@@ -228,7 +228,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	if (traveltime < 0.1) // useless anim
 	{
 		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
+		trigger_setnextthink(self, self.ltime + 0.1);
 		return;
 	}
 
@@ -247,7 +247,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 
 	// the thinking is now done by the controller
 	self.think = SUB_NullThink; // for PushMove
-	self.nextthink = self.ltime + traveltime;
+	trigger_setnextthink(self, self.ltime + traveltime);
 
 	// invoke controller
 	self = controller;
@@ -270,7 +270,7 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 	if (tdest == self.origin)
 	{
 		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
+		trigger_setnextthink(self, self.ltime + 0.1);
 		return;
 	}
 
@@ -296,7 +296,7 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 	if (traveltime < 0.15 || (self.platmovetype_start == 1 && self.platmovetype_end == 1)) // is this correct?
 	{
 		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
-		self.nextthink = self.ltime + traveltime;
+		trigger_setnextthink(self, self.ltime + traveltime);
 		return;
 	}
 
@@ -371,12 +371,12 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 	if (traveltime < 0.1)
 	{
 		self.avelocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
+		trigger_setnextthink(self, self.ltime + 0.1);
 		return;
 	}
 
 	self.avelocity = delta * (1 / traveltime);
-	self.nextthink = self.ltime + traveltime;
+	trigger_setnextthink(self, self.ltime + traveltime);
 }
 
 void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)

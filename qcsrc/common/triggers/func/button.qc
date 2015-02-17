@@ -7,7 +7,7 @@ void() button_return;
 void button_wait()
 {
 	self.state = STATE_TOP;
-	self.nextthink = self.ltime + self.wait;
+	trigger_setnextthink(self, self.ltime + self.wait);
 	self.think = button_return;
 	activator = self.enemy;
 	SUB_UseTargets();

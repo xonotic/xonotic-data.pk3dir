@@ -46,6 +46,10 @@ void drawborderlines(float thickness, vector pos, vector dim, vector color, floa
 
 void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag);
 
+void defer(float fdelay, void() func);
+
+void defer_clear(entity ent);
+
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
 float _drawpic_imgaspect;
 vector _drawpic_imgsize;

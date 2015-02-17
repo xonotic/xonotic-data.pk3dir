@@ -107,7 +107,7 @@ void plat_hit_top()
 	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 1;
 	self.think = plat_go_down;
-	self.nextthink = self.ltime + 3;
+	trigger_setnextthink(self, self.ltime + 3);
 }
 
 void plat_hit_bottom()
@@ -143,15 +143,11 @@ void plat_center_touch()
 		return;
 #endif
 
-#ifdef CSQC
-	print("Got this far\n");
-#endif
-
 	self = self.enemy;
 	if (self.state == 2)
 		plat_go_up ();
 	else if (self.state == 1)
-		self.nextthink = self.ltime + 1;	// delay going down
+		trigger_setnextthink(self, self.ltime + 1);
 }
 
 void plat_outside_touch()

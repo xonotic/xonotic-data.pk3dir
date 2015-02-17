@@ -69,7 +69,7 @@ void spawnfunc_func_rotating()
     self.blocked = generic_plat_blocked;
 
 	// wait for targets to spawn
-	self.nextthink = self.ltime + 999999999;
+	trigger_setnextthink(self, self.ltime + 999999999);
 	self.think = SUB_NullThink; // for PushMove
 
 	// TODO make a reset function for this one

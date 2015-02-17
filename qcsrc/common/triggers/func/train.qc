@@ -47,7 +47,7 @@ void train_wait()
 	else
 	{
 		self.think = train_next;
-		self.nextthink = self.ltime + self.wait;
+		trigger_setnextthink(self, self.ltime + self.wait);
 	}
 }
 
@@ -112,7 +112,7 @@ void func_train_find()
 	if (self.target == "")
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - self.view_ofs);
-	self.nextthink = self.ltime + 1;
+	trigger_setnextthink(self, self.ltime + 1);
 	self.think = train_next;
 }
 

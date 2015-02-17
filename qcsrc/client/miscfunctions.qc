@@ -4,6 +4,43 @@
 
 #include "../common/command/generic.qh"
 
+void defer_think()
+{
+    entity oself;
+
+    oself           = self;
+    self            = self.owner;
+    oself.think     = SUB_Remove;
+    oself.nextthink = time;
+
+    oself.use();
+}
+
+/*
+    Execute func() after time + fdelay.
+    self when func is executed = self when defer is called
+*/
+void defer(float fdelay, void() func)
+{
+    entity e;
+
+    e           = spawn();
+    e.classname = "defer";
+    e.owner     = self;
+    e.use       = func;
+    e.think     = defer_think;
+    e.nextthink = time + fdelay;
+}
+
+void defer_clear(entity ent)
+{
+	entity e;
+	for(e = world; (e = find(e, classname, "defer")); )
+		if(e.owner == ent)
+			remove(e);
+}
+
+
 void AuditLists()
 {
 	entity e;

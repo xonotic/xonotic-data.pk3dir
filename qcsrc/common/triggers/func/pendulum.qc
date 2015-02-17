@@ -67,7 +67,7 @@ void spawnfunc_func_pendulum()
 	controller.owner = self;
 	controller.nextthink = time + 1;
 	controller.think = func_pendulum_controller_think;
-	self.nextthink = self.ltime + 999999999;
+	trigger_setnextthink(self, self.ltime + 999999999);
 	self.think = SUB_NullThink; // for PushMove
 
 	//self.effects |= EF_LOWPRECISION;

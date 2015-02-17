@@ -632,7 +632,6 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 	{
 		if(WarpZoneLib_BadClassname(e.classname))
 			continue;
-		print(e.classname, ", first check\n");
 		p = WarpZoneLib_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
 		if(needlineofsight)
 		{
@@ -670,8 +669,6 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 	{
 		if(WarpZoneLib_BadClassname(e.classname))
 			continue;
-
-		print(e.classname, ", second check\n");
 
 		org0_new = WarpZone_TransformOrigin(e, org);
 		traceline(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);

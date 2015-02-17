@@ -74,7 +74,7 @@ void spawnfunc_func_bobbing()
 	controller.owner = self;
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;
-	self.nextthink = self.ltime + 999999999;
+	trigger_setnextthink(self, self.ltime + 999999999);
 	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02

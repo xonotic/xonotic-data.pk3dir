@@ -27,7 +27,13 @@ void() door_rotating_go_up;
 
 void door_blocked()
 {
-	if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO))
+	if((self.spawnflags & 8) 
+#ifdef SVQC
+		&& (other.takedamage != DAMAGE_NO)
+#elif defined(CSQC)
+		&& !PHYS_DEAD(other)
+#endif
+	)
 	{ // KIll Kill Kill!!
 #ifdef SVQC
 		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
@@ -40,8 +46,12 @@ void door_blocked()
 			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 #endif
 
-		 //Dont chamge direction for dead or dying stuff
-		if(PHYS_DEAD(other) && (other.takedamage == DAMAGE_NO))
+		 // don't change direction for dead or dying stuff
+		if(PHYS_DEAD(other)
+#ifdef SVQC
+			&& (other.takedamage == DAMAGE_NO)
+#endif
+		)
 		{
 			if (self.wait >= 0)
 			{
@@ -88,7 +98,7 @@ void door_hit_top()
 	{
 		self.think = door_rotating_go_down;
 	}
-	self.nextthink = self.ltime + self.wait;
+	trigger_setnextthink(self, self.ltime + self.wait);
 }
 
 void door_hit_bottom()
@@ -107,13 +117,6 @@ void door_go_down()
 		self.takedamage = DAMAGE_YES;
 		self.health = self.max_health;
 	}
-	print(
-#ifdef SVQC
-	"Server ",
-#elif defined(CSQC)
-	"Client ",
-#endif
-	"going down at time ", ftos(time), "\n");
 
 	self.state = STATE_DOWN;
 	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, door_hit_bottom);
@@ -126,7 +129,7 @@ void door_go_up()
 
 	if (self.state == STATE_TOP)
 	{	// reset top wait time
-		self.nextthink = self.ltime + self.wait;
+		trigger_setnextthink(self, self.ltime + self.wait);
 		return;
 	}
 
@@ -417,7 +420,7 @@ void door_rotating_go_up()
 
 	if (self.state == STATE_TOP)
 	{	// reset top wait time
-		self.nextthink = self.ltime + self.wait;
+		trigger_setnextthink(self, self.ltime + self.wait);
 		return;
 	}
 	if (self.noise2 != "")
@@ -448,8 +451,8 @@ void door_trigger_touch()
 		if (!(other.iscreature && !PHYS_DEAD(other)))
 #elif defined(CSQC)
 		if(!(IS_CLIENT(other) && !PHYS_DEAD(other)))
-			return;
 #endif
+			return;
 
 	if (time < self.attack_finished_single)
 		return;
@@ -553,7 +556,7 @@ entity LinkDoors_nextent(entity cur, entity near, entity pass)
 	return cur;
 }
 
-float LinkDoors_isconnected(entity e1, entity e2, entity pass)
+bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 {
 	float DELTA = 4;
 	if((e1.absmin_x > e2.absmax_x + DELTA)
@@ -738,7 +741,7 @@ float door_send(entity to, float sf)
 		WriteShort(MSG_ENTITY, self.speed);
 		WriteByte(MSG_ENTITY, self.lip);
 		WriteByte(MSG_ENTITY, self.state);
-		WriteShort(MSG_ENTITY, self.ltime);
+		WriteCoord(MSG_ENTITY, self.ltime);
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -919,7 +922,7 @@ void ent_door()
 		self.speed = ReadShort();
 		self.lip = ReadByte();
 		self.state = ReadByte();
-		self.ltime = ReadShort();
+		self.ltime = ReadCoord();
 
 		self.movetype = MOVETYPE_PUSH;
 		self.solid = SOLID_BSP;

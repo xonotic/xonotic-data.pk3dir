@@ -23,6 +23,8 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 
 .float lip;
 
+void trigger_setnextthink(entity e, float dtime);
+
 // used elsewhere (will fix)
 #ifdef SVQC
 void spawnfunc_trigger_once();

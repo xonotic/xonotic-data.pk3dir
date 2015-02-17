@@ -36,7 +36,7 @@ void fd_secret_use()
 
 	if (self.noise1 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
-	self.nextthink = self.ltime + 0.1;
+	trigger_setnextthink(self, self.ltime + 0.1);
 
 	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
 	makevectors(self.mangle);
@@ -71,7 +71,7 @@ void fd_secret_damage(entity inflictor, entity attacker, float damage, float dea
 // Wait after first movement...
 void fd_secret_move1()
 {
-	self.nextthink = self.ltime + 1.0;
+	trigger_setnextthink(self, self.ltime + 1.0);
 	self.think = fd_secret_move2;
 	if (self.noise3 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
@@ -92,7 +92,7 @@ void fd_secret_move3()
 		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 	if (!(self.spawnflags & SECRET_OPEN_ONCE))
 	{
-		self.nextthink = self.ltime + self.wait;
+		trigger_setnextthink(self, self.ltime + self.wait);
 		self.think = fd_secret_move4;
 	}
 }
@@ -108,7 +108,7 @@ void fd_secret_move4()
 // Wait 1 second...
 void fd_secret_move5()
 {
-	self.nextthink = self.ltime + 1.0;
+	trigger_setnextthink(self, self.ltime + 1.0);
 	self.think = fd_secret_move6;
 	if (self.noise3 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
