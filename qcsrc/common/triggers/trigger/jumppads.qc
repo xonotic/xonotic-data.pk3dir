@@ -79,9 +79,9 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
 	// ALWAYS solvable because jumpheight >= zdist
 	if(!solution.z)
-		solution.y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+		solution_y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
 	if(zdist == 0)
-		solution.x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+		solution_x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
 
 	if(zdist < 0)
 	{
@@ -256,7 +256,7 @@ void trigger_push_findtarget()
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
-	org.z = self.absmax.z - PL_MIN_z;
+	org_z = self.absmax.z - PL_MIN_z;
 
 	if (self.target)
 	{
@@ -341,10 +341,6 @@ float trigger_push_send(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.movedir_x);
 		WriteCoord(MSG_ENTITY, self.movedir_y);
 		WriteCoord(MSG_ENTITY, self.movedir_z);
-
-		WriteCoord(MSG_ENTITY, self.angles_x);
-		WriteCoord(MSG_ENTITY, self.angles_y);
-		WriteCoord(MSG_ENTITY, self.angles_z);
 	}
 
 	if(sf & 2)
@@ -429,6 +425,12 @@ void spawnfunc_target_position() { target_push_link(); }
 #endif
 
 #ifdef CSQC
+void trigger_push_remove()
+{
+	if(self.target)
+		strunzone(self.target);
+	self.target = string_null;
+}
 void ent_trigger_push()
 {
 	float sf = ReadByte();
@@ -437,16 +439,18 @@ void ent_trigger_push()
 	{
 		self.classname = "jumppad";
 		self.target = strzone(ReadString());
-		float mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
+		int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
 		self.spawnflags = ReadInt24_t();
 		self.active = ReadByte();
 		self.warpzone_isboxy = ReadByte();
 		self.height = ReadByte();
 		self.scale = ReadByte();
+
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
 		setorigin(self, self.origin);
+
 		self.mins_x = ReadCoord();
 		self.mins_y = ReadCoord();
 		self.mins_z = ReadCoord();
@@ -454,17 +458,16 @@ void ent_trigger_push()
 		self.maxs_y = ReadCoord();
 		self.maxs_z = ReadCoord();
 		setsize(self, self.mins, self.maxs);
+
 		self.movedir_x = ReadCoord();
 		self.movedir_y = ReadCoord();
 		self.movedir_z = ReadCoord();
-		self.angles_x = ReadCoord();
-		self.angles_y = ReadCoord();
-		self.angles_z = ReadCoord();
 
+		self.entremove = trigger_push_remove;
 		self.solid = SOLID_TRIGGER;
 		self.draw = trigger_draw_generic;
 		self.trigger_touch = trigger_push_touch;
-		self.drawmask = MASK_ENGINE;
+		self.drawmask = MASK_NORMAL;
 		self.move_time = time;
 		trigger_push_findtarget();
 	}
@@ -474,6 +477,17 @@ void ent_trigger_push()
 		self.team = ReadByte();
 		self.active = ReadByte();
 	}
+}
+
+void target_push_remove()
+{
+	if(self.classname)
+		strunzone(self.classname);
+	self.classname = string_null;
+
+	if(self.targetname)
+		strunzone(self.targetname);
+	self.targetname = string_null;
 }
 
 void ent_target_push()
@@ -486,6 +500,7 @@ void ent_target_push()
 	self.origin_z = ReadCoord();
 	setorigin(self, self.origin);
 
-	self.drawmask = MASK_ENGINE;
+	self.drawmask = MASK_NORMAL;
+	self.entremove = target_push_remove;
 }
 #endif
