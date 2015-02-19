@@ -23,6 +23,10 @@ void Movetype_Physics_MatchTicrate(float tr, bool sloppy);
 void Movetype_Physics_MatchServer(bool sloppy);
 void Movetype_Physics_NoMatchServer();
 
+float _Movetype_UnstickEntity();
+
+const int MAX_CLIP_PLANES = 5;
+
 const int MOVETYPE_NONE				= 0;
 const int MOVETYPE_ANGLENOCLIP	    = 1;
 const int MOVETYPE_ANGLECLIP	    = 2;

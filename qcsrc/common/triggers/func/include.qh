@@ -5,5 +5,7 @@
 #include "door.qh"
 #include "ladder.qh"
 #include "plat.qh"
+#include "rainsnow.qh"
+#include "pointparticles.qh"
 
 #endif

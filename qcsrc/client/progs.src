@@ -13,7 +13,6 @@ gibs.qc
 hook.qc
 hud_config.qc
 hud.qc
-laser.qc
 main.qc
 mapvoting.qc
 miscfunctions.qc
@@ -27,7 +26,6 @@ rubble.qc
 scoreboard.qc
 shownames.qc
 sortlist.qc
-target_music.qc
 teamradar.qc
 tturrets.qc
 tuba.qc

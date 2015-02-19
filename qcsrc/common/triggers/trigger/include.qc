@@ -10,6 +10,7 @@
 #include "hurt.qc"
 #include "impulse.qc"
 #include "jumppads.qc"
+#include "keylock.qc"
 #include "magicear.qc"
 #include "monoflop.qc"
 #include "multi.qc"

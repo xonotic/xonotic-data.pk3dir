@@ -70,7 +70,7 @@ void conveyor_reset()
 	self.SendFlags |= 2;
 }
 
-float conveyor_send(entity to, float sf)
+bool conveyor_send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
 	WriteByte(MSG_ENTITY, sf);

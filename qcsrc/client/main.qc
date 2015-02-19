@@ -3,7 +3,6 @@
 #include "particles.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "target_music.qh"
 #include "tturrets.qh"
 #include "tuba.qh"
 #include "wall.qh"
@@ -854,6 +853,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_PLAT: ent_plat(); break;
 		case ENT_CLIENT_PLAT_TRIGGER: ent_plat_trigger(); break;
 		case ENT_CLIENT_SWAMP: ent_swamp(); break;
+		case ENT_CLIENT_CORNER: ent_corner(); break;
+		case ENT_CLIENT_KEYLOCK: ent_keylock(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

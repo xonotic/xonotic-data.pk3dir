@@ -112,6 +112,8 @@ const int ENT_CLIENT_DOOR_TRIGGER = 66;
 const int ENT_CLIENT_PLAT = 67;
 const int ENT_CLIENT_PLAT_TRIGGER = 68;
 const int ENT_CLIENT_SWAMP = 69;
+const int ENT_CLIENT_CORNER = 70;
+const int ENT_CLIENT_KEYLOCK = 71;
 
 const int ENT_CLIENT_HEALING_ORB = 80;
 

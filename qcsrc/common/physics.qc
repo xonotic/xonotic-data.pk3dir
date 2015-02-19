@@ -4,6 +4,8 @@
 
 #ifdef SVQC
 
+#include "../server/miscfunctions.qh"
+
 void Physics_AddStats()
 {
 	// g_movementspeed hack
@@ -117,7 +119,7 @@ void PM_ClientMovement_Unstick()
 		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, self);
 		if (!trace_startsolid)
 		{
-			self.origin = neworigin;
+			setorigin(self, neworigin);
 			return;// true;
 		}
 	}
@@ -188,6 +190,106 @@ void PM_ClientMovement_UpdateStatus()
 		pmove_waterjumptime = 0;
 }
 
+#ifdef CSQC
+.float t_fraction;
+.vector t_plane_normal;
+.float t_startsolid;
+.vector t_endpos;
+entity t_tracebox(vector thevec1, vector tmin, vector tmax, vector thevec2, float type, entity forentity)
+{
+	entity e = spawn();
+	tracebox(thevec1, tmin, tmax, thevec2, type, forentity);
+	e.t_fraction = trace_fraction;
+	e.t_plane_normal = trace_plane_normal;
+	e.t_startsolid = trace_startsolid;
+	e.t_endpos = trace_endpos;
+
+	return e;
+}
+#endif
+
+void PM_ClientMovement_Move()
+{
+#ifdef CSQC
+
+	int bump;
+	float t;
+	float f;
+	vector neworigin = '0 0 0';
+	vector currentorigin2 = '0 0 0';
+	vector neworigin2 = '0 0 0';
+	vector primalvelocity;
+	entity trace = world, trace2 = world, trace3 = world;
+	entity oldtrace = world;
+
+	PM_ClientMovement_UpdateStatus();
+	primalvelocity = self.velocity;
+	for (bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && dotproduct(self.velocity, self.velocity) > 0; bump++)
+	{
+		neworigin = self.velocity * t;
+		trace = t_tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
+		if(trace.t_fraction < 1 && trace.t_plane_normal_z == 0)
+		{
+			// may be a step or wall, try stepping up
+			// first move forward at a higher level
+			currentorigin2 = self.origin;
+			currentorigin2_z += PHYS_STEPHEIGHT;
+			neworigin2 = neworigin;
+			neworigin_z = self.origin_z + PHYS_STEPHEIGHT;
+
+			trace2 = t_tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+			if(!trace2.t_startsolid)
+			{
+				// then move down from there
+				currentorigin2 = trace2.t_endpos;
+				neworigin2 = trace2.t_endpos;
+				neworigin_z = self.origin_z;
+
+				trace3 = t_tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+				// accept the new trace if it made some progress
+				if(fabs(trace3.t_endpos_x - trace.t_endpos_x) >= 0.03125 || fabs(trace3.t_endpos_y - trace.t_endpos_y) >= 0.03125)
+				{
+					oldtrace = trace;
+					trace = trace2;
+					trace.t_endpos = trace3.t_endpos;
+				}
+				else if(oldtrace) // TODO: check if we even need this
+				{
+					trace = oldtrace;
+				}
+			}
+		}
+
+		// check if it moved at all
+		if(trace.t_fraction >= 0.001)
+			setorigin(self, trace.t_endpos);
+
+		// check if it moved all the way
+		if(trace.t_fraction == 1)
+			break;
+
+		// this is only really needed for nogravityonground combined with gravityunaffectedbyticrate
+		// <LordHavoc> I'm pretty sure I commented it out solely because it seemed redundant
+		// this got commented out in a change that supposedly makes the code match QW better
+		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
+		if(trace.t_plane_normal_z > 0.7)
+			SET_ONGROUND(self);
+
+		t -= t * trace.t_fraction;
+
+		f = dotproduct(self.velocity, trace.t_plane_normal);
+		self.velocity = self.velocity + trace.t_plane_normal * -f;
+	}
+	if(pmove_waterjumptime > 0)
+		self.velocity = primalvelocity;
+
+	if(trace && !wasfreed(trace)) { remove(trace); }
+	if(trace2 && !wasfreed(trace2)) { remove(trace2); }
+	if(trace3 && !wasfreed(trace3)) { remove(trace3); }
+#endif
+}
+
+#if 0
 void PM_ClientMovement_Move()
 {
 #ifdef CSQC
@@ -238,7 +340,7 @@ void PM_ClientMovement_Move()
 
 		// check if it moved at all
 		if (trace_fraction >= 0.001)
-			self.origin = trace_endpos;
+			setorigin(self, trace_endpos);
 
 		// check if it moved all the way
 		if (trace_fraction == 1)
@@ -260,6 +362,7 @@ void PM_ClientMovement_Move()
 		self.velocity = primalvelocity;
 #endif
 }
+#endif
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 {
@@ -278,7 +381,7 @@ void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 
 	if (dot > 0) // we can't change direction while slowing down
 	{
-		k *= pow(dot, PHYS_AIRCONTROL_POWER)*PHYS_INPUT_TIMELENGTH;
+		k *= pow(dot, PHYS_AIRCONTROL_POWER) * PHYS_INPUT_TIMELENGTH;
 		xyspeed = max(0, xyspeed - PHYS_AIRCONTROL_PENALTY * sqrt(max(0, 1 - dot*dot)) * k/32);
 		k *= PHYS_AIRCONTROL;
 		self.velocity = normalize(self.velocity * xyspeed + wishdir * k);
@@ -986,6 +1089,33 @@ void PM_check_frozen(void)
 	}
 }
 
+void PM_check_hitground()
+{
+#ifdef SVQC
+	if (IS_ONGROUND(self))
+	if (IS_PLAYER(self)) // no fall sounds for observers thank you very much
+	if (self.wasFlying)
+	{
+		self.wasFlying = 0;
+		if (self.waterlevel < WATERLEVEL_SWIMMING)
+		if (time >= self.ladder_time)
+		if (!self.hook)
+		{
+			self.nextstep = time + 0.3 + random() * 0.1;
+			trace_dphitq3surfaceflags = 0;
+			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
+			{
+				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+				else
+					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			}
+		}
+	}
+#endif
+}
+
 void PM_check_blocked(void)
 {
 #ifdef SVQC
@@ -999,12 +1129,11 @@ void PM_check_blocked(void)
 #ifdef SVQC
 float speedaward_lastsent;
 float speedaward_lastupdate;
-string GetMapname(void);
 #endif
 void PM_check_race(void)
 {
 #ifdef SVQC
-	if not(g_cts || g_race)
+	if(!(g_cts || g_race))
 		return;
 	if (vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed)
 	{
@@ -1411,7 +1540,7 @@ void SV_WalkMove ()
 
 		// try moving up and forward to go up a step
 		// back to start pos
-		self.origin = start_origin;
+		setorigin(self, start_origin);
 		self.velocity = start_velocity;
 
 		// move up
@@ -1446,7 +1575,7 @@ void SV_WalkMove ()
 		{
 			//Con_Printf("wall\n");
 			// stepping up didn't make any progress, revert to original move
-			self.origin = originalmove_origin;
+			setorigin(self, originalmove_origin);
 			self.velocity = originalmove_velocity;
 			self.flags = originalmove_flags;
 			self.groundentity = originalmove_groundentity;
@@ -1483,7 +1612,7 @@ void SV_WalkMove ()
 		// if the push down didn't end up on good ground, use the move without
 		// the step up.  This happens near wall / slope combinations, and can
 		// cause the player to hop up higher on a slope too steep to climb
-		self.origin = originalmove_origin;
+		setorigin(self, originalmove_origin);
 		self.velocity = originalmove_velocity;
 		self.flags = originalmove_flags;
 		self.groundentity = originalmove_groundentity;
@@ -1648,14 +1777,16 @@ void PM_air(float buttons_prev, float maxspd_mod)
 }
 
 // used for calculating airshots
-float PM_is_flying()
+bool IsFlying(entity a)
 {
-	if (IS_ONGROUND(self))
-		return 0;
-	if (self.waterlevel >= WATERLEVEL_SWIMMING)
-		return 0;
-	traceline(self.origin, self.origin - '0 0 48', MOVE_NORMAL, self);
-	return trace_fraction >= 1;
+	if(IS_ONGROUND(a))
+		return false;
+	if(a.waterlevel >= WATERLEVEL_SWIMMING)
+		return false;
+	traceline(a.origin, a.origin - '0 0 48', MOVE_NORMAL, a);
+	if(trace_fraction < 1)
+		return false;
+	return true;
 }
 
 void PM_Main()
@@ -1816,48 +1947,20 @@ void PM_Main()
 	}
 #endif
 
-#ifdef SVQC
-	// if dead, behave differently
-	// in CSQC, physics don't handle dead player
-	if (self.deadflag)
+	if(PHYS_DEAD(self))
 		goto end;
-#endif
 
 #ifdef SVQC
 	if (!self.fixangle && !g_bugrigs)
 		self.angles = '0 1 0' * PHYS_INPUT_ANGLES(self).y;
 #endif
 
-#ifdef SVQC
-	if (IS_ONGROUND(self))
-	if (IS_PLAYER(self)) // no fall sounds for observers thank you very much
-	if (self.wasFlying)
-	{
-		self.wasFlying = 0;
-		if (self.waterlevel < WATERLEVEL_SWIMMING)
-		if (time >= self.ladder_time)
-		if (!self.hook)
-		{
-			self.nextstep = time + 0.3 + random() * 0.1;
-			trace_dphitq3surfaceflags = 0;
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
-			{
-				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-				else
-					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			}
-		}
-	}
-#endif
+	PM_check_hitground();
 
-	if (PM_is_flying())
+	if(IsFlying(self))
 		self.wasFlying = 1;
 
-#ifdef SVQC
 	if (IS_PLAYER(self))
-#endif
 		CheckPlayerJump();
 
 	if (self.flags & /* FL_WATERJUMP */ 2048)
@@ -1888,13 +1991,11 @@ void PM_Main()
 	else if (ITEMS(self) & IT_USING_JETPACK)
 		PM_jetpack(maxspeed_mod);
 
+	else if (IS_ONGROUND(self))
+		PM_walk(buttons_prev, maxspeed_mod);
+
 	else
-	{
-		if (IS_ONGROUND(self))
-			PM_walk(buttons_prev, maxspeed_mod);
-		else
-			PM_air(buttons_prev, maxspeed_mod);
-	}
+		PM_air(buttons_prev, maxspeed_mod);
 
 #ifdef SVQC
 	if (!IS_OBSERVER(self))
@@ -1907,14 +2008,10 @@ void PM_Main()
 		self.lastground = time;
 
 	// conveyors: then break velocity again
-	if (self.conveyor.state)
+	if(self.conveyor.state)
 		self.velocity += self.conveyor.movedir;
 
-#ifdef SVQC
-	self.lastflags = self.flags;
-#elif defined(CSQC)
-	self.lastflags = self.pmove_flags;
-#endif
+	self.lastflags = FLAGS(self);
 
 	self.lastclassname = self.classname;
 }
@@ -1926,4 +2023,9 @@ void CSQC_ClientMovement_PlayerMove_Frame(void)
 #endif
 {
 	PM_Main();
+
+#ifdef CSQC
+	pmove_org = self.origin;
+	pmove_vel = self.velocity;
+#endif
 }

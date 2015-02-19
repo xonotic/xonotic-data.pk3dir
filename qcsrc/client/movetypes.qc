@@ -24,7 +24,7 @@ void _Movetype_CheckVelocity() // SV_CheckVelocity
 float _Movetype_CheckWater(entity ent) // SV_CheckWater
 {
 	vector point = ent.move_origin;
-	point.z += (ent.mins.z + 1);
+	point_z += (ent.mins_z + 1);
 
 	int nativecontents = pointcontents(point);
 
@@ -44,11 +44,11 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 	{
 		ent.move_watertype = nativecontents;
 		ent.move_waterlevel = 1;
-		point.y = (ent.origin.y + ((ent.mins.z + ent.maxs.y) * 0.5));
+		point_y = (ent.origin_y + ((ent.mins_z + ent.maxs_y) * 0.5));
 		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
 			ent.move_waterlevel = 2;
-			point.y = ent.origin.y + ent.view_ofs.y;
+			point_y = ent.origin_y + ent.view_ofs_y;
 			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 				ent.move_waterlevel = 3;
 		}
@@ -170,21 +170,21 @@ void _Movetype_LinkEdict(float touch_triggers) // SV_LinkEdict
 
 	if(self.move_flags & FL_ITEM)
 	{
-		mi.x -= 15;
-		mi.y -= 15;
-		mi.z -= 1;
-		ma.x += 15;
-		ma.y += 15;
-		ma.z += 1;
+		mi_x -= 15;
+		mi_y -= 15;
+		mi_z -= 1;
+		ma_x += 15;
+		ma_y += 15;
+		ma_z += 1;
 	}
 	else
 	{
-		mi.x -= 1;
-		mi.y -= 1;
-		mi.z -= 1;
-		ma.x += 1;
-		ma.y += 1;
-		ma.z += 1;
+		mi_x -= 1;
+		mi_y -= 1;
+		mi_z -= 1;
+		ma_x += 1;
+		ma_y += 1;
+		ma_z += 1;
 	}
 
 	self.absmin = mi;
@@ -242,9 +242,9 @@ vector _Movetype_ClipVelocity(vector vel, vector norm, float f) // SV_ClipVeloci
 {
 	vel = vel - ((vel * norm) * norm) * f;
 
-	if(vel.x > -0.1 && vel.x < 0.1) vel.x = 0;
-	if(vel.y > -0.1 && vel.y < 0.1) vel.y = 0;
-	if(vel.z > -0.1 && vel.z < 0.1) vel.z = 0;
+	if(vel_x > -0.1 && vel_x < 0.1) vel_x = 0;
+	if(vel_y > -0.1 && vel_y < 0.1) vel_y = 0;
+	if(vel_z > -0.1 && vel_z < 0.1) vel_z = 0;
 
 	return vel;
 }
@@ -284,12 +284,342 @@ float _Movetype_PushEntity(vector push, float failonstartsolid) // SV_PushEntity
 	return trace_fraction;
 }
 
-const float MAX_CLIP_PLANES = 5;
+
+.float ltime;
+.void() blocked;
+void _Movetype_VectorAngles_FLU(vector myangles)
+{
+	float angle, sr, sp, sy, cr, cp, cy;
+
+	angle = myangles_y * (M_PI*2 / 360);
+	sy = sin(angle);
+	cy = cos(angle);
+	angle = myangles_x * (M_PI*2 / 360);
+	sp = sin(angle);
+	cp = cos(angle);
+	if(v_forward)
+	{
+		v_forward_x = cp*cy;
+		v_forward_y = cp*sy;
+		v_forward_z = -sp;
+	}
+	if(v_right || v_up)
+	{
+		if(myangles_z)
+		{
+			angle = myangles_z * (M_PI*2 / 360);
+			sr = sin(angle);
+			cr = cos(angle);
+			if(v_right)
+			{
+				v_right_x = sr*sp*cy+cr*-sy;
+				v_right_y = sr*sp*sy+cr*cy;
+				v_right_z = sr*cp;
+			}
+			if(v_up)
+			{
+				v_up_x = cr*sp*cy+-sr*-sy;
+				v_up_y = cr*sp*sy+-sr*cy;
+				v_up_z = cr*cp;
+			}
+		}
+		else
+		{
+			if(v_right)
+			{
+				v_right_x = -sy;
+				v_right_y = cy;
+				v_right_z = 0;
+			}
+			if(v_up)
+			{
+				v_up_x = sp*cy;
+				v_up_y = sp*sy;
+				v_up_z = cp;
+			}
+		}
+	}
+}
+
+void _Movetype_PushMove(float dt) // SV_PushMove
+{
+	float pushltime;
+	//int pusherowner;
+	//int i;
+	//int num_moved;
+	//int numcheckentities;
+	int savesolid;
+	bool rotated;
+	vector move1, moveangle;
+	vector a;
+	vector pushorig, pushang;
+	vector org;
+	vector move;
+	entity oldself;
+
+	if(!vlen(self.move_velocity) && !vlen(self.move_avelocity))
+	{
+		self.ltime += dt;
+		return;
+	}
+
+	switch(self.solid)
+	{
+	// LordHavoc: valid pusher types
+	case SOLID_BSP:
+	case SOLID_BBOX:
+	case SOLID_SLIDEBOX:
+	case SOLID_CORPSE: // LordHavoc: this would be weird...
+		break;
+	// LordHavoc: no collisions
+	case SOLID_NOT:
+	case SOLID_TRIGGER:
+		
+		self.move_origin = self.move_origin + self.move_velocity * dt;
+		self.move_angles_x -= 360.0 * floor(self.move_angles_x * (1.0 / 360.0));
+		self.move_angles_y -= 360.0 * floor(self.move_angles_y * (1.0 / 360.0));
+		self.move_angles_z -= 360.0 * floor(self.move_angles_z * (1.0 / 360.0));
+		self.ltime += dt;
+		_Movetype_LinkEdict(true);
+		return;
+	default:
+		printf("_Movetype_PushMove: entity %e with classname %s, unrecognized solid type %d\n", num_for_edict(self), self.classname, self.solid);
+		return;
+	}
+	if(!self.modelindex || self.model == "null")
+	{
+		printf("_Movetype_PushMove: entity %e with classname %s, unusable modelindex %f\n", num_for_edict(self), self.classname, self.modelindex);
+		return;
+	}
+	//pusherowner = self.owner;
+
+	rotated = (self.move_angles * self.move_avelocity) > 0;
+
+	move1 = self.move_velocity * dt;
+	moveangle = self.move_avelocity * dt;
+
+	a = -moveangle;
+
+	// sets v_forward, v_right and v_up
+	_Movetype_VectorAngles_FLU(a);
+
+	pushorig = self.move_origin;
+	pushang = self.move_angles;
+	pushltime = self.ltime;
+
+// move the pusher to its final position
+
+	self.move_origin = self.move_origin + self.move_velocity * dt;
+	self.move_angles = self.move_angles + self.move_avelocity * dt;
+	self.ltime += dt;
+	_Movetype_LinkEdict(true);
+
+	//pushermodel = SV_GetModelFromEdict(pusher);
+	//Matrix4x4_CreateFromQuakeEntity(&pusherfinalmatrix, PRVM_serveredictvector(pusher, origin)[0], PRVM_serveredictvector(pusher, origin)[1], PRVM_serveredictvector(pusher, origin)[2],
+	  //PRVM_serveredictvector(pusher, angles)[0], PRVM_serveredictvector(pusher, angles)[1], PRVM_serveredictvector(pusher, angles)[2], 1);
+	//Matrix4x4_Invert_Simple(&pusherfinalimatrix, &pusherfinalmatrix);
+
+	savesolid = self.solid;
+
+// see if any solid entities are inside the final position
+	//num_moved = 0;
+
+	entity e;
+	if(self.move_movetype != MOVETYPE_FAKEPUSH) // Tenebrae's MOVETYPE_PUSH variant that doesn't push...
+	for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+	{
+		if(e.owner == self)
+			continue;
+
+		if(self.owner == e)
+			continue;
+
+		//Con_Printf("%i %s ", PRVM_NUM_FOR_EDICT(check), PRVM_GetString(PRVM_serveredictstring(check, classname)));
+
+		// tell any MOVETYPE_STEP entity that it may need to check for water transitions
+		//check->priv.server->waterposition_forceupdate = true;
+
+		//int checkcontents = pointcontents(e.move_origin);
+
+		// if the entity is standing on the pusher, it will definitely be moved
+		// if the entity is not standing on the pusher, but is in the pusher's
+		// final position, move it
+		if(!(e.move_flags & FL_ONGROUND) || e.move_groundentity != self)
+		{
+			//vector pushermins = self.mins;
+			//vector pushermaxs = self.maxs;
+			//vector checkorigin = e.origin;
+			//vector checkmins = e.mins;
+			//vector checkmaxs = e.maxs;
+			//Collision_ClipToGenericEntity(&trace, pushermodel, pusher->priv.server->frameblend, &pusher->priv.server->skeleton, pushermins, pushermaxs, SUPERCONTENTS_BODY, &pusherfinalmatrix, 
+				//&pusherfinalimatrix, checkorigin, checkmins, checkmaxs, checkorigin, checkcontents, collision_extendmovelength.value);
+			tracebox(e.move_origin, e.mins, e.maxs, self.move_origin, MOVE_NOMONSTERS, e);
+			if(!trace_startsolid)
+			{
+				//Con_Printf("- not in solid\n");
+				continue;
+			}
+		}
+		vector pivot = e.mins + 0.5 * (e.maxs - e.mins);
+		//VectorClear(pivot);
+
+		if(rotated)
+		{
+			vector org2;
+			org = e.move_origin - self.move_origin;
+			org += pivot;
+			org2_x = (org * v_forward);
+			org2_y = (org * v_right);
+			org2_z = (org * v_up);
+			move = org2 - org;
+			move += move1;
+		}
+		else
+			move = move1;
+
+		//Con_Printf("- pushing %f %f %f\n", move[0], move[1], move[2]);
+
+		//VectorCopy (PRVM_serveredictvector(check, origin), check->priv.server->moved_from);
+		//VectorCopy (PRVM_serveredictvector(check, angles), check->priv.server->moved_fromangles);
+		//moved_edicts[num_moved++] = PRVM_NUM_FOR_EDICT(check);
+
+		// physics objects need better collisions than this code can do
+		/*if(e.move_movetype == MOVETYPE_PHYSICS)
+		{
+			e.move_origin += move;
+			oldself = self;
+			self = e;
+			_Movetype_LinkEdict(false);
+			_Movetype_LinkEdict_TouchAreaGrid();
+			self = oldself;
+			continue;
+		}*/
+
+		// try moving the contacted entity
+		self.solid = SOLID_NOT;
+		oldself = self;
+		self = e;
+		if(!_Movetype_PushEntity(move, true))
+		{
+			// entity "check" got teleported
+			self.angles_y += trace_fraction * moveangle_y;
+			oldself.solid = savesolid;
+			continue; // pushed enough
+		}
+		self = oldself;
+		// FIXME: turn players specially
+		e.angles_y += trace_fraction * moveangle_y;
+		self.solid = savesolid;
+		//Con_Printf("%s:%d frac %f startsolid %d bmodelstartsolid %d allsolid %d\n", __FILE__, __LINE__, trace.fraction, trace.startsolid, trace.bmodelstartsolid, trace.allsolid);
+
+		// this trace.fraction < 1 check causes items to fall off of pushers
+		// if they pass under or through a wall
+		// the groundentity check causes items to fall off of ledges
+		if(e.move_movetype != MOVETYPE_WALK && (trace_fraction < 1 || e.move_groundentity != self))
+			e.move_flags &= ~FL_ONGROUND;
+
+		// if it is still inside the pusher, block
+		//vector pushermins = self.mins;
+		//vector pushermaxs = self.maxs;
+		//vector checkorigin = e.move_origin;
+		//vector checkmins = e.mins;
+		//vector checkmaxs = e.maxs; 
+		//Collision_ClipToGenericEntity(&trace, pushermodel, pusher->priv.server->frameblend, &pusher->priv.server->skeleton, pushermins, pushermaxs, SUPERCONTENTS_BODY, 
+				//&pusherfinalmatrix, &pusherfinalimatrix, checkorigin, checkmins, checkmaxs, checkorigin, checkcontents, collision_extendmovelength.value);
+		tracebox(e.move_origin, e.mins, e.maxs, self.move_origin, MOVE_NOMONSTERS, e);
+		if(trace_startsolid)
+		{
+			/*vector move2;
+			if(SV_NudgeOutOfSolid_PivotIsKnownGood(check, pivot))
+			{
+				// hack to invoke all necessary movement triggers
+				move2 = '0 0 0';
+				if(!_Movetype_PushEntity(move2, true))
+				{
+					// entity "check" got teleported
+					continue;
+				}
+				// we could fix it
+				continue;
+			}*/
+
+			// still inside pusher, so it's really blocked
+
+			// fail the move
+			if(e.mins_x == e.maxs_x)
+				continue;
+			if(e.solid == SOLID_NOT || e.solid == SOLID_TRIGGER)
+			{
+				// corpse
+				e.mins_x = e.mins_y = 0;
+				e.maxs = e.mins;
+				continue;
+			}
+
+			self.move_origin = pushorig;
+			self.move_angles = pushang;
+			self.ltime = pushltime;
+			_Movetype_LinkEdict(true);
+
+			// move back any entities we already moved
+			/*for (i = 0;i < num_moved;i++)
+			{
+				prvm_edict_t *ed = PRVM_EDICT_NUM(moved_edicts[i]);
+				VectorCopy (ed->priv.server->moved_from, PRVM_serveredictvector(ed, origin));
+				VectorCopy (ed->priv.server->moved_fromangles, PRVM_serveredictvector(ed, angles));
+				SV_LinkEdict(ed);
+			}*/
+
+			// if the pusher has a "blocked" function, call it, otherwise just stay in place until the obstacle is gone
+			if(self.blocked)
+			{
+				self.move_time = time;
+				other = e;
+				self.blocked();
+			}
+			break;
+		}
+	}
+	self.move_angles_x -= 360.0 * floor(self.move_angles_x * (1.0 / 360.0));
+	self.move_angles_y -= 360.0 * floor(self.move_angles_y * (1.0 / 360.0));
+	self.move_angles_z -= 360.0 * floor(self.move_angles_z * (1.0 / 360.0));
+}
+
+void _Movetype_Physics_Pusher(float dt) // SV_Physics_Pusher
+{
+	float oldltime, movetime;
+
+	oldltime = self.ltime;
+
+	if (self.nextthink < self.ltime + dt)
+	{
+		movetime = self.nextthink - self.ltime;
+		if (movetime < 0)
+			movetime = 0;
+	}
+	else
+		movetime = dt;
+
+	if (movetime)
+		// advances PRVM_serveredictfloat(ent, ltime) if not blocked
+		_Movetype_PushMove(movetime);
+
+	if (self.nextthink > oldltime && self.nextthink <= self.ltime)
+	{
+		self.nextthink = 0;
+		//time = dt;
+		self.move_time = time;
+		other = world;
+		if(self.think)
+			self.think();
+	}
+}
+
 void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 {
 	if(self.move_flags & FL_ONGROUND)
 	{
-		if(self.move_velocity.z >= 1/32)
+		if(self.move_velocity_z >= 1/32)
 			self.move_flags &= ~FL_ONGROUND;
 		else if(!self.move_groundentity)
 			return;
@@ -367,7 +697,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
 
 			d = trace_plane_normal * self.move_velocity;
-			if(trace_plane_normal.z > 0.7 && d < bouncestop && d > -bouncestop)
+			if(trace_plane_normal_z > 0.7 && d < bouncestop && d > -bouncestop)
 			{
 				self.move_flags |= FL_ONGROUND;
 				self.move_groundentity = trace_ent;
@@ -380,7 +710,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		else
 		{
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1.0);
-			if(trace_plane_normal.z > 0.7)
+			if(trace_plane_normal_z > 0.7)
 			{
 				self.move_flags |= FL_ONGROUND;
 				self.move_groundentity = trace_ent;
@@ -422,7 +752,7 @@ void _Movetype_Physics_Frame(float movedt)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			error("SV_Physics_Pusher not implemented");
+			_Movetype_Physics_Pusher(movedt);
 			break;
 		case MOVETYPE_NONE:
 			break;

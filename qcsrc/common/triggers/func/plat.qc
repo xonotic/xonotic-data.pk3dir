@@ -147,11 +147,7 @@ void spawnfunc_func_plat()
 #elif defined(CSQC)
 void plat_draw()
 {
-	float dt = time - self.move_time;
-	self.move_time = time;
-	if(dt <= 0) { return; }
-
-	setorigin(self, self.origin + self.velocity * dt);
+	Movetype_Physics_NoMatchServer();
 }
 
 void ent_plat()

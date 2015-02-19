@@ -66,18 +66,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
 
-float IsFlying(entity a)
-{
-	if(a.flags & FL_ONGROUND)
-		return 0;
-	if(a.waterlevel >= WATERLEVEL_SWIMMING)
-		return 0;
-	traceline(a.origin, a.origin - '0 0 48', MOVE_NORMAL, a);
-	if(trace_fraction < 1)
-		return 0;
-	return 1;
-}
-
 void UpdateFrags(entity player, float f)
 {
 	PlayerTeamScore_AddScore(player, f);

@@ -236,14 +236,12 @@ void plat_reset()
 #endif
 }
 
-#ifdef SVQC
 .float platmovetype_start_default, platmovetype_end_default;
-float set_platmovetype(entity e, string s)
+bool set_platmovetype(entity e, string s)
 {
 	// sets platmovetype_start and platmovetype_end based on a string consisting of two values
 
-	float n;
-	n = tokenize_console(s);
+	int n = tokenize_console(s);
 	if(n > 0)
 		e.platmovetype_start = stof(argv(0));
 	else
@@ -266,4 +264,3 @@ float set_platmovetype(entity e, string s)
 
 	return true;
 }
-#endif

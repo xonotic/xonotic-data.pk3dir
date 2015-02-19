@@ -22,6 +22,8 @@
 .float() PlayerPhysplug;
 float AdjustAirAccelQW(float accelqw, float factor);
 
+bool IsFlying(entity a);
+
 #ifdef CSQC
 
 	float PM_multijump_checkjump();
@@ -81,6 +83,8 @@ float AdjustAirAccelQW(float accelqw, float factor);
 	#define WAS_ONGROUND(s)						!!(s.lastflags & PMF_ONGROUND)
 
 	#define ITEMS(s) 							getstati(STAT_ITEMS, 0, 24)
+
+	#define FLAGS(s)							(s).pmove_flags
 
 	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
 
@@ -199,6 +203,8 @@ float AdjustAirAccelQW(float accelqw, float factor);
 	#define WAS_ONGROUND(s)						!!((s).lastflags & FL_ONGROUND)
 
 	#define ITEMS(s)							s.items
+
+	#define FLAGS(s)							(s).flags
 
 	#define PHYS_AMMO_FUEL(s)					s.ammo_fuel
 
