@@ -1,4 +1,6 @@
 #ifdef SVQC
 void multi_trigger();
 void multi_reset();
+
+void spawnfunc_trigger_once();
 #endif

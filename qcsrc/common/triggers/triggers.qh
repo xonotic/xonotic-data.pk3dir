@@ -29,7 +29,6 @@ void trigger_setnextthink(entity e, float dtime);
 #ifdef SVQC
 void trigger_common_write(bool withtarget);
 
-void spawnfunc_trigger_once();
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
 
 void target_voicescript_next(entity pl);
