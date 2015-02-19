@@ -52,6 +52,9 @@ void trigger_common_write(bool withtarget)
 	WriteCoord(MSG_ENTITY, self.mins_x);
 	WriteCoord(MSG_ENTITY, self.mins_y);
 	WriteCoord(MSG_ENTITY, self.mins_z);
+	WriteCoord(MSG_ENTITY, self.maxs_x);
+	WriteCoord(MSG_ENTITY, self.maxs_y);
+	WriteCoord(MSG_ENTITY, self.maxs_z);
 
 	WriteCoord(MSG_ENTITY, self.movedir_x);
 	WriteCoord(MSG_ENTITY, self.movedir_y);
@@ -251,7 +254,7 @@ void trigger_touch_generic(void() touchfunc)
 {
 	entity e;
 	for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
-	if(e.isplayermodel)
+	if(e.isplayermodel || e.classname == "csqcprojectile")
 	{
 		vector emin = e.absmin, emax = e.absmax;
 		if(self.solid == SOLID_BSP)

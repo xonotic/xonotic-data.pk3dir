@@ -450,7 +450,7 @@ void door_trigger_touch()
 #ifdef SVQC
 		if (!(other.iscreature && !PHYS_DEAD(other)))
 #elif defined(CSQC)
-		if(!(IS_CLIENT(other) && !PHYS_DEAD(other)))
+		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !PHYS_DEAD(other)))
 #endif
 			return;
 
