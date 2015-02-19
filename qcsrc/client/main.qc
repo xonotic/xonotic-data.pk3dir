@@ -849,7 +849,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;
 		case ENT_CLIENT_CONVEYOR: ent_conveyor(); break;
 		case ENT_CLIENT_DOOR: ent_door(); break;
-		case ENT_CLIENT_DOOR_TRIGGER: ent_door_trigger(); break;
 		case ENT_CLIENT_PLAT: ent_plat(); break;
 		case ENT_CLIENT_PLAT_TRIGGER: ent_plat_trigger(); break;
 		case ENT_CLIENT_SWAMP: ent_swamp(); break;

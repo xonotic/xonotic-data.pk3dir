@@ -1738,6 +1738,7 @@ void CSQC_UpdateView(float w, float h)
 	UpdateDamage();
 	UpdateCrosshair();
 	UpdateHitsound();
+	InitializeEntitiesRun();
 
 	if(NextFrameCommand)
 	{

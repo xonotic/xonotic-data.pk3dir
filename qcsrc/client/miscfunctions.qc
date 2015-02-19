@@ -4,6 +4,79 @@
 
 #include "../common/command/generic.qh"
 
+void InitializeEntity(entity e, void(void) func, float order)
+{
+    entity prev, cur;
+
+    if (!e || e.initialize_entity)
+    {
+        // make a proxy initializer entity
+        entity e_old;
+        e_old = e;
+        e = spawn();
+        e.classname = "initialize_entity";
+        e.enemy = e_old;
+    }
+
+    e.initialize_entity = func;
+    e.initialize_entity_order = order;
+
+    cur = initialize_entity_first;
+    prev = world;
+    for (;;)
+    {
+        if (!cur || cur.initialize_entity_order > order)
+        {
+            // insert between prev and cur
+            if (prev)
+                prev.initialize_entity_next = e;
+            else
+                initialize_entity_first = e;
+            e.initialize_entity_next = cur;
+            return;
+        }
+        prev = cur;
+        cur = cur.initialize_entity_next;
+    }
+}
+void InitializeEntitiesRun()
+{
+    entity startoflist;
+    startoflist = initialize_entity_first;
+    initialize_entity_first = world;
+    for (self = startoflist; self; self = self.initialize_entity_next)
+    {
+	//self.remove_except_protected_forbidden = 1;
+    }
+    for (self = startoflist; self; )
+    {
+        entity e;
+        var void(void) func;
+        e = self.initialize_entity_next;
+        func = self.initialize_entity;
+        self.initialize_entity_order = 0;
+        self.initialize_entity = func_null;
+        self.initialize_entity_next = world;
+	//self.remove_except_protected_forbidden = 0;
+        if (self.classname == "initialize_entity")
+        {
+            entity e_old;
+            e_old = self.enemy;
+            remove(self);
+            self = e_old;
+        }
+        //dprint("Delayed initialization: ", self.classname, "\n");
+        if(func)
+            func();
+        else
+        {
+            eprint(self);
+            backtrace(strcat("Null function in: ", self.classname, "\n"));
+        }
+        self = e;
+    }
+}
+
 void defer_think()
 {
     entity oself;

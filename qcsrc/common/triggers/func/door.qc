@@ -448,7 +448,7 @@ void door_trigger_touch()
 {
 	if (other.health < 1)
 #ifdef SVQC
-		if (!(other.iscreature && !PHYS_DEAD(other)))
+		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !PHYS_DEAD(other)))
 #elif defined(CSQC)
 		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !PHYS_DEAD(other)))
 #endif
@@ -469,32 +469,6 @@ void door_trigger_touch()
 	door_use ();
 }
 
-#ifdef SVQC
-
-float door_trigger_send(entity to, float sf)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DOOR_TRIGGER);
-
-	WriteShort(MSG_ENTITY, num_for_edict(self.owner));
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
-
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
-
-	return true;
-}
-
-void door_trigger_link(entity trig)
-{
-	Net_LinkEntity(trig, false, 0, door_trigger_send);
-}
-
 void spawn_field(vector fmins, vector fmaxs)
 {
 	entity	trigger;
@@ -505,41 +479,18 @@ void spawn_field(vector fmins, vector fmaxs)
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = self;
+#ifdef SVQC
 	trigger.touch = door_trigger_touch;
+#elif defined(CSQC)
+	trigger.trigger_touch = door_trigger_touch;
+	trigger.draw = trigger_draw_generic;
+	trigger.drawmask = MASK_NORMAL;
+#endif
 
 	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
-	door_trigger_link(trigger);
 }
 
-#elif defined(CSQC)
 
-void ent_door_trigger()
-{
-	float entnum = ReadShort();
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	setorigin(self, self.origin);
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	setsize(self, self.mins, self.maxs);
-
-	self.owner = findfloat(world, sv_entnum, entnum); // if owner doesn't exist, it shouldn't matter much
-	self.classname = "doortriggerfield";
-	self.movetype = MOVETYPE_NONE;
-	self.solid = SOLID_TRIGGER;
-	self.trigger_touch = door_trigger_touch;
-	self.draw = trigger_draw_generic;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
-}
-
-#endif
-#ifdef SVQC
 /*
 =============
 LinkDoors
@@ -569,13 +520,17 @@ bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 	return true;
 }
 
+#ifdef SVQC
 void door_link();
+#endif
 void LinkDoors()
 {
 	entity	t;
 	vector	cmins, cmaxs;
 
+#ifdef SVQC
 	door_link();
+#endif
 
 	if (self.enemy)
 		return;		// already linked by another door
@@ -589,6 +544,7 @@ void LinkDoors()
 			return;
 		if (self.items)
 			return;
+
 		spawn_field(self.absmin, self.absmax);
 
 		return;		// don't want to link this door
@@ -660,7 +616,7 @@ void LinkDoors()
 	spawn_field(cmins, cmaxs);
 }
 
-
+#ifdef SVQC
 /*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
 
@@ -699,9 +655,6 @@ float door_send(entity to, float sf)
 	{
 		WriteString(MSG_ENTITY, self.classname);
 		WriteByte(MSG_ENTITY, self.spawnflags);
-		WriteShort(MSG_ENTITY, ((self.owner == self || !self.owner) ? -1 : num_for_edict(self.owner)));
-		WriteShort(MSG_ENTITY, ((self.enemy == self || !self.enemy) ? -1 : num_for_edict(self.enemy)));
-		WriteShort(MSG_ENTITY, num_for_edict(self));
 
 		WriteByte(MSG_ENTITY, self.scale);
 
@@ -772,6 +725,7 @@ void door_link()
 	FixSize(self);
 	Net_LinkEntity(self, false, 0, door_send);
 }
+#endif
 
 void door_init_startopen()
 {
@@ -779,10 +733,10 @@ void door_init_startopen()
 	self.pos2 = self.pos1;
 	self.pos1 = self.origin;
 
+#ifdef SVQC
 	self.SendFlags |= SF_TRIGGER_UPDATE;
-}
-
 #endif
+}
 
 void door_reset()
 {
@@ -877,9 +831,6 @@ void ent_door()
 	{
 		self.classname = strzone(ReadString());
 		self.spawnflags = ReadByte();
-		float myowner = ReadShort();
-		float myenemy = ReadShort();
-		self.sv_entnum = ReadShort();
 
 		self.scale = ReadByte();
 
@@ -933,10 +884,10 @@ void ent_door()
 		self.use = door_use;
 		self.blocked = door_blocked;
 
-		print(ftos(self.entnum), " ", ftos(self.sv_entnum), "\n");
+		LinkDoors();
 
-		self.owner = ((myowner == -1) ? self : findfloat(world, sv_entnum, myowner));
-		self.enemy = ((myenemy == -1) ? self : findfloat(world, sv_entnum, myenemy));
+		if(self.spawnflags & DOOR_START_OPEN)
+			door_init_startopen();
 	}
 
 	if(sf & SF_TRIGGER_RESET)
