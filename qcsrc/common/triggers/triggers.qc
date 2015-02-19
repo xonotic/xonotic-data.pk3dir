@@ -29,6 +29,100 @@ void trigger_setnextthink(entity e, float dtime)
 #endif
 }
 
+#ifdef SVQC
+void trigger_common_write(bool withtarget)
+{
+	WriteByte(MSG_ENTITY, self.warpzone_isboxy);
+	WriteByte(MSG_ENTITY, self.scale);
+
+	if(withtarget)
+	{
+		WriteString(MSG_ENTITY, self.target);
+		WriteString(MSG_ENTITY, self.target2);
+		WriteString(MSG_ENTITY, self.target3);
+		WriteString(MSG_ENTITY, self.target4);
+		WriteString(MSG_ENTITY, self.targetname);
+		WriteString(MSG_ENTITY, self.killtarget);
+	}
+
+	WriteCoord(MSG_ENTITY, self.origin_x);
+	WriteCoord(MSG_ENTITY, self.origin_y);
+	WriteCoord(MSG_ENTITY, self.origin_z);
+
+	WriteCoord(MSG_ENTITY, self.mins_x);
+	WriteCoord(MSG_ENTITY, self.mins_y);
+	WriteCoord(MSG_ENTITY, self.mins_z);
+
+	WriteCoord(MSG_ENTITY, self.movedir_x);
+	WriteCoord(MSG_ENTITY, self.movedir_y);
+	WriteCoord(MSG_ENTITY, self.movedir_z);
+
+	WriteCoord(MSG_ENTITY, self.angles_x);
+	WriteCoord(MSG_ENTITY, self.angles_y);
+	WriteCoord(MSG_ENTITY, self.angles_z);
+}
+
+#elif defined(CSQC)
+
+void trigger_common_read(bool withtarget)
+{
+	self.warpzone_isboxy = ReadByte();
+	self.scale = ReadByte();
+
+	if(withtarget)
+	{
+		self.target = strzone(ReadString());
+		self.target2 = strzone(ReadString());
+		self.target3 = strzone(ReadString());
+		self.target4 = strzone(ReadString());
+		self.targetname = strzone(ReadString());
+		self.killtarget = strzone(ReadString());
+	}
+
+	self.origin_x = ReadCoord();
+	self.origin_y = ReadCoord();
+	self.origin_z = ReadCoord();
+	setorigin(self, self.origin);
+
+	self.mins_x = ReadCoord();
+	self.mins_y = ReadCoord();
+	self.mins_z = ReadCoord();
+	self.maxs_x = ReadCoord();
+	self.maxs_y = ReadCoord();
+	self.maxs_z = ReadCoord();
+	setsize(self, self.mins, self.maxs);
+
+	self.movedir_x = ReadCoord();
+	self.movedir_y = ReadCoord();
+	self.movedir_z = ReadCoord();
+
+	self.angles_x = ReadCoord();
+	self.angles_y = ReadCoord();
+	self.angles_z = ReadCoord();
+}
+
+void trigger_remove_generic()
+{
+	if(self.target) { strunzone(self.target); }
+	self.target = string_null;
+
+	if(self.target2) { strunzone(self.target2); }
+	self.target2 = string_null;
+
+	if(self.target3) { strunzone(self.target3); }
+	self.target3 = string_null;
+
+	if(self.target4) { strunzone(self.target4); }
+	self.target4 = string_null;
+
+	if(self.targetname) { strunzone(self.targetname); }
+	self.target = string_null;
+
+	if(self.killtarget) { strunzone(self.killtarget); }
+	self.killtarget = string_null;
+}
+#endif
+
 /*
 ==============================
 SUB_UseTargets

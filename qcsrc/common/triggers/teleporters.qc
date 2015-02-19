@@ -1,30 +1,26 @@
-#include "t_teleporters.qh"
+#include "teleporters.qh"
 
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../warpzonelib/server.qh"
-    #include "../common/constants.qh"
-	#include "../common/triggers/subs.qh"
-    #include "../common/util.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/deathtypes.qh"
-    #include "tturrets/include/turrets_early.qh"
-    #include "vehicles/vehicles_def.qh"
-    #include "../common/mapinfo.qh"
-    #include "anticheat.qh"
+    #include "../../warpzonelib/common.qh"
+    #include "../../warpzonelib/util_server.qh"
+    #include "../../warpzonelib/server.qh"
+    #include "../constants.qh"
+	#include "../triggers/subs.qh"
+    #include "../util.qh"
+    #include "../../server/weapons/csqcprojectile.qh"
+    #include "../../server/autocvars.qh"
+    #include "../../server/constants.qh"
+    #include "../../server/defs.qh"
+    #include "../deathtypes.qh"
+    #include "../../server/tturrets/include/turrets_early.qh"
+    #include "../../server/vehicles/vehicles_def.qh"
+    #include "../mapinfo.qh"
+    #include "../../server/anticheat.qh"
 #endif
 
-void trigger_teleport_use()
-{
-	if(teamplay)
-		self.team = activator.team;
-}
+#ifdef SVQC
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
@@ -181,77 +177,6 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	return e;
 }
 
-void Teleport_Touch (void)
-{
-	entity oldself;
-	string s;
-
-	if (self.active != ACTIVE_ACTIVE)
-		return;
-
-	if (!other.teleportable)
-		return;
-
-	if(other.vehicle)
-	if(!other.vehicle.teleportable)
-		return;
-
-	if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
-		return;
-
-	if(other.deadflag != DEAD_NO)
-		return;
-
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
-			return;
-
-	EXACTTRIGGER_TOUCH;
-
-	if(IS_PLAYER(other))
-		RemoveGrapplingHook(other);
-
-	entity e;
-	e = Simple_TeleportPlayer(self, other);
-
-	activator = other;
-	s = self.target; self.target = string_null;
-	SUB_UseTargets();
-	if (!self.target) self.target = s;
-
-	oldself = self;
-	self = e;
-	SUB_UseTargets();
-	self = oldself;
-}
-
-void spawnfunc_info_teleport_destination (void)
-{
-	self.classname = "info_teleport_destination";
-
-	self.mangle = self.angles;
-	self.angles = '0 0 0';
-
-	//setorigin (self, self.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
-	setorigin (self, self.origin);
-
-	IFTARGETED
-	{
-	}
-	else
-		objerror ("^3Teleport destination without a targetname");
-}
-
-void spawnfunc_misc_teleporter_dest (void)
-{
-	spawnfunc_info_teleport_destination();
-}
-
-void spawnfunc_target_teleporter (void)
-{
-	spawnfunc_info_teleport_destination();
-}
-
 void teleport_findtarget (void)
 {
 	entity e;
@@ -297,29 +222,6 @@ entity Teleport_Find(vector mi, vector ma)
 	return world;
 }
 
-void spawnfunc_trigger_teleport (void)
-{
-	self.angles = '0 0 0';
-
-	EXACTTRIGGER_INIT;
-
-	self.active = ACTIVE_ACTIVE;
-
-	self.use = trigger_teleport_use;
-
-	// this must be called to spawn the teleport waypoints for bots
-	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
-
-	if (self.target == "")
-	{
-		objerror ("Teleporter with no target");
-		return;
-	}
-
-	self.teleport_next = teleport_first;
-	teleport_first = self;
-}
-
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
 	makevectors(pl.angles);
@@ -347,3 +249,4 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 		pl.lastteleporttime = time;
 	}
 }
+#endif

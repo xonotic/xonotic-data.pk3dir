@@ -8,6 +8,7 @@
 #include "triggers.qh"
 #include "subs.qh"
 #include "platforms.qh"
+#include "teleporters.qh"
 
 // func
 #include "func/include.qh"

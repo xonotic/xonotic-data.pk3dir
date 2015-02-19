@@ -229,7 +229,8 @@ void func_breakable_reset()
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
-void spawnfunc_func_breakable() {
+void spawnfunc_func_breakable()
+{
 	float n, i;
 	if(!self.health)
 		self.health = 100;

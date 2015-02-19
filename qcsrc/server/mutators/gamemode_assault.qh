@@ -29,6 +29,5 @@ const float ST_ASSAULT_OBJECTIVES = 1;
 const float SP_ASSAULT_OBJECTIVES = 4;
 
 // predefined spawnfuncs
-void spawnfunc_func_breakable();
 void target_objective_decrease_activate();
 #endif

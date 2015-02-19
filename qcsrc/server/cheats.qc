@@ -1,7 +1,7 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "race.qh"
-#include "t_teleporters.qh"
+#include "../common/triggers/teleporters.qh"
 
 #if defined(CSQC)
 #elif defined(MENUQC)
@@ -12,6 +12,7 @@
     #include "../warpzonelib/util_server.qh"
     #include "../common/constants.qh"
     #include "../common/util.qh"
+	#include "../common/triggers/func/breakable.qh"
     #include "../common/monsters/monsters.qh"
     #include "../common/weapons/weapons.qh"
     #include "weapons/tracing.qh"
@@ -19,6 +20,7 @@
     #include "defs.qh"
     #include "../common/deathtypes.qh"
 	#include "../common/triggers/subs.qh"
+	#include "../common/triggers/func/breakable.qh"
     #include "mutators/mutators_include.qh"
     #include "../csqcmodellib/sv_model.qh"
 #endif

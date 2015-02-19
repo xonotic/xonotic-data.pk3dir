@@ -98,29 +98,11 @@ float swamp_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_LADDER);
 
-	WriteByte(MSG_ENTITY, self.warpzone_isboxy);
-	WriteByte(MSG_ENTITY, self.scale);
 	WriteByte(MSG_ENTITY, self.dmg); // can probably get away with using a single byte here
 	WriteByte(MSG_ENTITY, self.swamp_slowdown);
 	WriteByte(MSG_ENTITY, self.swamp_interval);
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
 
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
-
-	WriteCoord(MSG_ENTITY, self.movedir_x);
-	WriteCoord(MSG_ENTITY, self.movedir_y);
-	WriteCoord(MSG_ENTITY, self.movedir_z);
-
-	WriteAngle(MSG_ENTITY, self.angles_x);
-	WriteAngle(MSG_ENTITY, self.angles_y);
-	WriteAngle(MSG_ENTITY, self.angles_z);
+	trigger_common_write(false);
 
 	return true;
 }
@@ -155,32 +137,11 @@ void spawnfunc_trigger_swamp(void)
 
 void ent_swamp()
 {
-	self.warpzone_isboxy = ReadByte();
-	self.scale = ReadByte();
 	self.dmg = ReadByte();
 	self.swamp_slowdown = ReadByte();
 	self.swamp_interval = ReadByte();
 
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	setorigin(self, self.origin);
-
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	setsize(self, self.mins, self.maxs);
-
-	self.movedir_x = ReadCoord();
-	self.movedir_y = ReadCoord();
-	self.movedir_z = ReadCoord();
-
-	self.angles_x = ReadAngle();
-	self.angles_y = ReadAngle();
-	self.angles_z = ReadAngle();
+	trigger_common_read(false);
 
 	self.classname = "trigger_swamp";
 	self.solid = SOLID_TRIGGER;
@@ -188,5 +149,6 @@ void ent_swamp()
 	self.trigger_touch = swamp_touch;
 	self.drawmask = MASK_NORMAL;
 	self.move_time = time;
+	self.entremove = trigger_remove_generic;
 }
 #endif

@@ -1,7 +1,7 @@
 #ifdef SVQC
 void plat_delayedinit()
 {
-	plat_spawn_inside_trigger ();	// the "start moving" trigger
+	plat_spawn_inside_trigger(); // the "start moving" trigger
 }
 
 float plat_send(entity to, float sf)
@@ -12,28 +12,14 @@ float plat_send(entity to, float sf)
 	if(sf & SF_TRIGGER_INIT)
 	{
 		WriteShort(MSG_ENTITY, num_for_edict(self));
-		WriteString(MSG_ENTITY, self.target);
-		WriteString(MSG_ENTITY, self.target2);
-		WriteString(MSG_ENTITY, self.target3);
-		WriteString(MSG_ENTITY, self.target4);
-		WriteString(MSG_ENTITY, self.targetname);
 
 		WriteByte(MSG_ENTITY, self.platmovetype_start);
 		WriteByte(MSG_ENTITY, self.platmovetype_turn);
 		WriteByte(MSG_ENTITY, self.platmovetype_end);
 
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
-
 		WriteString(MSG_ENTITY, self.model);
 
-		WriteCoord(MSG_ENTITY, self.mins_x);
-		WriteCoord(MSG_ENTITY, self.mins_y);
-		WriteCoord(MSG_ENTITY, self.mins_z);
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-		WriteCoord(MSG_ENTITY, self.maxs_y);
-		WriteCoord(MSG_ENTITY, self.maxs_z);
+		trigger_common_write(true);
 
 		WriteCoord(MSG_ENTITY, self.pos1_x);
 		WriteCoord(MSG_ENTITY, self.pos1_y);
@@ -45,10 +31,6 @@ float plat_send(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.size_x);
 		WriteCoord(MSG_ENTITY, self.size_y);
 		WriteCoord(MSG_ENTITY, self.size_z);
-
-		WriteAngle(MSG_ENTITY, self.angles_x);
-		WriteAngle(MSG_ENTITY, self.angles_y);
-		WriteAngle(MSG_ENTITY, self.angles_z);
 
 		WriteAngle(MSG_ENTITY, self.mangle_x);
 		WriteAngle(MSG_ENTITY, self.mangle_y);
@@ -157,31 +139,15 @@ void ent_plat()
 	if(sf & SF_TRIGGER_INIT)
 	{
 		self.sv_entnum = ReadShort();
-		self.target = strzone(ReadString());
-		self.target2 = strzone(ReadString());
-		self.target3 = strzone(ReadString());
-		self.target4 = strzone(ReadString());
-		self.targetname = strzone(ReadString());
 
 		self.platmovetype_start = ReadByte();
 		self.platmovetype_turn = ReadByte();
 		self.platmovetype_end = ReadByte();
 
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
-
 		self.model = strzone(ReadString());
 		setmodel(self, self.model);
 
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
-		setsize(self, self.mins, self.maxs);
+		trigger_common_read(true);
 
 		self.pos1_x = ReadCoord();
 		self.pos1_y = ReadCoord();
@@ -193,10 +159,6 @@ void ent_plat()
 		self.size_x = ReadCoord();
 		self.size_y = ReadCoord();
 		self.size_z = ReadCoord();
-
-		self.angles_x = ReadAngle();
-		self.angles_y = ReadAngle();
-		self.angles_z = ReadAngle();
 
 		self.mangle_x = ReadAngle();
 		self.mangle_y = ReadAngle();
@@ -214,13 +176,22 @@ void ent_plat()
 		self.drawmask = MASK_NORMAL;
 		self.draw = plat_draw;
 		self.use = plat_use;
+		self.entremove = trigger_remove_generic;
 
 		plat_reset(); // also called here
+
+		self.move_origin = self.origin;
+		self.move_angles = self.angles;
+		self.move_time = time;
 	}
 
 	if(sf & SF_TRIGGER_RESET)
 	{
 		plat_reset();
+
+		self.move_origin = self.origin;
+		self.move_angles = self.angles;
+		self.move_time = time;
 	}
 }
 #endif

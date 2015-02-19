@@ -1,6 +1,8 @@
 #ifndef T_TELEPORTERS_H
 #define T_TELEPORTERS_H
 
+#ifdef SVQC
+
 void trigger_teleport_use();
 
 #define TDEATHLOOP(o) \
@@ -53,19 +55,14 @@ entity Simple_TeleportPlayer(entity teleporter, entity player);
 
 void Teleport_Touch (void);
 
-void spawnfunc_info_teleport_destination (void);
-
-void spawnfunc_misc_teleporter_dest (void);
-
-void spawnfunc_target_teleporter (void);
-
 void teleport_findtarget (void);
 
 entity Teleport_Find(vector mi, vector ma);
 
 entity teleport_first;
 .entity teleport_next;
-void spawnfunc_trigger_teleport (void);
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl);
+#endif
+
 #endif

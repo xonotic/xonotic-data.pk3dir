@@ -4,6 +4,7 @@
 #include "subs.qc"
 #include "triggers.qc"
 #include "platforms.qc"
+#include "teleporters.qc"
 
 // func
 #include "func/include.qc"

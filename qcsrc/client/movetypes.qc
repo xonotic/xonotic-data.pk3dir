@@ -287,7 +287,7 @@ float _Movetype_PushEntity(vector push, float failonstartsolid) // SV_PushEntity
 
 .float ltime;
 .void() blocked;
-void _Movetype_VectorAngles_FLU(vector myangles)
+void _Movetype_AngleVectorsFLU(vector myangles) // AngleVectorsFLU
 {
 	float angle, sr, sp, sy, cr, cp, cy;
 
@@ -401,7 +401,7 @@ void _Movetype_PushMove(float dt) // SV_PushMove
 	a = -moveangle;
 
 	// sets v_forward, v_right and v_up
-	_Movetype_VectorAngles_FLU(a);
+	_Movetype_AngleVectorsFLU(a);
 
 	pushorig = self.move_origin;
 	pushang = self.move_angles;

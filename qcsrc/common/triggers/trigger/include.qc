@@ -21,3 +21,4 @@
 #include "relay_teamcheck.qc"
 #include "secret.qc"
 #include "swamp.qc"
+#include "teleport.qc"

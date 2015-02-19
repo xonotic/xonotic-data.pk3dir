@@ -27,6 +27,8 @@ void trigger_setnextthink(entity e, float dtime);
 
 // used elsewhere (will fix)
 #ifdef SVQC
+void trigger_common_write(bool withtarget);
+
 void spawnfunc_trigger_once();
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
 
@@ -39,6 +41,9 @@ void target_voicescript_clear(entity pl);
 .vector dest;
 
 #ifdef CSQC
+void trigger_common_read(bool withtarget);
+void trigger_remove_generic();
+
 float WarpZoneLib_ExactTrigger_Touch();
 #define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
 

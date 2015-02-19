@@ -320,27 +320,12 @@ float trigger_push_send(entity to, float sf)
 
 	if(sf & 1)
 	{
-		WriteString(MSG_ENTITY, self.target);
 		WriteByte(MSG_ENTITY, self.team);
 		WriteInt24_t(MSG_ENTITY, self.spawnflags);
 		WriteByte(MSG_ENTITY, self.active);
-		WriteByte(MSG_ENTITY, self.warpzone_isboxy);
 		WriteByte(MSG_ENTITY, self.height);
-		WriteByte(MSG_ENTITY, self.scale);
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
 
-		WriteCoord(MSG_ENTITY, self.mins_x);
-		WriteCoord(MSG_ENTITY, self.mins_y);
-		WriteCoord(MSG_ENTITY, self.mins_z);
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-		WriteCoord(MSG_ENTITY, self.maxs_y);
-		WriteCoord(MSG_ENTITY, self.maxs_z);
-
-		WriteCoord(MSG_ENTITY, self.movedir_x);
-		WriteCoord(MSG_ENTITY, self.movedir_y);
-		WriteCoord(MSG_ENTITY, self.movedir_z);
+		trigger_common_write(true);
 	}
 
 	if(sf & 2)
@@ -425,12 +410,7 @@ void spawnfunc_target_position() { target_push_link(); }
 #endif
 
 #ifdef CSQC
-void trigger_push_remove()
-{
-	if(self.target)
-		strunzone(self.target);
-	self.target = string_null;
-}
+
 void ent_trigger_push()
 {
 	float sf = ReadByte();
@@ -438,32 +418,14 @@ void ent_trigger_push()
 	if(sf & 1)
 	{
 		self.classname = "jumppad";
-		self.target = strzone(ReadString());
 		int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
 		self.spawnflags = ReadInt24_t();
 		self.active = ReadByte();
-		self.warpzone_isboxy = ReadByte();
 		self.height = ReadByte();
-		self.scale = ReadByte();
 
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		trigger_common_read(true);
 
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
-		setsize(self, self.mins, self.maxs);
-
-		self.movedir_x = ReadCoord();
-		self.movedir_y = ReadCoord();
-		self.movedir_z = ReadCoord();
-
-		self.entremove = trigger_push_remove;
+		self.entremove = trigger_remove_generic;
 		self.solid = SOLID_TRIGGER;
 		self.draw = trigger_draw_generic;
 		self.trigger_touch = trigger_push_touch;
