@@ -20,15 +20,6 @@ void FixSize(entity e)
 	e.maxs_z = rint(e.maxs_z);
 }
 
-void trigger_setnextthink(entity e, float dtime)
-{
-#ifdef CSQC
-	e.nextthink = time + dtime;
-#else
-	e.nextthink = dtime;
-#endif
-}
-
 #ifdef SVQC
 void trigger_common_write(bool withtarget)
 {
@@ -275,8 +266,6 @@ void trigger_draw_generic()
 	float dt = time - self.move_time;
 	self.move_time = time;
 	if(dt <= 0) { return; }
-
-	setorigin(self, self.origin + self.velocity * frametime);
 
 	if(self.trigger_touch) { trigger_touch_generic(self.trigger_touch); }
 }

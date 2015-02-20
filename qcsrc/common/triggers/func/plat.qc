@@ -1,6 +1,9 @@
 #ifdef SVQC
+void plat_link();
+
 void plat_delayedinit()
 {
+	plat_link();
 	plat_spawn_inside_trigger(); // the "start moving" trigger
 }
 
@@ -11,11 +14,10 @@ float plat_send(entity to, float sf)
 
 	if(sf & SF_TRIGGER_INIT)
 	{
-		WriteShort(MSG_ENTITY, num_for_edict(self));
-
 		WriteByte(MSG_ENTITY, self.platmovetype_start);
 		WriteByte(MSG_ENTITY, self.platmovetype_turn);
 		WriteByte(MSG_ENTITY, self.platmovetype_end);
+		WriteByte(MSG_ENTITY, self.spawnflags);
 
 		WriteString(MSG_ENTITY, self.model);
 
@@ -122,14 +124,13 @@ void spawnfunc_func_plat()
 	self.reset = plat_reset;
 	plat_reset();
 
-	plat_link();
-
 	InitializeEntity(self, plat_delayedinit, INITPRIO_FINDTARGET);
 }
 #elif defined(CSQC)
 void plat_draw()
 {
 	Movetype_Physics_NoMatchServer();
+	//Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 
 void ent_plat()
@@ -138,11 +139,10 @@ void ent_plat()
 
 	if(sf & SF_TRIGGER_INIT)
 	{
-		self.sv_entnum = ReadShort();
-
 		self.platmovetype_start = ReadByte();
 		self.platmovetype_turn = ReadByte();
 		self.platmovetype_end = ReadByte();
+		self.spawnflags = ReadByte();
 
 		self.model = strzone(ReadString());
 		setmodel(self, self.model);
@@ -171,6 +171,7 @@ void ent_plat()
 
 		self.dmg = ReadShort();
 
+		self.classname = "plat";
 		self.solid = SOLID_BSP;
 		self.movetype = MOVETYPE_PUSH;
 		self.drawmask = MASK_NORMAL;
@@ -180,9 +181,12 @@ void ent_plat()
 
 		plat_reset(); // also called here
 
+		self.move_movetype = MOVETYPE_PUSH;
 		self.move_origin = self.origin;
 		self.move_angles = self.angles;
 		self.move_time = time;
+
+		plat_spawn_inside_trigger();
 	}
 
 	if(sf & SF_TRIGGER_RESET)

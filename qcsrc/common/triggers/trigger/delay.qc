@@ -2,7 +2,7 @@
 void delay_use()
 {
     self.think = SUB_UseTargets;
-   trigger_setnextthink(self, self.wait);
+   self.nextthink = self.wait;
 }
 
 void delay_reset()

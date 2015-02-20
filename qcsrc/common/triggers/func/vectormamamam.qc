@@ -146,8 +146,8 @@ void spawnfunc_func_vectormamamam()
 		return;
 
 	// wait for targets to spawn
-	trigger_setnextthink(self, self.ltime + 999999999);
-	self.think = SUB_NullThink; // for PushMove
+	self.SUB_NEXTTHINK = self.SUB_LTIME + 999999999;
+	self.SUB_THINK = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;

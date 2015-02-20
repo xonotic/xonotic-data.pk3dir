@@ -1,4 +1,3 @@
-#ifdef SVQC
 .float train_wait_turning;
 void() train_next;
 void train_wait()
@@ -29,15 +28,17 @@ void train_wait()
 		ang_x = -ang_x; // flip up / down orientation
 
 		if(self.wait > 0) // slow turning
-			SUB_CalcAngleMove(ang, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
+			SUB_CalcAngleMove(ang, TSPEED_TIME, self.SUB_LTIME - time + self.wait, train_wait);
 		else // instant turning
 			SUB_CalcAngleMove(ang, TSPEED_TIME, 0.0000001, train_wait);
 		self.train_wait_turning = true;
 		return;
 	}
 
+#ifdef SVQC
 	if(self.noise != "")
 		stopsoundto(MSG_BROADCAST, self, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
+#endif
 
 	if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
 	{
@@ -46,8 +47,8 @@ void train_wait()
 	}
 	else
 	{
-		self.think = train_next;
-		trigger_setnextthink(self, self.ltime + self.wait);
+		self.SUB_THINK = train_next;
+		self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 	}
 }
 
@@ -104,6 +105,66 @@ void train_next()
 		sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 }
 
+#ifdef SVQC
+float train_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_TRAIN);
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & SF_TRIGGER_INIT)
+	{
+		WriteString(MSG_ENTITY, self.platmovetype);
+		WriteByte(MSG_ENTITY, self.platmovetype_turn);
+		WriteByte(MSG_ENTITY, self.spawnflags);
+
+		WriteString(MSG_ENTITY, self.model);
+
+		trigger_common_write(true);
+
+		WriteString(MSG_ENTITY, self.curvetarget);
+
+		WriteCoord(MSG_ENTITY, self.pos1_x);
+		WriteCoord(MSG_ENTITY, self.pos1_y);
+		WriteCoord(MSG_ENTITY, self.pos1_z);
+		WriteCoord(MSG_ENTITY, self.pos2_x);
+		WriteCoord(MSG_ENTITY, self.pos2_y);
+		WriteCoord(MSG_ENTITY, self.pos2_z);
+
+		WriteCoord(MSG_ENTITY, self.size_x);
+		WriteCoord(MSG_ENTITY, self.size_y);
+		WriteCoord(MSG_ENTITY, self.size_z);
+
+		WriteCoord(MSG_ENTITY, self.view_ofs_x);
+		WriteCoord(MSG_ENTITY, self.view_ofs_y);
+		WriteCoord(MSG_ENTITY, self.view_ofs_z);
+
+		WriteAngle(MSG_ENTITY, self.mangle_x);
+		WriteAngle(MSG_ENTITY, self.mangle_y);
+		WriteAngle(MSG_ENTITY, self.mangle_z);
+
+		WriteShort(MSG_ENTITY, self.speed);
+		WriteShort(MSG_ENTITY, self.height);
+		WriteByte(MSG_ENTITY, self.lip);
+		WriteByte(MSG_ENTITY, self.state);
+		WriteByte(MSG_ENTITY, self.wait);
+
+		WriteShort(MSG_ENTITY, self.dmg);
+		WriteByte(MSG_ENTITY, self.dmgtime);
+	}
+
+	if(sf & SF_TRIGGER_RESET)
+	{
+		// used on client
+	}
+
+	return true;
+}
+
+void train_link()
+{
+	Net_LinkEntity(self, 0, false, train_send);
+}
+
 void func_train_find()
 {
 	entity targ;
@@ -111,16 +172,21 @@ void func_train_find()
 	self.target = targ.target;
 	if (self.target == "")
 		objerror("func_train_find: no next target");
-	setorigin(self, targ.origin - self.view_ofs);
-	trigger_setnextthink(self, self.ltime + 1);
-	self.think = train_next;
+	SUB_SETORIGIN(self, targ.origin - self.view_ofs);
+	self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
+	self.SUB_THINK = train_next;
+
+	train_link();
 }
+
+#endif
 
 /*QUAKED spawnfunc_func_train (0 .5 .8) ?
 Ridable platform, targets spawnfunc_path_corner path to follow.
 speed : speed the train moves (can be overridden by each spawnfunc_path_corner)
 target : targetname of first spawnfunc_path_corner (starts here)
 */
+#ifdef SVQC
 void spawnfunc_func_train()
 {
 	if (self.noise != "")
@@ -162,4 +228,88 @@ void spawnfunc_func_train()
 
 	// TODO make a reset function for this one
 }
+#elif defined(CSQC)
+void train_draw()
+{
+	//Movetype_Physics_NoMatchServer();
+	Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+}
+
+void ent_train()
+{
+	float sf = ReadByte();
+
+	if(sf & SF_TRIGGER_INIT)
+	{
+		self.platmovetype = strzone(ReadString());
+		self.platmovetype_turn = ReadByte();
+		self.spawnflags = ReadByte();
+
+		self.model = strzone(ReadString());
+		setmodel(self, self.model);
+
+		trigger_common_read(true);
+
+		self.curvetarget = strzone(ReadString());
+
+		self.pos1_x = ReadCoord();
+		self.pos1_y = ReadCoord();
+		self.pos1_z = ReadCoord();
+		self.pos2_x = ReadCoord();
+		self.pos2_y = ReadCoord();
+		self.pos2_z = ReadCoord();
+
+		self.size_x = ReadCoord();
+		self.size_y = ReadCoord();
+		self.size_z = ReadCoord();
+
+		self.view_ofs_x = ReadCoord();
+		self.view_ofs_y = ReadCoord();
+		self.view_ofs_z = ReadCoord();
+
+		self.mangle_x = ReadAngle();
+		self.mangle_y = ReadAngle();
+		self.mangle_z = ReadAngle();
+
+		self.speed = ReadShort();
+		self.height = ReadShort();
+		self.lip = ReadByte();
+		self.state = ReadByte();
+		self.wait = ReadByte();
+
+		self.dmg = ReadShort();
+		self.dmgtime = ReadByte();
+
+		self.classname = "func_train";
+		self.solid = SOLID_BSP;
+		self.movetype = MOVETYPE_PUSH;
+		self.drawmask = MASK_NORMAL;
+		self.draw = train_draw;
+		self.entremove = trigger_remove_generic;
+
+		if(set_platmovetype(self, self.platmovetype))
+		{
+			self.platmovetype_start_default = self.platmovetype_start;
+			self.platmovetype_end_default = self.platmovetype_end;
+		}
+
+		// everything is set up by the time the train is linked, we shouldn't need this
+		//func_train_find();
+
+		// but we will need these
+		self.move_nextthink = self.move_ltime + 0.1;
+		self.move_think = train_next;
+
+		self.move_movetype = MOVETYPE_PUSH;
+		self.move_origin = self.origin;
+		self.move_angles = self.angles;
+		self.move_time = time;
+	}
+
+	if(sf & SF_TRIGGER_RESET)
+	{
+		// TODO: make a reset function for trains
+	}
+}
+
 #endif

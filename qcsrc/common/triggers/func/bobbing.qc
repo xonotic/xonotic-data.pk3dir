@@ -16,7 +16,7 @@ void func_bobbing_controller_think()
 	v = self.owner.destvec + self.owner.movedir * v_forward_y;
 	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.velocity = (v - self.owner.origin) * 10;
+		self.owner.velocity = (v - self.owner.SUB_ORIGIN) * 10;
 }
 
 /*QUAKED spawnfunc_func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
@@ -74,8 +74,8 @@ void spawnfunc_func_bobbing()
 	controller.owner = self;
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;
-	trigger_setnextthink(self, self.ltime + 999999999);
-	self.think = SUB_NullThink; // for PushMove
+	self.SUB_NEXTTHINK = self.SUB_LTIME + 999999999;
+	self.SUB_THINK = SUB_NullThink;
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;

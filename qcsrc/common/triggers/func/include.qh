@@ -7,5 +7,6 @@
 #include "plat.qh"
 #include "rainsnow.qh"
 #include "pointparticles.qh"
+#include "train.qh"
 
 #endif

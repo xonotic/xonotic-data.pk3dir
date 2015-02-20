@@ -108,9 +108,9 @@ const int ENT_CLIENT_TRIGGER_PUSH = 62;
 const int ENT_CLIENT_TARGET_PUSH = 63;
 const int ENT_CLIENT_CONVEYOR = 64;
 const int ENT_CLIENT_DOOR = 65;
-// 66
+const int ENT_CLIENT_TRAIN = 66;
 const int ENT_CLIENT_PLAT = 67;
-const int ENT_CLIENT_PLAT_TRIGGER = 68;
+// 68
 const int ENT_CLIENT_SWAMP = 69;
 const int ENT_CLIENT_CORNER = 70;
 const int ENT_CLIENT_KEYLOCK = 71;

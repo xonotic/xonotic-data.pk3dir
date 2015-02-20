@@ -14,6 +14,9 @@ bool corner_send(entity to, int sf)
 	WriteString(MSG_ENTITY, self.target3);
 	WriteString(MSG_ENTITY, self.target4);
 	WriteString(MSG_ENTITY, self.targetname);
+	WriteByte(MSG_ENTITY, self.target_random);
+
+	WriteByte(MSG_ENTITY, self.wait);
 
 	return true;
 }
@@ -25,11 +28,11 @@ void corner_link()
 
 void spawnfunc_path_corner()
 {
-	corner_link();
-
 	// setup values for overriding train movement
 	// if a second value does not exist, both start and end speeds are the single value specified
 	set_platmovetype(self, self.platmovetype);
+
+	corner_link();
 }
 #elif defined(CSQC)
 
@@ -51,7 +54,7 @@ void corner_remove()
 	self.targetname = string_null;
 
 	if(self.platmovetype) { strunzone(self.platmovetype); }
-	self.targetname = string_null;
+	self.platmovetype = string_null;
 }
 
 void ent_corner()
@@ -61,12 +64,16 @@ void ent_corner()
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();
 	self.origin_z = ReadCoord();
+	setorigin(self, self.origin);
 
 	self.target = strzone(ReadString());
 	self.target2 = strzone(ReadString());
 	self.target3 = strzone(ReadString());
 	self.target4 = strzone(ReadString());
 	self.targetname = strzone(ReadString());
+	self.target_random = ReadByte();
+
+	self.wait = ReadByte();
 
 	self.classname = "path_corner";
 	self.drawmask = MASK_NORMAL;

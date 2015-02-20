@@ -93,12 +93,12 @@ void door_hit_top()
 		return;		// don't come down automatically
 	if (self.classname == "door")
 	{
-		self.think = door_go_down;
+		self.SUB_THINK = door_go_down;
 	} else
 	{
-		self.think = door_rotating_go_down;
+		self.SUB_THINK = door_rotating_go_down;
 	}
-	trigger_setnextthink(self, self.ltime + self.wait);
+	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 }
 
 void door_hit_bottom()
@@ -129,7 +129,7 @@ void door_go_up()
 
 	if (self.state == STATE_TOP)
 	{	// reset top wait time
-		trigger_setnextthink(self, self.ltime + self.wait);
+		self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 		return;
 	}
 
@@ -383,8 +383,8 @@ void door_rotating_hit_top()
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
-	self.think = door_rotating_go_down;
-	self.nextthink = self.ltime + self.wait;
+	self.SUB_THINK = door_rotating_go_down;
+	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 }
 
 void door_rotating_hit_bottom()
@@ -420,7 +420,7 @@ void door_rotating_go_up()
 
 	if (self.state == STATE_TOP)
 	{	// reset top wait time
-		trigger_setnextthink(self, self.ltime + self.wait);
+		self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 		return;
 	}
 	if (self.noise2 != "")
@@ -656,28 +656,9 @@ float door_send(entity to, float sf)
 		WriteString(MSG_ENTITY, self.classname);
 		WriteByte(MSG_ENTITY, self.spawnflags);
 
-		WriteByte(MSG_ENTITY, self.scale);
-
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
-
 		WriteString(MSG_ENTITY, self.model);
 
-		WriteCoord(MSG_ENTITY, self.mins_x);
-		WriteCoord(MSG_ENTITY, self.mins_y);
-		WriteCoord(MSG_ENTITY, self.mins_z);
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-		WriteCoord(MSG_ENTITY, self.maxs_y);
-		WriteCoord(MSG_ENTITY, self.maxs_z);
-
-		WriteCoord(MSG_ENTITY, self.movedir_x);
-		WriteCoord(MSG_ENTITY, self.movedir_y);
-		WriteCoord(MSG_ENTITY, self.movedir_z);
-
-		WriteAngle(MSG_ENTITY, self.angles_x);
-		WriteAngle(MSG_ENTITY, self.angles_y);
-		WriteAngle(MSG_ENTITY, self.angles_z);
+		trigger_common_write(true);
 
 		WriteCoord(MSG_ENTITY, self.pos1_x);
 		WriteCoord(MSG_ENTITY, self.pos1_y);
@@ -694,7 +675,7 @@ float door_send(entity to, float sf)
 		WriteShort(MSG_ENTITY, self.speed);
 		WriteByte(MSG_ENTITY, self.lip);
 		WriteByte(MSG_ENTITY, self.state);
-		WriteCoord(MSG_ENTITY, self.ltime);
+		WriteCoord(MSG_ENTITY, self.SUB_LTIME);
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -729,7 +710,7 @@ void door_link()
 
 void door_init_startopen()
 {
-	setorigin (self, self.pos2);
+	SUB_SETORIGIN(self, self.pos2);
 	self.pos2 = self.pos1;
 	self.pos1 = self.origin;
 
@@ -740,11 +721,11 @@ void door_init_startopen()
 
 void door_reset()
 {
-	setorigin(self, self.pos1);
-	self.velocity = '0 0 0';
+	SUB_SETORIGIN(self, self.pos1);
+	self.SUB_VELOCITY = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = func_null;
-	self.nextthink = 0;
+	self.SUB_THINK = func_null;
+	self.SUB_NEXTTHINK = 0;
 
 #ifdef SVQC
 	self.SendFlags |= SF_TRIGGER_RESET;
@@ -793,7 +774,7 @@ void spawnfunc_func_door()
 	if (!self.lip)
 		self.lip = 8;
 
-	self.pos1 = self.origin;
+	self.pos1 = self.SUB_ORIGIN;
 	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
 
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
@@ -823,6 +804,13 @@ void spawnfunc_func_door()
 
 #elif defined(CSQC)
 
+void door_draw()
+{
+	Movetype_Physics_NoMatchServer();
+
+	trigger_draw_generic();
+}
+
 void ent_door()
 {
 	float sf = ReadByte();
@@ -832,31 +820,10 @@ void ent_door()
 		self.classname = strzone(ReadString());
 		self.spawnflags = ReadByte();
 
-		self.scale = ReadByte();
-
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
-
 		self.mdl = strzone(ReadString());
 		setmodel(self, self.mdl);
 
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
-		setsize(self, self.mins, self.maxs);
-
-		self.movedir_x = ReadCoord();
-		self.movedir_y = ReadCoord();
-		self.movedir_z = ReadCoord();
-
-		self.angles_x = ReadAngle();
-		self.angles_y = ReadAngle();
-		self.angles_z = ReadAngle();
+		trigger_common_read(true);
 
 		self.pos1_x = ReadCoord();
 		self.pos1_y = ReadCoord();
@@ -873,21 +840,25 @@ void ent_door()
 		self.speed = ReadShort();
 		self.lip = ReadByte();
 		self.state = ReadByte();
-		self.ltime = ReadCoord();
+		self.SUB_LTIME = ReadCoord();
 
-		self.movetype = MOVETYPE_PUSH;
 		self.solid = SOLID_BSP;
+		self.movetype = MOVETYPE_PUSH;
 		self.trigger_touch = door_touch;
-		self.draw = trigger_draw_generic;
+		self.draw = door_draw;
 		self.drawmask = MASK_NORMAL;
-		self.move_time = time;
 		self.use = door_use;
-		self.blocked = door_blocked;
 
 		LinkDoors();
 
 		if(self.spawnflags & DOOR_START_OPEN)
 			door_init_startopen();
+
+		self.move_time = time;
+		self.move_origin = self.origin;
+		self.move_movetype = MOVETYPE_PUSH;
+		self.move_angles = self.angles;
+		self.move_blocked = door_blocked;
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -901,6 +872,7 @@ void ent_door()
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
 		setorigin(self, self.origin);
+		self.move_origin = self.origin;
 
 		self.pos1_x = ReadCoord();
 		self.pos1_y = ReadCoord();

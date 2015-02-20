@@ -16,25 +16,6 @@ void generic_plat_blocked()
 #endif
 }
 
-#ifdef SVQC
-float plat_trigger_send(entity to, float sf)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PLAT_TRIGGER);
-	WriteShort(MSG_ENTITY, num_for_edict(self.enemy));
-
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
-
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
-	return true;
-}
-
 void plat_spawn_inside_trigger()
 {
 	entity trigger;
@@ -45,6 +26,12 @@ void plat_spawn_inside_trigger()
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
 	trigger.enemy = self;
+
+#ifdef CSQC
+	trigger.drawmask = MASK_NORMAL;
+	trigger.trigger_touch = plat_center_touch;
+	trigger.draw = trigger_draw_generic;
+#endif
 
 	tmin = self.absmin + '25 25 0';
 	tmax = self.absmax - '25 25 -8';
@@ -68,7 +55,6 @@ void plat_spawn_inside_trigger()
 			if(tmin_z < tmax_z)
 			{
 				setsize (trigger, tmin, tmax);
-				Net_LinkEntity(trigger, false, 0, plat_trigger_send);
 				return;
 			}
 
@@ -76,38 +62,14 @@ void plat_spawn_inside_trigger()
 	remove(trigger);
 	objerror("plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
 }
-#elif defined(CSQC)
-void ent_plat_trigger()
-{
-	float myenemy = ReadShort();
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	setorigin(self, self.origin);
-
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	setsize(self, self.mins, self.maxs);
-
-	self.enemy = findfloat(world, sv_entnum, myenemy);
-	if(!self.enemy) { print("^1BAD BAD BAD!!!\n"); }
-	self.drawmask = MASK_NORMAL;
-	self.draw = trigger_draw_generic;
-	self.trigger_touch = plat_center_touch;
-	self.solid = SOLID_TRIGGER;
-}
-#endif
 
 void plat_hit_top()
 {
 	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 1;
-	self.think = plat_go_down;
-	trigger_setnextthink(self, self.ltime + 3);
+
+	self.SUB_THINK = plat_go_down;
+	self.SUB_NEXTTHINK = self.SUB_LTIME + 3;
 }
 
 void plat_hit_bottom()
@@ -141,13 +103,15 @@ void plat_center_touch()
 #elif defined(CSQC)
 	if (!IS_PLAYER(other))
 		return;
+	if(PHYS_DEAD(other))
+		return;
 #endif
 
 	self = self.enemy;
 	if (self.state == 2)
 		plat_go_up ();
 	else if (self.state == 1)
-		trigger_setnextthink(self, self.ltime + 1);
+		self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
 }
 
 void plat_outside_touch()
@@ -170,8 +134,13 @@ void plat_outside_touch()
 
 void plat_trigger_use()
 {
+#ifdef SVQC
 	if (self.think)
 		return;		// already activated
+#elif defined(CSQC)
+	if(self.move_think)
+		return;
+#endif
 	plat_go_down();
 }
 

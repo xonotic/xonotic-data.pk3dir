@@ -1,6 +1,11 @@
 #ifndef MOVETYPES_H
 #define MOVETYPES_H
 
+.float move_ltime;
+.void(void) move_think;
+.float move_nextthink;
+.void(void) move_blocked;
+
 .float move_movetype;
 .float move_time;
 .vector move_origin;

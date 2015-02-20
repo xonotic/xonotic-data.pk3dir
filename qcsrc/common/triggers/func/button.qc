@@ -7,8 +7,8 @@ void() button_return;
 void button_wait()
 {
 	self.state = STATE_TOP;
-	trigger_setnextthink(self, self.ltime + self.wait);
-	self.think = button_return;
+	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
+	self.SUB_THINK = button_return;
 	activator = self.enemy;
 	SUB_UseTargets();
 	self.frame = 1;			// use alternate textures
