@@ -352,29 +352,6 @@ void trigger_push_link()
 {
 	Net_LinkEntity(self, false, 0, trigger_push_send);
 }
-
-void trigger_push_think()
-{
-	self.nextthink = time;
-
-	entity e;
-	if(self.trigger_touch)
-	for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
-	{
-		vector emin = e.absmin, emax = e.absmax;
-		if(self.solid == SOLID_BSP)
-		{
-			emin -= '1 1 1';
-			emax += '1 1 1';
-		}
-		if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-		if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
-		{
-			other = e;
-			self.trigger_touch();
-		}
-	}
-}
 #endif
 #ifdef SVQC
 /*
@@ -398,7 +375,7 @@ void spawnfunc_trigger_push()
 	self.active = ACTIVE_ACTIVE;
 	self.use = trigger_push_use;
 	self.trigger_touch = trigger_push_touch;
-	self.think = trigger_push_think;
+	self.think = trigger_think_generic;
 	self.nextthink = time;
 
 	// normal push setup

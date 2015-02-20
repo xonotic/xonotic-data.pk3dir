@@ -61,7 +61,9 @@ void spawnfunc_trigger_hurt()
 {
 	EXACTTRIGGER_INIT;
 	self.active = ACTIVE_ACTIVE;
-	self.move_touch = self.touch = trigger_hurt_touch;
+	self.trigger_touch = trigger_hurt_touch;
+	self.think = trigger_think_generic;
+	self.nextthink = time;
 	self.use = trigger_hurt_use;
 	self.enemy = world; // I hate you all
 	if (!self.dmg)
