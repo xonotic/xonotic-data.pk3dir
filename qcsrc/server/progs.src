@@ -74,6 +74,8 @@ weapons/tracing.qc
 weapons/weaponstats.qc
 weapons/weaponsystem.qc
 
+../client/movetypes.qc
+
 ../common/animdecide.qc
 ../common/buffs.qc
 ../common/campaign_file.qc

@@ -1,3 +1,5 @@
+#include "../common/physics.qh"
+
 #if defined(CSQC)
 	#include "../dpdefs/csprogsdefs.qh"
 	#include "defs.qh"
@@ -8,10 +10,19 @@
 	#include "../server/t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
+	#include "../server/autocvars.qh"
 #endif
 
 
+#ifdef SVQC
+#define GRAVITY_UNAFFECTED_BY_TICRATE autocvar_sv_gameplayfix_gravityunaffectedbyticrate
+
+#define TICRATE sys_frametime
+#elif defined(CSQC)
 #define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
+
+#define TICRATE ticrate
+#endif
 
 .entity move_groundentity; // FIXME add move_groundnetworkentity?
 .float move_suspendedinair;
@@ -542,16 +553,16 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		if(GRAVITY_UNAFFECTED_BY_TICRATE)
 		{
 			if(self.gravity)
-				self.move_velocity_z -= 0.5 * dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				self.move_velocity_z -= 0.5 * dt * self.gravity * PHYS_GRAVITY;
 			else
-				self.move_velocity_z -= 0.5 * dt * getstatf(STAT_MOVEVARS_GRAVITY);
+				self.move_velocity_z -= 0.5 * dt * PHYS_GRAVITY;
 		}
 		else
 		{
 			if(self.gravity)
-				self.move_velocity_z -= dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				self.move_velocity_z -= dt * self.gravity * PHYS_GRAVITY;
 			else
-				self.move_velocity_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+				self.move_velocity_z -= dt * PHYS_GRAVITY;
 		}
 	}
 
@@ -592,9 +603,9 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 			bouncefac = self.move_bounce_factor;     if(!bouncefac)  bouncefac = 0.5;
 			bouncestop = self.move_bounce_stopspeed; if(!bouncestop) bouncestop = 60 / 800;
 			if(self.gravity)
-				bouncestop *= self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+				bouncestop *= self.gravity * PHYS_GRAVITY;
 			else
-				bouncestop *= getstatf(STAT_MOVEVARS_GRAVITY);
+				bouncestop *= PHYS_GRAVITY;
 
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
 
@@ -639,9 +650,9 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 	if(!(self.move_flags & FL_ONGROUND))
 	{
 		if(self.gravity)
-			self.move_velocity_z -= 0.5 * dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+			self.move_velocity_z -= 0.5 * dt * self.gravity * PHYS_GRAVITY;
 		else
-			self.move_velocity_z -= 0.5 * dt * getstatf(STAT_MOVEVARS_GRAVITY);
+			self.move_velocity_z -= 0.5 * dt * PHYS_GRAVITY;
 	}
 
 	_Movetype_CheckWaterTransition(self);
@@ -663,8 +674,8 @@ void _Movetype_Physics_Frame(float movedt)
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater(self);
-			self.move_origin = self.move_origin + ticrate * self.move_velocity;
-			self.move_angles = self.move_angles + ticrate * self.move_avelocity;
+			self.move_origin = self.move_origin + TICRATE * self.move_velocity;
+			self.move_angles = self.move_angles + TICRATE * self.move_avelocity;
 			_Movetype_LinkEdict(false);
 			break;
 		case MOVETYPE_STEP:
@@ -702,7 +713,7 @@ void Movetype_Physics_NoMatchServer() // optimized
 
 void Movetype_Physics_MatchServer(bool sloppy)
 {
-	Movetype_Physics_MatchTicrate(ticrate, sloppy);
+	Movetype_Physics_MatchTicrate(TICRATE, sloppy);
 }
 
 void Movetype_Physics_MatchTicrate(float tr, bool sloppy) // SV_Physics_Entity
@@ -744,16 +755,16 @@ void Movetype_Physics_MatchTicrate(float tr, bool sloppy) // SV_Physics_Entity
 			if(GRAVITY_UNAFFECTED_BY_TICRATE)
 			{
 				if(self.gravity)
-					self.velocity_z -= 0.5 * dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+					self.velocity_z -= 0.5 * dt * self.gravity * PHYS_GRAVITY;
 				else
-					self.velocity_z -= 0.5 * dt * getstatf(STAT_MOVEVARS_GRAVITY);
+					self.velocity_z -= 0.5 * dt * PHYS_GRAVITY;
 			}
 			else
 			{
 				if(self.gravity)
-					self.velocity_z -= dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+					self.velocity_z -= dt * self.gravity * PHYS_GRAVITY;
 				else
-					self.velocity_z -= dt * getstatf(STAT_MOVEVARS_GRAVITY);
+					self.velocity_z -= dt * PHYS_GRAVITY;
 			}
 		}
 
@@ -775,9 +786,9 @@ void Movetype_Physics_MatchTicrate(float tr, bool sloppy) // SV_Physics_Entity
 			if(GRAVITY_UNAFFECTED_BY_TICRATE)
 			{
 				if(self.gravity)
-					self.velocity_z -= 0.5 * dt * self.gravity * getstatf(STAT_MOVEVARS_GRAVITY);
+					self.velocity_z -= 0.5 * dt * self.gravity * PHYS_GRAVITY;
 				else
-					self.velocity_z -= 0.5 * dt * getstatf(STAT_MOVEVARS_GRAVITY);
+					self.velocity_z -= 0.5 * dt * PHYS_GRAVITY;
 			}
 		}
 	}

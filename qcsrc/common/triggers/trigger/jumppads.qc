@@ -1,6 +1,7 @@
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
 #include "jumppads.qh"
+#include "../../../client/movetypes.qh"
 
 void trigger_push_use()
 {
@@ -144,6 +145,7 @@ void trigger_push_touch()
 	if(self.enemy)
 	{
 		other.velocity = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+		other.move_velocity = other.velocity;
 	}
 	else if(self.target)
 	{
@@ -157,13 +159,17 @@ void trigger_push_touch()
 				RandomSelection_Add(e, 0, string_null, 1, 1);
 		}
 		other.velocity = trigger_push_calculatevelocity(other.origin, RandomSelection_chosen_ent, self.height);
+		other.move_velocity = other.velocity;
 	}
 	else
 	{
 		other.velocity = self.movedir;
+		other.move_velocity = other.velocity;
 	}
 
 	UNSET_ONGROUND(other);
+
+	other.move_flags &= ~FL_ONGROUND;
 
 #ifdef SVQC
 	if (IS_PLAYER(other))
@@ -346,6 +352,29 @@ void trigger_push_link()
 {
 	Net_LinkEntity(self, false, 0, trigger_push_send);
 }
+
+void trigger_push_think()
+{
+	self.nextthink = time;
+
+	entity e;
+	if(self.trigger_touch)
+	for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+	{
+		vector emin = e.absmin, emax = e.absmax;
+		if(self.solid == SOLID_BSP)
+		{
+			emin -= '1 1 1';
+			emax += '1 1 1';
+		}
+		if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
+		if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+		{
+			other = e;
+			self.trigger_touch();
+		}
+	}
+}
 #endif
 #ifdef SVQC
 /*
@@ -368,7 +397,9 @@ void spawnfunc_trigger_push()
 
 	self.active = ACTIVE_ACTIVE;
 	self.use = trigger_push_use;
-	self.touch = trigger_push_touch;
+	self.trigger_touch = trigger_push_touch;
+	self.think = trigger_push_think;
+	self.nextthink = time;
 
 	// normal push setup
 	if (!self.speed)

@@ -25,6 +25,7 @@
     #include "g_hook.qh"
     #include "scores.qh"
     #include "spawnpoints.qh"
+	#include "../client/movetypes.qh"
 #endif
 
 float Damage_DamageInfo_SendEntity(entity to, float sf)
@@ -917,8 +918,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			farcent.think = SUB_Remove;
 		}
 		else
+		{
 			self.velocity = self.velocity + farce;
+			self.move_velocity = self.velocity;
+		}
 		self.flags &= ~FL_ONGROUND;
+		self.move_flags &= ~FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}
 	// apply damage
