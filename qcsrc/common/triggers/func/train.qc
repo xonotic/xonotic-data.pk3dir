@@ -210,7 +210,7 @@ void spawnfunc_func_train()
 		self.view_ofs = self.mins;
 
 	// wait for targets to spawn
-	InitializeEntity(self, func_train_find, INITPRIO_SETLOCATION);
+	InitializeEntity(self, func_train_find, INITPRIO_FINDTARGET);
 
 	self.blocked = generic_plat_blocked;
 	if(self.dmg && (self.message == ""))
@@ -297,8 +297,9 @@ void ent_train()
 		//func_train_find();
 
 		// but we will need these
-		self.move_nextthink = self.move_ltime + 0.1;
-		self.move_think = train_next;
+		//self.move_nextthink = self.move_ltime + 0.1;
+		//self.move_think = train_next;
+		train_next();
 
 		self.move_movetype = MOVETYPE_PUSH;
 		self.move_origin = self.origin;
