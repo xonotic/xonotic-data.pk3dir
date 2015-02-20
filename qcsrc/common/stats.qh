@@ -225,7 +225,7 @@ const int STAT_REVIVE_PROGRESS        = 106;
 // 187 empty?
 // 188 empty?
 // 189 empty?
-// 190 empty?
+const int STAT_GAMEPLAYFIX_EASIERWATERJUMP			  = 190;
 const int STAT_MOVEVARS_FRICTION_SLICK                = 191;
 const int STAT_MOVEVARS_FRICTION_ONLAND               = 192;
 const int STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS  = 193;

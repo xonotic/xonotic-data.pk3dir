@@ -37,6 +37,7 @@ void Physics_AddStats()
 	// hacks
 	addstat(STAT_MOVEVARS_FRICTION_ONLAND, AS_FLOAT, stat_sv_friction_on_land);
 	addstat(STAT_MOVEVARS_FRICTION_SLICK, AS_FLOAT, stat_sv_friction_slick);
+	addstat(STAT_GAMEPLAYFIX_EASIERWATERJUMP, AS_INT, stat_gameplayfix_easierwaterjump);
 }
 
 void Physics_UpdateStats(float maxspd_mod)
@@ -65,6 +66,8 @@ void Physics_UpdateStats(float maxspd_mod)
 
 	self.stat_sv_friction_on_land = PHYS_FRICTION_ONLAND;
 	self.stat_sv_friction_slick = PHYS_FRICTION_SLICK;
+
+	self.stat_gameplayfix_easierwaterjump = GAMEPLAYFIX_EASIERWATERJUMP;
 }
 #endif
 
@@ -125,7 +128,7 @@ void PM_ClientMovement_Unstick()
 	}
 }
 
-void PM_ClientMovement_UpdateStatus()
+void PM_ClientMovement_UpdateStatus(bool ground)
 {
 	// make sure player is not stuck
 	PM_ClientMovement_Unstick();
@@ -153,18 +156,20 @@ void PM_ClientMovement_UpdateStatus()
 	vector origin1 = self.origin + '0 0 1';
 	vector origin2 = self.origin - '0 0 1';
 
-	tracebox(origin1, self.mins, self.maxs, origin2, MOVE_NORMAL, self);
-	if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
+	if(ground)
 	{
-		SET_ONGROUND(self);
+		tracebox(origin1, self.mins, self.maxs, origin2, MOVE_NORMAL, self);
+		if (trace_fraction < 1.0 && trace_plane_normal_z > 0.7)
+		{
+			SET_ONGROUND(self);
 
-		// this code actually "predicts" an impact; so let's clip velocity first
-		float f = self.velocity * trace_plane_normal;
-		if (f < 0) // only if moving downwards actually
+			// this code actually "predicts" an impact; so let's clip velocity first
+			float f = self.velocity * trace_plane_normal;
 			self.velocity -= f * trace_plane_normal;
+		}
+		else
+			UNSET_ONGROUND(self);
 	}
-	else
-		UNSET_ONGROUND(self);
 
 	// set watertype/waterlevel
 	origin1 = self.origin;
@@ -190,114 +195,14 @@ void PM_ClientMovement_UpdateStatus()
 		pmove_waterjumptime = 0;
 }
 
-#ifdef CSQC
-.float t_fraction;
-.vector t_plane_normal;
-.float t_startsolid;
-.vector t_endpos;
-entity t_tracebox(vector thevec1, vector tmin, vector tmax, vector thevec2, float type, entity forentity)
-{
-	entity e = spawn();
-	tracebox(thevec1, tmin, tmax, thevec2, type, forentity);
-	e.t_fraction = trace_fraction;
-	e.t_plane_normal = trace_plane_normal;
-	e.t_startsolid = trace_startsolid;
-	e.t_endpos = trace_endpos;
-
-	return e;
-}
-#endif
-
-void PM_ClientMovement_Move()
-{
-#ifdef CSQC
-
-	int bump;
-	float t;
-	float f;
-	vector neworigin = '0 0 0';
-	vector currentorigin2 = '0 0 0';
-	vector neworigin2 = '0 0 0';
-	vector primalvelocity;
-	entity trace = world, trace2 = world, trace3 = world;
-	entity oldtrace = world;
-
-	PM_ClientMovement_UpdateStatus();
-	primalvelocity = self.velocity;
-	for (bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && dotproduct(self.velocity, self.velocity) > 0; bump++)
-	{
-		neworigin = self.velocity * t;
-		trace = t_tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
-		if(trace.t_fraction < 1 && trace.t_plane_normal_z == 0)
-		{
-			// may be a step or wall, try stepping up
-			// first move forward at a higher level
-			currentorigin2 = self.origin;
-			currentorigin2_z += PHYS_STEPHEIGHT;
-			neworigin2 = neworigin;
-			neworigin_z = self.origin_z + PHYS_STEPHEIGHT;
-
-			trace2 = t_tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-			if(!trace2.t_startsolid)
-			{
-				// then move down from there
-				currentorigin2 = trace2.t_endpos;
-				neworigin2 = trace2.t_endpos;
-				neworigin_z = self.origin_z;
-
-				trace3 = t_tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
-				// accept the new trace if it made some progress
-				if(fabs(trace3.t_endpos_x - trace.t_endpos_x) >= 0.03125 || fabs(trace3.t_endpos_y - trace.t_endpos_y) >= 0.03125)
-				{
-					oldtrace = trace;
-					trace = trace2;
-					trace.t_endpos = trace3.t_endpos;
-				}
-				else if(oldtrace) // TODO: check if we even need this
-				{
-					trace = oldtrace;
-				}
-			}
-		}
-
-		// check if it moved at all
-		if(trace.t_fraction >= 0.001)
-			setorigin(self, trace.t_endpos);
-
-		// check if it moved all the way
-		if(trace.t_fraction == 1)
-			break;
-
-		// this is only really needed for nogravityonground combined with gravityunaffectedbyticrate
-		// <LordHavoc> I'm pretty sure I commented it out solely because it seemed redundant
-		// this got commented out in a change that supposedly makes the code match QW better
-		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
-		if(trace.t_plane_normal_z > 0.7)
-			SET_ONGROUND(self);
-
-		t -= t * trace.t_fraction;
-
-		f = dotproduct(self.velocity, trace.t_plane_normal);
-		self.velocity = self.velocity + trace.t_plane_normal * -f;
-	}
-	if(pmove_waterjumptime > 0)
-		self.velocity = primalvelocity;
-
-	if(trace && !wasfreed(trace)) { remove(trace); }
-	if(trace2 && !wasfreed(trace2)) { remove(trace2); }
-	if(trace3 && !wasfreed(trace3)) { remove(trace3); }
-#endif
-}
-
-#if 0
 void PM_ClientMovement_Move()
 {
 #ifdef CSQC
 	float t = PHYS_INPUT_TIMELENGTH;
 	vector primalvelocity = self.velocity;
-	PM_ClientMovement_UpdateStatus();
+	PM_ClientMovement_UpdateStatus(false);
 	float bump = 0;
-	for (bump = 0; bump < 8 && self.velocity * self.velocity > 0; bump++)
+	for (bump = 0; bump < MAX_CLIP_PLANES && (self.velocity * self.velocity) > 0; bump++)
 	{
 		vector neworigin = self.origin + t * self.velocity;
 		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
@@ -362,7 +267,6 @@ void PM_ClientMovement_Move()
 		self.velocity = primalvelocity;
 #endif
 }
-#endif
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 {
@@ -1797,8 +1701,10 @@ void PM_Main()
 	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
+
+	PM_ClientMovement_UpdateStatus(true);
 #endif
-	PM_ClientMovement_UpdateStatus();
+	
 
 #ifdef SVQC
 	WarpZone_PlayerPhysics_FixVAngle();
