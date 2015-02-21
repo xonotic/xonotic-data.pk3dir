@@ -142,6 +142,15 @@ void func_breakable_behave_restore()
 		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 }
 
+void func_breakable_init_for_player(entity player)
+{
+	if (self.state == 0)
+	{
+		msg_entity = player;
+		soundto (MSG_ONE, self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+	}
+}
+
 void func_breakable_destroyed()
 {
 	func_breakable_look_destroyed();
@@ -282,6 +291,9 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
+
+	self.init_for_player_needed = 1;
+	self.init_for_player = func_breakable_init_for_player;
 
 	CSQCMODEL_AUTOINIT();
 }
