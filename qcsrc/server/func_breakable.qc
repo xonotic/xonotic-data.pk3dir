@@ -144,7 +144,7 @@ void func_breakable_behave_restore()
 
 void func_breakable_init_for_player(entity player)
 {
-	if (self.state == 0)
+	if (self.noise1 && self.state == 0)
 	{
 		msg_entity = player;
 		soundto (MSG_ONE, self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
