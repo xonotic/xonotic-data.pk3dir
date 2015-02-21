@@ -121,7 +121,7 @@ void func_breakable_behave_destroyed()
 	self.state = 1;
 	func_breakable_colormod();
 	if (self.noise1)
-		stopsound (self, CH_TRIGGER);
+		stopsound (self, CH_TRIGGER_SINGLE);
 }
 
 void func_breakable_behave_restore()
@@ -139,7 +139,7 @@ void func_breakable_behave_restore()
 	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
 	if (self.noise1)
-		sound (self, CH_TRIGGER, self.noise1, VOL_BASE, ATTEN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 }
 
 void func_breakable_destroyed()
