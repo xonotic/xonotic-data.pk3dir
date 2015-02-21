@@ -120,6 +120,14 @@ void func_breakable_behave_destroyed()
 	self.event_damage = func_null;
 	self.state = 1;
 	func_breakable_colormod();
+	if (self.noise1)
+	{
+		stopsoundto (MSG_BROADCAST, self, CH_TRIGGER);
+		// Only also send a reliable stop if self.noise is unused.
+		// Otherwise we may be stopping the destroy sound too.
+		if (!self.noise)
+			stopsoundto (MSG_ALL, self, CH_TRIGGER);
+	}
 }
 
 void func_breakable_behave_restore()
@@ -136,6 +144,8 @@ void func_breakable_behave_restore()
 	self.state = 0;
 	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
+	if (self.noise1)
+		sound (self, CH_TRIGGER, self.noise1, VOL_BASE, ATTEN_NORM);
 }
 
 void func_breakable_destroyed()
@@ -270,6 +280,8 @@ void spawnfunc_func_breakable() {
 		precache_model(argv(i));
 	if(self.noise)
 		precache_sound(self.noise);
+	if(self.noise1)
+		precache_sound(self.noise1);
 
 	self.team_saved = self.team;
 	self.dropped_origin = self.origin;
