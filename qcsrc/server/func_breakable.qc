@@ -121,13 +121,7 @@ void func_breakable_behave_destroyed()
 	self.state = 1;
 	func_breakable_colormod();
 	if (self.noise1)
-	{
-		stopsoundto (MSG_BROADCAST, self, CH_TRIGGER);
-		// Only also send a reliable stop if self.noise is unused.
-		// Otherwise we may be stopping the destroy sound too.
-		if (!self.noise)
-			stopsoundto (MSG_ALL, self, CH_TRIGGER);
-	}
+		stopsound (self, CH_TRIGGER);
 }
 
 void func_breakable_behave_restore()
