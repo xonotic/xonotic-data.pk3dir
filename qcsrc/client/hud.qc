@@ -591,7 +591,6 @@ void HUD_Weapons(void)
 		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
 		weapon_size.y = padded_panel_size.y / rows;
-		vertical_order = (columns >= rows);
 
 		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
 		// we enlarge them a bit when possible to better match the desired aspect ratio
@@ -603,6 +602,7 @@ void HUD_Weapons(void)
 			rows = ceil(weapon_count / columns);
 			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
 			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
+			vertical_order = false;
 		}
 		else
 		{
@@ -611,6 +611,7 @@ void HUD_Weapons(void)
 			columns = ceil(weapon_count / rows);
 			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
 			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
+			vertical_order = true;
 		}
 
 		// reduce size of the panel
@@ -753,7 +754,7 @@ void HUD_Weapons(void)
 		rows = table_size.y;
 		weapon_size.x = panel_size.x / columns;
 		weapon_size.y = panel_size.y / rows;
-		vertical_order = (columns >= rows);
+		vertical_order = (panel_size.x / panel_size.y >= aspect);
 	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
