@@ -37,10 +37,10 @@
 		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_x, 254, -1, 254) \
 		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_y, 254, -1, 254) \
 		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_z, 254, -1, 254) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_x, 254, -1, 254) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_y, 254, -1, 254) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_z, 254, -1, 254) \
 	CSQCMODEL_ENDIF \
+	CSQCMODEL_PROPERTY(256, float, ReadCoord, WriteCoord, colormod_x) \
+	CSQCMODEL_PROPERTY(256, float, ReadCoord, WriteCoord, colormod_y) \
+	CSQCMODEL_PROPERTY(256, float, ReadCoord, WriteCoord, colormod_z) \
 	CSQCMODEL_IF(isplayer) \
 		CSQCMODEL_PROPERTY(128, int, ReadByte, WriteByte, anim_state) \
 		CSQCMODEL_PROPERTY(128, float, ReadApproxPastTime, WriteApproxPastTime, anim_time) \
