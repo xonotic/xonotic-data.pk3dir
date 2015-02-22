@@ -7,7 +7,7 @@
 	#include "autocvars.qh"
 	#include "../common/deathtypes.qh"
 	#include "damage.qh"
-	#include "movetypes.qh"
+	#include "../common/movetypes.qh"
 	#include "prandom.qh"
 	#include "vehicles/vehicles.qh"
 #elif defined(MENUQC)

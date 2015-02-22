@@ -1,5 +1,5 @@
 #if defined(CSQC)
-	#include "movetypes.qh"
+	#include "../common/movetypes.qh"
 	#include "prandom.qh"
 	#include "rubble.qh"
 

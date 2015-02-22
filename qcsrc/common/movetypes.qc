@@ -1,10 +1,10 @@
-#include "../common/physics.qh"
+#include "physics.qh"
 
 #if defined(CSQC)
 	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/stats.qh"
-	#include "../common/util.qh"
+	#include "../client/defs.qh"
+	#include "stats.qh"
+	#include "util.qh"
 	#include "movetypes.qh"
 	#include "../csqcmodellib/common.qh"
 	#include "../server/t_items.qh"

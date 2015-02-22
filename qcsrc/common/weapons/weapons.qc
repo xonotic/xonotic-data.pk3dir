@@ -17,7 +17,7 @@
 	#include "../../client/autocvars.qh"
 	#include "../deathtypes.qh"
 	#include "../../csqcmodellib/interpolate.qh"
-	#include "../../client/movetypes.qh"
+	#include "../movetypes.qh"
 	#include "../../client/main.qh"
 	#include "../../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)

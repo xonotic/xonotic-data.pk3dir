@@ -74,8 +74,6 @@ weapons/tracing.qc
 weapons/weaponstats.qc
 weapons/weaponsystem.qc
 
-../client/movetypes.qc
-
 ../common/animdecide.qc
 ../common/buffs.qc
 ../common/campaign_file.qc
@@ -87,6 +85,7 @@ weapons/weaponsystem.qc
 ../common/monsters/monsters.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
+../common/movetypes.qc
 ../common/nades.qc
 ../common/net_notice.qc
 ../common/notifications.qc

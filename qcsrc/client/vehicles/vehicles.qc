@@ -6,7 +6,7 @@
     #include "../../common/util.qh"
     #include "../../common/buffs.qh"
     #include "../autocvars.qh"
-    #include "../movetypes.qh"
+    #include "../../common/movetypes.qh"
     #include "../prandom.qh"
     #include "../main.qh"
     #include "vehicles.qh"

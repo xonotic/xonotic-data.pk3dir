@@ -4,7 +4,7 @@
     #include "../common/buffs.qh"
     #include "../common/weapons/weapons.qh"
     #include "../client/autocvars.qh"
-    #include "../client/movetypes.qh"
+    #include "../common/movetypes.qh"
     #include "../client/main.qh"
     #include "../csqcmodellib/common.qh"
     #include "../csqcmodellib/cl_model.qh"

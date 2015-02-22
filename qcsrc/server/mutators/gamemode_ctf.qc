@@ -1,4 +1,4 @@
-#include "../../client/movetypes.qh"
+#include "../../common/movetypes.qh"
 
 void ctf_FakeTimeLimit(entity e, float t)
 {

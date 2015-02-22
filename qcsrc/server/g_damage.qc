@@ -25,7 +25,7 @@
     #include "g_hook.qh"
     #include "scores.qh"
     #include "spawnpoints.qh"
-	#include "../client/movetypes.qh"
+	#include "../common/movetypes.qh"
 #endif
 
 float Damage_DamageInfo_SendEntity(entity to, float sf)

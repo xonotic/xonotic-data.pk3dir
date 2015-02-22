@@ -3,7 +3,7 @@
 	#include "../client/defs.qh"
 	#include "nades.qh"
 	#include "buffs.qh"
-	#include "../client/movetypes.qh"
+	#include "../common/movetypes.qh"
 	#include "../server/tturrets/include/turrets_early.qh"
 	#include "../client/main.qh"
 	#include "../csqcmodellib/cl_model.qh"
