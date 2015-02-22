@@ -40,7 +40,7 @@ weapons/projectile.qc // TODO
 ../common/animdecide.qc
 ../common/buffs.qc
 ../common/mapinfo.qc
-../common/movetypes.qc
+../common/movetypes/include.qc
 ../common/nades.qc
 ../common/net_notice.qc
 ../common/notifications.qc

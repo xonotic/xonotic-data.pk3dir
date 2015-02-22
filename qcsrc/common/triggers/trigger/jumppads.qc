@@ -1,7 +1,7 @@
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
 #include "jumppads.qh"
-#include "../../movetypes.qh"
+#include "../../movetypes/movetypes.qh"
 
 void trigger_push_use()
 {

@@ -1,32 +1,18 @@
-#include "physics.qh"
+#include "include.qh"
+#include "../physics.qh"
 
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../client/defs.qh"
-	#include "stats.qh"
-	#include "util.qh"
+	#include "../../dpdefs/csprogsdefs.qh"
+	#include "../../client/defs.qh"
+	#include "../stats.qh"
+	#include "../util.qh"
 	#include "movetypes.qh"
-	#include "../csqcmodellib/common.qh"
-	#include "../server/t_items.qh"
+	#include "../../csqcmodellib/common.qh"
+	#include "../../server/t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../server/autocvars.qh"
+	#include "../../server/autocvars.qh"
 #endif
-
-
-#ifdef SVQC
-#define GRAVITY_UNAFFECTED_BY_TICRATE autocvar_sv_gameplayfix_gravityunaffectedbyticrate
-
-#define TICRATE sys_frametime
-#elif defined(CSQC)
-#define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
-
-#define TICRATE ticrate
-#endif
-
-.entity move_groundentity; // FIXME add move_groundnetworkentity?
-.float move_suspendedinair;
-.float move_didgravity;
 
 void _Movetype_CheckVelocity() // SV_CheckVelocity
 {
@@ -42,7 +28,7 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 	if(ent.move_watertype)
 	if(ent.move_watertype != nativecontents)
 	{
-		//print(sprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", ent.move_watertype, nativecontents));
+		//dprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", ent.move_watertype, nativecontents);
 		if(ent.contentstransition)
 			ent.contentstransition(ent.move_watertype, nativecontents);
 	}
@@ -84,7 +70,7 @@ void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 	}
 	else if(ent.move_watertype != contents)
 	{
-		//print(sprintf("_Movetype_CheckWaterTransition(): Origin: %s, Direct: '%d', Original: '%d', New: '%d'\n", vtos(ent.move_origin), pointcontents(ent.move_origin), ent.move_watertype, contents));
+		//dprintf("_Movetype_CheckWaterTransition(): Origin: %s, Direct: '%d', Original: '%d', New: '%d'\n", vtos(ent.move_origin), pointcontents(ent.move_origin), ent.move_watertype, contents);
 		if(ent.contentstransition)
 			ent.contentstransition(ent.move_watertype, contents);
 	}
@@ -298,7 +284,8 @@ float _Movetype_PushEntity(vector push, float failonstartsolid) // SV_PushEntity
 
 .float ltime;
 .void() blocked;
-void _Movetype_AngleVectorsFLU(vector myangles) // AngleVectorsFLU
+// matrix version of makevectors, sets v_forward, v_right and v_up
+void makevectors_matrix(vector myangles) // AngleVectorsFLU
 {
 	float angle, sr, sp, sy, cr, cp, cy;
 
@@ -352,310 +339,6 @@ void _Movetype_AngleVectorsFLU(vector myangles) // AngleVectorsFLU
 			}
 		}
 	}
-}
-
-void _Movetype_PushMove(float dt) // SV_PushMove
-{
-	bool rotated;
-	int savesolid;
-	float movetime2, pushltime;
-	vector move, move1, moveangle, pushorig, pushang;
-	vector a;
-	vector pivot;
-	entity oldself;
-	entity check;
-
-	if(self.move_velocity == '0 0 0' && self.move_avelocity == '0 0 0')
-	{
-		self.move_ltime += dt;
-		return;
-	}
-
-	switch(self.solid)
-	{
-	// LordHavoc: valid pusher types
-	case SOLID_BSP:
-	case SOLID_BBOX:
-	case SOLID_SLIDEBOX:
-	case SOLID_CORPSE: // LordHavoc: this would be weird...
-		break;
-	// LordHavoc: no collisions
-	case SOLID_NOT:
-	case SOLID_TRIGGER:
-		self.move_origin = self.move_origin + dt * self.move_velocity;
-		self.move_angles = self.move_angles + dt * self.move_avelocity;
-		self.move_angles_x -= 360.0 * floor(self.move_angles_x * (1.0 / 360.0));
-		self.move_angles_y -= 360.0 * floor(self.move_angles_y * (1.0 / 360.0));
-		self.move_angles_z -= 360.0 * floor(self.move_angles_z * (1.0 / 360.0));
-		self.move_ltime += dt;
-		_Movetype_LinkEdict(true);
-		return;
-	default:
-		dprintf("_Movetype_PushMove: entity %e, unrecognized solid type %d\n", self, self.solid);
-		return;
-	}
-
-	rotated = dotproduct(self.move_angles, self.move_angles) + dotproduct(self.move_avelocity, self.move_avelocity) > 0;
-
-	movetime2 = dt;
-
-	move1 = self.move_velocity * movetime2;
-	moveangle = self.move_avelocity * movetime2;
-
-	a = -moveangle;
-	// sets v_forward, v_right and v_up
-	_Movetype_AngleVectorsFLU(a);
-
-	pushorig = self.move_origin;
-	pushang = self.move_angles;
-	pushltime = self.move_ltime;
-
-// move the pusher to its final position
-
-	self.move_origin = self.move_origin + dt * self.move_velocity;
-	self.move_angles = self.move_angles + dt * self.move_avelocity;
-	
-	self.move_ltime += dt;
-	_Movetype_LinkEdict(true);
-
-	savesolid = self.solid;
-
-	if(self.move_movetype != MOVETYPE_FAKEPUSH)
-	for(check = findradius(0.5 * (self.absmin + self.absmax), 0.5 * vlen(self.absmax - self.absmin)); check; check = check.chain)
-	{
-		switch(check.move_movetype)
-		{
-		case MOVETYPE_NONE:
-		case MOVETYPE_PUSH:
-		case MOVETYPE_FOLLOW:
-		case MOVETYPE_NOCLIP:
-		case MOVETYPE_FLY_WORLDONLY:
-			continue;
-		default:
-			break;
-		}
-
-		if(check.owner == self)
-			continue;
-
-		if(self.owner == check)
-			continue;
-
-		pivot = check.mins + 0.5 * (check.maxs - check.mins);
-		//VectorClear(pivot);
-
-		if (rotated)
-		{
-			vector org2;
-			vector org = check.move_origin - self.move_origin;
-			org = org + pivot;
-			org2_x = dotproduct(org, v_forward);
-			org2_y = dotproduct(org, v_right);
-			org2_z = dotproduct(org, v_up);
-			move = org2 - org;
-			move = move + move1;
-		}
-		else
-			move = move1;
-
-		// physics objects need better collisions than this code can do
-		if(check.move_movetype == 32) // MOVETYPE_PHYSICS
-		{
-			check.move_origin = check.move_origin + move;
-			oldself = self;
-			self = check;
-			_Movetype_LinkEdict(true);
-			self = oldself;
-			continue;
-		}
-
-		// try moving the contacted entity
-		self.solid = SOLID_NOT;
-		oldself = self;
-		self = check;
-		if(!_Movetype_PushEntity(move, true))
-		{
-			self = oldself;
-			// entity "check" got teleported
-			check.move_angles_y += trace_fraction * moveangle_y;
-			self.solid = savesolid;
-			continue; // pushed enough
-		}
-		self = oldself;
-		// FIXME: turn players specially
-		check.move_angles_y += trace_fraction * moveangle_y;
-		self.solid = savesolid;
-
-		// this trace.fraction < 1 check causes items to fall off of pushers
-		// if they pass under or through a wall
-		// the groundentity check causes items to fall off of ledges
-		if(check.move_movetype != MOVETYPE_WALK && (trace_fraction < 1 || check.move_groundentity != self))
-			check.move_flags &= ~FL_ONGROUND;
-	}
-
-	self.move_angles_x -= 360.0 * floor(self.move_angles_x * (1.0 / 360.0));
-	self.move_angles_y -= 360.0 * floor(self.move_angles_y * (1.0 / 360.0));
-	self.move_angles_z -= 360.0 * floor(self.move_angles_z * (1.0 / 360.0));
-}
-
-void _Movetype_Physics_Pusher(float dt) // SV_Physics_Pusher
-{
-	float thinktime, oldltime, movetime;
-
-	oldltime = self.move_ltime;
-
-	thinktime = self.move_nextthink;
-	if(thinktime < self.move_ltime + dt)
-	{
-		movetime = thinktime - self.move_ltime;
-		if(movetime < 0)
-			movetime = 0;
-	}
-	else
-		movetime = dt;
-
-	if(movetime)
-		// advances self.move_ltime if not blocked
-		_Movetype_PushMove(movetime);
-
-	if(thinktime > oldltime && thinktime <= self.move_ltime)
-	{
-		self.move_nextthink = 0;
-		self.move_time = time;
-		other = world;
-		if(self.move_think)
-			self.move_think();
-	}
-}
-
-void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
-{
-	if(self.move_flags & FL_ONGROUND)
-	{
-		if(self.move_velocity_z >= 1/32)
-			self.move_flags &= ~FL_ONGROUND;
-		else if(!self.move_groundentity)
-			return;
-		else if(self.move_suspendedinair && wasfreed(self.move_groundentity))
-		{
-			self.move_groundentity = world;
-			return;
-		}
-	}
-
-	self.move_suspendedinair = false;
-
-	_Movetype_CheckVelocity();
-
-	if(self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS)
-	{
-		self.move_didgravity = 1;
-		if(GRAVITY_UNAFFECTED_BY_TICRATE)
-		{
-			if(self.gravity)
-				self.move_velocity_z -= 0.5 * dt * self.gravity * PHYS_GRAVITY;
-			else
-				self.move_velocity_z -= 0.5 * dt * PHYS_GRAVITY;
-		}
-		else
-		{
-			if(self.gravity)
-				self.move_velocity_z -= dt * self.gravity * PHYS_GRAVITY;
-			else
-				self.move_velocity_z -= dt * PHYS_GRAVITY;
-		}
-	}
-
-	self.move_angles = self.move_angles + self.move_avelocity * dt;
-
-	float movetime, bump;
-	movetime = dt;
-	for(bump = 0; bump < MAX_CLIP_PLANES && movetime > 0; ++bump)
-	{
-		vector move;
-		move = self.move_velocity * movetime;
-		_Movetype_PushEntity(move, true);
-		if(wasfreed(self))
-			return;
-
-		if(trace_startsolid)
-		{
-			_Movetype_UnstickEntity();
-			_Movetype_PushEntity(move, false);
-			if(wasfreed(self))
-				return;
-		}
-
-		if(trace_fraction == 1)
-			break;
-
-		movetime *= 1 - min(1, trace_fraction);
-
-		if(self.move_movetype == MOVETYPE_BOUNCEMISSILE)
-		{
-			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 2.0);
-			self.move_flags &= ~FL_ONGROUND;
-		}
-		else if(self.move_movetype == MOVETYPE_BOUNCE)
-		{
-			float d, bouncefac, bouncestop;
-
-			bouncefac = self.move_bounce_factor;     if(!bouncefac)  bouncefac = 0.5;
-			bouncestop = self.move_bounce_stopspeed; if(!bouncestop) bouncestop = 60 / 800;
-			if(self.gravity)
-				bouncestop *= self.gravity * PHYS_GRAVITY;
-			else
-				bouncestop *= PHYS_GRAVITY;
-
-			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
-
-			d = trace_plane_normal * self.move_velocity;
-			if(trace_plane_normal_z > 0.7 && d < bouncestop && d > -bouncestop)
-			{
-				self.move_flags |= FL_ONGROUND;
-				self.move_groundentity = trace_ent;
-				self.move_velocity = '0 0 0';
-				self.move_avelocity = '0 0 0';
-			}
-			else
-				self.move_flags &= ~FL_ONGROUND;
-		}
-		else
-		{
-			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1.0);
-			if(trace_plane_normal_z > 0.7)
-			{
-				self.move_flags |= FL_ONGROUND;
-				self.move_groundentity = trace_ent;
-				if(trace_ent.solid == SOLID_BSP)
-					self.move_suspendedinair = true;
-				self.move_velocity = '0 0 0';
-				self.move_avelocity = '0 0 0';
-			}
-			else
-				self.move_flags &= ~FL_ONGROUND;
-		}
-
-		// DP revision 8905 (just, WHY...)
-		if(self.move_movetype == MOVETYPE_BOUNCEMISSILE)
-			break;
-
-		// DP revision 8918 (WHY...)
-		if(self.move_flags & FL_ONGROUND)
-			break;
-	}
-
-	if(GRAVITY_UNAFFECTED_BY_TICRATE)
-	if(self.move_didgravity > 0)
-	if(!(self.move_flags & FL_ONGROUND))
-	{
-		if(self.gravity)
-			self.move_velocity_z -= 0.5 * dt * self.gravity * PHYS_GRAVITY;
-		else
-			self.move_velocity_z -= 0.5 * dt * PHYS_GRAVITY;
-	}
-
-	_Movetype_CheckWaterTransition(self);
 }
 
 void _Movetype_Physics_Frame(float movedt)

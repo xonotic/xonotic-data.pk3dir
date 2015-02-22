@@ -85,7 +85,7 @@ weapons/weaponsystem.qc
 ../common/monsters/monsters.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
-../common/movetypes.qc
+../common/movetypes/include.qc
 ../common/nades.qc
 ../common/net_notice.qc
 ../common/notifications.qc
