@@ -1931,7 +1931,6 @@ void CSQC_ClientMovement_PlayerMove_Frame(void)
 	PM_Main();
 
 #ifdef CSQC
-	pmove_org = self.origin;
-	pmove_vel = self.velocity;
+	self.pmove_flags = self.pm_flags;
 #endif
 }

@@ -26,6 +26,8 @@ bool IsFlying(entity a);
 
 #ifdef CSQC
 
+	.int pm_flags;
+
 	float PM_multijump_checkjump();
 	void PM_multijump();
 
@@ -69,23 +71,23 @@ bool IsFlying(entity a);
 	#define GAMEPLAYFIX_Q2AIRACCELERATE				cvar("sv_gameplayfix_q2airaccelerate")
 	#define GAMEPLAYFIX_EASIERWATERJUMP 			getstati(STAT_GAMEPLAYFIX_EASIERWATERJUMP)
 
-	#define IS_DUCKED(s)    					!!(s.pmove_flags & PMF_DUCKED)
-	#define SET_DUCKED(s)   					s.pmove_flags |= PMF_DUCKED
-	#define UNSET_DUCKED(s) 					s.pmove_flags &= ~PMF_DUCKED
+	#define IS_DUCKED(s)    					!!(s.pm_flags & PMF_DUCKED)
+	#define SET_DUCKED(s)   					s.pm_flags |= PMF_DUCKED
+	#define UNSET_DUCKED(s) 					s.pm_flags &= ~PMF_DUCKED
 
-	#define IS_JUMP_HELD(s)    					!!(s.pmove_flags & PMF_JUMP_HELD)
-	#define SET_JUMP_HELD(s)   					s.pmove_flags |= PMF_JUMP_HELD
-	#define UNSET_JUMP_HELD(s) 					s.pmove_flags &= ~PMF_JUMP_HELD
+	#define IS_JUMP_HELD(s)    					!!(s.pm_flags & PMF_JUMP_HELD)
+	#define SET_JUMP_HELD(s)   					s.pm_flags |= PMF_JUMP_HELD
+	#define UNSET_JUMP_HELD(s) 					s.pm_flags &= ~PMF_JUMP_HELD
 
-	#define IS_ONGROUND(s)    					!!(s.pmove_flags & PMF_ONGROUND)
-	#define SET_ONGROUND(s)   					s.pmove_flags |= PMF_ONGROUND
-	#define UNSET_ONGROUND(s) 					s.pmove_flags &= ~PMF_ONGROUND
+	#define IS_ONGROUND(s)    					!!(s.pm_flags & PMF_ONGROUND)
+	#define SET_ONGROUND(s)   					s.pm_flags |= PMF_ONGROUND
+	#define UNSET_ONGROUND(s) 					s.pm_flags &= ~PMF_ONGROUND
 
 	#define WAS_ONGROUND(s)						!!(s.lastflags & PMF_ONGROUND)
 
 	#define ITEMS(s) 							getstati(STAT_ITEMS, 0, 24)
 
-	#define FLAGS(s)							(s).pmove_flags
+	#define FLAGS(s)							(s).pm_flags
 
 	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
 
