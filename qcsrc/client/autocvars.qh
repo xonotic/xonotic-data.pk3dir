@@ -56,6 +56,7 @@ float autocvar_cl_gibs_avelocity_scale = 1;
 float autocvar_cl_gibs_velocity_up;
 bool autocvar_cl_particles_newvortexbeam;
 bool autocvar_cl_nexuiz_hook;
+int autocvar_cl_prohook;
 int autocvar_cl_gunalign;
 bool autocvar_cl_hidewaypoints;
 bool autocvar_cl_lockview;

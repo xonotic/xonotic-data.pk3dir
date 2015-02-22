@@ -129,6 +129,8 @@ void Draw_GrapplingHook()
 			string suffix = "";
 			if(autocvar_cl_nexuiz_hook)
 				suffix = "_nexuiz";
+			if(autocvar_cl_prohook)
+				suffix = "_pro";
 			intensity = 1;
 			offset = 0;
 			switch(t)
