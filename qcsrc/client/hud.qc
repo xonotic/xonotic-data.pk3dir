@@ -4872,7 +4872,9 @@ bool HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary
 	{
 		if (bInputType == 1)
 			return true;
-		HUD_QuickMenu_ActionForNumber(stof(chr2str(nPrimary)));
+		float f = HUD_QuickMenu_ActionForNumber(stof(chr2str(nPrimary)));
+		if(f && !(hudShiftState & S_CTRL))
+			HUD_QuickMenu_Close();
 	}
 	if(nPrimary == K_MOUSE1)
 	{
