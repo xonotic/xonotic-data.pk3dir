@@ -4469,6 +4469,9 @@ string QuickMenu_Page_Command[QUICKMENU_MAXLINES];
 string QuickMenu_Page_Description[QUICKMENU_MAXLINES];
 int QuickMenu_Page_Entries;
 int QuickMenu_Page;
+int QuickMenu_Page_ActivatedEntry = -1;
+bool QuickMenu_Page_ActivatedEntry_Close;
+float QuickMenu_Page_ActivatedEntry_Time;
 bool QuickMenu_IsLastPage;
 // all the entries are loaded into QuickMenu_Buffer
 // each entry (submenu or command) is composed of 2 entries
@@ -4821,6 +4824,13 @@ bool HUD_QuickMenu_ActionForNumber(int num)
 	return false;
 }
 
+void HUD_QuickMenu_Page_ActiveEntry(float entry_num)
+{
+	QuickMenu_Page_ActivatedEntry = entry_num;
+	QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
+	QuickMenu_Page_ActivatedEntry_Close = (!(hudShiftState & S_CTRL));
+}
+
 bool HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	// we only care for keyboard events
@@ -4872,9 +4882,7 @@ bool HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary
 	{
 		if (bInputType == 1)
 			return true;
-		float f = HUD_QuickMenu_ActionForNumber(stof(chr2str(nPrimary)));
-		if(f && !(hudShiftState & S_CTRL))
-			HUD_QuickMenu_Close();
+		HUD_QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
 	if(nPrimary == K_MOUSE1)
 	{
@@ -4946,15 +4954,7 @@ void HUD_QuickMenu_Mouse()
 			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
 
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
-			{
-				bool f;
-				if (entry_num < QUICKMENU_MAXLINES - 1)
-					f = HUD_QuickMenu_ActionForNumber(entry_num + 1);
-				else
-					f = HUD_QuickMenu_ActionForNumber(0);
-				if(f && !(hudShiftState & S_CTRL))
-					HUD_QuickMenu_Close();
-			}
+				HUD_QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
 		}
 	}
 
@@ -5046,7 +5046,21 @@ void HUD_QuickMenu(void)
 		else
 			color = "^3";
 		HUD_QuickMenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Page_Description[i]), fontsize);
+
+		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
+			&& QuickMenu_Page_ActivatedEntry == i)
+			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
+
 		panel_pos_y += fontsize_y;
+	}
+
+	if(QuickMenu_Page_ActivatedEntry >= 0 && time >= QuickMenu_Page_ActivatedEntry_Time)
+	{
+		bool f = HUD_QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
+		if(f && QuickMenu_Page_ActivatedEntry_Close)
+			HUD_QuickMenu_Close();
+		QuickMenu_Page_ActivatedEntry = -1;
+		QuickMenu_Page_ActivatedEntry_Time = 0;
 	}
 }
 
