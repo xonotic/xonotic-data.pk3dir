@@ -84,6 +84,8 @@ void(entity e, vector force, vector force_pos) physics_addforce = #541; // apply
 void(entity e, vector torque) physics_addtorque = #542; // add relative torque
 #endif  // VEHICLES_USE_ODE
 
+.float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
+
 // functions used outside the vehicle code
 void vehicles_exit(bool eject);
 void vehicles_enter(entity pl, entity veh);
