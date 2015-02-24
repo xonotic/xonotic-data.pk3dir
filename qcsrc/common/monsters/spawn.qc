@@ -1,3 +1,14 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+    #include "../util.qh"
+    #include "monsters.qh"
+    #include "sv_monsters.qh"
+    #include "spawn.qh"
+    #include "../../server/autocvars.qh"
+    #include "../../server/defs.qh"
+#endif
 entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {
 	// ensure spawnfunc database is initialized
@@ -34,7 +45,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 			mon = get_monsterinfo(i);
 			if(mon.netname == monster)
 			{
-				found = TRUE;
+				found = true;
 				monster_id = mon.monsterid; // we have the monster, old monster id is no longer required
 				break;
 			}
@@ -64,7 +75,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	}
 
 	//monster = strcat("$ spawnfunc_monster_", monster);
-	
+
 	entity oldself = self;
 	self = e;
 	monster_initialize(monster_id);

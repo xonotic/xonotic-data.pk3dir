@@ -1,8 +1,25 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+    #include "../client/defs.qh"
+    #include "util.qh"
+    #include "buffs.qh"
+    #include "weapons/weapons.qh"
+    #include "mapinfo.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "util.qh"
+    #include "buffs.qh"
+    #include "monsters/monsters.qh"
+    #include "mapinfo.qh"
+#endif
+
 // generic string stuff
 
-float _MapInfo_Cache_Active;
-float _MapInfo_Cache_DB_NameToIndex;
-float _MapInfo_Cache_Buf_IndexToMapData;
+int _MapInfo_Cache_Active;
+int _MapInfo_Cache_DB_NameToIndex;
+int _MapInfo_Cache_Buf_IndexToMapData;
 
 void MapInfo_Cache_Destroy()
 {
@@ -103,7 +120,7 @@ void MapInfo_Enumerate()
 		_MapInfo_globopen = 0;
 	}
 	MapInfo_Cache_Invalidate();
-	_MapInfo_globhandle = search_begin("maps/*.bsp", TRUE, TRUE);
+	_MapInfo_globhandle = search_begin("maps/*.bsp", true, true);
 	if(_MapInfo_globhandle >= 0)
 	{
 		_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
@@ -138,7 +155,7 @@ float _MapInfo_FilterList_cmp(float i, float j, entity pass)
 	return strcasecmp(a, b);
 }
 
-float MapInfo_FilterGametype(float pGametype, float pFeatures, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate)
+float MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, int pFlagsForbidden, bool pAbortOnGenerate)
 {
 	float i, j;
 	if (!_MapInfo_filtered_allocated)
@@ -255,7 +272,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	mapMins = '0 0 0';
 	mapMaxs = '0 0 0';
 
-	for(;;)
+	for (;;)
 	{
 		if (!((s = fgets(fh))))
 			break;
@@ -293,12 +310,12 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			if(k == "origin")
 			{
 				o = stov(strcat("'", v, "'"));
-				mapMins_x = min(mapMins_x, o_x);
-				mapMins_y = min(mapMins_y, o_y);
-				mapMins_z = min(mapMins_z, o_z);
-				mapMaxs_x = max(mapMaxs_x, o_x);
-				mapMaxs_y = max(mapMaxs_y, o_y);
-				mapMaxs_z = max(mapMaxs_z, o_z);
+				mapMins.x = min(mapMins.x, o.x);
+				mapMins.y = min(mapMins.y, o.y);
+				mapMins.z = min(mapMins.z, o.z);
+				mapMaxs.x = max(mapMaxs.x, o.x);
+				mapMaxs.y = max(mapMaxs.y, o.y);
+				mapMaxs.z = max(mapMaxs.z, o.z);
 			}
 			else if(k == "race_place")
 			{
@@ -434,7 +451,7 @@ string _MapInfo_GetDefault(float t)
 	}
 }
 
-void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, float load_default)
+void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int load_default)
 {
 	string sa;
 	MapInfo_Map_supportedGametypes |= pThisType;
@@ -442,7 +459,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		return;
 
 	if(load_default)
-		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, FALSE);
+		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, false);
 
 	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
 	{
@@ -572,10 +589,10 @@ float _MapInfo_GetTeamPlayBool(float t)
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.team;
-	return FALSE;
+	return false;
 }
 
-void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
+void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 {
 	string sa, k, v;
 	float p;
@@ -789,7 +806,7 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 				print("Map ", pFilename, " references not existing config file ", s, "\n");
 			else
 			{
-				for(;;)
+				for (;;)
 				{
 					if (!((s = fgets(fh))))
 						break;
@@ -860,25 +877,26 @@ float MapInfo_isRedundant(string fn, string t)
 	t = strreplace("'", "-", t);
 
 	if(!strcasecmp(fn, t))
-		return TRUE;
+		return true;
 
 	// we allow the visible title to have punctuation the file name does
 	// not, but not vice versa
 	t = strreplace("-", "", t);
 
 	if(!strcasecmp(fn, t))
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 // load info about a map by name into the MapInfo_Map_* globals
-float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, float pGametypeToSet)
+float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int pGametypeToSet)
 {
 	string fn;
 	string s, t;
 	float fh;
-	float r, f, n, i, p;
+	int f, i;
+	float r, n, p;
 	string acl;
 
 	acl = MAPINFO_SETTEMP_ACL_USER;
@@ -931,7 +949,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			{
 				n = tokenize_console(cvar_string("g_cdtracks_remaplist"));
 				s = strcat(" ", cvar_string("g_cdtracks_dontusebydefault"), " ");
-				for(;;)
+				for (;;)
 				{
 					i = floor(random() * n);
 					if(strstrofs(s, strcat(" ", argv(i), " "), 0) < 0)
@@ -979,7 +997,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 	}
 
 	_MapInfo_Map_Reset();
-	for(;;)
+	for (;;)
 	{
 		if (!((s = fgets(fh))))
 			break;
@@ -1038,7 +1056,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			f = MapInfo_Type_FromString(t);
 			dprint("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
 			if(f)
-				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, TRUE);
+				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
 			else
 				dprint("Map ", pFilename, " supports unknown game type ", t, ", ignored\n");
 		}
@@ -1072,12 +1090,12 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 						print("Map ", pFilename, " contains an incorrect size line, mins have to be < maxs\n");
 					else
 					{
-						MapInfo_Map_mins_x = a;
-						MapInfo_Map_mins_y = b;
-						MapInfo_Map_mins_z = c;
-						MapInfo_Map_maxs_x = d;
-						MapInfo_Map_maxs_y = e;
-						MapInfo_Map_maxs_z = f;
+						MapInfo_Map_mins.x = a;
+						MapInfo_Map_mins.y = b;
+						MapInfo_Map_mins.z = c;
+						MapInfo_Map_maxs.x = d;
+						MapInfo_Map_maxs.y = e;
+						MapInfo_Map_maxs.z = f;
 					}
 				}
 			}
@@ -1150,7 +1168,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 	dprint("Map ", pFilename, " supports no game types, ignored\n");
 	return 0;
 }
-float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametypeToSet)
+float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, int pGametypeToSet)
 {
 	float r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
 
@@ -1229,20 +1247,18 @@ string MapInfo_FixName(string s)
 	return MapInfo_FindName_match;
 }
 
-float MapInfo_CurrentFeatures()
+int MapInfo_CurrentFeatures()
 {
-	float req;
-	req = 0;
+	int req = 0;
 	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;
 }
 
-float MapInfo_CurrentGametype()
+int MapInfo_CurrentGametype()
 {
-	float prev;
 	entity e;
-	prev = cvar("gamecfg");
+	int prev = cvar("gamecfg");
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(cvar(e.netname))
 			if(prev != e.items)
@@ -1271,11 +1287,11 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 	return r;
 }
 
-void MapInfo_SwitchGameType(float t)
+void MapInfo_SwitchGameType(int t)
 {
-	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for (entity e = MapInfo_Type_first; e; e = e.enemy) {
 		cvar_set(e.netname, (t == e.items) ? "1" : "0");
+	}
 }
 
 void MapInfo_LoadMap(string s, float reinit)
@@ -1395,14 +1411,13 @@ void MapInfo_Shutdown()
 	{
 		search_end(_MapInfo_globhandle);
 		_MapInfo_globhandle = -1;
-		_MapInfo_globopen = FALSE;
+		_MapInfo_globopen = false;
 	}
 }
 
-float MapInfo_ForbiddenFlags()
+int MapInfo_ForbiddenFlags()
 {
-	float f;
-	f = MAPINFO_FLAG_FORBIDDEN;
+	int f = MAPINFO_FLAG_FORBIDDEN;
 
 #ifndef MENUQC
 	if (!cvar("g_maplist_allow_hidden"))
@@ -1415,10 +1430,9 @@ float MapInfo_ForbiddenFlags()
 	return f;
 }
 
-float MapInfo_RequiredFlags()
+int MapInfo_RequiredFlags()
 {
-	float f;
-	f = 0;
+	int f = 0;
 
 	if(cvar("g_maplist_allow_frustrating") > 1)
 		f |= MAPINFO_FLAG_FRUSTRATING;

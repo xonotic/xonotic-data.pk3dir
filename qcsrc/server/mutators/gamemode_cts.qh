@@ -1,7 +1,10 @@
-float g_race_qualifying;
+#ifndef GAMEMODE_CTS_H
+#define GAMEMODE_CTS_H
+//float g_race_qualifying;
 
 // scores
-#define ST_CTS_LAPS 1
-#define SP_CTS_LAPS 4
-#define SP_CTS_TIME 5
-#define SP_CTS_FASTEST 6
+const float ST_CTS_LAPS = 1;
+const float SP_CTS_LAPS = 4;
+const float SP_CTS_TIME = 5;
+const float SP_CTS_FASTEST = 6;
+#endif

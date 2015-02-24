@@ -1,15 +1,4 @@
-.float dphitcontentsmask;
-
-.float cnt; // effect number
-.vector velocity; // particle velocity
-.float waterlevel; // direction jitter
-.float count; // count multiplier
-.float impulse; // density
-.string noise; // sound
-.float atten;
-.float volume;
-.float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
-.vector movedir; // trace direction
+#include "particles.qh"
 
 void Draw_PointParticles()
 {
@@ -40,9 +29,9 @@ void Draw_PointParticles()
 	for(i = random(); i <= n && fail <= 64*n; ++i)
 	{
 		p = o + self.mins;
-		p_x += random() * sz_x;
-		p_y += random() * sz_y;
-		p_z += random() * sz_z;
+		p.x += random() * sz.x;
+		p.y += random() * sz.y;
+		p.z += random() * sz.z;
 		if(WarpZoneLib_BoxTouchesBrush(p, p, self, world))
 		{
 			if(self.movedir != '0 0 0')
@@ -83,9 +72,9 @@ void Ent_PointParticles_Remove()
 
 void Ent_PointParticles()
 {
-	float f, i;
+	float i;
 	vector v;
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 2)
 	{
 		i = ReadCoord(); // density (<0: point, >0: volume)
@@ -174,7 +163,7 @@ void Ent_PointParticles()
 		if(!self.absolute)
 		{
 			v = self.maxs - self.mins;
-			self.impulse *= -v_x * v_y * v_z / 262144; // relative: particles per 64^3 cube
+			self.impulse *= -v.x * v.y * v.z / 262144; // relative: particles per 64^3 cube
 		}
 	}
 
@@ -188,7 +177,6 @@ void Ent_PointParticles()
 	self.entremove = Ent_PointParticles_Remove;
 }
 
-.float glow_color; // palette index
 void Draw_Rain()
 {
     te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
@@ -229,8 +217,8 @@ void Net_ReadVortexBeamParticle()
 {
 	vector shotorg, endpos;
 	float charge;
-	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
-	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
+	shotorg.x = ReadCoord(); shotorg.y = ReadCoord(); shotorg.z = ReadCoord();
+	endpos.x = ReadCoord(); endpos.y = ReadCoord(); endpos.z = ReadCoord();
 	charge = ReadByte() / 255.0;
 
 	pointparticles(particleeffectnum("nex_muzzleflash"), shotorg, normalize(endpos - shotorg) * 1000, 1);

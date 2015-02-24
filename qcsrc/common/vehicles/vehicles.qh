@@ -1,3 +1,6 @@
+#ifndef VEHICLES_H
+#define VEHICLES_H
+
 // vehicle requests
 #define VR_SETUP          1 // (BOTH) setup vehicle data
 #define VR_THINK		  2 // (SERVER) logic to run every frame
@@ -9,34 +12,34 @@
 #define VR_HUD            8 // (CLIENT) logic to run every frame
 
 // functions:
-entity get_vehicleinfo(float id);
+entity get_vehicleinfo(int id);
 
 // fields:
 .entity tur_head;
 
 // flags:
-.float vehicle_flags;
-const float VHF_ISVEHICLE		= 2; /// Indicates vehicle
-const float VHF_HASSHIELD		= 4; /// Vehicle has shileding
-const float VHF_SHIELDREGEN		= 8; /// Vehicles shield regenerates
-const float VHF_HEALTHREGEN		= 16; /// Vehicles health regenerates
-const float VHF_ENERGYREGEN		= 32; /// Vehicles energy regenerates
-const float VHF_DEATHEJECT		= 64; /// Vehicle ejects pilot upon fatal damage
-const float VHF_MOVE_GROUND		= 128; /// Vehicle moves on gound
-const float VHF_MOVE_HOVER		= 256; /// Vehicle hover close to gound
-const float VHF_MOVE_FLY		= 512; /// Vehicle is airborn
-const float VHF_DMGSHAKE		= 1024; /// Add random velocity each frame if health < 50%
-const float VHF_DMGROLL			= 2048; /// Add random angles each frame if health < 50%
-const float VHF_DMGHEADROLL		= 4096; /// Add random head angles each frame if health < 50%
-const float VHF_MULTISLOT		= 8192; /// Vehicle has multiple player slots
-const float VHF_PLAYERSLOT		= 16384; /// This ent is a player slot on a multi-person vehicle
+.int vehicle_flags;
+const int VHF_ISVEHICLE			= 2; /// Indicates vehicle
+const int VHF_HASSHIELD			= 4; /// Vehicle has shileding
+const int VHF_SHIELDREGEN		= 8; /// Vehicles shield regenerates
+const int VHF_HEALTHREGEN		= 16; /// Vehicles health regenerates
+const int VHF_ENERGYREGEN		= 32; /// Vehicles energy regenerates
+const int VHF_DEATHEJECT		= 64; /// Vehicle ejects pilot upon fatal damage
+const int VHF_MOVE_GROUND		= 128; /// Vehicle moves on gound
+const int VHF_MOVE_HOVER		= 256; /// Vehicle hover close to gound
+const int VHF_MOVE_FLY			= 512; /// Vehicle is airborn
+const int VHF_DMGSHAKE			= 1024; /// Add random velocity each frame if health < 50%
+const int VHF_DMGROLL			= 2048; /// Add random angles each frame if health < 50%
+const int VHF_DMGHEADROLL		= 4096; /// Add random head angles each frame if health < 50%
+const int VHF_MULTISLOT			= 8192; /// Vehicle has multiple player slots
+const int VHF_PLAYERSLOT		= 16384; /// This ent is a player slot on a multi-person vehicle
 
 
 // entity properties of vehicleinfo:
-.float vehicleid; // VEH_...
+.int vehicleid; // VEH_...
 .string netname; // short name
 .string vehicle_name; // human readable name
-.float(float) vehicle_func; // v_...
+.int(int) vehicle_func; // v_...
 .string mdl; // currently a copy of the model
 .string model; // full name of model
 .string head_model; // full name of tur_head model
@@ -44,8 +47,8 @@ const float VHF_PLAYERSLOT		= 16384; /// This ent is a player slot on a multi-pe
 .string tag_head; // tur_head model tag
 .string tag_hud; // hud model tag
 .string tag_view; // cockpit model tag
-.float() PlayerPhysplug; // player physics mod
-.float spawnflags;
+.int() PlayerPhysplug; // player physics mod
+.int spawnflags;
 .vector mins, maxs; // vehicle hitbox size
 
 // other useful macros
@@ -56,18 +59,18 @@ const float VHF_PLAYERSLOT		= 16384; /// This ent is a player slot on a multi-pe
 //  Vehicle Registration
 // =====================
 
-float v_null(float dummy);
-void register_vehicle(float id, float(float) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname);
+int v_null(int dummy);
+void register_vehicle(int id, int(int) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname);
 void register_vehicles_done();
 
-const float VEH_MAXCOUNT = 24;
+const int VEH_MAXCOUNT = 24;
 #define VEH_FIRST 1
-float VEH_COUNT;
-float VEH_LAST;
+int VEH_COUNT;
+int VEH_LAST;
 
 #define REGISTER_VEHICLE_2(id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname) \
-	float id; \
-	float func(float); \
+	int id; \
+	int func(int); \
 	void RegisterVehicles_##id() \
 	{ \
 		VEH_LAST = (id = VEH_FIRST + VEH_COUNT); \
@@ -87,3 +90,5 @@ float VEH_LAST;
 
 #undef REGISTER_VEHICLE
 ACCUMULATE_FUNCTION(RegisterVehicles, register_vehicles_done);
+
+#endif

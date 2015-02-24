@@ -19,6 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+ #ifndef SV_MODEL_H
+ #define SV_MODEL_H
+
+ #include "common.qh"
 
 // generic CSQC model code
 
@@ -37,3 +41,4 @@ void CSQCModel_UnlinkEntity();
 #undef CSQCMODEL_PROPERTY
 #undef CSQCMODEL_ENDIF
 #undef CSQCMODEL_IF
+#endif

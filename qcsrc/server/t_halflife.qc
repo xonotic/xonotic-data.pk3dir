@@ -1,3 +1,11 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "defs.qh"
+    #include "../common/vehicles/sv_vehicles.qh"
+#endif
 
 .float  roomtype;
 .float  radius;

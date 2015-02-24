@@ -1,22 +1,25 @@
+#ifndef TEAMS_H
+#define TEAMS_H
+
 #ifdef TEAMNUMBERS_THAT_ARENT_STUPID
-const float NUM_TEAM_1 = 1;  // red
-const float NUM_TEAM_2 = 2; // blue
-const float NUM_TEAM_3 = 3; // yellow
-const float NUM_TEAM_4 = 4; // pink
-const float NUM_SPECTATOR = 5;
+const int NUM_TEAM_1 = 1;  // red
+const int NUM_TEAM_2 = 2; // blue
+const int NUM_TEAM_3 = 3; // yellow
+const int NUM_TEAM_4 = 4; // pink
+const int NUM_SPECTATOR = 5;
 #else
 #ifdef CSQC
-const float NUM_TEAM_1 = 4;  // red
-const float NUM_TEAM_2 = 13; // blue
-const float NUM_TEAM_3 = 12; // yellow
-const float NUM_TEAM_4 = 9; // pink
+const int NUM_TEAM_1 = 4;  // red
+const int NUM_TEAM_2 = 13; // blue
+const int NUM_TEAM_3 = 12; // yellow
+const int NUM_TEAM_4 = 9; // pink
 #else
-const float NUM_TEAM_1 = 5;  // red
-const float NUM_TEAM_2 = 14; // blue
-const float NUM_TEAM_3 = 13; // yellow
-const float NUM_TEAM_4 = 10; // pink
+const int NUM_TEAM_1 = 5;  // red
+const int NUM_TEAM_2 = 14; // blue
+const int NUM_TEAM_3 = 13; // yellow
+const int NUM_TEAM_4 = 10; // pink
 #endif
-const float NUM_SPECTATOR = 1337;
+const int NUM_SPECTATOR = 1337;
 #endif
 
 const string COL_TEAM_1 = "^1";
@@ -165,3 +168,4 @@ float Team_TeamToNumber(float teamid)
 #define APP_TEAM_NUM_4(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : ((num == NUM_TEAM_2) ? prefix##BLUE : ((num == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
 #define APP_TEAM_ENT_2(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
 #define APP_TEAM_ENT_4(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : ((ent.team == NUM_TEAM_2) ? prefix##BLUE : ((ent.team == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
+#endif

@@ -1,3 +1,6 @@
+#ifndef MENU_UTIL_H
+#define MENU_UTIL_H
+
 float GL_CheckExtension(string ext);
 float GL_Have_TextureCompression();
 
@@ -16,12 +19,14 @@ void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theC
 void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValue);
 void setDependentWeird(entity e, float(entity) func);
 
-float tooltipdb;
+int tooltipdb;
 void loadTooltips();
 void unloadTooltips();
 string getZonedTooltipForIdentifier(string s);
 
 string resolvemod(string m);
+
+float updateCompression();
 
 void UpdateNotification_URI_Get_Callback(float id, float status, string data);
 
@@ -29,11 +34,11 @@ void URI_Get_Callback(float id, float status, string data);
 
 // game type list box stuff (does not NEED to contain all game types, other
 // types stay available via console)
-float GameType_GetID(float cnt);
-string GameType_GetName(float cnt);
-string GameType_GetIcon(float cnt);
+int GameType_GetID(int cnt);
+string GameType_GetName(int cnt);
+string GameType_GetIcon(int cnt);
 //string GameType_GetTeams(float cnt);
-float GameType_GetCount();
+int GameType_GetCount();
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname);
 #define DIALOG_HUDPANEL_COMMON_NOTOGGLE() \
@@ -51,3 +56,4 @@ string _Nex_ExtResponseSystem_RecommendedServers;
 float _Nex_ExtResponseSystem_RecommendedServersNeedsRefresh;
 
 void CheckSendCvars(entity me, string cvarnamestring);
+#endif

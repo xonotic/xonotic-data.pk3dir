@@ -84,8 +84,6 @@ void dynlight_use()
 }
 void spawnfunc_dynlight()
 {
-	local	entity	targ;
-
 	if (!self.light_lev)
 		self.light_lev = 200;
 	if (!self.color)

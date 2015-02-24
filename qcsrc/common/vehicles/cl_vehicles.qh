@@ -1,6 +1,14 @@
+#ifndef CL_VEHICLES_H
+#define CL_VEHICLES_H
+
 // vehicle cvars
 var float autocvar_cl_vehicles_alarm = 1;
 var float autocvar_cl_vehicles_hud_tactical = 1;
+
+void Net_AuXair2(float bIsNew);
+void bumble_raygun_read(float bIsNew);
+void Net_VehicleSetup();
+void CSQC_BUMBLE_GUN_HUD();
 
 void RaptorCBShellfragDraw();
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
@@ -13,3 +21,6 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
 	local noref float reload1	= getstati(STAT_VEHICLESTAT_RELOAD1); \
 	local noref float ammo2		= getstati(STAT_VEHICLESTAT_AMMO2); \
 	local noref float reload2	= getstati(STAT_VEHICLESTAT_RELOAD2);
+
+#endif
+	

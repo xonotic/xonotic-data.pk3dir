@@ -1,17 +1,31 @@
-.float healer_lifetime;
-.float healer_radius;
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../client/defs.qh"
+	#include "nades.qh"
+	#include "buffs.qh"
+	#include "../client/movetypes.qh"
+	#include "../server/tturrets/include/turrets_early.qh"
+	#include "../client/main.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "constants.qh"
+    #include "../server/constants.qh"
+#endif
+
 
 #ifdef SVQC
-float healer_send(entity to, float sf)
+float healer_send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HEALING_ORB);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 
 		WriteByte(MSG_ENTITY, self.healer_lifetime);
 		//WriteByte(MSG_ENTITY, self.ltime - time + 1);
@@ -20,7 +34,7 @@ float healer_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, (self.ltime - time)*10.0+0.5);
 	}
 
-	return TRUE;
+	return true;
 }
 #endif // SVQC
 
@@ -43,8 +57,8 @@ void healer_setup()
 	setmodel(self, "models/ctf/shield.md3");
 
 	setorigin(self, self.origin);
-	
-	float model_radius = self.maxs_x;
+
+	float model_radius = self.maxs.x;
 	vector size = '1 1 1' * self.healer_radius / 2;
 	setsize(self,-size,size);
 	self.healer_radius = self.healer_radius/model_radius*0.6;
@@ -62,7 +76,7 @@ void healer_setup()
 
 void ent_healer()
 {
-	float sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & TNSF_SETUP)
 	{
