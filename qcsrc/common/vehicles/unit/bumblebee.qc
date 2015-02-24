@@ -268,7 +268,6 @@ void bumblebee_gunner_exit(int _exitflag)
 	player.teleportable	  = TELEPORT_NORMAL;
 	player.switchweapon   = gunner.switchweapon;
 	player.vehicle_enter_delay = time + 2;
-	player.spawnshieldtime = time + 0.5;
 
 	fixedmakevectors(vehic.angles);
 

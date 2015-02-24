@@ -705,7 +705,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 
 bool vehicles_crushable(entity e)
 {
-	if(IS_PLAYER(e))
+	if(IS_PLAYER(e) && time >= e.vehicle_enter_delay)
 		return true;
 
 	if(e.flags & FL_MONSTER)
@@ -847,7 +847,6 @@ void vehicles_exit(float eject)
 		_player.switchweapon	= _vehicle.switchweapon;
 		_player.last_vehiclecheck = time + 3;
 		_player.vehicle_enter_delay = time + 2;
-		_player.spawnshieldtime = time + 0.5; // protect them long enough to escape the deadly vehicle
 
 		CSQCVehicleSetup(_player, HUD_NORMAL);
 	}
