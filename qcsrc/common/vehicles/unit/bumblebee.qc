@@ -268,6 +268,7 @@ void bumblebee_gunner_exit(int _exitflag)
 	player.teleportable	  = TELEPORT_NORMAL;
 	player.switchweapon   = gunner.switchweapon;
 	player.vehicle_enter_delay = time + 2;
+	player.spawnshieldtime = time + 0.5;
 
 	fixedmakevectors(vehic.angles);
 
@@ -275,9 +276,10 @@ void bumblebee_gunner_exit(int _exitflag)
 	if(player == vehic.gunner2) { vehic.gunner2 = world; v_right *= -1; }
 
 	vector spot = real_origin(gunner);
-	spot += v_up * 128 + v_forward * 300 + v_right * 150;
-	spot = vehicles_findgoodexit(spot);
-	//setorigin(player, spot);
+	spot = spot + v_up * 128 + v_forward * 300 + v_right * 150;
+	spot = bumblebee_gunner_findgoodexit(spot, gunner, player);
+
+	// TODO: figure a way to move player out of the gunner
 
 	player.velocity = 0.75 * vehic.velocity + normalize(spot - vehic.origin) * 200;
 	player.velocity_z += 10;

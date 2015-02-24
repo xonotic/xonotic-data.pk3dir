@@ -847,6 +847,7 @@ void vehicles_exit(float eject)
 		_player.switchweapon	= _vehicle.switchweapon;
 		_player.last_vehiclecheck = time + 3;
 		_player.vehicle_enter_delay = time + 2;
+		_player.spawnshieldtime = time + 0.5; // protect them long enough to escape the deadly vehicle
 
 		CSQCVehicleSetup(_player, HUD_NORMAL);
 	}
@@ -903,7 +904,7 @@ void vehicles_touch()
 		if((self.origin_z + self.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
 		{
-			if(vlen(self.velocity) != 0)
+			if(vlen(self.velocity) >= 30)
 				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
