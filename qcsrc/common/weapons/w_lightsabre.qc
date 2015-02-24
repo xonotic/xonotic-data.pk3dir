@@ -47,7 +47,7 @@ LIGHTSABRE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-#include "../../effects.qh"
+#include "../effects.qh"
 #include "../animdecide.qh"
 
 void spawnfunc_weapon_lightsabre(void) { weapon_defaultspawnfunc(WEP_LIGHTSABRE); }
