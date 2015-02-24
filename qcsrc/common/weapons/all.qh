@@ -40,8 +40,7 @@
 #include "w_rpc.qc"
 
 // more other weapons
-#include "w_revolver.qc"
-#include "w_lightsabre.qc"
 #include "w_flak.qc"
+#include "w_lightsabre.qc"
 
 //#endif

@@ -1,6 +1,4 @@
-#ifndef CHAOS
-//const int WEP_LIGHTSABRE = 1337;
-#else
+#ifdef CHAOS
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id  */ LIGHTSABRE,
