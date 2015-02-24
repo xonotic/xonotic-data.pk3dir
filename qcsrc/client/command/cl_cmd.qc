@@ -242,10 +242,10 @@ void LocalCommand_hud(int request, int argc)
 
 				case "quickmenu":
 				{
-					if(HUD_QuickMenu_IsOpened())
-						HUD_QuickMenu_Close();
+					if(QuickMenu_IsOpened())
+						QuickMenu_Close();
 					else
-						HUD_QuickMenu_Open(argv(2), argv(3)); // mode, submenu
+						QuickMenu_Open(argv(2), argv(3)); // mode, submenu
 					return;
 				}
 

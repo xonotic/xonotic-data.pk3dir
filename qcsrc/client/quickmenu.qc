@@ -19,7 +19,7 @@ int QuickMenu_Buffer_Index;
 string QuickMenu_CurrentSubMenu;
 float QuickMenu_TimeOut;
 // if s1 is not empty s will be displayed as command otherwise as submenu
-void HUD_QuickMenu_Page_LoadEntry(int i, string s, string s1)
+void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
 	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
 	if (QuickMenu_Page_Description[i])
@@ -29,7 +29,7 @@ void HUD_QuickMenu_Page_LoadEntry(int i, string s, string s1)
 		strunzone(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command[i] = strzone(s1);
 }
-void HUD_QuickMenu_Page_ClearEntry(int i)
+void QuickMenu_Page_ClearEntry(int i)
 {
 	if (QuickMenu_Page_Description[i])
 		strunzone(QuickMenu_Page_Description[i]);
@@ -39,9 +39,9 @@ void HUD_QuickMenu_Page_ClearEntry(int i)
 	QuickMenu_Page_Command[i] = string_null;
 }
 
-float HUD_QuickMenu_Page_Load(string target_submenu, float new_page);
-void HUD_QuickMenu_Default(string submenu);
-bool HUD_QuickMenu_Open(string mode, string submenu)
+float QuickMenu_Page_Load(string target_submenu, float new_page);
+void QuickMenu_Default(string submenu);
+bool QuickMenu_Open(string mode, string submenu)
 {
 	int fh = -1;
 	string s;
@@ -60,7 +60,7 @@ bool HUD_QuickMenu_Open(string mode, string submenu)
 		if(QuickMenu_Buffer < 0)
 			return false;
 
-		HUD_QuickMenu_Default(submenu);
+		QuickMenu_Default(submenu);
 	}
 	else if(mode == "file")
 	{
@@ -141,9 +141,9 @@ bool HUD_QuickMenu_Open(string mode, string submenu)
 	}
 
 	if(mode == "file")
-		HUD_QuickMenu_Page_Load(submenu, 0);
+		QuickMenu_Page_Load(submenu, 0);
 	else
-		HUD_QuickMenu_Page_Load("", 0);
+		QuickMenu_Page_Load("", 0);
 
 	hud_panel_quickmenu = 1;
 	if(autocvar_hud_cursormode)
@@ -154,7 +154,7 @@ bool HUD_QuickMenu_Open(string mode, string submenu)
 	return true;
 }
 
-void HUD_QuickMenu_Buffer_Close()
+void QuickMenu_Buffer_Close()
 {
 	if (QuickMenu_Buffer >= 0)
 	{
@@ -164,19 +164,19 @@ void HUD_QuickMenu_Buffer_Close()
 	}
 }
 
-void HUD_QuickMenu_Close()
+void QuickMenu_Close()
 {
 	if (QuickMenu_CurrentSubMenu)
 		strunzone(QuickMenu_CurrentSubMenu);
 	QuickMenu_CurrentSubMenu = string_null;
 	int i;
 	for (i = 0; i < QUICKMENU_MAXLINES; ++i)
-		HUD_QuickMenu_Page_ClearEntry(i);
+		QuickMenu_Page_ClearEntry(i);
 	QuickMenu_Page_Entries = 0;
 	hud_panel_quickmenu = 0;
 	mouseClicked = 0;
 	prevMouseClicked = 0;
-	HUD_QuickMenu_Buffer_Close();
+	QuickMenu_Buffer_Close();
 
 	if(autocvar_hud_cursormode)
 	if(!mv_active)
@@ -184,7 +184,7 @@ void HUD_QuickMenu_Close()
 }
 
 // It assumes submenu open tag is already detected
-void HUD_QuickMenu_skip_submenu(string submenu)
+void QuickMenu_skip_submenu(string submenu)
 {
 	string s, z_submenu;
 	z_submenu = strzone(submenu);
@@ -195,12 +195,12 @@ void HUD_QuickMenu_skip_submenu(string submenu)
 			continue;
 		if(substring(s, 1, -1) == z_submenu) // submenu end
 			break;
-		HUD_QuickMenu_skip_submenu(substring(s, 1, -1));
+		QuickMenu_skip_submenu(substring(s, 1, -1));
 	}
 	strunzone(z_submenu);
 }
 
-bool HUD_QuickMenu_IsOpened()
+bool QuickMenu_IsOpened()
 {
 	return (QuickMenu_Page_Entries > 0);
 }
@@ -210,8 +210,8 @@ bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, float w
 {
 	int i;
 	for(i = 0; i < QUICKMENU_MAXLINES; ++i)
-		HUD_QuickMenu_Page_ClearEntry(i);
-	HUD_QuickMenu_Buffer_Close();
+		QuickMenu_Page_ClearEntry(i);
+	QuickMenu_Buffer_Close();
 
 	QuickMenu_Buffer = buf_create();
 	if(QuickMenu_Buffer < 0)
@@ -230,7 +230,7 @@ bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, float w
 
 // new_page 0 means page 0, new_page != 0 means next page
 int QuickMenu_Buffer_Index_Prev;
-bool HUD_QuickMenu_Page_Load(string target_submenu, int new_page)
+bool QuickMenu_Page_Load(string target_submenu, int new_page)
 {
 	string s = string_null, cmd = string_null, z_submenu;
 
@@ -288,7 +288,7 @@ bool HUD_QuickMenu_Page_Load(string target_submenu, int new_page)
 				QuickMenu_Buffer_Index_Prev = QuickMenu_Buffer_Index;
 			else if(QuickMenu_Page_Entries == QUICKMENU_MAXLINES)
 			{
-				HUD_QuickMenu_Page_ClearEntry(QUICKMENU_MAXLINES - 1);
+				QuickMenu_Page_ClearEntry(QUICKMENU_MAXLINES - 1);
 				QuickMenu_Buffer_Index = QuickMenu_Buffer_Index_Prev;
 				QuickMenu_IsLastPage = false;
 				break;
@@ -299,8 +299,8 @@ bool HUD_QuickMenu_Page_Load(string target_submenu, int new_page)
 		if(substring(s, 0, 1) == "S") // submenu
 		{
 			if(entry_num >= first_entry)
-				HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), "");
-			HUD_QuickMenu_skip_submenu(substring(s, 1, -1));
+				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), "");
+			QuickMenu_skip_submenu(substring(s, 1, -1));
 		}
 		else if(entry_num >= first_entry && substring(s, 0, 1) == "T")
 		{
@@ -315,11 +315,11 @@ bool HUD_QuickMenu_Page_Load(string target_submenu, int new_page)
 				cmd = substring(cmd, 1, -1);
 				strunzone(z_submenu);
 				if(HUD_Quickmenu_PlayerListEntries_Create(cmd, stof(substring(s, 1, 1)), stof(substring(s, 2, 1))))
-					return HUD_QuickMenu_Page_Load("", 0);
-				HUD_QuickMenu_Close();
+					return QuickMenu_Page_Load("", 0);
+				QuickMenu_Close();
 				return false;
 			}
-			HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
+			QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
 		}
 
 		++entry_num;
@@ -327,14 +327,14 @@ bool HUD_QuickMenu_Page_Load(string target_submenu, int new_page)
 	strunzone(z_submenu);
 	if (QuickMenu_Page_Entries == 0)
 	{
-		HUD_QuickMenu_Close();
+		QuickMenu_Close();
 		return false;
 	}
 	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
 	return true;
 }
 
-bool HUD_QuickMenu_ActionForNumber(int num)
+bool QuickMenu_ActionForNumber(int num)
 {
 	if (!QuickMenu_IsLastPage)
 	{
@@ -344,7 +344,7 @@ bool HUD_QuickMenu_ActionForNumber(int num)
 			return false;
 		if (num == 0)
 		{
-			HUD_QuickMenu_Page_Load(QuickMenu_CurrentSubMenu, +1);
+			QuickMenu_Page_Load(QuickMenu_CurrentSubMenu, +1);
 			return false;
 		}
 	} else if (num <= 0 || num > QuickMenu_Page_Entries)
@@ -356,24 +356,24 @@ bool HUD_QuickMenu_ActionForNumber(int num)
 		return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
-		HUD_QuickMenu_Page_Load(QuickMenu_Page_Description[num], 0);
+		QuickMenu_Page_Load(QuickMenu_Page_Description[num], 0);
 	return false;
 }
 
-void HUD_QuickMenu_Page_ActiveEntry(float entry_num)
+void QuickMenu_Page_ActiveEntry(float entry_num)
 {
 	QuickMenu_Page_ActivatedEntry = entry_num;
 	QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 	QuickMenu_Page_ActivatedEntry_Close = (!(hudShiftState & S_CTRL));
 }
 
-bool HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
+bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	// we only care for keyboard events
 	if(bInputType == 2)
 		return false;
 
-	if(!HUD_QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
+	if(!QuickMenu_IsOpened() || autocvar__hud_configure || mv_active)
 		return false;
 
 	if(bInputType == 3)
@@ -412,13 +412,13 @@ bool HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary
 	{
 		if (bInputType == 1)
 			return true;
-		HUD_QuickMenu_Close();
+		QuickMenu_Close();
 	}
 	else if(nPrimary >= '0' && nPrimary <= '9')
 	{
 		if (bInputType == 1)
 			return true;
-		HUD_QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
+		QuickMenu_Page_ActiveEntry(stof(chr2str(nPrimary)));
 	}
 	if(nPrimary == K_MOUSE1)
 	{
@@ -440,14 +440,14 @@ bool HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary
 	return true;
 }
 
-void HUD_QuickMenu_Mouse()
+void QuickMenu_Mouse()
 {
 	if(mv_active) return;
 
 	if(!mouseClicked)
 	if(prevMouseClicked & S_MOUSE2)
 	{
-		HUD_QuickMenu_Close();
+		QuickMenu_Close();
 		return;
 	}
 
@@ -490,7 +490,7 @@ void HUD_QuickMenu_Mouse()
 			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
 
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
-				HUD_QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
+				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
 		}
 	}
 
@@ -500,7 +500,7 @@ void HUD_QuickMenu_Mouse()
 	prevMouseClicked = mouseClicked;
 }
 
-void HUD_QuickMenu_DrawEntry(vector pos, string s, vector fontsize)
+void HUD_Quickmenu_DrawEntry(vector pos, string s, vector fontsize)
 {
 	string entry;
 	float offset;
@@ -519,7 +519,7 @@ void HUD_QuickMenu(void)
 	if(!autocvar__hud_configure)
 	{
 		if (hud_configure_prev && hud_configure_prev != -1)
-			HUD_QuickMenu_Close();
+			QuickMenu_Close();
 
 		if(!hud_draw_maximized) return;
 		if(mv_active) return;
@@ -528,25 +528,25 @@ void HUD_QuickMenu(void)
 
 		if(time > QuickMenu_TimeOut)
 		{
-			HUD_QuickMenu_Close();
+			QuickMenu_Close();
 			return;
 		}
 	}
 	else
 	{
-		if(!HUD_QuickMenu_IsOpened())
+		if(!QuickMenu_IsOpened())
 		{
 			QuickMenu_Page_Entries = 1;
-			HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Submenu%d"), QuickMenu_Page_Entries), "");
+			QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Submenu%d"), QuickMenu_Page_Entries), "");
 			++QuickMenu_Page_Entries;
-			HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Submenu%d"), QuickMenu_Page_Entries), "");
+			QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Submenu%d"), QuickMenu_Page_Entries), "");
 			++QuickMenu_Page_Entries;
 			// although real command doesn't matter here, it must not be empty
 			// otherwise the entry is displayed like a submenu
 			for (; QuickMenu_Page_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Page_Entries)
-				HUD_QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Command%d"), QuickMenu_Page_Entries), "-");
+				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, sprintf(_("Command%d"), QuickMenu_Page_Entries), "-");
 			++QuickMenu_Page_Entries;
-			HUD_QuickMenu_Page_ClearEntry(QuickMenu_Page_Entries);
+			QuickMenu_Page_ClearEntry(QuickMenu_Page_Entries);
 			QuickMenu_IsLastPage = false;
 		}
 	}
@@ -569,7 +569,7 @@ void HUD_QuickMenu(void)
 	if (!QuickMenu_IsLastPage)
 	{
 		color = "^5";
-		HUD_QuickMenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), fontsize);
+		HUD_Quickmenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), fontsize);
 	}
 	else
 		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize_y) / 2;
@@ -581,7 +581,7 @@ void HUD_QuickMenu(void)
 			color = "^4";
 		else
 			color = "^3";
-		HUD_QuickMenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Page_Description[i]), fontsize);
+		HUD_Quickmenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Page_Description[i]), fontsize);
 
 		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
 			&& QuickMenu_Page_ActivatedEntry == i)
@@ -592,9 +592,9 @@ void HUD_QuickMenu(void)
 
 	if(QuickMenu_Page_ActivatedEntry >= 0 && time >= QuickMenu_Page_ActivatedEntry_Time)
 	{
-		bool f = HUD_QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
+		bool f = QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
 		if(f && QuickMenu_Page_ActivatedEntry_Close)
-			HUD_QuickMenu_Close();
+			QuickMenu_Close();
 		QuickMenu_Page_ActivatedEntry = -1;
 		QuickMenu_Page_ActivatedEntry_Time = 0;
 	}
@@ -669,10 +669,10 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, float teamplayers, float withou
 
 // Specifying target_submenu, this function only loads entries inside target_submenu
 // NOTE: alternatively we could have loaded the whole default quickmenu and
-// then called HUD_QuickMenu_Page_Load(target_submenu, 0);
+// then called QuickMenu_Page_Load(target_submenu, 0);
 // but this sytem is more reliable since we can always refer to target_submenu
 // with the English title even if a translation is active
-void HUD_QuickMenu_Default(string target_submenu)
+void QuickMenu_Default(string target_submenu)
 {
 	bool target_submenu_found = false;
 	if(target_submenu != "")

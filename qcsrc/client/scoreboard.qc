@@ -953,7 +953,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 float HUD_WouldDrawScoreboard() {
 	if (autocvar__hud_configure)
 		return 0;
-	else if (HUD_QuickMenu_IsOpened())
+	else if (QuickMenu_IsOpened())
 		return 0;
 	else if (scoreboard_showscores)
 		return 1;

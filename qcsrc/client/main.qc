@@ -335,7 +335,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
-	if (HUD_QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
+	if (QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
