@@ -51,7 +51,7 @@ float autocvar_g_vehicle_bumblebee_cannon_ammo;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen_pause;
 
-var float autocvar_g_vehicle_bumblebee_cannon_lock = 0;
+float autocvar_g_vehicle_bumblebee_cannon_lock = 0;
 
 float autocvar_g_vehicle_bumblebee_cannon_turnspeed;
 float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down;
@@ -84,9 +84,9 @@ float autocvar_g_vehicle_bumblebee_blowup_radius;
 float autocvar_g_vehicle_bumblebee_blowup_coredamage;
 float autocvar_g_vehicle_bumblebee_blowup_edgedamage;
 float autocvar_g_vehicle_bumblebee_blowup_forceintensity;
-var vector autocvar_g_vehicle_bumblebee_bouncepain;
+vector autocvar_g_vehicle_bumblebee_bouncepain;
 
-var float autocvar_g_vehicle_bumblebee = 0;
+bool autocvar_g_vehicle_bumblebee = 0;
 
 float bumble_raygun_send(entity to, int sf);
 
@@ -873,7 +873,7 @@ float v_bumblebee(float req)
 			_body.enemy = self.enemy;
 			_body.scale = 1.5;
 			_body.angles = self.angles;
-			
+
 			pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
 			
 			self.health			= 0;
@@ -1178,7 +1178,7 @@ void bumble_raygun_draw()
 	}
 }
 
-void bumble_raygun_read(float bIsNew)
+void bumble_raygun_read(bool bIsNew)
 {
 	int sf = ReadByte();
 

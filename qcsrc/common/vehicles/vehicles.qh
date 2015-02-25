@@ -2,23 +2,16 @@
 #define VEHICLES_H
 
 // vehicle requests
-#define VR_SETUP          1 // (BOTH) setup vehicle data
-#define VR_THINK		  2 // (SERVER) logic to run every frame
-#define VR_DEATH          3 // (SERVER) called when vehicle dies
-#define VR_PRECACHE       4 // (BOTH) precaches models/sounds used by this vehicle
-#define VR_ENTER          5 // (SERVER) called when a player enters this vehicle
-#define VR_SPAWN          6 // (SERVER) called when the vehicle re-spawns
-#define VR_IMPACT         7 // (SERVER) called when a vehicle hits something
-#define VR_HUD            8 // (CLIENT) logic to run every frame
+const int VR_SETUP          = 1; // (BOTH) setup vehicle data
+const int VR_THINK		  	= 2; // (SERVER) logic to run every frame
+const int VR_DEATH          = 3; // (SERVER) called when vehicle dies
+const int VR_PRECACHE       = 4; // (BOTH) precaches models/sounds used by this vehicle
+const int VR_ENTER          = 5; // (SERVER) called when a player enters this vehicle
+const int VR_SPAWN          = 6; // (SERVER) called when the vehicle re-spawns
+const int VR_IMPACT         = 7; // (SERVER) called when a vehicle hits something
+const int VR_HUD            = 8; // (CLIENT) logic to run every frame
 
-// functions:
-entity get_vehicleinfo(int id);
-
-// fields:
-.entity tur_head;
-
-// flags:
-.int vehicle_flags;
+// vehicle spawn flags (need them here for common registrations)
 const int VHF_ISVEHICLE			= 2; /// Indicates vehicle
 const int VHF_HASSHIELD			= 4; /// Vehicle has shileding
 const int VHF_SHIELDREGEN		= 8; /// Vehicles shield regenerates
@@ -33,6 +26,12 @@ const int VHF_DMGROLL			= 2048; /// Add random angles each frame if health < 50%
 const int VHF_DMGHEADROLL		= 4096; /// Add random head angles each frame if health < 50%
 const int VHF_MULTISLOT			= 8192; /// Vehicle has multiple player slots
 const int VHF_PLAYERSLOT		= 16384; /// This ent is a player slot on a multi-person vehicle
+
+// functions:
+entity get_vehicleinfo(float id);
+
+// fields:
+.entity tur_head;
 
 
 // entity properties of vehicleinfo:

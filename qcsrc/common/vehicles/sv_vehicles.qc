@@ -1,7 +1,5 @@
-// =========================
-//  SVQC Vehicle Properties
-// =========================
-
+#include "vehicles.qh"
+#include "sv_vehicles.qh"
 
 float SendAuxiliaryXhair(entity to, float sf)
 {
@@ -271,6 +269,7 @@ void vehicles_gib_explode()
 {
 	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	pointparticles(particleeffectnum("explosion_small"), self.wp00.origin + '0 0 64', '0 0 0', 1);
 	remove(self);
 }
 
@@ -703,7 +702,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 	}
 }
 
-bool vehicles_crushable(entity e)
+float vehicles_crushable(entity e)
 {
 	if(IS_PLAYER(e) && time >= e.vehicle_enter_delay)
 		return true;

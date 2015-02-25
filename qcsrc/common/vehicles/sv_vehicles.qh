@@ -1,5 +1,6 @@
 #ifndef VEHICLES_DEF_H
 #define VEHICLES_DEF_H
+#ifdef SVQC
 
 #include "../server/tturrets/include/turrets_early.qh"
 
@@ -23,6 +24,9 @@ var float autocvar_g_vehicles_machinegun_damagerate = 0.5;
 var float autocvar_g_vehicles_rifle_damagerate = 0.75;
 var float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
 var float autocvar_g_vehicles_tag_damagerate = 5;
+
+// flags:
+.int vehicle_flags;
 
 // vehicle definitions
 .entity gun1;
@@ -59,7 +63,7 @@ const float VHSF_FACTORY = 2;
 .int hud;
 .float dmg_time;
 
-.float volly_counter;
+.int volly_counter;
 
 const int MAX_AXH = 4;
 .entity AuxiliaryXhair[MAX_AXH];
@@ -71,6 +75,16 @@ const int MAX_AXH = 4;
 .float  lock_time;
 .float  lock_soundtime;
 const float	DAMAGE_TARGETDRONE = 10;
+
+// vehicle functions
+.void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
+.bool(int _imp) vehicles_impulse;
+.int vehicle_weapon2mode;
+.void(int exit_flags) vehicle_exit;
+.bool() vehicle_enter;
+const int VHEF_NORMAL = 0;  /// User pressed exit key
+const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
+const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
 
 float  force_fromtag_power;
 float  force_fromtag_normpower;
@@ -86,20 +100,6 @@ void(entity e, vector torque) physics_addtorque = #542; // add relative torque
 
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
-// functions used outside the vehicle code
-void vehicles_exit(bool eject);
-void vehicles_enter(entity pl, entity veh);
-
-// vehicle functions
-.void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
-.int(int _imp) vehicles_impulse;
-.float vehicle_weapon2mode;
-.void(int exit_flags) vehicle_exit;
-.float() vehicle_enter;
-const int VHEF_NORMAL = 0;  /// User pressed exit key
-const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
-const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
-
 // macros
 #define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
 	ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
@@ -109,4 +109,7 @@ const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dis
 	if(trace_fraction != 1) \
 		acm += normalize(self.origin - trace_endpos) * (vlen(vel) * mult)
 
+void vehicles_exit(float eject);
+
+#endif
 #endif

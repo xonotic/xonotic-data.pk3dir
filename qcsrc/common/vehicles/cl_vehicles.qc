@@ -13,8 +13,8 @@
 #define hud_energy "gfx/vehicles/energy.tga"
 
 entity dropmark;
-var float autocvar_cl_vehicles_hudscale = 0.5;
-var float autocvar_cl_vehicles_hudalpha = 0.75;
+float autocvar_cl_vehicles_hudscale = 0.5;
+float autocvar_cl_vehicles_hudalpha = 0.75;
 
 const float MAX_AXH = 4;
 entity AuxiliaryXhair[MAX_AXH];
@@ -52,9 +52,9 @@ void AuxiliaryXhair_Draw2D()
 		self.draw2d = func_null;
 }
 
-void Net_AuXair2(float bIsNew)
+void Net_AuXair2(bool bIsNew)
 {
-	float axh_id	= bound(0, ReadByte(), MAX_AXH);
+	int axh_id	= bound(0, ReadByte(), MAX_AXH);
 	entity axh 		= AuxiliaryXhair[axh_id];
 
 	if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)

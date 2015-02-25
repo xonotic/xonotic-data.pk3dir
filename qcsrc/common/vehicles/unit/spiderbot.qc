@@ -13,14 +13,14 @@ REGISTER_VEHICLE(
 );
 #else
 
-const float SBRM_FIRST = 1;
-const float SBRM_VOLLY = 1;
-const float SBRM_GUIDE = 2;
-const float SBRM_ARTILLERY = 3;
-const float SBRM_LAST = 3;
+const int SBRM_FIRST = 1;
+const int SBRM_VOLLY = 1;
+const int SBRM_GUIDE = 2;
+const int SBRM_ARTILLERY = 3;
+const int SBRM_LAST = 3;
 
 #ifdef SVQC
-float autocvar_g_vehicle_spiderbot;
+bool autocvar_g_vehicle_spiderbot;
 
 float autocvar_g_vehicle_spiderbot_respawntime;
 
@@ -41,20 +41,20 @@ float autocvar_g_vehicle_spiderbot_head_pitchlimit_up;
 float autocvar_g_vehicle_spiderbot_head_turnlimit;
 float autocvar_g_vehicle_spiderbot_head_turnspeed;
 
-float autocvar_g_vehicle_spiderbot_health;
+int autocvar_g_vehicle_spiderbot_health;
 float autocvar_g_vehicle_spiderbot_health_regen;
 float autocvar_g_vehicle_spiderbot_health_regen_pause;
 
-float autocvar_g_vehicle_spiderbot_shield;
+int autocvar_g_vehicle_spiderbot_shield;
 float autocvar_g_vehicle_spiderbot_shield_regen;
 float autocvar_g_vehicle_spiderbot_shield_regen_pause;
 
 float autocvar_g_vehicle_spiderbot_minigun_damage;
 float autocvar_g_vehicle_spiderbot_minigun_refire;
 float autocvar_g_vehicle_spiderbot_minigun_spread;
-float autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
-float autocvar_g_vehicle_spiderbot_minigun_ammo_max;
-float autocvar_g_vehicle_spiderbot_minigun_ammo_regen;
+int autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
+int autocvar_g_vehicle_spiderbot_minigun_ammo_max;
+int autocvar_g_vehicle_spiderbot_minigun_ammo_regen;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause;
 float autocvar_g_vehicle_spiderbot_minigun_force;
 float autocvar_g_vehicle_spiderbot_minigun_solidpenetration;
@@ -495,8 +495,8 @@ float spiderbot_frame()
 
 			self = player;
 
-			// TODO: WTF
-			((spider.misc_bulletcounter % 2) ? gun = spider.gun1 : gun = spider.gun2);
+			gun = (spider.misc_bulletcounter % 2) ? spider.gun1 : spider.gun2;
+
 			v = gettaginfo(gun, gettagindex(gun, "barrels"));
 			v_forward = normalize(v_forward);
 			v += v_forward * 50;
@@ -877,8 +877,8 @@ float v_spiderbot(float req)
 
 #endif // SVQC
 #ifdef CSQC
-var float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
-var float autocvar_cl_vehicle_spiderbot_cross_size = 1;
+float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
+float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 #define spider_ico  "gfx/vehicles/sbot.tga"
 #define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
