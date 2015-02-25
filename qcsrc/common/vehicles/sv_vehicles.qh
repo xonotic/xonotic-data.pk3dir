@@ -104,10 +104,12 @@ void(entity e, vector torque) physics_addtorque = #542; // add relative torque
 #define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
 	ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
+#if 0
 #define vehicles_sweap_collision(orig,vel,dt,acm,mult) \
 	traceline(orig, orig + vel * dt, MOVE_NORMAL, self); \
 	if(trace_fraction != 1) \
 		acm += normalize(self.origin - trace_endpos) * (vlen(vel) * mult)
+#endif
 
 void vehicles_exit(float eject);
 
