@@ -1,8 +1,9 @@
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
-// visible etries are loaded from QuickMenu_Buffer into QuickMenu_Page_* arrays
+// visible entries are loaded from QuickMenu_Buffer into QuickMenu_Page_* arrays
 string QuickMenu_Page_Command[QUICKMENU_MAXLINES];
 string QuickMenu_Page_Description[QUICKMENU_MAXLINES];
+int QuickMenu_Page_Command_Type[QUICKMENU_MAXLINES];
 int QuickMenu_Page_Entries;
 int QuickMenu_Page;
 int QuickMenu_Page_ActivatedEntry = -1;
@@ -29,6 +30,7 @@ void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 		strunzone(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command[i] = strzone(s1);
 }
+
 void QuickMenu_Page_ClearEntry(int i)
 {
 	if (QuickMenu_Page_Description[i])
@@ -319,6 +321,10 @@ bool QuickMenu_Page_Load(string target_submenu, int new_page)
 				QuickMenu_Close();
 				return false;
 			}
+
+			tokenize_console(cmd);
+			QuickMenu_Page_Command_Type[QuickMenu_Page_Entries] = (argv(1) && argv(0) == "toggle");
+
 			QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), cmd);
 		}
 
@@ -353,6 +359,7 @@ bool QuickMenu_ActionForNumber(int num)
 	if (QuickMenu_Page_Command[num] != "")
 	{
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
+		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
 		return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
@@ -364,7 +371,17 @@ void QuickMenu_Page_ActiveEntry(float entry_num)
 {
 	QuickMenu_Page_ActivatedEntry = entry_num;
 	QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
-	QuickMenu_Page_ActivatedEntry_Close = (!(hudShiftState & S_CTRL));
+	if(QuickMenu_Page_Command[QuickMenu_Page_ActivatedEntry])
+	{
+		bool f = QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
+		// toggle commands don't close the quickmenu
+		if(QuickMenu_Page_Command_Type[QuickMenu_Page_ActivatedEntry] == 1)
+			QuickMenu_Page_ActivatedEntry_Close = false;
+		else
+			QuickMenu_Page_ActivatedEntry_Close = (f && !(hudShiftState & S_CTRL));
+	}
+	else
+		QuickMenu_Page_ActivatedEntry_Close = (!(hudShiftState & S_CTRL));
 }
 
 bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
@@ -500,14 +517,21 @@ void QuickMenu_Mouse()
 	prevMouseClicked = mouseClicked;
 }
 
-void HUD_Quickmenu_DrawEntry(vector pos, string s, vector fontsize)
+void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector fontsize)
 {
 	string entry;
 	float offset;
-	entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_colors);
+	float desc_size = panel_size_x;
+	if(option)
+	{
+		float option_size = stringwidth_nocolors(option, fontsize);
+		desc_size -= option_size;
+		drawstring(pos + eX * desc_size, option, fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
+	}
+	entry = textShortenToWidth(desc, desc_size, fontsize, stringwidth_colors);
 	if (autocvar_hud_panel_quickmenu_align > 0)
 	{
-		offset = (panel_size_x - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
+		offset = (desc_size - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
 		drawcolorcodedstring(pos + eX * offset, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 	}
 	else
@@ -569,7 +593,7 @@ void HUD_QuickMenu(void)
 	if (!QuickMenu_IsLastPage)
 	{
 		color = "^5";
-		HUD_Quickmenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), fontsize);
+		HUD_Quickmenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), string_null, fontsize);
 	}
 	else
 		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize_y) / 2;
@@ -577,11 +601,44 @@ void HUD_QuickMenu(void)
 	for (i = 1; i <= QuickMenu_Page_Entries; ++i) {
 		if (QuickMenu_Page_Description[i] == "")
 			break;
+		string option = string_null;
 		if (QuickMenu_Page_Command[i] == "")
 			color = "^4";
 		else
+		{
 			color = "^3";
-		HUD_Quickmenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Page_Description[i]), fontsize);
+			if(QuickMenu_Page_Command_Type[i] == 1) // toggle command
+			{
+				int end = strstrofs(QuickMenu_Page_Command[i], ";", 0);
+				if(end < 0)
+					tokenize_console(QuickMenu_Page_Command[i]);
+				else
+					tokenize_console(substring(QuickMenu_Page_Command[i], 0, end));
+
+				//if(argv(1) && argv(0) == "toggle") // already checked
+				{
+					// "enable feature xxx" "toggle xxx" (or "toggle xxx 1 0")
+					// "disable feature xxx" "toggle xxx 0 1"
+					float ON_value = 1, OFF_value = 0;
+					if(argv(2))
+						ON_value = stof(argv(2));
+
+					if(argv(3))
+						OFF_value = stof(argv(3));
+					else
+						OFF_value = !ON_value;
+
+					float value = cvar(argv(1));
+					if(value == ON_value)
+						option = "[X]";
+					else if(value == OFF_value)
+						option = "[_]";
+					else
+						option = "[?]";
+				}
+			}
+		}
+		HUD_Quickmenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Page_Description[i]), option, fontsize);
 
 		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
 			&& QuickMenu_Page_ActivatedEntry == i)
@@ -592,8 +649,13 @@ void HUD_QuickMenu(void)
 
 	if(QuickMenu_Page_ActivatedEntry >= 0 && time >= QuickMenu_Page_ActivatedEntry_Time)
 	{
-		bool f = QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
-		if(f && QuickMenu_Page_ActivatedEntry_Close)
+		if(!QuickMenu_Page_Command[QuickMenu_Page_ActivatedEntry])
+		{
+			bool f = QuickMenu_ActionForNumber(QuickMenu_Page_ActivatedEntry);
+			if(f && QuickMenu_Page_ActivatedEntry_Close)
+				QuickMenu_Close();
+		}
+		else if(QuickMenu_Page_ActivatedEntry_Close)
 			QuickMenu_Close();
 		QuickMenu_Page_ActivatedEntry = -1;
 		QuickMenu_Page_ActivatedEntry_Time = 0;
@@ -709,17 +771,17 @@ void QuickMenu_Default(string target_submenu)
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 		QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^1st/3rd person view")), "toggle chase_active")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Player models like mine on/off")), "toggle cl_forceplayermodels")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Names above players on/off")), "toggle hud_shownames")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Crosshair per weapon on/off")), "toggle crosshair_per_weapon")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^FPS on/off")), "toggle hud_panel_engineinfo")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Net graph on/off")), "toggle shownetgraph")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^3rd person view")), "toggle chase_active")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Player models like mine")), "toggle cl_forceplayermodels")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Names above players")), "toggle hud_shownames")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Crosshair per weapon")), "toggle crosshair_per_weapon")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^FPS")), "toggle hud_panel_engineinfo")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Net graph")), "toggle shownetgraph")
 		QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
 
 		QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Hit sound on/off")), "toggle cl_hitsound")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound on/off")), "toggle cl_chatsound")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Hit sound")), "toggle cl_hitsound")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound")), "toggle cl_chatsound")
 		QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
 
 		if(spectatee_status > 0)
@@ -741,9 +803,9 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_SMENU(CTX(_("QMCMD^Observer camera")), "Observer camera")
 		}
 
-		QUICKMENU_ENTRY(CTX(_("QMCMD^toggle fullscreen")), "toggle vid_fullscreen; vid_restart")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Fullscreen")), "toggle vid_fullscreen; vid_restart")
 		if(prvm_language != "en")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Translate chat messages on/off")), "toggle hud_panel_quickmenu_translatecommands")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Translate chat messages")), "toggle hud_panel_quickmenu_translatecommands")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
