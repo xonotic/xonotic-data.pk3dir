@@ -51,6 +51,7 @@ MUTATOR_DECLARATION(mutator_piggyback);
 MUTATOR_DECLARATION(mutator_buffs);
 MUTATOR_DECLARATION(mutator_itemeditor);
 MUTATOR_DECLARATION(mutator_skycycle);
+MUTATOR_DECLARATION(mutator_shotgunarena);
 MUTATOR_DECLARATION(sandbox);
 
 #endif
