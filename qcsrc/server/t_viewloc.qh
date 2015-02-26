@@ -1,0 +1,15 @@
+#ifndef T_VIEWLOC_H
+#define T_VIEWLOC_H
+
+.entity viewloc;
+
+#ifdef CSQC
+.entity goalentity;
+.entity enemy;
+.vector movedir;
+
+void ent_viewloc();
+void ent_viewloc_trigger();
+#endif
+
+#endif

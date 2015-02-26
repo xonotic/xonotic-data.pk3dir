@@ -78,6 +78,7 @@ weapons/projectile.qc // TODO
 
 ../server/movelib.qc
 ../server/t_items.qc
+../server/t_viewloc.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc

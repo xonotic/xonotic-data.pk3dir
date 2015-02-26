@@ -60,6 +60,7 @@ t_quake3.qc
 t_quake.qc
 t_swamp.qc
 t_teleporters.qc
+t_viewloc.qc
 waypointsprites.qc
 
 bot/bot.qc

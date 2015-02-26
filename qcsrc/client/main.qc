@@ -13,6 +13,8 @@
 #include "wall.qh"
 #include "waypointsprites.qh"
 
+#include "../server/t_viewloc.qh"
+
 #include "../common/effects.qh"
 
 #include "../common/vehicles/unit/bumblebee.qh"
@@ -1030,6 +1032,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
 		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
 		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
+		case ENT_CLIENT_VIEWLOC: ent_viewloc(); break;
+		case ENT_CLIENT_VIEWLOC_TRIGGER: ent_viewloc_trigger(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
