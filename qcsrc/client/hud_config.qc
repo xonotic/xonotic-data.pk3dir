@@ -916,7 +916,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (highlightedPanel)
 			HUD_Panel_EnableMenu();
 	}
-	else if(hit_con_bind)
+	else if(hit_con_bind || nPrimary == K_PAUSE)
 		return false;
 
 	return true;
