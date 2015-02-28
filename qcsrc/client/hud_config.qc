@@ -433,8 +433,7 @@ void HUD_Panel_SetPosSize(vector mySize)
 {
 	panel = highlightedPanel;
 	HUD_Panel_UpdatePosSize();
-	vector resizeorigin;
-	resizeorigin = panel_click_resizeorigin;
+	vector resizeorigin = panel_click_resizeorigin;
 	vector myPos;
 
 	// minimum panel size cap
@@ -567,7 +566,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	if (hudShiftState & S_ALT) // resize
 	{
-		highlightedAction = 1;
 		if(nPrimary == K_UPARROW)
 			resizeCorner = 1;
 		else if(nPrimary == K_RIGHTARROW)
@@ -604,7 +602,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 	else // move
 	{
-		highlightedAction = 2;
 		vector pos;
 		pos = panel_pos;
 		if(nPrimary == K_UPARROW)
@@ -1178,6 +1175,8 @@ void HUD_Panel_Mouse()
 	}
 	else
 	{
+		if(prevMouseClicked)
+			highlightedAction = 0;
 		if(menu_enabled == 2)
 			mouse_over_panel = 0;
 		else
