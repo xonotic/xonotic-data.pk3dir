@@ -183,79 +183,109 @@ bool CSQCPlayer_IsLocalPlayer()
 	return (self == csqcplayer);
 }
 
-void CSQCPlayer_SetViewLocation(int refdefflags)
+vector addtovector(vector v, float f){
+	vector c;
+	c.x = v.x + f;
+	c.y = v.y + f;
+	c.z = v.z + f;
+	return c;
+}
+vector vectomin (vector a, vector b) {
+	vector c;
+	c.x = min (a.x, b.x);
+	c.y = min (a.y, b.y);
+	c.z = min (a.z, b.z);
+	return c;
+}
+
+vector vectomax (vector a, vector b) {
+	vector c;
+	c.x = max (a.x, b.x);
+	c.y = max (a.y, b.y);
+	c.z = max (a.z, b.z);
+	return c;
+}
+
+// there may already be a function for bounding a vector in this manner, however my very quick search did not reveal one -- Player_2
+vector vecinbounds (vector point, vector a, vector b) {
+	vector c, d, e;
+
+	d = vectomin(a,b);
+	e = vectomax(a,b);
+	
+	c = vectomax(point, d);
+	c = vectomin(c, e);
+	
+	return c;
+	
+}
+
+vector vecoutbounds (vector point, vector a, vector b) {
+	vector c, d, e;
+	
+	d = vectomax(a,b);
+	e = vectomin(a,b);
+	
+	c = vectomax(point, d);
+	c = vectomin(c, e);
+	
+	return c;
+	
+}
+
+//does QC have a static type? I'll just use a global I guess...
+vector old_camera_position = '0 0 0';
+void CSQCPlayer_SetViewLocation()
 {
-	entity view = CSQCModel_server2csqc(player_localentnum);
-	if(!view) { return; }
-
-	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
+	if(self.viewloc && !wasfreed(self.viewloc) && self.viewloc.enemy && self.viewloc.goalentity)
 	{
-		vector level_start, level_end, camera_rail, camera_angle;
-		vector forward, backward;
+		entity view = CSQCModel_server2csqc(player_localentnum);
+		if(!view) { return; }
 
-		level_start = view.viewloc.enemy.origin;
-		level_end = view.viewloc.goalentity.origin;
+		vector position_a, position_b, camera_position, camera_angle, forward, backward;
 
-		// there may already be a function for bouning a vector in this manner, however my very quick search did not reveal one -- Player_2
+		position_a = self.viewloc.enemy.origin;
+		position_b = self.viewloc.goalentity.origin;
 
-		//bound the x axis
-		if (view.origin.x < min(level_start.x, level_end.x))
-			camera_rail.x = min(level_start.x, level_end.x);
-		else if (view.origin.x > max(level_start.x, level_end.x))
-			camera_rail.x = max(level_start.x, level_end.x);
+		if (cvar("cam_box")) {
+			camera_position = vecinbounds(view.origin, position_a, position_b);
+		}
 		else
-			camera_rail.x = view.origin.x;
-		
-		//bound the y axis
-		if (view.origin.y < min(level_start.y, level_end.y))
-			camera_rail.y = min(level_start.y, level_end.y);
-		else if (view.origin.y > max(level_start.y, level_end.y))
-			camera_rail.y = max(level_start.y, level_end.y);
-		else
-			camera_rail.y = view.origin.y;
-		
-		//bound the z axis
-		if (view.origin.z < min(level_start.z, level_end.z))
-			camera_rail.z = min(level_start.z, level_end.z);
-		else if (view.origin.z > max(level_start.z, level_end.z))
-			camera_rail.z = max(level_start.z, level_end.z);
-		else
-			camera_rail.z = view.origin.z;
+			camera_position = vecinbounds(view.origin, position_a, position_b);
 
-		//we float around x and y, but rotate around z
-		camera_angle.x = view.origin.x - camera_rail.x;
-		camera_angle.y = view.origin.y - camera_rail.y;
-		//camera_angle.z = camera_rail.z - view.origin.z;
 
-		//camera_angle.y = view.viewloc.enemy.angles_y;
-		camera_angle.z = view.viewloc.enemy.angles_z;
+		//for a world box set camera_angle to no angle
+		camera_angle = '0 0 0';
+
+		// a tracking camera follows the player when it leaves the world box 
+		if (cvar("cam_track")) {
+			//we float around x and y, but rotate around z
+			camera_angle.x = view.origin.x - camera_position.x;
+			camera_angle.y = view.origin.y - camera_position.y;
+			camera_angle.z = camera_position.z - view.origin.z;
+			//get the angles actual
+			camera_angle = vectoangles(normalize(camera_angle));
+		}
 		
-		//get the angles actual
-		camera_angle = vectoangles(normalize(camera_angle));
-
-		//dprint(vtos(camera_rail), "\n");
+		dprint(vtos(camera_position), "\n");
+		dprint(vtos(camera_angle), "\n");
 
 		freeze_org = getpropertyvec(VF_ORIGIN);
 		freeze_ang = getpropertyvec(VF_ANGLES);
-		setproperty(VF_ORIGIN, camera_rail);
+		setproperty(VF_ORIGIN, camera_position);
 		setproperty(VF_ANGLES, camera_angle);
-
-		forward = vectoangles(normalize(level_end - level_start));
-		backward = vectoangles(normalize(level_start - level_end));
-
+		
+		forward = vectoangles(normalize(vectomin(position_b, position_a) - vectomax(position_b, position_a)));
+		backward = vectoangles(normalize(vectomax(position_b, position_a) - vectomin(position_b, position_a)));
+		
 		if(input_movevalues_y < 0) // left
 			view.angles = backward;
 		if(input_movevalues_y > 0) // favour right
 			view.angles = forward;
-
-		/*if(input_buttons & 512) // left
-			view.angles = backward;
-		else //if(input_buttons & 1024) // right
-			view.angles = forward;*/
-
+		
 		if(input_buttons & 256) // forward
 			view.v_angle_x = view.angles_x = -50;
-
+		
 		setproperty(VF_CL_VIEWANGLES, view.angles);
 	}
 }
@@ -381,7 +411,7 @@ void CSQCPlayer_SetCamera()
 
 		V_CalcRefdef(view, refdefflags);
 
-		CSQCPlayer_SetViewLocation(refdefflags);
+		CSQCPlayer_SetViewLocation();
 	}
 	else
 	{

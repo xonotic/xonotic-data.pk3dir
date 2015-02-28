@@ -20,7 +20,7 @@ void viewloc_think()
 		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
 			if(!e.viewloc)
 				if(IS_PLAYER(e)) // should we support non-player entities with this?
-				if(e.deadflag == DEAD_NO) // death view is handled separately, we can't override this just yet
+				//if(e.deadflag == DEAD_NO) // death view is handled separately, we can't override this just yet
 				{
 					vector emin = e.absmin;
 					vector emax = e.absmax;
