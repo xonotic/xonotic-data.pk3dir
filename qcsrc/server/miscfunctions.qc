@@ -469,6 +469,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_sparkle, "cl_sparkle");
 	GetCvars_handleFloat(s, f, cvar_cl_pony, "cl_pony");
 	GetCvars_handleFloat(s, f, cvar_cl_pony_skin, "cl_pony_skin");
+	GetCvars_handleFloat(s, f, cvar_cl_goat, "cl_goat");
 	GetCvars_handleFloat(s, f, cvar_cl_damnfurries, "cl_damnfurries");
 	GetCvars_handleFloat(s, f, cvar_cl_thestars, "cl_thestars");
 	GetCvars_handleFloat(s, f, cvar_cl_robot, "cl_robot");
