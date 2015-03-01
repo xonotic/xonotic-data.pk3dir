@@ -1080,6 +1080,7 @@ void precache()
         precache_playermodel("models/player/terminusmale.iqm");
         precache_playermodel("models/player/ubot.iqm");
         precache_playermodel("models/player/rosalina.dpm");
+        precache_playermodel("models/player/draconimale.iqm");
     }
 
     if (g_footsteps)
