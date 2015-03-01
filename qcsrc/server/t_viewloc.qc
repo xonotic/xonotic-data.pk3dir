@@ -1,3 +1,4 @@
+#ifndef COMPAT_VEX
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -5,6 +6,7 @@
     #include "../warpzonelib/util_server.qh"
     #include "defs.qh"
 	#include "t_viewloc.qh"
+#endif
 #endif
 
 #ifdef SVQC

@@ -48,6 +48,7 @@ weapons/projectile.qc // TODO
 ../common/net_notice.qc
 ../common/notifications.qc
 ../common/playerstats.qc
+../common/p2mathlib.qc
 ../common/test.qc
 ../common/urllib.qc
 ../common/util.qc

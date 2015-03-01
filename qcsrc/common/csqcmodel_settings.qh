@@ -70,7 +70,8 @@
 	CSQCModel_Hook_PostUpdate(isnew, isplayer, islocalplayer);
 #define CSQCMODEL_HOOK_PREDRAW \
 	CSQCModel_Hook_PreDraw(isplayer);
-#define CSQCPLAYER_HOOK_POSTCAMERASETUP
+#define CSQCPLAYER_HOOK_POSTCAMERASETUP \
+	CSQCPlayer_SetViewLocation();
 
 // force updates of player entities that often even if unchanged
 #define CSQCPLAYER_FORCE_UPDATES 0.25
