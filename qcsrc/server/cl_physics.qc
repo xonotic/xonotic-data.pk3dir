@@ -25,6 +25,7 @@
     #include "race.qh"
     #include "playerdemo.qh"
 	#include "t_viewloc.qh"
+	#include "../common/viewloc.qh"
 #endif
 
 .float race_penalty;
@@ -863,7 +864,34 @@ void SV_PlayerPhysics()
 	if(time < self.ladder_time)
 		self.disableclientprediction = 1;
 
-	viewloc_PlayerPhysics();
+	if(self.viewloc)
+	{
+		self.disableclientprediction = 1;
+		vector oldmovement = self.movement;
+		self.movement_x = oldmovement_y;
+		self.movement_y = 0;
+
+		if(self.movement_x < 0)
+			self.movement_x = -self.movement_x;
+
+		vector level_start, level_end;
+		level_start = self.viewloc.enemy.origin;
+		level_end = self.viewloc.goalentity.origin;
+		vector forward, backward;
+		forward = vectoangles(normalize(level_end - level_start));
+		backward = vectoangles(normalize(level_start - level_end));
+
+		if(self.movement_x < 0) // left
+			self.angles = backward;
+		if(self.movement_x > 0) // right
+			self.angles = forward;
+
+		if(oldmovement_x > 0)
+			self.v_angle_x = self.angles_x = -50;
+		
+		if(!self.BUTTON_CROUCH)
+			self.BUTTON_CROUCH = (oldmovement_x < 0);
+	}
 
 	if(self.frozen)
 	{

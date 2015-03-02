@@ -1,6 +1,3 @@
-//#define COMPAT_VEX
-
-#ifndef COMPAT_VEX
 #include "util.qh"
 
 #if defined(CSQC)
@@ -10,7 +7,6 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include "../server/defs.qh"
-#endif
 #endif
 
 #ifdef SVQC
@@ -52,10 +48,6 @@ void viewloc_PlayerPhysics()
 
 void viewloc_SetTags()
 {
-#ifdef COMPAT_VEX
-	entity self = CSQCModel_server2csqc(player_localentnum);
-#endif
-
 	if(self.viewloc && wasfreed(self.viewloc))
 		self.viewloc = world;
 
@@ -66,19 +58,10 @@ void viewloc_SetTags()
 		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
 }
 
-#ifdef COMPAT_VEX
-entity view;
-#endif
+vector old_camera_angle = '0 0 0';
 void viewloc_SetViewLocation()
 {
-#ifdef COMPAT_VEX
-	if(!view) { view = spawn(); }
-
-	view.viewloc = findfloat(world, entnum, getstati(STAT_VIEWLOC));
-	view.origin = pmove_org;
-#else
 	entity view = CSQCModel_server2csqc(player_localentnum);
-#endif
 	if(!view) { return; }
 	//NOTE: the "cam_" cvars sould probably be changed out with a spawnflag or an entity key. I have it like this for my testing -- Player_2
 	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)

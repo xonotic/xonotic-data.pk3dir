@@ -113,6 +113,7 @@ weapons/weaponsystem.qc
 ../common/turrets/turrets.qc
 ../common/turrets/util.qc
 ../common/vehicles/vehicles_include.qc
+../common/viewloc.qc
 ../common/urllib.qc
 ../common/util.qc
 ../common/weapons/config.qc

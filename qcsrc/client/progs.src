@@ -71,6 +71,8 @@ weapons/projectile.qc // TODO
 ../common/vehicles/cl_vehicles.qc
 ../common/vehicles/vehicles.qc
 
+../common/viewloc.qc
+
 ../common/weapons/weapons.qc // TODO
 
 ../csqcmodellib/cl_model.qc
