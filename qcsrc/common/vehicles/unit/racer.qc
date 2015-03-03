@@ -15,7 +15,7 @@ REGISTER_VEHICLE(
 #ifdef SVQC
 #include "../../effects.qh"
 
-float autocvar_g_vehicle_racer;
+bool autocvar_g_vehicle_racer;
 
 float autocvar_g_vehicle_racer_speed_afterburn;
 float autocvar_g_vehicle_racer_afterburn_cost;
@@ -26,6 +26,9 @@ float autocvar_g_vehicle_racer_waterburn_speed;
 float autocvar_g_vehicle_racer_water_speed_forward;
 float autocvar_g_vehicle_racer_water_speed_strafe;
 
+float autocvar_g_vehicle_racer_water_downforce = 0.03;
+float autocvar_g_vehicle_racer_water_upforcedamper = 15;
+
 float autocvar_g_vehicle_racer_anglestabilizer;
 float autocvar_g_vehicle_racer_downforce;
 
@@ -35,7 +38,7 @@ float autocvar_g_vehicle_racer_springlength;
 float autocvar_g_vehicle_racer_upforcedamper;
 float autocvar_g_vehicle_racer_friction;
 
-var float autocvar_g_vehicle_racer_water_time = 5;
+float autocvar_g_vehicle_racer_water_time = 5;
 
 float autocvar_g_vehicle_racer_hovertype;
 float autocvar_g_vehicle_racer_hoverpower;
@@ -90,6 +93,8 @@ float autocvar_g_vehicle_racer_bouncefactor;
 float autocvar_g_vehicle_racer_bouncestop;
 vector autocvar_g_vehicle_racer_bouncepain;
 
+.float racer_watertime;
+
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
 
 void racer_align4point(float _delta)
@@ -114,16 +119,23 @@ void racer_align4point(float _delta)
 	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
 	self.velocity += push_vector * _delta;
+
+	float uforce = autocvar_g_vehicle_racer_upforcedamper;
 	
 	if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
-	if(self.owner.BUTTON_CROUCH && time < self.air_finished)
-		self.velocity_z += 30;
-	else
-		self.velocity_z += 200;
+	{
+		uforce = autocvar_g_vehicle_racer_water_upforcedamper;
+
+		if(self.owner.BUTTON_CROUCH && time < self.air_finished)
+			self.velocity_z += 30;
+		else
+			self.velocity_z += 200;
+	}
+	
 
 	// Anti ocilation
 	if(self.velocity_z > 0)
-		self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * _delta;
+		self.velocity_z *= 1 - uforce * _delta;
 
 	push_vector_x =  (fl_push - bl_push);
 	push_vector_x += (fr_push - br_push);
@@ -376,7 +388,7 @@ float racer_frame()
 			pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
 
 		racer.wait = time;
-		
+
 		if(pointcontents(racer.origin) == CONTENT_WATER)
 		{
 			racer.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * frametime;
@@ -409,7 +421,14 @@ float racer_frame()
 		sound (racer.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 	}
 
-	df -= v_up * (vlen(racer.velocity) * autocvar_g_vehicle_racer_downforce);
+	if(pointcontents(racer.origin) == CONTENT_WATER)
+		racer.racer_watertime = time;
+
+	float dforce = autocvar_g_vehicle_racer_downforce;
+	if(time - racer.racer_watertime <= 3)
+		dforce = autocvar_g_vehicle_racer_water_downforce;
+
+	df -= v_up * (vlen(racer.velocity) * dforce);
 	player.movement = racer.velocity += df * frametime;
 
 	if(!forbidWeaponUse(player))
@@ -511,12 +530,17 @@ void racer_think()
 	vector df = self.velocity * -autocvar_g_vehicle_racer_friction;
 	df_z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
 
+	float forced = autocvar_g_vehicle_racer_upforcedamper;
+
 	if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
+	{
+		forced = autocvar_g_vehicle_racer_water_upforcedamper;
 		self.velocity_z += 200;
+	}
 
 	self.velocity += df * pushdeltatime;
 	if(self.velocity_z > 0)
-		self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * pushdeltatime;
+		self.velocity_z *= 1 - forced * pushdeltatime;
 
 	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);

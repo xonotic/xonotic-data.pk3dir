@@ -1930,6 +1930,9 @@ void CSQC_UpdateView(float w, float h)
 		HUD_Radar_Mouse();
 
     if(hud && !intermission)
+    if(hud == HUD_BUMBLEBEE_GUN)
+    	CSQC_BUMBLE_GUN_HUD();
+    else
 		VEH_ACTION(hud, VR_HUD);
 
 	FPSCounter_Update();

@@ -103,7 +103,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
 		if(!(IS_VEHICLE(trace_ent) || IS_TURRET(trace_ent)))
 			trace_ent = world;
-			
+
 		if(trace_ent.alpha <= 0.5 && trace_ent.alpha != 0)
 			trace_ent = world; // invisible
 	}
@@ -634,8 +634,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;
 
+	if(DEATH_WEAPONOFWEAPONDEATH(deathtype))
+		damage *= autocvar_g_vehicles_weapon_damagerate;
+
 	self.enemy = attacker;
-	
+
 	self.pain_finished = time;
 
 	if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
@@ -706,7 +709,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 
 float vehicles_crushable(entity e)
 {
-	if(IS_PLAYER(e))
+	if(IS_PLAYER(e) && time >= e.vehicle_enter_delay)
 		return true;
 
 	if(IS_MONSTER(e))
@@ -847,6 +850,7 @@ void vehicles_exit(float eject)
 		_player.hud				= HUD_NORMAL;
 		_player.switchweapon	= _vehicle.switchweapon;
 		_player.last_vehiclecheck = time + 3;
+		_player.vehicle_enter_delay = time + 2;
 
 		CSQCVehicleSetup(_player, HUD_NORMAL);
 	}
@@ -884,7 +888,7 @@ void vehicles_exit(float eject)
 	_vehicle.owner = world;
 
 	CSQCMODEL_AUTOINIT();
-	
+
 	self = _oldself;
 
 	vehicles_exit_running = false;
@@ -903,7 +907,7 @@ void vehicles_touch()
 		if((self.origin_z + self.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
 		{
-			if(vlen(self.velocity) != 0)
+			if(vlen(self.velocity) >= 30)
 				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
@@ -924,28 +928,18 @@ void vehicles_touch()
 void vehicles_enter(entity pl, entity veh)
 {
    // Remove this when bots know how to use vehicles
-	if (IS_BOT_CLIENT(pl))
-	if (autocvar_g_vehicles_allow_bots)
-		dprint("Bot enters vehicle\n"); // This is where we need to disconnect (some, all?) normal bot AI and hand over to vehicle's _aiframe()
-	else
+	if((IS_BOT_CLIENT(pl) && !autocvar_g_vehicles_allow_bots))
 		return;
 
-	if(!IS_PLAYER(pl))
-		return;
+	if((!IS_PLAYER(pl))
+	|| (veh.phase >= time)
+	|| (pl.vehicle_enter_delay >= time)
+	|| (pl.frozen)
+	|| (pl.deadflag != DEAD_NO)
+	|| (pl.vehicle)
+	) { return; }
 
-	if(veh.phase > time)
-		return;
-
-	if(pl.frozen)
-		return;
-
-	if(pl.deadflag != DEAD_NO)
-		return;
-
-	if(pl.vehicle)
-		return;
-
-	if(autocvar_g_vehicles_enter) // skip if we're using regular touch code
+	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
 	if(veh.owner)
 	{
@@ -954,7 +948,7 @@ void vehicles_enter(entity pl, entity veh)
 		other = pl; // TODO: fix
 
 		if(!veh.gunner1)
-		if(veh.gun1.phase <= time)
+		if(time >= veh.gun1.phase)
 		if(veh.gun1.vehicle_enter)
 		if(veh.gun1.vehicle_enter())
 		{
@@ -963,7 +957,7 @@ void vehicles_enter(entity pl, entity veh)
 		}
 
 		if(!veh.gunner2)
-		if(veh.gun2.phase <= time)
+		if(time >= veh.gun2.phase)
 		if(veh.gun2.vehicle_enter)
 		if(veh.gun2.vehicle_enter())
 		{
@@ -1093,7 +1087,7 @@ void vehicles_think()
 		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
 	
 	VEH_ACTION(self.vehicleid, VR_THINK);
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -1144,7 +1138,7 @@ void vehicles_spawn()
 	vehicles_reset_colors();
 
 	VEH_ACTION(self.vehicleid, VR_SPAWN);
-	
+
 	CSQCMODEL_AUTOINIT();
 }
 
@@ -1154,7 +1148,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 		return false;
 
 	entity veh = get_vehicleinfo(vehicle_id);
-	
+
 	if(!veh.vehicleid)
 		return false;
 	

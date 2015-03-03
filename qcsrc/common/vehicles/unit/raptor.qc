@@ -13,15 +13,15 @@ REGISTER_VEHICLE(
 );
 #else
 
-const float RSM_FIRST = 1;
-const float RSM_BOMB = 1;
-const float RSM_FLARE = 2;
-const float RSM_LAST = 2;
+const int RSM_FIRST = 1;
+const int RSM_BOMB = 1;
+const int RSM_FLARE = 2;
+const int RSM_LAST = 2;
 
 #ifdef SVQC
 #include "../../effects.qh"
 
-float autocvar_g_vehicle_raptor;
+bool autocvar_g_vehicle_raptor;
 
 float autocvar_g_vehicle_raptor_respawntime;
 float autocvar_g_vehicle_raptor_takeofftime;
@@ -417,7 +417,7 @@ float raptor_frame()
 	raptor.velocity  += df * frametime;
 	player.velocity = player.movement  = raptor.velocity;
 	setorigin(player, raptor.origin + '0 0 32');
-	
+
 	player.vehicle_weapon2mode = raptor.vehicle_weapon2mode;
 
 	vector vf, ad;
@@ -730,6 +730,17 @@ float raptor_impulse(float _imp)
 {
 	switch(_imp)
 	{
+		case 1:
+		case 230:
+			self.vehicle.vehicle_weapon2mode = RSM_BOMB;
+			CSQCVehicleSetup(self, 0);
+			return true;
+		case 2:
+		case 231:
+			self.vehicle.vehicle_weapon2mode = RSM_FLARE;
+			CSQCVehicleSetup(self, 0);
+			return true;
+
 		case 10:
 		case 15:
 		case 18:
@@ -739,6 +750,7 @@ float raptor_impulse(float _imp)
 
 			CSQCVehicleSetup(self, 0);
 			return true;
+		case 11:
 		case 12:
 		case 16:
 		case 19:

@@ -37,10 +37,10 @@ entity get_vehicleinfo(float id);
 
 
 // entity properties of vehicleinfo:
-.float vehicleid; // VEH_...
+.int vehicleid; // VEH_...
 .string netname; // short name
 .string vehicle_name; // human readable name
-.float(float) vehicle_func; // v_...
+.int(int) vehicle_func; // v_...
 .string mdl; // currently a copy of the model
 .string model; // full name of model
 .string head_model; // full name of tur_head model
@@ -48,8 +48,8 @@ entity get_vehicleinfo(float id);
 .string tag_head; // tur_head model tag
 .string tag_hud; // hud model tag
 .string tag_view; // cockpit model tag
-.float() PlayerPhysplug; // player physics mod
-.float spawnflags;
+.int() PlayerPhysplug; // player physics mod
+.int spawnflags;
 .vector mins, maxs; // vehicle hitbox size
 
 // other useful macros
@@ -60,18 +60,18 @@ entity get_vehicleinfo(float id);
 //  Vehicle Registration
 // =====================
 
-float v_null(float dummy);
-void register_vehicle(float id, float(float) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname);
+int v_null(int dummy);
+void register_vehicle(int id, int(int) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname);
 void register_vehicles_done();
 
-const float VEH_MAXCOUNT = 24;
+const int VEH_MAXCOUNT = 24;
 #define VEH_FIRST 1
-float VEH_COUNT;
-float VEH_LAST;
+int VEH_COUNT;
+int VEH_LAST;
 
 #define REGISTER_VEHICLE_2(id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname) \
-	float id; \
-	float func(float); \
+	int id; \
+	int func(int); \
 	void RegisterVehicles_##id() \
 	{ \
 		VEH_LAST = (id = VEH_FIRST + VEH_COUNT); \
