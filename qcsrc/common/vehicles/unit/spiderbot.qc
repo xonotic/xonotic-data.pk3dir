@@ -29,6 +29,7 @@ float autocvar_g_vehicle_spiderbot_respawntime;
 float autocvar_g_vehicle_spiderbot_speed_stop;
 float autocvar_g_vehicle_spiderbot_speed_strafe;
 float autocvar_g_vehicle_spiderbot_speed_walk;
+float autocvar_g_vehicle_spiderbot_speed_run = 700;
 float autocvar_g_vehicle_spiderbot_turnspeed;
 float autocvar_g_vehicle_spiderbot_turnspeed_strafe;
 float autocvar_g_vehicle_spiderbot_movement_inertia;
@@ -402,7 +403,10 @@ float spiderbot_frame()
 			spider.frame = 5;
 		}
 
-		if((spider.flags & FL_ONGROUND) && player.BUTTON_JUMP && self.tur_head.wait < time)
+		if(!player.BUTTON_JUMP)
+			spider.BUTTON_JUMP = 0;
+
+		if((spider.flags & FL_ONGROUND) && player.BUTTON_JUMP && !spider.BUTTON_JUMP && self.tur_head.wait < time)
 		{
 			sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_jump.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 			//dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
@@ -410,7 +414,8 @@ float spiderbot_frame()
 
 			self.tur_head.wait = time + 2;
 			spider.jump_delay = time + 2;
-			player.BUTTON_JUMP = 0;
+			spider.BUTTON_JUMP = 1; // set spider's jump
+			//player.BUTTON_JUMP = 0;
 
 			vector movefix = '0 0 0';
 			if(player.movement_x > 0) movefix_x = 1;
@@ -473,7 +478,7 @@ float spiderbot_frame()
 					}
 					player.movement_y = 0;
 					float oldvelz = spider.velocity_z;
-					movelib_move_simple(normalize(v_forward * player.movement_x),autocvar_g_vehicle_spiderbot_speed_walk,autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(normalize(v_forward * player.movement_x),((player.BUTTON_JUMP) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
 					spider.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
