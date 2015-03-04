@@ -277,7 +277,7 @@ void racer_rocket_tracker()
 void racer_fire_rocket(string tagname, entity trg)
 {
 	vector v = gettaginfo(self, gettagindex(self, tagname));
-	entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", W_Sound("rocket_fire"),
+	entity rocket = vehicles_projectile("wakizashi_rocket_launch", W_Sound("rocket_fire"),
 						   v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
 						   autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
 						   DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
