@@ -426,7 +426,7 @@ float autocvar_vid_conheight;
 float autocvar_vid_conwidth;
 float autocvar_vid_pixelheight;
 float autocvar_viewsize;
-float autocvar_cl_eventchase_vehicle;
+bool autocvar_cl_eventchase_vehicle = 1;
 vector autocvar_cl_eventchase_vehicle_viewoffset = '0 0 80';
 float autocvar_cl_eventchase_vehicle_distance = 250;
 vector autocvar_cl_eventchase_generator_viewoffset = '0 0 80';
