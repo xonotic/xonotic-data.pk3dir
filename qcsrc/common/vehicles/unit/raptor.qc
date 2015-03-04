@@ -191,7 +191,7 @@ void raptor_bombdrop()
 
 void raptor_fire_cannon(entity gun, string tagname)
 {
-	vehicles_projectile("raptor_cannon_muzzleflash", W_Sound("lasergun_fire"),
+	vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH, W_Sound("lasergun_fire"),
 						   gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
 						   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
 						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, self.owner);

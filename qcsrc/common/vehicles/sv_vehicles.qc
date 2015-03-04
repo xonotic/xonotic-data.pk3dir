@@ -214,7 +214,7 @@ void vehicles_projectile_explode()
 	remove (self);
 }
 
-entity vehicles_projectile(string _mzlfx, string _mzlsound,
+entity vehicles_projectile(int _mzlfx, string _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
 						   float _deahtype, float _projtype, float _health,
@@ -257,8 +257,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 		sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
 	if(_mzlfx)
-		pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
-
+		Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
 
 	setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
