@@ -313,6 +313,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
 	}
 
+	if(DEATH_ISTURRET(deathtype))
+		damage *= autocvar_g_turrets_player_damagerate;
+
 	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
 		// tuba causes blood to come out of the ears

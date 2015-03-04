@@ -412,6 +412,8 @@ void FixPlayermodel()
 		}
 		if(self.cvar_cl_robot == 1)
 			defaultmodel = "models/player/terminusmale.iqm";
+		if(self.cvar_cl_goat)
+			defaultmodel = "models/player/draconimale.iqm";
 
 		// special hax
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist) || IS_BOT_CLIENT(self))

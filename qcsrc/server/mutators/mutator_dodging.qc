@@ -94,7 +94,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 		if (self.movement_z > 0) self.movement_z = 0;
 
 		self.velocity +=
-			+ ((self.dodging_direction_y * velocity_difference) * v_right)
+			  ((self.dodging_direction_y * velocity_difference) * v_right)
 			+ ((self.dodging_direction_x * velocity_difference) * v_forward);
 
 		self.dodging_velocity_gain = self.dodging_velocity_gain - velocity_difference;

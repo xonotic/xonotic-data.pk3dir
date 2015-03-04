@@ -652,6 +652,7 @@ const int MIF_GUIDED_TAG = 128;
 .int cvar_cl_damnfurries;
 .bool cvar_cl_thestars;
 .bool cvar_cl_robot;
+.bool cvar_cl_goat;
 .int cvar_cl_charge;
 
 .string cvar_cl_autovote;

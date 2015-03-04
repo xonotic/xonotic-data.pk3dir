@@ -3,4 +3,6 @@
 
 void bumble_raygun_read(bool bIsNew);
 
+void CSQC_BUMBLE_GUN_HUD();
+
 #endif

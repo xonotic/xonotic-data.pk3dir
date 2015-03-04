@@ -562,6 +562,8 @@ float autocvar_g_turrets_nofire;
 float autocvar_g_turrets_reloadcvars;
 float autocvar_g_turrets_targetscan_maxdelay;
 float autocvar_g_turrets_targetscan_mindelay;
+float autocvar_g_turrets_weapon_damagerate = 1;
+float autocvar_g_turrets_player_damagerate = 1; // incorrectly named, but there is no g_player yet
 float autocvar_g_use_ammunition;
 float autocvar_g_waypointeditor;
 float autocvar_g_waypointeditor_auto;

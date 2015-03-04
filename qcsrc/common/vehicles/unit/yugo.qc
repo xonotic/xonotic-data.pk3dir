@@ -89,7 +89,8 @@ void yugo_align4point(float _delta)
 
    self.velocity += push_vector * _delta;
    
-   if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
+	int cont = pointcontents(self.origin - '0 0 64');
+	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		self.velocity_z += 200;
 
 	// Anti ocilation
@@ -288,7 +289,8 @@ void yugo_think()
 	vector df = self.velocity * -autocvar_g_vehicle_yugo_friction;
 	df_z += (1 - trace_fraction) * ((self.owner) ? autocvar_g_vehicle_yugo_hoverpower : autocvar_g_vehicle_yugo_hoverpower_idle) + sin(time * 2) * (autocvar_g_vehicle_yugo_springlength * 2);
 
-	if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
+	int cont = pointcontents(self.origin - '0 0 64');
+	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		self.velocity_z += 200;
 
 	self.velocity += df * pushdeltatime;

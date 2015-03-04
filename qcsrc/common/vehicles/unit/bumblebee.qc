@@ -90,12 +90,12 @@ vector autocvar_g_vehicle_bumblebee_bouncepain;
 
 bool autocvar_g_vehicle_bumblebee = 0;
 
-float bumble_raygun_send(entity to, float sf);
+float bumble_raygun_send(entity to, int sf);
 
 void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
 {
 	vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-	vehicles_projectile("bigplasma_muzzleflash", W_Sound("flacexp3"),
+	vehicles_projectile(EFFECT_BIGPLASMA_MUZZLEFLASH, W_Sound("flacexp3"),
 						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
 						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
 						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
@@ -116,7 +116,7 @@ float bumblebee_gunner_frame()
 	vehic.angles_x *= -1;
 	makevectors(vehic.angles);
 	vehic.angles_x *= -1;
-	if((gun == vehic.gun1))
+	if(gun == vehic.gun1)
 	{
 		_in = autocvar_g_vehicle_bumblebee_cannon_turnlimit_in;
 		_out = autocvar_g_vehicle_bumblebee_cannon_turnlimit_out;
@@ -143,15 +143,7 @@ float bumblebee_gunner_frame()
 				if(trace_ent.takedamage)
 					if(!trace_ent.deadflag)
 					{
-						if(teamplay)
-						{
-							if(trace_ent.team != gunner.team)
-							{
-								gun.enemy = trace_ent;
-								gun.lock_time = time + 5;
-							}
-						}
-						else
+						if(DIFF_TEAM(trace_ent, gunner))
 						{
 							gun.enemy = trace_ent;
 							gun.lock_time = time + 5;
@@ -219,154 +211,173 @@ float bumblebee_gunner_frame()
 	return 1;
 }
 
-void bumblebee_gunner_exit(float _exitflag)
+vector bumblebee_gunner_findgoodexit(vector prefer_spot, entity gunner, entity player)
 {
-	if(IS_REAL_CLIENT(self))
-	{
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEWPORT);
-		WriteEntity(MSG_ONE, self);
+	//vector exitspot;
+	float mysize;
 
-		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
-		WriteAngle(MSG_ONE, 0);
-		WriteAngle(MSG_ONE, self.vehicle.angles.y);
-		WriteAngle(MSG_ONE, 0);
+	tracebox(gunner.origin + '0 0 32', PL_MIN, PL_MAX, prefer_spot, MOVE_NORMAL, player);
+	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
+		return prefer_spot;
+
+	mysize = 1.5 * vlen(PL_MAX - PL_MIN); // can't use gunner's size, as they don't have a size
+	float i;
+	vector v, v2;
+	v2 = 0.5 * (gunner.absmin + gunner.absmax);
+	for(i = 0; i < 100; ++i)
+	{
+		v = randomvec();
+		v_z = 0;
+		v = v2 + normalize(v) * mysize;
+		tracebox(v2, PL_MIN, PL_MAX, v, MOVE_NORMAL, player);
+		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
+			return v;
 	}
 
-	CSQCVehicleSetup(self, HUD_NORMAL);
-	setsize(self, PL_MIN, PL_MAX);
-
-	self.takedamage     = DAMAGE_AIM;
-	self.solid          = SOLID_SLIDEBOX;
-	self.movetype       = MOVETYPE_WALK;
-	self.effects        &= ~EF_NODRAW;
-	self.alpha          = 1;
-	self.PlayerPhysplug = func_null;
-	self.view_ofs       = PL_VIEW_OFS;
-	self.event_damage   = PlayerDamage;
-	self.hud            = HUD_NORMAL;
-	self.teleportable	= TELEPORT_NORMAL;
-	self.switchweapon   = self.vehicle.switchweapon;
-
-    vh_player = self;
-    vh_vehicle = self.vehicle;
-    MUTATOR_CALLHOOK(VehicleExit);
-    self = vh_player;
-    self.vehicle = vh_vehicle;
-
-	self.vehicle.vehicle_hudmodel.viewmodelforclient = self.vehicle;
-
-	fixedmakevectors(self.vehicle.owner.angles);
-
-	if(self == self.vehicle.owner.gunner1)
-	{
-		self.vehicle.owner.gunner1 = world;
-	}
-	else if(self == self.vehicle.owner.gunner2)
-	{
-		self.vehicle.owner.gunner2 = world;
-		v_right *= -1;
-	}
-	else
-		dprint("^1self != gunner1 or gunner2, this is a BIG PROBLEM, tell tZork this happend.\n");
-
-	vector spot = self.vehicle.owner.origin + + v_up * 128 + v_right * 300;
-	spot = vehicles_findgoodexit(spot);
-	//setorigin(self , spot);
-
-	self.velocity = 0.75 * self.vehicle.owner.velocity + normalize(spot - self.vehicle.owner.origin) * 200;
-	self.velocity_z += 10;
-
-	self.vehicle.phase = time + 5;
-	self.vehicle        = world;
+	return prefer_spot; // this should be considered a fallback?!
 }
 
-float bumblebee_gunner_enter()
+void bumblebee_gunner_exit(int _exitflag)
 {
-	RemoveGrapplingHook(other);
-	entity _gun, _gunner;
-	if(!self.gunner1)
-	{
-		_gun = self.gun1;
-		_gunner = self.gunner1;
-		self.gunner1 = other;
-	}
-	else if(!self.gunner2)
-	{
-		_gun = self.gun2;
-		_gunner = self.gunner2;
-		self.gunner2 = other;
-	}
-	else
-	{
-		dprint("^1ERROR:^7Tried to enter a fully occupied vehicle!\n");
-		return false;
-	}
+	entity player = self;
+	entity gunner = player.vehicle;
+	entity vehic = gunner.owner;
 
-	_gunner            = other;
-	_gunner.vehicle    = _gun;
-	_gun.switchweapon  = other.switchweapon;
-	_gun.vehicle_exit  = bumblebee_gunner_exit;
-
-	other.angles            = self.angles;
-	other.takedamage        = DAMAGE_NO;
-	other.solid             = SOLID_NOT;
-	other.movetype          = MOVETYPE_NOCLIP;
-	other.alpha             = -1;
-	other.event_damage      = func_null;
-	other.view_ofs          = '0 0 0';
-	other.hud               = _gun.hud;
-	other.teleportable		= false;
-	other.PlayerPhysplug    = _gun.PlayerPhysplug;
-	other.vehicle_ammo1     = self.vehicle_ammo1;
-	other.vehicle_ammo2     = self.vehicle_ammo2;
-	other.vehicle_reload1   = self.vehicle_reload1;
-	other.vehicle_reload2   = self.vehicle_reload2;
-	other.vehicle_energy    = self.vehicle_energy;
-	other.PlayerPhysplug    = bumblebee_gunner_frame;
-	other.flags             &= ~FL_ONGROUND;
-
-	if(IS_REAL_CLIENT(other))
+	if(IS_REAL_CLIENT(player))
 	{
-		msg_entity = other;
+		msg_entity = player;
 		WriteByte(MSG_ONE, SVC_SETVIEWPORT);
-		WriteEntity(MSG_ONE, _gun.vehicle_viewport);
+		WriteEntity(MSG_ONE, player);
+
 		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
-		WriteAngle(MSG_ONE, _gun.angles_x + self.angles_x);    // tilt
-		WriteAngle(MSG_ONE, _gun.angles_y + self.angles_y);    // yaw
-		WriteAngle(MSG_ONE, 0);                             // roll
+		WriteAngle(MSG_ONE, 0);
+		WriteAngle(MSG_ONE, vehic.angles.y);
+		WriteAngle(MSG_ONE, 0);
 	}
 
-	_gun.vehicle_hudmodel.viewmodelforclient = other;
+	CSQCVehicleSetup(player, HUD_NORMAL);
+	setsize(player, PL_MIN, PL_MAX);
 
-	CSQCVehicleSetup(other, other.hud);
+	player.takedamage     = DAMAGE_AIM;
+	player.solid          = SOLID_SLIDEBOX;
+	player.movetype       = MOVETYPE_WALK;
+	player.effects       &= ~EF_NODRAW;
+	player.alpha          = 1;
+	player.PlayerPhysplug = func_null;
+	player.view_ofs       = PL_VIEW_OFS;
+	player.event_damage   = PlayerDamage;
+	player.hud            = HUD_NORMAL;
+	player.teleportable	  = TELEPORT_NORMAL;
+	player.switchweapon   = gunner.switchweapon;
+	player.vehicle_enter_delay = time + 2;
 
-    vh_player = other;
-    vh_vehicle = _gun;
-    MUTATOR_CALLHOOK(VehicleEnter);
-    other = vh_player;
-    _gun = vh_vehicle;
+	fixedmakevectors(vehic.angles);
+
+	if(player == vehic.gunner1) { vehic.gunner1 = world; }
+	if(player == vehic.gunner2) { vehic.gunner2 = world; v_right *= -1; }
+
+	vector spot = real_origin(gunner);
+	spot = spot + v_up * 128 + v_forward * 300 + v_right * 150;
+	spot = bumblebee_gunner_findgoodexit(spot, gunner, player);
+
+	// TODO: figure a way to move player out of the gunner
+
+	player.velocity = 0.75 * vehic.velocity + normalize(spot - vehic.origin) * 200;
+	player.velocity_z += 10;
+
+	gunner.phase = time + 5;
+	gunner.vehicle_hudmodel.viewmodelforclient = gunner;
+
+	vh_player = player;
+	vh_vehicle = gunner;
+	MUTATOR_CALLHOOK(VehicleExit);
+	player = vh_player;
+	gunner = vh_vehicle;
+
+	player.vehicle = world;
+}
+
+bool bumblebee_gunner_enter()
+{
+	entity vehic = self;
+	entity player = other;
+	entity gunner = world;
+
+	if(!vehic.gunner1 && !vehic.gunner2 && ((time >= vehic.gun1.phase) + (time >= vehic.gun2.phase)) == 2)
+	{
+		// we can have some fun
+		if(vlen(real_origin(vehic.gun2) - player.origin) < vlen(real_origin(vehic.gun1) - player.origin))
+		{
+			gunner = vehic.gun2;
+			vehic.gunner2 = player;
+		}
+		else
+		{
+			gunner = vehic.gun1;
+			vehic.gunner1 = player;
+		}
+	}
+	else if(!vehic.gunner1 && time >= vehic.gun1.phase) 	{ gunner = vehic.gun1; vehic.gunner1 = player; }
+	else if(!vehic.gunner2 && time >= vehic.gun2.phase)		{ gunner = vehic.gun2; vehic.gunner2 = player; }
+	else { dprint("Vehicle is full, fail\n"); return false; }
+
+	player.vehicle 			= gunner;
+	player.angles 			= vehic.angles;
+	player.takedamage 		= DAMAGE_NO;
+	player.solid 			= SOLID_NOT;
+	player.alpha 			= -1;
+	player.movetype 		= MOVETYPE_NOCLIP;
+	player.event_damage 	= func_null;
+	player.view_ofs 		= '0 0 0';
+	player.hud 				= gunner.hud;
+	player.teleportable 	= false;
+	player.PlayerPhysplug 	= gunner.PlayerPhysplug;
+	player.vehicle_ammo1 	= vehic.vehicle_ammo1;
+	player.vehicle_ammo2 	= vehic.vehicle_ammo2;
+	player.vehicle_reload1 	= vehic.vehicle_reload1;
+	player.vehicle_reload2 	= vehic.vehicle_reload2;
+	player.vehicle_energy 	= vehic.vehicle_energy;
+	player.flags 		   &= ~FL_ONGROUND;
+
+	RemoveGrapplingHook(player);
+
+	gunner.switchweapon = player.switchweapon;
+	gunner.vehicle_exit = bumblebee_gunner_exit;
+	gunner.vehicle_hudmodel.viewmodelforclient = player;
+
+	if(IS_REAL_CLIENT(player))
+	{
+		msg_entity = player;
+		WriteByte(MSG_ONE, 		SVC_SETVIEWPORT);
+		WriteEntity(MSG_ONE, 	gunner.vehicle_viewport);
+
+		WriteByte(MSG_ONE, 		SVC_SETVIEWANGLES);
+		WriteAngle(MSG_ONE, 	gunner.angles_x + vehic.angles_x); // tilt
+		WriteAngle(MSG_ONE, 	gunner.angles_y + vehic.angles_y); // yaw
+		WriteAngle(MSG_ONE, 	0); // roll
+	}
+
+	CSQCVehicleSetup(player, player.hud);
+
+	vh_player = player;
+	vh_vehicle = gunner;
+	MUTATOR_CALLHOOK(VehicleEnter);
+	player = vh_player;
+	gunner = vh_vehicle;
 
 	return true;
 }
 
-float vehicles_valid_pilot()
+bool vehicles_valid_pilot()
 {
-	if (!IS_PLAYER(other))
+	if(IS_BOT_CLIENT(other) && !autocvar_g_vehicles_allow_bots)
 		return false;
 
-	if(other.deadflag != DEAD_NO)
-		return false;
-
-	if(other.vehicle != world)
-		return false;
-
-	if (!IS_REAL_CLIENT(other))
-		if(!autocvar_g_vehicles_allow_bots)
-			return false;
-
-	if(teamplay && other.team != self.team)
-		return false;
+	if((!IS_PLAYER(other))
+	|| (other.deadflag != DEAD_NO)
+	|| (other.vehicle)
+	|| (DIFF_TEAM(other, self))
+	) { return false; }
 
 	return true;
 }
@@ -383,13 +394,11 @@ void bumblebee_touch()
 
 	if(vehicles_valid_pilot())
 	{
-		if(self.gun1.phase <= time)
-			if(bumblebee_gunner_enter())
-				return;
+		float phase_time = (time >= self.gun1.phase) + (time >= self.gun2.phase);
 
-		if(self.gun2.phase <= time)
-			if(bumblebee_gunner_enter())
-				return;
+		if(time >= other.vehicle_enter_delay && phase_time)
+		if(bumblebee_gunner_enter())
+			return;
 	}
 
 	vehicles_touch();
@@ -688,14 +697,14 @@ void bumblebee_exit(float eject)
 	// Hide beam
 	if(self.gun3.enemy || !wasfreed(self.gun3.enemy)) {
 		self.gun3.enemy.effects |= EF_NODRAW;
-    }
+	}
 
 	self.owner.velocity = 0.75 * self.vehicle.velocity + normalize(spot - self.vehicle.origin) * 200;
 	self.owner.velocity_z += 10;
 	setorigin(self.owner, spot);
 
 	antilag_clear(self.owner);
-    self.owner = world;
+	self.owner = world;
 }
 
 void bumblebee_blowup()
@@ -824,9 +833,9 @@ float v_bumblebee(float req)
 		case VR_DEATH:
 		{
 			entity oldself = self;
-			
+
 			CSQCModel_UnlinkEntity();
-	
+
 			// Hide beam
 			if(self.gun3.enemy || !wasfreed(self.gun3.enemy))
 				self.gun3.enemy.effects |= EF_NODRAW;
@@ -909,6 +918,8 @@ float v_bumblebee(float req)
 				self.gun1.owner = self;
 				self.gun2.owner = self;
 				self.gun3.owner = self;
+
+				self.gun1.classname = self.gun2.classname = "vehicle_playerslot";
 
 				setmodel(self.gun1, "models/vehicles/bumblebee_plasma_right.dpm");
 				setmodel(self.gun2, "models/vehicles/bumblebee_plasma_left.dpm");

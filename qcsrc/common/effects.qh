@@ -26,6 +26,11 @@
     EFFECT(0, EFFECT_LASER_MUZZLEFLASH,         "laser_muzzleflash") \
     EFFECT(0, EFFECT_MACHINEGUN_MUZZLEFLASH,    "uzi_muzzleflash") \
     EFFECT(0, EFFECT_RIFLE_MUZZLEFLASH,         "rifle_muzzleflash") \
+    EFFECT(0, EFFECT_RAPTOR_MUZZLEFLASH,        "raptor_cannon_muzzleflash") \
+    EFFECT(0, EFFECT_RACER_MUZZLEFLASH,         "wakizashi_gun_muzzleflash") \
+    EFFECT(0, EFFECT_RACER_ROCKETLAUNCH,        "wakizashi_rocket_launch") \
+    EFFECT(0, EFFECT_SPIDERBOT_ROCKETLAUNCH,    "spiderbot_rocket_launch") \
+    EFFECT(0, EFFECT_BIGPLASMA_MUZZLEFLASH,     "bigplasma_muzzleflash") \
     EFFECT(1, EFFECT_RIFLE,                     "tr_rifle") \
     EFFECT(1, EFFECT_RIFLE_WEAK,                "tr_rifle_weak") \
     EFFECT(0, EFFECT_SEEKER_MUZZLEFLASH,        "seeker_muzzleflash") \
