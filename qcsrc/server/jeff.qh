@@ -11,4 +11,6 @@ void jeff_Announcer_ItemTouch(entity player, entity item);
 
 void jeff_Announcer_FireBullet(entity targ, entity ent, vector hitloc, vector start, vector end);
 
+void jeff_Annoncer_BuffPickup(entity player, entity item);
+
 #endif
