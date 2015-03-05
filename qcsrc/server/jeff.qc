@@ -120,7 +120,7 @@ void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, en
 		break;
 	}
 
-	if(deathtype == DEATH_NADE) { attacker.nadekill_count ++ 1; }
+	if(deathtype == DEATH_NADE) { attacker.nadekill_count += 1; }
 	else { attacker.nadekill_count = 0; }
 
 	if(DEATH_ISWEAPON(deathtype, WEP_DEVASTATOR)) { attacker.rocketkill_count += 1; }
