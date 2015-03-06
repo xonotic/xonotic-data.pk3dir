@@ -896,6 +896,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			highlightedPanel_backup = world;
 		}
 	}
+	else if(nPrimary == 's' && hudShiftState & S_CTRL) // save config
+	{
+		if (bInputType == 1 || mouseClicked)
+			return true;
+		localcmd("hud save myconfig\n");
+	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
 	{
 		if (bInputType == 1)
