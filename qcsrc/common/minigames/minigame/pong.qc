@@ -363,13 +363,15 @@ int pong_server_event(entity minigame, string event, ...)
 		{
 			entity player = ...(0,entity);
 			entity paddle;
+			entity ai;
 			int i;
 			for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
 			{
 				paddle = minigame.pong_paddles[i];
 				if ( paddle != world && paddle.realowner == player )
 				{
-					pong_ai_spawn(paddle);
+					ai = pong_ai_spawn(paddle);
+					ai.pong_score = player.minigame_players.pong_score;
 					break;
 				}
 					
