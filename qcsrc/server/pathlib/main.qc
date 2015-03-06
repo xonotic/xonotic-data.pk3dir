@@ -12,11 +12,11 @@ void pathlib_deletepath(entity start)
 }
 
 //#define PATHLIB_NODEEXPIRE 0.05
-#define PATHLIB_NODEEXPIRE 20
+const float PATHLIB_NODEEXPIRE = 20;
 
 void dumpnode(entity n)
 {
-    n.is_path_node = FALSE;
+    n.is_path_node = false;
     n.think        = SUB_Remove;
     n.nextthink    = time;
 }
@@ -38,7 +38,7 @@ entity pathlib_mknode(vector where,entity parent)
 
     node.think        = SUB_Remove;
     node.nextthink    = time + PATHLIB_NODEEXPIRE;
-    node.is_path_node = TRUE;
+    node.is_path_node = true;
     node.owner        = openlist;
     node.path_prev    = parent;
 
@@ -110,7 +110,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
                 node.path_prev = parent;
             }
 
-            if not (best_open_node)
+            if (!best_open_node)
                 best_open_node = node;
             else if(best_open_node.pathlib_node_f > node.pathlib_node_f)
                 best_open_node = node;
@@ -121,7 +121,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
     where = pathlib_movenode(parent.origin, to, 0);
 
-    if not(pathlib_movenode_goodnode)
+    if (!pathlib_movenode_goodnode)
     {
         //pathlib_showsquare(where, 0 ,30);
         //pathlib_showsquare(parent.origin, 1 ,30);
@@ -141,7 +141,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
 
     if(doedge)
-        if not (tile_check(where))
+        if (!tile_check(where))
         {
             dprint("tile_check fail\n");
             pathlib_showsquare(where, 0 ,30);
@@ -157,7 +157,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     node = findradius(where,pathlib_gridsize * 0.5);
     while(node)
     {
-        if(node.is_path_node == TRUE)
+        if(node.is_path_node == true)
         {
             ++pathlib_merge_cnt;
             if(node.owner == openlist)
@@ -175,7 +175,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
                     //}
                 }
 
-                if not (best_open_node)
+                if (!best_open_node)
                     best_open_node = node;
                 else if(best_open_node.pathlib_node_f > node.pathlib_node_f)
                     best_open_node = node;
@@ -192,7 +192,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     node.pathlib_node_g = g;
     node.pathlib_node_f = f;
 
-    if not (best_open_node)
+    if (!best_open_node)
         best_open_node = node;
     else if(best_open_node.pathlib_node_f > node.pathlib_node_f)
         best_open_node = node;
@@ -255,7 +255,7 @@ void pathlib_close_node(entity node,vector goal)
         if(pathlib_movenode_goodnode)
         {
             goal_node         = node;
-            pathlib_foundgoal = TRUE;
+            pathlib_foundgoal = true;
         }
     }
 }
@@ -268,7 +268,7 @@ void pathlib_cleanup()
 
     entity node;
 
-    node = findfloat(world,is_path_node, TRUE);
+    node = findfloat(world,is_path_node, true);
     while(node)
     {
         /*
@@ -280,7 +280,7 @@ void pathlib_cleanup()
         */
 
         dumpnode(node);
-        node = findfloat(node,is_path_node, TRUE);
+        node = findfloat(node,is_path_node, true);
     }
 
     if(openlist)
@@ -405,10 +405,10 @@ entity pathlib_astar(vector from,vector to)
         pathlib_movenode   = pathlib_swimnode;
     }
 
-    if not(openlist)
+    if (!openlist)
         openlist       = spawn();
 
-    if not(closedlist)
+    if (!closedlist)
         closedlist     = spawn();
 
     pathlib_closed_cnt       = 0;
@@ -443,12 +443,12 @@ entity pathlib_astar(vector from,vector to)
     //movenode_maxdrop  = '0 0 512';
     movenode_boxup    = '0 0 72';
 
-    from_x = fsnap(from_x, pathlib_gridsize);
-    from_y = fsnap(from_y, pathlib_gridsize);
+    from.x = fsnap(from.x, pathlib_gridsize);
+    from.y = fsnap(from.y, pathlib_gridsize);
     //from_z += 32;
 
-    to_x = fsnap(to_x, pathlib_gridsize);
-    to_y = fsnap(to_y, pathlib_gridsize);
+    to.x = fsnap(to.x, pathlib_gridsize);
+    to.y = fsnap(to.y, pathlib_gridsize);
     //to_z += 32;
 
     dprint("AStar init\n");

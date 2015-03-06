@@ -7,9 +7,9 @@ vector vsnap(vector point,float fsize)
 {
     vector vret;
 
-    vret_x = rint(point_x / fsize) * fsize;
-    vret_y = rint(point_y / fsize) * fsize;
-    vret_z = ceil(point_z / fsize) * fsize;
+    vret.x = rint(point.x / fsize) * fsize;
+    vret.y = rint(point.y / fsize) * fsize;
+    vret.z = ceil(point.z / fsize) * fsize;
 
     return vret;
 }
@@ -68,13 +68,13 @@ entity pathlib_nodeatpoint(vector where)
 
     ++pathlib_searched_cnt;
 
-    where_x = fsnap(where_x,pathlib_gridsize);
-    where_y = fsnap(where_y,pathlib_gridsize);
+    where.x = fsnap(where.x,pathlib_gridsize);
+    where.y = fsnap(where.y,pathlib_gridsize);
 
     node = findradius(where,pathlib_gridsize * 0.5);
     while(node)
     {
-        if(node.is_path_node == TRUE)
+        if(node.is_path_node == true)
             return node;
 
         node = node.chain;
@@ -94,25 +94,25 @@ float tile_check_cross(vector where)
     // forward-right
     p = where + f + r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
-    if not (location_isok(trace_endpos, 1, 0))
+    if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     // Forward-left
     p = where + f - r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
-    if not (location_isok(trace_endpos, 1, 0))
+    if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     // Back-right
     p = where - f + r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
-    if not (location_isok(trace_endpos, 1 ,0))
+    if (!location_isok(trace_endpos, 1 ,0))
         return 0;
 
     //Back-left
     p = where - f - r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
-    if not (location_isok(trace_endpos, 1, 0))
+    if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     return 1;
@@ -128,26 +128,26 @@ float tile_check_plus(vector where)
     // forward
     p = where + f;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    if (!location_isok(trace_endpos,1,0))
         return 0;
 
 
     //left
     p = where - r;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    if (!location_isok(trace_endpos,1,0))
         return 0;
 
     // Right
     p = where + r;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    if (!location_isok(trace_endpos,1,0))
         return 0;
 
     //Back
     p = where - f;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    if (!location_isok(trace_endpos,1,0))
         return 0;
 
     return 1;

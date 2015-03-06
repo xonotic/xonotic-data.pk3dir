@@ -1,3 +1,11 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../warpzonelib/util_server.qh"
+    #include "defs.qh"
+    #include "vehicles/vehicles_def.qh"
+#endif
 
 .float  roomtype;
 .float  radius;
@@ -37,7 +45,7 @@ void spawnfunc_func_healthcharger() {}
 
 void func_ladder_touch()
 {
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 	if (other.vehicle_flags & VHF_ISVEHICLE)
 		return;

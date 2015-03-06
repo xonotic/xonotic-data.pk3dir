@@ -24,7 +24,7 @@ void path_dbg_think()
 
 void __showpath2_think()
 {
-    #ifdef TURRET_DEBUG 
+    #ifdef TURRET_DEBUG
 	mark_info(self.origin,1);
 	#endif
     if(self.path_next)
@@ -65,19 +65,19 @@ void pathlib_showsquare2(entity node ,vector ncolor,float align)
     }
 }
 
-void pathlib_showsquare(vector where,float goodsquare,float lifetime)
+void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 {
     entity s;
 
-    if(!lifetime)
-        lifetime = time + 30;
+    if(!_lifetime)
+        _lifetime = time + 30;
     else
-        lifetime += time;
+        _lifetime += time;
 
     s           = spawn();
     s.alpha     = 0.25;
     s.think     = SUB_Remove;
-    s.nextthink = lifetime;
+    s.nextthink = _lifetime;
     s.scale     = pathlib_gridsize / 512.001;
     s.solid     = SOLID_NOT;
 
@@ -95,19 +95,19 @@ void pathlib_showsquare(vector where,float goodsquare,float lifetime)
     setorigin(s,where);
 }
 
-void pathlib_showedge(vector where,float lifetime,float rot)
+void pathlib_showedge(vector where,float _lifetime,float rot)
 {
     entity e;
 
-    if(!lifetime)
-        lifetime = time + 30;
+    if(!_lifetime)
+        _lifetime = time + 30;
     else
-        lifetime += time;
+        _lifetime += time;
 
     e           = spawn();
     e.alpha     = 0.25;
     e.think     = SUB_Remove;
-    e.nextthink = lifetime;
+    e.nextthink = _lifetime;
     e.scale     = pathlib_gridsize / 512;
     e.solid     = SOLID_NOT;
     setorigin(e,where);

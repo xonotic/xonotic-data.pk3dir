@@ -1,19 +1,19 @@
-#define ewheel_amin_stop 0
-#define ewheel_amin_fwd_slow 1
-#define ewheel_amin_fwd_fast 2
-#define ewheel_amin_bck_slow 3
-#define ewheel_amin_bck_fast 4
+const float ewheel_amin_stop = 0;
+const float ewheel_amin_fwd_slow = 1;
+const float ewheel_amin_fwd_fast = 2;
+const float ewheel_amin_bck_slow = 3;
+const float ewheel_amin_bck_fast = 4;
 
 void ewheel_attack()
 {
     float i;
     entity _mis;
-    
+
     for (i = 0; i < 1; ++i)
     {
         turret_do_updates(self);
 
-        _mis = turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_LASER, TRUE, TRUE); 
+        _mis = turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, true, true); // WEAPONTODO: this is not a projectile made by the blaster, add separate effect for it
         _mis.missile_flags = MIF_SPLASH;
 
         pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
@@ -55,7 +55,7 @@ void ewheel_move_path()
             self.pathcurrent = self.pathcurrent.path_next;
 
 #else
-    if (vlen(self.origin - self.pathcurrent.origin) < 64)    
+    if (vlen(self.origin - self.pathcurrent.origin) < 64)
         self.pathcurrent = self.pathcurrent.enemy;
 #endif
 
@@ -73,7 +73,7 @@ void  ewheel_move_enemy()
 {
 
     float newframe;
-    
+
     self.steerto = steerlib_arrive(self.enemy.origin,self.target_range_optimal);
 
     //self.steerto = steerlib_standoff(self.enemy.origin,self.target_range_optimal);
@@ -109,9 +109,9 @@ void  ewheel_move_enemy()
         newframe = ewheel_amin_stop;
         movelib_beak_simple(autocvar_g_turrets_unit_ewheel_speed_stop);
     }
-    
-    turrets_setframe(newframe , FALSE);
-    
+
+    turrets_setframe(newframe , false);
+
     /*if(self.frame != newframe)
     {
         self.frame = newframe;
@@ -139,10 +139,10 @@ void ewheel_postthink()
     float vz;
     vector wish_angle, real_angle;
 
-    vz = self.velocity_z;
+    vz = self.velocity.z;
 
-    self.angles_x = anglemods(self.angles_x);
-    self.angles_y = anglemods(self.angles_y);
+    self.angles_x = anglemods(self.angles.x);
+    self.angles_y = anglemods(self.angles.y);
 
     fixedmakevectors(self.angles);
 
@@ -151,9 +151,9 @@ void ewheel_postthink()
     real_angle = wish_angle - self.angles;
     real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
 
-    self.tur_head.spawnshieldtime = fabs(real_angle_y);
-    real_angle_y  = bound(-self.tur_head.aim_speed, real_angle_y, self.tur_head.aim_speed);
-    self.angles_y = (self.angles_y + real_angle_y);
+    self.tur_head.spawnshieldtime = fabs(real_angle.y);
+    real_angle.y = bound(-self.tur_head.aim_speed, real_angle.y, self.tur_head.aim_speed);
+    self.angles_y = (self.angles.y + real_angle.y);
 
     if(self.enemy)
         ewheel_move_enemy();
@@ -164,7 +164,7 @@ void ewheel_postthink()
 
 
     self.velocity_z = vz;
-    
+
     if(vlen(self.velocity))
         self.SendFlags |= TNSF_MOVE;
 }
@@ -176,7 +176,7 @@ void ewheel_respawnhook()
     // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
     if(self.movetype != MOVETYPE_WALK)
 		return;
-		
+
     self.velocity = '0 0 0';
     self.enemy = world;
 
@@ -221,7 +221,7 @@ void turret_ewheel_dinit()
 {
     entity e;
 
-    if (self.netname == "")      
+    if (self.netname == "")
         self.netname     = "eWheel Turret";
 
     if (self.target != "")
@@ -250,13 +250,13 @@ void turret_ewheel_dinit()
         remove(self);
         return;
     }
-    
+
     self.frame = 1;
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-    self.iscreature = TRUE;
+    self.iscreature = true;
     self.teleportable = TELEPORT_NORMAL;
-    self.damagedbycontents = TRUE;
+    self.damagedbycontents = true;
     self.movetype   = MOVETYPE_WALK;
     self.solid      = SOLID_SLIDEBOX;
     self.takedamage = DAMAGE_AIM;

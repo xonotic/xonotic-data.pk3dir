@@ -1,19 +1,24 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "common.qh"
+	#include "client.qh"
+	#include "../client/autocvars.qh"
+	#include "../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 void WarpZone_Fade_PreDraw()
 {
 	vector org;
 	org = getpropertyvec(VF_ORIGIN);
-	if(
-#ifdef COMPAT_XON060_DONTCRASH_CHECKPVS
-		cvar_string("g_xonoticversion") != "0.5.0" &&
-		cvar_string("g_xonoticversion") != "0.6.0" &&
-#endif
-		!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
 		self.alpha = 0;
 	else if(self.warpzone_fadestart)
 		self.alpha = bound(0, (self.warpzone_fadeend - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
 	else
 		self.alpha = 1;
-	//print(sprintf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs)));
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
 	if(self.alpha <= 0)
 		self.drawmask = 0;
 	else
@@ -22,17 +27,15 @@ void WarpZone_Fade_PreDraw()
 
 void WarpZone_Read(float isnew)
 {
-	float f;
-
 	warpzone_warpzones_exist = 1;
-	if not(self.enemy)
+	if (!self.enemy)
 	{
 		self.enemy = spawn();
 		self.enemy.classname = "warpzone_from";
 	}
 	self.classname = "trigger_warpzone";
 
-	f = ReadByte();
+	int f = ReadByte();
 	self.warpzone_isboxy = (f & 1);
 	if(f & 4)
 	{
@@ -89,11 +92,10 @@ void WarpZone_Read(float isnew)
 
 void WarpZone_Camera_Read(float isnew)
 {
-	float f;
 	warpzone_cameras_exist = 1;
 	self.classname = "func_warpzone_camera";
 
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 4)
 	{
 		self.origin_x = ReadCoord();
@@ -149,9 +151,9 @@ void WarpZone_Teleported_Read(float isnew)
 {
 	vector v;
 	self.classname = "warpzone_teleported";
-	v_x = ReadCoord();
-	v_y = ReadCoord();
-	v_z = ReadCoord();
+	v.x = ReadCoord();
+	v.y = ReadCoord();
+	v.z = ReadCoord();
 	if(!isnew)
 		return;
 	self.warpzone_transform = v;
@@ -163,7 +165,6 @@ void WarpZone_Teleported_Read(float isnew)
 
 float warpzone_fixingview;
 float warpzone_fixingview_drawexteriormodel;
-float autocvar_chase_active;
 
 void WarpZone_View_Outside()
 {
@@ -193,12 +194,12 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	entity e;
 	float pd;
 
-	mi_x = min(o_x, c0_x, c1_x, c2_x, c3_x);
-	ma_x = max(o_x, c0_x, c1_x, c2_x, c3_x);
-	mi_y = min(o_y, c0_y, c1_y, c2_y, c3_y);
-	ma_y = max(o_y, c0_y, c1_y, c2_y, c3_y);
-	mi_z = min(o_z, c0_z, c1_z, c2_z, c3_z);
-	ma_z = max(o_z, c0_z, c1_z, c2_z, c3_z);
+	mi.x = min(o.x, c0_x, c1_x, c2_x, c3_x);
+	ma.x = max(o.x, c0_x, c1_x, c2_x, c3_x);
+	mi.y = min(o.y, c0_y, c1_y, c2_y, c3_y);
+	ma.y = max(o.y, c0_y, c1_y, c2_y, c3_y);
+	mi.z = min(o.z, c0_z, c1_z, c2_z, c3_z);
+	ma.z = max(o.z, c0_z, c1_z, c2_z, c3_z);
 
 	e = WarpZone_Find(mi, ma);
 	if(e)
@@ -231,7 +232,7 @@ void WarpZone_FixPMove()
 }
 
 #ifndef KEEP_ROLL
-var float autocvar_cl_rollkillspeed = 10;
+float autocvar_cl_rollkillspeed = 10;
 #endif
 void WarpZone_FixView()
 {
@@ -239,21 +240,14 @@ void WarpZone_FixView()
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, o;
 	float f;
 
-	org = getpropertyvec(VF_ORIGIN);
-	ang = getpropertyvec(VF_ANGLES);
-#ifdef WORKAROUND_XON010
-	float dirty;
-	dirty = checkextension("DP_CSQC_ROTATEMOVES");
-#endif
+	warpzone_save_view_origin = org = getpropertyvec(VF_ORIGIN);
+	warpzone_save_view_angles = ang = getpropertyvec(VF_ANGLES);
 
 	e = WarpZone_Find(org, org);
 	if(e)
 	{
 		org = WarpZone_TransformOrigin(e, org);
 		ang = WarpZone_TransformVAngles(e, ang);
-#ifdef WORKAROUND_XON010
-		dirty = 1;
-#endif
 		WarpZone_View_Inside();
 	}
 	else
@@ -269,23 +263,11 @@ void WarpZone_FixView()
 	rick = getproperty(VF_CL_VIEWANGLES_Z);
 	rick *= f;
 	setproperty(VF_CL_VIEWANGLES_Z, rick);
-
-#ifdef WORKAROUND_XON010
-	if(ang_z > 1 || ang_z < -1)
-		dirty = 1;
-#endif
-	ang_z *= f;
+	ang.z *= f;
 #endif
 
-#ifdef WORKAROUND_XON010
-	if(dirty)
-	{
-#endif
 	setproperty(VF_ORIGIN, org);
 	setproperty(VF_ANGLES, ang);
-#ifdef WORKAROUND_XON010
-	}
-#endif
 
 	nearclip = '0 0 1' * (cvar("r_nearclip") * 1.125);
 	corner0 = cs_unproject('0 0 0' + nearclip);

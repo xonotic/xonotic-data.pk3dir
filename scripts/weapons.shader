@@ -103,3 +103,11 @@ minelayer
 		rgbgen lightingDiffuse
 	}
 }
+shotgun
+{
+	dpreflectcube cubemaps/default/sky
+	{
+		map textures/arc.tga
+		rgbgen lightingDiffuse
+	}
+}

@@ -20,9 +20,23 @@
  * IN THE SOFTWARE.
  */
 
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../common/animdecide.qh"
+	#include "../server/constants.qh"
+	#include "../server/defs.qh"
+	#include "common.qh"
+	#include "sv_model.qh"
+#endif
+
 // generic CSQC model code
 
-float CSQCModel_Send(entity to, float sf)
+float CSQCModel_Send(entity to, int sf)
 {
 	// some nice flags for CSQCMODEL_IF
 	float isplayer = (IS_CLIENT(self));
@@ -34,7 +48,7 @@ float CSQCModel_Send(entity to, float sf)
 	unused_float = isnolocalplayer;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODEL);
-	WriteShort(MSG_ENTITY, sf);
+	WriteInt24_t(MSG_ENTITY, sf);
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
@@ -50,7 +64,7 @@ float CSQCModel_Send(entity to, float sf)
 #undef CSQCMODEL_ENDIF
 #undef CSQCMODEL_IF
 
-	return TRUE;
+	return true;
 }
 
 #ifdef CSQCPLAYER_FORCE_UPDATES
@@ -100,7 +114,7 @@ void CSQCModel_CheckUpdate()
 	}
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
 	{ \
-		t tmp = bound(mi, s * self.f, ma) - mi; \
+		t tmp = rint(bound(mi, s * self.f, ma) - mi); \
 		if(tmp != self.csqcmodel_##f) \
 		{ \
 			self.csqcmodel_##f = tmp; \
