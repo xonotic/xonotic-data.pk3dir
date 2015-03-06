@@ -2152,6 +2152,8 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 {
 	if(vh_player.flagcarried)
 	{
+		vh_player.flagcarried.nodrawtoclient = vh_player; // hide the flag from the driver
+
 		if(!autocvar_g_ctf_allow_vehicle_carry && !autocvar_g_ctf_allow_vehicle_touch)
 		{
 			ctf_Handle_Throw(vh_player, world, DROP_NORMAL);
@@ -2177,6 +2179,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 		setorigin(vh_player.flagcarried, FLAG_CARRY_OFFSET);
 		vh_player.flagcarried.scale = FLAG_SCALE;
 		vh_player.flagcarried.angles = '0 0 0';
+		vh_player.flagcarried.nodrawtoclient = world;
 		return true;
 	}
 
