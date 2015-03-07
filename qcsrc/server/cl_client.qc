@@ -1019,7 +1019,7 @@ float PlayerInIDList(entity p, string idlist)
 	float n, i;
 	string s;
 
-	// NOTE: we do NOT check crypto_keyfp here, an unsigned ID is fine too for this
+	// NOTE: we do NOT check crypto_idfp_signed here, an unsigned ID is fine too for this
 	if (!p.crypto_idfp)
 		return 0;
 
@@ -1269,6 +1269,13 @@ void ClientConnect (void)
 	{
 		serverinfo_welcomemessage_send();
 		sv_notice_join();
+	}
+
+	for (entity e = world; (e = findfloat(e, init_for_player_needed, 1)); ) {
+		entity oldself = self;
+		self = e;
+		e.init_for_player(oldself);
+		self = oldself;
 	}
 
 	MUTATOR_CALLHOOK(ClientConnect);

@@ -60,6 +60,17 @@ float erfc(float x);
 vector lgamma(float x); // value in _x, sign in _y
 float tgamma(float x);
 
+/**
+ * Pythonic mod:
+ * TODO: %% operator?
+ *
+ *  1 %  2 ==  1
+ * -1 %  2 ==  1
+ *  1 % -2 == -1
+ * -1 % -2 == -1
+ */
+float pymod(float x, float y);
+
 //float ceil(float x);
 //float floor(float x);
 float nearbyint(float x);
