@@ -743,15 +743,14 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (!menu_enabled)
 			cvar_set("_hud_configure", "0");
 	}
-	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // select and highlight another panel
+	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
 	{
 		if (bInputType == 1 || mouseClicked)
 			return true;
 
-		//FIXME: if a panel is highlighted, has the same pos_x and lays in the same level
-		//of other panels then next consecutive ctrl-tab will select the highlighted panel too
-		//(it should only after every other panel of the hud)
-		//It's a minor bug anyway, we can live with it
+		// FIXME minor bug: if a panel is highlighted, has the same pos_x and
+		// lays in the same level of another panel then the next consecutive
+		// CTRL TAB presses will reselect once more the highlighted panel
 
 		entity starting_panel;
 		entity old_tab_panel = tab_panel;
