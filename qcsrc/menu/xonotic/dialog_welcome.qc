@@ -47,7 +47,7 @@ void XonoticWelcomeDialog_configureDialog(entity me)
 }
 void XonoticWelcomeDialog_readInputArgs(entity me, float argsbuf)
 {
-	float i = 0;
+	int i = 0;
 	string s;
 	welcomeDialog_resetStrings(me);
 	while((s = bufstr_get(argsbuf, i)) != "")

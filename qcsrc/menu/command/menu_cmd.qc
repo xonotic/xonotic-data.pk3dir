@@ -63,7 +63,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
 	{
-		float i;
+		int i;
 		entity e;
 		string s;
 		string filter = string_null;

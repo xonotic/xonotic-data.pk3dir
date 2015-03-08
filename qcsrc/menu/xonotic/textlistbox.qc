@@ -51,7 +51,7 @@ void XonoticTextListBox_resizeNotify(entity me, vector relOrigin, vector relSize
 }
 void XonoticTextListBox_setText(entity me, string theText)
 {
-	float i, k;
+	int i, k;
 	string ts;
 	if(me.textbuf >= 0)
 		buf_del(me.textbuf);

@@ -75,6 +75,7 @@ float median(float a, float b, float c);
 string ftos_decimals(float number, float decimals);
 
 bool fexists(string f);
+bool ImageExists(string img);
 
 vector colormapPaletteColor(float c, float isPants);
 

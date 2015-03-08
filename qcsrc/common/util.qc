@@ -280,6 +280,16 @@ bool fexists(string f)
     return true;
 }
 
+bool ImageExists(string img)
+{
+	if(fexists(strcat(img, ".tga"))) return true;
+	if(fexists(strcat(img, ".png"))) return true;
+	if(fexists(strcat(img, ".jpg"))) return true;
+	if(fexists(strcat(img, ".pcx"))) return true;
+
+	return false;
+}
+
 // Databases (hash tables)
 const float DB_BUCKETS = 8192;
 void db_save(float db, string pFilename)

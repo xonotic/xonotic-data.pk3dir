@@ -774,15 +774,27 @@ void serverinfo_welcomemessage_send()
 	WriteString(MSG_ONE, "128.03.192.999"); // FIXME: send the real server ip
 	WriteString(MSG_ONE, autocvar_hostname);
 	WriteString(MSG_ONE, getwelcomemessage());
-	WriteString(MSG_ONE, strcat("128.03.192.999", "/banner"));
+	string pic = strcat("128.03.192.999", "/banner");
+	if(ImageExists(pic))
+	{
+		print("Warning: image %s doesn't exist!\n", pic);
+		pic = "";
+	}
+	WriteString(MSG_ONE, pic);
 }
 
 void serverinfo_pic_send()
 {
+	string pic = strcat("128.03.192.999", "/banner");
+	if(ImageExists(pic))
+	{
+		print("Cannot send %s, file doesn't exist!\n", pic);
+		return;
+	}
 	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_SERVERINFO_PIC);
-	WritePicture(MSG_ONE, strcat("128.03.192.999", "/banner"), 3072);
+	WritePicture(MSG_ONE, pic, 3072);
 }
 
 /*
