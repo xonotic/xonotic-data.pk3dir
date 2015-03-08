@@ -237,6 +237,18 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		if(IS_PLAYER(frag_attacker))
 		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		{
+			if(frag_target.armorvalue)
+			{
+				frag_target.armorvalue -= 1;
+				frag_damage = 0;
+				frag_target.damage_dealt += 1;
+				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
+			}
+		}
+
+		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
+		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
 				if(!autocvar_g_instagib_blaster_keepdamage)
@@ -248,14 +260,6 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 					if(!autocvar_g_instagib_blaster_keepforce)
 						frag_force = '0 0 0';
 				}
-			}
-			else if(frag_target.armorvalue)
-			{
-				frag_target.armorvalue -= 1;
-				frag_damage = 0;
-				frag_target.damage_dealt += 1;
-				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
 			}
 		}
 	}
