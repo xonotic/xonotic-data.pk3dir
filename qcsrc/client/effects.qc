@@ -46,7 +46,9 @@ void cl_effects_lightningarc(vector from, vector to,float seglength,float drifts
     if(length < 1)
         return;
 
-    steps      = floor(length / seglength);
+    // Use at most 16 te_lightning1 segments, as these eat up beam list segments.
+    // TODO: Change this to R_BeginPolygon code, then we no longer have this limit.
+    steps      = min(16, floor(length / seglength));
     if(steps < 1)
     {
         te_lightning1(world,from,to);
