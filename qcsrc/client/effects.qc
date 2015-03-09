@@ -66,8 +66,9 @@ void cl_effects_lightningarc(vector from, vector to,float seglength,float drifts
             dirnew = normalize(direction * (1 - drift) + randomvec() * drift);
             pos = pos_l +  dirnew * steplength;
             te_lightning1(world,pos_l,pos);
-            if(random() < branchfactor)
-                cl_effects_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
+            // WTF endless recursion if branchfactor is 1.0 (possibly due to adding branchfactor_add). FIXME
+            // if(random() < branchfactor)
+            //     cl_effects_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
 
             pos_l = pos;
         }
