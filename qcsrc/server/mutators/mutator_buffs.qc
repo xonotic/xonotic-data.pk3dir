@@ -759,6 +759,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		}
 	}
 
+	if(self.buffs & BUFF_AMMO)
+	if(self.clip_size)
+		self.clip_load = self.(weapon_load[self.switchweapon]) = self.clip_size;
+
 	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
@@ -777,6 +781,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		{
 			self.buff_ammo_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
 			self.items |= IT_UNLIMITED_WEAPON_AMMO;
+
+			if(self.clip_load)
+				self.buff_ammo_prev_clipload = self.clip_load;
+			self.clip_load = self.(weapon_load[self.switchweapon]) = self.clip_size;
 		}
 
 		BUFF_ONREM(BUFF_AMMO)
@@ -785,6 +793,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 				self.items |= IT_UNLIMITED_WEAPON_AMMO;
 			else
 				self.items &= ~IT_UNLIMITED_WEAPON_AMMO;
+
+			if(self.buff_ammo_prev_clipload)
+				self.clip_load = self.buff_ammo_prev_clipload;
 		}
 
 		BUFF_ONADD(BUFF_INVISIBLE)
