@@ -670,4 +670,8 @@ bool sv_showfps;
 
 .string cvar_cl_physics;
 
+.float init_for_player_needed;
+.void(entity) init_for_player;
+
+
 #endif

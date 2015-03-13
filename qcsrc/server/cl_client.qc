@@ -1419,6 +1419,13 @@ void ClientConnect (void)
 	if(IS_REAL_CLIENT(self))
 		sv_notice_join();
 
+	for (entity e = world; (e = findfloat(e, init_for_player_needed, 1)); ) {
+		entity oldself = self;
+		self = e;
+		e.init_for_player(oldself);
+		self = oldself;
+	}
+
 	MUTATOR_CALLHOOK(ClientConnect);
 }
 /*

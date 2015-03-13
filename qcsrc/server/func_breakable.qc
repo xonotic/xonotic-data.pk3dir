@@ -91,7 +91,7 @@ void func_breakable_look_destroyed()
 		self.dropped_origin = self.origin;
 
 	if(self.mdl_dead == "")
-		self.model = "";
+		self.effects |= EF_NODRAW;
 	else {
 		if (self.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
 			floorZ = self.absmin.z;
@@ -99,7 +99,10 @@ void func_breakable_look_destroyed()
 			self.origin_z = floorZ;
 		}
 		setmodel(self, self.mdl_dead);
+		self.effects &= ~EF_NODRAW;
 	}
+
+	CSQCMODEL_AUTOUPDATE();
 
 	self.solid = SOLID_NOT;
 }
@@ -107,8 +110,13 @@ void func_breakable_look_destroyed()
 void func_breakable_look_restore()
 {
 	setmodel(self, self.mdl);
+	self.effects &= ~EF_NODRAW;
+
 	if(self.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
 		setorigin(self, self.dropped_origin);
+
+	CSQCMODEL_AUTOUPDATE();
+
 	self.solid = SOLID_BSP;
 }
 
@@ -120,6 +128,8 @@ void func_breakable_behave_destroyed()
 	self.event_damage = func_null;
 	self.state = 1;
 	func_breakable_colormod();
+	if (self.noise1)
+		stopsound (self, CH_TRIGGER_SINGLE);
 }
 
 void func_breakable_behave_restore()
@@ -136,6 +146,17 @@ void func_breakable_behave_restore()
 	self.state = 0;
 	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
+	if (self.noise1)
+		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+}
+
+void func_breakable_init_for_player(entity player)
+{
+	if (self.noise1 && self.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
+	{
+		msg_entity = player;
+		soundto (MSG_ONE, self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+	}
 }
 
 void func_breakable_destroyed()
@@ -271,12 +292,17 @@ void spawnfunc_func_breakable() {
 		precache_model(argv(i));
 	if(self.noise)
 		precache_sound(self.noise);
+	if(self.noise1)
+		precache_sound(self.noise1);
 
 	self.team_saved = self.team;
 	self.dropped_origin = self.origin;
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
+
+	self.init_for_player_needed = 1;
+	self.init_for_player = func_breakable_init_for_player;
 
 	CSQCMODEL_AUTOINIT();
 }
