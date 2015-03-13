@@ -3,50 +3,52 @@
 #include "../common/buffs.qh"
 #include "miscfunctions.qh"
 
-var float autocvar_jeff_announce_eagleeye_distance = 32768;
-var float autocvar_jeff_announce_rocketscientist_count = 5;
-var float autocvar_jeff_announce_shaftmaster_count = 5;
-var float autocvar_jeff_announce_flakmaster_count = 5;
-var float autocvar_jeff_announce_jackhammer_count = 5;
-var float autocvar_jeff_announce_nodebuster_count = 5;
-var float autocvar_jeff_announce_mutdestruct_time = 1.5;
-var float autocvar_jeff_announce_multikill_time = 0.6;
-var float autocvar_jeff_announce_roadrage_count = 6;
-var float autocvar_jeff_announce_roadrampage_count = 12;
-var float autocvar_jeff_announce_manslaughter_count = 20;
-var float autocvar_jeff_announce_hattrick_count = 50;
-var float autocvar_jeff_announce_denied_radius = 60;
-var float autocvar_jeff_announce_bottomfeeder_count = 20;
-var float autocvar_jeff_announce_wickedsick_count = 3;
-var float autocvar_jeff_announce_bluestreak_distance = 400;
-var float autocvar_jeff_announce_holy_distance = 800;
-var float autocvar_jeff_announce_hitandrun_speed = 1000;
-var float autocvar_jeff_announce_juggernaut_armor = 180;
-var float autocvar_jeff_announce_juggernaut_health = 170;
-var float autocvar_jeff_announce_slacker_time = 30;
-var float autocvar_jeff_announce_comboking_count = 30;
+float autocvar_jeff_announce_eagleeye_distance = 32768;
+int autocvar_jeff_announce_rocketscientist_count = 5;
+int autocvar_jeff_announce_shaftmaster_count = 5;
+int autocvar_jeff_announce_flakmaster_count = 5;
+int autocvar_jeff_announce_jackhammer_count = 5;
+int autocvar_jeff_announce_nodebuster_count = 5;
+float autocvar_jeff_announce_mutdestruct_time = 1.5;
+float autocvar_jeff_announce_multikill_time = 0.6;
+int autocvar_jeff_announce_roadrage_count = 6;
+int autocvar_jeff_announce_roadrampage_count = 12;
+int autocvar_jeff_announce_manslaughter_count = 20;
+int autocvar_jeff_announce_hattrick_count = 50;
+float autocvar_jeff_announce_denied_radius = 60;
+int autocvar_jeff_announce_bottomfeeder_count = 20;
+int autocvar_jeff_announce_wickedsick_count = 3;
+float autocvar_jeff_announce_bluestreak_distance = 400;
+float autocvar_jeff_announce_holy_distance = 800;
+float autocvar_jeff_announce_hitandrun_speed = 1000;
+float autocvar_jeff_announce_juggernaut_armor = 180;
+float autocvar_jeff_announce_juggernaut_health = 170;
+float autocvar_jeff_announce_slacker_time = 30;
+int autocvar_jeff_announce_comboking_count = 30;
+int autocvar_jeff_announce_wrecker_count = 30;
 
-.float rocketkill_count; // counter for rocket scientist
-.float arckill_count; // counter for shaft master
-.float hagarkill_count; // counter for flak master
-.float meleekill_count; // counter for flak master
-.float electrokill_count; // counter for flak master
-.float vkill_count; // counter for vehicle kills
-.float minipickup_count; // counter for bottom feeder
+.int rocketkill_count; // counter for rocket scientist
+.int arckill_count; // counter for shaft master
+.int hagarkill_count; // counter for flak master
+.int meleekill_count; // counter for flak master
+.int electrokill_count; // counter for flak master
+.int vkill_count; // counter for vehicle kills
+.int minipickup_count; // counter for bottom feeder
+.int nadekill_count; // counter for wrecker
 
-.float lastkiller_weapon;
+.int lastkiller_weapon;
 .float lastkiller_time;
 .float lastkilled_time;
 .float lastkilled_flying; // actually a counter
 
-.float jeff_weaponswitch_count;
+.int jeff_weaponswitch_count;
 
-.float annce_count;
+.int annce_count;
 .float last_announcer;
 
-float Fire_IsBurning(entity e); // defined later
+bool Fire_IsBurning(entity e); // defined later
 
-void jeff_Announcer_Send(entity player, float toall, float announce)
+void jeff_Announcer_Send(entity player, bool toall, int announce)
 {
 	if(player == world || !IS_PLAYER(player)) { return; }
 	if(player.last_announcer > time) { return; }
@@ -117,6 +119,9 @@ void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, en
 		bluestreak = true;
 		break;
 	}
+
+	if(deathtype == DEATH_NADE) { attacker.nadekill_count += 1; }
+	else { attacker.nadekill_count = 0; }
 
 	if(DEATH_ISWEAPON(deathtype, WEP_DEVASTATOR)) { attacker.rocketkill_count += 1; }
 	else { attacker.rocketkill_count = 0; }
@@ -279,8 +284,14 @@ void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, en
 	if(targ_flying && attacker_flying && (DEATH_ISWEAPON(deathtype, WEP_HAGAR) || DEATH_ISWEAPON(deathtype, WEP_SEEKER) || DEATH_ISWEAPON(deathtype, WEP_CRYLINK)))
 		jeff_Announcer_Send(attacker, false, ANNCE_JEFF_OUTSTANDING);
 
-	if(targ.buffs & BUFF_SPEED)
-		jeff_Announcer_Send(attacker, true, ANNCE_JEFF_SPEED);
+	if(time - targ.spawnshieldtime <= 5)
+		jeff_Announcer_Send(attacker, false, ANNCE_JEFF_INSTAGIB);
+
+	if(attacker.nadekill_count == autocvar_jeff_announce_wrecker_count && deathtype == DEATH_NADE)
+		jeff_Announcer_Send(attacker, false, ANNCE_JEFF_WRECKER);
+
+	if(targ_flying && attacker_flying && DEATH_ISWEAPON(deathtype, WEP_FLAK))
+		jeff_Announcer_Send(attacker, false, ANNCE_JEFF_EXCELLENT);
 
 
 	attacker.jeff_weaponswitch_count = 0;
@@ -322,6 +333,21 @@ void jeff_Announcer_FireBullet(entity targ, entity ent, vector hitloc, vector st
 		jeff_Announcer_Send(ent, false, ANNCE_JEFF_BULLSEYE);
 }
 
+void jeff_Annoncer_BuffPickup(entity player, entity item)
+{
+	if(item.buffs & BUFF_INVISIBLE)
+		jeff_Announcer_Send(player, true, ANNCE_JEFF_CAMOUFLAGED);
+
+	if(item.buffs & BUFF_VAMPIRE)
+		jeff_Announcer_Send(player, true, ANNCE_JEFF_VAMPIRE);
+
+	if(item.buffs & BUFF_BASH)
+		jeff_Announcer_Send(player, true, ANNCE_JEFF_BOOSTER);
+
+	if(item.buffs & BUFF_SPEED)
+		jeff_Announcer_Send(player, true, ANNCE_JEFF_SPEED);
+}
+
 #else
 
 void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, entity inflictor) { }
@@ -329,5 +355,6 @@ void jeff_Announcer_MatchEnd() { }
 void jeff_Announcer_VehicleEnter(entity player, entity veh) { }
 void jeff_Announcer_ItemTouch(entity player, entity item) { }
 void jeff_Announcer_FireBullet(entity targ, entity ent, vector hitloc, vector start, vector end) { }
+void jeff_Annoncer_BuffPickup(entity player, entity item) { }
 
 #endif

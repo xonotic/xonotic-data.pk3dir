@@ -175,6 +175,8 @@ void buff_Touch()
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound(other, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 	other.buffs |= (self.buffs);
+
+	jeff_Annoncer_BuffPickup(other, self);
 }
 
 float buff_Available(float buffid)

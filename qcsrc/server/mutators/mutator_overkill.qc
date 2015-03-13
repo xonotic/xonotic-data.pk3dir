@@ -139,6 +139,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
 		makevectors(self.v_angle);
 
+		int oldwep = self.weapon;
+		self.weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			WEP_BLASTER | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
@@ -151,6 +153,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 			WEP_CVAR_SEC(vaporizer, delay),
 			WEP_CVAR_SEC(vaporizer, lifetime)
 		);
+		self.weapon = oldwep;
 	}
 
 	self.weapon_blocked = false;
