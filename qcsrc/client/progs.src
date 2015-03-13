@@ -48,6 +48,7 @@ weapons/projectile.qc // TODO
 ../common/net_notice.qc
 ../common/notifications.qc
 ../common/playerstats.qc
+../common/p2mathlib.qc
 ../common/test.qc
 ../common/urllib.qc
 ../common/util.qc
@@ -70,6 +71,8 @@ weapons/projectile.qc // TODO
 ../common/vehicles/cl_vehicles.qc
 ../common/vehicles/vehicles.qc
 
+../common/viewloc.qc
+
 ../common/weapons/weapons.qc // TODO
 
 ../csqcmodellib/cl_model.qc
@@ -78,6 +81,7 @@ weapons/projectile.qc // TODO
 
 ../server/movelib.qc
 ../server/t_items.qc
+../server/t_viewloc.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc

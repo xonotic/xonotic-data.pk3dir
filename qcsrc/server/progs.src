@@ -60,6 +60,7 @@ t_quake3.qc
 t_quake.qc
 t_swamp.qc
 t_teleporters.qc
+t_viewloc.qc
 waypointsprites.qc
 
 bot/bot.qc
@@ -105,12 +106,14 @@ weapons/weaponsystem.qc
 ../common/net_notice.qc
 ../common/notifications.qc
 ../common/playerstats.qc
+../common/p2mathlib.qc
 ../common/test.qc
 ../common/turrets/targettrigger.qc
 ../common/turrets/sv_turrets.qc
 ../common/turrets/turrets.qc
 ../common/turrets/util.qc
 ../common/vehicles/vehicles_include.qc
+../common/viewloc.qc
 ../common/urllib.qc
 ../common/util.qc
 ../common/weapons/config.qc

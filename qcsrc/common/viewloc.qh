@@ -1,0 +1,17 @@
+#ifndef VIEWLOC_H
+#define VIEWLOC_H
+
+.entity viewloc;
+
+#ifdef SVQC
+
+void viewloc_PlayerPhysics();
+
+#elif defined(CSQC)
+
+void viewloc_SetViewLocation();
+void viewloc_SetTags();
+
+#endif
+
+#endif

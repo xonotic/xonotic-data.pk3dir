@@ -84,7 +84,30 @@ void Draw_GrapplingHook()
 			break;
 	}
 
-	if((self.owner.sv_entnum == player_localentnum - 1) && autocvar_chase_active <= 0)
+	entity view = CSQCModel_server2csqc(self.owner.sv_entnum + 1);
+	if(view.viewloc)
+	{
+		makevectors(view.angles);
+		vector org = view.origin + view.view_ofs;
+		switch(self.HookType)
+		{
+			default:
+			case ENT_CLIENT_HOOK:
+				a = org + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
+				b = self.origin;
+				break;
+			case ENT_CLIENT_ARC_BEAM:
+				if(self.HookRange)
+					b = org + v_forward * self.HookRange;
+				else
+					b = org + v_forward * vlen(self.velocity - self.origin); // honor original length of beam!
+				WarpZone_TraceLine(org, b, MOVE_NORMAL, world);
+				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+				a = org + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
+				break;
+		}
+	}
+	else if((self.owner.sv_entnum == player_localentnum - 1) && autocvar_chase_active <= 0)
 	{
 		switch(self.HookType)
 		{
