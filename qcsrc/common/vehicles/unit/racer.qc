@@ -24,6 +24,11 @@ float autocvar_g_vehicle_racer_waterburn_speed;
 float autocvar_g_vehicle_racer_water_speed_forward;
 float autocvar_g_vehicle_racer_water_speed_strafe;
 
+float autocvar_g_vehicle_racer_pitchlimit = 30;
+
+float autocvar_g_vehicle_racer_water_downforce = 0.03;
+float autocvar_g_vehicle_racer_water_upforcedamper = 15;
+
 float autocvar_g_vehicle_racer_anglestabilizer;
 float autocvar_g_vehicle_racer_downforce;
 
@@ -88,6 +93,8 @@ float autocvar_g_vehicle_racer_bouncefactor;
 float autocvar_g_vehicle_racer_bouncestop;
 vector autocvar_g_vehicle_racer_bouncepain;
 
+.float racer_watertime;
+
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
 
 void racer_align4point(float _delta)
@@ -112,16 +119,24 @@ void racer_align4point(float _delta)
 	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
 	self.velocity += push_vector * _delta;
+
+	float uforce = autocvar_g_vehicle_racer_upforcedamper;
 	
-	if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
-	if(self.owner.BUTTON_CROUCH && time < self.air_finished)
-		self.velocity_z += 30;
-	else
-		self.velocity_z += 200;
+	int cont = pointcontents(self.origin - '0 0 64');
+	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+	{
+		uforce = autocvar_g_vehicle_racer_water_upforcedamper;
+
+		if(self.owner.BUTTON_CROUCH && time < self.air_finished)
+			self.velocity_z += 30;
+		else
+			self.velocity_z += 200;
+	}
+	
 
 	// Anti ocilation
 	if(self.velocity_z > 0)
-		self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * _delta;
+		self.velocity_z *= 1 - uforce * _delta;
 
 	push_vector_x =  (fl_push - bl_push);
 	push_vector_x += (fr_push - br_push);
@@ -201,7 +216,8 @@ void racer_rocket_groundhugger()
 		self.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
 	}
 	
-	if(pointcontents(self.origin - '0 0 32') == CONTENT_WATER)
+	int cont = pointcontents(self.origin - '0 0 32');
+	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		self.velocity_z += 200;
 
 	UpdateCSQCProjectile(self);
@@ -328,7 +344,7 @@ float racer_frame()
 	// Pitch
 	ftmp = autocvar_g_vehicle_racer_pitchspeed  * frametime;
 	ftmp = bound(-ftmp, shortangle_f(player.v_angle_x - racer.angles_x, racer.angles_x), ftmp);
-	racer.angles_x = bound(-30, anglemods(racer.angles_x + ftmp), 30);
+	racer.angles_x = bound(-autocvar_g_vehicle_racer_pitchlimit, anglemods(racer.angles_x + ftmp), autocvar_g_vehicle_racer_pitchlimit);
 
 	makevectors(racer.angles);
 	racer.angles_x *= -1;
@@ -337,9 +353,10 @@ float racer_frame()
 	df = racer.velocity * -autocvar_g_vehicle_racer_friction;
 	//racer.velocity_z = ftmp;
 
+	int cont = pointcontents(racer.origin);
 	if(vlen(player.movement) != 0)
 	{
-		if(pointcontents(racer.origin) == CONTENT_WATER)
+		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		{
 			if(player.movement_x) { df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
 			if(player.movement_y) { df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
@@ -375,7 +392,7 @@ float racer_frame()
 
 		racer.wait = time;
 
-		if(pointcontents(racer.origin) == CONTENT_WATER)
+		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		{
 			racer.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * frametime;
 			df += (v_forward * autocvar_g_vehicle_racer_waterburn_speed);
@@ -407,7 +424,14 @@ float racer_frame()
 		sound (racer.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 	}
 
-	df -= v_up * (vlen(racer.velocity) * autocvar_g_vehicle_racer_downforce);
+	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+		racer.racer_watertime = time;
+
+	float dforce = autocvar_g_vehicle_racer_downforce;
+	if(time - racer.racer_watertime <= 3)
+		dforce = autocvar_g_vehicle_racer_water_downforce;
+
+	df -= v_up * (vlen(racer.velocity) * dforce);
 	player.movement = racer.velocity += df * frametime;
 
 	if(!forbidWeaponUse(player))
@@ -509,12 +533,18 @@ void racer_think()
 	vector df = self.velocity * -autocvar_g_vehicle_racer_friction;
 	df_z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
 
-	if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
+	float forced = autocvar_g_vehicle_racer_upforcedamper;
+
+	int cont = pointcontents(self.origin - '0 0 64');
+	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+	{
+		forced = autocvar_g_vehicle_racer_water_upforcedamper;
 		self.velocity_z += 200;
+	}
 
 	self.velocity += df * pushdeltatime;
 	if(self.velocity_z > 0)
-		self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * pushdeltatime;
+		self.velocity_z *= 1 - forced * pushdeltatime;
 
 	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);

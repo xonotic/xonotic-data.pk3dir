@@ -728,6 +728,17 @@ float raptor_impulse(float _imp)
 {
 	switch(_imp)
 	{
+		case 1:
+		case 230:
+			self.vehicle.vehicle_weapon2mode = RSM_BOMB;
+			CSQCVehicleSetup(self, 0);
+			return true;
+		case 2:
+		case 231:
+			self.vehicle.vehicle_weapon2mode = RSM_FLARE;
+			CSQCVehicleSetup(self, 0);
+			return true;
+
 		case 10:
 		case 15:
 		case 18:
@@ -737,6 +748,7 @@ float raptor_impulse(float _imp)
 
 			CSQCVehicleSetup(self, 0);
 			return true;
+		case 11:
 		case 12:
 		case 16:
 		case 19:

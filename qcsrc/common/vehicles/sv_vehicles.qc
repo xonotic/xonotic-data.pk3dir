@@ -632,6 +632,9 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;
 
+	if(DEATH_WEAPONOFWEAPONDEATH(deathtype))
+		damage *= autocvar_g_vehicles_weapon_damagerate;
+
 	self.enemy = attacker;
 
 	self.pain_finished = time;

@@ -6,9 +6,8 @@ bool autocvar_cl_vehicles_alarm = 1;
 bool autocvar_cl_vehicles_hud_tactical = 1;
 
 void Net_AuXair2(float bIsNew);
-void bumble_raygun_read(float bIsNew);
+
 void Net_VehicleSetup();
-void CSQC_BUMBLE_GUN_HUD();
 
 void RaptorCBShellfragDraw();
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);

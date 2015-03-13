@@ -3,6 +3,7 @@
 #ifdef SVQC
 
 #include "../server/tturrets/include/turrets_early.qh"
+#include "sv_vehicles.qh"
 
 // #define VEHICLES_USE_ODE
 
@@ -19,11 +20,12 @@ float autocvar_g_vehicles_delayspawn_jitter;
 float autocvar_g_vehicles_allow_bots;
 float autocvar_g_vehicles_teams;
 float autocvar_g_vehicles_teleportable;
-var float autocvar_g_vehicles_vortex_damagerate = 0.5;
-var float autocvar_g_vehicles_machinegun_damagerate = 0.5;
-var float autocvar_g_vehicles_rifle_damagerate = 0.75;
-var float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
-var float autocvar_g_vehicles_tag_damagerate = 5;
+float autocvar_g_vehicles_vortex_damagerate = 0.5;
+float autocvar_g_vehicles_machinegun_damagerate = 0.5;
+float autocvar_g_vehicles_rifle_damagerate = 0.75;
+float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
+float autocvar_g_vehicles_tag_damagerate = 5;
+float autocvar_g_vehicles_weapon_damagerate = 1;
 
 // flags:
 .int vehicle_flags;
@@ -92,6 +94,10 @@ vector force_fromtag_origin;
 
 float vehicles_exit_running;
 
+// macros
+#define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
+	ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
+
 #ifdef VEHICLES_USE_ODE
 void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object
 void(entity e, vector force, vector force_pos) physics_addforce = #541; // apply a force from certain origin, length of force vector is power of force
@@ -100,18 +106,9 @@ void(entity e, vector torque) physics_addtorque = #542; // add relative torque
 
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
-// macros
-#define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
-	ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
-
-#if 0
-#define vehicles_sweap_collision(orig,vel,dt,acm,mult) \
-	traceline(orig, orig + vel * dt, MOVE_NORMAL, self); \
-	if(trace_fraction != 1) \
-		acm += normalize(self.origin - trace_endpos) * (vlen(vel) * mult)
-#endif
-
 void vehicles_exit(float eject);
+float vehicle_initialize(float vehicle_id, float nodrop);
 
 #endif
+
 #endif

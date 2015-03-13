@@ -9,8 +9,9 @@
 #include "wall.qh"
 #include "waypointsprites.qh"
 
-#include "../common/vehicles/vehicles.qh"
+#include "../common/vehicles/unit/bumblebee.qh"
 #include "../common/vehicles/cl_vehicles.qh"
+#include "../common/vehicles/vehicles.qh"
 
 #include "../common/net_notice.qh"
 

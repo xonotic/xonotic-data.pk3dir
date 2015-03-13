@@ -27,6 +27,7 @@ float autocvar_g_vehicle_spiderbot_respawntime;
 float autocvar_g_vehicle_spiderbot_speed_stop;
 float autocvar_g_vehicle_spiderbot_speed_strafe;
 float autocvar_g_vehicle_spiderbot_speed_walk;
+float autocvar_g_vehicle_spiderbot_speed_run = 700;
 float autocvar_g_vehicle_spiderbot_turnspeed;
 float autocvar_g_vehicle_spiderbot_turnspeed_strafe;
 float autocvar_g_vehicle_spiderbot_movement_inertia;
@@ -320,6 +321,7 @@ void spiderbot_rocket_do()
 	self.gun2.cnt = time + self.attack_finished_single;
 }
 
+.float jump_delay;
 float spiderbot_frame()
 {
 	vector ad, vf;
@@ -388,37 +390,63 @@ float spiderbot_frame()
 	movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend, autocvar_g_vehicle_spiderbot_tiltlimit);
 
 	if(spider.flags & FL_ONGROUND)
+		spider.jump_delay = time; // reset now so movement can begin
+
+	//if(spider.flags & FL_ONGROUND)
 	{
+		if(spider.flags & FL_ONGROUND)
 		if(spider.frame == 4 && self.tur_head.wait != 0)
 		{
 			sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_land.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 			spider.frame = 5;
 		}
 
-		if(player.BUTTON_JUMP && self.tur_head.wait < time)
+		if(!player.BUTTON_JUMP)
+			spider.BUTTON_JUMP = 0;
+
+		if((spider.flags & FL_ONGROUND) && player.BUTTON_JUMP && !spider.BUTTON_JUMP && self.tur_head.wait < time)
 		{
 			sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_jump.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 			//dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
 			self.delay = 0;
 
 			self.tur_head.wait = time + 2;
-			player.BUTTON_JUMP = 0;
-			spider.velocity   = v_forward * 700 + v_up * 600;
+			spider.jump_delay = time + 2;
+			spider.BUTTON_JUMP = 1; // set spider's jump
+			//player.BUTTON_JUMP = 0;
+
+			vector movefix = '0 0 0';
+			if(player.movement_x > 0) movefix_x = 1;
+			if(player.movement_x < 0) movefix_x = -1;
+			if(player.movement_y > 0) movefix_y = 1;
+			if(player.movement_y < 0) movefix_y = -1;
+
+			vector rt = movefix_y * v_right;
+			vector sd = movefix_x * v_forward;
+			if(movefix_y == 0 && movefix_x == 0)
+				sd = v_forward; // always do forward
+
+			spider.flags &= ~FL_ONGROUND;
+
+			spider.velocity = sd * 700 + rt * 600 + v_up * 600;
 			spider.frame = 4;
 		}
-		else
+		else if(time >= spider.jump_delay)
 		{
 			if(vlen(player.movement) == 0)
 			{
-				if(self.sound_nexttime < time || self.delay != 3)
+				if(spider.flags & FL_ONGROUND)
 				{
-					self.delay = 3;
-					self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_idle.wav");
-					//dprint("spiderbot_idle:", ftos(soundlength("vehicles/spiderbot_idle.wav")), "\n");
-					sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_idle.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
+					if(self.sound_nexttime < time || self.delay != 3)
+					{
+						self.delay = 3;
+						self.sound_nexttime = time + 6.486500; //soundlength("vehicles/spiderbot_idle.wav");
+						//dprint("spiderbot_idle:", ftos(soundlength("vehicles/spiderbot_idle.wav")), "\n");
+						sound (self, CH_TRIGGER_SINGLE, "vehicles/spiderbot_idle.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
+					}
+					movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
+					spider.frame = 5;
 				}
-				movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
-				spider.frame = 5;
 			}
 			else
 			{
@@ -437,16 +465,23 @@ float spiderbot_frame()
 					if(player.movement_x > 0)
 					{
 						player.movement_x = 1;
-						spider.frame = 0;
+						if(spider.flags & FL_ONGROUND)
+							spider.frame = 0;
 					}
 					else if(player.movement_x < 0)
 					{
 						player.movement_x = -1;
-						spider.frame = 1;
+						if(spider.flags & FL_ONGROUND)
+							spider.frame = 1;
 					}
 					player.movement_y = 0;
-					movelib_move_simple(normalize(v_forward * player.movement_x),autocvar_g_vehicle_spiderbot_speed_walk,autocvar_g_vehicle_spiderbot_movement_inertia);
-
+					float oldvelz = spider.velocity_z;
+					movelib_move_simple(normalize(v_forward * player.movement_x),((player.BUTTON_JUMP) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
+					spider.velocity_z = oldvelz;
+					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
+					if(spider.velocity_z <= 20) // not while jumping
+						spider.velocity_z -= g * sys_frametime * autocvar_sv_gravity;
+					if(spider.flags & FL_ONGROUND)
 					if(self.sound_nexttime < time || self.delay != 1)
 					{
 						self.delay = 1;
@@ -460,14 +495,23 @@ float spiderbot_frame()
 					if(player.movement_y < 0)
 					{
 						player.movement_y = -1;
-						spider.frame = 2;
+						if(spider.flags & FL_ONGROUND)
+							spider.frame = 2;
 					}
 					else if(player.movement_y > 0)
 					{
 						player.movement_y = 1;
-						spider.frame = 3;
+						if(spider.flags & FL_ONGROUND)
+							spider.frame = 3;
 					}
+
+					float oldvelz = spider.velocity_z;
 					movelib_move_simple(normalize(v_right * player.movement_y),autocvar_g_vehicle_spiderbot_speed_strafe,autocvar_g_vehicle_spiderbot_movement_inertia);
+					spider.velocity_z = oldvelz;
+					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
+					if(spider.velocity_z <= 20) // not while jumping
+						spider.velocity_z -= g * sys_frametime * autocvar_sv_gravity;
+					if(spider.flags & FL_ONGROUND)
 					if(self.sound_nexttime < time || self.delay != 2)
 					{
 						self.delay = 2;
@@ -703,10 +747,27 @@ void spiderbot_blowup()
 	self.vehicle_hudmodel.viewmodelforclient = self;
 }
 
-float spiderbot_impulse(float _imp)
+bool spiderbot_impulse(int _imp)
 {
 	switch(_imp)
 	{
+		case 1:
+		case 230:
+			self.vehicle.vehicle_weapon2mode = SBRM_VOLLY;
+			CSQCVehicleSetup(self, 0);
+			return true;
+		case 2:
+		case 231:
+			self.vehicle.vehicle_weapon2mode = SBRM_GUIDE;
+			CSQCVehicleSetup(self, 0);
+			return true;
+		case 3:
+		case 232:
+		case 251:
+			self.vehicle.vehicle_weapon2mode = SBRM_ARTILLERY;
+			CSQCVehicleSetup(self, 0);
+			return true;
+
 		case 10:
 		case 15:
 		case 18:
@@ -717,6 +778,7 @@ float spiderbot_impulse(float _imp)
 			//centerprint(self, strcat("Rocket mode is ", ftos(self.vehicle.vehicle_weapon2mode)));
 			CSQCVehicleSetup(self, 0);
 			return true;
+		case 11:
 		case 12:
 		case 16:
 		case 19:

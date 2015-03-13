@@ -1,6 +1,8 @@
 #ifndef VEHICLES_H
 #define VEHICLES_H
 
+#include "sv_vehicles.qh"
+
 // vehicle requests
 const int VR_SETUP          = 1; // (BOTH) setup vehicle data
 const int VR_THINK		  	= 2; // (SERVER) logic to run every frame
