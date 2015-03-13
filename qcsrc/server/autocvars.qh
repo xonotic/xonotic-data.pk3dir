@@ -890,4 +890,5 @@ float autocvar_g_buffs_inferno_burntime_min_time;
 float autocvar_g_buffs_inferno_burntime_target_damage;
 float autocvar_g_buffs_inferno_burntime_target_time;
 float autocvar_g_buffs_inferno_damagemultiplier;
+float autocvar_g_buffs_swapper_range;
 #endif

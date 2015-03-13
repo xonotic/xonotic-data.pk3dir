@@ -167,3 +167,12 @@ models/relics/sign_inferno
 		rgbgen lightingDiffuse
 	}
 }
+models/relics/sign_swapper
+{
+	cull none
+ 	{
+		map models/relics/sign_swapper
+		blendfunc add
+		rgbgen lightingDiffuse
+	}
+}

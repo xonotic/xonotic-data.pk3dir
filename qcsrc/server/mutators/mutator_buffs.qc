@@ -563,6 +563,76 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
+{
+	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+
+	if(self.buffs & BUFF_SWAPPER)
+	{
+		float best_distance = autocvar_g_buffs_swapper_range;
+		entity closest = world;
+		entity player;
+		FOR_EACH_PLAYER(player)
+		if(DIFF_TEAM(self, player))
+		if(player.deadflag == DEAD_NO && !player.frozen && !player.vehicle)
+		if(vlen(self.origin - player.origin) <= best_distance)
+		{
+			best_distance = vlen(self.origin - player.origin);
+			closest = player;
+		}
+
+		if(closest)
+		{
+			vector my_org, my_vel, my_ang, their_org, their_vel, their_ang;
+
+			my_org = self.origin;
+			my_vel = self.velocity;
+			my_ang = self.angles;
+			their_org = closest.origin;
+			their_vel = closest.velocity;
+			their_ang = closest.angles;
+
+			if(closest.ballcarried)
+			if(g_keepaway) { ka_DropEvent(closest); }
+			else { DropBall(closest.ballcarried, closest.origin, closest.velocity);}
+			if(closest.flagcarried) { ctf_Handle_Throw(closest, world, DROP_THROW); }
+			if(closest.nade) { toss_nade(closest, '0 0 0', time + 0.05); }
+
+			MUTATOR_CALLHOOK(PortalTeleport); // initiate flag dropper
+
+			setorigin(self, their_org);
+			setorigin(closest, my_org);
+
+			closest.velocity = my_vel;
+			closest.angles = my_ang;
+			closest.fixangle = true;
+			closest.oldorigin = my_org;
+			closest.oldvelocity = my_vel;
+			self.velocity = their_vel;
+			self.angles = their_ang;
+			self.fixangle = true;
+			self.oldorigin = their_org;
+			self.oldvelocity = their_vel;
+
+			// set pusher so self gets the kill if they fall into void
+			closest.pusher = self;
+			closest.pushltime = time + autocvar_g_maxpushtime;
+			closest.istypefrag = closest.BUTTON_CHAT;
+
+			pointparticles(particleeffectnum("electro_combo"), their_org, '0 0 0', 1);
+			pointparticles(particleeffectnum("electro_combo"), my_org, '0 0 0', 1);
+
+			sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NORM);
+			sound(closest, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NORM);
+
+			// TODO: add a counter to handle how many times one can teleport, and a delay to prevent spam
+			self.buffs = 0;
+			return true;
+		}
+	}
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 {
 	if(self.buff_model)
@@ -848,6 +918,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, buffs_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, buffs_PlayerUseKey, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, buffs_PlayerThrowKey, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_ANY);
