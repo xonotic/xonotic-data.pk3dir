@@ -176,3 +176,12 @@ models/relics/sign_swapper
 		rgbgen lightingDiffuse
 	}
 }
+models/relics/sign_magnet
+{
+	cull none
+ 	{
+		map models/relics/sign_magnet
+		blendfunc add
+		rgbgen lightingDiffuse
+	}
+}

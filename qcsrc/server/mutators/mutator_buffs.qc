@@ -735,6 +735,22 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		}
 	}
 
+	if(self.buffs & BUFF_MAGNET)
+	{
+		vector pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
+		for(other = world; (other = findflags(other, flags, FL_ITEM)); )
+		if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, other.absmin, other.absmax))
+		{
+			entity oldself = self;
+			self = other;
+			other = oldself;
+			if(self.touch)
+				self.touch();
+			other = self;
+			self = oldself;
+		}
+	}
+
 	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
