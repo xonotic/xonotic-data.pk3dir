@@ -485,7 +485,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(!frag_target.frozen)
 	if(frag_target.takedamage)
 	if(DIFF_TEAM(frag_attacker, frag_target))
+	{
 		frag_attacker.health = bound(0, frag_attacker.health + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.health), g_pickup_healthsmall_max);
+		if(frag_target.armorvalue)
+			frag_attacker.armorvalue = bound(0, frag_attacker.armorvalue + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.armorvalue), g_pickup_armorsmall_max);
+	}
 
 	return false;
 }
