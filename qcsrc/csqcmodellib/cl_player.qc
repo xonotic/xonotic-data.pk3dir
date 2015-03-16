@@ -244,7 +244,7 @@ void CSQCPlayer_SetCamera()
 				v = v0;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 				CSQCPlayer_PredictTo(servercommandframe + 1, false);
-				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.pmove_flags & PMF_ONGROUND));
+				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.flags & FL_ONGROUND));
 				self.origin = o;
 				self.velocity = v;
 

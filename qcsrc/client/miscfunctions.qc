@@ -459,11 +459,11 @@ void PolyDrawModel(entity e)
 			break;
 }
 
-void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag)
+void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag)
 {
 	float x, y, q, d;
 	vector ringsize, v, t;
-	ringsize = radius * '1 1 0';
+	ringsize = radi * '1 1 0';
 
 	x = cos(f * 2 * M_PI);
 	y = sin(f * 2 * M_PI);

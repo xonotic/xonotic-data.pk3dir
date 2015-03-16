@@ -6,5 +6,6 @@
 #include "secret.qh"
 #include "swamp.qh"
 #include "keylock.qh"
+#include "impulse.qh"
 
 #endif

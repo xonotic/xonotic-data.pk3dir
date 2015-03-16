@@ -854,6 +854,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_CORNER: ent_corner(); break;
 		case ENT_CLIENT_KEYLOCK: ent_keylock(); break;
 		case ENT_CLIENT_TRAIN: ent_train(); break;
+		case ENT_CLIENT_TRIGGER_IMPULSE: ent_trigger_impulse(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
