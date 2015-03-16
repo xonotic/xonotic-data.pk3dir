@@ -35,10 +35,6 @@ void trigger_impulse_touch1()
 	other.lastpushtime = time;
 	if(!pushdeltatime) return;
 
-#ifdef CSQC
-	print("Touchie!\n");
-#endif
-
 	other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
 	other.flags &= ~FL_ONGROUND;
 #ifdef SVQC

@@ -204,28 +204,28 @@ const int STAT_REVIVE_PROGRESS        = 106;
 // 166 empty?
 // 167 empty?
 // 168 empty?
-// 169 empty?
-// 170 empty?
-// 171 empty?
-// 172 empty?
-// 173 empty?
-// 174 empty?
-// 175 empty?
-// 176 empty?
-// 177 empty?
-// 178 empty?
-// 179 empty?
-// 180 empty?
-// 181 empty?
-// 182 empty?
-// 183 empty?
-// 184 empty?
-// 185 empty?
-// 186 empty?
-// 187 empty?
-// 188 empty?
-// 189 empty?
-const int STAT_GAMEPLAYFIX_EASIERWATERJUMP			  = 190;
+const int STAT_BUGRIGS_REVERSE_STOPPING               = 169;
+const int STAT_BUGRIGS_REVERSE_SPINNING               = 170;
+const int STAT_BUGRIGS_CAR_JUMPING                    = 171;
+const int STAT_BUGRIGS_FRICTION_AIR                   = 172;
+const int STAT_BUGRIGS_STEER                          = 173;
+const int STAT_BUGRIGS_SPEED_POW                      = 174;
+const int STAT_BUGRIGS_SPEED_REF                      = 175;
+const int STAT_BUGRIGS_ACCEL                          = 176;
+const int STAT_BUGRIGS_FRICTION_BRAKE                 = 177;
+const int STAT_BUGRIGS_AIR_STEERING                   = 178;
+const int STAT_BUGRIGS_FRICTION_FLOOR                 = 179;
+const int STAT_BUGRIGS_REVERSE_SPEEDING               = 180;
+const int STAT_BUGRIGS_PLANAR_MOVEMENT                = 181;
+const int STAT_BUGRIGS_ANGLE_SMOOTHING                = 182;
+const int STAT_BUGRIGS                                = 183;
+const int STAT_GAMEPLAYFIX_STEPDOWN                   = 184;
+const int STAT_MOVEVARS_JUMPSTEP                      = 185;
+const int STAT_NOSTEP                                 = 186;
+const int STAT_GAMEPLAYFIX_UNSTICKPLAYERS             = 187;
+const int STAT_GAMEPLAYFIX_STEPMULTIPLETIMES          = 188;
+const int STAT_GAMEPLAYFIX_DOWNTRACEONGROUND          = 189;
+const int STAT_GAMEPLAYFIX_EASIERWATERJUMP            = 190;
 const int STAT_MOVEVARS_FRICTION_SLICK                = 191;
 const int STAT_MOVEVARS_FRICTION_ONLAND               = 192;
 const int STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS  = 193;

@@ -3,5 +3,6 @@
 
 #include "push.qh"
 #include "toss.qh"
+#include "walk.qh"
 
 #endif

@@ -1751,6 +1751,9 @@ void CSQC_ClientMovement_PlayerMove_Frame(void)
 	PM_Main();
 
 #ifdef CSQC
-	self.pmove_flags = self.flags; // TODO
+	self.pmove_flags = 
+			((self.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
+			(!(self.flags & FL_JUMPRELEASED) ? 0 : PMF_JUMP_HELD) |
+			((self.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);
 #endif
 }
