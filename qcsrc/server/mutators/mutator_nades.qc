@@ -666,7 +666,13 @@ void toss_nade(entity e, vector _velocity, float _time)
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 
-	setorigin(_nade, w_shotorg + (v_right * 25) * -1);
+	vector offset = (v_forward * autocvar_g_nades_throw_offset.x)
+				  + (v_right * autocvar_g_nades_throw_offset.y)
+				  + (v_up * autocvar_g_nades_throw_offset.z);
+	if(autocvar_g_nades_throw_offset == '0 0 0')
+		offset = '0 0 0';
+
+	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
 	//setmodel(_nade, "models/weapons/v_ok_grenade.md3");
 	//setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
