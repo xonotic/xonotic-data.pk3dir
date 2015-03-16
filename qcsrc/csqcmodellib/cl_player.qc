@@ -105,12 +105,12 @@ void CSQCPlayer_Unpredict()
 	self.origin = csqcplayer_origin;
 	self.velocity = csqcplayer_velocity;
 	csqcplayer_moveframe = csqcplayer_sequence+1; //+1 because the recieved frame has the move already done (server side)
-	self.pmove_flags = player_pmflags;
+	self.flags = player_pmflags;
 }
 
 void CSQCPlayer_SetMinsMaxs()
 {
-	if(self.pmove_flags & PMF_DUCKED)
+	if(self.flags & FL_DUCKED)
 	{
 		self.mins = PL_CROUCH_MIN;
 		self.maxs = PL_CROUCH_MAX;
@@ -126,7 +126,7 @@ void CSQCPlayer_SetMinsMaxs()
 
 void CSQCPlayer_SavePrediction()
 {
-	player_pmflags = self.pmove_flags;
+	player_pmflags = self.flags;
 	csqcplayer_origin = self.origin;
 	csqcplayer_velocity = self.velocity;
 	csqcplayer_sequence = servercommandframe;
@@ -212,15 +212,15 @@ void CSQCPlayer_SetCamera()
 
 			// get crouch state from the server
 			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-				self.pmove_flags &= ~PMF_DUCKED;
+				self.flags &= ~FL_DUCKED;
 			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
-				self.pmove_flags |= PMF_DUCKED;
+				self.flags |= FL_DUCKED;
 
 			// get onground state from the server
 			if(pmove_onground)
-				self.pmove_flags |= PMF_ONGROUND;
+				self.flags |= FL_ONGROUND;
 			else
-				self.pmove_flags &= ~PMF_ONGROUND;
+				self.flags &= ~FL_ONGROUND;
 
 			CSQCPlayer_SetMinsMaxs();
 
@@ -250,15 +250,15 @@ void CSQCPlayer_SetCamera()
 
 				// get crouch state from the server
 				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-					self.pmove_flags &= ~PMF_DUCKED;
+					self.flags &= ~FL_DUCKED;
 				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
-					self.pmove_flags |= PMF_DUCKED;
+					self.flags |= FL_DUCKED;
 
 				// get onground state from the server
 				if(pmove_onground)
-					self.pmove_flags |= PMF_ONGROUND;
+					self.flags |= FL_ONGROUND;
 				else
-					self.pmove_flags &= ~PMF_ONGROUND;
+					self.flags &= ~FL_ONGROUND;
 
 				CSQCPlayer_SavePrediction();
 			}
@@ -267,9 +267,9 @@ void CSQCPlayer_SetCamera()
 #ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)
 			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-				self.pmove_flags &= ~PMF_DUCKED;
+				self.flags &= ~FL_DUCKED;
 			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
-				self.pmove_flags |= PMF_DUCKED;
+				self.flags |= FL_DUCKED;
 #endif
 
 			CSQCPlayer_SetMinsMaxs();

@@ -494,16 +494,20 @@ float PlayerJump (void)
 
 	if (!WAS_ONGROUND(self))
 	{
+#ifdef SVQC
 		if(autocvar_speedmeter)
 			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
+#endif
 		if(self.lastground < time - 0.3)
 		{
 			self.velocity_x *= (1 - PHYS_FRICTION_ONLAND);
 			self.velocity_y *= (1 - PHYS_FRICTION_ONLAND);
 		}
+#ifdef SVQC
 		if(self.jumppadcount > 1)
 			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
+#endif
 	}
 
 	self.velocity_z += mjumpheight;
@@ -542,11 +546,9 @@ void CheckWaterJump()
 		if (trace_fraction == 1)
 		{	// open at eye level
 			self.velocity_z = 225;
-#ifdef SVQC
 			self.flags |= FL_WATERJUMP;
 			SET_JUMP_HELD(self);
 			self.teleport_time = time + 2;	// safety net
-#endif
 		}
 	}
 }
@@ -567,20 +569,14 @@ void CheckPlayerJump()
 	float was_flying = ITEMS(self) & IT_USING_JETPACK;
 #endif
 	if (JETPACK_JUMP(self) < 2)
-#ifdef SVQC
 		ITEMS(self) &= ~IT_USING_JETPACK;
-#endif
 
 	if(PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self))
 	{
-#ifdef SVQC
 		float air_jump = !PlayerJump() || self.multijump_count > 0; // PlayerJump() has important side effects
 		float activate = JETPACK_JUMP(self) && air_jump && PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self);
-		float has_fuel = !autocvar_g_jetpack_fuel || self.ammo_fuel || ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO;
-#else
-		PlayerJump(); // Client only
-		float has_fuel = true; // TODO
-#endif
+		float has_fuel = !PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) || ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO;
+
 		if (!(ITEMS(self) & IT_JETPACK)) { }
 		else if (self.jetpack_stopped) { }
 		else if (!has_fuel)
@@ -592,21 +588,15 @@ void CheckPlayerJump()
 				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 #endif
 			self.jetpack_stopped = true;
-#ifdef SVQC
 			ITEMS(self) &= ~IT_USING_JETPACK;
-#endif
 		}
-#ifdef SVQC
 		else if (activate && !PHYS_FROZEN(self))
 			ITEMS(self) |= IT_USING_JETPACK;
-#endif
 	}
 	else
 	{
 		self.jetpack_stopped = false;
-#ifdef SVQC
 		ITEMS(self) &= ~IT_USING_JETPACK;
-#endif
 	}
 	if (!PHYS_INPUT_BUTTON_JUMP(self))
 		UNSET_JUMP_HELD(self);
@@ -1349,196 +1339,24 @@ void PM_jetpack(float maxspd_mod)
 			self.velocity_z -= g * 0.5;
 #endif
 }
-#ifdef SVQC
-void SV_WalkMove ()
-{
-	// if PHYS_INPUT_TIMELENGTH is 0 (due to client sending the same timestamp twice),
-	// don't move
-	if (PHYS_INPUT_TIMELENGTH <= 0)
-		return;
 
-//	if (autocvar_sv_gameplayfix_unstickplayers)
-//		SV_CheckStuck (self);
-
-//	applygravity = !SV_CheckWater(self) && self.movetype == MOVETYPE_WALK && !(self.flags & FL_WATERJUMP);
-
-//	hitsupercontentsmask = SV_GenericHitSuperContentsMask(self);
-
-//	SV_CheckVelocity(self);
-
-	// do a regular slide move unless it looks like you ran into a step
-//	float oldonground = self.flags & FL_ONGROUND;
-
-	vector start_origin = self.origin;
-	vector start_velocity = self.velocity;
-
-	float clip = 0;
-//	clip = SV_FlyMove (self, PHYS_INPUT_TIMELENGTH, applygravity, NULL, hitsupercontentsmask, sv_gameplayfix_stepmultipletimes.integer ? sv_stepheight.value : 0);
-
-//	if(sv_gameplayfix_downtracesupportsongroundflag.integer)
-//	if(!(clip & 1))
-	{
-		// only try this if there was no floor in the way in the trace (no,
-		// this check seems to be not REALLY necessary, because if clip & 1,
-		// our trace will hit that thing too)
-		vector upmove = self.origin;
-		upmove_z++;
-		vector downmove = self.origin;
-		upmove_z--;
-		float type;
-		if (self.movetype == MOVETYPE_FLYMISSILE)
-			type = MOVE_MISSILE;
-		else if (self.movetype == MOVETYPE_FLY_WORLDONLY)
-			type = MOVE_WORLDONLY;
-		else if (self.solid == SOLID_TRIGGER || self.solid == SOLID_NOT)
-			type = MOVE_NOMONSTERS; // only clip against bmodels
-		else
-			type = MOVE_NORMAL;
-		vector entmins = self.mins;
-		vector entmaxs = self.maxs;
-		tracebox(upmove, entmins, entmaxs, downmove, type, self);
-		if(trace_fraction < 1 && trace_plane_normal_z > 0.7)
-			clip |= 1; // but we HAVE found a floor
-	}
-
-	// if the move did not hit the ground at any point, we're not on ground
-//	if(!(clip & 1))
-//		self.flags = self.flags & ~FL_ONGROUND;
-
-//	SV_CheckVelocity(self);
-//	SV_LinkEdict(self);
-//	SV_LinkEdict_TouchAreaGrid(self);
-
-	if(clip & 8) // teleport
-		return;
-
-	if (self.flags & FL_WATERJUMP)
-		return;
-
-//	if (autocvar_sv_nostep)
-//		return;
-
-	vector originalmove_origin = self.origin;
-	vector originalmove_velocity = self.velocity;
-	float originalmove_flags = self.flags;
-	entity originalmove_groundentity = self.groundentity;
-
-	// if move didn't block on a step, return
-	if (clip & 2)
-	{
-		// if move was not trying to move into the step, return
-		if (fabs(start_velocity_x) < 0.03125 && fabs(start_velocity_y) < 0.03125)
-			return;
-
-		if (self.movetype != MOVETYPE_FLY)
-		{
-			// return if gibbed by a trigger
-			if (self.movetype != MOVETYPE_WALK)
-				return;
-
-			// return if attempting to jump while airborn (unless sv_jumpstep)
-//			if (!autocvar_sv_jumpstep)
-//				if (!oldonground && PRVM_serveredictfloat(self, waterlevel) == 0)
-//					return;
-		}
-
-		// try moving up and forward to go up a step
-		// back to start pos
-		setorigin(self, start_origin);
-		self.velocity = start_velocity;
-
-		// move up
-		vector upmove = '0 0 0';
-		upmove_z = autocvar_sv_stepheight;
-//		if(!SV_PushEntity(&trace, self, upmove, true))
-//		{
-//			// we got teleported when upstepping... must abort the move
-//			return;
-//		}
-
-		// move forward
-		self.velocity_z = 0;
-//		clip = SV_FlyMove (self, PHYS_INPUT_TIMELENGTH, applygravity, stepnormal, hitsupercontentsmask, 0);
-		self.velocity_z += start_velocity_z;
-//		if(clip & 8)
-//		{
-//			// we got teleported when upstepping... must abort the move
-//			// note that z velocity handling may not be what QC expects here, but we cannot help it
-//			return;
-//		}
-
-//		SV_CheckVelocity(self);
-//		SV_LinkEdict(self);
-//		SV_LinkEdict_TouchAreaGrid(self);
-
-		// check for stuckness, possibly due to the limited precision of floats
-		// in the clipping hulls
-		if (clip
-		 && fabs(originalmove_origin_y - self.origin_y < 0.03125)
-		 && fabs(originalmove_origin_x - self.origin_x < 0.03125))
-		{
-			//Con_Printf("wall\n");
-			// stepping up didn't make any progress, revert to original move
-			setorigin(self, originalmove_origin);
-			self.velocity = originalmove_velocity;
-			self.flags = originalmove_flags;
-			self.groundentity = originalmove_groundentity;
-			return;
-		}
-
-		//Con_Printf("step - ");
-
-		// extra friction based on view angle
-//		if (clip & 2 && sv_wallfriction.integer)
-//			SV_WallFriction (self, stepnormal);
-	}
-	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
-//	else if (!autocvar_sv_gameplayfix_stepdown || self.waterlevel >= 3 || start_velocity_z >= (1.0 / 32.0) || !oldonground || (self.flags & FL_ONGROUND))
-//		return;
-
-	// move down
-	vector downmove = '0 0 0';
-	downmove_z = -autocvar_sv_stepheight + start_velocity_z*PHYS_INPUT_TIMELENGTH;
-//	if(!SV_PushEntity (&downtrace, self, downmove, true))
-//	{
-//		// we got teleported when downstepping... must abort the move
-//		return;
-//	}
-
-	if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
-	{
-		// this has been disabled so that you can't jump when you are stepping
-		// up while already jumping (also known as the Quake2 double jump bug)
-	}
-	else
-	{
-		//Con_Printf("slope\n");
-		// if the push down didn't end up on good ground, use the move without
-		// the step up.  This happens near wall / slope combinations, and can
-		// cause the player to hop up higher on a slope too steep to climb
-		setorigin(self, originalmove_origin);
-		self.velocity = originalmove_velocity;
-		self.flags = originalmove_flags;
-		self.groundentity = originalmove_groundentity;
-	}
-
-//	SV_CheckVelocity(self);
-//	SV_LinkEdict(self);
-//	SV_LinkEdict_TouchAreaGrid(self);
-}
-#endif
 void PM_walk(float buttons_prev, float maxspd_mod)
 {
 	if (!WAS_ONGROUND(self))
 	{
+#ifdef SVQC
 		if (autocvar_speedmeter)
 			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
+#endif
 		if (self.lastground < time - 0.3)
 			self.velocity *= (1 - PHYS_FRICTION_ONLAND);
+#ifdef SVQC
 		if (self.jumppadcount > 1)
 			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
+#endif
 	}
+
 	// walking
 	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
 	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
@@ -1697,6 +1515,8 @@ void PM_Main()
 {
 	float buttons = PHYS_INPUT_BUTTON_MASK(self);
 #ifdef CSQC
+	self.items = getstati(STAT_ITEMS, 0, 24);
+
 	self.team = myteam + 1; // is this correct?
 	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
@@ -1869,13 +1689,13 @@ void PM_Main()
 	if (IS_PLAYER(self))
 		CheckPlayerJump();
 
-	if (self.flags & /* FL_WATERJUMP */ 2048)
+	if (self.flags & FL_WATERJUMP)
 	{
 		self.velocity_x = self.movedir_x;
 		self.velocity_y = self.movedir_y;
 		if (time > self.teleport_time || self.waterlevel == WATERLEVEL_NONE)
 		{
-			self.flags &= ~/* FL_WATERJUMP */ 2048;
+			self.flags &= ~FL_WATERJUMP;
 			self.teleport_time = 0;
 		}
 	}
@@ -1917,7 +1737,7 @@ void PM_Main()
 	if(self.conveyor.state)
 		self.velocity += self.conveyor.movedir;
 
-	self.lastflags = FLAGS(self);
+	self.lastflags = self.flags;
 
 	self.lastclassname = self.classname;
 }
@@ -1931,6 +1751,6 @@ void CSQC_ClientMovement_PlayerMove_Frame(void)
 	PM_Main();
 
 #ifdef CSQC
-	self.pmove_flags = self.pm_flags;
+	self.pmove_flags = self.flags; // TODO
 #endif
 }
