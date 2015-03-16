@@ -1084,8 +1084,11 @@ void PM_fly(float maxspd_mod)
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(self) * maxspd_mod);
+#ifdef SVQC
 	if (time >= self.teleport_time)
+#endif
 		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+	PM_ClientMovement_Move();
 }
 
 void PM_swim(float maxspd_mod)
@@ -1166,9 +1169,9 @@ void PM_swim(float maxspd_mod)
 #endif
 		}
 	}
-	PM_ClientMovement_Move();
 	// water acceleration
 	PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
+	PM_ClientMovement_Move();
 }
 
 void PM_ladder(float maxspd_mod)
@@ -1216,12 +1219,12 @@ void PM_ladder(float maxspd_mod)
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(self) * maxspd_mod);
-	PM_ClientMovement_Move();
 #ifdef SVQC
 	if (time >= self.teleport_time)
 #endif
 		// water acceleration
 		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE*maxspd_mod, 1, 0, 0, 0);
+	PM_ClientMovement_Move();
 }
 
 void PM_jetpack(float maxspd_mod)
@@ -1705,7 +1708,7 @@ void PM_Main()
 		RaceCarPhysics();
 #endif
 
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY)
+	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY || (BUFFS(self) & BUFF_FLIGHT))
 		PM_fly(maxspeed_mod);
 
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
