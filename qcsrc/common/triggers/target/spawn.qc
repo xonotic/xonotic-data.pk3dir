@@ -231,6 +231,9 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 
 			self = oldself;
 			activator = oldactivator;
+
+			// We called an external function, so we have to re-tokenize msg.
+			n = tokenize_console(msg);
 		}
 		else
 		{

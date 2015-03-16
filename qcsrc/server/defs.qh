@@ -556,4 +556,8 @@ const int MIF_GUIDED_TAG = 128;
 .string playernick;
 .float elos;
 .float ranks;
+
+.float init_for_player_needed;
+.void(entity) init_for_player;
+
 #endif
