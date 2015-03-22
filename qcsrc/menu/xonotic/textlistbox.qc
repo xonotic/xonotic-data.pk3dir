@@ -17,6 +17,7 @@ CLASS(XonoticTextListBox) EXTENDS(ListBox)
 	METHOD(XonoticTextListBox, setSelected, void(entity, float))
 	METHOD(XonoticTextListBox, destroy, void(entity))
 	ATTRIB(XonoticTextListBox, textbuf, float, -1)
+	ATTRIB(XonoticTextListBox, textbufSize, float, 0)
 	ATTRIB(XonoticTextListBox, allowColors, float, 0)
 	METHOD(XonoticTextListBox, setText, void(entity, string))
 	METHOD(XonoticTextListBox, drawListBoxItem, void(entity, float, vector, float)) // item number, width/height, selected
@@ -78,6 +79,7 @@ void XonoticTextListBox_setText(entity me, string theText)
 		}
 	}
 	strunzone(s);
+	me.textbufSize = buf_getsize(me.textbuf);
 }
 void XonoticTextListBox_destroy(entity me)
 {
@@ -86,6 +88,7 @@ void XonoticTextListBox_destroy(entity me)
 }
 void XonoticTextListBox_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
-	draw_CenterText(me.realUpperMargin * eY + 0.5 * eX, bufstr_get(me.textbuf, i), me.realFontSize, '1 1 1', 1, me.allowColors);
+	if(me.textbufSize > 0)
+		draw_CenterText(me.realUpperMargin * eY + 0.5 * eX, bufstr_get(me.textbuf, i), me.realFontSize, '1 1 1', 1, me.allowColors);
 }
 #endif
