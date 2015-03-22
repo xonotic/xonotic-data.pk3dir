@@ -775,7 +775,7 @@ void serverinfo_welcomemessage_send()
 	WriteString(MSG_ONE, autocvar_hostname);
 	WriteString(MSG_ONE, getwelcomemessage());
 	string pic = strcat("128.03.192.999", "/banner");
-	if(ImageExists(pic))
+	if(!ImageExists(pic))
 	{
 		print("Warning: image %s doesn't exist!\n", pic);
 		pic = "";
@@ -786,7 +786,7 @@ void serverinfo_welcomemessage_send()
 void serverinfo_pic_send()
 {
 	string pic = strcat("128.03.192.999", "/banner");
-	if(ImageExists(pic))
+	if(!ImageExists(pic))
 	{
 		print("Cannot send %s, file doesn't exist!\n", pic);
 		return;
