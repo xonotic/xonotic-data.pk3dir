@@ -38,6 +38,8 @@ void viewloc_PlayerPhysics()
 
 		if(oldmovement_x > 0)
 			self.v_angle_x = self.angles_x = -50;
+		else if(oldmovement_x < 0)
+			self.v_angle_x = self.angles_x = 50;
 		
 		if(!self.BUTTON_CROUCH)
 			self.BUTTON_CROUCH = (oldmovement_x < 0);
