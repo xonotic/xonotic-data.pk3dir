@@ -202,41 +202,42 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 {
-	// powerups don't actually exist, so we can abuse them as much as we want
-	if(self.classname == "item_strength")
+	if(autocvar_g_powerups)
+	if(autocvar_g_overkill_powerups_replace)
 	{
-		self.classname = "item_removing"; // avoid letting other mutators use it
-		entity wep = spawn();
-		setorigin(wep, self.origin);
-		setmodel(wep, "models/weapons/g_ok_hmg.md3");
-		wep.classname = "weapon_hmg";
-		wep.ok_item = true;
-		wep.noalign = self.noalign;
-		wep.cnt = self.cnt;
-		wep.team = self.team;
-		wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
-		wep.pickup_anyway = true;
-		wep.think = spawnfunc_weapon_hmg;
-		wep.nextthink = time + 0.1;
-		return true;
-	}
+		if(self.classname == "item_strength")
+		{
+			entity wep = spawn();
+			setorigin(wep, self.origin);
+			setmodel(wep, "models/weapons/g_ok_hmg.md3");
+			wep.classname = "weapon_hmg";
+			wep.ok_item = true;
+			wep.noalign = self.noalign;
+			wep.cnt = self.cnt;
+			wep.team = self.team;
+			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.pickup_anyway = true;
+			wep.think = spawnfunc_weapon_hmg;
+			wep.nextthink = time + 0.1;
+			return true;
+		}
 
-	if(self.classname == "item_invincible")
-	{
-		self.classname = "item_removing"; // avoid letting other mutators use it
-		entity wep = spawn();
-		setorigin(wep, self.origin);
-		setmodel(wep, "models/weapons/g_ok_rl.md3");
-		wep.classname = "weapon_rpc";
-		wep.ok_item = true;
-		wep.noalign = self.noalign;
-		wep.cnt = self.cnt;
-		wep.team = self.team;
-		wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
-		wep.pickup_anyway = true;
-		wep.think = spawnfunc_weapon_rpc;
-		wep.nextthink = time + 0.1;
-		return true;
+		if(self.classname == "item_invincible")
+		{
+			entity wep = spawn();
+			setorigin(wep, self.origin);
+			setmodel(wep, "models/weapons/g_ok_rl.md3");
+			wep.classname = "weapon_rpc";
+			wep.ok_item = true;
+			wep.noalign = self.noalign;
+			wep.cnt = self.cnt;
+			wep.team = self.team;
+			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.pickup_anyway = true;
+			wep.think = spawnfunc_weapon_rpc;
+			wep.nextthink = time + 0.1;
+			return true;
+		}
 	}
 
 	return false;
