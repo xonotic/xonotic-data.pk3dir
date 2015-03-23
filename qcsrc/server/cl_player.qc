@@ -937,34 +937,22 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	return ret;
 }
 
-void IRCSay(string sourcename, string msgin)
+void IRCSay(string msgstr)
 {
-	entity head;
-
-	if(substring(msgin, 0, 1) == " ")
-		msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
-
-	//msgin = formatmessage(msgin);
-
-	if(msgin == "")
+	if(msgstr == "")
 		return;
 
-    string msgstr = strcat("\{1}[IRC] ", sourcename, "^7", msgin);
+	msgstr = strcat("\{1}", strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 
-	msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
-
-	FOR_EACH_CLIENTSLOT(head)
+	entity head;
+	FOR_EACH_REALCLIENT(head)
 	{
 		if(!intermission_running)
 		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 		if(IS_PLAYER(head))
 			continue;
-
-		//if(head.netaddress)
-		//if(head.netaddress != "")
-		//if(head.netaddress != "null/botclient")
-		if(IS_REAL_CLIENT(head))
-			sprint(head, msgstr);
+		
+		sprint(head, msgstr);
 	}
 }
 

@@ -1001,13 +1001,13 @@ void GameCommand_gravity(float request, float argc)
 	}
 }
 
-void GameCommand_ircmsg(float request, float argc)
+void GameCommand_ircmsg(float request, float argc, string command)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			IRCSay(argv(1), argv(2));
+			IRCSay(substring(command, strlen(argv(0))+1, strlen(command)));
 			return;
 		}
 			
@@ -1958,7 +1958,7 @@ void GameCommand_(float request)
 	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments), "Get specific information about a weapon model") \
 	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments), "Simple command to switch to another map") \
 	SERVER_COMMAND("gravity", GameCommand_gravity(request, arguments), "Changes gravity based on cvars") \
-	SERVER_COMMAND("ircmsg", GameCommand_ircmsg(request, arguments), "Say a message as an IRC user") \
+	SERVER_COMMAND("ircmsg", GameCommand_ircmsg(request, arguments, command), "Say a message as an IRC user") \
 	SERVER_COMMAND("lockteams", GameCommand_lockteams(request), "Disable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request), "Automatically rebuild mapinfo files") \
 	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments), "Change the team/status of a player") \
