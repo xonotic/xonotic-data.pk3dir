@@ -751,11 +751,17 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 
 		if(self.oldbuffs & BUFF_INVISIBLE)
 		{
-			self.alpha = self.buff_invisible_prev_alpha;
+			if(time < self.strength_finished && g_instagib)
+				self.alpha = autocvar_g_instagib_invis_alpha;
+			else
+				self.alpha = self.buff_invisible_prev_alpha;
 		}
 		else if(self.buffs & BUFF_INVISIBLE)
 		{
-			self.buff_invisible_prev_alpha = self.alpha;
+			if(time < self.strength_finished && g_instagib)
+				self.buff_invisible_prev_alpha = default_player_alpha;
+			else
+				self.buff_invisible_prev_alpha = self.alpha;
 			self.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 

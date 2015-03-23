@@ -123,7 +123,8 @@ void W_Shockwave_Melee_Think(void)
 	// set start time of melee
 	if(!self.cnt)
 	{
-		self.cnt = time; 
+		self.cnt = time;
+		W_PlayStrengthSound(self.realowner);
 	}
 
 	// update values for v_* vectors

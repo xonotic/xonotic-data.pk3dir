@@ -304,6 +304,8 @@ void PutObserverInServer (void)
 	self.fade_time = 0;
 	self.pain_frame = 0;
 	self.pain_finished = 0;
+	self.strength_finished = 0;
+	self.invincible_finished = 0;
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
 	self.istypefrag = 0;
@@ -676,6 +678,8 @@ void PutClientInServer (void)
 		self.fade_time = 0;
 		self.pain_frame = 0;
 		self.pain_finished = 0;
+		self.strength_finished = 0;
+		self.invincible_finished = 0;
 		self.pushltime = 0;
 		// players have no think function
 		self.think = func_null;
@@ -1646,6 +1650,46 @@ void player_powerups (void)
 
 	if (!g_instagib)
 	{
+		if (self.items & IT_STRENGTH)
+		{
+			play_countdown(self.strength_finished, "misc/poweroff.wav");
+			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
+			if (time > self.strength_finished)
+			{
+				self.items = self.items - (self.items & IT_STRENGTH);
+				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STRENGTH, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
+			}
+		}
+		else
+		{
+			if (time < self.strength_finished)
+			{
+				self.items = self.items | IT_STRENGTH;
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STRENGTH, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_STRENGTH);
+			}
+		}
+		if (self.items & IT_INVINCIBLE)
+		{
+			play_countdown(self.invincible_finished, "misc/poweroff.wav");
+			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
+			if (time > self.invincible_finished)
+			{
+				self.items = self.items - (self.items & IT_INVINCIBLE);
+				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SHIELD, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
+			}
+		}
+		else
+		{
+			if (time < self.invincible_finished)
+			{
+				self.items = self.items | IT_INVINCIBLE;
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SHIELD, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SHIELD);
+			}
+		}
 		if (self.items & IT_SUPERWEAPON)
 		{
 			if (!(self.weapons & WEPSET_SUPERWEAPONS))
@@ -1894,6 +1938,8 @@ void SpectateCopy(entity spectatee) {
 	self.last_pickup = spectatee.last_pickup;
 	self.hit_time = spectatee.hit_time;
 	self.metertime = spectatee.metertime;
+	self.strength_finished = spectatee.strength_finished;
+	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;

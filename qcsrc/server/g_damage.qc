@@ -192,6 +192,10 @@ string AppendItemcodes(string s, entity player)
 	if(w == 0)
 		w = player.cnt; // previous weapon!
 	s = strcat(s, ftos(w));
+	if(time < player.strength_finished)
+		s = strcat(s, "S");
+	if(time < player.invincible_finished)
+		s = strcat(s, "I");
 	if(player.flagcarried != world)
 		s = strcat(s, "F");
 	if(player.BUTTON_CHAT)
@@ -835,6 +839,28 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 
 			self = oldself;
+		}
+
+		if(!g_instagib)
+		{
+			// apply strength multiplier
+			if (attacker.items & IT_STRENGTH)
+			{
+				if(targ == attacker)
+				{
+					damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
+					force = force * autocvar_g_balance_powerup_strength_selfforce;
+				}
+				else
+				{
+					damage = damage * autocvar_g_balance_powerup_strength_damage;
+					force = force * autocvar_g_balance_powerup_strength_force;
+				}
+			}
+
+			// apply invincibility multiplier
+			if (targ.items & IT_INVINCIBLE)
+				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
 		}
 
 		if (targ == attacker)
