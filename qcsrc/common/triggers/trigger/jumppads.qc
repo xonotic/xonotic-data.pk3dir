@@ -375,9 +375,7 @@ void spawnfunc_trigger_push()
 
 	self.active = ACTIVE_ACTIVE;
 	self.use = trigger_push_use;
-	self.trigger_touch = trigger_push_touch;
-	self.think = trigger_think_generic;
-	self.nextthink = time;
+	self.touch = trigger_push_touch;
 
 	// normal push setup
 	if (!self.speed)
