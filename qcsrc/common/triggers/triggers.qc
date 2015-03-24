@@ -289,7 +289,7 @@ void trigger_think_generic()
 			emax += '1 1 1';
 		}
 		if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-		if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+		//if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
 		{
 			other = e;
 			self.trigger_touch();
