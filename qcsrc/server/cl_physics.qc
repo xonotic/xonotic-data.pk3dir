@@ -846,16 +846,6 @@ void SV_PlayerPhysics()
 		}
 	}
 
-	if ( self.discomode )
-	{
-		if(IS_PLAYER(self))
-			self.BUTTON_JUMP = 1;
-
-		self.angles_y = time*180;
-		self.velocity = randomvec() * 80;
-		self.fixangle = true;
-	}
-
 	if (self.movetype == MOVETYPE_NONE)
 		return;
 

@@ -177,6 +177,8 @@ void skeleton_from_frames(entity e, float is_dead)
 
 	if(!is_dead)
 	{
+		if(self == csqcplayer)
+			self.v_angle_x = input_angles_x;
 		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{

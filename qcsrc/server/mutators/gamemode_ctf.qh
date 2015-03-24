@@ -109,6 +109,7 @@ float ctf_captimerecord; // record time for capturing the flag
 .float next_take_time;
 .float ctf_flagdamaged;
 float ctf_teams;
+//.float ctf_thinkrate;
 
 // passing/throwing properties
 .float pass_distance;

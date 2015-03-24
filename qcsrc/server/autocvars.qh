@@ -652,13 +652,14 @@ string autocvar_sv_eventlog_files_nameprefix;
 string autocvar_sv_eventlog_files_namesuffix;
 float autocvar_sv_eventlog_files_timestamps;
 float autocvar_sv_friction_on_land;
+var float autocvar_sv_friction_slick = 0.5;
 float autocvar_sv_gameplayfix_q2airaccelerate;
 float autocvar_sv_gentle;
 #define autocvar_sv_gravity cvar("sv_gravity")
 string autocvar_sv_intermission_cdtrack;
-string autocvar_sv_jumpspeedcap_max;
+float autocvar_sv_jumpspeedcap_max;
 float autocvar_sv_jumpspeedcap_max_disable_on_ramps;
-string autocvar_sv_jumpspeedcap_min;
+float autocvar_sv_jumpspeedcap_min;
 float autocvar_sv_jumpvelocity;
 float autocvar_sv_logscores_bots;
 float autocvar_sv_logscores_console;

@@ -1,6 +1,7 @@
 #include "../../common/effects.qh"
 #include "../../common/buffs.qh"
 #include "../round_handler.qh"
+#include "../../common/triggers/target/music.qh"
 
 float buffs_BuffModel_Customize()
 {

@@ -104,4 +104,6 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me); // spawn().R = me.R
 #ifndef BITXOR_ASSIGN
 # define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
 #endif
+float WarpZoneLib_MoveOutOfSolid(entity e);
+#define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 #endif

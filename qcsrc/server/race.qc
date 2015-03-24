@@ -1,4 +1,5 @@
 #include "race.qh"
+#include "../common/triggers/subs.qh"
 
 void W_Porto_Fail(float failhard);
 

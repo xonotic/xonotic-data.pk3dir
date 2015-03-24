@@ -499,6 +499,7 @@ void Ent_Projectile()
 	if(!(self.count & 0x80))
 		InterpolateOrigin_Note();
 
+	self.classname = "csqcprojectile";
 	self.draw = Projectile_Draw;
 	self.entremove = Ent_RemoveProjectile;
 }

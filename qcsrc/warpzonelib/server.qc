@@ -6,6 +6,7 @@
 	#include "common.qh"
 	#include "server.qh"
 	#include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
 	#include "../common/util.qh"
 	#include "../server/constants.qh"
 	#include "../server/defs.qh"

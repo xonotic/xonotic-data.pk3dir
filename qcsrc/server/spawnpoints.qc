@@ -6,6 +6,7 @@
     #include "../warpzonelib/util_server.qh"
     #include "../common/constants.qh"
     #include "../common/teams.qh"
+	#include "../common/triggers/subs.qh"
     #include "../common/util.qh"
     #include "autocvars.qh"
     #include "constants.qh"

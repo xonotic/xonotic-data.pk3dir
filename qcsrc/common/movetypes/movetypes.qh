@@ -1,0 +1,96 @@
+#ifndef MOVETYPES_H
+#define MOVETYPES_H
+
+.float move_ltime;
+.void(void)move_think;
+.float move_nextthink;
+.void(void)move_blocked;
+
+.float move_movetype;
+.float move_time;
+.vector move_origin;
+.vector move_angles;
+.vector move_velocity;
+.vector move_avelocity;
+.int move_flags;
+.int move_watertype;
+.int move_waterlevel;
+.void(void)move_touch;
+.void(float, float)contentstransition;
+.float move_bounce_factor;
+.float move_bounce_stopspeed;
+.float move_nomonsters;  // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
+
+// should match sv_gameplayfix_fixedcheckwatertransition
+float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
+
+#ifdef SVQC
+#define GRAVITY_UNAFFECTED_BY_TICRATE autocvar_sv_gameplayfix_gravityunaffectedbyticrate
+
+#define TICRATE sys_frametime
+#elif defined(CSQC)
+#define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
+
+#define TICRATE ticrate
+#endif
+
+.entity move_groundentity;  // FIXME add move_groundnetworkentity?
+.float move_suspendedinair;
+.float move_didgravity;
+
+void _Movetype_WallFriction(vector stepnormal);
+int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float stepheight);
+void _Movetype_CheckVelocity();
+void _Movetype_CheckWaterTransition(entity ent);
+float _Movetype_CheckWater(entity ent);
+void _Movetype_LinkEdict_TouchAreaGrid();
+void _Movetype_LinkEdict(float touch_triggers);
+float _Movetype_TestEntityPosition(vector ofs);
+float _Movetype_UnstickEntity();
+vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
+void _Movetype_PushEntityTrace(vector push);
+float _Movetype_PushEntity(vector push, float failonstartsolid);
+void makevectors_matrix(vector myangles);
+
+void Movetype_Physics_MatchTicrate(float tr, bool sloppy);
+void Movetype_Physics_MatchServer(bool sloppy);
+void Movetype_Physics_NoMatchServer();
+void _Movetype_LinkEdict(float touch_triggers);
+void _Movetype_LinkEdict_TouchAreaGrid();
+
+float _Movetype_UnstickEntity();
+
+const int MAX_CLIP_PLANES = 5;
+
+#ifdef CSQC
+const int MOVETYPE_NONE             = 0;
+const int MOVETYPE_ANGLENOCLIP      = 1;
+const int MOVETYPE_ANGLECLIP        = 2;
+const int MOVETYPE_WALK             = 3;
+const int MOVETYPE_STEP             = 4;
+const int MOVETYPE_FLY              = 5;
+const int MOVETYPE_TOSS             = 6;
+const int MOVETYPE_PUSH             = 7;
+const int MOVETYPE_NOCLIP           = 8;
+const int MOVETYPE_FLYMISSILE       = 9;
+const int MOVETYPE_BOUNCE           = 10;
+const int MOVETYPE_BOUNCEMISSILE    = 11;  // Like bounce but doesn't lose speed on bouncing
+const int MOVETYPE_FOLLOW           = 12;
+const int MOVETYPE_FLY_WORLDONLY    = 33;
+
+const int FL_ITEM                   = 256;
+const int FL_ONGROUND				= 512;
+#endif
+
+const int MOVETYPE_FAKEPUSH         = 13;
+
+const float MOVEFLAG_Q2AIRACCELERATE            = 1;
+const float MOVEFLAG_NOGRAVITYONGROUND          = 2;
+const float MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
+
+#ifdef CSQC
+// TODO: figure out server's version of this
+#define moveflags (getstati(STAT_MOVEFLAGS))
+#endif
+
+#endif

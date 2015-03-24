@@ -1,12 +1,3 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "defs.qh"
-    #include "../common/vehicles/sv_vehicles.qh"
-#endif
-
 .float  roomtype;
 .float  radius;
 .float  pitch;
@@ -41,30 +32,3 @@ void spawnfunc_info_node() {}
 void spawnfunc_env_sound() {}
 void spawnfunc_light_spot() {}
 void spawnfunc_func_healthcharger() {}
-
-
-void func_ladder_touch()
-{
-	if (!other.iscreature)
-		return;
-	if(IS_VEHICLE(other))
-		return;
-
-	EXACTTRIGGER_TOUCH;
-
-	other.ladder_time = time + 0.1;
-	other.ladder_entity = self;
-}
-
-void spawnfunc_func_ladder()
-{
-	EXACTTRIGGER_INIT;
-	self.touch = func_ladder_touch;
-}
-
-void spawnfunc_func_water()
-{
-	EXACTTRIGGER_INIT;
-	self.touch = func_ladder_touch;
-}
-

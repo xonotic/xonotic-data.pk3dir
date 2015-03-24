@@ -1,3 +1,6 @@
+#ifndef GAMEMODE_INFECTION_H
+#define GAMEMODE_INFECTION_H
+
 float infection_teams;
 float aliveplayers[17];
 
@@ -9,3 +12,5 @@ float prev_total_players;
 
 // scores
 #define SP_INF_ROUNDS 4
+
+#endif
