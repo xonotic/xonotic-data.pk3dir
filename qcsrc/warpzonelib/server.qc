@@ -563,9 +563,7 @@ void WarpZone_InitStep_UpdateTransform()
 			c = getsurfacepoint(self, i_s, tri.z);
 			p = b - a;
 			q = c - a;
-			n =     '1 0 0' * (q.y * p.z - q.z * p.y)
-			+       '0 1 0' * (q.z * p.x - q.x * p.z)
-			+       '0 0 1' * (q.x * p.y - q.y * p.x);
+			n = cross(q, p);
 			area = area + vlen(n);
 			norm = norm + n;
 			point = point + vlen(n) * (a + b + c);
