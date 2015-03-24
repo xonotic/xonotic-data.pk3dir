@@ -3,11 +3,9 @@
 
 .entity viewloc;
 
-#ifdef SVQC
-
 void viewloc_PlayerPhysics();
 
-#elif defined(CSQC)
+#ifdef CSQC
 
 void viewloc_SetViewLocation();
 void viewloc_SetTags();

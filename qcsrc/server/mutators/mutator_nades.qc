@@ -1,5 +1,6 @@
 #include "../../common/effects.qh"
 #include "../round_handler.qh"
+#include "../../common/triggers/target/music.qh"
 
 .entity nade_spawnloc;
 

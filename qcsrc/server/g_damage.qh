@@ -53,8 +53,6 @@ float damage_gooddamage;
 .float istypefrag;
 .float taunt_soundtime;
 
-float IsFlying(entity a);
-
 void UpdateFrags(entity player, float f);
 
 // NOTE: f=0 means still count as a (positive) kill, but count no frags for it

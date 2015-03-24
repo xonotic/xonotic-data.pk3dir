@@ -1,5 +1,6 @@
 #include "havocbot.qh"
 #include "roles.qc"
+#include "../../../common/triggers/trigger/jumppads.qh"
 
 void havocbot_ai()
 {

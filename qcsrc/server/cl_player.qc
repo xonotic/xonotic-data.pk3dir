@@ -1,6 +1,5 @@
 #include "cl_player.qh"
 #include "jeff.qh"
-#include "g_triggers.qh"
 #include "g_violence.qh"
 #include "miscfunctions.qh"
 
@@ -11,6 +10,8 @@
 #include "../common/minigames/sv_minigames.qh"
 
 #include "weapons/weaponstats.qh"
+
+#include "../common/animdecide.qh"
 
 void CopyBody_Think(void)
 {

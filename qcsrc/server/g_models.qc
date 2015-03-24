@@ -4,6 +4,7 @@
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
     #include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
     #include "autocvars.qh"
     #include "constants.qh"
     #include "defs.qh"

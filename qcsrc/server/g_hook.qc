@@ -17,6 +17,7 @@
     #include "command/common.qh"
     #include "g_hook.qh"
     #include "round_handler.qh"
+	#include "weapons/common.qh"
 #endif
 
 /*============================================

@@ -1,4 +1,5 @@
 #include "../../common/effects.qh"
+#include "../../common/movetypes/movetypes.qh"
 
 void ctf_FakeTimeLimit(entity e, float t)
 {
@@ -736,6 +737,7 @@ void ctf_CheckStalemate(void)
 
 void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	self.velocity = self.velocity;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		if(autocvar_g_ctf_flag_return_damage_delay)
@@ -758,12 +760,10 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 	}
 }
 
-void ctf_FlagThink()
+void ctf_FlagUpdate()
 {
 	// declarations
 	entity tmp_entity;
-
-	self.nextthink = time + FLAG_THINKRATE; // only 5 fps, more is unnecessary.
 
 	// captureshield
 	if(self == ctf_worldflaglist) // only for the first flag
@@ -905,6 +905,22 @@ void ctf_FlagThink()
 			return;
 		}
 	}
+}
+
+void ctf_FlagThink()
+{
+	self.nextthink = time + FLAG_THINKRATE;
+
+	ctf_FlagUpdate();
+
+	/*if(time >= self.ctf_thinkrate)
+	{
+		self.ctf_thinkrate = time + FLAG_THINKRATE;
+		ctf_FlagUpdate();
+	}*/
+
+	//Movetype_Physics_NoMatchServer();
+	//Movetype_Physics_MatchTicrate(sys_frametime, 0);
 }
 
 void ctf_FlagTouch()
@@ -1105,6 +1121,10 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 
 	// captureshield setup
 	ctf_CaptureShield_Spawn(self);
+
+	//self.move_origin = self.origin;
+	//self.angles = self.angles;
+	//self.velocity = self.velocity;
 }
 
 void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
@@ -2176,7 +2196,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 	if(vh_player.flagcarried)
 	{
 		setattachment(vh_player.flagcarried, vh_player, "");
-		setorigin(vh_player.flagcarried, FLAG_CARRY_OFFSET);
+		setorigin(vh_player.flagcarried, VEHICLE_FLAG_OFFSET);
 		vh_player.flagcarried.scale = FLAG_SCALE;
 		vh_player.flagcarried.angles = '0 0 0';
 		vh_player.flagcarried.nodrawtoclient = world;

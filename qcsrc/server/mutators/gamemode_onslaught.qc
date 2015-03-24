@@ -2,6 +2,7 @@
 #include "../round_handler.qh"
 #include "../controlpoint.qh"
 #include "../generator.qh"
+#include "../../common/triggers/subs.qh"
 
 float ons_CaptureShield_Customize()
 {

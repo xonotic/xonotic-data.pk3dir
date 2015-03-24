@@ -30,7 +30,6 @@ const int ST_ASSAULT_OBJECTIVES = -1;
 const int SP_ASSAULT_OBJECTIVES = 4;
 
 // predefined spawnfuncs
-void spawnfunc_func_breakable();
 void target_objective_decrease_activate();
 
 #endif

@@ -4,6 +4,116 @@
 
 #include "../common/command/generic.qh"
 
+void InitializeEntity(entity e, void(void) func, float order)
+{
+    entity prev, cur;
+
+    if (!e || e.initialize_entity)
+    {
+        // make a proxy initializer entity
+        entity e_old;
+        e_old = e;
+        e = spawn();
+        e.classname = "initialize_entity";
+        e.enemy = e_old;
+    }
+
+    e.initialize_entity = func;
+    e.initialize_entity_order = order;
+
+    cur = initialize_entity_first;
+    prev = world;
+    for (;;)
+    {
+        if (!cur || cur.initialize_entity_order > order)
+        {
+            // insert between prev and cur
+            if (prev)
+                prev.initialize_entity_next = e;
+            else
+                initialize_entity_first = e;
+            e.initialize_entity_next = cur;
+            return;
+        }
+        prev = cur;
+        cur = cur.initialize_entity_next;
+    }
+}
+void InitializeEntitiesRun()
+{
+    entity startoflist;
+    startoflist = initialize_entity_first;
+    initialize_entity_first = world;
+    for (self = startoflist; self; self = self.initialize_entity_next)
+    {
+	//self.remove_except_protected_forbidden = 1;
+    }
+    for (self = startoflist; self; )
+    {
+        entity e;
+        var void(void) func;
+        e = self.initialize_entity_next;
+        func = self.initialize_entity;
+        self.initialize_entity_order = 0;
+        self.initialize_entity = func_null;
+        self.initialize_entity_next = world;
+	//self.remove_except_protected_forbidden = 0;
+        if (self.classname == "initialize_entity")
+        {
+            entity e_old;
+            e_old = self.enemy;
+            remove(self);
+            self = e_old;
+        }
+        //dprint("Delayed initialization: ", self.classname, "\n");
+        if(func)
+            func();
+        else
+        {
+            eprint(self);
+            backtrace(strcat("Null function in: ", self.classname, "\n"));
+        }
+        self = e;
+    }
+}
+
+void defer_think()
+{
+    entity oself;
+
+    oself           = self;
+    self            = self.owner;
+    oself.think     = SUB_Remove;
+    oself.nextthink = time;
+
+    oself.use();
+}
+
+/*
+    Execute func() after time + fdelay.
+    self when func is executed = self when defer is called
+*/
+void defer(float fdelay, void() func)
+{
+    entity e;
+
+    e           = spawn();
+    e.classname = "defer";
+    e.owner     = self;
+    e.use       = func;
+    e.think     = defer_think;
+    e.nextthink = time + fdelay;
+}
+
+void defer_clear(entity ent)
+{
+	entity e;
+	for(e = world; (e = find(e, classname, "defer")); )
+		if(e.owner == ent)
+			remove(e);
+}
+
+
 void AuditLists()
 {
 	entity e;
@@ -359,11 +469,11 @@ void PolyDrawModel(entity e)
 			break;
 }
 
-void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag)
+void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag)
 {
 	float x, y, q, d;
 	vector ringsize, v, t;
-	ringsize = radius * '1 1 0';
+	ringsize = radi * '1 1 0';
 
 	x = cos(f * 2 * M_PI);
 	y = sin(f * 2 * M_PI);

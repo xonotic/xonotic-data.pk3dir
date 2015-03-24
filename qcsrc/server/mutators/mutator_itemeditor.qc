@@ -91,6 +91,8 @@ string ie_FixItemName(string itname)
 	}
 }
 
+void initialize_field_db();
+void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act);
 void ie_SetItemType(entity e)
 {
 	string fixed_name = ie_FixItemName(e.ie_itemname);
