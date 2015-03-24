@@ -945,14 +945,14 @@ void IRCSay(string msgstr)
 	msgstr = strcat("\{1}", strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 
 	entity head;
-	FOR_EACH_REALCLIENT(head)
+	FOR_EACH_CLIENTSLOT(head)
 	{
 		if(!intermission_running)
 		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 		if(IS_PLAYER(head))
 			continue;
-		
-		sprint(head, msgstr);
+		if(IS_REAL_CLIENT(head))
+                    sprint(head, msgstr);
 	}
 }
 
