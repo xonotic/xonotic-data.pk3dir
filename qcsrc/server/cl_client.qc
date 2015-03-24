@@ -1,7 +1,6 @@
 #include "waypointsprites.qh"
 
 #include "cl_impulse.qh"
-#include "cl_physics.qh"
 #include "cl_player.qh"
 #include "ent_cs.qh"
 #include "g_subs.qh"
@@ -520,8 +519,6 @@ void PlayerTouch (void)
 			self.oldvelocity_z = self.velocity_z;
 
 			animdecide_setaction(self, ANIMACTION_JUMP, true);
-
-			self.restart_jump = -1; // restart jump anim next time
 
 			Damage (other, self, self, autocvar_g_player_crush_damage, DEATH_CRUSH, other.origin, '0 0 0');
 		}
@@ -1865,10 +1862,10 @@ void SetZoomState(float z)
 void GetPressedKeys(void) {
 	MUTATOR_CALLHOOK(GetPressedKeys);
 	#define X(var,bit,flag) (flag ? var |= bit : var &= ~bit)
-	X(self.pressedkeys, KEY_FORWARD, 	PHYS_INPUT_MOVEVALUES(self)_x > 0);
-	X(self.pressedkeys, KEY_BACKWARD, 	PHYS_INPUT_MOVEVALUES(self)_x < 0);
-	X(self.pressedkeys, KEY_RIGHT, 		PHYS_INPUT_MOVEVALUES(self)_y > 0);
-	X(self.pressedkeys, KEY_LEFT, 		PHYS_INPUT_MOVEVALUES(self)_y < 0);
+	X(self.pressedkeys, KEY_FORWARD, 	self.movement_x > 0);
+	X(self.pressedkeys, KEY_BACKWARD, 	self.movement_x < 0);
+	X(self.pressedkeys, KEY_RIGHT, 		self.movement_y > 0);
+	X(self.pressedkeys, KEY_LEFT, 		self.movement_y < 0);
 
 	X(self.pressedkeys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(self));
 	X(self.pressedkeys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(self));

@@ -9,14 +9,11 @@
 	#include "../server/defs.qh"
 #endif
 
-#ifdef SVQC
-
 // client movement
 void viewloc_PlayerPhysics()
 {
 	if(self.viewloc)
 	{
-		self.disableclientprediction = 1;
 		vector oldmovement = self.movement;
 		self.movement_x = oldmovement_y;
 		self.movement_y = 0;
@@ -37,16 +34,26 @@ void viewloc_PlayerPhysics()
 			self.angles = forward;
 
 		if(oldmovement_x > 0)
+#ifdef CSQC
+			input_angles_x =
+#endif
 			self.v_angle_x = self.angles_x = -50;
 		else if(oldmovement_x < 0)
+#ifdef CSQC
+			input_angles_x =
+#endif
 			self.v_angle_x = self.angles_x = 50;
-		
-		if(!self.BUTTON_CROUCH)
+
+		if(!PHYS_INPUT_BUTTON_CROUCH(self))
+#ifdef SVQC
 			self.BUTTON_CROUCH = (oldmovement_x < 0);
+#elif defined(CSQC)
+			if(oldmovement_x < 0) { input_buttons |= 16; self.flags |= FL_DUCKED; } else { input_buttons &= ~16; self.flags &= ~FL_DUCKED; }
+#endif
 	}
 }
 
-#elif defined(CSQC)
+#ifdef CSQC
 
 void viewloc_SetTags()
 {

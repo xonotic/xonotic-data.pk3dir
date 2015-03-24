@@ -15,7 +15,7 @@
 
 	#include "../warpzonelib/mathlib.qh"
 
-	#include "../server/t_viewloc.qh"
+	#include "../common/triggers/trigger/viewloc.qh"
 
 	.float death_time;
 	.int modelflags;

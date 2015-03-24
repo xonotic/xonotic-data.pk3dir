@@ -76,7 +76,7 @@ float PM_multijump_checkjump()
 
 			if(player_multijump)
 			{
-				if(PHYS_INPUT_MOVEVALUES(self)_x != 0 || PHYS_INPUT_MOVEVALUES(self)_y != 0) // don't remove all speed if player isnt pressing any movement keys
+				if(self.movement_x != 0 || self.movement_y != 0) // don't remove all speed if player isnt pressing any movement keys
 				{
 					float curspeed;
 					vector wishvel, wishdir;
@@ -90,8 +90,8 @@ float PM_multijump_checkjump()
 					curspeed = vlen(vec2(self.velocity));
 #endif
 
-					makevectors(PHYS_INPUT_ANGLES(self)_y * '0 1 0');
-					wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x + v_right * PHYS_INPUT_MOVEVALUES(self)_y;
+					makevectors(self.v_angle_y * '0 1 0');
+					wishvel = v_forward * self.movement_x + v_right * self.movement_y;
 					wishdir = normalize(wishvel);
 
 					self.velocity_x = wishdir_x * curspeed; // allow "dodging" at a multijump

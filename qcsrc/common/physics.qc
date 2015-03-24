@@ -6,7 +6,7 @@
 #ifdef SVQC
 
 #include "../server/miscfunctions.qh"
-#include "../server/t_viewloc.qh"
+#include "triggers/trigger/viewloc.qh"
 
 // client side physics
 bool Physics_Valid(string thecvar)
@@ -335,7 +335,7 @@ void PM_ClientMovement_Move()
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 {
-	float k = 32 * (2 * IsMoveInDirection(PHYS_INPUT_MOVEVALUES(self), 0) - 1);
+	float k = 32 * (2 * IsMoveInDirection(self.movement, 0) - 1);
 	if (k <= 0)
 		return;
 
@@ -595,7 +595,7 @@ float PlayerJump (void)
 void CheckWaterJump()
 {
 // check for a jump-out-of-water
-	makevectors(PHYS_INPUT_ANGLES(self));
+	makevectors(self.v_angle);
 	vector start = self.origin;
 	start_z += 8;
 	v_forward_z = 0;
@@ -697,8 +697,8 @@ void RaceCarPhysics()
 	vector rigvel;
 
 	vector angles_save = self.angles;
-	float accel = bound(-1, PHYS_INPUT_MOVEVALUES(self).x / PHYS_MAXSPEED(self), 1);
-	float steer = bound(-1, PHYS_INPUT_MOVEVALUES(self).y / PHYS_MAXSPEED(self), 1);
+	float accel = bound(-1, self.movement.x / PHYS_MAXSPEED(self), 1);
+	float steer = bound(-1, self.movement.y / PHYS_MAXSPEED(self), 1);
 
 	if (g_bugrigs_reverse_speeding)
 	{
@@ -973,13 +973,13 @@ void PM_check_nickspam(void)
 	if (self.nickspamcount >= autocvar_g_nick_flood_penalty_yellow)
 	{
 		// slight annoyance for nick change scripts
-		PHYS_INPUT_MOVEVALUES(self) = -1 * PHYS_INPUT_MOVEVALUES(self);
+		self.movement = -1 * self.movement;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = self.BUTTON_ZOOM = self.BUTTON_CROUCH = self.BUTTON_HOOK = self.BUTTON_USE = 0;
 
 		if (self.nickspamcount >= autocvar_g_nick_flood_penalty_red) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
 		{
-			PHYS_INPUT_ANGLES(self)_x = random() * 360;
-			PHYS_INPUT_ANGLES(self)_y = random() * 360;
+			self.v_angle_x = random() * 360;
+			self.v_angle_y = random() * 360;
 			// at least I'm not forcing retardedview by also assigning to angles_z
 			self.fixangle = true;
 		}
@@ -1031,12 +1031,12 @@ void PM_check_frozen(void)
 #endif
 	)
 	{
-		PHYS_INPUT_MOVEVALUES(self)_x = bound(-5, PHYS_INPUT_MOVEVALUES(self).x, 5);
-		PHYS_INPUT_MOVEVALUES(self)_y = bound(-5, PHYS_INPUT_MOVEVALUES(self).y, 5);
-		PHYS_INPUT_MOVEVALUES(self)_z = bound(-5, PHYS_INPUT_MOVEVALUES(self).z, 5);
+		self.movement_x = bound(-5, self.movement.x, 5);
+		self.movement_y = bound(-5, self.movement.y, 5);
+		self.movement_z = bound(-5, self.movement.z, 5);
 	}
 	else
-		PHYS_INPUT_MOVEVALUES(self) = '0 0 0';
+		self.movement = '0 0 0';
 
 	vector midpoint = ((self.absmin + self.absmax) * 0.5);
 	if (pointcontents(midpoint) == CONTENT_WATER)
@@ -1080,7 +1080,7 @@ void PM_check_blocked(void)
 #ifdef SVQC
 	if (!self.player_blocked)
 		return;
-	PHYS_INPUT_MOVEVALUES(self) = '0 0 0';
+	self.movement = '0 0 0';
 	self.disableclientprediction = 1;
 #endif
 }
@@ -1137,11 +1137,11 @@ void PM_fly(float maxspd_mod)
 	UNSET_ONGROUND(self);
 
 	self.velocity = self.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION);
-	makevectors(PHYS_INPUT_ANGLES(self));
-	//wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x + v_right * PHYS_INPUT_MOVEVALUES(self).y + v_up * PHYS_INPUT_MOVEVALUES(self).z;
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self).y
-					+ '0 0 1' * PHYS_INPUT_MOVEVALUES(self).z;
+	makevectors(self.v_angle);
+	//wishvel = v_forward * self.movement.x + v_right * self.movement.y + v_up * self.movement.z;
+	vector wishvel = v_forward * self.movement.x
+					+ v_right * self.movement.y
+					+ '0 0 1' * self.movement.z;
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(self) * maxspd_mod);
@@ -1162,7 +1162,7 @@ void PM_swim(float maxspd_mod)
 	// this mimics quakeworld code
 	if (jump && self.waterlevel == WATERLEVEL_SWIMMING && self.velocity_z >= -180)
 	{
-		vector yawangles = '0 1 0' * PHYS_INPUT_ANGLES(self).y;
+		vector yawangles = '0 1 0' * self.v_angle.y;
 		makevectors(yawangles);
 		vector forward = v_forward;
 		vector spot = self.origin + 24 * forward;
@@ -1182,11 +1182,11 @@ void PM_swim(float maxspd_mod)
 			}
 		}
 	}
-	makevectors(PHYS_INPUT_ANGLES(self));
-	//wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x + v_right * PHYS_INPUT_MOVEVALUES(self).y + v_up * PHYS_INPUT_MOVEVALUES(self).z;
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self).y
-					+ '0 0 1' * PHYS_INPUT_MOVEVALUES(self).z;
+	makevectors(self.v_angle);
+	//wishvel = v_forward * self.movement.x + v_right * self.movement.y + v_up * self.movement.z;
+	vector wishvel = v_forward * self.movement.x
+					+ v_right * self.movement.y
+					+ '0 0 1' * self.movement.z;
 	if (wishvel == '0 0 0')
 		wishvel = '0 0 -60'; // drift towards bottom
 
@@ -1251,11 +1251,11 @@ void PM_ladder(float maxspd_mod)
 	}
 
 	self.velocity = self.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION);
-	makevectors(PHYS_INPUT_ANGLES(self));
-	//wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x + v_right * PHYS_INPUT_MOVEVALUES(self).y + v_up * PHYS_INPUT_MOVEVALUES(self).z;
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self)_y
-					+ '0 0 1' * PHYS_INPUT_MOVEVALUES(self)_z;
+	makevectors(self.v_angle);
+	//wishvel = v_forward * self.movement.x + v_right * self.movement.y + v_up * self.movement.z;
+	vector wishvel = v_forward * self.movement_x
+					+ v_right * self.movement_y
+					+ '0 0 1' * self.movement_z;
 	self.velocity_z += g;
 	if (self.ladder_entity.classname == "func_water")
 	{
@@ -1290,10 +1290,10 @@ void PM_ladder(float maxspd_mod)
 
 void PM_jetpack(float maxspd_mod)
 {
-	//makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
-	makevectors(PHYS_INPUT_ANGLES(self));
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self)_x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self)_y;
+	//makevectors(self.v_angle.y * '0 1 0');
+	makevectors(self.v_angle);
+	vector wishvel = v_forward * self.movement_x
+					+ v_right * self.movement_y;
 	// add remaining speed as Z component
 	float maxairspd = PHYS_MAXAIRSPEED * max(1, maxspd_mod);
 	// fix speedhacks :P
@@ -1426,9 +1426,9 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	}
 
 	// walking
-	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self).y;
+	makevectors(self.v_angle.y * '0 1 0');
+	vector wishvel = v_forward * self.movement.x
+					+ v_right * self.movement.y;
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
@@ -1495,9 +1495,9 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 
 void PM_air(float buttons_prev, float maxspd_mod)
 {
-	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
-	vector wishvel = v_forward * PHYS_INPUT_MOVEVALUES(self).x
-					+ v_right * PHYS_INPUT_MOVEVALUES(self).y;
+	makevectors(self.v_angle.y * '0 1 0');
+	vector wishvel = v_forward * self.movement.x
+					+ v_right * self.movement.y;
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
@@ -1535,7 +1535,7 @@ void PM_air(float buttons_prev, float maxspd_mod)
 		// dv/dt = accel * maxspeed * (1 - accelqw) (when fast)
 		// log dv/dt = logaccel + logmaxspeed (when slow)
 		// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
-		float strafity = IsMoveInDirection(PHYS_INPUT_MOVEVALUES(self), -90) + IsMoveInDirection(PHYS_INPUT_MOVEVALUES(self), +90); // if one is nonzero, other is always zero
+		float strafity = IsMoveInDirection(self.movement, -90) + IsMoveInDirection(self.movement, +90); // if one is nonzero, other is always zero
 		if (PHYS_MAXAIRSTRAFESPEED)
 			wishspeed = min(wishspeed, GeomLerp(PHYS_MAXAIRSPEED*maxspd_mod, strafity, PHYS_MAXAIRSTRAFESPEED*maxspd_mod));
 		if (PHYS_AIRSTRAFEACCELERATE)
@@ -1547,7 +1547,7 @@ void PM_air(float buttons_prev, float maxspd_mod)
             	(1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(self)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(self))));
 		// !CPM
 
-		if (PHYS_WARSOWBUNNY_TURNACCEL && accelerating && PHYS_INPUT_MOVEVALUES(self).y == 0 && PHYS_INPUT_MOVEVALUES(self).x != 0)
+		if (PHYS_WARSOWBUNNY_TURNACCEL && accelerating && self.movement.y == 0 && self.movement.x != 0)
 			PM_AirAccelerate(wishdir, wishspeed2);
 		else
 			PM_Accelerate(wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(self), PHYS_AIRACCEL_SIDEWAYS_FRICTION / maxairspd, PHYS_AIRSPEEDLIMIT_NONQW(self));
@@ -1585,6 +1585,11 @@ void PM_Main()
 #ifdef CSQC
 	self.items = getstati(STAT_ITEMS, 0, 24);
 
+	self.movement = PHYS_INPUT_MOVEVALUES(self);
+
+	self.v_angle = PHYS_INPUT_ANGLES(self);
+	self.angles = PHYS_WORLD_ANGLES(self);
+
 	self.team = myteam + 1; // is this correct?
 	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
 		UNSET_JUMP_HELD(self); // canjump = true
@@ -1619,14 +1624,14 @@ void PM_Main()
 #ifdef SVQC
 	if (sv_maxidle > 0)
 	{
-		if (buttons != self.buttons_old || PHYS_INPUT_MOVEVALUES(self) != self.movement_old || PHYS_INPUT_ANGLES(self) != self.v_angle_old)
+		if (buttons != self.buttons_old || self.movement != self.movement_old || self.v_angle != self.v_angle_old)
 			self.parm_idlesince = time;
 	}
 #endif
 	float buttons_prev = self.buttons_old;
 	self.buttons_old = buttons;
-	self.movement_old = PHYS_INPUT_MOVEVALUES(self);
-	self.v_angle_old = PHYS_INPUT_ANGLES(self);
+	self.movement_old = self.movement;
+	self.v_angle_old = self.v_angle;
 
 	PM_check_nickspam();
 
@@ -1692,9 +1697,9 @@ void PM_Main()
 
 	// when we get here, disableclientprediction cannot be 2
 	self.disableclientprediction = 0;
+#endif
 
 	viewloc_PlayerPhysics();
-#endif
 
 	PM_check_spider();
 
@@ -1758,7 +1763,7 @@ void PM_Main()
 
 #ifdef SVQC
 	if (!self.fixangle && !g_bugrigs)
-		self.angles = '0 1 0' * PHYS_INPUT_ANGLES(self).y;
+		self.angles = '0 1 0' * self.v_angle.y;
 #endif
 
 	PM_check_hitground();

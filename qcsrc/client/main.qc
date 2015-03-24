@@ -12,8 +12,6 @@
 #include "wall.qh"
 #include "waypointsprites.qh"
 
-#include "../server/t_viewloc.qh"
-
 #include "../common/effects.qh"
 
 #include "../common/vehicles/unit/bumblebee.qh"

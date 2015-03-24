@@ -50,7 +50,6 @@ t_halflife.qc
 t_items.qc
 t_quake3.qc
 t_quake.qc
-t_viewloc.qc
 waypointsprites.qc
 
 bot/bot.qc

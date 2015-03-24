@@ -35,6 +35,9 @@ bool IsFlying(entity a);
 	.float watertype;
 	.int items;
 
+	.vector movement;
+	.vector v_angle;
+
 // TODO
 	#define IS_CLIENT(s)						(s).isplayermodel
 	#define IS_PLAYER(s)						(s).isplayermodel

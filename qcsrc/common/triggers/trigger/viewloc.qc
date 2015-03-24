@@ -1,10 +1,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "defs.qh"
-	#include "t_viewloc.qh"
+	#include "../../../dpdefs/progsdefs.qh"
+    #include "../../../warpzonelib/util_server.qh"
+    #include "../../../server/defs.qh"
 #endif
 
 #ifdef SVQC

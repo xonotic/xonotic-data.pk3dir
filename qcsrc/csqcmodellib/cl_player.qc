@@ -32,7 +32,7 @@
 	#include "common.qh"
 	#include "cl_model.qh"
 	#include "cl_player.qh"
- 	#include "../server/t_viewloc.qh"
+ 	#include "../common/triggers/trigger/viewloc.qh"
  	#include "../common/viewloc.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
