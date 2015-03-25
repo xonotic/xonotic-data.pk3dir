@@ -64,6 +64,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_SplitHealthArmor)
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
+	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
 	if(IS_MONSTER(self))
 	{
@@ -80,7 +81,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.gravity = 1;
 	self.reset = SUB_Remove;
 	setorigin(self, frag_target.origin + '0 0 32');
-	self.velocity = '0 0 200' + normalize(frag_attacker.origin - self.origin) * 500;
+	self.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
 	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
