@@ -162,7 +162,7 @@ float train_send(entity to, float sf)
 
 void train_link()
 {
-	Net_LinkEntity(self, 0, false, train_send);
+	//Net_LinkEntity(self, 0, false, train_send);
 }
 
 void func_train_find()
