@@ -318,9 +318,9 @@ float buff_Customize()
 
 void buff_Init(entity ent)
 {
-	if(!cvar("g_buffs")) { remove(self); return; }
+	if(!cvar("g_buffs")) { remove(ent); return; }
 
-	if(!teamplay && self.team) { self.team = 0; }
+	if(!teamplay && ent.team) { ent.team = 0; }
 
 	entity oldself = self;
 	self = ent;
