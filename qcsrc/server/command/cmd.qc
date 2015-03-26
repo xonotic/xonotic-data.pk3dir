@@ -826,6 +826,15 @@ void ClientCommand_macro_write_aliases(float fh)
 
 void SV_ParseClientCommand(string command)
 {
+	// If invalid UTF-8, don't even parse it
+	string command2 = "";
+	float len = strlen(command);
+	float i;
+	for (i = 0; i < len; ++i)
+		command2 = strcat(command2, chr2str(str2chr(command, i)));
+	if (command != command2)
+		return;
+
 	// if we're banned, don't even parse the command
 	if(Ban_MaybeEnforceBanOnce(self))
 		return;

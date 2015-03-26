@@ -146,6 +146,46 @@ float HUD_GetRowCount(float item_count, vector size, float item_aspect)
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
 }
 
+vector HUD_GetTableSize(float item_count, vector psize, float item_aspect)
+{
+	float columns, rows;
+	float ratio, best_ratio = 0;
+	float best_columns = 1, best_rows = 1;
+	bool vertical = (psize.x / psize.y >= item_aspect);
+	if(vertical)
+	{
+		psize = eX * psize.y + eY * psize.x;
+		item_aspect = 1 / item_aspect;
+	}
+
+	rows = ceil(sqrt(item_count));
+	columns = ceil(item_count/rows);
+	while(columns >= 1)
+	{
+		ratio = (psize.x/columns) / (psize.y/rows);
+		if(ratio > item_aspect)
+			ratio = item_aspect * item_aspect / ratio;
+
+		if(ratio <= best_ratio)
+			break; // ratio starts decreasing by now, skip next configurations
+
+		best_columns = columns;
+		best_rows = rows;
+		best_ratio = ratio;
+
+		if(columns == 1)
+			break;
+
+		--columns;
+		rows = ceil(item_count/columns);
+	}
+
+	if(vertical)
+		return eX * best_rows + eY * best_columns;
+	else
+		return eX * best_columns + eY * best_rows;
+}
+
 float stringwidth_colors(string s, vector theSize)
 {
 	return stringwidth(s, true, theSize);
@@ -430,7 +470,8 @@ void HUD_Weapons(void)
 	float screen_ar;
 	vector center = '0 0 0';
 	float weapon_count, weapon_id;
-	float row, column, rows = 0, columns;
+	float row, column, rows = 0, columns = 0;
+	bool vertical_order = true;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
@@ -505,6 +546,17 @@ void HUD_Weapons(void)
 		if(!weapons_stat)
 			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
 				weapons_stat |= WepSet_FromWeapon(i);
+
+		#if 0
+		/// debug code
+		if(cvar("wep_add"))
+		{
+			weapons_stat = '0 0 0';
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % WEP_COUNT);
+			for(i = WEP_FIRST; i <= countw; ++i)
+				weapons_stat |= WepSet_FromWeapon(i);
+		}
+		#endif
 	}
 
 	// determine which weapons are going to be shown
@@ -522,6 +574,7 @@ void HUD_Weapons(void)
 			if((weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon)) || (weaponorder[i].weapon == complain_weapon))
 				++weapon_count;
 
+
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
 		{
@@ -533,27 +586,32 @@ void HUD_Weapons(void)
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
-		rows = HUD_GetRowCount(WEP_COUNT, padded_panel_size, aspect);
-		columns = ceil(WEP_COUNT / rows);
+		vector table_size = HUD_GetTableSize(WEP_COUNT, padded_panel_size, aspect);
+		columns = table_size.x;
+		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
 		weapon_size.y = padded_panel_size.y / rows;
 
-		// reduce rows and columns as needed
 		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
 		// we enlarge them a bit when possible to better match the desired aspect ratio
-		if(padded_panel_size.y > padded_panel_size.x)
+		if(padded_panel_size.x / padded_panel_size.y < aspect)
 		{
-			columns = ceil(weapon_count / rows);
+			// maximum number of rows that allows to display items with the desired aspect ratio
+			float max_rows = floor(padded_panel_size.y / (weapon_size.x / aspect));
+			columns = min(columns, ceil(weapon_count / max_rows));
 			rows = ceil(weapon_count / columns);
 			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
 			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
+			vertical_order = false;
 		}
 		else
 		{
-			rows = ceil(weapon_count / columns);
+			float max_columns = floor(padded_panel_size.x / (weapon_size.y * aspect));
+			rows = min(rows, ceil(weapon_count / max_columns));
 			columns = ceil(weapon_count / rows);
 			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
 			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
+			vertical_order = true;
 		}
 
 		// reduce size of the panel
@@ -691,9 +749,12 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		rows = HUD_GetRowCount(weapon_count, panel_size, aspect);
-		columns = ceil(weapon_count/rows);
-		weapon_size = eX * panel_size.x*(1/columns) + eY * panel_size.y*(1/rows);
+		vector table_size = HUD_GetTableSize(WEP_COUNT, panel_size, aspect);
+		columns = table_size.x;
+		rows = table_size.y;
+		weapon_size.x = panel_size.x / columns;
+		weapon_size.y = panel_size.y / rows;
+		vertical_order = (panel_size.x / panel_size.y >= aspect);
 	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
@@ -850,12 +911,33 @@ void HUD_Weapons(void)
 			drawstring_aspect(weapon_pos + '1 1 0' * padding, s, weapon_size - '2 2 0' * padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
-		// continue with new position for the next weapon
-		++row;
-		if(row >= rows)
+		#if 0
+		/// debug code
+		if(!autocvar_hud_panel_weapons_onlyowned)
 		{
-			row = 0;
+			drawfill(weapon_pos + '1 1 0', weapon_size - '2 2 0', '1 1 1', panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
+			drawstring(weapon_pos, ftos(i + 1), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		#endif
+
+		// continue with new position for the next weapon
+		if(vertical_order)
+		{
 			++column;
+			if(column >= columns)
+			{
+				column = 0;
+				++row;
+			}
+		}
+		else
+		{
+			++row;
+			if(row >= rows)
+			{
+				row = 0;
+				++column;
+			}
 		}
 	}
 
