@@ -33,7 +33,7 @@ float func_ladder_send(entity to, float sf)
 
 void func_ladder_link()
 {
-	Net_LinkEntity(self, false, 0, func_ladder_send);
+	//Net_LinkEntity(self, false, 0, func_ladder_send);
 }
 
 void spawnfunc_func_ladder()
