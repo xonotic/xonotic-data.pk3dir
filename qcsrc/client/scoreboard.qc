@@ -548,13 +548,15 @@ string HUD_GetField(entity pl, int field)
 		case SP_PING:
 			if (!pl.gotscores)
 				return "\xE2\x96\xB6\xE2\x96\xB6\xE2\x96\xB6"; // >>> sign using U+25B6
+			return "lol";
+			/*
 			//str = getplayerkeyvalue(pl.sv_entnum, "ping");
 			f = pl.ping;
 			if(f == 0)
 				return _("N/A");
 			tmp = max(0, min(220, f-80)) / 220;
 			hud_field_rgb = '1 1 1' - '0 1 1'*tmp;
-			return ftos(f);
+			return ftos(f);*/
 
 		case SP_PL:
 			if (!pl.gotscores)
