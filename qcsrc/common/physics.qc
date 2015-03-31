@@ -241,17 +241,21 @@ void PM_ClientMovement_UpdateStatus(bool ground)
 	origin1_z += self.mins_z + 1;
 	self.waterlevel = WATERLEVEL_NONE;
 
-	self.watertype = (pointcontents(origin1) == CONTENT_WATER);
+	int thepoint = pointcontents(origin1);
+
+	self.watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
 
 	if(self.watertype)
 	{
 		self.waterlevel = WATERLEVEL_WETFEET;
 		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
-		if(pointcontents(origin1) == CONTENT_WATER)
+		thepoint = pointcontents(origin1);
+		if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
 		{
 			self.waterlevel = WATERLEVEL_SWIMMING;
 			origin1_z = self.origin_z + 22;
-			if(pointcontents(origin1) == CONTENT_WATER)
+			thepoint = pointcontents(origin1);
+			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
 				self.waterlevel = WATERLEVEL_SUBMERGED;
 		}
 	}
