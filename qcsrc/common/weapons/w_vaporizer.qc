@@ -164,8 +164,10 @@ float W_Vaporizer(float req)
 						W_DecreaseAmmo(WEP_CVAR_SEC(vaporizer, ammo));
 
 					// ugly instagib hack to reuse the fire mode of the laser
+					int oldwep = self.weapon; // we can't avoid this hack
+					self.weapon = WEP_BLASTER;
 					W_Blaster_Attack(
-						WEP_VAPORIZER | HITTYPE_SECONDARY,
+						WEP_BLASTER | HITTYPE_SECONDARY,
 						WEP_CVAR_SEC(vaporizer, shotangle),
 						WEP_CVAR_SEC(vaporizer, damage),
 						WEP_CVAR_SEC(vaporizer, edgedamage),
@@ -176,6 +178,7 @@ float W_Vaporizer(float req)
 						WEP_CVAR_SEC(vaporizer, delay),
 						WEP_CVAR_SEC(vaporizer, lifetime)
 					);
+					self.weapon = oldwep;
 
 					// now do normal refire
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
