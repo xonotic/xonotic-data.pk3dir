@@ -1,82 +1,72 @@
 #if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "../common/util.qh"
-    #include "../common/buffs.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "../client/autocvars.qh"
-    #include "../common/movetypes/movetypes.qh"
-    #include "../client/main.qh"
-    #include "../csqcmodellib/common.qh"
-    #include "../csqcmodellib/cl_model.qh"
-    #include "t_items.qh"
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../common/util.qh"
+	#include "../common/buffs.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "../client/autocvars.qh"
+	#include "../common/movetypes/movetypes.qh"
+	#include "../client/main.qh"
+	#include "../csqcmodellib/common.qh"
+	#include "../csqcmodellib/cl_model.qh"
+	#include "t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
+	#include "../dpdefs/progsdefs.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "../warpzonelib/util_server.qh"
+	#include "../common/constants.qh"
 	#include "../common/effects.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/monsters.qh"
+	#include "../common/util.qh"
+	#include "../common/monsters/monsters.qh"
 	#include "../common/triggers/subs.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/weaponsystem.qh"
-    #include "t_items.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "weapons/weaponsystem.qh"
+	#include "t_items.qh"
+	#include "autocvars.qh"
+	#include "constants.qh"
+	#include "defs.qh"
 	#include "jeff.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
+	#include "../common/notifications.qh"
+	#include "../common/deathtypes.qh"
+	#include "mutators/mutators_include.qh"
 #endif
 
 #ifdef CSQC
 void ItemDraw()
 {
-    if(self.gravity)
-    {
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
-        if(self.move_flags & FL_ONGROUND)
-        { // For some reason move_avelocity gets set to '0 0 0' here ...
-            self.oldorigin = self.origin;
-            self.gravity = 0;
+	Movetype_Physics_MatchServer(false);
 
-            if(autocvar_cl_animate_items)
-            { // ... so reset it if animations are requested.
-                if(self.ItemStatus & ITS_ANIMATE1)
-                    self.move_avelocity = '0 180 0';
+	if(self.move_flags & FL_ONGROUND)
+	{
+		self.oldorigin = self.move_origin;
+		if(autocvar_cl_animate_items)
+		{ // ... so reset it if animations are requested.
+			if(self.ItemStatus & ITS_ANIMATE1)
+				self.move_avelocity = '0 180 0';
 
-                if(self.ItemStatus & ITS_ANIMATE2)
-                    self.move_avelocity = '0 -90 0';
-            }
-        }
-    }
-    else if (autocvar_cl_animate_items)
-    {
-        if(self.ItemStatus & ITS_ANIMATE1)
-        {
-            self.angles += self.move_avelocity * frametime;
-            setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));
-        }
+			if(self.ItemStatus & ITS_ANIMATE2)
+				self.move_avelocity = '0 -90 0';
+		}
+	}
+	else if(autocvar_cl_animate_items)
+	{
+		if(self.ItemStatus & ITS_ANIMATE1)
+		{
+			self.move_angles += self.move_avelocity * frametime;
+			//self.move_origin = '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2);
+		}
 
-        if(self.ItemStatus & ITS_ANIMATE2)
-        {
-            self.angles += self.move_avelocity * frametime;
-            setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));
-        }
-    }
+		if(self.ItemStatus & ITS_ANIMATE2)
+		{
+			self.move_angles += self.move_avelocity * frametime;
+			//self.move_origin = '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3);
+		}
+	}
 }
 
 void ItemDrawSimple()
 {
-    if(self.gravity)
-    {
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
-
-        if(self.move_flags & FL_ONGROUND)
-            self.gravity = 0;
-    }
+	Movetype_Physics_MatchServer(false);
 }
 
 void Item_PreDraw()
@@ -91,6 +81,8 @@ void Item_PreDraw()
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
+	if(self.ItemStatus & ITS_AVAILABLE)
+		self.alpha = alph;
 	if(alph <= 0)
 		self.drawmask = 0;
 	else
@@ -99,151 +91,150 @@ void Item_PreDraw()
 
 void ItemRead(float _IsNew)
 {
-    int sf = ReadByte();
+	int sf = ReadByte();
 
-    if(sf & ISF_LOCATION)
-    {
-        self.origin_x = ReadCoord();
-        self.origin_y = ReadCoord();
-        self.origin_z = ReadCoord();
-        setorigin(self, self.origin);
-        self.oldorigin = self.origin;
-    }
+	if(sf & ISF_LOCATION)
+	{
+		self.move_origin_x = ReadCoord();
+		self.move_origin_y = ReadCoord();
+		self.move_origin_z = ReadCoord();
+		setorigin(self, self.move_origin);
+		self.oldorigin = self.move_origin;
+	}
 
-    if(sf & ISF_ANGLES)
-    {
-        self.angles_x = ReadAngle();
-        self.angles_y = ReadAngle();
-        self.angles_z = ReadAngle();
-        self.move_angles = self.angles;
-    }
+	if(sf & ISF_ANGLES)
+	{
+		self.move_angles_x = ReadAngle();
+		self.move_angles_y = ReadAngle();
+		self.move_angles_z = ReadAngle();
+	}
 
-    if(sf & ISF_SIZE)
-    {
-        float use_bigsize = ReadByte();
-        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
-    }
+	if(sf & ISF_SIZE)
+	{
+		float use_bigsize = ReadByte();
+		setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+	}
 
-    if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
-    {
-        self.ItemStatus = ReadByte();
+	if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
+	{
+		self.ItemStatus = ReadByte();
 
-        if(self.ItemStatus & ITS_AVAILABLE)
-        {
-            self.alpha = 1;
-            self.colormod = self.glowmod = '1 1 1';
-        }
-        else
-        {
-            if (autocvar_cl_ghost_items_color)
-            {
-                self.alpha = autocvar_cl_ghost_items;
-                self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
-            }
-            else
-                self.alpha = -1;
-        }
+		if(self.ItemStatus & ITS_AVAILABLE)
+		{
+			self.alpha = 1;
+			self.colormod = self.glowmod = '1 1 1';
+		}
+		else
+		{
+			if (autocvar_cl_ghost_items_color)
+			{
+				self.alpha = autocvar_cl_ghost_items;
+				self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
+			}
+			else
+				self.alpha = -1;
+		}
 
-        if(autocvar_cl_fullbright_items)
-            if(self.ItemStatus & ITS_ALLOWFB)
-                self.effects |= EF_FULLBRIGHT;
+		if(autocvar_cl_fullbright_items)
+			if(self.ItemStatus & ITS_ALLOWFB)
+				self.effects |= EF_FULLBRIGHT;
 
-        if(self.ItemStatus & ITS_STAYWEP)
-        {
-            self.colormod = self.glowmod = autocvar_cl_weapon_stay_color;
-            self.alpha = autocvar_cl_weapon_stay_alpha;
+		if(self.ItemStatus & ITS_STAYWEP)
+		{
+			self.colormod = self.glowmod = autocvar_cl_weapon_stay_color;
+			self.alpha = autocvar_cl_weapon_stay_alpha;
 
-        }
+		}
 
-        if(self.ItemStatus & ITS_POWERUP)
-        {
-            if(self.ItemStatus & ITS_AVAILABLE)
-                self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
-            else
-                 self.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
-        }
-    }
+		if(self.ItemStatus & ITS_POWERUP)
+		{
+			if(self.ItemStatus & ITS_AVAILABLE)
+				self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+			else
+				 self.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+		}
+	}
 
-    if(sf & ISF_MODEL)
-    {
-        self.drawmask  = MASK_NORMAL;
-		self.move_movetype = self.movetype = MOVETYPE_TOSS;
+	if(sf & ISF_MODEL)
+	{
+		self.drawmask  = MASK_NORMAL;
+		self.move_movetype = MOVETYPE_TOSS;
+		self.solid = SOLID_TRIGGER;
 		//self.renderflags |= RF_DEPTHHACK;
-        self.draw       = ItemDraw;
+		self.draw       = ItemDraw;
 
-        self.fade_end = ReadShort();
-        self.fade_start = ReadShort();
-        if(self.fade_start)
-        	self.predraw = Item_PreDraw;
+		self.fade_end = ReadShort();
+		self.fade_start = ReadShort();
+		if(self.fade_start)
+			self.predraw = Item_PreDraw;
 
-        if(self.mdl)
-            strunzone(self.mdl);
+		if(self.mdl)
+			strunzone(self.mdl);
 
-        self.mdl = "";
-        string _fn = ReadString();
+		self.mdl = "";
+		string _fn = ReadString();
 
-        if(autocvar_cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
-        {
-            string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-            self.draw = ItemDrawSimple;
+		if(autocvar_cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
+		{
+			string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
+			self.draw = ItemDrawSimple;
 
-            if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
-            else
-            {
-                self.draw = ItemDraw;
-                dprint("Simple item requested for ", _fn, " but no model exists for it\n");
-            }
-        }
+			if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
+				self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
+			else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
+				self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
+			else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
+				self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
+			else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
+				self.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
+			else
+			{
+				self.draw = ItemDraw;
+				dprint("Simple item requested for ", _fn, " but no model exists for it\n");
+			}
+		}
 
-        if(self.draw != ItemDrawSimple)
-            self.mdl = strzone(_fn);
+		if(self.draw != ItemDrawSimple)
+			self.mdl = strzone(_fn);
 
 
-        if(self.mdl == "")
-            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
+		if(self.mdl == "")
+			dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
 
-        precache_model(self.mdl);
-        setmodel(self, self.mdl);
-    }
+		precache_model(self.mdl);
+		setmodel(self, self.mdl);
+	}
 
-    if(sf & ISF_COLORMAP)
-        self.colormap = ReadShort();
+	if(sf & ISF_COLORMAP)
+		self.colormap = ReadShort();
 
-    if(sf & ISF_DROP)
-    {
-        self.gravity = 1;
-        //self.move_angles = '0 0 0';
-        self.move_movetype = MOVETYPE_TOSS;
-        self.move_velocity_x = ReadCoord();
-        self.move_velocity_y = ReadCoord();
-        self.move_velocity_z = ReadCoord();
-        self.velocity = self.move_velocity;
-        self.move_origin = self.oldorigin;
+	if(sf & ISF_DROP)
+	{
+		self.gravity = 1;
+		//self.move_angles = '0 0 0';
+		self.move_movetype = MOVETYPE_TOSS;
+		self.move_velocity_x = ReadCoord();
+		self.move_velocity_y = ReadCoord();
+		self.move_velocity_z = ReadCoord();
+		self.move_origin = self.oldorigin;
 
-        if(!self.move_time)
-        {
-            self.move_time = time;
-            self.spawntime = time;
-        }
-        else
-            self.move_time = max(self.move_time, time);
-    }
+		if(!self.move_time)
+		{
+			self.move_time = time;
+			self.spawntime = time;
+		}
+		else
+			self.move_time = max(self.move_time, time);
+	}
 
-    if(autocvar_cl_animate_items)
-    {
-        if(self.ItemStatus & ITS_ANIMATE1)
-            self.move_avelocity = '0 180 0';
+	/*if(autocvar_cl_animate_items)
+	{
+		if(self.ItemStatus & ITS_ANIMATE1)
+			self.move_avelocity = '0 180 0';
 
-        if(self.ItemStatus & ITS_ANIMATE2)
-            self.move_avelocity = '0 -90 0';
-    }
+		if(self.ItemStatus & ITS_ANIMATE2)
+			self.move_avelocity = '0 -90 0';
+	}*/
 }
 
 #endif
@@ -251,60 +242,60 @@ void ItemRead(float _IsNew)
 #ifdef SVQC
 float ItemSend(entity to, float sf)
 {
-    if(self.gravity)
-        sf |= ISF_DROP;
-    else
-        sf &= ~ISF_DROP;
+	if(self.gravity)
+		sf |= ISF_DROP;
+	else
+		sf &= ~ISF_DROP;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
 	//WriteByte(MSG_ENTITY, self.cnt);
-    if(sf & ISF_LOCATION)
-    {
-        WriteCoord(MSG_ENTITY, self.origin.x);
-        WriteCoord(MSG_ENTITY, self.origin.y);
-        WriteCoord(MSG_ENTITY, self.origin.z);
-    }
+	if(sf & ISF_LOCATION)
+	{
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
+	}
 
-    if(sf & ISF_ANGLES)
-    {
-        WriteAngle(MSG_ENTITY, self.angles_x);
-        WriteAngle(MSG_ENTITY, self.angles_y);
-        WriteAngle(MSG_ENTITY, self.angles_z);
-    }
+	if(sf & ISF_ANGLES)
+	{
+		WriteAngle(MSG_ENTITY, self.angles_x);
+		WriteAngle(MSG_ENTITY, self.angles_y);
+		WriteAngle(MSG_ENTITY, self.angles_z);
+	}
 
-    if(sf & ISF_SIZE)
-    {
+	if(sf & ISF_SIZE)
+	{
 		WriteByte(MSG_ENTITY, ((self.flags & FL_POWERUP) || self.health || self.armorvalue));
-    }
+	}
 
-    if(sf & ISF_STATUS)
-        WriteByte(MSG_ENTITY, self.ItemStatus);
+	if(sf & ISF_STATUS)
+		WriteByte(MSG_ENTITY, self.ItemStatus);
 
-    if(sf & ISF_MODEL)
-    {
-    	WriteShort(MSG_ENTITY, self.fade_end);
-    	WriteShort(MSG_ENTITY, self.fade_start);
+	if(sf & ISF_MODEL)
+	{
+		WriteShort(MSG_ENTITY, self.fade_end);
+		WriteShort(MSG_ENTITY, self.fade_start);
 
-        if(self.mdl == "")
-            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+		if(self.mdl == "")
+			dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
 
-        WriteString(MSG_ENTITY, self.mdl);
-    }
+		WriteString(MSG_ENTITY, self.mdl);
+	}
 
 
-    if(sf & ISF_COLORMAP)
-        WriteShort(MSG_ENTITY, self.colormap);
+	if(sf & ISF_COLORMAP)
+		WriteShort(MSG_ENTITY, self.colormap);
 
-    if(sf & ISF_DROP)
-    {
-        WriteCoord(MSG_ENTITY, self.velocity.x);
-        WriteCoord(MSG_ENTITY, self.velocity.y);
-        WriteCoord(MSG_ENTITY, self.velocity.z);
-    }
+	if(sf & ISF_DROP)
+	{
+		WriteCoord(MSG_ENTITY, self.velocity.x);
+		WriteCoord(MSG_ENTITY, self.velocity.y);
+		WriteCoord(MSG_ENTITY, self.velocity.z);
+	}
 
-    return true;
+	return true;
 }
 
 void ItemUpdate(entity item)
@@ -401,21 +392,21 @@ void Item_Show (entity e, float mode)
 	}
 
 	if (e.items & IT_STRENGTH || e.items & IT_INVINCIBLE)
-	    e.ItemStatus |= ITS_POWERUP;
+		e.ItemStatus |= ITS_POWERUP;
 
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
 
 
-    if (autocvar_g_fullbrightitems)
+	if (autocvar_g_fullbrightitems)
 		e.ItemStatus |= ITS_ALLOWFB;
 
 	if (autocvar_sv_simple_items)
-        e.ItemStatus |= ITS_ALLOWSI;
+		e.ItemStatus |= ITS_ALLOWSI;
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
-    e.SendFlags |= ISF_STATUS;
+	e.SendFlags |= ISF_STATUS;
 }
 
 void Item_Think()
@@ -969,10 +960,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.model = itemmodel;
 
 	if(self.model == "")
-    {
-        error(strcat("^1Tried to spawn ", itemname, " with no model!\n"));
-        return;
-    }
+	{
+		error(strcat("^1Tried to spawn ", itemname, " with no model!\n"));
+		return;
+	}
 
 	if(self.item_pickupsound == "")
 		self.item_pickupsound = pickupsound;
@@ -1054,7 +1045,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		}
 
 		if(self.angles != '0 0 0')
-            self.SendFlags |= ISF_ANGLES;
+			self.SendFlags |= ISF_ANGLES;
 
 		self.reset = Item_Reset;
 		// it's a level item
@@ -1099,7 +1090,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			entity otheritem;
 			for(otheritem = findradius(self.origin, 3); otheritem; otheritem = otheritem.chain)
 			{
-			    // why not flags & fl_item?
+				// why not flags & fl_item?
 				if(otheritem.is_item)
 				{
 					dprint("XXX Found duplicated item: ", itemname, vtos(self.origin));
@@ -1139,31 +1130,31 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	//self.effects |= EF_LOWPRECISION;
 
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-    {
-        self.pos1 = '-16 -16 0';
-        self.pos2 = '16 16 48';
-    }
+	{
+		self.pos1 = '-16 -16 0';
+		self.pos2 = '16 16 48';
+	}
 	else
-    {
-        self.pos1 = '-16 -16 0';
-        self.pos2 = '16 16 32';
-    }
-    setsize (self, self.pos1, self.pos2);
+	{
+		self.pos1 = '-16 -16 0';
+		self.pos2 = '16 16 32';
+	}
+	setsize (self, self.pos1, self.pos2);
 
-    self.SendFlags |= ISF_SIZE;
+	self.SendFlags |= ISF_SIZE;
 
-    if(itemflags & FL_POWERUP)
-        self.ItemStatus |= ITS_ANIMATE1;
+	if(itemflags & FL_POWERUP)
+		self.ItemStatus |= ITS_ANIMATE1;
 
 	if(self.armorvalue || self.health)
-        self.ItemStatus |= ITS_ANIMATE2;
+		self.ItemStatus |= ITS_ANIMATE2;
 
 	if(itemflags & FL_WEAPON)
 	{
 		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
-            self.colormap = 1024; // color shirt=0 pants=0 grey
-        else
-            self.gravity = 1;
+			self.colormap = 1024; // color shirt=0 pants=0 grey
+		else
+			self.gravity = 1;
 
 		self.ItemStatus |= ITS_ANIMATE1;
 		self.ItemStatus |= ISF_COLORMAP;
@@ -1181,7 +1172,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	else
 		Item_Reset();
 
-    Net_LinkEntity(self, !((itemflags & FL_POWERUP) || self.health || self.armorvalue), 0, ItemSend);
+	Net_LinkEntity(self, !((itemflags & FL_POWERUP) || self.health || self.armorvalue), 0, ItemSend);
 
 	// call this hook after everything else has been done
 	if(MUTATOR_CALLHOOK(Item_Spawn))
