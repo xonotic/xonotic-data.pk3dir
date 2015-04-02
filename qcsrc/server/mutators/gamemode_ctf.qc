@@ -2421,6 +2421,9 @@ void spawnfunc_team_CTF_blueplayer() { spawnfunc_info_player_team2();  }
 void spawnfunc_team_CTF_redspawn()   { spawnfunc_info_player_team1();  }
 void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
 
+void team_CTF_neutralflag()			 { spawnfunc_item_flag_neutral();  }
+void team_neutralobelisk()			 { spawnfunc_item_flag_neutral();  }
+
 
 // ==============
 // Initialization
