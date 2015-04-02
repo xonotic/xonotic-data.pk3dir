@@ -34,8 +34,6 @@
 #ifdef CSQC
 void ItemDraw()
 {
-	Movetype_Physics_MatchServer(false);
-
 	if(self.move_flags & FL_ONGROUND)
 	{
 		self.oldorigin = self.move_origin;
@@ -62,11 +60,13 @@ void ItemDraw()
 			//self.move_origin = '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3);
 		}
 	}
+
+	Movetype_Physics_NoMatchServer();
 }
 
 void ItemDrawSimple()
 {
-	Movetype_Physics_MatchServer(false);
+	Movetype_Physics_NoMatchServer();
 }
 
 void Item_PreDraw()
