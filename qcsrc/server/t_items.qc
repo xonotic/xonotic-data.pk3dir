@@ -79,6 +79,24 @@ void ItemDrawSimple()
     }
 }
 
+void Item_PreDraw()
+{
+	vector org;
+	float alph;
+	org = getpropertyvec(VF_ORIGIN);
+	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+		alph = 0;
+	else if(self.fade_start)
+		alph = bound(0, (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.fade_end - self.fade_start), 1);
+	else
+		alph = 1;
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
+	if(alph <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
+}
+
 void ItemRead(float _IsNew)
 {
     int sf = ReadByte();
@@ -152,6 +170,11 @@ void ItemRead(float _IsNew)
 		self.move_movetype = self.movetype = MOVETYPE_TOSS;
 		//self.renderflags |= RF_DEPTHHACK;
         self.draw       = ItemDraw;
+
+        self.fade_end = ReadShort();
+        self.fade_start = ReadShort();
+        if(self.fade_start)
+        	self.predraw = Item_PreDraw;
 
         if(self.mdl)
             strunzone(self.mdl);
@@ -261,6 +284,8 @@ float ItemSend(entity to, float sf)
 
     if(sf & ISF_MODEL)
     {
+    	WriteShort(MSG_ENTITY, self.fade_end);
+    	WriteShort(MSG_ENTITY, self.fade_start);
 
         if(self.mdl == "")
             dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
@@ -960,6 +985,12 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	self.items = itemid;
 	self.weapon = weaponid;
+
+	if(!self.fade_end)
+	{
+		self.fade_start = autocvar_g_items_mindist;
+		self.fade_end = autocvar_g_items_maxdist;
+	}
 
 	if(weaponid)
 		self.weapons = WepSet_FromWeapon(weaponid);

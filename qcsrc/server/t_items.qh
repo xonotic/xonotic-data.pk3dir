@@ -58,6 +58,9 @@ const int ISF_SIZE 				= 128;
 
 .int ItemStatus;
 
+.float fade_start;
+.float fade_end;
+
 #ifdef CSQC
 
 float  autocvar_cl_animate_items = 1;
