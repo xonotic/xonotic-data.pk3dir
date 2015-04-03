@@ -243,7 +243,7 @@ void W_Flak_Bomb_Explode(void)
 		fixedmakevectors(a + '1 0 0' * crandom() * spread_up
 						   + '0 1 0' * crandom() * spread_side);
 
-		entity p = W_Flak_Projectile(self.owner, false,
+		entity p = W_Flak_Projectile(self.realowner, false,
 						  WEP_CVAR_SEC(flak, damage),
 						  WEP_CVAR_SEC(flak, gravity),
 						  WEP_CVAR_SEC(flak, lifetime),

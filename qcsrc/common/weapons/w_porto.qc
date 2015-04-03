@@ -367,6 +367,12 @@ float W_Porto(float req)
 
 			return true;
 		}
+		case WR_CHECKAMMO1:
+		case WR_CHECKAMMO2:
+		{
+			// always allow infinite ammo
+			return true;
+		}
 		case WR_INIT:
 		{
 			precache_model(W_Model("g_porto.md3"));
