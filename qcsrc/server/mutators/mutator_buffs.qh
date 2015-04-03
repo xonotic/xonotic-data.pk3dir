@@ -5,13 +5,11 @@
 //
 // ammo
 .float buff_ammo_prev_infitems;
+.int buff_ammo_prev_clipload;
 // invisible
 .float buff_invisible_prev_alpha;
 // flight
 .float buff_flight_prev_gravity;
-// disability
-.float buff_disability_time;
-.float buff_disability_effect_time;
 #ifdef MONTY
 // blessed
 .float buff_blessed_time; // a little delay to prevent super spam
@@ -20,14 +18,23 @@
 .bool buff_blessed_soundplayed;
 .bool buff_blessed_crouch_held;
 #endif
+// jump
+.float stat_jumpheight;
+// disability
+.float buff_disability_time;
+.float buff_disability_effect_time;
+// common buff variables
+.float buff_effect_delay;
 
 // buff definitions
 .float buff_active;
 .float buff_activetime;
 .float buff_activetime_updated;
 .entity buff_waypoint;
-.float oldbuffs; // for updating effects
+.int oldbuffs; // for updating effects
 .entity buff_model; // controls effects (TODO: make csqc)
+
+const string BUFF_MODEL = "models/relics/relic.md3";
 
 const vector BUFF_MIN = ('-16 -16 -20');
 const vector BUFF_MAX = ('16 16 20');

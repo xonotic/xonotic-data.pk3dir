@@ -118,6 +118,11 @@ MUTATOR_HOOKABLE(WantWeapon);
 		//float ret_float;
 		//entity other;
 
+MUTATOR_HOOKABLE(WeaponSpeedFactor);
+	// allows changing weapon speed (projectiles mostly)
+	// INPUT, OUTPUT:
+		//float ret_float;
+
 MUTATOR_HOOKABLE(SetStartItems);
 	// adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}}
 

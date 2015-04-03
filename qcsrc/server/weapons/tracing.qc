@@ -147,7 +147,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 	float mspeed;
 	vector outvelocity;
 
-	mvelocity = mvelocity * g_weaponspeedfactor;
+	mvelocity = mvelocity * W_WeaponSpeedFactor();
 
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);

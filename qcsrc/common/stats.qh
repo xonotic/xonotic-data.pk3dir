@@ -101,7 +101,7 @@ const int STAT_PRISONED               = 92;
 const int STAT_ROUNDLOST              = 93;
 const int STAT_CTF_FLAGSTATUS         = 94;
 const int STAT_KH_KEYSTATUS           = 95;
-// 96 empty?
+const int STAT_BUFF_TIME              = 96;
 const int STAT_DISCO_MODE             = 97;
 const int STAT_FROZEN                 = 98;
 const int STAT_REVIVE_PROGRESS        = 99;

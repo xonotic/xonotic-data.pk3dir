@@ -71,3 +71,12 @@ string Buff_Sprite(int buff_id)
 			return e.model2;
 	return "";
 }
+
+float Buff_Timer(int buff_id)
+{
+	entity e;
+	for(e = Buff_Type_first; e; e = e.enemy)
+		if(buff_id == e.items)
+			return e.buff_time;
+	return 0;
+}

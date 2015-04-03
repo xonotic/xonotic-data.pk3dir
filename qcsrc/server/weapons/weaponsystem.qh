@@ -32,6 +32,8 @@ void W_WeaponFrame();
 
 float W_WeaponRateFactor();
 
+float W_WeaponSpeedFactor();
+
 float weapon_prepareattack(float secondary, float attacktime);
 
 float weapon_prepareattack_check(float secondary, float attacktime);

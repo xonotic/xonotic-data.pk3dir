@@ -207,6 +207,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_QUICKMENU:
 					HUD_Write_PanelCvar_q("_align");
 					break;
+				case HUD_PANEL_BUFFS:
+					HUD_Write_PanelCvar_q("_progressbar");
+					HUD_Write_PanelCvar_q("_progressbar_name");
 			}
 			HUD_Write("\n");
 		}

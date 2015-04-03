@@ -306,6 +306,8 @@ bool autocvar_hud_panel_powerups_flip;
 int autocvar_hud_panel_powerups_iconalign;
 bool autocvar_hud_panel_powerups_progressbar;
 bool autocvar_hud_panel_buffs = 1;
+bool autocvar_hud_panel_buffs_progressbar;
+string autocvar_hud_panel_buffs_progressbar_name = "progressbar";
 //float autocvar_hud_panel_buffs_iconalign;
 string autocvar_hud_panel_powerups_progressbar_shield;
 string autocvar_hud_panel_powerups_progressbar_strength;
