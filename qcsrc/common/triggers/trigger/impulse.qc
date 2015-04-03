@@ -137,7 +137,7 @@ bool trigger_impulse_send(entity to, int sf)
 
 void trigger_impulse_link()
 {
-	Net_LinkEntity(self, 0, false, trigger_impulse_send);
+	//Net_LinkEntity(self, 0, false, trigger_impulse_send);
 }
 
 void spawnfunc_trigger_impulse()
