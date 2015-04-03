@@ -143,8 +143,8 @@ void CSQCPlayer_Physics(void)
 {
 	switch(autocvar_cl_movement)
 	{
-		case 1: runstandardplayerphysics(self); break;
-		case 2: CSQC_ClientMovement_PlayerMove_Frame(); break;
+		case 1: CSQC_ClientMovement_PlayerMove_Frame(); break;
+		case 2: runstandardplayerphysics(self); break;
 	}
 }
 
