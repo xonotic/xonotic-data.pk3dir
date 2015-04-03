@@ -26,7 +26,9 @@ void WarpZoneLib_ExactTrigger_Init()
  	{
 		mi = self.mins;
 		ma = self.maxs;
+#ifdef SVQC
  		precache_model(self.model);
+#endif
  		setmodel(self, self.model);
 		// let mapper-set mins/maxs override the model's bounds if set
 		if(mi != '0 0 0' || ma != '0 0 0')

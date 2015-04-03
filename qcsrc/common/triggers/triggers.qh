@@ -47,9 +47,6 @@ void SUB_UseTargets_PreventReuse();
 void trigger_common_read(bool withtarget);
 void trigger_remove_generic();
 
-float WarpZoneLib_ExactTrigger_Touch();
-#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
-
 .float active;
 .string target;
 .string targetname;
