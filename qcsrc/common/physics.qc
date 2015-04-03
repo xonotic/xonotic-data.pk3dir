@@ -267,10 +267,99 @@ void PM_ClientMovement_UpdateStatus(bool ground)
 void PM_ClientMovement_Move()
 {
 #ifdef CSQC
+	int bump;
+	float t;
+	float f;
+	vector neworigin;
+	vector currentorigin2;
+	vector neworigin2;
+	vector primalvelocity;
+
+	vector trace1_endpos = '0 0 0';
+	vector trace2_endpos = '0 0 0';
+	vector trace3_endpos = '0 0 0';
+	float trace1_fraction = 0;
+	float trace2_fraction = 0;
+	float trace3_fraction = 0;
+	vector trace1_plane_normal = '0 0 0';
+	vector trace2_plane_normal = '0 0 0';
+	vector trace3_plane_normal = '0 0 0';
+	
+
+	PM_ClientMovement_UpdateStatus(false);
+	primalvelocity = self.velocity;
+	for(bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && (self.velocity * self.velocity) > 0; bump++)
+	{
+		neworigin = self.origin + t * self.velocity;
+		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
+		trace1_endpos = trace_endpos;
+		trace1_fraction = trace_fraction;
+		trace1_plane_normal = trace_plane_normal;
+		if(trace1_fraction < 1 && trace1_plane_normal_z == 0)
+		{
+			// may be a step or wall, try stepping up
+			// first move forward at a higher level
+			currentorigin2 = self.origin;
+			currentorigin2_z += PHYS_STEPHEIGHT;
+			neworigin2 = neworigin;
+			neworigin2_z += PHYS_STEPHEIGHT;
+			tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+			trace2_endpos = trace_endpos;
+			trace2_fraction = trace_fraction;
+			trace2_plane_normal = trace_plane_normal;
+			if(!trace_startsolid)
+			{
+				// then move down from there
+				currentorigin2 = trace2_endpos;
+				neworigin2 = trace2_endpos;
+				neworigin2_z = self.origin_z;
+				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+				trace3_endpos = trace_endpos;
+				trace3_fraction = trace_fraction;
+				trace3_plane_normal = trace_plane_normal;
+				// accept the new trace if it made some progress
+				if(fabs(trace3_endpos_x - trace1_endpos_x) >= 0.03125 || fabs(trace3_endpos_y - trace1_endpos_y) >= 0.03125)
+				{
+					trace1_endpos = trace2_endpos;
+					trace1_fraction = trace2_fraction;
+					trace1_plane_normal = trace2_plane_normal;
+					trace1_endpos = trace3_endpos;
+				}
+			}
+		}
+
+		// check if it moved at all
+		if(trace1_fraction >= 0.001)
+			setorigin(self, trace1_endpos);
+
+		// check if it moved all the way
+		if(trace1_fraction == 1)
+			break;
+
+		// this is only really needed for nogravityonground combined with gravityunaffectedbyticrate
+		// <LordHavoc> I'm pretty sure I commented it out solely because it seemed redundant
+		// this got commented out in a change that supposedly makes the code match QW better
+		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
+		if(trace1_plane_normal_z > 0.7)
+			SET_ONGROUND(self);
+
+		t -= t * trace1_fraction;
+
+		f = (self.velocity * trace1_plane_normal);
+		self.velocity = self.velocity + -f * trace1_plane_normal;
+	}
+	if(pmove_waterjumptime > 0)
+		self.velocity = primalvelocity;
+#endif
+}
+
+#if 0
+{
+#ifdef CSQC
 	float t = PHYS_INPUT_TIMELENGTH;
 	vector primalvelocity = self.velocity;
 	PM_ClientMovement_UpdateStatus(false);
-	float bump = 0;
+	int bump;
 	for (bump = 0; bump < MAX_CLIP_PLANES && (self.velocity * self.velocity) > 0; bump++)
 	{
 		vector neworigin = self.origin + t * self.velocity;
@@ -336,6 +425,7 @@ void PM_ClientMovement_Move()
 		self.velocity = primalvelocity;
 #endif
 }
+#endif
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 {
