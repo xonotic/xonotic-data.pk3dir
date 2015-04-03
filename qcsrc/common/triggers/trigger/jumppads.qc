@@ -351,7 +351,7 @@ void trigger_push_updatelink()
 
 void trigger_push_link()
 {
-	Net_LinkEntity(self, false, 0, trigger_push_send);
+	//Net_LinkEntity(self, false, 0, trigger_push_send);
 }
 #endif
 #ifdef SVQC

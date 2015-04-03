@@ -34,9 +34,9 @@ float func_ladder_send(entity to, float sf)
 
 void func_ladder_link()
 {
-	self.SendEntity = func_ladder_send;
-	self.SendFlags = 0xFFFFFF;
-	self.model = "null";
+	//self.SendEntity = func_ladder_send;
+	//self.SendFlags = 0xFFFFFF;
+	//self.model = "null";
 }
 
 void spawnfunc_func_ladder()

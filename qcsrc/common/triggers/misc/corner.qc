@@ -23,7 +23,7 @@ bool corner_send(entity to, int sf)
 
 void corner_link()
 {
-	Net_LinkEntity(self, false, 0, corner_send);
+	//Net_LinkEntity(self, false, 0, corner_send);
 }
 
 void spawnfunc_path_corner()
