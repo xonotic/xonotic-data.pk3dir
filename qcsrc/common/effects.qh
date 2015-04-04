@@ -147,13 +147,13 @@ void RegisterEffects_First()
     #define dedi ""
     #endif
 
-    printf("Beginning effect initialization on %s%s program...\n", dedi, PROGNAME);
+    dprintf("Beginning effect initialization on %s%s program...\n", dedi, PROGNAME);
     #undef dedi
 }
 
 void RegisterEffects_Done()
 {
-    print("Effects initialization successful!\n");
+    dprint("Effects initialization successful!\n");
 }
 
 // NOW we actually activate the declarations

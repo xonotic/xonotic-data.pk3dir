@@ -1825,7 +1825,7 @@ void RegisterNotifications_First()
     #define dedi ""
     #endif
 
-    printf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME);
+    dprintf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME);
     #undef dedi
 
     // maybe do another implementation of this with checksums? for now, we don't need versioning
@@ -1853,7 +1853,7 @@ void RegisterNotifications_Done()
         else
             print("Notification initialization failed! Read above and fix the errors!\n");
     }
-    else { print("Notification initialization successful!\n"); }
+    else { dprint("Notification initialization successful!\n"); }
 }
 
 // NOW we actually activate the declarations
