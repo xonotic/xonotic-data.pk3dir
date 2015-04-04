@@ -817,7 +817,7 @@ void SV_ChangeTeam(float _color)
 		TeamchangeFrags(self);
 	}
 
-	SetPlayerTeam(self, dteam, steam, false);
+	SetPlayerTeam(self, dteam, steam, !IS_CLIENT(self));
 
 	if(IS_PLAYER(self) && steam != dteam)
 	{
