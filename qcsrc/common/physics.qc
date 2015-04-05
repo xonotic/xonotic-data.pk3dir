@@ -79,6 +79,8 @@ void Physics_AddStats()
 	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
 	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
 	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
+
+	addstat(STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, AS_INT, stat_gameplayfix_upvelocityclearsonground);
 }
 
 void Physics_UpdateStats(float maxspd_mod)
@@ -133,6 +135,8 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_sv_airaccelerate = Physics_ClientOption(self, "airaccelerate");
 	self.stat_sv_airstopaccelerate = Physics_ClientOption(self, "airstopaccelerate");
 	self.stat_sv_jumpvelocity = Physics_ClientOption(self, "jumpvelocity");
+
+	self.stat_gameplayfix_upvelocityclearsonground = UPWARD_VELOCITY_CLEARS_ONGROUND;
 }
 #endif
 
