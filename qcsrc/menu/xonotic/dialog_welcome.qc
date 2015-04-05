@@ -105,7 +105,7 @@ void XonoticWelcomeDialog_fill(entity me)
 		me.TD(me, 1, me.columns / 2, me.serverinfo_ip_ent = makeXonoticTextLabel(0, ""));
 
 	me.gotoRC(me, 4, 0);
-		me.TD(me, me.rows - 4 - 1, me.columns, me.serverinfo_MOTD_ent = makeXonoticTextListBox());
+		me.TD(me, me.rows - 4 - 1, me.columns, me.serverinfo_MOTD_ent = makeXonoticTextBox());
 			me.serverinfo_MOTD_ent.allowColors = 1;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns / 2, e = makeXonoticCommandButton(_("Disconnect"), '0 0 0', "disconnect", COMMANDBUTTON_CLOSE));
