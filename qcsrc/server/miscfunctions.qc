@@ -339,9 +339,6 @@ string formatmessage(string msg)
 	return msg;
 }
 
-float boolean(float value) { // if value is 0 return false (0), otherwise return true (1)
-	return (value == 0) ? false : true;
-}
 
 /*
 =============
@@ -483,8 +480,8 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_receive, "cl_accuracy_data_receive");
 
-	self.cvar_cl_accuracy_data_share = boolean(self.cvar_cl_accuracy_data_share);
-	self.cvar_cl_accuracy_data_receive = boolean(self.cvar_cl_accuracy_data_receive);
+	self.cvar_cl_accuracy_data_share = (self.cvar_cl_accuracy_data_share == 0) ? false : true;
+	self.cvar_cl_accuracy_data_receive = (self.cvar_cl_accuracy_data_receive == 0) ? false : true;
 
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
