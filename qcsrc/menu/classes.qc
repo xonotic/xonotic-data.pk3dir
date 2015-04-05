@@ -57,7 +57,7 @@
 #include "xonotic/dialog_multiplayer_join_serverinfo.qc"
 #include "xonotic/playerlist.qc"
 #include "xonotic/listbox.qc"
-#include "xonotic/textlistbox.qc"
+#include "xonotic/textbox.qc"
 #include "xonotic/serverlist.qc"
 #include "xonotic/inputbox.qc"
 #include "xonotic/dialog_quit.qc"
