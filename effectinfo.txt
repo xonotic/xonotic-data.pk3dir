@@ -9176,3 +9176,96 @@ effect arc_overheat_fire // arc overheat bouncing sparks
 	originjitter 6 6 6
 	liquidfriction 5
 	velocitymultiplier 80
+
+//Small splash of water
+// main water
+effect water_splash_small
+	type alphastatic
+	tex 76 76
+	count 7
+	size 6 16
+	sizeincrease -10
+	alpha 100 450 656
+	velocityjitter 10 10 250
+	velocitymultiplier 0.6
+	airfriction 4
+	color 0xd3e5ea 0xa6eaff
+	rotate 0 360 -150 150
+	gravity 1.5
+// small water drops
+effect water_splash_small
+	type spark
+	tex 76 76
+	count 4
+	size 2 1
+	sizeincrease -5
+	alpha 50 145 200
+	velocityjitter 210 210 350
+	velocitymultiplier 0.2
+	airfriction 1
+	color 0xd3e5ea 0xa6eaff
+	rotate 0 360 -150 150
+	gravity 0.4
+	stretchfactor 2
+// water mist
+effect water_splash_small
+	type smoke
+	tex 75 75
+	count 4
+	size 6 26
+	sizeincrease 25
+	alpha 100 150 256
+	velocityjitter 150 150 250
+	velocitymultiplier 0.4
+	airfriction 4
+	color 0xd3e5ea 0xa6eaff
+	rotate 0 360 -15 15
+	gravity 0.9
+// Large splash of water
+// main water
+effect water_splash_large
+	type alphastatic
+	tex 76 76
+	count 15
+	size 15 25
+	sizeincrease -20
+	alpha 100 250 600
+	velocityjitter 150 150 150
+	velocitymultiplier 0.2
+	airfriction 1
+	color 0xd3e5ea 0xa6eaff
+	rotate 0 360 -150 150
+	gravity 0.5
+	originjitter 21 21 1
+// small water drops
+effect water_splash_large
+	type spark
+	tex 76 76
+	count 4
+	size 2 1
+	sizeincrease -5
+	alpha 50 145 200
+	velocityjitter 210 210 350
+	velocitymultiplier 0.3
+	airfriction 1
+	color 0xd3e5ea 0xa6eaff
+	rotate 0 360 -150 150
+	gravity 0.4
+	stretchfactor 2
+// water mist
+effect water_splash_large
+	type smoke
+	tex 75 75
+	count 10
+	size 6 26
+	sizeincrease 35
+	alpha 200 250 356
+	velocityjitter 180 180 250
+	velocitymultiplier 0.4
+	airfriction 4
+	color 0xd3e5ea 0xa6eaff
+	rotate 0 360 -15 15
+	gravity 0.9
+	originjitter 21 21 1
+
+
