@@ -373,6 +373,9 @@ void buff_Init(entity ent)
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
 
+	if(self.spawnflags & 1)
+		self.noalign = true;
+
 	if(self.noalign)
 		self.movetype = MOVETYPE_NONE; // reset by random location
 
@@ -401,7 +404,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = old.noalign;
+	ent.noalign = (old.noalign || (old.spawnflags & 1));
 
 	buff_Init(ent);
 }
