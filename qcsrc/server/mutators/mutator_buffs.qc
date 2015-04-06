@@ -270,7 +270,7 @@ void buff_Think()
 		if(autocvar_g_buffs_randomize)
 			buff_NewType(self, self.buffs);
 
-		if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
+		if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
 			buff_Respawn(self);
 	}
 
@@ -318,7 +318,7 @@ void buff_Reset()
 	buff_Waypoint_Reset();
 	self.buff_activetime_updated = false;
 
-	if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
+	if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
 		buff_Respawn(self);
 }
 
@@ -379,7 +379,7 @@ void buff_Init(entity ent)
 	setmodel(self, BUFF_MODEL);
 	setsize(self, BUFF_MIN, BUFF_MAX);
 
-	if(cvar("g_buffs_random_location") || (self.spawnflags & 1))
+	if(cvar("g_buffs_random_location") || (self.spawnflags & 64))
 		buff_Respawn(self);
 
 	self = oldself;
@@ -1046,7 +1046,7 @@ void buffs_DelayedInit()
 		for(i = 0; i < autocvar_g_buffs_spawn_count; ++i)
 		{
 			entity e = spawn();
-			e.spawnflags |= 1; // always randomize
+			e.spawnflags |= 64; // always randomize
 			e.velocity = randomvec() * 250; // this gets reset anyway if random location works
 			buff_Init(e);
 		}
