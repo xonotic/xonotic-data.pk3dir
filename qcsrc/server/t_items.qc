@@ -91,6 +91,8 @@ void Item_PreDraw()
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
+	if(self.ItemStatus & ITS_AVAILABLE)
+		self.alpha = alph;
 	if(alph <= 0)
 		self.drawmask = 0;
 	else
@@ -173,7 +175,7 @@ void ItemRead(float _IsNew)
 
         self.fade_end = ReadShort();
         self.fade_start = ReadShort();
-        if(self.fade_start)
+        if(self.fade_start && !autocvar_cl_items_nofade)
         	self.predraw = Item_PreDraw;
 
         if(self.mdl)
