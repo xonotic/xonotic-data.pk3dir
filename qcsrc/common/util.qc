@@ -500,19 +500,6 @@ string ScoreString(int pFlags, float pValue)
 	return valstr;
 }
 
-float dotproduct(vector a, vector b)
-{
-	return a.x * b.x + a.y * b.y + a.z * b.z;
-}
-
-vector cross(vector a, vector b)
-{
-	return
-		'1 0 0' * (a.y * b.z - a.z * b.y)
-	+	'0 1 0' * (a.z * b.x - a.x * b.z)
-	+	'0 0 1' * (a.x * b.y - a.y * b.x);
-}
-
 // compressed vector format:
 // like MD3, just even shorter
 //   4 bit pitch (16 angles), 0 is -90, 8 is 0, 16 would be 90
