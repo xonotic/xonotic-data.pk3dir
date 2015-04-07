@@ -146,10 +146,19 @@ void XonoticServerCreateTab_fill(entity me)
 		me.mapListBox = makeXonoticMapList();
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Maplist")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
+
+	// TODO can somebody help check TD and gotoRC size/position parameters (till the end of this function)?
 	me.TR(me);
-		me.TD(me, me.rows - 4, 3, me.mapListBox);
+		me.TD(me, me.rows - 6, 3, me.mapListBox);
+	me.gotoRC(me, me.rows - 3.7, 3.2);
+		/* map string filter */
+		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
+		me.TD(me, 1, 2.2, e = makeXonoticInputBox(0, string_null));
+			e.onChange = MapList_Filter_Change;
+			e.onChangeEntity = me.mapListBox;
+			me.mapListBox.controlledTextbox = e;
+
 	me.gotoRC(me, me.rows - 2.5, 3.2);
-		me.TDempty(me, 0.375);
 		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select all"), '0 0 0'));
 			e.onClick = MapList_All;
 			e.onClickEntity = me.mapListBox;

@@ -31,6 +31,8 @@ CLASS(XonoticMapList) EXTENDS(XonoticListBox)
 	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float))
 	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float))
 
+	ATTRIB(XonoticMapList, filterString, string, string_null)
+
 	ATTRIB(XonoticMapList, startButton, entity, NULL)
 
 	METHOD(XonoticMapList, loadCvars, void(entity))
@@ -43,6 +45,7 @@ CLASS(XonoticMapList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticListBox, alphaBG, float, 0)
 ENDCLASS(XonoticMapList)
 entity makeXonoticMapList();
+void MapList_Filter_Change(entity box, entity me);
 void MapList_All(entity btn, entity me);
 void MapList_None(entity btn, entity me);
 void MapList_LoadMap(entity btn, entity me);
@@ -202,8 +205,13 @@ void XonoticMapList_refilter(entity me)
 	float gt, f;
 	gt = MapInfo_CurrentGametype();
 	f = MapInfo_CurrentFeatures();
-	MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	// TODO consider consolidating the two functions
+	if (me.filterString)
+		MapInfo_FilterGametypeAndString(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0, me.filterString);
+	else
+		MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	me.nItems = MapInfo_count;
+
 	for(i = 0; i < MapInfo_count; ++i)
 		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
 	if(me.g_maplistCache)
@@ -215,6 +223,7 @@ void XonoticMapList_refilter(entity me)
 	for(i = 0; i < n; ++i)
 	{
 		j = MapInfo_FindName(argv(i));
+		//localcmd(sprintf("say %s\n", argv(i)));
 		if(j >= 0)
 			s = strcat(
 				substring(s, 0, j),
@@ -223,6 +232,7 @@ void XonoticMapList_refilter(entity me)
 			);
 	}
 	me.g_maplistCache = strzone(s);
+	//localcmd(sprintf("say maplistcache %s\n", me.g_maplistCache));
 	if(gt != me.lastGametype || f != me.lastFeatures)
 	{
 		me.lastGametype = gt;
@@ -235,15 +245,30 @@ void XonoticMapList_refilterCallback(entity me, entity cb)
 {
 	me.refilter(me);
 }
+void MapList_Filter_Change(entity box, entity me)
+{
+	if(me.filterString)
+		strunzone(me.filterString);
+	if(box.text != "")
+		me.filterString = strzone(box.text);
+	else
+		me.filterString = string_null;
+	
+	me.refilter(me);
+}
 
 void MapList_All(entity btn, entity me)
 {
 	float i;
 	string s;
-	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
+	if (me.filterString)
+		MapInfo_FilterGametypeAndString(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0, me.filterString);
+	else
+		MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
 		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
+		
 	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
 	me.refilter(me);
 }
