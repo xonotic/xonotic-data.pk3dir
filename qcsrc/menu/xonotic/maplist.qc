@@ -31,7 +31,8 @@ CLASS(XonoticMapList) EXTENDS(XonoticListBox)
 	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float))
 	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float))
 
-	ATTRIB(XonoticMapList, filterString, string, string_null)
+	ATTRIB(XonoticMapList, stringFilter, string, string_null)
+	ATTRIB(XonoticMapList, stringFilterBox, entity, NULL)
 
 	ATTRIB(XonoticMapList, startButton, entity, NULL)
 
@@ -45,7 +46,8 @@ CLASS(XonoticMapList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticListBox, alphaBG, float, 0)
 ENDCLASS(XonoticMapList)
 entity makeXonoticMapList();
-void MapList_Filter_Change(entity box, entity me);
+entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar);
+void MapList_StringFilter_Change(entity box, entity me);
 void MapList_All(entity btn, entity me);
 void MapList_None(entity btn, entity me);
 void MapList_LoadMap(entity btn, entity me);
@@ -57,12 +59,23 @@ void XonoticMapList_destroy(entity me)
 	MapInfo_Shutdown();
 }
 
+entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar)
+{
+	me.mapListBox.stringFilterBox = makeXonoticInputBox(doEditColorCodes, theCvar);
+	return me.mapListBox.stringFilterBox;
+}
 entity makeXonoticMapList()
 {
 	entity me;
 	me = spawnXonoticMapList();
 	me.configureXonoticMapList(me);
 	return me;
+}
+
+entity MapList_Set_String_Filter_Box(entity me, entity e)
+{
+	me.stringFilterBox = e;
+	return e;
 }
 
 void XonoticMapList_configureXonoticMapList(entity me)
@@ -75,6 +88,7 @@ void XonoticMapList_loadCvars(entity me)
 {
 	me.refilter(me);
 }
+
 
 float XonoticMapList_g_maplistCacheQuery(entity me, float i)
 {
@@ -206,8 +220,8 @@ void XonoticMapList_refilter(entity me)
 	gt = MapInfo_CurrentGametype();
 	f = MapInfo_CurrentFeatures();
 	// TODO consider consolidating the two functions
-	if (me.filterString)
-		MapInfo_FilterGametypeAndString(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0, me.filterString);
+	if (me.stringFilter)
+		MapInfo_FilterGametypeAndString(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0, me.stringFilter);
 	else
 		MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	me.nItems = MapInfo_count;
@@ -223,7 +237,6 @@ void XonoticMapList_refilter(entity me)
 	for(i = 0; i < n; ++i)
 	{
 		j = MapInfo_FindName(argv(i));
-		//localcmd(sprintf("say %s\n", argv(i)));
 		if(j >= 0)
 			s = strcat(
 				substring(s, 0, j),
@@ -232,7 +245,6 @@ void XonoticMapList_refilter(entity me)
 			);
 	}
 	me.g_maplistCache = strzone(s);
-	//localcmd(sprintf("say maplistcache %s\n", me.g_maplistCache));
 	if(gt != me.lastGametype || f != me.lastFeatures)
 	{
 		me.lastGametype = gt;
@@ -245,14 +257,14 @@ void XonoticMapList_refilterCallback(entity me, entity cb)
 {
 	me.refilter(me);
 }
-void MapList_Filter_Change(entity box, entity me)
+void MapList_StringFilter_Change(entity box, entity me)
 {
-	if(me.filterString)
-		strunzone(me.filterString);
+	if(me.stringFilter)
+		strunzone(me.stringFilter);
 	if(box.text != "")
-		me.filterString = strzone(box.text);
+		me.stringFilter = strzone(box.text);
 	else
-		me.filterString = string_null;
+		me.stringFilter = string_null;
 	
 	me.refilter(me);
 }
@@ -261,8 +273,8 @@ void MapList_All(entity btn, entity me)
 {
 	float i;
 	string s;
-	if (me.filterString)
-		MapInfo_FilterGametypeAndString(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0, me.filterString);
+	if (me.stringFilter)
+		MapInfo_FilterGametypeAndString(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0, me.stringFilter);
 	else
 		MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
 	s = "";
@@ -382,9 +394,12 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 		if(MapInfo_FindName_firstResult >= 0)
 			me.setSelected(me, MapInfo_FindName_firstResult);
 	}
+	else if(scan == 102 && ascii == 6 && shift == 2) // ctrl-f ("F"ind)
+	{
+		me.parent.setFocus(me.parent, me.stringFilterBox);
+	}
 	else
 		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
 	return 1;
 }
-
 #endif

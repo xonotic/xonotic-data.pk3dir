@@ -187,7 +187,7 @@ float MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, i
 
 	return 1;
 }
-float MapInfo_FilterGametypeAndString(int pGametype, int pFeatures, int pFlagsRequired, int pFlagsForbidden, bool pAbortOnGenerate, string fs)
+float MapInfo_FilterGametypeAndString(int pGametype, int pFeatures, int pFlagsRequired, int pFlagsForbidden, bool pAbortOnGenerate, string sf)
 {
 	float i, j;
 	string title;
@@ -207,14 +207,12 @@ float MapInfo_FilterGametypeAndString(int pGametype, int pFeatures, int pFlagsRe
 				return 0;
 			}
 		// prepare for keyword filter
-		//localcmd(sprintf("say filterString in mapinfo filter: %s\n", fs));
 		if (MapInfo_Map_title && strstrofs(MapInfo_Map_title, "<TITLE>", 0) == -1)
 			title = MapInfo_Map_title;
 		else
 			title = MapInfo_Map_bspname;
-		localcmd(sprintf("say map title: %s\n", title));
 		// keyword filter
-		if((strstrofs(strtolower(title), strtolower(fs), 0)) >= 0)
+		if((strstrofs(strtolower(title), strtolower(sf), 0)) >= 0)
 		if((MapInfo_Map_supportedGametypes & pGametype) != 0)
 		if((MapInfo_Map_supportedFeatures & pFeatures) == pFeatures)
 		if((MapInfo_Map_flags & pFlagsForbidden) == 0)
