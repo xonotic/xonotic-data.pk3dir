@@ -219,11 +219,9 @@ void XonoticMapList_refilter(entity me)
 	float gt, f;
 	gt = MapInfo_CurrentGametype();
 	f = MapInfo_CurrentFeatures();
-	// TODO consider consolidating the two functions
+	MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 	if (me.stringFilter)
-		MapInfo_FilterGametypeAndString(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0, me.stringFilter);
-	else
-		MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+		MapInfo_FilterString(me.stringFilter);
 	me.nItems = MapInfo_count;
 
 	for(i = 0; i < MapInfo_count; ++i)
@@ -273,10 +271,9 @@ void MapList_All(entity btn, entity me)
 {
 	float i;
 	string s;
+	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
 	if (me.stringFilter)
-		MapInfo_FilterGametypeAndString(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0, me.stringFilter);
-	else
-		MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
+		MapInfo_FilterString(me.stringFilter);
 	s = "";
 	for(i = 0; i < MapInfo_count; ++i)
 		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
