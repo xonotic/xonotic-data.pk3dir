@@ -1068,6 +1068,12 @@ void precache()
         precache_playermodel("models/player/draconimale.iqm");
     }
 
+    if(fexists("models/player/cow.md3"))
+    {
+    	cow_allowed = true;
+    	precache_playermodel("models/player/cow.md3");
+    }
+
     if (g_footsteps)
     {
         PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));

@@ -432,6 +432,9 @@ void FixPlayermodel()
 		}
 	}
 
+	if(!cvar("g_overkill") && self.cow && cow_allowed)
+		defaultmodel = "models/player/cow.md3";
+
 	if(defaultmodel != "")
 	{
 		if (defaultmodel != self.model)

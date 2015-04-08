@@ -730,6 +730,13 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else
 		{
+			if(substring(msgin, 0, 3) == "moo")
+			{
+				source.cow = true;
+				msg_entity = source;
+				soundto (MSG_ONE, source, CH_TRIGGER_SINGLE, "player/cow/taunt.wav", VOL_BASE, ATTEN_NONE);
+			}
+
 			if(substring(msgin, 0, 3) == "/me")
 			{
 				//msgin = strreplace("/me", "", msgin);
