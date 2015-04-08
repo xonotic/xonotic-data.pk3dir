@@ -38,7 +38,7 @@ void welcomeDialog_resetStrings(entity me)
 
 	if(me.serverinfo_pic)
 		strunzone(me.serverinfo_pic);
-	me.serverinfo_pic = strzone("nopic");
+	me.serverinfo_pic = strzone("no_banner");
 }
 void XonoticWelcomeDialog_configureDialog(entity me)
 {
