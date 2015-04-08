@@ -119,7 +119,6 @@ void MapInfo_Enumerate();
 float MapInfo_progress;
 float MapInfo_FilterGametype(float gametype, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
 float MapInfo_FilterString(string sf); // this one runs after MapInfo_FilterGametype to futhur filter the list by a string
-float MapInfo_FilterGametypeAndString(float gametype, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate, string filterString); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
 int MapInfo_CurrentFeatures(); // retrieves currently required features from cvars
 int MapInfo_CurrentGametype(); // retrieves current gametype from cvars
 int MapInfo_ForbiddenFlags(); // retrieves current flags from cvars
