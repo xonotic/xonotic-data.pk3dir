@@ -65,6 +65,8 @@ void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
 
+	// the left half begins here
+
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 3, makeXonoticHeaderLabel(_("Gametype")));
 	me.TR(me);
@@ -142,28 +144,34 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onClickEntity = main.mutatorsDialog;
 			main.mutatorsDialog.refilterEntity = me.mapListBox;
 
+	// The right half begins here
+
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.mapListBox = makeXonoticMapList();
+		// the maplistbox
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Maplist")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
-
-	// TODO can somebody help check TD and gotoRC size/position parameters (till the end of this function)?
 	me.TR(me);
 		me.TD(me, me.rows - 6, 3, me.mapListBox);
-	me.gotoRC(me, me.rows - 3.7, 3.2);
-		/* map string filter */
-		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
+
+	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
+		// map string filter
+		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticMapListStringFilterBox(me, 0, string_null);
-		me.TD(me, 1, 2.2, e = me.mapListBox.stringFilterBox);
+		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
 			e.onChange = MapList_StringFilter_Change;
 			e.onChangeEntity = me.mapListBox;
 			me.mapListBox.controlledTextbox = e;
 
-	me.gotoRC(me, me.rows - 2.5, 3.2);
-		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select all"), '0 0 0'));
+	me.TR(me);
+		// the selection buttons
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Select shown"), '0 0 0'));
 			e.onClick = MapList_All;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select none"), '0 0 0'));
+		me.TD(me, 1, 1, e = makeXonoticButton(_("De-select shown"), '0 0 0'));
+			e.onClick = MapList_None;
+			e.onClickEntity = me.mapListBox;
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Clear everything"), '0 0 0'));
 			e.onClick = MapList_None;
 			e.onClickEntity = me.mapListBox;
 
