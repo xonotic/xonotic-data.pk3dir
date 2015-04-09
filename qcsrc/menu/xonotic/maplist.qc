@@ -271,76 +271,25 @@ void MapList_StringFilter_Change(entity box, entity me)
 
 void MapList_Add_Shown(entity btn, entity me)
 {
-	float i, j, n, inlist;
-	string s, bspname;
-
-	localcmd(sprintf("say before %d\n", MapInfo_count));
-	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
-	localcmd(sprintf("say and %d\n", MapInfo_count));
-	if (me.stringFilter)
-		MapInfo_FilterString(me.stringFilter);
-	localcmd(sprintf("say after %d\n", MapInfo_count));
-
-	s = "";
-	n = tokenize_console(cvar_string("g_maplist"));
-	for(i = 0; i < MapInfo_count; ++i)
+	float i, n;
+	n = strlen(me.g_maplistCache);
+	for (i = 0 ; i < n; i++)
 	{
-		if (!((bspname = MapInfo_BSPName_ByID(i))))
-			continue;
-		// check whether g_maplist already has this map
-		inlist = 0;
-		for(j = 0; j < n; ++j)
-			if(argv(j) == bspname)
-			{
-				inlist = 1;
-				break;
-			}
-		if (inlist)
-			// g_maplist already has this map; no need to do anything
-			continue;
-		// g_maplist doesn't have this map; add to the temp string
-		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
-		localcmd(sprintf("say map %d: %s\n", i, MapInfo_BSPName_ByID(i)));
+		if (!me.g_maplistCacheQuery(me, i))
+			me.g_maplistCacheToggle(me, i);
 	}
-	// now add those new maps to the existing list
-	cvar_set("g_maplist", strcat(cvar_string("g_maplist"), substring(s, 1, strlen(s) - 1)));
 	me.refilter(me);
 }
 
 void MapList_Remove_Shown(entity btn, entity me)
 {
-	float i, j, n, inlist;
-	string s, bspname;
-
-	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
-	if (me.stringFilter)
-		MapInfo_FilterString(me.stringFilter);
-
-	s = "";
-	n = tokenize_console(cvar_string("g_maplist"));
-
-	for (j = 0; j < n; ++j)
+	float i, n;
+	n = strlen(me.g_maplistCache);
+	for (i = 0 ; i < n; i++)
 	{
-		// check whether this map from g_maplist is in the removal list
-		inlist = 0;
-		for(i = 0; i < MapInfo_count; ++i)
-		{
-			if (!((bspname = MapInfo_BSPName_ByID(i))))
-				continue;
-			if(argv(j) == bspname)
-			{
-				inlist = 1;
-				break;
-			}
-		}
-		if (inlist)
-			// this map is on the removal list; don't keep it
-			continue;
-		// this map is to be kept
-		s = strcat(s, " ", argv(j));
+		if (me.g_maplistCacheQuery(me, i))
+			me.g_maplistCacheToggle(me, i);
 	}
-
-	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
 	me.refilter(me);
 }
 
