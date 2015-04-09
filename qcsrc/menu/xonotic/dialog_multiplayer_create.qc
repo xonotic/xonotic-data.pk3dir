@@ -137,6 +137,8 @@ void XonoticServerCreateTab_fill(entity me)
 			e0.textEntity = main.mutatorsDialog;
 			e0.allowCut = 1;
 			//e0.allowWrap = 1;
+
+	me.mapListBox = makeXonoticMapList();
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators"), '0 0 0'));
@@ -147,7 +149,6 @@ void XonoticServerCreateTab_fill(entity me)
 	// The right half begins here
 
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.mapListBox = makeXonoticMapList();
 		// the maplistbox
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Maplist")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
@@ -155,7 +156,7 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, me.rows - 6, 3, me.mapListBox);
 
 	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
-		// map string filter
+		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticMapListStringFilterBox(me, 0, string_null);
 		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
@@ -165,15 +166,17 @@ void XonoticServerCreateTab_fill(entity me)
 
 	me.TR(me);
 		// the selection buttons
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Select shown"), '0 0 0'));
-			e.onClick = MapList_All;
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Add shown"), '0 0 0'));
+			e.onClick = MapList_Add_Shown;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1, e = makeXonoticButton(_("De-select shown"), '0 0 0'));
-			e.onClick = MapList_None;
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Remove shown"), '0 0 0'));
+			e.onClick = MapList_Remove_Shown;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Clear everything"), '0 0 0'));
-			e.onClick = MapList_None;
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Clear all"), '0 0 0'));
+			e.onClick = MapList_Clear_All;
 			e.onClickEntity = me.mapListBox;
+
+	// The big button at the bottom
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Multiplayer!"), '0 0 0'));
