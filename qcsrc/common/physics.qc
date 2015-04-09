@@ -1450,7 +1450,7 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	}
 
 	// walking
-	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
+	makevectors(self.v_angle.y * '0 1 0');
 	vector wishvel = v_forward * self.movement.x
 					+ v_right * self.movement.y;
 	// acceleration
@@ -1603,6 +1603,11 @@ bool IsFlying(entity a)
 	return true;
 }
 
+#ifdef CSQC
+float autocvar_cl_forwardspeed;
+float autocvar_cl_sidespeed;
+#endif
+
 void PM_Main()
 {
 	float buttons = PHYS_INPUT_BUTTON_MASK(self);
@@ -1613,6 +1618,12 @@ void PM_Main()
 
 	self.v_angle = PHYS_INPUT_ANGLES(self);
 	self.angles = PHYS_WORLD_ANGLES(self);
+
+	if(PHYS_MAXSPEED(self) != autocvar_cl_forwardspeed || PHYS_MAXSPEED(self) != autocvar_cl_sidespeed)
+	{
+		cvar_set("cl_forwardspeed", ftos(PHYS_MAXSPEED(self)));
+		cvar_set("cl_sidespeed", ftos(PHYS_MAXSPEED(self)));
+	}
 
 	self.team = myteam + 1; // is this correct?
 	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
