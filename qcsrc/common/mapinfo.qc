@@ -187,7 +187,7 @@ float MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, i
 
 	return 1;
 }
-float MapInfo_FilterString(string sf)
+void MapInfo_FilterString(string sf)
 {
 	// this function further filters _MapInfo_filtered, which is prepared by MapInfo_FilterGametype by string
 	float i, j;
@@ -212,7 +212,6 @@ float MapInfo_FilterString(string sf)
 
 	// sometimes the glob isn't sorted nicely, so fix it here...
 	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
-	return 1;
 }
 
 void MapInfo_Filter_Free()
