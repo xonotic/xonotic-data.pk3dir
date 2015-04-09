@@ -47,7 +47,8 @@ CLASS(XonoticMapList) EXTENDS(XonoticListBox)
 ENDCLASS(XonoticMapList)
 entity makeXonoticMapList();
 entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar);
-void MapList_StringFilter_Change(entity box, entity me);
+void MapList_StringFilterBox_Change(entity box, entity me);
+float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
 void MapList_Add_Shown(entity btn, entity me);
 void MapList_Remove_Shown(entity btn, entity me);
 void MapList_Clear_All(entity btn, entity me);
@@ -62,8 +63,7 @@ void XonoticMapList_destroy(entity me)
 
 entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar)
 {
-	me.mapListBox.stringFilterBox = makeXonoticInputBox(doEditColorCodes, theCvar);
-	return me.mapListBox.stringFilterBox;
+	return makeXonoticInputBox(doEditColorCodes, theCvar);
 }
 entity makeXonoticMapList()
 {
@@ -257,7 +257,7 @@ void XonoticMapList_refilterCallback(entity me, entity cb)
 	me.refilter(me);
 }
 
-void MapList_StringFilter_Change(entity box, entity me)
+void MapList_StringFilterBox_Change(entity box, entity me)
 {
 	if(me.stringFilter)
 		strunzone(me.stringFilter);
@@ -406,8 +406,34 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		me.parent.setFocus(me.parent, me.stringFilterBox);
 	}
+	else if(shift & S_CTRL && scan == 'u') // ctrl-u (remove stringFilter line
+	{
+		me.stringFilterBox.setText(me.stringFilterBox, "");
+		MapList_StringFilterBox_Change(me.stringFilterBox, me);
+	}
 	else
 		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
 	return 1;
+}
+
+float MapList_StringFilterBox_keyDown(entity me, float scan, float ascii, float shift)
+{
+	// in this section, note that onChangeEntity has the ref to mapListBox
+	// we make use of that, instead of extending a class to add one more attrib
+	switch(scan)
+	{
+		case K_KP_ENTER:
+		case K_ENTER:
+			// move the focus to the mapListBox
+			me.onChangeEntity.parent.setFocus(me.onChangeEntity.parent, me.onChangeEntity);
+			return 1;
+		case K_KP_UPARROW:
+		case K_UPARROW:
+		case K_KP_DOWNARROW:
+		case K_DOWNARROW:
+			// pass the event to the mapListBox (to scroll up and down)
+			return me.onChangeEntity.keyDown(me.onChangeEntity, scan, ascii, shift);
+	}
+	return SUPER(XonoticInputBox).keyDown(me, scan, ascii, shift);
 }
 #endif

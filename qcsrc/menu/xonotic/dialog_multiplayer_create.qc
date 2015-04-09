@@ -160,7 +160,8 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticMapListStringFilterBox(me, 0, string_null);
 		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
-			e.onChange = MapList_StringFilter_Change;
+			e.onChange = MapList_StringFilterBox_Change;
+			e.keyDown = MapList_StringFilterBox_keyDown;
 			e.onChangeEntity = me.mapListBox;
 			me.mapListBox.controlledTextbox = e;
 
