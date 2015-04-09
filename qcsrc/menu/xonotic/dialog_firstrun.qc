@@ -59,7 +59,7 @@ void XonoticFirstRunDialog_fill(entity me)
 		me.TD(me, 1, 3.75, box = makeXonoticInputBox(1, "_cl_name"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 1;
+			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
 			box.enableClearButton = 0;
 			label.textEntity = box;
 	me.TR(me);
