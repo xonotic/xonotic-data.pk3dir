@@ -391,7 +391,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 		if(MapInfo_FindName_firstResult >= 0)
 			me.setSelected(me, MapInfo_FindName_firstResult);
 	}
-	else if(scan == 102 && ascii == 6 && shift == 2) // ctrl-f ("F"ind)
+	else if(shift & S_CTRL && scan == 'f') // ctrl-f (as in "F"ind)
 	{
 		me.parent.setFocus(me.parent, me.stringFilterBox);
 	}
