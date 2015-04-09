@@ -2475,7 +2475,7 @@ void PlayerPreThink (void)
 
 	// Savage: Check for nameless players
 	if (isInvisibleString(self.netname)) {
-		string new_name = strzone(strcat("Player@", self.netaddress));
+		string new_name = strzone(strcat("Player@", ftos(self.playerid)));
 		if(autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(self.playerid), ":", new_name));
 		if(self.netname_previous)
