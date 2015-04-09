@@ -1450,7 +1450,7 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	}
 
 	// walking
-	makevectors(self.v_angle.y * '0 1 0');
+	makevectors(PHYS_INPUT_ANGLES(self).y * '0 1 0');
 	vector wishvel = v_forward * self.movement.x
 					+ v_right * self.movement.y;
 	// acceleration
@@ -1760,7 +1760,7 @@ void PM_Main()
 #ifdef SVQC
 	if (!IS_PLAYER(self))
 	{
-		maxspeed_mod *= autocvar_sv_spectator_speed_multiplier;
+		maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
 		if (!self.spectatorspeed)
 			self.spectatorspeed = maxspeed_mod;
 		if (self.impulse && self.impulse <= 19 || (self.impulse >= 200 && self.impulse <= 209) || (self.impulse >= 220 && self.impulse <= 229))
@@ -1778,7 +1778,7 @@ void PM_Main()
 			} // otherwise just clear
 			self.impulse = 0;
 		}
-		maxspeed_mod *= self.spectatorspeed;
+		maxspeed_mod = self.spectatorspeed;
 	}
 #endif
 
