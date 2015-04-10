@@ -159,6 +159,7 @@ void XonoticServerCreateTab_fill(entity me)
 		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticMapListStringFilterBox(me, 0, string_null);
+		me.mapListBox.stringFilterBox.tooltip = getZonedTooltipForIdentifier("XonoticMultiplayerDialog_StringFilterBox");
 		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
 			e.onChange = MapList_StringFilterBox_Change;
 			e.keyDown = MapList_StringFilterBox_keyDown;
@@ -173,8 +174,8 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Remove shown"), '0 0 0'));
 			e.onClick = MapList_Remove_Shown;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Clear all"), '0 0 0'));
-			e.onClick = MapList_Clear_All;
+		me.TD(me, 1, 1, e = makeXonoticButton(_("Remove all"), '0 0 0'));
+			e.onClick = MapList_Remove_All;
 			e.onClickEntity = me.mapListBox;
 
 	// The big button at the bottom

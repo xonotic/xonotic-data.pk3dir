@@ -51,7 +51,7 @@ void MapList_StringFilterBox_Change(entity box, entity me);
 float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
 void MapList_Add_Shown(entity btn, entity me);
 void MapList_Remove_Shown(entity btn, entity me);
-void MapList_Clear_All(entity btn, entity me);
+void MapList_Remove_All(entity btn, entity me);
 void MapList_LoadMap(entity btn, entity me);
 #endif
 
@@ -293,7 +293,7 @@ void MapList_Remove_Shown(entity btn, entity me)
 	me.refilter(me);
 }
 
-void MapList_Clear_All(entity btn, entity me)
+void MapList_Remove_All(entity btn, entity me)
 {
 	cvar_set("g_maplist", "");
 	me.refilter(me);
