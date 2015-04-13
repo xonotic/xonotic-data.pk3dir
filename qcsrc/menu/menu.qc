@@ -960,7 +960,10 @@ void m_setpointerfocus(entity wnd)
 			menuMousePos = focus.origin + 0.5 * focus.size;
 			menuMousePos.x *= 1 / conwidth;
 			menuMousePos.y *= 1 / conheight;
-			if(wnd.focused) // why does this never happen?
+			entity par = wnd.parent;
+			if(par.focused)
+				par.setFocus(par, wnd);
+			if(wnd.focused)
 				m_focus_item_chain(wnd, focus);
 		}
 	}
