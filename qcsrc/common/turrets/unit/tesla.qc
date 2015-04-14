@@ -110,7 +110,7 @@ float t_tesla(float req)
 			t = toast(e,r,d);
 			remove(e);
 
-			if (t == world) return TRUE;
+			if (t == world) return true;
 
 			self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_TEAMCHECK;
 
@@ -131,14 +131,14 @@ float t_tesla(float req)
 				e = e.chain;
 			}
 
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
 			if(!self.active)
 			{
 				self.tur_head.avelocity = '0 0 0';
-				return TRUE;
+				return true;
 			}
 
 			if(self.ammo < self.shot_dmg)
@@ -150,7 +150,7 @@ float t_tesla(float req)
 				self.tur_head.avelocity = '0 180 0' * (self.ammo / self.shot_dmg);
 
 				if(self.attack_finished_single > time)
-					return TRUE;
+					return true;
 
 				float f;
 				f = (self.ammo / self.ammo_max);
@@ -160,11 +160,11 @@ float t_tesla(float req)
 						te_csqc_lightningarc(self.tur_shotorg,self.tur_shotorg + (randomvec() * 350));
 			}
 
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -181,17 +181,17 @@ float t_tesla(float req)
 			self.aim_flags			= TFL_AIM_NO;
 			self.track_flags		= TFL_TRACK_NO;
 
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/tesla_base.md3");
 			precache_model ("models/turrets/tesla_head.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -202,15 +202,15 @@ float t_tesla(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

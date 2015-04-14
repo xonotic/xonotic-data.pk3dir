@@ -1,5 +1,0 @@
-#define CSQC
-
-#define ATTEN_NORM builtin_ATTEN_NORM
-
-#pragma noref 1

@@ -1,3 +1,12 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "test.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/dpextensions.qh"
+    #include "test.qh"
+#endif
+
 float TEST_failed;
 float TEST_ok;
 
@@ -10,15 +19,14 @@ void TEST_Fail(string cond)
 
 void TEST_OK()
 {
-	TEST_ok = TRUE;
+	TEST_ok = true;
 }
 
 float TEST_RunAll()
 {
-	float f = 0;
+	int f = 0;
 	float n = numentityfields();
-	float i;
-	for(i = 0; i < n; ++i)
+	for(int i = 0; i < n; ++i)
 	{
 		string name = entityfieldname(i);
 		if(substring(name, 0, 6) == "_TEST_")

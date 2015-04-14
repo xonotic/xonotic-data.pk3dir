@@ -81,7 +81,7 @@ void walker_melee_do_dmg()
 
 void walker_setnoanim()
 {
-	turrets_setframe(ANIM_NO, FALSE);
+	turrets_setframe(ANIM_NO, false);
 	self.animflag = self.frame;
 }
 void walker_rocket_explode()
@@ -226,7 +226,7 @@ void walker_fire_rocket(vector org)
 
 	rocket.classname		  = "walker_rocket";
 	rocket.owner			  = self;
-	rocket.bot_dodge		  = TRUE;
+	rocket.bot_dodge		  = true;
 	rocket.bot_dodgerating	= 50;
 	rocket.takedamage		 = DAMAGE_YES;
 	rocket.damageforcescale   = 2;
@@ -252,7 +252,7 @@ void walker_fire_rocket(vector org)
 	rocket.max_health		 = time + 9;
 	rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
 
-	CSQCProjectile(rocket, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
+	CSQCProjectile(rocket, false, PROJECTILE_ROCKET, false); // no culling, has fly sound
 }
 
 .vector enemy_last_loc;
@@ -346,7 +346,7 @@ float t_walker(float req)
 			fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0);
 			pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
@@ -556,9 +556,9 @@ float t_walker(float req)
 				self.SendFlags |= TNSF_MOVE;
 
 			self.oldorigin = self.origin;
-			turrets_setframe(self.animflag, FALSE);
+			turrets_setframe(self.animflag, false);
 
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
@@ -568,7 +568,7 @@ float t_walker(float req)
 #endif
 			self.pathcurrent = world;
 		
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -591,9 +591,9 @@ float t_walker(float req)
 				
 			self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
 			self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-			self.iscreature = TRUE;
+			self.iscreature = true;
 			self.teleportable = TELEPORT_NORMAL;
-			self.damagedbycontents = TRUE;
+			self.damagedbycontents = true;
 			self.solid = SOLID_SLIDEBOX;
 			self.takedamage = DAMAGE_AIM;
 			if(self.movetype != MOVETYPE_WALK)
@@ -630,7 +630,7 @@ float t_walker(float req)
 				}
 			}
 
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
@@ -638,15 +638,17 @@ float t_walker(float req)
 			precache_model ("models/turrets/walker_head_minigun.md3");
 			precache_model ("models/turrets/rocket.md3");
 			precache_sound ("weapons/rocket_impact.wav");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
 #ifdef CSQC
+
+#include "../../../server/movelib.qh"
 
 void walker_draw()
 {
@@ -681,15 +683,15 @@ float t_walker(float req)
 			self.move_time		= time;
 			self.draw			= walker_draw;
 			
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

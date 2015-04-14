@@ -50,7 +50,7 @@ float t_plasma(float req)
 					self.tur_head.frame = 1;
 			}
 
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
@@ -60,11 +60,11 @@ float t_plasma(float req)
 			if (self.tur_head.frame > 5)
 				self.tur_head.frame = 0;
 
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -75,17 +75,17 @@ float t_plasma(float req)
 			
 			turret_do_updates(self);
 
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/plasma.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -96,15 +96,15 @@ float t_plasma(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

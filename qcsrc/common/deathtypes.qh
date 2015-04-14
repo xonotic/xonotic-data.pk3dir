@@ -1,6 +1,20 @@
+#ifndef DEATHTYPES_H
+#define DEATHTYPES_H
+
+#include "notifications.qh"
+
 // ================================
 //  Deathtypes, reworked by Samual
 // ================================
+
+int DEATH_SPECIAL_START;
+int NORMAL_POS;
+int DEATH_MONSTER_FIRST;
+int DEATH_MONSTER_LAST;
+int DEATH_TURRET_FIRST;
+int DEATH_TURRET_LAST;
+int DEATH_VHFIRST;
+int DEATH_VHLAST;
 
 #define DEATHTYPES \
 	DEATHTYPE(DEATH_AUTOTEAMCHANGE,         DEATH_SELF_AUTOTEAMCHANGE,          NO_MSG,                        DEATH_SPECIAL_START) \
@@ -67,15 +81,14 @@
 
 #define DT_FIRST 10000
 #define DT_MAX 128 // limit of recursive functions with ACCUMULATE_FUNCTION
-float DT_COUNT;
+int DT_COUNT;
 
 entity deathtypes[DT_MAX];
 .entity death_msgself;
 .entity death_msgmurder;
 
 #define DEATHTYPE(name,msg_death,msg_death_by,position) \
-	float name; \
-	float position; \
+	int name; \
 	void RegisterDeathtype_##name() \
 	{ \
 		SET_FIRST_OR_LAST(position, DT_FIRST, DT_COUNT) \
@@ -105,7 +118,7 @@ DEATHTYPES
 #define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
 #define WEP_VALID(w)                  ((w) >= WEP_FIRST && (w) <= WEP_LAST)
 
-string Deathtype_Name(float deathtype)
+string Deathtype_Name(int deathtype)
 {
 	if(DEATH_ISSPECIAL(deathtype))
 	{
@@ -116,10 +129,11 @@ string Deathtype_Name(float deathtype)
 	else { return ftos(deathtype); }
 }
 
-const float DEATH_WEAPONMASK = 0xFF;
-const float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
-const float HITTYPE_SECONDARY = 0x100;
-const float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
-const float HITTYPE_BOUNCE = 0x400;
-const float HITTYPE_RESERVED2 = 0x800;
-const float HITTYPE_RESERVED = 0x1000; // unused yet
+const int DEATH_WEAPONMASK = 0xFF;
+const int DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
+const int HITTYPE_SECONDARY = 0x100;
+const int HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
+const int HITTYPE_BOUNCE = 0x400;
+const int HITTYPE_RESERVED2 = 0x800;
+const int HITTYPE_RESERVED = 0x1000; // unused yet
+#endif

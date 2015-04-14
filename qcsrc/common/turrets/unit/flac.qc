@@ -50,15 +50,15 @@ float t_flac(float req)
 			if (self.tur_head.frame >= 4)
 				self.tur_head.frame = 0;
 			
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -67,17 +67,17 @@ float t_flac(float req)
 			self.damage_flags |= TFL_DMG_HEADSHAKE;
 			self.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
 		
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/flac.md3");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -88,15 +88,15 @@ float t_flac(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

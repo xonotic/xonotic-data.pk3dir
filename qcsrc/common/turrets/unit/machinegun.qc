@@ -24,15 +24,15 @@ float t_machinegun(float req)
 			W_MachineGun_MuzzleFlash();
 			setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
 
-			return TRUE;
+			return true;
 		}
 		case TR_THINK:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_DEATH:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_SETUP:
 		{
@@ -42,18 +42,18 @@ float t_machinegun(float req)
 			self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
 			self.turret_flags |= TUR_FLAG_HITSCAN;
 
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/machinegun.md3");
 			precache_sound ("weapons/uzi_fire.wav");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -64,15 +64,15 @@ float t_machinegun(float req)
 	{
 		case TR_SETUP:
 		{
-			return TRUE;
+			return true;
 		}
 		case TR_PRECACHE:
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC

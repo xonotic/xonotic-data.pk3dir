@@ -1,3 +1,35 @@
-.float traileffect;
+#ifndef PROJECTILE_H
+#define PROJECTILE_H
+
+.int traileffect;
+
+.vector iorigin1, iorigin2;
+.float spawntime;
+.vector trail_oldorigin;
+.float trail_oldtime;
+.float fade_time, fade_rate;
+
+.float alphamod;
+.int count; // set if clientside projectile
+.int cnt; // sound index
+.float gravity;
+.int snd_looping;
+.bool silent;
+
+void SUB_Stop();
+
 void Projectile_ResetTrail(vector to);
+
 void Projectile_DrawTrail(vector to);
+
+void Projectile_Draw();
+
+void loopsound(entity e, int ch, string samp, float vol, float attn);
+
+void Ent_RemoveProjectile();
+
+void Ent_Projectile();
+
+void Projectile_Precache();
+
+#endif

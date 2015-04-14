@@ -1,7 +1,21 @@
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "constants.qh"
+	#include "util.qh"
+	#include "urllib.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "constants.qh"
+    #include "util.qh"
+    #include "urllib.qh"
+#endif
+
 // files
 .float url_fh;
-#define URL_FH_CURL   -1
-#define URL_FH_STDOUT -2
+const float URL_FH_CURL = -1;
+const float URL_FH_STDOUT = -2;
 
 // URLs
 .string url_url;
@@ -14,13 +28,13 @@
 .entity url_ready_pass;
 
 // for multi handles
-.float url_attempt;
-.float url_mode;
+.int url_attempt;
+.int url_mode;
 
 entity url_fromid[NUM_URL_ID];
-float autocvar__urllib_nextslot;
+int autocvar__urllib_nextslot;
 
-float url_URI_Get_Callback(float id, float status, string data)
+float url_URI_Get_Callback(int id, float status, string data)
 {
 	if(id < MIN_URL_ID)
 		return 0;
@@ -82,10 +96,10 @@ float url_URI_Get_Callback(float id, float status, string data)
 	}
 }
 
-void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
+void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
 	entity e;
-	float i;
+	int i;
 	if(strstrofs(url, "://", 0) >= 0)
 	{
 		switch(mode)
@@ -209,7 +223,7 @@ void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
 // close a file
 void url_fclose(entity e)
 {
-	float i;
+	int i;
 
 	if(e.url_fh == URL_FH_CURL)
 	{
@@ -363,7 +377,7 @@ void url_multi_ready(entity fh, entity me, float status)
 	}
 	me.url_ready(fh, me.url_ready_pass, status);
 }
-void url_multi_fopen(string url, float mode, url_ready_func rdy, entity pass)
+void url_multi_fopen(string url, int mode, url_ready_func rdy, entity pass)
 {
 	float n;
 	n = tokenize_console(url);

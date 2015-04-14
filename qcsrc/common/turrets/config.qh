@@ -1,6 +1,7 @@
-// ==========================
-//  Turret Config Generator
-// ==========================
+#ifndef TURRETS_CONFIG_H
+#define TURRETS_CONFIG_H
+
+#ifdef SVQC
 
 void Dump_Turret_Settings(void);
 float tur_config_file;
@@ -27,3 +28,7 @@ string tur_config_queue[MAX_TUR_CONFIG];
 	#define TUR_ADD_CVAR(turret,name) TUR_CONFIG_WRITE_CVARS(turret,name) \
 	tursettings \
 	#undef TUR_ADD_CVAR
+
+#endif
+
+#endif

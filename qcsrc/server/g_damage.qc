@@ -1,21 +1,46 @@
-.float dmg;
-.float dmg_edge;
-.float dmg_force;
-.float dmg_radius;
+#include "g_damage.qh"
+
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../warpzonelib/common.qh"
+    #include "../common/constants.qh"
+    #include "../common/teams.qh"
+    #include "../common/util.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "weapons/accuracy.qh"
+    #include "weapons/csqcprojectile.qh"
+    #include "weapons/selection.qh"
+    #include "t_items.qh"
+    #include "autocvars.qh"
+    #include "constants.qh"
+    #include "defs.qh"
+    #include "../common/notifications.qh"
+    #include "../common/deathtypes.qh"
+    #include "mutators/mutators_include.qh"
+    #include "../common/turrets/turrets.qh"
+    #include "../common/turrets/sv_turrets.qh"
+    #include "vehicles/vehicles_def.qh"
+    #include "../csqcmodellib/sv_model.qh"
+    #include "../common/playerstats.qh"
+    #include "g_hook.qh"
+    #include "scores.qh"
+    #include "spawnpoints.qh"
+#endif
 
 float Damage_DamageInfo_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(self.origin_x));
-	WriteCoord(MSG_ENTITY, floor(self.origin_y));
-	WriteCoord(MSG_ENTITY, floor(self.origin_z));
+	WriteCoord(MSG_ENTITY, floor(self.origin.x));
+	WriteCoord(MSG_ENTITY, floor(self.origin.y));
+	WriteCoord(MSG_ENTITY, floor(self.origin.z));
 	WriteByte(MSG_ENTITY, bound(1, self.dmg, 255));
 	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, self.oldorigin_x);
+	WriteShort(MSG_ENTITY, self.oldorigin.x);
 	WriteByte(MSG_ENTITY, self.species);
-	return TRUE;
+	return true;
 }
 
 void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, float bloodtype, entity dmgowner)
@@ -39,22 +64,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.oldorigin_x = compressShortVector(e.velocity);
 	e.species = bloodtype;
 
-	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
+	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
 }
-
-float checkrules_firstblood;
-
-float yoda;
-float damage_goodhits;
-float damage_gooddamage;
-
-.float dmg_team;
-.float teamkill_complain;
-.float teamkill_soundtime;
-.entity teamkill_soundsource;
-.entity pusher;
-.float istypefrag;
-.float taunt_soundtime;
 
 float IsFlying(entity a)
 {
@@ -73,9 +84,6 @@ void UpdateFrags(entity player, float f)
 	PlayerTeamScore_AddScore(player, f);
 }
 
-// NOTE: f=0 means still count as a (positive) kill, but count no frags for it
-void W_SwitchWeapon_Force(entity e, float w);
-entity GiveFrags_randomweapons;
 void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 {
 	// TODO route through PlayerScores instead
@@ -275,7 +283,6 @@ void Obituary_SpecialDeath(
 	else { backtrace("Obituary_SpecialDeath called without a special deathtype?\n"); return; }
 }
 
-float w_deathtype;
 float Obituary_WeaponDeath(
 	entity notif_target,
 	float murder,
@@ -288,7 +295,7 @@ float Obituary_WeaponDeath(
 	{
 		w_deathtype = deathtype;
 		float death_message = WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
-		w_deathtype = FALSE;
+		w_deathtype = false;
 
 		if(death_message)
 		{
@@ -318,9 +325,9 @@ float Obituary_WeaponDeath(
 			);
 		}
 
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
@@ -329,7 +336,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
-	float notif_firstblood = FALSE;
+	float notif_firstblood = false;
 	float kill_count_to_attacker, kill_count_to_target;
 
 	// Set final information for the death
@@ -359,7 +366,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if(deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 			{
-				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.team, 0, 0);
+				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.team, 0, 0);
 			}
 			else
 			{
@@ -367,19 +374,19 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					case DEATH_MIRRORDAMAGE:
 					{
-						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 						break;
 					}
 
 					default:
 					{
-						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+						Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 						break;
 					}
 				}
 			}
 		}
-		else if (!Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
+		else if (!Obituary_WeaponDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 			return;
@@ -431,8 +438,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if(!checkrules_firstblood)
 			{
-				checkrules_firstblood = TRUE;
-				notif_firstblood = TRUE; // modify the current messages so that they too show firstblood information
+				checkrules_firstblood = true;
+				notif_firstblood = true; // modify the current messages so that they too show firstblood information
 				PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PS_GR_P_ADDVAL(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
@@ -493,8 +500,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				);
 			}
 
-			if (!Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
+			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
+				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
 		}
 	}
 
@@ -518,7 +525,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			case DEATH_CUSTOM:
 			{
-				Obituary_SpecialDeath(targ, FALSE, deathtype,
+				Obituary_SpecialDeath(targ, false, deathtype,
 					targ.netname,
 					((strstrofs(deathmessage, "%", 0) < 0) ? strcat("%s ", deathmessage) : deathmessage),
 					deathlocation,
@@ -530,7 +537,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			default:
 			{
-				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
+				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.killcount, 0, 0);
 				break;
 			}
 		}
@@ -603,8 +610,8 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 		RemoveGrapplingHook(head);
 
 	// add waypoint
-	if(show_waypoint)	
-		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
+	if(show_waypoint)
+		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT, '0.25 0.90 1');
 }
 
 void Unfreeze (entity targ)
@@ -616,9 +623,9 @@ void Unfreeze (entity targ)
 	targ.frozen = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
-	
+
 	WaypointSprite_Kill(targ.waypointsprite_attached);
-	
+
 	FOR_EACH_PLAYER(head)
 	if(head.hook.aiment == targ)
 		RemoveGrapplingHook(head);
@@ -628,11 +635,6 @@ void Unfreeze (entity targ)
 		remove(targ.iceblock);
 	targ.iceblock = world;
 }
-
-// these are updated by each Damage call for use in button triggering and such
-entity damage_targ;
-entity damage_inflictor;
-entity damage_attacker;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -724,18 +726,18 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(autocvar_g_mirrordamage_virtual)
 							{
 								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, mirrordamage);
-								attacker.dmg_take += v_x;
-								attacker.dmg_save += v_y;
+								attacker.dmg_take += v.x;
+								attacker.dmg_save += v.y;
 								attacker.dmg_inflictor = inflictor;
-								mirrordamage = v_z;
+								mirrordamage = v.z;
 								mirrorforce = 0;
 							}
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
 								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
-								targ.dmg_take += v_x;
-								targ.dmg_save += v_y;
+								targ.dmg_take += v.x;
+								targ.dmg_save += v.y;
 								targ.dmg_inflictor = inflictor;
 								damage = 0;
 								if(!autocvar_g_friendlyfire_virtual_force)
@@ -787,42 +789,42 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			damage = 0;
 			force *= autocvar_g_freezetag_frozen_force;
 		}
-		
+
 		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freezetag_frozen_damage_trigger)
 		{
 			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
-		
+
 			entity oldself = self;
 			self = targ;
-			entity spot = SelectSpawnPoint (FALSE);
-			
+			entity spot = SelectSpawnPoint (false);
+
 			if(spot)
 			{
 				damage = 0;
 				self.deadflag = DEAD_NO;
 
 				self.angles = spot.angles;
-				
+
 				self.effects = 0;
 				self.effects |= EF_TELEPORT_BIT;
 
 				self.angles_z = 0; // never spawn tilted even if the spot says to
-				self.fixangle = TRUE; // turn this way immediately
+				self.fixangle = true; // turn this way immediately
 				self.velocity = '0 0 0';
 				self.avelocity = '0 0 0';
 				self.punchangle = '0 0 0';
 				self.punchvector = '0 0 0';
 				self.oldvelocity = self.velocity;
-				
+
 				self.spawnorigin = spot.origin;
-				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
+				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
 				self.oldorigin = self.origin;
 				self.prevorigin = self.origin;
-				
+
 				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
 			}
-			
+
 			self = oldself;
 		}
 
@@ -948,7 +950,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 }
 
-float RadiusDamage_running;
 float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity)
 	// Returns total damage applies to creatures
 {
@@ -990,7 +991,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	stat_damagedone = 0;
 
-	targ = WarpZone_FindRadius (inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, FALSE);
+	targ = WarpZone_FindRadius (inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, false);
 	while (targ)
 	{
 		next = targ.chain;
@@ -1087,9 +1088,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 								else
 									hitloc = nearest;
 							}
-							nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
-							nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
-							nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
+							nearest.x = targ.origin.x + targ.mins.x + random() * targ.size.x;
+							nearest.y = targ.origin.y + targ.mins.y + random() * targ.size.y;
+							nearest.z = targ.origin.z + targ.mins.z + random() * targ.size.z;
 						}
 
 						nearest = hitloc * (1 / max(1, hits));
@@ -1140,17 +1141,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, float deathtype, entity directhitentity)
 {
-	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, FALSE, forceintensity, deathtype, directhitentity);
+	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, directhitentity);
 }
-
-.float fire_damagepersec;
-.float fire_endtime;
-.float fire_deathtype;
-.entity fire_owner;
-.float fire_hitsound;
-.entity fire_burner;
-
-void fireburner_think();
 
 float Fire_IsBurning(entity e)
 {
@@ -1254,7 +1246,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 				if(e.fire_owner != o)
 				{
 					e.fire_owner = o;
-					e.fire_hitsound = FALSE;
+					e.fire_hitsound = false;
 				}
 			}
 			if(accuracy_isgooddamage(o, e))
@@ -1270,7 +1262,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		e.fire_endtime = time + t;
 		e.fire_deathtype = dt;
 		e.fire_owner = o;
-		e.fire_hitsound = FALSE;
+		e.fire_hitsound = false;
 		if(accuracy_isgooddamage(o, e))
 			accuracy_add(o, DEATH_WEAPONOFWEAPONDEATH(dt), 0, d);
 		return d;
@@ -1309,7 +1301,7 @@ void Fire_ApplyDamage(entity e)
 		e.fire_owner.damage_dealt = hi;
 		e.fire_owner.typehitsound = ty;
 	}
-	e.fire_hitsound = TRUE;
+	e.fire_hitsound = true;
 
 	if (!IS_INDEPENDENT_PLAYER(e))
 	if(!e.frozen)

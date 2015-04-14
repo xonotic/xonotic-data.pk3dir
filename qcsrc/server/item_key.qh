@@ -1,3 +1,6 @@
+#ifndef ITEM_KEY
+#define ITEM_KEY
+
 /**
  * Returns the bit ID of a key
  */
@@ -12,7 +15,7 @@ string item_keys_names[ITEM_KEY_MAX];
 
 /**
  * Use keys from p on l.
- * Returns TRUE if any new keys were given, FALSE otherwise.
+ * Returns true if any new keys were given, false otherwise.
  */
 float item_keys_usekey(entity l, entity p);
 
@@ -20,4 +23,4 @@ float item_keys_usekey(entity l, entity p);
  * Returns a string with a comma separated list of key names, as specified in keylist.
  */
 string item_keys_keylist(float keylist);
-
+#endif
