@@ -1236,7 +1236,7 @@ void HUD_Configure_Frame()
 			return;
 		}
 
-		if(!hud_configure_prev || hud_configure_prev == -1)
+		if(!hud_configure_prev)
 		{
 			if(autocvar_hud_cursormode)
 				setcursormode(1);
