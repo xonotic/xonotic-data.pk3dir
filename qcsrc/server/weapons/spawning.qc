@@ -1,3 +1,18 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+    #include "../../dpdefs/dpextensions.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "spawning.qh"
+    #include "weaponsystem.qh"
+    #include "../t_items.qh"
+    #include "../autocvars.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../mutators/mutators_include.qh"
+#endif
+
 string W_Apply_Weaponreplace(string in)
 {
 	float n = tokenize_console(in);
@@ -8,7 +23,7 @@ string W_Apply_Weaponreplace(string in)
 	{
 		replacement = "";
 		s = argv(i);
-		
+
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
@@ -33,7 +48,7 @@ void weapon_defaultspawnfunc(float wpn)
 	string s;
 	entity oldself;
 	float i, j;
-	float f;
+	int f;
 
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
@@ -42,7 +57,7 @@ void weapon_defaultspawnfunc(float wpn)
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
 			objerror("Attempted to spawn a mutator-blocked weapon rejected");
-			startitem_failed = TRUE;
+			startitem_failed = true;
 			return;
 		}
 
@@ -54,7 +69,7 @@ void weapon_defaultspawnfunc(float wpn)
 		if(s == "")
 		{
 			remove(self);
-			startitem_failed = TRUE;
+			startitem_failed = true;
 			return;
 		}
 		t = tokenize_console(s);
@@ -105,7 +120,7 @@ void weapon_defaultspawnfunc(float wpn)
 		if(wpn == 0)
 		{
 			remove(self);
-			startitem_failed = TRUE;
+			startitem_failed = true;
 			return;
 		}
 	}
@@ -161,7 +176,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 	// pickup anyway
 	if(g_pickup_weapons_anyway)
-		self.pickup_anyway = TRUE;
+		self.pickup_anyway = true;
 
 	f = FL_WEAPON;
 

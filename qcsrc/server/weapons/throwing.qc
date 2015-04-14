@@ -1,3 +1,21 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+    #include "../../dpdefs/dpextensions.qh"
+    #include "../../common/util.qh"
+    #include "../../common/weapons/weapons.qh"
+    #include "throwing.qh"
+    #include "weaponsystem.qh"
+    #include "../t_items.qh"
+    #include "../autocvars.qh"
+    #include "../constants.qh"
+    #include "../defs.qh"
+    #include "../../common/notifications.qh"
+    #include "../mutators/mutators_include.qh"
+    #include "../../common/mapinfo.qh"
+#endif
+
 void thrown_wep_think()
 {
 	self.nextthink = time;
@@ -32,7 +50,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
-	
+
 	W_DropEvent(WR_DROP,own,wpn,wep);
 
 	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
@@ -73,8 +91,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.think = thrown_wep_think;
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
-	wep.pickup_anyway = TRUE; // these are ALWAYS pickable
-	
+	wep.pickup_anyway = true; // these are ALWAYS pickable
+
 	//wa = W_AmmoItemCode(wpn);
 	if(ammotype == ammo_none)
 	{
@@ -176,7 +194,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	
+
 	if(!a) return;
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
@@ -185,5 +203,5 @@ void SpawnThrownWeapon(vector org, float w)
 {
 	if(self.weapons & WepSet_FromWeapon(self.weapon))
 		if(W_IsWeaponThrowable(self.weapon))
-			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');
 }
