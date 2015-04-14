@@ -765,6 +765,7 @@ float autocvar_g_random_gravity_positive;
 float autocvar_g_random_gravity_negative;
 float autocvar_g_random_gravity_delay;
 float autocvar_g_nades;
+vector autocvar_g_nades_throw_offset;
 float autocvar_g_nades_spawn;
 float autocvar_g_nades_spawn_count;
 float autocvar_g_nades_client_select;
