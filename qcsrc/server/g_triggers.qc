@@ -1,9 +1,10 @@
+#include "g_triggers.qh"
+#include "t_jumppads.qh"
+
 void SUB_DontUseTargets()
 {
 }
 
-
-void() SUB_UseTargets;
 
 void DelayThink()
 {
@@ -61,14 +62,13 @@ void SUB_UseTargets()
 //
 // print the message
 //
-	if (IS_PLAYER(activator) && self.message != "")
+	if(self)
+	if(IS_PLAYER(activator) && self.message != "")
+	if(IS_REAL_CLIENT(activator))
 	{
-		if(IS_REAL_CLIENT(activator))
-		{
-			centerprint (activator, self.message);
-			if (self.noise == "")
-				play2(activator, "misc/talk.wav");
-		}
+		centerprint(activator, self.message);
+		if (self.noise == "")
+			play2(activator, "misc/talk.wav");
 	}
 
 //
@@ -137,9 +137,6 @@ void SUB_UseTargets()
 
 //=============================================================================
 
-const float	SPAWNFLAG_NOMESSAGE = 1;
-const float	SPAWNFLAG_NOTOUCH = 1;
-
 // the wait time has passed, so set back up for another activation
 void multi_wait()
 {
@@ -205,8 +202,8 @@ void multi_use()
 
 void multi_touch()
 {
-	if (!(self.spawnflags & 2))
-		if (!other.iscreature)
+	if(!(self.spawnflags & 2))
+	if(!other.iscreature)
 			return;
 
 	if(self.team)
@@ -378,32 +375,26 @@ void spawnfunc_trigger_delay()
 
 void counter_use()
 {
-	self.count = self.count - 1;
+	self.count -= 1;
 	if (self.count < 0)
 		return;
 
-	if (self.count != 0)
+	if (self.count == 0)
 	{
-		if (IS_PLAYER(activator)
-		&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
-		{
-			if (self.count >= 4)
-				centerprint (activator, "There are more to go...");
-			else if (self.count == 3)
-				centerprint (activator, "Only 3 more to go...");
-			else if (self.count == 2)
-				centerprint (activator, "Only 2 more to go...");
-			else
-				centerprint (activator, "Only 1 more to go...");
-		}
-		return;
-	}
+		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
-	if (IS_PLAYER(activator)
-	&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
-		centerprint(activator, "Sequence completed!");
-	self.enemy = activator;
-	multi_trigger ();
+		self.enemy = activator;
+		multi_trigger ();
+	}
+	else
+	{
+		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+		if(self.count >= 4)
+			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
+		else
+			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, self.count);
+	}
 }
 
 void counter_reset()
@@ -438,7 +429,6 @@ void trigger_hurt_use()
 		self.enemy = world; // let's just destroy it, if taking over is too much work
 }
 
-.float triggerhurttime;
 void trigger_hurt_touch()
 {
 	if (self.active != ACTIVE_ACTIVE)
@@ -485,9 +475,6 @@ Any object touching this will be hurt
 set dmg to damage amount
 defalt dmg = 5
 */
-.entity trigger_hurt_next;
-entity trigger_hurt_last;
-entity trigger_hurt_first;
 void spawnfunc_trigger_hurt()
 {
 	EXACTTRIGGER_INIT;
@@ -516,9 +503,9 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 
 	for(th = trigger_hurt_first; th; th = th.trigger_hurt_next)
 		if(tracebox_hits_box(start, mi, ma, end, th.absmin, th.absmax))
-			return TRUE;
+			return true;
 
-	return FALSE;
+	return false;
 }
 
 //////////////////////////////////////////////////////////////
@@ -529,7 +516,6 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 //
 //////////////////////////////////////////////////////////////
 
-.float triggerhealtime;
 void trigger_heal_touch()
 {
 	if (self.active != ACTIVE_ACTIVE)
@@ -579,7 +565,6 @@ void spawnfunc_trigger_heal()
 //
 //////////////////////////////////////////////////////////////
 
-.entity trigger_gravity_check;
 void trigger_gravity_remove(entity own)
 {
 	if(own.trigger_gravity_check.owner == own)
@@ -621,7 +606,7 @@ void trigger_gravity_touch()
 {
 	float g;
 
-	if(self.state != TRUE)
+	if(self.state != true)
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -675,20 +660,18 @@ void spawnfunc_trigger_gravity()
 	if(self.noise != "")
 		precache_sound(self.noise);
 
-	self.state = TRUE;
+	self.state = true;
 	IFTARGETED
 	{
 		self.use = trigger_gravity_use;
 		if(self.spawnflags & 2)
-			self.state = FALSE;
+			self.state = false;
 	}
 }
 
 //=============================================================================
 
 // TODO add a way to do looped sounds with sound(); then complete this entity
-.float volume, atten;
-void target_speaker_use_off();
 void target_speaker_use_activator()
 {
 	if (!IS_REAL_CLIENT(activator))
@@ -824,11 +807,6 @@ void spawnfunc_func_stardust() {
 	self.effects = EF_STARDUST;
 }
 
-.string bgmscript;
-.float bgmscriptattack;
-.float bgmscriptdecay;
-.float bgmscriptsustain;
-.float bgmscriptrelease;
 float pointparticles_SendEntity(entity to, float fl)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
@@ -854,9 +832,9 @@ float pointparticles_SendEntity(entity to, float fl)
 	}
 	if(fl & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 	if(fl & 1)
 	{
@@ -865,12 +843,12 @@ float pointparticles_SendEntity(entity to, float fl)
 			WriteShort(MSG_ENTITY, self.modelindex);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, self.mins_x);
-				WriteCoord(MSG_ENTITY, self.mins_y);
-				WriteCoord(MSG_ENTITY, self.mins_z);
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				WriteCoord(MSG_ENTITY, self.mins.x);
+				WriteCoord(MSG_ENTITY, self.mins.y);
+				WriteCoord(MSG_ENTITY, self.mins.z);
+				WriteCoord(MSG_ENTITY, self.maxs.x);
+				WriteCoord(MSG_ENTITY, self.maxs.y);
+				WriteCoord(MSG_ENTITY, self.maxs.z);
 			}
 		}
 		else
@@ -878,9 +856,9 @@ float pointparticles_SendEntity(entity to, float fl)
 			WriteShort(MSG_ENTITY, 0);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				WriteCoord(MSG_ENTITY, self.maxs.x);
+				WriteCoord(MSG_ENTITY, self.maxs.y);
+				WriteCoord(MSG_ENTITY, self.maxs.z);
 			}
 		}
 		WriteShort(MSG_ENTITY, self.cnt);
@@ -1010,12 +988,12 @@ float rainsnow_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
-	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
-	WriteCoord(MSG_ENTITY, self.origin_y + self.mins_y);
-	WriteCoord(MSG_ENTITY, self.origin_z + self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x - self.mins_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y - self.mins_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z - self.mins_z);
+	WriteCoord(MSG_ENTITY, self.origin.x + self.mins.x);
+	WriteCoord(MSG_ENTITY, self.origin.y + self.mins.y);
+	WriteCoord(MSG_ENTITY, self.origin.z + self.mins.z);
+	WriteCoord(MSG_ENTITY, self.maxs.x - self.mins.x);
+	WriteCoord(MSG_ENTITY, self.maxs.y - self.mins.y);
+	WriteCoord(MSG_ENTITY, self.maxs.z - self.mins.z);
 	WriteShort(MSG_ENTITY, compressShortVector(self.dest));
 	WriteShort(MSG_ENTITY, self.count);
 	WriteByte(MSG_ENTITY, self.cnt);
@@ -1047,7 +1025,7 @@ void spawnfunc_func_rain()
 		self.cnt = 12;
 	if (!self.count)
 		self.count = 2000;
-	self.count = 0.01 * self.count * (self.size_x / 1024) * (self.size_y / 1024);
+	self.count = 0.01 * self.count * (self.size.x / 1024) * (self.size.y / 1024);
 	if (self.count < 1)
 		self.count = 1;
 	if(self.count > 65535)
@@ -1056,7 +1034,7 @@ void spawnfunc_func_rain()
 	self.state = 1; // 1 is rain, 0 is snow
 	self.Version = 1;
 
-	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
+	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 
 
@@ -1085,7 +1063,7 @@ void spawnfunc_func_snow()
 		self.cnt = 12;
 	if (!self.count)
 		self.count = 2000;
-	self.count = 0.01 * self.count * (self.size_x / 1024) * (self.size_y / 1024);
+	self.count = 0.01 * self.count * (self.size.x / 1024) * (self.size.y / 1024);
 	if (self.count < 1)
 		self.count = 1;
 	if(self.count > 65535)
@@ -1094,13 +1072,9 @@ void spawnfunc_func_snow()
 	self.state = 0; // 1 is rain, 0 is snow
 	self.Version = 1;
 
-	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
+	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 
-
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype);
-
-.float modelscale;
 void misc_laser_aim()
 {
 	vector a;
@@ -1117,7 +1091,7 @@ void misc_laser_aim()
 		else
 		{
 			a = vectoangles(self.enemy.origin - self.origin);
-			a_x = -a_x;
+			a.x = -a.x;
 			if(a != self.mangle)
 			{
 				self.mangle = a;
@@ -1146,7 +1120,6 @@ void misc_laser_init()
 		self.enemy = find(world, targetname, self.target);
 }
 
-.entity pusher;
 void misc_laser_think()
 {
 	vector o;
@@ -1236,15 +1209,15 @@ float laser_SendEntity(entity to, float fl)
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 	if(fl & 8)
 	{
-		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.x * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.y * 255.0);
+		WriteByte(MSG_ENTITY, self.colormod.z * 255.0);
 		if(fl & 0x40)
 			WriteByte(MSG_ENTITY, self.alpha * 255.0);
 		if(fl & 0x20)
@@ -1259,14 +1232,14 @@ float laser_SendEntity(entity to, float fl)
 	{
 		if(fl & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_z);
+			WriteCoord(MSG_ENTITY, self.enemy.origin.x);
+			WriteCoord(MSG_ENTITY, self.enemy.origin.y);
+			WriteCoord(MSG_ENTITY, self.enemy.origin.z);
 		}
 		else
 		{
-			WriteAngle(MSG_ENTITY, self.mangle_x);
-			WriteAngle(MSG_ENTITY, self.mangle_y);
+			WriteAngle(MSG_ENTITY, self.mangle.x);
+			WriteAngle(MSG_ENTITY, self.mangle.y);
 		}
 	}
 	if(fl & 4)
@@ -1344,7 +1317,7 @@ void spawnfunc_misc_laser()
 
 	self.mangle = self.angles;
 
-	Net_LinkEntity(self, FALSE, 0, laser_SendEntity);
+	Net_LinkEntity(self, false, 0, laser_SendEntity);
 
 	IFTARGETED
 	{
@@ -1357,10 +1330,6 @@ void spawnfunc_misc_laser()
 }
 
 // tZorks trigger impulse / gravity
-.float radius;
-.float falloff;
-.float strength;
-.float lastpushtime;
 
 // targeted (directional) mode
 void trigger_impulse_touch1()
@@ -1736,11 +1705,6 @@ void spawnfunc_trigger_gamestart() {
 
 
 
-.entity voicescript; // attached voice script
-.float voicescript_index; // index of next voice, or -1 to use the randomized ones
-.float voicescript_nextthink; // time to play next voice
-.float voicescript_voiceend; // time when this voice ends
-
 void target_voicescript_clear(entity pl)
 {
 	pl.voicescript = world;
@@ -1781,7 +1745,7 @@ void target_voicescript_next(entity pl)
 			if(pl.voicescript_index < vs.cnt)
 				i = pl.voicescript_index * 2;
 			else if(n > vs.cnt * 2)
-				i = mod(pl.voicescript_index - vs.cnt, (n - vs.cnt * 2 - 1) / 2) * 2 + vs.cnt * 2 + 1;
+				i = ((pl.voicescript_index - vs.cnt) % ((n - vs.cnt * 2 - 1) / 2)) * 2 + vs.cnt * 2 + 1;
 			else
 				i = -1;
 
@@ -1904,8 +1868,6 @@ void spawnfunc_trigger_disablerelay()
 	self.use = trigger_disablerelay_use;
 }
 
-float magicear_matched;
-float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
 string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin)
 {
 	float domatch, dotrigger, matchstart, l;
@@ -1913,7 +1875,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	entity oldself;
 	string savemessage;
 
-	magicear_matched = FALSE;
+	magicear_matched = false;
 
 	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
@@ -1927,10 +1889,10 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		if (!(ear.spawnflags & 256))
 			return msgin;
 
-		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
+		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir.x, !(ear.spawnflags & 512), ear.movedir.y, ear.movedir.z))
 			return msgin;
 
-		magicear_matched = TRUE;
+		magicear_matched = true;
 
 		if(dotrigger)
 		{
@@ -2021,7 +1983,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	if(matchstart == -1) // no match
 		return msgin;
 
-	magicear_matched = TRUE;
+	magicear_matched = true;
 
 	if(dotrigger)
 	{
@@ -2054,7 +2016,6 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		return msgin;
 }
 
-entity magicears;
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin)
 {
 	entity ear;
@@ -2062,9 +2023,9 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 	for(ear = magicears; ear; ear = ear.enemy)
 	{
 		msgout = trigger_magicear_processmessage(ear, source, teamsay, privatesay, msgin);
-		if (!(ear.spawnflags & 64))
-			if(magicear_matched)
-				return msgout;
+		if(!(ear.spawnflags & 64))
+		if(magicear_matched)
+			return msgout;
 		msgin = msgout;
 	}
 	return msgin;
@@ -2151,7 +2112,6 @@ void spawnfunc_relay_activatetoggle()
 	self.use = relay_activators_use;
 }
 
-.string chmap, gametype;
 void spawnfunc_target_changelevel_use()
 {
 	if(self.gametype != "")

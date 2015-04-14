@@ -1,3 +1,18 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+    #include "../../dpdefs/dpextensions.qh"
+    #include "../../common/constants.qh"
+    #include "../../common/util.qh"
+    #include "../../common/counting.qh"
+    #include "../../common/monsters/monsters.qh"
+    #include "../defs.qh"
+    #include "../../common/mapinfo.qh"
+    #include "getreplies.qh"
+    #include "../race.qh"
+#endif
+
 // =========================================================
 //  Reply messages for common commands, re-worked by Samual
 //  Last updated: December 30th, 2011
@@ -110,13 +125,10 @@ string getrankings()
 
 string getladder()
 {
-	float i, j, k, uidcnt = 0, thiscnt;
+	int i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
+	rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
 
 	for(k = 0; k < MapInfo_count; ++k)
 	{
@@ -289,14 +301,14 @@ string getladder()
 string getmaplist()
 {
 	string maplist = "", col;
-	float i, argc;
+	int i, argc;
 
 	argc = tokenize_console(autocvar_g_maplist);
 	for(i = 0; i < argc; ++i)
 	{
 		if(MapInfo_CheckMap(argv(i)))
 		{
-			if(mod(i, 2)) { col = "^2"; }
+			if(i % 2) { col = "^2"; }
 			else { col = "^3"; }
 			maplist = sprintf("%s%s%s ", maplist, col, argv(i));
 		}
@@ -323,13 +335,13 @@ string getlsmaps()
 				(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
 			)
 			{
-				newmaps = TRUE;
-				if(mod(i, 2)) { col = "^4*"; }
+				newmaps = true;
+				if(i % 2) { col = "^4*"; }
 				else { col = "^5*"; }
 			}
 			else
 			{
-				if(mod(i, 2)) { col = "^2"; }
+				if(i % 2) { col = "^2"; }
 				else { col = "^3"; }
 			}
 
@@ -338,17 +350,16 @@ string getlsmaps()
 	}
 
 	MapInfo_ClearTemps();
-	return sprintf("^7Maps available%s: %s\n", (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
+	return sprintf("^7Maps available (%d)%s: %s\n", tokenize_console(lsmaps), (newmaps ? " (New maps have asterisks marked in blue)" : ""), lsmaps);
 }
 
 string getmonsterlist()
 {
 	string monsterlist = "", col;
-	float i;
 
-	for(i = MON_FIRST; i <= MON_LAST; ++i)
+	for(int i = MON_FIRST; i <= MON_LAST; ++i)
 	{
-		if(mod(i, 2)) { col = "^2"; }
+		if(i % 2) { col = "^2"; }
 		else { col = "^3"; }
 		monsterlist = sprintf("%s%s%s ", monsterlist, col, (get_monsterinfo(i)).netname);
 	}

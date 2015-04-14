@@ -1,3 +1,8 @@
+#ifndef SERVER_DEFS_H
+#define SERVER_DEFS_H
+
+#include "../common/weapons/weapons.qh"
+
 #define INDEPENDENT_ATTACK_FINISHED
 
 noref float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
@@ -13,14 +18,14 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 #define BUTTON_USE        buttonuse
 #define BUTTON_DRAG       button8
 #define BUTTON_ZOOMSCRIPT button9
+#define BUTTON_JETPACK    button10
 
 // Globals
 
-float g_cloaked, g_footsteps, g_grappling_hook, g_minstagib;
+float g_cloaked, g_footsteps, g_grappling_hook, g_instagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_race_qualifying;
 float warmup_stage;
 float g_pickup_respawntime_weapon;
 float g_pickup_respawntime_superweapon;
@@ -83,7 +88,6 @@ float server_is_dedicated;
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
-.float	statdraintime;			// record the one-second intervals between draining health and armour when they're over 100
 .float  crouch;	// Crouching or not?
 
 .float	strength_finished;
@@ -102,7 +106,7 @@ float server_is_dedicated;
 //.float cnt2;
 
 .float play_time;
-.float respawn_flags;
+.int respawn_flags;
 .float respawn_time;
 .float respawn_time_max;
 .float death_time;
@@ -139,8 +143,8 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 //.float	chasecam;
 
 .float	damageforcescale;
-#define MIN_DAMAGEEXTRARADIUS 2
-#define MAX_DAMAGEEXTRARADIUS 16
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
 
 //.float          gravity;
@@ -156,7 +160,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float		dmgtime;
 
 .float		killcount;
-.float hitsound, typehitsound;
+.float damage_dealt, typehitsound;
 
 .float watersound_finished;
 .float iscreature;
@@ -173,18 +177,19 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .string item_pickupsound;
 
 // definitions for weaponsystem
-
+// more WEAPONTODO: move these to their proper files
 .entity weaponentity;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
 
-//.float weapon; // current weapon
-.float switchweapon; // weapon requested to switch to
-.float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+//.int weapon; // current weapon
+.int switchweapon; // weapon requested to switch to
+.int switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
 .string weaponname; // name of .weapon
 
+// WEAPONTODO
 .float autoswitch;
-float weapon_action(float wpn, float wrequest);
+//float WEP_ACTION(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
 void w_clear();
 void w_ready();
@@ -192,19 +197,16 @@ void w_ready();
 .float weapon_nextthink;
 .void() weapon_think;
 
-//float	PLAYER_WEAPONSELECTION_DELAY = );
-const float	PLAYER_WEAPONSELECTION_SPEED = 18;
-const vector	PLAYER_WEAPONSELECTION_RANGE = '0 20 -40';
 
 // weapon states (self.weaponentity.state)
-const float WS_CLEAR			= 0; // no weapon selected
-const float WS_RAISE			= 1; // raise frame
-const float WS_DROP			= 2; // deselecting frame
-const float WS_INUSE			= 3; // fire state
-const float WS_READY			= 4; // idle frame
+const int WS_CLEAR			= 0; // no weapon selected
+const int WS_RAISE			= 1; // raise frame
+const int WS_DROP				= 2; // deselecting frame
+const int WS_INUSE			= 3; // fire state
+const int WS_READY			= 4; // idle frame
 
 // there is 2 weapon tics that can run in one server frame
-#define W_TICSPERFRAME 2
+const int W_TICSPERFRAME = 2;
 
 void weapon_defaultspawnfunc(float wpn);
 
@@ -264,6 +266,7 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
+.float cvar_cl_jetpack_jump;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 
@@ -281,7 +284,7 @@ float default_weapon_alpha;
 
 .float version_nagtime;
 
-#define NUM_JUMPPADSUSED 3
+const int NUM_JUMPPADSUSED = 3;
 .float jumppadcount;
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
@@ -289,16 +292,12 @@ string gamemode_name;
 
 float startitem_failed;
 
-typedef .float floatfield;
-floatfield Item_CounterField(float it);
-
-float W_AmmoItemCode(float wpn);
-string W_Name(float weaponid);
 string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
+// WEAPONTODO: remove this
 WepSet weaponsInMap;
 
 .float respawn_countdown; // next number to count
@@ -347,7 +346,7 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 float next_pingtime;
 
 .float Version;
-.float SendFlags;
+.int SendFlags;
 .float(entity to, float sendflags) SendEntity;
 
 // player sounds, voice messages
@@ -355,7 +354,6 @@ float next_pingtime;
 #define ALLPLAYERSOUNDS \
 		_VOICEMSG(death) \
 		_VOICEMSG(drown) \
-		_VOICEMSG(fall) \
 		_VOICEMSG(fall) \
 		_VOICEMSG(falling) \
 		_VOICEMSG(gasp) \
@@ -401,12 +399,12 @@ string globalsound_metalfall;
 string globalsound_step;
 string globalsound_metalstep;
 
-#define VOICETYPE_PLAYERSOUND 10
-#define VOICETYPE_TEAMRADIO 11
-#define VOICETYPE_LASTATTACKER 12
-#define VOICETYPE_LASTATTACKER_ONLY 13
-#define VOICETYPE_AUTOTAUNT 14
-#define VOICETYPE_TAUNT 15
+const float VOICETYPE_PLAYERSOUND = 10;
+const float VOICETYPE_TEAMRADIO = 11;
+const float VOICETYPE_LASTATTACKER = 12;
+const float VOICETYPE_LASTATTACKER_ONLY = 13;
+const float VOICETYPE_AUTOTAUNT = 14;
+const float VOICETYPE_TAUNT = 15;
 
 void PrecachePlayerSounds(string f);
 void PrecacheGlobalSound(string samplestring);
@@ -434,7 +432,7 @@ float independent_players;
 
 string clientstuff;
 .float phase;
-.float pressedkeys;
+.int pressedkeys;
 
 .float porto_forbidden;
 
@@ -456,11 +454,11 @@ float round_starttime; //point in time when the countdown to round start is over
 
 void W_Porto_Remove (entity p);
 
-.float projectiledeathtype;
+.int projectiledeathtype;
 
 .string message2;
 
-.float stat_allow_oldnexbeam;
+.float stat_allow_oldvortexbeam;
 
 // reset to 0 on weapon switch
 // may be useful to all weapons
@@ -495,8 +493,6 @@ void ClientData_Touch(entity e);
 
 float servertime, serverprevtime, serverframetime;
 
-.entity soundentity;
-
 .float ammo_fuel;
 
 .vector prevorigin;
@@ -513,12 +509,13 @@ float servertime, serverprevtime, serverframetime;
 .float stat_shotorg; // networked stat for trueaim HUD
 
 string matchid;
-.float hitplotfh;
 
 .float last_pickup;
 
 .float hit_time;
 .float typehit_time;
+
+.float damage_dealt_total;
 
 .float stat_leadlimit;
 
@@ -529,8 +526,6 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-..float current_ammo;
-
 .float weapon_load[WEP_MAXCOUNT];
 .float ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
@@ -539,9 +534,9 @@ float client_cefc_accumulatortime;
 
 .entity lastrocket;
 .float minelayer_mines;
-.float nex_charge;
-.float nex_charge_rottime;
-.float nex_chargepool_ammo;
+.float vortex_charge;
+.float vortex_charge_rottime;
+.float vortex_chargepool_ammo;
 .float hagar_load;
 
 .float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
@@ -561,30 +556,33 @@ string deathmessage;
 
 .float just_joined;
 
-.float cvar_cl_accuracy_data_share;
-.float cvar_cl_accuracy_data_receive;
-
 .float cvar_cl_weaponimpulsemode;
 .float selectweapon; // last selected weapon of the player
 
 .float ballistics_density; // wall piercing factor, larger = bullet can pass through more
 
-#define ACTIVE_NOT 		0
-#define ACTIVE_ACTIVE 	1
-#define ACTIVE_IDLE 	2
-#define ACTIVE_BUSY 	2
-#define ACTIVE_TOGGLE	3
+const float ACTIVE_NOT 		= 0;
+const float ACTIVE_ACTIVE 	= 1;
+const float ACTIVE_IDLE 	= 2;
+const float ACTIVE_BUSY 	= 2;
+const float ACTIVE_TOGGLE 	= 3;
 .float active;
 .void (float act_state) setactive;
 .entity realowner;
 
-float serverflags;
+//float serverflags;
 
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float player_blocked;
+.float weapon_blocked; // weapon use disabled
 
-.float freezetag_frozen;
+.float frozen; // for freeze attacks
+.float revive_progress;
+.float revival_time; // time at which player was last revived
+.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+.entity iceblock;
+.entity frozen_by; // for ice fields
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
@@ -601,18 +599,32 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 string modname;
 
 .float missile_flags;
-#define MIF_SPLASH 2
-#define MIF_ARC 4
-#define MIF_PROXY 8
-#define MIF_GUIDED_MANUAL 16
-#define MIF_GUIDED_HEAT 32
-#define MIF_GUIDED_LASER 64
-#define MIF_GUIDED_AI 128
-#define MIF_GUIDED_TAG 128
+const int MIF_SPLASH = 2;
+const int MIF_ARC = 4;
+const int MIF_PROXY = 8;
+const int MIF_GUIDED_MANUAL = 16;
+const int MIF_GUIDED_HEAT = 32;
+const int MIF_GUIDED_LASER = 64;
+const int MIF_GUIDED_AI = 128;
+const int MIF_GUIDED_TAG = 128;
 #define MIF_GUIDED_ALL (MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
 #define MIF_GUIDED_TRACKING (MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
 #define MIF_GUIDED_CONFUSABLE (MIF_GUIDED_HEAT | MIF_GUIDED_AI)
 
-#define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? TRUE : FALSE)
-#define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? TRUE : FALSE)
-#define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? TRUE : FALSE)
+#define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? true : false)
+#define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? true : false)
+#define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? true : false)
+
+
+////
+
+.entity player_stats;
+//.float playerid;
+.string playernick;
+.float elos;
+.float ranks;
+
+.float init_for_player_needed;
+.void(entity) init_for_player;
+
+#endif

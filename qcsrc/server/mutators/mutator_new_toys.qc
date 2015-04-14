@@ -1,7 +1,7 @@
 /*
 
-CORE    laser   nex     lg      rl      cry     gl      elec    hagar   fireb   hook
-									minsta  porto
+CORE    laser   vortex     lg      rl      cry     gl      elec    hagar   fireb   hook
+									vaporizer  porto
 									tuba
 
 NEW             rifle   hlac    minel                           seeker
@@ -18,28 +18,28 @@ weaponreplace lists.
 Entity:
 
 {
-"classname" "weapon_nex"
+"classname" "weapon_vortex"
 "new_toys" "rifle"
 }
--> This will spawn as Rifle in this mutator ONLY, and as Nex otherwise.
+-> This will spawn as Rifle in this mutator ONLY, and as Vortex otherwise.
 
 {
-"classname" "weapon_nex"
-"new_toys" "nex rifle"
+"classname" "weapon_vortext"
+"new_toys" "vortex rifle"
 }
--> This will spawn as either Nex or Rifle in this mutator ONLY, and as Nex otherwise.
+-> This will spawn as either Vortex or Rifle in this mutator ONLY, and as Vortex otherwise.
 
 {
-"classname" "weapon_nex"
-"new_toys" "nex"
+"classname" "weapon_vortex"
+"new_toys" "vortex"
 }
--> This is always a Nex.
+-> This is always a Vortex.
 
 If the map specifies no "new_toys" argument
 
 There will be two default replacements selectable: "replace all" and "replace random".
-In "replace all" mode, e.g. Nex will have the default replacement "rifle".
-In "replace random" mode, Nex will have the default replacement "nex rifle".
+In "replace all" mode, e.g. Vortex will have the default replacement "rifle".
+In "replace random" mode, Vortex will have the default replacement "vortex rifle".
 
 This mutator's replacements run BEFORE regular weaponreplace!
 
@@ -69,9 +69,9 @@ roflsound "New toys, new toys!" sound.
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
-#define NT_AUTOREPLACE_NEVER 0
-#define NT_AUTOREPLACE_ALWAYS 1
-#define NT_AUTOREPLACE_RANDOM 2
+const float NT_AUTOREPLACE_NEVER = 0;
+const float NT_AUTOREPLACE_ALWAYS = 1;
+const float NT_AUTOREPLACE_RANDOM = 2;
 
 MUTATOR_HOOKFUNCTION(nt_SetModname)
 {
@@ -87,9 +87,10 @@ float nt_IsNewToy(float w)
 		case WEP_MINE_LAYER:
 		case WEP_HLAC:
 		case WEP_RIFLE:
-			return TRUE;
+		case WEP_SHOCKWAVE:
+			return true;
 		default:
-			return FALSE;
+			return false;
 	}
 }
 
@@ -98,9 +99,10 @@ string nt_GetFullReplacement(string w)
 	switch(w)
 	{
 		case "hagar": return "seeker";
-		case "rocketlauncher": return "minelayer";
-		case "uzi": return "hlac";
-		case "nex": return "rifle";
+		case "devastator": return "minelayer";
+		case "machinegun": return "hlac";
+		case "vortex": return "rifle";
+		case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }

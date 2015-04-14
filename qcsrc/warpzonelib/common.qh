@@ -1,3 +1,6 @@
+#ifndef WARPZONELIB_COMMON_H
+#define WARPZONELIB_COMMON_H
+
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL
 
@@ -16,6 +19,7 @@ float warpzone_cameras_exist;
 .float warpzone_fadestart;
 .float warpzone_fadeend;
 void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang);
+void WarpZone_Camera_SetUp(entity e, vector my_org, vector my_ang);
 
 float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig);
 vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org);
@@ -99,4 +103,5 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me); // spawn().R = me.R
 #endif
 #ifndef BITXOR_ASSIGN
 # define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
+#endif
 #endif

@@ -14,6 +14,7 @@ MARGIN_TOOLTIP                  '5 5 0'
 BORDER_TOOLTIP                  '1 1 0'
 FONTSIZE_TOOLTIP                12
 ALPHA_TOOLTIP                   0.7
+COLOR_TOOLTIP                   '1 1 1'
 WIDTH_TOOLTIP                   0.3
 AVOID_TOOLTIP                   '8 8 0'
 
@@ -35,6 +36,7 @@ COLOR_DIALOG_MODEL              '1 1 1'
 COLOR_DIALOG_CROSSHAIR          '1 1 1'
 COLOR_DIALOG_HUD                '1 1 1'
 COLOR_DIALOG_SERVERINFO         '1 1 1'
+COLOR_DIALOG_SCREENSHOTVIEWER   '1 1 1'
 COLOR_DIALOG_CVARS              '1 0 0'
 COLOR_DIALOG_HUDCONFIRM         '1 0 0'
 
@@ -61,6 +63,9 @@ ALPHA_BACKGROUND_INGAME         0
 ALPHA_DISABLED                  0.2
 ALPHA_BEHIND                    1
 ALPHA_TEXT                      0.7
+COLOR_TEXT                      '1 1 1'
+ALPHA_HEADER                    0.5
+COLOR_HEADER                    '1 1 1'
 
 // item: button
 //   uses "button" images
@@ -107,8 +112,8 @@ WIDTH_CREDITS                   0.5
 
 // item: cvar list
 ALPHA_CVARLIST_SAVED            1
-ALPHA_CVARLIST_TEMPORARY        0.7    
-COLOR_CVARLIST_CHANGED          '1 0 0' 
+ALPHA_CVARLIST_TEMPORARY        0.7
+COLOR_CVARLIST_CHANGED          '1 0 0'
 COLOR_CVARLIST_UNCHANGED        '1 1 1'
 COLOR_CVARLIST_CONTROLS         '1 0 0'
 
@@ -116,7 +121,7 @@ COLOR_CVARLIST_CONTROLS         '1 0 0'
 //   uses "border" images
 //   uses "closebutton" images
 MARGIN_TOP                      8
-MARGIN_BOTTOM                   12
+MARGIN_BOTTOM                   16
 MARGIN_LEFT                     16
 MARGIN_RIGHT                    16
 MARGIN_COLUMNS                  4
@@ -163,15 +168,16 @@ ALPHAS_MAINMENU                 '1 1 1'
 
 // item: player color button
 //   uses "colorbutton" images
-//   uses "color" images
 
 // item: player model
 COLOR_MODELTITLE                '1 1 1'
 ALPHA_MODELTITLE                1
 
-// item: player name editor
-//   uses "charmap" images
-//   uses "charmapbutton" images
+// item: charmap
+ALPHA_CHARMAP_CHAR              0.85
+COLOR_CHARMAP_CHAR              '1 1 1'
+ALPHA_CHARMAP_FOCUS             0.5
+COLOR_CHARMAP_FOCUS             '0 0 0'
 
 // item: radio button
 //   uses "radiobutton" images
@@ -197,6 +203,8 @@ COLOR_SERVERLIST_HIGHPING       '1 0 0'
 ALPHA_SERVERLIST_HIGHPING       0.2
 ALPHA_SERVERLIST_FAVORITE       0.8
 COLOR_SERVERLIST_FAVORITE       '1 1 1'
+ALPHA_SERVERLIST_CATEGORY       0.7
+COLOR_SERVERLIST_CATEGORY       '1 1 1'
 
 // item: server info
 COLOR_SERVERINFO_NAME           '1 1 1'
@@ -205,6 +213,12 @@ COLOR_SERVERINFO_IP             '0 0 0'
 // item: skin list
 COLOR_SKINLIST_TITLE            '1 1 1'
 COLOR_SKINLIST_AUTHOR           '0.5 0.5 0.5'
+
+// item: demo list
+COLOR_DEMOLIST_SUBDIR           '0.5 0.5 0.5'
+
+// item: screenshot list
+COLOR_SCREENSHOTLIST_SUBDIR     '0.5 0.5 0.5'
 
 // item: slider
 //   uses "slider" images

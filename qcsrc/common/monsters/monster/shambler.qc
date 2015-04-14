@@ -39,7 +39,7 @@ const float shambler_anim_death		= 8;
 void shambler_smash()
 {
 	makevectors(self.angles);
-	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs_z), '0 0 0', 1);
+	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 
 	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * 500, MOVE_NORMAL, self);
@@ -51,7 +51,7 @@ void shambler_smash()
 void shambler_swing()
 {
 	float r = (random() < 0.5);
-	monster_melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
+	monster_melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, true);
 	if(r)
 	{
 		defer(0.5, shambler_swing);
@@ -74,7 +74,7 @@ void shambler_lightning_explode()
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), world, (autocvar_g_monster_shambler_attack_lightning_force), self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), world, world, (autocvar_g_monster_shambler_attack_lightning_force), self.projectiledeathtype, other);
 
 	for(head = findradius(self.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
 	{
@@ -127,7 +127,7 @@ void shambler_lightning()
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
-	gren.bot_dodge = TRUE;
+	gren.bot_dodge = true;
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
@@ -146,14 +146,14 @@ void shambler_lightning()
 	gren.health = 50;
 	gren.damageforcescale = 0;
 	gren.event_damage = shambler_lightning_damage;
-	gren.damagedbycontents = TRUE;
+	gren.damagedbycontents = true;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjectileVelocityEx(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, false);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
 
-	CSQCProjectile(gren, TRUE, PROJECTILE_SHAMBLER_LIGHTNING, TRUE);
+	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
 
 float shambler_attack(float attack_type)
@@ -163,18 +163,19 @@ float shambler_attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		{
 			shambler_swing();
-			return TRUE;
+			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			if(time >= self.shambler_lastattack) // shambler doesn't attack much
+			if(self.flags & FL_ONGROUND)
 			if(random() <= 0.5 && vlen(self.enemy.origin - self.origin) <= 500)
 			{
 				self.frame = shambler_anim_smash;
 				defer(0.7, shambler_smash);
 				self.attack_finished_single = time + 1.1;
 				self.shambler_lastattack = time + 3;
-				return TRUE;
+				return true;
 			}
 			else if(random() <= 0.1) // small chance, don't want this spammed
 			{
@@ -182,26 +183,21 @@ float shambler_attack(float attack_type)
 				self.attack_finished_single = time + 1.1;
 				self.shambler_lastattack = time + 3;
 				defer(0.6, shambler_lightning);
-				return TRUE;
+				return true;
 			}
 
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 void spawnfunc_monster_shambler()
 {
 	self.classname = "monster_shambler";
 
-	self.monster_spawnfunc = spawnfunc_monster_shambler;
-
-	if(Monster_CheckAppearFlags(self))
-		return;
-
-	if(!monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_SHAMBLER)) { remove(self); return; }
 }
 
 float m_shambler(float req)
@@ -211,12 +207,12 @@ float m_shambler(float req)
 		case MR_THINK:
 		{
 			monster_move((autocvar_g_monster_shambler_speed_run), (autocvar_g_monster_shambler_speed_walk), (autocvar_g_monster_shambler_speed_stop), shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
-			return TRUE;
+			return true;
 		}
 		case MR_DEATH:
 		{
 			self.frame = shambler_anim_death;
-			return TRUE;
+			return true;
 		}
 		case MR_SETUP:
 		{
@@ -226,18 +222,18 @@ float m_shambler(float req)
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;
 			self.frame = shambler_anim_stand;
-			self.weapon = WEP_NEX;
+			self.weapon = WEP_VORTEX;
 
-			return TRUE;
+			return true;
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/shambler.mdl");
-			return TRUE;
+			precache_model("models/monsters/shambler.mdl");
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // SVQC
@@ -248,12 +244,11 @@ float m_shambler(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/shambler.mdl");
-			return TRUE;
+			return true;
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 #endif // CSQC
