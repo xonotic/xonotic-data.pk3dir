@@ -64,6 +64,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_SplitHealthArmor)
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
+	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
 	if(self.flags & FL_MONSTER)
 	{
@@ -80,7 +81,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.gravity = 1;
 	self.reset = SUB_Remove;
 	setorigin(self, frag_target.origin + '0 0 32');
-	self.velocity = '0 0 200' + normalize(frag_attacker.origin - self.origin) * 500;
+	self.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
 	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
@@ -137,6 +138,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
 		makevectors(self.v_angle);
 
+		int oldwep = self.weapon;
+		self.weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			WEP_BLASTER | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
@@ -149,6 +152,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 			WEP_CVAR_SEC(vaporizer, delay),
 			WEP_CVAR_SEC(vaporizer, lifetime)
 		);
+		self.weapon = oldwep;
 	}
 
 	self.weapon_blocked = false;

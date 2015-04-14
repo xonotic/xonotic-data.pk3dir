@@ -315,15 +315,21 @@ void cvar_changes_init()
 		// does nothing visible
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("g_balance_kill_delay");
+		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
+		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADPREFIX("g_mod_");
+		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_tdm_point_limit");
+		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
