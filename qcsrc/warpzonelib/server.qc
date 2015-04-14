@@ -538,7 +538,7 @@ void WarpZone_InitStep_UpdateTransform()
 {
 	vector org, ang, norm, point;
 	float area;
-	vector tri, a, b, c, p, q, n;
+	vector tri, a, b, c, n;
 	float i_s, i_t, n_t;
 	string tex;
 
@@ -562,11 +562,7 @@ void WarpZone_InitStep_UpdateTransform()
 			a = getsurfacepoint(self, i_s, tri.x);
 			b = getsurfacepoint(self, i_s, tri.y);
 			c = getsurfacepoint(self, i_s, tri.z);
-			p = b - a;
-			q = c - a;
-			n =     '1 0 0' * (q.y * p.z - q.z * p.y)
-			+       '0 1 0' * (q.z * p.x - q.x * p.z)
-			+       '0 0 1' * (q.x * p.y - q.y * p.x);
+			n = cross(c - a, b - a);
 			area = area + vlen(n);
 			norm = norm + n;
 			point = point + vlen(n) * (a + b + c);

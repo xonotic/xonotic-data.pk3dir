@@ -86,13 +86,11 @@ float ctf_CheckPassDirection(vector head_center, vector passer_center, vector pa
 		makevectors(passer_angle);
 
 		// find the closest point on the enemy to the center of the attack
-		float ang; // angle between shotdir and h
 		float h; // hypotenuse, which is the distance between attacker to head
 		float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 
 		h = vlen(head_center - passer_center);
-		ang = acos(dotproduct(normalize(head_center - passer_center), v_forward));
-		a = h * cos(ang);
+		a = h * (normalize(head_center - passer_center) * v_forward);
 
 		vector nearest_on_line = (passer_center + a * v_forward);
 		float distance_from_line = vlen(nearest_to_passer - nearest_on_line);
