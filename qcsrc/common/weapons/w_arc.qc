@@ -239,6 +239,8 @@ void W_Arc_Beam_Think(void)
 		||
 		self.owner.frozen
 		||
+		self.owner.vehicle
+		||
 		(WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max))
 	)
 	{
