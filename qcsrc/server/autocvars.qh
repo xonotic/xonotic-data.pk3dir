@@ -836,6 +836,7 @@ float autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health;
 float autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath;
 float autocvar_g_physics_clientselect;
 string autocvar_g_physics_clientselect_options;
+string autocvar_g_physics_clientselect_default;
 float autocvar_g_buffs_waypoint_distance;
 float autocvar_g_buffs_randomize;
 float autocvar_g_buffs_random_lifetime;
