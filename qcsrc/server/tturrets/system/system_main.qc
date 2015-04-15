@@ -1041,19 +1041,6 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if (!(self.spawnflags & TSF_SUSPENDED))
         builtin_droptofloor(); // why can't we use regular droptofloor here?
 
-    // Terrainbase spawnflag. This puts a enlongated model
-    // under the turret, so it looks ok on uneaven surfaces.
-    /*  TODO: Handle this with CSQC
-    if (self.spawnflags & TSF_TERRAINBASE)
-    {
-        entity tb;
-        tb = spawn();
-        setmodel(tb,"models/turrets/terrainbase.md3");
-        setorigin(tb,self.origin);
-        tb.solid = SOLID_BBOX;
-    }
-    */
-
     self.cvar_basename = cvar_base_name;
     load_unit_settings(self, self.cvar_basename, 0);
 
