@@ -278,7 +278,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
             (trace_ent.vehicle_flags & VHF_ISVEHICLE) || 
             (trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || 
             (trace_ent.takedamage == DAMAGE_TARGETDRONE)
-            ) { trace_ent = world; }
+            )) { trace_ent = world; }
     }
 
     if(self.lock_target == world && trace_ent != world)
