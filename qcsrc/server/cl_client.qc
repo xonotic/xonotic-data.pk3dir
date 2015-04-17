@@ -410,7 +410,7 @@ void FixPlayermodel()
 	if(!cvar("g_overkill"))
 	{
 		// public hax
-		if(self.cvar_cl_pony)
+		if(self.cvar_cl_pony && pony_allowed)
 		{
 			defaultmodel = "models/player/pony.iqm";
 			defaultskin = self.cvar_cl_pony_skin;

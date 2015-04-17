@@ -1060,7 +1060,11 @@ void precache()
 
     if(autocvar_sv_allow_customplayermodels)
     {
-        precache_playermodel("models/player/pony.iqm");
+    	if(fexists("models/player/pony.iqm"))
+    	{
+    		pony_allowed = true;
+    		precache_playermodel("models/player/pony.iqm");
+    	}
         precache_playermodel("models/player/renamon.iqm");
         precache_playermodel("models/player/terminusmale.iqm");
         precache_playermodel("models/player/ubot.iqm");

@@ -567,6 +567,8 @@ const int MIF_GUIDED_TAG = 128;
 .bool cvar_cl_goat;
 .int cvar_cl_charge;
 
+bool pony_allowed;
+
 .string cvar_cl_autovote;
 
 .entity lastkiller;
