@@ -1642,7 +1642,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 
 			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2)))
 			{
-				switch(cvar_string(sprintf("notification_%s", notif.nent_name)))
+				switch(cvar(sprintf("notification_%s", notif.nent_name)))
 				{
 					case 1: found_choice = notif.nent_optiona; break;
 					case 2: found_choice = notif.nent_optionb; break;

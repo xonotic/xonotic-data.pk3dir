@@ -105,6 +105,7 @@ void W_Devastator_Explode(void)
 	if(self.realowner.weapon == WEP_DEVASTATOR)
 	{
 		if(self.realowner.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
+		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			self.realowner.cnt = WEP_DEVASTATOR;
 			ATTACK_FINISHED(self.realowner) = time;
@@ -183,6 +184,7 @@ void W_Devastator_DoRemoteExplode(void)
 	if(self.realowner.weapon == WEP_DEVASTATOR)
 	{
 		if(self.realowner.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
+		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			self.realowner.cnt = WEP_DEVASTATOR;
 			ATTACK_FINISHED(self.realowner) = time;
