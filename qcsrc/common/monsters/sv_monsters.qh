@@ -30,6 +30,7 @@ int monsters_killed;
 .int m_anim_walk;
 .int m_anim_idle;
 .int oldskin;
+.string mdl_dead; // dead model for goombas
 
 #define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 
@@ -81,6 +82,8 @@ bool Monster_Spawn(int mon_id);
 void monster_setupcolors(entity mon);
 
 void Monster_Touch();
+
+void Monster_Move_2D(float mspeed, float allow_jumpoff, float manim_walk, float manim_idle);
 
 void Monster_Delay(float repeat_count, float repeat_defer, float defer_amnt, void() func);
 

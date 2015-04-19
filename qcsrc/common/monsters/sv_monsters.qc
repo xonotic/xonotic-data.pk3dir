@@ -1113,6 +1113,62 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, float death
 	}
 }
 
+// don't check for enemies, just keep walking in a straight line
+void Monster_Move_2D(float mspeed, float allow_jumpoff, float manim_walk, float manim_idle)
+{
+	if(gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || self.draggedby != world || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
+	{
+		mspeed = 0;
+		if(time >= self.spawn_time)
+			self.frame = manim_idle;
+		movelib_beak_simple(0.6);
+		return;
+	}
+
+	float reverse = FALSE;
+	vector a, b;
+	
+	makevectors(self.angles);
+	a = self.origin + '0 0 16';
+	b = self.origin + '0 0 16' + v_forward * 32;
+	
+	traceline(a, b, MOVE_NORMAL, self);
+	
+	if(trace_fraction != 1.0)
+	{
+		reverse = TRUE;
+		
+		if(trace_ent)
+		if(IS_PLAYER(trace_ent) && !(trace_ent.items & IT_STRENGTH))
+			reverse = FALSE;
+	}
+	
+	// TODO: fix this... tracing is broken if the floor is thin
+	/*
+	if(!allow_jumpoff)
+	{
+		a = b - '0 0 32';
+		traceline(b, a, MOVE_WORLDONLY, self);
+		if(trace_fraction == 1.0)
+			reverse = TRUE;
+	} */
+	
+	if(reverse)
+	{
+		self.angles_y = anglemods(self.angles_y - 180);
+		makevectors(self.angles);
+	}
+	
+	movelib_move_simple_gravity(v_forward, mspeed, 1);
+	
+	if(time > self.pain_finished)
+	if(time > self.attack_finished_single)
+	if(vlen(self.velocity) > 10)
+		self.frame = manim_walk;
+	else
+		self.frame = manim_idle;
+}
+
 void Monster_Think()
 {
 	self.think = Monster_Think;
@@ -1127,9 +1183,8 @@ void Monster_Think()
 
 	if(self.skin != self.oldskin) { Monster_Skin_Check(); }
 
-	MON_ACTION(self.monsterid, MR_THINK);
-
-	Monster_Move(self.speed2, self.speed, self.stopspeed, self.m_anim_run, self.m_anim_walk, self.m_anim_idle);
+	if(MON_ACTION(self.monsterid, MR_THINK))
+		Monster_Move(self.speed2, self.speed, self.stopspeed, self.m_anim_run, self.m_anim_walk, self.m_anim_idle);
 
 	CSQCMODEL_AUTOUPDATE();
 }

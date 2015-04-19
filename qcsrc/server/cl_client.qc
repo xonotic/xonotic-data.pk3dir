@@ -484,7 +484,13 @@ void PlayerTouch (void)
 	if(other == world)
 		return;
 
-	if(!IS_PLAYER(self) || !IS_PLAYER(other))
+	if(!autocvar_g_player_crush && !IS_MONSTER(other))
+		return;
+
+	if(!IS_PLAYER(self))
+		return;
+
+	if(!IS_PLAYER(other) && !IS_MONSTER(other))
 		return;
 
 	if(self.deadflag != DEAD_NO || other.deadflag != DEAD_NO)
@@ -496,7 +502,7 @@ void PlayerTouch (void)
 	if(forbidWeaponUse(self))
 		return;
 
-	if(autocvar_g_player_crush_simple)
+	if(autocvar_g_player_crush_simple && IS_PLAYER(other))
 	{
 		vector vdir = normalize(other.origin - self.origin);
 
@@ -808,7 +814,7 @@ void PutClientInServer (void)
 		self.weaponname = "";
 		self.switchingweapon = 0;
 
-		if(autocvar_g_player_crush)
+		//if(autocvar_g_player_crush)
 			self.touch = PlayerTouch;
 
 		if(!warmup_stage)
