@@ -424,7 +424,11 @@ void FixPlayermodel()
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist) || IS_BOT_CLIENT(self))
 		{
 			if(self.cvar_cl_thestars == 1)
+			{
+				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
+					self.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here
 				defaultmodel = "models/player/rosalina.dpm";
+			}
 			if(self.cvar_cl_damnfurries == 1)
 				defaultmodel = "models/player/renamon.iqm";
 			if(self.cvar_cl_robot == 2)
