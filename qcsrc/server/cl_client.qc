@@ -814,7 +814,7 @@ void PutClientInServer (void)
 		self.weaponname = "";
 		self.switchingweapon = 0;
 
-		//if(autocvar_g_player_crush)
+		if(autocvar_g_player_crush >= 0)
 			self.touch = PlayerTouch;
 
 		if(!warmup_stage)
