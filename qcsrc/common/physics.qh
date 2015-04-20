@@ -175,6 +175,14 @@ bool IsFlying(entity a);
 
 	.float discomode;
 
+	.vector stat_pl_view_ofs;
+	.vector stat_pl_crouch_view_ofs;
+
+	.vector stat_pl_min;
+	.vector stat_pl_max;
+	.vector stat_pl_crouch_min;
+	.vector stat_pl_crouch_max;
+
 	.float stat_sv_airaccel_qw;
 	.float stat_sv_airstrafeaccel_qw;
 	.float stat_sv_airspeedlimit_nonqw;

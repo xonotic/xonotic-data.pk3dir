@@ -31,7 +31,7 @@ const float KEY_TOUCHRATE = 0.5;
 
 const vector KEY_DROP_OFFSET = ('0 0 16');
 const vector KEY_CARRY_OFFSET = ('-16 0 8');
-#define KEY_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
+#define KEY_SPAWN_OFFSET ('0 0 1' * (PL_MAX.z - 13))
 const vector KEY_WAYPOINT_OFFSET = ('0 0 64');
 const vector KEY_FLOAT_OFFSET = ('0 0 16');
 const vector KEY_PASS_ARC_OFFSET = ('0 0 -10');

@@ -688,7 +688,7 @@ void PutClientInServer (void)
 		self.respawn_flags = 0;
 		self.respawn_time = 0;
 		self.stat_respawn_time = 0;
-		self.scale = 0;
+		self.scale = autocvar_sv_player_scale;
 		self.fade_time = 0;
 		self.pain_frame = 0;
 		self.pain_finished = 0;

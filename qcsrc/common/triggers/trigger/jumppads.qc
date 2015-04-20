@@ -263,7 +263,7 @@ void trigger_push_findtarget()
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
-	org_z = self.absmax.z - PL_MIN_z;
+	org_z = self.absmax.z - PL_MIN.z;
 
 	if (self.target)
 	{
