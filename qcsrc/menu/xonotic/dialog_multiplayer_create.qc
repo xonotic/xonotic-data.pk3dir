@@ -132,14 +132,16 @@ void XonoticServerCreateTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "bot_number", 0, -1);
 
-	me.gotoRC(me, me.rows - 3.5, 0);
+	me.gotoRC(me, me.rows - 3.8, 0);
 		me.TD(me, 1, 3, e0 = makeXonoticTextLabel(0.5, string_null));
 			e0.textEntity = main.mutatorsDialog;
 			e0.allowCut = 1;
 			//e0.allowWrap = 1;
 
+	// mapListBox is in the right column but the ref is needed for mutators dialog here
 	me.mapListBox = makeXonoticMapList();
-	me.TR(me);
+	//me.TR(me);
+	me.gotoRC(me, me.rows - 2.5, 0);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators"), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
@@ -153,9 +155,10 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Maplist")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
-		me.TD(me, me.rows - 6, 3, me.mapListBox);
+		// we use 5.8 here to visually match the bottom line of the component on the left (Bot Skill)
+		me.TD(me, me.rows - 5.8, 3, me.mapListBox);
 
-	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
+	me.gotoRC(me, me.rows - 3.8, me.firstColumn);
 		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticMapListStringFilterBox(me, 0, string_null);
@@ -166,7 +169,8 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onChangeEntity = me.mapListBox;
 			me.mapListBox.controlledTextbox = e;
 
-	me.TR(me);
+	//me.TR(me);
+	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
 		// the selection buttons
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Add shown"), '0 0 0'));
 			e.onClick = MapList_Add_Shown;
