@@ -16,8 +16,8 @@ const int SP_CTF_FCKILLS = 8;
 const int SP_CTF_RETURNS = 9;
 
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
-#define FLAG_MIN (PL_MIN + '0 0 -13')
-#define FLAG_MAX (PL_MAX + '0 0 -13')
+#define FLAG_MIN ('-16 -16 -24' + '0 0 -13')
+#define FLAG_MAX ('16 16 45' + '0 0 -13')
 
 const float FLAG_SCALE = 0.6;
 
@@ -27,7 +27,7 @@ const float WPFE_THINKRATE = 0.5;
 
 const vector FLAG_DROP_OFFSET = ('0 0 32');
 const vector FLAG_CARRY_OFFSET = ('-16 0 8');
-#define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX.z - 13))
+#define FLAG_SPAWN_OFFSET ('0 0 1' * (45 - 13))
 const vector FLAG_WAYPOINT_OFFSET = ('0 0 64');
 const vector FLAG_FLOAT_OFFSET = ('0 0 32');
 const vector FLAG_PASS_ARC_OFFSET = ('0 0 -10');
