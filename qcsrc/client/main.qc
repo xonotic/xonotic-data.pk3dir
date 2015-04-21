@@ -850,7 +850,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	if(is_new)
 	{
 		self.origin = spn_origin;
-		setsize(self, PL_MIN, PL_MAX);
+		setsize(self, '-16 -16 -24', '16 16 45');
 		droptofloor();
 
 		/*if(autocvar_cl_spawn_point_model) // needs a model first
