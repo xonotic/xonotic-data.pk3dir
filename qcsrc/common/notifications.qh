@@ -1445,8 +1445,16 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 //  Initialization/Create Declarations
 // ====================================
 
+// notification counts
+const int NOTIF_FIRST = 1;
+int NOTIF_ANNCE_COUNT;
+int NOTIF_INFO_COUNT;
+int NOTIF_CENTER_COUNT;
+int NOTIF_MULTI_COUNT;
+int NOTIF_CHOICE_COUNT;
+
 enum {
-    NO_CPID
+    NO_CPID = NOTIF_FIRST
 ,   CPID_ASSAULT_ROLE
 ,   CPID_CONQUEST
 ,   CPID_ROUND
@@ -1487,13 +1495,6 @@ enum {
 // always last
 ,   NOTIF_CPID_COUNT
 };
-// notification counts
-const float NOTIF_FIRST = 1;
-float NOTIF_ANNCE_COUNT;
-float NOTIF_INFO_COUNT;
-float NOTIF_CENTER_COUNT;
-float NOTIF_MULTI_COUNT;
-float NOTIF_CHOICE_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
 const int NOTIF_ANNCE_MAX   = 200;
