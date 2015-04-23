@@ -347,7 +347,7 @@ void W_Fireball_Attack2(void)
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float W_Fireball(float req)
+bool W_Fireball(int req)
 {
 	switch(req)
 	{
@@ -447,7 +447,7 @@ float W_Fireball(float req)
 }
 #endif
 #ifdef CSQC
-float W_Fireball(float req)
+bool W_Fireball(int req)
 {
 	switch(req)
 	{

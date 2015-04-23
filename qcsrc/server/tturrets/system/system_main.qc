@@ -15,7 +15,7 @@ void turrets_setframe(float _frame, float client_only)
 
 }
 
-float turret_send(entity to, float sf)
+float turret_send(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);

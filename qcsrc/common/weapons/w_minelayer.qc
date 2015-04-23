@@ -194,9 +194,9 @@ void W_MineLayer_ProximityExplode(void)
 	W_MineLayer_Explode();
 }
 
-float W_MineLayer_Count(entity e)
+int W_MineLayer_Count(entity e)
 {
-	float minecount = 0;
+	int minecount = 0;
 	entity mine;
 	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
@@ -400,7 +400,7 @@ float W_MineLayer_PlacedMines(float detonate)
 	return minfound;
 }
 
-float W_MineLayer(float req)
+bool W_MineLayer(int req)
 {
 	entity mine;
 	float ammo_amount;
@@ -591,7 +591,7 @@ float W_MineLayer(float req)
 }
 #endif
 #ifdef CSQC
-float W_MineLayer(float req)
+bool W_MineLayer(int req)
 {
 	switch(req)
 	{

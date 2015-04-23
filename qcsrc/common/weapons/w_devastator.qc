@@ -391,7 +391,7 @@ void W_Devastator_Attack(void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float W_Devastator(float req)
+bool W_Devastator(int req)
 {
 	entity rock;
 	float rockfound;
@@ -655,7 +655,7 @@ float W_Devastator(float req)
 }
 #endif
 #ifdef CSQC
-float W_Devastator(float req)
+bool W_Devastator(int req)
 {
 	switch(req)
 	{

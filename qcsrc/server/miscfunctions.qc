@@ -822,7 +822,7 @@ void soundtoat(float _dest, entity e, vector o, float chan, string samp, float v
     entno = num_for_edict(e);
     idx = precache_sound_index(samp);
 
-    float sflags;
+    int sflags;
     sflags = 0;
 
     _atten = floor(_atten * 64);
@@ -1836,7 +1836,7 @@ vector gettaginfo_relative(entity e, float tag)
 
 .float scale2;
 
-float modeleffect_SendEntity(entity to, float sf)
+float modeleffect_SendEntity(entity to, int sf)
 {
 	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);

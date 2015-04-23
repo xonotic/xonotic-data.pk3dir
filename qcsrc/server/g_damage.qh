@@ -35,7 +35,7 @@
 .float dmg_force;
 .float dmg_radius;
 
-float Damage_DamageInfo_SendEntity(entity to, float sf);
+float Damage_DamageInfo_SendEntity(entity to, int sf);
 
 void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner);
 

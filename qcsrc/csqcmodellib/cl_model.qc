@@ -68,7 +68,7 @@ void CSQCModel_InterpolateAnimation_1To2_PreNote(int sf)
 		self.frame2time = self.frame1time;
 	}
 }
-void CSQCModel_InterpolateAnimation_PreNote(float sf)
+void CSQCModel_InterpolateAnimation_PreNote(int sf)
 {
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	CSQCModel_InterpolateAnimation_2To4_PreNote(sf);
@@ -104,7 +104,7 @@ void CSQCModel_InterpolateAnimation_1To2_Note(int sf, float set_times)
 			self.frame1time = time;
 	}
 }
-void CSQCModel_InterpolateAnimation_Note(float sf)
+void CSQCModel_InterpolateAnimation_Note(int sf)
 {
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	CSQCModel_InterpolateAnimation_2To4_Note(sf, true);

@@ -984,7 +984,7 @@ void spawnfunc_func_sparks()
 	spawnfunc_func_pointparticles();
 }
 
-float rainsnow_SendEntity(entity to, float sf)
+float rainsnow_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);

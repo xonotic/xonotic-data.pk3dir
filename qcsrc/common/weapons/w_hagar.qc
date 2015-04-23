@@ -393,7 +393,7 @@ void W_Hagar_Attack2_Load(void)
 	}
 }
 
-float W_Hagar(float req)
+bool W_Hagar(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -522,7 +522,7 @@ float W_Hagar(float req)
 }
 #endif
 #ifdef CSQC
-float W_Hagar(float req)
+bool W_Hagar(int req)
 {
 	switch(req)
 	{

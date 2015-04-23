@@ -105,7 +105,7 @@ void GrapplingHook_Stop()
 }
 
 .vector hook_start, hook_end;
-float GrapplingHookSend(entity to, float sf)
+float GrapplingHookSend(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
 	sf = sf & 0x7F;

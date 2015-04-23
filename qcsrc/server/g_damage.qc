@@ -27,7 +27,7 @@
     #include "spawnpoints.qh"
 #endif
 
-float Damage_DamageInfo_SendEntity(entity to, float sf)
+float Damage_DamageInfo_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);

@@ -235,7 +235,7 @@ void W_MachineGun_Attack_Burst(void)
 
 }
 
-float W_MachineGun(float req)
+bool W_MachineGun(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -369,7 +369,7 @@ float W_MachineGun(float req)
 }
 #endif
 #ifdef CSQC
-float W_MachineGun(float req)
+bool W_MachineGun(int req)
 {
 	switch(req)
 	{

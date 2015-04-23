@@ -26,7 +26,7 @@ void vehicles_setreturn();
 const float MAX_AXH = 4;
 .entity AuxiliaryXhair[MAX_AXH];
 
-float SendAuxiliaryXhair(entity to, float sf)
+float SendAuxiliaryXhair(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
