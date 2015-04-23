@@ -53,6 +53,8 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+
+.float vortex_lasthit;
 #endif
 #else
 #ifdef SVQC
@@ -109,10 +111,18 @@ void W_Vortex_Attack(float issecondary)
 	}
 
 	yoda = 0;
+	damage_goodhits = 0;
 	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && self.vortex_lasthit)
+	{
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
+	}
+
+	self.vortex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
