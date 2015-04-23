@@ -627,4 +627,7 @@ const int MIF_GUIDED_TAG = 128;
 .float init_for_player_needed;
 .void(entity) init_for_player;
 
+.float fade_start, fade_end;
+.float inactive, alpha_max;
+
 #endif

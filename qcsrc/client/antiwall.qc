@@ -90,7 +90,7 @@ void Ent_Antiwall_Remove()
 
 void Ent_Antiwall()
 {
-	int f;
+	float f;
 	var .vector fld;
 
 	InterpolateOrigin_Undo();
@@ -148,7 +148,6 @@ void Ent_Antiwall()
 			self.loddistance1 = 0;
 			self.loddistance2 = 0;
 		}
-		self.solid = ReadByte();
 		self.scale = ReadShort() / 256.0;
 		if(f & 0x20)
 		{
@@ -187,14 +186,29 @@ void Ent_Antiwall()
 			self.movedir_z = ReadCoord();
 			self.lip = ReadByte() / 255.0;
 		}
+
+        self.fade_start = ReadShort();
+        self.fade_end = ReadShort();
+        self.alpha_max = ReadShort();
+        self.inactive = ReadShort();
+        self.solid = ReadByte();
+        if (!self.fade_start) {
+            self.fade_start = 50;
+        }
+        if (!self.fade_end) {
+            self.fade_end = 150;
+        }
+        if (!self.alpha_max) {
+            self.alpha_max = 1;
+        }
 		BGMScript_InitEntity(self);
 	}
-
 	InterpolateOrigin_Note();
 
 	self.saved = self.fld;
 
 	self.entremove = Ent_Antiwall_Remove;
 	self.draw = Ent_Antiwall_Draw;
+    self.predraw = Ent_Antiwall_PreDraw;
 }
 

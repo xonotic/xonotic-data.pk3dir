@@ -7,6 +7,7 @@
 #include "tturrets.qh"
 #include "tuba.qh"
 #include "wall.qh"
+#include "antiwall.qh"
 #include "waypointsprites.qh"
 
 #include "vehicles/vehicles.qh"
@@ -822,6 +823,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_CLIENTDATA: Ent_ClientData(); break;
 		case ENT_CLIENT_RANDOMSEED: Ent_RandomSeed(); break;
 		case ENT_CLIENT_WALL: Ent_Wall(); break;
+		case ENT_CLIENT_ANTIWALL: Ent_Antiwall(); break;
 		case ENT_CLIENT_MODELEFFECT: Ent_ModelEffect(bIsNewEntity); break;
 		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
 		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
