@@ -35,6 +35,7 @@ vehicles/vehicles.qc
 view.qc
 wall.qc
 waypointsprites.qc
+antiwall.qc
 
 command/cl_cmd.qc
 
