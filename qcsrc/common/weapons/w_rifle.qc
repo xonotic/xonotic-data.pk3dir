@@ -50,7 +50,7 @@ void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE); }
 void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }
 void spawnfunc_weapon_sniperrifle(void) { spawnfunc_weapon_rifle(); }
 
-void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, float deathtype, float pTracer, float pShots, string pSound)
+void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, string pSound)
 {
 	float i;
 

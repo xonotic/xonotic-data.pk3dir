@@ -643,7 +643,7 @@ void ctf_CheckStalemate(void)
 	}
 }
 
-void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{

@@ -225,7 +225,7 @@ void multi_touch()
 	multi_trigger ();
 }
 
-void multi_eventdamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void multi_eventdamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (!self.takedamage)
 		return;

@@ -163,7 +163,7 @@ void turret_projectile_touch()
     turret_projectile_explode();
 }
 
-void turret_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
     self.velocity  += vforce;
     self.health    -= damage;

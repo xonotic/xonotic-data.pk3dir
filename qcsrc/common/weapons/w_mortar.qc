@@ -99,7 +99,7 @@ void W_Mortar_Grenade_Explode2(void)
 }
 
 
-void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;

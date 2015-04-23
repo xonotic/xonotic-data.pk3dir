@@ -321,7 +321,7 @@ void monster_makevectors(entity e)
 	makevectors(self.v_angle);
 }
 
-float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, float deathtype, float dostop)
+float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, int deathtype, float dostop)
 {
 	if (self.health <= 0)
 		return false; // attacking while dead?!
@@ -910,7 +910,7 @@ void monsters_reset()
 	self.moveto = self.origin;
 }
 
-void monsters_corpse_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void monsters_corpse_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	self.health -= damage;
 
@@ -979,7 +979,7 @@ void monster_die(entity attacker, float gibbed)
 	MON_ACTION(self.monsterid, MR_DEATH);
 }
 
-void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void monsters_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
 		return;

@@ -583,7 +583,7 @@ void nade_beep()
 	self.nextthink = max(self.wait, time);
 }
 
-void nade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void nade_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{

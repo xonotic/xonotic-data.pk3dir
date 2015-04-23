@@ -785,7 +785,7 @@ void button_touch()
 	button_fire ();
 }
 
-void button_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void button_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
@@ -1145,7 +1145,7 @@ void door_trigger_touch()
 }
 
 
-void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)
@@ -1765,7 +1765,7 @@ void fd_secret_use()
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 }
 
-void fd_secret_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void fd_secret_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	fd_secret_use();
 }
