@@ -93,7 +93,7 @@ void M_Shambler_Attack_Lightning_Explode()
 	self.nextthink = time + 0.2;
 }
 
-void M_Shambler_Attack_Lightning_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void M_Shambler_Attack_Lightning_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;

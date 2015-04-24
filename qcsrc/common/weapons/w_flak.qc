@@ -138,7 +138,7 @@ void W_Flak_Projectile_Think(void)
 	self.nextthink = time;
 }
 
-entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, float lt, float spd, float upspd, float bnc, float deathtype)
+entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, float lt, float spd, float upspd, float bnc, int deathtype)
 {
 	entity e = spawn();
 	e.owner = e.realowner = o;
@@ -265,7 +265,7 @@ void W_Flak_Bomb_Touch(void)
 	self.use();
 }
 
-void W_Flak_Bomb_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Flak_Bomb_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;

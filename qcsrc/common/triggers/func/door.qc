@@ -285,7 +285,7 @@ void door_use()
 	}
 }
 
-void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)

@@ -251,7 +251,7 @@ void ItemRead(float _IsNew)
 #endif
 
 #ifdef SVQC
-float ItemSend(entity to, float sf)
+float ItemSend(entity to, int sf)
 {
 	if(self.gravity)
 		sf |= ISF_DROP;
@@ -957,7 +957,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	return item.bot_pickupbasevalue * c;
 }
 
-void Item_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 		RemoveItem(self);

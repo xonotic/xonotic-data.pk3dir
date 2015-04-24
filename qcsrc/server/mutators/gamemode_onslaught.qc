@@ -4,7 +4,7 @@
 #include "../generator.qh"
 #include "../../common/triggers/subs.qh"
 
-float ons_CaptureShield_Customize()
+bool ons_CaptureShield_Customize()
 {
 	entity e = WaypointSprite_getviewentity(other);
 
@@ -333,7 +333,7 @@ float ons_ControlPoint_Attackable(entity cp, float teamnumber)
 	return 0;
 }
 
-void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	entity oself;
 	
@@ -856,7 +856,7 @@ void ons_Generator_UpdateSprite(entity e)
 	}
 }
 
-void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(damage <= 0) { return; }
 	if(warmup_stage || gameover) { return; }

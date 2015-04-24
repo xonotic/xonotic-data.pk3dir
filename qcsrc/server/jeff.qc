@@ -67,7 +67,7 @@ void jeff_Announcer_Send(entity player, bool toall, int announce)
 	Send_Notification(((toall) ? NOTIF_ALL : NOTIF_ONE), ((toall) ? world : player), MSG_ANNCE, announce);
 }
 
-void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, entity inflictor)
+void jeff_Announcer_PlayerDies(entity attacker, int deathtype, entity targ, entity inflictor)
 {
 	if(attacker == targ) { return; } // don't play announcements for self kills (yet)
 	if(!IS_PLAYER(targ) || !targ) { return; } // don't play announcements for non-player kills
@@ -350,7 +350,7 @@ void jeff_Annoncer_BuffPickup(entity player, entity item)
 
 #else
 
-void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, entity inflictor) { }
+void jeff_Announcer_PlayerDies(entity attacker, int deathtype, entity targ, entity inflictor) { }
 void jeff_Announcer_MatchEnd() { }
 void jeff_Announcer_VehicleEnter(entity player, entity veh) { }
 void jeff_Announcer_ItemTouch(entity player, entity item) { }

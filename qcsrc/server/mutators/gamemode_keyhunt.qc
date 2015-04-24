@@ -652,7 +652,7 @@ void kh_CheckKeyReturn(entity key, float returntype)
 	}
 }
 
-void kh_KeyDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void kh_KeyDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{

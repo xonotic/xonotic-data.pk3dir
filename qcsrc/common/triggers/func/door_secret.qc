@@ -63,7 +63,7 @@ void fd_secret_use()
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 }
 
-void fd_secret_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void fd_secret_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	fd_secret_use();
 }

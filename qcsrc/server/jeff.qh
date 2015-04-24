@@ -3,7 +3,7 @@
 
 void jeff_Announcer_MatchEnd();
 
-void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, entity inflictor);
+void jeff_Announcer_PlayerDies(entity attacker, int deathtype, entity targ, entity inflictor);
 
 void jeff_Announcer_VehicleEnter(entity player, entity veh);
 

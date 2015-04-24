@@ -206,7 +206,7 @@ void turret_die()
 	}
 }
 
-void turret_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
 	// Enough already!
 	if(self.deadflag == DEAD_DEAD)
@@ -447,7 +447,7 @@ void turret_projectile_touch()
 	turret_projectile_explode();
 }
 
-void turret_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
 	self.velocity  += vforce;
 	self.health	-= damage;

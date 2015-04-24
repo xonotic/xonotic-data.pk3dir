@@ -85,7 +85,7 @@ void W_HeavyMachineGun_Attack_Auto()
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
-float W_HeavyMachineGun(float req)
+bool W_HeavyMachineGun(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -169,7 +169,7 @@ float W_HeavyMachineGun(float req)
 }
 #endif
 #ifdef CSQC
-float W_HeavyMachineGun(float req)
+bool W_HeavyMachineGun(int req)
 {
 	switch(req)
 	{

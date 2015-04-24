@@ -482,7 +482,7 @@ void W_RocketMinsta_SuperRocket_Touch (void)
 	W_RocketMinsta_SuperRocket_Explode();
 }
 
-void W_RocketMinsta_SuperRocket_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_RocketMinsta_SuperRocket_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;

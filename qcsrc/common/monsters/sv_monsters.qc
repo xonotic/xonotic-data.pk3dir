@@ -356,7 +356,7 @@ void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float
 // Monster attack handlers
 // =======================
 
-float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float animtime, float deathtype, float dostop)
+float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float animtime, int deathtype, float dostop)
 {
 	if(dostop) { self.state = MONSTER_ATTACK_MELEE; }
 
@@ -957,7 +957,7 @@ void Monster_Reset()
 	self.moveto = self.origin;
 }
 
-void Monster_Dead_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void Monster_Dead_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	self.health -= damage;
 
@@ -1029,7 +1029,7 @@ void Monster_Dead(entity attacker, float gibbed)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
 }
 
-void Monster_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void Monster_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL)
 		return;

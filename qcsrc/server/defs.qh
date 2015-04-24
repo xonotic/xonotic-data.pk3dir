@@ -62,7 +62,7 @@ float server_is_dedicated;
 
 // Fields
 
-.void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;
+.void(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
 
 //.string	wad;
 //.string	map;
@@ -284,7 +284,7 @@ float have_team_spawns_forteam[17]; // 0 = this team has no spawns, 1 = this tea
 .entity killindicator;
 .float killindicator_teamchange;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 float lockteams;
 
@@ -455,7 +455,7 @@ string matchid;
 
 .float stat_leadlimit;
 
-float radar_showennemies;
+bool radar_showennemies;
 
 #ifdef PROFILING
 float client_cefc_accumulator;

@@ -52,7 +52,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
 
-float WarpZone_Teleported_Send(entity to, float sf)
+float WarpZone_Teleported_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);

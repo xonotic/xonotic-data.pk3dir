@@ -67,7 +67,7 @@ void W_RocketPropelledChainsaw_Touch (void)
 	W_RocketPropelledChainsaw_Explode();
 }
 
-void W_RocketPropelledChainsaw_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_RocketPropelledChainsaw_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
@@ -148,7 +148,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float W_RocketPropelledChainsaw(float req)
+bool W_RocketPropelledChainsaw(int req)
 {
 	float ammo_amount = false;
 	switch(req)
@@ -234,7 +234,7 @@ float W_RocketPropelledChainsaw(float req)
 #endif
 
 #ifdef CSQC
-float W_RocketPropelledChainsaw(float req)
+bool W_RocketPropelledChainsaw(int req)
 {
 	switch(req)
 	{

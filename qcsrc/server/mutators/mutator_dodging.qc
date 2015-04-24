@@ -73,7 +73,7 @@
 .float dodging_velocity_gain;
 
 #ifdef CSQC
-.float pressedkeys;
+.int pressedkeys;
 
 #elif defined(SVQC)
 
@@ -110,7 +110,7 @@ void dodging_Initialize()
 #endif
 
 // returns 1 if the player is close to a wall
-float check_close_to_wall(float threshold)
+bool check_close_to_wall(float threshold)
 {
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
@@ -127,7 +127,7 @@ float check_close_to_wall(float threshold)
 	return false;
 }
 
-float check_close_to_ground(float threshold)
+bool check_close_to_ground(float threshold)
 {
 	return IS_ONGROUND(self) ? true : false;
 }
@@ -270,7 +270,7 @@ void PM_dodging()
 		self.velocity += PHYS_DODGING_UP_SPEED * v_up;
 
 #ifdef SVQC
-		if (autocvar_sv_dodging_sound == 1)
+		if(autocvar_sv_dodging_sound)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 		animdecide_setaction(self, ANIMACTION_JUMP, true);

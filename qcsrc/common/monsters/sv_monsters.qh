@@ -87,7 +87,7 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff, float manim_walk, float 
 
 void Monster_Delay(float repeat_count, float repeat_defer, float defer_amnt, void() func);
 
-float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float animtime, float deathtype, float dostop);
+float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float animtime, int deathtype, float dostop);
 
 bool Monster_Attack_Leap(int anm, void() touchfunc, vector vel, float animtime);
 
@@ -114,4 +114,5 @@ ALLMONSTERSOUNDS
 #undef _MSOUND
 
 float GetMonsterSoundSampleField_notFound;
+
 #endif

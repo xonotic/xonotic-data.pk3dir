@@ -321,7 +321,7 @@ void W_Devastator_Touch(void)
 	W_Devastator_Explode();
 }
 
-void W_Devastator_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Devastator_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -393,7 +393,7 @@ void W_Devastator_Attack(void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float W_Devastator(float req)
+bool W_Devastator(int req)
 {
 	entity rock;
 	float rockfound;
@@ -657,7 +657,7 @@ float W_Devastator(float req)
 }
 #endif
 #ifdef CSQC
-float W_Devastator(float req)
+bool W_Devastator(int req)
 {
 	switch(req)
 	{

@@ -92,7 +92,7 @@ void W_Lightsabre_Melee_Think(void)
 	entity target_victim;
 	vector targpos;
 	float isprimary = !(self.realowner.BUTTON_ATCK2);
-	float deathtype = WEP_LIGHTSABRE;
+	int deathtype = WEP_LIGHTSABRE;
 	if(!isprimary)
 		deathtype |= HITTYPE_SECONDARY;
 

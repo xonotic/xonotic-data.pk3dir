@@ -89,7 +89,7 @@ void M_Ogre_Attack_Grenade_Explode()
 	remove (self);
 }
 
-void M_Ogre_Attack_Grenade_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void M_Ogre_Attack_Grenade_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;

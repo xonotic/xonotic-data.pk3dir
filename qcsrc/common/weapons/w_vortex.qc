@@ -133,7 +133,7 @@ void W_Vortex_Attack(float issecondary)
 void spawnfunc_weapon_vortex(void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	float dt;
 	float ammo_amount;
@@ -310,7 +310,7 @@ float W_Vortex(float req)
 #endif
 #ifdef CSQC
 float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	switch(req)
 	{
