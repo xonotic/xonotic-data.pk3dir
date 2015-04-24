@@ -62,7 +62,6 @@ void Ent_Antiwall_Remove()
 void Ent_Antiwall()
 {
 	float f;
-	var .vector fld;
 
 	InterpolateOrigin_Undo();
 	self.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
