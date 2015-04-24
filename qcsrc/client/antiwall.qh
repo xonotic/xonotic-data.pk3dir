@@ -8,6 +8,7 @@
 .vector saved;
 .float inactive, alpha_max;
 .float fade_start, fade_end;
+.float illusion;
 
 void Ent_Antiwall_Draw();
 

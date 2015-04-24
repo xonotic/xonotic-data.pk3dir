@@ -103,6 +103,9 @@ void SUB_UseTargets()
 		}
 		if (s != "")
 		{
+            // Flag to set antiwall state
+            // 1 == deactivate, 2 == activate, 0 == do nothing
+            float aw_inactive = self.antiwall_flag;
 			for(t = world; (t = find(t, targetname, s)); )
 			if(t.use)
 			{
@@ -112,6 +115,21 @@ void SUB_UseTargets()
 				}
 				else
 				{
+                    if (t.classname == "func_antiwall") {
+                        if (aw_inactive == 1) {
+                            t.inactive = 1;
+                            if (!t.illusion) {
+                                t.solid = SOLID_BSP;
+                            }
+                        } else if (aw_inactive == 2) {
+                            t.inactive = 0;
+                            if (t.illusion) {
+                                t.solid = SOLID_NOT;
+                            } else {
+                                t.solid = SOLID_BSP;
+                            }
+                        }
+                    }
 					self = t;
 					other = stemp;
 					activator = act;

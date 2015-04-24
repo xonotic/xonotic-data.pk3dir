@@ -30,7 +30,7 @@ float antiwall_genericsendentity (entity to, float sf)
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')
 		sf |= 0x10;
-	if(self.solid && (self.mins != '0 0 0' || self.maxs != '0 0 0'))
+	if(self.mins != '0 0 0' || self.maxs != '0 0 0')
 		sf |= 0x20;
 	if(self.colormap != 0)
 		sf |= 0x40;
@@ -40,10 +40,14 @@ float antiwall_genericsendentity (entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ANTIWALL);
 	WriteByte(MSG_ENTITY, sf);
 
-    if (self.inactive) {
-        self.solid = SOLID_NOT;
+    if (!self.illusion) {
+        if (self.inactive) {
+            self.solid = SOLID_NOT;
+        } else {
+            self.solid = SOLID_BSP;
+        }
     } else {
-        self.solid = SOLID_BSP;
+        self.solid = SOLID_NOT;
     }
 
 	if(sf & 1)
@@ -108,22 +112,27 @@ float antiwall_genericsendentity (entity to, float sf)
         WriteShort(MSG_ENTITY, self.alpha_max);
         WriteShort(MSG_ENTITY, self.inactive);
         WriteByte(MSG_ENTITY, self.solid);
+        WriteShort(MSG_ENTITY, self.illusion);
         /*printf("called\n");*/
 	}
 
 	return TRUE;
 }
 
-#define ANTIWALL_INIT(sol) \
-	if(self.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) self.movetype = MOVETYPE_PHYSICS; \
-	if(!self.scale) self.scale = self.modelscale; \
-	SetBrushEntityModel(); \
-	self.use = antiwall_setcolormaptoactivator; \
-	InitializeEntity(self, antiwall_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
-	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \
-	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0; \
-	Net_LinkEntity(self, TRUE, 0, antiwall_genericsendentity);
-
-void spawnfunc_func_antiwall() { ANTIWALL_INIT(SOLID_BSP) } // Solid dynamic entity
-void spawnfunc_func_antiillusion() { ANTIWALL_INIT(SOLID_NOT) } // Non-solid dynamic entity
-void spawnfunc_aw() { ANTIWALL_INIT(SOLID_BSP) } // Solid dynamic entity
+void spawnfunc_func_antiwall() {
+    if (self.geomtype) {
+        if (autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) {
+            self.movetype = MOVETYPE_PHYSICS;
+        }
+    }
+    if (!self.scale) { self.scale = self.modelscale; }
+    SetBrushEntityModel();
+    self.use = antiwall_setcolormaptoactivator;
+    InitializeEntity(self, antiwall_dropbyspawnflags, INITPRIO_DROPTOFLOOR);
+    if (self.illusion) {
+        self.solid = SOLID_NOT;
+    } else {
+        self.solid = SOLID_BSP;
+    }
+    Net_LinkEntity(self, TRUE, 0, antiwall_genericsendentity);
+}

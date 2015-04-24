@@ -26,13 +26,6 @@ void Ent_Antiwall_PreDraw()
 void Ent_Antiwall_Draw()
 {
 	float f;
-	var .vector fld;
-
-	if(self.bgmscriptangular)
-		fld = angles;
-	else
-		fld = origin;
-	self.fld = self.saved;
 
 	if(self.lodmodelindex1)
 	{
@@ -60,25 +53,6 @@ void Ent_Antiwall_Draw()
 	}
 
 	InterpolateOrigin_Do();
-
-	self.saved = self.fld;
-
-	f = BGMScript(self);
-	if(f >= 0)
-	{
-		if(self.lip < 0) // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)
-			self.alpha = 1 + self.lip * f;
-		else // > 0: alpha goes from 1-|lip| to 1 when toggled (toggling adds lip)
-			self.alpha = 1 - self.lip * (1 - f);
-		self.fld = self.fld + self.movedir * f;
-	}
-	else
-		self.alpha = 1;
-
-	if(self.alpha >= ALPHA_MIN_VISIBLE)
-		self.drawmask = MASK_NORMAL;
-	else
-		self.drawmask = 0;
 }
 
 void Ent_Antiwall_Remove()
@@ -192,6 +166,7 @@ void Ent_Antiwall()
         self.alpha_max = ReadShort();
         self.inactive = ReadShort();
         self.solid = ReadByte();
+        self.illusion = ReadShort();
         if (!self.fade_start) {
             self.fade_start = 50;
         }
