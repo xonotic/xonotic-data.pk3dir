@@ -95,18 +95,6 @@ float antiwall_genericsendentity (entity to, float sf)
 			WriteCoord(MSG_ENTITY, self.maxs_y);
 			WriteCoord(MSG_ENTITY, self.maxs_z);
 		}
-		WriteString(MSG_ENTITY, self.bgmscript);
-		if(self.bgmscript != "")
-		{
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptattack * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptrelease * 64));
-			WriteCoord(MSG_ENTITY, self.movedir_x);
-			WriteCoord(MSG_ENTITY, self.movedir_y);
-			WriteCoord(MSG_ENTITY, self.movedir_z);
-			WriteByte(MSG_ENTITY, floor(self.lip * 255));
-		}
         WriteShort(MSG_ENTITY, self.fade_start);
         WriteShort(MSG_ENTITY, self.fade_end);
         WriteShort(MSG_ENTITY, self.alpha_max);

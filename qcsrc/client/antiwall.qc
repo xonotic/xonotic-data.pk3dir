@@ -57,9 +57,6 @@ void Ent_Antiwall_Draw()
 
 void Ent_Antiwall_Remove()
 {
-	if(self.bgmscript)
-		strunzone(self.bgmscript);
-	self.bgmscript = string_null;
 }
 
 void Ent_Antiwall()
@@ -69,12 +66,6 @@ void Ent_Antiwall()
 
 	InterpolateOrigin_Undo();
 	self.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
-
-	if(self.bgmscriptangular)
-		fld = angles;
-	else
-		fld = origin;
-	self.fld = self.saved;
 
 	f = ReadByte();
 
@@ -136,31 +127,6 @@ void Ent_Antiwall()
 			self.mins = self.maxs = '0 0 0';
 		setsize(self, self.mins, self.maxs);
 
-		if(self.bgmscript)
-			strunzone(self.bgmscript);
-		self.bgmscript = ReadString();
-		if(substring(self.bgmscript, 0, 1) == "<")
-		{
-			self.bgmscript = strzone(substring(self.bgmscript, 1, -1));
-			self.bgmscriptangular = 1;
-		}
-		else
-		{
-			self.bgmscript = strzone(self.bgmscript);
-			self.bgmscriptangular = 0;
-		}
-		if(self.bgmscript != "")
-		{
-			self.bgmscriptattack = ReadByte() / 64.0;
-			self.bgmscriptdecay = ReadByte() / 64.0;
-			self.bgmscriptsustain = ReadByte() / 255.0;
-			self.bgmscriptrelease = ReadByte() / 64.0;
-			self.movedir_x = ReadCoord();
-			self.movedir_y = ReadCoord();
-			self.movedir_z = ReadCoord();
-			self.lip = ReadByte() / 255.0;
-		}
-
         self.fade_start = ReadShort();
         self.fade_end = ReadShort();
         self.alpha_max = ReadShort();
@@ -176,11 +142,8 @@ void Ent_Antiwall()
         if (!self.alpha_max) {
             self.alpha_max = 1;
         }
-		BGMScript_InitEntity(self);
 	}
 	InterpolateOrigin_Note();
-
-	self.saved = self.fld;
 
 	self.entremove = Ent_Antiwall_Remove;
 	self.draw = Ent_Antiwall_Draw;
