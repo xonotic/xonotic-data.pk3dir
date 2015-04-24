@@ -1635,11 +1635,6 @@ bool IsFlying(entity a)
 	return true;
 }
 
-#ifdef CSQC
-float autocvar_cl_forwardspeed;
-float autocvar_cl_sidespeed;
-#endif
-
 void PM_Main()
 {
 	float buttons = PHYS_INPUT_BUTTON_MASK(self);
@@ -1650,12 +1645,6 @@ void PM_Main()
 
 	self.v_angle = PHYS_INPUT_ANGLES(self);
 	self.angles = PHYS_WORLD_ANGLES(self);
-
-	if(PHYS_MAXSPEED(self) != autocvar_cl_forwardspeed || PHYS_MAXSPEED(self) != autocvar_cl_sidespeed)
-	{
-		cvar_set("cl_forwardspeed", ftos(PHYS_MAXSPEED(self)));
-		cvar_set("cl_sidespeed", ftos(PHYS_MAXSPEED(self)));
-	}
 
 	self.team = myteam + 1; // is this correct?
 	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
@@ -1822,6 +1811,17 @@ void PM_Main()
 			self.impulse = 0;
 		}
 		maxspeed_mod = self.spectatorspeed;
+	}
+
+	float spd = max(PHYS_MAXSPEED(self), PHYS_MAXAIRSPEED) * maxspeed_mod;
+	if(self.speed != spd)
+	{
+		self.speed = spd;
+		string temps = ftos(spd);
+		stuffcmd(self, strcat("cl_forwardspeed ", temps, "\n"));
+		stuffcmd(self, strcat("cl_backspeed ", temps, "\n"));
+		stuffcmd(self, strcat("cl_sidespeed ", temps, "\n"));
+		stuffcmd(self, strcat("cl_upspeed ", temps, "\n"));
 	}
 #endif
 
