@@ -21,6 +21,7 @@
     #define int float
 
     #define stoi(s) stof(s)
+    #define stob(s) stof(s)
     #define itos(s) ftos(s)
 #endif
 

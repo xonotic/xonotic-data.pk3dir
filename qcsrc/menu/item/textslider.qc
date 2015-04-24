@@ -17,7 +17,7 @@ ENDCLASS(TextSlider)
 #endif
 
 #ifdef IMPLEMENTATION
-string TextSlider_valueToIdentifier(entity me, float val)
+string TextSlider_valueToIdentifier(entity me, int val)
 {
 	if(val >= me.nValues)
 		return "custom";
@@ -25,7 +25,7 @@ string TextSlider_valueToIdentifier(entity me, float val)
 		return "custom";
 	return me.(valueIdentifiers[val]);
 }
-string TextSlider_valueToText(entity me, float val)
+string TextSlider_valueToText(entity me, int val)
 {
 	if(val >= me.nValues)
 		return _("Custom");
@@ -35,7 +35,7 @@ string TextSlider_valueToText(entity me, float val)
 }
 void TextSlider_setValueFromIdentifier(entity me, string id)
 {
-	float i;
+	int i;
 	for(i = 0; i < me.nValues; ++i)
 		if(me.valueToIdentifier(me, i) == id)
 		{
@@ -58,9 +58,9 @@ void TextSlider_addValue(entity me, string theString, string theIdentifier)
 	me.(valueIdentifiers[me.nValues]) = theIdentifier;
 	me.nValues += 1;
 }
-void TextSlider_insertValue(entity me, float pos, string theString, string theIdentifier)
+void TextSlider_insertValue(entity me, int pos, string theString, string theIdentifier)
 {
-	float i;
+	int i;
 	for (i = me.nValues; i > pos; --i)
 	{
 		me.(valueStrings[i]) = me.(valueStrings[i-1]);
