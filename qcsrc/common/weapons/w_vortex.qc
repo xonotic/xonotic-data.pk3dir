@@ -266,6 +266,11 @@ bool W_Vortex(int req)
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return true;
 		}
+		case WR_SETUP:
+		{
+			self.vortex_lasthit = 0;
+			return true;
+		}
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_PRI(vortex, ammo);
@@ -289,6 +294,11 @@ bool W_Vortex(int req)
 		case WR_CONFIG:
 		{
 			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
+		}
+		case WR_RESETPLAYER:
+		{
+			self.vortex_lasthit = 0;
 			return true;
 		}
 		case WR_RELOAD:
