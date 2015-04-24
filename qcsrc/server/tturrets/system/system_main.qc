@@ -931,7 +931,7 @@ void turret_think()
 
 void turret_fire()
 {
-    if (autocvar_g_turrets_nofire != 0)
+    if (autocvar_g_turrets_nofire)
         return;
 
     self.turret_firefunc();
@@ -991,7 +991,7 @@ void turrets_manager_think()
     self.nextthink = time + 1;
 
     entity e;
-    if (autocvar_g_turrets_reloadcvars == 1)
+    if (autocvar_g_turrets_reloadcvars)
     {
         e = nextent(world);
         while (e)

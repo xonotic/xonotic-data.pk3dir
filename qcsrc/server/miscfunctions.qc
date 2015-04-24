@@ -101,7 +101,7 @@ float DistributeEvenly_GetRandomized(float weight)
 void GameLogEcho(string s)
 {
     string fn;
-    float matches;
+    int matches;
 
     if (autocvar_sv_eventlog_files)
     {
@@ -109,7 +109,7 @@ void GameLogEcho(string s)
         {
             logfile_open = true;
             matches = autocvar_sv_eventlog_files_counter + 1;
-            cvar_set("sv_eventlog_files_counter", ftos(matches));
+            cvar_set("sv_eventlog_files_counter", itos(matches));
             fn = ftos(matches);
             if (strlen(fn) < 8)
                 fn = strcat(substring("00000000", 0, 8 - strlen(fn)), fn);

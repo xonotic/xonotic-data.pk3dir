@@ -301,7 +301,7 @@ void FixPlayermodel()
 	defaultskin = 0;
 	chmdl = false;
 
-	if(autocvar_sv_defaultcharacter == 1)
+	if(autocvar_sv_defaultcharacter)
 	{
 		if(teamplay)
 		{
