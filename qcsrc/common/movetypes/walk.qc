@@ -29,11 +29,13 @@ void _Movetype_Physics_Walk(float dt)  // SV_WalkMove
 		vector upmove = self.move_origin + '0 0 1';
 		vector downmove = self.move_origin - '0 0 1';
 		int type;
-		if (self.move_movetype == MOVETYPE_FLYMISSILE) type = MOVE_MISSILE; else if (self.move_movetype == MOVETYPE_FLY_WORLDONLY)
+		if (self.move_movetype == MOVETYPE_FLYMISSILE)
+			type = MOVE_MISSILE;
+		else if (self.move_movetype == MOVETYPE_FLY_WORLDONLY)
 			type = MOVE_WORLDONLY;
 		else if (self.solid == SOLID_TRIGGER || self.solid == SOLID_NOT)
 			type = MOVE_NOMONSTERS;
-		else   type = MOVE_NORMAL;
+		else type = MOVE_NORMAL;
 		tracebox(upmove, self.mins, self.maxs, downmove, type, self);
 		if (trace_fraction < 1 && trace_plane_normal.z > 0.7)
 			clip |= 1;  // but we HAVE found a floor

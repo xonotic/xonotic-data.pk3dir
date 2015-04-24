@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
-var float autocvar_g_monster_zombie_damageforcescale = 0.55;
+float autocvar_g_monster_zombie_damageforcescale = 0.55;
 float autocvar_g_monster_zombie_attack_melee_damage;
 float autocvar_g_monster_zombie_attack_melee_delay;
 float autocvar_g_monster_zombie_attack_leap_damage;

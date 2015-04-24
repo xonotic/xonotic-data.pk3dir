@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_rotfish_health;
-var float autocvar_g_monster_rotfish_damageforcescale = 0.8;
+float autocvar_g_monster_rotfish_damageforcescale = 0.8;
 float autocvar_g_monster_rotfish_attack_range;
 float autocvar_g_monster_rotfish_attack_melee_damage;
 float autocvar_g_monster_rotfish_attack_melee_delay;

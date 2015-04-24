@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_ogre_health;
-var float autocvar_g_monster_ogre_damageforcescale = 0.4;
+float autocvar_g_monster_ogre_damageforcescale = 0.4;
 float autocvar_g_monster_ogre_attack_machinegun_spread;
 float autocvar_g_monster_ogre_attack_machinegun_solidpenetration;
 float autocvar_g_monster_ogre_attack_machinegun_damage;

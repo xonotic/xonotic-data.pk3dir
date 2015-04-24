@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_enforcer_health;
-var float autocvar_g_monster_enforcer_damageforcescale = 0.7;
+float autocvar_g_monster_enforcer_damageforcescale = 0.7;
 float autocvar_g_monster_enforcer_attack_plasma_damage;
 float autocvar_g_monster_enforcer_attack_plasma_edgedamage;
 float autocvar_g_monster_enforcer_attack_plasma_force;

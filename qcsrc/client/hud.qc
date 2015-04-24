@@ -5215,12 +5215,12 @@ float QuickMenu_CurrentPage;
 float QuickMenu_IsLastPage;
 // each quickmenu entry (submenu or command) is composed of 2 entries in the buffer
 #define QUICKMENU_BUFFER_MAXENTRIES 2*QUICKMENU_MAXENTRIES
-var float QuickMenu_Buffer = -1;
+float QuickMenu_Buffer = -1;
 float QuickMenu_Buffer_Size;
 float QuickMenu_Buffer_Index;
 string QuickMenu_CurrentSubMenu;
 float QuickMenu_CurrentPage_FirstEntry;
-var float QuickMenu_Entries;
+float QuickMenu_Entries;
 float QuickMenu_TimeOut;
 void HUD_QuickMenu_load_entry(float i, string s, string s1)
 {

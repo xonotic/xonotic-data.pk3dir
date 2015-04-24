@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_scrag_health;
-var float autocvar_g_monster_scrag_damageforcescale = 0.55;
+float autocvar_g_monster_scrag_damageforcescale = 0.55;
 float autocvar_g_monster_scrag_attack_spike_damage;
 float autocvar_g_monster_scrag_attack_spike_edgedamage;
 float autocvar_g_monster_scrag_attack_spike_force;

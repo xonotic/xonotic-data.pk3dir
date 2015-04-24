@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_spider_health;
-var float autocvar_g_monster_spider_damageforcescale = 0.6;
+float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_attack_bite_damage;
 float autocvar_g_monster_spider_attack_bite_delay;
 float autocvar_g_monster_spider_attack_web_damagetime;

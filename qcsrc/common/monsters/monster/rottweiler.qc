@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_rottweiler_health;
-var float autocvar_g_monster_rottweiler_damageforcescale = 0.7;
+float autocvar_g_monster_rottweiler_damageforcescale = 0.7;
 float autocvar_g_monster_rottweiler_attack_melee_damage;
 float autocvar_g_monster_rottweiler_attack_melee_delay;
 float autocvar_g_monster_rottweiler_speed_stop;

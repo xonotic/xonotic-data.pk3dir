@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_spawn_health;
-var float autocvar_g_monster_spawn_damageforcescale = 0.6;
+float autocvar_g_monster_spawn_damageforcescale = 0.6;
 float autocvar_g_monster_spawn_attack_explode_damage;
 float autocvar_g_monster_spawn_attack_explode_edgedamage;
 float autocvar_g_monster_spawn_attack_explode_radius;

@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_shambler_health;
-var float autocvar_g_monster_shambler_damageforcescale = 0.1;
+float autocvar_g_monster_shambler_damageforcescale = 0.1;
 float autocvar_g_monster_shambler_attack_smash_damage;
 float autocvar_g_monster_shambler_attack_smash_range;
 float autocvar_g_monster_shambler_attack_claw_damage;

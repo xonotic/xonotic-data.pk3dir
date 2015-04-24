@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../server/mutators/base.qh"
 
 float autocvar_g_monster_afrit_health;
-var float autocvar_g_monster_afrit_damageforcescale = 0.3;
+float autocvar_g_monster_afrit_damageforcescale = 0.3;
 float autocvar_g_monster_afrit_attack_fireball_damage;
 float autocvar_g_monster_afrit_attack_fireball_edgedamage;
 float autocvar_g_monster_afrit_attack_fireball_damagetime;

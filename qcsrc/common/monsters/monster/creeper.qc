@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_creeper_health;
-var float autocvar_g_monster_creeper_damageforcescale = 0.0001; // hehehe
+float autocvar_g_monster_creeper_damageforcescale = 0.0001; // hehehe
 float autocvar_g_monster_creeper_attack_explode_damage;
 float autocvar_g_monster_creeper_attack_explode_edgedamage;
 float autocvar_g_monster_creeper_attack_explode_radius;

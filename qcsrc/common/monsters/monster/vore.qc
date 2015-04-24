@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_vore_health;
-var float autocvar_g_monster_vore_damageforcescale = 0.4;
+float autocvar_g_monster_vore_damageforcescale = 0.4;
 float autocvar_g_monster_vore_attack_spike_damage;
 float autocvar_g_monster_vore_attack_spike_radius;
 float autocvar_g_monster_vore_attack_spike_delay;

@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_wyvern_health;
-var float autocvar_g_monster_wyvern_damageforcescale = 0.6;
+float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
 float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_damagetime;
