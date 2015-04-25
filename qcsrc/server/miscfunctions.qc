@@ -1275,7 +1275,7 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
 }
 
 
-void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc)
+void Net_LinkEntity(entity e, float docull, float dt, bool(entity, int) sendfunc)
 {
     vector mi, ma;
 

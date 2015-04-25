@@ -347,7 +347,7 @@ float next_pingtime;
 
 .float Version;
 .int SendFlags;
-.float(entity to, float sendflags) SendEntity;
+.bool(entity to, int sendflags) SendEntity;
 
 // player sounds, voice messages
 // TODO implemented fall and falling
