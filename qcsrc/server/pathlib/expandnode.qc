@@ -5,7 +5,7 @@ float  plib_fvals[8];
 float pathlib_expandnode_starf(entity node, vector start, vector goal)
 {
     vector where,f,r,t;
-    float i,fc,fc2,c;
+    float fc,fc2,c;
     entity nap;
 
     where = node.origin;
@@ -37,7 +37,7 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
     // Back-left
     plib_points[7] = where - f - r;
 
-    for(i=0;i < 8; ++i)
+    for(int i=0;i < 8; ++i)
     {
         t = plib_points[i];
         fc  = pathlib_heuristic(t,goal) + pathlib_cost(node, t, pathlib_gridsize);
@@ -50,7 +50,7 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
     vector bp;
     bp = plib_points[0];
     fc2 = 0;
-    for(i = 0; i < 8; ++i)
+    for(int i = 0; i < 8; ++i)
     {
         c = 0;
         nap = pathlib_nodeatpoint(plib_points[i]);
@@ -80,7 +80,7 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
 
     pathlib_makenode(node, start, bp, goal, pathlib_gridsize);
 
-    for(i = 0; i < 3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         pathlib_makenode(node, start, plib_points2[i], goal, pathlib_gridsize);
     }

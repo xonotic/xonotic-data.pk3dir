@@ -31,7 +31,7 @@ float waypointsprite_alpha;
 .string netname; // primary picture
 .string netname2; // secondary picture
 .string netname3; // tertiary picture
-.float team; // team that gets netname2
+.int team; // team that gets netname2
 .float lifetime;
 .float fadetime;
 .float maxdistance;

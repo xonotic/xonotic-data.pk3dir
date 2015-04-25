@@ -44,7 +44,7 @@ float SendAuxiliaryXhair(entity to, int sf)
     return true;
 }
 
-void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
+void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 {
     if (!IS_REAL_CLIENT(own))
         return;

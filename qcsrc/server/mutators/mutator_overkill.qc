@@ -1,4 +1,4 @@
-void ok_DecreaseCharge(entity ent, float wep)
+void ok_DecreaseCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return;
 
