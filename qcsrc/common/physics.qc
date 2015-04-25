@@ -533,7 +533,7 @@ When you press the jump key
 returns true if handled
 =============
 */
-float PlayerJump (void)
+bool PlayerJump (void)
 {
 	if (PHYS_FROZEN(self))
 		return true; // no jumping in freezetag when frozen

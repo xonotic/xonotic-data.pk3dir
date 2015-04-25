@@ -50,11 +50,17 @@ void PM_multijump()
 	}
 }
 
-float PM_multijump_checkjump()
+bool PM_multijump_checkjump()
 {
 	if(!PHYS_MULTIJUMP) { return false; }
 
-	if (!IS_JUMP_HELD(self) && !IS_ONGROUND(self) && self.cvar_cl_multijump) // jump button pressed this frame and we are in midair
+#ifdef SVQC
+	bool client_multijump = self.cvar_cl_multijump;
+#elif defined(CSQC)
+	bool client_multijump = cvar("cl_multijump");
+#endif
+
+	if (!IS_JUMP_HELD(self) && !IS_ONGROUND(self) && client_multijump) // jump button pressed this frame and we are in midair
 		self.multijump_ready = true;  // this is necessary to check that we released the jump button and pressed it again
 	else
 		self.multijump_ready = false;
@@ -99,7 +105,12 @@ float PM_multijump_checkjump()
 					// keep velocity_z unchanged!
 				}
 				if (PHYS_MULTIJUMP > 0)
+				{
+					#ifdef CSQC
+					print("Increasing!\n");
+					#endif
 					self.multijump_count += 1;
+				}
 			}
 		}
 		self.multijump_ready = false; // require releasing and pressing the jump button again for the next jump

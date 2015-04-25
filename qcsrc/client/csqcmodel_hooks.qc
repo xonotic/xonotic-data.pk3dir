@@ -626,6 +626,24 @@ void CSQCModel_Effects_Apply(void)
 	}
 }
 
+void CSQCModel_Fade_Apply()
+{
+	vector org;
+	float alph;
+	org = getpropertyvec(VF_ORIGIN);
+	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+		alph = 0;
+	else if(self.fade_start)
+		alph = bound(0, (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.fade_end - self.fade_start), 1);
+	else
+		alph = 1;
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
+	if(alph <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
+}
+
 void CSQCPlayer_Precache()
 {
 	precache_sound("misc/jetpack_fly.wav");
@@ -657,6 +675,8 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 	}
 	else
 		self.drawmask = MASK_NORMAL;
+
+	CSQCModel_Fade_Apply();
 
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{

@@ -77,6 +77,9 @@ void sandbox_ObjectFunction_Think()
 		self.realowner = world;
 	}
 
+	self.fade_start = autocvar_g_sandbox_object_fade_start;
+	self.fade_end = autocvar_g_sandbox_object_fade_end;
+
 	self.nextthink = time;
 
 	CSQCMODEL_AUTOUPDATE();
