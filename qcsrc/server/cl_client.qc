@@ -30,8 +30,6 @@
 
 #include "../common/minigames/sv_minigames.qh"
 
-#include "../common/minigames/sv_minigames.qh"
-
 #include "../common/monsters/sv_monsters.qh"
 
 #include "../common/vehicles/sv_vehicles.qh"
