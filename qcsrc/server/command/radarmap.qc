@@ -167,7 +167,7 @@ void sharpen_set(int x, float v)
 {
 	sharpen_buffer[x + 2 * RADAR_WIDTH_MAX] = v;
 }
-float sharpen_getpixel(float x, float y)
+float sharpen_getpixel(int x, int y)
 {
 	if(x < 0)
 		return 0;

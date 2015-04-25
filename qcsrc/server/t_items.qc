@@ -811,7 +811,7 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 
 float weapon_pickupevalfunc(entity player, entity item)
 {
-	float c, j, position;
+	float c;
 
 	// See if I have it already
 	if(item.weapons & ~player.weapons)
@@ -834,8 +834,8 @@ float weapon_pickupevalfunc(entity player, entity item)
 	if( bot_custom_weapon && c )
 	{
 		// Find the highest position on any range
-		position = -1;
-		for(j = 0; j < WEP_LAST ; ++j){
+		int position = -1;
+		for (int j = 0; j < WEP_LAST ; ++j){
 			if(
 					bot_weapons_far[j] == item.weapon ||
 					bot_weapons_mid[j] == item.weapon ||

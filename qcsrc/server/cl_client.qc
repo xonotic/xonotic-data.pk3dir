@@ -409,7 +409,6 @@ void PutClientInServer (void)
 	if(IS_PLAYER(self))
 	{
 		entity spot, oldself;
-		float j;
 
 		accuracy_resend(self);
 
@@ -598,13 +597,13 @@ void PutClientInServer (void)
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		for (int j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			WEP_ACTION(j, WR_RESETPLAYER);
 
 			// all weapons must be fully loaded when we spawn
 			entity e = get_weaponinfo(j);
-			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
+			if (e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.(weapon_load[j]) = e.reloading_ammo;
 		}
 

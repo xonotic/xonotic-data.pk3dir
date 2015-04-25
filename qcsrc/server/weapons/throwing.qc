@@ -40,7 +40,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	entity oldself, wep;
 	float thisammo, i;
 	string s;
-	var .float ammotype = (get_weaponinfo(wpn)).ammo_field;
+	var .int ammotype = (get_weaponinfo(wpn)).ammo_field;
 
 	wep = spawn();
 

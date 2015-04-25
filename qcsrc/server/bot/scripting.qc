@@ -1215,7 +1215,6 @@ void bot_setcurrentcommand()
 void bot_resetqueues()
 {
 	entity cl;
-	float i;
 
 	FOR_EACH_CLIENT(cl) if(cl.isbot)
 	{
@@ -1223,7 +1222,7 @@ void bot_resetqueues()
 		bot_clearqueue(cl);
 		// also, cancel all barriers
 		cl.bot_barrier = 0;
-		for(i = 0; i < cl.bot_places_count; ++i)
+		for(int i = 0; i < cl.bot_places_count; ++i)
 		{
 			strunzone(cl.(bot_placenames[i]));
 			cl.(bot_placenames[i]) = string_null;

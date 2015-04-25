@@ -285,7 +285,7 @@ float default_weapon_alpha;
 .float version_nagtime;
 
 const int NUM_JUMPPADSUSED = 3;
-.float jumppadcount;
+.int jumppadcount;
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
 string gamemode_name;
