@@ -140,7 +140,8 @@ void XonoticServerCreateTab_fill(entity me)
 
 	// mapListBox is in the right column but the ref is needed for mutators dialog here
 	me.mapListBox = makeXonoticMapList();
-	//me.TR(me);
+	// here we use the following line instead of me.TR(me) for better visual spacing;
+	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
 	me.gotoRC(me, me.rows - 2.5, 0);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators"), '0 0 0'));
@@ -169,7 +170,8 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onChangeEntity = me.mapListBox;
 			me.mapListBox.controlledTextbox = e;
 
-	//me.TR(me);
+	// here we use the following line instead of me.TR(me) for better visual spacing;
+	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
 	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
 		// the selection buttons
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Add shown"), '0 0 0'));
