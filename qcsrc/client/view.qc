@@ -22,6 +22,57 @@
 #elif defined(SVQC)
 #endif
 
+float showfps_prevfps;
+float showfps_prevfps_time;
+int showfps_framecounter;
+
+float showfps_delay;
+
+float showfps_frametimeavg;
+float showfps_frametimeavg1; // 1 frame ago
+float showfps_frametimeavg2; // 2 frames ago
+void FPSReporter_Think()
+{
+	if(!sv_showfps) { return; }
+
+	float currentTime = gettime(GETTIME_REALTIME);
+	if(cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage"))
+	{
+		float currentframetime = currentTime - showfps_prevfps_time;
+		showfps_frametimeavg = (showfps_frametimeavg + showfps_frametimeavg1 + showfps_frametimeavg2 + currentframetime)/4; // average three frametimes into framecounter for slightly more stable fps readings :P
+		showfps_frametimeavg2 = showfps_frametimeavg1;
+		showfps_frametimeavg1 = showfps_frametimeavg;
+
+		float weight;
+		weight = cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight");
+		if(currentframetime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
+		{
+			if(fabs(showfps_prevfps - (1/showfps_frametimeavg)) > showfps_prevfps * cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold")) // if there was a big jump in fps, just force prevfps at current (1/currentframetime) to make big updates instant
+				showfps_prevfps = (1/currentframetime);
+			showfps_prevfps = (1 - weight) * showfps_prevfps + weight * (1/showfps_frametimeavg); // framecounter just used so there's no need for a new variable, think of it as "frametime average"
+		}
+		showfps_prevfps_time = currentTime;
+	}
+	else
+	{
+		showfps_framecounter += 1;
+		if(currentTime - showfps_prevfps_time > autocvar_hud_panel_engineinfo_framecounter_time)
+		{
+			showfps_prevfps = showfps_framecounter/(currentTime - showfps_prevfps_time);
+			showfps_framecounter = 0;
+			showfps_prevfps_time = currentTime;
+		}
+	}
+
+	if(time >= showfps_delay)
+	{
+		showfps_delay = time + sv_showfps;
+		localcmd("\ncmd report fps ", sprintf("%.*f", autocvar_hud_panel_engineinfo_framecounter_decimals, showfps_prevfps), "\n");
+	}
+
+	//drawstring_aspect(pos, sprintf(_("FPS: %.*f"), autocvar_hud_panel_engineinfo_framecounter_decimals, prevfps), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
 entity porto;
 vector polyline[16];
 void Porto_Draw()
@@ -1470,6 +1521,8 @@ void CSQC_UpdateView(float w, float h)
 	else if(csqcplayer.viewloc) { setproperty(VF_FOV, GetViewLocationFOV(110)); } // enforce 110 fov, so things dont look odd
 	else if(fovlock > 0 && autocvar_cl_specfov) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
+
+	FPSReporter_Think();
 
 	float tempcamera = false;
 

@@ -669,7 +669,11 @@ void CheckWaterJump()
 			self.velocity_z = 225;
 			self.flags |= FL_WATERJUMP;
 			SET_JUMP_HELD(self);
+#ifdef SVQC
 			self.teleport_time = time + 2;	// safety net
+#elif defined(CSQC)
+			pmove_waterjumptime = time + 2;
+#endif
 		}
 	}
 }
@@ -1637,7 +1641,7 @@ bool IsFlying(entity a)
 
 void PM_Main()
 {
-	float buttons = PHYS_INPUT_BUTTON_MASK(self);
+	int buttons = PHYS_INPUT_BUTTON_MASK(self);
 #ifdef CSQC
 	self.items = getstati(STAT_ITEMS, 0, 24);
 
@@ -1684,7 +1688,7 @@ void PM_Main()
 			self.parm_idlesince = time;
 	}
 #endif
-	float buttons_prev = self.buttons_old;
+	int buttons_prev = self.buttons_old;
 	self.buttons_old = buttons;
 	self.movement_old = self.movement;
 	self.v_angle_old = self.v_angle;
@@ -1709,14 +1713,14 @@ void PM_Main()
 				self.race_penalty = 0;
 #endif
 
-		float not_allowed_to_move = 0;
+		bool not_allowed_to_move = false;
 #ifdef SVQC
 		if (self.race_penalty)
-			not_allowed_to_move = 1;
+			not_allowed_to_move = true;
 #endif
 #ifdef SVQC
 		if (time < game_starttime)
-			not_allowed_to_move = 1;
+			not_allowed_to_move = true;
 #endif
 
 		if (not_allowed_to_move)

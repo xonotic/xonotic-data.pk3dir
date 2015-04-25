@@ -413,22 +413,6 @@ void Playerchecker_Think()
 	self.nextthink = time + 0.2;
 }
 
-void FPSReporter_Think()
-{
-	localcmd("\ncmd report fps ", ftos(floor(cl_fps)), "\n");
-	self.nextthink = time + sv_showfps;
-}
-
-void FPSReporter_Init()
-{
-	if(!sv_showfps)
-		return;
-
-	entity e = spawn();
-	e.think = FPSReporter_Think;
-	e.nextthink = time + 1;
-}
-
 void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
@@ -440,7 +424,6 @@ void PostInit(void)
 
 	Porto_Init();
 	TrueAim_Init();
-	FPSReporter_Init();
 
 	fovlock = -1;
 
