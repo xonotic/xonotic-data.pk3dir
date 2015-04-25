@@ -15,7 +15,7 @@
     #include "race.qh"
 #endif
 
-float SpawnPoint_Send(entity to, float sf)
+float SpawnPoint_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
@@ -27,7 +27,7 @@ float SpawnPoint_Send(entity to, float sf)
 	return true;
 }
 
-float SpawnEvent_Send(entity to, float sf)
+float SpawnEvent_Send(entity to, int sf)
 {
 	float send;
 

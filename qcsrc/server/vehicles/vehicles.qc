@@ -11,7 +11,7 @@ float autocvar_g_vehicles_tag_damagerate = 5;
 
 float autocvar_g_vehicles;
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void vehicles_return();
 void vehicles_enter();
 void vehicles_touch();
@@ -26,7 +26,7 @@ void vehicles_setreturn();
 const float MAX_AXH = 4;
 .entity AuxiliaryXhair[MAX_AXH];
 
-float SendAuxiliaryXhair(entity to, float sf)
+float SendAuxiliaryXhair(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
@@ -150,7 +150,7 @@ vector targetdrone_getnewspot()
 
 #if 0
 void targetdrone_think();
-void targetdrone_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void targetdrone_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void targetdrone_renwe()
 {
 	self.think = targetdrone_think;
@@ -167,7 +167,7 @@ void targetdrone_renwe()
 	setsize(self, '-100 -100 -100', '100 100 100');
 
 }
-void targetdrone_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void targetdrone_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	self.health -= damage;
 	if(self.health <= 0)
@@ -274,11 +274,11 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
-
-        if(!trace_ent.vehicle_flags & VHF_ISVEHICLE ||
-				trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET ||
-				trace_ent.takedamage == DAMAGE_TARGETDRONE)
-            trace_ent = world;
+        if(!(
+            (trace_ent.vehicle_flags & VHF_ISVEHICLE) || 
+            (trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || 
+            (trace_ent.takedamage == DAMAGE_TARGETDRONE)
+            )) { trace_ent = world; }
     }
 
     if(self.lock_target == world && trace_ent != world)
@@ -366,7 +366,7 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 }
 
 // Generic vehile projectile system
-void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
     // Ignore damage from oterh projectiles from my owner (dont mess up volly's)
     if(inflictor.owner == self.owner)
@@ -910,7 +910,7 @@ void vehicles_painframe()
     }
 }
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
     self.dmg_time = time;
 

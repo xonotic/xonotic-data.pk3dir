@@ -31,7 +31,6 @@ void turret_precache(int _tid)
         precache_model ("models/turrets/head-gib2.md3");
         precache_model ("models/turrets/head-gib3.md3");
         precache_model ("models/turrets/head-gib4.md3");
-        precache_model ("models/turrets/terrainbase.md3");
         precache_model ("models/turrets/base.md3");
         precache_model ("models/turrets/rocket.md3");
     }

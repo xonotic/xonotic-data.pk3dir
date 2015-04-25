@@ -8,7 +8,7 @@
     #include "defs.qh"
 #endif
 
-float Casing_SendEntity(entity to, float sf)
+float Casing_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CASING);
 	WriteByte(MSG_ENTITY, self.state); // actually type

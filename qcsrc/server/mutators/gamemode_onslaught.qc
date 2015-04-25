@@ -25,7 +25,7 @@ void onslaught_link_checkupdate();
 entity ons_red_generator;
 entity ons_blue_generator;
 
-void ons_gib_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void ons_gib_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
 	self.velocity = self.velocity + vforce;
 }
@@ -570,7 +570,7 @@ void onslaught_generator_deaththink()
 	self.count = self.count - 1;
 }
 
-void onslaught_generator_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void onslaught_generator_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float i;
 	if (damage <= 0)
@@ -966,7 +966,7 @@ void spawnfunc_onslaught_generator()
 float ons_notification_time_team1;
 float ons_notification_time_team2;
 
-void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	entity oself;
 	float nag;

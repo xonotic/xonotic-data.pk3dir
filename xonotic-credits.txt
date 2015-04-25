@@ -75,6 +75,7 @@ Ruszkai "CuBe0wL" Ákos
 Severin "sev" Meyer
 
 *Music / Sound FX
+AquaNova (Archer)
 blkrbt
 chooksta
 Independent.nu
@@ -87,7 +88,6 @@ Saulo "mand1nga" Gil
 {SC0RP} - Ian "ID" Dorrell
 Stephan
 unfa
-AquaNova (Archer)
 
 *Game Code
 Samual "Ares" Lenks
@@ -123,6 +123,7 @@ Dale "graphitemaster" Weiler
 
 
 **Other Active Contributors
+BuddyFriendGuy
 Erik "Ablu" Schilling
 Jope "Sless" Withers
 Mircea "Taoki" Kitsune
@@ -133,6 +134,7 @@ Robert "ai" Kuroto
 
 *Asturian
 Llumex03
+Tornes "Tornes.Llume" Ḷḷume
 Ximielga
 
 *Belarusian
@@ -142,8 +144,14 @@ Mihail "meequz" Varantsou
 lokster
 set_killer
 
+*Chinese (China)
+Antonidas
+kalawore
+sapphireliu
+
 *Czech
 shogun assassin/woky
+Superovoce
 Tomáš "CZHeron" Volavka
 
 *Dutch
@@ -152,6 +160,7 @@ PinkRobot
 vegiburger
 
 *English (Australia)
+Laurene "sunflowers" Albrand
 Zac "Mario" Jardine
 
 *Finnish
@@ -173,7 +182,7 @@ Rudolf "divVerent" Polzer
 Yepoleb
 
 *Greek
-Γιάννης "Evropi" Α.
+Γιάννης "Evropi" Ανθυμίδης
 Konstantinos "LDinos" Mihalenas
 Savoritias
 Vindex
@@ -181,9 +190,6 @@ Vindex
 *Hungarian
 Ruszkai "CuBe0wL" Ákos
 xaN1C4n3
-
-*Japanese
-Lento
 
 *Italian
 Antonio "terencehill" Piu
@@ -197,10 +203,11 @@ Alex "tiprogrammierer.alex" Progger
 Amadeusz "amade/proraide" Sławiński
 
 *Portuguese
-Ricardo "Hellgardia" Silva
+Ricardo Manuel "Hellgardia" da Cruz Coelho da Silva
 xXxCHAOTICxXx
 
 *Romanian
+Adrian-Ciprian "adrian.tinjala" Tînjală
 BusterDBK
 Mircea "Taoki" Kitsune
 Tudor "TropiKo" Ionel
@@ -218,7 +225,7 @@ Sergej "Clearness High" Lutsyk
 *Serbian
 Саша "salepetronije" Петровић
 Pendulla
-Ristovski
+Rafael "Ristovski"
 
 *Spanish
 0000simon

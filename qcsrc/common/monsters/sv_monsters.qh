@@ -93,7 +93,7 @@ const int MONSTER_STATE_ATTACK_MELEE = 2;
 float monster_initialize(float mon_id);
 float monster_leap (float anm, void() touchfunc, vector vel, float anim_finished);
 void monster_makevectors(entity e);
-float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, float deathtype, float dostop);
+float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, int deathtype, float dostop);
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle);
 void monster_setupcolors(entity mon);
 float Monster_SkillModifier();

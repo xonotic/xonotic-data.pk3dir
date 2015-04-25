@@ -75,7 +75,7 @@ void TargetMusic_RestoreGame()
 // spawnflags:
 //   1 = START_OFF
 // when triggered, it is disabled/enabled for everyone
-float trigger_music_SendEntity(entity to, float sf)
+float trigger_music_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
 	sf &= ~0x80;

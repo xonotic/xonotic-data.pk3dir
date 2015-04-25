@@ -225,7 +225,7 @@ void multi_touch()
 	multi_trigger ();
 }
 
-void multi_eventdamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void multi_eventdamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (!self.takedamage)
 		return;
@@ -984,7 +984,7 @@ void spawnfunc_func_sparks()
 	spawnfunc_func_pointparticles();
 }
 
-float rainsnow_SendEntity(entity to, float sf)
+float rainsnow_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);

@@ -180,7 +180,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	}
 }
 
-float ScoreInfo_SendEntity(entity to, float sf)
+float ScoreInfo_SendEntity(entity to, int sf)
 {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);

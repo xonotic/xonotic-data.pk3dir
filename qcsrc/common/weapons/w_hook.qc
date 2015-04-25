@@ -108,7 +108,7 @@ void W_Hook_Explode2(void)
 	self.movetype = MOVETYPE_NONE;
 }
 
-void W_Hook_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Hook_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -173,7 +173,7 @@ void W_Hook_Attack2(void)
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float W_Hook(float req)
+bool W_Hook(int req)
 {
 	float hooked_time_max, hooked_fuel;
 
@@ -336,7 +336,7 @@ float W_Hook(float req)
 }
 #endif
 #ifdef CSQC
-float W_Hook(float req)
+bool W_Hook(int req)
 {
 	switch(req)
 	{

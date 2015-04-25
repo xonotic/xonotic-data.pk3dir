@@ -200,7 +200,7 @@ void W_Seeker_Missile_Think(void)
 
 
 
-void W_Seeker_Missile_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Seeker_Missile_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -482,7 +482,7 @@ void W_Seeker_Tag_Explode(void)
 	remove(self);
 }
 
-void W_Seeker_Tag_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Seeker_Tag_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -596,7 +596,7 @@ void W_Seeker_Fire_Tag(void)
 // Begin: Genereal weapon functions
 // ============================
 
-float W_Seeker(float req)
+bool W_Seeker(int req)
 {
 	float ammo_amount;
 
@@ -725,7 +725,7 @@ float W_Seeker(float req)
 }
 #endif
 #ifdef CSQC
-float W_Seeker(float req)
+bool W_Seeker(int req)
 {
 	switch(req)
 	{

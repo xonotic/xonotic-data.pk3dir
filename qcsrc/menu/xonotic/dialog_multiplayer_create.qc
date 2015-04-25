@@ -33,7 +33,7 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 		e.configureXonoticTextSlider(e, pCvar);
 
 		// clear old values
-		float i;
+		int i;
 		for(i = 0; i <= e.nValues; ++i);
 		{
 			if(e.(valueStrings[i])) { strunzone(e.(valueStrings[i])); }

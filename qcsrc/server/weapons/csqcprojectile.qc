@@ -13,7 +13,7 @@
 
 .float csqcprojectile_type;
 
-float CSQCProjectile_SendEntity(entity to, int sf)
+bool CSQCProjectile_SendEntity(entity to, int sf)
 {
 	float ft, fr;
 
@@ -68,7 +68,7 @@ float CSQCProjectile_SendEntity(entity to, int sf)
 	if(sf & 2)
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
 
-	return 1;
+	return true;
 }
 
 .vector csqcprojectile_oldorigin;
