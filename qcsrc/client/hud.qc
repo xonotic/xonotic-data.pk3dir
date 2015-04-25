@@ -4660,13 +4660,14 @@ void HUD_Main (void)
 		for(i = 0; i < HUD_PANEL_NUM; ++i)
 			panel_order[i] = -1;
 		string s = "";
-		float p_num, warning = false;
-		float argc = tokenize_console(autocvar__hud_panelorder);
+		int p_num;
+		bool warning = false;
+		int argc = tokenize_console(autocvar__hud_panelorder);
 		if (argc > HUD_PANEL_NUM)
 			warning = true;
 		//first detect wrong/missing panel numbers
 		for(i = 0; i < HUD_PANEL_NUM; ++i) {
-			p_num = stof(argv(i));
+			p_num = stoi(argv(i));
 			if (p_num >= 0 && p_num < HUD_PANEL_NUM) { //correct panel number?
 				if (panel_order[p_num] == -1) //found for the first time?
 					s = strcat(s, ftos(p_num), " ");
