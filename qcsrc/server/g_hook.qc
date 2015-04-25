@@ -133,7 +133,7 @@ float GrapplingHookSend(entity to, int sf)
 
 void GrapplingHookThink()
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
+	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
 	{
@@ -150,7 +150,7 @@ void GrapplingHookThink()
 
 	self.nextthink = time;
 
-	s = self.realowner.cvar_cl_gunalign;
+	int s = self.realowner.cvar_cl_gunalign;
 	if(s != 1 && s != 2 && s != 4)
 		s = 3; // default value
 	--s;
@@ -315,7 +315,6 @@ void FireGrapplingHook (void)
 {
 	entity missile;
 	vector org;
-	float s;
 	vector vs;
 
 	if(forbidWeaponUse()) return;
@@ -323,7 +322,7 @@ void FireGrapplingHook (void)
 
 	makevectors(self.v_angle);
 
-	s = self.cvar_cl_gunalign;
+	int s = self.cvar_cl_gunalign;
 	if(s != 1 && s != 2 && s != 4)
 		s = 3; // default value
 	--s;

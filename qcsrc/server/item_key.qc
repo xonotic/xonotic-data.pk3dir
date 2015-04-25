@@ -38,9 +38,6 @@ bool item_keys_usekey(entity l, entity p) {
 }
 
 string item_keys_keylist(float keylist) {
-	float base, l;
-	string n;
-
 	// no keys
 	if (!keylist)
 		return "";
@@ -49,10 +46,10 @@ string item_keys_keylist(float keylist) {
 	if ((keylist & (keylist-1)) != 0)
 		return strcat("the ", item_keys_names[lowestbit(keylist)]);
 
-	n = "";
-	base = 0;
+	string n = "";
+	int base = 0;
 	while (keylist) {
-		l = lowestbit(keylist);
+		int l = lowestbit(keylist);
 		if (n)
 			n = strcat(n, ", the ", item_keys_names[base + l]);
 		else

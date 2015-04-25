@@ -296,7 +296,7 @@ float xdecode(string s);
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
 
-float lowestbit(float f);
+int lowestbit(float f);
 
 #ifdef CSQC
 entity ReadCSQCEntity();

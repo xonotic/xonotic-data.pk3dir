@@ -576,7 +576,7 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 void spawnfunc_worldspawn (void)
 {
-	float fd, l, i, j, n;
+	float fd, l, j, n;
 	string s;
 
 	cvar = cvar_normal;
@@ -839,7 +839,7 @@ void spawnfunc_worldspawn (void)
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
 	monsterlist_reply = strzone(getmonsterlist());
-	for(i = 0; i < 10; ++i)
+	for(int i = 0; i < 10; ++i)
 	{
 		s = getrecords(i);
 		if (s)
@@ -862,7 +862,7 @@ void spawnfunc_worldspawn (void)
 	{
 		s = "";
 		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
-		for(i = 0; i < n; ++i)
+		for(int i = 0; i < n; ++i)
 			if(substring(argv(i), -18, -1) != "-serverpackage.txt")
 			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
 				s = strcat(s, " ", argv(i));
@@ -870,7 +870,7 @@ void spawnfunc_worldspawn (void)
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
-			for(i = 0; i < j; ++i)
+			for(int i = 0; i < j; ++i)
 				s = strcat(s, " ", search_getfilename(fd, i));
 			search_end(fd);
 		}
@@ -878,7 +878,7 @@ void spawnfunc_worldspawn (void)
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
-			for(i = 0; i < j; ++i)
+			for(int i = 0; i < j; ++i)
 				s = strcat(s, " ", search_getfilename(fd, i));
 			search_end(fd);
 		}

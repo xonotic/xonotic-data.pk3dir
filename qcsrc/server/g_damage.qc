@@ -293,10 +293,10 @@ float Obituary_WeaponDeath(
 	if(death_weapon)
 	{
 		w_deathtype = deathtype;
-		float death_message = WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
+		int death_message = WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
 		w_deathtype = false;
 
-		if(death_message)
+		if (death_message)
 		{
 			Send_Notification_WOCOVA(
 				NOTIF_ONE,

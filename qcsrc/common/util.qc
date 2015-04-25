@@ -2294,7 +2294,7 @@ float xdecode(string s)
 	return ((a * 22 + b) * 22 + c) * 22 + d;
 }
 
-float lowestbit(int f)
+int lowestbit(int f)
 {
 	f &= ~(f * 2);
 	f &= ~(f * 4);
