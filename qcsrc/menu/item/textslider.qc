@@ -12,7 +12,7 @@ CLASS(TextSlider) EXTENDS(Slider)
 	METHOD(TextSlider, configureTextSliderValues, void(entity, string))
 	ATTRIBARRAY(TextSlider, valueStrings, string, 256)
 	ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256)
-	ATTRIB(TextSlider, nValues, float, 0)
+	ATTRIB(TextSlider, nValues, int, 0)
 ENDCLASS(TextSlider)
 #endif
 

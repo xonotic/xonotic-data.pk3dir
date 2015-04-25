@@ -126,10 +126,10 @@ void ServerList_Info_Click(entity btn, entity me);
 void ServerList_Update_favoriteButton(entity btn, entity me);
 
 // fields for category entities
-const float MAX_CATEGORIES = 9;
-const float CATEGORY_FIRST = 1;
+const int MAX_CATEGORIES = 9;
+const int CATEGORY_FIRST = 1;
 entity categories[MAX_CATEGORIES];
-float category_ent_count;
+int category_ent_count;
 .string cat_name;
 .string cat_string;
 .string cat_enoverride_string;
@@ -138,9 +138,9 @@ float category_ent_count;
 .float cat_dioverride;
 
 // fields for drawing categories
-float category_name[MAX_CATEGORIES];
-float category_item[MAX_CATEGORIES];
-float category_draw_count;
+int category_name[MAX_CATEGORIES];
+int category_item[MAX_CATEGORIES];
+int category_draw_count;
 
 #define SLIST_CATEGORIES \
 	SLIST_CATEGORY(CAT_FAVORITED,    "",            "",             ZCTX(_("SLCAT^Favorites"))) \

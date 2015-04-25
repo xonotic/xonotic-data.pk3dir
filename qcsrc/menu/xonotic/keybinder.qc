@@ -251,7 +251,7 @@ void XonoticKeyBinder_doubleClickListBoxItem(entity me, float i, vector where)
 {
 	KeyBinder_Bind_Change(NULL, me);
 }
-void XonoticKeyBinder_setSelected(entity me, float i)
+void XonoticKeyBinder_setSelected(entity me, int i)
 {
 	// handling of "unselectable" items
 	i = floor(0.5 + bound(0, i, me.nItems - 1));
@@ -280,8 +280,7 @@ void XonoticKeyBinder_setSelected(entity me, float i)
 }
 float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 {
-	float r;
-	r = 1;
+	bool r = true;
 	switch(key)
 	{
 		case K_ENTER:
