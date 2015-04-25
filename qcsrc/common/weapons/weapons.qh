@@ -48,7 +48,7 @@ string weaponorder_byid;
 
 // weapon sets
 typedef vector WepSet;
-WepSet WepSet_FromWeapon(float a);
+WepSet WepSet_FromWeapon(int a);
 #ifdef SVQC
 void WepSet_AddStat();
 void WriteWepSet(float dest, WepSet w);
@@ -134,15 +134,15 @@ int GetAmmoStat(.int ammotype);
 //  Weapon Registration
 // =====================
 
-float w_null(float dummy);
+bool w_null(int dummy);
 
 void register_weapon(
-	float id,
+	int id,
 	WepSet bit,
-	float(float) func,
-	.float ammotype,
-	float i,
-	float weapontype,
+	bool(int) func,
+	.int ammotype,
+	int i,
+	int weapontype,
 	float pickupbasevalue,
 	vector clr,
 	string modelname,
@@ -159,7 +159,7 @@ void register_weapons_done();
 .int weapon;                // M: WEP_id    // WEP_...
 .WepSet weapons;            // A: WEPSET_id // WEPSET_...
 .float(float) weapon_func;  // M: function  // w_...
-..float ammo_field;         // M: ammotype  // main ammo field
+..int ammo_field;         // M: ammotype  // main ammo field
 .int impulse;               // M: impulse   // weapon impulse
 .int spawnflags;            // M: flags     // WEPSPAWNFLAG_... combined
 .float bot_pickupbasevalue; // M: rating    // bot weapon priority
@@ -179,7 +179,7 @@ void register_weapons_done();
 #define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
 	int id; \
 	WepSet bit; \
-	float function(float); \
+	bool function(int); \
 	void RegisterWeapons_##id() \
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \

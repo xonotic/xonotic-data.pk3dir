@@ -64,7 +64,7 @@ entity dummy_weapon_info;
 # error Kein Weltraum links auf dem Gerät
 #endif
 
-WepSet WepSet_FromWeapon(float a) {
+WepSet WepSet_FromWeapon(int a) {
 	a -= WEP_FIRST;
 #if WEP_MAXCOUNT > 24
 	if(a >= 24) {
