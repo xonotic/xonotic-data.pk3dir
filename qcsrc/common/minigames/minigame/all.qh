@@ -62,6 +62,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 
 #include "nmm.qc"
 #include "ttt.qc"
+//#include "c4.qc"
 
 /**
  * Registration:
@@ -73,6 +74,8 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 	MINIGAME(nmm, "Nine Men's Morris") \
 	MINIGAME(ttt, "Tic Tac Toe") \
 	/*empty line*/
+
+//MINIGAME(c4,  "Connect Four") \
 
 /**
  * Set up automatic entity read/write functionality
