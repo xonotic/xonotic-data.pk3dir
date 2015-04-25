@@ -35,7 +35,7 @@
 #endif
 
 float autocvar_cl_movement_errorcompensation = 0;
-float autocvar_cl_movement = 2; // testing purposes
+int autocvar_cl_movement = 1;
 
 // engine stuff
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
