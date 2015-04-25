@@ -527,7 +527,7 @@ float client_cefc_accumulatortime;
 #endif
 
 .float weapon_load[WEP_MAXCOUNT];
-.float ammo_none; // used by the reloading system, must always be 0
+.int ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
@@ -539,7 +539,7 @@ float client_cefc_accumulatortime;
 .float vortex_chargepool_ammo;
 .float hagar_load;
 
-.float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
+.int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
