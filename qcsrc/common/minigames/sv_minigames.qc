@@ -3,6 +3,7 @@
 void player_clear_minigame(entity player)
 {
 	player.active_minigame = world;
+	player.minigame_players = world;
 	if ( IS_PLAYER(player) )
 		player.movetype = MOVETYPE_WALK;
 	else
@@ -60,7 +61,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 
 // Send an entity to a client
 // only use on minigame entities or entities with a minigame owner
-float minigame_SendEntity(entity to, float sf)
+bool minigame_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
 	WriteByte(MSG_ENTITY, sf);
@@ -97,7 +98,7 @@ float minigame_SendEntity(entity to, float sf)
 	
 	minigame_ent.minigame_event(minigame_ent,"network_send",self,sf);
 	
-	return 1;
+	return true;
 	
 }
 #undef FIELD
@@ -115,16 +116,16 @@ void minigame_resend(entity minigame)
 	}
 }
 
-float minigame_CheckSend()
+bool minigame_CheckSend()
 {
 	entity e;
 	for ( e = self.owner.minigame_players; e != world; e = e.list_next )
 		if ( e.minigame_players == other )
-			return 1;
-	return 0;
+			return true;
+	return false;
 }
 
-float minigame_addplayer(entity minigame_session, entity player)
+int minigame_addplayer(entity minigame_session, entity player)
 {
 	if ( player.active_minigame )
 	{
@@ -133,7 +134,7 @@ float minigame_addplayer(entity minigame_session, entity player)
 		minigame_rmplayer(player.active_minigame,player);
 	}
 	
-	float mgteam = minigame_session.minigame_event(minigame_session,"join",player);
+	int mgteam = minigame_session.minigame_event(minigame_session,"join",player);
 	
 	if ( mgteam )
 	{
@@ -145,6 +146,7 @@ float minigame_addplayer(entity minigame_session, entity player)
 		player_pointer.list_next = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
+		player.minigame_players = player_pointer;
 		player_pointer.customizeentityforclient = minigame_CheckSend;
 		Net_LinkEntity(player_pointer, false, 0, minigame_SendEntity);
 
@@ -275,7 +277,7 @@ void initialize_minigames()
 		minig.classname = "minigame_descriptor"; \
 		minig.netname = #name; \
 		minig.message = nicename; \
-		minig.minigame_event = minigame_event_##name; \
+		minig.minigame_event = name##_server_event; \
 		if ( !last_minig ) minigame_descriptors = minig; \
 		else last_minig.list_next = minig; \
 		last_minig = minig;
@@ -316,19 +318,19 @@ entity minigame_find_player(entity client)
 	return world;
 }
 
-float MinigameImpulse(float imp)
+bool MinigameImpulse(int imp)
 {
 	entity e = minigame_find_player(self);
 	if ( imp && self.active_minigame && e )
 	{
 		return self.active_minigame.minigame_event(self.active_minigame,"impulse",e,imp);
 	}
-	return 0;
+	return false;
 }
 
 
 
-void ClientCommand_minigame(float request, float argc, string command)
+void ClientCommand_minigame(int request, int argc, string command)
 {
 	if ( !autocvar_sv_minigames )
 	{
@@ -407,7 +409,7 @@ void ClientCommand_minigame(float request, float argc, string command)
 		{
 			entity e = minigame_find_player(self);
 			string subcommand = substring(command,argv_end_index(0),-1);
-			float arg_c = tokenize_console(subcommand);
+			int arg_c = tokenize_console(subcommand);
 			if ( self.active_minigame.minigame_event(self.active_minigame,"cmd",e,arg_c,subcommand) )
 				return;
 				

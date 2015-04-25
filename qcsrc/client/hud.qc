@@ -5879,7 +5879,7 @@ Main HUD system
 ==================
 */
 
-float HUD_Panel_CheckFlags(float showflags)
+bool HUD_Panel_CheckFlags(int showflags)
 {
 	if ( HUD_Minigame_Showpanels() )
 		return showflags & PANEL_SHOW_MINIGAME;

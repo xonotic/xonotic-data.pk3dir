@@ -637,6 +637,8 @@ void spawnfunc_worldspawn (void)
 
 	initialize_minigames();
 
+	initialize_minigames();
+
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
 	TemporaryDB = db_create();

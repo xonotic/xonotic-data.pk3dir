@@ -30,6 +30,8 @@
 
 #include "../common/minigames/sv_minigames.qh"
 
+#include "../common/minigames/sv_minigames.qh"
+
 #include "../common/monsters/sv_monsters.qh"
 
 #include "../common/vehicles/sv_vehicles.qh"
@@ -1590,7 +1592,7 @@ void UpdateChatBubble()
 		self.chatbubbleentity.nextthink = time;
 		setmodel(self.chatbubbleentity, "models/misc/chatbubble.md3"); // precision set below
 		//setorigin(self.chatbubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
-		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs.z * '0 0 1');
+		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
 		self.chatbubbleentity.mdl = self.chatbubbleentity.model;
 		//self.chatbubbleentity.model = "";

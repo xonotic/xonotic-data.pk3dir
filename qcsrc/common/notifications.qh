@@ -1646,7 +1646,7 @@ float notif_global_error;
 .string nent_iconargs;
 #define MULTIICON_INFO(default,name,strnum,flnum,args,hudargs,iconargs,icon,normal,gentle) \
     NOTIF_ADD_AUTOCVAR(name, default) \
-    float name; \
+    int name; \
     void RegisterNotification_##name() \
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \

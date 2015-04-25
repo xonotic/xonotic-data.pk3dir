@@ -222,6 +222,8 @@ void CSQC_Init(void)
 
 	initialize_minigames();
 
+	initialize_minigames();
+
 	WaypointSprite_Load();
 
 	// precaches
