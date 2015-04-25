@@ -211,9 +211,9 @@ void CSQCPlayer_SetCamera()
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 			// get crouch state from the server
-			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
+			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
 				self.flags &= ~FL_DUCKED;
-			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
+			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
 				self.flags |= FL_DUCKED;
 
 			// get onground state from the server
@@ -249,9 +249,9 @@ void CSQCPlayer_SetCamera()
 				self.velocity = v;
 
 				// get crouch state from the server
-				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
+				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
 					self.flags &= ~FL_DUCKED;
-				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
+				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
 					self.flags |= FL_DUCKED;
 
 				// get onground state from the server
@@ -266,9 +266,9 @@ void CSQCPlayer_SetCamera()
 
 #ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)
-			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
+			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
 				self.flags &= ~FL_DUCKED;
-			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
+			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
 				self.flags |= FL_DUCKED;
 #endif
 

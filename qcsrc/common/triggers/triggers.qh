@@ -41,9 +41,6 @@ void target_voicescript_clear(entity pl);
 void trigger_common_read(bool withtarget);
 void trigger_remove_generic();
 
-float WarpZoneLib_ExactTrigger_Touch();
-#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
-
 .float active;
 .string target;
 .string targetname;

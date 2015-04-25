@@ -262,7 +262,7 @@ void trigger_push_findtarget()
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
-	org_z = self.absmax.z - PL_MIN_z;
+	org_z = self.absmax.z - PL_MIN.z;
 
 	if (self.target)
 	{
@@ -350,7 +350,7 @@ void trigger_push_updatelink()
 
 void trigger_push_link()
 {
-	Net_LinkEntity(self, false, 0, trigger_push_send);
+	//Net_LinkEntity(self, false, 0, trigger_push_send);
 }
 #endif
 #ifdef SVQC
@@ -374,9 +374,7 @@ void spawnfunc_trigger_push()
 
 	self.active = ACTIVE_ACTIVE;
 	self.use = trigger_push_use;
-	self.trigger_touch = trigger_push_touch;
-	self.think = trigger_think_generic;
-	self.nextthink = time;
+	self.touch = trigger_push_touch;
 
 	// normal push setup
 	if (!self.speed)

@@ -21,15 +21,22 @@
 .float move_bounce_stopspeed;
 .float move_nomonsters;  // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
 
+.entity move_aiment;
+.vector move_punchangle;
+
 // should match sv_gameplayfix_fixedcheckwatertransition
 float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
 
 #ifdef SVQC
+.int stat_gameplayfix_upvelocityclearsonground;
+
 #define GRAVITY_UNAFFECTED_BY_TICRATE autocvar_sv_gameplayfix_gravityunaffectedbyticrate
+#define UPWARD_VELOCITY_CLEARS_ONGROUND autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag
 
 #define TICRATE sys_frametime
 #elif defined(CSQC)
 #define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
+#define UPWARD_VELOCITY_CLEARS_ONGROUND getstati(STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
 
 #define TICRATE ticrate
 #endif

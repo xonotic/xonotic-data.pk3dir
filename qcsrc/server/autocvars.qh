@@ -722,6 +722,7 @@ float autocvar_timelimit_suddendeath;
 #define autocvar_utf8_enable cvar("utf8_enable")
 float autocvar_waypoint_benchmark;
 float autocvar_sv_gameplayfix_gravityunaffectedbyticrate;
+bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag;
 float autocvar_g_trueaim_minrange;
 float autocvar_g_debug_defaultsounds;
 float autocvar_g_grab_range;
@@ -884,4 +885,5 @@ float autocvar_g_buffs_vampire_damage_steal;
 float autocvar_g_buffs_invisible_alpha;
 float autocvar_g_buffs_flight_gravity;
 float autocvar_g_buffs_jump_height;
+float autocvar_sv_player_scale;
 #endif

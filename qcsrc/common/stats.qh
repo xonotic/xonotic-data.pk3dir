@@ -92,8 +92,8 @@ const int STAT_HEALING_ORB_ALPHA      = 83;
 const int STAT_PLASMA                 = 84;
 const int STAT_OK_AMMO_CHARGE         = 85;
 const int STAT_OK_AMMO_CHARGEPOOL     = 86;
-// 87 empty?
-// 88 empty?
+const int STAT_FROZEN                 = 87;
+const int STAT_REVIVE_PROGRESS        = 88;
 // 89 empty?
 // 90 empty?
 // 91 empty?
@@ -138,22 +138,24 @@ const int STAT_KH_PINKKEY_TEAM        = 103;
 
 /* Gamemode-specific stats end here */
 
-
-const int STAT_FROZEN                 = 105;
-const int STAT_REVIVE_PROGRESS        = 106;
-// 107 empty?
-// 108 empty?
-// 109 empty?
-// 110 empty?
-// 111 empty?
-// 112 empty?
-// 113 empty?
-// 114 empty?
-// 115 empty?
-// 116 empty?
-// 117 empty?
-// 118 empty?
-// 119 empty?
+const int STAT_PL_VIEW_OFS1           = 105;
+const int STAT_PL_VIEW_OFS2           = 106;
+const int STAT_PL_VIEW_OFS3           = 107;
+const int STAT_PL_MIN1                = 108;
+const int STAT_PL_MIN2                = 109;
+const int STAT_PL_MIN3                = 110;
+const int STAT_PL_MAX1                = 111;
+const int STAT_PL_MAX2                = 112;
+const int STAT_PL_MAX3                = 113;
+const int STAT_PL_CROUCH_MIN1         = 114;
+const int STAT_PL_CROUCH_MIN2         = 115;
+const int STAT_PL_CROUCH_MIN3         = 116;
+const int STAT_PL_CROUCH_MAX1         = 117;
+const int STAT_PL_CROUCH_MAX2         = 118;
+const int STAT_PL_CROUCH_MAX3         = 119;
+const int STAT_PL_CROUCH_VIEW_OFS1    = 117;
+const int STAT_PL_CROUCH_VIEW_OFS2    = 118;
+const int STAT_PL_CROUCH_VIEW_OFS3    = 119;
 // 120 empty?
 // 121 empty?
 // 122 empty?
@@ -203,7 +205,7 @@ const int STAT_REVIVE_PROGRESS        = 106;
 // 165 empty?
 // 166 empty?
 // 167 empty?
-// 168 empty?
+const int STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND   = 168;
 const int STAT_BUGRIGS_REVERSE_STOPPING               = 169;
 const int STAT_BUGRIGS_REVERSE_SPINNING               = 170;
 const int STAT_BUGRIGS_CAR_JUMPING                    = 171;

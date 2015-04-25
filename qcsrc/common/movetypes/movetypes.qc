@@ -575,7 +575,7 @@ void _Movetype_Physics_Frame(float movedt)
 		case MOVETYPE_NONE:
 			break;
 		case MOVETYPE_FOLLOW:
-			error("SV_Physics_Follow not implemented");
+			_Movetype_Physics_Follow();
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater(self);
@@ -584,7 +584,7 @@ void _Movetype_Physics_Frame(float movedt)
 			_Movetype_LinkEdict(false);
 			break;
 		case MOVETYPE_STEP:
-			error("SV_Physics_Step not implemented");
+			_Movetype_Physics_Step(movedt);
 			break;
 		case MOVETYPE_WALK:
 			_Movetype_Physics_Walk(movedt);

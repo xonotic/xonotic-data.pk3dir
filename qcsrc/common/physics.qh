@@ -35,6 +35,9 @@ bool IsFlying(entity a);
 	.float watertype;
 	.int items;
 
+	.vector movement;
+	.vector v_angle;
+
 // TODO
 	#define IS_CLIENT(s)						(s).isplayermodel
 	#define IS_PLAYER(s)						(s).isplayermodel
@@ -167,6 +170,14 @@ bool IsFlying(entity a);
 
 #elif defined(SVQC)
 
+	.vector stat_pl_view_ofs;
+	.vector stat_pl_crouch_view_ofs;
+
+	.vector stat_pl_min;
+	.vector stat_pl_max;
+	.vector stat_pl_crouch_min;
+	.vector stat_pl_crouch_max;
+
 	.float stat_sv_airaccel_qw;
 	.float stat_sv_airstrafeaccel_qw;
 	.float stat_sv_airspeedlimit_nonqw;
@@ -254,7 +265,7 @@ bool IsFlying(entity a);
 	#define SET_JUMP_HELD(s)   					s.flags &= ~FL_JUMPRELEASED
 	#define UNSET_JUMP_HELD(s) 					s.flags |= FL_JUMPRELEASED
 
-	#define IS_ONGROUND(s)    					!!(self.flags & FL_ONGROUND)
+	#define IS_ONGROUND(s)    					!!(s.flags & FL_ONGROUND)
 	#define SET_ONGROUND(s)   					s.flags |= FL_ONGROUND
 	#define UNSET_ONGROUND(s) 					s.flags &= ~FL_ONGROUND
 

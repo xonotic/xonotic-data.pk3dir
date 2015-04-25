@@ -397,10 +397,6 @@ const float SND_ATTENUATION = 2;
 const float SND_LARGEENTITY = 8;
 const float SND_LARGESOUND = 16;
 
-// WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
-#define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()
-
 const float INITPRIO_FIRST 				= 0;
 const float INITPRIO_GAMETYPE 			= 0;
 const float INITPRIO_GAMETYPE_FALLBACK 	= 1;

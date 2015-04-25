@@ -76,3 +76,4 @@ weapons/projectile.qc // TODO
 ../warpzonelib/client.qc
 ../warpzonelib/common.qc
 ../warpzonelib/mathlib.qc
+../warpzonelib/util_server.qc

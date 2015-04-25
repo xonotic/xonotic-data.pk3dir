@@ -83,7 +83,7 @@ void button_touch()
 	button_fire ();
 }
 
-void button_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void button_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))

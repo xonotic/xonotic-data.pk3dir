@@ -520,7 +520,7 @@ void PutClientInServer (void)
 		self.respawn_flags = 0;
 		self.respawn_time = 0;
 		self.stat_respawn_time = 0;
-		self.scale = 0;
+		self.scale = autocvar_sv_player_scale;
 		self.fade_time = 0;
 		self.pain_frame = 0;
 		self.pain_finished = 0;
@@ -655,7 +655,7 @@ void PutClientInServer (void)
 .float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
-float ClientInit_SendEntity(entity to, float sf)
+float ClientInit_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
@@ -1666,10 +1666,10 @@ void SetZoomState(float z)
 void GetPressedKeys(void) {
 	MUTATOR_CALLHOOK(GetPressedKeys);
 	#define X(var,bit,flag) (flag ? var |= bit : var &= ~bit)
-	X(self.pressedkeys, KEY_FORWARD, 	PHYS_INPUT_MOVEVALUES(self)_x > 0);
-	X(self.pressedkeys, KEY_BACKWARD, 	PHYS_INPUT_MOVEVALUES(self)_x < 0);
-	X(self.pressedkeys, KEY_RIGHT, 		PHYS_INPUT_MOVEVALUES(self)_y > 0);
-	X(self.pressedkeys, KEY_LEFT, 		PHYS_INPUT_MOVEVALUES(self)_y < 0);
+	X(self.pressedkeys, KEY_FORWARD, 	self.movement_x > 0);
+	X(self.pressedkeys, KEY_BACKWARD, 	self.movement_x < 0);
+	X(self.pressedkeys, KEY_RIGHT, 		self.movement_y > 0);
+	X(self.pressedkeys, KEY_LEFT, 		self.movement_y < 0);
 
 	X(self.pressedkeys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(self));
 	X(self.pressedkeys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(self));

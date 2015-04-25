@@ -25,6 +25,7 @@ float func_ladder_send(entity to, float sf)
 	WriteString(MSG_ENTITY, self.classname);
 	WriteByte(MSG_ENTITY, self.skin);
 	WriteByte(MSG_ENTITY, self.speed);
+	WriteString(MSG_ENTITY, self.mdl);
 
 	trigger_common_write(false);
 
@@ -33,11 +34,14 @@ float func_ladder_send(entity to, float sf)
 
 void func_ladder_link()
 {
-	Net_LinkEntity(self, false, 0, func_ladder_send);
+	//self.SendEntity = func_ladder_send;
+	//self.SendFlags = 0xFFFFFF;
+	//self.model = "null";
 }
 
 void spawnfunc_func_ladder()
 {
+	self.mdl = self.model;
 	EXACTTRIGGER_INIT;
 	self.touch = func_ladder_touch;
 
@@ -46,6 +50,7 @@ void spawnfunc_func_ladder()
 
 void spawnfunc_func_water()
 {
+	self.mdl = self.model;
 	EXACTTRIGGER_INIT;
 	self.touch = func_ladder_touch;
 
@@ -60,8 +65,10 @@ void ent_func_ladder()
 	self.classname = strzone(ReadString());
 	self.skin = ReadByte();
 	self.speed = ReadByte();
+	self.model = strzone(ReadString());
 
 	trigger_common_read(false);
+	self.mins = self.maxs = '0 0 0';
 
 	self.solid = SOLID_TRIGGER;
 	self.draw = trigger_draw_generic;
@@ -69,5 +76,8 @@ void ent_func_ladder()
 	self.drawmask = MASK_NORMAL;
 	self.move_time = time;
 	self.entremove = trigger_remove_generic;
+
+	//precache_model(self.mdl);
+	EXACTTRIGGER_INIT;
 }
 #endif

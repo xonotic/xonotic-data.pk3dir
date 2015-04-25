@@ -72,7 +72,7 @@
 .float dodging_velocity_gain;
 
 #ifdef CSQC
-.float pressedkeys;
+.int pressedkeys;
 
 #elif defined(SVQC)
 
@@ -109,7 +109,7 @@ void dodging_Initialize()
 #endif
 
 // returns 1 if the player is close to a wall
-float check_close_to_wall(float threshold)
+bool check_close_to_wall(float threshold)
 {
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
@@ -126,7 +126,7 @@ float check_close_to_wall(float threshold)
 	return false;
 }
 
-float check_close_to_ground(float threshold)
+bool check_close_to_ground(float threshold)
 {
 	return IS_ONGROUND(self) ? true : false;
 }
@@ -143,7 +143,7 @@ float PM_dodging_checkpressedkeys()
 	if ((time - self.last_dodging_time) < PHYS_DODGING_DELAY)
 		return false;
 
-	makevectors(PHYS_WORLD_ANGLES(self));
+	makevectors(self.angles);
 
 	if (check_close_to_ground(PHYS_DODGING_HEIGHT_THRESHOLD) != 1
 		&& check_close_to_wall(PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
@@ -154,7 +154,7 @@ float PM_dodging_checkpressedkeys()
 	float dodge_detected = 0;
 
 	#define X(COND,BTN,RESULT)															\
-	if (PHYS_INPUT_MOVEVALUES(self)_##COND)												\
+	if (self.movement_##COND)												\
 		/* is this a state change? */													\
 		if(!(PHYS_DODGING_PRESSED_KEYS(self) & KEY_##BTN) || frozen_no_doubletap) {		\
 				tap_direction_##RESULT;													\
@@ -214,7 +214,7 @@ void PM_dodging()
 	}
 
 	// make sure v_up, v_right and v_forward are sane
-	makevectors(PHYS_WORLD_ANGLES(self));
+	makevectors(self.angles);
 
 	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
 	// will be called ramp_time/frametime times = 2 times. so, we need to
@@ -234,7 +234,7 @@ void PM_dodging()
 	if (self.dodging_action == 1)
 	{
 		//disable jump key during dodge accel phase
-		if(PHYS_INPUT_MOVEVALUES(self)_z > 0) { PHYS_INPUT_MOVEVALUES(self)_z = 0; }
+		if(self.movement_z > 0) { self.movement_z = 0; }
 
 		self.velocity += ((self.dodging_direction_y * velocity_difference) * v_right)
 					+ ((self.dodging_direction_x * velocity_difference) * v_forward);

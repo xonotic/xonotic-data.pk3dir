@@ -285,7 +285,7 @@ void door_use()
 	}
 }
 
-void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)
@@ -703,8 +703,8 @@ float door_send(entity to, float sf)
 void door_link()
 {
 	// set size now, as everything is loaded
-	FixSize(self);
-	Net_LinkEntity(self, false, 0, door_send);
+	//FixSize(self);
+	//Net_LinkEntity(self, false, 0, door_send);
 }
 #endif
 

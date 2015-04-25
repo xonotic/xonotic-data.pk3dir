@@ -321,6 +321,8 @@ vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
 vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
 vector autocvar_sv_player_headsize = '24 24 12';
 
+
+#ifdef SVQC
 #define PL_VIEW_OFS autocvar_sv_player_viewoffset
 #define PL_MIN autocvar_sv_player_mins
 #define PL_MAX autocvar_sv_player_maxs
@@ -328,16 +330,14 @@ vector autocvar_sv_player_headsize = '24 24 12';
 #define PL_CROUCH_MIN autocvar_sv_player_crouch_mins
 #define PL_CROUCH_MAX autocvar_sv_player_crouch_maxs
 #define PL_HEAD autocvar_sv_player_headsize
-
-// helpers
-#define PL_VIEW_OFS_z autocvar_sv_player_viewoffset.z
-#define PL_MIN_z autocvar_sv_player_mins.z
-#define PL_MAX_z autocvar_sv_player_maxs.z
-#define PL_CROUCH_VIEW_OFS_z autocvar_sv_player_crouch_viewoffset.z
-#define PL_CROUCH_MIN_z autocvar_sv_player_mins.z
-#define PL_HEAD_x autocvar_sv_player_headsize.x
-#define PL_HEAD_y autocvar_sv_player_headsize.y
-#define PL_HEAD_z autocvar_sv_player_headsize.z
+#elif defined(CSQC)
+#define PL_VIEW_OFS vec3(getstatf(STAT_PL_VIEW_OFS1), getstatf(STAT_PL_VIEW_OFS2), getstatf(STAT_PL_VIEW_OFS3))
+#define PL_MIN vec3(getstatf(STAT_PL_MIN1), getstatf(STAT_PL_MIN2), getstatf(STAT_PL_MIN3))
+#define PL_MAX vec3(getstatf(STAT_PL_MAX1), getstatf(STAT_PL_MAX2), getstatf(STAT_PL_MAX3))
+#define PL_CROUCH_VIEW_OFS vec3(getstatf(STAT_PL_CROUCH_VIEW_OFS1), getstatf(STAT_PL_CROUCH_VIEW_OFS2), getstatf(STAT_PL_CROUCH_VIEW_OFS3))
+#define PL_CROUCH_MIN vec3(getstatf(STAT_PL_CROUCH_MIN1), getstatf(STAT_PL_CROUCH_MIN2), getstatf(STAT_PL_CROUCH_MIN3))
+#define PL_CROUCH_MAX vec3(getstatf(STAT_PL_CROUCH_MAX1), getstatf(STAT_PL_CROUCH_MAX2), getstatf(STAT_PL_CROUCH_MAX3))
+#endif
 
 // spawnpoint prios
 const int SPAWN_PRIO_NEAR_TEAMMATE_FOUND = 200;
