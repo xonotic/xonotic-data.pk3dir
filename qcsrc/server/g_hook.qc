@@ -261,6 +261,8 @@ void GrapplingHookThink()
 							if(self.aiment.flags & FL_PROJECTILE)
 								UpdateCSQCProjectile(self.aiment);
 						}
+						if(self.aiment.classname == "nade")
+							self.aiment.nextthink = time + autocvar_g_balance_grapplehook_nade_time; // set time after letting go?
 						aim_ent.pusher = self.realowner;
 						aim_ent.pushltime = time + autocvar_g_maxpushtime;
 						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;

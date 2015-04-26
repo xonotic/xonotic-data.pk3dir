@@ -105,6 +105,7 @@ float autocvar_g_balance_fuel_rot;
 float autocvar_g_balance_fuel_rotlinear;
 int autocvar_g_balance_fuel_rotstable;
 float autocvar_g_balance_grapplehook_piggybackfriction = 1;
+float autocvar_g_balance_grapplehook_nade_time = 0.7;
 float autocvar_g_balance_grapplehook_airfriction;
 float autocvar_g_balance_grapplehook_force_rubber;
 float autocvar_g_balance_grapplehook_force_rubber_overstretch;

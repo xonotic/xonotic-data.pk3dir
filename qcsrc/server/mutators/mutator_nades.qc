@@ -565,6 +565,10 @@ void nade_touch()
 		is_weapclip = 1;*/
 	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
+		entity head;
+		for(head = world; (head = find(head, classname, "grapplinghook")); )
+		if(head.aiment == self)
+			RemoveGrapplingHook(head.realowner);
 		remove(self);
 		return;
 	}
