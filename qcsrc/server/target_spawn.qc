@@ -315,7 +315,7 @@ void initialize_field_db()
 	{
 		float n, i;
 		string fn;
-		vector prev, new;
+		vector prev, next;
 		float ft;
 
 		n = numentityfields();
@@ -323,11 +323,11 @@ void initialize_field_db()
 		{
 			fn = entityfieldname(i);
 			ft = entityfieldtype(i);
-			new = i * '1 0 0' + ft * '0 1 0' + '0 0 1';
+			next = i * '1 0 0' + ft * '0 1 0' + '0 0 1';
 			prev = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", fn)));
 			if(prev.y == 0)
 			{
-				db_put(TemporaryDB, strcat("/target_spawn/field/", fn), vtos(new));
+				db_put(TemporaryDB, strcat("/target_spawn/field/", fn), vtos(next));
 				if(fn == "target_spawn_spawnfunc")
 					target_spawn_spawnfunc_field = i;
 			}

@@ -46,7 +46,7 @@ void make_mapinfo_Think()
 void changematchtime(float delta, float mi, float ma)
 {
 	float cur;
-	float new;
+	float update;
 	float lim;
 
 	if(delta == 0)
@@ -67,21 +67,21 @@ void changematchtime(float delta, float mi, float ma)
 		if(lim == 0)
 			return; // cannot increase any further
 		else if(lim < ma)
-			new = min(ma, lim + delta);
+			update = min(ma, lim + delta);
 		else // already above maximum: FAIL
 			return;
 	}
 	else
 	{
 		if(lim == 0) // infinite: try reducing to max, if we are allowed to
-			new = max(mi, ma);
+			update = max(mi, ma);
 		else if(lim > mi) // above minimum: decrease
-			new = max(mi, lim + delta);
+			update = max(mi, lim + delta);
 		else // already below minimum: FAIL
 			return;
 	}
 
-	cvar_set("timelimit", ftos(new / 60));
+	cvar_set("timelimit", ftos(update / 60));
 }
 
 
