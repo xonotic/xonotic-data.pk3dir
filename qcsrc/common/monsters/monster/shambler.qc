@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_shambler_health;
-var float autocvar_g_monster_shambler_damageforcescale = 0.1;
+float autocvar_g_monster_shambler_damageforcescale = 0.1;
 float autocvar_g_monster_shambler_attack_smash_damage;
 float autocvar_g_monster_shambler_attack_smash_range;
 float autocvar_g_monster_shambler_attack_claw_damage;
@@ -28,6 +28,7 @@ float autocvar_g_monster_shambler_speed_stop;
 float autocvar_g_monster_shambler_speed_run;
 float autocvar_g_monster_shambler_speed_walk;
 
+/*
 const float shambler_anim_stand		= 0;
 const float shambler_anim_walk		= 1;
 const float shambler_anim_run		= 2;
@@ -37,6 +38,7 @@ const float shambler_anim_swingl	= 5;
 const float shambler_anim_magic		= 6;
 const float shambler_anim_pain		= 7;
 const float shambler_anim_death		= 8;
+*/
 
 .float shambler_lastattack; // delay attacks separately
 
@@ -57,7 +59,7 @@ void M_Shambler_Attack_Smash()
 void M_Shambler_Attack_Swing()
 {
 	float r = (random() < 0.5);
-	Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, true);
+	Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? self.anim_melee2 : self.anim_melee3), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, true);
 	if(r)
 	{
 		Monster_Delay(1, 0, 0.5, M_Shambler_Attack_Swing);
@@ -93,7 +95,7 @@ void M_Shambler_Attack_Lightning_Explode()
 	self.nextthink = time + 0.2;
 }
 
-void M_Shambler_Attack_Lightning_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void M_Shambler_Attack_Lightning_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
@@ -180,7 +182,7 @@ float M_Shambler_Attack(float attack_type)
 			if(self.flags & FL_ONGROUND)
 			if(randomness <= 0.5 && enemy_len <= autocvar_g_monster_shambler_attack_smash_range)
 			{
-				self.frame = shambler_anim_smash;
+				setanim(self, self.anim_melee2, true, true, false);
 				Monster_Delay(1, 0, 0.7, M_Shambler_Attack_Smash);
 				self.attack_finished_single = time + 1.1;
 				self.anim_finished = time + 1.1;
@@ -190,7 +192,7 @@ float M_Shambler_Attack(float attack_type)
 			}
 			else if(randomness <= 0.1 && enemy_len >= autocvar_g_monster_shambler_attack_smash_range * 1.5) // small chance, don't want this spammed
 			{
-				self.frame = shambler_anim_magic;
+				setanim(self, self.anim_shoot, true, true, false);
 				self.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general
 				self.attack_finished_single = time + 1.1;
 				self.anim_finished = 1.1;
@@ -207,11 +209,13 @@ float M_Shambler_Attack(float attack_type)
 }
 
 void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER); }
+#endif // SVQC
 
-float M_Shambler(float req)
+bool M_Shambler(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -219,14 +223,31 @@ float M_Shambler(float req)
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.5;
-			self.frame = shambler_anim_pain;
+			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = shambler_anim_death;
+			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '8 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '1 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_pain1 = animfixfps(self, '7 1 2', none); // 0.5 seconds
+			self.anim_melee1 = animfixfps(self, '3 1 5', none); // analyze models and set framerate
+			self.anim_melee2 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_melee3 = animfixfps(self, '5 1 5', none); // analyze models and set framerate
+			self.anim_shoot = animfixfps(self, '6 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '2 1 1', none);
+
+			return true;
+		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_shambler_health);
@@ -236,16 +257,11 @@ float M_Shambler(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_shambler_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_shambler_damageforcescale); }
 
-			self.m_anim_walk = shambler_anim_walk;
-			self.m_anim_run = shambler_anim_run;
-			self.m_anim_idle = shambler_anim_stand;
-
 			self.monster_loot = spawnfunc_item_health_mega;
-			self.frame = shambler_anim_stand;
 			self.weapon = WEP_ELECTRO; // matches attacks better than WEP_VORTEX
 
-			self.frame = shambler_anim_magic;
-			self.spawn_time = time + 1.1;
+			setanim(self, self.anim_shoot, false, true, true);
+			self.spawn_time = self.animstate_endtime;
 			self.spawnshieldtime = self.spawn_time;
 
 			return true;
@@ -254,10 +270,10 @@ float M_Shambler(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

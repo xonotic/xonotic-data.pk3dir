@@ -143,10 +143,50 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 	return color;
 }
 
-float HUD_GetRowCount(float item_count, vector size, float item_aspect)
+float HUD_GetRowCount(int item_count, vector size, float item_aspect)
 {
 	float aspect = size_y / size_x;
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
+}
+
+vector HUD_GetTableSize(int item_count, vector psize, float item_aspect)
+{
+	float columns, rows;
+	float ratio, best_ratio = 0;
+	float best_columns = 1, best_rows = 1;
+	bool vertical = (psize.x / psize.y >= item_aspect);
+	if(vertical)
+	{
+		psize = eX * psize.y + eY * psize.x;
+		item_aspect = 1 / item_aspect;
+	}
+
+	rows = ceil(sqrt(item_count));
+	columns = ceil(item_count/rows);
+	while(columns >= 1)
+	{
+		ratio = (psize.x/columns) / (psize.y/rows);
+		if(ratio > item_aspect)
+			ratio = item_aspect * item_aspect / ratio;
+
+		if(ratio <= best_ratio)
+			break; // ratio starts decreasing by now, skip next configurations
+
+		best_columns = columns;
+		best_rows = rows;
+		best_ratio = ratio;
+
+		if(columns == 1)
+			break;
+
+		--columns;
+		rows = ceil(item_count/columns);
+	}
+
+	if(vertical)
+		return eX * best_rows + eY * best_columns;
+	else
+		return eX * best_columns + eY * best_rows;
 }
 
 float stringwidth_colors(string s, vector theSize)
@@ -159,20 +199,20 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, false, theSize);
 }
 
-void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
+void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
 {
 	position.x -= 2 / 3 * strlen(text) * theScale.x;
 	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
-void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
+void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
 {
 	position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
 	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
 // return the string of the onscreen race timer
-string MakeRaceString(float cp, float mytime, float histime, float lapdelta, string hisname)
+string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname)
 {
 	string col;
 	string timestr;
@@ -180,7 +220,7 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 	string lapstr;
 	lapstr = "";
 
-	if(histime == 0) // goal hit
+	if(theirtime == 0) // goal hit
 	{
 		if(mytime > 0)
 		{
@@ -209,12 +249,12 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 			col = "^1";
 		}
 	}
-	else if(histime > 0) // anticipation
+	else if(theirtime > 0) // anticipation
 	{
-		if(mytime >= histime)
-			timestr = strcat("+", ftos_decimals(mytime - histime, TIME_DECIMALS));
+		if(mytime >= theirtime)
+			timestr = strcat("+", ftos_decimals(mytime - theirtime, TIME_DECIMALS));
 		else
-			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(histime));
+			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime));
 		col = "^3";
 	}
 	else
@@ -232,24 +272,25 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 	else
 		cpname = _("Finish line");
 
-	if(histime < 0)
+	if(theirtime < 0)
 		return strcat(col, cpname);
-	else if(hisname == "")
+	else if(theirname == "")
 		return strcat(col, sprintf("%s (%s)", cpname, timestr));
 	else
-		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(hisname, col, lapstr)));
+		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
 }
 
 // Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
-float race_CheckName(string net_name) {
-	float i;
+int race_CheckName(string net_name)
+{
+	int i;
 	for (i=RANKINGS_CNT-1;i>=0;--i)
 		if(grecordholder[i] == net_name)
 			return i+1;
 	return 0;
 }
 
-float GetPlayerColorForce(int i)
+int GetPlayerColorForce(int i)
 {
 	if(!teamplay)
 		return 0;
@@ -257,7 +298,7 @@ float GetPlayerColorForce(int i)
 		return stof(getplayerkeyvalue(i, "colors")) & 15;
 }
 
-float GetPlayerColor(int i)
+int GetPlayerColor(int i)
 {
 	if(!playerslots[i].gotscores) // unconnected
 		return NUM_SPECTATOR;
@@ -286,7 +327,7 @@ HUD panels
 } while(0)
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
-void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
+void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
 {
 	if(!length_ratio || !theAlpha)
 		return;
@@ -389,7 +430,7 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 	}
 }
 
-void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, float drawflag)
+void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag)
 {
 	if(!theAlpha)
 		return;
@@ -417,9 +458,9 @@ void weaponorder_swap(int i, int j, entity pass)
 }
 
 string weaponorder_cmp_str;
-float weaponorder_cmp(float i, float j, entity pass)
+int weaponorder_cmp(int i, int j, entity pass)
 {
-	float ai, aj;
+	int ai, aj;
 	ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].weapon), 0);
 	aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].weapon), 0);
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
@@ -429,11 +470,13 @@ void HUD_Weapons(void)
 {
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();
-	float i, f, a;
+	int i;
+	float f, a;
 	float screen_ar;
 	vector center = '0 0 0';
-	float weapon_count, weapon_id;
-	float row, column, rows = 0, columns;
+	int weapon_count, weapon_id;
+	int row, column, rows = 0, columns = 0;
+	bool vertical_order = true;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
@@ -508,6 +551,17 @@ void HUD_Weapons(void)
 		if(!weapons_stat)
 			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
 				weapons_stat |= WepSet_FromWeapon(i);
+
+		#if 0
+		/// debug code
+		if(cvar("wep_add"))
+		{
+			weapons_stat = '0 0 0';
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % WEP_COUNT);
+			for(i = WEP_FIRST; i <= countw; ++i)
+				weapons_stat |= WepSet_FromWeapon(i);
+		}
+		#endif
 	}
 
 	// determine which weapons are going to be shown
@@ -525,6 +579,7 @@ void HUD_Weapons(void)
 			if((weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon)) || (weaponorder[i].weapon == complain_weapon))
 				++weapon_count;
 
+
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
 		{
@@ -533,35 +588,62 @@ void HUD_Weapons(void)
 		}
 
 		vector old_panel_size = panel_size;
-		if(panel_bg_padding)
-			old_panel_size -= '2 2 0' * panel_bg_padding;
-
-		// NOTE: the goal is to use the all-weapons layout and remove unneeded cells
-		// this way weapon icons always have the same size regardless of owned weapon count
+		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
-		rows = HUD_GetRowCount(WEP_COUNT, old_panel_size, aspect);
-		columns = ceil(WEP_COUNT/rows);
-		weapon_size.x = old_panel_size.x / columns;
-		weapon_size.y = old_panel_size.y / rows;
+		vector table_size = HUD_GetTableSize(WEP_COUNT, padded_panel_size, aspect);
+		columns = table_size.x;
+		rows = table_size.y;
+		weapon_size.x = padded_panel_size.x / columns;
+		weapon_size.y = padded_panel_size.y / rows;
 
-		// reduce rows and columns as needed
-		columns = ceil(weapon_count / rows);
-		rows = ceil(weapon_count / columns);
-
-		// NOTE: although weapons should aways look the same even if onlyowned is disabled,
+		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
 		// we enlarge them a bit when possible to better match the desired aspect ratio
-		// as they look much better
-		weapon_size.x = min(old_panel_size.x / columns, aspect * weapon_size.y);
-		weapon_size.y = min(old_panel_size.y / rows, weapon_size.x / aspect);
+		if(padded_panel_size.x / padded_panel_size.y < aspect)
+		{
+			// maximum number of rows that allows to display items with the desired aspect ratio
+			int max_rows = floor(padded_panel_size.y / (weapon_size.x / aspect));
+			columns = min(columns, ceil(weapon_count / max_rows));
+			rows = ceil(weapon_count / columns);
+			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
+			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
+			vertical_order = false;
+		}
+		else
+		{
+			int max_columns = floor(padded_panel_size.x / (weapon_size.y * aspect));
+			rows = min(rows, ceil(weapon_count / max_columns));
+			columns = ceil(weapon_count / rows);
+			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
+			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
+			vertical_order = true;
+		}
 
 		// reduce size of the panel
 		panel_size.x = columns * weapon_size.x;
 		panel_size.y = rows * weapon_size.y;
-		panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
-		panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
-		if(panel_bg_padding)
-			panel_size += '2 2 0' * panel_bg_padding;
+		panel_size += '2 2 0' * panel_bg_padding;
+
+		// center the resized panel, or snap it to the screen edge when close enough
+		if(panel_pos.x > vid_conwidth * 0.001)
+		{
+			if(panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
+				panel_pos.x += old_panel_size.x - panel_size.x;
+			else
+				panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+		}
+		else if(old_panel_size.x > vid_conwidth * 0.999)
+			panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+
+		if(panel_pos.y > vid_conheight * 0.001)
+		{
+			if(panel_pos.y + old_panel_size.y > vid_conheight * 0.999)
+				panel_pos.y += old_panel_size.y - panel_size.y;
+			else
+				panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
+		}
+		else if(old_panel_size.y > vid_conheight * 0.999)
+			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
 		weapon_count = WEP_COUNT;
@@ -672,9 +754,12 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		rows = HUD_GetRowCount(weapon_count, panel_size, aspect);
-		columns = ceil(weapon_count/rows);
-		weapon_size = eX * panel_size.x*(1/columns) + eY * panel_size.y*(1/rows);
+		vector table_size = HUD_GetTableSize(WEP_COUNT, panel_size, aspect);
+		columns = table_size.x;
+		rows = table_size.y;
+		weapon_size.x = panel_size.x / columns;
+		weapon_size.y = panel_size.y / rows;
+		vertical_order = (panel_size.x / panel_size.y >= aspect);
 	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
@@ -832,12 +917,33 @@ void HUD_Weapons(void)
 			drawstring_aspect(weapon_pos + '1 1 0' * padding, s, weapon_size - '2 2 0' * padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
-		// continue with new position for the next weapon
-		++row;
-		if(row >= rows)
+		#if 0
+		/// debug code
+		if(!autocvar_hud_panel_weapons_onlyowned)
 		{
-			row = 0;
+			drawfill(weapon_pos + '1 1 0', weapon_size - '2 2 0', '1 1 1', panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
+			drawstring(weapon_pos, ftos(i + 1), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		#endif
+
+		// continue with new position for the next weapon
+		if(vertical_order)
+		{
 			++column;
+			if(column >= columns)
+			{
+				column = 0;
+				++row;
+			}
+		}
+		else
+		{
+			++row;
+			if(row >= rows)
+			{
+				row = 0;
+				++column;
+			}
 		}
 	}
 
@@ -857,7 +963,7 @@ void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
 
 }
 
-void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expand_time)
+void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
 {
 	float theAlpha = 1, a, b;
 	vector nade_color, picpos, numpos;
@@ -893,14 +999,14 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 	}
 }
 
-void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent, float isInfinite)
+void DrawAmmoItem(vector myPos, vector mySize, .int ammoType, bool isCurrent, bool isInfinite)
 {
 	if(ammoType == ammo_none)
 		return;
 
 	// Initialize variables
 
-	float ammo;
+	int ammo;
 	if(autocvar__hud_configure)
 	{
 		isCurrent = (ammoType == ammo_rockets); // Rockets always current
@@ -928,7 +1034,7 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 		textPos = myPos + eX * mySize.y;
 	}
 
-	float isShadowed = (ammo <= 0 && !isCurrent && !isInfinite);
+	bool isShadowed = (ammo <= 0 && !isCurrent && !isInfinite);
 
 	vector iconColor = isShadowed ? '0 0 0' : '1 1 1';
 	vector textColor;
@@ -965,8 +1071,8 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammoType, float isCurrent,
 	drawpic_aspect_skin(iconPos, GetAmmoPicture(ammoType), '1 1 0' * mySize.y, iconColor, alpha, DRAWFLAG_NORMAL);
 }
 
-float nade_prevstatus;
-float nade_prevframe;
+int nade_prevstatus;
+int nade_prevframe;
 float nade_statuschange_time;
 void HUD_Ammo(void)
 {
@@ -992,10 +1098,11 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float rows = 0, columns, row, column;
+	int rows = 0, columns, row, column;
 	float nade_cnt = getstatf(STAT_NADE_BONUS), nade_score = getstatf(STAT_NADE_BONUS_SCORE);
-	float draw_nades = (nade_cnt > 0 || nade_score > 0), nade_statuschange_elapsedtime;
-	float total_ammo_count;
+	bool draw_nades = (nade_cnt > 0 || nade_score > 0);
+	float nade_statuschange_elapsedtime;
+	int total_ammo_count;
 
 	vector ammo_size;
 	if (autocvar_hud_panel_ammo_onlycurrent)
@@ -1037,8 +1144,8 @@ void HUD_Ammo(void)
 		ammo_size.y = newSize;
 	}
 
-	float i;
-	float infinite_ammo = (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_WEAPON_AMMO);
+	int i;
+	bool infinite_ammo = (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_WEAPON_AMMO);
 	row = column = 0;
 	if(autocvar_hud_panel_ammo_onlycurrent)
 	{
@@ -1066,7 +1173,7 @@ void HUD_Ammo(void)
 	}
 	else
 	{
-		.float ammotype;
+		.int ammotype;
 		row = column = 0;
 		for(i = 0; i < AMMO_COUNT; ++i)
 		{
@@ -1100,7 +1207,7 @@ void HUD_Ammo(void)
 	draw_endBoldFont();
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha, float fadelerp)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha, float fadelerp)
 {
 	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
@@ -1179,7 +1286,7 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, fl
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha)
+void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha)
 {
 	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
@@ -1188,14 +1295,16 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 //
 void HUD_Powerups(void)
 {
-	float superweapons_time;
+	float strength_time, shield_time, superweapons_time;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if(!(getstati(STAT_ITEMS, 0, 24) & IT_SUPERWEAPON)) return;
+		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
+		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
+		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
 		superweapons_time = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
 
 		if (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_SUPERWEAPONS)
@@ -1207,6 +1316,8 @@ void HUD_Powerups(void)
 	}
 	else
 	{
+		strength_time = 15;
+		shield_time = 27;
 		superweapons_time = 13;
 	}
 
@@ -1218,7 +1329,7 @@ void HUD_Powerups(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	HUD_Panel_DrawBg(bound(0, superweapons_time, 1));
+	HUD_Panel_DrawBg(bound(0, max(strength_time, shield_time, superweapons_time), 1));
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1226,30 +1337,140 @@ void HUD_Powerups(void)
 	}
 
 	float panel_ar = mySize.x/mySize.y;
-	float is_vertical = (panel_ar < 1);
-	vector superweapons_offset = '0 0 0';
+	bool is_vertical = (panel_ar < 1);
+	vector shield_offset = '0 0 0', strength_offset = '0 0 0', superweapons_offset = '0 0 0';
 
-	float superweapons_is = -1;
+	int superweapons_is = -1;
 
-	if(superweapons_time) { superweapons_is = 2; }
-
-	float superweapons_baralign;
-	float superweapons_iconalign;
-
-	if (autocvar_hud_panel_powerups_flip)
+	if(superweapons_time)
 	{
-		superweapons_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
-		superweapons_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
+		if(strength_time)
+		{
+			if(shield_time)
+				superweapons_is = 0;
+			else
+				superweapons_is = 2;
+		}
+		else
+		{
+			if(shield_time)
+				superweapons_is = 1;
+			else
+				superweapons_is = 2;
+		}
+	}
+
+	// FIXME handle superweapons here
+	if(superweapons_is == 0)
+	{
+		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+		{
+			mySize.x *= (1.0 / 3.0);
+			superweapons_offset.x = mySize.x;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset.x = 2*mySize.x;
+			else
+				strength_offset.x = 2*mySize.x;
+		}
+		else
+		{
+			mySize.y *= (1.0 / 3.0);
+			superweapons_offset.y = mySize.y;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset.y = 2*mySize.y;
+			else
+				strength_offset.y = 2*mySize.y;
+		}
 	}
 	else
 	{
-		superweapons_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
-		superweapons_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
+		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+		{
+			mySize.x *= 0.5;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset.x = mySize.x;
+			else
+				strength_offset.x = mySize.x;
+		}
+		else
+		{
+			mySize.y *= 0.5;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset.y = mySize.y;
+			else
+				strength_offset.y = mySize.y;
+		}
+	}
+
+	bool shield_baralign, strength_baralign, superweapons_baralign;
+	bool shield_iconalign, strength_iconalign, superweapons_iconalign;
+
+	if (autocvar_hud_panel_powerups_flip)
+	{
+		strength_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
+		shield_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
+		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
+		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
+	}
+	else
+	{
+		shield_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
+		strength_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
+		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
+		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
+	}
+
+	if(superweapons_is == 0)
+	{
+		superweapons_iconalign = strength_iconalign;
+		superweapons_baralign = 2;
+	}
+	else if(superweapons_is == 1)
+	{
+		superweapons_offset = strength_offset;
+		superweapons_iconalign = strength_iconalign;
+		superweapons_baralign = strength_baralign;
+	}
+	else // if(superweapons_is == 2)
+	{
+		superweapons_offset = shield_offset;
+		superweapons_iconalign = shield_iconalign;
+		superweapons_baralign = shield_baralign;
+	}
+
+	if(shield_time)
+	{
+		const float maxshield = 30;
+		float shield = ceil(shield_time);
+		if(autocvar_hud_panel_powerups_progressbar)
+			HUD_Panel_DrawProgressBar(pos + shield_offset, mySize, autocvar_hud_panel_powerups_progressbar_shield, shield/maxshield, is_vertical, shield_baralign, autocvar_hud_progressbar_shield_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		if(autocvar_hud_panel_powerups_text)
+		{
+			if(shield > 1)
+				DrawNumIcon(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1);
+			if(shield <= 5)
+				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1, bound(0, (shield - shield_time) / 0.5, 1));
+		}
+	}
+
+	if(strength_time)
+	{
+		const float maxstrength = 30;
+		float strength = ceil(strength_time);
+		if(autocvar_hud_panel_powerups_progressbar)
+			HUD_Panel_DrawProgressBar(pos + strength_offset, mySize, autocvar_hud_panel_powerups_progressbar_strength, strength/maxstrength, is_vertical, strength_baralign, autocvar_hud_progressbar_strength_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		if(autocvar_hud_panel_powerups_text)
+		{
+			if(strength > 1)
+				DrawNumIcon(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1);
+			if(strength <= 5)
+				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1, bound(0, (strength - strength_time) / 0.5, 1));
+		}
 	}
 
 	if(superweapons_time)
 	{
-		float maxsuperweapons = 30;
+		const float maxsuperweapons = 30;
 		float superweapons = ceil(superweapons_time);
 		if(autocvar_hud_panel_powerups_progressbar)
 			HUD_Panel_DrawProgressBar(pos + superweapons_offset, mySize, autocvar_hud_panel_powerups_progressbar_superweapons, superweapons/maxsuperweapons, is_vertical, superweapons_baralign, autocvar_hud_progressbar_superweapons_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -1270,19 +1491,19 @@ void HUD_Powerups(void)
 
 // prev_* vars contain the health/armor at the previous FRAME
 // set to -1 when player is dead or was not playing
-float prev_health, prev_armor;
+int prev_health, prev_armor;
 float health_damagetime, armor_damagetime;
-float health_beforedamage, armor_beforedamage;
+int health_beforedamage, armor_beforedamage;
 // old_p_* vars keep track of previous values when smoothing value changes of the progressbar
-float old_p_health, old_p_armor;
+int old_p_health, old_p_armor;
 float old_p_healthtime, old_p_armortime;
 // prev_p_* vars contain the health/armor progressbar value at the previous FRAME
 // set to -1 to forcedly stop effects when we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
-float prev_p_health, prev_p_armor;
+int prev_p_health, prev_p_armor;
 
 void HUD_HealthArmor(void)
 {
-	float armor, health, fuel;
+	int armor, health, fuel;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_healtharmor) return;
@@ -1343,11 +1564,11 @@ void HUD_HealthArmor(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float baralign = autocvar_hud_panel_healtharmor_baralign;
-	float iconalign = autocvar_hud_panel_healtharmor_iconalign;
+	int baralign = autocvar_hud_panel_healtharmor_baralign;
+	int iconalign = autocvar_hud_panel_healtharmor_iconalign;
 
-    float maxhealth = autocvar_hud_panel_healtharmor_maxhealth;
-    float maxarmor = autocvar_hud_panel_healtharmor_maxarmor;
+    int maxhealth = autocvar_hud_panel_healtharmor_maxhealth;
+    int maxarmor = autocvar_hud_panel_healtharmor_maxarmor;
 	if(autocvar_hud_panel_healtharmor == 2) // combined health and armor display
 	{
 		vector v;
@@ -1385,7 +1606,7 @@ void HUD_HealthArmor(void)
 	else
 	{
 		float panel_ar = mySize.x/mySize.y;
-		float is_vertical = (panel_ar < 1);
+		bool is_vertical = (panel_ar < 1);
 		vector health_offset = '0 0 0', armor_offset = '0 0 0';
 		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 		{
@@ -1404,8 +1625,8 @@ void HUD_HealthArmor(void)
 				armor_offset.y = mySize.y;
 		}
 
-		float health_baralign, armor_baralign, fuel_baralign;
-		float health_iconalign, armor_iconalign;
+		bool health_baralign, armor_baralign, fuel_baralign;
+		bool health_iconalign, armor_iconalign;
 		if (autocvar_hud_panel_healtharmor_flip)
 		{
 			armor_baralign = (autocvar_hud_panel_healtharmor_baralign == 2 || autocvar_hud_panel_healtharmor_baralign == 1);
@@ -1609,7 +1830,7 @@ void HUD_Notify(void)
 	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
 	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 
-	float entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size.y / size.x), NOTIFY_MAX_ENTRIES);
+	int entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size.y / size.x), NOTIFY_MAX_ENTRIES);
 	float entry_height = size.y / entry_count;
 
 	float panel_width_half = size.x * 0.5;
@@ -1624,7 +1845,8 @@ void HUD_Notify(void)
 
 	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
-	float i, j, count, step, limit, alpha;
+	int i, j, count, step, limit;
+	float alpha;
 
 	if (autocvar_hud_panel_notify_flip)
 	{
@@ -2040,7 +2262,7 @@ void HUD_Radar(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float color2;
+	int color2;
 	entity tm;
 	float scale2d, normalsize, bigsize;
 
@@ -2157,9 +2379,9 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
 	entity tm = world, pl;
-	float SCOREPANEL_MAX_ENTRIES = 6;
+	int SCOREPANEL_MAX_ENTRIES = 6;
 	float SCOREPANEL_ASPECTRATIO = 2;
-	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize.y/mySize.x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
+	int entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize.y/mySize.x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
 	vector fontsize = '1 1 0' * (mySize.y/entries);
 
 	vector rgb, score_color;
@@ -2169,7 +2391,8 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 	float name_size = mySize.x*0.75;
 	float spacing_size = mySize.x*0.04;
 	const float highlight_alpha = 0.2;
-	float i = 0, me_printed = 0, first_pl = 0;
+	int i = 0, first_pl = 0;
+	bool me_printed = false;
 	string s;
 	if (autocvar__hud_configure)
 	{
@@ -2260,7 +2483,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		{
 			if (i == first_pl)
 				rgb = '0 1 0'; //first: green
-			me_printed = 1;
+			me_printed = true;
 			drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		if (team_count)
@@ -2611,13 +2834,13 @@ void HUD_RaceTimer (void)
 
 // Vote window (#9)
 //
-float vote_yescount;
-float vote_nocount;
-float vote_needed;
-float vote_highlighted; // currently selected vote
+int vote_yescount;
+int vote_nocount;
+int vote_needed;
+int vote_highlighted; // currently selected vote
 
-float vote_active; // is there an active vote?
-float vote_prev; // previous state of vote_active to check for a change
+int vote_active; // is there an active vote?
+int vote_prev; // previous state of vote_active to check for a change
 float vote_alpha;
 float vote_change; // "time" when vote_active changed
 
@@ -2761,11 +2984,11 @@ void HUD_Vote(void)
 // Mod icons panel (#10)
 //
 
-float mod_active; // is there any active mod icon?
+bool mod_active; // is there any active mod icon?
 
-void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, float i)
+void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
-	float stat = -1;
+	int stat = -1;
 	string pic = "";
 	vector color = '0 0 0';
 	switch(i)
@@ -2825,7 +3048,8 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 		layout = autocvar_hud_panel_modicons_ca_layout;
 	else //if(gametype == MAPINFO_TYPE_FREEZETAG)
 		layout = autocvar_hud_panel_modicons_freezetag_layout;
-	float rows, columns, aspect_ratio;
+	int rows, columns;
+	float aspect_ratio;
 	aspect_ratio = (layout) ? 2 : 1;
 	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
 	columns = ceil(team_count/rows);
@@ -3025,8 +3249,8 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 }
 
 // CTF HUD modicon section
-float redflag_prevframe, blueflag_prevframe, yellowflag_prevframe, pinkflag_prevframe, neutralflag_prevframe; // status during previous frame
-float redflag_prevstatus, blueflag_prevstatus, yellowflag_prevstatus, pinkflag_prevstatus, neutralflag_prevstatus; // last remembered status
+int redflag_prevframe, blueflag_prevframe, yellowflag_prevframe, pinkflag_prevframe, neutralflag_prevframe; // status during previous frame
+int redflag_prevstatus, blueflag_prevstatus, yellowflag_prevstatus, pinkflag_prevstatus, neutralflag_prevstatus; // last remembered status
 float redflag_statuschange_time, blueflag_statuschange_time, yellowflag_statuschange_time, pinkflag_statuschange_time, neutralflag_statuschange_time; // time when the status changed
 
 void HUD_Mod_CTF_Reset(void)
@@ -3042,10 +3266,10 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	vector flag_size;
 	float f; // every function should have that
 
-	float redflag, blueflag, yellowflag, pinkflag, neutralflag; // current status
+	int redflag, blueflag, yellowflag, pinkflag, neutralflag; // current status
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime, neutralflag_statuschange_elapsedtime; // time since the status changed
-	float ctf_oneflag; // one-flag CTF mode enabled/disabled
-	float stat_items = getstati(STAT_CTF_FLAGSTATUS, 0, 24);
+	bool ctf_oneflag; // one-flag CTF mode enabled/disabled
+	int stat_items = getstati(STAT_CTF_FLAGSTATUS, 0, 24);
 	float fs, fs2, fs3, size1, size2;
 	vector e1, e2;
 
@@ -3370,9 +3594,9 @@ void HUD_Mod_KH(vector pos, vector mySize)
 {
 	// Read current state
 
-	float state = getstati(STAT_KH_KEYSTATUS);
-	float i, key_state;
-	float all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
+	int state = getstati(STAT_KH_KEYSTATUS);
+	int i, key_state;
+	int all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
 	all_keys = team1_keys = team2_keys = team3_keys = team4_keys = dropped_keys = carrying_keys = 0;
 
 	if(state)
@@ -3496,7 +3720,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 }
 
 // Keepaway HUD mod icon
-float kaball_prevstatus; // last remembered status
+int kaball_prevstatus; // last remembered status
 float kaball_statuschange_time; // time when the status changed
 
 // we don't need to reset for keepaway since it immediately
@@ -3511,8 +3735,8 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 	float BLINK_FREQ = 5;
 	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 
-	float stat_items = getstati(STAT_ITEMS, 0, 24);
-	float kaball = (stat_items/IT_KEY1) & 1;
+	int stat_items = getstati(STAT_ITEMS, 0, 24);
+	int kaball = (stat_items/IT_KEY1) & 1;
 
 	if(kaball != kaball_prevstatus)
 	{
@@ -3544,7 +3768,8 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 // Nexball HUD mod icon
 void HUD_Mod_NexBall(vector pos, vector mySize)
 {
-	float stat_items, nb_pb_starttime, dt, p;
+	float nb_pb_starttime, dt, p;
+	int stat_items;
 
 	stat_items = getstati(STAT_ITEMS, 0, 24);
 	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
@@ -3577,7 +3802,7 @@ float srecordtime_prev; // last remembered srecordtime
 float srecordtime_change_time; // time when srecordtime last changed
 
 float race_status_time;
-float race_status_prev;
+int race_status_prev;
 string race_status_name_prev;
 void HUD_Mod_Race(vector pos, vector mySize)
 {
@@ -3717,7 +3942,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	}
 }
 
-void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, float i)
+void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
 	float stat = -1;
 	string pic = "";
@@ -3786,7 +4011,8 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	mod_active = 1; // required in each mod function that always shows something
 
 	int layout = autocvar_hud_panel_modicons_dom_layout;
-	float rows, columns, aspect_ratio;
+	int rows, columns;
+	float aspect_ratio;
 	aspect_ratio = (layout) ? 3 : 1;
 	rows = HUD_GetRowCount(team_count, mySize, aspect_ratio);
 	columns = ceil(team_count/rows);
@@ -3828,7 +4054,7 @@ void HUD_ModIcons_SetFunc()
 	}
 }
 
-float mod_prev; // previous state of mod_active to check for a change
+int mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
 float mod_change; // "time" when mod_active changed
 
@@ -4130,7 +4356,7 @@ void HUD_Chat(void)
 //
 float prevfps;
 float prevfps_time;
-float framecounter;
+int framecounter;
 
 float frametimeavg;
 float frametimeavg1; // 1 frame ago
@@ -4505,7 +4731,7 @@ void HUD_Physics(void)
 		else
 			acceleration_offset.y = panel_size.y;
 	}
-	float speed_baralign, acceleration_baralign;
+	int speed_baralign, acceleration_baralign;
 	if (autocvar_hud_panel_physics_baralign == 1)
 		acceleration_baralign = speed_baralign = 1;
     else if(autocvar_hud_panel_physics_baralign == 4)
@@ -4661,21 +4887,21 @@ void HUD_Physics(void)
 
 // CenterPrint (#16)
 //
-const float CENTERPRINT_MAX_MSGS = 10;
-const float CENTERPRINT_MAX_ENTRIES = 50;
+const int CENTERPRINT_MAX_MSGS = 10;
+const int CENTERPRINT_MAX_ENTRIES = 50;
 const float CENTERPRINT_SPACING = 0.7;
-float cpm_index;
+int cpm_index;
 string centerprint_messages[CENTERPRINT_MAX_MSGS];
-float centerprint_msgID[CENTERPRINT_MAX_MSGS];
+int centerprint_msgID[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
-float centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
-float centerprint_showing;
+int centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
+bool centerprint_showing;
 
-void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
+void centerprint_generic(int new_id, string strMessage, float duration, int countdown_num)
 {
 	//printf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num);
-	float i, j;
+	int i, j;
 
 	if(strMessage == "" && new_id == 0)
 		return;
@@ -4755,7 +4981,7 @@ void centerprint_hud(string strMessage)
 
 void reset_centerprint_messages(void)
 {
-	float i;
+	int i;
 	for (i=0; i<CENTERPRINT_MAX_MSGS; ++i)
 	{
 		centerprint_expire_time[i] = 0;
@@ -4773,12 +4999,12 @@ void HUD_CenterPrint (void)
 	{
 		if(!autocvar_hud_panel_centerprint) return;
 
-		if (hud_configure_prev && hud_configure_prev != -1)
+		if(hud_configure_prev)
 			reset_centerprint_messages();
 	}
 	else
 	{
-		if (!hud_configure_prev)
+		if(!hud_configure_prev)
 			reset_centerprint_messages();
 		if (time > hud_configure_cp_generation_time)
 		{
@@ -4840,7 +5066,8 @@ void HUD_CenterPrint (void)
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	float entries, height;
+	int entries;
+	float height;
 	vector fontsize;
 	// entries = bound(1, floor(CENTERPRINT_MAX_ENTRIES * 4 * panel_size_y/panel_size_x), CENTERPRINT_MAX_ENTRIES);
 	// height = panel_size_y/entries;
@@ -4849,11 +5076,11 @@ void HUD_CenterPrint (void)
 	fontsize = '1 1 0' * height;
 	entries = bound(1, floor(panel_size.y/height), CENTERPRINT_MAX_ENTRIES);
 
-	float i, j, k, n, g;
+	int i, j, k, n, g;
 	float a, sz, align, current_msg_posY = 0, msg_size;
 	vector pos;
 	string ts;
-	float all_messages_expired = true;
+	bool all_messages_expired = true;
 
 	pos = panel_pos;
 	if (autocvar_hud_panel_centerprint_flip)
@@ -4997,12 +5224,12 @@ float QuickMenu_CurrentPage;
 float QuickMenu_IsLastPage;
 // each quickmenu entry (submenu or command) is composed of 2 entries in the buffer
 #define QUICKMENU_BUFFER_MAXENTRIES 2*QUICKMENU_MAXENTRIES
-var float QuickMenu_Buffer = -1;
+float QuickMenu_Buffer = -1;
 float QuickMenu_Buffer_Size;
 float QuickMenu_Buffer_Index;
 string QuickMenu_CurrentSubMenu;
 float QuickMenu_CurrentPage_FirstEntry;
-var float QuickMenu_Entries;
+float QuickMenu_Entries;
 float QuickMenu_TimeOut;
 void HUD_QuickMenu_load_entry(float i, string s, string s1)
 {
@@ -5579,7 +5806,7 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
 //
 void HUD_Buffs(void)
 {
-	float buffs = getstati(STAT_BUFFS, 0, 24);
+	int buffs = getstati(STAT_BUFFS, 0, 24);
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_buffs) return;
@@ -5592,7 +5819,7 @@ void HUD_Buffs(void)
 		buffs = Buff_Type_first.items; // force first buff
 	}
 
-	float b = 0; // counter to tell other functions that we have buffs
+	int b = 0; // counter to tell other functions that we have buffs
 	entity e;
 	string s = "";
 	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
@@ -5606,8 +5833,7 @@ void HUD_Buffs(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-
-	draw_beginBoldFont();
+	
 
 	vector pos, mySize;
 	pos = panel_pos;
@@ -5621,12 +5847,20 @@ void HUD_Buffs(void)
 	}
 
 	//float panel_ar = mySize_x/mySize_y;
-	//float is_vertical = (panel_ar < 1);
+	//bool is_vertical = (panel_ar < 1);
 	//float buff_iconalign = autocvar_hud_panel_buffs_iconalign;
 	vector buff_offset = '0 0 0';
 
+	draw_beginBoldFont();
+	float buff_time, buff_maxtime;
+	buff_time = bound(0, getstatf(STAT_BUFF_TIME) - time, 99);
+	buff_maxtime = 60; // TODO: stat?
 	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
 	{
+		if(buff_time && autocvar_hud_panel_buffs_progressbar)
+			HUD_Panel_DrawProgressBar(pos + buff_offset, mySize, autocvar_hud_panel_buffs_progressbar_name, buff_time/buff_maxtime, 0, 0, 
+									  Buff_Color(e.items) * -1 + '1 1 1', (autocvar_hud_progressbar_alpha * panel_fg_alpha) * 0.4, DRAWFLAG_NORMAL);
+
 		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);
 		drawcolorcodedstring_aspect(pos + buff_offset, s, mySize, panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 	}
@@ -5645,7 +5879,7 @@ Main HUD system
 ==================
 */
 
-float HUD_Panel_CheckFlags(float showflags)
+bool HUD_Panel_CheckFlags(int showflags)
 {
 	if ( HUD_Minigame_Showpanels() )
 		return showflags & PANEL_SHOW_MINIGAME;
@@ -5721,7 +5955,7 @@ void HUD_Main (void)
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 	{
-		float f;
+		int f;
 		vector color;
 		float hud_dock_color_team = autocvar_hud_dock_color_team;
 		if((teamplay) && hud_dock_color_team) {
@@ -5764,13 +5998,14 @@ void HUD_Main (void)
 		for(i = 0; i < HUD_PANEL_NUM; ++i)
 			panel_order[i] = -1;
 		string s = "";
-		float p_num, warning = false;
-		float argc = tokenize_console(autocvar__hud_panelorder);
+		int p_num;
+		bool warning = false;
+		int argc = tokenize_console(autocvar__hud_panelorder);
 		if (argc > HUD_PANEL_NUM)
 			warning = true;
 		//first detect wrong/missing panel numbers
 		for(i = 0; i < HUD_PANEL_NUM; ++i) {
-			p_num = stof(argv(i));
+			p_num = stoi(argv(i));
 			if (p_num >= 0 && p_num < HUD_PANEL_NUM) { //correct panel number?
 				if (panel_order[p_num] == -1) //found for the first time?
 					s = strcat(s, ftos(p_num), " ");

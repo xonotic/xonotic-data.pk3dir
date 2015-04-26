@@ -17,6 +17,6 @@ vector angleofs(entity from, entity to);
 
 vector angleofs3(vector from, vector from_a, entity to);
 
-void FireImoBeam (vector start, vector end, vector smin, vector smax, float bforce, float f_dmg, float f_velfactor, float deathtype);
+void FireImoBeam (vector start, vector end, vector smin, vector smax, float bforce, float f_dmg, float f_velfactor, int deathtype);
 
 #endif

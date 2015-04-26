@@ -1,5 +1,6 @@
 #include "../../common/vehicles/sv_vehicles.qh"
 #include "../round_handler.qh"
+#include "../../common/triggers/subs.qh"
 
 void dom_EventLog(string mode, float cpteam, entity actor) // use an alias for easy changing and quick editing later
 {

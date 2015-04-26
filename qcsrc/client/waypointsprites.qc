@@ -38,7 +38,7 @@ void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, f
 	R_EndPolygon();
 }
 
-void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f)
+void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float theheight, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f)
 {
 	vector o, ri, up;
 	float owidth; // outer width
@@ -56,13 +56,13 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	up = rotate(up, rot);
 
 	owidth = width + 2 * border;
-	o = o - up * (margin + border + height) + ri * (sz.x - owidth) * 0.5;
+	o = o - up * (margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
 
 	drawquad(o - up * border,                               ri * owidth,    up * border, "", rgb,  a,  f);
-	drawquad(o + up * height,                               ri * owidth,    up * border, "", rgb,  a,  f);
-	drawquad(o,                                             ri * border,    up * height, "", rgb,  a,  f);
-	drawquad(o + ri * (owidth - border),                    ri * border,    up * height, "", rgb,  a,  f);
-	drawquad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * height, "", hrgb, ha, f);
+	drawquad(o + up * theheight,                               ri * owidth,    up * border, "", rgb,  a,  f);
+	drawquad(o,                                             ri * border,    up * theheight, "", rgb,  a,  f);
+	drawquad(o + ri * (owidth - border),                    ri * border,    up * theheight, "", rgb,  a,  f);
+	drawquad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * theheight, "", hrgb, ha, f);
 }
 
 // returns location of sprite text
@@ -157,6 +157,8 @@ float spritelookupblinkvalue(string s)
 		case "item-invis":       return 2;
 		case "item-extralife":   return 2;
 		case "item-speed":       return 2;
+		case "item-strength":    return 2;
+		case "item-shield":      return 2;
 		case "item-fuelregen":   return 2;
 		case "item-jetpack":     return 2;
 		case "tagged-target":    return 2;
@@ -226,6 +228,8 @@ string spritelookuptext(string s)
 		case "item-invis": return _("Invisibility");
 		case "item-extralife": return _("Extra life");
 		case "item-speed": return _("Speed");
+		case "item-strength": return _("Strength");
+		case "item-shield": return _("Shield");
 		case "item-fuelregen": return _("Fuel regen");
 		case "item-jetpack": return _("Jet Pack");
 		case "frozen": return _("Frozen!");

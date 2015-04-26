@@ -64,6 +64,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_SplitHealthArmor)
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
+	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
 	if(IS_MONSTER(self))
 	{
@@ -80,7 +81,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.gravity = 1;
 	self.reset = SUB_Remove;
 	setorigin(self, frag_target.origin + '0 0 32');
-	self.velocity = '0 0 200' + normalize(frag_attacker.origin - self.origin) * 500;
+	self.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
 	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
@@ -139,6 +140,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
 		makevectors(self.v_angle);
 
+		int oldwep = self.weapon;
+		self.weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			WEP_BLASTER | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
@@ -151,6 +154,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 			WEP_CVAR_SEC(vaporizer, delay),
 			WEP_CVAR_SEC(vaporizer, lifetime)
 		);
+		self.weapon = oldwep;
 	}
 
 	self.weapon_blocked = false;
@@ -199,41 +203,42 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 {
-	// powerups don't actually exist, so we can abuse them as much as we want
-	if(self.classname == "item_strength")
+	if(autocvar_g_powerups)
+	if(autocvar_g_overkill_powerups_replace)
 	{
-		self.classname = "item_removing"; // avoid letting other mutators use it
-		entity wep = spawn();
-		setorigin(wep, self.origin);
-		setmodel(wep, "models/weapons/g_ok_hmg.md3");
-		wep.classname = "weapon_hmg";
-		wep.ok_item = true;
-		wep.noalign = self.noalign;
-		wep.cnt = self.cnt;
-		wep.team = self.team;
-		wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
-		wep.pickup_anyway = true;
-		wep.think = spawnfunc_weapon_hmg;
-		wep.nextthink = time + 0.1;
-		return true;
-	}
+		if(self.classname == "item_strength")
+		{
+			entity wep = spawn();
+			setorigin(wep, self.origin);
+			setmodel(wep, "models/weapons/g_ok_hmg.md3");
+			wep.classname = "weapon_hmg";
+			wep.ok_item = true;
+			wep.noalign = self.noalign;
+			wep.cnt = self.cnt;
+			wep.team = self.team;
+			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.pickup_anyway = true;
+			wep.think = spawnfunc_weapon_hmg;
+			wep.nextthink = time + 0.1;
+			return true;
+		}
 
-	if(self.classname == "item_invincible")
-	{
-		self.classname = "item_removing"; // avoid letting other mutators use it
-		entity wep = spawn();
-		setorigin(wep, self.origin);
-		setmodel(wep, "models/weapons/g_ok_rl.md3");
-		wep.classname = "weapon_rpc";
-		wep.ok_item = true;
-		wep.noalign = self.noalign;
-		wep.cnt = self.cnt;
-		wep.team = self.team;
-		wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
-		wep.pickup_anyway = true;
-		wep.think = spawnfunc_weapon_rpc;
-		wep.nextthink = time + 0.1;
-		return true;
+		if(self.classname == "item_invincible")
+		{
+			entity wep = spawn();
+			setorigin(wep, self.origin);
+			setmodel(wep, "models/weapons/g_ok_rl.md3");
+			wep.classname = "weapon_rpc";
+			wep.ok_item = true;
+			wep.noalign = self.noalign;
+			wep.cnt = self.cnt;
+			wep.team = self.team;
+			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+			wep.pickup_anyway = true;
+			wep.think = spawnfunc_weapon_rpc;
+			wep.nextthink = time + 0.1;
+			return true;
+		}
 	}
 
 	return false;
@@ -331,7 +336,7 @@ void ok_SetCvars()
 	cvar_settemp("g_balance_vortex_reload_time", "2");
 
 	// laser
-	cvar_settemp("g_balance_vaporizer_secondary_force", "300");
+	cvar_settemp("g_balance_vaporizer_secondary_force", cvar_string("g_overkill_vaporizer_secondary_force")); // was 300?
 
 	// misc
 	cvar_settemp("g_projectiles_newton_style_2_minfactor", "1");

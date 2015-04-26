@@ -1,33 +1,33 @@
-#define hud_bg "gfx/vehicles/frame.tga"
-#define hud_sh "gfx/vehicles/vh-shield.tga"
+const string hud_bg = "gfx/vehicles/frame.tga";
+const string hud_sh = "gfx/vehicles/vh-shield.tga";
 
-#define hud_hp_bar "gfx/vehicles/bar_up_left.tga"
-#define hud_hp_ico "gfx/vehicles/health.tga"
-#define hud_sh_bar "gfx/vehicles/bar_dwn_left.tga"
-#define hud_sh_ico "gfx/vehicles/shield.tga"
+const string hud_hp_bar = "gfx/vehicles/bar_up_left.tga";
+const string hud_hp_ico = "gfx/vehicles/health.tga";
+const string hud_sh_bar = "gfx/vehicles/bar_dwn_left.tga";
+const string hud_sh_ico = "gfx/vehicles/shield.tga";
 
-#define hud_ammo1_bar "gfx/vehicles/bar_up_right.tga"
-#define hud_ammo1_ico "gfx/vehicles/bullets.tga"
-#define hud_ammo2_bar "gfx/vehicles/bar_dwn_right.tga"
-#define hud_ammo2_ico "gfx/vehicles/rocket.tga"
-#define hud_energy "gfx/vehicles/energy.tga"
+const string hud_ammo1_bar = "gfx/vehicles/bar_up_right.tga";
+const string hud_ammo1_ico = "gfx/vehicles/bullets.tga";
+const string hud_ammo2_bar = "gfx/vehicles/bar_dwn_right.tga";
+const string hud_ammo2_ico = "gfx/vehicles/rocket.tga";
+const string hud_energy = "gfx/vehicles/energy.tga";
 
 entity dropmark;
 float autocvar_cl_vehicles_hudscale = 0.5;
 float autocvar_cl_vehicles_hudalpha = 0.75;
 
-const float MAX_AXH = 4;
+const int MAX_AXH = 4;
 entity AuxiliaryXhair[MAX_AXH];
 
 .string axh_image;
 .float  axh_fadetime;
-.float  axh_drawflag;
+.int    axh_drawflag;
 .float  axh_scale;
 
 float alarm1time;
 float alarm2time;
 
-void vehicle_alarm(entity e, float ch, string s0und)
+void vehicle_alarm(entity e, int ch, string s0und)
 {
 	if(!autocvar_cl_vehicles_alarm)
 		return;
@@ -82,9 +82,8 @@ void Net_AuXair2(bool bIsNew)
 
 void Net_VehicleSetup()
 {
-	float i;
-
-	float hud_id = ReadByte();
+	int i;
+	int hud_id = ReadByte();
 
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
 	if(hud_id == 0)
@@ -124,3 +123,43 @@ void Net_VehicleSetup()
 	}
 	else { VEH_ACTION(hud_id, VR_SETUP); }
 }
+
+#if 0
+.bool veh_precached;
+void ent_vehicle()
+{
+	int sf = ReadByte();
+
+	if(sf & VSF_SPAWN)
+	{
+		self.vehicleid = ReadByte();
+		VEH_ACTION(self.vehicleid, VR_SPAWN);
+	}
+
+	if(sf & VSF_SETUP)
+	{
+		VEH_ACTION(self.vehicleid, VR_SETUP);
+	}
+
+	if(sf & VSF_ENTER)
+	{
+		// player handles the .vehicle stuff, we need only set ourselves up for driving
+
+		VEH_ACTION(self.vehicleid, VR_ENTER);
+	}
+
+	if(sf & VSF_EXIT)
+	{
+		VEH_ACTION(self.vehicleid, VR_EXIT);
+	}
+
+	if(sf & VSF_PRECACHE)
+	{
+		if(!get_vehicleinfo(self.vehicleid).veh_precached)
+		{
+			(get_vehicleinfo(self.vehicleid)).veh_precached = true;
+			VEH_ACTION(self.vehicleid, VR_PRECACHE);
+		}
+	}
+}
+#endif

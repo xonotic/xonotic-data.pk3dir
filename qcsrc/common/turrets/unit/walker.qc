@@ -92,7 +92,7 @@ void walker_rocket_explode()
 	remove (self);
 }
 
-void walker_rocket_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void walker_rocket_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
 	self.health = self.health - damage;
 	self.velocity = self.velocity + vforce;

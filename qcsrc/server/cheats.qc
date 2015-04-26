@@ -1,7 +1,7 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "race.qh"
-#include "t_teleporters.qh"
+#include "../common/triggers/teleporters.qh"
 
 #if defined(CSQC)
 #elif defined(MENUQC)
@@ -12,6 +12,7 @@
     #include "../warpzonelib/util_server.qh"
     #include "../common/constants.qh"
     #include "../common/util.qh"
+	#include "../common/triggers/func/breakable.qh"
     #include "../common/monsters/monsters.qh"
     #include "../common/weapons/weapons.qh"
     #include "weapons/tracing.qh"
@@ -19,6 +20,8 @@
     #include "defs.qh"
 	#include "../common/effects.qh"
     #include "../common/deathtypes.qh"
+	#include "../common/triggers/subs.qh"
+	#include "../common/triggers/func/breakable.qh"
     #include "mutators/mutators_include.qh"
     #include "../csqcmodellib/sv_model.qh"
 #endif
@@ -177,6 +180,8 @@ float CheatImpulse(float i)
 			self.personal.pauserothealth_finished = self.pauserothealth_finished;
 			self.personal.pauserotfuel_finished = self.pauserotfuel_finished;
 			self.personal.pauseregen_finished = self.pauseregen_finished;
+			self.personal.strength_finished = self.strength_finished;
+			self.personal.invincible_finished = self.invincible_finished;
 			self.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING:
@@ -234,6 +239,8 @@ float CheatImpulse(float i)
 				self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
 				self.pauserotfuel_finished = time + self.personal.pauserotfuel_finished - self.personal.teleport_time;
 				self.pauseregen_finished = time + self.personal.pauseregen_finished - self.personal.teleport_time;
+				self.strength_finished = time + self.personal.strength_finished - self.personal.teleport_time;
+				self.invincible_finished = time + self.personal.invincible_finished - self.personal.teleport_time;
 
 				DID_CHEAT();
 				break;

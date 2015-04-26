@@ -1,6 +1,7 @@
 #if defined(CSQC)
 	#include "../dpdefs/csprogsdefs.qh"
 	#include "defs.qh"
+	#include "../common/triggers/triggers.qh"
 	#include "../common/util.qh"
 	#include "autocvars.qh"
 	#include "bgmscript.qh"

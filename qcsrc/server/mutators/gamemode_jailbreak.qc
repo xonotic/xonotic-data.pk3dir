@@ -186,6 +186,8 @@ void JB_AddDoor(entity door, float theteam, vector vdata, string sdata, entity c
 }
 
 float jb_doors_opened[2];
+void door_init_startopen(); // TODO
+void door_rotating_init_startopen(); // TODO
 void JB_MaybeOpenDoor(entity door, float openjails, vector vdata, string sdata, entity cpoint)
 {
 	if(openjails == OPENJAILS_LOCKED && door.jaildoormode != JAILDOORMODE_OPEN)
@@ -1097,7 +1099,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 {
 	//self.jb_isprisoned = false;
 
-	if(!round_handler_IsRoundStarted()) { return false; }
+	if(!round_handler_IsRoundStarted()) { self.jb_isprisoned = false; return false; }
 
 	if(self.jb_imprisoner != world)
 	{

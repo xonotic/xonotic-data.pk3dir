@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_rotfish_health;
-var float autocvar_g_monster_rotfish_damageforcescale = 0.8;
+float autocvar_g_monster_rotfish_damageforcescale = 0.8;
 float autocvar_g_monster_rotfish_attack_range;
 float autocvar_g_monster_rotfish_attack_melee_damage;
 float autocvar_g_monster_rotfish_attack_melee_delay;
@@ -20,10 +20,12 @@ float autocvar_g_monster_rotfish_speed_stop;
 float autocvar_g_monster_rotfish_speed_run;
 float autocvar_g_monster_rotfish_speed_walk;
 
+/*
 const float rotfish_anim_attack = 0;
 const float rotfish_anim_death  = 1;
 const float rotfish_anim_swim   = 2;
 const float rotfish_anim_pain   = 3;
+*/
 
 
 float M_Rotfish_Attack(float attack_type)
@@ -32,7 +34,7 @@ float M_Rotfish_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_rotfish_attack_melee_damage), rotfish_anim_attack, self.attack_range, (autocvar_g_monster_rotfish_attack_melee_delay), DEATH_MONSTER_ROTFISH_MELEE, true);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_rotfish_attack_melee_damage), self.anim_melee, self.attack_range, (autocvar_g_monster_rotfish_attack_melee_delay), DEATH_MONSTER_ROTFISH_MELEE, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -46,11 +48,13 @@ float M_Rotfish_Attack(float attack_type)
 
 void spawnfunc_monster_rotfish() { Monster_Spawn(MON_ROTFISH); }
 void spawnfunc_monster_fish() { spawnfunc_monster_rotfish(); }
+#endif // SVQC
 
-float M_Rotfish(float req)
+bool M_Rotfish(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -58,14 +62,28 @@ float M_Rotfish(float req)
 		case MR_PAIN:
 		{
 			self.pain_finished = 0.8;
-			self.frame = rotfish_anim_pain;
+			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = rotfish_anim_death;
+			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '1 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '2 1 1', none);
+			self.anim_idle = animfixfps(self, '2 1 1', none);
+			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
+			self.anim_melee = animfixfps(self, '0 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '2 1 1', none);
+
+			return true;
+		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_rotfish_health);
@@ -75,12 +93,7 @@ float M_Rotfish(float req)
 			if(!self.attack_range) { self.attack_range = autocvar_g_monster_rotfish_attack_range; }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_rotfish_damageforcescale); }
 
-			self.m_anim_walk = rotfish_anim_swim;
-			self.m_anim_run = rotfish_anim_swim;
-			self.m_anim_idle = rotfish_anim_swim;
-
 			self.monster_loot = spawnfunc_item_armor_small;
-			self.frame = rotfish_anim_swim;
 
 			return true;
 		}
@@ -88,10 +101,10 @@ float M_Rotfish(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

@@ -7,7 +7,6 @@
 #include "particles.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "target_music.qh"
 #include "../common/turrets/cl_turrets.qh"
 #include "tuba.qh"
 #include "wall.qh"
@@ -23,6 +22,8 @@
 #include "../common/monsters/monsters.qh"
 #include "../common/turrets/turrets.qh"
 #include "../common/vehicles/vehicles.qh"
+
+#include "../common/triggers/include.qh"
 
 #include "../warpzonelib/client.qh"
 
@@ -109,6 +110,7 @@ void CSQC_Init(void)
 	registercvar("cl_freeze", "0");
 	registercvar("cl_pony", "0");
 	registercvar("cl_pony_skin", "0");
+	registercvar("cl_goat", "0");
 	registercvar("cl_sparkle", "0");
 	registercvar("cl_multijump", "0");
 	registercvar("cl_dodging", "0");
@@ -209,6 +211,7 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
 	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
@@ -263,8 +266,6 @@ void CSQC_Init(void)
 	WarpZone_Init();
 
 	hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
-	hud_configure_prev = -1;
-
 	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
 }
 
@@ -413,22 +414,6 @@ void Playerchecker_Think()
 	self.nextthink = time + 0.2;
 }
 
-void FPSReporter_Think()
-{
-	localcmd("\ncmd report fps ", ftos(floor(cl_fps)), "\n");
-	self.nextthink = time + sv_showfps;
-}
-
-void FPSReporter_Init()
-{
-	if(!sv_showfps)
-		return;
-
-	entity e = spawn();
-	e.think = FPSReporter_Think;
-	e.nextthink = time + 1;
-}
-
 void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
@@ -440,7 +425,6 @@ void PostInit(void)
 
 	Porto_Init();
 	TrueAim_Init();
-	FPSReporter_Init();
 
 	fovlock = -1;
 
@@ -486,6 +470,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
+
 void Ent_RemoveEntCS()
 {
 	entcs_receiver[self.sv_entnum] = world;
@@ -849,7 +834,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	if(is_new)
 	{
 		self.origin = spn_origin;
-		setsize(self, PL_MIN, PL_MAX);
+		setsize(self, '-16 -16 -24', '16 16 45');
 		droptofloor();
 
 		/*if(autocvar_cl_spawn_point_model) // needs a model first
@@ -1030,6 +1015,19 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
 		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
 		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
+		case ENT_CLIENT_VIEWLOC: ent_viewloc(); break;
+		case ENT_CLIENT_VIEWLOC_TRIGGER: ent_viewloc_trigger(); break;
+		case ENT_CLIENT_LADDER: ent_func_ladder(); break;
+		case ENT_CLIENT_TRIGGER_PUSH: ent_trigger_push(); break;
+		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;
+		case ENT_CLIENT_CONVEYOR: ent_conveyor(); break;
+		case ENT_CLIENT_DOOR: ent_door(); break;
+		case ENT_CLIENT_PLAT: ent_plat(); break;
+		case ENT_CLIENT_SWAMP: ent_swamp(); break;
+		case ENT_CLIENT_CORNER: ent_corner(); break;
+		case ENT_CLIENT_KEYLOCK: ent_keylock(); break;
+		case ENT_CLIENT_TRAIN: ent_train(); break;
+		case ENT_CLIENT_TRIGGER_IMPULSE: ent_trigger_impulse(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
@@ -1196,6 +1194,8 @@ void Ent_Init()
 	sv_showfps = ReadByte();
 
 	sv_announcer = strzone(ReadString());
+
+	//sv_banner = strzone(ReadString());
 
 	if(sv_announcer != "") { Announcer_Precache(); }
 

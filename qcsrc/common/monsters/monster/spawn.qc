@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_spawn_health;
-var float autocvar_g_monster_spawn_damageforcescale = 0.6;
+float autocvar_g_monster_spawn_damageforcescale = 0.6;
 float autocvar_g_monster_spawn_attack_explode_damage;
 float autocvar_g_monster_spawn_attack_explode_edgedamage;
 float autocvar_g_monster_spawn_attack_explode_radius;
@@ -25,11 +25,13 @@ float autocvar_g_monster_spawn_speed_stop;
 float autocvar_g_monster_spawn_speed_run;
 float autocvar_g_monster_spawn_speed_walk;
 
+/*
 const float spawn_anim_walk 	= 0;
 const float spawn_anim_run  	= 1;
 const float spawn_anim_jump 	= 2;
 const float spawn_anim_fly  	= 3;
 const float spawn_anim_explode 	= 4;
+*/
 
 void M_Spawn_Attack_Explode()
 {
@@ -68,7 +70,7 @@ float M_Spawn_Attack(float attack_type)
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
-			float leap_success = Monster_Attack_Leap(spawn_anim_jump, M_Spawn_Attack_Leap_Touch, v_forward * (autocvar_g_monster_spawn_attack_leap_speed) + '0 0 200', (autocvar_g_monster_spawn_attack_leap_delay));
+			float leap_success = Monster_Attack_Leap(self.anim_melee, M_Spawn_Attack_Leap_Touch, v_forward * (autocvar_g_monster_spawn_attack_leap_speed) + '0 0 200', (autocvar_g_monster_spawn_attack_leap_delay));
 			if(leap_success)
 			{
 				self.movetype = MOVETYPE_BOUNCE;
@@ -82,11 +84,13 @@ float M_Spawn_Attack(float attack_type)
 }
 
 void spawnfunc_monster_spawn() { Monster_Spawn(MON_SPAWN); }
+#endif // SVQC
 
-float M_Spawn(float req)
+bool M_Spawn(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			// prevent standard code from breaking everything
@@ -107,6 +111,19 @@ float M_Spawn(float req)
 			defer(0.05, M_Spawn_Attack_Explode); // simply defer to prevent recursion
 			return true;
 		}
+		#endif
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '0 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_melee = animfixfps(self, '2 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '1 1 1', none);
+
+			return true;
+		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_spawn_health);
@@ -116,12 +133,7 @@ float M_Spawn(float req)
 			if(!self.attack_range) { self.attack_range = autocvar_g_monsters_target_range * 0.8; } // bounce from almost any distance
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_spawn_damageforcescale); }
 
-			self.m_anim_walk = spawn_anim_walk;
-			self.m_anim_run = spawn_anim_run;
-			self.m_anim_idle = spawn_anim_walk;
-
 			self.monster_loot = spawnfunc_item_rockets;
-			self.frame = spawn_anim_walk;
 
 			return true;
 		}
@@ -129,10 +141,10 @@ float M_Spawn(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

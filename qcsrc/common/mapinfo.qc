@@ -705,6 +705,10 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 		{
 			// ignore
 		}
+		else if(k == "monstercount")
+		{
+			cvar_set("g_invasion_monster_count", v);
+		}
 		else
 		{
 			print("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
@@ -1330,11 +1334,11 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 	return r;
 }
 
-void MapInfo_SwitchGameType(float t)
+void MapInfo_SwitchGameType(int t)
 {
-	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for (entity e = MapInfo_Type_first; e; e = e.enemy) {
 		cvar_set(e.netname, (t == e.items) ? "1" : "0");
+	}
 }
 
 void MapInfo_LoadMap(string s, float reinit)

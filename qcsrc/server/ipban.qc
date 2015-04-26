@@ -361,7 +361,7 @@ float Ban_GetClientIP(entity client)
 	float i1, i2, i3, i4;
 	string s;
 
-	if(client.crypto_keyfp)
+	if(client.crypto_idfp_signed)
 		ban_idfp = client.crypto_idfp;
 	else
 		ban_idfp = string_null;

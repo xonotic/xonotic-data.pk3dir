@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_creeper_health;
-var float autocvar_g_monster_creeper_damageforcescale = 0.0001; // hehehe
+float autocvar_g_monster_creeper_damageforcescale = 0.0001; // hehehe
 float autocvar_g_monster_creeper_attack_explode_damage;
 float autocvar_g_monster_creeper_attack_explode_edgedamage;
 float autocvar_g_monster_creeper_attack_explode_radius;
@@ -22,13 +22,15 @@ float autocvar_g_monster_creeper_speed_stop;
 float autocvar_g_monster_creeper_speed_walk;
 float autocvar_g_monster_creeper_speed_run;
 
-const float creeper_anim_idle = 0;
-const float creeper_anim_walk = 1;
-const float creeper_anim_die = 2;
+/*
+const int creeper_anim_idle = 0;
+const int creeper_anim_walk = 1;
+const int creeper_anim_die = 2;
+*/
 
-.float creeper_primed;
+.bool creeper_primed;
 
-float M_Creeper_Attack(float attack_type)
+bool M_Creeper_Attack(int attack_type)
 {
 	switch(attack_type)
 	{
@@ -44,7 +46,7 @@ float M_Creeper_Attack(float attack_type)
 				//Monster_Sound(monstersound_attack, 0, false, CH_SHOTS);
 				Damage (self, world, world, self.health + self.max_health + 200, DEATH_KILL, self.origin, '0 0 0'); // killing monster should be reliable enough
 				self.event_damage = func_null;
-				self.frame = creeper_anim_idle;
+				setanim(self, self.anim_idle, true, false, false);
 			}
 			else
 			{
@@ -52,7 +54,7 @@ float M_Creeper_Attack(float attack_type)
 				self.creeper_primed = true;
 
 				self.colormod = '1 0 0';
-				self.frame = creeper_anim_idle;
+				setanim(self, self.anim_idle, true, false, false);
 				self.velocity_x = 0;
 				self.velocity_y = 0;
 				self.state = MONSTER_ATTACK_MELEE;
@@ -71,11 +73,13 @@ float M_Creeper_Attack(float attack_type)
 }
 
 void spawnfunc_monster_creeper() { Monster_Spawn(MON_CREEPER); }
+#endif // SVQC
 
-float M_Creeper(float req)
+bool M_Creeper(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			if(self.creeper_primed)
@@ -90,9 +94,21 @@ float M_Creeper(float req)
 		}
 		case MR_DEATH:
 		{
-			self.frame = creeper_anim_die;
+			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '2 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '1 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_run = animfixfps(self, '1 1 1', none);
+
+			return true;
+		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_creeper_health);
@@ -103,11 +119,7 @@ float M_Creeper(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_creeper_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_creeper_damageforcescale); }
 
-			self.m_anim_walk = creeper_anim_walk;
-			self.m_anim_run = creeper_anim_walk;
-			self.m_anim_idle = creeper_anim_idle;
 			self.monster_loot = spawnfunc_ammo_rockets;
-			self.frame = creeper_anim_idle;
 			self.colormod = '1 1 1';
 
 			return true;
@@ -116,10 +128,10 @@ float M_Creeper(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

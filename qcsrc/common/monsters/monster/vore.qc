@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_vore_health;
-var float autocvar_g_monster_vore_damageforcescale = 0.4;
+float autocvar_g_monster_vore_damageforcescale = 0.4;
 float autocvar_g_monster_vore_attack_spike_damage;
 float autocvar_g_monster_vore_attack_spike_radius;
 float autocvar_g_monster_vore_attack_spike_delay;
@@ -32,10 +32,12 @@ float autocvar_g_monster_vore_speed_stop;
 float autocvar_g_monster_vore_speed_run;
 float autocvar_g_monster_vore_speed_walk;
 
+/*
 const float vore_anim_attack	= 0;
 const float vore_anim_pain		= 1;
 const float vore_anim_death		= 2;
 const float vore_anim_walk		= 3;
+*/
 
 .entity vore_spike;
 
@@ -157,13 +159,13 @@ float M_Vore_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_vore_attack_melee_damage), vore_anim_attack, self.attack_range, (autocvar_g_monster_vore_attack_melee_delay), DEATH_MONSTER_VORE_MELEE, true);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_vore_attack_melee_damage), self.anim_shoot, self.attack_range, (autocvar_g_monster_vore_attack_melee_delay), DEATH_MONSTER_VORE_MELEE, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			if(!self.vore_spike)
 			{
-				self.frame = vore_anim_attack;
+				setanim(self, self.anim_shoot, true, true, true);
 				self.attack_finished_single = time + (autocvar_g_monster_vore_attack_spike_delay);
 				self.anim_finished = time + 1;
 				Monster_Delay(1, 0, 0.2, M_Vore_Attack_Spike);
@@ -181,11 +183,13 @@ void spawnfunc_monster_vore() { Monster_Spawn(MON_VORE); }
 
 // compatibility with old spawns
 void spawnfunc_monster_shalrath() { spawnfunc_monster_vore(); }
+#endif // SVQC
 
-float M_Vore(float req)
+int M_Vore(bool req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -193,14 +197,28 @@ float M_Vore(float req)
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.4;
-			self.frame = vore_anim_pain;
+			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = vore_anim_death;
+			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '2 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '3 1 1', none);
+			self.anim_idle = animfixfps(self, '3 1 1', none);
+			self.anim_pain1 = animfixfps(self, '1 1 2', none); // 0.5 seconds
+			self.anim_shoot = animfixfps(self, '3 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '0 1 1', none);
+
+			return true;
+		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_vore_health);
@@ -209,13 +227,8 @@ float M_Vore(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_vore_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_vore_damageforcescale); }
 
-			self.m_anim_walk = vore_anim_walk;
-			self.m_anim_run = vore_anim_walk;
-			self.m_anim_idle = vore_anim_walk;
-
 			self.monster_loot = spawnfunc_ammo_cells;
 			self.weapon = WEP_MACHINEGUN;
-			self.frame = vore_anim_walk;
 
 			return true;
 		}
@@ -225,10 +238,10 @@ float M_Vore(float req)
 			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

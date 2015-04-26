@@ -17,7 +17,7 @@
 	#include "../../client/autocvars.qh"
 	#include "../deathtypes.qh"
 	#include "../../csqcmodellib/interpolate.qh"
-	#include "../../client/movetypes.qh"
+	#include "../movetypes/movetypes.qh"
 	#include "../../client/main.qh"
 	#include "../../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)
@@ -64,7 +64,7 @@ entity dummy_weapon_info;
 # error Kein Weltraum links auf dem Gerät
 #endif
 
-WepSet WepSet_FromWeapon(float a) {
+WepSet WepSet_FromWeapon(int a) {
 	a -= WEP_FIRST;
 #if WEP_MAXCOUNT > 24
 	if(a >= 24) {
@@ -152,10 +152,10 @@ WepSet ReadWepSet()
 void register_weapon(
 	int id,
 	WepSet bit,
-	float(float) func,
-	.float ammotype,
-	float i,
-	float weapontype,
+	bool(int) func,
+	.int ammotype,
+	int i,
+	int weapontype,
 	float pickupbasevalue,
 	vector clr,
 	string modelname,
@@ -195,7 +195,7 @@ void register_weapon(
 	func(WR_INIT);
 	#endif
 }
-float w_null(float dummy)
+bool w_null(int dummy)
 {
 	return 0;
 }
@@ -272,7 +272,7 @@ string W_NameWeaponOrder(string order)
 }
 string W_NumberWeaponOrder_MapFunc(string s)
 {
-	float i;
+	int i;
 	if(s == "0" || stof(s))
 		return s;
 	s = W_UndeprecateName(s);
@@ -338,7 +338,7 @@ string W_FixWeaponOrder_ForceComplete(string order)
 
 void W_RandomWeapons(entity e, float n)
 {
-	float i, j;
+	int i, j;
 	WepSet remaining;
 	WepSet result;
 	remaining = e.weapons;
@@ -355,7 +355,7 @@ void W_RandomWeapons(entity e, float n)
 	e.weapons = result;
 }
 
-string GetAmmoPicture(.float ammotype)
+string GetAmmoPicture(.int ammotype)
 {
 	switch(ammotype)
 	{
@@ -371,7 +371,7 @@ string GetAmmoPicture(.float ammotype)
 }
 
 #ifdef CSQC
-.float GetAmmoFieldFromNum(int i)
+.int GetAmmoFieldFromNum(int i)
 {
 	switch(i)
 	{
@@ -386,7 +386,7 @@ string GetAmmoPicture(.float ammotype)
 	}
 }
 
-int GetAmmoStat(.float ammotype)
+int GetAmmoStat(.int ammotype)
 {
 	switch(ammotype)
 	{
@@ -408,12 +408,14 @@ string W_Sound(string w_snd)
 	if(autocvar_sv_weapons_sounddir != "" && autocvar_sv_weapons_sounddir != "default")
 	{
 		string thesnd = sprintf("weapons_%s/%s", autocvar_sv_weapons_sounddir, w_snd);
-		float globhandle = search_begin(strcat("sound/", thesnd, ".*"), true, false);
-		if(globhandle >= 0)
-		{
-			search_end(globhandle);
+		if(fexists(strcat("sound/", thesnd, ".ogg")))
 			return strcat(thesnd, ".wav");
-		}
+
+		if(fexists(strcat("sound/", thesnd, ".wav")))
+			return strcat(thesnd, ".wav");
+
+		if(fexists(strcat("sound/", thesnd, ".flac")))
+			return strcat(thesnd, ".wav");
 	}
 	return strcat("weapons/", w_snd, ".wav");
 }

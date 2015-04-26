@@ -53,6 +53,8 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+
+.float vortex_lasthit;
 #endif
 #else
 #ifdef SVQC
@@ -109,10 +111,18 @@ void W_Vortex_Attack(float issecondary)
 	}
 
 	yoda = 0;
+	damage_goodhits = 0;
 	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && self.vortex_lasthit)
+	{
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
+	}
+
+	self.vortex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
@@ -123,7 +133,7 @@ void W_Vortex_Attack(float issecondary)
 void spawnfunc_weapon_vortex(void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	float dt;
 	float ammo_amount;
@@ -256,6 +266,11 @@ float W_Vortex(float req)
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return true;
 		}
+		case WR_SETUP:
+		{
+			self.vortex_lasthit = 0;
+			return true;
+		}
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_PRI(vortex, ammo);
@@ -281,6 +296,11 @@ float W_Vortex(float req)
 			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
+		case WR_RESETPLAYER:
+		{
+			self.vortex_lasthit = 0;
+			return true;
+		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), W_Sound("reload"));
@@ -300,7 +320,7 @@ float W_Vortex(float req)
 #endif
 #ifdef CSQC
 float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	switch(req)
 	{

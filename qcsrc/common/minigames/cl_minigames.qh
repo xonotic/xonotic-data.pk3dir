@@ -41,31 +41,31 @@ vector minigame_hud_denormalize(vector v, vector pos, vector mySize);
 vector minigame_hud_denormalize_size(vector v, vector pos, vector mySize);
 
 // Check if the mouse is inside the given area
-float minigame_hud_mouse_in(vector pos, vector sz);
+bool minigame_hud_mouse_in(vector pos, vector sz);
 
 // Like drawstring, but wrapping words to fit maxwidth
 // returns the size of the drawn area
 // align selects the string alignment (0 = left, 0.5 = center, 1 = right)
 vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
-	vector fontsize, vector color, float theAlpha, float drawflags, float align );
+	vector fontsize, vector color, float theAlpha, int drawflags, float align );
 
 // Like drawcolorcodedstring, but wrapping words to fit maxwidth
 // returns the size of the drawn area
 // align selects the string alignment (0 = left, 0.5 = center, 1 = right)
 vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos, 
-	string text, vector fontsize, float theAlpha, float drawflags, float align );
+	string text, vector fontsize, float theAlpha, int drawflags, float align );
 
 // Like drawstring but truncates the text to fit maxwidth
 void minigame_drawstring_trunc(float maxwidth, vector pos, string text, 
-	vector fontsize, vector color, float theAlpha, float drawflags );
+	vector fontsize, vector color, float theAlpha, int drawflags );
 
 // Like drawcolorcodedstring but truncates the text to fit maxwidth
 void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
-	vector fontsize, float theAlpha, float drawflags );
+	vector fontsize, float theAlpha, int drawflags );
 
 // like drawpic but pos represent the center rather than the topleft corner
 void minigame_drawpic_centered( vector pos, string texture, vector sz, 
-	vector color, float thealpha, float drawflags );
+	vector color, float thealpha, int drawflags );
 
 // Get full path of a minigame texture
 string minigame_texture(string name);

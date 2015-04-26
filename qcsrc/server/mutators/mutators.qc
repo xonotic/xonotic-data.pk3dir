@@ -41,6 +41,8 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_piggyback", mutator_piggyback, 1);
 	CHECK_MUTATOR_ADD("g_buffs", mutator_buffs, !g_nexball && !g_race && !g_cts);
 	CHECK_MUTATOR_ADD("g_itemeditor", mutator_itemeditor, cvar("g_pickup_items") && !g_ca);
+	CHECK_MUTATOR_ADD("g_skycycle", mutator_skycycle, 1);
+	CHECK_MUTATOR_ADD("g_shotgunarena", mutator_shotgunarena, !cvar("g_instagib") && !g_nexball && !cvar("g_overkill") && !cvar("g_riflearena"));
 
 	#undef CHECK_MUTATOR_ADD
 }

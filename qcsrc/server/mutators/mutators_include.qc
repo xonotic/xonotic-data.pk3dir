@@ -74,7 +74,6 @@
     #include "../playerdemo.qh"
     #include "../round_handler.qh"
     #include "../item_key.qh"
-    #include "../secret.qh"
     #include "../pathlib/pathlib.qh"
     #include "../../common/vehicles/vehicles.qh"
 #endif
@@ -130,3 +129,5 @@
 #include "mutator_piggyback.qc"
 #include "mutator_buffs.qc"
 #include "mutator_itemeditor.qc"
+#include "mutator_skycycle.qc"
+#include "mutator_shotgunarena.qc"

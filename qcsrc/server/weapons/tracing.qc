@@ -131,6 +131,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if (snd != "")
 	{
 		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+		W_PlayStrengthSound(ent);
 	}
 
 	// nudge w_shotend so a trace to w_shotend hits
@@ -146,7 +147,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 	float mspeed;
 	vector outvelocity;
 
-	mvelocity = mvelocity * g_weaponspeedfactor;
+	mvelocity = mvelocity * W_WeaponSpeedFactor();
 
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
@@ -190,11 +191,7 @@ float Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
 {
 	if(!autocvar_sv_headshot)
 		return false;
-	if(ent.weapon != WEP_RIFLE && ent.weapon != WEP_VAPORIZER && ent.weapon != WEP_VORTEX 
-#ifdef CHAOS
-	&&	ent.weapon != WEP_REVOLVER
-#endif
-	)
+	if(ent.weapon != WEP_RIFLE && ent.weapon != WEP_VAPORIZER && ent.weapon != WEP_VORTEX)
 		return false;
 	if(!IS_PLAYER(targ))
 		return false;
@@ -216,7 +213,7 @@ float Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
 //  Ballistics Tracing
 // ====================
 
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
+void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector hitloc, force, endpoint, dir;
 	entity ent, endent;

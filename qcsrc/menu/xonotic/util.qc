@@ -665,12 +665,11 @@ float updateCompression()
 	//GAMETYPE(MAPINFO_TYPE_INVASION) \
 	/* nothing */
 
-float GameType_GetID(float cnt)
+int GameType_GetID(int cnt)
 {
-	float i;
-	i = 0;
+	int i = 0;
 
-	#define GAMETYPE(id) { if(i++ == cnt) return id; }
+	#define GAMETYPE(id) { if (i++ == cnt) return id; }
 	GAMETYPES
 	#undef GAMETYPE
 
@@ -679,10 +678,9 @@ float GameType_GetID(float cnt)
 	return 0;
 }
 
-float GameType_GetCount()
+int GameType_GetCount()
 {
-	float i;
-	i = 0;
+	int i = 0;
 
 	#define GAMETYPE(id) ++i;
 	GAMETYPES
@@ -691,9 +689,9 @@ float GameType_GetCount()
 	return i;
 }
 
-string GameType_GetName(float cnt)
+string GameType_GetName(int cnt)
 {
-	float i = GameType_GetID(cnt);
+	int i = GameType_GetID(cnt);
 
 	if(i)
 		return MapInfo_Type_ToText(i);
@@ -701,9 +699,9 @@ string GameType_GetName(float cnt)
 	return "";
 }
 
-string GameType_GetIcon(float cnt)
+string GameType_GetIcon(int cnt)
 {
-	float i = GameType_GetID(cnt);
+	int i = GameType_GetID(cnt);
 
 	if(i)
 		return strcat("gametype_", MapInfo_Type_ToString(i));

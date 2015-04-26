@@ -16,7 +16,7 @@ void player_setupanimsformodel();
 
 void player_anim (void);
 
-void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 // g_<gametype>_str:
 // If 0, default is used.
@@ -37,6 +37,8 @@ void ClientKill_Now_TeamChange();
 void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 .float muted; // to be used by prvm_edictset server playernumber muted 1
+.bool cow;
+bool cow_allowed;
 float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
 // message "": do not say, just test flood control
 // return value:

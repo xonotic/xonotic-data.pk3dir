@@ -101,7 +101,7 @@ void W_MachineGun_MuzzleFlash(void)
 	self.muzzle_flash.owner = self.muzzle_flash.realowner = self;
 }
 
-void W_MachineGun_Attack(float deathtype)
+void W_MachineGun_Attack(int deathtype)
 {
 	W_SetupShot(self, true, 0, W_Sound("uzi_fire"), CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
 	if(!autocvar_g_norecoil)
@@ -235,7 +235,7 @@ void W_MachineGun_Attack_Burst(void)
 
 }
 
-float W_MachineGun(float req)
+bool W_MachineGun(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -369,7 +369,7 @@ float W_MachineGun(float req)
 }
 #endif
 #ifdef CSQC
-float W_MachineGun(float req)
+bool W_MachineGun(int req)
 {
 	switch(req)
 	{

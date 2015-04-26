@@ -57,7 +57,7 @@ float W_Tuba_MarkClientOnlyFieldsAsUsed() {
 
 void spawnfunc_weapon_tuba(void) { weapon_defaultspawnfunc(WEP_TUBA); }
 
-float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo)
+bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
 	float i, j, mmin, mmax, nolength;
 	float n = tokenize_console(melody);
@@ -184,7 +184,7 @@ void W_Tuba_NoteOff(void)
 	remove(self);
 }
 
-float W_Tuba_GetNote(entity pl, float hittype)
+int W_Tuba_GetNote(entity pl, int hittype)
 {
 	float movestate = 5;
 	if (pl.movement.x < 0)		movestate -= 3;
@@ -192,7 +192,7 @@ float W_Tuba_GetNote(entity pl, float hittype)
 	if (pl.movement.y < 0)		movestate -= 1;
 	else if (pl.movement.y > 0)	movestate += 1;
 
-	float note = 0;
+	int note = 0;
 	switch(movestate)
 	{
 	// layout: originally I wanted
@@ -252,9 +252,9 @@ float W_Tuba_GetNote(entity pl, float hittype)
 	return note;
 }
 
-float W_Tuba_NoteSendEntity(entity to, float sf)
+bool W_Tuba_NoteSendEntity(entity to, int sf)
 {
-	float f;
+	int f;
 
 	msg_entity = to;
 	if(!sound_allowed(MSG_ONE, self.realowner))
@@ -369,7 +369,7 @@ void W_Tuba_NoteOn(float hittype)
 	}
 }
 
-float W_Tuba(float req)
+bool W_Tuba(int req)
 {
 	switch(req)
 	{
@@ -495,7 +495,7 @@ float W_Tuba(float req)
 }
 #endif
 #ifdef CSQC
-float W_Tuba(float req)
+bool W_Tuba(int req)
 {
 	// nothing to do here; particles of tuba are handled differently
 	// WEAPONTODO

@@ -95,6 +95,10 @@ float ldexp(float x, int e)
 {
 	return x * pow(2, e);
 }
+float logn(float x, float base)
+{
+	return log(x) / log(base);
+}
 float log10(float x)
 {
 	return log(x) * M_LOG10E;
@@ -173,6 +177,20 @@ float tgamma(float x)
 	vector v;
 	v = lgamma(x);
 	return exp(v.x) * v.y;
+}
+
+/**
+ * Pythonic mod:
+ * TODO: %% operator?
+ *
+ *  1 %  2 ==  1
+ * -1 %  2 ==  1
+ *  1 % -2 == -1
+ * -1 % -2 == -1
+ */
+float pymod(float x, float y)
+{
+	return x - y * floor(x / y);
 }
 
 float nearbyint(float x)
@@ -275,4 +293,12 @@ int islessgreater(float x, float y)
 int isunordered(float x, float y)
 {
 	return !(x < y || x == y || x > y);
+}
+
+vector cross(vector a, vector b)
+{
+	return
+		'1 0 0' * (a.y * b.z - a.z * b.y)
+	+	'0 1 0' * (a.z * b.x - a.x * b.z)
+	+	'0 0 1' * (a.x * b.y - a.y * b.x);
 }

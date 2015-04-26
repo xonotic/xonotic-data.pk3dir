@@ -15,6 +15,8 @@
 
 	#include "../warpzonelib/mathlib.qh"
 
+	#include "../common/triggers/trigger/viewloc.qh"
+
 	.float death_time;
 	.int modelflags;
 #elif defined(MENUQC)
@@ -402,6 +404,12 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	if(self.tag_entity && wasfreed(self.tag_entity))
 		self.tag_entity = world;
 
+	if(self.viewloc && wasfreed(self.viewloc))
+		self.viewloc = world;
+
+	if(self.viewloc.entnum != self.tag_networkviewloc)
+		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+
 	if(self.tag_networkentity)
 	{
 		// we are ATTACHED!
@@ -618,6 +626,25 @@ void CSQCModel_Effects_Apply(void)
 	}
 }
 
+void CSQCModel_Fade_Apply()
+{
+	if(!self.fade_end) { return; }
+	vector org;
+	float alph;
+	org = getpropertyvec(VF_ORIGIN);
+	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+		alph = 0;
+	else if(self.fade_start)
+		alph = bound(0, (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.fade_end - self.fade_start), 1);
+	else
+		alph = 1;
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
+	if(alph <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
+}
+
 void CSQCPlayer_Precache()
 {
 	precache_sound("misc/jetpack_fly.wav");
@@ -650,10 +677,16 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 	else
 		self.drawmask = MASK_NORMAL;
 
+	CSQCModel_Fade_Apply();
+
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
-		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
-		CSQCPlayer_LOD_Apply();
+		if(isplayer)
+		{
+			CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
+			CSQCPlayer_LOD_Apply();
+		}
+
 		if(!isplayer)
 		{
 			skeleton_loadinfo(self);
@@ -679,10 +712,10 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 			bool onground = 0;
 			if(self == csqcplayer)
 			{
-				if(self.pmove_flags & PMF_ONGROUND)
+				if(self.flags & FL_ONGROUND)
 					onground = 1;
-				self.anim_prev_pmove_flags = self.pmove_flags;
-				if(self.pmove_flags & PMF_DUCKED)
+				self.anim_prev_pmove_flags = self.flags;
+				if(self.flags & FL_DUCKED)
 					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, false);
 				else if(self.anim_state & ANIMSTATE_DUCK)
 					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, false);
@@ -751,7 +784,7 @@ void CSQCModel_Hook_PreUpdate(bool isnew, bool isplayer, bool islocalplayer)
 void CSQCModel_Hook_PostUpdate(bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
-	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/");
+	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/" || substring(self.model, 0, 16) == "models/monsters/");
 
 	// save values set by server
 	if(self.isplayermodel)

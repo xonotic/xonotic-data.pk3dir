@@ -385,13 +385,11 @@ void W_Vaporizer_SuperBlast()
 			center = CENTER_OR_VIEWOFS(head);
 
 			// find the closest point on the enemy to the center of the attack
-			float ang; // angle between shotdir and h
 			float h; // hypotenuse, which is the distance between attacker to head
 			float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
-			
+
 			h = vlen(center - self.origin);
-			ang = acos(dotproduct(normalize(center - self.origin), w_shotdir));
-			a = h * cos(ang);
+			a = h * (normalize(center - self.origin) * w_shotdir);
 
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
@@ -484,7 +482,7 @@ void W_RocketMinsta_SuperRocket_Touch (void)
 	W_RocketMinsta_SuperRocket_Explode();
 }
 
-void W_RocketMinsta_SuperRocket_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_RocketMinsta_SuperRocket_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
@@ -775,8 +773,10 @@ float W_Vaporizer(float req)
 						W_DecreaseAmmo(WEP_CVAR_SEC(vaporizer, ammo));
 
 					// ugly instagib hack to reuse the fire mode of the laser
+					int oldwep = self.weapon; // we can't avoid this hack
+					self.weapon = WEP_BLASTER;
 					W_Blaster_Attack(
-						WEP_VAPORIZER | HITTYPE_SECONDARY,
+						WEP_BLASTER | HITTYPE_SECONDARY,
 						WEP_CVAR_SEC(vaporizer, shotangle),
 						WEP_CVAR_SEC(vaporizer, damage),
 						WEP_CVAR_SEC(vaporizer, edgedamage),
@@ -787,6 +787,7 @@ float W_Vaporizer(float req)
 						WEP_CVAR_SEC(vaporizer, delay),
 						WEP_CVAR_SEC(vaporizer, lifetime)
 					);
+					self.weapon = oldwep;
 
 					// now do normal refire
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);

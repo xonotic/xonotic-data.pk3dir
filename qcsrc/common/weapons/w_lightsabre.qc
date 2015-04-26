@@ -1,6 +1,4 @@
-#ifndef CHAOS
-//const int WEP_LIGHTSABRE = 1337;
-#else
+#ifdef CHAOS
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
 /* WEP_##id  */ LIGHTSABRE,
@@ -47,7 +45,7 @@ LIGHTSABRE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
-#include "../../effects.qh"
+#include "../effects.qh"
 #include "../animdecide.qh"
 
 void spawnfunc_weapon_lightsabre(void) { weapon_defaultspawnfunc(WEP_LIGHTSABRE); }
@@ -94,7 +92,7 @@ void W_Lightsabre_Melee_Think(void)
 	entity target_victim;
 	vector targpos;
 	float isprimary = !(self.realowner.BUTTON_ATCK2);
-	float deathtype = WEP_LIGHTSABRE;
+	int deathtype = WEP_LIGHTSABRE;
 	if(!isprimary)
 		deathtype |= HITTYPE_SECONDARY;
 

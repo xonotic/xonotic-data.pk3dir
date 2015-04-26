@@ -158,6 +158,14 @@ MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(instagib_BotShouldAttack)
+{
+	if(other.items & IT_STRENGTH)
+		return true;
+
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(instagib_MakePlayerObserver)
 {
 	instagib_stop_countdown(self);
@@ -186,6 +194,56 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 {
 	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
+
+	if (self.items & IT_STRENGTH)
+	{
+		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		if (time > self.strength_finished)
+		{
+			self.alpha = default_player_alpha;
+			self.exteriorweaponentity.alpha = default_weapon_alpha;
+			self.items &= ~IT_STRENGTH;
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
+		}
+	}
+	else
+	{
+		if (time < self.strength_finished)
+		{
+			self.alpha = autocvar_g_instagib_invis_alpha;
+			self.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
+			self.items |= IT_STRENGTH;
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
+		}
+	}
+
+	if (self.items & IT_INVINCIBLE)
+	{
+		play_countdown(self.invincible_finished, "misc/poweroff.wav");
+		if (time > self.invincible_finished)
+		{
+			self.items &= ~IT_INVINCIBLE;
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
+		}
+	}
+	else
+	{
+		if (time < self.invincible_finished)
+		{
+			self.items |= IT_INVINCIBLE;
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
+		}
+	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(instagib_PlayerPhysics)
+{
+	if(self.items & IT_INVINCIBLE)
+		self.stat_sv_maxspeed = self.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
+
 	return false;
 }
 
@@ -237,6 +295,18 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		if(IS_PLAYER(frag_attacker))
 		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		{
+			if(frag_target.armorvalue)
+			{
+				frag_target.armorvalue -= 1;
+				frag_damage = 0;
+				frag_target.damage_dealt += 1;
+				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
+			}
+		}
+
+		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
+		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
 				if(!autocvar_g_instagib_blaster_keepdamage)
@@ -248,14 +318,6 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 					if(!autocvar_g_instagib_blaster_keepforce)
 						frag_force = '0 0 0';
 				}
-			}
-			else if(frag_target.armorvalue)
-			{
-				frag_target.armorvalue -= 1;
-				frag_damage = 0;
-				frag_target.damage_dealt += 1;
-				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
-				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
 			}
 		}
 	}
@@ -273,7 +335,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		frag_mirrordamage = 0;
 	}
 
-	if(frag_target.buffs & BUFF_INVISIBLE)
+	if((frag_target.buffs & BUFF_INVISIBLE) || (frag_target.items & IT_STRENGTH))
 		yoda = 1;
 
 	return false;
@@ -345,11 +407,26 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(instagib_CustomizeWaypoint)
+{
+	entity e = WaypointSprite_getviewentity(other);
+
+	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
+	// but only apply this to real players, not to spectators
+	if((self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
+	if(DIFF_TEAM(self.owner, e))
+		return true;
+
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(instagib_ItemCountdown)
 {
 	switch(self.items)
 	{
+		case IT_STRENGTH:   item_name = "item-invis"; item_color = '0 0 1'; break;
 		case IT_NAILS:      item_name = "item-extralife"; item_color = '1 0 0'; break;
+		case IT_INVINCIBLE: item_name = "item-speed"; item_color = '1 0 1'; break;
 	}
 	return false;
 }
@@ -403,7 +480,25 @@ MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
 	if(random() <= 0.5)
 		instagib_item_supercells();
 
-	return false;
+	if(!autocvar_g_powerups) { return false; }
+	if(!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
+		return false;
+
+	entity e = spawn();
+
+	if(random() < 0.3)
+		e.think = spawnfunc_item_strength;
+	else if(random() < 0.6)
+		e.think = instagib_health_mega;
+	else
+		e.think = spawnfunc_item_invincible;
+
+	e.nextthink = time + 0.1;
+	e.spawnflags = self.spawnflags;
+	e.noalign = self.noalign;
+	setorigin(e, self.origin);
+
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_BuildMutatorsString)
@@ -429,12 +524,15 @@ MUTATOR_DEFINITION(mutator_instagib)
 	MUTATOR_HOOK(MatchEnd, instagib_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, instagib_MonsterLoot, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, instagib_MonsterSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BotShouldAttack, instagib_BotShouldAttack, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, instagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, instagib_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, instagib_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, instagib_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, instagib_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, instagib_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, instagib_FilterItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(CustomizeWaypoint, instagib_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, instagib_ItemCountdown, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, instagib_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, instagib_SplitHealthArmor, CBC_ORDER_ANY);

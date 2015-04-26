@@ -17,17 +17,17 @@ Required functions
 ------------------
 
 SVQC:
-	float minigame_event_<id>(entity minigame, string event, ...count)
+	int <id>_server_event(entity minigame, string event, ...count)
 		see ../minigames.qh for a detailed explanation
 CSQC:
-	void minigame_hud_board_<id>(vector pos, vector mySize)
+	void <id>_hud_board(vector pos, vector mySize)
 		draws the main game board inside the rectangle defined by pos and mySize
 		(That rectangle is expressed in window coordinates)
-	void minigame_hud_status_<id>(vector pos, vector mySize)
+	void <id>_hud_status(vector pos, vector mySize)
 		draws the game status panel inside the rectangle defined by pos and mySize
 		(That rectangle is expressed in window coordinates)
 		This panel shows eg scores, captured pieces and so on
-	float minigame_event_<id>(entity minigame, string event, ...count)
+	int <id>_client_event(entity minigame, string event, ...count)
 		see ../minigames.qh for a detailed explanation
 
 Managing entities
@@ -43,6 +43,7 @@ used as send flags for minigame entities:
 
 * MINIG_SF_CREATE
 	Used when creating a new object, you can use this to define fields that don't change
+	Don't add MINIG_SF_CREATE to SendFlags on your own
 * MINIG_SF_UPDATE
 	A miscellaneous update, can be safely used if the entity has just a few fields
 * MINIG_SF_CUSTOM
@@ -62,6 +63,8 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 
 #include "nmm.qc"
 #include "ttt.qc"
+#include "c4.qc"
+#include "pong.qc"
 
 /**
  * Registration:
@@ -72,6 +75,8 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 #define REGISTERED_MINIGAMES \
 	MINIGAME(nmm, "Nine Men's Morris") \
 	MINIGAME(ttt, "Tic Tac Toe") \
+	MINIGAME(pong, "Pong") \
+	MINIGAME(c4,  "Connect Four") \
 	/*empty line*/
 
 /**
@@ -102,4 +107,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
  */
 #define MINIGAME_SIMPLELINKED_ENTITIES \
 	MSLE(minigame_board_piece,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_UPDATE, Short, minigame_flags) FIELD(MINIG_SF_UPDATE, Vector2D,origin)) \
+	MSLE(pong_paddle,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(MINIG_SF_UPDATE,Vector2D,origin)) \
+	MSLE(pong_ball,FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(PONG_SF_BALLTEAM,Byte,team) FIELD(MINIG_SF_UPDATE, Vector2D, velocity) FIELD(MINIG_SF_UPDATE, Vector2D, origin)) \
+	MSLE(pong_ai, FIELD(MINIG_SF_CREATE,Byte,team) FIELD(PONG_SF_PLAYERSCORE, Long, pong_score)) \
 	/*empty line*/ 

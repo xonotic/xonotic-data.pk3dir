@@ -13,7 +13,8 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
 		{
 			if(self.vehicle)
 				vehicles_exit(VHEF_RELEASE);
-			self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+			if(self.event_damage)
+				self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 			self.bloodloss_timer = time + 0.5 + random() * 0.5;
 		}
 	}

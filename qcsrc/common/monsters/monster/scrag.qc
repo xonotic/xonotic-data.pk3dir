@@ -12,7 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_scrag_health;
-var float autocvar_g_monster_scrag_damageforcescale = 0.55;
+float autocvar_g_monster_scrag_damageforcescale = 0.55;
 float autocvar_g_monster_scrag_attack_spike_damage;
 float autocvar_g_monster_scrag_attack_spike_edgedamage;
 float autocvar_g_monster_scrag_attack_spike_force;
@@ -22,11 +22,13 @@ float autocvar_g_monster_scrag_speed_stop;
 float autocvar_g_monster_scrag_speed_run;
 float autocvar_g_monster_scrag_speed_walk;
 
+/*
 const float scrag_anim_hover	= 0;
 const float scrag_anim_fly		= 1;
 const float scrag_anim_magic	= 2;
 const float scrag_anim_pain		= 3;
 const float scrag_anim_death	= 4;
+*/
 
 void M_Scrag_Attack_Spike_Explode()
 {
@@ -83,7 +85,7 @@ float M_Scrag_Attack(float attack_type)
 			self.attack_finished_single = time + ((random() >= 0.8) ? 1.3 : 0.15);
 			self.anim_finished = self.attack_finished_single;
 
-			self.frame = scrag_anim_magic;
+			setanim(self, self.anim_shoot, true, true, false);
 
 			M_Scrag_Attack_Spike();
 
@@ -108,11 +110,13 @@ void spawnfunc_monster_scrag() { Monster_Spawn(MON_SCRAG); }
 // compatibility with old spawns
 void spawnfunc_monster_wizard() { spawnfunc_monster_scrag(); }
 void spawnfunc_monster_wyvern() { spawnfunc_monster_scrag(); }
+#endif // SVQC
 
-float M_Scrag(float req)
+bool M_Scrag(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -120,17 +124,31 @@ float M_Scrag(float req)
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.3;
-			self.frame = scrag_anim_pain;
+			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = scrag_anim_death;
+			setanim(self, self.anim_die1, false, true, true);
 			self.velocity_x = -200 + 400 * random();
 			self.velocity_y = -200 + 400 * random();
 			self.velocity_z = 100 + 100 * random();
 			return true;
 		}
+		#endif
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '5 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '0 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
+			self.anim_shoot = animfixfps(self, '2 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '1 1 1', none);
+
+			return true;
+		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_scrag_health);
@@ -139,12 +157,7 @@ float M_Scrag(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_scrag_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_scrag_damageforcescale); }
 
-			self.m_anim_walk = scrag_anim_hover;
-			self.m_anim_run = scrag_anim_fly;
-			self.m_anim_idle = scrag_anim_hover;
-
 			self.monster_loot = spawnfunc_item_shells;
-			self.frame = scrag_anim_hover;
 
 			return true;
 		}
@@ -152,10 +165,10 @@ float M_Scrag(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

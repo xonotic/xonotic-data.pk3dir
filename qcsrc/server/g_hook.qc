@@ -17,6 +17,7 @@
     #include "command/common.qh"
     #include "g_hook.qh"
     #include "round_handler.qh"
+	#include "weapons/common.qh"
 #endif
 
 /*============================================
@@ -109,7 +110,7 @@ void GrapplingHook_Stop()
 }
 
 .vector hook_start, hook_end;
-float GrapplingHookSend(entity to, float sf)
+float GrapplingHookSend(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
 	sf = sf & 0x7F;
@@ -144,7 +145,7 @@ void GrapplingHookThink()
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self) || intermission_running || (self.aiment.flags & FL_PROJECTILE))
+	if(LostMovetypeFollow(self) || intermission_running || ((self.aiment.flags & FL_PROJECTILE) && self.aiment.classname != "nade"))
 	{
 		RemoveGrapplingHook(self.realowner);
 		return;
@@ -248,7 +249,7 @@ void GrapplingHookThink()
 				dv = ((v - v0) * dir) * dir;
 				if(tarzan >= 2)
 				{
-					if(self.aiment.movetype == MOVETYPE_WALK)
+					if(self.aiment.movetype == MOVETYPE_WALK || self.aiment.classname == "nade")
 					{
 						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
@@ -257,7 +258,11 @@ void GrapplingHookThink()
 						{
 							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
 							self.aiment.flags &= ~FL_ONGROUND;
+							if(self.aiment.flags & FL_PROJECTILE)
+								UpdateCSQCProjectile(self.aiment);
 						}
+						if(self.aiment.classname == "nade")
+							self.aiment.nextthink = time + autocvar_g_balance_grapplehook_nade_time; // set time after letting go?
 						aim_ent.pusher = self.realowner;
 						aim_ent.pushltime = time + autocvar_g_maxpushtime;
 						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;
@@ -267,7 +272,7 @@ void GrapplingHookThink()
 				realpull.flags &= ~FL_ONGROUND;
 			}
 
-			if(!frozen_pulling)
+			if(!frozen_pulling && !(self.aiment.flags & FL_PROJECTILE))
 				realpull.velocity = WarpZone_RefSys_TransformVelocity(self, realpull, ((realpull == self.realowner) ? v : (v * autocvar_g_balance_grapplehook_piggybackfriction)));
 
 			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !self.aiment.frozen)
@@ -348,7 +353,7 @@ void GrapplingHookTouch (void)
 	//self.realowner.disableclientprediction = true;
 }
 
-void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;

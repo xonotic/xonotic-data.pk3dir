@@ -235,7 +235,7 @@ void VoteCount(float first_count)
 		switch(tmp_player.vote_selection)
 		{
 			case VOTE_SELECT_REJECT: { ++vote_reject_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
-			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(IS_PLAYER(tmp_player)) ++vote_real_accept_count; } break; }
 			case VOTE_SELECT_ABSTAIN: { ++vote_abstain_count; { if(IS_PLAYER(tmp_player)) ++vote_real_abstain_count; } break; }
 			default: break;
 		}

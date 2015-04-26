@@ -44,4 +44,5 @@ string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
 void race_send_speedaward(float msg);
 void race_send_speedaward_alltimebest(float msg);
+
 #endif

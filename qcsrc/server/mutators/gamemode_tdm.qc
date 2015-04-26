@@ -1,3 +1,13 @@
+int tdm_teams;
+
+// scoreboard setup
+void tdm_ScoreRules(float teams)
+{
+	//CheckAllowedTeams(world);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
+	ScoreRules_basics_end();
+}
+
 /*QUAKED spawnfunc_tdm_team (0 .5 .8) (-16 -16 -24) (16 16 32)
 Team declaration for TDM gameplay, this allows you to decide what team names and control point models are used in your map.
 Note: If you use spawnfunc_tdm_team entities you must define at least 2!  However, unlike domination, you don't need to make a blank one too.
@@ -29,36 +39,30 @@ void tdm_SpawnTeam (string teamname, float teamcolor)
 
 void tdm_DelayedInit()
 {
+	tdm_teams = 2;
+
+	if(autocvar_g_tdm_teams_override < 2 || autocvar_g_tdm_teams_override > 4)
+		tdm_teams = autocvar_g_tdm_teams;
+	else
+		tdm_teams = autocvar_g_tdm_teams_override;
+
+	tdm_teams = bound(2, tdm_teams, 4);
+
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "tdm_team") == world)
 	{
 		print("No ""tdm_team"" entities found on this map, creating them anyway.\n");
-
-		float numteams = autocvar_g_tdm_teams_override;
-		if(numteams < 2 || numteams > 4)
-			numteams = autocvar_g_tdm_teams;
-		numteams = bound(2, numteams, 4);
-
-		tdm_SpawnTeam(NAME_TEAM_1, NUM_TEAM_1 - 1);
-		tdm_SpawnTeam(NAME_TEAM_2, NUM_TEAM_2 - 1);
-		if(numteams >= 3)
-			tdm_SpawnTeam(NAME_TEAM_3, NUM_TEAM_3 - 1);
-		if(numteams >= 4)
-			tdm_SpawnTeam(NAME_TEAM_4, NUM_TEAM_4 - 1);
+		float i;
+		for(i = 1; i <= tdm_teams; ++i)
+			tdm_SpawnTeam(Team_ColorName(Team_NumberToTeam(i)), Team_NumberToTeam(i) - 1);
 	}
+
+	tdm_ScoreRules(tdm_teams);
 }
 
 MUTATOR_HOOKFUNCTION(tdm_GetTeamCount)
 {
 	ret_string = "tdm_team";
-	if(find(world, classname, "tdm_team") == world)
-	{
-		// make it at least half accurate
-		ret_float = bound(2, ((autocvar_g_tdm_teams_override < 2) ? autocvar_g_tdm_teams : autocvar_g_tdm_teams_override), 4);
-		ret_string = string_null;
-		return false;
-	}
-
 	return true;
 }
 

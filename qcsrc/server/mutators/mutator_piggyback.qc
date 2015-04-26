@@ -170,17 +170,17 @@ MUTATOR_HOOKFUNCTION(pb_PlayerThink)
 		pb_FixPBEnt(self);
 
 	if(IS_MONSTER(self.pbhost))
-	if(self.movement || (self.BUTTON_JUMP || self.BUTTON_CROUCH))
-	if(!self.pbhost.enemy)
+	if(self.movement || self.BUTTON_JUMP || self.BUTTON_CROUCH)
+	//if(!self.pbhost.enemy) // if player is trying to move, don't override
 	{
 		float forw, rit, updown = 0;
 		vector wishvel = '0 0 0';
 
 		makevectors(self.angles);
 		if(self.BUTTON_JUMP)
-			updown = 500;
+			updown = 300;
 		else if(self.BUTTON_CROUCH)
-			updown = -500;
+			updown = -300;
 
 		if(self.movement)
 		{
@@ -251,11 +251,12 @@ MUTATOR_HOOKFUNCTION(pb_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(pb_ItemTouch)
 {
+	entity p = other;
 	if(self.weapon)
 	if(other.piggybacker)
 	if(other.weapons & self.weapons)
 	{
-		entity p = other;
+		p = other;
 		while(p.piggybacker)
 		{
 			p = p.piggybacker;
@@ -263,6 +264,40 @@ MUTATOR_HOOKFUNCTION(pb_ItemTouch)
 			{
 				other = p;
 				break;
+			}
+		}
+	}
+
+	if(self.health || self.armorvalue)
+	if(other.piggybacker)
+	{
+		if(self.health)
+		if(other.health > start_health)
+		{
+			p = other;
+			while(p.piggybacker)
+			{
+				p = p.piggybacker;
+				if(p.health < start_health)
+				{
+					other = p;
+					break;
+				}
+			}
+		}
+
+		if(self.armorvalue)
+		if(other.armorvalue > 50) // can't use start value here, as players don't start with armor
+		{
+			p = other;
+			while(p.piggybacker)
+			{
+				p = p.piggybacker;
+				if(p.armorvalue < 50)
+				{
+					other = p;
+					break;
+				}
 			}
 		}
 	}

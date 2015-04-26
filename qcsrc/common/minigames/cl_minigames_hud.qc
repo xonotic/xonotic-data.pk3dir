@@ -1,7 +1,8 @@
 #include "minigames.qh"
 #include "../../client/mapvoting.qh"
 
-float HUD_mouse_over(entity somepanel)
+// whether the mouse is over the given panel
+bool HUD_mouse_over(entity somepanel)
 {
 	vector pos = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_pos")));
 	vector sz = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_size")));
@@ -13,6 +14,7 @@ float HUD_mouse_over(entity somepanel)
 // Minigame Board
 // ====================================================================
 
+// Draws the minigame game board
 void HUD_MinigameBoard ()
 {
 	entity hud_minigame = world;
@@ -38,6 +40,7 @@ void HUD_MinigameBoard ()
 // ====================================================================
 // Minigame Status
 // ====================================================================
+// Draws the minigame status panel
 void HUD_MinigameStatus ()
 {
 	entity hud_minigame = world;
@@ -170,7 +173,7 @@ void HUD_MinigameMenu_ClickCreate_Entry()
 
 // Helper click action for collapsible entries
 // returns true when you have to create the sub-entries
-float HUD_MinigameMenu_Click_ExpandCollapse()
+bool HUD_MinigameMenu_Click_ExpandCollapse()
 {
 	entity e;
 	if ( self.flags & 2 )
@@ -188,6 +191,8 @@ float HUD_MinigameMenu_Click_ExpandCollapse()
 		}
 		if ( self.list_next )
 			self.list_next.list_prev = self;
+		else
+			HUD_MinigameMenu_last_entry = self;
 	}
 	else
 	{
@@ -263,6 +268,7 @@ void HUD_MinigameMenu_ClickNoop()
 // Click action for Quit
 void HUD_MinigameMenu_ClickQuit()
 {
+	deactivate_minigame();
 	minigame_cmd("end");
 }
 
@@ -277,10 +283,9 @@ void HUD_MinigameMenu_ClickInvite()
 {
 	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
 	{
-		float i;
 		entity e;
 		entity prev = self;
-		for(i = 0; i < maxclients; ++i)
+		for(int i = 0; i < maxclients; ++i)
 		{
 			if ( player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
 				!findfloat(world,minigame_playerslot,i+1) && playerslots[i].ping )
@@ -311,7 +316,7 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string menumessage, string even
 		menumessage, HUD_MinigameMenu_ClickCustomEntry, parent );
 	e.netname = event_arg;
 	HUD_MinigameMenu_InsertEntry(e, parent);
-	dprint("CustomEntry ",ftos(num_for_edict(parent))," ",menumessage," ",event_arg,"\n");
+	//dprint("CustomEntry ",ftos(num_for_edict(parent))," ",menumessage," ",event_arg,"\n");
 }
 
 // Click action for the Current Game menu
@@ -329,7 +334,7 @@ void HUD_MinigameMenu_ClickCurrentGame()
 	}
 }
 // Whether the minigame menu panel is open
-float HUD_MinigameMenu_IsOpened()
+bool HUD_MinigameMenu_IsOpened()
 {
 	return !!HUD_MinigameMenu_entries;
 }
@@ -461,7 +466,7 @@ void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
 							  fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-// minigame menu panel UI
+// Minigame menu panel UI
 void HUD_MinigameMenu ()
 {	
 	if ( !HUD_MinigameMenu_IsOpened() )
@@ -479,13 +484,12 @@ void HUD_MinigameMenu ()
 
 	HUD_MinigameMenu_DrawEntry(panel_pos,_("Minigames"),hud_fontsize*2,'0.25 0.47 0.72');
 	panel_pos_y += hud_fontsize_y*2;
-	
-	entity e;
+
 	vector color;
 	vector offset;
 	float itemh;
 	vector imgsz = '22 22 0'; // NOTE: if changed, edit where HUD_MinigameMenu_activeitem is selected
-	for ( e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
+	for ( entity e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
 	{
 		color = e.colormod;
 		
@@ -574,7 +578,6 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 	}
 	else
 	{
-		
 		if(bInputType == 0) {
 			if(nPrimary == K_ALT) hudShiftState |= S_ALT;
 			if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
@@ -592,11 +595,9 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		
 		// allow some binds
 		string con_keys;
-		float keys;
-		float i;
 		con_keys = findkeysforcommand("toggleconsole", 0);
-		keys = tokenize(con_keys); // findkeysforcommand returns data for this
-		for (i = 0; i < keys; ++i)
+		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (int i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
 				return false;
@@ -693,7 +694,7 @@ void HUD_Minigame_Mouse()
 			cursorsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-float HUD_Minigame_Showpanels()
+bool HUD_Minigame_Showpanels()
 {
 	return HUD_MinigameMenu_IsOpened() && ( autocvar__hud_configure || minigame_isactive() );
 }

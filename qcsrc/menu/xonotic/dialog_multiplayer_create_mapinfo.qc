@@ -26,7 +26,7 @@ ENDCLASS(XonoticMapInfoDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
+void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 {
 	me.currentMapIndex = i;
 	me.startButton.onClickEntity = mlb;
@@ -67,7 +67,8 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 void XonoticMapInfoDialog_fill(entity me)
 {
 	entity e;
-	float w, wgt, i, n;
+	int i;
+	float w, wgt, n;
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, me.rows - 2, 3, e = makeXonoticImage(string_null, 4.0/3.0));

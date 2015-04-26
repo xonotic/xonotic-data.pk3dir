@@ -39,6 +39,7 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #else
 #ifdef SVQC
 #include "../effects.qh"
+#include "../triggers/trigger/jumppads.qh"
 
 void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO); }
 
@@ -124,7 +125,7 @@ void W_Porto_Touch(void)
 	norm = trace_plane_normal;
 	if(trace_ent.iscreature)
 	{
-		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN_z, MOVE_WORLDONLY, self);
+		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN.z, MOVE_WORLDONLY, self);
 		if(trace_fraction >= 1)
 			return;
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
@@ -260,7 +261,10 @@ void W_Porto_Attack(float type)
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
 
-	W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
+	if(self.items & IT_STRENGTH)
+		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
+	else
+		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
 
 	gren.angles = vectoangles(gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -281,8 +285,8 @@ void W_Porto_Attack(float type)
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float w_nexball_weapon(float req); // WEAPONTODO
-float W_Porto(float req)
+bool w_nexball_weapon(int req); // WEAPONTODO
+bool W_Porto(int req)
 {
 	//vector v_angle_save;
 
@@ -363,6 +367,12 @@ float W_Porto(float req)
 
 			return true;
 		}
+		case WR_CHECKAMMO1:
+		case WR_CHECKAMMO2:
+		{
+			// always allow infinite ammo
+			return true;
+		}
 		case WR_INIT:
 		{
 			precache_model(W_Model("g_porto.md3"));
@@ -393,7 +403,7 @@ float W_Porto(float req)
 }
 #endif
 #ifdef CSQC
-float W_Porto(float req)
+bool W_Porto(int req)
 {
 	switch(req)
 	{

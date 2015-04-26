@@ -9176,3 +9176,242 @@ effect arc_overheat_fire // arc overheat bouncing sparks
 	originjitter 6 6 6
 	liquidfriction 5
 	velocitymultiplier 80
+
+
+// relic_resistance effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_resistance
+count 20
+type static
+color 0x00ff80 0x00ff80
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_regeneration effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_regeneration
+count 1
+type static
+color 0x00ffff 0x00ffff
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_vempire effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_vampire
+count 20
+type static
+color 0xff00ff 0xff00ff
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_ammo effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_ammo
+count 1
+type static
+color 0x80ff00 0x80ff00
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_damage effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_damage
+count 20
+type static
+color 0xff0000 0xff0000
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_splashdamage effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_ssplashdamage
+count 20
+type static
+color 0xff8000 0xff8000
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_firingspeed effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_firingspeed
+count 20
+type static
+color 0xffff00 0xffff00
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_disability effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_disability
+count 20
+type static
+color 0x0000ff 0x0000ff
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_disability_curse effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_disability_curse
+count 1
+type static
+color 0x000080 0x000080
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_teamboost effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_teamboost
+count 20
+type static
+color 0xffffff 0xffffff
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_teamboost_boost effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_teamboost_boost
+count 1
+type static
+color 0x808080 0x808080
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_speed effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_speed
+count 1
+type static
+color 0x80ffff 0x80ffff
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_jump effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_jump
+count 20
+type static
+color 0xffff80 0xffff80
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_flight effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_flight
+count 1
+type static
+color 0x8080ff 0x8080ff
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_radioactive effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_radioactive
+count 20
+type static
+color 0x00ff00 0x00ff00
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_resurrection effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_resurrection
+count 20
+type static
+color 0xff0080 0xff0080
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32
+
+// relic_vengeance effect, used by the relics mutator
+// used in qcsrc/server/mutators/relics.qc: pointparticles(particleeffectnum(mdl), e.origin, '0 0 0', 1);
+effect relic_vengeance
+count 20
+type static
+color 0xff8080 0xff8080
+size 1.5 1.5
+alpha 128 256 256
+gravity -0.1
+airfriction 0.2
+liquidfriction 0.8
+originjitter 8 8 32
+velocityjitter 64 64 32

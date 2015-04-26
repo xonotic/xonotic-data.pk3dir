@@ -58,6 +58,9 @@ const int ISF_SIZE 				= 128;
 
 .int ItemStatus;
 
+.float fade_start;
+.float fade_end;
+
 #ifdef CSQC
 
 float  autocvar_cl_animate_items = 1;
@@ -80,7 +83,7 @@ void ItemRead(float _IsNew);
 #endif
 #ifdef SVQC
 float autocvar_sv_simple_items;
-float ItemSend(entity to, float sf);
+bool ItemSend(entity to, int sf);
 
 
 float have_pickup_item(void);
@@ -121,7 +124,7 @@ void Item_FindTeam();
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
 
-float ItemSend(entity to, float sf);
+bool ItemSend(entity to, int sf);
 void ItemUpdate(entity item);
 
 // pickup evaluation functions

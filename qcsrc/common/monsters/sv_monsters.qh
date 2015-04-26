@@ -26,10 +26,8 @@ int monsters_killed;
 .vector monster_face; // custom looking direction for monster (reset to '0 0 0' when you're done!)
 .float speed2; // run speed
 .float stopspeed;
-.int m_anim_run;
-.int m_anim_walk;
-.int m_anim_idle;
 .int oldskin;
+.string mdl_dead; // dead model for goombas
 
 #define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 
@@ -82,11 +80,13 @@ void monster_setupcolors(entity mon);
 
 void Monster_Touch();
 
+void Monster_Move_2D(float mspeed, float allow_jumpoff);
+
 void Monster_Delay(float repeat_count, float repeat_defer, float defer_amnt, void() func);
 
-float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float animtime, float deathtype, float dostop);
+float Monster_Attack_Melee(entity targ, float damg, vector anim, float er, float animtime, int deathtype, float dostop);
 
-bool Monster_Attack_Leap(int anm, void() touchfunc, vector vel, float animtime);
+bool Monster_Attack_Leap(vector anm, void() touchfunc, vector vel, float animtime);
 
 entity Monster_FindTarget(entity mon);
 
@@ -111,4 +111,5 @@ ALLMONSTERSOUNDS
 #undef _MSOUND
 
 float GetMonsterSoundSampleField_notFound;
+
 #endif

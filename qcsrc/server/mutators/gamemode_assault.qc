@@ -1,5 +1,6 @@
 #include "../../common/vehicles/sv_vehicles.qh"
 #include "../../common/turrets/sv_turrets.qh"
+#include "../../common/triggers/subs.qh"
 
 // random functions
 void assault_objective_use()

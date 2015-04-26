@@ -42,6 +42,18 @@ float W_WeaponRateFactor()
 	return t;
 }
 
+float W_WeaponSpeedFactor()
+{
+	float t;
+	t = 1.0 * g_weaponspeedfactor;
+
+	ret_float = t;
+	MUTATOR_CALLHOOK(WeaponSpeedFactor);
+	t = ret_float;
+
+	return t;
+}
+
 
 void(float fr, float t, void() func) weapon_thinkf;
 

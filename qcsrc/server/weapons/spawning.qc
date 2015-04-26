@@ -159,6 +159,9 @@ void weapon_defaultspawnfunc(float wpn)
 		}
 	}
 
+	if(self.weapon == WEP_FLAK)
+		self.ammo_rockets = cvar("g_pickup_rockets_weapon"); // special case
+
 	#if 0 // WEAPONTODO
 	if(e.items)
 	{

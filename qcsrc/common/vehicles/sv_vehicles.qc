@@ -3,7 +3,44 @@
 #include "sv_vehicles.qh"
 #include "../../server/jeff.qh"
 
-float SendAuxiliaryXhair(entity to, float sf)
+#if 0
+bool vehicle_send(entity to, int sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_VEHICLE);
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & VSF_SPAWN)
+	{
+		WriteByte(MSG_ENTITY, self.vehicleid);
+	}
+
+	if(sf & VSF_SETUP)
+	{
+		// send stuff?
+	}
+
+	if(sf & VSF_ENTER)
+	{
+		// player handles the .vehicle stuff, we need only set ourselves up for driving
+
+		// send stuff?
+	}
+
+	if(sf & VSF_EXIT)
+	{
+		// senf stuff?
+	}
+
+	if(sf & VSF_PRECACHE)
+	{
+		// send stuff?!
+	}
+
+	return true;
+}
+#endif
+
+bool SendAuxiliaryXhair(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
@@ -21,7 +58,7 @@ float SendAuxiliaryXhair(entity to, float sf)
 	return true;
 }
 
-void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
+void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 {
 	if(!IS_REAL_CLIENT(own))
 		return;
@@ -46,7 +83,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 	own.(AuxiliaryXhair[axh_id]) = axh;
 }
 
-void CSQCVehicleSetup(entity own, float vehicle_id)
+void CSQCVehicleSetup(entity own, int vehicle_id)
 {
 	if(!IS_REAL_CLIENT(own))
 		return;
@@ -61,7 +98,7 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 vector targetdrone_getnewspot()
 {
 	vector spot;
-	float i;
+	int i;
 	for(i = 0; i < 100; ++i)
 	{
 		spot = self.origin + randomvec() * 1024;
@@ -103,7 +140,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
 		if(!(IS_VEHICLE(trace_ent) || IS_TURRET(trace_ent)))
 			trace_ent = world;
-			
+
 		if(trace_ent.alpha <= 0.5 && trace_ent.alpha != 0)
 			trace_ent = world; // invisible
 	}
@@ -178,7 +215,7 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 }
 
 // projectile handling
-void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	// Ignore damage from oterh projectiles from my owner (dont mess up volly's)
 	if(inflictor.owner == self.owner)
@@ -214,11 +251,11 @@ void vehicles_projectile_explode()
 	remove (self);
 }
 
-entity vehicles_projectile(string _mzlfx, string _mzlsound,
+entity vehicles_projectile(int _mzlfx, string _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
-						   float _deahtype, float _projtype, float _health,
-						   float _cull, float _clianim, entity _owner)
+						   int _deahtype, float _projtype, float _health,
+						   bool _cull, bool _clianim, entity _owner)
 {
 	entity proj;
 
@@ -257,8 +294,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 		sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
 	if(_mzlfx)
-		pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
-
+		Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
 
 	setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
@@ -284,7 +320,7 @@ void vehicles_gib_think()
 		self.nextthink = time + 0.1;
 }
 
-entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, float _explode, float _maxtime, vector _rot)
+entity vehicle_tossgib(entity _template, vector _vel, string _tag, bool _burn, bool _explode, float _maxtime, vector _rot)
 {
 	entity _gib = spawn();
 	setmodel(_gib, _template.model);
@@ -315,12 +351,12 @@ entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, 
 	return _gib;
 }
 
-float vehicle_addplayerslot(	entity _owner,
+bool vehicle_addplayerslot(	entity _owner,
 								entity _slot,
-								float _hud,
+								int _hud,
 								string _hud_model,
-								float() _framefunc,
-								void(float) _exitfunc, float() _enterfunc)
+								bool() _framefunc,
+								void(bool) _exitfunc, float() _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
 		_owner.vehicle_flags |= VHF_MULTISLOT;
@@ -614,7 +650,7 @@ void vehicles_painframe()
 	}
 }
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	self.dmg_time = time;
 
@@ -634,8 +670,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;
 
+	if(DEATH_WEAPONOFWEAPONDEATH(deathtype))
+		damage *= autocvar_g_vehicles_weapon_damagerate;
+
 	self.enemy = attacker;
-	
+
 	self.pain_finished = time;
 
 	if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
@@ -706,7 +745,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 
 float vehicles_crushable(entity e)
 {
-	if(IS_PLAYER(e))
+	if(IS_PLAYER(e) && time >= e.vehicle_enter_delay)
 		return true;
 
 	if(IS_MONSTER(e))
@@ -786,7 +825,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
 	return self.origin;
 }
 
-void vehicles_exit(float eject)
+void vehicles_exit(bool eject)
 {
 	entity _vehicle;
 	entity _player;
@@ -847,6 +886,7 @@ void vehicles_exit(float eject)
 		_player.hud				= HUD_NORMAL;
 		_player.switchweapon	= _vehicle.switchweapon;
 		_player.last_vehiclecheck = time + 3;
+		_player.vehicle_enter_delay = time + 2;
 
 		CSQCVehicleSetup(_player, HUD_NORMAL);
 	}
@@ -884,7 +924,7 @@ void vehicles_exit(float eject)
 	_vehicle.owner = world;
 
 	CSQCMODEL_AUTOINIT();
-	
+
 	self = _oldself;
 
 	vehicles_exit_running = false;
@@ -903,7 +943,7 @@ void vehicles_touch()
 		if((self.origin_z + self.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
 		{
-			if(vlen(self.velocity) != 0)
+			if(vlen(self.velocity) >= 30)
 				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
@@ -924,28 +964,18 @@ void vehicles_touch()
 void vehicles_enter(entity pl, entity veh)
 {
    // Remove this when bots know how to use vehicles
-	if (IS_BOT_CLIENT(pl))
-	if (autocvar_g_vehicles_allow_bots)
-		dprint("Bot enters vehicle\n"); // This is where we need to disconnect (some, all?) normal bot AI and hand over to vehicle's _aiframe()
-	else
+	if((IS_BOT_CLIENT(pl) && !autocvar_g_vehicles_allow_bots))
 		return;
 
-	if(!IS_PLAYER(pl))
-		return;
+	if((!IS_PLAYER(pl))
+	|| (veh.phase >= time)
+	|| (pl.vehicle_enter_delay >= time)
+	|| (pl.frozen)
+	|| (pl.deadflag != DEAD_NO)
+	|| (pl.vehicle)
+	) { return; }
 
-	if(veh.phase > time)
-		return;
-
-	if(pl.frozen)
-		return;
-
-	if(pl.deadflag != DEAD_NO)
-		return;
-
-	if(pl.vehicle)
-		return;
-
-	if(autocvar_g_vehicles_enter) // skip if we're using regular touch code
+	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
 	if(veh.owner)
 	{
@@ -954,7 +984,7 @@ void vehicles_enter(entity pl, entity veh)
 		other = pl; // TODO: fix
 
 		if(!veh.gunner1)
-		if(veh.gun1.phase <= time)
+		if(time >= veh.gun1.phase)
 		if(veh.gun1.vehicle_enter)
 		if(veh.gun1.vehicle_enter())
 		{
@@ -963,7 +993,7 @@ void vehicles_enter(entity pl, entity veh)
 		}
 
 		if(!veh.gunner2)
-		if(veh.gun2.phase <= time)
+		if(time >= veh.gun2.phase)
 		if(veh.gun2.vehicle_enter)
 		if(veh.gun2.vehicle_enter())
 		{
@@ -1093,7 +1123,7 @@ void vehicles_think()
 		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
 	
 	VEH_ACTION(self.vehicleid, VR_THINK);
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -1144,17 +1174,17 @@ void vehicles_spawn()
 	vehicles_reset_colors();
 
 	VEH_ACTION(self.vehicleid, VR_SPAWN);
-	
+
 	CSQCMODEL_AUTOINIT();
 }
 
-float vehicle_initialize(float vehicle_id, float nodrop)
+bool vehicle_initialize(int vehicle_id, bool nodrop)
 {
 	if(!autocvar_g_vehicles)
 		return false;
 
 	entity veh = get_vehicleinfo(vehicle_id);
-	
+
 	if(!veh.vehicleid)
 		return false;
 	

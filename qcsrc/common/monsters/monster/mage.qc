@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_mage_health;
-var float autocvar_g_monster_mage_damageforcescale = 0.5;
+float autocvar_g_monster_mage_damageforcescale = 0.5;
 float autocvar_g_monster_mage_attack_spike_damage;
 float autocvar_g_monster_mage_attack_spike_radius;
 float autocvar_g_monster_mage_attack_spike_delay;
@@ -42,12 +42,14 @@ float autocvar_g_monster_mage_speed_stop;
 float autocvar_g_monster_mage_speed_run;
 float autocvar_g_monster_mage_speed_walk;
 
+/*
 const float mage_anim_idle		= 0;
 const float mage_anim_walk		= 1;
 const float mage_anim_attack	= 2;
 const float mage_anim_pain		= 3;
 const float mage_anim_death		= 4;
 const float mage_anim_run		= 5;
+*/
 
 void() M_Mage_Defend_Heal;
 void() M_Mage_Defend_Shield;
@@ -243,7 +245,7 @@ void M_Mage_Defend_Heal()
 
 	if(washealed)
 	{
-		self.frame = mage_anim_attack;
+		setanim(self, self.anim_shoot, true, true, true);
 		self.attack_finished_single = time + (autocvar_g_monster_mage_heal_delay);
 		self.anim_finished = time + 1.5;
 	}
@@ -255,7 +257,7 @@ void M_Mage_Attack_Push()
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
 	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
 
-	self.frame = mage_anim_attack;
+	setanim(self, self.anim_shoot, true, true, true);
 	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
 }
 
@@ -288,7 +290,7 @@ void M_Mage_Defend_Shield()
 	self.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
 	self.armorvalue = (autocvar_g_monster_mage_shield_blockpercent);
 	self.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
-	self.frame = mage_anim_attack;
+	setanim(self, self.anim_shoot, true, true, true);
 	self.attack_finished_single = time + 1;
 	self.anim_finished = time + 1;
 }
@@ -318,7 +320,7 @@ float M_Mage_Attack(float attack_type)
 				}
 				else
 				{
-					self.frame = mage_anim_attack;
+					setanim(self, self.anim_shoot, true, true, true);
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
 					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike);
@@ -343,15 +345,17 @@ void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE); }
 // compatibility with old spawns
 void spawnfunc_monster_shalrath() { spawnfunc_monster_mage(); }
 #endif
+#endif // SVQC
 
-float M_Mage(float req)
+bool M_Mage(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			entity head;
-			float need_help = false;
+			bool need_help = false;
 
 			for(head = world; (head = findfloat(head, iscreature, true)); )
 			if(head != self)
@@ -384,9 +388,23 @@ float M_Mage(float req)
 		}
 		case MR_DEATH:
 		{
-			self.frame = mage_anim_death;
+			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '1 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
+			self.anim_shoot = animfixfps(self, '2 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '5 1 1', none);
+
+			return true;
+		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_mage_health);
@@ -395,12 +413,7 @@ float M_Mage(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_mage_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
 
-			self.m_anim_walk = mage_anim_walk;
-			self.m_anim_run = mage_anim_run;
-			self.m_anim_idle = mage_anim_idle;
-
 			self.monster_loot = spawnfunc_item_health_large;
-			self.frame = mage_anim_walk;
 
 			return true;
 		}
@@ -410,10 +423,10 @@ float M_Mage(float req)
 			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

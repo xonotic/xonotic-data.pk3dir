@@ -6,6 +6,7 @@
 	#include "common.qh"
 	#include "server.qh"
 	#include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
 	#include "../common/util.qh"
 	#include "../server/constants.qh"
 	#include "../server/defs.qh"
@@ -51,7 +52,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
 
-float WarpZone_Teleported_Send(entity to, float sf)
+bool WarpZone_Teleported_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);
@@ -216,7 +217,7 @@ void WarpZone_Touch (void)
 	}
 }
 
-float WarpZone_Send(entity to, float sendflags)
+bool WarpZone_Send(entity to, int sendflags)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
@@ -270,7 +271,7 @@ float WarpZone_Send(entity to, float sendflags)
 	return true;
 }
 
-float WarpZone_Camera_Send(entity to, float sendflags)
+bool WarpZone_Camera_Send(entity to, int sendflags)
 {
 	int f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
@@ -537,7 +538,7 @@ void WarpZone_InitStep_UpdateTransform()
 {
 	vector org, ang, norm, point;
 	float area;
-	vector tri, a, b, c, p, q, n;
+	vector tri, a, b, c, n;
 	float i_s, i_t, n_t;
 	string tex;
 
@@ -561,11 +562,7 @@ void WarpZone_InitStep_UpdateTransform()
 			a = getsurfacepoint(self, i_s, tri.x);
 			b = getsurfacepoint(self, i_s, tri.y);
 			c = getsurfacepoint(self, i_s, tri.z);
-			p = b - a;
-			q = c - a;
-			n =     '1 0 0' * (q.y * p.z - q.z * p.y)
-			+       '0 1 0' * (q.z * p.x - q.x * p.z)
-			+       '0 0 1' * (q.x * p.y - q.y * p.x);
+			n = cross(c - a, b - a);
 			area = area + vlen(n);
 			norm = norm + n;
 			point = point + vlen(n) * (a + b + c);

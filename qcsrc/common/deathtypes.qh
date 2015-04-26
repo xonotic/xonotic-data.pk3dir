@@ -26,6 +26,7 @@ int DEATH_VHLAST;
 	DEATHTYPE(DEATH_DROWN,                  DEATH_SELF_DROWN,                   DEATH_MURDER_DROWN,            NORMAL_POS) \
 	DEATHTYPE(DEATH_FALL,                   DEATH_SELF_FALL,                    DEATH_MURDER_FALL,             NORMAL_POS) \
 	DEATHTYPE(DEATH_FIRE,                   DEATH_SELF_FIRE,                    DEATH_MURDER_FIRE,             NORMAL_POS) \
+	DEATHTYPE(DEATH_FOOT,                   DEATH_SELF_FOOT,                    NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_GENERIC,                DEATH_SELF_GENERIC,                 NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_HURTTRIGGER,            DEATH_SELF_VOID,                    DEATH_MURDER_VOID,             NORMAL_POS) \
 	DEATHTYPE(DEATH_KILL,                   DEATH_SELF_SUICIDE,                 NO_MSG,                        NORMAL_POS) \

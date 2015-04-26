@@ -77,7 +77,7 @@ void W_Hagar_Explode2(void)
 	remove(self);
 }
 
-void W_Hagar_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Hagar_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -301,7 +301,9 @@ void W_Hagar_Attack2_Load(void)
 	loaded = self.hagar_load >= WEP_CVAR_SEC(hagar, load_max);
 
 	// this is different than WR_CHECKAMMO when it comes to reloading
-	if(autocvar_g_balance_hagar_reload_ammo)
+	if(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		enough_ammo = true;
+	else if(autocvar_g_balance_hagar_reload_ammo)
 		enough_ammo = self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
 		enough_ammo = self.WEP_AMMO(HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
@@ -385,6 +387,7 @@ void W_Hagar_Attack2_Load(void)
 
 	// we aren't checking ammo during an attack, so we must do it here
 	if(!(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
+	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		// note: this doesn't force the switch
 		W_SwitchToOtherWeapon(self);
@@ -392,7 +395,7 @@ void W_Hagar_Attack2_Load(void)
 	}
 }
 
-float W_Hagar(float req)
+bool W_Hagar(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -521,7 +524,7 @@ float W_Hagar(float req)
 }
 #endif
 #ifdef CSQC
-float W_Hagar(float req)
+bool W_Hagar(int req)
 {
 	switch(req)
 	{

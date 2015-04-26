@@ -123,7 +123,8 @@ void W_Shockwave_Melee_Think(void)
 	// set start time of melee
 	if(!self.cnt)
 	{
-		self.cnt = time; 
+		self.cnt = time;
+		W_PlayStrengthSound(self.realowner);
 	}
 
 	// update values for v_* vectors
@@ -554,13 +555,11 @@ void W_Shockwave_Attack(void)
 			center = CENTER_OR_VIEWOFS(head);
 
 			// find the closest point on the enemy to the center of the attack
-			float ang; // angle between shotdir and h
 			float h; // hypotenuse, which is the distance between attacker to head
 			float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 
 			h = vlen(center - self.origin);
-			ang = acos(dotproduct(normalize(center - self.origin), w_shotdir));
-			a = h * cos(ang);
+			a = h * (normalize(center - self.origin) * w_shotdir);
 			// WEAPONTODO: replace with simpler method
 
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
@@ -668,7 +667,7 @@ void W_Shockwave_Attack(void)
 	}
 }
 
-float W_Shockwave(float req)
+bool W_Shockwave(int req)
 {
 	switch(req)
 	{
@@ -867,7 +866,7 @@ void Net_ReadShockwaveParticle(void)
 	shockwave.sw_time = time;
 }
 
-float W_Shockwave(float req)
+bool W_Shockwave(int req)
 {
 	switch(req)
 	{

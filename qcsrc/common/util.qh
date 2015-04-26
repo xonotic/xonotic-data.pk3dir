@@ -138,9 +138,6 @@ const float TIME_FACTOR = 100;
 
 string ScoreString(float vflags, float value);
 
-float dotproduct(vector a, vector b);
-vector cross(vector a, vector b);
-
 void compressShortVector_init();
 vector decompressShortVector(float data);
 float compressShortVector(vector vec);
@@ -246,8 +243,8 @@ void RandomSelection_Init();
 void RandomSelection_Add(entity e, float f, string s, float weight, float priority);
 
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage, float bycount); // returns vector: take, save, 0
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
+vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage, bool bycount); // returns vector: take, save, 0
 #endif
 
 string getcurrentmod();

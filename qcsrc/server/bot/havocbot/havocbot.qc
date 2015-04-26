@@ -1,5 +1,6 @@
 #include "havocbot.qh"
 #include "roles.qc"
+#include "../../../common/triggers/trigger/jumppads.qh"
 
 void havocbot_ai()
 {
@@ -468,7 +469,7 @@ void havocbot_movetogoal()
 
 		// Flying
 		self.BUTTON_HOOK = true;
-		if(self.navigation_jetpack_point.z - PL_MAX_z + PL_MIN_z < self.origin.z)
+		if(self.navigation_jetpack_point.z - PL_MAX.z + PL_MIN.z < self.origin.z)
 		{
 			self.movement_x = dir * v_forward * maxspeed;
 			self.movement_y = dir * v_right * maxspeed;

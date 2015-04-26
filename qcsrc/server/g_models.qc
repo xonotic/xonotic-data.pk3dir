@@ -4,6 +4,7 @@
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
     #include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
     #include "autocvars.qh"
     #include "constants.qh"
     #include "defs.qh"
@@ -60,7 +61,7 @@ void g_clientmodel_dropbyspawnflags()
 		self.SendFlags |= 2;
 }
 
-float g_clientmodel_genericsendentity (entity to, float sf)
+float g_clientmodel_genericsendentity (entity to, int sf)
 {
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')

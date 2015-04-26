@@ -22,6 +22,57 @@
 #elif defined(SVQC)
 #endif
 
+float showfps_prevfps;
+float showfps_prevfps_time;
+int showfps_framecounter;
+
+float showfps_delay;
+
+float showfps_frametimeavg;
+float showfps_frametimeavg1; // 1 frame ago
+float showfps_frametimeavg2; // 2 frames ago
+void FPSReporter_Think()
+{
+	if(!sv_showfps) { return; }
+
+	float currentTime = gettime(GETTIME_REALTIME);
+	if(cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage"))
+	{
+		float currentframetime = currentTime - showfps_prevfps_time;
+		showfps_frametimeavg = (showfps_frametimeavg + showfps_frametimeavg1 + showfps_frametimeavg2 + currentframetime)/4; // average three frametimes into framecounter for slightly more stable fps readings :P
+		showfps_frametimeavg2 = showfps_frametimeavg1;
+		showfps_frametimeavg1 = showfps_frametimeavg;
+
+		float weight;
+		weight = cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight");
+		if(currentframetime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
+		{
+			if(fabs(showfps_prevfps - (1/showfps_frametimeavg)) > showfps_prevfps * cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold")) // if there was a big jump in fps, just force prevfps at current (1/currentframetime) to make big updates instant
+				showfps_prevfps = (1/currentframetime);
+			showfps_prevfps = (1 - weight) * showfps_prevfps + weight * (1/showfps_frametimeavg); // framecounter just used so there's no need for a new variable, think of it as "frametime average"
+		}
+		showfps_prevfps_time = currentTime;
+	}
+	else
+	{
+		showfps_framecounter += 1;
+		if(currentTime - showfps_prevfps_time > autocvar_hud_panel_engineinfo_framecounter_time)
+		{
+			showfps_prevfps = showfps_framecounter/(currentTime - showfps_prevfps_time);
+			showfps_framecounter = 0;
+			showfps_prevfps_time = currentTime;
+		}
+	}
+
+	if(time >= showfps_delay)
+	{
+		showfps_delay = time + sv_showfps;
+		localcmd("\ncmd report fps ", sprintf("%.*f", autocvar_hud_panel_engineinfo_framecounter_decimals, showfps_prevfps), "\n");
+	}
+
+	//drawstring_aspect(pos, sprintf(_("FPS: %.*f"), autocvar_hud_panel_engineinfo_framecounter_decimals, prevfps), mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
 entity porto;
 vector polyline[16];
 void Porto_Draw()
@@ -224,6 +275,16 @@ vector GetCurrentFov(float fov)
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
+vector GetViewLocationFOV(float fov)
+{
+	float frustumx, frustumy, fovx, fovy;
+	frustumy = tan(fov * M_PI / 360.0) * 0.75;
+	frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
+	fovx = atan2(frustumx, 1) / M_PI * 360.0;
+	fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	return '1 0 0' * fovx + '0 1 0' * fovy;
+}
+
 vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, vector ov_org)
 {
 	float fovx, fovy;
@@ -414,15 +475,19 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-float WantEventchase()
+bool WantEventchase()
 {
 	if(autocvar_cl_orthoview)
 		return false;
 	if(intermission)
 		return true;
+	if(self.viewloc)
+		return true;
 	if(spectatee_status >= 0)
 	{
 		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
+			return true;
+		if(substring(self.model, 0, 16) == "models/monsters/")
 			return true;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO)))
 			return true;
@@ -553,7 +618,7 @@ void UpdateCrosshair()
 	float tempcamera = (gametype == MAPINFO_TYPE_JAILBREAK && spectatee_status >= 0 && getstati(STAT_ROUNDLOST) && !getstati(STAT_PRISONED));
 
 	// crosshair goes VERY LAST
-	if(!scoreboard_active && !camera_active && intermission != 2 && 
+	if(!scoreboard_active && !csqcplayer.viewloc && !camera_active && intermission != 2 && 
 		spectatee_status != -1 && hud == HUD_NORMAL && autocvar_chase_active >= 0 && 
 		!HUD_QuickMenu_IsOpened() && !tempcamera && !HUD_MinigameMenu_IsOpened() )
 	{
@@ -774,7 +839,7 @@ void UpdateCrosshair()
 		wcross_alpha_goal_prev = wcross_alpha;
 		wcross_color_goal_prev = wcross_color;
 
-		if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))
+		if(spectatee_status == -1 && shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))
 		{
 			wcross_blur = 1;
 			wcross_alpha *= 0.75;
@@ -1042,7 +1107,7 @@ void UpdateCrosshair()
 }
 
 float fps_start;
-int fps_frames;
+float fps_frames;
 
 void FPSCounter_Update()
 {
@@ -1213,6 +1278,7 @@ void CSQC_UpdateView(float w, float h)
 			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
 
 			// If the boxtrace fails, revert back to line tracing.
+			if(!self.viewloc)
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
@@ -1221,7 +1287,8 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
-			setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
+			if(!self.viewloc)
+				setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
@@ -1453,8 +1520,11 @@ void CSQC_UpdateView(float w, float h)
 		fovlock = -1;
 
 	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
+	else if(csqcplayer.viewloc) { setproperty(VF_FOV, GetViewLocationFOV(110)); } // enforce 110 fov, so things dont look odd
 	else if(fovlock > 0 && autocvar_cl_specfov) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
+
+	FPSReporter_Think();
 
 	float tempcamera = false;
 
@@ -1837,11 +1907,9 @@ void CSQC_UpdateView(float w, float h)
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, buffs = getstati(STAT_BUFFS, 0, 24);
-		entity e;
-		for(e = Buff_Type_first; e; e = e.enemy)
-		if(buffs & e.items)
-			++sharpen_intensity;
+		float sharpen_intensity = 0, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
+		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
+		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
 
 		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 
@@ -1886,6 +1954,7 @@ void CSQC_UpdateView(float w, float h)
 	UpdateDamage();
 	UpdateCrosshair();
 	UpdateHitsound();
+	InitializeEntitiesRun();
 
 	if(NextFrameCommand)
 	{
@@ -1930,6 +1999,9 @@ void CSQC_UpdateView(float w, float h)
 		HUD_Radar_Mouse();
 
     if(hud && !intermission)
+    if(hud == HUD_BUMBLEBEE_GUN)
+    	CSQC_BUMBLE_GUN_HUD();
+    else
 		VEH_ACTION(hud, VR_HUD);
 
 	FPSCounter_Update();

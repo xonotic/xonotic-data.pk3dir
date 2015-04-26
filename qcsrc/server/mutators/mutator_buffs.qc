@@ -1,6 +1,7 @@
 #include "../../common/effects.qh"
 #include "../../common/buffs.qh"
 #include "../round_handler.qh"
+#include "../../common/triggers/target/music.qh"
 
 float buffs_BuffModel_Customize()
 {
@@ -32,10 +33,35 @@ float buffs_BuffModel_Customize()
 	return true;
 }
 
+void buffs_BuffModel_Spawn(entity player)
+{
+	player.buff_model = spawn();
+	setmodel(player.buff_model, BUFF_MODEL);
+	setsize(player.buff_model, '0 0 -40', '0 0 40');
+	setattachment(player.buff_model, player, "");
+	setorigin(player.buff_model, '0 0 1' * (player.buff_model.maxs.z * 1));
+	player.buff_model.owner = player;
+	player.buff_model.scale = 0.7;
+	player.buff_model.pflags = PFLAGS_FULLDYNAMIC;
+	player.buff_model.light_lev = 200;
+	player.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
+}
+
 vector buff_GlowColor(entity buff)
 {
 	//if(buff.team) { return Team_ColorRGB(buff.team); }
 	return buff.color;
+}
+
+void buff_Effect(entity player, string eff)
+{
+	if(!autocvar_g_buffs_effects) { return; }
+
+	if(time >= self.buff_effect_delay)
+	{
+		pointparticles(particleeffectnum(eff), player.origin + ((player.mins + player.maxs) * 0.5), '0 0 0', 1);
+		self.buff_effect_delay = time + 0.05; // prevent spam
+	}
 }
 
 // buff item
@@ -131,6 +157,11 @@ void buff_Touch()
 		return;
 	}
 
+	if(IS_MONSTER(other))
+	if(cvar("g_piggyback"))
+	if(other.piggybacker)
+		other = other.piggybacker;
+
 	if(cvar("g_piggyback"))
 	if(other.buffs)
 	if(other.buffs == self.buffs || !other.cvar_cl_buffs_autoreplace)
@@ -170,6 +201,8 @@ void buff_Touch()
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound(other, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 	other.buffs |= (self.buffs);
+
+	jeff_Annoncer_BuffPickup(other, self);
 }
 
 float buff_Available(float buffid)
@@ -207,7 +240,7 @@ void buff_Think()
 		self.glowmod = buff_GlowColor(self);
 		self.skin = Buff_Skin(self.buffs);
 
-		setmodel(self, "models/relics/relic.md3");
+		setmodel(self, BUFF_MODEL);
 
 		if(self.buff_waypoint)
 		{
@@ -237,7 +270,7 @@ void buff_Think()
 		if(autocvar_g_buffs_randomize)
 			buff_NewType(self, self.buffs);
 
-		if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
+		if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
 			buff_Respawn(self);
 	}
 
@@ -285,7 +318,7 @@ void buff_Reset()
 	buff_Waypoint_Reset();
 	self.buff_activetime_updated = false;
 
-	if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
+	if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
 		buff_Respawn(self);
 }
 
@@ -310,9 +343,9 @@ float buff_Customize()
 
 void buff_Init(entity ent)
 {
-	if(!cvar("g_buffs")) { remove(self); return; }
+	if(!cvar("g_buffs")) { remove(ent); return; }
 
-	if(!teamplay && self.team) { self.team = 0; }
+	if(!teamplay && ent.team) { ent.team = 0; }
 
 	entity oldself = self;
 	self = ent;
@@ -340,13 +373,16 @@ void buff_Init(entity ent)
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
 
+	if(self.spawnflags & 1)
+		self.noalign = true;
+
 	if(self.noalign)
 		self.movetype = MOVETYPE_NONE; // reset by random location
 
-	setmodel(self, "models/relics/relic.md3");
+	setmodel(self, BUFF_MODEL);
 	setsize(self, BUFF_MIN, BUFF_MAX);
 
-	if(cvar("g_buffs_random_location") || (self.spawnflags & 1))
+	if(cvar("g_buffs_random_location") || (self.spawnflags & 64))
 		buff_Respawn(self);
 
 	self = oldself;
@@ -368,9 +404,98 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = old.noalign;
+	ent.noalign = (old.noalign || (old.spawnflags & 1));
 
 	buff_Init(ent);
+}
+
+#ifdef MONTY
+void buff_Blessed_Foot_Touch()
+{
+	if(other.iscreature && other.takedamage && other.health > 0)
+	{
+		int mydamage = 9999;
+		if(other == self.realowner)
+			mydamage = 5; // but spammed
+		Damage (other, self, world, mydamage, DEATH_FOOT, other.origin, '0 0 0');
+	}
+}
+
+void buff_Blessed_Foot_Think()
+{
+	self.nextthink = time;
+	if(self.buff_blessed_time)
+	if(time >= self.buff_blessed_time)
+	{
+		remove(self);
+		return;
+	}
+	if(self.origin_z <= self.buff_blessed_bottom_z)
+	{
+		if(!self.buff_blessed_soundplayed)
+		{
+			self.buff_blessed_time = time + 1;
+			self.velocity = '0 0 0';
+			setorigin(self, self.buff_blessed_bottom);
+			//sound(self, CH_TRIGGER_SINGLE, "monty/foot.wav", VOL_BASE, ATTEN_MAX);
+			sound(self, CH_TRIGGER_SINGLE, "monty/foot.wav", VOL_BASEVOICE, ATTEN_MIN);
+			self.buff_blessed_soundplayed = true;
+		}
+	}
+	else
+	{
+		self.velocity = '0 0 -1500';
+		//setorigin(self, self.origin - '0 0 10');
+	}
+}
+
+void buff_Blessed_SpawnFoot(entity player)
+{
+	makevectors(player.angles);
+	vector org = player.origin + (v_forward * 220) + ('0 0 1' * 32);
+	vector bottom;
+	vector top;
+	entity foot = spawn();
+
+	foot.realowner = player; // don't set owner, as we want this to crush owner
+	foot.classname = "montyfoot";
+	foot.solid = SOLID_TRIGGER;
+	foot.touch = buff_Blessed_Foot_Touch;
+	foot.think = buff_Blessed_Foot_Think;
+	foot.nextthink = time;
+	foot.movetype = MOVETYPE_NOCLIP;
+	foot.scale = 6;
+
+	setmodel(foot, "models/monty/foot.iqm");
+	setsize(foot, '-150 -150 0', '150 150 250');
+
+	//tracebox(org, foot.mins, foot.maxs, org + '0 0 800', MOVE_NORMAL, foot);
+	top = org + '0 0 800';
+	foot.dphitcontentsmask = DPCONTENTS_SOLID;
+	tracebox(org, foot.mins, foot.maxs, org - '0 0 2000', MOVE_WORLDONLY, foot);
+	foot.dphitcontentsmask = DPCONTENTS_LAVA;
+	bottom = trace_endpos;
+
+	foot.buff_blessed_bottom = bottom;
+	foot.buff_blessed_top = top;
+	setorigin(foot, top);
+
+	sound(player, CH_TRIGGER_SINGLE, "monty/ni.wav", VOL_BASEVOICE, ATTEN_NORM);
+}
+#endif
+
+void buff_Vengeance_DelayedDamage()
+{
+	if(self.enemy)
+		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF, self.enemy.origin, '0 0 0');
+
+	remove(self);
+	return;
+}
+
+float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
+{
+	return offset_y + (intersect_y - offset_y) * logn(((x - offset_x) * ((base - 1) / intersect_x)) + 1, base);
 }
 
 // mutator hooks
@@ -392,15 +517,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 	return false;
 }
 
-void buff_Vengeance_DelayedDamage()
-{
-	if(self.enemy)
-		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF, self.enemy.origin, '0 0 0');
-
-	remove(self);
-	return;
-}
-
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
 	if(frag_deathtype == DEATH_BUFF) { return false; }
@@ -414,8 +530,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
-	if(frag_target.health - autocvar_g_buffs_medic_survive_health > 0) // not if the final result would be less than 0, medic must get health
-		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health;
+		frag_damage = max(5, frag_target.health - autocvar_g_buffs_medic_survive_health);
+
+	if(frag_target.buffs & BUFF_JUMP)
+	if(frag_deathtype == DEATH_FALL)
+		frag_damage = 0;
 
 	if(frag_target.buffs & BUFF_VENGEANCE)
 	if(frag_attacker)
@@ -445,7 +564,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 
 	if(frag_attacker.buffs & BUFF_DISABILITY)
 	if(frag_target != frag_attacker)
-		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_time;
+		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
 	if(frag_attacker.buffs & BUFF_MEDIC)
 	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
@@ -454,6 +573,19 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	{
 		frag_target.health = min(g_pickup_healthmega_max, frag_target.health + frag_damage);
 		frag_damage = 0;
+	}
+
+	if(frag_attacker.buffs & BUFF_INFERNO)
+	if(frag_target != frag_attacker) {
+		float time = buff_Inferno_CalculateTime(
+			frag_damage,
+			0,
+			autocvar_g_buffs_inferno_burntime_min_time,
+			autocvar_g_buffs_inferno_burntime_target_damage,
+			autocvar_g_buffs_inferno_burntime_target_time,
+			autocvar_g_buffs_inferno_burntime_factor
+		);
+		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF);
 	}
 
 	// this... is ridiculous (TODO: fix!)
@@ -466,7 +598,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_target.takedamage)
 	if(!Player_Trapped(frag_target))
 	if(DIFF_TEAM(frag_attacker, frag_target))
+	{
 		frag_attacker.health = bound(0, frag_attacker.health + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.health), g_pickup_healthsmall_max);
+		if(frag_target.armorvalue)
+			frag_attacker.armorvalue = bound(0, frag_attacker.armorvalue + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.armorvalue), g_pickup_armorsmall_max);
+	}
 
 	return false;
 }
@@ -553,6 +689,76 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
+{
+	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+
+	if(self.buffs & BUFF_SWAPPER)
+	{
+		float best_distance = autocvar_g_buffs_swapper_range;
+		entity closest = world;
+		entity player;
+		FOR_EACH_PLAYER(player)
+		if(DIFF_TEAM(self, player))
+		if(player.deadflag == DEAD_NO && !player.frozen && !player.vehicle)
+		if(vlen(self.origin - player.origin) <= best_distance)
+		{
+			best_distance = vlen(self.origin - player.origin);
+			closest = player;
+		}
+
+		if(closest)
+		{
+			vector my_org, my_vel, my_ang, their_org, their_vel, their_ang;
+
+			my_org = self.origin;
+			my_vel = self.velocity;
+			my_ang = self.angles;
+			their_org = closest.origin;
+			their_vel = closest.velocity;
+			their_ang = closest.angles;
+
+			if(closest.ballcarried)
+			if(g_keepaway) { ka_DropEvent(closest); }
+			else { DropBall(closest.ballcarried, closest.origin, closest.velocity);}
+			if(closest.flagcarried) { ctf_Handle_Throw(closest, world, DROP_THROW); }
+			if(closest.nade) { toss_nade(closest, '0 0 0', time + 0.05); }
+
+			MUTATOR_CALLHOOK(PortalTeleport); // initiate flag dropper
+
+			setorigin(self, their_org);
+			setorigin(closest, my_org);
+
+			closest.velocity = my_vel;
+			closest.angles = my_ang;
+			closest.fixangle = true;
+			closest.oldorigin = my_org;
+			closest.oldvelocity = my_vel;
+			self.velocity = their_vel;
+			self.angles = their_ang;
+			self.fixangle = true;
+			self.oldorigin = their_org;
+			self.oldvelocity = their_vel;
+
+			// set pusher so self gets the kill if they fall into void
+			closest.pusher = self;
+			closest.pushltime = time + autocvar_g_maxpushtime;
+			closest.istypefrag = closest.BUTTON_CHAT;
+
+			pointparticles(particleeffectnum("electro_combo"), their_org, '0 0 0', 1);
+			pointparticles(particleeffectnum("electro_combo"), my_org, '0 0 0', 1);
+
+			sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NORM);
+			sound(closest, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NORM);
+
+			// TODO: add a counter to handle how many times one can teleport, and a delay to prevent spam
+			self.buffs = 0;
+			return true;
+		}
+	}
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 {
 	if(self.buff_model)
@@ -609,6 +815,17 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
+{
+	if(self.buffs & BUFF_SPEED)
+		ret_float *= autocvar_g_buffs_speed_weaponspeed;
+
+	if(time < self.buff_disability_time)
+		ret_float *= autocvar_g_buffs_disability_weaponspeed;
+
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(gameover || self.deadflag != DEAD_NO) { return false; }
@@ -620,73 +837,127 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.buff_disability_effect_time = time + 0.5;
 	}
 
-	if(Player_Trapped(self))
+	// handle buff lost status
+	// 1: notify everyone else
+	// 2: notify carrier as well
+	int buff_lost = 0;
+
+	if(self.buff_time)
+	if(time >= self.buff_time)
+		buff_lost = 2;
+
+	if(Player_Trapped(self)) { buff_lost = 1; }
+
+	if(buff_lost)
 	{
 		if(self.buffs)
 		{
 			Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
+			if(buff_lost >= 2)
+			{
+				Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, self.buffs); // TODO: special timeout message?
+				sound(self, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
+			}
 			self.buffs = 0;
 		}
 	}
 
+#ifdef MONTY
+	if(!self.crouch)
+		self.buff_blessed_crouch_held = false;
+
+	if(self.buffs & BUFF_BLESSED)
+	if(time >= self.buff_blessed_time)
+	if(self.crouch && !self.buff_blessed_crouch_held)
+	{
+		buff_Blessed_SpawnFoot(self);
+		self.buff_blessed_time = time + 0.5;
+		self.buff_blessed_crouch_held = true;
+	}
+#endif
+
+	if(self.buffs & BUFF_MAGNET)
+	{
+		vector pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
+		for(other = world; (other = findflags(other, flags, FL_ITEM)); )
+		if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, other.absmin, other.absmax))
+		{
+			entity oldself = self;
+			self = other;
+			other = oldself;
+			if(self.touch)
+				self.touch();
+			other = self;
+			self = oldself;
+		}
+	}
+
+	if(self.buffs & BUFF_AMMO)
+	if(self.clip_size)
+		self.clip_load = self.(weapon_load[self.switchweapon]) = self.clip_size;
+
 	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
-		self.alpha = autocvar_g_buffs_invisible_alpha;
+		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
+
+#define BUFF_ONADD(b) if((self.buffs & (b)) && !(self.oldbuffs & (b)))
+#define BUFF_ONREM(b) if(!(self.buffs & (b)) && (self.oldbuffs & (b)))
 
 	if(self.buffs != self.oldbuffs)
 	{
-		if(self.oldbuffs & BUFF_AMMO)
+		if(self.buffs && Buff_Timer(self.buffs))
+			self.buff_time = time + Buff_Timer(self.buffs);
+		else
+			self.buff_time = 0;
+
+		BUFF_ONADD(BUFF_AMMO)
+		{
+			self.buff_ammo_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
+			self.items |= IT_UNLIMITED_WEAPON_AMMO;
+
+			if(self.clip_load)
+				self.buff_ammo_prev_clipload = self.clip_load;
+			self.clip_load = self.(weapon_load[self.switchweapon]) = self.clip_size;
+		}
+
+		BUFF_ONREM(BUFF_AMMO)
 		{
 			if(self.buff_ammo_prev_infitems)
 				self.items |= IT_UNLIMITED_WEAPON_AMMO;
 			else
 				self.items &= ~IT_UNLIMITED_WEAPON_AMMO;
-		}
-		else if(self.buffs & BUFF_AMMO)
-		{
-			self.buff_ammo_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
-			self.items |= IT_UNLIMITED_WEAPON_AMMO;
-			if(!self.ammo_shells) { self.ammo_shells = 20; }
-			if(!self.ammo_cells) { self.ammo_cells = 20; }
-			if(!self.ammo_rockets) { self.ammo_rockets = 20; }
-			if(!self.ammo_nails) { self.ammo_nails = 20; }
-			if(!self.ammo_fuel) { self.ammo_fuel = 20; }
+
+			if(self.buff_ammo_prev_clipload)
+				self.clip_load = self.buff_ammo_prev_clipload;
 		}
 
-		if(self.oldbuffs & BUFF_INVISIBLE)
+		BUFF_ONADD(BUFF_INVISIBLE)
 		{
-			self.alpha = self.buff_invisible_prev_alpha;
-		}
-		else if(self.buffs & BUFF_INVISIBLE)
-		{
-			self.buff_invisible_prev_alpha = self.alpha;
+			if(time < self.strength_finished && g_instagib)
+				self.alpha = autocvar_g_instagib_invis_alpha;
+			else
+				self.alpha = self.buff_invisible_prev_alpha;
 			self.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 
-		if(self.oldbuffs & BUFF_FLIGHT)
-			self.gravity = self.buff_flight_prev_gravity;
-		else if(self.buffs & BUFF_FLIGHT)
+		BUFF_ONREM(BUFF_INVISIBLE)
+			self.alpha = self.buff_invisible_prev_alpha;
+
+		BUFF_ONADD(BUFF_FLIGHT)
 		{
 			self.buff_flight_prev_gravity = self.gravity;
 			self.gravity = autocvar_g_buffs_flight_gravity;
 		}
 
+		BUFF_ONREM(BUFF_FLIGHT)
+			self.gravity = self.buff_flight_prev_gravity;
+
 		self.oldbuffs = self.buffs;
 		if(self.buffs)
 		{
 			if(!self.buff_model)
-			{
-				self.buff_model = spawn();
-				setmodel(self.buff_model, "models/relics/relic.md3");
-				setsize(self.buff_model, '0 0 -40', '0 0 40');
-				setattachment(self.buff_model, self, "");
-				setorigin(self.buff_model, '0 0 1' * (self.buff_model.maxs.z * 1));
-				self.buff_model.owner = self;
-				self.buff_model.scale = 0.7;
-				self.buff_model.pflags = PFLAGS_FULLDYNAMIC;
-				self.buff_model.light_lev = 200;
-				self.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
-			}
+				buffs_BuffModel_Spawn(self);
+
 			self.buff_model.color = Buff_Color(self.buffs);
 			self.buff_model.glowmod = buff_GlowColor(self.buff_model);
 			self.buff_model.skin = Buff_Skin(self.buffs);
@@ -711,6 +982,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.buff_model.alpha = self.alpha;
 	}
 
+#undef BUFF_ONADD
+#undef BUFF_ONREM
 	return false;
 }
 
@@ -776,7 +1049,7 @@ void buffs_DelayedInit()
 		for(i = 0; i < autocvar_g_buffs_spawn_count; ++i)
 		{
 			entity e = spawn();
-			e.spawnflags |= 1; // always randomize
+			e.spawnflags |= 64; // always randomize
 			e.velocity = randomvec() * 250; // this gets reset anyway if random location works
 			buff_Init(e);
 		}
@@ -785,14 +1058,18 @@ void buffs_DelayedInit()
 
 void buffs_Initialize()
 {
-	precache_model("models/relics/relic.md3");
+	precache_model(BUFF_MODEL);
+	precache_model("models/monty/foot.iqm");
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("relics/relic_effect.wav");
 	precache_sound(W_Sound("rocket_impact"));
 	precache_sound("keepaway/respawn.wav");
+	precache_sound("monty/foot.wav");
+	precache_sound("monty/ni.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
+	addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
 
 	InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 }
@@ -811,11 +1088,13 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, buffs_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, buffs_PlayerUseKey, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, buffs_PlayerThrowKey, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_LAST);
 	MUTATOR_HOOK(CustomizeWaypoint, buffs_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WeaponSpeedFactor, buffs_WeaponSpeed, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, buffs_GetCvars, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, buffs_BuildMutatorsString, CBC_ORDER_ANY);

@@ -7,6 +7,7 @@ const int MR_THINK = 2; // (SERVER) logic to run every frame
 const int MR_DEATH = 3; // (SERVER) called when monster dies
 const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
 const int MR_PAIN = 5; // (SERVER) called when monster is damaged
+const int MR_ANIM = 6; // (BOTH?) sets animations for monster
 
 // functions
 entity get_monsterinfo(float id);
@@ -20,6 +21,7 @@ const int MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
 const int MON_FLAG_RANGED = 512; // monster shoots projectiles
 const int MON_FLAG_MELEE = 1024;
 const int MON_FLAG_RIDE = 2048; // monster can be mounted
+const int MON_FLAG_CRUSH = 4096; // monster can be stomped
 
 // entity properties of monsterinfo
 .float monsterid; // MON_...
@@ -31,6 +33,18 @@ const int MON_FLAG_RIDE = 2048; // monster can be mounted
 .string model; // full name of model
 .int spawnflags;
 .vector mins, maxs; // monster hitbox size
+
+// animations
+.vector anim_blockend;
+.vector anim_blockstart;
+.vector anim_melee1;
+.vector anim_melee2;
+.vector anim_melee3;
+.vector anim_pain3;
+.vector anim_pain4;
+.vector anim_pain5;
+.vector anim_walk;
+.vector anim_spawn;
 
 // other useful macros
 #define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
@@ -62,12 +76,9 @@ int MON_LAST;
 		register_monster(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterMonsters, RegisterMonsters_##id)
-#ifdef SVQC
+#ifndef MENUQC
 #define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
 	REGISTER_MONSTER_2(MON_##id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname)
-#elif defined(CSQC)
-	#define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,m_null,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
 #else
 #define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
 	REGISTER_MONSTER_2(MON_##id,m_null,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)

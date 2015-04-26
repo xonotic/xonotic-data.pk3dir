@@ -14,7 +14,7 @@ REGISTER_MONSTER(
 #include "../../effects.qh"
 
 float autocvar_g_monster_spider_health;
-var float autocvar_g_monster_spider_damageforcescale = 0.6;
+float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_attack_bite_damage;
 float autocvar_g_monster_spider_attack_bite_delay;
 float autocvar_g_monster_spider_attack_web_damagetime;
@@ -25,10 +25,12 @@ float autocvar_g_monster_spider_speed_stop;
 float autocvar_g_monster_spider_speed_run;
 float autocvar_g_monster_spider_speed_walk;
 
+/*
 const float spider_anim_idle		= 0;
 const float spider_anim_walk		= 1;
 const float spider_anim_attack		= 2;
 const float spider_anim_attack2		= 3;
+*/
 
 .float spider_web_delay;
 
@@ -98,13 +100,13 @@ float M_Spider_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? spider_anim_attack : spider_anim_attack2), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, true);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			if(time >= self.spider_web_delay)
 			{
-				self.frame = spider_anim_attack2;
+				setanim(self, self.anim_shoot, true, true, true);
 				self.attack_finished_single = time + (autocvar_g_monster_spider_attack_web_delay);
 				self.anim_finished = time + 1;
 				M_Spider_Attack_Web();
@@ -120,11 +122,13 @@ float M_Spider_Attack(float attack_type)
 }
 
 void spawnfunc_monster_spider() { Monster_Spawn(MON_SPIDER); }
+#endif // SVQC
 
-float M_Spider(float req)
+bool M_Spider(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -135,10 +139,23 @@ float M_Spider(float req)
 		}
 		case MR_DEATH:
 		{
-			self.frame = spider_anim_attack;
+			setanim(self, self.anim_melee, false, true, true);
 			self.angles_x = 180;
 			return true;
 		}
+		#endif
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_walk = animfixfps(self, '1 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_melee = animfixfps(self, '2 1 5', none); // analyze models and set framerate
+			self.anim_shoot = animfixfps(self, '3 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '1 1 1', none);
+
+			return true;
+		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_spider_health);
@@ -147,12 +164,7 @@ float M_Spider(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_spider_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
-			self.m_anim_walk = spider_anim_walk;
-			self.m_anim_run = spider_anim_walk;
-			self.m_anim_idle = spider_anim_idle;
-
 			self.monster_loot = spawnfunc_item_health_medium;
-			self.frame = spider_anim_idle;
 
 			return true;
 		}
@@ -161,10 +173,10 @@ float M_Spider(float req)
 			precache_sound (W_Sound("electro_fire2"));
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

@@ -6,9 +6,13 @@
 #include "sv_monsters.qh"
 #endif
 
+#include "../animdecide.qh"
+vector animfixfps(entity e, vector a, vector b);
+
 #include "monster/zombie.qc"
 #include "monster/spider.qc"
 #include "monster/mage.qc"
+#include "monster/goomba.qc"
 #ifndef MONSTERS_EXTRA
 	#include "monster/wyvern.qc"
 #endif

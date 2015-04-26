@@ -41,6 +41,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write("\n");
 
 		HUD_Write_Cvar_q("hud_progressbar_alpha");
+		HUD_Write_Cvar_q("hud_progressbar_strength_color");
+		HUD_Write_Cvar_q("hud_progressbar_shield_color");
 		HUD_Write_Cvar_q("hud_progressbar_health_color");
 		HUD_Write_Cvar_q("hud_progressbar_armor_color");
 		HUD_Write_Cvar_q("hud_progressbar_fuel_color");
@@ -112,6 +114,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
+					HUD_Write_PanelCvar_q("_progressbar_strength");
+					HUD_Write_PanelCvar_q("_progressbar_shield");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
@@ -203,6 +207,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_QUICKMENU:
 					HUD_Write_PanelCvar_q("_align");
 					break;
+				case HUD_PANEL_BUFFS:
+					HUD_Write_PanelCvar_q("_progressbar");
+					HUD_Write_PanelCvar_q("_progressbar_name");
 			}
 			HUD_Write("\n");
 		}
@@ -1238,7 +1245,7 @@ void HUD_Configure_Frame()
 			return;
 		}
 
-		if(!hud_configure_prev || hud_configure_prev == -1)
+		if(!hud_configure_prev)
 		{
 			if(autocvar_hud_cursormode)
 				setcursormode(1);

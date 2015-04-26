@@ -162,7 +162,7 @@ void W_Fireball_Think(void)
 	self.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Fireball_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -348,7 +348,7 @@ void W_Fireball_Attack2(void)
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float W_Fireball(float req)
+bool W_Fireball(int req)
 {
 	switch(req)
 	{
@@ -448,7 +448,7 @@ float W_Fireball(float req)
 }
 #endif
 #ifdef CSQC
-float W_Fireball(float req)
+bool W_Fireball(int req)
 {
 	switch(req)
 	{

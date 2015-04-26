@@ -500,19 +500,6 @@ string ScoreString(int pFlags, float pValue)
 	return valstr;
 }
 
-float dotproduct(vector a, vector b)
-{
-	return a.x * b.x + a.y * b.y + a.z * b.z;
-}
-
-vector cross(vector a, vector b)
-{
-	return
-		'1 0 0' * (a.y * b.z - a.z * b.y)
-	+	'0 1 0' * (a.z * b.x - a.x * b.z)
-	+	'0 0 1' * (a.x * b.y - a.y * b.x);
-}
-
 // compressed vector format:
 // like MD3, just even shorter
 //   4 bit pitch (16 angles), 0 is -90, 8 is 0, 16 would be 90
@@ -1856,7 +1843,7 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 }
 
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype)
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
@@ -2603,7 +2590,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 #ifdef SVQC
 vector combine_to_vector(float x, float y, float z)
 {
-	vector result; result.x = x; result.y = y; result.z = z;
+	vector result; result_x = x; result_y = y; result_z = z;
 	return result;
 }
 

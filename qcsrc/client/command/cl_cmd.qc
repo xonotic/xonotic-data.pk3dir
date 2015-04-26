@@ -309,7 +309,7 @@ void LocalCommand_hud(int request, int argc)
 			print("  'configname' is the name to save to for \"save\" action,\n");
 			print("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
 			print("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
-			print("  Full list of commands here: \"configure, quickmenu, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
+			print("  Full list of commands here: \"configure, quickmenu, minigame, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
 			return;
 		}
 	}
@@ -358,6 +358,31 @@ void LocalCommand_mv_download(int request, int argc)
 		{
 			print("\nUsage:^3 cl_cmd mv_download mapid\n");
 			print("  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
+			return;
+		}
+	}
+}
+
+void LocalCommand_find(int request, int argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity client;
+
+			for(client = world; (client = find(client, classname, argv(1))); )
+				print(etos(client), "\n");
+
+			return;
+		}
+
+		default:
+			print("Incorrect parameters for ^2find^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd find classname\n");
+			print("  Where 'classname' is the classname to search for.\n");
 			return;
 		}
 	}
@@ -434,6 +459,7 @@ void LocalCommand_(int request)
 	CLIENT_COMMAND("handlevote", LocalCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
 	CLIENT_COMMAND("hud", LocalCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
+	CLIENT_COMMAND("find", LocalCommand_find(request, arguments), "Search through entities for matching classname") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
 	/* nothing */

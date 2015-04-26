@@ -7,7 +7,7 @@
 // control point / generator constants
 #define ONS_CP_THINKRATE 0.2
 #define GEN_THINKRATE 1
-#define CPGEN_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
+#define CPGEN_SPAWN_OFFSET ('0 0 1' * (PL_MAX.z - 13))
 #define CPGEN_WAYPOINT_OFFSET ('0 0 128')
 #define CPICON_OFFSET ('0 0 96')
 

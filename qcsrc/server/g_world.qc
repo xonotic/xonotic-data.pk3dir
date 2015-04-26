@@ -36,7 +36,6 @@
     #include "ipban.qh"
     #include "race.qh"
     #include "antilag.qh"
-    #include "secret.qh"
 #endif
 
 const float LATENCY_THINKRATE = 10;
@@ -329,15 +328,21 @@ void cvar_changes_init()
 		// does nothing visible
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("g_balance_kill_delay");
+		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
+		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADPREFIX("g_mod_");
+		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_tdm_point_limit");
+		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
@@ -520,7 +525,7 @@ void detect_maptype()
 }
 
 entity randomseed;
-float RandomSeed_Send(entity to, float sf)
+float RandomSeed_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
@@ -588,6 +593,7 @@ void Nagger_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
+void Physics_AddStats();
 void spawnfunc_worldspawn (void)
 {
 	float fd, l, i, j, n;
@@ -705,7 +711,7 @@ void spawnfunc_worldspawn (void)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		s = sprintf("%d.%s.%06d", ftos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -736,6 +742,12 @@ void spawnfunc_worldspawn (void)
 		// TODO to mutator system
 		if(autocvar_g_norecoil)
 			s = strcat(s, ":norecoil");
+
+		// TODO to mutator system
+		if(autocvar_g_powerups == 0)
+			s = strcat(s, ":no_powerups");
+		if(autocvar_g_powerups > 0)
+			s = strcat(s, ":powerups");
 
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
@@ -801,6 +813,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);
 	Nagger_Init();
 
+	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
+	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
@@ -827,32 +841,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_FROZEN, AS_INT, frozen);
 	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);
 
-	// g_movementspeed hack
-	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
-	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
-	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
-	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
-
-	// new properties
-	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
-	addstat(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, AS_FLOAT, stat_sv_airaccel_qw_stretchfactor);
-	addstat(STAT_MOVEVARS_MAXAIRSTRAFESPEED, AS_FLOAT, stat_sv_maxairstrafespeed);
-	addstat(STAT_MOVEVARS_MAXAIRSPEED, AS_FLOAT, stat_sv_maxairspeed);
-	addstat(STAT_MOVEVARS_AIRSTRAFEACCELERATE, AS_FLOAT, stat_sv_airstrafeaccelerate);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL, AS_FLOAT, stat_sv_warsowbunny_turnaccel);
-	addstat(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, AS_FLOAT, stat_sv_airaccel_sideways_friction);
-	addstat(STAT_MOVEVARS_AIRCONTROL, AS_FLOAT, stat_sv_aircontrol);
-	addstat(STAT_MOVEVARS_AIRCONTROL_POWER, AS_FLOAT, stat_sv_aircontrol_power);
-	addstat(STAT_MOVEVARS_AIRCONTROL_PENALTY, AS_FLOAT, stat_sv_aircontrol_penalty);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, AS_FLOAT, stat_sv_warsowbunny_airforwardaccel);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED, AS_FLOAT, stat_sv_warsowbunny_topspeed);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_ACCEL, AS_FLOAT, stat_sv_warsowbunny_accel);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, AS_FLOAT, stat_sv_warsowbunny_backtosideratio);
-	addstat(STAT_MOVEVARS_FRICTION, AS_FLOAT, stat_sv_friction);
-	addstat(STAT_MOVEVARS_ACCELERATE, AS_FLOAT, stat_sv_accelerate);
-	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
-	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
-	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
+	// physics
+	Physics_AddStats();
 
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
@@ -1959,7 +1949,7 @@ float WinningCondition_RanOutOfSpawns()
 	if(have_team_spawns <= 0)
 		return WINNING_NO;
 
-	if(autocvar_g_spawn_useallspawns <= 0)
+	if(!autocvar_g_spawn_useallspawns)
 		return WINNING_NO;
 
 	if(!some_spawn_has_been_used)

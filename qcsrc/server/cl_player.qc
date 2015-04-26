@@ -1,6 +1,5 @@
 #include "cl_player.qh"
 #include "jeff.qh"
-#include "g_triggers.qh"
 #include "g_violence.qh"
 #include "miscfunctions.qh"
 
@@ -11,6 +10,8 @@
 #include "../common/minigames/sv_minigames.qh"
 
 #include "weapons/weaponstats.qh"
+
+#include "../common/animdecide.qh"
 
 void CopyBody_Think(void)
 {
@@ -156,7 +157,7 @@ void player_anim (void)
 	}
 }
 
-void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float take, save;
 	vector v;
@@ -312,6 +313,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		if(self != attacker)
 			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
 	}
+
+	if(DEATH_ISTURRET(deathtype))
+		damage *= autocvar_g_turrets_player_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
@@ -726,6 +730,13 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else
 		{
+			if(substring(msgin, 0, 3) == "moo")
+			{
+				source.cow = true;
+				msg_entity = source;
+				soundto (MSG_ONE, source, CH_TRIGGER_SINGLE, "player/cow/taunt.wav", VOL_BASE, ATTEN_NONE);
+			}
+
 			if(substring(msgin, 0, 3) == "/me")
 			{
 				//msgin = strreplace("/me", "", msgin);

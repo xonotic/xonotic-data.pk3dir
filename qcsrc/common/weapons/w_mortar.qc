@@ -99,7 +99,7 @@ void W_Mortar_Grenade_Explode2(void)
 }
 
 
-void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -319,7 +319,7 @@ void W_Mortar_Attack2(void)
 }
 
 .float bot_secondary_grenademooth;
-float W_Mortar(float req)
+bool W_Mortar(int req)
 {
 	entity nade;
 	float nadefound;
@@ -459,7 +459,7 @@ float W_Mortar(float req)
 }
 #endif
 #ifdef CSQC
-float W_Mortar(float req)
+bool W_Mortar(int req)
 {
 	switch(req)
 	{

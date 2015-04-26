@@ -36,7 +36,7 @@ vector minigame_hud_normalize(vector v, vector pos, vector mySize)
 }
 
 // Check if the mouse is inside the given area
-float minigame_hud_mouse_in(vector pos, vector sz)
+bool minigame_hud_mouse_in(vector pos, vector sz)
 {
 	return mousepos_x >= pos_x && mousepos_x < pos_x + sz_x &&
 	       mousepos_y >= pos_y && mousepos_y < pos_y + sz_y ;
@@ -51,9 +51,9 @@ void initialize_minigames()
 		minig.classname = "minigame_descriptor"; \
 		minig.netname = strzone(strtolower(#name)); \
 		minig.message = nicename; \
-		minig.minigame_hud_board = minigame_hud_board_##name; \
-		minig.minigame_hud_status = minigame_hud_status_##name; \
-		minig.minigame_event = minigame_event_##name; \
+		minig.minigame_hud_board = name##_hud_board; \
+		minig.minigame_hud_status = name##_hud_status; \
+		minig.minigame_event = name##_client_event; \
 		if ( !last_minig ) minigame_descriptors = minig; \
 		else last_minig.list_next = minig; \
 		last_minig = minig;
@@ -80,6 +80,7 @@ string minigame_texture(string name)
 #define MSLE_CLEAN_Byte(x)
 #define MSLE_CLEAN_Char(x)
 #define MSLE_CLEAN_Short(x)
+#define MSLE_CLEAN_Long(x)
 #define MSLE_CLEAN_Coord(x)
 #define MSLE_CLEAN_Angle(x)
 #define MSLE_CLEAN_Float(x)
@@ -99,15 +100,15 @@ void minigame_autoclean_entity(entity e)
 }
 
 void HUD_MinigameMenu_CurrentButton();
-float auto_close_minigamemenu;
+bool auto_close_minigamemenu;
 void deactivate_minigame()
 {
 	if ( !active_minigame )
 		return;
-	
+
 	active_minigame.minigame_event(active_minigame,"deactivate");
 	entity e = world;
-	while( (e = findentity(e, owner, self)) )
+	while( (e = findentity(e, owner, active_minigame)) )
 		if ( e.minigame_autoclean )
 		{
 			minigame_autoclean_entity(e);
@@ -115,7 +116,7 @@ void deactivate_minigame()
 
 	minigame_self = world;
 	active_minigame = world;
-	
+
 	if ( auto_close_minigamemenu )
 	{
 		HUD_MinigameMenu_Close();
@@ -123,6 +124,12 @@ void deactivate_minigame()
 	}
 	else
 		HUD_MinigameMenu_CurrentButton();
+}
+
+void minigame_entremove()
+{
+	if ( self == active_minigame )
+		deactivate_minigame();
 }
 
 void activate_minigame(entity minigame)
@@ -144,9 +151,7 @@ void activate_minigame(entity minigame)
 	
 	if ( active_minigame )
 	{
-		entity olds = minigame_self;
 		deactivate_minigame();
-		minigame_self = olds;
 	}
 	
 	if ( minigame_self.owner != minigame )
@@ -212,7 +217,7 @@ void ent_read_minigame()
 		
 		if ( sf & MINIG_SF_CREATE )
 		{
-			self.entremove = deactivate_minigame;
+			self.entremove = minigame_entremove;
 			self.descriptor = minigame_get_descriptor(ReadString_Raw());
 			if ( !self.descriptor )
 				dprint("Got a minigame without a client-side descriptor!\n");
@@ -251,10 +256,13 @@ void ent_read_minigame()
 	
 	if ( minigame_ent )
 		minigame_ent.minigame_event(minigame_ent,"network_receive",self,sf);
-	
-	dprint("CL Reading entity: ",ftos(num_for_edict(self)),
-		" classname:",self.classname," enttype:",ftos(self.enttype) );
-	dprint(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+
+	if ( sf & MINIG_SF_CREATE )
+	{
+		dprint("CL Reading entity: ",ftos(num_for_edict(self)),
+			" classname:",self.classname," enttype:",ftos(self.enttype) );
+		dprint(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+	}
 }
 #undef ReadFloat
 #undef ReadString
@@ -263,10 +271,10 @@ void ent_read_minigame()
 
 string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
-	float last_word;
+	int last_word;
 	string s;
-	float take_until;
-	float skip = 0;
+	int take_until;
+	int skip = 0;
 
 	s = getWrappedLine_remaining;
 
@@ -280,9 +288,8 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 	
 	if ( take_until > strlen(s) )
 		take_until = strlen(s);
-	
-	float i;
-	for ( i = 0; i < take_until; i++ )
+
+	for ( int i = 0; i < take_until; i++ )
 		if ( substring(s,i,1) == "\n" )
 		{
 			take_until = i;
@@ -320,7 +327,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 }
 
 vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
-	vector fontsize, vector color, float theAlpha, float drawflags, float align )
+	vector fontsize, vector color, float theAlpha, int drawflags, float align )
 {	
 	getWrappedLine_remaining = text;
 	vector mypos = pos;
@@ -339,7 +346,7 @@ vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text,
 }
 
 vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos, 
-	string text, vector fontsize, float theAlpha, float drawflags, float align )
+	string text, vector fontsize, float theAlpha, int drawflags, float align )
 {
 	getWrappedLine_remaining = text;
 	vector mypos = pos;
@@ -358,21 +365,21 @@ vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos,
 }
 
 void minigame_drawstring_trunc(float maxwidth, vector pos, string text, 
-	vector fontsize, vector color, float theAlpha, float drawflags )
+	vector fontsize, vector color, float theAlpha, int drawflags )
 {
 	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_nocolors);
 	drawstring(pos, line, fontsize, color, theAlpha, drawflags);
 }
 
 void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
-	vector fontsize, float theAlpha, float drawflags )
+	vector fontsize, float theAlpha, int drawflags )
 {
 	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_colors);
 	drawcolorcodedstring(pos, line, fontsize, theAlpha, drawflags);
 }
 
 void minigame_drawpic_centered( vector pos, string texture, vector sz, 
-	vector color, float thealpha, float drawflags )
+	vector color, float thealpha, int drawflags )
 {
 	drawpic( pos-sz/2, texture, sz, color, thealpha, drawflags );
 }

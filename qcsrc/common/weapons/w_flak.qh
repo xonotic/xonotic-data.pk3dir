@@ -1,0 +1,8 @@
+#ifndef W_FLAK_H
+#define W_FLAK_H
+
+#ifdef CSQC
+void Flak_Touch();
+#endif
+
+#endif
