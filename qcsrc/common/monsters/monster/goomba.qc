@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ GOOMBA,
 /* functions  */ M_Goomba, M_Goomba_Attack,
-/* spawnflags */ MON_FLAG_MELEE,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_CRUSH,
 /* mins,maxs  */ '-18 -18 -20', '18 18 20',
 /* model      */ "goomba.md3",
 /* netname    */ "goomba",
@@ -54,11 +54,13 @@ bool M_Goomba_Attack(int attack_type)
 }
 
 void spawnfunc_monster_goomba() { Monster_Spawn(MON_GOOMBA); }
+#endif // SVQC
 
 bool M_Goomba(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			Monster_Move_2D(self.speed, autocvar_g_monster_goomba_allow_jumpoff);
@@ -89,10 +91,10 @@ bool M_Goomba(int req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

@@ -65,11 +65,14 @@ void monster_dropitem()
 
 void monster_makevectors(entity e)
 {
-	vector v;
+	if(IS_MONSTER(self))
+	{
+		vector v;
 
-	v = e.origin + (e.mins + e.maxs) * 0.5;
-	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
-	self.v_angle_x = -self.v_angle_x;
+		v = e.origin + (e.mins + e.maxs) * 0.5;
+		self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
+		self.v_angle_x = -self.v_angle_x;
+	}
 
 	makevectors(self.v_angle);
 }
@@ -358,11 +361,11 @@ void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float
 
 float Monster_Attack_Melee(entity targ, float damg, vector anim, float er, float animtime, int deathtype, float dostop)
 {
-	if(dostop) { self.state = MONSTER_ATTACK_MELEE; }
+	if(dostop && IS_MONSTER(self)) { self.state = MONSTER_ATTACK_MELEE; }
 
-	setanim(self, anim, true, true, true);
+	setanim(self, anim, false, true, false);
 
-	if(self.animstate_endtime > time)
+	if(self.animstate_endtime > time && IS_MONSTER(self))
 		self.attack_finished_single = self.anim_finished = self.animstate_endtime;
 	else
 		self.attack_finished_single = self.anim_finished = time + animtime;
@@ -379,7 +382,7 @@ float Monster_Attack_Melee(entity targ, float damg, vector anim, float er, float
 
 float Monster_Attack_Leap_Check(vector vel)
 {
-	if(self.state)
+	if(self.state && IS_MONSTER(self))
 		return false; // already attacking
 	if(!(self.flags & FL_ONGROUND))
 		return false; // not on the ground
@@ -404,14 +407,15 @@ bool Monster_Attack_Leap(vector anm, void() touchfunc, vector vel, float animtim
 	if(!Monster_Attack_Leap_Check(vel))
 		return false;
 
-	setanim(self, anm, true, true, true);
+	setanim(self, anm, false, true, false);
 
-	if(self.animstate_endtime > time)
+	if(self.animstate_endtime > time && IS_MONSTER(self))
 		self.attack_finished_single = self.anim_finished = self.animstate_endtime;
 	else
 		self.attack_finished_single = self.anim_finished = time + animtime;
 
-	self.state = MONSTER_ATTACK_RANGED;
+	if(IS_MONSTER(self))
+		self.state = MONSTER_ATTACK_RANGED;
 	self.touch = touchfunc;
 	self.origin_z += 1;
 	self.velocity = vel;

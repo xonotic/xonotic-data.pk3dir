@@ -134,11 +134,13 @@ float M_Zombie_Attack(float attack_type)
 }
 
 void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE); }
+#endif // SVQC
 
-float M_Zombie(float req)
+bool M_Zombie(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			if(time >= self.spawn_time)
@@ -158,6 +160,7 @@ float M_Zombie(float req)
 			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -178,6 +181,7 @@ float M_Zombie(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_zombie_health);
@@ -204,10 +208,10 @@ float M_Zombie(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

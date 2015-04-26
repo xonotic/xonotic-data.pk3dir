@@ -110,11 +110,13 @@ void spawnfunc_monster_scrag() { Monster_Spawn(MON_SCRAG); }
 // compatibility with old spawns
 void spawnfunc_monster_wizard() { spawnfunc_monster_scrag(); }
 void spawnfunc_monster_wyvern() { spawnfunc_monster_scrag(); }
+#endif // SVQC
 
-float M_Scrag(float req)
+bool M_Scrag(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -133,6 +135,7 @@ float M_Scrag(float req)
 			self.velocity_z = 100 + 100 * random();
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -145,6 +148,7 @@ float M_Scrag(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_scrag_health);
@@ -161,10 +165,10 @@ float M_Scrag(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

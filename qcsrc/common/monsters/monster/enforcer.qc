@@ -122,11 +122,13 @@ float M_Enforcer_Attack(float attack_type)
 }
 
 void spawnfunc_monster_enforcer() { Monster_Spawn(MON_ENFORCER); }
+#endif // SVQC
 
-float M_Enforcer(float req)
+bool M_Enforcer(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -150,6 +152,7 @@ float M_Enforcer(float req)
 			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -166,6 +169,7 @@ float M_Enforcer(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_enforcer_health);
@@ -185,10 +189,10 @@ float M_Enforcer(float req)
 			precache_sound(W_Sound("lasergun_fire"));
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

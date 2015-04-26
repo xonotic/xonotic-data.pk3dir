@@ -29,17 +29,6 @@ int monsters_killed;
 .int oldskin;
 .string mdl_dead; // dead model for goombas
 
-.vector anim_blockend;
-.vector anim_blockstart;
-.vector anim_melee1;
-.vector anim_melee2;
-.vector anim_melee3;
-.vector anim_pain3;
-.vector anim_pain4;
-.vector anim_pain5;
-.vector anim_walk;
-.vector anim_spawn;
-
 #define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 
 // other properties

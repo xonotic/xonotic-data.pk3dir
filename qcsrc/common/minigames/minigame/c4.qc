@@ -8,6 +8,16 @@ const float C4_TURN_TEAM1 = 0x0001;
 const float C4_TURN_TEAM2 = 0x0002;
 const float C4_TURN_TEAM  = 0x000f; // turn team mask
 
+const int C4_LET_CNT = 7;
+const int C4_NUM_CNT = 6;
+const int C4_WIN_CNT = 4;
+
+const int C4_MAX_TILES = 42;
+
+const int C4_TILE_SIZE = 8;
+
+const int C4_TEAMS = 2;
+
 // send flags
 const float C4_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // send minigame_player scores (won matches)
 
@@ -35,7 +45,7 @@ bool c4_winning_piece(entity piece)
 	entity left = piece;
 	entity topleft = piece;
 	entity botleft = piece;
-	for(i = number; i < 6; ++i)
+	for(i = number; i < C4_NUM_CNT; ++i)
 	{
 		entity p = c4_find_piece(piece.owner,minigame_tile_buildname(letter, i));
 		if(p.team == piece.team)
@@ -59,7 +69,7 @@ bool c4_winning_piece(entity piece)
 			botleft = p;
 		else break;
 	}
-	for(i = letter, j = number; i >= 0, j < 6; --i, ++j)
+	for(i = letter, j = number; i >= 0, j < C4_NUM_CNT; --i, ++j)
 	{
 		entity p = c4_find_piece(piece.owner,minigame_tile_buildname(i, j));
 		if(p.team == piece.team)
@@ -76,43 +86,43 @@ bool c4_winning_piece(entity piece)
 		else break;
 	}
 
-	if(found >= 4)
+	if(found >= C4_WIN_CNT)
 		return true;
 
 	// right
 	found = 0;
-	for(i = minigame_tile_letter(left.netname); i < 7; ++i)
+	for(i = minigame_tile_letter(left.netname); i < C4_LET_CNT; ++i)
 	{
 		if(c4_find_piece(piece.owner,minigame_tile_buildname(i, number)).team == piece.team)
 			++found;
 		else break;
 	}
 
-	if(found >= 4)
+	if(found >= C4_WIN_CNT)
 		return true;
 
 	// diagright down
 	found = 0;
-	for(i = minigame_tile_letter(topleft.netname), j = minigame_tile_number(topleft.netname); i < 7, j >= 0; ++i, --j)
+	for(i = minigame_tile_letter(topleft.netname), j = minigame_tile_number(topleft.netname); i < C4_LET_CNT, j >= 0; ++i, --j)
 	{
 		if(c4_find_piece(piece.owner,minigame_tile_buildname(i, j)).team == piece.team)
 			++found;
 		else break;
 	}
 
-	if(found >= 4)
+	if(found >= C4_WIN_CNT)
 		return true;
 
 	// diagright up
 	found = 0;
-	for(i = minigame_tile_letter(botleft.netname), j = minigame_tile_number(botleft.netname); i < 7, j < 6; ++i, ++j)
+	for(i = minigame_tile_letter(botleft.netname), j = minigame_tile_number(botleft.netname); i < C4_LET_CNT, j < C4_NUM_CNT; ++i, ++j)
 	{
 		if(c4_find_piece(piece.owner,minigame_tile_buildname(i, j)).team == piece.team)
 			++found;
 		else break;
 	}
 
-	if(found >= 4)
+	if(found >= C4_WIN_CNT)
 		return true;
 	
 	return false;
@@ -125,7 +135,7 @@ float c4_valid_tile(string tile)
 		return 0;
 	float number = minigame_tile_number(tile);
 	float letter = minigame_tile_letter(tile);
-	return 0 <= number && number < 6 && 0 <= letter && letter < 7;
+	return 0 <= number && number < C4_NUM_CNT && 0 <= letter && letter < C4_LET_CNT;
 }
 
 // make a move
@@ -143,14 +153,14 @@ void c4_move(entity minigame, entity player, string pos )
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 			minigame.c4_npieces++;
-			minigame.c4_nexteam = minigame_next_team(player.team,2);
+			minigame.c4_nexteam = minigame_next_team(player.team,C4_TEAMS);
 			if ( c4_winning_piece(piece) )
 			{
 				player.minigame_flags++;
 				minigame_server_sendflags(player, C4_SF_PLAYERSCORE);
 				minigame.minigame_flags = C4_TURN_WIN | player.team;
 			}
-			else if ( minigame.c4_npieces >= 21 )
+			else if ( minigame.c4_npieces >= C4_MAX_TILES )
 				minigame.minigame_flags = C4_TURN_DRAW;
 			else
 				minigame.minigame_flags = C4_TURN_PLACE | minigame.c4_nexteam;
@@ -186,7 +196,7 @@ void c4_next_match(entity minigame, entity player)
 
 
 // required function, handle server side events
-float minigame_event_c4(entity minigame, string event, ...)
+float c4_server_event(entity minigame, string event, ...)
 {
 	switch(event)
 	{
@@ -211,11 +221,11 @@ float minigame_event_c4(entity minigame, string event, ...)
 			float pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 2 players
-			if(pl_num >= 2) { return false; }
+			if(pl_num >= C4_TEAMS) { return false; }
 
 			// Get the right team
 			if(minigame.minigame_players)
-				return minigame_next_team(minigame.minigame_players.team, 2);
+				return minigame_next_team(minigame.minigame_players.team, C4_TEAMS);
 
 			// Team 1 by default
 			return 1;
@@ -258,7 +268,7 @@ vector c4_boardsize;// HUD board size
 .float c4_checkwin; // Used to optimize checks to display a win
 
 // Required function, draw the game board
-void minigame_hud_board_c4(vector pos, vector mySize)
+void c4_hud_board(vector pos, vector mySize)
 {
 	minigame_hud_fitsqare(pos, mySize);
 	c4_boardpos = pos;
@@ -266,13 +276,13 @@ void minigame_hud_board_c4(vector pos, vector mySize)
 	
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("c4/board"));
 
-	vector tile_size = minigame_hud_denormalize_size(('1 0 0' / 6) + ('0 1 0' / 6),pos,mySize);
+	vector tile_size = minigame_hud_denormalize_size('1 1 0' / C4_TILE_SIZE,pos,mySize);
 	vector tile_pos;
 
 	if ( (active_minigame.minigame_flags & C4_TURN_TEAM) == minigame_self.team )
 	if ( c4_valid_tile(c4_curr_pos) )
 	{
-		tile_pos = minigame_tile_pos(c4_curr_pos,6,7);
+		tile_pos = minigame_tile_pos(c4_curr_pos,C4_NUM_CNT,C4_LET_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 		minigame_drawpic_centered( tile_pos,  
 				minigame_texture(strcat("c4/piece",ftos(minigame_self.team))),
@@ -284,7 +294,7 @@ void minigame_hud_board_c4(vector pos, vector mySize)
 	{
 		if ( e.classname == "minigame_board_piece" )
 		{
-			tile_pos = minigame_tile_pos(e.netname,6,7);
+			tile_pos = minigame_tile_pos(e.netname,C4_NUM_CNT,C4_LET_CNT);
 			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 			
 			if ( active_minigame.minigame_flags & C4_TURN_WIN )
@@ -310,7 +320,7 @@ void minigame_hud_board_c4(vector pos, vector mySize)
 
 
 // Required function, draw the game status panel
-void minigame_hud_status_c4(vector pos, vector mySize)
+void c4_hud_status(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg(1);
 	vector ts;
@@ -335,7 +345,7 @@ void minigame_hud_status_c4(vector pos, vector mySize)
 			if ( e.team == 2 )
 				mypos_y  += player_fontsize_y + ts_y;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-				(e.minigame_playerslot ? GetPlayerName(e.minigame_playerslot-1) : _("AI")),
+				GetPlayerName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 			mypos_y += player_fontsize_y;
@@ -402,7 +412,7 @@ string c4_get_lowest_tile(entity minigame, string s)
 {
 	int i;
 	int end = 0;
-	for(i = 6; i >= 0; --i)
+	for(i = C4_NUM_CNT; i >= 0; --i)
 	{
 		if(c4_find_piece(minigame,minigame_tile_buildname(minigame_tile_letter(s), i - 1)).team)
 		{
@@ -414,7 +424,7 @@ string c4_get_lowest_tile(entity minigame, string s)
 }
 
 // Required function, handle client events
-float minigame_event_c4(entity minigame, string event, ...)
+float c4_client_event(entity minigame, string event, ...)
 {
 	switch(event)
 	{
@@ -435,14 +445,14 @@ float minigame_event_c4(entity minigame, string event, ...)
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos(c4_get_lowest_tile(minigame, "a3"));
 						else
-							c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_relative_tile(c4_curr_pos,1,0,6,7)));
+							c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_relative_tile(c4_curr_pos,1,0,C4_NUM_CNT,C4_LET_CNT)));
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
 						if ( ! c4_curr_pos )
 							c4_set_curr_pos(c4_get_lowest_tile(minigame, "c3"));
 						else
-							c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_relative_tile(c4_curr_pos,-1,0,6,7)));
+							c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_relative_tile(c4_curr_pos,-1,0,C4_NUM_CNT,C4_LET_CNT)));
 						return true;
 					/*case K_UPARROW:
 					case K_KP_UPARROW:
@@ -483,7 +493,7 @@ float minigame_event_c4(entity minigame, string event, ...)
 			vector mouse_pos = minigame_hud_normalize(mousepos,c4_boardpos,c4_boardsize);
 			if ( minigame.minigame_flags == (C4_TURN_PLACE|minigame_self.team) )
 			{
-				c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_tile_name(mouse_pos,6,7)));
+				c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_tile_name(mouse_pos,C4_NUM_CNT,C4_LET_CNT)));
 			}
 			if ( ! c4_valid_tile(c4_curr_pos) )
 				c4_set_curr_pos("");

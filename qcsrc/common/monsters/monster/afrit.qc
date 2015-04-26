@@ -106,11 +106,13 @@ float M_Afrit_Attack(float attack_type)
 }
 
 void spawnfunc_monster_afrit() { Monster_Spawn(MON_AFRIT); }
+#endif // SVQC
 
-float M_Afrit(float req)
+bool M_Afrit(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			if(self.target_range < 0)
@@ -159,6 +161,7 @@ float M_Afrit(float req)
 			self.superweapons_finished = time + 20;
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -173,6 +176,7 @@ float M_Afrit(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_afrit_health);
@@ -196,10 +200,10 @@ float M_Afrit(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

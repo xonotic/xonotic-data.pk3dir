@@ -79,11 +79,13 @@ float M_Demon_Attack(float attack_type)
 void spawnfunc_monster_demon() { Monster_Spawn(MON_DEMON); }
 void spawnfunc_monster_demon1() { spawnfunc_monster_demon(); }
 void spawnfunc_monster_animus() { spawnfunc_monster_demon(); }
+#endif // SVQC
 
-float M_Demon(float req)
+bool M_Demon(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -99,6 +101,7 @@ float M_Demon(float req)
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -112,6 +115,7 @@ float M_Demon(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_demon_health);
@@ -128,10 +132,10 @@ float M_Demon(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

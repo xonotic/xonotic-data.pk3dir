@@ -475,7 +475,7 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-float WantEventchase()
+bool WantEventchase()
 {
 	if(autocvar_cl_orthoview)
 		return false;
@@ -486,6 +486,8 @@ float WantEventchase()
 	if(spectatee_status >= 0)
 	{
 		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
+			return true;
+		if(substring(self.model, 0, 16) == "models/monsters/")
 			return true;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO)))
 			return true;

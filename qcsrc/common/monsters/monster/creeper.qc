@@ -73,11 +73,13 @@ bool M_Creeper_Attack(int attack_type)
 }
 
 void spawnfunc_monster_creeper() { Monster_Spawn(MON_CREEPER); }
+#endif // SVQC
 
-float M_Creeper(float req)
+bool M_Creeper(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			if(self.creeper_primed)
@@ -95,6 +97,7 @@ float M_Creeper(float req)
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -105,6 +108,7 @@ float M_Creeper(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_creeper_health);
@@ -124,10 +128,10 @@ float M_Creeper(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

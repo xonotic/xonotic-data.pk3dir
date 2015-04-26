@@ -209,11 +209,13 @@ float M_Shambler_Attack(float attack_type)
 }
 
 void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER); }
+#endif // SVQC
 
-float M_Shambler(float req)
+bool M_Shambler(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -229,6 +231,7 @@ float M_Shambler(float req)
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -244,6 +247,7 @@ float M_Shambler(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_shambler_health);
@@ -266,10 +270,10 @@ float M_Shambler(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

@@ -345,15 +345,17 @@ void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE); }
 // compatibility with old spawns
 void spawnfunc_monster_shalrath() { spawnfunc_monster_mage(); }
 #endif
+#endif // SVQC
 
-float M_Mage(float req)
+bool M_Mage(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			entity head;
-			float need_help = false;
+			bool need_help = false;
 
 			for(head = world; (head = findfloat(head, iscreature, true)); )
 			if(head != self)
@@ -389,6 +391,7 @@ float M_Mage(float req)
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -401,6 +404,7 @@ float M_Mage(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_mage_health);
@@ -419,10 +423,10 @@ float M_Mage(float req)
 			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

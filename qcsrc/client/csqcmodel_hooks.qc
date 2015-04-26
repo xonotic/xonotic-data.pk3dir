@@ -681,8 +681,12 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
-		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
-		CSQCPlayer_LOD_Apply();
+		if(isplayer)
+		{
+			CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
+			CSQCPlayer_LOD_Apply();
+		}
+
 		if(!isplayer)
 		{
 			skeleton_loadinfo(self);
@@ -780,7 +784,7 @@ void CSQCModel_Hook_PreUpdate(bool isnew, bool isplayer, bool islocalplayer)
 void CSQCModel_Hook_PostUpdate(bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
-	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/");
+	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/" || substring(self.model, 0, 16) == "models/monsters/");
 
 	// save values set by server
 	if(self.isplayermodel)

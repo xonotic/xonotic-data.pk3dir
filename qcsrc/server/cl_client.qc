@@ -182,6 +182,7 @@ string CheckPlayerModel(string plyermodel) {
 	if(substring(plyermodel,-4,4) != ".dpm")
 	if(substring(plyermodel,-4,4) != ".iqm")
 	if(substring(plyermodel,-4,4) != ".md3")
+	if(substring(plyermodel,-4,4) != ".mdl")
 	if(substring(plyermodel,-4,4) != ".psk")
 		return FallbackPlayerModel;
 	// forbid the LOD models
@@ -488,13 +489,17 @@ void PlayerTouch (void)
 	if(other == world)
 		return;
 
-	if(!autocvar_g_player_crush && !IS_MONSTER(other))
+	bool and_monster = IS_MONSTER(other);
+	if(and_monster && !((get_monsterinfo(other.monsterid)).spawnflags & MON_FLAG_CRUSH))
+		and_monster = false;
+
+	if(!autocvar_g_player_crush && !and_monster)
 		return;
 
 	if(!IS_PLAYER(self))
 		return;
 
-	if(!IS_PLAYER(other) && !IS_MONSTER(other))
+	if(!IS_PLAYER(other) && !and_monster)
 		return;
 
 	if(self.deadflag != DEAD_NO || other.deadflag != DEAD_NO)

@@ -183,11 +183,13 @@ void spawnfunc_monster_vore() { Monster_Spawn(MON_VORE); }
 
 // compatibility with old spawns
 void spawnfunc_monster_shalrath() { spawnfunc_monster_vore(); }
+#endif // SVQC
 
-float M_Vore(float req)
+int M_Vore(bool req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -203,6 +205,7 @@ float M_Vore(float req)
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -215,6 +218,7 @@ float M_Vore(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_vore_health);
@@ -234,10 +238,10 @@ float M_Vore(float req)
 			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

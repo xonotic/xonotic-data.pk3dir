@@ -104,11 +104,13 @@ void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN); }
 // compatibility with old spawns
 void spawnfunc_monster_wizard() { spawnfunc_monster_wyvern(); }
 #endif // extra monsters include original wizard
+#endif // SVQC
 
-float M_Wyvern(float req)
+bool M_Wyvern(int req)
 {
 	switch(req)
 	{
+		#ifdef SVQC
 		case MR_THINK:
 		{
 			return true;
@@ -127,6 +129,7 @@ float M_Wyvern(float req)
 			self.velocity_z = 100 + 100 * random();
 			return true;
 		}
+		#endif
 		case MR_ANIM:
 		{
 			vector none = '0 0 0';
@@ -139,6 +142,7 @@ float M_Wyvern(float req)
 
 			return true;
 		}
+		#ifdef SVQC
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_wyvern_health);
@@ -155,10 +159,10 @@ float M_Wyvern(float req)
 		{
 			return true;
 		}
+		#endif
 	}
 
 	return true;
 }
 
-#endif // SVQC
 #endif // REGISTER_MONSTER

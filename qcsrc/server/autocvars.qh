@@ -929,6 +929,7 @@ bool autocvar_g_jump_grunt;
 bool autocvar_g_overkill_powerups_replace;
 bool autocvar_g_za;
 int autocvar_g_za_max_monsters;
+bool autocvar_g_za_infect;
 string autocvar_g_za_spawnmonster;
 float autocvar_g_za_spawn_delay;
 float autocvar_g_overkill_superguns_respawn_time;
