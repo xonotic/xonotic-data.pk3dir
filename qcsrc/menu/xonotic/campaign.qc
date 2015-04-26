@@ -5,7 +5,7 @@ CLASS(XonoticCampaignList) EXTENDS(XonoticListBox)
 	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity))
 	ATTRIB(XonoticCampaignList, rowsPerItem, float, 10)
 	METHOD(XonoticCampaignList, draw, void(entity))
-	METHOD(XonoticCampaignList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticCampaignList, drawListBoxItem, void(entity, int, vector, bool, float))
 	METHOD(XonoticCampaignList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticCampaignList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticCampaignList, setSelected, void(entity, float))
@@ -237,7 +237,7 @@ void XonoticCampaignList_doubleClickListBoxItem(entity me, float i, vector where
 {
 	CampaignList_LoadMap(me, me);
 }
-void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected)
+void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
 {
 	string s;
 	vector theColor;
@@ -263,6 +263,8 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(highlightedTime)
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, getHighlightAlpha(SKINALPHA_LISTBOX_SELECTED * 0.1, highlightedTime));
 
 	if(draw_PictureSize(strcat("/maps/", campaign_mapname[i])) == '0 0 0')
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);

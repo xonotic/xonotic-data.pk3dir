@@ -2,7 +2,7 @@
 CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
 	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity))
 	ATTRIB(XonoticLanguageList, rowsPerItem, float, 1)
-	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, int, vector, bool, float))
 	METHOD(XonoticLanguageList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticLanguageList, setSelected, void(entity, float))
 	METHOD(XonoticLanguageList, loadCvars, void(entity))
@@ -55,11 +55,13 @@ void XonoticLanguageList_configureXonoticLanguageList(entity me)
 	me.loadCvars(me);
 }
 
-void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
 {
 	string s, p;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(highlightedTime)
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, getHighlightAlpha(SKINALPHA_LISTBOX_SELECTED * 0.1, highlightedTime));
 
 	s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
 

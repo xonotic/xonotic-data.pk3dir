@@ -6,7 +6,7 @@ CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
 	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))
 	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)
 	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticStatsList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticStatsList, drawListBoxItem, void(entity, int, vector, bool, float))
 	METHOD(XonoticStatsList, getStats, void(entity))
 	METHOD(XonoticStatsList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticStatsList, keyDown, float(entity, float, float, float))
@@ -313,10 +313,12 @@ void XonoticStatsList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 #endif
 }
 
-void XonoticStatsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticStatsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
 {
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(highlightedTime)
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, getHighlightAlpha(SKINALPHA_LISTBOX_SELECTED * 0.1, highlightedTime));
 
 	string data = bufstr_get(me.listStats, i);
 	string s = car(data);

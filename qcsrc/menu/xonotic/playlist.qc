@@ -4,7 +4,7 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticPlayList, rowsPerItem, float, 1)
 	METHOD(XonoticPlayList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticPlayList, draw, void(entity))
-	METHOD(XonoticPlayList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticPlayList, drawListBoxItem, void(entity, int, vector, bool, float))
 	METHOD(XonoticPlayList, stopSound, void(entity))
 	METHOD(XonoticPlayList, startSound, void(entity, float))
 	METHOD(XonoticPlayList, resumeSound, void(entity))
@@ -170,11 +170,13 @@ void XonoticPlayList_draw(entity me)
 	SUPER(XonoticPlayList).draw(me);
 }
 
-void XonoticPlayList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticPlayList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(highlightedTime)
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, getHighlightAlpha(SKINALPHA_LISTBOX_SELECTED * 0.1, highlightedTime));
 
 	if(i == me.playingTrack)
 	{

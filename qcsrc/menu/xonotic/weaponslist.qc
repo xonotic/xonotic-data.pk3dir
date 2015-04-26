@@ -4,7 +4,7 @@ CLASS(XonoticWeaponsList) EXTENDS(XonoticListBox)
 	METHOD(XonoticWeaponsList, toString, string(entity))
 	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1)
 	METHOD(XonoticWeaponsList, draw, void(entity))
-	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, float))
 	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float))
 	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0')
@@ -90,11 +90,13 @@ string XonoticWeaponsList_toString(entity me)
 	}
 	return substring(s, 0, strlen(s) - 2);
 }
-void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticWeaponsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
 {
 	entity e;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(highlightedTime)
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, getHighlightAlpha(SKINALPHA_LISTBOX_SELECTED * 0.1, highlightedTime));
 	e = get_weaponinfo(stof(argv(i)));
 	string msg = e.message;
 	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)

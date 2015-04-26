@@ -768,6 +768,22 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 				e.configureXonoticTextSliderValues(e);
 }
 
+#define FADE_TIME 0.5
+#define MAX_ALPHA_INCREASE 0.1
+#define TRESHOLD_TIME 0.1
+float getHighlightAlpha(float baseAlpha, float highlightedTime)
+{
+	float alphaIncrease;
+	if (time - highlightedTime - TRESHOLD_TIME < FADE_TIME)
+	{
+		alphaIncrease = max(0, (time - highlightedTime - TRESHOLD_TIME) / FADE_TIME);
+		alphaIncrease = (1 - alphaIncrease) * MAX_ALPHA_INCREASE;
+	}
+	else
+		alphaIncrease = 0;
+	return baseAlpha + alphaIncrease;
+}
+
 void CheckSendCvars(entity me, string cvarnamestring)
 {
 	if(me.sendCvars)

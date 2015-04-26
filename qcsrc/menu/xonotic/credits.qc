@@ -3,7 +3,7 @@ CLASS(XonoticCreditsList) EXTENDS(XonoticListBox)
 	METHOD(XonoticCreditsList, configureXonoticCreditsList, void(entity))
 	ATTRIB(XonoticCreditsList, rowsPerItem, float, 1)
 	METHOD(XonoticCreditsList, draw, void(entity))
-	METHOD(XonoticCreditsList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticCreditsList, drawListBoxItem, void(entity, int, vector, bool, float))
 	METHOD(XonoticCreditsList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticCreditsList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticCreditsList, destroy, void(entity))
@@ -57,7 +57,7 @@ void XonoticCreditsList_resizeNotify(entity me, vector relOrigin, vector relSize
 	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 }
-void XonoticCreditsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticCreditsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
 {
 	// layout: Ping, Credits name, Map name, NP, TP, MP
 	string s;

@@ -3,7 +3,7 @@ CLASS(XonoticSoundList) EXTENDS(XonoticListBox)
 	METHOD(XonoticSoundList, configureXonoticSoundList, void(entity))
 	ATTRIB(XonoticSoundList, rowsPerItem, float, 1)
 	METHOD(XonoticSoundList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticSoundList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticSoundList, drawListBoxItem, void(entity, int, vector, bool, float))
 	METHOD(XonoticSoundList, getSounds, void(entity))
 	METHOD(XonoticSoundList, soundName, string(entity, float))
 	METHOD(XonoticSoundList, doubleClickListBoxItem, void(entity, float, vector))
@@ -101,11 +101,13 @@ void XonoticSoundList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.columnNameSize = 1 - me.columnNameOrigin - me.realFontSize.x;
 }
 
-void XonoticSoundList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticSoundList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(highlightedTime)
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, getHighlightAlpha(SKINALPHA_LISTBOX_SELECTED * 0.1, highlightedTime));
 
 	s = me.soundName(me,i);
 	if(s == cvar_string("menu_cdtrack")) // current menu track

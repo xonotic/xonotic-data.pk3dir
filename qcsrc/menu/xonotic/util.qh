@@ -48,6 +48,8 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
 
+float getHighlightAlpha(float baseAlpha, float highlightedTime);
+
 string _Nex_ExtResponseSystem_BannedServers;
 float _Nex_ExtResponseSystem_BannedServersNeedsRefresh;
 string _Nex_ExtResponseSystem_PromotedServers;

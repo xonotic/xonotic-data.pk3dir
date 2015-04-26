@@ -2,7 +2,7 @@
 CLASS(XonoticCvarList) EXTENDS(XonoticListBox)
 	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity))
 	ATTRIB(XonoticCvarList, rowsPerItem, float, 1)
-	METHOD(XonoticCvarList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticCvarList, drawListBoxItem, void(entity, int, vector, bool, float))
 	METHOD(XonoticCvarList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticCvarList, keyDown, float(entity, float, float, float))
 
@@ -152,7 +152,7 @@ void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 
 	me.setSelected(me, me.selectedItem);
 }
-void XonoticCvarList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
 {
 	string k, v, d;
 	float t;
@@ -164,6 +164,8 @@ void XonoticCvarList_drawListBoxItem(entity me, float i, vector absSize, float i
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(highlightedTime)
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, getHighlightAlpha(SKINALPHA_LISTBOX_SELECTED * 0.1, highlightedTime));
 
 	k = bufstr_get(me.handle, i);
 
