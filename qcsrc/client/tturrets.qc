@@ -162,7 +162,7 @@ void turret_remove()
     self.tur_head = world;
 }
 
-.vector glowmod;
+class(Turret) .vector glowmod;
 void turret_changeteam()
 {
 	switch(self.team - 1)

@@ -1,10 +1,11 @@
 #ifndef MODELEFFECTS_H
 #define MODELEFFECTS_H
 
-.float frame1time;
-.float lifetime, fadetime;
-.float teleport_time;
-.float scale1, scale2;
+entityclass(ModelEffect)
+class(ModelEffect) .float frame1time;
+class(ModelEffect) .float lifetime, fadetime;
+class(ModelEffect) .float teleport_time;
+class(ModelEffect) .float scale1, scale2;
 
 void ModelEffect_Draw();
 

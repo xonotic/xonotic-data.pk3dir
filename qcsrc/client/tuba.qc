@@ -6,11 +6,11 @@ const int TUBA_MIN = -18;
 const int TUBA_MAX = 27;
 const int TUBA_INSTRUMENTS = 3;
 
-.int note;
-.bool tuba_attenuate;
-.float tuba_volume;
-.float tuba_volume_initial;
-.int tuba_instrument;
+class(Tuba) .int note;
+class(Tuba) .bool tuba_attenuate;
+class(Tuba) .float tuba_volume;
+class(Tuba) .float tuba_volume_initial;
+class(Tuba) .int tuba_instrument;
 
 int Tuba_PitchStep;
 

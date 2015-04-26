@@ -1,8 +1,9 @@
 #ifndef SORTLIST_H
 #define SORTLIST_H
 
+entityclass(Sort)
 //.float(entity,entity) sort_cmp;
-.entity sort_next, sort_prev;
+class(Sort) .entity sort_next, sort_prev;
 
 entity Sort_Spawn();
 

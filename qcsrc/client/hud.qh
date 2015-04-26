@@ -69,18 +69,19 @@ vector panel_size_backup;
 vector panel_size_copied;
 
 entity panel;
-.string panel_name;
-.int panel_id;
-.vector current_panel_pos;
-.vector current_panel_size;
-.string current_panel_bg;
-.float current_panel_bg_alpha;
-.float current_panel_bg_border;
-.vector current_panel_bg_color;
-.float current_panel_bg_color_team;
-.float current_panel_bg_padding;
-.float current_panel_fg_alpha;
-.float update_time;
+entityclass(HUDPanel)
+class(HUDPanel) .string panel_name;
+class(HUDPanel) .int panel_id;
+class(HUDPanel) .vector current_panel_pos;
+class(HUDPanel) .vector current_panel_size;
+class(HUDPanel) .string current_panel_bg;
+class(HUDPanel) .float current_panel_bg_alpha;
+class(HUDPanel) .float current_panel_bg_border;
+class(HUDPanel) .vector current_panel_bg_color;
+class(HUDPanel) .float current_panel_bg_color_team;
+class(HUDPanel) .float current_panel_bg_padding;
+class(HUDPanel) .float current_panel_fg_alpha;
+class(HUDPanel) .float update_time;
 float panel_enabled;
 vector panel_pos;
 vector panel_size;
@@ -97,7 +98,7 @@ string panel_bg_border_str;
 float panel_bg_padding;
 string panel_bg_padding_str;
 
-.void() panel_draw;
+class(HUDPanel) .void() panel_draw;
 
 float current_player;
 

@@ -2,13 +2,13 @@
 
 #include "../warpzonelib/anglestransform.qh"
 
-.float skeleton_info_modelindex;
-.float skeleton_info_skin;
+class(Skeleton) .float skeleton_info_modelindex;
+class(Skeleton) .float skeleton_info_skin;
 const int BONETYPE_LOWER = 0;
 const int BONETYPE_UPPER = 1;
 const int MAX_BONES = 128;
-.float skeleton_bonetype[MAX_BONES];
-.float skeleton_numbones;
+class(Skeleton) .float skeleton_bonetype[MAX_BONES];
+class(Skeleton) .float skeleton_numbones;
 
 void skeleton_loadinfo(entity e)
 {

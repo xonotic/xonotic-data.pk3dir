@@ -10,8 +10,8 @@
 #elif defined(SVQC)
 #endif
 
-
-.bool silent;
+entityclass(Casing)
+class(Casing) .bool silent;
 
 void Casing_Delete()
 {

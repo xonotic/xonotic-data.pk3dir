@@ -15,12 +15,12 @@ float bgmscriptbuf;
 float bgmscriptbufsize;
 float bgmscriptbufloaded;
 
-.float bgmscriptline;
-.float bgmscriptline0;
-.float bgmscriptvolume;
-.float bgmscripttime;
-.float bgmscriptstate;
-.float bgmscriptstatetime;
+class(BGMScript) .float bgmscriptline;
+class(BGMScript) .float bgmscriptline0;
+class(BGMScript) .float bgmscriptvolume;
+class(BGMScript) .float bgmscripttime;
+class(BGMScript) .float bgmscriptstate;
+class(BGMScript) .float bgmscriptstatetime;
 
 float GetAttackDecaySustainAmplitude(float a, float d, float s, float t)
 {

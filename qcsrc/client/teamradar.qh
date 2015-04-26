@@ -3,11 +3,12 @@
 
 const int MAX_TEAMRADAR_TIMES = 32;
 
+entityclass(TeamRadar)
 // to make entities have dots on the team radar
-.float teamradar_icon;
-.float teamradar_times[MAX_TEAMRADAR_TIMES];
-.int teamradar_time_index;
-.vector teamradar_color;
+class(TeamRadar) .float teamradar_icon;
+class(TeamRadar) .float teamradar_times[MAX_TEAMRADAR_TIMES];
+class(TeamRadar) .int teamradar_time_index;
+class(TeamRadar) .vector teamradar_color;
 
 float teamradar_angle; // player yaw angle
 vector teamradar_origin3d_in_texcoord; // player origin

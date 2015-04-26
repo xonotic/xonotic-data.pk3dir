@@ -38,11 +38,11 @@
 #endif
 
 #ifndef QCC_SUPPORT_ENTITYCLASS
-    #define entityclass(name) typedef entity name
+    #define entityclass(name) /* typedef entity name; */
     #define class(name)
     #define new(class) spawn()
 #else
-    #define entityclass(name) entityclass name {}
+    #define entityclass(name) entityclass name {};
     #define class(name) [[class(name)]]
     #define new(class) ((class) spawn())
 #endif

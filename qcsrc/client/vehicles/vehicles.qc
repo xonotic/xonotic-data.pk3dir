@@ -60,10 +60,11 @@ void CSQC_BUMBLE_GUN_HUD();
 const int MAX_AXH = 4;
 entity AuxiliaryXhair[MAX_AXH];
 
-.string axh_image;
-.float  axh_fadetime;
-.float  axh_drawflag;
-.float  axh_scale;
+entityclass(AuxiliaryXhair)
+class(AuxiliaryXhair) .string axh_image;
+class(AuxiliaryXhair) .float  axh_fadetime;
+class(AuxiliaryXhair) .float  axh_drawflag;
+class(AuxiliaryXhair) .float  axh_scale;
 
 const string bumb_ico =  "gfx/vehicles/bumb.tga";
 const string bumb_lgun =  "gfx/vehicles/bumb_lgun.tga";

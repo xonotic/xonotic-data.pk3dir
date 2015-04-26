@@ -1,9 +1,10 @@
 #ifndef SHOWNAMES_H
 #define SHOWNAMES_H
 
-.float healthvalue;
-.float armorvalue;
-.float sameteam;
-.float fadedelay;
-.float pointtime;
+entityclass(ShowNames)
+class(ShowNames) .float healthvalue;
+class(ShowNames) .float armorvalue;
+class(ShowNames) .float sameteam;
+class(ShowNames) .float fadedelay;
+class(ShowNames) .float pointtime;
 #endif

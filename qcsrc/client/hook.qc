@@ -2,11 +2,12 @@
 #include "noise.qh"
 #include "../warpzonelib/common.qh"
 
-.float HookType; // ENT_CLIENT_*
-.vector origin;
-.vector velocity;
-.float HookSilent;
-.float HookRange;
+entityclass(Hook)
+class(Hook) .float HookType; // ENT_CLIENT_*
+class(Hook) .vector origin;
+class(Hook) .vector velocity;
+class(Hook) .float HookSilent;
+class(Hook) .float HookRange;
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 {
@@ -49,7 +50,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
-.float teleport_time;
+class(Hook) .float teleport_time;
 void Draw_GrapplingHook()
 {
 	vector a, b, atrans;

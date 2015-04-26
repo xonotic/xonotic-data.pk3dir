@@ -26,21 +26,22 @@ float waypointsprite_distancefadescale;
 float waypointsprite_distancefadedistance;
 float waypointsprite_alpha;
 
-.float helpme;
-.float rule;
-.string netname; // primary picture
-.string netname2; // secondary picture
-.string netname3; // tertiary picture
-.int team; // team that gets netname2
-.float lifetime;
-.float fadetime;
-.float maxdistance;
-.int hideflags;
-.float spawntime;
-.float health;
-.float build_started;
-.float build_starthealth;
-.float build_finished;
+entityclass(WaypointSprite)
+class(WaypointSprite) .float helpme;
+class(WaypointSprite) .float rule;
+class(WaypointSprite) .string netname; // primary picture
+class(WaypointSprite) .string netname2; // secondary picture
+class(WaypointSprite) .string netname3; // tertiary picture
+class(WaypointSprite) .int team; // team that gets netname2
+class(WaypointSprite) .float lifetime;
+class(WaypointSprite) .float fadetime;
+class(WaypointSprite) .float maxdistance;
+class(WaypointSprite) .int hideflags;
+class(WaypointSprite) .float spawntime;
+class(WaypointSprite) .float health;
+class(WaypointSprite) .float build_started;
+class(WaypointSprite) .float build_starthealth;
+class(WaypointSprite) .float build_finished;
 
 const float SPRITE_HEALTHBAR_WIDTH = 144;
 const float SPRITE_HEALTHBAR_HEIGHT = 9;
