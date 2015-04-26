@@ -537,23 +537,23 @@ void Item_ScheduleInitialRespawn(entity e)
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
 {
-	if (!item.ammotype)
+	if (!item.(ammotype))
 		return false;
 
 	if (item.spawnshieldtime)
 	{
-		if ((player.ammotype < ammomax) || item.pickup_anyway)
+		if ((player.(ammotype) < ammomax) || item.pickup_anyway)
 		{
-			player.ammotype = bound(player.ammotype, ammomax, player.ammotype + item.ammotype);
+			player.(ammotype) = bound(player.(ammotype), ammomax, player.(ammotype) + item.(ammotype));
 			goto YEAH;
 		}
 	}
 	else if(g_weapon_stay == 2)
 	{
-		float mi = min(item.ammotype, ammomax);
-		if (player.ammotype < mi)
+		float mi = min(item.(ammotype), ammomax);
+		if (player.(ammotype) < mi)
 		{
-			player.ammotype = mi;
+			player.(ammotype) = mi;
 			goto YEAH;
 		}
 	}
@@ -1530,56 +1530,56 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 float GiveBit(entity e, .float fld, float bit, float op, float val)
 {
 	float v0, v1;
-	v0 = (e.fld & bit);
+	v0 = (e.(fld) & bit);
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				e.fld |= bit;
+				e.(fld) |= bit;
 			else
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				e.fld |= bit;
+				e.(fld) |= bit;
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 	}
-	v1 = (e.fld & bit);
+	v1 = (e.(fld) & bit);
 	return (v0 != v1);
 }
 
 float GiveValue(entity e, .float fld, float op, float val)
 {
 	float v0, v1;
-	v0 = e.fld;
+	v0 = e.(fld);
 	switch(op)
 	{
 		case OP_SET:
-			e.fld = val;
+			e.(fld) = val;
 			break;
 		case OP_MIN:
-			e.fld = max(e.fld, val); // min 100 cells = at least 100 cells
+			e.(fld) = max(e.(fld), val); // min 100 cells = at least 100 cells
 			break;
 		case OP_MAX:
-			e.fld = min(e.fld, val);
+			e.(fld) = min(e.(fld), val);
 			break;
 		case OP_PLUS:
-			e.fld += val;
+			e.(fld) += val;
 			break;
 		case OP_MINUS:
-			e.fld -= val;
+			e.(fld) -= val;
 			break;
 	}
-	v1 = e.fld;
+	v1 = e.(fld);
 	return (v0 != v1);
 }
 
@@ -1602,9 +1602,9 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime)
 {
 	if(v0 < v1)
-		e.rotfield = max(e.rotfield, time + rottime);
+		e.(rotfield) = max(e.(rotfield), time + rottime);
 	else if(v0 > v1)
-		e.regenfield = max(e.regenfield, time + regentime);
+		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
 float GiveItems(entity e, float beginarg, float endarg)
 {

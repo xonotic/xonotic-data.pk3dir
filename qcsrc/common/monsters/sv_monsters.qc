@@ -275,9 +275,9 @@ float LoadMonsterSounds(string f, float first)
 		field = GetMonsterSoundSampleField(argv(0));
 		if(GetMonsterSoundSampleField_notFound)
 			continue;
-		if(self.field)
-			strunzone(self.field);
-		self.field = strzone(strcat(argv(1), " ", argv(2)));
+		if (self.(field))
+			strunzone(self.(field));
+		self.(field) = strzone(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
 	return 1;
@@ -305,7 +305,7 @@ void MonsterSound(.string samplefield, float sound_delay, float delaytoo, float 
 	if(delaytoo)
 	if(time < self.msound_delay)
 		return; // too early
-	GlobalSound(self.samplefield, chan, VOICETYPE_PLAYERSOUND);
+	GlobalSound(self.(samplefield), chan, VOICETYPE_PLAYERSOUND);
 
 	self.msound_delay = time + sound_delay;
 }

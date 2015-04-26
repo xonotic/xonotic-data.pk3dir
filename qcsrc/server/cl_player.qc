@@ -767,9 +767,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 				flood = 2;
 			}
 
-			if(time >= source.flood_field)
+			if (time >= source.(flood_field))
 			{
-				source.flood_field = max(time - flood_burst * flood_spl, source.flood_field) + lines * flood_spl;
+				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
 			}
 			else
 			{
@@ -779,14 +779,14 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else
 		{
-			if(time >= source.flood_field)
-				source.flood_field = max(time - flood_burst * flood_spl, source.flood_field) + flood_spl;
+			if (time >= source.(flood_field))
+				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
 			else
 				flood = 1;
 		}
 
 		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.flood_field = flood = 0;
+			source.(flood_field) = flood = 0;
 	}
 
 	if(flood == 2) // cannot happen for empty msgstr
@@ -831,9 +831,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 	else if(flood == 1)
 	{
-		if(autocvar_g_chat_flood_notify_flooder)
+		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
+			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else
@@ -1003,9 +1003,9 @@ float LoadPlayerSounds(string f, float first)
 			field = GetVoiceMessageSampleField(argv(0));
 		if(GetPlayerSoundSampleField_notFound)
 			continue;
-		if(self.field)
-			strunzone(self.field);
-		self.field = strzone(strcat(argv(1), " ", argv(2)));
+		if (self.(field))
+			strunzone(self.(field));
+		self.(field) = strzone(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
 	return 1;
@@ -1200,7 +1200,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 
 void PlayerSound(.string samplefield, float chan, float voicetype)
 {
-	GlobalSound(self.samplefield, chan, voicetype);
+	GlobalSound(self.(samplefield), chan, voicetype);
 }
 
 void VoiceMessage(string type, string msg)
@@ -1221,10 +1221,10 @@ void VoiceMessage(string type, string msg)
 
 	flood = Say(self, ownteam, world, msg, 1);
 
-	if(IS_SPEC(self) || IS_OBSERVER(self) || flood < 0)
-		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
+	if (IS_SPEC(self) || IS_OBSERVER(self) || flood < 0)
+		FakeGlobalSound(self.(sample), CH_VOICE, voicetype);
 	else if (flood > 0)
-		GlobalSound(self.sample, CH_VOICE, voicetype);
+		GlobalSound(self.(sample), CH_VOICE, voicetype);
 }
 
 void MoveToTeam(entity client, float team_colour, float type)

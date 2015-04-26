@@ -68,7 +68,7 @@ const float VHSF_NORMAL = 0;
 const float VHSF_FACTORY = 2;
 .void(float _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
 .float(float _imp) vehicles_impulse;
-.float vehicle_weapon2mode = volly_counter;
+.float vehicle_weapon2mode;
 
 #ifdef VEHICLES_USE_ODE
 void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object

@@ -184,26 +184,26 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 	entity e;
 	e = start;
 	funcPre(pass, e);
-	while(e.downleft)
+	while (e.(downleft))
 	{
-		e = e.downleft;
+		e = e.(downleft);
 		funcPre(pass, e);
 	}
 	funcPost(pass, e);
 	while(e != start)
 	{
-		if(e.right)
+		if (e.(right))
 		{
-			e = e.right;
+			e = e.(right);
 			funcPre(pass, e);
-			while(e.downleft)
+			while (e.(downleft))
 			{
-				e = e.downleft;
+				e = e.(downleft);
 				funcPre(pass, e);
 			}
 		}
 		else
-			e = e.up;
+			e = e.(up);
 		funcPost(pass, e);
 	}
 }
@@ -2539,11 +2539,11 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 	// start with a 1-element queue
 	queue_start = queue_end = e;
-	queue_end.fld = world;
+	queue_end.(fld) = world;
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
-	for (; queue_start; queue_start = queue_start.fld)
+	for (; queue_start; queue_start = queue_start.(fld))
 	{
 		// find all neighbors of queue_start
 		entity t;
@@ -2554,16 +2554,16 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 			if(iscon(t, queue_start, pass))
 			{
 				// it is connected? ADD IT. It will look for neighbors soon too.
-				queue_end.fld = t;
+				queue_end.(fld) = t;
 				queue_end = t;
-				queue_end.fld = world;
+				queue_end.(fld) = world;
 				queue_end.FindConnectedComponent_processing = 1;
 			}
 		}
 	}
 
 	// unmark
-	for(queue_start = e; queue_start; queue_start = queue_start.fld)
+	for (queue_start = e; queue_start; queue_start = queue_start.(fld))
 		queue_start.FindConnectedComponent_processing = 0;
 }
 

@@ -1650,7 +1650,7 @@ void SetWinners(.float field, float value)
 {
 	entity head;
 	FOR_EACH_PLAYER(head)
-		head.winning = (head.field == value);
+		head.winning = (head.(field) == value);
 }
 
 // set the .winning flag for those players with a given field value
@@ -1658,7 +1658,7 @@ void AddWinners(.float field, float value)
 {
 	entity head;
 	FOR_EACH_PLAYER(head)
-		if(head.field == value)
+		if (head.(field) == value)
 			head.winning = 1;
 }
 

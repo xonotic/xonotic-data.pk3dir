@@ -107,24 +107,24 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			// if our weapon is loaded, give its load back to the player
 			if(self.(weapon_load[self.weapon]) > 0)
 			{
-				own.ammotype += self.(weapon_load[self.weapon]);
+				own.(ammotype) += self.(weapon_load[self.weapon]);
 				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
 
-			wep.ammotype = 0;
+			wep.(ammotype) = 0;
 		}
 		else if(doreduce)
 		{
 			// if our weapon is loaded, give its load back to the player
 			if(self.(weapon_load[self.weapon]) > 0)
 			{
-				own.ammotype += self.(weapon_load[self.weapon]);
+				own.(ammotype) += self.(weapon_load[self.weapon]);
 				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
 
-			thisammo = min(own.ammotype, wep.ammotype);
-			wep.ammotype = thisammo;
-			own.ammotype -= thisammo;
+			thisammo = min(own.(ammotype), wep.(ammotype));
+			wep.(ammotype) = thisammo;
+			own.(ammotype) -= thisammo;
 
 			switch(ammotype)
 			{

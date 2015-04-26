@@ -357,17 +357,17 @@ void GetCvars_handleString(string thisname, float f, .string field, string name)
 {
 	if (f < 0)
 	{
-		if (self.field)
-			strunzone(self.field);
-		self.field = string_null;
+		if (self.(field))
+			strunzone(self.(field));
+		self.(field) = string_null;
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (self.field)
-				strunzone(self.field);
-			self.field = strzone(argv(f + 1));
+			if (self.(field))
+				strunzone(self.(field));
+			self.(field) = strzone(argv(f + 1));
 		}
 	}
 	else
@@ -379,12 +379,11 @@ void GetCvars_handleString_Fixup(string thisname, float f, .string field, string
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
 		{
-			string s;
-			s = func(strcat1(self.field));
-			if (s != self.field)
+			string s = func(strcat1(self.(field)));
+			if (s != self.(field))
 			{
-				strunzone(self.field);
-				self.field = strzone(s);
+				strunzone(self.(field));
+				self.(field) = strzone(s);
 			}
 		}
 }
@@ -396,7 +395,7 @@ void GetCvars_handleFloat(string thisname, float f, .float field, string name)
 	else if (f > 0)
 	{
 		if (thisname == name)
-			self.field = stof(argv(f + 1));
+			self.(field) = stof(argv(f + 1));
 	}
 	else
 		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
@@ -410,17 +409,17 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 	{
 		if (thisname == name)
 		{
-			if(!self.field)
+			if (!self.(field))
 			{
-				self.field = stof(argv(f + 1));
-				if(!self.field)
-					self.field = -1;
+				self.(field) = stof(argv(f + 1));
+				if (!self.(field))
+					self.(field) = -1;
 			}
 		}
 	}
 	else
 	{
-		if(!self.field)
+		if (!self.(field))
 			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }

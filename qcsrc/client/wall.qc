@@ -9,7 +9,7 @@ void Ent_Wall_Draw()
 		fld = angles;
 	else
 		fld = origin;
-	self.fld = self.saved;
+	self.(fld) = self.saved;
 
 	if(self.lodmodelindex1)
 	{
@@ -38,7 +38,7 @@ void Ent_Wall_Draw()
 
 	InterpolateOrigin_Do();
 
-	self.saved = self.fld;
+	self.saved = self.(fld);
 
 	f = BGMScript(self);
 	if(f >= 0)
@@ -47,7 +47,7 @@ void Ent_Wall_Draw()
 			self.alpha = 1 + self.lip * f;
 		else // > 0: alpha goes from 1-|lip| to 1 when toggled (toggling adds lip)
 			self.alpha = 1 - self.lip * (1 - f);
-		self.fld = self.fld + self.movedir * f;
+		self.(fld) = self.(fld) + self.movedir * f;
 	}
 	else
 		self.alpha = 1;
@@ -77,7 +77,7 @@ void Ent_Wall()
 		fld = angles;
 	else
 		fld = origin;
-	self.fld = self.saved;
+	self.(fld) = self.saved;
 
 	f = ReadByte();
 
@@ -169,7 +169,7 @@ void Ent_Wall()
 
 	InterpolateOrigin_Note();
 
-	self.saved = self.fld;
+	self.saved = self.(fld);
 
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;
