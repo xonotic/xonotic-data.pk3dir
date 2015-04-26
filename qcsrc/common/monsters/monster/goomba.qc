@@ -61,7 +61,7 @@ bool M_Goomba(int req)
 	{
 		case MR_THINK:
 		{
-			Monster_Move_2D(self.speed, autocvar_g_monster_goomba_allow_jumpoff, 0, 0);
+			Monster_Move_2D(self.speed, autocvar_g_monster_goomba_allow_jumpoff);
 			return false; // funny handler here, false means don't do regular moving
 		}
 		case MR_PAIN:

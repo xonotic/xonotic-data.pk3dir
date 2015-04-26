@@ -44,6 +44,7 @@ float autocvar_g_monster_ogre_speed_stop;
 float autocvar_g_monster_ogre_speed_run;
 float autocvar_g_monster_ogre_speed_walk;
 
+/*
 const float ogre_anim_idle 			= 0;
 const float ogre_anim_walk 			= 1;
 const float ogre_anim_run 			= 2;
@@ -58,6 +59,7 @@ const float ogre_anim_pain5 		= 10;
 const float ogre_anim_death1 		= 11;
 const float ogre_anim_death2 		= 12;
 const float ogre_anim_pull 			= 13;
+*/
 
 void M_Ogre_Attack_MachineGun()
 {
@@ -257,7 +259,7 @@ void M_Ogre_Attack_Chainsaw()
 	if(time >= self.cnt + meleetime)
 	{
 		// melee is finished
-		self.realowner.frame = ogre_anim_idle;
+		setanim(self.realowner, self.realowner.anim_idle, true, false, false);
 		remove(self);
 		return;
 	}
@@ -280,7 +282,7 @@ float M_Ogre_Attack(float attack_type)
 			if(vdir_z > 0.7)
 			{
 				self.attack_finished_single = time + 1.2;
-				self.frame = ogre_anim_shoot;
+				setanim(self, self.anim_pain1, true, true, false);
 				self.state = MONSTER_ATTACK_RANGED;
 				Monster_Delay(2, 0.1, 0.4, M_Ogre_Attack_MachineGun);
 				return 2;
@@ -293,7 +295,7 @@ float M_Ogre_Attack(float attack_type)
 			self.attack_finished_single = time + autocvar_g_monster_ogre_attack_melee_time + autocvar_g_monster_ogre_attack_melee_delay + 0.7;
 			self.anim_finished = self.attack_finished_single;
 			self.state = MONSTER_ATTACK_MELEE;
-			self.frame = ogre_anim_swing;
+			setanim(self, self.anim_melee1, true, true, false);
 
 			return true;
 		}
@@ -303,7 +305,7 @@ float M_Ogre_Attack(float attack_type)
 			self.state = MONSTER_ATTACK_RANGED;
 			self.attack_finished_single = time + 1;
 			self.anim_finished = time + 0.5;
-			self.frame = ogre_anim_shoot;
+			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
 	}
@@ -323,20 +325,42 @@ float M_Ogre(float req)
 		}
 		case MR_PAIN:
 		{
+			vector anim;
 			switch(floor(random() * 6))
 			{
 				default:
-				case 1: self.frame = ogre_anim_pain1; self.anim_finished = time + 0.4; break;
-				case 2: self.frame = ogre_anim_pain2; self.anim_finished = time + 0.2; break;
-				case 3: self.frame = ogre_anim_pain3; self.anim_finished = time + 0.5; break;
-				case 4: self.frame = ogre_anim_pain4; self.anim_finished = time + 1.5; break;
-				case 5: self.frame = ogre_anim_pain5; self.anim_finished = time + 1.4; break;
+				case 1: anim = self.anim_pain1; self.anim_finished = time + 0.4; break;
+				case 2: anim = self.anim_pain2; self.anim_finished = time + 0.2; break;
+				case 3: anim = self.anim_pain3; self.anim_finished = time + 0.5; break;
+				case 4: anim = self.anim_pain4; self.anim_finished = time + 1.5; break;
+				case 5: anim = self.anim_pain5; self.anim_finished = time + 1.4; break;
 			}
+			setanim(self, anim, true, true, true);
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = ((random() >= 0.5) ? ogre_anim_death1 : ogre_anim_death2);
+			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
+			return true;
+		}
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '11 1 0.5', none); // 2 seconds
+			self.anim_die2 = animfixfps(self, '12 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '1 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_pain1 = animfixfps(self, '6 1 2', none); // 0.5 seconds
+			self.anim_pain2 = animfixfps(self, '7 1 2', none); // 0.5 seconds
+			self.anim_pain3 = animfixfps(self, '8 1 2', none); // 0.5 seconds
+			self.anim_pain4 = animfixfps(self, '9 1 2', none); // 0.5 seconds
+			self.anim_pain5 = animfixfps(self, '10 1 2', none); // 0.5 seconds
+			self.anim_melee1 = animfixfps(self, '3 1 5', none); // analyze models and set framerate
+			self.anim_melee2 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_shoot = animfixfps(self, '5 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '2 1 1', none);
+			self.anim_draw = animfixfps(self, '13 1 1', none);
+
 			return true;
 		}
 		case MR_SETUP:
@@ -347,14 +371,10 @@ float M_Ogre(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_ogre_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_ogre_damageforcescale); }
 
-			self.m_anim_walk = ogre_anim_walk;
-			self.m_anim_run = ogre_anim_run;
-			self.m_anim_idle = ogre_anim_idle;
-
 			self.monster_loot = spawnfunc_item_rockets;
 			self.weapon = WEP_MACHINEGUN;
-			self.frame = ogre_anim_pull;
-			self.spawn_time = time + 1;
+			setanim(self, self.anim_draw, false, true, true);
+			self.spawn_time = self.animstate_endtime;
 			self.spawnshieldtime = self.spawn_time;
 
 			return true;

@@ -26,6 +26,7 @@ float autocvar_g_monster_enforcer_speed_stop;
 float autocvar_g_monster_enforcer_speed_run;
 float autocvar_g_monster_enforcer_speed_walk;
 
+/*
 const float enforcer_anim_stand			= 0;
 const float enforcer_anim_walk			= 1;
 const float enforcer_anim_run			= 2;
@@ -36,6 +37,7 @@ const float enforcer_anim_pain1			= 6;
 const float enforcer_anim_pain2			= 7;
 const float enforcer_anim_pain3			= 8;
 const float enforcer_anim_pain4			= 9;
+*/
 
 void M_Enforcer_Attack_Plasma_Explode()
 {
@@ -107,7 +109,7 @@ float M_Enforcer_Attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			self.frame = enforcer_anim_attack;
+			setanim(self, self.anim_shoot, true, true, true);
 			self.attack_finished_single = time + 0.7;
 			self.anim_finished = time + 0.7 * autocvar_g_monster_enforcer_attack_plasma_shots;
 			self.state = MONSTER_ATTACK_RANGED;
@@ -131,19 +133,37 @@ float M_Enforcer(float req)
 		}
 		case MR_PAIN:
 		{
+			vector anim;
 			switch(floor(random() * 5))
 			{
 				default:
-				case 1: self.frame = enforcer_anim_pain1; self.pain_finished = time + 0.3; break;
-				case 2: self.frame = enforcer_anim_pain2; self.pain_finished = time + 0.4; break;
-				case 3: self.frame = enforcer_anim_pain3; self.pain_finished = time + 0.7; break;
-				case 4: self.frame = enforcer_anim_pain4; self.pain_finished = time + 1; break;
+				case 1: anim = self.anim_pain1; self.pain_finished = time + 0.3; break;
+				case 2: anim = self.anim_pain2; self.pain_finished = time + 0.4; break;
+				case 3: anim = self.anim_pain3; self.pain_finished = time + 0.7; break;
+				case 4: anim = self.anim_pain4; self.pain_finished = time + 1; break;
 			}
+			setanim(self, anim, true, true, false);
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = ((random() > 0.5) ? enforcer_anim_death1 : enforcer_anim_death2);
+			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
+			return true;
+		}
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
+			self.anim_die2 = animfixfps(self, '5 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '1 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_pain1 = animfixfps(self, '6 1 2', none); // 0.5 seconds
+			self.anim_pain2 = animfixfps(self, '7 1 2', none); // 0.5 seconds
+			self.anim_pain3 = animfixfps(self, '8 1 2', none); // 0.5 seconds
+			self.anim_pain4 = animfixfps(self, '9 1 2', none); // 0.5 seconds
+			self.anim_shoot = animfixfps(self, '3 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '2 1 1', none);
+
 			return true;
 		}
 		case MR_SETUP:
@@ -153,10 +173,6 @@ float M_Enforcer(float req)
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_enforcer_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_enforcer_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_enforcer_damageforcescale); }
-
-			self.m_anim_walk = enforcer_anim_walk;
-			self.m_anim_run = enforcer_anim_run;
-			self.m_anim_idle = enforcer_anim_stand;
 
 			self.monster_loot = spawnfunc_item_cells;
 			self.weapon = WEP_CRYLINK;

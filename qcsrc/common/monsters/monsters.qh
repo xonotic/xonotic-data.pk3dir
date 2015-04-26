@@ -7,6 +7,7 @@ const int MR_THINK = 2; // (SERVER) logic to run every frame
 const int MR_DEATH = 3; // (SERVER) called when monster dies
 const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
 const int MR_PAIN = 5; // (SERVER) called when monster is damaged
+const int MR_ANIM = 6; // (BOTH?) sets animations for monster
 
 // functions
 entity get_monsterinfo(float id);

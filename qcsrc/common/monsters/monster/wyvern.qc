@@ -25,11 +25,13 @@ float autocvar_g_monster_wyvern_speed_stop;
 float autocvar_g_monster_wyvern_speed_run;
 float autocvar_g_monster_wyvern_speed_walk;
 
+/*
 const float wyvern_anim_hover	= 0;
 const float wyvern_anim_fly		= 1;
 const float wyvern_anim_magic	= 2;
 const float wyvern_anim_pain	= 3;
 const float wyvern_anim_death	= 4;
+*/
 
 void M_Wyvern_Attack_Fireball_Explode()
 {
@@ -113,14 +115,28 @@ float M_Wyvern(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.5;
+			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = wyvern_anim_death;
+			setanim(self, self.anim_die1, false, true, true);
 			self.velocity_x = -200 + 400 * random();
 			self.velocity_y = -200 + 400 * random();
 			self.velocity_z = 100 + 100 * random();
+			return true;
+		}
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '1 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
+			self.anim_shoot = animfixfps(self, '2 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '1 1 1', none);
+
 			return true;
 		}
 		case MR_SETUP:
@@ -131,12 +147,7 @@ float M_Wyvern(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
 
-			self.m_anim_walk = wyvern_anim_hover;
-			self.m_anim_run = wyvern_anim_fly;
-			self.m_anim_idle = wyvern_anim_hover;
-
 			self.monster_loot = spawnfunc_item_cells;
-			self.frame = wyvern_anim_hover;
 
 			return true;
 		}

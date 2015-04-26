@@ -104,6 +104,11 @@ MUTATOR_HOOKABLE(SpectateCopy);
 	// INPUT:
 //		entity other;
 
+MUTATOR_HOOKABLE(FixPlayermodel);
+	// allows modifying player's model
+	// INPUT, OUTPUT:
+	// string ret_string;
+
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon);
 	// returns 1 if throwing the current weapon shall not be allowed
 

@@ -439,6 +439,10 @@ void FixPlayermodel()
 	if(!cvar("g_overkill") && self.cow && cow_allowed)
 		defaultmodel = "models/player/cow.md3";
 
+	ret_string = defaultmodel;
+	MUTATOR_CALLHOOK(FixPlayermodel);
+	defaultmodel = ret_string;
+
 	if(defaultmodel != "")
 	{
 		if (defaultmodel != self.model)
@@ -2729,8 +2733,8 @@ void PlayerPreThink (void)
 			if (!self.crouch)
 			{
 				self.crouch = true;
-				self.view_ofs = PL_CROUCH_VIEW_OFS;
-				setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX);
+				self.view_ofs = self.stat_pl_crouch_view_ofs;
+				setsize (self, self.stat_pl_crouch_min, self.stat_pl_crouch_max);
 				// setanim(self, self.anim_duck, false, true, true); // this anim is BROKEN anyway
 			}
 		}
@@ -2738,12 +2742,12 @@ void PlayerPreThink (void)
 		{
 			if (self.crouch)
 			{
-				tracebox(self.origin, PL_MIN, PL_MAX, self.origin, false, self);
+				tracebox(self.origin, self.stat_pl_min, self.stat_pl_max, self.origin, false, self);
 				if (!trace_startsolid || self.pbhost)
 				{
 					self.crouch = false;
-					self.view_ofs = PL_VIEW_OFS;
-					setsize (self, PL_MIN, PL_MAX);
+					self.view_ofs = self.stat_pl_view_ofs;
+					setsize (self, self.stat_pl_min, self.stat_pl_max);
 				}
 			}
 		}

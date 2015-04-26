@@ -23,6 +23,7 @@ float autocvar_g_monster_zombie_speed_stop;
 float autocvar_g_monster_zombie_speed_run;
 float autocvar_g_monster_zombie_speed_walk;
 
+/*
 const float zombie_anim_attackleap			= 0;
 const float zombie_anim_attackrun1			= 1;
 const float zombie_anim_attackrun2			= 2;
@@ -54,6 +55,7 @@ const float zombie_anim_runforward			= 27;
 const float zombie_anim_runforwardleft		= 28;
 const float zombie_anim_runforwardright		= 29;
 const float zombie_anim_spawn				= 30;
+*/
 
 void M_Zombie_Attack_Leap_Touch()
 {
@@ -83,17 +85,17 @@ void M_Zombie_Defend_Block_End()
 	if(self.health <= 0)
 		return;
 
-	self.frame = zombie_anim_blockend;
+	setanim(self, self.anim_blockend, false, true, true);
 	self.armorvalue = autocvar_g_monsters_armor_blockpercent;
 }
 
 float M_Zombie_Defend_Block()
 {
-	self.frame = zombie_anim_blockstart;
 	self.armorvalue = 0.9;
 	self.state = MONSTER_ATTACK_MELEE; // freeze monster
 	self.attack_finished_single = time + 2.1;
 	self.anim_finished = self.attack_finished_single;
+	setanim(self, self.anim_blockstart, false, true, true);
 
 	Monster_Delay(1, 0, 2, M_Zombie_Defend_Block_End);
 
@@ -106,24 +108,25 @@ float M_Zombie_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			float rand = random(), chosen_anim;
-
-			if(rand < 0.33)
-				chosen_anim = zombie_anim_attackstanding1;
-			else if(rand < 0.66)
-				chosen_anim = zombie_anim_attackstanding2;
-			else
-				chosen_anim = zombie_anim_attackstanding3;
-
 			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
 				return M_Zombie_Defend_Block();
+
+			float rand = random();
+			vector chosen_anim;
+
+			if(rand < 0.33)
+				chosen_anim = self.anim_melee1;
+			else if(rand < 0.66)
+				chosen_anim = self.anim_melee2;
+			else
+				chosen_anim = self.anim_melee3;
 
 			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
-			return Monster_Attack_Leap(zombie_anim_attackleap, M_Zombie_Attack_Leap_Touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
+			return Monster_Attack_Leap(self.anim_shoot, M_Zombie_Attack_Leap_Touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
 		}
 	}
 
@@ -145,13 +148,34 @@ float M_Zombie(float req)
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.34;
-			self.frame = (random() >= 0.5) ? zombie_anim_painfront1 : zombie_anim_painfront2;
+			setanim(self, ((random() > 0.5) ? self.anim_pain1 : self.anim_pain2), true, true, false);
 			return true;
 		}
 		case MR_DEATH:
 		{
 			self.armorvalue = autocvar_g_monsters_armor_blockpercent;
-			self.frame = ((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
+
+			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
+			return true;
+		}
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '9 1 0.5', none); // 2 seconds
+			self.anim_die2 = animfixfps(self, '12 1 0.5', none); // 2 seconds
+			self.anim_spawn = animfixfps(self, '30 1 3', none);
+			self.anim_walk = animfixfps(self, '27 1 1', none);
+			self.anim_idle = animfixfps(self, '19 1 1', none);
+			self.anim_pain1 = animfixfps(self, '20 1 2', none); // 0.5 seconds
+			self.anim_pain2 = animfixfps(self, '22 1 2', none); // 0.5 seconds
+			self.anim_melee1 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_melee2 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_melee3 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_shoot = animfixfps(self, '0 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '27 1 1', none);
+			self.anim_blockstart = animfixfps(self, '8 1 1', none);
+			self.anim_blockend = animfixfps(self, '7 1 1', none);
+
 			return true;
 		}
 		case MR_SETUP:
@@ -161,21 +185,18 @@ float M_Zombie(float req)
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_zombie_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
 
-			self.m_anim_walk = zombie_anim_runforward;
-			self.m_anim_run = zombie_anim_runforward;
-			self.m_anim_idle = zombie_anim_idle;
-
 			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
 				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
 
 			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
 			self.monster_loot = spawnfunc_item_health_medium;
-			self.frame = zombie_anim_spawn;
-			self.spawn_time = time + 2.1;
 			self.spawnshieldtime = self.spawn_time;
 			self.respawntime = 0.2;
 			self.damageforcescale = 0.0001; // no push while spawning
+
+			setanim(self, self.anim_spawn, false, true, true);
+			self.spawn_time = self.animstate_endtime;
 
 			return true;
 		}

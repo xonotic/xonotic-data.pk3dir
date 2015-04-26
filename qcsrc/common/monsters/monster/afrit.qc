@@ -25,6 +25,7 @@ float autocvar_g_monster_afrit_speed_stop;
 float autocvar_g_monster_afrit_speed_run;
 float autocvar_g_monster_afrit_speed_walk;
 
+/*
 const float afrit_anim_sleep	= 0;
 const float afrit_anim_getup	= 1;
 const float afrit_anim_fly		= 2;
@@ -32,6 +33,7 @@ const float afrit_anim_pain		= 3;
 const float afrit_anim_attack	= 4;
 const float afrit_anim_die1		= 5;
 const float afrit_anim_die2		= 6;
+*/
 
 .float afrit_targetrange_backup;
 .float afrit_targetcheck_delay;
@@ -91,8 +93,8 @@ float M_Afrit_Attack(float attack_type)
 		case MONSTER_ATTACK_RANGED:
 		{
 			self.attack_finished_single = time + 2;
-			self.anim_finished = time + 1.3;
-			self.frame = afrit_anim_attack;
+			setanim(self, self.anim_shoot, false, true, true);
+			self.anim_finished = self.animstate_endtime;
 
 			Monster_Delay(2, 0.3, 0.7, M_Afrit_Attack_Fireball);
 
@@ -118,8 +120,8 @@ float M_Afrit(float req)
 					self.target_range = self.afrit_targetrange_backup;
 					if(Monster_FindTarget(self) != world)
 					{
-						self.frame = afrit_anim_getup;
-						self.anim_finished = time + 2.3;
+						setanim(self, self.anim_draw, false, true, true);
+						self.anim_finished = self.animstate_endtime;
 					}
 					else
 					{
@@ -131,11 +133,11 @@ float M_Afrit(float req)
 			self.fire_endtime = 0; // never burns
 
 			if(self.flags & FL_ONGROUND)
-				self.m_anim_idle = afrit_anim_sleep;
+				self.anim_idle = animfixfps(self, '0 1 0.5', '0 0 0');
 			else
-				self.m_anim_idle = afrit_anim_fly;
+				self.anim_idle = animfixfps(self, '2 1 0.5', '0 0 0');
 
-			if(self.frame == afrit_anim_sleep)
+			if(self.flags & FL_ONGROUND)
 				self.armorvalue = 0.95; // almost invincible
 			else
 				self.armorvalue = autocvar_g_monsters_armor_blockpercent;
@@ -147,15 +149,28 @@ float M_Afrit(float req)
 				frag_damage = 0; // afrit doesn't burn
 			else
 			{
-				self.pain_finished = time + 0.6;
-				self.frame = afrit_anim_pain;
+				setanim(self, self.anim_pain1, true, true, true);
 			}
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = (random() >= 0.5) ? afrit_anim_die1 : afrit_anim_die2;
+			setanim(self, ((random() >= 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
 			self.superweapons_finished = time + 20;
+			return true;
+		}
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '5 1 0.5', none); // 2 seconds
+			self.anim_die2 = animfixfps(self, '6 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '2 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 0.5', none);
+			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
+			self.anim_shoot = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '2 1 1', none);
+			self.anim_draw = animfixfps(self, '1 1 1', none);
+
 			return true;
 		}
 		case MR_SETUP:
@@ -165,10 +180,6 @@ float M_Afrit(float req)
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_afrit_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_afrit_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_afrit_damageforcescale); }
-
-			self.m_anim_walk = afrit_anim_fly;
-			self.m_anim_run = afrit_anim_fly;
-			self.m_anim_idle = afrit_anim_fly;
 
 			if(!self.target_range) { self.afrit_targetrange_backup = autocvar_g_monsters_target_range; }
 			else { self.afrit_targetrange_backup = self.target_range; }

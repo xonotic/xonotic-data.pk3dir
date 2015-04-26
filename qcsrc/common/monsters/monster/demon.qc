@@ -24,6 +24,7 @@ float autocvar_g_monster_demon_speed_stop;
 float autocvar_g_monster_demon_speed_run;
 float autocvar_g_monster_demon_speed_walk;
 
+/*
 const float demon_anim_stand	= 0;
 const float demon_anim_walk		= 1;
 const float demon_anim_run		= 2;
@@ -31,6 +32,7 @@ const float demon_anim_leap		= 3;
 const float demon_anim_pain		= 4;
 const float demon_anim_death	= 5;
 const float demon_anim_attack	= 6;
+*/
 
 void M_Demon_Attack_Leap_Touch()
 {
@@ -61,13 +63,13 @@ float M_Demon_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_demon_attack_melee_damage), demon_anim_attack, self.attack_range, (autocvar_g_monster_demon_attack_melee_delay), DEATH_MONSTER_DEMON_MELEE, true);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_demon_attack_melee_damage), self.anim_melee, self.attack_range, (autocvar_g_monster_demon_attack_melee_delay), DEATH_MONSTER_DEMON_MELEE, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			if(vlen(self.enemy.origin - self.origin) <= autocvar_g_monster_demon_attack_leap_mindist) { return false; }
 			makevectors(self.angles);
-			return Monster_Attack_Leap(demon_anim_leap, M_Demon_Attack_Leap_Touch, v_forward * (autocvar_g_monster_demon_attack_leap_speed) + '0 0 200', (autocvar_g_monster_demon_attack_leap_delay));
+			return Monster_Attack_Leap(self.anim_shoot, M_Demon_Attack_Leap_Touch, v_forward * (autocvar_g_monster_demon_attack_leap_speed) + '0 0 200', (autocvar_g_monster_demon_attack_leap_delay));
 		}
 	}
 
@@ -89,12 +91,25 @@ float M_Demon(float req)
 		case MR_PAIN:
 		{
 			self.pain_finished = time + 0.5;
-			self.frame = demon_anim_pain;
+			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
 		case MR_DEATH:
 		{
-			self.frame = demon_anim_death;
+			setanim(self, self.anim_die1, false, true, true);
+			return true;
+		}
+		case MR_ANIM:
+		{
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '5 1 0.5', none); // 2 seconds
+			self.anim_walk = animfixfps(self, '1 1 1', none);
+			self.anim_idle = animfixfps(self, '0 1 1', none);
+			self.anim_pain1 = animfixfps(self, '4 1 2', none); // 0.5 seconds
+			self.anim_melee = animfixfps(self, '6 1 5', none); // analyze models and set framerate
+			self.anim_shoot = animfixfps(self, '3 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '2 1 1', none);
+
 			return true;
 		}
 		case MR_SETUP:
@@ -105,12 +120,7 @@ float M_Demon(float req)
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_demon_speed_stop); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_demon_damageforcescale); }
 
-			self.m_anim_walk = demon_anim_walk;
-			self.m_anim_run = demon_anim_run;
-			self.m_anim_idle = demon_anim_stand;
-
 			self.monster_loot = spawnfunc_item_health_large;
-			self.frame = demon_anim_stand;
 
 			return true;
 		}

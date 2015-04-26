@@ -628,6 +628,7 @@ void CSQCModel_Effects_Apply(void)
 
 void CSQCModel_Fade_Apply()
 {
+	if(!self.fade_end) { return; }
 	vector org;
 	float alph;
 	org = getpropertyvec(VF_ORIGIN);

@@ -356,13 +356,16 @@ void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float
 // Monster attack handlers
 // =======================
 
-float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float animtime, int deathtype, float dostop)
+float Monster_Attack_Melee(entity targ, float damg, vector anim, float er, float animtime, int deathtype, float dostop)
 {
 	if(dostop) { self.state = MONSTER_ATTACK_MELEE; }
 
-	self.frame = anim;
+	setanim(self, anim, true, true, true);
 
-	if(animtime > 0) { self.attack_finished_single = self.anim_finished = time + animtime; }
+	if(self.animstate_endtime > time)
+		self.attack_finished_single = self.anim_finished = self.animstate_endtime;
+	else
+		self.attack_finished_single = self.anim_finished = time + animtime;
 
 	monster_makevectors(targ);
 
@@ -396,20 +399,23 @@ float Monster_Attack_Leap_Check(vector vel)
 	return true;
 }
 
-bool Monster_Attack_Leap(int anm, void() touchfunc, vector vel, float animtime)
+bool Monster_Attack_Leap(vector anm, void() touchfunc, vector vel, float animtime)
 {
 	if(!Monster_Attack_Leap_Check(vel))
 		return false;
 
-	self.frame = anm;
+	setanim(self, anm, true, true, true);
+
+	if(self.animstate_endtime > time)
+		self.attack_finished_single = self.anim_finished = self.animstate_endtime;
+	else
+		self.attack_finished_single = self.anim_finished = time + animtime;
+
 	self.state = MONSTER_ATTACK_RANGED;
 	self.touch = touchfunc;
 	self.origin_z += 1;
 	self.velocity = vel;
 	self.flags &= ~FL_ONGROUND;
-
-	self.attack_finished_single = time + animtime;
-	self.anim_finished = self.attack_finished_single; // TODO: make these frame based
 
 	return true;
 }
@@ -447,6 +453,24 @@ void Monster_Attack_Check(entity e, entity targ)
 // Main monster functions
 // ======================
 
+void Monster_UpdateModel()
+{
+	// assume some defaults
+	/*self.anim_idle   = animfixfps(self, '0 1 0.01', '0 0 0');
+	self.anim_walk   = animfixfps(self, '1 1 0.01', '0 0 0');
+	self.anim_run    = animfixfps(self, '2 1 0.01', '0 0 0');
+	self.anim_fire1  = animfixfps(self, '3 1 0.01', '0 0 0');
+	self.anim_fire2  = animfixfps(self, '4 1 0.01', '0 0 0');
+	self.anim_melee  = animfixfps(self, '5 1 0.01', '0 0 0');
+	self.anim_pain1  = animfixfps(self, '6 1 0.01', '0 0 0');
+	self.anim_pain2  = animfixfps(self, '7 1 0.01', '0 0 0');
+	self.anim_die1   = animfixfps(self, '8 1 0.01', '0 0 0');
+	self.anim_die2   = animfixfps(self, '9 1 0.01', '0 0 0');*/
+
+	// then get the real values
+	MON_ACTION(self.monsterid, MR_ANIM);
+}
+
 void Monster_Skin_Check()
 {
 	vector oldmin = self.mins, oldmax = self.maxs;
@@ -458,6 +482,7 @@ void Monster_Skin_Check()
 		precache_model(trymodel);
 		setmodel(self, trymodel);
 		setsize(self, oldmin, oldmax);
+		Monster_UpdateModel();
 		CSQCMODEL_AUTOUPDATE(); // do a quick update
 	}
 
@@ -468,6 +493,7 @@ void Monster_Touch()
 {
 	if(other == world) { return; }
 
+	if(other.monster_attack)
 	if(self.enemy != other)
 	if(!IS_MONSTER(other))
 	if(Monster_ValidTarget(self, other))
@@ -678,7 +704,7 @@ void Monster_CalculateVelocity(entity mon, vector to, vector from, float turnrat
 	//mon.angles = vectoangles(mon.velocity);
 }
 
-void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_run, float manim_walk, float manim_idle)
+void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 {
 	if(self.target2) { self.goalentity = find(world, targetname, self.target2); }
 
@@ -694,7 +720,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 			WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 		movelib_beak_simple(stpspeed);
-		self.frame = manim_idle;
+		setanim(self, self.anim_idle, true, false, false);
 
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
@@ -713,7 +739,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 			WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 		movelib_beak_simple(stpspeed);
-		self.frame = manim_idle;
+		setanim(self, self.anim_idle, true, false, false);
 
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
@@ -785,7 +811,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 	{
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
-			self.frame = manim_idle;
+			setanim(self, self.anim_idle, true, false, false);
 		movelib_beak_simple(stpspeed);
 		return;
 	}
@@ -861,9 +887,9 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 		if(!self.state)
 		if(time > self.anim_finished)
 		if(vlen(self.velocity) > 10)
-			self.frame = ((do_run) ? manim_run : manim_walk);
+			setanim(self, ((do_run) ? self.anim_run : self.anim_walk), true, false, false);
 		else
-			self.frame = manim_idle;
+			setanim(self, self.anim_idle, true, false, false);
 	}
 	else
 	{
@@ -878,7 +904,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 		if(time > self.pain_finished)
 		if(!self.state)
 		if(vlen(self.velocity) <= 30)
-			self.frame = manim_idle;
+			setanim(self, self.anim_idle, true, false, false);
 	}
 
 	self.steerto = steerlib_attract2(((self.monster_face) ? self.monster_face : self.moveto), 0.5, 500, 0.95);
@@ -1114,13 +1140,13 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 }
 
 // don't check for enemies, just keep walking in a straight line
-void Monster_Move_2D(float mspeed, float allow_jumpoff, float manim_walk, float manim_idle)
+void Monster_Move_2D(float mspeed, float allow_jumpoff)
 {
 	if(gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || self.draggedby != world || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
 	{
 		mspeed = 0;
 		if(time >= self.spawn_time)
-			self.frame = manim_idle;
+			setanim(self, self.anim_idle, true, false, false);
 		movelib_beak_simple(0.6);
 		return;
 	}
@@ -1164,9 +1190,9 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff, float manim_walk, float 
 	if(time > self.pain_finished)
 	if(time > self.attack_finished_single)
 	if(vlen(self.velocity) > 10)
-		self.frame = manim_walk;
+		setanim(self, self.anim_walk, true, false, false);
 	else
-		self.frame = manim_idle;
+		setanim(self, self.anim_idle, true, false, false);
 }
 
 void Monster_Think()
@@ -1184,7 +1210,7 @@ void Monster_Think()
 	if(self.skin != self.oldskin) { Monster_Skin_Check(); }
 
 	if(MON_ACTION(self.monsterid, MR_THINK))
-		Monster_Move(self.speed2, self.speed, self.stopspeed, self.m_anim_run, self.m_anim_walk, self.m_anim_idle);
+		Monster_Move(self.speed2, self.speed, self.stopspeed);
 
 	CSQCMODEL_AUTOUPDATE();
 }
@@ -1335,6 +1361,8 @@ bool Monster_Spawn(int mon_id)
 	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 
 	self.ticrate = bound(sys_frametime, ((!self.ticrate) ? autocvar_g_monsters_think_delay : self.ticrate), 60);
+
+	Monster_UpdateModel();
 
 	if(!Monster_Spawn_Setup())
 	{
