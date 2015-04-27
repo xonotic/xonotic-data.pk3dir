@@ -769,19 +769,18 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 }
 
 #define FADE_TIME 0.5
-#define MAX_ALPHA_INCREASE 0.1
 #define TRESHOLD_TIME 0.1
-float getHighlightAlpha(float baseAlpha, float highlightedTime)
+float getHighlightAlpha(float startAlpha, float targetAlpha, float highlightedTime)
 {
-	float alphaIncrease;
-	if (time - highlightedTime - TRESHOLD_TIME < FADE_TIME)
+	float theAlpha;
+	if((time - highlightedTime - TRESHOLD_TIME) < FADE_TIME)
 	{
-		alphaIncrease = max(0, (time - highlightedTime - TRESHOLD_TIME) / FADE_TIME);
-		alphaIncrease = (1 - alphaIncrease) * MAX_ALPHA_INCREASE;
+		float f = max(0, (time - highlightedTime - TRESHOLD_TIME) / FADE_TIME);
+		theAlpha = startAlpha + f * (targetAlpha - startAlpha);
 	}
 	else
-		alphaIncrease = 0;
-	return baseAlpha + alphaIncrease;
+		theAlpha = targetAlpha;
+	return theAlpha;
 }
 
 void CheckSendCvars(entity me, string cvarnamestring)
