@@ -17,7 +17,7 @@ CLASS(XonoticCharmap) EXTENDS(Item)
 	ATTRIB(XonoticCharmap, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticCharmap, realCellSize, vector, '0 0 0')
 	ATTRIB(XonoticCharmap, focusedCell, vector, '-1 -1 0')
-	ATTRIB(XonoticCharmap, previouslyFocusedCell, vector, '-1 -1 0')
+	ATTRIB(XonoticCharmap, pressedCell, vector, '-1 -1 0')
 ENDCLASS(XonoticCharmap)
 entity makeXonoticCharmap(entity controlledInputBox);
 #endif
@@ -117,7 +117,7 @@ float XonoticCharmap_mousePress(entity me, vector coords)
 	if(me.focusedCell.x >= 0)
 	{
 		me.pressed = 1;
-		me.previouslyFocusedCell = me.focusedCell;
+		me.pressedCell = me.focusedCell;
 	}
 
 	return 1;
@@ -130,7 +130,7 @@ float XonoticCharmap_mouseRelease(entity me, vector coords)
 
 	me.mouseMove(me, coords);
 
-	if(me.focusedCell == me.previouslyFocusedCell)
+	if(me.focusedCell == me.pressedCell)
 		me.enterChar(me);
 
 	me.pressed = 0;
@@ -223,7 +223,7 @@ void XonoticCharmap_draw(entity me)
 			// Draw focused cell
 			if(cell == me.focusedCell && me.focused)
 			{
-				if(!me.pressed || me.focusedCell == me.previouslyFocusedCell)
+				if(!me.pressed || me.focusedCell == me.pressedCell)
 				{
 					cellPos_x = mod(me.focusedCell.x, CHARMAP_COLS) / CHARMAP_COLS;
 					cellPos_y = mod(me.focusedCell.y, CHARMAP_ROWS) / CHARMAP_ROWS;

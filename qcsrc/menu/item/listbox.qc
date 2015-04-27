@@ -10,8 +10,8 @@ CLASS(ListBox) EXTENDS(Item)
 	METHOD(ListBox, mouseRelease, float(entity, vector))
 	METHOD(ListBox, focusLeave, void(entity))
 	ATTRIB(ListBox, focusable, float, 1)
-	ATTRIB(ListBox, highlightedItem, int, -1)
-	ATTRIB(ListBox, highlightedItemTime, float, 0)
+	ATTRIB(ListBox, focusedItem, int, -1)
+	ATTRIB(ListBox, focusedItemTime, float, 0)
 	ATTRIB(ListBox, allowFocusSound, float, 1)
 	ATTRIB(ListBox, selectedItem, int, 0)
 	ATTRIB(ListBox, size, vector, '0 0 0')
@@ -188,10 +188,10 @@ float ListBox_mouseMove(entity me, vector pos)
 	if(pos_x < 1 - me.controlWidth)
 	{
 		float x;
-		x = me.highlightedItem;
-		me.highlightedItem = me.getItemAtPos(me, me.scrollPos + pos.y);
-		if(x != me.highlightedItem)
-			me.highlightedItemTime = time;
+		x = me.focusedItem;
+		me.focusedItem = me.getItemAtPos(me, me.scrollPos + pos.y);
+		if(x != me.focusedItem)
+			me.focusedItemTime = time;
 	}
 	return 1;
 }
@@ -305,7 +305,7 @@ void ListBox_focusLeave(entity me)
 	// by a mouse click on an item of the list
 	// for example showing a dialog on right click
 	me.pressed = 0;
-	me.highlightedItem = -1;
+	me.focusedItem = -1;
 }
 void ListBox_updateControlTopBottom(entity me)
 {
@@ -397,7 +397,7 @@ void ListBox_draw(entity me)
 		vector relSize = eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, i);
 		absSize = boxToGlobalSize(relSize, me.size);
 		draw_scale = boxToGlobalSize(relSize, oldscale);
-		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i), (me.highlightedItem == i) ? me.highlightedItemTime : 0);
+		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i), (me.focusedItem == i) ? me.focusedItemTime : 0);
 		y += relSize.y;
 	}
 	draw_ClearClip();
