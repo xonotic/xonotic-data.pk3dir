@@ -236,5 +236,6 @@ void XonoticCharmap_draw(entity me)
 			draw_CenterText(charPos, character, me.realFontSize, SKINCOLOR_CHARMAP_CHAR, SKINALPHA_CHARMAP_CHAR, 0);
 		}
 	}
+	SUPER(XonoticCharmap).draw(me);
 }
 #endif
