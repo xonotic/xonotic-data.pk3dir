@@ -224,8 +224,6 @@ ALPHA_KEYGRABBER_KEYS           0.7
 // item: charmap
 ALPHA_CHARMAP_CHAR              0.85
 COLOR_CHARMAP_CHAR              '1 1 1'
-ALPHA_CHARMAP_FOCUS             0.75
-COLOR_CHARMAP_FOCUS             '0 0.375 0.75'
 
 // item: radio button
 //   uses "radiobutton" images

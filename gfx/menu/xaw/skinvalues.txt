@@ -179,8 +179,6 @@ ALPHA_MODELTITLE                1
 // item: charmap
 ALPHA_CHARMAP_CHAR              0.85
 COLOR_CHARMAP_CHAR              '1 1 1'
-ALPHA_CHARMAP_FOCUS             0.5
-COLOR_CHARMAP_FOCUS             '0 0 0'
 
 // item: radio button
 //   uses "radiobutton" images

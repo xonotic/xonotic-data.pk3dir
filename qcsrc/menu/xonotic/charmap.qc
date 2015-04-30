@@ -17,6 +17,7 @@ CLASS(XonoticCharmap) EXTENDS(Item)
 	ATTRIB(XonoticCharmap, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticCharmap, realCellSize, vector, '0 0 0')
 	ATTRIB(XonoticCharmap, focusedCell, vector, '-1 -1 0')
+	ATTRIB(XonoticCharmap, focusedCellTime, float, 0)
 	ATTRIB(XonoticCharmap, pressedCell, vector, '-1 -1 0')
 ENDCLASS(XonoticCharmap)
 entity makeXonoticCharmap(entity controlledInputBox);
@@ -92,6 +93,7 @@ void XonoticCharmap_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 
 float XonoticCharmap_mouseMove(entity me, vector coords)
 {
+	vector prevFocusedCell = me.focusedCell;
 	me.focusedCell_x = floor(coords.x * CHARMAP_COLS);
 	me.focusedCell_y = floor(coords.y * CHARMAP_ROWS);
 
@@ -101,6 +103,9 @@ float XonoticCharmap_mouseMove(entity me, vector coords)
 		me.focusedCell = '-1 -1 0';
 		return 0;
 	}
+
+	if(me.focusedCell != prevFocusedCell)
+		me.focusedCellTime = time;
 
 	return 1;
 }
@@ -227,7 +232,7 @@ void XonoticCharmap_draw(entity me)
 				{
 					cellPos_x = mod(me.focusedCell.x, CHARMAP_COLS) / CHARMAP_COLS;
 					cellPos_y = mod(me.focusedCell.y, CHARMAP_ROWS) / CHARMAP_ROWS;
-					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_CHARMAP_FOCUS, SKINALPHA_CHARMAP_FOCUS);
+					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_LISTBOX_FOCUSED, getHighlightAlpha(SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED, me.focusedCellTime));
 				}
 			}
 
