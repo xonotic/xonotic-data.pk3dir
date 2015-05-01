@@ -107,9 +107,6 @@ ALPHA_CREDITS_PERSON            1
 ROWS_CREDITS                    20
 WIDTH_CREDITS                   0.5
 
-// item: crosshair button
-//   uses "crosshairbutton" images
-
 // item: cvar list
 ALPHA_CVARLIST_SAVED            1
 ALPHA_CVARLIST_TEMPORARY        0.7

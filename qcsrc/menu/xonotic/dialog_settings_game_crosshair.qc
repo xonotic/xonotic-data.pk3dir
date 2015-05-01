@@ -27,7 +27,6 @@ entity makeXonoticGameCrosshairSettingsTab()
 void XonoticGameCrosshairSettingsTab_fill(entity me)
 {
 	entity e;
-	float i;
 
 	// crosshair_enabled: 0 = no crosshair options, 1 = no crosshair selection, but everything else enabled, 2 = all crosshair options enabled
 	// FIXME: In the future, perhaps make one global crosshair_type cvar which has 0 for disabled, 1 for custom, 2 for per weapon, etc?
@@ -39,27 +38,12 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 	//me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom")));
 	me.TR(me);
-		me.TDempty(me, 0.1);
-		for(i = 31; i <= 42; ++i) {
-			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
-		// show a larger preview of the selected crosshair
-		me.TDempty(me, 0.1);
-		me.TDNoMargin(me, 3, 0.8, e = makeXonoticCrosshairButton(7, -1), '1 1 0'); // crosshair -1 makes this a preview
+		me.TD(me, 3, 2, e = makeXonoticCrosshairPicker());
+			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
+		me.TD(me, 3, 1, e = makeXonoticCrosshairPreview());
 			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TDempty(me, 0.1);
-		for(i = 43; i <= 54; ++i) {
-			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
 	me.TR(me);
-		me.TDempty(me, 0.1);
-		for(i = 55; i <= 66; ++i) {
-			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));
