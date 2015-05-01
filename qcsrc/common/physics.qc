@@ -477,7 +477,7 @@ bool PlayerJump (void)
 		return true; // no jumping while blocked
 #endif
 
-	float doublejump = false;
+	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY;
 
 	player_multijump = doublejump;
