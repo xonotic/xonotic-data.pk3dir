@@ -1,6 +1,3 @@
-#ifndef IMPLEMENTATION_H
-#define IMPLEMENTATION_H
-
 #ifndef INTERFACE
 #define INTERFACE
 #endif
@@ -29,4 +26,5 @@
 
 // for the implementation
 #define SUPER(cname) (cname##_vtbl.vtblbase)
-#endif
+
+#include "../classes.inc"

@@ -1,6 +1,3 @@
-#ifndef INTERFACE_H
-#define INTERFACE_H
-
 #ifndef INTERFACE
 #define INTERFACE
 #endif
@@ -26,4 +23,5 @@
 #define ATTRIBARRAY(cname,name,type,cnt)   .type name[cnt];
 #define ENDCLASS(cname)                    .float instanceOf##cname;
 #define SUPER(cname)
-#endif
+
+#include "../classes.inc"
