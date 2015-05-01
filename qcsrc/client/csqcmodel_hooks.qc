@@ -1,13 +1,17 @@
 #if defined(CSQC)
+	#include "defs.qh"
 	#include "gibs.qh"
 	#include "miscfunctions.qh"
 	#include "player_skeleton.qh"
 	#include "sortlist.qh"
+	#include "main.qh"
 
+	#include "../client/autocvars.qh"
 	#include "../client/weapons/projectile.qh"
 
 	#include "../common/animdecide.qh"
 	#include "../common/csqcmodel_settings.qh"
+	#include "../common/teams.qh"
 
 	#include "../csqcmodellib/cl_model.qh"
 	#include "../csqcmodellib/cl_player.qh"

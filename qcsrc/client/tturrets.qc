@@ -1,7 +1,24 @@
 #include "tturrets.qh"
-#include "waypointsprites.qh"
 
+#include "autocvars.qh"
+#include "defs.qh"
+#include "main.qh"
+#include "hud.qh"
+#include "miscfunctions.qh"
+#include "waypointsprites.qh"
+#include "movetypes.qh"
+#include "prandom.qh"
+#include "teamradar.qh"
+
+#include "../common/teams.qh"
 #include "../server/movelib.qh"
+#include "../warpzonelib/anglestransform.qh"
+#include "../warpzonelib/mathlib.qh"
+
+.vector colormod;
+.float cnt;
+.float alpha;
+.float gravity;
 
 string tid2info_base;
 string tid2info_head;

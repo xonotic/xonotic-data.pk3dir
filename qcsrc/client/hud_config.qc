@@ -1,6 +1,7 @@
 #if defined(CSQC)
 	#include "../dpdefs/csprogsdefs.qh"
 	#include "defs.qh"
+	#include "miscfunctions.qh"
 	#include "../dpdefs/keycodes.qh"
 	#include "../common/constants.qh"
 	#include "autocvars.qh"

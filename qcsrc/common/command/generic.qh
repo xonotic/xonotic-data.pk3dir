@@ -1,6 +1,7 @@
 #ifndef GENERIC_H
 #define GENERIC_H
 
+#include "../constants.qh"
 #include "markup.qh"
 #include "rpn.qh"
 

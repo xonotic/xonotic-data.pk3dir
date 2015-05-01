@@ -1,6 +1,8 @@
 #ifndef PLAYER_SKELETON
 #define PLAYER_SKELETON
 
+#include "../common/util.qh"
+
 void free_skeleton_from_frames(entity e);
 void skeleton_from_frames(entity e, float is_dead);
 void skeleton_loadinfo(entity e);

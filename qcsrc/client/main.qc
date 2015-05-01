@@ -1,21 +1,50 @@
+#include "main.qh"
+
+#include "casings.qh"
+#include "csqcmodel_hooks.qh"
+#include "damage.qh"
+#include "defs.qh"
+#include "effects.qh"
+#include "gibs.qh"
+#include "hud.qh"
+#include "hud_config.qh"
+#include "hook.qh"
+#include "laser.qh"
 #include "mapvoting.qh"
 #include "modeleffects.qh"
 #include "particles.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
+#include "sortlist.qh"
 #include "target_music.qh"
 #include "tturrets.qh"
 #include "tuba.qh"
 #include "wall.qh"
 #include "waypointsprites.qh"
+#include "miscfunctions.qh"
+#include "prandom.qh"
 
 #include "vehicles/vehicles.qh"
 
+#include "weapons/projectile.qh"
+
 #include "../server/vehicles/bumblebee.qh"
+#include "../server/t_items.qh"
 
+#include "../common/buffs.qh"
+#include "../common/deathtypes.qh"
+#include "../common/mapinfo.qh"
+#include "../common/notifications.qh"
 #include "../common/net_notice.qh"
+#include "../common/stats.qh"
+#include "../common/teams.qh"
 
+#include "../common/weapons/weapons.qh"
 #include "../common/monsters/monsters.qh"
+#include "../common/nades.qh"
+
+#include "../csqcmodellib/cl_model.qh"
+#include "../csqcmodellib/interpolate.qh"
 
 #include "../warpzonelib/client.qh"
 

@@ -2,6 +2,7 @@
 	#include "../dpdefs/csprogsdefs.qh"
 	#include "../common/buffs.qh"
 	#include "../csqcmodellib/interpolate.qh"
+	#include "hook.qh"
 	#include "main.qh"
 	#include "../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)

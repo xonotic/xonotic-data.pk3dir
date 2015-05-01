@@ -1,6 +1,8 @@
 #ifndef MAPINFO_H
 #define MAPINFO_H
 
+#include "util.qh"
+
 int MAPINFO_TYPE_ALL;
 entity MapInfo_Type_first;
 entity MapInfo_Type_last;

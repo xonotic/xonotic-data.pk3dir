@@ -9,6 +9,8 @@
 	#include "main.qh"
 	#include "../csqcmodellib/cl_model.qh"
 	#include "shownames.qh"
+	#include "hud.qh"
+	#include "miscfunctions.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

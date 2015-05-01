@@ -1,5 +1,12 @@
 #include "modeleffects.qh"
 
+#include "defs.qh"
+#include "main.qh"
+
+.float cnt;
+.float scale;
+.float alpha;
+
 void ModelEffect_Draw()
 {
 	self.angles = self.angles + frametime * self.avelocity;

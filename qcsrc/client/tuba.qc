@@ -1,5 +1,11 @@
 #include "tuba.qh"
 
+#include "autocvars.qh"
+#include "main.qh"
+#include "../common/constants.qh"
+#include "../common/util.qh"
+#include "../warpzonelib/mathlib.qh"
+
 #define TUBA_STARTNOTE(i, n) strcat("weapons/tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n), ".wav")
 
 const int TUBA_MIN = -18;

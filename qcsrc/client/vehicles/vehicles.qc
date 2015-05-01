@@ -1,20 +1,21 @@
-#if defined(CSQC)
-    #include "../../dpdefs/csprogsdefs.qh"
-    #include "../defs.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/stats.qh"
-    #include "../../common/util.qh"
-    #include "../../common/buffs.qh"
-    #include "../autocvars.qh"
-    #include "../movetypes.qh"
-    #include "../prandom.qh"
-    #include "../main.qh"
-    #include "vehicles.qh"
-    #include "../../csqcmodellib/cl_model.qh"
-    #include "../../server/t_items.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "../../dpdefs/csprogsdefs.qh"
+#include "../../common/constants.qh"
+#include "../../common/stats.qh"
+#include "../../common/util.qh"
+#include "../../common/buffs.qh"
+#include "../../csqcmodellib/cl_model.qh"
+#include "../../server/t_items.qh"
+#include "../defs.qh"
+#include "../miscfunctions.qh"
+#include "../movetypes.qh"
+#include "../scoreboard.qh"
+#include "../autocvars.qh"
+#include "../movetypes.qh"
+#include "../prandom.qh"
+#include "../main.qh"
+#include "vehicles.qh"
+
+.float cnt;
 
 const string hud_bg = "gfx/vehicles/frame.tga";
 const string hud_sh = "gfx/vehicles/vh-shield.tga";
@@ -51,11 +52,7 @@ const string raptor_bomb = "gfx/vehicles/raptor_bombs.tga";
 const string raptor_drop = "gfx/vehicles/axh-dropcross.tga";
 string raptor_xhair;
 
-void CSQC_WAKIZASHI_HUD();
-void CSQC_SPIDER_HUD();
-void CSQC_RAPTOR_HUD();
-void CSQC_BUMBLE_HUD();
-void CSQC_BUMBLE_GUN_HUD();
+
 
 const int MAX_AXH = 4;
 entity AuxiliaryXhair[MAX_AXH];

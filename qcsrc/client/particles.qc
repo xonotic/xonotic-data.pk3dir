@@ -1,5 +1,12 @@
 #include "particles.qh"
 
+#include "../common/util.qh"
+#include "autocvars.qh"
+#include "bgmscript.qh"
+#include "main.qh"
+#include "../common/stats.qh"
+#include "../warpzonelib/common.qh"
+
 void Draw_PointParticles()
 {
 	float n, i, fail;

@@ -1,5 +1,15 @@
 #include "wall.qh"
 
+#include "autocvars.qh"
+#include "bgmscript.qh"
+#include "main.qh"
+#include "../common/util.qh"
+#include "../csqcmodellib/interpolate.qh"
+
+.float alpha;
+.float scale;
+.vector movedir;
+
 void Ent_Wall_Draw()
 {
 	float f;

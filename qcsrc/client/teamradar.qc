@@ -1,5 +1,12 @@
 #if defined(CSQC)
+	#include "autocvars.qh"
+	#include "defs.qh"
+	#include "hud.qh"
+	#include "main.qh"
+	#include "miscfunctions.qh"
 	#include "teamradar.qh"
+	#include "../common/util.qh"
+	#include "../csqcmodellib/interpolate.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

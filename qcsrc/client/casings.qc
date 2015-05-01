@@ -1,4 +1,8 @@
 #if defined(CSQC)
+	#include "autocvars.qh"
+	#include "../common/util.qh"
+	#include "defs.qh"
+	#include "main.qh"
 	#include "movetypes.qh"
 	#include "prandom.qh"
 	#include "rubble.qh"

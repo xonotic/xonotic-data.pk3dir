@@ -1,18 +1,25 @@
 #if defined(CSQC)
 	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
 	#include "../common/constants.qh"
 	#include "../common/util.qh"
-	#include "../common/weapons/weapons.qh"
-	#include "autocvars.qh"
 	#include "../common/deathtypes.qh"
+	#include "../common/weapons/weapons.qh"
+	#include "vehicles/vehicles.qh"
+	#include "autocvars.qh"
+	#include "defs.qh"
 	#include "damage.qh"
+	#include "gibs.qh"
 	#include "movetypes.qh"
 	#include "prandom.qh"
-	#include "vehicles/vehicles.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif
+
+.entity tag_entity;
+
+.float cnt;
+.int state;
+.bool isplayermodel;
 
 void DamageEffect_Think()
 {
