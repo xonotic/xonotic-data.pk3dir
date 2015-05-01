@@ -104,7 +104,7 @@ string Nade_TrailEffect(float proj, float nade_team)
 }
 
 #ifdef SVQC
-float healer_send(entity to, float sf);
+float healer_send(entity to, int sf);
 #endif
 
 #ifdef CSQC

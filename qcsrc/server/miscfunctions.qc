@@ -102,7 +102,7 @@ float DistributeEvenly_GetRandomized(float weight)
 void GameLogEcho(string s)
 {
     string fn;
-    float matches;
+    int matches;
 
     if (autocvar_sv_eventlog_files)
     {
@@ -110,7 +110,7 @@ void GameLogEcho(string s)
         {
             logfile_open = true;
             matches = autocvar_sv_eventlog_files_counter + 1;
-            cvar_set("sv_eventlog_files_counter", ftos(matches));
+            cvar_set("sv_eventlog_files_counter", itos(matches));
             fn = ftos(matches);
             if (strlen(fn) < 8)
                 fn = strcat(substring("00000000", 0, 8 - strlen(fn)), fn);
@@ -810,7 +810,7 @@ void soundtoat(float _dest, entity e, vector o, float chan, string samp, float v
     entno = num_for_edict(e);
     idx = precache_sound_index(samp);
 
-    float sflags;
+    int sflags;
     sflags = 0;
 
     attenu = floor(attenu * 64);
@@ -1262,7 +1262,7 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
     e.uncustomizeentityforclient_set = !!uncustomizer;
 }
 
-void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc)
+void Net_LinkEntity(entity e, float docull, float dt, bool(entity, int) sendfunc)
 {
     vector mi, ma;
 
@@ -1823,7 +1823,7 @@ vector gettaginfo_relative(entity e, float tag)
 
 .float scale2;
 
-float modeleffect_SendEntity(entity to, float sf)
+float modeleffect_SendEntity(entity to, int sf)
 {
 	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);

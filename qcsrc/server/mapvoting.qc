@@ -252,7 +252,7 @@ void MapVote_WriteMask()
 	}
 }
 
-float MapVote_SendEntity(entity to, float sf)
+float MapVote_SendEntity(entity to, int sf)
 {
 	float i;
 

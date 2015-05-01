@@ -62,7 +62,7 @@ float server_is_dedicated;
 
 // Fields
 
-.void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;
+.void(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
 
 //.string	wad;
 //.string	map;
@@ -283,7 +283,7 @@ float have_team_spawns_forteam[17]; // 0 = this team has no spawns, 1 = this tea
 .entity killindicator;
 .float killindicator_teamchange;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 float lockteams;
 
@@ -297,7 +297,7 @@ float next_pingtime;
 
 .float Version;
 .int SendFlags;
-.float(entity to, float sendflags) SendEntity;
+.bool(entity to, int sendflags) SendEntity;
 
 // player sounds, voice messages
 // TODO implemented fall and falling
@@ -454,7 +454,7 @@ string matchid;
 
 .float stat_leadlimit;
 
-float radar_showennemies;
+bool radar_showennemies;
 
 #ifdef PROFILING
 float client_cefc_accumulator;
@@ -462,7 +462,7 @@ float client_cefc_accumulatortime;
 #endif
 
 .float weapon_load[WEP_MAXCOUNT];
-.float ammo_none; // used by the reloading system, must always be 0
+.int ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
@@ -474,7 +474,7 @@ float client_cefc_accumulatortime;
 .float vortex_chargepool_ammo;
 .float hagar_load;
 
-.float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
+.int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones

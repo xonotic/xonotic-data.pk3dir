@@ -52,7 +52,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
 
-float WarpZone_Teleported_Send(entity to, float sf)
+bool WarpZone_Teleported_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);
@@ -217,7 +217,7 @@ void WarpZone_Touch (void)
 	}
 }
 
-float WarpZone_Send(entity to, float sendflags)
+bool WarpZone_Send(entity to, int sendflags)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
@@ -271,7 +271,7 @@ float WarpZone_Send(entity to, float sendflags)
 	return true;
 }
 
-float WarpZone_Camera_Send(entity to, float sendflags)
+bool WarpZone_Camera_Send(entity to, int sendflags)
 {
 	int f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);

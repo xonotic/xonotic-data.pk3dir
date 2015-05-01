@@ -28,7 +28,7 @@
 	#include "../common/movetypes/movetypes.qh"
 #endif
 
-float Damage_DamageInfo_SendEntity(entity to, float sf)
+float Damage_DamageInfo_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
@@ -43,7 +43,7 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	return true;
 }
 
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, float bloodtype, entity dmgowner)
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
 {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
@@ -72,7 +72,7 @@ void UpdateFrags(entity player, float f)
 	PlayerTeamScore_AddScore(player, f);
 }
 
-void GiveFrags (entity attacker, entity targ, float f, float deathtype)
+void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 {
 	// TODO route through PlayerScores instead
 	if(gameover) return;
@@ -192,7 +192,7 @@ string AppendItemcodes(string s, entity player)
 	return s;
 }
 
-void LogDeath(string mode, float deathtype, entity killer, entity killed)
+void LogDeath(string mode, int deathtype, entity killer, entity killed)
 {
 	string s;
 	if(!autocvar_sv_eventlog)
@@ -214,7 +214,7 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 void Obituary_SpecialDeath(
 	entity notif_target,
 	float murder,
-	float deathtype,
+	int deathtype,
 	string s1, string s2, string s3,
 	float f1, float f2, float f3)
 {
@@ -274,7 +274,7 @@ void Obituary_SpecialDeath(
 float Obituary_WeaponDeath(
 	entity notif_target,
 	float murder,
-	float deathtype,
+	int deathtype,
 	string s1, string s2, string s3,
 	float f1, float f2)
 {
@@ -318,7 +318,7 @@ float Obituary_WeaponDeath(
 	return false;
 }
 
-void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
+void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {
 	// Sanity check
 	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
@@ -624,7 +624,7 @@ void Unfreeze (entity targ)
 	targ.iceblock = world;
 }
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float mirrordamage;
 	float mirrorforce;
@@ -942,7 +942,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 }
 
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity)
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, int deathtype, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
@@ -1131,7 +1131,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	return total_damage_to_creatures;
 }
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, float deathtype, entity directhitentity)
+float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, entity directhitentity)
 {
 	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, directhitentity);
 }

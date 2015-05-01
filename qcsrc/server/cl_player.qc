@@ -148,7 +148,7 @@ void player_anim (void)
 	}
 }
 
-void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float take, save;
 	vector v;

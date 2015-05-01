@@ -250,7 +250,7 @@ void PM_dodging()
 		self.velocity += PHYS_DODGING_UP_SPEED * v_up;
 
 #ifdef SVQC
-		if (autocvar_sv_dodging_sound == 1)
+		if (autocvar_sv_dodging_sound)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 		animdecide_setaction(self, ANIMACTION_JUMP, true);

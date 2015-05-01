@@ -81,7 +81,7 @@ void turret_stdproc_respawn()
 /*
 * Standard damage proc.
 */
-void turret_stdproc_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_stdproc_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
     // Enougth allready!
     if(self.deadflag == DEAD_DEAD)

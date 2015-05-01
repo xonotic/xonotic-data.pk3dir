@@ -286,8 +286,8 @@ void W_Porto_Attack(float type)
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float w_nexball_weapon(float req); // WEAPONTODO
-float W_Porto(float req)
+bool w_nexball_weapon(int req); // WEAPONTODO
+bool W_Porto(int req)
 {
 	//vector v_angle_save;
 
@@ -398,7 +398,7 @@ float W_Porto(float req)
 }
 #endif
 #ifdef CSQC
-float W_Porto(float req)
+bool W_Porto(int req)
 {
 	switch(req)
 	{
