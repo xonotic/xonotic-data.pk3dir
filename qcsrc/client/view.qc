@@ -1,12 +1,10 @@
+#include "_.qh"
+
 #include "announcer.qh"
-#include "autocvars.qh"
-#include "defs.qh"
 #include "hook.qh"
 #include "hud.qh"
 #include "hud_config.qh"
-#include "main.qh"
 #include "mapvoting.qh"
-#include "miscfunctions.qh"
 #include "noise.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
@@ -24,8 +22,6 @@
 #include "../common/weapons/weapons.qh"
 
 #include "../csqcmodellib/cl_player.qh"
-
-#include "../dpdefs/csprogsdefs.qh"
 
 #include "../warpzonelib/client.qh"
 #include "../warpzonelib/common.qh"

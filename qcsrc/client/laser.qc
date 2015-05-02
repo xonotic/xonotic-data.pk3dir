@@ -1,15 +1,12 @@
 #include "laser.qh"
+#include "_.qh"
 
 #include "hook.qh"
-#include "main.qh"
 
 #include "../common/buffs.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/interpolate.qh"
-
-#include "../dpdefs/csprogsdefs.qh"
-
 
 // a laser goes from origin in direction angles
 // it has color 'colormod'

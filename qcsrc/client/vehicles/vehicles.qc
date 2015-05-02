@@ -1,9 +1,6 @@
 #include "vehicles.qh"
+#include "../_.qh"
 
-#include "../autocvars.qh"
-#include "../defs.qh"
-#include "../main.qh"
-#include "../miscfunctions.qh"
 #include "../movetypes.qh"
 #include "../movetypes.qh"
 #include "../prandom.qh"
@@ -16,8 +13,6 @@
 #include "../../common/util.qh"
 
 #include "../../csqcmodellib/cl_model.qh"
-
-#include "../../dpdefs/csprogsdefs.qh"
 
 .float cnt;
 

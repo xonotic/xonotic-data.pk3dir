@@ -1,10 +1,7 @@
 #include "csqcmodel_hooks.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
 #include "gibs.qh"
-#include "main.qh"
-#include "miscfunctions.qh"
 #include "player_skeleton.qh"
 #include "sortlist.qh"
 

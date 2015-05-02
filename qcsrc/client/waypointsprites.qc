@@ -1,10 +1,7 @@
 #include "waypointsprites.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
 #include "hud.qh"
-#include "main.qh"
-#include "miscfunctions.qh"
 #include "teamradar.qh"
 
 #include "../common/buffs.qh"

@@ -1,8 +1,6 @@
 #include "casings.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
-#include "main.qh"
 #include "movetypes.qh"
 #include "prandom.qh"
 #include "rubble.qh"

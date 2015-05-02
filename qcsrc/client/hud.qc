@@ -1,10 +1,7 @@
 #include "hud.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
 #include "hud_config.qh"
-#include "main.qh"
-#include "miscfunctions.qh"
 #include "scoreboard.qh"
 #include "sortlist.qh"
 #include "teamradar.qh"

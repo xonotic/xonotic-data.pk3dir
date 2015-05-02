@@ -1,6 +1,5 @@
 #include "prandom.qh"
-
-#include "../dpdefs/csprogsdefs.qh"
+#include "_.qh"
 
 #include "../warpzonelib/mathlib.qh"
 

@@ -1,7 +1,6 @@
 #include "damage.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
 #include "gibs.qh"
 #include "movetypes.qh"
 #include "prandom.qh"
@@ -13,8 +12,6 @@
 #include "../common/util.qh"
 
 #include "../common/weapons/weapons.qh"
-
-#include "../dpdefs/csprogsdefs.qh"
 
 .entity tag_entity;
 

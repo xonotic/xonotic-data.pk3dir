@@ -1,8 +1,7 @@
 #include "particles.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
 #include "bgmscript.qh"
-#include "main.qh"
 
 #include "../common/stats.qh"
 #include "../common/util.qh"

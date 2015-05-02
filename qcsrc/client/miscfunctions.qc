@@ -1,9 +1,7 @@
 #include "miscfunctions.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
 #include "hud.qh"
-#include "main.qh"
 #include "sortlist.qh"
 
 #include "../common/command/generic.qh"

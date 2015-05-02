@@ -1,10 +1,7 @@
 #include "teamradar.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
 #include "hud.qh"
-#include "main.qh"
-#include "miscfunctions.qh"
 
 #include "../common/util.qh"
 

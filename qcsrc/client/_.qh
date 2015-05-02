@@ -1,0 +1,11 @@
+#ifndef __H
+#define __H
+
+#include "autocvars.qh"
+#include "defs.qh"
+#include "main.qh"
+#include "miscfunctions.qh"
+
+#include "../dpdefs/csprogsdefs.qh"
+
+#endif

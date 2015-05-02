@@ -1,7 +1,5 @@
 #include "tuba.qh"
-
-#include "autocvars.qh"
-#include "main.qh"
+#include "_.qh"
 
 #include "../common/constants.qh"
 #include "../common/util.qh"

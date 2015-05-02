@@ -1,8 +1,7 @@
 #include "wall.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
 #include "bgmscript.qh"
-#include "main.qh"
 
 #include "../common/util.qh"
 

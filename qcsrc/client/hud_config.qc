@@ -1,13 +1,10 @@
 #include "hud_config.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
 #include "hud.qh"
-#include "miscfunctions.qh"
 
 #include "../common/constants.qh"
 
-#include "../dpdefs/csprogsdefs.qh"
 #include "../dpdefs/keycodes.qh"
 
 

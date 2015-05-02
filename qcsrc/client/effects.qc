@@ -1,8 +1,5 @@
 #include "effects.qh"
-
-#include "autocvars.qh"
-
-#include "../dpdefs/csprogsdefs.qh"
+#include "_.qh"
 
 /*
 .vector fx_start;

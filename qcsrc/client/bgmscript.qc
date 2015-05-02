@@ -1,12 +1,7 @@
 #include "bgmscript.qh"
-
-#include "autocvars.qh"
-#include "defs.qh"
-#include "main.qh"
+#include "_.qh"
 
 #include "../common/util.qh"
-
-#include "../dpdefs/csprogsdefs.qh"
 
 #define CONSTANT_SPEED_DECAY
 

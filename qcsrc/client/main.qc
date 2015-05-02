@@ -1,9 +1,9 @@
 #include "main.qh"
+#include "_.qh"
 
 #include "casings.qh"
 #include "csqcmodel_hooks.qh"
 #include "damage.qh"
-#include "defs.qh"
 #include "effects.qh"
 #include "gibs.qh"
 #include "hook.qh"
@@ -11,7 +11,6 @@
 #include "hud_config.qh"
 #include "laser.qh"
 #include "mapvoting.qh"
-#include "miscfunctions.qh"
 #include "modeleffects.qh"
 #include "particles.qh"
 #include "prandom.qh"

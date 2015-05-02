@@ -1,10 +1,7 @@
 #include "tturrets.qh"
+#include "_.qh"
 
-#include "autocvars.qh"
-#include "defs.qh"
 #include "hud.qh"
-#include "main.qh"
-#include "miscfunctions.qh"
 #include "movelib.qh"
 #include "movetypes.qh"
 #include "prandom.qh"
