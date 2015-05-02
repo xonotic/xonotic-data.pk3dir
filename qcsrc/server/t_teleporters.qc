@@ -1,4 +1,5 @@
 #include "t_teleporters.qh"
+#include "_.qh"
 
 #if defined(CSQC)
 #elif defined(MENUQC)
@@ -9,9 +10,6 @@
     #include "../common/constants.qh"
     #include "../common/util.qh"
     #include "weapons/csqcprojectile.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
     #include "../common/deathtypes.qh"
     #include "tturrets/include/turrets_early.qh"
     #include "vehicles/vehicles_def.qh"

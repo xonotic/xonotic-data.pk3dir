@@ -1,6 +1,7 @@
 #ifndef BUFFS_H
 #define BUFFS_H
 
+#include "teams.qh"
 #include "util.qh"
 
 entity Buff_Type_first;

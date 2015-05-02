@@ -1,3 +1,7 @@
+#include "../_.qh"
+
+#include "mutator.qh"
+
 // Random Gravity
 //
 // Mutator by Mario

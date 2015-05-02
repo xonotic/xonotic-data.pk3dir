@@ -1,6 +1,8 @@
-float total_players;
-float redalive, bluealive, yellowalive, pinkalive;
-.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
+#include "gamemode_ca.qh"
+#include "../_.qh"
+
+#include "gamemode.qh"
+
 float ca_teams;
 float allowed_to_spawn;
 

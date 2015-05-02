@@ -60,7 +60,16 @@ t_swamp.qc
 t_teleporters.qc
 waypointsprites.qc
 
+bot/aim.qc
 bot/bot.qc
+bot/navigation.qc
+bot/scripting.qc
+bot/waypoints.qc
+
+bot/havocbot/havocbot.qc
+bot/havocbot/role_keyhunt.qc
+bot/havocbot/role_onslaught.qc
+bot/havocbot/roles.qc
 
 command/banning.qc
 command/cmd.qc
@@ -72,6 +81,13 @@ command/vote.qc
 
 mutators/mutators_include.qc
 mutators/mutators.qc
+
+pathlib/costs.qc
+pathlib/expandnode.qc
+pathlib/main.qc
+pathlib/movenode.qc
+pathlib/path_waypoint.qc
+pathlib/utility.qc
 
 weapons/accuracy.qc
 weapons/common.qc

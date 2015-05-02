@@ -1,3 +1,12 @@
+#include "vehicles.qh"
+
+#include "../cl_player.qh"
+#include "../waypointsprites.qh"
+
+#include "../bot/waypoints.qh"
+
+.float() PlayerPhysplug;
+
 float autocvar_g_vehicles_crush_dmg;
 float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;

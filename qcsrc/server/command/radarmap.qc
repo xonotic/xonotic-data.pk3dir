@@ -1,13 +1,12 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/util.qh"
-    #include "../defs.qh"
-    #include "radarmap.qh"
-    #include "../../csqcmodellib/sv_model.qh"
-#endif
+#include "radarmap.qh"
+#include "../_.qh"
+
+#include "../g_subs.qh"
+#include "../g_world.qh"
+
+#include "../../common/util.qh"
+
+#include "../../csqcmodellib/sv_model.qh"
 
 // ===============================================
 //	Generates radar map images for use in the HUD

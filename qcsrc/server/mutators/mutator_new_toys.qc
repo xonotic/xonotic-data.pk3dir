@@ -1,3 +1,7 @@
+#include "../_.qh"
+
+#include "mutator.qh"
+
 /*
 
 CORE    laser   vortex     lg      rl      cry     gl      elec    hagar   fireb   hook

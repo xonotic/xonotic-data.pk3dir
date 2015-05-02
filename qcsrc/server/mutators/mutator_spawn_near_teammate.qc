@@ -1,3 +1,7 @@
+#include "../_.qh"
+
+#include "mutator.qh"
+
 .entity msnt_lookat;
 
 .float msnt_timer;

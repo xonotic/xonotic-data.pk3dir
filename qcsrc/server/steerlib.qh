@@ -1,0 +1,10 @@
+#ifndef STEERLIB_H
+#define STEERLIB_H
+
+.vector steerto;
+
+vector steerlib_arrive(vector point,float maximal_distance);
+vector steerlib_attract2(vector point, float min_influense,float max_distance,float max_influense);
+vector steerlib_pull(vector point);
+
+#endif

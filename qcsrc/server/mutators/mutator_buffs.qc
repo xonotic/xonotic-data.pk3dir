@@ -1,3 +1,12 @@
+#include "mutator_buffs.qh"
+#include "../_.qh"
+
+#include "mutator.qh"
+
+#include "../../common/buffs.qh"
+
+.float lifetime;
+
 float buffs_BuffModel_Customize()
 {
 	entity player, myowner;

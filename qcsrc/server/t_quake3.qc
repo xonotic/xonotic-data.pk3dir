@@ -1,3 +1,5 @@
+#include "_.qh"
+
 #include "../common/weapons/weapons.qc"
 
 //***********************

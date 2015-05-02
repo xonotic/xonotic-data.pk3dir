@@ -1,3 +1,6 @@
+#include "pathlib.qh"
+#include "utility.qh"
+
 vector plib_points2[8];
 vector plib_points[8];
 float  plib_fvals[8];

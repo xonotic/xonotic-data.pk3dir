@@ -1,3 +1,9 @@
+#include "../_.qh"
+
+#include "mutator.qh"
+
+#include "../antilag.qh"
+
 .float multijump_count;
 .float multijump_ready;
 

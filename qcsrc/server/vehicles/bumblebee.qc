@@ -323,6 +323,7 @@ void bumb_regen()
 
 }
 
+.vector hook_start, hook_end;
 float bumb_pilot_frame()
 {
 	entity pilot, vehic;

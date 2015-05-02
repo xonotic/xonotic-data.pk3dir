@@ -1,3 +1,10 @@
+#include "gamemode_assault.qh"
+#include "../_.qh"
+
+#include "gamemode.qh"
+
+.entity sprite;
+
 // random functions
 void assault_objective_use()
 {

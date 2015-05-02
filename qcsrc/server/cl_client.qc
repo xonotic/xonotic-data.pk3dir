@@ -1,5 +1,8 @@
+#include "cl_client.qh"
+
 #include "waypointsprites.qh"
 
+#include "anticheat.qh"
 #include "cl_impulse.qh"
 #include "cl_player.qh"
 #include "ent_cs.qh"
@@ -10,9 +13,22 @@
 #include "teamplay.qh"
 #include "playerdemo.qh"
 #include "secret.qh"
+#include "spawnpoints.qh"
+#include "g_damage.qh"
+#include "g_hook.qh"
+#include "t_teleporters.qh"
+#include "command/common.qh"
+#include "cheats.qh"
+#include "g_world.qh"
+#include "race.qh"
+#include "antilag.qh"
+#include "campaign.qh"
+#include "command/common.qh"
 
 #include "bot/bot.qh"
 #include "bot/navigation.qh"
+
+#include "vehicles/vehicles_def.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
@@ -23,7 +39,6 @@
 
 #include "../warpzonelib/server.qh"
 
-float c1, c2, c3, c4;
 
 void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);

@@ -1,8 +1,17 @@
+#include "_.qh"
 #include "round_handler.qh"
 
 #include "bot/waypoints.qh"
 
 #include "weapons/throwing.qh"
+#include "command/common.qh"
+#include "cheats.qh"
+#include "bot/navigation.qh"
+#include "weapons/selection.qh"
+#include "weapons/tracing.qh"
+#include "weapons/weaponsystem.qh"
+#include "vehicles/vehicles_def.qh"
+#include "waypointsprites.qh"
 
 #include "../common/weapons/weapons.qh"
 

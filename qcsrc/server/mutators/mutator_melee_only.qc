@@ -1,3 +1,7 @@
+#include "../_.qh"
+
+#include "mutator.qh"
+
 MUTATOR_HOOKFUNCTION(melee_SetStartItems)
 {
 	start_ammo_shells = warmup_start_ammo_shells = 0;

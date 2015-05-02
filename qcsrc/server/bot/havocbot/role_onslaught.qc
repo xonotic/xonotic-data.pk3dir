@@ -1,3 +1,15 @@
+#include "../../_.qh"
+
+#include "havocbot.qh"
+
+#include "../bot.qh"
+#include "../navigation.qh"
+#include "../waypoints.qh"
+
+#include "../../mutators/mutators_include.qh"
+
+#include "../../../common/teams.qh"
+
 const int HAVOCBOT_ONS_ROLE_NONE 		= 0;
 const int HAVOCBOT_ONS_ROLE_DEFENSE 	= 2;
 const int HAVOCBOT_ONS_ROLE_ASSISTANT 	= 4;

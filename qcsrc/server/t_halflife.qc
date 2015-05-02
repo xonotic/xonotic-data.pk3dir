@@ -1,11 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "defs.qh"
-    #include "vehicles/vehicles_def.qh"
-#endif
+#include "_.qh"
+
+#include "../warpzonelib/util_server.qh"
+#include "vehicles/vehicles_def.qh"
+
+.float  ladder_time;
+.entity ladder_entity;
 
 .float  roomtype;
 .float  radius;

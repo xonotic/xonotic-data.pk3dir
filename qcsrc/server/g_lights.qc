@@ -1,3 +1,7 @@
+#include "_.qh"
+
+void train_next();
+
 const float LOOP = 1;
 
 const float DNOSHADOW = 2;

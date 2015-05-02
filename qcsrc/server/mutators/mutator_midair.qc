@@ -1,3 +1,7 @@
+#include "../_.qh"
+
+#include "mutator.qh"
+
 .float midair_shieldtime;
 
 MUTATOR_HOOKFUNCTION(midair_PlayerDamage)

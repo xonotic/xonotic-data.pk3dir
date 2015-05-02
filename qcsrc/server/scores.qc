@@ -1,4 +1,10 @@
 #include "scores.qh"
+#include "_.qh"
+
+#include "command/common.qh"
+#include "mutators/mutators_include.qh"
+#include "../common/playerstats.qh"
+#include "../common/teams.qh"
 
 .entity scorekeeper;
 entity teamscorekeepers[16];

@@ -63,6 +63,10 @@ const int ISF_SIZE 				= 128;
 
 .int ItemStatus;
 
+void spawnfunc_item_strength();
+void spawnfunc_item_invincible();
+void spawnfunc_item_armor_small();
+
 #ifdef CSQC
 
 float  autocvar_cl_animate_items = 1;

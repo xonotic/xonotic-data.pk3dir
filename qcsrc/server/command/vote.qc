@@ -1,24 +1,23 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/command/shared_defs.qh"
-    #include "../autocvars.qh"
-    #include "../constants.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../../common/mapinfo.qh"
-    #include "common.qh"
-    #include "vote.qh"
-    #include "../../common/playerstats.qh"
-    #include "../scores.qh"
-    #include "../race.qh"
-    #include "../round_handler.qh"
-#endif
+#include "vote.qh"
+#include "../_.qh"
+
+#include "common.qh"
+
+#include "../g_damage.qh"
+#include "../g_world.qh"
+#include "../race.qh"
+#include "../round_handler.qh"
+#include "../scores.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/playerstats.qh"
+#include "../../common/util.qh"
+
+#include "../../common/command/shared_defs.qh"
 
 // =============================================
 //  Server side voting code, reworked by Samual

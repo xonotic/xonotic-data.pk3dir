@@ -1,4 +1,9 @@
 #include "g_subs.qh"
+#include "_.qh"
+
+#include "antilag.qh"
+#include "command/common.qh"
+#include "../warpzonelib/common.qh"
 
 void SUB_NullThink(void) { }
 

@@ -1,3 +1,6 @@
+#include "base.qh"
+#include "../_.qh"
+
 .float() cbc_func;
 .entity cbc_next;
 .float cbc_order;

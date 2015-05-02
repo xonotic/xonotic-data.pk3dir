@@ -1,3 +1,7 @@
+#include "_.qh"
+#include "bot/bot.qh"
+#include "g_damage.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -657,32 +661,6 @@ void SpecialCommand()
 	if(!CheatImpulse(99))
 		print("A hollow voice says \"Plugh\".\n");
 #endif
-}
-
-float speedaward_speed;
-string speedaward_holder;
-string speedaward_uid;
-void race_send_speedaward(float msg)
-{
-	// send the best speed of the round
-	WriteByte(msg, SVC_TEMPENTITY);
-	WriteByte(msg, TE_CSQC_RACE);
-	WriteByte(msg, RACE_NET_SPEED_AWARD);
-	WriteInt24_t(msg, floor(speedaward_speed+0.5));
-	WriteString(msg, speedaward_holder);
-}
-
-float speedaward_alltimebest;
-string speedaward_alltimebest_holder;
-string speedaward_alltimebest_uid;
-void race_send_speedaward_alltimebest(float msg)
-{
-	// send the best speed
-	WriteByte(msg, SVC_TEMPENTITY);
-	WriteByte(msg, TE_CSQC_RACE);
-	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
-	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
-	WriteString(msg, speedaward_alltimebest_holder);
 }
 
 string GetMapname(void);

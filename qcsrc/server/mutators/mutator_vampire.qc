@@ -1,3 +1,7 @@
+#include "../_.qh"
+
+#include "mutator.qh"
+
 MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 {
 	if(time >= frag_target.spawnshieldtime)

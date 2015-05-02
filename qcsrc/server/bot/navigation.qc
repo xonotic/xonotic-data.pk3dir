@@ -1,3 +1,13 @@
+#include "navigation.qh"
+#include "../_.qh"
+
+#include "bot.qh"
+#include "waypoints.qh"
+
+#include "../t_items.qh"
+
+#include "../../common/constants.qh"
+
 void bot_debug(string input)
 {
 	switch(autocvar_bot_debug)

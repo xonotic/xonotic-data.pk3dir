@@ -1,8 +1,15 @@
 #include "havocbot.qh"
+#include "../../_.qh"
 
-#include "role_onslaught.qc"
-#include "role_keyhunt.qc"
-#include "roles.qc"
+#include "../aim.qh"
+#include "../bot.qh"
+#include "../navigation.qh"
+#include "../scripting.qh"
+#include "../waypoints.qh"
+
+#include "../../../common/constants.qh"
+
+#include "../../../warpzonelib/common.qh"
 
 void havocbot_ai()
 {

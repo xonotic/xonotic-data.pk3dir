@@ -1,12 +1,6 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-#endif
+#include "_.qh"
+
+#include "../common/util.qh"
 
 float Casing_SendEntity(entity to, int sf)
 {

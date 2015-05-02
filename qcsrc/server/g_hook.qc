@@ -1,21 +1,20 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "vehicles/vehicles_def.qh"
-    #include "command/common.qh"
-    #include "g_hook.qh"
-    #include "round_handler.qh"
-#endif
+#include "g_hook.qh"
+#include "_.qh"
+
+#include "weapons/common.qh"
+#include "weapons/weaponsystem.qh"
+#include "weapons/selection.qh"
+#include "weapons/tracing.qh"
+#include "cl_player.qh"
+#include "t_teleporters.qh"
+#include "command/common.qh"
+#include "round_handler.qh"
+#include "vehicles/vehicles_def.qh"
+#include "../common/constants.qh"
+#include "../common/util.qh"
+#include "../common/weapons/weapons.qh"
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/server.qh"
 
 /*============================================
 

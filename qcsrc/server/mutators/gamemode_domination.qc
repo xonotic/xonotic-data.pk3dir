@@ -1,3 +1,8 @@
+#include "gamemode_domination.qh"
+#include "../_.qh"
+
+#include "gamemode.qh"
+
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)

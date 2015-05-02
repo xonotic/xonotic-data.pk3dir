@@ -1132,7 +1132,7 @@ float MOVE_HITMODEL = 4;
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //constant definitions:
-float MOVE_WORLDONLY = 3;
+const float MOVE_WORLDONLY = 3;
 //description:
 //allows traces to hit only world (ignoring all entities, unlike MOVE_NOMONSTERS which hits all bmodels), use as the nomonsters parameter to trace functions
 

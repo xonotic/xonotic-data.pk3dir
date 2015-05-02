@@ -1,3 +1,5 @@
+void W_MachineGun_MuzzleFlash(void);
+
 void spawnfunc_turret_machinegun();
 void turret_machinegun_std_init();
 void turret_machinegun_attack();

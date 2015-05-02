@@ -1,3 +1,7 @@
+#include "../_.qh"
+
+#include "mutator.qh"
+
 float g_nix_with_blaster;
 // WEAPONTODO
 int nix_weapon;

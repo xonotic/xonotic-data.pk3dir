@@ -1,3 +1,11 @@
+#include "gamemode_lms.qh"
+#include "../_.qh"
+
+#include "gamemode.qh"
+
+#include "../campaign.qh"
+#include "../command/cmd.qh"
+
 // main functions
 float LMS_NewPlayerLives()
 {

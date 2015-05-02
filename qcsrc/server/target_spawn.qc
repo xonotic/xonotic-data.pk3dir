@@ -1,11 +1,7 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/util.qh"
-    #include "defs.qh"
-#endif
+#include "_.qh"
+
+.entity pusher;
+.float pushltime;
 
 // spawner entity
 // "classname" "target_spawn"

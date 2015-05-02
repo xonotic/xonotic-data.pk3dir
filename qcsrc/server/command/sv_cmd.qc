@@ -1,25 +1,40 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/mathlib.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/teams.qh"
-    #include "../../common/util.qh"
-    #include "../../common/command/shared_defs.qh"
-    #include "../../common/monsters/sv_monsters.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../../common/mapinfo.qh"
-    #include "common.qh"
-    #include "cmd.qh"
-    #include "sv_cmd.qh"
-    #include "../anticheat.qh"
-    #include "../playerdemo.qh"
-#endif
+#include "sv_cmd.qh"
+#include "../_.qh"
+
+#include "banning.qh"
+#include "cmd.qh"
+#include "common.qh"
+#include "getreplies.qh"
+#include "radarmap.qh"
+
+#include "../anticheat.qh"
+#include "../campaign.qh"
+#include "../cl_client.qh"
+#include "../cl_player.qh"
+#include "../g_world.qh"
+#include "../ipban.qh"
+#include "../playerdemo.qh"
+#include "../teamplay.qh"
+
+#include "../bot/bot.qh"
+#include "../bot/navigation.qh"
+#include "../bot/scripting.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/command/shared_defs.qh"
+
+#include "../../common/monsters/sv_monsters.qh"
+
+#include "../../warpzonelib/mathlib.qh"
+
+void PutObserverInServer (void);
 
 // =====================================================
 //  Server side game commands code, reworked by Samual

@@ -1,39 +1,38 @@
 #include "g_world.qh"
+#include "_.qh"
 
+#include "anticheat.qh"
+#include "antilag.qh"
+#include "bot/bot.qh"
+#include "campaign.qh"
+#include "cheats.qh"
+#include "cl_client.qh"
+#include "command/common.qh"
+#include "command/getreplies.qh"
+#include "command/sv_cmd.qh"
+#include "command/vote.qh"
+#include "g_hook.qh"
+#include "ipban.qh"
+#include "mapvoting.qh"
+#include "mutators/mutators_include.qh"
+#include "race.qh"
+#include "scores.qh"
+#include "secret.qh"
+#include "teamplay.qh"
+#include "waypointsprites.qh"
+#include "weapons/weaponstats.qh"
 #include "../common/buffs.qh"
-
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../common/constants.qh"
-    #include "../common/stats.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/sv_monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/weaponstats.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "mutators/mutators_include.qh"
-    #include "campaign.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/common.qh"
-    #include "command/vote.qh"
-    #include "command/getreplies.qh"
-    #include "command/sv_cmd.qh"
-    #include "anticheat.qh"
-    #include "cheats.qh"
-    #include "../common/playerstats.qh"
-    #include "g_hook.qh"
-    #include "scores.qh"
-    #include "mapvoting.qh"
-    #include "ipban.qh"
-    #include "race.qh"
-    #include "antilag.qh"
-    #include "secret.qh"
-#endif
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/mapinfo.qh"
+#include "../common/monsters/monsters.qh"
+#include "../common/monsters/sv_monsters.qh"
+#include "../common/notifications.qh"
+#include "../common/playerstats.qh"
+#include "../common/stats.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+#include "../common/weapons/weapons.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -93,9 +92,7 @@ string redirection_target;
 float world_initialized;
 
 string GetGametype();
-void GotoNextMap(float reinit);
 void ShuffleMaplist();
-float(float reinit) DoNextMapOverride;
 
 void SetDefaultAlpha()
 {
@@ -2036,7 +2033,6 @@ CheckRules_World
 Exit deathmatch games upon conditions
 ============
 */
-void ReadyRestart();
 void CheckRules_World()
 {
 	float timelimit;

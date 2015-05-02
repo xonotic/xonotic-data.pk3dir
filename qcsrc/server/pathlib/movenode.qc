@@ -1,3 +1,8 @@
+#include "../_.qh"
+
+#include "pathlib.qh"
+#include "utility.qh"
+
 vector pathlib_wateroutnode(vector start,vector end, float doedge)
 {
     vector surface;

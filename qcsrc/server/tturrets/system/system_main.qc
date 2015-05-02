@@ -1,3 +1,8 @@
+#include "../../_.qh"
+
+#include "../../g_damage.qh"
+#include "../../bot/bot.qh"
+
 #define cvar_base "g_turrets_unit_"
 .float clientframe;
 void turrets_setframe(float _frame, float client_only)

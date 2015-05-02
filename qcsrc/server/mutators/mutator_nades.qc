@@ -1,3 +1,16 @@
+#include "mutator_nades.qh"
+#include "../_.qh"
+
+#include "mutator.qh"
+
+#include "gamemode_keyhunt.qh"
+#include "gamemode_freezetag.qh"
+#include "../../common/nades.qh"
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
+
+.float lifetime;
+
 .entity nade_spawnloc;
 
 void nade_timer_think()

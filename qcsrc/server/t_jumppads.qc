@@ -1,4 +1,16 @@
 #include "t_jumppads.qh"
+#include "_.qh"
+
+#include "g_subs.qh"
+
+#include "bot/navigation.qh"
+#include "bot/waypoints.qh"
+
+#include "weapons/csqcprojectile.qh"
+
+#include "../common/animdecide.qh"
+
+#include "../warpzonelib/util_server.qh"
 
 void trigger_push_use()
 {

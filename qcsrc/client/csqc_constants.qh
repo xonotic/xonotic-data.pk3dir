@@ -1,3 +1,6 @@
+#ifndef CSQC_CONSTANTS
+#define CSQC_CONSTANTS
+
 // MenuQC redefines world, change define it here to be safe
 #define world world
 
@@ -141,3 +144,5 @@ const int CAMERA_FREE = 1;
 const int CAMERA_CHASE = 2;
 
 const int EF_NOMODELFLAGS = 8388608;
+
+#endif

@@ -1,15 +1,13 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "autocvars.qh"
-    #include "defs.qh"
-    #include "command/banning.qh"
-    #include "ipban.qh"
-#endif
+#include "ipban.qh"
+#include "_.qh"
+
+#include "autocvars.qh"
+#include "command/banning.qh"
+#include "defs.qh"
+#include "../common/constants.qh"
+#include "../common/util.qh"
+#include "../dpdefs/dpextensions.qh"
+#include "../dpdefs/progsdefs.qh"
 
 /*
  * Protocol of online ban list:

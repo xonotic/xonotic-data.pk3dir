@@ -1,3 +1,13 @@
+#include "gamemode_ctf.qh"
+#include "../_.qh"
+
+#include "gamemode.qh"
+
+#include "../vehicles/vehicles_def.qh"
+
+#include "../../warpzonelib/common.qh"
+#include "../../warpzonelib/mathlib.qh"
+
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
 //  Last updated: September, 2012

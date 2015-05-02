@@ -1,3 +1,5 @@
+#include "../../_.qh"
+
 void spawnfunc_turret_phaser();
 void turret_phaser_dinit();
 void turret_phaser_attack();

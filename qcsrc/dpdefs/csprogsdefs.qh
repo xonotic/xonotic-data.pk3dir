@@ -267,8 +267,8 @@ const vector VEC_M1				= '-1 -1 -1';
 
 //const float M_PI				= 3.14159265358979323846;
 
-vector VEC_HULL_MIN				= '-16 -16 -24';
-vector VEC_HULL_MAX				= '16 16 32';
+const vector VEC_HULL_MIN		= '-16 -16 -24';
+const vector VEC_HULL_MAX		= '16 16 32';
 
 // Quake Temporary Entity Constants
 const int TE_SPIKE				= 0;
@@ -1083,7 +1083,7 @@ float PRECACHE_PIC_MIPMAP = 8; // mipmap the texture for possibly better downsca
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
 //constant definitions:
-float MOVE_WORLDONLY = 3;
+const float MOVE_WORLDONLY = 3;
 //description:
 //allows traces to hit only world (ignoring all entities, unlike MOVE_NOMONSTERS which hits all bmodels), use as the nomonsters parameter to trace functions
 

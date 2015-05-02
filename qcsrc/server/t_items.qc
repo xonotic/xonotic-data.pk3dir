@@ -1,12 +1,18 @@
 #include "t_items.qh"
 
 #if defined(SVQC)
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
+    #include "_.qh"
+
+    #include "g_subs.qh"
+    #include "waypointsprites.qh"
+
+    #include "bot/bot.qh"
+    #include "bot/waypoints.qh"
 
     #include "mutators/mutators_include.qh"
 
+    #include "weapons/common.qh"
+    #include "weapons/selection.qh"
     #include "weapons/weaponsystem.qh"
 
     #include "../common/constants.qh"
@@ -17,9 +23,6 @@
     #include "../common/monsters/monsters.qh"
 
     #include "../common/weapons/weapons.qh"
-
-    #include "../dpdefs/dpextensions.qh"
-    #include "../dpdefs/progsdefs.qh"
 
     #include "../warpzonelib/util_server.qh"
 #endif

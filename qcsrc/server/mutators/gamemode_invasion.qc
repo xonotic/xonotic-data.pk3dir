@@ -1,3 +1,11 @@
+#include "gamemode_invasion.qh"
+#include "../_.qh"
+
+#include "gamemode.qh"
+
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
+
 void spawnfunc_invasion_spawnpoint()
 {
 	if(!g_invasion) { remove(self); return; }

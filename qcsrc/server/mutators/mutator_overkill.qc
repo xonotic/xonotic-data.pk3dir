@@ -1,3 +1,12 @@
+#include "mutator_overkill.qh"
+#include "../_.qh"
+
+#include "mutator.qh"
+
+void W_Blaster_Attack(float, float, float, float, float, float, float, float, float, float);
+void spawnfunc_weapon_hmg();
+void spawnfunc_weapon_rpc();
+
 void ok_DecreaseCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return;

@@ -1,4 +1,5 @@
 #include "g_violence.qh"
+#include "_.qh"
 
 float Violence_GibSplash_SendEntity(entity to, int sf)
 {

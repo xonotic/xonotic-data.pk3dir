@@ -447,6 +447,8 @@ float racer_frame()
     return 1;
 }
 
+.float lastpushtime;
+
 void racer_think()
 {
     self.nextthink = time;
