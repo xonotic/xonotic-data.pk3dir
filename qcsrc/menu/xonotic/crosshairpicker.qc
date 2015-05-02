@@ -67,11 +67,6 @@ void XonoticCrosshairPicker_cellDraw(entity me, vector cell, vector cellPos, flo
 	draw_Picture(crosshairPos - 0.5 * sz, cross, sz, rgb, me.alpha);
 
 	if(cvar("crosshair_dot"))
-	{
-		if(cvar("crosshair_dot_color_custom") && (cvar_string("crosshair_dot_color") != "0"))
-			rgb = stov(cvar_string("crosshair_dot_color"));
-
 		draw_Picture(crosshairPos - 0.5 * sz * cvar("crosshair_dot_size"), "/gfx/crosshairdot", sz * cvar("crosshair_dot_size"), rgb, me.alpha);
-	}
 }
 #endif
