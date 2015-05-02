@@ -1,0 +1,196 @@
+#ifdef INTERFACE
+CLASS(XonoticPicker) EXTENDS(Item)
+	METHOD(XonoticPicker, configureXonoticPicker, void(entity))
+	METHOD(XonoticPicker, mousePress, float(entity, vector))
+	METHOD(XonoticPicker, mouseRelease, float(entity, vector))
+	METHOD(XonoticPicker, mouseMove, float(entity, vector))
+	METHOD(XonoticPicker, mouseDrag, float(entity, vector))
+	METHOD(XonoticPicker, keyDown, float(entity, float, float, float))
+	METHOD(XonoticPicker, draw, void(entity))
+	ATTRIB(XonoticPicker, focusable, float, 1)
+	ATTRIB(XonoticPicker, disabled, float, 0)
+	ATTRIB(XonoticPicker, alpha, float, 1)
+	ATTRIB(XonoticPicker, disabledAlpha, float, SKINALPHA_DISABLED)
+
+	ATTRIB(XonoticPicker, rows, float, 3)
+	ATTRIB(XonoticPicker, columns, float, 2)
+
+	METHOD(XonoticPicker, moveFocus, void(entity, vector, vector))
+	METHOD(XonoticPicker, cellSelect, void(entity))
+	METHOD(XonoticPicker, cellDraw, void(entity, vector, vector, float))
+	METHOD(XonoticPicker, cellIsValid, bool(entity, vector))
+	ATTRIB(XonoticPicker, realCellSize, vector, '0 0 0')
+	ATTRIB(XonoticPicker, focusedCell, vector, '-1 -1 0')
+	ATTRIB(XonoticPicker, focusedCellTime, float, 0)
+	ATTRIB(XonoticPicker, pressedCell, vector, '-1 -1 0')
+ENDCLASS(XonoticPicker)
+entity makeXonoticPicker();
+#endif
+
+#ifdef IMPLEMENTATION
+
+entity makeXonoticPicker()
+{
+	entity me;
+	me = spawnXonoticPicker();
+	me.configureXonoticPicker(me);
+	return me;
+}
+
+void XonoticPicker_configureXonoticPicker(entity me)
+{
+	me.realCellSize = eX / me.columns + eY / me.rows;
+}
+
+float XonoticPicker_mouseMove(entity me, vector coords)
+{
+	vector prevFocusedCell = me.focusedCell;
+	me.focusedCell_x = floor(coords.x * me.columns);
+	me.focusedCell_y = floor(coords.y * me.rows);
+
+	if(me.focusedCell.x < 0 || me.focusedCell.y < 0 ||
+	   me.focusedCell.x >= me.columns || me.focusedCell.y >= me.rows)
+	{
+		me.focusedCell = '-1 -1 0';
+		return 0;
+	}
+
+	if(me.focusedCell != prevFocusedCell)
+		me.focusedCellTime = time;
+
+	return 1;
+}
+
+float XonoticPicker_mouseDrag(entity me, vector coords)
+{
+	return me.mouseMove(me, coords);
+}
+
+float XonoticPicker_mousePress(entity me, vector coords)
+{
+	me.mouseMove(me, coords);
+
+	if(me.focusedCell.x >= 0)
+	{
+		me.pressed = 1;
+		me.pressedCell = me.focusedCell;
+	}
+
+	return 1;
+}
+
+float XonoticPicker_mouseRelease(entity me, vector coords)
+{
+	if(!me.pressed)
+		return 0;
+
+	me.mouseMove(me, coords);
+
+	if(me.focusedCell == me.pressedCell)
+		me.cellSelect(me);
+
+	me.pressed = 0;
+	return 1;
+}
+
+float XonoticPicker_keyDown(entity me, float key, float ascii, float shift)
+{
+	switch(key)
+	{
+		case K_LEFTARROW:
+		case K_KP_LEFTARROW:
+			me.moveFocus(me, me.focusedCell, '-1 0 0');
+			return 1;
+		case K_RIGHTARROW:
+		case K_KP_RIGHTARROW:
+			me.moveFocus(me, me.focusedCell, '1 0 0');
+			return 1;
+		case K_UPARROW:
+		case K_KP_UPARROW:
+			me.moveFocus(me, me.focusedCell, '0 -1 0');
+			return 1;
+		case K_DOWNARROW:
+		case K_KP_DOWNARROW:
+			me.moveFocus(me, me.focusedCell, '0 1 0');
+			return 1;
+		case K_HOME:
+		case K_KP_HOME:
+			me.focusedCell = '0 0 0';
+			return 1;
+		case K_END:
+		case K_KP_END:
+			me.focusedCell_x = me.columns - 1;
+			me.focusedCell_y = me.rows - 1;
+			return 1;
+		case K_ENTER:
+		case K_KP_ENTER:
+		case K_INS:
+		case K_KP_INS:
+			me.cellSelect(me);
+			return 1;
+	}
+	return 0;
+}
+
+void XonoticPicker_moveFocus(entity me, vector initialCell, vector step)
+{
+	me.focusedCell_x = mod(me.focusedCell.x + step.x + me.columns, me.columns);
+	me.focusedCell_y = mod(me.focusedCell.y + step.y + me.rows, me.rows);
+
+	if(me.focusedCell != initialCell) // Recursion break
+		if(!me.cellIsValid(me, me.focusedCell))
+			me.moveFocus(me, initialCell, step);
+}
+
+void XonoticPicker_cellSelect(entity me)
+{
+}
+
+bool XonoticPicker_cellIsValid(entity me, vector cell)
+{
+	return true;
+}
+
+void XonoticPicker_cellDraw(entity me, vector cell, vector cellPos, float highlightTime)
+{
+}
+
+void XonoticPicker_draw(entity me)
+{
+	float save;
+
+	me.focusable = !me.disabled;
+
+	save = draw_alpha;
+	if(me.disabled)
+		draw_alpha *= me.disabledAlpha;
+
+	vector cell, cellPos;
+	cell = '0 0 0';
+	cellPos = '0 0 0';
+
+	for(cell_y = 0; cell.y < me.rows; ++cell.y)
+	{
+		cellPos_y = mod(cell.y, me.rows) / me.rows;
+		for(cell_x = 0; cell.x < me.columns; ++cell.x)
+		{
+			if(!me.cellIsValid(me, cell))
+				continue;
+
+			cellPos_x = mod(cell.x, me.columns) / me.columns;
+
+			if(cell == me.focusedCell && me.focused)
+			{
+				if(!me.pressed || me.focusedCell == me.pressedCell)
+					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_LISTBOX_FOCUSED, getHighlightAlpha(SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED, me.focusedCellTime));
+			}
+
+			me.cellDraw(me, cell, cellPos, (me.focusedCell == cell) ? me.focusedCellTime : 0);
+		}
+	}
+
+	draw_alpha = save;
+
+	SUPER(XonoticPicker).draw(me);
+}
+#endif

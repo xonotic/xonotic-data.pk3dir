@@ -69,6 +69,7 @@
 #include "xonotic/image.qc"
 #include "xonotic/playermodel.qc"
 #include "xonotic/checkbox_slider_invalid.qc"
+#include "xonotic/picker.qc"
 #include "xonotic/charmap.qc"
 #include "xonotic/crosshairpicker.qc"
 #include "xonotic/crosshairpreview.qc"
