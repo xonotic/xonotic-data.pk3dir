@@ -13,15 +13,20 @@
 #include "target_music.qh"
 #include "vehicles/vehicles.qh"
 #include "waypointsprites.qh"
+
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
+
 #include "../common/weapons/weapons.qh"
+
 #include "../csqcmodellib/cl_player.qh"
+
 #include "../dpdefs/csprogsdefs.qh"
+
 #include "../warpzonelib/client.qh"
 #include "../warpzonelib/common.qh"
 #include "../warpzonelib/mathlib.qh"

@@ -6,6 +6,7 @@
 #include "movetypes.qh"
 #include "prandom.qh"
 #include "rubble.qh"
+
 #include "../common/util.qh"
 
 .float cnt;

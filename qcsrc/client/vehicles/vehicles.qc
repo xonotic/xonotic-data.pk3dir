@@ -8,13 +8,16 @@
 #include "../movetypes.qh"
 #include "../prandom.qh"
 #include "../scoreboard.qh"
+#include "../t_items.qh"
+
 #include "../../common/buffs.qh"
 #include "../../common/constants.qh"
 #include "../../common/stats.qh"
 #include "../../common/util.qh"
+
 #include "../../csqcmodellib/cl_model.qh"
+
 #include "../../dpdefs/csprogsdefs.qh"
-#include "../../server/t_items.qh"
 
 .float cnt;
 

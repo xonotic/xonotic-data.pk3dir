@@ -6,6 +6,7 @@
 #include "main.qh"
 #include "miscfunctions.qh"
 #include "sortlist.qh"
+
 #include "../common/constants.qh"
 #include "../common/counting.qh"
 #include "../common/mapinfo.qh"

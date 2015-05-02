@@ -1,31 +1,27 @@
-#if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "../common/util.qh"
-    #include "../common/buffs.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "../client/autocvars.qh"
-    #include "../client/movetypes.qh"
-    #include "../client/main.qh"
-    #include "../csqcmodellib/common.qh"
-    #include "../csqcmodellib/cl_model.qh"
-    #include "t_items.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/weaponsystem.qh"
-    #include "t_items.qh"
+#include "t_items.qh"
+
+#if defined(SVQC)
     #include "autocvars.qh"
     #include "constants.qh"
     #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
+
     #include "mutators/mutators_include.qh"
+
+    #include "weapons/weaponsystem.qh"
+
+    #include "../common/constants.qh"
+    #include "../common/deathtypes.qh"
+    #include "../common/notifications.qh"
+    #include "../common/util.qh"
+
+    #include "../common/monsters/monsters.qh"
+
+    #include "../common/weapons/weapons.qh"
+
+    #include "../dpdefs/dpextensions.qh"
+    #include "../dpdefs/progsdefs.qh"
+
+    #include "../warpzonelib/util_server.qh"
 #endif
 
 #ifdef CSQC

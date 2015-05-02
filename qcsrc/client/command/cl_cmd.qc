@@ -12,10 +12,11 @@
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
-#include "../scoreboard.qh"
+
+#include "../../common/mapinfo.qh"
+
 #include "../../common/command/generic.qh"
 #include "../../common/command/shared_defs.qh"
-#include "../../common/mapinfo.qh"
 
 void DrawDebugModel()
 {

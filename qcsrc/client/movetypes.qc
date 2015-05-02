@@ -1,11 +1,15 @@
 #include "movetypes.qh"
 
 #include "defs.qh"
+#include "t_items.qh"
+
 #include "../common/stats.qh"
 #include "../common/util.qh"
+
 #include "../csqcmodellib/common.qh"
+
 #include "../dpdefs/csprogsdefs.qh"
-#include "../server/t_items.qh"
+
 
 
 const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;

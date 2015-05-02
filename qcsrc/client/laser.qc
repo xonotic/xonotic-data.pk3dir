@@ -2,9 +2,12 @@
 
 #include "hook.qh"
 #include "main.qh"
+
 #include "../common/buffs.qh"
+
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/interpolate.qh"
+
 #include "../dpdefs/csprogsdefs.qh"
 
 

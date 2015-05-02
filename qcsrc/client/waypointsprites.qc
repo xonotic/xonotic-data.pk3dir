@@ -6,11 +6,15 @@
 #include "main.qh"
 #include "miscfunctions.qh"
 #include "teamradar.qh"
+
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
 #include "../common/teams.qh"
+
 #include "../common/weapons/weapons.qh"
+
 #include "../csqcmodellib/interpolate.qh"
+
 #include "../warpzonelib/mathlib.qh"
 
 .float alpha;

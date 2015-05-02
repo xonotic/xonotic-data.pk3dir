@@ -1,5 +1,4 @@
-const vector RACER_MIN = '-120 -120 -40';
-const vector RACER_MAX = '120 120 40';
+#include "racer.qh"
 
 #ifdef SVQC
 void racer_exit(float eject);

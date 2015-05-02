@@ -4,7 +4,9 @@
 #include "defs.qh"
 #include "hud.qh"
 #include "miscfunctions.qh"
+
 #include "../common/constants.qh"
+
 #include "../dpdefs/csprogsdefs.qh"
 #include "../dpdefs/keycodes.qh"
 

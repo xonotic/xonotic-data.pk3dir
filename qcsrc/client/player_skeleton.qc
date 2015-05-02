@@ -1,6 +1,7 @@
 #include "player_skeleton.qh"
 
 #include "../common/csqcmodel_settings.qh"
+
 #include "../warpzonelib/anglestransform.qh"
 
 class(Skeleton) .float skeleton_info_modelindex;

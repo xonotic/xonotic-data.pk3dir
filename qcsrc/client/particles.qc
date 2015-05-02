@@ -3,8 +3,10 @@
 #include "autocvars.qh"
 #include "bgmscript.qh"
 #include "main.qh"
+
 #include "../common/stats.qh"
 #include "../common/util.qh"
+
 #include "../warpzonelib/common.qh"
 
 void Draw_PointParticles()

@@ -8,6 +8,8 @@
 #include "scoreboard.qh"
 #include "sortlist.qh"
 #include "teamradar.qh"
+#include "t_items.qh"
+
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
 #include "../common/counting.qh"
@@ -15,8 +17,9 @@
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
 #include "../common/stats.qh"
+
 #include "../csqcmodellib/cl_player.qh"
-#include "../server/t_items.qh"
+
 #include "../warpzonelib/mathlib.qh"
 
 /*

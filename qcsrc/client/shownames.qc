@@ -5,11 +5,14 @@
 #include "hud.qh"
 #include "main.qh"
 #include "miscfunctions.qh"
+
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
+
 #include "../csqcmodellib/cl_model.qh"
+
 #include "../dpdefs/csprogsdefs.qh"
 
 

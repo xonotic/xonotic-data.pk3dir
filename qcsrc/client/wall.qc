@@ -3,7 +3,9 @@
 #include "autocvars.qh"
 #include "bgmscript.qh"
 #include "main.qh"
+
 #include "../common/util.qh"
+
 #include "../csqcmodellib/interpolate.qh"
 
 .float alpha;

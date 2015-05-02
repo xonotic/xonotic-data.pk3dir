@@ -5,12 +5,16 @@
 #include "hud.qh"
 #include "main.qh"
 #include "miscfunctions.qh"
+#include "movelib.qh"
 #include "movetypes.qh"
 #include "prandom.qh"
 #include "teamradar.qh"
 #include "waypointsprites.qh"
+
 #include "../common/teams.qh"
-#include "../server/movelib.qh"
+
+#include "../server/tturrets/include/turrets_early.qh"
+
 #include "../warpzonelib/anglestransform.qh"
 #include "../warpzonelib/mathlib.qh"
 

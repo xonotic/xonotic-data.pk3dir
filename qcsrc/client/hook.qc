@@ -6,8 +6,11 @@
 #include "main.qh"
 #include "miscfunctions.qh"
 #include "noise.qh"
+
 #include "../common/teams.qh"
+
 #include "../csqcmodellib/interpolate.qh"
+
 #include "../warpzonelib/common.qh"
 #include "../warpzonelib/mathlib.qh"
 

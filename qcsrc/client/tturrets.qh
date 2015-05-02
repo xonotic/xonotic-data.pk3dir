@@ -1,8 +1,6 @@
 #ifndef TTURRETS_H
 #define TTURRETS_H
 
-#include "../server/tturrets/include/turrets_early.qh"
-
 void ent_turret();
 void turrets_precache();
 entityclass(Turret)

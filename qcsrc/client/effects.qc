@@ -1,6 +1,7 @@
 #include "effects.qh"
 
 #include "autocvars.qh"
+
 #include "../dpdefs/csprogsdefs.qh"
 
 /*

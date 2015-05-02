@@ -5,7 +5,9 @@
 #include "hud.qh"
 #include "main.qh"
 #include "miscfunctions.qh"
+
 #include "../common/util.qh"
+
 #include "../csqcmodellib/interpolate.qh"
 
 float vlen2d(vector v)

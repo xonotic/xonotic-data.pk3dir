@@ -18,6 +18,7 @@ main.qc
 mapvoting.qc
 miscfunctions.qc
 modeleffects.qc
+movelib.qc
 movetypes.qc
 noise.qc
 particles.qc
@@ -31,12 +32,15 @@ target_music.qc
 teamradar.qc
 tturrets.qc
 tuba.qc
-vehicles/vehicles.qc
+t_items.qc
 view.qc
 wall.qc
 waypointsprites.qc
 
 command/cl_cmd.qc
+
+vehicles/bumblebee.qc
+vehicles/vehicles.qc
 
 weapons/projectile.qc // TODO
 
@@ -62,10 +66,6 @@ weapons/projectile.qc // TODO
 ../csqcmodellib/cl_model.qc
 ../csqcmodellib/cl_player.qc
 ../csqcmodellib/interpolate.qc
-
-../server/movelib.qc
-../server/t_items.qc
-../server/vehicles/bumblebee.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc

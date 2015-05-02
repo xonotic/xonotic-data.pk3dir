@@ -2,9 +2,11 @@
 
 #include "autocvars.qh"
 #include "main.qh"
+
 #include "../common/notifications.qh"
 #include "../common/stats.qh"
 #include "../common/util.qh"
+
 #include "../dpdefs/csprogsdefs.qh"
 
 bool announcer_1min;
