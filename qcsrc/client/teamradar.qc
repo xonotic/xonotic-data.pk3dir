@@ -1,15 +1,12 @@
-#if defined(CSQC)
-	#include "autocvars.qh"
-	#include "defs.qh"
-	#include "hud.qh"
-	#include "main.qh"
-	#include "miscfunctions.qh"
-	#include "teamradar.qh"
-	#include "../common/util.qh"
-	#include "../csqcmodellib/interpolate.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "teamradar.qh"
+
+#include "autocvars.qh"
+#include "defs.qh"
+#include "hud.qh"
+#include "main.qh"
+#include "miscfunctions.qh"
+#include "../common/util.qh"
+#include "../csqcmodellib/interpolate.qh"
 
 float vlen2d(vector v)
 {

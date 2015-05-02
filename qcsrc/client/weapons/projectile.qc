@@ -1,13 +1,14 @@
+#include "projectile.qh"
+
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../main.qh"
+#include "../movetypes.qh"
 #include "../../common/constants.qh"
 #include "../../common/nades.qh"
 #include "../../common/util.qh"
 #include "../../csqcmodellib/interpolate.qh"
 #include "../../warpzonelib/anglestransform.qh"
-#include "../autocvars.qh"
-#include "../defs.qh"
-#include "../main.qh"
-#include "../movetypes.qh"
-#include "projectile.qh"
 
 .float alpha;
 .float scale;

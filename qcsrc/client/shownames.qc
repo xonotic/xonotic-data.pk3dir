@@ -1,19 +1,16 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../common/teams.qh"
-	#include "../common/util.qh"
-	#include "../common/mapinfo.qh"
-	#include "autocvars.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-	#include "shownames.qh"
-	#include "hud.qh"
-	#include "miscfunctions.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "shownames.qh"
+
+#include "autocvars.qh"
+#include "defs.qh"
+#include "hud.qh"
+#include "main.qh"
+#include "miscfunctions.qh"
+#include "../common/constants.qh"
+#include "../common/mapinfo.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+#include "../csqcmodellib/cl_model.qh"
+#include "../dpdefs/csprogsdefs.qh"
 
 
 // self.isactive = player is in range and coordinates/status (health and armor) are up to date

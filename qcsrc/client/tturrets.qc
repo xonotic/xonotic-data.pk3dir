@@ -2,14 +2,13 @@
 
 #include "autocvars.qh"
 #include "defs.qh"
-#include "main.qh"
 #include "hud.qh"
+#include "main.qh"
 #include "miscfunctions.qh"
-#include "waypointsprites.qh"
 #include "movetypes.qh"
 #include "prandom.qh"
 #include "teamradar.qh"
-
+#include "waypointsprites.qh"
 #include "../common/teams.qh"
 #include "../server/movelib.qh"
 #include "../warpzonelib/anglestransform.qh"

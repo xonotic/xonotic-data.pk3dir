@@ -3,8 +3,8 @@
 #include "autocvars.qh"
 #include "defs.qh"
 #include "main.qh"
-#include "../common/util.qh"
 #include "../common/constants.qh"
+#include "../common/util.qh"
 #include "../warpzonelib/common.qh"
 
 .string noise;

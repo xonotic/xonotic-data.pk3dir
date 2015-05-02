@@ -1,30 +1,23 @@
-#if defined(CSQC)
-	#include "defs.qh"
-	#include "gibs.qh"
-	#include "miscfunctions.qh"
-	#include "player_skeleton.qh"
-	#include "sortlist.qh"
-	#include "main.qh"
+#include "csqcmodel_hooks.qh"
 
-	#include "../client/autocvars.qh"
-	#include "../client/weapons/projectile.qh"
+#include "defs.qh"
+#include "gibs.qh"
+#include "main.qh"
+#include "miscfunctions.qh"
+#include "player_skeleton.qh"
+#include "sortlist.qh"
+#include "../client/autocvars.qh"
+#include "../client/weapons/projectile.qh"
+#include "../common/animdecide.qh"
+#include "../common/csqcmodel_settings.qh"
+#include "../common/teams.qh"
+#include "../csqcmodellib/cl_model.qh"
+#include "../csqcmodellib/cl_player.qh"
+#include "../csqcmodellib/interpolate.qh"
+#include "../warpzonelib/mathlib.qh"
 
-	#include "../common/animdecide.qh"
-	#include "../common/csqcmodel_settings.qh"
-	#include "../common/teams.qh"
-
-	#include "../csqcmodellib/cl_model.qh"
-	#include "../csqcmodellib/cl_player.qh"
-	#include "../csqcmodellib/interpolate.qh"
-
-	#include "../warpzonelib/mathlib.qh"
-
-	.float death_time;
-	.int modelflags;
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
+.float death_time;
+.int modelflags;
 
 void CSQCModel_Hook_PreDraw(bool isplayer);
 

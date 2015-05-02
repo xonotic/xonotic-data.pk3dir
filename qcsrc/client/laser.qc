@@ -1,13 +1,11 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../common/buffs.qh"
-	#include "../csqcmodellib/interpolate.qh"
-	#include "hook.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "laser.qh"
+
+#include "hook.qh"
+#include "main.qh"
+#include "../common/buffs.qh"
+#include "../csqcmodellib/cl_model.qh"
+#include "../csqcmodellib/interpolate.qh"
+#include "../dpdefs/csprogsdefs.qh"
 
 
 // a laser goes from origin in direction angles

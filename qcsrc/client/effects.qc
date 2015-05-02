@@ -1,9 +1,7 @@
-#if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "autocvars.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "effects.qh"
+
+#include "autocvars.qh"
+#include "../dpdefs/csprogsdefs.qh"
 
 /*
 .vector fx_start;

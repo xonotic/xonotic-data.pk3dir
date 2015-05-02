@@ -1,8 +1,4 @@
-#if defined(CSQC)
-	#include "rubble.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "rubble.qh"
 
 // LordHavoc: rewrote this file, it was really bad code
 

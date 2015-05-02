@@ -1,17 +1,17 @@
 #include "scoreboard.qh"
 
 #include "autocvars.qh"
+#include "defs.qh"
+#include "hud.qh"
+#include "main.qh"
 #include "miscfunctions.qh"
+#include "sortlist.qh"
 #include "../common/constants.qh"
 #include "../common/counting.qh"
 #include "../common/mapinfo.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
-#include "defs.qh"
-#include "hud.qh"
-#include "main.qh"
-#include "sortlist.qh"
 
 float scoreboard_alpha_bg;
 float scoreboard_alpha_fg;

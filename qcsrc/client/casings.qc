@@ -1,18 +1,16 @@
-#if defined(CSQC)
-	#include "autocvars.qh"
-	#include "../common/util.qh"
-	#include "defs.qh"
-	#include "main.qh"
-	#include "movetypes.qh"
-	#include "prandom.qh"
-	#include "rubble.qh"
+#include "casings.qh"
 
-	.float cnt;
-	.float alpha;
-	.int state;
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "autocvars.qh"
+#include "defs.qh"
+#include "main.qh"
+#include "movetypes.qh"
+#include "prandom.qh"
+#include "rubble.qh"
+#include "../common/util.qh"
+
+.float cnt;
+.float alpha;
+.int state;
 
 entityclass(Casing)
 class(Casing) .bool silent;

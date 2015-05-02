@@ -1,14 +1,12 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "miscfunctions.qh"
-	#include "../dpdefs/keycodes.qh"
-	#include "../common/constants.qh"
-	#include "autocvars.qh"
-	#include "hud.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "hud_config.qh"
+
+#include "autocvars.qh"
+#include "defs.qh"
+#include "hud.qh"
+#include "miscfunctions.qh"
+#include "../common/constants.qh"
+#include "../dpdefs/csprogsdefs.qh"
+#include "../dpdefs/keycodes.qh"
 
 
 #define HUD_Write(s) fputs(fh, s)

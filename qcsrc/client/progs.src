@@ -11,8 +11,8 @@ damage.qc
 effects.qc
 gibs.qc
 hook.qc
-hud_config.qc
 hud.qc
+hud_config.qc
 laser.qc
 main.qc
 mapvoting.qc

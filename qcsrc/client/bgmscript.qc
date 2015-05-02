@@ -1,13 +1,10 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/util.qh"
-	#include "autocvars.qh"
-	#include "bgmscript.qh"
-	#include "main.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "bgmscript.qh"
+
+#include "autocvars.qh"
+#include "defs.qh"
+#include "main.qh"
+#include "../common/util.qh"
+#include "../dpdefs/csprogsdefs.qh"
 
 #define CONSTANT_SPEED_DECAY
 
