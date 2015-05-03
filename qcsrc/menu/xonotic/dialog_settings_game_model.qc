@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_GAME_MODEL_H
 #define DIALOG_SETTINGS_GAME_MODEL_H
+#include "tab.qc"
 CLASS(XonoticGameModelSettingsTab, XonoticTab)
 	//METHOD(XonoticGameModelSettingsTab, toString, string(entity))
 	METHOD(XonoticGameModelSettingsTab, fill, void(entity))

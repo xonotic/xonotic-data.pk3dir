@@ -1,5 +1,6 @@
 #ifndef TEXTLABEL_H
 #define TEXTLABEL_H
+#include "../item/label.qc"
 CLASS(XonoticTextLabel, Label)
 	METHOD(XonoticTextLabel, configureXonoticTextLabel, void(entity, float, string))
 	METHOD(XonoticTextLabel, draw, void(entity))

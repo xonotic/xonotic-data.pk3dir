@@ -1,5 +1,6 @@
 #ifndef DEMOLIST_H
 #define DEMOLIST_H
+#include "listbox.qc"
 CLASS(XonoticDemoList, XonoticListBox)
 	METHOD(XonoticDemoList, configureXonoticDemoList, void(entity))
 	ATTRIB(XonoticDemoList, rowsPerItem, float, 1)

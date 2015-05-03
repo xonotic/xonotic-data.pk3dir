@@ -1,5 +1,6 @@
 #ifndef BUTTON_H
 #define BUTTON_H
+#include "../item/button.qc"
 CLASS(XonoticButton, Button)
 	METHOD(XonoticButton, configureXonoticButton, void(entity, string, vector))
 	ATTRIB(XonoticButton, fontSize, float, SKINFONTSIZE_NORMAL)

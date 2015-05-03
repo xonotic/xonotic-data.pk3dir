@@ -1,5 +1,6 @@
 #ifndef DIALOG_MULTIPLAYER_MEDIA_MUSICPLAYER_H
 #define DIALOG_MULTIPLAYER_MEDIA_MUSICPLAYER_H
+#include "tab.qc"
 CLASS(XonoticMusicPlayerTab, XonoticTab)
 	METHOD(XonoticMusicPlayerTab, fill, void(entity))
 	ATTRIB(XonoticMusicPlayerTab, title, string, _("Music"))

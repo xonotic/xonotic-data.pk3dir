@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_INPUT_USERBIND_H
 #define DIALOG_SETTINGS_INPUT_USERBIND_H
+#include "dialog.qc"
 CLASS(XonoticUserbindEditDialog, XonoticDialog)
 	METHOD(XonoticUserbindEditDialog, loadUserBind, void(entity, string, string, string))
 	METHOD(XonoticUserbindEditDialog, fill, void(entity))

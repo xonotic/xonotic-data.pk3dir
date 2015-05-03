@@ -1,5 +1,6 @@
 #ifndef DIALOG_MULTIPLAYER_MEDIA_H
 #define DIALOG_MULTIPLAYER_MEDIA_H
+#include "tab.qc"
 CLASS(XonoticMediaTab, XonoticTab)
 	METHOD(XonoticMediaTab, fill, void(entity))
 	ATTRIB(XonoticMediaTab, title, string, _("Media"))

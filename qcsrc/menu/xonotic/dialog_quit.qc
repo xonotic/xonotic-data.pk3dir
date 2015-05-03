@@ -1,5 +1,6 @@
 #ifndef DIALOG_QUIT_H
 #define DIALOG_QUIT_H
+#include "dialog.qc"
 CLASS(XonoticQuitDialog, XonoticDialog)
 	METHOD(XonoticQuitDialog, fill, void(entity))
 	ATTRIB(XonoticQuitDialog, title, string, _("Quit"))

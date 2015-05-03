@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_MISC_H
 #define DIALOG_SETTINGS_MISC_H
+#include "tab.qc"
 CLASS(XonoticMiscSettingsTab, XonoticTab)
 	METHOD(XonoticMiscSettingsTab, fill, void(entity))
 	ATTRIB(XonoticMiscSettingsTab, title, string, _("Misc"))

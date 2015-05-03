@@ -1,5 +1,6 @@
 #ifndef ROOTDIALOG_H
 #define ROOTDIALOG_H
+#include "dialog.qc"
 CLASS(XonoticRootDialog, XonoticDialog)
 	// still to be customized by user
 	/*

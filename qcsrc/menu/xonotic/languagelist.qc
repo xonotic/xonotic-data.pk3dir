@@ -1,5 +1,6 @@
 #ifndef LANGUAGELIST_H
 #define LANGUAGELIST_H
+#include "listbox.qc"
 CLASS(XonoticLanguageList, XonoticListBox)
 	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity))
 	ATTRIB(XonoticLanguageList, rowsPerItem, float, 1)

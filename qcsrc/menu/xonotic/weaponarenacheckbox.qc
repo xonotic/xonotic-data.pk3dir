@@ -1,5 +1,6 @@
 #ifndef WEAPONARENACHECKBOX_H
 #define WEAPONARENACHECKBOX_H
+#include "../item/checkbox.qc"
 CLASS(XonoticWeaponarenaCheckBox, CheckBox)
 	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string))
 	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float))

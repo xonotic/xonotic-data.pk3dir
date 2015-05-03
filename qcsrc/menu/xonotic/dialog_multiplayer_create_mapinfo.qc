@@ -1,5 +1,6 @@
 #ifndef DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
 #define DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
+#include "dialog.qc"
 CLASS(XonoticMapInfoDialog, XonoticDialog)
 	METHOD(XonoticMapInfoDialog, fill, void(entity))
 	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity))

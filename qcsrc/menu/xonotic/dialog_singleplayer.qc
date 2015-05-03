@@ -1,5 +1,6 @@
 #ifndef DIALOG_SINGLEPLAYER_H
 #define DIALOG_SINGLEPLAYER_H
+#include "dialog.qc"
 CLASS(XonoticSingleplayerDialog, XonoticDialog)
 	METHOD(XonoticSingleplayerDialog, fill, void(entity))
 	ATTRIB(XonoticSingleplayerDialog, title, string, _("Singleplayer"))

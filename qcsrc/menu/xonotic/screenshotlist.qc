@@ -1,5 +1,6 @@
 #ifndef SCREENSHOTLIST_H
 #define SCREENSHOTLIST_H
+#include "listbox.qc"
 CLASS(XonoticScreenshotList, XonoticListBox)
 	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity))
 	ATTRIB(XonoticScreenshotList, rowsPerItem, float, 1)

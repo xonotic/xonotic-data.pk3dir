@@ -1,5 +1,6 @@
 #ifndef RADIOBUTTON_H
 #define RADIOBUTTON_H
+#include "../item/radiobutton.qc"
 CLASS(XonoticRadioButton, RadioButton)
 	METHOD(XonoticRadioButton, configureXonoticRadioButton, void(entity, float, string, string, string))
 	METHOD(XonoticRadioButton, draw, void(entity))

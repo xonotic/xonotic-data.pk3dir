@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_H
 #define DIALOG_SETTINGS_H
+#include "dialog.qc"
 CLASS(XonoticSettingsDialog, XonoticDialog)
 	METHOD(XonoticSettingsDialog, fill, void(entity))
 	ATTRIB(XonoticSettingsDialog, title, string, _("Settings"))

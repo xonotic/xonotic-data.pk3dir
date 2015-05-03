@@ -1,5 +1,6 @@
 #ifndef TEXTSLIDER_H
 #define TEXTSLIDER_H
+#include "../item/textslider.qc"
 CLASS(XonoticTextSlider, TextSlider)
 	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string))
 	METHOD(XonoticTextSlider, setValue, void(entity, float))

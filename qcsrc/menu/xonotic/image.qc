@@ -1,5 +1,6 @@
 #ifndef IMAGE_H
 #define IMAGE_H
+#include "../item/image.qc"
 CLASS(XonoticImage, Image)
 	METHOD(XonoticImage, configureXonoticImage, void(entity, string, float))
 ENDCLASS(XonoticImage)

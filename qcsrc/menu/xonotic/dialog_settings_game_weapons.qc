@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_GAME_WEAPONS_H
 #define DIALOG_SETTINGS_GAME_WEAPONS_H
+#include "tab.qc"
 CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
 	//METHOD(XonoticGameWeaponsSettingsTab, toString, string(entity))
 	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity))

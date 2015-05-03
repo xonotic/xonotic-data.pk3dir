@@ -1,5 +1,6 @@
 #ifndef COLORPICKER_STRING_H
 #define COLORPICKER_STRING_H
+#include "../item/image.qc"
 CLASS(XonoticColorpickerString, Image)
 	METHOD(XonoticColorpickerString, configureXonoticColorpickerString, void(entity, string, string))
 	METHOD(XonoticColorpickerString, mousePress, float(entity, vector))

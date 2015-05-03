@@ -1,5 +1,6 @@
 #ifndef INPUTBOX_H
 #define INPUTBOX_H
+#include "../item/inputbox.qc"
 CLASS(XonoticInputBox, InputBox)
 	METHOD(XonoticInputBox, configureXonoticInputBox, void(entity, float, string))
 	METHOD(XonoticInputBox, focusLeave, void(entity))

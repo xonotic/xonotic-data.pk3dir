@@ -1,5 +1,6 @@
 #ifndef LISTBOX_H
 #define LISTBOX_H
+#include "../item/listbox.qc"
 CLASS(XonoticListBox, ListBox)
 	METHOD(XonoticListBox, configureXonoticListBox, void(entity))
 	ATTRIB(XonoticListBox, fontSize, float, SKINFONTSIZE_NORMAL)

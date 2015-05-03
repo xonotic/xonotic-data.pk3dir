@@ -3,6 +3,7 @@
 
 #ifndef STATSLIST_H
 #define STATSLIST_H
+#include "listbox.qc"
 CLASS(XonoticStatsList, XonoticListBox)
 	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))
 	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)

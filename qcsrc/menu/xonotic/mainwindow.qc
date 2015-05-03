@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include "../item/modalcontroller.qc"
 CLASS(MainWindow, ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity))
 	METHOD(MainWindow, draw, void(entity))

@@ -1,5 +1,6 @@
 #ifndef CREDITS_H
 #define CREDITS_H
+#include "listbox.qc"
 CLASS(XonoticCreditsList, XonoticListBox)
 	METHOD(XonoticCreditsList, configureXonoticCreditsList, void(entity))
 	ATTRIB(XonoticCreditsList, rowsPerItem, float, 1)

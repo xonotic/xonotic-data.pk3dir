@@ -1,5 +1,6 @@
 #ifndef DIALOG_H
 #define DIALOG_H
+#include "../item/dialog.qc"
 CLASS(XonoticDialog, Dialog)
 	// still to be customized by user
 	/*

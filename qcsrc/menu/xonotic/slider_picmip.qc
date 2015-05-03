@@ -1,5 +1,6 @@
 #ifndef SLIDER_PICMIP_H
 #define SLIDER_PICMIP_H
+#include "textslider.qc"
 CLASS(XonoticPicmipSlider, XonoticTextSlider)
 	METHOD(XonoticPicmipSlider, configureXonoticPicmipSlider, void(entity))
 	METHOD(XonoticPicmipSlider, draw, void(entity))

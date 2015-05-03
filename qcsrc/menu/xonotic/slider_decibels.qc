@@ -2,6 +2,7 @@
 
 #ifndef SLIDER_DECIBELS_H
 #define SLIDER_DECIBELS_H
+#include "slider.qc"
 CLASS(XonoticDecibelsSlider, XonoticSlider)
 	METHOD(XonoticDecibelsSlider, loadCvars, void(entity))
 	METHOD(XonoticDecibelsSlider, saveCvars, void(entity))

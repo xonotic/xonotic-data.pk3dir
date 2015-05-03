@@ -1,5 +1,6 @@
 #ifndef DIALOG_HUDPANEL_NOTIFICATION_H
 #define DIALOG_HUDPANEL_NOTIFICATION_H
+#include "rootdialog.qc"
 CLASS(XonoticHUDNotificationDialog, XonoticRootDialog)
 	METHOD(XonoticHUDNotificationDialog, fill, void(entity))
 	ATTRIB(XonoticHUDNotificationDialog, title, string, _("Notification Panel"))

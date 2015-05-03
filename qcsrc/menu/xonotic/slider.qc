@@ -1,5 +1,6 @@
 #ifndef SLIDER_H
 #define SLIDER_H
+#include "../item/slider.qc"
 CLASS(XonoticSlider, Slider)
 	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string))
 	METHOD(XonoticSlider, setValue, void(entity, float))

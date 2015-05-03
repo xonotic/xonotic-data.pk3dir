@@ -1,5 +1,6 @@
 #ifndef MAPLIST_H
 #define MAPLIST_H
+#include "listbox.qc"
 CLASS(XonoticMapList, XonoticListBox)
 	METHOD(XonoticMapList, configureXonoticMapList, void(entity))
 	ATTRIB(XonoticMapList, rowsPerItem, float, 4)

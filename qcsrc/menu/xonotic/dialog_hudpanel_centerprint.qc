@@ -1,5 +1,6 @@
 #ifndef DIALOG_HUDPANEL_CENTERPRINT_H
 #define DIALOG_HUDPANEL_CENTERPRINT_H
+#include "rootdialog.qc"
 CLASS(XonoticHUDCenterprintDialog, XonoticRootDialog)
 	METHOD(XonoticHUDCenterprintDialog, fill, void(entity))
 	ATTRIB(XonoticHUDCenterprintDialog, title, string, _("Centerprint Panel"))

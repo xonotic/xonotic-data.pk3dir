@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_USER_H
 #define DIALOG_SETTINGS_USER_H
+#include "tab.qc"
 CLASS(XonoticUserSettingsTab, XonoticTab)
 	METHOD(XonoticUserSettingsTab, fill, void(entity))
 	ATTRIB(XonoticUserSettingsTab, title, string, _("User"))

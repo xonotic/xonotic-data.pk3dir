@@ -1,5 +1,6 @@
 #ifndef SKINLIST_H
 #define SKINLIST_H
+#include "listbox.qc"
 CLASS(XonoticSkinList, XonoticListBox)
 	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity))
 	ATTRIB(XonoticSkinList, rowsPerItem, float, 4)

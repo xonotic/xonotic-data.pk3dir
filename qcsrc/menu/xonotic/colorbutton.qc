@@ -1,5 +1,6 @@
 #ifndef COLORBUTTON_H
 #define COLORBUTTON_H
+#include "../item/radiobutton.qc"
 CLASS(XonoticColorButton, RadioButton)
 	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float))
 	METHOD(XonoticColorButton, setChecked, void(entity, float))

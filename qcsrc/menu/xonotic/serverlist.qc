@@ -1,5 +1,6 @@
 #ifndef SERVERLIST_H
 #define SERVERLIST_H
+#include "listbox.qc"
 CLASS(XonoticServerList, XonoticListBox)
 	METHOD(XonoticServerList, configureXonoticServerList, void(entity))
 	ATTRIB(XonoticServerList, rowsPerItem, float, 1)

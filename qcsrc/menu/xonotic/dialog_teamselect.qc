@@ -1,5 +1,6 @@
 #ifndef DIALOG_TEAMSELECT_H
 #define DIALOG_TEAMSELECT_H
+#include "rootdialog.qc"
 CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
 	METHOD(XonoticTeamSelectDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	METHOD(XonoticTeamSelectDialog, showNotify, void(entity))

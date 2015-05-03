@@ -1,5 +1,6 @@
 #ifndef DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_VIEWER_H
 #define DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_VIEWER_H
+#include "dialog.qc"
 CLASS(XonoticScreenshotViewerDialog, XonoticDialog)
 	METHOD(XonoticScreenshotViewerDialog, fill, void(entity))
 	METHOD(XonoticScreenshotViewerDialog, keyDown, float(entity, float, float, float))

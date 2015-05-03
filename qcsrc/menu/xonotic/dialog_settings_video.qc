@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_VIDEO_H
 #define DIALOG_SETTINGS_VIDEO_H
+#include "tab.qc"
 CLASS(XonoticVideoSettingsTab, XonoticTab)
 	METHOD(XonoticVideoSettingsTab, fill, void(entity))
 	ATTRIB(XonoticVideoSettingsTab, title, string, _("Video"))

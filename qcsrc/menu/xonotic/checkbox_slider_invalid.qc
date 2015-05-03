@@ -1,5 +1,6 @@
 #ifndef CHECKBOX_SLIDER_INVALID_H
 #define CHECKBOX_SLIDER_INVALID_H
+#include "../item/checkbox.qc"
 CLASS(XonoticSliderCheckBox, CheckBox)
 	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string))
 	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float))

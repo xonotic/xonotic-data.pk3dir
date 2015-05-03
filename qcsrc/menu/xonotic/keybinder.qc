@@ -1,5 +1,6 @@
 #ifndef KEYBINDER_H
 #define KEYBINDER_H
+#include "listbox.qc"
 CLASS(XonoticKeyBinder, XonoticListBox)
 	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity))
 	ATTRIB(XonoticKeyBinder, rowsPerItem, int, 1)

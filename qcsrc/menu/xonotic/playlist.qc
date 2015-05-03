@@ -1,5 +1,6 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
+#include "listbox.qc"
 CLASS(XonoticPlayList, XonoticListBox)
 	METHOD(XonoticPlayList, configureXonoticPlayList, void(entity))
 	ATTRIB(XonoticPlayList, rowsPerItem, float, 1)

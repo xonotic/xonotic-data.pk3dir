@@ -1,5 +1,6 @@
 #ifndef GAMETYPELIST_H
 #define GAMETYPELIST_H
+#include "listbox.qc"
 CLASS(XonoticGametypeList, XonoticListBox)
 	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity))
 	ATTRIB(XonoticGametypeList, rowsPerItem, float, 2)

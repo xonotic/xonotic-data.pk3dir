@@ -1,5 +1,6 @@
 #ifndef WEAPONSLIST_H
 #define WEAPONSLIST_H
+#include "listbox.qc"
 CLASS(XonoticWeaponsList, XonoticListBox)
 	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity))
 	METHOD(XonoticWeaponsList, toString, string(entity))

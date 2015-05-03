@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_EFFECTS_H
 #define DIALOG_SETTINGS_EFFECTS_H
+#include "tab.qc"
 CLASS(XonoticEffectsSettingsTab, XonoticTab)
 	METHOD(XonoticEffectsSettingsTab, fill, void(entity))
 	ATTRIB(XonoticEffectsSettingsTab, title, string, _("Effects"))

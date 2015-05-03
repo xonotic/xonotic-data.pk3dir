@@ -1,5 +1,6 @@
 #ifndef DIALOG_HUDPANEL_ENGINEINFO_H
 #define DIALOG_HUDPANEL_ENGINEINFO_H
+#include "rootdialog.qc"
 CLASS(XonoticHUDEngineInfoDialog, XonoticRootDialog)
 	METHOD(XonoticHUDEngineInfoDialog, fill, void(entity))
 	ATTRIB(XonoticHUDEngineInfoDialog, title, string, _("Engine Info Panel"))

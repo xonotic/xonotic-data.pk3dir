@@ -1,5 +1,6 @@
 #ifndef SCREENSHOTIMAGE_H
 #define SCREENSHOTIMAGE_H
+#include "image.qc"
 CLASS(XonoticScreenshotImage, XonoticImage)
 	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity))
 	METHOD(XonoticScreenshotImage, load, void(entity, string))

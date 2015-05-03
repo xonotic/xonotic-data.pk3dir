@@ -1,5 +1,6 @@
 #ifndef TABCONTROLLER_H
 #define TABCONTROLLER_H
+#include "../item/modalcontroller.qc"
 CLASS(XonoticTabController, ModalController)
 	METHOD(XonoticTabController, configureXonoticTabController, void(entity, float))
 	METHOD(XonoticTabController, makeTabButton, entity(entity, string, entity))

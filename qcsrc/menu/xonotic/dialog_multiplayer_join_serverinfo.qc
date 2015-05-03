@@ -2,6 +2,7 @@
 
 #ifndef DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H
 #define DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H
+#include "dialog.qc"
 CLASS(XonoticServerInfoDialog, XonoticDialog)
 	METHOD(XonoticServerInfoDialog, fill, void(entity))
 	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float))

@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_INPUT_H
 #define DIALOG_SETTINGS_INPUT_H
+#include "tab.qc"
 CLASS(XonoticInputSettingsTab, XonoticTab)
 	METHOD(XonoticInputSettingsTab, fill, void(entity))
 	ATTRIB(XonoticInputSettingsTab, title, string, _("Input"))

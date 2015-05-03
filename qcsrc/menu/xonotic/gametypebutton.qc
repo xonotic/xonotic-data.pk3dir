@@ -1,5 +1,6 @@
 #ifndef GAMETYPEBUTTON_H
 #define GAMETYPEBUTTON_H
+#include "../item/radiobutton.qc"
 CLASS(XonoticGametypeButton, RadioButton)
 	METHOD(XonoticGametypeButton, configureXonoticGametypeButton, void(entity, float, string, string))
 	METHOD(XonoticGametypeButton, setChecked, void(entity, float))

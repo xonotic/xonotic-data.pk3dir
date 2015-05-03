@@ -1,5 +1,6 @@
 #ifndef DIALOG_SETTINGS_MISC_CVARS_H
 #define DIALOG_SETTINGS_MISC_CVARS_H
+#include "dialog.qc"
 CLASS(XonoticCvarsDialog, XonoticDialog)
 	METHOD(XonoticCvarsDialog, fill, void(entity))
 	METHOD(XonoticCvarsDialog, showNotify, void(entity))

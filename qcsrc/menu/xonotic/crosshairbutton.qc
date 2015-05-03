@@ -1,5 +1,6 @@
 #ifndef CROSSHAIRBUTTON_H
 #define CROSSHAIRBUTTON_H
+#include "../item/radiobutton.qc"
 CLASS(XonoticCrosshairButton, RadioButton)
 	METHOD(XonoticCrosshairButton, configureXonoticCrosshairButton, void(entity, float, float))
 	METHOD(XonoticCrosshairButton, setChecked, void(entity, float))

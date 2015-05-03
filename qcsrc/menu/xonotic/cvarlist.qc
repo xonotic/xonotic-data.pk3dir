@@ -1,5 +1,6 @@
 #ifndef CVARLIST_H
 #define CVARLIST_H
+#include "listbox.qc"
 CLASS(XonoticCvarList, XonoticListBox)
 	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity))
 	ATTRIB(XonoticCvarList, rowsPerItem, float, 1)
