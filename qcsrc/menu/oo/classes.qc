@@ -10,7 +10,7 @@
 #endif
 
 #define CLASS(cname, base)                                          \
-[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
+entity spawn##cname(entity this, entity basevtbl) {                 \
     this = NEW(base); basevtbl = base##_vtbl;                       \
 }
 
