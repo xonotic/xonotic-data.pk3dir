@@ -65,9 +65,8 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 }
 float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 {
-	float f, i;
-	i = me.selectedItem;
-	f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
+	int i = me.selectedItem;
+	float f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
 
 	if(me.pressed != 1) // don't change priority if the person is just scrolling
 	{

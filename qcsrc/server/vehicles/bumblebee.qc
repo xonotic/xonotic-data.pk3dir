@@ -844,7 +844,7 @@ void spawnfunc_vehicle_bumblebee()
 	}
 }
 
-float bumble_raygun_send(entity to, float sf)
+float bumble_raygun_send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_BUMBLE_RAYGUN);
 

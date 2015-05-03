@@ -127,7 +127,7 @@ vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as 
 #ifdef SVQC
 void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC); }
 
-float W_Arc_Beam_Send(entity to, float sf)
+float W_Arc_Beam_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 
@@ -239,6 +239,8 @@ void W_Arc_Beam_Think(void)
 		||
 		self.owner.frozen
 		||
+		self.owner.vehicle
+		||
 		(WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max))
 	)
 	{
@@ -272,6 +274,7 @@ void W_Arc_Beam_Think(void)
 		entity oldself = self;
 		self = self.owner;
 		if(!WEP_ACTION(WEP_ARC, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC, WR_CHECKAMMO2))
+		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(self);
@@ -633,7 +636,7 @@ void Arc_Smoke()
 	}
 }
 
-float W_Arc(float req)
+bool W_Arc(int req)
 {
 	switch(req)
 	{
@@ -1518,7 +1521,7 @@ void Ent_ReadArcBeam(float isnew)
 	}
 }
 
-float W_Arc(float req)
+bool W_Arc(int req)
 {
 	switch(req)
 	{

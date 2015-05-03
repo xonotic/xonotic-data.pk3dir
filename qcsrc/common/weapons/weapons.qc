@@ -64,7 +64,7 @@ entity dummy_weapon_info;
 # error Kein Weltraum links auf dem Gerät
 #endif
 
-WepSet WepSet_FromWeapon(float a) {
+WepSet WepSet_FromWeapon(int a) {
 	a -= WEP_FIRST;
 #if WEP_MAXCOUNT > 24
 	if(a >= 24) {
@@ -130,10 +130,10 @@ WepSet ReadWepSet()
 void register_weapon(
 	int id,
 	WepSet bit,
-	float(float) func,
-	.float ammotype,
-	float i,
-	float weapontype,
+	bool(int) func,
+	.int ammotype,
+	int i,
+	int weapontype,
 	float pickupbasevalue,
 	vector clr,
 	string modelname,
@@ -169,7 +169,7 @@ void register_weapon(
 	func(WR_INIT);
 	#endif
 }
-float w_null(float dummy)
+bool w_null(int dummy)
 {
 	return 0;
 }
@@ -246,7 +246,7 @@ string W_NameWeaponOrder(string order)
 }
 string W_NumberWeaponOrder_MapFunc(string s)
 {
-	float i;
+	int i;
 	if(s == "0" || stof(s))
 		return s;
 	s = W_UndeprecateName(s);
@@ -312,7 +312,7 @@ string W_FixWeaponOrder_ForceComplete(string order)
 
 void W_RandomWeapons(entity e, float n)
 {
-	float i, j;
+	int i, j;
 	WepSet remaining;
 	WepSet result;
 	remaining = e.weapons;
@@ -329,7 +329,7 @@ void W_RandomWeapons(entity e, float n)
 	e.weapons = result;
 }
 
-string GetAmmoPicture(.float ammotype)
+string GetAmmoPicture(.int ammotype)
 {
 	switch(ammotype)
 	{
@@ -344,7 +344,7 @@ string GetAmmoPicture(.float ammotype)
 }
 
 #ifdef CSQC
-.float GetAmmoFieldFromNum(int i)
+.int GetAmmoFieldFromNum(int i)
 {
 	switch(i)
 	{
@@ -358,7 +358,7 @@ string GetAmmoPicture(.float ammotype)
 	}
 }
 
-int GetAmmoStat(.float ammotype)
+int GetAmmoStat(.int ammotype)
 {
 	switch(ammotype)
 	{

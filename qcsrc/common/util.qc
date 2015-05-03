@@ -1843,7 +1843,7 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 }
 
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype)
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
@@ -1867,7 +1867,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage)
+vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage)
 {
 	vector v;
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...

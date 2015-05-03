@@ -345,7 +345,7 @@ void raptor_flare_touch()
     remove(self);
 }
 
-void raptor_flare_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
     self.health -= damage;
     if(self.health <= 0)
