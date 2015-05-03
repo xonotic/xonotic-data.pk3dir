@@ -66,6 +66,9 @@ const int ISF_SIZE 				= 128;
 void spawnfunc_item_strength();
 void spawnfunc_item_invincible();
 void spawnfunc_item_armor_small();
+void spawnfunc_item_shells();
+void spawnfunc_item_bullets();
+void spawnfunc_item_rockets();
 
 #ifdef CSQC
 

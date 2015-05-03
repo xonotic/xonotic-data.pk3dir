@@ -1159,7 +1159,6 @@ void spawnfunc_item_rockets (void) {
 	StartItem ("models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
 }
 
-void spawnfunc_item_shells (void);
 void spawnfunc_item_bullets (void) {
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)

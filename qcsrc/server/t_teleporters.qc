@@ -1,21 +1,22 @@
 #include "t_teleporters.qh"
 #include "_.qh"
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../warpzonelib/server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "../common/deathtypes.qh"
-    #include "tturrets/include/turrets_early.qh"
-    #include "vehicles/vehicles_def.qh"
-    #include "../common/mapinfo.qh"
-    #include "anticheat.qh"
-#endif
+#include "anticheat.qh"
+#include "cl_player.qh"
+#include "g_hook.qh"
+#include "bot/waypoints.qh"
+#include "tturrets/include/turrets_early.qh"
+#include "vehicles/vehicles_def.qh"
+#include "weapons/csqcprojectile.qh"
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/mapinfo.qh"
+#include "../common/util.qh"
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/server.qh"
+#include "../warpzonelib/util_server.qh"
+
+.float lastteleporttime;
 
 void trigger_teleport_use()
 {
