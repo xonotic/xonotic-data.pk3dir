@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticTeamSelectDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
 	METHOD(XonoticTeamSelectDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	METHOD(XonoticTeamSelectDialog, showNotify, void(entity))
 	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection")) // ;)

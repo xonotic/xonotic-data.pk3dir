@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
+CLASS(XonoticDemoList, XonoticListBox)
 	METHOD(XonoticDemoList, configureXonoticDemoList, void(entity))
 	ATTRIB(XonoticDemoList, rowsPerItem, float, 1)
 	METHOD(XonoticDemoList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -38,7 +38,7 @@ void DemoList_Filter_Change(entity box, entity me);
 entity makeXonoticDemoList()
 {
 	entity me;
-	me = spawnXonoticDemoList();
+	me = NEW(XonoticDemoList);
 	me.configureXonoticDemoList(me);
 	return me;
 }

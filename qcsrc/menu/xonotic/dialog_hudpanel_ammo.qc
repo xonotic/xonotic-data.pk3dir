@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDAmmoDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDAmmoDialog, XonoticRootDialog)
 	METHOD(XonoticHUDAmmoDialog, fill, void(entity))
 	ATTRIB(XonoticHUDAmmoDialog, title, string, _("Ammo Panel"))
 	ATTRIB(XonoticHUDAmmoDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

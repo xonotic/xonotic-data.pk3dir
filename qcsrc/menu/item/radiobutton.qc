@@ -1,6 +1,6 @@
 #ifdef INTERFACE
 void RadioButton_Click(entity me, entity other);
-CLASS(RadioButton) EXTENDS(CheckBox)
+CLASS(RadioButton, CheckBox)
 	METHOD(RadioButton, configureRadioButton, void(entity, string, float, string, float, float))
 	ATTRIB(RadioButton, checked, float, 0)
 	ATTRIB(RadioButton, group, float, 0)

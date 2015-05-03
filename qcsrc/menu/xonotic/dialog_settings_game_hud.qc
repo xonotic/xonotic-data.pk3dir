@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticGameHUDSettingsTab) EXTENDS(XonoticTab)
+CLASS(XonoticGameHUDSettingsTab, XonoticTab)
 	//METHOD(XonoticGameHUDSettingsTab, toString, string(entity))
 	METHOD(XonoticGameHUDSettingsTab, fill, void(entity))
 	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity))
@@ -31,7 +31,7 @@ void XonoticGameHUDSettingsTab_showNotify(entity me)
 entity makeXonoticGameHUDSettingsTab()
 {
 	entity me;
-	me = spawnXonoticGameHUDSettingsTab();
+	me = NEW(XonoticGameHUDSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

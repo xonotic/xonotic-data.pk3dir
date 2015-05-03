@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticSingleplayerDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticSingleplayerDialog, XonoticDialog)
 	METHOD(XonoticSingleplayerDialog, fill, void(entity))
 	ATTRIB(XonoticSingleplayerDialog, title, string, _("Singleplayer"))
 	ATTRIB(XonoticSingleplayerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)

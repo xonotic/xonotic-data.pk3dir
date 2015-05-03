@@ -28,4 +28,7 @@ entity spawnObject()
 		Object_vtbl = spawnVtbl(e, null_entity);
 	return e;
 }
+
+#define NEW(cname) (spawn##cname())
+
 #endif

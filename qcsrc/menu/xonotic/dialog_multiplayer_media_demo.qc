@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticDemoBrowserTab) EXTENDS(XonoticTab)
+CLASS(XonoticDemoBrowserTab, XonoticTab)
 	METHOD(XonoticDemoBrowserTab, fill, void(entity))
 	ATTRIB(XonoticDemoBrowserTab, title, string, _("Demo"))
 	ATTRIB(XonoticDemoBrowserTab, intendedWidth, float, 0.9)
@@ -38,7 +38,7 @@ void DemoConfirm_Check_Gamestatus(entity btn, entity me)
 entity makeXonoticDemoBrowserTab()
 {
 	entity me;
-	me = spawnXonoticDemoBrowserTab();
+	me = NEW(XonoticDemoBrowserTab);
 	me.configureDialog(me);
 	return me;
 }

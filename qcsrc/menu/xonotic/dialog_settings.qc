@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticSettingsDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticSettingsDialog, XonoticDialog)
 	METHOD(XonoticSettingsDialog, fill, void(entity))
 	ATTRIB(XonoticSettingsDialog, title, string, _("Settings"))
 	ATTRIB(XonoticSettingsDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)

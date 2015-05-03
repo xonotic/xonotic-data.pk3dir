@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticDemoStartConfirmDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticDemoStartConfirmDialog, XonoticDialog)
 	METHOD(XonoticDemoStartConfirmDialog, fill, void(entity))
 	ATTRIB(XonoticDemoStartConfirmDialog, title, string, _("Disconnect"))
 	ATTRIB(XonoticDemoStartConfirmDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)

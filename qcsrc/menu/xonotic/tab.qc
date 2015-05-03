@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticTab) EXTENDS(Tab)
+CLASS(XonoticTab, Tab)
 	// still to be customized by user
 	/*
 	ATTRIB(XonoticTab, intendedWidth, float, 0)

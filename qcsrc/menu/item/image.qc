@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(Image) EXTENDS(Item)
+CLASS(Image, Item)
 	METHOD(Image, configureImage, void(entity, string))
 	METHOD(Image, draw, void(entity))
 	METHOD(Image, toString, string(entity))

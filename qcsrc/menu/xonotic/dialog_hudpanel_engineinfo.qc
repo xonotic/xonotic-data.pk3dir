@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDEngineInfoDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDEngineInfoDialog, XonoticRootDialog)
 	METHOD(XonoticHUDEngineInfoDialog, fill, void(entity))
 	ATTRIB(XonoticHUDEngineInfoDialog, title, string, _("Engine Info Panel"))
 	ATTRIB(XonoticHUDEngineInfoDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

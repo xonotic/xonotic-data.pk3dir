@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(ListBox) EXTENDS(Item)
+CLASS(ListBox, Item)
 	METHOD(ListBox, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(ListBox, configureListBox, void(entity, float, float))
 	METHOD(ListBox, draw, void(entity))

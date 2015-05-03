@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticProfileTab) EXTENDS(XonoticTab)
+CLASS(XonoticProfileTab, XonoticTab)
 	METHOD(XonoticProfileTab, fill, void(entity))
 	METHOD(XonoticProfileTab, draw, void(entity))
 	ATTRIB(XonoticProfileTab, title, string, _("Profile"))
@@ -16,7 +16,7 @@ entity makeXonoticProfileTab();
 entity makeXonoticProfileTab()
 {
 	entity me;
-	me = spawnXonoticProfileTab();
+	me = NEW(XonoticProfileTab);
 	me.configureDialog(me);
 	return me;
 }

@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticCvarsDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticCvarsDialog, XonoticDialog)
 	METHOD(XonoticCvarsDialog, fill, void(entity))
 	METHOD(XonoticCvarsDialog, showNotify, void(entity))
 	ATTRIB(XonoticCvarsDialog, title, string, _("Advanced settings"))

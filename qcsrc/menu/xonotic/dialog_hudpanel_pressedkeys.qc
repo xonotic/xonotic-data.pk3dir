@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDPressedKeysDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDPressedKeysDialog, XonoticRootDialog)
 	METHOD(XonoticHUDPressedKeysDialog, fill, void(entity))
 	ATTRIB(XonoticHUDPressedKeysDialog, title, string, _("Pressed Keys Panel"))
 	ATTRIB(XonoticHUDPressedKeysDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

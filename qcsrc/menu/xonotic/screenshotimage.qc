@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticScreenshotImage) EXTENDS(XonoticImage)
+CLASS(XonoticScreenshotImage, XonoticImage)
 	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity))
 	METHOD(XonoticScreenshotImage, load, void(entity, string))
 	METHOD(XonoticScreenshotImage, draw, void(entity))
@@ -21,7 +21,7 @@ entity makeXonoticScreenshotImage();
 entity makeXonoticScreenshotImage()
 {
 	entity me;
-	me = spawnXonoticScreenshotImage();
+	me = NEW(XonoticScreenshotImage);
 	me.configureXonoticScreenshotImage(me);
 	return me;
 }

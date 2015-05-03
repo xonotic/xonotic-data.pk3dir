@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticScoreboardFadeTimeSlider) EXTENDS(XonoticTextSlider)
+CLASS(XonoticScoreboardFadeTimeSlider, XonoticTextSlider)
 	METHOD(XonoticScoreboardFadeTimeSlider, configureXonoticScoreboardFadeTimeSlider, void(entity))
 	METHOD(XonoticScoreboardFadeTimeSlider, loadCvars, void(entity))
 	METHOD(XonoticScoreboardFadeTimeSlider, saveCvars, void(entity))
@@ -11,7 +11,7 @@ entity makeXonoticScoreboardFadeTimeSlider();
 entity makeXonoticScoreboardFadeTimeSlider()
 {
 	entity me;
-	me = spawnXonoticScoreboardFadeTimeSlider();
+	me = NEW(XonoticScoreboardFadeTimeSlider);
 	me.configureXonoticScoreboardFadeTimeSlider(me);
 	return me;
 }

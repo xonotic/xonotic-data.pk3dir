@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticMapInfoDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticMapInfoDialog, XonoticDialog)
 	METHOD(XonoticMapInfoDialog, fill, void(entity))
 	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity))
 	ATTRIB(XonoticMapInfoDialog, title, string, _("Map Information"))

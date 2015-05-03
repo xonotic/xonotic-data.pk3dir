@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticPlayerList) EXTENDS(XonoticListBox)
+CLASS(XonoticPlayerList, XonoticListBox)
 	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1)
 	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, float, vector, float))
@@ -30,7 +30,7 @@ const float PLAYERPARM_COUNT = 4;
 entity makeXonoticPlayerList()
 {
 	entity me;
-	me = spawnXonoticPlayerList();
+	me = NEW(XonoticPlayerList);
 	me.configureXonoticListBox(me);
 	return me;
 }

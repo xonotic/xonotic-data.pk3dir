@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticMapList) EXTENDS(XonoticListBox)
+CLASS(XonoticMapList, XonoticListBox)
 	METHOD(XonoticMapList, configureXonoticMapList, void(entity))
 	ATTRIB(XonoticMapList, rowsPerItem, float, 4)
 	METHOD(XonoticMapList, draw, void(entity))
@@ -40,7 +40,7 @@ CLASS(XonoticMapList) EXTENDS(XonoticListBox)
 
 	METHOD(XonoticMapList, destroy, void(entity))
 
-	ATTRIB(XonoticListBox, alphaBG, float, 0)
+	ATTRIB(XonoticMapList, alphaBG, float, 0)
 ENDCLASS(XonoticMapList)
 entity makeXonoticMapList();
 void MapList_All(entity btn, entity me);
@@ -57,7 +57,7 @@ void XonoticMapList_destroy(entity me)
 entity makeXonoticMapList()
 {
 	entity me;
-	me = spawnXonoticMapList();
+	me = NEW(XonoticMapList);
 	me.configureXonoticMapList(me);
 	return me;
 }

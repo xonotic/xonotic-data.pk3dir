@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticRadioButton) EXTENDS(RadioButton)
+CLASS(XonoticRadioButton, RadioButton)
 	METHOD(XonoticRadioButton, configureXonoticRadioButton, void(entity, float, string, string, string))
 	METHOD(XonoticRadioButton, draw, void(entity))
 	METHOD(XonoticRadioButton, setChecked, void(entity, float))
@@ -27,7 +27,7 @@ entity makeXonoticRadioButton(float, string, string, string);
 entity makeXonoticRadioButton(float theGroup, string theCvar, string theValue, string theText)
 {
 	entity me;
-	me = spawnXonoticRadioButton();
+	me = NEW(XonoticRadioButton);
 	me.configureXonoticRadioButton(me, theGroup, theCvar, theValue, theText);
 	return me;
 }

@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticRootDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticRootDialog, XonoticDialog)
 	// still to be customized by user
 	/*
 	ATTRIB(XonoticDialog, closable, float, 1)

@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticWinnerDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticWinnerDialog, XonoticDialog)
 	METHOD(XonoticWinnerDialog, fill, void(entity))
 	METHOD(XonoticWinnerDialog, focusEnter, void(entity))
 	ATTRIB(XonoticWinnerDialog, title, string, _("Winner"))

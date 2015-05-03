@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticInputSettingsTab) EXTENDS(XonoticTab)
+CLASS(XonoticInputSettingsTab, XonoticTab)
 	METHOD(XonoticInputSettingsTab, fill, void(entity))
 	ATTRIB(XonoticInputSettingsTab, title, string, _("Input"))
 	ATTRIB(XonoticInputSettingsTab, intendedWidth, float, 0.9)
@@ -13,7 +13,7 @@ entity makeXonoticInputSettingsTab();
 entity makeXonoticInputSettingsTab()
 {
 	entity me;
-	me = spawnXonoticInputSettingsTab();
+	me = NEW(XonoticInputSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

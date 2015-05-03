@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
+CLASS(XonoticScreenshotList, XonoticListBox)
 	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity))
 	ATTRIB(XonoticScreenshotList, rowsPerItem, float, 1)
 	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -49,7 +49,7 @@ void ScreenshotList_Filter_Change(entity box, entity me);
 entity makeXonoticScreenshotList()
 {
 	entity me;
-	me = spawnXonoticScreenshotList();
+	me = NEW(XonoticScreenshotList);
 	me.configureXonoticScreenshotList(me);
 	return me;
 }

@@ -1,7 +1,7 @@
 #include "../../common/weapons/weapons.qh"
 
 #ifdef INTERFACE
-CLASS(XonoticMutatorsDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticMutatorsDialog, XonoticDialog)
 	METHOD(XonoticMutatorsDialog, toString, string(entity))
 	METHOD(XonoticMutatorsDialog, fill, void(entity))
 	METHOD(XonoticMutatorsDialog, showNotify, void(entity))

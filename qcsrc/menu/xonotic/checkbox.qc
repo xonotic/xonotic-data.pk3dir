@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticCheckBox) EXTENDS(CheckBox)
+CLASS(XonoticCheckBox, CheckBox)
 	METHOD(XonoticCheckBox, configureXonoticCheckBox, void(entity, float, float, string, string))
 	METHOD(XonoticCheckBox, setChecked, void(entity, float))
 	ATTRIB(XonoticCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -53,7 +53,7 @@ entity makeXonoticCheckBox(float isInverted, string theCvar, string theText)
 entity makeXonoticCheckBoxEx(float theYesValue, float theNoValue, string theCvar, string theText)
 {
 	entity me;
-	me = spawnXonoticCheckBox();
+	me = NEW(XonoticCheckBox);
 	me.configureXonoticCheckBox(me, theYesValue, theNoValue, theCvar, theText);
 	return me;
 }

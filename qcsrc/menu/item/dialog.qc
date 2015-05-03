@@ -14,7 +14,7 @@
 // a subclass may help with using this as a tab
 
 #ifdef INTERFACE
-CLASS(Dialog) EXTENDS(InputContainer)
+CLASS(Dialog, InputContainer)
 	METHOD(Dialog, configureDialog, void(entity)) // no runtime configuration, all parameters are given in the code!
 	METHOD(Dialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	METHOD(Dialog, keyDown, float(entity, float, float, float))
@@ -128,7 +128,7 @@ void Dialog_configureDialog(entity me)
 {
 	float absWidth, absHeight;
 
-	me.frame = spawnBorderImage();
+	me.frame = NEW(BorderImage);
 	me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.borderLines * me.titleHeight);
 	me.frame.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
 	me.frame.zoomedOutTitleBar = me.zoomedOutTitleBar;
@@ -156,7 +156,7 @@ void Dialog_configureDialog(entity me)
 	if(me.closable && me.borderLines > 0)
 	{
 		entity closebutton;
-		closebutton = me.closeButton = me.frame.closeButton = spawnButton();
+		closebutton = me.closeButton = me.frame.closeButton = NEW(Button);
 		closebutton.configureButton(closebutton, "", 0, me.closeButtonImage);
 		closebutton.onClick = Dialog_Close; closebutton.onClickEntity = me;
 		closebutton.srcMulti = 0;

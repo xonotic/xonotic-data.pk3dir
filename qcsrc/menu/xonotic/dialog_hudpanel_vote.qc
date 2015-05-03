@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDVoteDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDVoteDialog, XonoticRootDialog)
 	METHOD(XonoticHUDVoteDialog, fill, void(entity))
 	ATTRIB(XonoticHUDVoteDialog, title, string, _("Vote Panel"))
 	ATTRIB(XonoticHUDVoteDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

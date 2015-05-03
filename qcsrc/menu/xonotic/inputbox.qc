@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticInputBox) EXTENDS(InputBox)
+CLASS(XonoticInputBox, InputBox)
 	METHOD(XonoticInputBox, configureXonoticInputBox, void(entity, float, string))
 	METHOD(XonoticInputBox, focusLeave, void(entity))
 	METHOD(XonoticInputBox, setText, void(entity, string))
@@ -38,7 +38,7 @@ entity makeXonoticInputBox(float, string);
 entity makeXonoticInputBox(float doEditColorCodes, string theCvar)
 {
 	entity me;
-	me = spawnXonoticInputBox();
+	me = NEW(XonoticInputBox);
 	me.configureXonoticInputBox(me, doEditColorCodes, theCvar);
 	return me;
 }

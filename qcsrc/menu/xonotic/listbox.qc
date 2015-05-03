@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticListBox) EXTENDS(ListBox)
+CLASS(XonoticListBox, ListBox)
 	METHOD(XonoticListBox, configureXonoticListBox, void(entity))
 	ATTRIB(XonoticListBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticListBox, scrollbarWidth, float, SKINWIDTH_SCROLLBAR)
@@ -21,7 +21,7 @@ entity makeXonoticListBox();
 entity makeXonoticListBox()
 {
 	entity me;
-	me = spawnXonoticListBox();
+	me = NEW(XonoticListBox);
 	me.configureXonoticListBox(me);
 	return me;
 }

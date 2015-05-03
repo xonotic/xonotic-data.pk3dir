@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDRadarDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDRadarDialog, XonoticRootDialog)
 	METHOD(XonoticHUDRadarDialog, fill, void(entity))
 	ATTRIB(XonoticHUDRadarDialog, title, string, _("Radar Panel"))
 	ATTRIB(XonoticHUDRadarDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

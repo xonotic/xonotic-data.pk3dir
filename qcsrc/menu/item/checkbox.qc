@@ -1,6 +1,6 @@
 #ifdef INTERFACE
 void CheckBox_Click(entity me, entity other);
-CLASS(CheckBox) EXTENDS(Button)
+CLASS(CheckBox, Button)
 	METHOD(CheckBox, configureCheckBox, void(entity, string, float, string))
 	METHOD(CheckBox, draw, void(entity))
 	METHOD(CheckBox, playClickSound, void(entity))

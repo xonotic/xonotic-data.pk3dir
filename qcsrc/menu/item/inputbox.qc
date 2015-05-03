@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(InputBox) EXTENDS(Label)
+CLASS(InputBox, Label)
 	METHOD(InputBox, configureInputBox, void(entity, string, float, float, string))
 	METHOD(InputBox, draw, void(entity))
 	METHOD(InputBox, setText, void(entity, string))

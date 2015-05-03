@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticWeaponarenaCheckBox) EXTENDS(CheckBox)
+CLASS(XonoticWeaponarenaCheckBox, CheckBox)
 	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string))
 	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float))
 	ATTRIB(XonoticWeaponarenaCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -16,7 +16,7 @@ entity makeXonoticWeaponarenaCheckBox(string, string);
 entity makeXonoticWeaponarenaCheckBox(string theWeapon, string theText)
 {
 	entity me;
-	me = spawnXonoticWeaponarenaCheckBox();
+	me = NEW(XonoticWeaponarenaCheckBox);
 	me.configureXonoticWeaponarenaCheckBox(me, theWeapon, theText);
 	return me;
 }

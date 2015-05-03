@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticCharmap) EXTENDS(Item)
+CLASS(XonoticCharmap, Item)
 	METHOD(XonoticCharmap, configureXonoticCharmap, void(entity, entity))
 	METHOD(XonoticCharmap, mousePress, float(entity, vector))
 	METHOD(XonoticCharmap, mouseRelease, float(entity, vector))
@@ -57,7 +57,7 @@ string charmap_cellToChar(vector cell)
 entity makeXonoticCharmap(entity controlledInputBox)
 {
 	entity me;
-	me = spawnXonoticCharmap();
+	me = NEW(XonoticCharmap);
 	me.configureXonoticCharmap(me, controlledInputBox);
 	return me;
 }

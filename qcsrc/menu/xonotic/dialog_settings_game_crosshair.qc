@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticGameCrosshairSettingsTab) EXTENDS(XonoticTab)
+CLASS(XonoticGameCrosshairSettingsTab, XonoticTab)
 	//METHOD(XonoticGameCrosshairSettingsTab, toString, string(entity))
 	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity))
 	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity))
@@ -19,7 +19,7 @@ void XonoticGameCrosshairSettingsTab_showNotify(entity me)
 entity makeXonoticGameCrosshairSettingsTab()
 {
 	entity me;
-	me = spawnXonoticGameCrosshairSettingsTab();
+	me = NEW(XonoticGameCrosshairSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

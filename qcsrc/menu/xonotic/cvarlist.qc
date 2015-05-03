@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticCvarList) EXTENDS(XonoticListBox)
+CLASS(XonoticCvarList, XonoticListBox)
 	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity))
 	ATTRIB(XonoticCvarList, rowsPerItem, float, 1)
 	METHOD(XonoticCvarList, drawListBoxItem, void(entity, float, vector, float))
@@ -44,7 +44,7 @@ void CvarList_End_Editing(entity box, entity me);
 entity makeXonoticCvarList()
 {
 	entity me;
-	me = spawnXonoticCvarList();
+	me = NEW(XonoticCvarList);
 	me.configureXonoticCvarList(me);
 	return me;
 }

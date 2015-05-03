@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticColorButton) EXTENDS(RadioButton)
+CLASS(XonoticColorButton, RadioButton)
 	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float))
 	METHOD(XonoticColorButton, setChecked, void(entity, float))
 	METHOD(XonoticColorButton, draw, void(entity))
@@ -21,7 +21,7 @@ entity makeXonoticColorButton(float, float, float);
 entity makeXonoticColorButton(float theGroup, float theColor, float theValue)
 {
 	entity me;
-	me = spawnXonoticColorButton();
+	me = NEW(XonoticColorButton);
 	me.configureXonoticColorButton(me, theGroup, theColor, theValue);
 	return me;
 }

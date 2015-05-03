@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticGametypeButton) EXTENDS(RadioButton)
+CLASS(XonoticGametypeButton, RadioButton)
 	METHOD(XonoticGametypeButton, configureXonoticGametypeButton, void(entity, float, string, string))
 	METHOD(XonoticGametypeButton, setChecked, void(entity, float))
 	ATTRIB(XonoticGametypeButton, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -26,7 +26,7 @@ void GameTypeButton_Click(entity me, entity other);
 entity makeXonoticGametypeButton(float theGroup, string theCvar, string theText)
 {
 	entity me;
-	me = spawnXonoticGametypeButton();
+	me = NEW(XonoticGametypeButton);
 	me.configureXonoticGametypeButton(me, theGroup, theCvar, theText);
 	return me;
 }

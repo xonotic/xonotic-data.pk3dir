@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(Nexposee) EXTENDS(Container)
+CLASS(Nexposee, Container)
 	METHOD(Nexposee, draw, void(entity))
 	METHOD(Nexposee, keyDown, float(entity, float, float, float))
 	METHOD(Nexposee, keyUp, float(entity, float, float, float))

@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDNotificationDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDNotificationDialog, XonoticRootDialog)
 	METHOD(XonoticHUDNotificationDialog, fill, void(entity))
 	ATTRIB(XonoticHUDNotificationDialog, title, string, _("Notification Panel"))
 	ATTRIB(XonoticHUDNotificationDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

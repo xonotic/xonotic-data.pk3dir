@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(Tab) EXTENDS(Dialog)
+CLASS(Tab, Dialog)
 	ATTRIB(Tab, isTabRoot, float, 0)
 	ATTRIB(Tab, closable, float, 0)
 	ATTRIB(Tab, rootDialog, float, 0)

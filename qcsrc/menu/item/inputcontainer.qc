@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(InputContainer) EXTENDS(Container)
+CLASS(InputContainer, Container)
 	METHOD(InputContainer, keyDown, float(entity, float, float, float))
 	METHOD(InputContainer, mouseMove, float(entity, vector))
 	METHOD(InputContainer, mousePress, float(entity, vector))

@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticGametypeList) EXTENDS(XonoticListBox)
+CLASS(XonoticGametypeList, XonoticListBox)
 	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity))
 	ATTRIB(XonoticGametypeList, rowsPerItem, float, 2)
 	METHOD(XonoticGametypeList, drawListBoxItem, void(entity, float, vector, float))
@@ -25,7 +25,7 @@ entity makeXonoticGametypeList();
 entity makeXonoticGametypeList(void)
 {
 	entity me;
-	me = spawnXonoticGametypeList();
+	me = NEW(XonoticGametypeList);
 	me.configureXonoticGametypeList(me);
 	return me;
 }

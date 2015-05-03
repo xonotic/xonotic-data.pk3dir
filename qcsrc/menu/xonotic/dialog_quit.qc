@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticQuitDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticQuitDialog, XonoticDialog)
 	METHOD(XonoticQuitDialog, fill, void(entity))
 	ATTRIB(XonoticQuitDialog, title, string, _("Quit"))
 	ATTRIB(XonoticQuitDialog, color, vector, SKINCOLOR_DIALOG_QUIT)

@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(Item) EXTENDS(Object)
+CLASS(Item, Object)
 	METHOD(Item, draw, void(entity))
 	METHOD(Item, keyDown, float(entity, float, float, float))
 	METHOD(Item, keyUp, float(entity, float, float, float))

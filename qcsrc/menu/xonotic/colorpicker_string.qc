@@ -1,12 +1,12 @@
 #ifdef INTERFACE
-CLASS(XonoticColorpickerString) EXTENDS(Image)
+CLASS(XonoticColorpickerString, Image)
 	METHOD(XonoticColorpickerString, configureXonoticColorpickerString, void(entity, string, string))
 	METHOD(XonoticColorpickerString, mousePress, float(entity, vector))
 	METHOD(XonoticColorpickerString, mouseRelease, float(entity, vector))
 	METHOD(XonoticColorpickerString, mouseDrag, float(entity, vector))
 	ATTRIB(XonoticColorpickerString, cvarName, string, string_null)
-	METHOD(XonoticColorPickerString, loadCvars, void(entity))
-	METHOD(XonoticColorPickerString, saveCvars, void(entity))
+	METHOD(XonoticColorpickerString, loadCvars, void(entity))
+	METHOD(XonoticColorpickerString, saveCvars, void(entity))
 	ATTRIB(XonoticColorpickerString, prevcoords, vector, '0 0 0')
 	ATTRIB(XonoticColorpickerString, image, string, SKINGFX_COLORPICKER)
 	ATTRIB(XonoticColorpickerString, imagemargin, vector, SKINMARGIN_COLORPICKER)
@@ -21,7 +21,7 @@ entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar);
 entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar)
 {
 	entity me;
-	me = spawnXonoticColorpickerString();
+	me = NEW(XonoticColorpickerString);
 	me.configureXonoticColorpickerString(me, theCvar, theDefaultCvar);
 	return me;
 }
@@ -38,7 +38,7 @@ void XonoticColorpickerString_configureXonoticColorpickerString(entity me, strin
 	}
 }
 
-void XonoticColorPickerString_loadCvars(entity me)
+void XonoticColorpickerString_loadCvars(entity me)
 {
 	if (!me.cvarName)
 		return;
@@ -55,7 +55,7 @@ void XonoticColorPickerString_loadCvars(entity me)
 		me.prevcoords = color_hslimage(stov(cvar_string(me.cvarName)), me.imagemargin);
 }
 
-void XonoticColorPickerString_saveCvars(entity me)
+void XonoticColorpickerString_saveCvars(entity me)
 {
 	if (!me.cvarName)
 		return;

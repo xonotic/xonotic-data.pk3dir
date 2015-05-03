@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
+CLASS(XonoticKeyBinder, XonoticListBox)
 	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity))
 	ATTRIB(XonoticKeyBinder, rowsPerItem, int, 1)
 	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, float, vector, float))
@@ -65,7 +65,7 @@ void Xonotic_KeyBinds_Read()
 entity makeXonoticKeyBinder()
 {
 	entity me;
-	me = spawnXonoticKeyBinder();
+	me = NEW(XonoticKeyBinder);
 	me.configureXonoticKeyBinder(me);
 	return me;
 }

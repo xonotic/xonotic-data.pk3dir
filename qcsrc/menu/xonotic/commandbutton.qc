@@ -5,7 +5,7 @@
 #endif
 
 #ifdef INTERFACE
-CLASS(XonoticCommandButton) EXTENDS(XonoticButton)
+CLASS(XonoticCommandButton, XonoticButton)
 	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float))
 	ATTRIB(XonoticCommandButton, onClickCommand, string, string_null)
 	ATTRIB(XonoticCommandButton, flags, float, 0)
@@ -17,7 +17,7 @@ entity makeXonoticCommandButton(string theText, vector theColor, string theComma
 entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, float theFlags)
 {
 	entity me;
-	me = spawnXonoticCommandButton();
+	me = NEW(XonoticCommandButton);
 	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags);
 	return me;
 }

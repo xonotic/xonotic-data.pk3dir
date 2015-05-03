@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDHealthArmorDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDHealthArmorDialog, XonoticRootDialog)
 	METHOD(XonoticHUDHealthArmorDialog, fill, void(entity))
 	ATTRIB(XonoticHUDHealthArmorDialog, title, string, _("Health/Armor Panel"))
 	ATTRIB(XonoticHUDHealthArmorDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticScreenshotViewerDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticScreenshotViewerDialog, XonoticDialog)
 	METHOD(XonoticScreenshotViewerDialog, fill, void(entity))
 	METHOD(XonoticScreenshotViewerDialog, keyDown, float(entity, float, float, float))
 	METHOD(XonoticScreenshotViewerDialog, loadScreenshot, void(entity, string))

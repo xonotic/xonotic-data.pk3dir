@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticResetDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticResetDialog, XonoticDialog)
 	METHOD(XonoticResetDialog, fill, void(entity))
 	ATTRIB(XonoticResetDialog, title, string, _("Factory reset"))
 	ATTRIB(XonoticResetDialog, color, vector, SKINCOLOR_DIALOG_QUIT)

@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(BorderImage) EXTENDS(Label)
+CLASS(BorderImage, Label)
 	METHOD(BorderImage, configureBorderImage, void(entity, string, float, vector, string, float))
 	METHOD(BorderImage, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(BorderImage, recalcPositionWithText, void(entity, string))

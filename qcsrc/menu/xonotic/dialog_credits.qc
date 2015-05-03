@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticCreditsDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticCreditsDialog, XonoticDialog)
 	METHOD(XonoticCreditsDialog, fill, void(entity))
 	METHOD(XonoticCreditsDialog, focusEnter, void(entity))
 	ATTRIB(XonoticCreditsDialog, title, string, _("Credits"))

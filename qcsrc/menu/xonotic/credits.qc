@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticCreditsList) EXTENDS(XonoticListBox)
+CLASS(XonoticCreditsList, XonoticListBox)
 	METHOD(XonoticCreditsList, configureXonoticCreditsList, void(entity))
 	ATTRIB(XonoticCreditsList, rowsPerItem, float, 1)
 	METHOD(XonoticCreditsList, draw, void(entity))
@@ -13,7 +13,7 @@ CLASS(XonoticCreditsList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticCreditsList, bufferIndex, float, 0)
 	ATTRIB(XonoticCreditsList, scrolling, float, 0)
 
-	ATTRIB(XonoticListBox, alphaBG, float, 0)
+	ATTRIB(XonoticCreditsList, alphaBG, float, 0)
 ENDCLASS(XonoticCreditsList)
 entity makeXonoticCreditsList();
 #endif
@@ -22,7 +22,7 @@ entity makeXonoticCreditsList();
 entity makeXonoticCreditsList()
 {
 	entity me;
-	me = spawnXonoticCreditsList();
+	me = NEW(XonoticCreditsList);
 	me.configureXonoticCreditsList(me);
 	return me;
 }

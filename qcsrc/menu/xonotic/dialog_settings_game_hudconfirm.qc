@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDConfirmDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticHUDConfirmDialog, XonoticDialog)
 	METHOD(XonoticHUDConfirmDialog, fill, void(entity))
 	ATTRIB(XonoticHUDConfirmDialog, title, string, _("Enter HUD editor"))
 	ATTRIB(XonoticHUDConfirmDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)

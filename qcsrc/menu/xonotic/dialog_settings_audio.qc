@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticAudioSettingsTab) EXTENDS(XonoticTab)
+CLASS(XonoticAudioSettingsTab, XonoticTab)
 	METHOD(XonoticAudioSettingsTab, fill, void(entity))
 	ATTRIB(XonoticAudioSettingsTab, title, string, _("Audio"))
 	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
@@ -14,7 +14,7 @@ entity makeXonoticAudioSettingsTab();
 entity makeXonoticAudioSettingsTab()
 {
 	entity me;
-	me = spawnXonoticAudioSettingsTab();
+	me = NEW(XonoticAudioSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

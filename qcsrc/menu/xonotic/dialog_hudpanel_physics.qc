@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDPhysicsDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDPhysicsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDPhysicsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDPhysicsDialog, title, string, _("Physics Panel"))
 	ATTRIB(XonoticHUDPhysicsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

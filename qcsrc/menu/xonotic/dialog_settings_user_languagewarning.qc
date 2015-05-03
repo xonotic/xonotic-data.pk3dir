@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticLanguageWarningDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticLanguageWarningDialog, XonoticDialog)
 	METHOD(XonoticLanguageWarningDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	ATTRIB(XonoticLanguageWarningDialog, title, string, _("Warning"))
 	ATTRIB(XonoticLanguageWarningDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)

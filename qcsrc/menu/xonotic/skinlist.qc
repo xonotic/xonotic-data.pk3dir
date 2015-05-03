@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticSkinList) EXTENDS(XonoticListBox)
+CLASS(XonoticSkinList, XonoticListBox)
 	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity))
 	ATTRIB(XonoticSkinList, rowsPerItem, float, 4)
 	METHOD(XonoticSkinList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -42,7 +42,7 @@ const float SKINPARM_COUNT = 4;
 entity makeXonoticSkinList()
 {
 	entity me;
-	me = spawnXonoticSkinList();
+	me = NEW(XonoticSkinList);
 	me.configureXonoticSkinList(me);
 	return me;
 }

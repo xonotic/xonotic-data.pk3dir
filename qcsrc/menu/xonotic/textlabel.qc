@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticTextLabel) EXTENDS(Label)
+CLASS(XonoticTextLabel, Label)
 	METHOD(XonoticTextLabel, configureXonoticTextLabel, void(entity, float, string))
 	METHOD(XonoticTextLabel, draw, void(entity))
 	ATTRIB(XonoticTextLabel, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -13,7 +13,7 @@ entity makeXonoticTextLabel(float theAlign, string theText);
 entity makeXonoticTextLabel(float theAlign, string theText)
 {
 	entity me;
-	me = spawnXonoticTextLabel();
+	me = NEW(XonoticTextLabel);
 	me.configureXonoticTextLabel(me, theAlign, theText);
 	return me;
 }

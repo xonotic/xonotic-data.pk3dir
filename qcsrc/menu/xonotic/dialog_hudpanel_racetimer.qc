@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDRaceTimerDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDRaceTimerDialog, XonoticRootDialog)
 	METHOD(XonoticHUDRaceTimerDialog, fill, void(entity))
 	ATTRIB(XonoticHUDRaceTimerDialog, title, string, _("Race Timer Panel"))
 	ATTRIB(XonoticHUDRaceTimerDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

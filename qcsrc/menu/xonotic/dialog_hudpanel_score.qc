@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDScoreDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDScoreDialog, XonoticRootDialog)
 	METHOD(XonoticHUDScoreDialog, fill, void(entity))
 	ATTRIB(XonoticHUDScoreDialog, title, string, _("Score Panel"))
 	ATTRIB(XonoticHUDScoreDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

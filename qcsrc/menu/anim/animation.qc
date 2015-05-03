@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(Animation) EXTENDS(Object)
+CLASS(Animation, Object)
 	METHOD(Animation, configureAnimation, void(entity, entity, void(entity, float), float, float, float, float))
 	METHOD(Animation, setTimeStartEnd, void(entity, float, float))
 	METHOD(Animation, setTimeStartDuration, void(entity, float, float))

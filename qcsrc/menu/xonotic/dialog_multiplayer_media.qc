@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticMediaTab) EXTENDS(XonoticTab)
+CLASS(XonoticMediaTab, XonoticTab)
 	METHOD(XonoticMediaTab, fill, void(entity))
 	ATTRIB(XonoticMediaTab, title, string, _("Media"))
 	ATTRIB(XonoticMediaTab, intendedWidth, float, 0.9)
@@ -14,7 +14,7 @@ entity makeXonoticMediaTab();
 entity makeXonoticMediaTab()
 {
 	entity me;
-	me = spawnXonoticMediaTab();
+	me = NEW(XonoticMediaTab);
 	me.configureDialog(me);
 	return me;
 }

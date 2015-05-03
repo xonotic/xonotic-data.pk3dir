@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticPicmipSlider) EXTENDS(XonoticTextSlider)
+CLASS(XonoticPicmipSlider, XonoticTextSlider)
 	METHOD(XonoticPicmipSlider, configureXonoticPicmipSlider, void(entity))
 	METHOD(XonoticPicmipSlider, draw, void(entity))
 	METHOD(XonoticPicmipSlider, autofix, void(entity))
@@ -12,7 +12,7 @@ entity makeXonoticPicmipSlider(); // note: you still need to call addValue and c
 entity makeXonoticPicmipSlider()
 {
 	entity me;
-	me = spawnXonoticPicmipSlider();
+	me = NEW(XonoticPicmipSlider);
 	me.configureXonoticPicmipSlider(me);
 	return me;
 }

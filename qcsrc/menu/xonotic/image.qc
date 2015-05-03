@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticImage) EXTENDS(Image)
+CLASS(XonoticImage, Image)
 	METHOD(XonoticImage, configureXonoticImage, void(entity, string, float))
 ENDCLASS(XonoticImage)
 entity makeXonoticImage(string theImage, float theAspect);
@@ -9,7 +9,7 @@ entity makeXonoticImage(string theImage, float theAspect);
 entity makeXonoticImage(string theImage, float theAspect)
 {
 	entity me;
-	me = spawnXonoticImage();
+	me = NEW(XonoticImage);
 	me.configureXonoticImage(me, theImage, theAspect);
 	return me;
 }

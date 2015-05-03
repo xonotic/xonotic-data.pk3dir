@@ -8,7 +8,6 @@
 
 #ifdef CLASS
 #undef CLASS
-#undef EXTENDS
 #undef METHOD
 #undef ATTRIB
 #undef ATTRIBARRAY
@@ -17,8 +16,7 @@
 #endif
 
 // for the constructor
-#define CLASS(cname)                       entity spawn##cname() { entity me;
-#define EXTENDS(base)                      me = spawn##base (); entity basevtbl; basevtbl = base##_vtbl;
+#define CLASS(cname,base)                  entity spawn##cname() { entity me = spawn##base (); entity basevtbl; basevtbl = base##_vtbl;
 #define METHOD(cname,name,prototype)       me.name = cname##_##name;
 #define ATTRIB(cname,name,type,val)        me.name = val;
 #define ATTRIBARRAY(cname,name,type,cnt)

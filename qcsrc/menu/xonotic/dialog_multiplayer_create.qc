@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
+CLASS(XonoticServerCreateTab, XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
@@ -56,7 +56,7 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 entity makeXonoticServerCreateTab()
 {
 	entity me;
-	me = spawnXonoticServerCreateTab();
+	me = NEW(XonoticServerCreateTab);
 	me.configureDialog(me);
 	return me;
 }

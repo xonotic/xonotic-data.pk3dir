@@ -1,7 +1,7 @@
 #include "../../common/mapinfo.qh"
 
 #ifdef INTERFACE
-CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticServerInfoDialog, XonoticDialog)
 	METHOD(XonoticServerInfoDialog, fill, void(entity))
 	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float))
 	ATTRIB(XonoticServerInfoDialog, title, string, _("Server Information"))

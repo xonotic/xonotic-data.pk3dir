@@ -2,7 +2,7 @@
 #include "../../common/playerstats.qh"
 
 #ifdef INTERFACE
-CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
+CLASS(XonoticStatsList, XonoticListBox)
 	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))
 	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)
 	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -32,7 +32,7 @@ entity makeXonoticStatsList();
 entity makeXonoticStatsList()
 {
 	entity me;
-	me = spawnXonoticStatsList();
+	me = NEW(XonoticStatsList);
 	me.configureXonoticStatsList(me);
 	return me;
 }

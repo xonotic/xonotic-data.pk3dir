@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticHUDExitDialog) EXTENDS(XonoticRootDialog)
+CLASS(XonoticHUDExitDialog, XonoticRootDialog)
 	METHOD(XonoticHUDExitDialog, fill, void(entity))
 	ATTRIB(XonoticHUDExitDialog, title, string, _("Panel HUD Setup"))
 	ATTRIB(XonoticHUDExitDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

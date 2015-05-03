@@ -8,7 +8,6 @@
 
 #ifdef CLASS
 #undef CLASS
-#undef EXTENDS
 #undef METHOD
 #undef ATTRIB
 #undef ATTRIBARRAY
@@ -16,8 +15,7 @@
 #undef SUPER
 #endif
 
-#define CLASS(cname)                       entity spawn##cname(); entity cname##_vtbl;
-#define EXTENDS(base)
+#define CLASS(cname,base)                  entity spawn##cname(); entity cname##_vtbl;
 #define METHOD(cname,name,prototype)       prototype cname##_##name; .prototype name;
 #define ATTRIB(cname,name,type,val)        .type name;
 #define ATTRIBARRAY(cname,name,type,cnt)   .type name[cnt];

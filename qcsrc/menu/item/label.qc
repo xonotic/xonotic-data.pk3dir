@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(Label) EXTENDS(Item)
+CLASS(Label, Item)
 	METHOD(Label, configureLabel, void(entity, string, float, float))
 	METHOD(Label, draw, void(entity))
 	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector))

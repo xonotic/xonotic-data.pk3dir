@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticMultiplayerDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticMultiplayerDialog, XonoticDialog)
 	METHOD(XonoticMultiplayerDialog, fill, void(entity))
 	ATTRIB(XonoticMultiplayerDialog, title, string, _("Multiplayer"))
 	ATTRIB(XonoticMultiplayerDialog, color, vector, SKINCOLOR_DIALOG_MULTIPLAYER)

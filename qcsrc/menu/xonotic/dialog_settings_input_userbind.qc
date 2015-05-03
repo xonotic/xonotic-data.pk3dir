@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticUserbindEditDialog) EXTENDS(XonoticDialog)
+CLASS(XonoticUserbindEditDialog, XonoticDialog)
 	METHOD(XonoticUserbindEditDialog, loadUserBind, void(entity, string, string, string))
 	METHOD(XonoticUserbindEditDialog, fill, void(entity))
 	ATTRIB(XonoticUserbindEditDialog, title, string, _("User defined key bind"))

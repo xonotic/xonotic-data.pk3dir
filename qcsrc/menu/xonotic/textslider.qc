@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticTextSlider) EXTENDS(TextSlider)
+CLASS(XonoticTextSlider, TextSlider)
 	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string))
 	METHOD(XonoticTextSlider, setValue, void(entity, float))
 	METHOD(XonoticTextSlider, configureXonoticTextSliderValues, void(entity))
@@ -29,7 +29,7 @@ entity makeXonoticTextSlider(string); // note: you still need to call addValue a
 entity makeXonoticTextSlider(string theCvar)
 {
 	entity me;
-	me = spawnXonoticTextSlider();
+	me = NEW(XonoticTextSlider);
 	me.configureXonoticTextSlider(me, theCvar);
 	return me;
 }

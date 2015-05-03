@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(Button) EXTENDS(Label)
+CLASS(Button, Label)
 	METHOD(Button, configureButton, void(entity, string, float, string))
 	METHOD(Button, draw, void(entity))
 	METHOD(Button, showNotify, void(entity))

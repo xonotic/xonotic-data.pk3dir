@@ -1,5 +1,5 @@
 #ifdef INTERFACE
-CLASS(XonoticWeaponsList) EXTENDS(XonoticListBox)
+CLASS(XonoticWeaponsList, XonoticListBox)
 	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity))
 	METHOD(XonoticWeaponsList, toString, string(entity))
 	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1)
@@ -20,7 +20,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me);
 entity makeXonoticWeaponsList()
 {
 	entity me;
-	me = spawnXonoticWeaponsList();
+	me = NEW(XonoticWeaponsList);
 	me.configureXonoticWeaponsList(me);
 	return me;
 }
