@@ -1,17 +1,20 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/common.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "tracing.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../antilag.qh"
-#endif
+#include "tracing.qh"
+#include "../_.qh"
+
+#include "accuracy.qh"
+#include "common.qh"
+#include "hitplot.qh"
+
+#include "../g_damage.qh"
+#include "../g_subs.qh"
+#include "../antilag.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/util.qh"
+
+#include "../../common/weapons/weapons.qh"
+
+#include "../../warpzonelib/common.qh"
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.

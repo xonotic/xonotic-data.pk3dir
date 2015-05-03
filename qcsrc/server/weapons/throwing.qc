@@ -1,20 +1,15 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/util.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "throwing.qh"
-    #include "weaponsystem.qh"
-    #include "../t_items.qh"
-    #include "../autocvars.qh"
-    #include "../constants.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../../common/mapinfo.qh"
-#endif
+#include "throwing.qh"
+#include "../_.qh"
+
+#include "weaponsystem.qh"
+#include "../mutators/mutators_include.qh"
+#include "../t_items.qh"
+#include "../g_damage.qh"
+#include "../g_subs.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/weapons.qh"
 
 void thrown_wep_think()
 {

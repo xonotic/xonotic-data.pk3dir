@@ -1,6 +1,6 @@
 #include "_.qh"
 
-#include "../common/weapons/weapons.qc"
+#include "../common/weapons/weapons.qh"
 
 void spawnfunc_weapon_electro();
 void spawnfunc_weapon_hagar();

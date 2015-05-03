@@ -1,6 +1,7 @@
 #include "_.qh"
 
-#include "../common/weapons/weapons.qc"
+#include "../common/weapons/weapons.qh"
+#include "../common/buffs.qh"
 
 void spawnfunc_weapon_crylink();
 void spawnfunc_weapon_electro();
