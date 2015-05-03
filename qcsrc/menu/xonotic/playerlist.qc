@@ -2,7 +2,7 @@
 CLASS(XonoticPlayerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1)
 	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, int, vector, bool, float))
+	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	ATTRIB(XonoticPlayerList, allowFocusSound, float, 0)
 	ATTRIB(XonoticPlayerList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPlayerList, columnNameOrigin, float, 0)
@@ -92,7 +92,7 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnScoreOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
 }
 
-void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
+void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	string score;

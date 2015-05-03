@@ -3,7 +3,7 @@ CLASS(XonoticSkinList) EXTENDS(XonoticListBox)
 	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity))
 	ATTRIB(XonoticSkinList, rowsPerItem, float, 4)
 	METHOD(XonoticSkinList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticSkinList, drawListBoxItem, void(entity, int, vector, bool, float))
+	METHOD(XonoticSkinList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticSkinList, getSkins, void(entity))
 	METHOD(XonoticSkinList, setSkin, void(entity))
 	METHOD(XonoticSkinList, loadCvars, void(entity))
@@ -149,14 +149,17 @@ void XonoticSkinList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.columnNameSize = 1 - me.columnPreviewSize - 2 * me.realFontSize.x;
 }
 
-void XonoticSkinList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
+void XonoticSkinList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(highlightedTime)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, getHighlightAlpha(SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED, highlightedTime));
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.skinParameter(me, i, SKINPARM_PREVIEW);
 	draw_Picture(me.columnPreviewOrigin * eX, s, me.columnPreviewSize * eX + eY, '1 1 1', 1);

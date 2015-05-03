@@ -2,7 +2,7 @@
 CLASS(XonoticGametypeList) EXTENDS(XonoticListBox)
 	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity))
 	ATTRIB(XonoticGametypeList, rowsPerItem, float, 2)
-	METHOD(XonoticGametypeList, drawListBoxItem, void(entity, int, vector, bool, float))
+	METHOD(XonoticGametypeList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticGametypeList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticGametypeList, setSelected, void(entity, float))
 	METHOD(XonoticGametypeList, loadCvars, void(entity))
@@ -76,14 +76,17 @@ void XonoticGametypeList_saveCvars(entity me)
 		owner.gameTypeChangeNotify(owner);
 	}
 }
-void XonoticGametypeList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
+void XonoticGametypeList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s1, s2;
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(highlightedTime)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, getHighlightAlpha(SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED, highlightedTime));
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	draw_Picture(me.columnIconOrigin * eX, GameType_GetIcon(i), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 	s1 = GameType_GetName(i);

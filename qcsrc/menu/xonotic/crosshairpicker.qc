@@ -7,7 +7,7 @@ CLASS(XonoticCrosshairPicker) EXTENDS(XonoticPicker)
 
 	METHOD(XonoticCrosshairPicker, cellSelect, void(entity, vector))
 	METHOD(XonoticCrosshairPicker, cellIsValid, bool(entity, vector))
-	METHOD(XonoticCrosshairPicker, cellDraw, void(entity, vector, vector, float))
+	METHOD(XonoticCrosshairPicker, cellDraw, void(entity, vector, vector))
 ENDCLASS(XonoticCrosshairPicker)
 entity makeXonoticCrosshairPicker();
 #endif
@@ -56,7 +56,7 @@ bool XonoticCrosshairPicker_cellIsValid(entity me, vector cell)
 	return true;
 }
 
-void XonoticCrosshairPicker_cellDraw(entity me, vector cell, vector cellPos, float highlightedTime)
+void XonoticCrosshairPicker_cellDraw(entity me, vector cell, vector cellPos)
 {
 	vector sz, rgb;
 	string cross = strcat("/gfx/crosshair", crosshairpicker_cellToCrosshair(me, cell));

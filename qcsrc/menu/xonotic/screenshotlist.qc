@@ -5,7 +5,7 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticScreenshotList, setSelected, void(entity, float))
 	METHOD(XonoticScreenshotList, draw, void(entity))
-	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, int, vector, bool, float))
+	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticScreenshotList, getScreenshots, void(entity))
 	METHOD(XonoticScreenshotList, previewScreenshot, void(entity))
 	METHOD(XonoticScreenshotList, startScreenshot, void(entity))
@@ -165,13 +165,16 @@ void XonoticScreenshotList_setSelected(entity me, float i)
 	}
 }
 
-void XonoticScreenshotList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
+void XonoticScreenshotList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(highlightedTime)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, getHighlightAlpha(SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED, highlightedTime));
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.screenshotName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);

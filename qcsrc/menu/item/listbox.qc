@@ -11,7 +11,7 @@ CLASS(ListBox) EXTENDS(Item)
 	METHOD(ListBox, focusLeave, void(entity))
 	ATTRIB(ListBox, focusable, float, 1)
 	ATTRIB(ListBox, focusedItem, int, -1)
-	ATTRIB(ListBox, focusedItemTime, float, 0)
+	ATTRIB(ListBox, focusedItemAlpha, float, 0.3)
 	ATTRIB(ListBox, allowFocusSound, float, 1)
 	ATTRIB(ListBox, selectedItem, int, 0)
 	ATTRIB(ListBox, size, vector, '0 0 0')
@@ -43,7 +43,7 @@ CLASS(ListBox) EXTENDS(Item)
 	ATTRIB(ListBox, lastClickedItem, float, -1)
 	ATTRIB(ListBox, lastClickedTime, float, 0)
 
-	METHOD(ListBox, drawListBoxItem, void(entity, int, vector, bool, float)) // item number, width/height, isSelected, highlightedTime
+	METHOD(ListBox, drawListBoxItem, void(entity, int, vector, bool, bool)) // item number, width/height, isSelected, isFocused
 	METHOD(ListBox, clickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
 	METHOD(ListBox, doubleClickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
 	METHOD(ListBox, setSelected, void(entity, float))
@@ -191,7 +191,7 @@ float ListBox_mouseMove(entity me, vector pos)
 		x = me.focusedItem;
 		me.focusedItem = me.getItemAtPos(me, me.scrollPos + pos.y);
 		if(x != me.focusedItem)
-			me.focusedItemTime = time;
+			me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
 	}
 	return 1;
 }
@@ -397,7 +397,7 @@ void ListBox_draw(entity me)
 		vector relSize = eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, i);
 		absSize = boxToGlobalSize(relSize, me.size);
 		draw_scale = boxToGlobalSize(relSize, oldscale);
-		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i), (me.focusedItem == i) ? me.focusedItemTime : 0);
+		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i), (me.focusedItem == i));
 		y += relSize.y;
 	}
 	draw_ClearClip();
@@ -417,7 +417,7 @@ void ListBox_doubleClickListBoxItem(entity me, float i, vector where)
 	// template method
 }
 
-void ListBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, float highlightedTime)
+void ListBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize.x) + eY * (8 / absSize.y), (isSelected ? '0 1 0' : '1 1 1'), 1, 0);
 }

@@ -17,11 +17,12 @@ CLASS(XonoticPicker) EXTENDS(Item)
 
 	METHOD(XonoticPicker, moveFocus, void(entity, vector, vector))
 	METHOD(XonoticPicker, cellSelect, void(entity, vector))
-	METHOD(XonoticPicker, cellDraw, void(entity, vector, vector, float))
+	METHOD(XonoticPicker, cellDraw, void(entity, vector, vector))
 	METHOD(XonoticPicker, cellIsValid, bool(entity, vector))
 	ATTRIB(XonoticPicker, realCellSize, vector, '0 0 0')
 	ATTRIB(XonoticPicker, selectedCell, vector, '-1 -1 0')
 	ATTRIB(XonoticPicker, focusedCell, vector, '-1 -1 0')
+	ATTRIB(XonoticPicker, focusedCellAlpha, float, 0)
 	ATTRIB(XonoticPicker, focusedCellTime, float, 0)
 	ATTRIB(XonoticPicker, pressedCell, vector, '-1 -1 0')
 ENDCLASS(XonoticPicker)
@@ -57,7 +58,7 @@ float XonoticPicker_mouseMove(entity me, vector coords)
 	}
 
 	if(me.focusedCell != prevFocusedCell)
-		me.focusedCellTime = time;
+		me.focusedCellAlpha = SKINALPHA_LISTBOX_FOCUSED;
 
 	return 1;
 }
@@ -153,7 +154,7 @@ bool XonoticPicker_cellIsValid(entity me, vector cell)
 	return true;
 }
 
-void XonoticPicker_cellDraw(entity me, vector cell, vector cellPos, float highlightTime)
+void XonoticPicker_cellDraw(entity me, vector cell, vector cellPos)
 {
 }
 
@@ -186,10 +187,13 @@ void XonoticPicker_draw(entity me)
 			else if(cell == me.focusedCell && me.focused)
 			{
 				if(!me.pressed || me.focusedCell == me.pressedCell)
-					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_LISTBOX_FOCUSED, getHighlightAlpha(SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED, me.focusedCellTime));
+				{
+					me.focusedCellAlpha = getFadedAlpha(me.focusedCellAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_LISTBOX_FOCUSED, me.focusedCellAlpha);
+				}
 			}
 
-			me.cellDraw(me, cell, cellPos, (me.focusedCell == cell) ? me.focusedCellTime : 0);
+			me.cellDraw(me, cell, cellPos);
 		}
 	}
 

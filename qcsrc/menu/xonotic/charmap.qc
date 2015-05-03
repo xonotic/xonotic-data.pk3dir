@@ -12,7 +12,7 @@ CLASS(XonoticCharmap) EXTENDS(XonoticPicker)
 
 	METHOD(XonoticCharmap, cellSelect, void(entity, vector))
 	METHOD(XonoticCharmap, cellIsValid, bool(entity, vector))
-	METHOD(XonoticCharmap, cellDraw, void(entity, vector, vector, float))
+	METHOD(XonoticCharmap, cellDraw, void(entity, vector, vector))
 	METHOD(XonoticCharmap, charOffset, vector)
 ENDCLASS(XonoticCharmap)
 entity makeXonoticCharmap(entity controlledInputBox);
@@ -106,7 +106,7 @@ bool XonoticCharmap_cellIsValid(entity me, vector cell)
 	return true;
 }
 
-void XonoticCharmap_cellDraw(entity me, vector cell, vector cellPos, float highlightedTime)
+void XonoticCharmap_cellDraw(entity me, vector cell, vector cellPos)
 {
 	draw_CenterText(cellPos + me.charOffset, charmap_cellToChar(me, cell), me.realFontSize, SKINCOLOR_CHARMAP_CHAR, SKINALPHA_CHARMAP_CHAR, 0);
 }
