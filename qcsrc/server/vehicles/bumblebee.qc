@@ -1,7 +1,7 @@
-#include "vehicle.qh"
 #include "bumblebee.qh"
 
 #ifdef SVQC
+#include "vehicle.qh"
 void bumb_fire_cannon(entity _gun, string _tagname, entity _owner)
 {
 	vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
