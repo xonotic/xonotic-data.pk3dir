@@ -222,6 +222,10 @@ ALPHA_KEYGRABBER_KEYS           0.7
 ALPHA_CHARMAP_CHAR              0.85
 COLOR_CHARMAP_CHAR              '1 1 1'
 
+// item: crosshairpicker
+ALPHA_CROSSHAIRPICKER_CROSSHAIR 0.85
+COLOR_CROSSHAIRPICKER_CROSSHAIR '1 1 1'
+
 // item: radio button
 //   uses "radiobutton" images
 COLOR_RADIOBUTTON_N             '1 1 1'

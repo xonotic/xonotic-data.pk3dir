@@ -58,7 +58,7 @@ bool XonoticCrosshairPicker_cellIsValid(entity me, vector cell)
 
 void XonoticCrosshairPicker_cellDraw(entity me, vector cell, vector cellPos)
 {
-	vector sz, rgb;
+	vector sz;
 	string cross = strcat("/gfx/crosshair", crosshairpicker_cellToCrosshair(me, cell));
 	sz = draw_PictureSize(cross);
 	sz = globalToBoxSize(sz, me.size);
@@ -68,12 +68,10 @@ void XonoticCrosshairPicker_cellDraw(entity me, vector cell, vector cellPos)
 	sz.y = sz.x / ar;
 	sz = sz * 0.95;
 
-	rgb = '1 1 1';
-
 	vector crosshairPos = cellPos + 0.5 * me.realCellSize;
-	draw_Picture(crosshairPos - 0.5 * sz, cross, sz, rgb, me.alpha);
+	draw_Picture(crosshairPos - 0.5 * sz, cross, sz, SKINCOLOR_CROSSHAIRPICKER_CROSSHAIR, SKINALPHA_CROSSHAIRPICKER_CROSSHAIR);
 
 	if(cvar("crosshair_dot"))
-		draw_Picture(crosshairPos - 0.5 * sz * cvar("crosshair_dot_size"), "/gfx/crosshairdot", sz * cvar("crosshair_dot_size"), rgb, me.alpha);
+		draw_Picture(crosshairPos - 0.5 * sz * cvar("crosshair_dot_size"), "/gfx/crosshairdot", sz * cvar("crosshair_dot_size"), SKINCOLOR_CROSSHAIRPICKER_CROSSHAIR, SKINALPHA_CROSSHAIRPICKER_CROSSHAIR);
 }
 #endif
