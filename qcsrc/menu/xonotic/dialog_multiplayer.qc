@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_MULTIPLAYER_H
+#define DIALOG_MULTIPLAYER_H
 CLASS(XonoticMultiplayerDialog, XonoticDialog)
 	METHOD(XonoticMultiplayerDialog, fill, void(entity))
 	ATTRIB(XonoticMultiplayerDialog, title, string, _("Multiplayer"))

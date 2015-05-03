@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef CHARMAP_H
+#define CHARMAP_H
 CLASS(XonoticCharmap, Item)
 	METHOD(XonoticCharmap, configureXonoticCharmap, void(entity, entity))
 	METHOD(XonoticCharmap, mousePress, float(entity, vector))

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef CVARLIST_H
+#define CVARLIST_H
 CLASS(XonoticCvarList, XonoticListBox)
 	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity))
 	ATTRIB(XonoticCvarList, rowsPerItem, float, 1)

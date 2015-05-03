@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ANIM_EASING_H
+#define ANIM_EASING_H
 entity makeHostedEasing(entity, void(entity, float), float(float, float, float, float), float, float, float);
 entity makeEasing(entity, void(entity, float), float(float, float, float, float), float, float, float, float);
 float easingLinear(float, float, float, float);

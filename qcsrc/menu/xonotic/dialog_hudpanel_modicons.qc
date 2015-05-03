@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_MODICONS_H
+#define DIALOG_HUDPANEL_MODICONS_H
 CLASS(XonoticHUDModIconsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDModIconsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDModIconsDialog, title, string, _("Mod Icons Panel"))

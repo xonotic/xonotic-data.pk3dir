@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef KEYBINDER_H
+#define KEYBINDER_H
 CLASS(XonoticKeyBinder, XonoticListBox)
 	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity))
 	ATTRIB(XonoticKeyBinder, rowsPerItem, int, 1)
@@ -28,6 +29,7 @@ entity makeXonoticKeyBinder();
 void KeyBinder_Bind_Change(entity btn, entity me);
 void KeyBinder_Bind_Clear(entity btn, entity me);
 void KeyBinder_Bind_Edit(entity btn, entity me);
+void KeyBinder_Bind_Reset_All(entity btn, entity me);
 #endif
 
 #ifdef IMPLEMENTATION

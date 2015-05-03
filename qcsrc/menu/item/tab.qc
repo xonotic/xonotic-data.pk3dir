@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ITEM_TAB_H
+#define ITEM_TAB_H
 CLASS(Tab, Dialog)
 	ATTRIB(Tab, isTabRoot, float, 0)
 	ATTRIB(Tab, closable, float, 0)

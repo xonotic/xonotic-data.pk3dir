@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef IMAGE_H
+#define IMAGE_H
 CLASS(XonoticImage, Image)
 	METHOD(XonoticImage, configureXonoticImage, void(entity, string, float))
 ENDCLASS(XonoticImage)

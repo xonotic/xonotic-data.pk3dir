@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef TEXTLABEL_H
+#define TEXTLABEL_H
 CLASS(XonoticTextLabel, Label)
 	METHOD(XonoticTextLabel, configureXonoticTextLabel, void(entity, float, string))
 	METHOD(XonoticTextLabel, draw, void(entity))
@@ -7,6 +8,7 @@ CLASS(XonoticTextLabel, Label)
 	ATTRIB(XonoticTextLabel, disabledAlpha, float, SKINALPHA_DISABLED)
 ENDCLASS(XonoticTextLabel)
 entity makeXonoticTextLabel(float theAlign, string theText);
+entity makeXonoticHeaderLabel(string theText);
 #endif
 
 #ifdef IMPLEMENTATION

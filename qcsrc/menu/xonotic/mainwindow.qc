@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 CLASS(MainWindow, ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity))
 	METHOD(MainWindow, draw, void(entity))

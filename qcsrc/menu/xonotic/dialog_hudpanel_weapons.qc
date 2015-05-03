@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_WEAPONS_H
+#define DIALOG_HUDPANEL_WEAPONS_H
 CLASS(XonoticHUDWeaponsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDWeaponsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDWeaponsDialog, title, string, _("Weapons Panel"))

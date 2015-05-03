@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_BUFFS_H
+#define DIALOG_HUDPANEL_BUFFS_H
 CLASS(XonoticHUDBuffsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDBuffsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDBuffsDialog, title, string, _("Buffs Panel"))

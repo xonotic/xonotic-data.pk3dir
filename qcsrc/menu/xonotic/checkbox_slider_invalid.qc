@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef CHECKBOX_SLIDER_INVALID_H
+#define CHECKBOX_SLIDER_INVALID_H
 CLASS(XonoticSliderCheckBox, CheckBox)
 	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string))
 	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float))

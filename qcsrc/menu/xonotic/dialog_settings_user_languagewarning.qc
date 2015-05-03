@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_USER_LANGUAGEWARNING_H
+#define DIALOG_SETTINGS_USER_LANGUAGEWARNING_H
 CLASS(XonoticLanguageWarningDialog, XonoticDialog)
 	METHOD(XonoticLanguageWarningDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	ATTRIB(XonoticLanguageWarningDialog, title, string, _("Warning"))

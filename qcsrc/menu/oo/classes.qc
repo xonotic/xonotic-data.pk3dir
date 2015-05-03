@@ -1,10 +1,4 @@
-#ifndef INTERFACE
-#define INTERFACE
-#endif
-
-#ifdef IMPLEMENTATION
-#undef IMPLEMENTATION
-#endif
+#include "base.qh"
 
 #ifdef CLASS
 #undef CLASS
@@ -39,13 +33,23 @@ prototype cname##_##name;                                           \
 #define ENDCLASS(cname)                                             \
 .bool instanceOf##cname;                                            \
 entity cname##_vtbl;                                                \
-[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
+[[last]] entity spawn##cname(entity this, entity basevtbl) {        \
     this.instanceOf##cname = true;                                  \
     this.classname = #cname;                                        \
     if (!cname##_vtbl) cname##_vtbl = spawnVtbl(this, basevtbl);    \
     return this;                                                    \
 }
 
-#define SUPER(cname)
+#define SUPER(cname) (cname##_vtbl.vtblbase)
+
+#ifdef IMPLEMENTATION
+#undef IMPLEMENTATION
+#endif
+
+#include "../classes.inc"
+
+#ifndef IMPLEMENTATION
+#define IMPLEMENTATION
+#endif
 
 #include "../classes.inc"

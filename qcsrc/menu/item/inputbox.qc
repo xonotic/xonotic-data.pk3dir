@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ITEM_INPUTBOX_H
+#define ITEM_INPUTBOX_H
 CLASS(InputBox, Label)
 	METHOD(InputBox, configureInputBox, void(entity, string, float, float, string))
 	METHOD(InputBox, draw, void(entity))

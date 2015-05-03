@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef RADIOBUTTON_H
+#define RADIOBUTTON_H
 CLASS(XonoticRadioButton, RadioButton)
 	METHOD(XonoticRadioButton, configureXonoticRadioButton, void(entity, float, string, string, string))
 	METHOD(XonoticRadioButton, draw, void(entity))

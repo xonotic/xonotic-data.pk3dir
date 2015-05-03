@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef COLORBUTTON_H
+#define COLORBUTTON_H
 CLASS(XonoticColorButton, RadioButton)
 	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float))
 	METHOD(XonoticColorButton, setChecked, void(entity, float))

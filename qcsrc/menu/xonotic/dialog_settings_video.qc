@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_VIDEO_H
+#define DIALOG_SETTINGS_VIDEO_H
 CLASS(XonoticVideoSettingsTab, XonoticTab)
 	METHOD(XonoticVideoSettingsTab, fill, void(entity))
 	ATTRIB(XonoticVideoSettingsTab, title, string, _("Video"))

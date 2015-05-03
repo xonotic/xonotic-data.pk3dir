@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef CHECKBOX_H
+#define CHECKBOX_H
 CLASS(XonoticCheckBox, CheckBox)
 	METHOD(XonoticCheckBox, configureXonoticCheckBox, void(entity, float, float, string, string))
 	METHOD(XonoticCheckBox, setChecked, void(entity, float))

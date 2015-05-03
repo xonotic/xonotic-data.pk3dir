@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_RADAR_H
+#define DIALOG_HUDPANEL_RADAR_H
 CLASS(XonoticHUDRadarDialog, XonoticRootDialog)
 	METHOD(XonoticHUDRadarDialog, fill, void(entity))
 	ATTRIB(XonoticHUDRadarDialog, title, string, _("Radar Panel"))

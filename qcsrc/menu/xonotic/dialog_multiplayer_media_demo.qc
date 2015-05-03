@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_H
+#define DIALOG_MULTIPLAYER_MEDIA_DEMO_H
 CLASS(XonoticDemoBrowserTab, XonoticTab)
 	METHOD(XonoticDemoBrowserTab, fill, void(entity))
 	ATTRIB(XonoticDemoBrowserTab, title, string, _("Demo"))
@@ -9,14 +10,11 @@ CLASS(XonoticDemoBrowserTab, XonoticTab)
 	ATTRIB(XonoticDemoBrowserTab, democlicktype, float, 0)
 ENDCLASS(XonoticDemoBrowserTab)
 entity makeXonoticDemoBrowserTab();
-#ifdef IMPLEMENTATION
-// private:
-const float DMO_PLAY = 1;
-const float DMO_TIME = 2;
-#endif
 #endif
 
 #ifdef IMPLEMENTATION
+const float DMO_PLAY = 1;
+const float DMO_TIME = 2;
 void DemoConfirm_Check_Gamestatus(entity btn, entity me)
 {
 	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) // we're not in a match, lets watch the demo

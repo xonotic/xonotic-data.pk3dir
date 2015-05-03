@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDSETUP_EXIT_H
+#define DIALOG_HUDSETUP_EXIT_H
 CLASS(XonoticHUDExitDialog, XonoticRootDialog)
 	METHOD(XonoticHUDExitDialog, fill, void(entity))
 	ATTRIB(XonoticHUDExitDialog, title, string, _("Panel HUD Setup"))

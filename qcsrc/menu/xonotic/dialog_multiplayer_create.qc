@@ -1,4 +1,6 @@
-#ifdef INTERFACE
+#ifndef DIALOG_MULTIPLAYER_CREATE_H
+#define DIALOG_MULTIPLAYER_CREATE_H
+#include "tab.qc"
 CLASS(XonoticServerCreateTab, XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))

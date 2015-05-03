@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_MULTIPLAYER_PROFILE_H
+#define DIALOG_MULTIPLAYER_PROFILE_H
 CLASS(XonoticProfileTab, XonoticTab)
 	METHOD(XonoticProfileTab, fill, void(entity))
 	METHOD(XonoticProfileTab, draw, void(entity))

@@ -13,7 +13,9 @@
 //
 // a subclass may help with using this as a tab
 
-#ifdef INTERFACE
+#ifndef ITEM_DIALOG_H
+#define ITEM_DIALOG_H
+#include "inputcontainer.qc"
 CLASS(Dialog, InputContainer)
 	METHOD(Dialog, configureDialog, void(entity)) // no runtime configuration, all parameters are given in the code!
 	METHOD(Dialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls

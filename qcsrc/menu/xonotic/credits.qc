@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef CREDITS_H
+#define CREDITS_H
 CLASS(XonoticCreditsList, XonoticListBox)
 	METHOD(XonoticCreditsList, configureXonoticCreditsList, void(entity))
 	ATTRIB(XonoticCreditsList, rowsPerItem, float, 1)

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_MISC_RESET_H
+#define DIALOG_SETTINGS_MISC_RESET_H
 CLASS(XonoticResetDialog, XonoticDialog)
 	METHOD(XonoticResetDialog, fill, void(entity))
 	ATTRIB(XonoticResetDialog, title, string, _("Factory reset"))

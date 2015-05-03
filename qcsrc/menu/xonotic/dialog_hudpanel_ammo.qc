@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_AMMO_H
+#define DIALOG_HUDPANEL_AMMO_H
 CLASS(XonoticHUDAmmoDialog, XonoticRootDialog)
 	METHOD(XonoticHUDAmmoDialog, fill, void(entity))
 	ATTRIB(XonoticHUDAmmoDialog, title, string, _("Ammo Panel"))

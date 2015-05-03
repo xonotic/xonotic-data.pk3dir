@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_GAME_WEAPONS_H
+#define DIALOG_SETTINGS_GAME_WEAPONS_H
 CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
 	//METHOD(XonoticGameWeaponsSettingsTab, toString, string(entity))
 	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity))

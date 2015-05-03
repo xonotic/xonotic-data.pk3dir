@@ -1,4 +1,6 @@
-#ifdef INTERFACE
+#ifndef ITEM_NEXPOSEE_H
+#define ITEM_NEXPOSEE_H
+#include "container.qc"
 CLASS(Nexposee, Container)
 	METHOD(Nexposee, draw, void(entity))
 	METHOD(Nexposee, keyDown, float(entity, float, float, float))
@@ -23,7 +25,6 @@ CLASS(Nexposee, Container)
 ENDCLASS(Nexposee)
 
 void ExposeeCloseButton_Click(entity button, entity other); // un-exposees the current state
-#endif
 
 // animation states:
 //   0 = thumbnails seen
@@ -31,9 +32,6 @@ void ExposeeCloseButton_Click(entity button, entity other); // un-exposees the c
 //   2 = zoomed in
 //   3 = zooming out
 // animation factor: 0 = minimum theSize, 1 = maximum theSize
-
-#ifdef IMPLEMENTATION
-
 .vector Nexposee_initialSize;
 .vector Nexposee_initialFontScale;
 .vector Nexposee_initialOrigin;
@@ -47,6 +45,9 @@ void ExposeeCloseButton_Click(entity button, entity other); // un-exposees the c
 .vector Nexposee_align;
 .float Nexposee_animationFactor;
 
+#endif
+
+#ifdef IMPLEMENTATION
 void Nexposee_close(entity me)
 {
 	// user must override this

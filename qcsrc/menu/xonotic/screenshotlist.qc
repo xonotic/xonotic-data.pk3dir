@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef SCREENSHOTLIST_H
+#define SCREENSHOTLIST_H
 CLASS(XonoticScreenshotList, XonoticListBox)
 	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity))
 	ATTRIB(XonoticScreenshotList, rowsPerItem, float, 1)

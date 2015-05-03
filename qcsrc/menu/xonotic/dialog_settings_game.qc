@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_GAME_H
+#define DIALOG_SETTINGS_GAME_H
 CLASS(XonoticGameSettingsTab, XonoticTab)
 	METHOD(XonoticGameSettingsTab, fill, void(entity))
 	ATTRIB(XonoticGameSettingsTab, title, string, _("Game"))

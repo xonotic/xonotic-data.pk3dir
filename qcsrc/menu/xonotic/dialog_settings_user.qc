@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_USER_H
+#define DIALOG_SETTINGS_USER_H
 CLASS(XonoticUserSettingsTab, XonoticTab)
 	METHOD(XonoticUserSettingsTab, fill, void(entity))
 	ATTRIB(XonoticUserSettingsTab, title, string, _("User"))

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SINGLEPLAYER_WINNER_H
+#define DIALOG_SINGLEPLAYER_WINNER_H
 CLASS(XonoticWinnerDialog, XonoticDialog)
 	METHOD(XonoticWinnerDialog, fill, void(entity))
 	METHOD(XonoticWinnerDialog, focusEnter, void(entity))

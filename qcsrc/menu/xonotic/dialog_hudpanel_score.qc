@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_SCORE_H
+#define DIALOG_HUDPANEL_SCORE_H
 CLASS(XonoticHUDScoreDialog, XonoticRootDialog)
 	METHOD(XonoticHUDScoreDialog, fill, void(entity))
 	ATTRIB(XonoticHUDScoreDialog, title, string, _("Score Panel"))

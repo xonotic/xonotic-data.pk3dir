@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_GAME_MODEL_H
+#define DIALOG_SETTINGS_GAME_MODEL_H
 CLASS(XonoticGameModelSettingsTab, XonoticTab)
 	//METHOD(XonoticGameModelSettingsTab, toString, string(entity))
 	METHOD(XonoticGameModelSettingsTab, fill, void(entity))

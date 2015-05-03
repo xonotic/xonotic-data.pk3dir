@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef MAPLIST_H
+#define MAPLIST_H
 CLASS(XonoticMapList, XonoticListBox)
 	METHOD(XonoticMapList, configureXonoticMapList, void(entity))
 	ATTRIB(XonoticMapList, rowsPerItem, float, 4)

@@ -1,6 +1,7 @@
 #include "../menu.qh"
 
-#ifdef INTERFACE
+#ifndef ANIM_ANIMHOST_H
+#define ANIM_ANIMHOST_H
 CLASS(AnimHost, Object)
 	METHOD(AnimHost, addAnim, void(entity, entity))
 	METHOD(AnimHost, removeAnim, void(entity, entity))

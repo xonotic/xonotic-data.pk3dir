@@ -1,6 +1,8 @@
 #include "../../common/campaign_common.qh"
 
-#ifdef INTERFACE
+#ifndef CAMPAIGN_H
+#define CAMPAIGN_H
+#include "listbox.qc"
 CLASS(XonoticCampaignList, XonoticListBox)
 	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity))
 	ATTRIB(XonoticCampaignList, rowsPerItem, float, 10)

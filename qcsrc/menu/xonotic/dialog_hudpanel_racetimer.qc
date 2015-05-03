@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_RACETIMER_H
+#define DIALOG_HUDPANEL_RACETIMER_H
 CLASS(XonoticHUDRaceTimerDialog, XonoticRootDialog)
 	METHOD(XonoticHUDRaceTimerDialog, fill, void(entity))
 	ATTRIB(XonoticHUDRaceTimerDialog, title, string, _("Race Timer Panel"))

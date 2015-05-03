@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_AUDIO_H
+#define DIALOG_SETTINGS_AUDIO_H
 CLASS(XonoticAudioSettingsTab, XonoticTab)
 	METHOD(XonoticAudioSettingsTab, fill, void(entity))
 	ATTRIB(XonoticAudioSettingsTab, title, string, _("Audio"))

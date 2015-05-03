@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_CREDITS_H
+#define DIALOG_CREDITS_H
 CLASS(XonoticCreditsDialog, XonoticDialog)
 	METHOD(XonoticCreditsDialog, fill, void(entity))
 	METHOD(XonoticCreditsDialog, focusEnter, void(entity))

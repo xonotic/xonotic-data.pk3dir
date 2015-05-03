@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_GAME_HUD_H
+#define DIALOG_SETTINGS_GAME_HUD_H
 CLASS(XonoticGameHUDSettingsTab, XonoticTab)
 	//METHOD(XonoticGameHUDSettingsTab, toString, string(entity))
 	METHOD(XonoticGameHUDSettingsTab, fill, void(entity))

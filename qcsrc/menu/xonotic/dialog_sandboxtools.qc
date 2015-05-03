@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SANDBOXTOOLS_H
+#define DIALOG_SANDBOXTOOLS_H
 CLASS(XonoticSandboxToolsDialog, XonoticRootDialog)
 	METHOD(XonoticSandboxToolsDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	ATTRIB(XonoticSandboxToolsDialog, title, string, _("Sandbox Tools")) // ;)

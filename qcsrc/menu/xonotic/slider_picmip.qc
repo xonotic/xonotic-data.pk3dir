@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef SLIDER_PICMIP_H
+#define SLIDER_PICMIP_H
 CLASS(XonoticPicmipSlider, XonoticTextSlider)
 	METHOD(XonoticPicmipSlider, configureXonoticPicmipSlider, void(entity))
 	METHOD(XonoticPicmipSlider, draw, void(entity))

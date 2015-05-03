@@ -1,6 +1,7 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
-#ifdef INTERFACE
+#ifndef ITEM_TEXTSLIDER_H
+#define ITEM_TEXTSLIDER_H
 CLASS(TextSlider, Slider)
 	METHOD(TextSlider, valueToText, string(entity, float))
 	METHOD(TextSlider, valueToIdentifier, string(entity, float))

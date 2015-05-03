@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef PLAYLIST_H
+#define PLAYLIST_H
 CLASS(XonoticPlayList, XonoticListBox)
 	METHOD(XonoticPlayList, configureXonoticPlayList, void(entity))
 	ATTRIB(XonoticPlayList, rowsPerItem, float, 1)

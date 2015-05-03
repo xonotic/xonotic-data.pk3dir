@@ -1,4 +1,6 @@
-#ifdef INTERFACE
+#ifndef BIGCOMMANDBUTTON_H
+#define BIGCOMMANDBUTTON_H
+#include "commandbutton.qc"
 CLASS(XonoticBigCommandButton, XonoticCommandButton)
 	METHOD(XonoticBigCommandButton, configureXonoticBigCommandButton, void(entity, string, vector, string, float))
 	ATTRIB(XonoticBigCommandButton, image, string, SKINGFX_BUTTON_BIG)

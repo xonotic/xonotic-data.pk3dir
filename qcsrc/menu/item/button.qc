@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ITEM_BUTTON_H
+#define ITEM_BUTTON_H
 CLASS(Button, Label)
 	METHOD(Button, configureButton, void(entity, string, float, string))
 	METHOD(Button, draw, void(entity))

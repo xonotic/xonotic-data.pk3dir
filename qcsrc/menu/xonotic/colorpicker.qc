@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef COLORPICKER_H
+#define COLORPICKER_H
 CLASS(XonoticColorpicker, Image)
 	METHOD(XonoticColorpicker, configureXonoticColorpicker, void(entity, entity))
 	METHOD(XonoticColorpicker, mousePress, float(entity, vector))

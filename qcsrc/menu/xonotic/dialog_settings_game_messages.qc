@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_GAME_MESSAGES_H
+#define DIALOG_SETTINGS_GAME_MESSAGES_H
 CLASS(XonoticGameMessageSettingsTab, XonoticTab)
 	//METHOD(XonoticGameWeaponsSettingsTab, toString, string(entity))
 	METHOD(XonoticGameMessageSettingsTab, fill, void(entity))

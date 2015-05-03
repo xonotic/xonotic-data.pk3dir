@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_GAME_HUDCONFIRM_H
+#define DIALOG_SETTINGS_GAME_HUDCONFIRM_H
 CLASS(XonoticHUDConfirmDialog, XonoticDialog)
 	METHOD(XonoticHUDConfirmDialog, fill, void(entity))
 	ATTRIB(XonoticHUDConfirmDialog, title, string, _("Enter HUD editor"))

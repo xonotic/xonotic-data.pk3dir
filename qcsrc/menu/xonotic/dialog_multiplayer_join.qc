@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_MULTIPLAYER_JOIN_H
+#define DIALOG_MULTIPLAYER_JOIN_H
 CLASS(XonoticServerListTab, XonoticTab)
 	METHOD(XonoticServerListTab, fill, void(entity))
 	ATTRIB(XonoticServerListTab, title, string, _("Join"))

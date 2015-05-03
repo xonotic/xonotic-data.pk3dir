@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_INFOMESSAGES_H
+#define DIALOG_HUDPANEL_INFOMESSAGES_H
 CLASS(XonoticHUDInfoMessagesDialog, XonoticRootDialog)
 	METHOD(XonoticHUDInfoMessagesDialog, fill, void(entity))
 	ATTRIB(XonoticHUDInfoMessagesDialog, title, string, _("Info Messages Panel"))

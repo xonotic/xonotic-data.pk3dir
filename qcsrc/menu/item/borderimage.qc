@@ -1,4 +1,6 @@
-#ifdef INTERFACE
+#ifndef ITEM_BORDERIMAGE_H
+#define ITEM_BORDERIMAGE_H
+#include "label.qc"
 CLASS(BorderImage, Label)
 	METHOD(BorderImage, configureBorderImage, void(entity, string, float, vector, string, float))
 	METHOD(BorderImage, resizeNotify, void(entity, vector, vector, vector, vector))

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_MISC_CVARS_H
+#define DIALOG_SETTINGS_MISC_CVARS_H
 CLASS(XonoticCvarsDialog, XonoticDialog)
 	METHOD(XonoticCvarsDialog, fill, void(entity))
 	METHOD(XonoticCvarsDialog, showNotify, void(entity))

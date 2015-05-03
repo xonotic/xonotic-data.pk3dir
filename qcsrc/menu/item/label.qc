@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ITEM_LABEL_H
+#define ITEM_LABEL_H
 CLASS(Label, Item)
 	METHOD(Label, configureLabel, void(entity, string, float, float))
 	METHOD(Label, draw, void(entity))

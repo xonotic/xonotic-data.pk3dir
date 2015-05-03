@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_MONSTERTOOLS_H
+#define DIALOG_MONSTERTOOLS_H
 CLASS(XonoticMonsterToolsDialog, XonoticRootDialog)
 	METHOD(XonoticMonsterToolsDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	ATTRIB(XonoticMonsterToolsDialog, title, string, _("Monster Tools"))

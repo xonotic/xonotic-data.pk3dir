@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_TIMER_H
+#define DIALOG_HUDPANEL_TIMER_H
 CLASS(XonoticHUDTimerDialog, XonoticRootDialog)
 	METHOD(XonoticHUDTimerDialog, fill, void(entity))
 	ATTRIB(XonoticHUDTimerDialog, title, string, _("Timer Panel"))

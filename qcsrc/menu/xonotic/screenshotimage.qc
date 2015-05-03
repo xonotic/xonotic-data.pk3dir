@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef SCREENSHOTIMAGE_H
+#define SCREENSHOTIMAGE_H
 CLASS(XonoticScreenshotImage, XonoticImage)
 	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity))
 	METHOD(XonoticScreenshotImage, load, void(entity, string))

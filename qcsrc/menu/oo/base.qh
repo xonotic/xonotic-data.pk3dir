@@ -1,6 +1,9 @@
 #ifndef BASE_H
 #define BASE_H
 
+#define NULL (null_entity)
+#define world NULL
+
 .string classname;
 .string vtblname;
 .entity vtblbase;

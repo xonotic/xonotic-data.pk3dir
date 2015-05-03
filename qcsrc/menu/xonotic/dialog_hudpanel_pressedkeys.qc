@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_PRESSEDKEYS_H
+#define DIALOG_HUDPANEL_PRESSEDKEYS_H
 CLASS(XonoticHUDPressedKeysDialog, XonoticRootDialog)
 	METHOD(XonoticHUDPressedKeysDialog, fill, void(entity))
 	ATTRIB(XonoticHUDPressedKeysDialog, title, string, _("Pressed Keys Panel"))

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ANIM_KEYFRAME_H
+#define ANIM_KEYFRAME_H
 CLASS(Keyframe, Animation)
 	METHOD(Keyframe, addEasing, entity(entity, float, float, float(float, float, float, float)))
 	METHOD(Keyframe, addAnim, void(entity, entity))

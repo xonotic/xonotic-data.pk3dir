@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef SKINLIST_H
+#define SKINLIST_H
 CLASS(XonoticSkinList, XonoticListBox)
 	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity))
 	ATTRIB(XonoticSkinList, rowsPerItem, float, 4)

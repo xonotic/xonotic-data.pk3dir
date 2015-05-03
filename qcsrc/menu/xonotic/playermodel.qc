@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef PLAYERMODEL_H
+#define PLAYERMODEL_H
 CLASS(XonoticPlayerModelSelector, XonoticImage)
 	METHOD(XonoticPlayerModelSelector, configureXonoticPlayerModelSelector, void(entity))
 	METHOD(XonoticPlayerModelSelector, loadCvars, void(entity))

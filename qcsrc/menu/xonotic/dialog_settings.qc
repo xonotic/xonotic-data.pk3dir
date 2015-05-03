@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_H
+#define DIALOG_SETTINGS_H
 CLASS(XonoticSettingsDialog, XonoticDialog)
 	METHOD(XonoticSettingsDialog, fill, void(entity))
 	ATTRIB(XonoticSettingsDialog, title, string, _("Settings"))

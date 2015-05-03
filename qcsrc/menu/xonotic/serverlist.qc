@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef SERVERLIST_H
+#define SERVERLIST_H
 CLASS(XonoticServerList, XonoticListBox)
 	METHOD(XonoticServerList, configureXonoticServerList, void(entity))
 	ATTRIB(XonoticServerList, rowsPerItem, float, 1)

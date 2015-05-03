@@ -1,7 +1,8 @@
 #include "../../common/counting.qh"
 #include "../../common/playerstats.qh"
 
-#ifdef INTERFACE
+#ifndef STATSLIST_H
+#define STATSLIST_H
 CLASS(XonoticStatsList, XonoticListBox)
 	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))
 	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef TAB_H
+#define TAB_H
 CLASS(XonoticTab, Tab)
 	// still to be customized by user
 	/*

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ITEM_H
+#define ITEM_H
 CLASS(Item, Object)
 	METHOD(Item, draw, void(entity))
 	METHOD(Item, keyDown, float(entity, float, float, float))

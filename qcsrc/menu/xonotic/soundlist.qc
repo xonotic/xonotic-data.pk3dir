@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef SOUNDLIST_H
+#define SOUNDLIST_H
 CLASS(XonoticSoundList, XonoticListBox)
 	METHOD(XonoticSoundList, configureXonoticSoundList, void(entity))
 	ATTRIB(XonoticSoundList, rowsPerItem, float, 1)

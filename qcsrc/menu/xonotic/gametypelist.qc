@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef GAMETYPELIST_H
+#define GAMETYPELIST_H
 CLASS(XonoticGametypeList, XonoticListBox)
 	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity))
 	ATTRIB(XonoticGametypeList, rowsPerItem, float, 2)

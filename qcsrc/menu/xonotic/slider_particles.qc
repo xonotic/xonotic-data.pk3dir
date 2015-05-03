@@ -1,4 +1,6 @@
-#ifdef INTERFACE
+#ifndef SLIDER_PARTICLES_H
+#define SLIDER_PARTICLES_H
+#include "textslider.qc"
 CLASS(XonoticParticlesSlider, XonoticTextSlider)
 	METHOD(XonoticParticlesSlider, configureXonoticParticlesSlider, void(entity))
 	METHOD(XonoticParticlesSlider, loadCvars, void(entity))

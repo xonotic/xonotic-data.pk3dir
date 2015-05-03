@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_QUIT_H
+#define DIALOG_QUIT_H
 CLASS(XonoticQuitDialog, XonoticDialog)
 	METHOD(XonoticQuitDialog, fill, void(entity))
 	ATTRIB(XonoticQuitDialog, title, string, _("Quit"))

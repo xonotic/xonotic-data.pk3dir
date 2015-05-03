@@ -1,6 +1,7 @@
 #include "../../warpzonelib/mathlib.qh"
 
-#ifdef INTERFACE
+#ifndef SLIDER_DECIBELS_H
+#define SLIDER_DECIBELS_H
 CLASS(XonoticDecibelsSlider, XonoticSlider)
 	METHOD(XonoticDecibelsSlider, loadCvars, void(entity))
 	METHOD(XonoticDecibelsSlider, saveCvars, void(entity))

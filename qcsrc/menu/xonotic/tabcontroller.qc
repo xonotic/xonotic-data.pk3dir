@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef TABCONTROLLER_H
+#define TABCONTROLLER_H
 CLASS(XonoticTabController, ModalController)
 	METHOD(XonoticTabController, configureXonoticTabController, void(entity, float))
 	METHOD(XonoticTabController, makeTabButton, entity(entity, string, entity))

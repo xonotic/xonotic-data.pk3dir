@@ -1,6 +1,7 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
-#ifdef INTERFACE
+#ifndef ITEM_SLIDER_H
+#define ITEM_SLIDER_H
 CLASS(Slider, Label)
 	METHOD(Slider, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Slider, configureSliderVisuals, void(entity, float, float, float, string))

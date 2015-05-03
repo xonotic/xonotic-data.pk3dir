@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_VOTE_H
+#define DIALOG_HUDPANEL_VOTE_H
 CLASS(XonoticHUDVoteDialog, XonoticRootDialog)
 	METHOD(XonoticHUDVoteDialog, fill, void(entity))
 	ATTRIB(XonoticHUDVoteDialog, title, string, _("Vote Panel"))

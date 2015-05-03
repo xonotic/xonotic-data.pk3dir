@@ -1,6 +1,7 @@
 #include "../../common/mapinfo.qh"
 
-#ifdef INTERFACE
+#ifndef DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H
+#define DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H
 CLASS(XonoticServerInfoDialog, XonoticDialog)
 	METHOD(XonoticServerInfoDialog, fill, void(entity))
 	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float))

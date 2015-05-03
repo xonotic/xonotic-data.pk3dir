@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ANIM_ANIMATION_H
+#define ANIM_ANIMATION_H
 void setterDummy(entity, float);
 CLASS(Animation, Object)
 	METHOD(Animation, configureAnimation, void(entity, entity, void(entity, float), float, float, float, float))

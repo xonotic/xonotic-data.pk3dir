@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_PHYSICS_H
+#define DIALOG_HUDPANEL_PHYSICS_H
 CLASS(XonoticHUDPhysicsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDPhysicsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDPhysicsDialog, title, string, _("Physics Panel"))

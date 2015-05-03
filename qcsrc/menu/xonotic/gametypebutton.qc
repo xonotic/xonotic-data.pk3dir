@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef GAMETYPEBUTTON_H
+#define GAMETYPEBUTTON_H
 CLASS(XonoticGametypeButton, RadioButton)
 	METHOD(XonoticGametypeButton, configureXonoticGametypeButton, void(entity, float, string, string))
 	METHOD(XonoticGametypeButton, setChecked, void(entity, float))

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_EFFECTS_H
+#define DIALOG_SETTINGS_EFFECTS_H
 CLASS(XonoticEffectsSettingsTab, XonoticTab)
 	METHOD(XonoticEffectsSettingsTab, fill, void(entity))
 	ATTRIB(XonoticEffectsSettingsTab, title, string, _("Effects"))

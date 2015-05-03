@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ITEM_IMAGE_H
+#define ITEM_IMAGE_H
 CLASS(Image, Item)
 	METHOD(Image, configureImage, void(entity, string))
 	METHOD(Image, draw, void(entity))

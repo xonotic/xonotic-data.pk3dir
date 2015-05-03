@@ -4,7 +4,8 @@
 //# define COMMANDBUTTON_REVERT 4
 #endif
 
-#ifdef INTERFACE
+#ifndef COMMANDBUTTON_H
+#define COMMANDBUTTON_H
 CLASS(XonoticCommandButton, XonoticButton)
 	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float))
 	ATTRIB(XonoticCommandButton, onClickCommand, string, string_null)

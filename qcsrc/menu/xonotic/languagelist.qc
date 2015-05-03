@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef LANGUAGELIST_H
+#define LANGUAGELIST_H
 CLASS(XonoticLanguageList, XonoticListBox)
 	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity))
 	ATTRIB(XonoticLanguageList, rowsPerItem, float, 1)

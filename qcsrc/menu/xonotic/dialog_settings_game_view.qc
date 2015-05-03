@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SETTINGS_GAME_VIEW_H
+#define DIALOG_SETTINGS_GAME_VIEW_H
 CLASS(XonoticGameViewSettingsTab, XonoticTab)
 	//METHOD(XonoticGameCrosshairSettingsTab, toString, string(entity))
 	METHOD(XonoticGameViewSettingsTab, fill, void(entity))

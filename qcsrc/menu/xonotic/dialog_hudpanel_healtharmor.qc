@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_HUDPANEL_HEALTHARMOR_H
+#define DIALOG_HUDPANEL_HEALTHARMOR_H
 CLASS(XonoticHUDHealthArmorDialog, XonoticRootDialog)
 	METHOD(XonoticHUDHealthArmorDialog, fill, void(entity))
 	ATTRIB(XonoticHUDHealthArmorDialog, title, string, _("Health/Armor Panel"))

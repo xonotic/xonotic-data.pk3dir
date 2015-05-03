@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_SINGLEPLAYER_H
+#define DIALOG_SINGLEPLAYER_H
 CLASS(XonoticSingleplayerDialog, XonoticDialog)
 	METHOD(XonoticSingleplayerDialog, fill, void(entity))
 	ATTRIB(XonoticSingleplayerDialog, title, string, _("Singleplayer"))

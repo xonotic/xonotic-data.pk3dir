@@ -4,8 +4,7 @@
 ../dpdefs/menudefs.qh
 ../dpdefs/keycodes.qh
 
-oo/interface.qc
-oo/implementation.qc
+oo/classes.qc
 
 draw.qc
 menu.qc

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef SLIDER_H
+#define SLIDER_H
 CLASS(XonoticSlider, Slider)
 	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string))
 	METHOD(XonoticSlider, setValue, void(entity, float))

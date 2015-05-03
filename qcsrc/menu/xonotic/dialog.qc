@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef DIALOG_H
+#define DIALOG_H
 CLASS(XonoticDialog, Dialog)
 	// still to be customized by user
 	/*

@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef WEAPONARENACHECKBOX_H
+#define WEAPONARENACHECKBOX_H
 CLASS(XonoticWeaponarenaCheckBox, CheckBox)
 	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string))
 	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float))
