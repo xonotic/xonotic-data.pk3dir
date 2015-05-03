@@ -1500,10 +1500,7 @@ void havocbot_role_ctf_carrier()
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 
 		navigation_goalrating_start();
-		if(ctf_oneflag)
-			havocbot_goalrating_ctf_enemybase(50000);
-		else
-			havocbot_goalrating_ctf_ourbase(50000);
+		havocbot_goalrating_ctf_ourbase(50000);
 
 		if(self.health<100)
 			havocbot_goalrating_ctf_carrieritems(1000, self.origin, 1000);
