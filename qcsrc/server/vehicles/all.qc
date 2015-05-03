@@ -1,8 +1,5 @@
-#ifndef VEHICLES_H
-#define VEHICLES_H
-
-#ifdef VEHICLES_ENABLED
-#   include "vehicles.qc"
+#if VEHICLES_ENABLED
+#   include "vehicle.qc"
 
 #   include "racer.qc"
 #   include "raptor.qc"
@@ -11,6 +8,4 @@
 #   ifndef VEHICLES_NO_UNSTABLE
 #       include "bumblebee.qc"
 #   endif
-#endif
-
 #endif

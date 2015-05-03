@@ -63,13 +63,6 @@ const int ISF_SIZE 				= 128;
 
 .int ItemStatus;
 
-void spawnfunc_item_strength();
-void spawnfunc_item_invincible();
-void spawnfunc_item_armor_small();
-void spawnfunc_item_shells();
-void spawnfunc_item_bullets();
-void spawnfunc_item_rockets();
-
 #ifdef CSQC
 
 float  autocvar_cl_animate_items = 1;
@@ -91,6 +84,13 @@ void ItemRead(float _IsNew);
 
 #endif
 #ifdef SVQC
+void spawnfunc_item_strength();
+void spawnfunc_item_invincible();
+void spawnfunc_item_armor_small();
+void spawnfunc_item_shells();
+void spawnfunc_item_bullets();
+void spawnfunc_item_rockets();
+
 float autocvar_sv_simple_items;
 bool ItemSend(entity to, int sf);
 

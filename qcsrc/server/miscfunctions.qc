@@ -4,6 +4,7 @@
 #include "antilag.qh"
 #include "command/common.qh"
 #include "constants.qh"
+#include "g_hook.qh"
 #include "ipban.qh"
 #include "mutators/mutators_include.qh"
 #include "tturrets/include/turrets_early.qh"
@@ -1461,7 +1462,6 @@ float SUB_NoImpactCheck()
 
 #define SUB_OwnerCheck() (other && (other == self.owner))
 
-void RemoveGrapplingHook(entity pl);
 void W_Crylink_Dequeue(entity e);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 {

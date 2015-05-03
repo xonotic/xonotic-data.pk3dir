@@ -20,6 +20,8 @@
 	#include "../../server/command/cmd.qh"
 	#include "../../server/command/common.qh"
 	#include "../../server/command/sv_cmd.qh"
+
+	#include "../../common/weapons/config.qh"
 #endif
 
 // =========================================================

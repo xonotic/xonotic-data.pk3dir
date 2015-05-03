@@ -6,7 +6,7 @@
 #include "g_hook.qh"
 #include "bot/waypoints.qh"
 #include "tturrets/include/turrets_early.qh"
-#include "vehicles/vehicles_def.qh"
+#include "vehicles/vehicle.qh"
 #include "weapons/csqcprojectile.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"

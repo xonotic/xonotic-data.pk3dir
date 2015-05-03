@@ -9,7 +9,7 @@
 #include "t_teleporters.qh"
 #include "command/common.qh"
 #include "round_handler.qh"
-#include "vehicles/vehicles_def.qh"
+#include "vehicles/vehicle.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
 #include "../common/weapons/weapons.qh"

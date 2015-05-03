@@ -83,6 +83,8 @@ pathlib/movenode.qc
 pathlib/path_waypoint.qc
 pathlib/utility.qc
 
+vehicles/all.qc
+
 weapons/accuracy.qc
 weapons/common.qc
 weapons/csqcprojectile.qc // TODO

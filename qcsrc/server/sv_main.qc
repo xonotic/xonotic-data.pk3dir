@@ -10,7 +10,7 @@
 #include "command/common.qh"
 
 #include "mutators/mutators_include.qh"
-#include "vehicles/vehicles_def.qh"
+#include "vehicles/vehicle.qh"
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"

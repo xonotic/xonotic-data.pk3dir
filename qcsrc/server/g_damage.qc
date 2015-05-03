@@ -8,7 +8,7 @@
 #include "spawnpoints.qh"
 #include "tturrets/include/turrets_early.qh"
 #include "t_items.qh"
-#include "vehicles/vehicles_def.qh"
+#include "vehicles/vehicle.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"

@@ -1,11 +1,11 @@
-#include "vehicles.qh"
+#include "vehicle.qh"
 
+#include "../_.qh"
 #include "../cl_player.qh"
+#include "../../common/constants.qh"
 #include "../waypointsprites.qh"
 
 #include "../bot/waypoints.qh"
-
-.float() PlayerPhysplug;
 
 float autocvar_g_vehicles_crush_dmg;
 float autocvar_g_vehicles_crush_force;
@@ -23,7 +23,6 @@ float autocvar_g_vehicles;
 void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void vehicles_return();
 void vehicles_enter();
-void vehicles_touch();
 void vehicles_reset_colors();
 void vehicles_clearreturn();
 void vehicles_setreturn();
@@ -123,23 +122,7 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
         WriteByte(MSG_ONE, 1 + own.vehicle.vehicle_weapon2mode + HUD_VEHICLE_LAST);
 }
 
-/** vehicles_locktarget
 
-    Generic target locking.
-
-    Figure out if what target is "locked" (if any), for missile tracking as such.
-
-    after calling, "if(self.lock_target != world && self.lock_strength == 1)" mean
-    you have a locked in target.
-
-    Exspects a crosshair_trace() or equivalent to be
-    dont before calling.
-
-**/
-.entity lock_target;
-.float  lock_strength;
-.float  lock_time;
-.float  lock_soundtime;
 const float	DAMAGE_TARGETDRONE = 10;
 
 vector targetdrone_getnewspot()
@@ -328,8 +311,6 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
     }
 }
 
-#define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
-ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
 #define vehicles_sweap_collision(orig,vel,dt,acm,mult) \
 traceline(orig, orig + vel * dt, MOVE_NORMAL, self); \
@@ -338,7 +319,6 @@ if(trace_fraction != 1) \
 
 // Hover movement support
 float  force_fromtag_power;
-float  force_fromtag_normpower;
 vector force_fromtag_origin;
 vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float max_power)
 {
@@ -568,7 +548,6 @@ void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
     }
 }
 
-.void() vehicle_impact;
 void vehicles_touch()
 {
 	if(MUTATOR_CALLHOOK(VehicleTouch))
@@ -604,7 +583,7 @@ void vehicles_touch()
 
     vehicles_enter();
 }
-float autocvar_g_vehicles_allow_bots = 0;
+.float monster_attack;
 void vehicles_enter()
 {
    // Remove this when bots know how to use vehicles

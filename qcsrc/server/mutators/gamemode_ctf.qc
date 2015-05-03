@@ -3,7 +3,9 @@
 
 #include "gamemode.qh"
 
-#include "../vehicles/vehicles_def.qh"
+#ifdef SVQC
+#include "../vehicles/vehicle.qh"
+#endif
 
 #include "../../warpzonelib/common.qh"
 #include "../../warpzonelib/mathlib.qh"

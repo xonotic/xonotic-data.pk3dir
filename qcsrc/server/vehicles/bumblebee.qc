@@ -1,3 +1,4 @@
+#include "vehicle.qh"
 #include "bumblebee.qh"
 
 #ifdef SVQC

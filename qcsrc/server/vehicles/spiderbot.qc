@@ -1,3 +1,4 @@
+#include "vehicle.qh"
 #include "spiderbot.qh"
 
 #ifdef SVQC

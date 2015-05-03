@@ -1,7 +1,7 @@
 #include "_.qh"
 
 #include "../warpzonelib/util_server.qh"
-#include "vehicles/vehicles_def.qh"
+#include "vehicles/vehicle.qh"
 
 .float  ladder_time;
 .entity ladder_entity;

@@ -8,6 +8,10 @@ declare -a NOWARN=(
   '-Wno-unused-variable'
   '-Wno-implicit-function-pointer'
 )
+declare -a FEATURES=(
+  '-DVEHICLES_ENABLED=1'
+  '-DVEHICLES_USE_ODE=0'
+)
 declare QCC=../../../gmqcc/gmqcc
 
 function check() {
@@ -15,7 +19,7 @@ function check() {
   declare -la predefs=("${!2}")
   find "$base" -type f -name '*.qc' -print0 | sort -z | while IFS= read -r -d '' file; do
     echo "$file"
-    ${QCC} -std=gmqcc -fftepp -fftepp-predefs -Werror -Wall "${NOWARN[@]}" -futf8 -O3 "${predefs[@]}" "$file" >/dev/null
+    ${QCC} -std=gmqcc -fftepp -fftepp-predefs -Werror -Wall "${NOWARN[@]}" "${FEATURES[@]}" -futf8 -O3 "${predefs[@]}" "$file" >/dev/null
   done
 }
 

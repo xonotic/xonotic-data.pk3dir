@@ -1,3 +1,4 @@
+#include "vehicle.qh"
 #include "raptor.qh"
 
 #ifdef SVQC
