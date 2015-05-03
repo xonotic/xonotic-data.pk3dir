@@ -15,11 +15,37 @@
 #undef SUPER
 #endif
 
-#define CLASS(cname,base)                  entity spawn##cname(); entity cname##_vtbl;
-#define METHOD(cname,name,prototype)       prototype cname##_##name; .prototype name;
-#define ATTRIB(cname,name,type,val)        .type name;
-#define ATTRIBARRAY(cname,name,type,cnt)   .type name[cnt];
-#define ENDCLASS(cname)                    .float instanceOf##cname;
+#define CLASS(cname, base)                                          \
+[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
+    this = NEW(base); basevtbl = base##_vtbl;                       \
+}
+
+#define METHOD(cname, name, prototype)                              \
+prototype cname##_##name;                                           \
+.prototype name;                                                    \
+[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
+    this.name = cname##_##name;                                     \
+}
+
+#define ATTRIB(cname, name, type, val)                              \
+.type name;                                                         \
+[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
+    this.name = val;                                                \
+}
+
+#define ATTRIBARRAY(cname, name, type, cnt)                         \
+.type name[cnt];
+
+#define ENDCLASS(cname)                                             \
+.bool instanceOf##cname;                                            \
+entity cname##_vtbl;                                                \
+[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
+    this.instanceOf##cname = true;                                  \
+    this.classname = #cname;                                        \
+    if (!cname##_vtbl) cname##_vtbl = spawnVtbl(this, basevtbl);    \
+    return this;                                                    \
+}
+
 #define SUPER(cname)
 
 #include "../classes.inc"

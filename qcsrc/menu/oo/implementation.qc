@@ -15,14 +15,11 @@
 #undef SUPER
 #endif
 
-// for the constructor
-#define CLASS(cname,base)                  entity spawn##cname() { entity me = spawn##base (); entity basevtbl; basevtbl = base##_vtbl;
-#define METHOD(cname,name,prototype)       me.name = cname##_##name;
-#define ATTRIB(cname,name,type,val)        me.name = val;
-#define ATTRIBARRAY(cname,name,type,cnt)
-#define ENDCLASS(cname)                    me.instanceOf##cname = 1; me.classname = #cname; if(!cname##_vtbl) cname##_vtbl = spawnVtbl(me, basevtbl); return me; }
-
-// for the implementation
+#define CLASS(cname, base)
+#define METHOD(cname, name, prototype)
+#define ATTRIB(cname, name, type, val)
+#define ATTRIBARRAY(cname, name, type, cnt)
+#define ENDCLASS(cname)
 #define SUPER(cname) (cname##_vtbl.vtblbase)
 
 #include "../classes.inc"

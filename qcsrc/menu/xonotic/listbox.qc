@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef LISTBOX_H
+#define LISTBOX_H
 CLASS(XonoticListBox, ListBox)
 	METHOD(XonoticListBox, configureXonoticListBox, void(entity))
 	ATTRIB(XonoticListBox, fontSize, float, SKINFONTSIZE_NORMAL)

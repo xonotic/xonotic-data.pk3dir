@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef ROOTDIALOG_H
+#define ROOTDIALOG_H
 CLASS(XonoticRootDialog, XonoticDialog)
 	// still to be customized by user
 	/*

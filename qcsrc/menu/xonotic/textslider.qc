@@ -1,4 +1,5 @@
-#ifdef INTERFACE
+#ifndef TEXTSLIDER_H
+#define TEXTSLIDER_H
 CLASS(XonoticTextSlider, TextSlider)
 	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string))
 	METHOD(XonoticTextSlider, setValue, void(entity, float))

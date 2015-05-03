@@ -1,4 +1,6 @@
-#ifdef INTERFACE
+#ifndef SLIDER_RESOLUTION_H
+#define SLIDER_RESOLUTION_H
+#include "textslider.qc"
 CLASS(XonoticResolutionSlider, XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, configureXonoticResolutionSlider, void(entity))
 	METHOD(XonoticResolutionSlider, loadResolutions, void(entity, float))

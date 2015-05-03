@@ -1,4 +1,6 @@
-#ifdef INTERFACE
+#ifndef PLAYERLIST_H
+#define PLAYERLIST_H
+#include "listbox.qc"
 CLASS(XonoticPlayerList, XonoticListBox)
 	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1)
 	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector))
