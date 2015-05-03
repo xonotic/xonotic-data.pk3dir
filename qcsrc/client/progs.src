@@ -37,7 +37,7 @@ view.qc
 wall.qc
 waypointsprites.qc
 
-command/cl_cmd.qc
+command/commands.qc
 
 vehicles/bumblebee.qc
 vehicles/vehicles.qc
@@ -54,10 +54,6 @@ weapons/projectile.qc // TODO
 ../common/test.qc
 ../common/urllib.qc
 ../common/util.qc
-
-../common/command/generic.qc
-../common/command/markup.qc
-../common/command/rpn.qc
 
 ../common/monsters/monsters.qc
 

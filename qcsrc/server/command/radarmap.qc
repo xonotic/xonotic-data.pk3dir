@@ -1,3 +1,4 @@
+#include "../../common/command/command.qh"
 #include "radarmap.qh"
 #include "../_.qh"
 

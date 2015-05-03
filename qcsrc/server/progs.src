@@ -71,13 +71,7 @@ bot/havocbot/role_keyhunt.qc
 bot/havocbot/role_onslaught.qc
 bot/havocbot/roles.qc
 
-command/banning.qc
-command/cmd.qc
-command/common.qc
-command/getreplies.qc
-command/radarmap.qc
-command/sv_cmd.qc
-command/vote.qc
+command/commands.qc
 
 mutators/mutators_include.qc
 mutators/mutators.qc
@@ -104,9 +98,6 @@ weapons/weaponsystem.qc
 ../common/buffs.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
-../common/command/generic.qc
-../common/command/markup.qc
-../common/command/rpn.qc
 ../common/mapinfo.qc
 ../common/monsters/monsters.qc
 ../common/monsters/spawn.qc

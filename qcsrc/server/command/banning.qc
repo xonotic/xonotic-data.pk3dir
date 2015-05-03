@@ -1,14 +1,14 @@
-#include "../_.qh"
-#include "../cl_player.qh"
-
+#include "../../common/command/command.qh"
 #include "banning.qh"
+#include "../_.qh"
+
 #include "common.qh"
 
+#include "../cl_player.qh"
 #include "../ipban.qh"
 
-#include "../../common/command/shared_defs.qh"
-
 #include "../../common/util.qh"
+
 // =====================================================
 //  Banning and kicking command code, written by Samual
 //  Last updated: December 29th, 2011

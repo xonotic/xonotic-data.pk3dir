@@ -10,7 +10,7 @@ oo/implementation.qc
 draw.qc
 menu.qc
 
-command/menu_cmd.qc
+command/commands.qc
 
 xonotic/util.qc
 
@@ -21,10 +21,6 @@ xonotic/util.qc
 ../common/test.qc
 ../common/urllib.qc
 ../common/util.qc
-
-../common/command/generic.qc
-../common/command/markup.qc
-../common/command/rpn.qc
 
 ../common/monsters/monsters.qc
 

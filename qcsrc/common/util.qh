@@ -385,12 +385,12 @@ string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimport
 string CCR(string input);
 
 #ifndef MENUQC
-#ifdef CSQC
-#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
-#else
-#define GENTLE autocvar_sv_gentle
-#endif
-#define normal_or_gentle(normal,gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
+	#ifdef CSQC
+		#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
+	#else
+		#define GENTLE autocvar_sv_gentle
+	#endif
+	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
 #endif
 
 // allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)

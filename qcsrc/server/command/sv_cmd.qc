@@ -1,3 +1,4 @@
+#include "../../common/command/command.qh"
 #include "sv_cmd.qh"
 #include "../_.qh"
 
@@ -27,8 +28,6 @@
 #include "../../common/notifications.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
-
-#include "../../common/command/shared_defs.qh"
 
 #include "../../common/monsters/sv_monsters.qh"
 

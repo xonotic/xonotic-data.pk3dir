@@ -20,7 +20,7 @@
     #include "../../common/command/markup.qh"
     #include "../../common/command/rpn.qh"
     #include "../../common/command/generic.qh"
-    #include "../../common/command/shared_defs.qh"
+    #include "../../common/command/command.qh"
     #include "../../common/net_notice.qh"
     #include "../../common/animdecide.qh"
     #include "../../common/monsters/monsters.qh"

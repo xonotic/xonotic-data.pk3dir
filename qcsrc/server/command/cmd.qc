@@ -1,3 +1,4 @@
+#include "../../common/command/command.qh"
 #include "cmd.qh"
 #include "../_.qh"
 
@@ -27,11 +28,6 @@
 #include "../../common/monsters/monsters.qh"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
-
-#include "../../common/command/shared_defs.qh"
-
-#include "../../dpdefs/dpextensions.qh"
-#include "../../dpdefs/progsdefs.qh"
 
 #include "../../warpzonelib/common.qh"
 

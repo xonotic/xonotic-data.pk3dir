@@ -1,3 +1,4 @@
+#include "../../common/command/command.qh"
 #include "vote.qh"
 #include "../_.qh"
 
@@ -16,8 +17,6 @@
 #include "../../common/notifications.qh"
 #include "../../common/playerstats.qh"
 #include "../../common/util.qh"
-
-#include "../../common/command/shared_defs.qh"
 
 // =============================================
 //  Server side voting code, reworked by Samual

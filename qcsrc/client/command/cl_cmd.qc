@@ -3,6 +3,7 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
+#include "../../common/command/command.qh"
 #include "cl_cmd.qh"
 
 #include "../autocvars.qh"
@@ -16,7 +17,6 @@
 #include "../../common/mapinfo.qh"
 
 #include "../../common/command/generic.qh"
-#include "../../common/command/shared_defs.qh"
 
 void DrawDebugModel()
 {
