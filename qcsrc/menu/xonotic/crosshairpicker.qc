@@ -16,12 +16,10 @@ entity makeXonoticCrosshairPicker();
 
 string crosshairpicker_cellToCrosshair(entity me, vector cell)
 {
-	float crosshair = 31 + cell.y * me.columns + cell.x;
-
-	if (crosshair >= 31 && crosshair < 31 + me.columns * me.rows)
-		return ftos(crosshair);
-	else
+	if(cell.x < 0 || cell.x >= me.columns || cell.y < 0 || cell.y >= me.rows)
 		return "";
+	return ftos(31 + cell.y * me.columns + cell.x);
+}
 
 vector crosshairpicker_crosshairToCell(entity me, string crosshair_str)
 {
