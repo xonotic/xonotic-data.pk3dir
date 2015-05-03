@@ -1,7 +1,9 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "menu.qh"
+#include "oo/classes.qc"
+#include "xonotic/util.qh"
+
+#include "../common/weapons/weapons.qh"
+#include "../common/mapinfo.qh"
 
 ///////////////////////////////////////////////
 // Menu Source File

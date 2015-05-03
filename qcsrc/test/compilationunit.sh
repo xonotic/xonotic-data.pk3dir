@@ -29,5 +29,5 @@ check "client" clientdefs[@]
 serverdefs=("-DSVQC" "common/util-pre.qh" "server/sys-pre.qh" "dpdefs/progsdefs.qh" "dpdefs/dpextensions.qh" "server/sys-post.qh" "server/defs.qh" "server/autocvars.qh")
 check "server" serverdefs[@]
 
-# menudefs=("-DMENUQC" "common/util-pre.qh" "dpdefs/menudefs.qh" "menu/oo/interface.qc" "menu/oo/implementation.qc")
-# check "menu" menudefs[@]
+menudefs=("-DMENUQC" "common/util-pre.qh" "dpdefs/menudefs.qh")
+check "menu" menudefs[@]

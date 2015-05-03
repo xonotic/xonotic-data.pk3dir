@@ -50,6 +50,8 @@ void postMenuDraw(); // this is run just after the menu is drawn (or not). Usefu
 
 void m_sync();
 
+void draw_reset_cropped();
+
 // sounds
 
 const string MENU_SOUND_CLEAR   = "sound/menu/clear.wav";
