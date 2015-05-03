@@ -10,7 +10,7 @@ CLASS(XonoticCharmap) EXTENDS(XonoticPicker)
 	ATTRIB(XonoticCharmap, rows, float, 10)
 	ATTRIB(XonoticCharmap, columns, float, 14)
 
-	METHOD(XonoticCharmap, cellSelect, void(entity))
+	METHOD(XonoticCharmap, cellSelect, void(entity, vector))
 	METHOD(XonoticCharmap, cellIsValid, bool(entity, vector))
 	METHOD(XonoticCharmap, cellDraw, void(entity, vector, vector, float))
 	METHOD(XonoticCharmap, charOffset, vector)
@@ -92,9 +92,9 @@ float XonoticCharmap_keyDown(entity me, float key, float ascii, float shift)
 	return me.inputBox.keyDown(me.inputBox, key, ascii, shift);
 }
 
-void XonoticCharmap_cellSelect(entity me)
+void XonoticCharmap_cellSelect(entity me, vector cell)
 {
-	string character = charmap_cellToChar(me, me.focusedCell);
+	string character = charmap_cellToChar(me, cell);
 	if(character != "")
 		me.inputBox.enterText(me.inputBox, character);
 }

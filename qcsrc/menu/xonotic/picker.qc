@@ -16,10 +16,11 @@ CLASS(XonoticPicker) EXTENDS(Item)
 	ATTRIB(XonoticPicker, columns, float, 2)
 
 	METHOD(XonoticPicker, moveFocus, void(entity, vector, vector))
-	METHOD(XonoticPicker, cellSelect, void(entity))
+	METHOD(XonoticPicker, cellSelect, void(entity, vector))
 	METHOD(XonoticPicker, cellDraw, void(entity, vector, vector, float))
 	METHOD(XonoticPicker, cellIsValid, bool(entity, vector))
 	ATTRIB(XonoticPicker, realCellSize, vector, '0 0 0')
+	ATTRIB(XonoticPicker, selectedCell, vector, '-1 -1 0')
 	ATTRIB(XonoticPicker, focusedCell, vector, '-1 -1 0')
 	ATTRIB(XonoticPicker, focusedCellTime, float, 0)
 	ATTRIB(XonoticPicker, pressedCell, vector, '-1 -1 0')
@@ -87,7 +88,7 @@ float XonoticPicker_mouseRelease(entity me, vector coords)
 	me.mouseMove(me, coords);
 
 	if(me.focusedCell == me.pressedCell)
-		me.cellSelect(me);
+		me.cellSelect(me, me.focusedCell);
 
 	me.pressed = 0;
 	return 1;
@@ -126,7 +127,7 @@ float XonoticPicker_keyDown(entity me, float key, float ascii, float shift)
 		case K_KP_ENTER:
 		case K_INS:
 		case K_KP_INS:
-			me.cellSelect(me);
+			me.cellSelect(me, me.focusedCell);
 			return 1;
 	}
 	return 0;
@@ -142,8 +143,9 @@ void XonoticPicker_moveFocus(entity me, vector initialCell, vector step)
 			me.moveFocus(me, initialCell, step);
 }
 
-void XonoticPicker_cellSelect(entity me)
+void XonoticPicker_cellSelect(entity me, vector cell)
 {
+	me.selectedCell = cell;
 }
 
 bool XonoticPicker_cellIsValid(entity me, vector cell)
@@ -179,7 +181,9 @@ void XonoticPicker_draw(entity me)
 
 			cellPos_x = mod(cell.x, me.columns) / me.columns;
 
-			if(cell == me.focusedCell && me.focused)
+			if(cell == me.selectedCell)
+				draw_Fill(cellPos, me.realCellSize, SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+			else if(cell == me.focusedCell && me.focused)
 			{
 				if(!me.pressed || me.focusedCell == me.pressedCell)
 					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_LISTBOX_FOCUSED, getHighlightAlpha(SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED, me.focusedCellTime));

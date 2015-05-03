@@ -5,7 +5,7 @@ CLASS(XonoticCrosshairPicker) EXTENDS(XonoticPicker)
 	ATTRIB(XonoticCrosshairPicker, rows, float, 3)
 	ATTRIB(XonoticCrosshairPicker, columns, float, 12)
 
-	METHOD(XonoticCrosshairPicker, cellSelect, void(entity))
+	METHOD(XonoticCrosshairPicker, cellSelect, void(entity, vector))
 	METHOD(XonoticCrosshairPicker, cellIsValid, bool(entity, vector))
 	METHOD(XonoticCrosshairPicker, cellDraw, void(entity, vector, vector, float))
 ENDCLASS(XonoticCrosshairPicker)
@@ -22,6 +22,13 @@ string crosshairpicker_cellToCrosshair(entity me, vector cell)
 		return ftos(crosshair);
 	else
 		return "";
+
+vector crosshairpicker_crosshairToCell(entity me, string crosshair_str)
+{
+	float crosshair = stof(crosshair_str) - 31;
+	if(crosshair - floor(crosshair) > 0)
+		return '-1 -1 0';
+	return mod(crosshair, me.columns) * eX + floor(crosshair / me.columns) * eY;
 }
 
 entity makeXonoticCrosshairPicker()
@@ -35,11 +42,13 @@ entity makeXonoticCrosshairPicker()
 void XonoticCrosshairPicker_configureXonoticCrosshairPicker(entity me)
 {
 	me.configureXonoticPicker(me);
+	SUPER(XonoticCrosshairPicker).cellSelect(me, crosshairpicker_crosshairToCell(me, cvar_string("crosshair")));
 }
 
-void XonoticCrosshairPicker_cellSelect(entity me)
+void XonoticCrosshairPicker_cellSelect(entity me, vector cell)
 {
 	cvar_set("crosshair", crosshairpicker_cellToCrosshair(me, me.focusedCell));
+	SUPER(XonoticCrosshairPicker).cellSelect(me, me.focusedCell);
 }
 
 bool XonoticCrosshairPicker_cellIsValid(entity me, vector cell)
