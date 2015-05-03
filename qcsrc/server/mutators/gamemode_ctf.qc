@@ -2130,6 +2130,8 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 {
 	if(vh_player.flagcarried)
 	{
+		vh_player.flagcarried.nodrawtoclient = vh_player; // hide the flag from the driver
+
 		if(!autocvar_g_ctf_allow_vehicle_carry && !autocvar_g_ctf_allow_vehicle_touch)
 		{
 			ctf_Handle_Throw(vh_player, world, DROP_NORMAL);
@@ -2155,6 +2157,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 		setorigin(vh_player.flagcarried, FLAG_CARRY_OFFSET);
 		vh_player.flagcarried.scale = FLAG_SCALE;
 		vh_player.flagcarried.angles = '0 0 0';
+		vh_player.flagcarried.nodrawtoclient = world;
 		return true;
 	}
 
@@ -2389,6 +2392,9 @@ void spawnfunc_team_CTF_redplayer()  { spawnfunc_info_player_team1();  }
 void spawnfunc_team_CTF_blueplayer() { spawnfunc_info_player_team2();  }
 void spawnfunc_team_CTF_redspawn()   { spawnfunc_info_player_team1();  }
 void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
+
+void team_CTF_neutralflag()			 { spawnfunc_item_flag_neutral();  }
+void team_neutralobelisk()			 { spawnfunc_item_flag_neutral();  }
 
 
 // ==============
