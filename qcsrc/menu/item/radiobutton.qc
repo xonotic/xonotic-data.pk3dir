@@ -1,5 +1,6 @@
 #ifndef ITEM_RADIOBUTTON_H
 #define ITEM_RADIOBUTTON_H
+#include "checkbox.qc"
 void RadioButton_Click(entity me, entity other);
 CLASS(RadioButton, CheckBox)
 	METHOD(RadioButton, configureRadioButton, void(entity, string, float, string, float, float))

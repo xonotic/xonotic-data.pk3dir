@@ -1,5 +1,6 @@
 #ifndef ITEM_LISTBOX_H
 #define ITEM_LISTBOX_H
+#include "../item.qc"
 CLASS(ListBox, Item)
 	METHOD(ListBox, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(ListBox, configureListBox, void(entity, float, float))

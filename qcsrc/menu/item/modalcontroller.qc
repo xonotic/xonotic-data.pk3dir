@@ -1,5 +1,6 @@
 #ifndef ITEM_MODALCONTROLLER_H
 #define ITEM_MODALCONTROLLER_H
+#include "container.qc"
 CLASS(ModalController, Container)
 	METHOD(ModalController, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(ModalController, draw, void(entity))

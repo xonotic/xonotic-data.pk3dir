@@ -1,5 +1,6 @@
 #ifndef ITEM_TAB_H
 #define ITEM_TAB_H
+#include "dialog.qc"
 CLASS(Tab, Dialog)
 	ATTRIB(Tab, isTabRoot, float, 0)
 	ATTRIB(Tab, closable, float, 0)

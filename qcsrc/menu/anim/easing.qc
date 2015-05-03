@@ -1,5 +1,6 @@
 #ifndef ANIM_EASING_H
 #define ANIM_EASING_H
+#include "animation.qc"
 entity makeHostedEasing(entity, void(entity, float), float(float, float, float, float), float, float, float);
 entity makeEasing(entity, void(entity, float), float(float, float, float, float), float, float, float, float);
 float easingLinear(float, float, float, float);

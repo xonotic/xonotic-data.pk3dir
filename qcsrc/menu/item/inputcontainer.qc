@@ -1,5 +1,6 @@
 #ifndef ITEM_INPUTCONTAINER_H
 #define ITEM_INPUTCONTAINER_H
+#include "container.qc"
 CLASS(InputContainer, Container)
 	METHOD(InputContainer, keyDown, float(entity, float, float, float))
 	METHOD(InputContainer, mouseMove, float(entity, vector))

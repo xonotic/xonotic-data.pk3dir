@@ -2,6 +2,7 @@
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
 #ifndef ITEM_SLIDER_H
 #define ITEM_SLIDER_H
+#include "label.qc"
 CLASS(Slider, Label)
 	METHOD(Slider, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Slider, configureSliderVisuals, void(entity, float, float, float, string))
