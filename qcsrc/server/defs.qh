@@ -81,6 +81,13 @@ float server_is_dedicated;
 .string  platmovetype;
 .float platmovetype_start, platmovetype_end;
 
+
+// Needed for dynamic clientwalls
+.float inactive; // Clientwall disappears when inactive
+.float alpha_max, alpha_min;
+.float fade_start, fade_end;
+.float default_solid; // Variable to store default self.solid for clientwalls
+
 .string killtarget;
 
 .vector	pos1, pos2;
@@ -626,8 +633,5 @@ const int MIF_GUIDED_TAG = 128;
 
 .float init_for_player_needed;
 .void(entity) init_for_player;
-
-.float fade_start, fade_end;
-.float inactive, alpha_max;
 
 #endif

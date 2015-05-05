@@ -7,6 +7,12 @@
 .float loddistance1, loddistance2;
 .vector saved;
 
+// Needed for dynamic clientwalls
+.float inactive; // Clientwall disappears when inactive
+.float alpha_max, alpha_min;
+.float fade_start, fade_end;
+.float default_solid; // Variable to store default self.solid for clientwalls
+
 void Ent_Wall_Draw();
 
 void Ent_Wall_Remove();

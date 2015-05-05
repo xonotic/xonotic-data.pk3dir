@@ -59,7 +59,6 @@ t_quake.qc
 t_swamp.qc
 t_teleporters.qc
 waypointsprites.qc
-antiwall.qc
 
 bot/bot.qc
 
