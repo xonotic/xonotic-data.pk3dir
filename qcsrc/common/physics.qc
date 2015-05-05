@@ -1581,6 +1581,8 @@ void PM_Main()
 
 	self.movement = PHYS_INPUT_MOVEVALUES(self);
 
+	vector oldv_angle = self.v_angle;
+	vector oldangles = self.angles; // we need to save these as they're abused by other code
 	self.v_angle = PHYS_INPUT_ANGLES(self);
 	self.angles = PHYS_WORLD_ANGLES(self);
 
@@ -1818,6 +1820,11 @@ void PM_Main()
 	self.lastflags = self.flags;
 
 	self.lastclassname = self.classname;
+
+#ifdef CSQC
+	self.v_angle = oldv_angle;
+	self.angles = oldangles;
+#endif
 }
 
 #ifdef SVQC

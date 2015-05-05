@@ -189,7 +189,7 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	input_angles = view_angles;
 }
 
-float CSQCPlayer_IsLocalPlayer()
+bool CSQCPlayer_IsLocalPlayer()
 {
 	return (self == csqcplayer);
 }
