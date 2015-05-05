@@ -68,13 +68,13 @@ void relocate_spawnpoint()
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
-    tracebox(self.origin, PL_MIN, PL_MAX, self.origin, true, self);
+    tracebox(self.origin, PL_MIN_CONST, PL_MAX_CONST, self.origin, true, self);
     if (trace_startsolid)
     {
         vector o;
         o = self.origin;
-        self.mins = PL_MIN;
-        self.maxs = PL_MAX;
+        self.mins = PL_MIN_CONST;
+        self.maxs = PL_MAX_CONST;
         if (!move_out_of_solid(self))
             objerror("could not get out of solid at all!");
         print("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
