@@ -11,7 +11,7 @@ void ctf_FakeTimeLimit(entity e, float t)
 		WriteCoord(MSG_ONE, (t + 1) / 60);
 }
 
-void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for easy changing and quick editing later
+void ctf_EventLog(string mode, int flagteam, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
@@ -57,27 +57,27 @@ void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnra
 	if(current_height) // make sure we can actually do this arcing path
 	{
 		targpos = (to + ('0 0 1' * current_height));
-		WarpZone_TraceLine(flag.move_origin, targpos, MOVE_NOMONSTERS, flag);
+		WarpZone_TraceLine(flag.origin, targpos, MOVE_NOMONSTERS, flag);
 		if(trace_fraction < 1)
 		{
 			//print("normal arc line failed, trying to find new pos...");
 			WarpZone_TraceLine(to, targpos, MOVE_NOMONSTERS, flag);
 			targpos = (trace_endpos + FLAG_PASS_ARC_OFFSET);
-			WarpZone_TraceLine(flag.move_origin, targpos, MOVE_NOMONSTERS, flag);
+			WarpZone_TraceLine(flag.origin, targpos, MOVE_NOMONSTERS, flag);
 			if(trace_fraction < 1) { targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
 			/*else { print(" ^3SUCCESS^7, using new arc line.\n"); } */
 		}
 	}
 	else { targpos = to; }
 
-	//flag.move_angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
+	//flag.angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
 
 	vector desired_direction = normalize(targpos - from);
-	if(turnrate) { flag.move_velocity = (normalize(normalize(flag.move_velocity) + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); }
-	else { flag.move_velocity = (desired_direction * autocvar_g_ctf_pass_velocity); }
+	if(turnrate) { flag.velocity = (normalize(normalize(flag.velocity) + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); }
+	else { flag.velocity = (desired_direction * autocvar_g_ctf_pass_velocity); }
 }
 
-float ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
+bool ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
 {
 	if(autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
 	{
@@ -111,7 +111,7 @@ float ctf_CheckPassDirection(vector head_center, vector passer_center, vector pa
 // CaptureShield Functions
 // =======================
 
-float ctf_CaptureShield_CheckStatus(entity p)
+bool ctf_CaptureShield_CheckStatus(entity p)
 {
 	float s, se;
 	entity e;
@@ -205,9 +205,9 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	player = (player ? player : flag.pass_sender);
 
 	// main
-	flag.move_movetype = MOVETYPE_TOSS;
+	flag.movetype = MOVETYPE_TOSS;
 	flag.takedamage = DAMAGE_YES;
-	flag.move_angles = '0 0 0';
+	flag.angles = '0 0 0';
 	flag.health = flag.max_flag_health;
 	flag.ctf_droptime = time;
 	flag.ctf_dropper = player;
@@ -255,18 +255,18 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
-		flag.move_origin = VEHICLE_FLAG_OFFSET;
+		setorigin(flag, VEHICLE_FLAG_OFFSET);
 		flag.scale = VEHICLE_FLAG_SCALE;
 	}
 	else
 	{
 		setattachment(flag, player, "");
-		flag.move_origin = VEHICLE_FLAG_OFFSET;
+		setorigin(flag, FLAG_CARRY_OFFSET);
 	}
-	flag.move_movetype = MOVETYPE_NONE;
+	flag.movetype = MOVETYPE_NONE;
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
-	flag.move_angles = '0 0 0';
+	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
@@ -306,15 +306,14 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 
 	// reset the flag
 	setattachment(flag, world, "");
-	flag.move_origin = player.origin + FLAG_DROP_OFFSET;
+	setorigin(flag, player.origin + FLAG_DROP_OFFSET);
 	flag.owner.flagcarried = world;
 	flag.owner = world;
 	flag.solid = SOLID_TRIGGER;
 	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
 
-	flag.move_flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
-	flag.flags = flag.move_flags;
+	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
 
 	switch(droptype)
 	{
@@ -331,7 +330,7 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 			ctf_CalculatePassVelocity(flag, targ_origin, player.origin, false);
 
 			// main
-			flag.move_movetype = MOVETYPE_FLY;
+			flag.movetype = MOVETYPE_FLY;
 			flag.takedamage = DAMAGE_NO;
 			flag.pass_sender = player;
 			flag.pass_target = receiver;
@@ -349,21 +348,21 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 			makevectors((player.v_angle.y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle.x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
 
 			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
-			flag.move_velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, false);
+			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, false);
 			ctf_Handle_Drop(flag, player, droptype);
 			break;
 		}
 
 		case DROP_RESET:
 		{
-			flag.move_velocity = '0 0 0'; // do nothing
+			flag.velocity = '0 0 0'; // do nothing
 			break;
 		}
 
 		default:
 		case DROP_NORMAL:
 		{
-			flag.move_velocity = W_CalculateProjectileVelocity(player.velocity, (('0 0 1' * autocvar_g_ctf_drop_velocity_up) + ((('0 1 0' * crandom()) + ('1 0 0' * crandom())) * autocvar_g_ctf_drop_velocity_side)), false);
+			flag.velocity = W_CalculateProjectileVelocity(player.velocity, (('0 0 1' * autocvar_g_ctf_drop_velocity_up) + ((('0 1 0' * crandom()) + ('1 0 0' * crandom())) * autocvar_g_ctf_drop_velocity_side)), false);
 			ctf_Handle_Drop(flag, player, droptype);
 			break;
 		}
@@ -417,8 +416,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	pointparticles(particleeffectnum(flag.capeffect), flag.move_origin, '0 0 0', 1);
-	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.move_origin - '0 0 15', -0.8, 0, 1);
+	pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
+	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
 	if(capturetype == CAPTURE_NORMAL)
@@ -483,20 +482,20 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	if(player.vehicle)
 	{
 		setattachment(flag, player.vehicle, "");
-		flag.move_origin = VEHICLE_FLAG_OFFSET;
+		setorigin(flag, VEHICLE_FLAG_OFFSET);
 		flag.scale = VEHICLE_FLAG_SCALE;
 	}
 	else
 	{
 		setattachment(flag, player, "");
-		flag.move_origin = FLAG_CARRY_OFFSET;
+		setorigin(flag, FLAG_CARRY_OFFSET);
 	}
 
 	// flag setup
-	flag.move_movetype = MOVETYPE_NONE;
+	flag.movetype = MOVETYPE_NONE;
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
-	flag.move_angles = '0 0 0';
+	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
 
 	switch(pickuptype)
@@ -643,7 +642,6 @@ void ctf_CheckStalemate(void)
 
 void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	self.move_velocity = self.velocity;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		// automatically kill the flag and return it
@@ -660,10 +658,12 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathty
 	}
 }
 
-void ctf_FlagUpdate()
+void ctf_FlagThink()
 {
 	// declarations
 	entity tmp_entity;
+
+	self.nextthink = time + FLAG_THINKRATE; // only 5 fps, more is unnecessary.
 
 	// captureshield
 	if(self == ctf_worldflaglist) // only for the first flag
@@ -673,7 +673,7 @@ void ctf_FlagUpdate()
 	// sanity checks
 	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
 		dprint("wtf the flag got squashed?\n");
-		tracebox(self.move_origin, FLAG_MIN, FLAG_MAX, self.move_origin, MOVE_NOMONSTERS, self);
+		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
 		if(!trace_startsolid || self.noalign) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
 
@@ -681,7 +681,7 @@ void ctf_FlagUpdate()
 	{
 		case FLAG_DROPPED:
 		{
-			self.move_angles = '0 0 0';
+			self.angles = '0 0 0';
 			break;
 		}
 
@@ -697,7 +697,7 @@ void ctf_FlagUpdate()
 			{
 				for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 					if(tmp_entity.ctf_status == FLAG_DROPPED)
-					if(vlen(self.move_origin - tmp_entity.move_origin) < autocvar_g_ctf_dropped_capture_radius)
+					if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
 					if(time > tmp_entity.ctf_droptime + autocvar_g_ctf_dropped_capture_delay)
 						ctf_Handle_Capture(self, tmp_entity, CAPTURE_DROPPED);
 			}
@@ -711,18 +711,18 @@ void ctf_FlagUpdate()
 				vector midpoint = ((self.absmin + self.absmax) * 0.5);
 				if(pointcontents(midpoint) == CONTENT_WATER)
 				{
-					self.move_velocity = self.move_velocity * 0.5;
+					self.velocity = self.velocity * 0.5;
 
 					if(pointcontents(midpoint + FLAG_FLOAT_OFFSET) == CONTENT_WATER)
-						{ self.move_velocity_z = autocvar_g_ctf_flag_dropped_floatinwater; }
+						{ self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater; }
 					else
-						{ self.move_movetype = MOVETYPE_FLY; }
+						{ self.movetype = MOVETYPE_FLY; }
 				}
-				else if(self.move_movetype == MOVETYPE_FLY) { self.move_movetype = MOVETYPE_TOSS; }
+				else if(self.movetype == MOVETYPE_FLY) { self.movetype = MOVETYPE_TOSS; }
 			}
 			if(autocvar_g_ctf_flag_return_dropped)
 			{
-				if((vlen(self.move_origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
+				if((vlen(self.origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
 				{
 					self.health = 0;
 					ctf_CheckFlagReturn(self, RETURN_DROPPED);
@@ -766,12 +766,12 @@ void ctf_FlagUpdate()
 		{
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_target, self, targ_origin); // origin of target as seen by the flag (us)
-			WarpZone_TraceLine(self.move_origin, targ_origin, MOVE_NOMONSTERS, self);
+			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 
 			if((self.pass_target == world)
 				|| (self.pass_target.deadflag != DEAD_NO)
 				|| (self.pass_target.flagcarried)
-				|| (vlen(self.move_origin - targ_origin) > autocvar_g_ctf_pass_radius)
+				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
 				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
 				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
 			{
@@ -781,7 +781,7 @@ void ctf_FlagUpdate()
 			else
 			{
 				// still a viable target, go for it
-				ctf_CalculatePassVelocity(self, targ_origin, self.move_origin, true);
+				ctf_CalculatePassVelocity(self, targ_origin, self.origin, true);
 			}
 			return;
 		}
@@ -792,20 +792,6 @@ void ctf_FlagUpdate()
 			return;
 		}
 	}
-}
-
-void ctf_FlagThink()
-{
-	self.nextthink = time;
-
-	if(time >= self.ctf_thinkrate)
-	{
-		self.ctf_thinkrate = time + FLAG_THINKRATE;
-		ctf_FlagUpdate();
-	}
-
-	//Movetype_Physics_NoMatchServer();
-	Movetype_Physics_MatchTicrate(sys_frametime, 0);
 }
 
 void ctf_FlagTouch()
@@ -842,7 +828,7 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			pointparticles(particleeffectnum(self.toucheffect), self.move_origin, '0 0 0', 1);
+			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
@@ -921,16 +907,15 @@ void ctf_RespawnFlag(entity flag)
 
 	// reset the flag
 	setattachment(flag, world, "");
-	flag.move_origin = flag.ctf_spawnorigin;
+	setorigin(flag, flag.ctf_spawnorigin);
 
-	flag.move_movetype = ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS);
+	flag.movetype = ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS);
 	flag.takedamage = DAMAGE_NO;
 	flag.health = flag.max_flag_health;
 	flag.solid = SOLID_TRIGGER;
-	flag.move_velocity = '0 0 0';
-	flag.move_angles = flag.mangle;
-	flag.move_flags = FL_ITEM | FL_NOTARGET;
-	flag.flags = flag.move_flags;
+	flag.velocity = '0 0 0';
+	flag.angles = flag.mangle;
+	flag.flags = FL_ITEM | FL_NOTARGET;
 
 	flag.ctf_status = FLAG_BASE;
 	flag.owner = world;
@@ -967,10 +952,6 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 
 	// captureshield setup
 	ctf_CaptureShield_Spawn(self);
-
-	self.move_origin = self.origin;
-	self.move_angles = self.angles;
-	self.move_velocity = self.velocity;
 }
 
 void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
@@ -990,8 +971,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
-	flag.move_flags = FL_ITEM | FL_NOTARGET;
-	flag.flags = flag.move_flags;
+	flag.flags = FL_ITEM | FL_NOTARGET;
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_NO;
 	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;
@@ -1002,15 +982,13 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.teleportable = TELEPORT_NORMAL;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
-	flag.move_velocity = '0 0 0';
+	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
 	flag.reset = ctf_Reset;
 	flag.touch = ctf_FlagTouch;
-	flag.move_touch = flag.touch;
 	flag.think = ctf_FlagThink;
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
-	flag.move_time = time;
 
 	// appearence
 	if(flag.model == "")       { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
@@ -1062,14 +1040,14 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	{
 		flag.dropped_origin = flag.origin;
 		flag.noalign = true;
-		flag.move_movetype = MOVETYPE_NONE;
+		flag.movetype = MOVETYPE_NONE;
 	}
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{
 		flag.noalign = false;
 		self = flag;
 		droptofloor();
-		flag.move_movetype = MOVETYPE_TOSS;
+		flag.movetype = MOVETYPE_TOSS;
 	}
 
 	InitializeEntity(flag, ctf_DelayedFlagSetup, INITPRIO_SETLOCATION);
@@ -1092,7 +1070,7 @@ void havocbot_calculate_middlepoint()
 	f = ctf_worldflaglist;
 	while (f)
 	{
-		fo = f.move_origin;
+		fo = f.origin;
 		s = s + fo;
 		f = f.ctf_worldflagnext;
 	}
@@ -1236,7 +1214,7 @@ void havocbot_goalrating_ctf_droppedflags(float ratingscale, vector org, float d
 		{
 			if(df_radius)
 			{
-				if(vlen(org-head.move_origin)<df_radius)
+				if(vlen(org-head.origin)<df_radius)
 					navigation_routerating(head, ratingscale, 10000);
 			}
 			else
@@ -1400,7 +1378,7 @@ void havocbot_role_ctf_escort()
 	// If the flag carrier reached the base switch to defense
 	mf = havocbot_ctf_find_flag(self);
 	if(mf.ctf_status!=FLAG_BASE)
-	if(vlen(ef.move_origin - mf.dropped_origin) < 300)
+	if(vlen(ef.origin - mf.dropped_origin) < 300)
 	{
 		havocbot_role_ctf_setrole(self, HAVOCBOT_CTF_ROLE_DEFENSE);
 		return;
@@ -1459,7 +1437,7 @@ void havocbot_role_ctf_offense()
 		if(mf.tag_entity)
 			pos = mf.tag_entity.origin;
 		else
-			pos = mf.move_origin;
+			pos = mf.origin;
 
 		// Try to get it if closer than the enemy base
 		if(vlen(self.origin-ef.dropped_origin)>vlen(self.origin-pos))
@@ -1475,7 +1453,7 @@ void havocbot_role_ctf_offense()
 		if(ef.tag_entity)
 			pos = ef.tag_entity.origin;
 		else
-			pos = ef.move_origin;
+			pos = ef.origin;
 
 		if(vlen(pos-mf.dropped_origin)>700)
 		{
@@ -1972,9 +1950,9 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 		else
 		{
 			setattachment(vh_player.flagcarried, vh_vehicle, "");
-			vh_player.flagcarried.move_origin = VEHICLE_FLAG_OFFSET;
+			setorigin(vh_player.flagcarried, VEHICLE_FLAG_OFFSET);
 			vh_player.flagcarried.scale = VEHICLE_FLAG_SCALE;
-			//vh_player.flagcarried.move_angles = '0 0 0';
+			//vh_player.flagcarried.angles = '0 0 0';
 		}
 		return true;
 	}
@@ -1987,9 +1965,9 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 	if(vh_player.flagcarried)
 	{
 		setattachment(vh_player.flagcarried, vh_player, "");
-		vh_player.flagcarried.move_origin = VEHICLE_FLAG_OFFSET;
+		setorigin(vh_player.flagcarried, FLAG_CARRY_OFFSET);
 		vh_player.flagcarried.scale = FLAG_SCALE;
-		vh_player.flagcarried.move_angles = '0 0 0';
+		vh_player.flagcarried.angles = '0 0 0';
 		return true;
 	}
 
@@ -2020,7 +1998,7 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 			case FLAG_PASSING:
 			{
 				// lock the flag, game is over
-				flag.move_movetype = MOVETYPE_NONE;
+				flag.movetype = MOVETYPE_NONE;
 				flag.takedamage = DAMAGE_NO;
 				flag.solid = SOLID_NOT;
 				flag.nextthink = false; // stop thinking
