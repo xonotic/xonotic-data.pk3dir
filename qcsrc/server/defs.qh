@@ -532,17 +532,17 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 string modname;
 
 .float missile_flags;
-const int MIF_SPLASH = 2;
-const int MIF_ARC = 4;
-const int MIF_PROXY = 8;
-const int MIF_GUIDED_MANUAL = 16;
-const int MIF_GUIDED_HEAT = 32;
-const int MIF_GUIDED_LASER = 64;
-const int MIF_GUIDED_AI = 128;
-const int MIF_GUIDED_TAG = 128;
-#define MIF_GUIDED_ALL (MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
-#define MIF_GUIDED_TRACKING (MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
-#define MIF_GUIDED_CONFUSABLE (MIF_GUIDED_HEAT | MIF_GUIDED_AI)
+const int MIF_SPLASH = BIT(1);
+const int MIF_ARC = BIT(2);
+const int MIF_PROXY = BIT(3);
+const int MIF_GUIDED_MANUAL = BIT(4);
+const int MIF_GUIDED_HEAT = BIT(5);
+const int MIF_GUIDED_LASER = BIT(6);
+const int MIF_GUIDED_AI = BIT(7);
+const int MIF_GUIDED_TAG = BIT(7);
+const int MIF_GUIDED_ALL = MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG;
+const int MIF_GUIDED_TRACKING = MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG;
+const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 #define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? true : false)
 #define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? true : false)

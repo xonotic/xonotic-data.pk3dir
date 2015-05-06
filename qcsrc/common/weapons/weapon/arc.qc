@@ -74,12 +74,12 @@ const int ARC_BT_BURST_HEAL =  0x12;
 const int ARC_BT_BURST_HIT =   0x13;
 const int ARC_BT_BURSTMASK =   0x10;
 
-const int ARC_SF_SETTINGS =    1;
-const int ARC_SF_START =       2;
-const int ARC_SF_WANTDIR =     4;
-const int ARC_SF_BEAMDIR =     8;
-const int ARC_SF_BEAMTYPE =    16;
-const int ARC_SF_LOCALMASK =   14;
+const int ARC_SF_SETTINGS =    BIT(0);
+const int ARC_SF_START =       BIT(1);
+const int ARC_SF_WANTDIR =     BIT(2);
+const int ARC_SF_BEAMDIR =     BIT(3);
+const int ARC_SF_BEAMTYPE =    BIT(4);
+const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 #endif
 #ifdef SVQC
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)

@@ -425,10 +425,10 @@ void readlevelcvars(void)
 // hack
 float precache_sound_index (string s) = #19;
 
-const float SND_VOLUME = 1;
-const float SND_ATTENUATION = 2;
-const float SND_LARGEENTITY = 8;
-const float SND_LARGESOUND = 16;
+const float SND_VOLUME = BIT(0);
+const float SND_ATTENUATION = BIT(1);
+const float SND_LARGEENTITY = BIT(3);
+const float SND_LARGESOUND = BIT(4);
 
 const float INITPRIO_FIRST 				= 0;
 const float INITPRIO_GAMETYPE 			= 0;

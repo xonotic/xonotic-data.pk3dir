@@ -31,15 +31,15 @@ entity start_node;
 .float pathlib_node_c;
 
 const float pathlib_node_edgeflag_unknown 		= 0;
-const float pathlib_node_edgeflag_left 			= 2;
-const float pathlib_node_edgeflag_right 		= 4;
-const float pathlib_node_edgeflag_forward 		= 8;
-const float pathlib_node_edgeflag_back 			= 16;
-const float pathlib_node_edgeflag_backleft 		= 32;
-const float pathlib_node_edgeflag_backright 	= 64;
-const float pathlib_node_edgeflag_forwardleft 	= 128;
-const float pathlib_node_edgeflag_forwardright 	= 256;
-const float pathlib_node_edgeflag_none 			= 512;
+const float pathlib_node_edgeflag_left 			= BIT(1);
+const float pathlib_node_edgeflag_right 		= BIT(2);
+const float pathlib_node_edgeflag_forward 		= BIT(3);
+const float pathlib_node_edgeflag_back 			= BIT(4);
+const float pathlib_node_edgeflag_backleft 		= BIT(5);
+const float pathlib_node_edgeflag_backright 	= BIT(6);
+const float pathlib_node_edgeflag_forwardleft 	= BIT(7);
+const float pathlib_node_edgeflag_forwardright 	= BIT(8);
+const float pathlib_node_edgeflag_none 			= BIT(9);
 .float pathlib_node_edgeflags;
 
 float pathlib_open_cnt;

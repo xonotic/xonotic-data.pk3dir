@@ -42,31 +42,31 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 	nags = 0;
 	if(readycount)
 	{
-		nags |= 1;
+		nags |= BIT(0);
 		if(to.ready == 0)
-			nags |= 2;
+			nags |= BIT(1);
 	}
 	if(vote_called)
 	{
-		nags |= 4;
+		nags |= BIT(2);
 		if(to.vote_selection == 0)
-			nags |= 8;
+			nags |= BIT(3);
 	}
 	if(warmup_stage)
-		nags |= 16;
+		nags |= BIT(4);
 
-	if(sendflags & 64)
-		nags |= 64;
+	if(sendflags & BIT(6))
+		nags |= BIT(6);
 
-	if(sendflags & 128)
-		nags |= 128;
+	if(sendflags & BIT(7))
+		nags |= BIT(7);
 
 	if(!(nags & 4)) // no vote called? send no string
-		nags &= ~(64 | 128);
+		nags &= ~(BIT(6) | BIT(7));
 
 	WriteByte(MSG_ENTITY, nags);
 
-	if(nags & 64)
+	if(nags & BIT(6))
 	{
 		WriteByte(MSG_ENTITY, vote_accept_count);
 		WriteByte(MSG_ENTITY, vote_reject_count);
@@ -74,7 +74,7 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 		WriteChar(MSG_ENTITY, to.vote_selection);
 	}
 
-	if(nags & 128)
+	if(nags & BIT(7))
 		WriteString(MSG_ENTITY, vote_called_display);
 
 	if(nags & 1)
@@ -99,19 +99,19 @@ void Nagger_Init()
 void Nagger_VoteChanged()
 {
 	if(nagger)
-		nagger.SendFlags |= 128;
+		nagger.SendFlags |= BIT(7);
 }
 
 void Nagger_VoteCountChanged()
 {
 	if(nagger)
-		nagger.SendFlags |= 64;
+		nagger.SendFlags |= BIT(6);
 }
 
 void Nagger_ReadyCounted()
 {
 	if(nagger)
-		nagger.SendFlags |= 1;
+		nagger.SendFlags |= BIT(0);
 }
 
 // If the vote_caller is still here, return their name, otherwise vote_caller_name

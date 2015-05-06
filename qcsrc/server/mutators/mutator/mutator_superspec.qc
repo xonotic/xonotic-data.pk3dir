@@ -4,15 +4,15 @@ REGISTER_MUTATOR(superspec, cvar("g_superspectate"));
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL ((edict_num(1) == self) ? true : false)
 
-const float ASF_STRENGTH 		= 1;
-const float ASF_SHIELD 			= 2;
-const float ASF_MEGA_AR 		= 4;
-const float ASF_MEGA_HP 		= 8;
-const float ASF_FLAG_GRAB 		= 16;
-const float ASF_OBSERVER_ONLY 	= 32;
-const float ASF_SHOWWHAT 		= 64;
-const float ASF_SSIM 			= 128;
-const float ASF_FOLLOWKILLER 	= 256;
+const float ASF_STRENGTH 		= BIT(0);
+const float ASF_SHIELD 			= BIT(1);
+const float ASF_MEGA_AR 		= BIT(2);
+const float ASF_MEGA_HP 		= BIT(3);
+const float ASF_FLAG_GRAB 		= BIT(4);
+const float ASF_OBSERVER_ONLY 	= BIT(5);
+const float ASF_SHOWWHAT 		= BIT(6);
+const float ASF_SSIM 			= BIT(7);
+const float ASF_FOLLOWKILLER 	= BIT(8);
 const float ASF_ALL 			= 0xFFFFFF;
 .float autospec_flags;
 

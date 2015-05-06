@@ -558,7 +558,7 @@ void Ent_Nagger()
 
     int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
-	if(!(nags & 4))
+	if(!(nags & BIT(2)))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
@@ -570,7 +570,7 @@ void Ent_Nagger()
 		vote_active = 1;
 	}
 
-	if(nags & 64)
+	if(nags & BIT(6))
 	{
 		vote_yescount = ReadByte();
 		vote_nocount = ReadByte();
@@ -578,7 +578,7 @@ void Ent_Nagger()
 		vote_highlighted = ReadChar();
 	}
 
-	if(nags & 128)
+	if(nags & BIT(7))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
@@ -600,11 +600,11 @@ void Ent_Nagger()
 		}
 	}
 
-	ready_waiting = (nags & 1);
-	ready_waiting_for_me = (nags & 2);
-	vote_waiting = (nags & 4);
-	vote_waiting_for_me = (nags & 8);
-	warmup_stage = (nags & 16);
+	ready_waiting = (nags & BIT(0));
+	ready_waiting_for_me = (nags & BIT(1));
+	vote_waiting = (nags & BIT(2));
+	vote_waiting_for_me = (nags & BIT(3));
+	warmup_stage = (nags & BIT(4));
 }
 
 void Ent_EliminatedPlayers()
