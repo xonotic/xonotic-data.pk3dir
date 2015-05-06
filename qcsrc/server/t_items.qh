@@ -10,10 +10,14 @@ const int IT_JETPACK               		=      16; // actual item
 const int IT_FUEL_REGEN            		=      32; // fuel regeneration trigger
 // where is 64... ?
 const int IT_FUEL       				=     128;
-const int IT_SHELLS     				=     256;
-const int IT_NAILS      				=     512;
-const int IT_ROCKETS    				=    1024;
-const int IT_CELLS      				=    2048;
+// -Wdouble-declaration
+// const int IT_SHELLS     				=     256;
+// -Wdouble-declaration
+// const int IT_NAILS      				=     512;
+// -Wdouble-declaration
+// const int IT_ROCKETS    				=    1024;
+// -Wdouble-declaration
+// const int IT_CELLS      				=    2048;
 const int IT_SUPERWEAPON				=    4096;
 const int IT_STRENGTH   				=    8192;
 const int IT_INVINCIBLE 				=   16384;
@@ -22,8 +26,10 @@ const int IT_PLASMA     				=   65536;
 
 // shared value space (union):
 	// for items:
-	const int IT_KEY1					=  131072;
-	const int IT_KEY2					=  262144;
+	// -Wdouble-declaration
+	#define IT_KEY1							131072
+	// -Wdouble-declaration
+	#define IT_KEY2							262144
 	// for players:
 	const int IT_RED_FLAG_TAKEN    		=   32768;
 	const int IT_RED_FLAG_LOST     		=   65536;
