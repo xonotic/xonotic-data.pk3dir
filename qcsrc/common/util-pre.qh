@@ -51,4 +51,7 @@
 [[deprecated("use true")]] [[alias("true")]] const bool TRUE;
 [[deprecated("use false")]] [[alias("false")]] const bool FALSE;
 
+#define BIT(n) (1 << (n))
+#define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
+
 #endif
