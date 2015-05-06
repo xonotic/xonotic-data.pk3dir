@@ -67,7 +67,7 @@ bool IsFlying(entity a);
 	#define PHYS_INPUT_BUTTON_FORWARD(s)		!!(input_buttons & 256)
 	#define PHYS_INPUT_BUTTON_LEFT(s)			!!(input_buttons & 512)
 	#define PHYS_INPUT_BUTTON_RIGHT(s)			!!(input_buttons & 1024)
-	#define PHYS_INPUT_BUTTON_JETPACK(s)		!!(input_buttons & 2048)
+	#define PHYS_INPUT_BUTTON_JETPACK(s)		!!(input_buttons & 4096)
 
 	#define PHYS_DEAD(s)						s.csqcmodel_isdead
 
