@@ -11,7 +11,7 @@
 // a laser goes from origin in direction angles
 // it has color 'colormod'
 // and stops when something is in the way
-entityclass(Laser)
+entityclass(Laser);
 class(Laser) .int cnt; // end effect
 class(Laser) .vector colormod;
 class(Laser) .int state; // on-off

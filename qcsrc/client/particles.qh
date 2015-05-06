@@ -3,7 +3,7 @@
 
 .int dphitcontentsmask;
 
-entityclass(PointParticles)
+entityclass(PointParticles);
 class(PointParticles) .int cnt; // effect number
 class(PointParticles) .vector velocity; // particle velocity
 class(PointParticles) .float waterlevel; // direction jitter

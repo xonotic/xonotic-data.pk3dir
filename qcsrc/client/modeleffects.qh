@@ -1,7 +1,7 @@
 #ifndef MODELEFFECTS_H
 #define MODELEFFECTS_H
 
-entityclass(ModelEffect)
+entityclass(ModelEffect);
 class(ModelEffect) .float frame1time;
 class(ModelEffect) .float lifetime, fadetime;
 class(ModelEffect) .float teleport_time;

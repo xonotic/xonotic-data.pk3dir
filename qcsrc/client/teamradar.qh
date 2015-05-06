@@ -3,7 +3,7 @@
 
 const int MAX_TEAMRADAR_TIMES = 32;
 
-entityclass(TeamRadar)
+entityclass(TeamRadar);
 // to make entities have dots on the team radar
 class(TeamRadar) .float teamradar_icon;
 class(TeamRadar) .float teamradar_times[MAX_TEAMRADAR_TIMES];

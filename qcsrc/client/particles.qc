@@ -16,7 +16,7 @@ void Draw_PointParticles()
 	vector o;
 	o = self.origin;
 	sz = self.maxs - self.mins;
-	n = BGMScript(self);
+	n = doBGMScript(self);
 	if(self.absolute == 2)
 	{
 		if(n >= 0)

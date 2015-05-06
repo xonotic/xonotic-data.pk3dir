@@ -171,7 +171,7 @@ float GetTimeForAmplitude(entity e, float amp)
 	}
 }
 
-float BGMScript(entity e)
+float doBGMScript(entity e)
 {
 	float amp, vel;
 

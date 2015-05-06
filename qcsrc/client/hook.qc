@@ -11,7 +11,7 @@
 #include "../warpzonelib/common.qh"
 #include "../warpzonelib/mathlib.qh"
 
-entityclass(Hook)
+entityclass(Hook);
 class(Hook) .float HookType; // ENT_CLIENT_*
 class(Hook) .vector origin;
 class(Hook) .vector velocity;

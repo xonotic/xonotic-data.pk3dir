@@ -3,6 +3,6 @@
 void Ent_TubaNote(bool isNew);
 void Tuba_Precache();
 
-entityclass(Tuba)
+entityclass(Tuba);
 
 #endif

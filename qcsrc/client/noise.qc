@@ -1,7 +1,7 @@
 #include "noise.qh"
 #include "_.qh"
 
-entityclass(Noise)
+entityclass(Noise);
 class(Noise) .float noise_baccum;
 class(Noise) .float noise_paccum;
 class(Noise) .float noise_paccum2;

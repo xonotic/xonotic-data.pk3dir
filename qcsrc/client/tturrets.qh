@@ -3,6 +3,6 @@
 
 void ent_turret();
 void turrets_precache();
-entityclass(Turret)
+entityclass(Turret);
 class(Turret) .entity tur_head;
 #endif

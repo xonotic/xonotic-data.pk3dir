@@ -51,7 +51,7 @@ void Ent_Wall_Draw()
 
 	self.saved = self.(fld);
 
-	f = BGMScript(self);
+	f = doBGMScript(self);
 	if(f >= 0)
 	{
 		if(self.lip < 0) // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)

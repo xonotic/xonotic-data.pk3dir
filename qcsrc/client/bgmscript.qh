@@ -1,7 +1,7 @@
 #ifndef BGMSCRIPT_H
 #define BGMSCRIPT_H
 
-entityclass(BGMScript)
+entityclass(BGMScript);
 class(BGMScript) .string bgmscript;
 class(BGMScript) .float bgmscriptattack;
 class(BGMScript) .float bgmscriptdecay;
@@ -11,5 +11,5 @@ class(BGMScript) .float bgmscriptrelease;
 class(BGMScript) .float just_toggled;
 
 void BGMScript_InitEntity(entity e);
-float BGMScript(entity e);
+float doBGMScript(entity e);
 #endif

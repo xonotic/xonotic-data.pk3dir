@@ -82,7 +82,7 @@ vector panel_size_backup;
 vector panel_size_copied;
 
 entity panel;
-entityclass(HUDPanel)
+entityclass(HUDPanel);
 class(HUDPanel) .string panel_name;
 class(HUDPanel) .int panel_id;
 class(HUDPanel) .vector current_panel_pos;

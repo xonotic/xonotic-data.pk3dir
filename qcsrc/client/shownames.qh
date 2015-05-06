@@ -1,7 +1,7 @@
 #ifndef SHOWNAMES_H
 #define SHOWNAMES_H
 
-entityclass(ShowNames)
+entityclass(ShowNames);
 class(ShowNames) .float healthvalue;
 class(ShowNames) .float armorvalue;
 class(ShowNames) .float sameteam;

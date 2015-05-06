@@ -1,7 +1,7 @@
 #ifndef WALL_H
 #define WALL_H
 
-entityclass(Wall)
+entityclass(Wall);
 class(Wall) .float lip;
 class(Wall) .float bgmscriptangular;
 class(Wall) .int lodmodelindex0, lodmodelindex1, lodmodelindex2;

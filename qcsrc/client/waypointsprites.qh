@@ -26,7 +26,7 @@ float waypointsprite_distancefadescale;
 float waypointsprite_distancefadedistance;
 float waypointsprite_alpha;
 
-entityclass(WaypointSprite)
+entityclass(WaypointSprite);
 class(WaypointSprite) .float helpme;
 class(WaypointSprite) .float rule;
 class(WaypointSprite) .string netname; // primary picture

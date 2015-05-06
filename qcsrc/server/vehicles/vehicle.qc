@@ -32,7 +32,7 @@ void vehicles_setreturn();
     Send additional points of interest to be drawn, to vehicle owner
 **/
 const float MAX_AXH = 4;
-.entity AuxiliaryXhair[MAX_AXH];
+.entity AuxiliaryXhairs[MAX_AXH];
 
 float SendAuxiliaryXhair(entity to, int sf)
 {
@@ -60,7 +60,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
     entity axh;
 
     axh_id = bound(0, axh_id, MAX_AXH);
-    axh = own.(AuxiliaryXhair[axh_id]);
+    axh = own.(AuxiliaryXhairs[axh_id]);
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
@@ -74,7 +74,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
     setorigin(axh, loc);
     axh.colormod            = clr;
     axh.SendFlags           = 0x01;
-    own.(AuxiliaryXhair[axh_id]) = axh;
+    own.(AuxiliaryXhairs[axh_id]) = axh;
 }
 
 /*

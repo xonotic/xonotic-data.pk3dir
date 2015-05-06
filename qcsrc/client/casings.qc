@@ -11,7 +11,7 @@
 .float alpha;
 .int state;
 
-entityclass(Casing)
+entityclass(Casing);
 class(Casing) .bool silent;
 
 void Casing_Delete()
