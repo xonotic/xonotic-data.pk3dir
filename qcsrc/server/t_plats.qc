@@ -862,9 +862,9 @@ void spawnfunc_func_button()
 }
 
 
-const float DOOR_START_OPEN = 1;
-const float DOOR_DONT_LINK = 4;
-const float DOOR_TOGGLE = 32;
+const float DOOR_START_OPEN = BIT(0);
+const float DOOR_DONT_LINK = BIT(2);
+const float DOOR_TOGGLE = BIT(5);
 
 /*
 
@@ -1499,8 +1499,8 @@ void door_reset()
 }
 
 // spawnflags require key (for now only func_door)
-const float SPAWNFLAGS_GOLD_KEY = 8;
-const float SPAWNFLAGS_SILVER_KEY = 16;
+const float SPAWNFLAGS_GOLD_KEY = BIT(3);
+const float SPAWNFLAGS_SILVER_KEY = BIT(4);
 void spawnfunc_func_door()
 {
 	// Quake 1 keys compatibility
@@ -1626,9 +1626,9 @@ void spawnfunc_func_door_rotating()
 	//	self.deathtype = " got in the way";
 
 	// I abuse "movedir" for denoting the axis for now
-	if (self.spawnflags & 64) // X (untested)
+	if (self.spawnflags & BIT(6)) // X (untested)
 		self.movedir = '0 0 1';
-	else if (self.spawnflags & 128) // Y (untested)
+	else if (self.spawnflags & BIT(7)) // Y (untested)
 		self.movedir = '1 0 0';
 	else // Z
 		self.movedir = '0 1 0';
@@ -1715,11 +1715,11 @@ void() fd_secret_move5;
 void() fd_secret_move6;
 void() fd_secret_done;
 
-const float SECRET_OPEN_ONCE = 1;		// stays open
-const float SECRET_1ST_LEFT = 2;		// 1st move is left of arrow
-const float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
-const float SECRET_NO_SHOOT = 8;		// only opened by trigger
-const float SECRET_YES_SHOOT = 16;	// shootable even if targeted
+const float SECRET_OPEN_ONCE = BIT(0);	// stays open
+const float SECRET_1ST_LEFT = BIT(1);	// 1st move is left of arrow
+const float SECRET_1ST_DOWN = BIT(2);	// 1st move is down from arrow
+const float SECRET_NO_SHOOT = BIT(3);	// only opened by trigger
+const float SECRET_YES_SHOOT = BIT(4);	// shootable even if targeted
 
 void fd_secret_use()
 {

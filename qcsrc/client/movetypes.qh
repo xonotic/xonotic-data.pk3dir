@@ -39,6 +39,6 @@ const int MOVETYPE_FOLLOW           = 12;
 const int MOVETYPE_FAKEPUSH         = 13;
 const int MOVETYPE_FLY_WORLDONLY    = 33;
 
-const int FL_ITEM                   = 256;
-const int FL_ONGROUND				= 512;
+const int FL_ITEM                   = BIT(8);
+const int FL_ONGROUND				= BIT(9);
 #endif

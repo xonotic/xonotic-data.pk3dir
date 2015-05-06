@@ -70,7 +70,7 @@ void WaypointSprite_UpdateOrigin(entity e, vector o)
 	if(o != e.origin)
 	{
 		setorigin(e, o);
-		e.SendFlags |= 64;
+		e.SendFlags |= BIT(6);
 	}
 }
 
@@ -87,7 +87,7 @@ void WaypointSprite_UpdateTeamRadar(entity e, float icon, vector col)
 	// no check, as this is never called without doing an actual change (usually only once)
 	e.cnt = (icon & 0x7F) | (e.cnt & 0x80);
 	e.colormod = col;
-	e.SendFlags |= 32;
+	e.SendFlags |= BIT(5);
 }
 
 void WaypointSprite_Ping(entity e)
@@ -98,14 +98,14 @@ void WaypointSprite_Ping(entity e)
 	e.waypointsprite_pingtime = time + 0.3;
 	// ALWAYS sends (this causes a radar circle), thus no check
 	e.cnt |= 0x80;
-	e.SendFlags |= 32;
+	e.SendFlags |= BIT(5);
 }
 
 void WaypointSprite_HelpMePing(entity e)
 {
 	WaypointSprite_Ping(e);
 	e.waypointsprite_helpmetime = time + waypointsprite_deployed_lifetime;
-	e.SendFlags |= 32;
+	e.SendFlags |= BIT(5);
 }
 
 void WaypointSprite_FadeOutIn(entity e, float t)
@@ -127,7 +127,7 @@ void WaypointSprite_FadeOutIn(entity e, float t)
 		e.fade_time = e.fade_time * t / current_fadetime;
 	}
 
-	e.SendFlags |= 16;
+	e.SendFlags |= BIT(4);
 }
 
 void WaypointSprite_Init()
@@ -280,29 +280,29 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 		}
 	}
 
-	if(sendflags & 64)
+	if(sendflags & BIT(6))
 	{
 		WriteCoord(MSG_ENTITY, self.origin.x);
 		WriteCoord(MSG_ENTITY, self.origin.y);
 		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 
-	if(sendflags & 1)
+	if(sendflags & BIT(0))
 	{
 		WriteByte(MSG_ENTITY, self.team);
 		WriteByte(MSG_ENTITY, self.rule);
 	}
 
-	if(sendflags & 2)
+	if(sendflags & BIT(1))
 		WriteString(MSG_ENTITY, self.model1);
 
-	if(sendflags & 4)
+	if(sendflags & BIT(2))
 		WriteString(MSG_ENTITY, self.model2);
 
-	if(sendflags & 8)
+	if(sendflags & BIT(3))
 		WriteString(MSG_ENTITY, self.model3);
 
-	if(sendflags & 16)
+	if(sendflags & BIT(4))
 	{
 		WriteCoord(MSG_ENTITY, self.fade_time);
 		WriteCoord(MSG_ENTITY, self.teleport_time);
@@ -310,13 +310,13 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 		float f;
 		f = 0;
 		if(self.currentammo)
-			f |= 1; // hideable
+			f |= BIT(0); // hideable
 		if(self.exteriormodeltoclient == to)
-			f |= 2; // my own
+			f |= BIT(1); // my own
 		WriteByte(MSG_ENTITY, f);
 	}
 
-	if(sendflags & 32)
+	if(sendflags & BIT(5))
 	{
 		WriteByte(MSG_ENTITY, self.cnt); // icon on radar
 		WriteByte(MSG_ENTITY, self.colormod.x * 255.0);

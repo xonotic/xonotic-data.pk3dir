@@ -387,23 +387,23 @@ void Ent_ReadEntCS()
 	self.classname = "entcs_receiver";
 	sf = ReadByte();
 
-	if(sf & 1)
+	if(sf & BIT(0))
 		self.sv_entnum = ReadByte();
-	if(sf & 2)
+	if(sf & BIT(1))
 	{
 		self.origin_x = ReadShort();
 		self.origin_y = ReadShort();
 		self.origin_z = ReadShort();
 		setorigin(self, self.origin);
 	}
-	if(sf & 4)
+	if(sf & BIT(2))
 	{
 		self.angles_y = ReadByte() * 360.0 / 256;
 		self.angles_x = self.angles_z = 0;
 	}
-	if(sf & 8)
+	if(sf & BIT(3))
 		self.healthvalue = ReadByte() * 10;
-	if(sf & 16)
+	if(sf & BIT(4))
 		self.armorvalue = ReadByte() * 10;
 
 	entcs_receiver[self.sv_entnum] = self;
@@ -568,7 +568,7 @@ void Ent_Nagger()
 
     int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
-	if(!(nags & 4))
+	if(!(nags & BIT(2)))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
@@ -580,7 +580,7 @@ void Ent_Nagger()
 		vote_active = 1;
 	}
 
-	if(nags & 64)
+	if(nags & BIT(6))
 	{
 		vote_yescount = ReadByte();
 		vote_nocount = ReadByte();
@@ -588,7 +588,7 @@ void Ent_Nagger()
 		vote_highlighted = ReadChar();
 	}
 
-	if(nags & 128)
+	if(nags & BIT(7))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
@@ -610,11 +610,11 @@ void Ent_Nagger()
 		}
 	}
 
-	ready_waiting = (nags & 1);
-	ready_waiting_for_me = (nags & 2);
-	vote_waiting = (nags & 4);
-	vote_waiting_for_me = (nags & 8);
-	warmup_stage = (nags & 16);
+	ready_waiting = (nags & BIT(0));
+	ready_waiting_for_me = (nags & BIT(1));
+	vote_waiting = (nags & BIT(2));
+	vote_waiting_for_me = (nags & BIT(3));
+	warmup_stage = (nags & BIT(4));
 }
 
 void Ent_EliminatedPlayers()

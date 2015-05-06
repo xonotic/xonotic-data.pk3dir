@@ -26,18 +26,18 @@ void animdecide_setframes(entity e, bool support_blending, .int fld_frame, .int 
 
 // explicit anim states (networked)
 void animdecide_setstate(entity e, int newstate, float restart);
-const int ANIMSTATE_DEAD1 = 1; // base frames: die1
-const int ANIMSTATE_DEAD2 = 2; // base frames: die2
-const int ANIMSTATE_DUCK = 4; // turns walk into duckwalk, jump into duckjump, etc.
-const int ANIMSTATE_FROZEN = 8; // force idle
+const int ANIMSTATE_DEAD1 = BIT(0); // base frames: die1
+const int ANIMSTATE_DEAD2 = BIT(1); // base frames: die2
+const int ANIMSTATE_DUCK = BIT(2); // turns walk into duckwalk, jump into duckjump, etc.
+const int ANIMSTATE_FROZEN = BIT(3); // force idle
 
 // implicit anim states (inferred from velocity, etc.)
-const int ANIMIMPLICITSTATE_INAIR = 1;
-const int ANIMIMPLICITSTATE_FORWARD = 2;
-const int ANIMIMPLICITSTATE_BACKWARDS = 4;
-const int ANIMIMPLICITSTATE_LEFT = 8;
-const int ANIMIMPLICITSTATE_RIGHT = 16;
-const int ANIMIMPLICITSTATE_JUMPRELEASED = 32;
+const int ANIMIMPLICITSTATE_INAIR = BIT(0);
+const int ANIMIMPLICITSTATE_FORWARD = BIT(1);
+const int ANIMIMPLICITSTATE_BACKWARDS = BIT(2);
+const int ANIMIMPLICITSTATE_LEFT = BIT(3);
+const int ANIMIMPLICITSTATE_RIGHT = BIT(4);
+const int ANIMIMPLICITSTATE_JUMPRELEASED = BIT(5);
 
 // explicit actions (networked); negative values are for lower body
 void animdecide_setaction(entity e, float action, float restart);

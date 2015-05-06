@@ -100,14 +100,14 @@ const int RADARICON_TAGGED = 1;
 
 ///////////////////////////
 // keys pressed
-const int KEY_FORWARD = 1;
-const int KEY_BACKWARD = 2;
-const int KEY_LEFT = 4;
-const int KEY_RIGHT = 8;
-const int KEY_JUMP = 16;
-const int KEY_CROUCH = 32;
-const int KEY_ATCK = 64;
-const int KEY_ATCK2 = 128;
+const int KEY_FORWARD = BIT(0);
+const int KEY_BACKWARD = BIT(1);
+const int KEY_LEFT = BIT(2);
+const int KEY_RIGHT = BIT(3);
+const int KEY_JUMP = BIT(4);
+const int KEY_CROUCH = BIT(5);
+const int KEY_ATCK = BIT(6);
+const int KEY_ATCK2 = BIT(7);
 
 ///////////////////////////
 // cvar constants
@@ -143,27 +143,27 @@ const int MAPVOTE_COUNT = 30;
 /**
  * Lower scores are better (e.g. suicides)
  */
-const int SFL_LOWER_IS_BETTER = 1;
+const int SFL_LOWER_IS_BETTER = BIT(0);
 
 /**
  * Don't show zero values as scores
  */
-const int SFL_HIDE_ZERO = 2;
+const int SFL_HIDE_ZERO = BIT(1);
 
 /**
  * Allow a column to be hidden (do not automatically add it even if it is a sorting key)
  */
-const int SFL_ALLOW_HIDE = 16;
+const int SFL_ALLOW_HIDE = BIT(4);
 
 /**
  * Display as a rank (with st, nd, rd, th suffix)
  */
-const int SFL_RANK = 32;
+const int SFL_RANK = BIT(5);
 
 /**
  * Display as mm:ss.s, value is stored as 10ths of a second (AND 0 is the worst possible value!)
  */
-const int SFL_TIME = 64;
+const int SFL_TIME = BIT(6);
 
 // not an extra constant yet
 #define SFL_ZERO_IS_WORST SFL_TIME

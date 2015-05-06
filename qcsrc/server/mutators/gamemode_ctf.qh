@@ -122,12 +122,12 @@ float ctf_captureshield_force; // push force of the shield
 
 // bot player logic
 const float HAVOCBOT_CTF_ROLE_NONE = 0;
-const float HAVOCBOT_CTF_ROLE_DEFENSE = 2;
-const float HAVOCBOT_CTF_ROLE_MIDDLE = 4;
-const float HAVOCBOT_CTF_ROLE_OFFENSE = 8;
-const float HAVOCBOT_CTF_ROLE_CARRIER = 16;
-const float HAVOCBOT_CTF_ROLE_RETRIEVER = 32;
-const float HAVOCBOT_CTF_ROLE_ESCORT = 64;
+const float HAVOCBOT_CTF_ROLE_DEFENSE = BIT(1);
+const float HAVOCBOT_CTF_ROLE_MIDDLE = BIT(2);
+const float HAVOCBOT_CTF_ROLE_OFFENSE = BIT(3);
+const float HAVOCBOT_CTF_ROLE_CARRIER = BIT(4);
+const float HAVOCBOT_CTF_ROLE_RETRIEVER = BIT(5);
+const float HAVOCBOT_CTF_ROLE_ESCORT = BIT(6);
 
 .float havocbot_cantfindflag;
 

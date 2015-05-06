@@ -1,12 +1,12 @@
 #ifndef SERVER_CONSTANTS_H
 #define SERVER_CONSTANTS_H
 
-const int FL_WEAPON = 8192;
-const int FL_POWERUP = 16384;
-const int FL_PROJECTILE = 32768;
-const int FL_TOSSED = 65536;
-const int FL_NO_WEAPON_STAY = 131072;
-const int FL_SPAWNING = 262144;
+const int FL_WEAPON = BIT(13);
+const int FL_POWERUP = BIT(14);
+const int FL_PROJECTILE = BIT(15);
+const int FL_TOSSED = BIT(BIT(4));
+const int FL_NO_WEAPON_STAY = BIT(17);
+const int FL_SPAWNING = BIT(18);
 
 const int SVC_SOUND = 6;
 const int SVC_STOPSOUND = 16;

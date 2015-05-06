@@ -31,63 +31,63 @@ vector real_origin(entity ent);
 .string cvar_basename;
 
 //.float spawnflags
-const float TSF_SUSPENDED     = 1;
+const float TSF_SUSPENDED     = BIT(0);
 /// Spawn a pillar model under the turret to make it look ok on uneven ground surfaces
-const float TSF_TERRAINBASE   = 2;
+const float TSF_TERRAINBASE   = BIT(1);
 /// Disable builtin ammo regeneration
-const float TSF_NO_AMMO_REGEN = 4;
+const float TSF_NO_AMMO_REGEN = BIT(2);
 /// Dont break path to chase enemys. will still fire at them if possible.
-const float TSF_NO_PATHBREAK  = 8;
+const float TSF_NO_PATHBREAK  = BIT(3);
 /// Dont respawn
-const float TSL_NO_RESPAWN    = 16;
+const float TSL_NO_RESPAWN    = BIT(4);
 /// Let this turret roam when idle.
-const float TSL_ROAM          = 32;
+const float TSL_ROAM          = BIT(5);
 
 /// target selection flags
 .float target_select_flags;
 /// target validatoin flags
 .float target_validate_flags;
 /// Dont select a target on its own.
-const float TFL_TARGETSELECT_NO            = 2;
+const float TFL_TARGETSELECT_NO            = BIT(1);
 /// Need line of sight
-const float TFL_TARGETSELECT_LOS           = 4;
+const float TFL_TARGETSELECT_LOS           = BIT(2);
 /// Players are valid targets
-const float TFL_TARGETSELECT_PLAYERS       = 8;
+const float TFL_TARGETSELECT_PLAYERS       = BIT(3);
 /// Missiles are valid targets
-const float TFL_TARGETSELECT_MISSILES      = 16;
+const float TFL_TARGETSELECT_MISSILES      = BIT(4);
 /// Responds to turret_trigger_target events
-const float TFL_TARGETSELECT_TRIGGERTARGET = 32;
+const float TFL_TARGETSELECT_TRIGGERTARGET = BIT(5);
 /// Angular limitations of turret head limits target selection
-const float TFL_TARGETSELECT_ANGLELIMITS   = 64;
+const float TFL_TARGETSELECT_ANGLELIMITS   = BIT(6);
 /// Range limits apply in targetselection
-const float TFL_TARGETSELECT_RANGELIMTS    = 128;
+const float TFL_TARGETSELECT_RANGELIMTS    = BIT(7);
 /// DOnt select targets with a .team matching its own
-const float TFL_TARGETSELECT_TEAMCHECK     = 256;
+const float TFL_TARGETSELECT_TEAMCHECK     = BIT(8);
 /// Cant select targets on its own. needs to be triggerd or slaved.
-const float TFL_TARGETSELECT_NOBUILTIN     = 512;
+const float TFL_TARGETSELECT_NOBUILTIN     = BIT(9);
 /// TFL_TARGETSELECT_TEAMCHECK is inverted (selects only mebers of own .team)
-const float TFL_TARGETSELECT_OWNTEAM       = 1024;
+const float TFL_TARGETSELECT_OWNTEAM       = BIT(10);
 /// Turrets aren't valid targets
-const float TFL_TARGETSELECT_NOTURRETS     = 2048;
+const float TFL_TARGETSELECT_NOTURRETS     = BIT(11);
 /// Use feild of view
-const float TFL_TARGETSELECT_FOV           = 4096;
+const float TFL_TARGETSELECT_FOV           = BIT(12);
 
-const float TFL_TARGETSELECT_MISSILESONLY  = 8192;
+const float TFL_TARGETSELECT_MISSILESONLY  = BIT(13);
 
 /// aim flags
 .float aim_flags;
 /// Dont aim.
-const float TFL_AIM_NO                  = 1;
+const float TFL_AIM_NO                  = BIT(0);
 /// Go for ground, not direct hit, but only if target is on ground.
-const float TFL_AIM_GROUNDGROUND        = 2;
+const float TFL_AIM_GROUNDGROUND        = BIT(1);
 /// Try to predict target movement (does not account for gravity)
-const float TFL_AIM_LEAD                = 4;
+const float TFL_AIM_LEAD                = BIT(2);
 /// Compensate for shot traveltime when lead
-const float TFL_AIM_SHOTTIMECOMPENSATE  = 8;
+const float TFL_AIM_SHOTTIMECOMPENSATE  = BIT(3);
 /// Try to do real prediction of targets z pos at impact.
-const float TFL_AIM_ZPREDICT            = 16;
+const float TFL_AIM_ZPREDICT            = BIT(4);
 /// Simply aim at target's current location
-const float TFL_AIM_SIMPLE              = 32;
+const float TFL_AIM_SIMPLE              = BIT(5);
 
 /// track (turn and pitch head) flags
 .float track_flags;
@@ -116,125 +116,125 @@ const float TFL_TRACKTYPE_FLUIDINERTIA = 3;
 /// How prefire check is preformed
 .float firecheck_flags;
 /// Dont kill the dead
-const float TFL_FIRECHECK_DEAD        = 4;
+const float TFL_FIRECHECK_DEAD        = BIT(2);
 /// Range limits apply
-const float TFL_FIRECHECK_DISTANCES   = 8;
+const float TFL_FIRECHECK_DISTANCES   = BIT(3);
 /// Line Of Sight needs to be clear
-const float TFL_FIRECHECK_LOS         = 16;
+const float TFL_FIRECHECK_LOS         = BIT(4);
 /// Consider distance inpactpoint<->aimspot
-const float TFL_FIRECHECK_AIMDIST     = 32;
+const float TFL_FIRECHECK_AIMDIST     = BIT(5);
 /// Consider enemy origin<->impactpoint
-const float TFL_FIRECHECK_REALDIST    = 64;
+const float TFL_FIRECHECK_REALDIST    = BIT(6);
 /// Consider angular diff head<->aimspot
-const float TFL_FIRECHECK_ANGLEDIST  = 128;
+const float TFL_FIRECHECK_ANGLEDIST  = BIT(7);
 /// (re)consider target.team<->self.team
-const float TFL_FIRECHECK_TEAMCECK   = 256;
+const float TFL_FIRECHECK_TEAMCECK   = BIT(8);
 /// Try to avoid friendly fire
-const float TFL_FIRECHECK_AFF        = 512;
+const float TFL_FIRECHECK_AFF        = BIT(9);
 /// Own .ammo needs to be >= then own .shot_dmg
-const float TFL_FIRECHECK_OWM_AMMO   = 1024;
+const float TFL_FIRECHECK_OWM_AMMO   = BIT(10);
 /// Others ammo need to be < others .ammo_max
-const float TFL_FIRECHECK_OTHER_AMMO = 2048;
+const float TFL_FIRECHECK_OTHER_AMMO = BIT(11);
 /// Check own .attack_finished_single vs time
-const float TFL_FIRECHECK_REFIRE     = 4096;
+const float TFL_FIRECHECK_REFIRE     = BIT(12);
 /// Move the acctual target to aimspot before tracing impact (and back after)
 //#define TFL_FIRECHECK_VERIFIED   8192
 /// Dont do any chekcs
-const float TFL_FIRECHECK_NO         = 16384;
+const float TFL_FIRECHECK_NO         = BIT(14);
 
 /// How shooting is done
 .float shoot_flags;
 /// Dont shoot
-const float  TFL_SHOOT_NO          = 64;
+const float  TFL_SHOOT_NO          = BIT(6);
 /// Fire in vollys (partial implementation through .shot_volly)
-const float  TFL_SHOOT_VOLLY       = 2;
+const float  TFL_SHOOT_VOLLY       = BIT(1);
 /// Always do a full volly, even if target is lost or dead. (not implemented)
-const float  TFL_SHOOT_VOLLYALWAYS = 4;
+const float  TFL_SHOOT_VOLLYALWAYS = BIT(2);
 /// Loop though all valid tarters, and hit them.
-const float  TFL_SHOOT_HITALLVALID = 8;
+const float  TFL_SHOOT_HITALLVALID = BIT(3);
 /// Fiering makes unit loose target (after volly is done, if in volly mode)
-const float  TFL_SHOOT_CLEARTARGET = 16;
+const float  TFL_SHOOT_CLEARTARGET = BIT(4);
 ///Custom shooting;
-const float  TFL_SHOOT_CUSTOM = 32;
+const float  TFL_SHOOT_CUSTOM = BIT(5);
 
 /// Information aboute the units capabilities
 .float turrcaps_flags;
 /// No kown capabilities
 const float  TFL_TURRCAPS_NONE        = 0;
 /// Capable of sniping
-const float  TFL_TURRCAPS_SNIPER      = 2;
+const float  TFL_TURRCAPS_SNIPER      = BIT(1);
 /// Capable of splasdamage
-const float  TFL_TURRCAPS_RADIUSDMG   = 4;
+const float  TFL_TURRCAPS_RADIUSDMG   = BIT(2);
 /// Has one or more cannons with zero shot traveltime
-const float  TFL_TURRCAPS_HITSCAN     = 8;
+const float  TFL_TURRCAPS_HITSCAN     = BIT(3);
 /// More then one (type of) gun
-const float  TFL_TURRCAPS_MULTIGUN    = 16;
+const float  TFL_TURRCAPS_MULTIGUN    = BIT(4);
 /// Carries at least one guided weapon
-const float  TFL_TURRCAPS_GUIDED      = 32;
+const float  TFL_TURRCAPS_GUIDED      = BIT(5);
 /// At least one gun fiers slow projectiles
-const float  TFL_TURRCAPS_SLOWPROJ    = 64;
+const float  TFL_TURRCAPS_SLOWPROJ    = BIT(6);
 /// At least one gun fiers medium speed projectiles
-const float  TFL_TURRCAPS_MEDPROJ     = 128;
+const float  TFL_TURRCAPS_MEDPROJ     = BIT(7);
 /// At least one gun fiers fast projectiles
-const float  TFL_TURRCAPS_FASTPROJ    = 256;
+const float  TFL_TURRCAPS_FASTPROJ    = BIT(8);
 /// At least one gun capable of damaging players
-const float  TFL_TURRCAPS_PLAYERKILL  = 512;
+const float  TFL_TURRCAPS_PLAYERKILL  = BIT(9);
 /// At least one gun that can shoot town missiles
-const float  TFL_TURRCAPS_MISSILEKILL = 1024;
+const float  TFL_TURRCAPS_MISSILEKILL = BIT(10);
 /// Has support capabilities. powerplants and sutch.
-const float  TFL_TURRCAPS_SUPPORT     = 2048;
+const float  TFL_TURRCAPS_SUPPORT     = BIT(11);
 /// Proveides at least one type of ammmo
-const float  TFL_TURRCAPS_AMMOSOURCE  = 4096;
+const float  TFL_TURRCAPS_AMMOSOURCE  = BIT(12);
 /// Can recive targets from external sources
-const float TFL_TURRCAPS_RECIVETARGETS = 8192;
+const float TFL_TURRCAPS_RECIVETARGETS = BIT(13);
 /// Capable of self-transport
-const float TFL_TURRCAPS_MOVE = 16384;
+const float TFL_TURRCAPS_MOVE = BIT(14);
 /// Will roam arround even if not chasing anyting
-const float TFL_TURRCAPS_ROAM = 32768;
-const float TFL_TURRCAPS_ISTURRET = 65536;
+const float TFL_TURRCAPS_ROAM = BIT(15);
+const float TFL_TURRCAPS_ISTURRET = BIT(BIT(4));
 
 /// Ammo types needed and/or provided
 //.float ammo_flags;
 #define ammo_flags currentammo
 /// Has and needs no ammo
-const float  TFL_AMMO_NONE     = 64;
+const float  TFL_AMMO_NONE     = BIT(6);
 /// Uses power
-const float  TFL_AMMO_ENERGY   = 2;
+const float  TFL_AMMO_ENERGY   = BIT(1);
 /// Uses bullets
-const float  TFL_AMMO_BULLETS  = 4;
+const float  TFL_AMMO_BULLETS  = BIT(2);
 /// Uses explosives
-const float  TFL_AMMO_ROCKETS  = 8;
+const float  TFL_AMMO_ROCKETS  = BIT(3);
 /// Regenerates ammo on its own
-const float  TFL_AMMO_RECHARGE = 16;
+const float  TFL_AMMO_RECHARGE = BIT(4);
 /// Can recive ammo from others
-const float  TFL_AMMO_RECIVE   = 32;
+const float  TFL_AMMO_RECIVE   = BIT(5);
 
 /// How incomming damage is handeld
 .float damage_flags;
 /// Cant be hurt
-const float  TFL_DMG_NO              = 256;
+const float  TFL_DMG_NO              = BIT(8);
 /// Can be damaged
-const float  TFL_DMG_YES             = 2;
+const float  TFL_DMG_YES             = BIT(1);
 /// Can be damaged  by teammates
-const float  TFL_DMG_TAKEFROMTEAM    = 4;
+const float  TFL_DMG_TAKEFROMTEAM    = BIT(2);
 /// Traget attackers
-const float  TFL_DMG_RETALIATE       = 8;
+const float  TFL_DMG_RETALIATE       = BIT(3);
 /// Target attackers, even is on own team
-const float  TFL_DMG_RETALIATEONTEAM = 16;
+const float  TFL_DMG_RETALIATEONTEAM = BIT(4);
 /// Loses target when damaged
-const float  TFL_DMG_TARGETLOSS      = 32;
+const float  TFL_DMG_TARGETLOSS      = BIT(5);
 /// Reciving damage trows off aim (pointless atm, aim gets recalculated to fast). not implemented.
-const float  TFL_DMG_AIMSHAKE        = 64;
+const float  TFL_DMG_AIMSHAKE        = BIT(6);
 /// Reciving damage slaps the head arround
-const float  TFL_DMG_HEADSHAKE       = 128;
+const float  TFL_DMG_HEADSHAKE       = BIT(7);
 /// Die and stay dead.
-const float  TFL_DMG_DEATH_NORESPAWN = 256;
+const float  TFL_DMG_DEATH_NORESPAWN = BIT(8);
 
 // Spawnflags
 /// Spawn in teambased modes
-const float TFL_SPAWN_TEAM      = 2;
+const float TFL_SPAWN_TEAM      = BIT(1);
 /// Spawn in FFA modes
-const float TFL_SPAWN_FFA       = 4;
+const float TFL_SPAWN_FFA       = BIT(2);
 
 
 /*
@@ -460,16 +460,16 @@ const int TID_TESLA         = 12;
 const int TID_WALKER        = 13;
 const int TID_LAST          = 13;
 
-const int TNSF_UPDATE       = 2;
-const int TNSF_STATUS       = 4;
-const int TNSF_SETUP        = 8;
-const int TNSF_ANG          = 16;
-const int TNSF_AVEL         = 32;
-const int TNSF_MOVE         = 64;
+const int TNSF_UPDATE       = BIT(1);
+const int TNSF_STATUS       = BIT(2);
+const int TNSF_SETUP        = BIT(3);
+const int TNSF_ANG          = BIT(4);
+const int TNSF_AVEL         = BIT(5);
+const int TNSF_MOVE         = BIT(6);
 .float anim_start_time;
-const int TNSF_ANIM         = 128;
+const int TNSF_ANIM         = BIT(7);
 
-const int TNSF_FULL_UPDATE  = 16777215;
+const int TNSF_FULL_UPDATE  = 0xFFFFFF;
 
 #endif // TTURRETS_ENABLED
 #endif

@@ -468,22 +468,22 @@ void CSQCModel_AutoTagIndex_Apply(void)
 }
 
 // FEATURE: EF_NODRAW workalike
-const int EF_BRIGHTFIELD	= 1;
-const int EF_BRIGHTLIGHT 	= 4;
-const int EF_DIMLIGHT 		= 8;
-const int EF_DOUBLESIDED 	= 32768;
-const int EF_NOSELFSHADOW 	= 65536;
-const int EF_DYNAMICMODELLIGHT = 131072;
-const int EF_RESTARTANIM_BIT = 1048576;
-const int EF_TELEPORT_BIT = 2097152;
-const int MF_ROCKET  =   1; // leave a trail
-const int MF_GRENADE =   2; // leave a trail
-const int MF_GIB     =   4; // leave a trail
-const int MF_ROTATE  =   8; // rotate (bonus items)
-const int MF_TRACER  =  16; // green split trail
-const int MF_ZOMGIB  =  32; // small blood trail
-const int MF_TRACER2 =  64; // orange split trail
-const int MF_TRACER3 = 128; // purple trail
+const int EF_BRIGHTFIELD	= BIT(0);
+const int EF_BRIGHTLIGHT 	= BIT(2);
+const int EF_DIMLIGHT 		= BIT(3);
+const int EF_DOUBLESIDED 	= BIT(15);
+const int EF_NOSELFSHADOW 	= BIT(16);
+const int EF_DYNAMICMODELLIGHT = BIT(17);
+const int EF_RESTARTANIM_BIT = BIT(20);
+const int EF_TELEPORT_BIT = BIT(21);
+const int MF_ROCKET  =  BIT(0); // leave a trail
+const int MF_GRENADE =  BIT(1); // leave a trail
+const int MF_GIB     =  BIT(2); // leave a trail
+const int MF_ROTATE  =  BIT(3); // rotate (bonus items)
+const int MF_TRACER  =  BIT(4); // green split trail
+const int MF_ZOMGIB  =  BIT(5); // small blood trail
+const int MF_TRACER2 =  BIT(6); // orange split trail
+const int MF_TRACER3 = BIT(7); // purple trail
 .int csqcmodel_effects;
 .int csqcmodel_modelflags;
 void CSQCModel_Effects_PreUpdate(void)

@@ -46,19 +46,19 @@ float entcs_send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	WriteByte(MSG_ENTITY, sf);
-	if(sf & 1)
+	if(sf & BIT(0))
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner)-1);
-	if(sf & 2)
+	if(sf & BIT(1))
 	{
 		WriteShort(MSG_ENTITY, self.origin.x);
 		WriteShort(MSG_ENTITY, self.origin.y);
 		WriteShort(MSG_ENTITY, self.origin.z);
 	}
-	if(sf & 4)
+	if(sf & BIT(2))
 		WriteByte(MSG_ENTITY, self.angles.y * 256.0 / 360);
-	if(sf & 8)
+	if(sf & BIT(3))
 		WriteByte(MSG_ENTITY, self.health / 10); // FIXME use a better scale?
-	if(sf & 16)
+	if(sf & BIT(4))
 		WriteByte(MSG_ENTITY, self.armorvalue / 10); // FIXME use a better scale?
 	return true;
 }
@@ -73,22 +73,22 @@ void entcs_think()
 	if(o.origin != self.origin)
 	{
 		setorigin(self, o.origin);
-		self.SendFlags |= 2;
+		self.SendFlags |= BIT(1);
 	}
 	if(o.angles.y != self.angles.y)
 	{
 		self.angles = o.angles;
-		self.SendFlags |= 4;
+		self.SendFlags |= BIT(2);
 	}
 	if(o.health != self.health)
 	{
 		self.health = o.health;
-		self.SendFlags |= 8;
+		self.SendFlags |= BIT(3);
 	}
 	if(o.armorvalue != self.armorvalue)
 	{
 		self.armorvalue = o.armorvalue;
-		self.SendFlags |= 16;
+		self.SendFlags |= BIT(4);
 	}
 }
 

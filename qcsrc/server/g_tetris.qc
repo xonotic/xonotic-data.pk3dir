@@ -45,13 +45,13 @@ const float TET_SPACE = 160; // blankness
 
 
 
-const float TETKEY_UP = 1;
-const float TETKEY_DOWN = 2;
-const float TETKEY_LEFT = 4;
-const float TETKEY_RIGHT = 8;
-const float TETKEY_ROTLEFT = 16;
-const float TETKEY_ROTRIGHT = 32;
-const float TETKEY_DROP = 64;
+const float TETKEY_UP = BIT(0);
+const float TETKEY_DOWN = BIT(1);
+const float TETKEY_LEFT = BIT(2);
+const float TETKEY_RIGHT = BIT(3);
+const float TETKEY_ROTLEFT = BIT(4);
+const float TETKEY_ROTRIGHT = BIT(5);
+const float TETKEY_DROP = BIT(6);
 const string TET_PADDING_RIGHT = "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0"; // get away from crosshair
 
 const float PIECES = 7;

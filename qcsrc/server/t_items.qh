@@ -2,47 +2,47 @@
 #define T_ITEMS_H
 
 // constants
-const int IT_UNLIMITED_WEAPON_AMMO 		=       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
-const int IT_UNLIMITED_SUPERWEAPONS		=       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
-const int IT_CTF_SHIELDED          		=       4; // set for the flag shield
-const int IT_USING_JETPACK         		=       8; // confirmation that button is pressed
-const int IT_JETPACK               		=      16; // actual item
-const int IT_FUEL_REGEN            		=      32; // fuel regeneration trigger
+const int IT_UNLIMITED_WEAPON_AMMO 		=	BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+const int IT_UNLIMITED_SUPERWEAPONS		=	BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+const int IT_CTF_SHIELDED          		=	BIT(2); // set for the flag shield
+const int IT_USING_JETPACK         		=	BIT(3); // confirmation that button is pressed
+const int IT_JETPACK               		=	BIT(4); // actual item
+const int IT_FUEL_REGEN            		=	BIT(5); // fuel regeneration trigger
 // where is 64... ?
-const int IT_FUEL       				=     128;
+const int IT_FUEL       				=	BIT(7);
 // -Wdouble-declaration
-// const int IT_SHELLS     				=     256;
+// const int IT_SHELLS     				=	BIT(8);
 // -Wdouble-declaration
-// const int IT_NAILS      				=     512;
+// const int IT_NAILS      				=	BIT(9);
 // -Wdouble-declaration
-// const int IT_ROCKETS    				=    1024;
+// const int IT_ROCKETS    				=	BIT(10);
 // -Wdouble-declaration
-// const int IT_CELLS      				=    2048;
-const int IT_SUPERWEAPON				=    4096;
-const int IT_STRENGTH   				=    8192;
-const int IT_INVINCIBLE 				=   16384;
-const int IT_HEALTH     				=   32768;
-const int IT_PLASMA     				=   65536;
+// const int IT_CELLS      				=	BIT(11);
+const int IT_SUPERWEAPON				=	BIT(12);
+const int IT_STRENGTH   				=	BIT(13);
+const int IT_INVINCIBLE 				=	BIT(14);
+const int IT_HEALTH     				=	BIT(15);
+const int IT_PLASMA     				=	BIT(16);
 
 // shared value space (union):
 	// for items:
 	// -Wdouble-declaration
-	#define IT_KEY1							131072
+	#define IT_KEY1							BIT(17)
 	// -Wdouble-declaration
-	#define IT_KEY2							262144
+	#define IT_KEY2							BIT(18)
 	// for players:
-	const int IT_RED_FLAG_TAKEN    		=   32768;
-	const int IT_RED_FLAG_LOST     		=   65536;
-	const int IT_RED_FLAG_CARRYING 		=   98304;
-	const int IT_BLUE_FLAG_TAKEN   		=  131072;
-	const int IT_BLUE_FLAG_LOST    		=  262144;
-	const int IT_BLUE_FLAG_CARRYING		=  393216;
+	const int IT_RED_FLAG_TAKEN    		=	BIT(15);
+	const int IT_RED_FLAG_LOST     		=	BIT(16);
+	const int IT_RED_FLAG_CARRYING 		=	IT_RED_FLAG_TAKEN | IT_RED_FLAG_LOST;
+	const int IT_BLUE_FLAG_TAKEN   		=	BIT(17);
+	const int IT_BLUE_FLAG_LOST    		=	BIT(18);
+	const int IT_BLUE_FLAG_CARRYING		=	IT_BLUE_FLAG_TAKEN | IT_BLUE_FLAG_LOST;
 // end
 
-const int IT_5HP                       	=  524288;
-const int IT_25HP                      	= 1048576;
-const int IT_ARMOR_SHARD               	= 2097152;
-const int IT_ARMOR                     	= 4194304;
+const int IT_5HP                       	=	BIT(19);
+const int IT_25HP                      	=	BIT(20);
+const int IT_ARMOR_SHARD               	=	BIT(21);
+const int IT_ARMOR                     	=	BIT(22);
 
 // item masks
 const int IT_AMMO                      	=    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
@@ -52,20 +52,20 @@ const int IT_UNLIMITED_AMMO            	=       3; // IT_UNLIMITED_SUPERWEAPONS 
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
-const int ISF_LOCATION 			= 2;
-const int ISF_MODEL				= 4;
-const int ISF_STATUS 			= 8;
-    const int ITS_STAYWEP 		= 1;
-    const int ITS_ANIMATE1 		= 2;
-    const int ITS_ANIMATE2 		= 4;
-    const int ITS_AVAILABLE 	= 8;
-    const int ITS_ALLOWFB 		= 16;
-    const int ITS_ALLOWSI 		= 32;
-    const int ITS_POWERUP 		= 64;
-const int ISF_COLORMAP 			= 16;
-const int ISF_DROP 				= 32;
-const int ISF_ANGLES 			= 64;
-const int ISF_SIZE 				= 128;
+const int ISF_LOCATION 			= BIT(1);
+const int ISF_MODEL				= BIT(2);
+const int ISF_STATUS 			= BIT(3);
+const int ITS_STAYWEP 		    = BIT(0);
+const int ITS_ANIMATE1 		    = BIT(1);
+const int ITS_ANIMATE2 		    = BIT(2);
+const int ITS_AVAILABLE 	    = BIT(3);
+const int ITS_ALLOWFB 		    = BIT(4);
+const int ITS_ALLOWSI 		    = BIT(5);
+const int ITS_POWERUP 		    = BIT(6);
+const int ISF_COLORMAP 			= BIT(4);
+const int ISF_DROP 				= BIT(5);
+const int ISF_ANGLES 			= BIT(6);
+const int ISF_SIZE 				= BIT(7);
 
 .int ItemStatus;
 

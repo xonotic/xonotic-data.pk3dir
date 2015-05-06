@@ -66,19 +66,19 @@ ALLMONSTERSOUNDS
 
 float GetMonsterSoundSampleField_notFound;
 
-const int MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 1
-const int MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 2
-const int MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill >= 3
+const int MONSTERSKILL_NOTEASY = BIT(8); // monster will not spawn on skill <= 1
+const int MONSTERSKILL_NOTMEDIUM = BIT(9); // monster will not spawn on skill 2
+const int MONSTERSKILL_NOTHARD = BIT(10); // monster will not spawn on skill >= 3
 
 // new flags
-const int MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
-const int MONSTERFLAG_NORESPAWN = 4;
-const int MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
-const int MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
-const int MONSTERFLAG_MINIBOSS = 64;	// monster spawns as mini-boss (also has a chance of naturally becoming one)
-const int MONSTERFLAG_INVINCIBLE = 128; // monster doesn't take damage (may be used for map objects & temporary monsters)
-const int MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
-const int MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
+const int MONSTERFLAG_APPEAR = BIT(1); // delay spawn until triggered
+const int MONSTERFLAG_NORESPAWN = BIT(2);
+const int MONSTERFLAG_FLY_VERTICAL = BIT(3); // fly/swim vertically
+const int MONSTERFLAG_INFRONT = BIT(5); // only check for enemies infront of us
+const int MONSTERFLAG_MINIBOSS = BIT(6);	// monster spawns as mini-boss (also has a chance of naturally becoming one)
+const int MONSTERFLAG_INVINCIBLE = BIT(7); // monster doesn't take damage (may be used for map objects & temporary monsters)
+const int MONSTERFLAG_SPAWNED = BIT(14); // flag for spawned monsters
+const int MONSTERFLAG_RESPAWNED = BIT(15); // flag for re-spawned monsters
 
 .int monster_movestate; // used to tell what the monster is currently doing
 const int MONSTER_MOVE_OWNER = 1; // monster will move to owner if in range, or stand still

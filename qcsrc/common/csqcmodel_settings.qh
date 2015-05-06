@@ -25,34 +25,34 @@
 
 // add properties you want networked to CSQC here
 #define CSQCMODEL_EXTRAPROPERTIES \
-	CSQCMODEL_PROPERTY(1, int, ReadShort, WriteShort, colormap) \
-	CSQCMODEL_PROPERTY(2, int, ReadInt24_t, WriteInt24_t, effects) \
-	CSQCMODEL_PROPERTY(4, int, ReadByte, WriteByte, modelflags) \
-	CSQCMODEL_PROPERTY_SCALED(8, float, ReadByte, WriteByte, alpha, 254, -1, 254) \
-	CSQCMODEL_PROPERTY(16, int, ReadByte, WriteByte, skin) \
-	CSQCMODEL_PROPERTY(32, float, ReadApproxPastTime, WriteApproxPastTime, death_time) \
-	CSQCMODEL_PROPERTY(64, float, ReadByte, WriteByte, solid) \
+	CSQCMODEL_PROPERTY(BIT(0), int, ReadShort, WriteShort, colormap) \
+	CSQCMODEL_PROPERTY(BIT(1), int, ReadInt24_t, WriteInt24_t, effects) \
+	CSQCMODEL_PROPERTY(BIT(2), int, ReadByte, WriteByte, modelflags) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(3), float, ReadByte, WriteByte, alpha, 254, -1, 254) \
+	CSQCMODEL_PROPERTY(BIT(4), int, ReadByte, WriteByte, skin) \
+	CSQCMODEL_PROPERTY(BIT(5), float, ReadApproxPastTime, WriteApproxPastTime, death_time) \
+	CSQCMODEL_PROPERTY(BIT(6), float, ReadByte, WriteByte, solid) \
 	CSQCMODEL_IF(!isplayer) \
-		CSQCMODEL_PROPERTY(128, TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_x, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_y, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_z, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_x, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_y, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_z, 255, 0, 255) \
+		CSQCMODEL_PROPERTY(BIT(7), TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
+		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_x, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_y, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, glowmod_z, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_x, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_y, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(BIT(8), float, ReadByte, WriteByte, colormod_z, 255, 0, 255) \
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_IF(isplayer) \
-		CSQCMODEL_PROPERTY(128, int, ReadByte, WriteByte, anim_state) \
-		CSQCMODEL_PROPERTY(128, float, ReadApproxPastTime, WriteApproxPastTime, anim_time) \
+		CSQCMODEL_PROPERTY(BIT(7), int, ReadByte, WriteByte, anim_state) \
+		CSQCMODEL_PROPERTY(BIT(7), float, ReadApproxPastTime, WriteApproxPastTime, anim_time) \
 		CSQCMODEL_IF(!islocalplayer) \
-			CSQCMODEL_PROPERTY(256, float, ReadChar, WriteChar, anim_lower_action) \
-			CSQCMODEL_PROPERTY(256, float, ReadApproxPastTime, WriteApproxPastTime, anim_lower_time) \
+			CSQCMODEL_PROPERTY(BIT(8), float, ReadChar, WriteChar, anim_lower_action) \
+			CSQCMODEL_PROPERTY(BIT(8), float, ReadApproxPastTime, WriteApproxPastTime, anim_lower_time) \
 		CSQCMODEL_ENDIF \
-		CSQCMODEL_PROPERTY(512, float, ReadChar, WriteChar, anim_upper_action) \
-		CSQCMODEL_PROPERTY(512, float, ReadApproxPastTime, WriteApproxPastTime, anim_upper_time) \
+		CSQCMODEL_PROPERTY(BIT(9), float, ReadChar, WriteChar, anim_upper_action) \
+		CSQCMODEL_PROPERTY(BIT(9), float, ReadApproxPastTime, WriteApproxPastTime, anim_upper_time) \
 	CSQCMODEL_ENDIF \
-	CSQCMODEL_PROPERTY(1024, float, ReadAngle, WriteAngle, v_angle_x) \
-	CSQCMODEL_PROPERTY_SCALED(4096, float, ReadByte, WriteByte, scale, 16, 0, 255)
+	CSQCMODEL_PROPERTY(BIT(10), float, ReadAngle, WriteAngle, v_angle_x) \
+	CSQCMODEL_PROPERTY_SCALED(BIT(12), float, ReadByte, WriteByte, scale, 16, 0, 255)
 // TODO get rid of colormod/glowmod here, find good solution for vortex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here

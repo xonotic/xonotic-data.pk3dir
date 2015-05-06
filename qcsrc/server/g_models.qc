@@ -19,13 +19,13 @@ void g_model_setcolormaptoactivator (void)
 	}
 	else
 		self.colormap = floor(random() * 256);
-	self.colormap |= 1024; // RENDER_COLORMAPPED
+	self.colormap |= BIT(10); // RENDER_COLORMAPPED
 }
 
 void g_clientmodel_setcolormaptoactivator (void)
 {
 	g_model_setcolormaptoactivator();
-	self.SendFlags |= 1;
+	self.SendFlags |= BIT(0);
 }
 
 void g_model_dropbyspawnflags()

@@ -593,7 +593,7 @@ void Ent_WaypointSprite()
 	InterpolateOrigin_Undo();
 	self.iflags |= IFLAG_ORIGIN;
 
-	if(sendflags & 0x80)
+	if(sendflags & BIT(7))
 	{
 		t = ReadByte();
 		if(t < 192)
@@ -618,7 +618,7 @@ void Ent_WaypointSprite()
 		self.build_finished = 0;
 	}
 
-	if(sendflags & 64)
+	if(sendflags & BIT(6))
 	{
 		// unfortunately, this needs to be exact (for the 3D display)
 		self.origin_x = ReadCoord();
@@ -627,34 +627,34 @@ void Ent_WaypointSprite()
 		setorigin(self, self.origin);
 	}
 
-	if(sendflags & 1)
+	if(sendflags & BIT(0))
 	{
 		self.team = ReadByte();
 		self.rule = ReadByte();
 	}
 
-	if(sendflags & 2)
+	if(sendflags & BIT(1))
 	{
 		if(self.netname)
 			strunzone(self.netname);
 		self.netname = strzone(ReadString());
 	}
 
-	if(sendflags & 4)
+	if(sendflags & BIT(2))
 	{
 		if(self.netname2)
 			strunzone(self.netname2);
 		self.netname2 = strzone(ReadString());
 	}
 
-	if(sendflags & 8)
+	if(sendflags & BIT(3))
 	{
 		if(self.netname3)
 			strunzone(self.netname3);
 		self.netname3 = strzone(ReadString());
 	}
 
-	if(sendflags & 16)
+	if(sendflags & BIT(4))
 	{
 		self.lifetime = ReadCoord();
 		self.fadetime = ReadCoord();
@@ -662,7 +662,7 @@ void Ent_WaypointSprite()
 		self.hideflags = ReadByte();
 	}
 
-	if(sendflags & 32)
+	if(sendflags & BIT(5))
 	{
 		f = ReadByte();
 		self.teamradar_icon = (f & 0x7F);

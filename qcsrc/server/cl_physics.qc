@@ -710,17 +710,17 @@ void SV_PlayerPhysics()
 
 	if(!buttons)
 		c = "x";
-	else if(buttons == 1)
+	else if(buttons == BIT(0))
 		c = "1";
-	else if(buttons == 2)
+	else if(buttons == BIT(1))
 		c = " ";
-	else if(buttons == 128)
+	else if(buttons == BIT(7))
 		c = "s";
-	else if(buttons == 256)
+	else if(buttons == BIT(8))
 		c = "w";
-	else if(buttons == 512)
+	else if(buttons == BIT(9))
 		c = "a";
-	else if(buttons == 1024)
+	else if(buttons == BIT(10))
 		c = "d";
 	else
 		c = "?";
@@ -1153,7 +1153,7 @@ void SV_PlayerPhysics()
 	else if (self.flags & FL_ONGROUND)
 	{
 		// we get here if we ran out of ammo
-		if((self.items & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && self.ammo_fuel < 0.01)
+		if((self.items & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & BIT(5)) && self.ammo_fuel < 0.01)
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 
 		// walking
@@ -1222,7 +1222,7 @@ void SV_PlayerPhysics()
 	{
 		float wishspeed0;
 		// we get here if we ran out of ammo
-		if((self.items & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && self.ammo_fuel < 0.01)
+		if((self.items & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & BIT(5)) && self.ammo_fuel < 0.01)
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 
 		if(maxspd_mod < 1)
