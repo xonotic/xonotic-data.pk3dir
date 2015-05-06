@@ -12,6 +12,7 @@
 .float alpha_max, alpha_min;
 .float fade_start, fade_end;
 .float default_solid; // Variable to store default self.solid for clientwalls
+.float clientwall_flag;
 
 void Ent_Wall_Draw();
 

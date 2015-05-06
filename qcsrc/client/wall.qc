@@ -2,25 +2,30 @@
 
 void Ent_Wall_PreDraw()
 {
-    if (self.inactive) {
-        self.alpha = 0;
-    } else {
-        vector org;
-        org = getpropertyvec(VF_ORIGIN);
-        if(!checkpvs(org, self))
-            self.alpha = 0;
-        else if(self.fade_start) {
-            self.alpha = self.alpha_max / 100.0 * bound(0,
-                               (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs)))
-                               / (self.fade_end - self.fade_start), 1);
-        } else {
-            self.alpha = 1;
-        }
-    }
-    if(self.alpha <= 0)
-        self.drawmask = 0;
-    else
-        self.drawmask = MASK_NORMAL;
+	if (self.inactive)
+	{
+		self.alpha = 0;
+	}
+	else
+	{
+		vector org;
+		org = getpropertyvec(VF_ORIGIN);
+		if(!checkpvs(org, self))
+			self.alpha = 0;
+		else if(self.fade_start) {
+			self.alpha = self.alpha_max / 100.0 * bound(0,
+							   (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs)))
+							   / (self.fade_end - self.fade_start), 1);
+		}
+		else
+		{
+			self.alpha = 1;
+		}
+	}
+	if(self.alpha <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
 }
 
 void Ent_Wall_Draw()
@@ -187,11 +192,11 @@ void Ent_Wall()
 			self.movedir_z = ReadCoord();
 			self.lip = ReadByte() / 255.0;
 		}
-        self.fade_start = ReadShort();
-        self.fade_end = ReadShort();
-        self.alpha_max = ReadShort();
-        self.alpha_min = ReadShort();
-        self.inactive = ReadShort();
+		self.fade_start = ReadShort();
+		self.fade_end = ReadShort();
+		self.alpha_max = ReadShort();
+		self.alpha_min = ReadShort();
+		self.inactive = ReadShort();
 		BGMScript_InitEntity(self);
 	}
 
@@ -201,5 +206,5 @@ void Ent_Wall()
 
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;
-    self.predraw = Ent_Wall_PreDraw;
+	self.predraw = Ent_Wall_PreDraw;
 }

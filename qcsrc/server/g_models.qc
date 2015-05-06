@@ -34,7 +34,7 @@ void g_clientmodel_setcolormaptoactivator (void)
 
 void g_clientmodel_use(void)
 {
-    g_clientmodel_setcolormaptoactivator();
+	g_clientmodel_setcolormaptoactivator();
 }
 
 void g_model_dropbyspawnflags()
@@ -138,11 +138,11 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 			WriteCoord(MSG_ENTITY, self.movedir.z);
 			WriteByte(MSG_ENTITY, floor(self.lip * 255));
 		}
-        WriteShort(MSG_ENTITY, self.fade_start);
-        WriteShort(MSG_ENTITY, self.fade_end);
-        WriteShort(MSG_ENTITY, self.alpha_max);
-        WriteShort(MSG_ENTITY, self.alpha_min);
-        WriteShort(MSG_ENTITY, self.inactive);
+		WriteShort(MSG_ENTITY, self.fade_start);
+		WriteShort(MSG_ENTITY, self.fade_end);
+		WriteShort(MSG_ENTITY, self.alpha_max);
+		WriteShort(MSG_ENTITY, self.alpha_min);
+		WriteShort(MSG_ENTITY, self.inactive);
 	}
 
 	return true;
@@ -166,7 +166,7 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0; \
 	Net_LinkEntity(self, true, 0, g_clientmodel_genericsendentity); \
-    self.default_solid = sol;
+	self.default_solid = sol;
 
 // non-solid model entities:
 void spawnfunc_misc_gamemodel()         { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity

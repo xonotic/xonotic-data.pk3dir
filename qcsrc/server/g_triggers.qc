@@ -103,9 +103,9 @@ void SUB_UseTargets()
 		}
 		if (s != "")
 		{
-            // Flag to set func_clientwall state
-            // 1 == deactivate, 2 == activate, 0 == do nothing
-            float aw_inactive = self.clientwall_flag;
+			// Flag to set func_clientwall state
+			// 1 == deactivate, 2 == activate, 0 == do nothing
+			float aw_inactive = self.clientwall_flag;
 			for(t = world; (t = find(t, targetname, s)); )
 			if(t.use)
 			{
@@ -115,18 +115,25 @@ void SUB_UseTargets()
 				}
 				else
 				{
-                    if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary") {
-                        if (aw_inactive == 1) {
-                            t.inactive = 1;
-                        } else if (aw_inactive == 2) {
-                            t.inactive = 0;
-                        }
-                        if (t.inactive) {
-                            t.solid = SOLID_NOT;
-                        } else {
-                            t.solid = t.default_solid;
-                        }
-                    }
+					if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
+					{
+						if (aw_inactive == 1)
+						{
+							t.inactive = 1;
+						}
+						else if (aw_inactive == 2)
+						{
+							t.inactive = 0;
+						}
+						if (t.inactive)
+						{
+							t.solid = SOLID_NOT;
+						}
+						else
+						{
+							t.solid = t.default_solid;
+						}
+					}
 					self = t;
 					other = stemp;
 					activator = act;
