@@ -29,6 +29,10 @@ entity spawnObject(entity this, entity)
 	return this;
 }
 
+// Classes have a `spawn##cname(entity, entity)` constructor
+// The parameters are used as locals for [[accumulate]]
+
+// Macro to hide this implementation detail
 #define NEW(cname) (spawn##cname(null_entity, null_entity))
 
 #define CLASS(cname, base)                                          \
