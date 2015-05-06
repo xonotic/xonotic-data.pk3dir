@@ -1,6 +1,6 @@
 #include "vehicle.qh"
 
-#include "../_.qh"
+#include "../_all.qh"
 #include "../cl_player.qh"
 #include "../../common/constants.qh"
 #include "../waypointsprites.qh"

@@ -1,5 +1,5 @@
 #include "csqcmodel_hooks.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "gibs.qh"
 #include "player_skeleton.qh"

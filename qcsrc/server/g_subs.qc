@@ -1,5 +1,5 @@
 #include "g_subs.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "antilag.qh"
 #include "command/common.qh"

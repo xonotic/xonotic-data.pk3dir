@@ -1,5 +1,5 @@
 #include "modeleffects.qh"
-#include "_.qh"
+#include "_all.qh"
 
 .float cnt;
 .float scale;

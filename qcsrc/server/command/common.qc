@@ -1,6 +1,6 @@
 #include "../../common/command/command.qh"
 #include "common.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "../scores.qh"
 

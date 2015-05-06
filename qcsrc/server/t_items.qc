@@ -1,7 +1,7 @@
 #include "t_items.qh"
 
 #if defined(SVQC)
-    #include "_.qh"
+    #include "_all.qh"
 
     #include "g_subs.qh"
     #include "waypointsprites.qh"

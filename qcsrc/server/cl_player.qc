@@ -1,5 +1,5 @@
 #include "cl_player.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "bot/bot.qh"
 #include "cheats.qh"

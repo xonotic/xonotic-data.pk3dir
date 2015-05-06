@@ -1,5 +1,5 @@
 #include "hud_config.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "hud.qh"
 

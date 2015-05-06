@@ -1,6 +1,6 @@
 #include "../../common/command/command.qh"
 #include "banning.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "common.qh"
 

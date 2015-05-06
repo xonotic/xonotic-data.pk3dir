@@ -1,5 +1,5 @@
 #include "spawnpoints.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "mutators/mutators_include.qh"
 #include "g_world.qh"

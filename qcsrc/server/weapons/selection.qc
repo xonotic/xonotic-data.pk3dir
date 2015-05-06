@@ -1,5 +1,5 @@
 #include "selection.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "weaponsystem.qh"
 #include "../t_items.qh"

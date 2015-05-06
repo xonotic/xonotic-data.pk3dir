@@ -1,6 +1,6 @@
 #include "../../common/command/command.qh"
 #include "radarmap.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "../g_subs.qh"
 #include "../g_world.qh"

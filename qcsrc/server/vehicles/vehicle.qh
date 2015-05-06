@@ -1,7 +1,7 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
 
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "../antilag.qh"
 #include "../cl_player.qh"

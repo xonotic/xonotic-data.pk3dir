@@ -1,5 +1,5 @@
 #include "scoreboard.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "hud.qh"
 #include "sortlist.qh"

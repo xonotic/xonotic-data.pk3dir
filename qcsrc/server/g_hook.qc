@@ -1,5 +1,5 @@
 #include "g_hook.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "weapons/common.qh"
 #include "weapons/weaponsystem.qh"

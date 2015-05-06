@@ -1,4 +1,4 @@
-#include "_.qh"
+#include "_all.qh"
 
 #include "announcer.qh"
 #include "hook.qh"

@@ -1,5 +1,5 @@
 #include "ipban.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "autocvars.qh"
 #include "command/banning.qh"

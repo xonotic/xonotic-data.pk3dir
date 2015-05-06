@@ -1,5 +1,5 @@
 #include "base.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 .float() cbc_func;
 .entity cbc_next;

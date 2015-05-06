@@ -1,4 +1,4 @@
-#include "../../_.qh"
+#include "../../_all.qh"
 
 void spawnfunc_turret_phaser();
 void turret_phaser_dinit();

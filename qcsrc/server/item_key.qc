@@ -1,5 +1,5 @@
 #include "item_key.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "../common/monsters/monsters.qh"
 #include "../common/notifications.qh"

@@ -1,5 +1,5 @@
 #include "bot.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "aim.qh"
 #include "navigation.qh"

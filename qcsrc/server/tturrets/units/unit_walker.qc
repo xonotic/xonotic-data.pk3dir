@@ -1,4 +1,4 @@
-#include "../../_.qh"
+#include "../../_all.qh"
 
 #include "../../movelib.qh"
 #include "../../steerlib.qh"

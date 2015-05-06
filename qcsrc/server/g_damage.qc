@@ -1,5 +1,5 @@
 #include "g_damage.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "g_hook.qh"
 #include "mutators/mutators_include.qh"

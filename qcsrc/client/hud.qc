@@ -1,5 +1,5 @@
 #include "hud.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "hud_config.qh"
 #include "scoreboard.qh"

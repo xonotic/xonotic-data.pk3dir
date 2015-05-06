@@ -1,5 +1,5 @@
 #include "g_world.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "anticheat.qh"
 #include "antilag.qh"

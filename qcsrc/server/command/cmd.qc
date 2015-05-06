@@ -1,6 +1,6 @@
 #include "../../common/command/command.qh"
 #include "cmd.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "common.qh"
 #include "vote.qh"

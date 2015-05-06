@@ -1,5 +1,5 @@
 #include "havocbot.qh"
-#include "../../_.qh"
+#include "../../_all.qh"
 
 #include "../aim.qh"
 #include "../bot.qh"

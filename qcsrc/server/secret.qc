@@ -1,5 +1,5 @@
 #include "secret.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "g_triggers.qh"
 #include "../common/util.qh"

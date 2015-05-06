@@ -1,5 +1,5 @@
 #include "waypointsprites.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "hud.qh"
 #include "teamradar.qh"

@@ -1,5 +1,5 @@
 #include "gamemode_lms.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "gamemode.qh"
 

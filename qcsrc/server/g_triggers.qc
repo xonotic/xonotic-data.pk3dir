@@ -1,5 +1,5 @@
 #include "g_triggers.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "weapons/csqcprojectile.qh"
 #include "../common/deathtypes.qh"

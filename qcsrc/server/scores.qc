@@ -1,5 +1,5 @@
 #include "scores.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "command/common.qh"
 #include "mutators/mutators_include.qh"

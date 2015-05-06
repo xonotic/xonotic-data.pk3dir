@@ -1,5 +1,5 @@
 #include "announcer.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "../common/notifications.qh"
 #include "../common/stats.qh"

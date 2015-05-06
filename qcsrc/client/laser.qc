@@ -1,5 +1,5 @@
 #include "laser.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "hook.qh"
 

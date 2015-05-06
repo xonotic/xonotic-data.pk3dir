@@ -1,5 +1,5 @@
 #include "wall.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "bgmscript.qh"
 

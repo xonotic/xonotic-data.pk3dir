@@ -1,5 +1,5 @@
 #include "t_teleporters.qh"
-#include "_.qh"
+#include "_all.qh"
 
 #include "anticheat.qh"
 #include "cl_player.qh"

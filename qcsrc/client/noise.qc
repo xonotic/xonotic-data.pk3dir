@@ -1,5 +1,5 @@
 #include "noise.qh"
-#include "_.qh"
+#include "_all.qh"
 
 entityclass(Noise);
 class(Noise) .float noise_baccum;

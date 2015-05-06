@@ -1,5 +1,5 @@
 #include "hitplot.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "../antilag.qh"
 #include "../g_subs.qh"

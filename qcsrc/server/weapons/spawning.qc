@@ -1,5 +1,5 @@
 #include "spawning.qh"
-#include "../_.qh"
+#include "../_all.qh"
 
 #include "weaponsystem.qh"
 #include "../mutators/mutators_include.qh"
