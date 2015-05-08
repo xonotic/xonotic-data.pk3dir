@@ -2,7 +2,6 @@
 CLASS(XonoticProfileTab) EXTENDS(XonoticTab)
 	METHOD(XonoticProfileTab, fill, void(entity))
 	METHOD(XonoticProfileTab, draw, void(entity))
-	ATTRIB(XonoticProfileTab, title, string, _("Profile"))
 	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticProfileTab, rows, float, 23)
 	ATTRIB(XonoticProfileTab, columns, float, 6.1) // added extra .2 for center space

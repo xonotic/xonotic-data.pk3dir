@@ -1,7 +1,6 @@
 #ifdef INTERFACE
 CLASS(XonoticAudioSettingsTab) EXTENDS(XonoticTab)
 	METHOD(XonoticAudioSettingsTab, fill, void(entity))
-	ATTRIB(XonoticAudioSettingsTab, title, string, _("Audio"))
 	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticAudioSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space

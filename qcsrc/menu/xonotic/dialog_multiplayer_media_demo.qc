@@ -1,7 +1,6 @@
 #ifdef INTERFACE
 CLASS(XonoticDemoBrowserTab) EXTENDS(XonoticTab)
 	METHOD(XonoticDemoBrowserTab, fill, void(entity))
-	ATTRIB(XonoticDemoBrowserTab, title, string, _("Demo"))
 	ATTRIB(XonoticDemoBrowserTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticDemoBrowserTab, rows, float, 21)
 	ATTRIB(XonoticDemoBrowserTab, columns, float, 6.5)

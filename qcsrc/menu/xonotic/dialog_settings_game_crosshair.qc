@@ -1,9 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticGameCrosshairSettingsTab) EXTENDS(XonoticTab)
-	//METHOD(XonoticGameCrosshairSettingsTab, toString, string(entity))
 	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity))
 	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity))
-	ATTRIB(XonoticGameCrosshairSettingsTab, title, string, _("Crosshair"))
 	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2)

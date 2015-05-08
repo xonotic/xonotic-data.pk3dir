@@ -1,9 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticGameMessageSettingsTab) EXTENDS(XonoticTab)
-	//METHOD(XonoticGameWeaponsSettingsTab, toString, string(entity))
 	METHOD(XonoticGameMessageSettingsTab, fill, void(entity))
 	METHOD(XonoticGameMessageSettingsTab, showNotify, void(entity))
-	ATTRIB(XonoticGameMessageSettingsTab, title, string, _("Messages"))
 	ATTRIB(XonoticGameMessageSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameMessageSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameMessageSettingsTab, columns, float, 6)

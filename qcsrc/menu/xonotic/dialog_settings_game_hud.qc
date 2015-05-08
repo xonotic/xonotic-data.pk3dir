@@ -1,9 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticGameHUDSettingsTab) EXTENDS(XonoticTab)
-	//METHOD(XonoticGameHUDSettingsTab, toString, string(entity))
 	METHOD(XonoticGameHUDSettingsTab, fill, void(entity))
 	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity))
-	ATTRIB(XonoticGameHUDSettingsTab, title, string, _("HUD"))
 	ATTRIB(XonoticGameHUDSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameHUDSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameHUDSettingsTab, columns, float, 6.2)

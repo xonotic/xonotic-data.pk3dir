@@ -1,9 +1,7 @@
 #ifdef INTERFACE
 CLASS(XonoticGameViewSettingsTab) EXTENDS(XonoticTab)
-	//METHOD(XonoticGameCrosshairSettingsTab, toString, string(entity))
 	METHOD(XonoticGameViewSettingsTab, fill, void(entity))
 	METHOD(XonoticGameViewSettingsTab, showNotify, void(entity))
-	ATTRIB(XonoticGameViewSettingsTab, title, string, _("View"))
 	ATTRIB(XonoticGameViewSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameViewSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameViewSettingsTab, columns, float, 6.2)
