@@ -38,9 +38,10 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 	//me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom")));
 	me.TR(me);
+		me.TDempty(me, 0.1);
 		me.TD(me, 3, 2, e = makeXonoticCrosshairPicker());
 			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		me.TD(me, 3, 1, e = makeXonoticCrosshairPreview());
+		me.TD(me, 3, 0.9, e = makeXonoticCrosshairPreview());
 			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 	me.TR(me);
 	me.TR(me);
