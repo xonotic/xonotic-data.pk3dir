@@ -1,0 +1,165 @@
+#ifndef MISCFUNCTIONS_H
+#define MISCFUNCTIONS_H
+
+entity players;
+entity teams;
+float team_count; // real teams
+
+void AuditLists();
+
+float RegisterPlayer(entity player);
+
+void RemovePlayer(entity player);
+
+void MoveToLast(entity e);
+
+float RegisterTeam(entity Team);
+
+void RemoveTeam(entity Team);
+
+entity GetTeam(int Team, bool add);
+
+vector HUD_GetFontsize(string cvarname);
+
+float PreviewExists(string name);
+
+vector rotate(vector v, float a);
+
+int ColorTranslateMode;
+
+string ColorTranslateRGB(string s);
+
+// decolorizes and team colors the player name when needed
+string playername(string thename, float teamid);
+
+float cvar_or(string cv, float v);
+
+vector project_3d_to_2d(vector vec);
+
+void dummyfunction(float a1, float a2, float a3, float a4, float a5, float a6, float a7, float a8);
+
+float expandingbox_sizefactor_from_fadelerp(float fadelerp);
+
+vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float boxxsizefactor);
+
+void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag);
+
+void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag);
+
+// drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
+float _drawpic_imgaspect;
+vector _drawpic_imgsize;
+vector _drawpic_sz;
+float _drawpic_oldsz;
+string _drawpic_picpath;
+#define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
+	do {\
+		_drawpic_imgsize = draw_getimagesize(pic);\
+		if(_drawpic_imgsize != '0 0 0') {\
+			_drawpic_imgaspect = _drawpic_imgsize.x/_drawpic_imgsize.y;\
+			_drawpic_sz = mySize;\
+			if(_drawpic_sz.x/_drawpic_sz.y > _drawpic_imgaspect) {\
+				_drawpic_oldsz = _drawpic_sz.x;\
+				_drawpic_sz.x = _drawpic_sz.y * _drawpic_imgaspect;\
+				if(_drawpic_sz.x)\
+					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz.x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			} else {\
+				_drawpic_oldsz = _drawpic_sz.y;\
+				_drawpic_sz.y = _drawpic_sz.x / _drawpic_imgaspect;\
+				if(_drawpic_sz.y)\
+					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz.y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			}\
+		}\
+	} while(0)
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_aspect_skin(pos,pic,sz,color,theAlpha,drawflag)\
+	do{\
+		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		if(precache_pic(_drawpic_picpath) == "") {\
+			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
+		}\
+		drawpic_aspect(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
+		_drawpic_picpath = string_null;\
+	} while(0)
+
+// draw HUD element with image from gfx/hud/hud_skin/foo.tga if it exists, otherwise gfx/hud/default/foo.tga
+#define drawpic_skin(pos,pic,sz,color,theAlpha,drawflag)\
+	do{\
+		_drawpic_picpath = strcat(hud_skin_path, "/", pic);\
+		if(precache_pic(_drawpic_picpath) == "") {\
+			_drawpic_picpath = strcat("gfx/hud/default/", pic);\
+		}\
+		drawpic(pos, _drawpic_picpath, sz, color, theAlpha, drawflag);\
+		_drawpic_picpath = string_null;\
+	} while(0)
+
+void drawpic_aspect_skin_expanding(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
+
+void drawpic_aspect_skin_expanding_two(vector position, string pic, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
+
+#define SET_POS_AND_SZ_Y_ASPECT(allow_colors) do {																	\
+	float textaspect, oldsz;																						\
+	textaspect = stringwidth(text, allow_colors, '1 1 1' * sz.y) / sz.y;											\
+	if(sz.x/sz.y > textaspect) {																					\
+		oldsz = sz.x;																								\
+		sz.x = sz.y * textaspect;																					\
+		pos.x += (oldsz - sz.x) * 0.5;																				\
+	} else {																										\
+		oldsz = sz.y;																								\
+		sz.y = sz.x / textaspect; 																					\
+		pos.y += (oldsz - sz.y) * 0.5;																				\
+	}																												\
+} while(0)
+
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag);
+
+// drawstring wrapper to draw a colorcodedstring as large as possible with preserved aspect ratio into a box
+void drawcolorcodedstring_aspect(vector pos, string text, vector sz, float theAlpha, float drawflag);
+
+vector drawfontscale;
+void drawstring_expanding(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag, float fadelerp);
+
+// drawstring wrapper to draw a string as large as possible with preserved aspect ratio into a box
+void drawstring_aspect_expanding(vector pos, string text, vector sz, vector color, float theAlpha, float drawflag, float fadelerp);
+
+void drawcolorcodedstring_expanding(vector position, string text, vector theScale, float theAlpha, float flag, float fadelerp);
+
+void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, float theAlpha, float drawflag, float fadelerp);
+
+// this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
+float PolyDrawModelSurface(entity e, float i_s);
+void PolyDrawModel(entity e);
+
+void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag);
+
+const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
+vector getplayerorigin(int pl);
+
+float getplayeralpha(float pl);
+
+vector getcsqcplayercolor(float pl);
+
+float getplayerisdead(float pl);
+
+void URI_Get_Callback(int id, float status, string data);
+
+void draw_beginBoldFont();
+
+void draw_endBoldFont();
+
+
+const int MAX_ACCURACY_LEVELS = 10;
+float acc_lev[MAX_ACCURACY_LEVELS];
+vector acc_col[MAX_ACCURACY_LEVELS];
+float acc_col_loadtime;
+int acc_levels;
+string acc_color_levels;
+void Accuracy_LoadLevels();
+
+void Accuracy_LoadColors();
+
+vector Accuracy_GetColor(float accuracy);
+
+#endif

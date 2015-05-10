@@ -1,3 +1,24 @@
+#include "damage.qh"
+#include "_all.qh"
+
+#include "gibs.qh"
+#include "movetypes.qh"
+#include "prandom.qh"
+
+#include "vehicles/vehicles.qh"
+
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/util.qh"
+
+#include "../common/weapons/weapons.qh"
+
+.entity tag_entity;
+
+.float cnt;
+.int state;
+.bool isplayermodel;
+
 void DamageEffect_Think()
 {
 	// if particle distribution is enabled, slow ticrate by total number of damages
@@ -31,11 +52,12 @@ void DamageEffect_Think()
 	pointparticles(self.team, org, '0 0 0', 1);
 }
 
-void DamageEffect(vector hitorg, float dmg, float type, float specnum)
+void DamageEffect(vector hitorg, float dmg, int type, int specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
-	float life, nearestbone = 0;
+	int nearestbone = 0;
+	float life;
 	string specstr, effectname;
 	entity e;
 
@@ -85,7 +107,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 		{
 			specstr = species_prefix(specnum);
 			specstr = substring(specstr, 0, strlen(specstr) - 1);
-			effectname = strreplace("BLOOD", specstr, effectname); 
+			effectname = strreplace("BLOOD", specstr, effectname);
 		}
 		else { return; } // objects don't bleed
 	}
@@ -104,7 +126,9 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 void Ent_DamageInfo(float isNew)
 {
-	float dmg, rad, edge, thisdmg, forcemul, species, hitplayer = FALSE;
+	float dmg, rad, edge, thisdmg;
+	bool hitplayer = false;
+	int species, forcemul;
 	vector force, thisforce;
 	entity oldself;
 
@@ -114,9 +138,9 @@ void Ent_DamageInfo(float isNew)
 	w_issilent = (w_deathtype & 0x8000);
 	w_deathtype = (w_deathtype & 0x7FFF);
 
-	w_org_x = ReadCoord();
-	w_org_y = ReadCoord();
-	w_org_z = ReadCoord();
+	w_org.x = ReadCoord();
+	w_org.y = ReadCoord();
+	w_org.z = ReadCoord();
 
 	dmg = ReadByte();
 	rad = ReadByte();
@@ -185,7 +209,7 @@ void Ent_DamageInfo(float isNew)
 		DamageEffect(w_org, thisdmg, w_deathtype, species);
 
 		if(self.isplayermodel)
-			hitplayer = TRUE; // this impact damaged a player
+			hitplayer = true; // this impact damaged a player
 	}
 
 	self = oldself;
@@ -329,9 +353,7 @@ void Ent_DamageInfo(float isNew)
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
-		float hitwep;
-
-		hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
+		int hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);

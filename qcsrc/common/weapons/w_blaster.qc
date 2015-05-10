@@ -9,7 +9,7 @@ REGISTER_WEAPON(
 /* color     */ '1 0.5 0.5',
 /* modelname */ "laser",
 /* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairlaser 0.4",
+/* crosshair */ "gfx/crosshairlaser 0.5",
 /* wepimg    */ "weaponlaser",
 /* refname   */ "blaster",
 /* wepname   */ _("Blaster")
@@ -68,7 +68,7 @@ void W_Blaster_Touch(void)
 		self.projectiledeathtype,
 		other
 	);
-	
+
 	remove(self);
 }
 
@@ -77,7 +77,7 @@ void W_Blaster_Think(void)
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;
 	self.nextthink = time + self.blaster_lifetime;
-	CSQCProjectile(self, TRUE, PROJECTILE_BLASTER, TRUE);
+	CSQCProjectile(self, true, PROJECTILE_BLASTER, true);
 }
 
 void W_Blaster_Attack(
@@ -94,13 +94,13 @@ void W_Blaster_Attack(
 {
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, atk_damage);
+	W_SetupShot_Dir(self, s_forward, false, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, atk_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.classname = "blasterbolt";
-	missile.bot_dodge = TRUE;
+	missile.bot_dodge = true;
 	missile.bot_dodgerating = atk_damage;
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -112,7 +112,7 @@ void W_Blaster_Attack(
 
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
-	
+
 	W_SetupProjVelocity_Explicit(
 		missile,
 		w_shotdir,
@@ -121,7 +121,7 @@ void W_Blaster_Attack(
 		0,
 		0,
 		atk_spread,
-		FALSE
+		false
 	);
 
 	missile.angles = vectoangles(missile.velocity);
@@ -132,7 +132,7 @@ void W_Blaster_Attack(
 	missile.touch = W_Blaster_Touch;
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH;
-	missile.projectiledeathtype = atk_deathtype; 
+	missile.projectiledeathtype = atk_deathtype;
 	missile.think = W_Blaster_Think;
 	missile.nextthink = time + atk_delay;
 
@@ -147,7 +147,7 @@ void W_Blaster_Attack(
 		self = oldself;
 	}
 }
-float W_Blaster(float request)
+bool W_Blaster(int request)
 {
 	switch(request)
 	{
@@ -156,16 +156,16 @@ float W_Blaster(float request)
 			if(WEP_CVAR(blaster, secondary))
 			{
 				if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
-					{ self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), FALSE); }
+					{ self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
 				else
-					{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), FALSE); }
+					{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 			}
 			else
-				{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), FALSE); }
+				{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 
-			return TRUE;
+			return true;
 		}
-		
+
 		case WR_THINK:
 		{
 			if(self.BUTTON_ATCK)
@@ -221,52 +221,52 @@ float W_Blaster(float request)
 					}
 				}
 			}
-			return TRUE;
+			return true;
 		}
-		
-		case WR_INIT: 
+
+		case WR_INIT:
 		{
 			precache_model("models/weapons/g_laser.md3");
 			precache_model("models/weapons/v_laser.md3");
 			precache_model("models/weapons/h_laser.iqm");
 			precache_sound("weapons/lasergun_fire.wav");
-			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
 		}
-		
+
 		case WR_SETUP:
 		{
 			self.ammo_field = ammo_none;
-			return TRUE;
+			return true;
 		}
-		
+
 		case WR_CHECKAMMO1:
 		case WR_CHECKAMMO2:
 		{
-			return TRUE; // laser has infinite ammo
+			return true; // laser has infinite ammo
 		}
-		
+
 		case WR_CONFIG:
 		{
-			BLASTER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			BLASTER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
-		
+
 		case WR_SUICIDEMESSAGE:
 		{
 			return WEAPON_BLASTER_SUICIDE;
 		}
-		
+
 		case WR_KILLMESSAGE:
 		{
 			return WEAPON_BLASTER_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
-float W_Blaster(float request)
+bool W_Blaster(int request)
 {
 	switch(request)
 	{
@@ -276,21 +276,21 @@ float W_Blaster(float request)
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 			if(!w_issilent) { sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM); }
-			return TRUE;
+			return true;
 		}
-		
+
 		case WR_INIT:
 		{
 			precache_sound("weapons/laserimpact.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

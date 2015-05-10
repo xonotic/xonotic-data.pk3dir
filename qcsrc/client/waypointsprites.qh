@@ -1,3 +1,87 @@
+#ifndef WAYPOINTSPRITES_H
+#define WAYPOINTSPRITES_H
+
+
+float waypointsprite_initialized;
+float waypointsprite_fadedistance;
+float waypointsprite_normdistance;
+float waypointsprite_minscale;
+float waypointsprite_minalpha;
+float waypointsprite_distancealphaexponent;
+float waypointsprite_timealphaexponent;
+float waypointsprite_scale;
+float waypointsprite_fontsize;
+float waypointsprite_edgefadealpha;
+float waypointsprite_edgefadescale;
+float waypointsprite_edgefadedistance;
+float waypointsprite_edgeoffset_bottom;
+float waypointsprite_edgeoffset_left;
+float waypointsprite_edgeoffset_right;
+float waypointsprite_edgeoffset_top;
+float waypointsprite_crosshairfadealpha;
+float waypointsprite_crosshairfadescale;
+float waypointsprite_crosshairfadedistance;
+float waypointsprite_distancefadealpha;
+float waypointsprite_distancefadescale;
+float waypointsprite_distancefadedistance;
+float waypointsprite_alpha;
+
+entityclass(WaypointSprite);
+class(WaypointSprite) .float helpme;
+class(WaypointSprite) .float rule;
+class(WaypointSprite) .string netname; // primary picture
+class(WaypointSprite) .string netname2; // secondary picture
+class(WaypointSprite) .string netname3; // tertiary picture
+class(WaypointSprite) .int team; // team that gets netname2
+class(WaypointSprite) .float lifetime;
+class(WaypointSprite) .float fadetime;
+class(WaypointSprite) .float maxdistance;
+class(WaypointSprite) .int hideflags;
+class(WaypointSprite) .float spawntime;
+class(WaypointSprite) .float health;
+class(WaypointSprite) .float build_started;
+class(WaypointSprite) .float build_starthealth;
+class(WaypointSprite) .float build_finished;
+
+const float SPRITE_HEALTHBAR_WIDTH = 144;
+const float SPRITE_HEALTHBAR_HEIGHT = 9;
+const float SPRITE_HEALTHBAR_MARGIN = 6;
+const float SPRITE_HEALTHBAR_BORDER = 2;
+const float SPRITE_HEALTHBAR_BORDERALPHA = 1;
+const float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
+const float SPRITE_ARROW_SCALE = 1.0;
+const float SPRITE_HELPME_BLINK = 2;
+
+float waypointsprite_count, waypointsprite_newcount;
+
+void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f);
+
+void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, float f);
+
+void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f);
+
+// returns location of sprite text
+vector drawspritearrow(vector o, float ang, vector rgb, float a, float t);
+
+// returns location of sprite healthbar
+vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s);
+
+float spritelookupblinkvalue(string s);
+vector spritelookupcolor(string s, vector def);
+string spritelookuptext(string s);
+
+vector fixrgbexcess_move(vector rgb, vector src, vector dst);
+vector fixrgbexcess(vector rgb);
+
+void Draw_WaypointSprite();
+
 // they are drawn using a .draw function
-void Ent_WaypointSprite();
+
 void Ent_RemoveWaypointSprite();
+void Ent_WaypointSprite();
+
+void WaypointSprite_Load_Frames(string ext);
+
+void WaypointSprite_Load();
+
+#endif

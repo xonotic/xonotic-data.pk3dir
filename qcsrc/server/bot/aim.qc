@@ -1,17 +1,22 @@
+#include "aim.qh"
+#include "../_all.qh"
 
-entity ka_ball;
+#include "bot.qh"
+
+#include "../mutators/mutators_include.qh"
+
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
-// returns TRUE only if it hit targ (don't target non-solid entities)
+// returns true only if it hit targ (don't target non-solid entities)
 
 float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore)
 {
 	float c, savesolid, shottime;
 	vector dir, end, v, o;
 	if (shotspeed < 1)
-		return FALSE; // could cause division by zero if calculated
+		return false; // could cause division by zero if calculated
 	if (targ.solid < SOLID_BBOX) // SOLID_NOT and SOLID_TRIGGER
-		return FALSE; // could never hit it
+		return false; // could never hit it
 	if (!tracetossent)
 		tracetossent = spawn();
 	tracetossent.owner = ignore;
@@ -21,14 +26,14 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	o = (targ.absmin + targ.absmax) * 0.5;
 	shottime = ((vlen(o - org) / shotspeed) + shotdelay);
 	v = targ.velocity * shottime + o;
-	tracebox(o, targ.mins, targ.maxs, v, FALSE, targ);
+	tracebox(o, targ.mins, targ.maxs, v, false, targ);
 	v = trace_endpos;
 	end = v + (targ.mins + targ.maxs) * 0.5;
 	if ((vlen(end - org) / shotspeed + 0.2) > maxtime)
 	{
 		// out of range
 		targ.solid = savesolid;
-		return FALSE;
+		return false;
 	}
 
 	if (!tracetossfaketarget)
@@ -60,9 +65,9 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 			// relink to remove it from physics considerations
 			setorigin(tracetossfaketarget, v);
 
-			return TRUE;
+			return true;
 		}
-		dir_z = dir_z + 0.1; // aim up a little more
+		dir.z = dir.z + 0.1; // aim up a little more
 		c = c + 1;
 	}
 	targ.solid = savesolid;
@@ -77,7 +82,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 
 	// leave a valid one even if it won't reach
 	findtrajectory_velocity = normalize(end - org) * shotspeed + shotspeedupward * '0 0 1';
-	return FALSE;
+	return false;
 }
 
 void lag_update()
@@ -91,13 +96,13 @@ void lag_update()
 
 float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
 {
-	if (self.lag1_time == 0) {self.lag1_time = t;self.lag1_float1 = f1;self.lag1_float2 = f2;self.lag1_entity1 = e1;self.lag1_vec1 = v1;self.lag1_vec2 = v2;self.lag1_vec3 = v3;self.lag1_vec4 = v4;return TRUE;}
-	if (self.lag2_time == 0) {self.lag2_time = t;self.lag2_float1 = f1;self.lag2_float2 = f2;self.lag2_entity1 = e1;self.lag2_vec1 = v1;self.lag2_vec2 = v2;self.lag2_vec3 = v3;self.lag2_vec4 = v4;return TRUE;}
-	if (self.lag3_time == 0) {self.lag3_time = t;self.lag3_float1 = f1;self.lag3_float2 = f2;self.lag3_entity1 = e1;self.lag3_vec1 = v1;self.lag3_vec2 = v2;self.lag3_vec3 = v3;self.lag3_vec4 = v4;return TRUE;}
-	if (self.lag4_time == 0) {self.lag4_time = t;self.lag4_float1 = f1;self.lag4_float2 = f2;self.lag4_entity1 = e1;self.lag4_vec1 = v1;self.lag4_vec2 = v2;self.lag4_vec3 = v3;self.lag4_vec4 = v4;return TRUE;}
-	if (self.lag5_time == 0) {self.lag5_time = t;self.lag5_float1 = f1;self.lag5_float2 = f2;self.lag5_entity1 = e1;self.lag5_vec1 = v1;self.lag5_vec2 = v2;self.lag5_vec3 = v3;self.lag5_vec4 = v4;return TRUE;}
+	if (self.lag1_time == 0) {self.lag1_time = t;self.lag1_float1 = f1;self.lag1_float2 = f2;self.lag1_entity1 = e1;self.lag1_vec1 = v1;self.lag1_vec2 = v2;self.lag1_vec3 = v3;self.lag1_vec4 = v4;return true;}
+	if (self.lag2_time == 0) {self.lag2_time = t;self.lag2_float1 = f1;self.lag2_float2 = f2;self.lag2_entity1 = e1;self.lag2_vec1 = v1;self.lag2_vec2 = v2;self.lag2_vec3 = v3;self.lag2_vec4 = v4;return true;}
+	if (self.lag3_time == 0) {self.lag3_time = t;self.lag3_float1 = f1;self.lag3_float2 = f2;self.lag3_entity1 = e1;self.lag3_vec1 = v1;self.lag3_vec2 = v2;self.lag3_vec3 = v3;self.lag3_vec4 = v4;return true;}
+	if (self.lag4_time == 0) {self.lag4_time = t;self.lag4_float1 = f1;self.lag4_float2 = f2;self.lag4_entity1 = e1;self.lag4_vec1 = v1;self.lag4_vec2 = v2;self.lag4_vec3 = v3;self.lag4_vec4 = v4;return true;}
+	if (self.lag5_time == 0) {self.lag5_time = t;self.lag5_float1 = f1;self.lag5_float2 = f2;self.lag5_entity1 = e1;self.lag5_vec1 = v1;self.lag5_vec2 = v2;self.lag5_vec3 = v3;self.lag5_vec4 = v4;return true;}
 	// no room for it (what is the best thing to do here??)
-	return FALSE;
+	return false;
 }
 
 float bot_shouldattack(entity e)
@@ -105,44 +110,44 @@ float bot_shouldattack(entity e)
 	if (e.team == self.team)
 	{
 		if (e == self)
-			return FALSE;
+			return false;
 		if (teamplay)
 		if (e.team != 0)
-			return FALSE;
+			return false;
 	}
 
 	if(e.frozen)
-		return FALSE;
+		return false;
 
 	// If neither player has ball then don't attack unless the ball is on the
 	// ground.
 	if (g_keepaway)
 		if (!e.ballcarried && !self.ballcarried && ka_ball.owner)
-			return FALSE;
+			return false;
 
 	if(teamplay)
 	{
 		if(e.team==0)
-			return FALSE;
+			return false;
 	}
 	else if(bot_ignore_bots)
 		if(IS_BOT_CLIENT(e))
-			return FALSE;
+			return false;
 
 	if (!e.takedamage)
-		return FALSE;
+		return false;
 	if (e.deadflag)
-		return FALSE;
+		return false;
 	if (e.BUTTON_CHAT)
-		return FALSE;
+		return false;
 	if(e.flags & FL_NOTARGET)
-		return FALSE;
+		return false;
 
 	checkentity = e;
 	if(MUTATOR_CALLHOOK(BotShouldAttack))
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
@@ -175,7 +180,7 @@ float bot_aimdir(vector v, float maxfiredeviation)
 
 	//dprint("aim ", self.netname, ": old:", vtos(self.v_angle));
 	// make sure v_angle is sane first
-	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
+	self.v_angle_y = self.v_angle.y - floor(self.v_angle.y / 360) * 360;
 	self.v_angle_z = 0;
 
 	// get the desired angles to aim at
@@ -189,10 +194,10 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	}
 	desiredang = vectoangles(v) + self.bot_badaimoffset;
 	//dprint(" desired:", vtos(desiredang));
-	if (desiredang_x >= 180)
-		desiredang_x = desiredang_x - 360;
-	desiredang_x = bound(-90, 0 - desiredang_x, 90);
-	desiredang_z = self.v_angle_z;
+	if (desiredang.x >= 180)
+		desiredang.x = desiredang.x - 360;
+	desiredang.x = bound(-90, 0 - desiredang.x, 90);
+	desiredang.z = self.v_angle.z;
 	//dprint(" / ", vtos(desiredang));
 
 	//// pain throws off aim
@@ -205,9 +210,9 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	// calculate turn angles
 	diffang = (desiredang - self.bot_olddesiredang);
 	// wrap yaw turn
-	diffang_y = diffang_y - floor(diffang_y / 360) * 360;
-	if (diffang_y >= 180)
-		diffang_y = diffang_y - 360;
+	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
+	if (diffang.y >= 180)
+		diffang.y = diffang.y - 360;
 	self.bot_olddesiredang = desiredang;
 	//dprint(" diff:", vtos(diffang));
 
@@ -239,9 +244,9 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	// calculate turn angles
 	diffang = desiredang - self.bot_mouseaim;
 	// wrap yaw turn
-	diffang_y = diffang_y - floor(diffang_y / 360) * 360;
-	if (diffang_y >= 180)
-		diffang_y = diffang_y - 360;
+	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
+	if (diffang.y >= 180)
+		diffang.y = diffang.y - 360;
 	//dprint(" diff:", vtos(diffang));
 
 	if (time >= self.bot_aimthinktime)
@@ -254,17 +259,17 @@ float bot_aimdir(vector v, float maxfiredeviation)
 
 	diffang = self.bot_mouseaim - desiredang;
 	// wrap yaw turn
-	diffang_y = diffang_y - floor(diffang_y / 360) * 360;
-	if (diffang_y >= 180)
-		diffang_y = diffang_y - 360;
+	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
+	if (diffang.y >= 180)
+		diffang.y = diffang.y - 360;
 	desiredang = desiredang + diffang * bound(0,autocvar_bot_ai_aimskill_think,1);
 
 	// calculate turn angles
 	diffang = desiredang - self.v_angle;
 	// wrap yaw turn
-	diffang_y = diffang_y - floor(diffang_y / 360) * 360;
-	if (diffang_y >= 180)
-		diffang_y = diffang_y - 360;
+	diffang.y = diffang.y - floor(diffang.y / 360) * 360;
+	if (diffang.y >= 180)
+		diffang.y = diffang.y - 360;
 	//dprint(" diff:", vtos(diffang));
 
 	// jitter tracking
@@ -282,7 +287,7 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	//self.v_angle = self.v_angle + diffang * bound(0, r * frametime * (skill * 0.5 + 2), 1);
 	//self.v_angle = self.v_angle + diffang * (1/ blendrate);
 	self.v_angle_z = 0;
-	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
+	self.v_angle_y = self.v_angle.y - floor(self.v_angle.y / 360) * 360;
 	//dprint(" turn:", vtos(self.v_angle));
 
 	makevectors(self.v_angle);
@@ -306,7 +311,7 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
 	if (vlen(trace_endpos-shotorg) < 500+500*bound(0, skill+self.bot_aggresskill, 10) || random()*random()>bound(0,(skill+self.bot_aggresskill)*0.05,1))
 		self.bot_firetimer = time + bound(0.1, 0.5-(skill+self.bot_aggresskill)*0.05, 0.5);
-	//traceline(shotorg,shotorg+shotdir*1000,FALSE,world);
+	//traceline(shotorg,shotorg+shotdir*1000,false,world);
 	//dprint(ftos(maxfiredeviation),"\n");
 	//dprint(" diff:", vtos(diffang), "\n");
 
@@ -360,7 +365,7 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', self.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, self))
 		{
 			self.dphitcontentsmask = hf;
-			return FALSE;
+			return false;
 		}
 
 		f = bot_aimdir(findtrajectory_velocity - shotspeedupward * '0 0 1', r);
@@ -369,23 +374,23 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	{
 		f = bot_aimdir(v - shotorg, r);
 		//dprint("AIM: ");dprint(vtos(self.bot_aimtargorigin));dprint(" + ");dprint(vtos(self.bot_aimtargvelocity));dprint(" * ");dprint(ftos(self.bot_aimlatency + vlen(self.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
-		//traceline(shotorg, shotorg + shotdir * 10000, FALSE, self);
+		//traceline(shotorg, shotorg + shotdir * 10000, false, self);
 		//if (trace_ent.takedamage)
 		//if (trace_fraction < 1)
 		//if (!bot_shouldattack(trace_ent))
-		//	return FALSE;
-		traceline(shotorg, self.bot_aimtargorigin, FALSE, self);
+		//	return false;
+		traceline(shotorg, self.bot_aimtargorigin, false, self);
 		if (trace_fraction < 1)
 		if (trace_ent != self.enemy)
 		if (!bot_shouldattack(trace_ent))
 		{
 			self.dphitcontentsmask = hf;
-			return FALSE;
+			return false;
 		}
 	}
 
 	//if (r > maxshottime * shotspeed)
-	//	return FALSE;
+	//	return false;
 	self.dphitcontentsmask = hf;
-	return TRUE;
+	return true;
 }

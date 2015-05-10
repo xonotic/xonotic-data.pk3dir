@@ -1,3 +1,13 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "_all.qh"
+
+    #include "../warpzonelib/util_server.qh"
+    #include "../common/weapons/weapons.qh"
+    #include "../common/deathtypes.qh"
+#endif
+
 /*
 *		t_swamp.c
 *		Adds spawnfunc_trigger_swamp and suppoart routines for xonotic 1.2.1+

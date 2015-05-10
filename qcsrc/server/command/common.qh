@@ -1,21 +1,29 @@
+#ifndef COMMAND_COMMON_H
+#define COMMAND_COMMON_H
+
+#include "vote.qh"
+
+#include "../../common/command/generic.qh"
+#include "../../common/command/command.qh"
+
 // ============================================================
 //  Shared declarations for server commands, written by Samual
 //  Last updated: December 30th, 2011
 // ============================================================
 
 // client verification results
-#define CLIENT_ACCEPTABLE 1
-#define CLIENT_DOESNT_EXIST -1
-#define CLIENT_NOT_REAL -2
-#define CLIENT_NOT_BOT -3
+const float CLIENT_ACCEPTABLE = 1;
+const float CLIENT_DOESNT_EXIST = -1;
+const float CLIENT_NOT_REAL = -2;
+const float CLIENT_NOT_BOT = -3;
 
 // definitions for timeouts
-#define TIMEOUT_INACTIVE 0
-#define TIMEOUT_LEADTIME 1
-#define TIMEOUT_ACTIVE 2
+const float TIMEOUT_INACTIVE = 0;
+const float TIMEOUT_LEADTIME = 1;
+const float TIMEOUT_ACTIVE = 2;
 
 // timeout which pauses the game by setting the slowmo value extremely low.
-#define TIMEOUT_SLOWMO_VALUE 0.0001
+const float TIMEOUT_SLOWMO_VALUE = 0.0001;
 
 // global timeout information declarations
 entity timeout_caller; // contains the entity of the player who started the last timeout
@@ -36,3 +44,142 @@ void CommonCommand_macro_write_aliases(float fh);
 
 // keep track of the next token to use for argc
 float next_token;
+
+// select the proper prefix for usage and other messages
+string GetCommandPrefix(entity caller);
+
+// if client return player nickname, or if server return admin nickname
+string GetCallerName(entity caller);
+
+// verify that the client provided is acceptable for kicking
+float VerifyKickableEntity(entity client);
+
+// verify that the client provided is acceptable for use
+float VerifyClientEntity(entity client, float must_be_real, float must_be_bots);
+
+// if the client is not acceptable, return a string to be used for error messages
+string GetClientErrorString_color(float clienterror, string original_input, string col);
+#define GetClientErrorString(clienterror,original_input) GetClientErrorString_color(clienterror,original_input,"^7")
+
+// is this entity number even in the possible range of entities?
+float VerifyClientNumber(float tmp_number);
+
+entity GetIndexedEntity(float argc, float start_index);
+
+// find a player which matches the input string, and return their entity
+entity GetFilteredEntity(string input);
+
+// same thing, but instead return their edict number
+float GetFilteredNumber(string input);
+
+// switch between sprint and print depending on whether the receiver is the server or a player
+void print_to(entity to, string input);
+
+// ==========================================
+//  Supporting functions for common commands
+// ==========================================
+
+// used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
+void timeout_handler_reset();
+
+void timeout_handler_think();
+
+// ===================================================
+//  Common commands used in both sv_cmd.qc and cmd.qc
+// ===================================================
+
+void CommonCommand_cvar_changes(float request, entity caller);
+
+void CommonCommand_cvar_purechanges(float request, entity caller);
+
+void CommonCommand_info(float request, entity caller, float argc);
+
+void CommonCommand_ladder(float request, entity caller);
+
+void CommonCommand_lsmaps(float request, entity caller);
+
+void CommonCommand_printmaplist(float request, entity caller);
+
+void CommonCommand_rankings(float request, entity caller);
+
+void CommonCommand_records(float request, entity caller);
+
+void CommonCommand_teamstatus(float request, entity caller);
+
+void CommonCommand_time(float request, entity caller);
+
+void CommonCommand_timein(float request, entity caller);
+
+void CommonCommand_timeout(float request, entity caller);
+
+void CommonCommand_who(float request, entity caller, float argc);
+
+
+// ==================================
+//  Macro system for common commands
+// ==================================
+
+// Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
+#define COMMON_COMMANDS(request,caller,arguments,command) \
+	COMMON_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, caller), "Prints a list of all changed server cvars") \
+	COMMON_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, caller), "Prints a list of all changed gameplay cvars") \
+	COMMON_COMMAND("info", CommonCommand_info(request, caller, arguments), "Request for unique server information set up by admin") \
+	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
+	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \
+	COMMON_COMMAND("printmaplist", CommonCommand_printmaplist(request, caller), "Display full server maplist reply") \
+	COMMON_COMMAND("rankings", CommonCommand_rankings(request, caller), "Print information about rankings") \
+	COMMON_COMMAND("records", CommonCommand_records(request, caller), "List top 10 records for the current map") \
+	COMMON_COMMAND("teamstatus", CommonCommand_teamstatus(request, caller), "Show information about player and team scores") \
+	COMMON_COMMAND("time", CommonCommand_time(request, caller), "Print different formats/readouts of time") \
+	COMMON_COMMAND("timein", CommonCommand_timein(request, caller), "Resume the game from being paused with a timeout") \
+	COMMON_COMMAND("timeout", CommonCommand_timeout(request, caller), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
+	COMMON_COMMAND("vote", VoteCommand(request, caller, arguments, command), "Request an action to be voted upon by players") \
+	COMMON_COMMAND("who", CommonCommand_who(request, caller, arguments), "Display detailed client information about all players") \
+	/* nothing */
+
+void CommonCommand_macro_help(entity caller)
+{
+	#define COMMON_COMMAND(name,function,description) \
+		{ print_to(caller, strcat("  ^2", name, "^7: ", description)); }
+
+	COMMON_COMMANDS(0, caller, 0, "");
+	#undef COMMON_COMMAND
+
+	return;
+}
+
+float CommonCommand_macro_command(float argc, entity caller, string command)
+{
+	#define COMMON_COMMAND(name,function,description) \
+		{ if(name == strtolower(argv(0))) { function; return true; } }
+
+	COMMON_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, command);
+	#undef COMMON_COMMAND
+
+	return false;
+}
+
+float CommonCommand_macro_usage(float argc, entity caller)
+{
+	#define COMMON_COMMAND(name,function,description) \
+		{ if(name == strtolower(argv(1))) { function; return true; } }
+
+	COMMON_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
+	#undef COMMON_COMMAND
+
+	return false;
+}
+
+void CommonCommand_macro_write_aliases(float fh)
+{
+	#define COMMON_COMMAND(name,function,description) \
+		{ CMD_Write_Alias("qc_cmd_svcmd", name, description); }
+
+	COMMON_COMMANDS(0, world, 0, "");
+	#undef COMMON_COMMAND
+
+	return;
+}
+
+
+#endif

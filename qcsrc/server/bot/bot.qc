@@ -1,14 +1,41 @@
 #include "bot.qh"
+#include "../_all.qh"
+
 #include "aim.qh"
 #include "navigation.qh"
+#include "scripting.qh"
 #include "waypoints.qh"
 
-#include "aim.qc"
-#include "navigation.qc"
-#include "waypoints.qc"
-#include "scripting.qc"
+#include "havocbot/havocbot.qh"
+#include "havocbot/scripting.qh"
 
-#include "havocbot/havocbot.qc"
+#include "../antilag.qh"
+#include "../autocvars.qh"
+#include "../campaign.qh"
+#include "../cl_client.qh"
+#include "../constants.qh"
+#include "../defs.qh"
+#include "../race.qh"
+#include "../t_items.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../weapons/accuracy.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/weapons/weapons.qh"
+
+#include "../../csqcmodellib/sv_model.qh"
+
+#include "../../dpdefs/dpextensions.qh"
+#include "../../dpdefs/progsdefs.qh"
+
+#include "../../warpzonelib/common.qh"
+#include "../../warpzonelib/util_server.qh"
 
 entity bot_spawn()
 {
@@ -53,7 +80,7 @@ void bot_think()
 	{
 		self.v_angle = self.angles;
 		self.v_angle_z = 0;
-		self.fixangle = FALSE;
+		self.fixangle = false;
 	}
 
 	self.dmg_take = 0;
@@ -201,7 +228,7 @@ void bot_setnameandstuff()
 	READSKILL(bot_thinkskill, 1, 0.5); // think skill
 	READSKILL(bot_aiskill, 2, 0); // "ai" skill
 
-	self.bot_config_loaded = TRUE;
+	self.bot_config_loaded = true;
 
 	// this is really only a default, JoinBestTeam is called later
 	setcolor(self, stof(bot_shirt) * 16 + stof(bot_pants));
@@ -241,9 +268,9 @@ void bot_setnameandstuff()
 
 void bot_custom_weapon_priority_setup()
 {
-	float tokens, i, c, w;
+	float tokens, i, w;
 
-	bot_custom_weapon = FALSE;
+	bot_custom_weapon = false;
 
 	if(	autocvar_bot_ai_custom_weapon_priority_far == "" ||
 		autocvar_bot_ai_custom_weapon_priority_mid == "" ||
@@ -274,7 +301,7 @@ void bot_custom_weapon_priority_setup()
 	// Parse far distance weapon priorities
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_far)," ");
 
-	c = 0;
+	int c = 0;
 	for(i=0; i < tokens && c < WEP_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {
@@ -313,7 +340,7 @@ void bot_custom_weapon_priority_setup()
 	if(c < WEP_COUNT)
 		bot_weapons_close[c] = -1;
 
-	bot_custom_weapon = TRUE;
+	bot_custom_weapon = true;
 }
 
 void bot_endgame()
@@ -358,7 +385,7 @@ void bot_relinkplayerlist()
 	}
 	dprint(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
 	bot_strategytoken = bot_list;
-	bot_strategytoken_taken = TRUE;
+	bot_strategytoken_taken = true;
 }
 
 void bot_clientdisconnect()
@@ -391,7 +418,7 @@ void bot_clientconnect()
 	self.bot_preferredcolors = self.clientcolors;
 	self.bot_nextthink = time - random();
 	self.lag_func = bot_lagfunc;
-	self.isbot = TRUE;
+	self.isbot = true;
 	self.createdtime = self.bot_nextthink;
 
 	if(!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
@@ -406,7 +433,7 @@ void bot_clientconnect()
 	else if(self.bot_forced_team==4)
 		self.team = NUM_TEAM_4;
 	else
-		JoinBestTeam(self, FALSE, TRUE);
+		JoinBestTeam(self, false, true);
 
 	havocbot_setupbot();
 }
@@ -417,7 +444,7 @@ void bot_removefromlargestteam()
 	entity best, head;
 	CheckAllowedTeams(world);
 	GetTeamCounts(world);
-	head = findchainfloat(isbot, TRUE);
+	head = findchainfloat(isbot, true);
 	if (!head)
 		return;
 	best = head;
@@ -463,7 +490,7 @@ void bot_removenewest()
 		return;
 	}
 
-	head = findchainfloat(isbot, TRUE);
+	head = findchainfloat(isbot, true);
 	if (!head)
 		return;
 	best = head;
@@ -560,7 +587,7 @@ float bot_fixcount()
 	// minplayers+bot_number, or remove all bots if no one is playing
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
-	bots_would_leave = FALSE;
+	bots_would_leave = false;
 	if (teamplay && autocvar_bot_vs_human && (c3==-1 && c4==-1))
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
@@ -575,7 +602,7 @@ float bot_fixcount()
 
 		bots = min(max(minbots, minplayers - activerealplayers), maxclients - realplayers);
 		if(bots > minbots)
-			bots_would_leave = TRUE;
+			bots_would_leave = true;
 	}
 	else
 	{
@@ -592,14 +619,14 @@ float bot_fixcount()
 			if (bot_spawn() == world)
 			{
 				bprint("Can not add bot, server full.\n");
-				return FALSE;
+				return false;
 			}
 		}
 		while (currentbots > bots)
 			bot_removenewest();
 	}
 
-	return TRUE;
+	return true;
 }
 
 void bot_serverframe()
@@ -654,7 +681,7 @@ void bot_serverframe()
 	}
 	else
 	{
-		botframe_spawnedwaypoints = TRUE;
+		botframe_spawnedwaypoints = true;
 		waypoint_loadall();
 		if(!waypoint_load_links())
 			waypoint_schedulerelinkall();
@@ -667,7 +694,7 @@ void bot_serverframe()
 		//  frame, which causes choppy framerates)
 		if (bot_strategytoken_taken)
 		{
-			bot_strategytoken_taken = FALSE;
+			bot_strategytoken_taken = false;
 			if (bot_strategytoken)
 				bot_strategytoken = bot_strategytoken.nextbot;
 			if (!bot_strategytoken)

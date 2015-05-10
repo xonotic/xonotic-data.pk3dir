@@ -1,3 +1,16 @@
+#include "../../common/command/command.qh"
+#include "getreplies.qh"
+#include "../_all.qh"
+
+#include "../race.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/counting.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/util.qh"
+
+#include "../../common/monsters/monsters.qh"
+
 // =========================================================
 //  Reply messages for common commands, re-worked by Samual
 //  Last updated: December 30th, 2011
@@ -110,7 +123,7 @@ string getrankings()
 
 string getladder()
 {
-	float i, j, k, uidcnt = 0, thiscnt;
+	int i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 
 	rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
@@ -286,7 +299,7 @@ string getladder()
 string getmaplist()
 {
 	string maplist = "", col;
-	float i, argc;
+	int i, argc;
 
 	argc = tokenize_console(autocvar_g_maplist);
 	for(i = 0; i < argc; ++i)
@@ -320,7 +333,7 @@ string getlsmaps()
 				(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
 			)
 			{
-				newmaps = TRUE;
+				newmaps = true;
 				if(i % 2) { col = "^4*"; }
 				else { col = "^5*"; }
 			}
@@ -341,9 +354,8 @@ string getlsmaps()
 string getmonsterlist()
 {
 	string monsterlist = "", col;
-	float i;
 
-	for(i = MON_FIRST; i <= MON_LAST; ++i)
+	for(int i = MON_FIRST; i <= MON_LAST; ++i)
 	{
 		if(i % 2) { col = "^2"; }
 		else { col = "^3"; }

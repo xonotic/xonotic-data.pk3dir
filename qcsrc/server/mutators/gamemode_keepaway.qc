@@ -1,3 +1,8 @@
+#include "gamemode_keepaway.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 // ===========================================================
 //  Keepaway game mode coding, written by Samual and Diabolik
 //  Last updated: September, 2012
@@ -7,11 +12,11 @@ float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on wayp
 {
 	if(e.ballcarried)
 		if(IS_SPEC(other))
-			return FALSE; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
+			return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
 
 	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
 
-	return TRUE;
+	return true;
 }
 
 void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
@@ -27,7 +32,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 
 	if(!MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
-		entity spot = SelectSpawnPoint(TRUE);
+		entity spot = SelectSpawnPoint(true);
 		setorigin(self, spot.origin);
 		self.angles = spot.angles;
 	}
@@ -43,7 +48,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
 	pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
 
-	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
+	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 
 	sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
@@ -97,7 +102,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 
 	// apply effects to player
 	other.glow_color = autocvar_g_keepawayball_trail_color;
-	other.glow_trail = TRUE;
+	other.glow_trail = true;
 	other.effects |= autocvar_g_keepaway_ballcarrier_effects;
 
 	// messages and sounds
@@ -140,7 +145,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.owner = world;
 
 	// reset the player effects
-	plyr.glow_trail = FALSE;
+	plyr.glow_trail = false;
 	plyr.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
 
 	// messages and sounds
@@ -153,7 +158,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
 
 	// waypoints
-	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
+	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
@@ -349,7 +354,7 @@ MUTATOR_HOOKFUNCTION(ka_BotRoles)
 		self.havocbot_role = havocbot_role_ka_carrier;
 	else
 		self.havocbot_role = havocbot_role_ka_collector;
-	return TRUE;
+	return true;
 }
 
 
@@ -373,7 +378,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.solid = SOLID_TRIGGER;
 	e.movetype = MOVETYPE_BOUNCE;
 	e.glow_color = autocvar_g_keepawayball_trail_color;
-	e.glow_trail = TRUE;
+	e.glow_trail = true;
 	e.flags = FL_ITEM;
 	e.reset = ka_Reset;
 	e.touch = ka_TouchEvent;
@@ -385,7 +390,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 
 void ka_ScoreRules()
 {
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, true); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,			"pickups",		0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,			"bctime",		SFL_SORT_PRIO_SECONDARY);

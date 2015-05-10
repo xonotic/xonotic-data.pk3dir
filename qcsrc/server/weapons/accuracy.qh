@@ -1,3 +1,6 @@
+#ifndef ACCURACY_H
+#define ACCURACY_H
+
 .float cvar_cl_accuracy_data_share;
 .float cvar_cl_accuracy_data_receive;
 
@@ -23,3 +26,4 @@ void accuracy_add(entity e, float w, float fired, float hit);
 // helper
 float accuracy_isgooddamage(entity attacker, entity targ);
 float accuracy_canbegooddamage(entity attacker);
+#endif

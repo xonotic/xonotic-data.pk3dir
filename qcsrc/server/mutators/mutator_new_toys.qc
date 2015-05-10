@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 /*
 
 CORE    laser   vortex     lg      rl      cry     gl      elec    hagar   fireb   hook
@@ -69,9 +73,9 @@ roflsound "New toys, new toys!" sound.
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
-#define NT_AUTOREPLACE_NEVER 0
-#define NT_AUTOREPLACE_ALWAYS 1
-#define NT_AUTOREPLACE_RANDOM 2
+const float NT_AUTOREPLACE_NEVER = 0;
+const float NT_AUTOREPLACE_ALWAYS = 1;
+const float NT_AUTOREPLACE_RANDOM = 2;
 
 MUTATOR_HOOKFUNCTION(nt_SetModname)
 {
@@ -88,9 +92,9 @@ float nt_IsNewToy(float w)
 		case WEP_HLAC:
 		case WEP_RIFLE:
 		case WEP_SHOCKWAVE:
-			return TRUE;
+			return true;
 		default:
-			return FALSE;
+			return false;
 	}
 }
 

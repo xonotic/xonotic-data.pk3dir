@@ -1,23 +1,26 @@
+#ifndef VOTE_H
+#define VOTE_H
+
 // ================================================
 //  Declarations for the vote system/vote commands
 //  Last updated: December 14th, 2011
 // ================================================
 
 // definitions for command selection between progs
-#define VC_ASGNMNT_BOTH 1
-#define VC_ASGNMNT_CLIENTONLY 2
-#define VC_ASGNMNT_SERVERONLY 3
+const float VC_ASGNMNT_BOTH = 1;
+const float VC_ASGNMNT_CLIENTONLY = 2;
+const float VC_ASGNMNT_SERVERONLY = 3;
 
 // vote selection definitions
-#define VOTE_SELECT_ABSTAIN -2
-#define VOTE_SELECT_REJECT -1
-#define VOTE_SELECT_NULL 0
-#define VOTE_SELECT_ACCEPT 1
+const float VOTE_SELECT_ABSTAIN = -2;
+const float VOTE_SELECT_REJECT = -1;
+const float VOTE_SELECT_NULL = 0;
+const float VOTE_SELECT_ACCEPT = 1;
 
 // different statuses of the current vote
-#define VOTE_NULL 0
-#define VOTE_NORMAL 1
-#define VOTE_MASTER 2
+const float VOTE_NULL = 0;
+const float VOTE_NORMAL = 1;
+const float VOTE_MASTER = 2;
 
 // global vote information declarations
 entity vote_caller; // original caller of the current vote
@@ -41,7 +44,7 @@ void VoteReset();
 void VoteCommand(float request, entity caller, float argc, string vote_command);
 
 // warmup and nagger stuff
-#define RESTART_COUNTDOWN 10
+const float RESTART_COUNTDOWN = 10;
 entity nagger;
 float readycount; // amount of players who are ready
 float readyrestart_happened; // keeps track of whether a restart has already happened
@@ -49,3 +52,5 @@ float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was al
 .float ready; // flag for if a player is ready
 void reset_map(float dorespawn);
 void ReadyCount();
+void ReadyRestart_force();
+#endif

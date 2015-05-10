@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 // Random Gravity
 //
 // Mutator by Mario
@@ -7,10 +11,10 @@ float gravity_delay;
 
 MUTATOR_HOOKFUNCTION(gravity_StartFrame)
 {
-	if(gameover || !cvar("g_random_gravity")) return FALSE;
-	if(time < gravity_delay) return FALSE;
-	if(time < game_starttime) return FALSE;
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted()) return FALSE;
+	if(gameover || !cvar("g_random_gravity")) return false;
+	if(time < gravity_delay) return false;
+	if(time < game_starttime) return false;
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted()) return false;
 
     if(random() >= autocvar_g_random_gravity_negative_chance)
         cvar_set("sv_gravity", ftos(bound(autocvar_g_random_gravity_min, random() - random() * -autocvar_g_random_gravity_negative, autocvar_g_random_gravity_max)));
@@ -21,7 +25,7 @@ MUTATOR_HOOKFUNCTION(gravity_StartFrame)
 
 	dprint("Gravity is now: ", ftos(autocvar_sv_gravity), "\n");
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(gravity_BuildMutatorsString)
@@ -47,5 +51,5 @@ MUTATOR_DEFINITION(mutator_random_gravity)
 		cvar_settemp("sv_gravity", cvar_string("sv_gravity")); // settemp current gravity so it's restored on match end
 	}
 
-	return FALSE;
+	return false;
 }

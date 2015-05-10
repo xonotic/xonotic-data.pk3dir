@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDItemsTimeDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_HUDPANEL_ITEMSTIME_H
+#define DIALOG_HUDPANEL_ITEMSTIME_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDItemsTimeDialog, XonoticRootDialog)
 	METHOD(XonoticHUDItemsTimeDialog, fill, void(entity))
 	ATTRIB(XonoticHUDItemsTimeDialog, title, string, _("Items Time Panel"))
 	ATTRIB(XonoticHUDItemsTimeDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

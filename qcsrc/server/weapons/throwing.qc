@@ -1,3 +1,16 @@
+#include "throwing.qh"
+#include "../_all.qh"
+
+#include "weaponsystem.qh"
+#include "../mutators/mutators_include.qh"
+#include "../t_items.qh"
+#include "../g_damage.qh"
+#include "../g_subs.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/weapons.qh"
+
 void thrown_wep_think()
 {
 	self.nextthink = time;
@@ -22,7 +35,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	entity oldself, wep;
 	float thisammo, i;
 	string s;
-	var .float ammotype = (get_weaponinfo(wpn)).ammo_field;
+	var .int ammotype = (get_weaponinfo(wpn)).ammo_field;
 
 	wep = spawn();
 
@@ -32,7 +45,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
-	
+
 	W_DropEvent(WR_DROP,own,wpn,wep);
 
 	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
@@ -73,8 +86,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.think = thrown_wep_think;
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
-	wep.pickup_anyway = TRUE; // these are ALWAYS pickable
-	
+	wep.pickup_anyway = true; // these are ALWAYS pickable
+
 	//wa = W_AmmoItemCode(wpn);
 	if(ammotype == ammo_none)
 	{
@@ -89,24 +102,24 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			// if our weapon is loaded, give its load back to the player
 			if(self.(weapon_load[self.weapon]) > 0)
 			{
-				own.ammotype += self.(weapon_load[self.weapon]);
+				own.(ammotype) += self.(weapon_load[self.weapon]);
 				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
 
-			wep.ammotype = 0;
+			wep.(ammotype) = 0;
 		}
 		else if(doreduce)
 		{
 			// if our weapon is loaded, give its load back to the player
 			if(self.(weapon_load[self.weapon]) > 0)
 			{
-				own.ammotype += self.(weapon_load[self.weapon]);
+				own.(ammotype) += self.(weapon_load[self.weapon]);
 				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 			}
 
-			thisammo = min(own.ammotype, wep.ammotype);
-			wep.ammotype = thisammo;
-			own.ammotype -= thisammo;
+			thisammo = min(own.(ammotype), wep.(ammotype));
+			wep.(ammotype) = thisammo;
+			own.(ammotype) -= thisammo;
 
 			switch(ammotype)
 			{
@@ -176,7 +189,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	
+
 	if(!a) return;
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
@@ -185,5 +198,5 @@ void SpawnThrownWeapon(vector org, float w)
 {
 	if(self.weapons & WepSet_FromWeapon(self.weapon))
 		if(W_IsWeaponThrowable(self.weapon))
-			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');
 }

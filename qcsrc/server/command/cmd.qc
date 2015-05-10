@@ -1,3 +1,40 @@
+#include "../../common/command/command.qh"
+#include "cmd.qh"
+#include "../_all.qh"
+
+#include "common.qh"
+#include "vote.qh"
+
+#include "../campaign.qh"
+#include "../cheats.qh"
+#include "../cl_player.qh"
+#include "../g_triggers.qh"
+#include "../ipban.qh"
+#include "../mapvoting.qh"
+#include "../scores.qh"
+#include "../teamplay.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#ifdef SVQC
+	#include "../vehicles/vehicle.qh"
+#endif
+
+#include "../../common/constants.qh"
+#include "../../common/deathtypes.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/monsters/monsters.qh"
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
+
+#include "../../warpzonelib/common.qh"
+
+void ClientKill_TeamChange (float targetteam); // 0 = don't change, -1 = auto, -2 = spec
+
 // =========================================================
 //  Server side networked commands code, reworked by Samual
 //  Last updated: December 28th, 2011
@@ -10,7 +47,7 @@ float SV_ParseClientCommand_floodcheck()
 		if(time <= (self.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
 			self.cmd_floodcount += 1;
-			if(self.cmd_floodcount > autocvar_sv_clientcommand_antispam_count) { return FALSE; } // too much spam, halt
+			if(self.cmd_floodcount > autocvar_sv_clientcommand_antispam_count) { return false; } // too much spam, halt
 		}
 		else
 		{
@@ -18,7 +55,7 @@ float SV_ParseClientCommand_floodcheck()
 			self.cmd_floodcount = 1;
 		}
 	}
-	return TRUE; // continue, as we're not flooding yet
+	return true; // continue, as we're not flooding yet
 }
 
 
@@ -92,7 +129,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 					}
 					else if(autocvar_g_campaign || autocvar_g_balance_teams)
 					{
-						//JoinBestTeam(self, FALSE, TRUE);
+						//JoinBestTeam(self, false, true);
 					}
 					else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0))
 					{
@@ -194,7 +231,7 @@ void ClientCommand_mobedit(float request, float argc)
 			{
 				makevectors(self.v_angle);
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-				
+
 				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); return; }
 				if(trace_ent.flags & FL_MONSTER)
 				{
@@ -236,7 +273,7 @@ void ClientCommand_mobkill(float request)
 		{
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-			
+
 			if(trace_ent.flags & FL_MONSTER)
 			{
 				if(trace_ent.realowner != self)
@@ -249,7 +286,7 @@ void ClientCommand_mobkill(float request)
 				return;
 			}
 		}
-	
+
 		default:
 			sprint(self, "Incorrect parameters for ^2mobkill^7\n");
 		case CMD_REQUEST_USAGE:
@@ -270,22 +307,22 @@ void ClientCommand_mobspawn(float request, float argc)
 			entity e;
 			string tospawn;
 			float moveflag, monstercount = 0;
-			
+
 			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
 			tospawn = strtolower(argv(1));
-			
+
 			if(tospawn == "list")
 			{
 				sprint(self, monsterlist_reply);
 				return;
 			}
-			
+
 			FOR_EACH_MONSTER(e)
 			{
 				if(e.realowner == self)
 					++monstercount;
 			}
-			
+
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); return; }
 			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); return; }
 			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); return; }
@@ -300,13 +337,13 @@ void ClientCommand_mobspawn(float request, float argc)
 			{
 				float found = 0, i;
 				entity mon;
-				
+
 				for(i = MON_FIRST; i <= MON_LAST; ++i)
 				{
 					mon = get_monsterinfo(i);
 					if(mon.netname == tospawn)
 					{
-						found = TRUE;
+						found = true;
 						break;
 					}
 				}
@@ -314,20 +351,20 @@ void ClientCommand_mobspawn(float request, float argc)
 				if(found || tospawn == "random")
 				{
 					totalspawned += 1;
-				
+
 					makevectors(self.v_angle);
-					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
+					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, true, self);
 					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
-				
-					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, FALSE, moveflag);
-					
+
+					e = spawnmonster(tospawn, 0, self, self, trace_endpos, false, false, moveflag);
+
 					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
-					
+
 					return;
 				}
 			}
 		}
-	
+
 		default:
 			sprint(self, "Incorrect parameters for ^2mobspawn^7\n");
 		case CMD_REQUEST_USAGE:
@@ -357,12 +394,12 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 							return;
 						if (self.ready) // toggle
 						{
-							self.ready = FALSE;
+							self.ready = false;
 							bprint(self.netname, "^2 is ^1NOT^2 ready\n");
 						}
 						else
 						{
-							self.ready = TRUE;
+							self.ready = true;
 							bprint(self.netname, "^2 is ready\n");
 						}
 
@@ -393,7 +430,7 @@ void ClientCommand_say(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2) { Say(self, FALSE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
+			if(argc >= 2) { Say(self, false, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
 			return; // never fall through to usage
 		}
 
@@ -413,7 +450,7 @@ void ClientCommand_say_team(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2) { Say(self, TRUE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
+			if(argc >= 2) { Say(self, true, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
 			return; // never fall through to usage
 		}
 
@@ -635,13 +672,13 @@ void ClientCommand_tell(float request, float argc, string command)
 			if(argc >= 3)
 			{
 				entity tell_to = GetIndexedEntity(argc, 1);
-				float tell_accepted = VerifyClientEntity(tell_to, TRUE, FALSE);
+				float tell_accepted = VerifyClientEntity(tell_to, true, false);
 
 				if(tell_accepted > 0) // the target is a real client
 				{
 					if(tell_to != self) // and we're allowed to send to them :D
 					{
-						Say(self, FALSE, tell_to, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)), TRUE);
+						Say(self, false, tell_to, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)), true);
 						return;
 					}
 					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
@@ -750,7 +787,7 @@ void ClientCommand_macro_help()
 	#define CLIENT_COMMAND(name,function,description) \
 		{ sprint(self, "  ^2", name, "^7: ", description, "\n"); }
 
-	CLIENT_COMMANDS(0, 0, "")
+	CLIENT_COMMANDS(0, 0, "");
 	#undef CLIENT_COMMAND
 
 	return;
@@ -759,23 +796,23 @@ void ClientCommand_macro_help()
 float ClientCommand_macro_command(float argc, string command)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
+	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 	#undef CLIENT_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 float ClientCommand_macro_usage(float argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc, "")
+	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 	#undef CLIENT_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void ClientCommand_macro_write_aliases(float fh)
@@ -783,7 +820,7 @@ void ClientCommand_macro_write_aliases(float fh)
 	#define CLIENT_COMMAND(name,function,description) \
 		{ CMD_Write_Alias("qc_cmd_cmd", name, description); }
 
-	CLIENT_COMMANDS(0, 0, "")
+	CLIENT_COMMANDS(0, 0, "");
 	#undef CLIENT_COMMAND
 
 	return;
@@ -796,6 +833,15 @@ void ClientCommand_macro_write_aliases(float fh)
 
 void SV_ParseClientCommand(string command)
 {
+	// If invalid UTF-8, don't even parse it
+	string command2 = "";
+	float len = strlen(command);
+	float i;
+	for (i = 0; i < len; ++i)
+		command2 = strcat(command2, chr2str(str2chr(command, i)));
+	if (command != command2)
+		return;
+
 	// if we're banned, don't even parse the command
 	if(Ban_MaybeEnforceBanOnce(self))
 		return;
@@ -826,9 +872,9 @@ void SV_ParseClientCommand(string command)
 
 		default:
 			if(SV_ParseClientCommand_floodcheck())
-				break; // "TRUE": continue, as we're not flooding yet
+				break; // "true": continue, as we're not flooding yet
 			else
-				return; // "FALSE": not allowed to continue, halt // print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n");
+				return; // "false": not allowed to continue, halt // print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n");
 	}
 
 	/* NOTE: should this be disabled? It can be spammy perhaps, but hopefully it's okay for now */

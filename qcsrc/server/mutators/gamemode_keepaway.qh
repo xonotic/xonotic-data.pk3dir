@@ -1,10 +1,17 @@
+#ifndef GAMEMODE_KEEPAWAY_H
+#define GAMEMODE_KEEPAWAY_H
+
 // these are needed since mutators are compiled last
 
 entity ka_ball;
 
-#define SP_KEEPAWAY_PICKUPS 4
-#define SP_KEEPAWAY_CARRIERKILLS 5
-#define SP_KEEPAWAY_BCTIME 6
+const float SP_KEEPAWAY_PICKUPS = 4;
+const float SP_KEEPAWAY_CARRIERKILLS = 5;
+const float SP_KEEPAWAY_BCTIME = 6;
 
 void() havocbot_role_ka_carrier;
 void() havocbot_role_ka_collector;
+
+void ka_DropEvent(entity plyr);
+
+#endif

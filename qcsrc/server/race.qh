@@ -1,3 +1,6 @@
+#ifndef RACE_H
+#define RACE_H
+
 float race_spawns;
 float race_highest_place_spawn; // number of places; a place higher gets spawned at 0
 float race_lowest_place_spawn; // where to spawn in qualifying
@@ -7,6 +10,7 @@ float race_timelimit;
 .float race_place;
 .float race_started;
 .float race_completed;
+.float race_laptime;
 float race_completing;
 
 .float race_movetime; // for reading
@@ -26,3 +30,26 @@ float race_GetFractionalLapCount(entity e);
 float race_readTime(string map, float pos);
 string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
+void race_ClearRecords();
+void race_SendNextCheckpoint(entity e, float spec);
+void race_PreparePlayer();
+void race_send_recordtime(float msg);
+void race_send_speedaward(float msg);
+
+float speedaward_speed;
+string speedaward_holder;
+string speedaward_uid;
+
+float speedaward_alltimebest;
+string speedaward_alltimebest_holder;
+string speedaward_alltimebest_uid;
+
+void race_send_speedaward(float msg);
+
+void race_send_speedaward_alltimebest(float msg);
+
+void race_SendRankings(float pos, float prevpos, float del, float msg);
+
+void race_RetractPlayer();
+
+#endif

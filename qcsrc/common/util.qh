@@ -1,11 +1,7 @@
-// commonly used, but better make them macros
-#define TRUE 1
-#define FALSE 0
+#ifndef COMMON_UTIL_H
+#define COMMON_UTIL_H
 
-// a dummy macro that prevents the "hanging ;" warning
-#define ENDS_WITH_CURLY_BRACE
-
-#ifdef GMQCC
+#ifdef QCC_SUPPORT_ACCUMULATE
 # define ACCUMULATE_FUNCTION(func,otherfunc) \
 	[[accumulate]] void func() { otherfunc(); }
 # define CALL_ACCUMULATED_FUNCTION(func) \
@@ -78,7 +74,7 @@ float median(float a, float b, float c);
 // works for up to 10 decimals!
 string ftos_decimals(float number, float decimals);
 
-float fexists(string f);
+bool fexists(string f);
 
 vector colormapPaletteColor(float c, float isPants);
 
@@ -86,25 +82,25 @@ vector colormapPaletteColor(float c, float isPants);
 string fstrunzone(string s);
 
 // database (NOTE: keys are case sensitive)
-void db_save(float db, string filename);
-void db_dump(float db, string pFilename);
-float db_create();
-float db_load(string filename);
-void db_close(float db);
-string db_get(float db, string key);
-void db_put(float db, string key, string value);
+void db_save(int db, string filename);
+void db_dump(int db, string pFilename);
+int db_create();
+int db_load(string filename);
+void db_close(int db);
+string db_get(int db, string key);
+void db_put(int db, string key, string value);
 
 // stringbuffer loading/saving
-float buf_load(string filename);
-void buf_save(float buf, string filename);
+int buf_load(string filename);
+void buf_save(int buf, string filename);
 
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
 string format_time(float seconds);
 string mmsss(float t);
 string mmssss(float t);
 
-#define TIME_DECIMALS 2
-#define TIME_FACTOR 100
+const float TIME_DECIMALS = 2;
+const float TIME_FACTOR = 100;
 #define TIME_ENCODED_TOSTRING(n) mmssss(n)
 #define RACE_RECORD "/race100record/"
 #define CTS_RECORD "/cts100record/"
@@ -112,9 +108,6 @@ string mmssss(float t);
 #define TIME_DECODE(n) ((n) / TIME_FACTOR)
 
 string ScoreString(float vflags, float value);
-
-float dotproduct(vector a, vector b);
-vector cross(vector a, vector b);
 
 void compressShortVector_init();
 vector decompressShortVector(float data);
@@ -221,15 +214,15 @@ void RandomSelection_Init();
 void RandomSelection_Add(entity e, float f, string s, float weight, float priority);
 
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage); // returns vector: take, save, 0
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
+vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage); // returns vector: take, save, 0
 #endif
 
 string getcurrentmod();
 
 #ifndef MENUQC
 #ifdef CSQC
-float ReadInt24_t();
+int ReadInt24_t();
 vector ReadInt48_t();
 vector ReadInt72_t();
 #else
@@ -240,12 +233,12 @@ void WriteInt72_t(float dest, vector val);
 #endif
 
 // the NULL function
-#ifdef GMQCC
+#ifdef QCC_SUPPORT_NIL
 #define func_null nil
 #define string_null nil
 #else
 var void func_null(void);
-var string string_null;
+string string_null;
 #endif
 float float2range11(float f);
 float float2range01(float f);
@@ -269,7 +262,7 @@ float get_model_parameters_age;
 string get_model_parameters_description;
 string get_model_parameters_bone_upperbody;
 string get_model_parameters_bone_weapon;
-#define MAX_AIM_BONES 4
+const int MAX_AIM_BONES = 4;
 string get_model_parameters_bone_aim[MAX_AIM_BONES];
 float get_model_parameters_bone_aimweight[MAX_AIM_BONES];
 float get_model_parameters_fixbone;
@@ -303,7 +296,7 @@ float xdecode(string s);
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
 
-float lowestbit(float f);
+int lowestbit(float f);
 
 #ifdef CSQC
 entity ReadCSQCEntity();
@@ -378,26 +371,26 @@ void backtrace(string msg);
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
-var string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
-var string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
-var string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
-var string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
+string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
+string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
+string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
+string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
 // "kill" colors
-var string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-var string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
-var string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
+string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
 // background color
-var string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
+string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
 
 string CCR(string input);
 
 #ifndef MENUQC
-#ifdef CSQC
-#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
-#else
-#define GENTLE autocvar_sv_gentle
-#endif
-#define normal_or_gentle(normal,gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
+	#ifdef CSQC
+		#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
+	#else
+		#define GENTLE autocvar_sv_gentle
+	#endif
+	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
 #endif
 
 // allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
@@ -427,18 +420,18 @@ void dedicated_print(string input);
 #endif
 
 #ifndef MENUQC
-#define CNT_NORMAL 1
-#define CNT_GAMESTART 2
-#define CNT_IDLE 3
-#define CNT_KILL 4
-#define CNT_RESPAWN 5
-#define CNT_ROUNDSTART 6
+const float CNT_NORMAL = 1;
+const float CNT_GAMESTART = 2;
+const float CNT_IDLE = 3;
+const float CNT_KILL = 4;
+const float CNT_RESPAWN = 5;
+const float CNT_ROUNDSTART = 6;
 float Announcer_PickNumber(float type, float num);
 #endif
 
 #ifndef MENUQC
-float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents);
-float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
+int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
+int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 #endif
 
 // Quadratic splines (bezier)
@@ -449,3 +442,4 @@ vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);
 
 // Returns the correct difference between two always increasing numbers
 #define COMPARE_INCREASING(to,from) (to < from ? from + to + 2 : to - from)
+#endif

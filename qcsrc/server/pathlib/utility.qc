@@ -1,3 +1,7 @@
+#include "utility.qh"
+
+#include "pathlib.qh"
+
 float fsnap(float val,float fsize)
 {
     return rint(val / fsize) * fsize;
@@ -7,9 +11,9 @@ vector vsnap(vector point,float fsize)
 {
     vector vret;
 
-    vret_x = rint(point_x / fsize) * fsize;
-    vret_y = rint(point_y / fsize) * fsize;
-    vret_z = ceil(point_z / fsize) * fsize;
+    vret.x = rint(point.x / fsize) * fsize;
+    vret.y = rint(point.y / fsize) * fsize;
+    vret.z = ceil(point.z / fsize) * fsize;
 
     return vret;
 }
@@ -68,13 +72,13 @@ entity pathlib_nodeatpoint(vector where)
 
     ++pathlib_searched_cnt;
 
-    where_x = fsnap(where_x,pathlib_gridsize);
-    where_y = fsnap(where_y,pathlib_gridsize);
+    where.x = fsnap(where.x,pathlib_gridsize);
+    where.y = fsnap(where.y,pathlib_gridsize);
 
     node = findradius(where,pathlib_gridsize * 0.5);
     while(node)
     {
-        if(node.is_path_node == TRUE)
+        if(node.is_path_node == true)
             return node;
 
         node = node.chain;

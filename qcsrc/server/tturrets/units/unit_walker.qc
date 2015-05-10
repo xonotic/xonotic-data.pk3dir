@@ -1,19 +1,25 @@
-#define ANIM_NO         0
-#define ANIM_TURN       1
-#define ANIM_WALK       2
-#define ANIM_RUN        3
-#define ANIM_STRAFE_L   4
-#define ANIM_STRAFE_R   5
-#define ANIM_JUMP       6
-#define ANIM_LAND       7
-#define ANIM_PAIN       8
-#define ANIM_MEELE      9
-#define ANIM_SWIM       10
-#define ANIM_ROAM       11
+#include "../../_all.qh"
+
+#include "../../movelib.qh"
+#include "../../steerlib.qh"
+#include "../../t_teleporters.qh"
+
+const float ANIM_NO         = 0;
+const float ANIM_TURN       = 1;
+const float ANIM_WALK       = 2;
+const float ANIM_RUN        = 3;
+const float ANIM_STRAFE_L   = 4;
+const float ANIM_STRAFE_R   = 5;
+const float ANIM_JUMP       = 6;
+const float ANIM_LAND       = 7;
+const float ANIM_PAIN       = 8;
+const float ANIM_MEELE      = 9;
+const float ANIM_SWIM       = 10;
+const float ANIM_ROAM       = 11;
 .float animflag;
 
-#define WALKER_MIN '-70 -70 0'
-#define WALKER_MAX '70 70 95'
+const vector WALKER_MIN = '-70 -70 0';
+const vector WALKER_MAX = '70 70 95';
 
 #define WALKER_PATH(s,e) pathlib_astar(s,e)
 
@@ -46,7 +52,7 @@ void walker_meele_do_dmg()
 
 void walker_setnoanim()
 {
-    turrets_setframe(ANIM_NO, FALSE);
+    turrets_setframe(ANIM_NO, false);
     self.animflag = self.frame;
 }
 void walker_rocket_explode()
@@ -56,7 +62,7 @@ void walker_rocket_explode()
     remove (self);
 }
 
-void walker_rocket_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void walker_rocket_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
     self.health = self.health - damage;
     self.velocity = self.velocity + vforce;
@@ -192,7 +198,7 @@ void walker_fire_rocket(vector org)
 
     rocket.classname          = "walker_rocket";
     rocket.owner              = self;
-    rocket.bot_dodge          = TRUE;
+    rocket.bot_dodge          = true;
     rocket.bot_dodgerating    = 50;
     rocket.takedamage         = DAMAGE_YES;
     rocket.damageforcescale   = 2;
@@ -218,7 +224,7 @@ void walker_fire_rocket(vector org)
     rocket.tur_health         = time + 9;
     rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
 
-    CSQCProjectile(rocket, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
+    CSQCProjectile(rocket, false, PROJECTILE_ROCKET, false); // no culling, has fly sound
 }
 
 .vector enemy_last_loc;
@@ -342,7 +348,7 @@ void walker_postthink()
                     }
 
                     self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
-                    self.moveto_z = self.origin_z + 64;
+                    self.moveto_z = self.origin.z + 64;
                     walker_move_to(self.moveto, 0);
                 }
 
@@ -374,7 +380,7 @@ void walker_postthink()
 
             wish_angle = angleofs(self, self.enemy);
             if (self.animflag != ANIM_SWIM)
-            if (fabs(wish_angle_y) < 15)
+            if (fabs(wish_angle.y) < 15)
             {
                 self.moveto   = self.enemy.origin;
                 self.steerto  = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
@@ -419,7 +425,7 @@ void walker_postthink()
         float  vz;
 
         real_angle = vectoangles(self.steerto) - self.angles;
-        vz         = self.velocity_z;
+        vz         = self.velocity.z;
 
         switch (self.animflag)
         {
@@ -479,7 +485,7 @@ void walker_postthink()
                 turny = autocvar_g_turrets_unit_walker_turn_swim;
                 turnx = autocvar_g_turrets_unit_walker_turn_swim;
 
-                self.angles_x += bound(-10, shortangle_f(real_angle_x, self.angles_x), 10);
+                self.angles_x += bound(-10, shortangle_f(real_angle.x, self.angles.x), 10);
                 movelib_move_simple(v_forward, autocvar_g_turrets_unit_walker_speed_swim, 0.3);
                 vz = self.velocity_z + sin(time * 4) * 8;
                 break;
@@ -492,13 +498,13 @@ void walker_postthink()
 
         if(turny)
         {
-            turny = bound( turny * -1, shortangle_f(real_angle_y, self.angles_y), turny );
+            turny = bound( turny * -1, shortangle_f(real_angle.y, self.angles.y), turny );
             self.angles_y += turny;
         }
 
         if(turnx)
         {
-            turnx = bound( turnx * -1, shortangle_f(real_angle_x, self.angles_x), turnx );
+            turnx = bound( turnx * -1, shortangle_f(real_angle.x, self.angles.x), turnx );
             self.angles_x += turnx;
         }
 
@@ -510,7 +516,7 @@ void walker_postthink()
         self.SendFlags |= TNSF_MOVE;
 
     self.oldorigin = self.origin;
-    turrets_setframe(self.animflag, FALSE);
+    turrets_setframe(self.animflag, false);
 }
 
 void walker_attack()
@@ -589,9 +595,9 @@ void turret_walker_dinit()
     setsize(self, WALKER_MIN, WALKER_MAX);
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-    self.iscreature = TRUE;
+    self.iscreature = true;
     self.teleportable = TELEPORT_NORMAL;
-    self.damagedbycontents = TRUE;
+    self.damagedbycontents = true;
     self.movetype   = MOVETYPE_WALK;
     self.solid      = SOLID_SLIDEBOX;
     self.takedamage = DAMAGE_AIM;

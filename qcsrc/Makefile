@@ -7,8 +7,7 @@ QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversio
 
 # We eventually need to get rid of these.
 QCCFLAGS_WTFS ?= \
-	-Wno-field-redeclared \
-	-Wno-double-declaration \
+	-Wno-field-redeclared
 
 QCCFLAGS ?= \
 	-std=gmqcc \
@@ -16,7 +15,12 @@ QCCFLAGS ?= \
 	-Werror -fno-bail-on-werror -Wall \
 	-fftepp -fftepp-predefs -Wcpp -futf8 \
 	$(QCCFLAGS_WTFS) \
+	$(QCCFLAGS_FEATURES) \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
+
+QCCFLAGS_FEATURES ?= \
+	-DVEHICLES_ENABLED=1 \
+	-DVEHICLES_USE_ODE=0
 
 # xonotic build system overrides this by command line argument to turn off the update-cvarcount step
 XON_BUILDSYSTEM =
@@ -38,7 +42,7 @@ $(QCCVERSIONFILE):
 FILES_CSPROGS = $(shell find client common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm)
 ../csprogs.dat: $(FILES_CSPROGS) $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
-	cd client && $(QCC) $(QCCFLAGS)
+	cd client && $(QCC) $(QCCFLAGS) -DCSQC
 
 server/precache-for-csqc.inc: $(FILES_CSPROGS)
 	sh collect-precache.sh
@@ -46,12 +50,12 @@ server/precache-for-csqc.inc: $(FILES_CSPROGS)
 FILES_PROGS = $(shell find server common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm)
 ../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE) server/precache-for-csqc.inc
 	@echo make[1]: Entering directory \`$(PWD)/server\'
-	cd server && $(QCC) $(QCCFLAGS)
+	cd server && $(QCC) $(QCCFLAGS) -DSVQC
 
 FILES_MENU = $(shell find menu common warpzonelib -type f -not -name fteqcc.log -not -name qc.asm)
 ../menu.dat: $(FILES_MENU) $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
-	cd menu && $(QCC) $(QCCFLAGS)
+	cd menu && $(QCC) $(QCCFLAGS) -DMENUQC
 
 .PHONY: testcase
 testcase:

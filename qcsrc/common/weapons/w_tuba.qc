@@ -55,39 +55,39 @@ float W_Tuba_MarkClientOnlyFieldsAsUsed() {
 #ifdef SVQC
 void spawnfunc_weapon_tuba(void) { weapon_defaultspawnfunc(WEP_TUBA); }
 
-float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo)
+bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
 	float i, j, mmin, mmax, nolength;
 	float n = tokenize_console(melody);
 	if(n > pl.tuba_lastnotes_cnt)
-		return FALSE;
+		return false;
 	float pitchshift = 0;
 
 	if(instrument >= 0)
 		if(pl.tuba_instrument != instrument)
-			return FALSE;
+			return false;
 
 	// verify notes...
-	nolength = FALSE;
+	nolength = false;
 	for(i = 0; i < n; ++i)
 	{
 		vector v = pl.(tuba_lastnotes[(pl.tuba_lastnotes_last - i + MAX_TUBANOTES) % MAX_TUBANOTES]);
 		float ai = stof(argv(n - i - 1));
 		float np = floor(ai);
 		if(ai == np)
-			nolength = TRUE;
+			nolength = true;
 		// n counts the last played notes BACKWARDS
 		// _x is start
 		// _y is end
 		// _z is note pitch
 		if(ignorepitch && i == 0)
 		{
-			pitchshift = np - v_z;
+			pitchshift = np - v.z;
 		}
 		else
 		{
-			if(v_z + pitchshift != np)
-				return FALSE;
+			if(v.z + pitchshift != np)
+				return false;
 		}
 	}
 
@@ -132,18 +132,18 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 				//printf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj);
 				//printf("m1 = %f\n", (vi_x - vj_y) / (ti - tj));
 				//printf("m2 = %f\n", (vi_y - vj_x) / (ti - tj));
-				mmin = max(mmin, (vi_x - vj_y) / (ti - tj)); // lower bound
-				mmax = min(mmax, (vi_y - vj_x) / (ti - tj)); // upper bound
+				mmin = max(mmin, (vi.x - vj.y) / (ti - tj)); // lower bound
+				mmax = min(mmax, (vi.y - vj.x) / (ti - tj)); // upper bound
 			}
 		}
 
 		if(mmin > mmax) // rhythm fail
-			return FALSE;
+			return false;
 	}
 
 	pl.tuba_lastnotes_cnt = 0;
 
-	return TRUE;
+	return true;
 }
 
 void W_Tuba_NoteOff(void)
@@ -182,18 +182,15 @@ void W_Tuba_NoteOff(void)
 	remove(self);
 }
 
-float W_Tuba_GetNote(entity pl, float hittype)
+int W_Tuba_GetNote(entity pl, int hittype)
 {
-	float note;
-	float movestate;
-	movestate = 5;
-	if(pl.movement_x < 0) movestate -= 3;
-	if(pl.movement_x > 0) movestate += 3;
-	if(pl.movement_y < 0) movestate -= 1;
-	if(pl.movement_y > 0) movestate += 1;
-#ifdef GMQCC
-	note = 0;
-#endif
+	float movestate = 5;
+	if (pl.movement.x < 0)		movestate -= 3;
+	else if (pl.movement.x > 0)	movestate += 3;
+	if (pl.movement.y < 0)		movestate -= 1;
+	else if (pl.movement.y > 0)	movestate += 1;
+
+	int note = 0;
 	switch(movestate)
 	{
 	// layout: originally I wanted
@@ -253,13 +250,13 @@ float W_Tuba_GetNote(entity pl, float hittype)
 	return note;
 }
 
-float W_Tuba_NoteSendEntity(entity to, float sf)
+bool W_Tuba_NoteSendEntity(entity to, int sf)
 {
-	float f;
+	int f;
 
 	msg_entity = to;
 	if(!sound_allowed(MSG_ONE, self.realowner))
-		return FALSE;
+		return false;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
 	WriteByte(MSG_ENTITY, sf);
@@ -274,11 +271,11 @@ float W_Tuba_NoteSendEntity(entity to, float sf)
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
-	return TRUE;
+	return true;
 }
 
 void W_Tuba_NoteThink(void)
@@ -324,7 +321,7 @@ void W_Tuba_NoteOn(float hittype)
 	vector o;
 	float n;
 
-	W_SetupShot(self, FALSE, 2, "", 0, WEP_CVAR(tuba, damage));
+	W_SetupShot(self, false, 2, "", 0, WEP_CVAR(tuba, damage));
 
 	n = W_Tuba_GetNote(self, hittype);
 
@@ -354,7 +351,7 @@ void W_Tuba_NoteOn(float hittype)
 		self.tuba_note.think = W_Tuba_NoteThink;
 		self.tuba_note.nextthink = time;
 		self.tuba_note.spawnshieldtime = time;
-		Net_LinkEntity(self.tuba_note, FALSE, 0, W_Tuba_NoteSendEntity);
+		Net_LinkEntity(self.tuba_note, false, 0, W_Tuba_NoteSendEntity);
 	}
 
 	self.tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(); // so it can get prolonged safely
@@ -370,7 +367,7 @@ void W_Tuba_NoteOn(float hittype)
 	}
 }
 
-float W_Tuba(float req)
+bool W_Tuba(int req)
 {
 	switch(req)
 	{
@@ -385,8 +382,8 @@ float W_Tuba(float req)
 				else
 					self.BUTTON_ATCK2 = 1;
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -414,8 +411,8 @@ float W_Tuba(float req)
 					self = oldself;
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -426,14 +423,14 @@ float W_Tuba(float req)
 			precache_model("models/weapons/h_akordeon.iqm");
 			precache_model("models/weapons/v_kleinbottle.md3");
 			precache_model("models/weapons/h_kleinbottle.iqm");
-			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
 		}
 		case WR_SETUP:
 		{
 			self.ammo_field = ammo_none;
 			self.tuba_instrument = 0;
-			return TRUE;
+			return true;
 		}
 		case WR_RELOAD:
 		{
@@ -455,23 +452,23 @@ float W_Tuba(float req)
 						self.weaponname = "tuba";
 						break;
 				}
-				W_SetupShot(self, FALSE, 0, "", 0, 0);
+				W_SetupShot(self, false, 0, "", 0, 0);
 				pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
 				self.weaponentity.state = WS_INUSE;
 				weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		case WR_CHECKAMMO2:
 		{
-			return TRUE; // tuba has infinite ammo
+			return true; // tuba has infinite ammo
 		}
 		case WR_CONFIG:
 		{
-			TUBA_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			TUBA_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -492,11 +489,11 @@ float W_Tuba(float req)
 				return WEAPON_TUBA_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
-float W_Tuba(float req)
+bool W_Tuba(int req)
 {
 	// nothing to do here; particles of tuba are handled differently
 	// WEAPONTODO
@@ -506,11 +503,11 @@ float W_Tuba(float req)
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 #endif
 #endif

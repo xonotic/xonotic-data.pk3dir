@@ -1,3 +1,5 @@
+#include "../pathlib.qh"
+
 float pathlib_g_static(entity parent,vector to, float static_cost)
 {
     return parent.pathlib_node_g + static_cost;
@@ -34,8 +36,8 @@ float pathlib_h_manhattan(vector a,vector b)
     //h(n) = D * (abs(n.x-goal.x) + abs(n.y-goal.y))
 
     float h;
-    h  = fabs(a_x - b_x);
-    h += fabs(a_y - b_y);
+    h  = fabs(a.x - b.x);
+    h += fabs(a.y - b.y);
     h *= pathlib_gridsize;
 
     return h;
@@ -50,8 +52,8 @@ float pathlib_h_diagonal(vector a,vector b)
     //h(n) = D * max(abs(n.x-goal.x), abs(n.y-goal.y))
     float h,x,y;
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
     h = pathlib_movecost * max(x,y);
 
     return h;
@@ -81,8 +83,8 @@ float pathlib_h_diagonal2(vector a,vector b)
     h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
     */
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
 
     h_diag = min(x,y);
     h_str = x + y;
@@ -105,9 +107,9 @@ float pathlib_h_diagonal2sdp(vector preprev,vector prev,vector point,vector end)
     //h_straight(n) = (abs(n.x-goal.x) + abs(n.y-goal.y))
     //h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
 
-    x = fabs(point_x - end_x);
-    y = fabs(point_y - end_y);
-    z = fabs(point_z - end_z);
+    x = fabs(point.x - end.x);
+    y = fabs(point.y - end.y);
+    z = fabs(point.z - end.z);
 
     h_diag = min3(x,y,z);
     h_str = x + y + z;
@@ -130,9 +132,9 @@ float pathlib_h_diagonal3(vector a,vector b)
 {
     float h_diag,h_str,h,x,y,z;
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
-    z = fabs(a_z - b_z);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
+    z = fabs(a.z - b.z);
 
     h_diag = min3(x,y,z);
     h_str = x + y + z;

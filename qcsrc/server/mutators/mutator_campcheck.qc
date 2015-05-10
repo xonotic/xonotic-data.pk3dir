@@ -1,3 +1,9 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "../campaign.qh"
+
 .float campcheck_nextcheck;
 .float campcheck_traveled_distance;
 
@@ -5,7 +11,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerDies)
 {
 	Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_CAMPCHECK);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(campcheck_PlayerDamage)
@@ -18,7 +24,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerDamage)
 		frag_attacker.campcheck_traveled_distance = autocvar_g_campcheck_distance;
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
@@ -32,7 +38,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 
 		// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
 		dist = self.prevorigin - self.origin;
-		dist_z = 0;
+		dist.z = 0;
 		self.campcheck_traveled_distance += fabs(vlen(dist));
 
 		if((autocvar_g_campaign && !campaign_bots_may_start) || (time < game_starttime) || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
@@ -56,7 +62,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(campcheck_PlayerSpawn)
@@ -64,13 +70,13 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerSpawn)
 	self.campcheck_nextcheck = time + autocvar_g_campcheck_interval * 2;
 	self.campcheck_traveled_distance = 0;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(campcheck_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":CampCheck");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_campcheck)
@@ -81,5 +87,5 @@ MUTATOR_DEFINITION(mutator_campcheck)
 	MUTATOR_HOOK(PlayerSpawn, campcheck_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, campcheck_BuildMutatorsString, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

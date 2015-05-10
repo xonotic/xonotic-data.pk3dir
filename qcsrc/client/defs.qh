@@ -1,0 +1,134 @@
+#ifndef CLIENT_DEFS_H
+#define CLIENT_DEFS_H
+
+// Additional OPTIONAL Fields and Globals
+//float		intermission;
+float		scoreboard_showscores;
+float		scoreboard_showaccuracy;
+.string		message;
+.int		renderflags;
+// float		coop;
+// float		deathmatch;
+
+float		dmg_take;
+// float		dmg_save;
+// vector		dmg_origin;
+
+// Darkplaces Render Modifications
+#if 0
+.float alpha;
+.float renderflags;
+.vector colormod;
+.float scale;
+#endif
+
+// Basic variables
+.float enttype; // entity type sent from server
+.int   sv_entnum; // entity number sent from server
+.int team;
+.int team_size;
+
+float vid_conwidth, vid_conheight;
+int binddb;
+
+// QUALIFYING
+float race_checkpoint;
+float race_time;
+float race_laptime;
+float race_checkpointtime;
+float race_previousbesttime;
+string race_previousbestname;
+float race_nextcheckpoint;
+float race_nextbesttime;
+string race_nextbestname;
+float race_penaltyaccumulator; // qualifying: total penalty time in tenths
+float race_penaltyeventtime; // time when the player got the penalty
+float race_penaltytime; // duration of penalty time, in tenths
+string race_penaltyreason; // reason for penalty
+float race_server_record; // server record
+float race_speedaward;
+string race_speedaward_holder;
+float race_speedaward_alltimebest;
+string race_speedaward_alltimebest_holder;
+
+// RACE
+float race_mycheckpoint;
+float race_mycheckpointtime;
+float race_mycheckpointdelta;
+float race_mycheckpointlapsdelta;
+string race_mycheckpointenemy;
+float race_othercheckpoint;
+float race_othercheckpointtime;
+float race_othercheckpointdelta;
+float race_othercheckpointlapsdelta;
+string race_othercheckpointenemy;
+float scoreboard_showscores_force;
+float race_status;
+string race_status_name;
+float race_myrank;
+
+// Nexball
+float nb_pb_period;
+
+// Spectating
+float spectatee_status;
+
+// short mapname
+string shortmapname;
+
+// database for misc stuff
+int tempdb;
+int ClientProgsDB;
+vector hook_shotorigin[4];
+vector lightning_shotorigin[4];
+
+
+#ifdef BLURTEST
+float blurtest_time0, blurtest_time1, blurtest_radius, blurtest_power;
+#endif
+
+float servertime, serverprevtime, serverdeltatime;
+
+float ticrate;
+
+.float damageforcescale;
+const float MIN_DAMAGEEXTRARADIUS = 2;
+const float MAX_DAMAGEEXTRARADIUS = 16;
+.float damageextraradius;
+.void(float thisdmg, int hittype, vector org, vector thisforce) event_damage;
+
+// only for Porto
+float angles_held_status;
+vector angles_held;
+
+// weapons
+.bool silent;
+
+int w_deathtype;
+float w_issilent, w_random;
+vector w_org, w_backoff;
+
+float rifle_scope;
+float vortex_scope;
+
+float minelayer_maxmines;
+
+float hagar_maxrockets;
+
+float bgmtime;
+
+string weaponorder_byimpulse;
+string weaponorder_bypriority;
+
+float vortex_charge_movingavg;
+
+int serverflags;
+
+float uid2name_dialog;
+
+.bool csqcmodel_isdead; // used by shownames and miscfunctions (float getplayerisdead(float) {}) to know when a player is dead
+
+#define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
+
+float g_balance_porto_secondary;
+#endif

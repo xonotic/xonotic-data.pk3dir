@@ -1,5 +1,14 @@
-float trace_dphitcontents;
-.float dphitcontentsmask;
+#include "common.qh"
+
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+    #include "../server/t_items.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "../common/weapons/weapons.qh"
+    #include "../dpdefs/dpextensions.qh"
+	#include "../dpdefs/progsdefs.qh"
+#endif
 
 void WarpZone_Accumulator_Clear(entity acc)
 {
@@ -32,7 +41,7 @@ void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
 }
 
 .vector(vector, vector) camera_transform;
-var float autocvar_cl_warpzone_usetrace = 1;
+float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
 {
 	vector vf, vr, vu;
@@ -263,7 +272,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	sol = -1;
 	frac = 0;
 	i = 16;
-	for(;;)
+	for (;;)
 	{
 		if(--i < 1)
 		{
@@ -386,7 +395,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	}
 	WarpZone_MakeAllSolid();
 	i = 16;
-	for(;;)
+	for (;;)
 	{
 		if(--i < 1)
 		{
@@ -469,7 +478,7 @@ void WarpZone_TrailParticles_WithMultiplier_trace_callback(vector from, vector e
 	boxparticles(WarpZone_TrailParticles_trace_callback_eff, WarpZone_TrailParticles_trace_callback_own, from, endpos, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_f, WarpZone_TrailParticles_trace_callback_flags);
 }
 
-void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags)
+void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, int boxflags)
 {
 	WarpZone_TrailParticles_trace_callback_own = own;
 	WarpZone_TrailParticles_trace_callback_eff = eff;
@@ -508,18 +517,18 @@ vector WarpZone_TransformVAngles(entity wz, vector ang)
 {
 #ifdef KEEP_ROLL
 	float roll;
-	roll = ang_z;
-	ang_z = 0;
+	roll = ang.z;
+	ang.z = 0;
 #endif
 
 	ang = AnglesTransform_ApplyToVAngles(wz.warpzone_transform, ang);
 
 #ifdef KEEP_ROLL
-	ang = AnglesTransform_Normalize(ang, TRUE);
+	ang = AnglesTransform_Normalize(ang, true);
 	ang = AnglesTransform_CancelRoll(ang);
-	ang_z = roll;
+	ang.z = roll;
 #else
-	ang = AnglesTransform_Normalize(ang, FALSE);
+	ang = AnglesTransform_Normalize(ang, false);
 #endif
 
 	return ang;
@@ -544,23 +553,23 @@ vector WarpZone_UnTransformVAngles(entity wz, vector ang)
 {
 	float roll;
 
-	roll = ang_z;
-	ang_z = 0;
+	roll = ang.z;
+	ang.z = 0;
 
 	ang = AnglesTransform_ApplyToVAngles(AnglesTransform_Invert(wz.warpzone_transform), ang);
-	ang = AnglesTransform_Normalize(ang, TRUE);
+	ang = AnglesTransform_Normalize(ang, true);
 	ang = AnglesTransform_CancelRoll(ang);
 
-	ang_z = roll;
+	ang.z = roll;
 	return ang;
 }
 
 vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 {
 	vector nearest;
-	nearest_x = bound(mi_x, org_x, ma_x);
-	nearest_y = bound(mi_y, org_y, ma_y);
-	nearest_z = bound(mi_z, org_z, ma_z);
+	nearest.x = bound(mi.x, org.x, ma.x);
+	nearest.y = bound(mi.y, org.y, ma.y);
+	nearest.z = bound(mi.z, org.z, ma.z);
 	return nearest;
 }
 

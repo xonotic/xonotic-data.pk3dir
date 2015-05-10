@@ -20,9 +20,23 @@
  * IN THE SOFTWARE.
  */
 
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "../common/constants.qh"
+	#include "../common/util.qh"
+	#include "../common/animdecide.qh"
+	#include "../server/constants.qh"
+	#include "../server/defs.qh"
+	#include "common.qh"
+	#include "sv_model.qh"
+#endif
+
 // generic CSQC model code
 
-float CSQCModel_Send(entity to, float sf)
+bool CSQCModel_Send(entity to, int sf)
 {
 	// some nice flags for CSQCMODEL_IF
 	float isplayer = (IS_CLIENT(self));
@@ -50,7 +64,7 @@ float CSQCModel_Send(entity to, float sf)
 #undef CSQCMODEL_ENDIF
 #undef CSQCMODEL_IF
 
-	return TRUE;
+	return true;
 }
 
 #ifdef CSQCPLAYER_FORCE_UPDATES

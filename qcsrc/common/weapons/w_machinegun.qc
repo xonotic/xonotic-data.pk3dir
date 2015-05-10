@@ -101,9 +101,9 @@ void W_MachineGun_MuzzleFlash(void)
 	self.muzzle_flash.owner = self.muzzle_flash.realowner = self;
 }
 
-void W_MachineGun_Attack(float deathtype)
+void W_MachineGun_Attack(int deathtype)
 {
-	W_SetupShot(self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
+	W_SetupShot(self, true, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -179,7 +179,7 @@ void W_MachineGun_Attack_Auto(void)
 
 	W_DecreaseAmmo(WEP_CVAR(machinegun, sustained_ammo));
 
-	W_SetupShot(self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
+	W_SetupShot(self, true, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -205,7 +205,7 @@ void W_MachineGun_Attack_Auto(void)
 
 void W_MachineGun_Attack_Burst(void)
 {
-	W_SetupShot(self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
+	W_SetupShot(self, true, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -235,7 +235,7 @@ void W_MachineGun_Attack_Burst(void)
 
 }
 
-float W_MachineGun(float req)
+bool W_MachineGun(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -243,11 +243,11 @@ float W_MachineGun(float req)
 		case WR_AIM:
 		{
 			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
-			
-			return TRUE;
+				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
+
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -270,7 +270,7 @@ float W_MachineGun(float req)
 					{
 						W_SwitchWeapon_Force(self, w_getbestweapon(self));
 						w_ready();
-						return FALSE;
+						return false;
 					}
 
 					W_DecreaseAmmo(WEP_CVAR(machinegun, burst_ammo));
@@ -298,8 +298,8 @@ float W_MachineGun(float req)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(machinegun, first_refire), w_ready);
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -308,8 +308,8 @@ float W_MachineGun(float req)
 			precache_model("models/weapons/v_uzi.md3");
 			precache_model("models/weapons/h_uzi.iqm");
 			precache_sound("weapons/uzi_fire.wav");
-			MACHINEGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			MACHINEGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -345,13 +345,13 @@ float W_MachineGun(float req)
 		}
 		case WR_CONFIG:
 		{
-			MACHINEGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			MACHINEGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), "weapons/reload.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -365,11 +365,11 @@ float W_MachineGun(float req)
 				return WEAPON_MACHINEGUN_MURDER_SPRAY;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
-float W_MachineGun(float req)
+bool W_MachineGun(int req)
 {
 	switch(req)
 	{
@@ -385,23 +385,23 @@ float W_MachineGun(float req)
 					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.2)
 					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
-					
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/ric1.wav");
 			precache_sound("weapons/ric2.wav");
 			precache_sound("weapons/ric3.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

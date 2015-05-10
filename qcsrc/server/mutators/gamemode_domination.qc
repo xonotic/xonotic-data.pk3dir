@@ -1,3 +1,8 @@
+#include "gamemode_domination.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
@@ -422,19 +427,19 @@ MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 		self.player_blocked = 1;
 	else
 		self.player_blocked = 0;
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_ClientConnect)
 {
 	set_dom_state(self);
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_BotRoles)
 {
 	self.havocbot_role = havocbot_role_dom;
-	return TRUE;
+	return true;
 }
 
 /*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)
@@ -513,7 +518,7 @@ void ScoreRules_dom(float teams)
 {
 	if(domination_roundbased)
 	{
-		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES, "takes", 0);
 		ScoreRules_basics_end();
@@ -526,7 +531,7 @@ void ScoreRules_dom(float teams)
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
-		ScoreRules_basics(teams, sp_score, sp_score, TRUE);
+		ScoreRules_basics(teams, sp_score, sp_score, true);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
@@ -596,7 +601,7 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}
-	
+
 	CheckAllowedTeams(world);
 	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
 

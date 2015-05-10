@@ -1,6 +1,10 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 float g_nix_with_blaster;
 // WEAPONTODO
-float nix_weapon;
+int nix_weapon;
 float nix_nextchange;
 float nix_nextweapon;
 .float nix_lastchange_id;
@@ -12,22 +16,22 @@ float NIX_CanChooseWeapon(float wpn)
 	entity e;
 	e = get_weaponinfo(wpn);
 	if(!e.weapon) // skip dummies
-		return FALSE;
+		return false;
 	if(g_weaponarena)
 	{
 		if(!(g_weaponarena_weapons & WepSet_FromWeapon(wpn)))
-			return FALSE;
+			return false;
 	}
 	else
 	{
 		if(wpn == WEP_BLASTER && g_nix_with_blaster) // WEAPONTODO: rename to g_nix_with_blaster
-			return FALSE;
+			return false;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-			return FALSE;
+			return false;
 		if (!(e.spawnflags & WEP_FLAG_NORMAL))
-			return FALSE;
+			return false;
 	}
-	return TRUE;
+	return true;
 }
 void NIX_ChooseNextWeapon()
 {
@@ -65,7 +69,7 @@ void NIX_GiveCurrentWeapon()
 	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
 	{
 		self.ammo_shells = self.ammo_nails = self.ammo_rockets = self.ammo_cells = self.ammo_plasma = self.ammo_fuel = 0;
-		
+
 		if(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
 			switch(e.ammo_field)
@@ -142,8 +146,8 @@ void NIX_GiveCurrentWeapon()
 	self.weapons |= WepSet_FromWeapon(nix_weapon);
 
 	if(self.switchweapon != nix_weapon)
-		if(!client_hasweapon(self, self.switchweapon, TRUE, FALSE))
-			if(client_hasweapon(self, nix_weapon, TRUE, FALSE))
+		if(!client_hasweapon(self, self.switchweapon, true, false))
+			if(client_hasweapon(self, nix_weapon, true, false))
 				W_SwitchWeapon(nix_weapon);
 }
 
@@ -265,7 +269,7 @@ MUTATOR_DEFINITION(mutator_nix)
 			e.ammo_rockets = start_ammo_rockets;
 			e.ammo_fuel = start_ammo_fuel;
 			e.weapons = start_weapons;
-			if(!client_hasweapon(e, e.weapon, TRUE, FALSE))
+			if(!client_hasweapon(e, e.weapon, true, false))
 				e.switchweapon = w_getbestweapon(self);
 		}
 	}

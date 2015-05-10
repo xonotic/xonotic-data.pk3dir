@@ -1,13 +1,15 @@
-float total_players;
-float redalive, bluealive, yellowalive, pinkalive;
-.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
+#include "gamemode_ca.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 float ca_teams;
 float allowed_to_spawn;
 
-#define ST_CA_ROUNDS 1
+const float ST_CA_ROUNDS = 1;
 void ca_ScoreRules(float teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }
@@ -80,7 +82,7 @@ float CA_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
-		allowed_to_spawn = FALSE;
+		allowed_to_spawn = false;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		FOR_EACH_PLAYER(e)
 			nades_Clear(e);
@@ -104,7 +106,7 @@ float CA_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
 
-	allowed_to_spawn = FALSE;
+	allowed_to_spawn = false;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	FOR_EACH_PLAYER(e)
@@ -116,15 +118,15 @@ float CA_CheckWinner()
 void CA_RoundStart()
 {
 	if(warmup_stage)
-		allowed_to_spawn = TRUE;
+		allowed_to_spawn = true;
 	else
-		allowed_to_spawn = FALSE;
+		allowed_to_spawn = false;
 }
 
-float prev_missing_teams_mask;
 float CA_CheckTeams()
 {
-	allowed_to_spawn = TRUE;
+	static float prev_missing_teams_mask;
+	allowed_to_spawn = true;
 	CA_count_alive_players();
 	if(CA_ALIVE_TEAMS_OK())
 	{
@@ -154,10 +156,10 @@ float CA_CheckTeams()
 float ca_isEliminated(entity e)
 {
 	if(e.caplayer == 1 && (e.deadflag != DEAD_NO || e.frags == FRAGS_LMS_LOSER))
-		return TRUE;
+		return true;
 	if(e.caplayer == 0.5)
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
@@ -213,7 +215,7 @@ MUTATOR_HOOKFUNCTION(ca_ClientConnect)
 
 MUTATOR_HOOKFUNCTION(ca_reset_map_global)
 {
-	allowed_to_spawn = TRUE;
+	allowed_to_spawn = true;
 	return 1;
 }
 
@@ -320,19 +322,19 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 
 	frag_mirrordamage = 0;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca_FilterItem)
 {
 	if(autocvar_g_powerups <= 0)
 	if(self.flags & FL_POWERUP)
-		return TRUE;
+		return true;
 
 	if(autocvar_g_pickup_items <= 0)
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
@@ -342,18 +344,18 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
 	if(frag_target != frag_attacker && IS_PLAYER(frag_attacker))
 		PlayerTeamScore_Add(frag_attacker, SP_SCORE, ST_SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerRegen)
 {
 	// no regeneration in CA
-	return TRUE;
+	return true;
 }
 
 void ca_Initialize()
 {
-	allowed_to_spawn = TRUE;
+	allowed_to_spawn = true;
 
 	ca_teams = autocvar_g_ca_teams_override;
 	if(ca_teams < 2)

@@ -1,0 +1,71 @@
+#ifndef BASE_H
+#define BASE_H
+
+#include "../../common/util.qh"
+#include "../../dpdefs/keycodes.qh"
+
+#define NULL (null_entity)
+#define world NULL
+
+.string classname;
+.string vtblname;
+.entity vtblbase;
+entity spawnVtbl(entity this, entity base)
+{
+	entity vtbl = spawn();
+	copyentity(this, vtbl);
+	vtbl.vtblname = vtbl.classname;
+	vtbl.classname = "vtbl";
+	vtbl.vtblbase = base ? base : vtbl; // Top level objects use vtbl as base
+	return vtbl;
+}
+
+entity Object_vtbl;
+entity spawnObject(entity this, entity)
+{
+	this = spawn();
+	this.classname = "Object";
+	if (!Object_vtbl) Object_vtbl = spawnVtbl(this, null_entity);
+	return this;
+}
+
+// Classes have a `spawn##cname(entity, entity)` constructor
+// The parameters are used as locals for [[accumulate]]
+
+// Macro to hide this implementation detail
+#define NEW(cname) (spawn##cname(null_entity, null_entity))
+
+#define CLASS(cname, base)                                          \
+entity spawn##cname(entity this, entity basevtbl) {                 \
+    this = NEW(base); basevtbl = base##_vtbl;                       \
+}
+
+#define METHOD(cname, name, prototype)                              \
+prototype cname##_##name;                                           \
+.prototype name;                                                    \
+[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
+    this.name = cname##_##name;                                     \
+}
+
+#define ATTRIB(cname, name, type, val)                              \
+.type name;                                                         \
+[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
+    this.name = val;                                                \
+}
+
+#define ATTRIBARRAY(cname, name, type, cnt)                         \
+.type name[cnt];
+
+#define ENDCLASS(cname)                                             \
+.bool instanceOf##cname;                                            \
+entity cname##_vtbl;                                                \
+[[last]] entity spawn##cname(entity this, entity basevtbl) {        \
+    this.instanceOf##cname = true;                                  \
+    this.classname = #cname;                                        \
+    if (!cname##_vtbl) cname##_vtbl = spawnVtbl(this, basevtbl);    \
+    return this;                                                    \
+}
+
+#define SUPER(cname) (cname##_vtbl.vtblbase)
+
+#endif

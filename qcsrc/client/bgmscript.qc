@@ -1,15 +1,20 @@
+#include "bgmscript.qh"
+#include "_all.qh"
+
+#include "../common/util.qh"
+
 #define CONSTANT_SPEED_DECAY
 
 float bgmscriptbuf;
 float bgmscriptbufsize;
 float bgmscriptbufloaded;
 
-.float bgmscriptline;
-.float bgmscriptline0;
-.float bgmscriptvolume;
-.float bgmscripttime;
-.float bgmscriptstate;
-.float bgmscriptstatetime;
+class(BGMScript) .float bgmscriptline;
+class(BGMScript) .float bgmscriptline0;
+class(BGMScript) .float bgmscriptvolume;
+class(BGMScript) .float bgmscripttime;
+class(BGMScript) .float bgmscriptstate;
+class(BGMScript) .float bgmscriptstatetime;
 
 float GetAttackDecaySustainAmplitude(float a, float d, float s, float t)
 {
@@ -166,7 +171,7 @@ float GetTimeForAmplitude(entity e, float amp)
 	}
 }
 
-float BGMScript(entity e)
+float doBGMScript(entity e)
 {
 	float amp, vel;
 
@@ -176,7 +181,7 @@ float BGMScript(entity e)
 	if(autocvar_bgmvolume <= 0)
 		return -1;
 
-	e.just_toggled = FALSE;
+	e.just_toggled = false;
 
 	if(bgmtime < 0)
 		return -1;
@@ -189,13 +194,13 @@ float BGMScript(entity e)
 		e.bgmscripttime = bgmtime;
 
 		// treat this as a stop event for all notes, to prevent sticking keys
-		e.bgmscriptstate = FALSE;
+		e.bgmscriptstate = false;
 		e.bgmscriptvolume = 1;
 		e.bgmscriptstatetime = bgmtime - GetTimeForAmplitude(e, amp);
 	}
 
 	// find the CURRENT line
-	for(;;)
+	for (;;)
 	{
 		tokenize_console(bufstr_get(bgmscriptbuf, e.bgmscriptline));
 		if(stof(argv(1)) >= bgmtime || argv(0) != e.bgmscript)
@@ -214,11 +219,11 @@ float BGMScript(entity e)
 			vel = stof(argv(2));
 			if(vel > 0)
 			{
-				e.just_toggled = e.bgmscriptstate = TRUE;
+				e.just_toggled = e.bgmscriptstate = true;
 				e.bgmscriptvolume = vel;
 			}
 			else
-				e.just_toggled = e.bgmscriptstate = FALSE;
+				e.just_toggled = e.bgmscriptstate = false;
 
 			e.bgmscriptstatetime = e.bgmscripttime - GetTimeForAmplitude(e, amp);
 		}

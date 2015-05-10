@@ -60,7 +60,7 @@ void W_HeavyMachineGun_Attack_Auto()
 
 	W_DecreaseAmmo(WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (self, true, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
@@ -85,7 +85,7 @@ void W_HeavyMachineGun_Attack_Auto()
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
-float W_HeavyMachineGun(float req)
+bool W_HeavyMachineGun(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -93,11 +93,11 @@ float W_HeavyMachineGun(float req)
 		case WR_AIM:
 		{
 			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
-			
-			return TRUE;
+				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
+
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -113,7 +113,7 @@ float W_HeavyMachineGun(float req)
 				}
 			}
 
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -122,8 +122,8 @@ float W_HeavyMachineGun(float req)
 			precache_model ("models/weapons/v_ok_hmg.md3");
 			precache_model ("models/weapons/h_ok_hmg.iqm");
 			precache_sound ("weapons/uzi_fire.wav");
-			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -145,13 +145,13 @@ float W_HeavyMachineGun(float req)
 		}
 		case WR_CONFIG:
 		{
-			HMG_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			HMG_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(WEP_CVAR(hmg, ammo), "weapons/reload.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -165,11 +165,11 @@ float W_HeavyMachineGun(float req)
 				return WEAPON_HMG_MURDER_SPRAY;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
-float W_HeavyMachineGun(float req)
+bool W_HeavyMachineGun(int req)
 {
 	switch(req)
 	{
@@ -186,22 +186,22 @@ float W_HeavyMachineGun(float req)
 				else if(w_random < 0.2)
 					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
 
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
 			precache_sound("weapons/ric1.wav");
 			precache_sound("weapons/ric2.wav");
 			precache_sound("weapons/ric3.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

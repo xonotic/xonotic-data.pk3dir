@@ -53,6 +53,8 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+
+.float vortex_lasthit;
 #endif
 #else
 #ifdef SVQC
@@ -64,19 +66,19 @@ void SendCSQCVortexBeamParticle(float charge) {
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
-	WriteCoord(MSG_BROADCAST, w_shotorg_x);
-	WriteCoord(MSG_BROADCAST, w_shotorg_y);
-	WriteCoord(MSG_BROADCAST, w_shotorg_z);
-	WriteCoord(MSG_BROADCAST, v_x);
-	WriteCoord(MSG_BROADCAST, v_y);
-	WriteCoord(MSG_BROADCAST, v_z);
+	WriteCoord(MSG_BROADCAST, w_shotorg.x);
+	WriteCoord(MSG_BROADCAST, w_shotorg.y);
+	WriteCoord(MSG_BROADCAST, w_shotorg.z);
+	WriteCoord(MSG_BROADCAST, v.x);
+	WriteCoord(MSG_BROADCAST, v.y);
+	WriteCoord(MSG_BROADCAST, v.z);
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
 
 void W_Vortex_Attack(float issecondary)
 {
 	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
-	
+
 	mydmg = WEP_CVAR_BOTH(vortex, !issecondary, damage);
 	myforce = WEP_CVAR_BOTH(vortex, !issecondary, force);
 	mymindist = WEP_CVAR_BOTH(vortex, !issecondary, damagefalloff_mindist);
@@ -100,17 +102,25 @@ void W_Vortex_Attack(float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(self, TRUE, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
+	W_SetupShot(self, true, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
 		sound(self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
+	damage_goodhits = 0;
 	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
 
 	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA); 
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && self.vortex_lasthit)
+	{
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
+	}
+
+	self.vortex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
@@ -121,7 +131,7 @@ void W_Vortex_Attack(float issecondary)
 void spawnfunc_weapon_vortex(void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	float dt;
 	float ammo_amount;
@@ -129,20 +139,20 @@ float W_Vortex(float req)
 	{
 		case WR_AIM:
 		{
-			if(bot_aim(1000000, 0, 1, FALSE))
-				self.BUTTON_ATCK = TRUE;
+			if(bot_aim(1000000, 0, 1, false))
+				self.BUTTON_ATCK = true;
 			else
 			{
 				if(WEP_CVAR(vortex, charge))
-					self.BUTTON_ATCK2 = TRUE;
+					self.BUTTON_ATCK2 = true;
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_THINK:
 		{
 			if(WEP_CVAR(vortex, charge) && self.vortex_charge < WEP_CVAR(vortex, charge_limit))
 				self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
-				
+
 			if(WEP_CVAR_SEC(vortex, chargepool))
 				if(self.vortex_chargepool_ammo < 1)
 				{
@@ -237,8 +247,8 @@ float W_Vortex(float req)
 					}
 				}
 			}
-			
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -251,8 +261,13 @@ float W_Vortex(float req)
 			precache_sound("weapons/nexwhoosh1.wav");
 			precache_sound("weapons/nexwhoosh2.wav");
 			precache_sound("weapons/nexwhoosh3.wav");
-			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
+		}
+		case WR_SETUP:
+		{
+			self.vortex_lasthit = 0;
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -271,18 +286,23 @@ float W_Vortex(float req)
 			}
 			else
 			{
-				return FALSE; // zoom is not a fire mode
+				return false; // zoom is not a fire mode
 			}
 		}
 		case WR_CONFIG:
 		{
-			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
+		}
+		case WR_RESETPLAYER:
+		{
+			self.vortex_lasthit = 0;
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), "weapons/reload.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -293,12 +313,12 @@ float W_Vortex(float req)
 			return WEAPON_VORTEX_MURDER;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
-var float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
-float W_Vortex(float req)
+float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
+bool W_Vortex(int req)
 {
 	switch(req)
 	{
@@ -309,8 +329,8 @@ float W_Vortex(float req)
 			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
-				
-			return TRUE;
+
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -319,23 +339,23 @@ float W_Vortex(float req)
 			{
 				precache_pic("gfx/reticle_nex");
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			if(button_zoom || zoomscript_caught || (!WEP_CVAR(vortex, secondary) && button_attack2))
 			{
 				reticle_image = "gfx/reticle_nex";
-				return TRUE;
+				return true;
 			}
 			else
 			{
 				// no weapon specific image for this weapon
-				return FALSE;
+				return false;
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

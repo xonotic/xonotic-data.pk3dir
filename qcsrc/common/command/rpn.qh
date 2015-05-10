@@ -1,10 +1,17 @@
+#ifndef COMMAND_RPN_H
+#define COMMAND_RPN_H
+
 // =========================================================
 //  Declarations for RPN command code, written by divVerent
 //  Last updated: December 28th, 2011
 // =========================================================
 
-#define MAX_RPN_STACK 16
-float rpn_db;
-float rpn_error;
-float rpn_sp;
+const int MAX_RPN_STACK = 16;
+int rpn_db;
+int rpn_error;
+int rpn_sp;
 string rpn_stack[MAX_RPN_STACK];
+
+void GenericCommand_rpn(float request, float argc, string command);
+
+#endif

@@ -1,7 +1,16 @@
-#define ANTILAG_MAX_ORIGINS 64
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "vehicles/vehicle.qh"
+    #include "antilag.qh"
+#endif
+
+const int ANTILAG_MAX_ORIGINS = 64;
 .vector antilag_origins[ANTILAG_MAX_ORIGINS];
 .float antilag_times[ANTILAG_MAX_ORIGINS];
-.float antilag_index;
+.int antilag_index;
 .vector antilag_saved_origin;
 .float antilag_takenback;
 
@@ -31,9 +40,7 @@ void antilag_record(entity e, float t)
 // finds the index BEFORE t
 float antilag_find(entity e, float t)
 {
-	float i;
-
-	for(i = e.antilag_index; i > 0; --i)
+	for(int i = e.antilag_index; i > 0; --i)
 		if(e.(antilag_times[i]) >= t)
 			if(e.(antilag_times[i - 1]) < t)
 				return i - 1;
@@ -42,7 +49,7 @@ float antilag_find(entity e, float t)
 		if(e.(antilag_times[ANTILAG_MAX_ORIGINS - 1]) < t)
 			return ANTILAG_MAX_ORIGINS - 1;
 
-	for(i = ANTILAG_MAX_ORIGINS - 1; i > e.antilag_index + 1; --i)
+	for(int i = ANTILAG_MAX_ORIGINS - 1; i > e.antilag_index + 1; --i)
 		if(e.(antilag_times[i]) >= t)
 			if(e.(antilag_times[i - 1]) < t)
 				return i - 1;
@@ -58,10 +65,8 @@ vector lerpv(float t0, vector v0, float t1, vector v1, float t)
 
 vector antilag_takebackorigin(entity e, float t)
 {
-	float i0, i1;
-
-	i0 = antilag_find(e, t);
-	if(i0 < 0)
+	int i0 = antilag_find(e, t);
+	if (i0 < 0)
 	{
 		// IN THE PRESENT
 		if(e.antilag_takenback)
@@ -69,8 +74,8 @@ vector antilag_takebackorigin(entity e, float t)
 		else
 			return e.origin;
 	}
-	i1 = i0 + 1;
-	if(i1 >= ANTILAG_MAX_ORIGINS)
+	int i1 = i0 + 1;
+	if (i1 >= ANTILAG_MAX_ORIGINS)
 		i1 = 0;
 
 	return lerpv(e.(antilag_times[i0]), e.(antilag_origins[i0]), e.(antilag_times[i1]), e.(antilag_origins[i1]), t);
@@ -100,7 +105,7 @@ void antilag_takeback(entity e, float t)
 		e.antilag_saved_origin = e.origin;
 
 	setorigin(e, antilag_takebackorigin(e, t));
-	e.antilag_takenback = TRUE;
+	e.antilag_takenback = true;
 }
 
 void antilag_restore(entity e)
@@ -115,15 +120,13 @@ void antilag_restore(entity e)
 		return;
 
 	setorigin(e, e.antilag_saved_origin);
-	e.antilag_takenback = FALSE;
+	e.antilag_takenback = false;
 }
 
 void antilag_clear(entity e)
 {
-	float i;
-
 	antilag_restore(e);
-	for(i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
+	for (int i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
 	{
 		e.(antilag_times[i]) = -2342;
 		e.(antilag_origins[i]) = e.origin;

@@ -1,13 +1,16 @@
-float Violence_GibSplash_SendEntity(entity to, float sf)
+#include "g_violence.qh"
+#include "_all.qh"
+
+float Violence_GibSplash_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
 	WriteByte(MSG_ENTITY, self.state); // actually type
 	WriteByte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier
-	WriteShort(MSG_ENTITY, floor(self.origin_x / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, floor(self.origin_y / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, floor(self.origin_z / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, self.oldorigin_x); // acrually compressed velocity
-	return TRUE;
+	WriteShort(MSG_ENTITY, floor(self.origin.x / 4)); // not using a coord here, as gibs don't need this accuracy
+	WriteShort(MSG_ENTITY, floor(self.origin.y / 4)); // not using a coord here, as gibs don't need this accuracy
+	WriteShort(MSG_ENTITY, floor(self.origin.z / 4)); // not using a coord here, as gibs don't need this accuracy
+	WriteShort(MSG_ENTITY, self.oldorigin.x); // acrually compressed velocity
+	return true;
 }
 
 // TODO maybe convert this to a TE?
@@ -38,7 +41,7 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 
 	e.oldorigin_x = compressShortVector(e.velocity);
 
-	Net_LinkEntity(e, FALSE, 0.2, Violence_GibSplash_SendEntity);
+	Net_LinkEntity(e, false, 0.2, Violence_GibSplash_SendEntity);
 }
 
 void Violence_GibSplash(entity source, float type, float amount, entity attacker)

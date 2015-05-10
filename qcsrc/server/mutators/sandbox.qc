@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 const float MAX_STORAGE_ATTACHMENTS = 16;
 float object_count;
 .float object_flood;
@@ -56,7 +60,7 @@ void sandbox_ObjectFunction_Think()
 	}
 
 	self.nextthink = time;
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -64,7 +68,7 @@ void sandbox_ObjectFunction_Think()
 entity sandbox_ObjectEdit_Get(float permissions)
 {
 	// Returns the traced entity if the player can edit it, and world if not.
-	// If permissions if FALSE, the object is returned regardless of editing rights.
+	// If permissions if false, the object is returned regardless of editing rights.
 	// Attached objects are SOLID_NOT and do not get traced.
 
 	crosshair_trace_plusvisibletriggers(self);
@@ -165,16 +169,16 @@ entity sandbox_ObjectSpawn(float database)
 
 		// set public object information
 		e.netname = strzone(self.netname); // name of the owner
-		e.message = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S")); // creation time
-		e.message2 = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S")); // last editing time
+		e.message = strzone(strftime(true, "%d-%m-%Y %H:%M:%S")); // creation time
+		e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S")); // last editing time
 
 		// set origin and direction based on player position and view angle
 		makevectors(self.v_angle);
 		WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
 		setorigin(e, trace_endpos);
-		e.angles_y = self.v_angle_y;
+		e.angles_y = self.v_angle.y;
 	}
-	
+
 	oldself = self;
 	self = e;
 	CSQCMODEL_AUTOINIT();
@@ -363,7 +367,7 @@ void sandbox_Database_Save()
 
 	file_name = strcat("sandbox/storage_", autocvar_g_sandbox_storage_name, "_", GetMapname(), ".txt");
 	file_get = fopen(file_name, FILE_WRITE);
-	fputs(file_get, strcat("// sandbox storage \"", autocvar_g_sandbox_storage_name, "\" for map \"", GetMapname(), "\" last updated ", strftime(TRUE, "%d-%m-%Y %H:%M:%S")));
+	fputs(file_get, strcat("// sandbox storage \"", autocvar_g_sandbox_storage_name, "\" for map \"", GetMapname(), "\" last updated ", strftime(true, "%d-%m-%Y %H:%M:%S")));
 	fputs(file_get, strcat(" containing ", ftos(object_count), " objects\n"));
 
 	for(head = world; (head = find(head, classname, "object")); )
@@ -373,7 +377,7 @@ void sandbox_Database_Save()
 			continue;
 
 		// use a line of text for each object, listing all properties
-		fputs(file_get, strcat(sandbox_ObjectPort_Save(head, TRUE), "\n"));
+		fputs(file_get, strcat(sandbox_ObjectPort_Save(head, true), "\n"));
 	}
 	fclose(file_get);
 }
@@ -393,7 +397,7 @@ void sandbox_Database_Load()
 	}
 	else
 	{
-		for(;;)
+		for (;;)
 		{
 			file_read = fgets(file_get);
 			if(file_read == "")
@@ -404,7 +408,7 @@ void sandbox_Database_Load()
 				continue;
 
 			entity e;
-			e = sandbox_ObjectPort_Load(file_read, TRUE);
+			e = sandbox_ObjectPort_Load(file_read, true);
 
 			if(e.material)
 			{
@@ -422,18 +426,18 @@ void sandbox_Database_Load()
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return FALSE;
+		return false;
 	if(cmd_name == "g_sandbox")
 	{
 		if(autocvar_g_sandbox_readonly)
 		{
 			print_to(self, "^2SANDBOX - INFO: ^7Sandbox mode is active, but in read-only mode. Sandbox commands cannot be used");
-			return TRUE;
+			return true;
 		}
 		if(cmd_argc < 2)
 		{
 			print_to(self, "^2SANDBOX - INFO: ^7Sandbox mode is active. For usage information, type 'sandbox help'");
-			return TRUE;
+			return true;
 		}
 
 		switch(argv(1))
@@ -471,52 +475,52 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3mesh ^7- prints information about the object's mesh, including skeletal bones");
 				print_to(self, "^3attachments ^7- prints information about the object's attachments");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
-				return TRUE;
+				return true;
 
 			// ---------------- COMMAND: OBJECT, SPAWN ----------------
 			case "object_spawn":
 				if(time < self.object_flood)
 				{
 					print_to(self, strcat("^1SANDBOX - WARNING: ^7Flood protection active. Please wait ^3", ftos(self.object_flood - time), " ^7seconds beofore spawning another object"));
-					return TRUE;
+					return true;
 				}
 				self.object_flood = time + autocvar_g_sandbox_editor_flood;
 				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
 					print_to(self, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
-					return TRUE;
+					return true;
 				}
 				if(cmd_argc < 3)
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'object_spawn' command");
-					return TRUE;
+					return true;
 				}
 				if (!(fexists(argv(2))))
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
-					return TRUE;
+					return true;
 				}
 
-				e = sandbox_ObjectSpawn(FALSE);
+				e = sandbox_ObjectSpawn(false);
 				setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
 					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
-				return TRUE;
+				return true;
 
 			// ---------------- COMMAND: OBJECT, REMOVE ----------------
 			case "object_remove":
-				e = sandbox_ObjectEdit_Get(TRUE);
+				e = sandbox_ObjectEdit_Get(true);
 				if(e != world)
 				{
 					if(autocvar_g_sandbox_info > 0)
 						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " removed an object at origin ^3", vtos(e.origin), "\n"));
 					sandbox_ObjectRemove(e);
-					return TRUE;
+					return true;
 				}
 
 				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be removed. Make sure you are facing an object that you have edit rights over");
-				return TRUE;
+				return true;
 
 			// ---------------- COMMAND: OBJECT, DUPLICATE ----------------
 			case "object_duplicate":
@@ -527,42 +531,42 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						e = sandbox_ObjectEdit_Get(autocvar_g_sandbox_editor_free); // can we copy objects we can't edit?
 						if(e != world)
 						{
-							s = sandbox_ObjectPort_Save(e, FALSE);
+							s = sandbox_ObjectPort_Save(e, false);
 							s = strreplace("\"", "\\\"", s);
 							stuffcmd(self, strcat("set ", argv(3), " \"", s, "\""));
 
 							print_to(self, "^2SANDBOX - INFO: ^7Object copied to clipboard");
-							return TRUE;
+							return true;
 						}
 						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be copied. Make sure you are facing an object that you have copy rights over");
-						return TRUE;
+						return true;
 
 					case "paste":
 						// spawns a new object using the properties in the player's clipboard cvar
 						if(time < self.object_flood)
 						{
 							print_to(self, strcat("^1SANDBOX - WARNING: ^7Flood protection active. Please wait ^3", ftos(self.object_flood - time), " ^7seconds beofore spawning another object"));
-							return TRUE;
+							return true;
 						}
 						self.object_flood = time + autocvar_g_sandbox_editor_flood;
 						if(argv(3) == "") // no object in clipboard
 						{
 							print_to(self, "^1SANDBOX - WARNING: ^7No object in clipboard. You must copy an object before you can paste it");
-							return TRUE;
+							return true;
 						}
 						if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 						{
 							print_to(self, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
-							return TRUE;
+							return true;
 						}
-						e = sandbox_ObjectPort_Load(argv(3), FALSE);
+						e = sandbox_ObjectPort_Load(argv(3), false);
 
 						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info > 0)
 							print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " pasted an object at origin ^3", vtos(e.origin), "\n"));
-						return TRUE;
+						return true;
 				}
-				return TRUE;
+				return true;
 
 			// ---------------- COMMAND: OBJECT, ATTACH ----------------
 			case "object_attach":
@@ -570,24 +574,24 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					case "get":
 						// select e as the object as meant to be attached
-						e = sandbox_ObjectEdit_Get(TRUE);
+						e = sandbox_ObjectEdit_Get(true);
 						if(e != world)
 						{
 							self.object_attach = e;
 							print_to(self, "^2SANDBOX - INFO: ^7Object selected for attachment");
-							return TRUE;
+							return true;
 						}
 						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be selected for attachment. Make sure you are facing an object that you have edit rights over");
-						return TRUE;
+						return true;
 					case "set":
 						if(self.object_attach == world)
 						{
 							print_to(self, "^1SANDBOX - WARNING: ^7No object selected for attachment. Please select an object to be attached first.");
-							return TRUE;
+							return true;
 						}
 
 						// attaches the previously selected object to e
-						e = sandbox_ObjectEdit_Get(TRUE);
+						e = sandbox_ObjectEdit_Get(true);
 						if(e != world)
 						{
 							sandbox_ObjectAttach_Set(self.object_attach, e, argv(3));
@@ -595,35 +599,35 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, "^2SANDBOX - INFO: ^7Object attached successfully");
 							if(autocvar_g_sandbox_info > 1)
 								print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " attached objects at origin ^3", vtos(e.origin), "\n"));
-							return TRUE;
+							return true;
 						}
 						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be attached to the parent. Make sure you are facing an object that you have edit rights over");
-						return TRUE;
+						return true;
 					case "remove":
 						// removes e if it was attached
-						e = sandbox_ObjectEdit_Get(TRUE);
+						e = sandbox_ObjectEdit_Get(true);
 						if(e != world)
 						{
 							sandbox_ObjectAttach_Remove(e);
 							print_to(self, "^2SANDBOX - INFO: ^7Child objects detached successfully");
 							if(autocvar_g_sandbox_info > 1)
 								print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " detached objects at origin ^3", vtos(e.origin), "\n"));
-							return TRUE;
+							return true;
 						}
 						print_to(self, "^1SANDBOX - WARNING: ^7Child objects could not be detached. Make sure you are facing an object that you have edit rights over");
-						return TRUE;
+						return true;
 				}
-				return TRUE;
+				return true;
 
 			// ---------------- COMMAND: OBJECT, EDIT ----------------
 			case "object_edit":
 				if(argv(2) == "")
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7Too few parameters. You must specify a property to edit");
-					return TRUE;
+					return true;
 				}
 
-				e = sandbox_ObjectEdit_Get(TRUE);
+				e = sandbox_ObjectEdit_Get(true);
 				if(e != world)
 				{
 					switch(argv(2))
@@ -690,20 +694,20 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							break;
 						default:
 							print_to(self, "^1SANDBOX - WARNING: ^7Invalid object property. For usage information, type 'sandbox help'");
-							return TRUE;
+							return true;
 					}
 
 					// update last editing time
 					if(e.message2)	strunzone(e.message2);
-					e.message2 = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S"));
+					e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S"));
 
 					if(autocvar_g_sandbox_info > 1)
 						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin), "\n"));
-					return TRUE;
+					return true;
 				}
 
 				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be edited. Make sure you are facing an object that you have edit rights over");
-				return TRUE;
+				return true;
 
 			// ---------------- COMMAND: OBJECT, CLAIM ----------------
 			case "object_claim":
@@ -711,9 +715,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				if(self.crypto_idfp == "")
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7You do not have a player UID, and cannot claim objects");
-					return TRUE;
+					return true;
 				}
-				e = sandbox_ObjectEdit_Get(TRUE);
+				e = sandbox_ObjectEdit_Get(true);
 				if(e != world)
 				{
 					// update the owner's name
@@ -729,7 +733,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					if(e.crypto_idfp == self.crypto_idfp)
 					{
 						print_to(self, "^2SANDBOX - INFO: ^7Object is already yours, nothing to claim");
-						return TRUE;
+						return true;
 					}
 
 					if(e.crypto_idfp)	strunzone(e.crypto_idfp);
@@ -738,25 +742,25 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, "^2SANDBOX - INFO: ^7Object claimed successfully");
 				}
 				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be claimed. Make sure you are facing an object that you have edit rights over");
-				return TRUE;
+				return true;
 
 			// ---------------- COMMAND: OBJECT, INFO ----------------
 			case "object_info":
 				// prints public information about the object to the player
-				e = sandbox_ObjectEdit_Get(FALSE);
+				e = sandbox_ObjectEdit_Get(false);
 				if(e != world)
 				{
 					switch(argv(2))
 					{
 						case "object":
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by \"^7", e.netname, "^7\", created \"^3", e.message, "^7\", last edited \"^3", e.message2, "^7\""));
-							return TRUE;
+							return true;
 						case "mesh":
 							s = "";
 							FOR_EACH_TAG(e)
 								s = strcat(s, "^7\"^5", gettaginfo_name, "^7\", ");
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is \"^3", e.model, "^7\" at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", s));
-							return TRUE;
+							return true;
 						case "attachments":
 							// this should show the same info as 'mesh' but for attachments
 							s = "";
@@ -776,39 +780,39 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								print_to(self, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(i), "^7 attachment(s): ", s));
 							else
 								print_to(self, "^2SANDBOX - INFO: ^7Object contains no attachments");
-							return TRUE;
+							return true;
 					}
 				}
 				print_to(self, "^1SANDBOX - WARNING: ^7No information could be found. Make sure you are facing an object");
-				return TRUE;
+				return true;
 
 			// ---------------- COMMAND: DEFAULT ----------------
 			default:
 				print_to(self, "Invalid command. For usage information, type 'sandbox help'");
-				return TRUE;
+				return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 float autosave_time;
 MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 {
 	if(!autocvar_g_sandbox_storage_autosave)
-		return FALSE;
+		return false;
 	if(time < autosave_time)
-		return FALSE;
+		return false;
 	autosave_time = time + autocvar_g_sandbox_storage_autosave;
 
 	sandbox_Database_Save();
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_SetModname)
 {
 	modname = "Sandbox";
-	return TRUE;
+	return true;
 }
 
 MUTATOR_DEFINITION(sandbox)
@@ -834,6 +838,6 @@ MUTATOR_DEFINITION(sandbox)
 		// nothing to remove
 	}
 
-	return FALSE;
+	return false;
 }
 

@@ -1,31 +1,28 @@
+#include "t_teleporters.qh"
+#include "_all.qh"
+
+#include "anticheat.qh"
+#include "cl_player.qh"
+#include "g_hook.qh"
+#include "bot/waypoints.qh"
+#include "tturrets/include/turrets_early.qh"
+#include "vehicles/vehicle.qh"
+#include "weapons/csqcprojectile.qh"
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/mapinfo.qh"
+#include "../common/util.qh"
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/server.qh"
+#include "../warpzonelib/util_server.qh"
+
+.float lastteleporttime;
+
 void trigger_teleport_use()
 {
 	if(teamplay)
 		self.team = activator.team;
 }
-
-#define TDEATHLOOP(o) \
-	entity head; \
-	vector deathmin; \
-	vector deathmax; \
-	float deathradius; \
-	deathmin = (o) + player.mins; \
-	deathmax = (o) + player.maxs; \
-	if(telefragmin != telefragmax) \
-	{ \
-		if(deathmin_x > telefragmin_x) deathmin_x = telefragmin_x; \
-		if(deathmin_y > telefragmin_y) deathmin_y = telefragmin_y; \
-		if(deathmin_z > telefragmin_z) deathmin_z = telefragmin_z; \
-		if(deathmax_x < telefragmax_x) deathmax_x = telefragmax_x; \
-		if(deathmax_y < telefragmax_y) deathmax_y = telefragmax_y; \
-		if(deathmax_z < telefragmax_z) deathmax_z = telefragmax_z; \
-	} \
-	deathradius = max(vlen(deathmin), vlen(deathmax)); \
-	for(head = findradius(o, deathradius); head; head = head.chain) \
-		if(head != player) \
-			if(head.takedamage) \
-				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
-
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
@@ -41,7 +38,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	}
 	return 0;
 }
-float tdeath_hit;
+
 void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax)
 {
 	TDEATHLOOP(player.origin)
@@ -66,21 +63,6 @@ void spawn_tdeath(vector v0, entity e, vector v)
 	tdeath(e, e, e, '0 0 0', '0 0 0');
 }
 
-.entity pusher;
-#define TELEPORT_FLAG_SOUND 1
-#define TELEPORT_FLAG_PARTICLES 2
-#define TELEPORT_FLAG_TDEATH 4
-#define TELEPORT_FLAG_FORCE_TDEATH 8
-
-#define TELEPORT_FLAGS_WARPZONE   0
-#define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH | TELEPORT_FLAG_FORCE_TDEATH)
-#define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
-
-// types for .teleportable entity setting
-#define TELEPORT_NORMAL 1 // play sounds/effects etc
-#define TELEPORT_SIMPLE 2 // only do teleport, nothing special
-
-void Reset_ArcBeam(entity player, vector forward);
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
 	entity telefragger;
@@ -114,7 +96,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	setorigin (player, to);
 	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
-	player.fixangle = TRUE;
+	player.fixangle = true;
 	player.velocity = to_velocity;
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
@@ -170,7 +152,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 			p = 1;
 			if(autocvar_g_telefrags_avoid)
 			{
-				locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
 					p = 0;
 			}
@@ -191,7 +173,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
 			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
 
-	locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
 	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 
 	return e;
@@ -313,8 +295,6 @@ entity Teleport_Find(vector mi, vector ma)
 	return world;
 }
 
-entity teleport_first;
-.entity teleport_next;
 void spawnfunc_trigger_teleport (void)
 {
 	self.angles = '0 0 0';

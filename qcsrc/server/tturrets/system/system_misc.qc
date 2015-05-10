@@ -36,9 +36,9 @@ vector shortangle_v(vector ang1, vector ang2)
 {
     vector vtmp;
 
-    vtmp_x = shortangle_f(ang1_x,ang2_x);
-    vtmp_y = shortangle_f(ang1_y,ang2_y);
-    vtmp_z = shortangle_f(ang1_z,ang2_z);
+    vtmp.x = shortangle_f(ang1_x,ang2_x);
+    vtmp.y = shortangle_f(ang1_y,ang2_y);
+    vtmp.z = shortangle_f(ang1_z,ang2_z);
 
     return vtmp;
 }
@@ -47,8 +47,8 @@ vector shortangle_vxy(vector ang1, vector ang2)
 {
     vector vtmp = '0 0 0';
 
-    vtmp_x = shortangle_f(ang1_x,ang2_x);
-    vtmp_y = shortangle_f(ang1_y,ang2_y);
+    vtmp.x = shortangle_f(ang1_x,ang2_x);
+    vtmp.y = shortangle_f(ang1_y,ang2_y);
 
     return vtmp;
 }
@@ -83,11 +83,11 @@ vector angleofs(entity from, entity to)
     v_res = vectoangles(v_res);
     v_res = v_res - from.angles;
 
-    if (v_res_x < 0) 	v_res_x += 360;
-    if (v_res_x > 180) 	v_res_x -= 360;
+    if (v_res.x < 0) 	v_res.x += 360;
+    if (v_res.x > 180) 	v_res.x -= 360;
 
-    if (v_res_y < 0) 	v_res_y += 360;
-    if (v_res_y > 180) 	v_res_y -= 360;
+    if (v_res.y < 0) 	v_res.y += 360;
+    if (v_res.y > 180) 	v_res.y -= 360;
 
     return v_res;
 }
@@ -100,11 +100,11 @@ vector angleofs3(vector from, vector from_a, entity to)
     v_res = vectoangles(v_res);
     v_res = v_res - from_a;
 
-    if (v_res_x < 0) 	v_res_x += 360;
-    if (v_res_x > 180) 	v_res_x -= 360;
+    if (v_res.x < 0) 	v_res.x += 360;
+    if (v_res.x > 180) 	v_res.x -= 360;
 
-    if (v_res_y < 0) 	v_res_y += 360;
-    if (v_res_y > 180) 	v_res_y -= 360;
+    if (v_res.y < 0) 	v_res.y += 360;
+    if (v_res.y > 180) 	v_res.y -= 360;
 
     return v_res;
 }
@@ -120,20 +120,20 @@ float turret_tag_fire_update_s()
     {
         error("Call to turret_tag_fire_update with self.tur_head missing!\n");
         self.tur_shotorg = '0 0 0';
-        return FALSE;
+        return false;
     }
 
     self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
     v_forward = normalize(v_forward);
 
-    return TRUE;
+    return true;
 }
 
 /*
 * Railgun-like beam, but has thickness and suppots slowing of target
 */
 void FireImoBeam (vector start, vector end, vector smin, vector smax,
-                  float bforce, float f_dmg, float f_velfactor, float deathtype)
+                  float bforce, float f_dmg, float f_velfactor, int deathtype)
 
 {
     vector hitloc, force, endpoint, dir;
@@ -149,7 +149,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
     // note down which entities were hit so we can damage them later
     while (1)
     {
-        tracebox(start, smin, smax, end, FALSE, self);
+        tracebox(start, smin, smax, end, false, self);
 
         // if it is world we can't hurt it so stop now
         if (trace_ent == world || trace_fraction == 1)
@@ -159,7 +159,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
             break;
 
         // make the entity non-solid so we can hit the next one
-        trace_ent.railgunhit = TRUE;
+        trace_ent.railgunhit = true;
         trace_ent.railgunhitloc = end;
         trace_ent.railgunhitsolidbackup = trace_ent.solid;
 
@@ -172,23 +172,23 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
     endpoint = trace_endpos;
 
     // find all the entities the railgun hit and restore their solid state
-    ent = findfloat(world, railgunhit, TRUE);
+    ent = findfloat(world, railgunhit, true);
     while (ent)
     {
         // restore their solid type
         ent.solid = ent.railgunhitsolidbackup;
-        ent = findfloat(ent, railgunhit, TRUE);
+        ent = findfloat(ent, railgunhit, true);
     }
 
     // find all the entities the railgun hit and hurt them
-    ent = findfloat(world, railgunhit, TRUE);
+    ent = findfloat(world, railgunhit, true);
     while (ent)
     {
         // get the details we need to call the damage function
         hitloc = ent.railgunhitloc;
         ent.railgunhitloc = '0 0 0';
         ent.railgunhitsolidbackup = SOLID_NOT;
-        ent.railgunhit = FALSE;
+        ent.railgunhit = false;
 
         // apply the damage
         if (ent.takedamage)
@@ -199,7 +199,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
         }
 
         // advance to the next entity
-        ent = findfloat(ent, railgunhit, TRUE);
+        ent = findfloat(ent, railgunhit, true);
     }
     trace_endpos = endpoint;
 }

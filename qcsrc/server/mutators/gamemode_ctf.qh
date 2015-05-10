@@ -1,3 +1,5 @@
+#ifndef GAMEMODE_CTF_H
+#define GAMEMODE_CTF_H
 // these are needed since mutators are compiled last
 
 #ifdef SVQC
@@ -5,23 +7,23 @@
 void ctf_RespawnFlag(entity flag);
 
 // score rule declarations
-#define ST_CTF_CAPS 1
-#define SP_CTF_CAPS 4
-#define SP_CTF_CAPTIME 5
-#define SP_CTF_PICKUPS 6
-#define SP_CTF_DROPS 7
-#define SP_CTF_FCKILLS 8
-#define SP_CTF_RETURNS 9
+const float ST_CTF_CAPS = 1;
+const float SP_CTF_CAPS = 4;
+const float SP_CTF_CAPTIME = 5;
+const float SP_CTF_PICKUPS = 6;
+const float SP_CTF_DROPS = 7;
+const float SP_CTF_FCKILLS = 8;
+const float SP_CTF_RETURNS = 9;
 
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')
 
-#define FLAG_SCALE 0.6
+const float FLAG_SCALE = 0.6;
 
-#define FLAG_THINKRATE 0.2
-#define FLAG_TOUCHRATE 0.5
-#define WPFE_THINKRATE 0.5
+const float FLAG_THINKRATE = 0.2;
+const float FLAG_TOUCHRATE = 0.5;
+const float WPFE_THINKRATE = 0.5;
 
 #define FLAG_DROP_OFFSET ('0 0 32')
 #define FLAG_CARRY_OFFSET ('-16 0 8')
@@ -31,12 +33,12 @@ void ctf_RespawnFlag(entity flag);
 #define FLAG_PASS_ARC_OFFSET ('0 0 -10')
 
 #define VEHICLE_FLAG_OFFSET ('0 0 96')
-#define VEHICLE_FLAG_SCALE 1.0
+const float VEHICLE_FLAG_SCALE = 1.0;
 
 // waypoint colors
-#define WPCOLOR_ENEMYFC(t) (colormapPaletteColor(t - 1, FALSE) * 0.75)
+#define WPCOLOR_ENEMYFC(t) (colormapPaletteColor(t - 1, false) * 0.75)
 #define WPCOLOR_FLAGCARRIER(t) ('0.8 0.8 0')
-#define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
+#define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, false)) * 0.5)
 
 // sounds
 #define snd_flag_taken noise
@@ -69,27 +71,29 @@ float wpforenemy_announced;
 float wpforenemy_nextthink;
 
 // statuses
-#define FLAG_BASE 1
-#define FLAG_DROPPED 2
-#define FLAG_CARRY 3
-#define FLAG_PASSING 4
+const float FLAG_BASE = 1;
+const float FLAG_DROPPED = 2;
+const float FLAG_CARRY = 3;
+const float FLAG_PASSING = 4;
 
-#define DROP_NORMAL 1
-#define DROP_THROW 2
-#define DROP_PASS 3
-#define DROP_RESET 4
+const float DROP_NORMAL = 1;
+const float DROP_THROW = 2;
+const float DROP_PASS = 3;
+const float DROP_RESET = 4;
 
-#define PICKUP_BASE 1
-#define PICKUP_DROPPED 2
+const float PICKUP_BASE = 1;
+const float PICKUP_DROPPED = 2;
 
-#define CAPTURE_NORMAL 1
-#define CAPTURE_DROPPED 2
+const float CAPTURE_NORMAL = 1;
+const float CAPTURE_DROPPED = 2;
 
-#define RETURN_TIMEOUT 1
-#define RETURN_DROPPED 2
-#define RETURN_DAMAGE 3
-#define RETURN_SPEEDRUN 4
-#define RETURN_NEEDKILL 5
+const float RETURN_TIMEOUT = 1;
+const float RETURN_DROPPED = 2;
+const float RETURN_DAMAGE = 3;
+const float RETURN_SPEEDRUN = 4;
+const float RETURN_NEEDKILL = 5;
+
+void ctf_Handle_Throw(entity player, entity receiver, float droptype);
 
 // flag properties
 #define ctf_spawnorigin dropped_origin
@@ -117,13 +121,13 @@ float ctf_captureshield_max_ratio; // punish at most 30% of each team
 float ctf_captureshield_force; // push force of the shield
 
 // bot player logic
-#define HAVOCBOT_CTF_ROLE_NONE 0
-#define HAVOCBOT_CTF_ROLE_DEFENSE 2
-#define HAVOCBOT_CTF_ROLE_MIDDLE 4
-#define HAVOCBOT_CTF_ROLE_OFFENSE 8
-#define HAVOCBOT_CTF_ROLE_CARRIER 16
-#define HAVOCBOT_CTF_ROLE_RETRIEVER 32
-#define HAVOCBOT_CTF_ROLE_ESCORT 64
+const float HAVOCBOT_CTF_ROLE_NONE = 0;
+const float HAVOCBOT_CTF_ROLE_DEFENSE = 2;
+const float HAVOCBOT_CTF_ROLE_MIDDLE = 4;
+const float HAVOCBOT_CTF_ROLE_OFFENSE = 8;
+const float HAVOCBOT_CTF_ROLE_CARRIER = 16;
+const float HAVOCBOT_CTF_ROLE_RETRIEVER = 32;
+const float HAVOCBOT_CTF_ROLE_ESCORT = 64;
 
 .float havocbot_cantfindflag;
 
@@ -131,4 +135,5 @@ vector havocbot_ctf_middlepoint;
 float havocbot_ctf_middlepoint_radius;
 
 void havocbot_role_ctf_setrole(entity bot, float role);
+#endif
 #endif

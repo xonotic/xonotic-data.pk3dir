@@ -1,33 +1,33 @@
-float teamradar_angle; // player yaw angle
-vector teamradar_origin3d_in_texcoord; // player origin
-vector teamradar_origin2d; // 2D origin
-vector teamradar_size2d; // 2D size
-vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // for non-centered radar display
-float teamradar_size; // 2D scale factor
-float hud_panel_radar_scale; // window size = ...qu
-float v_flipped;
+#include "teamradar.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+
+#include "../common/util.qh"
+
+#include "../csqcmodellib/interpolate.qh"
 
 float vlen2d(vector v)
 {
-	return sqrt(v_x * v_x + v_y * v_y);
+	return sqrt(v.x * v.x + v.y * v.y);
 }
 
 float vlen_maxnorm2d(vector v)
 {
-	return max(v_x, v_y, -v_x, -v_y);
+	return max(v.x, v.y, -v.x, -v.y);
 }
 
 float vlen_minnorm2d(vector v)
 {
-	return min(max(v_x, -v_x), max(v_y, -v_y));
+	return min(max(v.x, -v.x), max(v.y, -v.y));
 }
 
 vector teamradar_3dcoord_to_texcoord(vector in)
 {
 	vector out;
-	out_x = (in_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	out_y = (in_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
-	out_z = 0;
+	out.x = (in.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	out.y = (in.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
+	out.z = 0;
 	return out;
 }
 
@@ -37,18 +37,18 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	in -= teamradar_origin3d_in_texcoord;
 
 	out = rotate(in, teamradar_angle * DEG2RAD);
-	out_y = - out_y; // screen space is reversed
+	out.y = - out.y; // screen space is reversed
 
 	out = out * teamradar_size;
 	if(v_flipped)
-		out_x = -out_x;
+		out.x = -out.x;
 	out += teamradar_origin2d;
 	return out;
 }
 
 vector yinvert(vector v)
 {
-	v_y = 1 - v_y;
+	v.y = 1 - v.y;
 	return v;
 }
 
@@ -89,15 +89,15 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	makevectors(pangles - '0 1 0' * teamradar_angle);
 	if(v_flipped)
 	{
-		v_forward_x = -v_forward_x;
-		v_right_x = -v_right_x;
-		v_up_x = -v_up_x;
+		v_forward.x = -v_forward.x;
+		v_right.x = -v_right.x;
+		v_up.x = -v_up.x;
 	}
-	v_forward_z = 0;
+	v_forward.z = 0;
 	v_forward = normalize(v_forward);
-	v_forward_y *= -1.0;
-	v_right_x = -v_forward_y;
-	v_right_y = v_forward_x;
+	v_forward.y *= -1.0;
+	v_right.x = -v_forward.y;
+	v_right.y = v_forward.x;
 
 	if(rgb == '1 1 1')
 		rgb2 = '0 0 0';
@@ -121,43 +121,39 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 
 void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a)
 {
-	float dt;
-	vector v;
-	float i;
-
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord));
 	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon)), '8 8 0', rgb, a, 0);
 
 	if(pingdata)
 	{
-		for(i = 0; i < MAX_TEAMRADAR_TIMES; ++i)
+		for(int i = 0; i < MAX_TEAMRADAR_TIMES; ++i)
 		{
-			dt = pingdata.(teamradar_times[i]);
+			float dt = pingdata.(teamradar_times[i]);
 			if(dt == 0)
 				continue;
 			dt = time - dt;
 			if(dt >= 1 || dt <= 0)
 				continue;
-			v = '2 2 0' * teamradar_size * dt;
+			vector v = '2 2 0' * teamradar_size * dt;
 			drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
 		}
 	}
 }
 
-void draw_teamradar_link(vector start, vector end, float colors)
+void draw_teamradar_link(vector start, vector end, int colors)
 {
 	vector c0, c1, norm;
 
 	start = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(start));
 	end = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(end));
 	norm = normalize(start - end);
-	norm_z = norm_x;
-	norm_x = -norm_y;
-	norm_y = norm_z;
-	norm_z = 0;
+	norm.z = norm.x;
+	norm.x = -norm.y;
+	norm.y = norm.z;
+	norm.z = 0;
 
-	c0 = colormapPaletteColor(colors & 0x0F, FALSE);
-	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, FALSE);
+	c0 = colormapPaletteColor(colors & 0x0F, false);
+	c1 = colormapPaletteColor((colors & 0xF0) / 0x10, false);
 
 	R_BeginPolygon("", 0);
 	R_PolygonVertex(start - norm, '0 0 0', c0, panel_fg_alpha);
@@ -166,14 +162,6 @@ void draw_teamradar_link(vector start, vector end, float colors)
 	R_PolygonVertex(end - norm, '1 0 0', c1, panel_fg_alpha);
 	R_EndPolygon();
 }
-
-float hud_panel_radar_scale;
-float hud_panel_radar_foreground_alpha;
-float hud_panel_radar_rotation;
-noref vector hud_panel_radar_size; // fteqcc sucks
-float hud_panel_radar_zoommode;
-float hud_panel_radar_maximized_zoommode;
-float hud_panel_radar_maximized_rotation;
 
 void teamradar_loadcvars()
 {
@@ -194,16 +182,15 @@ void teamradar_loadcvars()
 	// match this to defaultXonotic.cfg!
 	if(!hud_panel_radar_scale) hud_panel_radar_scale = 4096;
 	if(!hud_panel_radar_foreground_alpha) hud_panel_radar_foreground_alpha = 0.8 * panel_fg_alpha;
-	if(!hud_panel_radar_size_x) hud_panel_radar_size_x = 128;
-	if(!hud_panel_radar_size_y) hud_panel_radar_size_y = hud_panel_radar_size_x;
+	if(!hud_panel_radar_size.x) hud_panel_radar_size.x = 128;
+	if(!hud_panel_radar_size.y) hud_panel_radar_size.y = hud_panel_radar_size.x;
 }
 
 // radar links
 
 void Ent_RadarLink()
 {
-	float sendflags;
-	sendflags = ReadByte();
+	int sendflags = ReadByte();
 
 	InterpolateOrigin_Undo();
 

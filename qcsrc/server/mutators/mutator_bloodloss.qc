@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .float bloodloss_timer;
 
 MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
@@ -5,7 +9,7 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
 	if(IS_PLAYER(self))
 	if(self.health <= autocvar_g_bloodloss && self.deadflag == DEAD_NO)
 	{
-		self.BUTTON_CROUCH = TRUE;
+		self.BUTTON_CROUCH = true;
 
 		if(time >= self.bloodloss_timer)
 		{
@@ -14,27 +18,27 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss_PlayerJump)
 {
 	if(self.health <= autocvar_g_bloodloss)
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":bloodloss");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Blood loss");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_bloodloss)
@@ -44,5 +48,5 @@ MUTATOR_DEFINITION(mutator_bloodloss)
 	MUTATOR_HOOK(BuildMutatorsString, bloodloss_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, bloodloss_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

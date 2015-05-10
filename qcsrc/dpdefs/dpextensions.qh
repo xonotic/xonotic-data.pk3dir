@@ -1,0 +1,61 @@
+#ifndef DPEXTENSIONS_H
+#define DPEXTENSIONS_H
+
+#pragma noref 1
+
+#include "upstream/dpextensions.qc"
+
+int(entity ent, string tagname) _gettagindex = #451;
+#define gettagindex _gettagindex
+
+int(string effectname) _particleeffectnum = #335;
+#define particleeffectnum _particleeffectnum
+
+int(string s, string separator1, ...) _tokenizebyseparator = #479;
+#define tokenizebyseparator _tokenizebyseparator
+
+int(string s) _tokenize_console = #514;
+#define tokenize_console _tokenize_console
+
+int(int i) _argv_start_index = #515;
+#define argv_start_index _argv_start_index
+
+int(int i) _argv_end_index = #516;
+#define argv_end_index _argv_end_index
+
+int(string s) _strlen = #114;
+#define strlen _strlen
+
+float(float skel, float bonenum) _skel_get_boneparent = #267;
+#define skel_get_boneparent _skel_get_boneparent
+
+float(float skel, string tagname) _skel_find_bone = #268;
+#define skel_find_bone _skel_find_bone
+
+float(string str, string sub, float startpos) _strstrofs = #221;
+#define strstrofs _strstrofs
+
+float(string str, float ofs) _str2chr = #222;
+#define str2chr _str2chr
+
+string(int c, ...) _chr2str = #223;
+#define chr2str _chr2str
+
+int(string s1, string s2) _strcmp = #228;
+#define strcmp _strcmp
+
+int(string s1, string s2, int len) _strncmp = #228;
+#define strncmp _strncmp
+
+int(string s1, string s2) _strcasecmp = #229;
+#define strcasecmp _strcasecmp
+
+int(string s1, string s2, int len) _strncasecmp = #230;
+#define strncasecmp _strncasecmp
+
+int() _buf_create = #460;
+#define buf_create _buf_create
+
+#pragma noref 0
+
+#endif

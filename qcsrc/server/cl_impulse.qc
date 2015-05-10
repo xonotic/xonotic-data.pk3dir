@@ -1,3 +1,20 @@
+#include "_all.qh"
+#include "round_handler.qh"
+
+#include "bot/waypoints.qh"
+
+#include "weapons/throwing.qh"
+#include "command/common.qh"
+#include "cheats.qh"
+#include "bot/navigation.qh"
+#include "weapons/selection.qh"
+#include "weapons/tracing.qh"
+#include "weapons/weaponsystem.qh"
+#include "vehicles/vehicle.qh"
+#include "waypointsprites.qh"
+
+#include "../common/weapons/weapons.qh"
+
 /*
  * Impulse map:
  *
@@ -35,7 +52,7 @@
 
 void ImpulseCommands (void)
 {
-	float imp;
+	int imp;
 	vector org;
 	float i;
 	float m;
@@ -99,7 +116,7 @@ void ImpulseCommands (void)
 					W_PreviousWeapon(2);
 					break;
 				case 17:
-					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
+					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, false), '0 0 0', true);
 					break;
 				case 18:
 					W_NextWeapon(1);
@@ -124,7 +141,7 @@ void ImpulseCommands (void)
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
-			i = imp % 10;
+			int i = imp % 10;
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
 		}
@@ -171,7 +188,7 @@ void ImpulseCommands (void)
 				{
 					if (!MUTATOR_CALLHOOK(HelpMePing))
 					{
-						wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
+						wp = WaypointSprite_Attach("helpme", true, RADARICON_HELPME, '1 0.5 0');
 						if(!wp)
 							WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
 						else
@@ -181,14 +198,14 @@ void ImpulseCommands (void)
 				}
 				break;
 			case 34:
-				wp = WaypointSprite_DeployFixed("here", FALSE, self.origin, RADARICON_HERE, '0 1 0');
+				wp = WaypointSprite_DeployFixed("here", false, self.origin, RADARICON_HERE, '0 1 0');
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "HERE spawned at location\n");
 				break;
 			case 35:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("here", FALSE, trace_endpos, RADARICON_HERE, '0 1 0');
+				wp = WaypointSprite_DeployFixed("here", false, trace_endpos, RADARICON_HERE, '0 1 0');
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "HERE spawned at crosshair\n");
@@ -196,21 +213,21 @@ void ImpulseCommands (void)
 			case 36:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin, RADARICON_HERE, '0 1 0');
+					wp = WaypointSprite_DeployFixed("here", false, self.death_origin, RADARICON_HERE, '0 1 0');
 					if(wp)
 						WaypointSprite_Ping(wp);
 					sprint(self, "HERE spawned at death location\n");
 				}
 				break;
 			case 37:
-				wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin, RADARICON_DANGER, '1 0.5 0');
+				wp = WaypointSprite_DeployFixed("danger", false, self.origin, RADARICON_DANGER, '1 0.5 0');
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "DANGER spawned at location\n");
 				break;
 			case 38:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("danger", FALSE, trace_endpos, RADARICON_DANGER, '1 0.5 0');
+				wp = WaypointSprite_DeployFixed("danger", false, trace_endpos, RADARICON_DANGER, '1 0.5 0');
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "DANGER spawned at crosshair\n");
@@ -218,7 +235,7 @@ void ImpulseCommands (void)
 			case 39:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin, RADARICON_DANGER, '1 0.5 0');
+					wp = WaypointSprite_DeployFixed("danger", false, self.death_origin, RADARICON_DANGER, '1 0.5 0');
 					if(wp)
 						WaypointSprite_Ping(wp);
 					sprint(self, "DANGER spawned at death location\n");
@@ -255,7 +272,7 @@ void ImpulseCommands (void)
 					bprint(strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
 					break;
 				case 104:
-					e = navigation_findnearestwaypoint(self, FALSE);
+					e = navigation_findnearestwaypoint(self, false);
 					if (e)
 					if (!(e.wpflags & WAYPOINTFLAG_GENERATED))
 					{
@@ -275,7 +292,7 @@ void ImpulseCommands (void)
 						e.colormod = '0.5 0.5 0.5';
 						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 					}
-					e2 = navigation_findnearestwaypoint(self, FALSE);
+					e2 = navigation_findnearestwaypoint(self, false);
 					navigation_markroutes(e2);
 					i = 0;
 					m = 0;
@@ -316,7 +333,7 @@ void ImpulseCommands (void)
 						org = e.origin;
 						tracebox(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', MOVE_NOMONSTERS, world);
 						setorigin(e, trace_endpos);
-						if(navigation_findnearestwaypoint(e, FALSE))
+						if(navigation_findnearestwaypoint(e, false))
 						{
 							setorigin(e, org);
 							e.effects &= ~EF_NODEPTHTEST;
@@ -347,7 +364,7 @@ void ImpulseCommands (void)
 					}
 					for(e = start; e; e = e.chain)
 					{
-						if(navigation_findnearestwaypoint(e, FALSE))
+						if(navigation_findnearestwaypoint(e, false))
 						{
 						}
 						else
@@ -364,7 +381,7 @@ void ImpulseCommands (void)
 					for(e = start; e; e = e.chain)
 					{
 						org = e.origin;
-						if(navigation_findnearestwaypoint(e, TRUE))
+						if(navigation_findnearestwaypoint(e, true))
 						{
 						}
 						else

@@ -1,0 +1,75 @@
+#ifndef CL_PLAYER_H
+#define CL_PLAYER_H
+
+.entity pusher;
+.float pushltime;
+.float istypefrag;
+
+.float CopyBody_nextthink;
+.void(void) CopyBody_think;
+void CopyBody_Think(void);
+void CopyBody(float keepvelocity);
+
+float player_getspecies();
+
+void player_setupanimsformodel();
+
+void player_anim (void);
+
+void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+
+// g_<gametype>_str:
+// If 0, default is used.
+// If <0, 0 is used.
+// Otherwise, g_str (default value) is used.
+// For consistency, negative values there are mapped to zero too.
+#define GAMETYPE_DEFAULTED_SETTING(str) \
+	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
+	 (gametype_setting_tmp < 0) ? 0 : \
+	 (gametype_setting_tmp == 0) ? max(0, autocvar_g_##str) : \
+	 gametype_setting_tmp)
+
+
+void calculate_player_respawn_time();
+
+void ClientKill_Now_TeamChange();
+
+void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+
+.float muted; // to be used by prvm_edictset server playernumber muted 1
+float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
+// message "": do not say, just test flood control
+// return value:
+//   1 = accept
+//   0 = reject
+//  -1 = fake accept
+
+float GetVoiceMessageVoiceType(string type);
+
+string allvoicesamples;
+.string GetVoiceMessageSampleField(string type);
+
+.string GetPlayerSoundSampleField(string type);
+
+void PrecacheGlobalSound(string samplestring);
+
+void PrecachePlayerSounds(string f);
+
+void ClearPlayerSounds();
+
+float LoadPlayerSounds(string f, float first);
+
+.int modelindex_for_playersound;
+.int skin_for_playersound;
+void UpdatePlayerSounds();
+
+void FakeGlobalSound(string sample, float chan, float voicetype);
+
+void GlobalSound(string sample, float chan, float voicetype);
+
+void PlayerSound(.string samplefield, float chan, float voicetype);
+
+void VoiceMessage(string type, string msg);
+
+void MoveToTeam(entity client, float team_colour, float type);
+#endif

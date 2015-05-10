@@ -1,3 +1,11 @@
+#include "_all.qh"
+
+#include "g_subs.qh"
+#include "g_triggers.qh"
+
+#include "../common/constants.qh"
+#include "../csqcmodellib/sv_model.qh"
+
 .float modelscale;
 
 void g_model_setcolormaptoactivator (void)
@@ -35,7 +43,7 @@ void g_model_dropbyspawnflags()
 	else if((self.spawnflags & 3) == 3) // ALIGN_ORIGIN | ALIGN_BOTTOM
 	{
 		traceline(self.origin, self.origin - '0 0 4096', MOVE_NOMONSTERS, self);
-		setorigin(self, trace_endpos - '0 0 1' * self.mins_z);
+		setorigin(self, trace_endpos - '0 0 1' * self.mins.z);
 	}
 }
 
@@ -48,7 +56,7 @@ void g_clientmodel_dropbyspawnflags()
 		self.SendFlags |= 2;
 }
 
-float g_clientmodel_genericsendentity (entity to, float sf)
+float g_clientmodel_genericsendentity (entity to, int sf)
 {
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')
@@ -71,18 +79,18 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 
 	if(sf & 4)
 	{
 		if(sf & 0x10)
 		{
-			WriteAngle(MSG_ENTITY, self.angles_x);
-			WriteAngle(MSG_ENTITY, self.angles_y);
-			WriteAngle(MSG_ENTITY, self.angles_z);
+			WriteAngle(MSG_ENTITY, self.angles.x);
+			WriteAngle(MSG_ENTITY, self.angles.y);
+			WriteAngle(MSG_ENTITY, self.angles.z);
 		}
 	}
 
@@ -102,12 +110,12 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 		WriteShort(MSG_ENTITY, floor(self.scale * 256));
 		if(sf & 0x20)
 		{
-			WriteCoord(MSG_ENTITY, self.mins_x);
-			WriteCoord(MSG_ENTITY, self.mins_y);
-			WriteCoord(MSG_ENTITY, self.mins_z);
-			WriteCoord(MSG_ENTITY, self.maxs_x);
-			WriteCoord(MSG_ENTITY, self.maxs_y);
-			WriteCoord(MSG_ENTITY, self.maxs_z);
+			WriteCoord(MSG_ENTITY, self.mins.x);
+			WriteCoord(MSG_ENTITY, self.mins.y);
+			WriteCoord(MSG_ENTITY, self.mins.z);
+			WriteCoord(MSG_ENTITY, self.maxs.x);
+			WriteCoord(MSG_ENTITY, self.maxs.y);
+			WriteCoord(MSG_ENTITY, self.maxs.z);
 		}
 		WriteString(MSG_ENTITY, self.bgmscript);
 		if(self.bgmscript != "")
@@ -116,14 +124,14 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 			WriteByte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
 			WriteByte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
 			WriteByte(MSG_ENTITY, floor(self.bgmscriptrelease * 64));
-			WriteCoord(MSG_ENTITY, self.movedir_x);
-			WriteCoord(MSG_ENTITY, self.movedir_y);
-			WriteCoord(MSG_ENTITY, self.movedir_z);
+			WriteCoord(MSG_ENTITY, self.movedir.x);
+			WriteCoord(MSG_ENTITY, self.movedir.y);
+			WriteCoord(MSG_ENTITY, self.movedir.z);
 			WriteByte(MSG_ENTITY, floor(self.lip * 255));
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -143,12 +151,12 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	InitializeEntity(self, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0; \
-	Net_LinkEntity(self, TRUE, 0, g_clientmodel_genericsendentity);
+	Net_LinkEntity(self, true, 0, g_clientmodel_genericsendentity);
 
 // non-solid model entities:
-void spawnfunc_misc_gamemodel()         { self.angles_x = -self.angles_x; G_MODEL_INIT      (SOLID_NOT) } // model entity
-void spawnfunc_misc_clientmodel()       { self.angles_x = -self.angles_x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
-void spawnfunc_misc_models()            { self.angles_x = -self.angles_x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
+void spawnfunc_misc_gamemodel()         { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity
+void spawnfunc_misc_clientmodel()       { self.angles_x = -self.angles.x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
+void spawnfunc_misc_models()            { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
 
 // non-solid brush entities:
 void spawnfunc_func_illusionary()       { G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)

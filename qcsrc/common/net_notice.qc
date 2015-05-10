@@ -1,3 +1,5 @@
+#include "net_notice.qh"
+
 #ifdef SVQC
 void sv_notice_join_think()
 {
@@ -7,7 +9,7 @@ void sv_notice_join_think()
     {
         float i;
         for(i = argc - 1; i >= 0; --i)
-            sv_notice_to(self.owner, argv(i), autocvar_sv_join_notices_time, FALSE);
+            sv_notice_to(self.owner, argv(i), autocvar_sv_join_notices_time, false);
     }
     remove(self);
 }
@@ -64,11 +66,11 @@ float cl_notice_run()
 {
     entity _notes;
     string _notice;
-    float m = FALSE;
+    float m = false;
 
     _notes = findchain(classname, "sv_notice");
     if(!_notes)
-        return FALSE;
+        return false;
     #define M1 30
     #define M2 10
 
@@ -96,7 +98,7 @@ float cl_notice_run()
         OUT(_notice, 16);
 
         if(_notes.skin)
-            m = TRUE;
+            m = true;
 
         if(_notes.alpha <= time)
         {

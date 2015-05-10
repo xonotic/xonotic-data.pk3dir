@@ -1,7 +1,10 @@
+#ifndef WEAPONS_COMMON_H
+#define WEAPONS_COMMON_H
 
 void W_GiveWeapon (entity e, float wep);
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
 void W_PlayStrengthSound(entity player);
-float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception);
+float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception);
 void W_PrepareExplosionByDamage(entity attacker, void() explode);
+#endif

@@ -1,13 +1,16 @@
-const float PUSH_ONCE			= 1;
-const float PUSH_SILENT		= 2;
+#include "t_jumppads.qh"
+#include "_all.qh"
 
-.float pushltime;
-.float istypefrag;
-.float height;
+#include "g_subs.qh"
 
-void() SUB_UseTargets;
+#include "bot/navigation.qh"
+#include "bot/waypoints.qh"
 
-float trigger_push_calculatevelocity_flighttime;
+#include "weapons/csqcprojectile.qh"
+
+#include "../common/animdecide.qh"
+
+#include "../warpzonelib/util_server.qh"
 
 void trigger_push_use()
 {
@@ -40,7 +43,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	if(other.gravity)
 		grav *= other.gravity;
 
-	zdist = torg_z - org_z;
+	zdist = torg.z - org.z;
 	sdist = vlen(torg - org - zdist * '0 0 1');
 	sdir = normalize(torg - org - zdist * '0 0 1');
 
@@ -81,10 +84,10 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	vector solution;
 	solution = solve_quadratic(0.5 * grav, -vz, zdist); // equation "z(ti) = zdist"
 	// ALWAYS solvable because jumpheight >= zdist
-	if(!solution_z)
-		solution_y = solution_x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
+	if(!solution.z)
+		solution.y = solution.x; // just in case it is not solvable due to roundoff errors, assume two equal solutions at their center (this is mainly for the usual case with ht == 0)
 	if(zdist == 0)
-		solution_x = solution_y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
+		solution.x = solution.y; // solution_x is 0 in this case, so don't use it, but rather use solution_y (which will be sqrt(0.5 * jumpheight / grav), actually)
 
 	if(zdist < 0)
 	{
@@ -94,14 +97,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			// almost straight line type
 			// jump apex is before the jump
 			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution_y;
+			trigger_push_calculatevelocity_flighttime = solution.y;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one too
-			trigger_push_calculatevelocity_flighttime = solution_y;
+			trigger_push_calculatevelocity_flighttime = solution.y;
 		}
 	}
 	else
@@ -112,14 +115,14 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 			// almost straight line type
 			// jump apex is after the jump
 			// we must take the smaller one
-			trigger_push_calculatevelocity_flighttime = solution_x;
+			trigger_push_calculatevelocity_flighttime = solution.x;
 		}
 		else
 		{
 			// regular jump
 			// jump apex is during the jump
 			// we must take the larger one
-			trigger_push_calculatevelocity_flighttime = solution_y;
+			trigger_push_calculatevelocity_flighttime = solution.y;
 		}
 	}
 	vs = sdist / trigger_push_calculatevelocity_flighttime;
@@ -180,12 +183,10 @@ void trigger_push_touch()
 		}
 		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
 		{
-			float i;
-			float found;
-			found = FALSE;
-			for(i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
+			bool found = false;
+			for(int i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
 				if(other.(jumppadsused[i]) == self)
-					found = TRUE;
+					found = true;
 			if(!found)
 			{
 				other.(jumppadsused[other.jumppadcount % NUM_JUMPPADSUSED]) = self;
@@ -201,10 +202,10 @@ void trigger_push_touch()
 				other.lastteleporttime = time;
 
 			if (other.deadflag == DEAD_NO)
-				animdecide_setaction(other, ANIMACTION_JUMP, TRUE);
+				animdecide_setaction(other, ANIMACTION_JUMP, true);
 		}
 		else
-			other.jumppadcount = TRUE;
+			other.jumppadcount = true;
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;
@@ -246,7 +247,6 @@ void trigger_push_touch()
 	}
 }
 
-.vector dest;
 void trigger_push_findtarget()
 {
 	entity e, t;
@@ -254,7 +254,7 @@ void trigger_push_findtarget()
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
-	org_z = self.absmax_z - PL_MIN_z;
+	org.z = self.absmax.z - PL_MIN_z;
 
 	if (self.target)
 	{

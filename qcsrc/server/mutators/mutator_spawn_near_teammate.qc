@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .entity msnt_lookat;
 
 .float msnt_timer;
@@ -31,10 +35,10 @@ MUTATOR_HOOKFUNCTION(msnt_Spawn_Score)
 	if(RandomSelection_chosen_ent)
 	{
 		spawn_spot.msnt_lookat = RandomSelection_chosen_ent;
-		spawn_score_x += SPAWN_PRIO_NEAR_TEAMMATE_FOUND;
+		spawn_score.x += SPAWN_PRIO_NEAR_TEAMMATE_FOUND;
 	}
 	else if(self.team == spawn_spot.team)
-		spawn_score_x += SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM; // prefer same team, if we can't find a spawn near teammate
+		spawn_score.x += SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM; // prefer same team, if we can't find a spawn near teammate
 
 	return 0;
 }
@@ -136,7 +140,7 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 	else if(spawn_spot.msnt_lookat)
 	{
 		self.angles = vectoangles(spawn_spot.msnt_lookat.origin - self.origin);
-		self.angles_x = -self.angles_x;
+		self.angles_x = -self.angles.x;
 		self.angles_z = 0; // never spawn tilted even if the spot says to
 		/*
 		sprint(self, "You should be looking at ", spawn_spot.msnt_lookat.netname, "^7.\n");

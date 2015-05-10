@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .float midair_shieldtime;
 
 MUTATOR_HOOKFUNCTION(midair_PlayerDamage)
@@ -5,9 +9,9 @@ MUTATOR_HOOKFUNCTION(midair_PlayerDamage)
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
 	if(time < self.midair_shieldtime)
-		frag_damage = FALSE;
+		frag_damage = false;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(midair_PlayerPowerups)
@@ -19,7 +23,7 @@ MUTATOR_HOOKFUNCTION(midair_PlayerPowerups)
 		self.midair_shieldtime = max(self.midair_shieldtime, time + autocvar_g_midair_shieldtime);
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(midair_PlayerSpawn)
@@ -27,19 +31,19 @@ MUTATOR_HOOKFUNCTION(midair_PlayerSpawn)
 	if(IS_BOT_CLIENT(self))
 		self.bot_moveskill = 0; // disable bunnyhopping
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(midair_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":midair");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(midair_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Midair");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_midair)
@@ -50,5 +54,5 @@ MUTATOR_DEFINITION(mutator_midair)
 	MUTATOR_HOOK(BuildMutatorsString, midair_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, midair_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

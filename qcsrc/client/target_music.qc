@@ -1,11 +1,18 @@
-float music_disabled;
-entity music_default;
-entity music_target;
-entity music_trigger;
-// FIXME also control bgmvolume here, to not require a target_music for the default track.
+#include "target_music.qh"
+#include "_all.qh"
 
-.float state;
-.float lastvol;
+#include "../common/constants.qh"
+#include "../common/util.qh"
+
+#include "../warpzonelib/common.qh"
+
+.string noise;
+.float cnt;
+.float count;
+.float fade_time;
+.float fade_rate;
+.float lifetime;
+.float volume;
 
 void TargetMusic_Advance()
 {
@@ -60,17 +67,14 @@ void TargetMusic_Advance()
 
 void Net_TargetMusic()
 {
-	float vol, fai, fao, tim, id;
-	string noi;
+	int id = ReadShort();
+	float vol = ReadByte() / 255.0;
+	float fai = ReadByte() / 16.0;
+	float fao = ReadByte() / 16.0;
+	float tim = ReadByte();
+	string noi = ReadString();
+
 	entity e;
-
-	id = ReadShort();
-	vol = ReadByte() / 255.0;
-	fai = ReadByte() / 16.0;
-	fao = ReadByte() / 16.0;
-	tim = ReadByte();
-	noi = ReadString();
-
 	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
 	{
 		if(e.count == id)
@@ -138,9 +142,7 @@ void Ent_TriggerMusic_Remove()
 
 void Ent_ReadTriggerMusic()
 {
-	float f;
-	string s;
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 4)
 	{
 		self.origin_x = ReadCoord();
@@ -170,7 +172,7 @@ void Ent_ReadTriggerMusic()
 		self.volume = ReadByte() / 255.0;
 		self.fade_time = ReadByte() / 16.0;
 		self.fade_rate = ReadByte() / 16.0;
-		s = self.noise;
+		string s = self.noise;
 		if(self.noise)
 			strunzone(self.noise);
 		self.noise = strzone(ReadString());

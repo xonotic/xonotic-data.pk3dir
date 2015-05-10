@@ -1,10 +1,19 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+    #include "defs.qh"
+    #include "playerdemo.qh"
+#endif
+
 .float playerdemo_fh;
 .float playerdemo_mode;
 .float playerdemo_starttime;
 .float playerdemo_time;
-#define PLAYERDEMO_MODE_OFF 0
-#define PLAYERDEMO_MODE_READING 1
-#define PLAYERDEMO_MODE_WRITING 2
+const float PLAYERDEMO_MODE_OFF = 0;
+const float PLAYERDEMO_MODE_READING = 1;
+const float PLAYERDEMO_MODE_WRITING = 2;
 void playerdemo_init()
 {
 	self.playerdemo_mode = PLAYERDEMO_MODE_OFF;
@@ -62,27 +71,27 @@ void playerdemo_open_write(string f)
 
 void playerdemo_write_originvector(.vector f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(vtos(self.f), "\n"));
+	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_sizevector(.vector f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(vtos(self.f), "\n"));
+	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_vector(.vector f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(vtos(self.f), "\n"));
+	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_string(.string f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(self.f, "\n"));
+	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
 }
 void playerdemo_write_modelstring(.string f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(self.f, "\n"));
+	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
 }
 void playerdemo_write_float(.float f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(ftos(self.f), "\n"));
+	fputs(self.playerdemo_fh, strcat(ftos(self.(f)), "\n"));
 }
 void playerdemo_write()
 {
@@ -97,36 +106,34 @@ void playerdemo_read_originvector(.vector f, string name)
 }
 void playerdemo_read_sizevector(.vector f, string name)
 {
-	self.f = stov(fgets(self.playerdemo_fh));
+	self.(f) = stov(fgets(self.playerdemo_fh));
 	setsize(self, self.mins, self.maxs);
 }
 void playerdemo_read_vector(.vector f, string name)
 {
-	self.f = stov(fgets(self.playerdemo_fh));
+	self.(f) = stov(fgets(self.playerdemo_fh));
 }
 void playerdemo_read_string(.string f, string name)
 {
-	string s;
-	s = fgets(self.playerdemo_fh);
-	if(s != self.f)
+	string s = fgets(self.playerdemo_fh);
+	if (s != self.(f))
 	{
 		/*
 		if(self.f)
 			strunzone(self.f);
 		*/
-		self.f = strzone(s);
+		self.(f) = strzone(s);
 	}
 }
 void playerdemo_read_modelstring(.string f, string name)
 {
-	string s;
-	s = fgets(self.playerdemo_fh);
-	if(s != self.f)
+	string s = fgets(self.playerdemo_fh);
+	if (s != self.(f))
 		setmodel(self, s);
 }
 void playerdemo_read_float(.float f, string name)
 {
-	self.f = stof(fgets(self.playerdemo_fh));
+	self.(f) = stof(fgets(self.playerdemo_fh));
 }
 float playerdemo_read()
 {

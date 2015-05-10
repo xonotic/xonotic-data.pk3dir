@@ -1,23 +1,33 @@
+#include "anglestransform.qh"
+
+#if defined(CSQC)
+	#include "../dpdefs/csprogsdefs.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../dpdefs/progsdefs.qh"
+    #include "../dpdefs/dpextensions.qh"
+#endif
+
 #ifdef POSITIVE_PITCH_IS_DOWN
 vector fixedvectoangles(vector a)
 {
 	vector ang;
 	ang = vectoangles(a);
-	ang_x = -ang_x;
+	ang.x = -ang.x;
 	return ang;
 }
 vector fixedvectoangles2(vector a, vector b)
 {
 	vector ang;
 	ang = vectoangles2(a, b);
-	ang_x = -ang_x;
+	ang.x = -ang.x;
 	return ang;
 }
 #else
 void fixedmakevectors(vector a)
 {
 	// a makevectors that actually inverts vectoangles
-	a_x = -a_x;
+	a.x = -a.x;
 	makevectors(a);
 }
 #endif
@@ -27,9 +37,9 @@ void fixedmakevectors(vector a)
 vector AnglesTransform_Apply(vector transform, vector v)
 {
 	fixedmakevectors(transform);
-	return v_forward * v_x
-		+ v_right   * (-v_y)
-		+ v_up      * v_z;
+	return v_forward * v.x
+		+ v_right   * (-v.y)
+		+ v_up      * v.z;
 }
 
 vector AnglesTransform_Multiply(vector t1, vector t2)
@@ -48,12 +58,12 @@ vector AnglesTransform_Invert(vector transform)
 	// but these are orthogonal unit vectors!
 	// so to invert, we can simply fixedvectoangles the TRANSPOSED matrix
 	// TODO is this always -transform?
-	i_forward_x = v_forward_x;
-	i_forward_y = -v_right_x;
-	i_forward_z = v_up_x;
-	i_up_x = v_forward_z;
-	i_up_y = -v_right_z;
-	i_up_z = v_up_z;
+	i_forward.x = v_forward.x;
+	i_forward.y = -v_right.x;
+	i_forward.z = v_up.x;
+	i_up.x = v_forward.z;
+	i_up.y = -v_right.z;
+	i_up.z = v_up.z;
 	return fixedvectoangles2(i_forward, i_up);
 }
 
@@ -63,9 +73,9 @@ vector AnglesTransform_TurnDirectionFR(vector transform)
 	// changes in-direction to out-direction
 	//fixedmakevectors(transform);
 	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
-	transform_x = -transform_x;
-	transform_y = 180 + transform_y;
-	transform_z = -transform_z;
+	transform.x = -transform.x;
+	transform.y = 180 + transform.y;
+	transform.z = -transform.z;
 	// pitch: -s +c
 	// yaw:   -s -c
 	// roll:  -s +c
@@ -78,9 +88,9 @@ vector AnglesTransform_TurnDirectionFU(vector transform)
 	// changes in-direction to out-direction
 	//fixedmakevectors(transform);
 	//return fixedvectoangles2(-1 * v_forward, 1 * v_up);
-	transform_x = -transform_x;
-	transform_y = 180 + transform_y;
-	transform_z = 180 - transform_z;
+	transform.x = -transform.x;
+	transform.y = 180 + transform.y;
+	transform.z = 180 - transform.z;
 	return transform;
 }
 
@@ -98,18 +108,18 @@ vector AnglesTransform_Normalize(vector t, float minimize_roll)
 {
 	float need_flip;
 	// first, bring all angles in their range...
-	t_x = t_x - 360 * rint(t_x / 360);
-	t_y = t_y - 360 * rint(t_y / 360);
-	t_z = t_z - 360 * rint(t_z / 360);
+	t.x = t.x - 360 * rint(t.x / 360);
+	t.y = t.y - 360 * rint(t.y / 360);
+	t.z = t.z - 360 * rint(t.z / 360);
 	if(minimize_roll)
-		need_flip = (t_z > 90 || t_z <= -90);
+		need_flip = (t.z > 90 || t.z <= -90);
 	else
-		need_flip = (t_x > 90 || t_x < -90); // for pitch we prefer to allow exactly -90 degrees for looking straight down
+		need_flip = (t.x > 90 || t.x < -90); // for pitch we prefer to allow exactly -90 degrees for looking straight down
 	if(need_flip)
 	{
-		if(t_x >= 0) t_x = 180 - t_x; else t_x = -180 - t_x;
-		if(t_y > 0) t_y -= 180; else t_y += 180;
-		if(t_z > 0) t_z -= 180; else t_z += 180;
+		if(t.x >= 0) t.x = 180 - t.x; else t.x = -180 - t.x;
+		if(t.y > 0) t.y -= 180; else t.y += 180;
+		if(t.z > 0) t.z -= 180; else t.z += 180;
 	}
 	return t;
 }
@@ -126,21 +136,21 @@ vector AnglesTransform_CancelRoll(vector t)
 
 	// FIXME find a better method
 
-	f = fabs(t_x - (-90)) / epsilon;
+	f = fabs(t.x - (-90)) / epsilon;
 	if(f < 1)
 	{
 		//t_x = -90;
-		t_y += t_z;
-		t_z = 0;
+		t.y += t.z;
+		t.z = 0;
 	}
 	else
 	{
-		f = fabs(t_x - 90) / epsilon;
+		f = fabs(t.x - 90) / epsilon;
 		if(f < 1)
 		{
 			//t_x = 90;
-			t_y -= t_z;
-			t_z = 0;
+			t.y -= t.z;
+			t.z = 0;
 		}
 	}
 	return t;
@@ -149,9 +159,9 @@ vector AnglesTransform_CancelRoll(vector t)
 #ifdef POSITIVE_PITCH_IS_DOWN
 vector AnglesTransform_ApplyToAngles(vector transform, vector v)
 {
-	v_x = -v_x;
+	v.x = -v.x;
 	v = AnglesTransform_Multiply(transform, v);
-	v_x = -v_x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_ApplyToVAngles(vector transform, vector v)
@@ -161,12 +171,12 @@ vector AnglesTransform_ApplyToVAngles(vector transform, vector v)
 }
 vector AnglesTransform_FromAngles(vector v)
 {
-	v_x = -v_x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_ToAngles(vector v)
 {
-	v_x = -v_x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_FromVAngles(vector v)
@@ -185,9 +195,9 @@ vector AnglesTransform_ApplyToAngles(vector transform, vector v)
 }
 vector AnglesTransform_ApplyToVAngles(vector transform, vector v)
 {
-	v_x = -v_x;
+	v.x = -v.x;
 	v = AnglesTransform_Multiply(transform, v);
-	v_x = -v_x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_FromAngles(vector v)
@@ -200,12 +210,12 @@ vector AnglesTransform_ToAngles(vector v)
 }
 vector AnglesTransform_FromVAngles(vector v)
 {
-	v_x = -v_x;
+	v.x = -v.x;
 	return v;
 }
 vector AnglesTransform_ToVAngles(vector v)
 {
-	v_x = -v_x;
+	v.x = -v.x;
 	return v;
 }
 #endif
