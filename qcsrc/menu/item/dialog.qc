@@ -128,12 +128,15 @@ void Dialog_configureDialog(entity me)
 {
 	float absWidth, absHeight;
 
-	me.frame = spawnBorderImage();
-	me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.borderLines * me.titleHeight);
-	me.frame.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
-	me.frame.zoomedOutTitleBar = me.zoomedOutTitleBar;
-	me.frame.alpha = me.alpha;
-	me.addItem(me, me.frame, '0 0 0', '1 1 0', 1);
+	if(me.isTabRoot)
+	{
+		me.frame = spawnBorderImage();
+		me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.borderLines * me.titleHeight);
+		me.frame.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
+		me.frame.zoomedOutTitleBar = me.zoomedOutTitleBar;
+		me.frame.alpha = me.alpha;
+		me.addItem(me, me.frame, '0 0 0', '1 1 0', 1);
+	}
 
 	if (!me.titleFontSize)
 		me.titleHeight = 0; // no title bar
@@ -153,7 +156,7 @@ void Dialog_configureDialog(entity me)
 
 	me.fill(me);
 
-	if(me.closable && me.borderLines > 0)
+	if(me.isTabRoot && me.closable && me.borderLines > 0)
 	{
 		entity closebutton;
 		closebutton = me.closeButton = me.frame.closeButton = spawnButton();
