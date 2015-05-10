@@ -1,5 +1,7 @@
 #include "t_items.qh"
 
+#include "../common/items/all.qc"
+
 #if defined(SVQC)
     #include "_all.qh"
 
@@ -1151,12 +1153,18 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		return;
 	}
 }
+
+void StartItemA (entity a)
+{
+    StartItem(a.ammoModel, a.ammoSound, g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, a.ammoName, a.ammoId, 0, 0, commodity_pickupevalfunc, a.ammoQuantity);
+}
+
 void spawnfunc_item_rockets (void) {
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
+    StartItemA (ITEM_Rockets);
 }
 
 void spawnfunc_item_bullets (void) {
@@ -1174,7 +1182,7 @@ void spawnfunc_item_bullets (void) {
 		self.ammo_nails = g_pickup_nails;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_bullets.mdl", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "bullets", IT_NAILS, 0, 0, commodity_pickupevalfunc, 2000);
+    StartItemA (ITEM_Bullets);
 }
 
 void spawnfunc_item_cells (void) {
@@ -1182,7 +1190,7 @@ void spawnfunc_item_cells (void) {
 		self.ammo_cells = g_pickup_cells;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "cells", IT_CELLS, 0, 0, commodity_pickupevalfunc, 2000);
+	StartItemA (ITEM_Cells);
 }
 
 void spawnfunc_item_plasma()
@@ -1191,7 +1199,7 @@ void spawnfunc_item_plasma()
 		self.ammo_plasma = g_pickup_plasma;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "plasma", IT_PLASMA, 0, 0, commodity_pickupevalfunc, 2000);
+	StartItemA (ITEM_Plasma);
 }
 
 void spawnfunc_item_shells (void) {
@@ -1209,7 +1217,7 @@ void spawnfunc_item_shells (void) {
 		self.ammo_shells = g_pickup_shells;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_shells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "shells", IT_SHELLS, 0, 0, commodity_pickupevalfunc, 500);
+	StartItemA (ITEM_Shells);
 }
 
 void spawnfunc_item_armor_small (void) {

@@ -28,8 +28,10 @@ ITEM_SIGNALS(ITEM_SEND)
 
 int ITEM_COUNT;
 #define REGISTER_ITEM(id, class, body)          \
+    entity ITEM_##id;                           \
     void RegisterItems_##id() {                 \
         const noref entity this = NEW(class);   \
+        ITEM_##id = this;                       \
         ITEMS[ITEM_COUNT++] = this;             \
         body                                    \
     }                                           \

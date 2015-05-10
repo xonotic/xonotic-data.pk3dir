@@ -1,3 +1,5 @@
+#ifndef ALL_C
+#define ALL_C
 #include "all.qh"
 
 #include "all.inc"
@@ -9,3 +11,5 @@ void ItemTest()
         ITEM_SEND(Default, it);
     }));
 }
+
+#endif
