@@ -1,0 +1,38 @@
+#ifndef ALL_H
+#define ALL_H
+
+const int MAX_ITEMS = 23;
+entity ITEMS[MAX_ITEMS];
+
+#define ITEMS_FOREACH(pred, body) do {      \
+    for (int i = 0; i < ITEM_COUNT; i++) {  \
+        const entity it = ITEMS[i];         \
+        if (pred) { body }                  \
+    }                                       \
+} while(0)
+
+void RegisterItems();
+void ItemTest();
+
+#ifdef CSQC
+void ReadItems()
+{
+/*
+    const int flags = read();
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        if (flags & BIT(i)) {
+            self.items[i] = read();
+        }
+    }
+*/
+}
+#endif
+
+#ifdef SVQC
+void WriteItems()
+{
+
+}
+#endif
+
+#endif

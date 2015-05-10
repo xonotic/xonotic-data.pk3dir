@@ -107,6 +107,9 @@ weapons/weaponsystem.qc
 ../common/test.qc
 ../common/urllib.qc
 ../common/util.qc
+
+../common/items/all.qc
+
 ../common/weapons/config.qc
 ../common/weapons/weapons.qc // TODO
 

@@ -32,6 +32,7 @@
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
+#include "../common/items/all.qh"
 #include "../common/weapons/weapons.qh"
 
 const float LATENCY_THINKRATE = 10;
@@ -556,6 +557,7 @@ void spawnfunc___init_dedicated_server(void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
+	CALL_ACCUMULATED_FUNCTION(RegisterItems);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
@@ -604,6 +606,7 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
+	CALL_ACCUMULATED_FUNCTION(RegisterItems);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);

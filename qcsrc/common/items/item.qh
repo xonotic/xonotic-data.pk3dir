@@ -1,0 +1,38 @@
+#ifndef GAMEITEM_H
+#define GAMEITEM_H
+#include "../oo.qh"
+CLASS(GameItem, Object)
+    METHOD(GameItem, respondTo, bool(entity, int))
+ENDCLASS(GameItem)
+
+
+
+#define LAMBDA(...) { __VA_ARGS__ ; }
+
+#define ITEM_SIGNALS(_) \
+    _(Default, void, (entity it), LAMBDA({ it.respondTo(it, SIGNAL); })) \
+    /* Common item signals */
+
+#define ITEM_SIGNAL(id) __Item_Signal_##id
+
+#define ITEM_ENUM(id, ret, params, body) ITEM_SIGNAL(id) ,
+enum { ITEM_SIGNALS(ITEM_ENUM) };
+#undef ITEM_ENUM
+
+#define ITEM_SEND(id, ret, params, body) ret __Item_Send_##id params { const noref int SIGNAL = ITEM_SIGNAL(id); body }
+ITEM_SIGNALS(ITEM_SEND)
+#undef ITEM_SEND
+#define ITEM_SEND(id, ...) __Item_Send_##id(__VA_ARGS__)
+
+
+
+int ITEM_COUNT;
+#define REGISTER_ITEM(id, class, body)          \
+    void RegisterItems_##id() {                 \
+        const noref entity this = NEW(class);   \
+        ITEMS[ITEM_COUNT++] = this;             \
+        body                                    \
+    }                                           \
+    ACCUMULATE_FUNCTION(RegisterItems, RegisterItems_##id)
+
+#endif

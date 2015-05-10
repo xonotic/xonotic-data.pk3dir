@@ -1,0 +1,8 @@
+#ifndef AMMO_H
+#define AMMO_H
+#include "../item.qh"
+CLASS(Ammo, GameItem)
+    METHOD(Ammo, respondTo, bool(entity, int))
+    ATTRIB(Ammo, ammoName, string, string_null)
+ENDCLASS(Ammo)
+#endif

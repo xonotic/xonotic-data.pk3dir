@@ -55,6 +55,8 @@ weapons/projectile.qc // TODO
 ../common/urllib.qc
 ../common/util.qc
 
+../common/items/all.qc
+
 ../common/monsters/monsters.qc
 
 ../common/weapons/weapons.qc // TODO

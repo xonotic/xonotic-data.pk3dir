@@ -1,0 +1,7 @@
+#ifndef BUFF_H
+#define BUFF_H
+#include "../item.qh"
+CLASS(Buff, GameItem)
+    METHOD(Buff, respondTo, bool(entity, int))
+ENDCLASS(Buff)
+#endif
