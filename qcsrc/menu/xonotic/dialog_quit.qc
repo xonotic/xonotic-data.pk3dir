@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticQuitDialog) EXTENDS(XonoticDialog)
+#ifndef DIALOG_QUIT_H
+#define DIALOG_QUIT_H
+#include "dialog.qc"
+CLASS(XonoticQuitDialog, XonoticDialog)
 	METHOD(XonoticQuitDialog, fill, void(entity))
 	ATTRIB(XonoticQuitDialog, title, string, _("Quit"))
 	ATTRIB(XonoticQuitDialog, color, vector, SKINCOLOR_DIALOG_QUIT)

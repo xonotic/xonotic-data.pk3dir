@@ -250,7 +250,7 @@ float nJoinAllowed(entity ignore);
 
 .entity flagcarried;
 
-.float playerid;
+.int playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
@@ -285,7 +285,7 @@ float default_weapon_alpha;
 .float version_nagtime;
 
 const int NUM_JUMPPADSUSED = 3;
-.float jumppadcount;
+.int jumppadcount;
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
 string gamemode_name;

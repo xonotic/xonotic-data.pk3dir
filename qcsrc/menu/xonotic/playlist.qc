@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
+#ifndef PLAYLIST_H
+#define PLAYLIST_H
+#include "listbox.qc"
+CLASS(XonoticPlayList, XonoticListBox)
 	METHOD(XonoticPlayList, configureXonoticPlayList, void(entity))
 	ATTRIB(XonoticPlayList, rowsPerItem, float, 1)
 	METHOD(XonoticPlayList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -42,7 +44,7 @@ void NextSound_Click(entity btn, entity me);
 entity makeXonoticPlayList()
 {
 	entity me;
-	me = spawnXonoticPlayList();
+	me = NEW(XonoticPlayList);
 	me.configureXonoticPlayList(me);
 	return me;
 }

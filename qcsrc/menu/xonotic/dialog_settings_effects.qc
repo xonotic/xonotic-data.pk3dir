@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticEffectsSettingsTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_SETTINGS_EFFECTS_H
+#define DIALOG_SETTINGS_EFFECTS_H
+#include "tab.qc"
+CLASS(XonoticEffectsSettingsTab, XonoticTab)
 	METHOD(XonoticEffectsSettingsTab, fill, void(entity))
 	ATTRIB(XonoticEffectsSettingsTab, title, string, _("Effects"))
 	ATTRIB(XonoticEffectsSettingsTab, intendedWidth, float, 0.9)
@@ -13,7 +15,7 @@ entity makeXonoticEffectsSettingsTab();
 entity makeXonoticEffectsSettingsTab()
 {
 	entity me;
-	me = spawnXonoticEffectsSettingsTab();
+	me = NEW(XonoticEffectsSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

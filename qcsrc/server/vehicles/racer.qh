@@ -1,0 +1,5 @@
+#ifndef RACER_H
+#define RACER_H
+const vector RACER_MIN = '-120 -120 -40';
+const vector RACER_MAX = '120 120 40';
+#endif

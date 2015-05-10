@@ -1,0 +1,5 @@
+#ifndef SPIDERBOT_H
+#define SPIDERBOT_H
+const vector SPIDERBOT_MIN = '-75 -75 10';
+const vector SPIDERBOT_MAX  = '75 75 125';
+#endif

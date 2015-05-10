@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDBuffsDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_HUDPANEL_BUFFS_H
+#define DIALOG_HUDPANEL_BUFFS_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDBuffsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDBuffsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDBuffsDialog, title, string, _("Buffs Panel"))
 	ATTRIB(XonoticHUDBuffsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

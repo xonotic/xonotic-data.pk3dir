@@ -1,15 +1,13 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "noise.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "noise.qh"
+#include "_all.qh"
 
-.float noise_baccum;
-.float noise_paccum;
-.float noise_paccum2;
-.float noise_paccum3;
-.float noise_bstate;
+entityclass(Noise);
+class(Noise) .float noise_baccum;
+class(Noise) .float noise_paccum;
+class(Noise) .float noise_paccum2;
+class(Noise) .float noise_paccum3;
+class(Noise) .float noise_bstate;
+
 float Noise_Brown(entity e, float dt)
 {
 	e.noise_baccum += random() * sqrt(dt); // same stddev for all dt

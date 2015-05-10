@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticCheckBoxString) EXTENDS(CheckBox)
+#ifndef CHECKBOX_STRING_H
+#define CHECKBOX_STRING_H
+#include "../item/checkbox.qc"
+CLASS(XonoticCheckBoxString, CheckBox)
 	METHOD(XonoticCheckBoxString, configureXonoticCheckBoxString, void(entity, string, string, string, string))
 	METHOD(XonoticCheckBoxString, setChecked, void(entity, float))
 	ATTRIB(XonoticCheckBoxString, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -27,7 +29,7 @@ entity makeXonoticCheckBoxString(string, string, string, string);
 entity makeXonoticCheckBoxString(string theYesValue, string theNoValue, string theCvar, string theText)
 {
 	entity me;
-	me = spawnXonoticCheckBoxString();
+	me = NEW(XonoticCheckBoxString);
 	me.configureXonoticCheckBoxString(me, theYesValue, theNoValue, theCvar, theText);
 	return me;
 }

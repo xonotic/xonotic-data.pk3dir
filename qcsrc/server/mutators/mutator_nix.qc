@@ -1,6 +1,10 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 float g_nix_with_blaster;
 // WEAPONTODO
-float nix_weapon;
+int nix_weapon;
 float nix_nextchange;
 float nix_nextweapon;
 .float nix_lastchange_id;

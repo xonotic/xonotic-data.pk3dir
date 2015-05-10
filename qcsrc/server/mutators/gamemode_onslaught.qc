@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 float autocvar_g_onslaught_spawn_at_controlpoints;
 float autocvar_g_onslaught_spawn_at_generator;
 float autocvar_g_onslaught_cp_proxydecap;

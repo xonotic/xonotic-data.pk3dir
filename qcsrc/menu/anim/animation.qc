@@ -1,5 +1,8 @@
-#ifdef INTERFACE
-CLASS(Animation) EXTENDS(Object)
+#ifndef ANIM_ANIMATION_H
+#define ANIM_ANIMATION_H
+#include "../oo/base.qh"
+void setterDummy(entity, float);
+CLASS(Animation, Object)
 	METHOD(Animation, configureAnimation, void(entity, entity, void(entity, float), float, float, float, float))
 	METHOD(Animation, setTimeStartEnd, void(entity, float, float))
 	METHOD(Animation, setTimeStartDuration, void(entity, float, float))
@@ -23,7 +26,6 @@ CLASS(Animation) EXTENDS(Object)
 	ATTRIB(Animation, stopped, float, false)
 	ATTRIB(Animation, finished, float, false)
 ENDCLASS(Animation)
-void setterDummy(entity, float);
 #endif
 
 #ifdef IMPLEMENTATION

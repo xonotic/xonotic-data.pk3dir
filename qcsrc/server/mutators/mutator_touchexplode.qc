@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .float touchexplode_time;
 
 void PlayerTouchExplode(entity p1, entity p2)

@@ -1,0 +1,6 @@
+#ifndef ANNOUNCER_H
+#define ANNOUNCER_H
+
+void Announcer();
+
+#endif

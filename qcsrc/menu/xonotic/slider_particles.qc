@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticParticlesSlider) EXTENDS(XonoticTextSlider)
+#ifndef SLIDER_PARTICLES_H
+#define SLIDER_PARTICLES_H
+#include "textslider.qc"
+CLASS(XonoticParticlesSlider, XonoticTextSlider)
 	METHOD(XonoticParticlesSlider, configureXonoticParticlesSlider, void(entity))
 	METHOD(XonoticParticlesSlider, loadCvars, void(entity))
 	METHOD(XonoticParticlesSlider, saveCvars, void(entity))
@@ -11,7 +13,7 @@ entity makeXonoticParticlesSlider();
 entity makeXonoticParticlesSlider()
 {
 	entity me;
-	me = spawnXonoticParticlesSlider();
+	me = NEW(XonoticParticlesSlider);
 	me.configureXonoticParticlesSlider(me);
 	return me;
 }

@@ -91,6 +91,7 @@ float bot_ignore_bots; // let bots not attack other bots (only works in non-team
  */
 
 entity bot_spawn();
+float bot_fixcount();
 
 void bot_think();
 void bot_setnameandstuff();
