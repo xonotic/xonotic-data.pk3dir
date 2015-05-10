@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(MainWindow) EXTENDS(ModalController)
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+#include "../item/modalcontroller.qc"
+CLASS(MainWindow, ModalController)
 	METHOD(MainWindow, configureMainWindow, void(entity))
 	METHOD(MainWindow, draw, void(entity))
 	ATTRIB(MainWindow, firstRunDialog, entity, NULL)
@@ -48,165 +50,165 @@ void MainWindow_configureMainWindow(entity me)
 	entity n, i;
 
 	// dialog run upon startup
-	me.firstRunDialog = i = spawnXonoticFirstRunDialog();
+	me.firstRunDialog = i = NEW(XonoticFirstRunDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
 	// hud_configure dialogs
-	i = spawnXonoticHUDExitDialog();
+	i = NEW(XonoticHUDExitDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDNotificationDialog();
+	i = NEW(XonoticHUDNotificationDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDAmmoDialog();
+	i = NEW(XonoticHUDAmmoDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDHealthArmorDialog();
+	i = NEW(XonoticHUDHealthArmorDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDChatDialog();
+	i = NEW(XonoticHUDChatDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDModIconsDialog();
+	i = NEW(XonoticHUDModIconsDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDPowerupsDialog();
+	i = NEW(XonoticHUDPowerupsDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDPressedKeysDialog();
+	i = NEW(XonoticHUDPressedKeysDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDRaceTimerDialog();
+	i = NEW(XonoticHUDRaceTimerDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDRadarDialog();
+	i = NEW(XonoticHUDRadarDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDScoreDialog();
+	i = NEW(XonoticHUDScoreDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDTimerDialog();
+	i = NEW(XonoticHUDTimerDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDVoteDialog();
+	i = NEW(XonoticHUDVoteDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDWeaponsDialog();
+	i = NEW(XonoticHUDWeaponsDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDEngineInfoDialog();
+	i = NEW(XonoticHUDEngineInfoDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDInfoMessagesDialog();
+	i = NEW(XonoticHUDInfoMessagesDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDPhysicsDialog();
+	i = NEW(XonoticHUDPhysicsDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDCenterprintDialog();
+	i = NEW(XonoticHUDCenterprintDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticHUDBuffsDialog();
+	i = NEW(XonoticHUDBuffsDialog);
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
 	// dialogs used by settings
-	me.userbindEditDialog = i = spawnXonoticUserbindEditDialog();
+	me.userbindEditDialog = i = NEW(XonoticUserbindEditDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.cvarsDialog = i = spawnXonoticCvarsDialog();
+	me.cvarsDialog = i = NEW(XonoticCvarsDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.resetDialog = i = spawnXonoticResetDialog();
+	me.resetDialog = i = NEW(XonoticResetDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.languageWarningDialog = i = spawnXonoticLanguageWarningDialog();
+	me.languageWarningDialog = i = NEW(XonoticLanguageWarningDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
+	me.hudconfirmDialog = i = NEW(XonoticHUDConfirmDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
 	// dialog used by singleplayer
-	me.winnerDialog = i = spawnXonoticWinnerDialog();
+	me.winnerDialog = i = NEW(XonoticWinnerDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
 	// dialog used by multiplayer/join
-	me.serverInfoDialog = i = spawnXonoticServerInfoDialog();
+	me.serverInfoDialog = i = NEW(XonoticServerInfoDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.demostartconfirmDialog = i = spawnXonoticDemoStartConfirmDialog();
+	me.demostartconfirmDialog = i = NEW(XonoticDemoStartConfirmDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.demotimeconfirmDialog = i = spawnXonoticDemoTimeConfirmDialog();
+	me.demotimeconfirmDialog = i = NEW(XonoticDemoTimeConfirmDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
 	// dialogs used by multiplayer/create
-	me.mapInfoDialog = i = spawnXonoticMapInfoDialog();
+	me.mapInfoDialog = i = NEW(XonoticMapInfoDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.mutatorsDialog = i = spawnXonoticMutatorsDialog();
+	me.mutatorsDialog = i = NEW(XonoticMutatorsDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
 	// dialogs used by multiplayer/media
-	me.screenshotViewerDialog = i = spawnXonoticScreenshotViewerDialog();
+	me.screenshotViewerDialog = i = NEW(XonoticScreenshotViewerDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
 
 	// mutator dialogs
-	i = spawnXonoticSandboxToolsDialog();
+	i = NEW(XonoticSandboxToolsDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z * SKINALPHA_DIALOG_SANDBOXTOOLS);
 
 
 	// miscellaneous dialogs
-	i = spawnXonoticTeamSelectDialog();
+	i = NEW(XonoticTeamSelectDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = spawnXonoticMonsterToolsDialog();
+	i = NEW(XonoticMonsterToolsDialog);
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z * SKINALPHA_DIALOG_SANDBOXTOOLS);
 
 
 	// main dialogs/windows
-	me.mainNexposee = n = spawnXonoticNexposee();
+	me.mainNexposee = n = NEW(XonoticNexposee);
 	/*
 		if(checkextension("DP_GECKO_SUPPORT"))
 		{
@@ -216,28 +218,28 @@ void MainWindow_configureMainWindow(entity me)
 			n.setNexposee(n, i, '0.1 0.1 0', SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		}
 	*/
-		i = spawnXonoticSingleplayerDialog();
+		i = NEW(XonoticSingleplayerDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_SINGLEPLAYER, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 
-		i = spawnXonoticMultiplayerDialog();
+		i = NEW(XonoticMultiplayerDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_MULTIPLAYER, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 
-		i = spawnXonoticSettingsDialog();
+		i = NEW(XonoticSettingsDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_SETTINGS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 
-		i = spawnXonoticCreditsDialog();
+		i = NEW(XonoticCreditsDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_CREDITS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / conheight));
 
-		i = spawnXonoticQuitDialog();
+		i = NEW(XonoticQuitDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_QUIT, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(Button) EXTENDS(Label)
+#ifndef ITEM_BUTTON_H
+#define ITEM_BUTTON_H
+#include "label.qc"
+CLASS(Button, Label)
 	METHOD(Button, configureButton, void(entity, string, float, string))
 	METHOD(Button, draw, void(entity))
 	METHOD(Button, showNotify, void(entity))

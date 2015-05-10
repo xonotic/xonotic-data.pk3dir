@@ -1,5 +1,5 @@
-#ifndef SHARED_DEFS_H
-#define SHARED_DEFS_H
+#ifndef COMMAND_H
+#define COMMAND_H
 
 // =========================================================
 //  Shared declarations for all commands, written by Samual

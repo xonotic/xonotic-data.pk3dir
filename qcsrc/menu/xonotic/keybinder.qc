@@ -1,7 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
+#ifndef KEYBINDER_H
+#define KEYBINDER_H
+#include "listbox.qc"
+CLASS(XonoticKeyBinder, XonoticListBox)
 	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity))
-	ATTRIB(XonoticKeyBinder, rowsPerItem, float, 1)
+	ATTRIB(XonoticKeyBinder, rowsPerItem, int, 1)
 	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticKeyBinder, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -16,7 +18,7 @@ CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticKeyBinder, columnKeysOrigin, float, 0)
 	ATTRIB(XonoticKeyBinder, columnKeysSize, float, 0)
 
-	ATTRIB(XonoticKeyBinder, previouslySelected, float, -1)
+	ATTRIB(XonoticKeyBinder, previouslySelected, int, -1)
 	ATTRIB(XonoticKeyBinder, inMouseHandler, float, 0)
 	ATTRIB(XonoticKeyBinder, userbindEditButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, keyGrabButton, entity, NULL)
@@ -28,21 +30,22 @@ entity makeXonoticKeyBinder();
 void KeyBinder_Bind_Change(entity btn, entity me);
 void KeyBinder_Bind_Clear(entity btn, entity me);
 void KeyBinder_Bind_Edit(entity btn, entity me);
+void KeyBinder_Bind_Reset_All(entity btn, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
 
 const string KEY_NOT_BOUND_CMD = "// not bound";
 
-const float MAX_KEYS_PER_FUNCTION = 2;
-const float MAX_KEYBINDS = 256;
+const int MAX_KEYS_PER_FUNCTION = 2;
+const int MAX_KEYBINDS = 256;
 string Xonotic_KeyBinds_Functions[MAX_KEYBINDS];
 string Xonotic_KeyBinds_Descriptions[MAX_KEYBINDS];
-float Xonotic_KeyBinds_Count = -1;
+int Xonotic_KeyBinds_Count = -1;
 
 void Xonotic_KeyBinds_Read()
 {
-	float fh;
+	int fh;
 	string s;
 
 	Xonotic_KeyBinds_Count = 0;
@@ -65,13 +68,14 @@ void Xonotic_KeyBinds_Read()
 entity makeXonoticKeyBinder()
 {
 	entity me;
-	me = spawnXonoticKeyBinder();
+	me = NEW(XonoticKeyBinder);
 	me.configureXonoticKeyBinder(me);
 	return me;
 }
 void replace_bind(string from, string to)
 {
-	float n, j, k;
+	int n, j;
+	float k; // not sure if float or int
 	n = tokenize(findkeysforcommand(from, 0)); // uses '...' strings
 	for(j = 0; j < n; ++j)
 	{
@@ -130,9 +134,10 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 	me.clearButton.disabled = 1;
 	keyGrabber = me;
 }
-void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
+void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 {
-	float n, j, k, nvalid;
+	int n, j, nvalid;
+	float k;
 	string func;
 
 	me.keyGrabButton.forcePressed = 0;
@@ -249,7 +254,7 @@ void XonoticKeyBinder_doubleClickListBoxItem(entity me, float i, vector where)
 {
 	KeyBinder_Bind_Change(NULL, me);
 }
-void XonoticKeyBinder_setSelected(entity me, float i)
+void XonoticKeyBinder_setSelected(entity me, int i)
 {
 	// handling of "unselectable" items
 	i = floor(0.5 + bound(0, i, me.nItems - 1));
@@ -276,10 +281,9 @@ void XonoticKeyBinder_setSelected(entity me, float i)
 		me.userbindEditButton.disabled = (substring(Xonotic_KeyBinds_Descriptions[i], 0, 1) != "$");
 	SUPER(XonoticKeyBinder).setSelected(me, i);
 }
-float XonoticKeyBinder_keyDown(entity me, float key, float ascii, float shift)
+float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 {
-	float r;
-	r = 1;
+	bool r = true;
 	switch(key)
 	{
 		case K_ENTER:
@@ -298,10 +302,11 @@ float XonoticKeyBinder_keyDown(entity me, float key, float ascii, float shift)
 	}
 	return r;
 }
-void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected)
 {
 	string s;
-	float j, k, n;
+	int j, n;
+	float k;
 	vector theColor;
 	float theAlpha;
 	string func, descr;

@@ -1,8 +1,17 @@
+#include "_all.qh"
 #include "round_handler.qh"
 
 #include "bot/waypoints.qh"
 
 #include "weapons/throwing.qh"
+#include "command/common.qh"
+#include "cheats.qh"
+#include "bot/navigation.qh"
+#include "weapons/selection.qh"
+#include "weapons/tracing.qh"
+#include "weapons/weaponsystem.qh"
+#include "vehicles/vehicle.qh"
+#include "waypointsprites.qh"
 
 #include "../common/weapons/weapons.qh"
 
@@ -132,7 +141,7 @@ void ImpulseCommands (void)
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
-			i = imp % 10;
+			int i = imp % 10;
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
 		}

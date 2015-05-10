@@ -1,3 +1,4 @@
+#include "../pathlib.qh"
 
 #ifdef TURRET_DEBUG
 void mark_error(vector where,float lifetime);
@@ -64,6 +65,8 @@ void pathlib_showsquare2(entity node ,vector ncolor,float align)
         node.angles_x -= 90;
     }
 }
+
+void SUB_Remove();
 
 void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 {

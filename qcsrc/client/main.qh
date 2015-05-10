@@ -1,6 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include "../common/constants.qh"
+
 // --------------------------------------------------------------------------
 // MENU Functionality
 
@@ -105,6 +107,8 @@ int switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
+
+void Fog_Force();
 
 string getcommandkey(string text, string command);
 

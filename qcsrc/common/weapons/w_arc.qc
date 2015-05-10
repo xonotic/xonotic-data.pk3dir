@@ -127,7 +127,7 @@ vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as 
 #ifdef SVQC
 void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC); }
 
-float W_Arc_Beam_Send(entity to, float sf)
+float W_Arc_Beam_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 
@@ -636,7 +636,7 @@ void Arc_Smoke()
 	}
 }
 
-float W_Arc(float req)
+bool W_Arc(int req)
 {
 	switch(req)
 	{
@@ -1521,7 +1521,7 @@ void Ent_ReadArcBeam(float isnew)
 	}
 }
 
-float W_Arc(float req)
+bool W_Arc(int req)
 {
 	switch(req)
 	{

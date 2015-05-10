@@ -1,6 +1,6 @@
 #include "monsters.qh"
 
-#include "all.qh"
+#include "all.inc"
 
 // MONSTER PLUGIN SYSTEM
 entity monster_info[MON_MAXCOUNT];

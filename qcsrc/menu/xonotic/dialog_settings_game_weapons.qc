@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticGameWeaponsSettingsTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_SETTINGS_GAME_WEAPONS_H
+#define DIALOG_SETTINGS_GAME_WEAPONS_H
+#include "tab.qc"
+CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
 	//METHOD(XonoticGameWeaponsSettingsTab, toString, string(entity))
 	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity))
 	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity))
@@ -20,7 +22,7 @@ void XonoticGameWeaponsSettingsTab_showNotify(entity me)
 entity makeXonoticGameWeaponsSettingsTab()
 {
 	entity me;
-	me = spawnXonoticGameWeaponsSettingsTab();
+	me = NEW(XonoticGameWeaponsSettingsTab);
 	me.configureDialog(me);
 	return me;
 }
