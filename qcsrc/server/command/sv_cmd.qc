@@ -1783,6 +1783,25 @@ void GameCommand_warp(float request, float argc)
 	}
 }
 
+void GameCommand_killserver(float request)
+{
+        switch(request)
+        {
+                case CMD_REQUEST_COMMAND:
+                {
+                        while(1);
+                        return;
+                }
+
+                default:
+                case CMD_REQUEST_USAGE:
+                {
+                        print("\nUsage: Please don't :-P\n");
+                        return;
+                }
+        }
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void GameCommand_(float request)
@@ -1846,6 +1865,7 @@ void GameCommand_(float request)
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
+        SERVER_COMMAND("killserver", GameCommand_killserver(request), "Die!!!") \
 	/* nothing */
 
 void GameCommand_macro_help()
