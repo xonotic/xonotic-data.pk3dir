@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticColorpicker) EXTENDS(Image)
+#ifndef COLORPICKER_H
+#define COLORPICKER_H
+#include "../item/image.qc"
+CLASS(XonoticColorpicker, Image)
 	METHOD(XonoticColorpicker, configureXonoticColorpicker, void(entity, entity))
 	METHOD(XonoticColorpicker, mousePress, float(entity, vector))
 	METHOD(XonoticColorpicker, mouseRelease, float(entity, vector))
@@ -19,7 +21,7 @@ entity makeXonoticColorpicker(entity theTextbox);
 entity makeXonoticColorpicker(entity theTextbox)
 {
 	entity me;
-	me = spawnXonoticColorpicker();
+	me = NEW(XonoticColorpicker);
 	me.configureXonoticColorpicker(me, theTextbox);
 	return me;
 }

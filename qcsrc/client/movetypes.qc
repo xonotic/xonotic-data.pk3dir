@@ -1,14 +1,12 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/stats.qh"
-	#include "../common/util.qh"
-	#include "movetypes.qh"
-	#include "../csqcmodellib/common.qh"
-	#include "../server/t_items.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "movetypes.qh"
+#include "_all.qh"
+
+#include "t_items.qh"
+
+#include "../common/stats.qh"
+#include "../common/util.qh"
+
+#include "../csqcmodellib/common.qh"
 
 
 const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;

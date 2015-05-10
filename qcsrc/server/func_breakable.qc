@@ -1,3 +1,11 @@
+#include "_all.qh"
+
+#include "g_subs.qh"
+#include "waypointsprites.qh"
+#include "g_damage.qh"
+#include "bot/bot.qh"
+#include "../common/csqcmodel_settings.qh"
+#include "../csqcmodellib/sv_model.qh"
 #include "weapons/common.qh"
 
 .entity sprite;

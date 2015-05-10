@@ -13,5 +13,16 @@ const float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeat
 
 void CheckRules_Player();
 void IntermissionThink();
+void GotoNextMap(float reinit);
+void ReadyRestart();
+
+void DumpStats(float final);
+float Map_IsRecent(string m);
+string GetNextMap();
+void ShuffleMaplist();
+void Map_Goto_SetStr(string nextmapname);
+void Map_Goto(float reinit);
+float DoNextMapOverride(float reinit);
+void CheckRules_World();
 
 #endif

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(Container) EXTENDS(Item)
+#ifndef ITEM_CONTAINER_H
+#define ITEM_CONTAINER_H
+#include "../item.qc"
+CLASS(Container, Item)
 	METHOD(Container, draw, void(entity))
 	METHOD(Container, keyUp, float(entity, float, float, float))
 	METHOD(Container, keyDown, float(entity, float, float, float))
@@ -117,9 +119,9 @@ void Container_resizeNotifyLie(entity me, vector relOrigin, vector relSize, vect
 	float d;
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
-		o = e.originField;
-		s = e.sizeField;
-		me.enterLieSubitem(me, o, s, e.fontScaleField, e.Container_alpha);
+		o = e.(originField);
+		s = e.(sizeField);
+		me.enterLieSubitem(me, o, s, e.(fontScaleField), e.Container_alpha);
 		e.resizeNotify(e, o, s, boxToGlobal(o, absOrigin, absSize), boxToGlobalSize(s, absSize));
 		me.leaveSubitem(me);
 	}
@@ -131,9 +133,9 @@ void Container_resizeNotifyLie(entity me, vector relOrigin, vector relSize, vect
 			{
 				e.resized = 0;
 				d = 1;
-				o = e.originField;
-				s = e.sizeField;
-				me.enterLieSubitem(me, o, s, e.fontScaleField, e.Container_alpha);
+				o = e.(originField);
+				s = e.(sizeField);
+				me.enterLieSubitem(me, o, s, e.(fontScaleField), e.Container_alpha);
 				e.resizeNotify(e, o, s, boxToGlobal(o, absOrigin, absSize), boxToGlobalSize(s, absSize));
 				me.leaveSubitem(me);
 			}

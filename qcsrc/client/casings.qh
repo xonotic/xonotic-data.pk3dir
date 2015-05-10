@@ -1,0 +1,8 @@
+#ifndef CASINGS_H
+#define CASINGS_H
+
+void Casings_Precache();
+
+void Ent_Casing(float isNew);
+
+#endif

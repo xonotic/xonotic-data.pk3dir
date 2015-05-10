@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticScreenshotBrowserTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_H
+#define DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_H
+#include "tab.qc"
+CLASS(XonoticScreenshotBrowserTab, XonoticTab)
 	METHOD(XonoticScreenshotBrowserTab, fill, void(entity))
 	ATTRIB(XonoticScreenshotBrowserTab, intendedWidth, float, 1)
 	ATTRIB(XonoticScreenshotBrowserTab, rows, float, 21)
@@ -17,7 +19,7 @@ entity makeXonoticScreenshotBrowserTab();
 entity makeXonoticScreenshotBrowserTab()
 {
 	entity me;
-	me = spawnXonoticScreenshotBrowserTab();
+	me = NEW(XonoticScreenshotBrowserTab);
 	me.configureDialog(me);
 	return me;
 }

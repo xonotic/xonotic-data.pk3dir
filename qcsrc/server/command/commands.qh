@@ -1,0 +1,15 @@
+#ifndef SERVER_COMMANDS_H
+#define SERVER_COMMANDS_H
+
+#include "../../common/command/commands.qh"
+
+#include "sv_cmd.qh"
+
+#include "banning.qh"
+#include "cmd.qh"
+#include "common.qh"
+#include "getreplies.qh"
+#include "radarmap.qh"
+#include "vote.qh"
+
+#endif

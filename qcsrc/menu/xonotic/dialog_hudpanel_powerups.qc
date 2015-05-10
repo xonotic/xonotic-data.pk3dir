@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDPowerupsDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_HUDPANEL_POWERUPS_H
+#define DIALOG_HUDPANEL_POWERUPS_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDPowerupsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDPowerupsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDPowerupsDialog, title, string, _("Powerups Panel"))
 	ATTRIB(XonoticHUDPowerupsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticGameCrosshairSettingsTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_SETTINGS_GAME_CROSSHAIR_H
+#define DIALOG_SETTINGS_GAME_CROSSHAIR_H
+#include "tab.qc"
+CLASS(XonoticGameCrosshairSettingsTab, XonoticTab)
 	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity))
 	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity))
 	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9)
@@ -17,7 +19,7 @@ void XonoticGameCrosshairSettingsTab_showNotify(entity me)
 entity makeXonoticGameCrosshairSettingsTab()
 {
 	entity me;
-	me = spawnXonoticGameCrosshairSettingsTab();
+	me = NEW(XonoticGameCrosshairSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

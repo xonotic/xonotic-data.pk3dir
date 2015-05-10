@@ -1,0 +1,8 @@
+#ifndef MENU_COMMANDS_H
+#define MENU_COMMANDS_H
+
+#include "../../common/command/commands.qh"
+
+#include "menu_cmd.qh"
+
+#endif

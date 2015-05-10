@@ -1,19 +1,13 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/getreplies.qh"
-    #include "command/cmd.qh"
-    #include "../common/playerstats.qh"
-    #include "mapvoting.qh"
-#endif
+#include "mapvoting.qh"
+#include "_all.qh"
+
+#include "g_world.qh"
+#include "command/cmd.qh"
+#include "command/getreplies.qh"
+#include "../common/constants.qh"
+#include "../common/mapinfo.qh"
+#include "../common/playerstats.qh"
+#include "../common/util.qh"
 
 float GameTypeVote_AvailabilityStatus(string gtname)
 {

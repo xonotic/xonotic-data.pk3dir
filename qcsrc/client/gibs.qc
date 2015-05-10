@@ -1,4 +1,17 @@
 #include "gibs.qh"
+#include "_all.qh"
+
+#include "movetypes.qh"
+#include "prandom.qh"
+#include "rubble.qh"
+
+#include "../common/constants.qh"
+#include "../common/util.qh"
+
+.float scale;
+.float alpha;
+.float cnt;
+.float gravity;
 
 void Gib_Delete()
 {

@@ -52,4 +52,5 @@ float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was al
 .float ready; // flag for if a player is ready
 void reset_map(float dorespawn);
 void ReadyCount();
+void ReadyRestart_force();
 #endif

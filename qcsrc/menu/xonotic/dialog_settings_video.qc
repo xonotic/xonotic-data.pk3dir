@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticVideoSettingsTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_SETTINGS_VIDEO_H
+#define DIALOG_SETTINGS_VIDEO_H
+#include "tab.qc"
+CLASS(XonoticVideoSettingsTab, XonoticTab)
 	METHOD(XonoticVideoSettingsTab, fill, void(entity))
 	ATTRIB(XonoticVideoSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticVideoSettingsTab, rows, float, 15.5)
@@ -13,7 +15,7 @@ entity makeXonoticVideoSettingsTab();
 entity makeXonoticVideoSettingsTab()
 {
 	entity me;
-	me = spawnXonoticVideoSettingsTab();
+	me = NEW(XonoticVideoSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

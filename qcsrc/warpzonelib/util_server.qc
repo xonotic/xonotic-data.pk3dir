@@ -1,11 +1,13 @@
+#include "util_server.qh"
+
+#include "common.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "common.qh"
-    #include "util_server.qh"
     #include "../csqcmodellib/sv_model.qh"
+    #include "../dpdefs/dpextensions.qh"
+	#include "../dpdefs/progsdefs.qh"
 #endif
 
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)

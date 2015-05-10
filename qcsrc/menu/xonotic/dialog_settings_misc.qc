@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticMiscSettingsTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_SETTINGS_MISC_H
+#define DIALOG_SETTINGS_MISC_H
+#include "tab.qc"
+CLASS(XonoticMiscSettingsTab, XonoticTab)
 	METHOD(XonoticMiscSettingsTab, fill, void(entity))
 	ATTRIB(XonoticMiscSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMiscSettingsTab, rows, float, 15.5)
@@ -12,7 +14,7 @@ entity makeXonoticMiscSettingsTab();
 entity makeXonoticMiscSettingsTab()
 {
 	entity me;
-	me = spawnXonoticMiscSettingsTab();
+	me = NEW(XonoticMiscSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

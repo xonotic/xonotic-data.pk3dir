@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticCrosshairButton) EXTENDS(RadioButton)
+#ifndef CROSSHAIRBUTTON_H
+#define CROSSHAIRBUTTON_H
+#include "../item/radiobutton.qc"
+CLASS(XonoticCrosshairButton, RadioButton)
 	METHOD(XonoticCrosshairButton, configureXonoticCrosshairButton, void(entity, float, float))
 	METHOD(XonoticCrosshairButton, setChecked, void(entity, float))
 	METHOD(XonoticCrosshairButton, draw, void(entity))
@@ -22,7 +24,7 @@ entity makeXonoticCrosshairButton(float, float);
 entity makeXonoticCrosshairButton(float theGroup, float theCrosshair)
 {
 	entity me;
-	me = spawnXonoticCrosshairButton();
+	me = NEW(XonoticCrosshairButton);
 	me.configureXonoticCrosshairButton(me, theGroup, theCrosshair);
 	return me;
 }
