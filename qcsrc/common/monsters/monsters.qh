@@ -1,6 +1,8 @@
 #ifndef MONSTERS_H
 #define MONSTERS_H
 
+#include "../util.qh"
+
 // monster requests
 const int MR_SETUP = 1; // (SERVER) setup monster data
 const int MR_THINK = 2; // (SERVER) logic to run every frame
@@ -64,7 +66,7 @@ int MON_LAST;
 	REGISTER_MONSTER_2(MON_##id,func,monsterflags,min_s,max_s,modelname,shortname,mname)
 #endif
 
-#include "all.qh"
+#include "all.inc"
 
 #undef REGISTER_MONSTER
 ACCUMULATE_FUNCTION(RegisterMonsters, register_monsters_done);

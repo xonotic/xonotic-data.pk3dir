@@ -5,6 +5,10 @@
 #include "calculations.qh"
 #endif
 
+#include "../util.qh"
+#ifdef SVQC
+#include "../../server/bot/aim.qh"
+#endif
 const int MAX_SHOT_DISTANCE = 32768;
 
 // weapon pickup ratings for bot logic
@@ -199,7 +203,7 @@ void register_weapons_done();
 	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname)
 #endif
 
-#include "all.qh"
+#include "all.inc"
 
 #undef WEP_ADD_CVAR_MO_PRI
 #undef WEP_ADD_CVAR_MO_SEC

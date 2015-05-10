@@ -1,7 +1,9 @@
 #include "../../common/weapons/weapons.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticMutatorsDialog) EXTENDS(XonoticDialog)
+#ifndef DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
+#define DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
+#include "dialog.qc"
+CLASS(XonoticMutatorsDialog, XonoticDialog)
 	METHOD(XonoticMutatorsDialog, toString, string(entity))
 	METHOD(XonoticMutatorsDialog, fill, void(entity))
 	METHOD(XonoticMutatorsDialog, showNotify, void(entity))

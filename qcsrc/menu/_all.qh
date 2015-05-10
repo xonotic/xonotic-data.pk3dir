@@ -1,0 +1,7 @@
+#ifndef CLIENT___H
+#define CLIENT___H
+
+#include "../dpdefs/menudefs.qh"
+#include "../dpdefs/keycodes.qh"
+
+#endif

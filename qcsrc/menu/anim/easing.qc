@@ -1,15 +1,17 @@
-#ifdef INTERFACE
-CLASS(Easing) EXTENDS(Animation)
-	METHOD(Easing, calcValue, float(entity, float, float, float, float))
-	METHOD(Easing, setMath, void(entity, float(float, float, float, float)))
-	ATTRIB(Easing, math, float(float, float, float, float), easingLinear)
-ENDCLASS(Easing)
+#ifndef ANIM_EASING_H
+#define ANIM_EASING_H
+#include "animation.qc"
 entity makeHostedEasing(entity, void(entity, float), float(float, float, float, float), float, float, float);
 entity makeEasing(entity, void(entity, float), float(float, float, float, float), float, float, float, float);
 float easingLinear(float, float, float, float);
 float easingQuadIn(float, float, float, float);
 float easingQuadOut(float, float, float, float);
 float easingQuadInOut(float, float, float, float);
+CLASS(Easing, Animation)
+	METHOD(Easing, calcValue, float(entity, float, float, float, float))
+	METHOD(Easing, setMath, void(entity, float(float, float, float, float)))
+	ATTRIB(Easing, math, float(float, float, float, float), easingLinear)
+ENDCLASS(Easing)
 #endif
 
 #ifdef IMPLEMENTATION
@@ -24,7 +26,7 @@ entity makeHostedEasing(entity obj, void(entity, float) objSetter, float(float, 
 entity makeEasing(entity obj, void(entity, float) objSetter, float(float, float, float, float) func, float animStartTime, float animDuration, float animStartValue, float animEnd)
 {
 	entity me;
-	me = spawnEasing();
+	me = NEW(Easing);
 	me.configureAnimation(me, obj, objSetter, animStartTime, animDuration, animStartValue, animEnd);
 	me.setMath(me, func);
 	return me;

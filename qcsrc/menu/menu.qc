@@ -1,7 +1,9 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "menu.qh"
+#include "oo/classes.qc"
+#include "xonotic/util.qh"
+
+#include "../common/weapons/weapons.qh"
+#include "../common/mapinfo.qh"
 
 ///////////////////////////////////////////////
 // Menu Source File
@@ -211,8 +213,8 @@ void m_init_delayed()
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 
 	loadTooltips();
-	anim = spawnAnimHost();
-	main = spawnMainWindow(); main.configureMainWindow(main);
+	anim = NEW(AnimHost);
+	main = NEW(MainWindow); main.configureMainWindow(main);
 	unloadTooltips();
 
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);

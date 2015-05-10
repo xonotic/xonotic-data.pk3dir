@@ -1,4 +1,29 @@
-#include "../common/weapons/weapons.qc"
+#include "_all.qh"
+
+#include "../common/weapons/weapons.qh"
+#include "../common/buffs.qh"
+
+void spawnfunc_weapon_crylink();
+void spawnfunc_weapon_electro();
+void spawnfunc_weapon_hagar();
+void spawnfunc_weapon_machinegun();
+void spawnfunc_weapon_vortex();
+
+void spawnfunc_target_items();
+
+void spawnfunc_item_bullets();
+void spawnfunc_item_cells();
+void spawnfunc_item_rockets();
+void spawnfunc_item_shells();
+
+void spawnfunc_item_jetpack();
+
+void spawnfunc_item_armor_big();
+void spawnfunc_item_armor_large();
+void spawnfunc_item_armor_small();
+
+void spawnfunc_item_health_medium();
+void spawnfunc_item_health_mega();
 
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons

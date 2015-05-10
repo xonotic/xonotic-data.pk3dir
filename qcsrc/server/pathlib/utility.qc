@@ -1,3 +1,7 @@
+#include "utility.qh"
+
+#include "pathlib.qh"
+
 float fsnap(float val,float fsize)
 {
     return rint(val / fsize) * fsize;

@@ -1,0 +1,11 @@
+#ifndef CLIENT___H
+#define CLIENT___H
+
+#include "autocvars.qh"
+#include "defs.qh"
+#include "main.qh"
+#include "miscfunctions.qh"
+
+#include "../dpdefs/csprogsdefs.qh"
+
+#endif

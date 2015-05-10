@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticServerList) EXTENDS(XonoticListBox)
+#ifndef SERVERLIST_H
+#define SERVERLIST_H
+#include "listbox.qc"
+CLASS(XonoticServerList, XonoticListBox)
 	METHOD(XonoticServerList, configureXonoticServerList, void(entity))
 	ATTRIB(XonoticServerList, rowsPerItem, float, 1)
 	METHOD(XonoticServerList, draw, void(entity))
@@ -440,7 +442,7 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 entity makeXonoticServerList()
 {
 	entity me;
-	me = spawnXonoticServerList();
+	me = NEW(XonoticServerList);
 	me.configureXonoticServerList(me);
 	return me;
 }

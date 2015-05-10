@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticCreditsDialog) EXTENDS(XonoticDialog)
+#ifndef DIALOG_CREDITS_H
+#define DIALOG_CREDITS_H
+#include "dialog.qc"
+CLASS(XonoticCreditsDialog, XonoticDialog)
 	METHOD(XonoticCreditsDialog, fill, void(entity))
 	METHOD(XonoticCreditsDialog, focusEnter, void(entity))
 	ATTRIB(XonoticCreditsDialog, title, string, _("Credits"))

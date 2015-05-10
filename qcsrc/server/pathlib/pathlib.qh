@@ -113,10 +113,4 @@ var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);
 	#include "debug.qc"
 #endif
 
-#include "utility.qc"
-#include "movenode.qc"
-#include "costs.qc"
-#include "expandnode.qc"
-#include "main.qc"
-#include "path_waypoint.qc"
 #endif

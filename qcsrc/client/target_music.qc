@@ -1,4 +1,18 @@
 #include "target_music.qh"
+#include "_all.qh"
+
+#include "../common/constants.qh"
+#include "../common/util.qh"
+
+#include "../warpzonelib/common.qh"
+
+.string noise;
+.float cnt;
+.float count;
+.float fade_time;
+.float fade_rate;
+.float lifetime;
+.float volume;
 
 void TargetMusic_Advance()
 {
