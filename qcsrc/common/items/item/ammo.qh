@@ -1,12 +1,6 @@
 #ifndef AMMO_H
 #define AMMO_H
-#include "../item.qh"
-CLASS(Ammo, GameItem)
-    METHOD(Ammo, respondTo, bool(entity, int))
-    ATTRIB(Ammo, ammoModel, string, string_null)
-    ATTRIB(Ammo, ammoSound, string, string_null)
-    ATTRIB(Ammo, ammoName, string, string_null)
-    ATTRIB(Ammo, ammoId, int, 0)
-    ATTRIB(Ammo, ammoQuantity, int, 0)
+#include "pickup.qh"
+CLASS(Ammo, Pickup)
 ENDCLASS(Ammo)
 #endif

@@ -1,0 +1,6 @@
+#ifndef HEALTH_H
+#define HEALTH_H
+#include "pickup.qh"
+CLASS(Health, Pickup)
+ENDCLASS(Health)
+#endif

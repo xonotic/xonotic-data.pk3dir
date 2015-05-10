@@ -1,0 +1,49 @@
+#ifndef PICKUP_H
+#define PICKUP_H
+#include "../item.qh"
+CLASS(Pickup, GameItem)
+    METHOD(Pickup, respondTo, bool(entity, int))
+    ATTRIB(Pickup, m_model, string, string_null)
+    ATTRIB(Pickup, m_sound, string, string_null)
+    ATTRIB(Pickup, m_respawntime, int, 0)
+    ATTRIB(Pickup, m_respawntimejitter, int, 0)
+    ATTRIB(Pickup, m_name, string, string_null)
+    ATTRIB(Pickup, m_itemid, int, 0)
+    ATTRIB(Pickup, m_botvalue, int, 0)
+ENDCLASS(Pickup)
+
+#define SPAWNTIMES(_) \
+    _(WEAPON, weapon) \
+    _(AMMO, ammo) \
+    _(SHORT, short) \
+    _(MEDIUM, medium) \
+    _(LONG, long) \
+    /**/
+
+#define SPAWNTIMES_ENUM(id, idlc) SPAWNTIME_##id ,
+enum { SPAWNTIMES(SPAWNTIMES_ENUM) };
+#undef SPAWNTIMES_ENUM
+
+#ifdef SVQC
+#include "../../../server/defs.qh"
+
+#define SPAWNTIMES_MAP(id, idlc) i == SPAWNTIME_##id ? g_pickup_respawntime_##idlc :
+[[inline]] int spawntime(int i) { return SPAWNTIMES(SPAWNTIMES_MAP) 0; }
+#undef SPAWNTIMES_MAP
+
+#define SPAWNTIMES_MAP(id, idlc) i == SPAWNTIME_##id ? g_pickup_respawntimejitter_##idlc :
+[[inline]] int spawntimejitter(int i) { return SPAWNTIMES(SPAWNTIMES_MAP) 0; }
+#undef SPAWNTIMES_MAP
+#endif
+
+bool Pickup_respondTo(entity this, int request)
+{
+    switch (request) {
+        default: return false;
+        case ITEM_SIGNAL(Default):
+            print(strcat(this.m_name, " responding\n"));
+            return true;
+    }
+}
+
+#endif

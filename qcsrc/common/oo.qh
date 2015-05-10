@@ -35,35 +35,35 @@ entity spawnObject(entity this, entity)
 // Macro to hide this implementation detail
 #define NEW(cname) (spawn##cname(NULL, NULL))
 
-#define CLASS(cname, base)                                          \
-entity spawn##cname(entity this, entity basevtbl) {                 \
-    this = NEW(base); basevtbl = base##_vtbl;                       \
+#define CLASS(cname, base)                                          		\
+entity spawn##cname(entity this, entity basevtbl) {                 		\
+    this = NEW(base); basevtbl = base##_vtbl;                       		\
 }
 
-#define METHOD(cname, name, prototype)                              \
-prototype cname##_##name;                                           \
-.prototype name;                                                    \
-[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
-    this.name = cname##_##name;                                     \
+#define METHOD(cname, name, prototype)                              		\
+prototype cname##_##name;                                           		\
+.prototype name;                                                    		\
+[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  		\
+    this.name = cname##_##name;                                     		\
 }
 
-#define ATTRIB(cname, name, type, val)                              \
-.type name;                                                         \
-[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  \
-    this.name = val;                                                \
+#define ATTRIB(cname, name, type, val)                              		\
+.type name;                                                         		\
+[[accumulate]] entity spawn##cname(entity this, entity basevtbl) {  		\
+    this.name = val;                                                		\
 }
 
-#define ATTRIBARRAY(cname, name, type, cnt)                         \
+#define ATTRIBARRAY(cname, name, type, cnt)                         		\
 .type name[cnt];
 
-#define ENDCLASS(cname)                                             \
-.bool instanceOf##cname;                                            \
-entity cname##_vtbl;                                                \
-[[last]] entity spawn##cname(entity this, entity basevtbl) {        \
-    this.instanceOf##cname = true;                                  \
-    this.classname = #cname;                                        \
-    if (!cname##_vtbl) cname##_vtbl = spawnVtbl(this, basevtbl);    \
-    return this;                                                    \
+#define ENDCLASS(cname)                                             		\
+.bool instanceOf##cname;                                            		\
+entity cname##_vtbl;                                                		\
+[[accumulate]] [[last]] entity spawn##cname(entity this, entity basevtbl) {	\
+    this.instanceOf##cname = true;                                  		\
+    this.classname = #cname;                                        		\
+    if (!cname##_vtbl) cname##_vtbl = spawnVtbl(this, basevtbl);    		\
+    return this;                                                    		\
 }
 
 #define SUPER(cname) (cname##_vtbl.vtblbase)
