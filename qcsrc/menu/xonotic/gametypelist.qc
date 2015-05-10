@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticGametypeList) EXTENDS(XonoticListBox)
+#ifndef GAMETYPELIST_H
+#define GAMETYPELIST_H
+#include "listbox.qc"
+CLASS(XonoticGametypeList, XonoticListBox)
 	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity))
 	ATTRIB(XonoticGametypeList, rowsPerItem, float, 2)
 	METHOD(XonoticGametypeList, drawListBoxItem, void(entity, int, vector, bool, bool))
@@ -25,7 +27,7 @@ entity makeXonoticGametypeList();
 entity makeXonoticGametypeList(void)
 {
 	entity me;
-	me = spawnXonoticGametypeList();
+	me = NEW(XonoticGametypeList);
 	me.configureXonoticGametypeList(me);
 	return me;
 }

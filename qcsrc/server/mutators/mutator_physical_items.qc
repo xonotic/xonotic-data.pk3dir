@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .vector spawn_origin, spawn_angles;
 
 void physical_item_think()

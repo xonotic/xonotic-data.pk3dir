@@ -1,5 +1,13 @@
 #include "mapvoting.qh"
+#include "_all.qh"
+
+#include "hud.qh"
 #include "scoreboard.qh"
+
+#include "../common/mapinfo.qh"
+#include "../common/util.qh"
+
+#include "../dpdefs/keycodes.qh"
 
 string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, vector fontsize)
 {

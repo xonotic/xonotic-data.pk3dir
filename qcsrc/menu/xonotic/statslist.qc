@@ -1,8 +1,10 @@
 #include "../../common/counting.qh"
 #include "../../common/playerstats.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticStatsList) EXTENDS(XonoticListBox)
+#ifndef STATSLIST_H
+#define STATSLIST_H
+#include "listbox.qc"
+CLASS(XonoticStatsList, XonoticListBox)
 	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))
 	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)
 	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -32,7 +34,7 @@ entity makeXonoticStatsList();
 entity makeXonoticStatsList()
 {
 	entity me;
-	me = spawnXonoticStatsList();
+	me = NEW(XonoticStatsList);
 	me.configureXonoticStatsList(me);
 	return me;
 }

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticPicker) EXTENDS(Item)
+#ifndef PICKER_H
+#define PICKER_H
+#include "../item.qc"
+CLASS(XonoticPicker, Item)
 	METHOD(XonoticPicker, configureXonoticPicker, void(entity))
 	METHOD(XonoticPicker, mousePress, float(entity, vector))
 	METHOD(XonoticPicker, mouseRelease, float(entity, vector))
@@ -34,7 +36,7 @@ entity makeXonoticPicker();
 entity makeXonoticPicker()
 {
 	entity me;
-	me = spawnXonoticPicker();
+	me = NEW(XonoticPicker);
 	me.configureXonoticPicker(me);
 	return me;
 }

@@ -1,7 +1,9 @@
 #include "../../common/campaign_common.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticCampaignList) EXTENDS(XonoticListBox)
+#ifndef CAMPAIGN_H
+#define CAMPAIGN_H
+#include "listbox.qc"
+CLASS(XonoticCampaignList, XonoticListBox)
 	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity))
 	ATTRIB(XonoticCampaignList, rowsPerItem, float, 10)
 	METHOD(XonoticCampaignList, draw, void(entity))
@@ -92,7 +94,7 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 entity makeXonoticCampaignList()
 {
 	entity me;
-	me = spawnXonoticCampaignList();
+	me = NEW(XonoticCampaignList);
 	me.configureXonoticCampaignList(me);
 	return me;
 }

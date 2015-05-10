@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticCvarList) EXTENDS(XonoticListBox)
+#ifndef CVARLIST_H
+#define CVARLIST_H
+#include "listbox.qc"
+CLASS(XonoticCvarList, XonoticListBox)
 	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity))
 	ATTRIB(XonoticCvarList, rowsPerItem, float, 1)
 	METHOD(XonoticCvarList, drawListBoxItem, void(entity, int, vector, bool, bool))
@@ -44,7 +46,7 @@ void CvarList_End_Editing(entity box, entity me);
 entity makeXonoticCvarList()
 {
 	entity me;
-	me = spawnXonoticCvarList();
+	me = NEW(XonoticCvarList);
 	me.configureXonoticCvarList(me);
 	return me;
 }

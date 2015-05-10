@@ -1,10 +1,5 @@
-const float RSM_FIRST = 0;
-const float RSM_BOMB = 0;
-const float RSM_FLARE = 1;
-const float RSM_LAST = 1;
-
-const vector RAPTOR_MIN = '-80 -80 0';
-const vector RAPTOR_MAX = '80 80 70';
+#include "vehicle.qh"
+#include "raptor.qh"
 
 #ifdef SVQC
 float autocvar_g_vehicle_raptor;

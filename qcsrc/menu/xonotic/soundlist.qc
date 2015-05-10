@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticSoundList) EXTENDS(XonoticListBox)
+#ifndef SOUNDLIST_H
+#define SOUNDLIST_H
+#include "listbox.qc"
+CLASS(XonoticSoundList, XonoticListBox)
 	METHOD(XonoticSoundList, configureXonoticSoundList, void(entity))
 	ATTRIB(XonoticSoundList, rowsPerItem, float, 1)
 	METHOD(XonoticSoundList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -38,7 +40,7 @@ void SoundList_Menu_Track_Reset(entity box, entity me);
 entity makeXonoticSoundList()
 {
 	entity me;
-	me = spawnXonoticSoundList();
+	me = NEW(XonoticSoundList);
 	me.configureXonoticSoundList(me);
 	return me;
 }

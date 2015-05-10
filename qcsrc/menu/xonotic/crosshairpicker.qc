@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticCrosshairPicker) EXTENDS(XonoticPicker)
+#ifndef CROSSHAIRPICKER_H
+#define CROSSHAIRPICKER_H
+#include "picker.qc"
+CLASS(XonoticCrosshairPicker, XonoticPicker)
 	METHOD(XonoticCrosshairPicker, configureXonoticCrosshairPicker, void(entity))
 
 	ATTRIB(XonoticCrosshairPicker, rows, float, 3)
@@ -32,7 +34,7 @@ vector crosshairpicker_crosshairToCell(entity me, string crosshair_str)
 entity makeXonoticCrosshairPicker()
 {
 	entity me;
-	me = spawnXonoticCrosshairPicker();
+	me = NEW(XonoticCrosshairPicker);
 	me.configureXonoticCrosshairPicker(me);
 	return me;
 }

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticCrosshairPreview) EXTENDS(Item)
+#ifndef CROSSHAIRPREVIEW_H
+#define CROSSHAIRPREVIEW_H
+#include "../item.qc"
+CLASS(XonoticCrosshairPreview, Item)
 	METHOD(XonoticCrosshairPreview, configureXonoticCrosshairPreview, void(entity))
 	METHOD(XonoticCrosshairPreview, draw, void(entity))
 	ATTRIB(XonoticCrosshairPreview, src, string, string_null)
@@ -14,7 +16,7 @@ entity makeXonoticCrosshairPreview();
 entity makeXonoticCrosshairPreview()
 {
 	entity me;
-	me = spawnXonoticCrosshairPreview();
+	me = NEW(XonoticCrosshairPreview);
 	me.configureXonoticCrosshairPreview(me);
 	return me;
 }

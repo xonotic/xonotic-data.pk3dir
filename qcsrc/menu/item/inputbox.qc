@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(InputBox) EXTENDS(Label)
+#ifndef ITEM_INPUTBOX_H
+#define ITEM_INPUTBOX_H
+#include "label.qc"
+CLASS(InputBox, Label)
 	METHOD(InputBox, configureInputBox, void(entity, string, float, float, string))
 	METHOD(InputBox, draw, void(entity))
 	METHOD(InputBox, setText, void(entity, string))

@@ -1,0 +1,47 @@
+#ifndef MUTATOR_H
+#define MUTATOR_H
+
+#include "base.qh"
+#include "mutator_nades.qh"
+
+#include "../cl_client.qh"
+#include "../cl_player.qh"
+#include "../cl_impulse.qh"
+#include "../cheats.qh"
+#include "../g_damage.qh"
+#include "../g_subs.qh"
+#include "../t_teleporters.qh"
+#include "../round_handler.qh"
+#include "../scores.qh"
+#include "../scores_rules.qh"
+#include "../waypointsprites.qh"
+
+#include "../bot/bot.qh"
+#include "../bot/navigation.qh"
+#include "../bot/waypoints.qh"
+
+#include "../bot/havocbot/havocbot.qh"
+#include "../bot/havocbot/roles.qh"
+#include "../bot/havocbot/role_keyhunt.qh"
+
+#include "../command/vote.qh"
+#include "../command/common.qh"
+
+#include "../weapons/common.qh"
+#include "../weapons/tracing.qh"
+#include "../weapons/throwing.qh"
+#include "../weapons/weaponsystem.qh"
+
+#include "../../common/deathtypes.qh"
+#include "../../common/notifications.qh"
+#include "../../common/stats.qh"
+#include "../../common/teams.qh"
+
+#include "../../common/monsters/monsters.qh"
+
+#include "../../warpzonelib/anglestransform.qh"
+#include "../../warpzonelib/mathlib.qh"
+#include "../../warpzonelib/server.qh"
+#include "../../warpzonelib/util_server.qh"
+
+#endif

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticDemoTimeConfirmDialog) EXTENDS(XonoticDialog)
+#ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_TIMECONFIRM_H
+#define DIALOG_MULTIPLAYER_MEDIA_DEMO_TIMECONFIRM_H
+#include "dialog.qc"
+CLASS(XonoticDemoTimeConfirmDialog, XonoticDialog)
 	METHOD(XonoticDemoTimeConfirmDialog, fill, void(entity))
 	ATTRIB(XonoticDemoTimeConfirmDialog, title, string, _("Disconnect"))
 	ATTRIB(XonoticDemoTimeConfirmDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)

@@ -1,3 +1,8 @@
+#include "gamemode_keepaway.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 // ===========================================================
 //  Keepaway game mode coding, written by Samual and Diabolik
 //  Last updated: September, 2012

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticCharmap) EXTENDS(XonoticPicker)
+#ifndef CHARMAP_H
+#define CHARMAP_H
+#include "picker.qc"
+CLASS(XonoticCharmap, XonoticPicker)
 	METHOD(XonoticCharmap, configureXonoticCharmap, void(entity, entity))
 	METHOD(XonoticCharmap, focusLeave, void(entity))
 	METHOD(XonoticCharmap, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -50,7 +52,7 @@ string charmap_cellToChar(entity me, vector cell)
 entity makeXonoticCharmap(entity controlledInputBox)
 {
 	entity me;
-	me = spawnXonoticCharmap();
+	me = NEW(XonoticCharmap);
 	me.configureXonoticCharmap(me, controlledInputBox);
 	return me;
 }

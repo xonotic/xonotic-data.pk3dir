@@ -1,10 +1,13 @@
 #ifndef MAPVOTING_H
 #define MAPVOTING_H
 
+#include "../common/constants.qh"
+
 // definitions for functions used outside mapvoting.qc
 void MapVote_Start();
 void MapVote_Spawn();
 void MapVote_Think();
+void MapVote_SendPicture(float id);
 float GameTypeVote_Start();
 float GameTypeVote_Finished(float pos);
 string GameTypeVote_MapInfo_FixName(string m);

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
+#ifndef LANGUAGELIST_H
+#define LANGUAGELIST_H
+#include "listbox.qc"
+CLASS(XonoticLanguageList, XonoticListBox)
 	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity))
 	ATTRIB(XonoticLanguageList, rowsPerItem, float, 1)
 	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, int, vector, bool, bool))
@@ -43,7 +45,7 @@ const float LANGPARM_COUNT = 4;
 entity makeXonoticLanguageList()
 {
 	entity me;
-	me = spawnXonoticLanguageList();
+	me = NEW(XonoticLanguageList);
 	me.configureXonoticLanguageList(me);
 	return me;
 }

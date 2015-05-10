@@ -1,5 +1,5 @@
-#ifndef RPN_H
-#define RPN_H
+#ifndef COMMAND_RPN_H
+#define COMMAND_RPN_H
 
 // =========================================================
 //  Declarations for RPN command code, written by divVerent
