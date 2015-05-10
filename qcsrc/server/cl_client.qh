@@ -1,0 +1,13 @@
+#ifndef CL_CLIENT_H
+#define CL_CLIENT_H
+float c1, c2, c3, c4;
+
+void play_countdown(float finished, string samp);
+
+float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
+
+float Spectate(entity pl);
+
+void CTS_ClientKill (entity e);
+
+#endif

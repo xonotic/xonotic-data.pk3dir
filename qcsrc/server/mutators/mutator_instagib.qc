@@ -1,3 +1,10 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "../cl_client.qh"
+#include "../../common/buffs.qh"
+
 void spawnfunc_item_minst_cells (void)
 {
 	if (!g_instagib) { remove(self); return; }

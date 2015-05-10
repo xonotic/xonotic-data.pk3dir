@@ -1,17 +1,11 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "accuracy.qh"
-    #include "../autocvars.qh"
-    #include "../constants.qh"
-    #include "../defs.qh"
-    #include "../mutators/mutators_include.qh"
-#endif
+#include "accuracy.qh"
+#include "../_all.qh"
+
+#include "../mutators/mutators_include.qh"
+#include "../../common/constants.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/weapons.qh"
 
 float accuracy_byte(float n, float d)
 {

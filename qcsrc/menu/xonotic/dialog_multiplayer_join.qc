@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticServerListTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_MULTIPLAYER_JOIN_H
+#define DIALOG_MULTIPLAYER_JOIN_H
+#include "tab.qc"
+CLASS(XonoticServerListTab, XonoticTab)
 	METHOD(XonoticServerListTab, fill, void(entity))
 	ATTRIB(XonoticServerListTab, title, string, _("Join"))
 	ATTRIB(XonoticServerListTab, intendedWidth, float, 0.9)
@@ -14,7 +16,7 @@ entity makeXonoticServerListTab();
 entity makeXonoticServerListTab()
 {
 	entity me;
-	me = spawnXonoticServerListTab();
+	me = NEW(XonoticServerListTab);
 	me.configureDialog(me);
 	return me;
 }

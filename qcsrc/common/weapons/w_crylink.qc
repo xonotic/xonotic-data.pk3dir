@@ -563,7 +563,7 @@ void W_Crylink_Attack2(void)
 	}
 }
 
-float W_Crylink(float req)
+bool W_Crylink(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -689,7 +689,7 @@ float W_Crylink(float req)
 }
 #endif
 #ifdef CSQC
-float W_Crylink(float req)
+bool W_Crylink(int req)
 {
 	switch(req)
 	{

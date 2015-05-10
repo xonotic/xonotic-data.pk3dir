@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
+#ifndef SLIDER_RESOLUTION_H
+#define SLIDER_RESOLUTION_H
+#include "textslider.qc"
+CLASS(XonoticResolutionSlider, XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, configureXonoticResolutionSlider, void(entity))
 	METHOD(XonoticResolutionSlider, loadResolutions, void(entity, float))
 	METHOD(XonoticResolutionSlider, addResolution, void(entity, float, float, float))
@@ -83,7 +85,7 @@ float updateConwidths(float width, float height, float pixelheight)
 entity makeXonoticResolutionSlider()
 {
 	entity me;
-	me = spawnXonoticResolutionSlider();
+	me = NEW(XonoticResolutionSlider);
 	me.configureXonoticResolutionSlider(me);
 	return me;
 }

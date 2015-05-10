@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticTab) EXTENDS(Tab)
+#ifndef TAB_H
+#define TAB_H
+#include "../item/tab.qc"
+CLASS(XonoticTab, Tab)
 	// still to be customized by user
 	/*
 	ATTRIB(XonoticTab, intendedWidth, float, 0)

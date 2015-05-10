@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 MUTATOR_HOOKFUNCTION(invincibleprojectiles_EditProjectile)
 {
 	if(other.health)

@@ -1,14 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-	#include "../../dpdefs/dpextensions.qh"
-	#include "../../common/urllib.qh"
-	#include "../../common/weapons/weapons.qh"
-	#include "weaponstats.qh"
-	#include "../autocvars.qh"
-	#include "../defs.qh"
-#endif
+#include "weaponstats.qh"
+#include "../_all.qh"
+
+#include "../g_world.qh"
+
+#include "../../common/urllib.qh"
+#include "../../common/weapons/weapons.qh"
 
 void WeaponStats_Init()
 {

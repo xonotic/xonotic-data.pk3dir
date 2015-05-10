@@ -5,6 +5,10 @@
 #include "calculations.qh"
 #endif
 
+#include "../util.qh"
+#ifdef SVQC
+#include "../../server/bot/aim.qh"
+#endif
 const int MAX_SHOT_DISTANCE = 32768;
 
 // weapon pickup ratings for bot logic
@@ -48,7 +52,7 @@ string weaponorder_byid;
 
 // weapon sets
 typedef vector WepSet;
-WepSet WepSet_FromWeapon(float a);
+WepSet WepSet_FromWeapon(int a);
 #ifdef SVQC
 void WepSet_AddStat();
 void WriteWepSet(float dest, WepSet w);
@@ -67,7 +71,7 @@ WepSet WEPSET_ALL;
 WepSet WEPSET_SUPERWEAPONS;
 
 // functions:
-entity get_weaponinfo(float id);
+entity get_weaponinfo(int id);
 string W_FixWeaponOrder(string order, float complete);
 string W_UndeprecateName(string s);
 string W_NameWeaponOrder(string order);
@@ -77,21 +81,21 @@ string W_FixWeaponOrder_AllowIncomplete(string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 void W_RandomWeapons(entity e, float n);
 
-string GetAmmoPicture(.float ammotype);
+string GetAmmoPicture(.int ammotype);
 
 #ifdef CSQC
-.float GetAmmoFieldFromNum(int i);
-int GetAmmoStat(.float ammotype);
+.int GetAmmoFieldFromNum(int i);
+int GetAmmoStat(.int ammotype);
 #endif
 
 // ammo types
-.float ammo_shells;
-.float ammo_nails;
-.float ammo_rockets;
-.float ammo_cells;
-.float ammo_plasma;
-.float ammo_fuel;
-.float ammo_none;
+.int ammo_shells;
+.int ammo_nails;
+.int ammo_rockets;
+.int ammo_cells;
+.int ammo_plasma;
+.int ammo_fuel;
+.int ammo_none;
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
@@ -134,15 +138,15 @@ int GetAmmoStat(.float ammotype);
 //  Weapon Registration
 // =====================
 
-float w_null(float dummy);
+bool w_null(int dummy);
 
 void register_weapon(
-	float id,
+	int id,
 	WepSet bit,
-	float(float) func,
-	.float ammotype,
-	float i,
-	float weapontype,
+	bool(int) func,
+	.int ammotype,
+	int i,
+	int weapontype,
 	float pickupbasevalue,
 	vector clr,
 	string modelname,
@@ -159,7 +163,7 @@ void register_weapons_done();
 .int weapon;                // M: WEP_id    // WEP_...
 .WepSet weapons;            // A: WEPSET_id // WEPSET_...
 .float(float) weapon_func;  // M: function  // w_...
-..float ammo_field;         // M: ammotype  // main ammo field
+..int ammo_field;         // M: ammotype  // main ammo field
 .int impulse;               // M: impulse   // weapon impulse
 .int spawnflags;            // M: flags     // WEPSPAWNFLAG_... combined
 .float bot_pickupbasevalue; // M: rating    // bot weapon priority
@@ -179,7 +183,7 @@ void register_weapons_done();
 #define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
 	int id; \
 	WepSet bit; \
-	float function(float); \
+	bool function(int); \
 	void RegisterWeapons_##id() \
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
@@ -199,7 +203,7 @@ void register_weapons_done();
 	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname)
 #endif
 
-#include "all.qh"
+#include "all.inc"
 
 #undef WEP_ADD_CVAR_MO_PRI
 #undef WEP_ADD_CVAR_MO_SEC

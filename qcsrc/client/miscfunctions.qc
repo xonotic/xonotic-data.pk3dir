@@ -1,8 +1,18 @@
 #include "miscfunctions.qh"
+#include "_all.qh"
 
-#include "../common/urllib.qh"
+#include "hud.qh"
+#include "sortlist.qh"
 
 #include "../common/command/generic.qh"
+
+#include "../common/teams.qh"
+#include "../common/urllib.qh"
+#include "../common/util.qh"
+
+#include "../csqcmodellib/cl_model.qh"
+
+#include "../warpzonelib/mathlib.qh"
 
 void AuditLists()
 {

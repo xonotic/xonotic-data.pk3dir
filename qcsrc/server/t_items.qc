@@ -1,31 +1,30 @@
-#if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "../common/util.qh"
-    #include "../common/buffs.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "../client/autocvars.qh"
-    #include "../client/movetypes.qh"
-    #include "../client/main.qh"
-    #include "../csqcmodellib/common.qh"
-    #include "../csqcmodellib/cl_model.qh"
-    #include "t_items.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/weaponsystem.qh"
-    #include "t_items.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
+#include "t_items.qh"
+
+#if defined(SVQC)
+    #include "_all.qh"
+
+    #include "g_subs.qh"
+    #include "waypointsprites.qh"
+
+    #include "bot/bot.qh"
+    #include "bot/waypoints.qh"
+
     #include "mutators/mutators_include.qh"
+
+    #include "weapons/common.qh"
+    #include "weapons/selection.qh"
+    #include "weapons/weaponsystem.qh"
+
+    #include "../common/constants.qh"
+    #include "../common/deathtypes.qh"
+    #include "../common/notifications.qh"
+    #include "../common/util.qh"
+
+    #include "../common/monsters/monsters.qh"
+
+    #include "../common/weapons/weapons.qh"
+
+    #include "../warpzonelib/util_server.qh"
 #endif
 
 #ifdef CSQC
@@ -229,7 +228,7 @@ void ItemRead(float _IsNew)
 #endif
 
 #ifdef SVQC
-float ItemSend(entity to, float sf)
+bool ItemSend(entity to, int sf)
 {
     if(self.gravity)
         sf |= ISF_DROP;
@@ -537,23 +536,23 @@ void Item_ScheduleInitialRespawn(entity e)
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
 {
-	if (!item.ammotype)
+	if (!item.(ammotype))
 		return false;
 
 	if (item.spawnshieldtime)
 	{
-		if ((player.ammotype < ammomax) || item.pickup_anyway)
+		if ((player.(ammotype) < ammomax) || item.pickup_anyway)
 		{
-			player.ammotype = bound(player.ammotype, ammomax, player.ammotype + item.ammotype);
+			player.(ammotype) = bound(player.(ammotype), ammomax, player.(ammotype) + item.(ammotype));
 			goto YEAH;
 		}
 	}
 	else if(g_weapon_stay == 2)
 	{
-		float mi = min(item.ammotype, ammomax);
-		if (player.ammotype < mi)
+		float mi = min(item.(ammotype), ammomax);
+		if (player.(ammotype) < mi)
 		{
-			player.ammotype = mi;
+			player.(ammotype) = mi;
 			goto YEAH;
 		}
 	}
@@ -811,7 +810,7 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 
 float weapon_pickupevalfunc(entity player, entity item)
 {
-	float c, j, position;
+	float c;
 
 	// See if I have it already
 	if(item.weapons & ~player.weapons)
@@ -834,8 +833,8 @@ float weapon_pickupevalfunc(entity player, entity item)
 	if( bot_custom_weapon && c )
 	{
 		// Find the highest position on any range
-		position = -1;
-		for(j = 0; j < WEP_LAST ; ++j){
+		int position = -1;
+		for (int j = 0; j < WEP_LAST ; ++j){
 			if(
 					bot_weapons_far[j] == item.weapon ||
 					bot_weapons_mid[j] == item.weapon ||
@@ -925,7 +924,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	return item.bot_pickupbasevalue * c;
 }
 
-void Item_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 		RemoveItem();
@@ -1160,7 +1159,6 @@ void spawnfunc_item_rockets (void) {
 	StartItem ("models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
 }
 
-void spawnfunc_item_shells (void);
 void spawnfunc_item_bullets (void) {
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
@@ -1530,56 +1528,56 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 float GiveBit(entity e, .float fld, float bit, float op, float val)
 {
 	float v0, v1;
-	v0 = (e.fld & bit);
+	v0 = (e.(fld) & bit);
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				e.fld |= bit;
+				e.(fld) |= bit;
 			else
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				e.fld |= bit;
+				e.(fld) |= bit;
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 	}
-	v1 = (e.fld & bit);
+	v1 = (e.(fld) & bit);
 	return (v0 != v1);
 }
 
 float GiveValue(entity e, .float fld, float op, float val)
 {
 	float v0, v1;
-	v0 = e.fld;
+	v0 = e.(fld);
 	switch(op)
 	{
 		case OP_SET:
-			e.fld = val;
+			e.(fld) = val;
 			break;
 		case OP_MIN:
-			e.fld = max(e.fld, val); // min 100 cells = at least 100 cells
+			e.(fld) = max(e.(fld), val); // min 100 cells = at least 100 cells
 			break;
 		case OP_MAX:
-			e.fld = min(e.fld, val);
+			e.(fld) = min(e.(fld), val);
 			break;
 		case OP_PLUS:
-			e.fld += val;
+			e.(fld) += val;
 			break;
 		case OP_MINUS:
-			e.fld -= val;
+			e.(fld) -= val;
 			break;
 	}
-	v1 = e.fld;
+	v1 = e.(fld);
 	return (v0 != v1);
 }
 
@@ -1602,9 +1600,9 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime)
 {
 	if(v0 < v1)
-		e.rotfield = max(e.rotfield, time + rottime);
+		e.(rotfield) = max(e.(rotfield), time + rottime);
 	else if(v0 > v1)
-		e.regenfield = max(e.regenfield, time + regentime);
+		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
 float GiveItems(entity e, float beginarg, float endarg)
 {

@@ -1,6 +1,8 @@
 #ifndef MAPINFO_H
 #define MAPINFO_H
 
+#include "util.qh"
+
 int MAPINFO_TYPE_ALL;
 entity MapInfo_Type_first;
 entity MapInfo_Type_last;
@@ -10,7 +12,7 @@ entity MapInfo_Type_last;
 .string netname; // game type name as in cvar (with g_ prefix)
 .string mdl; // game type short name
 .string message; // human readable name
-.float team; // does this gametype support teamplay?
+.int team; // does this gametype support teamplay?
 .string model2; // game type defaults
 .string gametype_description; // game type description
 

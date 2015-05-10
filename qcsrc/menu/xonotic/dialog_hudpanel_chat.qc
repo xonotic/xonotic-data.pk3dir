@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDChatDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_HUDPANEL_CHAT_H
+#define DIALOG_HUDPANEL_CHAT_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDChatDialog, XonoticRootDialog)
 	METHOD(XonoticHUDChatDialog, fill, void(entity))
 	ATTRIB(XonoticHUDChatDialog, title, string, _("Chat Panel"))
 	ATTRIB(XonoticHUDChatDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

@@ -21,7 +21,12 @@
     #define int float
 
     #define stoi(s) stof(s)
-    #define itos(s) ftos(s)
+    #define stob(s) stof(s)
+    #define itos(i) ftos(i)
+#else
+    #define stoi(s) ((int) stof(s))
+    #define stob(s) ((bool) stof(s))
+    #define itos(i) ftos(i)
 #endif
 
 #ifndef QCC_SUPPORT_BOOL
@@ -32,8 +37,21 @@
     const int false = 0;
 #endif
 
+#ifndef QCC_SUPPORT_ENTITYCLASS
+    #define entityclass(name) typedef entity name
+    #define class(name)
+    #define new(class) spawn()
+#else
+    #define entityclass(name) entityclass name {}
+    #define class(name) [[class(name)]]
+    #define new(class) ((class) spawn())
+#endif
+
 // Transitional aliases
 [[deprecated("use true")]] [[alias("true")]] const bool TRUE;
 [[deprecated("use false")]] [[alias("false")]] const bool FALSE;
+
+#define BIT(n) (1 << (n))
+#define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
 
 #endif

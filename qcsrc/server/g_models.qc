@@ -1,14 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../csqcmodellib/sv_model.qh"
-#endif
+#include "_all.qh"
+
+#include "g_subs.qh"
+#include "g_triggers.qh"
+
+#include "../common/constants.qh"
+#include "../csqcmodellib/sv_model.qh"
 
 .float modelscale;
 
@@ -60,7 +56,7 @@ void g_clientmodel_dropbyspawnflags()
 		self.SendFlags |= 2;
 }
 
-float g_clientmodel_genericsendentity (entity to, float sf)
+float g_clientmodel_genericsendentity (entity to, int sf)
 {
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')

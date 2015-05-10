@@ -1,0 +1,8 @@
+#ifndef COMMON_COMMANDS_H
+#define COMMON_COMMANDS_H
+
+#include "generic.qh"
+#include "markup.qh"
+#include "rpn.qh"
+
+#endif

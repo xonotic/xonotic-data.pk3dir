@@ -5,8 +5,6 @@
     #include "../dpdefs/dpextensions.qh"
 #endif
 
-.vector steerto;
-
 /**
     Uniform pull towards a point
 **/

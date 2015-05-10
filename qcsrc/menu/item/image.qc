@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(Image) EXTENDS(Item)
+#ifndef ITEM_IMAGE_H
+#define ITEM_IMAGE_H
+#include "../item.qc"
+CLASS(Image, Item)
 	METHOD(Image, configureImage, void(entity, string))
 	METHOD(Image, draw, void(entity))
 	METHOD(Image, toString, string(entity))

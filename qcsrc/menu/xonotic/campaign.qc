@@ -1,7 +1,9 @@
 #include "../../common/campaign_common.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticCampaignList) EXTENDS(XonoticListBox)
+#ifndef CAMPAIGN_H
+#define CAMPAIGN_H
+#include "listbox.qc"
+CLASS(XonoticCampaignList, XonoticListBox)
 	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity))
 	ATTRIB(XonoticCampaignList, rowsPerItem, float, 10)
 	METHOD(XonoticCampaignList, draw, void(entity))
@@ -50,8 +52,9 @@ string campaign_longdesc_wrapped[CAMPAIGN_MAX_ENTRIES];
 
 void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 {
-	float i, j;
-	float n, l;
+	int i, j;
+	int n;
+	float l;
 	string r, s;
 	for(i = 0; i < campaign_entries; ++i)
 	{
@@ -91,7 +94,7 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 entity makeXonoticCampaignList()
 {
 	entity me;
-	me = spawnXonoticCampaignList();
+	me = NEW(XonoticCampaignList);
 	me.configureXonoticCampaignList(me);
 	return me;
 }
@@ -236,7 +239,7 @@ void XonoticCampaignList_doubleClickListBoxItem(entity me, float i, vector where
 {
 	CampaignList_LoadMap(me, me);
 }
-void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected)
 {
 	string s;
 	vector theColor;
