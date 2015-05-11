@@ -101,10 +101,18 @@ float XonoticPicker_keyDown(entity me, float key, float ascii, float shift)
 {
 	switch(key)
 	{
+		case K_END:
+		case K_KP_END:
+			// lower left cell then left arrow to select the last valid cell
+			me.focusedCell = eY * (me.rows - 1);
 		case K_LEFTARROW:
 		case K_KP_LEFTARROW:
 			me.moveFocus(me, me.focusedCell, '-1 0 0');
 			return 1;
+		case K_HOME:
+		case K_KP_HOME:
+			// upper right cell then right arrow to select the first valid cell
+			me.focusedCell = eX * (me.columns - 1);
 		case K_RIGHTARROW:
 		case K_KP_RIGHTARROW:
 			me.moveFocus(me, me.focusedCell, '1 0 0');
@@ -116,15 +124,6 @@ float XonoticPicker_keyDown(entity me, float key, float ascii, float shift)
 		case K_DOWNARROW:
 		case K_KP_DOWNARROW:
 			me.moveFocus(me, me.focusedCell, '0 1 0');
-			return 1;
-		case K_HOME:
-		case K_KP_HOME:
-			me.focusedCell = '0 0 0';
-			return 1;
-		case K_END:
-		case K_KP_END:
-			me.focusedCell_x = me.columns - 1;
-			me.focusedCell_y = me.rows - 1;
 			return 1;
 		case K_ENTER:
 		case K_KP_ENTER:
@@ -144,6 +143,8 @@ void XonoticPicker_moveFocus(entity me, vector initialCell, vector step)
 	if(me.focusedCell != initialCell) // Recursion break
 		if(!me.cellIsValid(me, me.focusedCell))
 			me.moveFocus(me, initialCell, step);
+
+	me.focusedCellAlpha = SKINALPHA_LISTBOX_FOCUSED;
 }
 
 void XonoticPicker_cellSelect(entity me, vector cell)
