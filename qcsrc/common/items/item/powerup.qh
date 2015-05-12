@@ -1,0 +1,12 @@
+#ifndef POWERUP_H
+#define POWERUP_H
+#include "pickup.qh"
+CLASS(Powerup, Pickup)
+ENDCLASS(Powerup)
+
+#ifdef SVQC
+// For FL_POWERUP
+#include "../../../server/constants.qh"
+#endif
+
+#endif

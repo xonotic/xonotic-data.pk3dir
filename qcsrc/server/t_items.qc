@@ -1156,7 +1156,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 void StartItemA (entity a)
 {
-    StartItem(a.m_model, a.m_sound, a.m_respawntime, a.m_respawntimejitter, a.m_name, a.m_itemid, 0, 0, commodity_pickupevalfunc, a.m_botvalue);
+    StartItem(a.m_model, a.m_sound, a.m_respawntime, a.m_respawntimejitter, a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
 }
 
 void spawnfunc_item_rockets (void) {
@@ -1311,13 +1311,13 @@ void spawnfunc_item_strength (void) {
 		precache_sound("weapons/strength_fire.wav");
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
-		StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+		StartItemA (ITEM_Strength);
 }
 
 void spawnfunc_item_invincible (void) {
 		if(!self.invincible_finished)
 			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-		StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+		StartItemA (ITEM_Shield);
 }
 
 // compatibility:

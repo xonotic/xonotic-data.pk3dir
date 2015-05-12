@@ -4,3 +4,4 @@
 #include "item/armor.qc"
 #include "item/buff.qc"
 #include "item/health.qc"
+#include "item/powerup.qc"

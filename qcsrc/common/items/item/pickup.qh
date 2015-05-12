@@ -9,6 +9,8 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_itemid, int, 0)
 #ifdef SVQC
     ATTRIB(Pickup, m_botvalue, int, 0)
+    ATTRIB(Pickup, m_itemflags, int, 0)
+    ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc)
     ATTRIB(Pickup, m_respawntime, int, 0)
     ATTRIB(Pickup, m_respawntimejitter, int, 0)
 #endif
