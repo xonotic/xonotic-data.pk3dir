@@ -19,6 +19,8 @@ DEFINE(Strength
     ,   model               =   "models/items/g_strength.md3"
     ,   sound               =   "misc/powerup.wav"
     ,   name                =   "Strength Powerup"
+    )
+    ,IF(SV, CONFIGURE
     ,   itemid              =   IT_STRENGTH
     )
 )
@@ -27,6 +29,8 @@ DEFINE(Shield
     ,   model               =   "models/items/g_invincible.md3"
     ,   sound               =   "misc/powerup_shield.wav"
     ,   name                =   "Shield"
+    )
+    ,IF(SV, CONFIGURE
     ,   itemid              =   IT_INVINCIBLE
     )
 )

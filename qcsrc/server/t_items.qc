@@ -1478,7 +1478,7 @@ void spawnfunc_item_fuel(void)
 		self.ammo_fuel = g_pickup_fuel;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/g_fuel.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "Fuel", IT_FUEL, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItemA (ITEM_JetpackFuel);
 }
 
 void spawnfunc_item_fuel_regen(void)
@@ -1488,7 +1488,7 @@ void spawnfunc_item_fuel_regen(void)
 		spawnfunc_item_fuel();
 		return;
 	}
-	StartItem ("models/items/g_fuelregen.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Fuel regenerator", IT_FUEL_REGEN, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItemA (ITEM_JetpackRegen);
 }
 
 void spawnfunc_item_jetpack(void)
@@ -1500,7 +1500,7 @@ void spawnfunc_item_jetpack(void)
 		spawnfunc_item_fuel();
 		return;
 	}
-	StartItem ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItemA (ITEM_Jetpack);
 }
 
 float GiveWeapon(entity e, float wpn, float op, float val)

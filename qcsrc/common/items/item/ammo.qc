@@ -1,5 +1,7 @@
 #include "ammo.qh"
-#include "../../../server/t_items.qh"
+#ifdef SVQC
+    #include "../../../server/t_items.qh"
+#endif
 
 #define WITH(it) this.m_##it;
 #define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
@@ -15,56 +17,51 @@
 DEFINE(Bullets
     ,IF(ALL, CONFIGURE
     ,   model               =   "models/items/a_bullets.mdl"
-    ,   sound               =   "misc/itempickup.wav"
     ,   name                =   "bullets"
-    ,   itemid              =   IT_NAILS
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   2000
+    ,   itemid              =   IT_NAILS
     )
 )
 DEFINE(Cells
     ,IF(ALL, CONFIGURE
     ,   model               =   "models/items/a_cells.md3"
-    ,   sound               =   "misc/itempickup.wav"
     ,   name                =   "cells"
-    ,   itemid              =   IT_ROCKETS
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   2000
+    ,   itemid              =   IT_CELLS
     )
 )
 DEFINE(Plasma
     ,IF(ALL, CONFIGURE
     ,   model               =   "models/items/a_cells.md3"
-    ,   sound               =   "misc/itempickup.wav"
     ,   name                =   "plasma"
-    ,   itemid              =   IT_ROCKETS
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   2000
+    ,   itemid              =   IT_PLASMA
     )
 )
 DEFINE(Rockets
     ,IF(ALL, CONFIGURE
     ,   model               =   "models/items/a_rockets.md3"
-    ,   sound               =   "misc/itempickup.wav"
     ,   name                =   "rockets"
-    ,   itemid              =   IT_ROCKETS
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   3000
+    ,   itemid              =   IT_ROCKETS
     )
 )
 DEFINE(Shells
     ,IF(ALL, CONFIGURE
     ,   model               =   "models/items/a_shells.md3"
-    ,   sound               =   "misc/itempickup.wav"
     ,   name                =   "shells"
-    ,   itemid              =   IT_SHELLS
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   500
+    ,   itemid              =   IT_SHELLS
     )
 )
 
