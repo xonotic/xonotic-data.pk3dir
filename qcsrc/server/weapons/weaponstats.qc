@@ -4,7 +4,7 @@
 #include "../g_world.qh"
 
 #include "../../common/urllib.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
 void WeaponStats_Init()
 {

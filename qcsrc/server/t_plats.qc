@@ -13,7 +13,7 @@
 #include "../common/notifications.qh"
 #include "../common/util.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/sv_model.qh"
 

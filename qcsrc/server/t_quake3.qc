@@ -1,6 +1,6 @@
 #include "_all.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 #include "../common/buffs.qh"
 
 void spawnfunc_weapon_crylink();

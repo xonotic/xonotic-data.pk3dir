@@ -1,5 +1,5 @@
-#ifndef COMMON_COMMANDS_H
-#define COMMON_COMMANDS_H
+#ifndef COMMON_COMMANDS_ALL_H
+#define COMMON_COMMANDS_ALL_H
 
 #include "generic.qh"
 #include "markup.qh"

@@ -25,14 +25,14 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
 #include "../common/mapinfo.qh"
-#include "../common/monsters/monsters.qh"
+#include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;

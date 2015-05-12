@@ -9,10 +9,10 @@
 #include "../t_items.qh"
 #include "../../common/animdecide.qh"
 #include "../../common/constants.qh"
-#include "../../common/monsters/monsters.qh"
+#include "../../common/monsters/all.qh"
 #include "../../common/notifications.qh"
 #include "../../common/util.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 #include "../../csqcmodellib/sv_model.qh"
 
 /*

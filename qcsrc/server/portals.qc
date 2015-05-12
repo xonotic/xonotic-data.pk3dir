@@ -9,7 +9,7 @@
 #include "../common/deathtypes.qh"
 #include "../common/notifications.qh"
 #include "../common/util.qh"
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 #include "../csqcmodellib/sv_model.qh"
 #include "../warpzonelib/anglestransform.qh"
 #include "../warpzonelib/util_server.qh"

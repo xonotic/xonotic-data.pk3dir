@@ -1,5 +1,5 @@
-#ifndef VEHICLES_H
-#define VEHICLES_H
+#ifndef VEHICLES_ALL_H
+#define VEHICLES_ALL_H
 
 #if VEHICLES_ENABLED
 #   include "racer.qh"

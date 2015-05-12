@@ -9,7 +9,7 @@
 #include "../../common/mapinfo.qh"
 #include "../../common/util.qh"
 
-#include "../../common/monsters/monsters.qh"
+#include "../../common/monsters/all.qh"
 
 // =========================================================
 //  Reply messages for common commands, re-worked by Samual
