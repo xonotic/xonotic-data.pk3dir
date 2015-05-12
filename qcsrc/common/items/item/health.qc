@@ -1,49 +1,51 @@
 #include "health.qh"
 #include "../../../server/t_items.qh"
 
-#define REGISTER_HEALTH(id, model, sound, resp, name, itemid, botvalue) \
-REGISTER_ITEM(id, Health, LAMBDA({                                      \
-    this.m_model = model;                                               \
-    this.m_sound = sound;                                               \
-    this.m_respawntime = resp;                                          \
-    this.m_respawntimejitter = resp;                                    \
-    this.m_name = name;                                                 \
-    this.m_itemid = itemid;                                             \
-    this.m_botvalue = botvalue;                                         \
-}))
+#define WITH(it) this.m_##it;
+
+#define REGISTER_HEALTH(id, ...)        \
+    REGISTER_ITEM(id, Health, LAMBDA({  \
+        MAP(WITH, __VA_ARGS__)          \
+    }))
 
 REGISTER_HEALTH(HealthSmall
-    , "models/items/g_h1.md3"
-    , "misc/minihealth.wav"
-    , SPAWNTIME_SHORT
-    , "5 Health"
-    , IT_5HP
-    , BOT_PICKUP_RATING_LOW
+    , model             =   "models/items/g_h1.md3"
+    , sound             =   "misc/minihealth.wav"
+    , respawntime       =   SPAWNTIME_SHORT
+    , respawntimejitter =   SPAWNTIME_SHORT
+    , name              =   "5 Health"
+    , itemid            =   IT_5HP
+    , botvalue          =   BOT_PICKUP_RATING_LOW
 )
 
 REGISTER_HEALTH(HealthMedium
-    , "models/items/g_h25.md3"
-    , "misc/mediumhealth.wav"
-    , SPAWNTIME_SHORT
-    , "25 Health"
-    , IT_25HP
-    , BOT_PICKUP_RATING_MID
+    , model             =   "models/items/g_h25.md3"
+    , sound             =   "misc/mediumhealth.wav"
+    , respawntime       =   SPAWNTIME_SHORT
+    , respawntimejitter =   SPAWNTIME_SHORT
+    , name              =   "25 Health"
+    , itemid            =   IT_25HP
+    , botvalue          =   BOT_PICKUP_RATING_MID
 )
 
 REGISTER_HEALTH(HealthLarge
-    , "models/items/g_h50.md3"
-    , "misc/mediumhealth.wav"
-    , SPAWNTIME_MEDIUM
-    , "50 Health"
-    , IT_25HP
-    , BOT_PICKUP_RATING_MID
+    , model             =   "models/items/g_h50.md3"
+    , sound             =   "misc/mediumhealth.wav"
+    , respawntime       =   SPAWNTIME_MEDIUM
+    , respawntimejitter =   SPAWNTIME_MEDIUM
+    , name              =   "50 Health"
+    , itemid            =   IT_25HP
+    , botvalue          =   BOT_PICKUP_RATING_MID
 )
 
 REGISTER_HEALTH(HealthMega
-    , "models/items/g_h100.md3"
-    , "misc/megahealth.wav"
-    , SPAWNTIME_LONG
-    , "100 Health"
-    , IT_HEALTH
-    , BOT_PICKUP_RATING_HIGH
+    , model             =   "models/items/g_h100.md3"
+    , sound             =   "misc/megahealth.wav"
+    , respawntime       =   SPAWNTIME_LONG
+    , respawntimejitter =   SPAWNTIME_LONG
+    , name              =   "100 Health"
+    , itemid            =   IT_HEALTH
+    , botvalue          =   BOT_PICKUP_RATING_HIGH
 )
+
+#undef WITH

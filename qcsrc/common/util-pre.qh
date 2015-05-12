@@ -51,6 +51,34 @@
 [[deprecated("use true")]] [[alias("true")]] const bool TRUE;
 [[deprecated("use false")]] [[alias("false")]] const bool FALSE;
 
+#ifdef GMQCC
+    #define OVERLOAD(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)
+#else
+    #define OVERLOAD_(F,_9,_8,_7,_6,_5,_4,_3,_2,_1,n,...) F##_##n
+    #define OVERLOAD(F, ...) OVERLOAD_(F,__VA_ARGS__,9,8,7,6,5,4,3,2,1)(__VA_ARGS__)
+#endif
+
+#define MAP(f, ...) OVERLOAD(MAP, f, __VA_ARGS__)
+#define MAP_2(f, it) f(it)
+#define MAP_3(f, it, ...) f(it)MAP_2(f, __VA_ARGS__)
+#define MAP_4(f, it, ...) f(it)MAP_3(f, __VA_ARGS__)
+#define MAP_5(f, it, ...) f(it)MAP_4(f, __VA_ARGS__)
+#define MAP_6(f, it, ...) f(it)MAP_5(f, __VA_ARGS__)
+#define MAP_7(f, it, ...) f(it)MAP_6(f, __VA_ARGS__)
+#define MAP_8(f, it, ...) f(it)MAP_7(f, __VA_ARGS__)
+#define MAP_9(f, it, ...) f(it)MAP_8(f, __VA_ARGS__)
+#define MAP_10(f, it, ...) f(it)MAP_9(f, __VA_ARGS__)
+#define MAP_11(f, it, ...) f(it)MAP_10(f, __VA_ARGS__)
+#define MAP_12(f, it, ...) f(it)MAP_11(f, __VA_ARGS__)
+#define MAP_13(f, it, ...) f(it)MAP_12(f, __VA_ARGS__)
+#define MAP_14(f, it, ...) f(it)MAP_13(f, __VA_ARGS__)
+#define MAP_15(f, it, ...) f(it)MAP_14(f, __VA_ARGS__)
+#define MAP_16(f, it, ...) f(it)MAP_15(f, __VA_ARGS__)
+#define MAP_17(f, it, ...) f(it)MAP_16(f, __VA_ARGS__)
+#define MAP_18(f, it, ...) f(it)MAP_17(f, __VA_ARGS__)
+#define MAP_19(f, it, ...) f(it)MAP_18(f, __VA_ARGS__)
+#define MAP_20(f, it, ...) f(it)MAP_19(f, __VA_ARGS__)
+
 #define BIT(n) (1 << (n))
 #define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
 
