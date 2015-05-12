@@ -80,6 +80,10 @@
 #define MAP_20(f, it, ...) f(it)MAP_19(f, __VA_ARGS__)
 
 #define BIT(n) (1 << (n))
-#define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
+#ifndef BRANCHLESS_BITSET
+    #define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
+#else
+    #define BITSET(var, mask, flag) ((var) ^ (-(flag) ^ (var)) & (mask))
+#endif
 
 #endif
