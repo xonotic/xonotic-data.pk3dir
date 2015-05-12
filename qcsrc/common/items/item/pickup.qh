@@ -14,28 +14,9 @@ CLASS(Pickup, GameItem)
 #endif
 ENDCLASS(Pickup)
 
-#define SPAWNTIMES(_) \
-    _(WEAPON, weapon) \
-    _(AMMO, ammo) \
-    _(SHORT, short) \
-    _(MEDIUM, medium) \
-    _(LONG, long) \
-    /**/
-
-#define SPAWNTIMES_ENUM(id, idlc) SPAWNTIME_##id ,
-enum { SPAWNTIMES(SPAWNTIMES_ENUM) };
-#undef SPAWNTIMES_ENUM
-
 #ifdef SVQC
+// For g_pickup_respawntime
 #include "../../../server/defs.qh"
-
-#define SPAWNTIMES_MAP(id, idlc) i == SPAWNTIME_##id ? g_pickup_respawntime_##idlc :
-[[inline]] int spawntime(int i) { return SPAWNTIMES(SPAWNTIMES_MAP) 0; }
-#undef SPAWNTIMES_MAP
-
-#define SPAWNTIMES_MAP(id, idlc) i == SPAWNTIME_##id ? g_pickup_respawntimejitter_##idlc :
-[[inline]] int spawntimejitter(int i) { return SPAWNTIMES(SPAWNTIMES_MAP) 0; }
-#undef SPAWNTIMES_MAP
 #endif
 
 bool Pickup_respondTo(entity this, int request)

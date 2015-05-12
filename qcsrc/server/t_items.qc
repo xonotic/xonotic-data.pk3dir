@@ -1156,7 +1156,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 void StartItemA (entity a)
 {
-    StartItem(a.m_model, a.m_sound, spawntime(a.m_respawntime), spawntimejitter(a.m_respawntimejitter), a.m_name, a.m_itemid, 0, 0, commodity_pickupevalfunc, a.m_botvalue);
+    StartItem(a.m_model, a.m_sound, a.m_respawntime, a.m_respawntimejitter, a.m_name, a.m_itemid, 0, 0, commodity_pickupevalfunc, a.m_botvalue);
 }
 
 void spawnfunc_item_rockets (void) {
