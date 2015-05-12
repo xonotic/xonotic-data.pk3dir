@@ -99,6 +99,9 @@
 
 #define IF(pred, f, ...) pred(f, __VA_ARGS__)
 
+#define GET(name) name##get
+#define GETTER(type, name) type GET(name)() { return name; }
+
 #define BIT(n) (1 << (n))
 #ifndef BRANCHLESS_BITSET
     #define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))

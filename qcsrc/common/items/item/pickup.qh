@@ -11,14 +11,29 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_botvalue, int, 0)
     ATTRIB(Pickup, m_itemflags, int, 0)
     ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc)
-    ATTRIB(Pickup, m_respawntime, int, 0)
-    ATTRIB(Pickup, m_respawntimejitter, int, 0)
+    ATTRIB(Pickup, m_respawntime, float(), func_null)
+    ATTRIB(Pickup, m_respawntimejitter, float(), func_null)
 #endif
 ENDCLASS(Pickup)
 
 #ifdef SVQC
 // For g_pickup_respawntime
 #include "../../../server/defs.qh"
+// Getters to dynamically retrieve the values of g_pickup_respawntime* as they aren't autocvars
+GETTER(float, g_pickup_respawntime_weapon)
+GETTER(float, g_pickup_respawntime_superweapon)
+GETTER(float, g_pickup_respawntime_ammo)
+GETTER(float, g_pickup_respawntime_short)
+GETTER(float, g_pickup_respawntime_medium)
+GETTER(float, g_pickup_respawntime_long)
+GETTER(float, g_pickup_respawntime_powerup)
+GETTER(float, g_pickup_respawntimejitter_weapon)
+GETTER(float, g_pickup_respawntimejitter_superweapon)
+GETTER(float, g_pickup_respawntimejitter_ammo)
+GETTER(float, g_pickup_respawntimejitter_short)
+GETTER(float, g_pickup_respawntimejitter_medium)
+GETTER(float, g_pickup_respawntimejitter_long)
+GETTER(float, g_pickup_respawntimejitter_powerup)
 #endif
 
 bool Pickup_respondTo(entity this, int request)

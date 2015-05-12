@@ -14,8 +14,8 @@ DEFINE(HealthSmall
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   BOT_PICKUP_RATING_LOW
-    ,   respawntime         =         g_pickup_respawntime_short
-    ,   respawntimejitter   =   g_pickup_respawntimejitter_short
+    ,   respawntime         =         GET(g_pickup_respawntime_short)
+    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_short)
     )
 )
 
@@ -28,8 +28,8 @@ DEFINE(HealthMedium
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   BOT_PICKUP_RATING_MID
-    ,   respawntime         =         g_pickup_respawntime_short
-    ,   respawntimejitter   =   g_pickup_respawntimejitter_short
+    ,   respawntime         =         GET(g_pickup_respawntime_short)
+    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_short)
     )
 )
 
@@ -42,8 +42,8 @@ DEFINE(HealthLarge
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   BOT_PICKUP_RATING_MID
-    ,   respawntime         =         g_pickup_respawntime_medium
-    ,   respawntimejitter   =   g_pickup_respawntimejitter_medium
+    ,   respawntime         =         GET(g_pickup_respawntime_medium)
+    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_medium)
     )
 )
 
@@ -56,8 +56,8 @@ DEFINE(HealthMega
     )
     ,IF(SV, CONFIGURE
     ,   botvalue            =   BOT_PICKUP_RATING_HIGH
-    ,   respawntime         =         g_pickup_respawntime_long
-    ,   respawntimejitter   =   g_pickup_respawntimejitter_long
+    ,   respawntime         =         GET(g_pickup_respawntime_long)
+    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_long)
     )
 )
 

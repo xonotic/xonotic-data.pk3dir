@@ -3,13 +3,13 @@
 
 #define WITH(it) this.m_##it;
 #define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-#define DEFINE(id, ...)                                             \
-    REGISTER_ITEM(id, Ammo, LAMBDA(                                 \
-        IF(SV, CONFIGURE                                            \
-        ,   respawntime         =       g_pickup_respawntime_ammo   \
-        ,   respawntimejitter   = g_pickup_respawntimejitter_ammo   \
-        )                                                           \
-        MAP(IDENTITY, __VA_ARGS__)                                  \
+#define DEFINE(id, ...)                                                 \
+    REGISTER_ITEM(id, Ammo, LAMBDA(                                     \
+        IF(SV, CONFIGURE                                                \
+        ,   respawntime         =       GET(g_pickup_respawntime_ammo)  \
+        ,   respawntimejitter   = GET(g_pickup_respawntimejitter_ammo)  \
+        )                                                               \
+        MAP(IDENTITY, __VA_ARGS__)                                      \
     ))
 
 DEFINE(Bullets
