@@ -5,11 +5,13 @@ CLASS(Pickup, GameItem)
     METHOD(Pickup, respondTo, bool(entity, int))
     ATTRIB(Pickup, m_model, string, string_null)
     ATTRIB(Pickup, m_sound, string, string_null)
-    ATTRIB(Pickup, m_respawntime, int, 0)
-    ATTRIB(Pickup, m_respawntimejitter, int, 0)
     ATTRIB(Pickup, m_name, string, string_null)
     ATTRIB(Pickup, m_itemid, int, 0)
+#ifdef SVQC
     ATTRIB(Pickup, m_botvalue, int, 0)
+    ATTRIB(Pickup, m_respawntime, int, 0)
+    ATTRIB(Pickup, m_respawntimejitter, int, 0)
+#endif
 ENDCLASS(Pickup)
 
 #define SPAWNTIMES(_) \

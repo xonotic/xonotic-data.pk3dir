@@ -79,6 +79,24 @@
 #define MAP_19(f, it, ...) f(it)MAP_18(f, __VA_ARGS__)
 #define MAP_20(f, it, ...) f(it)MAP_19(f, __VA_ARGS__)
 
+#define IDENTITY(it) it
+
+#ifdef SVQC
+    #define SV(f, ...) f(__VA_ARGS__)
+#else
+    #define SV(f, ...)
+#endif
+
+#ifdef CSQC
+    #define CL(f, ...) f(__VA_ARGS__)
+#else
+    #define CL(f, ...)
+#endif
+
+#define ALL(f, ...) f(__VA_ARGS__)
+
+#define IF(pred, f, ...) pred(f, __VA_ARGS__)
+
 #define BIT(n) (1 << (n))
 #ifndef BRANCHLESS_BITSET
     #define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
