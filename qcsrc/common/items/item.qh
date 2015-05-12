@@ -7,8 +7,6 @@ ENDCLASS(GameItem)
 
 
 
-#define LAMBDA(...) { __VA_ARGS__ ; }
-
 #define ITEM_SIGNALS(_) \
     _(Default, void, (entity it), LAMBDA({ it.respondTo(it, SIGNAL); })) \
     /* Common item signals */

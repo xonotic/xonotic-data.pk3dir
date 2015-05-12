@@ -58,6 +58,8 @@
     #define OVERLOAD(F, ...) OVERLOAD_(F,__VA_ARGS__,9,8,7,6,5,4,3,2,1)(__VA_ARGS__)
 #endif
 
+#define LAMBDA(...) { __VA_ARGS__ ; }
+
 #define MAP(f, ...) OVERLOAD(MAP, f, __VA_ARGS__)
 #define MAP_2(f, it) f(it)
 #define MAP_3(f, it, ...) f(it)MAP_2(f, __VA_ARGS__)
