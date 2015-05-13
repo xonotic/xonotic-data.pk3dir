@@ -3136,23 +3136,20 @@ void HUD_Mod_KH(vector pos, vector mySize)
 		drawpic_aspect_skin(KH_SLOTS[i++], "kh_dropped", slot_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
 }
 
+void HUD_Mod_Infection(vector pos, vector mySize)
+{
+	mod_active = 1; // Infection should always show the mod HUD
+	float f = stof(getplayerkeyvalue(player_localentnum - 1, "colors"));
+	vector color = colormapPaletteColor(floor(f / 16), 0);
+	drawpic_aspect_skin(pos, "player_neutral", mySize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
 // Keepaway HUD mod icon
 int kaball_prevstatus; // last remembered status
 float kaball_statuschange_time; // time when the status changed
 
 // we don't need to reset for keepaway since it immediately
 // autocorrects prevstatus as to if the player has the ball or not
-
-void HUD_Mod_Infection(vector pos, vector mySize)
-{
-	mod_active = 1; // Infection should never hide the mod icons panel
-
-	float f = stof(getplayerkeyvalue(player_localentnum - 1, "colors"));
-
-	vector rgb = colormapPaletteColor(floor(f / 16), 0);
-
-	drawpic_aspect_skin(pos, "player", mySize, rgb, panel_fg_alpha, DRAWFLAG_NORMAL);
-}
 
 void HUD_Mod_Keepaway(vector pos, vector mySize)
 {
