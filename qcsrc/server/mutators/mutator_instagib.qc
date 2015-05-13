@@ -15,7 +15,7 @@ float instagib_respawntimejitter_ammo = 0;
 GETTER(float, instagib_respawntime_ammo)
 GETTER(float, instagib_respawntimejitter_ammo)
 
-REGISTER_ITEM(VaporizerCells, Pickup, MAP(IDENTITY
+REGISTER_ITEM(VaporizerCells, Pickup, APPLY(UNWORDS
     ,APPLY(CONFIGURE
     ,   model               =   "models/items/a_cells.md3"
     ,   sound               =   "misc/itempickup.wav"
@@ -29,7 +29,7 @@ REGISTER_ITEM(VaporizerCells, Pickup, MAP(IDENTITY
     )
 ))
 
-REGISTER_ITEM(ExtraLife, Pickup, MAP(IDENTITY
+REGISTER_ITEM(ExtraLife, Pickup, APPLY(UNWORDS
     ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_h100.md3"
     ,   sound               =   "misc/megahealth.wav"

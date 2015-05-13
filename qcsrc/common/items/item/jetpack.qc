@@ -5,7 +5,7 @@
 
 #define WITH(it) this.m_##it;
 #define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-#define DEFINE(id, ...) REGISTER_ITEM(id, Pickup, MAP(IDENTITY, __VA_ARGS__))
+#define DEFINE(id, ...) REGISTER_ITEM(id, Pickup, UNWORDS(__VA_ARGS__))
 
 DEFINE(Jetpack
     ,APPLY(CONFIGURE

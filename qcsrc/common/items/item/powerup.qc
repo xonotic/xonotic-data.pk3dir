@@ -11,7 +11,7 @@
         ,   respawntime         =         GET(g_pickup_respawntime_powerup) \
         ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_powerup) \
         )                                                                   \
-        MAP(IDENTITY, __VA_ARGS__)                                          \
+        UNWORDS(__VA_ARGS__)                                          \
     ))
 
 DEFINE(Strength

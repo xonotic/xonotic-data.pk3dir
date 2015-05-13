@@ -5,7 +5,7 @@
 
 #define WITH(it) this.m_##it;
 #define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-#define DEFINE(id, ...) REGISTER_ITEM(id, Health, MAP(IDENTITY, __VA_ARGS__))
+#define DEFINE(id, ...) REGISTER_ITEM(id, Health, UNWORDS(__VA_ARGS__))
 
 DEFINE(HealthSmall
     ,APPLY(CONFIGURE
