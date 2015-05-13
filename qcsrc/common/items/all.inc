@@ -3,4 +3,5 @@
 #include "item/buff.qc"
 #include "item/health.qc"
 #include "item/jetpack.qc"
+#include "item/pickup.qc"
 #include "item/powerup.qc"
