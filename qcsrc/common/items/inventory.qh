@@ -16,8 +16,9 @@ void Inventory_Read(Inventory data)
 {
     const int bits = ReadInt24_t();
     ITEMS_FOREACH(bits & BIT(i), LAMBDA({
-        int prev = data.inv_items[i];
-        int next = data.inv_items[i] = ReadByte();
+        .int fld = inv_items[i];
+        int prev = data.(fld);
+        int next = data.(fld) = ReadByte();
         dprintf("%s: %.0f -> %.0f\n", ITEMS[i].m_name, prev, next);
     }));
 }
@@ -28,8 +29,8 @@ void Inventory_Write(Inventory data)
 {
     int bits = 0;
     ITEMS_FOREACH(true, LAMBDA({
-        .int idx = inv_items[i];
-        bits = BITSET(bits, BIT(i), data.inventory.(idx) != (data.inventory.(idx) = data.(idx)));
+        .int fld = inv_items[i];
+        bits = BITSET(bits, BIT(i), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
     }));
     WriteInt24_t(MSG_ENTITY, bits);
     ITEMS_FOREACH(bits & BIT(i), LAMBDA({
