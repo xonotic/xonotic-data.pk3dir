@@ -12,7 +12,7 @@ entity ITEMS[MAX_ITEMS];
 } while(0)
 
 void RegisterItems();
-void ItemTest();
+void Dump_Items();
 
 #ifdef CSQC
 void ReadItems()

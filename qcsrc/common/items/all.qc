@@ -4,10 +4,9 @@
 
 #include "all.inc"
 
-void ItemTest()
+void Dump_Items()
 {
-    ITEMS_FOREACH(it != NULL, LAMBDA({
-        print(strcat(etos(it), "\n"));
+    ITEMS_FOREACH(true, LAMBDA({
         ITEM_HANDLE(Show, it);
     }));
 }

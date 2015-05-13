@@ -1,8 +1,7 @@
 #ifndef BUFF_H
 #define BUFF_H
-#include "../item.qh"
-CLASS(Buff, GameItem)
-    METHOD(Buff, show, void(entity this))
-    void Buff_show(entity this) { print("%s\n", "Buff"); }
+#include "pickup.qh"
+CLASS(Buff, Pickup)
+    ATTRIB(Buff, m_name, string, "Buff")
 ENDCLASS(Buff)
 #endif
