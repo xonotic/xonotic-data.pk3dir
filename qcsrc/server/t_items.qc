@@ -665,6 +665,8 @@ float Item_GiveTo(entity item, entity player)
 	return 1;
 }
 
+.entity itemdef;
+
 void Item_Touch (void)
 {
 	entity e, head;
@@ -704,8 +706,9 @@ void Item_Touch (void)
 		self.invincible_finished = max(0, self.invincible_finished - time);
 		self.superweapons_finished = max(0, self.superweapons_finished - time);
 	}
-
-	if(!Item_GiveTo(self, other))
+	entity it = self.itemdef;
+	bool gave = (it && it.instanceOfPickup) ? ITEM_HANDLE(Pickup, it, self, other) : Item_GiveTo(self, other);
+	if (!gave)
 	{
 		if (self.classname == "droppedweapon")
 		{
@@ -726,9 +729,7 @@ void Item_Touch (void)
 
 	if (self.classname == "droppedweapon")
 		remove (self);
-	else if (!self.spawnshieldtime)
-		return;
-	else
+	else if (self.spawnshieldtime)
 	{
 		if(self.team)
 		{
@@ -1156,6 +1157,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 void StartItemA (entity a)
 {
+    self.itemdef = a;
     StartItem(a.m_model, a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
 }
 

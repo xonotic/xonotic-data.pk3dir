@@ -8,7 +8,7 @@ void ItemTest()
 {
     ITEMS_FOREACH(it != NULL, LAMBDA({
         print(strcat(etos(it), "\n"));
-        ITEM_SEND(Default, it);
+        ITEM_HANDLE(Show, it);
     }));
 }
 

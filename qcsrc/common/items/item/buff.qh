@@ -2,6 +2,7 @@
 #define BUFF_H
 #include "../item.qh"
 CLASS(Buff, GameItem)
-    METHOD(Buff, respondTo, bool(entity, int))
+    METHOD(Buff, show, void(entity this))
+    void Buff_show(entity this) { print("%s\n", "Buff"); }
 ENDCLASS(Buff)
 #endif
