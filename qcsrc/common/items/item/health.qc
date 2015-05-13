@@ -8,7 +8,7 @@
 #define DEFINE(id, ...) REGISTER_ITEM(id, Health, MAP(IDENTITY, __VA_ARGS__))
 
 DEFINE(HealthSmall
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_h1.md3"
     ,   sound               =   "misc/minihealth.wav"
     ,   name                =   "5 Health"
@@ -22,7 +22,7 @@ DEFINE(HealthSmall
 )
 
 DEFINE(HealthMedium
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_h25.md3"
     ,   sound               =   "misc/mediumhealth.wav"
     ,   name                =   "25 Health"
@@ -36,7 +36,7 @@ DEFINE(HealthMedium
 )
 
 DEFINE(HealthLarge
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_h50.md3"
     ,   sound               =   "misc/mediumhealth.wav"
     ,   name                =   "50 Health"
@@ -50,7 +50,7 @@ DEFINE(HealthLarge
 )
 
 DEFINE(HealthMega
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_h100.md3"
     ,   sound               =   "misc/megahealth.wav"
     ,   name                =   "100 Health"

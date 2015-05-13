@@ -83,6 +83,8 @@
 
 #define IDENTITY(it) it
 
+#define APPLY(f, ...) f(__VA_ARGS__)
+
 #ifdef SVQC
     #define SV(f, ...) f(__VA_ARGS__)
 #else
@@ -95,9 +97,7 @@
     #define CL(f, ...)
 #endif
 
-#define ALL(f, ...) f(__VA_ARGS__)
-
-#define IF(pred, f, ...) pred(f, __VA_ARGS__)
+#define IF(cond, f, ...) cond(f, __VA_ARGS__)
 
 #define GET(name) name##get
 #define GETTER(type, name) type GET(name)() { return name; }

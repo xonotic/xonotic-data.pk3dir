@@ -15,7 +15,7 @@
     ))
 
 DEFINE(Strength
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_strength.md3"
     ,   sound               =   "misc/powerup.wav"
     ,   name                =   "Strength Powerup"
@@ -25,7 +25,7 @@ DEFINE(Strength
     )
 )
 DEFINE(Shield
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_invincible.md3"
     ,   sound               =   "misc/powerup_shield.wav"
     ,   name                =   "Shield"

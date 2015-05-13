@@ -15,7 +15,7 @@
     ))
 
 DEFINE(Bullets
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/a_bullets.mdl"
     ,   name                =   "bullets"
     )
@@ -25,7 +25,7 @@ DEFINE(Bullets
     )
 )
 DEFINE(Cells
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/a_cells.md3"
     ,   name                =   "cells"
     )
@@ -35,7 +35,7 @@ DEFINE(Cells
     )
 )
 DEFINE(Plasma
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/a_cells.md3"
     ,   name                =   "plasma"
     )
@@ -45,7 +45,7 @@ DEFINE(Plasma
     )
 )
 DEFINE(Rockets
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/a_rockets.md3"
     ,   name                =   "rockets"
     )
@@ -55,7 +55,7 @@ DEFINE(Rockets
     )
 )
 DEFINE(Shells
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/a_shells.md3"
     ,   name                =   "shells"
     )

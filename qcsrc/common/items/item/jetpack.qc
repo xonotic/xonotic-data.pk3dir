@@ -8,7 +8,7 @@
 #define DEFINE(id, ...) REGISTER_ITEM(id, Pickup, MAP(IDENTITY, __VA_ARGS__))
 
 DEFINE(Jetpack
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_jetpack.md3"
     ,   name                =   "Jet pack"
     )
@@ -23,7 +23,7 @@ DEFINE(Jetpack
 )
 
 DEFINE(JetpackFuel
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_fuel.md3"
     ,   name                =   "Fuel"
     )
@@ -37,7 +37,7 @@ DEFINE(JetpackFuel
 )
 
 DEFINE(JetpackRegen
-    ,IF(ALL, CONFIGURE
+    ,APPLY(CONFIGURE
     ,   model               =   "models/items/g_fuelregen.md3"
     ,   name                =   "Fuel regenerator"
     )
