@@ -1,13 +1,12 @@
-.float freezetag_frozen_time;
-.float freezetag_frozen_timeout;
-#define ICE_MAX_ALPHA 1
-#define ICE_MIN_ALPHA 0.1
-float freezetag_teams;
+#include "gamemode_freezetag.qh"
+#include "../_all.qh"
 
-#define SP_FREEZETAG_REVIVALS 4
+#include "gamemode.qh"
+
+const float SP_FREEZETAG_REVIVALS = 4;
 void freezetag_ScoreRules(float teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS, "revivals", 0);
 	ScoreRules_basics_end();
 }
@@ -39,9 +38,9 @@ void freezetag_count_alive_players()
 #define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
 
-float prev_missing_teams_mask;
 float freezetag_CheckTeams()
 {
+	static float prev_missing_teams_mask;
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
@@ -188,7 +187,7 @@ void freezetag_Freeze(entity attacker)
 	if(autocvar_g_freezetag_frozen_maxtime > 0)
 		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
-	Freeze(self, 0, 1, TRUE);
+	Freeze(self, 0, 1, true);
 
 	freezetag_count_alive_players();
 
@@ -206,8 +205,8 @@ void freezetag_Unfreeze(entity attacker)
 float freezetag_isEliminated(entity e)
 {
 	if(IS_PLAYER(e) && (e.frozen == 1 || e.deadflag != DEAD_NO))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 
@@ -425,7 +424,6 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 	return 1;
 }
 
-.float reviving; // temp var
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
 	float n;
@@ -465,7 +463,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			if(!o)
 				o = other;
 			if(self.frozen == 1)
-				other.reviving = TRUE;
+				other.reviving = true;
 			++n;
 		}
 	}
@@ -509,7 +507,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			if(other.reviving)
 			{
 				other.revive_progress = self.revive_progress;
-				other.reviving = FALSE;
+				other.reviving = false;
 			}
 		}
 	}
@@ -536,7 +534,7 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 			self.havocbot_role = havocbot_role_ft_offense;
 	}
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)

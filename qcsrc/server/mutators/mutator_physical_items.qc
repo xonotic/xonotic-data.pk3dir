@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .vector spawn_origin, spawn_angles;
 
 void physical_item_think()
@@ -45,7 +49,7 @@ void physical_item_touch()
 	}
 }
 
-void physical_item_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void physical_item_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(!self.cnt) // not for dropped items
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
@@ -58,9 +62,9 @@ void physical_item_damage(entity inflictor, entity attacker, float damage, float
 MUTATOR_HOOKFUNCTION(item_spawning)
 {
 	if(self.owner == world && autocvar_g_physical_items <= 1)
-		return FALSE;
+		return false;
 	if (self.spawnflags & 1) // floating item
-		return FALSE;
+		return false;
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
@@ -95,7 +99,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	self.movetype = MOVETYPE_FOLLOW;
 	self.aiment = wep; // attach the original weapon
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_physical_items)

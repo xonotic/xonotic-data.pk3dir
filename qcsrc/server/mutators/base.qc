@@ -1,3 +1,6 @@
+#include "base.qh"
+#include "../_all.qh"
+
 .float() cbc_func;
 .entity cbc_next;
 .float cbc_order;
@@ -91,11 +94,11 @@ float CallbackChain_Call(entity cb)
 	return r; // callbacks return an error status, so 0 is default return value
 }
 
-#define MAX_MUTATORS 15
+const float MAX_MUTATORS = 15;
 string loaded_mutators[MAX_MUTATORS];
 float Mutator_Add(mutatorfunc_t func, string name)
 {
-	float i, j;
+	int i, j;
 	j = -1;
 	for(i = 0; i < MAX_MUTATORS; ++i)
 	{
@@ -128,7 +131,7 @@ float Mutator_Add(mutatorfunc_t func, string name)
 }
 void Mutator_Remove(float(float) func, string name)
 {
-	float i;
+	int i;
 	for(i = 0; i < MAX_MUTATORS; ++i)
 		if(name == loaded_mutators[i])
 			break;

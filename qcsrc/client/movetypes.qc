@@ -1,4 +1,15 @@
-const float MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
+#include "movetypes.qh"
+#include "_all.qh"
+
+#include "t_items.qh"
+
+#include "../common/stats.qh"
+#include "../common/util.qh"
+
+#include "../csqcmodellib/common.qh"
+
+
+const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
 #define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
 
 .entity move_groundentity; // FIXME add move_groundnetworkentity?
@@ -11,14 +22,10 @@ void _Movetype_CheckVelocity() // SV_CheckVelocity
 
 float _Movetype_CheckWater(entity ent) // SV_CheckWater
 {
-	float supercontents;
-	float nativecontents;
-	vector point;
+	vector point = ent.move_origin;
+	point.z += (ent.mins.z + 1);
 
-	point = ent.move_origin;
-	point_z += (ent.mins_z + 1);
-
-	nativecontents = pointcontents(point);
+	int nativecontents = pointcontents(point);
 
 	if(ent.move_watertype)
 	if(ent.move_watertype != nativecontents)
@@ -31,16 +38,16 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 	ent.move_waterlevel = 0;
 	ent.move_watertype = CONTENT_EMPTY;
 
-	supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
+	int supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
 	if(supercontents & DPCONTENTS_LIQUIDSMASK)
 	{
 		ent.move_watertype = nativecontents;
 		ent.move_waterlevel = 1;
-		point_y = (ent.origin_y + ((ent.mins_z + ent.maxs_y) * 0.5));
+		point.y = (ent.origin.y + ((ent.mins.z + ent.maxs.y) * 0.5));
 		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
 			ent.move_waterlevel = 2;
-			point_y = ent.origin_y + ent.view_ofs_y;
+			point.y = ent.origin.y + ent.view_ofs.y;
 			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 				ent.move_waterlevel = 3;
 		}
@@ -52,7 +59,7 @@ float _Movetype_CheckWater(entity ent) // SV_CheckWater
 void _Movetype_CheckWaterTransition(entity ent) // SV_CheckWaterTransition
 {
 	float contents = pointcontents(ent.move_origin);
-	
+
 	if(!ent.move_watertype)
 	{
 		// just spawned here
@@ -125,11 +132,11 @@ void _Movetype_LinkEdict_TouchAreaGrid() // SV_LinkEdict_TouchAreaGrid
 			self = e;
 			other = oldself;
 
-			trace_allsolid = FALSE;
-			trace_startsolid = FALSE;
+			trace_allsolid = false;
+			trace_startsolid = false;
 			trace_fraction = 1;
-			trace_inwater = FALSE;
-			trace_inopen = TRUE;
+			trace_inwater = false;
+			trace_inopen = true;
 			trace_endpos = e.origin;
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
@@ -162,21 +169,21 @@ void _Movetype_LinkEdict(float touch_triggers) // SV_LinkEdict
 
 	if(self.move_flags & FL_ITEM)
 	{
-		mi_x -= 15;
-		mi_y -= 15;
-		mi_z -= 1;
-		ma_x += 15;
-		ma_y += 15;
-		ma_z += 1;
+		mi.x -= 15;
+		mi.y -= 15;
+		mi.z -= 1;
+		ma.x += 15;
+		ma.y += 15;
+		ma.z += 1;
 	}
 	else
 	{
-		mi_x -= 1;
-		mi_y -= 1;
-		mi_z -= 1;
-		ma_x += 1;
-		ma_y += 1;
-		ma_z += 1;
+		mi.x -= 1;
+		mi.y -= 1;
+		mi.z -= 1;
+		ma.x += 1;
+		ma.y += 1;
+		ma.z += 1;
 	}
 
 	self.absmin = mi;
@@ -189,26 +196,25 @@ void _Movetype_LinkEdict(float touch_triggers) // SV_LinkEdict
 float _Movetype_TestEntityPosition(vector ofs) // SV_TestEntityPosition
 {
 	vector org;
-	float cont;
 	org = self.move_origin + ofs;
 
-	cont = self.dphitcontentsmask;
+	int cont = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID;
 	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, MOVE_NOMONSTERS, self);
 	self.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
-		return TRUE;
+		return true;
 
 	if(vlen(trace_endpos - self.move_origin) > 0.0001)
 		self.move_origin = trace_endpos;
-	return FALSE;
+	return false;
 }
 
 float _Movetype_UnstickEntity() // SV_UnstickEntity
 {
 	if(!_Movetype_TestEntityPosition('0 0 0'))
-		return TRUE;
+		return true;
 	if(!_Movetype_TestEntityPosition('-1 0 0')) goto success;
 	if(!_Movetype_TestEntityPosition('1 0 0')) goto success;
 	if(!_Movetype_TestEntityPosition('0 -1 0')) goto success;
@@ -224,20 +230,20 @@ float _Movetype_UnstickEntity() // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition('0 0 1' * i)) goto success;
 	}
 	dprintf("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.move_origin));
-	return FALSE;
+	return false;
 :success
 	dprintf("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.move_origin));
-	_Movetype_LinkEdict(TRUE);
-	return TRUE;
+	_Movetype_LinkEdict(true);
+	return true;
 }
 
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f) // SV_ClipVelocity
 {
 	vel = vel - ((vel * norm) * norm) * f;
 
-	if(vel_x > -0.1 && vel_x < 0.1) vel_x = 0;
-	if(vel_y > -0.1 && vel_y < 0.1) vel_y = 0;
-	if(vel_z > -0.1 && vel_z < 0.1) vel_z = 0;
+	if(vel.x > -0.1 && vel.x < 0.1) vel.x = 0;
+	if(vel.y > -0.1 && vel.y < 0.1) vel.y = 0;
+	if(vel.z > -0.1 && vel.z < 0.1) vel.z = 0;
 
 	return vel;
 }
@@ -277,12 +283,12 @@ float _Movetype_PushEntity(vector push, float failonstartsolid) // SV_PushEntity
 	return trace_fraction;
 }
 
-#define MAX_CLIP_PLANES 5
+const float MAX_CLIP_PLANES = 5;
 void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 {
 	if(self.move_flags & FL_ONGROUND)
 	{
-		if(self.move_velocity_z >= 1/32)
+		if(self.move_velocity.z >= 1/32)
 			self.move_flags &= ~FL_ONGROUND;
 		else if(!self.move_groundentity)
 			return;
@@ -293,7 +299,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		}
 	}
 
-	self.move_suspendedinair = FALSE;
+	self.move_suspendedinair = false;
 
 	_Movetype_CheckVelocity();
 
@@ -324,14 +330,14 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 	{
 		vector move;
 		move = self.move_velocity * movetime;
-		_Movetype_PushEntity(move, TRUE);
+		_Movetype_PushEntity(move, true);
 		if(wasfreed(self))
 			return;
 
 		if(trace_startsolid)
 		{
 			_Movetype_UnstickEntity();
-			_Movetype_PushEntity(move, FALSE);
+			_Movetype_PushEntity(move, false);
 			if(wasfreed(self))
 				return;
 		}
@@ -360,7 +366,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
 
 			d = trace_plane_normal * self.move_velocity;
-			if(trace_plane_normal_z > 0.7 && d < bouncestop && d > -bouncestop)
+			if(trace_plane_normal.z > 0.7 && d < bouncestop && d > -bouncestop)
 			{
 				self.move_flags |= FL_ONGROUND;
 				self.move_groundentity = trace_ent;
@@ -373,12 +379,12 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		else
 		{
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1.0);
-			if(trace_plane_normal_z > 0.7)
+			if(trace_plane_normal.z > 0.7)
 			{
 				self.move_flags |= FL_ONGROUND;
 				self.move_groundentity = trace_ent;
 				if(trace_ent.solid == SOLID_BSP)
-					self.move_suspendedinair = TRUE;
+					self.move_suspendedinair = true;
 				self.move_velocity = '0 0 0';
 				self.move_avelocity = '0 0 0';
 			}
@@ -426,7 +432,7 @@ void _Movetype_Physics_Frame(float movedt)
 			_Movetype_CheckWater(self);
 			self.move_origin = self.move_origin + ticrate * self.move_velocity;
 			self.move_angles = self.move_angles + ticrate * self.move_avelocity;
-			_Movetype_LinkEdict(FALSE);
+			_Movetype_LinkEdict(false);
 			break;
 		case MOVETYPE_STEP:
 			error("SV_Physics_Step not implemented");
@@ -461,12 +467,12 @@ void Movetype_Physics_NoMatchServer() // optimized
 	setorigin(self, self.move_origin);
 }
 
-void Movetype_Physics_MatchServer(float sloppy)
+void Movetype_Physics_MatchServer(bool sloppy)
 {
 	Movetype_Physics_MatchTicrate(ticrate, sloppy);
 }
 
-void Movetype_Physics_MatchTicrate(float tr, float sloppy) // SV_Physics_Entity
+void Movetype_Physics_MatchTicrate(float tr, bool sloppy) // SV_Physics_Entity
 {
 	float n, i, dt, movedt;
 

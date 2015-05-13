@@ -1,9 +1,11 @@
-void SUB_NullThink(void) { }
+#include "g_subs.qh"
+#include "_all.qh"
 
-void()  SUB_CalcMoveDone;
-void() SUB_CalcAngleMoveDone;
-//void() SUB_UseTargets;
-void() SUB_Remove;
+#include "antilag.qh"
+#include "command/common.qh"
+#include "../warpzonelib/common.qh"
+
+void SUB_NullThink(void) { }
 
 void spawnfunc_info_null (void)
 {
@@ -16,22 +18,22 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 	if (!anim)
 		return; // no animation was given to us! We can't use this.
 
-	if (anim_x == e.animstate_startframe)
-	if (anim_y == e.animstate_numframes)
-	if (anim_z == e.animstate_framerate)
+	if (anim.x == e.animstate_startframe)
+	if (anim.y == e.animstate_numframes)
+	if (anim.z == e.animstate_framerate)
 	{
 		if(restart)
 		{
 			if(restart > 0)
-			if(anim_y == 1) // ZYM animation
+			if(anim.y == 1) // ZYM animation
 				BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
 		}
 		else
 			return;
 	}
-	e.animstate_startframe = anim_x;
-	e.animstate_numframes = anim_y;
-	e.animstate_framerate = anim_z;
+	e.animstate_startframe = anim.x;
+	e.animstate_numframes = anim.y;
+	e.animstate_framerate = anim.z;
 	e.animstate_starttime = servertime - 0.1 * serverframetime; // shift it a little bit into the past to prevent float inaccuracy hiccups
 	e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
 	e.animstate_looping = looping;
@@ -49,7 +51,7 @@ void updateanim(entity e)
 			e.animstate_starttime = e.animstate_endtime;
 			e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
 		}
-		e.animstate_override = FALSE;
+		e.animstate_override = false;
 	}
 	e.frame = e.animstate_startframe + bound(0, (time - e.animstate_starttime) * e.animstate_framerate, e.animstate_numframes - 1);
 	//print(ftos(time), " -> ", ftos(e.frame), "\n");
@@ -74,7 +76,6 @@ SUB_Friction
 Applies some friction to self
 ==================
 */
-.float friction;
 void SUB_Friction (void)
 {
 	self.nextthink = time;
@@ -152,7 +153,6 @@ void SUB_CalcMoveDone (void)
 		self.think1 ();
 }
 
-.float platmovetype_turn;
 void SUB_CalcMove_controller_think (void)
 {
 	entity oldself;
@@ -180,12 +180,12 @@ void SUB_CalcMove_controller_think (void)
 			vector destangle;
 			destangle = delta + 2 * delta2 * phasepos;
 			destangle = vectoangles(destangle);
-			destangle_x = -destangle_x; // flip up / down orientation
+			destangle.x = -destangle.x; // flip up / down orientation
 
 			// take the shortest distance for the angles
-			self.owner.angles_x -= 360 * floor((self.owner.angles_x - destangle_x) / 360 + 0.5);
-			self.owner.angles_y -= 360 * floor((self.owner.angles_y - destangle_y) / 360 + 0.5);
-			self.owner.angles_z -= 360 * floor((self.owner.angles_z - destangle_z) / 360 + 0.5);
+			self.owner.angles_x -= 360 * floor((self.owner.angles.x - destangle.x) / 360 + 0.5);
+			self.owner.angles_y -= 360 * floor((self.owner.angles.y - destangle.y) / 360 + 0.5);
+			self.owner.angles_z -= 360 * floor((self.owner.angles.z - destangle.z) / 360 + 0.5);
 			angloc = destangle - self.owner.angles;
 			angloc = angloc * (1 / sys_frametime); // so it arrives for the next frame
 			self.owner.avelocity = angloc;
@@ -235,12 +235,6 @@ void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector de
 	controller.destvec = dest; // end point
 	controller.destvec2 = '0 0 0';
 }
-
-float TSPEED_TIME = -1;
-float TSPEED_LINEAR = 0;
-float TSPEED_START = 1;
-float TSPEED_END = 2;
-// TODO average too?
 
 void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func)
 {
@@ -392,9 +386,9 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 		objerror ("No speed is defined!");
 
 	// take the shortest distance for the angles
-	self.angles_x -= 360 * floor((self.angles_x - destangle_x) / 360 + 0.5);
-	self.angles_y -= 360 * floor((self.angles_y - destangle_y) / 360 + 0.5);
-	self.angles_z -= 360 * floor((self.angles_z - destangle_z) / 360 + 0.5);
+	self.angles_x -= 360 * floor((self.angles.x - destangle.x) / 360 + 0.5);
+	self.angles_y -= 360 * floor((self.angles.y - destangle.y) / 360 + 0.5);
+	self.angles_z -= 360 * floor((self.angles.z - destangle.z) / 360 + 0.5);
 	delta = destangle - self.angles;
 
 	switch(tspeedtype)
@@ -507,7 +501,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 }
 void traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, FALSE);
+	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, false);
 }
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
@@ -519,11 +513,11 @@ void tracebox_antilag (entity source, vector v1, vector mi, vector ma, vector v2
 {
 	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
-	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, FALSE);
+	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, false);
 }
 void WarpZone_traceline_antilag_force (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
-	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, TRUE);
+	tracebox_antilag_force_wz(source, v1, '0 0 0', '0 0 0', v2, nomonst, forent, lag, true);
 }
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag)
 {
@@ -535,7 +529,7 @@ void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, 
 {
 	if (autocvar_g_antilag != 2 || source.cvar_cl_noantilag)
 		lag = 0;
-	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, TRUE);
+	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, true);
 }
 
 float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity) // returns the number of traces done, for benchmarking
@@ -554,7 +548,7 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 	float c;
 	c = 0;
 
-	for(;;)
+	for (;;)
 	{
 		if(pos * dir >= v2 * dir)
 		{
@@ -640,21 +634,21 @@ vector findbetterlocation (vector org, float mindist)
 	c = 0;
 	while (c < 6)
 	{
-		traceline (org, org + vec, TRUE, world);
+		traceline (org, org + vec, true, world);
 		vec = vec * -1;
 		if (trace_fraction < 1)
 		{
 			loc = trace_endpos;
-			traceline (loc, loc + vec, TRUE, world);
+			traceline (loc, loc + vec, true, world);
 			if (trace_fraction >= 1)
 				org = loc + vec;
 		}
 		if (c & 1)
 		{
-			h = vec_y;
-			vec_y = vec_x;
-			vec_x = vec_z;
-			vec_z = h;
+			h = vec.y;
+			vec.y = vec.x;
+			vec.x = vec.z;
+			vec.z = h;
 		}
 		c = c + 1;
 	}
@@ -704,16 +698,6 @@ float angc (float a1, float a2)
 	return a;
 }
 
-.string lodtarget1;
-.string lodtarget2;
-.string lodmodel1;
-.string lodmodel2;
-.float lodmodelindex0;
-.float lodmodelindex1;
-.float lodmodelindex2;
-.float loddistance1;
-.float loddistance2;
-
 float LOD_customize()
 {
 	float d;
@@ -727,7 +711,7 @@ float LOD_customize()
 			self.modelindex = self.lodmodelindex1;
 		else // if(d == 3)
 			self.modelindex = self.lodmodelindex2;
-		return TRUE;
+		return true;
 	}
 
 	// TODO csqc network this so it only gets sent once
@@ -739,7 +723,7 @@ float LOD_customize()
 	else
 		self.modelindex = self.lodmodelindex2;
 
-	return TRUE;
+	return true;
 }
 
 void LOD_uncustomize()
@@ -809,24 +793,24 @@ void LODmodel_attach()
 
 void ApplyMinMaxScaleAngles(entity e)
 {
-	if(e.angles_x != 0 || e.angles_z != 0 || self.avelocity_x != 0 || self.avelocity_z != 0) // "weird" rotation
+	if(e.angles.x != 0 || e.angles.z != 0 || self.avelocity.x != 0 || self.avelocity.z != 0) // "weird" rotation
 	{
 		e.maxs = '1 1 1' * vlen(
-			'1 0 0' * max(-e.mins_x, e.maxs_x) +
-			'0 1 0' * max(-e.mins_y, e.maxs_y) +
-			'0 0 1' * max(-e.mins_z, e.maxs_z)
+			'1 0 0' * max(-e.mins.x, e.maxs.x) +
+			'0 1 0' * max(-e.mins.y, e.maxs.y) +
+			'0 0 1' * max(-e.mins.z, e.maxs.z)
 		);
 		e.mins = -e.maxs;
 	}
-	else if(e.angles_y != 0 || self.avelocity_y != 0) // yaw only is a bit better
+	else if(e.angles.y != 0 || self.avelocity.y != 0) // yaw only is a bit better
 	{
 		e.maxs_x = vlen(
-			'1 0 0' * max(-e.mins_x, e.maxs_x) +
-			'0 1 0' * max(-e.mins_y, e.maxs_y)
+			'1 0 0' * max(-e.mins.x, e.maxs.x) +
+			'0 1 0' * max(-e.mins.y, e.maxs.y)
 		);
-		e.maxs_y = e.maxs_x;
-		e.mins_x = -e.maxs_x;
-		e.mins_y = -e.maxs_x;
+		e.maxs_y = e.maxs.x;
+		e.mins_x = -e.maxs.x;
+		e.mins_y = -e.maxs.x;
 	}
 	if(e.scale)
 		setsize(e, e.mins * e.scale, e.maxs * e.scale);

@@ -81,7 +81,7 @@ void turret_stdproc_respawn()
 /*
 * Standard damage proc.
 */
-void turret_stdproc_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_stdproc_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
     // Enougth allready!
     if(self.deadflag == DEAD_DEAD)
@@ -109,8 +109,8 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     // thorw head slightly off aim when hit?
     if (self.damage_flags & TFL_DMG_HEADSHAKE)
     {
-        self.tur_head.angles_x = self.tur_head.angles_x + (-0.5 + random()) * damage;
-        self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
+        self.tur_head.angles_x = self.tur_head.angles.x + (-0.5 + random()) * damage;
+        self.tur_head.angles_y = self.tur_head.angles.y + (-0.5 + random()) * damage;
 
         self.SendFlags  |= TNSF_ANG;
     }

@@ -1,3 +1,6 @@
+#ifndef TRACING_H
+#define TRACING_H
+
 vector w_shotorg;
 vector w_shotdir;
 vector w_shotend;
@@ -23,19 +26,19 @@ float mspercallcount;
 
 void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute);
 
-#define W_SetupProjVelocity_Basic(ent,pspeed,pspread) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, pspeed, 0, 0, pspread, FALSE)
+#define W_SetupProjVelocity_Basic(ent,pspeed,pspread) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, pspeed, 0, 0, pspread, false)
 
-#define W_SetupProjVelocity_UP_PRE(ent,wepname,prefix) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), WEP_CVAR(wepname, prefix##speed_up), WEP_CVAR(wepname, prefix##speed_z), WEP_CVAR(wepname, prefix##spread), FALSE)
-#define W_SetupProjVelocity_UP_PRI(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), FALSE)
-#define W_SetupProjVelocity_UP_SEC(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), FALSE)
+#define W_SetupProjVelocity_UP_PRE(ent,wepname,prefix) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), WEP_CVAR(wepname, prefix##speed_up), WEP_CVAR(wepname, prefix##speed_z), WEP_CVAR(wepname, prefix##spread), false)
+#define W_SetupProjVelocity_UP_PRI(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), false)
+#define W_SetupProjVelocity_UP_SEC(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), false)
 
 #define W_SetupProjVelocity_UP_BOTH(ent,wepname,isprimary) \
 	if(isprimary) { W_SetupProjVelocity_UP_PRI(ent, wepname); } \
 	else { W_SetupProjVelocity_UP_SEC(ent, wepname); }
 
-#define W_SetupProjVelocity_PRE(ent,wepname,prefix) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), 0, 0, WEP_CVAR(wepname, prefix##spread), FALSE)
-#define W_SetupProjVelocity_PRI(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), FALSE)
-#define W_SetupProjVelocity_SEC(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), FALSE)
+#define W_SetupProjVelocity_PRE(ent,wepname,prefix) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), 0, 0, WEP_CVAR(wepname, prefix##spread), false)
+#define W_SetupProjVelocity_PRI(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), false)
+#define W_SetupProjVelocity_SEC(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), false)
 
 #define W_SetupProjVelocity_BOTH(ent,wepname,isprimary) \
 	if(isprimary) { W_SetupProjVelocity_PRI(ent, wepname); } \
@@ -47,9 +50,10 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 
 .float railgundistance;
 .vector railgunforce;
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype);
+void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype);
 
 float fireBullet_trace_callback_eff;
 entity fireBullet_last_hit;
 void fireBullet_trace_callback(vector start, vector hit, vector end);
-void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, float tracereffects);
+void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects);
+#endif

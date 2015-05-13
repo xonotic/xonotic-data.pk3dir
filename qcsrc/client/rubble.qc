@@ -1,4 +1,4 @@
-.float creationtime;
+#include "rubble.qh"
 
 // LordHavoc: rewrote this file, it was really bad code
 

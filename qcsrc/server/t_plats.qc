@@ -1,3 +1,28 @@
+#include "_all.qh"
+
+#include "bot/bot.qh"
+
+#include "command/common.qh"
+
+#include "g_damage.qh"
+#include "g_subs.qh"
+#include "item_key.qh"
+
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/notifications.qh"
+#include "../common/util.qh"
+
+#include "../common/weapons/weapons.qh"
+
+#include "../csqcmodellib/sv_model.qh"
+
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/mathlib.qh"
+#include "../warpzonelib/util_server.qh"
+
+.float height;
+
 .float dmgtime2;
 void generic_plat_blocked()
 {
@@ -37,24 +62,24 @@ void plat_spawn_inside_trigger()
 
 	tmin = self.absmin + '25 25 0';
 	tmax = self.absmax - '25 25 -8';
-	tmin_z = tmax_z - (self.pos1_z - self.pos2_z + 8);
+	tmin.z = tmax.z - (self.pos1_z - self.pos2_z + 8);
 	if (self.spawnflags & PLAT_LOW_TRIGGER)
-		tmax_z = tmin_z + 8;
+		tmax.z = tmin.z + 8;
 
-	if (self.size_x <= 50)
+	if (self.size.x <= 50)
 	{
-		tmin_x = (self.mins_x + self.maxs_x) / 2;
-		tmax_x = tmin_x + 1;
+		tmin.x = (self.mins.x + self.maxs.x) / 2;
+		tmax.x = tmin.x + 1;
 	}
-	if (self.size_y <= 50)
+	if (self.size.y <= 50)
 	{
-		tmin_y = (self.mins_y + self.maxs_y) / 2;
-		tmax_y = tmin_y + 1;
+		tmin.y = (self.mins.y + self.maxs.y) / 2;
+		tmax.y = tmin.y + 1;
 	}
 
-	if(tmin_x < tmax_x)
-		if(tmin_y < tmax_y)
-			if(tmin_z < tmax_z)
+	if(tmin.x < tmax.x)
+		if(tmin.y < tmax.y)
+			if(tmin.z < tmax.z)
 			{
 				setsize (trigger, tmin, tmax);
 				return;
@@ -196,15 +221,15 @@ float set_platmovetype(entity e, string s)
 
 	if(n > 2)
 		if(argv(2) == "force")
-			return TRUE; // no checking, return immediately
+			return true; // no checking, return immediately
 
 	if(!cubic_speedfunc_is_sane(e.platmovetype_start, e.platmovetype_end))
 	{
 		objerror("Invalid platform move type; platform would go in reverse, which is not allowed.");
-		return FALSE;
+		return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 void spawnfunc_path_corner()
@@ -270,11 +295,11 @@ void spawnfunc_func_plat()
 	if (!self.lip)
 		self.lip = 16;
 	if (!self.height)
-		self.height = self.size_z - self.lip;
+		self.height = self.size.z - self.lip;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.origin;
-	self.pos2_z = self.origin_z - self.height;
+	self.pos2_z = self.origin.z - self.height;
 
 	self.reset = plat_reset;
 	plat_reset();
@@ -309,13 +334,13 @@ void train_wait()
 		else // linear movement
 			ang = targ.origin - (self.origin - self.view_ofs); // use the origin of the next path_corner
 		ang = vectoangles(ang);
-		ang_x = -ang_x; // flip up / down orientation
+		ang.x = -ang.x; // flip up / down orientation
 
 		if(self.wait > 0) // slow turning
 			SUB_CalcAngleMove(ang, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
 		else // instant turning
 			SUB_CalcAngleMove(ang, TSPEED_TIME, 0.0000001, train_wait);
-		self.train_wait_turning = TRUE;
+		self.train_wait_turning = true;
 		return;
 	}
 
@@ -324,7 +349,7 @@ void train_wait()
 
 	if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
 	{
-		self.train_wait_turning = FALSE;
+		self.train_wait_turning = false;
 		train_next();
 	}
 	else
@@ -417,10 +442,10 @@ void spawnfunc_func_train()
 	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
-	
+
 	if (self.spawnflags & 2)
 	{
-		self.platmovetype_turn = TRUE;
+		self.platmovetype_turn = true;
 		self.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
 	}
 	else
@@ -536,7 +561,7 @@ void func_bobbing_controller_think()
 
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
-	v = self.owner.destvec + self.owner.movedir * v_forward_y;
+	v = self.owner.destvec + self.owner.movedir * v_forward.y;
 	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
 		self.owner.velocity = (v - self.owner.origin) * 10;
@@ -620,11 +645,11 @@ void func_pendulum_controller_think()
 
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.freq + self.owner.phase) * '0 360 0');
-	v = self.owner.speed * v_forward_y + self.cnt;
+	v = self.owner.speed * v_forward.y + self.cnt;
 	if(self.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
 	{
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.avelocity_z = (remainder(v - self.owner.angles_z, 360)) * 10;
+		self.owner.avelocity_z = (remainder(v - self.owner.angles.z, 360)) * 10;
 	}
 }
 
@@ -662,11 +687,11 @@ void spawnfunc_func_pendulum()
 	if(!self.freq)
 	{
 		// find pendulum length (same formula as Q3A)
-		self.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(self.mins_z))));
+		self.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(self.mins.z))));
 	}
 
 	// copy initial angle
-	self.cnt = self.angles_z;
+	self.cnt = self.angles.z;
 
 	// wait for targets to spawn
 	controller = spawn();
@@ -766,7 +791,7 @@ void button_touch()
 	button_fire ();
 }
 
-void button_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void button_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
@@ -991,22 +1016,16 @@ ACTIVATION FUNCTIONS
 */
 
 float door_check_keys(void) {
-	local entity door;
-
-
-	if (self.owner)
-		door = self.owner;
-	else
-		door = self;
+	entity door = self.owner ? self.owner : self;
 
 	// no key needed
 	if (!door.itemkeys)
-		return TRUE;
+		return true;
 
 	// this door require a key
 	// only a player can have a key
 	if (!IS_PLAYER(other))
-		return FALSE;
+		return false;
 
 	if (item_keys_usekey(door, other)) {
 		// some keys were used
@@ -1028,9 +1047,9 @@ float door_check_keys(void) {
 		// door is now unlocked
 		play2(other, "misc/talk.wav");
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_UNLOCKED);
-		return TRUE;
+		return true;
 	} else
-		return FALSE;
+		return false;
 }
 
 
@@ -1132,7 +1151,7 @@ void door_trigger_touch()
 }
 
 
-void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)
@@ -1323,19 +1342,19 @@ entity LinkDoors_nextent(entity cur, entity near, entity pass)
 float LinkDoors_isconnected(entity e1, entity e2, entity pass)
 {
 	float DELTA = 4;
-	if (e1.absmin_x > e2.absmax_x + DELTA)
-		return FALSE;
-	if (e1.absmin_y > e2.absmax_y + DELTA)
-		return FALSE;
-	if (e1.absmin_z > e2.absmax_z + DELTA)
-		return FALSE;
-	if (e2.absmin_x > e1.absmax_x + DELTA)
-		return FALSE;
-	if (e2.absmin_y > e1.absmax_y + DELTA)
-		return FALSE;
-	if (e2.absmin_z > e1.absmax_z + DELTA)
-		return FALSE;
-	return TRUE;
+	if (e1.absmin.x > e2.absmax.x + DELTA)
+		return false;
+	if (e1.absmin.y > e2.absmax.y + DELTA)
+		return false;
+	if (e1.absmin.z > e2.absmax.z + DELTA)
+		return false;
+	if (e2.absmin.x > e1.absmax.x + DELTA)
+		return false;
+	if (e2.absmin.y > e1.absmax.y + DELTA)
+		return false;
+	if (e2.absmin.z > e1.absmax.z + DELTA)
+		return false;
+	return true;
 }
 
 /*
@@ -1394,18 +1413,18 @@ void LinkDoors()
 			self.targetname = t.targetname;
 		if((t.message != "") && (self.message == ""))
 			self.message = t.message;
-		if (t.absmin_x < cmins_x)
-			cmins_x = t.absmin_x;
-		if (t.absmin_y < cmins_y)
-			cmins_y = t.absmin_y;
-		if (t.absmin_z < cmins_z)
-			cmins_z = t.absmin_z;
-		if (t.absmax_x > cmaxs_x)
-			cmaxs_x = t.absmax_x;
-		if (t.absmax_y > cmaxs_y)
-			cmaxs_y = t.absmax_y;
-		if (t.absmax_z > cmaxs_z)
-			cmaxs_z = t.absmax_z;
+		if (t.absmin.x < cmins.x)
+			cmins.x = t.absmin.x;
+		if (t.absmin.y < cmins.y)
+			cmins.y = t.absmin.y;
+		if (t.absmin.z < cmins.z)
+			cmins.z = t.absmin.z;
+		if (t.absmax.x > cmaxs.x)
+			cmaxs.x = t.absmax.x;
+		if (t.absmax.y > cmaxs.y)
+			cmaxs.y = t.absmax.y;
+		if (t.absmax.z > cmaxs.z)
+			cmaxs.z = t.absmax.z;
 		if(t.enemy == self)
 			break;
 	}
@@ -1480,8 +1499,8 @@ void door_reset()
 }
 
 // spawnflags require key (for now only func_door)
-#define SPAWNFLAGS_GOLD_KEY 8
-#define SPAWNFLAGS_SILVER_KEY 16
+const float SPAWNFLAGS_GOLD_KEY = 8;
+const float SPAWNFLAGS_SILVER_KEY = 16;
 void spawnfunc_func_door()
 {
 	// Quake 1 keys compatibility
@@ -1614,9 +1633,9 @@ void spawnfunc_func_door_rotating()
 	else // Z
 		self.movedir = '0 1 0';
 
-	if (self.angles_y==0) self.angles_y = 90;
+	if (self.angles.y ==0) self.angles_y = 90;
 
-	self.movedir = self.movedir * self.angles_y;
+	self.movedir = self.movedir * self.angles.y;
 	self.angles = '0 0 0';
 
 	self.max_health = self.health;
@@ -1708,7 +1727,7 @@ void fd_secret_use()
 	string message_save;
 
 	self.health = 10000;
-	self.bot_attack = TRUE;
+	self.bot_attack = true;
 
 	// exit if still moving around...
 	if (self.origin != self.oldorigin)
@@ -1752,7 +1771,7 @@ void fd_secret_use()
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 }
 
-void fd_secret_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void fd_secret_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	fd_secret_use();
 }
@@ -1955,7 +1974,7 @@ void func_fourier_controller_think()
 	for(i = 0; i < n; ++i)
 	{
 		makevectors((t * stof(argv(i*5)) + stof(argv(i*5+1)) * 360) * '0 1 0');
-		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * self.owner.height * v_forward_y;
+		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * self.owner.height * v_forward.y;
 	}
 
 	if(self.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed

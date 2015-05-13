@@ -1,3 +1,8 @@
+#include "_all.qh"
+
+#include "defs.qh"
+#include "mutators/mutators_include.qh"
+
 /**
  * The point of these entities is to avoid the problems
  * with clientprediction.
@@ -25,19 +30,19 @@ float entcs_customize()
 	entity o;
 	o = self.owner;
 	if(o.deadflag != DEAD_NO)
-		return FALSE;
+		return false;
 	if (!IS_PLAYER(o))
-		return FALSE;
+		return false;
 	if(other == o)
-		return FALSE;
+		return false;
 	if((IS_PLAYER(other)) || other.caplayer)
 		if(!teamplay || o.team != other.team)
 			if (!radar_showennemies)
-				return FALSE;
-	return TRUE;
+				return false;
+	return true;
 }
 
-float entcs_send(entity to, float sf)
+float entcs_send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	WriteByte(MSG_ENTITY, sf);
@@ -45,17 +50,17 @@ float entcs_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner)-1);
 	if(sf & 2)
 	{
-		WriteShort(MSG_ENTITY, self.origin_x);
-		WriteShort(MSG_ENTITY, self.origin_y);
-		WriteShort(MSG_ENTITY, self.origin_z);
+		WriteShort(MSG_ENTITY, self.origin.x);
+		WriteShort(MSG_ENTITY, self.origin.y);
+		WriteShort(MSG_ENTITY, self.origin.z);
 	}
 	if(sf & 4)
-		WriteByte(MSG_ENTITY, self.angles_y * 256.0 / 360);
+		WriteByte(MSG_ENTITY, self.angles.y * 256.0 / 360);
 	if(sf & 8)
 		WriteByte(MSG_ENTITY, self.health / 10); // FIXME use a better scale?
 	if(sf & 16)
 		WriteByte(MSG_ENTITY, self.armorvalue / 10); // FIXME use a better scale?
-	return TRUE;
+	return true;
 }
 
 void entcs_think()
@@ -70,7 +75,7 @@ void entcs_think()
 		setorigin(self, o.origin);
 		self.SendFlags |= 2;
 	}
-	if(o.angles_y != self.angles_y)
+	if(o.angles.y != self.angles.y)
 	{
 		self.angles = o.angles;
 		self.SendFlags |= 4;
@@ -97,7 +102,7 @@ entity attach_entcs()
 	ent.think = entcs_think;
 	ent.nextthink = time;
 
-	Net_LinkEntity(ent, FALSE, 0, entcs_send);
+	Net_LinkEntity(ent, false, 0, entcs_send);
 	ent.customizeentityforclient = entcs_customize;
 
 	self.entcs = ent;

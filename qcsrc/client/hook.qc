@@ -1,8 +1,22 @@
-.float HookType; // ENT_CLIENT_*
-.vector origin;
-.vector velocity;
-.float HookSilent;
-.float HookRange;
+#include "hook.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+#include "noise.qh"
+
+#include "../common/teams.qh"
+
+#include "../csqcmodellib/interpolate.qh"
+
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/mathlib.qh"
+
+entityclass(Hook);
+class(Hook) .float HookType; // ENT_CLIENT_*
+class(Hook) .vector origin;
+class(Hook) .vector velocity;
+class(Hook) .float HookSilent;
+class(Hook) .float HookRange;
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 {
@@ -45,14 +59,14 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
-.float teleport_time;
+class(Hook) .float teleport_time;
 void Draw_GrapplingHook()
 {
 	vector a, b, atrans;
 	string tex;
 	vector rgb;
 	float t;
-	float s;
+	int s;
 	vector vs;
 	float intensity, offset;
 
@@ -86,7 +100,7 @@ void Draw_GrapplingHook()
 		{
 			default:
 			case ENT_CLIENT_HOOK:
-				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				b = self.origin;
 				break;
 			case ENT_CLIENT_ARC_BEAM:
@@ -96,7 +110,7 @@ void Draw_GrapplingHook()
 					b = view_origin + view_forward * vlen(self.velocity - self.origin); // honor original length of beam!
 				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
 				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
+				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				break;
 		}
 	}
@@ -190,8 +204,7 @@ void Ent_ReadHook(float bIsNew, float type)
 {
 	self.HookType = type;
 
-	float sf;
-	sf = ReadByte();
+	int sf = ReadByte();
 
 	self.HookSilent = (sf & 0x80);
 	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
@@ -200,7 +213,7 @@ void Ent_ReadHook(float bIsNew, float type)
 
 	if(sf & 1)
 	{
-		float myowner = ReadByte();
+		int myowner = ReadByte();
 		self.owner = playerslots[myowner - 1];
 		self.sv_entnum = myowner;
 		switch(self.HookType)

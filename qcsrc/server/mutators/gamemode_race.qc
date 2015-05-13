@@ -1,3 +1,10 @@
+#include "gamemode_race.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#include "../race.qh"
+
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_race()
@@ -29,7 +36,7 @@ void havocbot_role_race()
 
 void race_ScoreRules()
 {
-	ScoreRules_basics(race_teams, 0, 0, FALSE);
+	ScoreRules_basics(race_teams, 0, 0, false);
 	if(race_teams)
 	{
 		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
@@ -66,26 +73,26 @@ MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel_x = fabs(self.movement_x);
-	wishvel_y = fabs(self.movement_y);
-	if(wishvel_x != 0 && wishvel_y != 0 && wishvel_x != wishvel_y)
+	wishvel.x = fabs(self.movement.x);
+	wishvel.y = fabs(self.movement.y);
+	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
-		wishvel_z = 0;
+		wishvel.z = 0;
 		wishspeed = vlen(wishvel);
-		if(wishvel_x >= 2 * wishvel_y)
+		if(wishvel.x >= 2 * wishvel.y)
 		{
 			// pure X motion
-			if(self.movement_x > 0)
+			if(self.movement.x > 0)
 				self.movement_x = wishspeed;
 			else
 				self.movement_x = -wishspeed;
 			self.movement_y = 0;
 		}
-		else if(wishvel_y >= 2 * wishvel_x)
+		else if(wishvel.y >= 2 * wishvel.x)
 		{
 			// pure Y motion
 			self.movement_x = 0;
-			if(self.movement_y > 0)
+			if(self.movement.y > 0)
 				self.movement_y = wishspeed;
 			else
 				self.movement_y = -wishspeed;
@@ -93,18 +100,18 @@ MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
 		else
 		{
 			// diagonal
-			if(self.movement_x > 0)
+			if(self.movement.x > 0)
 				self.movement_x = M_SQRT1_2 * wishspeed;
 			else
 				self.movement_x = -M_SQRT1_2 * wishspeed;
-			if(self.movement_y > 0)
+			if(self.movement.y > 0)
 				self.movement_y = M_SQRT1_2 * wishspeed;
 			else
 				self.movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-	
-	return FALSE;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_ResetMap)
@@ -137,8 +144,8 @@ MUTATOR_HOOKFUNCTION(race_ResetMap)
 		cvar_set("timelimit", ftos(race_timelimit));
 		race_ScoreRules();
 	}
-	
-	return FALSE;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerPreThink)
@@ -148,7 +155,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerPreThink)
 	if(msg_entity.enemy.race_laptime)
 		race_SendNextCheckpoint(msg_entity.enemy, 1);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_ClientConnect)
@@ -175,7 +182,7 @@ MUTATOR_HOOKFUNCTION(race_ClientConnect)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_MakePlayerObserver)
@@ -189,7 +196,7 @@ MUTATOR_HOOKFUNCTION(race_MakePlayerObserver)
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerSpawn)
@@ -203,8 +210,8 @@ MUTATOR_HOOKFUNCTION(race_PlayerSpawn)
 	self.race_respawn_spotref = spawn_spot;
 
 	self.race_place = 0;
-	
-	return FALSE;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_PutClientInServer)
@@ -219,20 +226,20 @@ MUTATOR_HOOKFUNCTION(race_PutClientInServer)
 
 		race_AbandonRaceCheck(self);
 	}
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerDies)
 {
 	self.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(self);
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_BotRoles)
 {
 	self.havocbot_role = havocbot_role_race;
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerPostThink)
@@ -249,21 +256,21 @@ MUTATOR_HOOKFUNCTION(race_PlayerPostThink)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_ForbidClearPlayerScore)
 {
 	if(g_race_qualifying)
-		return TRUE; // in qualifying, you don't lose score by observing
+		return true; // in qualifying, you don't lose score by observing
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_GetTeamCount)
 {
 	ret_float = race_teams;
-	return FALSE;
+	return false;
 }
 
 void race_Initialize()

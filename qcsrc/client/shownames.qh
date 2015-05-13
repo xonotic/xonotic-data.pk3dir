@@ -1,5 +1,13 @@
-.float healthvalue;
-.float armorvalue;
-.float sameteam;
-.float fadedelay;
-.float pointtime;
+#ifndef SHOWNAMES_H
+#define SHOWNAMES_H
+
+entityclass(ShowNames);
+class(ShowNames) .float healthvalue;
+class(ShowNames) .float armorvalue;
+class(ShowNames) .float sameteam;
+class(ShowNames) .float fadedelay;
+class(ShowNames) .float pointtime;
+
+void Draw_ShowNames_All();
+
+#endif

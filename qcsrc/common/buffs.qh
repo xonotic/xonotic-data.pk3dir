@@ -1,19 +1,25 @@
+#ifndef BUFFS_H
+#define BUFFS_H
+
+#include "teams.qh"
+#include "util.qh"
+
 entity Buff_Type_first;
 entity Buff_Type_last;
 .entity enemy; // internal next pointer
 
-var float BUFF_LAST = 1;
+int BUFF_LAST = 1;
 
-.float items; // buff ID
+.int items; // buff ID
 .string netname; // buff name
 .string message; // human readable name
 .vector colormod; // buff color
 .string model2; // buff sprite
-.float skin; // buff skin
+.int skin; // buff skin
 
 #define REGISTER_BUFF(hname,sname,NAME,bskin,bcolor) \
-	var float BUFF_##NAME; \
-	var entity Buff_Type##sname; \
+	int BUFF_##NAME; \
+	entity Buff_Type##sname; \
 	void RegisterBuffs_##sname() \
 	{ \
 		BUFF_##NAME = BUFF_LAST * 2; \
@@ -47,9 +53,9 @@ REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.9 0.9 0.9');
 #undef REGISTER_BUFF
 
 #ifdef SVQC
-.float buffs;
+.int buffs;
 void buff_Init(entity ent);
-void buff_Init_Compat(entity ent, float replacement);
+void buff_Init_Compat(entity ent, int replacement);
 
 #define BUFF_SPAWNFUNC(e,b,t) void spawnfunc_item_buff_##e() { self.buffs = b; self.team = t; buff_Init(self); }
 #define BUFF_SPAWNFUNC_Q3TA_COMPAT(o,r) void spawnfunc_item_##o() { buff_Init_Compat(self,r); }
@@ -58,7 +64,7 @@ void buff_Init_Compat(entity ent, float replacement);
         BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
         BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
         BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
-        BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4) 
+        BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
 
 BUFF_SPAWNFUNCS(resistance,		BUFF_RESISTANCE)
 BUFF_SPAWNFUNCS(ammo,			BUFF_AMMO)
@@ -84,10 +90,11 @@ BUFF_SPAWNFUNC_Q3TA_COMPAT(invis,	BUFF_INVISIBLE)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(medic,	BUFF_MEDIC)
 #endif
 
-vector Buff_Color(float buff_id);
-string Buff_PrettyName(float buff_id);
-string Buff_Name(float buff_id);
-float Buff_Type_FromName(string buff_name);
-float Buff_Type_FromSprite(string buff_sprite);
-float Buff_Skin(float buff_id);
-string Buff_Sprite(float buff_id);
+vector Buff_Color(int buff_id);
+string Buff_PrettyName(int buff_id);
+string Buff_Name(int buff_id);
+int Buff_Type_FromName(string buff_name);
+int Buff_Type_FromSprite(string buff_sprite);
+int Buff_Skin(int buff_id);
+string Buff_Sprite(int buff_id);
+#endif

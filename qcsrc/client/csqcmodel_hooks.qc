@@ -1,11 +1,33 @@
-void CSQCModel_Hook_PreDraw(float isplayer);
+#include "csqcmodel_hooks.qh"
+#include "_all.qh"
 
-.float isplayermodel;
+#include "gibs.qh"
+#include "player_skeleton.qh"
+#include "sortlist.qh"
+
+#include "weapons/projectile.qh"
+
+#include "../common/animdecide.qh"
+#include "../common/csqcmodel_settings.qh"
+#include "../common/teams.qh"
+
+#include "../csqcmodellib/cl_model.qh"
+#include "../csqcmodellib/cl_player.qh"
+#include "../csqcmodellib/interpolate.qh"
+
+#include "../warpzonelib/mathlib.qh"
+
+.float death_time;
+.int modelflags;
+
+void CSQCModel_Hook_PreDraw(bool isplayer);
+
+.bool isplayermodel;
 
 // FEATURE: LOD
-.float lodmodelindex0;
-.float lodmodelindex1;
-.float lodmodelindex2;
+.int lodmodelindex0;
+.int lodmodelindex1;
+.int lodmodelindex2;
 void CSQCPlayer_LOD_Apply(void)
 {
 	// LOD model loading
@@ -71,26 +93,26 @@ void CSQCPlayer_LOD_Apply(void)
 
 // FEATURE: forcemodel and model color selection (MUST be called BEFORE LOD!)
 string forceplayermodels_model;
-float forceplayermodels_modelisgoodmodel;
-float forceplayermodels_modelindex;
-float forceplayermodels_skin;
+bool forceplayermodels_modelisgoodmodel;
+int forceplayermodels_modelindex;
+int forceplayermodels_skin;
 
 string forceplayermodels_mymodel;
-float forceplayermodels_myisgoodmodel;
-float forceplayermodels_mymodelindex;
+bool forceplayermodels_myisgoodmodel;
+int forceplayermodels_mymodelindex;
 
-float forceplayermodels_attempted;
+bool forceplayermodels_attempted;
 
 .string forceplayermodels_savemodel;
-.float forceplayermodels_savemodelindex;
-.float forceplayermodels_saveskin;
-.float forceplayermodels_savecolormap;
+.int forceplayermodels_savemodelindex;
+.int forceplayermodels_saveskin;
+.int forceplayermodels_savecolormap;
 
 .string forceplayermodels_isgoodmodel_mdl;
-.float forceplayermodels_isgoodmodel;
+.bool forceplayermodels_isgoodmodel;
 
 string forceplayermodels_goodmodel;
-float forceplayermodels_goodmodelindex;
+int forceplayermodels_goodmodelindex;
 
 .vector glowmod;
 .vector old_glowmod;
@@ -117,7 +139,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(void)
 			printf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
 	}
 }
-void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
+void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 {
 	// FORCEMODEL
 	// which one is ALWAYS good?
@@ -177,8 +199,8 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	}
 
 	// apply it
-	float isfriend;
-	float cm;
+	bool isfriend;
+	int cm;
 	cm = self.forceplayermodels_savecolormap;
 	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(cm - 1, "colors")) + 1024);
 
@@ -216,8 +238,8 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	if(teamplay)
 	{
 		// own team's color is never forced
-		float forcecolor_friend = 0;
-		float forcecolor_enemy = 0;
+		int forcecolor_friend = 0;
+		int forcecolor_enemy = 0;
 		entity tm;
 
 		if(autocvar_cl_forcemyplayercolors)
@@ -267,7 +289,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 
 	// GLOWMOD AND DEATH FADING
 	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
+		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, true) * 2;
 	else
 		self.glowmod = '1 1 1';
 
@@ -280,9 +302,9 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 			self.colormap = 0;
 
 			self.glowmod = self.old_glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
-			self.glowmod_x = max(self.glowmod_x, 0.0001);
-			self.glowmod_y = max(self.glowmod_y, 0.0001);
-			self.glowmod_z = max(self.glowmod_z, 0.0001);
+			self.glowmod_x = max(self.glowmod.x, 0.0001);
+			self.glowmod_y = max(self.glowmod.y, 0.0001);
+			self.glowmod_z = max(self.glowmod.z, 0.0001);
 		}
 		else if(self.old_glowmod != '0 0 0') { self.old_glowmod = '0 0 0'; }
 	}
@@ -291,13 +313,13 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 }
 
 // FEATURE: fallback frames
-.float csqcmodel_saveframe;
-.float csqcmodel_saveframe2;
+.int csqcmodel_saveframe;
+.int csqcmodel_saveframe2;
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-.float csqcmodel_saveframe3;
-.float csqcmodel_saveframe4;
+.int csqcmodel_saveframe3;
+.int csqcmodel_saveframe4;
 #endif
-.float csqcmodel_framecount;
+.int csqcmodel_framecount;
 
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
 void CSQCPlayer_FallbackFrame_PreUpdate(void)
@@ -309,7 +331,7 @@ void CSQCPlayer_FallbackFrame_PreUpdate(void)
 	self.frame4 = self.csqcmodel_saveframe4;
 #endif
 }
-void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
+void CSQCPlayer_FallbackFrame_PostUpdate(bool isnew)
 {
 	self.csqcmodel_saveframe = self.frame;
 	self.csqcmodel_saveframe2 = self.frame2;
@@ -322,25 +344,24 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 	// player "pops in"
 	if(isnew)
 	{
-#define FIX_FRAMETIME(f,ft) \
-		if(IS_DEAD_FRAME(self.f) && self.ft != 0 && self.death_time != 0) \
-		{ \
-			self.ft = self.death_time; \
-		}
-		FIX_FRAMETIME(frame, frame1time)
-		FIX_FRAMETIME(frame2, frame2time)
+#define FIX_FRAMETIME(f,ft) do {																					\
+		if(IS_DEAD_FRAME(self.f) && self.ft != 0 && self.death_time != 0)											\
+			self.ft = self.death_time;																				\
+} while(0)
+		FIX_FRAMETIME(frame, frame1time);
+		FIX_FRAMETIME(frame2, frame2time);
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-		FIX_FRAMETIME(frame3, frame3time)
-		FIX_FRAMETIME(frame4, frame4time)
+		FIX_FRAMETIME(frame3, frame3time);
+		FIX_FRAMETIME(frame4, frame4time);
 #endif
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
 }
-void CSQCPlayer_AnimDecide_PostUpdate(float isnew)
+void CSQCPlayer_AnimDecide_PostUpdate(bool isnew)
 {
 	self.csqcmodel_isdead = !!(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 }
-float CSQCPlayer_FallbackFrame(float f)
+int CSQCPlayer_FallbackFrame(int f)
 {
 	if(frameduration(self.modelindex, f) > 0)
 		return f; // goooooood
@@ -372,8 +393,8 @@ void CSQCPlayer_FallbackFrame_Apply(void)
 
 // FEATURE: auto tag_index
 .entity tag_entity;
-.float tag_entity_lastmodelindex;
-.float tag_index;
+.int tag_entity_lastmodelindex;
+.int tag_index;
 void CSQCModel_AutoTagIndex_Apply(void)
 {
 	if(self.tag_entity && wasfreed(self.tag_entity))
@@ -382,7 +403,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	if(self.tag_networkentity)
 	{
 		// we are ATTACHED!
-		float changed = 0;
+		bool changed = 0;
 		if(self.tag_entity.entnum != self.tag_networkentity)
 		{
 			self.tag_entity = findfloat(world, entnum, self.tag_networkentity);
@@ -447,24 +468,24 @@ void CSQCModel_AutoTagIndex_Apply(void)
 }
 
 // FEATURE: EF_NODRAW workalike
-const float EF_BRIGHTFIELD	= 1;
-const float EF_BRIGHTLIGHT 	= 4;
-const float EF_DIMLIGHT 	= 8;
-const float EF_DOUBLESIDED = 32768;
-const float EF_NOSELFSHADOW = 65536;
-const float EF_DYNAMICMODELLIGHT = 131072;
-const float EF_RESTARTANIM_BIT = 1048576;
-const float EF_TELEPORT_BIT = 2097152;
-const float MF_ROCKET  =   1; // leave a trail
-const float MF_GRENADE =   2; // leave a trail
-const float MF_GIB     =   4; // leave a trail
-const float MF_ROTATE  =   8; // rotate (bonus items)
-const float MF_TRACER  =  16; // green split trail
-const float MF_ZOMGIB  =  32; // small blood trail
-const float MF_TRACER2 =  64; // orange split trail
-const float MF_TRACER3 = 128; // purple trail
-.float csqcmodel_effects;
-.float csqcmodel_modelflags;
+const int EF_BRIGHTFIELD	= 1;
+const int EF_BRIGHTLIGHT 	= 4;
+const int EF_DIMLIGHT 		= 8;
+const int EF_DOUBLESIDED 	= 32768;
+const int EF_NOSELFSHADOW 	= 65536;
+const int EF_DYNAMICMODELLIGHT = 131072;
+const int EF_RESTARTANIM_BIT = 1048576;
+const int EF_TELEPORT_BIT = 2097152;
+const int MF_ROCKET  =   1; // leave a trail
+const int MF_GRENADE =   2; // leave a trail
+const int MF_GIB     =   4; // leave a trail
+const int MF_ROTATE  =   8; // rotate (bonus items)
+const int MF_TRACER  =  16; // green split trail
+const int MF_ZOMGIB  =  32; // small blood trail
+const int MF_TRACER2 =  64; // orange split trail
+const int MF_TRACER3 = 128; // purple trail
+.int csqcmodel_effects;
+.int csqcmodel_modelflags;
 void CSQCModel_Effects_PreUpdate(void)
 {
 	self.effects = self.csqcmodel_effects;
@@ -485,11 +506,10 @@ void CSQCModel_Effects_PostUpdate(void)
 	if(self.csqcmodel_teleported)
 		Projectile_ResetTrail(self.origin);
 }
-.float snd_looping;
+.int snd_looping;
 void CSQCModel_Effects_Apply(void)
 {
-	float eff = self.csqcmodel_effects;
-	eff &= ~CSQCMODEL_EF_RESPAWNGHOST;
+	int eff = self.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
 
 	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
@@ -582,17 +602,17 @@ void CSQCPlayer_Precache()
 }
 
 // general functions
-.float csqcmodel_predraw_run;
-.float anim_frame;
-.float anim_frame1time;
-.float anim_frame2;
-.float anim_frame2time;
-.float anim_saveframe;
-.float anim_saveframe1time;
-.float anim_saveframe2;
-.float anim_saveframe2time;
-.float anim_prev_pmove_flags;
-void CSQCModel_Hook_PreDraw(float isplayer)
+.int csqcmodel_predraw_run;
+.int anim_frame;
+.int anim_frame1time;
+.int anim_frame2;
+.int anim_frame2time;
+.int anim_saveframe;
+.int anim_saveframe1time;
+.int anim_saveframe2;
+.int anim_saveframe2time;
+.int anim_prev_pmove_flags;
+void CSQCModel_Hook_PreDraw(bool isplayer)
 {
 	if(self.csqcmodel_predraw_run == framecount)
 		return;
@@ -613,7 +633,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		if(!isplayer)
 		{
 			skeleton_loadinfo(self);
-			float doblend = (self.bone_upperbody >= 0);
+			bool doblend = (self.bone_upperbody >= 0);
 			CSQCPlayer_FallbackFrame_Apply();
 			if(doblend)
 			{
@@ -631,17 +651,17 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!
 			skeleton_loadinfo(self);
-			float doblend = (self.bone_upperbody >= 0);
-			float onground = 0;
+			bool doblend = (self.bone_upperbody >= 0);
+			bool onground = 0;
 			if(self == csqcplayer)
 			{
 				if(self.pmove_flags & PMF_ONGROUND)
 					onground = 1;
 				self.anim_prev_pmove_flags = self.pmove_flags;
 				if(self.pmove_flags & PMF_DUCKED)
-					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, FALSE);
+					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, false);
 				else if(self.anim_state & ANIMSTATE_DUCK)
-					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, FALSE);
+					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, false);
 			}
 			else
 			{
@@ -652,7 +672,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			animdecide_load_if_needed(self);
 			animdecide_setimplicitstate(self, onground);
 			animdecide_setframes(self, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
-			float sf = 0;
+			int sf = 0;
 			if(self.anim_saveframe != self.anim_frame || self.anim_saveframe1time != self.anim_frame1time)
 				sf |= CSQCMODEL_PROPERTY_FRAME;
 			if(self.anim_saveframe2 != self.anim_frame2 || self.anim_saveframe2time != self.anim_frame2time)
@@ -669,7 +689,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			self.frame1time = self.anim_frame1time;
 			self.frame2 = self.anim_frame2;
 			self.frame2time = self.anim_frame2time;
-			CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
+			CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, false);
 			CSQCModel_InterpolateAnimation_2To4_Do();
 			if(doblend)
 			{
@@ -690,7 +710,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 	CSQCModel_Effects_Apply();
 }
 
-void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
+void CSQCModel_Hook_PreUpdate(bool isnew, bool isplayer, bool islocalplayer)
 {
 	// interpolate v_angle
 	self.iflags |= IFLAG_V_ANGLE_X;
@@ -704,7 +724,7 @@ void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 	}
 }
 
-void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
+void CSQCModel_Hook_PostUpdate(bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
 	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/");

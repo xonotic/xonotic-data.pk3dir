@@ -1,3 +1,8 @@
+#include "../../_all.qh"
+
+#include "../../g_damage.qh"
+#include "../../bot/bot.qh"
+
 #define cvar_base "g_turrets_unit_"
 .float clientframe;
 void turrets_setframe(float _frame, float client_only)
@@ -15,7 +20,7 @@ void turrets_setframe(float _frame, float client_only)
 
 }
 
-float turret_send(entity to, float sf)
+float turret_send(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
@@ -24,37 +29,37 @@ float turret_send(entity to, float sf)
 	{
 	    WriteByte(MSG_ENTITY, self.turret_type);
 
-	    WriteCoord(MSG_ENTITY, self.origin_x);
-	    WriteCoord(MSG_ENTITY, self.origin_y);
-	    WriteCoord(MSG_ENTITY, self.origin_z);
+	    WriteCoord(MSG_ENTITY, self.origin.x);
+	    WriteCoord(MSG_ENTITY, self.origin.y);
+	    WriteCoord(MSG_ENTITY, self.origin.z);
 
-	    WriteAngle(MSG_ENTITY, self.angles_x);
-	    WriteAngle(MSG_ENTITY, self.angles_y);
+	    WriteAngle(MSG_ENTITY, self.angles.x);
+	    WriteAngle(MSG_ENTITY, self.angles.y);
     }
 
     if(sf & TNSF_ANG)
     {
-        WriteShort(MSG_ENTITY, rint(self.tur_head.angles_x));
-        WriteShort(MSG_ENTITY, rint(self.tur_head.angles_y));
+        WriteShort(MSG_ENTITY, rint(self.tur_head.angles.x));
+        WriteShort(MSG_ENTITY, rint(self.tur_head.angles.y));
     }
 
     if(sf & TNSF_AVEL)
     {
-        WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_x));
-        WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_y));
+        WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity.x));
+        WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity.y));
     }
 
     if(sf & TNSF_MOVE)
     {
-        WriteShort(MSG_ENTITY, rint(self.origin_x));
-        WriteShort(MSG_ENTITY, rint(self.origin_y));
-        WriteShort(MSG_ENTITY, rint(self.origin_z));
+        WriteShort(MSG_ENTITY, rint(self.origin.x));
+        WriteShort(MSG_ENTITY, rint(self.origin.y));
+        WriteShort(MSG_ENTITY, rint(self.origin.z));
 
-        WriteShort(MSG_ENTITY, rint(self.velocity_x));
-        WriteShort(MSG_ENTITY, rint(self.velocity_y));
-        WriteShort(MSG_ENTITY, rint(self.velocity_z));
+        WriteShort(MSG_ENTITY, rint(self.velocity.x));
+        WriteShort(MSG_ENTITY, rint(self.velocity.y));
+        WriteShort(MSG_ENTITY, rint(self.velocity.z));
 
-        WriteShort(MSG_ENTITY, rint(self.angles_y));
+        WriteShort(MSG_ENTITY, rint(self.angles.y));
     }
 
     if(sf & TNSF_ANIM)
@@ -73,7 +78,7 @@ float turret_send(entity to, float sf)
             WriteByte(MSG_ENTITY, ceil((self.health / self.tur_health) * 255));
     }
 
-	return TRUE;
+	return true;
 }
 
 void load_unit_settings(entity ent, string unitname, float is_reload)
@@ -163,7 +168,7 @@ void turret_projectile_touch()
     turret_projectile_explode();
 }
 
-void turret_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
     self.velocity  += vforce;
     self.health    -= damage;
@@ -182,7 +187,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
     setsize(proj, '-0.5 -0.5 -0.5' * _size, '0.5 0.5 0.5' * _size);
     proj.owner           = self;
     proj.realowner       = self;
-    proj.bot_dodge       = TRUE;
+    proj.bot_dodge       = true;
     proj.bot_dodgerating = self.shot_dmg;
     proj.think           = turret_projectile_explode;
     proj.touch           = turret_projectile_touch;
@@ -346,8 +351,8 @@ void turret_stdproc_track()
         target_angle = vectoangles(normalize(self.tur_aimpos - self.tur_shotorg));
     }
 
-    self.tur_head.angles_x = anglemods(self.tur_head.angles_x);
-    self.tur_head.angles_y = anglemods(self.tur_head.angles_y);
+    self.tur_head.angles_x = anglemods(self.tur_head.angles.x);
+    self.tur_head.angles_y = anglemods(self.tur_head.angles.y);
 
     // Find the diffrence between where we currently aim and where we want to aim
     //move_angle = target_angle - (self.angles + self.tur_head.angles);
@@ -362,21 +367,21 @@ void turret_stdproc_track()
             f_tmp = self.aim_speed * self.ticrate; // dgr/sec -> dgr/tic
             if (self.track_flags & TFL_TRACK_PITCH)
             {
-                self.tur_head.angles_x += bound(-f_tmp,move_angle_x, f_tmp);
-                if(self.tur_head.angles_x > self.aim_maxpitch)
+                self.tur_head.angles_x += bound(-f_tmp,move_angle.x, f_tmp);
+                if(self.tur_head.angles.x > self.aim_maxpitch)
                     self.tur_head.angles_x = self.aim_maxpitch;
 
-                if(self.tur_head.angles_x  < -self.aim_maxpitch)
+                if(self.tur_head.angles.x  < -self.aim_maxpitch)
                     self.tur_head.angles_x = self.aim_maxpitch;
             }
 
             if (self.track_flags & TFL_TRACK_ROT)
             {
-                self.tur_head.angles_y += bound(-f_tmp, move_angle_y, f_tmp);
-                if(self.tur_head.angles_y > self.aim_maxrot)
+                self.tur_head.angles_y += bound(-f_tmp, move_angle.y, f_tmp);
+                if(self.tur_head.angles.y > self.aim_maxrot)
                     self.tur_head.angles_y = self.aim_maxrot;
 
-                if(self.tur_head.angles_y  < -self.aim_maxrot)
+                if(self.tur_head.angles.y  < -self.aim_maxrot)
                     self.tur_head.angles_y = self.aim_maxrot;
             }
 
@@ -387,15 +392,15 @@ void turret_stdproc_track()
 
         case TFL_TRACKTYPE_FLUIDINERTIA:
             f_tmp = self.aim_speed * self.ticrate; // dgr/sec -> dgr/tic
-            move_angle_x = bound(-self.aim_speed, move_angle_x * self.track_accel_pitch * f_tmp, self.aim_speed);
-            move_angle_y = bound(-self.aim_speed, move_angle_y * self.track_accel_rot * f_tmp, self.aim_speed);
+            move_angle.x = bound(-self.aim_speed, move_angle.x * self.track_accel_pitch * f_tmp, self.aim_speed);
+            move_angle.y = bound(-self.aim_speed, move_angle.y * self.track_accel_rot * f_tmp, self.aim_speed);
             move_angle = (self.tur_head.avelocity * self.track_blendrate) + (move_angle * (1 - self.track_blendrate));
             break;
 
         case TFL_TRACKTYPE_FLUIDPRECISE:
 
-            move_angle_y = bound(-self.aim_speed, move_angle_y, self.aim_speed);
-            move_angle_x = bound(-self.aim_speed, move_angle_x, self.aim_speed);
+            move_angle.y = bound(-self.aim_speed, move_angle.y, self.aim_speed);
+            move_angle.x = bound(-self.aim_speed, move_angle.x, self.aim_speed);
 
             break;
     }
@@ -403,8 +408,8 @@ void turret_stdproc_track()
     //  pitch
     if (self.track_flags & TFL_TRACK_PITCH)
     {
-        self.tur_head.avelocity_x = move_angle_x;
-        if((self.tur_head.angles_x + self.tur_head.avelocity_x * self.ticrate) > self.aim_maxpitch)
+        self.tur_head.avelocity_x = move_angle.x;
+        if((self.tur_head.angles.x + self.tur_head.avelocity.x * self.ticrate) > self.aim_maxpitch)
         {
             self.tur_head.avelocity_x = 0;
             self.tur_head.angles_x = self.aim_maxpitch;
@@ -412,7 +417,7 @@ void turret_stdproc_track()
             self.SendFlags  |= TNSF_ANG;
         }
 
-        if((self.tur_head.angles_x + self.tur_head.avelocity_x * self.ticrate) < -self.aim_maxpitch)
+        if((self.tur_head.angles.x + self.tur_head.avelocity.x * self.ticrate) < -self.aim_maxpitch)
         {
             self.tur_head.avelocity_x = 0;
             self.tur_head.angles_x = -self.aim_maxpitch;
@@ -424,9 +429,9 @@ void turret_stdproc_track()
     //  rot
     if (self.track_flags & TFL_TRACK_ROT)
     {
-        self.tur_head.avelocity_y = move_angle_y;
+        self.tur_head.avelocity_y = move_angle.y;
 
-        if((self.tur_head.angles_y + self.tur_head.avelocity_y * self.ticrate) > self.aim_maxrot)
+        if((self.tur_head.angles.y + self.tur_head.avelocity.y * self.ticrate) > self.aim_maxrot)
         {
             self.tur_head.avelocity_y = 0;
             self.tur_head.angles_y = self.aim_maxrot;
@@ -434,7 +439,7 @@ void turret_stdproc_track()
             self.SendFlags  |= TNSF_ANG;
         }
 
-        if((self.tur_head.angles_y + self.tur_head.avelocity_y * self.ticrate) < -self.aim_maxrot)
+        if((self.tur_head.angles.y + self.tur_head.avelocity.y * self.ticrate) < -self.aim_maxrot)
         {
             self.tur_head.avelocity_y = 0;
             self.tur_head.angles_y = -self.aim_maxrot;
@@ -677,10 +682,10 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 
     if (validate_flags & TFL_TARGETSELECT_ANGLELIMITS)
     {
-        if (fabs(tvt_tadv_x) > e_turret.aim_maxpitch)
+        if (fabs(tvt_tadv.x) > e_turret.aim_maxpitch)
             return -17;
 
-        if (fabs(tvt_tadv_y) > e_turret.aim_maxrot)
+        if (fabs(tvt_tadv.y) > e_turret.aim_maxrot)
             return -18;
     }
 
@@ -931,7 +936,7 @@ void turret_think()
 
 void turret_fire()
 {
-    if (autocvar_g_turrets_nofire != 0)
+    if (autocvar_g_turrets_nofire)
         return;
 
     self.turret_firefunc();
@@ -980,7 +985,7 @@ void turret_stdproc_use()
 
 void turret_link()
 {
-    Net_LinkEntity(self, TRUE, 0, turret_send);
+    Net_LinkEntity(self, true, 0, turret_send);
     self.think      = turret_think;
     self.nextthink  = time;
     self.tur_head.effects = EF_NODRAW;
@@ -991,7 +996,7 @@ void turrets_manager_think()
     self.nextthink = time + 1;
 
     entity e;
-    if (autocvar_g_turrets_reloadcvars == 1)
+    if (autocvar_g_turrets_reloadcvars)
     {
         e = nextent(world);
         while (e)
@@ -1041,19 +1046,6 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if (!(self.spawnflags & TSF_SUSPENDED))
         builtin_droptofloor(); // why can't we use regular droptofloor here?
 
-    // Terrainbase spawnflag. This puts a enlongated model
-    // under the turret, so it looks ok on uneaven surfaces.
-    /*  TODO: Handle this with CSQC
-    if (self.spawnflags & TSF_TERRAINBASE)
-    {
-        entity tb;
-        tb = spawn();
-        setmodel(tb,"models/turrets/terrainbase.md3");
-        setorigin(tb,self.origin);
-        tb.solid = SOLID_BBOX;
-    }
-    */
-
     self.cvar_basename = cvar_base_name;
     load_unit_settings(self, self.cvar_basename, 0);
 
@@ -1102,8 +1094,8 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if (!self.health)
         self.health = 1000;
     self.tur_health = max(1, self.health);
-    self.bot_attack = TRUE;
-    self.monster_attack = TRUE;
+    self.bot_attack = true;
+    self.monster_attack = true;
 
     if (!self.turrcaps_flags)
         self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
@@ -1349,9 +1341,9 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     while (vlen(self.tur_dbg_rvec) < 2)
         self.tur_dbg_rvec  = randomvec() * 4;
 
-    self.tur_dbg_rvec_x = fabs(self.tur_dbg_rvec_x);
-    self.tur_dbg_rvec_y = fabs(self.tur_dbg_rvec_y);
-    self.tur_dbg_rvec_z = fabs(self.tur_dbg_rvec_z);
+    self.tur_dbg_rvec_x = fabs(self.tur_dbg_rvec.x);
+    self.tur_dbg_rvec_y = fabs(self.tur_dbg_rvec.y);
+    self.tur_dbg_rvec_z = fabs(self.tur_dbg_rvec.z);
 #endif
 
     // Its all good.

@@ -1,3 +1,21 @@
+#include "tracing.qh"
+#include "../_all.qh"
+
+#include "accuracy.qh"
+#include "common.qh"
+#include "hitplot.qh"
+
+#include "../g_damage.qh"
+#include "../g_subs.qh"
+#include "../antilag.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/util.qh"
+
+#include "../../common/weapons/weapons.qh"
+
+#include "../../warpzonelib/common.qh"
+
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
@@ -37,31 +55,31 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
-	if(ent.weaponentity.movedir_x > 0)
+	if(ent.weaponentity.movedir.x > 0)
 		vecs = ent.weaponentity.movedir;
 	else
 		vecs = '0 0 0';
 
-	dv = v_right * -vecs_y + v_up * vecs_z;
+	dv = v_right * -vecs.y + v_up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
 	// now move the shotorg forward as much as requested if possible
 	if(antilag)
 	{
 		if(ent.antilag_debug)
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ent.antilag_debug);
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent, ent.antilag_debug);
 		else
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 	}
 	else
-		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs_x + nudge), MOVE_NORMAL, ent);
+		tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
 	w_shotdir = normalize(w_shotend - w_shotorg);
 
 	//vector prevdir = w_shotdir;
 	//vector prevorg = w_shotorg;
-	//vector prevend = w_shotend; 
+	//vector prevend = w_shotend;
 
 	if (antilag)
 	if (!ent.cvar_cl_noantilag)
@@ -146,7 +164,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 		error("Unowned missile");
 
 	dir = dir + upDir * (pUpSpeed / pSpeed);
-	dir_z += pZSpeed / pSpeed;
+	dir.z += pZSpeed / pSpeed;
 	pSpeed *= vlen(dir);
 	dir = normalize(dir);
 
@@ -158,9 +176,9 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	}
 	mspercallsum -= gettime(GETTIME_HIRES);
 	#endif
-	
+
 	dir = W_CalculateSpread(dir, spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
-	
+
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
 	mspercallcount += 1;
@@ -175,7 +193,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 //  Ballistics Tracing
 // ====================
 
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
+void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector hitloc, force, endpoint, dir;
 	entity ent, endent;
@@ -207,9 +225,9 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	while (1)
 	{
 		if(self.antilag_debug)
-			WarpZone_traceline_antilag (self, start, end, FALSE, o, self.antilag_debug);
+			WarpZone_traceline_antilag (self, start, end, false, o, self.antilag_debug);
 		else
-			WarpZone_traceline_antilag (self, start, end, FALSE, o, ANTILAG_LATENCY(self));
+			WarpZone_traceline_antilag (self, start, end, false, o, ANTILAG_LATENCY(self));
 		if(o && WarpZone_trace_firstzone)
 		{
 			o = world;
@@ -224,7 +242,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			break;
 
 		// make the entity non-solid so we can hit the next one
-		trace_ent.railgunhit = TRUE;
+		trace_ent.railgunhit = true;
 		trace_ent.railgunhitloc = end;
 		trace_ent.railgunhitsolidbackup = trace_ent.solid;
 		trace_ent.railgundistance = vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos) - start);
@@ -243,12 +261,12 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	endq3surfaceflags = trace_dphitq3surfaceflags;
 
 	// find all the entities the railgun hit and restore their solid state
-	ent = findfloat(world, railgunhit, TRUE);
+	ent = findfloat(world, railgunhit, true);
 	while (ent)
 	{
 		// restore their solid type
 		ent.solid = ent.railgunhitsolidbackup;
-		ent = findfloat(ent, railgunhit, TRUE);
+		ent = findfloat(ent, railgunhit, true);
 	}
 
 	// spawn a temporary explosion entity for RadiusDamage calls
@@ -281,7 +299,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	}
 
 	// find all the entities the railgun hit and hurt them
-	ent = findfloat(world, railgunhit, TRUE);
+	ent = findfloat(world, railgunhit, true);
 	while (ent)
 	{
 		// get the details we need to call the damage function
@@ -303,11 +321,11 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 		ent.railgunhitloc = '0 0 0';
 		ent.railgunhitsolidbackup = SOLID_NOT;
-		ent.railgunhit = FALSE;
+		ent.railgunhit = false;
 		ent.railgundistance = 0;
 
 		// advance to the next entity
-		ent = findfloat(ent, railgunhit, TRUE);
+		ent = findfloat(ent, railgunhit, true);
 	}
 
 	// calculate hits and fired shots for hitscan
@@ -326,7 +344,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = world;
 }
 
-void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, float tracereffects)
+void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
 {
 	vector  end;
 
@@ -366,7 +384,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	for (;;)
 	{
 		// TODO also show effect while tracing
-		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, WarpZone_trace_forent, world, fireBullet_trace_callback);
+		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, false, WarpZone_trace_forent, world, fireBullet_trace_callback);
 		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 		start = trace_endpos;
@@ -421,7 +439,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 		// go through solid!
 		// outside the world? forget it
-		if(start_x > world.maxs_x || start_y > world.maxs_y || start_z > world.maxs_z || start_x < world.mins_x || start_y < world.mins_y || start_z < world.mins_z)
+		if(start.x > world.maxs.x || start.y > world.maxs.y || start.z > world.maxs.z || start.x < world.mins.x || start.y < world.mins.y || start.z < world.mins.z)
 			break;
 
 		float maxdist;
@@ -441,7 +459,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 		// move the entity along its velocity until it's out of solid, then let it resume
 		// The previously hit entity is ignored here!
-		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, WarpZone_trace_forent, TRUE, hit);
+		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, WarpZone_trace_forent, true, hit);
 		if(trace_fraction == 1) // 1: we never got out of solid
 			break;
 

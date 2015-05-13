@@ -1,0 +1,39 @@
+#ifndef MENUDEFS_H
+#define MENUDEFS_H
+
+#pragma noref 1
+
+#define true _true
+#define false _false
+#define TRUE _TRUE
+#define FALSE _FALSE
+
+#include "upstream/menudefs.qc"
+
+#undef true
+#undef false
+#undef TRUE
+#undef FALSE
+
+int(string str, string sub, int startpos) _strstrofs = #221;
+#define strstrofs _strstrofs
+int(string str, int ofs) _str2chr = #222;
+#define str2chr _str2chr
+string(int c, ...) _chr2str = #223;
+#define chr2str _chr2str
+
+int(string s1, string s2) _strcmp = #228;
+#define strcmp _strcmp
+int(string s1, string s2, int len) _strncmp = #228;
+#define strncmp _strncmp
+int(string s1, string s2) _strcasecmp = #229;
+#define strcasecmp _strcasecmp
+int(string s1, string s2, int len) _strncasecmp = #230;
+#define strncasecmp _strncasecmp
+
+int() _buf_create = #440;
+#define buf_create _buf_create
+
+#pragma noref 0
+
+#endif

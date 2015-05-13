@@ -1,3 +1,7 @@
+#include "_all.qh"
+
+void train_next();
+
 const float LOOP = 1;
 
 const float DNOSHADOW = 2;
@@ -84,8 +88,6 @@ void dynlight_use()
 }
 void spawnfunc_dynlight()
 {
-	local	entity	targ;
-
 	if (!self.light_lev)
 		self.light_lev = 200;
 	if (!self.color)

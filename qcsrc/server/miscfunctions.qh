@@ -1,0 +1,473 @@
+#ifndef MISCFUNCTIONS_H
+#define MISCFUNCTIONS_H
+
+#include "t_items.qh"
+
+#include "mutators/base.qh"
+#include "mutators/gamemode_race.qh"
+
+#include "../common/constants.qh"
+#include "../common/mapinfo.qh"
+
+#ifdef RELEASE
+#define cvar_string_normal builtin_cvar_string
+#define cvar_normal builtin_cvar
+#else
+string cvar_string_normal(string n)
+{
+	if (!(cvar_type(n) & 1))
+		backtrace(strcat("Attempt to access undefined cvar: ", n));
+	return builtin_cvar_string(n);
+}
+
+float cvar_normal(string n)
+{
+	return stof(cvar_string_normal(n));
+}
+#endif
+#define cvar_set_normal builtin_cvar_set
+
+.vector dropped_origin;
+.void(void) uncustomizeentityforclient;
+.float uncustomizeentityforclient_set;
+.float nottargeted;
+
+entity eliminatedPlayers;
+void EliminatedPlayers_Init(float(entity) isEliminated_func);
+
+string admin_name(void);
+
+void write_recordmarker(entity pl, float tstart, float dt);
+
+void play2all(string samp);
+
+void DistributeEvenly_Init(float amount, float totalweight);
+float DistributeEvenly_Get(float weight);
+
+void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2);
+
+void shockwave_spawn(string m, vector org, float sz, float t1, float t2);
+
+vector randompos(vector m1, vector m2);
+
+void play2team(float t, string filename);
+
+void GetCvars_handleFloat(string thisname, float f, .float field, string name);
+
+float spamsound(entity e, float chan, string samp, float vol, float _atten);
+
+void GetCvars_handleString(string thisname, float f, .string field, string name);
+
+void precache_all_playermodels(string pattern);
+
+void soundat(entity e, vector o, float chan, string samp, float vol, float _atten);
+
+void defer(float fdelay, void() func);
+
+void UncustomizeEntitiesRun();
+void InitializeEntitiesRun();
+
+void stopsoundto(float _dest, entity e, float chan);
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
+float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d);
+
+vector shotorg_adjust(vector vecs, float y_is_right, float visual);
+
+float DistributeEvenly_amount;
+float DistributeEvenly_totalweight;
+var void remove(entity e);
+void objerror(string s);
+void droptofloor();
+void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
+void() spawnpoint_use;
+void() SUB_Remove;
+
+void attach_sameorigin(entity e, entity to, string tag);
+
+void crosshair_trace(entity pl);
+
+void crosshair_trace_plusvisibletriggers(entity pl);
+
+void detach_sameorigin(entity e);
+
+void follow_sameorigin(entity e, entity to);
+
+string formatmessage(string msg);
+
+void GameLogEcho(string s);
+
+void GameLogInit();
+
+void GameLogClose();
+
+void GetCvars(float f);
+
+string GetMapname();
+
+float isPushable(entity e);
+
+float LostMovetypeFollow(entity ent);
+
+string uid2name(string myuid);
+
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
+
+string NearestLocation(vector p);
+
+void play2(entity e, string filename);
+
+string playername(entity p);
+
+void precache();
+
+void remove_safely(entity e);
+
+void remove_unsafely(entity e);
+
+void SetMovetypeFollow(entity ent, entity e);
+
+vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn);
+
+void soundto(float dest, entity e, float chan, string samp, float vol, float atten);
+
+void stopsound(entity e, float chan);
+
+float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector thmi, vector thma);
+
+void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+
+void WarpZone_crosshair_trace(entity pl);
+
+void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+
+
+#define IFTARGETED if(!self.nottargeted && self.targetname != "")
+
+#define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER) || ((dt) == DEATH_SLIME) || ((dt) == DEATH_LAVA) || ((dt) == DEATH_SWAMP))
+
+#define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
+
+#define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
+
+const string STR_PLAYER = "player";
+const string STR_SPECTATOR = "spectator";
+const string STR_OBSERVER = "observer";
+
+#define IS_PLAYER(v) 			(v.classname == STR_PLAYER)
+#define IS_SPEC(v) 				(v.classname == STR_SPECTATOR)
+#define IS_OBSERVER(v) 			(v.classname == STR_OBSERVER)
+#define IS_CLIENT(v)			(v.flags & FL_CLIENT)
+#define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
+#define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
+#define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
+
+#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
+#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
+#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
+
+#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(IS_PLAYER(v))
+#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if (!IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
+#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
+
+#define FOR_EACH_MONSTER(v) for(v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
+
+// copies a string to a tempstring (so one can strunzone it)
+string strcat1(string s) = #115; // FRIK_FILE
+
+float logfile_open;
+float logfile;
+
+#define strstr strstrofs
+/*
+// NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.
+// IT WILL MOST PROBABLY DESTROY _ALL_ OTHER TEMP
+// STRINGS AND TAKE QUITE LONG. haystack and needle MUST
+// BE CONSTANT OR strzoneD!
+float strstr(string haystack, string needle, float offset)
+{
+	float len, endpos;
+	string found;
+	len = strlen(needle);
+	endpos = strlen(haystack) - len;
+	while(offset <= endpos)
+	{
+		found = substring(haystack, offset, len);
+		if(found == needle)
+			return offset;
+		offset = offset + 1;
+	}
+	return -1;
+}
+*/
+
+const float NUM_NEAREST_ENTITIES = 4;
+entity nearest_entity[NUM_NEAREST_ENTITIES];
+float nearest_length[NUM_NEAREST_ENTITIES];
+
+
+//#NO AUTOCVARS START
+
+float g_pickup_shells;
+float g_pickup_shells_max;
+float g_pickup_nails;
+float g_pickup_nails_max;
+float g_pickup_rockets;
+float g_pickup_rockets_max;
+float g_pickup_cells;
+float g_pickup_cells_max;
+float g_pickup_plasma;
+float g_pickup_plasma_max;
+float g_pickup_fuel;
+float g_pickup_fuel_jetpack;
+float g_pickup_fuel_max;
+float g_pickup_armorsmall;
+float g_pickup_armorsmall_max;
+float g_pickup_armorsmall_anyway;
+float g_pickup_armormedium;
+float g_pickup_armormedium_max;
+float g_pickup_armormedium_anyway;
+float g_pickup_armorbig;
+float g_pickup_armorbig_max;
+float g_pickup_armorbig_anyway;
+float g_pickup_armorlarge;
+float g_pickup_armorlarge_max;
+float g_pickup_armorlarge_anyway;
+float g_pickup_healthsmall;
+float g_pickup_healthsmall_max;
+float g_pickup_healthsmall_anyway;
+float g_pickup_healthmedium;
+float g_pickup_healthmedium_max;
+float g_pickup_healthmedium_anyway;
+float g_pickup_healthlarge;
+float g_pickup_healthlarge_max;
+float g_pickup_healthlarge_anyway;
+float g_pickup_healthmega;
+float g_pickup_healthmega_max;
+float g_pickup_healthmega_anyway;
+float g_pickup_ammo_anyway;
+float g_pickup_weapons_anyway;
+float g_weaponarena;
+WepSet g_weaponarena_weapons;
+float g_weaponarena_random;
+float g_weaponarena_random_with_blaster;
+string g_weaponarena_list;
+float g_weaponspeedfactor;
+float g_weaponratefactor;
+float g_weapondamagefactor;
+float g_weaponforcefactor;
+float g_weaponspreadfactor;
+
+WepSet start_weapons;
+WepSet start_weapons_default;
+WepSet start_weapons_defaultmask;
+int start_items;
+float start_ammo_shells;
+float start_ammo_nails;
+float start_ammo_rockets;
+float start_ammo_cells;
+float start_ammo_plasma;
+float start_ammo_fuel;
+float start_health;
+float start_armorvalue;
+WepSet warmup_start_weapons;
+WepSet warmup_start_weapons_default;
+WepSet warmup_start_weapons_defaultmask;
+#define WARMUP_START_WEAPONS ((g_warmup_allguns == 1) ? (warmup_start_weapons & (weaponsInMap | start_weapons)) : warmup_start_weapons)
+float warmup_start_ammo_shells;
+float warmup_start_ammo_nails;
+float warmup_start_ammo_rockets;
+float warmup_start_ammo_cells;
+float warmup_start_ammo_plasma;
+float warmup_start_ammo_fuel;
+float warmup_start_health;
+float warmup_start_armorvalue;
+float g_weapon_stay;
+
+float want_weapon(entity weaponinfo, float allguns); // WEAPONTODO: what still needs done?
+void readplayerstartcvars();
+
+float g_bugrigs;
+float g_bugrigs_planar_movement;
+float g_bugrigs_planar_movement_car_jumping;
+float g_bugrigs_reverse_spinning;
+float g_bugrigs_reverse_speeding;
+float g_bugrigs_reverse_stopping;
+float g_bugrigs_air_steering;
+float g_bugrigs_angle_smoothing;
+float g_bugrigs_friction_floor;
+float g_bugrigs_friction_brake;
+float g_bugrigs_friction_air;
+float g_bugrigs_accel;
+float g_bugrigs_speed_ref;
+float g_bugrigs_speed_pow;
+float g_bugrigs_steer;
+
+float sv_autotaunt;
+float sv_taunt;
+
+string GetGametype(); // g_world.qc
+void mutators_add(); // mutators.qc
+void readlevelcvars(void)
+{
+	// load mutators
+	mutators_add();
+
+	if(cvar("sv_allow_fullbright"))
+		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
+
+    g_bugrigs = cvar("g_bugrigs");
+    g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
+    g_bugrigs_planar_movement_car_jumping = cvar("g_bugrigs_planar_movement_car_jumping");
+    g_bugrigs_reverse_spinning = cvar("g_bugrigs_reverse_spinning");
+    g_bugrigs_reverse_speeding = cvar("g_bugrigs_reverse_speeding");
+    g_bugrigs_reverse_stopping = cvar("g_bugrigs_reverse_stopping");
+    g_bugrigs_air_steering = cvar("g_bugrigs_air_steering");
+    g_bugrigs_angle_smoothing = cvar("g_bugrigs_angle_smoothing");
+    g_bugrigs_friction_floor = cvar("g_bugrigs_friction_floor");
+    g_bugrigs_friction_brake = cvar("g_bugrigs_friction_brake");
+    g_bugrigs_friction_air = cvar("g_bugrigs_friction_air");
+    g_bugrigs_accel = cvar("g_bugrigs_accel");
+    g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
+    g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
+    g_bugrigs_steer = cvar("g_bugrigs_steer");
+
+	g_instagib = cvar("g_instagib");
+
+	sv_clones = cvar("sv_clones");
+	sv_foginterval = cvar("sv_foginterval");
+	g_cloaked = cvar("g_cloaked");
+	g_footsteps = cvar("g_footsteps");
+	g_grappling_hook = cvar("g_grappling_hook");
+	g_jetpack = cvar("g_jetpack");
+	sv_maxidle = cvar("sv_maxidle");
+	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
+	sv_autotaunt = cvar("sv_autotaunt");
+	sv_taunt = cvar("sv_taunt");
+
+	warmup_stage = cvar("g_warmup");
+	g_warmup_limit = cvar("g_warmup_limit");
+	g_warmup_allguns = cvar("g_warmup_allguns");
+	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
+
+	if ((g_race && g_race_qualifying == 2) || g_assault || cvar("g_campaign"))
+		warmup_stage = 0; // these modes cannot work together, sorry
+
+	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
+	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
+	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
+	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
+	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
+	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
+	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
+	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
+	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
+	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
+	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
+	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
+	g_pickup_respawntimejitter_long = cvar("g_pickup_respawntimejitter_long");
+	g_pickup_respawntimejitter_powerup = cvar("g_pickup_respawntimejitter_powerup");
+
+	g_weaponspeedfactor = cvar("g_weaponspeedfactor");
+	g_weaponratefactor = cvar("g_weaponratefactor");
+	g_weapondamagefactor = cvar("g_weapondamagefactor");
+	g_weaponforcefactor = cvar("g_weaponforcefactor");
+	g_weaponspreadfactor = cvar("g_weaponspreadfactor");
+
+	g_pickup_shells = cvar("g_pickup_shells");
+	g_pickup_shells_max = cvar("g_pickup_shells_max");
+	g_pickup_nails = cvar("g_pickup_nails");
+	g_pickup_nails_max = cvar("g_pickup_nails_max");
+	g_pickup_rockets = cvar("g_pickup_rockets");
+	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
+	g_pickup_cells = cvar("g_pickup_cells");
+	g_pickup_cells_max = cvar("g_pickup_cells_max");
+	g_pickup_plasma = cvar("g_pickup_plasma");
+	g_pickup_plasma_max = cvar("g_pickup_plasma_max");
+	g_pickup_fuel = cvar("g_pickup_fuel");
+	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
+	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
+	g_pickup_armorsmall = cvar("g_pickup_armorsmall");
+	g_pickup_armorsmall_max = cvar("g_pickup_armorsmall_max");
+	g_pickup_armorsmall_anyway = cvar("g_pickup_armorsmall_anyway");
+	g_pickup_armormedium = cvar("g_pickup_armormedium");
+	g_pickup_armormedium_max = cvar("g_pickup_armormedium_max");
+	g_pickup_armormedium_anyway = cvar("g_pickup_armormedium_anyway");
+	g_pickup_armorbig = cvar("g_pickup_armorbig");
+	g_pickup_armorbig_max = cvar("g_pickup_armorbig_max");
+	g_pickup_armorbig_anyway = cvar("g_pickup_armorbig_anyway");
+	g_pickup_armorlarge = cvar("g_pickup_armorlarge");
+	g_pickup_armorlarge_max = cvar("g_pickup_armorlarge_max");
+	g_pickup_armorlarge_anyway = cvar("g_pickup_armorlarge_anyway");
+	g_pickup_healthsmall = cvar("g_pickup_healthsmall");
+	g_pickup_healthsmall_max = cvar("g_pickup_healthsmall_max");
+	g_pickup_healthsmall_anyway = cvar("g_pickup_healthsmall_anyway");
+	g_pickup_healthmedium = cvar("g_pickup_healthmedium");
+	g_pickup_healthmedium_max = cvar("g_pickup_healthmedium_max");
+	g_pickup_healthmedium_anyway = cvar("g_pickup_healthmedium_anyway");
+	g_pickup_healthlarge = cvar("g_pickup_healthlarge");
+	g_pickup_healthlarge_max = cvar("g_pickup_healthlarge_max");
+	g_pickup_healthlarge_anyway = cvar("g_pickup_healthlarge_anyway");
+	g_pickup_healthmega = cvar("g_pickup_healthmega");
+	g_pickup_healthmega_max = cvar("g_pickup_healthmega_max");
+	g_pickup_healthmega_anyway = cvar("g_pickup_healthmega_anyway");
+
+	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
+	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
+
+    g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
+    if(!g_weapon_stay)
+        g_weapon_stay = cvar("g_weapon_stay");
+
+	if (!warmup_stage)
+		game_starttime = time + cvar("g_start_delay");
+
+	for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
+		WEP_ACTION(i, WR_INIT);
+
+	readplayerstartcvars();
+}
+
+//#NO AUTOCVARS END
+
+
+// Sound functions
+//string precache_sound (string s) = #19;
+// hack
+float precache_sound_index (string s) = #19;
+
+const float SND_VOLUME = 1;
+const float SND_ATTENUATION = 2;
+const float SND_LARGEENTITY = 8;
+const float SND_LARGESOUND = 16;
+
+// WARNING: this kills the trace globals
+#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
+#define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()
+
+const float INITPRIO_FIRST 				= 0;
+const float INITPRIO_GAMETYPE 			= 0;
+const float INITPRIO_GAMETYPE_FALLBACK 	= 1;
+const float INITPRIO_FINDTARGET 		= 10;
+const float INITPRIO_DROPTOFLOOR 		= 20;
+const float INITPRIO_SETLOCATION 		= 90;
+const float INITPRIO_LINKDOORS 			= 91;
+const float INITPRIO_LAST 				= 99;
+
+.void(void) initialize_entity;
+.float initialize_entity_order;
+.entity initialize_entity_next;
+entity initialize_entity_first;
+
+
+
+
+
+float sound_allowed(float dest, entity e);
+void InitializeEntity(entity e, void(void) func, float order);
+void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
+void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc);
+
+#endif

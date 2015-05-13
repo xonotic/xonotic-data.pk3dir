@@ -1,0 +1,33 @@
+#ifndef PARTICLES_H
+#define PARTICLES_H
+
+.int dphitcontentsmask;
+
+entityclass(PointParticles);
+class(PointParticles) .int cnt; // effect number
+class(PointParticles) .vector velocity; // particle velocity
+class(PointParticles) .float waterlevel; // direction jitter
+class(PointParticles) .int count; // count multiplier
+class(PointParticles) .int impulse; // density
+class(PointParticles) .string noise; // sound
+class(PointParticles) .float atten;
+class(PointParticles) .float volume;
+class(PointParticles) .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
+class(PointParticles) .vector movedir; // trace direction
+
+void Draw_PointParticles();
+
+void Ent_PointParticles_Remove();
+
+void Ent_PointParticles();
+
+class(PointParticles) .float glow_color; // palette index
+
+void Draw_Rain();
+
+void Draw_Snow();
+
+void Ent_RainOrSnow();
+
+void Net_ReadVortexBeamParticle();
+#endif

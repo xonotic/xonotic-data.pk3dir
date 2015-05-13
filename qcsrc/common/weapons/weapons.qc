@@ -1,7 +1,60 @@
+#ifndef WEAPONS_C
+#define WEAPONS_C
+
+#include "weapons.qh"
+
+#if defined(CSQC)
+	#include "../../dpdefs/csprogsdefs.qh"
+	#include "../../client/defs.qh"
+	#include "../constants.qh"
+	#include "../stats.qh"
+	#include "../../warpzonelib/anglestransform.qh"
+	#include "../../warpzonelib/mathlib.qh"
+	#include "../../warpzonelib/common.qh"
+	#include "../../warpzonelib/client.qh"
+	#include "../util.qh"
+	#include "../buffs.qh"
+	#include "../../client/autocvars.qh"
+	#include "../deathtypes.qh"
+	#include "../../csqcmodellib/interpolate.qh"
+	#include "../../client/movetypes.qh"
+	#include "../../client/main.qh"
+	#include "../../csqcmodellib/cl_model.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+    #include "../../dpdefs/dpextensions.qh"
+    #include "../../warpzonelib/anglestransform.qh"
+    #include "../../warpzonelib/mathlib.qh"
+    #include "../../warpzonelib/common.qh"
+    #include "../../warpzonelib/util_server.qh"
+    #include "../../warpzonelib/server.qh"
+    #include "../constants.qh"
+    #include "../stats.qh"
+    #include "../teams.qh"
+    #include "../util.qh"
+    #include "../buffs.qh"
+    #include "../monsters/monsters.qh"
+    #include "config.qh"
+    #include "../../server/weapons/csqcprojectile.qh"
+    #include "../../server/weapons/tracing.qh"
+    #include "../../server/t_items.qh"
+    #include "../../server/autocvars.qh"
+    #include "../../server/constants.qh"
+    #include "../../server/defs.qh"
+    #include "../notifications.qh"
+    #include "../deathtypes.qh"
+    #include "../../server/mutators/mutators_include.qh"
+    #include "../mapinfo.qh"
+    #include "../../server/command/common.qh"
+    #include "../../csqcmodellib/sv_model.qh"
+    #include "../../server/portals.qh"
+    #include "../../server/g_hook.qh"
+#endif
 #ifndef MENUQC
 #include "calculations.qc"
 #endif
-#include "all.qh"
+#include "all.inc"
 
 // WEAPON PLUGIN SYSTEM
 entity weapon_info[WEP_MAXCOUNT];
@@ -11,7 +64,7 @@ entity dummy_weapon_info;
 # error Kein Weltraum links auf dem Gerät
 #endif
 
-WepSet WepSet_FromWeapon(float a) {
+WepSet WepSet_FromWeapon(int a) {
 	a -= WEP_FIRST;
 #if WEP_MAXCOUNT > 24
 	if(a >= 24) {
@@ -45,7 +98,7 @@ void WriteWepSet(float dst, WepSet w)
 #elif WEP_MAXCOUNT > 24
 	WriteInt48_t(dst, w);
 #else
-	WriteInt24_t(dst, w_x);
+	WriteInt24_t(dst, w.x);
 #endif
 }
 #endif
@@ -53,11 +106,11 @@ void WriteWepSet(float dst, WepSet w)
 WepSet WepSet_GetFromStat()
 {
 	WepSet w = '0 0 0';
-	w_x = getstati(STAT_WEAPONS);
+	w.x = getstati(STAT_WEAPONS);
 #if WEP_MAXCOUNT > 24
-	w_y = getstati(STAT_WEAPONS2);
+	w.y = getstati(STAT_WEAPONS2);
 #if WEP_MAXCOUNT > 48
-	w_z = getstati(STAT_WEAPONS3);
+	w.z = getstati(STAT_WEAPONS3);
 #endif
 #endif
 	return w;
@@ -75,12 +128,12 @@ WepSet ReadWepSet()
 #endif
 
 void register_weapon(
-	float id,
+	int id,
 	WepSet bit,
-	float(float) func,
-	.float ammotype,
-	float i,
-	float weapontype,
+	bool(int) func,
+	.int ammotype,
+	int i,
+	int weapontype,
 	float pickupbasevalue,
 	vector clr,
 	string modelname,
@@ -112,11 +165,11 @@ void register_weapon(
 	e.netname = refname;
 	e.message = wepname;
 
-	#ifndef MENUQC
+	#ifdef CSQC
 	func(WR_INIT);
 	#endif
 }
-float w_null(float dummy)
+bool w_null(int dummy)
 {
 	return 0;
 }
@@ -141,14 +194,14 @@ void register_weapons_done()
 	dummy_weapon_info.w_crosshair_size = 1;
 	dummy_weapon_info.model2 = "";
 
-	float i;
+	int i;
 	weaponorder_byid = "";
 	for(i = WEP_MAXCOUNT; i >= 1; --i)
 		if(weapon_info[i-1])
 			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
 	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }
-entity get_weaponinfo(float id)
+entity get_weaponinfo(int id)
 {
 	entity w;
 	if(id < WEP_FIRST || id > WEP_LAST)
@@ -179,7 +232,7 @@ string W_UndeprecateName(string s)
 	switch ( s )
 	{
 		case "nex"            : return "vortex";
-		case "rocketlauncher" : return "devastator"; 
+		case "rocketlauncher" : return "devastator";
 		case "laser"          : return "blaster";
 		case "minstanex"      : return "vaporizer";
 		case "grenadelauncher": return "mortar";
@@ -193,7 +246,7 @@ string W_NameWeaponOrder(string order)
 }
 string W_NumberWeaponOrder_MapFunc(string s)
 {
-	float i;
+	int i;
 	if(s == "0" || stof(s))
 		return s;
 	s = W_UndeprecateName(s);
@@ -209,14 +262,14 @@ string W_NumberWeaponOrder(string order)
 
 float W_FixWeaponOrder_BuildImpulseList_buf[WEP_MAXCOUNT];
 string W_FixWeaponOrder_BuildImpulseList_order;
-void W_FixWeaponOrder_BuildImpulseList_swap(float i, float j, entity pass)
+void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 {
 	float h;
 	h = W_FixWeaponOrder_BuildImpulseList_buf[i];
 	W_FixWeaponOrder_BuildImpulseList_buf[i] = W_FixWeaponOrder_BuildImpulseList_buf[j];
 	W_FixWeaponOrder_BuildImpulseList_buf[j] = h;
 }
-float W_FixWeaponOrder_BuildImpulseList_cmp(float i, float j, entity pass)
+float W_FixWeaponOrder_BuildImpulseList_cmp(int i, int j, entity pass)
 {
 	entity e1, e2;
 	float d;
@@ -233,7 +286,7 @@ float W_FixWeaponOrder_BuildImpulseList_cmp(float i, float j, entity pass)
 }
 string W_FixWeaponOrder_BuildImpulseList(string o)
 {
-	float i;
+	int i;
 	W_FixWeaponOrder_BuildImpulseList_order = o;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		W_FixWeaponOrder_BuildImpulseList_buf[i - WEP_FIRST] = i;
@@ -259,7 +312,7 @@ string W_FixWeaponOrder_ForceComplete(string order)
 
 void W_RandomWeapons(entity e, float n)
 {
-	float i, j;
+	int i, j;
 	WepSet remaining;
 	WepSet result;
 	remaining = e.weapons;
@@ -276,7 +329,7 @@ void W_RandomWeapons(entity e, float n)
 	e.weapons = result;
 }
 
-string GetAmmoPicture(.float ammotype)
+string GetAmmoPicture(.int ammotype)
 {
 	switch(ammotype)
 	{
@@ -291,7 +344,7 @@ string GetAmmoPicture(.float ammotype)
 }
 
 #ifdef CSQC
-.float GetAmmoFieldFromNum(float i)
+.int GetAmmoFieldFromNum(int i)
 {
 	switch(i)
 	{
@@ -305,7 +358,7 @@ string GetAmmoPicture(.float ammotype)
 	}
 }
 
-float GetAmmoStat(.float ammotype)
+int GetAmmoStat(.int ammotype)
 {
 	switch(ammotype)
 	{
@@ -318,4 +371,5 @@ float GetAmmoStat(.float ammotype)
 		default: return -1;
 	}
 }
+#endif
 #endif

@@ -1,3 +1,6 @@
+#ifndef MUTATOR_BUFFS_H
+#define MUTATOR_BUFFS_H
+
 // buff specific variables \\
 //
 // ammo
@@ -8,7 +11,7 @@
 .float buff_flight_prev_gravity;
 // jump
 .float stat_jumpheight;
-const float STAT_MOVEVARS_JUMPVELOCITY = 250; // engine hack
+//const float STAT_MOVEVARS_JUMPVELOCITY = 250; // engine hack
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
@@ -21,8 +24,9 @@ const float STAT_MOVEVARS_JUMPVELOCITY = 250; // engine hack
 .float oldbuffs; // for updating effects
 .entity buff_model; // controls effects (TODO: make csqc)
 
-#define BUFF_MIN ('-16 -16 -20')
-#define BUFF_MAX ('16 16 20')
+const vector BUFF_MIN = ('-16 -16 -20');
+const vector BUFF_MAX = ('16 16 20');
 
 // client side options
 .float cvar_cl_buffs_autoreplace;
+#endif

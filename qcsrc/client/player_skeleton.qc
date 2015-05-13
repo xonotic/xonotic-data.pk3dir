@@ -1,14 +1,20 @@
-.float skeleton_info_modelindex;
-.float skeleton_info_skin;
-#define BONETYPE_LOWER 0
-#define BONETYPE_UPPER 1
-#define MAX_BONES 128
-.float skeleton_bonetype[MAX_BONES];
-.float skeleton_numbones;
+#include "player_skeleton.qh"
+
+#include "../common/csqcmodel_settings.qh"
+
+#include "../warpzonelib/anglestransform.qh"
+
+class(Skeleton) .float skeleton_info_modelindex;
+class(Skeleton) .float skeleton_info_skin;
+const int BONETYPE_LOWER = 0;
+const int BONETYPE_UPPER = 1;
+const int MAX_BONES = 128;
+class(Skeleton) .float skeleton_bonetype[MAX_BONES];
+class(Skeleton) .float skeleton_numbones;
 
 void skeleton_loadinfo(entity e)
 {
-	float i;
+	int i;
 	if(e.skeleton_info_modelindex == e.modelindex && e.skeleton_info_skin == e.skin)
 		return;
 	e.bone_upperbody = 0;
@@ -56,11 +62,11 @@ void skeleton_markbones(entity e)
 {
 	float s = e.skeletonindex;
 	float n = (e.skeleton_numbones = skel_get_numbones(s));
-	float i;
+	int i;
 	for(i = 1; i <= n; ++i)
 	{
 		float t = BONETYPE_LOWER;
-		float p = skel_get_boneparent(s, i);
+		int p = skel_get_boneparent(s, i);
 		if(p > 0)
 			t = e.(skeleton_bonetype[p-1]);
 		if(i == e.bone_upperbody)
@@ -100,7 +106,6 @@ void free_skeleton_from_frames(entity e)
 
 void skeleton_from_frames(entity e, float is_dead)
 {
-	float i;
 	float m = e.modelindex;
 	if(!e.skeletonindex)
 	{
@@ -110,7 +115,6 @@ void skeleton_from_frames(entity e, float is_dead)
 	float s = e.skeletonindex;
 	if(!s)
 		return;
-	float bone;
 	float n = e.skeleton_numbones;
 	float savelerpfrac = e.lerpfrac;
 	float savelerpfrac3 = e.lerpfrac3;
@@ -129,7 +133,7 @@ void skeleton_from_frames(entity e, float is_dead)
 		skel_get_boneabs(s, e.bone_upperbody);
 		fixbone_oldangles = fixedvectoangles2(v_forward, v_up);
 	}
-
+	int bone;
 	for(bone = 0; bone < n; )
 	{
 		float firstbone = bone;
@@ -168,11 +172,12 @@ void skeleton_from_frames(entity e, float is_dead)
 
 	if(!is_dead)
 	{
+		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(e.(bone_aim[i]))
 			{
-				vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90) * e.(bone_aimweight[i]);
+				vector aim = '1 0 0' * bound(-90, self.v_angle.x, 90) * e.(bone_aimweight[i]);
 				vector org = skel_get_boneabs(s, e.(bone_aim[i]));
 				vector ang_cur = fixedvectoangles2(v_forward, v_up);
 				vector ang = AnglesTransform_Multiply(aim, ang_cur);

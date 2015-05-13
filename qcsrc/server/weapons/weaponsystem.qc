@@ -1,3 +1,20 @@
+#include "weaponsystem.qh"
+#include "../_all.qh"
+
+#include "selection.qh"
+
+#include "../command/common.qh"
+#include "../mutators/mutators_include.qh"
+#include "../round_handler.qh"
+#include "../t_items.qh"
+#include "../../common/animdecide.qh"
+#include "../../common/constants.qh"
+#include "../../common/monsters/monsters.qh"
+#include "../../common/notifications.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/weapons.qh"
+#include "../../csqcmodellib/sv_model.qh"
+
 /*
 ===========================================================================
 
@@ -21,13 +38,6 @@ float W_WeaponRateFactor()
 	return t;
 }
 
-// VorteX: static frame globals
-const float WFRAME_DONTCHANGE = -1;
-const float WFRAME_FIRE1 = 0;
-const float WFRAME_FIRE2 = 1;
-const float WFRAME_IDLE = 2;
-const float WFRAME_RELOAD = 3;
-.float wframe;
 
 void(float fr, float t, void() func) weapon_thinkf;
 
@@ -37,7 +47,7 @@ float CL_Weaponentity_CustomizeEntityForClient()
 	if(IS_SPEC(other))
 		if(other.enemy == self.owner)
 			self.viewmodelforclient = other;
-	return TRUE;
+	return true;
 }
 
 /*
@@ -231,12 +241,12 @@ void CL_WeaponEntity_SetModel(string name)
 
 	self.view_ofs = '0 0 0';
 
-	if(self.movedir_x >= 0)
+	if(self.movedir.x >= 0)
 	{
 		vector v0;
 		v0 = self.movedir;
-		self.movedir = shotorg_adjust(v0, FALSE, FALSE);
-		self.view_ofs = shotorg_adjust(v0, FALSE, TRUE) - v0;
+		self.movedir = shotorg_adjust(v0, false, false);
+		self.view_ofs = shotorg_adjust(v0, false, true) - v0;
 	}
 	self.owner.stat_shotorg = compressShotOrigin(self.movedir);
 	self.movedir = decompressShotOrigin(self.owner.stat_shotorg); // make them match perfectly
@@ -247,7 +257,7 @@ void CL_WeaponEntity_SetModel(string name)
 	setorigin(self, self.view_ofs);
 	// reset animstate now
 	self.wframe = WFRAME_IDLE;
-	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
+	setanim(self, self.anim_idle, true, false, true);
 }
 
 vector CL_Weapon_GetShotOrg(float wpn)
@@ -267,10 +277,10 @@ vector CL_Weapon_GetShotOrg(float wpn)
 
 void CL_Weaponentity_Think()
 {
-	float tb;
+	int tb;
 	self.nextthink = time;
 	if (intermission_running)
-		self.frame = self.anim_idle_x;
+		self.frame = self.anim_idle.x;
 	if (self.owner.weaponentity != self)
 	{
 		if (self.weaponentity)
@@ -456,11 +466,11 @@ float weapon_prepareattack_checkammo(float secondary)
 		entity mine;
 		if(self.weapon == WEP_MINE_LAYER)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
-			return FALSE;
+			return false;
 
 		if(self.weapon == WEP_SHOTGUN)
 		if(!secondary && WEP_CVAR(shotgun, secondary) == 1)
-			return FALSE; // no clicking, just allow
+			return false; // no clicking, just allow
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
@@ -489,40 +499,40 @@ float weapon_prepareattack_checkammo(float secondary)
 			W_SwitchToOtherWeapon(self);
 		}
 
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 .float race_penalty;
 float weapon_prepareattack_check(float secondary, float attacktime)
 {
 	if(!weapon_prepareattack_checkammo(secondary))
-		return FALSE;
+		return false;
 
 	//if sv_ready_restart_after_countdown is set, don't allow the player to shoot
 	//if all players readied up and the countdown is running
 	if(time < game_starttime || time < self.race_penalty) {
-		return FALSE;
+		return false;
 	}
 
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow the player to shoot while game is paused
-		return FALSE;
+		return false;
 
 	// do not even think about shooting if switching
 	if(self.switchweapon != self.weapon)
-		return FALSE;
+		return false;
 
 	if(attacktime >= 0)
 	{
 		// don't fire if previous attack is not finished
 		if (ATTACK_FINISHED(self) > time + self.weapon_frametime * 0.5)
-			return FALSE;
+			return false;
 		// don't fire while changing weapon
 		if (self.weaponentity.state != WS_READY)
-			return FALSE;
+			return false;
 	}
 
-	return TRUE;
+	return true;
 }
 float weapon_prepareattack_do(float secondary, float attacktime)
 {
@@ -542,17 +552,17 @@ float weapon_prepareattack_do(float secondary, float attacktime)
 	}
 	self.bulletcounter += 1;
 	//dprint("attack finished ", ftos(ATTACK_FINISHED(self)), "\n");
-	return TRUE;
+	return true;
 }
 float weapon_prepareattack(float secondary, float attacktime)
 {
 	if(weapon_prepareattack_check(secondary, attacktime))
 	{
 		weapon_prepareattack_do(secondary, attacktime);
-		return TRUE;
+		return true;
 	}
 	else
-		return FALSE;
+		return false;
 }
 
 void weapon_thinkf(float fr, float t, void() func)
@@ -564,12 +574,12 @@ void weapon_thinkf(float fr, float t, void() func)
 	if(fr == WFRAME_DONTCHANGE)
 	{
 		fr = self.weaponentity.wframe;
-		restartanim = FALSE;
+		restartanim = false;
 	}
 	else if (fr == WFRAME_IDLE)
-		restartanim = FALSE;
+		restartanim = false;
 	else
-		restartanim = TRUE;
+		restartanim = true;
 
 	of = v_forward;
 	or = v_right;
@@ -587,8 +597,8 @@ void weapon_thinkf(float fr, float t, void() func)
 			a = self.weaponentity.anim_fire2;
 		else // if (fr == WFRAME_RELOAD)
 			a = self.weaponentity.anim_reload;
-		a_z *= g_weaponratefactor;
-		setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
+		a.z *= g_weaponratefactor;
+		setanim(self.weaponentity, a, restartanim == false, restartanim, restartanim);
 	}
 
 	v_forward = of;
@@ -794,7 +804,7 @@ void W_AttachToShotorg(entity flash, vector offset)
 
 	flash.viewmodelforclient = self;
 
-	if(self.weaponentity.oldorigin_x > 0)
+	if(self.weaponentity.oldorigin.x > 0)
 	{
 		setattachment(xflash, self.exteriorweaponentity, "");
 		setorigin(xflash, self.weaponentity.oldorigin + offset);
@@ -957,7 +967,6 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	self.clip_load = self.(weapon_load[self.weapon]) = -1;
 }
 
-entity weapon_dropevent_item;
 void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item)
 {
 	entity oldself = self;

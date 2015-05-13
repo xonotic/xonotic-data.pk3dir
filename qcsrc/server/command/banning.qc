@@ -1,3 +1,14 @@
+#include "../../common/command/command.qh"
+#include "banning.qh"
+#include "../_all.qh"
+
+#include "common.qh"
+
+#include "../cl_player.qh"
+#include "../ipban.qh"
+
+#include "../../common/util.qh"
+
 // =====================================================
 //  Banning and kicking command code, written by Samual
 //  Last updated: December 29th, 2011
@@ -69,7 +80,7 @@ void BanCommand_kickban(float request, float argc, string command)
 			if(argc >= 2)
 			{
 				entity client = GetIndexedEntity(argc, 1);
-				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				float accepted = VerifyKickableEntity(client);
 				float reason_arg, bantime, masksize;
 				string reason;
 
@@ -116,11 +127,11 @@ void BanCommand_mute(float request, float argc, string command) // TODO: Add a s
 			if(argc >= 2)
 			{
 				entity client = GetFilteredEntity(argv(1));
-				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				float accepted = VerifyClientEntity(client, true, false);
 
 				if(accepted > 0)
 				{
-					client.muted = TRUE;
+					client.muted = true;
 					return;
 				}
 				else
@@ -204,11 +215,11 @@ void BanCommand_unmute(float request, float argc)
 			if(argc >= 2)
 			{
 				entity client = GetFilteredEntity(argv(1));
-				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				float accepted = VerifyClientEntity(client, true, false);
 
 				if(accepted > 0)
 				{
-					client.muted = FALSE;
+					client.muted = false;
 					return;
 				}
 				else
@@ -273,7 +284,7 @@ void BanCommand_macro_help()
 	#define BAN_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { print("  ^2", name, "^7: ", description, "\n"); } }
 
-	BAN_COMMANDS(0, 0, "")
+	BAN_COMMANDS(0, 0, "");
 	#undef BAN_COMMAND
 
 	return;
@@ -282,23 +293,23 @@ void BanCommand_macro_help()
 float BanCommand_macro_command(float argc, string command)
 {
 	#define BAN_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	BAN_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
+	BAN_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 	#undef BAN_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 float BanCommand_macro_usage(float argc)
 {
 	#define BAN_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	BAN_COMMANDS(CMD_REQUEST_USAGE, argc, "")
+	BAN_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 	#undef BAN_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void BanCommand_macro_write_aliases(float fh)
@@ -306,7 +317,7 @@ void BanCommand_macro_write_aliases(float fh)
 	#define BAN_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_sv", name, description); } }
 
-	BAN_COMMANDS(0, 0, "")
+	BAN_COMMANDS(0, 0, "");
 	#undef BAN_COMMAND
 
 	return;
@@ -323,8 +334,8 @@ float BanCommand(string command)
 
 	if(BanCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
-		return TRUE; // handled by one of the above GenericCommand_* functions
+		return true; // handled by one of the above GenericCommand_* functions
 	}
 
-	return FALSE;
+	return false;
 }

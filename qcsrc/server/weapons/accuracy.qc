@@ -1,3 +1,12 @@
+#include "accuracy.qh"
+#include "../_all.qh"
+
+#include "../mutators/mutators_include.qh"
+#include "../../common/constants.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/weapons.qh"
+
 float accuracy_byte(float n, float d)
 {
 	//printf("accuracy: %d / %d\n", n, d);
@@ -8,9 +17,9 @@ float accuracy_byte(float n, float d)
 	return 1 + rint(n * 100.0 / d);
 }
 
-float accuracy_send(entity to, float sf)
+float accuracy_send(entity to, int sf)
 {
-	float w, f;
+	int w, f;
 	entity a;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
 
@@ -25,7 +34,7 @@ float accuracy_send(entity to, float sf)
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
 	if(sf == 0)
-		return TRUE;
+		return true;
 	// note: we know that client and server agree about SendFlags...
 	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
 	{
@@ -36,7 +45,7 @@ float accuracy_send(entity to, float sf)
 		else
 			f *= 2;
 	}
-	return TRUE;
+	return true;
 }
 
 // init/free
@@ -46,7 +55,7 @@ void accuracy_init(entity e)
 	e.accuracy.owner = e;
 	e.accuracy.classname = "accuracy";
 	e.accuracy.drawonlytoclient = e;
-	Net_LinkEntity(e.accuracy, FALSE, 0, accuracy_send);
+	Net_LinkEntity(e.accuracy, false, 0, accuracy_send);
 }
 
 void accuracy_free(entity e)
@@ -64,7 +73,7 @@ void accuracy_resend(entity e)
 .float hit_time;
 .float fired_time;
 
-void accuracy_add(entity e, float w, float fired, float hit)
+void accuracy_add(entity e, int w, float fired, float hit)
 {
 	entity a;
 	float b;
@@ -113,13 +122,13 @@ float accuracy_isgooddamage(entity attacker, entity targ)
 	if(!targ.frozen)
 	if(mutator_check == MUT_ACCADD_INVALID || (mutator_check == MUT_ACCADD_VALID && IS_CLIENT(targ)))
 	if(DIFF_TEAM(attacker, targ))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 
 float accuracy_canbegooddamage(entity attacker)
 {
 	if(!warmup_stage)
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }

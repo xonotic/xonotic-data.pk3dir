@@ -1,11 +1,24 @@
-.float silent;
+#include "gibs.qh"
+#include "_all.qh"
+
+#include "movetypes.qh"
+#include "prandom.qh"
+#include "rubble.qh"
+
+#include "../common/constants.qh"
+#include "../common/util.qh"
+
+.float scale;
+.float alpha;
+.float cnt;
+.float gravity;
 
 void Gib_Delete()
 {
 	remove(self);
 }
 
-string species_prefix(float specnum)
+string species_prefix(int specnum)
 {
 	switch(specnum)
 	{
@@ -20,7 +33,7 @@ string species_prefix(float specnum)
 	}
 }
 
-void Gib_setmodel(entity gib, string mdlname, float specnum)
+void Gib_setmodel(entity gib, string mdlname, int specnum)
 {
 	switch(specnum)
 	{
@@ -48,7 +61,7 @@ void Gib_setmodel(entity gib, string mdlname, float specnum)
 	}
 }
 
-void new_te_bloodshower (float ef, vector org, float explosionspeed, float howmany)
+void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 {
 	float i, pmod;
 	pmod = autocvar_cl_particles_quality;
@@ -109,7 +122,7 @@ void Gib_Draw()
 	}
 }
 
-void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector vrand, float specnum, float destroyontouch, float issilent)
+void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector vrand, int specnum, bool destroyontouch, bool issilent)
 {
 	entity gib;
 
@@ -151,21 +164,22 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	RubbleLimit("gib", autocvar_cl_gibs_maxcount, Gib_Delete);
 }
 
-void Ent_GibSplash(float isNew)
+void Ent_GibSplash(bool isNew)
 {
-	float amount, type, specnum;
+	int amount, type, specnum;
 	vector org, vel;
 	string specstr;
-	float issilent;
+	bool issilent;
 	string gentle_prefix = "morphed_";
 
-	float c, randomvalue;
+	float randomvalue;
+	int c;
 
 	type = ReadByte(); // gibbage type
 	amount = ReadByte() / 16.0; // gibbage amount
-	org_x = ReadShort() * 4 + 2;
-	org_y = ReadShort() * 4 + 2;
-	org_z = ReadShort() * 4 + 2;
+	org.x = ReadShort() * 4 + 2;
+	org.y = ReadShort() * 4 + 2;
+	org.z = ReadShort() * 4 + 2;
 	vel = decompressShortVector(ReadShort());
 
 	float cl_gentle_gibs = autocvar_cl_gentle_gibs;

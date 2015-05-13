@@ -1,3 +1,8 @@
+#include "scripting.qh"
+#include "../_all.qh"
+
+#include "bot.qh"
+
 .float bot_cmdqueuebuf_allocated;
 .float bot_cmdqueuebuf;
 .float bot_cmdqueuebuf_start;
@@ -8,7 +13,7 @@ void bot_clearqueue(entity bot)
 	if(!bot.bot_cmdqueuebuf_allocated)
 		return;
 	buf_del(bot.bot_cmdqueuebuf);
-	bot.bot_cmdqueuebuf_allocated = FALSE;
+	bot.bot_cmdqueuebuf_allocated = false;
 	dprint("bot ", bot.netname, " queue cleared\n");
 }
 
@@ -17,7 +22,7 @@ void bot_queuecommand(entity bot, string cmdstring)
 	if(!bot.bot_cmdqueuebuf_allocated)
 	{
 		bot.bot_cmdqueuebuf = buf_create();
-		bot.bot_cmdqueuebuf_allocated = TRUE;
+		bot.bot_cmdqueuebuf_allocated = true;
 		bot.bot_cmdqueuebuf_start = 0;
 		bot.bot_cmdqueuebuf_end = 0;
 	}
@@ -39,7 +44,7 @@ void bot_queuecommand(entity bot, string cmdstring)
 			if(cmdstr == "sound")
 			{
 				// find the LAST word
-				for(;;)
+				for (;;)
 				{
 					sp = strstrofs(parm, " ", 0);
 					if(sp < 0)
@@ -91,7 +96,7 @@ float bot_havecommand(entity bot, float idx)
 	return 1;
 }
 
-#define MAX_BOT_PLACES 4
+const int MAX_BOT_PLACES = 4;
 .float bot_places_count;
 .entity bot_places[MAX_BOT_PLACES];
 .string bot_placenames[MAX_BOT_PLACES];
@@ -100,7 +105,7 @@ entity bot_getplace(string placename)
 	entity e;
 	if(substring(placename, 0, 1) == "@")
 	{
-		float i, p;
+		int i, p;
 		placename = substring(placename, 1, -1);
 		string s, s2;
 		for(i = 0; i < self.bot_places_count; ++i)
@@ -136,68 +141,6 @@ entity bot_getplace(string placename)
 	}
 }
 
-
-// NOTE: New commands should be added here. Do not forget to update BOT_CMD_COUNTER
-#define BOT_CMD_NULL			0
-#define BOT_CMD_PAUSE			1
-#define BOT_CMD_CONTINUE		2
-#define BOT_CMD_WAIT			3
-#define BOT_CMD_TURN			4
-#define BOT_CMD_MOVETO			5
-#define BOT_CMD_RESETGOAL		6	// Not implemented yet
-#define BOT_CMD_CC			7
-#define BOT_CMD_IF      		8
-#define BOT_CMD_ELSE    		9
-#define BOT_CMD_FI      		10
-#define BOT_CMD_RESETAIM   		11
-#define BOT_CMD_AIM			12
-#define BOT_CMD_PRESSKEY		13
-#define BOT_CMD_RELEASEKEY		14
-#define BOT_CMD_SELECTWEAPON		15
-#define BOT_CMD_IMPULSE			16
-#define BOT_CMD_WAIT_UNTIL		17
-#define BOT_CMD_MOVETOTARGET    18
-#define BOT_CMD_AIMTARGET       19
-#define BOT_CMD_BARRIER         20
-#define BOT_CMD_CONSOLE			21
-#define BOT_CMD_SOUND			22
-#define BOT_CMD_DEBUG_ASSERT_CANFIRE 23
-#define BOT_CMD_WHILE			24	// TODO: Not implemented yet
-#define BOT_CMD_WEND			25	// TODO: Not implemented yet
-#define BOT_CMD_CHASE			26	// TODO: Not implemented yet
-
-#define BOT_CMD_COUNTER			24	// Update this value if you add/remove a command
-
-// NOTE: Following commands should be implemented on the bot ai
-//		 If a new command should be handled by the target ai(s) please declare it here
-.float(vector) cmd_moveto;
-.float() cmd_resetgoal;
-
-//
-#define BOT_CMD_PARAMETER_NONE		0
-#define BOT_CMD_PARAMETER_FLOAT		1
-#define BOT_CMD_PARAMETER_STRING	2
-#define BOT_CMD_PARAMETER_VECTOR	3
-
-float bot_cmds_initialized;
-float bot_cmd_parm_type[BOT_CMD_COUNTER];
-string bot_cmd_string[BOT_CMD_COUNTER];
-
-// Bots command queue
-entity bot_cmd;	// global current command
-.entity bot_cmd_current; // current command of this bot
-
-.float is_bot_cmd;			// Tells if the entity is a bot command
-.float bot_cmd_index;			// Position of the command in the queue
-.float bot_cmd_type;			// If of command (see the BOT_CMD_* defines)
-.float bot_cmd_parm_float;		// Field to store a float parameter
-.string bot_cmd_parm_string;		// Field to store a string parameter
-.vector bot_cmd_parm_vector;		// Field to store a vector parameter
-
-float bot_barriertime;
-.float bot_barrier;
-
-.float bot_cmd_execution_index;		// Position in the queue of the command to be executed
 
 // Initialize global commands list
 // NOTE: New commands should be initialized here
@@ -275,7 +218,7 @@ void bot_commands_init()
 	bot_cmd_string[BOT_CMD_DEBUG_ASSERT_CANFIRE] = "debug_assert_canfire";
 	bot_cmd_parm_type[BOT_CMD_DEBUG_ASSERT_CANFIRE] = BOT_CMD_PARAMETER_FLOAT;
 
-	bot_cmds_initialized = TRUE;
+	bot_cmds_initialized = true;
 }
 
 // Returns first bot with matching name
@@ -321,7 +264,7 @@ entity find_bot_by_number(float number)
 
 float bot_decodecommand(string cmdstring)
 {
-	float cmd_parm_type, i;
+	float cmd_parm_type;
 	float sp;
 	string parm;
 
@@ -339,6 +282,7 @@ float bot_decodecommand(string cmdstring)
 	if(!bot_cmds_initialized)
 		bot_commands_init();
 
+	int i;
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
 		if(bot_cmd_string[i]!=cmdstring)
@@ -380,7 +324,7 @@ float bot_decodecommand(string cmdstring)
 
 void bot_cmdhelp(string scmd)
 {
-	float i, ntype;
+	int i, ntype;
 	string stype;
 
 	if(!bot_cmds_initialized)
@@ -495,7 +439,7 @@ void bot_cmdhelp(string scmd)
 
 void bot_list_commands()
 {
-	float i;
+	int i;
 	string ptype;
 
 	if(!bot_cmds_initialized)
@@ -526,15 +470,7 @@ void bot_list_commands()
 }
 
 // Commands code
-.float bot_exec_status;
-
-#define BOT_EXEC_STATUS_IDLE	0
-#define BOT_EXEC_STATUS_PAUSED	1
-#define BOT_EXEC_STATUS_WAITING	2
-
-#define CMD_STATUS_EXECUTING	0
-#define CMD_STATUS_FINISHED	1
-#define CMD_STATUS_ERROR	2
+.int bot_exec_status;
 
 void SV_ParseClientCommand(string s);
 float bot_cmd_cc()
@@ -626,8 +562,8 @@ float bot_cmd_barrier()
 
 float bot_cmd_turn()
 {
-	self.v_angle_y = self.v_angle_y + bot_cmd.bot_cmd_parm_float;
-	self.v_angle_y = self.v_angle_y - floor(self.v_angle_y / 360) * 360;
+	self.v_angle_y = self.v_angle.y + bot_cmd.bot_cmd_parm_float;
+	self.v_angle_y = self.v_angle.y - floor(self.v_angle.y / 360) * 360;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -640,7 +576,7 @@ float bot_cmd_select_weapon()
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
-	if(client_hasweapon(self, id, TRUE, FALSE))
+	if(client_hasweapon(self, id, true, false))
 		self.switchweapon = id;
 	else
 		return CMD_STATUS_ERROR;
@@ -648,13 +584,13 @@ float bot_cmd_select_weapon()
 	return CMD_STATUS_FINISHED;
 }
 
-.float bot_cmd_condition_status;
+.int bot_cmd_condition_status;
 
-#define CMD_CONDITION_NONE		0
-#define CMD_CONDITION_TRUE		1
-#define CMD_CONDITION_FALSE		2
-#define CMD_CONDITION_TRUE_BLOCK	4
-#define CMD_CONDITION_FALSE_BLOCK	8
+const int CMD_CONDITION_NONE = 0;
+const int CMD_CONDITION_true = 1;
+const int CMD_CONDITION_false = 2;
+const int CMD_CONDITION_true_BLOCK = 4;
+const int CMD_CONDITION_false_BLOCK = 8;
 
 float bot_cmd_eval(string expr)
 {
@@ -698,7 +634,7 @@ float bot_cmd_if()
 		return CMD_STATUS_ERROR;
 	}
 
-	self.bot_cmd_condition_status |= CMD_CONDITION_TRUE_BLOCK;
+	self.bot_cmd_condition_status |= CMD_CONDITION_true_BLOCK;
 
 	// search for operators
 	expr = bot_cmd.bot_cmd_parm_string;
@@ -711,9 +647,9 @@ float bot_cmd_if()
 		val_b = substring(expr,cmpofs+1,strlen(expr));
 
 		if(bot_cmd_eval(val_a)==bot_cmd_eval(val_b))
-			self.bot_cmd_condition_status |= CMD_CONDITION_TRUE;
+			self.bot_cmd_condition_status |= CMD_CONDITION_true;
 		else
-			self.bot_cmd_condition_status |= CMD_CONDITION_FALSE;
+			self.bot_cmd_condition_status |= CMD_CONDITION_false;
 
   		return CMD_STATUS_FINISHED;
 	}
@@ -726,9 +662,9 @@ float bot_cmd_if()
 		val_b = substring(expr,cmpofs+1,strlen(expr));
 
 		if(bot_cmd_eval(val_a)>bot_cmd_eval(val_b))
-			self.bot_cmd_condition_status |= CMD_CONDITION_TRUE;
+			self.bot_cmd_condition_status |= CMD_CONDITION_true;
 		else
-			self.bot_cmd_condition_status |= CMD_CONDITION_FALSE;
+			self.bot_cmd_condition_status |= CMD_CONDITION_false;
 
 		return CMD_STATUS_FINISHED;
 	}
@@ -741,25 +677,25 @@ float bot_cmd_if()
 		val_b = substring(expr,cmpofs+1,strlen(expr));
 
 		if(bot_cmd_eval(val_a)<bot_cmd_eval(val_b))
-			self.bot_cmd_condition_status |= CMD_CONDITION_TRUE;
+			self.bot_cmd_condition_status |= CMD_CONDITION_true;
 		else
-			self.bot_cmd_condition_status |= CMD_CONDITION_FALSE;
+			self.bot_cmd_condition_status |= CMD_CONDITION_false;
 
   		return CMD_STATUS_FINISHED;
 	}
 
 	if(bot_cmd_eval(expr))
-		self.bot_cmd_condition_status |= CMD_CONDITION_TRUE;
+		self.bot_cmd_condition_status |= CMD_CONDITION_true;
 	else
-		self.bot_cmd_condition_status |= CMD_CONDITION_FALSE;
+		self.bot_cmd_condition_status |= CMD_CONDITION_false;
 
   	return CMD_STATUS_FINISHED;
 }
 
 float bot_cmd_else()
 {
-	self.bot_cmd_condition_status &= ~CMD_CONDITION_TRUE_BLOCK;
-	self.bot_cmd_condition_status |= CMD_CONDITION_FALSE_BLOCK;
+	self.bot_cmd_condition_status &= ~CMD_CONDITION_true_BLOCK;
+	self.bot_cmd_condition_status |= CMD_CONDITION_false_BLOCK;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -821,8 +757,8 @@ float bot_cmd_aim()
 
 	self.bot_cmd_aim_begin = self.v_angle;
 
-	self.bot_cmd_aim_end_x = self.v_angle_x - stof(argv(1));
-	self.bot_cmd_aim_end_y = self.v_angle_y + stof(argv(0));
+	self.bot_cmd_aim_end_x = self.v_angle.x - stof(argv(1));
+	self.bot_cmd_aim_end_y = self.v_angle.y + stof(argv(0));
 	self.bot_cmd_aim_end_z = 0;
 
 	self.bot_cmd_aim_begintime = time;
@@ -856,7 +792,7 @@ float bot_cmd_aimtarget()
 	if(tokens==1)
 	{
 		self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
-		self.v_angle_x = -self.v_angle_x;
+		self.v_angle_x = -self.v_angle.x;
 		return CMD_STATUS_FINISHED;
 	}
 
@@ -867,7 +803,7 @@ float bot_cmd_aimtarget()
 
 	self.bot_cmd_aim_begin = self.v_angle;
 	self.bot_cmd_aim_end = vectoangles(v - (self.origin + self.view_ofs));
-	self.bot_cmd_aim_end_x = -self.bot_cmd_aim_end_x;
+	self.bot_cmd_aim_end_x = -self.bot_cmd_aim_end.x;
 
 	self.bot_cmd_aim_begintime = time;
 	self.bot_cmd_aim_endtime = time + step;
@@ -875,34 +811,34 @@ float bot_cmd_aimtarget()
 	return CMD_STATUS_EXECUTING;
 }
 
-.float bot_cmd_keys;
+.int bot_cmd_keys;
 
-#define BOT_CMD_KEY_NONE	0
-#define BOT_CMD_KEY_FORWARD 	1
-#define BOT_CMD_KEY_BACKWARD	2
-#define BOT_CMD_KEY_RIGHT	4
-#define BOT_CMD_KEY_LEFT	8
-#define BOT_CMD_KEY_JUMP	16
-#define BOT_CMD_KEY_ATTACK1 	32
-#define BOT_CMD_KEY_ATTACK2 	64
-#define BOT_CMD_KEY_USE		128
-#define BOT_CMD_KEY_HOOK	256
-#define BOT_CMD_KEY_CROUCH	512
-#define BOT_CMD_KEY_CHAT	1024
+const int BOT_CMD_KEY_NONE 		= 0;
+const int BOT_CMD_KEY_FORWARD 	= 1;
+const int BOT_CMD_KEY_BACKWARD 	= 2;
+const int BOT_CMD_KEY_RIGHT 	= 4;
+const int BOT_CMD_KEY_LEFT 		= 8;
+const int BOT_CMD_KEY_JUMP 		= 16;
+const int BOT_CMD_KEY_ATTACK1 	= 32;
+const int BOT_CMD_KEY_ATTACK2 	= 64;
+const int BOT_CMD_KEY_USE 		= 128;
+const int BOT_CMD_KEY_HOOK 		= 256;
+const int BOT_CMD_KEY_CROUCH 	= 512;
+const int BOT_CMD_KEY_CHAT 		= 1024;
 
 float bot_presskeys()
 {
 	self.movement = '0 0 0';
-	self.BUTTON_JUMP = FALSE;
-	self.BUTTON_CROUCH = FALSE;
-	self.BUTTON_ATCK = FALSE;
-	self.BUTTON_ATCK2 = FALSE;
-	self.BUTTON_USE = FALSE;
-	self.BUTTON_HOOK = FALSE;
-	self.BUTTON_CHAT = FALSE;
+	self.BUTTON_JUMP = false;
+	self.BUTTON_CROUCH = false;
+	self.BUTTON_ATCK = false;
+	self.BUTTON_ATCK2 = false;
+	self.BUTTON_USE = false;
+	self.BUTTON_HOOK = false;
+	self.BUTTON_CHAT = false;
 
 	if(self.bot_cmd_keys == BOT_CMD_KEY_NONE)
-		return FALSE;
+		return false;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
 		self.movement_x = autocvar_sv_maxspeed;
@@ -915,27 +851,27 @@ float bot_presskeys()
 		self.movement_y = -autocvar_sv_maxspeed;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_JUMP)
-		self.BUTTON_JUMP = TRUE;
+		self.BUTTON_JUMP = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_CROUCH)
-		self.BUTTON_CROUCH = TRUE;
+		self.BUTTON_CROUCH = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_ATTACK1)
-		self.BUTTON_ATCK = TRUE;
+		self.BUTTON_ATCK = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_ATTACK2)
-		self.BUTTON_ATCK2 = TRUE;
+		self.BUTTON_ATCK2 = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_USE)
-		self.BUTTON_USE = TRUE;
+		self.BUTTON_USE = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_HOOK)
-		self.BUTTON_HOOK = TRUE;
+		self.BUTTON_HOOK = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_CHAT)
-		self.BUTTON_CHAT = TRUE;
+		self.BUTTON_CHAT = true;
 
-	return TRUE;
+	return true;
 }
 
 
@@ -1039,7 +975,7 @@ float bot_cmd_presskey()
 
 	key = bot_cmd.bot_cmd_parm_string;
 
-	bot_cmd_keypress_handler(key,TRUE);
+	bot_cmd_keypress_handler(key,true);
 
 	return CMD_STATUS_FINISHED;
 }
@@ -1050,7 +986,7 @@ float bot_cmd_releasekey()
 
 	key = bot_cmd.bot_cmd_parm_string;
 
-	return bot_cmd_keypress_handler(key,FALSE);
+	return bot_cmd_keypress_handler(key,false);
 }
 
 float bot_cmd_pause()
@@ -1214,7 +1150,6 @@ void bot_setcurrentcommand()
 void bot_resetqueues()
 {
 	entity cl;
-	float i;
 
 	FOR_EACH_CLIENT(cl) if(cl.isbot)
 	{
@@ -1222,7 +1157,7 @@ void bot_resetqueues()
 		bot_clearqueue(cl);
 		// also, cancel all barriers
 		cl.bot_barrier = 0;
-		for(i = 0; i < cl.bot_places_count; ++i)
+		for(int i = 0; i < cl.bot_places_count; ++i)
 		{
 			strunzone(cl.(bot_placenames[i]));
 			cl.(bot_placenames[i]) = string_null;
@@ -1247,7 +1182,7 @@ float bot_execute_commands_once()
 	// (namely, it means you cannot make a bot "normal" ever again)
 	// to keep a bot walking for a while, use the "wait" bot command
 	if(bot_cmd == world)
-		return FALSE;
+		return false;
 
 	// Ignore all commands except continue when the bot is paused
 	if(self.bot_exec_status & BOT_EXEC_STATUS_PAUSED)
@@ -1255,7 +1190,7 @@ float bot_execute_commands_once()
 	{
 		if(bot_cmd.bot_cmd_type!=BOT_CMD_NULL)
 		{
-			bot_command_executed(TRUE);
+			bot_command_executed(true);
 			print( "WARNING: Commands are ignored while the bot is paused. Use the command 'continue' instead.\n");
 		}
 		return 1;
@@ -1266,14 +1201,14 @@ float bot_execute_commands_once()
 
 	// Handle conditions
 	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
-	if(self.bot_cmd_condition_status & CMD_CONDITION_TRUE && self.bot_cmd_condition_status & CMD_CONDITION_FALSE_BLOCK)
+	if(self.bot_cmd_condition_status & CMD_CONDITION_true && self.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
 	{
-		bot_command_executed(TRUE);
+		bot_command_executed(true);
 		return -1;
 	}
-	else if(self.bot_cmd_condition_status & CMD_CONDITION_FALSE && self.bot_cmd_condition_status & CMD_CONDITION_TRUE_BLOCK)
+	else if(self.bot_cmd_condition_status & CMD_CONDITION_false && self.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
 	{
-		bot_command_executed(TRUE);
+		bot_command_executed(true);
 		return -1;
 	}
 
@@ -1390,7 +1325,7 @@ float bot_execute_commands_once()
 			clientcommand(self,strcat("say ^7", bot_cmd_string[bot_cmd.bot_cmd_type]," ",parms,"\n"));
 		}
 
-		bot_command_executed(TRUE);
+		bot_command_executed(true);
 	}
 
 	if(status == CMD_STATUS_FINISHED)

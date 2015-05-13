@@ -1,22 +1,33 @@
-#define localcmd cmd
+#ifndef MENU_H
+#define MENU_H
 
-#define NULL (null_entity)
-#define world NULL
+#include "draw.qh"
+#include "skin.qh"
+
+#include "oo/base.qh"
+
+#include "xonotic/util.qh"
+
+#include "../common/constants.qh"
+#include "../common/test.qh"
+#include "../common/util.qh"
+
+#define localcmd cmd
 
 // constants
 
-const float GAME_ISSERVER 	= 1;
-const float GAME_CONNECTED	= 2;
-const float GAME_DEVELOPER	= 4;
+const int GAME_ISSERVER 	= 1;
+const int GAME_CONNECTED	= 2;
+const int GAME_DEVELOPER	= 4;
 
 // prototypes
 
 float Menu_Active;
-float gamestatus;
+int gamestatus;
 
-const float S_SHIFT = 1;
-const float S_CTRL = 2;
-const float S_ALT = 4;
+const int S_SHIFT = 1;
+const int S_CTRL = 2;
+const int S_ALT = 4;
 
 float frametime;
 float time;
@@ -38,3 +49,20 @@ void preMenuDraw(); // this is run before the menu is drawn. You may put some st
 void postMenuDraw(); // this is run just after the menu is drawn (or not). Useful to draw something over everything else.
 
 void m_sync();
+
+void draw_reset_cropped();
+
+// sounds
+
+const string MENU_SOUND_CLEAR   = "sound/menu/clear.wav";
+const string MENU_SOUND_CLOSE   = "sound/menu/close.wav";
+const string MENU_SOUND_EXECUTE = "sound/menu/execute.wav";
+const string MENU_SOUND_FOCUS   = "sound/menu/focus.wav";
+const string MENU_SOUND_OPEN    = "sound/menu/open.wav";
+const string MENU_SOUND_SELECT  = "sound/menu/select.wav";
+const string MENU_SOUND_SLIDE   = "sound/menu/slide.wav";
+const string MENU_SOUND_WINNER  = "sound/menu/winner.wav";
+
+void m_play_focus_sound();
+void m_play_click_sound(string soundfile);
+#endif

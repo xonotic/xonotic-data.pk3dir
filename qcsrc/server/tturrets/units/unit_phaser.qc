@@ -1,3 +1,5 @@
+#include "../../_all.qh"
+
 void spawnfunc_turret_phaser();
 void turret_phaser_dinit();
 void turret_phaser_attack();
@@ -91,7 +93,7 @@ void turret_phaser_attack()
     beam.scale = self.target_range / 256;
     beam.movetype = MOVETYPE_NONE;
     beam.enemy = self.enemy;
-    beam.bot_dodge = TRUE;
+    beam.bot_dodge = true;
     beam.bot_dodgerating = beam.shot_dmg;
     sound (beam, CH_SHOTS_SINGLE, "turrets/phaser.wav", VOL_BASE, ATTEN_NORM);
     self.fireflag = 1;

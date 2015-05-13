@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 MUTATOR_HOOKFUNCTION(pinata_PlayerDies)
 {
 	float j;
@@ -5,21 +9,21 @@ MUTATOR_HOOKFUNCTION(pinata_PlayerDies)
 	if(self.weapons & WepSet_FromWeapon(j))
 	if(self.switchweapon != j)
 	if(W_IsWeaponThrowable(j))
-		W_ThrowNewWeapon(self, j, FALSE, self.origin + (self.mins + self.maxs) * 0.5, randomvec() * 175 + '0 0 325');
+		W_ThrowNewWeapon(self, j, false, self.origin + (self.mins + self.maxs) * 0.5, randomvec() * 175 + '0 0 325');
 
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(pinata_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Pinata");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(pinata_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Piñata");
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_pinata)
@@ -28,5 +32,5 @@ MUTATOR_DEFINITION(mutator_pinata)
 	MUTATOR_HOOK(BuildMutatorsString, pinata_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, pinata_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

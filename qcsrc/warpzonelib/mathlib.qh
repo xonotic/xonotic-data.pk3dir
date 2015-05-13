@@ -1,21 +1,22 @@
+#ifndef MATHLIB_H
+#define MATHLIB_H
+
 // <math.h>
 
 // The commented-out functions need no implementation because DarkPlaces offers
 // them as builtins. They are listed here anyway for completeness sake.
 
-#define int float
-
-#define FP_NAN 0
-#define FP_INFINITE 1
-#define FP_ZERO 2
-#define FP_SUBNORMAL 3
-#define FP_NORMAL 4
+const int FP_NAN = 0;
+const int FP_INFINITE = 1;
+const int FP_ZERO = 2;
+const int FP_SUBNORMAL = 3;
+const int FP_NORMAL = 4;
 int fpclassify(float x);
-int isfinite(float x);
-int isinf(float x);
-int isnan(float x);
-int isnormal(float x);
-int signbit(float x);
+bool isfinite(float x);
+bool isinf(float x);
+bool isnan(float x);
+bool isnormal(float x);
+bool signbit(float x);
 
 //float acos(float x);
 //float asin(float x);
@@ -59,6 +60,17 @@ float erfc(float x);
 vector lgamma(float x); // value in _x, sign in _y
 float tgamma(float x);
 
+/**
+ * Pythonic mod:
+ * TODO: %% operator?
+ *
+ *  1 %  2 ==  1
+ * -1 %  2 ==  1
+ *  1 % -2 == -1
+ * -1 % -2 == -1
+ */
+float pymod(float x, float y);
+
 //float ceil(float x);
 //float floor(float x);
 float nearbyint(float x);
@@ -87,16 +99,22 @@ int islessequal(float x, float y);
 int islessgreater(float x, float y);
 int isunordered(float x, float y);
 
-#define M_E        2.7182818284590452354   /* e */
-#define M_LOG2E    1.4426950408889634074   /* log_2 e */
-#define M_LOG10E   0.43429448190325182765  /* log_10 e */
-#define M_LN2      0.69314718055994530942  /* log_e 2 */
-#define M_LN10     2.30258509299404568402  /* log_e 10 */
-#define M_PI       3.14159265358979323846  /* pi */
-#define M_PI_2     1.57079632679489661923  /* pi/2 */
-#define M_PI_4     0.78539816339744830962  /* pi/4 */
-#define M_1_PI     0.31830988618379067154  /* 1/pi */
-#define M_2_PI     0.63661977236758134308  /* 2/pi */
-#define M_2_SQRTPI 1.12837916709551257390  /* 2/sqrt(pi) */
-#define M_SQRT2    1.41421356237309504880  /* sqrt(2) */
-#define M_SQRT1_2  0.70710678118654752440  /* 1/sqrt(2) */
+const float M_E        = 2.7182818284590452354;   /* e */
+const float M_LOG2E    = 1.4426950408889634074;   /* log_2 e */
+const float M_LOG10E   = 0.43429448190325182765;  /* log_10 e */
+const float M_LN2      = 0.69314718055994530942;  /* log_e 2 */
+const float M_LN10     = 2.30258509299404568402;  /* log_e 10 */
+// -Wdouble-declaration
+#define M_PI             3.14159265358979323846   /* pi */
+const float M_PI_2     = 1.57079632679489661923;  /* pi/2 */
+const float M_PI_4     = 0.78539816339744830962;  /* pi/4 */
+const float M_1_PI     = 0.31830988618379067154;  /* 1/pi */
+const float M_2_PI     = 0.63661977236758134308;  /* 2/pi */
+const float M_2_SQRTPI = 1.12837916709551257390;  /* 2/sqrt(pi) */
+const float M_SQRT2    = 1.41421356237309504880;  /* sqrt(2) */
+const float M_SQRT1_2  = 0.70710678118654752440;  /* 1/sqrt(2) */
+
+// Non-<math.h> stuff follows here.
+vector cross(vector a, vector b);
+
+#endif

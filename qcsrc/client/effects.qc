@@ -1,3 +1,6 @@
+#include "effects.qh"
+#include "_all.qh"
+
 /*
 .vector fx_start;
 .vector fx_end;
@@ -30,7 +33,7 @@ void b_make(vector s,vector e, string t,float l,float z)
 }
 */
 
-void cl_effetcs_lightningarc(vector from, vector to,float seglength,float drifts,float drifte,float branchfactor,float branchfactor_add)
+void cl_effects_lightningarc(vector from, vector to,float seglength,float drifts,float drifte,float branchfactor,float branchfactor_add)
 {
     vector direction,dirnew, pos, pos_l;
     float length, steps, steplength, i,drift;
@@ -39,7 +42,9 @@ void cl_effetcs_lightningarc(vector from, vector to,float seglength,float drifts
     if(length < 1)
         return;
 
-    steps      = floor(length / seglength);
+    // Use at most 16 te_lightning1 segments, as these eat up beam list segments.
+    // TODO: Change this to R_BeginPolygon code, then we no longer have this limit.
+    steps      = min(16, floor(length / seglength));
     if(steps < 1)
     {
         te_lightning1(world,from,to);
@@ -57,8 +62,9 @@ void cl_effetcs_lightningarc(vector from, vector to,float seglength,float drifts
             dirnew = normalize(direction * (1 - drift) + randomvec() * drift);
             pos = pos_l +  dirnew * steplength;
             te_lightning1(world,pos_l,pos);
-            if(random() < branchfactor)
-                cl_effetcs_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
+            // WTF endless recursion if branchfactor is 1.0 (possibly due to adding branchfactor_add). FIXME
+            // if(random() < branchfactor)
+            //     cl_effects_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
 
             pos_l = pos;
         }
@@ -74,8 +80,8 @@ void Net_ReadLightningarc()
 {
 	vector from, to;
 
-    from_x = ReadCoord(); from_y = ReadCoord(); from_z = ReadCoord();
-    to_x   = ReadCoord(); to_y   = ReadCoord(); to_z   = ReadCoord();
+    from.x = ReadCoord(); from.y = ReadCoord(); from.z = ReadCoord();
+    to.x = ReadCoord(); to.y = ReadCoord(); to.z = ReadCoord();
 
     if(autocvar_cl_effects_lightningarc_simple)
     {
@@ -91,7 +97,7 @@ void Net_ReadLightningarc()
         branchfactor     = autocvar_cl_effects_lightningarc_branchfactor_start;
         branchfactor_add = autocvar_cl_effects_lightningarc_branchfactor_add;
 
-        cl_effetcs_lightningarc(from,to,seglength,drifts,drifte,branchfactor,branchfactor_add);
+        cl_effects_lightningarc(from,to,seglength,drifts,drifte,branchfactor,branchfactor_add);
     }
 
 }

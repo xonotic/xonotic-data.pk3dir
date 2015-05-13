@@ -1,3 +1,13 @@
+#include "../../common/command/command.qh"
+#include "common.qh"
+#include "../_all.qh"
+
+#include "../scores.qh"
+
+#include "../../common/notifications.qh"
+#include "../../common/counting.qh"
+
+
 // ====================================================
 //  Shared code for server commands, written by Samual
 //  Last updated: December 27th, 2011
@@ -21,6 +31,14 @@ string GetCallerName(entity caller)
 		return admin_name(); //((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
 }
 
+// verify that the client provided is acceptable for kicking
+float VerifyKickableEntity(entity client)
+{
+	if (!IS_REAL_CLIENT(client))
+		return CLIENT_NOT_REAL;
+	return CLIENT_ACCEPTABLE;
+}
+
 // verify that the client provided is acceptable for use
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
@@ -35,13 +53,13 @@ float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 }
 
 // if the client is not acceptable, return a string to be used for error messages
-string GetClientErrorString(float clienterror, string original_input)
+string GetClientErrorString_color(float clienterror, string original_input, string col)
 {
 	switch(clienterror)
 	{
-		case CLIENT_DOESNT_EXIST: { return strcat("Client '", original_input, "' doesn't exist"); }
-		case CLIENT_NOT_REAL: { return strcat("Client '", original_input, "' is not real"); }
-		case CLIENT_NOT_BOT: { return strcat("Client '", original_input, "' is not a bot"); }
+		case CLIENT_DOESNT_EXIST: { return strcat(col, "Client '", original_input, col, "' doesn't exist"); }
+		case CLIENT_NOT_REAL: { return strcat(col, "Client '", original_input, col, "' is not real"); }
+		case CLIENT_NOT_BOT: { return strcat(col, "Client '", original_input, col, "' is not a bot"); }
 		default: { return "Incorrect usage of GetClientErrorString"; }
 	}
 }
@@ -50,9 +68,9 @@ string GetClientErrorString(float clienterror, string original_input)
 float VerifyClientNumber(float tmp_number)
 {
 	if((tmp_number < 1) || (tmp_number > maxclients))
-		return FALSE;
+		return false;
 	else
-		return TRUE;
+		return true;
 }
 
 entity GetIndexedEntity(float argc, float start_index)
@@ -196,7 +214,7 @@ void timeout_handler_think()
 
 				// unlock the view for players so they can move around again
 				FOR_EACH_REALPLAYER(tmp_player)
-					tmp_player.fixangle = FALSE;
+					tmp_player.fixangle = false;
 
 				timeout_handler_reset();
 			}
@@ -406,9 +424,7 @@ void CommonCommand_records(float request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float i;
-
-			for(i = 0; i < 10; ++i)
+			for(int i = 0; i < 10; ++i)
 				if(records_reply[i] != "")
 					print_to(caller, records_reply[i]);
 
@@ -456,8 +472,8 @@ void CommonCommand_time(float request, entity caller)
 			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME))));
 			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES))));
 			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME))));
-			print_to(caller, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y")));
-			print_to(caller, strcat("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("localtime = ", strftime(true, "%a %b %e %H:%M:%S %Z %Y")));
+			print_to(caller, strcat("gmtime = ", strftime(false, "%a %b %e %H:%M:%S %Z %Y")));
 			return;
 		}
 
@@ -660,70 +676,3 @@ void CommonCommand_(float request, entity caller)
 	}
 }
 */
-
-
-// ==================================
-//  Macro system for common commands
-// ==================================
-
-// Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define COMMON_COMMANDS(request,caller,arguments,command) \
-	COMMON_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, caller), "Prints a list of all changed server cvars") \
-	COMMON_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, caller), "Prints a list of all changed gameplay cvars") \
-	COMMON_COMMAND("info", CommonCommand_info(request, caller, arguments), "Request for unique server information set up by admin") \
-	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
-	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \
-	COMMON_COMMAND("printmaplist", CommonCommand_printmaplist(request, caller), "Display full server maplist reply") \
-	COMMON_COMMAND("rankings", CommonCommand_rankings(request, caller), "Print information about rankings") \
-	COMMON_COMMAND("records", CommonCommand_records(request, caller), "List top 10 records for the current map") \
-	COMMON_COMMAND("teamstatus", CommonCommand_teamstatus(request, caller), "Show information about player and team scores") \
-	COMMON_COMMAND("time", CommonCommand_time(request, caller), "Print different formats/readouts of time") \
-	COMMON_COMMAND("timein", CommonCommand_timein(request, caller), "Resume the game from being paused with a timeout") \
-	COMMON_COMMAND("timeout", CommonCommand_timeout(request, caller), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
-	COMMON_COMMAND("vote", VoteCommand(request, caller, arguments, command), "Request an action to be voted upon by players") \
-	COMMON_COMMAND("who", CommonCommand_who(request, caller, arguments), "Display detailed client information about all players") \
-	/* nothing */
-
-void CommonCommand_macro_help(entity caller)
-{
-	#define COMMON_COMMAND(name,function,description) \
-		{ print_to(caller, strcat("  ^2", name, "^7: ", description)); }
-
-	COMMON_COMMANDS(0, caller, 0, "")
-	#undef COMMON_COMMAND
-
-	return;
-}
-
-float CommonCommand_macro_command(float argc, entity caller, string command)
-{
-	#define COMMON_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
-
-	COMMON_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, command)
-	#undef COMMON_COMMAND
-
-	return FALSE;
-}
-
-float CommonCommand_macro_usage(float argc, entity caller)
-{
-	#define COMMON_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
-
-	COMMON_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "")
-	#undef COMMON_COMMAND
-
-	return FALSE;
-}
-
-void CommonCommand_macro_write_aliases(float fh)
-{
-	#define COMMON_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("qc_cmd_svcmd", name, description); }
-
-	COMMON_COMMANDS(0, world, 0, "")
-	#undef COMMON_COMMAND
-
-	return;
-}

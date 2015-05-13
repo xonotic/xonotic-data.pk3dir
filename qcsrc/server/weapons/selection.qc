@@ -1,3 +1,13 @@
+#include "selection.qh"
+#include "../_all.qh"
+
+#include "weaponsystem.qh"
+#include "../t_items.qh"
+#include "../waypointsprites.qh"
+#include "../../common/constants.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/weapons.qh"
+
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)
 {
@@ -18,7 +28,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 
 	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 		complain = 0;
-		
+
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
 
@@ -26,7 +36,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	{
 		if (complain)
 			sprint(self, "Invalid weapon\n");
-		return FALSE;
+		return false;
 	}
 	if (cl.weapons & WepSet_FromWeapon(wpn))
 	{
@@ -59,10 +69,10 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 					play2(cl, "weapons/unavailable.wav");
 					Send_WeaponComplain (cl, wpn, 0);
 				}
-				return FALSE;
+				return false;
 			}
 		}
-		return TRUE;
+		return true;
 	}
 	if (complain)
 	{
@@ -85,7 +95,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 					WaypointSprite_Spawn(
 						(get_weaponinfo(wpn)).wpmodel,
 						1, 0,
-						world, e.origin + ('0 0 1' * e.maxs_z) * 1.2,
+						world, e.origin + ('0 0 1' * e.maxs.z) * 1.2,
 						self, 0,
 						world, enemy,
 						0,
@@ -101,15 +111,14 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 
 		play2(cl, "weapons/unavailable.wav");
 	}
-	return FALSE;
+	return false;
 }
 
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing)
 {
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
-	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast, c;
-	string rest;
+	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast;
 	WepSet wepset = '0 0 0';
 	switchtonext = switchtolast = 0;
 	first_valid = prev_valid = 0;
@@ -124,9 +133,9 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	if(dir == 0)
 		switchtonext = 1;
 
-	c = 0;
+	int c = 0;
 
-	rest = weaponorder;
+	string rest = weaponorder;
 	while(rest != "")
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
@@ -136,13 +145,13 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 		if(wep.impulse != imp)
 			continue;
 
-		float i, have_other = FALSE;
+		float i, have_other = false;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			if(i != weaponwant)
 			if((get_weaponinfo(i)).impulse == imp || imp < 0)
 			if((pl.weapons & WepSet_FromWeapon(i)) || (weaponsInMap & WepSet_FromWeapon(i)))
-				have_other = TRUE;
+				have_other = true;
 		}
 
 		// skip weapons we don't own that aren't normal and aren't in the map
@@ -153,7 +162,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 
 		++c;
 
-		if(!skipmissing || client_hasweapon(pl, weaponwant, TRUE, FALSE))
+		if(!skipmissing || client_hasweapon(pl, weaponwant, true, false))
 		{
 			if(switchtonext)
 				return weaponwant;
@@ -193,13 +202,13 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 				if(wep.impulse != imp)
 					continue;
 
-			float i, have_other = FALSE;
+			float i, have_other = false;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				if(i != weaponwant)
 				if((get_weaponinfo(i)).impulse == imp || imp < 0)
 				if((pl.weapons & WepSet_FromWeapon(i)) || (weaponsInMap & WepSet_FromWeapon(i)))
-					have_other = TRUE;
+					have_other = true;
 			}
 
 			// skip weapons we don't own that aren't normal and aren't in the map
@@ -211,7 +220,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 			--c;
 			if(c == 0)
 			{
-				client_hasweapon(pl, weaponwant, TRUE, TRUE);
+				client_hasweapon(pl, weaponwant, true, true);
 				break;
 			}
 		}
@@ -248,7 +257,7 @@ void W_SwitchWeapon(float imp)
 {
 	if (self.switchweapon != imp)
 	{
-		if (client_hasweapon(self, imp, TRUE, TRUE))
+		if (client_hasweapon(self, imp, true, true))
 			W_SwitchWeapon_Force(self, imp);
 		else
 			self.selectweapon = imp; // update selectweapon ANYWAY
@@ -259,7 +268,7 @@ void W_SwitchWeapon(float imp)
 void W_CycleWeapon(string weaponorder, float dir)
 {
 	float w;
-	w = W_GetCycleWeapon(self, weaponorder, dir, -1, 1, TRUE);
+	w = W_GetCycleWeapon(self, weaponorder, dir, -1, 1, true);
 	if(w > 0)
 		W_SwitchWeapon(w);
 }
@@ -297,7 +306,7 @@ void W_PreviousWeapon(float list)
 // previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon(void)
 {
-	if(client_hasweapon(self, self.cnt, TRUE, FALSE))
+	if(client_hasweapon(self, self.cnt, true, false))
 		W_SwitchWeapon(self.cnt);
 	else
 		W_SwitchToOtherWeapon(self);

@@ -1,0 +1,388 @@
+#ifndef G_TRIGGERS_H
+#define G_TRIGGERS_H
+
+void SUB_DontUseTargets();
+
+
+void() SUB_UseTargets;
+
+void DelayThink();
+
+/*
+==============================
+SUB_UseTargets
+
+the global "activator" should be set to the entity that initiated the firing.
+
+If self.delay is set, a DelayedUse entity will be created that will actually
+do the SUB_UseTargets after that many seconds have passed.
+
+Centerprints any self.message to the activator.
+
+Removes all entities with a targetname that match self.killtarget,
+and removes them, so some events can remove other triggers.
+
+Search for (string)targetname in all entities that
+match (string)self.target and call their .use function
+
+==============================
+*/
+void SUB_UseTargets();
+
+
+//=============================================================================
+
+const float	SPAWNFLAG_NOMESSAGE = 1;
+const float	SPAWNFLAG_NOTOUCH = 1;
+
+// the wait time has passed, so set back up for another activation
+void multi_wait();
+
+
+// the trigger was just touched/killed/used
+// self.enemy should be set to the activator so it can be held through a delay
+// so wait for the delay time before firing
+void multi_trigger();
+
+void multi_use();
+
+void multi_touch();
+
+void multi_eventdamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+
+void multi_reset();
+
+/*QUAKED spawnfunc_trigger_multiple (.5 .5 .5) ? notouch
+Variable sized repeatable trigger.  Must be targeted at one or more entities.  If "health" is set, the trigger must be killed to activate each time.
+If "delay" is set, the trigger waits some time after activating before firing.
+"wait" : Seconds between triggerings. (.2 default)
+If notouch is set, the trigger is only fired by other entities, not by touching.
+NOTOUCH has been obsoleted by spawnfunc_trigger_relay!
+sounds
+1)	secret
+2)	beep beep
+3)	large switch
+4)
+set "message" to text string
+*/
+void spawnfunc_trigger_multiple();
+
+
+/*QUAKED spawnfunc_trigger_once (.5 .5 .5) ? notouch
+Variable sized trigger. Triggers once, then removes itself.  You must set the key "target" to the name of another object in the level that has a matching
+"targetname".  If "health" is set, the trigger must be killed to activate.
+If notouch is set, the trigger is only fired by other entities, not by touching.
+if "killtarget" is set, any objects that have a matching "target" will be removed when the trigger is fired.
+if "angle" is set, the trigger will only fire when someone is facing the direction of the angle.  Use "360" for an angle of 0.
+sounds
+1)	secret
+2)	beep beep
+3)	large switch
+4)
+set "message" to text string
+*/
+void spawnfunc_trigger_once();
+
+//=============================================================================
+
+/*QUAKED spawnfunc_trigger_relay (.5 .5 .5) (-8 -8 -8) (8 8 8)
+This fixed size trigger cannot be touched, it can only be fired by other events.  It can contain killtargets, targets, delays, and messages.
+*/
+void spawnfunc_trigger_relay();
+
+void delay_use();
+
+void delay_reset();
+
+void spawnfunc_trigger_delay();
+
+//=============================================================================
+
+
+void counter_use();
+
+void counter_reset();
+
+/*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage
+Acts as an intermediary for an action that takes multiple inputs.
+
+If nomessage is not set, t will print "1 more.. " etc when triggered and "sequence complete" when finished.
+
+After the counter has been triggered "count" times (default 2), it will fire all of it's targets and remove itself.
+*/
+void spawnfunc_trigger_counter();
+
+void trigger_hurt_use();
+
+.float triggerhurttime;
+void trigger_hurt_touch();
+
+/*QUAKED spawnfunc_trigger_hurt (.5 .5 .5) ?
+Any object touching this will be hurt
+set dmg to damage amount
+defalt dmg = 5
+*/
+.entity trigger_hurt_next;
+entity trigger_hurt_last;
+entity trigger_hurt_first;
+void spawnfunc_trigger_hurt();
+
+float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
+
+//////////////////////////////////////////////////////////////
+//
+//
+//
+//Trigger heal --a04191b92fbd93aa67214ef7e72d6d2e
+//
+//////////////////////////////////////////////////////////////
+
+.float triggerhealtime;
+void trigger_heal_touch();
+
+void spawnfunc_trigger_heal();
+
+
+//////////////////////////////////////////////////////////////
+//
+//
+//
+//End trigger_heal
+//
+//////////////////////////////////////////////////////////////
+
+.entity trigger_gravity_check;
+void trigger_gravity_remove(entity own);
+void trigger_gravity_check_think();
+
+void trigger_gravity_use();
+
+void trigger_gravity_touch();
+
+void spawnfunc_trigger_gravity();
+
+//=============================================================================
+
+// TODO add a way to do looped sounds with sound(); then complete this entity
+.float volume, atten;
+void target_speaker_use_off();
+void target_speaker_use_activator();
+void target_speaker_use_on();
+void target_speaker_use_off();
+void target_speaker_reset();
+
+void spawnfunc_target_speaker();
+
+
+void spawnfunc_func_stardust();
+
+.string bgmscript;
+.float bgmscriptattack;
+.float bgmscriptdecay;
+.float bgmscriptsustain;
+.float bgmscriptrelease;
+float pointparticles_SendEntity(entity to, float fl);
+
+void pointparticles_use();
+
+void pointparticles_think();
+
+void pointparticles_reset();
+
+void spawnfunc_func_pointparticles();
+
+void spawnfunc_func_sparks();
+
+float rainsnow_SendEntity(entity to, int sf);
+
+/*QUAKED spawnfunc_func_rain (0 .5 .8) ?
+This is an invisible area like a trigger, which rain falls inside of.
+
+Keys:
+"velocity"
+ falling direction (should be something like '0 0 -700', use the X and Y velocity for wind)
+"cnt"
+ sets color of rain (default 12 - white)
+"count"
+ adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
+*/
+void spawnfunc_func_rain();
+
+
+/*QUAKED spawnfunc_func_snow (0 .5 .8) ?
+This is an invisible area like a trigger, which snow falls inside of.
+
+Keys:
+"velocity"
+ falling direction (should be something like '0 0 -300', use the X and Y velocity for wind)
+"cnt"
+ sets color of rain (default 12 - white)
+"count"
+ adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
+*/
+void spawnfunc_func_snow();
+
+.float modelscale;
+void misc_laser_aim();
+
+void misc_laser_init();
+
+.entity pusher;
+void misc_laser_think();
+
+float laser_SendEntity(entity to, float fl);
+
+/*QUAKED spawnfunc_misc_laser (.5 .5 .5) ? START_ON DEST_IS_FIXED
+Any object touching the beam will be hurt
+Keys:
+"target"
+ spawnfunc_target_position where the laser ends
+"mdl"
+ name of beam end effect to use
+"colormod"
+ color of the beam (default: red)
+"dmg"
+ damage per second (-1 for a laser that kills immediately)
+*/
+void laser_use();
+
+void laser_reset();
+
+void spawnfunc_misc_laser();
+
+// tZorks trigger impulse / gravity
+.float radius;
+.float falloff;
+.float strength;
+.float lastpushtime;
+
+// targeted (directional) mode
+void trigger_impulse_touch1();
+
+// Directionless (accelerator/decelerator) mode
+void trigger_impulse_touch2();
+
+// Spherical (gravity/repulsor) mode
+void trigger_impulse_touch3();
+
+/*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
+-------- KEYS --------
+target : If this is set, this points to the spawnfunc_target_position to which the player will get pushed.
+         If not, this trigger acts like a damper/accelerator field.
+
+strength : This is how mutch force to add in the direction of .target each second
+           when .target is set. If not, this is hoe mutch to slow down/accelerate
+           someting cought inside this trigger. (1=no change, 0,5 half speed rougthly each tic, 2 = doubble)
+
+radius   : If set, act as a spherical device rather then a liniar one.
+
+falloff : 0 = none, 1 = liniar, 2 = inverted liniar
+
+-------- NOTES --------
+Use a brush textured with common/origin in the trigger entity to determine the origin of the force
+in directional and sperical mode. For damper/accelerator mode this is not nessesary (and has no effect).
+*/
+
+void spawnfunc_trigger_impulse();
+
+/*QUAKED spawnfunc_trigger_flipflop (.5 .5 .5) (-8 -8 -8) (8 8 8) START_ENABLED
+"Flip-flop" trigger gate... lets only every second trigger event through
+*/
+void flipflop_use();
+
+void spawnfunc_trigger_flipflop();
+
+/*QUAKED spawnfunc_trigger_monoflop (.5 .5 .5) (-8 -8 -8) (8 8 8)
+"Mono-flop" trigger gate... turns one trigger event into one "on" and one "off" event, separated by a delay of "wait"
+*/
+void monoflop_use();
+void monoflop_fixed_use();
+
+void monoflop_think();
+
+void monoflop_reset();
+
+void spawnfunc_trigger_monoflop();
+
+void multivibrator_send();
+
+void multivibrator_toggle();
+
+void multivibrator_reset();
+
+/*QUAKED trigger_multivibrator (.5 .5 .5) (-8 -8 -8) (8 8 8) START_ON
+"Multivibrator" trigger gate... repeatedly sends trigger events. When triggered, turns on or off.
+-------- KEYS --------
+target: trigger all entities with this targetname when it goes off
+targetname: name that identifies this entity so it can be triggered; when off, it always uses the OFF state
+phase: offset of the timing
+wait: "on" cycle time (default: 1)
+respawntime: "off" cycle time (default: same as wait)
+-------- SPAWNFLAGS --------
+START_ON: assume it is already turned on (when targeted)
+*/
+void spawnfunc_trigger_multivibrator();
+
+
+void follow_init();
+
+void spawnfunc_misc_follow();
+
+
+
+void gamestart_use();
+
+void spawnfunc_trigger_gamestart();
+
+
+
+
+.entity voicescript; // attached voice script
+.float voicescript_index; // index of next voice, or -1 to use the randomized ones
+.float voicescript_nextthink; // time to play next voice
+.float voicescript_voiceend; // time when this voice ends
+
+void target_voicescript_clear(entity pl);
+
+void target_voicescript_use();
+
+void target_voicescript_next(entity pl);
+
+void spawnfunc_target_voicescript();
+
+
+
+void trigger_relay_teamcheck_use();
+
+void trigger_relay_teamcheck_reset();
+
+void spawnfunc_trigger_relay_teamcheck();
+
+
+
+void trigger_disablerelay_use();
+
+void spawnfunc_trigger_disablerelay();
+
+float magicear_matched;
+float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
+string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin);
+
+entity magicears;
+string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
+
+void spawnfunc_trigger_magicear();
+
+void relay_activators_use();
+
+void spawnfunc_relay_activate();
+
+void spawnfunc_relay_deactivate();
+
+void spawnfunc_relay_activatetoggle();
+
+.string chmap, gametype;
+void spawnfunc_target_changelevel_use();
+
+void spawnfunc_target_changelevel();
+#endif

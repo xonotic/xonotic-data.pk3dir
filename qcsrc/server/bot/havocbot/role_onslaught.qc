@@ -1,9 +1,21 @@
-#define HAVOCBOT_ONS_ROLE_NONE 		0
-#define HAVOCBOT_ONS_ROLE_DEFENSE	2
-#define HAVOCBOT_ONS_ROLE_ASSISTANT	4
-#define HAVOCBOT_ONS_ROLE_OFFENSE	8
+#include "../../_all.qh"
 
-.float havocbot_role_flags;
+#include "havocbot.qh"
+
+#include "../bot.qh"
+#include "../navigation.qh"
+#include "../waypoints.qh"
+
+#include "../../mutators/mutators_include.qh"
+
+#include "../../../common/teams.qh"
+
+const int HAVOCBOT_ONS_ROLE_NONE 		= 0;
+const int HAVOCBOT_ONS_ROLE_DEFENSE 	= 2;
+const int HAVOCBOT_ONS_ROLE_ASSISTANT 	= 4;
+const int HAVOCBOT_ONS_ROLE_OFFENSE 	= 8;
+
+.int havocbot_role_flags;
 .float havocbot_attack_time;
 
 .void() havocbot_role;
@@ -28,11 +40,11 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplay
 void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float sradius)
 {
 	entity head;
-	float t, i, c, needarmor = FALSE, needweapons = FALSE;
+	float t, i, c, needarmor = false, needweapons = false;
 
 	// Needs armor/health?
 	if(self.health<100)
-		needarmor = TRUE;
+		needarmor = true;
 
 	// Needs weapons?
 	c = 0;
@@ -45,7 +57,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	}
 
 	if(c<4)
-		needweapons = TRUE;
+		needweapons = true;
 
 	if(!needweapons && !needarmor)
 		return;
@@ -54,7 +66,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 //	dprint(self.netname, " needs armor ", ftos(needarmor) , "\n");
 
 	// See what is around
-	head = findchainfloat(bot_pickup, TRUE);
+	head = findchainfloat(bot_pickup, true);
 	while (head)
 	{
 		// gather health and armor only
@@ -97,7 +109,7 @@ void havocbot_role_ons_setrole(entity bot, float role)
 	dprint("\n");
 }
 
-float havocbot_ons_teamcount(entity bot, float role)
+float havocbot_ons_teamcount(entity bot, int role)
 {
 	float c = 0;
 	entity head;
@@ -121,7 +133,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	for (; cp2; cp2 = cp2.chain)
 	{
 		cp2.wpcost = c = 0;
-		cp2.wpconsidered = FALSE;
+		cp2.wpconsidered = false;
 
 		if(cp2.isshielded)
 			continue;
@@ -148,7 +160,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 
 		// NOTE: probably decrease the cost of attackable control points
 		cp2.wpcost = c;
-		cp2.wpconsidered = TRUE;
+		cp2.wpconsidered = true;
 	}
 
 	// We'll consider only the best case
@@ -176,7 +188,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	{
 		// Should be attacked
 		// Rate waypoints near it
-		found = FALSE;
+		found = false;
 		best = world;
 		bestvalue = 99999999999;
 		for(radius=0; radius<1000 && !found; radius+=500)
@@ -187,7 +199,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 				if(wp.classname=="waypoint")
 				if(checkpvs(wp.origin,cp))
 				{
-					found = TRUE;
+					found = true;
 					if(wp.cnt<bestvalue)
 					{
 						best = wp;
@@ -217,7 +229,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	{
 		// Should be touched
 		// dprint(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n");
-		found = FALSE;
+		found = false;
 
 		// Look for auto generated waypoint
 		if (!bot_waypoints_for_items)
@@ -226,7 +238,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 			if(wp.classname=="waypoint")
 			{
 				navigation_routerating(wp, ratingscale, 10000);
-				found = TRUE;
+				found = true;
 			}
 		}
 
@@ -248,7 +260,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 
 		// Should be attacked
 		// Rate waypoints near it
-		found = FALSE;
+		found = false;
 		bestwp = world;
 		best = 99999999999;
 
@@ -257,7 +269,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 			if(wp.classname=="waypoint")
 			if(checkpvs(wp.origin,g))
 			{
-				found = TRUE;
+				found = true;
 				if(wp.cnt<best)
 				{
 					bestwp = wp;
@@ -277,7 +289,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 			if(checkpvs(self.view_ofs,bestwp))
 				self.havocbot_attack_time = time + 5;
 
-			return TRUE;
+			return true;
 		}
 		else
 		{
@@ -285,10 +297,10 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 			// if there aren't waypoints near the generator go straight to it
 			navigation_routerating(g, ratingscale, 10000);
 			self.havocbot_attack_time = 0;
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 void havocbot_role_ons_offense()

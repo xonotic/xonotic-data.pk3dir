@@ -1,4 +1,7 @@
-float autocvar_sv_cheats; // must... declare... global
+#ifndef CHEATS_H
+#define CHEATS_H
+
+//float autocvar_sv_cheats; // must... declare... global
 
 float cheatcount_total;
 .float cheatcount;
@@ -10,4 +13,15 @@ float CheatImpulse(float i);
 float CheatCommand(float argc);
 float CheatFrame();
 
+const float CHIMPULSE_SPEEDRUN_INIT = 30;
+const float CHIMPULSE_GIVE_ALL = 99;
+const float CHIMPULSE_CLONE_MOVING = 140;
+const float CHIMPULSE_SPEEDRUN = 141;
+const float CHIMPULSE_CLONE_STANDING = 142;
+const float CHIMPULSE_TELEPORT = 143;
+const float CHIMPULSE_R00T = 148;
+
+const float CHRAME_DRAG = 8;
+
 void Drag_MoveDrag(entity from, entity to); // call this from CopyBody
+#endif

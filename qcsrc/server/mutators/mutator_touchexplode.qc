@@ -1,10 +1,14 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .float touchexplode_time;
 
 void PlayerTouchExplode(entity p1, entity p2)
 {
 	vector org;
 	org = (p1.origin + p2.origin) * 0.5;
-	org_z += (p1.mins_z + p2.mins_z) * 0.5;
+	org.z += (p1.mins.z + p2.mins.z) * 0.5;
 
 	sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_small"), org, '0 0 0', 1);
@@ -37,12 +41,12 @@ MUTATOR_HOOKFUNCTION(touchexplode_PlayerThink)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_DEFINITION(mutator_touchexplode)
 {
 	MUTATOR_HOOK(PlayerPreThink, touchexplode_PlayerThink, CBC_ORDER_ANY);
 
-	return FALSE;
+	return false;
 }

@@ -1,14 +1,25 @@
+#include "laser.qh"
+#include "_all.qh"
+
+#include "hook.qh"
+
+#include "../common/buffs.qh"
+
+#include "../csqcmodellib/cl_model.qh"
+#include "../csqcmodellib/interpolate.qh"
+
 // a laser goes from origin in direction angles
 // it has color 'colormod'
 // and stops when something is in the way
-.float cnt; // end effect
-.vector colormod;
-.float state; // on-off
-.float count; // flags for the laser
-.vector velocity;
-.float alpha;
-.float scale; // scaling factor of the thickness
-.float modelscale; // scaling factor of the dlight
+entityclass(Laser);
+class(Laser) .int cnt; // end effect
+class(Laser) .vector colormod;
+class(Laser) .int state; // on-off
+class(Laser) .int count; // flags for the laser
+class(Laser) .vector velocity;
+class(Laser) .float alpha;
+class(Laser) .float scale; // scaling factor of the thickness
+class(Laser) .float modelscale; // scaling factor of the dlight
 
 void Draw_Laser()
 {
@@ -19,7 +30,7 @@ void Draw_Laser()
 	{
 		if(self.count & 0x10)
 		{
-			trace_endpos = self.velocity,
+			trace_endpos = self.velocity;
 			trace_dphitq3surfaceflags = 0;
 		}
 		else
@@ -63,11 +74,10 @@ void Draw_Laser()
 
 void Ent_Laser()
 {
-	float f;
 	InterpolateOrigin_Undo();
 
 	// 30 bytes, or 13 bytes for just moving
-	f = ReadByte();
+	int f = ReadByte();
 	self.count = (f & 0xF0);
 
 	if(self.count & 0x80)

@@ -1,54 +1,11 @@
-//#define PATHLIB_RDFIELDS
-#ifdef PATHLIB_RDFIELDS
-    #define path_next swampslug
-    #define path_prev lasertarget
-#else
-    .entity path_next;
-    .entity path_prev;
-#endif
+#include "pathlib.qh"
+#include "_all.qh"
+
+#include "g_subs.qh"
 
 #define medium spawnshieldtime
 
 //#define DEBUGPATHING
-
-entity openlist;
-entity closedlist;
-entity scraplist;
-
-.float pathlib_node_g;
-.float pathlib_node_h;
-.float pathlib_node_f;
-
-float pathlib_open_cnt;
-float pathlib_closed_cnt;
-float pathlib_made_cnt;
-float pathlib_merge_cnt;
-float pathlib_recycle_cnt;
-float pathlib_searched_cnt;
-
-#ifdef DEBUGPATHING
-
-#endif
-
-float pathlib_bestopen_seached;
-float pathlib_bestcash_hits;
-float pathlib_bestcash_saved;
-
-float pathlib_gridsize;
-
-float pathlib_movecost;
-float pathlib_movecost_diag;
-float pathlib_movecost_waterfactor;
-
-float pathlib_edge_check_size;
-
-float pathlib_foundgoal;
-entity goal_node;
-
-entity best_open_node;
-.float is_path_node;
-
-
 #ifdef DEBUGPATHING
 float edge_show(vector point,float fsize);
 void mark_error(vector where,float lifetime);
@@ -117,9 +74,9 @@ vector vsnap(vector point,float fsize)
 {
     vector vret;
 
-    vret_x = rint(point_x / fsize) * fsize;
-    vret_y = rint(point_y / fsize) * fsize;
-    vret_z = ceil(point_z / fsize) * fsize;
+    vret.x = rint(point.x / fsize) * fsize;
+    vret.y = rint(point.y / fsize) * fsize;
+    vret.z = ceil(point.z / fsize) * fsize;
 
     return vret;
 }
@@ -160,16 +117,6 @@ float floor_ok(vector point)
 
     return 0;
 }
-
-#define inwater(point) (pointcontents(point) == CONTENT_WATER)
-/*
-float inwater(vector point)
-{
-    if(pointcontents(point) == CONTENT_WATER)
-        return 1;
-    return 0;
-}
-*/
 
 #define _pcheck(p) traceline(p+z_up,p-z_down,MOVE_WORLDONLY,self); if (!floor_ok(trace_endpos)) return 1
 float edge_check(vector point,float fsize)
@@ -220,8 +167,8 @@ vector pathlib_wateroutnode(vector start,vector end,float doedge)
 
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end_x, pathlib_gridsize);
-    end_y = fsnap(end_y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     traceline(end + ('0 0 0.25' * pathlib_gridsize),end - ('0 0 1' * pathlib_gridsize),MOVE_WORLDONLY,self);
     end = trace_endpos;
@@ -229,7 +176,7 @@ vector pathlib_wateroutnode(vector start,vector end,float doedge)
     if(pointcontents(end - '0 0 1') != CONTENT_SOLID)
         return end;
 
-    for(surface = start ; surface_z < (end_z + 32); ++surface_z)
+    for(surface = start ; surface.z < (end.z + 32); ++surface.z)
     {
         if(pointcontents(surface) == CONTENT_EMPTY)
             break;
@@ -242,7 +189,7 @@ vector pathlib_wateroutnode(vector start,vector end,float doedge)
     if(trace_fraction == 1)
         pathlib_movenode_goodnode = 1;
 
-    if(fabs(surface_z - end_z) > 32)
+    if(fabs(surface.z - end.z) > 32)
         pathlib_movenode_goodnode = 0;
 
     return end;
@@ -255,11 +202,11 @@ vector pathlib_swimnode(vector start,vector end,float doedge)
     if(pointcontents(start) != CONTENT_WATER)
         return end;
 
-    end_x = fsnap(end_x, pathlib_gridsize);
-    end_y = fsnap(end_y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     if(pointcontents(end) == CONTENT_EMPTY)
-        return pathlib_wateroutnode( start, end);
+        return pathlib_wateroutnode( start, end, doedge);
 
     tracebox(start, walknode_boxmin,walknode_boxmax, end, MOVE_WORLDONLY, self);
     if(trace_fraction == 1)
@@ -272,8 +219,8 @@ vector pathlib_flynode(vector start,vector end)
 {
     pathlib_movenode_goodnode = 0;
 
-    end_x = fsnap(end_x, pathlib_gridsize);
-    end_y = fsnap(end_y, pathlib_gridsize);
+    end.x = fsnap(end.x, pathlib_gridsize);
+    end.y = fsnap(end.y, pathlib_gridsize);
 
     tracebox(start, walknode_boxmin,walknode_boxmax, end, MOVE_WORLDONLY, self);
     if(trace_fraction == 1)
@@ -291,8 +238,8 @@ vector pathlib_walknode(vector start,vector end,float doedge)
 
     s   = start;
     e   = end;
-    e_z = 0;
-    s_z = 0;
+    e.z = 0;
+    s.z = 0;
     direction  = normalize(s - e);
 
     distance    = vlen(start - end);
@@ -340,8 +287,8 @@ vector pathlib_walknode(vector start,vector end,float doedge)
 
     point = last_point + direction * walknode_stepsize * laststep;
 
-    point_x = fsnap(point_x, pathlib_gridsize);
-    point_y = fsnap(point_y, pathlib_gridsize);
+    point.x = fsnap(point.x, pathlib_gridsize);
+    point.y = fsnap(point.y, pathlib_gridsize);
 
     s = point + walknode_stepup;
     e = point - walknode_maxdrop;
@@ -403,8 +350,8 @@ float pathlib_h_manhattan(vector a,vector b)
     //h(n) = D * (abs(n.x-goal.x) + abs(n.y-goal.y))
 
     float h;
-    h  = fabs(a_x - b_x);
-    h += fabs(a_y - b_y);
+    h  = fabs(a.x - b.x);
+    h += fabs(a.y - b.y);
     h *= pathlib_gridsize;
 
     return h;
@@ -419,8 +366,8 @@ float pathlib_h_diagonal(vector a,vector b)
     //h(n) = D * max(abs(n.x-goal.x), abs(n.y-goal.y))
     float h,x,y;
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
     h = pathlib_movecost * max(x,y);
 
     return h;
@@ -450,8 +397,8 @@ float pathlib_h_diagonal2(vector a,vector b)
     h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
     */
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
 
     h_diag = min(x,y);
     h_str = x + y;
@@ -476,9 +423,9 @@ float pathlib_h_diagonal2sdp(vector preprev,vector prev,vector point,vector end)
     //h_straight(n) = (abs(n.x-goal.x) + abs(n.y-goal.y))
     //h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
 
-    x = fabs(point_x - end_x);
-    y = fabs(point_y - end_y);
-    z = fabs(point_z - end_z);
+    x = fabs(point.x - end.x);
+    y = fabs(point.y - end.y);
+    z = fabs(point.z - end.z);
 
     h_diag = min3(x,y,z);
     h_str = x + y + z;
@@ -506,9 +453,9 @@ float pathlib_h_diagonal3(vector a,vector b)
     //h_straight(n) = (abs(n.x-goal.x) + abs(n.y-goal.y))
     //h(n) = D2 * h_diagonal(n) + D * (h_straight(n) - 2*h_diagonal(n)))
 
-    x = fabs(a_x - b_x);
-    y = fabs(a_y - b_y);
-    z = fabs(a_z - b_z);
+    x = fabs(a.x - b.x);
+    y = fabs(a.y - b.y);
+    z = fabs(a.z - b.z);
 
     h_diag = min3(x,y,z);
     h_str = x + y + z;
@@ -519,8 +466,7 @@ float pathlib_h_diagonal3(vector a,vector b)
     return h;
 }
 
-//#define PATHLIB_USE_NODESCRAP
-#define PATHLIB_NODEEXPIRE 0.05
+const float PATHLIB_NODEEXPIRE = 0.05;
 float pathlib_scraplist_cnt;
 entity newnode()
 {
@@ -541,7 +487,6 @@ entity newnode()
 #endif
     ++pathlib_made_cnt;
     n = spawn();
-#ifdef PATHLIB_NODEEXPIRE
     n.think      = SUB_Remove;
     n.nextthink  = time + PATHLIB_NODEEXPIRE;
     return n;
@@ -554,10 +499,10 @@ void dumpnode(entity n)
 
     n.path_next    = world;
     n.path_prev    = world;
-    n.is_path_node = FALSE;
+    n.is_path_node = false;
     n.owner        = scraplist;
 #else
-    //n.is_path_node = FALSE;
+    //n.is_path_node = false;
     n.think        = SUB_Remove;
     n.nextthink    = time;
 #endif
@@ -568,7 +513,7 @@ entity pathlib_mknode(vector where,entity parent)
     entity node;
 
     node              = newnode();
-    node.is_path_node = TRUE;
+    node.is_path_node = true;
     node.owner        = openlist;
     node.path_prev    = parent;
 
@@ -635,7 +580,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     node = findradius(where,pathlib_gridsize * 0.75);
     while(node)
     {
-        if(node.is_path_node == TRUE)
+        if(node.is_path_node == true)
         {
             ++pathlib_merge_cnt;
             if(node.owner == openlist)
@@ -727,7 +672,7 @@ void pathlib_close_node(entity node,vector goal)
         if(pathlib_movenode_goodnode)
         {
             goal_node         = node;
-            pathlib_foundgoal = TRUE;
+            pathlib_foundgoal = true;
         }
     }
 }
@@ -736,7 +681,7 @@ float pathlib_expandnode_star(entity node, vector start, vector goal)
 {
     vector point;
     vector where;
-    float nodecnt;
+    float nodecnt = 0;
 
     where = node.origin;
 
@@ -782,9 +727,9 @@ float pathlib_expandnode_box(entity node, vector start, vector goal)
 {
     vector v;
 
-    for(v_z = node.origin_z - pathlib_gridsize; v_z <= node.origin_z + pathlib_gridsize; v_z += pathlib_gridsize)
-    for(v_y = node.origin_y - pathlib_gridsize; v_y <= node.origin_y + pathlib_gridsize; v_y += pathlib_gridsize)
-    for(v_x = node.origin_x - pathlib_gridsize; v_x <= node.origin_x + pathlib_gridsize; v_x += pathlib_gridsize)
+    for(v.z = node.origin.z - pathlib_gridsize; v.z <= node.origin.z + pathlib_gridsize; v.z += pathlib_gridsize)
+    for(v.y = node.origin.y - pathlib_gridsize; v.y <= node.origin.y + pathlib_gridsize; v.y += pathlib_gridsize)
+    for(v.x = node.origin.x - pathlib_gridsize; v.x <= node.origin.x + pathlib_gridsize; v.x += pathlib_gridsize)
     {
         if(vlen(v - node.origin))
             pathlib_makenode(node,start,v,goal,pathlib_movecost);
@@ -797,11 +742,11 @@ void pathlib_cleanup()
 {
     entity node;
 
-    node = findfloat(world,is_path_node, TRUE);
+    node = findfloat(world,is_path_node, true);
     while(node)
     {
         dumpnode(node);
-        node = findfloat(node,is_path_node, TRUE);
+        node = findfloat(node,is_path_node, true);
     }
 
     if(openlist)
@@ -929,16 +874,16 @@ entity pathlib_astar(vector from,vector to)
 
     pathlib_edge_check_size = (vlen(walknode_boxmin - walknode_boxmax) * 0.5);
 
-    walknode_boxup    = '0 0 2' * self.maxs_z;
+    walknode_boxup    = '0 0 2' * self.maxs.z;
     walknode_stepsize = 32;
     walknode_stepup   = '0 0 1' * walknode_stepsize;
     walknode_maxdrop  = '0 0 3' * walknode_stepsize;
 
-    from_x = fsnap(from_x,pathlib_gridsize);
-    from_y = fsnap(from_y,pathlib_gridsize);
+    from.x = fsnap(from.x,pathlib_gridsize);
+    from.y = fsnap(from.y,pathlib_gridsize);
 
-    to_x = fsnap(to_x,pathlib_gridsize);
-    to_y = fsnap(to_y,pathlib_gridsize);
+    to.x = fsnap(to.x,pathlib_gridsize);
+    to.y = fsnap(to.y,pathlib_gridsize);
 
     dprint("AStar init. ", ftos(pathlib_scraplist_cnt), " nodes on scrap\n");
     path = pathlib_mknode(from,world);
@@ -1044,6 +989,3 @@ entity pathlib_astar(vector from,vector to)
 
     return world;
 }
-
-
-

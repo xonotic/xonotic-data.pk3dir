@@ -3,6 +3,21 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
+#include "../../common/command/command.qh"
+#include "cl_cmd.qh"
+
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../hud.qh"
+#include "../hud_config.qh"
+#include "../main.qh"
+#include "../mapvoting.qh"
+#include "../miscfunctions.qh"
+
+#include "../../common/mapinfo.qh"
+
+#include "../../common/command/generic.qh"
+
 void DrawDebugModel()
 {
 	if(time - floor(time) > 0.5)
@@ -22,7 +37,7 @@ void DrawDebugModel()
 //  Command Sub-Functions
 // =======================
 
-void LocalCommand_blurtest(float request)
+void LocalCommand_blurtest(int request)
 {
 	// Simple command to work with postprocessing temporarily... possibly completely pointless, the glsl shader is used for a real feature now...
 	// Anyway, to enable it, just compile the client with -DBLURTEST and then you can use the command.
@@ -57,7 +72,7 @@ void LocalCommand_blurtest(float request)
 	#endif
 }
 
-void LocalCommand_boxparticles(float request, float argc)
+void LocalCommand_boxparticles(int request, int argc)
 {
 	switch(request)
 	{
@@ -65,10 +80,10 @@ void LocalCommand_boxparticles(float request, float argc)
 		{
 			if (argc == 9)
 			{
-				float effect = particleeffectnum(argv(1));
+				int effect = particleeffectnum(argv(1));
 				if (effect >= 0)
 				{
-					float index = stof(argv(2));
+					int index = stoi(argv(2));
 					entity own;
 					if(index <= 0)
 						own = entitybyindex(-index);
@@ -78,8 +93,8 @@ void LocalCommand_boxparticles(float request, float argc)
 					vector org_to = stov(argv(4));
 					vector dir_from = stov(argv(5));
 					vector dir_to = stov(argv(6));
-					float countmultiplier = stof(argv(7));
-					float flags = stof(argv(8));
+					int countmultiplier = stoi(argv(7));
+					int flags = stoi(argv(8));
 					boxparticles(effect, own, org_from, org_to, dir_from, dir_to, countmultiplier, flags);
 					return;
 				}
@@ -108,22 +123,21 @@ void LocalCommand_boxparticles(float request, float argc)
 	}
 }
 
-void LocalCommand_create_scrshot_ent(float request)
+void LocalCommand_create_scrshot_ent(int request)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float fh;
 			string filename = strcat(MapInfo_Map_bspname, "_scrshot_ent.txt");
-			fh = fopen(filename, FILE_WRITE);
+			int fh = fopen(filename, FILE_WRITE);
 
 			if(fh >= 0)
 			{
 				fputs(fh, "{\n");
 				fputs(fh, strcat("\"classname\" \"info_autoscreenshot\"\n"));
-				fputs(fh, strcat("\"origin\" \"", strcat(ftos(view_origin_x), " ", ftos(view_origin_y), " ", ftos(view_origin_z)), "\"\n"));
-				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles_x), " ", ftos(view_angles_y), " ", ftos(view_angles_z)), "\"\n"));
+				fputs(fh, strcat("\"origin\" \"", strcat(ftos(view_origin.x), " ", ftos(view_origin.y), " ", ftos(view_origin.z)), "\"\n"));
+				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles.x), " ", ftos(view_angles.y), " ", ftos(view_angles.z)), "\"\n"));
 				fputs(fh, "}\n");
 
 				print("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
@@ -147,7 +161,7 @@ void LocalCommand_create_scrshot_ent(float request)
 	}
 }
 
-void LocalCommand_debugmodel(float request, float argc)
+void LocalCommand_debugmodel(int request, int argc)
 {
 	switch(request)
 	{
@@ -177,13 +191,13 @@ void LocalCommand_debugmodel(float request, float argc)
 	}
 }
 
-void LocalCommand_handlevote(float request, float argc)
+void LocalCommand_handlevote(int request, int argc)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float vote_selection;
+			int vote_selection;
 			string vote_string;
 
 			if(InterpretBoolean(argv(1)))
@@ -224,7 +238,7 @@ void LocalCommand_handlevote(float request, float argc)
 	}
 }
 
-void LocalCommand_hud(float request, float argc)
+void LocalCommand_hud(int request, int argc)
 {
 	switch(request)
 	{
@@ -289,7 +303,7 @@ void LocalCommand_hud(float request, float argc)
 	}
 }
 
-void LocalCommand_localprint(float request, float argc)
+void LocalCommand_localprint(int request, int argc)
 {
 	switch(request)
 	{
@@ -313,7 +327,7 @@ void LocalCommand_localprint(float request, float argc)
 	}
 }
 
-void LocalCommand_mv_download(float request, float argc)
+void LocalCommand_mv_download(int request, int argc)
 {
 	switch(request)
 	{
@@ -337,7 +351,7 @@ void LocalCommand_mv_download(float request, float argc)
 	}
 }
 
-void LocalCommand_sendcvar(float request, float argc)
+void LocalCommand_sendcvar(int request, int argc)
 {
 	switch(request)
 	{
@@ -373,7 +387,7 @@ void LocalCommand_sendcvar(float request, float argc)
 
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
-void LocalCommand_(float request)
+void LocalCommand_(int request)
 {
 	switch(request)
 	{
@@ -417,40 +431,40 @@ void LocalCommand_macro_help()
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { print("  ^2", name, "^7: ", description, "\n"); } }
 
-	CLIENT_COMMANDS(0, 0)
+	CLIENT_COMMANDS(0, 0);
 	#undef CLIENT_COMMAND
 
 	return;
 }
 
-float LocalCommand_macro_command(float argc)
+bool LocalCommand_macro_command(int argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc)
+	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc);
 	#undef CLIENT_COMMAND
 
-	return FALSE;
+	return false;
 }
 
-float LocalCommand_macro_usage(float argc)
+bool LocalCommand_macro_usage(int argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc)
+	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc);
 	#undef CLIENT_COMMAND
 
-	return FALSE;
+	return false;
 }
 
-void LocalCommand_macro_write_aliases(float fh)
+void LocalCommand_macro_write_aliases(int fh)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_cl", name, description); } }
 
-	CLIENT_COMMANDS(0, 0)
+	CLIENT_COMMANDS(0, 0);
 	#undef CLIENT_COMMAND
 
 	return;
@@ -464,7 +478,7 @@ void LocalCommand_macro_write_aliases(float fh)
 
 void GameCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
@@ -517,26 +531,26 @@ void GameCommand(string command)
 
 // These functions are here specifically to add special + - commands to the game, and are not really normal commands.
 // Please add client commands to the function above this, as this is only for special reasons.
-#define CONSOLE_COMMANDS_NORMAL \
-	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = TRUE; }) \
-	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = FALSE; }) \
-	CONSOLE_COMMAND("+showaccuracy", { scoreboard_showaccuracy = TRUE; }) \
-	CONSOLE_COMMAND("-showaccuracy", { scoreboard_showaccuracy = FALSE; }) \
+#define CONSOLE_COMMANDS_NORMAL() \
+	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = true; }) \
+	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = false; }) \
+	CONSOLE_COMMAND("+showaccuracy", { scoreboard_showaccuracy = true; }) \
+	CONSOLE_COMMAND("-showaccuracy", { scoreboard_showaccuracy = false; }) \
 	/* nothing */
 
-#define CONSOLE_COMMANDS_MOVEMENT \
-	CONSOLE_COMMAND("+forward", { ++camera_direction_x; }) \
-	CONSOLE_COMMAND("-forward", { --camera_direction_x; }) \
-	CONSOLE_COMMAND("+back", { --camera_direction_x; }) \
-	CONSOLE_COMMAND("-back", { ++camera_direction_x; }) \
-	CONSOLE_COMMAND("+moveup", { ++camera_direction_z; }) \
-	CONSOLE_COMMAND("-moveup", { --camera_direction_z; }) \
-	CONSOLE_COMMAND("+movedown", { --camera_direction_z; }) \
-	CONSOLE_COMMAND("-movedown", { ++camera_direction_z; }) \
-	CONSOLE_COMMAND("+moveright", { --camera_direction_y; }) \
-	CONSOLE_COMMAND("-moveright", { ++camera_direction_y; }) \
-	CONSOLE_COMMAND("+moveleft", { ++camera_direction_y; }) \
-	CONSOLE_COMMAND("-moveleft", { --camera_direction_y; }) \
+#define CONSOLE_COMMANDS_MOVEMENT() \
+	CONSOLE_COMMAND("+forward", { ++camera_direction.x; }) \
+	CONSOLE_COMMAND("-forward", { --camera_direction.x; }) \
+	CONSOLE_COMMAND("+back", { --camera_direction.x; }) \
+	CONSOLE_COMMAND("-back", { ++camera_direction.x; }) \
+	CONSOLE_COMMAND("+moveup", { ++camera_direction.z; }) \
+	CONSOLE_COMMAND("-moveup", { --camera_direction.z; }) \
+	CONSOLE_COMMAND("+movedown", { --camera_direction.z; }) \
+	CONSOLE_COMMAND("-movedown", { ++camera_direction.z; }) \
+	CONSOLE_COMMAND("+moveright", { --camera_direction.y; }) \
+	CONSOLE_COMMAND("-moveright", { ++camera_direction.y; }) \
+	CONSOLE_COMMAND("+moveleft", { ++camera_direction.y; }) \
+	CONSOLE_COMMAND("-moveleft", { --camera_direction.y; }) \
 	CONSOLE_COMMAND("+roll_right", { ++camera_roll; }) \
 	CONSOLE_COMMAND("-roll_right", { --camera_roll; }) \
 	CONSOLE_COMMAND("+roll_left", { --camera_roll; }) \
@@ -549,7 +563,7 @@ void ConsoleCommand_macro_init()
 	#define CONSOLE_COMMAND(name,execution) \
 		{ registercommand(name); }
 
-	CONSOLE_COMMANDS_NORMAL
+	CONSOLE_COMMANDS_NORMAL();
 	#undef CONSOLE_COMMAND
 
 	// then init movement commands
@@ -560,7 +574,7 @@ void ConsoleCommand_macro_init()
 		#define CONSOLE_COMMAND(name,execution) \
 			{ registercommand(name); }
 
-		CONSOLE_COMMANDS_MOVEMENT
+		CONSOLE_COMMANDS_MOVEMENT();
 		#undef CONSOLE_COMMAND
 	#ifndef CAMERATEST
 	}
@@ -569,29 +583,29 @@ void ConsoleCommand_macro_init()
 	return;
 }
 
-float ConsoleCommand_macro_normal(float argc)
+bool ConsoleCommand_macro_normal(int argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
-		{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
+		{ if(name == strtolower(argv(0))) { { execution } return true; } }
 
-	CONSOLE_COMMANDS_NORMAL
+	CONSOLE_COMMANDS_NORMAL();
 	#undef CONSOLE_COMMAND
 
-	return FALSE;
+	return false;
 }
 
-float ConsoleCommand_macro_movement(float argc)
+bool ConsoleCommand_macro_movement(int argc)
 {
 	if(camera_active)
 	{
 		#define CONSOLE_COMMAND(name,execution) \
-			{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
+			{ if(name == strtolower(argv(0))) { { execution } return true; } }
 
-		CONSOLE_COMMANDS_MOVEMENT
+		CONSOLE_COMMANDS_MOVEMENT();
 		#undef CONSOLE_COMMAND
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -600,20 +614,20 @@ float ConsoleCommand_macro_movement(float argc)
 // ======================================================
 // Used to parse commands in the console that have been registered with the "registercommand" function
 
-float CSQC_ConsoleCommand(string command)
+bool CSQC_ConsoleCommand(string command)
 {
-	float argc = tokenize_console(command);
+	int argc = tokenize_console(command);
 
 	if(ConsoleCommand_macro_normal(argc))
 	{
-		return TRUE;
+		return true;
 	}
 	else if(ConsoleCommand_macro_movement(argc))
 	{
-		return TRUE;
+		return true;
 	}
 
 	// Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 
-	return FALSE;
+	return false;
 }

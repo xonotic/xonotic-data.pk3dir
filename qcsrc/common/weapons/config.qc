@@ -1,22 +1,32 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+	#include "../../dpdefs/progsdefs.qh"
+    #include "../../dpdefs/dpextensions.qh"
+    #include "../util.qh"
+    #include "config.qh"
+    #include "weapons.qh"
+#endif
+
 // ==========================
 //  Balance Config Generator
 // ==========================
 
-void W_Config_Queue_Swap(float root, float child, entity pass)
+void W_Config_Queue_Swap(int root, int child, entity pass)
 {
 	string oldroot = wep_config_queue[root];
 	wep_config_queue[root] = wep_config_queue[child];
 	wep_config_queue[child] = oldroot;
 }
 
-float W_Config_Queue_Compare(float root, float child, entity pass)
+float W_Config_Queue_Compare(int root, int child, entity pass)
 {
 	return strcmp(wep_config_queue[root], wep_config_queue[child]);
 }
 
 void Dump_Weapon_Settings(void)
 {
-	float i, x, totalsettings = 0;
+	int i, x, totalsettings = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		// step 1: clear the queue
@@ -29,16 +39,16 @@ void Dump_Weapon_Settings(void)
 
 		// step 3: sort queue
 		heapsort(WEP_CONFIG_COUNT, W_Config_Queue_Swap, W_Config_Queue_Compare, world);
-		
+
 		// step 4: write queue
 		WEP_CONFIG_WRITETOFILE(sprintf(
 			"// {{{ #%d: %s%s\n",
 			i,
 			WEP_NAME(i),
 			(((get_weaponinfo(i)).spawnflags & WEP_FLAG_MUTATORBLOCKED) ? " (MUTATOR WEAPON)" : "")
-		))
-		for(x = 0; x <= WEP_CONFIG_COUNT; ++x) { WEP_CONFIG_WRITETOFILE(wep_config_queue[x]) }
-		WEP_CONFIG_WRITETOFILE("// }}}\n")
+		));
+		for(x = 0; x <= WEP_CONFIG_COUNT; ++x) { WEP_CONFIG_WRITETOFILE(wep_config_queue[x]); }
+		WEP_CONFIG_WRITETOFILE("// }}}\n");
 
 		// step 5: debug info
 		print(sprintf("#%d: %s: %d settings...\n", i, WEP_NAME(i), WEP_CONFIG_COUNT));

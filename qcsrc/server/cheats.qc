@@ -1,3 +1,27 @@
+#include "cheats.qh"
+#include "_all.qh"
+
+#include "g_damage.qh"
+#include "race.qh"
+#include "t_teleporters.qh"
+
+#include "mutators/mutators_include.qh"
+
+#include "weapons/tracing.qh"
+
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/util.qh"
+
+#include "../common/monsters/monsters.qh"
+
+#include "../common/weapons/weapons.qh"
+
+#include "../csqcmodellib/sv_model.qh"
+
+#include "../warpzonelib/anglestransform.qh"
+#include "../warpzonelib/util_server.qh"
+
 void CopyBody(float keepvelocity);
 
 #ifdef NOCHEATS
@@ -16,15 +40,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 .float maycheat;
 float gamestart_sv_cheats;
 
-#define CHIMPULSE_SPEEDRUN_INIT 30
-#define CHIMPULSE_GIVE_ALL 99
-#define CHIMPULSE_CLONE_MOVING 140
-#define CHIMPULSE_SPEEDRUN 141
-#define CHIMPULSE_CLONE_STANDING 142
-#define CHIMPULSE_TELEPORT 143
-#define CHIMPULSE_R00T 148
 
-#define CHRAME_DRAG 8
 
 void CheatInit()
 {
@@ -103,9 +119,9 @@ void info_autoscreenshot_findtarget()
 		return;
 	}
 	vector a = vectoangles(e.origin - self.origin);
-	a_x = -a_x; // don't ask
-	self.angles_x = a_x;
-	self.angles_y = a_y;
+	a.x = -a.x; // don't ask
+	self.angles_x = a.x;
+	self.angles_y = a.y;
 	// we leave Rick Roll alone
 }
 void spawnfunc_info_autoscreenshot()
@@ -178,7 +194,7 @@ float CheatImpulse(float i)
 			IS_CHEAT(i, 0, 0);
 			if(self.personal)
 			{
-				self.speedrunning = TRUE;
+				self.speedrunning = true;
 				tracebox(self.personal.origin, self.mins, self.maxs, self.personal.origin, MOVE_WORLDONLY, self);
 				if(trace_startsolid)
 				{
@@ -190,7 +206,7 @@ float CheatImpulse(float i)
 					setorigin(self, self.personal.origin);
 					self.oldvelocity = self.velocity = self.personal.velocity;
 					self.angles = self.personal.v_angle;
-					self.fixangle = TRUE;
+					self.fixangle = true;
 
 					MUTATOR_CALLHOOK(AbortSpeedrun);
 				}
@@ -232,7 +248,7 @@ float CheatImpulse(float i)
 					self.angles = e.angles;
 					remove(e);
 					// should we? self.angles_x = -self.angles_x;
-					self.fixangle = TRUE;
+					self.fixangle = true;
 					self.velocity = '0 0 0';
 					DID_CHEAT();
 					break;
@@ -241,8 +257,8 @@ float CheatImpulse(float i)
 			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 384, 384))
 			{
 				sprint(self, "Emergency teleport used random location\n");
-				self.angles_x = -self.angles_x;
-				self.fixangle = TRUE;
+				self.angles_x = -self.angles.x;
+				self.fixangle = true;
 				self.velocity = '0 0 0';
 				DID_CHEAT();
 				break;
@@ -319,7 +335,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   effectname
 				effectnum = particleeffectnum(argv(1));
-				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0);
+				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 				trailparticles(self, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -334,7 +350,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0);
+				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, self);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
@@ -420,9 +436,9 @@ float CheatCommand(float argc)
 			e.enemy.skin = 1;
 			setsize(e.enemy, '0 0 0', '0 0 0');
 			end = normalize(self.origin + self.view_ofs - e.aiment.origin);
-			end_x = (end_x > 0) * 2 - 1;
-			end_y = (end_y > 0) * 2 - 1;
-			end_z = (end_z > 0) * 2 - 1;
+			end.x = (end.x > 0) * 2 - 1;
+			end.y = (end.y > 0) * 2 - 1;
+			end.z = (end.z > 0) * 2 - 1;
 			if(argc == 4)
 				setorigin(e.enemy, stov(argv(3)));
 			else
@@ -546,8 +562,8 @@ float CheatCommand(float argc)
 				{
 					fputs(f, "{\n");
 					fputs(f, "\"classname\" \"trigger_race_checkpoint\"\n");
-					fputs(f, strcat("\"origin\" \"", ftos(e.absmin_x), " ", ftos(e.absmin_y), " ", ftos(e.absmin_z), "\"\n"));
-					fputs(f, strcat("\"maxs\" \"", ftos(e.absmax_x - e.absmin_x), " ", ftos(e.absmax_y - e.absmin_y), " ", ftos(e.absmax_z - e.absmin_z), "\"\n"));
+					fputs(f, strcat("\"origin\" \"", ftos(e.absmin.x), " ", ftos(e.absmin.y), " ", ftos(e.absmin.z), "\"\n"));
+					fputs(f, strcat("\"maxs\" \"", ftos(e.absmax.x - e.absmin.x), " ", ftos(e.absmax.y - e.absmin.y), " ", ftos(e.absmax.z - e.absmin.z), "\"\n"));
 					fputs(f, strcat("\"cnt\" \"", ftos(e.cnt), "\"\n"));
 					fputs(f, strcat("\"targetname\" \"checkpoint", ftos(e.cnt), "\"\n"));
 					fputs(f, "}\n");
@@ -568,7 +584,7 @@ float CheatCommand(float argc)
 					fputs(f, "{\n");
 					fputs(f, "\"classname\" \"info_player_race\"\n");
 					fputs(f, strcat("\"angle\" \"", ftos(vectoyaw(start - e.origin)), "\"\n"));
-					fputs(f, strcat("\"origin\" \"", ftos(e.origin_x), " ", ftos(e.origin_y), " ", ftos(e.origin_z), "\"\n"));
+					fputs(f, strcat("\"origin\" \"", ftos(e.origin.x), " ", ftos(e.origin.y), " ", ftos(e.origin.z), "\"\n"));
 					if(e.cnt == -2)
 					{
 						fputs(f, "\"target\" \"checkpoint0\"\n");
@@ -750,11 +766,11 @@ float CheatFrame()
 			{
 				// use cheat dragging if cheats are enabled
 				crosshair_trace_plusvisibletriggers(self);
-				Drag(TRUE, TRUE);
+				Drag(true, true);
 			}
 			else
 			{
-				Drag(FALSE, FALSE); // execute dragging
+				Drag(false, false); // execute dragging
 			}
 			break;
 	}
@@ -768,13 +784,23 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
+// on dragger:
+.float draggravity;
+.float dragspeed; // speed of mouse wheel action
+.float dragdistance; // distance of dragentity's draglocalvector from view_ofs
+.vector draglocalvector; // local attachment vector of the dragentity
+.float draglocalangle;
+// on draggee:
+.entity draggedby;
+.float dragmovetype;
+
 float Drag(float force_allow_pick, float ischeat)
 {
 	BEGIN_CHEAT_FUNCTION();
 
-	// returns TRUE when an entity has been picked up
-	// If pick is TRUE, the object can also be picked up if it's not being held already
-	// If pick is FALSE, only keep dragging the object if it's already being held
+	// returns true when an entity has been picked up
+	// If pick is true, the object can also be picked up if it's not being held already
+	// If pick is false, only keep dragging the object if it's already being held
 
 	switch(0)
 	{
@@ -820,7 +846,7 @@ float Drag(float force_allow_pick, float ischeat)
 						float pick = force_allow_pick;
 						if (e && !pick)
 						{
-							// pick is TRUE if the object can be picked up. While an object is being carried, the Drag() function
+							// pick is true if the object can be picked up. While an object is being carried, the Drag() function
 							// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
 							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 							// it goes out of range while slinging it around.
@@ -833,14 +859,14 @@ float Drag(float force_allow_pick, float ischeat)
 										break;
 									case 1: // owner can grab
 										if(e.owner == self || e.realowner == self)
-											pick = TRUE;
+											pick = true;
 										break;
 									case 2: // owner and team mates can grab
 										if(SAME_TEAM(e.owner, self) || SAME_TEAM(e.realowner, self) || e.team == self.team)
-											pick = TRUE;
+											pick = true;
 										break;
 									case 3: // anyone can grab
-										pick = TRUE;
+										pick = true;
 										break;
 									default:
 										break;
@@ -860,24 +886,15 @@ float Drag(float force_allow_pick, float ischeat)
 								Drag_Begin(self, e, trace_endpos);
 								if(ischeat)
 									DID_CHEAT();
-								return TRUE;
+								return true;
 							}
 					}
 			}
 			break;
 	}
-	return FALSE;
+	return false;
 }
 
-// on dragger:
-.float draggravity;
-.float dragspeed; // speed of mouse wheel action
-.float dragdistance; // distance of dragentity's draglocalvector from view_ofs
-.vector draglocalvector; // local attachment vector of the dragentity
-.float draglocalangle;
-// on draggee:
-.entity draggedby;
-.float dragmovetype;
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 {
 	float tagscale;
@@ -892,7 +909,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	dragger.dragentity = draggee;
 
 	dragger.dragdistance = vlen(touchpoint - dragger.origin - dragger.view_ofs);
-	dragger.draglocalangle = draggee.angles_y - dragger.v_angle_y;
+	dragger.draglocalangle = draggee.angles.y - dragger.v_angle.y;
 	touchpoint = touchpoint - gettaginfo(draggee, 0);
 	tagscale = pow(vlen(v_forward), -2);
 	dragger.draglocalvector_x = touchpoint * v_forward * tagscale;
@@ -938,35 +955,35 @@ float Drag_IsDraggable(entity draggee)
 {
 	// TODO add more checks for bad stuff here
 	if(draggee == world)
-		return FALSE;
+		return false;
 	if(draggee.classname == "func_bobbing")
-		return FALSE;
+		return false;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
-		return FALSE;
+		return false;
 	if(draggee.classname == "plat")
-		return FALSE;
+		return false;
 	if(draggee.classname == "func_button")
-		return FALSE;
+		return false;
 //	if(draggee.model == "")
-//		return FALSE;
+//		return false;
 	if(IS_SPEC(draggee))
-		return FALSE;
+		return false;
 	if(IS_OBSERVER(draggee))
-		return FALSE;
+		return false;
 	if(draggee.classname == "exteriorweaponentity")
-		return FALSE;
+		return false;
 	if(draggee.classname == "weaponentity")
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 float Drag_MayChangeAngles(entity draggee)
 {
 	// TODO add more checks for bad stuff here
 	if(substring(draggee.model, 0, 1) == "*")
-		return FALSE;
-	return TRUE;
+		return false;
+	return true;
 }
 
 void Drag_MoveForward(entity dragger)
@@ -994,21 +1011,21 @@ void Drag_Update(entity dragger)
 	draggee.flags &= ~FL_ONGROUND;
 
 	curorigin = gettaginfo(draggee, 0);
-	curorigin = curorigin + v_forward * dragger.draglocalvector_x + v_right * dragger.draglocalvector_y + v_up * dragger.draglocalvector_z;
+	curorigin = curorigin + v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
 	makevectors(dragger.v_angle);
 	neworigin = dragger.origin + dragger.view_ofs + v_forward * dragger.dragdistance;
 	goodvelocity = (neworigin - curorigin) * (1 / frametime);
 
-	while(draggee.angles_y - dragger.v_angle_y - dragger.draglocalangle > 180)
+	while(draggee.angles.y - dragger.v_angle.y - dragger.draglocalangle > 180)
 		dragger.draglocalangle += 360;
-	while(draggee.angles_y - dragger.v_angle_y - dragger.draglocalangle <= -180)
+	while(draggee.angles.y - dragger.v_angle.y - dragger.draglocalangle <= -180)
 		dragger.draglocalangle -= 360;
 
 	f = min(frametime * 10, 1);
 	draggee.velocity = draggee.velocity * (1 - f) + goodvelocity * f;
 
 	if(Drag_MayChangeAngles(draggee))
-		draggee.angles_y = draggee.angles_y * (1 - f) + (dragger.v_angle_y + dragger.draglocalangle) * f;
+		draggee.angles_y = draggee.angles.y * (1 - f) + (dragger.v_angle.y + dragger.draglocalangle) * f;
 
 	draggee.ltime = max(servertime + serverframetime, draggee.ltime); // fixes func_train breakage
 
@@ -1023,18 +1040,18 @@ float Drag_CanDrag(entity dragger)
 float Drag_IsDragging(entity dragger)
 {
 	if(!dragger.dragentity)
-		return FALSE;
+		return false;
 	if(wasfreed(dragger.dragentity) || dragger.dragentity.draggedby != dragger)
 	{
 		dragger.dragentity = world;
-		return FALSE;
+		return false;
 	}
 	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity))
 	{
 		Drag_Finish(dragger);
-		return FALSE;
+		return false;
 	}
-	return TRUE;
+	return true;
 }
 
 void Drag_MoveDrag(entity from, entity to)
@@ -1051,12 +1068,12 @@ void DragBox_Think()
 {
 	if(self.aiment && self.enemy)
 	{
-		self.origin_x = (self.aiment.origin_x + self.enemy.origin_x) * 0.5;
-		self.origin_y = (self.aiment.origin_y + self.enemy.origin_y) * 0.5;
-		self.origin_z = (self.aiment.origin_z + self.enemy.origin_z) * 0.5;
-		self.maxs_x = fabs(self.aiment.origin_x - self.enemy.origin_x) * 0.5;
-		self.maxs_y = fabs(self.aiment.origin_y - self.enemy.origin_y) * 0.5;
-		self.maxs_z = fabs(self.aiment.origin_z - self.enemy.origin_z) * 0.5;
+		self.origin_x = (self.aiment.origin.x + self.enemy.origin.x) * 0.5;
+		self.origin_y = (self.aiment.origin.y + self.enemy.origin.y) * 0.5;
+		self.origin_z = (self.aiment.origin.z + self.enemy.origin.z) * 0.5;
+		self.maxs_x = fabs(self.aiment.origin.x - self.enemy.origin.x) * 0.5;
+		self.maxs_y = fabs(self.aiment.origin.y - self.enemy.origin.y) * 0.5;
+		self.maxs_z = fabs(self.aiment.origin.z - self.enemy.origin.z) * 0.5;
 		self.mins = -1 * self.maxs;
 		setorigin(self, self.origin); setsize(self, self.mins, self.maxs); // link edict
 	}

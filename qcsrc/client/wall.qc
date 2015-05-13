@@ -1,8 +1,15 @@
-.float lip;
-.float bgmscriptangular;
-.float lodmodelindex0, lodmodelindex1, lodmodelindex2;
-.float loddistance1, loddistance2;
-.vector saved;
+#include "wall.qh"
+#include "_all.qh"
+
+#include "bgmscript.qh"
+
+#include "../common/util.qh"
+
+#include "../csqcmodellib/interpolate.qh"
+
+.float alpha;
+.float scale;
+.vector movedir;
 
 void Ent_Wall_Draw()
 {
@@ -13,7 +20,7 @@ void Ent_Wall_Draw()
 		fld = angles;
 	else
 		fld = origin;
-	self.fld = self.saved;
+	self.(fld) = self.saved;
 
 	if(self.lodmodelindex1)
 	{
@@ -42,16 +49,16 @@ void Ent_Wall_Draw()
 
 	InterpolateOrigin_Do();
 
-	self.saved = self.fld;
+	self.saved = self.(fld);
 
-	f = BGMScript(self);
+	f = doBGMScript(self);
 	if(f >= 0)
 	{
 		if(self.lip < 0) // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)
 			self.alpha = 1 + self.lip * f;
 		else // > 0: alpha goes from 1-|lip| to 1 when toggled (toggling adds lip)
 			self.alpha = 1 - self.lip * (1 - f);
-		self.fld = self.fld + self.movedir * f;
+		self.(fld) = self.(fld) + self.movedir * f;
 	}
 	else
 		self.alpha = 1;
@@ -71,7 +78,7 @@ void Ent_Wall_Remove()
 
 void Ent_Wall()
 {
-	float f;
+	int f;
 	var .vector fld;
 
 	InterpolateOrigin_Undo();
@@ -81,7 +88,7 @@ void Ent_Wall()
 		fld = angles;
 	else
 		fld = origin;
-	self.fld = self.saved;
+	self.(fld) = self.saved;
 
 	f = ReadByte();
 
@@ -173,7 +180,7 @@ void Ent_Wall()
 
 	InterpolateOrigin_Note();
 
-	self.saved = self.fld;
+	self.saved = self.(fld);
 
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;

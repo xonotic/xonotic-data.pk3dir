@@ -4,6 +4,7 @@ Ant "Antibody" Zucaro
 Marvin "Mirio" Beck
 Merlijn Hofstra
 Peter "Morphed" Pielak
+Ruszkai "CuBe0wL" Ákos
 Samual "Ares" Lenks
 Tyler "-z-" Mulligan
 Zac "Mario" Jardine
@@ -19,6 +20,7 @@ Jan "zykure" Behrens
 JH0nny
 Łukasz "kuniu the frogg" Polek
 Matthias "matthiaskrgr" Krüger
+Mattia "Melanosuchus" Basaglia
 MrBougo
 Nick "bitbomb" Lucca
 nilyt/nyov
@@ -69,10 +71,11 @@ MintOX
 packer
 Pearce "theShadow" Michal
 Rasmus "FruitieX" Eskola
-Ruszkai "C.Brutail" Ákos
+Ruszkai "CuBe0wL" Ákos
 Severin "sev" Meyer
 
 *Music / Sound FX
+AquaNova (Archer)
 blkrbt
 chooksta
 Independent.nu
@@ -85,7 +88,6 @@ Saulo "mand1nga" Gil
 {SC0RP} - Ian "ID" Dorrell
 Stephan
 unfa
-AquaNova (Archer)
 
 *Game Code
 Samual "Ares" Lenks
@@ -96,7 +98,7 @@ Zac "Mario" Jardine
 
 *Marketing / PR
 Tyler "-z-" Mulligan
-Ruszkai "C.Brutail" Ákos
+Ruszkai "CuBe0wL" Ákos
 Samual "Ares" Lenks
 Saulo "mand1nga" Gil
 
@@ -121,9 +123,9 @@ Dale "graphitemaster" Weiler
 
 
 **Other Active Contributors
+BuddyFriendGuy
 Erik "Ablu" Schilling
 Jope "Sless" Withers
-Mattia "Melanosuchus" Basaglia
 Mircea "Taoki" Kitsune
 Robert "ai" Kuroto
 
@@ -132,6 +134,7 @@ Robert "ai" Kuroto
 
 *Asturian
 Llumex03
+Tornes "Tornes.Llume" Ḷḷume
 Ximielga
 
 *Belarusian
@@ -141,21 +144,24 @@ Mihail "meequz" Varantsou
 lokster
 set_killer
 
+*Chinese (China)
+Antonidas
+kalawore
+sapphireliu
+
 *Czech
 shogun assassin/woky
+Superovoce
+Tomáš "CZHeron" Volavka
 
 *Dutch
 Alexander "freefang" van Dam
 PinkRobot
 vegiburger
 
-*German
-cvcxc
-Erik "Ablu" Schilling
-Jope "Sless" Withers
-Marvin "Mirio" Beck
-Rudolf "divVerent" Polzer
-Yepoleb
+*English (Australia)
+Laurene "sunflowers" Albrand
+Zac "Mario" Jardine
 
 *Finnish
 Henry "Exitium" Sanmark
@@ -167,18 +173,23 @@ Maxime "Taximus" Paradis
 RedGuff
 Yannick "SpiKe" Le Guen
 
+*German
+cvcxc
+Erik "Ablu" Schilling
+Jope "Sless" Withers
+Marvin "Mirio" Beck
+Rudolf "divVerent" Polzer
+Yepoleb
+
 *Greek
-Γιάννης "Evropi" Α.
+Γιάννης "Evropi" Ανθυμίδης
 Konstantinos "LDinos" Mihalenas
 Savoritias
 Vindex
 
 *Hungarian
-Ruszkai "C.Brutail" Ákos
+Ruszkai "CuBe0wL" Ákos
 xaN1C4n3
-
-*Japanese
-Lento
 
 *Italian
 Antonio "terencehill" Piu
@@ -188,18 +199,22 @@ XCostaX
 
 *Polish
 4m
+Alex "tiprogrammierer.alex" Progger
 Amadeusz "amade/proraide" Sławiński
 
 *Portuguese
-Ricardo "Hellgardia" Silva
+Ricardo Manuel "Hellgardia" da Cruz Coelho da Silva
 xXxCHAOTICxXx
 
 *Romanian
+Adrian-Ciprian "adrian.tinjala" Tînjală
 BusterDBK
 Mircea "Taoki" Kitsune
+Tudor "TropiKo" Ionel
 
 *Russian
 Alex "alextalker7" Talker
+Alexandr "zrg"
 Andrei "adem4ik" Stepanov
 gravicappa
 Hot Dog
@@ -210,7 +225,7 @@ Sergej "Clearness High" Lutsyk
 *Serbian
 Саша "salepetronije" Петровић
 Pendulla
-Ristovski
+Rafael "Ristovski"
 
 *Spanish
 0000simon
@@ -218,7 +233,7 @@ Alan "aagp" Garcia
 Ari_tent
 brunodeleo
 Kammy
-roader_gentto
+roader_gentoo
 Rodrigo Mouton Laudin
 SouL
 

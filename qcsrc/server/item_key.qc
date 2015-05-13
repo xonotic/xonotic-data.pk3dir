@@ -1,3 +1,11 @@
+#include "item_key.qh"
+#include "_all.qh"
+
+#include "../common/monsters/monsters.qh"
+#include "../common/notifications.qh"
+#include "../common/util.qh"
+#include "../warpzonelib/util_server.qh"
+
 /*
 TODO:
 - add an unlock sound (here to trigger_keylock and to func_door)
@@ -7,27 +15,24 @@ TODO:
 - should keys have a trigger?
 */
 
-float item_keys_usekey(entity l, entity p) {
+bool item_keys_usekey(entity l, entity p) {
 	float valid = l.itemkeys & p.itemkeys;
 
 	if (!valid) {
 		// other has none of the needed keys
-		return FALSE;
+		return false;
 	} else if (l.itemkeys == valid) {
 		// ALL needed keys were given
 		l.itemkeys = 0;
-		return TRUE;
+		return true;
 	} else {
 		// only some of the needed keys were given
 		l.itemkeys &= ~valid;
-		return TRUE;
+		return true;
 	}
 }
 
 string item_keys_keylist(float keylist) {
-	float base, l;
-	string n;
-
 	// no keys
 	if (!keylist)
 		return "";
@@ -36,10 +41,10 @@ string item_keys_keylist(float keylist) {
 	if ((keylist & (keylist-1)) != 0)
 		return strcat("the ", item_keys_names[lowestbit(keylist)]);
 
-	n = "";
-	base = 0;
+	string n = "";
+	int base = 0;
 	while (keylist) {
-		l = lowestbit(keylist);
+		int l = lowestbit(keylist);
 		if (n)
 			n = strcat(n, ", the ", item_keys_names[base + l]);
 		else
@@ -105,7 +110,7 @@ void spawn_item_key() {
 	{
 		// first nudge it off the floor a little bit to avoid math errors
 		setorigin(self, self.origin + '0 0 1');
-		// note droptofloor returns FALSE if stuck/or would fall too far
+		// note droptofloor returns false if stuck/or would fall too far
 		droptofloor();
 	}
 
@@ -140,8 +145,8 @@ This is the only correct way to put keys on the map!
 itemkeys MUST always have exactly one bit set.
 */
 void spawnfunc_item_key() {
-	local string _model, _netname;
-	local vector _colormod;
+	string _netname;
+	vector _colormod;
 
 	// reject this entity if more than one key was set!
 	if (self.itemkeys>0 && (self.itemkeys & (self.itemkeys-1)) != 0) {
@@ -196,9 +201,7 @@ void spawnfunc_item_key() {
 	}
 
 	// find default model
-#ifdef GMQCC
-	_model = string_null;
-#endif
+	string _model = string_null;
 	if (self.itemkeys <= ITEM_KEY_BIT(2)) {
 		_model = "models/keys/key.md3";
 	} else if (self.itemkeys >= ITEM_KEY_BIT(3) && self.itemkeys <= ITEM_KEY_BIT(5)) {
@@ -282,13 +285,11 @@ trigger_keylock
  * trigger givent targets
  */
 void trigger_keylock_trigger(string s) {
-	local entity t, stemp, otemp, atemp;
+	entity stemp = self;
+	entity otemp = other;
+	entity atemp = activator;
 
-	stemp = self;
-	otemp = other;
-	atemp = activator;
-
-
+	entity t;
 	for(t = world; (t = find(t, targetname, s)); )
 		if (t.use) {
 			self = t;
@@ -306,16 +307,14 @@ void trigger_keylock_trigger(string s) {
  * kill killtarget of trigger keylock.
  */
 void trigger_keylock_kill(string s) {
-	local entity t;
+	entity t;
 	for(t = world; (t = find(t, targetname, s)); )
 		remove(t);
 };
 
 void trigger_keylock_touch(void) {
-	local float key_used, started_delay;
-
-	key_used = FALSE;
-	started_delay = FALSE;
+	bool key_used = false;
+	bool started_delay = false;
 
 	// only player may trigger the lock
 	if (!IS_PLAYER(other))
@@ -343,10 +342,10 @@ void trigger_keylock_touch(void) {
 		}
 
 		// trigger target2
-		if (self.delay <= time || started_delay == TRUE)
+		if (self.delay <= time || started_delay == true)
 		if (self.target2) {
 			trigger_keylock_trigger(self.target2);
-			started_delay = TRUE;
+			started_delay = true;
 			self.delay = time + self.wait;
 		}
 	} else {

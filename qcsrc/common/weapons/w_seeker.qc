@@ -142,9 +142,9 @@ void W_Seeker_Missile_Think(void)
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
 			if( vlen(self.origin + olddir * self.wait) < dist)
-				traceline(self.origin, self.origin + olddir * self.wait, FALSE, self);
+				traceline(self.origin, self.origin + olddir * self.wait, false, self);
 			else
-				traceline(self.origin, eorg, FALSE, self);
+				traceline(self.origin, eorg, false, self);
 
 			// Setup adaptive tracelength
 			self.wait = bound(WEP_CVAR(seeker, missile_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = WEP_CVAR(seeker, missile_smart_trace_max));
@@ -200,7 +200,7 @@ void W_Seeker_Missile_Think(void)
 
 
 
-void W_Seeker_Missile_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Seeker_Missile_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -249,16 +249,16 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	W_DecreaseAmmo(WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0);
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
 	pointparticles(particleeffectnum("seeker_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	//self.detornator         = FALSE;
+	//self.detornator         = false;
 
 	missile                 = spawn();
 	missile.owner           = missile.realowner = self;
 	missile.classname       = "seeker_missile";
-	missile.bot_dodge       = TRUE;
+	missile.bot_dodge       = true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, missile_damage);
 
 	missile.think           = W_Seeker_Missile_Think;
@@ -272,7 +272,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	missile.takedamage      = DAMAGE_YES;
 	missile.health          = WEP_CVAR(seeker, missile_health);
 	missile.damageforcescale = WEP_CVAR(seeker, missile_damageforcescale);
-	missile.damagedbycontents = TRUE;
+	missile.damagedbycontents = true;
 	//missile.think           = W_Seeker_Missile_Animate; // csqc projectiles.
 
 	if(missile.enemy != world)
@@ -291,7 +291,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 
 	missile.angles = vectoangles(missile.velocity);
 
-	CSQCProjectile(missile, FALSE, PROJECTILE_SEEKER, TRUE);
+	CSQCProjectile(missile, false, PROJECTILE_SEEKER, true);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -340,7 +340,7 @@ void W_Seeker_Fire_Flac(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/flac_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/flac_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
 	w_shotorg += f_diff;
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -348,7 +348,7 @@ void W_Seeker_Fire_Flac(void)
 	missile 				= spawn();
 	missile.owner 			= missile.realowner = self;
 	missile.classname 		= "missile";
-	missile.bot_dodge 		= TRUE;
+	missile.bot_dodge 		= true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, flac_damage);
 	missile.touch 			= W_Seeker_Flac_Explode;
 	missile.use 			= W_Seeker_Flac_Explode;
@@ -369,7 +369,7 @@ void W_Seeker_Fire_Flac(void)
 	setsize(missile, '-2 -2 -2', '2 2 2');
 
 	W_SetupProjVelocity_UP_PRE(missile, seeker, flac_);
-	CSQCProjectile(missile, TRUE, PROJECTILE_FLAC, TRUE);
+	CSQCProjectile(missile, true, PROJECTILE_FLAC, true);
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -482,7 +482,7 @@ void W_Seeker_Tag_Explode(void)
 	remove(self);
 }
 
-void W_Seeker_Tag_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Seeker_Tag_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -545,7 +545,7 @@ void W_Seeker_Tag_Touch(void)
 
 		if(WEP_CVAR(seeker, type) == 1)
 		{
-			WaypointSprite_Spawn("tagged-target", WEP_CVAR(seeker, tag_tracker_lifetime), 0, other, '0 0 64', self.realowner, 0, other, wps_tag_tracker, TRUE, RADARICON_TAGGED, '0.5 1 0');
+			WaypointSprite_Spawn("tagged-target", WEP_CVAR(seeker, tag_tracker_lifetime), 0, other, '0 0 64', self.realowner, 0, other, wps_tag_tracker, true, RADARICON_TAGGED, '0.5 1 0');
 			WaypointSprite_UpdateRule(other.wps_tag_tracker, 0, SPRITERULE_DEFAULT);
 		}
 	}
@@ -559,12 +559,12 @@ void W_Seeker_Fire_Tag(void)
 	entity missile;
 	W_DecreaseAmmo(WEP_CVAR(seeker, tag_ammo));
 
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/tag_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
 	missile                 = spawn();
 	missile.owner           = missile.realowner = self;
 	missile.classname       = "seeker_tag";
-	missile.bot_dodge       = TRUE;
+	missile.bot_dodge       = true;
 	missile.bot_dodgerating = 50;
 	missile.touch           = W_Seeker_Tag_Touch;
 	missile.think           = SUB_Remove;
@@ -587,7 +587,7 @@ void W_Seeker_Fire_Tag(void)
 	W_SetupProjVelocity_PRE(missile, seeker, tag_);
 	missile.angles = vectoangles(missile.velocity);
 
-	CSQCProjectile(missile, TRUE, PROJECTILE_TAG, FALSE); // has sound
+	CSQCProjectile(missile, true, PROJECTILE_TAG, false); // has sound
 
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -596,7 +596,7 @@ void W_Seeker_Fire_Tag(void)
 // Begin: Genereal weapon functions
 // ============================
 
-float W_Seeker(float req)
+bool W_Seeker(int req)
 {
 	float ammo_amount;
 
@@ -606,12 +606,12 @@ float W_Seeker(float req)
 		{
 			if(WEP_CVAR(seeker, type) == 1)
 				if(W_Seeker_Tagged_Info(self, self.enemy) != world)
-					self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), FALSE);
+					self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
 				else
-					self.BUTTON_ATCK2 = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), FALSE);
+					self.BUTTON_ATCK2 = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
 			else
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), FALSE);
-			return TRUE;
+				self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
+			return true;
 		}
 		case WR_THINK:
 		{
@@ -658,7 +658,7 @@ float W_Seeker(float req)
 				}
 			}
 
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -668,8 +668,8 @@ float W_Seeker(float req)
 			precache_sound("weapons/tag_fire.wav");
 			precache_sound("weapons/flac_fire.wav");
 			precache_sound("weapons/seeker_fire.wav");
-			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
-			return TRUE;
+			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
@@ -701,13 +701,13 @@ float W_Seeker(float req)
 		}
 		case WR_CONFIG:
 		{
-			SEEKER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS)
-			return TRUE;
+			SEEKER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
 		}
 		case WR_RELOAD:
 		{
 			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), "weapons/reload.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_SUICIDEMESSAGE:
 		{
@@ -721,11 +721,11 @@ float W_Seeker(float req)
 				return WEAPON_SEEKER_MURDER_SPRAY;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #ifdef CSQC
-float W_Seeker(float req)
+bool W_Seeker(int req)
 {
 	switch(req)
 	{
@@ -767,7 +767,7 @@ float W_Seeker(float req)
 						sound(self, CH_SHOTS, "weapons/seekerexp3.wav", 1, ATTEN_NORM);
 				}
 			}
-			return TRUE;
+			return true;
 		}
 		case WR_INIT:
 		{
@@ -778,15 +778,15 @@ float W_Seeker(float req)
 			precache_sound("weapons/tagexp2.wav");
 			precache_sound("weapons/tagexp3.wav");
 			precache_sound("weapons/tag_impact.wav");
-			return TRUE;
+			return true;
 		}
 		case WR_ZOOMRETICLE:
 		{
 			// no weapon specific image for this weapon
-			return FALSE;
+			return false;
 		}
 	}
-	return FALSE;
+	return false;
 }
 #endif
 #endif

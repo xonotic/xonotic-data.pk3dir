@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 /*QUAKED spawnfunc_tdm_team (0 .5 .8) (-16 -16 -24) (16 16 32)
 Team declaration for TDM gameplay, this allows you to decide what team names and control point models are used in your map.
 Note: If you use spawnfunc_tdm_team entities you must define at least 2!  However, unlike domination, you don't need to make a blank one too.
@@ -48,7 +52,7 @@ void tdm_DelayedInit()
 MUTATOR_HOOKFUNCTION(tdm_GetTeamCount)
 {
 	ret_string = "tdm_team";
-	return TRUE;
+	return true;
 }
 
 MUTATOR_DEFINITION(gamemode_tdm)

@@ -1,4 +1,16 @@
+#ifndef VEHICLES_H
+#define VEHICLES_H
+
 void RaptorCBShellfragDraw();
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
 void Vehicles_Precache();
+void Net_AuXair2(bool bIsNew);
+void Net_VehicleSetup();
 
+void CSQC_WAKIZASHI_HUD();
+void CSQC_SPIDER_HUD();
+void CSQC_RAPTOR_HUD();
+void CSQC_BUMBLE_HUD();
+void CSQC_BUMBLE_GUN_HUD();
+
+#endif

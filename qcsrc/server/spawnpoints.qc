@@ -1,16 +1,27 @@
-float SpawnPoint_Send(entity to, float sf)
+#include "spawnpoints.qh"
+#include "_all.qh"
+
+#include "mutators/mutators_include.qh"
+#include "g_world.qh"
+#include "race.qh"
+#include "../common/constants.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+#include "../warpzonelib/util_server.qh"
+
+float SpawnPoint_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, self.team);
-	WriteShort(MSG_ENTITY, self.origin_x);
-	WriteShort(MSG_ENTITY, self.origin_y);
-	WriteShort(MSG_ENTITY, self.origin_z);
+	WriteShort(MSG_ENTITY, self.origin.x);
+	WriteShort(MSG_ENTITY, self.origin.y);
+	WriteShort(MSG_ENTITY, self.origin.z);
 
-	return TRUE;
+	return true;
 }
 
-float SpawnEvent_Send(entity to, float sf)
+float SpawnEvent_Send(entity to, int sf)
 {
 	float send;
 
@@ -19,17 +30,17 @@ float SpawnEvent_Send(entity to, float sf)
 	if(autocvar_g_spawn_alloweffects)
 	{
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
-		WriteShort(MSG_ENTITY, self.owner.origin_x);
-		WriteShort(MSG_ENTITY, self.owner.origin_y);
-		WriteShort(MSG_ENTITY, self.owner.origin_z);
-		send = TRUE;
+		WriteShort(MSG_ENTITY, self.owner.origin.x);
+		WriteShort(MSG_ENTITY, self.owner.origin.y);
+		WriteShort(MSG_ENTITY, self.owner.origin.z);
+		send = true;
 	}
 	else if((to == self.owner) || (IS_SPEC(to) && (to.enemy == self.owner)) )
 	{
 		WriteByte(MSG_ENTITY, 0);
-		send = TRUE;
+		send = true;
 	}
-	else { send = FALSE; }
+	else { send = false; }
 
 	return send;
 }
@@ -50,7 +61,7 @@ void relocate_spawnpoint()
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
-    tracebox(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
+    tracebox(self.origin, PL_MIN, PL_MAX, self.origin, true, self);
     if (trace_startsolid)
     {
         vector o;
@@ -60,9 +71,9 @@ void relocate_spawnpoint()
         if (!move_out_of_solid(self))
             objerror("could not get out of solid at all!");
         print("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
-        print(" needs to be moved out of solid, e.g. by '", ftos(self.origin_x - o_x));
-        print(" ", ftos(self.origin_y - o_y));
-        print(" ", ftos(self.origin_z - o_z), "'\n");
+        print(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
+        print(" ", ftos(self.origin.y - o.y));
+        print(" ", ftos(self.origin.z - o.z), "'\n");
         if (autocvar_g_spawnpoints_auto_move_out_of_solid)
         {
             if (!spawnpoint_nag)
@@ -127,7 +138,7 @@ void relocate_spawnpoint()
 		||
 		autocvar_g_spawn_useallspawns
 	)
-	{ Net_LinkEntity(self, FALSE, 0, SpawnPoint_Send); }
+	{ Net_LinkEntity(self, false, 0, SpawnPoint_Send); }
 }
 
 void spawnfunc_info_player_survivor (void)
@@ -205,7 +216,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 				self = ent;
 				spawn_score = ent.spawn_evalfunc(oldself, spot, spawn_score);
 				self = oldself;
-				if(spawn_score_x < 0)
+				if(spawn_score.x < 0)
 					return spawn_score;
 			}
 		}
@@ -239,7 +250,7 @@ entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck)
 
 	for(spot = firstspot; spot; spot = spot.chain)
 	{
-		if(spot.spawnpoint_score_x >= 0) // spawning allowed here
+		if(spot.spawnpoint_score.x >= 0) // spawning allowed here
 		{
 			if(spotlistend)
 				spotlistend.chain = spot;
@@ -262,7 +273,7 @@ entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exp
 
 	RandomSelection_Init();
 	for(spot = firstspot; spot; spot = spot.chain)
-		RandomSelection_Add(spot, 0, string_null, pow(bound(lower, spot.spawnpoint_score_y, upper), exponent) * spot.cnt, (spot.spawnpoint_score_y >= lower) * 0.5 + spot.spawnpoint_score_x);
+		RandomSelection_Add(spot, 0, string_null, pow(bound(lower, spot.spawnpoint_score.y, upper), exponent) * spot.cnt, (spot.spawnpoint_score.y >= lower) * 0.5 + spot.spawnpoint_score.x);
 
 	return RandomSelection_chosen_ent;
 }

@@ -1,7 +1,56 @@
-#define MAX_TEAMRADAR_TIMES 32
+#ifndef TEAMRADAR_H
+#define TEAMRADAR_H
 
+const int MAX_TEAMRADAR_TIMES = 32;
+
+entityclass(TeamRadar);
 // to make entities have dots on the team radar
-.float teamradar_icon;
-.float teamradar_times[MAX_TEAMRADAR_TIMES];
-.float teamradar_time_index;
-.vector teamradar_color;
+class(TeamRadar) .float teamradar_icon;
+class(TeamRadar) .float teamradar_times[MAX_TEAMRADAR_TIMES];
+class(TeamRadar) .int teamradar_time_index;
+class(TeamRadar) .vector teamradar_color;
+
+float teamradar_angle; // player yaw angle
+vector teamradar_origin3d_in_texcoord; // player origin
+vector teamradar_origin2d; // 2D origin
+vector teamradar_size2d; // 2D size
+vector teamradar_extraclip_mins, teamradar_extraclip_maxs; // for non-centered radar display
+float teamradar_size; // 2D scale factor
+float v_flipped;
+
+float hud_panel_radar_scale; // window size = ...qu
+float hud_panel_radar_foreground_alpha;
+float hud_panel_radar_rotation;
+vector hud_panel_radar_size;
+float hud_panel_radar_zoommode;
+float hud_panel_radar_maximized_zoommode;
+float hud_panel_radar_maximized_rotation;
+
+
+float vlen2d(vector v);
+
+float vlen_maxnorm2d(vector v);
+
+float vlen_minnorm2d(vector v);
+
+vector teamradar_3dcoord_to_texcoord(vector in);
+
+vector teamradar_texcoord_to_2dcoord(vector in);
+
+vector yinvert(vector v);
+
+void draw_teamradar_background(float fg);
+
+void draw_teamradar_player(vector coord3d, vector pangles, vector rgb);
+
+void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a);
+
+void draw_teamradar_link(vector start, vector end, int colors);
+
+void teamradar_loadcvars();
+
+// radar links
+
+void Ent_RadarLink();
+
+#endif

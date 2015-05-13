@@ -1,3 +1,9 @@
+#include "round_handler.qh"
+#include "_all.qh"
+
+#include "command/vote.qh"
+#include "../common/util.qh"
+
 void round_handler_Think()
 {
 	float f;
@@ -17,10 +23,10 @@ void round_handler_Think()
 
 	if(self.wait)
 	{
-		self.wait = FALSE;
+		self.wait = false;
 		self.cnt = self.count + 1; // init countdown
 		round_starttime = time + self.count;
-		reset_map(TRUE);
+		reset_map(true);
 	}
 
 	if(self.cnt > 0) // countdown running
@@ -52,7 +58,7 @@ void round_handler_Think()
 		if(self.canRoundEnd())
 		{
 			// schedule a new round
-			self.wait = TRUE;
+			self.wait = true;
 			self.nextthink = time + self.delay;
 		}
 		else
@@ -93,14 +99,14 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, v
 	round_handler.canRoundStart = canRoundStart_func;
 	round_handler.canRoundEnd = canRoundEnd_func;
 	round_handler.roundStart = roundStart_func;
-	round_handler.wait = FALSE;
+	round_handler.wait = false;
 	round_handler_Init(5, 5, 180);
 	round_handler.nextthink = time;
 }
 
 void round_handler_Reset(float next_think)
 {
-	round_handler.wait = FALSE;
+	round_handler.wait = false;
 	if(round_handler.count)
 	if(round_handler.cnt < round_handler.count + 1)
 		round_handler.cnt = round_handler.count + 1;

@@ -1,5 +1,5 @@
-#define RACER_MIN '-120 -120 -40'
-#define RACER_MAX '120 120 40'
+#include "vehicle.qh"
+#include "racer.qh"
 
 #ifdef SVQC
 void racer_exit(float eject);
@@ -99,20 +99,20 @@ void racer_align4point(float _delta)
    self.velocity += push_vector * _delta;
 
     // Anti ocilation
-    if(self.velocity_z > 0)
+    if(self.velocity.z > 0)
         self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * _delta;
 
-    push_vector_x =  (fl_push - bl_push);
+    push_vector.x =  (fl_push - bl_push);
     push_vector_x += (fr_push - br_push);
     push_vector_x *= 360;
 
-    push_vector_z = (fr_push - fl_push);
+    push_vector.z = (fr_push - fl_push);
     push_vector_z += (br_push - bl_push);
     push_vector_z *= 360;
 
     // Apply angle diffrance
-    self.angles_z += push_vector_z * _delta;
-    self.angles_x += push_vector_x * _delta;
+    self.angles_z += push_vector.z * _delta;
+    self.angles_x += push_vector.x * _delta;
 
     // Apply stabilizer
     self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
@@ -128,11 +128,11 @@ void racer_fire_cannon(string tagname)
     bolt = vehicles_projectile("wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
                            v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                            autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-                           DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE, self.owner);
+                           DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, self.owner);
 
 	// Fix z-aim (for chase mode)
     v = normalize(trace_endpos - bolt.origin);
-    v_forward_z = v_z * 0.5;
+    v_forward.z = v.z * 0.5;
     bolt.velocity = v_forward * autocvar_g_vehicle_racer_cannon_speed;
 }
 
@@ -215,7 +215,7 @@ void racer_rocket_tracker()
     newdir = normalize(predicted_origin - self.origin);
 
     //vector
-	float height_diff = predicted_origin_z - self.origin_z;
+	float height_diff = predicted_origin.z - self.origin.z;
 
     if(vlen(newdir - v_forward) > autocvar_g_vehicle_racer_rocket_locked_maxangle)
     {
@@ -226,7 +226,7 @@ void racer_rocket_tracker()
     }
 
     if(trace_fraction != 1.0 && trace_ent != self.enemy)
-        newdir_z += 16 * sys_frametime;
+        newdir.z += 16 * sys_frametime;
 
     self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
     self.velocity_z -= 800 * sys_frametime;
@@ -239,10 +239,10 @@ void racer_rocket_tracker()
 void racer_fire_rocket(string tagname, entity trg)
 {
     vector v = gettaginfo(self, gettagindex(self, tagname));
-    entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
+    entity rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
                            v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-                           DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE, self.owner);
+                           DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
 
     rocket.lip              = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
     rocket.wait             = autocvar_g_vehicle_racer_rocket_turnrate;
@@ -288,16 +288,16 @@ float racer_frame()
 
     // Yaw
     ftmp = autocvar_g_vehicle_racer_turnspeed * frametime;
-    ftmp = bound(-ftmp, shortangle_f(player.v_angle_y - racer.angles_y, racer.angles_y), ftmp);
-    racer.angles_y = anglemods(racer.angles_y + ftmp);
+    ftmp = bound(-ftmp, shortangle_f(player.v_angle.y - racer.angles.y, racer.angles.y), ftmp);
+    racer.angles_y = anglemods(racer.angles.y + ftmp);
 
     // Roll
     racer.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * frametime;
 
     // Pitch
     ftmp = autocvar_g_vehicle_racer_pitchspeed  * frametime;
-    ftmp = bound(-ftmp, shortangle_f(player.v_angle_x - racer.angles_x, racer.angles_x), ftmp);
-    racer.angles_x = bound(-30, anglemods(racer.angles_x + ftmp), 30);
+    ftmp = bound(-ftmp, shortangle_f(player.v_angle.x - racer.angles.x, racer.angles.x), ftmp);
+    racer.angles_x = bound(-30, anglemods(racer.angles.x + ftmp), 30);
 
     makevectors(racer.angles);
     racer.angles_x *= -1;
@@ -309,10 +309,10 @@ float racer_frame()
     if(vlen(player.movement) != 0)
     {
         if(player.movement_x)
-            df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward);
+            df += v_forward * ((player.movement.x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward);
 
         if(player.movement_y)
-            df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe);
+            df += v_right * ((player.movement.y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe);
 
         if(self.sound_nexttime < time || self.sounds != 1)
         {
@@ -425,13 +425,13 @@ float racer_frame()
     player.vehicle_reload1 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
 
     if(racer.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(racer.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, TRUE);
+        vehicles_regen(racer.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, true);
 
     if(racer.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(racer.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, FALSE);
+        vehicles_regen(racer.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, false);
 
     if(racer.vehicle_flags  & VHF_ENERGYREGEN)
-        vehicles_regen(racer.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, FALSE);
+        vehicles_regen(racer.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, false);
 
 
     VEHICLE_UPDATE_PLAYER(player, health, racer);
@@ -448,6 +448,8 @@ float racer_frame()
     return 1;
 }
 
+.float lastpushtime;
+
 void racer_think()
 {
     self.nextthink = time;
@@ -460,10 +462,10 @@ void racer_think()
     tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NORMAL, self);
 
     vector df = self.velocity * -autocvar_g_vehicle_racer_friction;
-	df_z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
+	df.z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
 
 	self.velocity += df * pushdeltatime;
-    if(self.velocity_z > 0)
+    if(self.velocity.z > 0)
         self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * pushdeltatime;
 
     self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
@@ -528,8 +530,8 @@ void racer_exit(float eject)
 
 void racer_impact()
 {
-	if(autocvar_g_vehicle_racer_bouncepain_x)
-		vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
+	if(autocvar_g_vehicle_racer_bouncepain.x)
+		vehicles_impact(autocvar_g_vehicle_racer_bouncepain.x, autocvar_g_vehicle_racer_bouncepain.y, autocvar_g_vehicle_racer_bouncepain.z);
 }
 
 void racer_blowup()
@@ -578,9 +580,9 @@ void racer_die()
     pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 
     if(random() < 0.5)
-        self.avelocity_z  = 32;
+        self.avelocity_z = 32;
     else
-        self.avelocity_z  = -32;
+        self.avelocity_z = -32;
 
     self.avelocity_x = -vlen(self.velocity) * 0.2;
     self.velocity   += '0 0 700';
@@ -667,12 +669,12 @@ void spawnfunc_vehicle_racer()
              "", "", "tag_viewport",
              HUD_WAKIZASHI,
              0.5 * RACER_MIN, 0.5 * RACER_MAX,
-             FALSE,
+             false,
              racer_spawn, autocvar_g_vehicle_racer_respawntime,
              racer_frame,
              racer_enter, racer_exit,
              racer_die,   racer_think,
-             TRUE,
+             true,
              autocvar_g_vehicle_racer_health,
              autocvar_g_vehicle_racer_shield))
     {

@@ -1,3 +1,14 @@
+#include "client.qh"
+#include "common.qh"
+
+#if defined(CSQC)
+	#include "../client/autocvars.qh"
+	#include "../csqcmodellib/cl_model.qh"
+	#include "../dpdefs/csprogsdefs.qh"
+#elif defined(MENUQC)
+#elif defined(SVQC)
+#endif
+
 void WarpZone_Fade_PreDraw()
 {
 	vector org;
@@ -17,8 +28,6 @@ void WarpZone_Fade_PreDraw()
 
 void WarpZone_Read(float isnew)
 {
-	float f;
-
 	warpzone_warpzones_exist = 1;
 	if (!self.enemy)
 	{
@@ -27,7 +36,7 @@ void WarpZone_Read(float isnew)
 	}
 	self.classname = "trigger_warpzone";
 
-	f = ReadByte();
+	int f = ReadByte();
 	self.warpzone_isboxy = (f & 1);
 	if(f & 4)
 	{
@@ -84,11 +93,10 @@ void WarpZone_Read(float isnew)
 
 void WarpZone_Camera_Read(float isnew)
 {
-	float f;
 	warpzone_cameras_exist = 1;
 	self.classname = "func_warpzone_camera";
 
-	f = ReadByte();
+	int f = ReadByte();
 	if(f & 4)
 	{
 		self.origin_x = ReadCoord();
@@ -144,9 +152,9 @@ void WarpZone_Teleported_Read(float isnew)
 {
 	vector v;
 	self.classname = "warpzone_teleported";
-	v_x = ReadCoord();
-	v_y = ReadCoord();
-	v_z = ReadCoord();
+	v.x = ReadCoord();
+	v.y = ReadCoord();
+	v.z = ReadCoord();
 	if(!isnew)
 		return;
 	self.warpzone_transform = v;
@@ -158,7 +166,6 @@ void WarpZone_Teleported_Read(float isnew)
 
 float warpzone_fixingview;
 float warpzone_fixingview_drawexteriormodel;
-float autocvar_chase_active;
 
 void WarpZone_View_Outside()
 {
@@ -188,12 +195,12 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 	entity e;
 	float pd;
 
-	mi_x = min(o_x, c0_x, c1_x, c2_x, c3_x);
-	ma_x = max(o_x, c0_x, c1_x, c2_x, c3_x);
-	mi_y = min(o_y, c0_y, c1_y, c2_y, c3_y);
-	ma_y = max(o_y, c0_y, c1_y, c2_y, c3_y);
-	mi_z = min(o_z, c0_z, c1_z, c2_z, c3_z);
-	ma_z = max(o_z, c0_z, c1_z, c2_z, c3_z);
+	mi.x = min(o.x, c0_x, c1_x, c2_x, c3_x);
+	ma.x = max(o.x, c0_x, c1_x, c2_x, c3_x);
+	mi.y = min(o.y, c0_y, c1_y, c2_y, c3_y);
+	ma.y = max(o.y, c0_y, c1_y, c2_y, c3_y);
+	mi.z = min(o.z, c0_z, c1_z, c2_z, c3_z);
+	ma.z = max(o.z, c0_z, c1_z, c2_z, c3_z);
 
 	e = WarpZone_Find(mi, ma);
 	if(e)
@@ -226,7 +233,7 @@ void WarpZone_FixPMove()
 }
 
 #ifndef KEEP_ROLL
-var float autocvar_cl_rollkillspeed = 10;
+float autocvar_cl_rollkillspeed = 10;
 #endif
 void WarpZone_FixView()
 {
@@ -257,7 +264,7 @@ void WarpZone_FixView()
 	rick = getproperty(VF_CL_VIEWANGLES_Z);
 	rick *= f;
 	setproperty(VF_CL_VIEWANGLES_Z, rick);
-	ang_z *= f;
+	ang.z *= f;
 #endif
 
 	setproperty(VF_ORIGIN, org);

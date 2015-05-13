@@ -1,0 +1,83 @@
+#ifndef MAPVOTING_H
+#define MAPVOTING_H
+
+#include "../common/constants.qh"
+
+int mv_num_maps;
+
+float mv_active;
+string mv_maps[MAPVOTE_COUNT];
+string mv_pics[MAPVOTE_COUNT];
+string mv_pk3[MAPVOTE_COUNT];
+float mv_preview[MAPVOTE_COUNT];
+float mv_votes[MAPVOTE_COUNT];
+float mv_avail[MAPVOTE_COUNT];
+float mv_avail_start[MAPVOTE_COUNT];
+entity mv_pk3list;
+float mv_abstain;
+float mv_ownvote;
+float mv_detail;
+float mv_timeout;
+float mv_top2_time;
+float mv_top2_alpha;
+
+vector mv_mousepos;
+int mv_selection;
+int mv_columns;
+int mv_mouse_selection;
+int mv_selection_keyboard;
+
+float gametypevote;
+string mapvote_chosenmap;
+vector gtv_text_size;
+vector gtv_text_size_small;
+
+string MapVote_FormatMapItem(int id, string map, float count, float maxwidth, vector fontsize);
+
+string GameTypeVote_DescriptionByID(int id);
+
+vector MapVote_RGB(int id);
+
+void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float count, int id);
+
+void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, int id);
+
+void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, int id);
+
+vector MapVote_GridVec(vector gridspec, int i, int m);
+
+float MapVote_Selection(vector topleft, vector cellsize, float rows, float columns);
+
+void MapVote_Draw();
+
+void Cmd_MapVote_MapDownload(float argc);
+
+void MapVote_CheckPK3(string pic, string pk3, int id);
+
+void MapVote_CheckPic(string pic, string pk3, int id);
+
+void MapVote_ReadMask();
+
+const int NUM_SSDIRS = 4;
+string ssdirs[NUM_SSDIRS];
+int n_ssdirs;
+void MapVote_Init();
+
+void MapVote_SendChoice(float index);
+
+int MapVote_MoveLeft(int pos);
+int MapVote_MoveRight(int pos);
+int MapVote_MoveUp(int pos);
+
+int MapVote_MoveDown(int pos);
+
+float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary);
+
+void MapVote_UpdateMask();
+
+void MapVote_UpdateVotes();
+
+void Ent_MapVote();
+
+void Net_MapVote_Picture();
+#endif

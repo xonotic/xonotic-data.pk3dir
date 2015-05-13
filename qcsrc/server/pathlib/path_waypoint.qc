@@ -1,3 +1,8 @@
+#include "../bot/waypoints.qh"
+
+#include "pathlib.qh"
+#include "main.qh"
+
 var float pathlib_wpp_open(entity wp, entity child, float cost);
 
 void pathlib_wpp_close(entity wp)
@@ -11,14 +16,14 @@ void pathlib_wpp_close(entity wp)
         best_open_node = world;
 
     if(wp == goal_node)
-        pathlib_foundgoal = TRUE;
+        pathlib_foundgoal = true;
 }
 
 float pathlib_wpp_opencb(entity wp, entity child, float cost)
 {
 
     if(child.pathlib_list == closedlist)
-        return FALSE;
+        return false;
 
 	// FIXME! wp.wp##mincost is NOT distance. Make it distance or add a field for distance to be used here (for better speed)
 	cost = vlen(child.origin - wp.origin);
@@ -32,21 +37,21 @@ float pathlib_wpp_opencb(entity wp, entity child, float cost)
 
 
     if(child == goal_node)
-        pathlib_foundgoal = TRUE;
+        pathlib_foundgoal = true;
 
     ++pathlib_open_cnt;
 
     if(best_open_node.pathlib_node_f > child.pathlib_node_f)
         best_open_node = child;
 
-    return TRUE;
+    return true;
 }
 
 float pathlib_wpp_openncb(entity wp, entity child, float cost)
 {
 
     if(child.pathlib_list == closedlist)
-        return FALSE;
+        return false;
 
 	// FIXME! wp.wp##mincost is NOT distance. Make it distance or add a field for distance to be used here (for better speed)
 	cost = vlen(child.origin - wp.origin);
@@ -58,14 +63,14 @@ float pathlib_wpp_openncb(entity wp, entity child, float cost)
     child.pathlib_node_f = child.pathlib_node_g + child.pathlib_node_h;
 
     if(child == goal_node)
-        pathlib_foundgoal = TRUE;
+        pathlib_foundgoal = true;
 
     ++pathlib_open_cnt;
 
     if(best_open_node.pathlib_node_f > child.pathlib_node_f)
         best_open_node = child;
 
-    return TRUE;
+    return true;
 }
 
 float pathlib_wpp_expand(entity wp)
@@ -138,7 +143,7 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
 	pathlib_movecost_diag  	= vlen('1 1 0' * pathlib_movecost);
 
 	if (!pathlib_wpp_waypointcallback)
-		callback = FALSE;
+		callback = false;
 
 	if (callback)
 		pathlib_wpp_open = pathlib_wpp_opencb;
@@ -156,7 +161,7 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     pathlib_closed_cnt       = 0;
     pathlib_open_cnt         = 0;
     pathlib_searched_cnt     = 0;
-    pathlib_foundgoal      = FALSE;
+    pathlib_foundgoal      = false;
 
     dprint("pathlib_waypointpath init\n");
 

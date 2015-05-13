@@ -1,3 +1,10 @@
+#include "_all.qh"
+
+#include "../warpzonelib/util_server.qh"
+#include "vehicles/vehicle.qh"
+
+.float  ladder_time;
+.entity ladder_entity;
 
 .float  roomtype;
 .float  radius;

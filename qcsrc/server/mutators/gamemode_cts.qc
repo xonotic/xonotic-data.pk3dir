@@ -1,3 +1,10 @@
+#include "gamemode_cts.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#include "../race.qh"
+
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_cts()
@@ -29,7 +36,7 @@ void havocbot_role_cts()
 
 void cts_ScoreRules()
 {
-	ScoreRules_basics(0, 0, 0, FALSE);
+	ScoreRules_basics(0, 0, 0, false);
 	if(g_race_qualifying)
 	{
 		ScoreInfo_SetLabel_PlayerScore(SP_CTS_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
@@ -59,26 +66,26 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel_x = fabs(self.movement_x);
-	wishvel_y = fabs(self.movement_y);
-	if(wishvel_x != 0 && wishvel_y != 0 && wishvel_x != wishvel_y)
+	wishvel.x = fabs(self.movement.x);
+	wishvel.y = fabs(self.movement.y);
+	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
-		wishvel_z = 0;
+		wishvel.z = 0;
 		wishspeed = vlen(wishvel);
-		if(wishvel_x >= 2 * wishvel_y)
+		if(wishvel.x >= 2 * wishvel.y)
 		{
 			// pure X motion
-			if(self.movement_x > 0)
+			if(self.movement.x > 0)
 				self.movement_x = wishspeed;
 			else
 				self.movement_x = -wishspeed;
 			self.movement_y = 0;
 		}
-		else if(wishvel_y >= 2 * wishvel_x)
+		else if(wishvel.y >= 2 * wishvel.x)
 		{
 			// pure Y motion
 			self.movement_x = 0;
-			if(self.movement_y > 0)
+			if(self.movement.y > 0)
 				self.movement_y = wishspeed;
 			else
 				self.movement_y = -wishspeed;
@@ -86,18 +93,18 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
 		else
 		{
 			// diagonal
-			if(self.movement_x > 0)
+			if(self.movement.x > 0)
 				self.movement_x = M_SQRT1_2 * wishspeed;
 			else
 				self.movement_x = -M_SQRT1_2 * wishspeed;
-			if(self.movement_y > 0)
+			if(self.movement.y > 0)
 				self.movement_y = M_SQRT1_2 * wishspeed;
 			else
 				self.movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-	
-	return FALSE;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_ResetMap)
@@ -130,8 +137,8 @@ MUTATOR_HOOKFUNCTION(cts_ResetMap)
 		cvar_set("timelimit", ftos(race_timelimit));
 		cts_ScoreRules();
 	}
-	
-	return FALSE;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerPreThink)
@@ -141,14 +148,14 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPreThink)
 	if(msg_entity.enemy.race_laptime)
 		race_SendNextCheckpoint(msg_entity.enemy, 1);
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_ClientConnect)
 {
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
-	
+
 	if(IS_REAL_CLIENT(self))
 	{
 		string rr = CTS_RECORD;
@@ -168,7 +175,7 @@ MUTATOR_HOOKFUNCTION(cts_ClientConnect)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_MakePlayerObserver)
@@ -181,7 +188,7 @@ MUTATOR_HOOKFUNCTION(cts_MakePlayerObserver)
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
@@ -195,8 +202,8 @@ MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
 	self.race_respawn_spotref = spawn_spot;
 
 	self.race_place = 0;
-	
-	return FALSE;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PutClientInServer)
@@ -211,20 +218,20 @@ MUTATOR_HOOKFUNCTION(cts_PutClientInServer)
 
 		race_AbandonRaceCheck(self);
 	}
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerDies)
 {
 	self.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(self);
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_BotRoles)
 {
 	self.havocbot_role = havocbot_role_cts;
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerPostThink)
@@ -241,21 +248,21 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPostThink)
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_ForbidThrowing)
 {
 	// no weapon dropping in CTS
-	return TRUE;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(cts_FilterItem)
 {
 	if(self.classname == "droppedweapon")
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerDamage)
@@ -264,19 +271,19 @@ MUTATOR_HOOKFUNCTION(cts_PlayerDamage)
 	if(!autocvar_g_cts_selfdamage)
 		frag_damage = 0;
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_ForbidClearPlayerScore)
 {
-	return TRUE; // in CTS, you don't lose score by observing
+	return true; // in CTS, you don't lose score by observing
 }
 
 MUTATOR_HOOKFUNCTION(cts_SetMods)
 {
 	g_cloaked = 1; // always enable cloak in CTS
 
-	return FALSE;
+	return false;
 }
 
 void cts_Initialize()

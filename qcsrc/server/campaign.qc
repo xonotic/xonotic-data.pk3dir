@@ -1,3 +1,10 @@
+#include "campaign.qh"
+#include "cheats.qh"
+#include "miscfunctions.qh"
+#include "g_world.qh"
+
+#include "../common/campaign_common.qh"
+
 // campaign cvars:
 //   _campaign_index: index of CURRENT map
 //   _campaign_name: name of the current campaign
@@ -7,7 +14,7 @@
 float campaign_level;
 float campaign_won;
 string campaign_index_var;
-float checkrules_equality;
+//float checkrules_equality;
 
 float CampaignBailout(string s)
 {

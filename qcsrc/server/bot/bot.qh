@@ -1,22 +1,24 @@
+#ifndef BOT_H
+#define BOT_H
 /*
  * Globals and Fields
  */
 
-const float AI_STATUS_ROAMING						= 1;	// Bot is just crawling the map. No enemies at sight
-const float AI_STATUS_ATTACKING					= 2;	// There are enemies at sight
-const float AI_STATUS_RUNNING						= 4;	// Bot is bunny hopping
-const float AI_STATUS_DANGER_AHEAD				= 8;	// There is lava/slime/trigger_hurt ahead
-const float AI_STATUS_OUT_JUMPPAD					= 16;	// Trying to get out of a "vertical" jump pad
-const float AI_STATUS_OUT_WATER					= 32;	// Trying to get out of water
-const float AI_STATUS_WAYPOINT_PERSONAL_LINKING	= 64;	// Waiting for the personal waypoint to be linked
-const float AI_STATUS_WAYPOINT_PERSONAL_GOING		= 128;	// Going to a personal waypoint
-const float AI_STATUS_WAYPOINT_PERSONAL_REACHED	= 256;	// Personal waypoint reached
-const float AI_STATUS_JETPACK_FLYING				= 512;
-const float AI_STATUS_JETPACK_LANDING				= 1024;
-const float AI_STATUS_STUCK						= 2048; // Cannot reach any goal
+const int AI_STATUS_ROAMING						= 1;	// Bot is just crawling the map. No enemies at sight
+const int AI_STATUS_ATTACKING					= 2;	// There are enemies at sight
+const int AI_STATUS_RUNNING						= 4;	// Bot is bunny hopping
+const int AI_STATUS_DANGER_AHEAD				= 8;	// There is lava/slime/trigger_hurt ahead
+const int AI_STATUS_OUT_JUMPPAD					= 16;	// Trying to get out of a "vertical" jump pad
+const int AI_STATUS_OUT_WATER					= 32;	// Trying to get out of water
+const int AI_STATUS_WAYPOINT_PERSONAL_LINKING	= 64;	// Waiting for the personal waypoint to be linked
+const int AI_STATUS_WAYPOINT_PERSONAL_GOING		= 128;	// Going to a personal waypoint
+const int AI_STATUS_WAYPOINT_PERSONAL_REACHED	= 256;	// Personal waypoint reached
+const int AI_STATUS_JETPACK_FLYING				= 512;
+const int AI_STATUS_JETPACK_LANDING				= 1024;
+const int AI_STATUS_STUCK						= 2048; // Cannot reach any goal
 
 .float isbot; // true if this client is actually a bot
-.float aistatus;
+.int aistatus;
 
 // Skill system
 float skill;
@@ -89,6 +91,7 @@ float bot_ignore_bots; // let bots not attack other bots (only works in non-team
  */
 
 entity bot_spawn();
+float bot_fixcount();
 
 void bot_think();
 void bot_setnameandstuff();
@@ -111,8 +114,9 @@ void bot_serverframe();
 
 void() havocbot_setupbot;
 
-float c1, c2, c3, c4;
+//float c1, c2, c3, c4;
 void CheckAllowedTeams(entity for_whom); void GetTeamCounts(entity other);
 float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
 
 void bot_calculate_stepheightvec(void);
+#endif

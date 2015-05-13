@@ -1,76 +1,84 @@
+#ifndef T_ITEMS_H
+#define T_ITEMS_H
+
 // constants
-#define WANT_CONST /* we WANT these to be constant, but it conflicts with the declaration in dpdefs/progsdefs.qc */
-const      float IT_UNLIMITED_WEAPON_AMMO     =       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
-const      float IT_UNLIMITED_SUPERWEAPONS    =       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
-const      float IT_CTF_SHIELDED              =       4; // set for the flag shield
-const      float IT_USING_JETPACK             =       8; // confirmation that button is pressed
-const      float IT_JETPACK                   =      16; // actual item
-const      float IT_FUEL_REGEN                =      32; // fuel regeneration trigger
+const int IT_UNLIMITED_WEAPON_AMMO 		=       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+const int IT_UNLIMITED_SUPERWEAPONS		=       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+const int IT_CTF_SHIELDED          		=       4; // set for the flag shield
+const int IT_USING_JETPACK         		=       8; // confirmation that button is pressed
+const int IT_JETPACK               		=      16; // actual item
+const int IT_FUEL_REGEN            		=      32; // fuel regeneration trigger
 // where is 64... ?
-const      float IT_FUEL                      =     128;
-WANT_CONST float IT_SHELLS                    =     256;
-WANT_CONST float IT_NAILS                     =     512;
-WANT_CONST float IT_ROCKETS                   =    1024;
-WANT_CONST float IT_CELLS                     =    2048;
-const      float IT_SUPERWEAPON               =    4096;
-const      float IT_STRENGTH                  =    8192;
-const      float IT_INVINCIBLE                =   16384;
-const      float IT_HEALTH                    =   32768;
-const      float IT_PLASMA                    =   65536;
+const int IT_FUEL       				=     128;
+// -Wdouble-declaration
+// const int IT_SHELLS     				=     256;
+// -Wdouble-declaration
+// const int IT_NAILS      				=     512;
+// -Wdouble-declaration
+// const int IT_ROCKETS    				=    1024;
+// -Wdouble-declaration
+// const int IT_CELLS      				=    2048;
+const int IT_SUPERWEAPON				=    4096;
+const int IT_STRENGTH   				=    8192;
+const int IT_INVINCIBLE 				=   16384;
+const int IT_HEALTH     				=   32768;
+const int IT_PLASMA     				=   65536;
 
 // shared value space (union):
 	// for items:
-	WANT_CONST float IT_KEY1                  =  131072;
-	WANT_CONST float IT_KEY2                  =  262144;
+	// -Wdouble-declaration
+	#define IT_KEY1							131072
+	// -Wdouble-declaration
+	#define IT_KEY2							262144
 	// for players:
-	const      float IT_RED_FLAG_TAKEN        =   32768;
-	const      float IT_RED_FLAG_LOST         =   65536;
-	const      float IT_RED_FLAG_CARRYING     =   98304;
-	const      float IT_BLUE_FLAG_TAKEN       =  131072;
-	const      float IT_BLUE_FLAG_LOST        =  262144;
-	const      float IT_BLUE_FLAG_CARRYING    =  393216;
+	const int IT_RED_FLAG_TAKEN    		=   32768;
+	const int IT_RED_FLAG_LOST     		=   65536;
+	const int IT_RED_FLAG_CARRYING 		=   98304;
+	const int IT_BLUE_FLAG_TAKEN   		=  131072;
+	const int IT_BLUE_FLAG_LOST    		=  262144;
+	const int IT_BLUE_FLAG_CARRYING		=  393216;
 // end
 
-const      float IT_5HP                       =  524288;
-const      float IT_25HP                      = 1048576;
-const      float IT_ARMOR_SHARD               = 2097152;
-const      float IT_ARMOR                     = 4194304;
+const int IT_5HP                       	=  524288;
+const int IT_25HP                      	= 1048576;
+const int IT_ARMOR_SHARD               	= 2097152;
+const int IT_ARMOR                     	= 4194304;
 
 // item masks
-const      float IT_AMMO                      =    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
-const      float IT_PICKUPMASK                =      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
-const      float IT_UNLIMITED_AMMO            =       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+const int IT_AMMO                      	=    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
+const int IT_PICKUPMASK                	=      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+const int IT_UNLIMITED_AMMO            	=       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
-const float AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
+const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
-#define ISF_LOCATION 2
-#define ISF_MODEL    4
-#define ISF_STATUS   8
-    #define ITS_STAYWEP   1
-    #define ITS_ANIMATE1  2
-    #define ITS_ANIMATE2  4
-    #define ITS_AVAILABLE 8
-    #define ITS_ALLOWFB   16
-    #define ITS_ALLOWSI   32
-    #define ITS_POWERUP   64
-#define ISF_COLORMAP 16
-#define ISF_DROP 32
-#define ISF_ANGLES 64
-#define ISF_SIZE 128
+const int ISF_LOCATION 			= 2;
+const int ISF_MODEL				= 4;
+const int ISF_STATUS 			= 8;
+    const int ITS_STAYWEP 		= 1;
+    const int ITS_ANIMATE1 		= 2;
+    const int ITS_ANIMATE2 		= 4;
+    const int ITS_AVAILABLE 	= 8;
+    const int ITS_ALLOWFB 		= 16;
+    const int ITS_ALLOWSI 		= 32;
+    const int ITS_POWERUP 		= 64;
+const int ISF_COLORMAP 			= 16;
+const int ISF_DROP 				= 32;
+const int ISF_ANGLES 			= 64;
+const int ISF_SIZE 				= 128;
 
-.float ItemStatus;
+.int ItemStatus;
 
 #ifdef CSQC
 
-var float  autocvar_cl_animate_items = 1;
-var float  autocvar_cl_ghost_items = 0.45;
-var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
-var float  autocvar_cl_fullbright_items = 0;
-var vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
-var float  autocvar_cl_weapon_stay_alpha = 0.75;
-var float  autocvar_cl_simple_items = 0;
-var string autocvar_cl_simpleitems_postfix = "_simple";
+float  autocvar_cl_animate_items = 1;
+float  autocvar_cl_ghost_items = 0.45;
+vector autocvar_cl_ghost_items_color = '-1 -1 -1';
+float  autocvar_cl_fullbright_items = 0;
+vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
+float  autocvar_cl_weapon_stay_alpha = 0.75;
+float  autocvar_cl_simple_items = 0;
+string autocvar_cl_simpleitems_postfix = "_simple";
 .float  spawntime;
 .float  gravity;
 .vector colormod;
@@ -82,13 +90,20 @@ void ItemRead(float _IsNew);
 
 #endif
 #ifdef SVQC
+void spawnfunc_item_strength();
+void spawnfunc_item_invincible();
+void spawnfunc_item_armor_small();
+void spawnfunc_item_shells();
+void spawnfunc_item_bullets();
+void spawnfunc_item_rockets();
+
 float autocvar_sv_simple_items;
-float ItemSend(entity to, float sf);
+bool ItemSend(entity to, int sf);
 
 
 float have_pickup_item(void);
 
-#define ITEM_RESPAWN_TICKS 10
+const float ITEM_RESPAWN_TICKS = 10;
 
 #define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
 	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
@@ -124,7 +139,7 @@ void Item_FindTeam();
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
 
-float ItemSend(entity to, float sf);
+bool ItemSend(entity to, int sf);
 void ItemUpdate(entity item);
 
 // pickup evaluation functions
@@ -142,11 +157,11 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 void target_items_use (void);
 
-#define OP_SET 0
-#define OP_MIN 1
-#define OP_MAX 2
-#define OP_PLUS 3
-#define OP_MINUS 4
+const float OP_SET = 0;
+const float OP_MIN = 1;
+const float OP_MAX = 2;
+const float OP_PLUS = 3;
+const float OP_MINUS = 4;
 
 float GiveWeapon(entity e, float wpn, float op, float val);
 
@@ -166,4 +181,5 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 
 float GiveItems(entity e, float beginarg, float endarg);
+#endif
 #endif

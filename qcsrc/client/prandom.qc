@@ -1,3 +1,8 @@
+#include "prandom.qh"
+#include "_all.qh"
+
+#include "../warpzonelib/mathlib.qh"
+
 // prandom - PREDICTABLE random number generator (not seeded yet)
 
 #ifdef USE_PRANDOM
@@ -5,7 +10,7 @@ float prandom_seed;
 float prandom()
 {
 	float c;
-	c = crc16(FALSE, strcat(ftos(prandom_seed), ftos(prandom_seed + M_PI)));
+	c = crc16(false, strcat(ftos(prandom_seed), ftos(prandom_seed + M_PI)));
 	prandom_seed = c;
 
 #ifdef USE_PRANDOM_DEBUG
@@ -21,9 +26,9 @@ vector prandomvec()
 
 	do
 	{
-		v_x = prandom();
-		v_y = prandom();
-		v_z = prandom();
+		v.x = prandom();
+		v.y = prandom();
+		v.z = prandom();
 	}
 	while(v * v > 1);
 

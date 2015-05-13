@@ -1,0 +1,23 @@
+#ifndef TARGET_MUSIC_H
+#define TARGET_MUSIC_H
+
+float music_disabled;
+entity music_default;
+entity music_target;
+entity music_trigger;
+// FIXME also control bgmvolume here, to not require a target_music for the default track.
+
+entityclass(TargetMusic);
+class(TargetMusic) .int state;
+class(TargetMusic) .float lastvol;
+
+void TargetMusic_Advance();
+
+void Net_TargetMusic();
+
+void Ent_TriggerMusic_Think();
+
+void Ent_TriggerMusic_Remove();
+
+void Ent_ReadTriggerMusic();
+#endif

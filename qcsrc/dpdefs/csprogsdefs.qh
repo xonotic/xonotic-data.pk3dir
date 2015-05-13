@@ -1,0 +1,20 @@
+#ifndef CSPROGSDEFS_H
+#define CSPROGSDEFS_H
+
+#pragma noref 1
+
+#define true _true
+#define false _false
+#define TRUE _TRUE
+#define FALSE _FALSE
+
+#include "upstream/csprogsdefs.qc"
+
+#undef true
+#undef false
+#undef TRUE
+#undef FALSE
+
+#pragma noref 0
+
+#endif

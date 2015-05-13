@@ -1,4 +1,8 @@
+#include "secret.qh"
+#include "_all.qh"
 
+#include "g_triggers.qh"
+#include "../common/util.qh"
 
 void secrets_setstatus() {
 	self.stat_secrets_total = secrets_total;

@@ -1,3 +1,23 @@
+#include "../../common/command/command.qh"
+#include "vote.qh"
+#include "../_all.qh"
+
+#include "common.qh"
+
+#include "../g_damage.qh"
+#include "../g_world.qh"
+#include "../race.qh"
+#include "../round_handler.qh"
+#include "../scores.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/playerstats.qh"
+#include "../../common/util.qh"
+
 // =============================================
 //  Server side voting code, reworked by Samual
 //  Last updated: December 27th, 2011
@@ -6,7 +26,7 @@
 //  Nagger for players to know status of voting
 float Nagger_SendEntity(entity to, float sendflags)
 {
-	float nags, i, f, b;
+	int nags, i, f, b;
 	entity e;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_NAGGER);
 
@@ -69,12 +89,12 @@ float Nagger_SendEntity(entity to, float sendflags)
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void Nagger_Init()
 {
-	Net_LinkEntity(nagger = spawn(), FALSE, 0, Nagger_SendEntity);
+	Net_LinkEntity(nagger = spawn(), false, 0, Nagger_SendEntity);
 }
 
 void Nagger_VoteChanged()
@@ -213,7 +233,7 @@ void VoteCount(float first_count)
 		switch(tmp_player.vote_selection)
 		{
 			case VOTE_SELECT_REJECT: { ++vote_reject_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
-			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(IS_PLAYER(tmp_player)) ++vote_real_accept_count; } break; }
 			case VOTE_SELECT_ABSTAIN: { ++vote_abstain_count; { if(IS_PLAYER(tmp_player)) ++vote_real_abstain_count; } break; }
 			default: break;
 		}
@@ -306,7 +326,7 @@ void VoteThink()
 	if(vote_endtime > 0) // a vote was called
 	if(time > vote_endtime) // time is up
 	{
-		VoteCount(FALSE);
+		VoteCount(false);
 	}
 
 	return;
@@ -396,7 +416,7 @@ void reset_map(float dorespawn)
 void ReadyRestart_think()
 {
 	restart_mapalreadyrestarted = 1;
-	reset_map(TRUE);
+	reset_map(true);
 	Score_ClearAll();
 	remove(self);
 
@@ -457,7 +477,7 @@ void ReadyRestart_force()
 	if(autocvar_sv_timeout) { FOR_EACH_REALPLAYER(tmp_player) { tmp_player.allowed_timeouts = autocvar_sv_timeout_number; } }
 
 	//reset map immediately if this cvar is not set
-	if (!autocvar_sv_ready_restart_after_countdown) { reset_map(TRUE); }
+	if (!autocvar_sv_ready_restart_after_countdown) { reset_map(true); }
 
 	if(autocvar_sv_eventlog) { GameLogEcho(":restart"); }
 }
@@ -523,10 +543,10 @@ float Votecommand_check_assignment(entity caller, float assignment)
 		|| ((!from_server && assignment == VC_ASGNMNT_CLIENTONLY)
 		|| (from_server && assignment == VC_ASGNMNT_SERVERONLY)))
 	{
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 string VoteCommand_extractcommand(string input, float startpos, float argc)
@@ -547,9 +567,9 @@ float VoteCommand_checknasty(string vote_command)
 		|| (strstrofs(vote_command, "\n", 0) >= 0)
 		|| (strstrofs(vote_command, "\r", 0) >= 0)
 		|| (strstrofs(vote_command, "$", 0) >= 0))
-		return FALSE;
+		return false;
 
-	return TRUE;
+	return true;
 }
 
 float VoteCommand_checkinlist(string vote_command, string list)
@@ -557,9 +577,9 @@ float VoteCommand_checkinlist(string vote_command, string list)
 	string l = strcat(" ", list, " ");
 
 	if(strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0)
-		return TRUE;
+		return true;
 
-	return FALSE;
+	return false;
 }
 
 string ValidateMap(string validated_map, entity caller)
@@ -599,7 +619,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 	float checkmate;
 
 	if(cmdrestriction == "")
-		return TRUE;
+		return true;
 
 	++startpos; // skip command name
 
@@ -611,11 +631,11 @@ float VoteCommand_checkargs(float startpos, float argc)
 
 	minargs = stof(cmdrestriction);
 	if(argc - startpos < minargs)
-		return FALSE;
+		return false;
 
 	p = strstrofs(cmdrestriction, ";", 0); // find first semicolon
 
-	for(;;)
+	for (;;)
 	{
 		// we know that at any time, startpos <= argc - minargs
 		// so this means: argc-minargs >= startpos >= argc, thus
@@ -632,7 +652,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 				break;
 
 			// otherwise fail
-			return FALSE;
+			return false;
 		}
 
 		// cut to next semicolon
@@ -652,7 +672,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 			checkmate = strlen(arg);
 			for(check = 0; check < checkmate; ++check)
 				if(strstrofs(charlist, substring(arg, check, 1), 0) < 0)
-					return FALSE; // not allowed character
+					return false; // not allowed character
 			// all characters are allowed. FINE.
 		}
 
@@ -661,7 +681,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 		p = q;
 	}
 
-	return TRUE;
+	return true;
 }
 
 float VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
@@ -680,13 +700,13 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		&&
 		(strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos))) > autocvar_sv_vote_limit)
 	)
-		return FALSE;
+		return false;
 
 	if (!VoteCommand_checkinlist(first_command, vote_list))
-		return FALSE;
+		return false;
 
 	if (!VoteCommand_checkargs(startpos, argc))
-		return FALSE;
+		return false;
 
 	switch(first_command) // now go through and parse the proper commands to adjust as needed.
 	{
@@ -694,7 +714,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		case "kickban": // catch all kick/kickban commands
 		{
 			entity victim = GetIndexedEntity(argc, (startpos + 1));
-			float accepted = VerifyClientEntity(victim, TRUE, FALSE);
+			float accepted = VerifyClientEntity(victim, true, false);
 
 			if(accepted > 0)
 			{
@@ -709,7 +729,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 				vote_parsed_command = strcat(first_command, " # ", ftos(num_for_edict(victim)), " ", command_arguments);
 				vote_parsed_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", reason);
 			}
-			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return FALSE; }
+			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return false; }
 
 			break;
 		}
@@ -719,7 +739,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		case "gotomap": // re-direct all map selection commands to gotomap
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
-			if (!vote_command) { return FALSE; }
+			if (!vote_command) { return false; }
 			vote_parsed_command = strcat("gotomap ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 
@@ -735,7 +755,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -757,7 +777,7 @@ void VoteCommand_abstain(float request, entity caller) // CLIENT ONLY
 				print_to(caller, "^1You abstained from your vote.");
 				caller.vote_selection = VOTE_SELECT_ABSTAIN;
 				msg_entity = caller;
-				if(!autocvar_sv_vote_singlecount) { VoteCount(FALSE); }
+				if(!autocvar_sv_vote_singlecount) { VoteCount(false); }
 			}
 
 			return;
@@ -792,6 +812,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 			else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
+			else if(caller && !IS_CLIENT(caller)) { print_to(caller, "^1Only connected clients can vote."); }
 			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 			else if(caller && (time < caller.vote_waittime)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_waittime - time)), "^1 seconds before you can again call a vote.")); }
 			else if (!VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
@@ -818,7 +839,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote for ", vote_called_display, "\n");
 				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 				Nagger_VoteChanged();
-				VoteCount(TRUE); // needed if you are the only one
+				VoteCount(true); // needed if you are the only one
 			}
 
 			return;
@@ -873,7 +894,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 
 						else // everything went okay, proceed with giving this player master privilages
 						{
-							caller.vote_master = TRUE;
+							caller.vote_master = true;
 							print_to(caller, strcat("Accepted vote master login from ", GetCallerName(caller)));
 							bprint("\{1}^2* ^3", GetCallerName(caller), "^2 logged in as ^3master^2\n");
 							if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vlogin:", ftos(caller.playerid))); }
@@ -907,7 +928,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 							bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote to become ^3master^2.\n");
 							if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 							Nagger_VoteChanged();
-							VoteCount(TRUE); // needed if you are the only one
+							VoteCount(true); // needed if you are the only one
 						}
 
 						return;
@@ -945,7 +966,7 @@ void VoteCommand_no(float request, entity caller) // CLIENT ONLY
 				print_to(caller, "^1You rejected the vote.");
 				caller.vote_selection = VOTE_SELECT_REJECT;
 				msg_entity = caller;
-				if(!autocvar_sv_vote_singlecount) { VoteCount(FALSE); }
+				if(!autocvar_sv_vote_singlecount) { VoteCount(false); }
 			}
 
 			return;
@@ -1022,7 +1043,7 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 				print_to(caller, "^1You accepted the vote.");
 				caller.vote_selection = VOTE_SELECT_ACCEPT;
 				msg_entity = caller;
-				if(!autocvar_sv_vote_singlecount) { VoteCount(FALSE); }
+				if(!autocvar_sv_vote_singlecount) { VoteCount(false); }
 			}
 
 			return;
@@ -1088,7 +1109,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 		#define VOTE_COMMAND(name,function,description,assignment) \
 			{ if(Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
 
-		VOTE_COMMANDS(0, caller, 0, "")
+		VOTE_COMMANDS(0, caller, 0, "");
 		#undef VOTE_COMMAND
 
 		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are listed above.\n"));
@@ -1100,7 +1121,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 		#define VOTE_COMMAND(name,function,description,assignment) \
 			{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(2))) { function; return; } } }
 
-		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "")
+		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
 		#undef VOTE_COMMAND
 	}
 
@@ -1110,12 +1131,12 @@ void VoteCommand_macro_help(entity caller, float argc)
 float VoteCommand_macro_command(entity caller, float argc, string vote_command)
 {
 	#define VOTE_COMMAND(name,function,description,assignment) \
-		{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(1))) { function; return TRUE; } } }
+		{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(1))) { function; return true; } } }
 
-	VOTE_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, vote_command)
+	VOTE_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, vote_command);
 	#undef VOTE_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 

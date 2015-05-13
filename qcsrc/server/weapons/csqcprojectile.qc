@@ -1,6 +1,16 @@
+#include "csqcprojectile.qh"
+#include "../_all.qh"
+
+#include "../t_items.qh"
+
+#include "../command/common.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/weapons/weapons.qh"
+
 .float csqcprojectile_type;
 
-float CSQCProjectile_SendEntity(entity to, float sf)
+bool CSQCProjectile_SendEntity(entity to, int sf)
 {
 	float ft, fr;
 
@@ -30,15 +40,15 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 
 	if(sf & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
 
 		if(sf & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, self.velocity_x);
-			WriteCoord(MSG_ENTITY, self.velocity_y);
-			WriteCoord(MSG_ENTITY, self.velocity_z);
+			WriteCoord(MSG_ENTITY, self.velocity.x);
+			WriteCoord(MSG_ENTITY, self.velocity.y);
+			WriteCoord(MSG_ENTITY, self.velocity.z);
 			if(sf & 0x10)
 				WriteCoord(MSG_ENTITY, self.gravity);
 		}
@@ -55,7 +65,7 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 	if(sf & 2)
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
 
-	return 1;
+	return true;
 }
 
 .vector csqcprojectile_oldorigin;
@@ -68,7 +78,7 @@ void CSQCProjectile_Check(entity e)
 	e.csqcprojectile_oldorigin = e.origin;
 }
 
-void CSQCProjectile(entity e, float clientanimate, float type, float docull)
+void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 {
 	Net_LinkEntity(e, docull, 0, CSQCProjectile_SendEntity);
 

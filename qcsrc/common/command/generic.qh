@@ -1,7 +1,20 @@
+#ifndef COMMAND_GENERIC_H
+#define COMMAND_GENERIC_H
+
+#include "../constants.qh"
+
 // =========================================================
 //  Declarations for common command code, written by Samual
 //  Last updated: December 28th, 2011
 // =========================================================
+
+void GenericCommand_macro_help();
+
+float GenericCommand_macro_command(float argc, string command);
+
+float GenericCommand_macro_usage(float argc);
+
+void GenericCommand_macro_write_aliases(float fh);
 
 // Used by other game command systems for common commands,
 // and it returns true if handled, false if not.
@@ -16,7 +29,8 @@ string GetProgramCommandPrefix(void);
 #define CMD_Write_Alias(execute,command,description) CMD_Write(sprintf("alias %-20s \"%-13s %-20s ${* ?}\" // %s\n", command, execute, command, description))
 void GenericCommand_macro_write_aliases(float fh);
 
-void Curl_URI_Get_Callback(float id, float status, string data);
-float curl_uri_get_pos;
+void Curl_URI_Get_Callback(int id, float status, string data);
+int curl_uri_get_pos;
 float curl_uri_get_exec[URI_GET_CURL_END - URI_GET_CURL + 1];
 string curl_uri_get_cvar[URI_GET_CURL_END - URI_GET_CURL + 1];
+#endif

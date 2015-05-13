@@ -1,21 +1,27 @@
-.vector iorigin1, iorigin2;
-.float spawntime;
-.vector trail_oldorigin;
-.float trail_oldtime;
-.float fade_time, fade_rate;
+#include "projectile.qh"
+
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../main.qh"
+#include "../movetypes.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/nades.qh"
+#include "../../common/util.qh"
+
+#include "../../csqcmodellib/interpolate.qh"
+
+#include "../../warpzonelib/anglestransform.qh"
+
+.float alpha;
+.float scale;
+.vector colormod;
 
 void SUB_Stop()
 {
 	self.move_velocity = self.move_avelocity = '0 0 0';
 	self.move_movetype = MOVETYPE_NONE;
 }
-
-.float alphamod;
-.float count; // set if clientside projectile
-.float cnt; // sound index
-.float gravity;
-.float snd_looping;
-.float silent;
 
 void Projectile_ResetTrail(vector to)
 {
@@ -36,7 +42,7 @@ void Projectile_DrawTrail(vector to)
 	// force the effect even for stationary firemine
 	if(self.cnt == PROJECTILE_FIREMINE)
 		if(from == to)
-			from_z += 1;
+			from.z += 1;
 
 	if (self.traileffect)
 	{
@@ -49,8 +55,8 @@ void Projectile_Draw()
 {
 	vector rot;
 	vector trailorigin;
-	float f;
-	float drawn;
+	int f;
+	bool drawn;
 	float t;
 	float a;
 
@@ -116,7 +122,7 @@ void Projectile_Draw()
 
 	vector ang;
 	ang = self.angles;
-	ang_x = -ang_x;
+	ang.x = -ang.x;
 	makevectors(ang);
 
 	a = 1 - (time - self.fade_time) * self.fade_rate;
@@ -159,7 +165,7 @@ void Projectile_Draw()
 	self.drawmask = MASK_NORMAL;
 }
 
-void loopsound(entity e, float ch, string samp, float vol, float attn)
+void loopsound(entity e, int ch, string samp, float vol, float attn)
 {
 	if(self.silent)
 		return;
@@ -179,7 +185,7 @@ void Ent_RemoveProjectile()
 
 void Ent_Projectile()
 {
-	float f;
+	int f;
 
 	// projectile properties:
 	//   kind (interpolated, or clientside)
@@ -444,7 +450,7 @@ void Ent_Projectile()
 
 		if(Nade_IDFromProjectile(self.cnt) != 0)
 		{
-			float nade_type = Nade_IDFromProjectile(self.cnt);
+			int nade_type = Nade_IDFromProjectile(self.cnt);
 			self.mins = '-16 -16 -16';
 			self.maxs = '16 16 16';
 			self.colormod = Nade_Color(nade_type);

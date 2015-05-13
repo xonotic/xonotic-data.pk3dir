@@ -1,3 +1,8 @@
+#ifndef SCORES_H
+#define SCORES_H
+
+#include "../common/constants.qh"
+
 entity scores_initialized; // non-world when scores labels/rules have been set
 .float scores[MAX_SCORE];
 .float teamscores[MAX_TEAMSCORE];
@@ -124,3 +129,4 @@ string GetTeamScoreString(float tm, float shortString);
  * nospectators: exclude spectators
  */
 entity PlayerScore_Sort(.float field, float teams, float strict, float nospectators);
+#endif

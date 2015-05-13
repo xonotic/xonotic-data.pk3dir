@@ -1,7 +1,13 @@
+#ifndef MAPVOTING_H
+#define MAPVOTING_H
+
+#include "../common/constants.qh"
+
 // definitions for functions used outside mapvoting.qc
 void MapVote_Start();
 void MapVote_Spawn();
 void MapVote_Think();
+void MapVote_SendPicture(float id);
 float GameTypeVote_Start();
 float GameTypeVote_Finished(float pos);
 string GameTypeVote_MapInfo_FixName(string m);
@@ -12,11 +18,10 @@ string getmapname_stored;
 float mapvote_initialized;
 
 float mapvote_nextthink;
-float mapvote_initialized;
 float mapvote_keeptwotime;
 float mapvote_timeout;
 string mapvote_message;
-#define MAPVOTE_SCREENSHOT_DIRS_COUNT 4
+const float MAPVOTE_SCREENSHOT_DIRS_COUNT = 4;
 string mapvote_screenshot_dirs[MAPVOTE_SCREENSHOT_DIRS_COUNT];
 float mapvote_screenshot_dirs_count;
 
@@ -37,3 +42,4 @@ float mapvote_abstain;
 .float mapvote;
 
 entity mapvote_ent;
+#endif

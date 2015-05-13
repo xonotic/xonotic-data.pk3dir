@@ -1,29 +1,37 @@
+#ifndef NADES_H
+#define NADES_H
+
+#include "teams.qh"
+
+.float healer_lifetime;
+.float healer_radius;
+
 // use slots 70-100
-const float PROJECTILE_NADE = 71;
-const float PROJECTILE_NADE_BURN = 72;
-const float PROJECTILE_NADE_NAPALM = 73;
-const float PROJECTILE_NADE_NAPALM_BURN = 74;
-const float PROJECTILE_NAPALM_FOUNTAIN = 75;
-const float PROJECTILE_NADE_ICE = 76;
-const float PROJECTILE_NADE_ICE_BURN = 77;
-const float PROJECTILE_NADE_TRANSLOCATE = 78;
-const float PROJECTILE_NADE_SPAWN = 79;
-const float PROJECTILE_NADE_HEAL = 80;
-const float PROJECTILE_NADE_HEAL_BURN = 81;
-const float PROJECTILE_NADE_MONSTER = 82;
-const float PROJECTILE_NADE_MONSTER_BURN = 83;
+const int PROJECTILE_NADE = 71;
+const int PROJECTILE_NADE_BURN = 72;
+const int PROJECTILE_NADE_NAPALM = 73;
+const int PROJECTILE_NADE_NAPALM_BURN = 74;
+const int PROJECTILE_NAPALM_FOUNTAIN = 75;
+const int PROJECTILE_NADE_ICE = 76;
+const int PROJECTILE_NADE_ICE_BURN = 77;
+const int PROJECTILE_NADE_TRANSLOCATE = 78;
+const int PROJECTILE_NADE_SPAWN = 79;
+const int PROJECTILE_NADE_HEAL = 80;
+const int PROJECTILE_NADE_HEAL_BURN = 81;
+const int PROJECTILE_NADE_MONSTER = 82;
+const int PROJECTILE_NADE_MONSTER_BURN = 83;
 
-const float NADE_TYPE_NORMAL = 1;
-const float NADE_TYPE_NAPALM = 2;
-const float NADE_TYPE_ICE = 3;
-const float NADE_TYPE_TRANSLOCATE = 4;
-const float NADE_TYPE_SPAWN = 5;
-const float NADE_TYPE_HEAL = 6;
-const float NADE_TYPE_MONSTER = 7;
+const int NADE_TYPE_NORMAL = 1;
+const int NADE_TYPE_NAPALM = 2;
+const int NADE_TYPE_ICE = 3;
+const int NADE_TYPE_TRANSLOCATE = 4;
+const int NADE_TYPE_SPAWN = 5;
+const int NADE_TYPE_HEAL = 6;
+const int NADE_TYPE_MONSTER = 7;
 
-const float NADE_TYPE_LAST = 7; // a check to prevent using higher values & crashing
+const int NADE_TYPE_LAST = 7; // a check to prevent using higher values & crashing
 
-vector Nade_Color(float nadeid)
+vector Nade_Color(int nadeid)
 {
 	switch(nadeid)
 	{
@@ -39,7 +47,7 @@ vector Nade_Color(float nadeid)
 	return '0 0 0';
 }
 
-float Nade_IDFromProjectile(float proj)
+int Nade_IDFromProjectile(float proj)
 {
 	switch(proj)
 	{
@@ -60,7 +68,7 @@ float Nade_IDFromProjectile(float proj)
 	return 0;
 }
 
-float Nade_ProjectileFromID(float proj, float burn)
+int Nade_ProjectileFromID(int proj, bool burn)
 {
 	switch(proj)
 	{
@@ -93,11 +101,16 @@ string Nade_TrailEffect(float proj, float nade_team)
 		case PROJECTILE_NADE_MONSTER: return "nade_red";
 		case PROJECTILE_NADE_MONSTER_BURN: return "nade_red_burn";
 	}
-	
+
 	return "";
 }
+
+#ifdef SVQC
+float healer_send(entity to, int sf);
+#endif
 
 #ifdef CSQC
 // misc functions
 void ent_healer();
 #endif // CSQC
+#endif

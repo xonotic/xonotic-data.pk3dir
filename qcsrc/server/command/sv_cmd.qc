@@ -1,3 +1,40 @@
+#include "../../common/command/command.qh"
+#include "sv_cmd.qh"
+#include "../_all.qh"
+
+#include "banning.qh"
+#include "cmd.qh"
+#include "common.qh"
+#include "getreplies.qh"
+#include "radarmap.qh"
+
+#include "../anticheat.qh"
+#include "../campaign.qh"
+#include "../cl_client.qh"
+#include "../cl_player.qh"
+#include "../g_world.qh"
+#include "../ipban.qh"
+#include "../playerdemo.qh"
+#include "../teamplay.qh"
+
+#include "../bot/bot.qh"
+#include "../bot/navigation.qh"
+#include "../bot/scripting.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/monsters/sv_monsters.qh"
+
+#include "../../warpzonelib/mathlib.qh"
+
+void PutObserverInServer (void);
+
 // =====================================================
 //  Server side game commands code, reworked by Samual
 //  Last updated: December 29th, 2011
@@ -23,7 +60,7 @@ void make_mapinfo_Think()
 void changematchtime(float delta, float mi, float ma)
 {
 	float cur;
-	float new;
+	float update;
 	float lim;
 
 	if(delta == 0)
@@ -44,21 +81,21 @@ void changematchtime(float delta, float mi, float ma)
 		if(lim == 0)
 			return; // cannot increase any further
 		else if(lim < ma)
-			new = min(ma, lim + delta);
+			update = min(ma, lim + delta);
 		else // already above maximum: FAIL
 			return;
 	}
 	else
 	{
 		if(lim == 0) // infinite: try reducing to max, if we are allowed to
-			new = max(mi, ma);
+			update = max(mi, ma);
 		else if(lim > mi) // above minimum: decrease
-			new = max(mi, lim + delta);
+			update = max(mi, lim + delta);
 		else // already below minimum: FAIL
 			return;
 	}
 
-	cvar_set("timelimit", ftos(new / 60));
+	cvar_set("timelimit", ftos(update / 60));
 }
 
 
@@ -85,13 +122,13 @@ void GameCommand_adminmsg(float request, float argc)
 
 			if((targets) && (admin_message))
 			{
-				for(;targets;)
+				for (;targets;)
 				{
 					t = car(targets); targets = cdr(targets);
 
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
-					accepted = VerifyClientEntity(client, TRUE, FALSE);
+					accepted = VerifyClientEntity(client, true, false);
 
 					if(accepted <= 0)
 					{
@@ -241,7 +278,7 @@ void GameCommand_anticheat(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity client = GetIndexedEntity(argc, 1);
-			float accepted = VerifyClientEntity(client, FALSE, FALSE);
+			float accepted = VerifyClientEntity(client, false, false);
 
 			if(accepted > 0)
 			{
@@ -272,77 +309,77 @@ void GameCommand_bbox(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print("Original size: ", ftos(world.absmin_x), " ", ftos(world.absmin_y), " ", ftos(world.absmin_z));
-			print(" ", ftos(world.absmax_x), " ", ftos(world.absmax_y), " ", ftos(world.absmax_z), "\n");
-			print("Currently set size: ", ftos(world.mins_x), " ", ftos(world.mins_y), " ", ftos(world.mins_z));
-			print(" ", ftos(world.maxs_x), " ", ftos(world.maxs_y), " ", ftos(world.maxs_z), "\n");
+			print("Original size: ", ftos(world.absmin.x), " ", ftos(world.absmin.y), " ", ftos(world.absmin.z));
+			print(" ", ftos(world.absmax.x), " ", ftos(world.absmax.y), " ", ftos(world.absmax.z), "\n");
+			print("Currently set size: ", ftos(world.mins.x), " ", ftos(world.mins.y), " ", ftos(world.mins.z));
+			print(" ", ftos(world.maxs.x), " ", ftos(world.maxs.y), " ", ftos(world.maxs.z), "\n");
 			print("Solid bounding box size:");
 
-			tracebox('1 0 0' * world.absmin_x,
-							'0 1 0' * world.absmin_y + '0 0 1' * world.absmin_z,
-							'0 1 0' * world.absmax_y + '0 0 1' * world.absmax_z,
-							'1 0 0' * world.absmax_x,
+			tracebox('1 0 0' * world.absmin.x,
+							'0 1 0' * world.absmin.y + '0 0 1' * world.absmin.z,
+							'0 1 0' * world.absmax.y + '0 0 1' * world.absmax.z,
+							'1 0 0' * world.absmax.x,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmin_x));
+				print(" ", ftos(world.absmin.x));
 			else
-				print(" ", ftos(trace_endpos_x));
+				print(" ", ftos(trace_endpos.x));
 
-			tracebox('0 1 0' * world.absmin_y,
-							'1 0 0' * world.absmin_x + '0 0 1' * world.absmin_z,
-							'1 0 0' * world.absmax_x + '0 0 1' * world.absmax_z,
-							'0 1 0' * world.absmax_y,
+			tracebox('0 1 0' * world.absmin.y,
+							'1 0 0' * world.absmin.x + '0 0 1' * world.absmin.z,
+							'1 0 0' * world.absmax.x + '0 0 1' * world.absmax.z,
+							'0 1 0' * world.absmax.y,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmin_y));
+				print(" ", ftos(world.absmin.y));
 			else
-				print(" ", ftos(trace_endpos_y));
+				print(" ", ftos(trace_endpos.y));
 
-			tracebox('0 0 1' * world.absmin_z,
-							'1 0 0' * world.absmin_x + '0 1 0' * world.absmin_y,
-							'1 0 0' * world.absmax_x + '0 1 0' * world.absmax_y,
-							'0 0 1' * world.absmax_z,
+			tracebox('0 0 1' * world.absmin.z,
+							'1 0 0' * world.absmin.x + '0 1 0' * world.absmin.y,
+							'1 0 0' * world.absmax.x + '0 1 0' * world.absmax.y,
+							'0 0 1' * world.absmax.z,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmin_z));
+				print(" ", ftos(world.absmin.z));
 			else
-				print(" ", ftos(trace_endpos_z));
+				print(" ", ftos(trace_endpos.z));
 
-			tracebox('1 0 0' * world.absmax_x,
-							'0 1 0' * world.absmin_y + '0 0 1' * world.absmin_z,
-							'0 1 0' * world.absmax_y + '0 0 1' * world.absmax_z,
-							'1 0 0' * world.absmin_x,
+			tracebox('1 0 0' * world.absmax.x,
+							'0 1 0' * world.absmin.y + '0 0 1' * world.absmin.z,
+							'0 1 0' * world.absmax.y + '0 0 1' * world.absmax.z,
+							'1 0 0' * world.absmin.x,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmax_x));
+				print(" ", ftos(world.absmax.x));
 			else
-				print(" ", ftos(trace_endpos_x));
+				print(" ", ftos(trace_endpos.x));
 
-			tracebox('0 1 0' * world.absmax_y,
-							'1 0 0' * world.absmin_x + '0 0 1' * world.absmin_z,
-							'1 0 0' * world.absmax_x + '0 0 1' * world.absmax_z,
-							'0 1 0' * world.absmin_y,
+			tracebox('0 1 0' * world.absmax.y,
+							'1 0 0' * world.absmin.x + '0 0 1' * world.absmin.z,
+							'1 0 0' * world.absmax.x + '0 0 1' * world.absmax.z,
+							'0 1 0' * world.absmin.y,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmax_y));
+				print(" ", ftos(world.absmax.y));
 			else
-				print(" ", ftos(trace_endpos_y));
+				print(" ", ftos(trace_endpos.y));
 
-			tracebox('0 0 1' * world.absmax_z,
-							'1 0 0' * world.absmin_x + '0 1 0' * world.absmin_y,
-							'1 0 0' * world.absmax_x + '0 1 0' * world.absmax_y,
-							'0 0 1' * world.absmin_z,
+			tracebox('0 0 1' * world.absmax.z,
+							'1 0 0' * world.absmin.x + '0 1 0' * world.absmin.y,
+							'1 0 0' * world.absmax.x + '0 1 0' * world.absmax.y,
+							'0 0 1' * world.absmin.z,
 					MOVE_WORLDONLY,
 					world);
 			if(trace_startsolid)
-				print(" ", ftos(world.absmax_z));
+				print(" ", ftos(world.absmax.z));
 			else
-				print(" ", ftos(trace_endpos_z));
+				print(" ", ftos(trace_endpos.z));
 
 			print("\n");
 			return;
@@ -481,7 +518,7 @@ void GameCommand_cointoss(float request, float argc)
 			string result1 = (argv(2) ? strcat("^7", argv(1)) : "^1HEADS");
 			string result2 = (argv(2) ? strcat("^7", argv(2)) : "^4TAILS");
 			string choice = ((random() > 0.5) ? result1 : result2);
-			
+
 			Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_COINTOSS, choice);
 			return;
 		}
@@ -551,7 +588,7 @@ void GameCommand_defer_clear(float request, float argc)
 			if(argc >= 2)
 			{
 				client = GetIndexedEntity(argc, 1);
-				accepted = VerifyClientEntity(client, TRUE, FALSE);
+				accepted = VerifyClientEntity(client, true, false);
 
 				if(accepted > 0)
 				{
@@ -838,14 +875,14 @@ void GameCommand_gettaginfo(float request, float argc)
 					v = gettaginfo(tmp_entity, i);
 					print("model ", tmp_entity.model, " frame ", ftos(tmp_entity.frame), " tag ", gettaginfo_name);
 					print(" index ", ftos(i), " parent ", ftos(gettaginfo_parent), "\n");
-					print(" vector = ", ftos(v_x), " ", ftos(v_y), " ", ftos(v_z), "\n");
-					print(" offset = ", ftos(gettaginfo_offset_x), " ", ftos(gettaginfo_offset_y), " ", ftos(gettaginfo_offset_z), "\n");
-					print(" forward = ", ftos(gettaginfo_forward_x), " ", ftos(gettaginfo_forward_y), " ", ftos(gettaginfo_forward_z), "\n");
-					print(" right = ", ftos(gettaginfo_right_x), " ", ftos(gettaginfo_right_y), " ", ftos(gettaginfo_right_z), "\n");
-					print(" up = ", ftos(gettaginfo_up_x), " ", ftos(gettaginfo_up_y), " ", ftos(gettaginfo_up_z), "\n");
+					print(" vector = ", ftos(v.x), " ", ftos(v.y), " ", ftos(v.z), "\n");
+					print(" offset = ", ftos(gettaginfo_offset.x), " ", ftos(gettaginfo_offset.y), " ", ftos(gettaginfo_offset.z), "\n");
+					print(" forward = ", ftos(gettaginfo_forward.x), " ", ftos(gettaginfo_forward.y), " ", ftos(gettaginfo_forward.z), "\n");
+					print(" right = ", ftos(gettaginfo_right.x), " ", ftos(gettaginfo_right.y), " ", ftos(gettaginfo_right.z), "\n");
+					print(" up = ", ftos(gettaginfo_up.x), " ", ftos(gettaginfo_up.y), " ", ftos(gettaginfo_up.z), "\n");
 					if(argc >= 6)
 					{
-						v_y = -v_y;
+						v.y = -v.y;
 						localcmd(strcat(argv(4), vtos(v), argv(5), "\n"));
 					}
 				}
@@ -1024,13 +1061,13 @@ void GameCommand_moveplayer(float request, float argc)
 			// lets see if the target(s) even actually exist.
 			if((targets) && (destination))
 			{
-				for(;targets;)
+				for (;targets;)
 				{
 					t = car(targets); targets = cdr(targets);
 
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
-					accepted = VerifyClientEntity(client, FALSE, FALSE);
+					accepted = VerifyClientEntity(client, false, false);
 
 					if(accepted <= 0)
 					{
@@ -1078,7 +1115,7 @@ void GameCommand_moveplayer(float request, float argc)
 								else if(team_id == 0)  // auto team
 								{
 									CheckAllowedTeams(client);
-									team_id = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
+									team_id = Team_NumberToTeam(FindSmallestTeam(client, false));
 								}
 								else
 								{
@@ -1190,7 +1227,7 @@ void GameCommand_playerdemo(float request, float argc)
 					case "read":
 					{
 						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, FALSE, TRUE);
+						accepted = VerifyClientEntity(client, false, true);
 
 						if(accepted <= 0)
 						{
@@ -1206,7 +1243,7 @@ void GameCommand_playerdemo(float request, float argc)
 					case "write":
 					{
 						client = GetIndexedEntity(argc, 2);
-						accepted = VerifyClientEntity(client, FALSE, FALSE);
+						accepted = VerifyClientEntity(client, false, false);
 
 						if(accepted <= 0)
 						{
@@ -1261,7 +1298,7 @@ void GameCommand_printstats(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			DumpStats(FALSE);
+			DumpStats(false);
 			print("stats dumped.\n");
 			return;
 		}
@@ -1356,7 +1393,8 @@ void GameCommand_shuffleteams(float request)
 			if(teamplay)
 			{
 				entity tmp_player;
-				float i, x, z, t_teams, t_players, team_color;
+				int i;
+				float x, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
 				t_players = 0;
@@ -1376,7 +1414,7 @@ void GameCommand_shuffleteams(float request)
 				// build a list of the players in a random order
 				FOR_EACH_PLAYER(tmp_player)
 				{
-					for(;;)
+					for (;;)
 					{
 						i = bound(1, floor(random() * maxclients) + 1, maxclients);
 
@@ -1393,7 +1431,7 @@ void GameCommand_shuffleteams(float request)
 				}
 
 				// finally, from the list made earlier, re-join the players in different order.
-				for(i = 1; i <= t_teams; ++i)
+				for (int i = 1; i <= t_teams; ++i)
 				{
 					// find out how many players to assign to this team
 					x = (t_players / t_teams);
@@ -1402,7 +1440,7 @@ void GameCommand_shuffleteams(float request)
 					team_color = Team_NumberToTeam(i);
 
 					// sort through the random list of players made earlier
-					for(z = 1; z <= maxclients; ++z)
+					for (int z = 1; z <= maxclients; ++z)
 					{
 						if (!(shuffleteams_teams[i] >= x))
 						{
@@ -1468,7 +1506,7 @@ void GameCommand_stuffto(float request, float argc)
 			if(argv(2))
 			{
 				entity client = GetIndexedEntity(argc, 1);
-				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				float accepted = VerifyClientEntity(client, true, false);
 
 				if(accepted > 0)
 				{
@@ -1518,18 +1556,18 @@ void GameCommand_trace(float request, float argc)
 					float hitcount = 0;
 					print("TEST CASE. If this returns the runaway loop counter error, possibly everything is oaky.\n");
 					float worst_endpos_bug = 0;
-					for(;;)
+					for (;;)
 					{
 						org = world.mins;
 						delta = world.maxs - world.mins;
 
-						start_x = org_x + random() * delta_x;
-						start_y = org_y + random() * delta_y;
-						start_z = org_z + random() * delta_z;
+						start.x = org.x + random() * delta.x;
+						start.y = org.y + random() * delta.y;
+						start.z = org.z + random() * delta.z;
 
-						end_x = org_x + random() * delta_x;
-						end_y = org_y + random() * delta_y;
-						end_z = org_z + random() * delta_z;
+						end.x = org.x + random() * delta.x;
+						end.y = org.y + random() * delta.y;
+						end.z = org.z + random() * delta.z;
 
 						start = stov(vtos(start));
 						end = stov(vtos(end));
@@ -1547,7 +1585,7 @@ void GameCommand_trace(float request, float argc)
 								// how much do we need to back off?
 								safe = 1;
 								unsafe = 0;
-								for(;;)
+								for (;;)
 								{
 									pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
 									tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
@@ -1581,7 +1619,7 @@ void GameCommand_trace(float request, float argc)
 								q0 = p;
 								dq = 0;
 								dqf = 1;
-								for(;;)
+								for (;;)
 								{
 									q = p + normalize(end - p) * (dq + dqf);
 									if(q == q0)
@@ -1622,17 +1660,17 @@ void GameCommand_trace(float request, float argc)
 					for(i = 0; i < 100000; ++i)
 					{
 						dv = randomvec();
-						if(dv_z > 0)
+						if(dv.z > 0)
 							dv = -1 * dv;
 						tracebox(vv, e.mins, e.maxs, vv + dv, MOVE_NORMAL, e);
 						if(trace_startsolid)
 							print("bug 1\n");
 						if(trace_fraction == 1)
-						if(dv_z < f)
+						if(dv.z < f)
 						{
-							print("bug 2: ", ftos(dv_x), " ", ftos(dv_y), " ", ftos(dv_z));
-							print(" (", ftos(asin(dv_z / vlen(dv)) * 180 / M_PI), " degrees)\n");
-							f = dv_z;
+							print("bug 2: ", ftos(dv.x), " ", ftos(dv.y), " ", ftos(dv.z));
+							print(" (", ftos(asin(dv.z / vlen(dv)) * 180 / M_PI), " degrees)\n");
+							f = dv.z;
 						}
 					}
 					print("highest possible dist: ", ftos(f), "\n");
@@ -1815,7 +1853,7 @@ void GameCommand_macro_help()
 	#define SERVER_COMMAND(name,function,description) \
 		{ print("  ^2", name, "^7: ", description, "\n"); }
 
-	SERVER_COMMANDS(0, 0, "")
+	SERVER_COMMANDS(0, 0, "");
 	#undef SERVER_COMMAND
 
 	return;
@@ -1824,23 +1862,23 @@ void GameCommand_macro_help()
 float GameCommand_macro_command(float argc, string command)
 {
 	#define SERVER_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { function; return true; } }
 
-	SERVER_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
+	SERVER_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
 	#undef SERVER_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 float GameCommand_macro_usage(float argc)
 {
 	#define SERVER_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		{ if(name == strtolower(argv(1))) { function; return true; } }
 
-	SERVER_COMMANDS(CMD_REQUEST_USAGE, argc, "")
+	SERVER_COMMANDS(CMD_REQUEST_USAGE, argc, "");
 	#undef SERVER_COMMAND
 
-	return FALSE;
+	return false;
 }
 
 void GameCommand_macro_write_aliases(float fh)
@@ -1848,7 +1886,7 @@ void GameCommand_macro_write_aliases(float fh)
 	#define SERVER_COMMAND(name,function,description) \
 		{ CMD_Write_Alias("qc_cmd_sv", name, description); }
 
-	SERVER_COMMANDS(0, 0, "")
+	SERVER_COMMANDS(0, 0, "");
 	#undef SERVER_COMMAND
 
 	return;

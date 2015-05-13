@@ -1,0 +1,28 @@
+#ifndef G_WORLD_H
+#define G_WORLD_H
+
+float checkrules_equality;
+float checkrules_suddendeathwarning;
+float checkrules_suddendeathend;
+float checkrules_overtimesadded; //how many overtimes have been already added
+
+const float WINNING_NO = 0; // no winner, but time limits may terminate the game
+const float WINNING_YES = 1; // winner found
+const float WINNING_NEVER = 2; // no winner, enter overtime if time limit is reached
+const float WINNING_STARTSUDDENDEATHOVERTIME = 3; // no winner, enter suddendeath overtime NOW
+
+void CheckRules_Player();
+void IntermissionThink();
+void GotoNextMap(float reinit);
+void ReadyRestart();
+
+void DumpStats(float final);
+float Map_IsRecent(string m);
+string GetNextMap();
+void ShuffleMaplist();
+void Map_Goto_SetStr(string nextmapname);
+void Map_Goto(float reinit);
+float DoNextMapOverride(float reinit);
+void CheckRules_World();
+
+#endif

@@ -19,6 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#ifndef CSQCMODELLIB_COMMON_H
+#define CSQCMODELLIB_COMMON_H
+
+#include "../common/csqcmodel_settings.qh"
 
 noref string csqcmodel_license = "\
 Copyright (c) 2011 Rudolf Polzer\
@@ -44,25 +48,25 @@ IN THE SOFTWARE.\
 
 .vector glowmod;
 .vector view_ofs;
-.float frame;
+.int frame;
 .float frame1time;
-.float frame2;
+.int frame2;
 .float frame2time;
 .float lerpfrac;
 
-#define CSQCMODEL_PROPERTY_FRAME 8388608
-#define CSQCMODEL_PROPERTY_TELEPORTED 4194304 // the "teleport bit" cancelling interpolation
-#define CSQCMODEL_PROPERTY_MODELINDEX 2097152
-#define CSQCMODEL_PROPERTY_ORIGIN 1048576
-#define CSQCMODEL_PROPERTY_YAW 524288
-#define CSQCMODEL_PROPERTY_PITCHROLL 262144
-#define CSQCMODEL_PROPERTY_FRAME2 131072
-#define CSQCMODEL_PROPERTY_LERPFRAC 65536
-#define CSQCMODEL_PROPERTY_SIZE 32768
+const int CSQCMODEL_PROPERTY_FRAME = 8388608;
+const int CSQCMODEL_PROPERTY_TELEPORTED = 4194304; // the "teleport bit" cancelling interpolation
+const int CSQCMODEL_PROPERTY_MODELINDEX = 2097152;
+const int CSQCMODEL_PROPERTY_ORIGIN = 1048576;
+const int CSQCMODEL_PROPERTY_YAW = 524288;
+const int CSQCMODEL_PROPERTY_PITCHROLL = 262144;
+const int CSQCMODEL_PROPERTY_FRAME2 = 131072;
+const int CSQCMODEL_PROPERTY_LERPFRAC = 65536;
+const int CSQCMODEL_PROPERTY_SIZE = 32768;
 
 #define ALLPROPERTIES_COMMON \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME, float, ReadByte, WriteByte, frame) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_MODELINDEX, float, ReadShort, WriteShort, modelindex) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME, int, ReadByte, WriteByte, frame) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_MODELINDEX, int, ReadShort, WriteShort, modelindex) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_x) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_y) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_z) \
@@ -85,8 +89,9 @@ IN THE SOFTWARE.\
 .float frame4time;
 .float lerpfrac4;
 #define ALLPROPERTIES ALLPROPERTIES_COMMON \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME2, float, ReadByte, WriteByte, frame2) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_FRAME2, int, ReadByte, WriteByte, frame2) \
 	CSQCMODEL_PROPERTY_SCALED(CSQCMODEL_PROPERTY_LERPFRAC, float, ReadByte, WriteByte, lerpfrac, 255, 0, 255)
 #else
 #define ALLPROPERTIES ALLPROPERTIES_COMMON
+#endif
 #endif

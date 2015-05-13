@@ -1,3 +1,21 @@
+#include "g_hook.qh"
+#include "_all.qh"
+
+#include "weapons/common.qh"
+#include "weapons/weaponsystem.qh"
+#include "weapons/selection.qh"
+#include "weapons/tracing.qh"
+#include "cl_player.qh"
+#include "t_teleporters.qh"
+#include "command/common.qh"
+#include "round_handler.qh"
+#include "vehicles/vehicle.qh"
+#include "../common/constants.qh"
+#include "../common/util.qh"
+#include "../common/weapons/weapons.qh"
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/server.qh"
+
 /*============================================
 
       Wazat's Xonotic Grappling Hook
@@ -59,7 +77,7 @@ void RemoveGrapplingHook(entity pl)
 	if(pl.movetype == MOVETYPE_FLY)
 		pl.movetype = MOVETYPE_WALK;
 
-	//pl.disableclientprediction = FALSE;
+	//pl.disableclientprediction = false;
 }
 
 void GrapplingHookReset(void)
@@ -86,7 +104,7 @@ void GrapplingHook_Stop()
 }
 
 .vector hook_start, hook_end;
-float GrapplingHookSend(entity to, float sf)
+float GrapplingHookSend(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
 	sf = sf & 0x7F;
@@ -99,22 +117,22 @@ float GrapplingHookSend(entity to, float sf)
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_start_x);
-		WriteCoord(MSG_ENTITY, self.hook_start_y);
-		WriteCoord(MSG_ENTITY, self.hook_start_z);
+		WriteCoord(MSG_ENTITY, self.hook_start.x);
+		WriteCoord(MSG_ENTITY, self.hook_start.y);
+		WriteCoord(MSG_ENTITY, self.hook_start.z);
 	}
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_end_x);
-		WriteCoord(MSG_ENTITY, self.hook_end_y);
-		WriteCoord(MSG_ENTITY, self.hook_end_z);
+		WriteCoord(MSG_ENTITY, self.hook_end.x);
+		WriteCoord(MSG_ENTITY, self.hook_end.y);
+		WriteCoord(MSG_ENTITY, self.hook_end.z);
 	}
-	return TRUE;
+	return true;
 }
 
 void GrapplingHookThink()
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
+	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
 	{
@@ -131,14 +149,14 @@ void GrapplingHookThink()
 
 	self.nextthink = time;
 
-	s = self.realowner.cvar_cl_gunalign;
+	int s = self.realowner.cvar_cl_gunalign;
 	if(s != 1 && s != 2 && s != 4)
 		s = 3; // default value
 	--s;
 	vs = hook_shotorigin[s];
 
 	makevectors(self.realowner.v_angle);
-	org = self.realowner.origin + self.realowner.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
+	org = self.realowner.origin + self.realowner.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 	myorg = WarpZone_RefSys_TransformOrigin(self.realowner, self, org);
 
 	if(self.hook_length < 0)
@@ -239,7 +257,7 @@ void GrapplingHookThink()
 		}
 	}
 
-	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
+	makevectors(self.angles.x * '-1 0 0' + self.angles.y * '0 1 0');
 	myorg = WarpZone_RefSys_TransformOrigin(self, self.realowner, self.origin); // + v_forward * (-9);
 
 	if(myorg != self.hook_start)
@@ -267,10 +285,10 @@ void GrapplingHookTouch (void)
 			WarpZone_RefSys_BeginAddingIncrementally(self, self.aiment);
 		}
 
-	//self.realowner.disableclientprediction = TRUE;
+	//self.realowner.disableclientprediction = true;
 }
 
-void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -296,7 +314,6 @@ void FireGrapplingHook (void)
 {
 	entity missile;
 	vector org;
-	float s;
 	vector vs;
 
 	if(forbidWeaponUse()) return;
@@ -304,7 +321,7 @@ void FireGrapplingHook (void)
 
 	makevectors(self.v_angle);
 
-	s = self.cvar_cl_gunalign;
+	int s = self.cvar_cl_gunalign;
 	if(s != 1 && s != 2 && s != 4)
 		s = 3; // default value
 	--s;
@@ -312,7 +329,7 @@ void FireGrapplingHook (void)
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
 	sound (self, CH_WEAPON_B, "weapons/hook_fire.wav", VOL_BASE, ATTEN_NORM);
-	org = self.origin + self.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
+	org = self.origin + self.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
 	org = trace_endpos;
@@ -335,7 +352,7 @@ void FireGrapplingHook (void)
 
 	missile.state = 0; // not latched onto anything
 
-	W_SetupProjVelocity_Explicit(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(missile, v_forward, v_up, autocvar_g_balance_grapplehook_speed_fly, 0, 0, 0, false);
 
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
@@ -354,7 +371,7 @@ void FireGrapplingHook (void)
 
 	missile.hook_start = missile.hook_end = missile.origin;
 
-	Net_LinkEntity(missile, FALSE, 0, GrapplingHookSend);
+	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
 }
 
 //  void GrapplingHookFrame()
@@ -477,10 +494,10 @@ void GrappleHookInit()
 	else
 	{
 		WEP_ACTION(WEP_HOOK, WR_INIT);
-		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 1);
-		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 2);
-		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 3);
-		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), FALSE, FALSE, 4);
+		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 1);
+		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 2);
+		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 3);
+		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 4);
 	}
 }
 
