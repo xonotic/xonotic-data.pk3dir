@@ -1,39 +1,52 @@
 #ifndef MUTATORS_BASE_H
 #define MUTATORS_BASE_H
-const float CBC_ORDER_EXCLUSIVE = 3;
-const float CBC_ORDER_FIRST = 1;
-const float CBC_ORDER_LAST = 2;
-const float CBC_ORDER_ANY = 4;
+const int CBC_ORDER_FIRST = 1;
+const int CBC_ORDER_LAST = 2;
+const int CBC_ORDER_EXCLUSIVE = 3;
+const int CBC_ORDER_ANY = 4;
 
-float CallbackChain_ReturnValue; // read-only field of the current return value
+bool CallbackChain_ReturnValue; // read-only field of the current return value
 
 entity CallbackChain_New(string name);
-float CallbackChain_Add(entity cb, float() func, float order);
-float CallbackChain_Remove(entity cb, float() func);
+bool CallbackChain_Add(entity cb, bool() func, int order);
+int CallbackChain_Remove(entity cb, bool() func);
 // a callback function is like this:
-// float mycallback(entity me)
+// bool mycallback(entity me)
 // {
 //   do something
-//   return r;
+//   return false;
 // }
-float CallbackChain_Call(entity cb);
+bool CallbackChain_Call(entity cb);
 
-const float MUTATOR_REMOVING = 0;
-const float MUTATOR_ADDING = 1;
-const float MUTATOR_ROLLING_BACK = 2;
-typedef float(float) mutatorfunc_t;
-float Mutator_Add(mutatorfunc_t func, string name);
+enum {
+	MUTATOR_REMOVING,
+	MUTATOR_ADDING,
+	MUTATOR_ROLLING_BACK
+};
+typedef bool(int) mutatorfunc_t;
+bool Mutator_Add(mutatorfunc_t func, string name);
 void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 
 #define MUTATOR_ADD(name) Mutator_Add(MUTATOR_##name, #name)
 #define MUTATOR_REMOVE(name) Mutator_Remove(MUTATOR_##name, #name)
-#define MUTATOR_DEFINITION(name) float MUTATOR_##name(float mode)
-#define MUTATOR_DECLARATION(name) float MUTATOR_##name(float mode)
-#define MUTATOR_HOOKFUNCTION(name) float HOOKFUNCTION_##name()
-#define MUTATOR_HOOK(cb,func,order) do { if(mode == MUTATOR_ADDING) { if(!HOOK_##cb) HOOK_##cb = CallbackChain_New(#cb); if(!CallbackChain_Add(HOOK_##cb,HOOKFUNCTION_##func,order)) { print("HOOK FAILED: ", #func, "\n"); return 1; } } else if(mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK) { if(HOOK_##cb) CallbackChain_Remove(HOOK_##cb,HOOKFUNCTION_##func); } } while(0)
-#define MUTATOR_ONADD if(mode == MUTATOR_ADDING)
-#define MUTATOR_ONREMOVE if(mode == MUTATOR_REMOVING)
-#define MUTATOR_ONROLLBACK_OR_REMOVE if(mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
+#define MUTATOR_DEFINITION(name) bool MUTATOR_##name(int mode)
+#define MUTATOR_DECLARATION(name) bool MUTATOR_##name(int mode)
+#define MUTATOR_HOOKFUNCTION(name) bool HOOKFUNCTION_##name()
+#define MUTATOR_HOOK(cb, func, order) do { 										\
+	MUTATOR_ONADD { 															\
+		if (!HOOK_##cb) HOOK_##cb = CallbackChain_New(#cb); 					\
+		if (!CallbackChain_Add(HOOK_##cb, HOOKFUNCTION_##func, order)) { 		\
+			print("HOOK FAILED: ", #func, "\n"); 								\
+			return true; 														\
+		} 																		\
+	} 																			\
+	MUTATOR_ONROLLBACK_OR_REMOVE { 												\
+		if (HOOK_##cb) CallbackChain_Remove(HOOK_##cb, HOOKFUNCTION_##func);	\
+	} 																			\
+} while(0)
+#define MUTATOR_ONADD if (mode == MUTATOR_ADDING)
+#define MUTATOR_ONREMOVE if (mode == MUTATOR_REMOVING)
+#define MUTATOR_ONROLLBACK_OR_REMOVE if (mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
 
 #define MUTATOR_HOOKABLE(cb) entity HOOK_##cb
 #define MUTATOR_CALLHOOK(cb) CallbackChain_Call(HOOK_##cb)
@@ -74,7 +87,7 @@ MUTATOR_HOOKABLE(PlayerDies);
 		entity frag_inflictor;
 		entity frag_attacker;
 		entity frag_target; // same as self
-		float frag_deathtype;
+		int frag_deathtype;
 
 MUTATOR_HOOKABLE(PlayerJump);
 	// called when a player presses the jump key
@@ -231,7 +244,7 @@ MUTATOR_HOOKABLE(PlayerPowerups);
 	// called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items.
 	// INPUT
 //	entity self;
-	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P
+	int olditems; // also technically output, but since it is at the end of the function it's useless for that :P
 
 MUTATOR_HOOKABLE(PlayerRegen);
 	// called every player think frame
@@ -254,7 +267,7 @@ MUTATOR_HOOKABLE(SV_ParseClientCommand);
 	// NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
 	// INPUT
 	string cmd_name; // command name
-	float cmd_argc; // also, argv() can be used
+	int cmd_argc; // also, argv() can be used
 	string cmd_string; // whole command, use only if you really have to
 	/*
 		// example:
@@ -364,9 +377,11 @@ MUTATOR_HOOKABLE(ItemTouch);
 	// called at when a item is touched. Called early, can edit item properties.
 //	entity self;	// item
 //	entity other; 	// player
-	const float MUT_ITEMTOUCH_CONTINUE = 0; // return this flag to make the function continue as normal
-	const float MUT_ITEMTOUCH_RETURN = 1; // return this flag to make the function return (handled entirely by mutator)
-	const float MUT_ITEMTOUCH_PICKUP = 2; // return this flag to have the item "picked up" and taken even after mutator handled it
+enum {
+	MUT_ITEMTOUCH_CONTINUE, // return this flag to make the function continue as normal
+	MUT_ITEMTOUCH_RETURN, // return this flag to make the function return (handled entirely by mutator)
+	MUT_ITEMTOUCH_PICKUP // return this flag to have the item "picked up" and taken even after mutator handled it
+};
 
 MUTATOR_HOOKABLE(ClientConnect);
 	// called at when a player connect
@@ -379,7 +394,9 @@ MUTATOR_HOOKABLE(AccuracyTargetValid);
 	// called when a target is checked for accuracy
 //	entity frag_attacker; // attacker
 //	entity frag_target; // target
-	const float MUT_ACCADD_VALID = 0; // return this flag to make the function continue if target is a client
-	const float MUT_ACCADD_INVALID = 1; // return this flag to make the function always continue
-	const float MUT_ACCADD_INDIFFERENT = 2; // return this flag to make the function always return
+enum {
+	MUT_ACCADD_VALID, // return this flag to make the function continue if target is a client
+	MUT_ACCADD_INVALID, // return this flag to make the function always continue
+	MUT_ACCADD_INDIFFERENT // return this flag to make the function always return
+};
 #endif
