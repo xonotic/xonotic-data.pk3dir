@@ -34,6 +34,22 @@ void g_clientmodel_setcolormaptoactivator (void)
 
 void g_clientmodel_use(void)
 {
+	if (self.antiwall_flag == 1)
+	{
+		self.inactive = 1;
+	}
+	else if (self.antiwall_flag == 2)
+	{
+		self.inactive = 0;
+	}
+	if (self.inactive)
+	{
+		self.solid = SOLID_NOT;
+	}
+	else
+	{
+		self.solid = self.default_solid;
+	}
 	g_clientmodel_setcolormaptoactivator();
 }
 
