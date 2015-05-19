@@ -13,10 +13,23 @@ void Ent_Wall_PreDraw()
 		if(!checkpvs(org, self))
 			self.alpha = 0;
 		else if(self.fade_start) {
-			vector player_dist = org - self.origin - 0.5 * (self.mins + self.maxs);
-			self.alpha = (self.alpha_min + self.alpha_max * bound(0,
-							   (self.fade_end - vlen(player_dist))
+			float player_dist = vlen(org - self.origin - 0.5 * (self.mins + self.maxs));
+			if (self.fade_end == self.fade_start)
+			{
+				if (player_dist >= self.fade_start) {
+					self.alpha = 0;
+				}
+				else
+				{
+					self.alpha = 1;
+				}
+			}
+			else
+			{
+				self.alpha = (self.alpha_min + self.alpha_max * bound(0,
+							   (self.fade_end - player_dist)
 							   / (self.fade_end - self.fade_start), 1)) / 100.0;
+			}
 		}
 		else
 		{
