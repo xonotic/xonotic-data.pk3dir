@@ -153,6 +153,7 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 		WriteShort(MSG_ENTITY, self.alpha_max);
 		WriteShort(MSG_ENTITY, self.alpha_min);
 		WriteShort(MSG_ENTITY, self.inactive);
+		WriteShort(MSG_ENTITY, self.fade_vertical_offset);
 	}
 
 	return true;

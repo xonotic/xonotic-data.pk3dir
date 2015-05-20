@@ -12,17 +12,16 @@ void Ent_Wall_PreDraw()
 		org = getpropertyvec(VF_ORIGIN);
 		if(!checkpvs(org, self))
 			self.alpha = 0;
-		else if(self.fade_start) {
-			float player_dist = vlen(org - self.origin - 0.5 * (self.mins + self.maxs));
+		else if(self.fade_start || self.fade_end) {
+			vector offset = '0 0 0';
+			offset_z = self.fade_vertical_offset;
+			float player_dist = vlen(org - self.origin - 0.5 * (self.mins + self.maxs) + offset);
 			if (self.fade_end == self.fade_start)
 			{
-				if (player_dist >= self.fade_start) {
+				if (player_dist >= self.fade_start)
 					self.alpha = 0;
-				}
 				else
-				{
 					self.alpha = 1;
-				}
 			}
 			else
 			{
@@ -211,6 +210,7 @@ void Ent_Wall()
 		self.alpha_max = ReadShort();
 		self.alpha_min = ReadShort();
 		self.inactive = ReadShort();
+		self.fade_vertical_offset = ReadShort();
 		BGMScript_InitEntity(self);
 	}
 

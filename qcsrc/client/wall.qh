@@ -7,11 +7,14 @@
 .float loddistance1, loddistance2;
 .vector saved;
 
-// Needed for dynamic clientwalls
+// Needed for interactive clientwalls
 .float inactive; // Clientwall disappears when inactive
 .float alpha_max, alpha_min;
-.float fade_start, fade_end;
-.float default_solid; // Variable to store default self.solid for clientwalls
+// If fade_start > fade_end, fadeout will be inverted
+// fade_vertical_offset is a vertival offset for player position
+.float fade_start, fade_end, fade_vertical_offset;
+.float default_solid;
+// This variable will be set by trigger
 .float antiwall_flag;
 
 void Ent_Wall_Draw();

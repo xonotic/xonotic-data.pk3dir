@@ -85,7 +85,7 @@ float server_is_dedicated;
 // Needed for dynamic clientwalls
 .float inactive; // Clientwall disappears when inactive
 .float alpha_max, alpha_min;
-.float fade_start, fade_end;
+.float fade_start, fade_end, fade_vertical_offset;
 .float default_solid; // Variable to store default self.solid for clientwalls
 
 .string killtarget;
