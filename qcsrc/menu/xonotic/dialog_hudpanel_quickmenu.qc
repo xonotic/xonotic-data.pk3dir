@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDQuickMenuDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_HUDPANEL_QUICKMENU_H
+#define DIALOG_HUDPANEL_QUICKMENU_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDQuickMenuDialog, XonoticRootDialog)
 	METHOD(XonoticHUDQuickMenuDialog, fill, void(entity))
 	ATTRIB(XonoticHUDQuickMenuDialog, title, string, _("Quick Menu Panel"))
 	ATTRIB(XonoticHUDQuickMenuDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

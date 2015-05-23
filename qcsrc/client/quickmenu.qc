@@ -1,3 +1,9 @@
+#include "_all.qh"
+
+#include "hud_config.qh"
+
+#include "../dpdefs/keycodes.qh"
+
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;
 // visible entries are loaded from QuickMenu_Buffer into QuickMenu_Page_* arrays
