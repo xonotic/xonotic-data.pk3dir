@@ -1,4 +1,20 @@
 #include "waypointsprites.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+#include "teamradar.qh"
+
+#include "../common/buffs.qh"
+#include "../common/constants.qh"
+#include "../common/teams.qh"
+
+#include "../common/weapons/weapons.qh"
+
+#include "../csqcmodellib/interpolate.qh"
+
+#include "../warpzonelib/mathlib.qh"
+
+.float alpha;
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {

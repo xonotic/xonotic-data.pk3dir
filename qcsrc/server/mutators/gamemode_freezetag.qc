@@ -1,8 +1,7 @@
-.float freezetag_frozen_time;
-.float freezetag_frozen_timeout;
-const float ICE_MAX_ALPHA = 1;
-const float ICE_MIN_ALPHA = 0.1;
-float freezetag_teams;
+#include "gamemode_freezetag.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
 
 const float SP_FREEZETAG_REVIVALS = 4;
 void freezetag_ScoreRules(float teams)
@@ -425,7 +424,6 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 	return 1;
 }
 
-.float reviving; // temp var
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
 	float n;

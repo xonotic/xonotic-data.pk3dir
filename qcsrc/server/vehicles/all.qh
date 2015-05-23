@@ -1,0 +1,14 @@
+#ifndef VEHICLES_H
+#define VEHICLES_H
+
+#if VEHICLES_ENABLED
+#   include "racer.qh"
+#   include "raptor.qh"
+#   include "spiderbot.qh"
+
+#   ifndef VEHICLES_NO_UNSTABLE
+#       include "bumblebee.qh"
+#   endif
+#endif
+
+#endif

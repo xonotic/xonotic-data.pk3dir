@@ -1,7 +1,9 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "menu.qh"
+#include "oo/classes.qc"
+#include "xonotic/util.qh"
+
+#include "../common/weapons/weapons.qh"
+#include "../common/mapinfo.qh"
 
 ///////////////////////////////////////////////
 // Menu Source File
@@ -211,8 +213,8 @@ void m_init_delayed()
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 
 	loadTooltips();
-	anim = spawnAnimHost();
-	main = spawnMainWindow(); main.configureMainWindow(main);
+	anim = NEW(AnimHost);
+	main = NEW(MainWindow); main.configureMainWindow(main);
 	unloadTooltips();
 
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
@@ -960,7 +962,10 @@ void m_setpointerfocus(entity wnd)
 			menuMousePos = focus.origin + 0.5 * focus.size;
 			menuMousePos.x *= 1 / conwidth;
 			menuMousePos.y *= 1 / conheight;
-			if(wnd.focused) // why does this never happen?
+			entity par = wnd.parent;
+			if(par.focused)
+				par.setFocus(par, wnd);
+			if(wnd.focused)
 				m_focus_item_chain(wnd, focus);
 		}
 	}

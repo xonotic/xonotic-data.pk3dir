@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticWeaponsList) EXTENDS(XonoticListBox)
+#ifndef WEAPONSLIST_H
+#define WEAPONSLIST_H
+#include "listbox.qc"
+CLASS(XonoticWeaponsList, XonoticListBox)
 	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity))
 	METHOD(XonoticWeaponsList, toString, string(entity))
 	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1)
@@ -20,7 +22,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me);
 entity makeXonoticWeaponsList()
 {
 	entity me;
-	me = spawnXonoticWeaponsList();
+	me = NEW(XonoticWeaponsList);
 	me.configureXonoticWeaponsList(me);
 	return me;
 }
@@ -65,9 +67,8 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 }
 float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 {
-	float f, i;
-	i = me.selectedItem;
-	f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
+	int i = me.selectedItem;
+	float f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
 
 	if(me.pressed != 1) // don't change priority if the person is just scrolling
 	{

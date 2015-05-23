@@ -1,15 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "item_key.qh"
-#endif
+#include "item_key.qh"
+#include "_all.qh"
+
+#include "../common/monsters/monsters.qh"
+#include "../common/notifications.qh"
+#include "../common/util.qh"
+#include "../warpzonelib/util_server.qh"
 
 /*
 TODO:
@@ -38,9 +33,6 @@ bool item_keys_usekey(entity l, entity p) {
 }
 
 string item_keys_keylist(float keylist) {
-	float base, l;
-	string n;
-
 	// no keys
 	if (!keylist)
 		return "";
@@ -49,10 +41,10 @@ string item_keys_keylist(float keylist) {
 	if ((keylist & (keylist-1)) != 0)
 		return strcat("the ", item_keys_names[lowestbit(keylist)]);
 
-	n = "";
-	base = 0;
+	string n = "";
+	int base = 0;
 	while (keylist) {
-		l = lowestbit(keylist);
+		int l = lowestbit(keylist);
 		if (n)
 			n = strcat(n, ", the ", item_keys_names[base + l]);
 		else

@@ -1,0 +1,12 @@
+#ifndef SERVER___H
+#define SERVER___H
+
+#include "autocvars.qh"
+#include "constants.qh"
+#include "defs.qh"
+#include "miscfunctions.qh"
+
+#include "../dpdefs/progsdefs.qh"
+#include "../dpdefs/dpextensions.qh"
+
+#endif

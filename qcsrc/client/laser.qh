@@ -1,0 +1,6 @@
+#ifndef LASER_H
+#define LASER_H
+
+void Ent_Laser();
+
+#endif

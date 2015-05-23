@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_MULTIPLAYER_CREATE_H
+#define DIALOG_MULTIPLAYER_CREATE_H
+#include "tab.qc"
+CLASS(XonoticServerCreateTab, XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
@@ -33,7 +35,7 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 		e.configureXonoticTextSlider(e, pCvar);
 
 		// clear old values
-		float i;
+		int i;
 		for(i = 0; i <= e.nValues; ++i);
 		{
 			if(e.(valueStrings[i])) { strunzone(e.(valueStrings[i])); }
@@ -56,7 +58,7 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 entity makeXonoticServerCreateTab()
 {
 	entity me;
-	me = spawnXonoticServerCreateTab();
+	me = NEW(XonoticServerCreateTab);
 	me.configureDialog(me);
 	return me;
 }

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(Keyframe) EXTENDS(Animation)
+#ifndef ANIM_KEYFRAME_H
+#define ANIM_KEYFRAME_H
+#include "animation.qc"
+CLASS(Keyframe, Animation)
 	METHOD(Keyframe, addEasing, entity(entity, float, float, float(float, float, float, float)))
 	METHOD(Keyframe, addAnim, void(entity, entity))
 	METHOD(Keyframe, calcValue, float(entity, float, float, float, float))
@@ -26,7 +28,7 @@ entity makeHostedKeyframe(entity obj, void(entity, float) objSetter, float animD
 entity makeKeyframe(entity obj, void(entity, float) objSetter, float animDuration, float animStart, float animEnd)
 {
 	entity me;
-	me = spawnKeyframe();
+	me = NEW(Keyframe);
 	me.configureAnimation(me, obj, objSetter, time, animDuration, animStart, animEnd);
 	return me;
 }

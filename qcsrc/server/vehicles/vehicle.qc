@@ -1,3 +1,12 @@
+#include "vehicle.qh"
+
+#include "../_all.qh"
+#include "../cl_player.qh"
+#include "../../common/constants.qh"
+#include "../waypointsprites.qh"
+
+#include "../bot/waypoints.qh"
+
 float autocvar_g_vehicles_crush_dmg;
 float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
@@ -11,10 +20,9 @@ float autocvar_g_vehicles_tag_damagerate = 5;
 
 float autocvar_g_vehicles;
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void vehicles_return();
 void vehicles_enter();
-void vehicles_touch();
 void vehicles_reset_colors();
 void vehicles_clearreturn();
 void vehicles_setreturn();
@@ -24,9 +32,9 @@ void vehicles_setreturn();
     Send additional points of interest to be drawn, to vehicle owner
 **/
 const float MAX_AXH = 4;
-.entity AuxiliaryXhair[MAX_AXH];
+.entity AuxiliaryXhairs[MAX_AXH];
 
-float SendAuxiliaryXhair(entity to, float sf)
+float SendAuxiliaryXhair(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
@@ -44,7 +52,7 @@ float SendAuxiliaryXhair(entity to, float sf)
     return true;
 }
 
-void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
+void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 {
     if (!IS_REAL_CLIENT(own))
         return;
@@ -52,7 +60,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     entity axh;
 
     axh_id = bound(0, axh_id, MAX_AXH);
-    axh = own.(AuxiliaryXhair[axh_id]);
+    axh = own.(AuxiliaryXhairs[axh_id]);
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
@@ -66,7 +74,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     setorigin(axh, loc);
     axh.colormod            = clr;
     axh.SendFlags           = 0x01;
-    own.(AuxiliaryXhair[axh_id]) = axh;
+    own.(AuxiliaryXhairs[axh_id]) = axh;
 }
 
 /*
@@ -114,23 +122,7 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
         WriteByte(MSG_ONE, 1 + own.vehicle.vehicle_weapon2mode + HUD_VEHICLE_LAST);
 }
 
-/** vehicles_locktarget
 
-    Generic target locking.
-
-    Figure out if what target is "locked" (if any), for missile tracking as such.
-
-    after calling, "if(self.lock_target != world && self.lock_strength == 1)" mean
-    you have a locked in target.
-
-    Exspects a crosshair_trace() or equivalent to be
-    dont before calling.
-
-**/
-.entity lock_target;
-.float  lock_strength;
-.float  lock_time;
-.float  lock_soundtime;
 const float	DAMAGE_TARGETDRONE = 10;
 
 vector targetdrone_getnewspot()
@@ -150,7 +142,7 @@ vector targetdrone_getnewspot()
 
 #if 0
 void targetdrone_think();
-void targetdrone_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void targetdrone_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void targetdrone_renwe()
 {
 	self.think = targetdrone_think;
@@ -167,7 +159,7 @@ void targetdrone_renwe()
 	setsize(self, '-100 -100 -100', '100 100 100');
 
 }
-void targetdrone_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void targetdrone_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	self.health -= damage;
 	if(self.health <= 0)
@@ -274,11 +266,11 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
-
-        if(!trace_ent.vehicle_flags & VHF_ISVEHICLE ||
-				trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET ||
-				trace_ent.takedamage == DAMAGE_TARGETDRONE)
-            trace_ent = world;
+        if(!(
+            (trace_ent.vehicle_flags & VHF_ISVEHICLE) || 
+            (trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || 
+            (trace_ent.takedamage == DAMAGE_TARGETDRONE)
+            )) { trace_ent = world; }
     }
 
     if(self.lock_target == world && trace_ent != world)
@@ -319,8 +311,6 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
     }
 }
 
-#define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
-ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
 #define vehicles_sweap_collision(orig,vel,dt,acm,mult) \
 traceline(orig, orig + vel * dt, MOVE_NORMAL, self); \
@@ -329,7 +319,6 @@ if(trace_fraction != 1) \
 
 // Hover movement support
 float  force_fromtag_power;
-float  force_fromtag_normpower;
 vector force_fromtag_origin;
 vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float max_power)
 {
@@ -366,7 +355,7 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 }
 
 // Generic vehile projectile system
-void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
     // Ignore damage from oterh projectiles from my owner (dont mess up volly's)
     if(inflictor.owner == self.owner)
@@ -559,7 +548,6 @@ void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
     }
 }
 
-.void() vehicle_impact;
 void vehicles_touch()
 {
 	if(MUTATOR_CALLHOOK(VehicleTouch))
@@ -595,7 +583,7 @@ void vehicles_touch()
 
     vehicles_enter();
 }
-float autocvar_g_vehicles_allow_bots = 0;
+.float monster_attack;
 void vehicles_enter()
 {
    // Remove this when bots know how to use vehicles
@@ -860,16 +848,16 @@ void vehicles_exit(float eject)
 
 void vehicles_regen(float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
 {
-    if(self.regen_field < field_max)
-    if(timer + rpause < time)
+    if (self.(regen_field) < field_max)
+    if (timer + rpause < time)
     {
-        if(_healthscale)
+        if (_healthscale)
             regen = regen * (self.vehicle_health / self.tur_health);
 
-        self.regen_field = min(self.regen_field + regen * delta_time, field_max);
+        self.(regen_field) = min(self.(regen_field) + regen * delta_time, field_max);
 
-        if(self.owner)
-            self.owner.regen_field = (self.regen_field / field_max) * 100;
+        if (self.owner)
+            self.owner.(regen_field) = (self.(regen_field) / field_max) * 100;
     }
 }
 
@@ -910,7 +898,7 @@ void vehicles_painframe()
     }
 }
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
     self.dmg_time = time;
 

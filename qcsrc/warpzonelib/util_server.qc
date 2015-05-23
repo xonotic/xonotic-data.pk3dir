@@ -1,11 +1,13 @@
+#include "util_server.qh"
+
+#include "common.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "common.qh"
-    #include "util_server.qh"
     #include "../csqcmodellib/sv_model.qh"
+    #include "../dpdefs/dpextensions.qh"
+	#include "../dpdefs/progsdefs.qh"
 #endif
 
 void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
@@ -77,8 +79,12 @@ void WarpZoneLib_ExactTrigger_Init()
 		makevectors (self.angles);
 		self.movedir = v_forward;
 	}
-	self.warpzone_isboxy = 1;
- 	if(self.model != "")
+	if(self.model == "")
+	{
+		// It's a box! No need to match with exacttriggers.
+		self.warpzone_isboxy = 1;
+	}
+	else
  	{
 		mi = self.mins;
 		ma = self.maxs;
@@ -87,11 +93,11 @@ void WarpZoneLib_ExactTrigger_Init()
 		// let mapper-set mins/maxs override the model's bounds if set
 		if(mi != '0 0 0' || ma != '0 0 0')
 		{
+			// It's a box! No need to match with exacttriggers.
 			self.mins = mi;
 			self.maxs = ma;
+			self.warpzone_isboxy = 1;
 		}
-		else
-			self.warpzone_isboxy = 0; // enable exacttrigger matching
  	}
 	setorigin(self, self.origin);
 	if(self.scale)

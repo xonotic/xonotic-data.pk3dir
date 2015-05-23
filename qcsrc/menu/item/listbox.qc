@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(ListBox) EXTENDS(Item)
+#ifndef ITEM_LISTBOX_H
+#define ITEM_LISTBOX_H
+#include "../item.qc"
+CLASS(ListBox, Item)
 	METHOD(ListBox, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(ListBox, configureListBox, void(entity, float, float))
 	METHOD(ListBox, draw, void(entity))
@@ -10,7 +12,7 @@ CLASS(ListBox) EXTENDS(Item)
 	METHOD(ListBox, focusLeave, void(entity))
 	ATTRIB(ListBox, focusable, float, 1)
 	ATTRIB(ListBox, allowFocusSound, float, 1)
-	ATTRIB(ListBox, selectedItem, float, 0)
+	ATTRIB(ListBox, selectedItem, int, 0)
 	ATTRIB(ListBox, size, vector, '0 0 0')
 	ATTRIB(ListBox, origin, vector, '0 0 0')
 	ATTRIB(ListBox, scrollPos, float, 0) // measured in window heights, fixed when needed

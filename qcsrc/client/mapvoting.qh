@@ -1,6 +1,8 @@
 #ifndef MAPVOTING_H
 #define MAPVOTING_H
 
+#include "../common/constants.qh"
+
 int mv_num_maps;
 
 string mv_maps[MAPVOTE_COUNT];

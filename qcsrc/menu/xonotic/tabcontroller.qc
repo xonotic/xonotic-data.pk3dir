@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticTabController) EXTENDS(ModalController)
+#ifndef TABCONTROLLER_H
+#define TABCONTROLLER_H
+#include "../item/modalcontroller.qc"
+CLASS(XonoticTabController, ModalController)
 	METHOD(XonoticTabController, configureXonoticTabController, void(entity, float))
 	METHOD(XonoticTabController, makeTabButton, entity(entity, string, entity))
 	ATTRIB(XonoticTabController, rows, float, 0)
@@ -13,7 +15,7 @@ entity makeXonoticTabController(float theRows);
 entity makeXonoticTabController(float theRows)
 {
 	entity me;
-	me = spawnXonoticTabController();
+	me = NEW(XonoticTabController);
 	me.configureXonoticTabController(me, theRows);
 	return me;
 }

@@ -1,3 +1,15 @@
+#include "gamemode_ctf.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#ifdef SVQC
+#include "../vehicles/vehicle.qh"
+#endif
+
+#include "../../warpzonelib/common.qh"
+#include "../../warpzonelib/mathlib.qh"
+
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
 //  Last updated: September, 2012
@@ -89,13 +101,11 @@ float ctf_CheckPassDirection(vector head_center, vector passer_center, vector pa
 		makevectors(passer_angle);
 
 		// find the closest point on the enemy to the center of the attack
-		float ang; // angle between shotdir and h
 		float h; // hypotenuse, which is the distance between attacker to head
 		float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 
 		h = vlen(head_center - passer_center);
-		ang = acos(dotproduct(normalize(head_center - passer_center), v_forward));
-		a = h * cos(ang);
+		a = h * (normalize(head_center - passer_center) * v_forward);
 
 		vector nearest_on_line = (passer_center + a * v_forward);
 		float distance_from_line = vlen(nearest_to_passer - nearest_on_line);
@@ -645,7 +655,7 @@ void ctf_CheckStalemate(void)
 	}
 }
 
-void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{

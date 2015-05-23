@@ -147,7 +147,7 @@ void W_Blaster_Attack(
 		self = oldself;
 	}
 }
-float W_Blaster(float request)
+bool W_Blaster(int request)
 {
 	switch(request)
 	{
@@ -266,7 +266,7 @@ float W_Blaster(float request)
 }
 #endif
 #ifdef CSQC
-float W_Blaster(float request)
+bool W_Blaster(int request)
 {
 	switch(request)
 	{

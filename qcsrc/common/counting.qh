@@ -1,6 +1,8 @@
 #ifndef COUNTING_H
 #define COUNTING_H
 
+#include "util.qh"
+
 // ===============================================
 //  Time processing and counting functions/macros
 // ===============================================

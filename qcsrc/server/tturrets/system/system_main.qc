@@ -1,3 +1,8 @@
+#include "../../_all.qh"
+
+#include "../../g_damage.qh"
+#include "../../bot/bot.qh"
+
 #define cvar_base "g_turrets_unit_"
 .float clientframe;
 void turrets_setframe(float _frame, float client_only)
@@ -15,7 +20,7 @@ void turrets_setframe(float _frame, float client_only)
 
 }
 
-float turret_send(entity to, float sf)
+float turret_send(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
@@ -163,7 +168,7 @@ void turret_projectile_touch()
     turret_projectile_explode();
 }
 
-void turret_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
     self.velocity  += vforce;
     self.health    -= damage;
@@ -931,7 +936,7 @@ void turret_think()
 
 void turret_fire()
 {
-    if (autocvar_g_turrets_nofire != 0)
+    if (autocvar_g_turrets_nofire)
         return;
 
     self.turret_firefunc();
@@ -991,7 +996,7 @@ void turrets_manager_think()
     self.nextthink = time + 1;
 
     entity e;
-    if (autocvar_g_turrets_reloadcvars == 1)
+    if (autocvar_g_turrets_reloadcvars)
     {
         e = nextent(world);
         while (e)
@@ -1040,19 +1045,6 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
 
     if (!(self.spawnflags & TSF_SUSPENDED))
         builtin_droptofloor(); // why can't we use regular droptofloor here?
-
-    // Terrainbase spawnflag. This puts a enlongated model
-    // under the turret, so it looks ok on uneaven surfaces.
-    /*  TODO: Handle this with CSQC
-    if (self.spawnflags & TSF_TERRAINBASE)
-    {
-        entity tb;
-        tb = spawn();
-        setmodel(tb,"models/turrets/terrainbase.md3");
-        setorigin(tb,self.origin);
-        tb.solid = SOLID_BBOX;
-    }
-    */
 
     self.cvar_basename = cvar_base_name;
     load_unit_settings(self, self.cvar_basename, 0);

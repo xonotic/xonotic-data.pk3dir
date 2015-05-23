@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
+#ifndef SLIDER_RESOLUTION_H
+#define SLIDER_RESOLUTION_H
+#include "textslider.qc"
+CLASS(XonoticResolutionSlider, XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, configureXonoticResolutionSlider, void(entity))
 	METHOD(XonoticResolutionSlider, loadResolutions, void(entity, float))
 	METHOD(XonoticResolutionSlider, addResolution, void(entity, float, float, float))
@@ -7,6 +9,8 @@ CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, saveCvars, void(entity))
 	METHOD(XonoticResolutionSlider, draw, void(entity))
 	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float, -1)
+	ATTRIB(XonoticResolutionSlider, maxAllowedWidth, float, 0)
+	ATTRIB(XonoticResolutionSlider, maxAllowedHeight, float, 0)
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
 float updateConwidths(float width, float height, float pixelheight);
@@ -81,12 +85,16 @@ float updateConwidths(float width, float height, float pixelheight)
 entity makeXonoticResolutionSlider()
 {
 	entity me;
-	me = spawnXonoticResolutionSlider();
+	me = NEW(XonoticResolutionSlider);
 	me.configureXonoticResolutionSlider(me);
 	return me;
 }
 void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight)
 {
+	if (me.maxAllowedWidth && w > me.maxAllowedWidth)
+		return;
+	if (me.maxAllowedHeight && h > me.maxAllowedHeight)
+		return;
 	float i;
 	for (i = 0; i < me.nValues; ++i)
 	{
@@ -138,6 +146,8 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 	}
 	// NOW we can safely clear.
 	me.clearValues(me);
+	me.maxAllowedWidth = 0;
+	me.maxAllowedHeight = 0;
 
 	if (fullscreen)
 	{
@@ -161,6 +171,21 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 
 	if(me.nValues == 0)
 	{
+		// Get workarea.
+		r = getresolution(-2);
+		// If workarea is not supported, get desktop size.
+		if(r.x == 0 && r.y == 0)
+			r = getresolution(-1);
+
+		// Add it, and limit all other resolutions to the workarea/desktop size.
+		if(r.x != 0 || r.y != 0)
+		{
+			me.maxAllowedWidth = r.x;
+			me.maxAllowedHeight = r.y;
+			me.addResolution(me, r.x, r.y, r.z);
+		}
+
+		// Add nice hardcoded defaults.
 		me.addResolution(me, 640, 480, 1); // pc res
 #if 0
 		me.addResolution(me, 720, 480, 1.125); // DVD NTSC 4:3

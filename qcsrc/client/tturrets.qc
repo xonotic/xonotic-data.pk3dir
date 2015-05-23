@@ -1,7 +1,24 @@
 #include "tturrets.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+#include "movelib.qh"
+#include "movetypes.qh"
+#include "prandom.qh"
+#include "teamradar.qh"
 #include "waypointsprites.qh"
 
-#include "../server/movelib.qh"
+#include "../common/teams.qh"
+
+#include "../server/tturrets/include/turrets_early.qh"
+
+#include "../warpzonelib/anglestransform.qh"
+#include "../warpzonelib/mathlib.qh"
+
+.vector colormod;
+.float cnt;
+.float alpha;
+.float gravity;
 
 string tid2info_base;
 string tid2info_head;
@@ -31,7 +48,6 @@ void turret_precache(int _tid)
         precache_model ("models/turrets/head-gib2.md3");
         precache_model ("models/turrets/head-gib3.md3");
         precache_model ("models/turrets/head-gib4.md3");
-        precache_model ("models/turrets/terrainbase.md3");
         precache_model ("models/turrets/base.md3");
         precache_model ("models/turrets/rocket.md3");
     }
@@ -163,7 +179,7 @@ void turret_remove()
     self.tur_head = world;
 }
 
-.vector glowmod;
+class(Turret) .vector glowmod;
 void turret_changeteam()
 {
 	switch(self.team - 1)

@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL ((edict_num(1) == self) ? true : false)
 

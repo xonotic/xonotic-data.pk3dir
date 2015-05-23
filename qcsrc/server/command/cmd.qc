@@ -1,31 +1,39 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/common.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/teams.qh"
-    #include "../../common/util.qh"
-    #include "../../common/command/shared_defs.qh"
-    #include "../../common/monsters/monsters.qh"
-    #include "../../common/monsters/sv_monsters.qh"
-    #include "../../common/monsters/spawn.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../../common/deathtypes.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../vehicles/vehicles_def.qh"
-    #include "../campaign.qh"
-    #include "../../common/mapinfo.qh"
-    #include "common.qh"
-    #include "vote.qh"
-    #include "cmd.qh"
-    #include "../cheats.qh"
-    #include "../scores.qh"
-    #include "../ipban.qh"
+#include "../../common/command/command.qh"
+#include "cmd.qh"
+#include "../_all.qh"
+
+#include "common.qh"
+#include "vote.qh"
+
+#include "../campaign.qh"
+#include "../cheats.qh"
+#include "../cl_player.qh"
+#include "../g_triggers.qh"
+#include "../ipban.qh"
+#include "../mapvoting.qh"
+#include "../scores.qh"
+#include "../teamplay.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#ifdef SVQC
+	#include "../vehicles/vehicle.qh"
 #endif
+
+#include "../../common/constants.qh"
+#include "../../common/deathtypes.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/monsters/monsters.qh"
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
+
+#include "../../warpzonelib/common.qh"
+
+void ClientKill_TeamChange (float targetteam); // 0 = don't change, -1 = auto, -2 = spec
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual
@@ -825,6 +833,15 @@ void ClientCommand_macro_write_aliases(float fh)
 
 void SV_ParseClientCommand(string command)
 {
+	// If invalid UTF-8, don't even parse it
+	string command2 = "";
+	float len = strlen(command);
+	float i;
+	for (i = 0; i < len; ++i)
+		command2 = strcat(command2, chr2str(str2chr(command, i)));
+	if (command != command2)
+		return;
+
 	// if we're banned, don't even parse the command
 	if(Ban_MaybeEnforceBanOnce(self))
 		return;

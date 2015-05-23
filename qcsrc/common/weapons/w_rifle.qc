@@ -50,7 +50,7 @@ void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE); }
 void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }
 void spawnfunc_weapon_sniperrifle(void) { spawnfunc_weapon_rifle(); }
 
-void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, float deathtype, float pTracer, float pShots, string pSound)
+void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, string pSound)
 {
 	float i;
 
@@ -133,7 +133,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 }
 
 .float bot_secondary_riflemooth;
-float W_Rifle(float req)
+bool W_Rifle(int req)
 {
 	float ammo_amount;
 
@@ -264,7 +264,7 @@ float W_Rifle(float req)
 }
 #endif
 #ifdef CSQC
-float W_Rifle(float req)
+bool W_Rifle(int req)
 {
 	switch(req)
 	{

@@ -1,3 +1,16 @@
+#include "mutator_nades.qh"
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "gamemode_keyhunt.qh"
+#include "gamemode_freezetag.qh"
+#include "../../common/nades.qh"
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
+
+.float lifetime;
+
 .entity nade_spawnloc;
 
 void nade_timer_think()
@@ -475,7 +488,7 @@ void nade_monster_boom()
 void nade_boom()
 {
 	string expef;
-	float nade_blast = 1;
+	bool nade_blast = true;
 
 	switch ( self.nade_type )
 	{
@@ -484,16 +497,16 @@ void nade_boom()
 			expef = "explosion_medium";
 			break;
 		case NADE_TYPE_ICE:
-			nade_blast = 0;
+			nade_blast = false;
 			expef = "electro_combo"; // hookbomb_explode electro_combo bigplasma_impact
 			break;
 		case NADE_TYPE_TRANSLOCATE:
-			nade_blast = 0;
+			nade_blast = false;
 			expef = "";
 			break;
 		case NADE_TYPE_MONSTER:
 		case NADE_TYPE_SPAWN:
-			nade_blast = 0;
+			nade_blast = false;
 			switch(self.realowner.team)
 			{
 				case NUM_TEAM_1: expef = "spawn_event_red"; break;
@@ -504,7 +517,7 @@ void nade_boom()
 			}
 			break;
 		case NADE_TYPE_HEAL:
-			nade_blast = 0;
+			nade_blast = false;
 			expef = "spawn_event_red";
 			break;
 
@@ -551,12 +564,12 @@ void nade_boom()
 
 void nade_touch()
 {
-	float is_weapclip = 0;
+	/*float is_weapclip = 0;
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
 	if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
-		is_weapclip = 1;
-	if(ITEM_TOUCH_NEEDKILL() || is_weapclip)
+		is_weapclip = 1;*/
+	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
 		remove(self);
 		return;
@@ -583,7 +596,7 @@ void nade_beep()
 	self.nextthink = max(self.wait, time);
 }
 
-void nade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void nade_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -666,7 +679,13 @@ void toss_nade(entity e, vector _velocity, float _time)
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 
-	setorigin(_nade, w_shotorg + (v_right * 25) * -1);
+	vector offset = (v_forward * autocvar_g_nades_throw_offset.x)
+				  + (v_right * autocvar_g_nades_throw_offset.y)
+				  + (v_up * autocvar_g_nades_throw_offset.z);
+	if(autocvar_g_nades_throw_offset == '0 0 0')
+		offset = '0 0 0';
+
+	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
 	//setmodel(_nade, "models/weapons/v_ok_grenade.md3");
 	//setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
@@ -677,7 +696,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 
-	if(self.v_angle.x >= 70 && self.v_angle.x <= 110)
+	if(self.v_angle.x >= 70 && self.v_angle.x <= 110 && self.BUTTON_CROUCH)
 		_nade.velocity = '0 0 100';
 	else if(autocvar_g_nades_nade_newton_style == 1)
 		_nade.velocity = e.velocity + _velocity;

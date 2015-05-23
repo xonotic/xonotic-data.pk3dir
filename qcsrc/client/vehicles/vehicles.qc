@@ -1,20 +1,20 @@
-#if defined(CSQC)
-    #include "../../dpdefs/csprogsdefs.qh"
-    #include "../defs.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/stats.qh"
-    #include "../../common/util.qh"
-    #include "../../common/buffs.qh"
-    #include "../autocvars.qh"
-    #include "../movetypes.qh"
-    #include "../prandom.qh"
-    #include "../main.qh"
-    #include "vehicles.qh"
-    #include "../../csqcmodellib/cl_model.qh"
-    #include "../../server/t_items.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "vehicles.qh"
+#include "../_all.qh"
+
+#include "../movetypes.qh"
+#include "../movetypes.qh"
+#include "../prandom.qh"
+#include "../scoreboard.qh"
+#include "../t_items.qh"
+
+#include "../../common/buffs.qh"
+#include "../../common/constants.qh"
+#include "../../common/stats.qh"
+#include "../../common/util.qh"
+
+#include "../../csqcmodellib/cl_model.qh"
+
+.float cnt;
 
 const string hud_bg = "gfx/vehicles/frame.tga";
 const string hud_sh = "gfx/vehicles/vh-shield.tga";
@@ -51,19 +51,16 @@ const string raptor_bomb = "gfx/vehicles/raptor_bombs.tga";
 const string raptor_drop = "gfx/vehicles/axh-dropcross.tga";
 string raptor_xhair;
 
-void CSQC_WAKIZASHI_HUD();
-void CSQC_SPIDER_HUD();
-void CSQC_RAPTOR_HUD();
-void CSQC_BUMBLE_HUD();
-void CSQC_BUMBLE_GUN_HUD();
+
 
 const int MAX_AXH = 4;
-entity AuxiliaryXhair[MAX_AXH];
+entity AuxiliaryXhairs[MAX_AXH];
 
-.string axh_image;
-.float  axh_fadetime;
-.float  axh_drawflag;
-.float  axh_scale;
+entityclass(AuxiliaryXhair);
+class(AuxiliaryXhair) .string axh_image;
+class(AuxiliaryXhair) .float  axh_fadetime;
+class(AuxiliaryXhair) .float  axh_drawflag;
+class(AuxiliaryXhair) .float  axh_scale;
 
 const string bumb_ico =  "gfx/vehicles/bumb.tga";
 const string bumb_lgun =  "gfx/vehicles/bumb_lgun.tga";
@@ -107,7 +104,7 @@ void AuxiliaryXhair_Draw2D()
 void Net_AuXair2(bool bIsNew)
 {
     int axh_id	= bound(0, ReadByte(), MAX_AXH);
-    entity axh 		= AuxiliaryXhair[axh_id];
+    entity axh 		= AuxiliaryXhairs[axh_id];
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
@@ -119,7 +116,7 @@ void Net_AuXair2(bool bIsNew)
 		axh.axh_image		= "gfx/vehicles/axh-ring.tga";
 		axh.axh_scale		= 1;
         axh.alpha			= 1;
-		AuxiliaryXhair[axh_id] = axh;
+		AuxiliaryXhairs[axh_id] = axh;
     }
 
 	axh.move_origin_x = ReadCoord();
@@ -157,7 +154,7 @@ void Net_VehicleSetup()
     int i;
     for(i = 0; i < MAX_AXH; ++i)
     {
-        entity axh = AuxiliaryXhair[i];
+        entity axh = AuxiliaryXhairs[i];
         if(axh != world && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
             remove(axh);
 
@@ -169,59 +166,59 @@ void Net_VehicleSetup()
 		axh.axh_image		= "gfx/vehicles/axh-ring.tga";
 		axh.axh_scale		= 1;
         axh.alpha			= 1;
-		AuxiliaryXhair[i]	= axh;
+		AuxiliaryXhairs[i]	= axh;
     }
 
     switch(hud_id)
     {
         case HUD_SPIDERBOT:
             // Minigun1
-            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-ring.tga";
-            AuxiliaryXhair[0].axh_scale   = 0.25;
+            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-ring.tga";
+            AuxiliaryXhairs[0].axh_scale   = 0.25;
             // Minigun2
-            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-ring.tga";
-            AuxiliaryXhair[1].axh_scale   = 0.25;
+            AuxiliaryXhairs[1].axh_image   = "gfx/vehicles/axh-ring.tga";
+            AuxiliaryXhairs[1].axh_scale   = 0.25;
             // Rocket
-            AuxiliaryXhair[2].axh_image   = "gfx/vehicles/axh-special1.tga";
-            AuxiliaryXhair[2].axh_scale   = 0.5;
+            AuxiliaryXhairs[2].axh_image   = "gfx/vehicles/axh-special1.tga";
+            AuxiliaryXhairs[2].axh_scale   = 0.5;
             break;
 
         case HUD_WAKIZASHI:
-            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhair[0].axh_scale   = 0.25;
+            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
+            AuxiliaryXhairs[0].axh_scale   = 0.25;
             break;
 
         case HUD_RAPTOR:
-            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-special2.tga";
-            AuxiliaryXhair[0].axh_scale   = 0.5;
+            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-special2.tga";
+            AuxiliaryXhairs[0].axh_scale   = 0.5;
             //AuxiliaryXhair[0].alpha       = 0.5;
 
-            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhair[1].axh_scale   = 0.25;
+            AuxiliaryXhairs[1].axh_image   = "gfx/vehicles/axh-bracket.tga";
+            AuxiliaryXhairs[1].axh_scale   = 0.25;
             //AuxiliaryXhair[1].alpha       = 0.75;
             //AuxiliaryXhair[1].axh_drawflag  = DRAWFLAG_NORMAL;
             break;
 
         case HUD_BUMBLEBEE:
             // Raygun-locked
-            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhair[0].axh_scale   = 0.5;
+            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
+            AuxiliaryXhairs[0].axh_scale   = 0.5;
 
             // Gunner1
-            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-target.tga";
-            AuxiliaryXhair[1].axh_scale   = 0.75;
+            AuxiliaryXhairs[1].axh_image   = "gfx/vehicles/axh-target.tga";
+            AuxiliaryXhairs[1].axh_scale   = 0.75;
 
             // Gunner2
-            AuxiliaryXhair[2].axh_image   = "gfx/vehicles/axh-target.tga";
-            AuxiliaryXhair[2].axh_scale   = 0.75;
+            AuxiliaryXhairs[2].axh_image   = "gfx/vehicles/axh-target.tga";
+            AuxiliaryXhairs[2].axh_scale   = 0.75;
             break;
         case HUD_BUMBLEBEE_GUN:
             // Plasma cannons
-            AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhair[0].axh_scale   = 0.25;
+            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
+            AuxiliaryXhairs[0].axh_scale   = 0.25;
             // Raygun
-            AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhair[1].axh_scale   = 0.25;
+            AuxiliaryXhairs[1].axh_image   = "gfx/vehicles/axh-bracket.tga";
+            AuxiliaryXhairs[1].axh_scale   = 0.25;
             break;
     }
 }
@@ -341,7 +338,7 @@ void CSQC_BUMBLE_HUD()
     drawresetcliparea();
 
 // Right gunner slot occupied?
-	if(!AuxiliaryXhair[1].draw2d)
+	if(!AuxiliaryXhairs[1].draw2d)
 	{
 		shield = (picsize.x * 0.5) - (0.5 * stringwidth(_("No right gunner!"), false, '1 0 0' * picsize.y + '0 1 0' * picsize.y));
 		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
@@ -363,7 +360,7 @@ void CSQC_BUMBLE_HUD()
     drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // Left gunner slot occupied?
-	if(!AuxiliaryXhair[2].draw2d)
+	if(!AuxiliaryXhairs[2].draw2d)
 	{
 		shield = (picsize.x * 0.5) - (0.5 * stringwidth(_("No left gunner!"), false, '1 0 0' * picsize.y + '0 1 0' * picsize.y));
 		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);

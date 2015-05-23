@@ -1,25 +1,31 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../common/stats.qh"
-	#include "../warpzonelib/mathlib.qh"
-	#include "../warpzonelib/common.qh"
-	#include "../warpzonelib/client.qh"
-	#include "../common/teams.qh"
-	#include "../common/util.qh"
-	#include "../common/nades.qh"
-	#include "../common/weapons/weapons.qh"
-	#include "../common/mapinfo.qh"
-	#include "autocvars.qh"
-	#include "hud.qh"
-	#include "scoreboard.qh"
-	#include "noise.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_player.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "_all.qh"
+
+#include "announcer.qh"
+#include "hook.qh"
+#include "hud.qh"
+#include "hud_config.qh"
+#include "mapvoting.qh"
+#include "noise.qh"
+#include "scoreboard.qh"
+#include "shownames.qh"
+#include "target_music.qh"
+#include "vehicles/vehicles.qh"
+#include "waypointsprites.qh"
+
+#include "../common/constants.qh"
+#include "../common/mapinfo.qh"
+#include "../common/nades.qh"
+#include "../common/stats.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+
+#include "../common/weapons/weapons.qh"
+
+#include "../csqcmodellib/cl_player.qh"
+
+#include "../warpzonelib/client.qh"
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/mathlib.qh"
 
 entity porto;
 vector polyline[16];
@@ -763,7 +769,7 @@ void UpdateCrosshair()
 		wcross_alpha_goal_prev = wcross_alpha;
 		wcross_color_goal_prev = wcross_color;
 
-		if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))
+		if(spectatee_status == -1 && shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))
 		{
 			wcross_blur = 1;
 			wcross_alpha *= 0.75;

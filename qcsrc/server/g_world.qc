@@ -1,39 +1,38 @@
 #include "g_world.qh"
+#include "_all.qh"
 
+#include "anticheat.qh"
+#include "antilag.qh"
+#include "bot/bot.qh"
+#include "campaign.qh"
+#include "cheats.qh"
+#include "cl_client.qh"
+#include "command/common.qh"
+#include "command/getreplies.qh"
+#include "command/sv_cmd.qh"
+#include "command/vote.qh"
+#include "g_hook.qh"
+#include "ipban.qh"
+#include "mapvoting.qh"
+#include "mutators/mutators_include.qh"
+#include "race.qh"
+#include "scores.qh"
+#include "secret.qh"
+#include "teamplay.qh"
+#include "waypointsprites.qh"
+#include "weapons/weaponstats.qh"
 #include "../common/buffs.qh"
-
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../common/constants.qh"
-    #include "../common/stats.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/sv_monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/weaponstats.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "mutators/mutators_include.qh"
-    #include "campaign.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/common.qh"
-    #include "command/vote.qh"
-    #include "command/getreplies.qh"
-    #include "command/sv_cmd.qh"
-    #include "anticheat.qh"
-    #include "cheats.qh"
-    #include "../common/playerstats.qh"
-    #include "g_hook.qh"
-    #include "scores.qh"
-    #include "mapvoting.qh"
-    #include "ipban.qh"
-    #include "race.qh"
-    #include "antilag.qh"
-    #include "secret.qh"
-#endif
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/mapinfo.qh"
+#include "../common/monsters/monsters.qh"
+#include "../common/monsters/sv_monsters.qh"
+#include "../common/notifications.qh"
+#include "../common/playerstats.qh"
+#include "../common/stats.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+#include "../common/weapons/weapons.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -93,9 +92,7 @@ string redirection_target;
 float world_initialized;
 
 string GetGametype();
-void GotoNextMap(float reinit);
 void ShuffleMaplist();
-float(float reinit) DoNextMapOverride;
 
 void SetDefaultAlpha()
 {
@@ -314,15 +311,21 @@ void cvar_changes_init()
 		// does nothing visible
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("g_balance_kill_delay");
+		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
+		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADPREFIX("g_mod_");
+		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_tdm_point_limit");
+		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
@@ -503,7 +506,7 @@ void detect_maptype()
 }
 
 entity randomseed;
-float RandomSeed_Send(entity to, float sf)
+float RandomSeed_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
@@ -570,7 +573,7 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 void spawnfunc_worldspawn (void)
 {
-	float fd, l, i, j, n;
+	float fd, l, j, n;
 	string s;
 
 	cvar = cvar_normal;
@@ -680,7 +683,7 @@ void spawnfunc_worldspawn (void)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		s = sprintf("%d.%s.%06d", ftos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -833,7 +836,7 @@ void spawnfunc_worldspawn (void)
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
 	monsterlist_reply = strzone(getmonsterlist());
-	for(i = 0; i < 10; ++i)
+	for(int i = 0; i < 10; ++i)
 	{
 		s = getrecords(i);
 		if (s)
@@ -856,7 +859,7 @@ void spawnfunc_worldspawn (void)
 	{
 		s = "";
 		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
-		for(i = 0; i < n; ++i)
+		for(int i = 0; i < n; ++i)
 			if(substring(argv(i), -18, -1) != "-serverpackage.txt")
 			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
 				s = strcat(s, " ", argv(i));
@@ -864,7 +867,7 @@ void spawnfunc_worldspawn (void)
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
-			for(i = 0; i < j; ++i)
+			for(int i = 0; i < j; ++i)
 				s = strcat(s, " ", search_getfilename(fd, i));
 			search_end(fd);
 		}
@@ -872,7 +875,7 @@ void spawnfunc_worldspawn (void)
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
-			for(i = 0; i < j; ++i)
+			for(int i = 0; i < j; ++i)
 				s = strcat(s, " ", search_getfilename(fd, i));
 			search_end(fd);
 		}
@@ -1644,7 +1647,7 @@ void SetWinners(.float field, float value)
 {
 	entity head;
 	FOR_EACH_PLAYER(head)
-		head.winning = (head.field == value);
+		head.winning = (head.(field) == value);
 }
 
 // set the .winning flag for those players with a given field value
@@ -1652,7 +1655,7 @@ void AddWinners(.float field, float value)
 {
 	entity head;
 	FOR_EACH_PLAYER(head)
-		if(head.field == value)
+		if (head.(field) == value)
 			head.winning = 1;
 }
 
@@ -1958,7 +1961,7 @@ float WinningCondition_RanOutOfSpawns()
 	if(have_team_spawns <= 0)
 		return WINNING_NO;
 
-	if(autocvar_g_spawn_useallspawns <= 0)
+	if(!autocvar_g_spawn_useallspawns)
 		return WINNING_NO;
 
 	if(!some_spawn_has_been_used)
@@ -2030,7 +2033,6 @@ CheckRules_World
 Exit deathmatch games upon conditions
 ============
 */
-void ReadyRestart();
 void CheckRules_World()
 {
 	float timelimit;

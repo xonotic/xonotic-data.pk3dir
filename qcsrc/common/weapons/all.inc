@@ -1,14 +1,3 @@
-// TODO: include once
-//#ifndef WEAPONS_ALL_H
-//#define WEAPONS_ALL_H
-
-#include "../util.qh"
-
-#ifdef SVQC
-#   include "config.qh"
-#   include "../../server/bot/aim.qh"
-#endif
-
 // ONLY EVER ADD NEW WEAPONS AT THE END. IF YOU REMOVE ONE, PUT THE LAST ONE ON
 // ITS PLACE. THIS IS TO AVOID UNNECESSARY RENUMBERING OF WEAPON IMPULSES.
 // IF YOU DISREGARD THIS NOTICE, I'LL KILL YOU WITH THE @!#%'N TUBA
@@ -38,5 +27,3 @@
 #include "w_arc.qc"
 #include "w_hmg.qc"
 #include "w_rpc.qc"
-
-//#endif

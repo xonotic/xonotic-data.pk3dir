@@ -1,13 +1,11 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../dpdefs/keycodes.qh"
-	#include "../common/constants.qh"
-	#include "autocvars.qh"
-	#include "hud.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "hud_config.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+
+#include "../common/constants.qh"
+
+#include "../dpdefs/keycodes.qh"
 
 
 #define HUD_Write(s) fputs(fh, s)
@@ -1236,7 +1234,7 @@ void HUD_Configure_Frame()
 			return;
 		}
 
-		if(!hud_configure_prev || hud_configure_prev == -1)
+		if(!hud_configure_prev)
 		{
 			if(autocvar_hud_cursormode)
 				setcursormode(1);

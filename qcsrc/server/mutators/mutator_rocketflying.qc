@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 MUTATOR_HOOKFUNCTION(rocketflying_EditProjectile)
 {
 	if(other.classname == "rocket" || other.classname == "mine")

@@ -1,3 +1,9 @@
+#include "mutator_dodging.qh"
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "../../common/animdecide.qh"
 
 .float cvar_cl_dodging_timeout;
 
@@ -96,7 +102,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 			  self.velocity
 			+ (autocvar_sv_dodging_up_speed * v_up);
 
-		if (autocvar_sv_dodging_sound == 1)
+		if (autocvar_sv_dodging_sound)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 		animdecide_setaction(self, ANIMACTION_JUMP, true);
@@ -118,9 +124,10 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 
 // returns 1 if the player is close to a wall
-float check_close_to_wall(float threshold) {
-	if (autocvar_sv_dodging_wall_dodging == 0)
-		return 0;
+bool check_close_to_wall(float threshold)
+{
+	if(!autocvar_sv_dodging_wall_dodging)
+		return false;
 
 	vector trace_start;
 	vector trace_end;
@@ -130,31 +137,32 @@ float check_close_to_wall(float threshold) {
 	trace_end = self.origin + (1000*v_right);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
-		return 1;
+		return true;
 
 	trace_end = self.origin - (1000*v_right);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
-		return 1;
+		return true;
 
 	trace_end = self.origin + (1000*v_forward);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
-		return 1;
+		return true;
 
 	trace_end = self.origin - (1000*v_forward);
 	tracebox(trace_start, self.mins, self.maxs, trace_end, true, self);
 	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)
-		return 1;
+		return true;
 
-	return 0;
+	return false;
 }
 
-float check_close_to_ground(float threshold) {
+bool check_close_to_ground(float threshold)
+{
 	if (self.flags & FL_ONGROUND)
-		return 1;
+		return true;
 
-	return 0;
+	return false;
 }
 
 

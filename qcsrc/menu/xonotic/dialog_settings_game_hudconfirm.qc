@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDConfirmDialog) EXTENDS(XonoticDialog)
+#ifndef DIALOG_SETTINGS_GAME_HUDCONFIRM_H
+#define DIALOG_SETTINGS_GAME_HUDCONFIRM_H
+#include "dialog.qc"
+CLASS(XonoticHUDConfirmDialog, XonoticDialog)
 	METHOD(XonoticHUDConfirmDialog, fill, void(entity))
 	ATTRIB(XonoticHUDConfirmDialog, title, string, _("Enter HUD editor"))
 	ATTRIB(XonoticHUDConfirmDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)
@@ -13,11 +15,11 @@ ENDCLASS(XonoticHUDConfirmDialog)
 void HUDSetup_Start(entity me, entity btn)
 {
 	if (!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
-		localcmd("map hudsetup/hudsetup", "\n");
+		localcmd("map _hudsetup\n");
 	else
 		localcmd("togglemenu 0\n");
 
-	localcmd("_hud_configure 1", "\n");
+	localcmd("_hud_configure 1\n");
 }
 
 void XonoticHUDConfirmDialog_fill(entity me)

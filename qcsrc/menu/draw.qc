@@ -1,7 +1,6 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "draw.qh"
+#include "../common/util.qh"
+#include "../common/constants.qh"
 
 string draw_mousepointer;
 vector draw_mousepointer_offset;
