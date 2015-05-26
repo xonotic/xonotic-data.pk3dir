@@ -4691,9 +4691,7 @@ void HUD_ItemsTime(void)
 
 	float rows, columns;
 	float ar = max(2, autocvar_hud_panel_itemstime_ratio) + 1;
-	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * ar * rows * count + rows * rows) + rows + 0.5) / 2), count);
-
+	rows = HUD_GetRowCount(count, mySize, ar);
 	columns = ceil(count/rows);
 
 	vector itemstime_size;
