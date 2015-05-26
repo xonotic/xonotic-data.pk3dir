@@ -4694,8 +4694,7 @@ void HUD_ItemsTime(void)
 	rows = HUD_GetRowCount(count, mySize, ar);
 	columns = ceil(count/rows);
 
-	vector itemstime_size;
-	itemstime_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	vector itemstime_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
 
 	vector offset = '0 0 0';
 	float newSize;
@@ -4706,38 +4705,38 @@ void HUD_ItemsTime(void)
 			HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
 
 		// reduce panel to avoid spacing items
-		if(itemstime_size_x / itemstime_size_y < ar)
+		if(itemstime_size.x / itemstime_size.y < ar)
 		{
-			newSize = rows * itemstime_size_x / ar;
-			pos_y += (mySize_y - newSize) / 2;
-			mySize_y = newSize;
-			itemstime_size_y = mySize_y / rows;
+			newSize = rows * itemstime_size.x / ar;
+			pos.y += (mySize.y - newSize) / 2;
+			mySize.y = newSize;
+			itemstime_size.y = mySize.y / rows;
 		}
 		else
 		{
-			newSize = columns * itemstime_size_y * ar;
-			pos_x += (mySize_x - newSize) / 2;
-			mySize_x = newSize;
-			itemstime_size_x = mySize_x / columns;
+			newSize = columns * itemstime_size.y * ar;
+			pos.x += (mySize.x - newSize) / 2;
+			mySize.x = newSize;
+			itemstime_size.x = mySize.x / columns;
 		}
 		panel_pos = pos - '1 1 0' * panel_bg_padding;
 		panel_size = mySize + '2 2 0' * panel_bg_padding;
 	}
 	else
 	{
-		if(itemstime_size_x/itemstime_size_y > ar)
+		if(itemstime_size.x/itemstime_size.y > ar)
 		{
-			newSize = ar * itemstime_size_y;
-			offset_x = itemstime_size_x - newSize;
-			pos_x += offset_x/2;
-			itemstime_size_x = newSize;
+			newSize = ar * itemstime_size.y;
+			offset.x = itemstime_size.x - newSize;
+			pos.x += offset.x/2;
+			itemstime_size.x = newSize;
 		}
 		else
 		{
-			newSize = 1/ar * itemstime_size_x;
-			offset_y = itemstime_size_y - newSize;
-			pos_y += offset_y/2;
-			itemstime_size_y = newSize;
+			newSize = 1/ar * itemstime_size.x;
+			offset.y = itemstime_size.y - newSize;
+			pos.y += offset.y/2;
+			itemstime_size.y = newSize;
 		}
 	}
 
@@ -4750,7 +4749,7 @@ void HUD_ItemsTime(void)
 		if (!autocvar_hud_panel_itemstime_showspawned)
 			if (ItemsTime_time[i] <= time)
 				continue;
-		DrawItemsTimeItem(pos + eX * column * (itemstime_size_x + offset_x) + eY * row * (itemstime_size_y + offset_y), itemstime_size, ar, i);
+		DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i);
 		++row;
 		if(row >= rows)
 		{
