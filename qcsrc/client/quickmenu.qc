@@ -401,8 +401,8 @@ bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if(bInputType == 3)
 	{
-		mousepos_x = nPrimary;
-		mousepos_y = nSecondary;
+		mousepos.x = nPrimary;
+		mousepos.y = nSecondary;
 		return true;
 	}
 
@@ -478,8 +478,8 @@ void QuickMenu_Mouse()
 	{
 		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
 
-		mousepos_x = bound(0, mousepos_x, vid_conwidth);
-		mousepos_y = bound(0, mousepos_y, vid_conheight);
+		mousepos.x = bound(0, mousepos.x, vid_conwidth);
+		mousepos.y = bound(0, mousepos.y, vid_conheight);
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -492,17 +492,17 @@ void QuickMenu_Mouse()
 
 	float first_entry_pos, entries_height;
 	vector fontsize;
-	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
-	first_entry_pos = panel_pos_y + ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize_y) / 2;
-	entries_height = panel_size_y - ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize_y);
+	fontsize = '1 1 0' * (panel_size.y / QUICKMENU_MAXLINES);
+	first_entry_pos = panel_pos.y + ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize.y) / 2;
+	entries_height = panel_size.y - ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize.y);
 
-	if (mousepos_x >= panel_pos_x && mousepos_y >= first_entry_pos && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= first_entry_pos + entries_height)
+	if (mousepos.x >= panel_pos.x && mousepos.y >= first_entry_pos && mousepos.x <= panel_pos.x + panel_size.x && mousepos.y <= first_entry_pos + entries_height)
 	{
 		float entry_num;
-		entry_num = floor((mousepos_y - first_entry_pos) / fontsize_y);
+		entry_num = floor((mousepos.y - first_entry_pos) / fontsize.y);
 		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
 		{
-			panel_pos_y = first_entry_pos + entry_num * fontsize_y;
+			panel_pos.y = first_entry_pos + entry_num * fontsize.y;
 			vector color;
 			if(mouseClicked & S_MOUSE1)
 				color = '0.5 1 0.5';
@@ -510,7 +510,7 @@ void QuickMenu_Mouse()
 				color = '1 1 0.3';
 			else
 				color = '1 1 1';
-			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, eX * panel_size.x + eY * fontsize.y, color, .2, DRAWFLAG_NORMAL);
 
 			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
 				QuickMenu_Page_ActiveEntry((entry_num < QUICKMENU_MAXLINES - 1) ? entry_num + 1 : 0);
@@ -527,7 +527,7 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 {
 	string entry;
 	float offset;
-	float desc_width = panel_size_x;
+	float desc_width = panel_size.x;
 	if(option)
 	{
 		string pic = strcat(hud_skin_path, "/", option);
@@ -536,7 +536,7 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 		vector option_size = '1 1 0' * fontsize.y * 0.8;
 		desc_width -= option_size.x;
 		drawpic(pos + eX * desc_width + eY * (fontsize.y - option_size.y) / 2, pic, option_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
-		desc_width -= fontsize_x / 4;
+		desc_width -= fontsize.x / 4;
 	}
 	entry = textShortenToWidth(desc, desc_width, fontsize, stringwidth_colors);
 	if (autocvar_hud_panel_quickmenu_align > 0)
@@ -598,15 +598,15 @@ void HUD_QuickMenu(void)
 	int i;
 	vector fontsize;
 	string color;
-	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
+	fontsize = '1 1 0' * (panel_size.y / QUICKMENU_MAXLINES);
 
 	if (!QuickMenu_IsLastPage)
 	{
 		color = "^5";
-		HUD_Quickmenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), string_null, fontsize);
+		HUD_Quickmenu_DrawEntry(panel_pos + eY * (panel_size.y - fontsize.y), sprintf("%d: %s%s", 0, color, _("Continue...")), string_null, fontsize);
 	}
 	else
-		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize_y) / 2;
+		panel_pos.y += ((QUICKMENU_MAXLINES - QuickMenu_Page_Entries) * fontsize.y) / 2;
 
 	for (i = 1; i <= QuickMenu_Page_Entries; ++i) {
 		if (QuickMenu_Page_Description[i] == "")
@@ -652,9 +652,9 @@ void HUD_QuickMenu(void)
 
 		if(QuickMenu_Page_ActivatedEntry_Time && time < QuickMenu_Page_ActivatedEntry_Time
 			&& QuickMenu_Page_ActivatedEntry == i)
-			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
+			drawfill(panel_pos, eX * panel_size.x + eY * fontsize.y, '0.5 1 0.5', .2, DRAWFLAG_NORMAL);
 
-		panel_pos_y += fontsize_y;
+		panel_pos.y += fontsize.y;
 	}
 
 	if(QuickMenu_Page_ActivatedEntry >= 0 && time >= QuickMenu_Page_ActivatedEntry_Time)
