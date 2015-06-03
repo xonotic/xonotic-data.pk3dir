@@ -979,9 +979,11 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	vector oldscale = draw_scale;
 	vector oldshift = draw_shift;
+#ifndef SET_YRANGE
 #define SET_YRANGE(start,end) \
 	draw_scale = boxToGlobalSize(eX * 1 + eY * (end - start), oldscale); \
 	draw_shift = boxToGlobal(eY * start, oldshift, oldscale);
+#endif
 
 	for (j = 0; j < category_draw_count; ++j) {
 		// Matches exactly the headings with increased height.
