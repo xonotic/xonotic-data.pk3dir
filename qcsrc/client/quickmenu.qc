@@ -527,17 +527,21 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 {
 	string entry;
 	float offset;
-	float desc_size = panel_size_x;
+	float desc_width = panel_size_x;
 	if(option)
 	{
-		float option_size = stringwidth_nocolors(option, fontsize);
-		desc_size -= option_size;
-		drawstring(pos + eX * desc_size, option, fontsize, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
+		string pic = strcat(hud_skin_path, "/", option);
+		if(precache_pic(pic) == "")
+			pic = strcat("gfx/hud/default/", option);
+		vector option_size = '1 1 0' * fontsize.y * 0.8;
+		desc_width -= option_size.x;
+		drawpic(pos + eX * desc_width + eY * (fontsize.y - option_size.y) / 2, pic, option_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE);
+		desc_width -= fontsize_x / 4;
 	}
-	entry = textShortenToWidth(desc, desc_size, fontsize, stringwidth_colors);
+	entry = textShortenToWidth(desc, desc_width, fontsize, stringwidth_colors);
 	if (autocvar_hud_panel_quickmenu_align > 0)
 	{
-		offset = (desc_size - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
+		offset = (desc_width - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
 		drawcolorcodedstring(pos + eX * offset, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 	}
 	else
@@ -636,11 +640,11 @@ void HUD_QuickMenu(void)
 
 					float value = cvar(argv(1));
 					if(value == ON_value)
-						option = "[X]";
+						option = "checkbox_checked";
 					else if(value == OFF_value)
-						option = "[_]";
+						option = "checkbox_empty";
 					else
-						option = "[?]";
+						option = "checkbox_undefined";
 				}
 			}
 		}
