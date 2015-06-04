@@ -541,7 +541,18 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 	entry = textShortenToWidth(desc, desc_width, fontsize, stringwidth_colors);
 	if (autocvar_hud_panel_quickmenu_align > 0)
 	{
-		offset = (desc_width - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
+		float real_desc_width = stringwidth_colors(entry, fontsize);
+		offset = (desc_width - real_desc_width) * min(autocvar_hud_panel_quickmenu_align, 1);
+
+		if(option)
+		{
+			// when there's enough room align description regardless the checkbox
+			float extra_offset = (panel_size.x - desc_width) * min(autocvar_hud_panel_quickmenu_align, 1);
+			if(offset + real_desc_width + extra_offset < desc_width)
+				offset += extra_offset;
+			else
+				offset = max(0, desc_width - real_desc_width);
+		}
 		drawcolorcodedstring(pos + eX * offset, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 	}
 	else
