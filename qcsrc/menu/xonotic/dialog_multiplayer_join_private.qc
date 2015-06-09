@@ -22,61 +22,58 @@ entity makeXonoticPrivateServerListTab()
 }
 void XonoticPrivateServerListTab_fill(entity me)
 {
-	//entity e, slist;
-	entity e;
+	entity e, pslist;
 
-	//slist  = makeXonoticPrivateServerList();
+	pslist  = makeXonoticPrivateServerList();
 
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
-		me.TD(me, 1, 2.8, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, me.columns - 0.6, e = makeXonoticInputBox(0, string_null));
 			//e.onChange = PrivateServerList_Filter_Change;
-			//e.onChangeEntity = slist;
-			//slist.controlledTextbox = e;
-
-	me.gotoRC(me, 0.5, 3.6);
-		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "menu_slist_categories", ZCTX(_("SRVS^Categories"))));
-			//e.onClickEntity = slist;
-			//e.onClick = PrivateServerList_Categories_Click;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showempty", ZCTX(_("SRVS^Empty"))));
-			//slist.filterShowEmpty = e.checked;
-			//e.onClickEntity = slist;
-			//e.onClick = PrivateServerList_ShowEmpty_Click;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showfull", ZCTX(_("SRVS^Full"))));
-			//slist.filterShowFull = e.checked;
-			//e.onClickEntity = slist;
-			//e.onClick = PrivateServerList_ShowFull_Click;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "net_slist_pause", _("Pause")));
+			//e.onChangeEntity = pslist;
+			//pslist.controlledTextbox = e;
 
 	me.gotoRC(me, 2, 0);
-		//me.TD(me, 1, 1, slist.sortButton1 = makeXonoticButton(string_null, '0 0 0'));
-		//me.TD(me, 1, 1, slist.sortButton2 = makeXonoticButton(string_null, '0 0 0'));
-		//me.TD(me, 1, 1, slist.sortButton3 = makeXonoticButton(string_null, '0 0 0'));
-		//me.TD(me, 1, 1, slist.sortButton4 = makeXonoticButton(string_null, '0 0 0'));
-		//me.TD(me, 1, 1, slist.sortButton5 = makeXonoticButton(string_null, '0 0 0'));
+		me.TD(me, 1, 1, pslist.sortButton1 = makeXonoticButton("Nickname", '0 0 0'));
+		me.TD(me, 1, 1, pslist.sortButton2 = makeXonoticButton("Address", '0 0 0'));
 	me.TR(me);
-		//me.TD(me, me.rows - 5, me.columns, slist);
+		me.TD(me, me.rows - 7, me.columns, pslist);
 
-	me.gotoRC(me, me.rows - 2, 0);
-		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(0, _("Address:")));
-		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
-			//e.onEnter = PrivateServerList_Connect_Click;
-			//e.onEnterEntity = slist;
+	me.gotoRC(me, me.rows - 4, 0);
+		me.TD(me, 1, 0.4, e = makeXonoticTextLabel(0, _("Nickname:")));
+		me.TD(me, 1, me.columns - 0.4, e = makeXonoticInputBox(0, string_null));
+			e.onEnter = PrivateServerList_Connect_Click;
+			e.onEnterEntity = pslist;
 			//e.onChange = PrivateServerList_Update_favoriteButton;
-			//e.onChangeEntity = slist;
-			//slist.ipAddressBox = e;
-		me.TD(me, 1, 1.5, e = makeXonoticButton("", '0 0 0'));
-			//e.onClick = PrivateServerList_Favorite_Click;
-			//e.onClickEntity = slist;
-			//slist.favoriteButton = e;
-		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Info..."), '0 0 0'));
+			e.onChangeEntity = pslist;
+			pslist.nicknameBox = e;
+	me.TR(me);
+		me.TD(me, 1, 0.4, e = makeXonoticTextLabel(0, _("Address:")));
+		me.TD(me, 1, me.columns - 0.4, e = makeXonoticInputBox(0, string_null));
+			e.onEnter = PrivateServerList_Connect_Click;
+			e.onEnterEntity = pslist;
+			//e.onChange = PrivateServerList_Update_favoriteButton;
+			e.onChangeEntity = pslist;
+			pslist.ipAddressBox = e;
+	me.TR(me);
+		me.TD(me, 1, 2.16, e = makeXonoticButton("Add", '0 0 0'));
+			e.onClick = PrivateServerList_Add_Click;
+			e.onClickEntity = pslist;
+			pslist.addButton = e;
+		me.TD(me, 1, 2.16, e = makeXonoticButton(_("Update"), '0 0 0'));
 			//e.onClick = PrivateServerList_Info_Click;
-			//e.onClickEntity = slist;
-			//slist.infoButton = e;
+			//e.onClickEntity = pslist;
+			//pslist.infoButton = e;
+			pslist.updateButton = e;
+		me.TD(me, 1, 2.16, e = makeXonoticButton("Remove", '0 0 0'));
+			e.onClick = PrivateServerList_Remove_Click;
+			e.onClickEntity = pslist;
+			pslist.removeButton = e;
+		me.TDempty(me, 0.02);
 	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Join!"), '0 0 0'));
-			//e.onClick = PrivateServerList_Connect_Click;
-			//e.onClickEntity = slist;
-			//slist.connectButton = e;
+			e.onClick = PrivateServerList_Connect_Click;
+			e.onClickEntity = pslist;
+			pslist.connectButton = e;
 }
 #endif
