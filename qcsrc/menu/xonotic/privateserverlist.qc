@@ -3,13 +3,12 @@
 #include "listbox.qc"
 CLASS(XonoticPrivateServerList, XonoticListBox)
 	METHOD(XonoticPrivateServerList, configureXonoticPrivateServerList, void(entity))
-//	ATTRIB(XonoticPrivateServerList, rowsPerItem, float, 1)
 	METHOD(XonoticPrivateServerList, draw, void(entity))
 	METHOD(XonoticPrivateServerList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticPrivateServerList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticPrivateServerList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticPrivateServerList, resizeNotify, void(entity, vector, vector, vector, vector))
-//	METHOD(XonoticPrivateServerList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticPrivateServerList, keyDown, bool(entity, int, bool, bool))
 
 	ATTRIB(XonoticPrivateServerList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPrivateServerList, realUpperMargin, float, 0)
@@ -45,10 +44,7 @@ CLASS(XonoticPrivateServerList, XonoticListBox)
 
 	ATTRIB(XonoticPrivateServerList, currentSortOrder, float, 0)
 	ATTRIB(XonoticPrivateServerList, currentSortField, float, -1)
-//
-	ATTRIB(XonoticPrivateServerList, addressBoxFocused, float, -1)
-	ATTRIB(XonoticPrivateServerList, nicknameBoxFocused, float, -1)
-//
+
 //	ATTRIB(XonoticPrivateServerList, seenIPv4, float, 0)
 //	ATTRIB(XonoticPrivateServerList, seenIPv6, float, 0)
 //	ATTRIB(XonoticPrivateServerList, categoriesHeight, float, 1.25)
@@ -174,11 +170,11 @@ void XonoticPrivateServerList_setSelected(entity me, int i)
 	if (me.addressNicknameBoxTrashable) {
 		me.addressBox.setText(me.addressBox, me.selectedServer);
 		me.addressBox.cursorPos = strlen(me.selectedServer);
-		me.addressBoxFocused = -1;
+		me.addressBox.focused = 0;
 
 		me.nicknameBox.setText(me.nicknameBox, me.selectedServerNickname);
 		me.nicknameBox.cursorPos = strlen(me.selectedServerNickname);
-		me.nicknameBoxFocused = -1;
+		me.nicknameBox.focused = 0;
 
 		// we just copied the address and nickname, so there shouldn't be any ADD/UPDATE available
 		me.addButton.disabled = true;
@@ -308,6 +304,30 @@ void XonoticPrivateServerList_resizeNotify(entity me, vector relOrigin, vector r
 		me.currentSortField = -1;
 		me.setSortOrder(me, f, me.currentSortOrder); // force resetting the sort order
 	}
+}
+bool XonoticPrivateServerList_keyDown(entity me, int scan, bool ascii, bool shift)
+{
+	if(scan == K_ENTER || scan == K_KP_ENTER) {
+		ServerList_Connect_Click(NULL, me);
+		return true;
+	} else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS) {
+		// add new
+		me.addressBox.setText(me.addressBox, "");
+		me.addressBox.cursorPos = 0;
+		me.nicknameBox.setText(me.nicknameBox, "");
+		me.nicknameBox.cursorPos = 0;
+		me.addressBox.focused = 1;
+		return false;
+	} else {
+		me.addressNicknameBoxTrashable = 1;
+		if(SUPER(XonoticServerList).keyDown(me, scan, ascii, shift))
+			return true;
+		else if(!me.controlledTextbox)
+			return false;
+		else
+			return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
+	}
+
 }
 void PrivateServerList_Connect_Click(entity btn, entity me)
 {
