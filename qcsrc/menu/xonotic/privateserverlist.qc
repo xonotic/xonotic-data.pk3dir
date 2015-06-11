@@ -3,12 +3,20 @@
 #include "listbox.qc"
 CLASS(XonoticPrivateServerList, XonoticListBox)
 	METHOD(XonoticPrivateServerList, configureXonoticPrivateServerList, void(entity))
+	METHOD(XonoticPrivateServerList, destroy, void(entity))
+
 	METHOD(XonoticPrivateServerList, draw, void(entity))
 	METHOD(XonoticPrivateServerList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticPrivateServerList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticPrivateServerList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticPrivateServerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticPrivateServerList, keyDown, bool(entity, int, bool, bool))
+
+	ATTRIB(XonoticPrivateServerList, privateServers, float, -1)
+	ATTRIB(XonoticPrivateServerList, privateServers_allocated, float, 0)
+
+	ATTRIB(XonoticPrivateServerList, privateServers_filtered, float, -1)
+	ATTRIB(XonoticPrivateServerList, privateServers_filtered_allocated, float, 0)
 
 	ATTRIB(XonoticPrivateServerList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPrivateServerList, realUpperMargin, float, 0)
@@ -21,10 +29,7 @@ CLASS(XonoticPrivateServerList, XonoticListBox)
 	ATTRIB(XonoticPrivateServerList, selectedServerNickname, string, string_null) // to restore selected server when needed
 	METHOD(XonoticPrivateServerList, setSelected, void(entity, float))
 	METHOD(XonoticPrivateServerList, setSortOrder, void(entity, float, float))
-//	ATTRIB(XonoticPrivateServerList, filterShowEmpty, float, 1)
-//	ATTRIB(XonoticPrivateServerList, filterShowFull, float, 1)
-//	ATTRIB(XonoticPrivateServerList, filterString, string, string_null)
-//	ATTRIB(XonoticPrivateServerList, controlledTextbox, entity, NULL)
+	ATTRIB(XonoticPrivateServerList, filterTextbox, entity, NULL)
 
 	ATTRIB(XonoticPrivateServerList, addressBox, entity, NULL)
 	ATTRIB(XonoticPrivateServerList, nicknameBox, entity, NULL)
@@ -45,14 +50,6 @@ CLASS(XonoticPrivateServerList, XonoticListBox)
 	ATTRIB(XonoticPrivateServerList, currentSortOrder, float, 0)
 	ATTRIB(XonoticPrivateServerList, currentSortField, float, -1)
 
-//	ATTRIB(XonoticPrivateServerList, seenIPv4, float, 0)
-//	ATTRIB(XonoticPrivateServerList, seenIPv6, float, 0)
-//	ATTRIB(XonoticPrivateServerList, categoriesHeight, float, 1.25)
-//
-//	METHOD(XonoticPrivateServerList, getTotalHeight, float(entity))
-//	METHOD(XonoticPrivateServerList, getItemAtPos, float(entity, float))
-//	METHOD(XonoticPrivateServerList, getItemStart, float(entity, float))
-//	METHOD(XonoticPrivateServerList, getItemHeight, float(entity, float))
 ENDCLASS(XonoticPrivateServerList)
 entity makeXonoticPrivateServerList();
 
@@ -63,78 +60,32 @@ const float REFRESHPRIVATESERVERLIST_REFILTER = 1;
 const float REFRESHPRIVATESERVERLIST_SELECTLAST = 2;  
 
 //// function declarations
+void privateServerList_cvar_load(float buf);
+void privateServerList_cvar_save(float buf);
+
 string getPrivateServerListString();
 void setPrivateServerListString(string psl);
 string makePrivateServerString(string address, string nickname);
+string parsePrivateServerString(string s, string key);
 
 float getPrivateServerCount();
 string getPrivateServerInfoFromListByIndex(float idx, string key);
 float findInPrivateServerListByAddress(string address); // returns index if found; or -1 if not; -2 if error
-void removePrivateServerFromList(string address);
-void updatePrivateServerInList(string address, string nickname);
+
 void addPrivateServerToList(string address, string nickname);
+void updatePrivateServerInList(string address, string nickname);
+void removePrivateServerFromList(string address);
 
 void PrivateServerList_Connect_Click(entity btn, entity me);
 void PrivateServerList_Add_Click(entity btn, entity me);
 void PrivateServerList_Update_Click(entity btn, entity me);
 void PrivateServerList_Remove_Click(entity btn, entity me);
 void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me);
+void PrivateServerList_Filter_Change(entity box, entity me);
 
 #endif
 #endif
 #ifdef IMPLEMENTATION
-float getPslistFieldIndex(string s)
-{
-	if (s == "Nickname")
-		return 1;
-	else if (s == "Address")
-		return 2;
-	else
-		return 0;
-}
-//bool IsServerInList(string list, string srv)
-//{
-//	string p;
-//	int i, n;
-//	if(srv == "")
-//		return false;
-//	srv = netaddress_resolve(srv, 26000);
-//	if(srv == "")
-//		return false;
-//	p = crypto_getidfp(srv);
-//	n = tokenize_console(list);
-//	for(i = 0; i < n; ++i)
-//	{
-//		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
-//		{
-//			if(p)
-//				if(argv(i) == p)
-//					return true;
-//		}
-//		else
-//		{
-//			if(srv == netaddress_resolve(argv(i), 26000))
-//				return true;
-//		}
-//	}
-//	return false;
-//}
-//
-//int CheckCategoryOverride(int cat)
-//{
-//	entity catent = RetrieveCategoryEnt(cat);
-//	if(catent)
-//	{
-//		int override = (autocvar_menu_slist_categories ? catent.cat_enoverride : catent.cat_dioverride);
-//		if(override) { return override; }
-//		else { return cat; }
-//	}
-//	else
-//	{
-//		error(sprintf("CheckCategoryOverride(%d): Improper category number!\n", cat));
-//		return cat;
-//	}
-//}
 entity makeXonoticPrivateServerList()
 {
 	entity me;
@@ -145,7 +96,41 @@ entity makeXonoticPrivateServerList()
 void XonoticPrivateServerList_configureXonoticPrivateServerList(entity me)
 {
 	me.configureXonoticListBox(me);
-	me.nItems = getPrivateServerCount();
+
+	if (me.privateServers_allocated) {
+		buf_del(me.privateServers);
+	}
+	me.privateServers = buf_create();
+	me.privateServers_allocated = 1;
+
+	if (me.privateServers_filtered_allocated) {
+		buf_del(me.privateServers_allocated);
+	}
+	me.privateServers_filtered = buf_create();
+	me.privateServers_filtered_allocated = 1;
+
+	privateServerList_cvar_load(me.privateServers);	
+	privateServerList_cvar_load(me.privateServers_filtered);	
+	me.nItems = buf_getsize(me.privateServers_filtered);
+}
+void XonoticPrivateServerList_destroy(entity me)
+{
+	if (me.privateServers_allocated) {
+		buf_del(me.privateServers);
+	}
+	if (me.privateServers_filtered_allocated) {
+		buf_del(me.privateServers_filtered);
+	}
+}
+
+float getPslistFieldIndex(string s)
+{
+	if (s == "Nickname")
+		return 1;
+	else if (s == "Address")
+		return 2;
+	else
+		return 0;
 }
 void XonoticPrivateServerList_setSelected(entity me, int i)
 {
@@ -204,7 +189,7 @@ void XonoticPrivateServerList_setSortOrder(entity me, int fld, int direction)
 }
 void XonoticPrivateServerList_refreshPrivateServerList(entity me, float mode)
 {
-	me.nItems = getPrivateServerCount();
+	me.nItems = buf_getsize(me.privateServers_filtered);
 	if (me.selectedItem > me.nItems-1) {
 		me.selectedItem = me.nItems-1;
 	}
@@ -257,6 +242,36 @@ void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me)
 			me.selectedServerNickname = strzone(me.nicknameBox.text);
 		}
 	}
+}
+void PrivateServerList_Filter_Change(entity box, entity me)
+{
+	// throw away the old copy
+	if (me.privateServers_filtered_allocated) {
+		buf_del(me.privateServers_filtered);
+	}
+	me.privateServers_filtered = buf_create();
+	me.privateServers_filtered_allocated = 1;
+
+	// if the filterString is empty, just copy the whole list
+	if (box.text == "") {
+		// buf_copy doesn't work; darkplaces bug?
+		//buf_copy(me.privateServers, me.privateServers_filtered);
+		privateServerList_cvar_load(me.privateServers_filtered);	
+	} else {
+		// otherwise filter through the whole list
+		float size = buf_getsize(me.privateServers);
+		string serverString;
+		string filterString = strtolower(box.text);
+		for (float i = 0; i < size; i++) {
+			serverString = bufstr_get(me.privateServers, i);
+			if (strstrofs(strtolower(parsePrivateServerString(serverString, "Address")), filterString, 0) >= 0
+				|| strstrofs(strtolower(parsePrivateServerString(serverString, "Nickname")), filterString, 0) >= 0
+			) {
+				bufstr_add(me.privateServers_filtered, serverString, true);
+			}
+		}
+	}
+	me.refreshPrivateServerList(me, REFRESHPRIVATESERVERLIST_REFILTER);
 }
 void XonoticPrivateServerList_positionSortButton(entity me, entity btn, float theOrigin, float theSize, string theTitle, void(entity, entity) theFunc)
 {
@@ -322,10 +337,10 @@ bool XonoticPrivateServerList_keyDown(entity me, int scan, bool ascii, bool shif
 		me.addressNicknameBoxTrashable = 1;
 		if(SUPER(XonoticServerList).keyDown(me, scan, ascii, shift))
 			return true;
-		else if(!me.controlledTextbox)
+		else if(!me.filterTextbox)
 			return false;
 		else
-			return me.controlledTextbox.keyDown(me.controlledTextbox, scan, ascii, shift);
+			return me.filterTextbox.keyDown(me.filterTextbox, scan, ascii, shift);
 	}
 
 }
@@ -379,19 +394,36 @@ void XonoticPrivateServerList_drawListBoxItem(entity me, int i, vector absSize, 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	// layout: Nickname, Address:Port
-	nickname = getPrivateServerInfoFromListByIndex(i, "Nickname");
+	string ps = bufstr_get(me.privateServers_filtered, i);
+
+	nickname = parsePrivateServerString(ps, "Nickname");
 	s = draw_TextShortenToWidth(nickname, me.columnNicknameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNicknameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 
-	address = getPrivateServerInfoFromListByIndex(i, "Address");
+	address = parsePrivateServerString(ps, "Address");
 	s = draw_TextShortenToWidth(address, me.columnAddressSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnAddressOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
-
 }
 
 // functions to manipulate net_private_server_list, which has the format:
 // 192.168.1.50:20006,Server name and descripiton delimited by backslash\[FE80:0000:0000:0000:0202:B3FF:FE1E:8329]:26001,another server
+void privateServerList_cvar_load(float buf)
+{
+	float count, i;
+	
+	string cvar = cvar_string("net_private_server_list");
+	count = tokenizebyseparator(cvar, "\\");
+	for (i = 0; i < count; i++) {
+		bufstr_add(buf, argv(i), true);
+	}
+	buf_sort(buf,count,0);
+}
+void privateServerList_cvar_save(float buf)
+{
+	string psl = buf_implode(buf, "\\");
+	localcmd(sprintf("seta net_private_server_list \"%s\"", MakeConsoleSafe(psl)));
+}
+
 void setPrivateServerListString(string psl)
 {
 	localcmd(sprintf("seta net_private_server_list \"%s\"", MakeConsoleSafe(psl)));
@@ -399,6 +431,24 @@ void setPrivateServerListString(string psl)
 string getPrivateServerListString()
 {
 	return cvar_string("net_private_server_list");
+}
+string parsePrivateServerString(string s, string key)
+{
+	// the first comma is used to separate the server address and nickname
+	float delimiter_pos = strstrofs(s, ",", 0);
+	if (delimiter_pos == -1) {
+		return "";
+	}
+
+	if (key == "Address") {
+		return substring(s, 0, delimiter_pos);	
+	} else if (key == "Nickname") {
+		return substring(s, delimiter_pos+1, strlen(s)-delimiter_pos-1);
+	} else if (key == "All") {
+		return s;
+	} else {
+		return "";
+	}
 }
 string makePrivateServerString(string address, string nickname)
 {
@@ -421,28 +471,11 @@ string getPrivateServerInfoFromListByIndex(float idx, string key)
 	float count;
 	string psl = getPrivateServerListString();
 	count = tokenizebyseparator(psl, "\\");
-	string psl1; // one server from private server list string
-	float delimiter_pos;
 
 	if (idx < 0 || idx > count) {
 		return "";
 	} else {
-		psl1 = argv(idx);
-		// the first comma is used to separate the server address and nickname
-		delimiter_pos = strstrofs(psl1, ",", 0);
-		if (delimiter_pos == -1) {
-			return "";
-		}
-
-		if (key == "Address") {
-			return substring(psl1, 0, delimiter_pos);	
-		} else if (key == "Nickname") {
-			return substring(psl1, delimiter_pos+1, strlen(psl1)-delimiter_pos-1);
-		} else if (key == "All") {
-			return psl1;
-		} else {
-			return "";
-		}
+		return parsePrivateServerString(argv(idx), key);
 	}
 }
 float findInPrivateServerListByAddress(string address)
