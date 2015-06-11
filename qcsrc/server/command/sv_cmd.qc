@@ -1399,7 +1399,8 @@ void GameCommand_shuffleteams(float request)
 				// count the total amount of players and total amount of teams
 				t_players = 0;
 				t_teams = 0;
-				FOR_EACH_PLAYER(tmp_player)
+				FOR_EACH_CLIENT(tmp_player)
+				if(IS_PLAYER(tmp_player) || tmp_player.caplayer)
 				{
 					CheckAllowedTeams(tmp_player);
 
@@ -1412,7 +1413,8 @@ void GameCommand_shuffleteams(float request)
 				}
 
 				// build a list of the players in a random order
-				FOR_EACH_PLAYER(tmp_player)
+				FOR_EACH_CLIENT(tmp_player)
+				if(IS_PLAYER(tmp_player) || tmp_player.caplayer)
 				{
 					for (;;)
 					{
