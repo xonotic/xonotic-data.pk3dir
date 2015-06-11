@@ -34,8 +34,8 @@ void XonoticPrivateServerListTab_fill(entity me)
 			pslist.filterTextbox = e;
 
 	me.gotoRC(me, 2, 0);
-		me.TD(me, 1, 1, pslist.sortButton1 = makeXonoticButton("Nickname", '0 0 0'));
-		me.TD(me, 1, 1, pslist.sortButton2 = makeXonoticButton("Address", '0 0 0'));
+		me.TD(me, 1, 1, pslist.sortButtonNickname = makeXonoticButton("Nickname", '0 0 0'));
+		me.TD(me, 1, 1, pslist.sortButtonAddress = makeXonoticButton("Address", '0 0 0'));
 	me.TR(me);
 		me.TD(me, me.rows - 7, me.columns, pslist);
 
