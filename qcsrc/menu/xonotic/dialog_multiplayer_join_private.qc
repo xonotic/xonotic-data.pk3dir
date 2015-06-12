@@ -27,8 +27,8 @@ void XonoticPrivateServerListTab_fill(entity me)
 	pslist  = makeXonoticPrivateServerList();
 
 	me.gotoRC(me, 0.5, 0);
-		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
-		me.TD(me, 1, me.columns - 0.6, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, 0.4, e = makeXonoticTextLabel(0, _("Filter:")));
+		me.TD(me, 1, me.columns - .4, e = makeXonoticInputBox(0, string_null));
 			e.onChange = PrivateServerList_Filter_Change;
 			e.onChangeEntity = pslist;
 			pslist.filterTextbox = e;
