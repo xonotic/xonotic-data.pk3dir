@@ -174,7 +174,7 @@ void XonoticPrivateServerList_setSelected(entity me, int i)
 		me.updateButton.disabled = true;
 		me.removeButton.disabled = false;
 
-		_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
+	//_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
 	}
 	SUPER(XonoticPrivateServerList).setSelected(me, i);
 }
@@ -200,7 +200,7 @@ void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me)
 		// address is the same as the selected server; no adding duplicated record allowed
 		me.addButton.disabled = true;
 		// the record is in this list shown, the filter is fine; leave it on
-		_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
+	//_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
 		// now check the nickname
 		if (me.nicknameBox.text == me.selectedServerNickname) {
 			// the nickname is also the same, no point to update
@@ -224,7 +224,7 @@ void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me)
 			me.updateButton.disabled = false;
 			me.removeButton.disabled = true;
 			// since the record is in this list shown, the filter is fine
-			_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
+		//_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
 			// move cursor to the existing server, but leave the textboxes alone
 			SUPER(XonoticPrivateServerList).setSelected(me, index);
 			if(me.selectedServerAddress)
@@ -242,7 +242,7 @@ void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me)
 			float index2 = privateServers_filtered_findByAddress(me.addressBox.text);
 			if (index2 >= 0) {
 				// the big list has it; disable the filter to show all servers
-				_PrivateServerList_Filter_Switch(me.filterTextbox, me, false);
+			//_PrivateServerList_Filter_Switch(me.filterTextbox, me, false);
 			} else {
 				// the big list doesn't have it, no need to change the filter
 				;
@@ -380,6 +380,7 @@ void PrivateServerList_Add_Click(entity btn, entity me)
 	if (me.addressBox.text == "" || me.nicknameBox.text == "")
 		return;
 	addPrivateServerToList(me.addressBox.text, me.nicknameBox.text);
+	me.addressNicknameBoxTrashable = 1;
 	me.refreshPrivateServerList(me, me.addressBox.text);
 }
 void PrivateServerList_Update_Click(entity btn, entity me)
@@ -387,6 +388,7 @@ void PrivateServerList_Update_Click(entity btn, entity me)
 	if (me.addressBox.text == "" || me.nicknameBox.text == "")
 		return;
 	updatePrivateServerInList(me.addressBox.text, me.nicknameBox.text);
+	me.addressNicknameBoxTrashable = 1;
 	me.refreshPrivateServerList(me, me.addressBox.text);
 }
 void PrivateServerList_Remove_Click(entity btn, entity me)
@@ -400,6 +402,7 @@ void PrivateServerList_Remove_Click(entity btn, entity me)
 	}
 	// now remove the server from the list
 	removePrivateServerFromList(me.addressBox.text);
+	me.addressNicknameBoxTrashable = 1;
 	me.refreshPrivateServerList(me, address);
 }
 void XonoticPrivateServerList_clickListBoxItem(entity me, int i, vector where)
@@ -566,7 +569,6 @@ void addPrivateServerToList(string address, string nickname)
 	bufstr_add(privateServers_complete, makePrivateServerString(address, nickname), true);
 	privateServerList_cvar_save(privateServers_complete); 
 	privateServerList_cvar_load(privateServers_filtered);
-
 	// move the added server to the right place
 	privateServers_filtered_sort(sortField, sortOrder);	
 }
