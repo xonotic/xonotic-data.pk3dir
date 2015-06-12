@@ -3,11 +3,11 @@
 #include "tab.qc"
 CLASS(XonoticJoinTab, XonoticTab)
 	METHOD(XonoticJoinTab, fill, void(entity))
-	ATTRIB(XonoticJoinTab, title, string, _("Join"))
+	ATTRIB(XonoticJoinTab, title, string, _("Servers"))
 	ATTRIB(XonoticJoinTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticJoinTab, rows, float, 23)
 	ATTRIB(XonoticJoinTab, columns, float, 3)
-	ATTRIB(XonoticJoinTab, name, string, "Join")
+	ATTRIB(XonoticJoinTab, name, string, "Servers")
 ENDCLASS(XonoticJoinTab)
 entity makeXonoticJoinTab();
 #endif

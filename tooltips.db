@@ -4,11 +4,26 @@
 
 \XonoticMultiplayerDialog\Play online, against your friends in LAN, view demos or change player settings
 \XonoticMultiplayerDialog/Servers\Find servers to play on
+\XonoticMultiplayerDialog/Public\Public servers from Xonotic master
+\XonoticMultiplayerDialog/Private\Private servers added by you
+
+\XonoticMultiplayerDialog/Public/Filter\Narrow down the list by a keyword
+\XonoticMultiplayerDialog/Public/Address\Domain name or IP address, and the port of the server. Format: server.xonotic.net:26000 or 1.2.3.4:26001 or [FF80:0000:0000:0000:0202:A201:AE2E:32A0]:26001
+\XonoticMultiplayerDialog/Join!\Connect to the server and start playing
+
+\XonoticMultiplayerDialog/Private/Filter\Narrow down your list with parts of your nickname or address
+\XonoticMultiplayerDialog/Private/Nickname:\A nickname used to identify the server
+\XonoticMultiplayerDialog/Private/Address:\Domain name or IP address, and the port of the server. Format: server.xonotic.net:26000 or 1.2.3.4:26001 or [FF80:0000:0000:0000:0202:A201:AE2E:32A0]:26001
+
+\XonoticMultiplayerDialog/Private/Add\Add the server with a NEW address to the list. If the address already exists, you can only update it.
+\XonoticMultiplayerDialog/Private/Update\Update the nickname of an EXISTING address. If it doesn't exist, you are adding a new server.
+\XonoticMultiplayerDialog/Private/Remove\Remove the highlighted server
+
 \menu_slist_showempty\Show empty servers
 \menu_slist_showfull\Show full servers that have no slots available
 \net_slist_pause\Pause updating the server list to prevent servers from "jumping around"
 \XonoticMultiplayerDialog/Info...\Show more information about the currently highlighted server
-\XonoticMultiplayerDialog/Bookmark\Bookmark the currently highlighted server so that it's faster to find in the future
+\XonoticMultiplayerDialog/Favorite\Mark or unmark the highlighted server as favorite
 \XonoticMultiplayerDialog/Create\Host your own game
 \XonoticMultiplayerDialog/Demos\Browse and view demos
 \XonoticMultiplayerDialog/Player Setup\Customize your player settings

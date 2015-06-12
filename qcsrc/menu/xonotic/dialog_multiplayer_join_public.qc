@@ -29,6 +29,7 @@ void XonoticServerListTab_fill(entity me)
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.TD(me, 1, 2.8, e = makeXonoticInputBox(0, string_null));
+			e.tooltip = getZonedTooltipForIdentifier("XonoticMultiplayerDialog/Public/Filter");
 			e.onChange = ServerList_Filter_Change;
 			e.onChangeEntity = slist;
 			slist.controlledTextbox = e;
@@ -59,12 +60,13 @@ void XonoticServerListTab_fill(entity me)
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(0, _("Address:")));
 		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
+			e.tooltip = getZonedTooltipForIdentifier("XonoticMultiplayerDialog/Public/Address");
 			e.onEnter = ServerList_Connect_Click;
 			e.onEnterEntity = slist;
 			e.onChange = ServerList_Update_favoriteButton;
 			e.onChangeEntity = slist;
 			slist.ipAddressBox = e;
-		me.TD(me, 1, 1.5, e = makeXonoticButton("", '0 0 0'));
+		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Favorite"), '0 0 0'));
 			e.onClick = ServerList_Favorite_Click;
 			e.onClickEntity = slist;
 			slist.favoriteButton = e;
