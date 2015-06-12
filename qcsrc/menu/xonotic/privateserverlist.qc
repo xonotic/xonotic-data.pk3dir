@@ -261,18 +261,20 @@ void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me)
 }
 void _PrivateServerList_Filter_Switch(entity box, entity me, bool enabled)
 {
-	// This section toggles Filter Switch without erasing user's filterString.
-	// However, it could be a bit confusing for users. If so, use the next section of code instead
 	if (box.disabled == !enabled) {
 		return;
 	}
 	me.filterBox.disabled = !enabled;
-	PrivateServerList_onFilterBoxChange(box, me);
 
-	//if (enabled)
-	//	return;
-	//me.filterBox.text = "";
-	//PrivateServerList_onFilterBoxChange(box, me);
+	// We can toggle Filter Switch without erasing user's filterString.
+	// However, it could be confusing for users when it turns back on.
+	// To avoid that, we delete FilterString altogether.
+	if (box.disabled) {
+		box.setText(box, "");
+		box.disabled = false;
+	}
+
+	PrivateServerList_onFilterBoxChange(box, me);
 }
 void PrivateServerList_onFilterBoxChange(entity box, entity me)
 {
