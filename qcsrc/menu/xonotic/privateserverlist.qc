@@ -24,7 +24,7 @@ CLASS(XonoticPrivateServerList, XonoticListBox)
 	ATTRIB(XonoticPrivateServerList, selectedServerAddress, string, string_null)
 	ATTRIB(XonoticPrivateServerList, selectedServerNickname, string, string_null)
 
-	ATTRIB(XonoticPrivateServerList, filterTextbox, entity, NULL)
+	ATTRIB(XonoticPrivateServerList, filterBox, entity, NULL)
 	ATTRIB(XonoticPrivateServerList, addressBox, entity, NULL)
 	ATTRIB(XonoticPrivateServerList, nicknameBox, entity, NULL)
 	ATTRIB(XonoticPrivateServerList, addressNicknameBoxTrashable, float, 1)
@@ -80,7 +80,7 @@ void PrivateServerList_Add_Click(entity btn, entity me);
 void PrivateServerList_Update_Click(entity btn, entity me);
 void PrivateServerList_Remove_Click(entity btn, entity me);
 void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me);
-void PrivateServerList_Filter_Change(entity box, entity me);
+void PrivateServerList_onFilterBoxChange(entity box, entity me);
 void _PrivateServerList_Filter_Switch(entity box, entity me, bool enbled);
 void PrivateServerList_sortButtonClick(entity btn, entity me);
 
@@ -174,7 +174,7 @@ void XonoticPrivateServerList_setSelected(entity me, int i)
 		me.updateButton.disabled = true;
 		me.removeButton.disabled = false;
 
-	//_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
+		_PrivateServerList_Filter_Switch(me.filterBox, me, true);
 	}
 	SUPER(XonoticPrivateServerList).setSelected(me, i);
 }
@@ -200,7 +200,7 @@ void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me)
 		// address is the same as the selected server; no adding duplicated record allowed
 		me.addButton.disabled = true;
 		// the record is in this list shown, the filter is fine; leave it on
-	//_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
+		_PrivateServerList_Filter_Switch(me.filterBox, me, true);
 		// now check the nickname
 		if (me.nicknameBox.text == me.selectedServerNickname) {
 			// the nickname is also the same, no point to update
@@ -216,33 +216,42 @@ void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me)
 	} else {
 		// user provides an address
 		me.addressNicknameBoxTrashable = 0;
+		// disable REMOVE button, to avoid confusion or what's actually being deleted
+		me.removeButton.disabled = true;
 		// check whether it's the same as other server in the list
 		float index = privateServers_filtered_findByAddress(me.addressBox.text);
 		if (index >= 0) {
 			// this address already exists; no ADD, but allow UPDATE
 			me.addButton.disabled = true;
 			me.updateButton.disabled = false;
-			me.removeButton.disabled = true;
 			// since the record is in this list shown, the filter is fine
-		//_PrivateServerList_Filter_Switch(me.filterTextbox, me, true);
+			_PrivateServerList_Filter_Switch(me.filterBox, me, true);
 			// move cursor to the existing server, but leave the textboxes alone
-			SUPER(XonoticPrivateServerList).setSelected(me, index);
 			if(me.selectedServerAddress)
 				strunzone(me.selectedServerAddress);
 			me.selectedServerAddress = strzone(me.addressBox.text);
 			if(me.selectedServerNickname)
 				strunzone(me.selectedServerNickname);
 			me.selectedServerNickname = strzone(me.nicknameBox.text);
+			SUPER(XonoticPrivateServerList).setSelected(me, index);
 		} else {
 			// this address is new, allow ADD
 			me.addButton.disabled = false;
 			me.updateButton.disabled = true;
-			me.removeButton.disabled = true;
-			// check whether it's the same as other server in the complete list
-			float index2 = privateServers_filtered_findByAddress(me.addressBox.text);
+			// check whether it's in the complete list
+			float index2 = privateServers_complete_findByAddress(me.addressBox.text);
 			if (index2 >= 0) {
 				// the big list has it; disable the filter to show all servers
-			//_PrivateServerList_Filter_Switch(me.filterTextbox, me, false);
+				// so users can see the server being updated
+				_PrivateServerList_Filter_Switch(me.filterBox, me, false);
+				// move cursor to the existing server
+				if(me.selectedServerAddress)
+					strunzone(me.selectedServerAddress);
+				me.selectedServerAddress = strzone(me.addressBox.text);
+				if(me.selectedServerNickname)
+					strunzone(me.selectedServerNickname);
+				me.selectedServerNickname = strzone(me.nicknameBox.text);
+				SUPER(XonoticPrivateServerList).setSelected(me, index);
 			} else {
 				// the big list doesn't have it, no need to change the filter
 				;
@@ -252,14 +261,20 @@ void PrivateServerList_onAddressNicknameBoxChange(entity box, entity me)
 }
 void _PrivateServerList_Filter_Switch(entity box, entity me, bool enabled)
 {
-	//if (box.disabled == !enabled) {
+	// This section toggles Filter Switch without erasing user's filterString.
+	// However, it could be a bit confusing for users. If so, use the next section of code instead
+	if (box.disabled == !enabled) {
+		return;
+	}
+	me.filterBox.disabled = !enabled;
+	PrivateServerList_onFilterBoxChange(box, me);
+
+	//if (enabled)
 	//	return;
-	//}
-	//me.filterTextbox.disabled = !enabled;
-	//PrivateServerList_Filter_Change(box, me);
-	return;
+	//me.filterBox.text = "";
+	//PrivateServerList_onFilterBoxChange(box, me);
 }
-void PrivateServerList_Filter_Change(entity box, entity me)
+void PrivateServerList_onFilterBoxChange(entity box, entity me)
 {
 	// throw away the old copy and rebuild a new one
 	if (privateServers_filtered_allocated) {
@@ -360,10 +375,10 @@ bool XonoticPrivateServerList_keyDown(entity me, int scan, bool ascii, bool shif
 		me.addressNicknameBoxTrashable = 1;
 		if(SUPER(XonoticServerList).keyDown(me, scan, ascii, shift))
 			return true;
-		else if(!me.filterTextbox)
+		else if(!me.filterBox)
 			return false;
 		else
-			return me.filterTextbox.keyDown(me.filterTextbox, scan, ascii, shift);
+			return me.filterBox.keyDown(me.filterBox, scan, ascii, shift);
 	}
 
 }
@@ -390,6 +405,7 @@ void PrivateServerList_Update_Click(entity btn, entity me)
 	updatePrivateServerInList(me.addressBox.text, me.nicknameBox.text);
 	me.addressNicknameBoxTrashable = 1;
 	me.refreshPrivateServerList(me, me.addressBox.text);
+	PrivateServerList_onFilterBoxChange(me.filterBox, me);
 }
 void PrivateServerList_Remove_Click(entity btn, entity me)
 {

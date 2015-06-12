@@ -29,9 +29,9 @@ void XonoticPrivateServerListTab_fill(entity me)
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 0.4, e = makeXonoticTextLabel(0, _("Filter:")));
 		me.TD(me, 1, me.columns - .4, e = makeXonoticInputBox(0, string_null));
-			e.onChange = PrivateServerList_Filter_Change;
+			e.onChange = PrivateServerList_onFilterBoxChange;
 			e.onChangeEntity = pslist;
-			pslist.filterTextbox = e;
+			pslist.filterBox = e;
 
 	me.gotoRC(me, 2, 0);
 		me.TD(me, 1, 1, pslist.sortButtonNickname = makeXonoticButton("Nickname", '0 0 0'));
