@@ -60,6 +60,8 @@ void XonoticServerListTab_fill(entity me)
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(0, _("Address:")));
 		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
+			// make this a readonly textbox; the customizable address function is moved to Private Server section
+			e.disabled = true;
 			e.tooltip = getZonedTooltipForIdentifier("XonoticMultiplayerDialog/Public/Address");
 			e.onEnter = ServerList_Connect_Click;
 			e.onEnterEntity = slist;
