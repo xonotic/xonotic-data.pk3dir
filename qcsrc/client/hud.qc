@@ -3998,6 +3998,7 @@ void HUD_Physics(void)
 
 		f = bound(0, f * 10, 1);
 		acc_avg = acc_avg * (1 - f) + acceleration * f;
+		acceleration = acc_avg;
 	}
 
 	//compute layout
