@@ -4142,7 +4142,7 @@ void HUD_Physics(void)
 
 		f = acceleration/autocvar_hud_panel_physics_acceleration_max;
 		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
-			f = sqrt(f);
+			f = (f >= 0 ? sqrt(f) : -sqrt(-f));
 
 		if (acceleration_progressbar_scale) // allow progressbar to go out of panel bounds
 		{
