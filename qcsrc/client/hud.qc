@@ -3996,9 +3996,12 @@ void HUD_Physics(void)
 		acc_prevspeed = vel;
 		acc_prevtime = time;
 
-		f = bound(0, f * 10, 1);
-		acc_avg = acc_avg * (1 - f) + acceleration * f;
-		acceleration = acc_avg;
+		if(autocvar_hud_panel_physics_acceleration_movingaverage)
+		{
+			f = bound(0, f * 10, 1);
+			acc_avg = acc_avg * (1 - f) + acceleration * f;
+			acceleration = acc_avg;
+		}
 	}
 
 	//compute layout
