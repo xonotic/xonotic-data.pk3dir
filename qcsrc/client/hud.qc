@@ -4171,8 +4171,13 @@ void HUD_Physics(void)
 	tmp_size.y = panel_size.y * text_scale;
 	tmp_offset.x = 0;
 	tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
+
+	int decimals = 2;
+	// workaround for ftos_decimals returning a negative 0
+	if(acceleration > -1 / pow(10, decimals) && acceleration < 0)
+		acceleration = 0;
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
-		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(acceleration, 2), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(acceleration, decimals), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	draw_endBoldFont();
 }
