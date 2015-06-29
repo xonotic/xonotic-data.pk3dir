@@ -4167,17 +4167,20 @@ void HUD_Physics(void)
 
 		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset + tmp_offset, tmp_size, "accelbar", f, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	tmp_size.x = panel_size.x;
-	tmp_size.y = panel_size.y * text_scale;
-	tmp_offset.x = 0;
-	tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
 
-	int decimals = 2;
-	// workaround for ftos_decimals returning a negative 0
-	if(acceleration > -1 / pow(10, decimals) && acceleration < 0)
-		acceleration = 0;
-	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
+	if(autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
+	{
+		tmp_size.x = panel_size.x;
+		tmp_size.y = panel_size.y * text_scale;
+		tmp_offset.x = 0;
+		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
+
+		int decimals = 2;
+		// workaround for ftos_decimals returning a negative 0
+		if(acceleration > -1 / pow(10, decimals) && acceleration < 0)
+			acceleration = 0;
 		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(acceleration, decimals), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
 	draw_endBoldFont();
 }
