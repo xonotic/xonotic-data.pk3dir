@@ -292,27 +292,18 @@ HUD_PANELS(HUD_PANEL)
 } while(0)
 
 // return smoothly faded pos and size of given panel when a dialog is active
-#define HUD_Panel_UpdatePosSize_ForMenu() do {                                                                      \
-	vector menu_enable_pos;                                                                                         \
-	vector menu_enable_size = '0 0 0';                                                                              \
-	float menu_enable_maxsize_x = 0.3 * vid_conwidth;                                                               \
-	float menu_enable_maxsize_y = 0.18 * vid_conheight;                                                             \
-	if (panel_size.x > panel_size.y) {                                                                              \
-		if (panel_size.y > menu_enable_maxsize_y) {                                                                 \
-			menu_enable_size.y = menu_enable_maxsize_y;                                                             \
-			menu_enable_size.x = panel_size.x * (menu_enable_maxsize_y/panel_size.y);                               \
-			panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;       \
-		}                                                                                                           \
-		menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size.x + eY * (vid_conheight - menu_enable_maxsize_y);\
-	} else {                                                                                                        \
-		if (panel_size.x > menu_enable_maxsize_x) {                                                                 \
-			menu_enable_size.x = menu_enable_maxsize_x;                                                             \
-			menu_enable_size.y = panel_size.y * (menu_enable_maxsize_x/panel_size.x);                               \
-			panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;       \
-		}                                                                                                           \
-		menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size.y + eX * (vid_conwidth - menu_enable_maxsize_x);\
-	}                                                                                                               \
-	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos;                  \
+// don't center too wide panels, it doesn't work with different resolutions
+#define HUD_Panel_UpdatePosSize_ForMenu() do { \
+	vector menu_enable_size = panel_size; \
+	float max_panel_width = 0.52 * vid_conwidth; \
+	if(panel_size.x > max_panel_width) \
+	{ \
+		menu_enable_size.x = max_panel_width; \
+		menu_enable_size.y = panel_size.y * (menu_enable_size.x / panel_size.x); \
+	} \
+	vector menu_enable_pos = eX * (panel_bg_border + 0.5 * max_panel_width) + eY * 0.5 * vid_conheight - 0.5 * menu_enable_size; \
+	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos; \
+	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size; \
 } while(0)
 
 // Scale the pos and size vectors to absolute coordinates
