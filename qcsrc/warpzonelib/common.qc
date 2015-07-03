@@ -5,7 +5,7 @@
     #include "../server/t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../common/weapons/weapons.qh"
+    #include "../common/weapons/all.qh"
     #include "../dpdefs/dpextensions.qh"
 	#include "../dpdefs/progsdefs.qh"
 #endif

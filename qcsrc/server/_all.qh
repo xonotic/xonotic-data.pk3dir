@@ -1,5 +1,5 @@
-#ifndef SERVER___H
-#define SERVER___H
+#ifndef SERVER_ALL_H
+#define SERVER_ALL_H
 
 #include "autocvars.qh"
 #include "constants.qh"

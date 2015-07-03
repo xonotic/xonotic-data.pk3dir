@@ -3,7 +3,6 @@
 #include "tab.qc"
 CLASS(XonoticUserSettingsTab, XonoticTab)
 	METHOD(XonoticUserSettingsTab, fill, void(entity))
-	ATTRIB(XonoticUserSettingsTab, title, string, _("User"))
 	ATTRIB(XonoticUserSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticUserSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticUserSettingsTab, columns, float, 6)

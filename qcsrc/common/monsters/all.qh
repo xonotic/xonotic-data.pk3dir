@@ -1,5 +1,5 @@
-#ifndef MONSTERS_H
-#define MONSTERS_H
+#ifndef MONSTERS_ALL_H
+#define MONSTERS_ALL_H
 
 #include "../util.qh"
 

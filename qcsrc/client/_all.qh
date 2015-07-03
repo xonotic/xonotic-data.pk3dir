@@ -1,5 +1,5 @@
-#ifndef CLIENT___H
-#define CLIENT___H
+#ifndef CLIENT_ALL_H
+#define CLIENT_ALL_H
 
 #include "autocvars.qh"
 #include "defs.qh"

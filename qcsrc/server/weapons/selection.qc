@@ -6,7 +6,7 @@
 #include "../waypointsprites.qh"
 #include "../../common/constants.qh"
 #include "../../common/util.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)

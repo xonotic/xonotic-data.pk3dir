@@ -5,13 +5,13 @@
 #include "movetypes.qh"
 #include "prandom.qh"
 
-#include "vehicles/vehicles.qh"
+#include "vehicles/all.qh"
 
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
 #include "../common/util.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 .entity tag_entity;
 

@@ -20,9 +20,9 @@
     #include "../common/notifications.qh"
     #include "../common/util.qh"
 
-    #include "../common/monsters/monsters.qh"
+    #include "../common/monsters/all.qh"
 
-    #include "../common/weapons/weapons.qh"
+    #include "../common/weapons/all.qh"
 
     #include "../warpzonelib/util_server.qh"
 #endif

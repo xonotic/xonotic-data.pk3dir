@@ -4,7 +4,7 @@
 CLASS(XonoticLanguageList, XonoticListBox)
 	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity))
 	ATTRIB(XonoticLanguageList, rowsPerItem, float, 1)
-	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticLanguageList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticLanguageList, setSelected, void(entity, float))
 	METHOD(XonoticLanguageList, loadCvars, void(entity))
@@ -57,11 +57,16 @@ void XonoticLanguageList_configureXonoticLanguageList(entity me)
 	me.loadCvars(me);
 }
 
-void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s, p;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
 

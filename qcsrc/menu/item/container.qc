@@ -14,6 +14,7 @@ CLASS(Container, Item)
 	METHOD(Container, resizeNotifyLie, void(entity, vector, vector, vector, vector, .vector, .vector, .vector))
 	METHOD(Container, addItem, void(entity, entity, vector, vector, float))
 	METHOD(Container, addItemCentered, void(entity, entity, vector, float))
+	METHOD(Container, addItemRightCentered, void(entity, entity, vector, float))
 	METHOD(Container, moveItemAfter, void(entity, entity, entity))
 	METHOD(Container, removeItem, void(entity, entity))
 	METHOD(Container, setFocus, void(entity, entity))
@@ -280,6 +281,11 @@ float Container_mouseRelease(entity me, vector pos)
 void Container_addItemCentered(entity me, entity other, vector theSize, float theAlpha)
 {
 	me.addItem(me, other, '0.5 0.5 0' - 0.5 * theSize, theSize, theAlpha);
+}
+
+void Container_addItemRightCentered(entity me, entity other, vector theSize, float theAlpha)
+{
+	me.addItem(me, other, '1 0.5 0' - 0.5 * theSize, theSize, theAlpha);
 }
 
 void Container_addItem(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)
