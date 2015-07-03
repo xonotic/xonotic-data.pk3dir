@@ -1,4 +1,4 @@
-#include "monsters.qh"
+#include "all.qh"
 
 #include "all.inc"
 

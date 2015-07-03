@@ -1,7 +1,7 @@
 #ifndef SERVER_DEFS_H
 #define SERVER_DEFS_H
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #define INDEPENDENT_ATTACK_FINISHED
 

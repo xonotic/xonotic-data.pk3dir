@@ -5,7 +5,7 @@ CLASS(XonoticDemoList, XonoticListBox)
 	METHOD(XonoticDemoList, configureXonoticDemoList, void(entity))
 	ATTRIB(XonoticDemoList, rowsPerItem, float, 1)
 	METHOD(XonoticDemoList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticDemoList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticDemoList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticDemoList, getDemos, void(entity))
 	METHOD(XonoticDemoList, startDemo, void(entity))
 	METHOD(XonoticDemoList, timeDemo, void(entity))
@@ -135,11 +135,16 @@ void XonoticDemoList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.columnNameSize = 1 - 2 * me.realFontSize.x;
 }
 
-void XonoticDemoList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticDemoList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.demoName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);

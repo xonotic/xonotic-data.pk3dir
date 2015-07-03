@@ -9,7 +9,7 @@
 #include "scoreboard.qh"
 #include "shownames.qh"
 #include "target_music.qh"
-#include "vehicles/vehicles.qh"
+#include "vehicles/all.qh"
 #include "waypointsprites.qh"
 
 #include "../common/constants.qh"
@@ -19,7 +19,7 @@
 #include "../common/teams.qh"
 #include "../common/util.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/cl_player.qh"
 

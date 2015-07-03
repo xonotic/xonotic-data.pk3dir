@@ -1,5 +1,5 @@
-#ifndef VEHICLES_H
-#define VEHICLES_H
+#ifndef VEHICLES_ALL_H
+#define VEHICLES_ALL_H
 
 void RaptorCBShellfragDraw();
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);

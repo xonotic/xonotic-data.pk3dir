@@ -27,7 +27,7 @@
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
 
-#include "../../common/monsters/monsters.qh"
+#include "../../common/monsters/all.qh"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 

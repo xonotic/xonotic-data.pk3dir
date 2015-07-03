@@ -67,7 +67,7 @@ bot/havocbot/role_keyhunt.qc
 bot/havocbot/role_onslaught.qc
 bot/havocbot/roles.qc
 
-command/commands.qc
+command/all.qc
 
 mutators/mutators_include.qc
 mutators/mutators.qc
@@ -97,7 +97,7 @@ weapons/weaponsystem.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
-../common/monsters/monsters.qc
+../common/monsters/all.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
 ../common/nades.qc
@@ -111,7 +111,7 @@ weapons/weaponsystem.qc
 ../common/items/all.qc
 
 ../common/weapons/config.qc
-../common/weapons/weapons.qc // TODO
+../common/weapons/all.qc // TODO
 
 ../csqcmodellib/sv_model.qc
 

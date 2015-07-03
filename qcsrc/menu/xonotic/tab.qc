@@ -17,7 +17,6 @@ CLASS(XonoticTab, Tab)
 	ATTRIB(XonoticTab, columnSpacing, float, SKINMARGIN_COLUMNS) // pixels
 	ATTRIB(XonoticTab, rowSpacing, float, SKINMARGIN_ROWS) // pixels
 	ATTRIB(XonoticTab, rowHeight, float, SKINFONTSIZE_NORMAL * SKINHEIGHT_NORMAL) // pixels
-	ATTRIB(XonoticTab, titleHeight, float, SKINFONTSIZE_TITLE * SKINHEIGHT_TITLE) // pixels
 
 	ATTRIB(XonoticTab, backgroundImage, string, string_null)
 ENDCLASS(XonoticTab)

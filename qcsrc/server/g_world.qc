@@ -25,7 +25,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
 #include "../common/mapinfo.qh"
-#include "../common/monsters/monsters.qh"
+#include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
@@ -33,7 +33,7 @@
 #include "../common/teams.qh"
 #include "../common/util.qh"
 #include "../common/items/all.qh"
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -189,6 +189,8 @@ void cvar_changes_init()
 		BADCVAR("g_configversion");
 		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
+		BADCVAR("sv_mapformat_is_quake2");
+		BADCVAR("sv_mapformat_is_quake3");
 		BADPREFIX("sv_world");
 
 		// client

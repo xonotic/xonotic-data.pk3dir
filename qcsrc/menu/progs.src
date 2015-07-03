@@ -9,7 +9,7 @@ oo/classes.qc
 draw.qc
 menu.qc
 
-command/commands.qc
+command/all.qc
 
 xonotic/util.qc
 
@@ -23,8 +23,8 @@ xonotic/util.qc
 
 ../common/items/all.qc
 
-../common/monsters/monsters.qc
+../common/monsters/all.qc
 
-../common/weapons/weapons.qc // TODO
+../common/weapons/all.qc // TODO
 
 ../warpzonelib/mathlib.qc

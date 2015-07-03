@@ -4,7 +4,7 @@
 CLASS(XonoticKeyBinder, XonoticListBox)
 	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity))
 	ATTRIB(XonoticKeyBinder, rowsPerItem, int, 1)
-	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticKeyBinder, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticKeyBinder, setSelected, void(entity, float))
@@ -302,7 +302,7 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 	}
 	return r;
 }
-void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected)
+void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	int j, n;
@@ -331,6 +331,12 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 			else
 				draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 		}
+		else if(isFocused)
+		{
+			me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+		}
+
 		theAlpha = SKINALPHA_KEYGRABBER_KEYS;
 		theColor = SKINCOLOR_KEYGRABBER_KEYS;
 		extraMargin = me.realFontSize.x * 0.5;

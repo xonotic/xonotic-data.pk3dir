@@ -1,7 +1,7 @@
 #include "item_key.qh"
 #include "_all.qh"
 
-#include "../common/monsters/monsters.qh"
+#include "../common/monsters/all.qh"
 #include "../common/notifications.qh"
 #include "../common/util.qh"
 #include "../warpzonelib/util_server.qh"

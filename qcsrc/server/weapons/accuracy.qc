@@ -5,7 +5,7 @@
 #include "../../common/constants.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
 float accuracy_byte(float n, float d)
 {

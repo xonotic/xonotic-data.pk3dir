@@ -13,7 +13,7 @@
 #include "vehicles/vehicle.qh"
 #include "waypointsprites.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 /*
  * Impulse map:

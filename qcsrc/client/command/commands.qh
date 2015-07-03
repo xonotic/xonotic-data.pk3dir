@@ -1,8 +1,0 @@
-#ifndef CLIENT_COMMANDS_H
-#define CLIENT_COMMANDS_H
-
-#include "../../common/command/commands.qh"
-
-#include "cl_cmd.qh"
-
-#endif

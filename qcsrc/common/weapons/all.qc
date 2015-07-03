@@ -1,7 +1,7 @@
-#ifndef WEAPONS_C
-#define WEAPONS_C
+#ifndef WEAPONS_ALL_C
+#define WEAPONS_ALL_C
 
-#include "weapons.qh"
+#include "all.qh"
 
 #if defined(CSQC)
 	#include "../../dpdefs/csprogsdefs.qh"
@@ -34,7 +34,7 @@
     #include "../teams.qh"
     #include "../util.qh"
     #include "../buffs.qh"
-    #include "../monsters/monsters.qh"
+    #include "../monsters/all.qh"
     #include "config.qh"
     #include "../../server/weapons/csqcprojectile.qh"
     #include "../../server/weapons/tracing.qh"

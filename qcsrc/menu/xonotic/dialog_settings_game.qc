@@ -3,7 +3,6 @@
 #include "tab.qc"
 CLASS(XonoticGameSettingsTab, XonoticTab)
 	METHOD(XonoticGameSettingsTab, fill, void(entity))
-	ATTRIB(XonoticGameSettingsTab, title, string, _("Game"))
 	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5)
