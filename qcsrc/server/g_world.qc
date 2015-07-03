@@ -188,6 +188,8 @@ void cvar_changes_init()
 		BADCVAR("g_configversion");
 		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
+		BADCVAR("sv_mapformat_is_quake2");
+		BADCVAR("sv_mapformat_is_quake3");
 		BADPREFIX("sv_world");
 
 		// client
