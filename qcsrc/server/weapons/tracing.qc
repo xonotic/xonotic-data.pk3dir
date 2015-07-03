@@ -12,7 +12,7 @@
 #include "../../common/constants.qh"
 #include "../../common/util.qh"
 
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
 #include "../../warpzonelib/common.qh"
 

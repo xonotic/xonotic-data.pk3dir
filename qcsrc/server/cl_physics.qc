@@ -13,7 +13,7 @@
     #include "../common/util.qh"
     #include "../common/animdecide.qh"
     #include "../common/monsters/sv_monsters.qh"
-    #include "../common/weapons/weapons.qh"
+    #include "../common/weapons/all.qh"
     #include "t_items.qh"
     #include "autocvars.qh"
     #include "defs.qh"

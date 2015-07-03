@@ -2,7 +2,7 @@
 #include "oo/classes.qc"
 #include "xonotic/util.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 #include "../common/mapinfo.qh"
 
 ///////////////////////////////////////////////

@@ -6,7 +6,7 @@
 #include "../../common/deathtypes.qh"
 #include "../../common/notifications.qh"
 #include "../../common/util.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
 void W_GiveWeapon (entity e, float wep)
 {

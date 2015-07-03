@@ -8,7 +8,7 @@
 #include "../common/constants.qh"
 #include "../common/teams.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/interpolate.qh"
 

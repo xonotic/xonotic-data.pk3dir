@@ -25,21 +25,21 @@
 #include "waypointsprites.qh"
 
 #include "vehicles/bumblebee.qh"
-#include "vehicles/vehicles.qh"
+#include "vehicles/all.qh"
 
 #include "weapons/projectile.qh"
 
 #include "../common/buffs.qh"
 #include "../common/deathtypes.qh"
 #include "../common/mapinfo.qh"
-#include "../common/monsters/monsters.qh"
+#include "../common/monsters/all.qh"
 #include "../common/nades.qh"
 #include "../common/net_notice.qh"
 #include "../common/notifications.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/interpolate.qh"

@@ -1,7 +1,7 @@
 #ifndef HUD_H
 #define HUD_H
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 const int HUD_PANEL_MAX = 24;
 entity hud_panel[HUD_PANEL_MAX];

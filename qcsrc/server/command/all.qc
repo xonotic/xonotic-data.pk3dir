@@ -1,4 +1,4 @@
-#include "../../common/command/commands.qc"
+#include "../../common/command/all.qc"
 
 #include "sv_cmd.qc"
 

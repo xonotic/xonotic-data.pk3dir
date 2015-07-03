@@ -21,7 +21,7 @@
 #include "../common/teams.qh"
 #include "../common/urllib.qh"
 #include "../common/util.qh"
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 #include "../csqcmodellib/sv_model.qh"
 #include "../warpzonelib/anglestransform.qh"
 #include "../warpzonelib/server.qh"
