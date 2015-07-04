@@ -35,6 +35,8 @@
 
 #include "../common/net_notice.qh"
 
+#include "../common/items/inventory.qh"
+
 #include "../common/monsters/sv_monsters.qh"
 
 #include "../warpzonelib/server.qh"
@@ -1096,6 +1098,7 @@ void ClientConnect (void)
 	PlayerScore_Attach(self);
 	ClientData_Attach();
 	accuracy_init(self);
+	Inventory_new(self);
 
 	bot_clientconnect();
 
@@ -1338,6 +1341,7 @@ void ClientDisconnect (void)
 	bot_relinkplayerlist();
 
 	accuracy_free(self);
+	Inventory_delete(self);
 	ClientData_Detach();
 	PlayerScore_Detach(self);
 

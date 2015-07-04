@@ -21,6 +21,8 @@ xonotic/util.qc
 ../common/urllib.qc
 ../common/util.qc
 
+../common/items/all.qc
+
 ../common/monsters/all.qc
 
 ../common/weapons/all.qc // TODO
