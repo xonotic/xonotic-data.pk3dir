@@ -373,6 +373,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_domination_point_limit");
+		BADCVAR("g_domination_teams_override");
 		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
@@ -393,6 +394,7 @@ void cvar_changes_init()
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_tdm_teams_override");
 		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
