@@ -79,22 +79,22 @@ entity HUD_MinigameMenu_entries;
 entity HUD_MinigameMenu_last_entry;
 
 // Minigame menu options: insert entry after the given location
-void HUD_MinigameMenu_InsertEntry(entity entry, entity prev)
+void HUD_MinigameMenu_InsertEntry(entity newentry, entity prev)
 {
 	if ( !HUD_MinigameMenu_entries )
 	{
-		HUD_MinigameMenu_entries = entry;
-		HUD_MinigameMenu_last_entry = entry;
+		HUD_MinigameMenu_entries = newentry;
+		HUD_MinigameMenu_last_entry = newentry;
 		return;
 	}
 	
-	entry.list_prev = prev;
-	entry.list_next = prev.list_next;
+	newentry.list_prev = prev;
+	newentry.list_next = prev.list_next;
 	if ( prev.list_next )
-		prev.list_next.list_prev = entry;
+		prev.list_next.list_prev = newentry;
 	else
-		HUD_MinigameMenu_last_entry = entry;
-	prev.list_next = entry;
+		HUD_MinigameMenu_last_entry = newentry;
+	prev.list_next = newentry;
 	
 }
 
@@ -484,7 +484,7 @@ void HUD_MinigameMenu ()
 
 	HUD_MinigameMenu_DrawEntry(panel_pos,_("Minigames"),hud_fontsize*2,'0.25 0.47 0.72');
 	panel_pos_y += hud_fontsize_y*2;
-	
+
 	vector color;
 	vector offset;
 	float itemh;

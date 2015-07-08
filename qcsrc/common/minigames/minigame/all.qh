@@ -63,7 +63,11 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 
 #include "nmm.qc"
 #include "ttt.qc"
+#include "c4.qc"
 #include "pong.qc"
+#include "qto.qc"
+#include "ps.qc"
+#include "pp.qc"
 
 /**
  * Registration:
@@ -74,7 +78,11 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 #define REGISTERED_MINIGAMES \
 	MINIGAME(nmm, "Nine Men's Morris") \
 	MINIGAME(ttt, "Tic Tac Toe") \
-	MINIGAME(pong, "Pong") \
+	MINIGAME(pong,"Pong") \
+	MINIGAME(c4,  "Connect Four") \
+	MINIGAME(qto, "Quinto") \
+	MINIGAME(ps,  "Peg Solitaire") \
+	MINIGAME(pp,  "Push-Pull") \
 	/*empty line*/
 
 /**

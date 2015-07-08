@@ -105,6 +105,7 @@ void deactivate_minigame()
 {
 	if ( !active_minigame )
 		return;
+
 	active_minigame.minigame_event(active_minigame,"deactivate");
 	entity e = world;
 	while( (e = findentity(e, owner, active_minigame)) )
@@ -255,7 +256,7 @@ void ent_read_minigame()
 	
 	if ( minigame_ent )
 		minigame_ent.minigame_event(minigame_ent,"network_receive",self,sf);
-	
+
 	if ( sf & MINIG_SF_CREATE )
 	{
 		dprint("CL Reading entity: ",ftos(num_for_edict(self)),
@@ -287,7 +288,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 	
 	if ( take_until > strlen(s) )
 		take_until = strlen(s);
-	
+
 	for ( int i = 0; i < take_until; i++ )
 		if ( substring(s,i,1) == "\n" )
 		{

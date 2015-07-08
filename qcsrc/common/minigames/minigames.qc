@@ -68,6 +68,12 @@ int minigame_next_team(int curr_team, int n_teams)
 	return curr_team % n_teams + 1;
 }
 
+// Get the previous team number
+int minigame_prev_team(int curr_team, int n_teams)
+{
+	return curr_team % n_teams - 1;
+}
+
 // set send flags only when on server
 // (for example in game logic which can be used both in client and server
 void minigame_server_sendflags(entity ent, int mgflags)
