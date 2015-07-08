@@ -1,7 +1,7 @@
 #ifndef SERVER_DEFS_H
 #define SERVER_DEFS_H
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #define INDEPENDENT_ATTACK_FINISHED
 
@@ -204,7 +204,7 @@ float nJoinAllowed(entity ignore);
 
 .entity flagcarried;
 
-.float playerid;
+.int playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 

@@ -14,15 +14,6 @@ const int INITPRIO_SETLOCATION 			= 90;
 const int INITPRIO_LINKDOORS 			= 91;
 const int INITPRIO_LAST 				= 99;
 
-.void(void) initialize_entity;
-.int initialize_entity_order;
-.entity initialize_entity_next;
-entity initialize_entity_first;
-
-void InitializeEntity(entity e, void(void) func, int order);
-
-void InitializeEntitiesRun();
-
 void AuditLists();
 
 float RegisterPlayer(entity player);
@@ -63,10 +54,6 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag);
 
 void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag);
-
-void defer(float fdelay, void() func);
-
-void defer_clear(entity ent);
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
 float _drawpic_imgaspect;

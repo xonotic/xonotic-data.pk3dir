@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticWinnerDialog) EXTENDS(XonoticDialog)
+#ifndef DIALOG_SINGLEPLAYER_WINNER_H
+#define DIALOG_SINGLEPLAYER_WINNER_H
+#include "dialog.qc"
+CLASS(XonoticWinnerDialog, XonoticDialog)
 	METHOD(XonoticWinnerDialog, fill, void(entity))
 	METHOD(XonoticWinnerDialog, focusEnter, void(entity))
 	ATTRIB(XonoticWinnerDialog, title, string, _("Winner"))

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDModIconsDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_HUDPANEL_MODICONS_H
+#define DIALOG_HUDPANEL_MODICONS_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDModIconsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDModIconsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDModIconsDialog, title, string, _("Mod Icons Panel"))
 	ATTRIB(XonoticHUDModIconsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

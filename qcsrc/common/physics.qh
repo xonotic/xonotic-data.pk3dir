@@ -94,7 +94,7 @@ bool IsFlying(entity a);
 
 	#define WAS_ONGROUND(s)						!!(s.lastflags & FL_ONGROUND)
 
-	#define ITEMS(s) 							(s).items
+	#define ITEMS_STAT(s) 						(s).items
 	#define BUFFS(s)							getstati(STAT_BUFFS)
 
 	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
@@ -271,7 +271,7 @@ bool IsFlying(entity a);
 
 	#define WAS_ONGROUND(s)						!!((s).lastflags & FL_ONGROUND)
 
-	#define ITEMS(s)							s.items
+	#define ITEMS_STAT(s)						s.items
 	#define BUFFS(s)							(s).buffs
 
 	#define PHYS_AMMO_FUEL(s)					s.ammo_fuel

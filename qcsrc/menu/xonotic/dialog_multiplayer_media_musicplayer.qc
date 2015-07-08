@@ -1,7 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticMusicPlayerTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_MULTIPLAYER_MEDIA_MUSICPLAYER_H
+#define DIALOG_MULTIPLAYER_MEDIA_MUSICPLAYER_H
+#include "tab.qc"
+CLASS(XonoticMusicPlayerTab, XonoticTab)
 	METHOD(XonoticMusicPlayerTab, fill, void(entity))
-	ATTRIB(XonoticMusicPlayerTab, title, string, _("Music"))
 	ATTRIB(XonoticMusicPlayerTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMusicPlayerTab, rows, float, 21)
 	ATTRIB(XonoticMusicPlayerTab, columns, float, 6.5)
@@ -14,7 +15,7 @@ entity makeXonoticMusicPlayerTab();
 entity makeXonoticMusicPlayerTab()
 {
 	entity me;
-	me = spawnXonoticMusicPlayerTab();
+	me = NEW(XonoticMusicPlayerTab);
 	me.configureDialog(me);
 	return me;
 }

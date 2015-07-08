@@ -1,10 +1,13 @@
+#include "util_server.qh"
+
+#include "common.qh"
+
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "util_server.qh"
     #include "../csqcmodellib/sv_model.qh"
+    #include "../dpdefs/dpextensions.qh"
+	#include "../dpdefs/progsdefs.qh"
 #endif
 #include "common.qh"
 

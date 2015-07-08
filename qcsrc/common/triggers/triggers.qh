@@ -15,12 +15,6 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 .float nottargeted;
 #define IFTARGETED if(!self.nottargeted && self.targetname != "")
 
-.string bgmscript;
-.float bgmscriptattack;
-.float bgmscriptdecay;
-.float bgmscriptsustain;
-.float bgmscriptrelease;
-
 .float lip;
 
 // used elsewhere (will fix)

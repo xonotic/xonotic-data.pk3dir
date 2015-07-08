@@ -1,7 +1,25 @@
 #include "tturrets.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+#include "movelib.qh"
+#include "prandom.qh"
+#include "teamradar.qh"
 #include "waypointsprites.qh"
 
-#include "../server/movelib.qh"
+#include "../common/teams.qh"
+
+#include "../common/movetypes/movetypes.qh"
+
+#include "../server/tturrets/include/turrets_early.qh"
+
+#include "../warpzonelib/anglestransform.qh"
+#include "../warpzonelib/mathlib.qh"
+
+.vector colormod;
+.float cnt;
+.float alpha;
+.float gravity;
 
 string tid2info_base;
 string tid2info_head;
@@ -162,7 +180,7 @@ void turret_remove()
     self.tur_head = world;
 }
 
-.vector glowmod;
+class(Turret) .vector glowmod;
 void turret_changeteam()
 {
 	switch(self.team - 1)

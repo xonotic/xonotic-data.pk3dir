@@ -1,3 +1,5 @@
+#include "../../bot/navigation.qh"
+
 const float ewheel_amin_stop = 0;
 const float ewheel_amin_fwd_slow = 1;
 const float ewheel_amin_fwd_fast = 2;

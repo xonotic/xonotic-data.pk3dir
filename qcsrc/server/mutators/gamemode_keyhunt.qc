@@ -1,4 +1,8 @@
-#define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
+#include "gamemode_keyhunt.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 
 // #define KH_PLAYER_USE_ATTACHMENT
 // #define KH_PLAYER_USE_CARRIEDMODEL

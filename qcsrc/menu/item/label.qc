@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(Label) EXTENDS(Item)
+#ifndef ITEM_LABEL_H
+#define ITEM_LABEL_H
+#include "../item.qc"
+CLASS(Label, Item)
 	METHOD(Label, configureLabel, void(entity, string, float, float))
 	METHOD(Label, draw, void(entity))
 	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector))

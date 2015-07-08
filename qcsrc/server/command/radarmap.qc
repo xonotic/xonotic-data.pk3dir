@@ -1,13 +1,12 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/util.qh"
-    #include "../defs.qh"
-    #include "radarmap.qh"
-    #include "../../csqcmodellib/sv_model.qh"
-#endif
+#include "../../common/command/command.qh"
+#include "radarmap.qh"
+#include "../_all.qh"
+
+#include "../g_world.qh"
+
+#include "../../common/util.qh"
+
+#include "../../csqcmodellib/sv_model.qh"
 
 // ===============================================
 //	Generates radar map images for use in the HUD
@@ -167,7 +166,7 @@ void sharpen_set(int x, float v)
 {
 	sharpen_buffer[x + 2 * RADAR_WIDTH_MAX] = v;
 }
-float sharpen_getpixel(float x, float y)
+float sharpen_getpixel(int x, int y)
 {
 	if(x < 0)
 		return 0;

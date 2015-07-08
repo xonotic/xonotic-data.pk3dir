@@ -2,6 +2,7 @@
 #ifdef SVQC
 #include "jumppads.qh"
 #include "../../movetypes/movetypes.qh"
+#include "../../../server/_all.qh"
 
 void trigger_push_use()
 {

@@ -1,0 +1,6 @@
+#ifndef EFFECTS_H
+#define EFFECTS_H
+
+void Net_ReadArc();
+
+#endif

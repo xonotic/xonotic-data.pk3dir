@@ -1,5 +1,6 @@
 #ifdef SVQC
 #include "../../../server/weapons/common.qh"
+#include "../../../server/_all.qh"
 
 .entity sprite;
 

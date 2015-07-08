@@ -1,3 +1,9 @@
+#ifdef SVQC
+	#include "../_all.qh"
+	#include "mutator.qh"
+	#include "../antilag.qh"
+#endif
+
 .float multijump_count;
 .float multijump_ready;
 

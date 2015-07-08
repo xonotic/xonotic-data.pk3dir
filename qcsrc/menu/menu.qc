@@ -1,7 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "menu.qh"
+#include "oo/classes.qc"
+#include "xonotic/util.qh"
+
+#include "../common/items/all.qh"
+#include "../common/weapons/all.qh"
+#include "../common/mapinfo.qh"
 
 ///////////////////////////////////////////////
 // Menu Source File
@@ -78,6 +81,7 @@ void m_init()
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterItems);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	RegisterSLCategories();
@@ -211,8 +215,8 @@ void m_init_delayed()
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 
 	loadTooltips();
-	anim = spawnAnimHost();
-	main = spawnMainWindow(); main.configureMainWindow(main);
+	anim = NEW(AnimHost);
+	main = NEW(MainWindow); main.configureMainWindow(main);
 	unloadTooltips();
 
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);

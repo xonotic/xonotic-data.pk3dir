@@ -1,4 +1,14 @@
-#include "../../common/movetypes/movetypes.qh"
+#include "gamemode_ctf.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#ifdef SVQC
+#include "../vehicles/vehicle.qh"
+#endif
+
+#include "../../warpzonelib/common.qh"
+#include "../../warpzonelib/mathlib.qh"
 
 void ctf_FakeTimeLimit(entity e, float t)
 {

@@ -5,23 +5,38 @@
 // 255 is the current limit (MAX_CL_STATS - 1), engine will need to be modified if you wish to add more stats
 
 const int MAX_CL_STATS                = 256;
-const int STAT_HEALTH                 = 0;
+// -Wdouble-declaration
+// const int STAT_HEALTH                 = 0;
 // 1 empty?
 const int STAT_WEAPON                 = 2;
-const int STAT_AMMO                   = 3;
-const int STAT_ARMOR                  = 4;
-const int STAT_WEAPONFRAME            = 5;
-const int STAT_SHELLS                 = 6;
-const int STAT_NAILS                  = 7;
-const int STAT_ROCKETS                = 8;
-const int STAT_CELLS                  = 9;
-const int STAT_ACTIVEWEAPON           = 10;
-const int STAT_TOTALSECRETS           = 11;
-const int STAT_TOTALMONSTERS          = 12;
-const int STAT_SECRETS                = 13;
-const int STAT_MONSTERS               = 14;
-const int STAT_ITEMS                  = 15;
-const int STAT_VIEWHEIGHT             = 16;
+// -Wdouble-declaration
+// const int STAT_AMMO                   = 3;
+// -Wdouble-declaration
+// const int STAT_ARMOR                  = 4;
+// -Wdouble-declaration
+// const int STAT_WEAPONFRAME            = 5;
+// -Wdouble-declaration
+// const int STAT_SHELLS                 = 6;
+// -Wdouble-declaration
+// const int STAT_NAILS                  = 7;
+// -Wdouble-declaration
+// const int STAT_ROCKETS                = 8;
+// -Wdouble-declaration
+// const int STAT_CELLS                  = 9;
+// -Wdouble-declaration
+// const int STAT_ACTIVEWEAPON           = 10;
+// -Wdouble-declaration
+// const int STAT_TOTALSECRETS           = 11;
+// -Wdouble-declaration
+// const int STAT_TOTALMONSTERS          = 12;
+// -Wdouble-declaration
+// const int STAT_SECRETS                = 13;
+// -Wdouble-declaration
+// const int STAT_MONSTERS               = 14;
+// -Wdouble-declaration
+// const int STAT_ITEMS                  = 15;
+// -Wdouble-declaration
+// const int STAT_VIEWHEIGHT             = 16;
 // 17 empty?
 // 18 empty?
 // 19 empty?
@@ -272,14 +287,19 @@ const int STAT_MOVEVARS_AIRSTOPACCELERATE             = 231;
 const int STAT_MOVEVARS_AIRSTRAFEACCELERATE           = 232;
 const int STAT_MOVEVARS_MAXAIRSTRAFESPEED             = 233;
 const int STAT_MOVEVARS_AIRCONTROL                    = 234;
-const int STAT_FRAGLIMIT                              = 235;
-const int STAT_TIMELIMIT                              = 236;
+// -Wdouble-declaration
+// const int STAT_FRAGLIMIT                              = 235;
+// -Wdouble-declaration
+// const int STAT_TIMELIMIT                              = 236;
 const int STAT_MOVEVARS_WALLFRICTION                  = 237;
 const int STAT_MOVEVARS_FRICTION                      = 238;
 const int STAT_MOVEVARS_WATERFRICTION                 = 239;
-const int STAT_MOVEVARS_TICRATE                       = 240;
-const int STAT_MOVEVARS_TIMESCALE                     = 241;
-const int STAT_MOVEVARS_GRAVITY                       = 242;
+// -Wdouble-declaration
+// const int STAT_MOVEVARS_TICRATE                       = 240;
+// -Wdouble-declaration
+// const int STAT_MOVEVARS_TIMESCALE                     = 241;
+// -Wdouble-declaration
+// const int STAT_MOVEVARS_GRAVITY                       = 242;
 const int STAT_MOVEVARS_STOPSPEED                     = 243;
 const int STAT_MOVEVARS_MAXSPEED                      = 244;
 const int STAT_MOVEVARS_SPECTATORMAXSPEED             = 245;

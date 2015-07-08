@@ -1,8 +1,17 @@
 #include "havocbot.qh"
-#include "role_onslaught.qc"
-#include "role_keyhunt.qc"
-#include "roles.qc"
+#include "../../_all.qh"
+
+#include "../aim.qh"
+#include "../bot.qh"
+#include "../navigation.qh"
+#include "../scripting.qh"
+#include "../waypoints.qh"
+
+#include "../../../common/constants.qh"
+
 #include "../../../common/triggers/trigger/jumppads.qh"
+
+#include "../../../warpzonelib/common.qh"
 
 void havocbot_ai()
 {
@@ -149,9 +158,6 @@ void havocbot_ai()
 	// if the bot is not attacking, consider reloading weapons
 	if (!(self.aistatus & AI_STATUS_ATTACKING))
 	{
-		float i;
-		entity e;
-
 		// we are currently holding a weapon that's not fully loaded, reload it
 		if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
 		if(self.clip_load < self.clip_size)
@@ -162,9 +168,9 @@ void havocbot_ai()
 		if(skill >= 5) // bots can only look for unloaded weapons past this skill
 		if(self.clip_load >= 0) // only if we're not reloading a weapon already
 		{
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
-				e = get_weaponinfo(i);
+				entity e = get_weaponinfo(i);
 				if ((self.weapons & WepSet_FromWeapon(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
 					self.switchweapon = i;
 			}

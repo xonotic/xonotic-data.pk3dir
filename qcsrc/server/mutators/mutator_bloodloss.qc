@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .float bloodloss_timer;
 
 MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)

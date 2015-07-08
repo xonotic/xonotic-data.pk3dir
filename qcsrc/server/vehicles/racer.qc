@@ -1,5 +1,5 @@
-const vector RACER_MIN = '-120 -120 -40';
-const vector RACER_MAX = '120 120 40';
+#include "vehicle.qh"
+#include "racer.qh"
 
 #ifdef SVQC
 #include "../../common/triggers/trigger/impulse.qh"
@@ -449,6 +449,8 @@ float racer_frame()
     self = player;
     return 1;
 }
+
+.float lastpushtime;
 
 void racer_think()
 {

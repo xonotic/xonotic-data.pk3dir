@@ -3,7 +3,7 @@
 #elif defined(SVQC)
 	#include "../../../dpdefs/progsdefs.qh"
     #include "../../../dpdefs/dpextensions.qh"
-    #include "../../constants.qh"
+    #include "../../../server/_all.qh"
     #include "../../../server/constants.qh"
     #include "../../../server/defs.qh"
 #endif

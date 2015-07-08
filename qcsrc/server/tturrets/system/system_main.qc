@@ -1,4 +1,7 @@
-#include "../../../common/triggers/subs.qh"
+#include "../../_all.qh"
+
+#include "../../g_damage.qh"
+#include "../../bot/bot.qh"
 
 #define cvar_base "g_turrets_unit_"
 .float clientframe;

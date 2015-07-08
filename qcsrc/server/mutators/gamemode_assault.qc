@@ -1,4 +1,9 @@
-#include "../../common/triggers/subs.qh"
+#include "gamemode_assault.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+.entity sprite;
 
 // random functions
 void assault_objective_use()

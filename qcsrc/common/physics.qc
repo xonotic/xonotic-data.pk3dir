@@ -625,18 +625,18 @@ void CheckWaterJump()
 void CheckPlayerJump()
 {
 #ifdef SVQC
-	float was_flying = ITEMS(self) & IT_USING_JETPACK;
+	float was_flying = ITEMS_STAT(self) & IT_USING_JETPACK;
 #endif
 	if (JETPACK_JUMP(self) < 2)
-		ITEMS(self) &= ~IT_USING_JETPACK;
+		ITEMS_STAT(self) &= ~IT_USING_JETPACK;
 
 	if(PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self))
 	{
 		float air_jump = !PlayerJump() || self.multijump_count > 0; // PlayerJump() has important side effects
 		float activate = JETPACK_JUMP(self) && air_jump && PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self);
-		float has_fuel = !PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) || ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO;
+		float has_fuel = !PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) || ITEMS_STAT(self) & IT_UNLIMITED_WEAPON_AMMO;
 
-		if (!(ITEMS(self) & IT_JETPACK)) { }
+		if (!(ITEMS_STAT(self) & IT_JETPACK)) { }
 		else if (self.jetpack_stopped) { }
 		else if (!has_fuel)
 		{
@@ -647,15 +647,15 @@ void CheckPlayerJump()
 				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 #endif
 			self.jetpack_stopped = true;
-			ITEMS(self) &= ~IT_USING_JETPACK;
+			ITEMS_STAT(self) &= ~IT_USING_JETPACK;
 		}
 		else if (activate && !PHYS_FROZEN(self))
-			ITEMS(self) |= IT_USING_JETPACK;
+			ITEMS_STAT(self) |= IT_USING_JETPACK;
 	}
 	else
 	{
 		self.jetpack_stopped = false;
-		ITEMS(self) &= ~IT_USING_JETPACK;
+		ITEMS_STAT(self) &= ~IT_USING_JETPACK;
 	}
 	if (!PHYS_INPUT_BUTTON_JUMP(self))
 		UNSET_JUMP_HELD(self);
@@ -1366,7 +1366,7 @@ void PM_jetpack(float maxspd_mod)
 	wishvel_z = (wishvel_z - PHYS_GRAVITY) * fz + PHYS_GRAVITY;
 
 	fvel = min(1, vlen(wishvel) / best);
-	if (PHYS_JETPACK_FUEL && !(ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO))
+	if (PHYS_JETPACK_FUEL && !(ITEMS_STAT(self) & IT_UNLIMITED_WEAPON_AMMO))
 		f = min(1, PHYS_AMMO_FUEL(self) / (PHYS_JETPACK_FUEL * PHYS_INPUT_TIMELENGTH * fvel));
 	else
 		f = 1;
@@ -1379,10 +1379,10 @@ void PM_jetpack(float maxspd_mod)
 		UNSET_ONGROUND(self);
 
 #ifdef SVQC
-		if (!(ITEMS(self) & IT_UNLIMITED_WEAPON_AMMO))
+		if (!(ITEMS_STAT(self) & IT_UNLIMITED_WEAPON_AMMO))
 			self.ammo_fuel -= PHYS_JETPACK_FUEL * PHYS_INPUT_TIMELENGTH * fvel * f;
 
-		ITEMS(self) |= IT_USING_JETPACK;
+		ITEMS_STAT(self) |= IT_USING_JETPACK;
 
 		// jetpack also inhibits health regeneration, but only for 1 second
 		self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
@@ -1794,7 +1794,7 @@ void PM_Main()
 	else if (time < self.ladder_time)
 		PM_ladder(maxspeed_mod);
 
-	else if (ITEMS(self) & IT_USING_JETPACK)
+	else if (ITEMS_STAT(self) & IT_USING_JETPACK)
 		PM_jetpack(maxspeed_mod);
 
 	else if (IS_ONGROUND(self))

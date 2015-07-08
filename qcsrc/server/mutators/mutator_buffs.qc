@@ -1,4 +1,11 @@
-#include "../../common/triggers/target/music.qh"
+#include "mutator_buffs.qh"
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "../../common/buffs.qh"
+
+.float lifetime;
 
 float buffs_BuffModel_Customize()
 {

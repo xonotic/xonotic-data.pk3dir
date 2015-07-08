@@ -1,4 +1,7 @@
-#include "../../common/triggers/subs.qh"
+#include "gamemode_domination.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
 
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {

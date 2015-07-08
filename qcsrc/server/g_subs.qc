@@ -1,4 +1,9 @@
 #include "g_subs.qh"
+#include "_all.qh"
+
+#include "antilag.qh"
+#include "command/common.qh"
+#include "../warpzonelib/common.qh"
 
 void spawnfunc_info_null (void)
 {

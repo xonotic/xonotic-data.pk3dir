@@ -1,3 +1,15 @@
+#include "waypoints.qh"
+#include "../_all.qh"
+
+#include "bot.qh"
+#include "navigation.qh"
+
+#include "../antilag.qh"
+
+#include "../../common/constants.qh"
+
+#include "../../warpzonelib/util_server.qh"
+
 // create a new spawnfunc_waypoint and automatically link it to other waypoints, and link
 // them back to it as well
 // (suitable for spawnfunc_waypoint editor)
@@ -893,7 +905,7 @@ float botframe_autowaypoints_createwp(vector v, entity p, .entity fld, float f)
 		w = find(w, classname, "waypoint");
 	}
 
-	waypoint_schedulerelink(p.fld = waypoint_spawn(v, v, f));
+	waypoint_schedulerelink(p.(fld) = waypoint_spawn(v, v, f));
 	return 1;
 }
 
@@ -948,14 +960,14 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 						if(navigation_waypoint_will_link(w.origin, porg, p, walkfromwp, 1050))
 						{
 							bestdist = d;
-							p.fld = w;
+							p.(fld) = w;
 						}
 			}
 			w = find(w, classname, "waypoint");
 		}
 		if(bestdist < maxdist)
 		{
-			print("update chain to new nearest WP ", etos(p.fld), "\n");
+			print("update chain to new nearest WP ", etos(p.(fld)), "\n");
 			return 0;
 		}
 
@@ -964,7 +976,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 			// we know maxdist < 2100
 			// so wp -> porg is still valid
 			// all is good
-			p.fld = wp;
+			p.(fld) = wp;
 			return 0;
 		}
 
@@ -978,7 +990,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		setorigin(p, save);
 		if(w)
 		{
-			p.fld = w;
+			p.(fld) = w;
 			return 0;
 		}
 	}
@@ -1043,8 +1055,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 .entity botframe_autowaypoints_lastwp0, botframe_autowaypoints_lastwp1;
 void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 {
-	float r;
-	r = botframe_autowaypoints_fix_from(p, walkfromwp, p.fld, fld);
+	float r = botframe_autowaypoints_fix_from(p, walkfromwp, p.(fld), fld);
 	if(r != -1)
 		return;
 	r = botframe_autowaypoints_fix_from(p, walkfromwp, world, fld);

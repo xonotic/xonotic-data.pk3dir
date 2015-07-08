@@ -1,10 +1,12 @@
-#ifdef INTERFACE
-CLASS(XonoticWeaponsList) EXTENDS(XonoticListBox)
+#ifndef WEAPONSLIST_H
+#define WEAPONSLIST_H
+#include "listbox.qc"
+CLASS(XonoticWeaponsList, XonoticListBox)
 	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity))
 	METHOD(XonoticWeaponsList, toString, string(entity))
 	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1)
 	METHOD(XonoticWeaponsList, draw, void(entity))
-	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float))
 	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0')
@@ -20,7 +22,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me);
 entity makeXonoticWeaponsList()
 {
 	entity me;
-	me = spawnXonoticWeaponsList();
+	me = NEW(XonoticWeaponsList);
 	me.configureXonoticWeaponsList(me);
 	return me;
 }
@@ -90,11 +92,16 @@ string XonoticWeaponsList_toString(entity me)
 	}
 	return substring(s, 0, strlen(s) - 2);
 }
-void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticWeaponsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	entity e;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 	e = get_weaponinfo(stof(argv(i)));
 	string msg = e.message;
 	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
