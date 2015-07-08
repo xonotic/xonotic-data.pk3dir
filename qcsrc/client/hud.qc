@@ -1,10 +1,23 @@
+#include "hud.qh"
+#include "_all.qh"
+
+#include "hud_config.qh"
 #include "scoreboard.qh"
+#include "sortlist.qh"
 #include "teamradar.qh"
+#include "t_items.qh"
+
 #include "../common/buffs.qh"
+#include "../common/constants.qh"
 #include "../common/counting.qh"
+#include "../common/deathtypes.qh"
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
-#include "../server/t_items.qh"
+#include "../common/stats.qh"
+
+#include "../csqcmodellib/cl_player.qh"
+
+#include "../warpzonelib/mathlib.qh"
 
 /*
 ==================
@@ -1485,17 +1498,6 @@ void HUD_Powerups(void)
 // Health/armor (#3)
 //
 
-// prev_* vars contain the health/armor at the previous FRAME
-// set to -1 when player is dead or was not playing
-int prev_health, prev_armor;
-float health_damagetime, armor_damagetime;
-int health_beforedamage, armor_beforedamage;
-// old_p_* vars keep track of previous values when smoothing value changes of the progressbar
-int old_p_health, old_p_armor;
-float old_p_healthtime, old_p_armortime;
-// prev_p_* vars contain the health/armor progressbar value at the previous FRAME
-// set to -1 to forcedly stop effects when we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
-int prev_p_health, prev_p_armor;
 
 void HUD_HealthArmor(void)
 {
@@ -2624,15 +2626,6 @@ void HUD_RaceTimer (void)
 
 // Vote window (#9)
 //
-int vote_yescount;
-int vote_nocount;
-int vote_needed;
-int vote_highlighted; // currently selected vote
-
-int vote_active; // is there an active vote?
-int vote_prev; // previous state of vote_active to check for a change
-float vote_alpha;
-float vote_change; // "time" when vote_active changed
 
 void HUD_Vote(void)
 {
@@ -4303,15 +4296,23 @@ void HUD_CenterPrint (void)
 			reset_centerprint_messages();
 		if (time > hud_configure_cp_generation_time)
 		{
-			float r;
-			r = random();
-			if (r > 0.75)
-				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: ^COUNT"), 1, 10);
-			else if (r > 0.5)
-				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
+			if(HUD_PANEL(CENTERPRINT) == highlightedPanel)
+			{
+				float r;
+				r = random();
+				if (r > 0.8)
+					centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: ^COUNT"), 1, 10);
+				else if (r > 0.55)
+					centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
+				else
+					centerprint_hud(sprintf("Message at time %s", seconds_tostring(time)));
+				hud_configure_cp_generation_time = time + 1 + random()*4;
+			}
 			else
-				centerprint_hud(sprintf("Message at time %s", seconds_tostring(time)));
-			hud_configure_cp_generation_time = time + 1 + random()*4;
+			{
+				centerprint_generic(0, sprintf("Centerprint message", seconds_tostring(time)), 10, 0);
+				hud_configure_cp_generation_time = time + 10 - random()*3;
+			}
 		}
 	}
 

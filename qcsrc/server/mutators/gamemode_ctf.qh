@@ -93,6 +93,8 @@ const float RETURN_DAMAGE = 3;
 const float RETURN_SPEEDRUN = 4;
 const float RETURN_NEEDKILL = 5;
 
+void ctf_Handle_Throw(entity player, entity receiver, float droptype);
+
 // flag properties
 #define ctf_spawnorigin dropped_origin
 float ctf_stalemate; // indicates that a stalemate is active

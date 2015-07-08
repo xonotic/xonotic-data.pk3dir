@@ -1,11 +1,13 @@
 #include "../../common/campaign_common.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticCampaignList) EXTENDS(XonoticListBox)
+#ifndef CAMPAIGN_H
+#define CAMPAIGN_H
+#include "listbox.qc"
+CLASS(XonoticCampaignList, XonoticListBox)
 	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity))
 	ATTRIB(XonoticCampaignList, rowsPerItem, float, 10)
 	METHOD(XonoticCampaignList, draw, void(entity))
-	METHOD(XonoticCampaignList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticCampaignList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticCampaignList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticCampaignList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticCampaignList, setSelected, void(entity, float))
@@ -92,7 +94,7 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 entity makeXonoticCampaignList()
 {
 	entity me;
-	me = spawnXonoticCampaignList();
+	me = NEW(XonoticCampaignList);
 	me.configureXonoticCampaignList(me);
 	return me;
 }
@@ -237,7 +239,7 @@ void XonoticCampaignList_doubleClickListBoxItem(entity me, float i, vector where
 {
 	CampaignList_LoadMap(me, me);
 }
-void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected)
+void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	vector theColor;
@@ -263,6 +265,11 @@ void XonoticCampaignList_drawListBoxItem(entity me, int i, vector absSize, bool 
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	if(draw_PictureSize(strcat("/maps/", campaign_mapname[i])) == '0 0 0')
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);

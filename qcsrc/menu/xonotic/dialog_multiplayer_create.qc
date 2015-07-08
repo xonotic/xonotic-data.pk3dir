@@ -1,9 +1,10 @@
-#ifdef INTERFACE
-CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_MULTIPLAYER_CREATE_H
+#define DIALOG_MULTIPLAYER_CREATE_H
+#include "tab.qc"
+CLASS(XonoticServerCreateTab, XonoticTab)
 	METHOD(XonoticServerCreateTab, fill, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
 	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
-	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 23)
 	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space
@@ -56,7 +57,7 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 entity makeXonoticServerCreateTab()
 {
 	entity me;
-	me = spawnXonoticServerCreateTab();
+	me = NEW(XonoticServerCreateTab);
 	me.configureDialog(me);
 	return me;
 }

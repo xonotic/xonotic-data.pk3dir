@@ -1,0 +1,12 @@
+#ifndef COMMAND_H
+#define COMMAND_H
+
+// =========================================================
+//  Shared declarations for all commands, written by Samual
+//  Last updated: December 13th, 2011
+// =========================================================
+
+// identifiers for subfunction requests by the command code structure
+const int CMD_REQUEST_COMMAND = 1;
+const int CMD_REQUEST_USAGE = 2;
+#endif

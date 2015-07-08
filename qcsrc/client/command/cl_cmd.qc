@@ -3,8 +3,20 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
+#include "../../common/command/command.qh"
+#include "cl_cmd.qh"
+
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../hud.qh"
+#include "../hud_config.qh"
+#include "../main.qh"
+#include "../mapvoting.qh"
+#include "../miscfunctions.qh"
+
+#include "../../common/mapinfo.qh"
+
 #include "../../common/command/generic.qh"
-#include "../../common/command/shared_defs.qh"
 
 void DrawDebugModel()
 {

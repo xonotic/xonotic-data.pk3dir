@@ -1,13 +1,11 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../dpdefs/keycodes.qh"
-	#include "../common/constants.qh"
-	#include "autocvars.qh"
-	#include "hud.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "hud_config.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+
+#include "../common/constants.qh"
+
+#include "../dpdefs/keycodes.qh"
 
 
 #define HUD_Write(s) fputs(fh, s)
@@ -433,8 +431,7 @@ void HUD_Panel_SetPosSize(vector mySize)
 {
 	panel = highlightedPanel;
 	HUD_Panel_UpdatePosSize();
-	vector resizeorigin;
-	resizeorigin = panel_click_resizeorigin;
+	vector resizeorigin = panel_click_resizeorigin;
 	vector myPos;
 
 	// minimum panel size cap
@@ -567,7 +564,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	if (hudShiftState & S_ALT) // resize
 	{
-		highlightedAction = 1;
 		if(nPrimary == K_UPARROW)
 			resizeCorner = 1;
 		else if(nPrimary == K_RIGHTARROW)
@@ -604,7 +600,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 	else // move
 	{
-		highlightedAction = 2;
 		vector pos;
 		pos = panel_pos;
 		if(nPrimary == K_UPARROW)
@@ -630,14 +625,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		highlightedPanel_backup = highlightedPanel;
 	}
 }
-
-const int S_MOUSE1 = 1;
-const int S_MOUSE2 = 2;
-const int S_MOUSE3 = 4;
-int mouseClicked;
-int prevMouseClicked; // previous state
-float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
-vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
 
 void HUD_Panel_EnableMenu();
 entity tab_panels[HUD_PANEL_MAX];
@@ -746,15 +733,14 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (!menu_enabled)
 			cvar_set("_hud_configure", "0");
 	}
-	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // select and highlight another panel
+	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
 	{
 		if (bInputType == 1 || mouseClicked)
 			return true;
 
-		//FIXME: if a panel is highlighted, has the same pos_x and lays in the same level
-		//of other panels then next consecutive ctrl-tab will select the highlighted panel too
-		//(it should only after every other panel of the hud)
-		//It's a minor bug anyway, we can live with it
+		// FIXME minor bug: if a panel is highlighted, has the same pos_x and
+		// lays in the same level of another panel then the next consecutive
+		// CTRL TAB presses will reselect once more the highlighted panel
 
 		entity starting_panel;
 		entity old_tab_panel = tab_panel;
@@ -899,6 +885,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			highlightedPanel_backup = world;
 		}
 	}
+	else if(nPrimary == 's' && hudShiftState & S_CTRL) // save config
+	{
+		if (bInputType == 1 || mouseClicked)
+			return true;
+		localcmd("hud save myconfig\n");
+	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
 	{
 		if (bInputType == 1)
@@ -919,7 +911,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (highlightedPanel)
 			HUD_Panel_EnableMenu();
 	}
-	else if(hit_con_bind)
+	else if(hit_con_bind || nPrimary == K_PAUSE)
 		return false;
 
 	return true;
@@ -1178,6 +1170,8 @@ void HUD_Panel_Mouse()
 	}
 	else
 	{
+		if(prevMouseClicked)
+			highlightedAction = 0;
 		if(menu_enabled == 2)
 			mouse_over_panel = 0;
 		else

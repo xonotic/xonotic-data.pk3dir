@@ -1,5 +1,5 @@
-const vector SPIDERBOT_MIN = '-75 -75 10';
-const vector SPIDERBOT_MAX  = '75 75 125';
+#include "vehicle.qh"
+#include "spiderbot.qh"
 
 #ifdef SVQC
 float autocvar_g_vehicle_spiderbot;

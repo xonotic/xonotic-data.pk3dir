@@ -1,17 +1,12 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "common.qh"
-    #include "../t_items.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../../common/deathtypes.qh"
-#endif
+#include "common.qh"
+#include "../_all.qh"
+
+#include "../t_items.qh"
+#include "../../common/constants.qh"
+#include "../../common/deathtypes.qh"
+#include "../../common/notifications.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/all.qh"
 
 void W_GiveWeapon (entity e, float wep)
 {

@@ -1,26 +1,26 @@
 #include "cheats.qh"
+#include "_all.qh"
+
 #include "g_damage.qh"
 #include "race.qh"
 #include "t_teleporters.qh"
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/anglestransform.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/tracing.qh"
-    #include "autocvars.qh"
-    #include "defs.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "../csqcmodellib/sv_model.qh"
-#endif
+#include "mutators/mutators_include.qh"
+
+#include "weapons/tracing.qh"
+
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/util.qh"
+
+#include "../common/monsters/all.qh"
+
+#include "../common/weapons/all.qh"
+
+#include "../csqcmodellib/sv_model.qh"
+
+#include "../warpzonelib/anglestransform.qh"
+#include "../warpzonelib/util_server.qh"
 
 void CopyBody(float keepvelocity);
 
@@ -40,15 +40,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 .float maycheat;
 float gamestart_sv_cheats;
 
-const float CHIMPULSE_SPEEDRUN_INIT = 30;
-const float CHIMPULSE_GIVE_ALL = 99;
-const float CHIMPULSE_CLONE_MOVING = 140;
-const float CHIMPULSE_SPEEDRUN = 141;
-const float CHIMPULSE_CLONE_STANDING = 142;
-const float CHIMPULSE_TELEPORT = 143;
-const float CHIMPULSE_R00T = 148;
 
-const float CHRAME_DRAG = 8;
 
 void CheatInit()
 {

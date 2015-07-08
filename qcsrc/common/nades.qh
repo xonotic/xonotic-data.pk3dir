@@ -1,6 +1,8 @@
 #ifndef NADES_H
 #define NADES_H
 
+#include "teams.qh"
+
 .float healer_lifetime;
 .float healer_radius;
 

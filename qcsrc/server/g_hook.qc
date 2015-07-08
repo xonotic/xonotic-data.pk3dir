@@ -1,21 +1,20 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "vehicles/vehicles_def.qh"
-    #include "command/common.qh"
-    #include "g_hook.qh"
-    #include "round_handler.qh"
-#endif
+#include "g_hook.qh"
+#include "_all.qh"
+
+#include "weapons/common.qh"
+#include "weapons/weaponsystem.qh"
+#include "weapons/selection.qh"
+#include "weapons/tracing.qh"
+#include "cl_player.qh"
+#include "t_teleporters.qh"
+#include "command/common.qh"
+#include "round_handler.qh"
+#include "vehicles/vehicle.qh"
+#include "../common/constants.qh"
+#include "../common/util.qh"
+#include "../common/weapons/all.qh"
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/server.qh"
 
 /*============================================
 
@@ -133,7 +132,7 @@ float GrapplingHookSend(entity to, int sf)
 
 void GrapplingHookThink()
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
+	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
 	{
@@ -150,7 +149,7 @@ void GrapplingHookThink()
 
 	self.nextthink = time;
 
-	s = self.realowner.cvar_cl_gunalign;
+	int s = self.realowner.cvar_cl_gunalign;
 	if(s != 1 && s != 2 && s != 4)
 		s = 3; // default value
 	--s;
@@ -315,7 +314,6 @@ void FireGrapplingHook (void)
 {
 	entity missile;
 	vector org;
-	float s;
 	vector vs;
 
 	if(forbidWeaponUse()) return;
@@ -323,7 +321,7 @@ void FireGrapplingHook (void)
 
 	makevectors(self.v_angle);
 
-	s = self.cvar_cl_gunalign;
+	int s = self.cvar_cl_gunalign;
 	if(s != 1 && s != 2 && s != 4)
 		s = 3; // default value
 	--s;

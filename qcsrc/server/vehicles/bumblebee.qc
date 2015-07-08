@@ -1,6 +1,7 @@
 #include "bumblebee.qh"
 
 #ifdef SVQC
+#include "vehicle.qh"
 void bumb_fire_cannon(entity _gun, string _tagname, entity _owner)
 {
 	vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
@@ -323,6 +324,7 @@ void bumb_regen()
 
 }
 
+.vector hook_start, hook_end;
 float bumb_pilot_frame()
 {
 	entity pilot, vehic;

@@ -1,4 +1,12 @@
+#include "util.qh"
+#include "../menu.qh"
+#include "../oo/base.qh"
+#include "../../common/campaign_common.qh"
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
 #include "../../common/urllib.qh"
+#include "../../common/util.qh"
+#include "../../common/command/generic.qh"
 
 float GL_CheckExtension(string ext)
 {
@@ -43,6 +51,7 @@ string getZonedTooltipForIdentifier(string s)
 	return string_null;
 }
 
+.entity parent, firstChild, nextSibling;
 void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
 {
 	depthfirst(root, parent, firstChild, nextSibling, funcPre, funcPost, pass);
@@ -52,11 +61,15 @@ void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, e
 void SUB_Null_ee(entity e1, entity e2)
 {
 }
+
+.void(entity) saveCvars;
 void saveCvarsOf(entity ignore, entity e)
 {
 	if(e.saveCvars)
 		e.saveCvars(e);
 }
+
+.void(entity) loadCvars;
 void loadCvarsOf(entity ignore, entity e)
 {
 	if(e.loadCvars)
@@ -135,6 +148,7 @@ void makeCallback(entity e, entity cbent, void(entity, entity) cbfunc)
 .string cvarString_setDependent;
 .string cvarValue_setDependent;
 .float(entity) func_setDependent;
+.bool disabled;
 void setDependent_Check(entity e)
 {
 	float f;
@@ -181,6 +195,7 @@ void setDependent_Draw(entity e)
 	setDependent_Check(e);
 	e.draw_setDependent(e);
 }
+.void(entity) draw;
 void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax)
 {
 	e.draw_setDependent = e.draw;
@@ -529,6 +544,8 @@ void postMenuDraw()
 		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
 	}
 }
+void DialogOpenButton_Click_withCoords(entity button, entity tab, vector theOrigin, vector theSize);
+.entity winnerDialog;
 void preMenuDraw()
 {
 	vector fs, sz = '0 0 0', line, mid;
@@ -709,6 +726,18 @@ string GameType_GetIcon(int cnt)
 	return "";
 }
 
+.void(entity) TR;
+.void(entity, float, float, entity) TD;
+.void(entity, float) TDempty;
+entity makeXonoticTextLabel(float theAlign, string theText);
+entity makeXonoticTextSlider(string);
+.void(entity, string, string) addValue;
+.void(entity) configureXonoticTextSliderValues;
+entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar);
+entity makeXonoticCheckBoxString(string, string, string, string);
+entity makeXonoticCheckBox(float, string, string);
+.bool sendCvars;
+
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {
 	float i;
@@ -766,6 +795,15 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+}
+
+float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)
+{
+	if(startAlpha < targetAlpha)
+		currentAlpha = min(currentAlpha + frametime * 0.5, targetAlpha);
+	else
+		currentAlpha = max(currentAlpha - frametime * 0.5, targetAlpha);
+	return currentAlpha;
 }
 
 void CheckSendCvars(entity me, string cvarnamestring)

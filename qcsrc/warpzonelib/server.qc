@@ -1,15 +1,16 @@
+#include "server.qh"
+
+#include "common.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-	#include "../dpdefs/dpextensions.qh"
-	#include "common.qh"
-	#include "server.qh"
 	#include "../common/constants.qh"
 	#include "../common/util.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "../dpdefs/progsdefs.qh"
+	#include "../server/command/common.qh"
 	#include "../server/constants.qh"
 	#include "../server/defs.qh"
-	#include "../server/command/common.qh"
 #endif
 
 #ifdef WARPZONELIB_KEEPDEBUG

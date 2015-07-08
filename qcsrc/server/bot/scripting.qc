@@ -1,3 +1,8 @@
+#include "scripting.qh"
+#include "../_all.qh"
+
+#include "bot.qh"
+
 .float bot_cmdqueuebuf_allocated;
 .float bot_cmdqueuebuf;
 .float bot_cmdqueuebuf_start;
@@ -136,68 +141,6 @@ entity bot_getplace(string placename)
 	}
 }
 
-
-// NOTE: New commands should be added here. Do not forget to update BOT_CMD_COUNTER
-const int BOT_CMD_NULL 			= 0;
-const int BOT_CMD_PAUSE 		= 1;
-const int BOT_CMD_CONTINUE 		= 2;
-const int BOT_CMD_WAIT 			= 3;
-const int BOT_CMD_TURN 			= 4;
-const int BOT_CMD_MOVETO 		= 5;
-const int BOT_CMD_RESETGOAL 	= 6;	// Not implemented yet
-const int BOT_CMD_CC 			= 7;
-const int BOT_CMD_IF 			= 8;
-const int BOT_CMD_ELSE 			= 9;
-const int BOT_CMD_FI 			= 10;
-const int BOT_CMD_RESETAIM 		= 11;
-const int BOT_CMD_AIM 			= 12;
-const int BOT_CMD_PRESSKEY 		= 13;
-const int BOT_CMD_RELEASEKEY 	= 14;
-const int BOT_CMD_SELECTWEAPON 	= 15;
-const int BOT_CMD_IMPULSE 		= 16;
-const int BOT_CMD_WAIT_UNTIL 	= 17;
-const int BOT_CMD_MOVETOTARGET 	= 18;
-const int BOT_CMD_AIMTARGET 	= 19;
-const int BOT_CMD_BARRIER 		= 20;
-const int BOT_CMD_CONSOLE 		= 21;
-const int BOT_CMD_SOUND 		= 22;
-const int BOT_CMD_DEBUG_ASSERT_CANFIRE = 23;
-const int BOT_CMD_WHILE 		= 24;	// TODO: Not implemented yet
-const int BOT_CMD_WEND 			= 25;	// TODO: Not implemented yet
-const int BOT_CMD_CHASE 		= 26;	// TODO: Not implemented yet
-
-const int BOT_CMD_COUNTER 		= 24;	// Update this value if you add/remove a command
-
-// NOTE: Following commands should be implemented on the bot ai
-//		 If a new command should be handled by the target ai(s) please declare it here
-.float(vector) cmd_moveto;
-.float() cmd_resetgoal;
-
-//
-const int BOT_CMD_PARAMETER_NONE = 0;
-const int BOT_CMD_PARAMETER_FLOAT = 1;
-const int BOT_CMD_PARAMETER_STRING = 2;
-const int BOT_CMD_PARAMETER_VECTOR = 3;
-
-float bot_cmds_initialized;
-int bot_cmd_parm_type[BOT_CMD_COUNTER];
-string bot_cmd_string[BOT_CMD_COUNTER];
-
-// Bots command queue
-entity bot_cmd;	// global current command
-.entity bot_cmd_current; // current command of this bot
-
-.float is_bot_cmd;			// Tells if the entity is a bot command
-.float bot_cmd_index;			// Position of the command in the queue
-.int bot_cmd_type;			// If of command (see the BOT_CMD_* defines)
-.float bot_cmd_parm_float;		// Field to store a float parameter
-.string bot_cmd_parm_string;		// Field to store a string parameter
-.vector bot_cmd_parm_vector;		// Field to store a vector parameter
-
-float bot_barriertime;
-.float bot_barrier;
-
-.float bot_cmd_execution_index;		// Position in the queue of the command to be executed
 
 // Initialize global commands list
 // NOTE: New commands should be initialized here
@@ -528,14 +471,6 @@ void bot_list_commands()
 
 // Commands code
 .int bot_exec_status;
-
-#define BOT_EXEC_STATUS_IDLE	0
-#define BOT_EXEC_STATUS_PAUSED	1
-#define BOT_EXEC_STATUS_WAITING	2
-
-#define CMD_STATUS_EXECUTING	0
-#define CMD_STATUS_FINISHED	1
-#define CMD_STATUS_ERROR	2
 
 void SV_ParseClientCommand(string s);
 float bot_cmd_cc()
@@ -1215,7 +1150,6 @@ void bot_setcurrentcommand()
 void bot_resetqueues()
 {
 	entity cl;
-	float i;
 
 	FOR_EACH_CLIENT(cl) if(cl.isbot)
 	{
@@ -1223,7 +1157,7 @@ void bot_resetqueues()
 		bot_clearqueue(cl);
 		// also, cancel all barriers
 		cl.bot_barrier = 0;
-		for(i = 0; i < cl.bot_places_count; ++i)
+		for(int i = 0; i < cl.bot_places_count; ++i)
 		{
 			strunzone(cl.(bot_placenames[i]));
 			cl.(bot_placenames[i]) = string_null;
