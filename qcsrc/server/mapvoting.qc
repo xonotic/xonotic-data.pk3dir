@@ -9,9 +9,22 @@
 #include "../common/playerstats.qh"
 #include "../common/util.qh"
 
+/**
+ * Returns the gamtype ID from its name, if type_name isn't a real gametype it
+ * checks for sv_vote_gametype_(type_name)_type
+ */
+float GameTypeVote_Type_FromString(string type_name)
+{
+	float type = MapInfo_Type_FromString(type_name);
+	if ( type == 0 )
+		type = MapInfo_Type_FromString(cvar_string(
+			strcat("sv_vote_gametype_",type_name,"_type")));
+	return type;
+}
+
 float GameTypeVote_AvailabilityStatus(string gtname)
 {
-	float type = MapInfo_Type_FromString(gtname);
+	float type = GameTypeVote_Type_FromString(gtname);
 	if( type == 0 )
 		return GTV_FORBIDDEN;
 
@@ -33,7 +46,7 @@ float GameTypeVote_GetMask()
 	n = min(MAPVOTE_COUNT, n);
 	gametype_mask = 0;
 	for(j = 0; j < n; ++j)
-		gametype_mask |= MapInfo_Type_FromString(argv(j));
+		gametype_mask |= GameTypeVote_Type_FromString(argv(j));
 	return gametype_mask;
 }
 
@@ -658,7 +671,7 @@ float GameTypeVote_Finished(float pos)
 	if(!gametypevote || gametypevote_finished)
 		return false;
 
-	if ( !GameTypeVote_SetGametype(MapInfo_Type_FromString(mapvote_maps[pos])) )
+	if ( !GameTypeVote_SetGametype(GameTypeVote_Type_FromString(mapvote_maps[pos])) )
 	{
 		dprint("Selected gametype is not supported by any map");
 	}
@@ -674,7 +687,7 @@ float GameTypeVote_Finished(float pos)
 float GameTypeVote_AddVotable(string nextMode)
 {
 	float j;
-	if ( nextMode == "" || MapInfo_Type_FromString(nextMode) == 0 )
+	if ( nextMode == "" || GameTypeVote_Type_FromString(nextMode) == 0 )
 		return false;
 	for(j = 0; j < mapvote_count; ++j)
 		if(mapvote_maps[j] == nextMode)
