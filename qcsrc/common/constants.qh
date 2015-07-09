@@ -64,6 +64,7 @@ const int ENT_CLIENT_WARPZONE = 24;
 const int ENT_CLIENT_WARPZONE_CAMERA = 25;
 const int ENT_CLIENT_TRIGGER_MUSIC = 26;
 const int ENT_CLIENT_HOOK = 27;
+const int ENT_CLIENT_INVENTORY = 28;
 const int ENT_CLIENT_ARC_BEAM = 29; // WEAPONTODO: fix numbers
 const int ENT_CLIENT_ACCURACY = 30;
 const int ENT_CLIENT_SHOWNAMES = 31;

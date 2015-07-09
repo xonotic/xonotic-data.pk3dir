@@ -1,3 +1,15 @@
+#include "gamemode_ctf.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#ifdef SVQC
+#include "../vehicles/vehicle.qh"
+#endif
+
+#include "../../warpzonelib/common.qh"
+#include "../../warpzonelib/mathlib.qh"
+
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
 //  Last updated: September, 2012
@@ -643,7 +655,7 @@ void ctf_CheckStalemate(void)
 	}
 }
 
-void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{

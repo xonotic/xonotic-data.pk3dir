@@ -6,7 +6,7 @@
     #include "constants.qh"
     #include "util.qh"
     #include "urllib.qh"
-    #include "weapons/weapons.qh"
+    #include "weapons/all.qh"
     #include "../server/weapons/accuracy.qh"
     #include "../server/defs.qh"
     #include "playerstats.qh"

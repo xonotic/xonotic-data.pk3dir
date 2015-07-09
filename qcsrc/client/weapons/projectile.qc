@@ -1,5 +1,22 @@
 #include "projectile.qh"
 
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../main.qh"
+#include "../movetypes.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/nades.qh"
+#include "../../common/util.qh"
+
+#include "../../csqcmodellib/interpolate.qh"
+
+#include "../../warpzonelib/anglestransform.qh"
+
+.float alpha;
+.float scale;
+.vector colormod;
+
 void SUB_Stop()
 {
 	self.move_velocity = self.move_avelocity = '0 0 0';

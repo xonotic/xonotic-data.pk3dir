@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticButton) EXTENDS(Button)
+#ifndef BUTTON_H
+#define BUTTON_H
+#include "../item/button.qc"
+CLASS(XonoticButton, Button)
 	METHOD(XonoticButton, configureXonoticButton, void(entity, string, vector))
 	ATTRIB(XonoticButton, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticButton, image, string, SKINGFX_BUTTON)
@@ -20,7 +22,7 @@ entity makeXonoticButton(string theText, vector theColor);
 entity makeXonoticButton(string theText, vector theColor)
 {
 	entity me;
-	me = spawnXonoticButton();
+	me = NEW(XonoticButton);
 	me.configureXonoticButton(me, theText, theColor);
 	return me;
 }

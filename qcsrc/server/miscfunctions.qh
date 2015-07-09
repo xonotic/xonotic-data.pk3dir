@@ -32,6 +32,46 @@ float cvar_normal(string n)
 .float uncustomizeentityforclient_set;
 .float nottargeted;
 
+entity eliminatedPlayers;
+void EliminatedPlayers_Init(float(entity) isEliminated_func);
+
+string admin_name(void);
+
+void write_recordmarker(entity pl, float tstart, float dt);
+
+void play2all(string samp);
+
+void DistributeEvenly_Init(float amount, float totalweight);
+float DistributeEvenly_Get(float weight);
+
+void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2);
+
+void shockwave_spawn(string m, vector org, float sz, float t1, float t2);
+
+vector randompos(vector m1, vector m2);
+
+void play2team(float t, string filename);
+
+void GetCvars_handleFloat(string thisname, float f, .float field, string name);
+
+float spamsound(entity e, float chan, string samp, float vol, float _atten);
+
+void GetCvars_handleString(string thisname, float f, .string field, string name);
+
+void precache_all_playermodels(string pattern);
+
+void soundat(entity e, vector o, float chan, string samp, float vol, float _atten);
+
+void defer(float fdelay, void() func);
+
+void UncustomizeEntitiesRun();
+void InitializeEntitiesRun();
+
+void stopsoundto(float _dest, entity e, float chan);
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
+float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d);
+
+vector shotorg_adjust(vector vecs, float y_is_right, float visual);
 
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
@@ -67,6 +107,8 @@ string GetMapname();
 float isPushable(entity e);
 
 float LostMovetypeFollow(entity ent);
+
+string uid2name(string myuid);
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
 
@@ -426,6 +468,6 @@ entity initialize_entity_first;
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(void) func, float order);
 void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
-void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc);
+void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc);
 
 #endif

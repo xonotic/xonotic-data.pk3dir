@@ -1,14 +1,9 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../common/constants.qh"
-    #include "autocvars.qh"
-    #include "defs.qh"
-    #include "scores.qh"
-#endif
+#include "scores_rules.qh"
+#include "_all.qh"
 
-//float c1, c2, c3, c4;
+#include "cl_client.qh"
+#include "scores.qh"
+
 void CheckAllowedTeams (entity for_whom);
 
 // NOTE: SP_ constants may not be >= MAX_SCORE; ST_constants may not be >= MAX_TEAMSCORE

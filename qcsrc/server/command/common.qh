@@ -4,7 +4,7 @@
 #include "vote.qh"
 
 #include "../../common/command/generic.qh"
-#include "../../common/command/shared_defs.qh"
+#include "../../common/command/command.qh"
 
 // ============================================================
 //  Shared declarations for server commands, written by Samual

@@ -1,3 +1,10 @@
+#include "gamemode_race.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#include "../race.qh"
+
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_race()

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticSlider) EXTENDS(Slider)
+#ifndef SLIDER_H
+#define SLIDER_H
+#include "../item/slider.qc"
+CLASS(XonoticSlider, Slider)
 	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string))
 	METHOD(XonoticSlider, setValue, void(entity, float))
 	ATTRIB(XonoticSlider, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -28,7 +30,7 @@ entity makeXonoticSlider(float, float, float, string);
 entity makeXonoticSlider(float theValueMin, float theValueMax, float theValueStep, string theCvar)
 {
 	entity me;
-	me = spawnXonoticSlider();
+	me = NEW(XonoticSlider);
 	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar);
 	return me;
 }

@@ -295,10 +295,10 @@ void animdecide_setframes(entity e, float support_blending, .float fld_frame, .f
 			upper = lower;
 		if(e.frame1time != upper.y || e.frame2time != lower.y)
 			BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
-		e.fld_frame = upper.x;
-		e.fld_frame1time = upper.y;
-		e.fld_frame2 = lower.x;
-		e.fld_frame2time = lower.y;
+		e.(fld_frame) = upper.x;
+		e.(fld_frame1time) = upper.y;
+		e.(fld_frame2) = lower.x;
+		e.(fld_frame2time) = lower.y;
 	}
 	else
 	{
@@ -308,8 +308,8 @@ void animdecide_setframes(entity e, float support_blending, .float fld_frame, .f
 			upper = lower;
 		if(e.frame1time != upper.y)
 			BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
-		e.fld_frame = upper.x;
-		e.fld_frame1time = upper.y;
+		e.(fld_frame) = upper.x;
+		e.(fld_frame1time) = upper.y;
 	}
 }
 

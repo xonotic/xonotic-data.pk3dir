@@ -1,17 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "spawning.qh"
-    #include "weaponsystem.qh"
-    #include "../t_items.qh"
-    #include "../autocvars.qh"
-    #include "../constants.qh"
-    #include "../defs.qh"
-    #include "../mutators/mutators_include.qh"
-#endif
+#include "spawning.qh"
+#include "../_all.qh"
+
+#include "weaponsystem.qh"
+#include "../mutators/mutators_include.qh"
+#include "../t_items.qh"
+#include "../../common/weapons/all.qh"
 
 string W_Apply_Weaponreplace(string in)
 {

@@ -1,33 +1,28 @@
 #include "g_damage.qh"
+#include "_all.qh"
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../warpzonelib/common.qh"
-    #include "../common/constants.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/accuracy.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "weapons/selection.qh"
-    #include "t_items.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "tturrets/include/turrets_early.qh"
-    #include "vehicles/vehicles_def.qh"
-    #include "../csqcmodellib/sv_model.qh"
-    #include "../common/playerstats.qh"
-    #include "g_hook.qh"
-    #include "scores.qh"
-    #include "spawnpoints.qh"
-#endif
+#include "g_hook.qh"
+#include "mutators/mutators_include.qh"
+#include "scores.qh"
+#include "waypointsprites.qh"
+#include "spawnpoints.qh"
+#include "tturrets/include/turrets_early.qh"
+#include "t_items.qh"
+#include "vehicles/vehicle.qh"
+#include "weapons/accuracy.qh"
+#include "weapons/csqcprojectile.qh"
+#include "weapons/selection.qh"
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/notifications.qh"
+#include "../common/playerstats.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+#include "../common/weapons/all.qh"
+#include "../csqcmodellib/sv_model.qh"
+#include "../warpzonelib/common.qh"
 
-float Damage_DamageInfo_SendEntity(entity to, float sf)
+float Damage_DamageInfo_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
@@ -42,7 +37,7 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	return true;
 }
 
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, float bloodtype, entity dmgowner)
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
 {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
@@ -83,7 +78,7 @@ void UpdateFrags(entity player, float f)
 	PlayerTeamScore_AddScore(player, f);
 }
 
-void GiveFrags (entity attacker, entity targ, float f, float deathtype)
+void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 {
 	// TODO route through PlayerScores instead
 	if(gameover) return;
@@ -203,7 +198,7 @@ string AppendItemcodes(string s, entity player)
 	return s;
 }
 
-void LogDeath(string mode, float deathtype, entity killer, entity killed)
+void LogDeath(string mode, int deathtype, entity killer, entity killed)
 {
 	string s;
 	if(!autocvar_sv_eventlog)
@@ -225,7 +220,7 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 void Obituary_SpecialDeath(
 	entity notif_target,
 	float murder,
-	float deathtype,
+	int deathtype,
 	string s1, string s2, string s3,
 	float f1, float f2, float f3)
 {
@@ -285,7 +280,7 @@ void Obituary_SpecialDeath(
 float Obituary_WeaponDeath(
 	entity notif_target,
 	float murder,
-	float deathtype,
+	int deathtype,
 	string s1, string s2, string s3,
 	float f1, float f2)
 {
@@ -293,10 +288,10 @@ float Obituary_WeaponDeath(
 	if(death_weapon)
 	{
 		w_deathtype = deathtype;
-		float death_message = WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
+		int death_message = WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
 		w_deathtype = false;
 
-		if(death_message)
+		if (death_message)
 		{
 			Send_Notification_WOCOVA(
 				NOTIF_ONE,
@@ -329,7 +324,7 @@ float Obituary_WeaponDeath(
 	return false;
 }
 
-void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
+void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {
 	// Sanity check
 	if (!IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
@@ -635,7 +630,7 @@ void Unfreeze (entity targ)
 	targ.iceblock = world;
 }
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float mirrordamage;
 	float mirrorforce;
@@ -949,7 +944,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 }
 
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity)
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, int deathtype, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
@@ -1138,7 +1133,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	return total_damage_to_creatures;
 }
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, float deathtype, entity directhitentity)
+float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, entity directhitentity)
 {
 	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, false, forceintensity, deathtype, directhitentity);
 }

@@ -86,7 +86,7 @@ void shambler_lightning_explode()
 	self.nextthink = time + 0.2;
 }
 
-void shambler_lightning_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void shambler_lightning_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;

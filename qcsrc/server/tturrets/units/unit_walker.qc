@@ -1,3 +1,9 @@
+#include "../../_all.qh"
+
+#include "../../movelib.qh"
+#include "../../steerlib.qh"
+#include "../../t_teleporters.qh"
+
 const float ANIM_NO         = 0;
 const float ANIM_TURN       = 1;
 const float ANIM_WALK       = 2;
@@ -56,7 +62,7 @@ void walker_rocket_explode()
     remove (self);
 }
 
-void walker_rocket_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void walker_rocket_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
     self.health = self.health - damage;
     self.velocity = self.velocity + vforce;

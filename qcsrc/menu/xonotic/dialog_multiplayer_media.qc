@@ -1,7 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticMediaTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_MULTIPLAYER_MEDIA_H
+#define DIALOG_MULTIPLAYER_MEDIA_H
+#include "tab.qc"
+CLASS(XonoticMediaTab, XonoticTab)
 	METHOD(XonoticMediaTab, fill, void(entity))
-	ATTRIB(XonoticMediaTab, title, string, _("Media"))
 	ATTRIB(XonoticMediaTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMediaTab, rows, float, 23)
 	ATTRIB(XonoticMediaTab, columns, float, 3)
@@ -14,7 +15,7 @@ entity makeXonoticMediaTab();
 entity makeXonoticMediaTab()
 {
 	entity me;
-	me = spawnXonoticMediaTab();
+	me = NEW(XonoticMediaTab);
 	me.configureDialog(me);
 	return me;
 }

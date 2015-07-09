@@ -1,4 +1,15 @@
-#include "../common/weapons/weapons.qc"
+#include "_all.qh"
+
+#include "../common/weapons/all.qh"
+
+void spawnfunc_weapon_electro();
+void spawnfunc_weapon_hagar();
+void spawnfunc_weapon_machinegun();
+void spawnfunc_item_bullets();
+void spawnfunc_item_armor_large();
+void spawnfunc_item_armor_large();
+void spawnfunc_item_health_mega();
+void spawnfunc_item_health_medium();
 
 //***********************
 //QUAKE 1 ENTITIES - So people can play quake1 maps with the xonotic weapons
