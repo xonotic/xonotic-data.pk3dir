@@ -12,12 +12,14 @@ Zac "Mario" Jardine
 **Extended Team
 Antonio "terencehill" Piu
 Archer
+BuddyFriendGuy
 Debugger
 GATTS
 Halogene
 IDWMaster
 Jan "zykure" Behrens
 JH0nny
+Luigi
 Łukasz "kuniu the frogg" Polek
 Matthias "matthiaskrgr" Krüger
 Mattia "Melanosuchus" Basaglia
@@ -64,6 +66,7 @@ Cuinn "Cuinnton" Herrick
 Debugger
 Jakob "tZork" Markström Gröhn
 Konrad "Justin" Slawinski
+Maddin
 Łukasz "kuniu the frogg" Polek
 Maik "SavageX" Merten
 Marvin "Mirio" Beck
@@ -123,11 +126,8 @@ Dale "graphitemaster" Weiler
 
 
 **Other Active Contributors
-BuddyFriendGuy
 Erik "Ablu" Schilling
-Jope "Sless" Withers
 Mircea "Taoki" Kitsune
-Robert "ai" Kuroto
 
 
 **Translators
@@ -279,6 +279,7 @@ Henning "Tymo" Janssen
 Innovati
 Jitspoe
 Jody Gallagher
+Jope "Sless" Withers
 Juergen "LowDragon" Timm
 KadaverJack
 Kevin "Tyrann" Shanahan
@@ -312,6 +313,7 @@ Q1 Retexturing Project
 Qantourisc
 Oleh "BlaXpirit" Prypin
 Rick "Rat" Kelley
+Robert "ai" Kuroto
 Ronan
 Sajt
 Saulo "mand1nga" Gil
