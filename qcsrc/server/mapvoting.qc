@@ -9,6 +9,35 @@
 #include "../common/playerstats.qh"
 #include "../common/util.qh"
 
+
+// definitions
+
+float mapvote_nextthink;
+float mapvote_keeptwotime;
+float mapvote_timeout;
+string mapvote_message;
+const float MAPVOTE_SCREENSHOT_DIRS_COUNT = 4;
+string mapvote_screenshot_dirs[MAPVOTE_SCREENSHOT_DIRS_COUNT];
+float mapvote_screenshot_dirs_count;
+
+float mapvote_count;
+float mapvote_count_real;
+string mapvote_maps[MAPVOTE_COUNT];
+float mapvote_maps_screenshot_dir[MAPVOTE_COUNT];
+string mapvote_maps_pakfile[MAPVOTE_COUNT];
+float mapvote_maps_suggested[MAPVOTE_COUNT];
+string mapvote_suggestions[MAPVOTE_COUNT];
+float mapvote_suggestion_ptr;
+float mapvote_voters;
+float mapvote_selections[MAPVOTE_COUNT];
+float mapvote_maps_availability[MAPVOTE_COUNT];
+float mapvote_run;
+float mapvote_detail;
+float mapvote_abstain;
+.float mapvote;
+
+entity mapvote_ent;
+
 /**
  * Returns the gamtype ID from its name, if type_name isn't a real gametype it
  * checks for sv_vote_gametype_(type_name)_type

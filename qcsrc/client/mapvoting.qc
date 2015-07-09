@@ -9,6 +9,40 @@
 
 #include "../dpdefs/keycodes.qh"
 
+
+int mv_num_maps;
+
+float mv_active;
+string mv_maps[MAPVOTE_COUNT];
+string mv_pics[MAPVOTE_COUNT];
+string mv_pk3[MAPVOTE_COUNT];
+float mv_preview[MAPVOTE_COUNT];
+float mv_votes[MAPVOTE_COUNT];
+float mv_avail[MAPVOTE_COUNT];
+float mv_avail_start[MAPVOTE_COUNT];
+entity mv_pk3list;
+float mv_abstain;
+float mv_ownvote;
+float mv_detail;
+float mv_timeout;
+float mv_top2_time;
+float mv_top2_alpha;
+
+vector mv_mousepos;
+int mv_selection;
+int mv_columns;
+int mv_mouse_selection;
+int mv_selection_keyboard;
+
+float gametypevote;
+string mapvote_chosenmap;
+vector gtv_text_size;
+vector gtv_text_size_small;
+
+const int NUM_SSDIRS = 4;
+string ssdirs[NUM_SSDIRS];
+int n_ssdirs;
+
 string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, vector fontsize)
 {
 	string pre, post;
