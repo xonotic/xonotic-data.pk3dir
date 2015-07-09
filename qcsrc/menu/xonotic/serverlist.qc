@@ -1,9 +1,11 @@
-#ifdef INTERFACE
-CLASS(XonoticServerList) EXTENDS(XonoticListBox)
+#ifndef SERVERLIST_H
+#define SERVERLIST_H
+#include "listbox.qc"
+CLASS(XonoticServerList, XonoticListBox)
 	METHOD(XonoticServerList, configureXonoticServerList, void(entity))
 	ATTRIB(XonoticServerList, rowsPerItem, float, 1)
 	METHOD(XonoticServerList, draw, void(entity))
-	METHOD(XonoticServerList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticServerList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticServerList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticServerList, keyDown, float(entity, float, float, float))
@@ -440,7 +442,7 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 entity makeXonoticServerList()
 {
 	entity me;
-	me = spawnXonoticServerList();
+	me = NEW(XonoticServerList);
 	me.configureXonoticServerList(me);
 	return me;
 }
@@ -961,7 +963,7 @@ void XonoticServerList_doubleClickListBoxItem(entity me, int i, vector where)
 {
 	ServerList_Connect_Click(NULL, me);
 }
-void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected)
+void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
 	float p;
@@ -1017,6 +1019,11 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	m = tokenizebyseparator(s, ":");

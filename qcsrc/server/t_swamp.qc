@@ -1,10 +1,10 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
+	#include "_all.qh"
+
     #include "../warpzonelib/util_server.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "defs.qh"
+    #include "../common/weapons/all.qh"
     #include "../common/deathtypes.qh"
 #endif
 

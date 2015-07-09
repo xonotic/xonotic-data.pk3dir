@@ -1,14 +1,9 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "hitplot.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../antilag.qh"
-#endif
+#include "hitplot.qh"
+#include "../_all.qh"
+
+#include "../antilag.qh"
+#include "../g_subs.qh"
+#include "../../common/weapons/all.qh"
 
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
 {

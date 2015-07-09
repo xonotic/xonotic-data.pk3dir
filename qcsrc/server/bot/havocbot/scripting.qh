@@ -1,0 +1,5 @@
+#ifndef HAVOCBOT_SCRIPTING_H
+#define HAVOCBOT_SCRIPTING_H
+
+void bot_clearqueue(entity bot);
+#endif

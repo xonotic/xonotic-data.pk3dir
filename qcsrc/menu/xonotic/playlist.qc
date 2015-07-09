@@ -1,10 +1,12 @@
-#ifdef INTERFACE
-CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
+#ifndef PLAYLIST_H
+#define PLAYLIST_H
+#include "listbox.qc"
+CLASS(XonoticPlayList, XonoticListBox)
 	METHOD(XonoticPlayList, configureXonoticPlayList, void(entity))
 	ATTRIB(XonoticPlayList, rowsPerItem, float, 1)
 	METHOD(XonoticPlayList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticPlayList, draw, void(entity))
-	METHOD(XonoticPlayList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticPlayList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticPlayList, stopSound, void(entity))
 	METHOD(XonoticPlayList, startSound, void(entity, float))
 	METHOD(XonoticPlayList, resumeSound, void(entity))
@@ -42,7 +44,7 @@ void NextSound_Click(entity btn, entity me);
 entity makeXonoticPlayList()
 {
 	entity me;
-	me = spawnXonoticPlayList();
+	me = NEW(XonoticPlayList);
 	me.configureXonoticPlayList(me);
 	return me;
 }
@@ -170,11 +172,16 @@ void XonoticPlayList_draw(entity me)
 	SUPER(XonoticPlayList).draw(me);
 }
 
-void XonoticPlayList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticPlayList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	if(i == me.playingTrack)
 	{

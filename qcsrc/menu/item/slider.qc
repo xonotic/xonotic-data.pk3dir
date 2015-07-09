@@ -1,7 +1,9 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
-#ifdef INTERFACE
-CLASS(Slider) EXTENDS(Label)
+#ifndef ITEM_SLIDER_H
+#define ITEM_SLIDER_H
+#include "label.qc"
+CLASS(Slider, Label)
 	METHOD(Slider, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Slider, configureSliderVisuals, void(entity, float, float, float, string))
 	METHOD(Slider, configureSliderValues, void(entity, float, float, float, float, float, float))

@@ -1,4 +1,12 @@
 #include "particles.qh"
+#include "_all.qh"
+
+#include "bgmscript.qh"
+
+#include "../common/stats.qh"
+#include "../common/util.qh"
+
+#include "../warpzonelib/common.qh"
 
 void Draw_PointParticles()
 {
@@ -8,7 +16,7 @@ void Draw_PointParticles()
 	vector o;
 	o = self.origin;
 	sz = self.maxs - self.mins;
-	n = BGMScript(self);
+	n = doBGMScript(self);
 	if(self.absolute == 2)
 	{
 		if(n >= 0)

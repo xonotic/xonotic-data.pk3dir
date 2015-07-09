@@ -1,25 +1,25 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../common/buffs.qh"
-	#include "../csqcmodellib/interpolate.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "laser.qh"
+#include "_all.qh"
 
+#include "hook.qh"
+
+#include "../common/buffs.qh"
+
+#include "../csqcmodellib/cl_model.qh"
+#include "../csqcmodellib/interpolate.qh"
 
 // a laser goes from origin in direction angles
 // it has color 'colormod'
 // and stops when something is in the way
-.int cnt; // end effect
-.vector colormod;
-.int state; // on-off
-.int count; // flags for the laser
-.vector velocity;
-.float alpha;
-.float scale; // scaling factor of the thickness
-.float modelscale; // scaling factor of the dlight
+entityclass(Laser);
+class(Laser) .int cnt; // end effect
+class(Laser) .vector colormod;
+class(Laser) .int state; // on-off
+class(Laser) .int count; // flags for the laser
+class(Laser) .vector velocity;
+class(Laser) .float alpha;
+class(Laser) .float scale; // scaling factor of the thickness
+class(Laser) .float modelscale; // scaling factor of the dlight
 
 void Draw_Laser()
 {

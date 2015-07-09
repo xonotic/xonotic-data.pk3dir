@@ -1,10 +1,18 @@
+#include "role_keyhunt.qh"
+#include "../../_all.qh"
+
+#include "havocbot.qh"
+
+#include "../bot.qh"
+#include "../navigation.qh"
+
+#include "../../mutators/mutators_include.qh"
+
 void() havocbot_role_kh_carrier;
 void() havocbot_role_kh_defense;
 void() havocbot_role_kh_offense;
 void() havocbot_role_kh_freelancer;
 
-entity kh_worldkeylist;
-.entity kh_worldkeynext;
 
 void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
 {

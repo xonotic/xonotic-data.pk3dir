@@ -1,20 +1,65 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "../cl_client.qh"
+#include "../../common/buffs.qh"
+
+#include "../../common/items/item.qh"
+
+#define WITH(it) this.m_##it;
+#define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
+
+float instagib_respawntime_ammo = 45;
+float instagib_respawntimejitter_ammo = 0;
+GETTER(float, instagib_respawntime_ammo)
+GETTER(float, instagib_respawntimejitter_ammo)
+
+REGISTER_ITEM(VaporizerCells, Pickup, APPLY(UNWORDS
+    ,APPLY(CONFIGURE
+    ,   model               =   "models/items/a_cells.md3"
+    ,   sound               =   "misc/itempickup.wav"
+    ,   name                =   "Vaporizer Ammo"
+    )
+    ,IF(SV, CONFIGURE
+    ,   botvalue            =   100
+    ,   itemid              =   IT_CELLS
+    ,   respawntime         =         GET(instagib_respawntime_ammo)
+    ,   respawntimejitter   =   GET(instagib_respawntimejitter_ammo)
+    )
+))
+
+REGISTER_ITEM(ExtraLife, Pickup, APPLY(UNWORDS
+    ,APPLY(CONFIGURE
+    ,   model               =   "models/items/g_h100.md3"
+    ,   sound               =   "misc/megahealth.wav"
+    ,   name                =   "Extralife"
+    )
+    ,IF(SV, CONFIGURE
+    ,   botvalue            =   BOT_PICKUP_RATING_HIGH
+    ,   itemflags           =   FL_POWERUP
+    ,   itemid              =   IT_NAILS
+    ,   respawntime         =         GET(g_pickup_respawntime_powerup)
+    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_powerup)
+    )
+))
+
+#undef WITH
+#undef CONFIGURE
+
 void spawnfunc_item_minst_cells (void)
 {
 	if (!g_instagib) { remove(self); return; }
 	if (!self.ammo_cells)
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
 
-	StartItem ("models/items/a_cells.md3",
-			   "misc/itempickup.wav", 45, 0,
-			   "Vaporizer Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+	StartItemA (ITEM_VaporizerCells);
 }
 
 void instagib_health_mega()
 {
 	self.max_health = 1;
-	StartItem ("models/items/g_h100.md3",
-			   "misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			   "Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+	StartItemA (ITEM_ExtraLife);
 }
 
 .float instagib_nextthink;

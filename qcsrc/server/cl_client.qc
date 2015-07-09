@@ -1,5 +1,8 @@
+#include "cl_client.qh"
+
 #include "waypointsprites.qh"
 
+#include "anticheat.qh"
 #include "cl_impulse.qh"
 #include "cl_player.qh"
 #include "ent_cs.qh"
@@ -10,20 +13,34 @@
 #include "teamplay.qh"
 #include "playerdemo.qh"
 #include "secret.qh"
+#include "spawnpoints.qh"
+#include "g_damage.qh"
+#include "g_hook.qh"
+#include "t_teleporters.qh"
+#include "command/common.qh"
+#include "cheats.qh"
+#include "g_world.qh"
+#include "race.qh"
+#include "antilag.qh"
+#include "campaign.qh"
+#include "command/common.qh"
 
 #include "bot/bot.qh"
 #include "bot/navigation.qh"
+
+#include "vehicles/vehicle.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
 
+#include "../common/items/inventory.qh"
+
 #include "../common/monsters/sv_monsters.qh"
 
 #include "../warpzonelib/server.qh"
 
-float c1, c2, c3, c4;
 
 void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
@@ -409,7 +426,6 @@ void PutClientInServer (void)
 	if(IS_PLAYER(self))
 	{
 		entity spot, oldself;
-		float j;
 
 		accuracy_resend(self);
 
@@ -598,13 +614,13 @@ void PutClientInServer (void)
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		for (int j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			WEP_ACTION(j, WR_RESETPLAYER);
 
 			// all weapons must be fully loaded when we spawn
 			entity e = get_weaponinfo(j);
-			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
+			if (e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.(weapon_load[j]) = e.reloading_ammo;
 		}
 
@@ -1082,6 +1098,7 @@ void ClientConnect (void)
 	PlayerScore_Attach(self);
 	ClientData_Attach();
 	accuracy_init(self);
+	Inventory_new(self);
 
 	bot_clientconnect();
 
@@ -1324,6 +1341,7 @@ void ClientDisconnect (void)
 	bot_relinkplayerlist();
 
 	accuracy_free(self);
+	Inventory_delete(self);
 	ClientData_Detach();
 	PlayerScore_Detach(self);
 

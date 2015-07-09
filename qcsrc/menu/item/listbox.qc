@@ -1,14 +1,19 @@
-#ifdef INTERFACE
-CLASS(ListBox) EXTENDS(Item)
+#ifndef ITEM_LISTBOX_H
+#define ITEM_LISTBOX_H
+#include "../item.qc"
+CLASS(ListBox, Item)
 	METHOD(ListBox, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(ListBox, configureListBox, void(entity, float, float))
 	METHOD(ListBox, draw, void(entity))
 	METHOD(ListBox, keyDown, float(entity, float, float, float))
+	METHOD(ListBox, mouseMove, float(entity, vector))
 	METHOD(ListBox, mousePress, float(entity, vector))
 	METHOD(ListBox, mouseDrag, float(entity, vector))
 	METHOD(ListBox, mouseRelease, float(entity, vector))
 	METHOD(ListBox, focusLeave, void(entity))
 	ATTRIB(ListBox, focusable, float, 1)
+	ATTRIB(ListBox, focusedItem, int, -1)
+	ATTRIB(ListBox, focusedItemAlpha, float, 0.3)
 	ATTRIB(ListBox, allowFocusSound, float, 1)
 	ATTRIB(ListBox, selectedItem, int, 0)
 	ATTRIB(ListBox, size, vector, '0 0 0')
@@ -40,7 +45,7 @@ CLASS(ListBox) EXTENDS(Item)
 	ATTRIB(ListBox, lastClickedItem, float, -1)
 	ATTRIB(ListBox, lastClickedTime, float, 0)
 
-	METHOD(ListBox, drawListBoxItem, void(entity, float, vector, float)) // item number, width/height, selected
+	METHOD(ListBox, drawListBoxItem, void(entity, int, vector, bool, bool)) // item number, width/height, isSelected, isFocused
 	METHOD(ListBox, clickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
 	METHOD(ListBox, doubleClickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
 	METHOD(ListBox, setSelected, void(entity, float))
@@ -176,6 +181,22 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 		return 0;
 	return 1;
 }
+float ListBox_mouseMove(entity me, vector pos)
+{
+	if(pos_x < 0) return 0;
+	if(pos_y < 0) return 0;
+	if(pos_x >= 1) return 0;
+	if(pos_y >= 1) return 0;
+	if(pos_x < 1 - me.controlWidth)
+	{
+		float x;
+		x = me.focusedItem;
+		me.focusedItem = me.getItemAtPos(me, me.scrollPos + pos.y);
+		if(x != me.focusedItem)
+			me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
+	}
+	return 1;
+}
 float ListBox_mouseDrag(entity me, vector pos)
 {
 	float hit;
@@ -286,6 +307,7 @@ void ListBox_focusLeave(entity me)
 	// by a mouse click on an item of the list
 	// for example showing a dialog on right click
 	me.pressed = 0;
+	me.focusedItem = -1;
 }
 void ListBox_updateControlTopBottom(entity me)
 {
@@ -367,6 +389,7 @@ void ListBox_draw(entity me)
 	draw_SetClip();
 	oldshift = draw_shift;
 	oldscale = draw_scale;
+
 	float y;
 	i = me.getItemAtPos(me, me.scrollPos);
 	y = me.getItemStart(me, i) - me.scrollPos;
@@ -376,7 +399,7 @@ void ListBox_draw(entity me)
 		vector relSize = eX * (1 - me.controlWidth) + eY * me.getItemHeight(me, i);
 		absSize = boxToGlobalSize(relSize, me.size);
 		draw_scale = boxToGlobalSize(relSize, oldscale);
-		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
+		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i), (me.focusedItem == i));
 		y += relSize.y;
 	}
 	draw_ClearClip();
@@ -396,8 +419,8 @@ void ListBox_doubleClickListBoxItem(entity me, float i, vector where)
 	// template method
 }
 
-void ListBox_drawListBoxItem(entity me, float i, vector absSize, float selected)
+void ListBox_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize.x) + eY * (8 / absSize.y), (selected ? '0 1 0' : '1 1 1'), 1, 0);
+	draw_Text('0 0 0', sprintf(_("Item %d"), i), eX * (8 / absSize.x) + eY * (8 / absSize.y), (isSelected ? '0 1 0' : '1 1 1'), 1, 0);
 }
 #endif

@@ -1,4 +1,10 @@
 #include "g_triggers.qh"
+#include "_all.qh"
+
+#include "weapons/csqcprojectile.qh"
+#include "../common/deathtypes.qh"
+#include "../warpzonelib/util_server.qh"
+#include "g_subs.qh"
 #include "t_jumppads.qh"
 
 void SUB_DontUseTargets()
@@ -683,11 +689,11 @@ void target_speaker_use_activator()
 		sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
 			snd = "misc/null.wav";
-		else if(activator.sample == "")
+		else if (activator.(sample) == "")
 			snd = "misc/null.wav";
 		else
 		{
-			tokenize_console(activator.sample);
+			tokenize_console(activator.(sample));
 			float n;
 			n = stof(argv(1));
 			if(n > 0)
@@ -710,11 +716,11 @@ void target_speaker_use_on()
 		sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
 			snd = "misc/null.wav";
-		else if(activator.sample == "")
+		else if (activator.(sample) == "")
 			snd = "misc/null.wav";
 		else
 		{
-			tokenize_console(activator.sample);
+			tokenize_console(activator.(sample));
 			float n;
 			n = stof(argv(1));
 			if(n > 0)

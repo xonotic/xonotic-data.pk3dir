@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 const float MAX_STORAGE_ATTACHMENTS = 16;
 float object_count;
 .float object_flood;
