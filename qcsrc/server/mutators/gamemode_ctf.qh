@@ -32,10 +32,7 @@ const vector FLAG_WAYPOINT_OFFSET = ('0 0 64');
 const vector FLAG_FLOAT_OFFSET = ('0 0 32');
 const vector FLAG_PASS_ARC_OFFSET = ('0 0 -10');
 
-const vector VEHICLE_FLAG_OFFSET = ('0 0 90');
-
-
-
+const vector VEHICLE_FLAG_OFFSET = ('0 0 96');
 const float VEHICLE_FLAG_SCALE = 1.0;
 
 // waypoint colors
