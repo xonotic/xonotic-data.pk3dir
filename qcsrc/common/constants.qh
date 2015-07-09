@@ -323,4 +323,5 @@ const int URI_GET_URLLIB_END = 191;
 // gametype vote flags
 const int GTV_FORBIDDEN = 0; // Cannot be voted
 const int GTV_AVAILABLE = 1; // Can be voted
+const int GTV_CUSTOM    = 2; // Custom entry
 #endif

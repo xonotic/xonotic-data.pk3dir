@@ -514,11 +514,47 @@ void MapVote_ReadMask()
 	}
 }
 
+void MapVote_ReadOption(int i)
+{
+	string map = strzone(ReadString());
+	string pk3 = strzone(ReadString());
+	int j = bound(0, ReadByte(), n_ssdirs - 1);
+
+	mv_maps[i] = map;
+	mv_pk3[i] = pk3;
+	mv_flags[i] = GTV_AVAILABLE;
+
+	string pic = strzone(strcat(ssdirs[j], "/", map));
+	mv_pics[i] = pic;
+	mv_preview[i] = false;
+	MapVote_CheckPic(pic, pk3, i);
+}
+
+void GameTypeVote_ReadOption(int i)
+{
+	dprint(sprintf("\n\n^3==========\nReading %d\n\n",i));
+	string gt = strzone(ReadString());
+
+	mv_maps[i] = gt;
+	mv_pk3[i] = string_null;
+	mv_flags[i] = ReadByte();
+
+	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, gt);
+	if(precache_pic(mv_picpath) == "")
+		mv_picpath = strcat("gfx/menu/default/gametype_", gt);
+	string pic = strzone(mv_picpath);
+	mv_pics[i] = pic;
+	mv_preview[i] = PreviewExists(pic);
+
+	if ( mv_flags[i] & GTV_CUSTOM )
+	{
+		ReadString(); // name
+		ReadString(); // description
+	}
+}
+
 void MapVote_Init()
 {
-	int i, j;
-	string map, pk3, s;
-
 	precache_sound ("misc/invshot.wav");
 
 	mv_active = 1;
@@ -527,6 +563,7 @@ void MapVote_Init()
 	mv_selection = -1;
 	mv_selection_keyboard = 0;
 
+	string s;
 	for(n_ssdirs = 0; ; ++n_ssdirs)
 	{
 		s = ReadString();
@@ -577,6 +614,7 @@ void MapVote_Init()
 	}
 
 	MapVote_ReadMask();
+	int i;
 	for(i = 0; i < mv_num_maps; ++i )
 		mv_flags_start[i] = mv_flags[i];
 
@@ -587,32 +625,10 @@ void MapVote_Init()
 	{
 		mv_votes[i] = 0;
 
-		map = strzone(ReadString());
-		pk3 = strzone(ReadString());
-		j = bound(0, ReadByte(), n_ssdirs - 1);
-
-		mv_maps[i] = map;
-		mv_pk3[i] = pk3;
-		mv_flags[i] = ReadByte();
-
-		if(gametypevote)
-		{
-			//map = strzone(strcat("gfx/menu/default/gametype_", map));
-			//map = strzone(sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, map));
-			string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, map);
-			if(precache_pic(mv_picpath) == "")
-				mv_picpath = strcat("gfx/menu/default/gametype_", map);
-			map = strzone(mv_picpath);
-			mv_pics[i] = map;
-			mv_preview[i] = PreviewExists(map);
-		}
+		if ( gametypevote )
+			GameTypeVote_ReadOption(i);
 		else
-		{
-			map = strzone(strcat(ssdirs[j], "/", map));
-			mv_pics[i] = map;
-			mv_preview[i] = false;
-			MapVote_CheckPic(map, pk3, i);
-		}
+			MapVote_ReadOption(i);
 	}
 
 	for(i = 0; i < n_ssdirs; ++i)
