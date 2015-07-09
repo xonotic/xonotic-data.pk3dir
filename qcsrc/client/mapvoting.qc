@@ -18,8 +18,8 @@ string mv_pics[MAPVOTE_COUNT];
 string mv_pk3[MAPVOTE_COUNT];
 float mv_preview[MAPVOTE_COUNT];
 float mv_votes[MAPVOTE_COUNT];
-float mv_avail[MAPVOTE_COUNT];
-float mv_avail_start[MAPVOTE_COUNT];
+float mv_flags[MAPVOTE_COUNT];
+float mv_flags_start[MAPVOTE_COUNT];
 entity mv_pk3list;
 float mv_abstain;
 float mv_ownvote;
@@ -51,7 +51,7 @@ string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, v
 	{
 		if(_count == 1)
 			post = _(" (1 vote)");
-		else if(_count >= 0 && mv_avail[id] == GTV_AVAILABLE)
+		else if(_count >= 0 && (mv_flags[id] & GTV_AVAILABLE))
 			post = sprintf(_(" (%d votes)"), _count);
 		else
 			post = "";
@@ -70,7 +70,7 @@ string GameTypeVote_DescriptionByID(int id)
 
 vector MapVote_RGB(int id)
 {
-	if(mv_avail[id] != GTV_AVAILABLE)
+	if(!(mv_flags[id] & GTV_AVAILABLE))
 		return '1 1 1';
 	if(id == mv_ownvote)
 		return '0 1 0';
@@ -93,14 +93,14 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	vector offset = pos;
 	float nlines = 0;
 
-	if(mv_avail_start[id] != GTV_AVAILABLE)
+	if(!(mv_flags_start[id] & GTV_AVAILABLE))
 		alpha = 0.2;
-	else if ( mv_avail[id] != GTV_AVAILABLE && mv_top2_alpha)
+	else if ( !(mv_flags[id] & GTV_AVAILABLE) && mv_top2_alpha)
 		alpha = mv_top2_alpha;
 	else
 		alpha = 1;
 
-	if(id == mv_selection && mv_avail[id] == GTV_AVAILABLE)
+	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
 	{
 		drawfill(rect_pos, rect_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
 	}
@@ -195,7 +195,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	text_size = stringwidth(label, false, hud_fontsize);
 
 	float theAlpha;
-	if (mv_avail[id] != GTV_AVAILABLE && mv_top2_alpha)
+	if (!(mv_flags[id] & GTV_AVAILABLE) && mv_top2_alpha)
 		theAlpha = mv_top2_alpha;
 	else
 		theAlpha = 1;
@@ -225,7 +225,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	else
 		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, '0 0 0', theAlpha, DRAWFLAG_NORMAL);
 
-	if(id == mv_selection && mv_avail[id] == GTV_AVAILABLE)
+	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
 		drawfill(pos, img_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
 }
 
@@ -500,12 +500,17 @@ void MapVote_ReadMask()
 			mask = ReadLong();
 
 		for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
-			mv_avail[i] = (mask & power) ? GTV_AVAILABLE : GTV_FORBIDDEN;
+		{
+			if ( mask & power )
+				mv_flags[i] |= GTV_AVAILABLE;
+			else
+				mv_flags[i] &= ~GTV_AVAILABLE;
+		}
 	}
 	else
 	{
 		for(i = 0; i < mv_num_maps; ++i )
-			mv_avail[i] = ReadByte();
+			mv_flags[i] = ReadByte();
 	}
 }
 
@@ -573,7 +578,7 @@ void MapVote_Init()
 
 	MapVote_ReadMask();
 	for(i = 0; i < mv_num_maps; ++i )
-		mv_avail_start[i] = mv_avail[i];
+		mv_flags_start[i] = mv_flags[i];
 
 	// Assume mv_pk3list is world, there should only be 1 mapvote per round
 	mv_pk3list = world; // I'm still paranoid!
@@ -588,7 +593,7 @@ void MapVote_Init()
 
 		mv_maps[i] = map;
 		mv_pk3[i] = pk3;
-		mv_avail[i] = ReadByte();
+		mv_flags[i] = ReadByte();
 
 		if(gametypevote)
 		{
@@ -627,7 +632,7 @@ int MapVote_MoveLeft(int pos)
 		imp = mv_num_maps - 1;
 	else
 		imp = pos < 1 ? mv_num_maps - 1 : pos - 1;
-	if ( mv_avail[imp] != GTV_AVAILABLE && imp != mv_ownvote )
+	if ( !(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote )
 		imp = MapVote_MoveLeft(imp);
 	return imp;
 }
@@ -638,7 +643,7 @@ int MapVote_MoveRight(int pos)
 		imp = 0;
 	else
 		imp = pos >= mv_num_maps - 1 ? 0 : pos + 1;
-	if ( mv_avail[imp] != GTV_AVAILABLE && imp != mv_ownvote )
+	if ( !(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote )
 		imp = MapVote_MoveRight(imp);
 	return imp;
 }
@@ -657,7 +662,7 @@ int MapVote_MoveUp(int pos)
 				imp -= mv_columns;
 		}
 	}
-	if ( mv_avail[imp] != GTV_AVAILABLE && imp != mv_ownvote )
+	if ( !(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote )
 		imp = MapVote_MoveUp(imp);
 	return imp;
 }
@@ -672,7 +677,7 @@ int MapVote_MoveDown(int pos)
 		if ( imp >= mv_num_maps )
 			imp = imp % mv_columns;
 	}
-	if ( mv_avail[imp] != GTV_AVAILABLE && imp != mv_ownvote )
+	if ( !(mv_flags[imp] & GTV_AVAILABLE) && imp != mv_ownvote )
 		imp = MapVote_MoveDown(imp);
 	return imp;
 }
@@ -765,7 +770,7 @@ void MapVote_UpdateVotes()
 	int i;
 	for(i = 0; i < mv_num_maps; ++i)
 	{
-		if(mv_avail[i] == GTV_AVAILABLE)
+		if(mv_flags[i] & GTV_AVAILABLE)
 		{
 			if(mv_detail)
 				mv_votes[i] = ReadByte();

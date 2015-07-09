@@ -30,7 +30,7 @@ string mapvote_suggestions[MAPVOTE_COUNT];
 float mapvote_suggestion_ptr;
 float mapvote_voters;
 float mapvote_selections[MAPVOTE_COUNT];
-float mapvote_maps_availability[MAPVOTE_COUNT];
+float mapvote_maps_flags[MAPVOTE_COUNT];
 float mapvote_run;
 float mapvote_detail;
 float mapvote_abstain;
@@ -51,7 +51,7 @@ float GameTypeVote_Type_FromString(string type_name)
 	return type;
 }
 
-float GameTypeVote_AvailabilityStatus(string gtname)
+int GameTypeVote_AvailabilityStatus(string gtname)
 {
 	float type = GameTypeVote_Type_FromString(gtname);
 	if( type == 0 )
@@ -189,7 +189,7 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 
 	mapvote_maps_screenshot_dir[mapvote_count] = i;
 	mapvote_maps_pakfile[mapvote_count] = strzone(pakfile);
-	mapvote_maps_availability[mapvote_count] = GTV_AVAILABLE;
+	mapvote_maps_flags[mapvote_count] = GTV_AVAILABLE;
 
 	mapvote_count += 1;
 }
@@ -271,7 +271,7 @@ void MapVote_WriteMask()
 		float mask,power;
 		mask = 0;
 		for(i = 0, power = 1; i < mapvote_count; ++i, power *= 2)
-			if(mapvote_maps_availability[i] == GTV_AVAILABLE )
+			if(mapvote_maps_flags[i] & GTV_AVAILABLE )
 				mask |= power;
 
 		if(mapvote_count < 8)
@@ -284,7 +284,7 @@ void MapVote_WriteMask()
 	else
 	{
 		for ( i = 0; i < mapvote_count; ++i )
-			WriteByte(MSG_ENTITY, mapvote_maps_availability[i]);
+			WriteByte(MSG_ENTITY, mapvote_maps_flags[i]);
 	}
 }
 
@@ -326,6 +326,7 @@ float MapVote_SendEntity(entity to, int sf)
 
 		MapVote_WriteMask();
 
+		// Send data for the vote options
 		for(i = 0; i < mapvote_count; ++i)
 		{
 			if(mapvote_abstain && i == mapvote_count - 1)
@@ -340,7 +341,7 @@ float MapVote_SendEntity(entity to, int sf)
 				WriteString(MSG_ENTITY, mapvote_maps[i]);
 				WriteString(MSG_ENTITY, mapvote_maps_pakfile[i]);
 				WriteByte(MSG_ENTITY, mapvote_maps_screenshot_dir[i]);
-				WriteByte(MSG_ENTITY, mapvote_maps_availability[i]);
+				WriteByte(MSG_ENTITY, mapvote_maps_flags[i]);
 			}
 		}
 	}
@@ -355,7 +356,7 @@ float MapVote_SendEntity(entity to, int sf)
 	{
 		if(mapvote_detail)
 			for(i = 0; i < mapvote_count; ++i)
-				if ( mapvote_maps_availability[i] == GTV_AVAILABLE )
+				if ( mapvote_maps_flags[i] == GTV_AVAILABLE )
 					WriteByte(MSG_ENTITY, mapvote_selections[i]);
 
 		WriteByte(MSG_ENTITY, to.mapvote);
@@ -394,7 +395,7 @@ float MapVote_Finished(float mappos)
 		result = strcat(result, ":", ftos(mapvote_selections[mappos]), "::");
 		didntvote = mapvote_voters;
 		for(i = 0; i < mapvote_count; ++i)
-			if(mapvote_maps_availability[i] == GTV_AVAILABLE )
+			if(mapvote_maps_flags[i] & GTV_AVAILABLE )
 			{
 				didntvote -= mapvote_selections[i];
 				if(i != mappos)
@@ -443,7 +444,7 @@ void MapVote_CheckRules_1()
 	float i;
 
 	for(i = 0; i < mapvote_count; ++i)
-		if( mapvote_maps_availability[i] == GTV_AVAILABLE )
+		if( mapvote_maps_flags[i] & GTV_AVAILABLE )
 		{
 			//dprint("Map ", ftos(i), ": "); dprint(mapvote_maps[i], "\n");
 			mapvote_selections[i] = 0;
@@ -481,7 +482,7 @@ float MapVote_CheckRules_2()
 	currentPlace = 0;
 	currentVotes = -1;
 	for(i = 0; i < mapvote_count_real; ++i)
-		if ( mapvote_maps_availability[i] == GTV_AVAILABLE )
+		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
 		{
 			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
 			if ( gametypevote &&  mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
@@ -502,7 +503,7 @@ float MapVote_CheckRules_2()
 	RandomSelection_Init();
 	for(i = 0; i < mapvote_count_real; ++i)
 		if(i != firstPlace)
-		if ( mapvote_maps_availability[i] == GTV_AVAILABLE )
+		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
 			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
 	secondPlace = RandomSelection_chosen_float;
 	secondPlaceVotes = RandomSelection_best_priority;
@@ -537,7 +538,7 @@ float MapVote_CheckRules_2()
 						result = strcat(result, ":", ftos(mapvote_selections[i]));
 						if(i < mapvote_count_real)
 						{
-							mapvote_maps_availability[i] = GTV_FORBIDDEN;
+							mapvote_maps_flags[i] &= ~GTV_AVAILABLE;
 						}
 					}
 			}
@@ -576,11 +577,11 @@ void MapVote_Tick()
 		}
 
 		// clear possibly invalid votes
-		if ( mapvote_maps_availability[other.mapvote-1] != GTV_AVAILABLE )
+		if ( !(mapvote_maps_flags[other.mapvote-1] & GTV_AVAILABLE) )
 			other.mapvote = 0;
 		// use impulses as new vote
 		if(other.impulse >= 1 && other.impulse <= mapvote_count)
-			if( mapvote_maps_availability[other.impulse - 1] == GTV_AVAILABLE )
+			if( mapvote_maps_flags[other.impulse - 1] & GTV_AVAILABLE )
 			{
 				other.mapvote = other.impulse;
 				MapVote_TouchVotes(other);
@@ -727,7 +728,7 @@ float GameTypeVote_AddVotable(string nextMode)
 
 	mapvote_maps_screenshot_dir[mapvote_count] = 0;
 	mapvote_maps_pakfile[mapvote_count] = strzone("");
-	mapvote_maps_availability[mapvote_count] = GameTypeVote_AvailabilityStatus(nextMode);
+	mapvote_maps_flags[mapvote_count] = GameTypeVote_AvailabilityStatus(nextMode);
 
 	mapvote_count += 1;
 
@@ -755,7 +756,7 @@ float GameTypeVote_Start()
 	for(j = 0; j < n; ++j)
 	{
 		if ( GameTypeVote_AddVotable(argv(j)) )
-		if ( mapvote_maps_availability[j] == GTV_AVAILABLE )
+		if ( mapvote_maps_flags[j] & GTV_AVAILABLE )
 		{
 			really_available++;
 			which_available = j;
