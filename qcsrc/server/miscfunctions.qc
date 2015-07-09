@@ -580,7 +580,7 @@ void readplayerstartcvars()
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
-		if(g_ca)
+		if(g_ca || g_freezetag)
 			s = "most";
 	}
 
@@ -709,7 +709,7 @@ void readplayerstartcvars()
 		warmup_start_weapons_default = start_weapons_default;
 		warmup_start_weapons_defaultmask = start_weapons_defaultmask;
 
-		if (!g_weaponarena && !g_ca)
+		if (!g_weaponarena && !g_ca && !g_freezetag)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
 			warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
