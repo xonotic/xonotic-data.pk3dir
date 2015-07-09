@@ -15,7 +15,8 @@ int mv_num_maps;
 float mv_active;
 string mv_maps[MAPVOTE_COUNT];
 string mv_pics[MAPVOTE_COUNT];
-string mv_pk3[MAPVOTE_COUNT];
+string mv_pk3[MAPVOTE_COUNT]; // map pk3 name or gametype human readable name
+string mv_desc[MAPVOTE_COUNT];
 float mv_preview[MAPVOTE_COUNT];
 float mv_votes[MAPVOTE_COUNT];
 float mv_flags[MAPVOTE_COUNT];
@@ -63,11 +64,6 @@ string MapVote_FormatMapItem(int id, string map, float _count, float maxwidth, v
 	return strcat(pre, map, post);
 }
 
-string GameTypeVote_DescriptionByID(int id)
-{
-	return MapInfo_Type_Description(MapInfo_Type_FromString(mv_maps[id]));
-}
-
 vector MapVote_RGB(int id)
 {
 	if(!(mv_flags[id] & GTV_AVAILABLE))
@@ -112,8 +108,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 
 	entity title;
 	title = spawn();
-	title.message = MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)),
-										  _count, tsize, gtv_text_size);
+	title.message = MapVote_FormatMapItem(id, mv_pk3[id], _count, tsize, gtv_text_size);
 	title.origin = pos-offset;
 
 	pos.y += gtv_text_size_small.y;
@@ -128,7 +123,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	pos.x += desc_padding;
 	tsize -= desc_padding;
 
-	string thelabel = GameTypeVote_DescriptionByID(id), ts;
+	string thelabel = mv_desc[id], ts;
 	entity last = title;
 	entity next = world;
 	if( thelabel != "")
@@ -532,11 +527,9 @@ void MapVote_ReadOption(int i)
 
 void GameTypeVote_ReadOption(int i)
 {
-	dprint(sprintf("\n\n^3==========\nReading %d\n\n",i));
 	string gt = strzone(ReadString());
 
 	mv_maps[i] = gt;
-	mv_pk3[i] = string_null;
 	mv_flags[i] = ReadByte();
 
 	string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, gt);
@@ -548,8 +541,14 @@ void GameTypeVote_ReadOption(int i)
 
 	if ( mv_flags[i] & GTV_CUSTOM )
 	{
-		ReadString(); // name
-		ReadString(); // description
+		mv_pk3[i] = strzone(ReadString()); // name
+		mv_desc[i] = strzone(ReadString()); // description
+	}
+	else
+	{
+		int type = MapInfo_Type_FromString(gt);
+		mv_pk3[i] = strzone(MapInfo_Type_ToText(type));
+		mv_desc[i] = MapInfo_Type_Description(type);
 	}
 }
 
