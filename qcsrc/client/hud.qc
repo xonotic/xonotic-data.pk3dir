@@ -3909,6 +3909,7 @@ void HUD_InfoMessages(void)
 //
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;
+float physics_update_time, discrete_speed, discrete_acceleration;
 void HUD_Physics(void)
 {
 	if(!autocvar__hud_configure)
@@ -3996,8 +3997,23 @@ void HUD_Physics(void)
 		acc_prevspeed = vel;
 		acc_prevtime = time;
 
-		f = bound(0, f * 10, 1);
-		acc_avg = acc_avg * (1 - f) + acceleration * f;
+		if(autocvar_hud_panel_physics_acceleration_movingaverage)
+		{
+			f = bound(0, f * 10, 1);
+			acc_avg = acc_avg * (1 - f) + acceleration * f;
+			acceleration = acc_avg;
+		}
+	}
+
+	int acc_decimals = 2;
+	if(time > physics_update_time)
+	{
+		// workaround for ftos_decimals returning a negative 0
+		if(discrete_acceleration > -1 / pow(10, acc_decimals) && discrete_acceleration < 0)
+			discrete_acceleration = 0;
+		discrete_acceleration = acceleration;
+		discrete_speed = speed;
+		physics_update_time += autocvar_hud_panel_physics_update_interval;
 	}
 
 	//compute layout
@@ -4051,7 +4067,7 @@ void HUD_Physics(void)
 		//else
 			//tmp_offset_x = 0;
 		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
-		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(discrete_speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		//draw speed unit
 		if (speed_baralign)
@@ -4141,7 +4157,7 @@ void HUD_Physics(void)
 
 		f = acceleration/autocvar_hud_panel_physics_acceleration_max;
 		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
-			f = sqrt(f);
+			f = (f >= 0 ? sqrt(f) : -sqrt(-f));
 
 		if (acceleration_progressbar_scale) // allow progressbar to go out of panel bounds
 		{
@@ -4163,12 +4179,16 @@ void HUD_Physics(void)
 
 		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset + tmp_offset, tmp_size, "accelbar", f, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	tmp_size.x = panel_size.x;
-	tmp_size.y = panel_size.y * text_scale;
-	tmp_offset.x = 0;
-	tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
-	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
-		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(acceleration, 2), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+	if(autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
+	{
+		tmp_size.x = panel_size.x;
+		tmp_size.y = panel_size.y * text_scale;
+		tmp_offset.x = 0;
+		tmp_offset.y = (panel_size.y - tmp_size.y) / 2;
+
+		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(discrete_acceleration, acc_decimals), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
 	draw_endBoldFont();
 }
