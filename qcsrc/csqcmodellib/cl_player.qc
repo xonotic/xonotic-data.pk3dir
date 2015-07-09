@@ -135,12 +135,23 @@ void CSQCPlayer_SavePrediction()
 
 void CSQC_ClientMovement_PlayerMove_Frame();
 
+void PM_Movement_Move()
+{
+	runstandardplayerphysics(self);
+#ifdef CSQC
+	self.flags = 
+			((self.pmove_flags & PMF_DUCKED) ? FL_DUCKED : 0) |
+			(!(self.pmove_flags & PMF_JUMP_HELD) ? FL_JUMPRELEASED : 0) |
+			((self.pmove_flags & PMF_ONGROUND) ? FL_ONGROUND : 0);
+#endif
+}
+
 void CSQCPlayer_Physics(void)
 {
 	switch(autocvar_cl_movement)
 	{
-		case 1: runstandardplayerphysics(self); break;
-		case 2: CSQC_ClientMovement_PlayerMove_Frame(); break;
+		case 1: CSQC_ClientMovement_PlayerMove_Frame(); break;
+		case 2: PM_Movement_Move(); break;
 	}
 }
 
