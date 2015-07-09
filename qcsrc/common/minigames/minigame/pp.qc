@@ -10,6 +10,11 @@ const int PP_TURN_TEAM  = 0x000f; // turn team mask
 
 const int PP_BLOCKED_TEAM = 5; // there won't ever be a 5th team, so we can abuse this
 
+const int PP_LET_CNT = 7;
+const int PP_NUM_CNT = 7;
+
+const int PP_TILE_SIZE = 7;
+
 .int pp_team1_score;
 .int pp_team2_score;
 
@@ -34,7 +39,7 @@ bool pp_valid_tile(string tile)
 		return 0;
 	int number = minigame_tile_number(tile);
 	int letter = minigame_tile_letter(tile);
-	return 0 <= number && number < 7 && 0 <= letter && letter < 7;
+	return 0 <= number && number < PP_NUM_CNT && 0 <= letter && letter < PP_LET_CNT;
 }
 
 // Checks if the given piece completes a row
@@ -139,8 +144,8 @@ void pp_move(entity minigame, entity player, string pos )
 void pp_setup_pieces(entity minigame)
 {
 	int i, t; // letter, number
-	for(i = 0; i < 7; ++i)
-	for(t = 0; t < 7; ++t)
+	for(i = 0; i < PP_LET_CNT; ++i)
+	for(t = 0; t < PP_NUM_CNT; ++t)
 	{
 		bool t2_true = ((i == 0 || i == 6) && t > 0 && t < 6);
 		bool t1_true = (i > 0 && i < 6 && (t == 0 || t == 6));
@@ -273,7 +278,7 @@ void pp_hud_board(vector pos, vector mySize)
 	
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("pp/board"));
 
-	vector tile_size = minigame_hud_denormalize_size('1 1 0'/7,pos,mySize);
+	vector tile_size = minigame_hud_denormalize_size('1 1 0'/PP_TILE_SIZE,pos,mySize);
 	vector tile_pos;
 
 	active_minigame.pp_curr_piece = world;
@@ -290,7 +295,7 @@ void pp_hud_board(vector pos, vector mySize)
 	{
 		if ( e.classname == "minigame_board_piece" )
 		{
-			tile_pos = minigame_tile_pos(e.netname,7,7);
+			tile_pos = minigame_tile_pos(e.netname,PP_LET_CNT,PP_NUM_CNT);
 			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 
 			vector tile_color = '1 1 1';
@@ -323,7 +328,7 @@ void pp_hud_board(vector pos, vector mySize)
 	if ( (active_minigame.minigame_flags & PP_TURN_TEAM) == minigame_self.team )
 	if ( pp_valid_move(active_minigame, pp_curr_pos) )
 	{
-		tile_pos = minigame_tile_pos(pp_curr_pos,7,7);
+		tile_pos = minigame_tile_pos(pp_curr_pos,PP_LET_CNT,PP_NUM_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 		minigame_drawpic_centered( tile_pos,  
 				minigame_texture("pp/piece_current"),
@@ -331,7 +336,7 @@ void pp_hud_board(vector pos, vector mySize)
 	}
 	else if(pp_valid_tile(pp_curr_pos))
 	{
-		tile_pos = minigame_tile_pos(pp_curr_pos,7,7);
+		tile_pos = minigame_tile_pos(pp_curr_pos,PP_LET_CNT,PP_NUM_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 		minigame_drawpic_centered( tile_pos,  
 				minigame_texture("pp/piece_selected"),
@@ -491,28 +496,28 @@ int pp_client_event(entity minigame, string event, ...)
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a3");
 						else
-							pp_set_curr_pos(minigame_relative_tile(pp_curr_pos,1,0,7,7));
+							pp_set_curr_pos(minigame_relative_tile(pp_curr_pos,1,0,PP_LET_CNT,PP_NUM_CNT));
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("c3");
 						else
-							pp_set_curr_pos(minigame_relative_tile(pp_curr_pos,-1,0,7,7));
+							pp_set_curr_pos(minigame_relative_tile(pp_curr_pos,-1,0,PP_LET_CNT,PP_NUM_CNT));
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a1");
 						else
-							pp_set_curr_pos(minigame_relative_tile(pp_curr_pos,0,1,7,7));
+							pp_set_curr_pos(minigame_relative_tile(pp_curr_pos,0,1,PP_LET_CNT,PP_NUM_CNT));
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
 						if ( ! pp_curr_pos )
 							pp_set_curr_pos("a3");
 						else
-							pp_set_curr_pos(minigame_relative_tile(pp_curr_pos,0,-1,7,7));
+							pp_set_curr_pos(minigame_relative_tile(pp_curr_pos,0,-1,PP_LET_CNT,PP_NUM_CNT));
 						return true;
 					case K_ENTER:
 					case K_KP_ENTER:
@@ -538,7 +543,7 @@ int pp_client_event(entity minigame, string event, ...)
 		{
 			vector mouse_pos = minigame_hud_normalize(mousepos,pp_boardpos,pp_boardsize);
 			if ( minigame.minigame_flags == (PP_TURN_PLACE|minigame_self.team) )
-				pp_set_curr_pos(minigame_tile_name(mouse_pos,7,7));
+				pp_set_curr_pos(minigame_tile_name(mouse_pos,PP_LET_CNT,PP_NUM_CNT));
 			if ( ! pp_valid_tile(pp_curr_pos) )
 				pp_set_curr_pos("");
 

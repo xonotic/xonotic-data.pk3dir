@@ -12,6 +12,10 @@ const int TTT_TURN_TEAM  = 0x000f; // turn team mask
 const int TTT_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // send minigame_player scores (won matches)
 const int TTT_SF_SINGLEPLAYER = MINIG_SF_CUSTOM<<1;// send minigame.ttt_ai
 
+const int TTT_LET_CNT = 3;
+const int TTT_NUM_CNT = 3;
+const int TTT_TILE_SIZE = 3;
+
 .int ttt_npieces; // (minigame) number of pieces on the board (simplifies checking a draw)
 .int ttt_nexteam; // (minigame) next team (used to change the starting team on following matches)
 .int ttt_ai;      // (minigame) when non-zero, singleplayer vs AI
@@ -64,7 +68,7 @@ bool ttt_valid_tile(string tile)
 		return 0;
 	int number = minigame_tile_number(tile);
 	int letter = minigame_tile_letter(tile);
-	return 0 <= number && number < 3 && 0 <= letter && letter < 3;
+	return 0 <= number && number < TTT_NUM_CNT && 0 <= letter && letter < TTT_LET_CNT;
 }
 
 // make a move
@@ -89,7 +93,7 @@ void ttt_move(entity minigame, entity player, string pos )
 				minigame_server_sendflags(player, TTT_SF_PLAYERSCORE);
 				minigame.minigame_flags = TTT_TURN_WIN | player.team;
 			}
-			else if ( minigame.ttt_npieces >= 9 )
+			else if ( minigame.ttt_npieces >= (TTT_LET_CNT * TTT_NUM_CNT) )
 				minigame.minigame_flags = TTT_TURN_DRAW;
 			else
 				minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
@@ -220,13 +224,13 @@ void ttt_hud_board(vector pos, vector mySize)
 	
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("ttt/board"));
 
-	vector tile_size = minigame_hud_denormalize_size('1 1 0'/3,pos,mySize);
+	vector tile_size = minigame_hud_denormalize_size('1 1 0'/TTT_TILE_SIZE,pos,mySize);
 	vector tile_pos;
 
 	if ( (active_minigame.minigame_flags & TTT_TURN_TEAM) == minigame_self.team )
 	if ( ttt_valid_tile(ttt_curr_pos) )
 	{
-		tile_pos = minigame_tile_pos(ttt_curr_pos,3,3);
+		tile_pos = minigame_tile_pos(ttt_curr_pos,TTT_LET_CNT,TTT_NUM_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 		minigame_drawpic_centered( tile_pos,  
 				minigame_texture(strcat("ttt/piece",ftos(minigame_self.team))),
@@ -238,7 +242,7 @@ void ttt_hud_board(vector pos, vector mySize)
 	{
 		if ( e.classname == "minigame_board_piece" )
 		{
-			tile_pos = minigame_tile_pos(e.netname,3,3);
+			tile_pos = minigame_tile_pos(e.netname,TTT_LET_CNT,TTT_NUM_CNT);
 			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 			
 			if ( active_minigame.minigame_flags & TTT_TURN_WIN )
@@ -562,28 +566,28 @@ int ttt_client_event(entity minigame, string event, ...)
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a3");
 						else
-							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,1,0,3,3));
+							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,1,0,TTT_LET_CNT,TTT_NUM_CNT));
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("c3");
 						else
-							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,-1,0,3,3));
+							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,-1,0,TTT_LET_CNT,TTT_NUM_CNT));
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a1");
 						else
-							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,1,3,3));
+							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,1,TTT_LET_CNT,TTT_NUM_CNT));
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
 						if ( ! ttt_curr_pos )
 							ttt_set_curr_pos("a3");
 						else
-							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,-1,3,3));
+							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,-1,TTT_LET_CNT,TTT_NUM_CNT));
 						return true;
 					case K_ENTER:
 					case K_KP_ENTER:
@@ -609,7 +613,7 @@ int ttt_client_event(entity minigame, string event, ...)
 		{
 			vector mouse_pos = minigame_hud_normalize(mousepos,ttt_boardpos,ttt_boardsize);
 			if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame_self.team) )
-				ttt_set_curr_pos(minigame_tile_name(mouse_pos,3,3));
+				ttt_set_curr_pos(minigame_tile_name(mouse_pos,TTT_LET_CNT,TTT_NUM_CNT));
 			if ( ! ttt_valid_tile(ttt_curr_pos) )
 				ttt_set_curr_pos("");
 
