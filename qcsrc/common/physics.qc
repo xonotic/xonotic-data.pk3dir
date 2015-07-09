@@ -1754,7 +1754,19 @@ void PM_Main()
 #endif
 
 	if(PHYS_DEAD(self))
+	{
+		// handle water here
+		vector midpoint = ((self.absmin + self.absmax) * 0.5);
+		if(pointcontents(midpoint) == CONTENT_WATER)
+		{
+			self.velocity = self.velocity * 0.5;
+
+			// do we want this?
+			//if(pointcontents(midpoint + '0 0 2') == CONTENT_WATER)
+				//{ self.velocity_z = 70; }
+		}
 		goto end;
+	}
 
 #ifdef SVQC
 	if (!self.fixangle && !g_bugrigs)
