@@ -41,7 +41,7 @@
 .float spectatorspeed;
 
 // client side physics
-float Physics_Valid(string thecvar)
+bool Physics_Valid(string thecvar)
 {
 	if(!autocvar_g_physics_clientselect) { return false; }
 
