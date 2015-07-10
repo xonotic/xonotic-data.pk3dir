@@ -360,7 +360,6 @@ void Cmd_HUD_SetFields(float argc)
 
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 
-	draw_beginBoldFont();
 	for(i = 1; i < argc - 1; ++i)
 	{
 		float nocomplain;
@@ -499,7 +498,6 @@ void Cmd_HUD_SetFields(float argc)
 	}
 
 	hud_field[hud_num_fields] = SP_END;
-	draw_endBoldFont();
 }
 
 // MOVEUP::
@@ -879,7 +877,6 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	}
 
 	// print the strings of the columns headers and draw the columns
-	draw_beginBoldFont();
 	int i;
 	for(i = 0; i < hud_num_fields; ++i)
 	{
@@ -923,7 +920,6 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 			pos.x -= hud_fontsize.x;
 		}
 	}
-	draw_endBoldFont();
 
 	pos.x = xmin;
 	pos.y += 1.25 * hud_fontsize.y; // skip the header
