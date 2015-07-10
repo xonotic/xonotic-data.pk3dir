@@ -78,54 +78,62 @@ vector MapVote_RGB(int id)
 
 void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string gtype, string pic, float _count, int id)
 {
+	// Find the correct alpha
 	float alpha;
-	float desc_padding = gtv_text_size.x * 3;
+	if(!(mv_flags_start[id] & GTV_AVAILABLE))
+		alpha = 0.2; // The gametype isn't supported by the map
+	else if ( !(mv_flags[id] & GTV_AVAILABLE) && mv_top2_alpha)
+		alpha = mv_top2_alpha; // Fade away if not one of the top 2 choice
+	else
+		alpha = 1; // Normal, full alpha
+
+	// Bounding box details
 	float rect_margin = hud_fontsize.y / 2;
 	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
 	vector rect_size = '1 1 0';
 	rect_size.x = tsize + rect_margin;
 	rect_size.y = maxh + rect_margin;
-	vector rgb = MapVote_RGB(id);
-	vector offset = pos;
-	float nlines = 0;
 
-	if(!(mv_flags_start[id] & GTV_AVAILABLE))
-		alpha = 0.2;
-	else if ( !(mv_flags[id] & GTV_AVAILABLE) && mv_top2_alpha)
-		alpha = mv_top2_alpha;
-	else
-		alpha = 1;
-
+	// Highlight selected item
 	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
 	{
 		drawfill(rect_pos, rect_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
 	}
+
+	// Highlight current vote
+	vector rgb = MapVote_RGB(id);
 	if(id == mv_ownvote)
 	{
 		drawfill(rect_pos, rect_size, rgb, 0.1*alpha, DRAWFLAG_NORMAL);
 		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
 	}
 
+	vector offset = pos;
+
+	float title_gap = gtv_text_size.y * 1.4; // distance between the title and the description
+	pos.y += title_gap;
+	maxh -= title_gap;
+
+	// Evaluate the image size
+	vector image_size = '1 1 0' * gtv_text_size.x * 3;
+	if ( maxh < image_size.y )
+		image_size = '1 1 0' * maxh;
+	image_size *= 0.8;
+	if(pic == "")
+		image_size = '0 0 0';
+	float desc_padding = gtv_text_size.x * 0.6;
+	pos.x += image_size.x + desc_padding;
+	tsize -= image_size.x + desc_padding;
+
+	// Split the description into lines
 	entity title;
 	title = spawn();
 	title.message = MapVote_FormatMapItem(id, mv_pk3[id], _count, tsize, gtv_text_size);
-	title.origin = pos-offset;
-
-	pos.y += gtv_text_size_small.y;
-	pos.y += gtv_text_size.y/2;
-
-	maxh -= gtv_text_size.y;
-
-	entity picent = spawn();
-	picent.origin = pos-offset;
-	picent.maxs = '1 1 0 ' * min(maxh, desc_padding) * 0.8;
-
-	pos.x += desc_padding;
-	tsize -= desc_padding;
 
 	string thelabel = mv_desc[id], ts;
 	entity last = title;
 	entity next = world;
+	float nlines = 0;
 	if( thelabel != "")
 	{
 		float i,n = tokenizebyseparator(thelabel, "\n");
@@ -149,14 +157,19 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		}
 	}
 
-	maxh -= max(nlines*gtv_text_size_small.y,picent.maxs.y);
+	// Center the contents in the bounding box
+	maxh -= max(nlines*gtv_text_size_small.y,image_size.y);
 	if ( maxh > 0 )
 		offset.y += maxh/2;
-	drawstring(title.origin+offset, title.message, gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL);
 
+	// Draw the title
+	drawstring(offset, title.message, gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL);
+
+	// Draw the icon
 	if(pic != "")
-		drawpic(picent.origin+offset, pic, picent.maxs, '1 1 1', alpha, DRAWFLAG_NORMAL);
+		drawpic('0 1 0'*title_gap+'0.5 0 0'*desc_padding+offset, pic, image_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
 
+	// Draw the description
 	for ( last = title.chain; last ; )
 	{
 		drawstring(last.origin+offset, last.message, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
@@ -165,7 +178,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		remove(next);
 	}
 
-	remove(picent);
+	// Cleanup
 	remove(title);
 }
 
