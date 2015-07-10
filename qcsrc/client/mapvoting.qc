@@ -541,8 +541,11 @@ void GameTypeVote_ReadOption(int i)
 
 	if ( mv_flags[i] & GTV_CUSTOM )
 	{
-		mv_pk3[i] = strzone(ReadString()); // name
-		mv_desc[i] = strzone(ReadString()); // description
+		string name = ReadString();
+		if ( strlen(name) < 1 )
+			name = gt;
+		mv_pk3[i] = strzone(name);
+		mv_desc[i] = strzone(ReadString());
 	}
 	else
 	{
