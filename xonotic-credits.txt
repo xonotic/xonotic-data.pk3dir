@@ -59,6 +59,7 @@ Sahil "DiaboliK" Singhal
 nifrek
 
 *Level Design
+Amadeusz "amade/proraide" Sławiński
 Ben "MooKow" Banker
 Calinou
 Cortez
@@ -76,6 +77,7 @@ Pearce "theShadow" Michal
 Rasmus "FruitieX" Eskola
 Ruszkai "CuBe0wL" Ákos
 Severin "sev" Meyer
+ShadoW
 
 *Music / Sound FX
 AquaNova (Archer)
