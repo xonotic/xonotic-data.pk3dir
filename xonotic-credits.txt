@@ -68,6 +68,7 @@ Debugger
 Jakob "tZork" Markström Gröhn
 Konrad "Justin" Slawinski
 Maddin
+L0
 Łukasz "kuniu the frogg" Polek
 Maik "SavageX" Merten
 Marvin "Mirio" Beck
