@@ -119,8 +119,6 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	if ( maxh < image_size.y )
 		image_size = '1 1 0' * maxh;
 	image_size *= 0.8;
-	if(pic == "")
-		image_size = '0 0 0';
 	float desc_padding = gtv_text_size.x * 0.6;
 	pos.x += image_size.x + desc_padding;
 	tsize -= image_size.x + desc_padding;
