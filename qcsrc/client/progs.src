@@ -11,13 +11,14 @@ damage.qc
 effects.qc
 gibs.qc
 hook.qc
-hud_config.qc
 hud.qc
+hud_config.qc
 laser.qc
 main.qc
 mapvoting.qc
 miscfunctions.qc
 modeleffects.qc
+movelib.qc
 movetypes.qc
 noise.qc
 particles.qc
@@ -31,12 +32,15 @@ target_music.qc
 teamradar.qc
 tturrets.qc
 tuba.qc
-vehicles/vehicles.qc
+t_items.qc
 view.qc
 wall.qc
 waypointsprites.qc
 
-command/cl_cmd.qc
+command/all.qc
+
+vehicles/bumblebee.qc
+vehicles/all.qc
 
 weapons/projectile.qc // TODO
 
@@ -51,21 +55,15 @@ weapons/projectile.qc // TODO
 ../common/urllib.qc
 ../common/util.qc
 
-../common/command/generic.qc
-../common/command/markup.qc
-../common/command/rpn.qc
+../common/items/all.qc
 
-../common/monsters/monsters.qc
+../common/monsters/all.qc
 
-../common/weapons/weapons.qc // TODO
+../common/weapons/all.qc // TODO
 
 ../csqcmodellib/cl_model.qc
 ../csqcmodellib/cl_player.qc
 ../csqcmodellib/interpolate.qc
-
-../server/movelib.qc
-../server/t_items.qc
-../server/vehicles/bumblebee.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc

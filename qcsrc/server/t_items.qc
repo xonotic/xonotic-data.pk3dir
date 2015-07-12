@@ -1,31 +1,32 @@
-#if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "../common/util.qh"
-    #include "../common/buffs.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "../client/autocvars.qh"
-    #include "../client/movetypes.qh"
-    #include "../client/main.qh"
-    #include "../csqcmodellib/common.qh"
-    #include "../csqcmodellib/cl_model.qh"
-    #include "t_items.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/weaponsystem.qh"
-    #include "t_items.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
+#include "t_items.qh"
+
+#include "../common/items/all.qc"
+
+#if defined(SVQC)
+    #include "_all.qh"
+
+    #include "g_subs.qh"
+    #include "waypointsprites.qh"
+
+    #include "bot/bot.qh"
+    #include "bot/waypoints.qh"
+
     #include "mutators/mutators_include.qh"
+
+    #include "weapons/common.qh"
+    #include "weapons/selection.qh"
+    #include "weapons/weaponsystem.qh"
+
+    #include "../common/constants.qh"
+    #include "../common/deathtypes.qh"
+    #include "../common/notifications.qh"
+    #include "../common/util.qh"
+
+    #include "../common/monsters/all.qh"
+
+    #include "../common/weapons/all.qh"
+
+    #include "../warpzonelib/util_server.qh"
 #endif
 
 #ifdef CSQC
@@ -229,7 +230,7 @@ void ItemRead(float _IsNew)
 #endif
 
 #ifdef SVQC
-float ItemSend(entity to, float sf)
+bool ItemSend(entity to, int sf)
 {
     if(self.gravity)
         sf |= ISF_DROP;
@@ -537,23 +538,23 @@ void Item_ScheduleInitialRespawn(entity e)
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
 {
-	if (!item.ammotype)
+	if (!item.(ammotype))
 		return false;
 
 	if (item.spawnshieldtime)
 	{
-		if ((player.ammotype < ammomax) || item.pickup_anyway)
+		if ((player.(ammotype) < ammomax) || item.pickup_anyway)
 		{
-			player.ammotype = bound(player.ammotype, ammomax, player.ammotype + item.ammotype);
+			player.(ammotype) = bound(player.(ammotype), ammomax, player.(ammotype) + item.(ammotype));
 			goto YEAH;
 		}
 	}
 	else if(g_weapon_stay == 2)
 	{
-		float mi = min(item.ammotype, ammomax);
-		if (player.ammotype < mi)
+		float mi = min(item.(ammotype), ammomax);
+		if (player.(ammotype) < mi)
 		{
-			player.ammotype = mi;
+			player.(ammotype) = mi;
 			goto YEAH;
 		}
 	}
@@ -664,6 +665,8 @@ float Item_GiveTo(entity item, entity player)
 	return 1;
 }
 
+.entity itemdef;
+
 void Item_Touch (void)
 {
 	entity e, head;
@@ -703,8 +706,9 @@ void Item_Touch (void)
 		self.invincible_finished = max(0, self.invincible_finished - time);
 		self.superweapons_finished = max(0, self.superweapons_finished - time);
 	}
-
-	if(!Item_GiveTo(self, other))
+	entity it = self.itemdef;
+	bool gave = (it && it.instanceOfPickup) ? ITEM_HANDLE(Pickup, it, self, other) : Item_GiveTo(self, other);
+	if (!gave)
 	{
 		if (self.classname == "droppedweapon")
 		{
@@ -725,9 +729,7 @@ void Item_Touch (void)
 
 	if (self.classname == "droppedweapon")
 		remove (self);
-	else if (!self.spawnshieldtime)
-		return;
-	else
+	else if (self.spawnshieldtime)
 	{
 		if(self.team)
 		{
@@ -811,7 +813,7 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 
 float weapon_pickupevalfunc(entity player, entity item)
 {
-	float c, j, position;
+	float c;
 
 	// See if I have it already
 	if(item.weapons & ~player.weapons)
@@ -834,8 +836,8 @@ float weapon_pickupevalfunc(entity player, entity item)
 	if( bot_custom_weapon && c )
 	{
 		// Find the highest position on any range
-		position = -1;
-		for(j = 0; j < WEP_LAST ; ++j){
+		int position = -1;
+		for (int j = 0; j < WEP_LAST ; ++j){
 			if(
 					bot_weapons_far[j] == item.weapon ||
 					bot_weapons_mid[j] == item.weapon ||
@@ -1152,15 +1154,21 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		return;
 	}
 }
+
+void StartItemA (entity a)
+{
+    self.itemdef = a;
+    StartItem(a.m_model, a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
+}
+
 void spawnfunc_item_rockets (void) {
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_rockets.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "rockets", IT_ROCKETS, 0, 0, commodity_pickupevalfunc, 3000);
+    StartItemA (ITEM_Rockets);
 }
 
-void spawnfunc_item_shells (void);
 void spawnfunc_item_bullets (void) {
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
@@ -1176,7 +1184,7 @@ void spawnfunc_item_bullets (void) {
 		self.ammo_nails = g_pickup_nails;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_bullets.mdl", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "bullets", IT_NAILS, 0, 0, commodity_pickupevalfunc, 2000);
+    StartItemA (ITEM_Bullets);
 }
 
 void spawnfunc_item_cells (void) {
@@ -1184,7 +1192,7 @@ void spawnfunc_item_cells (void) {
 		self.ammo_cells = g_pickup_cells;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "cells", IT_CELLS, 0, 0, commodity_pickupevalfunc, 2000);
+	StartItemA (ITEM_Cells);
 }
 
 void spawnfunc_item_plasma()
@@ -1193,7 +1201,7 @@ void spawnfunc_item_plasma()
 		self.ammo_plasma = g_pickup_plasma;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "plasma", IT_PLASMA, 0, 0, commodity_pickupevalfunc, 2000);
+	StartItemA (ITEM_Plasma);
 }
 
 void spawnfunc_item_shells (void) {
@@ -1211,7 +1219,7 @@ void spawnfunc_item_shells (void) {
 		self.ammo_shells = g_pickup_shells;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/a_shells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "shells", IT_SHELLS, 0, 0, commodity_pickupevalfunc, 500);
+	StartItemA (ITEM_Shells);
 }
 
 void spawnfunc_item_armor_small (void) {
@@ -1221,7 +1229,7 @@ void spawnfunc_item_armor_small (void) {
 		self.max_armorvalue = g_pickup_armorsmall_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armorsmall_anyway;
-	StartItem ("models/items/item_armor_small.md3", "misc/armor1.wav", g_pickup_respawntime_short, g_pickup_respawntimejitter_short, "5 Armor", IT_ARMOR_SHARD, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItemA (ITEM_ArmorSmall);
 }
 
 void spawnfunc_item_armor_medium (void) {
@@ -1231,7 +1239,7 @@ void spawnfunc_item_armor_medium (void) {
 		self.max_armorvalue = g_pickup_armormedium_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armormedium_anyway;
-	StartItem ("models/items/item_armor_medium.md3", "misc/armor10.wav", g_pickup_respawntime_medium, g_pickup_respawntimejitter_medium, "25 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
+	StartItemA (ITEM_ArmorMedium);
 }
 
 void spawnfunc_item_armor_big (void) {
@@ -1241,7 +1249,7 @@ void spawnfunc_item_armor_big (void) {
 		self.max_armorvalue = g_pickup_armorbig_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armorbig_anyway;
-	StartItem ("models/items/item_armor_big.md3", "misc/armor17_5.wav", g_pickup_respawntime_long, g_pickup_respawntimejitter_long, "50 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, 20000);
+	StartItemA (ITEM_ArmorBig);
 }
 
 void spawnfunc_item_armor_large (void) {
@@ -1251,7 +1259,7 @@ void spawnfunc_item_armor_large (void) {
 		self.max_armorvalue = g_pickup_armorlarge_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armorlarge_anyway;
-	StartItem ("models/items/item_armor_large.md3", "misc/armor25.wav", g_pickup_respawntime_long, g_pickup_respawntimejitter_long, "100 Armor", IT_ARMOR, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+	StartItemA (ITEM_ArmorLarge);
 }
 
 void spawnfunc_item_health_small (void) {
@@ -1261,7 +1269,7 @@ void spawnfunc_item_health_small (void) {
 		self.health = g_pickup_healthsmall;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_healthsmall_anyway;
-	StartItem ("models/items/g_h1.md3", "misc/minihealth.wav", g_pickup_respawntime_short, g_pickup_respawntimejitter_short, "5 Health", IT_5HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItemA (ITEM_HealthSmall);
 }
 
 void spawnfunc_item_health_medium (void) {
@@ -1271,7 +1279,7 @@ void spawnfunc_item_health_medium (void) {
 		self.health = g_pickup_healthmedium;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_healthmedium_anyway;
-	StartItem ("models/items/g_h25.md3", "misc/mediumhealth.wav", g_pickup_respawntime_short, g_pickup_respawntimejitter_short, "25 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
+    StartItemA (ITEM_HealthMedium);
 }
 
 void spawnfunc_item_health_large (void) {
@@ -1281,17 +1289,17 @@ void spawnfunc_item_health_large (void) {
 		self.health = g_pickup_healthlarge;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_healthlarge_anyway;
-	StartItem ("models/items/g_h50.md3", "misc/mediumhealth.wav", g_pickup_respawntime_medium, g_pickup_respawntimejitter_medium, "50 Health", IT_25HP, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_MID);
+	StartItemA (ITEM_HealthLarge);
 }
 
 void spawnfunc_item_health_mega (void) {
-		if(!self.max_health)
-			self.max_health = g_pickup_healthmega_max;
-		if(!self.health)
-			self.health = g_pickup_healthmega;
-		if(!self.pickup_anyway)
-			self.pickup_anyway = g_pickup_healthmega_anyway;
-		StartItem ("models/items/g_h100.md3", "misc/megahealth.wav", g_pickup_respawntime_long, g_pickup_respawntimejitter_long, "100 Health", IT_HEALTH, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+    if(!self.max_health)
+        self.max_health = g_pickup_healthmega_max;
+    if(!self.health)
+        self.health = g_pickup_healthmega;
+    if(!self.pickup_anyway)
+        self.pickup_anyway = g_pickup_healthmega_anyway;
+    StartItemA (ITEM_HealthMega);
 }
 
 // support old misnamed entities
@@ -1305,13 +1313,13 @@ void spawnfunc_item_strength (void) {
 		precache_sound("weapons/strength_fire.wav");
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
-		StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+		StartItemA (ITEM_Strength);
 }
 
 void spawnfunc_item_invincible (void) {
 		if(!self.invincible_finished)
 			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-		StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+		StartItemA (ITEM_Shield);
 }
 
 // compatibility:
@@ -1472,7 +1480,7 @@ void spawnfunc_item_fuel(void)
 		self.ammo_fuel = g_pickup_fuel;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItem ("models/items/g_fuel.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "Fuel", IT_FUEL, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItemA (ITEM_JetpackFuel);
 }
 
 void spawnfunc_item_fuel_regen(void)
@@ -1482,7 +1490,7 @@ void spawnfunc_item_fuel_regen(void)
 		spawnfunc_item_fuel();
 		return;
 	}
-	StartItem ("models/items/g_fuelregen.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Fuel regenerator", IT_FUEL_REGEN, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItemA (ITEM_JetpackRegen);
 }
 
 void spawnfunc_item_jetpack(void)
@@ -1494,7 +1502,7 @@ void spawnfunc_item_jetpack(void)
 		spawnfunc_item_fuel();
 		return;
 	}
-	StartItem ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
+	StartItemA (ITEM_Jetpack);
 }
 
 float GiveWeapon(entity e, float wpn, float op, float val)
@@ -1530,56 +1538,56 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 float GiveBit(entity e, .float fld, float bit, float op, float val)
 {
 	float v0, v1;
-	v0 = (e.fld & bit);
+	v0 = (e.(fld) & bit);
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				e.fld |= bit;
+				e.(fld) |= bit;
 			else
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				e.fld |= bit;
+				e.(fld) |= bit;
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.fld &= ~bit;
+				e.(fld) &= ~bit;
 			break;
 	}
-	v1 = (e.fld & bit);
+	v1 = (e.(fld) & bit);
 	return (v0 != v1);
 }
 
 float GiveValue(entity e, .float fld, float op, float val)
 {
 	float v0, v1;
-	v0 = e.fld;
+	v0 = e.(fld);
 	switch(op)
 	{
 		case OP_SET:
-			e.fld = val;
+			e.(fld) = val;
 			break;
 		case OP_MIN:
-			e.fld = max(e.fld, val); // min 100 cells = at least 100 cells
+			e.(fld) = max(e.(fld), val); // min 100 cells = at least 100 cells
 			break;
 		case OP_MAX:
-			e.fld = min(e.fld, val);
+			e.(fld) = min(e.(fld), val);
 			break;
 		case OP_PLUS:
-			e.fld += val;
+			e.(fld) += val;
 			break;
 		case OP_MINUS:
-			e.fld -= val;
+			e.(fld) -= val;
 			break;
 	}
-	v1 = e.fld;
+	v1 = e.(fld);
 	return (v0 != v1);
 }
 
@@ -1602,9 +1610,9 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime)
 {
 	if(v0 < v1)
-		e.rotfield = max(e.rotfield, time + rottime);
+		e.(rotfield) = max(e.(rotfield), time + rottime);
 	else if(v0 > v1)
-		e.regenfield = max(e.regenfield, time + regentime);
+		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
 float GiveItems(entity e, float beginarg, float endarg)
 {

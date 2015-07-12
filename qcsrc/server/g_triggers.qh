@@ -193,7 +193,7 @@ void spawnfunc_func_pointparticles();
 
 void spawnfunc_func_sparks();
 
-float rainsnow_SendEntity(entity to, float sf);
+float rainsnow_SendEntity(entity to, int sf);
 
 /*QUAKED spawnfunc_func_rain (0 .5 .8) ?
 This is an invisible area like a trigger, which rain falls inside of.

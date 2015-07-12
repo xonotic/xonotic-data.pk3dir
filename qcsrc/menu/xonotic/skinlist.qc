@@ -1,9 +1,11 @@
-#ifdef INTERFACE
-CLASS(XonoticSkinList) EXTENDS(XonoticListBox)
+#ifndef SKINLIST_H
+#define SKINLIST_H
+#include "listbox.qc"
+CLASS(XonoticSkinList, XonoticListBox)
 	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity))
 	ATTRIB(XonoticSkinList, rowsPerItem, float, 4)
 	METHOD(XonoticSkinList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticSkinList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticSkinList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticSkinList, getSkins, void(entity))
 	METHOD(XonoticSkinList, setSkin, void(entity))
 	METHOD(XonoticSkinList, loadCvars, void(entity))
@@ -42,7 +44,7 @@ const float SKINPARM_COUNT = 4;
 entity makeXonoticSkinList()
 {
 	entity me;
-	me = spawnXonoticSkinList();
+	me = NEW(XonoticSkinList);
 	me.configureXonoticSkinList(me);
 	return me;
 }
@@ -149,12 +151,17 @@ void XonoticSkinList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.columnNameSize = 1 - me.columnPreviewSize - 2 * me.realFontSize.x;
 }
 
-void XonoticSkinList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticSkinList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.skinParameter(me, i, SKINPARM_PREVIEW);
 	draw_Picture(me.columnPreviewOrigin * eX, s, me.columnPreviewSize * eX + eY, '1 1 1', 1);

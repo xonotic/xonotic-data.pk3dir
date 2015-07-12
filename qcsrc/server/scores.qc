@@ -1,4 +1,10 @@
 #include "scores.qh"
+#include "_all.qh"
+
+#include "command/common.qh"
+#include "mutators/mutators_include.qh"
+#include "../common/playerstats.qh"
+#include "../common/teams.qh"
 
 .entity scorekeeper;
 entity teamscorekeepers[16];
@@ -18,29 +24,29 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
 		return previous;
 	if((fieldflags & SFL_SORT_PRIO_MASK) < previous.y)
 		return previous;
-	if(t1.field == t2.field)
+	if (t1.(field) == t2.(field))
 		return previous;
 
 	previous.y = fieldflags & SFL_SORT_PRIO_MASK;
 
 	if(fieldflags & SFL_ZERO_IS_WORST)
 	{
-		if(t1.field == 0)
+		if (t1.(field) == 0)
 		{
 			previous.x = -1;
 			return previous;
 		}
-		else if(t2.field == 0)
+		else if (t2.(field) == 0)
 		{
 			previous.x = +1;
 			return previous;
 		}
 	}
 
-	if(fieldflags & SFL_LOWER_IS_BETTER)
-		previous.x = (t2.field - t1.field);
+	if (fieldflags & SFL_LOWER_IS_BETTER)
+		previous.x = (t2.(field) - t1.(field));
 	else
-		previous.x = (t1.field - t2.field);
+		previous.x = (t1.(field) - t2.(field));
 
 	return previous;
 }
@@ -180,7 +186,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	}
 }
 
-float ScoreInfo_SendEntity(entity to, float sf)
+float ScoreInfo_SendEntity(entity to, int sf)
 {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
@@ -699,7 +705,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 	plist = world;
 
 	FOR_EACH_CLIENT(p)
-		p.field = 0;
+		p.(field) = 0;
 
 	FOR_EACH_CLIENT(p) if(p.scorekeeper)
 	{
@@ -739,7 +745,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, 0))
 			j = i;
 
-		pbest.field = j;
+		pbest.(field) = j;
 
 		if (!pfirst)
 			pfirst = pbest;

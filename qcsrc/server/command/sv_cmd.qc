@@ -1,25 +1,39 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/mathlib.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/teams.qh"
-    #include "../../common/util.qh"
-    #include "../../common/command/shared_defs.qh"
-    #include "../../common/monsters/sv_monsters.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../../common/mapinfo.qh"
-    #include "common.qh"
-    #include "cmd.qh"
-    #include "sv_cmd.qh"
-    #include "../anticheat.qh"
-    #include "../playerdemo.qh"
-#endif
+#include "../../common/command/command.qh"
+#include "sv_cmd.qh"
+#include "../_all.qh"
+
+#include "banning.qh"
+#include "cmd.qh"
+#include "common.qh"
+#include "getreplies.qh"
+#include "radarmap.qh"
+
+#include "../anticheat.qh"
+#include "../campaign.qh"
+#include "../cl_client.qh"
+#include "../cl_player.qh"
+#include "../g_world.qh"
+#include "../ipban.qh"
+#include "../playerdemo.qh"
+#include "../teamplay.qh"
+
+#include "../bot/bot.qh"
+#include "../bot/navigation.qh"
+#include "../bot/scripting.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/monsters/sv_monsters.qh"
+
+#include "../../warpzonelib/mathlib.qh"
+
+void PutObserverInServer (void);
 
 // =====================================================
 //  Server side game commands code, reworked by Samual
@@ -46,7 +60,7 @@ void make_mapinfo_Think()
 void changematchtime(float delta, float mi, float ma)
 {
 	float cur;
-	float new;
+	float update;
 	float lim;
 
 	if(delta == 0)
@@ -67,21 +81,21 @@ void changematchtime(float delta, float mi, float ma)
 		if(lim == 0)
 			return; // cannot increase any further
 		else if(lim < ma)
-			new = min(ma, lim + delta);
+			update = min(ma, lim + delta);
 		else // already above maximum: FAIL
 			return;
 	}
 	else
 	{
 		if(lim == 0) // infinite: try reducing to max, if we are allowed to
-			new = max(mi, ma);
+			update = max(mi, ma);
 		else if(lim > mi) // above minimum: decrease
-			new = max(mi, lim + delta);
+			update = max(mi, lim + delta);
 		else // already below minimum: FAIL
 			return;
 	}
 
-	cvar_set("timelimit", ftos(new / 60));
+	cvar_set("timelimit", ftos(update / 60));
 }
 
 
@@ -1380,12 +1394,13 @@ void GameCommand_shuffleteams(float request)
 			{
 				entity tmp_player;
 				int i;
-				float x, z, t_teams, t_players, team_color;
+				float x, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
 				t_players = 0;
 				t_teams = 0;
-				FOR_EACH_PLAYER(tmp_player)
+				FOR_EACH_CLIENT(tmp_player)
+				if(IS_PLAYER(tmp_player) || tmp_player.caplayer)
 				{
 					CheckAllowedTeams(tmp_player);
 
@@ -1398,7 +1413,8 @@ void GameCommand_shuffleteams(float request)
 				}
 
 				// build a list of the players in a random order
-				FOR_EACH_PLAYER(tmp_player)
+				FOR_EACH_CLIENT(tmp_player)
+				if(IS_PLAYER(tmp_player) || tmp_player.caplayer)
 				{
 					for (;;)
 					{
@@ -1417,7 +1433,7 @@ void GameCommand_shuffleteams(float request)
 				}
 
 				// finally, from the list made earlier, re-join the players in different order.
-				for(i = 1; i <= t_teams; ++i)
+				for (int i = 1; i <= t_teams; ++i)
 				{
 					// find out how many players to assign to this team
 					x = (t_players / t_teams);
@@ -1426,7 +1442,7 @@ void GameCommand_shuffleteams(float request)
 					team_color = Team_NumberToTeam(i);
 
 					// sort through the random list of players made earlier
-					for(z = 1; z <= maxclients; ++z)
+					for (int z = 1; z <= maxclients; ++z)
 					{
 						if (!(shuffleteams_teams[i] >= x))
 						{

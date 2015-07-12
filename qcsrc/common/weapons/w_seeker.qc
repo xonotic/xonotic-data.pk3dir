@@ -596,7 +596,7 @@ void W_Seeker_Fire_Tag(void)
 // Begin: Genereal weapon functions
 // ============================
 
-float W_Seeker(float req)
+bool W_Seeker(int req)
 {
 	float ammo_amount;
 
@@ -725,7 +725,7 @@ float W_Seeker(float req)
 }
 #endif
 #ifdef CSQC
-float W_Seeker(float req)
+bool W_Seeker(int req)
 {
 	switch(req)
 	{

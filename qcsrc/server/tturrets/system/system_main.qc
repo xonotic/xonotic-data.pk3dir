@@ -1,3 +1,8 @@
+#include "../../_all.qh"
+
+#include "../../g_damage.qh"
+#include "../../bot/bot.qh"
+
 #define cvar_base "g_turrets_unit_"
 .float clientframe;
 void turrets_setframe(float _frame, float client_only)
@@ -15,7 +20,7 @@ void turrets_setframe(float _frame, float client_only)
 
 }
 
-float turret_send(entity to, float sf)
+float turret_send(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
@@ -931,7 +936,7 @@ void turret_think()
 
 void turret_fire()
 {
-    if (autocvar_g_turrets_nofire != 0)
+    if (autocvar_g_turrets_nofire)
         return;
 
     self.turret_firefunc();
@@ -991,7 +996,7 @@ void turrets_manager_think()
     self.nextthink = time + 1;
 
     entity e;
-    if (autocvar_g_turrets_reloadcvars == 1)
+    if (autocvar_g_turrets_reloadcvars)
     {
         e = nextent(world);
         while (e)

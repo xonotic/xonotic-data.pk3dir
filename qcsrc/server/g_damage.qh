@@ -10,7 +10,7 @@
     #include "../common/constants.qh"
     #include "../common/teams.qh"
     #include "../common/util.qh"
-    #include "../common/weapons/weapons.qh"
+    #include "../common/weapons/all.qh"
     #include "weapons/accuracy.qh"
     #include "weapons/csqcprojectile.qh"
     #include "weapons/selection.qh"
@@ -22,7 +22,7 @@
     #include "../common/deathtypes.qh"
     #include "mutators/mutators_include.qh"
     #include "tturrets/include/turrets_early.qh"
-    #include "vehicles/vehicles_def.qh"
+    #include "vehicles/vehicle.qh"
     #include "../csqcmodellib/sv_model.qh"
     #include "../common/playerstats.qh"
     #include "g_hook.qh"
@@ -35,7 +35,7 @@
 .float dmg_force;
 .float dmg_radius;
 
-float Damage_DamageInfo_SendEntity(entity to, float sf);
+float Damage_DamageInfo_SendEntity(entity to, int sf);
 
 void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner);
 

@@ -419,7 +419,7 @@ void W_Electro_CheckAttack(void)
 }
 
 .float bot_secondary_electromooth;
-float W_Electro(float req)
+bool W_Electro(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -569,7 +569,7 @@ float W_Electro(float req)
 }
 #endif
 #ifdef CSQC
-float W_Electro(float req)
+bool W_Electro(int req)
 {
 	switch(req)
 	{

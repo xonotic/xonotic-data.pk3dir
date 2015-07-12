@@ -146,7 +146,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float W_RocketPropelledChainsaw(float req)
+bool W_RocketPropelledChainsaw(int req)
 {
 	float ammo_amount = false;
 	switch(req)
@@ -232,7 +232,7 @@ float W_RocketPropelledChainsaw(float req)
 #endif
 
 #ifdef CSQC
-float W_RocketPropelledChainsaw(float req)
+bool W_RocketPropelledChainsaw(int req)
 {
 	switch(req)
 	{

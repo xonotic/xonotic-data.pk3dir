@@ -78,7 +78,7 @@ vector autocvar_g_vehicle_bumblebee_bouncepain;
 float autocvar_g_vehicle_bumblebee = 0;
 
 
-float bumble_raygun_send(entity to, float sf);
+float bumble_raygun_send(entity to, int sf);
 
 const vector BUMB_MIN = '-130 -130 -130';
 const vector BUMB_MAX = '130 130 130';
@@ -117,7 +117,7 @@ void bumb_spawn(float _f);
 
 void spawnfunc_vehicle_bumblebee();
 
-float bumble_raygun_send(entity to, float sf);
+float bumble_raygun_send(entity to, int sf);
 #endif // SVQC
 
 #ifdef CSQC

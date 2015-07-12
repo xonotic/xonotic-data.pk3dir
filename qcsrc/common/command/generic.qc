@@ -1,5 +1,28 @@
+#include "command.qh"
 #include "generic.qh"
-#include "shared_defs.qh"
+
+#include "markup.qh"
+#include "rpn.qh"
+
+#include "../mapinfo.qh"
+#include "../test.qh"
+
+#ifndef MENUQC
+	#include "../notifications.qh"
+#endif
+
+#ifdef CSQC
+	#include "../../client/command/cl_cmd.qh"
+#endif
+
+#ifdef SVQC
+	#include "../../server/command/banning.qh"
+	#include "../../server/command/cmd.qh"
+	#include "../../server/command/common.qh"
+	#include "../../server/command/sv_cmd.qh"
+
+	#include "../../common/weapons/config.qh"
+#endif
 
 // =========================================================
 //  Generic program common command code, written by Samual
@@ -213,6 +236,25 @@ void GenericCommand_dumpcommands(float request)
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpcommands"));
 			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_dumpitems(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			Dump_Items();
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			printf("\nUsage:^3 %s dumpitems", GetProgramCommandPrefix());
 			return;
 		}
 	}
@@ -628,6 +670,7 @@ void GenericCommand_(float request)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
+	GENERIC_COMMAND("dumpitems", GenericCommand_dumpitems(request), "Dump all items to the console") \
 	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
 	GENERIC_COMMAND("dumpweapons", GenericCommand_dumpweapons(request), "Dump all weapons into weapons_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \

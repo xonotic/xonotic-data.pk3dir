@@ -1,4 +1,18 @@
 #include "race.qh"
+#include "_all.qh"
+
+#include "cl_client.qh"
+#include "portals.qh"
+#include "scores.qh"
+#include "spawnpoints.qh"
+#include "waypointsprites.qh"
+#include "bot/waypoints.qh"
+#include "bot/navigation.qh"
+#include "command/getreplies.qh"
+#include "../common/deathtypes.qh"
+#include "../common/notifications.qh"
+#include "../common/mapinfo.qh"
+#include "../warpzonelib/util_server.qh"
 
 void W_Porto_Fail(float failhard);
 
@@ -79,7 +93,6 @@ void spawnfunc_target_checkpoint();
 .float race_penalty_accumulator;
 .string race_penalty_reason;
 .float race_checkpoint; // player: next checkpoint that has to be reached
-.float race_laptime;
 .entity race_lastpenalty;
 
 .entity sprite;
@@ -174,6 +187,27 @@ void race_send_recordtime(float msg)
 	WriteByte(msg, TE_CSQC_RACE);
 	WriteByte(msg, RACE_NET_SERVER_RECORD);
 	WriteInt24_t(msg, race_readTime(GetMapname(), 1));
+}
+
+
+void race_send_speedaward(float msg)
+{
+	// send the best speed of the round
+	WriteByte(msg, SVC_TEMPENTITY);
+	WriteByte(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_SPEED_AWARD);
+	WriteInt24_t(msg, floor(speedaward_speed+0.5));
+	WriteString(msg, speedaward_holder);
+}
+
+void race_send_speedaward_alltimebest(float msg)
+{
+	// send the best speed
+	WriteByte(msg, SVC_TEMPENTITY);
+	WriteByte(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
+	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
+	WriteString(msg, speedaward_alltimebest_holder);
 }
 
 void race_SendRankings(float pos, float prevpos, float del, float msg)
