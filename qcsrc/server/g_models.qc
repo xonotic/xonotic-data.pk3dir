@@ -25,7 +25,7 @@ void g_model_setcolormaptoactivator (void)
 void g_clientmodel_setcolormaptoactivator (void)
 {
 	g_model_setcolormaptoactivator();
-	self.SendFlags |= 9;
+	self.SendFlags |= (8 | 1);
 }
 
 void g_clientmodel_use(void)
