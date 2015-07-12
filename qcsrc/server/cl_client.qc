@@ -2172,8 +2172,8 @@ void SpectatorThink()
 {
 	if ( self.impulse )
 	{
-		MinigameImpulse(self.impulse);
-		self.impulse = 0;
+		if(MinigameImpulse(self.impulse))
+			self.impulse = 0;
 	}
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
