@@ -19,8 +19,7 @@ void Ent_Wall_PreDraw()
 	}
 	else
 	{
-		vector org;
-		org = getpropertyvec(VF_ORIGIN);
+		vector org = getpropertyvec(VF_ORIGIN);
 		if(!checkpvs(org, self))
 			self.alpha = 0;
 		else if(self.fade_start || self.fade_end) {
