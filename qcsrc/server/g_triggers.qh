@@ -385,4 +385,8 @@ void spawnfunc_relay_activatetoggle();
 void spawnfunc_target_changelevel_use();
 
 void spawnfunc_target_changelevel();
+
+.float antiwall_flag; // Variable to define what to do with func_clientwall
+// 0 == do nothing, 1 == deactivate, 2 == activate
+
 #endif
