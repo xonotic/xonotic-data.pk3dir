@@ -1,10 +1,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../../dpdefs/progsdefs.qh"
-    #include "../../../dpdefs/dpextensions.qh"
+	#include "../../../server/_all.qh"
     #include "../../util.qh"
-    #include "../../../server/_all.qh"
+    #include "../../../server/defs.qh"
 #endif
 
 #ifdef SVQC

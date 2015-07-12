@@ -3,13 +3,13 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
+	#include "../../server/_all.qh"
     #include "../../warpzonelib/common.qh"
     #include "../../warpzonelib/util_server.qh"
     #include "../../warpzonelib/server.qh"
     #include "../constants.qh"
 	#include "../triggers/subs.qh"
     #include "../util.qh"
-    #include "../../server/_all.qh"
     #include "../../server/weapons/csqcprojectile.qh"
     #include "../../server/autocvars.qh"
     #include "../../server/constants.qh"

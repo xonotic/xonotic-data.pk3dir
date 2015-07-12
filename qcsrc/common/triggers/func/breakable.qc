@@ -1,6 +1,14 @@
 #ifdef SVQC
-#include "../../../server/weapons/common.qh"
+
 #include "../../../server/_all.qh"
+
+#include "../../../server/g_subs.qh"
+#include "../../../server/waypointsprites.qh"
+#include "../../../server/g_damage.qh"
+#include "../../../server/bot/bot.qh"
+#include "../../common/csqcmodel_settings.qh"
+#include "../../../csqcmodellib/sv_model.qh"
+#include "../../../server/weapons/common.qh"
 
 .entity sprite;
 

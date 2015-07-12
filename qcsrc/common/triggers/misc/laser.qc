@@ -1,5 +1,5 @@
 #if defined(CSQC)
-	#include "../../../dpdefs/csprogsdefs.qh"
+	#include "../../../client/_all.qh"
 	#include "../../buffs.qh"
 	#include "../../../csqcmodellib/interpolate.qh"
 	#include "../../../client/main.qh"
@@ -269,14 +269,15 @@ void spawnfunc_misc_laser()
 // a laser goes from origin in direction angles
 // it has color 'colormod'
 // and stops when something is in the way
-.int cnt; // end effect
-.vector colormod;
-.int state; // on-off
-.int count; // flags for the laser
-.vector velocity;
-.float alpha;
-.float scale; // scaling factor of the thickness
-.float modelscale; // scaling factor of the dlight
+entityclass(Laser);
+class(Laser) .int cnt; // end effect
+class(Laser) .vector colormod;
+class(Laser) .int state; // on-off
+class(Laser) .int count; // flags for the laser
+class(Laser) .vector velocity;
+class(Laser) .float alpha;
+class(Laser) .float scale; // scaling factor of the thickness
+class(Laser) .float modelscale; // scaling factor of the dlight
 
 void Draw_Laser()
 {

@@ -2,7 +2,6 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include "../../../server/_all.qh"
-	#include "../../../dpdefs/progsdefs.qh"
     #include "../../../warpzonelib/util_server.qh"
     #include "../../weapons/all.qh"
     #include "../../../server/defs.qh"
