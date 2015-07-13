@@ -665,7 +665,7 @@ void W_Shockwave_Attack(void)
 	}
 }
 
-float W_Shockwave(float req)
+bool W_Shockwave(int req)
 {
 	switch(req)
 	{
@@ -864,7 +864,7 @@ void Net_ReadShockwaveParticle(void)
 	shockwave.sw_time = time;
 }
 
-float W_Shockwave(float req)
+bool W_Shockwave(int req)
 {
 	switch(req)
 	{

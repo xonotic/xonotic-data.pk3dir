@@ -98,12 +98,6 @@ float vehicles_exit_running;
 #define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
 	ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
-#ifdef VEHICLES_USE_ODE
-void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object
-void(entity e, vector force, vector force_pos) physics_addforce = #541; // apply a force from certain origin, length of force vector is power of force
-void(entity e, vector torque) physics_addtorque = #542; // add relative torque
-#endif  // VEHICLES_USE_ODE
-
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
 void vehicles_exit(float eject);

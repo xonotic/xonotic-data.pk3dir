@@ -1,4 +1,13 @@
-void ok_DecreaseCharge(entity ent, float wep)
+#include "mutator_overkill.qh"
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+void W_Blaster_Attack(float, float, float, float, float, float, float, float, float, float);
+void spawnfunc_weapon_hmg();
+void spawnfunc_weapon_rpc();
+
+void ok_DecreaseCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return;
 
@@ -10,7 +19,7 @@ void ok_DecreaseCharge(entity ent, float wep)
 	ent.ammo_charge[wep] -= max(0, cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
-void ok_IncreaseCharge(entity ent, float wep)
+void ok_IncreaseCharge(entity ent, int wep)
 {
 	entity wepent = get_weaponinfo(wep);
 
@@ -22,7 +31,7 @@ void ok_IncreaseCharge(entity ent, float wep)
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
-float ok_CheckWeaponCharge(entity ent, float wep)
+float ok_CheckWeaponCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return true;
 
@@ -183,9 +192,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 {
 	if(autocvar_g_overkill_ammo_charge)
 	{
-		float i;
-
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
 			self.ammo_charge[i] = autocvar_g_overkill_ammo_charge_limit;
 
 		self.ok_use_ammocharge = 1;

@@ -1,5 +1,8 @@
+#include "cl_client.qh"
+
 #include "waypointsprites.qh"
 
+#include "anticheat.qh"
 #include "cl_impulse.qh"
 #include "cl_player.qh"
 #include "ent_cs.qh"
@@ -10,20 +13,34 @@
 #include "teamplay.qh"
 #include "playerdemo.qh"
 #include "secret.qh"
+#include "spawnpoints.qh"
+#include "g_damage.qh"
+#include "g_hook.qh"
+#include "t_teleporters.qh"
+#include "command/common.qh"
+#include "cheats.qh"
+#include "g_world.qh"
+#include "race.qh"
+#include "antilag.qh"
+#include "campaign.qh"
+#include "command/common.qh"
 
 #include "bot/bot.qh"
 #include "bot/navigation.qh"
+
+#include "../common/vehicles/sv_vehicles.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
 
+#include "../common/items/inventory.qh"
+
 #include "../common/monsters/sv_monsters.qh"
 
 #include "../warpzonelib/server.qh"
 
-float c1, c2, c3, c4;
 
 void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
@@ -301,7 +318,7 @@ void FixPlayermodel()
 	defaultskin = 0;
 	chmdl = false;
 
-	if(autocvar_sv_defaultcharacter == 1)
+	if(autocvar_sv_defaultcharacter)
 	{
 		if(teamplay)
 		{
@@ -409,7 +426,6 @@ void PutClientInServer (void)
 	if(IS_PLAYER(self))
 	{
 		entity spot, oldself;
-		float j;
 
 		accuracy_resend(self);
 
@@ -595,13 +611,13 @@ void PutClientInServer (void)
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		for (int j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			WEP_ACTION(j, WR_RESETPLAYER);
 
 			// all weapons must be fully loaded when we spawn
 			entity e = get_weaponinfo(j);
-			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
+			if (e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.(weapon_load[j]) = e.reloading_ammo;
 		}
 
@@ -648,7 +664,7 @@ void PutClientInServer (void)
 .float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
-float ClientInit_SendEntity(entity to, float sf)
+float ClientInit_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
@@ -1079,6 +1095,7 @@ void ClientConnect (void)
 	PlayerScore_Attach(self);
 	ClientData_Attach();
 	accuracy_init(self);
+	Inventory_new(self);
 
 	bot_clientconnect();
 
@@ -1321,6 +1338,7 @@ void ClientDisconnect (void)
 	bot_relinkplayerlist();
 
 	accuracy_free(self);
+	Inventory_delete(self);
 	ClientData_Detach();
 	PlayerScore_Detach(self);
 

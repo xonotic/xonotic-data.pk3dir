@@ -1,54 +1,11 @@
-//#define PATHLIB_RDFIELDS
-#ifdef PATHLIB_RDFIELDS
-    #define path_next swampslug
-    #define path_prev lasertarget
-#else
-    .entity path_next;
-    .entity path_prev;
-#endif
+#include "pathlib.qh"
+#include "_all.qh"
+
+#include "g_subs.qh"
 
 #define medium spawnshieldtime
 
 //#define DEBUGPATHING
-
-entity openlist;
-entity closedlist;
-entity scraplist;
-
-.float pathlib_node_g;
-.float pathlib_node_h;
-.float pathlib_node_f;
-
-float pathlib_open_cnt;
-float pathlib_closed_cnt;
-float pathlib_made_cnt;
-float pathlib_merge_cnt;
-float pathlib_recycle_cnt;
-float pathlib_searched_cnt;
-
-#ifdef DEBUGPATHING
-
-#endif
-
-float pathlib_bestopen_seached;
-float pathlib_bestcash_hits;
-float pathlib_bestcash_saved;
-
-float pathlib_gridsize;
-
-float pathlib_movecost;
-float pathlib_movecost_diag;
-float pathlib_movecost_waterfactor;
-
-float pathlib_edge_check_size;
-
-float pathlib_foundgoal;
-entity goal_node;
-
-entity best_open_node;
-.float is_path_node;
-
-
 #ifdef DEBUGPATHING
 float edge_show(vector point,float fsize);
 void mark_error(vector where,float lifetime);
@@ -161,16 +118,6 @@ float floor_ok(vector point)
     return 0;
 }
 
-#define inwater(point) (pointcontents(point) == CONTENT_WATER)
-/*
-float inwater(vector point)
-{
-    if(pointcontents(point) == CONTENT_WATER)
-        return 1;
-    return 0;
-}
-*/
-
 #define _pcheck(p) traceline(p+z_up,p-z_down,MOVE_WORLDONLY,self); if (!floor_ok(trace_endpos)) return 1
 float edge_check(vector point,float fsize)
 {
@@ -259,7 +206,7 @@ vector pathlib_swimnode(vector start,vector end,float doedge)
     end.y = fsnap(end.y, pathlib_gridsize);
 
     if(pointcontents(end) == CONTENT_EMPTY)
-        return pathlib_wateroutnode( start, end);
+        return pathlib_wateroutnode( start, end, doedge);
 
     tracebox(start, walknode_boxmin,walknode_boxmax, end, MOVE_WORLDONLY, self);
     if(trace_fraction == 1)
@@ -519,7 +466,6 @@ float pathlib_h_diagonal3(vector a,vector b)
     return h;
 }
 
-//#define PATHLIB_USE_NODESCRAP
 const float PATHLIB_NODEEXPIRE = 0.05;
 float pathlib_scraplist_cnt;
 entity newnode()
@@ -541,7 +487,6 @@ entity newnode()
 #endif
     ++pathlib_made_cnt;
     n = spawn();
-#ifdef PATHLIB_NODEEXPIRE
     n.think      = SUB_Remove;
     n.nextthink  = time + PATHLIB_NODEEXPIRE;
     return n;
@@ -736,7 +681,7 @@ float pathlib_expandnode_star(entity node, vector start, vector goal)
 {
     vector point;
     vector where;
-    float nodecnt;
+    float nodecnt = 0;
 
     where = node.origin;
 
@@ -1044,6 +989,3 @@ entity pathlib_astar(vector from,vector to)
 
     return world;
 }
-
-
-

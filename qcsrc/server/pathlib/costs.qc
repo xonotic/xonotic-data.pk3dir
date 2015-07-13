@@ -1,3 +1,5 @@
+#include "../pathlib.qh"
+
 float pathlib_g_static(entity parent,vector to, float static_cost)
 {
     return parent.pathlib_node_g + static_cost;

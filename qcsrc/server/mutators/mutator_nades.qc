@@ -1,3 +1,16 @@
+#include "mutator_nades.qh"
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "gamemode_keyhunt.qh"
+#include "gamemode_freezetag.qh"
+#include "../../common/nades.qh"
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
+
+.float lifetime;
+
 .entity nade_spawnloc;
 
 void nade_timer_think()
@@ -475,7 +488,7 @@ void nade_monster_boom()
 void nade_boom()
 {
 	string expef;
-	float nade_blast = 1;
+	bool nade_blast = true;
 
 	switch ( self.nade_type )
 	{
@@ -484,16 +497,16 @@ void nade_boom()
 			expef = "explosion_medium";
 			break;
 		case NADE_TYPE_ICE:
-			nade_blast = 0;
+			nade_blast = false;
 			expef = "electro_combo"; // hookbomb_explode electro_combo bigplasma_impact
 			break;
 		case NADE_TYPE_TRANSLOCATE:
-			nade_blast = 0;
+			nade_blast = false;
 			expef = "";
 			break;
 		case NADE_TYPE_MONSTER:
 		case NADE_TYPE_SPAWN:
-			nade_blast = 0;
+			nade_blast = false;
 			switch(self.realowner.team)
 			{
 				case NUM_TEAM_1: expef = "spawn_event_red"; break;
@@ -504,7 +517,7 @@ void nade_boom()
 			}
 			break;
 		case NADE_TYPE_HEAL:
-			nade_blast = 0;
+			nade_blast = false;
 			expef = "spawn_event_red";
 			break;
 
@@ -583,7 +596,7 @@ void nade_beep()
 	self.nextthink = max(self.wait, time);
 }
 
-void nade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void nade_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{

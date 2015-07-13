@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticWeaponarenaCheckBox) EXTENDS(CheckBox)
+#ifndef WEAPONARENACHECKBOX_H
+#define WEAPONARENACHECKBOX_H
+#include "../item/checkbox.qc"
+CLASS(XonoticWeaponarenaCheckBox, CheckBox)
 	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string))
 	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float))
 	ATTRIB(XonoticWeaponarenaCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -16,7 +18,7 @@ entity makeXonoticWeaponarenaCheckBox(string, string);
 entity makeXonoticWeaponarenaCheckBox(string theWeapon, string theText)
 {
 	entity me;
-	me = spawnXonoticWeaponarenaCheckBox();
+	me = NEW(XonoticWeaponarenaCheckBox);
 	me.configureXonoticWeaponarenaCheckBox(me, theWeapon, theText);
 	return me;
 }

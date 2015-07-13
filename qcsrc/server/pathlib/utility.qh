@@ -1,0 +1,6 @@
+#ifndef PATHLIB_UTILITY
+#define PATHLIB_UTILITY
+float fsnap(float val,float fsize);
+entity pathlib_nodeatpoint(vector where);
+float tile_check_plus2(vector where);
+#endif

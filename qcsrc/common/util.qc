@@ -184,26 +184,26 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 	entity e;
 	e = start;
 	funcPre(pass, e);
-	while(e.downleft)
+	while (e.(downleft))
 	{
-		e = e.downleft;
+		e = e.(downleft);
 		funcPre(pass, e);
 	}
 	funcPost(pass, e);
 	while(e != start)
 	{
-		if(e.right)
+		if (e.(right))
 		{
-			e = e.right;
+			e = e.(right);
 			funcPre(pass, e);
-			while(e.downleft)
+			while (e.(downleft))
 			{
-				e = e.downleft;
+				e = e.(downleft);
 				funcPre(pass, e);
 			}
 		}
 		else
-			e = e.up;
+			e = e.(up);
 		funcPost(pass, e);
 	}
 }
@@ -1843,7 +1843,7 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 }
 
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype)
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
@@ -1867,7 +1867,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage)
+vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage)
 {
 	vector v;
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...
@@ -2294,7 +2294,7 @@ float xdecode(string s)
 	return ((a * 22 + b) * 22 + c) * 22 + d;
 }
 
-float lowestbit(int f)
+int lowestbit(int f)
 {
 	f &= ~(f * 2);
 	f &= ~(f * 4);
@@ -2539,11 +2539,11 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 	// start with a 1-element queue
 	queue_start = queue_end = e;
-	queue_end.fld = world;
+	queue_end.(fld) = world;
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
-	for (; queue_start; queue_start = queue_start.fld)
+	for (; queue_start; queue_start = queue_start.(fld))
 	{
 		// find all neighbors of queue_start
 		entity t;
@@ -2554,16 +2554,16 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 			if(iscon(t, queue_start, pass))
 			{
 				// it is connected? ADD IT. It will look for neighbors soon too.
-				queue_end.fld = t;
+				queue_end.(fld) = t;
 				queue_end = t;
-				queue_end.fld = world;
+				queue_end.(fld) = world;
 				queue_end.FindConnectedComponent_processing = 1;
 			}
 		}
 	}
 
 	// unmark
-	for(queue_start = e; queue_start; queue_start = queue_start.fld)
+	for (queue_start = e; queue_start; queue_start = queue_start.(fld))
 		queue_start.FindConnectedComponent_processing = 0;
 }
 

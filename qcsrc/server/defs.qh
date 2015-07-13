@@ -1,7 +1,7 @@
 #ifndef SERVER_DEFS_H
 #define SERVER_DEFS_H
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #define INDEPENDENT_ATTACK_FINISHED
 
@@ -64,7 +64,7 @@ float server_is_dedicated;
 
 // Fields
 
-.void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;
+.void(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
 
 //.string	wad;
 //.string	map;
@@ -80,6 +80,13 @@ float server_is_dedicated;
 .float	sounds;
 .string  platmovetype;
 .float platmovetype_start, platmovetype_end;
+
+
+// Needed for dynamic clientwalls
+.float inactive; // Clientwall disappears when inactive
+.float alpha_max, alpha_min;
+.float fade_start, fade_end, fade_vertical_offset;
+.float default_solid; // Variable to store default self.solid for clientwalls
 
 .string killtarget;
 
@@ -250,7 +257,7 @@ float nJoinAllowed(entity ignore);
 
 .entity flagcarried;
 
-.float playerid;
+.int playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
@@ -285,7 +292,7 @@ float default_weapon_alpha;
 .float version_nagtime;
 
 const int NUM_JUMPPADSUSED = 3;
-.float jumppadcount;
+.int jumppadcount;
 .entity jumppadsused[NUM_JUMPPADSUSED];
 
 string gamemode_name;
@@ -333,7 +340,7 @@ float have_team_spawns_forteam[17]; // 0 = this team has no spawns, 1 = this tea
 .entity killindicator;
 .float killindicator_teamchange;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 float lockteams;
 
@@ -347,7 +354,7 @@ float next_pingtime;
 
 .float Version;
 .int SendFlags;
-.float(entity to, float sendflags) SendEntity;
+.bool(entity to, int sendflags) SendEntity;
 
 // player sounds, voice messages
 // TODO implemented fall and falling
@@ -452,6 +459,29 @@ float round_starttime; //point in time when the countdown to round start is over
 .float stat_sv_airspeedlimit_nonqw;
 .float stat_sv_maxspeed;
 
+// new properties
+.float stat_sv_jumpvelocity;
+.float stat_sv_airaccel_qw_stretchfactor;
+.float stat_sv_maxairstrafespeed;
+.float stat_sv_maxairspeed;
+.float stat_sv_airstrafeaccelerate;
+.float stat_sv_warsowbunny_turnaccel;
+.float stat_sv_airaccel_sideways_friction;
+.float stat_sv_aircontrol;
+.float stat_sv_aircontrol_power;
+.float stat_sv_aircontrol_penalty;
+.float stat_sv_warsowbunny_airforwardaccel;
+.float stat_sv_warsowbunny_topspeed;
+.float stat_sv_warsowbunny_accel;
+.float stat_sv_warsowbunny_backtosideratio;
+.float stat_sv_friction;
+.float stat_sv_accelerate;
+.float stat_sv_stopspeed;
+.float stat_sv_airaccelerate;
+.float stat_sv_airstopaccelerate;
+
+.string cvar_cl_physics;
+
 void W_Porto_Remove (entity p);
 
 .int projectiledeathtype;
@@ -519,7 +549,7 @@ string matchid;
 
 .float stat_leadlimit;
 
-float radar_showennemies;
+bool radar_showennemies;
 
 #ifdef PROFILING
 float client_cefc_accumulator;
@@ -527,7 +557,7 @@ float client_cefc_accumulatortime;
 #endif
 
 .float weapon_load[WEP_MAXCOUNT];
-.float ammo_none; // used by the reloading system, must always be 0
+.int ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
@@ -539,7 +569,7 @@ float client_cefc_accumulatortime;
 .float vortex_chargepool_ammo;
 .float hagar_load;
 
-.float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
+.int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones

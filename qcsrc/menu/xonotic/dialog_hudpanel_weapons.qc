@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDWeaponsDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_HUDPANEL_WEAPONS_H
+#define DIALOG_HUDPANEL_WEAPONS_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDWeaponsDialog, XonoticRootDialog)
 	METHOD(XonoticHUDWeaponsDialog, fill, void(entity))
 	ATTRIB(XonoticHUDWeaponsDialog, title, string, _("Weapons Panel"))
 	ATTRIB(XonoticHUDWeaponsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

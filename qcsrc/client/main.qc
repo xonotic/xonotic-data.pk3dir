@@ -1,11 +1,26 @@
+#include "main.qh"
+#include "_all.qh"
+
+#include "casings.qh"
+#include "csqcmodel_hooks.qh"
+#include "damage.qh"
+#include "effects.qh"
+#include "gibs.qh"
+#include "hook.qh"
+#include "hud.qh"
+#include "hud_config.qh"
+#include "laser.qh"
 #include "mapvoting.qh"
 #include "modeleffects.qh"
 #include "particles.qh"
+#include "prandom.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
+#include "sortlist.qh"
 #include "target_music.qh"
 #include "tturrets.qh"
 #include "tuba.qh"
+#include "t_items.qh"
 #include "wall.qh"
 #include "waypointsprites.qh"
 
@@ -13,9 +28,24 @@
 #include "../common/vehicles/cl_vehicles.qh"
 #include "../common/vehicles/vehicles.qh"
 
-#include "../common/net_notice.qh"
+#include "weapons/projectile.qh"
 
-#include "../common/monsters/monsters.qh"
+#include "../common/buffs.qh"
+#include "../common/deathtypes.qh"
+#include "../common/mapinfo.qh"
+#include "../common/monsters/all.qh"
+#include "../common/nades.qh"
+#include "../common/net_notice.qh"
+#include "../common/notifications.qh"
+#include "../common/stats.qh"
+#include "../common/teams.qh"
+
+#include "../common/items/all.qh"
+
+#include "../common/weapons/all.qh"
+
+#include "../csqcmodellib/cl_model.qh"
+#include "../csqcmodellib/interpolate.qh"
 
 #include "../warpzonelib/client.qh"
 
@@ -110,6 +140,7 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
+	CALL_ACCUMULATED_FUNCTION(RegisterItems);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
@@ -829,6 +860,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
+		case ENT_CLIENT_INVENTORY: Inventory_Read(self); break;
 		case ENT_CLIENT_ARC_BEAM: Ent_ReadArcBeam(bIsNewEntity); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;

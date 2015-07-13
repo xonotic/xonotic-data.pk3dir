@@ -5,7 +5,7 @@
     #include "../../dpdefs/dpextensions.qh"
     #include "../util.qh"
     #include "config.qh"
-    #include "weapons.qh"
+    #include "all.qh"
 #endif
 
 // ==========================

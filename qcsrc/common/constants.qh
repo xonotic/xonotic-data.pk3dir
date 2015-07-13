@@ -64,6 +64,7 @@ const int ENT_CLIENT_WARPZONE = 24;
 const int ENT_CLIENT_WARPZONE_CAMERA = 25;
 const int ENT_CLIENT_TRIGGER_MUSIC = 26;
 const int ENT_CLIENT_HOOK = 27;
+const int ENT_CLIENT_INVENTORY = 28;
 const int ENT_CLIENT_ARC_BEAM = 29; // WEAPONTODO: fix numbers
 const int ENT_CLIENT_ACCURACY = 30;
 const int ENT_CLIENT_SHOWNAMES = 31;
@@ -313,8 +314,8 @@ const int URI_GET_UPDATENOTIFICATION = 33;
 const int URI_GET_URLLIB = 128;
 const int URI_GET_URLLIB_END = 191;
 
-// gametype votes
-const int GTV_AVAILABLE = 0;
-// for later use in per-map gametype filtering
-const int GTV_FORBIDDEN = 2;
+// gametype vote flags
+const int GTV_FORBIDDEN = 0; // Cannot be voted
+const int GTV_AVAILABLE = 1; // Can be voted
+const int GTV_CUSTOM    = 2; // Custom entry
 #endif

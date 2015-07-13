@@ -4,15 +4,12 @@
 ../dpdefs/menudefs.qh
 ../dpdefs/keycodes.qh
 
-oo/interface.qh
-	classes.qc
-oo/implementation.qh
-	classes.qc
+oo/classes.qc
 
 draw.qc
 menu.qc
 
-command/menu_cmd.qc
+command/all.qc
 
 xonotic/util.qc
 
@@ -24,12 +21,10 @@ xonotic/util.qc
 ../common/urllib.qc
 ../common/util.qc
 
-../common/command/generic.qc
-../common/command/markup.qc
-../common/command/rpn.qc
+../common/items/all.qc
 
-../common/monsters/monsters.qc
+../common/monsters/all.qc
 
-../common/weapons/weapons.qc // TODO
+../common/weapons/all.qc // TODO
 
 ../warpzonelib/mathlib.qc

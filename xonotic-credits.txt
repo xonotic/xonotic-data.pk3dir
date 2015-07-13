@@ -12,12 +12,14 @@ Zac "Mario" Jardine
 **Extended Team
 Antonio "terencehill" Piu
 Archer
+BuddyFriendGuy
 Debugger
 GATTS
 Halogene
 IDWMaster
 Jan "zykure" Behrens
 JH0nny
+Luigi
 Łukasz "kuniu the frogg" Polek
 Matthias "matthiaskrgr" Krüger
 Mattia "Melanosuchus" Basaglia
@@ -57,6 +59,7 @@ Sahil "DiaboliK" Singhal
 nifrek
 
 *Level Design
+Amadeusz "amade/proraide" Sławiński
 Ben "MooKow" Banker
 Calinou
 Cortez
@@ -64,6 +67,8 @@ Cuinn "Cuinnton" Herrick
 Debugger
 Jakob "tZork" Markström Gröhn
 Konrad "Justin" Slawinski
+Maddin
+L0
 Łukasz "kuniu the frogg" Polek
 Maik "SavageX" Merten
 Marvin "Mirio" Beck
@@ -73,8 +78,10 @@ Pearce "theShadow" Michal
 Rasmus "FruitieX" Eskola
 Ruszkai "CuBe0wL" Ákos
 Severin "sev" Meyer
+ShadoW
 
 *Music / Sound FX
+AquaNova (Archer)
 blkrbt
 chooksta
 Independent.nu
@@ -87,7 +94,6 @@ Saulo "mand1nga" Gil
 {SC0RP} - Ian "ID" Dorrell
 Stephan
 unfa
-AquaNova (Archer)
 
 *Game Code
 Samual "Ares" Lenks
@@ -124,15 +130,14 @@ Dale "graphitemaster" Weiler
 
 **Other Active Contributors
 Erik "Ablu" Schilling
-Jope "Sless" Withers
 Mircea "Taoki" Kitsune
-Robert "ai" Kuroto
 
 
 **Translators
 
 *Asturian
 Llumex03
+Tornes "Tornes.Llume" Ḷḷume
 Ximielga
 
 *Belarusian
@@ -142,8 +147,14 @@ Mihail "meequz" Varantsou
 lokster
 set_killer
 
+*Chinese (China)
+Antonidas
+kalawore
+sapphireliu
+
 *Czech
 shogun assassin/woky
+Superovoce
 Tomáš "CZHeron" Volavka
 
 *Dutch
@@ -152,6 +163,7 @@ PinkRobot
 vegiburger
 
 *English (Australia)
+Laurene "sunflowers" Albrand
 Zac "Mario" Jardine
 
 *Finnish
@@ -173,7 +185,7 @@ Rudolf "divVerent" Polzer
 Yepoleb
 
 *Greek
-Γιάννης "Evropi" Α.
+Γιάννης "Evropi" Ανθυμίδης
 Konstantinos "LDinos" Mihalenas
 Savoritias
 Vindex
@@ -181,9 +193,6 @@ Vindex
 *Hungarian
 Ruszkai "CuBe0wL" Ákos
 xaN1C4n3
-
-*Japanese
-Lento
 
 *Italian
 Antonio "terencehill" Piu
@@ -197,10 +206,11 @@ Alex "tiprogrammierer.alex" Progger
 Amadeusz "amade/proraide" Sławiński
 
 *Portuguese
-Ricardo "Hellgardia" Silva
+Ricardo Manuel "Hellgardia" da Cruz Coelho da Silva
 xXxCHAOTICxXx
 
 *Romanian
+Adrian-Ciprian "adrian.tinjala" Tînjală
 BusterDBK
 Mircea "Taoki" Kitsune
 Tudor "TropiKo" Ionel
@@ -218,7 +228,7 @@ Sergej "Clearness High" Lutsyk
 *Serbian
 Саша "salepetronije" Петровић
 Pendulla
-Ristovski
+Rafael "Ristovski"
 
 *Spanish
 0000simon
@@ -272,6 +282,7 @@ Henning "Tymo" Janssen
 Innovati
 Jitspoe
 Jody Gallagher
+Jope "Sless" Withers
 Juergen "LowDragon" Timm
 KadaverJack
 Kevin "Tyrann" Shanahan
@@ -305,6 +316,7 @@ Q1 Retexturing Project
 Qantourisc
 Oleh "BlaXpirit" Prypin
 Rick "Rat" Kelley
+Robert "ai" Kuroto
 Ronan
 Sajt
 Saulo "mand1nga" Gil

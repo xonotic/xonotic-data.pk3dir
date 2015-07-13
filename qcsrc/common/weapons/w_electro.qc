@@ -300,7 +300,7 @@ void W_Electro_Orb_Touch(void)
 	}
 }
 
-void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -419,7 +419,7 @@ void W_Electro_CheckAttack(void)
 }
 
 .float bot_secondary_electromooth;
-float W_Electro(float req)
+bool W_Electro(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -569,7 +569,7 @@ float W_Electro(float req)
 }
 #endif
 #ifdef CSQC
-float W_Electro(float req)
+bool W_Electro(int req)
 {
 	switch(req)
 	{

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticPlayerModelSelector) EXTENDS(XonoticImage)
+#ifndef PLAYERMODEL_H
+#define PLAYERMODEL_H
+#include "image.qc"
+CLASS(XonoticPlayerModelSelector, XonoticImage)
 	METHOD(XonoticPlayerModelSelector, configureXonoticPlayerModelSelector, void(entity))
 	METHOD(XonoticPlayerModelSelector, loadCvars, void(entity))
 	METHOD(XonoticPlayerModelSelector, saveCvars, void(entity))
@@ -31,7 +33,7 @@ void PlayerModelSelector_Prev_Click(entity btn, entity me);
 entity makeXonoticPlayerModelSelector()
 {
 	entity me;
-	me = spawnXonoticPlayerModelSelector();
+	me = NEW(XonoticPlayerModelSelector);
 	me.configureXonoticPlayerModelSelector(me);
 	return me;
 }

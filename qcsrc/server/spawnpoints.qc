@@ -1,21 +1,15 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "mutators/mutators_include.qh"
-    #include "spawnpoints.qh"
-    #include "race.qh"
-#endif
+#include "spawnpoints.qh"
+#include "_all.qh"
 
-float SpawnPoint_Send(entity to, float sf)
+#include "mutators/mutators_include.qh"
+#include "g_world.qh"
+#include "race.qh"
+#include "../common/constants.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+#include "../warpzonelib/util_server.qh"
+
+float SpawnPoint_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
@@ -27,7 +21,7 @@ float SpawnPoint_Send(entity to, float sf)
 	return true;
 }
 
-float SpawnEvent_Send(entity to, float sf)
+float SpawnEvent_Send(entity to, int sf)
 {
 	float send;
 

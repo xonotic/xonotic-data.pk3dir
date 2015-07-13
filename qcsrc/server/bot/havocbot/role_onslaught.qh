@@ -1,0 +1,4 @@
+#ifndef ROLE_ONSLAUGHT_H
+#define ROLE_ONSLAUGHT_H
+void havocbot_chooserole_ons();
+#endif

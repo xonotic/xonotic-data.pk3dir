@@ -1,4 +1,9 @@
 #include "modeleffects.qh"
+#include "_all.qh"
+
+.float cnt;
+.float scale;
+.float alpha;
 
 void ModelEffect_Draw()
 {
