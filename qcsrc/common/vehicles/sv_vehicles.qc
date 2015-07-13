@@ -19,7 +19,7 @@ float SendAuxiliaryXhair(entity to, float sf)
 	return true;
 }
 
-void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
+void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 {
 	if(!IS_REAL_CLIENT(own))
 		return;
@@ -44,7 +44,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 	own.(AuxiliaryXhair[axh_id]) = axh;
 }
 
-void CSQCVehicleSetup(entity own, float vehicle_id)
+void CSQCVehicleSetup(entity own, int vehicle_id)
 {
 	if(!IS_REAL_CLIENT(own))
 		return;
@@ -59,7 +59,7 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 vector targetdrone_getnewspot()
 {
 	vector spot;
-	float i;
+	int i;
 	for(i = 0; i < 100; ++i)
 	{
 		spot = self.origin + randomvec() * 1024;
@@ -176,7 +176,7 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 }
 
 // projectile handling
-void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	// Ignore damage from oterh projectiles from my owner (dont mess up volly's)
 	if(inflictor.owner == self.owner)
@@ -215,8 +215,8 @@ void vehicles_projectile_explode()
 entity vehicles_projectile(string _mzlfx, string _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
-						   float _deahtype, float _projtype, float _health,
-						   float _cull, float _clianim, entity _owner)
+						   int _deahtype, float _projtype, float _health,
+						   bool _cull, bool _clianim, entity _owner)
 {
 	entity proj;
 
@@ -282,7 +282,7 @@ void vehicles_gib_think()
 		self.nextthink = time + 0.1;
 }
 
-entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, float _explode, float _maxtime, vector _rot)
+entity vehicle_tossgib(entity _template, vector _vel, string _tag, bool _burn, bool _explode, float _maxtime, vector _rot)
 {
 	entity _gib = spawn();
 	setmodel(_gib, _template.model);
@@ -313,12 +313,12 @@ entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, 
 	return _gib;
 }
 
-float vehicle_addplayerslot(	entity _owner,
+bool vehicle_addplayerslot(	entity _owner,
 								entity _slot,
-								float _hud,
+								int _hud,
 								string _hud_model,
-								float() _framefunc,
-								void(float) _exitfunc, float() _enterfunc)
+								bool() _framefunc,
+								void(bool) _exitfunc, float() _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
 		_owner.vehicle_flags |= VHF_MULTISLOT;
@@ -612,7 +612,7 @@ void vehicles_painframe()
 	}
 }
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	self.dmg_time = time;
 
@@ -787,7 +787,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
 	return self.origin;
 }
 
-void vehicles_exit(float eject)
+void vehicles_exit(bool eject)
 {
 	entity _vehicle;
 	entity _player;
@@ -980,7 +980,7 @@ void vehicles_enter(entity pl, entity veh)
 		if(autocvar_g_vehicles_steal_show_waypoint)
 			WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, true, RADARICON_DANGER, Team_ColorRGB(pl.team));
 	}
-	else { return; }
+	else return;
 
 	RemoveGrapplingHook(pl);
 
@@ -1138,7 +1138,7 @@ void vehicles_spawn()
 	CSQCMODEL_AUTOINIT();
 }
 
-float vehicle_initialize(float vehicle_id, float nodrop)
+bool vehicle_initialize(int vehicle_id, bool nodrop)
 {
 	if(!autocvar_g_vehicles)
 		return false;
