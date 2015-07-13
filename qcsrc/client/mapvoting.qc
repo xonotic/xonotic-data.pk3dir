@@ -294,7 +294,7 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	return mv_mouse_selection;
 }
 
-vector HUD_GetTableSize(int item_count, vector psize, float item_aspect);
+vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect);
 void MapVote_Draw()
 {
 	string map;
@@ -364,7 +364,7 @@ void MapVote_Draw()
 		mv_num_maps -= 1;
 
 	int item_aspect = (gametypevote) ? 2/1 : 4/3;
-	vector table_size = HUD_GetTableSize(mv_num_maps, eX * (xmax - xmin) + eY * (ymax - ymin), item_aspect);
+	vector table_size = HUD_GetTableSize_BestItemAR(mv_num_maps, eX * (xmax - xmin) + eY * (ymax - ymin), item_aspect);
 	mv_columns = table_size.x;
 	rows = table_size.y;
 

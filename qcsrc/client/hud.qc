@@ -159,7 +159,7 @@ float HUD_GetRowCount(int item_count, vector size, float item_aspect)
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
 }
 
-vector HUD_GetTableSize(int item_count, vector psize, float item_aspect)
+vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect)
 {
 	float columns, rows;
 	float ratio, best_ratio = 0;
@@ -601,7 +601,7 @@ void HUD_Weapons(void)
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
-		vector table_size = HUD_GetTableSize(WEP_COUNT, padded_panel_size, aspect);
+		vector table_size = HUD_GetTableSize_BestItemAR(WEP_COUNT, padded_panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
@@ -764,7 +764,7 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		vector table_size = HUD_GetTableSize(WEP_COUNT, panel_size, aspect);
+		vector table_size = HUD_GetTableSize_BestItemAR(WEP_COUNT, panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = panel_size.x / columns;
