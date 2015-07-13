@@ -294,6 +294,7 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 	return mv_mouse_selection;
 }
 
+vector HUD_GetTableSize(int item_count, vector psize, float item_aspect);
 void MapVote_Draw()
 {
 	string map;
@@ -362,7 +363,10 @@ void MapVote_Draw()
 	if(mv_abstain)
 		mv_num_maps -= 1;
 
-	rows = ceil(mv_num_maps / mv_columns);
+	int item_aspect = (gametypevote) ? 2/1 : 4/3;
+	vector table_size = HUD_GetTableSize(mv_num_maps, eX * (xmax - xmin) + eY * (ymax - ymin), item_aspect);
+	mv_columns = table_size.x;
+	rows = table_size.y;
 
 	dist.x = (xmax - xmin) / mv_columns;
 	dist.y = (ymax - pos.y) / rows;
@@ -598,8 +602,6 @@ void MapVote_Init()
 
 	gametypevote = ReadByte();
 
-	float mv_real_num_maps = mv_num_maps - mv_abstain;
-
 	if(gametypevote)
 	{
 		mapvote_chosenmap = strzone(ReadString());
@@ -608,22 +610,6 @@ void MapVote_Init()
 
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
-
-		if (mv_real_num_maps > 8 )
-			mv_columns = 3;
-		else
-			mv_columns = min(2, mv_real_num_maps);
-    }
-    else
-	{
-		if (mv_real_num_maps > 16)
-			mv_columns = 5;
-		else if (mv_real_num_maps > 9)
-			mv_columns = 4;
-		else if(mv_real_num_maps > 3)
-			mv_columns = 3;
-		else
-			mv_columns = mv_real_num_maps;
 	}
 
 	MapVote_ReadMask();
