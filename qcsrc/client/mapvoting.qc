@@ -389,6 +389,9 @@ void MapVote_Draw()
 	{
 		tsize = dist.x - 10;
 		isize = min(dist.y - 10, 0.75 * tsize);
+		float maxheight = (ymax - pos.y) / 1.5;
+		if (isize > maxheight)
+			isize = maxheight;
 	}
 
 	mv_selection = MapVote_Selection(pos, dist, rows, mv_columns);
