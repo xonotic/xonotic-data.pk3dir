@@ -209,6 +209,9 @@ void SUB_UseTargets()
 		}
 		if (s != "")
 		{
+			// Flag to set func_clientwall state
+			// 1 == deactivate, 2 == activate, 0 == do nothing
+			float aw_flag = self.antiwall_flag;
 			for(t = world; (t = find(t, targetname, s)); )
 			if(t.use)
 			{
@@ -218,6 +221,8 @@ void SUB_UseTargets()
 				}
 				else
 				{
+					if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
+						t.antiwall_flag = aw_flag;
 					self = t;
 					other = stemp;
 					activator = act;

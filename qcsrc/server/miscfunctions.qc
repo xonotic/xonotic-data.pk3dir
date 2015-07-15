@@ -436,6 +436,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleFloat(s, f, cvar_cl_jetpack_jump, "cl_jetpack_jump");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
+	GetCvars_handleString(s, f, cvar_cl_physics, "cl_physics");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
@@ -567,7 +568,7 @@ void readplayerstartcvars()
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
-		if(g_ca)
+		if(g_ca || g_freezetag)
 			s = "most";
 	}
 
@@ -696,7 +697,7 @@ void readplayerstartcvars()
 		warmup_start_weapons_default = start_weapons_default;
 		warmup_start_weapons_defaultmask = start_weapons_defaultmask;
 
-		if (!g_weaponarena && !g_ca)
+		if (!g_weaponarena && !g_ca && !g_freezetag)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
 			warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");

@@ -10,6 +10,9 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 
 .void() trigger_touch;
 
+.float antiwall_flag; // Variable to define what to do with func_clientwall
+// 0 == do nothing, 1 == deactivate, 2 == activate
+
 .float height;
 
 .float nottargeted;

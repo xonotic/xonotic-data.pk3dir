@@ -68,6 +68,11 @@ float server_is_dedicated;
 //.string	map;
 
 //.float	worldtype;
+// Needed for dynamic clientwalls
+.float inactive; // Clientwall disappears when inactive
+.float alpha_max, alpha_min;
+.float fade_start, fade_end, fade_vertical_offset;
+.float default_solid; // Variable to store default self.solid for clientwalls
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
@@ -556,6 +561,8 @@ const int MIF_GUIDED_TAG = 128;
 .string playernick;
 .float elos;
 .float ranks;
+
+.string cvar_cl_physics;
 
 .float init_for_player_needed;
 .void(entity) init_for_player;

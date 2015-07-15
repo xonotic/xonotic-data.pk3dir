@@ -6,6 +6,36 @@
 
 #include "../server/miscfunctions.qh"
 
+// client side physics
+bool Physics_Valid(string thecvar)
+{
+	if(!autocvar_g_physics_clientselect) { return false; }
+
+	string l = strcat(" ", autocvar_g_physics_clientselect_options, " ");
+
+	if(strstrofs(l, strcat(" ", thecvar, " "), 0) >= 0)
+		return true;
+
+	return false;
+}
+
+float Physics_ClientOption(entity pl, string option)
+{
+	if(Physics_Valid(pl.cvar_cl_physics))
+	{
+		string var = sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option);
+		if(cvar_type(var) & CVAR_TYPEFLAG_EXISTS)
+			return cvar(var);
+	}
+	if(autocvar_g_physics_clientselect && autocvar_g_physics_clientselect_default)
+	{
+		string var = sprintf("g_physics_%s_%s", autocvar_g_physics_clientselect_default, option);
+		if(cvar_type(var) & CVAR_TYPEFLAG_EXISTS)
+			return cvar(var);
+	}
+	return cvar(strcat("sv_", option));
+}
+
 void Physics_AddStats()
 {
 	// static view offset and hitbox vectors
@@ -61,6 +91,27 @@ void Physics_AddStats()
 	addstat(STAT_MOVEVARS_FRICTION_SLICK, AS_FLOAT, stat_sv_friction_slick);
 	addstat(STAT_GAMEPLAYFIX_EASIERWATERJUMP, AS_INT, stat_gameplayfix_easierwaterjump);
 
+	// new properties
+	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
+	addstat(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, AS_FLOAT, stat_sv_airaccel_qw_stretchfactor);
+	addstat(STAT_MOVEVARS_MAXAIRSTRAFESPEED, AS_FLOAT, stat_sv_maxairstrafespeed);
+	addstat(STAT_MOVEVARS_MAXAIRSPEED, AS_FLOAT, stat_sv_maxairspeed);
+	addstat(STAT_MOVEVARS_AIRSTRAFEACCELERATE, AS_FLOAT, stat_sv_airstrafeaccelerate);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL, AS_FLOAT, stat_sv_warsowbunny_turnaccel);
+	addstat(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, AS_FLOAT, stat_sv_airaccel_sideways_friction);
+	addstat(STAT_MOVEVARS_AIRCONTROL, AS_FLOAT, stat_sv_aircontrol);
+	addstat(STAT_MOVEVARS_AIRCONTROL_POWER, AS_FLOAT, stat_sv_aircontrol_power);
+	addstat(STAT_MOVEVARS_AIRCONTROL_PENALTY, AS_FLOAT, stat_sv_aircontrol_penalty);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, AS_FLOAT, stat_sv_warsowbunny_airforwardaccel);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED, AS_FLOAT, stat_sv_warsowbunny_topspeed);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_ACCEL, AS_FLOAT, stat_sv_warsowbunny_accel);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, AS_FLOAT, stat_sv_warsowbunny_backtosideratio);
+	addstat(STAT_MOVEVARS_FRICTION, AS_FLOAT, stat_sv_friction);
+	addstat(STAT_MOVEVARS_ACCELERATE, AS_FLOAT, stat_sv_accelerate);
+	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
+	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
+	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
+
 	addstat(STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, AS_INT, stat_gameplayfix_upvelocityclearsonground);
 }
 
@@ -75,13 +126,14 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_pl_crouch_min = PL_CROUCH_MIN;
 	self.stat_pl_crouch_max = PL_CROUCH_MAX;
 
-	self.stat_sv_airaccel_qw = AdjustAirAccelQW(autocvar_sv_airaccel_qw, maxspd_mod);
-	if (autocvar_sv_airstrafeaccel_qw)
-		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(autocvar_sv_airstrafeaccel_qw, maxspd_mod);
+
+	self.stat_sv_airaccel_qw = AdjustAirAccelQW(Physics_ClientOption(self, "airaccel_qw"), maxspd_mod);
+	if(Physics_ClientOption(self, "airstrafeaccel_qw"))
+		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(Physics_ClientOption(self, "airstrafeaccel_qw"), maxspd_mod);
 	else
 		self.stat_sv_airstrafeaccel_qw = 0;
-	self.stat_sv_airspeedlimit_nonqw = autocvar_sv_airspeedlimit_nonqw * maxspd_mod;
-	self.stat_sv_maxspeed = autocvar_sv_maxspeed * maxspd_mod; // also slow walking
+	self.stat_sv_airspeedlimit_nonqw = Physics_ClientOption(self, "airspeedlimit_nonqw") * maxspd_mod;
+	self.stat_sv_maxspeed = Physics_ClientOption(self, "maxspeed") * maxspd_mod; // also slow walking
 	self.stat_movement_highspeed = PHYS_HIGHSPEED; // TODO: remove this!
 
 	self.stat_doublejump = PHYS_DOUBLEJUMP;
@@ -101,6 +153,29 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_sv_friction_slick = PHYS_FRICTION_SLICK;
 
 	self.stat_gameplayfix_easierwaterjump = GAMEPLAYFIX_EASIERWATERJUMP;
+
+
+	// old stats
+	// fix some new settings
+	self.stat_sv_airaccel_qw_stretchfactor = Physics_ClientOption(self, "airaccel_qw_stretchfactor");
+	self.stat_sv_maxairstrafespeed = Physics_ClientOption(self, "maxairstrafespeed");
+	self.stat_sv_maxairspeed = Physics_ClientOption(self, "maxairspeed");
+	self.stat_sv_airstrafeaccelerate = Physics_ClientOption(self, "airstrafeaccelerate");
+	self.stat_sv_warsowbunny_turnaccel = Physics_ClientOption(self, "warsowbunny_turnaccel");
+	self.stat_sv_airaccel_sideways_friction = Physics_ClientOption(self, "airaccel_sideways_friction");
+	self.stat_sv_aircontrol = Physics_ClientOption(self, "aircontrol");
+	self.stat_sv_aircontrol_power = Physics_ClientOption(self, "aircontrol_power");
+	self.stat_sv_aircontrol_penalty = Physics_ClientOption(self, "aircontrol_penalty");
+	self.stat_sv_warsowbunny_airforwardaccel = Physics_ClientOption(self, "warsowbunny_airforwardaccel");
+	self.stat_sv_warsowbunny_topspeed = Physics_ClientOption(self, "warsowbunny_topspeed");
+	self.stat_sv_warsowbunny_accel = Physics_ClientOption(self, "warsowbunny_accel");
+	self.stat_sv_warsowbunny_backtosideratio = Physics_ClientOption(self, "warsowbunny_backtosideratio");
+	self.stat_sv_friction = Physics_ClientOption(self, "friction");
+	self.stat_sv_accelerate = Physics_ClientOption(self, "accelerate");
+	self.stat_sv_stopspeed = Physics_ClientOption(self, "stopspeed");
+	self.stat_sv_airaccelerate = Physics_ClientOption(self, "airaccelerate");
+	self.stat_sv_airstopaccelerate = Physics_ClientOption(self, "airstopaccelerate");
+	self.stat_sv_jumpvelocity = Physics_ClientOption(self, "jumpvelocity");
 
 	self.stat_gameplayfix_upvelocityclearsonground = UPWARD_VELOCITY_CLEARS_ONGROUND;
 }
@@ -329,7 +404,7 @@ void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
 	if (k <= 0)
 		return;
 
-	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED, 1);
+	k *= bound(0, wishspeed / PHYS_MAXAIRSPEED(self), 1);
 
 	float zspeed = self.velocity_z;
 	self.velocity_z = 0;
@@ -1010,7 +1085,9 @@ void PM_check_spider(void)
 	if (time >= self.spider_slowness)
 		return;
 	PHYS_MAXSPEED(self) *= 0.5; // half speed while slow from spider
-	self.stat_sv_airspeedlimit_nonqw *= 0.5;
+	PHYS_MAXAIRSPEED(self) *= 0.5;
+	PHYS_AIRSPEEDLIMIT_NONQW(self) *= 0.5;
+	PHYS_AIRSTRAFEACCELERATE(self) *= 0.5;
 #endif
 }
 
@@ -1293,7 +1370,7 @@ void PM_jetpack(float maxspd_mod)
 	vector wishvel = v_forward * self.movement_x
 					+ v_right * self.movement_y;
 	// add remaining speed as Z component
-	float maxairspd = PHYS_MAXAIRSPEED * max(1, maxspd_mod);
+	float maxairspd = PHYS_MAXAIRSPEED(self) * max(1, maxspd_mod);
 	// fix speedhacks :P
 	wishvel = normalize(wishvel) * min(1, vlen(wishvel) / maxairspd);
 	// add the unused velocity as up component
@@ -1502,7 +1579,7 @@ void PM_air(float buttons_prev, float maxspd_mod)
 	if (pmove_waterjumptime <= 0)
 #endif
 	{
-		float maxairspd = PHYS_MAXAIRSPEED * min(maxspd_mod, 1);
+		float maxairspd = PHYS_MAXAIRSPEED(self) * min(maxspd_mod, 1);
 
 		// apply air speed limit
 		float airaccelqw = PHYS_AIRACCEL_QW(self);
@@ -1531,9 +1608,9 @@ void PM_air(float buttons_prev, float maxspd_mod)
 		// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
 		float strafity = IsMoveInDirection(self.movement, -90) + IsMoveInDirection(self.movement, +90); // if one is nonzero, other is always zero
 		if (PHYS_MAXAIRSTRAFESPEED)
-			wishspeed = min(wishspeed, GeomLerp(PHYS_MAXAIRSPEED*maxspd_mod, strafity, PHYS_MAXAIRSTRAFESPEED*maxspd_mod));
-		if (PHYS_AIRSTRAFEACCELERATE)
-			airaccel = GeomLerp(airaccel, strafity, PHYS_AIRSTRAFEACCELERATE*maxspd_mod);
+			wishspeed = min(wishspeed, GeomLerp(PHYS_MAXAIRSPEED(self)*maxspd_mod, strafity, PHYS_MAXAIRSTRAFESPEED*maxspd_mod));
+		if (PHYS_AIRSTRAFEACCELERATE(self))
+			airaccel = GeomLerp(airaccel, strafity, PHYS_AIRSTRAFEACCELERATE(self)*maxspd_mod);
 		if (PHYS_AIRSTRAFEACCEL_QW(self))
 			airaccelqw =
             	(((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(self) : PHYS_AIRACCEL_QW(self)) >= 0) ? +1 : -1)
@@ -1741,7 +1818,7 @@ void PM_Main()
 		maxspeed_mod = self.spectatorspeed;
 	}
 
-	float spd = max(PHYS_MAXSPEED(self), PHYS_MAXAIRSPEED) * maxspeed_mod;
+	float spd = max(PHYS_MAXSPEED(self), PHYS_MAXAIRSPEED(self)) * maxspeed_mod;
 	if(self.speed != spd)
 	{
 		self.speed = spd;
