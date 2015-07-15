@@ -25,6 +25,7 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
+void ka_TouchEvent();
 void ka_RespawnBall() // runs whenever the ball needs to be relocated
 {
 	if(gameover) { return; }
@@ -42,6 +43,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	self.velocity = '0 0 200';
 	self.angles = '0 0 0';
 	self.effects = autocvar_g_keepawayball_effects;
+	self.touch = ka_TouchEvent;
 	self.think = ka_RespawnBall;
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
@@ -169,7 +171,14 @@ void ka_Reset() // used to clear the ballcarrier whenever the match switches fro
 	if((self.owner) && (IS_PLAYER(self.owner)))
 		ka_DropEvent(self.owner);
 
-	ka_RespawnBall();
+	if(time < game_starttime)
+	{
+		self.think = ka_RespawnBall;
+		self.touch = func_null;
+		self.nextthink = game_starttime;
+	}
+	else
+		ka_RespawnBall();
 }
 
 
