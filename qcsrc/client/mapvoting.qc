@@ -87,13 +87,6 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	else
 		alpha = 1; // Normal, full alpha
 
-	float maxheight = vid_conheight / 5;
-	if(maxh > maxheight)
-	{
-		pos.y += (maxh - maxheight) / 2;
-		maxh = maxheight;
-	}
-
 	// Bounding box details
 	float rect_margin = hud_fontsize.y / 2;
 
@@ -211,7 +204,6 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	float img_ar = 4/3;
 	img_size.x = min(tsize, isize * img_ar);
-	img_size.x = min(img_size.x, vid_conwidth / 6);
 	img_size.y = img_size.x / img_ar;
 	img_size.y -= hud_fontsize.y - autocvar_scoreboard_border_thickness * 2;
 	img_size.x = img_size.y * img_ar;
@@ -390,6 +382,35 @@ void MapVote_Draw()
 
 	dist.x = (xmax - xmin) / mv_columns;
 	dist.y = (ymax - pos.y) / rows;
+
+	// reduce size of too wide items
+	tmp = vid_conwidth / 3; // max width
+	if(dist.x > tmp)
+	{
+		dist.x = tmp;
+		dist.y = min(dist.y, dist.x / item_aspect);
+	}
+	tmp = vid_conheight / 3; // max height
+	if(dist.y > tmp)
+	{
+		dist.y = tmp;
+		dist.x = min(dist.x, dist.y * item_aspect);
+	}
+
+	// reduce size to fix aspect ratio
+	if(dist.x / dist.y > item_aspect)
+		dist.x = dist.y * item_aspect;
+	else
+		dist.y = dist.x / item_aspect;
+
+	// adjust table pos and size according to the new size
+	float offset;
+	offset = ((xmax - pos.x) - dist.x * mv_columns) / 2;
+	xmin = pos.x += offset;
+	xmax -= offset;
+	offset = ((ymax - pos.y) - dist.y * rows) / 2;
+	ymin = pos.y += offset;
+	ymax -= offset;
 
 	tsize = dist.x;
 	isize = dist.y;
