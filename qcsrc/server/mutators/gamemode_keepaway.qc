@@ -192,9 +192,8 @@ void havocbot_goalrating_ball(float ratingscale, vector org)
 		t = (self.health + self.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
 		navigation_routerating(ball_owner, t * ratingscale, 2000);
 	}
-
-	// Ball has been dropped so collect.
-	navigation_routerating(ka_ball, ratingscale, 2000);
+	else // Ball has been dropped so collect.
+		navigation_routerating(ka_ball, ratingscale, 2000);
 }
 
 void havocbot_role_ka_carrier()
