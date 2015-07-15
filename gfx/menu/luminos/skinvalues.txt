@@ -1,4 +1,4 @@
-title Luminos (default)
+title Luminos
 author sev
 
 // Colors: 'Red Green Blue'

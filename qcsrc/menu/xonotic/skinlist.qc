@@ -85,7 +85,7 @@ string XonoticSkinList_skinParameter(entity me, float i, float key)
 void XonoticSkinList_getSkins(entity me)
 {
 	float glob, buf, i, n, fh;
-	string s;
+	string s, name;
 
 	buf = buf_create();
 	glob = search_begin("gfx/menu/*/skinvalues.txt", true, true);
@@ -100,7 +100,8 @@ void XonoticSkinList_getSkins(entity me)
 	for(i = 0; i < n; ++i)
 	{
 		s = search_getfilename(glob, i);
-		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, substring(s, 9, strlen(s) - 24)); // the * part
+		name = substring(s, 9, strlen(s) - 24); // the * part
+		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, name);
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, _("<TITLE>"));
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, _("<AUTHOR>"));
 		if(draw_PictureSize(strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview")) == '0 0 0')
@@ -117,7 +118,12 @@ void XonoticSkinList_getSkins(entity me)
 		{
 			// these two are handled by skinlist.qc
 			if(substring(s, 0, 6) == "title ")
-				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, substring(s, 6, strlen(s) - 6));
+			{
+				if (name == cvar_defstring("menu_skin"))
+					bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, strcat(substring(s, 6, strlen(s) - 6), " (", _("Default"), ")"));
+				else
+					bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, substring(s, 6, strlen(s) - 6));
+			}
 			else if(substring(s, 0, 7) == "author ")
 				bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, substring(s, 7, strlen(s) - 7));
 		}
