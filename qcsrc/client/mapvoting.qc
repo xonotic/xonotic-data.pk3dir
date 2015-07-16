@@ -374,8 +374,8 @@ void MapVote_Draw()
 	if(mv_abstain)
 		mv_num_maps -= 1;
 
-	// for mapvote it would be better 4/3 but map name needs more horizzontal space
-	int item_aspect = (gametypevote) ? 3/1 : 2/1;
+	// higher than the image itself ratio for mapvote items to reserve space for long map names
+	int item_aspect = (gametypevote) ? 3/1 : 5/3;
 	vector table_size = HUD_GetTableSize_BestItemAR(mv_num_maps, eX * (xmax - xmin) + eY * (ymax - ymin), item_aspect);
 	mv_columns = table_size.x;
 	rows = table_size.y;
