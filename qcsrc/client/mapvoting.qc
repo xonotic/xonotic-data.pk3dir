@@ -312,10 +312,8 @@ void MapVote_Draw()
 	int i;
 	float tmp;
 	vector pos;
-	float isize;
 	float center;
 	float rows;
-	float tsize;
 	vector dist = '0 0 0';
 
 	if(!mv_active)
@@ -412,9 +410,6 @@ void MapVote_Draw()
 	ymin = pos.y += offset;
 	ymax -= offset;
 
-	tsize = dist.x;
-	isize = dist.y;
-
 	mv_selection = MapVote_Selection(pos, dist, rows, mv_columns);
 
 	if (mv_top2_time)
@@ -432,9 +427,9 @@ void MapVote_Draw()
 		tmp = mv_votes[i]; // FTEQCC bug: too many array accesses in the function call screw it up
 		map = mv_maps[i];
 		if(mv_preview[i])
-			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), isize, tsize, map, mv_pics[i], tmp, i);
+			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, mv_pics[i], tmp, i);
 		else
-			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), isize, tsize, map, "", tmp, i);
+			DrawItem(pos + MapVote_GridVec(dist, i, mv_columns), dist.y, dist.x, map, "", tmp, i);
 	}
 
 	if(mv_abstain)
@@ -444,7 +439,7 @@ void MapVote_Draw()
 		tmp = mv_votes[i];
 		pos.y = ymax + 2 * hud_fontsize.y;
 		pos.x = (xmax+xmin)*0.5;
-		MapVote_DrawAbstain(pos, isize, xmax - xmin, tmp, i);
+		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}
 
 	drawpic(mv_mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), '32 32 0', '1 1 1', 1 - autocvar__menu_alpha, DRAWFLAG_NORMAL);
