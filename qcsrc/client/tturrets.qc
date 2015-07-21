@@ -289,8 +289,8 @@ void turret_draw2d()
                     else
                         txt = "gfx/vehicles/vth-stationary.tga";
 
-                    vector pz = drawgetimagesize(txt) * 0.25;
-                    drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.75, DRAWFLAG_NORMAL);
+                    vector pz = drawgetimagesize(txt) * autocvar_cl_vehicles_crosshair_size;
+                    drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.7, DRAWFLAG_NORMAL);
                     break;
             }
         }
