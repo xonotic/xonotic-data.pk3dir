@@ -19,6 +19,7 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, size, vector, '0 0 0')
 	ATTRIB(ListBox, origin, vector, '0 0 0')
 	ATTRIB(ListBox, scrollPos, float, 0) // measured in window heights, fixed when needed
+	ATTRIB(ListBox, scrollPosTarget, float, 0)
 	ATTRIB(ListBox, previousValue, float, 0)
 	ATTRIB(ListBox, pressed, float, 0) // 0 = normal, 1 = scrollbar dragging, 2 = item dragging, 3 = released
 	ATTRIB(ListBox, pressOffset, float, 0)
@@ -27,7 +28,6 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, controlTop, float, 0)
 	ATTRIB(ListBox, controlBottom, float, 0)
 	ATTRIB(ListBox, controlWidth, float, 0)
-	ATTRIB(ListBox, dragScrollTimer, float, 0)
 	ATTRIB(ListBox, dragScrollPos, vector, '0 0 0')
 
 	ATTRIB(ListBox, src, string, string_null) // scrollbar
@@ -82,7 +82,26 @@ ENDCLASS(ListBox)
 #ifdef IMPLEMENTATION
 void ListBox_setSelected(entity me, float i)
 {
-	me.selectedItem = bound(0, i, me.nItems - 1);
+	i = bound(0, i, me.nItems - 1);
+
+	// scroll the list to make sure the selected item is visible
+	// (even if the selected item doesn't change).
+	if(i < me.getFirstFullyVisibleItemAtScrollPos(me, me.scrollPos))
+	{
+		// above visible area
+		me.scrollPosTarget = me.getItemStart(me, i);
+	}
+	else if(i > me.getLastFullyVisibleItemAtScrollPos(me, me.scrollPos))
+	{
+		// below visible area
+		if(i == me.nItems - 1)
+			me.scrollPosTarget = me.getTotalHeight(me) - 1;
+		else
+		{
+			me.scrollPosTarget = me.getItemStart(me, i + 1) - 1;
+		}
+	}
+	me.selectedItem = i;
 }
 void ListBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
@@ -114,24 +133,21 @@ float ListBox_getItemHeight(entity me, float i)
 
 float ListBox_getLastFullyVisibleItemAtScrollPos(entity me, float pos)
 {
-	return me.getItemAtPos(me, pos + 1.001) - 1;
+	return me.getItemAtPos(me, pos + 0.999) - 1;
 }
 float ListBox_getFirstFullyVisibleItemAtScrollPos(entity me, float pos)
 {
-	return me.getItemAtPos(me, pos - 0.001) + 1;
+	return me.getItemAtPos(me, pos + 0.001) + 1;
 }
 float ListBox_keyDown(entity me, float key, float ascii, float shift)
 {
-	me.dragScrollTimer = time;
 	if(key == K_MWHEELUP)
 	{
-		me.scrollPos = max(me.scrollPos - 0.5, 0);
-		me.setSelected(me, min(me.selectedItem, me.getLastFullyVisibleItemAtScrollPos(me, me.scrollPos)));
+		me.scrollPosTarget = max(me.scrollPosTarget - 0.5, 0);
 	}
 	else if(key == K_MWHEELDOWN)
 	{
-		me.scrollPos = min(me.scrollPos + 0.5, me.getTotalHeight(me) - 1);
-		me.setSelected(me, max(me.selectedItem, me.getFirstFullyVisibleItemAtScrollPos(me, me.scrollPos)));
+		me.scrollPosTarget = min(me.scrollPosTarget + 0.5, me.getTotalHeight(me) - 1);
 	}
 	else if(key == K_PGUP || key == K_KP_PGUP)
 	{
@@ -168,15 +184,9 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 	else if(key == K_DOWNARROW || key == K_KP_DOWNARROW)
 		me.setSelected(me, me.selectedItem + 1);
 	else if(key == K_HOME || key == K_KP_HOME)
-	{
-		me.scrollPos = 0;
 		me.setSelected(me, 0);
-	}
 	else if(key == K_END || key == K_KP_END)
-	{
-		me.scrollPos = max(0, me.getTotalHeight(me) - 1);
 		me.setSelected(me, me.nItems - 1);
-	}
 	else
 		return 0;
 	return 1;
@@ -200,7 +210,6 @@ float ListBox_mouseMove(entity me, vector pos)
 float ListBox_mouseDrag(entity me, vector pos)
 {
 	float hit;
-	float i;
 	me.updateControlTopBottom(me);
 	me.dragScrollPos = pos;
 	if(me.pressed == 1)
@@ -215,15 +224,12 @@ float ListBox_mouseDrag(entity me, vector pos)
 			// calculate new pos to v
 			float d;
 			d = (pos.y - me.pressOffset) / (1 - (me.controlBottom - me.controlTop)) * (me.getTotalHeight(me) - 1);
-			me.scrollPos = me.previousValue + d;
+			me.scrollPosTarget = me.previousValue + d;
 		}
 		else
-			me.scrollPos = me.previousValue;
-		me.scrollPos = min(me.scrollPos, me.getTotalHeight(me) - 1);
-		me.scrollPos = max(me.scrollPos, 0);
-		i = min(me.selectedItem, me.getLastFullyVisibleItemAtScrollPos(me, me.scrollPos));
-		i = max(i, ListBox_getFirstFullyVisibleItemAtScrollPos(me, me.scrollPos));
-		me.setSelected(me, i);
+			me.scrollPosTarget = me.previousValue;
+		me.scrollPosTarget = min(me.scrollPosTarget, me.getTotalHeight(me) - 1);
+		me.scrollPosTarget = max(me.scrollPosTarget, 0);
 	}
 	else if(me.pressed == 2)
 	{
@@ -239,21 +245,18 @@ float ListBox_mousePress(entity me, vector pos)
 	if(pos.y >= 1) return 0;
 	me.dragScrollPos = pos;
 	me.updateControlTopBottom(me);
-	me.dragScrollTimer = time;
 	if(pos.x >= 1 - me.controlWidth)
 	{
 		// if hit, set me.pressed, otherwise scroll by one page
 		if(pos.y < me.controlTop)
 		{
 			// page up
-			me.scrollPos = max(me.scrollPos - 1, 0);
-			me.setSelected(me, min(me.selectedItem, ListBox_getLastFullyVisibleItemAtScrollPos(me, me.scrollPos)));
+			me.scrollPosTarget = max(me.scrollPosTarget - 1, 0);
 		}
 		else if(pos.y > me.controlBottom)
 		{
 			// page down
-			me.scrollPos = min(me.scrollPos + 1, me.getTotalHeight(me) - 1);
-			me.setSelected(me, max(me.selectedItem, ListBox_getFirstFullyVisibleItemAtScrollPos(me, me.scrollPos)));
+			me.scrollPosTarget = min(me.scrollPosTarget + 1, me.getTotalHeight(me) - 1);
 		}
 		else
 		{
@@ -322,20 +325,6 @@ void ListBox_updateControlTopBottom(entity me)
 	}
 	else
 	{
-		if(frametime) // only do this in draw frames
-		{
-			if(me.dragScrollTimer < time)
-			{
-				float save;
-				save = me.scrollPos;
-				// if selected item is below listbox, increase scrollpos so it is in
-				me.scrollPos = max(me.scrollPos, me.getItemStart(me, me.selectedItem) + me.getItemHeight(me, me.selectedItem) - 1);
-				// if selected item is above listbox, decrease scrollpos so it is in
-				me.scrollPos = min(me.scrollPos, me.getItemStart(me, me.selectedItem));
-				if(me.scrollPos != save)
-					me.dragScrollTimer = time + 0.2;
-			}
-		}
 		// if scroll pos is below end of list, fix it
 		me.scrollPos = min(me.scrollPos, me.getTotalHeight(me) - 1);
 		// if scroll pos is above beginning of list, fix it
@@ -364,6 +353,15 @@ void ListBox_draw(entity me)
 	float i;
 	vector absSize, fillSize = '0 0 0';
 	vector oldshift, oldscale;
+
+	if(me.scrollPos != me.scrollPosTarget)
+	{
+		float PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
+		// this formula is guaranted to work with whatever framerate
+		float f = sin(PI / 2 * pow(frametime, 0.65));
+		me.scrollPos = me.scrollPos * (1 - f) + me.scrollPosTarget * f;
+	}
+
 	if(me.pressed == 2)
 		me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event
 	me.updateControlTopBottom(me);

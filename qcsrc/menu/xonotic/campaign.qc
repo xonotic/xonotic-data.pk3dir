@@ -129,8 +129,8 @@ void XonoticCampaignList_loadCvars(entity me)
 	if(me.columnNameSize)
 		rewrapCampaign(me.columnNameSize, me.rowsPerItem - 3, me.emptyLineHeight, me.realFontSize);
 	me.nItems = min(me.campaignIndex + 2, campaign_entries);
-	me.selectedItem = min(me.campaignIndex, me.nItems - 1);
 	me.scrollPos = me.nItems * me.itemHeight - 1;
+	me.setSelected(me, min(me.campaignIndex, me.nItems - 1));
 	if(me.labelTitle)
 		me.labelTitle.setText(me.labelTitle, campaign_title);
 }
