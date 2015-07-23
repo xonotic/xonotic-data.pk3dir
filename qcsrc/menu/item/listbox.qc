@@ -14,6 +14,7 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, focusable, float, 1)
 	ATTRIB(ListBox, focusedItem, int, -1)
 	ATTRIB(ListBox, focusedItemAlpha, float, 0.3)
+	ATTRIB(ListBox, focusedItemPos, vector, '0 0 0')
 	ATTRIB(ListBox, allowFocusSound, float, 1)
 	ATTRIB(ListBox, selectedItem, int, 0)
 	ATTRIB(ListBox, size, vector, '0 0 0')
@@ -193,16 +194,17 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 }
 float ListBox_mouseMove(entity me, vector pos)
 {
+	float focusedItem_save = me.focusedItem;
+	me.focusedItem = -1;
 	if(pos_x < 0) return 0;
 	if(pos_y < 0) return 0;
 	if(pos_x >= 1) return 0;
 	if(pos_y >= 1) return 0;
 	if(pos_x < 1 - me.controlWidth)
 	{
-		float x;
-		x = me.focusedItem;
 		me.focusedItem = me.getItemAtPos(me, me.scrollPos + pos.y);
-		if(x != me.focusedItem)
+		me.focusedItemPos = eY * pos.y;
+		if(focusedItem_save != me.focusedItem)
 			me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
 	}
 	return 1;
@@ -233,6 +235,7 @@ float ListBox_mouseDrag(entity me, vector pos)
 	}
 	else if(me.pressed == 2)
 	{
+		me.focusedItem = -1;
 		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
 	}
 	return 1;
@@ -360,6 +363,10 @@ void ListBox_draw(entity me)
 		// this formula is guaranted to work with whatever framerate
 		float f = sin(PI / 2 * pow(frametime, 0.65));
 		me.scrollPos = me.scrollPos * (1 - f) + me.scrollPosTarget * f;
+
+		// update focusedItem while scrolling
+		if(me.focusedItem >= 0)
+			me.mouseMove(me, me.focusedItemPos);
 	}
 
 	if(me.pressed == 2)
