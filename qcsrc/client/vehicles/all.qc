@@ -45,13 +45,12 @@ const string vICON_SHIELD = "gfx/vehicles/shield.tga";
 const string vICON_AMMO1  = "gfx/vehicles/bullets.tga";
 const string vICON_AMMO2  = "gfx/vehicles/rocket.tga";
 
-const string vCROSS_BRACKET  = "gfx/vehicles/axh-bracket.tga";
-const string vCROSS_CROSS    = "gfx/vehicles/axh-cross.tga";
-const string vCROSS_DROP     = "gfx/vehicles/axh-dropcross.tga";
-const string vCROSS_RING     = "gfx/vehicles/axh-ring.tga";
-const string vCROSS_SPECIAL1 = "gfx/vehicles/axh-special1.tga";
-const string vCROSS_SPECIAL2 = "gfx/vehicles/axh-special2.tga";
-const string vCROSS_TAG      = "gfx/vehicles/axh-tag.tga";
+const string vCROSS_AIM  = "gfx/vehicles/axh-special1.tga";
+const string vCROSS_DROP = "gfx/vehicles/axh-dropcross.tga";
+const string vCROSS_HEAL = "gfx/vehicles/axh-cross.tga";
+const string vCROSS_HINT = "gfx/vehicles/axh-ring.tga";
+const string vCROSS_LOCK = "gfx/vehicles/axh-bracket.tga";
+const string vCROSS_TAG  = "gfx/vehicles/axh-tag.tga";
 
 const int SBRM_FIRST     = 1;
 const int SBRM_VOLLY     = 1;
@@ -109,7 +108,7 @@ void Net_AuXair2(bool bIsNew)
 		axh.drawmask     = MASK_NORMAL;
 		axh.axh_drawflag = DRAWFLAG_ADDITIVE;
 		axh.axh_fadetime = 0.1;
-		axh.axh_image    = vCROSS_RING;
+		axh.axh_image    = vCROSS_HINT;
 		axh.alpha        = 1;
 
 		AuxiliaryXhairs[axh_id] = axh;
@@ -160,7 +159,7 @@ void Net_VehicleSetup()
 		axh.drawmask     = MASK_NORMAL;
 		axh.axh_drawflag = DRAWFLAG_NORMAL;
 		axh.axh_fadetime = 0.1;
-		axh.axh_image    = vCROSS_RING;
+		axh.axh_image    = vCROSS_HINT;
 		axh.alpha        = 1;
 		AuxiliaryXhairs[i] = axh;
 	}
@@ -168,29 +167,27 @@ void Net_VehicleSetup()
 	switch(hud_id)
 	{
 		case HUD_SPIDERBOT:
-			AuxiliaryXhairs[0].axh_image = vCROSS_RING; // Minigun1
-			AuxiliaryXhairs[1].axh_image = vCROSS_RING; // Minigun2
-			AuxiliaryXhairs[2].axh_image = vCROSS_SPECIAL1; // Rocket
+			AuxiliaryXhairs[0].axh_image = vCROSS_HINT; // Minigun1
+			AuxiliaryXhairs[1].axh_image = vCROSS_HINT; // Minigun2
 			break;
 
 		case HUD_WAKIZASHI:
-			AuxiliaryXhairs[0].axh_image = vCROSS_BRACKET; // Rocket
+			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK; // Rocket
 			break;
 
 		case HUD_RAPTOR:
-			AuxiliaryXhairs[0].axh_image = vCROSS_SPECIAL2;
-			AuxiliaryXhairs[1].axh_image = vCROSS_BRACKET;
+			AuxiliaryXhairs[1].axh_image = vCROSS_LOCK;
 			break;
 
 		case HUD_BUMBLEBEE:
-			AuxiliaryXhairs[0].axh_image = vCROSS_BRACKET; // Raygun-locked
+			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK; // Raygun-locked
 			AuxiliaryXhairs[1].axh_image = vCROSS_TAG; // Gunner1
 			AuxiliaryXhairs[2].axh_image = vCROSS_TAG; // Gunner2
 			break;
 
 		case HUD_BUMBLEBEE_GUN:
-			AuxiliaryXhairs[0].axh_image = vCROSS_BRACKET; // Plasma cannons
-			AuxiliaryXhairs[1].axh_image = vCROSS_BRACKET; // Raygun
+			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK; // Plasma cannons
+			AuxiliaryXhairs[1].axh_image = vCROSS_LOCK; // Raygun
 			break;
 	}
 }
@@ -433,7 +430,7 @@ void Vehicles_drawHUD(
 
 void CSQC_BUMBLE_HUD()
 {
-	Vehicles_drawHUD(vMODEL_BUMBLE, vMODEL_BUMBLE_WEAPON1, vMODEL_BUMBLE_WEAPON2, vICON_AMMO1, vICON_AMMO1, vCROSS_SPECIAL1, TRUE, FALSE);
+	Vehicles_drawHUD(vMODEL_BUMBLE, vMODEL_BUMBLE_WEAPON1, vMODEL_BUMBLE_WEAPON2, vICON_AMMO1, vICON_AMMO1, vCROSS_HEAL, TRUE, FALSE);
 }
 
 void CSQC_BUMBLE_GUN_HUD()
@@ -447,8 +444,8 @@ void CSQC_SPIDER_HUD()
 
 	switch(weapon2mode)
 	{
-		case SBRM_VOLLY: crosshair = vCROSS_BRACKET; break;
-		case SBRM_GUIDE: crosshair = vCROSS_CROSS;   break;
+		case SBRM_VOLLY: crosshair = vCROSS_LOCK; break;
+		case SBRM_GUIDE: crosshair = vCROSS_AIM;  break;
 		default:         crosshair = vCROSS_TAG;
 	}
 
@@ -461,8 +458,8 @@ void CSQC_RAPTOR_HUD()
 
 	switch(weapon2mode)
 	{
-		case RSM_FLARE: crosshair = vCROSS_BRACKET; break;
-		default:        crosshair = vCROSS_RING;
+		case RSM_FLARE: crosshair = vCROSS_LOCK; break;
+		default:        crosshair = vCROSS_AIM;
 	}
 
 	Vehicles_drawHUD(vMODEL_RAPTOR, vMODEL_RAPTOR_WEAPON1, vMODEL_RAPTOR_WEAPON2, vICON_AMMO1, vICON_AMMO2, crosshair, FALSE, TRUE);
@@ -470,7 +467,7 @@ void CSQC_RAPTOR_HUD()
 
 void CSQC_WAKIZASHI_HUD()
 {
-	Vehicles_drawHUD(vMODEL_RACER, vMODEL_RACER_WEAPON1, vMODEL_RACER_WEAPON2, vICON_AMMO1, vICON_AMMO2, vCROSS_SPECIAL1, FALSE, FALSE);
+	Vehicles_drawHUD(vMODEL_RACER, vMODEL_RACER_WEAPON1, vMODEL_RACER_WEAPON2, vICON_AMMO1, vICON_AMMO2, vCROSS_AIM, FALSE, FALSE);
 }
 
 void Vehicles_Precache()
