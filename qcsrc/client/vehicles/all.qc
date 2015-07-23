@@ -247,11 +247,11 @@ void Vehicles_drawHUD(
 
 	drawpic(tmpPos, modelWeapon1, tmpSize, '1 1 1' * ammo1 + '1 0 0' * (1 - ammo1), 1, DRAWFLAG_NORMAL);
 	drawpic(tmpPos, modelWeapon2, tmpSize, '1 1 1' * ammo2 + '1 0 0' * (1 - ammo2), 1, DRAWFLAG_NORMAL);
-	drawpic(tmpPos, vMODEL_SHIELD, tmpSize, '1 1 1', shield, DRAWFLAG_NORMAL);
+	drawpic(tmpPos, vMODEL_SHIELD, tmpSize, '1 1 1' * shield + '1 0 0' * (1 - shield), shield, DRAWFLAG_NORMAL);
 
 	// Health bar
 	tmpSize.y = hudSize.y / 2;
-	tmpPos.x  = hudPos.x + hudSize.x / 24;
+	tmpPos.x  = hudPos.x + hudSize.x * (32/768);
 	tmpPos.y  = hudPos.y;
 
 	drawsetcliparea(tmpPos.x + (tmpSize.x * (1 - health)), tmpPos.y, tmpSize.x, tmpSize.y);
@@ -264,7 +264,7 @@ void Vehicles_drawHUD(
 	drawpic(tmpPos, vBAR_SHIELD, tmpSize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
 	// Ammo1 bar
-	tmpPos.x = hudPos.x + hudSize.x / 1.6;
+	tmpPos.x = hudPos.x + hudSize.x * (480/768);
 	tmpPos.y = hudPos.y;
 
 	if(ammo1)
@@ -286,10 +286,10 @@ void Vehicles_drawHUD(
 	drawresetcliparea();
 
 	// Health icon
-	tmpSize.x = hudSize.x / 6;
-	tmpSize.y = hudSize.y / 2;
-	tmpPos.x  = hudPos.x + hudSize.x / 24;
-	tmpPos.y  = hudPos.y;
+	tmpSize.x = hudSize.x * (80/768);
+	tmpSize.y = hudSize.y * (80/256);
+	tmpPos.x  = hudPos.x + hudSize.x * (56/768);
+	tmpPos.y  = hudPos.y + hudSize.y * (48/256);
 
 	if(health < 0.25)
 	{
@@ -333,21 +333,21 @@ void Vehicles_drawHUD(
 	}
 
 	// Ammo1 icon
-	tmpPos.x = hudPos.x + hudSize.x * 19 / 24;
-	tmpPos.y = hudPos.y;
+	tmpPos.x = hudPos.x + hudSize.x * (632/768);
+	tmpPos.y = hudPos.y + hudSize.y * (48/256);
 
 	if(ammo1)
-		drawpic(tmpPos, vICON_AMMO1, tmpSize, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(tmpPos, iconAmmo1, tmpSize, '1 1 1', 1, DRAWFLAG_NORMAL);
 	else
-		drawpic(tmpPos, vICON_AMMO1, tmpSize, '1 1 1', 0.25, DRAWFLAG_NORMAL);
+		drawpic(tmpPos, iconAmmo1, tmpSize, '1 1 1', 0.2, DRAWFLAG_NORMAL);
 
 	// Ammo2 icon
 	tmpPos.y = hudPos.y + hudSize.y / 2;
 
 	if(ammo2)
-		drawpic(tmpPos, vICON_AMMO2, tmpSize, '1 1 1', 1, DRAWFLAG_NORMAL);
+		drawpic(tmpPos, iconAmmo2, tmpSize, '1 1 1', 1, DRAWFLAG_NORMAL);
 	else
-		drawpic(tmpPos, vICON_AMMO2, tmpSize, '1 1 1', 0.25, DRAWFLAG_NORMAL);
+		drawpic(tmpPos, iconAmmo2, tmpSize, '1 1 1', 0.2, DRAWFLAG_NORMAL);
 
 	// Crosshair
 	tmpSize  = draw_getimagesize(crosshair) * autocvar_cl_vehicles_crosshair_size;
@@ -360,17 +360,17 @@ void Vehicles_drawHUD(
 	if(shouldDrawBumbleGunnerCrosshair)
 	{
 		tmpSize = '1 1 1' * hud_fontsize;
-		tmpPos.x = hudPos.x + hudSize.x / 1.5;
+		tmpPos.x = hudPos.x + hudSize.x * (520/768);
 
 		if(!AuxiliaryXhairs[1].draw2d)
 		{
-			tmpPos.y = hudPos.y + hudSize.y / 2 - hudSize.y / 10 - tmpSize.y;
+			tmpPos.y = hudPos.y + hudSize.y * (96/256) - tmpSize.y;
 			drawstring(tmpPos, _("No right gunner!"), tmpSize, '1 1 1', blinkValue, DRAWFLAG_NORMAL);
 		}
 
 		if(!AuxiliaryXhairs[2].draw2d)
 		{
-			tmpPos.y = hudPos.y + hudSize.y / 2 + hudSize.y / 10;
+			tmpPos.y = hudPos.y + hudSize.y * (160/256);
 			drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', blinkValue, DRAWFLAG_NORMAL);
 		}
 	}
