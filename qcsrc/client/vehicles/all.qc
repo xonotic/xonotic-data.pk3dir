@@ -448,7 +448,7 @@ void CSQC_BUMBLE_GUN_HUD()
 	Vehicles_drawHUD(vMODEL_GUNNER, vMODEL_GUNNER_WEAPON1, vNULL,
 		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
 		vNULL, '0 0 0',
-		vNULL, TRUE, FALSE);
+		vNULL, FALSE, FALSE);
 }
 
 void CSQC_SPIDER_HUD()
