@@ -45,12 +45,12 @@ const string vICON_SHIELD = "gfx/vehicles/shield.tga";
 const string vICON_AMMO1  = "gfx/vehicles/bullets.tga";
 const string vICON_AMMO2  = "gfx/vehicles/rocket.tga";
 
-const string vCROSS_AIM  = "gfx/vehicles/axh-special1.tga";
-const string vCROSS_DROP = "gfx/vehicles/axh-dropcross.tga";
-const string vCROSS_HEAL = "gfx/vehicles/axh-cross.tga";
-const string vCROSS_HINT = "gfx/vehicles/axh-ring.tga";
-const string vCROSS_LOCK = "gfx/vehicles/axh-bracket.tga";
-const string vCROSS_TAG  = "gfx/vehicles/axh-tag.tga";
+const string vCROSS_AIM  = "gfx/vehicles/crosshair_aim.tga";
+const string vCROSS_DROP = "gfx/vehicles/crosshair_drop.tga";
+const string vCROSS_HEAL = "gfx/vehicles/crosshair_heal.tga";
+const string vCROSS_HINT = "gfx/vehicles/crosshair_hint.tga";
+const string vCROSS_LOCK = "gfx/vehicles/crosshair_lock.tga";
+const string vCROSS_TAG  = "gfx/vehicles/crosshair_tag.tga.tga";
 
 const int SBRM_FIRST     = 1;
 const int SBRM_VOLLY     = 1;
