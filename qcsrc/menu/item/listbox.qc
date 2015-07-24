@@ -363,6 +363,8 @@ void ListBox_draw(entity me)
 		// this formula is guaranted to work with whatever framerate
 		float f = sin(PI / 2 * pow(frametime, 0.65));
 		me.scrollPos = me.scrollPos * (1 - f) + me.scrollPosTarget * f;
+		if(fabs(me.scrollPos - me.scrollPosTarget) < 0.001)
+			me.scrollPos = me.scrollPosTarget;
 
 		// update focusedItem while scrolling
 		if(me.focusedItem >= 0)
