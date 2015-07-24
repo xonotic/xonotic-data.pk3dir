@@ -186,8 +186,8 @@ void Net_VehicleSetup()
 			break;
 
 		case HUD_BUMBLEBEE_GUN:
-			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK; // Plasma cannons
-			AuxiliaryXhairs[1].axh_image = vCROSS_LOCK; // Raygun
+			AuxiliaryXhairs[0].axh_image = vCROSS_TAG; // Plasma cannons
+			AuxiliaryXhairs[1].axh_image = vCROSS_TAG; // Raygun
 			break;
 	}
 }
