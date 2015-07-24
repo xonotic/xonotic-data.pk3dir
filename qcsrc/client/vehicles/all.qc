@@ -200,9 +200,7 @@ void Vehicles_drawHUD(
 	vector colorAmmo1,
 	string iconAmmo2,
 	vector colorAmmo2,
-	string crosshair,
-	bool shouldDrawBumbleGunnerCrosshair,
-	bool shouldDrawRaptorBombCrosshair)
+	string crosshair)
 {
 	if(autocvar_r_letterbox)
 		return;
@@ -357,7 +355,7 @@ void Vehicles_drawHUD(
 		drawpic(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
 
 	// Bumblebee gunner crosshairs
-	if(shouldDrawBumbleGunnerCrosshair)
+	if(hud == HUD_BUMBLEBEE)
 	{
 		tmpSize = '1 1 1' * hud_fontsize;
 		tmpPos.x = hudPos.x + hudSize.x * (520/768);
@@ -376,7 +374,7 @@ void Vehicles_drawHUD(
 	}
 
 	// Raptor bomb crosshair
-	if(shouldDrawRaptorBombCrosshair && weapon2mode != RSM_FLARE)
+	if(hud == HUD_RAPTOR && weapon2mode != RSM_FLARE)
 	{
 		vector where;
 
@@ -440,7 +438,7 @@ void CSQC_BUMBLE_HUD()
 	Vehicles_drawHUD(vMODEL_BUMBLE, vMODEL_BUMBLE_WEAPON1, vMODEL_BUMBLE_WEAPON2,
 		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
 		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
-		vCROSS_HEAL, TRUE, FALSE);
+		vCROSS_HEAL);
 }
 
 void CSQC_BUMBLE_GUN_HUD()
@@ -448,7 +446,7 @@ void CSQC_BUMBLE_GUN_HUD()
 	Vehicles_drawHUD(vMODEL_GUNNER, vMODEL_GUNNER_WEAPON1, vNULL,
 		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
 		vNULL, '0 0 0',
-		vNULL, FALSE, FALSE);
+		vNULL);
 }
 
 void CSQC_SPIDER_HUD()
@@ -465,7 +463,7 @@ void CSQC_SPIDER_HUD()
 	Vehicles_drawHUD(vMODEL_SPIDER, vMODEL_SPIDER_WEAPON1, vMODEL_SPIDER_WEAPON2,
 		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
 		vICON_AMMO2, autocvar_hud_progressbar_vehicles_ammo2_color,
-		crosshair, FALSE, FALSE);
+		crosshair);
 }
 
 void CSQC_RAPTOR_HUD()
@@ -481,7 +479,7 @@ void CSQC_RAPTOR_HUD()
 	Vehicles_drawHUD(vMODEL_RAPTOR, vMODEL_RAPTOR_WEAPON1, vMODEL_RAPTOR_WEAPON2,
 		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
 		vICON_AMMO2, autocvar_hud_progressbar_vehicles_ammo2_color,
-		crosshair, FALSE, TRUE);
+		crosshair);
 }
 
 void CSQC_WAKIZASHI_HUD()
@@ -489,7 +487,7 @@ void CSQC_WAKIZASHI_HUD()
 	Vehicles_drawHUD(vMODEL_RACER, vMODEL_RACER_WEAPON1, vMODEL_RACER_WEAPON2,
 		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
 		vICON_AMMO2, autocvar_hud_progressbar_vehicles_ammo2_color,
-		vCROSS_AIM, FALSE, FALSE);
+		vCROSS_AIM);
 }
 
 void Vehicles_Precache()
