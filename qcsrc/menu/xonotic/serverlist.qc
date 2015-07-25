@@ -723,6 +723,7 @@ void XonoticServerList_draw(entity me)
 		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
 			{
+				// don't follow the selected item with SUPER(XonoticServerList).setSelected(me, i);
 				me.selectedItem = i;
 				found = true;
 				break;
@@ -733,8 +734,9 @@ void XonoticServerList_draw(entity me)
 	{
 		if(me.nItems > 0)
 		{
+			// selected server disappeared, select the last server (scrolling to it)
 			if(me.selectedItem >= me.nItems)
-				me.selectedItem = me.nItems - 1;
+				SUPER(XonoticServerList).setSelected(me, me.nItems - 1);
 			if(me.selectedServer)
 				strunzone(me.selectedServer);
 			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
