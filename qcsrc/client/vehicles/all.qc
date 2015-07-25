@@ -16,41 +16,12 @@
 
 .float cnt;
 
-const string vNULL  = "gfx/vehicles/null.tga";
-const string vFRAME = "gfx/vehicles/frame.tga";
-
-const string vMODEL_SHIELD         = "gfx/vehicles/vh-shield.tga";
-const string vMODEL_BUMBLE         = "gfx/vehicles/bumb.tga";
-const string vMODEL_BUMBLE_WEAPON1 = "gfx/vehicles/bumb_lgun.tga";
-const string vMODEL_BUMBLE_WEAPON2 = "gfx/vehicles/bumb_rgun.tga";
-const string vMODEL_GUNNER         = "gfx/vehicles/bumb_side.tga";
-const string vMODEL_GUNNER_WEAPON1 = "gfx/vehicles/bumb_side_gun.tga";
-const string vMODEL_RAPTOR         = "gfx/vehicles/raptor.tga";
-const string vMODEL_RAPTOR_WEAPON1 = "gfx/vehicles/raptor_guns.tga";
-const string vMODEL_RAPTOR_WEAPON2 = "gfx/vehicles/raptor_bombs.tga";
-const string vMODEL_SPIDER         = "gfx/vehicles/sbot.tga";
-const string vMODEL_SPIDER_WEAPON1 = "gfx/vehicles/sbot_mguns.tga";
-const string vMODEL_SPIDER_WEAPON2 = "gfx/vehicles/sbot_rpods.tga";
-const string vMODEL_RACER          = "gfx/vehicles/waki.tga";
-const string vMODEL_RACER_WEAPON1  = "gfx/vehicles/waki_guns.tga";
-const string vMODEL_RACER_WEAPON2  = "gfx/vehicles/waki_rockets.tga";
-
-const string vBAR_HEALTH = "gfx/vehicles/bar_up_left.tga";
-const string vBAR_SHIELD = "gfx/vehicles/bar_dwn_left.tga";
-const string vBAR_AMMO1  = "gfx/vehicles/bar_up_right.tga";
-const string vBAR_AMMO2  = "gfx/vehicles/bar_dwn_right.tga";
-
-const string vICON_HEALTH = "gfx/vehicles/health.tga";
-const string vICON_SHIELD = "gfx/vehicles/shield.tga";
-const string vICON_AMMO1  = "gfx/vehicles/bullets.tga";
-const string vICON_AMMO2  = "gfx/vehicles/rocket.tga";
-
 const string vCROSS_AIM  = "gfx/vehicles/crosshair_aim.tga";
 const string vCROSS_DROP = "gfx/vehicles/crosshair_drop.tga";
 const string vCROSS_HEAL = "gfx/vehicles/crosshair_heal.tga";
 const string vCROSS_HINT = "gfx/vehicles/crosshair_hint.tga";
 const string vCROSS_LOCK = "gfx/vehicles/crosshair_lock.tga";
-const string vCROSS_TAG  = "gfx/vehicles/crosshair_tag.tga.tga";
+const string vCROSS_TAG  = "gfx/vehicles/crosshair_tag.tga";
 
 const int SBRM_FIRST     = 1;
 const int SBRM_VOLLY     = 1;
@@ -193,9 +164,9 @@ void Net_VehicleSetup()
 }
 
 void Vehicles_drawHUD(
-	string modelBase,
-	string modelWeapon1,
-	string modelWeapon2,
+	string vehicle,
+	string vehicleWeapon1,
+	string vehicleWeapon2,
 	string iconAmmo1,
 	vector colorAmmo1,
 	string iconAmmo2,
@@ -230,14 +201,18 @@ void Vehicles_drawHUD(
 	ammo1 = (ammo1) ? ammo1 : energy;
 
 	// Frame
-	hudSize  = draw_getimagesize(vFRAME) * autocvar_cl_vehicles_hudscale;
+	string frame = strcat(hud_skin_path, "/vehicle_frame");
+	if (precache_pic(frame) == "")
+		frame = "gfx/hud/default/vehicle_frame";
+
+	hudSize  = draw_getimagesize(frame) * autocvar_cl_vehicles_hudscale;
 	hudPos.x = (vid_conwidth - hudSize.x) / 2;
 	hudPos.y = vid_conheight - hudSize.y;
 
 	if(teamplay && autocvar_hud_panel_bg_color_team)
-		drawpic(hudPos, vFRAME, hudSize, myteamcolors * autocvar_hud_panel_bg_color_team, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
+		drawpic(hudPos, frame, hudSize, myteamcolors * autocvar_hud_panel_bg_color_team, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
 	else
-		drawpic(hudPos, vFRAME, hudSize, autocvar_hud_panel_bg_color, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
+		drawpic(hudPos, frame, hudSize, autocvar_hud_panel_bg_color, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
 
 	// Model
 	tmpSize.x = hudSize.x / 3;
@@ -246,13 +221,13 @@ void Vehicles_drawHUD(
 	tmpPos.y  = hudPos.y;
 
 	if(health < 0.25)
-		drawpic(tmpPos, modelBase, tmpSize, '1 0 0' + '0 1 1' * blinkValue, hudAlpha, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, vehicle, tmpSize, '1 0 0' + '0 1 1' * blinkValue, hudAlpha, DRAWFLAG_NORMAL);
 	else
-		drawpic(tmpPos, modelBase, tmpSize, '1 1 1' * health  + '1 0 0' * (1 - health), hudAlpha, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, vehicle, tmpSize, '1 1 1' * health  + '1 0 0' * (1 - health), hudAlpha, DRAWFLAG_NORMAL);
 
-	drawpic(tmpPos, modelWeapon1, tmpSize, '1 1 1' * ammo1 + '1 0 0' * (1 - ammo1), hudAlpha, DRAWFLAG_NORMAL);
-	drawpic(tmpPos, modelWeapon2, tmpSize, '1 1 1' * ammo2 + '1 0 0' * (1 - ammo2), hudAlpha, DRAWFLAG_NORMAL);
-	drawpic(tmpPos, vMODEL_SHIELD, tmpSize, '1 1 1' * shield + '1 0 0' * (1 - shield), hudAlpha * shield, DRAWFLAG_NORMAL);
+	drawpic_skin(tmpPos, vehicleWeapon1, tmpSize, '1 1 1' * ammo1 + '1 0 0' * (1 - ammo1), hudAlpha, DRAWFLAG_NORMAL);
+	drawpic_skin(tmpPos, vehicleWeapon2, tmpSize, '1 1 1' * ammo2 + '1 0 0' * (1 - ammo2), hudAlpha, DRAWFLAG_NORMAL);
+	drawpic_skin(tmpPos, "vehicle_shield", tmpSize, '1 1 1' * shield + '1 0 0' * (1 - shield), hudAlpha * shield, DRAWFLAG_NORMAL);
 
 	// Health bar
 	tmpSize.y = hudSize.y / 2;
@@ -260,13 +235,13 @@ void Vehicles_drawHUD(
 	tmpPos.y  = hudPos.y;
 
 	drawsetcliparea(tmpPos.x + (tmpSize.x * (1 - health)), tmpPos.y, tmpSize.x, tmpSize.y);
-	drawpic(tmpPos, vBAR_HEALTH, tmpSize, autocvar_hud_progressbar_health_color, barAlpha, DRAWFLAG_NORMAL);
+	drawpic_skin(tmpPos, "vehicle_bar_northwest", tmpSize, autocvar_hud_progressbar_health_color, barAlpha, DRAWFLAG_NORMAL);
 
 	// Shield bar
 	tmpPos.y = hudPos.y + hudSize.y / 2;
 
 	drawsetcliparea(tmpPos.x + (tmpSize.x * (1 - shield)), tmpPos.y, tmpSize.x, tmpSize.y);
-	drawpic(tmpPos, vBAR_SHIELD, tmpSize, autocvar_hud_progressbar_armor_color, barAlpha, DRAWFLAG_NORMAL);
+	drawpic_skin(tmpPos, "vehicle_bar_southwest", tmpSize, autocvar_hud_progressbar_armor_color, barAlpha, DRAWFLAG_NORMAL);
 
 	// Ammo1 bar
 	tmpPos.x = hudPos.x + hudSize.x * (480/768);
@@ -277,7 +252,7 @@ void Vehicles_drawHUD(
 	else
 		drawsetcliparea(tmpPos.x, tmpPos.y, tmpSize.x * reload1, tmpSize.y);
 
-	drawpic(tmpPos, vBAR_AMMO1, tmpSize, colorAmmo1, barAlpha, DRAWFLAG_NORMAL);
+	drawpic_skin(tmpPos, "vehicle_bar_northeast", tmpSize, colorAmmo1, barAlpha, DRAWFLAG_NORMAL);
 
 	// Ammo2 bar
 	tmpPos.y = hudPos.y + hudSize.y / 2;
@@ -287,13 +262,13 @@ void Vehicles_drawHUD(
 	else
 		drawsetcliparea(tmpPos.x, tmpPos.y, tmpSize.x * reload2, tmpSize.y);
 
-	drawpic(tmpPos, vBAR_AMMO2, tmpSize, colorAmmo2, barAlpha, DRAWFLAG_NORMAL);
+	drawpic_skin(tmpPos, "vehicle_bar_southeast", tmpSize, colorAmmo2, barAlpha, DRAWFLAG_NORMAL);
 	drawresetcliparea();
 
 	// Health icon
 	tmpSize.x = hudSize.x * (80/768);
 	tmpSize.y = hudSize.y * (80/256);
-	tmpPos.x  = hudPos.x + hudSize.x * (56/768);
+	tmpPos.x  = hudPos.x + hudSize.x * (64/768);
 	tmpPos.y  = hudPos.y + hudSize.y * (48/256);
 
 	if(health < 0.25)
@@ -303,7 +278,7 @@ void Vehicles_drawHUD(
 			alarm1time = time + 2;
 			sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
 		}
-		drawpic(tmpPos, vICON_HEALTH, tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
 	else
 	{
@@ -312,7 +287,7 @@ void Vehicles_drawHUD(
 			sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
 			alarm1time = 0;
 		}
-		drawpic(tmpPos, vICON_HEALTH, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
 	}
 
 	// Shield icon
@@ -325,7 +300,7 @@ void Vehicles_drawHUD(
 			alarm2time = time + 1;
 			sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
 		}
-		drawpic(tmpPos, vICON_SHIELD, tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
 	else
 	{
@@ -334,25 +309,25 @@ void Vehicles_drawHUD(
 			sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
 			alarm2time = 0;
 		}
-		drawpic(tmpPos, vICON_SHIELD, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
 	}
 
 	// Ammo1 icon
-	tmpPos.x = hudPos.x + hudSize.x * (632/768);
+	tmpPos.x = hudPos.x + hudSize.x * (624/768);
 	tmpPos.y = hudPos.y + hudSize.y * (48/256);
 
 	if(ammo1)
-		drawpic(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
 	else
-		drawpic(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
 
 	// Ammo2 icon
 	tmpPos.y = hudPos.y + hudSize.y / 2;
 
 	if(ammo2)
-		drawpic(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
 	else
-		drawpic(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
+		drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
 
 	// Bumblebee gunner crosshairs
 	if(hud == HUD_BUMBLEBEE)
@@ -435,18 +410,18 @@ void Vehicles_drawHUD(
 
 void CSQC_BUMBLE_HUD()
 {
-	Vehicles_drawHUD(vMODEL_BUMBLE, vMODEL_BUMBLE_WEAPON1, vMODEL_BUMBLE_WEAPON2,
-		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
-		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
+	Vehicles_drawHUD("vehicle_bumble", "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 		vCROSS_HEAL);
 }
 
 void CSQC_BUMBLE_GUN_HUD()
 {
-	Vehicles_drawHUD(vMODEL_GUNNER, vMODEL_GUNNER_WEAPON1, vNULL,
-		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
-		vNULL, '0 0 0',
-		vNULL);
+	Vehicles_drawHUD("vehicle_gunner", "vehicle_gunner_weapon1", "null",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"null", '0 0 0',
+		"null");
 }
 
 void CSQC_SPIDER_HUD()
@@ -460,9 +435,9 @@ void CSQC_SPIDER_HUD()
 		default:         crosshair = vCROSS_TAG;
 	}
 
-	Vehicles_drawHUD(vMODEL_SPIDER, vMODEL_SPIDER_WEAPON1, vMODEL_SPIDER_WEAPON2,
-		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
-		vICON_AMMO2, autocvar_hud_progressbar_vehicles_ammo2_color,
+	Vehicles_drawHUD("vehicle_spider", "vehicle_spider_weapon1", "vehicle_spider_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 		crosshair);
 }
 
@@ -476,17 +451,17 @@ void CSQC_RAPTOR_HUD()
 		default:        crosshair = vCROSS_AIM;
 	}
 
-	Vehicles_drawHUD(vMODEL_RAPTOR, vMODEL_RAPTOR_WEAPON1, vMODEL_RAPTOR_WEAPON2,
-		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
-		vICON_AMMO2, autocvar_hud_progressbar_vehicles_ammo2_color,
+	Vehicles_drawHUD("vehicle_raptor", "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 		crosshair);
 }
 
 void CSQC_WAKIZASHI_HUD()
 {
-	Vehicles_drawHUD(vMODEL_RACER, vMODEL_RACER_WEAPON1, vMODEL_RACER_WEAPON2,
-		vICON_AMMO1, autocvar_hud_progressbar_vehicles_ammo1_color,
-		vICON_AMMO2, autocvar_hud_progressbar_vehicles_ammo2_color,
+	Vehicles_drawHUD("vehicle_racer", "vehicle_racer_weapon1", "vehicle_racer_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 		vCROSS_AIM);
 }
 
