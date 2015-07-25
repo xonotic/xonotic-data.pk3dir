@@ -21,6 +21,8 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, origin, vector, '0 0 0')
 	ATTRIB(ListBox, scrollPos, float, 0) // measured in window heights, fixed when needed
 	ATTRIB(ListBox, scrollPosTarget, float, 0)
+	ATTRIB(ListBox, needScrollToItem, float, -1)
+	METHOD(ListBox, scrollToItem, void(entity, int))
 	ATTRIB(ListBox, previousValue, float, 0)
 	ATTRIB(ListBox, pressed, float, 0) // 0 = normal, 1 = scrollbar dragging, 2 = item dragging, 3 = released
 	ATTRIB(ListBox, pressOffset, float, 0)
@@ -81,8 +83,16 @@ ENDCLASS(ListBox)
 #endif
 
 #ifdef IMPLEMENTATION
-void ListBox_setSelected(entity me, float i)
+void ListBox_scrollToItem(entity me, int i)
 {
+	// scroll doesn't work properly until iHeight is set to the correct value
+	// at the first resizeNotify call
+	if(me.iHeight == 1) // initial temporary value of iHeight is 1
+	{
+		me.needScrollToItem = i;
+		return;
+	}
+
 	i = bound(0, i, me.nItems - 1);
 
 	// scroll the list to make sure the selected item is visible
@@ -98,10 +108,14 @@ void ListBox_setSelected(entity me, float i)
 		if(i == me.nItems - 1)
 			me.scrollPosTarget = me.getTotalHeight(me) - 1;
 		else
-		{
 			me.scrollPosTarget = me.getItemStart(me, i + 1) - 1;
-		}
 	}
+}
+
+void ListBox_setSelected(entity me, float i)
+{
+	i = bound(0, i, me.nItems - 1);
+	me.scrollToItem(me, i);
 	me.selectedItem = i;
 }
 void ListBox_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
@@ -356,7 +370,11 @@ void ListBox_draw(entity me)
 	float i;
 	vector absSize, fillSize = '0 0 0';
 	vector oldshift, oldscale;
-
+	if(me.needScrollToItem >= 0)
+	{
+		me.scrollToItem(me, me.needScrollToItem);
+		me.needScrollToItem = -1;
+	}
 	if(me.scrollPos != me.scrollPosTarget)
 	{
 		float PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
