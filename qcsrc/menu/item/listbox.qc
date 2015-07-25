@@ -85,9 +85,9 @@ ENDCLASS(ListBox)
 #ifdef IMPLEMENTATION
 void ListBox_scrollToItem(entity me, int i)
 {
-	// scroll doesn't work properly until iHeight is set to the correct value
+	// scroll doesn't work properly until itemHeight is set to the correct value
 	// at the first resizeNotify call
-	if(me.iHeight == 1) // initial temporary value of iHeight is 1
+	if(me.itemHeight == 1) // initial temporary value of itemHeight is 1
 	{
 		me.needScrollToItem = i;
 		return;
