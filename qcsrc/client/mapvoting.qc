@@ -347,27 +347,35 @@ void MapVote_Draw()
 	pos.z = 0;
 
 	draw_beginBoldFont();
+
 	map = ((gametypevote) ? _("Decide the gametype") : _("Vote for a map"));
-	pos.x = center - stringwidth(map, false, '12 0 0');
-	drawstring(pos, map, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
-	pos.y += 26;
+	pos.x = center - stringwidth(map, false, hud_fontsize * 2) * 0.5;
+	drawstring(pos, map, hud_fontsize * 2, '1 1 1', 1, DRAWFLAG_NORMAL);
+	pos.y += hud_fontsize.y * 2;
 
 	if( mapvote_chosenmap != "" )
 	{
-		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize*1.5/2);
-		drawstring(pos, mapvote_chosenmap, hud_fontsize*1.5, '1 1 1', 1, DRAWFLAG_NORMAL);
-		pos.y += hud_fontsize.y*2;
+		pos.y += hud_fontsize.y * 0.25;
+		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize * 1.5) * 0.5;
+		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', 1, DRAWFLAG_NORMAL);
+		pos.y += hud_fontsize.y * 1.5;
+		pos.y += hud_fontsize.y * 0.5;
 	}
+	else
+		pos.y += hud_fontsize.y * 0.5;
+
+	draw_endBoldFont();
 
 	i = ceil(max(0, mv_timeout - time));
 	map = sprintf(_("%d seconds left"), i);
-	pos.x = center - stringwidth(map, false, '8 0 0');
-	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
-	pos.y += 22;
-	pos.x = xmin;
-	draw_endBoldFont();
+	pos.x = center - stringwidth(map, false, hud_fontsize * 1.5) * 0.5;
+	drawstring(pos, map, hud_fontsize * 1.5, '0 1 0', 1, DRAWFLAG_NORMAL);
+	pos.y += hud_fontsize.y * 1.5;
+	pos.y += hud_fontsize.y * 0.5;
 
 	// base for multi-column stuff...
+	pos.y += hud_fontsize.y;
+	pos.x = xmin;
 	ymin = pos.y;
 	if(mv_abstain)
 		mv_num_maps -= 1;
@@ -407,8 +415,7 @@ void MapVote_Draw()
 	xmin = pos.x += offset;
 	xmax -= offset;
 	offset = ((ymax - pos.y) - dist.y * rows) / 2;
-	ymin = pos.y += offset;
-	ymax -= offset;
+	ymax -= 2 * offset;
 
 	mv_selection = MapVote_Selection(pos, dist, rows, mv_columns);
 
