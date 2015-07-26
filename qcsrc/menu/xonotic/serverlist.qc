@@ -1164,16 +1164,16 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(me.seenIPv4 && me.seenIPv6)
 	{
 		if(isv6)
-			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), iconSize, '1 1 1', 1);
+			draw_Picture(iconPos, "icon_ipv6", iconSize, '1 1 1', 1);
 		else if(isv4)
-			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), iconSize, '1 1 1', 1);
+			draw_Picture(iconPos, "icon_ipv4", iconSize, '1 1 1', 1);
 	}
 
 	iconPos.x += iconSize.x;
 
 	// AES
 	if(q > 0)
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+		draw_Picture(iconPos, strcat("icon_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
 
 	iconPos.x += iconSize.x;
 
@@ -1181,13 +1181,13 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(modname == "Xonotic")
 	{
 		if(pure == 0)
-			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), iconSize, '1 1 1', 1);
+			draw_Picture(iconPos, "icon_pure1", iconSize, '1 1 1', 1);
 	}
 	else
 	{
-		string icon = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname);
+		string icon = strcat("icon_mod_", modname);
 		if(draw_PictureSize(icon) == '0 0 0')
-			icon = strcat(SKINGFX_SERVERLIST_ICON, "_mod_");
+			icon = "icon_mod_";
 
 		if(pure == 0)
 			draw_Picture(iconPos, icon, iconSize, '1 1 1', 1);
@@ -1199,7 +1199,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	// Stats
 	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), iconSize, '1 1 1', 1);
+		draw_Picture(iconPos, "icon_stats1", iconSize, '1 1 1', 1);
 
 	// --------------
 	//  RENDER TEXT
