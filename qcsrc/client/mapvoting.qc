@@ -90,10 +90,10 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	// Bounding box details
 	float rect_margin = hud_fontsize.y / 2;
 
-	pos.x += rect_margin;
-	pos.y += rect_margin;
-	maxh -= 2 * rect_margin;
-	tsize -= 2 * rect_margin;
+	pos.x += rect_margin + autocvar_scoreboard_border_thickness;
+	pos.y += rect_margin + autocvar_scoreboard_border_thickness;
+	maxh -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
+	tsize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
 
 	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
 	vector rect_size = '1 1 0';
