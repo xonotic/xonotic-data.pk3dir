@@ -121,7 +121,6 @@ void CampaignPreInit()
 	strunzone(title);
 }
 
-string GetMapname();
 void CampaignPostInit()
 {
 	// now some sanity checks

@@ -15,7 +15,7 @@
 #else
 string cvar_string_normal(string n)
 {
-	if (!(cvar_type(n) & 1))
+	if (!(cvar_type(n) & CVAR_TYPEFLAG_EXISTS))
 		backtrace(strcat("Attempt to access undefined cvar: ", n));
 	return builtin_cvar_string(n);
 }
@@ -141,14 +141,10 @@ void WarpZone_crosshair_trace(entity pl);
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 
 
-#define IFTARGETED if(!self.nottargeted && self.targetname != "")
-
 #define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 #define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER) || ((dt) == DEATH_SLIME) || ((dt) == DEATH_LAVA) || ((dt) == DEATH_SWAMP))
 
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
-
-#define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 
 const string STR_PLAYER = "player";
 const string STR_SPECTATOR = "spectator";
@@ -443,10 +439,6 @@ const float SND_ATTENUATION = 2;
 const float SND_LARGEENTITY = 8;
 const float SND_LARGESOUND = 16;
 
-// WARNING: this kills the trace globals
-#define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
-#define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()
-
 const float INITPRIO_FIRST 				= 0;
 const float INITPRIO_GAMETYPE 			= 0;
 const float INITPRIO_GAMETYPE_FALLBACK 	= 1;
@@ -468,6 +460,6 @@ entity initialize_entity_first;
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(void) func, float order);
 void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
-void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc);
+void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc);
 
 #endif

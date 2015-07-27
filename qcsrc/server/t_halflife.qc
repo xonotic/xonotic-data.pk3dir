@@ -1,11 +1,3 @@
-#include "_all.qh"
-
-#include "../warpzonelib/util_server.qh"
-#include "vehicles/vehicle.qh"
-
-.float  ladder_time;
-.entity ladder_entity;
-
 .float  roomtype;
 .float  radius;
 .float  pitch;
@@ -40,30 +32,3 @@ void spawnfunc_info_node() {}
 void spawnfunc_env_sound() {}
 void spawnfunc_light_spot() {}
 void spawnfunc_func_healthcharger() {}
-
-
-void func_ladder_touch()
-{
-	if (!other.iscreature)
-		return;
-	if (other.vehicle_flags & VHF_ISVEHICLE)
-		return;
-
-	EXACTTRIGGER_TOUCH;
-
-	other.ladder_time = time + 0.1;
-	other.ladder_entity = self;
-}
-
-void spawnfunc_func_ladder()
-{
-	EXACTTRIGGER_INIT;
-	self.touch = func_ladder_touch;
-}
-
-void spawnfunc_func_water()
-{
-	EXACTTRIGGER_INIT;
-	self.touch = func_ladder_touch;
-}
-

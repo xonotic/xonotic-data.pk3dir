@@ -665,20 +665,20 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	GAMETYPE(MAPINFO_TYPE_CTF) \
 	GAMETYPE(MAPINFO_TYPE_CA) \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH) \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
 	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
 	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
 	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \
 	GAMETYPE(MAPINFO_TYPE_LMS) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	//GAMETYPE(MAPINFO_TYPE_INVASION) \
 	/* nothing */
 
@@ -795,6 +795,15 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 				for(i = 0; i <= 10; ++i)
 					e.addValue(e, strzone(ftos_decimals(i - 5, 0)), strzone(ftos(i - 5)));
 				e.configureXonoticTextSliderValues(e);
+}
+
+float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)
+{
+	if(startAlpha < targetAlpha)
+		currentAlpha = min(currentAlpha + frametime * 0.5, targetAlpha);
+	else
+		currentAlpha = max(currentAlpha - frametime * 0.5, targetAlpha);
+	return currentAlpha;
 }
 
 void CheckSendCvars(entity me, string cvarnamestring)

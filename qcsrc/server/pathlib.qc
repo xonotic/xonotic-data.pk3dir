@@ -1,8 +1,6 @@
 #include "pathlib.qh"
 #include "_all.qh"
 
-#include "g_subs.qh"
-
 #define medium spawnshieldtime
 
 //#define DEBUGPATHING

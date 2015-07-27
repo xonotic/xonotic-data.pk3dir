@@ -2,6 +2,8 @@
 #include "racer.qh"
 
 #ifdef SVQC
+#include "../../common/triggers/trigger/impulse.qh"
+
 void racer_exit(float eject);
 void racer_enter();
 

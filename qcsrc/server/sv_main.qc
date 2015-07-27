@@ -18,7 +18,7 @@
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/sv_model.qh"
 
@@ -140,6 +140,7 @@ void CreatureFrame (void)
 			if (g_footsteps)
 			if (!gameover)
 			if (self.flags & FL_ONGROUND)
+			if (!self.crouch)
 			if (velocity_len > autocvar_sv_maxspeed * 0.6)
 			if (!self.deadflag)
 			if (time < self.lastground + 0.2)

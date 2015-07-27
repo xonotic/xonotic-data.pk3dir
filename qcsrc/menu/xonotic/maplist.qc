@@ -5,7 +5,7 @@ CLASS(XonoticMapList, XonoticListBox)
 	METHOD(XonoticMapList, configureXonoticMapList, void(entity))
 	ATTRIB(XonoticMapList, rowsPerItem, float, 4)
 	METHOD(XonoticMapList, draw, void(entity))
-	METHOD(XonoticMapList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticMapList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector))
@@ -161,7 +161,7 @@ void XonoticMapList_doubleClickListBoxItem(entity me, float i, vector where)
 		}
 }
 
-void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticMapList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	// layout: Ping, Map name, Map name, NP, TP, MP
 	string s;
@@ -179,8 +179,16 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(included)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
+	else
+	{
+		if(included)
+			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
+		if(isFocused)
+		{
+			me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+		}
+	}
 
 	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);

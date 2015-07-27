@@ -11,13 +11,13 @@ const int IT_FUEL_REGEN            		=      32; // fuel regeneration trigger
 // where is 64... ?
 const int IT_FUEL       				=     128;
 // -Wdouble-declaration
-// const int IT_SHELLS     				=     256;
+#define IT_SHELLS     				          256
 // -Wdouble-declaration
-// const int IT_NAILS      				=     512;
+#define IT_NAILS      				          512
 // -Wdouble-declaration
-// const int IT_ROCKETS    				=    1024;
+#define IT_ROCKETS    				         1024
 // -Wdouble-declaration
-// const int IT_CELLS      				=    2048;
+#define IT_CELLS      				         2048
 const int IT_SUPERWEAPON				=    4096;
 const int IT_STRENGTH   				=    8192;
 const int IT_INVINCIBLE 				=   16384;

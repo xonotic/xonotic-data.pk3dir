@@ -3,7 +3,6 @@
 #include "tab.qc"
 CLASS(XonoticMediaTab, XonoticTab)
 	METHOD(XonoticMediaTab, fill, void(entity))
-	ATTRIB(XonoticMediaTab, title, string, _("Media"))
 	ATTRIB(XonoticMediaTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMediaTab, rows, float, 23)
 	ATTRIB(XonoticMediaTab, columns, float, 3)

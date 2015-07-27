@@ -3,7 +3,6 @@
 #include "tab.qc"
 CLASS(XonoticVideoSettingsTab, XonoticTab)
 	METHOD(XonoticVideoSettingsTab, fill, void(entity))
-	ATTRIB(XonoticVideoSettingsTab, title, string, _("Video"))
 	ATTRIB(XonoticVideoSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticVideoSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticVideoSettingsTab, columns, float, 6.2) // added extra .2 for center space
