@@ -316,6 +316,7 @@ void MapVote_Draw()
 	float rows;
 	vector dist = '0 0 0';
 
+	//if(intermission != 2) return;
 	if(!mv_active)
 		return;
 
@@ -380,6 +381,8 @@ void MapVote_Draw()
 	if(mv_abstain)
 		mv_num_maps -= 1;
 
+	HUD_Panel_UpdateCvars();
+
 	// higher than the image itself ratio for mapvote items to reserve space for long map names
 	int item_aspect = (gametypevote) ? 3/1 : 5/3;
 	vector table_size = HUD_GetTableSize_BestItemAR(mv_num_maps, eX * (xmax - xmin) + eY * (ymax - ymin), item_aspect);
@@ -416,6 +419,25 @@ void MapVote_Draw()
 	xmax -= offset;
 	offset = ((ymax - pos.y) - dist.y * rows) / 2;
 	ymax -= 2 * offset;
+
+	// override panel_pos and panel_size
+	panel_pos.x = pos.x;
+	panel_pos.y = pos.y;
+	panel_size.x = xmax - xmin;
+	panel_size.y = ymax - ymin;
+	HUD_Panel_DrawBg(1);
+
+	if(panel_bg_padding)
+	{
+		// FIXME item AR gets slightly changed here...
+		// it's rather hard to avoid it at this point
+		dist.x -= 2 * panel_bg_padding / mv_columns;
+		dist.y -= 2 * panel_bg_padding / rows;
+		xmin = pos.x += panel_bg_padding;
+		ymin = pos.y += panel_bg_padding;
+		xmax -= 2 * panel_bg_padding;
+		ymax -= 2 * panel_bg_padding;
+	}
 
 	mv_selection = MapVote_Selection(pos, dist, rows, mv_columns);
 
