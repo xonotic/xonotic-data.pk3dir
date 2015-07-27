@@ -8,7 +8,6 @@
 #include "noise.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "target_music.qh"
 #include "vehicles/all.qh"
 #include "waypointsprites.qh"
 
@@ -16,6 +15,7 @@
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
 #include "../common/stats.qh"
+#include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
 

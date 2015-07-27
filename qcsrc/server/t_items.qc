@@ -5,7 +5,6 @@
 #if defined(SVQC)
     #include "_all.qh"
 
-    #include "g_subs.qh"
     #include "waypointsprites.qh"
 
     #include "bot/bot.qh"
@@ -20,6 +19,7 @@
     #include "../common/constants.qh"
     #include "../common/deathtypes.qh"
     #include "../common/notifications.qh"
+	#include "../common/triggers/subs.qh"
     #include "../common/util.qh"
 
     #include "../common/monsters/all.qh"

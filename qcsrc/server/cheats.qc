@@ -3,7 +3,7 @@
 
 #include "g_damage.qh"
 #include "race.qh"
-#include "t_teleporters.qh"
+#include "../common/triggers/teleporters.qh"
 
 #include "mutators/mutators_include.qh"
 
@@ -16,6 +16,10 @@
 #include "../common/monsters/all.qh"
 
 #include "../common/weapons/all.qh"
+
+#include "../common/triggers/subs.qh"
+
+#include "../common/triggers/func/breakable.qh"
 
 #include "../csqcmodellib/sv_model.qh"
 

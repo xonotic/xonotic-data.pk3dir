@@ -15,8 +15,6 @@ class(Wall) .vector saved;
 // fade_vertical_offset is a vertival offset for player position
 .float fade_start, fade_end, fade_vertical_offset;
 .float default_solid;
-// This variable will be set by trigger
-.float antiwall_flag;
 
 void Ent_Wall_Draw();
 

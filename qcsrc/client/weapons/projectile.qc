@@ -3,10 +3,10 @@
 #include "../autocvars.qh"
 #include "../defs.qh"
 #include "../main.qh"
-#include "../movetypes.qh"
 
 #include "../../common/constants.qh"
 #include "../../common/nades.qh"
+#include "../../common/movetypes/movetypes.qh"
 #include "../../common/util.qh"
 
 #include "../../csqcmodellib/interpolate.qh"
@@ -486,6 +486,7 @@ void Ent_Projectile()
 	if(!(self.count & 0x80))
 		InterpolateOrigin_Note();
 
+	self.classname = "csqcprojectile";
 	self.draw = Projectile_Draw;
 	self.entremove = Ent_RemoveProjectile;
 }
