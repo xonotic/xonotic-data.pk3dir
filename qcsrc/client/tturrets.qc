@@ -3,12 +3,13 @@
 
 #include "hud.qh"
 #include "movelib.qh"
-#include "movetypes.qh"
 #include "prandom.qh"
 #include "teamradar.qh"
 #include "waypointsprites.qh"
 
 #include "../common/teams.qh"
+
+#include "../common/movetypes/movetypes.qh"
 
 #include "../server/tturrets/include/turrets_early.qh"
 

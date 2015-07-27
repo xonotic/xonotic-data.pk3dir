@@ -11,6 +11,7 @@ ENDCLASS(GameItem)
 
 
 int ITEM_COUNT;
+/** If you register a new item, make sure to add it to all.inc */
 #define REGISTER_ITEM(id, class, body)          \
     entity ITEM_##id;                           \
     void RegisterItems_##id() {                 \

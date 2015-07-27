@@ -3,5 +3,7 @@
 
 float WarpZoneLib_MoveOutOfSolid(entity e);
 float WarpZoneLib_ExactTrigger_Touch();
+#ifdef SVQC
 void WarpZoneLib_ExactTrigger_Init();
+#endif
 #endif

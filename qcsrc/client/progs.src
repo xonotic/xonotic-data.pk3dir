@@ -13,13 +13,11 @@ gibs.qc
 hook.qc
 hud.qc
 hud_config.qc
-laser.qc
 main.qc
 mapvoting.qc
 miscfunctions.qc
 modeleffects.qc
 movelib.qc
-movetypes.qc
 noise.qc
 particles.qc
 player_skeleton.qc
@@ -28,7 +26,6 @@ rubble.qc
 scoreboard.qc
 shownames.qc
 sortlist.qc
-target_music.qc
 teamradar.qc
 tturrets.qc
 tuba.qc
@@ -47,9 +44,11 @@ weapons/projectile.qc // TODO
 ../common/animdecide.qc
 ../common/buffs.qc
 ../common/mapinfo.qc
+../common/movetypes/include.qc
 ../common/nades.qc
 ../common/net_notice.qc
 ../common/notifications.qc
+../common/physics.qc
 ../common/playerstats.qc
 ../common/test.qc
 ../common/urllib.qc
@@ -61,11 +60,16 @@ weapons/projectile.qc // TODO
 
 ../common/weapons/all.qc // TODO
 
+../common/triggers/include.qc
+
 ../csqcmodellib/cl_model.qc
 ../csqcmodellib/cl_player.qc
 ../csqcmodellib/interpolate.qc
+
+../server/mutators/mutator_multijump.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc
 ../warpzonelib/common.qc
 ../warpzonelib/mathlib.qc
+../warpzonelib/util_server.qc

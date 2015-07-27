@@ -74,7 +74,6 @@
     #include "../playerdemo.qh"
     #include "../round_handler.qh"
     #include "../item_key.qh"
-    #include "../secret.qh"
     #include "../pathlib/pathlib.qh"
     #include "../tturrets/include/turrets.qh"
     #include "../vehicles/all.qh"

@@ -8,7 +8,6 @@
 #include "../campaign.qh"
 #include "../cheats.qh"
 #include "../cl_player.qh"
-#include "../g_triggers.qh"
 #include "../ipban.qh"
 #include "../mapvoting.qh"
 #include "../scores.qh"
@@ -373,6 +372,46 @@ void ClientCommand_mobspawn(float request, float argc)
 			sprint(self, "  See 'cmd mobspawn list' for available monsters.\n");
 			sprint(self, "  Argument 'random' spawns a random monster.\n");
 			sprint(self, "  Monster will follow the owner if second argument is not defined.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_physics(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string command = strtolower(argv(1));
+			
+			if(!autocvar_g_physics_clientselect)
+			{
+				sprint(self, "Client physics selection is currently disabled.\n");
+				return;
+			}
+
+			if(command == "list" || command == "help")
+			{
+				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
+				return;
+			}
+			
+			if(Physics_Valid(command) || command == "default")
+			{
+				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
+				sprint(self, strcat("^2Physics set successfully changed to ^3", command, "\n"));
+				return;
+			}
+		}
+	
+		default:
+			sprint(self, strcat("Current physics set: ^3", self.cvar_cl_physics, "\n"));
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd physics <physics>\n");
+			sprint(self, "  See 'cmd physics list' for available physics sets.\n");
+			sprint(self, "  Argument 'default' resets to standard physics.\n");
 			return;
 		}
 	}
@@ -770,6 +809,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
 	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \
 	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
+	CLIENT_COMMAND("physics", ClientCommand_physics(request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
