@@ -225,8 +225,11 @@ void Vehicles_drawHUD(
 	else
 		drawpic_skin(tmpPos, vehicle, tmpSize, '1 1 1' * health  + '1 0 0' * (1 - health), hudAlpha, DRAWFLAG_NORMAL);
 
-	drawpic_skin(tmpPos, vehicleWeapon1, tmpSize, '1 1 1' * ammo1 + '1 0 0' * (1 - ammo1), hudAlpha, DRAWFLAG_NORMAL);
-	drawpic_skin(tmpPos, vehicleWeapon2, tmpSize, '1 1 1' * ammo2 + '1 0 0' * (1 - ammo2), hudAlpha, DRAWFLAG_NORMAL);
+	if(vehicleWeapon1)
+		drawpic_skin(tmpPos, vehicleWeapon1, tmpSize, '1 1 1' * ammo1 + '1 0 0' * (1 - ammo1), hudAlpha, DRAWFLAG_NORMAL);
+	if(vehicleWeapon2)
+		drawpic_skin(tmpPos, vehicleWeapon2, tmpSize, '1 1 1' * ammo2 + '1 0 0' * (1 - ammo2), hudAlpha, DRAWFLAG_NORMAL);
+
 	drawpic_skin(tmpPos, "vehicle_shield", tmpSize, '1 1 1' * shield + '1 0 0' * (1 - shield), hudAlpha * shield, DRAWFLAG_NORMAL);
 
 	// Health bar
@@ -316,18 +319,24 @@ void Vehicles_drawHUD(
 	tmpPos.x = hudPos.x + hudSize.x * (624/768);
 	tmpPos.y = hudPos.y + hudSize.y * (48/256);
 
-	if(ammo1)
-		drawpic_skin(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
-	else
-		drawpic_skin(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
+	if(iconAmmo1)
+	{
+		if(ammo1)
+			drawpic_skin(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+		else
+			drawpic_skin(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
+	}
 
 	// Ammo2 icon
 	tmpPos.y = hudPos.y + hudSize.y / 2;
 
-	if(ammo2)
-		drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
-	else
-		drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
+	if(iconAmmo2)
+	{
+		if(ammo2)
+			drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+		else
+			drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
+	}
 
 	// Bumblebee gunner crosshairs
 	if(hud == HUD_BUMBLEBEE)
@@ -401,11 +410,14 @@ void Vehicles_drawHUD(
 	}
 
 	// Crosshair
-	tmpSize  = draw_getimagesize(crosshair) * autocvar_cl_vehicles_crosshair_size;
-	tmpPos.x = (vid_conwidth - tmpSize.x) / 2;
-	tmpPos.y = (vid_conheight - tmpSize.y) / 2;
+	if(crosshair)
+	{
+		tmpSize  = draw_getimagesize(crosshair) * autocvar_cl_vehicles_crosshair_size;
+		tmpPos.x = (vid_conwidth - tmpSize.x) / 2;
+		tmpPos.y = (vid_conheight - tmpSize.y) / 2;
 
-	drawpic(tmpPos, crosshair, tmpSize, '1 1 1', autocvar_crosshair_alpha, DRAWFLAG_NORMAL);
+		drawpic(tmpPos, crosshair, tmpSize, '1 1 1', autocvar_crosshair_alpha, DRAWFLAG_NORMAL);
+	}
 }
 
 void CSQC_BUMBLE_HUD()
@@ -418,10 +430,10 @@ void CSQC_BUMBLE_HUD()
 
 void CSQC_BUMBLE_GUN_HUD()
 {
-	Vehicles_drawHUD("vehicle_gunner", "vehicle_gunner_weapon1", "null",
+	Vehicles_drawHUD("vehicle_gunner", "vehicle_gunner_weapon1", string_null,
 		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-		"null", '0 0 0',
-		"null");
+		string_null, '0 0 0',
+		string_null);
 }
 
 void CSQC_SPIDER_HUD()
