@@ -2,12 +2,12 @@
 #include "_all.qh"
 
 #include "g_hook.qh"
-#include "g_subs.qh"
 #include "mutators/mutators_include.qh"
-#include "t_teleporters.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
 #include "../common/notifications.qh"
+#include "../common/triggers/teleporters.qh"
+#include "../common/triggers/subs.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
 #include "../csqcmodellib/sv_model.qh"
@@ -310,8 +310,8 @@ void Portal_Touch()
 		return;
 
 	/*
-	if(other.mins_x < PL_MIN_x || other.mins_y < PL_MIN_y || other.mins_z < PL_MIN_z
-	|| other.maxs_x > PL_MAX_x || other.maxs_y > PL_MAX_y || other.maxs_z > PL_MAX_z)
+	if(other.mins_x < PL_MIN.x || other.mins_y < PL_MIN.y || other.mins_z < PL_MIN.z
+	|| other.maxs_x > PL_MAX.x || other.maxs_y > PL_MAX.y || other.maxs_z > PL_MAX.z)
 	{
 		// can't teleport this
 		return;

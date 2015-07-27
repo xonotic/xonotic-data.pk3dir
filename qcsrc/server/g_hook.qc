@@ -6,7 +6,6 @@
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "cl_player.qh"
-#include "t_teleporters.qh"
 #include "command/common.qh"
 #include "round_handler.qh"
 #include "../common/vehicles/sv_vehicles.qh"

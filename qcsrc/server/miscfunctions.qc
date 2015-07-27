@@ -1,6 +1,5 @@
 #include "miscfunctions.qh"
 #include "_all.qh"
-
 #include "antilag.qh"
 #include "command/common.qh"
 #include "constants.qh"
@@ -19,6 +18,7 @@
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
+#include "../common/triggers/subs.qh"
 #include "../common/urllib.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
@@ -220,19 +220,6 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     */
 
     return nearest_entity[0];
-}
-
-void spawnfunc_target_location()
-{
-    self.classname = "target_location";
-    // location name in netname
-    // eventually support: count, teamgame selectors, line of sight?
-}
-
-void spawnfunc_info_location()
-{
-    self.classname = "target_location";
-    self.message = self.netname;
 }
 
 string NearestLocation(vector p)
@@ -774,7 +761,7 @@ void readplayerstartcvars()
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
-float sound_allowed(float _dest, entity e)
+float sound_allowed(float destin, entity e)
 {
     // sounds from world may always pass
     for (;;)
@@ -789,7 +776,7 @@ float sound_allowed(float _dest, entity e)
             break;
     }
     // sounds to self may always pass
-    if (_dest == MSG_ONE)
+    if (destin == MSG_ONE)
         if (e == msg_entity)
             return true;
     // sounds by players can be removed
@@ -801,14 +788,14 @@ float sound_allowed(float _dest, entity e)
 }
 
 #undef sound
-void sound(entity e, float chan, string samp, float vol, float _atten)
+void sound(entity e, float chan, string samp, float vol, float attenu)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
-    sound7(e, chan, samp, vol, _atten, 0, 0);
+    sound7(e, chan, samp, vol, attenu, 0, 0);
 }
 
-void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten)
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float attenu)
 {
     float entno, idx;
 
@@ -821,12 +808,12 @@ void soundtoat(float _dest, entity e, vector o, float chan, string samp, float v
     int sflags;
     sflags = 0;
 
-    _atten = floor(_atten * 64);
+    attenu = floor(attenu * 64);
     vol = floor(vol * 255);
 
     if (vol != 255)
         sflags |= SND_VOLUME;
-    if (_atten != 64)
+    if (attenu != 64)
         sflags |= SND_ATTENUATION;
     if (entno >= 8192 || chan < 0 || chan > 7)
         sflags |= SND_LARGEENTITY;
@@ -838,7 +825,7 @@ void soundtoat(float _dest, entity e, vector o, float chan, string samp, float v
     if (sflags & SND_VOLUME)
         WriteByte(_dest, vol);
     if (sflags & SND_ATTENUATION)
-        WriteByte(_dest, _atten);
+        WriteByte(_dest, attenu);
     if (sflags & SND_LARGEENTITY)
     {
         WriteShort(_dest, entno);
@@ -1269,7 +1256,6 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
     e.uncustomizeentityforclient = uncustomizer;
     e.uncustomizeentityforclient_set = !!uncustomizer;
 }
-
 
 void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc)
 {

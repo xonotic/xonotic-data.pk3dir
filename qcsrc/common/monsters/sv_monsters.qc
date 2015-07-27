@@ -19,6 +19,7 @@
     #include "../../server/campaign.qh"
     #include "../../server/command/common.qh"
     #include "../../server/command/cmd.qh"
+	#include "../triggers/triggers.qh"
     #include "../../csqcmodellib/sv_model.qh"
     #include "../../server/round_handler.qh"
     #include "../../server/tturrets/include/turrets.qh"

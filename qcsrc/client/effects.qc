@@ -8,9 +8,6 @@
 .string fx_texture;
 .float  fx_lifetime;
 
-void SUB_Remove()
-{ remove(self); }
-
 void b_draw()
 {
     //Draw_CylindricLine(self.fx_start, self.fx_end, self.fx_with, self.fx_texture, 0, time * 3, '1 1 1', 0.7, DRAWFLAG_ADDITIVE, view_origin);

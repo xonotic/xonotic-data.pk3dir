@@ -6,17 +6,14 @@
 #include "cl_impulse.qh"
 #include "cl_player.qh"
 #include "ent_cs.qh"
-#include "g_subs.qh"
 #include "ipban.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
 #include "playerdemo.qh"
-#include "secret.qh"
 #include "spawnpoints.qh"
 #include "g_damage.qh"
 #include "g_hook.qh"
-#include "t_teleporters.qh"
 #include "command/common.qh"
 #include "cheats.qh"
 #include "g_world.qh"
@@ -34,6 +31,11 @@
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
+#include "../common/physics.qh"
+
+#include "../common/triggers/subs.qh"
+#include "../common/triggers/triggers.qh"
+#include "../common/triggers/trigger/secret.qh"
 
 #include "../common/items/inventory.qh"
 
@@ -529,7 +531,7 @@ void PutClientInServer (void)
 		self.respawn_flags = 0;
 		self.respawn_time = 0;
 		self.stat_respawn_time = 0;
-		self.scale = 0;
+		self.scale = autocvar_sv_player_scale;
 		self.fade_time = 0;
 		self.pain_frame = 0;
 		self.pain_finished = 0;
@@ -1680,55 +1682,17 @@ void SetZoomState(float z)
 
 void GetPressedKeys(void) {
 	MUTATOR_CALLHOOK(GetPressedKeys);
-	if (self.movement.x > 0) // get if movement keys are pressed
-	{	// forward key pressed
-		self.pressedkeys |= KEY_FORWARD;
-		self.pressedkeys &= ~KEY_BACKWARD;
-	}
-	else if (self.movement.x < 0)
-	{	// backward key pressed
-		self.pressedkeys |= KEY_BACKWARD;
-		self.pressedkeys &= ~KEY_FORWARD;
-	}
-	else
-	{	// no x input
-		self.pressedkeys &= ~KEY_FORWARD;
-		self.pressedkeys &= ~KEY_BACKWARD;
-	}
+	#define X(var,bit,flag) (flag ? var |= bit : var &= ~bit)
+	X(self.pressedkeys, KEY_FORWARD, 	self.movement_x > 0);
+	X(self.pressedkeys, KEY_BACKWARD, 	self.movement_x < 0);
+	X(self.pressedkeys, KEY_RIGHT, 		self.movement_y > 0);
+	X(self.pressedkeys, KEY_LEFT, 		self.movement_y < 0);
 
-	if (self.movement.y > 0)
-	{	// right key pressed
-		self.pressedkeys |= KEY_RIGHT;
-		self.pressedkeys &= ~KEY_LEFT;
-	}
-	else if (self.movement.y < 0)
-	{	// left key pressed
-		self.pressedkeys |= KEY_LEFT;
-		self.pressedkeys &= ~KEY_RIGHT;
-	}
-	else
-	{	// no y input
-		self.pressedkeys &= ~KEY_RIGHT;
-		self.pressedkeys &= ~KEY_LEFT;
-	}
-
-	if (self.BUTTON_JUMP) // get if jump and crouch keys are pressed
-		self.pressedkeys |= KEY_JUMP;
-	else
-		self.pressedkeys &= ~KEY_JUMP;
-	if (self.BUTTON_CROUCH)
-		self.pressedkeys |= KEY_CROUCH;
-	else
-		self.pressedkeys &= ~KEY_CROUCH;
-
-	if (self.BUTTON_ATCK)
-		self.pressedkeys |= KEY_ATCK;
-	else
-		self.pressedkeys &= ~KEY_ATCK;
-	if (self.BUTTON_ATCK2)
-		self.pressedkeys |= KEY_ATCK2;
-	else
-		self.pressedkeys &= ~KEY_ATCK2;
+	X(self.pressedkeys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(self));
+	X(self.pressedkeys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(self));
+	X(self.pressedkeys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(self));
+	X(self.pressedkeys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(self));
+	#undef X
 }
 
 /*
@@ -2560,8 +2524,8 @@ void PlayerPreThink (void)
 			if (!self.crouch)
 			{
 				self.crouch = true;
-				self.view_ofs = PL_CROUCH_VIEW_OFS;
-				setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX);
+				self.view_ofs = self.stat_pl_crouch_view_ofs;
+				setsize (self, self.stat_pl_crouch_min, self.stat_pl_crouch_max);
 				// setanim(self, self.anim_duck, false, true, true); // this anim is BROKEN anyway
 			}
 		}
@@ -2569,12 +2533,12 @@ void PlayerPreThink (void)
 		{
 			if (self.crouch)
 			{
-				tracebox(self.origin, PL_MIN, PL_MAX, self.origin, false, self);
+				tracebox(self.origin, self.stat_pl_min, self.stat_pl_max, self.origin, false, self);
 				if (!trace_startsolid)
 				{
 					self.crouch = false;
-					self.view_ofs = PL_VIEW_OFS;
-					setsize (self, PL_MIN, PL_MAX);
+					self.view_ofs = self.stat_pl_view_ofs;
+					setsize (self, self.stat_pl_min, self.stat_pl_max);
 				}
 			}
 		}

@@ -5,7 +5,6 @@
 #include "command/common.qh"
 
 #include "g_damage.qh"
-#include "g_subs.qh"
 #include "item_key.qh"
 
 #include "../common/constants.qh"

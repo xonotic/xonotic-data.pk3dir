@@ -17,7 +17,6 @@
 #include "scoreboard.qh"
 #include "shownames.qh"
 #include "sortlist.qh"
-#include "target_music.qh"
 #include "tturrets.qh"
 #include "tuba.qh"
 #include "t_items.qh"
@@ -46,6 +45,8 @@
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/interpolate.qh"
+
+#include "../common/triggers/include.qh"
 
 #include "../warpzonelib/client.qh"
 
@@ -379,6 +380,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
+
 void Ent_RemoveEntCS()
 {
 	entcs_receiver[self.sv_entnum] = world;
@@ -696,7 +698,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	if(is_new)
 	{
 		self.origin = spn_origin;
-		setsize(self, PL_MIN, PL_MAX);
+		setsize(self, PL_MIN_CONST, PL_MAX_CONST);
 		droptofloor();
 
 		/*if(autocvar_cl_spawn_point_model) // needs a model first
@@ -872,6 +874,17 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
+		case ENT_CLIENT_LADDER: ent_func_ladder(); break;
+		case ENT_CLIENT_TRIGGER_PUSH: ent_trigger_push(); break;
+		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;
+		case ENT_CLIENT_CONVEYOR: ent_conveyor(); break;
+		case ENT_CLIENT_DOOR: ent_door(); break;
+		case ENT_CLIENT_PLAT: ent_plat(); break;
+		case ENT_CLIENT_SWAMP: ent_swamp(); break;
+		case ENT_CLIENT_CORNER: ent_corner(); break;
+		case ENT_CLIENT_KEYLOCK: ent_keylock(); break;
+		case ENT_CLIENT_TRAIN: ent_train(); break;
+		case ENT_CLIENT_TRIGGER_IMPULSE: ent_trigger_impulse(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

@@ -12,11 +12,9 @@ campaign.qc
 cheats.qc
 cl_client.qc
 cl_impulse.qc
-cl_physics.qc
 cl_player.qc
 csqceffects.qc
 ent_cs.qc
-func_breakable.qc
 g_casings.qc
 g_damage.qc
 g_hook.qc
@@ -24,7 +22,6 @@ g_hook.qc
 g_models.qc
 g_subs.qc
 g_tetris.qc
-g_triggers.qc
 g_violence.qc
 g_world.qc
 ipban.qc
@@ -39,21 +36,14 @@ race.qc
 round_handler.qc
 scores.qc
 scores_rules.qc
-secret.qc
 spawnpoints.qc
 steerlib.qc
 sv_main.qc
-target_music.qc
-target_spawn.qc
 teamplay.qc
 t_halflife.qc
 t_items.qc
-t_jumppads.qc
-t_plats.qc
-t_quake.qc
 t_quake3.qc
-t_swamp.qc
-t_teleporters.qc
+t_quake.qc
 waypointsprites.qc
 
 bot/aim.qc
@@ -98,11 +88,14 @@ weapons/weaponsystem.qc
 ../common/monsters/all.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
+../common/movetypes/include.qc
 ../common/nades.qc
 ../common/net_notice.qc
 ../common/notifications.qc
+../common/physics.qc
 ../common/playerstats.qc
 ../common/test.qc
+../common/triggers/include.qc
 ../common/urllib.qc
 ../common/util.qc
 ../common/vehicles/vehicles_include.qc

@@ -1,5 +1,3 @@
-#include "../../g_subs.qh"
-
 void spawnfunc_turret_targettrigger();
 void turret_targettrigger_touch();
 
