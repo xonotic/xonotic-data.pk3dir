@@ -47,6 +47,22 @@ vector Nade_Color(int nadeid)
 	return '0 0 0';
 }
 
+string Nade_Pic(int nadeid)
+{
+	switch(nadeid)
+	{
+		case NADE_TYPE_NORMAL: return "nade_normal";
+		case NADE_TYPE_NAPALM: return "nade_napalm";
+		case NADE_TYPE_ICE: return "nade_ice";
+		case NADE_TYPE_TRANSLOCATE: return "nade_translocate";
+		case NADE_TYPE_SPAWN: return "nade_spawn";
+		case NADE_TYPE_HEAL: return "nade_heal";
+		case NADE_TYPE_MONSTER: return "nade_monster";
+	}
+
+	return "nade_normal";
+}
+
 int Nade_IDFromProjectile(float proj)
 {
 	switch(proj)
