@@ -415,7 +415,7 @@ void Draw_WaypointSprite()
 	{
 		if(self.helpme && time < self.helpme)
 			a *= SPRITE_HELPME_BLINK;
-		else
+		else if(!self.lifetime) // fading out waypoints don't blink
 			a *= spritelookupblinkvalue(spriteimage);
 	}
 
@@ -425,7 +425,7 @@ void Draw_WaypointSprite()
 		a = 1;
 	}
 
-	if(a <= 0)
+	if(a <= 0.003)
 		return;
 
 	rgb = fixrgbexcess(rgb);
