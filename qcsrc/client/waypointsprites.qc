@@ -166,6 +166,10 @@ vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, 
 
 float spritelookupblinkvalue(string s)
 {
+	if(substring(s, 0, 4) == "wpn-")
+	if(get_weaponinfo(stof(substring(s, 4, strlen(s)))).spawnflags & WEP_FLAG_SUPERWEAPON)
+		return 2;
+
 	switch(s)
 	{
 		case "ons-cp-atck-neut": return 2;
@@ -182,9 +186,6 @@ float spritelookupblinkvalue(string s)
 		case "item-shield":      return 2;
 		case "item-fuelregen":   return 2;
 		case "item-jetpack":     return 2;
-		case "wpn-fireball":     return 2; // superweapon
-		case "wpn-minstanex":    return 2; // superweapon
-		case "wpn-porto":        return 2; // superweapon
 		case "tagged-target":    return 2;
 		default:                 return 1;
 	}
