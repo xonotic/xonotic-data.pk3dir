@@ -195,7 +195,7 @@ void PutObserverInServer (void)
 
 	if(IS_REAL_CLIENT(self))
 	{
-		Item_ItemsTime_Get(self);
+		Item_ItemsTime_SetTimesForPlayer(self);
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
@@ -508,7 +508,7 @@ void PutClientInServer (void)
 			self.superweapons_finished = 0;
 
 		if(!warmup_stage)
-			Item_ItemsTime_ResetForPlayer(self);
+			Item_ItemsTime_ResetTimesForPlayer(self);
 
 		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
 		{

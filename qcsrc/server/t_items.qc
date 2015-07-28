@@ -436,7 +436,7 @@ void Item_ItemsTime_Init()
 	it_jetpack_time = -1;
 	it_superweapons_time = -1;
 }
-void Item_ItemsTime_Reset()
+void Item_ItemsTime_ResetTimes()
 {
 	it_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
 	it_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
@@ -449,7 +449,7 @@ void Item_ItemsTime_Reset()
 	it_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
 	it_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
 }
-void Item_ItemsTime_ResetForPlayer(entity e)
+void Item_ItemsTime_ResetTimesForPlayer(entity e)
 {
 	e.item_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
 	e.item_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
@@ -462,7 +462,7 @@ void Item_ItemsTime_ResetForPlayer(entity e)
 	e.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
 	e.item_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
 }
-void Item_ItemsTime_Get(entity e)
+void Item_ItemsTime_SetTimesForPlayer(entity e)
 {
 	e.item_armor_large_time = it_armor_large_time;
 	e.item_health_mega_time = it_health_mega_time;
@@ -475,13 +475,13 @@ void Item_ItemsTime_Get(entity e)
 	e.item_jetpack_time = it_jetpack_time;
 	e.item_superweapons_time = it_superweapons_time;
 }
-float Item_ItemsTime_UpdateTime_Check(float item_time, float t)
+bool Item_ItemsTime_UpdateTime_Check(float item_time, float t)
 {
 	if(t == 0 && item_time == -1)
-		return TRUE;
+		return true;
 	if(time < t && (item_time <= time || t < item_time))
-		return TRUE;
-	return FALSE;
+		return true;
+	return false;
 }
 void Item_ItemsTime_UpdateTime(entity e, float t)
 {
@@ -547,20 +547,20 @@ void Item_ItemsTime_UpdateTime(entity e, float t)
 			break;
 	}
 }
-void Item_ItemsTime_GetForAll()
+void Item_ItemsTime_SetTimesForAllPlayers()
 {
 	entity e;
 	if(warmup_stage)
 	{
 		FOR_EACH_REALCLIENT(e)
-			Item_ItemsTime_Get(e);
+			Item_ItemsTime_SetTimesForPlayer(e);
 	}
 	else
 	{
 		FOR_EACH_REALCLIENT(e)
 		{
-			if (e.classname != "player")
-				Item_ItemsTime_Get(e);
+			if(!IS_PLAYER(e))
+				Item_ItemsTime_SetTimesForPlayer(e);
 		}
 	}
 }
@@ -580,7 +580,7 @@ void Item_Respawn (void)
 	if(self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
 	{
 		Item_ItemsTime_UpdateTime(self, 0);
-		Item_ItemsTime_GetForAll();
+		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 
 	self.think = Item_Think;
@@ -720,7 +720,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 			}
 		}
 		Item_ItemsTime_UpdateTime(e, t);
-		Item_ItemsTime_GetForAll();
+		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 	else
 	{
