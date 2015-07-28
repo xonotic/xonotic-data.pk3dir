@@ -47,7 +47,7 @@ vector Nade_Color(int nadeid)
 	return '0 0 0';
 }
 
-string Nade_Pic(int nadeid)
+string Nade_Icon(int nadeid)
 {
 	switch(nadeid)
 	{
