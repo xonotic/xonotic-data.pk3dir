@@ -38,10 +38,10 @@ vector Nade_Color(int nadeid)
 		case NADE_TYPE_NORMAL: return '1 1 1';
 		case NADE_TYPE_NAPALM: return '2 0.5 0';
 		case NADE_TYPE_ICE: return '0 0.5 2';
-		case NADE_TYPE_TRANSLOCATE: return '1 0.0625 1';
-		case NADE_TYPE_SPAWN: return '1 0.9 0.06';
+		case NADE_TYPE_TRANSLOCATE: return '1 0 1';
+		case NADE_TYPE_SPAWN: return '1 0.9 0';
 		case NADE_TYPE_HEAL: return '1 0 0';
-		case NADE_TYPE_MONSTER: return '1 0.5 0';
+		case NADE_TYPE_MONSTER: return '0.25 0.75 0';
 	}
 
 	return '0 0 0';
