@@ -40,7 +40,7 @@ vector Nade_Color(int nadeid)
 		case NADE_TYPE_ICE: return '0 0.5 2';
 		case NADE_TYPE_TRANSLOCATE: return '1 0.0625 1';
 		case NADE_TYPE_SPAWN: return '1 0.9 0.06';
-        case NADE_TYPE_HEAL: return '1 0 0';
+		case NADE_TYPE_HEAL: return '1 0 0';
 		case NADE_TYPE_MONSTER: return '1 0.5 0';
 	}
 
@@ -59,8 +59,8 @@ int Nade_IDFromProjectile(float proj)
 		case PROJECTILE_NADE_ICE_BURN: return NADE_TYPE_ICE;
 		case PROJECTILE_NADE_TRANSLOCATE: return NADE_TYPE_TRANSLOCATE;
 		case PROJECTILE_NADE_SPAWN: return NADE_TYPE_SPAWN;
-        case PROJECTILE_NADE_HEAL:
-        case PROJECTILE_NADE_HEAL_BURN: return NADE_TYPE_HEAL;
+		case PROJECTILE_NADE_HEAL:
+		case PROJECTILE_NADE_HEAL_BURN: return NADE_TYPE_HEAL;
 		case PROJECTILE_NADE_MONSTER:
 		case PROJECTILE_NADE_MONSTER_BURN: return NADE_TYPE_MONSTER;
 	}
@@ -77,7 +77,7 @@ int Nade_ProjectileFromID(int proj, bool burn)
 		case NADE_TYPE_ICE: return (burn) ? PROJECTILE_NADE_ICE_BURN : PROJECTILE_NADE_ICE;
 		case NADE_TYPE_TRANSLOCATE: return PROJECTILE_NADE_TRANSLOCATE;
 		case NADE_TYPE_SPAWN: return PROJECTILE_NADE_SPAWN;
-        case NADE_TYPE_HEAL: return (burn) ? PROJECTILE_NADE_HEAL_BURN : PROJECTILE_NADE_HEAL;
+		case NADE_TYPE_HEAL: return (burn) ? PROJECTILE_NADE_HEAL_BURN : PROJECTILE_NADE_HEAL;
 		case NADE_TYPE_MONSTER: return (burn) ? PROJECTILE_NADE_MONSTER_BURN : PROJECTILE_NADE_MONSTER;
 	}
 
@@ -96,8 +96,8 @@ string Nade_TrailEffect(float proj, float nade_team)
 		case PROJECTILE_NADE_ICE_BURN: return "wakizashi_rocket_thrust";
 		case PROJECTILE_NADE_TRANSLOCATE: return "TR_CRYLINKPLASMA";
 		case PROJECTILE_NADE_SPAWN: return "nade_yellow";
-        case PROJECTILE_NADE_HEAL: return "nade_red";
-        case PROJECTILE_NADE_HEAL_BURN: return "nade_red_burn";
+		case PROJECTILE_NADE_HEAL: return "nade_red";
+		case PROJECTILE_NADE_HEAL_BURN: return "nade_red_burn";
 		case PROJECTILE_NADE_MONSTER: return "nade_red";
 		case PROJECTILE_NADE_MONSTER_BURN: return "nade_red_burn";
 	}
