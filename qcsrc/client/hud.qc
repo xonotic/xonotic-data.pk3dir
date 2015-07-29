@@ -3593,7 +3593,6 @@ void HUD_PressedKeys(void)
 //
 void HUD_Chat(void)
 {
-	//if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if (!autocvar_hud_panel_chat)
@@ -3615,6 +3614,15 @@ void HUD_Chat(void)
 
 	HUD_Panel_UpdateCvars();
 
+	if(intermission == 2)
+	{
+		// reserve some more space to the mapvote panel
+		// by resizing and moving chat panel to the bottom
+		panel_size.y = min(panel_size.y, vid_conheight * 0.2);
+		panel_pos.y = vid_conheight - panel_size.y - panel_bg_border * 2;
+		chat_posy = panel_pos.y;
+		chat_sizey = panel_size.y;
+	}
 	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
 	{
 		panel_pos.y = panel_bg_border;

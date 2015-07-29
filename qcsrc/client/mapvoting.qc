@@ -333,14 +333,15 @@ void MapVote_Draw()
 	}
 
 	center = (vid_conwidth - 1)/2;
-	xmin = vid_conwidth*0.05; // 5% border must suffice
+	xmin = vid_conwidth * 0.08;
 	xmax = vid_conwidth - xmin;
 	ymin = 20;
-	i = autocvar_con_chatpos; // *autocvar_con_chatsize;
-	if(i < 0)
-		ymax = vid_conheight + (i - autocvar_con_chat) * autocvar_con_chatsize;
-	if(i >= 0 || ymax < (vid_conheight*0.5))
-		ymax = vid_conheight - ymin;
+	ymax = vid_conheight - ymin;
+
+	if(chat_posy + chat_sizey / 2 < vid_conheight / 2)
+		ymin += chat_sizey;
+	else
+		ymax -= chat_sizey;
 
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 
@@ -374,14 +375,18 @@ void MapVote_Draw()
 	pos.y += hud_fontsize.y * 1.5;
 	pos.y += hud_fontsize.y * 0.5;
 
+	HUD_Panel_UpdateCvars();
+
 	// base for multi-column stuff...
 	pos.y += hud_fontsize.y;
 	pos.x = xmin;
 	ymin = pos.y;
+	float abstain_spacing = panel_bg_border + hud_fontsize.y;
 	if(mv_abstain)
+	{
 		mv_num_maps -= 1;
-
-	HUD_Panel_UpdateCvars();
+		ymax -= abstain_spacing;
+	}
 
 	// higher than the image itself ratio for mapvote items to reserve space for long map names
 	int item_aspect = (gametypevote) ? 3/1 : 5/3;
@@ -466,7 +471,7 @@ void MapVote_Draw()
 
 	if(mv_abstain && i < mv_num_maps) {
 		tmp = mv_votes[i];
-		pos.y = ymax + 2 * hud_fontsize.y;
+		pos.y = ymax + abstain_spacing;
 		pos.x = (xmax+xmin)*0.5;
 		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}

@@ -113,6 +113,11 @@ string panel_bg_padding_str;
 
 class(HUDPanel) .void() panel_draw;
 
+// chat panel can be reduced / moved while the mapvote is active
+// let know the mapvote panel about chat pos and size
+float chat_posy;
+float chat_sizey;
+
 float current_player;
 
 float GetPlayerColorForce(int i);
