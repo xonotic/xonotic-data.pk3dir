@@ -521,8 +521,6 @@ void HUD_Weapons(void)
 	// update generic hud functions
 	HUD_Panel_UpdateCvars();
 
-	draw_beginBoldFont();
-
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
 	{
@@ -592,10 +590,7 @@ void HUD_Weapons(void)
 
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
-		{
-			draw_endBoldFont();
 			return;
-		}
 
 		vector old_panel_size = panel_size;
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
@@ -749,10 +744,7 @@ void HUD_Weapons(void)
 	HUD_Panel_DrawBg(1);
 
 	if(center.x == -1)
-	{
-		draw_endBoldFont();
 		return;
-	}
 
 	if(panel_bg_padding)
 	{
@@ -955,8 +947,6 @@ void HUD_Weapons(void)
 			}
 		}
 	}
-
-	draw_endBoldFont();
 }
 
 // Ammo (#1)
@@ -1551,6 +1541,9 @@ void HUD_HealthArmor(void)
 	}
 
 	HUD_Panel_UpdateCvars();
+
+	draw_beginBoldFont();
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1756,6 +1749,8 @@ void HUD_HealthArmor(void)
 			HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", fuel/100, is_vertical, fuel_baralign, autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 		}
 	}
+
+	draw_endBoldFont();
 }
 
 // Notification area (#4)
@@ -2490,8 +2485,6 @@ void HUD_RaceTimer (void)
 
 	HUD_Panel_UpdateCvars();
 
-	draw_beginBoldFont();
-
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2527,7 +2520,9 @@ void HUD_RaceTimer (void)
 	if(autocvar__hud_configure)
 	{
 		s = "0:13:37";
+		draw_beginBoldFont();
 		drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, false, '0.60 0.60 0' * mySize.y), s, '0.60 0.60 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
 		s = _("^1Intermediate 1 (+15.42)");
 		drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.20 * mySize.y) + eY * 0.60 * mySize.y, s, '1 1 0' * 0.20 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, "missing a checkpoint");
@@ -2577,6 +2572,8 @@ void HUD_RaceTimer (void)
 			}
 		}
 
+		draw_beginBoldFont();
+
 		if(forcetime != "")
 		{
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
@@ -2590,6 +2587,8 @@ void HUD_RaceTimer (void)
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
 			drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, false, '0.6 0.6 0' * mySize.y), s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
+
+		draw_endBoldFont();
 	}
 	else
 	{
@@ -2620,8 +2619,6 @@ void HUD_RaceTimer (void)
 			}
 		}
 	}
-
-	draw_endBoldFont();
 }
 
 // Vote window (#9)
