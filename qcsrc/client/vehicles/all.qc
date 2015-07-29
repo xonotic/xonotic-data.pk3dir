@@ -16,12 +16,13 @@
 
 .float cnt;
 
-const string vCROSS_AIM  = "gfx/vehicles/crosshair_aim.tga";
-const string vCROSS_DROP = "gfx/vehicles/crosshair_drop.tga";
-const string vCROSS_HEAL = "gfx/vehicles/crosshair_heal.tga";
-const string vCROSS_HINT = "gfx/vehicles/crosshair_hint.tga";
-const string vCROSS_LOCK = "gfx/vehicles/crosshair_lock.tga";
-const string vCROSS_TAG  = "gfx/vehicles/crosshair_tag.tga";
+const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
+const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
+const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
+const string vCROSS_HEAL  = "gfx/vehicles/crosshair_heal.tga";
+const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint.tga";
+const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock.tga";
+const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain.tga";
 
 const int SBRM_FIRST     = 1;
 const int SBRM_VOLLY     = 1;
@@ -151,14 +152,14 @@ void Net_VehicleSetup()
 			break;
 
 		case HUD_BUMBLEBEE:
-			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK; // Raygun-locked
-			AuxiliaryXhairs[1].axh_image = vCROSS_TAG; // Gunner1
-			AuxiliaryXhairs[2].axh_image = vCROSS_TAG; // Gunner2
+			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK;  // Raygun-locked
+			AuxiliaryXhairs[1].axh_image = vCROSS_BURST; // Gunner1
+			AuxiliaryXhairs[2].axh_image = vCROSS_BURST; // Gunner2
 			break;
 
 		case HUD_BUMBLEBEE_GUN:
-			AuxiliaryXhairs[0].axh_image = vCROSS_TAG; // Plasma cannons
-			AuxiliaryXhairs[1].axh_image = vCROSS_TAG; // Raygun
+			AuxiliaryXhairs[0].axh_image = vCROSS_BURST; // Plasma cannons
+			AuxiliaryXhairs[1].axh_image = vCROSS_BURST; // Raygun
 			break;
 	}
 }
@@ -442,9 +443,10 @@ void CSQC_SPIDER_HUD()
 
 	switch(weapon2mode)
 	{
-		case SBRM_VOLLY: crosshair = vCROSS_LOCK; break;
-		case SBRM_GUIDE: crosshair = vCROSS_AIM;  break;
-		default:         crosshair = vCROSS_TAG;
+		case SBRM_VOLLY:     crosshair = vCROSS_BURST; break;
+		case SBRM_GUIDE:     crosshair = vCROSS_GUIDE; break;
+		case SBRM_ARTILLERY: crosshair = vCROSS_RAIN;  break;
+		default:             crosshair = vCROSS_BURST;
 	}
 
 	Vehicles_drawHUD("vehicle_spider", "vehicle_spider_weapon1", "vehicle_spider_weapon2",
@@ -459,8 +461,9 @@ void CSQC_RAPTOR_HUD()
 
 	switch(weapon2mode)
 	{
-		case RSM_FLARE: crosshair = vCROSS_LOCK; break;
-		default:        crosshair = vCROSS_AIM;
+		case RSM_FLARE: crosshair = vCROSS_RAIN;  break;
+		case RSM_BOMB:  crosshair = vCROSS_BURST; break;
+		default:        crosshair = vCROSS_BURST;
 	}
 
 	Vehicles_drawHUD("vehicle_raptor", "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
@@ -474,7 +477,7 @@ void CSQC_WAKIZASHI_HUD()
 	Vehicles_drawHUD("vehicle_racer", "vehicle_racer_weapon1", "vehicle_racer_weapon2",
 		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-		vCROSS_AIM);
+		vCROSS_GUIDE);
 }
 
 void Vehicles_Precache()
