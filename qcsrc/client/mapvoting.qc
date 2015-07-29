@@ -189,23 +189,25 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float _count, int id)
 {
 	vector img_size = '0 0 0';
-	vector rgb;
 	string label;
 	float text_size;
 
-	rgb = MapVote_RGB(id);
+	float rect_margin = hud_fontsize.y / 2;
 
-	float padding = hud_fontsize.y / 2;
+	pos.x += rect_margin + autocvar_scoreboard_border_thickness;
+	pos.y += rect_margin + autocvar_scoreboard_border_thickness;
+	isize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
+	tsize -= 2 * (rect_margin + autocvar_scoreboard_border_thickness);
 
-	pos.x += padding;
-	pos.y += padding;
-	isize -= 2 * padding;
-	tsize -= 2 * padding;
+	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
+	vector rect_size = '1 1 0';
+	rect_size.x = tsize + rect_margin;
+	rect_size.y = isize + rect_margin;
 
 	float img_ar = 4/3;
 	img_size.x = min(tsize, isize * img_ar);
 	img_size.y = img_size.x / img_ar;
-	img_size.y -= hud_fontsize.y - autocvar_scoreboard_border_thickness * 2;
+	img_size.y -= hud_fontsize.y;
 	img_size.x = img_size.y * img_ar;
 
 	pos.y += (isize - img_size.y - hud_fontsize.y) / 2;
@@ -214,9 +216,13 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	text_size = stringwidth(label, false, hud_fontsize);
 
+	float save_rect_sizex = rect_size.x;
+	rect_size.x = max(img_size.x, text_size) + rect_margin;
+	rect_pos.x += (save_rect_sizex - rect_size.x) / 2;
+
 	vector text_pos = '0 0 0';
 	text_pos.x = pos.x + (tsize - text_size) / 2;
-	text_pos.y = pos.y + img_size.y + autocvar_scoreboard_border_thickness;
+	text_pos.y = pos.y + img_size.y;
 
 	pos.x += (tsize - img_size.x) / 2;
 
@@ -225,6 +231,19 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		theAlpha = mv_top2_alpha;
 	else
 		theAlpha = 1;
+
+	// Highlight selected item
+	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
+		drawfill(rect_pos, rect_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
+
+	// Highlight current vote
+	vector rgb = MapVote_RGB(id);
+	if(id == mv_ownvote)
+	{
+		drawfill(rect_pos, rect_size, rgb, 0.1*theAlpha, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, theAlpha, DRAWFLAG_NORMAL);
+	}
+
 	drawstring(text_pos, label, hud_fontsize, rgb, theAlpha, DRAWFLAG_NORMAL);
 
 	if(pic == "")
@@ -238,14 +257,6 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		else
 			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
 	}
-
-	if(id == mv_ownvote)
-		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, rgb, theAlpha, DRAWFLAG_NORMAL);
-	else
-		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, '0 0 0', theAlpha, DRAWFLAG_NORMAL);
-
-	if(id == mv_selection && (mv_flags[id] & GTV_AVAILABLE))
-		drawfill(pos, img_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
 }
 
 void MapVote_DrawAbstain(vector pos, float isize, float tsize, float _count, int id)
