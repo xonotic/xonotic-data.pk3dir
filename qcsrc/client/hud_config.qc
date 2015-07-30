@@ -232,6 +232,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	int i;
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		panel = hud_panel[i];
+		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
 		if(!panel_enabled) continue;
@@ -328,6 +329,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	int i;
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		panel = hud_panel[i];
+		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
 		if(!panel_enabled) continue;
@@ -787,6 +789,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			for(i = 0; i < HUD_PANEL_NUM; ++i)
 			{
 				panel = hud_panel[i];
+				if(panel == HUD_PANEL(MAPVOTE))
+					continue;
 				if (panel == tab_panels[i] || panel == starting_panel)
 					continue;
 				HUD_Panel_UpdatePosSize();
@@ -934,6 +938,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		j += 1;
 
 		panel = hud_panel[i];
+		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		HUD_Panel_UpdatePosSize();
 
 		float border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
@@ -1015,6 +1020,8 @@ void HUD_Panel_Highlight(float allow_move)
 		j += 1;
 
 		panel = hud_panel[i];
+		if(panel == HUD_PANEL(MAPVOTE))
+			continue;
 		HUD_Panel_UpdatePosSize();
 
 		float border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
