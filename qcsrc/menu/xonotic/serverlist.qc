@@ -27,6 +27,7 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, columnTypeSize, float, 0)
 	ATTRIB(XonoticServerList, columnPlayersOrigin, float, 0)
 	ATTRIB(XonoticServerList, columnPlayersSize, float, 0)
+	ATTRIB(XonoticServerList, lockedSelectedItem, bool, true) // initially keep selected the first item of the list, avoiding an unwanted scrolling
 
 	ATTRIB(XonoticServerList, selectedServer, string, string_null) // to restore selected server when needed
 	METHOD(XonoticServerList, setSelected, void(entity, float))
@@ -460,6 +461,7 @@ void XonoticServerList_configureXonoticServerList(entity me)
 }
 void XonoticServerList_setSelected(entity me, int i)
 {
+	me.lockedSelectedItem = false;
 	//int save = me.selectedItem;
 	SUPER(XonoticServerList).setSelected(me, i);
 	/*
@@ -717,7 +719,20 @@ void XonoticServerList_draw(entity me)
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
 	me.favoriteButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 
-	if(me.selectedServer)
+	if(me.lockedSelectedItem)
+	{
+		if(me.nItems > 0)
+		{
+			if(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem) != me.selectedServer)
+			{
+				if(me.selectedServer)
+					strunzone(me.selectedServer);
+				me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+			}
+			found = true;
+		}
+	}
+	else if(me.selectedServer)
 	{
 		for(i = 0; i < me.nItems; ++i)
 		{
