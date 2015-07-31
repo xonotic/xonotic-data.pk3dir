@@ -976,9 +976,25 @@ float HUD_WouldDrawScoreboard() {
 float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
+	WepSet weapons_stat = WepSet_GetFromStat();
+	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	int i;
-	int weapon_cnt = WEP_COUNT - 3; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
-	float rows;
+	float weapon_stats;
+	int disownedcnt = 0;
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+	{
+		self = get_weaponinfo(i);
+		if(!self.weapon)
+			continue;
+
+		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+
+		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+			++disownedcnt;
+	}
+
+	int weapon_cnt = WEP_COUNT - disownedcnt;
+	int rows;
 	if(autocvar_scoreboard_accuracy_doublerows)
 		rows = 2;
 	else
@@ -1023,7 +1039,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(switchweapon == WEP_VAPORIZER)
 		g_instagib = 1; // TODO: real detection for instagib?
 
-	float weapon_stats;
 	if(autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
 	else
@@ -1034,9 +1049,10 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if (!self.weapon)
 			continue;
-		if ((i == WEP_VORTEX && g_instagib) || i == WEP_PORTO || (i == WEP_VAPORIZER && !g_instagib) || i == WEP_TUBA) // skip port-o-launch, vortex || vaporizer and tuba
-			continue;
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+
+		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+			continue;
 
 		float weapon_alpha;
 		if(weapon_stats >= 0)
