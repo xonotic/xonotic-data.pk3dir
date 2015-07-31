@@ -155,9 +155,8 @@ void XonoticScreenshotList_setSelected(entity me, float i)
 	SUPER(XonoticScreenshotList).setSelected(me, i);
 	if (me.pressed && me.selectedItem != selectedItem_save)
 	{
-		// while dragging the scrollbar (or an item)
-		// for a smooth mouse movement do not load immediately the new selected images
-		me.newScreenshotTime = time + 0.22; // dragging an item we need a delay > 0.2 (from listbox: me.dragScrollTimer = time + 0.2;)
+		// avoid immediate image loading on quick repeated selection changes
+		me.newScreenshotTime = time + 0.22;
 	}
 	else if (time > me.newScreenshotTime)
 	{
@@ -295,8 +294,6 @@ float XonoticScreenshotList_keyDown(entity me, float scan, float ascii, float sh
 		me.startScreenshot(me);
 		return 1;
 	}
-	if(scan == K_MWHEELUP || scan == K_MWHEELDOWN)
-		me.newScreenshotTime = time + 0.2;
 	return SUPER(XonoticScreenshotList).keyDown(me, scan, ascii, shift);
 }
 #endif
