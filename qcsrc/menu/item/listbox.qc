@@ -419,8 +419,11 @@ void ListBox_draw(entity me)
 	if(me.scrollPos != me.scrollPosTarget)
 	{
 		float PI = 3.1415926535897932384626433832795028841971693993751058209749445923;
-		// this formula is guaranted to work with whatever framerate
-		float f = sin(PI / 2 * pow(frametime, 0.65));
+		float exp_factor = 0.65;
+		if(me.pressed == 1)
+			exp_factor = 0.45; // scroll faster while dragging the scrollbar
+		// this formula works with whatever framerate
+		float f = sin(PI / 2 * pow(frametime, exp_factor));
 		me.scrollPos = me.scrollPos * (1 - f) + me.scrollPosTarget * f;
 		if(fabs(me.scrollPos - me.scrollPosTarget) < 0.001)
 			me.scrollPos = me.scrollPosTarget;
