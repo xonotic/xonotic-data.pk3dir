@@ -1,11 +1,10 @@
+#include "../../common/triggers/target/music.qh"
 #include "mutator_buffs.qh"
 #include "../_all.qh"
 
 #include "mutator.qh"
 
 #include "../../common/buffs.qh"
-
-.float lifetime;
 
 float buffs_BuffModel_Customize()
 {
@@ -247,7 +246,7 @@ void buff_Think()
 		if(autocvar_g_buffs_randomize)
 			buff_NewType(self, self.buffs);
 
-		if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
+		if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
 			buff_Respawn(self);
 	}
 
@@ -295,7 +294,7 @@ void buff_Reset()
 	buff_Waypoint_Reset();
 	self.buff_activetime_updated = false;
 
-	if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
+	if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
 		buff_Respawn(self);
 }
 
@@ -320,9 +319,9 @@ float buff_Customize()
 
 void buff_Init(entity ent)
 {
-	if(!cvar("g_buffs")) { remove(self); return; }
+	if(!cvar("g_buffs")) { remove(ent); return; }
 
-	if(!teamplay && self.team) { self.team = 0; }
+	if(!teamplay && ent.team) { ent.team = 0; }
 
 	entity oldself = self;
 	self = ent;
@@ -350,13 +349,16 @@ void buff_Init(entity ent)
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
 
+	if(self.spawnflags & 1)
+		self.noalign = true;
+
 	if(self.noalign)
 		self.movetype = MOVETYPE_NONE; // reset by random location
 
 	setmodel(self, BUFF_MODEL);
 	setsize(self, BUFF_MIN, BUFF_MAX);
 
-	if(cvar("g_buffs_random_location") || (self.spawnflags & 1))
+	if(cvar("g_buffs_random_location") || (self.spawnflags & 64))
 		buff_Respawn(self);
 
 	self = oldself;
@@ -378,7 +380,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
 	ent.angles = old.angles;
-	ent.noalign = old.noalign;
+	ent.noalign = (old.noalign || (old.spawnflags & 1));
 
 	buff_Init(ent);
 }
@@ -524,6 +526,12 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 	{
 		self.stat_sv_maxspeed *= autocvar_g_buffs_disability_speed;
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_disability_speed;
+	}
+
+	if(self.buffs & BUFF_JUMP)
+	{
+		// automatically reset, no need to worry
+		self.stat_sv_jumpvelocity = autocvar_g_buffs_jump_height;
 	}
 
 	return false;
@@ -924,7 +932,7 @@ void buffs_DelayedInit()
 		for(i = 0; i < autocvar_g_buffs_spawn_count; ++i)
 		{
 			entity e = spawn();
-			e.spawnflags |= 1; // always randomize
+			e.spawnflags |= 64; // always randomize
 			e.velocity = randomvec() * 250; // this gets reset anyway if random location works
 			buff_Init(e);
 		}
@@ -963,7 +971,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, buffs_PlayerThrowKey, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_LAST);
 	MUTATOR_HOOK(CustomizeWaypoint, buffs_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponSpeedFactor, buffs_WeaponSpeed, CBC_ORDER_ANY);
