@@ -354,6 +354,8 @@ float autocvar_hud_panel_weapons_complainbubble_time;
 int autocvar_hud_panel_weapons_label;
 float autocvar_hud_panel_weapons_label_scale = 0.5;
 bool autocvar_hud_panel_weapons_onlyowned;
+float autocvar_hud_panel_weapons_noncurrent_alpha = 1;
+float autocvar_hud_panel_weapons_noncurrent_scale = 1;
 float autocvar_hud_panel_weapons_timeout;
 int autocvar_hud_panel_weapons_timeout_effect;
 float autocvar_hud_panel_weapons_timeout_fadebgmin;
