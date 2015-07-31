@@ -228,6 +228,16 @@ vector GetCurrentFov(float fov)
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
+vector GetViewLocationFOV(float fov)
+{
+	float frustumx, frustumy, fovx, fovy;
+	frustumy = tan(fov * M_PI / 360.0) * 0.75;
+	frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
+	fovx = atan2(frustumx, 1) / M_PI * 360.0;
+	fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	return '1 0 0' * fovx + '0 1 0' * fovy;
+}
+
 vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, vector ov_org)
 {
 	float fovx, fovy;
@@ -420,11 +430,13 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-float WantEventchase()
+bool WantEventchase()
 {
 	if(autocvar_cl_orthoview)
 		return false;
 	if(intermission)
+		return true;
+	if(self.viewloc)
 		return true;
 	if(spectatee_status >= 0)
 	{
@@ -550,7 +562,7 @@ void UpdateCrosshair()
 			CSQC_common_hud();
 
 	// crosshair goes VERY LAST
-	if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL)
+	if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL && !csqcplayer.viewloc)
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;
@@ -1119,6 +1131,7 @@ void CSQC_UpdateView(float w, float h)
 			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
 
 			// If the boxtrace fails, revert back to line tracing.
+			if(!self.viewloc)
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
@@ -1127,7 +1140,8 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
-			setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
+			if(!self.viewloc)
+				setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
@@ -1349,6 +1363,7 @@ void CSQC_UpdateView(float w, float h)
 	vid_pixelheight = autocvar_vid_pixelheight;
 
 	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
+	else if(csqcplayer.viewloc) { setproperty(VF_FOV, GetViewLocationFOV(110)); } // enforce 110 fov, so things dont look odd
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	// Camera for demo playback

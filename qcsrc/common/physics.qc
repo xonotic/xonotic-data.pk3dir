@@ -1,10 +1,12 @@
 #include "physics.qh"
 #include "triggers/trigger/swamp.qh"
 #include "triggers/trigger/jumppads.qh"
+#include "viewloc.qh"
 
 #ifdef SVQC
 
 #include "../server/miscfunctions.qh"
+#include "triggers/trigger/viewloc.qh"
 
 // client side physics
 bool Physics_Valid(string thecvar)
@@ -1761,6 +1763,8 @@ void PM_Main()
 	// when we get here, disableclientprediction cannot be 2
 	self.disableclientprediction = 0;
 #endif
+
+	viewloc_PlayerPhysics();
 
 	PM_check_spider();
 

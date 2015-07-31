@@ -22,3 +22,4 @@
 #include "secret.qc"
 #include "swamp.qc"
 #include "teleport.qc"
+#include "viewloc.qc"
