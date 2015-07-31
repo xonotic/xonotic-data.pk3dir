@@ -29,9 +29,9 @@ void viewloc_PlayerPhysics()
 		backward = vectoangles(normalize(level_start - level_end));
 
 		if(self.movement_x < 0) // left
-			self.angles = backward;
+			self.angles_y = backward_y;
 		if(self.movement_x > 0) // right
-			self.angles = forward;
+			self.angles_y = forward_y;
 
 		if(oldmovement_x > 0)
 #ifdef CSQC
@@ -146,9 +146,9 @@ void viewloc_SetViewLocation()
 		backward = vectoangles(normalize(vec_to_max(position_b, position_a) - vec_to_min(position_b, position_a)));
 		
 		if(input_movevalues_y < 0) // left
-			view.angles = backward;
+			view.angles_y = backward_y;
 		if(input_movevalues_y > 0) // favour right
-			view.angles = forward;
+			view.angles_y = forward_y;
 
 		setproperty(VF_CL_VIEWANGLES, view.angles);
 	}
