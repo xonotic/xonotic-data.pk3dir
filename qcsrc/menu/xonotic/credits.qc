@@ -9,6 +9,7 @@ CLASS(XonoticCreditsList, XonoticListBox)
 	METHOD(XonoticCreditsList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticCreditsList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticCreditsList, destroy, void(entity))
+	ATTRIB(XonoticCreditsList, selectionDoesntMatter, bool, true)
 
 	ATTRIB(XonoticCreditsList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticCreditsList, realUpperMargin, float, 0)
@@ -88,19 +89,7 @@ void XonoticCreditsList_drawListBoxItem(entity me, int i, vector absSize, bool i
 
 float XonoticCreditsList_keyDown(entity me, float key, float ascii, float shift)
 {
-	me.dragScrollTimer = time;
 	me.scrolling = 0;
-	if(key == K_PGUP || key == K_KP_PGUP)
-		me.scrollPosTarget = max(me.scrollPosTarget - 0.5, 0);
-	else if(key == K_PGDN || key == K_KP_PGDN)
-		me.scrollPosTarget = min(me.scrollPosTarget + 0.5, me.nItems * me.itemHeight - 1);
-	else if(key == K_UPARROW || key == K_KP_UPARROW)
-		me.scrollPosTarget = max(me.scrollPosTarget - me.itemHeight, 0);
-	else if(key == K_DOWNARROW || key == K_KP_DOWNARROW)
-		me.scrollPosTarget = min(me.scrollPosTarget + me.itemHeight, me.nItems * me.itemHeight - 1);
-	else
-		return SUPER(XonoticCreditsList).keyDown(me, key, ascii, shift);
-
-	return 1;
+	return SUPER(XonoticCreditsList).keyDown(me, key, ascii, shift);
 }
 #endif

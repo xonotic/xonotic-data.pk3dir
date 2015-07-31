@@ -32,6 +32,7 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, controlBottom, float, 0)
 	ATTRIB(ListBox, controlWidth, float, 0)
 	ATTRIB(ListBox, dragScrollPos, vector, '0 0 0')
+	ATTRIB(ListBox, selectionDoesntMatter, bool, false) // improves scrolling by keys for lists that don't need to show an active selection
 
 	ATTRIB(ListBox, src, string, string_null) // scrollbar
 	ATTRIB(ListBox, color, vector, '1 1 1')
@@ -166,6 +167,12 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 	}
 	else if(key == K_PGUP || key == K_KP_PGUP)
 	{
+		if(me.selectionDoesntMatter)
+		{
+			me.scrollPosTarget = max(me.scrollPosTarget - 0.5, 0);
+			return 1;
+		}
+
 		float i = me.selectedItem;
 		float a = me.getItemHeight(me, i);
 		for (;;)
@@ -181,6 +188,12 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 	}
 	else if(key == K_PGDN || key == K_KP_PGDN)
 	{
+		if(me.selectionDoesntMatter)
+		{
+			me.scrollPosTarget = min(me.scrollPosTarget + 0.5, me.nItems * me.itemHeight - 1);
+			return 1;
+		}
+
 		float i = me.selectedItem;
 		float a = me.getItemHeight(me, i);
 		for (;;)
@@ -195,9 +208,25 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 		me.setSelected(me, i - 1);
 	}
 	else if(key == K_UPARROW || key == K_KP_UPARROW)
+	{
+		if(me.selectionDoesntMatter)
+		{
+			me.scrollPosTarget = max(me.scrollPosTarget - me.itemHeight, 0);
+			return 1;
+		}
+
 		me.setSelected(me, me.selectedItem - 1);
+	}
 	else if(key == K_DOWNARROW || key == K_KP_DOWNARROW)
+	{
+		if(me.selectionDoesntMatter)
+		{
+			me.scrollPosTarget = min(me.scrollPosTarget + me.itemHeight, me.nItems * me.itemHeight - 1);
+			return 1;
+		}
+
 		me.setSelected(me, me.selectedItem + 1);
+	}
 	else if(key == K_HOME || key == K_KP_HOME)
 		me.setSelected(me, 0);
 	else if(key == K_END || key == K_KP_END)
