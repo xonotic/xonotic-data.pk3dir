@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticMultiplayerDialog) EXTENDS(XonoticDialog)
+#ifndef DIALOG_MULTIPLAYER_H
+#define DIALOG_MULTIPLAYER_H
+#include "dialog.qc"
+CLASS(XonoticMultiplayerDialog, XonoticDialog)
 	METHOD(XonoticMultiplayerDialog, fill, void(entity))
 	ATTRIB(XonoticMultiplayerDialog, title, string, _("Multiplayer"))
 	ATTRIB(XonoticMultiplayerDialog, color, vector, SKINCOLOR_DIALOG_MULTIPLAYER)
@@ -17,9 +19,6 @@ void XonoticMultiplayerDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Servers"), makeXonoticServerListTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Create"), makeXonoticServerCreateTab()));
-		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Demos"), makeXonoticDemoBrowserTab()));
-		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Screenshots"), makeXonoticScreenshotBrowserTab()));
-		//me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Players"), makeXonoticDemoBrowserTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Media"), makeXonoticMediaTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Profile"), makeXonoticProfileTab()));
 

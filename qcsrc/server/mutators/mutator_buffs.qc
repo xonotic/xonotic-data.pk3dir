@@ -1,3 +1,12 @@
+#include "mutator_buffs.qh"
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "../../common/buffs.qh"
+
+.float lifetime;
+
 float buffs_BuffModel_Customize()
 {
 	entity player, myowner;
@@ -524,7 +533,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
 {
 	if(self.buffs & BUFF_JUMP)
 		player_jumpheight = autocvar_g_buffs_jump_height;
-	self.stat_jumpheight = player_jumpheight;
 
 	return false;
 }
@@ -934,7 +942,6 @@ void buffs_Initialize()
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
 	addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
-	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_jumpheight);
 
 	InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 }

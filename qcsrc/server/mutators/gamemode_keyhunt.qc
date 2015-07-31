@@ -1,4 +1,8 @@
-#define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
+#include "gamemode_keyhunt.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 
 // #define KH_PLAYER_USE_ATTACHMENT
 // #define KH_PLAYER_USE_CARRIEDMODEL
@@ -271,7 +275,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	}
 	// in any case:
 	setattachment(key, world, "");
-	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN_z - KH_KEY_MIN_z));
+	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN.z - KH_KEY_MIN_z));
 	key.angles = key.owner.angles;
 #else
 	setorigin(key, key.owner.origin + key.origin.z * '0 0 1');
@@ -397,7 +401,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 	}
 }
 
-void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.owner)
 		return;

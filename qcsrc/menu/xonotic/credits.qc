@@ -1,9 +1,11 @@
-#ifdef INTERFACE
-CLASS(XonoticCreditsList) EXTENDS(XonoticListBox)
+#ifndef CREDITS_H
+#define CREDITS_H
+#include "listbox.qc"
+CLASS(XonoticCreditsList, XonoticListBox)
 	METHOD(XonoticCreditsList, configureXonoticCreditsList, void(entity))
 	ATTRIB(XonoticCreditsList, rowsPerItem, float, 1)
 	METHOD(XonoticCreditsList, draw, void(entity))
-	METHOD(XonoticCreditsList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticCreditsList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticCreditsList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticCreditsList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticCreditsList, destroy, void(entity))
@@ -13,7 +15,7 @@ CLASS(XonoticCreditsList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticCreditsList, bufferIndex, float, 0)
 	ATTRIB(XonoticCreditsList, scrolling, float, 0)
 
-	ATTRIB(XonoticListBox, alphaBG, float, 0)
+	ATTRIB(XonoticCreditsList, alphaBG, float, 0)
 ENDCLASS(XonoticCreditsList)
 entity makeXonoticCreditsList();
 #endif
@@ -22,7 +24,7 @@ entity makeXonoticCreditsList();
 entity makeXonoticCreditsList()
 {
 	entity me;
-	me = spawnXonoticCreditsList();
+	me = NEW(XonoticCreditsList);
 	me.configureXonoticCreditsList(me);
 	return me;
 }
@@ -57,7 +59,7 @@ void XonoticCreditsList_resizeNotify(entity me, vector relOrigin, vector relSize
 	me.realFontSize_x = me.fontSize / (absSize.x * (1 - me.controlWidth));
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize.y);
 }
-void XonoticCreditsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticCreditsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	// layout: Ping, Credits name, Map name, NP, TP, MP
 	string s;

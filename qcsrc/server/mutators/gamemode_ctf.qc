@@ -1,7 +1,14 @@
-// ================================================================
-//  Official capture the flag game mode coding, reworked by Samual
-//  Last updated: September, 2012
-// ================================================================
+#include "gamemode_ctf.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#ifdef SVQC
+#include "../vehicles/vehicle.qh"
+#endif
+
+#include "../../warpzonelib/common.qh"
+#include "../../warpzonelib/mathlib.qh"
 
 void ctf_FakeTimeLimit(entity e, float t)
 {
@@ -14,7 +21,7 @@ void ctf_FakeTimeLimit(entity e, float t)
 		WriteCoord(MSG_ONE, (t + 1) / 60);
 }
 
-void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for easy changing and quick editing later
+void ctf_EventLog(string mode, int flagteam, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
@@ -80,7 +87,7 @@ void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnra
 	else { flag.velocity = (desired_direction * autocvar_g_ctf_pass_velocity); }
 }
 
-float ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
+bool ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
 {
 	if(autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
 	{
@@ -114,7 +121,7 @@ float ctf_CheckPassDirection(vector head_center, vector passer_center, vector pa
 // CaptureShield Functions
 // =======================
 
-float ctf_CaptureShield_CheckStatus(entity p)
+bool ctf_CaptureShield_CheckStatus(entity p)
 {
 	float s, se;
 	entity e;
@@ -643,7 +650,7 @@ void ctf_CheckStalemate(void)
 	}
 }
 
-void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -949,6 +956,7 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	self.bot_basewaypoint = self.nearestwaypoint;
 
 	// waypointsprites
+	// move_origin isnt accessible just yet
 	WaypointSprite_SpawnFixed(((self.team == NUM_TEAM_1) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, false));
 	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, false));
 

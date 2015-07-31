@@ -10,7 +10,7 @@
     #include "../common/constants.qh"
     #include "../common/teams.qh"
     #include "../common/util.qh"
-    #include "../common/weapons/weapons.qh"
+    #include "../common/weapons/all.qh"
     #include "weapons/accuracy.qh"
     #include "weapons/csqcprojectile.qh"
     #include "weapons/selection.qh"
@@ -22,7 +22,7 @@
     #include "../common/deathtypes.qh"
     #include "mutators/mutators_include.qh"
     #include "tturrets/include/turrets_early.qh"
-    #include "vehicles/vehicles_def.qh"
+    #include "vehicles/vehicle.qh"
     #include "../csqcmodellib/sv_model.qh"
     #include "../common/playerstats.qh"
     #include "g_hook.qh"
@@ -35,9 +35,9 @@
 .float dmg_force;
 .float dmg_radius;
 
-float Damage_DamageInfo_SendEntity(entity to, float sf);
+float Damage_DamageInfo_SendEntity(entity to, int sf);
 
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, float bloodtype, entity dmgowner);
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner);
 
 float checkrules_firstblood;
 
@@ -60,16 +60,16 @@ void UpdateFrags(entity player, float f);
 // NOTE: f=0 means still count as a (positive) kill, but count no frags for it
 void W_SwitchWeapon_Force(entity e, float w);
 entity GiveFrags_randomweapons;
-void GiveFrags (entity attacker, entity targ, float f, float deathtype);
+void GiveFrags (entity attacker, entity targ, float f, int deathtype);
 
 string AppendItemcodes(string s, entity player);
 
-void LogDeath(string mode, float deathtype, entity killer, entity killed);
+void LogDeath(string mode, int deathtype, entity killer, entity killed);
 
 void Obituary_SpecialDeath(
 	entity notif_target,
 	float murder,
-	float deathtype,
+	int deathtype,
 	string s1, string s2, string s3,
 	float f1, float f2, float f3);
 
@@ -77,11 +77,11 @@ float w_deathtype;
 float Obituary_WeaponDeath(
 	entity notif_target,
 	float murder,
-	float deathtype,
+	int deathtype,
 	string s1, string s2, string s3,
 	float f1, float f2);
 
-void Obituary(entity attacker, entity inflictor, entity targ, float deathtype);
+void Obituary(entity attacker, entity inflictor, entity targ, int deathtype);
 
 void Ice_Think();
 
@@ -94,13 +94,13 @@ entity damage_targ;
 entity damage_inflictor;
 entity damage_attacker;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 float RadiusDamage_running;
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity);
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, int deathtype, entity directhitentity);
 	// Returns total damage applies to creatures
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, float deathtype, entity directhitentity);
+float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, int deathtype, entity directhitentity);
 
 .float fire_damagepersec;
 .float fire_endtime;

@@ -16,4 +16,8 @@ float Ban_Delete(float i);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void BanCommand_macro_write_aliases(float fh);
+
+void BanCommand_macro_help();
+float BanCommand_macro_usage(float argc);
+
 #endif

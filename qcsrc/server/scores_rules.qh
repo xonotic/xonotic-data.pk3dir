@@ -1,0 +1,8 @@
+#ifndef SCORES_RULES_H
+#define SCORES_RULES_H
+
+void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabled);
+void ScoreRules_basics_end();
+void ScoreRules_generic();
+
+#endif

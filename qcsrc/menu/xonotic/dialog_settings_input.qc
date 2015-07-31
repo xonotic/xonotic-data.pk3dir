@@ -1,7 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticInputSettingsTab) EXTENDS(XonoticTab)
+#ifndef DIALOG_SETTINGS_INPUT_H
+#define DIALOG_SETTINGS_INPUT_H
+#include "tab.qc"
+CLASS(XonoticInputSettingsTab, XonoticTab)
 	METHOD(XonoticInputSettingsTab, fill, void(entity))
-	ATTRIB(XonoticInputSettingsTab, title, string, _("Input"))
 	ATTRIB(XonoticInputSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticInputSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticInputSettingsTab, columns, float, 6.2) // added extra .2 for center space
@@ -13,7 +14,7 @@ entity makeXonoticInputSettingsTab();
 entity makeXonoticInputSettingsTab()
 {
 	entity me;
-	me = spawnXonoticInputSettingsTab();
+	me = NEW(XonoticInputSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

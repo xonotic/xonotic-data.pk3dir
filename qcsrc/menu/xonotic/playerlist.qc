@@ -1,8 +1,10 @@
-#ifdef INTERFACE
-CLASS(XonoticPlayerList) EXTENDS(XonoticListBox)
+#ifndef PLAYERLIST_H
+#define PLAYERLIST_H
+#include "listbox.qc"
+CLASS(XonoticPlayerList, XonoticListBox)
 	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1)
 	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	ATTRIB(XonoticPlayerList, allowFocusSound, float, 0)
 	ATTRIB(XonoticPlayerList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPlayerList, columnNameOrigin, float, 0)
@@ -30,7 +32,7 @@ const float PLAYERPARM_COUNT = 4;
 entity makeXonoticPlayerList()
 {
 	entity me;
-	me = spawnXonoticPlayerList();
+	me = NEW(XonoticPlayerList);
 	me.configureXonoticListBox(me);
 	return me;
 }
@@ -92,7 +94,7 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnScoreOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
 }
 
-void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	string score;

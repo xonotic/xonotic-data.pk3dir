@@ -1,13 +1,13 @@
+#include "common.qh"
+
 #if defined(CSQC)
 	#include "../dpdefs/csprogsdefs.qh"
-    #include "common.qh"
     #include "../server/t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
+    #include "../common/weapons/all.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "common.qh"
-    #include "../common/weapons/weapons.qh"
+	#include "../dpdefs/progsdefs.qh"
 #endif
 
 void WarpZone_Accumulator_Clear(entity acc)
@@ -573,6 +573,45 @@ vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 	return nearest;
 }
 
+float WarpZoneLib_BadClassname(string myclassname)
+{
+	switch(myclassname)
+	{
+		case "weapon_info":
+		case "monster_info":
+		case "deathtype":
+		case "callback":
+		case "callbackchain":
+		case "weaponentity":
+		case "exteriorweaponentity":
+		case "csqc_score_team":
+		case "pingplreport":
+		case "ent_client_scoreinfo":
+		case "saved_cvar_value":
+		case "accuracy":
+		case "entcs_sender_v2":
+		case "entcs_receiver_v2":
+		case "clientinit":
+		case "sprite_waypoint":
+		case "waypoint":
+		case "gibsplash":
+		//case "net_linked": // actually some real entities are linked without classname, fail
+		case "":
+			return true;
+	}
+
+	if(startsWith(myclassname, "msg_"))
+		return true;
+
+	if(startsWith(myclassname, "target_"))
+		return true;
+
+	if(startsWith(myclassname, "info_"))
+		return true;
+
+	return false;
+}
+
 .float WarpZone_findradius_hit;
 .entity WarpZone_findradius_next;
 void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,               vector transform, vector shift, float needlineofsight)
@@ -591,6 +630,8 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 
 	for(e = e0; e; e = e.chain)
 	{
+		if(WarpZoneLib_BadClassname(e.classname))
+			continue;
 		p = WarpZoneLib_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
 		if(needlineofsight)
 		{
@@ -626,6 +667,9 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 	}
 	for(e = wz; e; e = e.WarpZone_findradius_next)
 	{
+		if(WarpZoneLib_BadClassname(e.classname))
+			continue;
+
 		org0_new = WarpZone_TransformOrigin(e, org);
 		traceline(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
 		org_new = trace_endpos;
@@ -771,4 +815,65 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	e = spawn();
 	WarpZone_RefSys_Copy(e, me);
 	return e;
+}
+
+float WarpZoneLib_ExactTrigger_Touch()
+{
+	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, self, other);
+}
+
+
+void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
+{
+	float eps = 0.0625;
+	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+		return;
+	if (trace_fraction < 1)
+	{
+		// hit something
+		// adjust origin in the other direction...
+		setorigin(e,e.origin - by * (1 - trace_fraction));
+	}
+}
+
+float WarpZoneLib_MoveOutOfSolid(entity e)
+{
+	vector o, m0, m1;
+
+	o = e.origin;
+	traceline(o, o, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+		return false;
+
+	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
+	if (!trace_startsolid)
+		return true;
+
+	m0 = e.mins;
+	m1 = e.maxs;
+	e.mins = '0 0 0';
+	e.maxs = '0 0 0';
+	WarpZoneLib_MoveOutOfSolid_Expand(e, '1 0 0' * m0_x);
+	e.mins_x = m0_x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, '1 0 0' * m1_x);
+	e.maxs_x = m1_x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 1 0' * m0_y);
+	e.mins_y = m0_y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 1 0' * m1_y);
+	e.maxs_y = m1_y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 0 1' * m0_z);
+	e.mins_z = m0_z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, '0 0 1' * m1_z);
+	e.maxs_z = m1_z;
+	setorigin(e, e.origin);
+
+	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+	{
+		setorigin(e, o);
+		return false;
+	}
+
+	return true;
 }

@@ -1,14 +1,16 @@
 #include "player_skeleton.qh"
 
+#include "../common/csqcmodel_settings.qh"
+
 #include "../warpzonelib/anglestransform.qh"
 
-.float skeleton_info_modelindex;
-.float skeleton_info_skin;
+class(Skeleton) .float skeleton_info_modelindex;
+class(Skeleton) .float skeleton_info_skin;
 const int BONETYPE_LOWER = 0;
 const int BONETYPE_UPPER = 1;
 const int MAX_BONES = 128;
-.float skeleton_bonetype[MAX_BONES];
-.float skeleton_numbones;
+class(Skeleton) .float skeleton_bonetype[MAX_BONES];
+class(Skeleton) .float skeleton_numbones;
 
 void skeleton_loadinfo(entity e)
 {
@@ -170,6 +172,8 @@ void skeleton_from_frames(entity e, float is_dead)
 
 	if(!is_dead)
 	{
+		if(self == csqcplayer)
+			self.v_angle_x = input_angles_x;
 		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{

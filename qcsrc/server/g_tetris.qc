@@ -100,11 +100,11 @@ float GetXBlock(float x, string dat)
 	return stof(substring(dat, x-1, 1));
 }
 
-string SetXBlock(float x, string dat, float new)
+string SetXBlock(float x, string dat, float val)
 {
 	return strcat(
 		substring(dat, 0, x-1),
-		ftos(new),
+		ftos(val),
 		substring(dat, x, -1)
 	);
 }

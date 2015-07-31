@@ -3,7 +3,7 @@
 #elif defined(SVQC)
 	#include "../../dpdefs/progsdefs.qh"
     #include "../util.qh"
-    #include "monsters.qh"
+    #include "all.qh"
     #include "sv_monsters.qh"
     #include "spawn.qh"
     #include "../../server/autocvars.qh"

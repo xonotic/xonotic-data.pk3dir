@@ -47,9 +47,6 @@ void sv_notice_toall(string _notice, float _howlong, float _modal)
 #endif // SVQC
 
 #ifdef CSQC
-void SUB_Remove()
-{ remove(self); }
-
 void cl_notice_read()
 {
     entity _notice;

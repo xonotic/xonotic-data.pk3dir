@@ -133,7 +133,7 @@ float turret_tag_fire_update_s()
 * Railgun-like beam, but has thickness and suppots slowing of target
 */
 void FireImoBeam (vector start, vector end, vector smin, vector smax,
-                  float bforce, float f_dmg, float f_velfactor, float deathtype)
+                  float bforce, float f_dmg, float f_velfactor, int deathtype)
 
 {
     vector hitloc, force, endpoint, dir;
@@ -229,7 +229,6 @@ void turrets_precash()
 
 
 #ifdef TURRET_DEBUG
-void SUB_Remove();
 void marker_think()
 {
     if(self.cnt)

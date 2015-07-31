@@ -1,3 +1,5 @@
+#include "../../csqceffects.qh"
+
 void spawnfunc_turret_tesla();
 void turret_tesla_dinit();
 void turret_tesla_fire();

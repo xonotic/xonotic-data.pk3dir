@@ -1,3 +1,9 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "../campaign.qh"
+
 .float campcheck_nextcheck;
 .float campcheck_traveled_distance;
 

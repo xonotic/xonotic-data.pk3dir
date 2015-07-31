@@ -1,3 +1,8 @@
+#include "gamemode_nexball.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 float autocvar_g_nexball_safepass_turnrate;
 float autocvar_g_nexball_safepass_maxdist;
 float autocvar_g_nexball_safepass_holdtime;

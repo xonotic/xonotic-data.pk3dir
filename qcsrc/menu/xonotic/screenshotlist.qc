@@ -1,11 +1,13 @@
-#ifdef INTERFACE
-CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
+#ifndef SCREENSHOTLIST_H
+#define SCREENSHOTLIST_H
+#include "listbox.qc"
+CLASS(XonoticScreenshotList, XonoticListBox)
 	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity))
 	ATTRIB(XonoticScreenshotList, rowsPerItem, float, 1)
 	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticScreenshotList, setSelected, void(entity, float))
 	METHOD(XonoticScreenshotList, draw, void(entity))
-	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, int, vector, bool, bool))
 	METHOD(XonoticScreenshotList, getScreenshots, void(entity))
 	METHOD(XonoticScreenshotList, previewScreenshot, void(entity))
 	METHOD(XonoticScreenshotList, startScreenshot, void(entity))
@@ -49,7 +51,7 @@ void ScreenshotList_Filter_Change(entity box, entity me);
 entity makeXonoticScreenshotList()
 {
 	entity me;
-	me = spawnXonoticScreenshotList();
+	me = NEW(XonoticScreenshotList);
 	me.configureXonoticScreenshotList(me);
 	return me;
 }
@@ -165,11 +167,16 @@ void XonoticScreenshotList_setSelected(entity me, float i)
 	}
 }
 
-void XonoticScreenshotList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticScreenshotList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.screenshotName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);

@@ -3,8 +3,20 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
+#include "../../common/command/command.qh"
+#include "cl_cmd.qh"
+
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../hud.qh"
+#include "../hud_config.qh"
+#include "../main.qh"
+#include "../mapvoting.qh"
+#include "../miscfunctions.qh"
+
+#include "../../common/mapinfo.qh"
+
 #include "../../common/command/generic.qh"
-#include "../../common/command/shared_defs.qh"
 
 void DrawDebugModel()
 {
@@ -339,6 +351,31 @@ void LocalCommand_mv_download(int request, int argc)
 	}
 }
 
+void LocalCommand_find(int request, int argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity client;
+
+			for(client = world; (client = find(client, classname, argv(1))); )
+				print(etos(client), "\n");
+
+			return;
+		}
+
+		default:
+			print("Incorrect parameters for ^2find^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd find classname\n");
+			print("  Where 'classname' is the classname to search for.\n");
+			return;
+		}
+	}
+}
+
 void LocalCommand_sendcvar(int request, int argc)
 {
 	switch(request)
@@ -410,6 +447,7 @@ void LocalCommand_(int request)
 	CLIENT_COMMAND("handlevote", LocalCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
 	CLIENT_COMMAND("hud", LocalCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
+	CLIENT_COMMAND("find", LocalCommand_find(request, arguments), "Search through entities for matching classname") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
 	/* nothing */
