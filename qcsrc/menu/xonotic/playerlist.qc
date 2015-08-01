@@ -17,6 +17,7 @@ CLASS(XonoticPlayerList, XonoticListBox)
 	METHOD(XonoticPlayerList, setPlayerList, void(entity, string))
 	METHOD(XonoticPlayerList, getPlayerList, string(entity, float, float))
 	ATTRIB(XonoticPlayerList, playerList, float, -1)
+	ATTRIB(XonoticPlayerList, selectionDoesntMatter, bool, true)
 ENDCLASS(XonoticPlayerList)
 entity makeXonoticPlayerList();
 #endif
