@@ -2316,7 +2316,7 @@ void HUD_Score(void)
 	vector distribution_color;
 	entity tm, pl, me;
 
-	me = playerslots[player_localentnum - 1];
+	me = playerslots[current_player];
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
@@ -3782,7 +3782,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
+				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(current_player));
 			drawInfoMessage(s);
 
 			if(spectatee_status == -1)
@@ -4630,8 +4630,6 @@ void HUD_Main (void)
 		hud_skin_prev = strzone(autocvar_hud_skin);
 	}
 
-    current_player = player_localentnum;
-
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 	{
@@ -4651,11 +4649,11 @@ void HUD_Main (void)
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player, "colors"));
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player, "colors"));
 				color = colormapPaletteColor(f % 16, 1);
 			}
 			else
