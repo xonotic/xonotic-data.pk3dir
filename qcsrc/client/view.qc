@@ -1054,7 +1054,11 @@ void CSQC_UpdateView(float w, float h)
 
 	CSQCPlayer_SetCamera();
 
-	myteam = GetPlayerColor(player_localentnum - 1);
+	if(player_localentnum <= maxclients) // is it a client?
+		current_player = player_localentnum - 1;
+	else // then player_localentnum is the vehicle I'm driving
+		current_player = player_localnum;
+	myteam = GetPlayerColor(current_player);
 
 	if(myteam != prev_myteam)
 	{
