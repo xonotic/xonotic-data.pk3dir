@@ -1,14 +1,14 @@
 #include "all.qh"
 #include "../_all.qh"
 
-#include "../movetypes.qh"
-#include "../movetypes.qh"
+#include "../../common/movetypes/movetypes.qh"
 #include "../prandom.qh"
 #include "../scoreboard.qh"
 #include "../t_items.qh"
 
 #include "../../common/buffs.qh"
 #include "../../common/constants.qh"
+#include "../../common/movetypes/movetypes.qh"
 #include "../../common/stats.qh"
 #include "../../common/util.qh"
 

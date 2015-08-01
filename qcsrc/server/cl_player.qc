@@ -5,7 +5,6 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "g_subs.qh"
-#include "g_triggers.qh"
 #include "g_violence.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
@@ -16,10 +15,13 @@
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
 #include "../common/deathtypes.qh"
+#include "../common/triggers/subs.qh"
 #include "../common/playerstats.qh"
 #include "../csqcmodellib/sv_model.qh"
 
 #include "weapons/weaponstats.qh"
+
+#include "../common/animdecide.qh"
 
 void CopyBody_Think(void)
 {

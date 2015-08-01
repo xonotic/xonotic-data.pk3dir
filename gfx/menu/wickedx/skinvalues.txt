@@ -196,6 +196,9 @@ COLOR_DIALOG_SCREENSHOTVIEWER   '1 1 1'
 COLOR_DIALOG_CVARS              '1 0 0'
 COLOR_DIALOG_HUDCONFIRM         '1 0 0'
 
+// gametypelist
+BOOL_GAMETYPELIST_ICON_BLUR     1
+
 // item: input box
 //   uses "inputbox" images
 COLOR_INPUTBOX_N                '1 1 1'

@@ -2,7 +2,6 @@
 
 #include "../../movelib.qh"
 #include "../../steerlib.qh"
-#include "../../t_teleporters.qh"
 
 const float ANIM_NO         = 0;
 const float ANIM_TURN       = 1;
