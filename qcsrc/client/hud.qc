@@ -2892,63 +2892,33 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	
 	ctf_oneflag = (stat_items & CTF_FLAG_NEUTRAL);
 
-	if(redflag || blueflag || yellowflag || pinkflag || neutralflag)
-		mod_active = 1;
-	else
-		mod_active = 0;
+	mod_active = redflag || blueflag || yellowflag || pinkflag || neutralflag;
 
-	if(autocvar__hud_configure)
-	{
+	if (autocvar__hud_configure) {
 		redflag = 1;
 		blueflag = 2;
-		if(team_count >= 3)
+		if (team_count >= 3)
 			yellowflag = 2;
-		if(team_count >= 4)
+		if (team_count >= 4)
 			pinkflag = 3;
 		ctf_oneflag = neutralflag = 0; // disable neutral flag in hud editor?
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
-	if (redflag != redflag_prevframe)
-	{
-		redflag_statuschange_time = time;
-		redflag_prevstatus = redflag_prevframe;
-		redflag_prevframe = redflag;
-	}
-
-	if (blueflag != blueflag_prevframe)
-	{
-		blueflag_statuschange_time = time;
-		blueflag_prevstatus = blueflag_prevframe;
-		blueflag_prevframe = blueflag;
-	}
-
-	if (yellowflag != yellowflag_prevframe)
-	{
-		yellowflag_statuschange_time = time;
-		yellowflag_prevstatus = yellowflag_prevframe;
-		yellowflag_prevframe = yellowflag;
-	}
-
-	if (pinkflag != pinkflag_prevframe)
-	{
-		pinkflag_statuschange_time = time;
-		pinkflag_prevstatus = pinkflag_prevframe;
-		pinkflag_prevframe = pinkflag;
-	}
-
-	if (neutralflag != neutralflag_prevframe)
-	{
-		neutralflag_statuschange_time = time;
-		neutralflag_prevstatus = neutralflag_prevframe;
-		neutralflag_prevframe = neutralflag;
-	}
-
-	redflag_statuschange_elapsedtime = time - redflag_statuschange_time;
-	blueflag_statuschange_elapsedtime = time - blueflag_statuschange_time;
-	yellowflag_statuschange_elapsedtime = time - yellowflag_statuschange_time;
-	pinkflag_statuschange_elapsedtime = time - pinkflag_statuschange_time;
-	neutralflag_statuschange_elapsedtime = time - neutralflag_statuschange_time;
+	#define X(team) do {															\
+		if (team##flag != team##flag_prevframe) {									\
+    		team##flag_statuschange_time = time;									\
+    		team##flag_prevstatus = team##flag_prevframe;							\
+    		team##flag_prevframe = team##flag;										\
+    	}																			\
+    	team##flag_statuschange_elapsedtime = time - team##flag_statuschange_time; 	\
+    } while (0)
+	X(red);
+	X(blue);
+	X(yellow);
+	X(pink);
+	X(neutral);
+	#undef X
 
 	const float BLINK_FACTOR = 0.15;
 	const float BLINK_BASE = 0.85;
@@ -2959,214 +2929,92 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	// ensure RMS == 1
 	const float BLINK_FREQ = 5; // circle frequency, = 2*pi*frequency in hertz
 
-	string red_icon, red_icon_prevstatus;
-	int red_alpha, red_alpha_prevstatus;
-	red_alpha = red_alpha_prevstatus = 1;
-	switch(redflag)
-	{
-		case 1: red_icon = "flag_red_taken"; break;
-		case 2: red_icon = "flag_red_lost"; break;
-		case 3: red_icon = "flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_1))
-				red_icon = "flag_red_shielded";
-			else
-				red_icon = string_null;
-			break;
-	}
-	switch(redflag_prevstatus)
-	{
-		case 1: red_icon_prevstatus = "flag_red_taken"; break;
-		case 2: red_icon_prevstatus = "flag_red_lost"; break;
-		case 3: red_icon_prevstatus = "flag_red_carrying"; red_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if(redflag == 3)
-				red_icon_prevstatus = "flag_red_carrying"; // make it more visible
-			else if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_1))
-				red_icon_prevstatus = "flag_red_shielded";
-			else
-				red_icon_prevstatus = string_null;
-			break;
-	}
+	#define X(team, cond) \
+	string team##_icon, team##_icon_prevstatus; \
+	int team##_alpha, team##_alpha_prevstatus; \
+	team##_alpha = team##_alpha_prevstatus = 1; \
+	do { \
+		switch (team##flag) { \
+			case 1: team##_icon = "flag_" #team "_taken"; break; \
+			case 2: team##_icon = "flag_" #team "_lost"; break; \
+			case 3: team##_icon = "flag_" #team "_carrying"; team##_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; \
+			default: \
+				if ((stat_items & CTF_SHIELDED) && (cond)) { \
+					team##_icon = "flag_" #team "_shielded"; \
+				} else { \
+					team##_icon = string_null; \
+				} \
+				break; \
+		} \
+		switch (team##flag_prevstatus) { \
+			case 1: team##_icon_prevstatus = "flag_" #team "_taken"; break; \
+			case 2: team##_icon_prevstatus = "flag_" #team "_lost"; break; \
+			case 3: team##_icon_prevstatus = "flag_" #team "_carrying"; team##_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; \
+			default: \
+				if (team##flag == 3) { \
+					team##_icon_prevstatus = "flag_" #team "_carrying"; /* make it more visible */\
+				} else if((stat_items & CTF_SHIELDED) && (cond)) { \
+					team##_icon_prevstatus = "flag_" #team "_shielded"; \
+				} else { \
+					team##_icon_prevstatus = string_null; \
+				} \
+				break; \
+		} \
+	} while (0)
+	X(red, myteam != NUM_TEAM_1);
+	X(blue, myteam != NUM_TEAM_2);
+	X(yellow, myteam != NUM_TEAM_3);
+	X(pink, myteam != NUM_TEAM_4);
+	X(neutral, true);
+	#undef X
 
-	string blue_icon, blue_icon_prevstatus;
-	int blue_alpha, blue_alpha_prevstatus;
-	blue_alpha = blue_alpha_prevstatus = 1;
-	switch(blueflag)
-	{
-		case 1: blue_icon = "flag_blue_taken"; break;
-		case 2: blue_icon = "flag_blue_lost"; break;
-		case 3: blue_icon = "flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_2))
-				blue_icon = "flag_blue_shielded";
-			else
-				blue_icon = string_null;
-			break;
-	}
-	switch(blueflag_prevstatus)
-	{
-		case 1: blue_icon_prevstatus = "flag_blue_taken"; break;
-		case 2: blue_icon_prevstatus = "flag_blue_lost"; break;
-		case 3: blue_icon_prevstatus = "flag_blue_carrying"; blue_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if(blueflag == 3)
-				blue_icon_prevstatus = "flag_blue_carrying"; // make it more visible
-			else if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_2))
-				blue_icon_prevstatus = "flag_blue_shielded";
-			else
-				blue_icon_prevstatus = string_null;
-			break;
-	}
-
-	string yellow_icon, yellow_icon_prevstatus;
-	int yellow_alpha, yellow_alpha_prevstatus;
-	yellow_alpha = yellow_alpha_prevstatus = 1;
-	switch(yellowflag)
-	{
-		case 1: yellow_icon = "flag_yellow_taken"; break;
-		case 2: yellow_icon = "flag_yellow_lost"; break;
-		case 3: yellow_icon = "flag_yellow_carrying"; yellow_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_3))
-				yellow_icon = "flag_yellow_shielded";
-			else
-				yellow_icon = string_null;
-			break;
-	}
-	switch(yellowflag_prevstatus)
-	{
-		case 1: yellow_icon_prevstatus = "flag_yellow_taken"; break;
-		case 2: yellow_icon_prevstatus = "flag_yellow_lost"; break;
-		case 3: yellow_icon_prevstatus = "flag_yellow_carrying"; yellow_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if(yellowflag == 3)
-				yellow_icon_prevstatus = "flag_yellow_carrying"; // make it more visible
-			else if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_3))
-				yellow_icon_prevstatus = "flag_yellow_shielded";
-			else
-				yellow_icon_prevstatus = string_null;
-			break;
-	}
-
-	string pink_icon, pink_icon_prevstatus;
-	int pink_alpha, pink_alpha_prevstatus;
-	pink_alpha = pink_alpha_prevstatus = 1;
-	switch(pinkflag)
-	{
-		case 1: pink_icon = "flag_pink_taken"; break;
-		case 2: pink_icon = "flag_pink_lost"; break;
-		case 3: pink_icon = "flag_pink_carrying"; pink_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_4))
-				pink_icon = "flag_pink_shielded";
-			else
-				pink_icon = string_null;
-			break;
-	}
-	switch(pinkflag_prevstatus)
-	{
-		case 1: pink_icon_prevstatus = "flag_pink_taken"; break;
-		case 2: pink_icon_prevstatus = "flag_pink_lost"; break;
-		case 3: pink_icon_prevstatus = "flag_pink_carrying"; pink_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if(pinkflag == 3)
-				pink_icon_prevstatus = "flag_pink_carrying"; // make it more visible
-			else if((stat_items & CTF_SHIELDED) && (myteam != NUM_TEAM_4))
-				pink_icon_prevstatus = "flag_pink_shielded";
-			else
-				pink_icon_prevstatus = string_null;
-			break;
-	}
-
-	string neutral_icon, neutral_icon_prevstatus;
-	int neutral_alpha, neutral_alpha_prevstatus;
-	neutral_alpha = neutral_alpha_prevstatus = 1;
-	switch(neutralflag)
-	{
-		case 1: neutral_icon = "flag_neutral_taken"; break;
-		case 2: neutral_icon = "flag_neutral_lost"; break;
-		case 3: neutral_icon = "flag_neutral_carrying"; neutral_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if((stat_items & CTF_SHIELDED))
-				neutral_icon = "flag_neutral_shielded";
-			else
-				neutral_icon = string_null;
-			break;
-	}
-	switch(neutralflag_prevstatus)
-	{
-		case 1: neutral_icon_prevstatus = "flag_neutral_taken"; break;
-		case 2: neutral_icon_prevstatus = "flag_neutral_lost"; break;
-		case 3: neutral_icon_prevstatus = "flag_neutral_carrying"; neutral_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if(neutralflag == 3)
-				neutral_icon_prevstatus = "flag_neutral_carrying"; // make it more visible
-			else if((stat_items & CTF_SHIELDED))
-				neutral_icon_prevstatus = "flag_neutral_shielded";
-			else
-				neutral_icon_prevstatus = string_null;
-			break;
-	}
-
-	if(ctf_oneflag)
-	{
+	if (ctf_oneflag) {
 		// hacky, but these aren't needed
 		red_icon = red_icon_prevstatus = blue_icon = blue_icon_prevstatus = yellow_icon = yellow_icon_prevstatus = pink_icon = pink_icon_prevstatus = string_null;
 		fs = fs2 = fs3 = 1;
-	}
-	else switch(team_count)
-	{
+	} else switch (team_count) {
 		default:
 		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
 		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;
 		case 4: fs = 0.75; fs2 = 0.25; fs3 = 0.5; break;
 	}
 
-	if(mySize_x > mySize_y)
-	{
+	if (mySize_x > mySize_y) {
 		size1 = mySize_x;
 		size2 = mySize_y;
 		e1 = eX;
 		e2 = eY;
-	}
-	else
-	{
+	} else {
 		size1 = mySize_y;
 		size2 = mySize_x;
 		e1 = eY;
 		e2 = eX;
 	}
 
-	switch(myteam)
-	{
+	switch (myteam) {
 		default:
-		case NUM_TEAM_1:
-		{
+		case NUM_TEAM_1: {
 			redflag_pos = pos;
 			blueflag_pos = pos + eX * fs2 * size1;
 			yellowflag_pos = pos - eX * fs2 * size1;
 			pinkflag_pos = pos + eX * fs3 * size1;
 			break;
 		}
-		case NUM_TEAM_2:
-		{
+		case NUM_TEAM_2: {
 			redflag_pos = pos + eX * fs2 * size1;
 			blueflag_pos = pos;
 			yellowflag_pos = pos - eX * fs2 * size1;
 			pinkflag_pos = pos + eX * fs3 * size1;
 			break;
 		}
-		case NUM_TEAM_3:
-		{
+		case NUM_TEAM_3: {
 			redflag_pos = pos + eX * fs3 * size1;
 			blueflag_pos = pos - eX * fs2 * size1;
 			yellowflag_pos = pos;
 			pinkflag_pos = pos + eX * fs2 * size1;
 			break;
 		}
-		case NUM_TEAM_4:
-		{
+		case NUM_TEAM_4: {
 			redflag_pos = pos - eX * fs2 * size1;
 			blueflag_pos = pos + eX * fs3 * size1;
 			yellowflag_pos = pos + eX * fs2 * size1;
@@ -3177,35 +3025,19 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	neutralflag_pos = pos;
 	flag_size = e1 * fs * size1 + e2 * size2;
 
-	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
-	if(red_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(redflag_pos, red_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
-	if(red_icon)
-		drawpic_aspect_skin(redflag_pos, red_icon, flag_size, '1 1 1', panel_fg_alpha * red_alpha * f, DRAWFLAG_NORMAL);
-
-	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
-	if(blue_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(blueflag_pos, blue_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
-	if(blue_icon)
-		drawpic_aspect_skin(blueflag_pos, blue_icon, flag_size, '1 1 1', panel_fg_alpha * blue_alpha * f, DRAWFLAG_NORMAL);
-
-	f = bound(0, yellowflag_statuschange_elapsedtime*2, 1);
-	if(yellow_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(yellowflag_pos, yellow_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha_prevstatus, DRAWFLAG_NORMAL, f);
-	if(yellow_icon)
-		drawpic_aspect_skin(yellowflag_pos, yellow_icon, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha * f, DRAWFLAG_NORMAL);
-
-	f = bound(0, pinkflag_statuschange_elapsedtime*2, 1);
-	if(pink_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(pinkflag_pos, pink_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * pink_alpha_prevstatus, DRAWFLAG_NORMAL, f);
-	if(pink_icon)
-		drawpic_aspect_skin(pinkflag_pos, pink_icon, flag_size, '1 1 1', panel_fg_alpha * pink_alpha * f, DRAWFLAG_NORMAL);
-
-	f = bound(0, neutralflag_statuschange_elapsedtime*2, 1);
-	if(neutral_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(neutralflag_pos, neutral_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * neutral_alpha_prevstatus, DRAWFLAG_NORMAL, f);
-	if(neutral_icon)
-		drawpic_aspect_skin(neutralflag_pos, neutral_icon, flag_size, '1 1 1', panel_fg_alpha * neutral_alpha * f, DRAWFLAG_NORMAL);
+	#define X(team) do { \
+		f = bound(0, team##flag_statuschange_elapsedtime * 2, 1); \
+		if (team##_icon_prevstatus && f < 1) \
+			drawpic_aspect_skin_expanding(team##flag_pos, team##_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * team##_alpha_prevstatus, DRAWFLAG_NORMAL, f); \
+		if (team##_icon) \
+			drawpic_aspect_skin(team##flag_pos, team##_icon, flag_size, '1 1 1', panel_fg_alpha * team##_alpha * f, DRAWFLAG_NORMAL); \
+	} while (0)
+	X(red);
+	X(blue);
+	X(yellow);
+	X(pink);
+	X(neutral);
+	#undef X
 }
 
 // Keyhunt HUD modicon section
