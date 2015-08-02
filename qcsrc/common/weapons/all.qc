@@ -17,7 +17,7 @@
 	#include "../../client/autocvars.qh"
 	#include "../deathtypes.qh"
 	#include "../../csqcmodellib/interpolate.qh"
-	#include "../../client/movetypes.qh"
+	#include "../movetypes/movetypes.qh"
 	#include "../../client/main.qh"
 	#include "../../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)
@@ -91,6 +91,16 @@ void WepSet_AddStat()
 #endif
 #endif
 }
+void WepSet_AddStat_InMap()
+{
+	addstat(STAT_WEAPONSINMAP, AS_INT, weaponsinmap_x);
+#if WEP_MAXCOUNT > 24
+	addstat(STAT_WEAPONSINMAP2, AS_INT, weaponsinmap_y);
+#if WEP_MAXCOUNT > 48
+	addstat(STAT_WEAPONSINMAP3, AS_INT, weaponsinmap_z);
+#endif
+#endif
+}
 void WriteWepSet(float dst, WepSet w)
 {
 #if WEP_MAXCOUNT > 48
@@ -111,6 +121,18 @@ WepSet WepSet_GetFromStat()
 	w.y = getstati(STAT_WEAPONS2);
 #if WEP_MAXCOUNT > 48
 	w.z = getstati(STAT_WEAPONS3);
+#endif
+#endif
+	return w;
+}
+WepSet WepSet_GetFromStat_InMap()
+{
+	WepSet w = '0 0 0';
+	w_x = getstati(STAT_WEAPONSINMAP);
+#if WEP_MAXCOUNT > 24
+	w_y = getstati(STAT_WEAPONSINMAP2);
+#if WEP_MAXCOUNT > 48
+	w_z = getstati(STAT_WEAPONSINMAP3);
 #endif
 #endif
 	return w;

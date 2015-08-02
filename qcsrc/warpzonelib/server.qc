@@ -5,6 +5,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
 	#include "../common/util.qh"
 	#include "../dpdefs/dpextensions.qh"
 	#include "../dpdefs/progsdefs.qh"

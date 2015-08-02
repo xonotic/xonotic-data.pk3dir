@@ -23,5 +23,4 @@ const int NUM_PLAYERSKINS_TEAMPLAY = 3;
 
 const int ASSAULT_VALUE_INACTIVE = 1000;
 
-const int DOOR_NOSPLASH = 256; // generic anti-splashdamage spawnflag
 #endif

@@ -114,6 +114,9 @@ COLOR_CVARLIST_CHANGED          '1 0 0'
 COLOR_CVARLIST_UNCHANGED        '1 1 1'
 COLOR_CVARLIST_CONTROLS         '1 0 0'
 
+// gametypelist
+BOOL_GAMETYPELIST_ICON_BLUR     1
+
 // item: dialog
 //   uses "border" images
 //   uses "closebutton" images

@@ -229,7 +229,6 @@ void turrets_precash()
 
 
 #ifdef TURRET_DEBUG
-void SUB_Remove();
 void marker_think()
 {
     if(self.cnt)

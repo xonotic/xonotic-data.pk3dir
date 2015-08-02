@@ -7,7 +7,6 @@
 #include "../cl_player.qh"
 #include "../g_damage.qh"
 #include "../g_hook.qh"
-#include "../g_subs.qh"
 #include "../movelib.qh"
 
 #include "../bot/bot.qh"
@@ -153,14 +152,14 @@ const int VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a multi
 .entity gunner1;
 .entity gunner2;
 
-.float vehicle_health;      /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
-.float vehicle_energy;      /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
-.float vehicle_shield;      /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
+.float vehicle_health;  /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
+.float vehicle_energy;  /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
+.float vehicle_shield;  /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
 
-.float vehicle_ammo1;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo1 value.
-.float vehicle_reload1; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload1 value.
-.float vehicle_ammo2;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo2 value.
-.float vehicle_reload2; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload2 value.
+.float vehicle_ammo1;   /// If self is player this is 0..100 indicating percentage of primary ammo left UNLESS value is already stored in vehicle_energy. If self is vehile, this is the real ammo1 value.
+.float vehicle_reload1; /// If self is player this is 0..100 indicating percentage of primary reload status. If self is vehile, this is the real reload1 value.
+.float vehicle_ammo2;   /// If self is player this is 0..100 indicating percentage of secondary ammo left. If self is vehile, this is the real ammo2 value.
+.float vehicle_reload2; /// If self is player this is 0..100 indicating percentage of secondary reload status. If self is vehile, this is the real reload2 value.
 
 .float sound_nexttime;
 const float VOL_VEHICLEENGINE = 1;

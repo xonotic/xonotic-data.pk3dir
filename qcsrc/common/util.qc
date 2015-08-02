@@ -2570,7 +2570,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 #ifdef SVQC
 vector combine_to_vector(float x, float y, float z)
 {
-	vector result; result.x = x; result.y = y; result.z = z;
+	vector result; result_x = x; result_y = y; result_z = z;
 	return result;
 }
 
