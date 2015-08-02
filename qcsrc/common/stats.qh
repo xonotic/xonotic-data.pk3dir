@@ -112,7 +112,7 @@ const int STAT_REVIVE_PROGRESS        = 88;
 const int STAT_WEAPONSINMAP           = 89;
 const int STAT_WEAPONSINMAP2          = 90;
 const int STAT_WEAPONSINMAP3          = 91;
-// 92 empty?
+const int STAT_CTF_FLAGSTATUS         = 92;
 // 93 empty?
 // 94 empty?
 // 95 empty?

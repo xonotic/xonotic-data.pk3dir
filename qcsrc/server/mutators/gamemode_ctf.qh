@@ -36,9 +36,9 @@ const vector VEHICLE_FLAG_OFFSET = ('0 0 96');
 const float VEHICLE_FLAG_SCALE = 1.0;
 
 // waypoint colors
-#define WPCOLOR_ENEMYFC(t) (colormapPaletteColor(t - 1, false) * 0.75)
+#define WPCOLOR_ENEMYFC(t) ((t) ? colormapPaletteColor(t - 1, false) * 0.75 : '1 1 1')
 #define WPCOLOR_FLAGCARRIER(t) ('0.8 0.8 0')
-#define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, false)) * 0.5)
+#define WPCOLOR_DROPPEDFLAG(t) ((t) ? ('0.25 0.25 0.25' + colormapPaletteColor(t - 1, false)) * 0.5 : '1 1 1')
 
 // sounds
 #define snd_flag_taken noise
@@ -67,7 +67,7 @@ entity ctf_worldflaglist;
 .entity wps_flagdropped;
 .entity wps_enemyflagcarrier;
 .float wps_helpme_time;
-float wpforenemy_announced;
+bool wpforenemy_announced;
 float wpforenemy_nextthink;
 
 // statuses
@@ -97,15 +97,16 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype);
 
 // flag properties
 #define ctf_spawnorigin dropped_origin
-float ctf_stalemate; // indicates that a stalemate is active
+bool ctf_stalemate; // indicates that a stalemate is active
 float ctf_captimerecord; // record time for capturing the flag
 .float ctf_pickuptime;
 .float ctf_droptime;
-.float ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
+.int ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
 .entity ctf_dropper; // don't allow spam of dropping the flag
-.float max_flag_health;
+.int max_flag_health;
 .float next_take_time;
-.float ctf_thinkrate;
+.bool ctf_flagdamaged;
+int ctf_teams;
 
 // passing/throwing properties
 .float pass_distance;
@@ -113,13 +114,16 @@ float ctf_captimerecord; // record time for capturing the flag
 .entity pass_target;
 .float throw_antispam;
 .float throw_prevtime;
-.float throw_count;
+.int throw_count;
 
 // CaptureShield: If the player is too bad to be allowed to capture, shield them from taking the flag.
-.float ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture
+.bool ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture
 float ctf_captureshield_min_negscore; // punish at -20 points
 float ctf_captureshield_max_ratio; // punish at most 30% of each team
 float ctf_captureshield_force; // push force of the shield
+
+// 1 flag ctf
+bool ctf_oneflag; // indicates whether or not a neutral flag has been found
 
 // bot player logic
 const int HAVOCBOT_CTF_ROLE_NONE = 0;
@@ -135,6 +139,32 @@ const int HAVOCBOT_CTF_ROLE_ESCORT = 64;
 vector havocbot_ctf_middlepoint;
 float havocbot_ctf_middlepoint_radius;
 
-void havocbot_role_ctf_setrole(entity bot, float role);
+void havocbot_role_ctf_setrole(entity bot, int role);
+
+// team checking
+#define CTF_SAMETEAM(a,b) ((autocvar_g_ctf_reverse || (ctf_oneflag && autocvar_g_ctf_oneflag_reverse)) ? DIFF_TEAM(a,b) : SAME_TEAM(a,b))
+#define CTF_DIFFTEAM(a,b) ((autocvar_g_ctf_reverse || (ctf_oneflag && autocvar_g_ctf_oneflag_reverse)) ? SAME_TEAM(a,b) : DIFF_TEAM(a,b))
+
+// networked flag statuses
+.int ctf_flagstatus;
 #endif
+
+const int CTF_RED_FLAG_TAKEN			= 1;
+const int CTF_RED_FLAG_LOST				= 2;
+const int CTF_RED_FLAG_CARRYING			= 3;
+const int CTF_BLUE_FLAG_TAKEN			= 4;
+const int CTF_BLUE_FLAG_LOST			= 8;
+const int CTF_BLUE_FLAG_CARRYING		= 12;
+const int CTF_YELLOW_FLAG_TAKEN			= 16;
+const int CTF_YELLOW_FLAG_LOST			= 32;
+const int CTF_YELLOW_FLAG_CARRYING		= 48;
+const int CTF_PINK_FLAG_TAKEN			= 64;
+const int CTF_PINK_FLAG_LOST			= 128;
+const int CTF_PINK_FLAG_CARRYING		= 192;
+const int CTF_NEUTRAL_FLAG_TAKEN		= 256;
+const int CTF_NEUTRAL_FLAG_LOST			= 512;
+const int CTF_NEUTRAL_FLAG_CARRYING		= 768;
+const int CTF_FLAG_NEUTRAL				= 2048;
+const int CTF_SHIELDED					= 4096;
+
 #endif
