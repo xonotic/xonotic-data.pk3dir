@@ -1,5 +1,5 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_STARTCONFIRM_H
-#define DIALOG_MULTIPLAYER_MEDIA_DEMO_STARTCONFIRM_H
+#ifndef DIALOG_MEDIA_DEMO_STARTCONFIRM_H
+#define DIALOG_MEDIA_DEMO_STARTCONFIRM_H
 #include "dialog.qc"
 CLASS(XonoticDemoStartConfirmDialog, XonoticDialog)
 	METHOD(XonoticDemoStartConfirmDialog, fill, void(entity))

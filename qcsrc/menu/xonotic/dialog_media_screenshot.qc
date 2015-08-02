@@ -1,5 +1,5 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_H
-#define DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_H
+#ifndef DIALOG_MEDIA_SCREENSHOT_H
+#define DIALOG_MEDIA_SCREENSHOT_H
 #include "tab.qc"
 CLASS(XonoticScreenshotBrowserTab, XonoticTab)
 	METHOD(XonoticScreenshotBrowserTab, fill, void(entity))

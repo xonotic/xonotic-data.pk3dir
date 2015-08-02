@@ -1,5 +1,5 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_MUSICPLAYER_H
-#define DIALOG_MULTIPLAYER_MEDIA_MUSICPLAYER_H
+#ifndef DIALOG_MEDIA_MUSICPLAYER_H
+#define DIALOG_MEDIA_MUSICPLAYER_H
 #include "tab.qc"
 CLASS(XonoticMusicPlayerTab, XonoticTab)
 	METHOD(XonoticMusicPlayerTab, fill, void(entity))

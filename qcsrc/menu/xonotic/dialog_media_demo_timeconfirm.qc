@@ -1,5 +1,5 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_TIMECONFIRM_H
-#define DIALOG_MULTIPLAYER_MEDIA_DEMO_TIMECONFIRM_H
+#ifndef DIALOG_MEDIA_DEMO_TIMECONFIRM_H
+#define DIALOG_MEDIA_DEMO_TIMECONFIRM_H
 #include "dialog.qc"
 CLASS(XonoticDemoTimeConfirmDialog, XonoticDialog)
 	METHOD(XonoticDemoTimeConfirmDialog, fill, void(entity))

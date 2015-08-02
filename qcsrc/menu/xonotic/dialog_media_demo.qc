@@ -1,5 +1,5 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_H
-#define DIALOG_MULTIPLAYER_MEDIA_DEMO_H
+#ifndef DIALOG_MEDIA_DEMO_H
+#define DIALOG_MEDIA_DEMO_H
 #include "tab.qc"
 CLASS(XonoticDemoBrowserTab, XonoticTab)
 	METHOD(XonoticDemoBrowserTab, fill, void(entity))

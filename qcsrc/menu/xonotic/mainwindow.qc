@@ -232,6 +232,11 @@ void MainWindow_configureMainWindow(entity me)
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_SETTINGS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 
+		i = NEW(XonoticMediaDialog);
+		i.configureDialog(i);
+		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+		n.setNexposee(n, i, SKINPOSITION_DIALOG_MEDIA, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
+
 		i = NEW(XonoticCreditsDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
