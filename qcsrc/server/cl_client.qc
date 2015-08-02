@@ -2230,6 +2230,8 @@ void PlayerPreThink (void)
 	self.stat_allow_oldvortexbeam = autocvar_g_allow_oldvortexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
 
+	self.weaponsinmap = weaponsInMap;
+
 	if(frametime)
 	{
 		// physics frames: update anticheat stuff

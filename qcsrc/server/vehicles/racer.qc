@@ -412,19 +412,26 @@ float racer_frame()
         racer.delay = time + 0.3;
 
         if(racer.misc_bulletcounter == 1)
+        {
             racer_fire_rocket("tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+            player.vehicle_ammo2 = 50;
+        }
         else if(racer.misc_bulletcounter == 2)
         {
             racer_fire_rocket("tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
             racer.lock_strength  = 0;
             racer.lock_target    = world;
             racer.misc_bulletcounter = 0;
-
             racer.delay = time + autocvar_g_vehicle_racer_rocket_refire;
             racer.lip = time;
+            player.vehicle_ammo2 = 0;
         }
     }
-    player.vehicle_reload1 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
+    else
+        if(racer.misc_bulletcounter == 0)
+            player.vehicle_ammo2 = 100;
+
+    player.vehicle_reload2 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
 
     if(racer.vehicle_flags  & VHF_SHIELDREGEN)
         vehicles_regen(racer.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, true);

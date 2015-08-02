@@ -16,108 +16,75 @@
 
 .float cnt;
 
-const string hud_bg = "gfx/vehicles/frame.tga";
-const string hud_sh = "gfx/vehicles/vh-shield.tga";
+const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
+const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
+const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
+const string vCROSS_HEAL  = "gfx/vehicles/crosshair_heal.tga";
+const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint.tga";
+const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock.tga";
+const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain.tga";
 
-const string hud_hp_bar = "gfx/vehicles/bar_up_left.tga";
-const string hud_hp_ico = "gfx/vehicles/health.tga";
-const string hud_sh_bar = "gfx/vehicles/bar_dwn_left.tga";
-const string hud_sh_ico = "gfx/vehicles/shield.tga";
-
-const string hud_ammo1_bar = "gfx/vehicles/bar_up_right.tga";
-const string hud_ammo1_ico = "gfx/vehicles/bullets.tga";
-const string hud_ammo2_bar = "gfx/vehicles/bar_dwn_right.tga";
-const string hud_ammo2_ico = "gfx/vehicles/rocket.tga";
-const string hud_energy = "gfx/vehicles/energy.tga";
-
-const int SBRM_FIRST = 1;
-const int SBRM_VOLLY = 1;
-const int SBRM_GUIDE = 2;
+const int SBRM_FIRST     = 1;
+const int SBRM_VOLLY     = 1;
+const int SBRM_GUIDE     = 2;
 const int SBRM_ARTILLERY = 3;
-const int SBRM_LAST = 3;
+const int SBRM_LAST      = 3;
 
 const int RSM_FIRST = 1;
-const int RSM_BOMB = 1;
+const int RSM_BOMB  = 1;
 const int RSM_FLARE = 2;
-const int RSM_LAST = 2;
-
-entity dropmark;
-float autocvar_cl_vehicles_hudscale = 0.5;
-float autocvar_cl_vehicles_hudalpha = 0.75;
-
-const string raptor_ico =  "gfx/vehicles/raptor.tga";
-const string raptor_gun =  "gfx/vehicles/raptor_guns.tga";
-const string raptor_bomb = "gfx/vehicles/raptor_bombs.tga";
-const string raptor_drop = "gfx/vehicles/axh-dropcross.tga";
-string raptor_xhair;
-
-
+const int RSM_LAST  = 2;
 
 const int MAX_AXH = 4;
 entity AuxiliaryXhairs[MAX_AXH];
-
 entityclass(AuxiliaryXhair);
 class(AuxiliaryXhair) .string axh_image;
 class(AuxiliaryXhair) .float  axh_fadetime;
 class(AuxiliaryXhair) .float  axh_drawflag;
-class(AuxiliaryXhair) .float  axh_scale;
 
-const string bumb_ico =  "gfx/vehicles/bumb.tga";
-const string bumb_lgun =  "gfx/vehicles/bumb_lgun.tga";
-const string bumb_rgun =  "gfx/vehicles/bumb_rgun.tga";
-
-const string bumb_gun_ico =  "gfx/vehicles/bumb_side.tga";
-const string bumb_gun_gun =  "gfx/vehicles/bumb_side_gun.tga";
-
-const string spider_ico =  "gfx/vehicles/sbot.tga";
-const string spider_rkt =  "gfx/vehicles/sbot_rpods.tga";
-const string spider_mgun = "gfx/vehicles/sbot_mguns.tga";
-string spider_xhair; // = "gfx/vehicles/axh-special1.tga";
-
-const string waki_ico = "gfx/vehicles/waki.tga";
-const string waki_eng = "gfx/vehicles/waki_e.tga";
-const string waki_gun = "gfx/vehicles/waki_guns.tga";
-const string waki_rkt = "gfx/vehicles/waki_rockets.tga";
-const string waki_xhair = "gfx/vehicles/axh-special1.tga";
+entity dropmark;
 
 float alarm1time;
 float alarm2time;
 int weapon2mode;
 
+
 void AuxiliaryXhair_Draw2D()
 {
-    vector loc, psize;
+	if (scoreboard_showscores)
+		return;
 
-    psize = self.axh_scale * draw_getimagesize(self.axh_image);
-    loc = project_3d_to_2d(self.move_origin) - 0.5 * psize;
-    if (!(loc.z < 0 || loc.x < 0 || loc.y < 0 || loc.x > vid_conwidth || loc.y > vid_conheight))
-    {
-        loc.z = 0;
-        psize.z = 0;
-        drawpic(loc, self.axh_image, psize, self.colormod, self.alpha, self.axh_drawflag);
-    }
+	vector size = draw_getimagesize(self.axh_image) * autocvar_cl_vehicles_crosshair_size;
+	vector pos = project_3d_to_2d(self.move_origin) - 0.5 * size;
 
-    if(time - self.cnt > self.axh_fadetime)
-        self.draw2d = func_null;
+	if (!(pos.z < 0 || pos.x < 0 || pos.y < 0 || pos.x > vid_conwidth || pos.y > vid_conheight))
+	{
+		pos.z = 0;
+		size.z = 0;
+		drawpic(pos, self.axh_image, size, self.colormod, autocvar_crosshair_alpha * self.alpha, self.axh_drawflag);
+	}
+
+	if(time - self.cnt > self.axh_fadetime)
+		self.draw2d = func_null;
 }
 
 void Net_AuXair2(bool bIsNew)
 {
-    int axh_id	= bound(0, ReadByte(), MAX_AXH);
-    entity axh 		= AuxiliaryXhairs[axh_id];
+	int axh_id = bound(0, ReadByte(), MAX_AXH);
+	entity axh = AuxiliaryXhairs[axh_id];
 
-    if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
-    {
-        axh					= spawn();
-		axh.draw2d			= func_null;
-		axh.drawmask 		= MASK_NORMAL;
-		axh.axh_drawflag	= DRAWFLAG_ADDITIVE;
-		axh.axh_fadetime	= 0.1;
-		axh.axh_image		= "gfx/vehicles/axh-ring.tga";
-		axh.axh_scale		= 1;
-        axh.alpha			= 1;
+	if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+	{
+		axh              = spawn();
+		axh.draw2d       = func_null;
+		axh.drawmask     = MASK_NORMAL;
+		axh.axh_drawflag = DRAWFLAG_ADDITIVE;
+		axh.axh_fadetime = 0.1;
+		axh.axh_image    = vCROSS_HINT;
+		axh.alpha        = 1;
+
 		AuxiliaryXhairs[axh_id] = axh;
-    }
+	}
 
 	axh.move_origin_x = ReadCoord();
 	axh.move_origin_y = ReadCoord();
@@ -125,876 +92,392 @@ void Net_AuXair2(bool bIsNew)
 	axh.colormod_x = ReadByte() / 255;
 	axh.colormod_y = ReadByte() / 255;
 	axh.colormod_z = ReadByte() / 255;
-    axh.cnt 			= time;
-    axh.draw2d			= AuxiliaryXhair_Draw2D;
+	axh.cnt    = time;
+	axh.draw2d = AuxiliaryXhair_Draw2D;
 }
 
 void Net_VehicleSetup()
 {
-    int hud_id = ReadByte();
+	int hud_id = ReadByte();
 
-    // Weapon update?
-    if(hud_id > HUD_VEHICLE_LAST)
-    {
-        weapon2mode = hud_id - HUD_VEHICLE_LAST;
-        return;
-    }
+	// Weapon update?
+	if(hud_id > HUD_VEHICLE_LAST)
+	{
+		weapon2mode = hud_id - HUD_VEHICLE_LAST;
+		return;
+	}
 
-    // hud_id == 0 means we exited a vehicle, so stop alarm sound/s
-    if(hud_id == 0)
-    {
-        sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-        sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-        return;
-    }
+	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
+	if(hud_id == 0)
+	{
+		sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+		sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+		return;
+	}
 
-    hud_id  = bound(HUD_VEHICLE_FIRST, hud_id, HUD_VEHICLE_LAST);
+	hud_id  = bound(HUD_VEHICLE_FIRST, hud_id, HUD_VEHICLE_LAST);
 
-    // Init auxiliary crosshairs
-    int i;
-    for(i = 0; i < MAX_AXH; ++i)
-    {
-        entity axh = AuxiliaryXhairs[i];
-        if(axh != world && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
-            remove(axh);
+	// Init auxiliary crosshairs
+	int i;
+	for(i = 0; i < MAX_AXH; ++i)
+	{
+		entity axh = AuxiliaryXhairs[i];
 
-        axh					= spawn();
-		axh.draw2d			= func_null;
-		axh.drawmask		= MASK_NORMAL;
-		axh.axh_drawflag	= DRAWFLAG_NORMAL;
-		axh.axh_fadetime	= 0.1;
-		axh.axh_image		= "gfx/vehicles/axh-ring.tga";
-		axh.axh_scale		= 1;
-        axh.alpha			= 1;
-		AuxiliaryXhairs[i]	= axh;
-    }
+		if(axh != world && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+			remove(axh);
 
-    switch(hud_id)
-    {
-        case HUD_SPIDERBOT:
-            // Minigun1
-            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-ring.tga";
-            AuxiliaryXhairs[0].axh_scale   = 0.25;
-            // Minigun2
-            AuxiliaryXhairs[1].axh_image   = "gfx/vehicles/axh-ring.tga";
-            AuxiliaryXhairs[1].axh_scale   = 0.25;
-            // Rocket
-            AuxiliaryXhairs[2].axh_image   = "gfx/vehicles/axh-special1.tga";
-            AuxiliaryXhairs[2].axh_scale   = 0.5;
-            break;
+		axh              = spawn();
+		axh.draw2d       = func_null;
+		axh.drawmask     = MASK_NORMAL;
+		axh.axh_drawflag = DRAWFLAG_NORMAL;
+		axh.axh_fadetime = 0.1;
+		axh.axh_image    = vCROSS_HINT;
+		axh.alpha        = 1;
+		AuxiliaryXhairs[i] = axh;
+	}
 
-        case HUD_WAKIZASHI:
-            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhairs[0].axh_scale   = 0.25;
-            break;
+	switch(hud_id)
+	{
+		case HUD_SPIDERBOT:
+			AuxiliaryXhairs[0].axh_image = vCROSS_HINT; // Minigun1
+			AuxiliaryXhairs[1].axh_image = vCROSS_HINT; // Minigun2
+			break;
 
-        case HUD_RAPTOR:
-            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-special2.tga";
-            AuxiliaryXhairs[0].axh_scale   = 0.5;
-            //AuxiliaryXhair[0].alpha       = 0.5;
+		case HUD_WAKIZASHI:
+			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK; // Rocket
+			break;
 
-            AuxiliaryXhairs[1].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhairs[1].axh_scale   = 0.25;
-            //AuxiliaryXhair[1].alpha       = 0.75;
-            //AuxiliaryXhair[1].axh_drawflag  = DRAWFLAG_NORMAL;
-            break;
+		case HUD_RAPTOR:
+			AuxiliaryXhairs[1].axh_image = vCROSS_LOCK;
+			break;
 
-        case HUD_BUMBLEBEE:
-            // Raygun-locked
-            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhairs[0].axh_scale   = 0.5;
+		case HUD_BUMBLEBEE:
+			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK;  // Raygun-locked
+			AuxiliaryXhairs[1].axh_image = vCROSS_BURST; // Gunner1
+			AuxiliaryXhairs[2].axh_image = vCROSS_BURST; // Gunner2
+			break;
 
-            // Gunner1
-            AuxiliaryXhairs[1].axh_image   = "gfx/vehicles/axh-target.tga";
-            AuxiliaryXhairs[1].axh_scale   = 0.75;
-
-            // Gunner2
-            AuxiliaryXhairs[2].axh_image   = "gfx/vehicles/axh-target.tga";
-            AuxiliaryXhairs[2].axh_scale   = 0.75;
-            break;
-        case HUD_BUMBLEBEE_GUN:
-            // Plasma cannons
-            AuxiliaryXhairs[0].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhairs[0].axh_scale   = 0.25;
-            // Raygun
-            AuxiliaryXhairs[1].axh_image   = "gfx/vehicles/axh-bracket.tga";
-            AuxiliaryXhairs[1].axh_scale   = 0.25;
-            break;
-    }
+		case HUD_BUMBLEBEE_GUN:
+			AuxiliaryXhairs[0].axh_image = vCROSS_BURST; // Plasma cannons
+			AuxiliaryXhairs[1].axh_image = vCROSS_BURST; // Raygun
+			break;
+	}
 }
-#define HUD_GETSTATS \
-    int vh_health       = getstati(STAT_VEHICLESTAT_HEALTH);  \
-	float shield        = getstati(STAT_VEHICLESTAT_SHIELD);  \
-	noref int energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
-	noref float ammo1   = getstati(STAT_VEHICLESTAT_AMMO1);   \
-	noref float reload1 = getstati(STAT_VEHICLESTAT_RELOAD1); \
-	noref int ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
-	noref int reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
+
+void Vehicles_drawHUD(
+	string vehicle,
+	string vehicleWeapon1,
+	string vehicleWeapon2,
+	string iconAmmo1,
+	vector colorAmmo1,
+	string iconAmmo2,
+	vector colorAmmo2,
+	string crosshair)
+{
+	if(autocvar_r_letterbox)
+		return;
+
+	if(scoreboard_showscores)
+		return;
+
+	// Initialize
+	vector hudSize = '0 0 0';
+	vector hudPos  = '0 0 0';
+	vector tmpSize = '0 0 0';
+	vector tmpPos  = '0 0 0';
+
+	float hudAlpha = autocvar_hud_panel_fg_alpha;
+	float barAlpha = autocvar_hud_progressbar_alpha * hudAlpha;
+	float blinkValue = 0.55 + sin(time * 7) * 0.45;
+
+	float health  = getstati(STAT_VEHICLESTAT_HEALTH)  * 0.01;
+	float shield  = getstati(STAT_VEHICLESTAT_SHIELD)  * 0.01;
+	float energy  = getstati(STAT_VEHICLESTAT_ENERGY)  * 0.01;
+	float ammo1   = getstati(STAT_VEHICLESTAT_AMMO1)   * 0.01;
+	float reload1 = getstati(STAT_VEHICLESTAT_RELOAD1) * 0.01;
+	float ammo2   = getstati(STAT_VEHICLESTAT_AMMO2)   * 0.01;
+	float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
+
+	// HACK to deal with the inconcistent use of the vehicle stats
+	ammo1 = (ammo1) ? ammo1 : energy;
+
+	// Frame
+	string frame = strcat(hud_skin_path, "/vehicle_frame");
+	if (precache_pic(frame) == "")
+		frame = "gfx/hud/default/vehicle_frame";
+
+	hudSize  = draw_getimagesize(frame) * autocvar_cl_vehicles_hudscale;
+	hudPos.x = (vid_conwidth - hudSize.x) / 2;
+	hudPos.y = vid_conheight - hudSize.y;
+
+	if(teamplay && autocvar_hud_panel_bg_color_team)
+		drawpic(hudPos, frame, hudSize, myteamcolors * autocvar_hud_panel_bg_color_team, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
+	else
+		drawpic(hudPos, frame, hudSize, autocvar_hud_panel_bg_color, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
+
+	// Model
+	tmpSize.x = hudSize.x / 3;
+	tmpSize.y = hudSize.y;
+	tmpPos.x  = hudPos.x + hudSize.x / 3;
+	tmpPos.y  = hudPos.y;
+
+	if(health < 0.25)
+		drawpic_skin(tmpPos, vehicle, tmpSize, '1 0 0' + '0 1 1' * blinkValue, hudAlpha, DRAWFLAG_NORMAL);
+	else
+		drawpic_skin(tmpPos, vehicle, tmpSize, '1 1 1' * health  + '1 0 0' * (1 - health), hudAlpha, DRAWFLAG_NORMAL);
+
+	if(vehicleWeapon1)
+		drawpic_skin(tmpPos, vehicleWeapon1, tmpSize, '1 1 1' * ammo1 + '1 0 0' * (1 - ammo1), hudAlpha, DRAWFLAG_NORMAL);
+	if(vehicleWeapon2)
+		drawpic_skin(tmpPos, vehicleWeapon2, tmpSize, '1 1 1' * ammo2 + '1 0 0' * (1 - ammo2), hudAlpha, DRAWFLAG_NORMAL);
+
+	drawpic_skin(tmpPos, "vehicle_shield", tmpSize, '1 1 1' * shield + '1 0 0' * (1 - shield), hudAlpha * shield, DRAWFLAG_NORMAL);
+
+	// Health bar
+	tmpSize.y = hudSize.y / 2;
+	tmpPos.x  = hudPos.x + hudSize.x * (32/768);
+	tmpPos.y  = hudPos.y;
+
+	drawsetcliparea(tmpPos.x + (tmpSize.x * (1 - health)), tmpPos.y, tmpSize.x, tmpSize.y);
+	drawpic_skin(tmpPos, "vehicle_bar_northwest", tmpSize, autocvar_hud_progressbar_health_color, barAlpha, DRAWFLAG_NORMAL);
+
+	// Shield bar
+	tmpPos.y = hudPos.y + hudSize.y / 2;
+
+	drawsetcliparea(tmpPos.x + (tmpSize.x * (1 - shield)), tmpPos.y, tmpSize.x, tmpSize.y);
+	drawpic_skin(tmpPos, "vehicle_bar_southwest", tmpSize, autocvar_hud_progressbar_armor_color, barAlpha, DRAWFLAG_NORMAL);
+
+	// Ammo1 bar
+	tmpPos.x = hudPos.x + hudSize.x * (480/768);
+	tmpPos.y = hudPos.y;
+
+	if(ammo1)
+		drawsetcliparea(tmpPos.x, tmpPos.y, tmpSize.x * ammo1, tmpSize.y);
+	else
+		drawsetcliparea(tmpPos.x, tmpPos.y, tmpSize.x * reload1, tmpSize.y);
+
+	drawpic_skin(tmpPos, "vehicle_bar_northeast", tmpSize, colorAmmo1, barAlpha, DRAWFLAG_NORMAL);
+
+	// Ammo2 bar
+	tmpPos.y = hudPos.y + hudSize.y / 2;
+
+	if(ammo2)
+		drawsetcliparea(tmpPos.x, tmpPos.y, tmpSize.x * ammo2, tmpSize.y);
+	else
+		drawsetcliparea(tmpPos.x, tmpPos.y, tmpSize.x * reload2, tmpSize.y);
+
+	drawpic_skin(tmpPos, "vehicle_bar_southeast", tmpSize, colorAmmo2, barAlpha, DRAWFLAG_NORMAL);
+	drawresetcliparea();
+
+	// Health icon
+	tmpSize.x = hudSize.x * (80/768);
+	tmpSize.y = hudSize.y * (80/256);
+	tmpPos.x  = hudPos.x + hudSize.x * (64/768);
+	tmpPos.y  = hudPos.y + hudSize.y * (48/256);
+
+	if(health < 0.25)
+	{
+		if(alarm1time < time)
+		{
+			alarm1time = time + 2;
+			sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
+		}
+		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+	}
+	else
+	{
+		if(alarm1time)
+		{
+			sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+			alarm1time = 0;
+		}
+		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+	}
+
+	// Shield icon
+	tmpPos.y = hudPos.y + hudSize.y / 2;
+
+	if(shield < 0.25)
+	{
+		if(alarm2time < time)
+		{
+			alarm2time = time + 1;
+			sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
+		}
+		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+	}
+	else
+	{
+		if(alarm2time)
+		{
+			sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+			alarm2time = 0;
+		}
+		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+	}
+
+	// Ammo1 icon
+	tmpPos.x = hudPos.x + hudSize.x * (624/768);
+	tmpPos.y = hudPos.y + hudSize.y * (48/256);
+
+	if(iconAmmo1)
+	{
+		if(ammo1)
+			drawpic_skin(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+		else
+			drawpic_skin(tmpPos, iconAmmo1, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
+	}
+
+	// Ammo2 icon
+	tmpPos.y = hudPos.y + hudSize.y / 2;
+
+	if(iconAmmo2)
+	{
+		if(ammo2)
+			drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
+		else
+			drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
+	}
+
+	// Bumblebee gunner crosshairs
+	if(hud == HUD_BUMBLEBEE)
+	{
+		tmpSize = '1 1 1' * hud_fontsize;
+		tmpPos.x = hudPos.x + hudSize.x * (520/768);
+
+		if(!AuxiliaryXhairs[1].draw2d)
+		{
+			tmpPos.y = hudPos.y + hudSize.y * (96/256) - tmpSize.y;
+			drawstring(tmpPos, _("No right gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+		}
+
+		if(!AuxiliaryXhairs[2].draw2d)
+		{
+			tmpPos.y = hudPos.y + hudSize.y * (160/256);
+			drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+		}
+	}
+
+	// Raptor bomb crosshair
+	if(hud == HUD_RAPTOR && weapon2mode != RSM_FLARE)
+	{
+		vector where;
+
+		if(!dropmark)
+		{
+			dropmark = spawn();
+			dropmark.owner = self;
+			dropmark.gravity = 1;
+		}
+
+		if(reload2 == 1)
+		{
+			setorigin(dropmark, pmove_org);
+			dropmark.velocity = pmove_vel;
+			tracetoss(dropmark, self);
+
+			where = project_3d_to_2d(trace_endpos);
+
+			setorigin(dropmark, trace_endpos);
+			tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
+
+			if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
+			{
+				where.x -= tmpSize.x * 0.5;
+				where.y -= tmpSize.y * 0.5;
+				where.z = 0;
+				drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
+				drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
+			}
+			dropmark.cnt = time + 5;
+		}
+		else
+		{
+			if(dropmark.cnt > time)
+			{
+				where = project_3d_to_2d(dropmark.origin);
+				tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
+
+				if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
+				{
+					where.x -= tmpSize.x * 0.5;
+					where.y -= tmpSize.y * 0.5;
+					where.z = 0;
+					drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
+					drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
+				}
+			}
+		}
+	}
+
+	// Crosshair
+	if(crosshair)
+	{
+		tmpSize  = draw_getimagesize(crosshair) * autocvar_cl_vehicles_crosshair_size;
+		tmpPos.x = (vid_conwidth - tmpSize.x) / 2;
+		tmpPos.y = (vid_conheight - tmpSize.y) / 2;
+
+		drawpic(tmpPos, crosshair, tmpSize, '1 1 1', autocvar_crosshair_alpha, DRAWFLAG_NORMAL);
+	}
+}
 
 void CSQC_BUMBLE_HUD()
 {
-/*
-    drawpic(hudloc, waki_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_b, picsize, '0 1 0' * health + '1 0 0'  * (1 - health), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_r, picsize, '1 1 1' * reload1 + '1 0 0' * (1 - reload1), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_e, picsize, '1 1 1' * energy + '1 0 0'  * (1 - energy), 1, DRAWFLAG_NORMAL);
-*/
-	if(autocvar_r_letterbox)
-        return;
-
-    vector picsize, hudloc = '0 0 0', pic2size, picloc;
-
-    // Fetch health & ammo stats
-	HUD_GETSTATS
-
-    picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc.y = vid_conheight - picsize.y;
-    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
-
-    drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
-
-    shield  *= 0.01;
-    vh_health  *= 0.01;
-    energy  *= 0.01;
-    reload1 *= 0.01;
-
-    pic2size = draw_getimagesize(bumb_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
-    picloc = picsize * 0.5 - pic2size * 0.5;
-
-    if(vh_health < 0.25)
-        drawpic(hudloc + picloc, bumb_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, bumb_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-
-    drawpic(hudloc + picloc, bumb_lgun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, bumb_lgun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
-
-// Health bar
-    picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
-    if(vh_health < 0.25)
-    {
-        if(alarm1time < time)
-        {
-            alarm1time = time + 2;
-            sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm1time)
-        {
-            sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm1time = 0;
-        }
-    }
-
-// Shield bar
-    picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - shield)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-    picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
-    if(shield < 0.25)
-    {
-        if(alarm2time < time)
-        {
-            alarm2time = time + 1;
-            sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm2time)
-        {
-            sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm2time = 0;
-        }
-    }
-
-	ammo1 *= 0.01;
-	ammo2 *= 0.01;
-
-// Gunner1 bar
-    picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, picloc.y, picsize.x * ammo1, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-
-// Right gunner slot occupied?
-	if(!AuxiliaryXhairs[1].draw2d)
-	{
-		shield = (picsize.x * 0.5) - (0.5 * stringwidth(_("No right gunner!"), false, '1 0 0' * picsize.y + '0 1 0' * picsize.y));
-		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
-		drawstring(hudloc + picloc + '1 0 0' * shield, _("No right gunner!"), '1 0 0' * picsize.y + '0 1 0' * picsize.y, '1 0 0' + '0 1 1' * sin(time * 10), 1, DRAWFLAG_NORMAL);
-	}
-
-// ..  and icon
-    picsize = 1.5 * draw_getimagesize(hud_energy) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
-    if(ammo1 < 0.2)
-        drawpic(hudloc + picloc, hud_energy, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_energy, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-// Gunner2 bar
-    picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, picloc.y, picsize.x * ammo2, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// Left gunner slot occupied?
-	if(!AuxiliaryXhairs[2].draw2d)
-	{
-		shield = (picsize.x * 0.5) - (0.5 * stringwidth(_("No left gunner!"), false, '1 0 0' * picsize.y + '0 1 0' * picsize.y));
-		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
-		drawstring(hudloc + picloc + '1 0 0' * shield, _("No left gunner!"), '1 0 0' * picsize.y + '0 1 0' * picsize.y, '1 0 0' + '0 1 1' * sin(time * 10), 1, DRAWFLAG_NORMAL);
-	}
-
-// ..  and icon
-    picsize = 1.5 * draw_getimagesize(hud_energy) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
-    if(ammo2 < 0.2)
-        drawpic(hudloc + picloc, hud_energy, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_energy, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-	if (scoreboard_showscores)
-		HUD_DrawScoreboard();
-    else
-    {
-        picsize = draw_getimagesize(waki_xhair);
-        picsize.x *= 0.5;
-        picsize.y *= 0.5;
-        drawpic('0.5 0 0' * (vid_conwidth - picsize.x) + '0 0.5 0' * (vid_conheight - picsize.y), waki_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    }
-
+	Vehicles_drawHUD("vehicle_bumble", "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		vCROSS_HEAL);
 }
 
 void CSQC_BUMBLE_GUN_HUD()
 {
-
-	if(autocvar_r_letterbox)
-        return;
-
-    vector picsize, hudloc = '0 0 0', pic2size, picloc;
-
-    // Fetch health & ammo stats
-	HUD_GETSTATS
-
-    picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc.y = vid_conheight - picsize.y;
-    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
-
-    drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
-
-    shield  *= 0.01;
-    vh_health  *= 0.01;
-    energy  *= 0.01;
-    reload1 *= 0.01;
-
-    pic2size = draw_getimagesize(bumb_gun_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
-    picloc = picsize * 0.5 - pic2size * 0.5;
-
-    if(vh_health < 0.25)
-        drawpic(hudloc + picloc, bumb_gun_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, bumb_gun_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-
-    drawpic(hudloc + picloc, bumb_gun_gun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
-
-// Health bar
-    picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
-    if(vh_health < 0.25)
-    {
-        if(alarm1time < time)
-        {
-            alarm1time = time + 2;
-            sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm1time)
-        {
-            sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm1time = 0;
-        }
-    }
-
-// Shield bar
-    picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - shield)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-    picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
-    if(shield < 0.25)
-    {
-        if(alarm2time < time)
-        {
-            alarm2time = time + 1;
-            sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm2time)
-        {
-            sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm2time = 0;
-        }
-    }
-
-// Gun bar
-    picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, picloc.y, picsize.x * energy, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-
-// ..  and icon
-    picsize = 1.5 * draw_getimagesize(hud_energy) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
-    if(energy < 0.2)
-        drawpic(hudloc + picloc, hud_energy, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_energy, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-	if (scoreboard_showscores)
-		HUD_DrawScoreboard();
-    /*
-    else
-    {
-        picsize = draw_getimagesize(waki_xhair);
-        picsize_x *= 0.5;
-        picsize_y *= 0.5;
-
-
-        drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), waki_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    }
-    */
+	Vehicles_drawHUD("vehicle_gunner", "vehicle_gunner_weapon1", string_null,
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		string_null, '0 0 0',
+		string_null);
 }
-
-
 
 void CSQC_SPIDER_HUD()
 {
-	if(autocvar_r_letterbox)
-        return;
+	string crosshair;
 
-    vector picsize, hudloc = '0 0 0', pic2size, picloc;
-    int i;
+	switch(weapon2mode)
+	{
+		case SBRM_VOLLY:     crosshair = vCROSS_BURST; break;
+		case SBRM_GUIDE:     crosshair = vCROSS_GUIDE; break;
+		case SBRM_ARTILLERY: crosshair = vCROSS_RAIN;  break;
+		default:             crosshair = vCROSS_BURST;
+	}
 
-    // Fetch health & ammo stats
-	HUD_GETSTATS
-
-    picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc.y = vid_conheight - picsize.y;
-    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
-
-    drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
-
-    ammo1   *= 0.01;
-    shield  *= 0.01;
-    vh_health  *= 0.01;
-    reload2 *= 0.01;
-
-    pic2size = draw_getimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
-    picloc = picsize * 0.5 - pic2size * 0.5;
-    if(vh_health < 0.25)
-        drawpic(hudloc + picloc, spider_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, spider_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, spider_rkt, pic2size,  '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, spider_mgun, pic2size, '1 1 1' * ammo1   + '1 0 0' * (1 - ammo1),   1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
-
-// Health bar
-    picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
-    if(vh_health < 0.25)
-    {
-        if(alarm1time < time)
-        {
-            alarm1time = time + 2;
-            sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm1time)
-        {
-            sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm1time = 0;
-        }
-    }
-// Shield bar
-    picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - shield)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-    picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
-    if(shield < 0.25)
-    {
-        if(alarm2time < time)
-        {
-            alarm2time = time + 1;
-            sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm2time)
-        {
-            sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm2time = 0;
-        }
-    }
-
-// Minigun bar
-    picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, picloc.y, picsize.x * ammo1, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picsize = draw_getimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
-    if(ammo1 < 0.2)
-        drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-// Rocket ammo bar
-    picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
-    ammo1 = picsize.x / 8;
-    picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, hudloc.y + picloc.y, picsize.x * reload2, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-
-// ..  and icons
-    pic2size = 0.35 * draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
-    picloc.x -= pic2size.x;
-    picloc.y += pic2size.y * 2.25;
-    if(ammo2 == 9)
-    {
-        for(i = 1; i < 9; ++i)
-        {
-            picloc.x += ammo1;
-            drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, ((8 * reload2 <= i) ? '0 0 0' : '1 1 1'), 0.75, DRAWFLAG_NORMAL);
-        }
-    }
-    else
-    {
-        for(i = 1; i < 9; ++i)
-        {
-            picloc.x += ammo1;
-            drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, ((i >= ammo2) ? '1 1 1' : '0 0 0'), 0.75, DRAWFLAG_NORMAL);
-        }
-    }
-    pic2size = draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
-    if(ammo2 == 9)
-        drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-	if (scoreboard_showscores)
-		HUD_DrawScoreboard();
-    else
-    {
-        switch(weapon2mode)
-        {
-            case SBRM_VOLLY:
-                spider_xhair = "gfx/vehicles/axh-bracket.tga";
-                break;
-            case SBRM_GUIDE:
-                spider_xhair = "gfx/vehicles/axh-cross.tga";
-                break;
-            case SBRM_ARTILLERY:
-                spider_xhair = "gfx/vehicles/axh-tag.tga";
-                break;
-            default:
-                spider_xhair= "gfx/vehicles/axh-tag.tga";
-        }
-
-        picsize = draw_getimagesize(spider_xhair);
-        picsize.x *= autocvar_cl_vehicle_spiderbot_cross_size;
-        picsize.y *= autocvar_cl_vehicle_spiderbot_cross_size;
-
-        drawpic('0.5 0 0' * (vid_conwidth - picsize.x) + '0 0.5 0' * (vid_conheight - picsize.y), spider_xhair, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_ADDITIVE);
-    }
+	Vehicles_drawHUD("vehicle_spider", "vehicle_spider_weapon1", "vehicle_spider_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
+		crosshair);
 }
 
 void CSQC_RAPTOR_HUD()
 {
-	if(autocvar_r_letterbox)
-        return;
+	string crosshair;
 
-    vector picsize, hudloc = '0 0 0', pic2size, picloc;
+	switch(weapon2mode)
+	{
+		case RSM_FLARE: crosshair = vCROSS_RAIN;  break;
+		case RSM_BOMB:  crosshair = vCROSS_BURST; break;
+		default:        crosshair = vCROSS_BURST;
+	}
 
-    // Fetch health & ammo stats
-	HUD_GETSTATS
-
-    picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc.y = vid_conheight - picsize.y;
-    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
-
-    drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
-
-    ammo1   *= 0.01;
-    ammo2   *= 0.01;
-    shield  *= 0.01;
-    vh_health  *= 0.01;
-    energy  *= 0.01;
-    reload1 = reload2 * 0.01;
-    //reload2 *= 0.01;
-
-    pic2size = draw_getimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
-    picloc = picsize * 0.5 - pic2size * 0.5;
-    if(vh_health < 0.25)
-        drawpic(hudloc + picloc, raptor_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, raptor_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, raptor_bomb, pic2size,  '1 1 1' * reload1 + '1 0 0' * (1 - reload1), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, raptor_gun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
-
-// Health bar
-    picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
-    if(vh_health < 0.25)
-    {
-        if(alarm1time < time)
-        {
-            alarm1time = time + 2;
-            sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm1time)
-        {
-            sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm1time = 0;
-        }
-    }
-
-// Shield bar
-    picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - shield)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-    picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
-    if(shield < 0.25)
-    {
-        if(alarm2time < time)
-        {
-            alarm2time = time + 1;
-            sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm2time)
-        {
-            sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm2time = 0;
-        }
-    }
-
-// Gun bar
-    picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, picloc.y, picsize.x * energy, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picsize = draw_getimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
-    if(energy < 0.2)
-        drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-// Bomb bar
-    picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, hudloc.y + picloc.y, picsize.x * reload1, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    pic2size = draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
-    if(reload1 != 1)
-        drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-    if(weapon2mode == RSM_FLARE)
-    {
-        raptor_xhair =  "gfx/vehicles/axh-bracket.tga";
-    }
-    else
-    {
-        raptor_xhair =  "gfx/vehicles/axh-ring.tga";
-
-        // Bombing crosshair
-        if(!dropmark)
-        {
-            dropmark = spawn();
-            dropmark.owner = self;
-            dropmark.gravity = 1;
-        }
-
-        if(reload2 == 100)
-        {
-            vector where;
-
-            setorigin(dropmark, pmove_org);
-            dropmark.velocity = pmove_vel;
-            tracetoss(dropmark, self);
-
-            where = project_3d_to_2d(trace_endpos);
-
-            setorigin(dropmark, trace_endpos);
-            picsize = draw_getimagesize(raptor_drop) * 0.2;
-
-            if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
-            {
-                where.x -= picsize.x * 0.5;
-                where.y -= picsize.y * 0.5;
-                where.z = 0;
-                drawpic(where, raptor_drop, picsize, '0 2 0', 1, DRAWFLAG_ADDITIVE);
-            }
-            dropmark.cnt = time + 5;
-        }
-        else
-        {
-            vector where;
-            if(dropmark.cnt > time)
-            {
-                where = project_3d_to_2d(dropmark.origin);
-                picsize = draw_getimagesize(raptor_drop) * 0.25;
-
-                if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
-                {
-                    where.x -= picsize.x * 0.5;
-                    where.y -= picsize.y * 0.5;
-                    where.z = 0;
-                    drawpic(where, raptor_drop, picsize, '2 0 0', 1, DRAWFLAG_ADDITIVE);
-                }
-            }
-        }
-    }
-
-	if (scoreboard_showscores)
-		HUD_DrawScoreboard();
-    else
-    {
-        picsize = draw_getimagesize(raptor_xhair);
-        picsize.x *= 0.5;
-        picsize.y *= 0.5;
-
-        drawpic('0.5 0 0' * (vid_conwidth - picsize.x) + '0 0.5 0' * (vid_conheight - picsize.y), raptor_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    }
+	Vehicles_drawHUD("vehicle_raptor", "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
+		crosshair);
 }
 
 void CSQC_WAKIZASHI_HUD()
 {
-/*
-    drawpic(hudloc, waki_s, picsize, '1 1 1', shield, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_b, picsize, '0 1 0' * health + '1 0 0'  * (1 - health), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_r, picsize, '1 1 1' * reload1 + '1 0 0' * (1 - reload1), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc, waki_e, picsize, '1 1 1' * energy + '1 0 0'  * (1 - energy), 1, DRAWFLAG_NORMAL);
-*/
-	if(autocvar_r_letterbox)
-        return;
-
-    vector picsize, hudloc = '0 0 0', pic2size, picloc;
-
-    // Fetch health & ammo stats
-	HUD_GETSTATS
-
-    picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-    hudloc.y = vid_conheight - picsize.y;
-    hudloc.x = vid_conwidth * 0.5 - picsize.x * 0.5;
-
-    drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
-
-    shield  *= 0.01;
-    vh_health  *= 0.01;
-    energy  *= 0.01;
-    reload1 *= 0.01;
-
-    pic2size = draw_getimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
-    picloc = picsize * 0.5 - pic2size * 0.5;
-    if(vh_health < 0.25)
-        drawpic(hudloc + picloc, waki_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, waki_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, waki_eng, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, waki_gun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, waki_rkt, pic2size,  '1 1 1' * reload1 + '1 0 0' * (1 - reload1), 1, DRAWFLAG_NORMAL);
-    drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
-
-// Health bar
-    picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
-    if(vh_health < 0.25)
-    {
-        if(alarm1time < time)
-        {
-            alarm1time = time + 2;
-            sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm1time)
-        {
-            sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm1time = 0;
-        }
-    }
-
-
-// Shield bar
-    picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x + (picsize.x * (1 - shield)), 0, vid_conwidth, vid_conheight);
-    drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-    picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
-    if(shield < 0.25)
-    {
-        if(alarm2time < time)
-        {
-            alarm2time = time + 1;
-            sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
-        }
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    }
-    else
-    {
-        drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-        if(alarm2time)
-        {
-            sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-            alarm2time = 0;
-        }
-    }
-
-// Gun bar
-    picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, picloc.y, picsize.x * energy, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    picsize = draw_getimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
-    if(energy < 0.2)
-        drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-// Bomb bar
-    picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
-    picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
-    drawsetcliparea(hudloc.x + picloc.x, hudloc.y + picloc.y, picsize.x * reload1, vid_conheight);
-    drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    drawresetcliparea();
-// ..  and icon
-    pic2size = draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
-    picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
-    if(reload1 != 1)
-        drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-    else
-        drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-	if (scoreboard_showscores)
-		HUD_DrawScoreboard();
-    else
-    {
-        picsize = draw_getimagesize(waki_xhair);
-        picsize.x *= 0.5;
-        picsize.y *= 0.5;
-
-
-        drawpic('0.5 0 0' * (vid_conwidth - picsize.x) + '0 0.5 0' * (vid_conheight - picsize.y), waki_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-    }
+	Vehicles_drawHUD("vehicle_racer", "vehicle_racer_weapon1", "vehicle_racer_weapon2",
+		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
+		vCROSS_GUIDE);
 }
 
 void Vehicles_Precache()
@@ -1005,8 +488,8 @@ void Vehicles_Precache()
 	precache_model("models/vehicles/rocket01.md3");
 	precache_model("models/vehicles/rocket02.md3");
 
-	precache_sound ("vehicles/alarm.wav");
-	precache_sound ("vehicles/alarm_shield.wav");
+	precache_sound("vehicles/alarm.wav");
+	precache_sound("vehicles/alarm_shield.wav");
 }
 
 void RaptorCBShellfragDraw()
@@ -1022,16 +505,16 @@ void RaptorCBShellfragDraw()
 		self.alpha = bound(0, self.nextthink - time, 1);
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
-        remove(self);
+		remove(self);
 }
 
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 {
-    entity sfrag;
+	entity sfrag;
 
-    sfrag = spawn();
-    setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
-    setorigin(sfrag, _org);
+	sfrag = spawn();
+	setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
+	setorigin(sfrag, _org);
 
 	sfrag.move_movetype = MOVETYPE_BOUNCE;
 	sfrag.gravity = 0.15;
@@ -1050,5 +533,5 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 	sfrag.nextthink = time + 3;
 	sfrag.cnt = time + 2;
 	sfrag.alpha = 1;
-    sfrag.drawmask = MASK_NORMAL;
+	sfrag.drawmask = MASK_NORMAL;
 }
