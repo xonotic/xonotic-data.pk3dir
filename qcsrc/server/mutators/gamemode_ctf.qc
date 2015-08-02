@@ -1128,8 +1128,8 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	if(flag.skin == 0)			{ flag.skin = cvar(sprintf("g_ctf_flag_%s_skin", teamname)); }
 	if(flag.model == "")		{ flag.model = cvar_string(sprintf("g_ctf_flag_%s_model", teamname)); }
 	set_flag_string(flag, toucheffect, 	"%sflag_touch", teamname);
-	set_flag_string(flag, passeffect, 	"%sflag_pass", 	teamname);
-	set_flag_string(flag, capeffect, 	"%sflag_cap", 	teamname);
+	set_flag_string(flag, passeffect, 	"%s_pass", 		teamname);
+	set_flag_string(flag, capeffect, 	"%s_cap", 		teamname);
 
 	// sounds
 	set_flag_string(flag, snd_flag_taken, 		"ctf/%s_taken.wav", 	teamname);
