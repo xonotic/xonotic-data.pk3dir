@@ -1,3 +1,8 @@
+#include "../bot/waypoints.qh"
+
+#include "pathlib.qh"
+#include "main.qh"
+
 var float pathlib_wpp_open(entity wp, entity child, float cost);
 
 void pathlib_wpp_close(entity wp)

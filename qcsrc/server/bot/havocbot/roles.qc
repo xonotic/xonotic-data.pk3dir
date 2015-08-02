@@ -1,3 +1,10 @@
+#include "../../_all.qh"
+
+#include "havocbot.qh"
+#include "role_keyhunt.qh"
+
+#include "../bot.qh"
+#include "../navigation.qh"
 
 .float max_armorvalue;
 .float havocbot_role_timeout;

@@ -38,6 +38,8 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #else
 #ifdef SVQC
+#include "../triggers/trigger/jumppads.qh"
+
 void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO); }
 
 void W_Porto_Success(void)
@@ -122,7 +124,7 @@ void W_Porto_Touch(void)
 	norm = trace_plane_normal;
 	if(trace_ent.iscreature)
 	{
-		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN_z, MOVE_WORLDONLY, self);
+		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN.z, MOVE_WORLDONLY, self);
 		if(trace_fraction >= 1)
 			return;
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
@@ -284,8 +286,8 @@ void W_Porto_Attack(float type)
 	other = gren; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-float w_nexball_weapon(float req); // WEAPONTODO
-float W_Porto(float req)
+bool w_nexball_weapon(int req); // WEAPONTODO
+bool W_Porto(int req)
 {
 	//vector v_angle_save;
 
@@ -396,7 +398,7 @@ float W_Porto(float req)
 }
 #endif
 #ifdef CSQC
-float W_Porto(float req)
+bool W_Porto(int req)
 {
 	switch(req)
 	{

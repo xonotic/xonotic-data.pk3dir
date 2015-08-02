@@ -1,4 +1,20 @@
 #include "waypointsprites.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+#include "teamradar.qh"
+
+#include "../common/buffs.qh"
+#include "../common/constants.qh"
+#include "../common/teams.qh"
+
+#include "../common/weapons/all.qh"
+
+#include "../csqcmodellib/interpolate.qh"
+
+#include "../warpzonelib/mathlib.qh"
+
+.float alpha;
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {
@@ -38,7 +54,7 @@ void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, f
 	R_EndPolygon();
 }
 
-void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f)
+void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float theheight, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f)
 {
 	vector o, ri, up;
 	float owidth; // outer width
@@ -56,13 +72,13 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	up = rotate(up, rot);
 
 	owidth = width + 2 * border;
-	o = o - up * (margin + border + height) + ri * (sz.x - owidth) * 0.5;
+	o = o - up * (margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
 
 	drawquad(o - up * border,                               ri * owidth,    up * border, "", rgb,  a,  f);
-	drawquad(o + up * height,                               ri * owidth,    up * border, "", rgb,  a,  f);
-	drawquad(o,                                             ri * border,    up * height, "", rgb,  a,  f);
-	drawquad(o + ri * (owidth - border),                    ri * border,    up * height, "", rgb,  a,  f);
-	drawquad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * height, "", hrgb, ha, f);
+	drawquad(o + up * theheight,                               ri * owidth,    up * border, "", rgb,  a,  f);
+	drawquad(o,                                             ri * border,    up * theheight, "", rgb,  a,  f);
+	drawquad(o + ri * (owidth - border),                    ri * border,    up * theheight, "", rgb,  a,  f);
+	drawquad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * theheight, "", hrgb, ha, f);
 }
 
 // returns location of sprite text

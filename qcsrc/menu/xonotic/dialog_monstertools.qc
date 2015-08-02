@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticMonsterToolsDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_MONSTERTOOLS_H
+#define DIALOG_MONSTERTOOLS_H
+#include "rootdialog.qc"
+CLASS(XonoticMonsterToolsDialog, XonoticRootDialog)
 	METHOD(XonoticMonsterToolsDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
 	ATTRIB(XonoticMonsterToolsDialog, title, string, _("Monster Tools"))
 	ATTRIB(XonoticMonsterToolsDialog, color, vector, SKINCOLOR_DIALOG_SANDBOXTOOLS)

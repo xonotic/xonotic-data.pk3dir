@@ -1,25 +1,31 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/constants.qh"
-	#include "../common/stats.qh"
-	#include "../warpzonelib/mathlib.qh"
-	#include "../warpzonelib/common.qh"
-	#include "../warpzonelib/client.qh"
-	#include "../common/teams.qh"
-	#include "../common/util.qh"
-	#include "../common/nades.qh"
-	#include "../common/weapons/weapons.qh"
-	#include "../common/mapinfo.qh"
-	#include "autocvars.qh"
-	#include "hud.qh"
-	#include "scoreboard.qh"
-	#include "noise.qh"
-	#include "main.qh"
-	#include "../csqcmodellib/cl_player.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "_all.qh"
+
+#include "announcer.qh"
+#include "hook.qh"
+#include "hud.qh"
+#include "hud_config.qh"
+#include "mapvoting.qh"
+#include "noise.qh"
+#include "scoreboard.qh"
+#include "shownames.qh"
+#include "vehicles/all.qh"
+#include "waypointsprites.qh"
+
+#include "../common/constants.qh"
+#include "../common/mapinfo.qh"
+#include "../common/nades.qh"
+#include "../common/stats.qh"
+#include "../common/triggers/target/music.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+
+#include "../common/weapons/all.qh"
+
+#include "../csqcmodellib/cl_player.qh"
+
+#include "../warpzonelib/client.qh"
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/mathlib.qh"
 
 entity porto;
 vector polyline[16];
@@ -1048,7 +1054,11 @@ void CSQC_UpdateView(float w, float h)
 
 	CSQCPlayer_SetCamera();
 
-	myteam = GetPlayerColor(player_localentnum - 1);
+	if(player_localentnum <= maxclients) // is it a client?
+		current_player = player_localentnum - 1;
+	else // then player_localentnum is the vehicle I'm driving
+		current_player = player_localnum;
+	myteam = GetPlayerColor(current_player);
 
 	if(myteam != prev_myteam)
 	{

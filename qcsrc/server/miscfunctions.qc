@@ -1,34 +1,30 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "miscfunctions.qh"
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/playerstats.qh"
-    #include "../warpzonelib/anglestransform.qh"
-    #include "../warpzonelib/server.qh"
-    #include "../common/constants.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/urllib.qh"
-    #include "../common/command/generic.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/accuracy.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "weapons/selection.qh"
-    #include "t_items.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "tturrets/include/turrets_early.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/common.qh"
-    #include "../csqcmodellib/sv_model.qh"
-    #include "ipban.qh"
-#endif
+#include "miscfunctions.qh"
+#include "_all.qh"
+#include "antilag.qh"
+#include "command/common.qh"
+#include "constants.qh"
+#include "g_hook.qh"
+#include "ipban.qh"
+#include "mutators/mutators_include.qh"
+#include "tturrets/include/turrets_early.qh"
+#include "t_items.qh"
+#include "weapons/accuracy.qh"
+#include "weapons/csqcprojectile.qh"
+#include "weapons/selection.qh"
+#include "../common/command/generic.qh"
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/mapinfo.qh"
+#include "../common/notifications.qh"
+#include "../common/playerstats.qh"
+#include "../common/teams.qh"
+#include "../common/triggers/subs.qh"
+#include "../common/urllib.qh"
+#include "../common/util.qh"
+#include "../common/weapons/all.qh"
+#include "../csqcmodellib/sv_model.qh"
+#include "../warpzonelib/anglestransform.qh"
+#include "../warpzonelib/server.qh"
 
 void crosshair_trace(entity pl)
 {
@@ -101,7 +97,7 @@ float DistributeEvenly_GetRandomized(float weight)
 void GameLogEcho(string s)
 {
     string fn;
-    float matches;
+    int matches;
 
     if (autocvar_sv_eventlog_files)
     {
@@ -109,7 +105,7 @@ void GameLogEcho(string s)
         {
             logfile_open = true;
             matches = autocvar_sv_eventlog_files_counter + 1;
-            cvar_set("sv_eventlog_files_counter", ftos(matches));
+            cvar_set("sv_eventlog_files_counter", itos(matches));
             fn = ftos(matches);
             if (strlen(fn) < 8)
                 fn = strcat(substring("00000000", 0, 8 - strlen(fn)), fn);
@@ -224,19 +220,6 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     */
 
     return nearest_entity[0];
-}
-
-void spawnfunc_target_location()
-{
-    self.classname = "target_location";
-    // location name in netname
-    // eventually support: count, teamgame selectors, line of sight?
-}
-
-void spawnfunc_info_location()
-{
-    self.classname = "target_location";
-    self.message = self.netname;
 }
 
 string NearestLocation(vector p)
@@ -357,17 +340,17 @@ void GetCvars_handleString(string thisname, float f, .string field, string name)
 {
 	if (f < 0)
 	{
-		if (self.field)
-			strunzone(self.field);
-		self.field = string_null;
+		if (self.(field))
+			strunzone(self.(field));
+		self.(field) = string_null;
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (self.field)
-				strunzone(self.field);
-			self.field = strzone(argv(f + 1));
+			if (self.(field))
+				strunzone(self.(field));
+			self.(field) = strzone(argv(f + 1));
 		}
 	}
 	else
@@ -379,12 +362,11 @@ void GetCvars_handleString_Fixup(string thisname, float f, .string field, string
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
 		{
-			string s;
-			s = func(strcat1(self.field));
-			if (s != self.field)
+			string s = func(strcat1(self.(field)));
+			if (s != self.(field))
 			{
-				strunzone(self.field);
-				self.field = strzone(s);
+				strunzone(self.(field));
+				self.(field) = strzone(s);
 			}
 		}
 }
@@ -396,7 +378,7 @@ void GetCvars_handleFloat(string thisname, float f, .float field, string name)
 	else if (f > 0)
 	{
 		if (thisname == name)
-			self.field = stof(argv(f + 1));
+			self.(field) = stof(argv(f + 1));
 	}
 	else
 		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
@@ -410,17 +392,17 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 	{
 		if (thisname == name)
 		{
-			if(!self.field)
+			if (!self.(field))
 			{
-				self.field = stof(argv(f + 1));
-				if(!self.field)
-					self.field = -1;
+				self.(field) = stof(argv(f + 1));
+				if (!self.(field))
+					self.(field) = -1;
 			}
 		}
 	}
 	else
 	{
-		if(!self.field)
+		if (!self.(field))
 			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
@@ -454,6 +436,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleFloat(s, f, cvar_cl_jetpack_jump, "cl_jetpack_jump");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
+	GetCvars_handleString(s, f, cvar_cl_physics, "cl_physics");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
@@ -575,7 +558,7 @@ void readplayerstartcvars()
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
-		if(g_ca)
+		if(g_ca || g_freezetag)
 			s = "most";
 	}
 
@@ -704,7 +687,7 @@ void readplayerstartcvars()
 		warmup_start_weapons_default = start_weapons_default;
 		warmup_start_weapons_defaultmask = start_weapons_defaultmask;
 
-		if (!g_weaponarena && !g_ca)
+		if (!g_weaponarena && !g_ca && !g_freezetag)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
 			warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
@@ -768,7 +751,7 @@ void readplayerstartcvars()
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
-float sound_allowed(float _dest, entity e)
+float sound_allowed(float destin, entity e)
 {
     // sounds from world may always pass
     for (;;)
@@ -783,7 +766,7 @@ float sound_allowed(float _dest, entity e)
             break;
     }
     // sounds to self may always pass
-    if (_dest == MSG_ONE)
+    if (destin == MSG_ONE)
         if (e == msg_entity)
             return true;
     // sounds by players can be removed
@@ -795,14 +778,14 @@ float sound_allowed(float _dest, entity e)
 }
 
 #undef sound
-void sound(entity e, float chan, string samp, float vol, float _atten)
+void sound(entity e, float chan, string samp, float vol, float attenu)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
-    sound7(e, chan, samp, vol, _atten, 0, 0);
+    sound7(e, chan, samp, vol, attenu, 0, 0);
 }
 
-void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten)
+void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float attenu)
 {
     float entno, idx;
 
@@ -812,15 +795,15 @@ void soundtoat(float _dest, entity e, vector o, float chan, string samp, float v
     entno = num_for_edict(e);
     idx = precache_sound_index(samp);
 
-    float sflags;
+    int sflags;
     sflags = 0;
 
-    _atten = floor(_atten * 64);
+    attenu = floor(attenu * 64);
     vol = floor(vol * 255);
 
     if (vol != 255)
         sflags |= SND_VOLUME;
-    if (_atten != 64)
+    if (attenu != 64)
         sflags |= SND_ATTENUATION;
     if (entno >= 8192 || chan < 0 || chan > 7)
         sflags |= SND_LARGEENTITY;
@@ -832,7 +815,7 @@ void soundtoat(float _dest, entity e, vector o, float chan, string samp, float v
     if (sflags & SND_VOLUME)
         WriteByte(_dest, vol);
     if (sflags & SND_ATTENUATION)
-        WriteByte(_dest, _atten);
+        WriteByte(_dest, attenu);
     if (sflags & SND_LARGEENTITY)
     {
         WriteShort(_dest, entno);
@@ -1264,8 +1247,7 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
     e.uncustomizeentityforclient_set = !!uncustomizer;
 }
 
-
-void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendfunc)
+void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc)
 {
     vector mi, ma;
 
@@ -1294,7 +1276,6 @@ void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendf
 }
 
 
-entity eliminatedPlayers;
 .float(entity) isEliminated;
 float EliminatedPlayers_SendEntity(entity to, float sendflags)
 {
@@ -1458,7 +1439,6 @@ float SUB_NoImpactCheck()
 
 #define SUB_OwnerCheck() (other && (other == self.owner))
 
-void RemoveGrapplingHook(entity pl);
 void W_Crylink_Dequeue(entity e);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 {
@@ -1826,7 +1806,7 @@ vector gettaginfo_relative(entity e, float tag)
 
 .float scale2;
 
-float modeleffect_SendEntity(entity to, float sf)
+float modeleffect_SendEntity(entity to, int sf)
 {
 	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);

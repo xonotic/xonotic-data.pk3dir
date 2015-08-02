@@ -7,18 +7,19 @@
     #include "../constants.qh"
     #include "../teams.qh"
     #include "../util.qh"
-    #include "monsters.qh"
+    #include "all.qh"
     #include "sv_monsters.qh"
-    #include "../weapons/weapons.qh"
+    #include "../weapons/all.qh"
     #include "../../server/autocvars.qh"
     #include "../../server/defs.qh"
     #include "../deathtypes.qh"
     #include "../../server/mutators/mutators_include.qh"
     #include "../../server/tturrets/include/turrets_early.qh"
-    #include "../../server/vehicles/vehicles_def.qh"
+    #include "../../server/vehicles/vehicle.qh"
     #include "../../server/campaign.qh"
     #include "../../server/command/common.qh"
     #include "../../server/command/cmd.qh"
+	#include "../triggers/triggers.qh"
     #include "../../csqcmodellib/sv_model.qh"
     #include "../../server/round_handler.qh"
     #include "../../server/tturrets/include/turrets.qh"
@@ -275,9 +276,9 @@ float LoadMonsterSounds(string f, float first)
 		field = GetMonsterSoundSampleField(argv(0));
 		if(GetMonsterSoundSampleField_notFound)
 			continue;
-		if(self.field)
-			strunzone(self.field);
-		self.field = strzone(strcat(argv(1), " ", argv(2)));
+		if (self.(field))
+			strunzone(self.(field));
+		self.(field) = strzone(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
 	return 1;
@@ -305,7 +306,7 @@ void MonsterSound(.string samplefield, float sound_delay, float delaytoo, float 
 	if(delaytoo)
 	if(time < self.msound_delay)
 		return; // too early
-	GlobalSound(self.samplefield, chan, VOICETYPE_PLAYERSOUND);
+	GlobalSound(self.(samplefield), chan, VOICETYPE_PLAYERSOUND);
 
 	self.msound_delay = time + sound_delay;
 }
@@ -321,7 +322,7 @@ void monster_makevectors(entity e)
 	makevectors(self.v_angle);
 }
 
-float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, float deathtype, float dostop)
+float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, int deathtype, float dostop)
 {
 	if (self.health <= 0)
 		return false; // attacking while dead?!
@@ -910,7 +911,7 @@ void monsters_reset()
 	self.moveto = self.origin;
 }
 
-void monsters_corpse_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void monsters_corpse_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	self.health -= damage;
 
@@ -979,7 +980,7 @@ void monster_die(entity attacker, float gibbed)
 	MON_ACTION(self.monsterid, MR_DEATH);
 }
 
-void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void monsters_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
 		return;

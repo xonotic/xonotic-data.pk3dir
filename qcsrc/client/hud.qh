@@ -1,7 +1,7 @@
 #ifndef HUD_H
 #define HUD_H
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 const int HUD_PANEL_MAX = 24;
 entity hud_panel[HUD_PANEL_MAX];
@@ -21,6 +21,19 @@ bool chat_panel_modified;
 bool radar_panel_modified;
 
 void HUD_Radar_Hide_Maximized();
+
+void HUD_Reset (void);
+void HUD_Main (void);
+
+int vote_yescount;
+int vote_nocount;
+int vote_needed;
+int vote_highlighted; // currently selected vote
+
+int vote_active; // is there an active vote?
+int vote_prev; // previous state of vote_active to check for a change
+float vote_alpha;
+float vote_change; // "time" when vote_active changed
 
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
@@ -74,18 +87,19 @@ vector panel_size_backup;
 vector panel_size_copied;
 
 entity panel;
-.string panel_name;
-.int panel_id;
-.vector current_panel_pos;
-.vector current_panel_size;
-.string current_panel_bg;
-.float current_panel_bg_alpha;
-.float current_panel_bg_border;
-.vector current_panel_bg_color;
-.float current_panel_bg_color_team;
-.float current_panel_bg_padding;
-.float current_panel_fg_alpha;
-.float update_time;
+entityclass(HUDPanel);
+class(HUDPanel) .string panel_name;
+class(HUDPanel) .int panel_id;
+class(HUDPanel) .vector current_panel_pos;
+class(HUDPanel) .vector current_panel_size;
+class(HUDPanel) .string current_panel_bg;
+class(HUDPanel) .float current_panel_bg_alpha;
+class(HUDPanel) .float current_panel_bg_border;
+class(HUDPanel) .vector current_panel_bg_color;
+class(HUDPanel) .float current_panel_bg_color_team;
+class(HUDPanel) .float current_panel_bg_padding;
+class(HUDPanel) .float current_panel_fg_alpha;
+class(HUDPanel) .float update_time;
 float panel_enabled;
 vector panel_pos;
 vector panel_size;
@@ -102,11 +116,30 @@ string panel_bg_border_str;
 float panel_bg_padding;
 string panel_bg_padding_str;
 
-.void() panel_draw;
+class(HUDPanel) .void() panel_draw;
 
 float current_player;
 
 float GetPlayerColorForce(int i);
+
+float stringwidth_colors(string s, vector theSize);
+int GetPlayerColor(int i);
+string GetPlayerName(int i);
+float stringwidth_nocolors(string s, vector theSize);
+void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
+
+
+// prev_* vars contain the health/armor at the previous FRAME
+// set to -1 when player is dead or was not playing
+int prev_health, prev_armor;
+float health_damagetime, armor_damagetime;
+int health_beforedamage, armor_beforedamage;
+// old_p_* vars keep track of previous values when smoothing value changes of the progressbar
+int old_p_health, old_p_armor;
+float old_p_healthtime, old_p_armortime;
+// prev_p_* vars contain the health/armor progressbar value at the previous FRAME
+// set to -1 to forcedly stop effects when we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
+int prev_p_health, prev_p_armor;
 
 
 #define HUD_PANELS(HUD_PANEL) 																						\
@@ -199,9 +232,9 @@ HUD_PANELS(HUD_PANEL)
 			panel_bg_color = autocvar_hud_panel_bg_color;                                                           \
 		} else {                                                                                                    \
 			if (panel_bg_color_str == "shirt") {                                                                    \
-				panel_bg_color = colormapPaletteColor(floor(stof(getplayerkeyvalue(current_player - 1, "colors")) / 16), 0);\
+				panel_bg_color = colormapPaletteColor(floor(stof(getplayerkeyvalue(current_player, "colors")) / 16), 0); \
 			} else if (panel_bg_color_str == "pants") {                                                             \
-				panel_bg_color = colormapPaletteColor(stof(getplayerkeyvalue(current_player - 1, "colors")) % 16, 1);\
+				panel_bg_color = colormapPaletteColor(stof(getplayerkeyvalue(current_player, "colors")) % 16, 1); \
 			} else {                                                                                                \
 				panel_bg_color = stov(panel_bg_color_str);                                                          \
 			}                                                                                                       \
@@ -264,27 +297,18 @@ HUD_PANELS(HUD_PANEL)
 } while(0)
 
 // return smoothly faded pos and size of given panel when a dialog is active
-#define HUD_Panel_UpdatePosSize_ForMenu() do {                                                                      \
-	vector menu_enable_pos;                                                                                         \
-	vector menu_enable_size = '0 0 0';                                                                              \
-	float menu_enable_maxsize_x = 0.3 * vid_conwidth;                                                               \
-	float menu_enable_maxsize_y = 0.18 * vid_conheight;                                                             \
-	if (panel_size.x > panel_size.y) {                                                                              \
-		if (panel_size.y > menu_enable_maxsize_y) {                                                                 \
-			menu_enable_size.y = menu_enable_maxsize_y;                                                             \
-			menu_enable_size.x = panel_size.x * (menu_enable_maxsize_y/panel_size.y);                               \
-			panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;       \
-		}                                                                                                           \
-		menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size.x + eY * (vid_conheight - menu_enable_maxsize_y);\
-	} else {                                                                                                        \
-		if (panel_size.x > menu_enable_maxsize_x) {                                                                 \
-			menu_enable_size.x = menu_enable_maxsize_x;                                                             \
-			menu_enable_size.y = panel_size.y * (menu_enable_maxsize_x/panel_size.x);                               \
-			panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;       \
-		}                                                                                                           \
-		menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size.y + eX * (vid_conwidth - menu_enable_maxsize_x);\
-	}                                                                                                               \
-	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos;                  \
+// don't center too wide panels, it doesn't work with different resolutions
+#define HUD_Panel_UpdatePosSize_ForMenu() do { \
+	vector menu_enable_size = panel_size; \
+	float max_panel_width = 0.52 * vid_conwidth; \
+	if(panel_size.x > max_panel_width) \
+	{ \
+		menu_enable_size.x = max_panel_width; \
+		menu_enable_size.y = panel_size.y * (menu_enable_size.x / panel_size.x); \
+	} \
+	vector menu_enable_pos = eX * (panel_bg_border + 0.5 * max_panel_width) + eY * 0.5 * vid_conheight - 0.5 * menu_enable_size; \
+	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos; \
+	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size; \
 } while(0)
 
 // Scale the pos and size vectors to absolute coordinates

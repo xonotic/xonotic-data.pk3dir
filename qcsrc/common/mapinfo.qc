@@ -3,7 +3,7 @@
     #include "../client/defs.qh"
     #include "util.qh"
     #include "buffs.qh"
-    #include "weapons/weapons.qh"
+    #include "weapons/all.qh"
     #include "mapinfo.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -11,7 +11,7 @@
     #include "../dpdefs/dpextensions.qh"
     #include "util.qh"
     #include "buffs.qh"
-    #include "monsters/monsters.qh"
+    #include "monsters/all.qh"
     #include "mapinfo.qh"
 #endif
 

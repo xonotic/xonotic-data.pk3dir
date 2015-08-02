@@ -1,5 +1,18 @@
+#include "../_all.qh"
+
+#include "gamemode.qh"
 #include "../controlpoint.qh"
 #include "../generator.qh"
+
+vector randompos(vector m1, vector m2)
+{
+	vector v;
+	m2 = m2 - m1;
+	v_x = m2_x * random() + m1_x;
+	v_y = m2_y * random() + m1_y;
+	v_z = m2_z * random() + m1_z;
+	return	v;
+}
 
 // =======================
 // CaptureShield Functions
@@ -79,27 +92,6 @@ void ons_debug(string input)
 		case 1: dprint(input); break;
 		case 2: print(input); break;
 	}
-}
-
-void FixSize(entity e)
-{
-	e.mins_x = rint(e.mins_x);
-	e.mins_y = rint(e.mins_y);
-	e.mins_z = rint(e.mins_z);
-	
-	e.maxs_x = rint(e.maxs_x);
-	e.maxs_y = rint(e.maxs_y);
-	e.maxs_z = rint(e.maxs_z);
-}
-
-vector randompos(vector m1, vector m2)
-{
-	vector v;
-	m2 = m2 - m1;
-	v_x = m2_x * random() + m1_x;
-	v_y = m2_y * random() + m1_y;
-	v_z = m2_z * random() + m1_z;
-	return	v;
 }
 
 void setmodel_fixsize(entity e, string m)

@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDNotificationDialog) EXTENDS(XonoticRootDialog)
+#ifndef DIALOG_HUDPANEL_NOTIFICATION_H
+#define DIALOG_HUDPANEL_NOTIFICATION_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDNotificationDialog, XonoticRootDialog)
 	METHOD(XonoticHUDNotificationDialog, fill, void(entity))
 	ATTRIB(XonoticHUDNotificationDialog, title, string, _("Notification Panel"))
 	ATTRIB(XonoticHUDNotificationDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)

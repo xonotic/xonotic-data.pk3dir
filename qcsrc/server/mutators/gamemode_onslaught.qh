@@ -7,7 +7,7 @@
 // control point / generator constants
 const float ONS_CP_THINKRATE = 0.2;
 const float GEN_THINKRATE = 1;
-#define CPGEN_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
+#define CPGEN_SPAWN_OFFSET ('0 0 1' * (PL_MAX_CONST.z - 13))
 const vector CPGEN_WAYPOINT_OFFSET = ('0 0 128');
 const vector CPICON_OFFSET = ('0 0 96');
 

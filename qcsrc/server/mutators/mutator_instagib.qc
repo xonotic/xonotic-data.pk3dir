@@ -1,20 +1,25 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+#include "../cl_client.qh"
+#include "../../common/buffs.qh"
+
+#include "../../common/items/all.qc"
+
 void spawnfunc_item_minst_cells (void)
 {
 	if (!g_instagib) { remove(self); return; }
 	if (!self.ammo_cells)
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
 
-	StartItem ("models/items/a_cells.md3",
-			   "misc/itempickup.wav", 45, 0,
-			   "Vaporizer Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+	StartItemA (ITEM_VaporizerCells);
 }
 
 void instagib_health_mega()
 {
 	self.max_health = 1;
-	StartItem ("models/items/g_h100.md3",
-			   "misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-			   "Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+	StartItemA (ITEM_ExtraLife);
 }
 
 .float instagib_nextthink;

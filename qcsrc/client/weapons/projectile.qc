@@ -1,5 +1,22 @@
 #include "projectile.qh"
 
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../main.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/nades.qh"
+#include "../../common/movetypes/movetypes.qh"
+#include "../../common/util.qh"
+
+#include "../../csqcmodellib/interpolate.qh"
+
+#include "../../warpzonelib/anglestransform.qh"
+
+.float alpha;
+.float scale;
+.vector colormod;
+
 void SUB_Stop()
 {
 	self.move_velocity = self.move_avelocity = '0 0 0';
@@ -469,6 +486,7 @@ void Ent_Projectile()
 	if(!(self.count & 0x80))
 		InterpolateOrigin_Note();
 
+	self.classname = "csqcprojectile";
 	self.draw = Projectile_Draw;
 	self.entremove = Ent_RemoveProjectile;
 }

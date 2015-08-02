@@ -24,6 +24,7 @@ const float VOTE_MASTER = 2;
 
 // global vote information declarations
 entity vote_caller; // original caller of the current vote
+string vote_caller_name; // name of the vote caller
 float vote_called; // stores status of current vote (See VOTE_*)
 float vote_endtime; // time when the vote is finished
 float vote_accept_count; // total amount of players who accept the vote (counted by VoteCount() function)
@@ -52,4 +53,5 @@ float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was al
 .float ready; // flag for if a player is ready
 void reset_map(float dorespawn);
 void ReadyCount();
+void ReadyRestart_force();
 #endif

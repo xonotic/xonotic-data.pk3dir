@@ -1,9 +1,5 @@
-#if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "autocvars.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "effects.qh"
+#include "_all.qh"
 
 /*
 .vector fx_start;
@@ -11,9 +7,6 @@
 .float  fx_with;
 .string fx_texture;
 .float  fx_lifetime;
-
-void SUB_Remove()
-{ remove(self); }
 
 void b_draw()
 {

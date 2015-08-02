@@ -389,11 +389,11 @@ entity WaypointSprite_Spawn(
 	wp.team = t;
 	wp.owner = own;
 	wp.currentammo = hideable;
-	if(own)
+	if (own)
 	{
-		if(own.ownfield)
-			remove(own.ownfield);
-		own.ownfield = wp;
+		if (own.(ownfield))
+			remove(own.(ownfield));
+		own.(ownfield) = wp;
 		wp.owned_by_field = ownfield;
 	}
 	wp.fade_rate = maxdistance;

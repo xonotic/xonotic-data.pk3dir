@@ -1,0 +1,14 @@
+#ifndef TRIGGER_IMPULSE_H
+#define TRIGGER_IMPULSE_H
+
+// tZorks trigger impulse / gravity
+.float radius;
+.float falloff;
+.float strength;
+.float lastpushtime;
+
+#ifdef CSQC
+void ent_trigger_impulse();
+#endif
+
+#endif

@@ -203,7 +203,7 @@ void W_HLAC_Attack2_Frame(void)
 	}
 }
 
-float W_HLAC(float req)
+bool W_HLAC(int req)
 {
 	float ammo_amount;
 	switch(req)
@@ -282,7 +282,7 @@ float W_HLAC(float req)
 }
 #endif
 #ifdef CSQC
-float W_HLAC(float req)
+bool W_HLAC(int req)
 {
 	switch(req)
 	{

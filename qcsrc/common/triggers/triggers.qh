@@ -1,0 +1,54 @@
+#ifndef TRIGGERS_H
+#define TRIGGERS_H
+
+const float SF_TRIGGER_INIT = 1;
+const float SF_TRIGGER_UPDATE = 2;
+const float SF_TRIGGER_RESET = 4;
+
+const float	SPAWNFLAG_NOMESSAGE = 1;
+const float	SPAWNFLAG_NOTOUCH = 1;
+
+.void() trigger_touch;
+
+.float antiwall_flag; // Variable to define what to do with func_clientwall
+// 0 == do nothing, 1 == deactivate, 2 == activate
+
+.float height;
+
+.float nottargeted;
+#define IFTARGETED if(!self.nottargeted && self.targetname != "")
+
+.float lip;
+
+// used elsewhere (will fix)
+#ifdef SVQC
+void trigger_common_write(bool withtarget);
+
+string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
+
+void target_voicescript_next(entity pl);
+void target_voicescript_clear(entity pl);
+#endif
+
+.float volume, atten;
+
+.vector dest;
+
+void FixSize(entity e);
+
+#ifdef CSQC
+void trigger_common_read(bool withtarget);
+void trigger_remove_generic();
+
+.float active;
+.string target;
+.string targetname;
+
+const int ACTIVE_NOT 		= 0;
+const int ACTIVE_ACTIVE 	= 1;
+const int ACTIVE_IDLE 		= 2;
+const int ACTIVE_BUSY 		= 2;
+const int ACTIVE_TOGGLE		= 3;
+#endif
+
+#endif

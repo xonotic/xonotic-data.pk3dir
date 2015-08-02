@@ -1,3 +1,8 @@
+#include "gamemode_keepaway.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 // ===========================================================
 //  Keepaway game mode coding, written by Samual and Diabolik
 //  Last updated: September, 2012
@@ -20,6 +25,7 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
+void ka_TouchEvent();
 void ka_RespawnBall() // runs whenever the ball needs to be relocated
 {
 	if(gameover) { return; }
@@ -37,6 +43,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	self.velocity = '0 0 200';
 	self.angles = '0 0 0';
 	self.effects = autocvar_g_keepawayball_effects;
+	self.touch = ka_TouchEvent;
 	self.think = ka_RespawnBall;
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
@@ -164,7 +171,14 @@ void ka_Reset() // used to clear the ballcarrier whenever the match switches fro
 	if((self.owner) && (IS_PLAYER(self.owner)))
 		ka_DropEvent(self.owner);
 
-	ka_RespawnBall();
+	if(time < game_starttime)
+	{
+		self.think = ka_RespawnBall;
+		self.touch = func_null;
+		self.nextthink = game_starttime;
+	}
+	else
+		ka_RespawnBall();
 }
 
 
@@ -187,9 +201,8 @@ void havocbot_goalrating_ball(float ratingscale, vector org)
 		t = (self.health + self.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
 		navigation_routerating(ball_owner, t * ratingscale, 2000);
 	}
-
-	// Ball has been dropped so collect.
-	navigation_routerating(ka_ball, ratingscale, 2000);
+	else // Ball has been dropped so collect.
+		navigation_routerating(ka_ball, ratingscale, 2000);
 }
 
 void havocbot_role_ka_carrier()

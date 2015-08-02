@@ -1,0 +1,5 @@
+#ifndef PATHLIB_MAIN_H
+#define PATHLIB_MAIN_H
+float buildpath_nodefilter_none(vector n,vector c,vector p);
+entity path_build(entity next, vector where, entity prev, entity start);
+#endif

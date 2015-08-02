@@ -1,6 +1,11 @@
 #include "menu_cmd.qh"
 
+#include "../menu.qh"
+#include "../oo/classes.qc"
+
 #include "../../common/command/generic.qh"
+
+.entity firstChild, nextSibling;
 
 string _dumptree_space;
 void _dumptree_open(entity pass, entity me)
@@ -28,6 +33,8 @@ void _dumptree_close(entity pass, entity me)
 		print(_dumptree_space, "}\n");
 	}
 }
+
+float updateConwidths(float width, float height, float pixelheight);
 
 void GameCommand(string theCommand)
 {

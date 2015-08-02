@@ -1,4 +1,19 @@
 #include "teamplay.qh"
+#include "_all.qh"
+
+#include "cl_client.qh"
+#include "race.qh"
+#include "scores.qh"
+#include "scores_rules.qh"
+
+#include "bot/bot.qh"
+
+#include "command/vote.qh"
+
+#include "mutators/mutators_include.qh"
+
+#include "../common/deathtypes.qh"
+#include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
 {

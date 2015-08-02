@@ -214,8 +214,8 @@ void RandomSelection_Init();
 void RandomSelection_Add(entity e, float f, string s, float weight, float priority);
 
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage); // returns vector: take, save, 0
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
+vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage); // returns vector: take, save, 0
 #endif
 
 string getcurrentmod();
@@ -296,7 +296,7 @@ float xdecode(string s);
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
 
-float lowestbit(float f);
+int lowestbit(float f);
 
 #ifdef CSQC
 entity ReadCSQCEntity();
@@ -385,12 +385,12 @@ string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimport
 string CCR(string input);
 
 #ifndef MENUQC
-#ifdef CSQC
-#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
-#else
-#define GENTLE autocvar_sv_gentle
-#endif
-#define normal_or_gentle(normal,gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
+	#ifdef CSQC
+		#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
+	#else
+		#define GENTLE autocvar_sv_gentle
+	#endif
+	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
 #endif
 
 // allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)

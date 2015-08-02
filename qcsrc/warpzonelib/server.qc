@@ -1,15 +1,17 @@
+#include "server.qh"
+
+#include "common.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-	#include "../dpdefs/dpextensions.qh"
-	#include "common.qh"
-	#include "server.qh"
 	#include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
 	#include "../common/util.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "../dpdefs/progsdefs.qh"
+	#include "../server/command/common.qh"
 	#include "../server/constants.qh"
 	#include "../server/defs.qh"
-	#include "../server/command/common.qh"
 #endif
 
 #ifdef WARPZONELIB_KEEPDEBUG
@@ -51,7 +53,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
 
-float WarpZone_Teleported_Send(entity to, float sf)
+bool WarpZone_Teleported_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);
@@ -216,7 +218,7 @@ void WarpZone_Touch (void)
 	}
 }
 
-float WarpZone_Send(entity to, float sendflags)
+bool WarpZone_Send(entity to, int sendflags)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
@@ -270,7 +272,7 @@ float WarpZone_Send(entity to, float sendflags)
 	return true;
 }
 
-float WarpZone_Camera_Send(entity to, float sendflags)
+bool WarpZone_Camera_Send(entity to, int sendflags)
 {
 	int f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
