@@ -96,6 +96,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_timeout_speed_in");
 					HUD_Write_PanelCvar_q("_timeout_speed_out");
 					HUD_Write_PanelCvar_q("_onlyowned");
+					HUD_Write_PanelCvar_q("_noncurrent_alpha");
+					HUD_Write_PanelCvar_q("_noncurrent_scale");
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");

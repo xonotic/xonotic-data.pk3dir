@@ -792,11 +792,17 @@ void HUD_Weapons(void)
 	// draw items
 	row = column = 0;
 	vector label_size = '1 1 0' * min(weapon_size.x, weapon_size.y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
+	vector noncurrent_pos = '0 0 0';
+	vector noncurrent_size = weapon_size * bound(0, autocvar_hud_panel_weapons_noncurrent_scale, 1);
+	float noncurrent_alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_weapons_noncurrent_alpha, 1);
+	bool isCurrent;
+
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
 		self = weaponorder[i];
 		weapon_id = self.impulse;
+		isCurrent = (self.weapon == switchweapon);
 
 		// skip if this weapon doesn't exist
 		if(!self || weapon_id < 0) { continue; }
@@ -807,12 +813,12 @@ void HUD_Weapons(void)
 			continue;
 
 		// figure out the drawing position of weapon
-		weapon_pos = (panel_pos
-			+ eX * column * weapon_size.x
-			+ eY * row * weapon_size.y);
+		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
+		noncurrent_pos.x = weapon_pos.x + (weapon_size.x - noncurrent_size.x) / 2;
+		noncurrent_pos.y = weapon_pos.y + (weapon_size.y - noncurrent_size.y) / 2;
 
 		// draw background behind currently selected weapon
-		if(self.weapon == switchweapon)
+		if(isCurrent)
 			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
@@ -830,7 +836,10 @@ void HUD_Weapons(void)
 		if(weapons_stat & WepSet_FromWeapon(self.weapon))
 		{
 			// draw the weapon image
-			drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			if(isCurrent)
+				drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			else
+				drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '1 1 1', noncurrent_alpha, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)
@@ -892,7 +901,7 @@ void HUD_Weapons(void)
 		}
 		else // draw a "ghost weapon icon" if you don't have the weapon
 		{
-			drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '0.2 0.2 0.2', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
