@@ -524,8 +524,6 @@ void HUD_Weapons(void)
 	// update generic hud functions
 	HUD_Panel_UpdateCvars();
 
-	draw_beginBoldFont();
-
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
 	{
@@ -595,10 +593,7 @@ void HUD_Weapons(void)
 
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0)
-		{
-			draw_endBoldFont();
 			return;
-		}
 
 		vector old_panel_size = panel_size;
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
@@ -752,10 +747,7 @@ void HUD_Weapons(void)
 	HUD_Panel_DrawBg(1);
 
 	if(center.x == -1)
-	{
-		draw_endBoldFont();
 		return;
-	}
 
 	if(panel_bg_padding)
 	{
@@ -958,56 +950,51 @@ void HUD_Weapons(void)
 			}
 		}
 	}
-
-	draw_endBoldFont();
 }
 
 // Ammo (#1)
-void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
+void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector color)
 {
-
 	HUD_Panel_DrawProgressBar(
 		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x,
 		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x,
 		autocvar_hud_panel_ammo_progressbar_name,
-		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color,
+		progress, 0, 0, color,
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-
 }
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
 {
-	float theAlpha = 1, a, b;
-	vector nade_color, picpos, numpos;
+	float bonusNades    = getstatf(STAT_NADE_BONUS);
+	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
+	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
+	vector nadeColor    = Nade_Color(bonusType);
+	string nadeIcon     = Nade_Icon(bonusType);
 
-	nade_color = Nade_Color(getstati(STAT_NADE_BONUS_TYPE));
-
-	a = getstatf(STAT_NADE_BONUS);
-	b = getstatf(STAT_NADE_BONUS_SCORE);
+	vector iconPos, textPos;
 
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
-		numpos = myPos;
-		picpos = myPos + eX * 2 * mySize.y;
+		iconPos = myPos + eX * 2 * mySize.y;
+		textPos = myPos;
 	}
 	else
 	{
-		numpos = myPos + eX * mySize.y;
-		picpos = myPos;
+		iconPos = myPos;
+		textPos = myPos + eX * mySize.y;
 	}
 
-	DrawNadeScoreBar(myPos, mySize, nade_color);
-
-	if(b > 0 || a > 0)
+	if(bonusNades > 0 || bonusProgress > 0)
 	{
+		DrawNadeProgressBar(myPos, mySize, bonusProgress, nadeColor);
+
 		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(textPos, ftos(bonusNades), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if(draw_expanding)
-			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
+			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
 
-		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize.y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 }
 
@@ -1554,6 +1541,9 @@ void HUD_HealthArmor(void)
 	}
 
 	HUD_Panel_UpdateCvars();
+
+	draw_beginBoldFont();
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -1759,6 +1749,8 @@ void HUD_HealthArmor(void)
 			HUD_Panel_DrawProgressBar(pos, mySize, "progressbar", fuel/100, is_vertical, fuel_baralign, autocvar_hud_progressbar_fuel_color, panel_fg_alpha * 0.8, DRAWFLAG_NORMAL);
 		}
 	}
+
+	draw_endBoldFont();
 }
 
 // Notification area (#4)
@@ -2324,7 +2316,7 @@ void HUD_Score(void)
 	vector distribution_color;
 	entity tm, pl, me;
 
-	me = playerslots[player_localentnum - 1];
+	me = playerslots[current_player];
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
@@ -2493,8 +2485,6 @@ void HUD_RaceTimer (void)
 
 	HUD_Panel_UpdateCvars();
 
-	draw_beginBoldFont();
-
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2530,7 +2520,9 @@ void HUD_RaceTimer (void)
 	if(autocvar__hud_configure)
 	{
 		s = "0:13:37";
+		draw_beginBoldFont();
 		drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, false, '0.60 0.60 0' * mySize.y), s, '0.60 0.60 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
 		s = _("^1Intermediate 1 (+15.42)");
 		drawcolorcodedstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, true, '1 1 0' * 0.20 * mySize.y) + eY * 0.60 * mySize.y, s, '1 1 0' * 0.20 * mySize.y, panel_fg_alpha, DRAWFLAG_NORMAL);
 		s = sprintf(_("^1PENALTY: %.1f (%s)"), 2, "missing a checkpoint");
@@ -2580,6 +2572,8 @@ void HUD_RaceTimer (void)
 			}
 		}
 
+		draw_beginBoldFont();
+
 		if(forcetime != "")
 		{
 			a = bound(0, (time - race_checkpointtime) / 0.5, 1);
@@ -2593,6 +2587,8 @@ void HUD_RaceTimer (void)
 			s = TIME_ENCODED_TOSTRING(TIME_ENCODE(time + TIME_DECODE(race_penaltyaccumulator) - race_laptime));
 			drawstring(pos + eX * 0.5 * mySize.x - '0.5 0 0' * stringwidth(s, false, '0.6 0.6 0' * mySize.y), s, '0.6 0.6 0' * mySize.y, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
+
+		draw_endBoldFont();
 	}
 	else
 	{
@@ -2623,8 +2619,6 @@ void HUD_RaceTimer (void)
 			}
 		}
 	}
-
-	draw_endBoldFont();
 }
 
 // Vote window (#9)
@@ -2892,7 +2886,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	
 	ctf_oneflag = (stat_items & CTF_FLAG_NEUTRAL);
 
-	mod_active = redflag || blueflag || yellowflag || pinkflag || neutralflag;
+	mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag);
 
 	if (autocvar__hud_configure) {
 		redflag = 1;
@@ -3818,7 +3812,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
+				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(current_player));
 			drawInfoMessage(s);
 
 			if(spectatee_status == -1)
@@ -4666,8 +4660,6 @@ void HUD_Main (void)
 		hud_skin_prev = strzone(autocvar_hud_skin);
 	}
 
-    current_player = player_localentnum;
-
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 	{
@@ -4687,11 +4679,11 @@ void HUD_Main (void)
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player, "colors"));
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player, "colors"));
 				color = colormapPaletteColor(f % 16, 1);
 			}
 			else

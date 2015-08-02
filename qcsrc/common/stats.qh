@@ -107,13 +107,12 @@ const int STAT_HEALING_ORB_ALPHA      = 83;
 const int STAT_PLASMA                 = 84;
 const int STAT_OK_AMMO_CHARGE         = 85;
 const int STAT_OK_AMMO_CHARGEPOOL     = 86;
-const int STAT_CTF_FLAGSTATUS         = 87;
-const int STAT_FROZEN                 = 88;
-const int STAT_REVIVE_PROGRESS        = 89;
-// 89 empty?
-// 90 empty?
-// 91 empty?
-// 92 empty?
+const int STAT_FROZEN                 = 87;
+const int STAT_REVIVE_PROGRESS        = 88;
+const int STAT_WEAPONSINMAP           = 89;
+const int STAT_WEAPONSINMAP2          = 90;
+const int STAT_WEAPONSINMAP3          = 91;
+const int STAT_CTF_FLAGSTATUS         = 92;
 // 93 empty?
 // 94 empty?
 // 95 empty?
