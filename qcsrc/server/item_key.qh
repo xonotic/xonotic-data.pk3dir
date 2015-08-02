@@ -11,6 +11,7 @@
 /**
  * list of key names.
  */
+#ifdef SVQC
 string item_keys_names[ITEM_KEY_MAX];
 
 /**
@@ -23,4 +24,6 @@ float item_keys_usekey(entity l, entity p);
  * Returns a string with a comma separated list of key names, as specified in keylist.
  */
 string item_keys_keylist(float keylist);
+#endif
+
 #endif

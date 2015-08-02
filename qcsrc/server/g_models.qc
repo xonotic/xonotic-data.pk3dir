@@ -1,7 +1,8 @@
 #include "_all.qh"
 
-#include "g_subs.qh"
-#include "g_triggers.qh"
+#include "../common/triggers/subs.qh"
+
+#include "../client/bgmscript.qh"
 
 #include "../common/constants.qh"
 #include "../csqcmodellib/sv_model.qh"

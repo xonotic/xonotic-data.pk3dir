@@ -1,7 +1,7 @@
 #include "casings.qh"
 #include "_all.qh"
 
-#include "movetypes.qh"
+#include "../common/movetypes/movetypes.qh"
 #include "prandom.qh"
 #include "rubble.qh"
 

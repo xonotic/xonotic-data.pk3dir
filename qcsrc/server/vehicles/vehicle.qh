@@ -7,7 +7,6 @@
 #include "../cl_player.qh"
 #include "../g_damage.qh"
 #include "../g_hook.qh"
-#include "../g_subs.qh"
 #include "../movelib.qh"
 
 #include "../bot/bot.qh"

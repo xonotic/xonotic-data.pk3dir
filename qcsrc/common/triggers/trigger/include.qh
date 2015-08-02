@@ -1,0 +1,11 @@
+#ifndef TRIGGERS_TRIGGER_INCLUDE_H
+#define TRIGGERS_TRIGGER_INCLUDE_H
+
+#include "multi.qh"
+#include "jumppads.qh"
+#include "secret.qh"
+#include "swamp.qh"
+#include "keylock.qh"
+#include "impulse.qh"
+
+#endif

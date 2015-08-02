@@ -1,0 +1,3 @@
+#ifdef CSQC
+void Ent_Laser();
+#endif

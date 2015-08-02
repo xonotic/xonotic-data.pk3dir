@@ -1,6 +1,31 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+// COMMIT-TODO: Update if necessary before committing
+// Revision 1: additional statistics sent (flag caps, returns, deaths)
+// Revision 2: Mapvote preview pictures
+// Revision 3: optimized map vote protocol
+// Revision 4: CSQC config var system
+// Revision 5: mapvote time fix
+// Revision 6: more robust against packet loss/delays, also show not yet connected clients
+// Revision 7: packet loss column
+// Revision 8: race
+// Revision 9: race delta
+// Revision 10: scoreboard force
+// Revision 11: scoreboard unforce; spectator support beginning
+// Revision 12: smaller scores updates (SERVER: requires new engine)
+// Revision 13: pointparticles
+// Revision 14: laser
+// Revision 15: zoom
+// Revision 16: multi-weapons
+// Revision 17: multi-weaponimpulses
+// Revision 18: warmup
+// Revision 19: fog
+// Revision 20: naggers
+// Revision 21: entcs for players optimized (position data down from 12 to 7 bytes); waypointsprites in csqc for team radar
+// Revision 22: hook shot origin
+#define CSQC_REVISION 22
+
 const int AS_STRING = 1;
 const int AS_INT = 2;
 const int AS_FLOAT_TRUNCATED = 2;
@@ -79,6 +104,17 @@ const int ENT_CLIENT_ELIMINATEDPLAYERS = 39;
 const int ENT_CLIENT_TURRET = 40;
 const int ENT_CLIENT_AUXILIARYXHAIR = 50;
 const int ENT_CLIENT_VEHICLE = 60;
+const int ENT_CLIENT_LADDER = 61;
+const int ENT_CLIENT_TRIGGER_PUSH = 62;
+const int ENT_CLIENT_TARGET_PUSH = 63;
+const int ENT_CLIENT_CONVEYOR = 64;
+const int ENT_CLIENT_DOOR = 65;
+const int ENT_CLIENT_TRAIN = 66;
+const int ENT_CLIENT_PLAT = 67;
+const int ENT_CLIENT_TRIGGER_IMPULSE = 68;
+const int ENT_CLIENT_SWAMP = 69;
+const int ENT_CLIENT_CORNER = 70;
+const int ENT_CLIENT_KEYLOCK = 71;
 
 const int ENT_CLIENT_HEALING_ORB = 80;
 
@@ -277,7 +313,7 @@ const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
 const int SERVERFLAG_TEAMPLAY = 2;
 const int SERVERFLAG_PLAYERSTATS = 4;
 
-// FIXME/EXPLAINME: why?
+// FIXME/EXPLAINME: why? Mario: because
 vector autocvar_sv_player_maxs = '16 16 45';
 vector autocvar_sv_player_mins = '-16 -16 -24';
 vector autocvar_sv_player_viewoffset = '0 0 20';
@@ -286,6 +322,9 @@ vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
 vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
 vector autocvar_sv_player_headsize = '24 24 12';
 
+
+// not so constant
+#ifdef SVQC
 #define PL_VIEW_OFS autocvar_sv_player_viewoffset
 #define PL_MIN autocvar_sv_player_mins
 #define PL_MAX autocvar_sv_player_maxs
@@ -293,16 +332,18 @@ vector autocvar_sv_player_headsize = '24 24 12';
 #define PL_CROUCH_MIN autocvar_sv_player_crouch_mins
 #define PL_CROUCH_MAX autocvar_sv_player_crouch_maxs
 #define PL_HEAD autocvar_sv_player_headsize
+#elif defined(CSQC)
+#define PL_VIEW_OFS vec3(getstatf(STAT_PL_VIEW_OFS1), getstatf(STAT_PL_VIEW_OFS2), getstatf(STAT_PL_VIEW_OFS3))
+#define PL_MIN vec3(getstatf(STAT_PL_MIN1), getstatf(STAT_PL_MIN2), getstatf(STAT_PL_MIN3))
+#define PL_MAX vec3(getstatf(STAT_PL_MAX1), getstatf(STAT_PL_MAX2), getstatf(STAT_PL_MAX3))
+#define PL_CROUCH_VIEW_OFS vec3(getstatf(STAT_PL_CROUCH_VIEW_OFS1), getstatf(STAT_PL_CROUCH_VIEW_OFS2), getstatf(STAT_PL_CROUCH_VIEW_OFS3))
+#define PL_CROUCH_MIN vec3(getstatf(STAT_PL_CROUCH_MIN1), getstatf(STAT_PL_CROUCH_MIN2), getstatf(STAT_PL_CROUCH_MIN3))
+#define PL_CROUCH_MAX vec3(getstatf(STAT_PL_CROUCH_MAX1), getstatf(STAT_PL_CROUCH_MAX2), getstatf(STAT_PL_CROUCH_MAX3))
+#endif
 
-// helpers
-#define PL_VIEW_OFS_z autocvar_sv_player_viewoffset.z
-#define PL_MIN_z autocvar_sv_player_mins.z
-#define PL_MAX_z autocvar_sv_player_maxs.z
-#define PL_CROUCH_VIEW_OFS_z autocvar_sv_player_crouch_viewoffset.z
-#define PL_CROUCH_MIN_z autocvar_sv_player_mins.z
-#define PL_HEAD_x autocvar_sv_player_headsize.x
-#define PL_HEAD_y autocvar_sv_player_headsize.y
-#define PL_HEAD_z autocvar_sv_player_headsize.z
+// a bit more constant
+const vector PL_MAX_CONST = '16 16 45';
+const vector PL_MIN_CONST = '-16 -16 -24';
 
 // spawnpoint prios
 const int SPAWN_PRIO_NEAR_TEAMMATE_FOUND = 200;
