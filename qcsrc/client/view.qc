@@ -124,7 +124,7 @@ vector GetCurrentFov(float fov)
 
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 	zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > 16)
+	if(zoomfactor < 1 || zoomfactor > 30)
 		zoomfactor = 2.5;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0)
@@ -155,7 +155,7 @@ vector GetCurrentFov(float fov)
 	}
 	else if(autocvar_cl_spawnzoom && zoomin_effect)
 	{
-		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 16);
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 30);
 
 		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime);
 		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
