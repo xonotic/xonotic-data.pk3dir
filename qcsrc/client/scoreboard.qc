@@ -1010,7 +1010,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float fontsize = height * 1/3;
 	float weapon_height = height * 2/3;
 	float weapon_width = sbwidth / columnns / rows;
-	bool g_instagib = false;
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y + autocvar_scoreboard_border_thickness;
@@ -1041,9 +1040,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	int weapons_with_stats = 0;
 	if(rows == 2)
 		pos.x += weapon_width / 2;
-
-	if(switchweapon == WEP_VAPORIZER)
-		g_instagib = true; // TODO: real detection for instagib?
 
 	if(autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
