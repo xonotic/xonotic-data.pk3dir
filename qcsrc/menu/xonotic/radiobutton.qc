@@ -57,7 +57,12 @@ void XonoticRadioButton_loadCvars(entity me)
 	if(me.cvarValue)
 	{
 		if(me.cvarName)
-			me.checked = (cvar_string(me.cvarName) == me.cvarValue);
+		{
+			if(me.getCvarValueFromCvar)
+				me.checked = (cvar_string(me.cvarName) == cvar_string(me.cvarValue));
+			else
+				me.checked = (cvar_string(me.cvarName) == me.cvarValue);
+		}
 	}
 	else
 	{
