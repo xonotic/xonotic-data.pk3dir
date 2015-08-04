@@ -124,7 +124,7 @@ vector GetCurrentFov(float fov)
 
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 	zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > 16)
+	if(zoomfactor < 1 || zoomfactor > 30)
 		zoomfactor = 2.5;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0)
@@ -155,7 +155,7 @@ vector GetCurrentFov(float fov)
 	}
 	else if(autocvar_cl_spawnzoom && zoomin_effect)
 	{
-		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 16);
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 30);
 
 		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime);
 		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
@@ -1054,7 +1054,11 @@ void CSQC_UpdateView(float w, float h)
 
 	CSQCPlayer_SetCamera();
 
-	myteam = GetPlayerColor(player_localentnum - 1);
+	if(player_localentnum <= maxclients) // is it a client?
+		current_player = player_localentnum - 1;
+	else // then player_localentnum is the vehicle I'm driving
+		current_player = player_localnum;
+	myteam = GetPlayerColor(current_player);
 
 	if(myteam != prev_myteam)
 	{

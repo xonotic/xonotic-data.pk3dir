@@ -13,6 +13,9 @@
 #include "../common/deathtypes.qh"
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
+
+#include "../server/mutators/gamemode_ctf.qh"
+
 #include "../common/stats.qh"
 
 #include "../csqcmodellib/cl_player.qh"
@@ -789,11 +792,17 @@ void HUD_Weapons(void)
 	// draw items
 	row = column = 0;
 	vector label_size = '1 1 0' * min(weapon_size.x, weapon_size.y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
+	vector noncurrent_pos = '0 0 0';
+	vector noncurrent_size = weapon_size * bound(0, autocvar_hud_panel_weapons_noncurrent_scale, 1);
+	float noncurrent_alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_weapons_noncurrent_alpha, 1);
+	bool isCurrent;
+
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
 		self = weaponorder[i];
 		weapon_id = self.impulse;
+		isCurrent = (self.weapon == switchweapon);
 
 		// skip if this weapon doesn't exist
 		if(!self || weapon_id < 0) { continue; }
@@ -804,12 +813,12 @@ void HUD_Weapons(void)
 			continue;
 
 		// figure out the drawing position of weapon
-		weapon_pos = (panel_pos
-			+ eX * column * weapon_size.x
-			+ eY * row * weapon_size.y);
+		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
+		noncurrent_pos.x = weapon_pos.x + (weapon_size.x - noncurrent_size.x) / 2;
+		noncurrent_pos.y = weapon_pos.y + (weapon_size.y - noncurrent_size.y) / 2;
 
 		// draw background behind currently selected weapon
-		if(self.weapon == switchweapon)
+		if(isCurrent)
 			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
@@ -827,7 +836,10 @@ void HUD_Weapons(void)
 		if(weapons_stat & WepSet_FromWeapon(self.weapon))
 		{
 			// draw the weapon image
-			drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			if(isCurrent)
+				drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			else
+				drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '1 1 1', noncurrent_alpha, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)
@@ -889,7 +901,7 @@ void HUD_Weapons(void)
 		}
 		else // draw a "ghost weapon icon" if you don't have the weapon
 		{
-			drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '0.2 0.2 0.2', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
@@ -950,51 +962,48 @@ void HUD_Weapons(void)
 }
 
 // Ammo (#1)
-void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
+void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector color)
 {
-
 	HUD_Panel_DrawProgressBar(
 		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x,
 		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize.x,
 		autocvar_hud_panel_ammo_progressbar_name,
-		getstatf(STAT_NADE_BONUS_SCORE), 0, 0, color,
+		progress, 0, 0, color,
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-
 }
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
 {
-	float theAlpha = 1, a, b;
-	vector nade_color, picpos, numpos;
+	float bonusNades    = getstatf(STAT_NADE_BONUS);
+	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
+	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
+	vector nadeColor    = Nade_Color(bonusType);
+	string nadeIcon     = Nade_Icon(bonusType);
 
-	nade_color = Nade_Color(getstati(STAT_NADE_BONUS_TYPE));
-
-	a = getstatf(STAT_NADE_BONUS);
-	b = getstatf(STAT_NADE_BONUS_SCORE);
+	vector iconPos, textPos;
 
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
-		numpos = myPos;
-		picpos = myPos + eX * 2 * mySize.y;
+		iconPos = myPos + eX * 2 * mySize.y;
+		textPos = myPos;
 	}
 	else
 	{
-		numpos = myPos + eX * mySize.y;
-		picpos = myPos;
+		iconPos = myPos;
+		textPos = myPos + eX * mySize.y;
 	}
 
-	DrawNadeScoreBar(myPos, mySize, nade_color);
-
-	if(b > 0 || a > 0)
+	if(bonusNades > 0 || bonusProgress > 0)
 	{
+		DrawNadeProgressBar(myPos, mySize, bonusProgress, nadeColor);
+
 		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(textPos, ftos(bonusNades), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		if(draw_expanding)
-			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
+			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
 
-		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize.y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
 }
 
@@ -2316,7 +2325,7 @@ void HUD_Score(void)
 	vector distribution_color;
 	entity tm, pl, me;
 
-	me = playerslots[player_localentnum - 1];
+	me = playerslots[current_player];
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
@@ -2854,154 +2863,184 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 }
 
 // CTF HUD modicon section
-float redflag_prevframe, blueflag_prevframe; // status during previous frame
-int redflag_prevstatus, blueflag_prevstatus; // last remembered status
-float redflag_statuschange_time, blueflag_statuschange_time; // time when the status changed
+int redflag_prevframe, blueflag_prevframe, yellowflag_prevframe, pinkflag_prevframe, neutralflag_prevframe; // status during previous frame
+int redflag_prevstatus, blueflag_prevstatus, yellowflag_prevstatus, pinkflag_prevstatus, neutralflag_prevstatus; // last remembered status
+float redflag_statuschange_time, blueflag_statuschange_time, yellowflag_statuschange_time, pinkflag_statuschange_time, neutralflag_statuschange_time; // time when the status changed
 
 void HUD_Mod_CTF_Reset(void)
 {
-	redflag_prevstatus = blueflag_prevstatus = redflag_prevframe = blueflag_prevframe = redflag_statuschange_time = blueflag_statuschange_time = 0;
+	redflag_prevstatus = blueflag_prevstatus = yellowflag_prevstatus = pinkflag_prevstatus = neutralflag_prevstatus = 0;
+	redflag_prevframe = blueflag_prevframe = yellowflag_prevframe = pinkflag_prevframe = neutralflag_prevframe = 0;
+	redflag_statuschange_time = blueflag_statuschange_time = yellowflag_statuschange_time = pinkflag_statuschange_time = neutralflag_statuschange_time = 0;
 }
 
 void HUD_Mod_CTF(vector pos, vector mySize)
 {
-	vector redflag_pos, blueflag_pos;
+	vector redflag_pos, blueflag_pos, yellowflag_pos, pinkflag_pos, neutralflag_pos;
 	vector flag_size;
 	float f; // every function should have that
 
-	int redflag, blueflag; // current status
-	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
-	int stat_items;
+	int redflag, blueflag, yellowflag, pinkflag, neutralflag; // current status
+	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime, neutralflag_statuschange_elapsedtime; // time since the status changed
+	bool ctf_oneflag; // one-flag CTF mode enabled/disabled
+	int stat_items = getstati(STAT_CTF_FLAGSTATUS, 0, 24);
+	float fs, fs2, fs3, size1, size2;
+	vector e1, e2;
 
-	stat_items = getstati(STAT_ITEMS, 0, 24);
-	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
-	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
+	redflag = (stat_items/CTF_RED_FLAG_TAKEN) & 3;
+	blueflag = (stat_items/CTF_BLUE_FLAG_TAKEN) & 3;
+	yellowflag = (stat_items/CTF_YELLOW_FLAG_TAKEN) & 3;
+	pinkflag = (stat_items/CTF_PINK_FLAG_TAKEN) & 3;
+	neutralflag = (stat_items/CTF_NEUTRAL_FLAG_TAKEN) & 3;
+	
+	ctf_oneflag = (stat_items & CTF_FLAG_NEUTRAL);
 
-	if(redflag || blueflag)
-		mod_active = 1;
-	else
-		mod_active = 0;
+	mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag);
 
-	if(autocvar__hud_configure)
-	{
+	if (autocvar__hud_configure) {
 		redflag = 1;
 		blueflag = 2;
+		if (team_count >= 3)
+			yellowflag = 2;
+		if (team_count >= 4)
+			pinkflag = 3;
+		ctf_oneflag = neutralflag = 0; // disable neutral flag in hud editor?
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
-	if (redflag != redflag_prevframe)
-	{
-		redflag_statuschange_time = time;
-		redflag_prevstatus = redflag_prevframe;
-		redflag_prevframe = redflag;
-	}
+	#define X(team) do {															\
+		if (team##flag != team##flag_prevframe) {									\
+    		team##flag_statuschange_time = time;									\
+    		team##flag_prevstatus = team##flag_prevframe;							\
+    		team##flag_prevframe = team##flag;										\
+    	}																			\
+    	team##flag_statuschange_elapsedtime = time - team##flag_statuschange_time; 	\
+    } while (0)
+	X(red);
+	X(blue);
+	X(yellow);
+	X(pink);
+	X(neutral);
+	#undef X
 
-	if (blueflag != blueflag_prevframe)
-	{
-		blueflag_statuschange_time = time;
-		blueflag_prevstatus = blueflag_prevframe;
-		blueflag_prevframe = blueflag;
-	}
-
-	redflag_statuschange_elapsedtime = time - redflag_statuschange_time;
-	blueflag_statuschange_elapsedtime = time - blueflag_statuschange_time;
-
-	float BLINK_FACTOR = 0.15;
-	float BLINK_BASE = 0.85;
+	const float BLINK_FACTOR = 0.15;
+	const float BLINK_BASE = 0.85;
 	// note:
 	//   RMS = sqrt(BLINK_BASE^2 + 0.5 * BLINK_FACTOR^2)
 	// thus
 	//   BLINK_BASE = sqrt(RMS^2 - 0.5 * BLINK_FACTOR^2)
 	// ensure RMS == 1
-	float BLINK_FREQ = 5; // circle frequency, = 2*pi*frequency in hertz
+	const float BLINK_FREQ = 5; // circle frequency, = 2*pi*frequency in hertz
 
-	string red_icon, red_icon_prevstatus;
-	float red_alpha, red_alpha_prevstatus;
-	red_alpha = red_alpha_prevstatus = 1;
-	switch(redflag) {
-		case 1: red_icon = "flag_red_taken"; break;
-		case 2: red_icon = "flag_red_lost"; break;
-		case 3: red_icon = "flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_2))
-				red_icon = "flag_red_shielded";
-			else
-				red_icon = string_null;
-			break;
-	}
-	switch(redflag_prevstatus) {
-		case 1: red_icon_prevstatus = "flag_red_taken"; break;
-		case 2: red_icon_prevstatus = "flag_red_lost"; break;
-		case 3: red_icon_prevstatus = "flag_red_carrying"; red_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if(redflag == 3)
-				red_icon_prevstatus = "flag_red_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_2))
-				red_icon_prevstatus = "flag_red_shielded";
-			else
-				red_icon_prevstatus = string_null;
-			break;
-	}
+	#define X(team, cond) \
+	string team##_icon, team##_icon_prevstatus; \
+	int team##_alpha, team##_alpha_prevstatus; \
+	team##_alpha = team##_alpha_prevstatus = 1; \
+	do { \
+		switch (team##flag) { \
+			case 1: team##_icon = "flag_" #team "_taken"; break; \
+			case 2: team##_icon = "flag_" #team "_lost"; break; \
+			case 3: team##_icon = "flag_" #team "_carrying"; team##_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; \
+			default: \
+				if ((stat_items & CTF_SHIELDED) && (cond)) { \
+					team##_icon = "flag_" #team "_shielded"; \
+				} else { \
+					team##_icon = string_null; \
+				} \
+				break; \
+		} \
+		switch (team##flag_prevstatus) { \
+			case 1: team##_icon_prevstatus = "flag_" #team "_taken"; break; \
+			case 2: team##_icon_prevstatus = "flag_" #team "_lost"; break; \
+			case 3: team##_icon_prevstatus = "flag_" #team "_carrying"; team##_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break; \
+			default: \
+				if (team##flag == 3) { \
+					team##_icon_prevstatus = "flag_" #team "_carrying"; /* make it more visible */\
+				} else if((stat_items & CTF_SHIELDED) && (cond)) { \
+					team##_icon_prevstatus = "flag_" #team "_shielded"; \
+				} else { \
+					team##_icon_prevstatus = string_null; \
+				} \
+				break; \
+		} \
+	} while (0)
+	X(red, myteam != NUM_TEAM_1);
+	X(blue, myteam != NUM_TEAM_2);
+	X(yellow, myteam != NUM_TEAM_3);
+	X(pink, myteam != NUM_TEAM_4);
+	X(neutral, true);
+	#undef X
 
-	string blue_icon, blue_icon_prevstatus;
-	float blue_alpha, blue_alpha_prevstatus;
-	blue_alpha = blue_alpha_prevstatus = 1;
-	switch(blueflag) {
-		case 1: blue_icon = "flag_blue_taken"; break;
-		case 2: blue_icon = "flag_blue_lost"; break;
-		case 3: blue_icon = "flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+	if (ctf_oneflag) {
+		// hacky, but these aren't needed
+		red_icon = red_icon_prevstatus = blue_icon = blue_icon_prevstatus = yellow_icon = yellow_icon_prevstatus = pink_icon = pink_icon_prevstatus = string_null;
+		fs = fs2 = fs3 = 1;
+	} else switch (team_count) {
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_1))
-				blue_icon = "flag_blue_shielded";
-			else
-				blue_icon = string_null;
-			break;
-	}
-	switch(blueflag_prevstatus) {
-		case 1: blue_icon_prevstatus = "flag_blue_taken"; break;
-		case 2: blue_icon_prevstatus = "flag_blue_lost"; break;
-		case 3: blue_icon_prevstatus = "flag_blue_carrying"; blue_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
-		default:
-			if(blueflag == 3)
-				blue_icon_prevstatus = "flag_blue_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_1))
-				blue_icon_prevstatus = "flag_blue_shielded";
-			else
-				blue_icon_prevstatus = string_null;
-			break;
+		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
+		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;
+		case 4: fs = 0.75; fs2 = 0.25; fs3 = 0.5; break;
 	}
 
-	if(mySize.x > mySize.y) {
-		if (myteam == NUM_TEAM_1) { // always draw own flag on left
-			redflag_pos = pos;
-			blueflag_pos = pos + eX * 0.5 * mySize.x;
-		} else {
-			blueflag_pos = pos;
-			redflag_pos = pos + eX * 0.5 * mySize.x;
-		}
-		flag_size = eX * 0.5 * mySize.x + eY * mySize.y;
+	if (mySize_x > mySize_y) {
+		size1 = mySize_x;
+		size2 = mySize_y;
+		e1 = eX;
+		e2 = eY;
 	} else {
-		if (myteam == NUM_TEAM_1) { // always draw own flag on left
-			redflag_pos = pos;
-			blueflag_pos = pos + eY * 0.5 * mySize.y;
-		} else {
-			blueflag_pos = pos;
-			redflag_pos = pos + eY * 0.5 * mySize.y;
-		}
-		flag_size = eY * 0.5 * mySize.y + eX * mySize.x;
+		size1 = mySize_y;
+		size2 = mySize_x;
+		e1 = eY;
+		e2 = eX;
 	}
 
-	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
-	if(red_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(redflag_pos, red_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
-	if(red_icon)
-		drawpic_aspect_skin(redflag_pos, red_icon, flag_size, '1 1 1', panel_fg_alpha * red_alpha * f, DRAWFLAG_NORMAL);
+	switch (myteam) {
+		default:
+		case NUM_TEAM_1: {
+			redflag_pos = pos;
+			blueflag_pos = pos + eX * fs2 * size1;
+			yellowflag_pos = pos - eX * fs2 * size1;
+			pinkflag_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_2: {
+			redflag_pos = pos + eX * fs2 * size1;
+			blueflag_pos = pos;
+			yellowflag_pos = pos - eX * fs2 * size1;
+			pinkflag_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_3: {
+			redflag_pos = pos + eX * fs3 * size1;
+			blueflag_pos = pos - eX * fs2 * size1;
+			yellowflag_pos = pos;
+			pinkflag_pos = pos + eX * fs2 * size1;
+			break;
+		}
+		case NUM_TEAM_4: {
+			redflag_pos = pos - eX * fs2 * size1;
+			blueflag_pos = pos + eX * fs3 * size1;
+			yellowflag_pos = pos + eX * fs2 * size1;
+			pinkflag_pos = pos;
+			break;
+		}
+	}
+	neutralflag_pos = pos;
+	flag_size = e1 * fs * size1 + e2 * size2;
 
-	f = bound(0, blueflag_statuschange_elapsedtime*2, 1);
-	if(blue_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(blueflag_pos, blue_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
-	if(blue_icon)
-		drawpic_aspect_skin(blueflag_pos, blue_icon, flag_size, '1 1 1', panel_fg_alpha * blue_alpha * f, DRAWFLAG_NORMAL);
+	#define X(team) do { \
+		f = bound(0, team##flag_statuschange_elapsedtime * 2, 1); \
+		if (team##_icon_prevstatus && f < 1) \
+			drawpic_aspect_skin_expanding(team##flag_pos, team##_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * team##_alpha_prevstatus, DRAWFLAG_NORMAL, f); \
+		if (team##_icon) \
+			drawpic_aspect_skin(team##flag_pos, team##_icon, flag_size, '1 1 1', panel_fg_alpha * team##_alpha * f, DRAWFLAG_NORMAL); \
+	} while (0)
+	X(red);
+	X(blue);
+	X(yellow);
+	X(pink);
+	X(neutral);
+	#undef X
 }
 
 // Keyhunt HUD modicon section
@@ -3782,7 +3821,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
+				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(current_player));
 			drawInfoMessage(s);
 
 			if(spectatee_status == -1)
@@ -4637,8 +4676,6 @@ void HUD_Main (void)
 		hud_skin_prev = strzone(autocvar_hud_skin);
 	}
 
-    current_player = player_localentnum;
-
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
 	{
@@ -4658,11 +4695,11 @@ void HUD_Main (void)
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player, "colors"));
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player, "colors"));
 				color = colormapPaletteColor(f % 16, 1);
 			}
 			else

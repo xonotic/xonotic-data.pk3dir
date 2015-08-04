@@ -645,6 +645,7 @@ void vehicles_enter()
     self.owner.vehicle_ammo2    = self.vehicle_ammo2;
     self.owner.vehicle_reload1  = self.vehicle_reload1;
     self.owner.vehicle_reload2  = self.vehicle_reload2;
+    self.owner.vehicle_energy   = self.vehicle_energy;
 
     // Cant do this, hides attached objects too.
     //self.exteriormodeltoclient = self.owner;
