@@ -23,11 +23,11 @@ models/relics/sign_resistance
 		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_regeneration
+models/relics/sign_medic
 {
 	cull none
  	{
-		map models/relics/sign_regeneration
+		map models/relics/sign_medic
 		blendfunc add
 		rgbgen lightingDiffuse
 	}
@@ -50,11 +50,11 @@ models/relics/sign_ammo
 		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_splashdamage
+models/relics/sign_bash
 {
 	cull none
  	{
-		map models/relics/sign_splashdamage
+		map models/relics/sign_bash
 		blendfunc add
 		rgbgen lightingDiffuse
 	}
@@ -104,11 +104,11 @@ models/relics/sign_invisible
 		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_resurrection
+models/relics/sign_blessed
 {
 	cull none
  	{
-		map models/relics/sign_resurrection
+		map models/relics/sign_blessed
 		blendfunc add
 		rgbgen lightingDiffuse
 	}
