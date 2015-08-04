@@ -50,15 +50,6 @@ models/relics/sign_ammo
 		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_damage
-{
-	cull none
- 	{
-		map models/relics/sign_damage
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
 models/relics/sign_splashdamage
 {
 	cull none
@@ -68,29 +59,11 @@ models/relics/sign_splashdamage
 		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_firingspeed
-{
-	cull none
- 	{
-		map models/relics/sign_firingspeed
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
 models/relics/sign_disability
 {
 	cull none
  	{
 		map models/relics/sign_disability
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
-models/relics/sign_teamboost
-{
-	cull none
- 	{
-		map models/relics/sign_teamboost
 		blendfunc add
 		rgbgen lightingDiffuse
 	}
@@ -127,15 +100,6 @@ models/relics/sign_invisible
 	cull none
  	{
 		map models/relics/sign_invisible
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
-models/relics/sign_radioactive
-{
-	cull none
- 	{
-		map models/relics/sign_radioactive
 		blendfunc add
 		rgbgen lightingDiffuse
 	}
