@@ -240,11 +240,15 @@ void XonoticMapList_refilter(entity me)
 	{
 		j = MapInfo_FindName(argv(i));
 		if(j >= 0)
-			s = strcat(
-				substring(s, 0, j),
-				"1",
-				substring(s, j+1, MapInfo_count - (j+1))
-			);
+		{
+			// double check that the two mapnames are "identical", not just share the same prefix
+			if (strlen(MapInfo_BSPName_ByID(j)) == strlen(argv(i)))
+				s = strcat(
+					substring(s, 0, j),
+					"1",
+					substring(s, j+1, MapInfo_count - (j+1))
+				);
+		}
 	}
 	me.g_maplistCache = strzone(s);
 	if(gt != me.lastGametype || f != me.lastFeatures)
