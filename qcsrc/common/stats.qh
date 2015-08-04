@@ -173,9 +173,7 @@ const int STAT_PL_CROUCH_VIEW_OFS3    = 119;
 const int STAT_WEAPONSINMAP           = 120;
 const int STAT_WEAPONSINMAP2          = 121;
 const int STAT_WEAPONSINMAP3          = 122;
-// 121 empty?
-// 122 empty?
-// 123 empty?
+const int STAT_CTF_FLAGSTATUS         = 123;
 // 124 empty?
 // 125 empty?
 // 126 empty?
