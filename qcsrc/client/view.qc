@@ -1815,13 +1815,9 @@ void CSQC_common_hud(void)
 	HUD_Main(); // always run these functions for alpha checks
 	HUD_DrawScoreboard();
 
-	if (scoreboard_active) // scoreboard/accuracy
+	// scoreboard/accuracy, map/gametype voting screen
+	if (scoreboard_active || intermission == 2)
 		HUD_Reset();
-	else if (intermission == 2) // map voting screen
-	{
-		MapVote_Draw();
-		HUD_Reset();
-	}
 }
 
 
