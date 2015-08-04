@@ -57,20 +57,20 @@ float sv_cvar(string cvarname)
 	} \
 	ACCUMULATE_FUNCTION(RegisterBuffs, RegisterBuffs_##sname)
 
-REGISTER_BUFF(_("Ammo"),ammo,AMMO,3,'0.2 1 0.2');
-REGISTER_BUFF(_("Resistance"),resistance,RESISTANCE,0,'0.3 0.2 1');
-REGISTER_BUFF(_("Speed"),speed,SPEED,9,'1 1 0.2');
-REGISTER_BUFF(_("Medic"),medic,MEDIC,1,'1 0.3 1');
-REGISTER_BUFF(_("Bash"),bash,BASH,5,'1 0.4 0');
-REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,2,'1 0.15 0');
-REGISTER_BUFF(_("Disability"),disability,DISABILITY,7,'0.66 0.66 0.73');
-REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'0.55 0.5 1');
-REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.7 0.2 1');
-REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'1 0.2 0.5');
-REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.9 0.9 0.9');
-REGISTER_BUFF(_("Inferno"),inferno,INFERNO,16,'2 0 0');
-REGISTER_BUFF(_("Swapper"),swapper,SWAPPER,17,'0.59 0 0.95');
-REGISTER_BUFF(_("Magnet"),magnet,MAGNET,18,'0.45 0.45 0.45');
+REGISTER_BUFF(_("Ammo"),ammo,AMMO,3,'0.76 1 0.1');
+REGISTER_BUFF(_("Resistance"),resistance,RESISTANCE,0,'0.36 1 0.07');
+REGISTER_BUFF(_("Speed"),speed,SPEED,9,'0.1 1 0.84');
+REGISTER_BUFF(_("Medic"),medic,MEDIC,1,'1 0.12 0');
+REGISTER_BUFF(_("Bash"),bash,BASH,5,'1 0.39 0');
+REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,2,'1 0 0.24');
+REGISTER_BUFF(_("Disability"),disability,DISABILITY,7,'0.94 0.3 1');
+REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'1 0.23 0.61');
+REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.24 0.78 1');
+REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'0.33 0.56 1');
+REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.5 0.5 1');
+REGISTER_BUFF(_("Inferno"),inferno,INFERNO,16,'1 0.62 0');
+REGISTER_BUFF(_("Swapper"),swapper,SWAPPER,17,'0.63 0.36 1');
+REGISTER_BUFF(_("Magnet"),magnet,MAGNET,18,'1 0.95 0.18');
 #undef REGISTER_BUFF
 
 #ifdef SVQC
