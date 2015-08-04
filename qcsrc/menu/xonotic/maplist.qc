@@ -53,6 +53,7 @@ void MapList_StringFilterBox_Change(entity box, entity me);
 float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
 void MapList_Add_Shown(entity btn, entity me);
 void MapList_Remove_Shown(entity btn, entity me);
+void MapList_Add_All(entity btn, entity me);
 void MapList_Remove_All(entity btn, entity me);
 void MapList_LoadMap(entity btn, entity me);
 #endif
@@ -297,14 +298,13 @@ void MapList_Remove_Shown(entity btn, entity me)
 
 void MapList_Add_All(entity btn, entity me)
 {
-	// TODO make it work
-	float i, n;
-	n = strlen(me.g_maplistCache);
-	for (i = 0 ; i < n; i++)
-	{
-		if (!me.g_maplistCacheQuery(me, i))
-			me.g_maplistCacheToggle(me, i);
-	}
+	float i;
+	string s;
+	MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, MapInfo_ForbiddenFlags(), 0); // all
+	s = "";
+	for(i = 0; i < MapInfo_count; ++i)
+		s = strcat(s, " ", MapInfo_BSPName_ByID(i));
+	cvar_set("g_maplist", substring(s, 1, strlen(s) - 1));
 	me.refilter(me);
 }
 

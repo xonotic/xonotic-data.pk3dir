@@ -47,6 +47,7 @@
 \XonoticMultiplayerDialog_StringFilterBox\Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done.
 \XonoticMultiplayerDialog/Add shown\Add the maps shown in Maplist above to your selection
 \XonoticMultiplayerDialog/Remove shown\Remove the maps shown in Maplist above from your selection
+\XonoticMultiplayerDialog/Add all\Add every available map to your selection
 \XonoticMultiplayerDialog/Remove all\Remove all the maps from your selection
 
 
