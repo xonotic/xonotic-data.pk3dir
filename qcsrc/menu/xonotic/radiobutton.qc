@@ -15,7 +15,7 @@ CLASS(XonoticRadioButton, RadioButton)
 	ATTRIB(XonoticRadioButton, cvarName, string, string_null)
 	ATTRIB(XonoticRadioButton, cvarValue, string, string_null)
 	ATTRIB(XonoticRadioButton, cvarOffValue, string, string_null)
-	ATTRIB(XonoticRadioButton, getCvarValueFromCvar, float, 0)
+	ATTRIB(XonoticRadioButton, cvarValueIsAnotherCvar, float, 0)
 	METHOD(XonoticRadioButton, loadCvars, void(entity))
 	METHOD(XonoticRadioButton, saveCvars, void(entity))
 
@@ -58,7 +58,7 @@ void XonoticRadioButton_loadCvars(entity me)
 	{
 		if(me.cvarName)
 		{
-			if(me.getCvarValueFromCvar)
+			if(me.cvarValueIsAnotherCvar)
 				me.checked = (cvar_string(me.cvarName) == cvar_string(me.cvarValue));
 			else
 				me.checked = (cvar_string(me.cvarName) == me.cvarValue);
@@ -107,7 +107,7 @@ void XonoticRadioButton_saveCvars(entity me)
 		{
 			if(me.checked)
 			{
-				if(me.getCvarValueFromCvar)
+				if(me.cvarValueIsAnotherCvar)
 					cvar_set(me.cvarName, cvar_string(me.cvarValue));
 				else
 					cvar_set(me.cvarName, me.cvarValue);
