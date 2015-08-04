@@ -159,9 +159,9 @@ void XonoticServerCreateTab_fill(entity me)
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
 		// we use 5.8 here to visually match the bottom line of the component on the left (Bot Skill)
-		me.TD(me, me.rows - 5.8, 3, me.mapListBox);
+		me.TD(me, me.rows - 6.8, 3, me.mapListBox);
 
-	me.gotoRC(me, me.rows - 3.8, me.firstColumn);
+	me.gotoRC(me, me.rows - 4.5, me.firstColumn);
 		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticMapListStringFilterBox(me, 0, string_null);
@@ -172,17 +172,21 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onChangeEntity = me.mapListBox;
 			me.mapListBox.controlledTextbox = e;
 
-	// here we use the following line instead of me.TR(me) for better visual spacing;
-	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
-	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
+	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
 		// the selection buttons
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Add shown"), '0 0 0'));
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Add shown"), '0 0 0'));
 			e.onClick = MapList_Add_Shown;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Remove shown"), '0 0 0'));
+		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Remove shown"), '0 0 0'));
 			e.onClick = MapList_Remove_Shown;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1, e = makeXonoticButton(_("Remove all"), '0 0 0'));
+	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Add all"), '0 0 0'));
+			e.onClick = MapList_Add_All;
+			e.onClickEntity = me.mapListBox;
+		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Remove all"), '0 0 0'));
 			e.onClick = MapList_Remove_All;
 			e.onClickEntity = me.mapListBox;
 

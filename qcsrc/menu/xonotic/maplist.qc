@@ -295,6 +295,19 @@ void MapList_Remove_Shown(entity btn, entity me)
 	me.refilter(me);
 }
 
+void MapList_Add_All(entity btn, entity me)
+{
+	// TODO make it work
+	float i, n;
+	n = strlen(me.g_maplistCache);
+	for (i = 0 ; i < n; i++)
+	{
+		if (!me.g_maplistCacheQuery(me, i))
+			me.g_maplistCacheToggle(me, i);
+	}
+	me.refilter(me);
+}
+
 void MapList_Remove_All(entity btn, entity me)
 {
 	cvar_set("g_maplist", "");
