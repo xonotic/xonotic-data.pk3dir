@@ -4788,7 +4788,7 @@ void HUD_ItemsTime(void)
 
 	vector offset = '0 0 0';
 	float newSize;
-	if(autocvar_hud_panel_itemstime_size_dinamic)
+	if(autocvar_hud_panel_itemstime_dynamicsize)
 	{
 		if(autocvar__hud_configure)
 		if(menu_enabled != 2)

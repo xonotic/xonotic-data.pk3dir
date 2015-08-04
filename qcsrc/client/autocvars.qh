@@ -270,7 +270,7 @@ float autocvar_hud_panel_healtharmor_progressbar_gfx_lowhealth;
 float autocvar_hud_panel_healtharmor_progressbar_gfx_smooth;
 int autocvar_hud_panel_healtharmor_text;
 int autocvar_hud_panel_itemstime = 2;
-float autocvar_hud_panel_itemstime_size_dinamic = 1;
+float autocvar_hud_panel_itemstime_dynamicsize = 1;
 float autocvar_hud_panel_itemstime_ratio = 2;
 int autocvar_hud_panel_itemstime_iconalign;
 bool autocvar_hud_panel_itemstime_progressbar = 0;

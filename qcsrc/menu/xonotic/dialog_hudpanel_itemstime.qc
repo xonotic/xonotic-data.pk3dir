@@ -41,6 +41,6 @@ void XonoticHUDItemsTimeDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_showspawned", _("Show spawned items")));
 	me.TR(me);
-		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_size_dinamic", _("Dinamic size")));
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_dynamicsize", _("Dynamic size")));
 }
 #endif
