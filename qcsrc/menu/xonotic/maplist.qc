@@ -33,6 +33,9 @@ CLASS(XonoticMapList, XonoticListBox)
 	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float))
 	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float))
 
+	ATTRIB(XonoticMapList, stringFilter, string, string_null)
+	ATTRIB(XonoticMapList, stringFilterBox, entity, NULL)
+
 	ATTRIB(XonoticMapList, startButton, entity, NULL)
 
 	METHOD(XonoticMapList, loadCvars, void(entity))
@@ -45,8 +48,13 @@ CLASS(XonoticMapList, XonoticListBox)
 	ATTRIB(XonoticMapList, alphaBG, float, 0)
 ENDCLASS(XonoticMapList)
 entity makeXonoticMapList();
-void MapList_All(entity btn, entity me);
-void MapList_None(entity btn, entity me);
+entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar);
+void MapList_StringFilterBox_Change(entity box, entity me);
+float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
+void MapList_Add_Shown(entity btn, entity me);
+void MapList_Remove_Shown(entity btn, entity me);
+void MapList_Add_All(entity btn, entity me);
+void MapList_Remove_All(entity btn, entity me);
 void MapList_LoadMap(entity btn, entity me);
 #endif
 
@@ -56,12 +64,22 @@ void XonoticMapList_destroy(entity me)
 	MapInfo_Shutdown();
 }
 
+entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar)
+{
+	return makeXonoticInputBox(doEditColorCodes, theCvar);
+}
 entity makeXonoticMapList()
 {
 	entity me;
 	me = NEW(XonoticMapList);
 	me.configureXonoticMapList(me);
 	return me;
+}
+
+entity MapList_Set_String_Filter_Box(entity me, entity e)
+{
+	me.stringFilterBox = e;
+	return e;
 }
 
 void XonoticMapList_configureXonoticMapList(entity me)
@@ -74,6 +92,7 @@ void XonoticMapList_loadCvars(entity me)
 {
 	me.refilter(me);
 }
+
 
 float XonoticMapList_g_maplistCacheQuery(entity me, float i)
 {
@@ -213,7 +232,10 @@ void XonoticMapList_refilter(entity me)
 	gt = MapInfo_CurrentGametype();
 	f = MapInfo_CurrentFeatures();
 	MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	if (me.stringFilter)
+		MapInfo_FilterString(me.stringFilter);
 	me.nItems = MapInfo_count;
+
 	for(i = 0; i < MapInfo_count; ++i)
 		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
 	if(me.g_maplistCache)
@@ -226,11 +248,15 @@ void XonoticMapList_refilter(entity me)
 	{
 		j = MapInfo_FindName(argv(i));
 		if(j >= 0)
-			s = strcat(
-				substring(s, 0, j),
-				"1",
-				substring(s, j+1, MapInfo_count - (j+1))
-			);
+		{
+			// double check that the two mapnames are "identical", not just share the same prefix
+			if (strlen(MapInfo_BSPName_ByID(j)) == strlen(argv(i)))
+				s = strcat(
+					substring(s, 0, j),
+					"1",
+					substring(s, j+1, MapInfo_count - (j+1))
+				);
+		}
 	}
 	me.g_maplistCache = strzone(s);
 	if(gt != me.lastGametype || f != me.lastFeatures)
@@ -246,7 +272,43 @@ void XonoticMapList_refilterCallback(entity me, entity cb)
 	me.refilter(me);
 }
 
-void MapList_All(entity btn, entity me)
+void MapList_StringFilterBox_Change(entity box, entity me)
+{
+	if(me.stringFilter)
+		strunzone(me.stringFilter);
+	if(box.text != "")
+		me.stringFilter = strzone(box.text);
+	else
+		me.stringFilter = string_null;
+	
+	me.refilter(me);
+}
+
+void MapList_Add_Shown(entity btn, entity me)
+{
+	float i, n;
+	n = strlen(me.g_maplistCache);
+	for (i = 0 ; i < n; i++)
+	{
+		if (!me.g_maplistCacheQuery(me, i))
+			me.g_maplistCacheToggle(me, i);
+	}
+	me.refilter(me);
+}
+
+void MapList_Remove_Shown(entity btn, entity me)
+{
+	float i, n;
+	n = strlen(me.g_maplistCache);
+	for (i = 0 ; i < n; i++)
+	{
+		if (me.g_maplistCacheQuery(me, i))
+			me.g_maplistCacheToggle(me, i);
+	}
+	me.refilter(me);
+}
+
+void MapList_Add_All(entity btn, entity me)
 {
 	float i;
 	string s;
@@ -258,7 +320,7 @@ void MapList_All(entity btn, entity me)
 	me.refilter(me);
 }
 
-void MapList_None(entity btn, entity me)
+void MapList_Remove_All(entity btn, entity me)
 {
 	cvar_set("g_maplist", "");
 	me.refilter(me);
@@ -367,9 +429,38 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 		if(MapInfo_FindName_firstResult >= 0)
 			me.setSelected(me, MapInfo_FindName_firstResult);
 	}
+	else if(shift & S_CTRL && scan == 'f') // ctrl-f (as in "F"ind)
+	{
+		me.parent.setFocus(me.parent, me.stringFilterBox);
+	}
+	else if(shift & S_CTRL && scan == 'u') // ctrl-u (remove stringFilter line
+	{
+		me.stringFilterBox.setText(me.stringFilterBox, "");
+		MapList_StringFilterBox_Change(me.stringFilterBox, me);
+	}
 	else
 		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
 	return 1;
 }
 
+float MapList_StringFilterBox_keyDown(entity me, float scan, float ascii, float shift)
+{
+	// in this section, note that onChangeEntity has the ref to mapListBox
+	// we make use of that, instead of extending a class to add one more attrib
+	switch(scan)
+	{
+		case K_KP_ENTER:
+		case K_ENTER:
+			// move the focus to the mapListBox
+			me.onChangeEntity.parent.setFocus(me.onChangeEntity.parent, me.onChangeEntity);
+			return 1;
+		case K_KP_UPARROW:
+		case K_UPARROW:
+		case K_KP_DOWNARROW:
+		case K_DOWNARROW:
+			// pass the event to the mapListBox (to scroll up and down)
+			return me.onChangeEntity.keyDown(me.onChangeEntity, scan, ascii, shift);
+	}
+	return SUPER(XonoticInputBox).keyDown(me, scan, ascii, shift);
+}
 #endif
