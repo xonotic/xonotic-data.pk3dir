@@ -110,12 +110,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_POWERUPS:
-					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_strength");
-					HUD_Write_PanelCvar_q("_progressbar_shield");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
@@ -203,10 +200,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo_minalpha");
 					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
 					HUD_Write_PanelCvar_q("_fade_minfontsize");
-					break;
-				case HUD_PANEL_BUFFS:
-					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_name");
 			}
 			HUD_Write("\n");
 		}

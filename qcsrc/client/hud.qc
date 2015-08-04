@@ -1301,196 +1301,217 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertica
 
 // Powerups (#2)
 //
+
+// Powerup item fields (reusing existing fields)
+.string message;  // Human readable name
+.string netname;  // Icon name
+.vector colormod; // Color
+.float count;     // Time left
+.float lifetime;  // Maximum time
+
+entity powerupItems;
+int powerupItemsCount;
+
+void resetPowerupItems()
+{
+	entity item;
+	for(item = powerupItems; item; item = item.chain)
+		item.count = 0;
+
+	powerupItemsCount = 0;
+}
+
+void addPowerupItem(string name, string icon, vector color, float currentTime, float lifeTime)
+{
+	if(!powerupItems)
+		powerupItems = spawn();
+
+	entity item;
+	for(item = powerupItems; item.count; item = item.chain)
+		if(!item.chain)
+			item.chain = spawn();
+
+	item.message  = name;
+	item.netname  = icon;
+	item.colormod = color;
+	item.count    = currentTime;
+	item.lifetime = lifeTime;
+
+	++powerupItemsCount;
+}
+
+int getPowerupItemAlign(int align, int column, int row, int columns, int rows, bool isVertical)
+{
+	if(align < 2)
+		return align;
+
+	bool isTop    =  isVertical && rows > 1 && row == 0;
+	bool isBottom =  isVertical && rows > 1 && row == rows-1;
+	bool isLeft   = !isVertical && columns > 1 && column == 0;
+	bool isRight  = !isVertical && columns > 1 && column == columns-1;
+
+	if(isTop    || isLeft)  return (align == 2) ? 1 : 0;
+	if(isBottom || isRight) return (align == 2) ? 0 : 1;
+
+	return 2;
+}
+
 void HUD_Powerups(void)
 {
-	float strength_time, shield_time, superweapons_time;
+	int allItems = getstati(STAT_ITEMS, 0, 24);
+	int allBuffs = getstati(STAT_BUFFS, 0, 24);
+	int strengthTime, shieldTime, superTime;
+
+	// Initialize items
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
-		if (getstati(STAT_HEALTH) <= 0) return;
+		if(getstati(STAT_HEALTH) <= 0) return;
+		if(!(allItems & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) && !allBuffs) return;
 
-		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
-		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
-		superweapons_time = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
+		strengthTime = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
+		shieldTime = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
+		superTime = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
 
-		if (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_SUPERWEAPONS)
-			superweapons_time = 99; // force max
+		if(allItems & IT_UNLIMITED_SUPERWEAPONS)
+			superTime = 99;
 
-		// prevent stuff to show up on mismatch that will be fixed next frame
-		if (!(getstati(STAT_ITEMS, 0, 24) & IT_SUPERWEAPON))
-			superweapons_time = 0;
+		// Prevent stuff to show up on mismatch that will be fixed next frame
+		if(!(allItems & IT_SUPERWEAPON))
+			superTime = 0;
 	}
 	else
 	{
-		strength_time = 15;
-		shield_time = 27;
-		superweapons_time = 13;
+		strengthTime = 15;
+		shieldTime = 27;
+		superTime = 13;
+		allBuffs = 0;
 	}
 
+	// Add items to linked list
+	resetPowerupItems();
+
+	if(strengthTime)
+		addPowerupItem("Strength", "strength", autocvar_hud_progressbar_strength_color, strengthTime, 30);
+	if(shieldTime)
+		addPowerupItem("Shield", "shield", autocvar_hud_progressbar_shield_color, shieldTime, 30);
+	if(superTime)
+		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
+
+	entity item;
+	for(item = Buff_Type_first; item; item = item.enemy)
+		if(allBuffs & item.items)
+			addPowerupItem(item.message, strcat("buff_", item.netname), item.colormod, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+
+	if(!powerupItemsCount)
+		return;
+
+	// Draw panel background
 	HUD_Panel_UpdateCvars();
+	HUD_Panel_DrawBg(1);
 
-	draw_beginBoldFont();
+	// Set drawing area
+	vector pos = panel_pos;
+	vector size = panel_size;
+	bool isVertical = size.y > size.x;
 
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
-
-	HUD_Panel_DrawBg(bound(0, max(strength_time, shield_time, superweapons_time), 1));
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		size -= '2 2 0' * panel_bg_padding;
 	}
 
-	float panel_ar = mySize.x/mySize.y;
-	bool is_vertical = (panel_ar < 1);
-	vector shield_offset = '0 0 0', strength_offset = '0 0 0', superweapons_offset = '0 0 0';
+	// Find best partitioning of the drawing area
+	const float DESIRED_ASPECT = 6;
+	float aspect = 0, a;
+	int columns = 0, c;
+	int rows = 0, r;
+	int i = 1;
 
-	int superweapons_is = -1;
-
-	if(superweapons_time)
+	do
 	{
-		if(strength_time)
+		c = floor(powerupItemsCount / i);
+		r = ceil(powerupItemsCount / c);
+		a = isVertical ? (size.y/r) / (size.x/c) : (size.x/c) / (size.y/r);
+
+		if(i == 1 || fabs(DESIRED_ASPECT - a) < fabs(DESIRED_ASPECT - aspect))
 		{
-			if(shield_time)
-				superweapons_is = 0;
-			else
-				superweapons_is = 2;
+			aspect = a;
+			columns = c;
+			rows = r;
+		}
+	}
+	while(++i <= powerupItemsCount);
+
+	// Prevent single items from getting too wide
+	if(powerupItemsCount == 1 && aspect > DESIRED_ASPECT)
+	{
+		if(isVertical)
+		{
+			size.y *= 0.5;
+			pos.y += size.y * 0.5;
 		}
 		else
 		{
-			if(shield_time)
-				superweapons_is = 1;
-			else
-				superweapons_is = 2;
+			size.x *= 0.5;
+			pos.x += size.x * 0.5;
 		}
 	}
 
-	// FIXME handle superweapons here
-	if(superweapons_is == 0)
+	// Draw items from linked list
+	vector itemPos = pos;
+	vector itemSize = eX * (size.x / columns) + eY * (size.y / rows);
+	vector textColor = '1 1 1';
+
+	int fullSeconds = 0;
+	int align = 0;
+	int column = 0;
+	int row = 0;
+
+	draw_beginBoldFont();
+	for(item = powerupItems; item.count; item = item.chain)
 	{
-		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+		itemPos = eX * (pos.x + column * itemSize.x) + eY * (pos.y + row * itemSize.y);
+
+		// Draw progressbar
+		if(autocvar_hud_panel_powerups_progressbar)
 		{
-			mySize.x *= (1.0 / 3.0);
-			superweapons_offset.x = mySize.x;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset.x = 2*mySize.x;
-			else
-				strength_offset.x = 2*mySize.x;
+			align = getPowerupItemAlign(autocvar_hud_panel_powerups_baralign, column, row, columns, rows, isVertical);
+			HUD_Panel_DrawProgressBar(itemPos, itemSize, "progressbar", item.count / item.lifetime, isVertical, align, item.colormod, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+
+		// Draw icon and text
+		if(autocvar_hud_panel_powerups_text)
+		{
+			align = getPowerupItemAlign(autocvar_hud_panel_powerups_iconalign, column, row, columns, rows, isVertical);
+			fullSeconds = ceil(item.count);
+			textColor = '0.6 0.6 0.6' + (item.colormod * 0.4);
+
+			if(item.count > 1)
+				DrawNumIcon(itemPos, itemSize, fullSeconds, item.netname, isVertical, align, textColor, panel_fg_alpha);
+			if(item.count <= 5)
+				DrawNumIcon_expanding(itemPos, itemSize, fullSeconds, item.netname, isVertical, align, textColor, panel_fg_alpha, bound(0, (fullSeconds - item.count) / 0.5, 1));
+		}
+
+		// Determine next section
+		if(isVertical)
+		{
+			if(++column >= columns)
+			{
+				column = 0;
+				++row;
+			}
 		}
 		else
 		{
-			mySize.y *= (1.0 / 3.0);
-			superweapons_offset.y = mySize.y;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset.y = 2*mySize.y;
-			else
-				strength_offset.y = 2*mySize.y;
+			if(++row >= rows)
+			{
+				row = 0;
+				++column;
+			}
 		}
 	}
-	else
-	{
-		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
-		{
-			mySize.x *= 0.5;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset.x = mySize.x;
-			else
-				strength_offset.x = mySize.x;
-		}
-		else
-		{
-			mySize.y *= 0.5;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset.y = mySize.y;
-			else
-				strength_offset.y = mySize.y;
-		}
-	}
-
-	bool shield_baralign, strength_baralign, superweapons_baralign;
-	bool shield_iconalign, strength_iconalign, superweapons_iconalign;
-
-	if (autocvar_hud_panel_powerups_flip)
-	{
-		strength_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
-		shield_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
-		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
-		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
-	}
-	else
-	{
-		shield_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
-		strength_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
-		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
-		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
-	}
-
-	if(superweapons_is == 0)
-	{
-		superweapons_iconalign = strength_iconalign;
-		superweapons_baralign = 2;
-	}
-	else if(superweapons_is == 1)
-	{
-		superweapons_offset = strength_offset;
-		superweapons_iconalign = strength_iconalign;
-		superweapons_baralign = strength_baralign;
-	}
-	else // if(superweapons_is == 2)
-	{
-		superweapons_offset = shield_offset;
-		superweapons_iconalign = shield_iconalign;
-		superweapons_baralign = shield_baralign;
-	}
-
-	if(shield_time)
-	{
-		const float maxshield = 30;
-		float shield = ceil(shield_time);
-		if(autocvar_hud_panel_powerups_progressbar)
-			HUD_Panel_DrawProgressBar(pos + shield_offset, mySize, autocvar_hud_panel_powerups_progressbar_shield, shield/maxshield, is_vertical, shield_baralign, autocvar_hud_progressbar_shield_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		if(autocvar_hud_panel_powerups_text)
-		{
-			if(shield > 1)
-				DrawNumIcon(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1);
-			if(shield <= 5)
-				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1, bound(0, (shield - shield_time) / 0.5, 1));
-		}
-	}
-
-	if(strength_time)
-	{
-		const float maxstrength = 30;
-		float strength = ceil(strength_time);
-		if(autocvar_hud_panel_powerups_progressbar)
-			HUD_Panel_DrawProgressBar(pos + strength_offset, mySize, autocvar_hud_panel_powerups_progressbar_strength, strength/maxstrength, is_vertical, strength_baralign, autocvar_hud_progressbar_strength_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		if(autocvar_hud_panel_powerups_text)
-		{
-			if(strength > 1)
-				DrawNumIcon(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1);
-			if(strength <= 5)
-				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1, bound(0, (strength - strength_time) / 0.5, 1));
-		}
-	}
-
-	if(superweapons_time)
-	{
-		const float maxsuperweapons = 30;
-		float superweapons = ceil(superweapons_time);
-		if(autocvar_hud_panel_powerups_progressbar)
-			HUD_Panel_DrawProgressBar(pos + superweapons_offset, mySize, autocvar_hud_panel_powerups_progressbar_superweapons, superweapons/maxsuperweapons, is_vertical, superweapons_baralign, autocvar_hud_progressbar_superweapons_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		if(autocvar_hud_panel_powerups_text)
-		{
-			if(superweapons > 1)
-				DrawNumIcon(pos + superweapons_offset, mySize, superweapons, "superweapons", is_vertical, superweapons_iconalign, '1 1 1', 1);
-			if(superweapons <= 5)
-				DrawNumIcon_expanding(pos + superweapons_offset, mySize, superweapons, "superweapons", is_vertical, superweapons_iconalign, '1 1 1', 1, bound(0, (superweapons - superweapons_time) / 0.5, 1));
-		}
-	}
-
 	draw_endBoldFont();
 }
 
@@ -2892,7 +2913,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	yellowflag = (stat_items/CTF_YELLOW_FLAG_TAKEN) & 3;
 	pinkflag = (stat_items/CTF_PINK_FLAG_TAKEN) & 3;
 	neutralflag = (stat_items/CTF_NEUTRAL_FLAG_TAKEN) & 3;
-	
+
 	ctf_oneflag = (stat_items & CTF_FLAG_NEUTRAL);
 
 	mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag);
@@ -4588,7 +4609,7 @@ void HUD_Buffs(void)
 	}
 
 	HUD_Panel_UpdateCvars();
-	
+
 
 	vector pos, mySize;
 	pos = panel_pos;
@@ -4613,7 +4634,7 @@ void HUD_Buffs(void)
 	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
 	{
 		if(buff_time && autocvar_hud_panel_buffs_progressbar)
-			HUD_Panel_DrawProgressBar(pos + buff_offset, mySize, autocvar_hud_panel_buffs_progressbar_name, buff_time/buff_maxtime, 0, 0, 
+			HUD_Panel_DrawProgressBar(pos + buff_offset, mySize, autocvar_hud_panel_buffs_progressbar_name, buff_time/buff_maxtime, 0, 0,
 									  Buff_Color(e.items) * -1 + '1 1 1', (autocvar_hud_progressbar_alpha * panel_fg_alpha) * 0.4, DRAWFLAG_NORMAL);
 
 		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);
