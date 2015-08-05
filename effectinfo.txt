@@ -9176,3 +9176,188 @@ effect arc_overheat_fire // arc overheat bouncing sparks
 	originjitter 6 6 6
 	liquidfriction 5
 	velocitymultiplier 80
+
+// yellowflag_touch -- effects for touching the yellow flag
+// used nowhere in code
+effect yellowflag_touch
+count 35
+type spark
+tex 40 40
+color 0xFFFF0F 0xFFFF0F
+size 1 3
+alpha 0 256 556
+gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 300 300 300
+velocitymultiplier 0.5
+airfriction 3
+
+// pinkflag_touch -- effects for touching the pink flag
+// used nowhere in code
+effect pinkflag_touch
+count 35
+type spark
+tex 40 40
+color 0xFF0FFF 0xFF0FFF
+size 1 3
+alpha 0 256 556
+gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 300 300 300
+velocitymultiplier 0.5
+airfriction 3
+
+// neutralflag_touch -- effects for touching the neutral flag
+// used nowhere in code
+effect neutralflag_touch
+count 35
+type spark
+tex 40 40
+color 0xFFFFFF 0xFFFFFF
+size 1 3
+alpha 0 256 556
+gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 300 300 300
+velocitymultiplier 0.5
+airfriction 3
+
+// yellow_pass
+// used nowhere in code
+effect yellow_pass
+trailspacing 64
+color 0xFFFF0F 0xFFFF0F
+size 2 2
+tex 32 32
+alpha 64 128 64
+airfriction 5
+sizeincrease 2
+type static
+effect yellow_pass
+trailspacing 12
+color 0xFFFF0F 0xFFFF0F
+size 1 1
+tex 0 8
+alpha 32 64 32
+airfriction 9
+sizeincrease 8
+velocityjitter 64 64 64
+type static
+effect yellow_pass
+trailspacing 12
+color 0xFFFF0F 0xFFFF0F
+size 4 4
+//tex 48 55
+alpha 256 256 1280
+type static
+
+// pink_pass
+// used nowhere in code
+effect pink_pass
+trailspacing 64
+color 0xFFFFFF 0xFFFFFF
+size 2 2
+tex 32 32
+alpha 64 128 64
+airfriction 5
+sizeincrease 2
+type static
+effect pink_pass
+trailspacing 12
+color 0xFFFFFF 0xFFFFFF
+size 1 1
+tex 0 8
+alpha 32 64 32
+airfriction 9
+sizeincrease 8
+velocityjitter 64 64 64
+type static
+effect pink_pass
+trailspacing 12
+color 0xFFFFFF 0xFFFFFF
+size 4 4
+//tex 48 55
+alpha 256 256 1280
+type static
+
+// neutral_pass
+// used nowhere in code
+effect neutral_pass
+trailspacing 64
+color 0xFFFFFF 0xFFFFFF
+size 2 2
+tex 32 32
+alpha 64 128 64
+airfriction 5
+sizeincrease 2
+type static
+effect neutral_pass
+trailspacing 12
+color 0xFFFFFF 0xFFFFFF
+size 1 1
+tex 0 8
+alpha 32 64 32
+airfriction 9
+sizeincrease 8
+velocityjitter 64 64 64
+type static
+effect neutral_pass
+trailspacing 12
+color 0xFFFFFF 0xFFFFFF
+size 4 4
+//tex 48 55
+alpha 256 256 1280
+type static
+
+// yellow_cap -- yellow team capture effect
+effect yellow_cap
+count 500
+type spark
+tex 64 64
+color 0xFFFF0F 0xFFFF0F
+size 1 1
+alpha 0 256 100
+stretchfactor 2
+//gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 1000 1000 1500
+velocitymultiplier 0.5
+airfriction 2
+stretchfactor 0.6
+effect yellow_cap
+countabsolute 1
+type smoke
+tex 65 65
+size 150 150
+alpha 190 190 180
+sizeincrease -80
+color 0xFFFF0F 0xFFFF0F
+
+// pink_cap -- pink team capture effect
+effect pink_cap
+count 500
+type spark
+tex 64 64
+color 0xFF0FFF 0xFF0FFF
+size 1 1
+alpha 0 256 100
+stretchfactor 2
+//gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 1000 1000 1500
+velocitymultiplier 0.5
+airfriction 2
+stretchfactor 0.6
+effect pink_cap
+countabsolute 1
+type smoke
+tex 65 65
+size 150 150
+alpha 190 190 180
+sizeincrease -80
+color 0xFF0FFF 0xFF0FFF

@@ -187,6 +187,32 @@ float MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, i
 
 	return 1;
 }
+void MapInfo_FilterString(string sf)
+{
+	// this function further filters _MapInfo_filtered, which is prepared by MapInfo_FilterGametype by string
+	float i, j;
+	string title;
+
+	for(i = 0, j = -1; i < MapInfo_count; ++i)
+	{
+		if (MapInfo_Get_ByID(i))
+		{
+			// prepare for keyword filter
+			if (MapInfo_Map_title && strstrofs(MapInfo_Map_title, "<TITLE>", 0) == -1)
+				title = MapInfo_Map_title;
+			else
+				title = MapInfo_Map_bspname;
+			// keyword filter
+			if((strstrofs(strtolower(title), strtolower(sf), 0)) >= 0)
+				bufstr_set(_MapInfo_filtered, ++j, bufstr_get(_MapInfo_filtered, i));
+		}
+	}
+	MapInfo_count = j + 1;
+	MapInfo_ClearTemps();
+
+	// sometimes the glob isn't sorted nicely, so fix it here...
+	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
+}
 
 void MapInfo_Filter_Free()
 {

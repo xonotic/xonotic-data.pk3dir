@@ -653,6 +653,7 @@ float raptor_frame()
 
     raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
     player.vehicle_reload2 = bound(0, raptor.bomb1.alpha * 100, 100);
+    player.vehicle_ammo2 = (player.vehicle_reload2 == 100) ? 100 : 0;
 
     if(self.bomb1.cnt < time)
     {

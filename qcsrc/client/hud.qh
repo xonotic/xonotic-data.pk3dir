@@ -113,6 +113,11 @@ string panel_bg_padding_str;
 
 class(HUDPanel) .void() panel_draw;
 
+// chat panel can be reduced / moved while the mapvote is active
+// let know the mapvote panel about chat pos and size
+float chat_posy;
+float chat_sizey;
+
 float current_player;
 
 float GetPlayerColorForce(int i);
@@ -155,7 +160,9 @@ int prev_p_health, prev_p_armor;
 	HUD_PANEL(INFOMESSAGES , HUD_InfoMessages , infomessages) 														\
 	HUD_PANEL(PHYSICS      , HUD_Physics      , physics) 															\
 	HUD_PANEL(CENTERPRINT  , HUD_CenterPrint  , centerprint) 														\
-	HUD_PANEL(BUFFS        , HUD_Buffs        , buffs)
+	HUD_PANEL(BUFFS        , HUD_Buffs        , buffs) \
+	HUD_PANEL(MAPVOTE      , MapVote_Draw     , mapvote) \
+	// always add new panels to the end of list
 
 #define HUD_PANEL(NAME, draw_func, name)																			\
 	int HUD_PANEL_##NAME;																							\
@@ -227,9 +234,9 @@ HUD_PANELS(HUD_PANEL)
 			panel_bg_color = autocvar_hud_panel_bg_color;                                                           \
 		} else {                                                                                                    \
 			if (panel_bg_color_str == "shirt") {                                                                    \
-				panel_bg_color = colormapPaletteColor(floor(stof(getplayerkeyvalue(current_player - 1, "colors")) / 16), 0);\
+				panel_bg_color = colormapPaletteColor(floor(stof(getplayerkeyvalue(current_player, "colors")) / 16), 0); \
 			} else if (panel_bg_color_str == "pants") {                                                             \
-				panel_bg_color = colormapPaletteColor(stof(getplayerkeyvalue(current_player - 1, "colors")) % 16, 1);\
+				panel_bg_color = colormapPaletteColor(stof(getplayerkeyvalue(current_player, "colors")) % 16, 1); \
 			} else {                                                                                                \
 				panel_bg_color = stov(panel_bg_color_str);                                                          \
 			}                                                                                                       \
