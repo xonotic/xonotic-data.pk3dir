@@ -230,11 +230,10 @@ vector GetCurrentFov(float fov)
 
 vector GetViewLocationFOV(float fov)
 {
-	float frustumx, frustumy, fovx, fovy;
-	frustumy = tan(fov * M_PI / 360.0) * 0.75;
-	frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
-	fovx = atan2(frustumx, 1) / M_PI * 360.0;
-	fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	float frustumy = tan(fov * M_PI / 360.0) * 0.75;
+	float frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
+	float fovx = atan2(frustumx, 1) / M_PI * 360.0;
+	float fovy = atan2(frustumy, 1) / M_PI * 360.0;
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
