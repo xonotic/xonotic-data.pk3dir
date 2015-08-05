@@ -202,7 +202,7 @@ void buff_NewType(entity ent, float cb)
 	for(e = Buff_Type_first; e; e = e.enemy)
 	if(buff_Available(e.items))
 	{
-		RandomSelection_Add(world, e.items, string_null, 1, 1 / e.count); // if it's already been chosen, give it a lower priority
+		RandomSelection_Add(world, e.items, string_null, 1, max(0.2, 1 / e.count)); // if it's already been chosen, give it a lower priority
 		e.count += 1;
 	}
 	ent.buffs = RandomSelection_chosen_float;
