@@ -50,9 +50,12 @@ weapons/projectile.qc // TODO
 ../common/notifications.qc
 ../common/physics.qc
 ../common/playerstats.qc
+../common/p2mathlib.qc
 ../common/test.qc
 ../common/urllib.qc
 ../common/util.qc
+
+../common/viewloc.qc
 
 ../common/items/all.qc
 

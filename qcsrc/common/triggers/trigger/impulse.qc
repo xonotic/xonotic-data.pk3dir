@@ -35,7 +35,17 @@ void trigger_impulse_touch1()
 	other.lastpushtime = time;
 	if(!pushdeltatime) return;
 
-	other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
+	if(self.spawnflags & 64)
+	{
+		float addspeed = str - other.velocity * normalize(targ.origin - self.origin);
+		if (addspeed > 0)
+		{
+			float accelspeed = min(8 * pushdeltatime * str, addspeed);
+			other.velocity += accelspeed * normalize(targ.origin - self.origin);
+		}
+	}
+	else
+		other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
 	other.flags &= ~FL_ONGROUND;
 #ifdef SVQC
 	UpdateCSQCProjectile(other);
