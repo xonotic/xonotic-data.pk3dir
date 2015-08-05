@@ -7,5 +7,6 @@
 #include "swamp.qh"
 #include "keylock.qh"
 #include "impulse.qh"
+#include "viewloc.qh"
 
 #endif

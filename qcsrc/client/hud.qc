@@ -162,7 +162,7 @@ float HUD_GetRowCount(int item_count, vector size, float item_aspect)
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
 }
 
-vector HUD_GetTableSize(int item_count, vector psize, float item_aspect)
+vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect)
 {
 	float columns, rows;
 	float ratio, best_ratio = 0;
@@ -507,7 +507,8 @@ void HUD_Weapons(void)
 	vector color;
 
 	// check to see if we want to continue
-	if(hud != HUD_NORMAL) { return; }
+	if(intermission == 2) return;
+	if(hud != HUD_NORMAL) return;
 
 	if(!autocvar__hud_configure)
 	{
@@ -599,7 +600,7 @@ void HUD_Weapons(void)
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
-		vector table_size = HUD_GetTableSize(WEP_COUNT, padded_panel_size, aspect);
+		vector table_size = HUD_GetTableSize_BestItemAR(WEP_COUNT, padded_panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
@@ -759,7 +760,7 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		vector table_size = HUD_GetTableSize(WEP_COUNT, panel_size, aspect);
+		vector table_size = HUD_GetTableSize_BestItemAR(WEP_COUNT, panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = panel_size.x / columns;
@@ -1084,6 +1085,7 @@ int nade_prevframe;
 float nade_statuschange_time;
 void HUD_Ammo(void)
 {
+	if(intermission == 2) return;
 	if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
@@ -1358,6 +1360,8 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 
 void HUD_Powerups(void)
 {
+	if(intermission == 2) return;
+
 	int allItems = getstati(STAT_ITEMS, 0, 24);
 	int allBuffs = getstati(STAT_BUFFS, 0, 24);
 	int strengthTime, shieldTime, superTime;
@@ -1522,6 +1526,7 @@ void HUD_Powerups(void)
 void HUD_HealthArmor(void)
 {
 	int armor, health, fuel;
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_healtharmor) return;
@@ -1828,6 +1833,7 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void HUD_Notify(void)
 {
+	if(intermission == 2) return;
 	if (!autocvar__hud_configure)
 		if (!autocvar_hud_panel_notify)
 			return;
@@ -1953,6 +1959,7 @@ string seconds_tostring(float sec)
 
 void HUD_Timer(void)
 {
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_timer) return;
@@ -2012,6 +2019,7 @@ void HUD_Timer(void)
 //
 void HUD_Radar(void)
 {
+	if(intermission == 2) return;
 	if (!autocvar__hud_configure)
 	{
 		if (hud_panel_radar_maximized)
@@ -2323,6 +2331,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 void HUD_Score(void)
 {
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
@@ -2506,6 +2515,7 @@ void HUD_Score(void)
 //
 void HUD_RaceTimer (void)
 {
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
@@ -2656,6 +2666,7 @@ void HUD_RaceTimer (void)
 
 void HUD_Vote(void)
 {
+	if(intermission == 2) return;
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
@@ -3532,6 +3543,7 @@ float mod_change; // "time" when mod_active changed
 
 void HUD_ModIcons(void)
 {
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
@@ -3573,6 +3585,7 @@ void HUD_ModIcons(void)
 //
 void HUD_PressedKeys(void)
 {
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_pressedkeys) return;
@@ -3659,6 +3672,15 @@ void HUD_Chat(void)
 
 	HUD_Panel_UpdateCvars();
 
+	if(intermission == 2)
+	{
+		// reserve some more space to the mapvote panel
+		// by resizing and moving chat panel to the bottom
+		panel_size.y = min(panel_size.y, vid_conheight * 0.2);
+		panel_pos.y = vid_conheight - panel_size.y - panel_bg_border * 2;
+		chat_posy = panel_pos.y;
+		chat_sizey = panel_size.y;
+	}
 	if(autocvar__con_chat_maximized && !autocvar__hud_configure) // draw at full screen height if maximized
 	{
 		panel_pos.y = panel_bg_border;
@@ -3727,6 +3749,7 @@ float frametimeavg1; // 1 frame ago
 float frametimeavg2; // 2 frames ago
 void HUD_EngineInfo(void)
 {
+	//if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_engineinfo) return;
@@ -3788,6 +3811,7 @@ void HUD_EngineInfo(void)
 } while(0)
 void HUD_InfoMessages(void)
 {
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_infomessages) return;
@@ -3969,6 +3993,7 @@ float acc_prevtime, acc_avg, top_speed, top_speed_time;
 float physics_update_time, discrete_speed, discrete_acceleration;
 void HUD_Physics(void)
 {
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_physics) return;
@@ -4360,6 +4385,7 @@ void reset_centerprint_messages(void)
 float hud_configure_cp_generation_time;
 void HUD_CenterPrint (void)
 {
+	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_centerprint) return;
@@ -4578,7 +4604,6 @@ void HUD_CenterPrint (void)
 	}
 }
 
-
 /*
 ==================
 Main HUD system
@@ -4605,9 +4630,6 @@ void HUD_Main (void)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
 	HUD_Configure_Frame();
-
-	if(intermission == 2) // no hud during mapvote
-		hud_fade_alpha = 0;
 
 	// panels that we want to be active together with the scoreboard
 	// they must fade only when the menu does
@@ -4715,7 +4737,7 @@ void HUD_Main (void)
 	}
 
 	hud_draw_maximized = 0;
-	// draw panels in order specified by panel_order array
+	// draw panels in the order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
 		(panel = hud_panel[panel_order[i]]).panel_draw();
 
