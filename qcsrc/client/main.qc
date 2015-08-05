@@ -119,6 +119,9 @@ void CSQC_Init(void)
 	registercvar("cl_nade_type", "3");
 	registercvar("cl_pokenade_type", "zombie");
 
+	registercvar("cl_jumpspeedcap_min", "");
+	registercvar("cl_jumpspeedcap_max", "");
+
 	gametype = 0;
 
 	// hud_fields uses strunzone on the titles!

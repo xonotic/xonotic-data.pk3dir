@@ -246,8 +246,8 @@ const int STAT_GAMEPLAYFIX_EASIERWATERJUMP            = 190;
 const int STAT_MOVEVARS_FRICTION_SLICK                = 191;
 const int STAT_MOVEVARS_FRICTION_ONLAND               = 192;
 const int STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS  = 193;
-const int STAT_MOVEVARS_JUMPSPEEDCAP_MAX              = 194;
-const int STAT_MOVEVARS_JUMPSPEEDCAP_MIN              = 195;
+// 194 empty?
+// 195 empty?
 const int STAT_DOUBLEJUMP                             = 196;
 const int STAT_MOVEVARS_TRACK_CANJUMP                 = 197;
 const int STAT_MULTIJUMP_ADD                          = 198;

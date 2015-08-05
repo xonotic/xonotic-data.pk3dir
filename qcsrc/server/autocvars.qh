@@ -625,9 +625,9 @@ float autocvar_sv_gameplayfix_q2airaccelerate;
 int autocvar_sv_gentle;
 #define autocvar_sv_gravity cvar("sv_gravity")
 string autocvar_sv_intermission_cdtrack;
-float autocvar_sv_jumpspeedcap_max;
+string autocvar_sv_jumpspeedcap_max;
 float autocvar_sv_jumpspeedcap_max_disable_on_ramps;
-float autocvar_sv_jumpspeedcap_min;
+string autocvar_sv_jumpspeedcap_min;
 float autocvar_sv_jumpvelocity;
 bool autocvar_sv_logscores_bots;
 bool autocvar_sv_logscores_console;
