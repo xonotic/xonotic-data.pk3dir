@@ -652,12 +652,25 @@ void Item_RespawnCountdown (void)
 				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
 			}
 		}
-		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+
 		if(self.waypointsprite_attached)
 		{
+			entity e;
+			entity it = self;
+			self = self.waypointsprite_attached;
+			FOR_EACH_REALCLIENT(e)
+				if(self.waypointsprite_visible_for_player(e))
+				{
+					msg_entity = e;
+					soundto(MSG_ONE, it, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+				}
+			self = it;
+
 			WaypointSprite_Ping(self.waypointsprite_attached);
 			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
 		}
+		else
+			sound(self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	}
 }
 
