@@ -485,6 +485,9 @@ bool Item_ItemsTime_UpdateTime_Check(float item_time, float t)
 }
 void Item_ItemsTime_UpdateTime(entity e, float t)
 {
+	if(!autocvar_sv_itemstime)
+		return;
+
 	if(g_instagib)
 	{
 		switch(e.items)
@@ -508,15 +511,11 @@ void Item_ItemsTime_UpdateTime(entity e, float t)
 		switch(e.items)
 		{
 			case IT_HEALTH:
-				if(!autocvar_sv_itemstime)
-					break;
 				//if (e.classname == "item_health_mega")
 					if(Item_ItemsTime_UpdateTime_Check(it_health_mega_time, t))
 						it_health_mega_time = t;
 				break;
 			case IT_ARMOR:
-				if(!autocvar_sv_itemstime)
-					break;
 				if (e.classname == "item_armor_large")
 					if(Item_ItemsTime_UpdateTime_Check(it_armor_large_time, t))
 						it_armor_large_time = t;
@@ -532,7 +531,7 @@ void Item_ItemsTime_UpdateTime(entity e, float t)
 			default:
 				if(e.weapons & WEPSET_SUPERWEAPONS)
 					if(Item_ItemsTime_UpdateTime_Check(it_superweapons_time, t))
-							it_superweapons_time = t;
+						it_superweapons_time = t;
 		}
 	}
 	switch(e.items)
