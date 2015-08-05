@@ -128,10 +128,6 @@ void MainWindow_configureMainWindow(entity me)
 	i.configureDialog(i);
 	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	i = NEW(XonoticHUDBuffsDialog);
-	i.configureDialog(i);
-	me.addItemRightCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
 
 	// dialogs used by settings
 	me.userbindEditDialog = i = NEW(XonoticUserbindEditDialog);
