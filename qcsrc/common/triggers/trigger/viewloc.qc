@@ -12,6 +12,8 @@ void viewloc_think()
 {
 	entity e;
 
+	// we abuse this method, rather than using normal .touch, because touch isn't reliable with multiple clients inside the same trigger, and can't "untouch" entities
+
 	// set myself as current viewloc where possible
 	for(e = world; (e = findentity(e, viewloc, self)); )
 		e.viewloc = world;
