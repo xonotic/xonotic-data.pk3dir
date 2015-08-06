@@ -4757,7 +4757,7 @@ void HUD_ItemsTime(void)
 
 	float i;
 	float count = 0;
-	if (autocvar_hud_panel_itemstime_showspawned)
+	if (!autocvar_hud_panel_itemstime_hidespawned)
 		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
 			count += (ItemsTime_time[i] != -1);
 	else
@@ -4845,7 +4845,7 @@ void HUD_ItemsTime(void)
 		}
 		else
 			item_available = (item_time <= time);
-		if (!autocvar_hud_panel_itemstime_showspawned)
+		if(autocvar_hud_panel_itemstime_hidespawned)
 			if(item_available)
 				continue;
 		DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i, item_time, item_available);
