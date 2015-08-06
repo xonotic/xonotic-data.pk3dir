@@ -4664,12 +4664,13 @@ string GetItemsTimePicture(float i)
 	}
 }
 
-void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode)
+void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, float item_time, bool item_available)
 {
 	float t = 0;
 	vector color = '0 0 0';
 	float picalpha;
-	if(ItemsTime_time[itemcode] <= time)
+
+	if(item_available)
 	{
 		float BLINK_FACTOR = 0.15;
 		float BLINK_BASE = 0.85;
@@ -4677,16 +4678,14 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode)
 		picalpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 	}
 	else
-	{
-		picalpha = 1;
-		t = floor(ItemsTime_time[itemcode] - time + 0.999);
-		if(t < 5)
-			color = '0.7 0 0';
-		else if(t < 10)
-			color = '0.7 0.7 0';
-		else
-			color = '1 1 1';
-	}
+		picalpha = 0.3;
+	t = floor(item_time - time + 0.999);
+	if(t < 5)
+		color = '0.7 0 0';
+	else if(t < 10)
+		color = '0.7 0.7 0';
+	else
+		color = '1 1 1';
 
 	vector picpos, numpos;
 	if(autocvar_hud_panel_itemstime_iconalign)
@@ -4833,13 +4832,23 @@ void HUD_ItemsTime(void)
 	HUD_Panel_DrawBg(1);
 
 	float row = 0, column = 0;
+	bool item_available;
 	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
 		if (ItemsTime_time[i] == -1)
 			continue;
+	
+		float item_time = ItemsTime_time[i];
+		if(item_time < -1)
+		{
+			item_available = true;
+			item_time = -item_time;
+		}
+		else
+			item_available = (item_time <= time);
 		if (!autocvar_hud_panel_itemstime_showspawned)
-			if (ItemsTime_time[i] <= time)
+			if(item_available)
 				continue;
-		DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i);
+		DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i, item_time, item_available);
 		++row;
 		if(row >= rows)
 		{

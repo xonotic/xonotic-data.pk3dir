@@ -479,6 +479,8 @@ bool Item_ItemsTime_UpdateTime_Check(float item_time, float t)
 {
 	if(t == 0 && item_time == -1)
 		return true;
+	if(t < 0) // negative means there's another available item of the same kind
+		t = -t;
 	if(time < t && (item_time <= time || t < item_time))
 		return true;
 	return false;
@@ -578,7 +580,21 @@ void Item_Respawn (void)
 
 	if(self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
 	{
-		Item_ItemsTime_UpdateTime(self, 0);
+		entity head;
+		float t = 0;
+		float isavailable = true;
+		for(head = world; (head = find(head, classname, self.classname)); )
+		{
+			// in instagib .classname is "instagib" for every item
+			if(self == head || (g_instagib && self.items != head.items))
+				continue;
+			if(head.scheduledrespawntime > time && (t == 0 || head.scheduledrespawntime < t))
+				t = head.scheduledrespawntime;
+		}
+
+		if(isavailable)
+			t = -t; // let know the client there's another available item
+		Item_ItemsTime_UpdateTime(self, t);
 		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 
@@ -717,19 +733,19 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		}
 		else
 		{
+			bool isavailable = false;
 			for(t = e.scheduledrespawntime, head = world; (head = find(head, classname, e.classname)); )
 			{
 				// in instagib .classname is "instagib" for every item
 				if(e == head || (g_instagib && e.items != head.items))
 					continue;
 				if(head.scheduledrespawntime <= time)
-				{
-					t = 0;
-					break;
-				}
-				if(head.scheduledrespawntime < t)
+					isavailable = true;
+				else if(head.scheduledrespawntime < t)
 					t = head.scheduledrespawntime;
 			}
+			if(isavailable)
+				t = -t; // let know the client there's another available item
 		}
 		Item_ItemsTime_UpdateTime(e, t);
 		Item_ItemsTime_SetTimesForAllPlayers();
