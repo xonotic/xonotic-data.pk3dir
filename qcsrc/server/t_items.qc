@@ -513,12 +513,12 @@ void Item_ItemsTime_UpdateTime(entity e, float t)
 		switch(e.items)
 		{
 			case IT_HEALTH:
-				//if (e.classname == "item_health_mega")
+				// if(e.classname == "item_health_mega") // IT_HEALTH unequivocally identifies it
 					if(Item_ItemsTime_UpdateTime_Check(it_health_mega_time, t))
 						it_health_mega_time = t;
 				break;
 			case IT_ARMOR:
-				if (e.classname == "item_armor_large")
+				if(e.classname == "item_armor_large") // IT_ARMOR doesn't unequivocally identifies it
 					if(Item_ItemsTime_UpdateTime_Check(it_armor_large_time, t))
 						it_armor_large_time = t;
 				break;
@@ -566,6 +566,45 @@ void Item_ItemsTime_SetTimesForAllPlayers()
 	}
 }
 
+float Item_ItemsTime_GetTime(entity e, float t)
+{
+	entity head;
+	bool isavailable = (t == 0);
+	if(e.weapons & WEPSET_SUPERWEAPONS)
+	{
+		for(head = world; (head = nextent(head)); )
+		{
+			if(clienttype(head) != CLIENTTYPE_NOTACLIENT || !(head.weapons & WEPSET_SUPERWEAPONS) || head.classname == "weapon_info")
+				continue;
+			if(e == head)
+				continue;
+
+			if(head.scheduledrespawntime <= time)
+				isavailable = true;
+			else if(t == 0 || head.scheduledrespawntime < t)
+				t = head.scheduledrespawntime;
+		}
+	}
+	else
+	{
+		for(head = world; (head = nextent(head)); )
+		{
+			if(head.itemdef != e.itemdef)
+				continue;
+			if(e == head)
+				continue;
+
+			if(head.scheduledrespawntime <= time)
+				isavailable = true;
+			else if(t == 0 || head.scheduledrespawntime < t)
+				t = head.scheduledrespawntime;
+		}
+	}
+	if(isavailable)
+		t = -t; // let know the client there's another available item
+	return t;
+}
+
 void Item_Respawn (void)
 {
 	Item_Show(self, 1);
@@ -580,20 +619,7 @@ void Item_Respawn (void)
 
 	if(self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
 	{
-		entity head;
-		float t = 0;
-		float isavailable = true;
-		for(head = world; (head = find(head, classname, self.classname)); )
-		{
-			// in instagib .classname is "instagib" for every item
-			if(self == head || (g_instagib && self.items != head.items))
-				continue;
-			if(head.scheduledrespawntime > time && (t == 0 || head.scheduledrespawntime < t))
-				t = head.scheduledrespawntime;
-		}
-
-		if(isavailable)
-			t = -t; // let know the client there's another available item
+		float t = Item_ItemsTime_GetTime(self, 0);
 		Item_ItemsTime_UpdateTime(self, t);
 		Item_ItemsTime_SetTimesForAllPlayers();
 	}
@@ -706,47 +732,11 @@ void Item_ScheduleRespawnIn(entity e, float t)
 {
 	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS) || e.classname == "item_armor_large" || e.items == IT_HEALTH)
 	{
-		entity head;
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.count = 0;
-		if(e.weapons & WEPSET_SUPERWEAPONS)
-		{
-			for(t = e.scheduledrespawntime, head = world; (head = nextent(head)); )
-			{
-				if(e == head)
-					continue;
-				if(clienttype(head) == CLIENTTYPE_NOTACLIENT)
-				if(head.weapons & WEPSET_SUPERWEAPONS)
-				if(head.classname != "weapon_info")
-				{
-					if(head.scheduledrespawntime <= time)
-					{
-						t = 0;
-						break;
-					}
-					if(head.scheduledrespawntime < t)
-						t = head.scheduledrespawntime;
-				}
-			}
-		}
-		else
-		{
-			bool isavailable = false;
-			for(t = e.scheduledrespawntime, head = world; (head = find(head, classname, e.classname)); )
-			{
-				// in instagib .classname is "instagib" for every item
-				if(e == head || (g_instagib && e.items != head.items))
-					continue;
-				if(head.scheduledrespawntime <= time)
-					isavailable = true;
-				else if(head.scheduledrespawntime < t)
-					t = head.scheduledrespawntime;
-			}
-			if(isavailable)
-				t = -t; // let know the client there's another available item
-		}
+		t = Item_ItemsTime_GetTime(e, e.scheduledrespawntime);
 		Item_ItemsTime_UpdateTime(e, t);
 		Item_ItemsTime_SetTimesForAllPlayers();
 	}
@@ -904,8 +894,6 @@ float Item_GiveTo(entity item, entity player)
 
 	return 1;
 }
-
-.entity itemdef;
 
 void Item_Touch (void)
 {
