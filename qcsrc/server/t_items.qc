@@ -476,7 +476,7 @@ void Item_ItemsTime_SetTimesForPlayer(entity e)
 	e.item_superweapons_time = it_superweapons_time;
 }
 
-void Item_ItemsTime_UpdateTime(entity e, float t)
+void Item_ItemsTime_SetTime(entity e, float t)
 {
 	if(!autocvar_sv_itemstime)
 		return;
@@ -547,7 +547,7 @@ void Item_ItemsTime_SetTimesForAllPlayers()
 	}
 }
 
-float Item_ItemsTime_GetTime(entity e, float t)
+float Item_ItemsTime_UpdateTime(entity e, float t)
 {
 	entity head;
 	bool isavailable = (t == 0);
@@ -600,8 +600,8 @@ void Item_Respawn (void)
 
 	if(self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
 	{
-		float t = Item_ItemsTime_GetTime(self, 0);
-		Item_ItemsTime_UpdateTime(self, t);
+		float t = Item_ItemsTime_UpdateTime(self, 0);
+		Item_ItemsTime_SetTime(self, t);
 		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 
@@ -717,8 +717,8 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.count = 0;
-		t = Item_ItemsTime_GetTime(e, e.scheduledrespawntime);
-		Item_ItemsTime_UpdateTime(e, t);
+		t = Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
+		Item_ItemsTime_SetTime(e, t);
 		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 	else
@@ -1298,7 +1298,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
 			self.target = "###item###"; // for finding the nearest item using find()
 
-		Item_ItemsTime_UpdateTime(self, 0);
+		Item_ItemsTime_SetTime(self, 0);
 	}
 
 	self.bot_pickup = true;
