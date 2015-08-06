@@ -475,16 +475,7 @@ void Item_ItemsTime_SetTimesForPlayer(entity e)
 	e.item_jetpack_time = it_jetpack_time;
 	e.item_superweapons_time = it_superweapons_time;
 }
-bool Item_ItemsTime_UpdateTime_Check(float item_time, float t)
-{
-	if(t == 0 && item_time == -1)
-		return true;
-	if(t < 0) // negative means there's another available item of the same kind
-		t = -t;
-	if(time < t && (item_time <= time || t < item_time))
-		return true;
-	return false;
-}
+
 void Item_ItemsTime_UpdateTime(entity e, float t)
 {
 	if(!autocvar_sv_itemstime)
@@ -495,16 +486,13 @@ void Item_ItemsTime_UpdateTime(entity e, float t)
 		switch(e.items)
 		{
 			case IT_STRENGTH://"item-invis"
-				if(Item_ItemsTime_UpdateTime_Check(it_invisible_time, t))
-					it_invisible_time = t;
+				it_invisible_time = t;
 				break;
 			case IT_NAILS://"item-extralife"
-				if(Item_ItemsTime_UpdateTime_Check(it_extralife_time, t))
-					it_extralife_time = t;
+				it_extralife_time = t;
 				break;
 			case IT_INVINCIBLE://"item-speed"
-				if(Item_ItemsTime_UpdateTime_Check(it_speed_time, t))
-					it_speed_time = t;
+				it_speed_time = t;
 				break;
 		}
 	}
@@ -514,37 +502,30 @@ void Item_ItemsTime_UpdateTime(entity e, float t)
 		{
 			case IT_HEALTH:
 				// if(e.classname == "item_health_mega") // IT_HEALTH unequivocally identifies it
-					if(Item_ItemsTime_UpdateTime_Check(it_health_mega_time, t))
-						it_health_mega_time = t;
+					it_health_mega_time = t;
 				break;
 			case IT_ARMOR:
 				if(e.classname == "item_armor_large") // IT_ARMOR doesn't unequivocally identifies it
-					if(Item_ItemsTime_UpdateTime_Check(it_armor_large_time, t))
-						it_armor_large_time = t;
+					it_armor_large_time = t;
 				break;
 			case IT_STRENGTH://"item-strength"
-				if(Item_ItemsTime_UpdateTime_Check(it_strength_time, t))
-					it_strength_time = t;
+				it_strength_time = t;
 				break;
 			case IT_INVINCIBLE://"item-shield"
-				if(Item_ItemsTime_UpdateTime_Check(it_shield_time, t))
-					it_shield_time = t;
+				it_shield_time = t;
 				break;
 			default:
 				if(e.weapons & WEPSET_SUPERWEAPONS)
-					if(Item_ItemsTime_UpdateTime_Check(it_superweapons_time, t))
-						it_superweapons_time = t;
+					it_superweapons_time = t;
 		}
 	}
 	switch(e.items)
 	{
 		case IT_FUEL_REGEN://"item-fuelregen"
-			if(Item_ItemsTime_UpdateTime_Check(it_fuelregen_time, t))
-				it_fuelregen_time = t;
+			it_fuelregen_time = t;
 			break;
 		case IT_JETPACK://"item-jetpack"
-			if(Item_ItemsTime_UpdateTime_Check(it_jetpack_time, t))
-				it_jetpack_time = t;
+			it_jetpack_time = t;
 			break;
 	}
 }
