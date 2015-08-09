@@ -4671,7 +4671,9 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
 	vector color = '0 0 0';
 	float picalpha;
 
-	if(item_available)
+	if(autocvar_hud_panel_itemstime_hidespawned)
+		picalpha = 1;
+	else if(item_available)
 	{
 		float BLINK_FACTOR = 0.15;
 		float BLINK_BASE = 0.85;
