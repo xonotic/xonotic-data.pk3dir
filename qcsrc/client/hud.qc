@@ -4646,6 +4646,7 @@ void HUD_Buffs(void)
 //
 const float ITEMSTIME_MAXITEMS = 10;
 float ItemsTime_time[ITEMSTIME_MAXITEMS];
+float ItemsTime_availableTime[ITEMSTIME_MAXITEMS];
 string GetItemsTimePicture(float i)
 {
 	switch(i)
@@ -4664,7 +4665,7 @@ string GetItemsTimePicture(float i)
 	}
 }
 
-void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, float item_time, bool item_available)
+void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, float item_time, bool item_available, float item_availableTime)
 {
 	float t = 0;
 	vector color = '0 0 0';
@@ -4717,6 +4718,8 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
 
 	if(t > 0 && autocvar_hud_panel_itemstime_text)
 		drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	if(item_availableTime)
+		drawpic_aspect_skin_expanding(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
 	drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
 }
 
@@ -4845,10 +4848,25 @@ void HUD_ItemsTime(void)
 		}
 		else
 			item_available = (item_time <= time);
+
+		if(ItemsTime_time[i] >= 0)
+		{
+			if(time <= ItemsTime_time[i])
+				ItemsTime_availableTime[i] = 0;
+			else if(ItemsTime_availableTime[i] == 0)
+				ItemsTime_availableTime[i] = time;
+		}
+		else if(ItemsTime_availableTime[i] == 0)
+			ItemsTime_availableTime[i] = time;
+
+		float f = (time - ItemsTime_availableTime[i]) * 2;
+		f = (f > 1) ? 0 : bound(0, f, 1);
+
 		if(autocvar_hud_panel_itemstime_hidespawned)
 			if(item_available)
 				continue;
-		DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i, item_time, item_available);
+
+		DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i, item_time, item_available, f);
 		++row;
 		if(row >= rows)
 		{
