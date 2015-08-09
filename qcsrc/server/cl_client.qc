@@ -226,7 +226,8 @@ void PutObserverInServer (void)
 	if(self.killcount != -666)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname);
-		if(autocvar_g_chat_nospectators == 1 || (cvar("g_warmup") && !(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
+		if(!intermission_running)
+		if(autocvar_g_chat_nospectators == 1 || (!(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 		if(self.just_joined == false) {
