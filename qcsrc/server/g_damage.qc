@@ -12,6 +12,7 @@
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
+#include "../common/buffs.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
 #include "../common/notifications.qh"
@@ -483,8 +484,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 				);
 			}
 
+			float f3 = 0;
+			if(deathtype == DEATH_BUFF)
+				f3 = attacker.buffs;
+
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
-				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, 0);
+				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, f3);
 		}
 	}
 
@@ -839,7 +844,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)
-		if(deathtype != DEATH_BUFF_VENGEANCE)
+		if(deathtype != DEATH_BUFF)
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
@@ -1121,7 +1126,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	RadiusDamage_running = 0;
 
 	if(!DEATH_ISSPECIAL(deathtype))
-		accuracy_add(attacker, DEATH_WEAPONOFWEAPONDEATH(deathtype), 0, min(coredamage, stat_damagedone));
+		accuracy_add(attacker, DEATH_WEAPONOF(deathtype), 0, min(coredamage, stat_damagedone));
 
 	return total_damage_to_creatures;
 }
@@ -1237,7 +1242,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 				}
 			}
 			if(accuracy_isgooddamage(o, e))
-				accuracy_add(o, DEATH_WEAPONOFWEAPONDEATH(dt), 0, max(0, totaldamage - mindamage));
+				accuracy_add(o, DEATH_WEAPONOF(dt), 0, max(0, totaldamage - mindamage));
 			return max(0, totaldamage - mindamage); // can never be negative, but to make sure
 		}
 		else
@@ -1251,7 +1256,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		e.fire_owner = o;
 		e.fire_hitsound = false;
 		if(accuracy_isgooddamage(o, e))
-			accuracy_add(o, DEATH_WEAPONOFWEAPONDEATH(dt), 0, d);
+			accuracy_add(o, DEATH_WEAPONOF(dt), 0, d);
 		return d;
 	}
 }

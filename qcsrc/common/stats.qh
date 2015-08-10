@@ -109,12 +109,11 @@ const int STAT_OK_AMMO_CHARGE         = 85;
 const int STAT_OK_AMMO_CHARGEPOOL     = 86;
 const int STAT_FROZEN                 = 87;
 const int STAT_REVIVE_PROGRESS        = 88;
-const int STAT_WEAPONSINMAP           = 89;
-const int STAT_WEAPONSINMAP2          = 90;
-const int STAT_WEAPONSINMAP3          = 91;
-const int STAT_CTF_FLAGSTATUS         = 92;
-// 93 empty?
-// 94 empty?
+const int STAT_BUFF_TIME              = 90;
+const int STAT_WEAPONSINMAP           = 91;
+const int STAT_WEAPONSINMAP2          = 92;
+const int STAT_WEAPONSINMAP3          = 93;
+const int STAT_CTF_FLAGSTATUS         = 94;
 // 95 empty?
 // 96 empty?
 // 97 empty?

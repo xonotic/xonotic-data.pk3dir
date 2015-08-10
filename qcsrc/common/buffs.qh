@@ -1,5 +1,9 @@
 #ifndef BUFFS_H
 #define BUFFS_H
+// Welcome to the stuff behind the scenes
+// Below, you will find the list of buffs
+// Add new buffs here!
+// Note: Buffs also need spawnfuncs, which are set below
 
 #include "teams.qh"
 #include "util.qh"
@@ -9,6 +13,7 @@ entity Buff_Type_last;
 .entity enemy; // internal next pointer
 
 int BUFF_LAST = 1;
+int BUFF_ALL;
 
 .int items; // buff ID
 .string netname; // buff name
@@ -16,6 +21,17 @@ int BUFF_LAST = 1;
 .vector colormod; // buff color
 .string model2; // buff sprite
 .int skin; // buff skin
+.float buff_time;
+
+// hacky function to return the cvar value only to server - TODO: do this properly!
+float sv_cvar(string cvarname)
+{
+#ifdef SVQC
+	return cvar(cvarname);
+#else
+	return 0;
+#endif
+}
 
 #define REGISTER_BUFF(hname,sname,NAME,bskin,bcolor) \
 	int BUFF_##NAME; \
@@ -24,12 +40,14 @@ int BUFF_LAST = 1;
 	{ \
 		BUFF_##NAME = BUFF_LAST * 2; \
 		BUFF_LAST = BUFF_##NAME; \
+		BUFF_ALL |= BUFF_##NAME; \
 		Buff_Type##sname = spawn(); \
 		Buff_Type##sname.items = BUFF_##NAME; \
 		Buff_Type##sname.netname = #sname; \
 		Buff_Type##sname.message = hname; \
 		Buff_Type##sname.skin = bskin; \
 		Buff_Type##sname.colormod = bcolor; \
+		Buff_Type##sname.buff_time = sv_cvar(strcat("g_buffs_", #sname, "_time")); \
 		Buff_Type##sname.model2 = strzone(strcat("buff-", #sname)); \
 		if(!Buff_Type_first) \
 			Buff_Type_first = Buff_Type##sname; \
@@ -39,17 +57,20 @@ int BUFF_LAST = 1;
 	} \
 	ACCUMULATE_FUNCTION(RegisterBuffs, RegisterBuffs_##sname)
 
-REGISTER_BUFF(_("Ammo"),ammo,AMMO,3,'0.2 1 0.2');
-REGISTER_BUFF(_("Resistance"),resistance,RESISTANCE,0,'0.3 0.2 1');
-REGISTER_BUFF(_("Speed"),speed,SPEED,9,'1 1 0.2');
-REGISTER_BUFF(_("Medic"),medic,MEDIC,1,'1 0.3 1');
-REGISTER_BUFF(_("Bash"),bash,BASH,5,'1 0.4 0');
-REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,2,'1 0.15 0');
-REGISTER_BUFF(_("Disability"),disability,DISABILITY,7,'0.66 0.66 0.73');
-REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'0.55 0.5 1');
-REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.7 0.2 1');
-REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'1 0.2 0.5');
-REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.9 0.9 0.9');
+REGISTER_BUFF(_("Ammo"),ammo,AMMO,3,'0.76 1 0.1');
+REGISTER_BUFF(_("Resistance"),resistance,RESISTANCE,0,'0.36 1 0.07');
+REGISTER_BUFF(_("Speed"),speed,SPEED,9,'0.1 1 0.84');
+REGISTER_BUFF(_("Medic"),medic,MEDIC,1,'1 0.12 0');
+REGISTER_BUFF(_("Bash"),bash,BASH,5,'1 0.39 0');
+REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,2,'1 0 0.24');
+REGISTER_BUFF(_("Disability"),disability,DISABILITY,7,'0.94 0.3 1');
+REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'1 0.23 0.61');
+REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.24 0.78 1');
+REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'0.33 0.56 1');
+REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.5 0.5 1');
+REGISTER_BUFF(_("Inferno"),inferno,INFERNO,16,'1 0.62 0');
+REGISTER_BUFF(_("Swapper"),swapper,SWAPPER,17,'0.63 0.36 1');
+REGISTER_BUFF(_("Magnet"),magnet,MAGNET,18,'1 0.95 0.18');
 #undef REGISTER_BUFF
 
 #ifdef SVQC
@@ -77,10 +98,13 @@ BUFF_SPAWNFUNCS(vengeance,		BUFF_VENGEANCE)
 BUFF_SPAWNFUNCS(jump,			BUFF_JUMP)
 BUFF_SPAWNFUNCS(flight,			BUFF_FLIGHT)
 BUFF_SPAWNFUNCS(invisible,		BUFF_INVISIBLE)
+BUFF_SPAWNFUNCS(inferno,		BUFF_INFERNO)
+BUFF_SPAWNFUNCS(swapper,		BUFF_SWAPPER)
+BUFF_SPAWNFUNCS(magnet,			BUFF_MAGNET)
 BUFF_SPAWNFUNCS(random,			0)
 
 BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler,    BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(resistance,	BUFF_RESISTANCE)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(resistance, BUFF_RESISTANCE)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(scout,      BUFF_SPEED)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(ammoregen,  BUFF_AMMO)
 
@@ -88,6 +112,10 @@ BUFF_SPAWNFUNC_Q3TA_COMPAT(ammoregen,  BUFF_AMMO)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(haste,	BUFF_SPEED)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(invis,	BUFF_INVISIBLE)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(medic,	BUFF_MEDIC)
+
+#undef BUFF_SPAWNFUNC
+#undef BUFF_SPAWNFUNC_Q3TA_COMPAT
+#undef BUFF_SPAWNFUNCS
 #endif
 
 vector Buff_Color(int buff_id);
@@ -97,4 +125,5 @@ int Buff_Type_FromName(string buff_name);
 int Buff_Type_FromSprite(string buff_sprite);
 int Buff_Skin(int buff_id);
 string Buff_Sprite(int buff_id);
+float Buff_Timer(int buff_id);
 #endif

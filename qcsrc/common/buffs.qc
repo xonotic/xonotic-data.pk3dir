@@ -54,8 +54,7 @@ int Buff_Type_FromSprite(string buff_sprite)
 	return 0;
 }
 
-
-int Buff_Skin(float buff_id)
+int Buff_Skin(int buff_id)
 {
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
@@ -71,4 +70,13 @@ string Buff_Sprite(int buff_id)
 		if(buff_id == e.items)
 			return e.model2;
 	return "";
+}
+
+float Buff_Timer(int buff_id)
+{
+	entity e;
+	for(e = Buff_Type_first; e; e = e.enemy)
+		if(buff_id == e.items)
+			return e.buff_time;
+	return 0;
 }

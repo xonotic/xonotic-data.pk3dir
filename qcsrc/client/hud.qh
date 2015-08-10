@@ -142,25 +142,24 @@ float old_p_healthtime, old_p_armortime;
 int prev_p_health, prev_p_armor;
 
 
-#define HUD_PANELS(HUD_PANEL) 																						\
-	HUD_PANEL(WEAPONS      , HUD_Weapons      , weapons) 															\
-	HUD_PANEL(AMMO         , HUD_Ammo         , ammo) 																\
-	HUD_PANEL(POWERUPS     , HUD_Powerups     , powerups) 															\
-	HUD_PANEL(HEALTHARMOR  , HUD_HealthArmor  , healtharmor) 														\
-	HUD_PANEL(NOTIFY       , HUD_Notify       , notify) 															\
-	HUD_PANEL(TIMER        , HUD_Timer        , timer) 																\
-	HUD_PANEL(RADAR        , HUD_Radar        , radar) 																\
-	HUD_PANEL(SCORE        , HUD_Score        , score) 																\
-	HUD_PANEL(RACETIMER    , HUD_RaceTimer    , racetimer) 															\
-	HUD_PANEL(VOTE         , HUD_Vote         , vote) 																\
-	HUD_PANEL(MODICONS     , HUD_ModIcons     , modicons)															\
-	HUD_PANEL(PRESSEDKEYS  , HUD_PressedKeys  , pressedkeys) 														\
-	HUD_PANEL(CHAT         , HUD_Chat         , chat) 																\
-	HUD_PANEL(ENGINEINFO   , HUD_EngineInfo   , engineinfo) 														\
-	HUD_PANEL(INFOMESSAGES , HUD_InfoMessages , infomessages) 														\
-	HUD_PANEL(PHYSICS      , HUD_Physics      , physics) 															\
-	HUD_PANEL(CENTERPRINT  , HUD_CenterPrint  , centerprint) 														\
-	HUD_PANEL(BUFFS        , HUD_Buffs        , buffs) \
+#define HUD_PANELS(HUD_PANEL) \
+	HUD_PANEL(WEAPONS      , HUD_Weapons      , weapons) \
+	HUD_PANEL(AMMO         , HUD_Ammo         , ammo) \
+	HUD_PANEL(POWERUPS     , HUD_Powerups     , powerups) \
+	HUD_PANEL(HEALTHARMOR  , HUD_HealthArmor  , healtharmor) \
+	HUD_PANEL(NOTIFY       , HUD_Notify       , notify) \
+	HUD_PANEL(TIMER        , HUD_Timer        , timer) \
+	HUD_PANEL(RADAR        , HUD_Radar        , radar) \
+	HUD_PANEL(SCORE        , HUD_Score        , score) \
+	HUD_PANEL(RACETIMER    , HUD_RaceTimer    , racetimer) \
+	HUD_PANEL(VOTE         , HUD_Vote         , vote) \
+	HUD_PANEL(MODICONS     , HUD_ModIcons     , modicons) \
+	HUD_PANEL(PRESSEDKEYS  , HUD_PressedKeys  , pressedkeys) \
+	HUD_PANEL(CHAT         , HUD_Chat         , chat) \
+	HUD_PANEL(ENGINEINFO   , HUD_EngineInfo   , engineinfo) \
+	HUD_PANEL(INFOMESSAGES , HUD_InfoMessages , infomessages) \
+	HUD_PANEL(PHYSICS      , HUD_Physics      , physics) \
+	HUD_PANEL(CENTERPRINT  , HUD_CenterPrint  , centerprint) \
 	HUD_PANEL(MAPVOTE      , MapVote_Draw     , mapvote) \
 	// always add new panels to the end of list
 

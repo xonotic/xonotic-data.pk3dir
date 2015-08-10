@@ -42,7 +42,6 @@
 #include "xonotic/dialog_credits.qc"
 #include "xonotic/dialog_firstrun.qc"
 #include "xonotic/dialog_hudpanel_ammo.qc"
-#include "xonotic/dialog_hudpanel_buffs.qc"
 #include "xonotic/dialog_hudpanel_centerprint.qc"
 #include "xonotic/dialog_hudpanel_chat.qc"
 #include "xonotic/dialog_hudpanel_engineinfo.qc"
