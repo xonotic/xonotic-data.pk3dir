@@ -277,7 +277,7 @@ bool autocvar_hud_panel_itemstime_progressbar = 0;
 float autocvar_hud_panel_itemstime_progressbar_maxtime = 30;
 string autocvar_hud_panel_itemstime_progressbar_name = "progressbar";
 float autocvar_hud_panel_itemstime_progressbar_reduced;
-bool autocvar_hud_panel_itemstime_hidespawned = 0;
+bool autocvar_hud_panel_itemstime_hidespawned = 1;
 int autocvar_hud_panel_itemstime_text = 1;
 bool autocvar_hud_panel_infomessages;
 bool autocvar_hud_panel_infomessages_flip;

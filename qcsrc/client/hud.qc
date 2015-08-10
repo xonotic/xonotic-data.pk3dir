@@ -4671,7 +4671,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
 	vector color = '0 0 0';
 	float picalpha;
 
-	if(autocvar_hud_panel_itemstime_hidespawned)
+	if(autocvar_hud_panel_itemstime_hidespawned == 2)
 		picalpha = 1;
 	else if(item_available)
 	{
@@ -4762,12 +4762,15 @@ void HUD_ItemsTime(void)
 
 	float i;
 	float count = 0;
-	if (!autocvar_hud_panel_itemstime_hidespawned)
+	if(autocvar_hud_panel_itemstime_hidespawned == 1)
 		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
-			count += (ItemsTime_time[i] != -1);
-	else
+			count += (ItemsTime_time[i] > time || -ItemsTime_time[i] > time);
+	else if(autocvar_hud_panel_itemstime_hidespawned == 2)
 		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
 			count += (ItemsTime_time[i] > time);
+	else
+		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
+			count += (ItemsTime_time[i] != -1);
 	if (count == 0)
 		return;
 
@@ -4841,7 +4844,7 @@ void HUD_ItemsTime(void)
 	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
 		if (ItemsTime_time[i] == -1)
 			continue;
-	
+
 		float item_time = ItemsTime_time[i];
 		if(item_time < -1)
 		{
@@ -4864,8 +4867,12 @@ void HUD_ItemsTime(void)
 		float f = (time - ItemsTime_availableTime[i]) * 2;
 		f = (f > 1) ? 0 : bound(0, f, 1);
 
-		if(autocvar_hud_panel_itemstime_hidespawned)
-			if(item_available)
+		if(autocvar_hud_panel_itemstime_hidespawned == 1)
+			if(!(ItemsTime_time[i] > time || -ItemsTime_time[i] > time))
+				continue;
+
+		if(autocvar_hud_panel_itemstime_hidespawned == 2)
+			if(!(ItemsTime_time[i] > time))
 				continue;
 
 		DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i, item_time, item_available, f);
