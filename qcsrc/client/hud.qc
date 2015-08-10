@@ -4720,6 +4720,8 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
 
 	if(t > 0 && autocvar_hud_panel_itemstime_text)
 		drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	else
+		picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
 	if(item_availableTime)
 		drawpic_aspect_skin_expanding(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
 	drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
