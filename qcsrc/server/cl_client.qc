@@ -195,6 +195,7 @@ void PutObserverInServer (void)
 
 	if(IS_REAL_CLIENT(self))
 	{
+		Item_ItemsTime_SetTimesForPlayer(self);
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
@@ -226,7 +227,8 @@ void PutObserverInServer (void)
 	if(self.killcount != -666)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname);
-		if(autocvar_g_chat_nospectators == 1 || (cvar("g_warmup") && !(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
+		if(!intermission_running)
+		if(autocvar_g_chat_nospectators == 1 || (!(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
 		if(self.just_joined == false) {
@@ -505,6 +507,9 @@ void PutClientInServer (void)
 			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		else
 			self.superweapons_finished = 0;
+
+		if(!warmup_stage)
+			Item_ItemsTime_ResetTimesForPlayer(self);
 
 		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
 		{
@@ -2225,6 +2230,8 @@ void PlayerPreThink (void)
 	self.stat_round_starttime = round_starttime;
 	self.stat_allow_oldvortexbeam = autocvar_g_allow_oldvortexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
+
+	self.weaponsinmap = weaponsInMap;
 
 	if(frametime)
 	{

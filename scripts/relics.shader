@@ -1,160 +1,182 @@
 models/relics/relic
 {
 	dpreflectcube cubemaps/default/sky
- 	{
-		map models/relics/relic.tga
+	{
+		map models/relics/relic
 		rgbgen lightingDiffuse
 	}
 }
+
 models/relics/relic_ring
 {
- 	{
-		map models/relics/relic_ring.tga
+	{
+		map models/relics/relic_ring
 		blendfunc GL_SRC_ALPHA GL_ONE
 		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_resistance
-{
-	cull none
- 	{
-		map models/relics/sign_resistance.tga
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
-models/relics/sign_regeneration
-{
-	cull none
- 	{
-		map models/relics/sign_regeneration.tga
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
-models/relics/sign_vampire
-{
-	cull none
- 	{
-		map models/relics/sign_vampire.tga
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
+
 models/relics/sign_ammo
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_ammo.tga
+	nopicmip
+	{
+		map models/relics/sign_ammo
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_damage
+
+models/relics/sign_bash
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_damage.tga
+	nopicmip
+	{
+		map models/relics/sign_bash
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_splashdamage
+
+models/relics/sign_blessed
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_splashdamage.tga
+	nopicmip
+	{
+		map models/relics/sign_blessed
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_firingspeed
-{
-	cull none
- 	{
-		map models/relics/sign_firingspeed.tga
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
+
 models/relics/sign_disability
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_disability.tga
+	nopicmip
+	{
+		map models/relics/sign_disability
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_teamboost
-{
-	cull none
- 	{
-		map models/relics/sign_teamboost.tga
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
-models/relics/sign_speed
-{
-	cull none
- 	{
-		map models/relics/sign_speed.tga
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
-models/relics/sign_jump
-{
-	cull none
- 	{
-		map models/relics/sign_jump.tga
-		blendfunc add
-		rgbgen lightingDiffuse
-	}
-}
+
 models/relics/sign_flight
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_flight.tga
+	nopicmip
+	{
+		map models/relics/sign_flight
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }
+
+models/relics/sign_inferno
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_inferno
+		blendfunc add
+	}
+}
+
 models/relics/sign_invisible
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_invisible.tga
+	nopicmip
+	{
+		map models/relics/sign_invisible
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_radioactive
+
+models/relics/sign_jump
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_radioactive.tga
+	nopicmip
+	{
+		map models/relics/sign_jump
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }
-models/relics/sign_resurrection
+
+models/relics/sign_magnet
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_resurrection.tga
+	nopicmip
+	{
+		map models/relics/sign_magnet
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }
+
+models/relics/sign_medic
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_medic
+		blendfunc add
+	}
+}
+
+models/relics/sign_resistance
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_resistance
+		blendfunc add
+	}
+}
+
+models/relics/sign_speed
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_speed
+		blendfunc add
+	}
+}
+
+models/relics/sign_swapper
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_swapper
+		blendfunc add
+	}
+}
+
+models/relics/sign_vampire
+{
+	deformVertexes autosprite
+	cull none
+	nopicmip
+	{
+		map models/relics/sign_vampire
+		blendfunc add
+	}
+}
+
 models/relics/sign_vengeance
 {
+	deformVertexes autosprite
 	cull none
- 	{
-		map models/relics/sign_vengeance.tga
+	nopicmip
+	{
+		map models/relics/sign_vengeance
 		blendfunc add
-		rgbgen lightingDiffuse
 	}
 }

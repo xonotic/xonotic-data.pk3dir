@@ -976,18 +976,40 @@ float HUD_WouldDrawScoreboard() {
 float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
+	WepSet weapons_stat = WepSet_GetFromStat();
+	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
+	float initial_posx = pos.x;
 	int i;
-	int weapon_cnt = WEP_COUNT - 3; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
-	float rows;
-	if(autocvar_scoreboard_accuracy_doublerows)
+	float weapon_stats;
+	int disownedcnt = 0;
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+	{
+		self = get_weaponinfo(i);
+		if(!self.weapon)
+			continue;
+
+		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+
+		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+			++disownedcnt;
+	}
+
+	int weapon_cnt = WEP_COUNT - disownedcnt;
+
+	if(weapon_cnt <= 0)
+		return pos;
+
+	int rows;
+	if(autocvar_scoreboard_accuracy_doublerows && weapon_cnt >= floor(WEP_COUNT * 0.5))
 		rows = 2;
 	else
 		rows = 1;
+	int columnns = ceil(weapon_cnt / rows);
+
 	float height = 40;
 	float fontsize = height * 1/3;
 	float weapon_height = height * 2/3;
-	float weapon_width = sbwidth / weapon_cnt;
-	float g_instagib = 0;
+	float weapon_width = sbwidth / columnns / rows;
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos.y += 1.25 * hud_fontsize.y + autocvar_scoreboard_border_thickness;
@@ -1002,7 +1024,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// column highlighting
-	for(i = 0; i < weapon_cnt/rows; ++i)
+	for(i = 0; i < columnns; ++i)
 	{
 		if(!(i % 2))
 			drawfill(pos + '1 0 0' * weapon_width * rows * i, '0 1 0' * height * rows + '1 0 0' * weapon_width * rows, '0 0 0', scoreboard_alpha_bg * 0.2, DRAWFLAG_NORMAL);
@@ -1015,28 +1037,28 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	}
 
 	average_accuracy = 0;
-	float weapons_with_stats;
-	weapons_with_stats = 0;
+	int weapons_with_stats = 0;
 	if(rows == 2)
 		pos.x += weapon_width / 2;
 
-	if(switchweapon == WEP_VAPORIZER)
-		g_instagib = 1; // TODO: real detection for instagib?
-
-	float weapon_stats;
 	if(autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
 	else
 		Accuracy_LoadColors();
 
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+	float oldposx = pos.x;
+	vector tmpos = pos;
+
+	int column;
+	for(i = WEP_FIRST, column = 0; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
 		if (!self.weapon)
 			continue;
-		if ((i == WEP_VORTEX && g_instagib) || i == WEP_PORTO || (i == WEP_VAPORIZER && !g_instagib) || i == WEP_TUBA) // skip port-o-launch, vortex || vaporizer and tuba
-			continue;
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+
+		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+			continue;
 
 		float weapon_alpha;
 		if(weapon_stats >= 0)
@@ -1045,7 +1067,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic_aspect_skin(pos, self.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(tmpos, self.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if(weapon_stats >= 0) {
 			weapons_with_stats += 1;
@@ -1060,24 +1082,24 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			if(!autocvar_scoreboard_accuracy_nocolors)
 				rgb = Accuracy_GetColor(weapon_stats);
 
-			drawstring(pos + '1 0 0' * padding + '0 1 0' * weapon_height, s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+			drawstring(tmpos + '1 0 0' * padding + '0 1 0' * weapon_height, s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}
+		tmpos.x += weapon_width * rows;
 		pos.x += weapon_width * rows;
-		if(rows == 2 && i == 6) {
-			pos.x -= sbwidth;
+		if(rows == 2 && column == columnns - 1) {
+			tmpos.x = oldposx;
+			tmpos.y += height;
 			pos.y += height;
 		}
+		++column;
 	}
 
 	if(weapons_with_stats)
 		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
 
-	if(rows == 2)
-		pos.x -= weapon_width / 2;
-	pos.x -= sbwidth;
 	pos.y += height;
-
-	pos.y +=  1.25 * hud_fontsize.y;
+	pos.y += 1.25 * hud_fontsize.y;
+	pos.x = initial_posx;
 	return pos;
 }
 
