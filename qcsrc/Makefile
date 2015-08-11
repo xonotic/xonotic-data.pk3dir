@@ -13,7 +13,7 @@ QCCFLAGS ?= \
 	-std=gmqcc \
 	-O3 -flno \
 	-Werror -fno-bail-on-werror -Wall \
-	-fftepp -fftepp-predefs -Wcpp -futf8 \
+	-fftepp -fftepp-predefs -Wcpp -futf8 -frelaxed-switch \
 	$(QCCFLAGS_WTFS) \
 	$(QCCFLAGS_FEATURES) \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)

@@ -27,7 +27,7 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 #endif
 }
 
-REGISTER_ITEM(ArmorBig, Armor) {
+REGISTER_ITEM(ArmorLarge, Armor) {
     this.m_model                =   "models/items/item_armor_big.md3";
     this.m_sound                =   "misc/armor17_5.wav";
     this.m_name                 =   "50 Armor";
@@ -39,7 +39,7 @@ REGISTER_ITEM(ArmorBig, Armor) {
 #endif
 }
 
-REGISTER_ITEM(ArmorLarge, Armor) {
+REGISTER_ITEM(ArmorMega, Armor) {
     this.m_model                =   "models/items/item_armor_large.md3";
     this.m_sound                =   "misc/armor25.wav";
     this.m_name                 =   "100 Armor";

@@ -114,7 +114,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
 		minf = autocvar_g_balance_fuel_regenstable;
 		limitf = autocvar_g_balance_fuel_limit;
 
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
 	}
 	return true; // return true anyway, as frozen uses no regen
 }
@@ -256,8 +256,8 @@ MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 
 	switch(self.items)
 	{
-		case IT_HEALTH: return !(autocvar_g_overkill_100h_anyway);
-		case IT_ARMOR: return !(autocvar_g_overkill_100a_anyway);
+		case ITEM_HealthMega.m_itemid: return !(autocvar_g_overkill_100h_anyway);
+		case ITEM_ArmorMega.m_itemid: return !(autocvar_g_overkill_100a_anyway);
 	}
 
 	return true;
