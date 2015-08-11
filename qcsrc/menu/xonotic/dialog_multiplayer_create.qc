@@ -145,7 +145,7 @@ void XonoticServerCreateTab_fill(entity me)
 	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
 	me.gotoRC(me, me.rows - 2.5, 0);
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators"), '0 0 0'));
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
 			main.mutatorsDialog.refilterEntity = me.mapListBox;
