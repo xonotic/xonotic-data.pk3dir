@@ -1,39 +1,19 @@
 #include "powerup.qh"
 #include "../../../server/t_items.qh"
 
-#define WITH(it) this.m_##it;
-#define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-#define DEFINE(id)                                                          \
-    REGISTER_ITEM(id, Ammo, LAMBDA(                                         \
-        IF(SV, CONFIGURE                                                    \
-        ,   botvalue            =   100000                                  \
-        ,   itemflags           =   FL_POWERUP                              \
-        ,   respawntime         =         GET(g_pickup_respawntime_powerup) \
-        ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_powerup) \
-        )                                                                   \
-    ))
-
-DEFINE(Strength) {
-    APPLY(CONFIGURE
-    ,   model               =   "models/items/g_strength.md3"
-    ,   sound               =   "misc/powerup.wav"
-    ,   name                =   "Strength Powerup"
-    )
-    IF(SV, CONFIGURE
-    ,   itemid              =   IT_STRENGTH
-    )
+REGISTER_ITEM(Strength, Powerup) {
+    this.m_model    =   "models/items/g_strength.md3";
+    this.m_sound    =   "misc/powerup.wav";
+    this.m_name     =   "Strength Powerup";
+#ifdef SVQC
+    this.m_itemid   =   IT_STRENGTH;
+#endif
 }
-DEFINE(Shield) {
-    APPLY(CONFIGURE
-    ,   model               =   "models/items/g_invincible.md3"
-    ,   sound               =   "misc/powerup_shield.wav"
-    ,   name                =   "Shield"
-    )
-    IF(SV, CONFIGURE
-    ,   itemid              =   IT_INVINCIBLE
-    )
+REGISTER_ITEM(Shield, Powerup) {
+    this.m_model    =   "models/items/g_invincible.md3";
+    this.m_sound    =   "misc/powerup_shield.wav";
+    this.m_name     =   "Shield";
+#ifdef SVQC
+    this.m_itemid   =   IT_INVINCIBLE;
+#endif
 }
-
-#undef WITH
-#undef CONFIGURE
-#undef DEFINE

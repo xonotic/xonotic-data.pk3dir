@@ -3,67 +3,43 @@
     #include "../../../server/t_items.qh"
 #endif
 
-#define WITH(it) this.m_##it;
-#define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-#define DEFINE(id)                                                      \
-    REGISTER_ITEM(id, Ammo, LAMBDA(                                     \
-        IF(SV, CONFIGURE                                                \
-        ,   respawntime         =       GET(g_pickup_respawntime_ammo)  \
-        ,   respawntimejitter   = GET(g_pickup_respawntimejitter_ammo)  \
-        )                                                               \
-    ))
-
-DEFINE(Bullets) {
-    APPLY(CONFIGURE
-    ,   model               =   "models/items/a_bullets.mdl"
-    ,   name                =   "bullets"
-    )
-    IF(SV, CONFIGURE
-    ,   botvalue            =   2000
-    ,   itemid              =   IT_NAILS
-    )
+REGISTER_ITEM(Bullets, Ammo) {
+    this.m_model    =   "models/items/a_bullets.mdl";
+    this.m_name     =   "bullets";
+#ifdef SVQC
+    this.m_botvalue =   2000;
+    this.m_itemid   =   IT_NAILS;
+#endif
 }
-DEFINE(Cells) {
-    APPLY(CONFIGURE
-    ,   model               =   "models/items/a_cells.md3"
-    ,   name                =   "cells"
-    )
-    IF(SV, CONFIGURE
-    ,   botvalue            =   2000
-    ,   itemid              =   IT_CELLS
-    )
+REGISTER_ITEM(Cells, Ammo) {
+    this.m_model    =   "models/items/a_cells.md3";
+    this.m_name     =   "cells";
+#ifdef SVQC
+    this.m_botvalue =   2000;
+    this.m_itemid   =   IT_CELLS;
+#endif
 }
-DEFINE(Plasma) {
-    APPLY(CONFIGURE
-    ,   model               =   "models/items/a_cells.md3"
-    ,   name                =   "plasma"
-    )
-    IF(SV, CONFIGURE
-    ,   botvalue            =   2000
-    ,   itemid              =   IT_PLASMA
-    )
+REGISTER_ITEM(Plasma, Ammo) {
+    this.m_model    =   "models/items/a_cells.md3";
+    this.m_name     =   "plasma";
+#ifdef SVQC
+    this.m_botvalue =   2000;
+    this.m_itemid   =   IT_PLASMA;
+#endif
 }
-DEFINE(Rockets) {
-    APPLY(CONFIGURE
-    ,   model               =   "models/items/a_rockets.md3"
-    ,   name                =   "rockets"
-    )
-    IF(SV, CONFIGURE
-    ,   botvalue            =   3000
-    ,   itemid              =   IT_ROCKETS
-    )
+REGISTER_ITEM(Rockets, Ammo) {
+    this.m_model    =   "models/items/a_rockets.md3";
+    this.m_name     =   "rockets";
+#ifdef SVQC
+    this.m_botvalue =   3000;
+    this.m_itemid   =   IT_ROCKETS;
+#endif
 }
-DEFINE(Shells) {
-    APPLY(CONFIGURE
-    ,   model               =   "models/items/a_shells.md3"
-    ,   name                =   "shells"
-    )
-    IF(SV, CONFIGURE
-    ,   botvalue            =   500
-    ,   itemid              =   IT_SHELLS
-    )
+REGISTER_ITEM(Shells, Ammo) {
+    this.m_model    =   "models/items/a_shells.md3";
+    this.m_name     =   "shells";
+#ifdef SVQC
+    this.m_botvalue =   500;
+    this.m_itemid   =   IT_SHELLS;
+#endif
 }
-
-#undef WITH
-#undef CONFIGURE
-#undef DEFINE
