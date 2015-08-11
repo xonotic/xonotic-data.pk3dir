@@ -418,11 +418,11 @@ void ListBox_draw(entity me)
 	}
 	if(me.scrollPos != me.scrollPosTarget)
 	{
-		float exp_factor = 0.16;
+		float averaging_time = 0.16;
 		if(me.pressed == 1)
-			exp_factor = 0.06; // scroll faster while dragging the scrollbar
+			averaging_time = 0.06; // scroll faster while dragging the scrollbar
 		// this formula works with whatever framerate
-		float f = exp(-frametime / exp_factor);
+		float f = exp(-frametime / averaging_time);
 		me.scrollPos = me.scrollPos * f + me.scrollPosTarget * (1 - f);
 		if(fabs(me.scrollPos - me.scrollPosTarget) < 0.001)
 			me.scrollPos = me.scrollPosTarget;
