@@ -5,14 +5,14 @@
 
 #define WITH(it) this.m_##it;
 #define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-#define DEFINE(id, ...) REGISTER_ITEM(id, Pickup, UNWORDS(__VA_ARGS__))
+#define DEFINE(id) REGISTER_ITEM(id, Pickup, )
 
-DEFINE(Jetpack
-    ,APPLY(CONFIGURE
+DEFINE(Jetpack) {
+    APPLY(CONFIGURE
     ,   model               =   "models/items/g_jetpack.md3"
     ,   name                =   "Jet pack"
     )
-    ,IF(SV, CONFIGURE
+    IF(SV, CONFIGURE
     ,   botvalue            =   BOT_PICKUP_RATING_LOW
     ,   itemflags           =   FL_POWERUP
     ,   itemid              =   IT_JETPACK
@@ -20,28 +20,28 @@ DEFINE(Jetpack
     ,   respawntime         =         GET(g_pickup_respawntime_powerup)
     ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_powerup)
     )
-)
+}
 
-DEFINE(JetpackFuel
-    ,APPLY(CONFIGURE
+DEFINE(JetpackFuel) {
+    APPLY(CONFIGURE
     ,   model               =   "models/items/g_fuel.md3"
     ,   name                =   "Fuel"
     )
-    ,IF(SV, CONFIGURE
+    IF(SV, CONFIGURE
     ,   botvalue            =   BOT_PICKUP_RATING_LOW
     ,   itemid              =   IT_FUEL
     ,   pickupevalfunc      =   commodity_pickupevalfunc
     ,   respawntime         =         GET(g_pickup_respawntime_ammo)
     ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_ammo)
     )
-)
+}
 
-DEFINE(JetpackRegen
-    ,APPLY(CONFIGURE
+DEFINE(JetpackRegen) {
+    APPLY(CONFIGURE
     ,   model               =   "models/items/g_fuelregen.md3"
     ,   name                =   "Fuel regenerator"
     )
-    ,IF(SV, CONFIGURE
+    IF(SV, CONFIGURE
     ,   botvalue            =   BOT_PICKUP_RATING_LOW
     ,   itemflags           =   FL_POWERUP
     ,   itemid              =   IT_FUEL_REGEN
@@ -49,7 +49,7 @@ DEFINE(JetpackRegen
     ,   respawntime         =         GET(g_pickup_respawntime_powerup)
     ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_powerup)
     )
-)
+}
 
 #undef WITH
 #undef CONFIGURE
