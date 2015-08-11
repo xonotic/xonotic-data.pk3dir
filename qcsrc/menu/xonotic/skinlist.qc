@@ -66,7 +66,7 @@ void XonoticSkinList_loadCvars(entity me)
 	{
 		if(me.skinParameter(me, i, SKINPARM_NAME) == s)
 		{
-			me.selectedItem = i;
+			me.setSelected(me, i);
 			break;
 		}
 	}

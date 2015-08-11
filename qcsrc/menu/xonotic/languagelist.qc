@@ -121,17 +121,17 @@ void XonoticLanguageList_loadCvars(entity me)
 	{
 		if(me.languageParameter(me, i, LANGPARM_ID) == "en")
 		{
-			me.selectedItem = i;
+			SUPER(XonoticLanguageList).setSelected(me, i);
 			break;
 		}
 	}
 
-        // otherwise, find the language
+	// otherwise, find the language
 	for(i = 0; i < n; ++i)
 	{
 		if(me.languageParameter(me, i, LANGPARM_ID) == s)
 		{
-			me.selectedItem = i;
+			SUPER(XonoticLanguageList).setSelected(me, i);
 			break;
 		}
 	}
