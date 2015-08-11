@@ -10,42 +10,6 @@
     #include "../server/defs.qh"
 #endif
 
-// player animation data for this model
-// each vector is as follows:
-// _x = startframe
-// _y = numframes
-// _z = framerate
-.vector anim_die1; // player dies
-.vector anim_die2; // player dies differently
-.vector anim_draw; // player pulls out a weapon
-.vector anim_duckwalk; // player walking while crouching
-.vector anim_duckjump; // player jumping from a crouch
-.vector anim_duckidle; // player idling while crouching
-.vector anim_idle; // player standing
-.vector anim_jump; // player jump
-.vector anim_pain1; // player flinches from pain
-.vector anim_pain2; // player flinches from pain, differently
-.vector anim_shoot; // player shoots
-.vector anim_taunt; // player taunts others (FIXME: no code references this)
-.vector anim_run; // player running forward
-.vector anim_runbackwards; // player running backward
-.vector anim_strafeleft; // player shuffling left quickly
-.vector anim_straferight; // player shuffling right quickly
-.vector anim_forwardright; // player running forward and right
-.vector anim_forwardleft; // player running forward and left
-.vector anim_backright; // player running backward and right
-.vector anim_backleft; // player running back and left
-.vector anim_melee; // player doing the melee action
-.vector anim_duck; // player doing the melee action
-.vector anim_duckwalkbackwards;
-.vector anim_duckwalkstrafeleft;
-.vector anim_duckwalkstraferight;
-.vector anim_duckwalkforwardright;
-.vector anim_duckwalkforwardleft;
-.vector anim_duckwalkbackright;
-.vector anim_duckwalkbackleft;
-.float animdecide_modelindex;
-
 void animdecide_load_if_needed(entity e)
 {
 	if(e.modelindex == e.animdecide_modelindex)

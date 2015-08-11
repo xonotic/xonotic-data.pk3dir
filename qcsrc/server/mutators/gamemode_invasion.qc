@@ -126,7 +126,7 @@ float Invasion_CheckWinner()
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		FOR_EACH_MONSTER(head)
-			monster_remove(head);
+			Monster_Remove(head);
 
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
@@ -203,7 +203,7 @@ float Invasion_CheckWinner()
 	}
 
 	FOR_EACH_MONSTER(head)
-		monster_remove(head);
+		Monster_Remove(head);
 
 	if(teamplay)
 	{
@@ -296,7 +296,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 	self.monster_skill = inv_monsterskill;
 
 	if((get_monsterinfo(self.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, M_NAME(self.monsterid));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, self.monster_name);
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 

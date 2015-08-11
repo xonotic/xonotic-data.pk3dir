@@ -8,8 +8,10 @@ const int MR_SETUP = 1; // (SERVER) setup monster data
 const int MR_THINK = 2; // (SERVER) logic to run every frame
 const int MR_DEATH = 3; // (SERVER) called when monster dies
 const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
+const int MR_PAIN = 5; // (SERVER) called when monster is damaged
+const int MR_ANIM = 6; // (BOTH?) sets animations for monster
 
-// functions:
+// functions
 entity get_monsterinfo(float id);
 
 // special spawn flags
@@ -21,49 +23,65 @@ const int MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
 const int MON_FLAG_RANGED = 512; // monster shoots projectiles
 const int MON_FLAG_MELEE = 1024;
 
-// entity properties of monsterinfo:
+// entity properties of monsterinfo
 .float monsterid; // MON_...
 .string netname; // short name
 .string monster_name; // human readable name
-.float(float) monster_func; // m_...
+.float(float) monster_func; // M_...
+.float(float attack_type) monster_attackfunc; // attack function
 .string mdl; // currently a copy of the model
 .string model; // full name of model
 .int spawnflags;
 .vector mins, maxs; // monster hitbox size
 
+// animations
+.vector anim_blockend;
+.vector anim_blockstart;
+.vector anim_melee1;
+.vector anim_melee2;
+.vector anim_melee3;
+.vector anim_pain3;
+.vector anim_pain4;
+.vector anim_pain5;
+.vector anim_walk;
+.vector anim_spawn;
+
 // other useful macros
 #define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
-#define M_NAME(monstertype) (get_monsterinfo(monstertype)).monster_name
 
 // =====================
 //	Monster Registration
 // =====================
 
 float m_null(float dummy);
-void register_monster(float id, float(float) func, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname);
+void register_monster(float id, float(float) func, float(float) attackfunc, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname);
 void register_monsters_done();
 
-const int MON_MAXCOUNT = 24;
+const int MON_MAXCOUNT = 24; // increase as necessary, limit is infinite, but keep loops small!
 const int MON_FIRST = 1;
 int MON_COUNT;
 int MON_LAST;
 
-#define REGISTER_MONSTER_2(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
+#define REGISTER_MONSTER_2(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
 	int id; \
 	float func(float); \
+	float attackfunc(float); \
 	void RegisterMonsters_##id() \
 	{ \
 		MON_LAST = (id = MON_FIRST + MON_COUNT); \
 		++MON_COUNT; \
-		register_monster(id,func,monsterflags,min_s,max_s,modelname,shortname,mname); \
+		register_monster(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterMonsters, RegisterMonsters_##id)
-#ifdef MENUQC
-#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
+#ifdef SVQC
+#define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname)
+#elif defined(CSQC)
+#define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,func,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
 #else
-#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,func,monsterflags,min_s,max_s,modelname,shortname,mname)
+#define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,m_null,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
 #endif
 
 #include "all.inc"
