@@ -122,6 +122,7 @@ const int ENT_CLIENT_HEALING_ORB = 80;
 
 const int SPRITERULE_DEFAULT = 0;
 const int SPRITERULE_TEAMPLAY = 1;
+const int SPRITERULE_SPECTATOR = 2;
 
 const int RADARICON_NONE = 0;
 const int RADARICON_FLAG = 1;
