@@ -82,6 +82,12 @@ void multi_touch()
 			return;		// not facing the right way
 	}
 
+	// if the trigger has pressed keys, check that the player is pressing those keys
+	if(self.pressedkeys)
+	if(IS_PLAYER(other)) // only for players
+	if(!(other.pressedkeys & self.pressedkeys))
+		return;
+
 	EXACTTRIGGER_TOUCH;
 
 	self.enemy = other;

@@ -1,3 +1,3 @@
 #include "buff.qh"
 
-REGISTER_ITEM(DefaultBuff, Buff, LAMBDA())
+REGISTER_ITEM(DefaultBuff, Buff);

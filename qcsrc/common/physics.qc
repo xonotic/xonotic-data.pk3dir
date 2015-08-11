@@ -1,10 +1,12 @@
 #include "physics.qh"
 #include "triggers/trigger/swamp.qh"
 #include "triggers/trigger/jumppads.qh"
+#include "viewloc.qh"
 
 #ifdef SVQC
 
 #include "../server/miscfunctions.qh"
+#include "triggers/trigger/viewloc.qh"
 
 // client side physics
 bool Physics_Valid(string thecvar)
@@ -82,8 +84,6 @@ void Physics_AddStats()
 	addstat(STAT_DOUBLEJUMP, AS_INT, stat_doublejump);
 
 	// jump speed caps
-	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_MIN, AS_FLOAT, stat_jumpspeedcap_min);
-	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_MIN, AS_FLOAT, stat_jumpspeedcap_min);
 	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, AS_INT, stat_jumpspeedcap_disable_onramps);
 
 	// hacks
@@ -145,8 +145,6 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_jetpack_maxspeed_up = PHYS_JETPACK_MAXSPEED_UP;
 	self.stat_jetpack_fuel = PHYS_JETPACK_FUEL;
 
-	self.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MIN;
-	self.stat_jumpspeedcap_max = PHYS_JUMPSPEEDCAP_MAX;
 	self.stat_jumpspeedcap_disable_onramps = PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS;
 
 	self.stat_sv_friction_on_land = PHYS_FRICTION_ONLAND;
@@ -600,22 +598,22 @@ bool PlayerJump (void)
 	// velocity bounds.  Final velocity is bound between (jumpheight *
 	// min + jumpheight) and (jumpheight * max + jumpheight);
 
-	if(PHYS_JUMPSPEEDCAP_MIN)
+	if(PHYS_JUMPSPEEDCAP_MIN != "")
 	{
-		float minjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MIN;
+		float minjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MIN);
 
 		if (self.velocity_z < minjumpspeed)
 			mjumpheight += minjumpspeed - self.velocity_z;
 	}
 
-	if(PHYS_JUMPSPEEDCAP_MAX)
+	if(PHYS_JUMPSPEEDCAP_MAX != "")
 	{
 		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 
 		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS))
 		{
-			float maxjumpspeed = mjumpheight * PHYS_JUMPSPEEDCAP_MAX;
+			float maxjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MAX);
 
 			if (self.velocity_z > maxjumpspeed)
 				mjumpheight -= self.velocity_z - maxjumpspeed;
@@ -1762,6 +1760,8 @@ void PM_Main()
 	self.disableclientprediction = 0;
 #endif
 
+	viewloc_PlayerPhysics();
+
 	PM_check_spider();
 
 	PM_check_frozen();
@@ -1827,6 +1827,17 @@ void PM_Main()
 		stuffcmd(self, strcat("cl_backspeed ", temps, "\n"));
 		stuffcmd(self, strcat("cl_sidespeed ", temps, "\n"));
 		stuffcmd(self, strcat("cl_upspeed ", temps, "\n"));
+	}
+
+	if(self.stat_jumpspeedcap_min != PHYS_JUMPSPEEDCAP_MIN)
+	{
+		self.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MIN;
+		stuffcmd(self, strcat("cl_jumpspeedcap_min ", PHYS_JUMPSPEEDCAP_MIN, "\n"));
+	}
+	if(self.stat_jumpspeedcap_max != PHYS_JUMPSPEEDCAP_MAX)
+	{
+		self.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MAX;
+		stuffcmd(self, strcat("cl_jumpspeedcap_max ", PHYS_JUMPSPEEDCAP_MAX, "\n"));
 	}
 #endif
 
