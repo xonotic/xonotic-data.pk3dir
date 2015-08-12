@@ -9,11 +9,15 @@
     void Register_##ns##_##id() {                               \
         entity this = NEW(class);                               \
         ns##_##id = this;                                       \
-        this.fld = ns##_COUNT;                                  \
+        this.fld = counter;                                     \
         array[counter++] = this;                                \
         Register_##ns##_##id##_init(this);                      \
     }                                                           \
     ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id)         \
     REGISTER_INIT(ns, id)
+
+void __static_init() { }
+#define static_init() CALL_ACCUMULATED_FUNCTION(__static_init)
+#define REGISTER_REGISTRY(func) ACCUMULATE_FUNCTION(__static_init, func)
 
 #endif

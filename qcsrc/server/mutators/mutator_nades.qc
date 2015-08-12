@@ -23,7 +23,7 @@ void nade_timer_think()
 
 void nade_burn_spawn(entity _nade)
 {
-	CSQCProjectile(_nade, true, Nade_ProjectileFromID(_nade.nade_type, true), true);
+	CSQCProjectile(_nade, true, NADES[_nade.nade_type].m_projectile[true], true);
 }
 
 void nade_spawn(entity _nade)
@@ -42,7 +42,7 @@ void nade_spawn(entity _nade)
 
 	_nade.effects |= EF_LOWPRECISION;
 
-	CSQCProjectile(_nade, true, Nade_ProjectileFromID(_nade.nade_type, false), true);
+	CSQCProjectile(_nade, true, NADES[_nade.nade_type].m_projectile[false], true);
 }
 
 void napalm_damage(float dist, float damage, float edgedamage, float burntime)
@@ -366,7 +366,7 @@ void nade_translocate_boom()
 	self.realowner = self;
 	self = oldself;
 
-	TeleportPlayer(self, self.realowner, locout, self.realowner.mangle, v_forward * vlen(self.realowner.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+	TeleportPlayer(self, self.realowner, locout, self.realowner.angles, v_forward * vlen(self.realowner.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 }
 
 void nade_spawn_boom()
@@ -490,7 +490,7 @@ void nade_boom()
 	string expef;
 	bool nade_blast = true;
 
-	switch ( self.nade_type )
+	switch ( NADES[self.nade_type] )
 	{
 		case NADE_TYPE_NAPALM:
 			nade_blast = autocvar_g_nades_napalm_blast;
@@ -549,7 +549,7 @@ void nade_boom()
 	}
 
 	if(self.takedamage)
-	switch ( self.nade_type )
+	switch ( NADES[self.nade_type] )
 	{
 		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
 		case NADE_TYPE_ICE: nade_ice_boom(); break;
@@ -605,7 +605,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 		return;
 	}
 
-	if(self.nade_type == NADE_TYPE_TRANSLOCATE || self.nade_type == NADE_TYPE_SPAWN)
+	if(self.nade_type == NADE_TYPE_TRANSLOCATE.m_id || self.nade_type == NADE_TYPE_SPAWN.m_id)
 		return;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
@@ -653,7 +653,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 
 	self.health -= damage;
 
-	if ( self.nade_type != NADE_TYPE_HEAL || IS_PLAYER(attacker) )
+	if ( self.nade_type != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
 		self.realowner = attacker;
 
 	if(self.health <= 0)
@@ -724,7 +724,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
 
-	if(_nade.nade_type == NADE_TYPE_TRANSLOCATE || _nade.nade_type == NADE_TYPE_SPAWN)
+	if(_nade.nade_type == NADE_TYPE_TRANSLOCATE.m_id || _nade.nade_type == NADE_TYPE_SPAWN.m_id)
 		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	else
 		_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
@@ -783,7 +783,7 @@ float nade_customize()
 	{
 		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 		if(!self.traileffectnum)
-			self.traileffectnum = particleeffectnum(Nade_TrailEffect(Nade_ProjectileFromID(self.nade_type, false), self.team));
+			self.traileffectnum = particleeffectnum(Nade_TrailEffect(NADES[self.nade_type].m_projectile[false], self.team));
 		self.alpha = 1;
 	}
 
@@ -817,14 +817,14 @@ void nade_prime()
 		n.pokenade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
-	n.nade_type = bound(1, n.nade_type, NADE_TYPE_LAST);
+	n.nade_type = bound(1, n.nade_type, NADES_COUNT);
 
 	setmodel(n, "models/weapons/v_ok_grenade.md3");
 	//setattachment(n, self, "bip01 l hand");
 	n.exteriormodeltoclient = self;
 	n.customizeentityforclient = nade_customize;
-	n.traileffectnum = particleeffectnum(Nade_TrailEffect(Nade_ProjectileFromID(n.nade_type, false), self.team));
-	n.colormod = Nade_Color(n.nade_type);
+	n.traileffectnum = particleeffectnum(Nade_TrailEffect(NADES[n.nade_type].m_projectile[false], self.team));
+	n.colormod = NADES[n.nade_type].m_color;
 	n.realowner = self;
 	n.colormap = self.colormap;
 	n.glowmod = self.glowmod;
@@ -837,7 +837,7 @@ void nade_prime()
 	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
 	setattachment(fn, self.weaponentity, "");
 	fn.realowner = fn.owner = self;
-	fn.colormod = Nade_Color(n.nade_type);
+	fn.colormod = NADES[n.nade_type].m_color;
 	fn.colormap = self.colormap;
 	fn.glowmod = self.glowmod;
 	fn.think = SUB_Remove;
@@ -995,7 +995,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				self.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 			}
 
-			self.nade_type = bound(1, self.nade_type, NADE_TYPE_LAST);
+			self.nade_type = bound(1, self.nade_type, NADES_COUNT);
 
 			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
 				nades_GiveBonus(self, time_score / autocvar_g_nades_bonus_score_max);

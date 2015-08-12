@@ -9,6 +9,7 @@ entity ITEMS[MAX_ITEMS];
 int ITEM_COUNT;
 /** If you register a new item, make sure to add it to all.inc */
 #define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, class, m_id)
+REGISTER_REGISTRY(RegisterItems)
 
 #define ITEMS_FOREACH(pred, body) do {      \
     for (int i = 0; i < ITEM_COUNT; i++) {  \
