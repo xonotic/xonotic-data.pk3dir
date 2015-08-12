@@ -4643,7 +4643,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
 		picalpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 	}
 	else
-		picalpha = 0.3;
+		picalpha = 0.5;
 	t = floor(item_time - time + 0.999);
 	if(t < 5)
 		color = '0.7 0 0';
