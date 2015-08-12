@@ -978,8 +978,8 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 	float bonusNades    = getstatf(STAT_NADE_BONUS);
 	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
 	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
-	vector nadeColor    = Nade_Color(bonusType);
-	string nadeIcon     = Nade_Icon(bonusType);
+	vector nadeColor    = NADES[bonusType].m_color;
+	string nadeIcon     = NADES[bonusType].m_icon;
 
 	vector iconPos, textPos;
 
