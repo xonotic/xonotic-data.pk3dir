@@ -1,15 +1,19 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool m_wyvern(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ WYVERN,
-/* function   */ m_wyvern,
 /* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED,
 /* mins,maxs  */ '-20 -20 -58', '20 20 20',
 /* model      */ "wizard.mdl",
 /* netname    */ "wyvern",
 /* fullname   */ _("Wyvern")
-);
+) {
+#ifndef MENUQC
+	this.monster_func = m_wyvern;
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_wyvern_health;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
@@ -96,7 +100,7 @@ void spawnfunc_monster_wyvern()
 {
 	self.classname = "monster_wyvern";
 
-	if(!monster_initialize(MON_WYVERN)) { remove(self); return; }
+	if(!monster_initialize(MON_WYVERN.monsterid)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -155,4 +159,3 @@ float m_wyvern(float req)
 }
 
 #endif // CSQC
-#endif // REGISTER_MONSTER
