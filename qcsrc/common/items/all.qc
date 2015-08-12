@@ -1,5 +1,5 @@
-#ifndef ALL_C
-#define ALL_C
+#ifndef ITEMS_ALL_C
+#define ITEMS_ALL_C
 #include "all.qh"
 
 #include "all.inc"

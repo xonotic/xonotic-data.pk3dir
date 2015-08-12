@@ -1,14 +1,14 @@
 #include "../registry.qh"
 
-#ifndef ALL_H
-#define ALL_H
+#ifndef ITEMS_ALL_H
+#define ITEMS_ALL_H
 
 void RegisterItems();
 const int MAX_ITEMS = 24;
 entity ITEMS[MAX_ITEMS];
 int ITEM_COUNT;
 /** If you register a new item, make sure to add it to all.inc */
-#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, class)
+#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, class, m_id)
 
 #define ITEMS_FOREACH(pred, body) do {      \
     for (int i = 0; i < ITEM_COUNT; i++) {  \
