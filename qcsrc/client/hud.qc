@@ -4615,11 +4615,11 @@ string GetItemsTimePicture(float i)
 	{
 		case 0: return "item_large_armor";
 		case 1: return "item_mega_health";
-		case 2: return "item_strength";
-		case 3: return "item_shield";
+		case 2: return "strength";
+		case 3: return "shield";
 		case 4: return "item_mega_health";
-		case 5: return "item_strength";
-		case 6: return "item_shield";
+		case 5: return "strength";
+		case 6: return "shield";
 		case 7: return "fuelregen";
 		case 8: return "jetpack";
 		case 9: return "superweapons";
@@ -4643,7 +4643,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
 		picalpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 	}
 	else
-		picalpha = 0.3;
+		picalpha = 0.5;
 	t = floor(item_time - time + 0.999);
 	if(t < 5)
 		color = '0.7 0 0';
