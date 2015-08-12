@@ -1,15 +1,19 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool m_spider(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ SPIDER,
-/* function   */ m_spider,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-18 -18 -25', '18 18 30',
 /* model      */ "spider.dpm",
 /* netname    */ "spider",
 /* fullname   */ _("Spider")
-);
+) {
+#ifndef MENUQC
+	this.monster_func = m_spider;
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_spider_health;
 float autocvar_g_monster_spider_attack_bite_damage;
@@ -37,7 +41,7 @@ void spider_web_explode()
 		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
 		RadiusDamage(self, self.realowner, 0, 0, 25, world, world, 25, self.projectiledeathtype, world);
 
-		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != MON_SPIDER)
+		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != MON_SPIDER.monsterid)
 			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 
 		remove(self);
@@ -119,7 +123,7 @@ void spawnfunc_monster_spider()
 {
 	self.classname = "monster_spider";
 
-	if(!monster_initialize(MON_SPIDER)) { remove(self); return; }
+	if(!monster_initialize(MON_SPIDER.monsterid)) { remove(self); return; }
 }
 
 float m_spider(float req)
@@ -174,4 +178,3 @@ float m_spider(float req)
 }
 
 #endif // CSQC
-#endif // REGISTER_MONSTER
