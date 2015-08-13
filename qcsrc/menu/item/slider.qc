@@ -24,6 +24,7 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, value, float, 0)
 	ATTRIB(Slider, animated, float, 1)
 	ATTRIB(Slider, sliderValue, float, 0)
+	ATTRIB(Slider, sliderAnim, entity, world)
 	ATTRIB(Slider, valueMin, float, 0)
 	ATTRIB(Slider, valueMax, float, 0)
 	ATTRIB(Slider, valueStep, float, 0)
@@ -51,8 +52,11 @@ ENDCLASS(Slider)
 void Slider_setValue(entity me, float val)
 {
 	if (me.animated) {
-		anim.removeObjAnim(anim, me);
-		makeHostedEasing(me, Slider_setSliderValue, easingQuadInOut, 1, me.sliderValue, val);
+		float t = 0.5;
+		if(!me.sliderAnim)
+			me.sliderAnim = makeHostedEasing(me, Slider_setSliderValue, easingQuadOut, t, me.sliderValue, val);
+		else
+			me.sliderAnim.update(me.sliderAnim, t, me.sliderValue, val);
 	} else {
 		me.setSliderValue(me, val);
 	}
@@ -295,6 +299,14 @@ void Slider_draw(entity me)
 		else
 			draw_Picture(eX * controlLeft, strcat(me.src, "_n"), eX * me.controlWidth + eY, me.color, 1);
 	}
+
+	if(me.sliderAnim)
+	if(me.sliderAnim.isFinished(me.sliderAnim))
+	{
+		anim.removeObjAnim(anim, me);
+		me.sliderAnim = world;
+	}
+
 	me.setText(me, me.valueToText(me, me.value));
 	draw_alpha = save;
 	SUPER(Slider).draw(me);
