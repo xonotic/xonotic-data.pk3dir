@@ -53,6 +53,8 @@ void Slider_setValue(entity me, float val)
 {
 	if (me.animated) {
 		float t = 0.5;
+		if(me.pressed == 2)
+			t = 0.3; // slightly more responsive while dragging the handle
 		if(!me.sliderAnim)
 			me.sliderAnim = makeHostedEasing(me, Slider_setSliderValue, easingQuadOut, t, me.sliderValue, val);
 		else
@@ -181,7 +183,7 @@ float Slider_keyUp(entity me, float key, float ascii, float shift)
 float Slider_mouseDrag(entity me, vector pos)
 {
 	float hit;
-	float v, animed;
+	float v;
 	if(me.disabled)
 		return 0;
 
@@ -194,16 +196,13 @@ float Slider_mouseDrag(entity me, vector pos)
 		if(pos.y >= 1 + me.tolerance.y) hit = 0;
 		if(hit)
 		{
-			anim.removeObjAnim(anim, me);
-			animed = me.animated;
-			me.animated = false;
+			// handle dragging
+			me.pressed = 2;
 
 			v = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 			if(me.valueStep)
 				v = floor(0.5 + v / me.valueStep) * me.valueStep;
 			me.setValue(me, v);
-
-			me.animated = animed;
 		}
 		else
 			me.setValue(me, me.previousValue);
