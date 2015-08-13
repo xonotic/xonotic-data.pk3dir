@@ -1,6 +1,8 @@
 #ifndef REGISTRY_H
 #define REGISTRY_H
 
+#include "util.qh"
+
 #define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
 
 #define REGISTER(initfunc, ns, array, counter, id, class, fld)  \
@@ -19,5 +21,10 @@
 void __static_init() { }
 #define static_init() CALL_ACCUMULATED_FUNCTION(__static_init)
 #define REGISTER_REGISTRY(func) ACCUMULATE_FUNCTION(__static_init, func)
+
+#define STATIC_INIT(func) \
+    void _static_##func(); \
+    ACCUMULATE_FUNCTION(__static_init, _static_##func) \
+    void _static_##func()
 
 #endif

@@ -2,6 +2,7 @@
 
 ../common/util-pre.qh
 ../dpdefs/csprogsdefs.qh
+../common/util-post.qh
 
 announcer.qc
 bgmscript.qc

@@ -5,6 +5,7 @@ sys-pre.qh
 ../dpdefs/progsdefs.qh
 ../dpdefs/dpextensions.qh
 sys-post.qh
+../common/util-post.qh
 
 anticheat.qc
 antilag.qc
