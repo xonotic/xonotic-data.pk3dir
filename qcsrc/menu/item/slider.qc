@@ -181,10 +181,6 @@ float Slider_mouseDrag(entity me, vector pos)
 	if(me.disabled)
 		return 0;
 
-	anim.removeObjAnim(anim, me);
-	animed = me.animated;
-	me.animated = false;
-
 	if(me.pressed)
 	{
 		hit = 1;
@@ -194,16 +190,20 @@ float Slider_mouseDrag(entity me, vector pos)
 		if(pos.y >= 1 + me.tolerance.y) hit = 0;
 		if(hit)
 		{
+			anim.removeObjAnim(anim, me);
+			animed = me.animated;
+			me.animated = false;
+
 			v = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 			if(me.valueStep)
 				v = floor(0.5 + v / me.valueStep) * me.valueStep;
 			me.setValue(me, v);
+
+			me.animated = animed;
 		}
 		else
 			me.setValue(me, me.previousValue);
 	}
-
-	me.animated = animed;
 
 	return 1;
 }
