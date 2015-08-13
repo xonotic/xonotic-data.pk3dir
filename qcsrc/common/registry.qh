@@ -3,6 +3,16 @@
 
 #define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
 
+void Register_hook(entity this, string ns, string id) {
+#ifdef SVQC
+#define Q "\""
+    localcmd("\nset me= ", sprintf("%i", this));
+    localcmd("\nhook_spawned ${me=} "Q, ns, Q " " Q, id, Q);
+    localcmd("\n");
+#undef Q
+#endif
+}
+
 #define REGISTER(initfunc, ns, array, counter, id, class, fld)  \
     entity ns##_##id;                                           \
     REGISTER_INIT(ns, id) { }                                   \
@@ -12,11 +22,18 @@
         this.fld = counter;                                     \
         array[counter++] = this;                                \
         Register_##ns##_##id##_init(this);                      \
+        Register_hook(this, #ns, #id);                          \
     }                                                           \
     ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id)         \
     REGISTER_INIT(ns, id)
 
-void __static_init() { }
+void __static_init() {
+    localcmd("\nalias _my_= "   "\"prvm_edictset server ${me=} ${1} ${2}\"");
+    localcmd("\nalias _my_-> "  "\"prvm_edictget server ${me=} ${1} ${2}\"");
+    localcmd("\nalias my "      "\"_my_${2} ${1} ${3}\"");
+    localcmd("\nalias me "      "\"prvm_edict server ${me=}\"");
+    localcmd("\n");
+}
 #define static_init() CALL_ACCUMULATED_FUNCTION(__static_init)
 #define REGISTER_REGISTRY(func) ACCUMULATE_FUNCTION(__static_init, func)
 
