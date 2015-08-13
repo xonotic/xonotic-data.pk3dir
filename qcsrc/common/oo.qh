@@ -22,6 +22,8 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine) {
     return this;
 }
 
+
+
 #define entityclass(...) OVERLOAD(entityclass, __VA_ARGS__)
 #define entityclass_1(name) entityclass_2(name, Object)
 #ifndef QCC_SUPPORT_ENTITYCLASS
@@ -38,39 +40,55 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine) {
 // The parameter is used across [[accumulate]] functions
 
 // Macro to hide this implementation detail
-#define NEW(cname) (spawn##cname(new(cname)))
+#define NEW(cname, ...) \
+    OVERLOAD(spawn##cname, new(cname), ##__VA_ARGS__)
+
+#define CONSTRUCTOR(cname, ...) \
+    cname OVERLOAD(spawn##cname, cname this, __VA_ARGS__)
 
 .string vtblname;
 .entity vtblbase;
 
-#define VTBL(cname, base) \
-    entity cname##_vtbl; \
-    STATIC_INIT(cname##_vtbl) { \
-        entity e = NEW(cname); \
-        e.vtblname = #cname; \
-        e.classname = "vtbl"; \
-        /* Top level objects refer to themselves */ \
-        e.vtblbase = base ? base : e; \
-        cname##_vtbl = e; \
-    }
+void RegisterClasses() { }
+ACCUMULATE_FUNCTION(__static_init, RegisterClasses)
 
-#define INIT_STATIC(cname) [[accumulate]] entity spawn##cname(entity this)
-#define INIT(cname) [[accumulate]] void spawn##cname##_init(entity this)
+#define VTBL(cname, base) \
+    INIT_STATIC(cname); \
+    entity cname##_vtbl; \
+    void cname##_vtbl_init() { \
+        cname e = new(vtbl); \
+        spawn##cname##_static(e); \
+        e.vtblname = #cname; \
+        /* Top level objects refer to themselves */ \
+        e.vtblbase = base##_vtbl ? base##_vtbl : e; \
+        cname##_vtbl = e; \
+    } \
+    ACCUMULATE_FUNCTION(RegisterClasses, cname##_vtbl_init)
+
+#define INIT_STATIC(cname) [[accumulate]] void spawn##cname##_static(cname this)
+#define INIT(cname) [[accumulate]] cname spawn##cname##_1(cname this)
 
 #define CLASS(cname, base)                  \
     entityclass(cname, base);               \
     class(cname) .bool instanceOf##cname;   \
-    INIT(cname) { }                         \
-    INIT_STATIC(cname);                     \
-    VTBL(cname, base##_vtbl)                \
+    VTBL(cname, base)                       \
     INIT_STATIC(cname) {                    \
         if (cname##_vtbl) {                 \
             copyentity(cname##_vtbl, this); \
-            spawn##cname##_init(this);      \
-            return this;                    \
+            return;                         \
         }                                   \
-        spawn##base(this);                  \
+        spawn##base##_static(this);         \
         this.instanceOf##cname = true;      \
+    }                                       \
+    INIT(cname) {                           \
+        /* Only statically initialize the current class, it contains everything it inherits */ \
+        if (cname##_vtbl.vtblname == this.classname) { \
+            spawn##cname##_static(this);    \
+            this.classname = #cname;        \
+            this.vtblname = string_null;    \
+            this.vtblbase = cname##_vtbl;   \
+        }                                   \
+        spawn##base##_1(this);              \
     }
 
 #define METHOD(cname, name, prototype)      \
@@ -86,14 +104,16 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine) {
     class(cname) .type name[cnt];
 
 #define ENDCLASS(cname) \
-    [[last]] INIT_STATIC(cname) { return this; }
+    [[last]] INIT(cname) { return this; }
 
 #define SUPER(cname) (cname##_vtbl.vtblbase)
 
-#define spawnNULL(e)
-#define NULL_vtbl NULL
-
-CLASS(Object, NULL)
-ENDCLASS(Object)
+#define spawn_static(this)
+#define spawn_1(this)
+#define _vtbl NULL
+CLASS(Object, ); ENDCLASS(Object)
+#undef spawn_static
+#undef spawn_1
+#undef _vtbl
 
 #endif
