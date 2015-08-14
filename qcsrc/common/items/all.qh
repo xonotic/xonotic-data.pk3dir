@@ -8,7 +8,7 @@ const int MAX_ITEMS = 24;
 entity ITEMS[MAX_ITEMS], ITEMS_first, ITEMS_last;
 int ITEM_COUNT;
 /** If you register a new item, make sure to add it to all.inc */
-#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, class, m_id)
+#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, m_id, NEW(class))
 REGISTER_REGISTRY(RegisterItems)
 
 #define ITEMS_FOREACH(pred, body) do {      \

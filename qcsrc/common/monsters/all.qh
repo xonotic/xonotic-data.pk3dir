@@ -11,7 +11,7 @@ int MON_COUNT;
 const int MON_FIRST = 1;
 #define MON_LAST (MON_FIRST + MON_COUNT - 1)
 /** If you register a new monster, make sure to add it to all.inc */
-#define REGISTER_MONSTER(id, class) REGISTER(RegisterMonsters, MON, monster_info, MON_COUNT, id, class, monsterid)
+#define REGISTER_MONSTER(id, class) REGISTER(RegisterMonsters, MON, monster_info, MON_COUNT, id, monsterid, NEW(class))
 #include "monster.qh"
 #define REGISTER_MONSTER_SIMPLE(id, monsterflags, min_s, max_s, modelname, shortname, mname) \
     REGISTER_MONSTER(id, Monster) {                                     \

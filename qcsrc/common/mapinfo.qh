@@ -21,6 +21,7 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, gametype_description, string, string_null)
     CONSTRUCTOR(Gametype, string hname, string sname, string g_name, bool gteamplay, string defaults, string gdescription)
     {
+        CONSTRUCT(Gametype);
         this.netname = g_name;
         this.mdl = sname;
         this.message = hname;
@@ -39,8 +40,9 @@ int MAPINFO_TYPE_ALL;
 
 #define REGISTER_GAMETYPE(hname, sname, g_name, NAME, gteamplay, defaults, gdescription)                    \
     int MAPINFO_TYPE_##NAME;                                                                                \
-    REGISTER(RegisterGametypes, MAPINFO_TYPE, MAPINFO_TYPES, MAPINFO_TYPE_COUNT, g_name, Gametype, m_id) {  \
-        CONSTRUCT(Gametype, hname, #sname, #g_name, gteamplay, defaults, gdescription);                     \
+    REGISTER(RegisterGametypes, MAPINFO_TYPE, MAPINFO_TYPES, MAPINFO_TYPE_COUNT, g_name, m_id,              \
+        NEW(Gametype, hname, #sname, #g_name, gteamplay, defaults, gdescription)                            \
+    ) {                                                                                                     \
         /* same as `1 << m_id` */                                                                           \
         MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME;                \
         this.items = MAPINFO_TYPE_##NAME;                                                                   \

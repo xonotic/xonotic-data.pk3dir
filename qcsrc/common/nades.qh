@@ -27,7 +27,7 @@ void RegisterNades();
 const int NADES_MAX = 8;
 entity NADES[NADES_MAX], NADES_first, NADES_last;
 int NADES_COUNT;
-#define REGISTER_NADE(id) REGISTER(RegisterNades, NADE_TYPE, NADES, NADES_COUNT, id, Nade, m_id)
+#define REGISTER_NADE(id) REGISTER(RegisterNades, NADE_TYPE, NADES, NADES_COUNT, id, m_id, NEW(Nade))
 REGISTER_REGISTRY(RegisterNades)
 
 CLASS(Nade, Object)
