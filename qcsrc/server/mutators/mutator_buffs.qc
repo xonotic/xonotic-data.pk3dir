@@ -6,6 +6,20 @@
 
 #include "../../common/buffs.qh"
 
+entity buff_FirstFromFlags(int _buffs)
+{
+	if (flags)
+	{
+		FOREACH(BUFFS, 0, BUFFS_COUNT,
+			it.m_itemid & _buffs,
+			LAMBDA({
+				return it;
+			})
+		);
+	}
+	return BUFF_NULL;
+}
+
 float buffs_BuffModel_Customize()
 {
 	entity player, myowner;
@@ -49,7 +63,7 @@ void buffs_BuffModel_Spawn(entity player)
 vector buff_GlowColor(entity buff)
 {
 	//if(buff.team) { return Team_ColorRGB(buff.team); }
-	return buff.color;
+	return buff.m_color;
 }
 
 void buff_Effect(entity player, string eff)
@@ -66,28 +80,23 @@ void buff_Effect(entity player, string eff)
 // buff item
 float buff_Waypoint_visible_for_player(entity plr)
 {
-    if(!self.owner.buff_active && !self.owner.buff_activetime)
-        return false;
+	if(!self.owner.buff_active && !self.owner.buff_activetime)
+		return false;
 
-	if(plr.buffs)
+	if (plr.buffs)
 	{
-		if(plr.cvar_cl_buffs_autoreplace)
-		{
-			if(plr.buffs == self.owner.buffs)
-				return false;
-		}
-		else
-			return false;
+		return plr.cvar_cl_buffs_autoreplace == false || plr.buffs != self.owner.buffs;
 	}
 
-    return WaypointSprite_visible_for_player(plr);
+	return WaypointSprite_visible_for_player(plr);
 }
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_Sprite(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, true, RADARICON_POWERUP, e.glowmod);
-    WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
-    e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
+	entity buff = buff_FirstFromFlags(e.buffs);
+	WaypointSprite_Spawn(buff.m_sprite, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, true, RADARICON_POWERUP, e.glowmod);
+	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
+	e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
 
 void buff_SetCooldown(float cd)
@@ -156,12 +165,13 @@ void buff_Touch()
 		return;
 	}
 
-	if(other.buffs)
+	if (other.buffs)
 	{
-		if(other.cvar_cl_buffs_autoreplace && other.buffs != self.buffs)
+		if (other.cvar_cl_buffs_autoreplace && other.buffs != self.buffs)
 		{
+			int buffid = buff_FirstFromFlags(other.buffs).m_id;
 			//Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_DROP, other.buffs);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, other.buffs);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, buffid);
 
 			other.buffs = 0;
 			//sound(other, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
@@ -172,39 +182,39 @@ void buff_Touch()
 	self.owner = other;
 	self.buff_active = false;
 	self.lifetime = 0;
-
-	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, self.buffs);
-	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, self.buffs);
+	int buffid = buff_FirstFromFlags(self.buffs).m_id;
+	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, buffid);
+	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, buffid);
 
 	pointparticles(particleeffectnum("item_pickup"), CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound(other, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 	other.buffs |= (self.buffs);
 }
 
-float buff_Available(float buffid)
+float buff_Available(entity buff)
 {
-	if(buffid == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
+	if (buff == BUFF_NULL)
 		return false;
-
-	if(buffid == BUFF_VAMPIRE && cvar("g_vampire"))
+	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
 		return false;
-
-	if(!cvar(strcat("g_buffs_", Buff_Name(buffid))))
+	if (buff == BUFF_VAMPIRE && cvar("g_vampire"))
 		return false;
-
-	return true;
+	return cvar(strcat("g_buffs_", buff.m_name));
 }
+
+.int buff_seencount;
 
 void buff_NewType(entity ent, float cb)
 {
-	entity e;
 	RandomSelection_Init();
-	for(e = Buff_Type_first; e; e = e.enemy)
-	if(buff_Available(e.items))
-	{
-		RandomSelection_Add(world, e.items, string_null, 1, max(0.2, 1 / e.count)); // if it's already been chosen, give it a lower priority
-		e.count += 1;
-	}
+	FOREACH(BUFFS, 0, BUFFS_COUNT,
+		buff_Available(it),
+		LAMBDA({
+			it.buff_seencount += 1;
+			// if it's already been chosen, give it a lower priority
+			RandomSelection_Add(world, it.m_itemid, string_null, 1, max(0.2, 1 / it.buff_seencount));
+		})
+	);
 	ent.buffs = RandomSelection_chosen_float;
 }
 
@@ -212,9 +222,10 @@ void buff_Think()
 {
 	if(self.buffs != self.oldbuffs)
 	{
-		self.color = Buff_Color(self.buffs);
-		self.glowmod = buff_GlowColor(self);
-		self.skin = Buff_Skin(self.buffs);
+		entity buff = buff_FirstFromFlags(self.buffs);
+		self.color = buff.m_color;
+		self.glowmod = buff_GlowColor(buff);
+		self.skin = buff.m_skin;
 
 		setmodel(self, BUFF_MODEL);
 
@@ -236,7 +247,7 @@ void buff_Think()
 	{
 		buff_SetCooldown(self.buff_activetime);
 		self.buff_activetime_updated = true;
-    }
+	}
 
 	if(!self.buff_active && !self.buff_activetime)
 	if(!self.owner || self.owner.frozen || self.owner.deadflag != DEAD_NO || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
@@ -323,9 +334,11 @@ void buff_Init(entity ent)
 
 	if(!teamplay && ent.team) { ent.team = 0; }
 
+	entity buff = buff_FirstFromFlags(self.buffs);
+
 	entity oldself = self;
 	self = ent;
-	if(!self.buffs || buff_Available(self.buffs))
+	if(!self.buffs || buff_Available(buff))
 		buff_NewType(self, 0);
 
 	self.classname = "item_buff";
@@ -338,12 +351,12 @@ void buff_Init(entity ent)
 	self.gravity = 1;
 	self.movetype = MOVETYPE_TOSS;
 	self.scale = 1;
-	self.skin = Buff_Skin(self.buffs);
+	self.skin = buff.m_skin;
 	self.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 	self.customizeentityforclient = buff_Customize;
 	//self.gravity = 100;
-	self.color = Buff_Color(self.buffs);
+	self.color = buff.m_color;
 	self.glowmod = buff_GlowColor(self);
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
 	self.buff_active = !self.buff_activetime;
@@ -364,14 +377,14 @@ void buff_Init(entity ent)
 	self = oldself;
 }
 
-void buff_Init_Compat(entity ent, float replacement)
+void buff_Init_Compat(entity ent, entity replacement)
 {
-	if(ent.spawnflags & 2)
+	if (ent.spawnflags & 2)
 		ent.team = NUM_TEAM_1;
-	else if(ent.spawnflags & 4)
+	else if (ent.spawnflags & 4)
 		ent.team = NUM_TEAM_2;
 
-	ent.buffs = replacement;
+	ent.buffs = replacement.m_itemid;
 
 	buff_Init(ent);
 }
@@ -404,7 +417,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
 	if(frag_deathtype == DEATH_BUFF) { return false; }
 
-	if(frag_target.buffs & BUFF_RESISTANCE)
+	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
 	{
 		vector v = healtharmor_applydamage(50, autocvar_g_buffs_resistance_blockpercent, frag_deathtype, frag_damage);
 		damage_take = v.x;
@@ -418,22 +431,22 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
 	if(frag_deathtype == DEATH_BUFF) { return false; }
 
-	if(frag_target.buffs & BUFF_SPEED)
+	if(frag_target.buffs & BUFF_SPEED.m_itemid)
 	if(frag_target != frag_attacker)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
-	if(frag_target.buffs & BUFF_MEDIC)
+	if(frag_target.buffs & BUFF_MEDIC.m_itemid)
 	if((frag_target.health - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
 		frag_damage = max(5, frag_target.health - autocvar_g_buffs_medic_survive_health);
 
-	if(frag_target.buffs & BUFF_JUMP)
+	if(frag_target.buffs & BUFF_JUMP.m_itemid)
 	if(frag_deathtype == DEATH_FALL)
 		frag_damage = 0;
 
-	if(frag_target.buffs & BUFF_VENGEANCE)
+	if(frag_target.buffs & BUFF_VENGEANCE.m_itemid)
 	if(frag_attacker)
 	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
@@ -447,23 +460,23 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		dmgent.nextthink = time + 0.1;
 	}
 
-	if(frag_target.buffs & BUFF_BASH)
+	if(frag_target.buffs & BUFF_BASH.m_itemid)
 	if(frag_attacker != frag_target)
 	if(vlen(frag_force))
 		frag_force = '0 0 0';
 
-	if(frag_attacker.buffs & BUFF_BASH)
+	if(frag_attacker.buffs & BUFF_BASH.m_itemid)
 	if(vlen(frag_force))
 	if(frag_attacker == frag_target)
 		frag_force *= autocvar_g_buffs_bash_force_self;
 	else
 		frag_force *= autocvar_g_buffs_bash_force;
 
-	if(frag_attacker.buffs & BUFF_DISABILITY)
+	if(frag_attacker.buffs & BUFF_DISABILITY.m_itemid)
 	if(frag_target != frag_attacker)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
-	if(frag_attacker.buffs & BUFF_MEDIC)
+	if(frag_attacker.buffs & BUFF_MEDIC.m_itemid)
 	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(SAME_TEAM(frag_attacker, frag_target))
 	if(frag_attacker != frag_target)
@@ -472,7 +485,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_damage = 0;
 	}
 
-	if(frag_attacker.buffs & BUFF_INFERNO)
+	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
 		float time = buff_Inferno_CalculateTime(
 			frag_damage,
@@ -486,7 +499,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	}
 
 	// this... is ridiculous (TODO: fix!)
-	if(frag_attacker.buffs & BUFF_VAMPIRE)
+	if(frag_attacker.buffs & BUFF_VAMPIRE.m_itemid)
 	if(!frag_target.vehicle)
 	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
@@ -516,7 +529,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 {
-	if(self.buffs & BUFF_SPEED)
+	if(self.buffs & BUFF_SPEED.m_itemid)
 	{
 		self.stat_sv_maxspeed *= autocvar_g_buffs_speed_speed;
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_speed_speed;
@@ -528,7 +541,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_disability_speed;
 	}
 
-	if(self.buffs & BUFF_JUMP)
+	if(self.buffs & BUFF_JUMP.m_itemid)
 	{
 		// automatically reset, no need to worry
 		self.stat_sv_jumpvelocity = autocvar_g_buffs_jump_height;
@@ -539,7 +552,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
 {
-	if(self.buffs & BUFF_JUMP)
+	if(self.buffs & BUFF_JUMP.m_itemid)
 		player_jumpheight = autocvar_g_buffs_jump_height;
 
 	return false;
@@ -560,7 +573,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 {
 	if(self.buffs)
 	{
-		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
+		int buffid = buff_FirstFromFlags(self.buffs).m_id;
+		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
 		self.buffs = 0;
 
 		if(self.buff_model)
@@ -577,8 +591,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 	if(self.buffs)
 	{
-		Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, self.buffs);
-		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
+		int buffid = buff_FirstFromFlags(self.buffs).m_id;
+		Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, buffid);
+		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
 
 		self.buffs = 0;
 		sound(self, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
@@ -591,7 +606,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
 {
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
-	if(self.buffs & BUFF_SWAPPER)
+	if(self.buffs & BUFF_SWAPPER.m_itemid)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = world;
@@ -678,7 +693,7 @@ MUTATOR_HOOKFUNCTION(buffs_CustomizeWaypoint)
 
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
-	if((self.owner.flags & FL_CLIENT) && (self.owner.buffs & BUFF_INVISIBLE) && (e == other))
+	if((self.owner.flags & FL_CLIENT) && (self.owner.buffs & BUFF_INVISIBLE.m_itemid) && (e == other))
 	if(DIFF_TEAM(self.owner, e))
 		return true;
 
@@ -703,7 +718,7 @@ MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 {
-	if(self.buffs & BUFF_SPEED)
+	if(self.buffs & BUFF_SPEED.m_itemid)
 		weapon_rate *= autocvar_g_buffs_speed_rate;
 
 	if(time < self.buff_disability_time)
@@ -714,7 +729,7 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 
 MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
 {
-	if(self.buffs & BUFF_SPEED)
+	if(self.buffs & BUFF_SPEED.m_itemid)
 		ret_float *= autocvar_g_buffs_speed_weaponspeed;
 
 	if(time < self.buff_disability_time)
@@ -722,6 +737,8 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
 
 	return false;
 }
+
+.float buff_time;
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
@@ -749,17 +766,18 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 	{
 		if(self.buffs)
 		{
-			Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
+			int buffid = buff_FirstFromFlags(self.buffs).m_id;
+			Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
 			if(buff_lost >= 2)
 			{
-				Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, self.buffs); // TODO: special timeout message?
+				Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
 				sound(self, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
 			}
 			self.buffs = 0;
 		}
 	}
 
-	if(self.buffs & BUFF_MAGNET)
+	if(self.buffs & BUFF_MAGNET.m_itemid)
 	{
 		vector pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
 		for(other = world; (other = findflags(other, flags, FL_ITEM)); )
@@ -775,23 +793,22 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		}
 	}
 
-	if(self.buffs & BUFF_AMMO)
+	if(self.buffs & BUFF_AMMO.m_itemid)
 	if(self.clip_size)
 		self.clip_load = self.(weapon_load[self.switchweapon]) = self.clip_size;
 
-	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
+	if((self.buffs & BUFF_INVISIBLE.m_itemid) && (self.oldbuffs & BUFF_INVISIBLE.m_itemid))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
 
-#define BUFF_ONADD(b) if((self.buffs & (b)) && !(self.oldbuffs & (b)))
-#define BUFF_ONREM(b) if(!(self.buffs & (b)) && (self.oldbuffs & (b)))
+#define BUFF_ONADD(b) if ( (self.buffs & (b).m_itemid) && !(self.oldbuffs & (b).m_itemid))
+#define BUFF_ONREM(b) if (!(self.buffs & (b).m_itemid) &&  (self.oldbuffs & (b).m_itemid))
 
 	if(self.buffs != self.oldbuffs)
 	{
-		if(self.buffs && Buff_Timer(self.buffs))
-			self.buff_time = time + Buff_Timer(self.buffs);
-		else
-			self.buff_time = 0;
+		entity buff = buff_FirstFromFlags(self.buffs);
+		float bufftime = buff != BUFF_NULL ? buff.m_time(buff) : 0;
+		self.buff_time = (bufftime) ? time + bufftime : 0;
 
 		BUFF_ONADD(BUFF_AMMO)
 		{
@@ -841,9 +858,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			if(!self.buff_model)
 				buffs_BuffModel_Spawn(self);
 
-			self.buff_model.color = Buff_Color(self.buffs);
+			self.buff_model.color = buff.m_color;
 			self.buff_model.glowmod = buff_GlowColor(self.buff_model);
-			self.buff_model.skin = Buff_Skin(self.buffs);
+			self.buff_model.skin = buff.m_skin;
 
 			self.effects |= EF_NOSHADOW;
 		}
@@ -892,14 +909,14 @@ MUTATOR_HOOKFUNCTION(buffs_VehicleExit)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 {
-	if(self.buffs & BUFF_MEDIC)
+	if(self.buffs & BUFF_MEDIC.m_itemid)
 	{
 		regen_mod_rot = autocvar_g_buffs_medic_rot;
 		regen_mod_limit = regen_mod_max = autocvar_g_buffs_medic_max;
 		regen_mod_regen = autocvar_g_buffs_medic_regen;
 	}
 
-	if(self.buffs & BUFF_SPEED)
+	if(self.buffs & BUFF_SPEED.m_itemid)
 		regen_mod_regen = autocvar_g_buffs_speed_regen;
 
 	return false;

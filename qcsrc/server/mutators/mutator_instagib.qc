@@ -290,7 +290,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		frag_mirrordamage = 0;
 	}
 
-	if((frag_target.buffs & BUFF_INVISIBLE) || (frag_target.items & IT_STRENGTH))
+	if((frag_target.buffs & BUFF_INVISIBLE.m_itemid) || (frag_target.items & IT_STRENGTH))
 		yoda = 1;
 
 	return false;

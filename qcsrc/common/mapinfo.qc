@@ -603,7 +603,7 @@ void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int lo
 string _MapInfo_GetDefaultEx(float t)
 {
 	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.model2;
 	return "";
@@ -612,7 +612,7 @@ string _MapInfo_GetDefaultEx(float t)
 float _MapInfo_GetTeamPlayBool(float t)
 {
 	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.team;
 	return false;
@@ -754,7 +754,7 @@ float MapInfo_Type_FromString(string t)
 	}
 	if(t == "all")
 		return MAPINFO_TYPE_ALL;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
 		if(t == e.mdl)
 			return e.items;
 	return 0;
@@ -763,7 +763,7 @@ float MapInfo_Type_FromString(string t)
 string MapInfo_Type_Description(float t)
 {
 	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.gametype_description;
 	return "";
@@ -774,7 +774,7 @@ string MapInfo_Type_ToString(float t)
 	entity e;
 	if(t == MAPINFO_TYPE_ALL)
 	 	return "all";
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.mdl;
 	return "";
@@ -783,7 +783,7 @@ string MapInfo_Type_ToString(float t)
 string MapInfo_Type_ToText(float t)
 {
 	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.message;
 	/* xgettext:no-c-format */
@@ -1291,7 +1291,7 @@ int MapInfo_CurrentGametype()
 {
 	entity e;
 	int prev = cvar("gamecfg");
-	for(e = MapInfo_Type_first; e; e = e.enemy)
+	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
 		if(cvar(e.netname))
 			if(prev != e.items)
 				return e.items;
@@ -1321,7 +1321,7 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 
 void MapInfo_SwitchGameType(int t)
 {
-	for (entity e = MapInfo_Type_first; e; e = e.enemy) {
+	for (entity e = MAPINFO_TYPES_first; e; e = e.enemy) {
 		cvar_set(e.netname, (t == e.items) ? "1" : "0");
 	}
 }

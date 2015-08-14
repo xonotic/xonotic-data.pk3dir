@@ -3,44 +3,54 @@
 
 #include "util.qh"
 
+CLASS(Gametype, Object)
+    ATTRIB(Gametype, m_id, int, 0)
+    /** game type ID */
+    ATTRIB(Gametype, items, int, 0)
+    /** game type name as in cvar (with g_ prefix) */
+    ATTRIB(Gametype, netname, string, string_null)
+    /** game type short name */
+    ATTRIB(Gametype, mdl, string, string_null)
+    /** human readable name */
+    ATTRIB(Gametype, message, string, string_null)
+    /** does this gametype support teamplay? */
+    ATTRIB(Gametype, team, bool, false)
+    /** game type defaults */
+    ATTRIB(Gametype, model2, string, string_null)
+    /** game type description */
+    ATTRIB(Gametype, gametype_description, string, string_null)
+    CONSTRUCTOR(Gametype, string hname, string sname, string g_name, bool gteamplay, string defaults, string gdescription)
+    {
+        CONSTRUCT(Gametype);
+        this.netname = g_name;
+        this.mdl = sname;
+        this.message = hname;
+        this.team = gteamplay;
+        this.model2 = defaults;
+        this.gametype_description = gdescription;
+        return this;
+    }
+ENDCLASS(Gametype)
+
+void RegisterGametypes();
+const int MAX_MAPINFO_TYPES = 24;
+entity MAPINFO_TYPES[MAX_MAPINFO_TYPES], MAPINFO_TYPES_first, MAPINFO_TYPES_last;
+int MAPINFO_TYPE_COUNT;
 int MAPINFO_TYPE_ALL;
-entity MapInfo_Type_first;
-entity MapInfo_Type_last;
-.entity enemy; // internal next pointer
 
-.int items; // game type ID
-.string netname; // game type name as in cvar (with g_ prefix)
-.string mdl; // game type short name
-.string message; // human readable name
-.int team; // does this gametype support teamplay?
-.string model2; // game type defaults
-.string gametype_description; // game type description
-
-#define REGISTER_GAMETYPE(hname,sname,g_name,NAME,gteamplay,defaults,gdescription) \
-	int MAPINFO_TYPE_##NAME; \
-	entity MapInfo_Type##g_name; \
-	void RegisterGametypes_##g_name() \
-	{ \
-		MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; \
-		MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME; \
-		MapInfo_Type##g_name = spawn(); \
-		MapInfo_Type##g_name.items = MAPINFO_TYPE_##NAME; \
-		MapInfo_Type##g_name.netname = #g_name; \
-		MapInfo_Type##g_name.mdl = #sname; \
-		MapInfo_Type##g_name.message = hname; \
-		MapInfo_Type##g_name.team = gteamplay; \
-		MapInfo_Type##g_name.model2 = defaults; \
-		MapInfo_Type##g_name.gametype_description = gdescription; \
-		if(!MapInfo_Type_first) \
-			MapInfo_Type_first = MapInfo_Type##g_name; \
-		if(MapInfo_Type_last) \
-			MapInfo_Type_last.enemy = MapInfo_Type##g_name; \
-		MapInfo_Type_last = MapInfo_Type##g_name; \
-	} \
-	ACCUMULATE_FUNCTION(RegisterGametypes, RegisterGametypes_##g_name)
+#define REGISTER_GAMETYPE(hname, sname, g_name, NAME, gteamplay, defaults, gdescription)                    \
+    int MAPINFO_TYPE_##NAME;                                                                                \
+    REGISTER(RegisterGametypes, MAPINFO_TYPE, MAPINFO_TYPES, MAPINFO_TYPE_COUNT, g_name, m_id,              \
+        NEW(Gametype, hname, #sname, #g_name, gteamplay, defaults, gdescription)                            \
+    ) {                                                                                                     \
+        /* same as `1 << m_id` */                                                                           \
+        MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME;                \
+        this.items = MAPINFO_TYPE_##NAME;                                                                   \
+    }
+REGISTER_REGISTRY(RegisterGametypes)
 
 #define IS_GAMETYPE(NAME) \
-	(MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
+    (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
 
 REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,false,"timelimit=20 pointlimit=30 leadlimit=0",_("Kill all enemies"));
 #define g_dm IS_GAMETYPE(DEATHMATCH)
