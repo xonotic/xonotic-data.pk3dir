@@ -25,7 +25,7 @@ const int PROJECTILE_NADE_MONSTER_BURN = 83;
 
 void RegisterNades();
 const int NADES_MAX = 8;
-entity NADES[NADES_MAX];
+entity NADES[NADES_MAX], NADES_first, NADES_last;
 int NADES_COUNT;
 #define REGISTER_NADE(id) REGISTER(RegisterNades, NADE_TYPE, NADES, NADES_COUNT, id, Nade, m_id)
 REGISTER_REGISTRY(RegisterNades)

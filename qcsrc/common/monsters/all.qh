@@ -5,7 +5,7 @@
 
 void RegisterMonsters();
 const int MON_MAXCOUNT = 24;
-entity monster_info[MON_MAXCOUNT];
+entity monster_info[MON_MAXCOUNT], monster_info_first, monster_info_last;
 entity get_monsterinfo(float id);
 int MON_COUNT;
 const int MON_FIRST = 1;
@@ -24,6 +24,7 @@ const int MON_FIRST = 1;
         this.model = strzone(strcat("models/monsters/", modelname));    \
     }                                                                   \
     REGISTER_INIT(MON, id)
+REGISTER_REGISTRY(RegisterMonsters)
 
 #include "../util.qh"
 
