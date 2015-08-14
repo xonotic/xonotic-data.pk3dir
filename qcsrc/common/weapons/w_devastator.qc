@@ -62,7 +62,7 @@ DEVASTATOR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_devastator(void) { weapon_defaultspawnfunc(WEP_DEVASTATOR); }
+void spawnfunc_weapon_devastator(void) { weapon_defaultspawnfunc(WEP_DEVASTATOR.m_id); }
 void spawnfunc_weapon_rocketlauncher(void) { spawnfunc_weapon_devastator(); }
 
 void W_Devastator_Unregister(void)
@@ -101,12 +101,12 @@ void W_Devastator_Explode(void)
 		other
 	);
 
-	if(self.realowner.weapon == WEP_DEVASTATOR)
+	if(self.realowner.weapon == WEP_DEVASTATOR.m_id)
 	{
 		if(self.realowner.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			self.realowner.cnt = WEP_DEVASTATOR;
+			self.realowner.cnt = WEP_DEVASTATOR.m_id;
 			ATTACK_FINISHED(self.realowner) = time;
 			self.realowner.switchweapon = w_getbestweapon(self.realowner);
 		}
@@ -180,12 +180,12 @@ void W_Devastator_DoRemoteExplode(void)
 		world
 	);
 
-	if(self.realowner.weapon == WEP_DEVASTATOR)
+	if(self.realowner.weapon == WEP_DEVASTATOR.m_id)
 	{
 		if(self.realowner.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			self.realowner.cnt = WEP_DEVASTATOR;
+			self.realowner.cnt = WEP_DEVASTATOR.m_id;
 			ATTACK_FINISHED(self.realowner) = time;
 			self.realowner.switchweapon = w_getbestweapon(self.realowner);
 		}
@@ -261,7 +261,7 @@ void W_Devastator_Think(void)
 		self.velocity = self.velocity + v_forward * min(WEP_CVAR(devastator, speedaccel) * W_WeaponSpeedFactor() * frametime, velspeed);
 
 	// laser guided, or remote detonation
-	if(self.realowner.weapon == WEP_DEVASTATOR)
+	if(self.realowner.weapon == WEP_DEVASTATOR.m_id)
 	{
 		if(self == self.realowner.lastrocket)
 		if(!self.realowner.rl_release)
@@ -365,7 +365,7 @@ void W_Devastator_Attack(void)
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_DEVASTATOR;
+	missile.projectiledeathtype = WEP_DEVASTATOR.m_id;
 	setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
@@ -547,7 +547,7 @@ bool W_Devastator(int req)
 					self.rl_release = 1;
 
 				if(self.BUTTON_ATCK2)
-				if(self.switchweapon == WEP_DEVASTATOR)
+				if(self.switchweapon == WEP_DEVASTATOR.m_id)
 				{
 					rockfound = 0;
 					for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == self)
@@ -589,12 +589,12 @@ bool W_Devastator(int req)
 		{
 			#if 0
 			// don't switch while guiding a missile
-			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_DEVASTATOR)
+			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_DEVASTATOR.m_id)
 			{
 				ammo_amount = false;
 				if(WEP_CVAR(devastator, reload_ammo))
 				{
-					if(self.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo) && self.(weapon_load[WEP_DEVASTATOR]) < WEP_CVAR(devastator, ammo))
+					if(self.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo) && self.(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
 						ammo_amount = true;
 				}
 				else if(self.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
@@ -611,13 +611,13 @@ bool W_Devastator(int req)
 			else
 			{
 				ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
-				ammo_amount += self.(weapon_load[WEP_DEVASTATOR]) >= WEP_CVAR(devastator, ammo);
+				ammo_amount += self.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
 				printf("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
 				return ammo_amount;
 			}
 			#else
 			ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
-			ammo_amount += self.(weapon_load[WEP_DEVASTATOR]) >= WEP_CVAR(devastator, ammo);
+			ammo_amount += self.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
 			return ammo_amount;
 			#endif
 		}

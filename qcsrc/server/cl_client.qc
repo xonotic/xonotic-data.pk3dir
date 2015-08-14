@@ -2367,7 +2367,7 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(self.weapon == WEP_VORTEX && WEP_CVAR(vortex, charge))
+			if(self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge))
 			{
 				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
 				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
@@ -2463,7 +2463,7 @@ void PlayerPreThink (void)
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
-		if((self.weapon == WEP_SHOCKWAVE || self.weapon == WEP_SHOTGUN) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)
@@ -2540,7 +2540,7 @@ void PlayerPreThink (void)
 
 	// WEAPONTODO: Add weapon request for this
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
+		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX.m_id) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE.m_id && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

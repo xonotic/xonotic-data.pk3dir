@@ -41,7 +41,7 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 #include "../triggers/trigger/jumppads.qh"
 
-void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO); }
+void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
 
 void W_Porto_Success(void)
 {
@@ -83,7 +83,7 @@ void W_Porto_Fail(float failhard)
 			tracetoss(self, self);
 			if(vlen(trace_endpos - self.realowner.origin) < 128)
 			{
-				W_ThrowNewWeapon(self.realowner, WEP_PORTO, 0, self.origin, self.velocity);
+				W_ThrowNewWeapon(self.realowner, WEP_PORTO.m_id, 0, self.origin, self.velocity);
 				Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
 			}
 		}

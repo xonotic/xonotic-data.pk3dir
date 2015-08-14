@@ -25,7 +25,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(ent.weapon == WEP_RIFLE)
+	if(ent.weapon == WEP_RIFLE.m_id)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -273,7 +273,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	//explosion = spawn();
 
 	// Find all non-hit players the beam passed close by
-	if(deathtype == WEP_VAPORIZER || deathtype == WEP_VORTEX)
+	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
 	{
 		FOR_EACH_REALCLIENT(msg_entity)
 		if(msg_entity != self)

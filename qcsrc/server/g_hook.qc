@@ -394,7 +394,7 @@ void FireGrapplingHook (void)
 
 void GrapplingHookFrame()
 {
-	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK)
+	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id)
 	{
 		// offhand hook controls
 		if(self.BUTTON_HOOK)
@@ -423,14 +423,14 @@ void GrapplingHookFrame()
 			//self.hook_state &= ~HOOK_RELEASING;
 		}
 	}
-	else if(!g_grappling_hook && self.switchweapon != WEP_HOOK)
+	else if(!g_grappling_hook && self.switchweapon != WEP_HOOK.m_id)
 	{
 		if(self.BUTTON_HOOK && !self.hook_switchweapon)
-			W_SwitchWeapon(WEP_HOOK);
+			W_SwitchWeapon(WEP_HOOK.m_id);
 	}
 	self.hook_switchweapon = self.BUTTON_HOOK;
 
-	if(!g_grappling_hook && self.weapon != WEP_HOOK)
+	if(!g_grappling_hook && self.weapon != WEP_HOOK.m_id)
 	{
 		self.hook_state &= ~HOOK_FIRING;
 		self.hook_state |= HOOK_REMOVING;
@@ -492,11 +492,11 @@ void GrappleHookInit()
 	}
 	else
 	{
-		WEP_ACTION(WEP_HOOK, WR_INIT);
-		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 1);
-		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 2);
-		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 3);
-		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK), false, false, 4);
+		WEP_ACTION(WEP_HOOK.m_id, WR_INIT);
+		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 1);
+		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 2);
+		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 3);
+		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 4);
 	}
 }
 

@@ -46,7 +46,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER.m_id))
 	{
 		frag_damage = 0;
 
@@ -148,9 +148,9 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		makevectors(self.v_angle);
 
 		int oldwep = self.weapon;
-		self.weapon = WEP_BLASTER;
+		self.weapon = WEP_BLASTER.m_id;
 		W_Blaster_Attack(
-			WEP_BLASTER | HITTYPE_SECONDARY,
+			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
 			WEP_CVAR_SEC(vaporizer, damage),
 			WEP_CVAR_SEC(vaporizer, edgedamage),
@@ -275,8 +275,8 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
 	WepSet ok_start_items = (WEPSET_MACHINEGUN | WEPSET_VORTEX | WEPSET_SHOTGUN);
 
-	if((get_weaponinfo(WEP_RPC)).weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
-	if((get_weaponinfo(WEP_HMG)).weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
+	if((get_weaponinfo(WEP_RPC.m_id)).weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
+	if((get_weaponinfo(WEP_HMG.m_id)).weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
@@ -334,12 +334,12 @@ void ok_Initialize()
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);
 
-	(get_weaponinfo(WEP_RPC)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-	(get_weaponinfo(WEP_HMG)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	(get_weaponinfo(WEP_RPC.m_id)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	(get_weaponinfo(WEP_HMG.m_id)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
-	(get_weaponinfo(WEP_SHOTGUN)).mdl = "ok_shotgun";
-	(get_weaponinfo(WEP_MACHINEGUN)).mdl = "ok_mg";
-	(get_weaponinfo(WEP_VORTEX)).mdl = "ok_sniper";
+	(get_weaponinfo(WEP_SHOTGUN.m_id)).mdl = "ok_shotgun";
+	(get_weaponinfo(WEP_MACHINEGUN.m_id)).mdl = "ok_mg";
+	(get_weaponinfo(WEP_VORTEX.m_id)).mdl = "ok_sniper";
 }
 
 MUTATOR_DEFINITION(mutator_overkill)
@@ -367,8 +367,8 @@ MUTATOR_DEFINITION(mutator_overkill)
 
 	MUTATOR_ONREMOVE
 	{
-		(get_weaponinfo(WEP_RPC)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		(get_weaponinfo(WEP_HMG)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		(get_weaponinfo(WEP_RPC.m_id)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		(get_weaponinfo(WEP_HMG.m_id)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	return false;

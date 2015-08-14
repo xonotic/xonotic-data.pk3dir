@@ -226,7 +226,7 @@ float m_shambler(float req)
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;
 			self.frame = shambler_anim_stand;
-			self.weapon = WEP_VORTEX;
+			self.weapon = WEP_VORTEX.m_id;
 
 			return true;
 		}

@@ -49,7 +49,7 @@ VAPORIZER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER); }
+void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER.m_id); }
 void spawnfunc_weapon_minstanex(void) { spawnfunc_weapon_vaporizer(); }
 
 void W_Vaporizer_Attack(void)
@@ -64,7 +64,7 @@ void W_Vaporizer_Attack(void)
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_VAPORIZER);
+	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
@@ -166,9 +166,9 @@ float W_Vaporizer(float req)
 
 					// ugly instagib hack to reuse the fire mode of the laser
 					int oldwep = self.weapon; // we can't avoid this hack
-					self.weapon = WEP_BLASTER;
+					self.weapon = WEP_BLASTER.m_id;
 					W_Blaster_Attack(
-						WEP_BLASTER | HITTYPE_SECONDARY,
+						WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 						WEP_CVAR_SEC(vaporizer, shotangle),
 						WEP_CVAR_SEC(vaporizer, damage),
 						WEP_CVAR_SEC(vaporizer, edgedamage),
@@ -211,7 +211,7 @@ float W_Vaporizer(float req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(VAPORIZER) >= vaporizer_ammo;
-			ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= vaporizer_ammo;
+			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -219,7 +219,7 @@ float W_Vaporizer(float req)
 			if(!WEP_CVAR_SEC(vaporizer, ammo))
 				return true;
 			ammo_amount = self.WEP_AMMO(VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
-			ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= WEP_CVAR_SEC(vaporizer, ammo);
+			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

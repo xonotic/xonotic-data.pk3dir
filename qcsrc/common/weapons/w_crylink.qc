@@ -64,7 +64,7 @@ CRYLINK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_crylink(void) { weapon_defaultspawnfunc(WEP_CRYLINK); }
+void spawnfunc_weapon_crylink(void) { weapon_defaultspawnfunc(WEP_CRYLINK.m_id); }
 
 void W_Crylink_CheckLinks(entity e)
 {
@@ -392,7 +392,7 @@ void W_Crylink_Attack(void)
 
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
 		PROJECTILE_MAKETRIGGER(proj);
-		proj.projectiledeathtype = WEP_CRYLINK;
+		proj.projectiledeathtype = WEP_CRYLINK.m_id;
 		//proj.gravity = 0.001;
 
 		setorigin(proj, w_shotorg);
@@ -501,7 +501,7 @@ void W_Crylink_Attack2(void)
 
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
 		PROJECTILE_MAKETRIGGER(proj);
-		proj.projectiledeathtype = WEP_CRYLINK | HITTYPE_SECONDARY;
+		proj.projectiledeathtype = WEP_CRYLINK.m_id | HITTYPE_SECONDARY;
 		//proj.gravity = 0.001;
 
 		setorigin(proj, w_shotorg);
@@ -628,7 +628,7 @@ bool W_Crylink(int req)
 					if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						// ran out of ammo!
-						self.cnt = WEP_CRYLINK;
+						self.cnt = WEP_CRYLINK.m_id;
 						self.switchweapon = w_getbestweapon(self);
 					}
 				}
@@ -654,7 +654,7 @@ bool W_Crylink(int req)
 				return true;
 
 			ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_PRI(crylink, ammo);
-			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_PRI(crylink, ammo);
+			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -664,7 +664,7 @@ bool W_Crylink(int req)
 				return true;
 
 			ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_SEC(crylink, ammo);
-			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_SEC(crylink, ammo);
+			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

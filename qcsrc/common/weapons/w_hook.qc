@@ -67,7 +67,7 @@ void spawnfunc_weapon_hook(void)
 		remove(self);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_HOOK);
+	weapon_defaultspawnfunc(WEP_HOOK.m_id);
 }
 
 void W_Hook_ExplodeThink(void)
@@ -143,7 +143,7 @@ void W_Hook_Attack2(void)
 	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
 	gren.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_HOOK | HITTYPE_SECONDARY;
+	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 

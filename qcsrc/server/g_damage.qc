@@ -107,7 +107,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		else if(!(attacker.weapons & WepSet_FromWeapon(culprit)))
 			culprit = attacker.weapon;
 
-		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
+		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER.m_id) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
 			// no exchange
 		}
@@ -651,7 +651,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
 
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
-	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
+	if(DEATH_ISWEAPON(deathtype, WEP_HOOK.m_id) || DEATH_ISWEAPON(deathtype, WEP_TUBA.m_id))
 	{
 		if(IS_PLAYER(targ))
 			if(SAME_TEAM(targ, attacker))
@@ -967,8 +967,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	total_damage_to_creatures = 0;
 
-	if(deathtype != (WEP_HOOK | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
-		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
+	if(deathtype != (WEP_HOOK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
+		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA.m_id) // do not send tuba damage (bandwidth hog)
 		{
 			force = inflictorvelocity;
 			if(vlen(force) == 0)
@@ -1029,7 +1029,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = force * (finaldmg / coredamage) * forceintensity;
 					hitloc = nearest;
 
-					if(deathtype & WEP_BLASTER)
+					if(deathtype & WEP_BLASTER.m_id)
 						force *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
 
 					if(targ != directhitentity)

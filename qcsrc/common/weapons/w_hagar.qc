@@ -56,7 +56,7 @@ HAGAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_hagar(void) { weapon_defaultspawnfunc(WEP_HAGAR); }
+void spawnfunc_weapon_hagar(void) { weapon_defaultspawnfunc(WEP_HAGAR.m_id); }
 
 // NO bounce protection, as bounces are limited!
 
@@ -148,7 +148,7 @@ void W_Hagar_Attack(void)
 	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + WEP_CVAR_PRI(hagar, lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_HAGAR;
+	missile.projectiledeathtype = WEP_HAGAR.m_id;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -192,7 +192,7 @@ void W_Hagar_Attack2(void)
 	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -251,7 +251,7 @@ void W_Hagar_Attack2_Load_Release(void)
 		missile.think = adaptor_think2use_hittype_splash;
 		missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 		PROJECTILE_MAKETRIGGER(missile);
-		missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;
+		missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
 		setorigin(missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
@@ -303,7 +303,7 @@ void W_Hagar_Attack2_Load(void)
 	if(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		enough_ammo = true;
 	else if(autocvar_g_balance_hagar_reload_ammo)
-		enough_ammo = self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_SEC(hagar, ammo);
+		enough_ammo = self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
 		enough_ammo = self.WEP_AMMO(HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
 
@@ -473,13 +473,13 @@ bool W_Hagar(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(HAGAR) >= WEP_CVAR_PRI(hagar, ammo);
-			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_PRI(hagar, ammo);
+			ammo_amount += self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
 			ammo_amount = self.WEP_AMMO(HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
-			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_SEC(hagar, ammo);
+			ammo_amount += self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

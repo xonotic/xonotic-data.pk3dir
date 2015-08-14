@@ -56,7 +56,7 @@ MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-void spawnfunc_weapon_mortar(void) { weapon_defaultspawnfunc(WEP_MORTAR); }
+void spawnfunc_weapon_mortar(void) { weapon_defaultspawnfunc(WEP_MORTAR.m_id); }
 void spawnfunc_weapon_grenadelauncher(void) { spawnfunc_weapon_mortar(); }
 
 void W_Mortar_Grenade_Explode(void)
@@ -242,7 +242,7 @@ void W_Mortar_Attack(void)
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_MORTAR;
+	gren.projectiledeathtype = WEP_MORTAR.m_id;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
@@ -291,7 +291,7 @@ void W_Mortar_Attack2(void)
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_MORTAR | HITTYPE_SECONDARY;
+	gren.projectiledeathtype = WEP_MORTAR.m_id | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
@@ -422,13 +422,13 @@ bool W_Mortar(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_PRI(mortar, ammo);
-			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_PRI(mortar, ammo);
+			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
 			ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_SEC(mortar, ammo);
-			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_SEC(mortar, ammo);
+			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

@@ -45,7 +45,7 @@ RPC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_rpc() { weapon_defaultspawnfunc(WEP_RPC); }
+void spawnfunc_weapon_rpc() { weapon_defaultspawnfunc(WEP_RPC.m_id); }
 
 void W_RocketPropelledChainsaw_Explode()
 {
@@ -123,7 +123,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	missile.damagedbycontents = true;
 	missile.movetype = MOVETYPE_FLY;
 
-	missile.projectiledeathtype = WEP_RPC;
+	missile.projectiledeathtype = WEP_RPC.m_id;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
@@ -193,7 +193,7 @@ bool W_RocketPropelledChainsaw(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(RPC) >= WEP_CVAR(rpc, ammo);
-			ammo_amount += self.(weapon_load[WEP_RPC]) >= WEP_CVAR(rpc, ammo);
+			ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:

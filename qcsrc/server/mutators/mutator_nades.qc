@@ -608,28 +608,28 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE.m_id || self.nade_type == NADE_TYPE_SPAWN.m_id)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER.m_id))
 	{
 		force *= 1.5;
 		damage = 0;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id) && (deathtype & HITTYPE_SECONDARY))
 	{
 		force *= 0.5; // too much
 		frag_damage = 0;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX.m_id) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id))
 	{
 		force *= 6;
 		damage = self.max_health * 0.55;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN.m_id) || DEATH_ISWEAPON(deathtype, WEP_HMG.m_id))
 		damage = self.max_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE.m_id) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN.m_id)) // WEAPONTODO
 	if(deathtype & HITTYPE_SECONDARY)
 	{
 		damage = self.max_health * 0.1;
@@ -929,7 +929,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	float key_pressed = self.BUTTON_HOOK;
 	float time_score;
 
-	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, false, false) || (weaponsInMap & WEPSET_HOOK))
+	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK.m_id, false, false) || (weaponsInMap & WEPSET_HOOK))
 		key_pressed = self.button16; // if hook is enabled, use an alternate key
 
 	if(self.nade)

@@ -68,7 +68,7 @@ WepSet ReadWepSet();
 const int WEP_FIRST = 1;
 #define WEP_MAXCOUNT 24 // Increase as needed. Can be up to three times as much.
 int WEP_COUNT;
-int WEP_LAST;
+#define WEP_LAST (WEP_FIRST + WEP_COUNT - 1)
 WepSet WEPSET_ALL;
 WepSet WEPSET_SUPERWEAPONS;
 
@@ -101,7 +101,7 @@ int GetAmmoStat(.int ammotype);
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
-#define WEP_AMMO(wpn) ((get_weaponinfo(WEP_##wpn)).ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
+#define WEP_AMMO(wpn) ((get_weaponinfo(WEP_##wpn.m_id)).ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
 #define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
 
 
@@ -133,7 +133,7 @@ int GetAmmoStat(.int ammotype);
 
 // set initialization values for weapon settings
 #define WEP_SKIP_CVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
-#define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(WEP_##wepid).##prop = autocvar_g_balance_##wepname##_##name;
+#define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(WEP_##wepid.m_id).##prop = autocvar_g_balance_##wepname##_##name;
 
 
 // =====================
@@ -211,15 +211,14 @@ entity weapon_info[WEP_MAXCOUNT], weapon_info_first, weapon_info_last;
 entity dummy_weapon_info;
 
 #define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-	int WEP_##id; \
 	WepSet WEPSET_##id; \
-	REGISTER(RegisterWeapons, WEP_, weapon_info, WEP_COUNT, id, m_id, \
+	REGISTER(RegisterWeapons, WEP, weapon_info, WEP_COUNT, id, m_id, \
 		NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
 	) { \
-		WEP_LAST = (WEP_##id = WEP_FIRST + WEP_COUNT - 1); \
-		WEPSET_ALL |= (WEPSET_##id = WepSet_FromWeapon(WEP_##id)); \
+		this.m_id++; \
+		WEPSET_ALL |= (WEPSET_##id = WepSet_FromWeapon(this.m_id)); \
 		if ((flags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= WEPSET_##id; \
-		register_weapon(this, WEP_##id, WEPSET_##id); \
+		register_weapon(this, this.m_id, WEPSET_##id); \
 	}
 
 bool w_null(int) { return false; }

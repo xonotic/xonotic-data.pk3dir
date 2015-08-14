@@ -48,7 +48,7 @@ BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_blaster(void) { weapon_defaultspawnfunc(WEP_BLASTER); }
+void spawnfunc_weapon_blaster(void) { weapon_defaultspawnfunc(WEP_BLASTER.m_id); }
 void spawnfunc_weapon_laser(void) { spawnfunc_weapon_blaster(); }
 
 void W_Blaster_Touch(void)
@@ -174,7 +174,7 @@ bool W_Blaster(int request)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(blaster, refire)))
 				{
 					W_Blaster_Attack(
-						WEP_BLASTER,
+						WEP_BLASTER.m_id,
 						WEP_CVAR_PRI(blaster, shotangle),
 						WEP_CVAR_PRI(blaster, damage),
 						WEP_CVAR_PRI(blaster, edgedamage),
@@ -194,7 +194,7 @@ bool W_Blaster(int request)
 				{
 					case 0: // switch to last used weapon
 					{
-						if(self.switchweapon == WEP_BLASTER) // don't do this if already switching
+						if(self.switchweapon == WEP_BLASTER.m_id) // don't do this if already switching
 							W_LastWeapon();
 						break;
 					}
@@ -204,7 +204,7 @@ bool W_Blaster(int request)
 						if(weapon_prepareattack(1, WEP_CVAR_SEC(blaster, refire)))
 						{
 							W_Blaster_Attack(
-								WEP_BLASTER | HITTYPE_SECONDARY,
+								WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 								WEP_CVAR_SEC(blaster, shotangle),
 								WEP_CVAR_SEC(blaster, damage),
 								WEP_CVAR_SEC(blaster, edgedamage),

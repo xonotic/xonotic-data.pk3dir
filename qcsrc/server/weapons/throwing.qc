@@ -144,7 +144,7 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_cts)
 		return 0;
-	if (g_nexball && w == WEP_MORTAR)
+	if (g_nexball && w == WEP_MORTAR.m_id)
 		return 0;
     if(w == 0)
         return 0;

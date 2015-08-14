@@ -24,7 +24,7 @@ float NIX_CanChooseWeapon(float wpn)
 	}
 	else
 	{
-		if(wpn == WEP_BLASTER && g_nix_with_blaster) // WEAPONTODO: rename to g_nix_with_blaster
+		if(wpn == WEP_BLASTER.m_id && g_nix_with_blaster) // WEAPONTODO: rename to g_nix_with_blaster
 			return false;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return false;
