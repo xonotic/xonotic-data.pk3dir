@@ -15,12 +15,12 @@ class(Inventory) .int inv_items[MAX_ITEMS];
 void Inventory_Read(Inventory data)
 {
     const int bits = ReadInt24_t();
-    FOREACH(ITEMS, 0, ITEM_COUNT, bits & BIT(i), LAMBDA({
+    FOREACH(ITEMS, bits & BIT(i), LAMBDA(
         .int fld = inv_items[i];
         int prev = data.(fld);
         int next = data.(fld) = ReadByte();
         dprintf("%s: %.0f -> %.0f\n", ITEMS[i].m_name, prev, next);
-    }));
+    ));
 }
 #endif
 
@@ -28,14 +28,14 @@ void Inventory_Read(Inventory data)
 void Inventory_Write(Inventory data)
 {
     int bits = 0;
-    FOREACH(ITEMS, 0, ITEM_COUNT, true, LAMBDA({
+    FOREACH(ITEMS, true, LAMBDA(
         .int fld = inv_items[i];
         bits = BITSET(bits, BIT(i), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
-    }));
+    ));
     WriteInt24_t(MSG_ENTITY, bits);
-    FOREACH(ITEMS, 0, ITEM_COUNT, bits & BIT(i), LAMBDA({
+    FOREACH(ITEMS, bits & BIT(i), LAMBDA(
         WriteByte(MSG_ENTITY, data.inv_items[i]);
-    }));
+    ));
 }
 #endif
 

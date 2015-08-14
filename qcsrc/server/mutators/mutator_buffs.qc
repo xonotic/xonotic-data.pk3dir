@@ -10,12 +10,7 @@ entity buff_FirstFromFlags(int _buffs)
 {
 	if (flags)
 	{
-		FOREACH(BUFFS, 0, BUFFS_COUNT,
-			it.m_itemid & _buffs,
-			LAMBDA({
-				return it;
-			})
-		);
+		FOREACH(BUFFS, it.m_itemid & _buffs, LAMBDA(return it));
 	}
 	return BUFF_NULL;
 }
@@ -207,14 +202,11 @@ float buff_Available(entity buff)
 void buff_NewType(entity ent, float cb)
 {
 	RandomSelection_Init();
-	FOREACH(BUFFS, 0, BUFFS_COUNT,
-		buff_Available(it),
-		LAMBDA({
-			it.buff_seencount += 1;
-			// if it's already been chosen, give it a lower priority
-			RandomSelection_Add(world, it.m_itemid, string_null, 1, max(0.2, 1 / it.buff_seencount));
-		})
-	);
+	FOREACH(BUFFS, buff_Available(it), LAMBDA(
+		it.buff_seencount += 1;
+		// if it's already been chosen, give it a lower priority
+		RandomSelection_Add(world, it.m_itemid, string_null, 1, max(0.2, 1 / it.buff_seencount));
+	));
 	ent.buffs = RandomSelection_chosen_float;
 }
 

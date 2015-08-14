@@ -95,32 +95,28 @@ REGISTER_NADE(MONSTER) {
 
 entity Nade_FromProjectile(float proj)
 {
-    for (int i = 0; i < NADES_COUNT; i++)
-    {
-        entity nade = NADES[i];
+    FOREACH(NADES, true, LAMBDA(
         for (int j = 0; j < 2; j++)
         {
-            if (nade.m_projectile[j] == proj) return nade;
+            if (it.m_projectile[j] == proj) return it;
         }
-    }
+    ));
     return NADE_TYPE_NULL;
 }
 
 string Nade_TrailEffect(float proj, float nade_team)
 {
-    for (int i = 0; i < NADES_COUNT; i++)
-    {
-        entity nade = NADES[i];
+    FOREACH(NADES, true, LAMBDA(
         for (int j = 0; j < 2; j++)
         {
-            if (nade.m_projectile[j] == proj)
+            if (it.m_projectile[j] == proj)
             {
-                string trail = nade.m_trail[j];
+                string trail = it.m_trail[j];
                 if (trail) return trail;
                 break;
             }
         }
-    }
+    ));
     switch (proj)
     {
         case PROJECTILE_NADE: return strcat("nade_", Static_Team_ColorName_Lower(nade_team));

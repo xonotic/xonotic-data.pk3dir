@@ -207,13 +207,10 @@ string spritelookuptext(string s)
 	if (substring(s, 0, 5) == "buff-")
 	{
 		entity buff = BUFF_NULL;
-		FOREACH(BUFFS, 0, BUFFS_COUNT,
-			it.m_sprite == s,
-			LAMBDA({
-				buff = it;
-				break;
-			})
-		);
+		FOREACH(BUFFS, it.m_sprite == s, LAMBDA(
+			buff = it;
+			break;
+		));
 		return buff.m_prettyName;
 	}
 

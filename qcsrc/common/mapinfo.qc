@@ -602,19 +602,13 @@ void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int lo
 
 string _MapInfo_GetDefaultEx(float t)
 {
-	entity e;
-	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.model2;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.model2));
 	return "";
 }
 
 float _MapInfo_GetTeamPlayBool(float t)
 {
-	entity e;
-	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.team;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.team));
 	return false;
 }
 
@@ -715,7 +709,6 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 
 float MapInfo_Type_FromString(string t)
 {
-	entity e;
 	if(t == "nexball")
 	{
 		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
@@ -754,38 +747,27 @@ float MapInfo_Type_FromString(string t)
 	}
 	if(t == "all")
 		return MAPINFO_TYPE_ALL;
-	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
-		if(t == e.mdl)
-			return e.items;
+	FOREACH(MAPINFO_TYPES, it.mdl == t, LAMBDA(return it.items));
 	return 0;
 }
 
 string MapInfo_Type_Description(float t)
 {
-	entity e;
-	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.gametype_description;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.gametype_description));
 	return "";
 }
 
 string MapInfo_Type_ToString(float t)
 {
-	entity e;
 	if(t == MAPINFO_TYPE_ALL)
 	 	return "all";
-	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.mdl;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.mdl));
 	return "";
 }
 
 string MapInfo_Type_ToText(float t)
 {
-	entity e;
-	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.message;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.message));
 	/* xgettext:no-c-format */
 	return _("@!#%'n Tuba Throwing");
 }
@@ -1289,14 +1271,9 @@ int MapInfo_CurrentFeatures()
 
 int MapInfo_CurrentGametype()
 {
-	entity e;
 	int prev = cvar("gamecfg");
-	for(e = MAPINFO_TYPES_first; e; e = e.enemy)
-		if(cvar(e.netname))
-			if(prev != e.items)
-				return e.items;
-	if(prev)
-		return prev;
+	FOREACH(MAPINFO_TYPES, cvar(it.netname) && it.items != prev, LAMBDA(return it.items));
+	if (prev) return prev;
 	return MAPINFO_TYPE_DEATHMATCH;
 }
 
@@ -1321,9 +1298,9 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 
 void MapInfo_SwitchGameType(int t)
 {
-	for (entity e = MAPINFO_TYPES_first; e; e = e.enemy) {
-		cvar_set(e.netname, (t == e.items) ? "1" : "0");
-	}
+	FOREACH(MAPINFO_TYPES, true, LAMBDA(
+		cvar_set(it.netname, (it.items == t) ? "1" : "0")
+	));
 }
 
 void MapInfo_LoadMap(string s, float reinit)
