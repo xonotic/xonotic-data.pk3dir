@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id	 */ HMG,
 /* function	 */ W_HeavyMachineGun,
@@ -37,7 +37,8 @@ REGISTER_WEAPON(
 #ifdef SVQC
 HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 
 void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG); }

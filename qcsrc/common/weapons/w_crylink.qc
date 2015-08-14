@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ CRYLINK,
 /* function  */ W_Crylink,
@@ -61,7 +61,8 @@ CRYLINK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity queuenext;
 .entity queueprev;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_crylink(void) { weapon_defaultspawnfunc(WEP_CRYLINK); }
 

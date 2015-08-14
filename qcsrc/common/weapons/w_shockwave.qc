@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ SHOCKWAVE,
 /* function  */ W_Shockwave,
@@ -79,7 +79,8 @@ void Net_ReadShockwaveParticle(void);
 .float sw_spread_min;
 .float sw_time;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_shockwave(void)
 {

@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ SHOTGUN,
 /* function  */ W_Shotgun,
@@ -49,7 +49,8 @@ REGISTER_WEAPON(
 #ifdef SVQC
 SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN); }
 

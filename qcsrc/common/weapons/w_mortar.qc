@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ MORTAR,
 /* function  */ W_Mortar,
@@ -52,7 +52,8 @@ MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float gl_detonate_later;
 .float gl_bouncecnt;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 
 void spawnfunc_weapon_mortar(void) { weapon_defaultspawnfunc(WEP_MORTAR); }

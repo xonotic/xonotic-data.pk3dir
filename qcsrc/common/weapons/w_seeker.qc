@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ SEEKER,
 /* function  */ W_Seeker,
@@ -81,7 +81,8 @@ SEEKER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity tag_target, wps_tag_tracker;
 .float tag_time;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_seeker(void) { weapon_defaultspawnfunc(WEP_SEEKER); }
 

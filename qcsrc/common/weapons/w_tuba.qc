@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ TUBA,
 /* function  */ W_Tuba,
@@ -51,7 +51,8 @@ float W_Tuba_MarkClientOnlyFieldsAsUsed() {
 .float tuba_lastnotes_cnt; // over
 .vector tuba_lastnotes[MAX_TUBANOTES];
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_tuba(void) { weapon_defaultspawnfunc(WEP_TUBA); }
 

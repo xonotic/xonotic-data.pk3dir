@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ DEVASTATOR,
 /* function  */ W_Devastator,
@@ -59,7 +59,8 @@ DEVASTATOR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float rl_release;
 .float rl_detonate_later;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_devastator(void) { weapon_defaultspawnfunc(WEP_DEVASTATOR); }
 void spawnfunc_weapon_rocketlauncher(void) { spawnfunc_weapon_devastator(); }

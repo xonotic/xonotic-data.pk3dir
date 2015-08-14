@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ HLAC,
 /* function  */ W_HLAC,
@@ -45,7 +45,8 @@ REGISTER_WEAPON(
 #ifdef SVQC
 HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC); }
 

@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id	 */ RPC,
 /* function	 */ W_RocketPropelledChainsaw,
@@ -42,7 +42,8 @@ REGISTER_WEAPON(
 #ifdef SVQC
 RPC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_rpc() { weapon_defaultspawnfunc(WEP_RPC); }
 

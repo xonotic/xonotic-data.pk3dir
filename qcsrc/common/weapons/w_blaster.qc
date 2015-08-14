@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ BLASTER,
 /* function  */ W_Blaster,
@@ -45,7 +45,8 @@ BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float blaster_force;
 .float blaster_lifetime;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_blaster(void) { weapon_defaultspawnfunc(WEP_BLASTER); }
 void spawnfunc_weapon_laser(void) { spawnfunc_weapon_blaster(); }

@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ VAPORIZER,
 /* function  */ W_Vaporizer,
@@ -46,7 +46,8 @@ VAPORIZER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float vaporizer_lasthit;
 .float jump_interval;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER); }
 void spawnfunc_weapon_minstanex(void) { spawnfunc_weapon_vaporizer(); }

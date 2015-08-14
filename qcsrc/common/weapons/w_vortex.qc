@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ VORTEX,
 /* function  */ W_Vortex,
@@ -56,7 +56,8 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 .float vortex_lasthit;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX); }
 void spawnfunc_weapon_nex(void) { spawnfunc_weapon_vortex(); }

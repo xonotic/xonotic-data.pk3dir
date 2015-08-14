@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ MACHINEGUN,
 /* function  */ W_MachineGun,
@@ -51,7 +51,8 @@ REGISTER_WEAPON(
 #ifdef SVQC
 MACHINEGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 
 void spawnfunc_weapon_machinegun(void)

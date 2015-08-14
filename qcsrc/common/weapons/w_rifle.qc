@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ RIFLE,
 /* function  */ W_Rifle,
@@ -44,7 +44,8 @@ REGISTER_WEAPON(
 RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float rifle_accumulator;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE); }
 void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }

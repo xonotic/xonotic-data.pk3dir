@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ ARC,
 /* function  */ W_Arc,
@@ -123,7 +123,8 @@ float Draw_ArcBeam_callback_last_thickness;
 vector Draw_ArcBeam_callback_last_top; // NOTE: in same coordinate system as player.
 vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as player.
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC); }
 

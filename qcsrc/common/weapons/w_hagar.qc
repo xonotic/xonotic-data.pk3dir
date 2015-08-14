@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ HAGAR,
 /* function  */ W_Hagar,
@@ -53,7 +53,8 @@ REGISTER_WEAPON(
 #ifdef SVQC
 HAGAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_hagar(void) { weapon_defaultspawnfunc(WEP_HAGAR); }
 

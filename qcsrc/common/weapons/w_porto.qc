@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ PORTO,
 /* function  */ W_Porto,
@@ -36,7 +36,8 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float porto_v_angle_held;
 .vector right_vector;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 #include "../triggers/trigger/jumppads.qh"
 

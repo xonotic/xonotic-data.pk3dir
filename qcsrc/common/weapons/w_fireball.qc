@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ FIREBALL,
 /* function  */ W_Fireball,
@@ -52,7 +52,8 @@ FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .vector fireball_impactvec;
 .float fireball_primarytime;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_fireball(void) { weapon_defaultspawnfunc(WEP_FIREBALL); }
 

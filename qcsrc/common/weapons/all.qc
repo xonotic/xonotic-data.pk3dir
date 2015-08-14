@@ -54,7 +54,9 @@
 #ifndef MENUQC
 #include "calculations.qc"
 #endif
+#define IMPLEMENTATION
 #include "all.inc"
+#undef IMPLEMENTATION
 
 // WEAPON PLUGIN SYSTEM
 entity weapon_info[WEP_MAXCOUNT];

@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ MINE_LAYER,
 /* function  */ W_MineLayer,
@@ -54,7 +54,8 @@ void W_MineLayer_Think(void);
 .float mine_time;
 .vector mine_orientation;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_minelayer(void) { weapon_defaultspawnfunc(WEP_MINE_LAYER); }
 

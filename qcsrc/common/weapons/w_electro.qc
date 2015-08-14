@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ ELECTRO,
 /* function  */ W_Electro,
@@ -64,7 +64,8 @@ ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float electro_secondarytime;
 void W_Electro_ExplodeCombo(void);
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_electro(void) { weapon_defaultspawnfunc(WEP_ELECTRO); }
 
