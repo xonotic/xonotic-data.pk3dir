@@ -204,7 +204,18 @@ vector spritelookupcolor(string s, vector def)
 string spritelookuptext(string s)
 {
 	if(substring(s, 0, 4) == "wpn-") { return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).message); }
-	if(substring(s, 0, 5) == "buff-") { return Buff_PrettyName(Buff_Type_FromSprite(s)); }
+	if (substring(s, 0, 5) == "buff-")
+	{
+		entity buff = BUFF_NULL;
+		FOREACH(BUFFS, 0, BUFFS_COUNT,
+			it.m_sprite == s,
+			LAMBDA({
+				buff = it;
+				break;
+			})
+		);
+		return buff.m_prettyName;
+	}
 
 	switch(s)
 	{

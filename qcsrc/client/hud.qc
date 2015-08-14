@@ -1403,10 +1403,12 @@ void HUD_Powerups(void)
 	if(superTime)
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
-	entity item;
-	for(item = Buff_Type_first; item; item = item.enemy)
-		if(allBuffs & item.items)
-			addPowerupItem(item.message, strcat("buff_", item.netname), item.colormod, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+	FOREACH(BUFFS, 0, BUFFS_COUNT,
+		it.m_itemid & allBuffs,
+		LAMBDA(
+			addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+		)
+	);
 
 	if(!powerupItemsCount)
 		return;
@@ -1474,7 +1476,7 @@ void HUD_Powerups(void)
 	int row = 0;
 
 	draw_beginBoldFont();
-	for(item = powerupItems; item.count; item = item.chain)
+	for(entity item = powerupItems; item.count; item = item.chain)
 	{
 		itemPos = eX * (pos.x + column * itemSize.x) + eY * (pos.y + row * itemSize.y);
 

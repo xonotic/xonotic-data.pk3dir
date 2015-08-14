@@ -51,6 +51,13 @@
 [[deprecated("use true")]] [[alias("true")]] const bool TRUE;
 [[deprecated("use false")]] [[alias("false")]] const bool FALSE;
 
+#define FOREACH(arr, start, end, cond, body) do { \
+    for (int i = start; i < end; ++i) {     \
+        const noref entity it = arr[i];     \
+        if (cond) { body }                  \
+    }                                       \
+} while(0)
+
 #ifdef GMQCC
     #define OVERLOAD(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)
 #else

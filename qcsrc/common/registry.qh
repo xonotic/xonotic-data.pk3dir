@@ -1,17 +1,22 @@
 #ifndef REGISTRY_H
 #define REGISTRY_H
 
+#include "oo.qh"
+
 #define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
+#define REGISTER_INIT_POST(ns, id) [[accumulate]] void Register_##ns##_##id##_init_post(entity this)
 
 #define REGISTER(initfunc, ns, array, counter, id, class, fld)  \
     entity ns##_##id;                                           \
     REGISTER_INIT(ns, id) { }                                   \
+    REGISTER_INIT_POST(ns, id) { }                              \
     void Register_##ns##_##id() {                               \
         entity this = NEW(class);                               \
         ns##_##id = this;                                       \
         this.fld = counter;                                     \
         array[counter++] = this;                                \
         Register_##ns##_##id##_init(this);                      \
+        Register_##ns##_##id##_init_post(this);                 \
     }                                                           \
     ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id)         \
     REGISTER_INIT(ns, id)

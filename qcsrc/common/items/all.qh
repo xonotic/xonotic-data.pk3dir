@@ -11,13 +11,6 @@ int ITEM_COUNT;
 #define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, class, m_id)
 REGISTER_REGISTRY(RegisterItems)
 
-#define ITEMS_FOREACH(pred, body) do {      \
-    for (int i = 0; i < ITEM_COUNT; i++) {  \
-        const noref entity it = ITEMS[i];   \
-        if (pred) { body }                  \
-    }                                       \
-} while(0)
-
 void Dump_Items();
 
 #endif

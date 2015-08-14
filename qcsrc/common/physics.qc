@@ -1885,7 +1885,7 @@ void PM_Main()
 		RaceCarPhysics();
 #endif
 
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY || (BUFFS(self) & BUFF_FLIGHT))
+	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY || (BUFFS_STAT(self) & BUFF_FLIGHT.m_itemid))
 		PM_fly(maxspeed_mod);
 
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
