@@ -101,7 +101,7 @@ int GetAmmoStat(.int ammotype);
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
-#define WEP_AMMO(wpn) ((get_weaponinfo(WEP_##wpn.m_id)).ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
+#define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
 #define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
 
 
@@ -133,7 +133,7 @@ int GetAmmoStat(.int ammotype);
 
 // set initialization values for weapon settings
 #define WEP_SKIP_CVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
-#define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(WEP_##wepid.m_id).##prop = autocvar_g_balance_##wepname##_##name;
+#define WEP_SET_PROP(wepid,wepname,type,prop,name) WEP_##wepid.prop = autocvar_g_balance_##wepname##_##name;
 
 
 // =====================

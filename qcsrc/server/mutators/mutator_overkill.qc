@@ -275,8 +275,8 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
 	WepSet ok_start_items = (WEPSET_MACHINEGUN | WEPSET_VORTEX | WEPSET_SHOTGUN);
 
-	if((get_weaponinfo(WEP_RPC.m_id)).weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
-	if((get_weaponinfo(WEP_HMG.m_id)).weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
+	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
+	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
@@ -334,12 +334,12 @@ void ok_Initialize()
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);
 
-	(get_weaponinfo(WEP_RPC.m_id)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-	(get_weaponinfo(WEP_HMG.m_id)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
-	(get_weaponinfo(WEP_SHOTGUN.m_id)).mdl = "ok_shotgun";
-	(get_weaponinfo(WEP_MACHINEGUN.m_id)).mdl = "ok_mg";
-	(get_weaponinfo(WEP_VORTEX.m_id)).mdl = "ok_sniper";
+	WEP_SHOTGUN.mdl = "ok_shotgun";
+	WEP_MACHINEGUN.mdl = "ok_mg";
+	WEP_VORTEX.mdl = "ok_sniper";
 }
 
 MUTATOR_DEFINITION(mutator_overkill)
@@ -367,8 +367,8 @@ MUTATOR_DEFINITION(mutator_overkill)
 
 	MUTATOR_ONREMOVE
 	{
-		(get_weaponinfo(WEP_RPC.m_id)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		(get_weaponinfo(WEP_HMG.m_id)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	return false;
