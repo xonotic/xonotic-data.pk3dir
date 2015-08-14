@@ -151,24 +151,7 @@ WepSet ReadWepSet()
 
 void register_weapons_done()
 {
-	dummy_weapon_info = spawn();
-	dummy_weapon_info.classname = "weapon_info";
-	dummy_weapon_info.weapon = 0; // you can recognize dummies by this
-	dummy_weapon_info.weapons = '0 0 0';
-	dummy_weapon_info.netname = "";
-	dummy_weapon_info.message = "AOL CD Thrower";
-	dummy_weapon_info.weapon_func = w_null;
-	dummy_weapon_info.wpmodel = "";
-	dummy_weapon_info.mdl = "";
-	dummy_weapon_info.model = "";
-	dummy_weapon_info.spawnflags = 0;
-	dummy_weapon_info.impulse = -1;
-	dummy_weapon_info.bot_pickupbasevalue = 0;
-	dummy_weapon_info.ammo_field = ammo_none;
-
-	dummy_weapon_info.w_crosshair = "gfx/crosshair1";
-	dummy_weapon_info.w_crosshair_size = 1;
-	dummy_weapon_info.model2 = "";
+	dummy_weapon_info = NEW(Weapon);
 
 	weaponorder_byid = "";
 	for (int i = WEP_MAXCOUNT - 1; i >= 0; --i)
