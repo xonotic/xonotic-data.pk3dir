@@ -59,8 +59,6 @@
 #undef IMPLEMENTATION
 
 // WEAPON PLUGIN SYSTEM
-entity weapon_info[WEP_MAXCOUNT];
-entity dummy_weapon_info;
 
 #if WEP_MAXCOUNT > 72
 # error Kein Weltraum links auf dem Gerät
@@ -151,52 +149,6 @@ WepSet ReadWepSet()
 }
 #endif
 
-void register_weapon(
-	int id,
-	WepSet bit,
-	bool(int) func,
-	.int ammotype,
-	int i,
-	int weapontype,
-	float pickupbasevalue,
-	vector clr,
-	string modelname,
-	string simplemdl,
-	string crosshair,
-	string wepimg,
-	string refname,
-	string wepname)
-{
-	entity e;
-	weapon_info[id - 1] = e = spawn();
-	e.classname = "weapon_info";
-	e.weapon = id;
-	e.weapons = bit;
-	e.weapon_func = func;
-	e.ammo_field = ammotype;
-	e.impulse = i;
-	e.spawnflags = weapontype;
-	e.bot_pickupbasevalue = pickupbasevalue;
-	e.wpcolor = clr;
-	e.wpmodel = strzone(strcat("wpn-", ftos(id)));
-	e.mdl = modelname;
-	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
-	e.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
-	e.w_crosshair = strzone(car(crosshair));
-	string s = cdr(crosshair);
-	e.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
-	e.model2 = strzone(wepimg);
-	e.netname = refname;
-	e.message = wepname;
-
-	#ifdef CSQC
-	func(WR_INIT);
-	#endif
-}
-bool w_null(int dummy)
-{
-	return 0;
-}
 void register_weapons_done()
 {
 	dummy_weapon_info = spawn();
@@ -218,10 +170,9 @@ void register_weapons_done()
 	dummy_weapon_info.w_crosshair_size = 1;
 	dummy_weapon_info.model2 = "";
 
-	int i;
 	weaponorder_byid = "";
-	for(i = WEP_MAXCOUNT; i >= 1; --i)
-		if(weapon_info[i-1])
+	for (int i = WEP_MAXCOUNT - 1; i >= 0; --i)
+		if (weapon_info[i])
 			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
 	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }
