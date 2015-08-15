@@ -360,11 +360,7 @@ void nade_translocate_boom()
 
 	makevectors(self.realowner.angles);
 
-	entity oldself = self;
-	self = self.realowner;
-	MUTATOR_CALLHOOK(PortalTeleport);
-	self.realowner = self;
-	self = oldself;
+	MUTATOR_CALLHOOK(PortalTeleport, self.realowner);
 
 	TeleportPlayer(self, self.realowner, locout, self.realowner.angles, v_forward * vlen(self.realowner.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 }

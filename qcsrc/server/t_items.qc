@@ -1358,7 +1358,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.SendFlags |= ISF_ANGLES;
 
 	// call this hook after everything else has been done
-	if(MUTATOR_CALLHOOK(Item_Spawn))
+	if(MUTATOR_CALLHOOK(Item_Spawn, self))
 	{
 		startitem_failed = true;
 		remove(self);

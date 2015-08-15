@@ -170,11 +170,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	// factor -1 allows chaining portals, but may be weird
 	player.right_vector = -1 * AnglesTransform_Apply(transform, player.right_vector);
 
-	entity oldself = self;
-	self = player;
-	MUTATOR_CALLHOOK(PortalTeleport);
-	player = self;
-	self = oldself;
+	MUTATOR_CALLHOOK(PortalTeleport, player);
 
 	if (!teleporter.enemy)
 	{
