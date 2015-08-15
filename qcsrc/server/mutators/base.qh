@@ -246,7 +246,7 @@ MUTATOR_HOOKABLE(PlayerPhysics, EV_NO_ARGS);
     /**/
 float get_cvars_f;
 string get_cvars_s;
-MUTATOR_HOOKABLE(GetCvars, EV_GetCvars);
+MUTATOR_HOOKABLE(GetCvars, EV_NO_ARGS); // NOTE: Can't use EV_GetCvars because of `SZ_GetSpace: overflow`
 
 /** can edit any "just fired" projectile */
 #define EV_EditProjectile(i, o) \
