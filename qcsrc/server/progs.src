@@ -116,3 +116,5 @@ weapons/weaponsystem.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/server.qc
 ../warpzonelib/util_server.qc
+
+../../mod/server/progs.inc

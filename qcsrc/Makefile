@@ -20,7 +20,8 @@ QCCFLAGS ?= \
 
 QCCFLAGS_FEATURES ?= \
 	-DVEHICLES_ENABLED=1 \
-	-DVEHICLES_USE_ODE=0
+	-DVEHICLES_USE_ODE=0 \
+	-DBUILD_MOD=$(BUILD_MOD)
 
 # xonotic build system overrides this by command line argument to turn off the update-cvarcount step
 XON_BUILDSYSTEM =
