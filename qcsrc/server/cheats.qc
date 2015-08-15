@@ -212,7 +212,7 @@ float CheatImpulse(float i)
 					self.angles = self.personal.v_angle;
 					self.fixangle = true;
 
-					MUTATOR_CALLHOOK(AbortSpeedrun);
+					MUTATOR_CALLHOOK(AbortSpeedrun, self);
 				}
 
 				self.ammo_rockets = self.personal.ammo_rockets;

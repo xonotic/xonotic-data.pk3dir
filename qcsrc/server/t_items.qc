@@ -644,9 +644,7 @@ void Item_RespawnCountdown (void)
 						{name = "item_armor_large"; rgb = '0 1 0';}
 					break;
 			}
-			item_name = name;
-			item_color = rgb;
-			MUTATOR_CALLHOOK(Item_RespawnCountdown);
+			MUTATOR_CALLHOOK(Item_RespawnCountdown, name, rgb);
 			name = item_name;
 			rgb = item_color;
 			if(self.flags & FL_WEAPON)
@@ -903,7 +901,7 @@ void Item_Touch (void)
 	if (time < self.item_spawnshieldtime)
 		return;
 
-	switch(MUTATOR_CALLHOOK(ItemTouch))
+	switch(MUTATOR_CALLHOOK(ItemTouch, self, other))
 	{
 		case MUT_ITEMTOUCH_RETURN: { return; }
 		case MUT_ITEMTOUCH_PICKUP: { goto pickup; }

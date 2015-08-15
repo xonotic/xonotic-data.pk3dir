@@ -1279,7 +1279,7 @@ void ClientConnect (void)
 		self = oldself;
 	}
 
-	MUTATOR_CALLHOOK(ClientConnect);
+	MUTATOR_CALLHOOK(ClientConnect, self);
 }
 /*
 =============

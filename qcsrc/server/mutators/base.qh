@@ -450,84 +450,117 @@ MUTATOR_HOOKABLE(Item_Spawn, EV_Item_Spawn);
 MUTATOR_HOOKABLE(SetWeaponreplace, EV_SetWeaponreplace);
 
 /** called when an item is about to respawn */
-MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_NO_ARGS);
-	// INPUT+OUTPUT:
-	string item_name;
-	vector item_color;
+#define EV_Item_RespawnCountdown(i, o) \
+    /**/ i(string, item_name) \
+    /**/ o(string, item_name) \
+    /**/ i(vector, item_color) \
+    /**/ o(vector, item_color) \
+    /**/
+string item_name;
+vector item_color;
+MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
 /** called when a bot checks a target to attack */
-MUTATOR_HOOKABLE(BotShouldAttack, EV_NO_ARGS);
-	// INPUT
-	entity checkentity;
+#define EV_BotShouldAttack(i, o) \
+    /**/ i(entity, checkentity) \
+    /**/
+entity checkentity;
+MUTATOR_HOOKABLE(BotShouldAttack, EV_BotShouldAttack);
 
 /**
  * called whenever a player goes through a portal gun teleport
  * allows you to strip a player of an item if they go through the teleporter to help prevent cheating
  */
- #define EV_PortalTeleport(i, o) \
-     /**/ i(entity, self) \
-     /**/
+#define EV_PortalTeleport(i, o) \
+    /**/ i(entity, self) \
+    /**/
 MUTATOR_HOOKABLE(PortalTeleport, EV_PortalTeleport);
 
-MUTATOR_HOOKABLE(HelpMePing, EV_NO_ARGS);
-	// called whenever a player uses impulse 33 (help me) in cl_impulse.qc
-	// normally help me ping uses self.waypointsprite_attachedforcarrier,
-	// but if your mutator uses something different then you can handle it
-	// in a special manner using this hook
-	// INPUT
-//	entity self; // the player who pressed impulse 33
+/**
+ * called whenever a player uses impulse 33 (help me) in cl_impulse.qc
+ * normally help me ping uses self.waypointsprite_attachedforcarrier,
+ * but if your mutator uses something different then you can handle it
+ * in a special manner using this hook
+ */
+#define EV_HelpMePing(i, o) \
+    /** the player who pressed impulse 33 */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(HelpMePing, EV_HelpMePing);
 
+/**
+ * called when a vehicle initializes
+ * return true to remove the vehicle
+ */
 MUTATOR_HOOKABLE(VehicleSpawn, EV_NO_ARGS);
-	// called when a vehicle initializes
-	// return true to remove the vehicle
 
-MUTATOR_HOOKABLE(VehicleEnter, EV_NO_ARGS);
-	// called when a player enters a vehicle
-	// allows mutators to set special settings in this event
-	// INPUT
-	entity vh_player; // player
-	entity vh_vehicle; // vehicle
+/**
+ * called when a player enters a vehicle
+ * allows mutators to set special settings in this event
+ */
+#define EV_VehicleEnter(i, o) \
+    /** player */ i(entity, vh_player) \
+    /** vehicle */ i(entity, vh_vehicle) \
+    /**/
+entity vh_player;
+entity vh_vehicle;
+MUTATOR_HOOKABLE(VehicleEnter, EV_VehicleEnter);
 
-MUTATOR_HOOKABLE(VehicleTouch, EV_NO_ARGS);
-	// called when a player touches a vehicle
-	// return true to stop player from entering the vehicle
-	// INPUT
-//	entity self; // vehicle
-//	entity other; // player
+/**
+ * called when a player touches a vehicle
+ * return true to stop player from entering the vehicle
+ */
+#define EV_VehicleTouch(i, o) \
+    /** vehicle */ i(entity, self) \
+    /** player */ i(entity, other) \
+    /**/
+MUTATOR_HOOKABLE(VehicleTouch, EV_VehicleTouch);
 
-MUTATOR_HOOKABLE(VehicleExit, EV_NO_ARGS);
-	// called when a player exits a vehicle
-	// allows mutators to set special settings in this event
-	// INPUT
-//	entity vh_player; // player
-//	entity vh_vehicle; // vehicle
+/**
+ * called when a player exits a vehicle
+ * allows mutators to set special settings in this event
+ */
+#define EV_VehicleExit(i, o) \
+    /** player */ i(entity, vh_player) \
+    /** vehicle */ i(entity, vh_vehicle) \
+    /**/
+MUTATOR_HOOKABLE(VehicleExit, EV_VehicleExit);
 
-MUTATOR_HOOKABLE(AbortSpeedrun, EV_NO_ARGS);
-	// called when a speedrun is aborted and the player is teleported back to start position
-	// INPUT
-//	entity self; // player
+/** called when a speedrun is aborted and the player is teleported back to start position */
+#define EV_AbortSpeedrun(i, o) \
+    /** player */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(AbortSpeedrun, EV_AbortSpeedrun);
 
-MUTATOR_HOOKABLE(ItemTouch, EV_NO_ARGS);
-	// called at when a item is touched. Called early, can edit item properties.
-//	entity self;	// item
-//	entity other; 	// player
+/** called at when a item is touched. Called early, can edit item properties. */
+#define EV_ItemTouch(i, o) \
+    /** item */ i(entity, self) \
+    /** player */ i(entity, other) \
+    /**/
+MUTATOR_HOOKABLE(ItemTouch, EV_ItemTouch);
+
 enum {
 	MUT_ITEMTOUCH_CONTINUE, // return this flag to make the function continue as normal
 	MUT_ITEMTOUCH_RETURN, // return this flag to make the function return (handled entirely by mutator)
 	MUT_ITEMTOUCH_PICKUP // return this flag to have the item "picked up" and taken even after mutator handled it
 };
 
-MUTATOR_HOOKABLE(ClientConnect, EV_NO_ARGS);
-	// called at when a player connect
-//	entity self;	// player
+/** called at when a player connect */
+#define EV_ClientConnect(i, o) \
+    /** player */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(ClientConnect, EV_ClientConnect);
 
-MUTATOR_HOOKABLE(HavocBot_ChooseRole, EV_NO_ARGS);
-//	entity self;
+#define EV_HavocBot_ChooseRole(i, o) \
+    /**/ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(HavocBot_ChooseRole, EV_HavocBot_ChooseRole);
 
-MUTATOR_HOOKABLE(AccuracyTargetValid, EV_NO_ARGS);
-	// called when a target is checked for accuracy
-//	entity frag_attacker; // attacker
-//	entity frag_target; // target
+/** called when a target is checked for accuracy */
+#define EV_AccuracyTargetValid(i, o) \
+    /** attacker */ i(entity, frag_attacker) \
+    /** target */ i(entity, frag_target) \
+    /**/
+MUTATOR_HOOKABLE(AccuracyTargetValid, EV_AccuracyTargetValid);
 enum {
 	MUT_ACCADD_VALID, // return this flag to make the function continue if target is a client
 	MUT_ACCADD_INVALID, // return this flag to make the function always continue
