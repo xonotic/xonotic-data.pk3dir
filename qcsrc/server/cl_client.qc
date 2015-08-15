@@ -422,7 +422,7 @@ void PutClientInServer (void)
 	// reset player keys
 	self.itemkeys = 0;
 
-	MUTATOR_CALLHOOK(PutClientInServer);
+	MUTATOR_CALLHOOK(PutClientInServer, self);
 
 	if(gameover)
 		self.classname = "observer";
@@ -644,8 +644,7 @@ void PutClientInServer (void)
 
 		Unfreeze(self);
 
-		spawn_spot = spot;
-		MUTATOR_CALLHOOK(PlayerSpawn);
+		MUTATOR_CALLHOOK(PlayerSpawn, spot);
 
 		if(autocvar_spawn_debug)
 		{

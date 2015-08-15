@@ -549,11 +549,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
-		frag_attacker = attacker;
-		frag_inflictor = inflictor;
-		frag_target = self;
-		frag_deathtype = deathtype;
-		MUTATOR_CALLHOOK(PlayerDies);
+		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 
 		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 

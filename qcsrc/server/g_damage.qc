@@ -147,10 +147,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	entity oldself;
 	oldself = self;
 	self = attacker;
-	frag_attacker = attacker;
-	frag_target = targ;
-	frag_score = f;
-	if(MUTATOR_CALLHOOK(GiveFragsForKill))
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
 	{
 		f = frag_score;
 		self = oldself;

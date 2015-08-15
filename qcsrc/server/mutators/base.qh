@@ -62,7 +62,7 @@ void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 #define HANDLE_POPOUT(type, id) id = out_##id;
 
 #define MUTATOR_HOOKABLE(id, params) \
-	_MUTATOR_HOOKABLE(id, int params(HANDLE_PARAMS, HANDLE_PARAMS)) { \
+	_MUTATOR_HOOKABLE(id, int params(HANDLE_PARAMS, HANDLE_NOP)) { \
 		params(HANDLE_PUSHTMP, HANDLE_NOP) \
 		params(HANDLE_PREPARE, HANDLE_NOP) \
 		bool ret = CallbackChain_Call(HOOK_##id); \
@@ -79,49 +79,77 @@ void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 
 #define EV_NO_ARGS(i, o)
 
-MUTATOR_HOOKABLE(MakePlayerObserver, EV_NO_ARGS)
-	// called when a player becomes observer, after shared setup
+/** called when a player becomes observer, after shared setup */
+#define EV_MakePlayerObserver(i, o) \
+    /**/
+MUTATOR_HOOKABLE(MakePlayerObserver, EV_MakePlayerObserver)
 
-MUTATOR_HOOKABLE(PutClientInServer, EV_NO_ARGS);
-//	entity self; // client wanting to spawn
+/** */
+#define EV_PutClientInServer(i, o) \
+    /** client wanting to spawn */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
 
-MUTATOR_HOOKABLE(PlayerSpawn, EV_NO_ARGS);
-	entity spawn_spot; // spot that was used, or world
-	// called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here)
+/** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
+#define EV_PlayerSpawn(i, o) \
+    /** spot that was used, or world */ i(entity, spawn_spot) \
+    /**/
+entity spawn_spot;
+MUTATOR_HOOKABLE(PlayerSpawn, EV_PlayerSpawn);
 
-MUTATOR_HOOKABLE(reset_map_global, EV_NO_ARGS);
-	// called in reset_map
+/** called in reset_map */
+#define EV_reset_map_global(i, o) \
+    /**/
+MUTATOR_HOOKABLE(reset_map_global, EV_reset_map_global);
 
-MUTATOR_HOOKABLE(reset_map_players, EV_NO_ARGS);
-	// called in reset_map
+/** called in reset_map */
+#define EV_reset_map_players(i, o) \
+    /**/
+MUTATOR_HOOKABLE(reset_map_players, EV_reset_map_players);
 
-MUTATOR_HOOKABLE(ForbidPlayerScore_Clear, EV_NO_ARGS);
-	// returns 1 if clearing player score shall not be allowed
+/** returns 1 if clearing player score shall not be allowed */
+#define EV_ForbidPlayerScore_Clear(i, o) \
+    /**/
+MUTATOR_HOOKABLE(ForbidPlayerScore_Clear, EV_ForbidPlayerScore_Clear);
 
-MUTATOR_HOOKABLE(ClientDisconnect, EV_NO_ARGS);
-	// called when a player disconnects
+/** called when a player disconnects */
+#define EV_ClientDisconnect(i, o) \
+    /**/
+MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
 
-MUTATOR_HOOKABLE(PlayerDies, EV_NO_ARGS);
-	// called when a player dies to e.g. remove stuff he was carrying.
-	// INPUT:
-		entity frag_inflictor;
-		entity frag_attacker;
-		entity frag_target; // same as self
-		int frag_deathtype;
+/** called when a player dies to e.g. remove stuff he was carrying. */
+#define EV_PlayerDies(i, o) \
+    /**/ i(entity, frag_inflictor) \
+    /**/ i(entity, frag_attacker) \
+    /** same as self */ i(entity, frag_target) \
+    /**/ i(int, frag_deathtype) \
+    /**/
+entity frag_inflictor;
+entity frag_attacker;
+entity frag_target;
+int frag_deathtype;
+MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
-MUTATOR_HOOKABLE(PlayerJump, EV_NO_ARGS);
-	// called when a player presses the jump key
-	// INPUT, OUTPUT:
-		float player_multijump;
-		float player_jumpheight;
+/** called when a player presses the jump key */
+#define EV_PlayerJump(i, o) \
+    /**/ i(float, player_multijump) \
+    /**/ i(float, player_jumpheight) \
+    /**/ o(float, player_multijump) \
+    /**/ o(float, player_jumpheight) \
+    /**/
+float player_multijump;
+float player_jumpheight;
+MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 
-MUTATOR_HOOKABLE(GiveFragsForKill, EV_NO_ARGS);
-	// called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill
-	// INPUT:
-//		entity frag_attacker; // same as self
-//		entity frag_target;
-	// INPUT, OUTPUT:
-		float frag_score;
+/** called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill */
+#define EV_GiveFragsForKill(i, o) \
+    /** same as self */ i(entity, frag_attacker) \
+    /**/ i(entity, frag_target) \
+    /**/ i(float, frag_score) \
+    /**/ o(float, frag_score) \
+    /**/
+float frag_score;
+MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 	// called when the match ends
