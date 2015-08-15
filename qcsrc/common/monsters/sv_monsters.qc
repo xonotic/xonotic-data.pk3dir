@@ -40,8 +40,7 @@ void monster_dropitem()
 
 	e.monster_loot = self.monster_loot;
 
-	other = e;
-	MUTATOR_CALLHOOK(MonsterDropItem);
+	MUTATOR_CALLHOOK(MonsterDropItem, e);
 	e = other;
 
 	if(e && e.monster_loot)
@@ -370,7 +369,7 @@ float Monster_CanRespawn(entity ent)
 {
 	other = ent;
 	if(ent.deadflag == DEAD_DEAD) // don't call when monster isn't dead
-	if(MUTATOR_CALLHOOK(MonsterRespawn))
+	if(MUTATOR_CALLHOOK(MonsterRespawn, ent))
 		return true; // enabled by a mutator
 
 	if(ent.spawnflags & MONSTERFLAG_NORESPAWN)
@@ -716,11 +715,13 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	targ = self.goalentity;
 
-	monster_target = targ;
-	monster_speed_run = runspeed;
-	monster_speed_walk = walkspeed;
-
-	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || self.draggedby != world || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
+	if (MUTATOR_CALLHOOK(MonsterMove, runspeed, walkspeed, targ)
+		|| gameover
+		|| self.draggedby != world
+		|| (round_handler_IsActive() && !round_handler_IsRoundStarted())
+		|| time < game_starttime
+		|| (autocvar_g_campaign && !campaign_bots_may_start)
+		|| time < self.spawn_time)
 	{
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
@@ -729,7 +730,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		return;
 	}
 
-	targ = monster_target;
 	runspeed = bound(0, monster_speed_run * Monster_SkillModifier(), runspeed * 2); // limit maxspeed to prevent craziness
 	walkspeed = bound(0, monster_speed_walk * Monster_SkillModifier(), walkspeed * 2); // limit maxspeed to prevent craziness
 

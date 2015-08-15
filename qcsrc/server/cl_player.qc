@@ -385,14 +385,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		self.istypefrag = 0;
 	}
 
-	frag_inflictor = inflictor;
-	frag_attacker = attacker;
-	frag_target = self;
 	frag_damage = damage;
-	damage_take = take;
-	damage_save = save;
-	damage_force = force;
-	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, self, force, take, save);
 	take = bound(0, damage_take, self.health);
 	save = bound(0, damage_save, self.armorvalue);
 	excess = max(0, damage - take - save);
