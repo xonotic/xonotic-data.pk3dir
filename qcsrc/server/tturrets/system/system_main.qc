@@ -1271,7 +1271,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
         self.health = 150;
 
 // Game hooks
-	if(MUTATOR_CALLHOOK(TurretSpawn))
+	if(MUTATOR_CALLHOOK(TurretSpawn, self))
 		return 0;
 
 // End of default & sanety checks, start building the turret.

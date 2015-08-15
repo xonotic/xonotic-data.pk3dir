@@ -1039,9 +1039,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, int death
 
 		WaypointSprite_Kill(self.sprite);
 
-		frag_attacker = attacker;
 		frag_target = self;
-		MUTATOR_CALLHOOK(MonsterDies);
+		MUTATOR_CALLHOOK(MonsterDies, attacker);
 
 		if(self.health <= -100 || deathtype == DEATH_KILL) // check if we're already gibbed
 		{

@@ -212,46 +212,57 @@ MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
     /**/
 MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
 
+/**
+ * checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)
+ * return error to request removal
+ */
 MUTATOR_HOOKABLE(FilterItem, EV_NO_ARGS);
-	// checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)
-	// return error to request removal
 
-MUTATOR_HOOKABLE(TurretSpawn, EV_NO_ARGS);
-	// return error to request removal
-	// INPUT: self - turret
+/** return error to request removal */
+#define EV_TurretSpawn(i, o) \
+    /** turret */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(TurretSpawn, EV_TurretSpawn);
 
+/** return error to prevent entity spawn, or modify the entity */
 MUTATOR_HOOKABLE(OnEntityPreSpawn, EV_NO_ARGS);
-	// return error to prevent entity spawn, or modify the entity
 
+/** runs in the event loop for players; is called for ALL player entities, also bots, also the dead, or spectators */
 MUTATOR_HOOKABLE(PlayerPreThink, EV_NO_ARGS);
-	// runs in the event loop for players; is called for ALL player entities, also bots, also the dead, or spectators
 
+/** TODO change this into a general PlayerPostThink hook? */
 MUTATOR_HOOKABLE(GetPressedKeys, EV_NO_ARGS);
-	// TODO change this into a general PlayerPostThink hook?
 
+/**
+ * called before any player physics, may adjust variables for movement,
+ * is run AFTER bot code and idle checking
+ */
 MUTATOR_HOOKABLE(PlayerPhysics, EV_NO_ARGS);
-	// called before any player physics, may adjust variables for movement,
-	// is run AFTER bot code and idle checking
 
-MUTATOR_HOOKABLE(GetCvars, EV_NO_ARGS);
-	// is meant to call GetCvars_handle*(get_cvars_s, get_cvars_f, cvarfield, "cvarname") for cvars this mutator needs from the client
-	// INPUT:
-		float get_cvars_f;
-		string get_cvars_s;
+/** is meant to call GetCvars_handle*(get_cvars_s, get_cvars_f, cvarfield, "cvarname") for cvars this mutator needs from the client */
+#define EV_GetCvars(i, o) \
+    /**/ i(float, get_cvars_f) \
+    /**/ i(string, get_cvars_s) \
+    /**/
+float get_cvars_f;
+string get_cvars_s;
+MUTATOR_HOOKABLE(GetCvars, EV_GetCvars);
 
-MUTATOR_HOOKABLE(EditProjectile, EV_NO_ARGS);
-	// can edit any "just fired" projectile
-	// INPUT:
-//		entity self;
-//		entity other;
+/** can edit any "just fired" projectile */
+#define EV_EditProjectile(i, o) \
+    /**/ i(entity, self) \
+    /**/ i(entity, other) \
+    /**/
+MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
 
+/** called when a monster spawns */
 MUTATOR_HOOKABLE(MonsterSpawn, EV_NO_ARGS);
-	// called when a monster spawns
 
-MUTATOR_HOOKABLE(MonsterDies, EV_NO_ARGS);
-	// called when a monster dies
-	// INPUT:
-//		entity frag_attacker;
+/** called when a monster dies */
+#define EV_MonsterDies(i, o) \
+    /**/ i(entity, frag_attacker) \
+    /**/
+MUTATOR_HOOKABLE(MonsterDies, EV_MonsterDies);
 
 MUTATOR_HOOKABLE(MonsterRespawn, EV_NO_ARGS);
 	// called when a monster wants to respawn

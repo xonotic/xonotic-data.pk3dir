@@ -425,10 +425,7 @@ void GetCvars(float f)
 	if (f > 0)
 		s = strcat1(argv(f));
 
-	get_cvars_f = f;
-	get_cvars_s = s;
-
-	MUTATOR_CALLHOOK(GetCvars);
+	MUTATOR_CALLHOOK(GetCvars, f, s);
 
 	Notification_GetCvars();
 

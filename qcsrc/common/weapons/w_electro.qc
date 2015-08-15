@@ -284,7 +284,7 @@ void W_Electro_Attack_Bolt(void)
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
 
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
 void W_Electro_Orb_Touch(void)
@@ -400,7 +400,7 @@ void W_Electro_Attack_Orb(void)
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, false); // no culling, it has sound
 
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
 void W_Electro_CheckAttack(void)

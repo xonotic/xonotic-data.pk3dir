@@ -374,7 +374,7 @@ void W_MineLayer_Attack(void)
 
 	// common properties
 
-	other = mine; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, mine);
 
 	self.minelayer_mines = W_MineLayer_Count(self);
 }

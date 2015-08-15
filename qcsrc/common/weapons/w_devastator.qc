@@ -388,7 +388,7 @@ void W_Devastator_Attack(void)
 	W_AttachToShotorg(flash, '5 0 0');
 
 	// common properties
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 bool W_Devastator(int req)
