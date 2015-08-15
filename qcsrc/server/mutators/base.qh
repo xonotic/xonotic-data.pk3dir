@@ -151,49 +151,66 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 float frag_score;
 MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 
+/** called when the match ends */
 MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
-	// called when the match ends
 
-MUTATOR_HOOKABLE(GetTeamCount, EV_NO_ARGS);
-	// should adjust ret_float to contain the team count
-	// INPUT, OUTPUT:
-		float ret_float;
+/** should adjust ret_float to contain the team count */
+#define EV_GetTeamCount(i, o) \
+    /**/ i(float, ret_float) \
+    /**/ o(float, ret_float) \
+    /**/
+float ret_float;
+MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
 
-MUTATOR_HOOKABLE(SpectateCopy, EV_NO_ARGS);
-	// copies variables for spectating "other" to "self"
-	// INPUT:
-//		entity other;
+/** copies variables for spectating "other" to "self" */
+#define EV_SpectateCopy(i, o) \
+    /**/ i(entity, other) \
+    /**/ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
 
+/** returns 1 if throwing the current weapon shall not be allowed */
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_NO_ARGS);
-	// returns 1 if throwing the current weapon shall not be allowed
 
-MUTATOR_HOOKABLE(WeaponRateFactor, EV_NO_ARGS);
-	// allows changing attack rate
-	// INPUT, OUTPUT:
-		float weapon_rate;
+/** allows changing attack rate */
+#define EV_WeaponRateFactor(i, o) \
+    /**/ i(float, weapon_rate) \
+    /**/ o(float, weapon_rate) \
+    /**/
+float weapon_rate;
+MUTATOR_HOOKABLE(WeaponRateFactor, EV_WeaponRateFactor);
 
-MUTATOR_HOOKABLE(WeaponSpeedFactor, EV_NO_ARGS);
-	// allows changing weapon speed (projectiles mostly)
-	// INPUT, OUTPUT:
-		//float ret_float;
+/** allows changing weapon speed (projectiles mostly) */
+#define EV_WeaponSpeedFactor(i, o) \
+    /**/ i(float, ret_float) \
+    /**/ o(float, ret_float) \
+    /**/
+MUTATOR_HOOKABLE(WeaponSpeedFactor, EV_WeaponSpeedFactor);
 
+/** adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}} */
 MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
-	// adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}}
 
-MUTATOR_HOOKABLE(BuildMutatorsString, EV_NO_ARGS);
-	// appends ":mutatorname" to ret_string for logging
-	// INPUT, OUTPUT:
-		string ret_string;
+/** appends ":mutatorname" to ret_string for logging */
+#define EV_BuildMutatorsString(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+string ret_string;
+MUTATOR_HOOKABLE(BuildMutatorsString, EV_BuildMutatorsString);
 
-MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_NO_ARGS);
-	// appends ", Mutator name" to ret_string for display
-	// INPUT, OUTPUT:
-//		string ret_string;
+/** appends ", Mutator name" to ret_string for display */
+#define EV_BuildMutatorsPrettyString(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
 
-MUTATOR_HOOKABLE(CustomizeWaypoint, EV_NO_ARGS);
-	// called every frame
-	// customizes the waypoint for spectators
-	// INPUT: self = waypoint, other = player, other.enemy = spectator
+/** called every frame. customizes the waypoint for spectators */
+#define EV_CustomizeWaypoint(i, o) \
+    /** waypoint */ i(entity, self) \
+    /** player; other.enemy = spectator */ i(entity, other) \
+    /**/
+MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
 
 MUTATOR_HOOKABLE(FilterItem, EV_NO_ARGS);
 	// checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)

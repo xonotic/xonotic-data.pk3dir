@@ -1705,8 +1705,7 @@ spectate mode routines
 */
 
 void SpectateCopy(entity spectatee) {
-	other = spectatee;
-	MUTATOR_CALLHOOK(SpectateCopy);
+	MUTATOR_CALLHOOK(SpectateCopy, spectatee, self);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;

@@ -28,11 +28,9 @@
 
 float W_WeaponRateFactor()
 {
-	float t;
-	t = 1.0 / g_weaponratefactor;
+	float t = 1.0 / g_weaponratefactor;
 
-	weapon_rate = t;
-	MUTATOR_CALLHOOK(WeaponRateFactor);
+	MUTATOR_CALLHOOK(WeaponRateFactor, t);
 	t = weapon_rate;
 
 	return t;
@@ -40,11 +38,9 @@ float W_WeaponRateFactor()
 
 float W_WeaponSpeedFactor()
 {
-	float t;
-	t = 1.0 * g_weaponspeedfactor;
+	float t = 1.0 * g_weaponspeedfactor;
 
-	ret_float = t;
-	MUTATOR_CALLHOOK(WeaponSpeedFactor);
+	MUTATOR_CALLHOOK(WeaponSpeedFactor, t);
 	t = ret_float;
 
 	return t;
