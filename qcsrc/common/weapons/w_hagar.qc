@@ -160,7 +160,7 @@ void W_Hagar_Attack(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 void W_Hagar_Attack2(void)
@@ -204,7 +204,7 @@ void W_Hagar_Attack2(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR_BOUNCING, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 .float hagar_loadstep, hagar_loadblock, hagar_loadbeep, hagar_warning;
@@ -280,7 +280,7 @@ void W_Hagar_Attack2_Load_Release(void)
 
 		CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
-		other = missile; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, missile);
 	}
 
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, load_animtime), w_ready);

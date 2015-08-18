@@ -385,14 +385,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		self.istypefrag = 0;
 	}
 
-	frag_inflictor = inflictor;
-	frag_attacker = attacker;
-	frag_target = self;
 	frag_damage = damage;
-	damage_take = take;
-	damage_save = save;
-	damage_force = force;
-	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, self, force, take, save);
 	take = bound(0, damage_take, self.health);
 	save = bound(0, damage_save, self.armorvalue);
 	excess = max(0, damage - take - save);
@@ -549,11 +543,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
-		frag_attacker = attacker;
-		frag_inflictor = inflictor;
-		frag_target = self;
-		frag_deathtype = deathtype;
-		MUTATOR_CALLHOOK(PlayerDies);
+		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 
 		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 

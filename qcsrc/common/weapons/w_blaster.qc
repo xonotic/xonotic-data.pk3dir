@@ -136,7 +136,7 @@ void W_Blaster_Attack(
 	missile.think = W_Blaster_Think;
 	missile.nextthink = time + atk_delay;
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 
 	if(time >= missile.nextthink)
 	{

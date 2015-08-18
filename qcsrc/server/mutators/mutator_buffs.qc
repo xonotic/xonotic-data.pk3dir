@@ -629,7 +629,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
 			if(closest.flagcarried) { ctf_Handle_Throw(closest, world, DROP_THROW); }
 			if(closest.nade) { toss_nade(closest, '0 0 0', time + 0.05); }
 
-			MUTATOR_CALLHOOK(PortalTeleport); // initiate flag dropper
+			MUTATOR_CALLHOOK(PortalTeleport, self); // initiate flag dropper
 
 			setorigin(self, their_org);
 			setorigin(closest, my_org);

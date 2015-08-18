@@ -437,7 +437,7 @@ void W_Crylink_Attack(void)
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
-		other = proj; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, proj);
 	}
 	if(WEP_CVAR_PRI(crylink, joinspread) != 0)
 	{
@@ -553,7 +553,7 @@ void W_Crylink_Attack2(void)
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
-		other = proj; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, proj);
 	}
 	if(WEP_CVAR_SEC(crylink, joinspread) != 0)
 	{

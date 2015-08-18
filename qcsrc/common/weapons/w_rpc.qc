@@ -143,7 +143,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 	missile.pos1 = missile.velocity;
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 bool W_RocketPropelledChainsaw(int req)

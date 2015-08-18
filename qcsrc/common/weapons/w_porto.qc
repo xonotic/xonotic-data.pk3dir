@@ -283,7 +283,7 @@ void W_Porto_Attack(float type)
 	else
 		CSQCProjectile(gren, true, PROJECTILE_PORTO_RED, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 bool w_nexball_weapon(int req); // WEAPONTODO
