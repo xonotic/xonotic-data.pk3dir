@@ -449,11 +449,11 @@ void W_Arc_Beam_Think(void)
 		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
 		float is_player = (
-			trace_ent.classname == "player"
+			IS_PLAYER(trace_ent)
 			||
 			trace_ent.classname == "body"
 			||
-			(trace_ent.flags & FL_MONSTER)
+			IS_MONSTER(trace_ent)
 		);
 
 		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
