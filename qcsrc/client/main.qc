@@ -121,6 +121,9 @@ void CSQC_Init(void)
 	registercvar("cl_nade_type", "3");
 	registercvar("cl_pokenade_type", "zombie");
 
+	registercvar("cl_jumpspeedcap_min", "");
+	registercvar("cl_jumpspeedcap_max", "");
+
 	gametype = 0;
 
 	// hud_fields uses strunzone on the titles!
@@ -139,14 +142,11 @@ void CSQC_Init(void)
 	GetTeam(NUM_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
+	static_init();
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterItems);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	WaypointSprite_Load();
 
@@ -881,6 +881,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
+		case ENT_CLIENT_VIEWLOC: ent_viewloc(); break;
+		case ENT_CLIENT_VIEWLOC_TRIGGER: ent_viewloc_trigger(); break;
 		case ENT_CLIENT_LADDER: ent_func_ladder(); break;
 		case ENT_CLIENT_TRIGGER_PUSH: ent_trigger_push(); break;
 		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;

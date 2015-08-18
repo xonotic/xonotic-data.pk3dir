@@ -113,6 +113,10 @@ const float ITEM_RESPAWN_TICKS = 10;
 .float max_armorvalue;
 .float pickup_anyway;
 
+void Item_ItemsTime_SetTimesForPlayer(entity e);
+
+void Item_ItemsTime_ResetTimesForPlayer(entity e);
+
 void Item_Show (entity e, float mode);
 
 void Item_Respawn (void);
@@ -152,6 +156,7 @@ float weapon_pickupevalfunc(entity player, entity item);
 float commodity_pickupevalfunc(entity player, entity item);
 
 .float is_item;
+.entity itemdef;
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue);
 
 

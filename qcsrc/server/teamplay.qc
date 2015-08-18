@@ -41,6 +41,7 @@ void ActivateTeamplay()
 {
 	serverflags |= SERVERFLAG_TEAMPLAY;
 	teamplay = 1;
+	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
 }
 
 void InitGameplayMode()
@@ -57,8 +58,9 @@ void InitGameplayMode()
 	world.maxs = mi_max;
 
 	MapInfo_LoadMapSettings(mapname);
-	teamplay = 0;
 	serverflags &= ~SERVERFLAG_TEAMPLAY;
+	teamplay = 0;
+	cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
 
 	if (!cvar_value_issafe(world.fog))
 	{

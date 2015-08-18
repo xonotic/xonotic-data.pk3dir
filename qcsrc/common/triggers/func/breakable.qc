@@ -38,6 +38,7 @@
 //   spawnflags:
 //     1 = start disabled (needs to be triggered to activate)
 //     2 = indicate damage
+//     4 = don't take direct damage (needs to be triggered to 'explode', then triggered again to restore)
 // notes:
 //   for mdl_dead to work, origin must be set (using a common/origin brush).
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
@@ -137,6 +138,8 @@ void func_breakable_behave_destroyed()
 	self.bot_attack = false;
 	self.event_damage = func_null;
 	self.state = 1;
+	if(self.spawnflags & 4)
+		self.use = func_null;
 	func_breakable_colormod();
 	if (self.noise1)
 		stopsound (self, CH_TRIGGER_SINGLE);
@@ -150,9 +153,12 @@ void func_breakable_behave_restore()
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
-	self.takedamage = DAMAGE_AIM;
-	self.bot_attack = true;
-	self.event_damage = func_breakable_damage;
+	if(!(self.spawnflags & 4))
+	{
+		self.takedamage = DAMAGE_AIM;
+		self.bot_attack = true;
+		self.event_damage = func_breakable_damage;
+	}
 	self.state = 0;
 	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
@@ -231,6 +237,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, int 
 	if(self.team)
 		if(attacker.team == self.team)
 			return;
+	self.pain_finished = time;
 	self.health = self.health - damage;
 	if(self.sprite)
 	{
@@ -292,7 +299,17 @@ void spawnfunc_func_breakable()
 	self.mdl = self.model;
 	SetBrushEntityModel();
 
-	self.use = func_breakable_restore;
+	if(self.spawnflags & 4)
+		self.use = func_breakable_destroy;
+	else
+		self.use = func_breakable_restore;
+
+	if(self.spawnflags & 4)
+	{
+		self.takedamage = DAMAGE_NO;
+		self.event_damage = func_null;
+		self.bot_attack = false;
+	}
 
 	// precache all the models
 	if (self.mdl_dead)

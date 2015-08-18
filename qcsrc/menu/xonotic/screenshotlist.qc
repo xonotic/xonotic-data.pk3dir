@@ -29,7 +29,6 @@ CLASS(XonoticScreenshotList, XonoticListBox)
 
 	ATTRIB(XonoticScreenshotList, newScreenshotTime, float, 0)
 	ATTRIB(XonoticScreenshotList, newSlideShowScreenshotTime, float, 0)
-	ATTRIB(XonoticScreenshotList, prevSelectedItem, float, 0)
 
 	ATTRIB(XonoticScreenshotList, screenshotBrowserDialog, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotPreview, entity, NULL)
@@ -152,13 +151,12 @@ void XonoticScreenshotList_setSelected(entity me, float i)
 {
 	if (me.newSlideShowScreenshotTime)
 		me.startSlideShow(me);
-	me.prevSelectedItem = me.selectedItem;
+	float selectedItem_save = me.selectedItem;
 	SUPER(XonoticScreenshotList).setSelected(me, i);
-	if (me.pressed && me.selectedItem != me.prevSelectedItem)
+	if (me.pressed && me.selectedItem != selectedItem_save)
 	{
-		// while dragging the scrollbar (or an item)
-		// for a smooth mouse movement do not load immediately the new selected images
-		me.newScreenshotTime = time + 0.22; // dragging an item we need a delay > 0.2 (from listbox: me.dragScrollTimer = time + 0.2;)
+		// avoid immediate image loading on quick repeated selection changes
+		me.newScreenshotTime = time + 0.22;
 	}
 	else if (time > me.newScreenshotTime)
 	{
@@ -296,8 +294,6 @@ float XonoticScreenshotList_keyDown(entity me, float scan, float ascii, float sh
 		me.startScreenshot(me);
 		return 1;
 	}
-	if(scan == K_MWHEELUP || scan == K_MWHEELDOWN)
-		me.newScreenshotTime = time + 0.2;
 	return SUPER(XonoticScreenshotList).keyDown(me, scan, ascii, shift);
 }
 #endif

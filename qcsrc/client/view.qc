@@ -124,7 +124,7 @@ vector GetCurrentFov(float fov)
 
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 	zoomfactor = autocvar_cl_zoomfactor;
-	if(zoomfactor < 1 || zoomfactor > 16)
+	if(zoomfactor < 1 || zoomfactor > 30)
 		zoomfactor = 2.5;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0)
@@ -155,7 +155,7 @@ vector GetCurrentFov(float fov)
 	}
 	else if(autocvar_cl_spawnzoom && zoomin_effect)
 	{
-		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 16);
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 30);
 
 		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime);
 		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
@@ -225,6 +225,15 @@ vector GetCurrentFov(float fov)
 	fovx = atan2(frustumx, 1) / M_PI * 360.0;
 	fovy = atan2(frustumy, 1) / M_PI * 360.0;
 
+	return '1 0 0' * fovx + '0 1 0' * fovy;
+}
+
+vector GetViewLocationFOV(float fov)
+{
+	float frustumy = tan(fov * M_PI / 360.0) * 0.75;
+	float frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
+	float fovx = atan2(frustumx, 1) / M_PI * 360.0;
+	float fovy = atan2(frustumy, 1) / M_PI * 360.0;
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
@@ -420,11 +429,13 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-float WantEventchase()
+bool WantEventchase()
 {
 	if(autocvar_cl_orthoview)
 		return false;
 	if(intermission)
+		return true;
+	if(self.viewloc)
 		return true;
 	if(spectatee_status >= 0)
 	{
@@ -532,7 +543,7 @@ void UpdateCrosshair()
 	if(getstati(STAT_FROZEN))
 		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 	else if (getstatf(STAT_HEALING_ORB)>time)
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, Nade_Color(NADE_TYPE_HEAL), autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, NADE_TYPE_HEAL.m_color, autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
 	if(!intermission)
 	if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
@@ -550,7 +561,7 @@ void UpdateCrosshair()
 			CSQC_common_hud();
 
 	// crosshair goes VERY LAST
-	if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL)
+	if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL && !csqcplayer.viewloc)
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;
@@ -1147,6 +1158,7 @@ void CSQC_UpdateView(float w, float h)
 			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
 
 			// If the boxtrace fails, revert back to line tracing.
+			if(!self.viewloc)
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
@@ -1155,7 +1167,8 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
-			setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
+			if(!self.viewloc)
+				setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
@@ -1377,6 +1390,7 @@ void CSQC_UpdateView(float w, float h)
 	vid_pixelheight = autocvar_vid_pixelheight;
 
 	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
+	else if(csqcplayer.viewloc) { setproperty(VF_FOV, GetViewLocationFOV(110)); } // enforce 110 fov, so things dont look odd
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	// Camera for demo playback
@@ -1841,13 +1855,9 @@ void CSQC_common_hud(void)
 	HUD_Main(); // always run these functions for alpha checks
 	HUD_DrawScoreboard();
 
-	if (scoreboard_active) // scoreboard/accuracy
+	// scoreboard/accuracy, map/gametype voting screen
+	if (scoreboard_active || intermission == 2)
 		HUD_Reset();
-	else if (intermission == 2) // map voting screen
-	{
-		MapVote_Draw();
-		HUD_Reset();
-	}
 }
 
 

@@ -538,7 +538,7 @@ float spiderbot_frame()
         vehicles_regen(spider.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, false);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
-    player.vehicle_ammo2 = spider.tur_head.frame;
+    player.vehicle_ammo2 = (9 - spider.tur_head.frame) / 8 * 100; // Percentage, like ammo1
 
     if(spider.gun2.cnt <= time)
         player.vehicle_reload2 = 100;

@@ -5,6 +5,7 @@ sys-pre.qh
 ../dpdefs/progsdefs.qh
 ../dpdefs/dpextensions.qh
 sys-post.qh
+../common/util-post.qh
 
 anticheat.qc
 antilag.qc
@@ -97,7 +98,9 @@ weapons/weaponsystem.qc
 ../common/notifications.qc
 ../common/physics.qc
 ../common/playerstats.qc
+../common/p2mathlib.qc
 ../common/test.qc
+../common/viewloc.qc
 ../common/triggers/include.qc
 ../common/urllib.qc
 ../common/util.qc

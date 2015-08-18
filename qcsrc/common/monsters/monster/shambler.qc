@@ -1,15 +1,19 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool m_shambler(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ SHAMBLER,
-/* function   */ m_shambler,
 /* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-41 -41 -31', '41 41 65',
 /* model      */ "shambler.mdl",
 /* netname    */ "shambler",
 /* fullname   */ _("Shambler")
-);
+) {
+#ifndef MENUQC
+	this.monster_func = m_shambler;
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
 float autocvar_g_monster_shambler_attack_smash_damage;
@@ -197,7 +201,7 @@ void spawnfunc_monster_shambler()
 {
 	self.classname = "monster_shambler";
 
-	if(!monster_initialize(MON_SHAMBLER)) { remove(self); return; }
+	if(!monster_initialize(MON_SHAMBLER.monsterid)) { remove(self); return; }
 }
 
 float m_shambler(float req)
@@ -252,4 +256,3 @@ float m_shambler(float req)
 }
 
 #endif // CSQC
-#endif // REGISTER_MONSTER

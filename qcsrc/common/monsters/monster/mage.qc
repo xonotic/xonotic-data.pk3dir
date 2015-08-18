@@ -1,15 +1,19 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool m_mage(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ MAGE,
-/* function   */ m_mage,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -24', '36 36 50',
 /* model      */ "mage.dpm",
 /* netname    */ "mage",
 /* fullname   */ _("Mage")
-);
+) {
+#ifndef MENUQC
+    this.monster_func = m_mage;
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_attack_spike_damage;
@@ -337,7 +341,7 @@ void spawnfunc_monster_mage()
 {
 	self.classname = "monster_mage";
 
-	if(!monster_initialize(MON_MAGE)) { remove(self); return; }
+	if(!monster_initialize(MON_MAGE.monsterid)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -420,4 +424,3 @@ float m_mage(float req)
 }
 
 #endif // CSQC
-#endif // REGISTER_MONSTER

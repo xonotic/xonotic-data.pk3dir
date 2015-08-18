@@ -559,13 +559,10 @@ void spawnfunc___init_dedicated_server(void)
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
+	static_init();
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterItems);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -574,6 +571,7 @@ void spawnfunc___init_dedicated_server(void)
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
+void Item_ItemsTime_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
@@ -609,13 +607,10 @@ void spawnfunc_worldspawn (void)
 	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);
 
 	// needs to be done so early because of the constants they create
+	static_init();
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterItems);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -785,6 +780,7 @@ void spawnfunc_worldspawn (void)
 	WeaponStats_Init();
 
 	WepSet_AddStat();
+	WepSet_AddStat_InMap();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -814,6 +810,19 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
 
 	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
+
+	// items time
+	addstat(STAT_ARMOR_LARGE_TIME, AS_FLOAT, item_armor_large_time);
+	addstat(STAT_HEALTH_MEGA_TIME, AS_FLOAT, item_health_mega_time);
+	addstat(STAT_INVISIBLE_TIME, AS_FLOAT, item_invisible_time);
+	addstat(STAT_SPEED_TIME, AS_FLOAT, item_speed_time);
+	addstat(STAT_EXTRALIFE_TIME, AS_FLOAT, item_extralife_time);
+	addstat(STAT_STRENGTH_TIME, AS_FLOAT, item_strength_time);
+	addstat(STAT_SHIELD_TIME, AS_FLOAT, item_shield_time);
+	addstat(STAT_FUELREGEN_TIME, AS_FLOAT, item_fuelregen_time);
+	addstat(STAT_JETPACK_TIME, AS_FLOAT, item_jetpack_time);
+	addstat(STAT_SUPERWEAPONS_TIME, AS_FLOAT, item_superweapons_time);
+	Item_ItemsTime_Init();
 
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);

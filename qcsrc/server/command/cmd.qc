@@ -26,7 +26,7 @@
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
 
-#include "../../common/monsters/all.qh"
+#include "../../common/monsters/all.qc"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
@@ -239,7 +239,7 @@ void ClientCommand_mobedit(float request, float argc)
 					{
 						case "skin":
 						{
-							if(trace_ent.monsterid != MON_MAGE)
+							if(trace_ent.monsterid != MON_MAGE.monsterid)
 								trace_ent.skin = stof(argv(2));
 							return;
 						}

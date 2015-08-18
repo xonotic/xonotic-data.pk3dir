@@ -114,7 +114,7 @@ void Projectile_Draw()
 				break;
 		}
 
-		if(Nade_IDFromProjectile(self.cnt) != 0)
+		if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 			rot = self.avelocity;
 
 		self.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(self.angles), rot * (t - self.spawntime)));
@@ -142,7 +142,7 @@ void Projectile_Draw()
 			break;
 	}
 
-	if(Nade_IDFromProjectile(self.cnt) != 0)
+	if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 		trailorigin += v_up * 4;
 
 	if(drawn)
@@ -318,7 +318,12 @@ void Ent_Projectile()
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
-				if(Nade_IDFromProjectile(self.cnt) != 0) { setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(Nade_TrailEffect(self.cnt, self.team)); break; }
+				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
+				{
+					setmodel(self, "models/weapons/v_ok_grenade.md3");
+					self.traileffect = particleeffectnum(Nade_TrailEffect(self.cnt, self.team));
+					break;
+				}
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
 		}
@@ -448,12 +453,12 @@ void Ent_Projectile()
 				break;
 		}
 
-		if(Nade_IDFromProjectile(self.cnt) != 0)
+		if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 		{
-			int nade_type = Nade_IDFromProjectile(self.cnt);
+			entity nade_type = Nade_FromProjectile(self.cnt);
 			self.mins = '-16 -16 -16';
 			self.maxs = '16 16 16';
-			self.colormod = Nade_Color(nade_type);
+			self.colormod = nade_type.m_color;
 			self.move_movetype = MOVETYPE_BOUNCE;
 			self.move_touch = func_null;
 			self.scale = 1.5;

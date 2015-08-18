@@ -20,7 +20,7 @@ void spawnfunc_invasion_spawnpoint()
 float invasion_PickMonster(float supermonster_count)
 {
 	if(autocvar_g_invasion_zombies_only)
-		return MON_ZOMBIE;
+		return MON_ZOMBIE.monsterid;
 
 	float i;
 	entity mon;
@@ -431,7 +431,7 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 void invasion_Initialize()
 {
 	if(autocvar_g_invasion_zombies_only)
-		MON_ACTION(MON_ZOMBIE, MR_PRECACHE);
+		MON_ACTION(MON_ZOMBIE.monsterid, MR_PRECACHE);
 	else
 	{
 		float i;
