@@ -162,6 +162,13 @@ const string STR_OBSERVER = "observer";
 #define IS_VEHICLE(v)			(v.vehicle_flags & VHF_ISVEHICLE)
 #define IS_TURRET(v)			(v.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 
+#define IS_MACRO(v) \
+	#ifdef v \
+		true \
+	#else \
+		false \
+	#endif
+
 #define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
 #define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
