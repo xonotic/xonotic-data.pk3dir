@@ -110,7 +110,7 @@ void W_HLAC_Attack(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 void W_HLAC_Attack2(void)
@@ -154,7 +154,7 @@ void W_HLAC_Attack2(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // weapon frames

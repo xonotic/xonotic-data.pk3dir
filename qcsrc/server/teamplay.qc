@@ -283,8 +283,7 @@ string getwelcomemessage(void)
 {
 	string s, modifications, motd;
 
-	ret_string = "";
-	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
+	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	modifications = ret_string;
 
 	if(g_weaponarena)
@@ -432,8 +431,7 @@ void CheckAllowedTeams (entity for_whom)
 		// cover anything else by treating it like tdm with no teams spawned
 		dm = 2;
 
-		ret_float = dm;
-		MUTATOR_CALLHOOK(GetTeamCount);
+		MUTATOR_CALLHOOK(GetTeamCount, dm);
 		dm = ret_float;
 
 		if(dm >= 4)

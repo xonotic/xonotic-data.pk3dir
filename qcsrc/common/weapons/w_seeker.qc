@@ -293,7 +293,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 
 	CSQCProjectile(missile, false, PROJECTILE_SEEKER, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -371,7 +371,7 @@ void W_Seeker_Fire_Flac(void)
 	W_SetupProjVelocity_UP_PRE(missile, seeker, flac_);
 	CSQCProjectile(missile, true, PROJECTILE_FLAC, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -589,7 +589,7 @@ void W_Seeker_Fire_Tag(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_TAG, false); // has sound
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================

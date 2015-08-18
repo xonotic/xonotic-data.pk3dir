@@ -213,7 +213,7 @@ void W_Fireball_Attack1(void)
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREBALL, true);
 
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
@@ -344,7 +344,7 @@ void W_Fireball_Attack2(void)
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREMINE, true);
 
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
 bool W_Fireball(int req)

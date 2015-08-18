@@ -267,7 +267,7 @@ void W_Mortar_Attack(void)
 	else
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 void W_Mortar_Attack2(void)
@@ -315,7 +315,7 @@ void W_Mortar_Attack2(void)
 	else
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 .float bot_secondary_grenademooth;

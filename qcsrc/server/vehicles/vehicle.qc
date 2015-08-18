@@ -550,7 +550,7 @@ void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
 
 void vehicles_touch()
 {
-	if(MUTATOR_CALLHOOK(VehicleTouch))
+	if(MUTATOR_CALLHOOK(VehicleTouch, self, other))
 		return;
 
     // Vehicle currently in use
@@ -683,11 +683,7 @@ void vehicles_enter()
 
     CSQCVehicleSetup(self.owner, self.hud);
 
-    vh_player = other;
-    vh_vehicle = self;
-    MUTATOR_CALLHOOK(VehicleEnter);
-    other = vh_player;
-    self = vh_vehicle;
+    MUTATOR_CALLHOOK(VehicleEnter, other, self);
 
     self.vehicle_enter();
     antilag_clear(other);
@@ -823,11 +819,7 @@ void vehicles_exit(float eject)
     if(!teamplay)
         _vehicle.team = 0;
 
-    vh_player = _player;
-    vh_vehicle = _vehicle;
-    MUTATOR_CALLHOOK(VehicleExit);
-    _player = vh_player;
-    _vehicle = vh_vehicle;
+    MUTATOR_CALLHOOK(VehicleExit, _player, _vehicle);
 
     _vehicle.team = _vehicle.tur_head.team;
 

@@ -162,11 +162,7 @@ void bumb_gunner_exit(float _exitflag)
 	self.hud            = HUD_NORMAL;
 	self.switchweapon   = self.vehicle.switchweapon;
 
-    vh_player = self;
-    vh_vehicle = self.vehicle;
-    MUTATOR_CALLHOOK(VehicleExit);
-    self = vh_player;
-    self.vehicle = vh_vehicle;
+    MUTATOR_CALLHOOK(VehicleExit, self, self.vehicle);
 
 	self.vehicle.vehicle_hudmodel.viewmodelforclient = self.vehicle;
 
@@ -250,11 +246,7 @@ float bumb_gunner_enter()
 
 	CSQCVehicleSetup(other, other.hud);
 
-    vh_player = other;
-    vh_vehicle = _gun;
-    MUTATOR_CALLHOOK(VehicleEnter);
-    other = vh_player;
-    _gun = vh_vehicle;
+    MUTATOR_CALLHOOK(VehicleEnter, other, _gun);
 
 	return true;
 }

@@ -147,10 +147,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	entity oldself;
 	oldself = self;
 	self = attacker;
-	frag_attacker = attacker;
-	frag_target = targ;
-	frag_score = f;
-	if(MUTATOR_CALLHOOK(GiveFragsForKill))
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
 	{
 		f = frag_score;
 		self = oldself;
@@ -749,13 +746,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		frag_attacker = attacker;
-		frag_target = targ;
-		frag_damage = damage;
-		frag_force = force;
-		frag_deathtype = deathtype;
-		frag_mirrordamage = mirrordamage;
-		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
+		MUTATOR_CALLHOOK(PlayerDamage_Calculate, attacker, targ, deathtype, damage, mirrordamage, force);
 		damage = frag_damage;
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;

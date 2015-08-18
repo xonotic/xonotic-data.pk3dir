@@ -692,8 +692,7 @@ void spawnfunc_worldspawn (void)
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
 		s = ":gameinfo:mutators:LIST";
 
-		ret_string = s;
-		MUTATOR_CALLHOOK(BuildMutatorsString);
+		MUTATOR_CALLHOOK(BuildMutatorsString, s);
 		s = ret_string;
 
 		// simple, probably not good in the mutator system

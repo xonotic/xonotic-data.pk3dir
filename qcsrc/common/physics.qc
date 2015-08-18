@@ -553,12 +553,12 @@ bool PlayerJump (void)
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY;
 
+#ifdef SVQC
+	if (MUTATOR_CALLHOOK(PlayerJump, doublejump, mjumpheight))
+#elif defined(CSQC)
 	player_multijump = doublejump;
 	player_jumpheight = mjumpheight;
-#ifdef SVQC
-	if (MUTATOR_CALLHOOK(PlayerJump))
-#elif defined(CSQC)
-	if(PM_multijump_checkjump())
+	if (PM_multijump_checkjump())
 #endif
 		return true;
 
