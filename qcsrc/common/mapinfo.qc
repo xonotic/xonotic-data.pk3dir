@@ -1166,7 +1166,13 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 		else if(t == "cdtrack")
 		{
 			t = car(s); s = cdr(s);
-			if(pGametypeToSet) // FIXME is this check right here?
+			// We do this only if pGametypeToSet even though this
+			// content is theoretically game type independent,
+			// because MapInfo_Map_clientstuff contains otherwise
+			// game type dependent stuff. That way this value stays
+			// empty when not setting a game type to not set any
+			// false expectations.
+			if(pGametypeToSet)
 			{
 				if (!cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
