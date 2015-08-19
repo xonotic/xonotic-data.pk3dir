@@ -34,5 +34,9 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_overkill", mutator_overkill, !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill");
 	CHECK_MUTATOR_ADD("g_buffs", mutator_buffs, 1);
 
+	FOREACH(MUTATORS, it.mutatorcheck(), LAMBDA(
+		Mutator_Add(it)
+	));
+
 	#undef CHECK_MUTATOR_ADD
 }

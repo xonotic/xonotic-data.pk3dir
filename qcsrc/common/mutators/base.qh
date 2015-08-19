@@ -143,8 +143,10 @@ enum {
 typedef bool(int) mutatorfunc_t;
 
 CLASS(Mutator, Object)
+    ATTRIB(Mutator, m_id, int, 0)
     ATTRIB(Mutator, mutatorname, string, string_null)
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t, func_null)
+    METHOD(Mutator, mutatorcheck, bool())
     CONSTRUCTOR(Mutator, string name, mutatorfunc_t func) {
         CONSTRUCT(Mutator);
         this.mutatorname = name;
@@ -206,17 +208,52 @@ void Mutator_Remove(Mutator mut)
 #define MUTATOR_DEFINITION(name) \
     bool MUTATORFUNCTION_##name(int mode); \
     STATIC_INIT(MUTATOR_##name) { MUTATOR_##name = NEW(Mutator, #name, MUTATORFUNCTION_##name); } \
-    bool MUTATORFUNCTION_##name(int mode)
+    [[last]] bool MUTATORFUNCTION_##name(int mode)
+
+void RegisterMutators();
+const int MUTATORS_MAX = MAX_MUTATORS;
+entity MUTATORS[MUTATORS_MAX], MUTATORS_first, MUTATORS_last;
+int MUTATORS_COUNT;
+#define REGISTER_MUTATOR(id, dependence) \
+    bool MUTATORFUNCTION_##id##_hooks(int mode) { return = false; } \
+    bool MUTATORFUNCTION_##id(int mode) { \
+        return = false; \
+        bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
+    } \
+    bool MUTATOR_##id##_check() { return dependence; } \
+    REGISTER(RegisterMutators, MUTATOR, MUTATORS, MUTATORS_COUNT, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    { this.mutatorcheck = MUTATOR_##id##_check; } \
+    [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
+REGISTER_REGISTRY(RegisterMutators)
+
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)
 #define MUTATOR_ONREMOVE                if (mode == MUTATOR_REMOVING)
 #define MUTATOR_ONROLLBACK_OR_REMOVE    if (mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
 #define MUTATOR_ADD(name)               Mutator_Add(MUTATOR_##name)
 #define MUTATOR_REMOVE(name)            Mutator_Remove(MUTATOR_##name)
 #define MUTATOR_RETURNVALUE             CallbackChain_ReturnValue
-#define MUTATOR_HOOKFUNCTION(name) \
-    bool HOOKFUNCTION_##name(); \
-    Callback CALLBACK_##name; STATIC_INIT(CALLBACK_##name) { CALLBACK_##name = NEW(Callback, HOOKFUNCTION_##name); } \
+
+#define _MUTATOR_CALLBACK(name, func) \
+    Callback CALLBACK_##name; \
+    bool func(); \
+    STATIC_INIT(CALLBACK_##name) { CALLBACK_##name = NEW(Callback, func); }
+
+#define MUTATOR_HOOKFUNCTION(...) \
+    OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__)
+
+#define MUTATOR_HOOKFUNCTION_1(name) \
+    _MUTATOR_CALLBACK(name, HOOKFUNCTION_##name) \
     bool HOOKFUNCTION_##name()
+
+#define MUTATOR_HOOKFUNCTION_2(mut, cb) \
+    MUTATOR_HOOKFUNCTION(mut, cb, CBC_ORDER_ANY)
+
+#define MUTATOR_HOOKFUNCTION_3(mut, cb, order) \
+    _MUTATOR_CALLBACK(mut##_##cb, mut##_##cb) \
+    [[accumulate]] bool MUTATORFUNCTION_##mut##_hooks(int mode) { MUTATOR_HOOK(cb, mut##_##cb, order); } \
+    bool mut##_##cb() { return = false; } \
+    [[accumulate]] bool mut##_##cb()
+
 #define MUTATOR_HOOK(cb, func, order) do {                              \
     MUTATOR_ONADD {                                                     \
         if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
