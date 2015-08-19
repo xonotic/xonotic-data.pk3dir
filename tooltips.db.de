@@ -43,7 +43,7 @@
 \g_weaponarena\Waffen-Arenen: Die Auswahl einer Waffen-Arena führt dazu, dass jeder Spieler mit der gewählten Waffe startet. Diese hat unendlich viel Munition, andere Waffen sind nicht vorhanden - Spezielle Waffen-Arenen: Spieler starten mit allen Waffen und unendlich viel Munition
 \g_instagib\Alle Spieler starten mit der MinstaNex, eine elektromagnetische Schienenkanone mit unendlich viel Schaden. Wenn ein Spieler keine Munition mehr hat, bleiben ihm 10 Sekunden um neue zu finden, ansonsten stirbt er. Der 2. Feuermodus ist Laser, welcher keinen Schaden hinzufügen kann. Dieser eignet sich gut für Tricksprünge
 \g_nix\Es gibt keine aufzusammelnden Gegenstände in Xonotic - Anstelle der Möglichkeit Waffen aufzusammeln, spielen alle mit der gleichen Waffe. Nach einiger Zeit startet ein Countdown, danach wechseln alle Spieler zu einer neuen gleichen Waffe
-\g_nix_with_laser\In Nix ist als zweite Waffe der Laser vorhanden
+\g_nix_with_blaster\In Nix ist als zweite Waffe der Laser vorhanden
 \XonoticMultiplayerDialog/Select all\Wähle alle Maps
 \XonoticMultiplayerDialog/Select none\Wähle alle Maps ab
 
