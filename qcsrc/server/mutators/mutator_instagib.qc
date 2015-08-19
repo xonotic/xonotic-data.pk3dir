@@ -405,7 +405,7 @@ MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
 {
 	if (!autocvar_g_powerups) { return false; }
-	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
+	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.itemdef == ITEM_HealthMega))
 		return false;
 
 	entity e = spawn();
