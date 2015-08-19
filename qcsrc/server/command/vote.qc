@@ -361,7 +361,10 @@ void reset_map(float dorespawn)
 	// since Item_Reset schedules respawn of superweapons and powerups
 	for(self = world; (self = nextent(self)); )
 	if(IS_NOT_A_CLIENT(self))
-		Item_ItemsTime_SetTime(self, 0);
+	{
+		if(self.reset)
+			Item_ItemsTime_SetTime(self, 0);
+	}
 
 	for(self = world; (self = nextent(self)); )
 	if(IS_NOT_A_CLIENT(self))
