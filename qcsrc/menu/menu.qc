@@ -5,6 +5,7 @@
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
 #include "../common/mapinfo.qh"
+#include "../common/mutators/base.qh"
 
 ///////////////////////////////////////////////
 // Menu Source File

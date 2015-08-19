@@ -40,6 +40,8 @@
 
 #include "../common/items/all.qh"
 
+#include "../common/mutators/base.qh"
+
 #include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/cl_model.qh"

@@ -46,9 +46,9 @@ CLASS(CallbackChain, Object)
 
     ATTRIB(CallbackChain, cbc_next, CallbackNode, NULL)
     ATTRIB(CallbackChain, cbc_order, int, 0)
-    CONSTRUCTOR(CallbackChain, string name) {
+    CONSTRUCTOR(CallbackChain, string _name) {
         CONSTRUCT(CallbackChain);
-        this.netname = name;
+        this.netname = _name;
         return this;
     }
 
@@ -120,6 +120,10 @@ ENDCLASS(CallbackChain)
 #define _MUTATOR_HANDLE_POPTMP(type, id) id = tmp_##id;
 #define _MUTATOR_HANDLE_POPOUT(type, id) id = out_##id;
 
+void RegisterHooks() {};
+void RegisterCallbacks() {};
+void RegisterMutators() {};
+
 #define _MUTATOR_HOOKABLE(id, ...) CallbackChain HOOK_##id; bool __Mutator_Send_##id(__VA_ARGS__)
 #define MUTATOR_HOOKABLE(id, params) \
     _MUTATOR_HOOKABLE(id, int params(_MUTATOR_HANDLE_PARAMS, _MUTATOR_HANDLE_NOP)) { \
@@ -131,7 +135,7 @@ ENDCLASS(CallbackChain)
         params(_MUTATOR_HANDLE_NOP,     _MUTATOR_HANDLE_POPOUT) \
         return ret; \
     } \
-    STATIC_INIT(HOOK_##id) { HOOK_##id = NEW(CallbackChain, #id); }
+    [[accumulate]] void RegisterHooks() { HOOK_##id = NEW(CallbackChain, #id); }
 #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
 
 enum {
@@ -146,10 +150,10 @@ CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0)
     ATTRIB(Mutator, mutatorname, string, string_null)
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t, func_null)
-    METHOD(Mutator, mutatorcheck, bool())
-    CONSTRUCTOR(Mutator, string name, mutatorfunc_t func) {
+    ATTRIB(Mutator, mutatorcheck, bool(), func_null)
+    CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
         CONSTRUCT(Mutator);
-        this.mutatorname = name;
+        this.mutatorname = _name;
         this.mutatorfunc = func;
         return this;
     }
@@ -207,13 +211,12 @@ void Mutator_Remove(Mutator mut)
     Mutator MUTATOR_##name
 #define MUTATOR_DEFINITION(name) \
     bool MUTATORFUNCTION_##name(int mode); \
-    STATIC_INIT(MUTATOR_##name) { MUTATOR_##name = NEW(Mutator, #name, MUTATORFUNCTION_##name); } \
+    [[accumulate]] void RegisterMutators() { MUTATOR_##name = NEW(Mutator, #name, MUTATORFUNCTION_##name); } \
     [[last]] bool MUTATORFUNCTION_##name(int mode)
 
-void RegisterMutators();
 const int MUTATORS_MAX = MAX_MUTATORS;
-entity MUTATORS[MUTATORS_MAX], MUTATORS_first, MUTATORS_last;
-int MUTATORS_COUNT;
+noref entity MUTATORS[MUTATORS_MAX], MUTATORS_first, MUTATORS_last;
+noref int MUTATORS_COUNT;
 #define REGISTER_MUTATOR(id, dependence) \
     bool MUTATORFUNCTION_##id##_hooks(int mode) { return = false; } \
     bool MUTATORFUNCTION_##id(int mode) { \
@@ -224,7 +227,13 @@ int MUTATORS_COUNT;
     REGISTER(RegisterMutators, MUTATOR, MUTATORS, MUTATORS_COUNT, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
     [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
-REGISTER_REGISTRY(RegisterMutators)
+
+STATIC_INIT(Mutators) {
+    RegisterHooks();
+    RegisterCallbacks();
+    RegisterMutators();
+    FOREACH(MUTATORS, it.mutatorcheck(), LAMBDA(Mutator_Add(it)));
+}
 
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)
 #define MUTATOR_ONREMOVE                if (mode == MUTATOR_REMOVING)
@@ -236,7 +245,7 @@ REGISTER_REGISTRY(RegisterMutators)
 #define _MUTATOR_CALLBACK(name, func) \
     Callback CALLBACK_##name; \
     bool func(); \
-    STATIC_INIT(CALLBACK_##name) { CALLBACK_##name = NEW(Callback, func); }
+    [[accumulate]] void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
 
 #define MUTATOR_HOOKFUNCTION(...) \
     OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__)
