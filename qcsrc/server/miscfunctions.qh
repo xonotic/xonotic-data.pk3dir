@@ -3,7 +3,7 @@
 
 #include "t_items.qh"
 
-#include "mutators/base.qh"
+#include "mutators/events.qh"
 #include "mutators/gamemode_race.qh"
 
 #include "../common/constants.qh"
@@ -75,7 +75,6 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual);
 
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
-var void remove(entity e);
 void objerror(string s);
 void droptofloor();
 void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
