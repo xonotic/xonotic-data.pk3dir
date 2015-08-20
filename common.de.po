@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-20 01:27+0200\n"
-"PO-Revision-Date: 2015-08-19 23:24+0000\n"
+"POT-Creation-Date: 2015-08-20 19:14+0200\n"
+"PO-Revision-Date: 2015-08-20 17:11+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: German (http://www.transifex.com/team-xonotic/xonotic/"
 "language/de/)\n"
@@ -910,11 +910,11 @@ msgstr "Ballbesitzer"
 
 #: qcsrc/client/waypointsprites.qc:257
 msgid "Mega health"
-msgstr ""
+msgstr "Mega-Health"
 
 #: qcsrc/client/waypointsprites.qc:258
 msgid "Large armor"
-msgstr ""
+msgstr "Große Armor"
 
 #: qcsrc/client/waypointsprites.qc:259
 msgid "Invisibility"
@@ -1005,15 +1005,15 @@ msgstr "Unsichtbar"
 
 #: qcsrc/common/buffs.qh:71
 msgid "Inferno"
-msgstr ""
+msgstr "Inferno"
 
 #: qcsrc/common/buffs.qh:72
 msgid "Swapper"
-msgstr ""
+msgstr "Tauscher"
 
 #: qcsrc/common/buffs.qh:73
 msgid "Magnet"
-msgstr ""
+msgstr "Magnet"
 
 #: qcsrc/common/command/generic.qc:173
 msgid "error creating curl handle\n"
@@ -1446,7 +1446,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:356
 msgid "^BGThe flag was returned by its owner"
-msgstr ""
+msgstr "^BGDie Flagge ist zu ihrem Besitzer zurückgekehrt"
 
 #: qcsrc/common/notifications.qh:357
 msgid "^BGThe ^TC^TT^BG flag was destroyed and returned to base"
@@ -1454,7 +1454,7 @@ msgstr "^BGDie ^TC^TT^BG Flagge wurde zerstört und zur Basis zurückgebracht"
 
 #: qcsrc/common/notifications.qh:358
 msgid "^BGThe flag was destroyed and returned to base"
-msgstr ""
+msgstr "^BGDie Flagge wurde zerstört und ist zur Basis zurückgekehrt"
 
 #: qcsrc/common/notifications.qh:359
 msgid "^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"
@@ -1464,7 +1464,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:360
 msgid "^BGThe flag was dropped in the base and returned itself"
-msgstr ""
+msgstr "^BGDie Flagge wurde in der Basis zurückgelassen und ist zurückgekehrt"
 
 #: qcsrc/common/notifications.qh:361
 msgid ""
@@ -1477,6 +1477,8 @@ msgstr ""
 #: qcsrc/common/notifications.qh:362
 msgid "^BGThe flag fell somewhere it couldn't be reached and returned to base"
 msgstr ""
+"^BGDie Flagge fiel an einen unerreichbaren Ort und ist daher aus Langeweile "
+"heimgeflogen"
 
 #: qcsrc/common/notifications.qh:363
 #, c-format
@@ -1492,6 +1494,8 @@ msgstr ""
 msgid ""
 "^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"
 msgstr ""
+"^BGDie Flagge hatte nach ^F1%.2f^BG Sekunden einfach keine Geduld mehr und "
+"ist nach Hause gegangen"
 
 #: qcsrc/common/notifications.qh:365
 msgid "^BGThe ^TC^TT^BG flag has returned to the base"
@@ -1499,7 +1503,7 @@ msgstr "^BGDie ^TC^TT^BG Flagge ist zur Basis zurückgekehrt"
 
 #: qcsrc/common/notifications.qh:366
 msgid "^BGThe flag has returned to the base"
-msgstr ""
+msgstr "^BGDie Flagge ist zur Basis zurückgekehrt"
 
 #: qcsrc/common/notifications.qh:367
 #, c-format
@@ -1519,7 +1523,7 @@ msgstr "^BG%s^BG hat die ^TC^TT^BG Flagge genommen"
 #: qcsrc/common/notifications.qh:370
 #, c-format
 msgid "^BG%s^BG got the flag"
-msgstr ""
+msgstr "^BG%s^BG hat die Flagge genommen"
 
 #: qcsrc/common/notifications.qh:371 qcsrc/common/notifications.qh:372
 #, c-format
@@ -1554,12 +1558,14 @@ msgstr "^F2Du wirst in der nächsten Runde zuschauen"
 #: qcsrc/common/notifications.qh:378
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 wurde durch ^BG%s^K1's ^BG%s^K1 Buff getötet ^K1%s%s"
 
 #: qcsrc/common/notifications.qh:378
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 msgstr ""
+"^BG%s%s^K1 wurde durch ^BG%s^K1's ^BG%s^K1 Buff zu Punkten verarbeitet ^K1%s"
+"%s"
 
 #: qcsrc/common/notifications.qh:379
 #, c-format
@@ -2688,7 +2694,7 @@ msgstr ""
 
 #: qcsrc/common/notifications.qh:608
 msgid "^BGThis flag is currently inactive"
-msgstr ""
+msgstr "^BGDiese Flagge ist zur Zeit nicht aktiv"
 
 #: qcsrc/common/notifications.qh:609
 msgid ""
@@ -2696,6 +2702,10 @@ msgid ""
 "^BGfor ^F2too many unsuccessful attempts^BG to capture.\n"
 "^BGMake some defensive scores before trying again."
 msgstr ""
+"^BGDu bist jetzt von der Flagge ^F1abgeschirmt\n"
+"^BGwegen ^F2zu vielen fehlgeschlagenen Versuchen^BG,\n"
+"^BGdie Flagge zu erobern. Gewinne Punkte in der Verteidigung,\n"
+"^BGbevor du es noch einmal versuchst."
 
 #: qcsrc/common/notifications.qh:610
 msgid "^BGYou captured the ^TC^TT^BG flag!"
@@ -2728,7 +2738,7 @@ msgstr "^BGDu bekamst die ^TC^TT^BG Flagge von %s;"
 #: qcsrc/common/notifications.qh:616
 #, c-format
 msgid "^BGYou received the flag from %s"
-msgstr ""
+msgstr "^BGDu bekamst die Flagge von %s;"
 
 #: qcsrc/common/notifications.qh:617
 #, c-format
@@ -2748,7 +2758,7 @@ msgstr "^BGDu hast die ^TC^TT^BG Flagge an %s gepasst"
 #: qcsrc/common/notifications.qh:620
 #, c-format
 msgid "^BGYou passed the flag to %s"
-msgstr ""
+msgstr "^BGDu hast die Flagge an %s gepasst"
 
 #: qcsrc/common/notifications.qh:621
 msgid "^BGYou got the ^TC^TT^BG flag!"
@@ -2756,17 +2766,17 @@ msgstr "^BGDu hast die ^TC^TT^BG Flagge!"
 
 #: qcsrc/common/notifications.qh:622
 msgid "^BGYou got the flag!"
-msgstr ""
+msgstr "^BGDu hast die Flagge!"
 
 #: qcsrc/common/notifications.qh:623
 #, c-format
 msgid "^BGYou got your %steam^BG's flag, return it!"
-msgstr ""
+msgstr "^BGDu hast die Flagge deines %sTeams^BG, bringe sie zurück!"
 
 #: qcsrc/common/notifications.qh:624
 #, c-format
 msgid "^BGYou got the %senemy^BG's flag, return it!"
-msgstr ""
+msgstr "^BGDu hast die Flagge des %sFeindes^BG, bringe sie zurück!"
 
 #: qcsrc/common/notifications.qh:625
 #, c-format
@@ -2781,32 +2791,33 @@ msgstr "^BGDer %sFeind (^BG%s%s)^BG hat eure Flagge! Bring sie zurück!"
 #: qcsrc/common/notifications.qh:627
 #, c-format
 msgid "^BGThe %senemy^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "^BGDer %sFeind^BG hat die Flagge! Bringe sie zurück!"
 
 #: qcsrc/common/notifications.qh:628
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"
-msgstr ""
+msgstr "^BGDer %sFeind (^BG%s%s)^BG hat die Flagge! Bringe sie zurück!"
 
 #: qcsrc/common/notifications.qh:629
 #, c-format
 msgid "^BGThe %senemy^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "^BGDer %sFeind^BG hat seine Flagge! Hole sie!"
 
 #: qcsrc/common/notifications.qh:630
 #, c-format
 msgid "^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"
-msgstr ""
+msgstr "^BGDer %sFeind (^BG%s%s)^BG hat seine Flagge! Hole sie!"
 
 #: qcsrc/common/notifications.qh:631
 #, c-format
 msgid "^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"
-msgstr ""
+msgstr "^BGDein %sTeamkollege^BG hat die ^TC^TT^BG Flagge! Beschütze ihn!"
 
 #: qcsrc/common/notifications.qh:632
 #, c-format
 msgid "^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"
 msgstr ""
+"^BGDein %sTeamkollege (^BG%s%s)^BG hat die ^TC^TT^BG Flagge! Beschütze ihn!"
 
 #: qcsrc/common/notifications.qh:633
 #, c-format
@@ -3938,7 +3949,7 @@ msgstr "Nein"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:92
 msgid "Undecided"
-msgstr ""
+msgstr "Später nachfragen"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.qc:96
 msgid "Save settings"
@@ -3959,12 +3970,12 @@ msgstr "Nur aktuellen Munitionstyp anzeigen"
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:51
 msgid "Noncurrent alpha:"
-msgstr ""
+msgstr "Alpha der inaktiven:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Noncurrent scale:"
-msgstr ""
+msgstr "Größe der inaktiven:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:39
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:31
@@ -4104,35 +4115,35 @@ msgstr "Ausrichtung tauschen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:6
 msgid "Items Time Panel"
-msgstr ""
+msgstr "Gegenstände-Zeit-Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:23
 msgid "PNL^Disabled"
-msgstr ""
+msgstr "Nicht anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "PNL^Enabled spectating"
-msgstr ""
+msgstr "Beim Zuschauen zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "PNL^Enabled even playing in warmup"
-msgstr ""
+msgstr "Auch in der Aufwärmphase zeigen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:36
 msgid "Reduced"
-msgstr ""
+msgstr "Reduziert"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "Text/Icon-Verhältnis:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:42
 msgid "Hide spawned items"
-msgstr ""
+msgstr "Verfügbare Gegenstände ausblenden"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:44
 msgid "Dynamic size"
-msgstr ""
+msgstr "Dynamische Größe"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:6
 msgid "Mod Icons Panel"
@@ -4461,7 +4472,7 @@ msgstr "Taste"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:65
 msgid "Weapon ID scale:"
-msgstr ""
+msgstr "Waffen-ID-Größe:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
 msgid "Show Accuracy"
@@ -4831,11 +4842,11 @@ msgstr "Filter:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:177
 msgid "Add shown"
-msgstr ""
+msgstr "Alle sichtbaren hinzufügen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:180
 msgid "Remove shown"
-msgstr ""
+msgstr "Alle sichtbaren entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:185
 msgid "Add all"
@@ -4843,7 +4854,7 @@ msgstr "Alle hinzufügen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
 msgid "Remove all"
-msgstr ""
+msgstr "Alle entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:195
 msgid "Start Multiplayer!"
@@ -5195,7 +5206,7 @@ msgstr "Screenshot"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:30
 msgid "Music Player"
-msgstr ""
+msgstr "Musikplayer"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:56
 msgid "Auto record demos"
@@ -5235,23 +5246,23 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:42
 msgid "MUSICPL^Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:45
 msgid "MUSICPL^Add all"
-msgstr ""
+msgstr "Alle hinzufügen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:49
 msgid "Set as menu track"
-msgstr ""
+msgstr "Als Menü-Musik festlegen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:53
 msgid "Reset default menu track"
-msgstr ""
+msgstr "Menü-Musik zurücksetzen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:59
 msgid "Playlist:"
-msgstr ""
+msgstr "Wiedergabeliste:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:60
 msgid "Random order"
@@ -5259,31 +5270,31 @@ msgstr "Zufällige Reihenfolge"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:65
 msgid "MUSICPL^Stop"
-msgstr ""
+msgstr "Stopp"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:68
 msgid "MUSICPL^Play"
-msgstr ""
+msgstr "Abspielen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:71
 msgid "MUSICPL^Pause"
-msgstr ""
+msgstr "Pause"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:74
 msgid "MUSICPL^Prev"
-msgstr ""
+msgstr "Zurück"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:77
 msgid "MUSICPL^Next"
-msgstr ""
+msgstr "Vor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:81
 msgid "MUSICPL^Remove"
-msgstr ""
+msgstr "Entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:84
 msgid "MUSICPL^Remove all"
-msgstr ""
+msgstr "Alle entfernen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_screenshot.qc:51
 msgid "Auto screenshot scoreboard"
@@ -5677,7 +5688,7 @@ msgstr "Menü-Sounds"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:143
 msgid "Focus sounds"
-msgstr ""
+msgstr "Auswahl-Sounds"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:147
 msgid "Time announcer:"
@@ -5905,7 +5916,7 @@ msgstr "Schadenseffekte:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:152
 msgid "DMGFX^Disabled"
-msgstr ""
+msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:153
 msgid "Skeletal"
@@ -5913,7 +5924,7 @@ msgstr "Nur auf Modellen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:154
 msgid "DMGFX^All"
-msgstr ""
+msgstr "Alle"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:158
 msgid "No dynamic lighting"
@@ -6193,7 +6204,7 @@ msgstr "Lauf-Informationen in Info-Nachrichten:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:55
 msgid "SPREES^Disabled"
-msgstr ""
+msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:56
 msgid "Target"
@@ -6205,7 +6216,7 @@ msgstr "Angreifer"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:58
 msgid "SPREES^Both"
-msgstr ""
+msgstr "Alle"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_messages.qc:64
 msgid "Print on a seperate line"
@@ -6539,7 +6550,7 @@ msgstr "Jetpack aktiveren durch Springen:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:95
 msgid "JPJUMP^Disabled"
-msgstr ""
+msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:96
 msgid "Air only"
@@ -6547,7 +6558,7 @@ msgstr "nur solange in der Luft"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:97
 msgid "JPJUMP^All"
-msgstr ""
+msgstr "Immer"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:103
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:108

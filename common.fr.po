@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-20 01:27+0200\n"
-"PO-Revision-Date: 2015-08-19 23:24+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2015-08-20 19:14+0200\n"
+"PO-Revision-Date: 2015-08-20 10:17+0000\n"
+"Last-Translator: Yannick Le Guen <leguen.yannick@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/team-xonotic/xonotic/"
 "language/fr/)\n"
 "Language: fr\n"
@@ -918,11 +918,11 @@ msgstr "Porteur de balle"
 
 #: qcsrc/client/waypointsprites.qc:257
 msgid "Mega health"
-msgstr ""
+msgstr "Méga santé"
 
 #: qcsrc/client/waypointsprites.qc:258
 msgid "Large armor"
-msgstr ""
+msgstr "Grande armure"
 
 #: qcsrc/client/waypointsprites.qc:259
 msgid "Invisibility"
@@ -1005,7 +1005,7 @@ msgstr "Saut"
 
 #: qcsrc/common/buffs.qh:69
 msgid "Flight"
-msgstr "Vol"
+msgstr "Envol"
 
 #: qcsrc/common/buffs.qh:70
 msgid "Invisible"
@@ -1013,15 +1013,15 @@ msgstr "Invisibilité"
 
 #: qcsrc/common/buffs.qh:71
 msgid "Inferno"
-msgstr ""
+msgstr "Inferno"
 
 #: qcsrc/common/buffs.qh:72
 msgid "Swapper"
-msgstr ""
+msgstr "Échange"
 
 #: qcsrc/common/buffs.qh:73
 msgid "Magnet"
-msgstr ""
+msgstr "Aimant"
 
 #: qcsrc/common/command/generic.qc:173
 msgid "error creating curl handle\n"
@@ -1565,12 +1565,14 @@ msgstr "^F2Vous serez spectateur lors de la prochaine manche"
 #: qcsrc/common/notifications.qh:378
 #, c-format
 msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
-msgstr ""
+msgstr "^BG%s%s^K1 a été tué par ^BG%s^K1 et son bonus de ^BG%s^K1 ^K1%s%s"
 
 #: qcsrc/common/notifications.qh:378
 #, c-format
 msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
 msgstr ""
+"^BG%s%s^K1 a été pris pour cible par ^BG%s^K1 et son bonus de ^BG%s^K1 ^K1%s"
+"%s"
 
 #: qcsrc/common/notifications.qh:379
 #, c-format
@@ -4137,35 +4139,35 @@ msgstr "Inverser l'alignement"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:6
 msgid "Items Time Panel"
-msgstr ""
+msgstr "Minuterie des objets"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:23
 msgid "PNL^Disabled"
-msgstr ""
+msgstr "Désactivé"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
 msgid "PNL^Enabled spectating"
-msgstr ""
+msgstr "Afficher en mode spectateur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
 msgid "PNL^Enabled even playing in warmup"
-msgstr ""
+msgstr "Afficher même en mode échauffement"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:36
 msgid "Reduced"
-msgstr ""
+msgstr "Réduite"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
 msgid "Text/icon ratio:"
-msgstr ""
+msgstr "Ratio texte / icônes :"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:42
 msgid "Hide spawned items"
-msgstr ""
+msgstr "Masquer les objets disponibles"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:44
 msgid "Dynamic size"
-msgstr ""
+msgstr "Taille dynamique"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:6
 msgid "Mod Icons Panel"
@@ -4301,7 +4303,7 @@ msgstr "Touches Appuyées"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:25
 msgid "Panel enabled when spectating"
-msgstr "Afficher le tableau de bord en mode spectateur"
+msgstr "Afficher en mode spectateur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:26
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:26
