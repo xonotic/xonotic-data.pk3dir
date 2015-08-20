@@ -909,10 +909,23 @@ void havocbot_chooseenemy()
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	bool scan_transparent = false;
+	bool scan_secondary_targets = false;
 	while(true)
 	{
-		while (head)
+		scan_secondary_targets = false;
+		for ( ; head; head = head.chain)
 		{
+			if(!scan_secondary_targets)
+			{
+				if(head.classname == "misc_breakablemodel")
+					continue;
+			}
+			else
+			{
+				if(head.classname != "misc_breakablemodel")
+					continue;
+			}
+
 			v = (head.absmin + head.absmax) * 0.5;
 			rating = vlen(v - eye);
 			if (rating<autocvar_bot_ai_enemydetectionradius)
@@ -926,7 +939,13 @@ void havocbot_chooseenemy()
 					bestrating = rating;
 				}
 			}
-			head = head.chain;
+
+			if(!best && !scan_secondary_targets)
+			{
+				scan_secondary_targets = true;
+				head = head2;
+				bestrating = 100000000;
+			}
 		}
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
