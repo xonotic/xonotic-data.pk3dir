@@ -501,11 +501,11 @@ void Item_ItemsTime_SetTime(entity e, float t)
 		switch(e.items)
 		{
 			case IT_HEALTH:
-				// if(e.classname == "item_health_mega") // IT_HEALTH unequivocally identifies it
+				// if(e.itemdef == ITEM_MegaHealth) // e.items == IT_HEALTH unequivocally identifies it
 					it_health_mega_time = t;
 				break;
 			case IT_ARMOR:
-				if(e.classname == "item_armor_large") // IT_ARMOR doesn't unequivocally identifies it
+				if(e.itemdef == ITEM_ArmorLarge) // e.items == IT_ARMOR doesn't unequivocally identifies it
 					it_armor_large_time = t;
 				break;
 			case IT_STRENGTH://"item-strength"
@@ -598,7 +598,7 @@ void Item_Respawn (void)
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-	if(self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
+	if(self.flags & FL_POWERUP || self.itemdef == ITEM_ArmorLarge || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
 	{
 		float t = Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_SetTime(self, t);
@@ -636,11 +636,11 @@ void Item_RespawnCountdown (void)
 				case IT_STRENGTH:   name = "item-strength"; rgb = '0 0 1'; break;
 				case IT_INVINCIBLE: name = "item-shield"; rgb = '1 0 1'; break;
 				case IT_HEALTH:
-					//if (self.classname == "item_health_mega")
+					// if(self.itemdef == ITEM_HealthMega)
 						{name = "item_health_mega"; rgb = '1 0 0';}
 					break;
 				case IT_ARMOR:
-					if (self.classname == "item_armor_large")
+					if(self.itemdef == ITEM_ArmorLarge)
 						{name = "item_armor_large"; rgb = '0 1 0';}
 					break;
 			}
@@ -709,7 +709,7 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS) || e.classname == "item_armor_large" || e.items == IT_HEALTH)
+	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS) || e.itemdef == ITEM_ArmorLarge || e.items == IT_HEALTH)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
