@@ -202,6 +202,7 @@ void PutObserverInServer (void)
 	}
 
 	self.frags = FRAGS_SPECTATOR;
+	self.bot_attack = false;
 
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
