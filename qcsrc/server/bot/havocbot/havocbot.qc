@@ -856,7 +856,7 @@ void havocbot_movetogoal()
 void havocbot_chooseenemy()
 {
 	entity head, best, head2;
-	float rating, bestrating, i, hf;
+	float rating, bestrating, hf;
 	vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 	{
@@ -908,7 +908,8 @@ void havocbot_chooseenemy()
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	for(i = 0; ; ++i)
+	bool scan_transparent = false;
+	while(true)
 	{
 		while (head)
 		{
@@ -932,13 +933,14 @@ void havocbot_chooseenemy()
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
 		if(best || self.weapons) // || self.weapon == WEP_RIFLE
 			break;
-		if(i)
+		if(scan_transparent)
 			break;
 
 		// Set flags to see through transparent objects
 		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
+		scan_transparent = true;
 	}
 
 	// Restore hit flags
