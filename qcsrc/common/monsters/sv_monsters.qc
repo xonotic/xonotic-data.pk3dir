@@ -80,7 +80,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	//if(trace_ent != targ)
 		//return false;
 
-	if(targ.vehicle_flags & VHF_ISVEHICLE)
+	if(IS_VEHICLE(targ))
 	if(!((get_monsterinfo(ent.monsterid)).spawnflags & MON_FLAG_RANGED))
 		return false; // melee attacks are useless against vehicles
 
@@ -99,7 +99,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(IS_SPEC(targ) || IS_OBSERVER(targ))
 		return false; // enemy is a spectator
 
-	if(!(targ.vehicle_flags & VHF_ISVEHICLE))
+	if(!IS_VEHICLE(targ))
 	if(targ.deadflag != DEAD_NO || ent.deadflag != DEAD_NO || targ.health <= 0 || ent.health <= 0)
 		return false; // enemy/self is dead
 
@@ -109,7 +109,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ.monster_owner == ent)
 		return false; // don't attack our pet
 
-	if(!(targ.vehicle_flags & VHF_ISVEHICLE))
+	if(!IS_VEHICLE(targ))
 	if(targ.flags & FL_NOTARGET)
 		return false; // enemy can't be targeted
 
@@ -181,7 +181,7 @@ void MonsterTouch ()
 		return;
 
 	if(self.enemy != other)
-	if(!(other.flags & FL_MONSTER))
+	if(!IS_MONSTER(other))
 	if(monster_isvalidtarget(other, self))
 		self.enemy = other;
 }

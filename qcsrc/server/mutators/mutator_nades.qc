@@ -408,7 +408,7 @@ void nade_heal_touch()
 {
 	float maxhealth;
 	float health_factor;
-	if(IS_PLAYER(other) || (other.flags & FL_MONSTER))
+	if(IS_PLAYER(other) || IS_MONSTER(other))
 	if(other.deadflag == DEAD_NO)
 	if(!other.frozen)
 	{
@@ -422,7 +422,7 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			maxhealth = (other.flags & FL_MONSTER) ? other.max_health : g_pickup_healthmega_max;
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : g_pickup_healthmega_max;
 			if ( other.health < maxhealth )
 			{
 				if ( self.nade_show_particles )
@@ -438,9 +438,9 @@ void nade_heal_touch()
 
 	}
 
-	if ( IS_REAL_CLIENT(other) || (other.vehicle_flags & VHF_ISVEHICLE) )
+	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
 	{
-		entity show_red = (other.vehicle_flags & VHF_ISVEHICLE) ? other.owner : other;
+		entity show_red = (IS_VEHICLE(other)) ? other.owner : other;
 		show_red.stat_healing_orb = time+0.1;
 		show_red.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
 	}

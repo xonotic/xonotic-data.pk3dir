@@ -475,7 +475,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	if(player.flags & FL_MONSTER)
+	if(IS_MONSTER(player))
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_MONSTER_), player.monster_name);
 	}
@@ -906,7 +906,7 @@ void ctf_FlagTouch()
 	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	entity toucher = other, tmp_entity;
-	bool is_not_monster = (!(toucher.flags & FL_MONSTER)), num_perteam = 0;
+	bool is_not_monster = (!IS_MONSTER(toucher)), num_perteam = 0;
 
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
@@ -923,14 +923,14 @@ void ctf_FlagTouch()
 
 	// special touch behaviors
 	if(toucher.frozen) { return; }
-	else if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
 		else
 			return; // do nothing
 	}
-	else if(toucher.flags & FL_MONSTER)
+	else if(IS_MONSTER(toucher))
 	{
 		if(!autocvar_g_ctf_allow_monster_touch)
 			return; // do nothing

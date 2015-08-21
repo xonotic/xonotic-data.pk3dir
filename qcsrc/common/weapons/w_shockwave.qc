@@ -158,7 +158,7 @@ void W_Shockwave_Melee_Think(void)
 		te_customflash(targpos, 40,  2, '1 1 1');
 #endif
 
-		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self if necessary
 			&& (trace_ent.takedamage == DAMAGE_AIM)

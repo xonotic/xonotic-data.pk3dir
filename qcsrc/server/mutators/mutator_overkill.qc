@@ -75,7 +75,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	entity oldself = self;
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
-	if(self.flags & FL_MONSTER)
+	if(IS_MONSTER(self))
 	{
 		remove(other); // remove default item
 		other = world;
