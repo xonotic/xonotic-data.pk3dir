@@ -522,7 +522,7 @@ void walker_attack()
 {
     sound (self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTEN_NORM);
     fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0);
-    pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+    Send_Effect("laser_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 }
 
 

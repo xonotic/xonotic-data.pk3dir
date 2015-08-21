@@ -242,7 +242,7 @@ void W_Porto_Attack(float type)
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 
-	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	//Send_Effect("grenadelauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn();
 	gren.cnt = type;
@@ -283,7 +283,7 @@ void W_Porto_Attack(float type)
 	else
 		CSQCProjectile(gren, true, PROJECTILE_PORTO_RED, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 bool w_nexball_weapon(int req); // WEAPONTODO

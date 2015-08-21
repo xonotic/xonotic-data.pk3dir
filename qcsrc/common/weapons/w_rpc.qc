@@ -108,7 +108,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 
 	W_DecreaseAmmo(WEP_CVAR(rpc, ammo));
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(rpc, damage));
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("rocketlauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	missile.owner = missile.realowner = self;
@@ -143,7 +143,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 	missile.pos1 = missile.velocity;
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 bool W_RocketPropelledChainsaw(int req)

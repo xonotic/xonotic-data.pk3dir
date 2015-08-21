@@ -113,7 +113,7 @@ void W_Hagar_Touch2(void)
 		self.use();
 	} else {
 		self.cnt++;
-		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
+		Send_Effect("hagar_bounce", self.origin, self.velocity, 1);
 		self.angles = vectoangles(self.velocity);
 		self.owner = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -128,7 +128,7 @@ void W_Hagar_Attack(void)
 
 	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -160,7 +160,7 @@ void W_Hagar_Attack(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 void W_Hagar_Attack2(void)
@@ -171,7 +171,7 @@ void W_Hagar_Attack2(void)
 
 	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -204,7 +204,7 @@ void W_Hagar_Attack2(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR_BOUNCING, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 .float hagar_loadstep, hagar_loadblock, hagar_loadbeep, hagar_warning;
@@ -223,7 +223,7 @@ void W_Hagar_Attack2_Load_Release(void)
 	weapon_prepareattack_do(1, WEP_CVAR_SEC(hagar, refire));
 
 	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
 	right = v_right;
@@ -280,7 +280,7 @@ void W_Hagar_Attack2_Load_Release(void)
 
 		CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
-		other = missile; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, missile);
 	}
 
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, load_animtime), w_ready);

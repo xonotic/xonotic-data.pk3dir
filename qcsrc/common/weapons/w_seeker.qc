@@ -251,7 +251,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	makevectors(self.v_angle);
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
-	pointparticles(particleeffectnum("seeker_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("seeker_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	//self.detornator         = false;
 
@@ -293,7 +293,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 
 	CSQCProjectile(missile, false, PROJECTILE_SEEKER, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -343,7 +343,7 @@ void W_Seeker_Fire_Flac(void)
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/flac_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
 	w_shotorg += f_diff;
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile 				= spawn();
 	missile.owner 			= missile.realowner = self;
@@ -371,7 +371,7 @@ void W_Seeker_Fire_Flac(void)
 	W_SetupProjVelocity_UP_PRE(missile, seeker, flac_);
 	CSQCProjectile(missile, true, PROJECTILE_FLAC, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -589,7 +589,7 @@ void W_Seeker_Fire_Tag(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_TAG, false); // has sound
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================

@@ -257,7 +257,7 @@ void W_Crylink_LinkJoinEffect_Think(void)
 					e.projectiledeathtype,
 					other
 				);
-				pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
+				Send_Effect("crylink_joinexplode", self.origin, '0 0 0', n);
 			}
 		}
 	}
@@ -359,7 +359,7 @@ void W_Crylink_Attack(void)
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect("crylink_muzzleflash", w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -437,7 +437,7 @@ void W_Crylink_Attack(void)
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
-		other = proj; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, proj);
 	}
 	if(WEP_CVAR_PRI(crylink, joinspread) != 0)
 	{
@@ -468,7 +468,7 @@ void W_Crylink_Attack2(void)
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect("crylink_muzzleflash", w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -553,7 +553,7 @@ void W_Crylink_Attack2(void)
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
-		other = proj; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, proj);
 	}
 	if(WEP_CVAR_SEC(crylink, joinspread) != 0)
 	{

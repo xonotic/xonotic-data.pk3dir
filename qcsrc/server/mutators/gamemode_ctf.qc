@@ -454,7 +454,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
+	Send_Effect(flag.capeffect, flag.origin, '0 0 0', 1);
 	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
@@ -608,7 +608,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	}
 
 	// effects
-	pointparticles(particleeffectnum(flag.toucheffect), player.origin, '0 0 0', 1);
+	Send_Effect(flag.toucheffect, player.origin, '0 0 0', 1);
 
 	// waypoints
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
@@ -939,7 +939,7 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
+			Send_Effect(self.toucheffect, self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}

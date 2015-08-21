@@ -170,7 +170,7 @@ void W_Hook_Attack2(void)
 
 	CSQCProjectile(gren, true, PROJECTILE_HOOKBOMB, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 bool W_Hook(int req)

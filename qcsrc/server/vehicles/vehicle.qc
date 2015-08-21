@@ -164,7 +164,7 @@ void targetdrone_damage(entity inflictor, entity attacker, float damage, int dea
 	self.health -= damage;
 	if(self.health <= 0)
 	{
-		pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+		Send_Effect("explosion_medium", self.origin, '0 0 0', 1);
 
 		if(!self.cnt)
 			remove(self);
@@ -434,7 +434,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
         sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
     if(_mzlfx)
-        pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
+        Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
 
 
     setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
@@ -505,7 +505,7 @@ void vehicles_spawn()
     self.angles             = self.pos2;
     setorigin(self, self.pos1 + '0 0 0');
     // Show it
-    pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
+    Send_Effect("teleport", self.origin + '0 0 64', '0 0 0', 1);
 
     if(self.vehicle_controller)
         self.team = self.vehicle_controller.team;
@@ -550,7 +550,7 @@ void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
 
 void vehicles_touch()
 {
-	if(MUTATOR_CALLHOOK(VehicleTouch))
+	if(MUTATOR_CALLHOOK(VehicleTouch, self, other))
 		return;
 
     // Vehicle currently in use
@@ -683,11 +683,7 @@ void vehicles_enter()
 
     CSQCVehicleSetup(self.owner, self.hud);
 
-    vh_player = other;
-    vh_vehicle = self;
-    MUTATOR_CALLHOOK(VehicleEnter);
-    other = vh_player;
-    self = vh_vehicle;
+    MUTATOR_CALLHOOK(VehicleEnter, other, self);
 
     self.vehicle_enter();
     antilag_clear(other);
@@ -823,11 +819,7 @@ void vehicles_exit(float eject)
     if(!teamplay)
         _vehicle.team = 0;
 
-    vh_player = _player;
-    vh_vehicle = _vehicle;
-    MUTATOR_CALLHOOK(VehicleExit);
-    _player = vh_player;
-    _vehicle = vh_vehicle;
+    MUTATOR_CALLHOOK(VehicleExit, _player, _vehicle);
 
     _vehicle.team = _vehicle.tur_head.team;
 
@@ -885,7 +877,7 @@ void vehicles_painframe()
         float _ftmp;
         _ftmp = self.owner.vehicle_health / 50;
         self.pain_frame = time + 0.1 + (random() * 0.5 * _ftmp);
-        pointparticles(particleeffectnum("smoke_small"), (self.origin + (randomvec() * 80)), '0 0 0', 1);
+        Send_Effect("smoke_small", (self.origin + (randomvec() * 80)), '0 0 0', 1);
 
         if(self.vehicle_flags & VHF_DMGSHAKE)
             self.velocity += randomvec() * 30;
@@ -1011,7 +1003,7 @@ void vehicles_clearreturn()
 
 void vehicles_return()
 {
-    pointparticles(particleeffectnum("teleport"), self.wp00.origin + '0 0 64', '0 0 0', 1);
+    Send_Effect("teleport", self.wp00.origin + '0 0 64', '0 0 0', 1);
 
     self.wp00.think     = vehicles_spawn;
     self.wp00.nextthink = time;
@@ -1367,7 +1359,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 void vehicles_gib_explode()
 {
 	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	remove(self);
 }
 
