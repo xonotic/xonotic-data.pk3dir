@@ -1,4 +1,4 @@
-void Create_Effect_Entity(float eff_name, string eff_string, float eff_trail)
+void Create_Effect_Entity(int eff_name, string eff_string, bool eff_trail)
 {
 	entity eff;
 	effects_ent[eff_name - 1] = eff = spawn();
@@ -10,24 +10,24 @@ void Create_Effect_Entity(float eff_name, string eff_string, float eff_trail)
 }
 
 #ifdef CSQC
-void Read_Effect(float is_new)
+void Read_Effect(bool is_new)
 {
 #if EFFECTS_COUNT >= 255
-	float net_name = ReadShort();
+	int net_name = ReadShort();
 #else
-	float net_name = ReadByte();
+	int net_name = ReadByte();
 #endif
 
 	entity eff = effects_ent[net_name - 1];
 
 	vector v, vel = '0 0 0';
-	float eff_cnt = 1;
-	float eff_trail = eff.eent_eff_trail;
+	int eff_cnt = 1;
+	bool eff_trail = eff.eent_eff_trail;
 	v_x = ReadCoord();
 	v_y = ReadCoord();
 	v_z = ReadCoord();
 
-	float use_vel = ReadByte();
+	bool use_vel = ReadByte();
 	if(use_vel)
 	{
 		vel_x = ReadCoord();
@@ -47,7 +47,7 @@ void Read_Effect(float is_new)
 #endif
 
 #ifdef SVQC
-float Net_Write_Effect(entity client, float sf)
+bool Net_Write_Effect(entity client, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_EFFECT);
 #if EFFECTS_COUNT >= 255
