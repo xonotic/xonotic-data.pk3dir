@@ -14,6 +14,8 @@
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
 
+#include "../mutators/events.qh"
+
 #include "../../common/mapinfo.qh"
 
 #include "../../common/command/generic.qh"
@@ -605,14 +607,12 @@ void ConsoleCommand_macro_init()
 	#ifndef CAMERATEST
 	}
 	#endif
-
-	return;
 }
 
-bool ConsoleCommand_macro_normal(int argc)
+bool ConsoleCommand_macro_normal(string s, int argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
-		{ if(name == strtolower(argv(0))) { { execution } return true; } }
+		{ if (name == s) { { execution } return true; } }
 
 	CONSOLE_COMMANDS_NORMAL();
 	#undef CONSOLE_COMMAND
@@ -620,12 +620,12 @@ bool ConsoleCommand_macro_normal(int argc)
 	return false;
 }
 
-bool ConsoleCommand_macro_movement(int argc)
+bool ConsoleCommand_macro_movement(string s, int argc)
 {
 	if(camera_active)
 	{
 		#define CONSOLE_COMMAND(name,execution) \
-			{ if(name == strtolower(argv(0))) { { execution } return true; } }
+			{ if (name == s) { { execution } return true; } }
 
 		CONSOLE_COMMANDS_MOVEMENT();
 		#undef CONSOLE_COMMAND
@@ -643,17 +643,10 @@ bool ConsoleCommand_macro_movement(int argc)
 bool CSQC_ConsoleCommand(string command)
 {
 	int argc = tokenize_console(command);
-
-	if(ConsoleCommand_macro_normal(argc))
-	{
-		return true;
-	}
-	else if(ConsoleCommand_macro_movement(argc))
-	{
-		return true;
-	}
-
-	// Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
-
-	return false;
+	string s = strtolower(argv(0));
+	// Return value should be true if CSQC handled the command, otherwise return false to have the engine handle it.
+	return (ConsoleCommand_macro_normal(s, argc)
+	|| ConsoleCommand_macro_movement(s, argc)
+	|| MUTATOR_CALLHOOK(CSQC_ConsoleCommand, s, argc, command)
+	);
 }

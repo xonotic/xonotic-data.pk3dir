@@ -1,0 +1,38 @@
+#ifndef CLIENT_MUTATORS_EVENTS_H
+#define CLIENT_MUTATORS_EVENTS_H
+
+#include "../../common/mutators/base.qh"
+
+// globals
+
+string cmd_name;
+int cmd_argc;
+string cmd_string;
+
+/**
+ * Called when a client command is parsed
+ * NOTE: hooks MUST start with if (MUTATOR_RETURNVALUE) return false;
+ * NOTE: return true if you handled the command, return false to continue handling
+ * NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
+ * // example:
+ * MUTATOR_HOOKFUNCTION(foo, CSQC_ConsoleCommand) {
+ *     if (MUTATOR_RETURNVALUE) return false; // command was already handled
+ *     if (cmd_name == "echocvar" && cmd_argc >= 2) {
+ *         print(cvar_string(argv(1)), "\n");
+ *         return true;
+ *     }
+ *     if (cmd_name == "echostring" && cmd_argc >= 2) {
+ *         print(substring(cmd_string, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), "\n");
+ *         return true;
+ *     }
+ *     return false;
+ * }
+ */
+#define EV_CSQC_ConsoleCommand(i, o) \
+    /** command name */ i(string, cmd_name) \
+    /** also, argv() can be used */ i(int, cmd_argc) \
+    /** whole command, use only if you really have to */ i(string, cmd_string) \
+    /**/
+MUTATOR_HOOKABLE(CSQC_ConsoleCommand, EV_CSQC_ConsoleCommand);
+
+#endif

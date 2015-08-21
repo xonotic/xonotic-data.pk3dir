@@ -290,8 +290,8 @@ MUTATOR_HOOKABLE(PlayerUseKey, EV_NO_ARGS);
 
 /**
  * called when a client command is parsed
- * NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return 0;
- * NOTE: return 1 if you handled the command, return 0 to continue handling
+ * NOTE: hooks MUST start with if (MUTATOR_RETURNVALUE) return false;
+ * NOTE: return true if you handled the command, return false to continue handling
  * NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
  * // example:
  * MUTATOR_HOOKFUNCTION(foo_SV_ParseClientCommand)
