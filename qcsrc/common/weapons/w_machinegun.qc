@@ -118,7 +118,7 @@ void W_MachineGun_Attack(int deathtype)
 	else
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), deathtype, 0);
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("uzi_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -191,7 +191,7 @@ void W_MachineGun_Attack_Auto(void)
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("uzi_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -214,7 +214,7 @@ void W_MachineGun_Attack_Burst(void)
 
 	fireBullet(w_shotorg, w_shotdir, WEP_CVAR(machinegun, burst_speed), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), WEP_MACHINEGUN, 0);
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("uzi_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');

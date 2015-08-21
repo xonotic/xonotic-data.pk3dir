@@ -73,7 +73,7 @@ void W_HeavyMachineGun_Attack_Auto()
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("uzi_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');

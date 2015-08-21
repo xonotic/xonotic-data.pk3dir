@@ -23,6 +23,7 @@
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
+#include "../common/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
@@ -563,6 +564,7 @@ void spawnfunc___init_dedicated_server(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -611,6 +613,7 @@ void spawnfunc_worldspawn (void)
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 

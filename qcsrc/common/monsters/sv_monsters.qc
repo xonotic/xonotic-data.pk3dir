@@ -842,7 +842,7 @@ void monster_remove(entity mon)
 	if(!mon)
 		return; // nothing to remove
 
-	pointparticles(particleeffectnum("item_pickup"), mon.origin, '0 0 0', 1);
+	Send_Effect("item_pickup", mon.origin, '0 0 0', 1);
 
 	if(mon.weaponentity)
 		remove(mon.weaponentity);

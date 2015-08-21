@@ -760,7 +760,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			{
 				Unfreeze(targ);
 				targ.health = autocvar_g_freezetag_revive_falldamage_health;
-				pointparticles(particleeffectnum("iceorglass"), targ.origin, '0 0 0', 3);
+				Send_Effect("iceorglass", targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
@@ -771,7 +771,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freezetag_frozen_damage_trigger)
 		{
-			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
+			Send_Effect("teleport", targ.origin, '0 0 0', 1);
 
 			entity oldself = self;
 			self = targ;
@@ -801,7 +801,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				self.oldorigin = self.origin;
 				self.prevorigin = self.origin;
 
-				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+				Send_Effect("teleport", self.origin, '0 0 0', 1);
 			}
 
 			self = oldself;

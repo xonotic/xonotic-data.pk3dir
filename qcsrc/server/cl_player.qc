@@ -529,7 +529,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			if(deathtype == DEATH_KILL)
 			{
 				// for the lemmings fans, a small harmless explosion
-				pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+				Send_Effect("rocket_explode", self.origin, '0 0 0', 1);
 			}
 		}
 

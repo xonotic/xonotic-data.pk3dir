@@ -90,7 +90,7 @@ void GrapplingHookReset(void)
 void GrapplingHookThink();
 void GrapplingHook_Stop()
 {
-	pointparticles(particleeffectnum("grapple_impact"), self.origin, '0 0 0', 1);
+	Send_Effect("grapple_impact", self.origin, '0 0 0', 1);
 	sound (self, CH_SHOTS, "weapons/hook_impact.wav", VOL_BASE, ATTEN_NORM);
 
 	self.state = 1;
@@ -333,7 +333,7 @@ void FireGrapplingHook (void)
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
 	org = trace_endpos;
 
-	pointparticles(particleeffectnum("grapple_muzzleflash"), org, '0 0 0', 1);
+	Send_Effect("grapple_muzzleflash", org, '0 0 0', 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
