@@ -512,8 +512,8 @@ void GameCommand(string command)
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
-
-	if(strtolower(argv(0)) == "help")
+	string s = strtolower(argv(0));
+	if (s == "help")
 	{
 		if(argc == 1)
 		{
@@ -537,14 +537,11 @@ void GameCommand(string command)
 			return;
 		}
 	}
-	else if(GenericCommand(command))
-	{
-		return; // handled by common/command/generic.qc
-	}
-	else if(LocalCommand_macro_command(argc)) // continue as usual and scan for normal commands
-	{
-		return; // handled by one of the above LocalCommand_* functions
-	}
+	// continue as usual and scan for normal commands
+	if (GenericCommand(command)// handled by common/command/generic.qc
+	|| LocalCommand_macro_command(argc) // handled by one of the above LocalCommand_* functions
+	|| MUTATOR_CALLHOOK(CSQC_ConsoleCommand, s, argc, command) // handled by a mutator
+	) return;
 
 	// nothing above caught the command, must be invalid
 	print(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.\n");
@@ -647,6 +644,5 @@ bool CSQC_ConsoleCommand(string command)
 	// Return value should be true if CSQC handled the command, otherwise return false to have the engine handle it.
 	return (ConsoleCommand_macro_normal(s, argc)
 	|| ConsoleCommand_macro_movement(s, argc)
-	|| MUTATOR_CALLHOOK(CSQC_ConsoleCommand, s, argc, command)
 	);
 }
