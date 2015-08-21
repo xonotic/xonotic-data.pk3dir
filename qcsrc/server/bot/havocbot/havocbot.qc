@@ -967,6 +967,8 @@ void havocbot_chooseenemy()
 
 	self.enemy = best;
 	self.havocbot_stickenemy = true;
+	if(best && best.classname == "misc_breakablemodel")
+		self.havocbot_stickenemy = false;
 }
 
 float havocbot_chooseweapon_checkreload(int new_weapon)
