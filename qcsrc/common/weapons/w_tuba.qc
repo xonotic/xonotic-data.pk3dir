@@ -362,7 +362,7 @@ void W_Tuba_NoteOn(float hittype)
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	if(time > self.tuba_smoketime)
 	{
-		pointparticles(particleeffectnum("smoke_ring"), o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
+		Send_Effect("smoke_ring", o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
 		self.tuba_smoketime = time + 0.25;
 	}
 }
@@ -453,7 +453,7 @@ bool W_Tuba(int req)
 						break;
 				}
 				W_SetupShot(self, false, 0, "", 0, 0);
-				pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
+				Send_Effect("teleport", w_shotorg, '0 0 0', 1);
 				self.weaponentity.state = WS_INUSE;
 				weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
 			}

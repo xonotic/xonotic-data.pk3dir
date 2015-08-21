@@ -124,7 +124,7 @@ MUTATOR_HOOKFUNCTION(instagib_MonsterLoot)
 MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
 {
 	// always refill ammo
-	if(self.monsterid == MON_MAGE)
+	if(self.monsterid == MON_MAGE.monsterid)
 		self.skin = 1;
 
 	return false;
@@ -290,7 +290,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		frag_mirrordamage = 0;
 	}
 
-	if((frag_target.buffs & BUFF_INVISIBLE) || (frag_target.items & ITEM_Strength.m_itemid))
+	if((frag_target.buffs & BUFF_INVISIBLE.m_itemid) || (frag_target.items & ITEM_Strength.m_itemid))
 		yoda = 1;
 
 	return false;
@@ -405,7 +405,7 @@ MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
 {
 	if (!autocvar_g_powerups) { return false; }
-	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
+	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.itemdef == ITEM_HealthMega))
 		return false;
 
 	entity e = spawn();

@@ -2,6 +2,7 @@
 
 ../common/util-pre.qh
 ../dpdefs/csprogsdefs.qh
+../common/util-post.qh
 
 announcer.qc
 bgmscript.qc
@@ -43,6 +44,7 @@ weapons/projectile.qc // TODO
 
 ../common/animdecide.qc
 ../common/buffs.qc
+../common/effects.qc
 ../common/mapinfo.qc
 ../common/movetypes/include.qc
 ../common/nades.qc

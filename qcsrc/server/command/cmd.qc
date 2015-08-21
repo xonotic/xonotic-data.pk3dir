@@ -26,7 +26,7 @@
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
 
-#include "../../common/monsters/all.qh"
+#include "../../common/monsters/all.qc"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
@@ -239,7 +239,7 @@ void ClientCommand_mobedit(float request, float argc)
 					{
 						case "skin":
 						{
-							if(trace_ent.monsterid != MON_MAGE)
+							if(trace_ent.monsterid != MON_MAGE.monsterid)
 								trace_ent.skin = stof(argv(2));
 							return;
 						}
@@ -888,11 +888,6 @@ void SV_ParseClientCommand(string command)
 
 	float argc = tokenize_console(command);
 
-	// for the mutator hook system
-	cmd_name = strtolower(argv(0));
-	cmd_argc = argc;
-	cmd_string = command;
-
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3
@@ -941,7 +936,7 @@ void SV_ParseClientCommand(string command)
 			return;
 		}
 	}
-	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
+	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand, strtolower(argv(0)), argc, command))
 	{
 		return; // handled by a mutator
 	}

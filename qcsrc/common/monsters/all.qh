@@ -1,5 +1,30 @@
+#include "../registry.qh"
+
 #ifndef MONSTERS_ALL_H
 #define MONSTERS_ALL_H
+
+void RegisterMonsters();
+const int MON_MAXCOUNT = 24;
+entity monster_info[MON_MAXCOUNT], monster_info_first, monster_info_last;
+entity get_monsterinfo(float id);
+int MON_COUNT;
+const int MON_FIRST = 1;
+#define MON_LAST (MON_FIRST + MON_COUNT - 1)
+/** If you register a new monster, make sure to add it to all.inc */
+#define REGISTER_MONSTER(id, class) REGISTER(RegisterMonsters, MON, monster_info, MON_COUNT, id, monsterid, NEW(class))
+#include "monster.qh"
+#define REGISTER_MONSTER_SIMPLE(id, monsterflags, min_s, max_s, modelname, shortname, mname) \
+    REGISTER_MONSTER(id, Monster) {                                     \
+        this.netname = shortname;                                       \
+        this.monster_name = mname;                                      \
+        this.mdl = modelname;                                           \
+        this.spawnflags = monsterflags;                                 \
+        this.mins = min_s;                                              \
+        this.maxs = max_s;                                              \
+        this.model = strzone(strcat("models/monsters/", modelname));    \
+    }                                                                   \
+    REGISTER_INIT(MON, id)
+REGISTER_REGISTRY(RegisterMonsters)
 
 #include "../util.qh"
 
@@ -8,9 +33,6 @@ const int MR_SETUP = 1; // (SERVER) setup monster data
 const int MR_THINK = 2; // (SERVER) logic to run every frame
 const int MR_DEATH = 3; // (SERVER) called when monster dies
 const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
-
-// functions:
-entity get_monsterinfo(float id);
 
 // special spawn flags
 const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
@@ -22,10 +44,7 @@ const int MON_FLAG_RANGED = 512; // monster shoots projectiles
 const int MON_FLAG_MELEE = 1024;
 
 // entity properties of monsterinfo:
-.float monsterid; // MON_...
 .string netname; // short name
-.string monster_name; // human readable name
-.float(float) monster_func; // m_...
 .string mdl; // currently a copy of the model
 .string model; // full name of model
 .int spawnflags;
@@ -35,39 +54,4 @@ const int MON_FLAG_MELEE = 1024;
 #define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
 #define M_NAME(monstertype) (get_monsterinfo(monstertype)).monster_name
 
-// =====================
-//	Monster Registration
-// =====================
-
-float m_null(float dummy);
-void register_monster(float id, float(float) func, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname);
-void register_monsters_done();
-
-const int MON_MAXCOUNT = 24;
-const int MON_FIRST = 1;
-int MON_COUNT;
-int MON_LAST;
-
-#define REGISTER_MONSTER_2(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	int id; \
-	float func(float); \
-	void RegisterMonsters_##id() \
-	{ \
-		MON_LAST = (id = MON_FIRST + MON_COUNT); \
-		++MON_COUNT; \
-		register_monster(id,func,monsterflags,min_s,max_s,modelname,shortname,mname); \
-	} \
-	ACCUMULATE_FUNCTION(RegisterMonsters, RegisterMonsters_##id)
-#ifdef MENUQC
-#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
-#else
-#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,func,monsterflags,min_s,max_s,modelname,shortname,mname)
-#endif
-
-#include "all.inc"
-
-#undef REGISTER_MONSTER
-ACCUMULATE_FUNCTION(RegisterMonsters, register_monsters_done);
 #endif

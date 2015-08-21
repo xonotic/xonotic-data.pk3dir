@@ -3,6 +3,7 @@
 ../common/util-pre.qh
 ../dpdefs/menudefs.qh
 ../dpdefs/keycodes.qh
+../common/util-post.qh
 
 oo/classes.qc
 

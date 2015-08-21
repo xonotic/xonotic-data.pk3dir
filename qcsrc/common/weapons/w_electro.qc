@@ -259,7 +259,7 @@ void W_Electro_Attack_Bolt(void)
 		WEP_CVAR_PRI(electro, damage)
 	);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("electro_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.classname = "electro_bolt";
@@ -284,7 +284,7 @@ void W_Electro_Attack_Bolt(void)
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
 
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
 void W_Electro_Orb_Touch(void)
@@ -359,7 +359,7 @@ void W_Electro_Attack_Orb(void)
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("electro_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	entity proj = spawn();
 	proj.classname = "electro_orb";
@@ -400,7 +400,7 @@ void W_Electro_Attack_Orb(void)
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, false); // no culling, it has sound
 
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
 void W_Electro_CheckAttack(void)

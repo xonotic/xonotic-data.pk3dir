@@ -158,7 +158,7 @@ MUTATOR_HOOKFUNCTION(lms_KeepScore)
 MUTATOR_HOOKFUNCTION(lms_FilterItem)
 {
 	if(autocvar_g_lms_extra_lives)
-	if(self.classname == "item_health_mega")
+	if(self.itemdef == ITEM_HealthMega)
 	{
 		self.max_health = 1;
 		return false;

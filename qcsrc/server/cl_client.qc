@@ -188,7 +188,7 @@ void PutObserverInServer (void)
 	entity	spot;
     self.hud = HUD_NORMAL;
 
-	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1); }
 
 	spot = SelectSpawnPoint (true);
 	if(!spot)
@@ -424,7 +424,7 @@ void PutClientInServer (void)
 	// reset player keys
 	self.itemkeys = 0;
 
-	MUTATOR_CALLHOOK(PutClientInServer);
+	MUTATOR_CALLHOOK(PutClientInServer, self);
 
 	if(gameover)
 		self.classname = "observer";
@@ -646,8 +646,7 @@ void PutClientInServer (void)
 
 		Unfreeze(self);
 
-		spawn_spot = spot;
-		MUTATOR_CALLHOOK(PlayerSpawn);
+		MUTATOR_CALLHOOK(PlayerSpawn, spot);
 
 		if(autocvar_spawn_debug)
 		{
@@ -1282,7 +1281,7 @@ void ClientConnect (void)
 		self = oldself;
 	}
 
-	MUTATOR_CALLHOOK(ClientConnect);
+	MUTATOR_CALLHOOK(ClientConnect, self);
 }
 /*
 =============
@@ -1306,7 +1305,7 @@ void ClientDisconnect (void)
 
 	PlayerStats_GameReport_FinalizePlayer(self);
 
-	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1); }
 
 	CheatShutdownClient();
 
@@ -1443,7 +1442,7 @@ void respawn(void)
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
-		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
+		Send_Effect("respawn_ghost", self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
@@ -1465,7 +1464,7 @@ void play_countdown(float finished, string samp)
 void player_powerups (void)
 {
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
-	olditems = self.items;
+	int items_prev = self.items;
 
 	if((self.items & IT_USING_JETPACK) && !self.deadflag && !gameover)
 		self.modelflags |= MF_ROCKET;
@@ -1577,7 +1576,7 @@ void player_powerups (void)
 	if (time < self.spawnshieldtime)
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
-	MUTATOR_CALLHOOK(PlayerPowerups);
+	MUTATOR_CALLHOOK(PlayerPowerups, self, items_prev);
 }
 
 float CalcRegen(float current, float stable, float regenfactor, float regenframetime)
@@ -1629,11 +1628,7 @@ void player_regen (void)
 {
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
-	regen_mod_max = max_mod;
-	regen_mod_regen = regen_mod;
-	regen_mod_rot = rot_mod;
-	regen_mod_limit = limit_mod;
-	if(!MUTATOR_CALLHOOK(PlayerRegen))
+	if(!MUTATOR_CALLHOOK(PlayerRegen, max_mod, regen_mod, rot_mod, limit_mod))
 	if(!self.frozen)
 	{
 		float minh, mina, maxh, maxa, limith, limita;
@@ -1708,8 +1703,7 @@ spectate mode routines
 */
 
 void SpectateCopy(entity spectatee) {
-	other = spectatee;
-	MUTATOR_CALLHOOK(SpectateCopy);
+	MUTATOR_CALLHOOK(SpectateCopy, spectatee, self);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;

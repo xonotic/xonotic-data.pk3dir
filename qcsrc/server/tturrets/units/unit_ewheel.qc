@@ -18,7 +18,7 @@ void ewheel_attack()
         _mis = turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, true, true); // WEAPONTODO: this is not a projectile made by the blaster, add separate effect for it
         _mis.missile_flags = MIF_SPLASH;
 
-        pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+        Send_Effect("laser_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
         self.tur_head.frame += 2;
 

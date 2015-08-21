@@ -979,8 +979,8 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 	float bonusNades    = getstatf(STAT_NADE_BONUS);
 	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
 	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
-	vector nadeColor    = Nade_Color(bonusType);
-	string nadeIcon     = Nade_Icon(bonusType);
+	vector nadeColor    = NADES[bonusType].m_color;
+	string nadeIcon     = NADES[bonusType].m_icon;
 
 	vector iconPos, textPos;
 
@@ -1404,10 +1404,9 @@ void HUD_Powerups()
 	if(superTime)
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
-	entity item;
-	for(item = Buff_Type_first; item; item = item.enemy)
-		if(allBuffs & item.items)
-			addPowerupItem(item.message, strcat("buff_", item.netname), item.colormod, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+	FOREACH(BUFFS, it.m_itemid & allBuffs, LAMBDA(
+		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+	));
 
 	if(!powerupItemsCount)
 		return;
@@ -1475,7 +1474,7 @@ void HUD_Powerups()
 	int row = 0;
 
 	draw_beginBoldFont();
-	for(item = powerupItems; item.count; item = item.chain)
+	for(entity item = powerupItems; item.count; item = item.chain)
 	{
 		itemPos = eX * (pos.x + column * itemSize.x) + eY * (pos.y + row * itemSize.y);
 
@@ -4616,11 +4615,11 @@ string GetItemsTimePicture(float i)
 	{
 		case 0: return "item_large_armor";
 		case 1: return "item_mega_health";
-		case 2: return "item_strength";
-		case 3: return "item_shield";
+		case 2: return "strength";
+		case 3: return "shield";
 		case 4: return "item_mega_health";
-		case 5: return "item_strength";
-		case 6: return "item_shield";
+		case 5: return "strength";
+		case 6: return "shield";
 		case 7: return "fuelregen";
 		case 8: return "jetpack";
 		case 9: return "superweapons";
@@ -4644,7 +4643,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
 		picalpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 	}
 	else
-		picalpha = 0.3;
+		picalpha = 0.5;
 	t = floor(item_time - time + 0.999);
 	if(t < 5)
 		color = '0.7 0 0';

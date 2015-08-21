@@ -327,7 +327,7 @@ void W_MineLayer_Attack(void)
 	W_DecreaseAmmo(WEP_CVAR(minelayer, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, "weapons/mine_fire.wav", CH_WEAPON_A, WEP_CVAR(minelayer, damage));
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("rocketlauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
 	mine.owner = mine.realowner = self;
@@ -374,7 +374,7 @@ void W_MineLayer_Attack(void)
 
 	// common properties
 
-	other = mine; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, mine);
 
 	self.minelayer_mines = W_MineLayer_Count(self);
 }
