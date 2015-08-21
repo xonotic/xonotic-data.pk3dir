@@ -1,7 +1,45 @@
+#include "../effects.qh"
 #include "vehicles.qh"
 #include "sv_vehicles.qh"
 
-float SendAuxiliaryXhair(entity to, float sf)
+#if 0
+bool vehicle_send(entity to, int sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_VEHICLE);
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & VSF_SPAWN)
+	{
+		WriteByte(MSG_ENTITY, self.vehicleid);
+	}
+
+	if(sf & VSF_SETUP)
+	{
+		// send stuff?
+	}
+
+	if(sf & VSF_ENTER)
+	{
+		// player handles the .vehicle stuff, we need only set ourselves up for driving
+
+		// send stuff?
+	}
+
+	if(sf & VSF_EXIT)
+	{
+		// senf stuff?
+	}
+
+	if(sf & VSF_PRECACHE)
+	{
+		// send stuff?!
+	}
+
+	return true;
+}
+#endif
+
+bool SendAuxiliaryXhair(entity to, int sf)
 {
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
@@ -99,7 +137,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 		if(trace_ent.deadflag != DEAD_NO)
 			trace_ent = world;
 
-		if(!((trace_ent.vehicle_flags & VHF_ISVEHICLE) || (trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)))
+		if(!(IS_VEHICLE(trace_ent) || IS_TURRET(trace_ent)))
 			trace_ent = world;
 
 		if(trace_ent.alpha <= 0.5 && trace_ent.alpha != 0)
@@ -255,8 +293,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 		sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
 	if(_mzlfx)
-		pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
-
+		Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
 
 	setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
@@ -268,8 +305,8 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 void vehicles_gib_explode()
 {
 	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
-	pointparticles(particleeffectnum("explosion_small"), self.wp00.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	Send_Effect("explosion_small", self.wp00.origin + '0 0 64', '0 0 0', 1);
 	remove(self);
 }
 
@@ -443,7 +480,7 @@ void vehicles_clearreturn(entity veh)
 void vehicles_spawn();
 void vehicles_return()
 {
-	pointparticles(particleeffectnum("teleport"), self.wp00.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect("teleport", self.wp00.origin + '0 0 64', '0 0 0', 1);
 
 	self.wp00.think	 = vehicles_spawn;
 	self.wp00.nextthink = time;
@@ -617,19 +654,19 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, int deatht
 	self.dmg_time = time;
 
 	// WEAPONTODO
-	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX.m_id))
 		damage *= autocvar_g_vehicles_vortex_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN.m_id))
 		damage *= autocvar_g_vehicles_machinegun_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
+	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE.m_id))
 		damage *= autocvar_g_vehicles_rifle_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id))
 		damage *= autocvar_g_vehicles_vaporizer_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
+	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER.m_id))
 		damage *= autocvar_g_vehicles_tag_damagerate;
 
 	if(DEATH_WEAPONOFWEAPONDEATH(deathtype))
@@ -710,7 +747,7 @@ float vehicles_crushable(entity e)
 	if(IS_PLAYER(e) && time >= e.vehicle_enter_delay)
 		return true;
 
-	if(e.flags & FL_MONSTER)
+	if(IS_MONSTER(e))
 		return true;
 
 	return false;
@@ -867,11 +904,7 @@ void vehicles_exit(bool eject)
 
 	WaypointSprite_Kill(_vehicle.wps_intruder);
 
-	vh_player = _player;
-	vh_vehicle = _vehicle;
-	MUTATOR_CALLHOOK(VehicleExit);
-	_player = vh_player;
-	_vehicle = vh_vehicle;
+	MUTATOR_CALLHOOK(VehicleExit, _player, _vehicle);
 
 	_vehicle.team = _vehicle.tur_head.team;
 
@@ -894,7 +927,7 @@ void vehicles_exit(bool eject)
 
 void vehicles_touch()
 {
-	if(MUTATOR_CALLHOOK(VehicleTouch))
+	if(MUTATOR_CALLHOOK(VehicleTouch, self, other))
 		return;
 
 	// Vehicle currently in use
@@ -921,6 +954,20 @@ void vehicles_touch()
 		return;
 
 	vehicles_enter(other, self);
+}
+
+bool vehicle_impulse(int imp)
+{
+	switch(imp)
+	{
+		case 17:
+		{
+			stuffcmd(self, "\ntoggle cl_eventchase_vehicle\nset _vehicles_shownchasemessage 1\n");
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void vehicles_enter(entity pl, entity veh)
@@ -1024,6 +1071,7 @@ void vehicles_enter(entity pl, entity veh)
 	pl.vehicle_ammo2 = veh.vehicle_ammo2;
 	pl.vehicle_reload1 = veh.vehicle_reload1;
 	pl.vehicle_reload2 = veh.vehicle_reload2;
+	pl.vehicle_energy = veh.vehicle_energy;
 
 	// Cant do this, hides attached objects too.
 	//veh.exteriormodeltoclient = veh.owner;
@@ -1062,9 +1110,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	CSQCVehicleSetup(pl, veh.vehicleid);
 
-	vh_player = pl;
-	vh_vehicle = veh;
-	MUTATOR_CALLHOOK(VehicleEnter);
+	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
 	entity oldself = self;
 	self = veh;
@@ -1121,7 +1167,7 @@ void vehicles_spawn()
 	self.angles = self.pos2;
 	setorigin(self, self.pos1);
 	// Show it
-	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect("teleport", self.origin + '0 0 64', '0 0 0', 1);
 
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;
@@ -1177,9 +1223,12 @@ bool vehicle_initialize(int vehicle_id, bool nodrop)
 	if(self.team && (!teamplay || !autocvar_g_vehicles_teams))
 		self.team = 0;
 
-	self.vehicle_flags |= VHF_ISVEHICLE;
+	if(self.mdl == "" || !self.mdl)
+		setmodel(self, veh.model);
+	else
+		setmodel(self, self.mdl);
 
-	setmodel(self, veh.model);
+	self.vehicle_flags |= VHF_ISVEHICLE;
 
 	self.vehicle_viewport		= spawn();
 	self.vehicle_hudmodel		= spawn();

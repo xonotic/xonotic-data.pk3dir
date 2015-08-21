@@ -3,54 +3,38 @@
     #include "../../../server/constants.qh"
 #endif
 
-#define WITH(it) this.m_##it;
-#define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-#define DEFINE(id, ...) REGISTER_ITEM(id, Pickup, UNWORDS(__VA_ARGS__))
+#include "ammo.qh"
+#include "powerup.qh"
 
-DEFINE(Jetpack
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/g_jetpack.md3"
-    ,   name                =   "Jet pack"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   BOT_PICKUP_RATING_LOW
-    ,   itemflags           =   FL_POWERUP
-    ,   itemid              =   IT_JETPACK
-    ,   pickupevalfunc      =   commodity_pickupevalfunc
-    ,   respawntime         =         GET(g_pickup_respawntime_powerup)
-    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_powerup)
-    )
-)
+REGISTER_ITEM(Jetpack, Powerup) {
+    this.m_model                =   "models/items/g_jetpack.md3";
+    this.m_name                 =   "Jet pack";
+#ifdef SVQC
+    this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
+    this.m_itemid               =   IT_JETPACK;
+    this.m_pickupevalfunc       =   commodity_pickupevalfunc;
+#endif
+}
 
-DEFINE(JetpackFuel
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/g_fuel.md3"
-    ,   name                =   "Fuel"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   BOT_PICKUP_RATING_LOW
-    ,   itemid              =   IT_FUEL
-    ,   pickupevalfunc      =   commodity_pickupevalfunc
-    ,   respawntime         =         GET(g_pickup_respawntime_ammo)
-    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_ammo)
-    )
-)
+REGISTER_ITEM(JetpackFuel, Ammo) {
+    this.m_model    =   "models/items/g_fuel.md3";
+    this.m_name     =   "Fuel";
+    this.m_ammoPic  =   "ammo_fuel";
+#ifdef SVQC
+    this.m_botvalue =   BOT_PICKUP_RATING_LOW;
+    this.m_itemid   =   IT_FUEL;
+#endif
+}
 
-DEFINE(JetpackRegen
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/g_fuelregen.md3"
-    ,   name                =   "Fuel regenerator"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   BOT_PICKUP_RATING_LOW
-    ,   itemflags           =   FL_POWERUP
-    ,   itemid              =   IT_FUEL_REGEN
-    ,   pickupevalfunc      =   commodity_pickupevalfunc
-    ,   respawntime         =         GET(g_pickup_respawntime_powerup)
-    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_powerup)
-    )
-)
-
-#undef WITH
-#undef CONFIGURE
-#undef DEFINE
+REGISTER_ITEM(JetpackRegen, Pickup) {
+    this.m_model                =   "models/items/g_fuelregen.md3";
+    this.m_name                 =   "Fuel regenerator";
+#ifdef SVQC
+    this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
+    this.m_itemflags            =   FL_POWERUP;
+    this.m_itemid               =   IT_FUEL_REGEN;
+    this.m_pickupevalfunc       =   commodity_pickupevalfunc;
+    this.m_respawntime          =   GET(g_pickup_respawntime_powerup);
+    this.m_respawntimejitter    =   GET(g_pickup_respawntimejitter_powerup);
+#endif
+}

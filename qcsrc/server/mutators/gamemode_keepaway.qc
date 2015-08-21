@@ -25,6 +25,7 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
+void ka_TouchEvent();
 void ka_RespawnBall() // runs whenever the ball needs to be relocated
 {
 	if(gameover) { return; }
@@ -42,11 +43,12 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	self.velocity = '0 0 200';
 	self.angles = '0 0 0';
 	self.effects = autocvar_g_keepawayball_effects;
+	self.touch = ka_TouchEvent;
 	self.think = ka_RespawnBall;
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
-	pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
-	pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
+	Send_Effect("electro_combo", oldballorigin, '0 0 0', 1);
+	Send_Effect("electro_combo", self.origin, '0 0 0', 1);
 
 	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
@@ -79,7 +81,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if(other.frozen) { return; }
 	if (!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
-		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
+		Send_Effect("kaball_sparks", self.origin, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTEN_NORM);
 		return;
 	}
@@ -169,7 +171,14 @@ void ka_Reset() // used to clear the ballcarrier whenever the match switches fro
 	if((self.owner) && (IS_PLAYER(self.owner)))
 		ka_DropEvent(self.owner);
 
-	ka_RespawnBall();
+	if(time < game_starttime)
+	{
+		self.think = ka_RespawnBall;
+		self.touch = func_null;
+		self.nextthink = game_starttime;
+	}
+	else
+		ka_RespawnBall();
 }
 
 
@@ -192,9 +201,8 @@ void havocbot_goalrating_ball(float ratingscale, vector org)
 		t = (self.health + self.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
 		navigation_routerating(ball_owner, t * ratingscale, 2000);
 	}
-
-	// Ball has been dropped so collect.
-	navigation_routerating(ka_ball, ratingscale, 2000);
+	else // Ball has been dropped so collect.
+		navigation_routerating(ka_ball, ratingscale, 2000);
 }
 
 void havocbot_role_ka_carrier()

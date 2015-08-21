@@ -31,6 +31,7 @@
 
 #include "../common/buffs.qh"
 #include "../common/deathtypes.qh"
+#include "../common/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/nades.qh"
@@ -40,6 +41,8 @@
 #include "../common/teams.qh"
 
 #include "../common/items/all.qh"
+
+#include "../common/mutators/base.qh"
 
 #include "../common/weapons/all.qh"
 
@@ -120,6 +123,9 @@ void CSQC_Init(void)
 	registercvar("cl_nade_type", "3");
 	registercvar("cl_pokenade_type", "zombie");
 
+	registercvar("cl_jumpspeedcap_min", "");
+	registercvar("cl_jumpspeedcap_max", "");
+
 	gametype = 0;
 
 	// hud_fields uses strunzone on the titles!
@@ -138,15 +144,12 @@ void CSQC_Init(void)
 	GetTeam(NUM_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterItems);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	static_init();
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 
 	WaypointSprite_Load();
 
@@ -874,6 +877,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
+		case ENT_CLIENT_VIEWLOC: ent_viewloc(); break;
+		case ENT_CLIENT_VIEWLOC_TRIGGER: ent_viewloc_trigger(); break;
 		case ENT_CLIENT_LADDER: ent_func_ladder(); break;
 		case ENT_CLIENT_TRIGGER_PUSH: ent_trigger_push(); break;
 		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;
@@ -885,6 +890,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_KEYLOCK: ent_keylock(); break;
 		case ENT_CLIENT_TRAIN: ent_train(); break;
 		case ENT_CLIENT_TRIGGER_IMPULSE: ent_trigger_impulse(); break;
+		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ SEEKER,
 /* function  */ W_Seeker,
@@ -81,9 +81,10 @@ SEEKER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity tag_target, wps_tag_tracker;
 .float tag_time;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_seeker(void) { weapon_defaultspawnfunc(WEP_SEEKER); }
+void spawnfunc_weapon_seeker(void) { weapon_defaultspawnfunc(WEP_SEEKER.m_id); }
 
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
@@ -251,7 +252,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	makevectors(self.v_angle);
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
-	pointparticles(particleeffectnum("seeker_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("seeker_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	//self.detornator         = false;
 
@@ -276,9 +277,9 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	//missile.think           = W_Seeker_Missile_Animate; // csqc projectiles.
 
 	if(missile.enemy != world)
-		missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
+		missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
 	else
-		missile.projectiledeathtype = WEP_SEEKER;
+		missile.projectiledeathtype = WEP_SEEKER.m_id;
 
 
 	setorigin(missile, w_shotorg);
@@ -293,7 +294,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 
 	CSQCProjectile(missile, false, PROJECTILE_SEEKER, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -343,7 +344,7 @@ void W_Seeker_Fire_Flac(void)
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/flac_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
 	w_shotorg += f_diff;
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile 				= spawn();
 	missile.owner 			= missile.realowner = self;
@@ -356,8 +357,8 @@ void W_Seeker_Fire_Flac(void)
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
 	missile.solid 			= SOLID_BBOX;
 	missile.movetype 		= MOVETYPE_FLY;
-	missile.projectiledeathtype = WEP_SEEKER;
-	missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = WEP_SEEKER.m_id;
+	missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
 	missile.flags 				= FL_PROJECTILE;
 	missile.missile_flags       = MIF_SPLASH;
 
@@ -371,7 +372,7 @@ void W_Seeker_Fire_Flac(void)
 	W_SetupProjVelocity_UP_PRE(missile, seeker, flac_);
 	CSQCProjectile(missile, true, PROJECTILE_FLAC, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -416,7 +417,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 	entity oldself,oldenemy;
 	self.cnt = self.cnt - 1;
 
-	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.WEP_AMMO(SEEKER) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER))
+	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.WEP_AMMO(SEEKER) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER.m_id))
 	{
 		remove(self);
 		return;
@@ -455,7 +456,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 void W_Seeker_Tracker_Think(void)
 {
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
-	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER)
+	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER.m_id)
 	|| (time > self.tag_time + WEP_CVAR(seeker, tag_tracker_lifetime)))
 	{
 		if(self)
@@ -477,7 +478,7 @@ void W_Seeker_Tag_Explode(void)
 {
 	//if(other==self.realowner)
 	//    return;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_BOUNCE, other.species, self);
+	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, other.species, self);
 
 	remove(self);
 }
@@ -505,7 +506,7 @@ void W_Seeker_Tag_Touch(void)
 	te_knightspike(org2);
 
 	self.event_damage = func_null;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_BOUNCE | HITTYPE_SECONDARY, other.species, self);
+	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, other.species, self);
 
 	if(other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)
 	{
@@ -589,7 +590,7 @@ void W_Seeker_Fire_Tag(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_TAG, false); // has sound
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -676,12 +677,12 @@ bool W_Seeker(int req)
 			if(WEP_CVAR(seeker, type) == 1)
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, missile_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, missile_ammo);
+				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
 			}
 			else
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, tag_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, tag_ammo);
+				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
 			}
 			return ammo_amount;
 		}
@@ -690,12 +691,12 @@ bool W_Seeker(int req)
 			if(WEP_CVAR(seeker, type) == 1)
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, tag_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, tag_ammo);
+				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
 			}
 			else
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, flac_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, flac_ammo);
+				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
 			}
 			return ammo_amount;
 		}

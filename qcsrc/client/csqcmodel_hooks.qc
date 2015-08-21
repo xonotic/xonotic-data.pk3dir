@@ -10,6 +10,7 @@
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
 #include "../common/teams.qh"
+#include "../common/triggers/trigger/viewloc.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/cl_player.qh"
@@ -399,6 +400,12 @@ void CSQCModel_AutoTagIndex_Apply(void)
 {
 	if(self.tag_entity && wasfreed(self.tag_entity))
 		self.tag_entity = world;
+
+	if(self.viewloc && wasfreed(self.viewloc))
+		self.viewloc = world;
+
+	if(self.viewloc.entnum != self.tag_networkviewloc)
+		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
 
 	if(self.tag_networkentity)
 	{

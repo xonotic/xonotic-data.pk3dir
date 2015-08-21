@@ -5,5 +5,6 @@
 #include "../classes.inc"
 #define IMPLEMENTATION
 #include "../classes.inc"
+#undef IMPLEMENTATION
 
 #endif

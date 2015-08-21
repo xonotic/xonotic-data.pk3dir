@@ -87,7 +87,7 @@ int VEH_LAST;
 	REGISTER_VEHICLE_2(VEH_##id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname)
 #endif
 
-#include "all.qh"
+#include "unit/all.qh"
 
 #undef REGISTER_VEHICLE
 ACCUMULATE_FUNCTION(RegisterVehicles, register_vehicles_done);

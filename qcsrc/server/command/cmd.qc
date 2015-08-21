@@ -26,7 +26,7 @@
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
 
-#include "../../common/monsters/all.qh"
+#include "../../common/monsters/all.qc"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
@@ -232,14 +232,14 @@ void ClientCommand_mobedit(float request, float argc)
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 
 				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); return; }
-				if(trace_ent.flags & FL_MONSTER)
+				if(IS_MONSTER(trace_ent))
 				{
 					if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
 					switch(argv(1))
 					{
 						case "skin":
 						{
-							if(trace_ent.monsterid != MON_MAGE)
+							if(trace_ent.monsterid != MON_MAGE.monsterid)
 								trace_ent.skin = stof(argv(2));
 							return;
 						}
@@ -273,7 +273,7 @@ void ClientCommand_mobkill(float request)
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 
-			if(trace_ent.flags & FL_MONSTER)
+			if(IS_MONSTER(trace_ent))
 			{
 				if(trace_ent.realowner != self)
 				{
@@ -888,11 +888,6 @@ void SV_ParseClientCommand(string command)
 
 	float argc = tokenize_console(command);
 
-	// for the mutator hook system
-	cmd_name = strtolower(argv(0));
-	cmd_argc = argc;
-	cmd_string = command;
-
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3
@@ -941,7 +936,7 @@ void SV_ParseClientCommand(string command)
 			return;
 		}
 	}
-	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
+	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand, strtolower(argv(0)), argc, command))
 	{
 		return; // handled by a mutator
 	}

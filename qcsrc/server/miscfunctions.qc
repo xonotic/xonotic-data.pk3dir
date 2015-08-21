@@ -303,11 +303,11 @@ string formatmessage(string msg)
 				wep = self.cnt;
 			replacement = WEP_NAME(wep);
 		} else if (escape == "W") {
-			if (self.items & IT_SHELLS) replacement = "shells";
-			else if (self.items & IT_NAILS) replacement = "bullets";
-			else if (self.items & IT_ROCKETS) replacement = "rockets";
-			else if (self.items & IT_CELLS) replacement = "cells";
-			else if (self.items & IT_PLASMA) replacement = "plasma";
+			if (self.items & ITEM_Shells.m_itemid) replacement = "shells";
+			else if (self.items & ITEM_Bullets.m_itemid) replacement = "bullets";
+			else if (self.items & ITEM_Rockets.m_itemid) replacement = "rockets";
+			else if (self.items & ITEM_Cells.m_itemid) replacement = "cells";
+			else if (self.items & ITEM_Plasma.m_itemid) replacement = "plasma";
 			else replacement = "batteries"; // ;)
 		} else if (escape == "x") {
 			replacement = cursor_ent.netname;
@@ -427,7 +427,6 @@ void GetCvars(float f)
 
 	get_cvars_f = f;
 	get_cvars_s = s;
-
 	MUTATOR_CALLHOOK(GetCvars);
 
 	Notification_GetCvars();
@@ -516,14 +515,14 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 			d = false;
 	}
 	else if (g_cts)
-		d = (i == WEP_SHOTGUN);
+		d = (i == WEP_SHOTGUN.m_id);
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
 		d = !(!weaponinfo.weaponstart);
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-		d |= (i == WEP_HOOK);
+		d |= (i == WEP_HOOK.m_id);
 	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
@@ -725,13 +724,13 @@ void readplayerstartcvars()
 	}
 
 	if (g_jetpack)
-		start_items |= IT_JETPACK;
+		start_items |= ITEM_Jetpack.m_itemid;
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
-	if ((start_items & IT_JETPACK) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
+	if ((start_items & ITEM_Jetpack.m_itemid) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
 	{
-		start_items |= IT_FUEL_REGEN;
+		start_items |= ITEM_JetpackRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}

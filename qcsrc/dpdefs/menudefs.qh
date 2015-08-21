@@ -8,12 +8,16 @@
 #define TRUE _TRUE
 #define FALSE _FALSE
 
+#define spawn _spawn
+
 #include "upstream/menudefs.qc"
 
 #undef true
 #undef false
 #undef TRUE
 #undef FALSE
+
+#undef spawn
 
 int(string str, string sub, int startpos) _strstrofs = #221;
 #define strstrofs _strstrofs

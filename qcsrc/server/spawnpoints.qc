@@ -228,7 +228,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		}
 	}
 
-	MUTATOR_CALLHOOK(Spawn_Score);
+	MUTATOR_CALLHOOK(Spawn_Score, self, spawn_spot, spawn_score);
 	return spawn_score;
 }
 

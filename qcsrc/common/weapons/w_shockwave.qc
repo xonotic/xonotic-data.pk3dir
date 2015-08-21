@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ SHOCKWAVE,
 /* function  */ W_Shockwave,
@@ -79,7 +79,8 @@ void Net_ReadShockwaveParticle(void);
 .float sw_spread_min;
 .float sw_time;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_shockwave(void)
 {
@@ -87,10 +88,10 @@ void spawnfunc_weapon_shockwave(void)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(WEP_MACHINEGUN);
+		weapon_defaultspawnfunc(WEP_MACHINEGUN.m_id);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_SHOCKWAVE);
+	weapon_defaultspawnfunc(WEP_SHOCKWAVE.m_id);
 }
 
 const float MAX_SHOCKWAVE_HITS = 10;
@@ -158,7 +159,7 @@ void W_Shockwave_Melee_Think(void)
 		te_customflash(targpos, 40,  2, '1 1 1');
 #endif
 
-		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self if necessary
 			&& (trace_ent.takedamage == DAMAGE_AIM)
@@ -178,14 +179,14 @@ void W_Shockwave_Melee_Think(void)
 				self.realowner,
 				self.realowner,
 				swing_damage,
-				(WEP_SHOCKWAVE | HITTYPE_SECONDARY),
+				(WEP_SHOCKWAVE.m_id | HITTYPE_SECONDARY),
 				(self.realowner.origin + self.realowner.view_ofs),
 				(v_forward * WEP_CVAR(shockwave, melee_force))
 			);
 
 			// handle accuracy
 			if(accuracy_isgooddamage(self.realowner, target_victim))
-				{ accuracy_add(self.realowner, WEP_SHOCKWAVE, 0, swing_damage); }
+				{ accuracy_add(self.realowner, WEP_SHOCKWAVE.m_id, 0, swing_damage); }
 
 			#ifdef DEBUG_SHOCKWAVE
 			print(sprintf(
@@ -375,7 +376,7 @@ void W_Shockwave_Attack(void)
 		WEP_CVAR(shockwave, blast_splash_edgedamage),
 		WEP_CVAR(shockwave, blast_splash_radius),
 		w_shotdir * WEP_CVAR(shockwave, blast_splash_force),
-		WEP_SHOCKWAVE,
+		WEP_SHOCKWAVE.m_id,
 		0,
 		self
 	);
@@ -455,7 +456,7 @@ void W_Shockwave_Attack(void)
 					self,
 					self,
 					final_damage,
-					WEP_SHOCKWAVE,
+					WEP_SHOCKWAVE.m_id,
 					head.origin,
 					final_force
 				);
@@ -639,7 +640,7 @@ void W_Shockwave_Attack(void)
 			self,
 			self,
 			final_damage,
-			WEP_SHOCKWAVE,
+			WEP_SHOCKWAVE.m_id,
 			head.origin,
 			final_force
 		);
@@ -647,7 +648,7 @@ void W_Shockwave_Attack(void)
 		if(accuracy_isgooddamage(self.realowner, head))
 		{
 			print("wtf\n");
-			accuracy_add(self.realowner, WEP_SHOCKWAVE, 0, final_damage);
+			accuracy_add(self.realowner, WEP_SHOCKWAVE.m_id, 0, final_damage);
 		}
 
 		#ifdef DEBUG_SHOCKWAVE

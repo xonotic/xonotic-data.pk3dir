@@ -3,68 +3,48 @@
     #include "../../../server/t_items.qh"
 #endif
 
-#define WITH(it) this.m_##it;
-#define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-#define DEFINE(id, ...)                                                 \
-    REGISTER_ITEM(id, Ammo, LAMBDA(                                     \
-        IF(SV, CONFIGURE                                                \
-        ,   respawntime         =       GET(g_pickup_respawntime_ammo)  \
-        ,   respawntimejitter   = GET(g_pickup_respawntimejitter_ammo)  \
-        )                                                               \
-        UNWORDS(__VA_ARGS__)                                            \
-    ))
-
-DEFINE(Bullets
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/a_bullets.mdl"
-    ,   name                =   "bullets"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   2000
-    ,   itemid              =   IT_NAILS
-    )
-)
-DEFINE(Cells
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/a_cells.md3"
-    ,   name                =   "cells"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   2000
-    ,   itemid              =   IT_CELLS
-    )
-)
-DEFINE(Plasma
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/a_cells.md3"
-    ,   name                =   "plasma"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   2000
-    ,   itemid              =   IT_PLASMA
-    )
-)
-DEFINE(Rockets
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/a_rockets.md3"
-    ,   name                =   "rockets"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   3000
-    ,   itemid              =   IT_ROCKETS
-    )
-)
-DEFINE(Shells
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/a_shells.md3"
-    ,   name                =   "shells"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   500
-    ,   itemid              =   IT_SHELLS
-    )
-)
-
-#undef WITH
-#undef CONFIGURE
-#undef DEFINE
+REGISTER_ITEM(Bullets, Ammo) {
+    this.m_model    =   "models/items/a_bullets.mdl";
+    this.m_name     =   "bullets";
+    this.m_ammoPic  =   "ammo_bullets";
+#ifdef SVQC
+    this.m_botvalue =   2000;
+    this.m_itemid   =   IT_NAILS;
+#endif
+}
+REGISTER_ITEM(Cells, Ammo) {
+    this.m_model    =   "models/items/a_cells.md3";
+    this.m_name     =   "cells";
+    this.m_ammoPic  =   "ammo_cells";
+#ifdef SVQC
+    this.m_botvalue =   2000;
+    this.m_itemid   =   IT_CELLS;
+#endif
+}
+REGISTER_ITEM(Plasma, Ammo) {
+    this.m_model    =   "models/items/a_cells.md3";
+    this.m_name     =   "plasma";
+    this.m_ammoPic  =   "ammo_cells";
+#ifdef SVQC
+    this.m_botvalue =   2000;
+    this.m_itemid   =   IT_PLASMA;
+#endif
+}
+REGISTER_ITEM(Rockets, Ammo) {
+    this.m_model    =   "models/items/a_rockets.md3";
+    this.m_name     =   "rockets";
+    this.m_ammoPic  =   "ammo_rockets";
+#ifdef SVQC
+    this.m_botvalue =   3000;
+    this.m_itemid   =   IT_ROCKETS;
+#endif
+}
+REGISTER_ITEM(Shells, Ammo) {
+    this.m_model    =   "models/items/a_shells.md3";
+    this.m_name     =   "shells";
+    this.m_ammoPic  =   "ammo_shells";
+#ifdef SVQC
+    this.m_botvalue =   500;
+    this.m_itemid   =   IT_SHELLS;
+#endif
+}

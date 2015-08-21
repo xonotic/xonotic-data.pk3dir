@@ -8,34 +8,27 @@ float instagib_respawntimejitter_ammo = 0;
 GETTER(float, instagib_respawntime_ammo)
 GETTER(float, instagib_respawntimejitter_ammo)
 
-REGISTER_ITEM(VaporizerCells, Pickup, APPLY(UNWORDS
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/a_cells.md3"
-    ,   sound               =   "misc/itempickup.wav"
-    ,   name                =   "Vaporizer Ammo"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   100
-    ,   itemid              =   IT_CELLS
-    ,   respawntime         =         GET(instagib_respawntime_ammo)
-    ,   respawntimejitter   =   GET(instagib_respawntimejitter_ammo)
-    )
-))
+REGISTER_ITEM(VaporizerCells, Ammo) {
+    this.m_model               =   "models/items/a_cells.md3";
+    this.m_sound               =   "misc/itempickup.wav";
+    this.m_name                =   "Vaporizer Ammo";
+#ifdef SVQC
+    this.m_botvalue            =   100;
+    this.m_itemid              =   IT_CELLS;
+    this.m_respawntime         =   GET(instagib_respawntime_ammo);
+    this.m_respawntimejitter   =   GET(instagib_respawntimejitter_ammo);
+#endif
+}
 
-REGISTER_ITEM(ExtraLife, Pickup, APPLY(UNWORDS
-    ,APPLY(CONFIGURE
-    ,   model               =   "models/items/g_h100.md3"
-    ,   sound               =   "misc/megahealth.wav"
-    ,   name                =   "Extralife"
-    )
-    ,IF(SV, CONFIGURE
-    ,   botvalue            =   BOT_PICKUP_RATING_HIGH
-    ,   itemflags           =   FL_POWERUP
-    ,   itemid              =   IT_NAILS
-    ,   respawntime         =         GET(g_pickup_respawntime_powerup)
-    ,   respawntimejitter   =   GET(g_pickup_respawntimejitter_powerup)
-    )
-))
+REGISTER_ITEM(ExtraLife, Powerup) {
+    this.m_model               =   "models/items/g_h100.md3";
+    this.m_sound               =   "misc/megahealth.wav";
+    this.m_name                =   "Extralife";
+#ifdef SVQC
+    this.m_itemid              =   IT_NAILS;
+    this.m_botvalue            =   BOT_PICKUP_RATING_HIGH;
+#endif
+}
 
 #undef WITH
 #undef CONFIGURE

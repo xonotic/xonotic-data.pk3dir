@@ -1,6 +1,8 @@
 #ifndef VEHICLES_INCLUDE_H
 #define VEHICLES_INCLUDE_H
 
+#include "all.qh"
+
 #ifdef CSQC
 #include "vehicles.qh"
 #include "cl_vehicles.qh"

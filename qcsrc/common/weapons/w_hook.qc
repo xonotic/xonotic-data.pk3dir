@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ HOOK,
 /* function  */ W_Hook,
@@ -55,7 +55,8 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float hook_time_hooked;
 .float hook_time_fueldecrease;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 
 void spawnfunc_weapon_hook(void)
@@ -66,7 +67,7 @@ void spawnfunc_weapon_hook(void)
 		remove(self);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_HOOK);
+	weapon_defaultspawnfunc(WEP_HOOK.m_id);
 }
 
 void W_Hook_ExplodeThink(void)
@@ -142,7 +143,7 @@ void W_Hook_Attack2(void)
 	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
 	gren.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_HOOK | HITTYPE_SECONDARY;
+	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
@@ -170,7 +171,7 @@ void W_Hook_Attack2(void)
 
 	CSQCProjectile(gren, true, PROJECTILE_HOOKBOMB, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 bool W_Hook(int req)

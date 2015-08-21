@@ -777,6 +777,9 @@ void spawnfunc_func_door()
 	self.pos1 = self.SUB_ORIGIN;
 	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
 
+	if(self.spawnflags & DOOR_NONSOLID)
+		self.solid = SOLID_NOT;
+
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position
 	if (self.spawnflags & DOOR_START_OPEN)

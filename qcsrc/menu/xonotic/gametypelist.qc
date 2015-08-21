@@ -36,9 +36,11 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 	me.configureXonoticListBox(me);
 	me.nItems = GameType_GetCount();
 
-	// we want the pics mipmapped
-	for(int i = 0; i < GameType_GetCount(); ++i)
-		draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
+	if(SKINBOOL_GAMETYPELIST_ICON_BLUR)
+	{
+		for(int i = 0; i < GameType_GetCount(); ++i)
+			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
+	}
 
 	me.loadCvars(me);
 }

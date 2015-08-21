@@ -601,7 +601,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
         return -5;
 
     // Cant touch this
-    if(e_target.vehicle_flags & VHF_ISVEHICLE)
+    if(IS_VEHICLE(e_target))
     {
         if (e_target.vehicle_health <= 0)
             return -6;
@@ -1001,7 +1001,7 @@ void turrets_manager_think()
         e = nextent(world);
         while (e)
         {
-            if (e.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+            if(IS_TURRET(e))
             {
                 load_unit_settings(e,e.cvar_basename,1);
                 if(e.turret_postthink)
@@ -1271,7 +1271,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
         self.health = 150;
 
 // Game hooks
-	if(MUTATOR_CALLHOOK(TurretSpawn))
+	if(MUTATOR_CALLHOOK(TurretSpawn, self))
 		return 0;
 
 // End of default & sanety checks, start building the turret.

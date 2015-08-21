@@ -1,4 +1,6 @@
-#include "all.qh"
+#include "unit/all.qh"
+
+#include "vehicles_include.qc"
 
 // VEHICLE PLUGIN SYSTEM
 entity vehicle_info[VEH_MAXCOUNT];

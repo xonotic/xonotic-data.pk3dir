@@ -95,7 +95,7 @@ bool IsFlying(entity a);
 	#define WAS_ONGROUND(s)						!!(s.lastflags & FL_ONGROUND)
 
 	#define ITEMS_STAT(s) 						(s).items
-	#define BUFFS(s)							getstati(STAT_BUFFS)
+	#define BUFFS_STAT(s)						getstati(STAT_BUFFS)
 
 	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
 
@@ -119,8 +119,8 @@ bool IsFlying(entity a);
 	#define PHYS_BUGRIGS_REVERSE_SPINNING 		getstatf(STAT_BUGRIGS_REVERSE_SPINNING)
 	#define PHYS_BUGRIGS_REVERSE_STOPPING 		getstatf(STAT_BUGRIGS_REVERSE_STOPPING)
 
-	#define PHYS_JUMPSPEEDCAP_MIN				getstatf(STAT_MOVEVARS_JUMPSPEEDCAP_MIN)
-	#define PHYS_JUMPSPEEDCAP_MAX				getstatf(STAT_MOVEVARS_JUMPSPEEDCAP_MAX)
+	#define PHYS_JUMPSPEEDCAP_MIN				cvar_string("cl_jumpspeedcap_min")
+	#define PHYS_JUMPSPEEDCAP_MAX				cvar_string("cl_jumpspeedcap_max")
 	#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS	getstati(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
 
 	#define PHYS_TRACK_CANJUMP(s)				getstati(STAT_MOVEVARS_TRACK_CANJUMP)
@@ -191,8 +191,8 @@ bool IsFlying(entity a);
 
 	.float stat_doublejump;
 
-	.float stat_jumpspeedcap_min;
-	.float stat_jumpspeedcap_max;
+	.string stat_jumpspeedcap_min;
+	.string stat_jumpspeedcap_max;
 	.float stat_jumpspeedcap_disable_onramps;
 
 	.float stat_jetpack_accel_side;
@@ -295,7 +295,7 @@ bool IsFlying(entity a);
 	#define WAS_ONGROUND(s)						!!((s).lastflags & FL_ONGROUND)
 
 	#define ITEMS_STAT(s)						s.items
-	#define BUFFS(s)							(s).buffs
+	#define BUFFS_STAT(s)						(s).buffs
 
 	#define PHYS_AMMO_FUEL(s)					s.ammo_fuel
 

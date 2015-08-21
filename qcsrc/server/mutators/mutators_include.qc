@@ -78,7 +78,7 @@
     #include "../tturrets/include/turrets.qh"
 #endif
 
-#include "base.qc"
+#include "../../common/mutators/base.qh"
 #include "gamemode_assault.qc"
 #include "gamemode_ca.qc"
 #include "gamemode_ctf.qc"

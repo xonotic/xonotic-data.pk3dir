@@ -126,6 +126,9 @@ HEIGHT_NORMAL                 1.45
 HEIGHT_TITLE                  1.45
 HEIGHT_ZOOMEDTITLE            -1
 
+// gametypelist
+BOOL_GAMETYPELIST_ICON_BLUR   0
+
 // inputbox
 COLOR_INPUTBOX_F              '1 1 1'
 COLOR_INPUTBOX_N              '1 1 1'

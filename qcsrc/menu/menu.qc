@@ -5,6 +5,7 @@
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
 #include "../common/mapinfo.qh"
+#include "../common/mutators/base.qh"
 
 ///////////////////////////////////////////////
 // Menu Source File
@@ -80,9 +81,7 @@ void m_init()
 	}
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterItems);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	static_init();
 
 	RegisterSLCategories();
 

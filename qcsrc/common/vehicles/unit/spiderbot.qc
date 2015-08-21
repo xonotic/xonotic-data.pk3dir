@@ -581,7 +581,8 @@ float spiderbot_frame()
 		vehicles_regen(spider.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, false);
 
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
-	player.vehicle_ammo2 = spider.tur_head.frame;
+	//player.vehicle_ammo2 = spider.tur_head.frame;
+	player.vehicle_ammo2 = (9 - spider.tur_head.frame) / 8 * 100; // Percentage, like ammo1
 
 	if(spider.gun2.cnt <= time)
 		player.vehicle_reload2 = 100;
@@ -668,7 +669,7 @@ void spiderbot_headfade()
 		if(self.alpha > 0.1)
 		{
 			sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-			pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
+			Send_Effect("explosion_big", self.origin + '0 0 100', '0 0 0', 1);
 		}
 		remove(self);
 	}
@@ -681,7 +682,7 @@ void spiderbot_blowup()
 		if(random() < 0.1)
 		{
 			sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-			pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+			Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 		}
 		self.nextthink = time + 0.1;
 		return;
@@ -942,190 +943,32 @@ float v_spiderbot(float req)
 float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
 float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
-#define spider_ico  "gfx/vehicles/sbot.tga"
-#define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
-#define spider_mgun "gfx/vehicles/sbot_mguns.tga"
-string spider_xhair; // = "gfx/vehicles/axh-special1.tga";
-
 float v_spiderbot(float req)
 {
 	switch(req)
 	{
 		case VR_HUD:
 		{
-			if(autocvar_r_letterbox)
-				return true;
+			string crosshair;
 
-			vector picsize, hudloc = '0 0 0', pic2size, picloc;
-			float i;
-
-			// Fetch health & ammo stats
-			HUD_GETVEHICLESTATS
-
-			picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-			hudloc_y = vid_conheight - picsize_y;
-			hudloc_x = vid_conwidth * 0.5 - picsize_x * 0.5;
-
-			drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
-
-			ammo1   *= 0.01;
-			shield  *= 0.01;
-			vh_health  *= 0.01;
-			reload2 *= 0.01;
-
-			pic2size = draw_getimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
-			picloc = picsize * 0.5 - pic2size * 0.5;
-			if(vh_health < 0.25)
-				drawpic(hudloc + picloc, spider_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
-			else
-				drawpic(hudloc + picloc, spider_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, spider_rkt, pic2size,  '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, spider_mgun, pic2size, '1 1 1' * ammo1   + '1 0 0' * (1 - ammo1),   1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
-
-		// Health bar
-			picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
-			picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
-			drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
-			drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
-			drawresetcliparea();
-		// ..  and icon
-			picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
-			picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
-			if(vh_health < 0.25)
+			switch(weapon2mode)
 			{
-				if(alarm1time < time)
-				{
-					alarm1time = time + 2;
-					vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
-				}
-				drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-			}
-			else
-			{
-				drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-				if(alarm1time)
-				{
-					vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
-					alarm1time = 0;
-				}
-			}
-		// Shield bar
-			picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
-			picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
-			drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - shield)), 0, vid_conwidth, vid_conheight);
-			drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			drawresetcliparea();
-		// ..  and icon
-			picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-			picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
-			if(shield < 0.25)
-			{
-				if(alarm2time < time)
-				{
-					alarm2time = time + 1;
-					vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm_shield.wav");
-				}
-				drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-			}
-			else
-			{
-				drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-				if(alarm2time)
-				{
-					vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
-					alarm2time = 0;
-				}
+				case SBRM_VOLLY:     crosshair = vCROSS_BURST; break;
+				case SBRM_GUIDE:     crosshair = vCROSS_GUIDE; break;
+				case SBRM_ARTILLERY: crosshair = vCROSS_RAIN;  break;
+				default:             crosshair = vCROSS_BURST;
 			}
 
-		// Minigun bar
-			picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
-			picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
-			drawsetcliparea(hudloc_x + picloc_x, picloc_y, picsize_x * ammo1, vid_conheight);
-			drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			drawresetcliparea();
-		// ..  and icon
-			picsize = draw_getimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
-			picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
-			if(ammo1 < 0.2)
-				drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-			else
-				drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-		// Rocket ammo bar
-			picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
-			ammo1 = picsize_x / 8;
-			picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
-			drawsetcliparea(hudloc_x + picloc_x, hudloc_y + picloc_y, picsize_x * reload2, vid_conheight);
-			drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			drawresetcliparea();
-
-		// ..  and icons
-			pic2size = 0.35 * draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
-			picloc_x -= pic2size_x;
-			picloc_y += pic2size_y * 2.25;
-			if(ammo2 == 9)
-			{
-				for(i = 1; i < 9; ++i)
-				{
-					picloc_x += ammo1;
-					drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, ((8 * reload2 <= i) ? '0 0 0' : '1 1 1'), 0.75, DRAWFLAG_NORMAL);
-				}
-			}
-			else
-			{
-				for(i = 1; i < 9; ++i)
-				{
-					picloc_x += ammo1;
-					drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, ((i >= ammo2) ? '1 1 1' : '0 0 0'), 0.75, DRAWFLAG_NORMAL);
-				}
-			}
-			pic2size = draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
-			picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
-			if(ammo2 == 9)
-				drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-			else
-				drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-			if (scoreboard_showscores)
-				HUD_DrawScoreboard();
-			else
-			{
-				switch(getstati(STAT_VEHICLESTAT_W2MODE))
-				{
-					case SBRM_VOLLY:
-						spider_xhair = "gfx/vehicles/axh-bracket.tga";
-						break;
-					case SBRM_GUIDE:
-						spider_xhair = "gfx/vehicles/axh-cross.tga";
-						break;
-					case SBRM_ARTILLERY:
-						spider_xhair = "gfx/vehicles/axh-tag.tga";
-						break;
-					default:
-						spider_xhair= "gfx/vehicles/axh-tag.tga";
-				}
-
-				picsize = draw_getimagesize(spider_xhair);
-				picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
-				picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
-
-				drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), spider_xhair, picsize, '1 1 1', autocvar_cl_vehicle_spiderbot_cross_alpha, DRAWFLAG_ADDITIVE);
-			}
-			
+			Vehicles_drawHUD("vehicle_spider", "vehicle_spider_weapon1", "vehicle_spider_weapon2",
+							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
+							 crosshair);
 			return true;
 		}
 		case VR_SETUP:
 		{
-			// Minigun1
-			AuxiliaryXhair[0].axh_image   = "gfx/vehicles/axh-ring.tga";
-			AuxiliaryXhair[0].axh_scale   = 0.25;
-			// Minigun2
-			AuxiliaryXhair[1].axh_image   = "gfx/vehicles/axh-ring.tga";
-			AuxiliaryXhair[1].axh_scale   = 0.25;
-			// Rocket
-			AuxiliaryXhair[2].axh_image   = "gfx/vehicles/axh-special1.tga";
-			AuxiliaryXhair[2].axh_scale   = 0.5;
+			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
+			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
 		
 			return true;
 		}

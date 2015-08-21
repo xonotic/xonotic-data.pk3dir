@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ MORTAR,
 /* function  */ W_Mortar,
@@ -52,10 +52,11 @@ MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float gl_detonate_later;
 .float gl_bouncecnt;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 
-void spawnfunc_weapon_mortar(void) { weapon_defaultspawnfunc(WEP_MORTAR); }
+void spawnfunc_weapon_mortar(void) { weapon_defaultspawnfunc(WEP_MORTAR.m_id); }
 void spawnfunc_weapon_grenadelauncher(void) { spawnfunc_weapon_mortar(); }
 
 void W_Mortar_Grenade_Explode(void)
@@ -150,7 +151,7 @@ void W_Mortar_Grenade_Touch1(void)
 			spamsound(self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
 		else
 			spamsound(self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
-		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
+		Send_Effect("hagar_bounce", self.origin, self.velocity, 1);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 	}
@@ -195,7 +196,7 @@ void W_Mortar_Grenade_Touch2(void)
 			spamsound(self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
 		else
 			spamsound(self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
-		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
+		Send_Effect("hagar_bounce", self.origin, self.velocity, 1);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 
@@ -230,7 +231,7 @@ void W_Mortar_Attack(void)
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("grenadelauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn();
 	gren.owner = gren.realowner = self;
@@ -241,7 +242,7 @@ void W_Mortar_Attack(void)
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_MORTAR;
+	gren.projectiledeathtype = WEP_MORTAR.m_id;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
@@ -267,7 +268,7 @@ void W_Mortar_Attack(void)
 	else
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 void W_Mortar_Attack2(void)
@@ -279,7 +280,7 @@ void W_Mortar_Attack2(void)
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("grenadelauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn();
 	gren.owner = gren.realowner = self;
@@ -290,7 +291,7 @@ void W_Mortar_Attack2(void)
 	gren.bouncefactor = WEP_CVAR(mortar, bouncefactor);
 	gren.bouncestop = WEP_CVAR(mortar, bouncestop);
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_MORTAR | HITTYPE_SECONDARY;
+	gren.projectiledeathtype = WEP_MORTAR.m_id | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
@@ -315,7 +316,7 @@ void W_Mortar_Attack2(void)
 	else
 		CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 .float bot_secondary_grenademooth;
@@ -421,13 +422,13 @@ bool W_Mortar(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_PRI(mortar, ammo);
-			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_PRI(mortar, ammo);
+			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
 			ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_SEC(mortar, ammo);
-			ammo_amount += self.(weapon_load[WEP_MORTAR]) >= WEP_CVAR_SEC(mortar, ammo);
+			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

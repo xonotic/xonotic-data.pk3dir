@@ -28,12 +28,20 @@
 
 float W_WeaponRateFactor()
 {
-	float t;
-	t = 1.0 / g_weaponratefactor;
+	float t = 1.0 / g_weaponratefactor;
 
-	weapon_rate = t;
-	MUTATOR_CALLHOOK(WeaponRateFactor);
+	MUTATOR_CALLHOOK(WeaponRateFactor, t);
 	t = weapon_rate;
+
+	return t;
+}
+
+float W_WeaponSpeedFactor()
+{
+	float t = 1.0 * g_weaponspeedfactor;
+
+	MUTATOR_CALLHOOK(WeaponSpeedFactor, t);
+	t = ret_float;
 
 	return t;
 }
@@ -464,11 +472,11 @@ float weapon_prepareattack_checkammo(float secondary)
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
 		entity mine;
-		if(self.weapon == WEP_MINE_LAYER)
+		if(self.weapon == WEP_MINE_LAYER.m_id)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return false;
 
-		if(self.weapon == WEP_SHOTGUN)
+		if(self.weapon == WEP_SHOTGUN.m_id)
 		if(!secondary && WEP_CVAR(shotgun, secondary) == 1)
 			return false; // no clicking, just allow
 
@@ -629,7 +637,7 @@ void weapon_thinkf(float fr, float t, void() func)
 
 	if((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		if((self.weapon == WEP_SHOCKWAVE || self.weapon == WEP_SHOTGUN) && fr == WFRAME_FIRE2)
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && fr == WFRAME_FIRE2)
 			animdecide_setaction(self, ANIMACTION_MELEE, restartanim);
 		else
 			animdecide_setaction(self, ANIMACTION_SHOOT, restartanim);

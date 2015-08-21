@@ -2,6 +2,7 @@
 
 ../common/util-pre.qh
 ../dpdefs/csprogsdefs.qh
+../common/util-post.qh
 
 announcer.qc
 bgmscript.qc
@@ -40,6 +41,7 @@ weapons/projectile.qc // TODO
 
 ../common/animdecide.qc
 ../common/buffs.qc
+../common/effects.qc
 ../common/mapinfo.qc
 ../common/movetypes/include.qc
 ../common/nades.qc
@@ -47,9 +49,12 @@ weapons/projectile.qc // TODO
 ../common/notifications.qc
 ../common/physics.qc
 ../common/playerstats.qc
+../common/p2mathlib.qc
 ../common/test.qc
 ../common/urllib.qc
 ../common/util.qc
+
+../common/viewloc.qc
 
 ../common/items/all.qc
 
@@ -72,3 +77,5 @@ weapons/projectile.qc // TODO
 ../warpzonelib/common.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/util_server.qc
+
+../../mod/client/progs.inc

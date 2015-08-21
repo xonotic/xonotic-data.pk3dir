@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id	 */ RPC,
 /* function	 */ W_RocketPropelledChainsaw,
@@ -42,9 +42,10 @@ REGISTER_WEAPON(
 #ifdef SVQC
 RPC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_rpc() { weapon_defaultspawnfunc(WEP_RPC); }
+void spawnfunc_weapon_rpc() { weapon_defaultspawnfunc(WEP_RPC.m_id); }
 
 void W_RocketPropelledChainsaw_Explode()
 {
@@ -108,7 +109,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 
 	W_DecreaseAmmo(WEP_CVAR(rpc, ammo));
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(rpc, damage));
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("rocketlauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	missile.owner = missile.realowner = self;
@@ -122,7 +123,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	missile.damagedbycontents = true;
 	missile.movetype = MOVETYPE_FLY;
 
-	missile.projectiledeathtype = WEP_RPC;
+	missile.projectiledeathtype = WEP_RPC.m_id;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
@@ -143,7 +144,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	W_AttachToShotorg(flash, '5 0 0');
 	missile.pos1 = missile.velocity;
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 bool W_RocketPropelledChainsaw(int req)
@@ -192,7 +193,7 @@ bool W_RocketPropelledChainsaw(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(RPC) >= WEP_CVAR(rpc, ammo);
-			ammo_amount += self.(weapon_load[WEP_RPC]) >= WEP_CVAR(rpc, ammo);
+			ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:

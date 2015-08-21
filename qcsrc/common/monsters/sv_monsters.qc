@@ -40,8 +40,7 @@ void monster_dropitem()
 
 	e.monster_loot = self.monster_loot;
 
-	other = e;
-	MUTATOR_CALLHOOK(MonsterDropItem);
+	MUTATOR_CALLHOOK(MonsterDropItem, e);
 	e = other;
 
 	if(e && e.monster_loot)
@@ -81,7 +80,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	//if(trace_ent != targ)
 		//return false;
 
-	if(targ.vehicle_flags & VHF_ISVEHICLE)
+	if(IS_VEHICLE(targ))
 	if(!((get_monsterinfo(ent.monsterid)).spawnflags & MON_FLAG_RANGED))
 		return false; // melee attacks are useless against vehicles
 
@@ -100,7 +99,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(IS_SPEC(targ) || IS_OBSERVER(targ))
 		return false; // enemy is a spectator
 
-	if(!(targ.vehicle_flags & VHF_ISVEHICLE))
+	if(!IS_VEHICLE(targ))
 	if(targ.deadflag != DEAD_NO || ent.deadflag != DEAD_NO || targ.health <= 0 || ent.health <= 0)
 		return false; // enemy/self is dead
 
@@ -110,7 +109,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ.monster_owner == ent)
 		return false; // don't attack our pet
 
-	if(!(targ.vehicle_flags & VHF_ISVEHICLE))
+	if(!IS_VEHICLE(targ))
 	if(targ.flags & FL_NOTARGET)
 		return false; // enemy can't be targeted
 
@@ -182,7 +181,7 @@ void MonsterTouch ()
 		return;
 
 	if(self.enemy != other)
-	if(!(other.flags & FL_MONSTER))
+	if(!IS_MONSTER(other))
 	if(monster_isvalidtarget(other, self))
 		self.enemy = other;
 }
@@ -362,7 +361,7 @@ void Monster_CheckMinibossFlag ()
 		self.health += autocvar_g_monsters_miniboss_healthboost;
 		self.effects |= EF_RED;
 		if(!self.weapon)
-			self.weapon = WEP_VORTEX;
+			self.weapon = WEP_VORTEX.m_id;
 	}
 }
 
@@ -370,7 +369,7 @@ float Monster_CanRespawn(entity ent)
 {
 	other = ent;
 	if(ent.deadflag == DEAD_DEAD) // don't call when monster isn't dead
-	if(MUTATOR_CALLHOOK(MonsterRespawn))
+	if(MUTATOR_CALLHOOK(MonsterRespawn, ent))
 		return true; // enabled by a mutator
 
 	if(ent.spawnflags & MONSTERFLAG_NORESPAWN)
@@ -592,7 +591,7 @@ void monster_CalculateVelocity(entity mon, vector to, vector from, float turnrat
 {
 	float current_distance = vlen((('1 0 0' * to.x) + ('0 1 0' * to.y)) - (('1 0 0' * from.x) + ('0 1 0' * from.y))); // for the sake of this check, exclude Z axis
 	float initial_height = 0; //min(50, (targ_distance * tanh(20)));
-	float current_height = (initial_height * min(1, (current_distance / self.pass_distance)));
+	float current_height = (initial_height * min(1, self.pass_distance ? (current_distance / self.pass_distance) : 0));
 	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
 
 	vector targpos;
@@ -716,11 +715,13 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	targ = self.goalentity;
 
-	monster_target = targ;
-	monster_speed_run = runspeed;
-	monster_speed_walk = walkspeed;
-
-	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || self.draggedby != world || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
+	if (MUTATOR_CALLHOOK(MonsterMove, runspeed, walkspeed, targ)
+		|| gameover
+		|| self.draggedby != world
+		|| (round_handler_IsActive() && !round_handler_IsRoundStarted())
+		|| time < game_starttime
+		|| (autocvar_g_campaign && !campaign_bots_may_start)
+		|| time < self.spawn_time)
 	{
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
@@ -729,7 +730,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		return;
 	}
 
-	targ = monster_target;
 	runspeed = bound(0, monster_speed_run * Monster_SkillModifier(), runspeed * 2); // limit maxspeed to prevent craziness
 	walkspeed = bound(0, monster_speed_walk * Monster_SkillModifier(), walkspeed * 2); // limit maxspeed to prevent craziness
 
@@ -842,7 +842,7 @@ void monster_remove(entity mon)
 	if(!mon)
 		return; // nothing to remove
 
-	pointparticles(particleeffectnum("item_pickup"), mon.origin, '0 0 0', 1);
+	Send_Effect("item_pickup", mon.origin, '0 0 0', 1);
 
 	if(mon.weaponentity)
 		remove(mon.weaponentity);
@@ -1039,9 +1039,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, int death
 
 		WaypointSprite_Kill(self.sprite);
 
-		frag_attacker = attacker;
 		frag_target = self;
-		MUTATOR_CALLHOOK(MonsterDies);
+		MUTATOR_CALLHOOK(MonsterDies, attacker);
 
 		if(self.health <= -100 || deathtype == DEATH_KILL) // check if we're already gibbed
 		{

@@ -27,6 +27,7 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, columnTypeSize, float, 0)
 	ATTRIB(XonoticServerList, columnPlayersOrigin, float, 0)
 	ATTRIB(XonoticServerList, columnPlayersSize, float, 0)
+	ATTRIB(XonoticServerList, lockedSelectedItem, bool, true) // initially keep selected the first item of the list, avoiding an unwanted scrolling
 
 	ATTRIB(XonoticServerList, selectedServer, string, string_null) // to restore selected server when needed
 	METHOD(XonoticServerList, setSelected, void(entity, float))
@@ -460,6 +461,7 @@ void XonoticServerList_configureXonoticServerList(entity me)
 }
 void XonoticServerList_setSelected(entity me, int i)
 {
+	me.lockedSelectedItem = false;
 	//int save = me.selectedItem;
 	SUPER(XonoticServerList).setSelected(me, i);
 	/*
@@ -717,12 +719,26 @@ void XonoticServerList_draw(entity me)
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
 	me.favoriteButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 
-	if(me.selectedServer)
+	if(me.lockedSelectedItem)
+	{
+		if(me.nItems > 0)
+		{
+			if(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem) != me.selectedServer)
+			{
+				if(me.selectedServer)
+					strunzone(me.selectedServer);
+				me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+			}
+			found = true;
+		}
+	}
+	else if(me.selectedServer)
 	{
 		for(i = 0; i < me.nItems; ++i)
 		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
 			{
+				// don't follow the selected item with SUPER(XonoticServerList).setSelected(me, i);
 				me.selectedItem = i;
 				found = true;
 				break;
@@ -733,8 +749,9 @@ void XonoticServerList_draw(entity me)
 	{
 		if(me.nItems > 0)
 		{
+			// selected server disappeared, select the last server (scrolling to it)
 			if(me.selectedItem >= me.nItems)
-				me.selectedItem = me.nItems - 1;
+				SUPER(XonoticServerList).setSelected(me, me.nItems - 1);
 			if(me.selectedServer)
 				strunzone(me.selectedServer);
 			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
@@ -1160,57 +1177,46 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	iconPos_x = (me.columnIconsSize - 3 * iconSize.x) * 0.5;
 	iconPos_y = (1 - iconSize.y) * 0.5;
 
-	string n;
-
-	if (!(me.seenIPv4 && me.seenIPv6))
+	// IP
+	if(me.seenIPv4 && me.seenIPv6)
 	{
-		iconPos.x += iconSize.x * 0.5;
-	}
-	else if(me.seenIPv4 && me.seenIPv6)
-	{
-		n = string_null;
 		if(isv6)
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), 0); // PRECACHE_PIC_MIPMAP
+			draw_Picture(iconPos, "icon_ipv6", iconSize, '1 1 1', 1);
 		else if(isv4)
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), 0); // PRECACHE_PIC_MIPMAP
-		if(n)
-			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		iconPos.x += iconSize.x;
+			draw_Picture(iconPos, "icon_ipv4", iconSize, '1 1 1', 1);
 	}
 
-	if(q > 0)
-	{
-		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), 0); // PRECACHE_PIC_MIPMAP
-		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-	}
 	iconPos.x += iconSize.x;
 
+	// AES
+	if(q > 0)
+		draw_Picture(iconPos, strcat("icon_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+
+	iconPos.x += iconSize.x;
+
+	// Mod
 	if(modname == "Xonotic")
 	{
 		if(pure == 0)
-		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), PRECACHE_PIC_MIPMAP);
-			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		}
+			draw_Picture(iconPos, "icon_pure1", iconSize, '1 1 1', 1);
 	}
 	else
 	{
-		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname), PRECACHE_PIC_MIPMAP);
-		if(draw_PictureSize(n) == '0 0 0')
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_"), PRECACHE_PIC_MIPMAP);
+		string icon = strcat("icon_mod_", modname);
+		if(draw_PictureSize(icon) == '0 0 0')
+			icon = "icon_mod_";
+
 		if(pure == 0)
-			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+			draw_Picture(iconPos, icon, iconSize, '1 1 1', 1);
 		else
-			draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
+			draw_Picture(iconPos, icon, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
 	}
+
 	iconPos.x += iconSize.x;
 
+	// Stats
 	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
-	{
-		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), 0); // PRECACHE_PIC_MIPMAP
-		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-	}
-	iconPos.x += iconSize.x;
+		draw_Picture(iconPos, "icon_stats1", iconSize, '1 1 1', 1);
 
 	// --------------
 	//  RENDER TEXT

@@ -3,7 +3,7 @@
 
 #include "t_items.qh"
 
-#include "mutators/base.qh"
+#include "mutators/events.qh"
 #include "mutators/gamemode_race.qh"
 
 #include "../common/constants.qh"
@@ -75,7 +75,6 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual);
 
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
-var void remove(entity e);
 void objerror(string s);
 void droptofloor();
 void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
@@ -157,6 +156,10 @@ const string STR_OBSERVER = "observer";
 #define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
 #define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
 #define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
+
+#define IS_MONSTER(v)			(v.flags & FL_MONSTER)
+#define IS_VEHICLE(v)			(v.vehicle_flags & VHF_ISVEHICLE)
+#define IS_TURRET(v)			(v.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 
 #define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))

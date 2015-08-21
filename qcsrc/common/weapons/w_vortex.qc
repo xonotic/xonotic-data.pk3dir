@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ VORTEX,
 /* function  */ W_Vortex,
@@ -56,9 +56,10 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 .float vortex_lasthit;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX); }
+void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX.m_id); }
 void spawnfunc_weapon_nex(void) { spawnfunc_weapon_vortex(); }
 
 void SendCSQCVortexBeamParticle(float charge) {
@@ -110,7 +111,7 @@ void W_Vortex_Attack(float issecondary)
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
+	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX.m_id);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
@@ -214,7 +215,7 @@ bool W_Vortex(int req)
 											{
 												self.clip_load = max(WEP_CVAR_SEC(vortex, ammo), self.clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
 											}
-											self.(weapon_load[WEP_VORTEX]) = self.clip_load;
+											self.(weapon_load[WEP_VORTEX.m_id]) = self.clip_load;
 										}
 										else
 										{
@@ -272,7 +273,7 @@ bool W_Vortex(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_PRI(vortex, ammo);
-			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX]) >= WEP_CVAR_PRI(vortex, ammo));
+			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -281,7 +282,7 @@ bool W_Vortex(int req)
 			{
 				// don't allow charging if we don't have enough ammo
 				ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_SEC(vortex, ammo);
-				ammo_amount += self.(weapon_load[WEP_VORTEX]) >= WEP_CVAR_SEC(vortex, ammo);
+				ammo_amount += self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
 				return ammo_amount;
 			}
 			else

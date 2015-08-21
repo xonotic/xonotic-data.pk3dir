@@ -10,7 +10,6 @@
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
-#include "../common/vehicles/sv_vehicles.qh"
 #include "waypointsprites.qh"
 
 #include "../common/weapons/all.qh"
@@ -73,9 +72,13 @@ void ImpulseCommands (void)
 
 	if(self.vehicle)
 	if(self.vehicle.deadflag == DEAD_NO)
-	if(self.vehicle.vehicles_impulse)
-	if(self.vehicle.vehicles_impulse(imp))
-		return;
+	{
+		if(self.vehicle.vehicles_impulse)
+		if(self.vehicle.vehicles_impulse(imp))
+			return;
+		if(vehicle_impulse(imp))
+			return;
+	}
 
 	if(CheatImpulse(imp))
 	{
@@ -189,7 +192,7 @@ void ImpulseCommands (void)
 			case 33:
 				if(self.deadflag == DEAD_NO && teamplay)
 				{
-					if (!MUTATOR_CALLHOOK(HelpMePing))
+					if (!MUTATOR_CALLHOOK(HelpMePing, self))
 					{
 						wp = WaypointSprite_Attach("helpme", true, RADARICON_HELPME, '1 0.5 0');
 						if(!wp)

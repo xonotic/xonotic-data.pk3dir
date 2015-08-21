@@ -13,6 +13,9 @@ REGISTER_VEHICLE(
 );
 #else
 #ifdef SVQC
+#include "../../effects.qh"
+#include "../../triggers/trigger/impulse.qh"
+
 bool autocvar_g_vehicle_racer;
 
 float autocvar_g_vehicle_racer_speed_afterburn;
@@ -279,7 +282,7 @@ void racer_rocket_tracker()
 void racer_fire_rocket(string tagname, entity trg)
 {
 	vector v = gettaginfo(self, gettagindex(self, tagname));
-	entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
+	entity rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
 						   v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
 						   autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
 						   DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
@@ -325,7 +328,7 @@ float racer_frame()
 		return 1;
 	}
 
-	racer_align4point(frametime);
+	racer_align4point(PHYS_INPUT_TIMELENGTH);
 
 	player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
 
@@ -334,15 +337,15 @@ float racer_frame()
 	racer.angles_x *= -1;
 
 	// Yaw
-	ftmp = autocvar_g_vehicle_racer_turnspeed * frametime;
+	ftmp = autocvar_g_vehicle_racer_turnspeed * PHYS_INPUT_TIMELENGTH;
 	ftmp = bound(-ftmp, shortangle_f(player.v_angle_y - racer.angles_y, racer.angles_y), ftmp);
 	racer.angles_y = anglemods(racer.angles_y + ftmp);
 
 	// Roll
-	racer.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * frametime;
+	racer.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * PHYS_INPUT_TIMELENGTH;
 
 	// Pitch
-	ftmp = autocvar_g_vehicle_racer_pitchspeed  * frametime;
+	ftmp = autocvar_g_vehicle_racer_pitchspeed  * PHYS_INPUT_TIMELENGTH;
 	ftmp = bound(-ftmp, shortangle_f(player.v_angle_x - racer.angles_x, racer.angles_x), ftmp);
 	racer.angles_x = bound(-autocvar_g_vehicle_racer_pitchlimit, anglemods(racer.angles_x + ftmp), autocvar_g_vehicle_racer_pitchlimit);
 
@@ -367,13 +370,16 @@ float racer_frame()
 			if(player.movement_y) { df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe); }
 		}
 
+#ifdef SVQC
 		if(self.sound_nexttime < time || self.sounds != 1)
 		{
 			self.sounds = 1;
 			self.sound_nexttime = time + 10.922667; //soundlength("vehicles/racer_move.wav");
 			sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_move.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
+#endif
 	}
+#ifdef SVQC
 	else
 	{
 		if(self.sound_nexttime < time || self.sounds != 0)
@@ -383,26 +389,30 @@ float racer_frame()
 			sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_idle.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
 	}
+#endif
 
 	// Afterburn
-	if (player.BUTTON_JUMP && racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
+	if (PHYS_INPUT_BUTTON_JUMP(player) && racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * PHYS_INPUT_TIMELENGTH))
 	{
+#ifdef SVQC
 		if(time - racer.wait > 0.2)
 			pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
+#endif
 
 		racer.wait = time;
 
 		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		{
-			racer.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * frametime;
+			racer.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * PHYS_INPUT_TIMELENGTH;
 			df += (v_forward * autocvar_g_vehicle_racer_waterburn_speed);
 		}
 		else
 		{
-			racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
+			racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * PHYS_INPUT_TIMELENGTH;
 			df += (v_forward * autocvar_g_vehicle_racer_speed_afterburn);
 		}
 
+#ifdef SVQC
 		if(racer.invincible_finished < time)
 		{
 			traceline(racer.origin, racer.origin - '0 0 256', MOVE_NORMAL, self);
@@ -417,6 +427,7 @@ float racer_frame()
 			racer.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
 			sound (racer.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
+#endif
 	}
 	else
 	{
@@ -432,8 +443,9 @@ float racer_frame()
 		dforce = autocvar_g_vehicle_racer_water_downforce;
 
 	df -= v_up * (vlen(racer.velocity) * dforce);
-	player.movement = racer.velocity += df * frametime;
+	player.movement = racer.velocity += df * PHYS_INPUT_TIMELENGTH;
 
+#ifdef SVQC
 	if(!forbidWeaponUse(player))
 	if(player.BUTTON_ATCK)
 	if(time > racer.attack_finished_single)
@@ -481,19 +493,25 @@ float racer_frame()
 		racer.delay = time + 0.3;
 
 		if(racer.misc_bulletcounter == 1)
+		{
 			racer_fire_rocket("tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+			player.vehicle_ammo2 = 50;
+		}
 		else if(racer.misc_bulletcounter == 2)
 		{
 			racer_fire_rocket("tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
 			racer.lock_strength  = 0;
 			racer.lock_target	= world;
 			racer.misc_bulletcounter = 0;
-
 			racer.delay = time + autocvar_g_vehicle_racer_rocket_refire;
 			racer.lip = time;
+			player.vehicle_ammo2 = 0;
 		}
 	}
-	player.vehicle_reload1 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
+	else if(racer.misc_bulletcounter == 0)
+		player.vehicle_ammo2 = 100;
+
+	player.vehicle_reload2 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
 
 	if(racer.vehicle_flags  & VHF_SHIELDREGEN)
 		vehicles_regen(racer.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, true);
@@ -512,6 +530,8 @@ float racer_frame()
 		VEHICLE_UPDATE_PLAYER(player, shield, racer);
 
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
+#endif
+
 	setorigin(player,racer.origin + '0 0 32');
 	player.velocity = racer.velocity;
 
@@ -643,62 +663,76 @@ void spawnfunc_vehicle_racer()
 	if(!vehicle_initialize(VEH_RACER, false)) { remove(self); return; }
 }
 
-float v_racer(float req)
+#endif // SVQC
+
+#ifdef CSQC
+#if 0
+void racer_draw()
+{
+	float pushdeltatime = time - self.lastpushtime;
+	if (pushdeltatime > 0.15) pushdeltatime = 0;
+	self.lastpushtime = time;
+	if(!pushdeltatime) return;
+
+	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin - ('0 0 1' * getstatf(STAT_VEH_RACER_SPRINGLENGTH)), MOVE_NOMONSTERS, self);
+
+	vector df = self.move_velocity * -getstatf(STAT_VEH_RACER_FRICTION);
+	df_z += (1 - trace_fraction) * getstatf(STAT_VEH_RACER_HOVERPOWER) + sin(time * 2) * (getstatf(STAT_VEH_RACER_SPRINGLENGTH) * 2);
+
+	float forced = getstatf(STAT_VEH_RACER_UPFORCEDAMPER);
+
+	int cont = pointcontents(self.move_origin - '0 0 64');
+	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+	{
+		forced = getstatf(STAT_VEH_RACER_WATER_UPFORCEDAMPER);
+		self.move_velocity_z += 200;
+	}
+
+	self.move_velocity += df * pushdeltatime;
+	if(self.move_velocity_z > 0)
+		self.move_velocity_z *= 1 - forced * pushdeltatime;
+
+	self.move_angles_x *= 1 - (getstatf(STAT_VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
+	self.move_angles_z *= 1 - (getstatf(STAT_VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
+	
+	Movetype_Physics_MatchServer(false);
+}
+#endif
+#endif
+
+bool v_racer(int req)
 {
 	switch(req)
 	{
 		case VR_IMPACT:
 		{
+		#ifdef SVQC
 			if(autocvar_g_vehicle_racer_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
+		#endif
 			return true;
 		}
+
 		case VR_ENTER:
 		{
+		#ifdef SVQC
 			self.movetype = MOVETYPE_BOUNCE;
 			self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
 			self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
 
 			if(self.owner.flagcarried)
 			   setorigin(self.owner.flagcarried, '-190 0 96');
+		#elif defined(CSQC)
+
+			self.move_movetype = MOVETYPE_BOUNCE;
+		#endif
 			   
 			return true;
 		}
-		case VR_THINK:
-		{
-			return true;
-		}
-		case VR_DEATH:
-		{
-			self.health			= 0;
-			self.event_damage	= func_null;
-			self.solid			= SOLID_CORPSE;
-			self.takedamage		= DAMAGE_NO;
-			self.deadflag		= DEAD_DYING;
-			self.movetype		= MOVETYPE_BOUNCE;
-			self.wait			= time;
-			self.delay			= 2 + time + random() * 3;
-			self.cnt			= 1 + random() * 2;
-			self.touch			= racer_deadtouch;
 
-			pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
-
-			if(random() < 0.5)
-				self.avelocity_z = 32;
-			else
-				self.avelocity_z = -32;
-
-			self.avelocity_x = -vlen(self.velocity) * 0.2;
-			self.velocity += '0 0 700';
-			self.colormod = '-0.5 -0.5 -0.5';
-
-			self.think = racer_blowup_think;
-			self.nextthink = time;
-	
-			return true;
-		}
 		case VR_SPAWN:
 		{
+		#ifdef SVQC
 			if(self.scale != 0.5)
 			{
 				if(autocvar_g_vehicle_racer_hovertype != 0)
@@ -731,11 +765,60 @@ float v_racer(float req)
 			self.damageforcescale = 0.5;
 			self.vehicle_health = autocvar_g_vehicle_racer_health;
 			self.vehicle_shield = autocvar_g_vehicle_racer_shield;
-			
+		#endif
 			return true;
 		}
+
+		case VR_DEATH:
+		{
+		#ifdef SVQC
+			self.SendEntity		= func_null; // stop networking this racer (for now)
+			self.health			= 0;
+			self.event_damage	= func_null;
+			self.solid			= SOLID_CORPSE;
+			self.takedamage		= DAMAGE_NO;
+			self.deadflag		= DEAD_DYING;
+			self.movetype		= MOVETYPE_BOUNCE;
+			self.wait			= time;
+			self.delay			= 2 + time + random() * 3;
+			self.cnt			= 1 + random() * 2;
+			self.touch			= racer_deadtouch;
+
+			Send_Effect("explosion_medium", self.origin, '0 0 0', 1);
+
+			if(random() < 0.5)
+				self.avelocity_z = 32;
+			else
+				self.avelocity_z = -32;
+
+			self.avelocity_x = -vlen(self.velocity) * 0.2;
+			self.velocity += '0 0 700';
+			self.colormod = '-0.5 -0.5 -0.5';
+
+			self.think = racer_blowup_think;
+			self.nextthink = time;
+		#endif
+			return true;
+		}
+
+#ifdef CSQC
+		case VR_HUD:
+		{
+			Vehicles_drawHUD("vehicle_racer", "vehicle_racer_weapon1", "vehicle_racer_weapon2",
+							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
+							 vCROSS_GUIDE);
+			return true;
+		}
+#endif
 		case VR_SETUP:
 		{
+		#ifdef SVQC
+			self.vehicle_exit = racer_exit;
+		#endif
+
+		#ifdef SVQC
+			// we have no need to network energy
 			if(autocvar_g_vehicle_racer_energy)
 			if(autocvar_g_vehicle_racer_energy_regen)
 				self.vehicle_flags |= VHF_ENERGYREGEN;
@@ -748,17 +831,22 @@ float v_racer(float req)
 
 			if(autocvar_g_vehicle_racer_health_regen)
 				self.vehicle_flags |= VHF_HEALTHREGEN;
-				
-			self.vehicle_exit = racer_exit;
+
 			self.respawntime = autocvar_g_vehicle_racer_respawntime;
 			self.vehicle_health = autocvar_g_vehicle_racer_health;
 			self.vehicle_shield = autocvar_g_vehicle_racer_shield;
 			self.max_health = self.vehicle_health;
-				
+		#endif
+
+		#ifdef CSQC
+			AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
+		#endif
 			return true;
 		}
+
 		case VR_PRECACHE:
 		{
+		#ifdef SVQC
 			precache_sound ("weapons/lasergun_fire.wav");
 			precache_sound ("weapons/rocket_fire.wav");
 
@@ -767,6 +855,8 @@ float v_racer(float req)
 			precache_sound ("vehicles/racer_boost.wav");
 
 			precache_model ("models/vhshield.md3");
+		#endif
+
 			precache_model ("models/vehicles/wakizashi.dpm");
 			precache_model ("models/vehicles/wakizashi_cockpit.dpm");
 			return true;
@@ -776,164 +866,4 @@ float v_racer(float req)
 	return true;
 }
 
-#endif // SVQC
-#ifdef CSQC
-
-#define waki_ico "gfx/vehicles/waki.tga"
-#define waki_eng "gfx/vehicles/waki_e.tga"
-#define waki_gun "gfx/vehicles/waki_guns.tga"
-#define waki_rkt "gfx/vehicles/waki_rockets.tga"
-#define waki_xhair "gfx/vehicles/axh-special1.tga"
-
-float v_racer(float req)
-{
-	switch(req)
-	{
-		case VR_HUD:
-		{
-			if(autocvar_r_letterbox)
-				return true;
-
-			vector picsize, hudloc = '0 0 0', pic2size, picloc;
-
-			// Fetch health & ammo stats
-			HUD_GETVEHICLESTATS
-
-			picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
-			hudloc_y = vid_conheight - picsize_y;
-			hudloc_x = vid_conwidth * 0.5 - picsize_x * 0.5;
-
-			drawpic(hudloc, hud_bg, picsize, '1 1 1', autocvar_cl_vehicles_hudalpha, DRAWFLAG_NORMAL);
-
-			shield  *= 0.01;
-			vh_health  *= 0.01;
-			energy  *= 0.01;
-			reload1 *= 0.01;
-
-			pic2size = draw_getimagesize(waki_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
-			picloc = picsize * 0.5 - pic2size * 0.5;
-			if(vh_health < 0.25)
-				drawpic(hudloc + picloc, waki_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
-			else
-				drawpic(hudloc + picloc, waki_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, waki_eng, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, waki_gun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, waki_rkt, pic2size,  '1 1 1' * reload1 + '1 0 0' * (1 - reload1), 1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
-
-		// Health bar
-			picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
-			picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
-			drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
-			drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
-			drawresetcliparea();
-		// ..  and icon
-			picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
-			picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
-			if(vh_health < 0.25)
-			{
-				if(alarm1time < time)
-				{
-					alarm1time = time + 2;
-					vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
-				}
-
-				drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-			}
-			else
-			{
-				drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-				if(alarm1time)
-				{
-					vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
-					alarm1time = 0;
-				}
-			}
-
-
-		// Shield bar
-			picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
-			picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
-			drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - shield)), 0, vid_conwidth, vid_conheight);
-			drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			drawresetcliparea();
-		// ..  and icon
-			picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-			picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
-			if(shield < 0.25)
-			{
-				if(alarm2time < time)
-				{
-					alarm2time = time + 1;
-					vehicle_alarm(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav");
-				}
-				drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-			}
-			else
-			{
-				drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-				if(alarm2time)
-				{
-					vehicle_alarm(self, CH_TRIGGER_SINGLE, "misc/null.wav");
-					alarm2time = 0;
-				}
-			}
-
-		// Gun bar
-			picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
-			picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
-			drawsetcliparea(hudloc_x + picloc_x, picloc_y, picsize_x * energy, vid_conheight);
-			drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			drawresetcliparea();
-		// ..  and icon
-			picsize = draw_getimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
-			picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
-			if(energy < 0.2)
-				drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-			else
-				drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-		// Bomb bar
-			picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
-			picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
-			drawsetcliparea(hudloc_x + picloc_x, hudloc_y + picloc_y, picsize_x * reload1, vid_conheight);
-			drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			drawresetcliparea();
-		// ..  and icon
-			pic2size = draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
-			picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
-			if(reload1 != 1)
-				drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
-			else
-				drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-			if (scoreboard_showscores)
-				HUD_DrawScoreboard();
-			else
-			{
-				picsize = draw_getimagesize(waki_xhair);
-				picsize_x *= 0.5;
-				picsize_y *= 0.5;
-
-
-				drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), waki_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			}
-			return true;
-		}
-		case VR_SETUP:
-		{
-			AuxiliaryXhair[0].axh_image = "gfx/vehicles/axh-bracket.tga";
-			AuxiliaryXhair[0].axh_scale = 0.25;
-			return true;
-		}
-		case VR_PRECACHE:
-		{
-			return true;
-		}
-	}
-
-	return true;
-}
-
-#endif // CSQC
 #endif // REGISTER_VEHICLE
