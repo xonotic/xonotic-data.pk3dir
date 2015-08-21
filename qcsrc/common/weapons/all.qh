@@ -65,10 +65,10 @@ WepSet ReadWepSet();
 #endif
 
 // weapon name macros
-#define WEP_FIRST 1
+const int WEP_FIRST = 1;
 #define WEP_MAXCOUNT 24 // Increase as needed. Can be up to three times as much.
 int WEP_COUNT;
-int WEP_LAST;
+#define WEP_LAST (WEP_FIRST + WEP_COUNT - 1)
 WepSet WEPSET_ALL;
 WepSet WEPSET_SUPERWEAPONS;
 
@@ -101,7 +101,7 @@ int GetAmmoStat(.int ammotype);
 
 // other useful macros
 #define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
-#define WEP_AMMO(wpn) ((get_weaponinfo(WEP_##wpn)).ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
+#define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
 #define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
 
 
@@ -133,76 +133,123 @@ int GetAmmoStat(.int ammotype);
 
 // set initialization values for weapon settings
 #define WEP_SKIP_CVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
-#define WEP_SET_PROP(wepid,wepname,type,prop,name) get_weaponinfo(WEP_##wepid).##prop = autocvar_g_balance_##wepname##_##name;
+#define WEP_SET_PROP(wepid,wepname,type,prop,name) WEP_##wepid.prop = autocvar_g_balance_##wepname##_##name;
 
 
 // =====================
 //  Weapon Registration
 // =====================
 
-bool w_null(int dummy);
+bool w_null(int) { return false; }
 
-void register_weapon(
-	int id,
-	WepSet bit,
-	bool(int) func,
-	.int ammotype,
-	int i,
-	int weapontype,
-	float pickupbasevalue,
-	vector clr,
-	string modelname,
-	string simplemdl,
-	string crosshair,
-	string wepimg,
-	string refname,
-	string wepname);
+/** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
+CLASS(Weapon, Object)
+	ATTRIB(Weapon, m_id, int, 0)
+    /**
+     * M: WEP_id    : WEP_...
+     * you can recognize dummies when this == 0
+     */
+    ATTRIB(Weapon, weapon, int, 0);
+    /** A: WEPSET_id : WEPSET_... */
+    ATTRIB(Weapon, weapons, WepSet, '0 0 0');
+    /** M: function  : w_... */
+    ATTRIB(Weapon, weapon_func, bool(int), w_null);
+    /** M: ammotype  : main ammo field */
+    ATTRIB(Weapon, ammo_field, .int, ammo_none);
+    /** M: impulse   : weapon impulse */
+    ATTRIB(Weapon, impulse, int, -1);
+    /** M: flags     : WEPSPAWNFLAG_... combined */
+    ATTRIB(Weapon, spawnflags, int, 0);
+    /** M: rating    : bot weapon priority */
+    ATTRIB(Weapon, bot_pickupbasevalue, float, 0);
+    /** M: color     : waypointsprite color */
+    ATTRIB(Weapon, wpcolor, vector, '0 0 0');
+    /** A: wpn-id    : wpn- sprite name */
+    ATTRIB(Weapon, wpmodel, string, "");
+    /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
+    ATTRIB(Weapon, mdl, string, "");
+    /** A: modelname : full path to g_ model */
+    ATTRIB(Weapon, model, string, "");
+    /** M: simplemdl : simpleitems weapon model/image */
+    ATTRIB(Weapon, w_simplemdl, string, "foobar");
+    /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
+    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshair1");
+    /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
+    ATTRIB(Weapon, w_crosshair_size, float, 1);
+    /** M: wepimg    : "weaponfoobar" side view image file of weapon. WEAPONTODO: Move out of skin files, move to common files */
+    ATTRIB(Weapon, model2, string, "");
+    /** M: refname   : reference name name */
+    ATTRIB(Weapon, netname, string, "");
+    /** M: wepname   : human readable name */
+    ATTRIB(Weapon, message, string, "AOL CD Thrower");
 
-void register_weapons_done();
+	CONSTRUCTOR(Weapon,
+		bool(int) function,
+		.int ammotype,
+		int i,
+		int weapontype,
+		float pickupbasevalue,
+		vector clr,
+		string modelname,
+		string simplemdl,
+		string crosshair,
+		string wepimg,
+		string refname,
+		string wepname
+	) {
+		CONSTRUCT(Weapon);
+		this.weapon_func = function;
+		this.ammo_field = ammotype;
+		this.impulse = i;
+		this.spawnflags = weapontype;
+		this.bot_pickupbasevalue = pickupbasevalue;
+		this.wpcolor = clr;
+		this.mdl = modelname;
+		this.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+		this.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
+		this.w_crosshair = strzone(car(crosshair));
+		string s = cdr(crosshair);
+		this.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
+		this.model2 = strzone(wepimg);
+		this.netname = refname;
+		this.message = wepname;
+		return this;
+	}
+	void register_weapon(entity this, int id, WepSet bit)
+	{
+		this.classname = "weapon_info";
+		this.weapon = id;
+		this.weapons = bit;
+		this.wpmodel = strzone(strcat("wpn-", ftos(id)));
+		#ifdef CSQC
+		this.weapon_func(WR_INIT);
+		#endif
+	}
+ENDCLASS(Weapon)
 
-// entity properties of weaponinfo:
-// fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A"
-.int weapon;                // M: WEP_id    // WEP_...
-.WepSet weapons;            // A: WEPSET_id // WEPSET_...
-.float(float) weapon_func;  // M: function  // w_...
-..int ammo_field;         // M: ammotype  // main ammo field
-.int impulse;               // M: impulse   // weapon impulse
-.int spawnflags;            // M: flags     // WEPSPAWNFLAG_... combined
-.float bot_pickupbasevalue; // M: rating    // bot weapon priority
-.vector wpcolor;            // M: color     // waypointsprite color
-.string wpmodel;            // A: wpn-id    // wpn- sprite name
-.string mdl;                // M: modelname // name of model (without g_ v_ or h_ prefixes)
-.string model;              // A: modelname // full path to g_ model
-.string w_simplemdl;        // M: simplemdl // simpleitems weapon model/image
-.string w_crosshair;        // M: crosshair // per-weapon crosshair: "CrosshairImage Size"
-.float w_crosshair_size;    // A: crosshair // per-weapon crosshair size (argument two of "crosshair" field)
-.string model2;             // M: wepimg    // "weaponfoobar" side view image file of weapon // WEAPONTODO: Move out of skin files, move to common files
-.string netname;            // M: refname   // reference name name
-.string message;            // M: wepname   // human readable name
+void RegisterWeapons();
+REGISTER_REGISTRY(RegisterWeapons)
+entity weapon_info[WEP_MAXCOUNT], weapon_info_first, weapon_info_last;
+entity dummy_weapon_info;
 
+#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+	WepSet WEPSET_##id; \
+	REGISTER(RegisterWeapons, WEP, weapon_info, WEP_COUNT, id, m_id, \
+		NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+	) { \
+		this.m_id++; \
+		WEPSET_ALL |= (WEPSET_##id = WepSet_FromWeapon(this.m_id)); \
+		if ((flags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= WEPSET_##id; \
+		register_weapon(this, this.m_id, WEPSET_##id); \
+	}
 
-// note: the fabs call is just there to hide "if result is constant" warning
-#define REGISTER_WEAPON_2(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
-	int id; \
-	WepSet bit; \
-	bool function(int); \
-	void RegisterWeapons_##id() \
-	{ \
-		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
-		bit = WepSet_FromWeapon(id); \
-		WEPSET_ALL |= bit; \
-		if((flags) & WEP_FLAG_SUPERWEAPON) \
-			WEPSET_SUPERWEAPONS |= bit; \
-		++WEP_COUNT; \
-		register_weapon(id,bit,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname); \
-	} \
-	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
-#ifdef MENUQC
-#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname)
+#ifndef MENUQC
+	#define REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+    	bool function(int); \
+    	_REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
 #else
-#define REGISTER_WEAPON(id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,function,ammotype,impulse,flags,rating,color,modelname,simplemdl,crosshair,wepimg,refname,wepname)
+	#define REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+		_REGISTER_WEAPON(id, w_null,   ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
 #endif
 
 #include "all.inc"
@@ -213,7 +260,6 @@ void register_weapons_done();
 #undef WEP_ADD_CVAR_MO_NONE
 #undef WEP_ADD_CVAR
 #undef WEP_ADD_PROP
-#undef REGISTER_WEAPON
-
+void register_weapons_done();
 ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done);
 #endif

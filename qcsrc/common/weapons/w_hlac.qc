@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ HLAC,
 /* function  */ W_HLAC,
@@ -45,9 +45,10 @@ REGISTER_WEAPON(
 #ifdef SVQC
 HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC); }
+void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
 
 void W_HLAC_Touch(void)
 {
@@ -106,7 +107,7 @@ void W_HLAC_Attack(void)
     missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
-	missile.projectiledeathtype = WEP_HLAC;
+	missile.projectiledeathtype = WEP_HLAC.m_id;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
@@ -150,7 +151,7 @@ void W_HLAC_Attack2(void)
 
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH;
-	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = WEP_HLAC.m_id | HITTYPE_SECONDARY;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
@@ -250,13 +251,13 @@ bool W_HLAC(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_PRI(hlac, ammo);
-			ammo_amount += self.(weapon_load[WEP_HLAC]) >= WEP_CVAR_PRI(hlac, ammo);
+			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
 			ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_SEC(hlac, ammo);
-			ammo_amount += self.(weapon_load[WEP_HLAC]) >= WEP_CVAR_SEC(hlac, ammo);
+			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

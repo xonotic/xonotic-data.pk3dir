@@ -26,7 +26,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
 
-	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
+	if(wpn == WEP_HOOK.m_id && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 		complain = 0;
 
 	if(complain)
@@ -55,7 +55,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				entity mine;
-				if(wpn == WEP_MINE_LAYER)
+				if(wpn == WEP_MINE_LAYER.m_id)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
 

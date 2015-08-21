@@ -13,14 +13,15 @@ QCCFLAGS ?= \
 	-std=gmqcc \
 	-O3 -flno \
 	-Werror -fno-bail-on-werror -Wall \
-	-fftepp -fftepp-predefs -Wcpp -futf8 -frelaxed-switch \
+	-fftepp -fftepp-predefs -Wcpp -futf8 -frelaxed-switch -freturn-assignments \
 	$(QCCFLAGS_WTFS) \
 	$(QCCFLAGS_FEATURES) \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 
 QCCFLAGS_FEATURES ?= \
 	-DVEHICLES_ENABLED=1 \
-	-DVEHICLES_USE_ODE=0
+	-DVEHICLES_USE_ODE=0 \
+	-DBUILD_MOD=$(BUILD_MOD)
 
 # xonotic build system overrides this by command line argument to turn off the update-cvarcount step
 XON_BUILDSYSTEM =

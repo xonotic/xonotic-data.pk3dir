@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ ELECTRO,
 /* function  */ W_Electro,
@@ -64,9 +64,10 @@ ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float electro_secondarytime;
 void W_Electro_ExplodeCombo(void);
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_electro(void) { weapon_defaultspawnfunc(WEP_ELECTRO); }
+void spawnfunc_weapon_electro(void) { weapon_defaultspawnfunc(WEP_ELECTRO.m_id); }
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {
@@ -130,7 +131,7 @@ void W_Electro_ExplodeCombo(void)
 		world,
 		world,
 		WEP_CVAR(electro, combo_force),
-		WEP_ELECTRO | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
+		WEP_ELECTRO.m_id | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
 		world
 	);
 
@@ -271,7 +272,7 @@ void W_Electro_Attack_Bolt(void)
 	proj.nextthink = time;
 	proj.ltime = time + WEP_CVAR_PRI(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_ELECTRO;
+	proj.projectiledeathtype = WEP_ELECTRO.m_id;
 	setorigin(proj, w_shotorg);
 
 	proj.movetype = MOVETYPE_FLY;
@@ -370,7 +371,7 @@ void W_Electro_Attack_Orb(void)
 	proj.bot_dodgerating = WEP_CVAR_SEC(electro, damage);
 	proj.nextthink = time + WEP_CVAR_SEC(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_ELECTRO | HITTYPE_SECONDARY;
+	proj.projectiledeathtype = WEP_ELECTRO.m_id | HITTYPE_SECONDARY;
 	setorigin(proj, w_shotorg);
 
 	//proj.glow_size = 50;
@@ -511,7 +512,7 @@ bool W_Electro(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(ELECTRO) >= WEP_CVAR_PRI(electro, ammo);
-			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_PRI(electro, ammo);
+			ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_PRI(electro, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -519,12 +520,12 @@ bool W_Electro(int req)
 			if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
 			{
 				ammo_amount = self.WEP_AMMO(ELECTRO) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
-				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+				ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
 			}
 			else
 			{
 				ammo_amount = self.WEP_AMMO(ELECTRO) >= WEP_CVAR_SEC(electro, ammo);
-				ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= WEP_CVAR_SEC(electro, ammo);
+				ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo);
 			}
 			return ammo_amount;
 		}

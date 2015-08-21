@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ FIREBALL,
 /* function  */ W_Fireball,
@@ -52,9 +52,10 @@ FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .vector fireball_impactvec;
 .float fireball_primarytime;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_fireball(void) { weapon_defaultspawnfunc(WEP_FIREBALL); }
+void spawnfunc_weapon_fireball(void) { weapon_defaultspawnfunc(WEP_FIREBALL.m_id); }
 
 void W_Fireball_Explode(void)
 {
@@ -96,7 +97,7 @@ void W_Fireball_Explode(void)
 			dir = normalize(e.origin + e.view_ofs - self.origin);
 
 			if(accuracy_isgooddamage(self.realowner, e))
-				accuracy_add(self.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
+				accuracy_add(self.realowner, WEP_FIREBALL.m_id, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
 			Damage(e, self, self.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
 			Send_Effect("fireball_bfgdamage", e.origin, -1 * dir, 1);
@@ -200,7 +201,7 @@ void W_Fireball_Attack1(void)
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = WEP_CVAR_PRI(fireball, damageforcescale);
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_FIREBALL;
+	proj.projectiledeathtype = WEP_FIREBALL.m_id;
 	setorigin(proj, w_shotorg);
 
 	proj.movetype = MOVETYPE_FLY;
@@ -327,7 +328,7 @@ void W_Fireball_Attack2(void)
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(fireball, damage);
 	proj.movetype = MOVETYPE_BOUNCE;
-	proj.projectiledeathtype = WEP_FIREBALL | HITTYPE_SECONDARY;
+	proj.projectiledeathtype = WEP_FIREBALL.m_id | HITTYPE_SECONDARY;
 	proj.touch = W_Fireball_Firemine_Touch;
 	PROJECTILE_MAKETRIGGER(proj);
 	setsize(proj, '-4 -4 -4', '4 4 4');

@@ -1,0 +1,22 @@
+#ifndef COMMON_MUTATORS_EVENTS_H
+#define COMMON_MUTATORS_EVENTS_H
+
+#define EV_NO_ARGS(i, o)
+
+string ret_string;
+
+/** appends ":mutatorname" to ret_string for logging */
+#define EV_BuildMutatorsString(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+MUTATOR_HOOKABLE(BuildMutatorsString, EV_BuildMutatorsString);
+
+/** appends ", Mutator name" to ret_string for display */
+#define EV_BuildMutatorsPrettyString(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
+
+#endif

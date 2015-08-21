@@ -322,7 +322,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
+	if(DEATH_ISWEAPON(deathtype, WEP_TUBA.m_id))
 	{
 		// tuba causes blood to come out of the ears
 		vector ear1, ear2;

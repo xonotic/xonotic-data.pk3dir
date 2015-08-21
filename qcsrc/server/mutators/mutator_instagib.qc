@@ -250,7 +250,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		}
 
 		if(IS_PLAYER(frag_attacker))
-		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
+		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER.m_id))
 		{
 			if(frag_target.armorvalue)
 			{
@@ -262,7 +262,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 			}
 		}
 
-		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
+		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER.m_id))
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
@@ -319,13 +319,13 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	if(self.classname == "item_cells")
 		return true; // no normal cells?
 
-	if(self.weapon == WEP_VAPORIZER && self.classname == "droppedweapon")
+	if(self.weapon == WEP_VAPORIZER.m_id && self.classname == "droppedweapon")
 	{
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
 		return false;
 	}
 
-	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_VORTEX)
+	if(self.weapon == WEP_DEVASTATOR.m_id || self.weapon == WEP_VORTEX.m_id)
 	{
 		entity e = spawn();
 		setorigin(e, self.origin);

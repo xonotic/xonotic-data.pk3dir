@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ SHOTGUN,
 /* function  */ W_Shotgun,
@@ -49,9 +49,10 @@ REGISTER_WEAPON(
 #ifdef SVQC
 SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN); }
+void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN.m_id); }
 
 void W_Shotgun_Attack(float isprimary)
 {
@@ -62,7 +63,7 @@ void W_Shotgun_Attack(float isprimary)
 
 	W_SetupShot(self, true, 5, "weapons/shotgun_fire.wav", ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
-		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN, 0);
+		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
 	Send_Effect("shotgun_muzzleflash", w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
@@ -142,11 +143,11 @@ void W_Shotgun_Melee_Think(void)
 			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 			Damage(target_victim, self.realowner, self.realowner,
-				swing_damage, WEP_SHOTGUN | HITTYPE_SECONDARY,
+				swing_damage, WEP_SHOTGUN.m_id | HITTYPE_SECONDARY,
 				self.realowner.origin + self.realowner.view_ofs,
 				v_forward * WEP_CVAR_SEC(shotgun, force));
 
-			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOTGUN, 0, swing_damage); }
+			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOTGUN.m_id, 0, swing_damage); }
 
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
@@ -303,7 +304,7 @@ float W_Shotgun(float req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
-			ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= WEP_CVAR_PRI(shotgun, ammo);
+			ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -317,7 +318,7 @@ float W_Shotgun(float req)
 				case 2: // secondary triple shot
 				{
 					ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
-					ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= WEP_CVAR_PRI(shotgun, ammo);
+					ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
 					return ammo_amount;
 				}
 				default: return false; // secondary unavailable
