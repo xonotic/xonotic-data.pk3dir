@@ -23,8 +23,9 @@
 #include "wall.qh"
 #include "waypointsprites.qh"
 
-#include "vehicles/bumblebee.qh"
-#include "vehicles/all.qh"
+#include "../common/vehicles/unit/bumblebee.qh"
+#include "../common/vehicles/cl_vehicles.qh"
+#include "../common/vehicles/vehicles.qh"
 
 #include "weapons/projectile.qh"
 
@@ -148,6 +149,7 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 
 	WaypointSprite_Load();
 
@@ -160,7 +162,6 @@ void CSQC_Init(void)
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	Vehicles_Precache();
 	turrets_precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();

@@ -10,7 +10,6 @@
 #include "command/common.qh"
 
 #include "mutators/mutators_include.qh"
-#include "vehicles/vehicle.qh"
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
@@ -18,6 +17,7 @@
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
+#include "../common/vehicles/sv_vehicles.qh"
 #include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/sv_model.qh"

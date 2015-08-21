@@ -15,7 +15,7 @@
     #include "../deathtypes.qh"
     #include "../../server/mutators/mutators_include.qh"
     #include "../../server/tturrets/include/turrets_early.qh"
-    #include "../../server/vehicles/vehicle.qh"
+    #include "../vehicles/sv_vehicles.qh"
     #include "../../server/campaign.qh"
     #include "../../server/command/common.qh"
     #include "../../server/command/cmd.qh"

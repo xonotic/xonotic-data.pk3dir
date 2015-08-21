@@ -141,7 +141,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	ok_IncreaseCharge(self, self.weapon);
 
 	if(self.BUTTON_ATCK2)
-	if(!forbidWeaponUse() || self.weapon_blocked) // allow if weapon is blocked
+	if(!forbidWeaponUse(self) || self.weapon_blocked) // allow if weapon is blocked
 	if(time >= self.jump_interval)
 	{
 		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();

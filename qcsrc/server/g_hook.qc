@@ -8,7 +8,7 @@
 #include "cl_player.qh"
 #include "command/common.qh"
 #include "round_handler.qh"
-#include "vehicles/vehicle.qh"
+#include "../common/vehicles/sv_vehicles.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
@@ -315,7 +315,7 @@ void FireGrapplingHook (void)
 	vector org;
 	vector vs;
 
-	if(forbidWeaponUse()) return;
+	if(forbidWeaponUse(self)) return;
 	if(self.vehicle) return;
 
 	makevectors(self.v_angle);

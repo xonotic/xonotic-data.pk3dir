@@ -25,7 +25,7 @@
 #include "bot/bot.qh"
 #include "bot/navigation.qh"
 
-#include "vehicles/vehicle.qh"
+#include "../common/vehicles/sv_vehicles.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
@@ -219,7 +219,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-		vehicles_exit(VHEF_RELESE);
+		vehicles_exit(VHEF_RELEASE);
 
 	WaypointSprite_PlayerDead();
 
@@ -446,9 +446,6 @@ void PutClientInServer (void)
 		}
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
-
-		if(self.vehicle)
-			vehicles_exit(VHEF_RELESE);
 
 		self.classname = "player";
 		self.wasplayer = true;
@@ -820,7 +817,7 @@ void ClientKill_Now()
 {
 	if(self.vehicle)
 	{
-	    vehicles_exit(VHEF_RELESE);
+	    vehicles_exit(VHEF_RELEASE);
 	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
@@ -1295,7 +1292,7 @@ void ReadyCount();
 void ClientDisconnect (void)
 {
 	if(self.vehicle)
-	    vehicles_exit(VHEF_RELESE);
+	    vehicles_exit(VHEF_RELEASE);
 
 	if (!IS_CLIENT(self))
 	{
@@ -1656,7 +1653,11 @@ void player_regen (void)
 	// if player rotted to death...  die!
 	// check this outside above checks, as player may still be able to rot to death
 	if(self.health < 1)
+	{
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELEASE);
 		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
@@ -2166,6 +2167,7 @@ void SpectatorThink()
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
+void vehicles_enter (entity pl, entity veh);
 void PlayerUseKey()
 {
 	if (!IS_PLAYER(self))
@@ -2173,8 +2175,41 @@ void PlayerUseKey()
 
 	if(self.vehicle)
 	{
-        vehicles_exit(VHEF_NORMAL);
-        return;
+		if(!gameover)
+		{
+			vehicles_exit(VHEF_NORMAL);
+			return;
+		}
+	}
+	else if(autocvar_g_vehicles_enter)
+	{
+		if(!self.frozen)
+		if(self.deadflag == DEAD_NO)
+		if(!gameover)
+		{
+			entity head, closest_target = world;
+			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
+
+			while(head) // find the closest acceptable target to enter
+			{
+				if(head.vehicle_flags & VHF_ISVEHICLE)
+				if(head.deadflag == DEAD_NO)
+				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, self)))
+				if(head.takedamage != DAMAGE_NO)
+				{
+					if(closest_target)
+					{
+						if(vlen(self.origin - head.origin) < vlen(self.origin - closest_target.origin))
+						{ closest_target = head; }
+					}
+					else { closest_target = head; }
+				}
+
+				head = head.chain;
+			}
+
+			if(closest_target) { vehicles_enter(self, closest_target); return; }
+		}
 	}
 
 	// a use key was pressed; call handlers
@@ -2217,6 +2252,7 @@ Called every frame for each client before the physics are run
 */
 .float usekeypressed;
 void() nexball_setstatus;
+.float last_vehiclecheck;
 .int items_added;
 void PlayerPreThink (void)
 {
@@ -2323,7 +2359,7 @@ void PlayerPreThink (void)
 		if(self.health < 1)
 		{
 			if(self.vehicle)
-				vehicles_exit(VHEF_RELESE);
+				vehicles_exit(VHEF_RELEASE);
 			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
 		}
 		else if ( self.revive_progress <= 0 )
@@ -2331,6 +2367,30 @@ void PlayerPreThink (void)
 	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
+
+	if(autocvar_g_vehicles_enter)
+	if(time > self.last_vehiclecheck)
+	if(IS_PLAYER(self))
+	if(!gameover)
+	if(!self.frozen)
+	if(!self.vehicle)
+	if(self.deadflag == DEAD_NO)
+	{
+		entity veh;
+		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
+		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
+		if(veh.deadflag == DEAD_NO)
+		if(veh.takedamage != DAMAGE_NO)
+		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, self))
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
+		else if(!veh.owner)
+		if(!veh.team || SAME_TEAM(self, veh))
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
+		else if(autocvar_g_vehicles_steal)
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+
+		self.last_vehiclecheck = time + 1;
+	}
 
 	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{

@@ -734,7 +734,7 @@ void Send_Notification_WOCOVA(
     MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
     MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_IN,            0, 0, "",              NO_CPID,               "0 0", _("^K1In^BG-portal created"), "") \
     MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_OUT,           0, 0, "",              NO_CPID,               "0 0", _("^F3Out^BG-portal created"), "") \
-    MSG_CENTER_NOTIF(1, CENTER_PORTO_FAILED,                0, 0, "",              NO_CPID,               "0 0", _("^K1Portal deployment failed.\n\n^F2Catch it to try again!"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_PORTO_FAILED,                0, 0, "",              NO_CPID,               "0 0", _("^F1Portal creation failed"), "") \
     MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,      0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Invisibility has worn off"), "") \
     MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SHIELD,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Shield has worn off"), "") \
     MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SPEED,             0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Speed has worn off"), "") \
@@ -757,6 +757,11 @@ void Send_Notification_WOCOVA(
     MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
     MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
     MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER,               0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter/exit the vehicle"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER_GUNNER,        0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter the vehicle gunner"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER_STEAL,         0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to steal this vehicle"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_VEHICLE_STEAL,               0, 0, "",              CPID_VEHICLES_OTHER,   "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_VEHICLE_STEAL_SELF,          0, 0, "",              CPID_VEHICLES_OTHER,   "4 0",  _("^F2You have stolen the enemy's vehicle, you are now visible on their radar!"), "") \
     MSG_CENTER_NOTIF(1, CENTER_WEAPON_MINELAYER_LIMIT,      0, 1, "f1",            NO_CPID,               "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "")
 
 #define MULTITEAM_MULTI2(default,prefix,anncepre,infopre,centerpre) \
@@ -1333,6 +1338,8 @@ enum {
 ,   CPID_RACE_FINISHLAP
 ,   CPID_TEAMCHANGE
 ,   CPID_TIMEOUT
+,   CPID_VEHICLES
+,   CPID_VEHICLES_OTHER
 // always last
 ,   NOTIF_CPID_COUNT
 };

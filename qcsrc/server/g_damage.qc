@@ -8,7 +8,7 @@
 #include "spawnpoints.qh"
 #include "tturrets/include/turrets_early.qh"
 #include "t_items.qh"
-#include "vehicles/vehicle.qh"
+#include "../common/vehicles/sv_vehicles.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -662,7 +662,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
-			vehicles_exit(VHEF_RELESE);
+			vehicles_exit(VHEF_RELEASE);
 
 		// These are ALWAYS lethal
 		// No damage modification here
