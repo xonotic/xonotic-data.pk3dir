@@ -39,10 +39,12 @@ void Read_Effect(bool is_new)
 		eff_cnt = ReadByte();
 
 	if(is_new)
-	if(eff_trail)
-		WarpZone_TrailParticles(world, particleeffectnum(eff.eent_eff_name), v, vel);
-	else
-		pointparticles(particleeffectnum(eff.eent_eff_name), v, vel, eff_cnt);
+	{
+		if(eff_trail)
+			WarpZone_TrailParticles(world, particleeffectnum(eff.eent_eff_name), v, vel);
+		else
+			pointparticles(particleeffectnum(eff.eent_eff_name), v, vel, eff_cnt);
+	}
 }
 #endif
 
