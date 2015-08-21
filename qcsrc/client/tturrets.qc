@@ -280,9 +280,9 @@ void turret_draw2d()
         if(hud != HUD_NORMAL)
         {        
 			if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
-				txt = "gfx/vehicles/vth-mover.tga";
+				txt = "gfx/vehicles/turret_moving.tga";
 			else
-				txt = "gfx/vehicles/vth-stationary.tga";
+				txt = "gfx/vehicles/turret_stationary.tga";
 
 			vector pz = drawgetimagesize(txt) * autocvar_cl_vehicles_crosshair_size;
 			drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.7, DRAWFLAG_NORMAL);

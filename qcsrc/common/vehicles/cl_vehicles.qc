@@ -5,8 +5,6 @@ const string vCROSS_HEAL  = "gfx/vehicles/crosshair_heal.tga";
 const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint.tga";
 const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock.tga";
 const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain.tga";
-const string vCROSS_TANK  = "gfx/vehicles/crosshair_tank.tga";
-const string vCROSS_TANK2 = "gfx/vehicles/crosshair_tank2.tga";
 
 entity dropmark;
 
