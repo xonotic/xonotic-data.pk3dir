@@ -68,7 +68,7 @@ float friend_needshelp(entity e)
 		return false;
 	if(!IS_PLAYER(e))
 		return (IS_MONSTER(e) && e.health < e.max_health);
-	if(e.items & IT_INVINCIBLE)
+	if(e.items & ITEM_Shield.m_itemid)
 		return false;
 
 	switch(self.skin)

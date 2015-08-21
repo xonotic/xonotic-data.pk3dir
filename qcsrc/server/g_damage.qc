@@ -810,7 +810,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		if(!g_instagib)
 		{
 			// apply strength multiplier
-			if (attacker.items & IT_STRENGTH)
+			if (attacker.items & ITEM_Strength.m_itemid)
 			{
 				if(targ == attacker)
 				{
@@ -825,7 +825,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			}
 
 			// apply invincibility multiplier
-			if (targ.items & IT_INVINCIBLE)
+			if (targ.items & ITEM_Shield.m_itemid)
 				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
 		}
 

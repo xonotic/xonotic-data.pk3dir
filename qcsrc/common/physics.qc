@@ -709,7 +709,7 @@ void CheckPlayerJump()
 		float activate = JETPACK_JUMP(self) && air_jump && PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self);
 		float has_fuel = !PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) || ITEMS_STAT(self) & IT_UNLIMITED_WEAPON_AMMO;
 
-		if (!(ITEMS_STAT(self) & IT_JETPACK)) { }
+		if (!(ITEMS_STAT(self) & ITEM_Jetpack.m_itemid)) { }
 		else if (self.jetpack_stopped) { }
 		else if (!has_fuel)
 		{

@@ -353,14 +353,14 @@ void W_RandomWeapons(entity e, float n)
 
 string GetAmmoPicture(.int ammotype)
 {
-	switch(ammotype)
+	switch (ammotype)
 	{
-		case ammo_shells:  return "ammo_shells";
-		case ammo_nails:   return "ammo_bullets";
-		case ammo_rockets: return "ammo_rockets";
-		case ammo_cells:   return "ammo_cells";
-		case ammo_plasma:  return "ammo_cells";
-		case ammo_fuel:    return "ammo_fuel";
+		case ammo_shells:  return ITEM_Shells.m_ammoPic;
+		case ammo_nails:   return ITEM_Bullets.m_ammoPic;
+		case ammo_rockets: return ITEM_Rockets.m_ammoPic;
+		case ammo_cells:   return ITEM_Cells.m_ammoPic;
+		case ammo_plasma:  return ITEM_Plasma.m_ammoPic;
+		case ammo_fuel:    return ITEM_JetpackFuel.m_ammoPic;
 		default: return ""; // wtf, no ammo type?
 	}
 }

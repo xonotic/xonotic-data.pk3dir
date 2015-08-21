@@ -262,7 +262,7 @@ void W_Porto_Attack(float type)
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
 
-	if(self.items & IT_STRENGTH)
+	if(self.items & ITEM_Strength.m_itemid)
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
 	else
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);

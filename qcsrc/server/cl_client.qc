@@ -33,6 +33,8 @@
 #include "../common/net_notice.qh"
 #include "../common/physics.qh"
 
+#include "../common/items/all.qc"
+
 #include "../common/triggers/subs.qh"
 #include "../common/triggers/triggers.qh"
 #include "../common/triggers/trigger/secret.qh"
@@ -1479,13 +1481,13 @@ void player_powerups (void)
 
 	if (!g_instagib)
 	{
-		if (self.items & IT_STRENGTH)
+		if (self.items & ITEM_Strength.m_itemid)
 		{
 			play_countdown(self.strength_finished, "misc/poweroff.wav");
 			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.strength_finished)
 			{
-				self.items = self.items - (self.items & IT_STRENGTH);
+				self.items = self.items - (self.items & ITEM_Strength.m_itemid);
 				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STRENGTH, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
 			}
@@ -1494,18 +1496,18 @@ void player_powerups (void)
 		{
 			if (time < self.strength_finished)
 			{
-				self.items = self.items | IT_STRENGTH;
+				self.items = self.items | ITEM_Strength.m_itemid;
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STRENGTH, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_STRENGTH);
 			}
 		}
-		if (self.items & IT_INVINCIBLE)
+		if (self.items & ITEM_Shield.m_itemid)
 		{
 			play_countdown(self.invincible_finished, "misc/poweroff.wav");
 			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.invincible_finished)
 			{
-				self.items = self.items - (self.items & IT_INVINCIBLE);
+				self.items = self.items - (self.items & ITEM_Shield.m_itemid);
 				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SHIELD, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
 			}
@@ -1514,7 +1516,7 @@ void player_powerups (void)
 		{
 			if (time < self.invincible_finished)
 			{
-				self.items = self.items | IT_INVINCIBLE;
+				self.items = self.items | ITEM_Shield.m_itemid;
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SHIELD, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SHIELD);
 			}
@@ -1664,7 +1666,7 @@ void player_regen (void)
 		minf = autocvar_g_balance_fuel_regenstable;
 		limitf = autocvar_g_balance_fuel_limit;
 
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
 	}
 }
 
@@ -2496,8 +2498,8 @@ void PlayerPreThink (void)
 			W_WeaponFrame();
 
 			self.items_added = 0;
-			if(self.items & IT_JETPACK)
-				if(self.items & IT_FUEL_REGEN || self.ammo_fuel >= 0.01)
+			if(self.items & ITEM_Jetpack.m_itemid)
+				if(self.items & ITEM_JetpackRegen.m_itemid || self.ammo_fuel >= 0.01)
 					self.items_added |= IT_FUEL;
 
 			self.items |= self.items_added;

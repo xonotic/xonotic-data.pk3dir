@@ -372,7 +372,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 		{
 			makevectors((player.v_angle.y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle.x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
 
-			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
+			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & ITEM_Strength.m_itemid) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
 			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, false);
 			ctf_Handle_Drop(flag, player, droptype);
 			break;
