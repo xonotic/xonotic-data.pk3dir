@@ -87,6 +87,7 @@ weapons/weaponsystem.qc
 ../common/buffs.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
+../common/effects.qc
 ../common/mapinfo.qc
 ../common/monsters/all.qc
 ../common/monsters/spawn.qc

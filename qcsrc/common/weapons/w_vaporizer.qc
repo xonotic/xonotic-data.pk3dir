@@ -75,7 +75,7 @@ void W_Vaporizer_Attack(void)
 
 	self.vaporizer_lasthit = damage_goodhits;
 
-	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("nex_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
 	vector v;
@@ -84,33 +84,33 @@ void W_Vaporizer_Attack(void)
 	{
 		case NUM_TEAM_1:   // Red
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3RED_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3RED", w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_2:   // Blue
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3BLUE_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3BLUE", w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_3:   // Yellow
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3YELLOW_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3YELLOW", w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_4:   // Pink
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3PINK_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3PINK", w_shotorg, v, 1);
 			break;
 		default:
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3", w_shotorg, v, 1);
 			break;
 	}
 

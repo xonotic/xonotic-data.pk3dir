@@ -58,7 +58,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 	W_SetupShot(self, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
-	pointparticles(particleeffectnum("rifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
+	Send_Effect("rifle_muzzleflash", w_shotorg, w_shotdir * 2000, 1);
 
 	if(self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) // if zoomed, shoot from the eye
 	{

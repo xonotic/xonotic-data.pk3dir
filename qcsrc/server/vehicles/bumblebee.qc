@@ -622,7 +622,7 @@ void bumb_blowup()
 				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_large"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	Send_Effect("explosion_large", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 
 	if(self.owner.deadflag == DEAD_DYING)
 		self.owner.deadflag = DEAD_DEAD;
@@ -638,7 +638,7 @@ void bumb_diethink()
 	if(random() < 0.1)
 	{
 		sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+		Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 
 	self.nextthink = time + 0.1;
@@ -686,7 +686,7 @@ void bumb_die()
 	_body.owner = self;
 	_body.enemy = self.enemy;
 
-	pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
+	Send_Effect("explosion_medium", findbetterlocation(self.origin, 16), '0 0 0', 1);
 
 	self.health			= 0;
 	self.event_damage	= func_null;

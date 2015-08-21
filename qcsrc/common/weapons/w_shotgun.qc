@@ -64,7 +64,7 @@ void W_Shotgun_Attack(float isprimary)
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN, 0);
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
+	Send_Effect("shotgun_muzzleflash", w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
 	// casing code
 	if(autocvar_g_casings >= 1)

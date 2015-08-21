@@ -78,7 +78,7 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 		d = damage + (edgedamage - damage) * (d / dist);
 		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
 		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+		Send_Effect("fireball_laser", self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
 }
 
@@ -225,7 +225,7 @@ void nade_napalm_boom()
 void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 {
 	frost_target.frozen_by = freezefield.realowner;
-	pointparticles(particleeffectnum("electro_impact"), frost_target.origin, '0 0 0', 1);
+	Send_Effect("electro_impact", frost_target.origin, '0 0 0', 1);
 	Freeze(frost_target, 1/freeze_time, 3, false);
 	if(frost_target.ballcarried)
 	if(g_keepaway) { ka_DropEvent(frost_target); }
@@ -259,7 +259,7 @@ void nade_ice_think()
 				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
 				default:		 expef = "nade_neutral_explode"; break;
 			}
-			pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
 			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
@@ -284,15 +284,15 @@ void nade_ice_think()
 	randomp.x = randomr*cos(randomw);
 	randomp.y = randomr*sin(randomw);
 	randomp.z = 1;
-	pointparticles(particleeffectnum("electro_muzzleflash"), self.origin + randomp, '0 0 0', 1);
+	Send_Effect("electro_muzzleflash", self.origin + randomp, '0 0 0', 1);
 
 	if(time >= self.nade_special_time)
 	{
 		self.nade_special_time = time+0.7;
 
 
-		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
-		pointparticles(particleeffectnum("icefield"), self.origin, '0 0 0', 1);
+		Send_Effect("electro_impact", self.origin, '0 0 0', 1);
+		Send_Effect("icefield", self.origin, '0 0 0', 1);
 	}
 
 
@@ -426,7 +426,7 @@ void nade_heal_touch()
 			if ( other.health < maxhealth )
 			{
 				if ( self.nade_show_particles )
-					pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
+					Send_Effect("healing_fx", other.origin, '0 0 0', 1);
 				other.health = min(other.health+health_factor, maxhealth);
 			}
 			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
@@ -530,7 +530,7 @@ void nade_boom()
 	}
 
 	if(expef != "")
-		pointparticles(particleeffectnum(expef), findbetterlocation(self.origin, 8), '0 0 0', 1);
+		Send_Effect(expef, findbetterlocation(self.origin, 8), '0 0 0', 1);
 
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
@@ -1120,7 +1120,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
 	{
 		Unfreeze(frag_target);
 		frag_target.health = autocvar_g_freezetag_revive_nade_health;
-		pointparticles(particleeffectnum("iceorglass"), frag_target.origin, '0 0 0', 3);
+		Send_Effect("iceorglass", frag_target.origin, '0 0 0', 3);
 		frag_damage = 0;
 		frag_force = '0 0 0';
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);

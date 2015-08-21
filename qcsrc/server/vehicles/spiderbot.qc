@@ -507,7 +507,7 @@ float spiderbot_frame()
 
             sound (gun, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTEN_NORM);
             //trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
-            pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), v, v_forward * 2500, 1);
+            Send_Effect("spiderbot_minigun_muzzleflash", v, v_forward * 2500, 1);
 
             self = spider;
 
@@ -654,7 +654,7 @@ void spiderbot_headfade()
         if(self.alpha > 0.1)
         {
             sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-            pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
+            Send_Effect("explosion_big", self.origin + '0 0 100', '0 0 0', 1);
         }
         remove(self);
     }
@@ -667,7 +667,7 @@ void spiderbot_blowup()
         if(random() < 0.1)
         {
             sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-            pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+            Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
         }
         self.nextthink = time + 0.1;
         return;

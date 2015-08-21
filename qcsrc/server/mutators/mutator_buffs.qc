@@ -67,7 +67,7 @@ void buff_Effect(entity player, string eff)
 
 	if(time >= self.buff_effect_delay)
 	{
-		pointparticles(particleeffectnum(eff), player.origin + ((player.mins + player.maxs) * 0.5), '0 0 0', 1);
+		Send_Effect(eff, player.origin + ((player.mins + player.maxs) * 0.5), '0 0 0', 1);
 		self.buff_effect_delay = time + 0.05; // prevent spam
 	}
 }
@@ -131,8 +131,8 @@ void buff_Respawn(entity ent)
 	if(autocvar_g_buffs_random_lifetime > 0)
 		ent.lifetime = time + autocvar_g_buffs_random_lifetime;
 
-	pointparticles(particleeffectnum("electro_combo"), oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
-	pointparticles(particleeffectnum("electro_combo"), CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
+	Send_Effect("electro_combo", oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
+	Send_Effect("electro_combo", CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
 
 	WaypointSprite_Ping(ent.buff_waypoint);
 
@@ -181,7 +181,7 @@ void buff_Touch()
 	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, buffid);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, buffid);
 
-	pointparticles(particleeffectnum("item_pickup"), CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound(other, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 	other.buffs |= (self.buffs);
 }
@@ -263,7 +263,7 @@ void buff_Think()
 		{
 			self.buff_active = true;
 			sound(self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);
-			pointparticles(particleeffectnum("item_respawn"), CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+			Send_Effect("item_respawn", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 		}
 	}
 
@@ -650,8 +650,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
 			closest.pushltime = time + autocvar_g_maxpushtime;
 			closest.istypefrag = closest.BUTTON_CHAT;
 
-			pointparticles(particleeffectnum("electro_combo"), their_org, '0 0 0', 1);
-			pointparticles(particleeffectnum("electro_combo"), my_org, '0 0 0', 1);
+			Send_Effect("electro_combo", their_org, '0 0 0', 1);
+			Send_Effect("electro_combo", my_org, '0 0 0', 1);
 
 			sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NORM);
 			sound(closest, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NORM);
@@ -739,7 +739,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 	if(time < self.buff_disability_time)
 	if(time >= self.buff_disability_effect_time)
 	{
-		pointparticles(particleeffectnum("smoking"), self.origin + ((self.mins + self.maxs) * 0.5), '0 0 0', 1);
+		Send_Effect("smoking", self.origin + ((self.mins + self.maxs) * 0.5), '0 0 0', 1);
 		self.buff_disability_effect_time = time + 0.5;
 	}
 

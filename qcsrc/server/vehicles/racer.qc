@@ -337,7 +337,7 @@ float racer_frame()
     if (player.BUTTON_JUMP && racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
     {
         if(time - racer.wait > 0.2)
-            pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
+            Send_Effect("wakizashi_booster_smoke", self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
 
         racer.wait = time;
         racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
@@ -347,7 +347,7 @@ float racer_frame()
         {
             traceline(racer.origin, racer.origin - '0 0 256', MOVE_NORMAL, self);
             if(trace_fraction != 1.0)
-                pointparticles(particleeffectnum("smoke_small"), trace_endpos, '0 0 0', 1);
+                Send_Effect("smoke_small", trace_endpos, '0 0 0', 1);
 
             racer.invincible_finished = time + 0.1 + (random() * 0.1);
         }
@@ -586,7 +586,7 @@ void racer_die()
     self.cnt          = 1 + random() * 2;
     self.touch        = racer_deadtouch;
 
-    pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+    Send_Effect("explosion_medium", self.origin, '0 0 0', 1);
 
     if(random() < 0.5)
         self.avelocity_z = 32;

@@ -259,7 +259,7 @@ void W_Electro_Attack_Bolt(void)
 		WEP_CVAR_PRI(electro, damage)
 	);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("electro_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.classname = "electro_bolt";
@@ -359,7 +359,7 @@ void W_Electro_Attack_Orb(void)
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("electro_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	entity proj = spawn();
 	proj.classname = "electro_orb";

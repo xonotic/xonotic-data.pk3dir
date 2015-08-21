@@ -257,7 +257,7 @@ void W_Crylink_LinkJoinEffect_Think(void)
 					e.projectiledeathtype,
 					other
 				);
-				pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
+				Send_Effect("crylink_joinexplode", self.origin, '0 0 0', n);
 			}
 		}
 	}
@@ -359,7 +359,7 @@ void W_Crylink_Attack(void)
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect("crylink_muzzleflash", w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -468,7 +468,7 @@ void W_Crylink_Attack2(void)
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect("crylink_muzzleflash", w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{

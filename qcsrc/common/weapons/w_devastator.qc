@@ -292,7 +292,7 @@ void W_Devastator_Think(void)
 
 			if(!self.count)
 			{
-				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
+				Send_Effect("rocket_guide", self.origin, self.velocity, 1);
 				// TODO add a better sound here
 				sound(self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
 				self.count = 1;
@@ -342,7 +342,7 @@ void W_Devastator_Attack(void)
 	W_DecreaseAmmo(WEP_CVAR(devastator, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(devastator, damage));
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("rocketlauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
