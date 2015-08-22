@@ -13,7 +13,9 @@ REGISTER_VEHICLE_SIMPLE(
 /* tags	   	  */ "", "", "tag_viewport",
 /* netname	  */ "bumblebee",
 /* fullname   */ _("Bumblebee")
-);
+) {
+    this.m_icon = "vehicle_bumble";
+}
 #endif
 
 #ifdef IMPLEMENTATION
@@ -1101,7 +1103,7 @@ float v_bumblebee(float req)
 	{
 		case VR_HUD:
 		{
-			Vehicles_drawHUD("vehicle_bumble", "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
+			Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 vCROSS_HEAL);

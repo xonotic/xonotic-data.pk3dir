@@ -12,7 +12,9 @@ REGISTER_VEHICLE_SIMPLE(
 /* tags	   	  */ "", "", "tag_viewport",
 /* netname	  */ "racer",
 /* fullname   */ _("Racer")
-);
+) {
+    this.m_icon = "vehicle_racer";
+}
 #endif
 
 #ifdef IMPLEMENTATION
@@ -808,7 +810,7 @@ bool v_racer(int req)
 #ifdef CSQC
 		case VR_HUD:
 		{
-			Vehicles_drawHUD("vehicle_racer", "vehicle_racer_weapon1", "vehicle_racer_weapon2",
+			Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 vCROSS_GUIDE);

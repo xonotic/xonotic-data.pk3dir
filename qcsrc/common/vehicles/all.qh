@@ -41,22 +41,6 @@ entity get_vehicleinfo(float id);
 .entity tur_head;
 
 
-// entity properties of vehicleinfo:
-.int vehicleid; // VEH_...
-.string netname; // short name
-.string vehicle_name; // human readable name
-.int(int) vehicle_func; // v_...
-.string mdl; // currently a copy of the model
-.string model; // full name of model
-.string head_model; // full name of tur_head model
-.string hud_model; // cockpit model
-.string tag_head; // tur_head model tag
-.string tag_hud; // hud model tag
-.string tag_view; // cockpit model tag
-.int() PlayerPhysplug; // player physics mod
-.int spawnflags;
-.vector mins, maxs; // vehicle hitbox size
-
 // other useful macros
 #define VEH_ACTION(vehicletype,mrequest) (get_vehicleinfo(vehicletype)).vehicle_func(mrequest)
 #define VEH_NAME(vehicletype) (get_vehicleinfo(vehicletype)).vehicle_name
@@ -93,19 +77,7 @@ const int VEH_FIRST = 1;
     REGISTER_INIT(VEH, id)
 REGISTER_REGISTRY(RegisterVehicles)
 
-
-REGISTER_VEHICLE(NULL, Vehicle) {
-    this.vehicleid = 0; // you can recognize dummies by this
-    this.netname = "";
-    this.vehicle_name = "Vehicle";
-    this.vehicle_func = v_null;
-    this.mdl = "";
-    this.mins = '-0 -0 -0';
-    this.maxs = '0 0 0';
-    this.model = "";
-    this.head_model = "";
-    this.hud_model = "";
-}
+REGISTER_VEHICLE(NULL, Vehicle);
 
 #include "all.inc"
 

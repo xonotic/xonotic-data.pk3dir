@@ -13,7 +13,9 @@ REGISTER_VEHICLE_SIMPLE(
 /* tags	   	  */ "", "tag_hud", "tag_camera",
 /* netname	  */ "raptor",
 /* fullname   */ _("Raptor")
-);
+) {
+    this.m_icon = "vehicle_raptor";
+}
 #endif
 
 #ifdef IMPLEMENTATION
@@ -1043,7 +1045,7 @@ float v_raptor(float req)
 				default:        crosshair = vCROSS_BURST;
 			}
 			
-			Vehicles_drawHUD("vehicle_raptor", "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
+			Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 crosshair);
