@@ -2,8 +2,8 @@
 #define DIALOG_SETTINGS_MISC_CVARS_H
 #include "dialog.qc"
 CLASS(XonoticCvarsDialog, XonoticDialog)
-	METHOD(XonoticCvarsDialog, fill, void(entity))
-	METHOD(XonoticCvarsDialog, showNotify, void(entity))
+	METHOD(XonoticCvarsDialog, fill, void(entity));
+	METHOD(XonoticCvarsDialog, showNotify, void(entity));
 	ATTRIB(XonoticCvarsDialog, title, string, _("Advanced settings"))
 	ATTRIB(XonoticCvarsDialog, color, vector, SKINCOLOR_DIALOG_CVARS)
 	ATTRIB(XonoticCvarsDialog, intendedWidth, float, 0.8)

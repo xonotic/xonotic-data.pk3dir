@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_RACETIMER_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDRaceTimerDialog, XonoticRootDialog)
-	METHOD(XonoticHUDRaceTimerDialog, fill, void(entity))
+	METHOD(XonoticHUDRaceTimerDialog, fill, void(entity));
 	ATTRIB(XonoticHUDRaceTimerDialog, title, string, _("Race Timer Panel"))
 	ATTRIB(XonoticHUDRaceTimerDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDRaceTimerDialog, intendedWidth, float, 0.4)

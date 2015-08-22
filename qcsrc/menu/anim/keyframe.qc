@@ -2,9 +2,9 @@
 #define ANIM_KEYFRAME_H
 #include "animation.qc"
 CLASS(Keyframe, Animation)
-	METHOD(Keyframe, addEasing, entity(entity, float, float, float(float, float, float, float)))
-	METHOD(Keyframe, addAnim, void(entity, entity))
-	METHOD(Keyframe, calcValue, float(entity, float, float, float, float))
+	METHOD(Keyframe, addEasing, entity(entity, float, float, float(float, float, float, float)));
+	METHOD(Keyframe, addAnim, void(entity, entity));
+	METHOD(Keyframe, calcValue, float(entity, float, float, float, float));
 	ATTRIB(Keyframe, currentChild, entity, NULL)
 	ATTRIB(Keyframe, firstChild, entity, NULL)
 	ATTRIB(Keyframe, lastChild, entity, NULL)

@@ -2,15 +2,15 @@
 #define ITEM_IMAGE_H
 #include "../item.qc"
 CLASS(Image, Item)
-	METHOD(Image, configureImage, void(entity, string))
-	METHOD(Image, draw, void(entity))
-	METHOD(Image, toString, string(entity))
-	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Image, updateAspect, void(entity))
-	METHOD(Image, initZoom, void(entity))
-	METHOD(Image, setZoom, void(entity, float, float))
-	METHOD(Image, drag_setStartPos, float(entity, vector))
-	METHOD(Image, drag, float(entity, vector))
+	METHOD(Image, configureImage, void(entity, string));
+	METHOD(Image, draw, void(entity));
+	METHOD(Image, toString, string(entity));
+	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Image, updateAspect, void(entity));
+	METHOD(Image, initZoom, void(entity));
+	METHOD(Image, setZoom, void(entity, float, float));
+	METHOD(Image, drag_setStartPos, float(entity, vector));
+	METHOD(Image, drag, float(entity, vector));
 	ATTRIB(Image, src, string, string_null)
 	ATTRIB(Image, color, vector, '1 1 1')
 	ATTRIB(Image, forcedAspect, float, 0) // special values: -1 keep image aspect ratio, -2 keep image size but bound to the containing box, -3 always keep image size

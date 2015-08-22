@@ -2,13 +2,13 @@
 #define CREDITS_H
 #include "listbox.qc"
 CLASS(XonoticCreditsList, XonoticListBox)
-	METHOD(XonoticCreditsList, configureXonoticCreditsList, void(entity))
+	METHOD(XonoticCreditsList, configureXonoticCreditsList, void(entity));
 	ATTRIB(XonoticCreditsList, rowsPerItem, float, 1)
-	METHOD(XonoticCreditsList, draw, void(entity))
-	METHOD(XonoticCreditsList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticCreditsList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticCreditsList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticCreditsList, destroy, void(entity))
+	METHOD(XonoticCreditsList, draw, void(entity));
+	METHOD(XonoticCreditsList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticCreditsList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticCreditsList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticCreditsList, destroy, void(entity));
 	ATTRIB(XonoticCreditsList, selectionDoesntMatter, bool, true)
 
 	ATTRIB(XonoticCreditsList, realFontSize, vector, '0 0 0')

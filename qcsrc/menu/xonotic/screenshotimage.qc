@@ -2,14 +2,14 @@
 #define SCREENSHOTIMAGE_H
 #include "image.qc"
 CLASS(XonoticScreenshotImage, XonoticImage)
-	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity))
-	METHOD(XonoticScreenshotImage, load, void(entity, string))
-	METHOD(XonoticScreenshotImage, draw, void(entity))
+	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity));
+	METHOD(XonoticScreenshotImage, load, void(entity, string));
+	METHOD(XonoticScreenshotImage, draw, void(entity));
 	ATTRIB(XonoticScreenshotImage, focusable, float, 1) // mousePress and mouseDrag work only if focusable is set
-	METHOD(XonoticScreenshotImage, mousePress, float(entity, vector))
-	METHOD(XonoticScreenshotImage, mouseDrag, float(entity, vector))
-	METHOD(XonoticScreenshotImage, mouseMove, float(entity, vector))
-	METHOD(XonoticScreenshotImage, resizeNotify, void(entity, vector, vector, vector, vector))
+	METHOD(XonoticScreenshotImage, mousePress, float(entity, vector));
+	METHOD(XonoticScreenshotImage, mouseDrag, float(entity, vector));
+	METHOD(XonoticScreenshotImage, mouseMove, float(entity, vector));
+	METHOD(XonoticScreenshotImage, resizeNotify, void(entity, vector, vector, vector, vector));
 	ATTRIB(XonoticScreenshotImage, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticScreenshotImage, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticScreenshotImage, showTitle, float, 1)

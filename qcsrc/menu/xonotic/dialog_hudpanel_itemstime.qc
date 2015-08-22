@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_ITEMSTIME_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDItemsTimeDialog, XonoticRootDialog)
-	METHOD(XonoticHUDItemsTimeDialog, fill, void(entity))
+	METHOD(XonoticHUDItemsTimeDialog, fill, void(entity));
 	ATTRIB(XonoticHUDItemsTimeDialog, title, string, _("Items Time Panel"))
 	ATTRIB(XonoticHUDItemsTimeDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDItemsTimeDialog, intendedWidth, float, 0.4)

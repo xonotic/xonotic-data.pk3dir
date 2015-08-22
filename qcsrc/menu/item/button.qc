@@ -2,15 +2,15 @@
 #define ITEM_BUTTON_H
 #include "label.qc"
 CLASS(Button, Label)
-	METHOD(Button, configureButton, void(entity, string, float, string))
-	METHOD(Button, draw, void(entity))
-	METHOD(Button, showNotify, void(entity))
-	METHOD(Button, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Button, keyDown, float(entity, float, float, float))
-	METHOD(Button, mousePress, float(entity, vector))
-	METHOD(Button, mouseDrag, float(entity, vector))
-	METHOD(Button, mouseRelease, float(entity, vector))
-	METHOD(Button, playClickSound, void(entity))
+	METHOD(Button, configureButton, void(entity, string, float, string));
+	METHOD(Button, draw, void(entity));
+	METHOD(Button, showNotify, void(entity));
+	METHOD(Button, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Button, keyDown, float(entity, float, float, float));
+	METHOD(Button, mousePress, float(entity, vector));
+	METHOD(Button, mouseDrag, float(entity, vector));
+	METHOD(Button, mouseRelease, float(entity, vector));
+	METHOD(Button, playClickSound, void(entity));
 	ATTRIB(Button, onClick, void(entity, entity), func_null)
 	ATTRIB(Button, onClickEntity, entity, NULL)
 	ATTRIB(Button, src, string, string_null)

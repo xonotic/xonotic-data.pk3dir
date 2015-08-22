@@ -2,7 +2,7 @@
 #define DIALOG_SETTINGS_EFFECTS_H
 #include "tab.qc"
 CLASS(XonoticEffectsSettingsTab, XonoticTab)
-	METHOD(XonoticEffectsSettingsTab, fill, void(entity))
+	METHOD(XonoticEffectsSettingsTab, fill, void(entity));
 	ATTRIB(XonoticEffectsSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticEffectsSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space
