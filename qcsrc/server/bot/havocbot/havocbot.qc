@@ -914,7 +914,7 @@ void havocbot_chooseenemy()
 	while(true)
 	{
 		scan_secondary_targets = false;
-		for ( ; head; head = head.chain)
+		while(head)
 		{
 			if(!scan_secondary_targets)
 			{
@@ -951,6 +951,8 @@ void havocbot_chooseenemy()
 				head = head2;
 				bestrating = 100000000;
 			}
+			else
+				head = head.chain;
 		}
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
