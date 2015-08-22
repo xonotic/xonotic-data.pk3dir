@@ -767,7 +767,7 @@ float bumble_raygun_send(entity to, float sf)
 void spawnfunc_vehicle_bumblebee()
 {
 	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
-	if(!vehicle_initialize(VEH_BUMBLEBEE.vehicleid, false)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }
 
 float v_bumblebee(float req)

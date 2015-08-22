@@ -1183,17 +1183,15 @@ void vehicles_spawn()
 	CSQCMODEL_AUTOINIT();
 }
 
-bool vehicle_initialize(int vehicle_id, bool nodrop)
+bool vehicle_initialize(entity veh, bool nodrop)
 {
 	if(!autocvar_g_vehicles)
 		return false;
 
-	entity veh = get_vehicleinfo(vehicle_id);
-
 	if(!veh.vehicleid)
 		return false;
 	
-	if(!veh.tur_head) { VEH_ACTION(vehicle_id, VR_PRECACHE); }
+	if(!veh.tur_head) { VEH_ACTION(veh.vehicleid, VR_PRECACHE); }
 
 	if(self.targetname && self.targetname != "")
 	{
@@ -1238,7 +1236,7 @@ bool vehicle_initialize(int vehicle_id, bool nodrop)
 	self.iscreature				= true;
 	self.teleportable			= false; // no teleporting for vehicles, too buggy
 	self.damagedbycontents		= true;
-	self.vehicleid				= vehicle_id;
+	self.vehicleid				= veh.vehicleid;
 	self.PlayerPhysplug			= veh.PlayerPhysplug;
 	self.event_damage			= func_null;
 	self.touch					= vehicles_touch;
@@ -1286,7 +1284,7 @@ bool vehicle_initialize(int vehicle_id, bool nodrop)
 	self.pos2 = self.angles;
 	self.tur_head.team = self.team;
 
-	VEH_ACTION(vehicle_id, VR_SETUP);
+	VEH_ACTION(veh.vehicleid, VR_SETUP);
 
 	if(self.active == ACTIVE_NOT)
 		self.nextthink = 0; // wait until activated

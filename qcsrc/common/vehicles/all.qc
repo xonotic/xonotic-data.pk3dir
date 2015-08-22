@@ -46,15 +46,11 @@ STATIC_INIT(vehicles_common_initialize)
 }
 #endif
 
-entity get_vehicleinfo(float id)
+entity get_vehicleinfo(int id)
 {
-	entity m;
-	if(id < VEH_FIRST || id > VEH_LAST)
-		return VEH_NULL;
-	m = vehicle_info[id - 1];
-	if(m)
-		return m;
-	return VEH_NULL;
+	if (id < VEH_FIRST || id > VEH_LAST) return VEH_NULL;
+	entity m = vehicle_info[id];
+	return m ? m : VEH_NULL;
 }
 
 #endif

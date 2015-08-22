@@ -810,7 +810,7 @@ bool spiderbot_impulse(int _imp)
 void spawnfunc_vehicle_spiderbot()
 {
 	if(!autocvar_g_vehicle_spiderbot) { remove(self); return; }
-	if(!vehicle_initialize(VEH_SPIDERBOT.vehicleid, false)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
 float v_spiderbot(float req)

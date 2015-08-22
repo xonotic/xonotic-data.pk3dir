@@ -788,7 +788,7 @@ float raptor_impulse(float _imp)
 void spawnfunc_vehicle_raptor()
 {
 	if(!autocvar_g_vehicle_raptor) { remove(self); return; }
-	if(!vehicle_initialize(VEH_RAPTOR.vehicleid, false)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
 
 float v_raptor(float req)
