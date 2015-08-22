@@ -910,6 +910,7 @@ void havocbot_chooseenemy()
 
 	bool scan_transparent = false;
 	bool scan_secondary_targets = false;
+	bool have_secondary_targets = false;
 	while(true)
 	{
 		scan_secondary_targets = false;
@@ -918,7 +919,10 @@ void havocbot_chooseenemy()
 			if(!scan_secondary_targets)
 			{
 				if(head.classname == "misc_breakablemodel")
+				{
+					have_secondary_targets = true;
 					continue;
+				}
 			}
 			else
 			{
@@ -940,9 +944,10 @@ void havocbot_chooseenemy()
 				}
 			}
 
-			if(!best && !scan_secondary_targets)
+			if(!best && have_secondary_targets && !scan_secondary_targets)
 			{
 				scan_secondary_targets = true;
+				// restart the loop
 				head = head2;
 				bestrating = 100000000;
 			}
