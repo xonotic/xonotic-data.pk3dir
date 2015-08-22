@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ TUBA,
 /* function  */ W_Tuba,
@@ -51,9 +51,10 @@ float W_Tuba_MarkClientOnlyFieldsAsUsed() {
 .float tuba_lastnotes_cnt; // over
 .vector tuba_lastnotes[MAX_TUBANOTES];
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_tuba(void) { weapon_defaultspawnfunc(WEP_TUBA); }
+void spawnfunc_weapon_tuba(void) { weapon_defaultspawnfunc(WEP_TUBA.m_id); }
 
 bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
@@ -357,12 +358,12 @@ void W_Tuba_NoteOn(float hittype)
 	self.tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(); // so it can get prolonged safely
 
 	//sound(self, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(self, self, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), world, world, WEP_CVAR(tuba, force), hittype | WEP_TUBA, world);
+	RadiusDamage(self, self, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), world, world, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, world);
 
 	o = gettaginfo(self.exteriorweaponentity, 0);
 	if(time > self.tuba_smoketime)
 	{
-		pointparticles(particleeffectnum("smoke_ring"), o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
+		Send_Effect("smoke_ring", o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
 		self.tuba_smoketime = time + 0.25;
 	}
 }
@@ -453,7 +454,7 @@ bool W_Tuba(int req)
 						break;
 				}
 				W_SetupShot(self, false, 0, "", 0, 0);
-				pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
+				Send_Effect("teleport", w_shotorg, '0 0 0', 1);
 				self.weaponentity.state = WS_INUSE;
 				weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
 			}

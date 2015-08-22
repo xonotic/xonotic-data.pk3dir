@@ -46,7 +46,7 @@
     #include "../../common/deathtypes.qh"
     #include "mutators_include.qh"
     #include "../tturrets/include/turrets_early.qh"
-    #include "../vehicles/vehicle.qh"
+    #include "../../common/vehicles/sv_vehicles.qh"
     #include "../campaign.qh"
     #include "../../common/campaign_common.qh"
     #include "../../common/mapinfo.qh"
@@ -76,10 +76,9 @@
     #include "../item_key.qh"
     #include "../pathlib/pathlib.qh"
     #include "../tturrets/include/turrets.qh"
-    #include "../vehicles/all.qh"
 #endif
 
-#include "base.qc"
+#include "../../common/mutators/base.qh"
 #include "gamemode_assault.qc"
 #include "gamemode_ca.qc"
 #include "gamemode_ctf.qc"

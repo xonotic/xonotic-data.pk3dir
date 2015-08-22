@@ -37,13 +37,11 @@ waypointsprites.qc
 
 command/all.qc
 
-vehicles/bumblebee.qc
-vehicles/all.qc
-
 weapons/projectile.qc // TODO
 
 ../common/animdecide.qc
 ../common/buffs.qc
+../common/effects.qc
 ../common/mapinfo.qc
 ../common/movetypes/include.qc
 ../common/nades.qc
@@ -70,6 +68,8 @@ weapons/projectile.qc // TODO
 ../csqcmodellib/cl_player.qc
 ../csqcmodellib/interpolate.qc
 
+../common/vehicles/vehicles_include.qc
+
 ../server/mutators/mutator_multijump.qc
 
 ../warpzonelib/anglestransform.qc
@@ -77,3 +77,5 @@ weapons/projectile.qc // TODO
 ../warpzonelib/common.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/util_server.qc
+
+../../mod/client/progs.inc

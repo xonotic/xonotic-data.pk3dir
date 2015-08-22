@@ -1,0 +1,280 @@
+#ifndef MUTATORS_BASE_H
+#define MUTATORS_BASE_H
+
+const int CBC_ORDER_FIRST = 1;
+const int CBC_ORDER_LAST = 2;
+const int CBC_ORDER_EXCLUSIVE = 3;
+const int CBC_ORDER_ANY = 4;
+
+bool CallbackChain_ReturnValue; // read-only field of the current return value
+
+/**
+ * Callbacks may be added to zero or more callback chains.
+ */
+CLASS(Callback, Object)
+    /**
+     * a callback function is like this:
+     * bool mycallback()
+     * {
+     *     do something
+     *     return false;
+     * }
+     */
+    ATTRIB(Callback, cbc_func, bool(), func_null)
+    CONSTRUCTOR(Callback, bool() func) {
+        CONSTRUCT(Callback);
+        this.cbc_func = func;
+        return this;
+    }
+ENDCLASS(Callback)
+
+/**
+ * Callback chains contain zero or more callbacks.
+ */
+CLASS(CallbackChain, Object)
+    CLASS(CallbackNode, Object)
+        ATTRIB(CallbackNode, cbc, Callback, NULL)
+        ATTRIB(CallbackNode, cbc_next, CallbackNode, NULL)
+        ATTRIB(CallbackNode, cbc_order, int, 0)
+        CONSTRUCTOR(CallbackNode, Callback it, int order) {
+            CONSTRUCT(CallbackNode);
+            this.cbc = it;
+            this.cbc_order = order;
+            return this;
+        }
+    ENDCLASS(CallbackNode)
+
+    ATTRIB(CallbackChain, cbc_next, CallbackNode, NULL)
+    ATTRIB(CallbackChain, cbc_order, int, 0)
+    CONSTRUCTOR(CallbackChain, string _name) {
+        CONSTRUCT(CallbackChain);
+        this.netname = _name;
+        return this;
+    }
+
+    bool CallbackChain_Add(CallbackChain this, Callback cb, int order)
+    {
+        if (order & CBC_ORDER_FIRST) {
+            if (order & CBC_ORDER_LAST)
+                if (this.cbc_order & CBC_ORDER_ANY)
+                    return false;
+            if (this.cbc_order & CBC_ORDER_FIRST)
+                return false;
+        } else if (order & CBC_ORDER_LAST) {
+            if (this.cbc_order & CBC_ORDER_LAST)
+                return false;
+        }
+        entity node = NEW(CallbackNode, cb, order);
+        if (order & CBC_ORDER_FIRST) {
+            node.cbc_next = this.cbc_next;
+            this.cbc_next = node;
+        } else if (order & CBC_ORDER_LAST) {
+            CallbackNode prev = NULL, it = this.cbc_next;
+            while (it) { prev = it, it = it.cbc_next; }
+            if (prev) prev.cbc_next = node;
+            else this.cbc_next = node;
+        } else {
+            // by default we execute last, but before a possible CBC_ORDER_LAST callback
+            CallbackNode prev = NULL, it = this.cbc_next;
+            while (it && !(it.cbc_order & CBC_ORDER_LAST)) { prev = it, it = it.cbc_next; }
+            node.cbc_next = it;
+            if (prev) prev.cbc_next = node;
+            else this.cbc_next = node;
+        }
+        this.cbc_order |= (order | CBC_ORDER_ANY);
+        return true;
+    }
+    int CallbackChain_Remove(CallbackChain this, Callback cb)
+    {
+        int n = 0, order = 0;
+        for (Callback prev = NULL, it = this.cbc_next; it; prev = it, it = it.cbc_next) {
+            if (it.cbc == cb) {
+                // remove it from the chain
+                Callback next = it.cbc_next;
+                if (prev) prev.cbc_next = next;
+                else this.cbc_next = next;
+                ++n;
+            }
+            // it is now something we want to keep
+            order |= (it.cbc_order & CBC_ORDER_ANY);
+        }
+        this.cbc_order = order;
+        return n;
+    }
+    bool CallbackChain_Call(CallbackChain this)
+    {
+        bool r = false;
+        for (Callback it = this.cbc_next; it; it = it.cbc_next) {
+            CallbackChain_ReturnValue = r;
+            r |= it.cbc.cbc_func();
+        }
+        return r; // callbacks return an error status, so 0 is default return value
+    }
+ENDCLASS(CallbackChain)
+
+#define _MUTATOR_HANDLE_NOP(type, id)
+#define _MUTATOR_HANDLE_PARAMS(type, id) , type in_##id
+#define _MUTATOR_HANDLE_PREPARE(type, id) id = in_##id;
+#define _MUTATOR_HANDLE_PUSHTMP(type, id) type tmp_##id = id;
+#define _MUTATOR_HANDLE_PUSHOUT(type, id) type out_##id = id;
+#define _MUTATOR_HANDLE_POPTMP(type, id) id = tmp_##id;
+#define _MUTATOR_HANDLE_POPOUT(type, id) id = out_##id;
+
+void RegisterHooks() {};
+void RegisterCallbacks() {};
+void RegisterMutators() {};
+
+#define _MUTATOR_HOOKABLE(id, ...) CallbackChain HOOK_##id; bool __Mutator_Send_##id(__VA_ARGS__)
+#define MUTATOR_HOOKABLE(id, params) \
+    _MUTATOR_HOOKABLE(id, int params(_MUTATOR_HANDLE_PARAMS, _MUTATOR_HANDLE_NOP)) { \
+        params(_MUTATOR_HANDLE_PUSHTMP, _MUTATOR_HANDLE_NOP) \
+        params(_MUTATOR_HANDLE_PREPARE, _MUTATOR_HANDLE_NOP) \
+        bool ret = CallbackChain_Call(HOOK_##id); \
+        params(_MUTATOR_HANDLE_NOP,     _MUTATOR_HANDLE_PUSHOUT) \
+        params(_MUTATOR_HANDLE_POPTMP,  _MUTATOR_HANDLE_NOP) \
+        params(_MUTATOR_HANDLE_NOP,     _MUTATOR_HANDLE_POPOUT) \
+        return ret; \
+    } \
+    [[accumulate]] void RegisterHooks() { HOOK_##id = NEW(CallbackChain, #id); }
+#define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
+
+enum {
+    MUTATOR_REMOVING,
+    MUTATOR_ADDING,
+    MUTATOR_ROLLING_BACK
+};
+
+typedef bool(int) mutatorfunc_t;
+
+CLASS(Mutator, Object)
+    ATTRIB(Mutator, m_id, int, 0)
+    ATTRIB(Mutator, mutatorname, string, string_null)
+    ATTRIB(Mutator, mutatorfunc, mutatorfunc_t, func_null)
+    ATTRIB(Mutator, mutatorcheck, bool(), func_null)
+    CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
+        CONSTRUCT(Mutator);
+        this.mutatorname = _name;
+        this.mutatorfunc = func;
+        return this;
+    }
+ENDCLASS(Mutator)
+
+const int MAX_MUTATORS = 15;
+Mutator loaded_mutators[MAX_MUTATORS];
+
+bool Mutator_Add(Mutator mut)
+{
+    int j = -1;
+    for (int i = 0; i < MAX_MUTATORS; ++i) {
+        if (loaded_mutators[i] == mut)
+            return true; // already added
+        if (!(loaded_mutators[i]))
+            j = i;
+    }
+    if (j < 0) {
+        backtrace("WARNING: too many mutators, cannot add any more\n");
+        return false;
+    }
+    loaded_mutators[j] = mut;
+    mutatorfunc_t func = mut.mutatorfunc;
+    if (!func(MUTATOR_ADDING)) {
+        // good
+        return true;
+    }
+    backtrace("WARNING: when adding mutator: adding failed, rolling back\n");
+    if (func(MUTATOR_ROLLING_BACK)) {
+        // baaaaad
+        error("WARNING: when adding mutator: rolling back failed");
+    }
+    return false;
+}
+
+void Mutator_Remove(Mutator mut)
+{
+    int i;
+    for (i = 0; i < MAX_MUTATORS; ++i)
+        if (loaded_mutators[i] == mut)
+            break;
+    if (i >= MAX_MUTATORS) {
+        backtrace("WARNING: removing not-added mutator\n");
+        return;
+    }
+    loaded_mutators[i] = NULL;
+    mutatorfunc_t func = mut.mutatorfunc;
+    if (func(MUTATOR_REMOVING)) {
+        // baaaaad
+        error("Mutator_Remove: removing mutator failed");
+    }
+}
+
+#define MUTATOR_DECLARATION(name) \
+    Mutator MUTATOR_##name
+#define MUTATOR_DEFINITION(name) \
+    bool MUTATORFUNCTION_##name(int mode); \
+    [[accumulate]] void RegisterMutators() { MUTATOR_##name = NEW(Mutator, #name, MUTATORFUNCTION_##name); } \
+    [[last]] bool MUTATORFUNCTION_##name(int mode)
+
+const int MUTATORS_MAX = MAX_MUTATORS;
+noref entity MUTATORS[MUTATORS_MAX], MUTATORS_first, MUTATORS_last;
+noref int MUTATORS_COUNT;
+#define REGISTER_MUTATOR(id, dependence) \
+    bool MUTATORFUNCTION_##id##_hooks(int mode) { return = false; } \
+    bool MUTATORFUNCTION_##id(int mode) { \
+        return = false; \
+        bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
+    } \
+    bool MUTATOR_##id##_check() { return dependence; } \
+    REGISTER(RegisterMutators, MUTATOR, MUTATORS, MUTATORS_COUNT, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    { this.mutatorcheck = MUTATOR_##id##_check; } \
+    [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
+
+STATIC_INIT(Mutators) {
+    RegisterHooks();
+    RegisterCallbacks();
+    RegisterMutators();
+    FOREACH(MUTATORS, it.mutatorcheck(), LAMBDA(Mutator_Add(it)));
+}
+
+#define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)
+#define MUTATOR_ONREMOVE                if (mode == MUTATOR_REMOVING)
+#define MUTATOR_ONROLLBACK_OR_REMOVE    if (mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
+#define MUTATOR_ADD(name)               Mutator_Add(MUTATOR_##name)
+#define MUTATOR_REMOVE(name)            Mutator_Remove(MUTATOR_##name)
+#define MUTATOR_RETURNVALUE             CallbackChain_ReturnValue
+
+#define _MUTATOR_CALLBACK(name, func) \
+    Callback CALLBACK_##name; \
+    bool func(); \
+    [[accumulate]] void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
+
+#define MUTATOR_HOOKFUNCTION(...) \
+    OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__)
+
+#define MUTATOR_HOOKFUNCTION_1(name) \
+    _MUTATOR_CALLBACK(name, HOOKFUNCTION_##name) \
+    bool HOOKFUNCTION_##name()
+
+#define MUTATOR_HOOKFUNCTION_2(mut, cb) \
+    MUTATOR_HOOKFUNCTION(mut, cb, CBC_ORDER_ANY)
+
+#define MUTATOR_HOOKFUNCTION_3(mut, cb, order) \
+    _MUTATOR_CALLBACK(mut##_##cb, mut##_##cb) \
+    [[accumulate]] bool MUTATORFUNCTION_##mut##_hooks(int mode) { MUTATOR_HOOK(cb, mut##_##cb, order); } \
+    bool mut##_##cb() { return = false; } \
+    [[accumulate]] bool mut##_##cb()
+
+#define MUTATOR_HOOK(cb, func, order) do {                              \
+    MUTATOR_ONADD {                                                     \
+        if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
+            print("HOOK FAILED: ", #cb, ":", #func, "\n");              \
+            return true;                                                \
+        }                                                               \
+    }                                                                   \
+    MUTATOR_ONROLLBACK_OR_REMOVE {                                      \
+        CallbackChain_Remove(HOOK_##cb, CALLBACK_##func);               \
+    }                                                                   \
+} while (0)
+
+#include "events.qh"
+
+#endif

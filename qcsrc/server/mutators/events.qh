@@ -1,83 +1,9 @@
-#ifndef MUTATORS_BASE_H
-#define MUTATORS_BASE_H
-const int CBC_ORDER_FIRST = 1;
-const int CBC_ORDER_LAST = 2;
-const int CBC_ORDER_EXCLUSIVE = 3;
-const int CBC_ORDER_ANY = 4;
+#ifndef SERVER_MUTATORS_EVENTS_H
+#define SERVER_MUTATORS_EVENTS_H
 
-bool CallbackChain_ReturnValue; // read-only field of the current return value
-
-entity CallbackChain_New(string name);
-bool CallbackChain_Add(entity cb, bool() func, int order);
-int CallbackChain_Remove(entity cb, bool() func);
-// a callback function is like this:
-// bool mycallback(entity me)
-// {
-//   do something
-//   return false;
-// }
-bool CallbackChain_Call(entity cb);
-
-enum {
-	MUTATOR_REMOVING,
-	MUTATOR_ADDING,
-	MUTATOR_ROLLING_BACK
-};
-typedef bool(int) mutatorfunc_t;
-bool Mutator_Add(mutatorfunc_t func, string name);
-void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
-
-#define MUTATOR_ADD(name) Mutator_Add(MUTATOR_##name, #name)
-#define MUTATOR_REMOVE(name) Mutator_Remove(MUTATOR_##name, #name)
-#define MUTATOR_DEFINITION(name) bool MUTATOR_##name(int mode)
-#define MUTATOR_DECLARATION(name) bool MUTATOR_##name(int mode)
-#define MUTATOR_HOOKFUNCTION(name) bool HOOKFUNCTION_##name()
-#define MUTATOR_HOOK(cb, func, order) do { 										\
-	MUTATOR_ONADD { 															\
-		if (!HOOK_##cb) HOOK_##cb = CallbackChain_New(#cb); 					\
-		if (!CallbackChain_Add(HOOK_##cb, HOOKFUNCTION_##func, order)) { 		\
-			print("HOOK FAILED: ", #func, "\n"); 								\
-			return true; 														\
-		} 																		\
-	} 																			\
-	MUTATOR_ONROLLBACK_OR_REMOVE { 												\
-		if (HOOK_##cb) CallbackChain_Remove(HOOK_##cb, HOOKFUNCTION_##func);	\
-	} 																			\
-} while(0)
-#define MUTATOR_ONADD if (mode == MUTATOR_ADDING)
-#define MUTATOR_ONREMOVE if (mode == MUTATOR_REMOVING)
-#define MUTATOR_ONROLLBACK_OR_REMOVE if (mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
-
-#define _MUTATOR_HOOKABLE(id, ...) entity HOOK_##id; bool __Mutator_Send_##id(__VA_ARGS__)
-#define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
-
-#define MUTATOR_RETURNVALUE CallbackChain_ReturnValue
-
-#define HANDLE_NOP(type, id)
-#define HANDLE_PARAMS(type, id) , type in_##id
-#define HANDLE_PREPARE(type, id) id = in_##id;
-#define HANDLE_PUSHTMP(type, id) type tmp_##id = id;
-#define HANDLE_PUSHOUT(type, id) type out_##id = id;
-#define HANDLE_POPTMP(type, id) id = tmp_##id;
-#define HANDLE_POPOUT(type, id) id = out_##id;
-
-#define MUTATOR_HOOKABLE(id, params) \
-	_MUTATOR_HOOKABLE(id, int params(HANDLE_PARAMS, HANDLE_NOP)) { \
-		params(HANDLE_PUSHTMP, HANDLE_NOP) \
-		params(HANDLE_PREPARE, HANDLE_NOP) \
-		bool ret = CallbackChain_Call(HOOK_##id); \
-		params(HANDLE_NOP,     HANDLE_PUSHOUT) \
-		params(HANDLE_POPTMP,  HANDLE_NOP) \
-		params(HANDLE_NOP,     HANDLE_POPOUT) \
-		return ret; \
-	}
-
-
+#include "../../common/mutators/base.qh"
 
 // register all possible hooks here
-// some parameters are commented to avoid duplicate declarations
-
-#define EV_NO_ARGS(i, o)
 
 /** called when a player becomes observer, after shared setup */
 #define EV_MakePlayerObserver(i, o) \
@@ -189,21 +115,6 @@ MUTATOR_HOOKABLE(WeaponSpeedFactor, EV_WeaponSpeedFactor);
 
 /** adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}} */
 MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
-
-/** appends ":mutatorname" to ret_string for logging */
-#define EV_BuildMutatorsString(i, o) \
-    /**/ i(string, ret_string) \
-    /**/ o(string, ret_string) \
-    /**/
-string ret_string;
-MUTATOR_HOOKABLE(BuildMutatorsString, EV_BuildMutatorsString);
-
-/** appends ", Mutator name" to ret_string for display */
-#define EV_BuildMutatorsPrettyString(i, o) \
-    /**/ i(string, ret_string) \
-    /**/ o(string, ret_string) \
-    /**/
-MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
 
 /** called every frame. customizes the waypoint for spectators */
 #define EV_CustomizeWaypoint(i, o) \
@@ -379,8 +290,8 @@ MUTATOR_HOOKABLE(PlayerUseKey, EV_NO_ARGS);
 
 /**
  * called when a client command is parsed
- * NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return 0;
- * NOTE: return 1 if you handled the command, return 0 to continue handling
+ * NOTE: hooks MUST start with if (MUTATOR_RETURNVALUE) return false;
+ * NOTE: return true if you handled the command, return false to continue handling
  * NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
  * // example:
  * MUTATOR_HOOKFUNCTION(foo_SV_ParseClientCommand)

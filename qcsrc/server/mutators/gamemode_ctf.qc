@@ -4,7 +4,7 @@
 #include "gamemode.qh"
 
 #ifdef SVQC
-#include "../vehicles/vehicle.qh"
+#include "../../common/vehicles/sv_vehicles.qh"
 #endif
 
 #include "../../warpzonelib/common.qh"
@@ -372,7 +372,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 		{
 			makevectors((player.v_angle.y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle.x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
 
-			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
+			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & ITEM_Strength.m_itemid) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
 			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, false);
 			ctf_Handle_Drop(flag, player, droptype);
 			break;
@@ -454,7 +454,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
+	Send_Effect(flag.capeffect, flag.origin, '0 0 0', 1);
 	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
@@ -475,7 +475,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	if(player.flags & FL_MONSTER)
+	if(IS_MONSTER(player))
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_MONSTER_), player.monster_name);
 	}
@@ -608,7 +608,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	}
 
 	// effects
-	pointparticles(particleeffectnum(flag.toucheffect), player.origin, '0 0 0', 1);
+	Send_Effect(flag.toucheffect, player.origin, '0 0 0', 1);
 
 	// waypoints
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
@@ -906,7 +906,7 @@ void ctf_FlagTouch()
 	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	entity toucher = other, tmp_entity;
-	bool is_not_monster = (!(toucher.flags & FL_MONSTER)), num_perteam = 0;
+	bool is_not_monster = (!IS_MONSTER(toucher)), num_perteam = 0;
 
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
@@ -923,14 +923,14 @@ void ctf_FlagTouch()
 
 	// special touch behaviors
 	if(toucher.frozen) { return; }
-	else if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
 		else
 			return; // do nothing
 	}
-	else if(toucher.flags & FL_MONSTER)
+	else if(IS_MONSTER(toucher))
 	{
 		if(!autocvar_g_ctf_allow_monster_touch)
 			return; // do nothing
@@ -939,7 +939,7 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
+			Send_Effect(self.toucheffect, self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}

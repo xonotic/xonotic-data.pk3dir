@@ -23,13 +23,15 @@
 #include "wall.qh"
 #include "waypointsprites.qh"
 
-#include "vehicles/bumblebee.qh"
-#include "vehicles/all.qh"
+#include "../common/vehicles/unit/bumblebee.qh"
+#include "../common/vehicles/cl_vehicles.qh"
+#include "../common/vehicles/vehicles.qh"
 
 #include "weapons/projectile.qh"
 
 #include "../common/buffs.qh"
 #include "../common/deathtypes.qh"
+#include "../common/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/nades.qh"
@@ -39,6 +41,8 @@
 #include "../common/teams.qh"
 
 #include "../common/items/all.qh"
+
+#include "../common/mutators/base.qh"
 
 #include "../common/weapons/all.qh"
 
@@ -141,10 +145,11 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 
 	WaypointSprite_Load();
 
@@ -157,7 +162,6 @@ void CSQC_Init(void)
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	Vehicles_Precache();
 	turrets_precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
@@ -886,6 +890,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_KEYLOCK: ent_keylock(); break;
 		case ENT_CLIENT_TRAIN: ent_train(); break;
 		case ENT_CLIENT_TRIGGER_IMPULSE: ent_trigger_impulse(); break;
+		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

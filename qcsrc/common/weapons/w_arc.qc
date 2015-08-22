@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ ARC,
 /* function  */ W_Arc,
@@ -123,9 +123,10 @@ float Draw_ArcBeam_callback_last_thickness;
 vector Draw_ArcBeam_callback_last_top; // NOTE: in same coordinate system as player.
 vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as player.
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC); }
+void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC.m_id); }
 
 float W_Arc_Beam_Send(entity to, int sf)
 {
@@ -264,7 +265,7 @@ void W_Arc_Beam_Think(void)
 
 			if ( WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max) )
 			{
-				pointparticles( particleeffectnum("arc_overheat"),
+				Send_Effect("arc_overheat",
 					self.beam_start, self.beam_wantdir, 1 );
 				sound(self, CH_WEAPON_A, "weapons/arc_stop.wav", VOL_BASE, ATTN_NORM);
 			}
@@ -273,7 +274,7 @@ void W_Arc_Beam_Think(void)
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		entity oldself = self;
 		self = self.owner;
-		if(!WEP_ACTION(WEP_ARC, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC, WR_CHECKAMMO2))
+		if(!WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO2))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -449,11 +450,11 @@ void W_Arc_Beam_Think(void)
 		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
 
 		float is_player = (
-			trace_ent.classname == "player"
+			IS_PLAYER(trace_ent)
 			||
 			trace_ent.classname == "body"
 			||
-			(trace_ent.flags & FL_MONSTER)
+			IS_MONSTER(trace_ent)
 		);
 
 		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
@@ -530,7 +531,7 @@ void W_Arc_Beam_Think(void)
 				{
 					accuracy_add(
 						self.owner,
-						WEP_ARC,
+						WEP_ARC.m_id,
 						0,
 						rootdamage * coefficient * falloff
 					);
@@ -541,7 +542,7 @@ void W_Arc_Beam_Think(void)
 					self.owner,
 					self.owner,
 					rootdamage * coefficient * falloff,
-					WEP_ARC,
+					WEP_ARC.m_id,
 					hitorigin,
 					WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
 				);
@@ -609,10 +610,10 @@ void Arc_Smoke()
 	if ( self.arc_overheat > time )
 	{
 		if ( random() < self.arc_heat_percent )
-			pointparticles( particleeffectnum("arc_smoke"), smoke_origin, '0 0 0', 1 );
+			Send_Effect("arc_smoke", smoke_origin, '0 0 0', 1 );
 		if ( self.BUTTON_ATCK || self.BUTTON_ATCK2 )
 		{
-			pointparticles( particleeffectnum("arc_overheat_fire"), smoke_origin, w_shotdir, 1 );
+			Send_Effect("arc_overheat_fire", smoke_origin, w_shotdir, 1 );
 			if ( !self.arc_smoke_sound )
 			{
 				self.arc_smoke_sound = 1;
@@ -625,11 +626,11 @@ void Arc_Smoke()
 	{
 		if ( random() < (self.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) /
 				( WEP_CVAR(arc, overheat_max)-WEP_CVAR(arc, overheat_min) ) )
-			pointparticles( particleeffectnum("arc_smoke"), smoke_origin, '0 0 0', 1 );
+			Send_Effect("arc_smoke", smoke_origin, '0 0 0', 1 );
 	}
 
 	if (  self.arc_smoke_sound && ( self.arc_overheat <= time ||
-		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || self.switchweapon != WEP_ARC )
+		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || self.switchweapon != WEP_ARC.m_id )
 	{
 		self.arc_smoke_sound = 0;
 		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
@@ -730,10 +731,10 @@ bool W_Arc(int req)
 			precache_sound("weapons/arc_loop_overheat.wav");
 			if(!arc_shotorigin[0])
 			{
-				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 1);
-				arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 2);
-				arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 3);
-				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), false, false, 4);
+				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 1);
+				arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 2);
+				arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 3);
+				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
 			}
 			ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
@@ -766,7 +767,7 @@ bool W_Arc(int req)
 		}
 		case WR_PICKUP:
 		{
-			if ( !client_hasweapon(self, WEP_ARC, false, false) &&
+			if ( !client_hasweapon(self, WEP_ARC.m_id, false, false) &&
 				weapon_dropevent_item.arc_overheat > time )
 			{
 				self.arc_overheat = weapon_dropevent_item.arc_overheat;

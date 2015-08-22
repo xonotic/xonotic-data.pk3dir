@@ -366,7 +366,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
 {
-	if(!(checkentity.flags & FL_MONSTER))
+	if(!IS_MONSTER(checkentity))
 		return true;
 
 	return false;
@@ -382,7 +382,7 @@ MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
 {
-	if(frag_target.flags & FL_MONSTER)
+	if(IS_MONSTER(frag_target))
 		return MUT_ACCADD_INVALID;
 	return MUT_ACCADD_INDIFFERENT;
 }

@@ -78,7 +78,7 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 		d = damage + (edgedamage - damage) * (d / dist);
 		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
 		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+		Send_Effect("fireball_laser", self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
 }
 
@@ -225,7 +225,7 @@ void nade_napalm_boom()
 void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 {
 	frost_target.frozen_by = freezefield.realowner;
-	pointparticles(particleeffectnum("electro_impact"), frost_target.origin, '0 0 0', 1);
+	Send_Effect("electro_impact", frost_target.origin, '0 0 0', 1);
 	Freeze(frost_target, 1/freeze_time, 3, false);
 	if(frost_target.ballcarried)
 	if(g_keepaway) { ka_DropEvent(frost_target); }
@@ -259,7 +259,7 @@ void nade_ice_think()
 				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
 				default:		 expef = "nade_neutral_explode"; break;
 			}
-			pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
 			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
@@ -284,15 +284,15 @@ void nade_ice_think()
 	randomp.x = randomr*cos(randomw);
 	randomp.y = randomr*sin(randomw);
 	randomp.z = 1;
-	pointparticles(particleeffectnum("electro_muzzleflash"), self.origin + randomp, '0 0 0', 1);
+	Send_Effect("electro_muzzleflash", self.origin + randomp, '0 0 0', 1);
 
 	if(time >= self.nade_special_time)
 	{
 		self.nade_special_time = time+0.7;
 
 
-		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
-		pointparticles(particleeffectnum("icefield"), self.origin, '0 0 0', 1);
+		Send_Effect("electro_impact", self.origin, '0 0 0', 1);
+		Send_Effect("icefield", self.origin, '0 0 0', 1);
 	}
 
 
@@ -408,7 +408,7 @@ void nade_heal_touch()
 {
 	float maxhealth;
 	float health_factor;
-	if(IS_PLAYER(other) || (other.flags & FL_MONSTER))
+	if(IS_PLAYER(other) || IS_MONSTER(other))
 	if(other.deadflag == DEAD_NO)
 	if(!other.frozen)
 	{
@@ -422,11 +422,11 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			maxhealth = (other.flags & FL_MONSTER) ? other.max_health : g_pickup_healthmega_max;
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : g_pickup_healthmega_max;
 			if ( other.health < maxhealth )
 			{
 				if ( self.nade_show_particles )
-					pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
+					Send_Effect("healing_fx", other.origin, '0 0 0', 1);
 				other.health = min(other.health+health_factor, maxhealth);
 			}
 			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
@@ -438,9 +438,9 @@ void nade_heal_touch()
 
 	}
 
-	if ( IS_REAL_CLIENT(other) || (other.vehicle_flags & VHF_ISVEHICLE) )
+	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
 	{
-		entity show_red = (other.vehicle_flags & VHF_ISVEHICLE) ? other.owner : other;
+		entity show_red = (IS_VEHICLE(other)) ? other.owner : other;
 		show_red.stat_healing_orb = time+0.1;
 		show_red.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
 	}
@@ -530,7 +530,7 @@ void nade_boom()
 	}
 
 	if(expef != "")
-		pointparticles(particleeffectnum(expef), findbetterlocation(self.origin, 8), '0 0 0', 1);
+		Send_Effect(expef, findbetterlocation(self.origin, 8), '0 0 0', 1);
 
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
@@ -604,28 +604,28 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE.m_id || self.nade_type == NADE_TYPE_SPAWN.m_id)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER.m_id))
 	{
 		force *= 1.5;
 		damage = 0;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id) && (deathtype & HITTYPE_SECONDARY))
 	{
 		force *= 0.5; // too much
 		frag_damage = 0;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX.m_id) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id))
 	{
 		force *= 6;
 		damage = self.max_health * 0.55;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN.m_id) || DEATH_ISWEAPON(deathtype, WEP_HMG.m_id))
 		damage = self.max_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE.m_id) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN.m_id)) // WEAPONTODO
 	if(deathtype & HITTYPE_SECONDARY)
 	{
 		damage = self.max_health * 0.1;
@@ -799,7 +799,7 @@ void nade_prime()
 	n.classname = "nade";
 	fn.classname = "fake_nade";
 
-	if(self.items & IT_STRENGTH && autocvar_g_nades_bonus_onstrength)
+	if(self.items & ITEM_Strength.m_itemid && autocvar_g_nades_bonus_onstrength)
 		n.nade_type = self.nade_type;
 	else if (self.bonus_nades >= 1)
 	{
@@ -857,7 +857,7 @@ float CanThrowNade()
 	if (!autocvar_g_nades)
 		return false; // allow turning them off mid match
 
-	if(forbidWeaponUse())
+	if(forbidWeaponUse(self))
 		return false;
 
 	if (!IS_PLAYER(self))
@@ -925,7 +925,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	float key_pressed = self.BUTTON_HOOK;
 	float time_score;
 
-	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, false, false) || (weaponsInMap & WEPSET_HOOK))
+	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK.m_id, false, false) || (weaponsInMap & WEPSET_HOOK))
 		key_pressed = self.button16; // if hook is enabled, use an alternate key
 
 	if(self.nade)
@@ -1120,7 +1120,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
 	{
 		Unfreeze(frag_target);
 		frag_target.health = autocvar_g_freezetag_revive_nade_health;
-		pointparticles(particleeffectnum("iceorglass"), frag_target.origin, '0 0 0', 3);
+		Send_Effect("iceorglass", frag_target.origin, '0 0 0', 3);
 		frag_damage = 0;
 		frag_force = '0 0 0';
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
