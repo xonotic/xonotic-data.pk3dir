@@ -1,4 +1,6 @@
-#ifdef REGISTER_VEHICLE
+#ifndef VEHICLE_BUMBLEBEE
+#define VEHICLE_BUMBLEBEE
+#include "bumblebee.qh"
 REGISTER_VEHICLE(
 /* VEH_##id   */ BUMBLEBEE,
 /* function   */ v_bumblebee,
@@ -11,7 +13,9 @@ REGISTER_VEHICLE(
 /* netname	  */ "bumblebee",
 /* fullname   */ _("Bumblebee")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 
 const float BRG_SETUP = 2;
 const float BRG_START = 4;

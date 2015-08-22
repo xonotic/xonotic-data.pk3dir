@@ -2,8 +2,7 @@
 #define VEHICLES_DEF_H
 #ifdef SVQC
 
-#include "../server/tturrets/include/turrets_early.qh"
-#include "sv_vehicles.qh"
+#include "../../server/tturrets/include/turrets_early.qh"
 
 // #define VEHICLES_USE_ODE
 
@@ -106,5 +105,4 @@ bool vehicle_impulse(int imp);
 bool vehicles_crushable(entity e);
 
 #endif
-
 #endif

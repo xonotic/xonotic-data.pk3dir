@@ -1,4 +1,5 @@
-#ifdef REGISTER_VEHICLE
+#ifndef VEHICLE_SPIDERBOT
+#define VEHICLE_SPIDERBOT
 REGISTER_VEHICLE(
 /* VEH_##id   */ SPIDERBOT,
 /* function   */ v_spiderbot,
@@ -11,7 +12,9 @@ REGISTER_VEHICLE(
 /* netname	  */ "spiderbot",
 /* fullname   */ _("Spiderbot")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 
 const int SBRM_FIRST = 1;
 const int SBRM_VOLLY = 1;

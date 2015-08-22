@@ -68,7 +68,7 @@ weapons/projectile.qc // TODO
 ../csqcmodellib/cl_player.qc
 ../csqcmodellib/interpolate.qc
 
-../common/vehicles/vehicles_include.qc
+../common/vehicles/all.qc
 
 ../server/mutators/mutator_multijump.qc
 

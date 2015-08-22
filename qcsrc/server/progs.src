@@ -102,7 +102,7 @@ weapons/weaponsystem.qc
 ../common/triggers/include.qc
 ../common/urllib.qc
 ../common/util.qc
-../common/vehicles/vehicles_include.qc
+../common/vehicles/all.qc
 
 ../common/items/all.qc
 

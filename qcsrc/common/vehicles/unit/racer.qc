@@ -1,4 +1,5 @@
-#ifdef REGISTER_VEHICLE
+#ifndef VEHICLE_RACER
+#define VEHICLE_RACER
 REGISTER_VEHICLE(
 /* VEH_##id   */ RACER,
 /* function   */ v_racer,
@@ -11,7 +12,9 @@ REGISTER_VEHICLE(
 /* netname	  */ "racer",
 /* fullname   */ _("Racer")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 #include "../../effects.qh"
 #include "../../triggers/trigger/impulse.qh"

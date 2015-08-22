@@ -16,7 +16,7 @@
 #include "../mutators/mutators_include.qh"
 
 #ifdef SVQC
-	#include "../../common/vehicles/sv_vehicles.qh"
+	#include "../../common/vehicles/all.qh"
 #endif
 
 #include "../../common/constants.qh"

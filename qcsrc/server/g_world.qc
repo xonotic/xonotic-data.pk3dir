@@ -27,7 +27,7 @@
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
-#include "../common/vehicles/vehicles.qh"
+#include "../common/vehicles/all.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"

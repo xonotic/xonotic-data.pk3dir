@@ -1,6 +1,17 @@
-#include "unit/all.qh"
+#ifndef VEHICLES_ALL_C
+#define VEHICLES_ALL_C
 
-#include "vehicles_include.qc"
+#include "all.qh"
+
+#if defined(SVQC)
+	#include "sv_vehicles.qc"
+#elif defined(CSQC)
+	#include "cl_vehicles.qc"
+#endif
+
+#define IMPLEMENTATION
+#include "all.inc"
+#undef IMPLEMENTATION
 
 // VEHICLE PLUGIN SYSTEM
 entity vehicle_info[VEH_MAXCOUNT];
@@ -56,7 +67,7 @@ void register_vehicle(float id, float(float) func, float vehicleflags, vector mi
 	e.tag_head = headtag;
 	e.tag_hud = hudtag;
 	e.tag_view = viewtag;
-	
+
 	#ifndef MENUQC
 	vehicles_common_initialize();
 	#endif
@@ -87,3 +98,5 @@ entity get_vehicleinfo(float id)
 		return m;
 	return dummy_vehicle_info;
 }
+
+#endif

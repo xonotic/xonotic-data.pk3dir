@@ -1,4 +1,6 @@
-#ifdef REGISTER_VEHICLE
+#ifndef VEHICLE_RAPTOR
+#define VEHICLE_RAPTOR
+#include "raptor.qh"
 REGISTER_VEHICLE(
 /* VEH_##id   */ RAPTOR,
 /* function   */ v_raptor,
@@ -11,7 +13,9 @@ REGISTER_VEHICLE(
 /* netname	  */ "raptor",
 /* fullname   */ _("Raptor")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 bool autocvar_g_vehicle_raptor;

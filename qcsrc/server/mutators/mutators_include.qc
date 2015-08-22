@@ -46,7 +46,7 @@
     #include "../../common/deathtypes.qh"
     #include "mutators_include.qh"
     #include "../tturrets/include/turrets_early.qh"
-    #include "../../common/vehicles/sv_vehicles.qh"
+    #include "../../common/vehicles/all.qh"
     #include "../campaign.qh"
     #include "../../common/campaign_common.qh"
     #include "../../common/mapinfo.qh"
