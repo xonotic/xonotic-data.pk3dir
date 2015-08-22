@@ -2,8 +2,8 @@
 #define DIALOG_SETTINGS_GAME_WEAPONS_H
 #include "tab.qc"
 CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
-	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity))
-	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity))
+	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity));
+	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameWeaponsSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6)

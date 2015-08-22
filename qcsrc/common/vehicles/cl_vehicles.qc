@@ -1,21 +1,3 @@
-#include "all.qh"
-#include "../_all.qh"
-
-#include "../../common/movetypes/movetypes.qh"
-#include "../prandom.qh"
-#include "../scoreboard.qh"
-#include "../t_items.qh"
-
-#include "../../common/buffs.qh"
-#include "../../common/constants.qh"
-#include "../../common/movetypes/movetypes.qh"
-#include "../../common/stats.qh"
-#include "../../common/util.qh"
-
-#include "../../csqcmodellib/cl_model.qh"
-
-.float cnt;
-
 const string vCROSS_BURST = "gfx/vehicles/crosshair_burst.tga";
 const string vCROSS_DROP  = "gfx/vehicles/crosshair_drop.tga";
 const string vCROSS_GUIDE = "gfx/vehicles/crosshair_guide.tga";
@@ -24,30 +6,25 @@ const string vCROSS_HINT  = "gfx/vehicles/crosshair_hint.tga";
 const string vCROSS_LOCK  = "gfx/vehicles/crosshair_lock.tga";
 const string vCROSS_RAIN  = "gfx/vehicles/crosshair_rain.tga";
 
-const int SBRM_FIRST     = 1;
-const int SBRM_VOLLY     = 1;
-const int SBRM_GUIDE     = 2;
-const int SBRM_ARTILLERY = 3;
-const int SBRM_LAST      = 3;
-
-const int RSM_FIRST = 1;
-const int RSM_BOMB  = 1;
-const int RSM_FLARE = 2;
-const int RSM_LAST  = 2;
+entity dropmark;
 
 const int MAX_AXH = 4;
-entity AuxiliaryXhairs[MAX_AXH];
-entityclass(AuxiliaryXhair);
-class(AuxiliaryXhair) .string axh_image;
-class(AuxiliaryXhair) .float  axh_fadetime;
-class(AuxiliaryXhair) .float  axh_drawflag;
+entity AuxiliaryXhair[MAX_AXH];
 
-entity dropmark;
+.string axh_image;
+.float  axh_fadetime;
+.int    axh_drawflag;
 
 float alarm1time;
 float alarm2time;
-int weapon2mode;
 
+void vehicle_alarm(entity e, int ch, string s0und)
+{
+	if(!autocvar_cl_vehicles_alarm)
+		return;
+
+	sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
+}
 
 void AuxiliaryXhair_Draw2D()
 {
@@ -70,42 +47,34 @@ void AuxiliaryXhair_Draw2D()
 
 void Net_AuXair2(bool bIsNew)
 {
-	int axh_id = bound(0, ReadByte(), MAX_AXH);
-	entity axh = AuxiliaryXhairs[axh_id];
+	int axh_id	= bound(0, ReadByte(), MAX_AXH);
+	entity axh 		= AuxiliaryXhair[axh_id];
 
 	if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 	{
-		axh              = spawn();
-		axh.draw2d       = func_null;
-		axh.drawmask     = MASK_NORMAL;
-		axh.axh_drawflag = DRAWFLAG_ADDITIVE;
-		axh.axh_fadetime = 0.1;
-		axh.axh_image    = vCROSS_HINT;
-		axh.alpha        = 1;
-
-		AuxiliaryXhairs[axh_id] = axh;
+		axh					= spawn();
+		axh.draw2d			= func_null;
+		axh.drawmask 		= MASK_NORMAL;
+		axh.axh_drawflag	= DRAWFLAG_ADDITIVE;
+		axh.axh_fadetime	= 0.1;
+		axh.axh_image		= vCROSS_HINT;
+		axh.alpha			= 1;
+		AuxiliaryXhair[axh_id] = axh;
 	}
 
-	axh.move_origin_x = ReadCoord();
-	axh.move_origin_y = ReadCoord();
-	axh.move_origin_z = ReadCoord();
-	axh.colormod_x = ReadByte() / 255;
-	axh.colormod_y = ReadByte() / 255;
-	axh.colormod_z = ReadByte() / 255;
-	axh.cnt    = time;
-	axh.draw2d = AuxiliaryXhair_Draw2D;
+	axh.move_origin_x	= ReadCoord();
+	axh.move_origin_y	= ReadCoord();
+	axh.move_origin_z	= ReadCoord();
+	axh.colormod_x		= ReadByte() / 255;
+	axh.colormod_y		= ReadByte() / 255;
+	axh.colormod_z		= ReadByte() / 255;
+	axh.cnt 			= time;
+	axh.draw2d			= AuxiliaryXhair_Draw2D;
 }
 
 void Net_VehicleSetup()
 {
 	int hud_id = ReadByte();
-
-	// Weapon update?
-	if(hud_id > HUD_VEHICLE_LAST)
-	{
-		weapon2mode = hud_id - HUD_VEHICLE_LAST;
-		return;
-	}
 
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
 	if(hud_id == 0)
@@ -115,13 +84,10 @@ void Net_VehicleSetup()
 		return;
 	}
 
-	hud_id  = bound(HUD_VEHICLE_FIRST, hud_id, HUD_VEHICLE_LAST);
-
 	// Init auxiliary crosshairs
-	int i;
-	for(i = 0; i < MAX_AXH; ++i)
+	for(int i = 0; i < MAX_AXH; ++i)
 	{
-		entity axh = AuxiliaryXhairs[i];
+		entity axh = AuxiliaryXhair[i];
 
 		if(axh != world && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 			remove(axh);
@@ -133,35 +99,15 @@ void Net_VehicleSetup()
 		axh.axh_fadetime = 0.1;
 		axh.axh_image    = vCROSS_HINT;
 		axh.alpha        = 1;
-		AuxiliaryXhairs[i] = axh;
+		AuxiliaryXhair[i] = axh;
 	}
 
-	switch(hud_id)
+	if(hud_id == HUD_BUMBLEBEE_GUN)
 	{
-		case HUD_SPIDERBOT:
-			AuxiliaryXhairs[0].axh_image = vCROSS_HINT; // Minigun1
-			AuxiliaryXhairs[1].axh_image = vCROSS_HINT; // Minigun2
-			break;
-
-		case HUD_WAKIZASHI:
-			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK; // Rocket
-			break;
-
-		case HUD_RAPTOR:
-			AuxiliaryXhairs[1].axh_image = vCROSS_LOCK;
-			break;
-
-		case HUD_BUMBLEBEE:
-			AuxiliaryXhairs[0].axh_image = vCROSS_LOCK;  // Raygun-locked
-			AuxiliaryXhairs[1].axh_image = vCROSS_BURST; // Gunner1
-			AuxiliaryXhairs[2].axh_image = vCROSS_BURST; // Gunner2
-			break;
-
-		case HUD_BUMBLEBEE_GUN:
-			AuxiliaryXhairs[0].axh_image = vCROSS_BURST; // Plasma cannons
-			AuxiliaryXhairs[1].axh_image = vCROSS_BURST; // Raygun
-			break;
+		AuxiliaryXhair[0].axh_image = vCROSS_BURST; // Plasma cannons
+		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
 	}
+	else { VEH_ACTION(hud_id, VR_SETUP); }
 }
 
 void Vehicles_drawHUD(
@@ -198,7 +144,7 @@ void Vehicles_drawHUD(
 	float ammo2   = getstati(STAT_VEHICLESTAT_AMMO2)   * 0.01;
 	float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
 
-	// HACK to deal with the inconcistent use of the vehicle stats
+	// HACK to deal with the inconsistent use of the vehicle stats
 	ammo1 = (ammo1) ? ammo1 : energy;
 
 	// Frame
@@ -214,6 +160,15 @@ void Vehicles_drawHUD(
 		drawpic(hudPos, frame, hudSize, myteamcolors * autocvar_hud_panel_bg_color_team, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
 	else
 		drawpic(hudPos, frame, hudSize, autocvar_hud_panel_bg_color, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
+
+	if(!autocvar__vehicles_shownchasemessage && time < vh_notice_time)
+	{
+		float tmpblinkValue = 0.55 + sin(time * 3) * 0.45;
+		tmpPos.x = hudPos.x + hudSize.x * (96/256) - tmpSize.x;
+		tmpPos.y = hudPos.y;
+		tmpSize = '1 1 1' * hud_fontsize;
+		drawstring(tmpPos, sprintf(_("Press %s"), getcommandkey("dropweapon", "dropweapon")), tmpSize, '1 0 0' + '0 1 1' * tmpblinkValue, hudAlpha, DRAWFLAG_NORMAL);
+	}
 
 	// Model
 	tmpSize.x = hudSize.x / 3;
@@ -280,7 +235,7 @@ void Vehicles_drawHUD(
 		if(alarm1time < time)
 		{
 			alarm1time = time + 2;
-			sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
+			vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
@@ -288,7 +243,7 @@ void Vehicles_drawHUD(
 	{
 		if(alarm1time)
 		{
-			sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+			vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
 			alarm1time = 0;
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
@@ -302,7 +257,7 @@ void Vehicles_drawHUD(
 		if(alarm2time < time)
 		{
 			alarm2time = time + 1;
-			sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav");
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
@@ -310,7 +265,7 @@ void Vehicles_drawHUD(
 	{
 		if(alarm2time)
 		{
-			sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "misc/null.wav");
 			alarm2time = 0;
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
@@ -340,18 +295,18 @@ void Vehicles_drawHUD(
 	}
 
 	// Bumblebee gunner crosshairs
-	if(hud == HUD_BUMBLEBEE)
+	if(hud == VEH_BUMBLEBEE)
 	{
 		tmpSize = '1 1 1' * hud_fontsize;
 		tmpPos.x = hudPos.x + hudSize.x * (520/768);
 
-		if(!AuxiliaryXhairs[1].draw2d)
+		if(!AuxiliaryXhair[1].draw2d)
 		{
 			tmpPos.y = hudPos.y + hudSize.y * (96/256) - tmpSize.y;
 			drawstring(tmpPos, _("No right gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 		}
 
-		if(!AuxiliaryXhairs[2].draw2d)
+		if(!AuxiliaryXhair[2].draw2d)
 		{
 			tmpPos.y = hudPos.y + hudSize.y * (160/256);
 			drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
@@ -359,7 +314,7 @@ void Vehicles_drawHUD(
 	}
 
 	// Raptor bomb crosshair
-	if(hud == HUD_RAPTOR && weapon2mode != RSM_FLARE)
+	if(hud == VEH_RAPTOR && weapon2mode != RSM_FLARE)
 	{
 		vector where;
 
@@ -419,119 +374,4 @@ void Vehicles_drawHUD(
 
 		drawpic(tmpPos, crosshair, tmpSize, '1 1 1', autocvar_crosshair_alpha, DRAWFLAG_NORMAL);
 	}
-}
-
-void CSQC_BUMBLE_HUD()
-{
-	Vehicles_drawHUD("vehicle_bumble", "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
-		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-		vCROSS_HEAL);
-}
-
-void CSQC_BUMBLE_GUN_HUD()
-{
-	Vehicles_drawHUD("vehicle_gunner", "vehicle_gunner_weapon1", string_null,
-		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-		string_null, '0 0 0',
-		string_null);
-}
-
-void CSQC_SPIDER_HUD()
-{
-	string crosshair;
-
-	switch(weapon2mode)
-	{
-		case SBRM_VOLLY:     crosshair = vCROSS_BURST; break;
-		case SBRM_GUIDE:     crosshair = vCROSS_GUIDE; break;
-		case SBRM_ARTILLERY: crosshair = vCROSS_RAIN;  break;
-		default:             crosshair = vCROSS_BURST;
-	}
-
-	Vehicles_drawHUD("vehicle_spider", "vehicle_spider_weapon1", "vehicle_spider_weapon2",
-		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-		crosshair);
-}
-
-void CSQC_RAPTOR_HUD()
-{
-	string crosshair;
-
-	switch(weapon2mode)
-	{
-		case RSM_FLARE: crosshair = vCROSS_RAIN;  break;
-		case RSM_BOMB:  crosshair = vCROSS_BURST; break;
-		default:        crosshair = vCROSS_BURST;
-	}
-
-	Vehicles_drawHUD("vehicle_raptor", "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
-		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-		crosshair);
-}
-
-void CSQC_WAKIZASHI_HUD()
-{
-	Vehicles_drawHUD("vehicle_racer", "vehicle_racer_weapon1", "vehicle_racer_weapon2",
-		"vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-		"vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-		vCROSS_GUIDE);
-}
-
-void Vehicles_Precache()
-{
-	precache_model("models/vehicles/bomblet.md3");
-	precache_model("models/vehicles/clusterbomb.md3");
-	precache_model("models/vehicles/clusterbomb_fragment.md3");
-	precache_model("models/vehicles/rocket01.md3");
-	precache_model("models/vehicles/rocket02.md3");
-
-	precache_sound("vehicles/alarm.wav");
-	precache_sound("vehicles/alarm_shield.wav");
-}
-
-void RaptorCBShellfragDraw()
-{
-	if(wasfreed(self))
-		return;
-
-	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
-	self.move_avelocity += randomvec() * 15;
-	self.renderflags = 0;
-
-	if(self.cnt < time)
-		self.alpha = bound(0, self.nextthink - time, 1);
-
-	if(self.alpha < ALPHA_MIN_VISIBLE)
-		remove(self);
-}
-
-void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
-{
-	entity sfrag;
-
-	sfrag = spawn();
-	setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
-	setorigin(sfrag, _org);
-
-	sfrag.move_movetype = MOVETYPE_BOUNCE;
-	sfrag.gravity = 0.15;
-	sfrag.solid = SOLID_CORPSE;
-
-	sfrag.draw = RaptorCBShellfragDraw;
-
-	sfrag.move_origin = sfrag.origin = _org;
-	sfrag.move_velocity = _vel;
-	sfrag.move_avelocity = prandomvec() * vlen(sfrag.move_velocity);
-	sfrag.angles = self.move_angles = _ang;
-
-	sfrag.move_time = time;
-	sfrag.damageforcescale = 4;
-
-	sfrag.nextthink = time + 3;
-	sfrag.cnt = time + 2;
-	sfrag.alpha = 1;
-	sfrag.drawmask = MASK_NORMAL;
 }

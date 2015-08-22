@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_MODICONS_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDModIconsDialog, XonoticRootDialog)
-	METHOD(XonoticHUDModIconsDialog, fill, void(entity))
+	METHOD(XonoticHUDModIconsDialog, fill, void(entity));
 	ATTRIB(XonoticHUDModIconsDialog, title, string, _("Mod Icons Panel"))
 	ATTRIB(XonoticHUDModIconsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDModIconsDialog, intendedWidth, float, 0.4)

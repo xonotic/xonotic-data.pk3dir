@@ -2,7 +2,7 @@
 #define DIALOG_SETTINGS_MISC_RESET_H
 #include "dialog.qc"
 CLASS(XonoticResetDialog, XonoticDialog)
-	METHOD(XonoticResetDialog, fill, void(entity))
+	METHOD(XonoticResetDialog, fill, void(entity));
 	ATTRIB(XonoticResetDialog, title, string, _("Factory reset"))
 	ATTRIB(XonoticResetDialog, color, vector, SKINCOLOR_DIALOG_QUIT)
 	ATTRIB(XonoticResetDialog, intendedWidth, float, 0.5)

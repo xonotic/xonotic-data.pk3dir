@@ -2,8 +2,8 @@
 #define DIALOG_MULTIPLAYER_PROFILE_H
 #include "tab.qc"
 CLASS(XonoticProfileTab, XonoticTab)
-	METHOD(XonoticProfileTab, fill, void(entity))
-	METHOD(XonoticProfileTab, draw, void(entity))
+	METHOD(XonoticProfileTab, fill, void(entity));
+	METHOD(XonoticProfileTab, draw, void(entity));
 	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticProfileTab, rows, float, 23)
 	ATTRIB(XonoticProfileTab, columns, float, 6.1) // added extra .2 for center space

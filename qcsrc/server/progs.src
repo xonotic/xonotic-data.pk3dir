@@ -70,8 +70,6 @@ pathlib/movenode.qc
 pathlib/path_waypoint.qc
 pathlib/utility.qc
 
-vehicles/all.qc
-
 weapons/accuracy.qc
 weapons/common.qc
 weapons/csqcprojectile.qc // TODO
@@ -87,6 +85,7 @@ weapons/weaponsystem.qc
 ../common/buffs.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
+../common/effects.qc
 ../common/mapinfo.qc
 ../common/monsters/all.qc
 ../common/monsters/spawn.qc
@@ -103,6 +102,7 @@ weapons/weaponsystem.qc
 ../common/triggers/include.qc
 ../common/urllib.qc
 ../common/util.qc
+../common/vehicles/vehicles_include.qc
 
 ../common/items/all.qc
 

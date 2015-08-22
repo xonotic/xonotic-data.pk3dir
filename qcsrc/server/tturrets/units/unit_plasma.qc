@@ -34,7 +34,7 @@ void turret_plasma_minsta_attack (void)
 					   800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
 
-	pointparticles(particleeffectnum("nex_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+	Send_Effect("nex_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
 	// teamcolor / hit beam effect
 	vector v;
@@ -68,7 +68,7 @@ void turret_plasma_attack()
     entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, true, true);
     missile.missile_flags = MIF_SPLASH;
 
-    pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+    Send_Effect("laser_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;
 }
@@ -77,7 +77,7 @@ void turret_plasma_dual_attack()
 {
     entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, true, true);
     missile.missile_flags = MIF_SPLASH;
-    pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+    Send_Effect("laser_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
     self.tur_head.frame += 1;
 }
 

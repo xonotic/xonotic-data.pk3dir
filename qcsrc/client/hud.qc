@@ -11,6 +11,7 @@
 #include "../common/constants.qh"
 #include "../common/counting.qh"
 #include "../common/deathtypes.qh"
+#include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
 
@@ -1358,7 +1359,7 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 	return 2;
 }
 
-void HUD_Powerups(void)
+void HUD_Powerups()
 {
 	if(intermission == 2) return;
 
@@ -1372,7 +1373,7 @@ void HUD_Powerups(void)
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
 		if(getstati(STAT_HEALTH) <= 0) return;
-		if(!(allItems & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) && !allBuffs) return;
+		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
 		shieldTime = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);

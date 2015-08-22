@@ -2,13 +2,13 @@
 #define CVARLIST_H
 #include "listbox.qc"
 CLASS(XonoticCvarList, XonoticListBox)
-	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity))
+	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity));
 	ATTRIB(XonoticCvarList, rowsPerItem, float, 1)
-	METHOD(XonoticCvarList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticCvarList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticCvarList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticCvarList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticCvarList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticCvarList, keyDown, float(entity, float, float, float));
 
-	METHOD(XonoticCvarList, destroy, void(entity))
+	METHOD(XonoticCvarList, destroy, void(entity));
 
 	ATTRIB(XonoticCvarList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticCvarList, realUpperMargin, float, 0)
@@ -17,9 +17,9 @@ CLASS(XonoticCvarList, XonoticListBox)
 	ATTRIB(XonoticCvarList, columnValueOrigin, float, 0)
 	ATTRIB(XonoticCvarList, columnValueSize, float, 0)
 
-	METHOD(XonoticCvarList, mouseRelease, float(entity, vector))
-	METHOD(XonoticCvarList, setSelected, void(entity, float))
-	METHOD(XonoticCvarList, updateCvarType, float(entity))
+	METHOD(XonoticCvarList, mouseRelease, float(entity, vector));
+	METHOD(XonoticCvarList, setSelected, void(entity, float));
+	METHOD(XonoticCvarList, updateCvarType, float(entity));
 
 	ATTRIB(XonoticCvarList, controlledTextbox, entity, NULL)
 	ATTRIB(XonoticCvarList, cvarNameBox, entity, NULL)

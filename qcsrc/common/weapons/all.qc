@@ -54,11 +54,11 @@
 #ifndef MENUQC
 #include "calculations.qc"
 #endif
+#define IMPLEMENTATION
 #include "all.inc"
+#undef IMPLEMENTATION
 
 // WEAPON PLUGIN SYSTEM
-entity weapon_info[WEP_MAXCOUNT];
-entity dummy_weapon_info;
 
 #if WEP_MAXCOUNT > 72
 # error Kein Weltraum links auf dem Gerät
@@ -149,77 +149,13 @@ WepSet ReadWepSet()
 }
 #endif
 
-void register_weapon(
-	int id,
-	WepSet bit,
-	bool(int) func,
-	.int ammotype,
-	int i,
-	int weapontype,
-	float pickupbasevalue,
-	vector clr,
-	string modelname,
-	string simplemdl,
-	string crosshair,
-	string wepimg,
-	string refname,
-	string wepname)
-{
-	entity e;
-	weapon_info[id - 1] = e = spawn();
-	e.classname = "weapon_info";
-	e.weapon = id;
-	e.weapons = bit;
-	e.weapon_func = func;
-	e.ammo_field = ammotype;
-	e.impulse = i;
-	e.spawnflags = weapontype;
-	e.bot_pickupbasevalue = pickupbasevalue;
-	e.wpcolor = clr;
-	e.wpmodel = strzone(strcat("wpn-", ftos(id)));
-	e.mdl = modelname;
-	e.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
-	e.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
-	e.w_crosshair = strzone(car(crosshair));
-	string s = cdr(crosshair);
-	e.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
-	e.model2 = strzone(wepimg);
-	e.netname = refname;
-	e.message = wepname;
-
-	#ifdef CSQC
-	func(WR_INIT);
-	#endif
-}
-bool w_null(int dummy)
-{
-	return 0;
-}
 void register_weapons_done()
 {
-	dummy_weapon_info = spawn();
-	dummy_weapon_info.classname = "weapon_info";
-	dummy_weapon_info.weapon = 0; // you can recognize dummies by this
-	dummy_weapon_info.weapons = '0 0 0';
-	dummy_weapon_info.netname = "";
-	dummy_weapon_info.message = "AOL CD Thrower";
-	dummy_weapon_info.weapon_func = w_null;
-	dummy_weapon_info.wpmodel = "";
-	dummy_weapon_info.mdl = "";
-	dummy_weapon_info.model = "";
-	dummy_weapon_info.spawnflags = 0;
-	dummy_weapon_info.impulse = -1;
-	dummy_weapon_info.bot_pickupbasevalue = 0;
-	dummy_weapon_info.ammo_field = ammo_none;
+	dummy_weapon_info = NEW(Weapon);
 
-	dummy_weapon_info.w_crosshair = "gfx/crosshair1";
-	dummy_weapon_info.w_crosshair_size = 1;
-	dummy_weapon_info.model2 = "";
-
-	int i;
 	weaponorder_byid = "";
-	for(i = WEP_MAXCOUNT; i >= 1; --i)
-		if(weapon_info[i-1])
+	for (int i = WEP_MAXCOUNT - 1; i >= 0; --i)
+		if (weapon_info[i])
 			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
 	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }
@@ -353,14 +289,14 @@ void W_RandomWeapons(entity e, float n)
 
 string GetAmmoPicture(.int ammotype)
 {
-	switch(ammotype)
+	switch (ammotype)
 	{
-		case ammo_shells:  return "ammo_shells";
-		case ammo_nails:   return "ammo_bullets";
-		case ammo_rockets: return "ammo_rockets";
-		case ammo_cells:   return "ammo_cells";
-		case ammo_plasma:  return "ammo_cells";
-		case ammo_fuel:    return "ammo_fuel";
+		case ammo_shells:  return ITEM_Shells.m_ammoPic;
+		case ammo_nails:   return ITEM_Bullets.m_ammoPic;
+		case ammo_rockets: return ITEM_Rockets.m_ammoPic;
+		case ammo_cells:   return ITEM_Cells.m_ammoPic;
+		case ammo_plasma:  return ITEM_Plasma.m_ammoPic;
+		case ammo_fuel:    return ITEM_JetpackFuel.m_ammoPic;
 		default: return ""; // wtf, no ammo type?
 	}
 }

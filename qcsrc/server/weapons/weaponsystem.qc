@@ -472,11 +472,11 @@ float weapon_prepareattack_checkammo(float secondary)
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
 		entity mine;
-		if(self.weapon == WEP_MINE_LAYER)
+		if(self.weapon == WEP_MINE_LAYER.m_id)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return false;
 
-		if(self.weapon == WEP_SHOTGUN)
+		if(self.weapon == WEP_SHOTGUN.m_id)
 		if(!secondary && WEP_CVAR(shotgun, secondary) == 1)
 			return false; // no clicking, just allow
 
@@ -637,7 +637,7 @@ void weapon_thinkf(float fr, float t, void() func)
 
 	if((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		if((self.weapon == WEP_SHOCKWAVE || self.weapon == WEP_SHOTGUN) && fr == WFRAME_FIRE2)
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && fr == WFRAME_FIRE2)
 			animdecide_setaction(self, ANIMACTION_MELEE, restartanim);
 		else
 			animdecide_setaction(self, ANIMACTION_SHOOT, restartanim);
@@ -649,17 +649,17 @@ void weapon_thinkf(float fr, float t, void() func)
 	}
 }
 
-float forbidWeaponUse()
+float forbidWeaponUse(entity player)
 {
 	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
 		return 1;
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return 1;
-	if(self.player_blocked)
+	if(player.player_blocked)
 		return 1;
-	if(self.frozen)
+	if(player.frozen)
 		return 1;
-	if(self.weapon_blocked)
+	if(player.weapon_blocked)
 		return 1;
 	return 0;
 }
@@ -674,7 +674,7 @@ void W_WeaponFrame()
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
-	if(forbidWeaponUse())
+	if(forbidWeaponUse(self))
 	if(self.weaponentity.state != WS_CLEAR)
 	{
 		w_ready();

@@ -16,7 +16,7 @@
     #include "../../server/defs.qh"
     #include "../deathtypes.qh"
     #include "../../server/tturrets/include/turrets_early.qh"
-    #include "../../server/vehicles/all.qh"
+    #include "../vehicles/sv_vehicles.qh"
     #include "../mapinfo.qh"
     #include "../../server/anticheat.qh"
 #endif
@@ -82,8 +82,8 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
-				pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
-				pointparticles(particleeffectnum("teleport"), to + v_forward * 32, '0 0 0', 1);
+				Send_Effect("teleport", player.origin, '0 0 0', 1);
+				Send_Effect("teleport", to + v_forward * 32, '0 0 0', 1);
 			}
 			self.pushltime = time + 0.2;
 		}

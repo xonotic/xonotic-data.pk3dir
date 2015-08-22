@@ -2,7 +2,7 @@
 #define DIALOG_MULTIPLAYER_H
 #include "dialog.qc"
 CLASS(XonoticMultiplayerDialog, XonoticDialog)
-	METHOD(XonoticMultiplayerDialog, fill, void(entity))
+	METHOD(XonoticMultiplayerDialog, fill, void(entity));
 	ATTRIB(XonoticMultiplayerDialog, title, string, _("Multiplayer"))
 	ATTRIB(XonoticMultiplayerDialog, color, vector, SKINCOLOR_DIALOG_MULTIPLAYER)
 	ATTRIB(XonoticMultiplayerDialog, intendedWidth, float, 0.96)

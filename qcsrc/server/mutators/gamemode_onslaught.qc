@@ -53,7 +53,7 @@ void ons_throwgib_think()
 
 	if(d>2)
 	if(random()<0.6)
-		pointparticles(particleeffectnum("onslaught_generator_gib_flame"), self.origin, '0 0 0', 1);
+		Send_Effect("onslaught_generator_gib_flame", self.origin, '0 0 0', 1);
 }
 
 void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn)
@@ -490,11 +490,11 @@ void onslaught_generator_damage_think()
 	if(random() < 0.9 - self.owner.health / self.owner.max_health)
 		if(random() < 0.01)
 		{
-			pointparticles(particleeffectnum("electro_ballexplode"), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
+			Send_Effect("electro_ballexplode", self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
 			sound(self, CH_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);
 		}
 		else
-			pointparticles(particleeffectnum("torch_small"), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
+			Send_Effect("torch_small", self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
 }
 
 void onslaught_generator_damage_spawn(entity gd_owner)
@@ -539,7 +539,7 @@ void onslaught_generator_deaththink()
 	for(i=0;i < 10;++i)
 	{
 		org = self.origin + randompos('-30 -30 -30' * i + '0 0 -20', '30 30 30' * i + '0 0 20');
-		pointparticles(particleeffectnum("onslaught_generator_gib_explode"), org, '0 0 0', 1);
+		Send_Effect("onslaught_generator_gib_explode", org, '0 0 0', 1);
 	}
 
 	// Short explosion sound + small explosion
@@ -551,7 +551,7 @@ void onslaught_generator_deaththink()
 
 	// Particles
 	org = self.origin + randompos(self.mins + '8 8 8', self.maxs + '-8 -8 -8');
-	pointparticles(particleeffectnum("onslaught_generator_smallexplosion"), org, '0 0 0', 1);
+	Send_Effect("onslaught_generator_smallexplosion", org, '0 0 0', 1);
 
 	// rays
 	if(random() > 0.25 )
@@ -565,7 +565,7 @@ void onslaught_generator_deaththink()
 		org = self.origin;
 		te_explosion(org);
 		onslaught_generator_shockwave_spawn(org);
-		pointparticles(particleeffectnum("onslaught_generator_finalexplosion"), org, '0 0 0', 1);
+		Send_Effect("onslaught_generator_finalexplosion", org, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else
@@ -679,7 +679,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	else
 	{
 		// particles on every hit
-		pointparticles(particleeffectnum("sparks"), hitloc, force * -1, 1);
+		Send_Effect("sparks", hitloc, force * -1, 1);
 
 		//sound on every hit
 		if (random() < 0.5)
@@ -1026,7 +1026,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 	// colormod flash when shot
 	self.colormod = '2 2 2';
 	// particles on every hit
-	pointparticles(particleeffectnum("sparks"), hitloc, force*-1, 1);
+	Send_Effect("sparks", hitloc, force*-1, 1);
 	//sound on every hit
 	if (random() < 0.5)
 		sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE+0.3, ATTEN_NORM);
@@ -1036,7 +1036,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 	if (self.health < 0)
 	{
 		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+		Send_Effect("rocket_explode", self.origin, '0 0 0', 1);
 		{
 			string t;
 			t = Team_ColoredFullName(attacker.team);
@@ -1209,7 +1209,7 @@ void onslaught_controlpoint_icon_think()
 	// damaged fx
 	if(random() < 0.6 - self.health / self.max_health)
 	{
-		pointparticles(particleeffectnum("electricity_sparks"), self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
+		Send_Effect("electricity_sparks", self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
 			sound(self, CH_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTEN_NORM);
@@ -1264,11 +1264,8 @@ void onslaught_controlpoint_icon_buildthink()
 	//setsize(self, '-32 -32 0', '32 32 8');
 
 	if(random() < 0.9 - self.health / self.max_health)
-		pointparticles(particleeffectnum("rage"), self.origin + 10 * randomvec(), '0 0 -1', 1);
+		Send_Effect("rage", self.origin + 10 * randomvec(), '0 0 -1', 1);
 }
-
-
-
 
 void onslaught_controlpoint_touch()
 {

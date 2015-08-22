@@ -67,8 +67,8 @@ float friend_needshelp(entity e)
 	if(e.frozen)
 		return false;
 	if(!IS_PLAYER(e))
-		return ((e.flags & FL_MONSTER) && e.health < e.max_health);
-	if(e.items & IT_INVINCIBLE)
+		return (IS_MONSTER(e) && e.health < e.max_health);
+	if(e.items & ITEM_Shield.m_itemid)
 		return false;
 
 	switch(self.skin)
@@ -90,7 +90,7 @@ void mage_spike_explode()
 
 	self.realowner.mage_spike = world;
 
-	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
+	Send_Effect("explosion_small", self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE, other);
 
 	remove (self);
@@ -232,11 +232,11 @@ void mage_heal()
 					break;
 			}
 
-			pointparticles(particleeffectnum(fx), head.origin, '0 0 0', 1);
+			Send_Effect(fx, head.origin, '0 0 0', 1);
 		}
 		else
 		{
-			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
+			Send_Effect("healing_fx", head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
 			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE))
 				WaypointSprite_UpdateHealth(head.sprite, head.health);
@@ -254,7 +254,7 @@ void mage_push()
 {
 	sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
-	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
+	Send_Effect("TE_EXPLOSION", self.origin, '0 0 0', 1);
 
 	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
@@ -271,7 +271,7 @@ void mage_teleport()
 	if(trace_fraction < 1)
 		return;
 
-	pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1);
+	Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1);
 	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
 
 	self.attack_finished_single = time + 0.2;

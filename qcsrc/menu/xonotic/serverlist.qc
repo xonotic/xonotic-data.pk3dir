@@ -2,14 +2,14 @@
 #define SERVERLIST_H
 #include "listbox.qc"
 CLASS(XonoticServerList, XonoticListBox)
-	METHOD(XonoticServerList, configureXonoticServerList, void(entity))
+	METHOD(XonoticServerList, configureXonoticServerList, void(entity));
 	ATTRIB(XonoticServerList, rowsPerItem, float, 1)
-	METHOD(XonoticServerList, draw, void(entity))
-	METHOD(XonoticServerList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticServerList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticServerList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticServerList, toggleFavorite, void(entity, string))
+	METHOD(XonoticServerList, draw, void(entity));
+	METHOD(XonoticServerList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticServerList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticServerList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticServerList, toggleFavorite, void(entity, string));
 
 	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85)
 
@@ -30,8 +30,8 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, lockedSelectedItem, bool, true) // initially keep selected the first item of the list, avoiding an unwanted scrolling
 
 	ATTRIB(XonoticServerList, selectedServer, string, string_null) // to restore selected server when needed
-	METHOD(XonoticServerList, setSelected, void(entity, float))
-	METHOD(XonoticServerList, setSortOrder, void(entity, float, float))
+	METHOD(XonoticServerList, setSelected, void(entity, float));
+	METHOD(XonoticServerList, setSortOrder, void(entity, float, float));
 	ATTRIB(XonoticServerList, filterShowEmpty, float, 1)
 	ATTRIB(XonoticServerList, filterShowFull, float, 1)
 	ATTRIB(XonoticServerList, filterString, string, string_null)
@@ -39,10 +39,10 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, ipAddressBox, entity, NULL)
 	ATTRIB(XonoticServerList, favoriteButton, entity, NULL)
 	ATTRIB(XonoticServerList, nextRefreshTime, float, 0)
-	METHOD(XonoticServerList, refreshServerList, void(entity, float)) // refresh mode: REFRESHSERVERLIST_*
+	METHOD(XonoticServerList, refreshServerList, void(entity, float)); // refresh mode: REFRESHSERVERLIST_*
 	ATTRIB(XonoticServerList, needsRefresh, float, 1)
-	METHOD(XonoticServerList, focusEnter, void(entity))
-	METHOD(XonoticServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)))
+	METHOD(XonoticServerList, focusEnter, void(entity));
+	METHOD(XonoticServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)));
 	ATTRIB(XonoticServerList, sortButton1, entity, NULL)
 	ATTRIB(XonoticServerList, sortButton2, entity, NULL)
 	ATTRIB(XonoticServerList, sortButton3, entity, NULL)
@@ -59,10 +59,10 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, seenIPv6, float, 0)
 	ATTRIB(XonoticServerList, categoriesHeight, float, 1.25)
 
-	METHOD(XonoticServerList, getTotalHeight, float(entity))
-	METHOD(XonoticServerList, getItemAtPos, float(entity, float))
-	METHOD(XonoticServerList, getItemStart, float(entity, float))
-	METHOD(XonoticServerList, getItemHeight, float(entity, float))
+	METHOD(XonoticServerList, getTotalHeight, float(entity));
+	METHOD(XonoticServerList, getItemAtPos, float(entity, float));
+	METHOD(XonoticServerList, getItemStart, float(entity, float));
+	METHOD(XonoticServerList, getItemHeight, float(entity, float));
 ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 

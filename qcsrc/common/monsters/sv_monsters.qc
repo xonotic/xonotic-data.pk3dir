@@ -15,7 +15,7 @@
     #include "../deathtypes.qh"
     #include "../../server/mutators/mutators_include.qh"
     #include "../../server/tturrets/include/turrets_early.qh"
-    #include "../../server/vehicles/vehicle.qh"
+    #include "../vehicles/sv_vehicles.qh"
     #include "../../server/campaign.qh"
     #include "../../server/command/common.qh"
     #include "../../server/command/cmd.qh"
@@ -80,7 +80,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	//if(trace_ent != targ)
 		//return false;
 
-	if(targ.vehicle_flags & VHF_ISVEHICLE)
+	if(IS_VEHICLE(targ))
 	if(!((get_monsterinfo(ent.monsterid)).spawnflags & MON_FLAG_RANGED))
 		return false; // melee attacks are useless against vehicles
 
@@ -99,7 +99,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(IS_SPEC(targ) || IS_OBSERVER(targ))
 		return false; // enemy is a spectator
 
-	if(!(targ.vehicle_flags & VHF_ISVEHICLE))
+	if(!IS_VEHICLE(targ))
 	if(targ.deadflag != DEAD_NO || ent.deadflag != DEAD_NO || targ.health <= 0 || ent.health <= 0)
 		return false; // enemy/self is dead
 
@@ -109,7 +109,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ.monster_owner == ent)
 		return false; // don't attack our pet
 
-	if(!(targ.vehicle_flags & VHF_ISVEHICLE))
+	if(!IS_VEHICLE(targ))
 	if(targ.flags & FL_NOTARGET)
 		return false; // enemy can't be targeted
 
@@ -181,7 +181,7 @@ void MonsterTouch ()
 		return;
 
 	if(self.enemy != other)
-	if(!(other.flags & FL_MONSTER))
+	if(!IS_MONSTER(other))
 	if(monster_isvalidtarget(other, self))
 		self.enemy = other;
 }
@@ -361,7 +361,7 @@ void Monster_CheckMinibossFlag ()
 		self.health += autocvar_g_monsters_miniboss_healthboost;
 		self.effects |= EF_RED;
 		if(!self.weapon)
-			self.weapon = WEP_VORTEX;
+			self.weapon = WEP_VORTEX.m_id;
 	}
 }
 
@@ -591,7 +591,7 @@ void monster_CalculateVelocity(entity mon, vector to, vector from, float turnrat
 {
 	float current_distance = vlen((('1 0 0' * to.x) + ('0 1 0' * to.y)) - (('1 0 0' * from.x) + ('0 1 0' * from.y))); // for the sake of this check, exclude Z axis
 	float initial_height = 0; //min(50, (targ_distance * tanh(20)));
-	float current_height = (initial_height * min(1, (current_distance / self.pass_distance)));
+	float current_height = (initial_height * min(1, self.pass_distance ? (current_distance / self.pass_distance) : 0));
 	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
 
 	vector targpos;
@@ -842,7 +842,7 @@ void monster_remove(entity mon)
 	if(!mon)
 		return; // nothing to remove
 
-	pointparticles(particleeffectnum("item_pickup"), mon.origin, '0 0 0', 1);
+	Send_Effect("item_pickup", mon.origin, '0 0 0', 1);
 
 	if(mon.weaponentity)
 		remove(mon.weaponentity);

@@ -8,7 +8,7 @@
 #include "spawnpoints.qh"
 #include "tturrets/include/turrets_early.qh"
 #include "t_items.qh"
-#include "vehicles/vehicle.qh"
+#include "../common/vehicles/sv_vehicles.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -107,7 +107,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		else if(!(attacker.weapons & WepSet_FromWeapon(culprit)))
 			culprit = attacker.weapon;
 
-		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
+		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER.m_id) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
 			// no exchange
 		}
@@ -554,13 +554,13 @@ void Ice_Think()
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
 {
-	if(!IS_PLAYER(targ) && !(targ.flags & FL_MONSTER)) // only specified entities can be freezed
+	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 
 	if(targ.frozen)
 		return;
 
-	float targ_maxhealth = ((targ.flags & FL_MONSTER) ? targ.max_health : start_health);
+	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
 	targ.frozen = frozen_type;
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
@@ -648,7 +648,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 					RemoveGrapplingHook(targ); // STOP THAT, you parasite!
 
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
-	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
+	if(DEATH_ISWEAPON(deathtype, WEP_HOOK.m_id) || DEATH_ISWEAPON(deathtype, WEP_TUBA.m_id))
 	{
 		if(IS_PLAYER(targ))
 			if(SAME_TEAM(targ, attacker))
@@ -662,7 +662,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
-			vehicles_exit(VHEF_RELESE);
+			vehicles_exit(VHEF_RELEASE);
 
 		// These are ALWAYS lethal
 		// No damage modification here
@@ -760,7 +760,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			{
 				Unfreeze(targ);
 				targ.health = autocvar_g_freezetag_revive_falldamage_health;
-				pointparticles(particleeffectnum("iceorglass"), targ.origin, '0 0 0', 3);
+				Send_Effect("iceorglass", targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
@@ -771,7 +771,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freezetag_frozen_damage_trigger)
 		{
-			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
+			Send_Effect("teleport", targ.origin, '0 0 0', 1);
 
 			entity oldself = self;
 			self = targ;
@@ -801,7 +801,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				self.oldorigin = self.origin;
 				self.prevorigin = self.origin;
 
-				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+				Send_Effect("teleport", self.origin, '0 0 0', 1);
 			}
 
 			self = oldself;
@@ -810,7 +810,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		if(!g_instagib)
 		{
 			// apply strength multiplier
-			if (attacker.items & IT_STRENGTH)
+			if (attacker.items & ITEM_Strength.m_itemid)
 			{
 				if(targ == attacker)
 				{
@@ -825,7 +825,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			}
 
 			// apply invincibility multiplier
-			if (targ.items & IT_INVINCIBLE)
+			if (targ.items & ITEM_Shield.m_itemid)
 				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
 		}
 
@@ -840,12 +840,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		if(targ != attacker)
 		{
 			entity victim;
-			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
+			if(IS_VEHICLE(targ) && targ.owner)
 				victim = targ.owner;
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || (victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (victim.flags & FL_MONSTER))
+			if(IS_PLAYER(victim) || IS_TURRET(victim) || IS_MONSTER(victim))
 			{
 				if(DIFF_TEAM(victim, attacker) && !victim.frozen)
 				{
@@ -958,8 +958,8 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 
 	total_damage_to_creatures = 0;
 
-	if(deathtype != (WEP_HOOK | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
-		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
+	if(deathtype != (WEP_HOOK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
+		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA.m_id) // do not send tuba damage (bandwidth hog)
 		{
 			force = inflictorvelocity;
 			if(vlen(force) == 0)
@@ -1020,7 +1020,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = force * (finaldmg / coredamage) * forceintensity;
 					hitloc = nearest;
 
-					if(deathtype & WEP_BLASTER)
+					if(deathtype & WEP_BLASTER.m_id)
 						force *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
 
 					if(targ != directhitentity)

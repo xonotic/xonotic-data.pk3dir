@@ -97,7 +97,8 @@ ACCUMULATE_FUNCTION(__static_init, RegisterClasses)
 #define METHOD(cname, name, prototype)      \
     class(cname) .prototype name;           \
     prototype cname##_##name;               \
-    INIT_STATIC(cname) { this.name = cname##_##name; }
+    INIT_STATIC(cname) { this.name = cname##_##name; } \
+    prototype cname##_##name
 
 #define ATTRIB(cname, name, type, val)      \
     class(cname) .type name;                \

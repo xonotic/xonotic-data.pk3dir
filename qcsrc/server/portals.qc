@@ -266,6 +266,10 @@ void Portal_Touch()
 	if(other.classname == "grapplinghook")
 		return; // handled by think
 
+	if(!autocvar_g_vehicles_teleportable)
+	if(other.vehicle_flags & VHF_ISVEHICLE)
+		return; // no teleporting vehicles?
+
 	if(!self.enemy)
 		error("Portal_Touch called for a broken portal\n");
 
@@ -411,7 +415,7 @@ void Portal_Remove(entity portal, float killed)
 	{
 		fixedmakevectors(portal.mangle);
 		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
+		Send_Effect("rocket_explode", portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else

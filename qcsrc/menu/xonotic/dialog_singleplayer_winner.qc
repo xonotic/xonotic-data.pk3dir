@@ -2,8 +2,8 @@
 #define DIALOG_SINGLEPLAYER_WINNER_H
 #include "dialog.qc"
 CLASS(XonoticWinnerDialog, XonoticDialog)
-	METHOD(XonoticWinnerDialog, fill, void(entity))
-	METHOD(XonoticWinnerDialog, focusEnter, void(entity))
+	METHOD(XonoticWinnerDialog, fill, void(entity));
+	METHOD(XonoticWinnerDialog, focusEnter, void(entity));
 	ATTRIB(XonoticWinnerDialog, title, string, _("Winner"))
 	ATTRIB(XonoticWinnerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)
 	ATTRIB(XonoticWinnerDialog, intendedWidth, float, 0.32)

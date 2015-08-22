@@ -8,8 +8,8 @@ float easingQuadIn(float, float, float, float);
 float easingQuadOut(float, float, float, float);
 float easingQuadInOut(float, float, float, float);
 CLASS(Easing, Animation)
-	METHOD(Easing, calcValue, float(entity, float, float, float, float))
-	METHOD(Easing, setMath, void(entity, float(float, float, float, float)))
+	METHOD(Easing, calcValue, float(entity, float, float, float, float));
+	METHOD(Easing, setMath, void(entity, float(float, float, float, float)));
 	ATTRIB(Easing, math, float(float, float, float, float), easingLinear)
 ENDCLASS(Easing)
 #endif

@@ -158,7 +158,7 @@ MUTATOR_HOOKFUNCTION(lms_KeepScore)
 MUTATOR_HOOKFUNCTION(lms_FilterItem)
 {
 	if(autocvar_g_lms_extra_lives)
-	if(self.classname == "item_health_mega")
+	if(self.itemdef == ITEM_HealthMega)
 	{
 		self.max_health = 1;
 		return false;
@@ -170,7 +170,7 @@ MUTATOR_HOOKFUNCTION(lms_FilterItem)
 MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 {
 	// give extra lives for mega health
-	if(self.items & IT_HEALTH)
+	if (self.items & ITEM_HealthMega.m_itemid)
 	{
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
 		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);

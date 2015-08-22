@@ -2,26 +2,26 @@
 #define ITEM_NEXPOSEE_H
 #include "container.qc"
 CLASS(Nexposee, Container)
-	METHOD(Nexposee, draw, void(entity))
-	METHOD(Nexposee, keyDown, float(entity, float, float, float))
-	METHOD(Nexposee, keyUp, float(entity, float, float, float))
-	METHOD(Nexposee, mousePress, float(entity, vector))
-	METHOD(Nexposee, mouseMove, float(entity, vector))
-	METHOD(Nexposee, mouseRelease, float(entity, vector))
-	METHOD(Nexposee, mouseDrag, float(entity, vector))
-	METHOD(Nexposee, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Nexposee, focusEnter, void(entity))
-	METHOD(Nexposee, close, void(entity))
+	METHOD(Nexposee, draw, void(entity));
+	METHOD(Nexposee, keyDown, float(entity, float, float, float));
+	METHOD(Nexposee, keyUp, float(entity, float, float, float));
+	METHOD(Nexposee, mousePress, float(entity, vector));
+	METHOD(Nexposee, mouseMove, float(entity, vector));
+	METHOD(Nexposee, mouseRelease, float(entity, vector));
+	METHOD(Nexposee, mouseDrag, float(entity, vector));
+	METHOD(Nexposee, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Nexposee, focusEnter, void(entity));
+	METHOD(Nexposee, close, void(entity));
 
 	ATTRIB(Nexposee, animationState, float, -1)
 	ATTRIB(Nexposee, animationFactor, float, 0)
 	ATTRIB(Nexposee, selectedChild, entity, NULL)
 	ATTRIB(Nexposee, mouseFocusedChild, entity, NULL)
-	METHOD(Nexposee, addItem, void(entity, entity, vector, vector, float))
-	METHOD(Nexposee, calc, void(entity))
-	METHOD(Nexposee, setNexposee, void(entity, entity, vector, float, float))
+	METHOD(Nexposee, addItem, void(entity, entity, vector, vector, float));
+	METHOD(Nexposee, calc, void(entity));
+	METHOD(Nexposee, setNexposee, void(entity, entity, vector, float, float));
 	ATTRIB(Nexposee, mousePosition, vector, '0 0 0')
-	METHOD(Nexposee, pullNexposee, void(entity, entity, vector))
+	METHOD(Nexposee, pullNexposee, void(entity, entity, vector));
 ENDCLASS(Nexposee)
 
 void ExposeeCloseButton_Click(entity button, entity other); // un-exposees the current state

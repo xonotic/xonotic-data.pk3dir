@@ -278,22 +278,14 @@ void turret_draw2d()
             return; // Dont draw wp's for turrets out of view
         o.z = 0;
         if(hud != HUD_NORMAL)
-        {
-            switch(hud)
-            {
-                case HUD_SPIDERBOT:
-                case HUD_WAKIZASHI:
-                case HUD_RAPTOR:
-                case HUD_BUMBLEBEE:
-                    if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
-                        txt = "gfx/vehicles/turret_moving.tga";
-                    else
-                        txt = "gfx/vehicles/turret_stationary.tga";
+        {        
+			if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
+				txt = "gfx/vehicles/turret_moving.tga";
+			else
+				txt = "gfx/vehicles/turret_stationary.tga";
 
-                    vector pz = drawgetimagesize(txt) * autocvar_cl_vehicles_crosshair_size;
-                    drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.7, DRAWFLAG_NORMAL);
-                    break;
-            }
+			vector pz = drawgetimagesize(txt) * autocvar_cl_vehicles_crosshair_size;
+			drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.7, DRAWFLAG_NORMAL);
         }
 	}
 

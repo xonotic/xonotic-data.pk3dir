@@ -8,7 +8,7 @@ CLASS(XonoticTab, Tab)
 	ATTRIB(XonoticTab, rows, float, 3)
 	ATTRIB(XonoticTab, columns, float, 2)
 	*/
-	METHOD(XonoticTab, showNotify, void(entity))
+	METHOD(XonoticTab, showNotify, void(entity));
 
 	ATTRIB(XonoticTab, marginTop, float, 0) // pixels
 	ATTRIB(XonoticTab, marginBottom, float, 0) // pixels

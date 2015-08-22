@@ -17,18 +17,18 @@
 #define ITEM_DIALOG_H
 #include "inputcontainer.qc"
 CLASS(Dialog, InputContainer)
-	METHOD(Dialog, configureDialog, void(entity)) // no runtime configuration, all parameters are given in the code!
-	METHOD(Dialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	METHOD(Dialog, keyDown, float(entity, float, float, float))
-	METHOD(Dialog, close, void(entity))
-	METHOD(Dialog, addItemSimple, void(entity, float, float, float, float, entity, vector))
+	METHOD(Dialog, configureDialog, void(entity)); // no runtime configuration, all parameters are given in the code!
+	METHOD(Dialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
+	METHOD(Dialog, keyDown, float(entity, float, float, float));
+	METHOD(Dialog, close, void(entity));
+	METHOD(Dialog, addItemSimple, void(entity, float, float, float, float, entity, vector));
 
-	METHOD(Dialog, TD, void(entity, float, float, entity))
-	METHOD(Dialog, TDNoMargin, void(entity, float, float, entity, vector))
-	METHOD(Dialog, TDempty, void(entity, float))
-	METHOD(Dialog, setFirstColumn, void(entity, float))
-	METHOD(Dialog, TR, void(entity))
-	METHOD(Dialog, gotoRC, void(entity, float, float))
+	METHOD(Dialog, TD, void(entity, float, float, entity));
+	METHOD(Dialog, TDNoMargin, void(entity, float, float, entity, vector));
+	METHOD(Dialog, TDempty, void(entity, float));
+	METHOD(Dialog, setFirstColumn, void(entity, float));
+	METHOD(Dialog, TR, void(entity));
+	METHOD(Dialog, gotoRC, void(entity, float, float));
 
 	ATTRIB(Dialog, isTabRoot, float, 1)
 	ATTRIB(Dialog, closeButton, entity, NULL)
