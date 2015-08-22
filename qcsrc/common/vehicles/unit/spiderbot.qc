@@ -1,5 +1,6 @@
 #ifndef VEHICLE_SPIDERBOT
 #define VEHICLE_SPIDERBOT
+int v_spiderbot(int);
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ SPIDERBOT,
 /* function   */ v_spiderbot,
@@ -807,7 +808,7 @@ bool spiderbot_impulse(int _imp)
 void spawnfunc_vehicle_spiderbot()
 {
 	if(!autocvar_g_vehicle_spiderbot) { remove(self); return; }
-	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_SPIDERBOT.vehicleid, false)) { remove(self); return; }
 }
 
 float v_spiderbot(float req)

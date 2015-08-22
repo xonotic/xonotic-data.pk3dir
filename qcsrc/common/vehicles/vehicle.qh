@@ -4,7 +4,7 @@
 int v_null(int) { return 0; }
 
 CLASS(Vehicle, Object)
-    ATTRIB(Vehicle, m_id, int, 0)
+    ATTRIB(Vehicle, vehicleid, int, 0)
 ENDCLASS(Vehicle)
 
 #endif

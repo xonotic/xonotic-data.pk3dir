@@ -13,10 +13,8 @@
 #include "all.inc"
 #undef IMPLEMENTATION
 
-// VEHICLE PLUGIN SYSTEM
-entity dummy_vehicle_info;
-
-void vehicles_common_initialize()
+#ifndef MENUQC
+STATIC_INIT(vehicles_common_initialize)
 {
 #ifdef CSQC
 	precache_model("models/vehicles/bomblet.md3");
@@ -46,54 +44,17 @@ void vehicles_common_initialize()
 	addstat(STAT_VEHICLESTAT_RELOAD2, AS_INT, vehicle_reload2);
 #endif // SVQC
 }
+#endif
 
-void register_vehicle(entity e, float id, float(float) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname)
-{
-	vehicle_info[id - 1] = e;
-	e.classname = "vehicle_info";
-	e.vehicleid = id;
-	e.netname = shortname;
-	e.vehicle_name = vname;
-	e.vehicle_func = func;
-	e.mdl = modelname;
-	e.spawnflags = vehicleflags;
-	e.mins = min_s;
-	e.maxs = max_s;
-	e.model = modelname;
-	e.head_model = headmodelname;
-	e.hud_model = hudmodelname;
-	e.tag_head = headtag;
-	e.tag_hud = hudtag;
-	e.tag_view = viewtag;
-
-	#ifndef MENUQC
-	vehicles_common_initialize();
-	#endif
-}
-void register_vehicles_done()
-{
-	dummy_vehicle_info = spawn();
-	dummy_vehicle_info.classname = "vehicle_info";
-	dummy_vehicle_info.vehicleid = 0; // you can recognize dummies by this
-	dummy_vehicle_info.netname = "";
-	dummy_vehicle_info.vehicle_name = "Vehicle";
-	dummy_vehicle_info.vehicle_func = v_null;
-	dummy_vehicle_info.mdl = "";
-	dummy_vehicle_info.mins = '-0 -0 -0';
-	dummy_vehicle_info.maxs = '0 0 0';
-	dummy_vehicle_info.model = "";
-	dummy_vehicle_info.head_model = "";
-	dummy_vehicle_info.hud_model = "";
-}
 entity get_vehicleinfo(float id)
 {
 	entity m;
 	if(id < VEH_FIRST || id > VEH_LAST)
-		return dummy_vehicle_info;
+		return VEH_NULL;
 	m = vehicle_info[id - 1];
 	if(m)
 		return m;
-	return dummy_vehicle_info;
+	return VEH_NULL;
 }
 
 #endif

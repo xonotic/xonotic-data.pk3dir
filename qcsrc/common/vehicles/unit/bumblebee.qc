@@ -1,6 +1,7 @@
 #ifndef VEHICLE_BUMBLEBEE
 #define VEHICLE_BUMBLEBEE
 #include "bumblebee.qh"
+int v_bumblebee(int);
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ BUMBLEBEE,
 /* function   */ v_bumblebee,
@@ -660,7 +661,7 @@ void bumblebee_land()
 
 void bumblebee_exit(float eject)
 {
-	if(self.owner.vehicleid == VEH_BUMBLEBEE)
+	if(self.owner.vehicleid == VEH_BUMBLEBEE.vehicleid)
 	{
 		bumblebee_gunner_exit(eject);
 		return;
@@ -764,7 +765,7 @@ float bumble_raygun_send(entity to, float sf)
 void spawnfunc_vehicle_bumblebee()
 {
 	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
-	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_BUMBLEBEE.vehicleid, false)) { remove(self); return; }
 }
 
 float v_bumblebee(float req)

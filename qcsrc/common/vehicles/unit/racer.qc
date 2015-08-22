@@ -1,5 +1,6 @@
 #ifndef VEHICLE_RACER
 #define VEHICLE_RACER
+int v_racer(int);
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RACER,
 /* function   */ v_racer,
@@ -663,7 +664,7 @@ void racer_deadtouch()
 void spawnfunc_vehicle_racer()
 {
 	if(!autocvar_g_vehicle_racer) { remove(self); return; }
-	if(!vehicle_initialize(VEH_RACER, false)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_RACER.vehicleid, false)) { remove(self); return; }
 }
 
 #endif // SVQC

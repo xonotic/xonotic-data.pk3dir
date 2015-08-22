@@ -1,6 +1,7 @@
 #ifndef VEHICLE_RAPTOR
 #define VEHICLE_RAPTOR
 #include "raptor.qh"
+int v_raptor(int);
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RAPTOR,
 /* function   */ v_raptor,
@@ -785,7 +786,7 @@ float raptor_impulse(float _imp)
 void spawnfunc_vehicle_raptor()
 {
 	if(!autocvar_g_vehicle_raptor) { remove(self); return; }
-	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_RAPTOR.vehicleid, false)) { remove(self); return; }
 }
 
 float v_raptor(float req)
