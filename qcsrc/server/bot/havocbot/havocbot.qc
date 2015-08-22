@@ -914,24 +914,21 @@ void havocbot_chooseenemy()
 	while(true)
 	{
 		scan_secondary_targets = false;
-		while(head)
+		:scan_targets
+		for( ; head; head = head.chain)
 		{
 			if(!scan_secondary_targets)
 			{
 				if(head.classname == "misc_breakablemodel")
 				{
 					have_secondary_targets = true;
-					head = head.chain;
 					continue;
 				}
 			}
 			else
 			{
 				if(head.classname != "misc_breakablemodel")
-				{
-					head = head.chain;
 					continue;
-				}
 			}
 
 			v = (head.absmin + head.absmax) * 0.5;
@@ -947,16 +944,15 @@ void havocbot_chooseenemy()
 					bestrating = rating;
 				}
 			}
+		}
 
-			if(!best && have_secondary_targets && !scan_secondary_targets)
-			{
-				scan_secondary_targets = true;
-				// restart the loop
-				head = head2;
-				bestrating = 100000000;
-			}
-			else
-				head = head.chain;
+		if(!best && have_secondary_targets && !scan_secondary_targets)
+		{
+			scan_secondary_targets = true;
+			// restart the loop
+			head = head2;
+			bestrating = 100000000;
+			goto scan_targets;
 		}
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
