@@ -14,7 +14,6 @@
 #undef IMPLEMENTATION
 
 // VEHICLE PLUGIN SYSTEM
-entity vehicle_info[VEH_MAXCOUNT];
 entity dummy_vehicle_info;
 
 void vehicles_common_initialize()
@@ -48,10 +47,9 @@ void vehicles_common_initialize()
 #endif // SVQC
 }
 
-void register_vehicle(float id, float(float) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname)
+void register_vehicle(entity e, float id, float(float) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname)
 {
-	entity e;
-	vehicle_info[id - 1] = e = spawn();
+	vehicle_info[id - 1] = e;
 	e.classname = "vehicle_info";
 	e.vehicleid = id;
 	e.netname = shortname;
@@ -72,7 +70,6 @@ void register_vehicle(float id, float(float) func, float vehicleflags, vector mi
 	vehicles_common_initialize();
 	#endif
 }
-float v_null(float dummy) { return 0; }
 void register_vehicles_done()
 {
 	dummy_vehicle_info = spawn();

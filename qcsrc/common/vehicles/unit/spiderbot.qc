@@ -1,6 +1,6 @@
 #ifndef VEHICLE_SPIDERBOT
 #define VEHICLE_SPIDERBOT
-REGISTER_VEHICLE(
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ SPIDERBOT,
 /* function   */ v_spiderbot,
 /* spawnflags */ VHF_DMGSHAKE,

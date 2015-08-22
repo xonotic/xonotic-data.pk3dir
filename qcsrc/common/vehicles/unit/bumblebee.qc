@@ -1,7 +1,7 @@
 #ifndef VEHICLE_BUMBLEBEE
 #define VEHICLE_BUMBLEBEE
 #include "bumblebee.qh"
-REGISTER_VEHICLE(
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ BUMBLEBEE,
 /* function   */ v_bumblebee,
 /* spawnflags */ VHF_DMGSHAKE,

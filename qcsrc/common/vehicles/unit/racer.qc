@@ -1,6 +1,6 @@
 #ifndef VEHICLE_RACER
 #define VEHICLE_RACER
-REGISTER_VEHICLE(
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RACER,
 /* function   */ v_racer,
 /* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
@@ -859,9 +859,10 @@ bool v_racer(int req)
 
 			precache_model ("models/vhshield.md3");
 		#endif
-
+		#ifndef MENUQC
 			precache_model ("models/vehicles/wakizashi.dpm");
 			precache_model ("models/vehicles/wakizashi_cockpit.dpm");
+		#endif
 			return true;
 		}
 	}

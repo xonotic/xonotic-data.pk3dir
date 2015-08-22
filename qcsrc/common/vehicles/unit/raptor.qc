@@ -1,7 +1,7 @@
 #ifndef VEHICLE_RAPTOR
 #define VEHICLE_RAPTOR
 #include "raptor.qh"
-REGISTER_VEHICLE(
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RAPTOR,
 /* function   */ v_raptor,
 /* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,

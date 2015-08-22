@@ -147,7 +147,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
-	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 
 	WaypointSprite_Load();
 

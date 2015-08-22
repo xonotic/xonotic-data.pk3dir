@@ -57,18 +57,15 @@ weapons/projectile.qc // TODO
 ../common/viewloc.qc
 
 ../common/items/all.qc
-
 ../common/monsters/all.qc
-
-../common/weapons/all.qc // TODO
+../common/vehicles/all.qc
+../common/weapons/all.qc
 
 ../common/triggers/include.qc
 
 ../csqcmodellib/cl_model.qc
 ../csqcmodellib/cl_player.qc
 ../csqcmodellib/interpolate.qc
-
-../common/vehicles/all.qc
 
 ../server/mutators/mutator_multijump.qc
 

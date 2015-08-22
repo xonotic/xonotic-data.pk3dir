@@ -65,38 +65,30 @@ entity get_vehicleinfo(float id);
 //  Vehicle Registration
 // =====================
 
-int v_null(int dummy);
-void register_vehicle(int id, int(int) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname);
+void RegisterVehicles();
+const int VEH_MAXCOUNT = 24;
+entity vehicle_info[VEH_MAXCOUNT], vehicle_info_first, vehicle_info_last;
+int VEH_COUNT;
+const int VEH_FIRST = 1;
+#define VEH_LAST (VEH_FIRST + VEH_COUNT - 1)
+/** If you register a new vehicle, make sure to add it to all.inc */
+#define REGISTER_VEHICLE(id, class) REGISTER(RegisterVehicles, vehicle_info, vehicle_info, VEH_COUNT, id, m_id, NEW(class))
+#include "vehicle.qh"
+#define REGISTER_VEHICLE_SIMPLE(id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname) \
+    int VEH_##id; \
+    int func(int); \
+    REGISTER_VEHICLE(id, Vehicle) { \
+		VEH_##id = VEH_LAST; \
+        register_vehicle(this,VEH_##id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname); \
+    } \
+    REGISTER_INIT(vehicle_info, id)
+REGISTER_REGISTRY(RegisterVehicles)
+
+void register_vehicle(entity e, int id, int(int) func, float vehicleflags, vector min_s, vector max_s, string modelname, string headmodelname, string hudmodelname, string headtag, string hudtag, string viewtag, string shortname, string vname);
 void register_vehicles_done();
 
-const int VEH_MAXCOUNT = 24;
-#define VEH_FIRST 1
-int VEH_COUNT;
-int VEH_LAST;
-
-#define REGISTER_VEHICLE_2(id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname) \
-	int id; \
-	int func(int); \
-	void RegisterVehicles_##id() \
-	{ \
-		VEH_LAST = (id = VEH_FIRST + VEH_COUNT); \
-		++VEH_COUNT; \
-		register_vehicle(id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname); \
-	} \
-	ACCUMULATE_FUNCTION(RegisterVehicles, RegisterVehicles_##id)
-#ifdef MENUQC
-#define REGISTER_VEHICLE(id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname) \
-	REGISTER_VEHICLE_2(VEH_##id,v_null,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname)
-#else
-#define REGISTER_VEHICLE(id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname) \
-	REGISTER_VEHICLE_2(VEH_##id,func,vehicleflags,min_s,max_s,modelname,headmodelname,hudmodelname,headtag,hudtag,viewtag,shortname,vname)
-#endif
-
 #include "all.inc"
 
-#undef REGISTER_VEHICLE
 ACCUMULATE_FUNCTION(RegisterVehicles, register_vehicles_done);
-
-#include "all.inc"
 
 #endif
