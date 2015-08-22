@@ -921,13 +921,17 @@ void havocbot_chooseenemy()
 				if(head.classname == "misc_breakablemodel")
 				{
 					have_secondary_targets = true;
+					head = head.chain;
 					continue;
 				}
 			}
 			else
 			{
 				if(head.classname != "misc_breakablemodel")
+				{
+					head = head.chain;
 					continue;
+				}
 			}
 
 			v = (head.absmin + head.absmax) * 0.5;
