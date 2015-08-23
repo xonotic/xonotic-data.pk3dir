@@ -35,4 +35,7 @@ string cmd_string;
     /**/
 MUTATOR_HOOKABLE(CSQC_ConsoleCommand, EV_CSQC_ConsoleCommand);
 
+/* Called when the crosshair is being updated */
+MUTATOR_HOOKABLE(UpdateCrosshair, EV_NO_ARGS);
+
 #endif

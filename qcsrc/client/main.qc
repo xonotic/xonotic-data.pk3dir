@@ -23,6 +23,8 @@
 #include "wall.qh"
 #include "waypointsprites.qh"
 
+#include "mutators/events.qh"
+
 #include "../common/vehicles/unit/bumblebee.qh"
 #include "../common/vehicles/cl_vehicles.qh"
 #include "../common/vehicles/vehicles.qh"
