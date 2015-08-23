@@ -1,5 +1,8 @@
-#ifdef REGISTER_VEHICLE
-REGISTER_VEHICLE(
+#ifndef VEHICLE_BUMBLEBEE
+#define VEHICLE_BUMBLEBEE
+#include "bumblebee.qh"
+int v_bumblebee(int);
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ BUMBLEBEE,
 /* function   */ v_bumblebee,
 /* spawnflags */ VHF_DMGSHAKE,
@@ -10,8 +13,12 @@ REGISTER_VEHICLE(
 /* tags	   	  */ "", "", "tag_viewport",
 /* netname	  */ "bumblebee",
 /* fullname   */ _("Bumblebee")
-);
-#else
+) {
+    this.m_icon = "vehicle_bumble";
+}
+#endif
+
+#ifdef IMPLEMENTATION
 
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
@@ -656,7 +663,7 @@ void bumblebee_land()
 
 void bumblebee_exit(float eject)
 {
-	if(self.owner.vehicleid == VEH_BUMBLEBEE)
+	if(self.owner.vehicleid == VEH_BUMBLEBEE.vehicleid)
 	{
 		bumblebee_gunner_exit(eject);
 		return;
@@ -1096,7 +1103,7 @@ float v_bumblebee(float req)
 	{
 		case VR_HUD:
 		{
-			Vehicles_drawHUD("vehicle_bumble", "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
+			Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 vCROSS_HEAL);

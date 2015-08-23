@@ -1704,6 +1704,12 @@ MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ons_PlayHitsound)
+{
+	return (frag_victim.classname == "onslaught_generator" && !frag_victim.isshielded)
+		|| (frag_victim.classname == "onslaught_controlpoint_icon" && !frag_victim.owner.isshielded);
+}
+
 MUTATOR_DEFINITION(gamemode_onslaught)
 {
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ons_BuildMutatorsPrettyString, CBC_ORDER_ANY);
@@ -1712,6 +1718,7 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	MUTATOR_HOOK(TurretSpawn, ons_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterMove, ons_MonsterThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, ons_MonsterSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayHitsound, ons_PlayHitsound, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(Spawn_Score, ons_Spawn_Score, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

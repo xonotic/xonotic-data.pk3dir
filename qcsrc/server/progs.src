@@ -87,7 +87,6 @@ weapons/weaponsystem.qc
 ../common/campaign_setup.qc
 ../common/effects.qc
 ../common/mapinfo.qc
-../common/monsters/all.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
 ../common/movetypes/include.qc
@@ -102,9 +101,12 @@ weapons/weaponsystem.qc
 ../common/triggers/include.qc
 ../common/urllib.qc
 ../common/util.qc
-../common/vehicles/vehicles_include.qc
 
 ../common/items/all.qc
+../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
+../common/weapons/all.qc // TODO
 
 ../common/turrets/sv_turrets.qc
 ../common/turrets/config.qc
@@ -113,7 +115,6 @@ weapons/weaponsystem.qc
 ../common/turrets/checkpoint.qc
 ../common/turrets/targettrigger.qc
 ../common/weapons/config.qc
-../common/weapons/all.qc // TODO
 
 ../csqcmodellib/sv_model.qc
 

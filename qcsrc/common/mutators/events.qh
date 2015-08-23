@@ -3,7 +3,27 @@
 
 #define EV_NO_ARGS(i, o)
 
+#pragma noref 1
 string ret_string;
+
+#define MUTATOR_TYPES(_, x) \
+    _(x, bool) \
+    _(x, int) \
+    _(x, entity) \
+    _(x, float) \
+    _(x, vector) \
+    _(x, string) \
+    /**/
+
+#define MUTATOR_NEWGLOBAL(x, type) type mutator_argv_##type##_##x;
+
+MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 0)
+MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 1)
+
+#undef MUTATOR_TYPES
+#undef MUTATOR_NEWGLOBAL
+
+#pragma noref 0
 
 /** appends ":mutatorname" to ret_string for logging */
 #define EV_BuildMutatorsString(i, o) \

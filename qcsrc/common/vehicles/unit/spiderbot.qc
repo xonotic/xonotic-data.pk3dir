@@ -1,5 +1,7 @@
-#ifdef REGISTER_VEHICLE
-REGISTER_VEHICLE(
+#ifndef VEHICLE_SPIDERBOT
+#define VEHICLE_SPIDERBOT
+int v_spiderbot(int);
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ SPIDERBOT,
 /* function   */ v_spiderbot,
 /* spawnflags */ VHF_DMGSHAKE,
@@ -10,8 +12,12 @@ REGISTER_VEHICLE(
 /* tags	   	  */ "tag_head", "tag_hud", "",
 /* netname	  */ "spiderbot",
 /* fullname   */ _("Spiderbot")
-);
-#else
+) {
+    this.m_icon = "vehicle_spider";
+}
+#endif
+
+#ifdef IMPLEMENTATION
 
 const int SBRM_FIRST = 1;
 const int SBRM_VOLLY = 1;
@@ -959,7 +965,7 @@ float v_spiderbot(float req)
 				default:             crosshair = vCROSS_BURST;
 			}
 
-			Vehicles_drawHUD("vehicle_spider", "vehicle_spider_weapon1", "vehicle_spider_weapon2",
+			Vehicles_drawHUD(VEH_SPIDERBOT.m_icon, "vehicle_spider_weapon1", "vehicle_spider_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 crosshair);

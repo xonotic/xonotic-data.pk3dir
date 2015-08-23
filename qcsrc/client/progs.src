@@ -55,14 +55,14 @@ weapons/projectile.qc // TODO
 
 ../common/viewloc.qc
 
-../common/weapons/all.qc // TODO
-
 ../common/items/all.qc
-
 ../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
+../common/weapons/all.qc
+
 ../common/turrets/cl_turrets.qc
 ../common/turrets/turrets.qc
-
 
 ../common/triggers/include.qc
 
@@ -70,13 +70,10 @@ weapons/projectile.qc // TODO
 ../csqcmodellib/cl_player.qc
 ../csqcmodellib/interpolate.qc
 
-../common/vehicles/vehicles_include.qc
-
 ../server/mutators/mutator_multijump.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc
-
 ../warpzonelib/common.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/util_server.qc

@@ -17,7 +17,7 @@
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
-#include "../common/vehicles/sv_vehicles.qh"
+#include "../common/vehicles/all.qh"
 #include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/sv_model.qh"

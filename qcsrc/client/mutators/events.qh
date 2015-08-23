@@ -35,4 +35,18 @@ string cmd_string;
     /**/
 MUTATOR_HOOKABLE(CSQC_ConsoleCommand, EV_CSQC_ConsoleCommand);
 
+/* Called when the crosshair is being updated */
+MUTATOR_HOOKABLE(UpdateCrosshair, EV_NO_ARGS);
+
+/**
+ * Called when a temp entity is parsed
+ * NOTE: hooks MUST start with `if (MUTATOR_RETURNVALUE) return false;`
+ * NOTE: hooks MUST start with `if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return false;`
+ * NOTE: return true if you handled the command, return false to continue handling
+ */
+#define EV_CSQC_Parse_TempEntity(i, o) \
+    /** entity id */ i(int, mutator_argv_int_0) \
+    /**/
+MUTATOR_HOOKABLE(CSQC_Parse_TempEntity, EV_CSQC_Parse_TempEntity);
+
 #endif

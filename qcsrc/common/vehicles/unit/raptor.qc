@@ -1,5 +1,8 @@
-#ifdef REGISTER_VEHICLE
-REGISTER_VEHICLE(
+#ifndef VEHICLE_RAPTOR
+#define VEHICLE_RAPTOR
+#include "raptor.qh"
+int v_raptor(int);
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RAPTOR,
 /* function   */ v_raptor,
 /* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
@@ -10,8 +13,12 @@ REGISTER_VEHICLE(
 /* tags	   	  */ "", "tag_hud", "tag_camera",
 /* netname	  */ "raptor",
 /* fullname   */ _("Raptor")
-);
-#else
+) {
+    this.m_icon = "vehicle_raptor";
+}
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 bool autocvar_g_vehicle_raptor;
@@ -1038,7 +1045,7 @@ float v_raptor(float req)
 				default:        crosshair = vCROSS_BURST;
 			}
 			
-			Vehicles_drawHUD("vehicle_raptor", "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
+			Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 crosshair);

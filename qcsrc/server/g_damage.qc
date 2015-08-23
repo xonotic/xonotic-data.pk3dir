@@ -7,7 +7,7 @@
 #include "waypointsprites.qh"
 #include "spawnpoints.qh"
 #include "t_items.qh"
-#include "../common/vehicles/sv_vehicles.qh"
+#include "../common/vehicles/all.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -844,7 +844,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim))
+			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim))
 			{
 				if(DIFF_TEAM(victim, attacker) && !victim.frozen)
 				{
