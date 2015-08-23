@@ -8,7 +8,7 @@ float autocvar_cl_damagetext_alpha_start = 1;
 float autocvar_cl_damagetext_alpha_lifetime = 3;
 vector autocvar_cl_damagetext_velocity = '0 0 20';
 vector autocvar_cl_damagetext_offset = '0 -40 0';
-float autocvar_cl_damagetext_accumulate_range = 300;
+float autocvar_cl_damagetext_accumulate_range = 30;
 
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color)
