@@ -1,6 +1,7 @@
 REGISTER_MUTATOR(damagetext, true);
 
 #ifdef CSQC
+string autocvar_cl_damagetext_format = "-%3$d";
 vector autocvar_cl_damagetext_color = '1 1 0';
 float autocvar_cl_damagetext_size = 8;
 float autocvar_cl_damagetext_alpha_start = 1;
@@ -30,7 +31,7 @@ CLASS(DamageText, Object)
         vector pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
         if (pos.z >= 0 && this.m_size > 0) {
             pos.z = 0;
-            string s = sprintf("-%d", this.m_damage + this.m_armordamage);
+            string s = sprintf(autocvar_cl_damagetext_format, this.m_damage, this.m_armordamage, this.m_damage + this.m_armordamage);
             drawstring(pos, s, this.m_size * '1 1 0', this.m_color, this.alpha, DRAWFLAG_NORMAL);
         }
     }
