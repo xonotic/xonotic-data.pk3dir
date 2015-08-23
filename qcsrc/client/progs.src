@@ -64,8 +64,6 @@ weapons/projectile.qc // TODO
 ../common/turrets/turrets.qc
 
 
-../common/weapons/all.qc // TODO
-
 ../common/triggers/include.qc
 
 ../csqcmodellib/cl_model.qc
