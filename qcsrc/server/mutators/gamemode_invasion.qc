@@ -1,3 +1,11 @@
+#include "gamemode_invasion.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
+
 void spawnfunc_invasion_spawnpoint()
 {
 	if(!g_invasion) { remove(self); return; }
@@ -12,7 +20,7 @@ void spawnfunc_invasion_spawnpoint()
 float invasion_PickMonster(float supermonster_count)
 {
 	if(autocvar_g_invasion_zombies_only)
-		return MON_ZOMBIE;
+		return MON_ZOMBIE.monsterid;
 
 	float i;
 	entity mon;
@@ -358,7 +366,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
 {
-	if(!(checkentity.flags & FL_MONSTER))
+	if(!IS_MONSTER(checkentity))
 		return true;
 
 	return false;
@@ -374,7 +382,7 @@ MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
 {
-	if(frag_target.flags & FL_MONSTER)
+	if(IS_MONSTER(frag_target))
 		return MUT_ACCADD_INVALID;
 	return MUT_ACCADD_INDIFFERENT;
 }
@@ -423,7 +431,7 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 void invasion_Initialize()
 {
 	if(autocvar_g_invasion_zombies_only)
-		MON_ACTION(MON_ZOMBIE, MR_PRECACHE);
+		MON_ACTION(MON_ZOMBIE.monsterid, MR_PRECACHE);
 	else
 	{
 		float i;

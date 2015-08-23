@@ -1,13 +1,11 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../dpdefs/keycodes.qh"
-	#include "../common/constants.qh"
-	#include "autocvars.qh"
-	#include "hud.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "hud_config.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+
+#include "../common/constants.qh"
+
+#include "../dpdefs/keycodes.qh"
 
 
 #define HUD_Write(s) fputs(fh, s)
@@ -98,6 +96,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_timeout_speed_in");
 					HUD_Write_PanelCvar_q("_timeout_speed_out");
 					HUD_Write_PanelCvar_q("_onlyowned");
+					HUD_Write_PanelCvar_q("_noncurrent_alpha");
+					HUD_Write_PanelCvar_q("_noncurrent_scale");
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");
@@ -110,12 +110,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_POWERUPS:
-					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_strength");
-					HUD_Write_PanelCvar_q("_progressbar_shield");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
@@ -204,6 +201,15 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
 					HUD_Write_PanelCvar_q("_fade_minfontsize");
 					break;
+				case HUD_PANEL_ITEMSTIME:
+					HUD_Write_PanelCvar_q("_iconalign");
+					HUD_Write_PanelCvar_q("_progressbar");
+					HUD_Write_PanelCvar_q("_progressbar_name");
+					HUD_Write_PanelCvar_q("_progressbar_reduced");
+					HUD_Write_PanelCvar_q("_text");
+					HUD_Write_PanelCvar_q("_ratio");
+					HUD_Write_PanelCvar_q("_dynamicsize");
+					break;
 			}
 			HUD_Write("\n");
 		}
@@ -234,6 +240,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	int i;
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		panel = hud_panel[i];
+		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
 		if(!panel_enabled) continue;
@@ -330,6 +337,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	int i;
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
 		panel = hud_panel[i];
+		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
 		if(!panel_enabled) continue;
@@ -433,8 +441,7 @@ void HUD_Panel_SetPosSize(vector mySize)
 {
 	panel = highlightedPanel;
 	HUD_Panel_UpdatePosSize();
-	vector resizeorigin;
-	resizeorigin = panel_click_resizeorigin;
+	vector resizeorigin = panel_click_resizeorigin;
 	vector myPos;
 
 	// minimum panel size cap
@@ -567,7 +574,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 
 	if (hudShiftState & S_ALT) // resize
 	{
-		highlightedAction = 1;
 		if(nPrimary == K_UPARROW)
 			resizeCorner = 1;
 		else if(nPrimary == K_RIGHTARROW)
@@ -604,7 +610,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 	else // move
 	{
-		highlightedAction = 2;
 		vector pos;
 		pos = panel_pos;
 		if(nPrimary == K_UPARROW)
@@ -746,15 +751,14 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (!menu_enabled)
 			cvar_set("_hud_configure", "0");
 	}
-	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // select and highlight another panel
+	else if(nPrimary == K_TAB && hudShiftState & S_CTRL) // switch panel
 	{
 		if (bInputType == 1 || mouseClicked)
 			return true;
 
-		//FIXME: if a panel is highlighted, has the same pos_x and lays in the same level
-		//of other panels then next consecutive ctrl-tab will select the highlighted panel too
-		//(it should only after every other panel of the hud)
-		//It's a minor bug anyway, we can live with it
+		// FIXME minor bug: if a panel is highlighted, has the same pos_x and
+		// lays in the same level of another panel then the next consecutive
+		// CTRL TAB presses will reselect once more the highlighted panel
 
 		entity starting_panel;
 		entity old_tab_panel = tab_panel;
@@ -793,6 +797,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			for(i = 0; i < HUD_PANEL_NUM; ++i)
 			{
 				panel = hud_panel[i];
+				if(panel == HUD_PANEL(MAPVOTE))
+					continue;
 				if (panel == tab_panels[i] || panel == starting_panel)
 					continue;
 				HUD_Panel_UpdatePosSize();
@@ -899,6 +905,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			highlightedPanel_backup = world;
 		}
 	}
+	else if(nPrimary == 's' && hudShiftState & S_CTRL) // save config
+	{
+		if (bInputType == 1 || mouseClicked)
+			return true;
+		localcmd("hud save myconfig\n");
+	}
 	else if(nPrimary == K_UPARROW || nPrimary == K_DOWNARROW || nPrimary == K_LEFTARROW || nPrimary == K_RIGHTARROW)
 	{
 		if (bInputType == 1)
@@ -919,7 +931,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (highlightedPanel)
 			HUD_Panel_EnableMenu();
 	}
-	else if(hit_con_bind)
+	else if(hit_con_bind || nPrimary == K_PAUSE)
 		return false;
 
 	return true;
@@ -934,6 +946,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		j += 1;
 
 		panel = hud_panel[i];
+		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		HUD_Panel_UpdatePosSize();
 
 		float border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
@@ -1015,6 +1028,8 @@ void HUD_Panel_Highlight(float allow_move)
 		j += 1;
 
 		panel = hud_panel[i];
+		if(panel == HUD_PANEL(MAPVOTE))
+			continue;
 		HUD_Panel_UpdatePosSize();
 
 		float border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
@@ -1178,6 +1193,8 @@ void HUD_Panel_Mouse()
 	}
 	else
 	{
+		if(prevMouseClicked)
+			highlightedAction = 0;
 		if(menu_enabled == 2)
 			mouse_over_panel = 0;
 		else

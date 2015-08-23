@@ -1,21 +1,23 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
-#ifdef INTERFACE
-CLASS(Slider) EXTENDS(Label)
-	METHOD(Slider, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Slider, configureSliderVisuals, void(entity, float, float, float, string))
-	METHOD(Slider, configureSliderValues, void(entity, float, float, float, float, float, float))
-	METHOD(Slider, draw, void(entity))
-	METHOD(Slider, keyDown, float(entity, float, float, float))
-	METHOD(Slider, keyUp, float(entity, float, float, float))
-	METHOD(Slider, mousePress, float(entity, vector))
-	METHOD(Slider, mouseDrag, float(entity, vector))
-	METHOD(Slider, mouseRelease, float(entity, vector))
-	METHOD(Slider, valueToText, string(entity, float))
-	METHOD(Slider, toString, string(entity))
-	METHOD(Slider, setValue, void(entity, float))
-	METHOD(Slider, setSliderValue, void(entity, float))
-	METHOD(Slider, showNotify, void(entity))
+#ifndef ITEM_SLIDER_H
+#define ITEM_SLIDER_H
+#include "label.qc"
+CLASS(Slider, Label)
+	METHOD(Slider, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Slider, configureSliderVisuals, void(entity, float, float, float, string));
+	METHOD(Slider, configureSliderValues, void(entity, float, float, float, float, float, float));
+	METHOD(Slider, draw, void(entity));
+	METHOD(Slider, keyDown, float(entity, float, float, float));
+	METHOD(Slider, keyUp, float(entity, float, float, float));
+	METHOD(Slider, mousePress, float(entity, vector));
+	METHOD(Slider, mouseDrag, float(entity, vector));
+	METHOD(Slider, mouseRelease, float(entity, vector));
+	METHOD(Slider, valueToText, string(entity, float));
+	METHOD(Slider, toString, string(entity));
+	METHOD(Slider, setValue, void(entity, float));
+	METHOD(Slider, setSliderValue, void(entity, float));
+	METHOD(Slider, showNotify, void(entity));
 	ATTRIB(Slider, src, string, string_null)
 	ATTRIB(Slider, focusable, float, 1)
 	ATTRIB(Slider, allowFocusSound, float, 1)

@@ -1,5 +1,5 @@
-#ifndef MARKUP_H
-#define MARKUP_H
+#ifndef COMMAND_MARKUP_H
+#define COMMAND_MARKUP_H
 
 // ==========================================================
 //  Declarations for markup command code, reworked by Samual

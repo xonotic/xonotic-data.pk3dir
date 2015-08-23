@@ -1,6 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticSandboxToolsDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticSandboxToolsDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
+#ifndef DIALOG_SANDBOXTOOLS_H
+#define DIALOG_SANDBOXTOOLS_H
+#include "rootdialog.qc"
+CLASS(XonoticSandboxToolsDialog, XonoticRootDialog)
+	METHOD(XonoticSandboxToolsDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
 	ATTRIB(XonoticSandboxToolsDialog, title, string, _("Sandbox Tools")) // ;)
 	ATTRIB(XonoticSandboxToolsDialog, color, vector, SKINCOLOR_DIALOG_SANDBOXTOOLS)
 	ATTRIB(XonoticSandboxToolsDialog, intendedWidth, float, 0.8)

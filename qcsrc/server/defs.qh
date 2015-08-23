@@ -1,7 +1,7 @@
 #ifndef SERVER_DEFS_H
 #define SERVER_DEFS_H
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #define INDEPENDENT_ATTACK_FINISHED
 
@@ -46,8 +46,6 @@ float g_jetpack;
 float sv_clones;
 float sv_foginterval;
 
-entity	activator;
-
 float player_count;
 float currentbots;
 float bots_would_leave;
@@ -64,27 +62,17 @@ float server_is_dedicated;
 
 // Fields
 
-.void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;
+.void(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
 
 //.string	wad;
 //.string	map;
 
 //.float	worldtype;
-.float	delay;
-.float	wait;
-.float	lip;
-//.float	light_lev;
-.float	speed;
-//.float	style;
-//.float	skill;
-.float	sounds;
-.string  platmovetype;
-.float platmovetype_start, platmovetype_end;
-
-.string killtarget;
-
-.vector	pos1, pos2;
-.vector	mangle;
+// Needed for dynamic clientwalls
+.float inactive; // Clientwall disappears when inactive
+.float alpha_max, alpha_min;
+.float fade_start, fade_end, fade_vertical_offset;
+.float default_solid; // Variable to store default self.solid for clientwalls
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
@@ -94,14 +82,7 @@ float server_is_dedicated;
 .float	invincible_finished;
 .float	superweapons_finished;
 
-.vector		finaldest, finalangle; 		//plat.qc stuff
-.void()		think1;
-.float state;
-.float		t_length, t_width;
-
-.vector destvec;		// for rain
-.vector destvec2;		// for train
-.float cnt;		// for rain
+.float cnt; // used in too many places
 .float count;
 //.float cnt2;
 
@@ -112,15 +93,6 @@ float server_is_dedicated;
 .float death_time;
 .float fade_time;
 .float fade_rate;
-
-// player animation state
-.float animstate_startframe;
-.float animstate_numframes;
-.float animstate_framerate;
-.float animstate_starttime;
-.float animstate_endtime;
-.float animstate_override;
-.float animstate_looping;
 
 // weapon animation vectors:
 .vector anim_fire1;
@@ -138,6 +110,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 .float species;
 
+.float	scheduledrespawntime;
 .float	respawntime;
 .float	respawntimejitter;
 //.float	chasecam;
@@ -210,25 +183,12 @@ const int W_TICSPERFRAME = 2;
 
 void weapon_defaultspawnfunc(float wpn);
 
-.vector dest1, dest2;
-
 float gameover;
 float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
 
-// Keys player is holding
-.float itemkeys;
-// message delay for func_door locked by keys and key locks
-// this field is used on player entities
-.float key_door_messagetime;
-
-
 .float version;
-
-//swamp
-.float in_swamp;              // bool
-.entity swampslug;            // Uses this to release from swamp ("untouch" fix)
 
 // footstep interval
 .float nextstep;
@@ -250,7 +210,7 @@ float nJoinAllowed(entity ignore);
 
 .entity flagcarried;
 
-.float playerid;
+.int playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
@@ -284,10 +244,6 @@ float default_weapon_alpha;
 
 .float version_nagtime;
 
-const int NUM_JUMPPADSUSED = 3;
-.float jumppadcount;
-.entity jumppadsused[NUM_JUMPPADSUSED];
-
 string gamemode_name;
 
 float startitem_failed;
@@ -299,6 +255,8 @@ void FixClientCvars(entity e);
 
 // WEAPONTODO: remove this
 WepSet weaponsInMap;
+
+.WepSet weaponsinmap;
 
 .float respawn_countdown; // next number to count
 
@@ -333,7 +291,7 @@ float have_team_spawns_forteam[17]; // 0 = this team has no spawns, 1 = this tea
 .entity killindicator;
 .float killindicator_teamchange;
 
-void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 float lockteams;
 
@@ -347,7 +305,7 @@ float next_pingtime;
 
 .float Version;
 .int SendFlags;
-.float(entity to, float sendflags) SendEntity;
+.bool(entity to, int sendflags) SendEntity;
 
 // player sounds, voice messages
 // TODO implemented fall and falling
@@ -447,11 +405,6 @@ float round_starttime; //point in time when the countdown to round start is over
 .float stat_game_starttime;
 .float stat_round_starttime;
 
-.float stat_sv_airaccel_qw;
-.float stat_sv_airstrafeaccel_qw;
-.float stat_sv_airspeedlimit_nonqw;
-.float stat_sv_maxspeed;
-
 void W_Porto_Remove (entity p);
 
 .int projectiledeathtype;
@@ -463,16 +416,6 @@ void W_Porto_Remove (entity p);
 // reset to 0 on weapon switch
 // may be useful to all weapons
 .float bulletcounter;
-
-void target_voicescript_next(entity pl);
-void target_voicescript_clear(entity pl);
-
-.string target2;
-.string target3;
-.string target4;
-.string curvetarget;
-.float target_random;
-.float trigger_reverse;
 
 // Nexball
 .entity ballcarried; // Also used for keepaway
@@ -519,7 +462,7 @@ string matchid;
 
 .float stat_leadlimit;
 
-float radar_showennemies;
+bool radar_showennemies;
 
 #ifdef PROFILING
 float client_cefc_accumulator;
@@ -527,7 +470,7 @@ float client_cefc_accumulatortime;
 #endif
 
 .float weapon_load[WEP_MAXCOUNT];
-.float ammo_none; // used by the reloading system, must always be 0
+.int ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
@@ -539,7 +482,7 @@ float client_cefc_accumulatortime;
 .float vortex_chargepool_ammo;
 .float hagar_load;
 
-.float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
+.int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
 #define PROJECTILE_MAKETRIGGER(e) (e).solid = SOLID_CORPSE; (e).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE
 // when doing this, hagar can go through clones
@@ -570,6 +513,17 @@ const float ACTIVE_TOGGLE 	= 3;
 .void (float act_state) setactive;
 .entity realowner;
 
+.float item_armor_large_time;
+.float item_health_mega_time;
+.float item_invisible_time;
+.float item_speed_time;
+.float item_extralife_time;
+.float item_strength_time;
+.float item_shield_time;
+.float item_fuelregen_time;
+.float item_jetpack_time;
+.float item_superweapons_time;
+
 //float serverflags;
 
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
@@ -593,8 +547,6 @@ void PlayerUseKey();
 
 typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .spawn_evalfunc_t spawn_evalfunc;
-
-.entity conveyor;
 
 string modname;
 
@@ -623,6 +575,8 @@ const int MIF_GUIDED_TAG = 128;
 .string playernick;
 .float elos;
 .float ranks;
+
+.string cvar_cl_physics;
 
 .float init_for_player_needed;
 .void(entity) init_for_player;

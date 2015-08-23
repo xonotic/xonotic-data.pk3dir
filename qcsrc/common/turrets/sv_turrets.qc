@@ -206,7 +206,7 @@ void turret_die()
 	}
 }
 
-void turret_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
 	// Enough already!
 	if(self.deadflag == DEAD_DEAD)
@@ -444,7 +444,7 @@ void turret_projectile_touch()
 	turret_projectile_explode();
 }
 
-void turret_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void turret_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
 {
 	self.velocity  += vforce;
 	self.health	-= damage;
@@ -717,7 +717,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 		return -5;
 
 	// Cant touch this
-	if(e_target.vehicle_flags & VHF_ISVEHICLE)
+	if(IS_VEHICLE(e_target))
 	{
 		if (e_target.vehicle_health <= 0)
 			return -6;
@@ -1206,7 +1206,7 @@ void turrets_manager_think()
 		e = nextent(world);
 		while (e)
 		{
-			if (e.turret_flags & TUR_FLAG_ISTURRET)
+			if (IS_TURRET(e))
 			{
 				load_unit_settings(e,e.cvar_basename,1);
 				TUR_ACTION(self.turretid, TR_THINK);
@@ -1386,7 +1386,7 @@ float turret_initialize(float tur_id)
 	
 	TUR_ACTION(tur_id, TR_SETUP);
 	
-	if(MUTATOR_CALLHOOK(TurretSpawn))
+	if(MUTATOR_CALLHOOK(TurretSpawn, self))
 		return false;
 
 	return true;

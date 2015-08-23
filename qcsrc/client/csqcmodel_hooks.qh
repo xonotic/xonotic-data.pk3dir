@@ -1,0 +1,6 @@
+#ifndef CSQCMODEL_HOOKS
+#define CSQCMODEL_HOOKS
+
+void CSQCPlayer_Precache();
+
+#endif

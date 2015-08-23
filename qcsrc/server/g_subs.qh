@@ -70,12 +70,6 @@ void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector co
 
 void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest);
 
-float TSPEED_TIME = -1;
-float TSPEED_LINEAR = 0;
-float TSPEED_START = 1;
-float TSPEED_END = 2;
-// TODO average too?
-
 void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func);
 
 void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func);

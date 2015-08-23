@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ BLASTER,
 /* function  */ W_Blaster,
@@ -45,9 +45,10 @@ BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float blaster_force;
 .float blaster_lifetime;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_blaster(void) { weapon_defaultspawnfunc(WEP_BLASTER); }
+void spawnfunc_weapon_blaster(void) { weapon_defaultspawnfunc(WEP_BLASTER.m_id); }
 void spawnfunc_weapon_laser(void) { spawnfunc_weapon_blaster(); }
 
 void W_Blaster_Touch(void)
@@ -95,7 +96,7 @@ void W_Blaster_Attack(
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
 	W_SetupShot_Dir(self, s_forward, false, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, atk_damage);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("laser_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -136,7 +137,7 @@ void W_Blaster_Attack(
 	missile.think = W_Blaster_Think;
 	missile.nextthink = time + atk_delay;
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 
 	if(time >= missile.nextthink)
 	{
@@ -147,7 +148,7 @@ void W_Blaster_Attack(
 		self = oldself;
 	}
 }
-float W_Blaster(float request)
+bool W_Blaster(int request)
 {
 	switch(request)
 	{
@@ -173,7 +174,7 @@ float W_Blaster(float request)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(blaster, refire)))
 				{
 					W_Blaster_Attack(
-						WEP_BLASTER,
+						WEP_BLASTER.m_id,
 						WEP_CVAR_PRI(blaster, shotangle),
 						WEP_CVAR_PRI(blaster, damage),
 						WEP_CVAR_PRI(blaster, edgedamage),
@@ -193,7 +194,7 @@ float W_Blaster(float request)
 				{
 					case 0: // switch to last used weapon
 					{
-						if(self.switchweapon == WEP_BLASTER) // don't do this if already switching
+						if(self.switchweapon == WEP_BLASTER.m_id) // don't do this if already switching
 							W_LastWeapon();
 						break;
 					}
@@ -203,7 +204,7 @@ float W_Blaster(float request)
 						if(weapon_prepareattack(1, WEP_CVAR_SEC(blaster, refire)))
 						{
 							W_Blaster_Attack(
-								WEP_BLASTER | HITTYPE_SECONDARY,
+								WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 								WEP_CVAR_SEC(blaster, shotangle),
 								WEP_CVAR_SEC(blaster, damage),
 								WEP_CVAR_SEC(blaster, edgedamage),
@@ -266,7 +267,7 @@ float W_Blaster(float request)
 }
 #endif
 #ifdef CSQC
-float W_Blaster(float request)
+bool W_Blaster(int request)
 {
 	switch(request)
 	{

@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .float touchexplode_time;
 
 void PlayerTouchExplode(entity p1, entity p2)
@@ -7,7 +11,7 @@ void PlayerTouchExplode(entity p1, entity p2)
 	org.z += (p1.mins.z + p2.mins.z) * 0.5;
 
 	sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_small"), org, '0 0 0', 1);
+	Send_Effect("explosion_small", org, '0 0 0', 1);
 
 	entity e;
 	e = spawn();

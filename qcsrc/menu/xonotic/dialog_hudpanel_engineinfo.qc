@@ -1,6 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDEngineInfoDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDEngineInfoDialog, fill, void(entity))
+#ifndef DIALOG_HUDPANEL_ENGINEINFO_H
+#define DIALOG_HUDPANEL_ENGINEINFO_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDEngineInfoDialog, XonoticRootDialog)
+	METHOD(XonoticHUDEngineInfoDialog, fill, void(entity));
 	ATTRIB(XonoticHUDEngineInfoDialog, title, string, _("Engine Info Panel"))
 	ATTRIB(XonoticHUDEngineInfoDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDEngineInfoDialog, intendedWidth, float, 0.4)

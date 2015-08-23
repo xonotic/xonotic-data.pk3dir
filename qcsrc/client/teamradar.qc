@@ -1,8 +1,11 @@
-#if defined(CSQC)
-	#include "teamradar.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "teamradar.qh"
+#include "_all.qh"
+
+#include "hud.qh"
+
+#include "../common/util.qh"
+
+#include "../csqcmodellib/interpolate.qh"
 
 float vlen2d(vector v)
 {

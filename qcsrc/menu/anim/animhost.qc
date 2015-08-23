@@ -1,18 +1,20 @@
 #include "../menu.qh"
 
-#ifdef INTERFACE
-CLASS(AnimHost) EXTENDS(Object)
-	METHOD(AnimHost, addAnim, void(entity, entity))
-	METHOD(AnimHost, removeAnim, void(entity, entity))
-	METHOD(AnimHost, removeAllAnim, void(entity))
-	METHOD(AnimHost, removeObjAnim, void(entity, entity))
-	METHOD(AnimHost, stopAllAnim, void(entity))
-	METHOD(AnimHost, stopObjAnim, void(entity, entity))
-	METHOD(AnimHost, resumeAllAnim, void(entity))
-	METHOD(AnimHost, resumeObjAnim, void(entity, entity))
-	METHOD(AnimHost, finishAllAnim, void(entity))
-	METHOD(AnimHost, finishObjAnim, void(entity, entity))
-	METHOD(AnimHost, tickAll, void(entity))
+#ifndef ANIM_ANIMHOST_H
+#define ANIM_ANIMHOST_H
+#include "../oo/base.qh"
+CLASS(AnimHost, Object)
+	METHOD(AnimHost, addAnim, void(entity, entity));
+	METHOD(AnimHost, removeAnim, void(entity, entity));
+	METHOD(AnimHost, removeAllAnim, void(entity));
+	METHOD(AnimHost, removeObjAnim, void(entity, entity));
+	METHOD(AnimHost, stopAllAnim, void(entity));
+	METHOD(AnimHost, stopObjAnim, void(entity, entity));
+	METHOD(AnimHost, resumeAllAnim, void(entity));
+	METHOD(AnimHost, resumeObjAnim, void(entity, entity));
+	METHOD(AnimHost, finishAllAnim, void(entity));
+	METHOD(AnimHost, finishObjAnim, void(entity, entity));
+	METHOD(AnimHost, tickAll, void(entity));
 	ATTRIB(AnimHost, firstChild, entity, NULL)
 	ATTRIB(AnimHost, lastChild, entity, NULL)
 ENDCLASS(AnimHost)

@@ -1,13 +1,14 @@
-#ifdef INTERFACE
-CLASS(XonoticScreenshotBrowserTab) EXTENDS(XonoticTab)
-	METHOD(XonoticScreenshotBrowserTab, fill, void(entity))
-	ATTRIB(XonoticScreenshotBrowserTab, title, string, "Screenshot")
+#ifndef DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_H
+#define DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_H
+#include "tab.qc"
+CLASS(XonoticScreenshotBrowserTab, XonoticTab)
+	METHOD(XonoticScreenshotBrowserTab, fill, void(entity));
 	ATTRIB(XonoticScreenshotBrowserTab, intendedWidth, float, 1)
 	ATTRIB(XonoticScreenshotBrowserTab, rows, float, 21)
 	ATTRIB(XonoticScreenshotBrowserTab, columns, float, 6.5)
 	ATTRIB(XonoticScreenshotBrowserTab, name, string, "ScreenshotBrowser")
 
-	METHOD(XonoticScreenshotBrowserTab, loadPreviewScreenshot, void(entity, string))
+	METHOD(XonoticScreenshotBrowserTab, loadPreviewScreenshot, void(entity, string));
 	ATTRIB(XonoticScreenshotBrowserTab, screenshotImage, entity, NULL)
 	ATTRIB(XonoticScreenshotBrowserTab, currentScrPath, string, string_null)
 ENDCLASS(XonoticScreenshotBrowserTab)
@@ -18,7 +19,7 @@ entity makeXonoticScreenshotBrowserTab();
 entity makeXonoticScreenshotBrowserTab()
 {
 	entity me;
-	me = spawnXonoticScreenshotBrowserTab();
+	me = NEW(XonoticScreenshotBrowserTab);
 	me.configureDialog(me);
 	return me;
 }

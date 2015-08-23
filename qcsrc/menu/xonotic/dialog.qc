@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticDialog) EXTENDS(Dialog)
+#ifndef DIALOG_H
+#define DIALOG_H
+#include "../item/dialog.qc"
+CLASS(XonoticDialog, Dialog)
 	// still to be customized by user
 	/*
 	ATTRIB(XonoticDialog, closable, float, 1)
@@ -27,7 +29,7 @@ CLASS(XonoticDialog) EXTENDS(Dialog)
 
 	ATTRIB(XonoticDialog, alpha, float, SKINALPHA_TEXT)
 
-	METHOD(XonoticDialog, configureDialog, void(entity))
+	METHOD(XonoticDialog, configureDialog, void(entity));
 ENDCLASS(XonoticDialog)
 #ifndef IMPLEMENTATION
 entity currentDialog;

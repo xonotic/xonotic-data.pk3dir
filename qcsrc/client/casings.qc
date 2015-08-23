@@ -1,17 +1,18 @@
-#if defined(CSQC)
-	#include "movetypes.qh"
-	#include "prandom.qh"
-	#include "rubble.qh"
+#include "casings.qh"
+#include "_all.qh"
 
-	.float cnt;
-	.float alpha;
-	.int state;
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "../common/movetypes/movetypes.qh"
+#include "prandom.qh"
+#include "rubble.qh"
 
+#include "../common/util.qh"
 
-.bool silent;
+.float cnt;
+.float alpha;
+.int state;
+
+entityclass(Casing);
+class(Casing) .bool silent;
 
 void Casing_Delete()
 {

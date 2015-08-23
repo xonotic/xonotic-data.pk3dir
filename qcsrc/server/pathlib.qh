@@ -1,0 +1,48 @@
+#ifndef PATHLIB_H
+#define PATHLIB_H
+
+//#define PATHLIB_RDFIELDS
+#ifdef PATHLIB_RDFIELDS
+    #define path_next swampslug
+    #define path_prev lasertarget
+#else
+    .entity path_next;
+    .entity path_prev;
+#endif
+
+entity openlist;
+entity closedlist;
+entity scraplist;
+
+.float pathlib_node_g;
+.float pathlib_node_h;
+.float pathlib_node_f;
+
+float pathlib_open_cnt;
+float pathlib_closed_cnt;
+float pathlib_made_cnt;
+float pathlib_merge_cnt;
+float pathlib_recycle_cnt;
+float pathlib_searched_cnt;
+
+float pathlib_bestopen_seached;
+float pathlib_bestcash_hits;
+float pathlib_bestcash_saved;
+
+float pathlib_gridsize;
+
+float pathlib_movecost;
+float pathlib_movecost_diag;
+float pathlib_movecost_waterfactor;
+
+float pathlib_edge_check_size;
+
+float pathlib_foundgoal;
+entity goal_node;
+
+entity best_open_node;
+.float is_path_node;
+
+#define inwater(point) (pointcontents(point) == CONTENT_WATER)
+
+#endif

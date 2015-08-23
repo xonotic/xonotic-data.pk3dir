@@ -1,6 +1,7 @@
 #include "g_violence.qh"
+#include "_all.qh"
 
-float Violence_GibSplash_SendEntity(entity to, float sf)
+float Violence_GibSplash_SendEntity(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
 	WriteByte(MSG_ENTITY, self.state); // actually type

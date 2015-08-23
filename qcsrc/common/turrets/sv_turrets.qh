@@ -79,6 +79,10 @@ void turret_do_updates(entity e_turret);
 
 .float() turret_firecheckfunc; // TODO: deprecate!
 
+void turrets_setframe(float _frame, float client_only);
+
+float turret_initialize(float tur_id);
+
 /// Function to use for target evaluation. usualy turret_targetscore_generic
 .float(entity _turret, entity _target) turret_score_target;
 

@@ -1,13 +1,9 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-    #include "../common/stats.qh"
-    #include "../common/util.qh"
-    #include "autocvars.qh"
-    #include "../common/notifications.qh"
-    #include "main.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "announcer.qh"
+#include "_all.qh"
+
+#include "../common/notifications.qh"
+#include "../common/stats.qh"
+#include "../common/util.qh"
 
 bool announcer_1min;
 bool announcer_5min;

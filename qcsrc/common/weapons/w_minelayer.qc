@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ MINE_LAYER,
 /* function  */ W_MineLayer,
@@ -54,9 +54,10 @@ void W_MineLayer_Think(void);
 .float mine_time;
 .vector mine_orientation;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_minelayer(void) { weapon_defaultspawnfunc(WEP_MINE_LAYER); }
+void spawnfunc_weapon_minelayer(void) { weapon_defaultspawnfunc(WEP_MINE_LAYER.m_id); }
 
 void W_MineLayer_Stick(entity to)
 {
@@ -119,14 +120,14 @@ void W_MineLayer_Explode(void)
 
 	RadiusDamage(self, self.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), world, world, WEP_CVAR(minelayer, force), self.projectiledeathtype, other);
 
-	if(self.realowner.weapon == WEP_MINE_LAYER)
+	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
 		entity oldself;
 		oldself = self;
 		self = self.realowner;
-		if(!WEP_ACTION(WEP_MINE_LAYER, WR_CHECKAMMO1))
+		if(!WEP_ACTION(WEP_MINE_LAYER.m_id, WR_CHECKAMMO1))
 		{
-			self.cnt = WEP_MINE_LAYER;
+			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
@@ -146,14 +147,14 @@ void W_MineLayer_DoRemoteExplode(void)
 
 	RadiusDamage(self, self.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), world, world, WEP_CVAR(minelayer, remote_force), self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
-	if(self.realowner.weapon == WEP_MINE_LAYER)
+	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
 		entity oldself;
 		oldself = self;
 		self = self.realowner;
-		if(!WEP_ACTION(WEP_MINE_LAYER, WR_CHECKAMMO1))
+		if(!WEP_ACTION(WEP_MINE_LAYER.m_id, WR_CHECKAMMO1))
 		{
-			self.cnt = WEP_MINE_LAYER;
+			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
@@ -194,9 +195,9 @@ void W_MineLayer_ProximityExplode(void)
 	W_MineLayer_Explode();
 }
 
-float W_MineLayer_Count(entity e)
+int W_MineLayer_Count(entity e)
 {
-	float minecount = 0;
+	int minecount = 0;
 	entity mine;
 	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
@@ -261,7 +262,7 @@ void W_MineLayer_Think(void)
 	}
 
 	// remote detonation
-	if(self.realowner.weapon == WEP_MINE_LAYER)
+	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	if(self.realowner.deadflag == DEAD_NO)
 	if(self.minelayer_detonate)
 		W_MineLayer_RemoteExplode();
@@ -290,7 +291,7 @@ void W_MineLayer_Touch(void)
 	}
 }
 
-void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -327,7 +328,7 @@ void W_MineLayer_Attack(void)
 	W_DecreaseAmmo(WEP_CVAR(minelayer, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, "weapons/mine_fire.wav", CH_WEAPON_A, WEP_CVAR(minelayer, damage));
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("rocketlauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
 	mine.owner = mine.realowner = self;
@@ -347,7 +348,7 @@ void W_MineLayer_Attack(void)
 
 	mine.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(mine);
-	mine.projectiledeathtype = WEP_MINE_LAYER;
+	mine.projectiledeathtype = WEP_MINE_LAYER.m_id;
 	setsize(mine, '-4 -4 -4', '4 4 4'); // give it some size so it can be shot
 
 	setorigin(mine, w_shotorg - v_forward * 4); // move it back so it hits the wall at the right point
@@ -374,7 +375,7 @@ void W_MineLayer_Attack(void)
 
 	// common properties
 
-	other = mine; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, mine);
 
 	self.minelayer_mines = W_MineLayer_Count(self);
 }
@@ -400,7 +401,7 @@ float W_MineLayer_PlacedMines(float detonate)
 	return minfound;
 }
 
-float W_MineLayer(float req)
+bool W_MineLayer(int req)
 {
 	entity mine;
 	float ammo_amount;
@@ -548,10 +549,10 @@ float W_MineLayer(float req)
 		case WR_CHECKAMMO1:
 		{
 			// don't switch while placing a mine
-			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
+			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER.m_id)
 			{
 				ammo_amount = self.WEP_AMMO(MINE_LAYER) >= WEP_CVAR(minelayer, ammo);
-				ammo_amount += self.(weapon_load[WEP_MINE_LAYER]) >= WEP_CVAR(minelayer, ammo);
+				ammo_amount += self.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
 				return ammo_amount;
 			}
 			return true;
@@ -591,7 +592,7 @@ float W_MineLayer(float req)
 }
 #endif
 #ifdef CSQC
-float W_MineLayer(float req)
+bool W_MineLayer(int req)
 {
 	switch(req)
 	{

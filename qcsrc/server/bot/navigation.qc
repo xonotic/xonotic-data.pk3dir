@@ -1,3 +1,14 @@
+#include "navigation.qh"
+#include "../_all.qh"
+
+#include "bot.qh"
+#include "waypoints.qh"
+
+#include "../t_items.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/triggers/trigger/jumppads.qh"
+
 void bot_debug(string input)
 {
 	switch(autocvar_bot_debug)
@@ -387,7 +398,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	}
 
 	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org.z = ent.origin.z + ent.mins.z - PL_MIN_z; // player height
+	org.z = ent.origin.z + ent.mins.z - PL_MIN.z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
@@ -710,7 +721,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 			float zdistance, xydistance, cost, t, fuel;
 			vector down, npa, npb;
 
-			down = '0 0 -1' * (PL_MAX_z - PL_MIN_z) * 10;
+			down = '0 0 -1' * (PL_MAX.z - PL_MIN.z) * 10;
 
 			do{
 				npa = pointa + down;

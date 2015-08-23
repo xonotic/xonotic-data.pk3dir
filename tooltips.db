@@ -43,8 +43,12 @@
 \g_instagib\Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps.
 \g_nix\No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
 \g_nix_with_laser\Always carry the laser as an additional weapon in Nix
-\XonoticMultiplayerDialog/Select all\Select all maps
-\XonoticMultiplayerDialog/Select none\Unselect all maps
+
+\XonoticMultiplayerDialog_StringFilterBox\Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done.
+\XonoticMultiplayerDialog/Add shown\Add the maps shown in Maplist above to your selection
+\XonoticMultiplayerDialog/Remove shown\Remove the maps shown in Maplist above from your selection
+\XonoticMultiplayerDialog/Add all\Add every available map to your selection
+\XonoticMultiplayerDialog/Remove all\Remove all the maps from your selection
 
 
 \XonoticMultiplayerDialog/Timedemo\Benchmark how fast your computer can run the highlighted demo

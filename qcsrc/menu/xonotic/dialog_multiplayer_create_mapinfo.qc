@@ -1,7 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticMapInfoDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticMapInfoDialog, fill, void(entity))
-	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity))
+#ifndef DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
+#define DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
+#include "dialog.qc"
+CLASS(XonoticMapInfoDialog, XonoticDialog)
+	METHOD(XonoticMapInfoDialog, fill, void(entity));
+	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity));
 	ATTRIB(XonoticMapInfoDialog, title, string, _("Map Information"))
 	ATTRIB(XonoticMapInfoDialog, color, vector, SKINCOLOR_DIALOG_MAPINFO)
 	ATTRIB(XonoticMapInfoDialog, intendedWidth, float, 1.0)
@@ -26,7 +28,7 @@ ENDCLASS(XonoticMapInfoDialog)
 #endif
 
 #ifdef IMPLEMENTATION
-void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
+void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 {
 	me.currentMapIndex = i;
 	me.startButton.onClickEntity = mlb;
@@ -67,7 +69,8 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 void XonoticMapInfoDialog_fill(entity me)
 {
 	entity e;
-	float w, wgt, i, n;
+	int i;
+	float w, wgt, n;
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, me.rows - 2, 3, e = makeXonoticImage(string_null, 4.0/3.0));

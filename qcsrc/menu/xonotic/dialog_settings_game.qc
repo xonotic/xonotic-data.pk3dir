@@ -1,7 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticGameSettingsTab) EXTENDS(XonoticTab)
-	METHOD(XonoticGameSettingsTab, fill, void(entity))
-	ATTRIB(XonoticGameSettingsTab, title, string, _("Game"))
+#ifndef DIALOG_SETTINGS_GAME_H
+#define DIALOG_SETTINGS_GAME_H
+#include "tab.qc"
+CLASS(XonoticGameSettingsTab, XonoticTab)
+	METHOD(XonoticGameSettingsTab, fill, void(entity));
 	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5)
@@ -13,7 +14,7 @@ entity makeXonoticGameSettingsTab();
 entity makeXonoticGameSettingsTab()
 {
 	entity me;
-	me = spawnXonoticGameSettingsTab();
+	me = NEW(XonoticGameSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

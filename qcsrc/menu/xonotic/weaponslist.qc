@@ -1,15 +1,17 @@
-#ifdef INTERFACE
-CLASS(XonoticWeaponsList) EXTENDS(XonoticListBox)
-	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity))
-	METHOD(XonoticWeaponsList, toString, string(entity))
+#ifndef WEAPONSLIST_H
+#define WEAPONSLIST_H
+#include "listbox.qc"
+CLASS(XonoticWeaponsList, XonoticListBox)
+	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity));
+	METHOD(XonoticWeaponsList, toString, string(entity));
 	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1)
-	METHOD(XonoticWeaponsList, draw, void(entity))
-	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticWeaponsList, draw, void(entity));
+	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float));
 	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticWeaponsList, realUpperMargin, float, 0)
-	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector))
+	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector));
 ENDCLASS(XonoticWeaponsList)
 entity makeXonoticWeaponsList();
 void WeaponsList_MoveUp_Click(entity btn, entity me);
@@ -20,7 +22,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me);
 entity makeXonoticWeaponsList()
 {
 	entity me;
-	me = spawnXonoticWeaponsList();
+	me = NEW(XonoticWeaponsList);
 	me.configureXonoticWeaponsList(me);
 	return me;
 }
@@ -44,7 +46,7 @@ void WeaponsList_MoveUp_Click(entity box, entity me)
 	if(me.selectedItem > 0)
 	{
 		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem - 1, me.selectedItem));
-		me.selectedItem -= 1;
+		me.setSelected(me, me.selectedItem - 1);
 	}
 }
 void WeaponsList_MoveDown_Click(entity box, entity me)
@@ -52,7 +54,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me)
 	if(me.selectedItem < me.nItems - 1)
 	{
 		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, me.selectedItem + 1));
-		me.selectedItem += 1;
+		me.setSelected(me, me.selectedItem + 1);
 	}
 }
 void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
@@ -65,9 +67,8 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 }
 float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 {
-	float f, i;
-	i = me.selectedItem;
-	f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
+	int i = me.selectedItem;
+	float f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
 
 	if(me.pressed != 1) // don't change priority if the person is just scrolling
 	{
@@ -91,11 +92,16 @@ string XonoticWeaponsList_toString(entity me)
 	}
 	return substring(s, 0, strlen(s) - 2);
 }
-void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticWeaponsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	entity e;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 	e = get_weaponinfo(stof(argv(i)));
 	string msg = e.message;
 	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)

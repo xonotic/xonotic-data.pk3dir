@@ -1,8 +1,10 @@
-#ifdef INTERFACE
-CLASS(XonoticScoreboardFadeTimeSlider) EXTENDS(XonoticTextSlider)
-	METHOD(XonoticScoreboardFadeTimeSlider, configureXonoticScoreboardFadeTimeSlider, void(entity))
-	METHOD(XonoticScoreboardFadeTimeSlider, loadCvars, void(entity))
-	METHOD(XonoticScoreboardFadeTimeSlider, saveCvars, void(entity))
+#ifndef SLIDER_SBFADETIME_H
+#define SLIDER_SBFADETIME_H
+#include "textslider.qc"
+CLASS(XonoticScoreboardFadeTimeSlider, XonoticTextSlider)
+	METHOD(XonoticScoreboardFadeTimeSlider, configureXonoticScoreboardFadeTimeSlider, void(entity));
+	METHOD(XonoticScoreboardFadeTimeSlider, loadCvars, void(entity));
+	METHOD(XonoticScoreboardFadeTimeSlider, saveCvars, void(entity));
 ENDCLASS(XonoticScoreboardFadeTimeSlider)
 entity makeXonoticScoreboardFadeTimeSlider();
 #endif
@@ -11,7 +13,7 @@ entity makeXonoticScoreboardFadeTimeSlider();
 entity makeXonoticScoreboardFadeTimeSlider()
 {
 	entity me;
-	me = spawnXonoticScoreboardFadeTimeSlider();
+	me = NEW(XonoticScoreboardFadeTimeSlider);
 	me.configureXonoticScoreboardFadeTimeSlider(me);
 	return me;
 }

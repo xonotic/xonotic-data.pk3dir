@@ -1,40 +1,40 @@
 #include "g_world.qh"
+#include "_all.qh"
 
+#include "anticheat.qh"
+#include "antilag.qh"
+#include "bot/bot.qh"
+#include "campaign.qh"
+#include "cheats.qh"
+#include "cl_client.qh"
+#include "command/common.qh"
+#include "command/getreplies.qh"
+#include "command/sv_cmd.qh"
+#include "command/vote.qh"
+#include "g_hook.qh"
+#include "ipban.qh"
+#include "mapvoting.qh"
+#include "mutators/mutators_include.qh"
+#include "race.qh"
+#include "scores.qh"
+#include "teamplay.qh"
+#include "waypointsprites.qh"
+#include "weapons/weaponstats.qh"
 #include "../common/buffs.qh"
-
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../common/constants.qh"
-    #include "../common/stats.qh"
-    #include "../common/teams.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/sv_monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/weaponstats.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/notifications.qh"
-    #include "mutators/mutators_include.qh"
-    #include "campaign.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/common.qh"
-    #include "command/vote.qh"
-    #include "command/getreplies.qh"
-    #include "command/sv_cmd.qh"
-    #include "anticheat.qh"
-    #include "cheats.qh"
-	#include "../common/turrets/turrets.qh"
-    #include "../common/playerstats.qh"
-    #include "g_hook.qh"
-    #include "scores.qh"
-    #include "mapvoting.qh"
-    #include "ipban.qh"
-    #include "race.qh"
-    #include "antilag.qh"
-    #include "secret.qh"
-#endif
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/effects.qh"
+#include "../common/mapinfo.qh"
+#include "../common/monsters/all.qh"
+#include "../common/monsters/sv_monsters.qh"
+#include "../common/vehicles/vehicles.qh"
+#include "../common/notifications.qh"
+#include "../common/playerstats.qh"
+#include "../common/stats.qh"
+#include "../common/teams.qh"
+#include "../common/util.qh"
+#include "../common/items/all.qh"
+#include "../common/weapons/all.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -94,9 +94,7 @@ string redirection_target;
 float world_initialized;
 
 string GetGametype();
-void GotoNextMap(float reinit);
 void ShuffleMaplist();
-float(float reinit) DoNextMapOverride;
 
 void SetDefaultAlpha()
 {
@@ -192,6 +190,8 @@ void cvar_changes_init()
 		BADCVAR("g_configversion");
 		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
+		BADCVAR("sv_mapformat_is_quake2");
+		BADCVAR("sv_mapformat_is_quake3");
 		BADPREFIX("sv_world");
 
 		// client
@@ -274,6 +274,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
+		BADCVAR("g_invasion_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
@@ -377,6 +378,7 @@ void cvar_changes_init()
 		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_domination_point_limit");
+		BADCVAR("g_domination_teams_override");
 		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
@@ -397,6 +399,7 @@ void cvar_changes_init()
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_tdm_teams_override");
 		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
@@ -510,7 +513,7 @@ void detect_maptype()
 }
 
 entity randomseed;
-float RandomSeed_Send(entity to, float sf)
+float RandomSeed_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
@@ -558,13 +561,12 @@ void spawnfunc___init_dedicated_server(void)
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	static_init();
 	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -573,12 +575,14 @@ void spawnfunc___init_dedicated_server(void)
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
+void Item_ItemsTime_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
+void Physics_AddStats();
 void spawnfunc_worldspawn (void)
 {
-	float fd, l, i, j, n;
+	float fd, l, j, n;
 	string s;
 
 	cvar = cvar_normal;
@@ -607,13 +611,12 @@ void spawnfunc_worldspawn (void)
 	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	static_init();
 	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -689,14 +692,13 @@ void spawnfunc_worldspawn (void)
 	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
-		s = sprintf("%d.%s.%06d", ftos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
 		s = ":gameinfo:mutators:LIST";
 
-		ret_string = s;
-		MUTATOR_CALLHOOK(BuildMutatorsString);
+		MUTATOR_CALLHOOK(BuildMutatorsString, s);
 		s = ret_string;
 
 		// simple, probably not good in the mutator system
@@ -783,6 +785,7 @@ void spawnfunc_worldspawn (void)
 	WeaponStats_Init();
 
 	WepSet_AddStat();
+	WepSet_AddStat_InMap();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -813,15 +816,46 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
 
+	// items time
+	addstat(STAT_ARMOR_LARGE_TIME, AS_FLOAT, item_armor_large_time);
+	addstat(STAT_HEALTH_MEGA_TIME, AS_FLOAT, item_health_mega_time);
+	addstat(STAT_INVISIBLE_TIME, AS_FLOAT, item_invisible_time);
+	addstat(STAT_SPEED_TIME, AS_FLOAT, item_speed_time);
+	addstat(STAT_EXTRALIFE_TIME, AS_FLOAT, item_extralife_time);
+	addstat(STAT_STRENGTH_TIME, AS_FLOAT, item_strength_time);
+	addstat(STAT_SHIELD_TIME, AS_FLOAT, item_shield_time);
+	addstat(STAT_FUELREGEN_TIME, AS_FLOAT, item_fuelregen_time);
+	addstat(STAT_JETPACK_TIME, AS_FLOAT, item_jetpack_time);
+	addstat(STAT_SUPERWEAPONS_TIME, AS_FLOAT, item_superweapons_time);
+	Item_ItemsTime_Init();
+
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
 	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);
 
-	// g_movementspeed hack
-	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
-	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
-	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
-	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
+	// physics
+	Physics_AddStats();
+
+	// new properties
+	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
+	addstat(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, AS_FLOAT, stat_sv_airaccel_qw_stretchfactor);
+	addstat(STAT_MOVEVARS_MAXAIRSTRAFESPEED, AS_FLOAT, stat_sv_maxairstrafespeed);
+	addstat(STAT_MOVEVARS_MAXAIRSPEED, AS_FLOAT, stat_sv_maxairspeed);
+	addstat(STAT_MOVEVARS_AIRSTRAFEACCELERATE, AS_FLOAT, stat_sv_airstrafeaccelerate);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL, AS_FLOAT, stat_sv_warsowbunny_turnaccel);
+	addstat(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, AS_FLOAT, stat_sv_airaccel_sideways_friction);
+	addstat(STAT_MOVEVARS_AIRCONTROL, AS_FLOAT, stat_sv_aircontrol);
+	addstat(STAT_MOVEVARS_AIRCONTROL_POWER, AS_FLOAT, stat_sv_aircontrol_power);
+	addstat(STAT_MOVEVARS_AIRCONTROL_PENALTY, AS_FLOAT, stat_sv_aircontrol_penalty);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, AS_FLOAT, stat_sv_warsowbunny_airforwardaccel);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED, AS_FLOAT, stat_sv_warsowbunny_topspeed);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_ACCEL, AS_FLOAT, stat_sv_warsowbunny_accel);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, AS_FLOAT, stat_sv_warsowbunny_backtosideratio);
+	addstat(STAT_MOVEVARS_FRICTION, AS_FLOAT, stat_sv_friction);
+	addstat(STAT_MOVEVARS_ACCELERATE, AS_FLOAT, stat_sv_accelerate);
+	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
+	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
+	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
 
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
@@ -842,7 +876,7 @@ void spawnfunc_worldspawn (void)
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
 	monsterlist_reply = strzone(getmonsterlist());
-	for(i = 0; i < 10; ++i)
+	for(int i = 0; i < 10; ++i)
 	{
 		s = getrecords(i);
 		if (s)
@@ -865,7 +899,7 @@ void spawnfunc_worldspawn (void)
 	{
 		s = "";
 		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
-		for(i = 0; i < n; ++i)
+		for(int i = 0; i < n; ++i)
 			if(substring(argv(i), -18, -1) != "-serverpackage.txt")
 			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
 				s = strcat(s, " ", argv(i));
@@ -873,7 +907,7 @@ void spawnfunc_worldspawn (void)
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
-			for(i = 0; i < j; ++i)
+			for(int i = 0; i < j; ++i)
 				s = strcat(s, " ", search_getfilename(fd, i));
 			search_end(fd);
 		}
@@ -881,7 +915,7 @@ void spawnfunc_worldspawn (void)
 		if(fd >= 0)
 		{
 			j = search_getsize(fd);
-			for(i = 0; i < j; ++i)
+			for(int i = 0; i < j; ++i)
 				s = strcat(s, " ", search_getfilename(fd, i));
 			search_end(fd);
 		}
@@ -1653,7 +1687,7 @@ void SetWinners(.float field, float value)
 {
 	entity head;
 	FOR_EACH_PLAYER(head)
-		head.winning = (head.field == value);
+		head.winning = (head.(field) == value);
 }
 
 // set the .winning flag for those players with a given field value
@@ -1661,7 +1695,7 @@ void AddWinners(.float field, float value)
 {
 	entity head;
 	FOR_EACH_PLAYER(head)
-		if(head.field == value)
+		if (head.(field) == value)
 			head.winning = 1;
 }
 
@@ -1967,7 +2001,7 @@ float WinningCondition_RanOutOfSpawns()
 	if(have_team_spawns <= 0)
 		return WINNING_NO;
 
-	if(autocvar_g_spawn_useallspawns <= 0)
+	if(!autocvar_g_spawn_useallspawns)
 		return WINNING_NO;
 
 	if(!some_spawn_has_been_used)
@@ -2039,7 +2073,6 @@ CheckRules_World
 Exit deathmatch games upon conditions
 ============
 */
-void ReadyRestart();
 void CheckRules_World()
 {
 	float timelimit;

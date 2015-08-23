@@ -1,6 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticSettingsDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticSettingsDialog, fill, void(entity))
+#ifndef DIALOG_SETTINGS_H
+#define DIALOG_SETTINGS_H
+#include "dialog.qc"
+CLASS(XonoticSettingsDialog, XonoticDialog)
+	METHOD(XonoticSettingsDialog, fill, void(entity));
 	ATTRIB(XonoticSettingsDialog, title, string, _("Settings"))
 	ATTRIB(XonoticSettingsDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)
 	ATTRIB(XonoticSettingsDialog, intendedWidth, float, 0.96)

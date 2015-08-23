@@ -4,9 +4,11 @@
 //# define COMMANDBUTTON_REVERT 4
 #endif
 
-#ifdef INTERFACE
-CLASS(XonoticCommandButton) EXTENDS(XonoticButton)
-	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float))
+#ifndef COMMANDBUTTON_H
+#define COMMANDBUTTON_H
+#include "button.qc"
+CLASS(XonoticCommandButton, XonoticButton)
+	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float));
 	ATTRIB(XonoticCommandButton, onClickCommand, string, string_null)
 	ATTRIB(XonoticCommandButton, flags, float, 0)
 ENDCLASS(XonoticCommandButton)
@@ -17,7 +19,7 @@ entity makeXonoticCommandButton(string theText, vector theColor, string theComma
 entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, float theFlags)
 {
 	entity me;
-	me = spawnXonoticCommandButton();
+	me = NEW(XonoticCommandButton);
 	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags);
 	return me;
 }

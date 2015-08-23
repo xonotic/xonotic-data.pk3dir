@@ -1,17 +1,12 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "selection.qh"
-    #include "weaponsystem.qh"
-    #include "../t_items.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-#endif
+#include "selection.qh"
+#include "../_all.qh"
+
+#include "weaponsystem.qh"
+#include "../t_items.qh"
+#include "../waypointsprites.qh"
+#include "../../common/constants.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/all.qh"
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)
@@ -31,7 +26,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
 
-	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
+	if(wpn == WEP_HOOK.m_id && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 		complain = 0;
 
 	if(complain)
@@ -60,7 +55,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				entity mine;
-				if(wpn == WEP_MINE_LAYER)
+				if(wpn == WEP_MINE_LAYER.m_id)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
 
@@ -267,7 +262,7 @@ void W_SwitchWeapon(float imp)
 		else
 			self.selectweapon = imp; // update selectweapon ANYWAY
 	}
-	else if(!forbidWeaponUse()) { WEP_ACTION(self.weapon, WR_RELOAD); }
+	else if(!forbidWeaponUse(self)) { WEP_ACTION(self.weapon, WR_RELOAD); }
 }
 
 void W_CycleWeapon(string weaponorder, float dir)

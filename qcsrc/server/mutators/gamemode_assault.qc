@@ -1,3 +1,10 @@
+#include "gamemode_assault.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+.entity sprite;
+
 // random functions
 void assault_objective_use()
 {
@@ -203,8 +210,31 @@ void assault_wall_think()
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
+void vehicles_clearreturn(entity veh);
+void vehicles_spawn();
 void assault_new_round()
 {
+    entity oldself;
+	//bprint("ASSAULT: new round\n");
+
+	oldself = self;
+	// Eject players from vehicles
+    FOR_EACH_PLAYER(self)
+    {
+        if(self.vehicle)
+            vehicles_exit(VHEF_RELEASE);
+    }
+
+    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
+    while(self)
+    {
+        vehicles_clearreturn(self);
+        vehicles_spawn();
+        self = self.chain;
+    }
+
+    self = oldself;
+
 	// up round counter
 	self.winning = self.winning + 1;
 

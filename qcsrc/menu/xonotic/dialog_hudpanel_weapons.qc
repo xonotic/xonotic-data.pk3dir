@@ -1,10 +1,12 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDWeaponsDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDWeaponsDialog, fill, void(entity))
+#ifndef DIALOG_HUDPANEL_WEAPONS_H
+#define DIALOG_HUDPANEL_WEAPONS_H
+#include "rootdialog.qc"
+CLASS(XonoticHUDWeaponsDialog, XonoticRootDialog)
+	METHOD(XonoticHUDWeaponsDialog, fill, void(entity));
 	ATTRIB(XonoticHUDWeaponsDialog, title, string, _("Weapons Panel"))
 	ATTRIB(XonoticHUDWeaponsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDWeaponsDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 19)
+	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 21)
 	ATTRIB(XonoticHUDWeaponsDialog, columns, float, 4)
 	ATTRIB(XonoticHUDWeaponsDialog, name, string, "HUDweapons")
 	ATTRIB(XonoticHUDWeaponsDialog, requiresConnection, float, true)
@@ -44,6 +46,14 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_weapons_onlyowned", _("Show only owned weapons")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Noncurrent alpha:")));
+		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_weapons_noncurrent_alpha"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Noncurrent scale:")));
+		me.TD(me, 1, 2.6, e = makeXonoticSlider(0, 1, 0.1, "hud_panel_weapons_noncurrent_scale"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Show weapon ID as:")));

@@ -1,12 +1,8 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/util.qh"
-    #include "defs.qh"
-    #include "round_handler.qh"
-#endif
+#include "round_handler.qh"
+#include "_all.qh"
+
+#include "command/vote.qh"
+#include "../common/util.qh"
 
 void round_handler_Think()
 {

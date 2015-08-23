@@ -1,4 +1,19 @@
 #include "teamplay.qh"
+#include "_all.qh"
+
+#include "cl_client.qh"
+#include "race.qh"
+#include "scores.qh"
+#include "scores_rules.qh"
+
+#include "bot/bot.qh"
+
+#include "command/vote.qh"
+
+#include "mutators/mutators_include.qh"
+
+#include "../common/deathtypes.qh"
+#include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
 {
@@ -26,6 +41,7 @@ void ActivateTeamplay()
 {
 	serverflags |= SERVERFLAG_TEAMPLAY;
 	teamplay = 1;
+	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
 }
 
 void InitGameplayMode()
@@ -42,8 +58,9 @@ void InitGameplayMode()
 	world.maxs = mi_max;
 
 	MapInfo_LoadMapSettings(mapname);
-	teamplay = 0;
 	serverflags &= ~SERVERFLAG_TEAMPLAY;
+	teamplay = 0;
+	cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
 
 	if (!cvar_value_issafe(world.fog))
 	{
@@ -266,8 +283,7 @@ string getwelcomemessage(void)
 {
 	string s, modifications, motd;
 
-	ret_string = "";
-	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
+	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	modifications = ret_string;
 
 	if(g_weaponarena)
@@ -415,8 +431,7 @@ void CheckAllowedTeams (entity for_whom)
 		// cover anything else by treating it like tdm with no teams spawned
 		dm = 2;
 
-		ret_float = dm;
-		MUTATOR_CALLHOOK(GetTeamCount);
+		MUTATOR_CALLHOOK(GetTeamCount, dm);
 		dm = ret_float;
 
 		if(dm >= 4)

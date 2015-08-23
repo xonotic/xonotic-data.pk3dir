@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ VORTEX,
 /* function  */ W_Vortex,
@@ -53,10 +53,13 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+
+.float vortex_lasthit;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX); }
+void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX.m_id); }
 void spawnfunc_weapon_nex(void) { spawnfunc_weapon_vortex(); }
 
 void SendCSQCVortexBeamParticle(float charge) {
@@ -107,10 +110,18 @@ void W_Vortex_Attack(float issecondary)
 	}
 
 	yoda = 0;
-	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
+	damage_goodhits = 0;
+	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX.m_id);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && self.vortex_lasthit)
+	{
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
+	}
+
+	self.vortex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
@@ -121,7 +132,7 @@ void W_Vortex_Attack(float issecondary)
 void spawnfunc_weapon_vortex(void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	float dt;
 	float ammo_amount;
@@ -204,7 +215,7 @@ float W_Vortex(float req)
 											{
 												self.clip_load = max(WEP_CVAR_SEC(vortex, ammo), self.clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
 											}
-											self.(weapon_load[WEP_VORTEX]) = self.clip_load;
+											self.(weapon_load[WEP_VORTEX.m_id]) = self.clip_load;
 										}
 										else
 										{
@@ -254,10 +265,15 @@ float W_Vortex(float req)
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
+		case WR_SETUP:
+		{
+			self.vortex_lasthit = 0;
+			return true;
+		}
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_PRI(vortex, ammo);
-			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX]) >= WEP_CVAR_PRI(vortex, ammo));
+			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -266,7 +282,7 @@ float W_Vortex(float req)
 			{
 				// don't allow charging if we don't have enough ammo
 				ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_SEC(vortex, ammo);
-				ammo_amount += self.(weapon_load[WEP_VORTEX]) >= WEP_CVAR_SEC(vortex, ammo);
+				ammo_amount += self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
 				return ammo_amount;
 			}
 			else
@@ -277,6 +293,11 @@ float W_Vortex(float req)
 		case WR_CONFIG:
 		{
 			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+			return true;
+		}
+		case WR_RESETPLAYER:
+		{
+			self.vortex_lasthit = 0;
 			return true;
 		}
 		case WR_RELOAD:
@@ -298,7 +319,7 @@ float W_Vortex(float req)
 #endif
 #ifdef CSQC
 float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	switch(req)
 	{

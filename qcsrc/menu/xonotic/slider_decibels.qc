@@ -1,10 +1,12 @@
 #include "../../warpzonelib/mathlib.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticDecibelsSlider) EXTENDS(XonoticSlider)
-	METHOD(XonoticDecibelsSlider, loadCvars, void(entity))
-	METHOD(XonoticDecibelsSlider, saveCvars, void(entity))
-	METHOD(XonoticDecibelsSlider, valueToText, string(entity, float))
+#ifndef SLIDER_DECIBELS_H
+#define SLIDER_DECIBELS_H
+#include "slider.qc"
+CLASS(XonoticDecibelsSlider, XonoticSlider)
+	METHOD(XonoticDecibelsSlider, loadCvars, void(entity));
+	METHOD(XonoticDecibelsSlider, saveCvars, void(entity));
+	METHOD(XonoticDecibelsSlider, valueToText, string(entity, float));
 ENDCLASS(XonoticDecibelsSlider)
 entity makeXonoticDecibelsSlider(float, float, float, string);
 #endif
@@ -42,7 +44,7 @@ float fromDecibelOfSquare(float f, float mi)
 entity makeXonoticDecibelsSlider(float theValueMin, float theValueMax, float theValueStep, string theCvar)
 {
 	entity me;
-	me = spawnXonoticDecibelsSlider();
+	me = NEW(XonoticDecibelsSlider);
 	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar);
 	return me;
 }

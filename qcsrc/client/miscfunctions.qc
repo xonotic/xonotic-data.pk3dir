@@ -1,8 +1,18 @@
 #include "miscfunctions.qh"
+#include "_all.qh"
 
-#include "../common/urllib.qh"
+#include "hud.qh"
+#include "sortlist.qh"
 
 #include "../common/command/generic.qh"
+
+#include "../common/teams.qh"
+#include "../common/urllib.qh"
+#include "../common/util.qh"
+
+#include "../csqcmodellib/cl_model.qh"
+
+#include "../warpzonelib/mathlib.qh"
 
 void AuditLists()
 {
@@ -349,11 +359,11 @@ void PolyDrawModel(entity e)
 			break;
 }
 
-void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag)
+void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag)
 {
 	float x, y, q, d;
 	vector ringsize, v, t;
-	ringsize = radius * '1 1 0';
+	ringsize = radi * '1 1 0';
 
 	x = cos(f * 2 * M_PI);
 	y = sin(f * 2 * M_PI);

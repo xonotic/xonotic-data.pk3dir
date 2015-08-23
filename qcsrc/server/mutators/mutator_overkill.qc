@@ -1,4 +1,13 @@
-void ok_DecreaseCharge(entity ent, float wep)
+#include "mutator_overkill.qh"
+#include "../_all.qh"
+
+#include "mutator.qh"
+
+void W_Blaster_Attack(float, float, float, float, float, float, float, float, float, float);
+void spawnfunc_weapon_hmg();
+void spawnfunc_weapon_rpc();
+
+void ok_DecreaseCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return;
 
@@ -10,7 +19,7 @@ void ok_DecreaseCharge(entity ent, float wep)
 	ent.ammo_charge[wep] -= max(0, cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
-void ok_IncreaseCharge(entity ent, float wep)
+void ok_IncreaseCharge(entity ent, int wep)
 {
 	entity wepent = get_weaponinfo(wep);
 
@@ -22,7 +31,7 @@ void ok_IncreaseCharge(entity ent, float wep)
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
-float ok_CheckWeaponCharge(entity ent, float wep)
+float ok_CheckWeaponCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return true;
 
@@ -37,7 +46,7 @@ float ok_CheckWeaponCharge(entity ent, float wep)
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER.m_id))
 	{
 		frag_damage = 0;
 
@@ -66,7 +75,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	entity oldself = self;
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
-	if(self.flags & FL_MONSTER)
+	if(IS_MONSTER(self))
 	{
 		remove(other); // remove default item
 		other = world;
@@ -105,7 +114,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
 		minf = autocvar_g_balance_fuel_regenstable;
 		limitf = autocvar_g_balance_fuel_limit;
 
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
 	}
 	return true; // return true anyway, as frozen uses no regen
 }
@@ -132,16 +141,16 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	ok_IncreaseCharge(self, self.weapon);
 
 	if(self.BUTTON_ATCK2)
-	if(!forbidWeaponUse() || self.weapon_blocked) // allow if weapon is blocked
+	if(!forbidWeaponUse(self) || self.weapon_blocked) // allow if weapon is blocked
 	if(time >= self.jump_interval)
 	{
 		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
 		makevectors(self.v_angle);
 
 		int oldwep = self.weapon;
-		self.weapon = WEP_BLASTER;
+		self.weapon = WEP_BLASTER.m_id;
 		W_Blaster_Attack(
-			WEP_BLASTER | HITTYPE_SECONDARY,
+			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
 			WEP_CVAR_SEC(vaporizer, damage),
 			WEP_CVAR_SEC(vaporizer, edgedamage),
@@ -183,9 +192,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 {
 	if(autocvar_g_overkill_ammo_charge)
 	{
-		float i;
-
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
 			self.ammo_charge[i] = autocvar_g_overkill_ammo_charge_limit;
 
 		self.ok_use_ammocharge = 1;
@@ -249,8 +256,8 @@ MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 
 	switch(self.items)
 	{
-		case IT_HEALTH: return !(autocvar_g_overkill_100h_anyway);
-		case IT_ARMOR: return !(autocvar_g_overkill_100a_anyway);
+		case ITEM_HealthMega.m_itemid: return !(autocvar_g_overkill_100h_anyway);
+		case ITEM_ArmorMega.m_itemid: return !(autocvar_g_overkill_100a_anyway);
 	}
 
 	return true;
@@ -268,8 +275,8 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
 	WepSet ok_start_items = (WEPSET_MACHINEGUN | WEPSET_VORTEX | WEPSET_SHOTGUN);
 
-	if((get_weaponinfo(WEP_RPC)).weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
-	if((get_weaponinfo(WEP_HMG)).weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
+	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
+	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
@@ -327,12 +334,12 @@ void ok_Initialize()
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);
 
-	(get_weaponinfo(WEP_RPC)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-	(get_weaponinfo(WEP_HMG)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
-	(get_weaponinfo(WEP_SHOTGUN)).mdl = "ok_shotgun";
-	(get_weaponinfo(WEP_MACHINEGUN)).mdl = "ok_mg";
-	(get_weaponinfo(WEP_VORTEX)).mdl = "ok_sniper";
+	WEP_SHOTGUN.mdl = "ok_shotgun";
+	WEP_MACHINEGUN.mdl = "ok_mg";
+	WEP_VORTEX.mdl = "ok_sniper";
 }
 
 MUTATOR_DEFINITION(mutator_overkill)
@@ -360,8 +367,8 @@ MUTATOR_DEFINITION(mutator_overkill)
 
 	MUTATOR_ONREMOVE
 	{
-		(get_weaponinfo(WEP_RPC)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		(get_weaponinfo(WEP_HMG)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	return false;

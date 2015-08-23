@@ -50,7 +50,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 
 .float railgundistance;
 .vector railgunforce;
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype);
+void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype);
 
 float fireBullet_trace_callback_eff;
 entity fireBullet_last_hit;

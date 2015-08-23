@@ -1,26 +1,25 @@
-#if defined(CSQC)
-	#include "gibs.qh"
-	#include "miscfunctions.qh"
-	#include "player_skeleton.qh"
-	#include "sortlist.qh"
+#include "csqcmodel_hooks.qh"
+#include "_all.qh"
 
-	#include "../client/weapons/projectile.qh"
+#include "gibs.qh"
+#include "player_skeleton.qh"
+#include "sortlist.qh"
 
-	#include "../common/animdecide.qh"
-	#include "../common/csqcmodel_settings.qh"
+#include "weapons/projectile.qh"
 
-	#include "../csqcmodellib/cl_model.qh"
-	#include "../csqcmodellib/cl_player.qh"
-	#include "../csqcmodellib/interpolate.qh"
+#include "../common/animdecide.qh"
+#include "../common/csqcmodel_settings.qh"
+#include "../common/teams.qh"
+#include "../common/triggers/trigger/viewloc.qh"
 
-	#include "../warpzonelib/mathlib.qh"
+#include "../csqcmodellib/cl_model.qh"
+#include "../csqcmodellib/cl_player.qh"
+#include "../csqcmodellib/interpolate.qh"
 
-	.float death_time;
-	.int modelflags;
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "../warpzonelib/mathlib.qh"
 
+.float death_time;
+.int modelflags;
 
 void CSQCModel_Hook_PreDraw(bool isplayer);
 
@@ -402,6 +401,12 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	if(self.tag_entity && wasfreed(self.tag_entity))
 		self.tag_entity = world;
 
+	if(self.viewloc && wasfreed(self.viewloc))
+		self.viewloc = world;
+
+	if(self.viewloc.entnum != self.tag_networkviewloc)
+		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+
 	if(self.tag_networkentity)
 	{
 		// we are ATTACHED!
@@ -657,10 +662,10 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 			bool onground = 0;
 			if(self == csqcplayer)
 			{
-				if(self.pmove_flags & PMF_ONGROUND)
+				if(self.flags & FL_ONGROUND)
 					onground = 1;
-				self.anim_prev_pmove_flags = self.pmove_flags;
-				if(self.pmove_flags & PMF_DUCKED)
+				self.anim_prev_pmove_flags = self.flags;
+				if(self.flags & FL_DUCKED)
 					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, false);
 				else if(self.anim_state & ANIMSTATE_DUCK)
 					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, false);

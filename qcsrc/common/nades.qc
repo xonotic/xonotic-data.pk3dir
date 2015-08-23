@@ -3,7 +3,7 @@
 	#include "../client/defs.qh"
 	#include "nades.qh"
 	#include "buffs.qh"
-	#include "../client/movetypes.qh"
+	#include "../common/movetypes/movetypes.qh"
 	#include "../client/main.qh"
 	#include "../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)
@@ -11,6 +11,7 @@
 	#include "../dpdefs/progsdefs.qh"
     #include "constants.qh"
     #include "../server/constants.qh"
+	#include "../common/turrets/sv_turrets.qh"
 #endif
 
 

@@ -1,15 +1,17 @@
+#include "server.qh"
+
+#include "common.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-	#include "../dpdefs/dpextensions.qh"
-	#include "common.qh"
-	#include "server.qh"
 	#include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
 	#include "../common/util.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "../dpdefs/progsdefs.qh"
+	#include "../server/command/common.qh"
 	#include "../server/constants.qh"
 	#include "../server/defs.qh"
-	#include "../server/command/common.qh"
 #endif
 
 #ifdef WARPZONELIB_KEEPDEBUG
@@ -51,7 +53,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
 
-float WarpZone_Teleported_Send(entity to, float sf)
+bool WarpZone_Teleported_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);
@@ -130,6 +132,8 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		player.warpzone_teleport_finishtime += sys_frametime - dt;
 
 #ifndef WARPZONE_USE_FIXANGLE
+	if(IS_VEHICLE(player) && player.owner)
+		player = player.owner; // hax
 	if(IS_PLAYER(player))
 	{
 		// instead of fixangle, send the transform to the client for smoother operation
@@ -216,7 +220,7 @@ void WarpZone_Touch (void)
 	}
 }
 
-float WarpZone_Send(entity to, float sendflags)
+bool WarpZone_Send(entity to, int sendflags)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
@@ -270,7 +274,7 @@ float WarpZone_Send(entity to, float sendflags)
 	return true;
 }
 
-float WarpZone_Camera_Send(entity to, float sendflags)
+bool WarpZone_Camera_Send(entity to, int sendflags)
 {
 	int f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
