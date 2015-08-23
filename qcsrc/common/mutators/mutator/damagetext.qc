@@ -15,6 +15,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, alpha, float, autocvar_cl_damagetext_alpha_start)
     ATTRIB(DamageText, fade_rate, float, 1 / autocvar_cl_damagetext_alpha_lifetime)
     ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity)
+    ATTRIB(DamageText, m_group, int, 0)
     ATTRIB(DamageText, m_damage, int, 0)
     ATTRIB(DamageText, m_armordamage, int, 0)
     ATTRIB(DamageText, time_prev, float, time)
@@ -42,8 +43,9 @@ CLASS(DamageText, Object)
         this.alpha = 1;
     }
 
-    CONSTRUCTOR(DamageText, vector _origin, int _health, int _armor) {
+    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor) {
         CONSTRUCT(DamageText);
+        this.m_group = _group;
         DamageText_update(this, _origin, _health, _armor);
         return this;
     }
@@ -62,6 +64,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     WriteMutator(MSG_ONE, damagetext);
     WriteShort(MSG_ONE, health);
     WriteShort(MSG_ONE, armor);
+    WriteEntity(MSG_ONE, hit);
     WriteCoord(MSG_ONE, location.x);
     WriteCoord(MSG_ONE, location.y);
     WriteCoord(MSG_ONE, location.z);
@@ -74,14 +77,15 @@ MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
     if (!ReadMutatorEquals(mutator_argv_int_0, damagetext)) return false;
     int health = ReadShort();
     int armor = ReadShort();
+    int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
-        if (e.instanceOfDamageText) {
+        if (e.instanceOfDamageText && e.m_group == group) {
             DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor);
             return true;
         }
     }
-    NEW(DamageText, location, health, armor);
+    NEW(DamageText, group, location, health, armor);
     return true;
 }
 #endif
