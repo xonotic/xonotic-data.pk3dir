@@ -536,7 +536,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		self.owner.iscaptured = true;
 		self.solid = SOLID_BBOX;
 
-		pointparticles(particleeffectnum(sprintf("%s_cap", Static_Team_ColorName_Lower(self.owner.team))), self.owner.origin, '0 0 0', 1);
+		Send_Effect(sprintf("%s_cap", Static_Team_ColorName_Lower(self.owner.team)), self.owner.origin, '0 0 0', 1);
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
@@ -567,7 +567,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		setmodel_fixsize(self.owner, "models/onslaught/controlpoint_pad2.md3");
 		
 	if(random() < 0.9 - self.health / self.max_health)
-		pointparticles(particleeffectnum("rage"), self.origin + 10 * randomvec(), '0 0 -1', 1);
+		Send_Effect("rage", self.origin + 10 * randomvec(), '0 0 -1', 1);
 }
 
 void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
@@ -595,7 +595,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	cp.team = e.team;
 	cp.colormap = e.colormap;
 
-	pointparticles(particleeffectnum(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team))), e.origin, '0 0 0', 1);
+	Send_Effect(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team)), e.origin, '0 0 0', 1);
 
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / ONS_CP_THINKRATE));
 	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
@@ -670,7 +670,7 @@ void ons_ControlPoint_Touch()
 	entity toucher = other;
 	int attackable;
 	
-	if((toucher.vehicle_flags & VHF_ISVEHICLE) && toucher.owner)
+	if(IS_VEHICLE(toucher) && toucher.owner)
 	if(autocvar_g_onslaught_allow_vehicle_touch)
 		toucher = toucher.owner;
 	else
@@ -923,7 +923,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 	else
 	{
 		// particles on every hit
-		pointparticles(particleeffectnum("sparks"), hitloc, force * -1, 1);
+		Send_Effect("sparks", hitloc, force * -1, 1);
 
 		//sound on every hit
 		if (random() < 0.5)
@@ -1689,7 +1689,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 			{
 				if ( tele_effects )
 				{
-					pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
+					Send_Effect("teleport", player.origin, '0 0 0', 1);
 					sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 				}
 				setorigin(player, loc);
@@ -1699,7 +1699,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 				player.teleport_antispam = time + autocvar_g_onslaught_teleport_wait;
 
 				if ( tele_effects )
-					pointparticles(particleeffectnum("teleport"), player.origin + v_forward * 32, '0 0 0', 1);
+					Send_Effect("teleport", player.origin + v_forward * 32, '0 0 0', 1);
 				return true;
 			}
 		}
