@@ -1,0 +1,22 @@
+#ifdef IMPLEMENTATION
+
+AUTOCVAR(g_globalforces, float, false, "Global forces: knockback affects everyone");
+REGISTER_MUTATOR(mutator_globalforces, autocvar_g_globalforces);
+
+MUTATOR_HOOKFUNCTION(mutator_globalforces, BuildMutatorsString) {
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), ":GlobalForces");
+}
+
+MUTATOR_HOOKFUNCTION(mutator_globalforces, BuildMutatorsPrettyString) {
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Global forces");
+}
+
+MUTATOR_HOOKFUNCTION(mutator_globalforces, PlayerDamage_SplitHealthArmor) {
+    entity frag_target = M_ARGV(2, entity);
+    vector damage_force = M_ARGV(3, vector) * autocvar_g_globalforces;
+    FOREACH_CLIENT(IS_PLAYER(it) && it != frag_target, {
+        it.velocity += damage_explosion_calcpush(it.damageforcescale * damage_force, it.velocity, autocvar_g_balance_damagepush_speedfactor);
+    });
+}
+
+#endif
