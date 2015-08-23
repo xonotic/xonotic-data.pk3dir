@@ -7,9 +7,11 @@
 announcer.qc
 bgmscript.qc
 casings.qc
+controlpoint.qc
 csqcmodel_hooks.qc
 damage.qc
 effects.qc
+generator.qc
 gibs.qc
 hook.qc
 hud.qc

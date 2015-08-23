@@ -119,7 +119,7 @@ const int STAT_SHIELD_TIME            = 95;
 const int STAT_FUELREGEN_TIME         = 96;
 const int STAT_JETPACK_TIME           = 97;
 const int STAT_SUPERWEAPONS_TIME      = 98;
-// 99 empty?
+const int STAT_ROUNDLOST              = 99;
 
 /* The following stats change depending on the gamemode, so can share the same ID */
 // IDs 100 to 104 reserved for gamemodes

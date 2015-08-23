@@ -2,7 +2,6 @@
 
 #include "havocbot.qh"
 #include "role_keyhunt.qh"
-#include "role_onslaught.qh"
 
 #include "../bot.qh"
 #include "../navigation.qh"
@@ -246,8 +245,6 @@ void havocbot_chooserole()
 		return;
 	else if (g_keyhunt)
 		havocbot_chooserole_kh();
-	else if (g_onslaught)
-		havocbot_chooserole_ons();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 }

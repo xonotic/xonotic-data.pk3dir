@@ -14,6 +14,7 @@ cheats.qc
 cl_client.qc
 cl_impulse.qc
 cl_player.qc
+controlpoint.qc
 csqceffects.qc
 ent_cs.qc
 g_casings.qc
@@ -25,6 +26,7 @@ g_subs.qc
 g_tetris.qc
 g_violence.qc
 g_world.qc
+generator.qc
 ipban.qc
 item_key.qc
 mapvoting.qc
@@ -55,7 +57,6 @@ bot/waypoints.qc
 
 bot/havocbot/havocbot.qc
 bot/havocbot/role_keyhunt.qc
-bot/havocbot/role_onslaught.qc
 bot/havocbot/roles.qc
 
 command/all.qc

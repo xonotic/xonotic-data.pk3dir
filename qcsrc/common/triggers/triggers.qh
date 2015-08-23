@@ -34,6 +34,8 @@ void target_voicescript_clear(entity pl);
 
 .vector dest;
 
+void FixSize(entity e);
+
 #ifdef CSQC
 void trigger_common_read(bool withtarget);
 void trigger_remove_generic();

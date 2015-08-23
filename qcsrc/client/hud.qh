@@ -12,6 +12,16 @@ int HUD_PANEL_LAST;
 int panel_order[HUD_PANEL_MAX];
 string hud_panelorder_prev;
 
+bool hud_draw_maximized;
+bool hud_panel_radar_maximized;
+bool hud_panel_radar_mouse;
+float hud_panel_radar_bottom;
+bool hud_panel_radar_temp_hidden;
+bool chat_panel_modified;
+bool radar_panel_modified;
+
+void HUD_Radar_Hide_Maximized();
+
 void HUD_Reset (void);
 void HUD_Main (void);
 
@@ -24,11 +34,6 @@ int vote_active; // is there an active vote?
 int vote_prev; // previous state of vote_active to check for a change
 float vote_alpha;
 float vote_change; // "time" when vote_active changed
-
-float hud_draw_maximized;
-float hud_panel_radar_maximized;
-float chat_panel_modified;
-float radar_panel_modified;
 
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)

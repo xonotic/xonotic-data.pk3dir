@@ -2,9 +2,11 @@
 #include "_all.qh"
 
 #include "casings.qh"
+#include "controlpoint.qh"
 #include "csqcmodel_hooks.qh"
 #include "damage.qh"
 #include "effects.qh"
+#include "generator.qh"
 #include "gibs.qh"
 #include "hook.qh"
 #include "hud.qh"
@@ -160,6 +162,7 @@ void CSQC_Init(void)
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 
+	generator_precache();
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
@@ -367,6 +370,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	bSkipKey = false;
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
@@ -784,7 +790,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = false;
 		}
 	}
-
+	HUD_Radar_Hide_Maximized();
 	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum);
 }
 
@@ -871,6 +877,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
+		case ENT_CLIENT_GENERATOR: ent_generator(); break;
+		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
