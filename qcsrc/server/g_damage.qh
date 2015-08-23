@@ -22,7 +22,7 @@
     #include "../common/deathtypes.qh"
     #include "mutators/mutators_include.qh"
     #include "tturrets/include/turrets_early.qh"
-    #include "../common/vehicles/sv_vehicles.qh"
+    #include "../common/vehicles/all.qh"
     #include "../csqcmodellib/sv_model.qh"
     #include "../common/playerstats.qh"
     #include "g_hook.qh"

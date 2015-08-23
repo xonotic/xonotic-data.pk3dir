@@ -1,5 +1,7 @@
-#ifdef REGISTER_VEHICLE
-REGISTER_VEHICLE(
+#ifndef VEHICLE_RACER
+#define VEHICLE_RACER
+int v_racer(int);
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RACER,
 /* function   */ v_racer,
 /* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
@@ -10,8 +12,12 @@ REGISTER_VEHICLE(
 /* tags	   	  */ "", "", "tag_viewport",
 /* netname	  */ "racer",
 /* fullname   */ _("Racer")
-);
-#else
+) {
+    this.m_icon = "vehicle_racer";
+}
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 #include "../../effects.qh"
 #include "../../triggers/trigger/impulse.qh"
@@ -804,7 +810,7 @@ bool v_racer(int req)
 #ifdef CSQC
 		case VR_HUD:
 		{
-			Vehicles_drawHUD("vehicle_racer", "vehicle_racer_weapon1", "vehicle_racer_weapon2",
+			Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 vCROSS_GUIDE);
@@ -856,9 +862,10 @@ bool v_racer(int req)
 
 			precache_model ("models/vhshield.md3");
 		#endif
-
+		#ifndef MENUQC
 			precache_model ("models/vehicles/wakizashi.dpm");
 			precache_model ("models/vehicles/wakizashi_cockpit.dpm");
+		#endif
 			return true;
 		}
 	}

@@ -23,10 +23,9 @@ xonotic/util.qc
 ../common/util.qc
 
 ../common/items/all.qc
-
 ../common/monsters/all.qc
-
-../common/weapons/all.qc // TODO
+../common/vehicles/all.qc
+../common/weapons/all.qc
 
 ../warpzonelib/mathlib.qc
 

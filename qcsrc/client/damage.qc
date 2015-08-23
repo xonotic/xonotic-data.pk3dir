@@ -4,7 +4,7 @@
 #include "gibs.qh"
 #include "prandom.qh"
 
-#include "../common/vehicles/cl_vehicles.qh"
+#include "../common/vehicles/all.qh"
 
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"

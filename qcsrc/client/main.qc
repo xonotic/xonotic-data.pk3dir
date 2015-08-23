@@ -23,11 +23,7 @@
 #include "wall.qh"
 #include "waypointsprites.qh"
 
-#include "mutators/events.qh"
-
-#include "../common/vehicles/unit/bumblebee.qh"
-#include "../common/vehicles/cl_vehicles.qh"
-#include "../common/vehicles/vehicles.qh"
+#include "../common/vehicles/all.qh"
 
 #include "mutators/events.qh"
 
@@ -153,7 +149,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
-	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 
 	WaypointSprite_Load();
 
