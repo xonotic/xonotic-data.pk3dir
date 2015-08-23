@@ -10,6 +10,8 @@
 #include "shownames.qh"
 #include "waypointsprites.qh"
 
+#include "mutators/events.qh"
+
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
@@ -800,6 +802,8 @@ void UpdateCrosshair()
 		wcross_scale_prev = wcross_scale;
 		wcross_alpha_prev = wcross_alpha;
 		wcross_color_prev = wcross_color;
+
+		MUTATOR_CALLHOOK(UpdateCrosshair);
 
 		wcross_scale *= 1 - autocvar__menu_alpha;
 		wcross_alpha *= 1 - autocvar__menu_alpha;
