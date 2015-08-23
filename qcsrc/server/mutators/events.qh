@@ -56,6 +56,13 @@ entity frag_target;
 int frag_deathtype;
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
+/** called when a player dies to e.g. remove stuff he was carrying. */
+#define EV_PlayHitsound(i, o) \
+    /**/ i(entity, frag_victim) \
+    /**/
+entity frag_victim;
+MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
+
 /** called when a player presses the jump key */
 #define EV_PlayerJump(i, o) \
     /**/ i(float, player_multijump) \
