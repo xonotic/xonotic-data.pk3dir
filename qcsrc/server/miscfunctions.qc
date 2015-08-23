@@ -249,8 +249,15 @@ string formatmessage(string msg)
 	entity cursor_ent;
 	string escape;
 	string replacement;
+	string ammoitems;
 	p = 0;
 	n = 7;
+
+	ammoitems = "batteries";
+	if(self.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
+	if(self.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
+	if(self.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
+	if(self.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
 
 	WarpZone_crosshair_trace(self);
 	cursor = trace_endpos;
@@ -278,45 +285,27 @@ string formatmessage(string msg)
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
-		if (escape == "%")
-			replacement = "%";
-		else if (escape == "\\")
-			replacement = "\\";
-		else if (escape == "n")
-			replacement = "\n";
-		else if (escape == "a")
-			replacement = ftos(floor(self.armorvalue));
-		else if (escape == "h")
-			replacement = ftos(floor(self.health));
-		else if (escape == "l")
-			replacement = NearestLocation(self.origin);
-		else if (escape == "y")
-			replacement = NearestLocation(cursor);
-		else if (escape == "d")
-			replacement = NearestLocation(self.death_origin);
-		else if (escape == "w") {
-			float wep;
-			wep = self.weapon;
-			if (!wep)
-				wep = self.switchweapon;
-			if (!wep)
-				wep = self.cnt;
-			replacement = WEP_NAME(wep);
-		} else if (escape == "W") {
-			if (self.items & ITEM_Shells.m_itemid) replacement = "shells";
-			else if (self.items & ITEM_Bullets.m_itemid) replacement = "bullets";
-			else if (self.items & ITEM_Rockets.m_itemid) replacement = "rockets";
-			else if (self.items & ITEM_Cells.m_itemid) replacement = "cells";
-			else if (self.items & ITEM_Plasma.m_itemid) replacement = "plasma";
-			else replacement = "batteries"; // ;)
-		} else if (escape == "x") {
-			replacement = cursor_ent.netname;
-			if (replacement == "" || !cursor_ent)
-				replacement = "nothing";
-		} else if (escape == "s")
-			replacement = ftos(vlen(self.velocity - self.velocity.z * '0 0 1'));
-		else if (escape == "S")
-			replacement = ftos(vlen(self.velocity));
+		switch(escape)
+		{
+			case "%": replacement = "%"; break;
+			case "\\":replacement = "\\"; break;
+			case "n": replacement = "\n"; break;
+			case "a": replacement = ftos(floor(self.armorvalue)); break;
+			case "h": replacement = ftos(floor(self.health)); break;
+			case "l": replacement = NearestLocation(self.origin); break;
+			case "y": replacement = NearestLocation(cursor); break;
+			case "d": replacement = NearestLocation(self.death_origin); break;
+			case "w": replacement = WEP_NAME((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon); break;
+			case "W": replacement = ammoitems; break;
+			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
+			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
+			case "S": replacement = ftos(vlen(self.velocity)); break;
+			default:
+			{
+				MUTATOR_CALLHOOK(FormatMessage, escape, replacement);
+				break;
+			}
+		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);

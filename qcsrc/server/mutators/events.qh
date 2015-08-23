@@ -102,6 +102,16 @@ MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
     /**/
 MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
 
+/** called when formatting a chat message to replace fancy functions */
+#define EV_FormatMessage(i, o) \
+    /**/ i(string, format_escape) \
+    /**/ i(string, format_replacement) \
+    /**/ o(string, format_replacement) \
+    /**/
+string format_escape;
+string format_replacement;
+MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
+
 /** returns 1 if throwing the current weapon shall not be allowed */
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_NO_ARGS);
 
