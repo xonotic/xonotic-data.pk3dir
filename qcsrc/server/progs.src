@@ -108,6 +108,12 @@ weapons/weaponsystem.qc
 ../common/vehicles/all.qc
 ../common/weapons/all.qc // TODO
 
+../common/turrets/sv_turrets.qc
+../common/turrets/config.qc
+../common/turrets/util.qc
+../common/turrets/turrets.qc
+../common/turrets/checkpoint.qc
+../common/turrets/targettrigger.qc
 ../common/weapons/config.qc
 
 ../csqcmodellib/sv_model.qc

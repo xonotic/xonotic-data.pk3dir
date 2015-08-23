@@ -14,7 +14,9 @@
     #include "../../server/defs.qh"
     #include "../deathtypes.qh"
     #include "../../server/mutators/mutators_include.qh"
-    #include "../../server/tturrets/include/turrets_early.qh"
+	#include "../../server/steerlib.qh"
+	#include "../turrets/sv_turrets.qh"
+	#include "../turrets/util.qh"
     #include "../vehicles/all.qh"
     #include "../../server/campaign.qh"
     #include "../../server/command/common.qh"
@@ -22,7 +24,6 @@
 	#include "../triggers/triggers.qh"
     #include "../../csqcmodellib/sv_model.qh"
     #include "../../server/round_handler.qh"
-    #include "../../server/tturrets/include/turrets.qh"
 #endif
 
 // =========================

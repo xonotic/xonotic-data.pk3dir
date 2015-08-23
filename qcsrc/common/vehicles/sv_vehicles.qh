@@ -2,7 +2,7 @@
 #define VEHICLES_DEF_H
 #ifdef SVQC
 
-#include "../../server/tturrets/include/turrets_early.qh"
+#include "../turrets/sv_turrets.qh"
 
 // #define VEHICLES_USE_ODE
 

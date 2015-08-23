@@ -6,7 +6,6 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mutators/mutators_include.qh"
-#include "tturrets/include/turrets_early.qh"
 #include "t_items.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
@@ -21,6 +20,7 @@
 #include "../common/triggers/subs.qh"
 #include "../common/urllib.qh"
 #include "../common/util.qh"
+#include "../common/turrets/sv_turrets.qh"
 #include "../common/weapons/all.qh"
 #include "../csqcmodellib/sv_model.qh"
 #include "../warpzonelib/anglestransform.qh"
@@ -998,11 +998,6 @@ void precache()
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
 	precache_model("models/ice/ice.md3");
-
-#ifdef TTURRETS_ENABLED
-    if (autocvar_g_turrets)
-        turrets_precash();
-#endif
 
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)

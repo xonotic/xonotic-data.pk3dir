@@ -1658,6 +1658,29 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
     return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
+{
+	entity e, ee = world;
+	if(self.targetname)
+	{
+		e = find(world, target, self.targetname);
+
+		if(e != world)
+		{
+			self.team = e.team;
+			ee = e;
+		}
+	}
+	
+	if(ee)
+	{
+		activator = ee;
+		self.use();
+	}
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(ons_MonsterThink)
 {
 	entity e = find(world, targetname, self.target);
@@ -1674,15 +1697,6 @@ MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 	if(self.targetname)
 	{
 		e = find(world,target,self.targetname);
-		if(e != world)
-		{
-			self.team = e.team;
-			ee = e;
-		}
-	}
-
-	if(ee)
-	{
         activator = ee;
         self.use();
     }
@@ -1701,6 +1715,7 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ons_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, ons_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, ons_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(TurretSpawn, ons_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterMove, ons_MonsterThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, ons_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayHitsound, ons_PlayHitsound, CBC_ORDER_ANY);

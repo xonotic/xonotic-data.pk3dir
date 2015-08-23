@@ -1,0 +1,6 @@
+#ifndef CL_TURRETS_H
+#define CL_TURRETS_H
+
+void ent_turret();
+
+#endif

@@ -17,7 +17,6 @@
 #include "scoreboard.qh"
 #include "shownames.qh"
 #include "sortlist.qh"
-#include "tturrets.qh"
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"
@@ -50,6 +49,9 @@
 #include "../csqcmodellib/interpolate.qh"
 
 #include "../common/triggers/include.qh"
+
+#include "../common/turrets/cl_turrets.qh"
+#include "../common/turrets/turrets.qh"
 
 #include "../warpzonelib/client.qh"
 
@@ -145,6 +147,7 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
@@ -161,7 +164,6 @@ void CSQC_Init(void)
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	turrets_precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 

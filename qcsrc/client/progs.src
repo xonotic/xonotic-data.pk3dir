@@ -28,7 +28,6 @@ scoreboard.qc
 shownames.qc
 sortlist.qc
 teamradar.qc
-tturrets.qc
 tuba.qc
 t_items.qc
 view.qc
@@ -61,6 +60,9 @@ weapons/projectile.qc // TODO
 ../common/mutators/all.qc
 ../common/vehicles/all.qc
 ../common/weapons/all.qc
+
+../common/turrets/cl_turrets.qc
+../common/turrets/turrets.qc
 
 ../common/triggers/include.qc
 
