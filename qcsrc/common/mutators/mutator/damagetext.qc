@@ -32,7 +32,7 @@ CLASS(DamageText, Object)
         if (pos.z >= 0 && this.m_size > 0) {
             pos.z = 0;
             string s = sprintf(autocvar_cl_damagetext_format, this.m_damage, this.m_armordamage, this.m_damage + this.m_armordamage);
-            drawstring(pos, s, this.m_size * '1 1 0', this.m_color, this.alpha, DRAWFLAG_NORMAL);
+            drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', this.m_color, this.alpha, DRAWFLAG_NORMAL);
         }
     }
     ATTRIB(DamageText, draw2d, void(), DamageText_draw)
