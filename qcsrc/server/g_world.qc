@@ -336,7 +336,6 @@ void cvar_changes_init()
 		BADCVAR("pausable");
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
-		BADCVAR("sv_fraginfo");
 		BADCVAR("sv_timeout");
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("crypto_");
@@ -347,7 +346,6 @@ void cvar_changes_init()
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_cullentities_");
-		BADPREFIX("sv_fraginfo_");
 		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
