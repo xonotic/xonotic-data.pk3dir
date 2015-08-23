@@ -384,7 +384,7 @@ void ClientCommand_physics(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			string command = strtolower(argv(1));
-			
+
 			if(!autocvar_g_physics_clientselect)
 			{
 				sprint(self, "Client physics selection is currently disabled.\n");
@@ -396,7 +396,7 @@ void ClientCommand_physics(float request, float argc)
 				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
 				return;
 			}
-			
+
 			if(Physics_Valid(command) || command == "default")
 			{
 				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
@@ -404,7 +404,7 @@ void ClientCommand_physics(float request, float argc)
 				return;
 			}
 		}
-	
+
 		default:
 			sprint(self, strcat("Current physics set: ^3", self.cvar_cl_physics, "\n"));
 		case CMD_REQUEST_USAGE:

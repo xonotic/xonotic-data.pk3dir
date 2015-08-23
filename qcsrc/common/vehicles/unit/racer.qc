@@ -134,7 +134,7 @@ void racer_align4point(float _delta)
 	self.velocity += push_vector * _delta;
 
 	float uforce = autocvar_g_vehicle_racer_upforcedamper;
-	
+
 	int cont = pointcontents(self.origin - '0 0 64');
 	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 	{
@@ -145,7 +145,7 @@ void racer_align4point(float _delta)
 		else
 			self.velocity_z += 200;
 	}
-	
+
 
 	// Anti ocilation
 	if(self.velocity_z > 0)
@@ -228,7 +228,7 @@ void racer_rocket_groundhugger()
 		self.velocity = olddir * newvel;
 		self.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
 	}
-	
+
 	int cont = pointcontents(self.origin - '0 0 32');
 	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		self.velocity_z += 200;
@@ -578,7 +578,7 @@ void racer_think()
 
 	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -652,10 +652,10 @@ void racer_blowup()
 void racer_blowup_think()
 {
 	self.nextthink = time;
-	
+
 	if(time >= self.delay)
 		racer_blowup();
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -704,7 +704,7 @@ void racer_draw()
 
 	self.move_angles_x *= 1 - (getstatf(STAT_VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
 	self.move_angles_z *= 1 - (getstatf(STAT_VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
-	
+
 	Movetype_Physics_MatchServer(false);
 }
 #endif
@@ -736,7 +736,7 @@ bool v_racer(int req)
 
 			self.move_movetype = MOVETYPE_BOUNCE;
 		#endif
-			   
+
 			return true;
 		}
 
@@ -767,9 +767,9 @@ bool v_racer(int req)
 			self.solid		  = SOLID_SLIDEBOX;
 			self.delay		  = time;
 			self.scale		  = 0.5;
-			
+
 			self.PlayerPhysplug = racer_frame;
-			
+
 			self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
 			self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
 			self.damageforcescale = 0.5;

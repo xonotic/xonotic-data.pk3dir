@@ -21,7 +21,7 @@ float T_Config_Queue_Compare(float root, float child, entity pass)
 		else if(c > r) { return -1; }
 		else { return 1; }
 	}
-	
+
 	return 0;
 }
 
@@ -40,7 +40,7 @@ void Dump_Turret_Settings(void)
 
 		// step 3: sort queue
 		heapsort(TUR_CONFIG_COUNT, T_Config_Queue_Swap, T_Config_Queue_Compare, world);
-		
+
 		// step 4: write queue
 		TUR_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n", i, TUR_NAME(i)))
 		for(x = 0; x <= TUR_CONFIG_COUNT; ++x)

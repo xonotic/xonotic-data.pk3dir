@@ -43,9 +43,9 @@ void cpicon_draw()
 	self.cp_bob_origin_z = 4 * PI * (1 - cos(self.cp_bob_spd));
 	self.cp_bob_spd = self.cp_bob_spd + 1.875 * frametime;
 	self.colormod = '1 1 1' * (2 - bound(0, (self.pain_finished - time) / 10, 1));
-	
+
 	if(!self.iscaptured) self.alpha = self.health / self.max_health;
-	
+
 	if(self.iscaptured)
 	{
 		if (self.punchangle_x > 0)
@@ -92,7 +92,7 @@ void cpicon_draw()
 		self.angles_z = self.punchangle_z;
 		self.move_angles_y = self.move_angles_y + 45 * frametime;
 	}
-	
+
 	setorigin(self, self.cp_origin + self.cp_bob_origin + self.cp_bob_dmg);
 }
 
@@ -108,7 +108,7 @@ void cpicon_damage(float hp)
 		setmodel(self, "models/onslaught/controlpoint_icon_dmg1.md3");
 	else if(hp <= self.max_health || hp >= self.max_health)
 		setmodel(self, "models/onslaught/controlpoint_icon.md3");
-		
+
 	self.punchangle = (2 * randomvec() - '1 1 1') * 45;
 
 	self.cp_bob_dmg_z = (2 * random() - 1) * 15;
@@ -124,7 +124,7 @@ void cpicon_construct()
 
 	setmodel(self, "models/onslaught/controlpoint_icon.md3");
 	setsize(self, CPICON_MIN, CPICON_MAX);
-	
+
 	if(self.icon_realmodel == world)
 	{
 		self.icon_realmodel = spawn();
@@ -135,7 +135,7 @@ void cpicon_construct()
 		self.icon_realmodel.solid = SOLID_NOT;
 		self.icon_realmodel.move_origin = self.icon_realmodel.origin;
 	}
-	
+
 	if(self.iscaptured) { self.icon_realmodel.solid = SOLID_BBOX; }
 
 	self.move_movetype	= MOVETYPE_NOCLIP;

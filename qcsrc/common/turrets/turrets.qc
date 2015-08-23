@@ -17,10 +17,10 @@ void turrets_common_precache()
 	precache_model ("models/turrets/head-gib4.md3");
 	precache_model ("models/turrets/base.md3");
 	precache_model ("models/turrets/rocket.md3");
-	
+
 	precache_model ("models/turrets/c512.md3");
 	precache_model ("models/marker.md3");
-	
+
 #ifdef TURRET_DEBUG
 	precache_model ("models/turrets/c512.md3");
 	precache_model ("models/pathlib/goodsquare.md3");
@@ -46,7 +46,7 @@ void register_turret(float id, float(float) func, float turretflags, vector min_
 	e.maxs = max_s;
 	e.model = strzone(strcat("models/turrets/", modelname));
 	e.head_model = strzone(strcat("models/turrets/", headmodelname));
-	
+
 	#ifndef MENUQC
 	turrets_common_precache();
 	#endif

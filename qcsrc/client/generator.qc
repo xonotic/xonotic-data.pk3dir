@@ -45,7 +45,7 @@ void ons_generator_ray_draw()
 {
 	if(time < self.move_time)
 		return;
-	
+
 	self.move_time = time + 0.05;
 
 	if(self.count > 10)
@@ -96,9 +96,9 @@ void generator_draw()
 		}
 		else
 			pointparticles(particleeffectnum("torch_small"), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
-	
+
 		self.move_time = time + 0.1;
-		
+
 		return;
 	}
 
@@ -114,7 +114,7 @@ void generator_draw()
 		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 6);
 	}
-	
+
 	// rays
 	if(random() > 0.25)
 	{

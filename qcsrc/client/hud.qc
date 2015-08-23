@@ -2030,14 +2030,14 @@ void HUD_Radar_Show_Maximized(bool doshow,float clickable)
 {
 	hud_panel_radar_maximized = doshow;
 	hud_panel_radar_temp_hidden = 0;
-	
+
 	if ( doshow )
 	{
 		if (clickable)
 		{
 			if(autocvar_hud_cursormode)
 				setcursormode(1);
-			hud_panel_radar_mouse = 1; 
+			hud_panel_radar_mouse = 1;
 		}
 	}
 	else if ( hud_panel_radar_mouse )
@@ -2057,7 +2057,7 @@ void HUD_Radar_Hide_Maximized()
 
 float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
-	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse || 
+	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse ||
 		autocvar__hud_configure || mv_active)
 		return false;
 
@@ -2099,7 +2099,7 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			if(nPrimary == stof(argv(i)))
 				return false;
 		}
-		
+
 		if ( getstati(STAT_HEALTH) <= 0 )
 		{
 			// Show scoreboard
@@ -2119,7 +2119,7 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 		else if ( bInputType == 0 )
 			HUD_Radar_Hide_Maximized();
-		
+
 		return false;
 	}
 
@@ -2130,19 +2130,19 @@ void HUD_Radar_Mouse()
 {
 	if ( !hud_panel_radar_mouse ) return;
 	if(mv_active) return;
-	
+
 	if ( intermission )
 	{
 		HUD_Radar_Hide_Maximized();
 		return;
 	}
-	
+
 	if(mouseClicked & S_MOUSE2)
 	{
 		HUD_Radar_Hide_Maximized();
 		return;
 	}
-	
+
 	if(!autocvar_hud_cursormode)
 	{
 		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
@@ -2152,14 +2152,14 @@ void HUD_Radar_Mouse()
 	}
 
 	HUD_Panel_UpdateCvars();
-	
-	
+
+
 	panel_size = autocvar_hud_panel_radar_maximized_size;
 	panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
 	panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
 	panel_pos_x = (vid_conwidth - panel_size_x) / 2;
 	panel_pos_y = (vid_conheight - panel_size_y) / 2;
-		
+
 	if(mouseClicked & S_MOUSE1)
 	{
 		// click outside
@@ -2171,11 +2171,11 @@ void HUD_Radar_Mouse()
 		}
 		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos),view_origin_z);
 		localcmd(sprintf("cmd ons_spawn %f %f %f",pos_x,pos_y,pos_z));
-		
+
 		HUD_Radar_Hide_Maximized();
 		return;
 	}
-	
+
 
 	const vector cursor_size = '32 32 0';
 	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursor_size, '1 1 1', 0.8, DRAWFLAG_NORMAL);
@@ -2390,7 +2390,7 @@ void HUD_Radar(void)
 	drawresetcliparea();
 
 	if ( hud_panel_radar_mouse )
-	{			
+	{
 		string message = "Click to select teleport destination";
 
 		if ( getstati(STAT_HEALTH) <= 0 )

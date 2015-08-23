@@ -430,7 +430,7 @@ float bumblebee_pilot_frame()
 {
 	entity pilot, vehic;
 	vector newvel;
-	
+
 	if(intermission_running)
 	{
 		self.vehicle.velocity = '0 0 0';
@@ -661,7 +661,7 @@ void bumblebee_land()
 		self.think	= vehicles_think;
 
 	self.nextthink = time;
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -680,7 +680,7 @@ void bumblebee_exit(float eject)
 		self.think = bumblebee_land;
 		self.nextthink  = time;
 	}
-	
+
 	self.movetype = MOVETYPE_TOSS;
 
 	if(!self.owner)
@@ -782,7 +782,7 @@ float v_bumblebee(float req)
 		{
 			if(autocvar_g_vehicle_bumblebee_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
-				
+
 			return true;
 		}
 		case VR_ENTER:
@@ -796,12 +796,12 @@ float v_bumblebee(float req)
 		{
 			self.angles_z *= 0.8;
 			self.angles_x *= 0.8;
-			
+
 			self.nextthink = time;
-			
+
 			if(!self.owner)
 			{
-				entity oldself = self;		
+				entity oldself = self;
 				if(self.gunner1)
 				{
 					self = self.gunner1;
@@ -814,7 +814,7 @@ float v_bumblebee(float req)
 					other = oldother;
 					return true;
 				}
-				
+
 				if(self.gunner2)
 				{
 					self = self.gunner2;
@@ -826,9 +826,9 @@ float v_bumblebee(float req)
 					self.touch();
 					other = oldother;
 					return true;
-				}		
+				}
 			}
-			
+
 			return true;
 		}
 		case VR_DEATH:
@@ -840,7 +840,7 @@ float v_bumblebee(float req)
 			// Hide beam
 			if(self.gun3.enemy || !wasfreed(self.gun3.enemy))
 				self.gun3.enemy.effects |= EF_NODRAW;
-			
+
 			if(self.gunner1)
 			{
 				self = self.gunner1;
@@ -868,7 +868,7 @@ float v_bumblebee(float req)
 				_body.touch = bumblebee_blowup;
 			else
 				_body.touch = func_null;
-				
+
 			_body.think = bumblebee_diethink;
 			_body.nextthink = time;
 			_body.wait = time + 2 + (random() * 8);
@@ -878,7 +878,7 @@ float v_bumblebee(float req)
 			_body.angles = self.angles;
 
 			Send_Effect("explosion_medium", findbetterlocation(self.origin, 16), '0 0 0', 1);
-			
+
 			self.health			= 0;
 			self.event_damage	= func_null;
 			self.solid			= SOLID_NOT;
@@ -952,14 +952,14 @@ float v_bumblebee(float req)
 				setorigin(self.gun2.vehicle_viewport, '-85 0 50');
 
 				self.scale = 1.5;
-				
+
 				// Raygun beam
 				if(self.gun3.enemy == world)
-				{			
+				{
 					self.gun3.enemy = spawn();
 					Net_LinkEntity(self.gun3.enemy, true, 0, bumble_raygun_send);
-					self.gun3.enemy.SendFlags = BRG_SETUP;			
-					self.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;			
+					self.gun3.enemy.SendFlags = BRG_SETUP;
+					self.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
 					self.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
 				}
 			}
@@ -969,9 +969,9 @@ float v_bumblebee(float req)
 			self.solid = SOLID_BBOX;
 			self.movetype = MOVETYPE_TOSS;
 			self.damageforcescale = 0.025;
-			
+
 			self.PlayerPhysplug = bumblebee_pilot_frame;
-			
+
 			setorigin(self, self.origin + '0 0 25');
 			return true;
 		}
@@ -989,13 +989,13 @@ float v_bumblebee(float req)
 
 			if(autocvar_g_vehicle_bumblebee_health_regen)
 				self.vehicle_flags |= VHF_HEALTHREGEN;
-				
+
 			self.vehicle_exit = bumblebee_exit;
 			self.respawntime = autocvar_g_vehicle_bumblebee_respawntime;
 			self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
 			self.max_health = self.vehicle_health;
 			self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
-				
+
 			return true;
 		}
 		case VR_PRECACHE:

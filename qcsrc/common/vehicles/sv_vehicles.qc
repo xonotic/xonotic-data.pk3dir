@@ -1123,10 +1123,10 @@ void vehicles_enter(entity pl, entity veh)
 void vehicles_think()
 {
 	self.nextthink = time;
-	
+
 	if(self.owner)
 		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
-	
+
 	VEH_ACTION(self.vehicleid, VR_THINK);
 
 	CSQCMODEL_AUTOUPDATE();
@@ -1190,7 +1190,7 @@ bool vehicle_initialize(entity veh, bool nodrop)
 
 	if(!veh.vehicleid)
 		return false;
-	
+
 	if(!veh.tur_head) { VEH_ACTION(veh.vehicleid, VR_PRECACHE); }
 
 	if(self.targetname && self.targetname != "")

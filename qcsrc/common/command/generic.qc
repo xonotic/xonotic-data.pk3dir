@@ -373,7 +373,7 @@ void GenericCommand_dumpturrets(float request)
 			tur_config_file = -1;
 			tur_config_alsoprint = -1;
 			string filename = argv(1);
-			
+
 			if(filename == "")
 			{
 				filename = "turrets_dump.cfg";
@@ -385,7 +385,7 @@ void GenericCommand_dumpturrets(float request)
 				tur_config_alsoprint = TRUE;
 			}
 			tur_config_file = fopen(filename, FILE_WRITE);
-			
+
 			if(tur_config_file >= 0)
 			{
 				Dump_Turret_Settings();
@@ -403,7 +403,7 @@ void GenericCommand_dumpturrets(float request)
 			#endif
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{

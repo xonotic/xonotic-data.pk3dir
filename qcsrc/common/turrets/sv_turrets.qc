@@ -24,7 +24,7 @@ vector turret_aim_generic()
 		if (self.aim_flags & TFL_AIM_SHOTTIMECOMPENSATE)	   // Need to conpensate for shot traveltime
 		{
 			prep = pre_pos;
-			
+
 			distance = vlen(prep - self.tur_shotorg);
 			impact_time = distance / self.shot_speed;
 
@@ -274,7 +274,7 @@ void turret_respawn()
 	self.think	 = turret_think;
 
 	self.SendFlags = TNSF_FULL_UPDATE;
-	
+
 	TUR_ACTION(self.turretid, TR_SETUP);
 }
 
@@ -978,7 +978,7 @@ void turret_fire()
 {
 	if (autocvar_g_turrets_nofire != 0)
 		return;
-		
+
 	TUR_ACTION(self.turretid, TR_ATTACK);
 
 	self.attack_finished_single = time + self.shot_refire;
@@ -1106,7 +1106,7 @@ void turret_think()
 				// Fire!
 				if (self.turret_firecheckfunc() != 0)
 					turret_fire();
-					
+
 				TUR_ACTION(self.turretid, TR_THINK);
 
 				return;
@@ -1144,7 +1144,7 @@ void turret_think()
 			// Turn & pitch
 			if(!(self.track_flags & TFL_TRACK_NO))
 				turret_track();
-				
+
 			TUR_ACTION(self.turretid, TR_THINK);
 
 			// And bail.
@@ -1244,7 +1244,7 @@ float turret_initialize(float tur_id)
 
 	self.cvar_basename = tur.cvar_basename;
 	load_unit_settings(self, self.cvar_basename, 0);
-	
+
 	if(!self.team || !teamplay)		{ self.team = MAX_SHOT_DISTANCE; }
 	if(!self.ticrate)				{ self.ticrate = ((self.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
 	if(!self.health)				{ self.health = 1000; }
@@ -1259,19 +1259,19 @@ float turret_initialize(float tur_id)
 	if(!self.target_select_flags)	{ self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_ANGLELIMITS; }
 	if(!self.firecheck_flags)		{ self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_LOS
 														   | TFL_FIRECHECK_AIMDIST | TFL_FIRECHECK_TEAMCHECK | TFL_FIRECHECK_AMMO_OWN | TFL_FIRECHECK_REFIRE; }
-														   
+
 	if(self.track_type != TFL_TRACKTYPE_STEPMOTOR)
 	{
 		// Fluid / Ineria mode. Looks mutch nicer.
 		// Can reduce aim preformance alot, needs a bit diffrent aimspeed
-		
+
 		self.aim_speed = bound(0.1, ((!self.aim_speed) ? 180 : self.aim_speed), 1000);
-		
+
 		if(!self.track_accel_pitch)		{ self.track_accel_pitch = 0.5; }
 		if(!self.track_accel_rotate)	{ self.track_accel_rotate = 0.5; }
 		if(!self.track_blendrate)		{ self.track_blendrate = 0.35; }
 	}
-	
+
 	self.respawntime 				= max(-1, ((!self.respawntime) ? 60 : self.respawntime));
 	self.shot_refire 				= bound(0.01, ((!self.shot_refire) ? 1 : self.shot_refire), 9999);
 	self.shot_dmg 					= max(1, ((!self.shot_dmg) ? self.shot_refire * 50 : self.shot_dmg));
@@ -1295,31 +1295,31 @@ float turret_initialize(float tur_id)
 	self.target_select_playerbias	= bound(-10, ((!self.target_select_playerbias) ? 1 : self.target_select_playerbias), 10);
 	self.ammo_max					= max(self.shot_dmg, ((!self.ammo_max) ? self.shot_dmg * 10 : self.ammo_max));
 	self.ammo_recharge				= max(0, ((!self.ammo_recharge) ? self.shot_dmg * 0.5 : self.ammo_recharge));
-	
+
 	self.turret_flags = TUR_FLAG_ISTURRET | (tur.spawnflags);
-	
+
 	if(self.turret_flags & TUR_FLAG_SPLASH)
 		self.aim_flags |= TFL_AIM_SPLASH;
-		
+
 	if(self.turret_flags & TUR_FLAG_MISSILE)
 		self.target_select_flags |= TFL_TARGETSELECT_MISSILES;
 
 	if(self.turret_flags & TUR_FLAG_PLAYER)
 		self.target_select_flags |= TFL_TARGETSELECT_PLAYERS;
-		
+
 	if(self.spawnflags & TSL_NO_RESPAWN)
 		self.damage_flags |= TFL_DMG_DEATH_NORESPAWN;
-		
+
 	if (self.turret_flags & TUR_FLAG_SUPPORT)
 		self.turret_score_target = turret_targetscore_support;
 	else
 		self.turret_score_target = turret_targetscore_generic;
-		
+
 	++turret_count;
-		
+
 	setmodel(self, tur.model);
 	setsize(self, tur.mins, tur.maxs);
-	
+
 	self.turretid				= tur_id;
 	self.classname				= "turret_main";
 	self.active					= ACTIVE_ACTIVE;
@@ -1340,20 +1340,20 @@ float turret_initialize(float tur_id)
 	self.bot_attack				= true;
 	self.nextthink				= time + 1;
 	self.nextthink			   += turret_count * sys_frametime;
-	
+
 	self.tur_head = spawn();
 	setmodel(self.tur_head, tur.head_model);
 	setsize(self.tur_head, '0 0 0', '0 0 0');
 	setorigin(self.tur_head, '0 0 0');
 	setattachment(self.tur_head, self, "tag_head");
-	
+
 	self.tur_head.netname		= self.tur_head.classname = "turret_head";
 	self.tur_head.team			= self.team;
 	self.tur_head.owner			= self;
 	self.tur_head.takedamage	= DAMAGE_NO;
 	self.tur_head.solid			= SOLID_NOT;
 	self.tur_head.movetype		= self.movetype;
-	
+
 	if(!self.tur_defend)
 	if(self.target != "")
 	{
@@ -1364,12 +1364,12 @@ float turret_initialize(float tur_id)
 			dprint("Turret has invalid defendpoint!\n");
 		}
 	}
-	
+
 	if (self.tur_defend)
 		self.idle_aim = self.tur_head.angles + angleofs(self.tur_head, self.tur_defend);
 	else
 		self.idle_aim = '0 0 0';
-		
+
 #ifdef TURRET_DEBUG
 	self.tur_debug_start = self.nextthink;
 	while (vlen(self.tur_debug_rvec) < 2)
@@ -1383,9 +1383,9 @@ float turret_initialize(float tur_id)
 	turret_link();
 	turret_respawn();
 	turret_tag_fire_update();
-	
+
 	TUR_ACTION(tur_id, TR_SETUP);
-	
+
 	if(MUTATOR_CALLHOOK(TurretSpawn, self))
 		return false;
 

@@ -1115,7 +1115,7 @@ void CSQC_UpdateView(float w, float h)
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && getstati(STAT_ROUNDLOST));
 		entity gen = world;
-		
+
 		if(ons_roundlost)
 		{
 			entity e;
@@ -1835,7 +1835,7 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
-	else 
+	else
 		HUD_Radar_Mouse();
 
     if(hud && !intermission)

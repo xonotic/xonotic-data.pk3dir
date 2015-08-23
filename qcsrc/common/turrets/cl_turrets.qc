@@ -240,7 +240,7 @@ void turret_construct()
 	self.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
 	self.teamradar_color = '1 0 0';
 	self.alpha = 1;
-	
+
 	TUR_ACTION(self.turretid, TR_SETUP);
 }
 
@@ -371,7 +371,7 @@ void ent_turret()
 
 		self.angles_x = ReadAngle();
 		self.angles_y = ReadAngle();
-		
+
 		turret_construct();
 		self.colormap = 1024;
 		self.glowmod = '0 1 1';

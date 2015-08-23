@@ -260,7 +260,7 @@ void spiderbot_rocket_do()
 	if(self.wait != -10)
 	if(!self.owner.BUTTON_ATCK2)
 		return;
-		
+
 	if(forbidWeaponUse(self.owner))
 		return;
 
@@ -825,7 +825,7 @@ float v_spiderbot(float req)
 		{
 			if(autocvar_g_vehicle_spiderbot_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
-		
+
 			return true;
 		}
 		case VR_ENTER:
@@ -841,14 +841,14 @@ float v_spiderbot(float req)
 				setattachment(self.owner.flagcarried, self.tur_head, "");
 				setorigin(self.owner.flagcarried, '-20 0 120');
 			}
-		
+
 			return true;
 		}
 		case VR_THINK:
 		{
 			if(self.flags & FL_ONGROUND)
 				movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
-			
+
 			return true;
 		}
 		case VR_DEATH:
@@ -866,7 +866,7 @@ float v_spiderbot(float req)
 			self.colormod			= self.tur_head.colormod = '-1 -1 -1';
 			self.frame				= 10;
 			self.movetype			= MOVETYPE_TOSS;
-			
+
 			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
 
 			return true;
@@ -899,7 +899,7 @@ float v_spiderbot(float req)
 			self.damageforcescale = 0.03;
 			self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
 			self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
-			
+
 			self.PlayerPhysplug = spiderbot_frame;
 
 			return true;
@@ -979,7 +979,7 @@ float v_spiderbot(float req)
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
 			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
-		
+
 			return true;
 		}
 		case VR_PRECACHE:
