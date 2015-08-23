@@ -2,14 +2,14 @@
 #define CROSSHAIRPICKER_H
 #include "picker.qc"
 CLASS(XonoticCrosshairPicker, XonoticPicker)
-	METHOD(XonoticCrosshairPicker, configureXonoticCrosshairPicker, void(entity))
+	METHOD(XonoticCrosshairPicker, configureXonoticCrosshairPicker, void(entity));
 
 	ATTRIB(XonoticCrosshairPicker, rows, float, 3)
 	ATTRIB(XonoticCrosshairPicker, columns, float, 12)
 
-	METHOD(XonoticCrosshairPicker, cellSelect, void(entity, vector))
-	METHOD(XonoticCrosshairPicker, cellIsValid, bool(entity, vector))
-	METHOD(XonoticCrosshairPicker, cellDraw, void(entity, vector, vector))
+	METHOD(XonoticCrosshairPicker, cellSelect, void(entity, vector));
+	METHOD(XonoticCrosshairPicker, cellIsValid, bool(entity, vector));
+	METHOD(XonoticCrosshairPicker, cellDraw, void(entity, vector, vector));
 ENDCLASS(XonoticCrosshairPicker)
 entity makeXonoticCrosshairPicker();
 #endif

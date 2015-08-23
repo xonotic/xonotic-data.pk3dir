@@ -600,7 +600,7 @@ void havocbot_movetogoal()
 		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity.z < 0)
-			if(client_hasweapon(self, WEP_DEVASTATOR, true, false))
+			if(client_hasweapon(self, WEP_DEVASTATOR.m_id, true, false))
 			{
 				self.movement_x = maxspeed;
 
@@ -614,7 +614,7 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_DEVASTATOR;
+				self.switchweapon = WEP_DEVASTATOR.m_id;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = true;
 				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
@@ -930,7 +930,7 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_RIFLE
+		if(best || self.weapons) // || self.weapon == WEP_RIFLE.m_id
 			break;
 		if(i)
 			break;
@@ -980,7 +980,7 @@ void havocbot_chooseweapon()
 	// ;)
 	if(g_weaponarena_weapons == WEPSET_TUBA)
 	{
-		self.switchweapon = WEP_TUBA;
+		self.switchweapon = WEP_TUBA.m_id;
 		return;
 	}
 
@@ -989,7 +989,7 @@ void havocbot_chooseweapon()
 	{
 		// If no weapon was chosen get the first available weapon
 		if(self.weapon==0)
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER)
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER.m_id)
 		{
 			if(client_hasweapon(self, i, true, false))
 			{

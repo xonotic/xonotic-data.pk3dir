@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-08 12:38+0200\n"
-"PO-Revision-Date: 2015-08-08 10:39+0000\n"
+"POT-Creation-Date: 2015-08-20 01:24+0200\n"
+"PO-Revision-Date: 2015-08-19 23:24+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Romanian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/ro/)\n"
@@ -59,205 +59,205 @@ msgstr "Nu are"
 msgid "Unavailable"
 msgstr "Indisponibil"
 
-#: qcsrc/client/hud.qc:1877 qcsrc/client/hud.qc:1878 qcsrc/client/hud.qc:2238
+#: qcsrc/client/hud.qc:1898 qcsrc/client/hud.qc:1899 qcsrc/client/hud.qc:2259
 #, c-format
 msgid "Player %d"
 msgstr "Jucător: %d"
 
-#: qcsrc/client/hud.qc:2544
+#: qcsrc/client/hud.qc:2565
 msgid "^1Intermediate 1 (+15.42)"
 msgstr "^1Intermediar 1 (+15.42)"
 
-#: qcsrc/client/hud.qc:2546 qcsrc/client/hud.qc:2588 qcsrc/client/hud.qc:2633
+#: qcsrc/client/hud.qc:2567 qcsrc/client/hud.qc:2609 qcsrc/client/hud.qc:2654
 #, c-format
 msgid "^1PENALTY: %.1f (%s)"
 msgstr "^1PENALIZARE: %.1f (%s)"
 
-#: qcsrc/client/hud.qc:2635
+#: qcsrc/client/hud.qc:2656
 #, c-format
 msgid "^2PENALTY: %.1f (%s)"
 msgstr "^2PENALIZARE: %.1f (%s)"
 
-#: qcsrc/client/hud.qc:2655
+#: qcsrc/client/hud.qc:2676
 msgid "^1You must answer before entering hud configure mode\n"
 msgstr ""
 "^1Trebuie să răspunzi înainte să intri în modul de configurare al hud-ului\n"
 
-#: qcsrc/client/hud.qc:2660
+#: qcsrc/client/hud.qc:2681
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
 msgstr "^2Nume ^7în loc de ”^1Jucător anonim^7” în statistici"
 
-#: qcsrc/client/hud.qc:2739
+#: qcsrc/client/hud.qc:2760
 msgid "A vote has been called for:"
 msgstr "A fost chemat un vot pentru:"
 
-#: qcsrc/client/hud.qc:2741
+#: qcsrc/client/hud.qc:2762
 msgid "Allow servers to store and display your name?"
 msgstr "Permite serverelor să-ți stocheze și să-ți afișeze numele? "
 
-#: qcsrc/client/hud.qc:2745
+#: qcsrc/client/hud.qc:2766
 msgid "^1Configure the HUD"
 msgstr "^1Configurează HUD-ul"
 
-#: qcsrc/client/hud.qc:2749
+#: qcsrc/client/hud.qc:2770
 #, c-format
 msgid "Yes (%s): %d"
 msgstr "Da (%s): %d"
 
-#: qcsrc/client/hud.qc:2751
+#: qcsrc/client/hud.qc:2772
 #, c-format
 msgid "No (%s): %d"
 msgstr "Nu (%s): %d"
 
-#: qcsrc/client/hud.qc:3322 qcsrc/client/hud.qc:3325 qcsrc/client/hud.qc:3327
+#: qcsrc/client/hud.qc:3343 qcsrc/client/hud.qc:3346 qcsrc/client/hud.qc:3348
 msgid "Personal best"
 msgstr "Record personal"
 
-#: qcsrc/client/hud.qc:3340 qcsrc/client/hud.qc:3343 qcsrc/client/hud.qc:3345
+#: qcsrc/client/hud.qc:3361 qcsrc/client/hud.qc:3364 qcsrc/client/hud.qc:3366
 msgid "Server best"
 msgstr "Record server"
 
-#: qcsrc/client/hud.qc:3713
+#: qcsrc/client/hud.qc:3734
 msgid "^3Player^7: This is the chat area."
 msgstr "^3Jucător^7: Aceasta este zona de conversație."
 
-#: qcsrc/client/hud.qc:3779
+#: qcsrc/client/hud.qc:3800
 #, c-format
 msgid "FPS: %.*f"
 msgstr "FPS: %.*f"
 
-#: qcsrc/client/hud.qc:3845
+#: qcsrc/client/hud.qc:3866
 msgid "^1Observing"
 msgstr "^1În mod observare"
 
-#: qcsrc/client/hud.qc:3847
+#: qcsrc/client/hud.qc:3868
 #, c-format
 msgid "^1Spectating: ^7%s"
 msgstr "^1În mod spectator: ^7%s"
 
-#: qcsrc/client/hud.qc:3851
+#: qcsrc/client/hud.qc:3872
 #, c-format
 msgid "^1Press ^3%s^1 to spectate"
 msgstr "^1Apasă ^3%s^1 pentru a deveni spectator"
 
-#: qcsrc/client/hud.qc:3853
+#: qcsrc/client/hud.qc:3874
 #, c-format
 msgid "^1Press ^3%s^1 or ^3%s^1 for next or previous player"
 msgstr "^1Apasă ^3%s^1 sau ^3%s^1 pentru jucătorul următor sau precedent"
 
-#: qcsrc/client/hud.qc:3857
+#: qcsrc/client/hud.qc:3878
 #, c-format
 msgid "^1Use ^3%s^1 or ^3%s^1 to change the speed"
 msgstr "^1Folosiți ^3%s^1 sau ^3%s^1 pentru a schimba viteza"
 
-#: qcsrc/client/hud.qc:3859
+#: qcsrc/client/hud.qc:3880
 #, c-format
 msgid "^1Press ^3%s^1 to observe"
 msgstr "^1Apasă ^3%s^1 pentru a observa"
 
-#: qcsrc/client/hud.qc:3862
+#: qcsrc/client/hud.qc:3883
 #, c-format
 msgid "^1Press ^3%s^1 for gamemode info"
 msgstr "^1Apasă ^3%s^1 pentru informații despre modul de joc"
 
-#: qcsrc/client/hud.qc:3870
+#: qcsrc/client/hud.qc:3891
 msgid "^1Match has already begun"
 msgstr "^1Meciul deja a început"
 
-#: qcsrc/client/hud.qc:3872
+#: qcsrc/client/hud.qc:3893
 msgid "^1You have no more lives left"
 msgstr "^1Nu mai ai vieți rămase"
 
-#: qcsrc/client/hud.qc:3874 qcsrc/client/hud.qc:3877
+#: qcsrc/client/hud.qc:3895 qcsrc/client/hud.qc:3898
 #, c-format
 msgid "^1Press ^3%s^1 to join"
 msgstr "^1Apasă ^3%s^1 pentru a te alătura jocului"
 
-#: qcsrc/client/hud.qc:3885
+#: qcsrc/client/hud.qc:3906
 #, c-format
 msgid "^1Game starts in ^3%d^1 seconds"
 msgstr "^1Jocul începe în ^3%d^1 secunde"
 
-#: qcsrc/client/hud.qc:3892
+#: qcsrc/client/hud.qc:3913
 msgid "^2Currently in ^1warmup^2 stage!"
 msgstr "^2Momentan în faza de ^1încălzire^2!"
 
-#: qcsrc/client/hud.qc:3907
+#: qcsrc/client/hud.qc:3928
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
 msgstr "%sApasă ^3%s%s pentru a înceta încălzirea"
 
-#: qcsrc/client/hud.qc:3909
+#: qcsrc/client/hud.qc:3930
 #, c-format
 msgid "%sPress ^3%s%s once you are ready"
 msgstr "%sApasă ^3%s%s când ești pregătit"
 
-#: qcsrc/client/hud.qc:3914
+#: qcsrc/client/hud.qc:3935
 msgid "^2Waiting for others to ready up to end warmup..."
 msgstr ""
 "^2Se așteaptă ceilalți jucători să se pregătească pentru a înceta "
 "încălzirea..."
 
-#: qcsrc/client/hud.qc:3916
+#: qcsrc/client/hud.qc:3937
 msgid "^2Waiting for others to ready up..."
 msgstr "^2Se așteaptă ca ceilalți să fie gata..."
 
-#: qcsrc/client/hud.qc:3922
+#: qcsrc/client/hud.qc:3943
 #, c-format
 msgid "^2Press ^3%s^2 to end warmup"
 msgstr "^2Apasă ^3%s^2 pentru a înceta încălzirea"
 
-#: qcsrc/client/hud.qc:3943
+#: qcsrc/client/hud.qc:3964
 msgid "Teamnumbers are unbalanced!"
 msgstr "Echipele nu sunt echilibrate!"
 
-#: qcsrc/client/hud.qc:3948
+#: qcsrc/client/hud.qc:3969
 #, c-format
 msgid " Press ^3%s%s to adjust"
 msgstr "Apasă ^3%s%s pentru a ajusta"
 
-#: qcsrc/client/hud.qc:3956
+#: qcsrc/client/hud.qc:3977
 msgid "^7Press ^3ESC ^7to show HUD options."
 msgstr "^7Apasă ^3ESC ^7pentru a arăta opțiunile HUD-ului"
 
-#: qcsrc/client/hud.qc:3958
+#: qcsrc/client/hud.qc:3979
 msgid "^3Doubleclick ^7a panel for panel-specific options."
 msgstr "^3Dublu-clic ^7pe panou pentru opțiuni specifice panoului"
 
-#: qcsrc/client/hud.qc:3960
+#: qcsrc/client/hud.qc:3981
 msgid "^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"
 msgstr "^3CTRL ^7pentru a dezactiva testarea de coliziune, ^3SHIFT ^7și"
 
-#: qcsrc/client/hud.qc:3962
+#: qcsrc/client/hud.qc:3983
 msgid "^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."
 msgstr "^3ALT ^7+ ^3SĂGEȚI ^7pentru ajustări fine."
 
-#: qcsrc/client/hud.qc:4011
+#: qcsrc/client/hud.qc:4032
 msgid " qu/s"
 msgstr "qu/s"
 
-#: qcsrc/client/hud.qc:4015
+#: qcsrc/client/hud.qc:4036
 msgid " m/s"
 msgstr "m/s"
 
-#: qcsrc/client/hud.qc:4019
+#: qcsrc/client/hud.qc:4040
 msgid " km/h"
 msgstr "km/h"
 
-#: qcsrc/client/hud.qc:4023
+#: qcsrc/client/hud.qc:4044
 msgid " mph"
 msgstr "mph"
 
-#: qcsrc/client/hud.qc:4027
+#: qcsrc/client/hud.qc:4048
 msgid " knots"
 msgstr "noduri"
 
-#: qcsrc/client/hud_config.qc:212
+#: qcsrc/client/hud_config.qc:218
 #, c-format
 msgid "^2Successfully exported to %s! (Note: It's saved in data/data/)\n"
 msgstr "^2Exportat cu succes către %s! (Notă: Este salvat în data/data/)\n"
 
-#: qcsrc/client/hud_config.qc:216
+#: qcsrc/client/hud_config.qc:222
 #, c-format
 msgid "^1Couldn't write to %s\n"
 msgstr "^1Nu s-a putut scrie către %s\n"
@@ -266,7 +266,7 @@ msgstr "^1Nu s-a putut scrie către %s\n"
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
 msgstr "EROARE - MENIUL ESTE VIZIBIL DAR NU S-A DEFINIT NICIUN MENIU!"
 
-#: qcsrc/client/main.qc:1358
+#: qcsrc/client/main.qc:1355
 #, c-format
 msgid "%s (not bound)"
 msgstr "%s (nu este atașată)"
@@ -762,7 +762,7 @@ msgstr "Ești mort, așteaptă ^3%s^7 până la respawn"
 msgid "You are dead, press ^2%s^7 to respawn"
 msgstr "Ești mort, apasă ^2%s^7 pentru a te respawna"
 
-#: qcsrc/client/tturrets.qc:321 qcsrc/client/waypointsprites.qc:529
+#: qcsrc/client/tturrets.qc:321 qcsrc/client/waypointsprites.qc:553
 msgid "Spam"
 msgstr "Spam"
 
@@ -787,205 +787,225 @@ msgstr "Fitil grenadă"
 msgid "Revival progress"
 msgstr "Progres reînviere"
 
-#: qcsrc/client/waypointsprites.qc:205
+#: qcsrc/client/waypointsprites.qc:219
 msgid "Push"
 msgstr "Împinge"
 
-#: qcsrc/client/waypointsprites.qc:206
+#: qcsrc/client/waypointsprites.qc:220
 msgid "Destroy"
 msgstr "Distruge"
 
-#: qcsrc/client/waypointsprites.qc:207
+#: qcsrc/client/waypointsprites.qc:221
 msgid "Defend"
 msgstr "Apără"
 
-#: qcsrc/client/waypointsprites.qc:208
+#: qcsrc/client/waypointsprites.qc:222
 msgid "Blue base"
 msgstr "Baza albastră"
 
-#: qcsrc/client/waypointsprites.qc:209
+#: qcsrc/client/waypointsprites.qc:223
 msgid "DANGER"
 msgstr "PERICOL"
 
-#: qcsrc/client/waypointsprites.qc:210
+#: qcsrc/client/waypointsprites.qc:224
 msgid "Enemy carrier"
 msgstr "Posesor inamic"
 
-#: qcsrc/client/waypointsprites.qc:211
+#: qcsrc/client/waypointsprites.qc:225
 msgid "Flag carrier"
 msgstr "Posesor de steag"
 
-#: qcsrc/client/waypointsprites.qc:212
+#: qcsrc/client/waypointsprites.qc:226
 msgid "Dropped flag"
 msgstr "Steag scăpat"
 
-#: qcsrc/client/waypointsprites.qc:213
+#: qcsrc/client/waypointsprites.qc:227
 msgid "Help me!"
 msgstr "Ajutor! "
 
-#: qcsrc/client/waypointsprites.qc:214
+#: qcsrc/client/waypointsprites.qc:228
 msgid "Here"
 msgstr "Aici"
 
-#: qcsrc/client/waypointsprites.qc:215
+#: qcsrc/client/waypointsprites.qc:229
 msgid "Dropped key"
 msgstr "Cheie scăpată"
 
-#: qcsrc/client/waypointsprites.qc:216 qcsrc/client/waypointsprites.qc:218
-#: qcsrc/client/waypointsprites.qc:219 qcsrc/client/waypointsprites.qc:220
-#: qcsrc/client/waypointsprites.qc:221
+#: qcsrc/client/waypointsprites.qc:230 qcsrc/client/waypointsprites.qc:232
+#: qcsrc/client/waypointsprites.qc:233 qcsrc/client/waypointsprites.qc:234
+#: qcsrc/client/waypointsprites.qc:235
 msgid "Key carrier"
 msgstr "Posesor de cheie"
 
-#: qcsrc/client/waypointsprites.qc:217
+#: qcsrc/client/waypointsprites.qc:231
 msgid "Run here"
 msgstr "Fugi aici"
 
-#: qcsrc/client/waypointsprites.qc:222
+#: qcsrc/client/waypointsprites.qc:236
 msgid "Red base"
 msgstr "Baza roșie"
 
-#: qcsrc/client/waypointsprites.qc:223
+#: qcsrc/client/waypointsprites.qc:237
 msgid "Yellow base"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:224
+#: qcsrc/client/waypointsprites.qc:238
 msgid "White base"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:225
+#: qcsrc/client/waypointsprites.qc:239
 msgid "Pink base"
 msgstr ""
 
-#: qcsrc/client/waypointsprites.qc:226
+#: qcsrc/client/waypointsprites.qc:240
 msgid "Waypoint"
 msgstr "Indicator"
 
-#: qcsrc/client/waypointsprites.qc:227 qcsrc/client/waypointsprites.qc:228
-#: qcsrc/client/waypointsprites.qc:229
+#: qcsrc/client/waypointsprites.qc:241 qcsrc/client/waypointsprites.qc:242
+#: qcsrc/client/waypointsprites.qc:243
 msgid "Generator"
 msgstr "Generator"
 
-#: qcsrc/client/waypointsprites.qc:230 qcsrc/client/waypointsprites.qc:231
-#: qcsrc/client/waypointsprites.qc:232 qcsrc/client/waypointsprites.qc:233
-#: qcsrc/client/waypointsprites.qc:234 qcsrc/client/waypointsprites.qc:235
-#: qcsrc/client/waypointsprites.qc:236 qcsrc/client/waypointsprites.qc:237
+#: qcsrc/client/waypointsprites.qc:244 qcsrc/client/waypointsprites.qc:245
 #: qcsrc/client/waypointsprites.qc:246 qcsrc/client/waypointsprites.qc:247
 #: qcsrc/client/waypointsprites.qc:248 qcsrc/client/waypointsprites.qc:249
-#: qcsrc/client/waypointsprites.qc:250
+#: qcsrc/client/waypointsprites.qc:250 qcsrc/client/waypointsprites.qc:251
+#: qcsrc/client/waypointsprites.qc:260 qcsrc/client/waypointsprites.qc:261
+#: qcsrc/client/waypointsprites.qc:262 qcsrc/client/waypointsprites.qc:263
+#: qcsrc/client/waypointsprites.qc:264
 msgid "Control point"
 msgstr "Punct de control"
 
-#: qcsrc/client/waypointsprites.qc:238
+#: qcsrc/client/waypointsprites.qc:252
 msgid "Checkpoint"
 msgstr "Punct de verificare"
 
-#: qcsrc/client/waypointsprites.qc:239 qcsrc/client/waypointsprites.qc:241
+#: qcsrc/client/waypointsprites.qc:253 qcsrc/client/waypointsprites.qc:255
 msgid "Finish"
 msgstr "Sosire"
 
-#: qcsrc/client/waypointsprites.qc:240 qcsrc/client/waypointsprites.qc:241
+#: qcsrc/client/waypointsprites.qc:254 qcsrc/client/waypointsprites.qc:255
 msgid "Start"
 msgstr "Pornire"
 
-#: qcsrc/client/waypointsprites.qc:242
+#: qcsrc/client/waypointsprites.qc:256
 msgid "Goal"
 msgstr "Gol"
 
-#: qcsrc/client/waypointsprites.qc:243 qcsrc/client/waypointsprites.qc:244
+#: qcsrc/client/waypointsprites.qc:257 qcsrc/client/waypointsprites.qc:258
 msgid "Ball"
 msgstr "Minge"
 
-#: qcsrc/client/waypointsprites.qc:245
+#: qcsrc/client/waypointsprites.qc:259
 msgid "Ball carrier"
 msgstr "Posesor de minge"
 
-#: qcsrc/client/waypointsprites.qc:251
+#: qcsrc/client/waypointsprites.qc:265
+msgid "Mega health"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:266
+msgid "Large armor"
+msgstr ""
+
+#: qcsrc/client/waypointsprites.qc:267
 msgid "Invisibility"
 msgstr "Invizibilitate"
 
-#: qcsrc/client/waypointsprites.qc:252
+#: qcsrc/client/waypointsprites.qc:268
 msgid "Extra life"
 msgstr "Viață bonus"
 
-#: qcsrc/client/waypointsprites.qc:253 qcsrc/common/buffs.qh:44
+#: qcsrc/client/waypointsprites.qc:269 qcsrc/common/buffs.qh:59
 msgid "Speed"
 msgstr "Viteză"
 
-#: qcsrc/client/waypointsprites.qc:254
+#: qcsrc/client/waypointsprites.qc:270
 msgid "Strength"
 msgstr "Forță"
 
-#: qcsrc/client/waypointsprites.qc:255
+#: qcsrc/client/waypointsprites.qc:271
 msgid "Shield"
 msgstr "Scut"
 
-#: qcsrc/client/waypointsprites.qc:256
+#: qcsrc/client/waypointsprites.qc:272
 msgid "Fuel regen"
 msgstr "Regenerare combustibil"
 
-#: qcsrc/client/waypointsprites.qc:257
+#: qcsrc/client/waypointsprites.qc:273
 msgid "Jet Pack"
 msgstr "Jet Pack"
 
-#: qcsrc/client/waypointsprites.qc:258
+#: qcsrc/client/waypointsprites.qc:274
 msgid "Frozen!"
 msgstr "Înghețat!"
 
-#: qcsrc/client/waypointsprites.qc:259
+#: qcsrc/client/waypointsprites.qc:275
 msgid "Tagged"
 msgstr "Atins"
 
-#: qcsrc/client/waypointsprites.qc:260
+#: qcsrc/client/waypointsprites.qc:276
 msgid "Vehicle"
 msgstr "Vehicul"
 
-#: qcsrc/client/waypointsprites.qc:533
+#: qcsrc/client/waypointsprites.qc:557
 #, c-format
 msgid "%s needing help!"
 msgstr "%s are nevoie de ajutor!"
 
-#: qcsrc/common/buffs.qh:42
+#: qcsrc/common/buffs.qh:45
 msgid "Ammo"
 msgstr "Muniție"
 
-#: qcsrc/common/buffs.qh:43
+#: qcsrc/common/buffs.qh:52
 msgid "Resistance"
 msgstr "Rezistență"
 
-#: qcsrc/common/buffs.qh:45
+#: qcsrc/common/buffs.qh:66
 msgid "Medic"
 msgstr "Medic"
 
-#: qcsrc/common/buffs.qh:46
+#: qcsrc/common/buffs.qh:73
 msgid "Bash"
 msgstr "Izbi"
 
-#: qcsrc/common/buffs.qh:47
+#: qcsrc/common/buffs.qh:80
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:96
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:185
 msgid "Vampire"
 msgstr "Vampir"
 
-#: qcsrc/common/buffs.qh:48
+#: qcsrc/common/buffs.qh:87
 msgid "Disability"
 msgstr "Dizabilitate"
 
-#: qcsrc/common/buffs.qh:49
+#: qcsrc/common/buffs.qh:94
 msgid "Vengeance"
 msgstr "Răzbunare"
 
-#: qcsrc/common/buffs.qh:50
+#: qcsrc/common/buffs.qh:101
 msgid "Jump"
 msgstr "Salt"
 
-#: qcsrc/common/buffs.qh:51
+#: qcsrc/common/buffs.qh:108
 msgid "Flight"
 msgstr "Zbor"
 
-#: qcsrc/common/buffs.qh:52
+#: qcsrc/common/buffs.qh:115
 msgid "Invisible"
 msgstr "Invizibilitate"
+
+#: qcsrc/common/buffs.qh:122
+msgid "Inferno"
+msgstr ""
+
+#: qcsrc/common/buffs.qh:129
+msgid "Swapper"
+msgstr ""
+
+#: qcsrc/common/buffs.qh:136
+msgid "Magnet"
+msgstr ""
 
 #: qcsrc/common/command/generic.qc:173
 msgid "error creating curl handle\n"
@@ -1204,88 +1224,88 @@ msgstr "%drd"
 msgid "%dth"
 msgstr "%dth"
 
-#: qcsrc/common/mapinfo.qc:790
+#: qcsrc/common/mapinfo.qc:772
 #, no-c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "Aruncă @!#%'n Tuba"
 
-#: qcsrc/common/mapinfo.qh:45
+#: qcsrc/common/mapinfo.qh:55
 msgid "Deathmatch"
 msgstr "Meci până la moarte"
 
-#: qcsrc/common/mapinfo.qh:45
+#: qcsrc/common/mapinfo.qh:55
 msgid "Kill all enemies"
 msgstr "Ucide toți inamicii"
 
-#: qcsrc/common/mapinfo.qh:48
+#: qcsrc/common/mapinfo.qh:58
 msgid "Last Man Standing"
 msgstr "Ultimul Supraviețuitor"
 
-#: qcsrc/common/mapinfo.qh:48
+#: qcsrc/common/mapinfo.qh:58
 msgid "Survive and kill until the enemies have no lives left"
 msgstr "Supraviețuiește și ucide până ce inamicii rămân fără vieți"
 
-#: qcsrc/common/mapinfo.qh:51
+#: qcsrc/common/mapinfo.qh:61
 msgid "Race"
 msgstr "Cursă"
 
-#: qcsrc/common/mapinfo.qh:51
+#: qcsrc/common/mapinfo.qh:61
 msgid "Race against other players to the finish line"
 msgstr "Întrece-te cu ceilalți jucători până la linia de sosire"
 
-#: qcsrc/common/mapinfo.qh:54
+#: qcsrc/common/mapinfo.qh:64
 msgid "Race CTS"
 msgstr "Cursă CTS"
 
-#: qcsrc/common/mapinfo.qh:54
+#: qcsrc/common/mapinfo.qh:64
 msgid "Race for fastest time"
 msgstr "Întrecere pentru cel mai scurt timp"
 
-#: qcsrc/common/mapinfo.qh:57
+#: qcsrc/common/mapinfo.qh:67
 msgid "Kill all enemy teammates"
 msgstr "Ucide toți coechipierii inamici"
 
-#: qcsrc/common/mapinfo.qh:57
+#: qcsrc/common/mapinfo.qh:67
 msgid "Team Deathmatch"
 msgstr "Meci până la moarte în echipă"
 
-#: qcsrc/common/mapinfo.qh:60
+#: qcsrc/common/mapinfo.qh:70
 msgid "Capture the Flag"
 msgstr "Capturează Steagul"
 
-#: qcsrc/common/mapinfo.qh:60
+#: qcsrc/common/mapinfo.qh:70
 msgid "Find and bring the enemy flag to your base to capture it"
 msgstr "Găsește și adu steagul inamic la baza ta pentru a-l captura"
 
-#: qcsrc/common/mapinfo.qh:63
+#: qcsrc/common/mapinfo.qh:73
 msgid "Clan Arena"
 msgstr "Clan Arena"
 
-#: qcsrc/common/mapinfo.qh:63
+#: qcsrc/common/mapinfo.qh:73
 msgid "Kill all enemy teammates to win the round"
 msgstr "Ucide toți coechipierii inamici pentru a câștiga runda"
 
-#: qcsrc/common/mapinfo.qh:66
+#: qcsrc/common/mapinfo.qh:76
 msgid "Capture all the control points to win"
 msgstr "Capturează toate punctele de control pentru a câștiga"
 
-#: qcsrc/common/mapinfo.qh:66
+#: qcsrc/common/mapinfo.qh:76
 msgid "Domination"
 msgstr "Dominație"
 
-#: qcsrc/common/mapinfo.qh:69
+#: qcsrc/common/mapinfo.qh:79
 msgid "Gather all the keys to win the round"
 msgstr "Adună toate cheile pentru a câștiga runda"
 
-#: qcsrc/common/mapinfo.qh:69
+#: qcsrc/common/mapinfo.qh:79
 msgid "Key Hunt"
 msgstr "Vânătoarea de chei"
 
-#: qcsrc/common/mapinfo.qh:72
+#: qcsrc/common/mapinfo.qh:82
 msgid "Assault"
 msgstr "Asalt"
 
-#: qcsrc/common/mapinfo.qh:72
+#: qcsrc/common/mapinfo.qh:82
 msgid ""
 "Destroy obstacles to find and destroy the enemy power core before time runs "
 "out"
@@ -1293,70 +1313,70 @@ msgstr ""
 "Distruge obstacole pentru a găsi și a distruge reactorul inamic înainte să "
 "se scurgă timpul"
 
-#: qcsrc/common/mapinfo.qh:75
+#: qcsrc/common/mapinfo.qh:85
 msgid "Capture control points to reach and destroy the enemy generator"
 msgstr ""
 "Capturează punctele de control pentru a ajunge la generatorul inamic și "
 "distruge-l"
 
-#: qcsrc/common/mapinfo.qh:75
+#: qcsrc/common/mapinfo.qh:85
 msgid "Onslaught"
 msgstr "Atac violent"
 
-#: qcsrc/common/mapinfo.qh:78
+#: qcsrc/common/mapinfo.qh:88
 msgid "Nexball"
 msgstr "Nexball"
 
-#: qcsrc/common/mapinfo.qh:78
+#: qcsrc/common/mapinfo.qh:88
 msgid "XonSports"
 msgstr "XonSports"
 
-#: qcsrc/common/mapinfo.qh:81
+#: qcsrc/common/mapinfo.qh:91
 msgid "Freeze Tag"
 msgstr "Înghețare cu ștafetă"
 
-#: qcsrc/common/mapinfo.qh:81
+#: qcsrc/common/mapinfo.qh:91
 msgid "Kill enemies to freeze them, stand next to teammates to revive them"
 msgstr ""
 "Ucide inamicii pentru a-i îngheța, stai lângă coechipieri pentru a-i dezgheța"
 
-#: qcsrc/common/mapinfo.qh:84
+#: qcsrc/common/mapinfo.qh:94
 msgid "Hold the ball to get points for kills"
 msgstr "Ține mingea pentru a înscrie puncte pentru ucideri"
 
-#: qcsrc/common/mapinfo.qh:84
+#: qcsrc/common/mapinfo.qh:94
 msgid "Keepaway"
 msgstr "„Ține departe”"
 
-#: qcsrc/common/mapinfo.qh:87
+#: qcsrc/common/mapinfo.qh:97
 msgid "Invasion"
 msgstr "Invazie"
 
-#: qcsrc/common/mapinfo.qh:87
+#: qcsrc/common/mapinfo.qh:97
 msgid "Survive against waves of monsters"
 msgstr "Supraviețuiește valurilor de monștri"
 
-#: qcsrc/common/monsters/monster/mage.qc:9
+#: qcsrc/common/monsters/monster/mage.qc:10
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:26
 msgid "Mage"
 msgstr "Mag"
 
-#: qcsrc/common/monsters/monster/shambler.qc:9
+#: qcsrc/common/monsters/monster/shambler.qc:10
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:25
 msgid "Shambler"
 msgstr "Târâtor"
 
-#: qcsrc/common/monsters/monster/spider.qc:9
+#: qcsrc/common/monsters/monster/spider.qc:10
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:24
 msgid "Spider"
 msgstr "Păianjen"
 
-#: qcsrc/common/monsters/monster/wyvern.qc:9
+#: qcsrc/common/monsters/monster/wyvern.qc:10
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:27
 msgid "Wyvern"
 msgstr "Dragon"
 
-#: qcsrc/common/monsters/monster/zombie.qc:9
+#: qcsrc/common/monsters/monster/zombie.qc:10
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:23
 msgid "Zombie"
 msgstr "Zombie"
@@ -1517,137 +1537,147 @@ msgstr "^F2Vei deveni spectator în runda următoare"
 
 #: qcsrc/common/notifications.qh:378
 #, c-format
+msgid "^BG%s%s^K1 was killed by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:378
+#, c-format
+msgid "^BG%s%s^K1 was scored against by ^BG%s^K1's ^BG%s^K1 buff ^K1%s%s"
+msgstr ""
+
+#: qcsrc/common/notifications.qh:379
+#, c-format
 msgid "^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a fost eliminat pe nedrept de către ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:379
+#: qcsrc/common/notifications.qh:380
 #, c-format
 msgid "^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a fost înecat de către ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:380
+#: qcsrc/common/notifications.qh:381
 #, c-format
 msgid "^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a fost pedepsit de ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:381
+#: qcsrc/common/notifications.qh:382
 #, c-format
 msgid "^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s"
 msgstr "^BG%s%s^K1 a fost ars nițel de focul^K1%s%s lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:381
+#: qcsrc/common/notifications.qh:382
 #, c-format
 msgid "^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a fost pârjolit de către ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:382
+#: qcsrc/common/notifications.qh:383
 #, c-format
 msgid "^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"
 msgstr "^BG%s^K1%s%s l-a gătit pe ^BG%s%s^K1"
 
-#: qcsrc/common/notifications.qh:383
+#: qcsrc/common/notifications.qh:384
 #, c-format
 msgid "^BG%s%s^K1 was pushed infront of a monster by ^BG%s^K1%s%s"
 msgstr "^BG%s^K1%s%s l-a împins pe ^BG%s%s^K1 în fața unui monștru"
 
-#: qcsrc/common/notifications.qh:384
+#: qcsrc/common/notifications.qh:385
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"
 msgstr "^BG%s%s^K1 a călcat pe Grenada%s%s lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:385
+#: qcsrc/common/notifications.qh:386
 #, c-format
 msgid "^BG%s%s^K1 got too close to a napalm explosion%s%s"
 msgstr "^BG%s%s^K1 a fost un pic cam aproape de o explozie Napalm%s%s"
 
-#: qcsrc/common/notifications.qh:385
+#: qcsrc/common/notifications.qh:386
 #, c-format
 msgid "^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"
 msgstr "^BG%s%s^K1 a fost ars de Grenada cu Napalm%s%s a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:386
+#: qcsrc/common/notifications.qh:387
 #, c-format
 msgid "^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"
 msgstr ""
 "^BG%s%s^K1 a fost aruncat în aer de Grenada de Gheață%s%s a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:387
+#: qcsrc/common/notifications.qh:388
 #, c-format
 msgid "^BG%s%s^K1 was frozen to death by ^BG%s^K1's Ice Nade%s%s"
 msgstr "^BG%s%s^K1 a fost degerat de Grenada de Gheață%s%s a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:388
+#: qcsrc/common/notifications.qh:389
 #, c-format
 msgid "^BG%s%s^K1 has not been healed by ^BG%s^K1's Healing Nade%s%s"
 msgstr ""
 "^BG%s%s^K1 nu a fost vindecat de Grenada de Vindecare%s%s a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:389
+#: qcsrc/common/notifications.qh:390
 #, c-format
 msgid "^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a fost aruncat în spațiu de către ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:390
+#: qcsrc/common/notifications.qh:391
 #, c-format
 msgid "^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"
 msgstr "^BG%s^K1%s%s l-a acoperit pe ^BG%s%s^K1 cu mâzgă"
 
-#: qcsrc/common/notifications.qh:391
+#: qcsrc/common/notifications.qh:392
 #, c-format
 msgid "^BG%s%s^K1 was preserved by ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a fost conservat de ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:392
+#: qcsrc/common/notifications.qh:393
 #, c-format
 msgid "^BG%s%s^K1 tried to occupy ^BG%s^K1's teleport destination space%s%s"
 msgstr ""
 "^BG%s%s^K1 a încercat să ocupe spațiul destinat teleportării lui ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:392
+#: qcsrc/common/notifications.qh:393
 #, c-format
 msgid "^BG%s%s^K1 was telefragged by ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a murit de la teleportorul lui ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:393
+#: qcsrc/common/notifications.qh:394
 #, c-format
 msgid "^BG%s%s^K1 died in an accident with ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a murit într-un accident cu ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:394
+#: qcsrc/common/notifications.qh:395
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s"
 msgstr ""
 "^BG%s%s^K1 a fost prins în explozia de la arma Bondar%s%s a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:395
+#: qcsrc/common/notifications.qh:396
 #, c-format
 msgid "^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s"
 msgstr "^BG%s%s^K1 a văzut stele verzi de la arma Bondar%s%s a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:396
+#: qcsrc/common/notifications.qh:397
 #, c-format
 msgid "^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"
 msgstr "^BG%s%s^K1 a fost zdrobit de ^BG%s^K1%s%s"
 
-#: qcsrc/common/notifications.qh:397
+#: qcsrc/common/notifications.qh:398
 #, c-format
 msgid "^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s"
 msgstr "^BG%s%s^K1 a fost bombardat de arma Raptor%s%s a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:398
+#: qcsrc/common/notifications.qh:399
 #, c-format
 msgid "^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s"
 msgstr "^BG%s%s^K1 n-a putut rezista petele purpurii%s%s ale lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:399
+#: qcsrc/common/notifications.qh:400
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s"
 msgstr ""
 "^BG%s%s^K1 a fost prins în suflul exploziei când Raptor-ul lui ^BG%s^K1 a "
 "explodat%s%s"
 
-#: qcsrc/common/notifications.qh:400
+#: qcsrc/common/notifications.qh:401
 #, c-format
 msgid ""
 "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"
@@ -1655,38 +1685,33 @@ msgstr ""
 "^BG%s%s^K1 a fost prins în suflul exploziei când Păianjenul Mecanizat al lui "
 "^BG%s^K1 a explodat%s%s"
 
-#: qcsrc/common/notifications.qh:401
+#: qcsrc/common/notifications.qh:402
 #, c-format
 msgid "^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s"
 msgstr ""
 "^BG%s%s^K1 a fost sfârtecat de Păianjenul Mecanizat%s%s al lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:402
+#: qcsrc/common/notifications.qh:403
 #, c-format
 msgid "^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"
 msgstr ""
 "^BG%s%s^K1 a fost spulberat de Păianjenul Mecanizat%s%s al lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:403
+#: qcsrc/common/notifications.qh:404
 #, c-format
 msgid "^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"
 msgstr ""
 "^BG%s%s^K1 a fost prins în explozia%s%s mașinii de curse a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:404
+#: qcsrc/common/notifications.qh:405
 #, c-format
 msgid "^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"
 msgstr "^BG%s%s^K1 a fost căsăpit de mașina de curse%s%s a lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:405
+#: qcsrc/common/notifications.qh:406
 #, c-format
 msgid "^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"
 msgstr "^BG%s%s^K1 nu s-a putut adăposti de mașina de curse%s%s a lui ^BG%s^K1"
-
-#: qcsrc/common/notifications.qh:406
-#, c-format
-msgid "^BG%s%s^K1 was destroyed by the vengeful ^BG%s^K1%s%s"
-msgstr "^BG%s%s^K1 a fost distrus de răzbunătorul ^BG%s^K1%s%s"
 
 #: qcsrc/common/notifications.qh:407
 #, c-format
@@ -2472,7 +2497,7 @@ msgstr "^BG%s%s^K1 a fost împușcat de Mitraliera%s%s lui ^BG%s^K1"
 msgid "^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"
 msgstr "^BG%s%s^K1 a fost ciuruit de Mitraliera%s%s lui ^BG%s^K1"
 
-#: qcsrc/common/notifications.qh:552 qcsrc/common/notifications.qh:761
+#: qcsrc/common/notifications.qh:552 qcsrc/common/notifications.qh:760
 #, c-format
 msgid "^BGYou cannot place more than ^F2%s^BG mines at a time"
 msgstr "^BGNu poți plasa mai mult de ^F2%s^BG mine în același timp"
@@ -3236,7 +3261,11 @@ msgstr "^BGSe scanează intervalul de frecvență..."
 msgid "^BGYou are starting with the ^TC^TT Key"
 msgstr "^BGAi început cu cheia ^TC^TT"
 
-#: qcsrc/common/notifications.qh:721 qcsrc/common/notifications.qh:723
+#: qcsrc/common/notifications.qh:721
+msgid "^BGYou have no lives left, you must wait until the next match"
+msgstr "^BGNu mai ai vieți rămase, trebuie să aștepți următorul meci"
+
+#: qcsrc/common/notifications.qh:722
 #, c-format
 msgid ""
 "^BGWaiting for players to join...\n"
@@ -3245,33 +3274,29 @@ msgstr ""
 "^BGSe așteaptă jucători să se alăture...\n"
 "Sunt necesari jucători activi pentru: %s"
 
-#: qcsrc/common/notifications.qh:722
-msgid "^BGYou have no lives left, you must wait until the next match"
-msgstr "^BGNu mai ai vieți rămase, trebuie să aștepți următorul meci"
-
-#: qcsrc/common/notifications.qh:724
+#: qcsrc/common/notifications.qh:723
 #, c-format
 msgid "^BGWaiting for %s player(s) to join..."
 msgstr "^BGSe așteaptă să se alăture %s jucător(i)..."
 
-#: qcsrc/common/notifications.qh:725
+#: qcsrc/common/notifications.qh:724
 msgid "^F4^COUNT^BG left to find some ammo!"
 msgstr "^F4^COUNT^BG să găsești niște muniție!"
 
-#: qcsrc/common/notifications.qh:726
+#: qcsrc/common/notifications.qh:725
 msgid "^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"
 msgstr "^BGCaută niște muniție sau vei muri în ^F4^COUNT^BG!"
 
-#: qcsrc/common/notifications.qh:726
+#: qcsrc/common/notifications.qh:725
 msgid "^BGGet some ammo! ^F4^COUNT^BG left!"
 msgstr "^BGIa niște muniție! Mai ai ^F4^COUNT^BG !"
 
-#: qcsrc/common/notifications.qh:727
+#: qcsrc/common/notifications.qh:726
 #, c-format
 msgid "^F2Extra lives remaining: ^K1%s"
 msgstr "^F2Extra vieți rămase: ^K1%s"
 
-#: qcsrc/common/notifications.qh:729
+#: qcsrc/common/notifications.qh:728
 #, c-format
 msgid ""
 "^F2^COUNT^BG until weapon change...\n"
@@ -3280,16 +3305,16 @@ msgstr ""
 "^F2^COUNT^BG până se schimbă arma...\n"
 "Următoarea armă: ^F1%s"
 
-#: qcsrc/common/notifications.qh:730
+#: qcsrc/common/notifications.qh:729
 #, c-format
 msgid "^F2Active weapon: ^F1%s"
 msgstr "^F2Armă activă: ^F1%s"
 
-#: qcsrc/common/notifications.qh:731
+#: qcsrc/common/notifications.qh:730
 msgid "^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"
 msgstr "^BGApasă ^F2DROPWEAPON^BG din nou să arunci grenada!"
 
-#: qcsrc/common/notifications.qh:732
+#: qcsrc/common/notifications.qh:731
 msgid ""
 "^K1Your generator is NOT shielded!\n"
 "^BGRe-capture controlpoints to shield it!"
@@ -3297,7 +3322,7 @@ msgstr ""
 "^K1Generatorul tău NU ESTE  protejat!\n"
 "^BGRecapturează punctele de control pentru al proteja!"
 
-#: qcsrc/common/notifications.qh:733
+#: qcsrc/common/notifications.qh:732
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep fragging until we have a winner!"
@@ -3305,7 +3330,7 @@ msgstr ""
 "^F2Acum se joacă ^F4PRELUNGIRE^F2!\n"
 "Continuați să ucideți până ce avem un învingător!"
 
-#: qcsrc/common/notifications.qh:733
+#: qcsrc/common/notifications.qh:732
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "Keep scoring until we have a winner!"
@@ -3313,7 +3338,7 @@ msgstr ""
 "^F2Acum se joacă ^F4PRELUNGIRE^F2!\n"
 "Continuați să înscrieți până ce avem un învingător!"
 
-#: qcsrc/common/notifications.qh:734
+#: qcsrc/common/notifications.qh:733
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
 "\n"
@@ -3326,7 +3351,7 @@ msgstr ""
 "Cu cât mai multe puncte deține echipa ta,\n"
 "cu atât mai repede va ceda generatorul inamicului"
 
-#: qcsrc/common/notifications.qh:735
+#: qcsrc/common/notifications.qh:734
 #, c-format
 msgid ""
 "^F2Now playing ^F4OVERTIME^F2!\n"
@@ -3335,15 +3360,15 @@ msgstr ""
 "^F2Acum se joacă ^F4PRELUNGIRE^F2!\n"
 "^BGA fost adăugat ^F4%s^BG în joc!"
 
-#: qcsrc/common/notifications.qh:736
+#: qcsrc/common/notifications.qh:735
 msgid "^K1In^BG-portal created"
 msgstr "^K1Interior^BG-portal creat"
 
-#: qcsrc/common/notifications.qh:737
+#: qcsrc/common/notifications.qh:736
 msgid "^F3Out^BG-portal created"
 msgstr "^F3Exterior^BG-portal creat"
 
-#: qcsrc/common/notifications.qh:738
+#: qcsrc/common/notifications.qh:737
 msgid ""
 "^K1Portal deployment failed.\n"
 "\n"
@@ -3353,109 +3378,109 @@ msgstr ""
 "\n"
 "^F2Prinde-l pentru a reîncerca!"
 
-#: qcsrc/common/notifications.qh:739
+#: qcsrc/common/notifications.qh:738
 msgid "^F2Invisibility has worn off"
 msgstr "^F2Invisibilitatea a expirat"
 
-#: qcsrc/common/notifications.qh:740
+#: qcsrc/common/notifications.qh:739
 msgid "^F2Shield has worn off"
 msgstr "^F2Scutul a expirat"
 
-#: qcsrc/common/notifications.qh:741
+#: qcsrc/common/notifications.qh:740
 msgid "^F2Speed has worn off"
 msgstr "^F2Rapiditatea a expirat"
 
-#: qcsrc/common/notifications.qh:742
+#: qcsrc/common/notifications.qh:741
 msgid "^F2Strength has worn off"
 msgstr "^F2Rezistența a expirat"
 
-#: qcsrc/common/notifications.qh:743
+#: qcsrc/common/notifications.qh:742
 msgid "^F2You are invisible"
 msgstr "^F2Ești invincibil"
 
-#: qcsrc/common/notifications.qh:744
+#: qcsrc/common/notifications.qh:743
 msgid "^F2Shield surrounds you"
 msgstr "^F2Scutul de înconjoară"
 
-#: qcsrc/common/notifications.qh:745
+#: qcsrc/common/notifications.qh:744
 msgid "^F2You are on speed"
 msgstr "^F2Ești în viteză"
 
-#: qcsrc/common/notifications.qh:746
+#: qcsrc/common/notifications.qh:745
 msgid "^F2Strength infuses your weapons with devastating power"
 msgstr "^F2Forța îți infuzează armele cu putere devastatoare"
 
-#: qcsrc/common/notifications.qh:747
+#: qcsrc/common/notifications.qh:746
 msgid "^F2The race is over, finish your lap!"
 msgstr "^F2Cursa s-a încheiat, termină-ți tura!"
 
-#: qcsrc/common/notifications.qh:748
+#: qcsrc/common/notifications.qh:747
 msgid "^BGSecondary fire inflicts no damage!"
 msgstr "^BGFoc secundar nu cauzează daune!"
 
-#: qcsrc/common/notifications.qh:749
+#: qcsrc/common/notifications.qh:748
 msgid "^BGSequence completed!"
 msgstr "^BGSecvență terminată!"
 
-#: qcsrc/common/notifications.qh:750
+#: qcsrc/common/notifications.qh:749
 msgid "^BGThere are more to go..."
 msgstr "^BGMai sunt multe..."
 
-#: qcsrc/common/notifications.qh:751
+#: qcsrc/common/notifications.qh:750
 #, c-format
 msgid "^BGOnly %s^BG more to go..."
 msgstr "Mai sunt ^BGdoar %s^BG..."
 
-#: qcsrc/common/notifications.qh:752
+#: qcsrc/common/notifications.qh:751
 msgid "^F2Superweapons have broken down"
 msgstr "^F2Super-armele s-au epuizat"
 
-#: qcsrc/common/notifications.qh:753
+#: qcsrc/common/notifications.qh:752
 msgid "^F2Superweapons have been lost"
 msgstr "^F2Super-armele au fost pierdute"
 
-#: qcsrc/common/notifications.qh:754
+#: qcsrc/common/notifications.qh:753
 msgid "^F2You now have a superweapon"
 msgstr "^F2Acum ai o super-armă"
 
-#: qcsrc/common/notifications.qh:755
+#: qcsrc/common/notifications.qh:754
 msgid "^K1Changing to ^TC^TT^K1 in ^COUNT"
 msgstr "^K1Schimbare la ^TC^TT^K1 în ^COUNT"
 
-#: qcsrc/common/notifications.qh:756
+#: qcsrc/common/notifications.qh:755
 msgid "^K1Changing team in ^COUNT"
 msgstr "^K1Schimbarea echipei în ^COUNT"
 
-#: qcsrc/common/notifications.qh:757
+#: qcsrc/common/notifications.qh:756
 msgid "^K1Spectating in ^COUNT"
 msgstr "^K1Spectator în ^COUNT"
 
-#: qcsrc/common/notifications.qh:758
+#: qcsrc/common/notifications.qh:757
 msgid "^K1Suicide in ^COUNT"
 msgstr "^K1Sinucidere în ^COUNT"
 
-#: qcsrc/common/notifications.qh:759
+#: qcsrc/common/notifications.qh:758
 msgid "^F4Timeout begins in ^COUNT"
 msgstr "^F4Pauza începe în ^COUNT"
 
-#: qcsrc/common/notifications.qh:760
+#: qcsrc/common/notifications.qh:759
 msgid "^F4Timeout ends in ^COUNT"
 msgstr "^F4Pauza se termină în ^COUNT"
 
-#: qcsrc/common/notifications.qh:1070 qcsrc/common/notifications.qh:1071
+#: qcsrc/common/notifications.qh:1069 qcsrc/common/notifications.qh:1070
 #, c-format
 msgid " (near %s)"
 msgstr " (aproape %s)"
 
-#: qcsrc/common/notifications.qh:1078 qcsrc/common/notifications.qh:1079
+#: qcsrc/common/notifications.qh:1077 qcsrc/common/notifications.qh:1078
 msgid "primary"
 msgstr "primară"
 
-#: qcsrc/common/notifications.qh:1078 qcsrc/common/notifications.qh:1079
+#: qcsrc/common/notifications.qh:1077 qcsrc/common/notifications.qh:1078
 msgid "secondary"
 msgstr "secundară"
 
-#: qcsrc/common/notifications.qh:1089
+#: qcsrc/common/notifications.qh:1088
 #, c-format
 msgid " ^F1(Press %s)"
 msgstr " ^F1(Apasă %s)"
@@ -3803,7 +3828,7 @@ msgstr ""
 "Comanda invalida. Pentru o lista cu comenzile suportate, scrieti menu_cmd "
 "ajutor (in consola).\n"
 
-#: qcsrc/menu/item/listbox.qc:424
+#: qcsrc/menu/item/listbox.qc:488
 #, c-format
 msgid "Item %d"
 msgstr "Obiect %d"
@@ -3815,7 +3840,7 @@ msgstr "Obiect %d"
 msgid "Custom"
 msgstr "personalizat"
 
-#: qcsrc/menu/xonotic/campaign.qc:285
+#: qcsrc/menu/xonotic/campaign.qc:286
 #, c-format
 msgid "Level %d: %s"
 msgstr "Nivelul %d: %s"
@@ -3933,6 +3958,7 @@ msgid "Noncurrent scale:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:39
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:31
 msgid "Align icon:"
 msgstr "Aliniere icon:"
 
@@ -3940,6 +3966,7 @@ msgstr "Aliniere icon:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:39
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:43
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:31
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:43
 msgid "Left"
@@ -3949,14 +3976,11 @@ msgstr "Stanga"
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:41
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:44
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:33
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:44
 msgid "Right"
 msgstr "Dreapta"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_buffs.qc:6
-msgid "Buffs Panel"
-msgstr "Panou de buff-uri"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:6
 msgid "Centerprint Panel"
@@ -4024,6 +4048,7 @@ msgid "Health/Armor Panel"
 msgstr "Fereastra Viata/Armura"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:25
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:25
 msgid "Enable status bar"
 msgstr "Activare bara de statut"
@@ -4067,6 +4092,38 @@ msgstr "Informatii:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.qc:28
 msgid "Flip align"
 msgstr "Oglindire pozitie"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:6
+msgid "Items Time Panel"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:23
+msgid "PNL^Disabled"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:24
+msgid "PNL^Enabled spectating"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:25
+msgid "PNL^Enabled even playing in warmup"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:36
+msgid "Reduced"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:39
+msgid "Text/icon ratio:"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:42
+msgid "Hide spawned items"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:44
+msgid "Dynamic size"
+msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:6
 msgid "Mod Icons Panel"
@@ -4195,10 +4252,6 @@ msgstr "Include accelerația verticală"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:6
 msgid "Powerups Panel"
 msgstr "Panou Powerup"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:48
-msgid "Flip strength and shield positions"
-msgstr "Inversează pozițiile de putere și scut"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.qc:6
 msgid "Pressed Keys Panel"
@@ -4523,7 +4576,7 @@ msgid "Spawn"
 msgstr "Crează"
 
 #: qcsrc/menu/xonotic/dialog_monstertools.qc:31
-#: qcsrc/menu/xonotic/serverlist.qc:437
+#: qcsrc/menu/xonotic/serverlist.qc:438
 msgid "Remove"
 msgstr "Șterge"
 
@@ -4752,9 +4805,8 @@ msgid "Godlike"
 msgstr "Dumnezeiesc"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:148
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:11
-msgid "Mutators"
-msgstr "Modificatori"
+msgid "Mutators..."
+msgstr "Modificari speciale..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:157
 msgid "Maplist"
@@ -4838,6 +4890,10 @@ msgstr "Închide"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:118
 msgid "MAP^Play"
 msgstr "MAP^Joacă"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:11
+msgid "Mutators"
+msgstr "Modificatori"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.qc:37
 msgid "All Weapons Arena"
@@ -6248,7 +6304,7 @@ msgid "GHOITEMS^Blue"
 msgstr "GHOITEMS^Albastru"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:56
-#: qcsrc/menu/xonotic/serverlist.qc:925
+#: qcsrc/menu/xonotic/serverlist.qc:942
 msgid "Players"
 msgstr "Jucatori"
 
@@ -7008,23 +7064,23 @@ msgstr "Acțiune instantă! (hartă aleatorie cu boți)"
 msgid "???"
 msgstr "???"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:139
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:138
 msgid "Campaign Difficulty:"
 msgstr "Dificultate Campanie:"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:140
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:139
 msgid "CSKL^Easy"
 msgstr "CSKL^Ușor"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:141
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:140
 msgid "CSKL^Medium"
 msgstr "CSKL^Mediu"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:142
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:141
 msgid "CSKL^Hard"
 msgstr "CSKL^Greu"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.qc:144
+#: qcsrc/menu/xonotic/dialog_singleplayer.qc:143
 msgid "Start Singleplayer!"
 msgstr "Pornește Joc Singleplayer!"
 
@@ -7092,7 +7148,7 @@ msgstr ""
 "Huh? Nu se poate juca asta (tipul jocului este invalid). Re-filtrez pentru a "
 "preveni asta pe viitor.\n"
 
-#: qcsrc/menu/xonotic/playerlist.qc:121 qcsrc/menu/xonotic/playerlist.qc:131
+#: qcsrc/menu/xonotic/playerlist.qc:122 qcsrc/menu/xonotic/playerlist.qc:132
 msgid "spectator"
 msgstr "spectator"
 
@@ -7100,59 +7156,59 @@ msgstr "spectator"
 msgid "<no model found>"
 msgstr "<nu a fost găsit nici un model>"
 
-#: qcsrc/menu/xonotic/serverlist.qc:148
+#: qcsrc/menu/xonotic/serverlist.qc:149
 msgid "SLCAT^Favorites"
 msgstr "SLCAT^Favorite"
 
-#: qcsrc/menu/xonotic/serverlist.qc:149
+#: qcsrc/menu/xonotic/serverlist.qc:150
 msgid "SLCAT^Recommended"
 msgstr "SLCAT^Recomandate"
 
-#: qcsrc/menu/xonotic/serverlist.qc:150
+#: qcsrc/menu/xonotic/serverlist.qc:151
 msgid "SLCAT^Normal Servers"
 msgstr "SLCAT^Servere Normale"
 
-#: qcsrc/menu/xonotic/serverlist.qc:151
+#: qcsrc/menu/xonotic/serverlist.qc:152
 msgid "SLCAT^Servers"
 msgstr "SLCAT^Servere"
 
-#: qcsrc/menu/xonotic/serverlist.qc:152
+#: qcsrc/menu/xonotic/serverlist.qc:153
 msgid "SLCAT^Competitive Mode"
 msgstr "SLCAT^Mod Competitiv"
 
-#: qcsrc/menu/xonotic/serverlist.qc:153
+#: qcsrc/menu/xonotic/serverlist.qc:154
 msgid "SLCAT^Modified Servers"
 msgstr "SLCAT^Servere modificate"
 
-#: qcsrc/menu/xonotic/serverlist.qc:154
+#: qcsrc/menu/xonotic/serverlist.qc:155
 msgid "SLCAT^Overkill Mode"
 msgstr "SLCAT^Mod Overkill"
 
-#: qcsrc/menu/xonotic/serverlist.qc:155
+#: qcsrc/menu/xonotic/serverlist.qc:156
 msgid "SLCAT^InstaGib Mode"
 msgstr "SLCAT^Mod InstaGib"
 
-#: qcsrc/menu/xonotic/serverlist.qc:156
+#: qcsrc/menu/xonotic/serverlist.qc:157
 msgid "SLCAT^Defrag Mode"
 msgstr "SLCAT^Mod Defrag"
 
-#: qcsrc/menu/xonotic/serverlist.qc:437
+#: qcsrc/menu/xonotic/serverlist.qc:438
 msgid "Favorite"
 msgstr "Adaugă Favorite"
 
-#: qcsrc/menu/xonotic/serverlist.qc:921
+#: qcsrc/menu/xonotic/serverlist.qc:938
 msgid "Ping"
 msgstr "Latență"
 
-#: qcsrc/menu/xonotic/serverlist.qc:922
+#: qcsrc/menu/xonotic/serverlist.qc:939
 msgid "Host name"
 msgstr "Nume server"
 
-#: qcsrc/menu/xonotic/serverlist.qc:923
+#: qcsrc/menu/xonotic/serverlist.qc:940
 msgid "Map"
 msgstr "Hartă"
 
-#: qcsrc/menu/xonotic/serverlist.qc:924
+#: qcsrc/menu/xonotic/serverlist.qc:941
 msgid "Type"
 msgstr "Tip"
 
@@ -7228,96 +7284,96 @@ msgstr "PART^Rapid"
 msgid "PART^Instant"
 msgstr "PART^Instant"
 
-#: qcsrc/menu/xonotic/statslist.qc:59
+#: qcsrc/menu/xonotic/statslist.qc:60
 msgid "January"
 msgstr "ianuarie"
 
-#: qcsrc/menu/xonotic/statslist.qc:60
+#: qcsrc/menu/xonotic/statslist.qc:61
 msgid "February"
 msgstr "februarie"
 
-#: qcsrc/menu/xonotic/statslist.qc:61
+#: qcsrc/menu/xonotic/statslist.qc:62
 msgid "March"
 msgstr "martie"
 
-#: qcsrc/menu/xonotic/statslist.qc:62
+#: qcsrc/menu/xonotic/statslist.qc:63
 msgid "April"
 msgstr "aprilie"
 
-#: qcsrc/menu/xonotic/statslist.qc:63
+#: qcsrc/menu/xonotic/statslist.qc:64
 msgid "May"
 msgstr "mai"
 
-#: qcsrc/menu/xonotic/statslist.qc:64
+#: qcsrc/menu/xonotic/statslist.qc:65
 msgid "June"
 msgstr "iunie"
 
-#: qcsrc/menu/xonotic/statslist.qc:65
+#: qcsrc/menu/xonotic/statslist.qc:66
 msgid "July"
 msgstr "iulie"
 
-#: qcsrc/menu/xonotic/statslist.qc:66
+#: qcsrc/menu/xonotic/statslist.qc:67
 msgid "August"
 msgstr "august"
 
-#: qcsrc/menu/xonotic/statslist.qc:67
+#: qcsrc/menu/xonotic/statslist.qc:68
 msgid "September"
 msgstr "septembrie"
 
-#: qcsrc/menu/xonotic/statslist.qc:68
+#: qcsrc/menu/xonotic/statslist.qc:69
 msgid "October"
 msgstr "octombrie"
 
-#: qcsrc/menu/xonotic/statslist.qc:69
+#: qcsrc/menu/xonotic/statslist.qc:70
 msgid "November"
 msgstr "noiembrie"
 
-#: qcsrc/menu/xonotic/statslist.qc:70
+#: qcsrc/menu/xonotic/statslist.qc:71
 msgid "December"
 msgstr "decembrie"
 
-#: qcsrc/menu/xonotic/statslist.qc:126
+#: qcsrc/menu/xonotic/statslist.qc:127
 msgid "Joined:"
 msgstr "Intrat:"
 
-#: qcsrc/menu/xonotic/statslist.qc:133
+#: qcsrc/menu/xonotic/statslist.qc:134
 msgid "Last_Seen:"
 msgstr "Last_Seen:"
 
-#: qcsrc/menu/xonotic/statslist.qc:140
+#: qcsrc/menu/xonotic/statslist.qc:141
 msgid "Time_Played:"
 msgstr "Time_Played:"
 
-#: qcsrc/menu/xonotic/statslist.qc:147
+#: qcsrc/menu/xonotic/statslist.qc:148
 msgid "Favorite_Map:"
 msgstr "Favorite_Map:"
 
-#: qcsrc/menu/xonotic/statslist.qc:231 qcsrc/menu/xonotic/statslist.qc:275
+#: qcsrc/menu/xonotic/statslist.qc:232 qcsrc/menu/xonotic/statslist.qc:276
 #, c-format
 msgid "%s_Matches:"
 msgstr "%s_Matches:"
 
-#: qcsrc/menu/xonotic/statslist.qc:238
+#: qcsrc/menu/xonotic/statslist.qc:239
 #, c-format
 msgid "%s_ELO:"
 msgstr "%s_ELO:"
 
-#: qcsrc/menu/xonotic/statslist.qc:245
+#: qcsrc/menu/xonotic/statslist.qc:246
 #, c-format
 msgid "%s_Rank:"
 msgstr "%s_Clasament:"
 
-#: qcsrc/menu/xonotic/statslist.qc:252
+#: qcsrc/menu/xonotic/statslist.qc:253
 #, c-format
 msgid "%s_Percentile:"
 msgstr "%s_Percentile:"
 
-#: qcsrc/menu/xonotic/statslist.qc:261
+#: qcsrc/menu/xonotic/statslist.qc:262
 #, c-format
 msgid "%s_Favorite_Map:"
 msgstr "%s_Favorite_Map:"
 
-#: qcsrc/menu/xonotic/statslist.qc:276
+#: qcsrc/menu/xonotic/statslist.qc:277
 #, c-format
 msgid "%d (unranked)"
 msgstr "%d (neclasat)"

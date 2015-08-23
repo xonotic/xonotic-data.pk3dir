@@ -2,9 +2,9 @@
 #define SLIDER_PARTICLES_H
 #include "textslider.qc"
 CLASS(XonoticParticlesSlider, XonoticTextSlider)
-	METHOD(XonoticParticlesSlider, configureXonoticParticlesSlider, void(entity))
-	METHOD(XonoticParticlesSlider, loadCvars, void(entity))
-	METHOD(XonoticParticlesSlider, saveCvars, void(entity))
+	METHOD(XonoticParticlesSlider, configureXonoticParticlesSlider, void(entity));
+	METHOD(XonoticParticlesSlider, loadCvars, void(entity));
+	METHOD(XonoticParticlesSlider, saveCvars, void(entity));
 ENDCLASS(XonoticParticlesSlider)
 entity makeXonoticParticlesSlider();
 #endif

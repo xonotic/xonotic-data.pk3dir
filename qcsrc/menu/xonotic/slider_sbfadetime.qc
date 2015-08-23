@@ -2,9 +2,9 @@
 #define SLIDER_SBFADETIME_H
 #include "textslider.qc"
 CLASS(XonoticScoreboardFadeTimeSlider, XonoticTextSlider)
-	METHOD(XonoticScoreboardFadeTimeSlider, configureXonoticScoreboardFadeTimeSlider, void(entity))
-	METHOD(XonoticScoreboardFadeTimeSlider, loadCvars, void(entity))
-	METHOD(XonoticScoreboardFadeTimeSlider, saveCvars, void(entity))
+	METHOD(XonoticScoreboardFadeTimeSlider, configureXonoticScoreboardFadeTimeSlider, void(entity));
+	METHOD(XonoticScoreboardFadeTimeSlider, loadCvars, void(entity));
+	METHOD(XonoticScoreboardFadeTimeSlider, saveCvars, void(entity));
 ENDCLASS(XonoticScoreboardFadeTimeSlider)
 entity makeXonoticScoreboardFadeTimeSlider();
 #endif

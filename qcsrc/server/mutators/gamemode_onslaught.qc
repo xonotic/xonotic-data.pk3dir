@@ -502,7 +502,7 @@ void ons_ControlPoint_Icon_Think()
 	// damaged fx
 	if(random() < 0.6 - self.health / self.max_health)
 	{
-		pointparticles(particleeffectnum("electricity_sparks"), self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
+		Send_Effect("electricity_sparks", self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
 			sound(self, CH_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTEN_NORM);
@@ -2056,6 +2056,12 @@ MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ons_PlayHitsound)
+{
+	return (frag_victim.classname == "onslaught_generator" && !frag_victim.isshielded)
+		|| (frag_victim.classname == "onslaught_controlpoint_icon" && !frag_victim.owner.isshielded);
+}
+
 // ==========
 // Spawnfuncs
 // ==========
@@ -2118,7 +2124,6 @@ void spawnfunc_onslaught_generator()
 	ons_GeneratorSetup(self);
 }
 
-
 // scoreboard setup
 void ons_ScoreRules()
 {
@@ -2167,6 +2172,7 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	MUTATOR_HOOK(SpectateCopy, ons_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, ons_SV_ParseClientCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ons_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayHitsound, ons_PlayHitsound, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

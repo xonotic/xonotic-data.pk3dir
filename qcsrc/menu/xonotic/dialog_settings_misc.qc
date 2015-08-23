@@ -2,7 +2,7 @@
 #define DIALOG_SETTINGS_MISC_H
 #include "tab.qc"
 CLASS(XonoticMiscSettingsTab, XonoticTab)
-	METHOD(XonoticMiscSettingsTab, fill, void(entity))
+	METHOD(XonoticMiscSettingsTab, fill, void(entity));
 	ATTRIB(XonoticMiscSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMiscSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticMiscSettingsTab, columns, float, 6.2)

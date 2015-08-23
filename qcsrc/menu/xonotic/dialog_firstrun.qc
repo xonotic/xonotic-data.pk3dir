@@ -2,7 +2,7 @@
 #define DIALOG_FIRSTRUN_H
 #include "rootdialog.qc"
 CLASS(XonoticFirstRunDialog, XonoticRootDialog)
-	METHOD(XonoticFirstRunDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
+	METHOD(XonoticFirstRunDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
 	ATTRIB(XonoticFirstRunDialog, title, string, _("Welcome"))
 	ATTRIB(XonoticFirstRunDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN)
 	ATTRIB(XonoticFirstRunDialog, intendedWidth, float, 0.7)

@@ -28,7 +28,7 @@ void W_GiveWeapon (entity e, float wep)
 
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 {
-	if((player.items & IT_STRENGTH)
+	if((player.items & ITEM_Strength.m_itemid)
 		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
 		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{

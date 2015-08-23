@@ -2,8 +2,8 @@
 #define CHECKBOX_H
 #include "../item/checkbox.qc"
 CLASS(XonoticCheckBox, CheckBox)
-	METHOD(XonoticCheckBox, configureXonoticCheckBox, void(entity, float, float, string, string))
-	METHOD(XonoticCheckBox, setChecked, void(entity, float))
+	METHOD(XonoticCheckBox, configureXonoticCheckBox, void(entity, float, float, string, string));
+	METHOD(XonoticCheckBox, setChecked, void(entity, float));
 	ATTRIB(XonoticCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticCheckBox, image, string, SKINGFX_CHECKBOX)
 	ATTRIB(XonoticCheckBox, yesValue, float, 1)
@@ -15,8 +15,8 @@ CLASS(XonoticCheckBox, CheckBox)
 	ATTRIB(XonoticCheckBox, colorD, vector, SKINCOLOR_CHECKBOX_D)
 
 	ATTRIB(XonoticCheckBox, cvarName, string, string_null)
-	METHOD(XonoticCheckBox, loadCvars, void(entity))
-	METHOD(XonoticCheckBox, saveCvars, void(entity))
+	METHOD(XonoticCheckBox, loadCvars, void(entity));
+	METHOD(XonoticCheckBox, saveCvars, void(entity));
 	ATTRIB(XonoticCheckBox, sendCvars, float, 0)
 
 	ATTRIB(XonoticCheckBox, alpha, float, SKINALPHA_TEXT)

@@ -11,7 +11,7 @@ CLASS(XonoticRootDialog, XonoticDialog)
 	ATTRIB(XonoticDialog, rows, float, 3)
 	ATTRIB(XonoticDialog, columns, float, 2)
 	*/
-	METHOD(XonoticRootDialog, close, void(entity))
+	METHOD(XonoticRootDialog, close, void(entity));
 ENDCLASS(XonoticRootDialog)
 #endif
 

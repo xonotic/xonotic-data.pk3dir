@@ -25,13 +25,15 @@
 #include "bot/bot.qh"
 #include "bot/navigation.qh"
 
-#include "vehicles/vehicle.qh"
+#include "../common/vehicles/all.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
 #include "../common/physics.qh"
+
+#include "../common/items/all.qc"
 
 #include "../common/triggers/subs.qh"
 #include "../common/triggers/triggers.qh"
@@ -186,7 +188,7 @@ void PutObserverInServer (void)
 	entity	spot;
     self.hud = HUD_NORMAL;
 
-	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1); }
 
 	spot = SelectSpawnPoint (true);
 	if(!spot)
@@ -217,7 +219,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-		vehicles_exit(VHEF_RELESE);
+		vehicles_exit(VHEF_RELEASE);
 
 	WaypointSprite_PlayerDead();
 
@@ -422,7 +424,7 @@ void PutClientInServer (void)
 	// reset player keys
 	self.itemkeys = 0;
 
-	MUTATOR_CALLHOOK(PutClientInServer);
+	MUTATOR_CALLHOOK(PutClientInServer, self);
 
 	if(gameover)
 		self.classname = "observer";
@@ -444,9 +446,6 @@ void PutClientInServer (void)
 		}
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
-
-		if(self.vehicle)
-			vehicles_exit(VHEF_RELESE);
 
 		self.classname = "player";
 		self.wasplayer = true;
@@ -644,8 +643,7 @@ void PutClientInServer (void)
 
 		Unfreeze(self);
 
-		spawn_spot = spot;
-		MUTATOR_CALLHOOK(PlayerSpawn);
+		MUTATOR_CALLHOOK(PlayerSpawn, spot);
 
 		if(autocvar_spawn_debug)
 		{
@@ -819,7 +817,7 @@ void ClientKill_Now()
 {
 	if(self.vehicle)
 	{
-	    vehicles_exit(VHEF_RELESE);
+	    vehicles_exit(VHEF_RELEASE);
 	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
@@ -1280,7 +1278,7 @@ void ClientConnect (void)
 		self = oldself;
 	}
 
-	MUTATOR_CALLHOOK(ClientConnect);
+	MUTATOR_CALLHOOK(ClientConnect, self);
 }
 /*
 =============
@@ -1294,7 +1292,7 @@ void ReadyCount();
 void ClientDisconnect (void)
 {
 	if(self.vehicle)
-	    vehicles_exit(VHEF_RELESE);
+	    vehicles_exit(VHEF_RELEASE);
 
 	if (!IS_CLIENT(self))
 	{
@@ -1304,7 +1302,7 @@ void ClientDisconnect (void)
 
 	PlayerStats_GameReport_FinalizePlayer(self);
 
-	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1); }
 
 	CheatShutdownClient();
 
@@ -1441,7 +1439,7 @@ void respawn(void)
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
-		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
+		Send_Effect("respawn_ghost", self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
@@ -1463,7 +1461,7 @@ void play_countdown(float finished, string samp)
 void player_powerups (void)
 {
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
-	olditems = self.items;
+	int items_prev = self.items;
 
 	if((self.items & IT_USING_JETPACK) && !self.deadflag && !gameover)
 		self.modelflags |= MF_ROCKET;
@@ -1480,13 +1478,13 @@ void player_powerups (void)
 
 	if (!g_instagib)
 	{
-		if (self.items & IT_STRENGTH)
+		if (self.items & ITEM_Strength.m_itemid)
 		{
 			play_countdown(self.strength_finished, "misc/poweroff.wav");
 			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.strength_finished)
 			{
-				self.items = self.items - (self.items & IT_STRENGTH);
+				self.items = self.items - (self.items & ITEM_Strength.m_itemid);
 				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STRENGTH, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
 			}
@@ -1495,18 +1493,18 @@ void player_powerups (void)
 		{
 			if (time < self.strength_finished)
 			{
-				self.items = self.items | IT_STRENGTH;
+				self.items = self.items | ITEM_Strength.m_itemid;
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STRENGTH, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_STRENGTH);
 			}
 		}
-		if (self.items & IT_INVINCIBLE)
+		if (self.items & ITEM_Shield.m_itemid)
 		{
 			play_countdown(self.invincible_finished, "misc/poweroff.wav");
 			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.invincible_finished)
 			{
-				self.items = self.items - (self.items & IT_INVINCIBLE);
+				self.items = self.items - (self.items & ITEM_Shield.m_itemid);
 				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SHIELD, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
 			}
@@ -1515,7 +1513,7 @@ void player_powerups (void)
 		{
 			if (time < self.invincible_finished)
 			{
-				self.items = self.items | IT_INVINCIBLE;
+				self.items = self.items | ITEM_Shield.m_itemid;
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SHIELD, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SHIELD);
 			}
@@ -1575,7 +1573,7 @@ void player_powerups (void)
 	if (time < self.spawnshieldtime)
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
-	MUTATOR_CALLHOOK(PlayerPowerups);
+	MUTATOR_CALLHOOK(PlayerPowerups, self, items_prev);
 }
 
 float CalcRegen(float current, float stable, float regenfactor, float regenframetime)
@@ -1627,11 +1625,7 @@ void player_regen (void)
 {
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
-	regen_mod_max = max_mod;
-	regen_mod_regen = regen_mod;
-	regen_mod_rot = rot_mod;
-	regen_mod_limit = limit_mod;
-	if(!MUTATOR_CALLHOOK(PlayerRegen))
+	if(!MUTATOR_CALLHOOK(PlayerRegen, max_mod, regen_mod, rot_mod, limit_mod))
 	if(!self.frozen)
 	{
 		float minh, mina, maxh, maxa, limith, limita;
@@ -1659,7 +1653,11 @@ void player_regen (void)
 	// if player rotted to death...  die!
 	// check this outside above checks, as player may still be able to rot to death
 	if(self.health < 1)
+	{
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELEASE);
 		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
@@ -1669,7 +1667,7 @@ void player_regen (void)
 		minf = autocvar_g_balance_fuel_regenstable;
 		limitf = autocvar_g_balance_fuel_limit;
 
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
 	}
 }
 
@@ -1706,8 +1704,7 @@ spectate mode routines
 */
 
 void SpectateCopy(entity spectatee) {
-	other = spectatee;
-	MUTATOR_CALLHOOK(SpectateCopy);
+	MUTATOR_CALLHOOK(SpectateCopy, spectatee, self);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
@@ -2170,6 +2167,7 @@ void SpectatorThink()
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
+void vehicles_enter (entity pl, entity veh);
 void PlayerUseKey()
 {
 	if (!IS_PLAYER(self))
@@ -2177,8 +2175,41 @@ void PlayerUseKey()
 
 	if(self.vehicle)
 	{
-        vehicles_exit(VHEF_NORMAL);
-        return;
+		if(!gameover)
+		{
+			vehicles_exit(VHEF_NORMAL);
+			return;
+		}
+	}
+	else if(autocvar_g_vehicles_enter)
+	{
+		if(!self.frozen)
+		if(self.deadflag == DEAD_NO)
+		if(!gameover)
+		{
+			entity head, closest_target = world;
+			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
+
+			while(head) // find the closest acceptable target to enter
+			{
+				if(head.vehicle_flags & VHF_ISVEHICLE)
+				if(head.deadflag == DEAD_NO)
+				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, self)))
+				if(head.takedamage != DAMAGE_NO)
+				{
+					if(closest_target)
+					{
+						if(vlen(self.origin - head.origin) < vlen(self.origin - closest_target.origin))
+						{ closest_target = head; }
+					}
+					else { closest_target = head; }
+				}
+
+				head = head.chain;
+			}
+
+			if(closest_target) { vehicles_enter(self, closest_target); return; }
+		}
 	}
 
 	// a use key was pressed; call handlers
@@ -2221,6 +2252,7 @@ Called every frame for each client before the physics are run
 */
 .float usekeypressed;
 void() nexball_setstatus;
+.float last_vehiclecheck;
 .int items_added;
 void PlayerPreThink (void)
 {
@@ -2327,7 +2359,7 @@ void PlayerPreThink (void)
 		if(self.health < 1)
 		{
 			if(self.vehicle)
-				vehicles_exit(VHEF_RELESE);
+				vehicles_exit(VHEF_RELEASE);
 			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
 		}
 		else if ( self.revive_progress <= 0 )
@@ -2335,6 +2367,30 @@ void PlayerPreThink (void)
 	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
+
+	if(autocvar_g_vehicles_enter)
+	if(time > self.last_vehiclecheck)
+	if(IS_PLAYER(self))
+	if(!gameover)
+	if(!self.frozen)
+	if(!self.vehicle)
+	if(self.deadflag == DEAD_NO)
+	{
+		entity veh;
+		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
+		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
+		if(veh.deadflag == DEAD_NO)
+		if(veh.takedamage != DAMAGE_NO)
+		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, self))
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
+		else if(!veh.owner)
+		if(!veh.team || SAME_TEAM(self, veh))
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
+		else if(autocvar_g_vehicles_steal)
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+
+		self.last_vehiclecheck = time + 1;
+	}
 
 	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
@@ -2367,7 +2423,7 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(self.weapon == WEP_VORTEX && WEP_CVAR(vortex, charge))
+			if(self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge))
 			{
 				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
 				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
@@ -2463,7 +2519,7 @@ void PlayerPreThink (void)
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
-		if((self.weapon == WEP_SHOCKWAVE || self.weapon == WEP_SHOTGUN) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)
@@ -2502,8 +2558,8 @@ void PlayerPreThink (void)
 			W_WeaponFrame();
 
 			self.items_added = 0;
-			if(self.items & IT_JETPACK)
-				if(self.items & IT_FUEL_REGEN || self.ammo_fuel >= 0.01)
+			if(self.items & ITEM_Jetpack.m_itemid)
+				if(self.items & ITEM_JetpackRegen.m_itemid || self.ammo_fuel >= 0.01)
 					self.items_added |= IT_FUEL;
 
 			self.items |= self.items_added;
@@ -2540,7 +2596,7 @@ void PlayerPreThink (void)
 
 	// WEAPONTODO: Add weapon request for this
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
+		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX.m_id) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE.m_id && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;

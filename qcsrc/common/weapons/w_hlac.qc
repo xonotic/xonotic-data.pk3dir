@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ HLAC,
 /* function  */ W_HLAC,
@@ -45,9 +45,10 @@ REGISTER_WEAPON(
 #ifdef SVQC
 HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC); }
+void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
 
 void W_HLAC_Touch(void)
 {
@@ -77,7 +78,7 @@ void W_HLAC_Attack(void)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
 	W_SetupShot(self, false, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("laser_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -106,11 +107,11 @@ void W_HLAC_Attack(void)
     missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
-	missile.projectiledeathtype = WEP_HLAC;
+	missile.projectiledeathtype = WEP_HLAC.m_id;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 void W_HLAC_Attack2(void)
@@ -125,7 +126,7 @@ void W_HLAC_Attack2(void)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
 	W_SetupShot(self, false, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("laser_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -150,11 +151,11 @@ void W_HLAC_Attack2(void)
 
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH;
-	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = WEP_HLAC.m_id | HITTYPE_SECONDARY;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // weapon frames
@@ -250,13 +251,13 @@ bool W_HLAC(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_PRI(hlac, ammo);
-			ammo_amount += self.(weapon_load[WEP_HLAC]) >= WEP_CVAR_PRI(hlac, ammo);
+			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
 			ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_SEC(hlac, ammo);
-			ammo_amount += self.(weapon_load[WEP_HLAC]) >= WEP_CVAR_SEC(hlac, ammo);
+			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

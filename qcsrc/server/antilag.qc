@@ -3,7 +3,7 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "vehicles/vehicle.qh"
+    #include "../common/vehicles/all.qh"
     #include "antilag.qh"
 #endif
 

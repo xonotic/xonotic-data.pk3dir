@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ HAGAR,
 /* function  */ W_Hagar,
@@ -53,9 +53,10 @@ REGISTER_WEAPON(
 #ifdef SVQC
 HAGAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_hagar(void) { weapon_defaultspawnfunc(WEP_HAGAR); }
+void spawnfunc_weapon_hagar(void) { weapon_defaultspawnfunc(WEP_HAGAR.m_id); }
 
 // NO bounce protection, as bounces are limited!
 
@@ -113,7 +114,7 @@ void W_Hagar_Touch2(void)
 		self.use();
 	} else {
 		self.cnt++;
-		pointparticles(particleeffectnum("hagar_bounce"), self.origin, self.velocity, 1);
+		Send_Effect("hagar_bounce", self.origin, self.velocity, 1);
 		self.angles = vectoangles(self.velocity);
 		self.owner = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -128,7 +129,7 @@ void W_Hagar_Attack(void)
 
 	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -147,7 +148,7 @@ void W_Hagar_Attack(void)
 	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + WEP_CVAR_PRI(hagar, lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_HAGAR;
+	missile.projectiledeathtype = WEP_HAGAR.m_id;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -160,7 +161,7 @@ void W_Hagar_Attack(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 void W_Hagar_Attack2(void)
@@ -171,7 +172,7 @@ void W_Hagar_Attack2(void)
 
 	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -191,7 +192,7 @@ void W_Hagar_Attack2(void)
 	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 	PROJECTILE_MAKETRIGGER(missile);
-	missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
 	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
@@ -204,7 +205,7 @@ void W_Hagar_Attack2(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HAGAR_BOUNCING, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 .float hagar_loadstep, hagar_loadblock, hagar_loadbeep, hagar_warning;
@@ -223,7 +224,7 @@ void W_Hagar_Attack2_Load_Release(void)
 	weapon_prepareattack_do(1, WEP_CVAR_SEC(hagar, refire));
 
 	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
 	right = v_right;
@@ -250,7 +251,7 @@ void W_Hagar_Attack2_Load_Release(void)
 		missile.think = adaptor_think2use_hittype_splash;
 		missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 		PROJECTILE_MAKETRIGGER(missile);
-		missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;
+		missile.projectiledeathtype = WEP_HAGAR.m_id | HITTYPE_SECONDARY;
 		setorigin(missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
@@ -280,7 +281,7 @@ void W_Hagar_Attack2_Load_Release(void)
 
 		CSQCProjectile(missile, true, PROJECTILE_HAGAR, true);
 
-		other = missile; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, missile);
 	}
 
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, load_animtime), w_ready);
@@ -302,7 +303,7 @@ void W_Hagar_Attack2_Load(void)
 	if(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		enough_ammo = true;
 	else if(autocvar_g_balance_hagar_reload_ammo)
-		enough_ammo = self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_SEC(hagar, ammo);
+		enough_ammo = self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
 		enough_ammo = self.WEP_AMMO(HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
 
@@ -472,13 +473,13 @@ bool W_Hagar(int req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(HAGAR) >= WEP_CVAR_PRI(hagar, ammo);
-			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_PRI(hagar, ammo);
+			ammo_amount += self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
 			ammo_amount = self.WEP_AMMO(HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
-			ammo_amount += self.(weapon_load[WEP_HAGAR]) >= WEP_CVAR_SEC(hagar, ammo);
+			ammo_amount += self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:

@@ -43,7 +43,7 @@ const float shambler_anim_death		= 8;
 void shambler_smash()
 {
 	makevectors(self.angles);
-	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
+	Send_Effect("explosion_medium", (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 
 	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * 500, MOVE_NORMAL, self);
@@ -68,7 +68,7 @@ void shambler_lightning_explode()
 	entity head;
 
 	sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("electro_impact"), '0 0 0', '0 0 0', 1);
+	Send_Effect("electro_impact", '0 0 0', '0 0 0', 1);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -226,7 +226,7 @@ float m_shambler(float req)
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;
 			self.frame = shambler_anim_stand;
-			self.weapon = WEP_VORTEX;
+			self.weapon = WEP_VORTEX.m_id;
 
 			return true;
 		}

@@ -30,7 +30,6 @@ scoreboard.qc
 shownames.qc
 sortlist.qc
 teamradar.qc
-tturrets.qc
 tuba.qc
 t_items.qc
 view.qc
@@ -39,13 +38,11 @@ waypointsprites.qc
 
 command/all.qc
 
-vehicles/bumblebee.qc
-vehicles/all.qc
-
 weapons/projectile.qc // TODO
 
 ../common/animdecide.qc
 ../common/buffs.qc
+../common/effects.qc
 ../common/mapinfo.qc
 ../common/movetypes/include.qc
 ../common/nades.qc
@@ -61,10 +58,13 @@ weapons/projectile.qc // TODO
 ../common/viewloc.qc
 
 ../common/items/all.qc
-
 ../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
+../common/weapons/all.qc
 
-../common/weapons/all.qc // TODO
+../common/turrets/cl_turrets.qc
+../common/turrets/turrets.qc
 
 ../common/triggers/include.qc
 
@@ -79,3 +79,5 @@ weapons/projectile.qc // TODO
 ../warpzonelib/common.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/util_server.qc
+
+../../mod/client/progs.inc

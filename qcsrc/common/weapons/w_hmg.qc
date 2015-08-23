@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id	 */ HMG,
 /* function	 */ W_HeavyMachineGun,
@@ -37,10 +37,11 @@ REGISTER_WEAPON(
 #ifdef SVQC
 HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 
-void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG); }
+void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG.m_id); }
 
 void W_HeavyMachineGun_Attack_Auto()
 {
@@ -69,11 +70,11 @@ void W_HeavyMachineGun_Attack_Auto()
 	}
 
 	float hmg_spread = bound(WEP_CVAR(hmg, spread_min), WEP_CVAR(hmg, spread_min) + (WEP_CVAR(hmg, spread_add) * self.misc_bulletcounter), WEP_CVAR(hmg, spread_max));
-	fireBullet(w_shotorg, w_shotdir, hmg_spread, WEP_CVAR(hmg, solidpenetration), WEP_CVAR(hmg, damage), WEP_CVAR(hmg, force), WEP_HMG, 0);
+	fireBullet(w_shotorg, w_shotdir, hmg_spread, WEP_CVAR(hmg, solidpenetration), WEP_CVAR(hmg, damage), WEP_CVAR(hmg, force), WEP_HMG.m_id, 0);
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("uzi_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -130,7 +131,7 @@ bool W_HeavyMachineGun(int req)
 			ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
 
 			if(autocvar_g_balance_hmg_reload_ammo)
-				ammo_amount += self.(weapon_load[WEP_HMG]) >= WEP_CVAR(hmg, ammo);
+				ammo_amount += self.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
 
 			return ammo_amount;
 		}
@@ -139,7 +140,7 @@ bool W_HeavyMachineGun(int req)
 			ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
 
 			if(autocvar_g_balance_hmg_reload_ammo)
-				ammo_amount += self.(weapon_load[WEP_HMG]) >= WEP_CVAR(hmg, ammo);
+				ammo_amount += self.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
 
 			return ammo_amount;
 		}

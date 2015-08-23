@@ -2,16 +2,16 @@
 #define SOUNDLIST_H
 #include "listbox.qc"
 CLASS(XonoticSoundList, XonoticListBox)
-	METHOD(XonoticSoundList, configureXonoticSoundList, void(entity))
+	METHOD(XonoticSoundList, configureXonoticSoundList, void(entity));
 	ATTRIB(XonoticSoundList, rowsPerItem, float, 1)
-	METHOD(XonoticSoundList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticSoundList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticSoundList, getSounds, void(entity))
-	METHOD(XonoticSoundList, soundName, string(entity, float))
-	METHOD(XonoticSoundList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticSoundList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticSoundList, destroy, void(entity))
-	METHOD(XonoticSoundList, showNotify, void(entity))
+	METHOD(XonoticSoundList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticSoundList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticSoundList, getSounds, void(entity));
+	METHOD(XonoticSoundList, soundName, string(entity, float));
+	METHOD(XonoticSoundList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticSoundList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticSoundList, destroy, void(entity));
+	METHOD(XonoticSoundList, showNotify, void(entity));
 
 	ATTRIB(XonoticSoundList, listSound, float, -1)
 	ATTRIB(XonoticSoundList, realFontSize, vector, '0 0 0')

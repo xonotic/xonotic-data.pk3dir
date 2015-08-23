@@ -384,7 +384,7 @@ void Item_Show (entity e, float mode)
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
 
-	if (e.items & IT_STRENGTH || e.items & IT_INVINCIBLE)
+	if (e.items & ITEM_Strength.m_itemid || e.items & ITEM_Shield.m_itemid)
 	    e.ItemStatus |= ITS_POWERUP;
 
 	if (autocvar_g_nodepthtestitems)
@@ -501,11 +501,11 @@ void Item_ItemsTime_SetTime(entity e, float t)
 		switch(e.items)
 		{
 			case IT_HEALTH:
-				// if(e.classname == "item_health_mega") // IT_HEALTH unequivocally identifies it
+				// if(e.itemdef == ITEM_MegaHealth) // e.items == IT_HEALTH unequivocally identifies it
 					it_health_mega_time = t;
 				break;
 			case IT_ARMOR:
-				if(e.classname == "item_armor_large") // IT_ARMOR doesn't unequivocally identifies it
+				if(e.itemdef == ITEM_ArmorLarge) // e.items == IT_ARMOR doesn't unequivocally identifies it
 					it_armor_large_time = t;
 				break;
 			case IT_STRENGTH://"item-strength"
@@ -590,15 +590,15 @@ void Item_Respawn (void)
 {
 	Item_Show(self, 1);
 	// this is ugly...
-	if(self.items == IT_STRENGTH)
+	if(self.items == ITEM_Strength.m_itemid)
 		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
-	else if(self.items == IT_INVINCIBLE)
+	else if(self.items == ITEM_Shield.m_itemid)
 		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-	if(self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
+	if(self.flags & FL_POWERUP || self.itemdef == ITEM_ArmorLarge || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
 	{
 		float t = Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_SetTime(self, t);
@@ -608,8 +608,8 @@ void Item_Respawn (void)
 	self.think = Item_Think;
 	self.nextthink = time;
 
-	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
-	pointparticles(particleeffectnum("item_respawn"), self.origin + 0.5 * (self.mins + self.maxs), '0 0 0', 1);
+	//Send_Effect("item_respawn", self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
+	Send_Effect("item_respawn", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 }
 
 void Item_RespawnCountdown (void)
@@ -629,24 +629,22 @@ void Item_RespawnCountdown (void)
 			string name;
 			vector rgb = '1 0 1';
 			name = string_null;
-			switch(self.items)
+			switch (self.items)
 			{
-				case IT_FUEL_REGEN: name = "item-fuelregen"; rgb = '1 0.5 0'; break;
-				case IT_JETPACK:    name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
-				case IT_STRENGTH:   name = "item-strength"; rgb = '0 0 1'; break;
-				case IT_INVINCIBLE: name = "item-shield"; rgb = '1 0 1'; break;
-				case IT_HEALTH:
+				case ITEM_JetpackRegen.m_itemid: name = "item-fuelregen"; rgb = '1 0.5 0'; break;
+				case ITEM_Jetpack.m_itemid:    name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
+				case ITEM_Strength.m_itemid:   name = "item-strength"; rgb = '0 0 1'; break;
+				case ITEM_Shield.m_itemid: name = "item-shield"; rgb = '1 0 1'; break;
+				case ITEM_HealthMega.m_itemid:
 					//if (self.classname == "item_health_mega")
 						{name = "item_health_mega"; rgb = '1 0 0';}
 					break;
-				case IT_ARMOR:
-					if (self.classname == "item_armor_large")
+				case ITEM_ArmorMega.m_itemid:
+					if (self.itemdef == ITEM_ArmorLarge)
 						{name = "item_armor_large"; rgb = '0 1 0';}
 					break;
 			}
-			item_name = name;
-			item_color = rgb;
-			MUTATOR_CALLHOOK(Item_RespawnCountdown);
+			MUTATOR_CALLHOOK(Item_RespawnCountdown, name, rgb);
 			name = item_name;
 			rgb = item_color;
 			if(self.flags & FL_WEAPON)
@@ -711,7 +709,7 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS) || e.classname == "item_armor_large" || e.items == IT_HEALTH)
+	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS) || e.itemdef == ITEM_ArmorLarge || e.items == IT_HEALTH)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -903,7 +901,7 @@ void Item_Touch (void)
 	if (time < self.item_spawnshieldtime)
 		return;
 
-	switch(MUTATOR_CALLHOOK(ItemTouch))
+	switch(MUTATOR_CALLHOOK(ItemTouch, self, other))
 	{
 		case MUT_ITEMTOUCH_RETURN: { return; }
 		case MUT_ITEMTOUCH_PICKUP: { goto pickup; }
@@ -933,7 +931,7 @@ void Item_Touch (void)
 
 	other.last_pickup = time;
 
-	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
+	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
@@ -1012,6 +1010,7 @@ void Item_FindTeam()
 // TODO: perhaps nice special effect?
 void RemoveItem(void)
 {
+	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
 }
 
@@ -1085,17 +1084,17 @@ float commodity_pickupevalfunc(entity player, entity item)
 		if (!(player.weapons & WepSet_FromWeapon(i)))
 			continue;
 
-		if(wi.items & IT_SHELLS)
+		if(wi.items & ITEM_Shells.m_itemid)
 			need_shells = true;
-		else if(wi.items & IT_NAILS)
+		else if(wi.items & ITEM_Bullets.m_itemid)
 			need_nails = true;
-		else if(wi.items & IT_ROCKETS)
+		else if(wi.items & ITEM_Rockets.m_itemid)
 			need_rockets = true;
-		else if(wi.items & IT_CELLS)
+		else if(wi.items & ITEM_Cells.m_itemid)
 			need_cells = true;
-		else if(wi.items & IT_PLASMA)
+		else if(wi.items & ITEM_Plasma.m_itemid)
 			need_plasma = true;
-		else if(wi.items & IT_FUEL)
+		else if(wi.items & ITEM_JetpackFuel.m_itemid)
 			need_fuel = true;
 	}
 
@@ -1288,9 +1287,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		precache_sound (self.item_pickupsound);
 
 		precache_sound ("misc/itemrespawncountdown.wav");
-		if(itemid == IT_STRENGTH)
+		if(itemid == ITEM_Strength.m_itemid)
 			precache_sound ("misc/strength_respawn.wav");
-		else if(itemid == IT_INVINCIBLE)
+		else if(itemid == ITEM_Shield.m_itemid)
 			precache_sound ("misc/shield_respawn.wav");
 		else
 			precache_sound ("misc/itemrespawn.wav");
@@ -1358,7 +1357,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.SendFlags |= ISF_ANGLES;
 
 	// call this hook after everything else has been done
-	if(MUTATOR_CALLHOOK(Item_Spawn))
+	if(MUTATOR_CALLHOOK(Item_Spawn, self))
 	{
 		startitem_failed = true;
 		remove(self);
@@ -1460,7 +1459,7 @@ void spawnfunc_item_armor_big (void) {
 		self.max_armorvalue = g_pickup_armorbig_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armorbig_anyway;
-	StartItemA (ITEM_ArmorBig);
+	StartItemA (ITEM_ArmorLarge);
 }
 
 void spawnfunc_item_armor_large (void) {
@@ -1470,7 +1469,7 @@ void spawnfunc_item_armor_large (void) {
 		self.max_armorvalue = g_pickup_armorlarge_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armorlarge_anyway;
-	StartItemA (ITEM_ArmorLarge);
+	StartItemA (ITEM_ArmorMega);
 }
 
 void spawnfunc_item_health_small (void) {
@@ -1593,11 +1592,11 @@ void spawnfunc_target_items (void)
 			if     (argv(i) == "unlimited_ammo")         self.items |= IT_UNLIMITED_AMMO;
 			else if(argv(i) == "unlimited_weapon_ammo")  self.items |= IT_UNLIMITED_WEAPON_AMMO;
 			else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
-			else if(argv(i) == "strength")               self.items |= IT_STRENGTH;
-			else if(argv(i) == "invincible")             self.items |= IT_INVINCIBLE;
+			else if(argv(i) == "strength")               self.items |= ITEM_Strength.m_itemid;
+			else if(argv(i) == "invincible")             self.items |= ITEM_Shield.m_itemid;
 			else if(argv(i) == "superweapons")           self.items |= IT_SUPERWEAPON;
-			else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
-			else if(argv(i) == "fuel_regen")             self.items |= IT_FUEL_REGEN;
+			else if(argv(i) == "jetpack")                self.items |= ITEM_Jetpack.m_itemid;
+			else if(argv(i) == "fuel_regen")             self.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
@@ -1647,11 +1646,11 @@ void spawnfunc_target_items (void)
 		self.netname = "";
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * !!(self.items & IT_STRENGTH), "strength");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * !!(self.items & IT_INVINCIBLE), "invincible");
+		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * !!(self.items & ITEM_Strength.m_itemid), "strength");
+		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * !!(self.items & ITEM_Shield.m_itemid), "invincible");
 		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * !!(self.items & IT_SUPERWEAPON), "superweapons");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_JETPACK), "jetpack");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_FUEL_REGEN), "fuel_regen");
+		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & ITEM_Jetpack.m_itemid), "jetpack");
+		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
 		if(self.ammo_shells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_shells), "shells");
 		if(self.ammo_nails != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_nails), "nails");
 		if(self.ammo_rockets != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_rockets), "rockets");
@@ -1696,7 +1695,7 @@ void spawnfunc_item_fuel(void)
 
 void spawnfunc_item_fuel_regen(void)
 {
-	if(start_items & IT_FUEL_REGEN)
+	if(start_items & ITEM_JetpackRegen.m_itemid)
 	{
 		spawnfunc_item_fuel();
 		return;
@@ -1708,7 +1707,7 @@ void spawnfunc_item_jetpack(void)
 {
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel_jetpack;
-	if(start_items & IT_JETPACK)
+	if(start_items & ITEM_Jetpack.m_itemid)
 	{
 		spawnfunc_item_fuel();
 		return;
@@ -1888,13 +1887,13 @@ float GiveItems(entity e, float beginarg, float endarg)
 				op = OP_MINUS;
 				continue;
 			case "ALL":
-				got += GiveBit(e, items, IT_FUEL_REGEN, op, val);
+				got += GiveBit(e, items, ITEM_JetpackRegen.m_itemid, op, val);
 				got += GiveValue(e, strength_finished, op, val);
 				got += GiveValue(e, invincible_finished, op, val);
 				got += GiveValue(e, superweapons_finished, op, val);
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
 			case "all":
-				got += GiveBit(e, items, IT_JETPACK, op, val);
+				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
 				got += GiveValue(e, health, op, val);
 				got += GiveValue(e, armorvalue, op, val);
 			case "allweapons":
@@ -1923,10 +1922,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveBit(e, items, IT_UNLIMITED_SUPERWEAPONS, op, val);
 				break;
 			case "jetpack":
-				got += GiveBit(e, items, IT_JETPACK, op, val);
+				got += GiveBit(e, items, ITEM_Jetpack.m_itemid, op, val);
 				break;
 			case "fuel_regen":
-				got += GiveBit(e, items, IT_FUEL_REGEN, op, val);
+				got += GiveBit(e, items, ITEM_JetpackRegen.m_itemid, op, val);
 				break;
 			case "strength":
 				got += GiveValue(e, strength_finished, op, val);
@@ -1980,10 +1979,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 		op = OP_SET;
 	}
 
-	POSTGIVE_BIT(e, items, IT_FUEL_REGEN, "misc/itempickup.wav", string_null);
+	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, "misc/itempickup.wav", string_null);
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, "misc/powerup.wav", "misc/poweroff.wav");
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, "misc/powerup.wav", "misc/poweroff.wav");
-	POSTGIVE_BIT(e, items, IT_JETPACK, "misc/itempickup.wav", string_null);
+	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, "misc/itempickup.wav", string_null);
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	{
 		wi = get_weaponinfo(j);

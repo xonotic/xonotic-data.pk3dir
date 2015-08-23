@@ -87,11 +87,11 @@ float nt_IsNewToy(float w)
 {
 	switch(w)
 	{
-		case WEP_SEEKER:
-		case WEP_MINE_LAYER:
-		case WEP_HLAC:
-		case WEP_RIFLE:
-		case WEP_SHOCKWAVE:
+		case WEP_SEEKER.m_id:
+		case WEP_MINE_LAYER.m_id:
+		case WEP_HLAC.m_id:
+		case WEP_RIFLE.m_id:
+		case WEP_SHOCKWAVE.m_id:
 			return true;
 		default:
 			return false;

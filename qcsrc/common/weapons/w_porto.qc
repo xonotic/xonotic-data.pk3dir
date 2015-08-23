@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ PORTO,
 /* function  */ W_Porto,
@@ -36,11 +36,12 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float porto_v_angle_held;
 .vector right_vector;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 #include "../triggers/trigger/jumppads.qh"
 
-void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO); }
+void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
 
 void W_Porto_Success(void)
 {
@@ -82,7 +83,7 @@ void W_Porto_Fail(float failhard)
 			tracetoss(self, self);
 			if(vlen(trace_endpos - self.realowner.origin) < 128)
 			{
-				W_ThrowNewWeapon(self.realowner, WEP_PORTO, 0, self.origin, self.velocity);
+				W_ThrowNewWeapon(self.realowner, WEP_PORTO.m_id, 0, self.origin, self.velocity);
 				Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
 			}
 		}
@@ -242,7 +243,7 @@ void W_Porto_Attack(float type)
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 
-	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	//Send_Effect("grenadelauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn();
 	gren.cnt = type;
@@ -262,7 +263,7 @@ void W_Porto_Attack(float type)
 	gren.think = W_Porto_Think;
 	gren.touch = W_Porto_Touch;
 
-	if(self.items & IT_STRENGTH)
+	if(self.items & ITEM_Strength.m_itemid)
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed) * autocvar_g_balance_powerup_strength_force, 0);
 	else
 		W_SetupProjVelocity_Basic(gren, WEP_CVAR_BOTH(porto, (type <= 0), speed), 0);
@@ -283,7 +284,7 @@ void W_Porto_Attack(float type)
 	else
 		CSQCProjectile(gren, true, PROJECTILE_PORTO_RED, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
 bool w_nexball_weapon(int req); // WEAPONTODO

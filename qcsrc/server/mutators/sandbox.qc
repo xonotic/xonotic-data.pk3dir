@@ -31,7 +31,7 @@ void sandbox_ObjectFunction_Touch()
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
 	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTEN_NORM);
-	pointparticles(particleeffectnum(strcat("impact_", self.material)), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
+	Send_Effect(strcat("impact_", self.material), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
 void sandbox_ObjectFunction_Think()

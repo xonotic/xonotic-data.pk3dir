@@ -8,8 +8,9 @@
 #include "noise.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "vehicles/all.qh"
 #include "waypointsprites.qh"
+
+#include "mutators/events.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
@@ -34,7 +35,7 @@ void Porto_Draw()
 	vector p, dir, ang, q, nextdir;
 	float portal_number, portal1_idx;
 
-	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
+	if(activeweapon != WEP_PORTO.m_id || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
 	if(g_balance_porto_secondary)
 		return;
@@ -133,7 +134,7 @@ vector GetCurrentFov(float fov)
 
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
-	if((activeweapon == WEP_VORTEX && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
+	if((activeweapon == WEP_VORTEX.m_id && vortex_scope) || (activeweapon == WEP_RIFLE.m_id && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -320,16 +321,16 @@ float TrueAimCheck()
 
 	switch(activeweapon) // WEAPONTODO
 	{
-		case WEP_TUBA: // no aim
-		case WEP_PORTO: // shoots from eye
-		case WEP_HOOK: // no trueaim
-		case WEP_MORTAR: // toss curve
+		case WEP_TUBA.m_id: // no aim
+		case WEP_PORTO.m_id: // shoots from eye
+		case WEP_HOOK.m_id: // no trueaim
+		case WEP_MORTAR.m_id: // toss curve
 			return SHOTTYPE_HITWORLD;
-		case WEP_VORTEX:
-		case WEP_VAPORIZER:
+		case WEP_VORTEX.m_id:
+		case WEP_VAPORIZER.m_id:
 			mv = MOVE_NORMAL;
 			break;
-		case WEP_RIFLE:
+		case WEP_RIFLE.m_id:
 			ta = trueaim_rifle;
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
@@ -338,19 +339,19 @@ float TrueAimCheck()
 				return EnemyHitCheck();
 			}
 			break;
-		case WEP_DEVASTATOR: // projectile has a size!
+		case WEP_DEVASTATOR.m_id: // projectile has a size!
 			mi = '-3 -3 -3';
 			ma = '3 3 3';
 			break;
-		case WEP_FIREBALL: // projectile has a size!
+		case WEP_FIREBALL.m_id: // projectile has a size!
 			mi = '-16 -16 -16';
 			ma = '16 16 16';
 			break;
-		case WEP_SEEKER: // projectile has a size!
+		case WEP_SEEKER.m_id: // projectile has a size!
 			mi = '-2 -2 -2';
 			ma = '2 2 2';
 			break;
-		case WEP_ELECTRO: // projectile has a size!
+		case WEP_ELECTRO.m_id: // projectile has a size!
 			mi = '0 0 -3';
 			ma = '0 0 -3';
 			break;
@@ -405,8 +406,6 @@ const float CAMERA_CHASE = 2;
 float reticle_type;
 string reticle_image;
 string NextFrameCommand;
-void CSQC_SPIDER_HUD();
-void CSQC_RAPTOR_HUD();
 
 vector freeze_org, freeze_ang;
 entity nightvision_noise, nightvision_noise2;
@@ -439,7 +438,9 @@ bool WantEventchase()
 		return true;
 	if(spectatee_status >= 0)
 	{
-		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO)))
+		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
+			return true;
+		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO.m_id)))
 			return true;
 		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
 		{
@@ -490,7 +491,7 @@ void UpdateHitsound()
 
 	static float hitsound_time_prev = 0;
 	// HACK: the only way to get the arc to sound consistent with pitch shift is to ignore cl_hitsound_antispam_time
-	float arc_hack = activeweapon == WEP_ARC && autocvar_cl_hitsound >= 2;
+	float arc_hack = activeweapon == WEP_ARC.m_id && autocvar_cl_hitsound >= 2;
 	if (arc_hack || COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		if (autocvar_cl_hitsound && unaccounted_damage)
@@ -802,6 +803,8 @@ void UpdateCrosshair()
 		wcross_alpha_prev = wcross_alpha;
 		wcross_color_prev = wcross_color;
 
+		MUTATOR_CALLHOOK(UpdateCrosshair);
+
 		wcross_scale *= 1 - autocvar__menu_alpha;
 		wcross_alpha *= 1 - autocvar__menu_alpha;
 		wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
@@ -837,7 +840,7 @@ void UpdateCrosshair()
 
 
 				// handle the values
-				if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
+				if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX.m_id && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
 				{
 					if (vortex_chargepool || use_vortex_chargepool) {
 						use_vortex_chargepool = 1;
@@ -857,14 +860,14 @@ void UpdateCrosshair()
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
+				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER.m_id && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
 				{
 					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if (activeweapon == WEP_HAGAR && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				else if (activeweapon == WEP_HAGAR.m_id && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
 					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
@@ -887,12 +890,12 @@ void UpdateCrosshair()
 
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
-					if ((activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
+					if ((activeweapon == WEP_RIFLE.m_id) && (weapon_clipsize == 80))
 						ring_image = "gfx/crosshair_ring_rifle.tga";
 					else
 						ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC )
+				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC.m_id )
 				{
 					ring_value = arc_heat;
 					ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
@@ -1007,6 +1010,8 @@ const int BUTTON_3 = 4;
 const int BUTTON_4 = 8;
 float cl_notice_run();
 float prev_myteam;
+int lasthud;
+float vh_notice_time;
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -1021,6 +1026,11 @@ void CSQC_UpdateView(float w, float h)
 	++framecount;
 
 	hud = getstati(STAT_HUD);
+
+	if(hud != HUD_NORMAL && lasthud == HUD_NORMAL)
+		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
+
+	lasthud = hud;
 
 	if(autocvar__hud_showbinds_reload) // menu can set this one
 	{
@@ -1102,6 +1112,7 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
+		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && getstati(STAT_ROUNDLOST));
 		entity gen = world;
 		
@@ -1129,6 +1140,7 @@ void CSQC_UpdateView(float w, float h)
 
 			// detect maximum viewoffset and use it
 			vector view_offset = autocvar_cl_eventchase_viewoffset;
+			if(vehicle_chase && autocvar_cl_eventchase_vehicle_viewoffset) { view_offset = autocvar_cl_eventchase_vehicle_viewoffset; }
 			if(ons_roundlost) { view_offset = autocvar_cl_eventchase_generator_viewoffset; }
 
 			if(view_offset)
@@ -1145,6 +1157,7 @@ void CSQC_UpdateView(float w, float h)
 
 			// make the camera smooth back
 			float chase_distance = autocvar_cl_eventchase_distance;
+			if(vehicle_chase && autocvar_cl_eventchase_vehicle_distance) { chase_distance = autocvar_cl_eventchase_vehicle_distance; }
 			if(ons_roundlost) { chase_distance = autocvar_cl_eventchase_generator_distance; }
 
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < chase_distance)
@@ -1826,18 +1839,10 @@ void CSQC_UpdateView(float w, float h)
 		HUD_Radar_Mouse();
 
     if(hud && !intermission)
-    {
-        if(hud == HUD_SPIDERBOT)
-            CSQC_SPIDER_HUD();
-        else if(hud == HUD_WAKIZASHI)
-            CSQC_WAKIZASHI_HUD();
-        else if(hud == HUD_RAPTOR)
-            CSQC_RAPTOR_HUD();
-        else if(hud == HUD_BUMBLEBEE)
-            CSQC_BUMBLE_HUD();
-        else if(hud == HUD_BUMBLEBEE_GUN)
-            CSQC_BUMBLE_GUN_HUD();
-    }
+    if(hud == HUD_BUMBLEBEE_GUN)
+    	CSQC_BUMBLE_GUN_HUD();
+    else
+		VEH_ACTION(hud, VR_HUD);
 
 	cl_notice_run();
 

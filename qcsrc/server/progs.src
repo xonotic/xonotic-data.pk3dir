@@ -71,8 +71,6 @@ pathlib/movenode.qc
 pathlib/path_waypoint.qc
 pathlib/utility.qc
 
-vehicles/all.qc
-
 weapons/accuracy.qc
 weapons/common.qc
 weapons/csqcprojectile.qc // TODO
@@ -88,8 +86,8 @@ weapons/weaponsystem.qc
 ../common/buffs.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
+../common/effects.qc
 ../common/mapinfo.qc
-../common/monsters/all.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
 ../common/movetypes/include.qc
@@ -106,9 +104,18 @@ weapons/weaponsystem.qc
 ../common/util.qc
 
 ../common/items/all.qc
-
-../common/weapons/config.qc
+../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
 ../common/weapons/all.qc // TODO
+
+../common/turrets/sv_turrets.qc
+../common/turrets/config.qc
+../common/turrets/util.qc
+../common/turrets/turrets.qc
+../common/turrets/checkpoint.qc
+../common/turrets/targettrigger.qc
+../common/weapons/config.qc
 
 ../csqcmodellib/sv_model.qc
 
@@ -117,3 +124,5 @@ weapons/weaponsystem.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/server.qc
 ../warpzonelib/util_server.qc
+
+../../mod/server/progs.inc

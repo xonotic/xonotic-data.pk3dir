@@ -4,7 +4,7 @@
 #include "gibs.qh"
 #include "prandom.qh"
 
-#include "vehicles/all.qh"
+#include "../common/vehicles/all.qh"
 
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
@@ -334,7 +334,7 @@ void Ent_DamageInfo(float isNew)
 				pointparticles(particleeffectnum("electro_impact"), self.origin, w_backoff * 1000, 1);
 				break;
 
-			 case DEATH_TURRET_WALK_MEELE:
+			 case DEATH_TURRET_WALK_MELEE:
 				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("TE_SPARK"), self.origin, w_backoff * 1000, 1);
 				break;
@@ -357,7 +357,7 @@ void Ent_DamageInfo(float isNew)
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
-		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
+		if(trace_fraction < 1 && hitwep != WEP_VORTEX.m_id && hitwep != WEP_VAPORIZER.m_id)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
