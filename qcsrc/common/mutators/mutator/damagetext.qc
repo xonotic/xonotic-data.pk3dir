@@ -1,6 +1,7 @@
 REGISTER_MUTATOR(damagetext, true);
 
 #ifdef CSQC
+bool autocvar_cl_damagetext = false;
 string autocvar_cl_damagetext_format = "-%3$d";
 vector autocvar_cl_damagetext_color = '1 1 0';
 float autocvar_cl_damagetext_size = 8;
@@ -9,6 +10,17 @@ float autocvar_cl_damagetext_alpha_lifetime = 3;
 vector autocvar_cl_damagetext_velocity = '0 0 20';
 vector autocvar_cl_damagetext_offset = '0 -40 0';
 float autocvar_cl_damagetext_accumulate_range = 30;
+STATIC_INIT(cl_damagetext) {
+    CVAR_DESCRIBE(cl_damagetext, _("Draw damage dealt. 0: disabled, 1: enabled"));
+    CVAR_DESCRIBESTR(cl_damagetext_format, _("How to format the damage text. 1$ is health, 2$ is armor, 3$ is both"));
+    CVAR_DESCRIBEVEC(cl_damagetext_color, _("Default damage text color"));
+    CVAR_DESCRIBE(cl_damagetext_size, _("Damage text font size"));
+    CVAR_DESCRIBE(cl_damagetext_alpha_start, _("Damage text initial alpha"));
+    CVAR_DESCRIBE(cl_damagetext_alpha_lifetime, _("Damage text lifetime in seconds"));
+    CVAR_DESCRIBEVEC(cl_damagetext_velocity, _("Damage text move direction"));
+    CVAR_DESCRIBEVEC(cl_damagetext_offset, _("Damage text offset"));
+    CVAR_DESCRIBE(cl_damagetext_accumulate_range, _("Damage text spawned within this range is accumulated"));
+}
 
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color)
@@ -55,6 +67,9 @@ ENDCLASS(DamageText)
 
 #ifdef SVQC
 int autocvar_sv_damagetext = 2;
+STATIC_INIT(sv_damagetext) {
+    CVAR_DESCRIBE(sv_damagetext, _("<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players"));
+}
 #define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
 #define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1 /* spectators only */)
 #define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)
@@ -87,7 +102,6 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 #endif
 
 #ifdef CSQC
-bool autocvar_cl_damagetext = false;
 MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
     if (MUTATOR_RETURNVALUE) return false;
     if (!ReadMutatorEquals(mutator_argv_int_0, damagetext)) return false;
