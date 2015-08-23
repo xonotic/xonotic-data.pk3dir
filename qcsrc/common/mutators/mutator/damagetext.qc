@@ -54,14 +54,25 @@ ENDCLASS(DamageText)
 #endif
 
 #ifdef SVQC
+int autocvar_sv_damagetext = 2;
+#define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
+#define SV_DAMAGETEXT_SPECTATORS_ONLY() (autocvar_sv_damagetext >= 1 /* spectators only */)
+#define SV_DAMAGETEXT_PLAYERS()         (autocvar_sv_damagetext >= 2 /* players */)
+#define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3 /* all players */)
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
+    if (SV_DAMAGETEXT_DISABLED()) return;
     const entity attacker = mutator_argv_entity_0;
     const entity hit = mutator_argv_entity_1; if (hit == attacker) return;
     const int health = mutator_argv_int_0;
     const int armor = mutator_argv_int_1;
     const vector location = hit.origin;
     entity e;
-    FOR_EACH_REALCLIENT(e) if (e == attacker || (IS_SPEC(e) && e.enemy == attacker)) {
+    FOR_EACH_REALCLIENT(e) if (
+        (SV_DAMAGETEXT_ALL()) ||
+        (SV_DAMAGETEXT_PLAYERS() && e == attacker) ||
+        (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(e) && e.enemy == attacker) ||
+        (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(e))
+    ) {
         msg_entity = e;
         WriteByte(MSG_ONE, SVC_TEMPENTITY);
         WriteMutator(MSG_ONE, damagetext);
@@ -76,6 +87,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 #endif
 
 #ifdef CSQC
+bool autocvar_cl_damagetext = false;
 MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
     if (MUTATOR_RETURNVALUE) return false;
     if (!ReadMutatorEquals(mutator_argv_int_0, damagetext)) return false;
@@ -83,13 +95,17 @@ MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
     int armor = ReadShort();
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
-    for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
-        if (e.instanceOfDamageText && e.m_group == group) {
-            DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor);
-            return true;
+    if (autocvar_cl_damagetext) {
+        if (autocvar_cl_damagetext_accumulate_range) {
+            for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
+                if (e.instanceOfDamageText && e.m_group == group) {
+                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor);
+                    return true;
+                }
+            }
         }
+        NEW(DamageText, group, location, health, armor);
     }
-    NEW(DamageText, group, location, health, armor);
     return true;
 }
 #endif
