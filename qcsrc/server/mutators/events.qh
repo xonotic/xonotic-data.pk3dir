@@ -260,6 +260,18 @@ float frag_mirrordamage;
 vector frag_force;
 MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
 
+/**
+ * Called when a player is damaged
+ */
+#define EV_PlayerDamaged(i, o) \
+    /** attacker */ i(entity, mutator_argv_entity_0) \
+    /** target */ i(entity, mutator_argv_entity_1) \
+    /** health */ i(int, mutator_argv_int_0) \
+    /** armor */ i(int, mutator_argv_int_1) \
+    /** location */ i(vector, mutator_argv_vector_0) \
+    /**/
+MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
+
 /** called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items. */
 #define EV_PlayerPowerups(i, o) \
     /**/ i(entity, self) \
