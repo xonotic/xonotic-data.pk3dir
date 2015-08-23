@@ -54,20 +54,23 @@ ENDCLASS(DamageText)
 
 #ifdef SVQC
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
-    const entity me = mutator_argv_entity_0; if (!IS_REAL_CLIENT(me)) return;
-    const entity hit = mutator_argv_entity_1; if (hit == me) return;
+    const entity attacker = mutator_argv_entity_0;
+    const entity hit = mutator_argv_entity_1; if (hit == attacker) return;
     const int health = mutator_argv_int_0;
     const int armor = mutator_argv_int_1;
     const vector location = hit.origin;
-    msg_entity = me;
-    WriteByte(MSG_ONE, SVC_TEMPENTITY);
-    WriteMutator(MSG_ONE, damagetext);
-    WriteShort(MSG_ONE, health);
-    WriteShort(MSG_ONE, armor);
-    WriteEntity(MSG_ONE, hit);
-    WriteCoord(MSG_ONE, location.x);
-    WriteCoord(MSG_ONE, location.y);
-    WriteCoord(MSG_ONE, location.z);
+    entity e;
+    FOR_EACH_REALCLIENT(e) if (e == attacker || (IS_SPEC(e) && e.enemy == attacker)) {
+        msg_entity = e;
+        WriteByte(MSG_ONE, SVC_TEMPENTITY);
+        WriteMutator(MSG_ONE, damagetext);
+        WriteShort(MSG_ONE, health);
+        WriteShort(MSG_ONE, armor);
+        WriteEntity(MSG_ONE, hit);
+        WriteCoord(MSG_ONE, location.x);
+        WriteCoord(MSG_ONE, location.y);
+        WriteCoord(MSG_ONE, location.z);
+    }
 }
 #endif
 
