@@ -1,10 +1,11 @@
 #ifndef VEHICLE_RAPTOR
 #define VEHICLE_RAPTOR
 #include "raptor.qh"
+#ifndef MENUQC
 int v_raptor(int);
+#endif
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RAPTOR,
-/* function   */ v_raptor,
 /* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
 /* mins,maxs  */ '-80 -80 0', '80 80 70',
 /* model	  */ "models/vehicles/raptor.dpm",
@@ -15,6 +16,9 @@ REGISTER_VEHICLE_SIMPLE(
 /* fullname   */ _("Raptor")
 ) {
     this.m_icon = "vehicle_raptor";
+#ifndef MENUQC
+    this.vehicle_func = v_raptor;
+#endif
 }
 #endif
 

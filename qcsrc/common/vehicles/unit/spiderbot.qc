@@ -1,9 +1,10 @@
 #ifndef VEHICLE_SPIDERBOT
 #define VEHICLE_SPIDERBOT
+#ifndef MENUQC
 int v_spiderbot(int);
+#endif
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ SPIDERBOT,
-/* function   */ v_spiderbot,
 /* spawnflags */ VHF_DMGSHAKE,
 /* mins,maxs  */ '-75 -75 10', '75 75 125',
 /* model	  */ "models/vehicles/spiderbot.dpm",
@@ -14,6 +15,9 @@ REGISTER_VEHICLE_SIMPLE(
 /* fullname   */ _("Spiderbot")
 ) {
     this.m_icon = "vehicle_spider";
+#ifndef MENUQC
+    this.vehicle_func = v_spiderbot;
+#endif
 }
 #endif
 

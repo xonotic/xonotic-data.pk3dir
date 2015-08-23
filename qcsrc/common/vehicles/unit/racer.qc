@@ -1,9 +1,10 @@
 #ifndef VEHICLE_RACER
 #define VEHICLE_RACER
+#ifndef MENUQC
 int v_racer(int);
+#endif
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RACER,
-/* function   */ v_racer,
 /* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
 /* mins,maxs  */ '-120 -120 -40' * 0.5, '120 120 40' * 0.5,
 /* model	  */ "models/vehicles/wakizashi.dpm",
@@ -14,6 +15,9 @@ REGISTER_VEHICLE_SIMPLE(
 /* fullname   */ _("Racer")
 ) {
     this.m_icon = "vehicle_racer";
+#ifndef MENUQC
+    this.vehicle_func = v_racer;
+#endif
 }
 #endif
 

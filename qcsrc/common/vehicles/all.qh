@@ -58,11 +58,10 @@ const int VEH_FIRST = 1;
 /** If you register a new vehicle, make sure to add it to all.inc */
 #define REGISTER_VEHICLE(id, class) REGISTER(RegisterVehicles, VEH, vehicle_info, VEH_COUNT, id, vehicleid, NEW(class))
 #include "vehicle.qh"
-#define REGISTER_VEHICLE_SIMPLE(id, func, vehicleflags, min_s, max_s, modelname, headmodelname, hudmodelname, headtag, hudtag, viewtag, shortname, vname) \
+#define REGISTER_VEHICLE_SIMPLE(id, vehicleflags, min_s, max_s, modelname, headmodelname, hudmodelname, headtag, hudtag, viewtag, shortname, vname) \
     REGISTER_VEHICLE(id, Vehicle) {         \
     	this.netname = shortname;           \
     	this.vehicle_name = vname;          \
-    	this.vehicle_func = func;           \
     	this.mdl = modelname;               \
     	this.spawnflags = vehicleflags;     \
     	this.mins = min_s;                  \

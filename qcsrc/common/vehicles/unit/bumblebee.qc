@@ -1,10 +1,11 @@
 #ifndef VEHICLE_BUMBLEBEE
 #define VEHICLE_BUMBLEBEE
 #include "bumblebee.qh"
+#ifndef MENUQC
 int v_bumblebee(int);
+#endif
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ BUMBLEBEE,
-/* function   */ v_bumblebee,
 /* spawnflags */ VHF_DMGSHAKE,
 /* mins,maxs  */ '-245 -130 -130', '230 130 130',
 /* model	  */ "models/vehicles/bumblebee_body.dpm",
@@ -15,6 +16,9 @@ REGISTER_VEHICLE_SIMPLE(
 /* fullname   */ _("Bumblebee")
 ) {
     this.m_icon = "vehicle_bumble";
+#ifndef MENUQC
+    this.vehicle_func = v_bumblebee;
+#endif
 }
 #endif
 
