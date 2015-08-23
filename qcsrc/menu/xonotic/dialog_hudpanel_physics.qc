@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_PHYSICS_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDPhysicsDialog, XonoticRootDialog)
-	METHOD(XonoticHUDPhysicsDialog, fill, void(entity))
+	METHOD(XonoticHUDPhysicsDialog, fill, void(entity));
 	ATTRIB(XonoticHUDPhysicsDialog, title, string, _("Physics Panel"))
 	ATTRIB(XonoticHUDPhysicsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDPhysicsDialog, intendedWidth, float, 0.4)

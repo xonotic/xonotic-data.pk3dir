@@ -2,15 +2,15 @@
 #define ITEM_LISTBOX_H
 #include "../item.qc"
 CLASS(ListBox, Item)
-	METHOD(ListBox, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(ListBox, configureListBox, void(entity, float, float))
-	METHOD(ListBox, draw, void(entity))
-	METHOD(ListBox, keyDown, float(entity, float, float, float))
-	METHOD(ListBox, mouseMove, float(entity, vector))
-	METHOD(ListBox, mousePress, float(entity, vector))
-	METHOD(ListBox, mouseDrag, float(entity, vector))
-	METHOD(ListBox, mouseRelease, float(entity, vector))
-	METHOD(ListBox, focusLeave, void(entity))
+	METHOD(ListBox, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(ListBox, configureListBox, void(entity, float, float));
+	METHOD(ListBox, draw, void(entity));
+	METHOD(ListBox, keyDown, float(entity, float, float, float));
+	METHOD(ListBox, mouseMove, float(entity, vector));
+	METHOD(ListBox, mousePress, float(entity, vector));
+	METHOD(ListBox, mouseDrag, float(entity, vector));
+	METHOD(ListBox, mouseRelease, float(entity, vector));
+	METHOD(ListBox, focusLeave, void(entity));
 	ATTRIB(ListBox, focusable, float, 1)
 	ATTRIB(ListBox, focusedItem, int, -1)
 	ATTRIB(ListBox, focusedItemAlpha, float, 0.3)
@@ -22,12 +22,12 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, scrollPos, float, 0) // measured in window heights, fixed when needed
 	ATTRIB(ListBox, scrollPosTarget, float, 0)
 	ATTRIB(ListBox, needScrollToItem, float, -1)
-	METHOD(ListBox, scrollToItem, void(entity, int))
+	METHOD(ListBox, scrollToItem, void(entity, int));
 	ATTRIB(ListBox, previousValue, float, 0)
 	ATTRIB(ListBox, pressed, float, 0) // 0 = normal, 1 = scrollbar dragging, 2 = item dragging, 3 = released
 	ATTRIB(ListBox, pressOffset, float, 0)
 
-	METHOD(ListBox, updateControlTopBottom, void(entity))
+	METHOD(ListBox, updateControlTopBottom, void(entity));
 	ATTRIB(ListBox, controlTop, float, 0)
 	ATTRIB(ListBox, controlBottom, float, 0)
 	ATTRIB(ListBox, controlWidth, float, 0)
@@ -49,19 +49,19 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, lastClickedItem, float, -1)
 	ATTRIB(ListBox, lastClickedTime, float, 0)
 
-	METHOD(ListBox, drawListBoxItem, void(entity, int, vector, bool, bool)) // item number, width/height, isSelected, isFocused
-	METHOD(ListBox, clickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
-	METHOD(ListBox, doubleClickListBoxItem, void(entity, float, vector)) // item number, relative clickpos
-	METHOD(ListBox, setSelected, void(entity, float))
+	METHOD(ListBox, drawListBoxItem, void(entity, int, vector, bool, bool)); // item number, width/height, isSelected, isFocused
+	METHOD(ListBox, clickListBoxItem, void(entity, float, vector)); // item number, relative clickpos
+	METHOD(ListBox, doubleClickListBoxItem, void(entity, float, vector)); // item number, relative clickpos
+	METHOD(ListBox, setSelected, void(entity, float));
 
-	METHOD(ListBox, getLastFullyVisibleItemAtScrollPos, float(entity, float))
-	METHOD(ListBox, getFirstFullyVisibleItemAtScrollPos, float(entity, float))
+	METHOD(ListBox, getLastFullyVisibleItemAtScrollPos, float(entity, float));
+	METHOD(ListBox, getFirstFullyVisibleItemAtScrollPos, float(entity, float));
 
 	// NOTE: override these four methods if you want variable sized list items
-	METHOD(ListBox, getTotalHeight, float(entity))
-	METHOD(ListBox, getItemAtPos, float(entity, float))
-	METHOD(ListBox, getItemStart, float(entity, float))
-	METHOD(ListBox, getItemHeight, float(entity, float))
+	METHOD(ListBox, getTotalHeight, float(entity));
+	METHOD(ListBox, getItemAtPos, float(entity, float));
+	METHOD(ListBox, getItemStart, float(entity, float));
+	METHOD(ListBox, getItemHeight, float(entity, float));
 	// NOTE: if getItemAt* are overridden, it may make sense to cache the
 	// start and height of the last item returned by getItemAtPos and fast
 	// track returning their properties for getItemStart and getItemHeight.

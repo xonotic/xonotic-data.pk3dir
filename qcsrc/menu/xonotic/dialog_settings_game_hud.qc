@@ -2,8 +2,8 @@
 #define DIALOG_SETTINGS_GAME_HUD_H
 #include "tab.qc"
 CLASS(XonoticGameHUDSettingsTab, XonoticTab)
-	METHOD(XonoticGameHUDSettingsTab, fill, void(entity))
-	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity))
+	METHOD(XonoticGameHUDSettingsTab, fill, void(entity));
+	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameHUDSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameHUDSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameHUDSettingsTab, columns, float, 6.2)

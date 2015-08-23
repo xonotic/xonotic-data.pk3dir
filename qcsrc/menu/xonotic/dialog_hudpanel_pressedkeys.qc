@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_PRESSEDKEYS_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDPressedKeysDialog, XonoticRootDialog)
-	METHOD(XonoticHUDPressedKeysDialog, fill, void(entity))
+	METHOD(XonoticHUDPressedKeysDialog, fill, void(entity));
 	ATTRIB(XonoticHUDPressedKeysDialog, title, string, _("Pressed Keys Panel"))
 	ATTRIB(XonoticHUDPressedKeysDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDPressedKeysDialog, intendedWidth, float, 0.4)

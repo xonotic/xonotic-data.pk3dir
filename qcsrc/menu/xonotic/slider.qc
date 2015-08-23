@@ -2,8 +2,8 @@
 #define SLIDER_H
 #include "../item/slider.qc"
 CLASS(XonoticSlider, Slider)
-	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string))
-	METHOD(XonoticSlider, setValue, void(entity, float))
+	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string));
+	METHOD(XonoticSlider, setValue, void(entity, float));
 	ATTRIB(XonoticSlider, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT)
 	ATTRIB(XonoticSlider, image, string, SKINGFX_SLIDER)
@@ -16,8 +16,8 @@ CLASS(XonoticSlider, Slider)
 	ATTRIB(XonoticSlider, color2, vector, SKINCOLOR_SLIDER_S)
 
 	ATTRIB(XonoticSlider, cvarName, string, string_null)
-	METHOD(XonoticSlider, loadCvars, void(entity))
-	METHOD(XonoticSlider, saveCvars, void(entity))
+	METHOD(XonoticSlider, loadCvars, void(entity));
+	METHOD(XonoticSlider, saveCvars, void(entity));
 	ATTRIB(XonoticSlider, sendCvars, float, 0)
 
 	ATTRIB(XonoticSlider, alpha, float, SKINALPHA_TEXT)

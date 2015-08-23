@@ -2,13 +2,13 @@
 #define LANGUAGELIST_H
 #include "listbox.qc"
 CLASS(XonoticLanguageList, XonoticListBox)
-	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity))
+	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity));
 	ATTRIB(XonoticLanguageList, rowsPerItem, float, 1)
-	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticLanguageList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticLanguageList, setSelected, void(entity, float))
-	METHOD(XonoticLanguageList, loadCvars, void(entity))
-	METHOD(XonoticLanguageList, saveCvars, void(entity))
+	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticLanguageList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticLanguageList, setSelected, void(entity, float));
+	METHOD(XonoticLanguageList, loadCvars, void(entity));
+	METHOD(XonoticLanguageList, saveCvars, void(entity));
 
 	ATTRIB(XonoticLanguageList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticLanguageList, realUpperMargin, float, 0)
@@ -17,15 +17,15 @@ CLASS(XonoticLanguageList, XonoticListBox)
 	ATTRIB(XonoticLanguageList, columnPercentageOrigin, float, 0)
 	ATTRIB(XonoticLanguageList, columnPercentageSize, float, 0)
 
-	METHOD(XonoticLanguageList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float)) // enter handling
+	METHOD(XonoticLanguageList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float)); // enter handling
 
-	METHOD(XonoticLanguageList, destroy, void(entity))
+	METHOD(XonoticLanguageList, destroy, void(entity));
 
 	ATTRIB(XonoticLanguageList, languagelist, float, -1)
-	METHOD(XonoticLanguageList, getLanguages, void(entity))
-	METHOD(XonoticLanguageList, setLanguage, void(entity))
-	METHOD(XonoticLanguageList, languageParameter, string(entity, float, float))
+	METHOD(XonoticLanguageList, getLanguages, void(entity));
+	METHOD(XonoticLanguageList, setLanguage, void(entity));
+	METHOD(XonoticLanguageList, languageParameter, string(entity, float, float));
 
 	ATTRIB(XonoticLanguageList, name, string, "languageselector") // change this to make it noninteractive (for first run dialog)
 ENDCLASS(XonoticLanguageList)

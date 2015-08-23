@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 #include "../item/modalcontroller.qc"
 CLASS(MainWindow, ModalController)
-	METHOD(MainWindow, configureMainWindow, void(entity))
-	METHOD(MainWindow, draw, void(entity))
+	METHOD(MainWindow, configureMainWindow, void(entity));
+	METHOD(MainWindow, draw, void(entity));
 	ATTRIB(MainWindow, firstRunDialog, entity, NULL)
 	ATTRIB(MainWindow, advancedDialog, entity, NULL)
 	ATTRIB(MainWindow, mutatorsDialog, entity, NULL)

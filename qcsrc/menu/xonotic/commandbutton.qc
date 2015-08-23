@@ -8,7 +8,7 @@
 #define COMMANDBUTTON_H
 #include "button.qc"
 CLASS(XonoticCommandButton, XonoticButton)
-	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float))
+	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float));
 	ATTRIB(XonoticCommandButton, onClickCommand, string, string_null)
 	ATTRIB(XonoticCommandButton, flags, float, 0)
 ENDCLASS(XonoticCommandButton)

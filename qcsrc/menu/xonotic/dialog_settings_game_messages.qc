@@ -2,8 +2,8 @@
 #define DIALOG_SETTINGS_GAME_MESSAGES_H
 #include "tab.qc"
 CLASS(XonoticGameMessageSettingsTab, XonoticTab)
-	METHOD(XonoticGameMessageSettingsTab, fill, void(entity))
-	METHOD(XonoticGameMessageSettingsTab, showNotify, void(entity))
+	METHOD(XonoticGameMessageSettingsTab, fill, void(entity));
+	METHOD(XonoticGameMessageSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameMessageSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameMessageSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameMessageSettingsTab, columns, float, 6)

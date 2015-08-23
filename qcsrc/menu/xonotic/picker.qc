@@ -2,13 +2,13 @@
 #define PICKER_H
 #include "../item.qc"
 CLASS(XonoticPicker, Item)
-	METHOD(XonoticPicker, configureXonoticPicker, void(entity))
-	METHOD(XonoticPicker, mousePress, float(entity, vector))
-	METHOD(XonoticPicker, mouseRelease, float(entity, vector))
-	METHOD(XonoticPicker, mouseMove, float(entity, vector))
-	METHOD(XonoticPicker, mouseDrag, float(entity, vector))
-	METHOD(XonoticPicker, keyDown, float(entity, float, float, float))
-	METHOD(XonoticPicker, draw, void(entity))
+	METHOD(XonoticPicker, configureXonoticPicker, void(entity));
+	METHOD(XonoticPicker, mousePress, float(entity, vector));
+	METHOD(XonoticPicker, mouseRelease, float(entity, vector));
+	METHOD(XonoticPicker, mouseMove, float(entity, vector));
+	METHOD(XonoticPicker, mouseDrag, float(entity, vector));
+	METHOD(XonoticPicker, keyDown, float(entity, float, float, float));
+	METHOD(XonoticPicker, draw, void(entity));
 	ATTRIB(XonoticPicker, focusable, float, 1)
 	ATTRIB(XonoticPicker, disabled, float, 0)
 	ATTRIB(XonoticPicker, alpha, float, 1)
@@ -17,10 +17,10 @@ CLASS(XonoticPicker, Item)
 	ATTRIB(XonoticPicker, rows, float, 3)
 	ATTRIB(XonoticPicker, columns, float, 2)
 
-	METHOD(XonoticPicker, moveFocus, void(entity, vector, vector))
-	METHOD(XonoticPicker, cellSelect, void(entity, vector))
-	METHOD(XonoticPicker, cellDraw, void(entity, vector, vector))
-	METHOD(XonoticPicker, cellIsValid, bool(entity, vector))
+	METHOD(XonoticPicker, moveFocus, void(entity, vector, vector));
+	METHOD(XonoticPicker, cellSelect, void(entity, vector));
+	METHOD(XonoticPicker, cellDraw, void(entity, vector, vector));
+	METHOD(XonoticPicker, cellIsValid, bool(entity, vector));
 	ATTRIB(XonoticPicker, realCellSize, vector, '0 0 0')
 	ATTRIB(XonoticPicker, selectedCell, vector, '-1 -1 0')
 	ATTRIB(XonoticPicker, focusedCell, vector, '-1 -1 0')

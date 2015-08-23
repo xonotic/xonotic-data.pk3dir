@@ -2,19 +2,19 @@
 #define PLAYERMODEL_H
 #include "image.qc"
 CLASS(XonoticPlayerModelSelector, XonoticImage)
-	METHOD(XonoticPlayerModelSelector, configureXonoticPlayerModelSelector, void(entity))
-	METHOD(XonoticPlayerModelSelector, loadCvars, void(entity))
-	METHOD(XonoticPlayerModelSelector, saveCvars, void(entity))
-	METHOD(XonoticPlayerModelSelector, draw, void(entity))
-	METHOD(XonoticPlayerModelSelector, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayerModelSelector, showNotify, void(entity))
+	METHOD(XonoticPlayerModelSelector, configureXonoticPlayerModelSelector, void(entity));
+	METHOD(XonoticPlayerModelSelector, loadCvars, void(entity));
+	METHOD(XonoticPlayerModelSelector, saveCvars, void(entity));
+	METHOD(XonoticPlayerModelSelector, draw, void(entity));
+	METHOD(XonoticPlayerModelSelector, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticPlayerModelSelector, showNotify, void(entity));
 	ATTRIB(XonoticPlayerModelSelector, currentModel, string, string_null)
 	ATTRIB(XonoticPlayerModelSelector, currentSkin, float, 0)
 	ATTRIB(XonoticPlayerModelSelector, currentModelImage, string, string_null)
 	ATTRIB(XonoticPlayerModelSelector, currentModelTitle, string, string_null)
 	ATTRIB(XonoticPlayerModelSelector, currentModelDescription, string, string_null)
-	METHOD(XonoticPlayerModelSelector, go, void(entity, float))
-	METHOD(XonoticPlayerModelSelector, destroy, void(entity))
+	METHOD(XonoticPlayerModelSelector, go, void(entity, float));
+	METHOD(XonoticPlayerModelSelector, destroy, void(entity));
 	ATTRIB(XonoticPlayerModelSelector, origin, vector, '0 0 0')
 	ATTRIB(XonoticPlayerModelSelector, size, vector, '0 0 0')
 	ATTRIB(XonoticPlayerModelSelector, realFontSize, vector, '0 0 0')

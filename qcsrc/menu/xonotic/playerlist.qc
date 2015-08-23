@@ -3,8 +3,8 @@
 #include "listbox.qc"
 CLASS(XonoticPlayerList, XonoticListBox)
 	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1)
-	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, int, vector, bool, bool))
+	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	ATTRIB(XonoticPlayerList, allowFocusSound, float, 0)
 	ATTRIB(XonoticPlayerList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPlayerList, columnNameOrigin, float, 0)
@@ -14,8 +14,8 @@ CLASS(XonoticPlayerList, XonoticListBox)
 	ATTRIB(XonoticPlayerList, realUpperMargin, float, 0)
 	ATTRIB(XonoticPlayerList, origin, vector, '0 0 0')
 	ATTRIB(XonoticPlayerList, itemAbsSize, vector, '0 0 0')
-	METHOD(XonoticPlayerList, setPlayerList, void(entity, string))
-	METHOD(XonoticPlayerList, getPlayerList, string(entity, float, float))
+	METHOD(XonoticPlayerList, setPlayerList, void(entity, string));
+	METHOD(XonoticPlayerList, getPlayerList, string(entity, float, float));
 	ATTRIB(XonoticPlayerList, playerList, float, -1)
 	ATTRIB(XonoticPlayerList, selectionDoesntMatter, bool, true)
 ENDCLASS(XonoticPlayerList)

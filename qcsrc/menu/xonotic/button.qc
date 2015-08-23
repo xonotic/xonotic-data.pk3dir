@@ -2,7 +2,7 @@
 #define BUTTON_H
 #include "../item/button.qc"
 CLASS(XonoticButton, Button)
-	METHOD(XonoticButton, configureXonoticButton, void(entity, string, vector))
+	METHOD(XonoticButton, configureXonoticButton, void(entity, string, vector));
 	ATTRIB(XonoticButton, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticButton, image, string, SKINGFX_BUTTON)
 	ATTRIB(XonoticButton, grayImage, string, SKINGFX_BUTTON_GRAY)

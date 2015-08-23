@@ -25,6 +25,8 @@
 
 #include "../common/vehicles/all.qh"
 
+#include "mutators/events.qh"
+
 #include "weapons/projectile.qh"
 
 #include "../common/buffs.qh"
@@ -1254,69 +1256,55 @@ void Net_WeaponComplain()
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float CSQC_Parse_TempEntity()
 {
-	float bHandled;
-		bHandled  = true;
 	// Acquire TE ID
-	float nTEID;
-		nTEID = ReadByte();
+	int nTEID = ReadByte();
 
-	if(autocvar_developer_csqcentities)
+	if (autocvar_developer_csqcentities)
 		printf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
-		// NOTE: Could just do return instead of break...
-	switch(nTEID)
+	switch (nTEID)
 	{
+		case TE_CSQC_MUTATOR:
+			int mutID = ReadMutator();
+			if (MUTATOR_CALLHOOK(CSQC_Parse_TempEntity, mutID))
+			return true;
 		case TE_CSQC_TARGET_MUSIC:
 			Net_TargetMusic();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_PICTURE:
 			Net_MapVote_Picture();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_VORTEXBEAMPARTICLE:
 			Net_ReadVortexBeamParticle();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_TEAMNAGGER:
 			Net_TeamNagger();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_ARC:
 			Net_ReadArc();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_PINGPLREPORT:
 			Net_ReadPingPLReport();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_VEHICLESETUP:
 			Net_VehicleSetup();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_SVNOTICE:
 			cl_notice_read();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
 			Net_ReadShockwaveParticle();
-			bHandled = true;
-			break;
+			return true;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
-			bHandled = false;
-			break;
+			return false;
 	}
-
-	return bHandled;
 }
 
 string getcommandkey(string text, string command)

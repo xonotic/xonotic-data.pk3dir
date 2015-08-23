@@ -34,7 +34,7 @@ CLASS(Buff, Pickup)
 	ATTRIB(Buff, m_skin, int, 0)
 	ATTRIB(Buff, m_sprite, string, "")
 #ifdef SVQC
-	METHOD(Buff, m_time, float(entity))
+	METHOD(Buff, m_time, float(entity));
 	float Buff_m_time(entity this) { return cvar(strcat("g_buffs_", this.netname, "_time")); }
 #endif
 ENDCLASS(Buff)

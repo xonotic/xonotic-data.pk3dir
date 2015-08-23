@@ -5,15 +5,15 @@
 #define STATSLIST_H
 #include "listbox.qc"
 CLASS(XonoticStatsList, XonoticListBox)
-	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))
+	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity));
 	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)
-	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticStatsList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticStatsList, getStats, void(entity))
-	METHOD(XonoticStatsList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticStatsList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticStatsList, destroy, void(entity))
-	METHOD(XonoticStatsList, showNotify, void(entity))
+	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticStatsList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticStatsList, getStats, void(entity));
+	METHOD(XonoticStatsList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticStatsList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticStatsList, destroy, void(entity));
+	METHOD(XonoticStatsList, showNotify, void(entity));
 	ATTRIB(XonoticStatsList, selectionDoesntMatter, bool, true)
 
 	ATTRIB(XonoticStatsList, listStats, float, -1)

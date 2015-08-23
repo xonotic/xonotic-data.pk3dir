@@ -2,9 +2,9 @@
 #define INPUTBOX_H
 #include "../item/inputbox.qc"
 CLASS(XonoticInputBox, InputBox)
-	METHOD(XonoticInputBox, configureXonoticInputBox, void(entity, float, string))
-	METHOD(XonoticInputBox, focusLeave, void(entity))
-	METHOD(XonoticInputBox, setText, void(entity, string))
+	METHOD(XonoticInputBox, configureXonoticInputBox, void(entity, float, string));
+	METHOD(XonoticInputBox, focusLeave, void(entity));
+	METHOD(XonoticInputBox, setText, void(entity, string));
 	ATTRIB(XonoticInputBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticInputBox, image, string, SKINGFX_INPUTBOX)
 	ATTRIB(XonoticInputBox, onChange, void(entity, entity), func_null)
@@ -26,10 +26,10 @@ CLASS(XonoticInputBox, InputBox)
 	ATTRIB(XonoticInputBox, cb_colorC, vector, SKINCOLOR_CLEARBUTTON_C)
 
 	ATTRIB(XonoticInputBox, cvarName, string, string_null)
-	METHOD(XonoticInputBox, loadCvars, void(entity))
-	METHOD(XonoticInputBox, saveCvars, void(entity))
+	METHOD(XonoticInputBox, loadCvars, void(entity));
+	METHOD(XonoticInputBox, saveCvars, void(entity));
 	ATTRIB(XonoticInputBox, sendCvars, float, 0)
-	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float))
+	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float));
 
 	ATTRIB(XonoticInputBox, saveImmediately, float, 0)
 ENDCLASS(XonoticInputBox)

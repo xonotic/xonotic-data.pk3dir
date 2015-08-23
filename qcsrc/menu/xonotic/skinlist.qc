@@ -2,18 +2,18 @@
 #define SKINLIST_H
 #include "listbox.qc"
 CLASS(XonoticSkinList, XonoticListBox)
-	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity))
+	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity));
 	ATTRIB(XonoticSkinList, rowsPerItem, float, 4)
-	METHOD(XonoticSkinList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticSkinList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticSkinList, getSkins, void(entity))
-	METHOD(XonoticSkinList, setSkin, void(entity))
-	METHOD(XonoticSkinList, loadCvars, void(entity))
-	METHOD(XonoticSkinList, saveCvars, void(entity))
-	METHOD(XonoticSkinList, skinParameter, string(entity, float, float))
-	METHOD(XonoticSkinList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticSkinList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticSkinList, destroy, void(entity))
+	METHOD(XonoticSkinList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticSkinList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticSkinList, getSkins, void(entity));
+	METHOD(XonoticSkinList, setSkin, void(entity));
+	METHOD(XonoticSkinList, loadCvars, void(entity));
+	METHOD(XonoticSkinList, saveCvars, void(entity));
+	METHOD(XonoticSkinList, skinParameter, string(entity, float, float));
+	METHOD(XonoticSkinList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticSkinList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticSkinList, destroy, void(entity));
 
 	ATTRIB(XonoticSkinList, skinlist, float, -1)
 	ATTRIB(XonoticSkinList, realFontSize, vector, '0 0 0')

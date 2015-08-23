@@ -2,14 +2,14 @@
 #define WEAPONARENACHECKBOX_H
 #include "../item/checkbox.qc"
 CLASS(XonoticWeaponarenaCheckBox, CheckBox)
-	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string))
-	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float))
+	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string));
+	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float));
 	ATTRIB(XonoticWeaponarenaCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticWeaponarenaCheckBox, image, string, SKINGFX_CHECKBOX)
 	ATTRIB(XonoticWeaponarenaCheckBox, netname, string, string_null)
 
-	METHOD(XonoticWeaponarenaCheckBox, loadCvars, void(entity))
-	METHOD(XonoticWeaponarenaCheckBox, saveCvars, void(entity))
+	METHOD(XonoticWeaponarenaCheckBox, loadCvars, void(entity));
+	METHOD(XonoticWeaponarenaCheckBox, saveCvars, void(entity));
 ENDCLASS(XonoticWeaponarenaCheckBox)
 entity makeXonoticWeaponarenaCheckBox(string, string);
 #endif
