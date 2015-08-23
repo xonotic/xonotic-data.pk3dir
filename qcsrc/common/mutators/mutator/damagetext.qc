@@ -1,0 +1,87 @@
+REGISTER_MUTATOR(damagetext, true);
+
+#ifdef CSQC
+vector autocvar_cl_damagetext_color = '1 1 0';
+float autocvar_cl_damagetext_size = 8;
+float autocvar_cl_damagetext_alpha_start = 1;
+float autocvar_cl_damagetext_alpha_lifetime = 3;
+vector autocvar_cl_damagetext_velocity = '0 0 20';
+vector autocvar_cl_damagetext_offset = '0 -40 0';
+float autocvar_cl_damagetext_accumulate_range = 300;
+
+CLASS(DamageText, Object)
+    ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color)
+    ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size)
+    ATTRIB(DamageText, alpha, float, autocvar_cl_damagetext_alpha_start)
+    ATTRIB(DamageText, fade_rate, float, 1 / autocvar_cl_damagetext_alpha_lifetime)
+    ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity)
+    ATTRIB(DamageText, m_damage, int, 0)
+    ATTRIB(DamageText, m_armordamage, int, 0)
+    ATTRIB(DamageText, time_prev, float, time)
+
+    void DamageText_draw() {
+        entity this = self;
+        float dt = time - this.time_prev;
+        this.time_prev = time;
+        setorigin(this, this.origin + dt * this.velocity);
+        this.alpha -= dt * this.fade_rate;
+        if (this.alpha < 0) remove(this);
+        vector pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
+        if (pos.z >= 0 && this.m_size > 0) {
+            pos.z = 0;
+            string s = sprintf("-%d", this.m_damage + this.m_armordamage);
+            drawstring(pos, s, this.m_size * '1 1 0', this.m_color, this.alpha, DRAWFLAG_NORMAL);
+        }
+    }
+    ATTRIB(DamageText, draw2d, void(), DamageText_draw)
+
+    void DamageText_update(DamageText this, vector _origin, int _health, int _armor) {
+        this.m_damage = _health;
+        this.m_armordamage = _armor;
+        setorigin(this, _origin);
+        this.alpha = 1;
+    }
+
+    CONSTRUCTOR(DamageText, vector _origin, int _health, int _armor) {
+        CONSTRUCT(DamageText);
+        DamageText_update(this, _origin, _health, _armor);
+        return this;
+    }
+ENDCLASS(DamageText)
+#endif
+
+#ifdef SVQC
+MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
+    const entity me = mutator_argv_entity_0; if (!IS_REAL_CLIENT(me)) return;
+    const entity hit = mutator_argv_entity_1; if (hit == me) return;
+    const int health = mutator_argv_int_0;
+    const int armor = mutator_argv_int_1;
+    const vector location = hit.origin;
+    msg_entity = me;
+    WriteByte(MSG_ONE, SVC_TEMPENTITY);
+    WriteMutator(MSG_ONE, damagetext);
+    WriteShort(MSG_ONE, health);
+    WriteShort(MSG_ONE, armor);
+    WriteCoord(MSG_ONE, location.x);
+    WriteCoord(MSG_ONE, location.y);
+    WriteCoord(MSG_ONE, location.z);
+}
+#endif
+
+#ifdef CSQC
+MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
+    if (MUTATOR_RETURNVALUE) return false;
+    if (!ReadMutatorEquals(mutator_argv_int_0, damagetext)) return false;
+    int health = ReadShort();
+    int armor = ReadShort();
+    vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
+    for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
+        if (e.instanceOfDamageText) {
+            DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor);
+            return true;
+        }
+    }
+    NEW(DamageText, location, health, armor);
+    return true;
+}
+#endif
