@@ -254,10 +254,10 @@ string formatmessage(string msg)
 	n = 7;
 
 	ammoitems = "batteries";
-	if(self.items & IT_PLASMA) ammoitems = "plasma";
-	if(self.items & IT_CELLS) ammoitems = "cells";
-	if(self.items & IT_ROCKETS) ammoitems = "rockets";
-	if(self.items & IT_SHELLS) ammoitems = "shells";
+	if(self.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
+	if(self.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
+	if(self.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
+	if(self.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
 
 	WarpZone_crosshair_trace(self);
 	cursor = trace_endpos;
