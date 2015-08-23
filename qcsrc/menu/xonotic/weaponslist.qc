@@ -2,16 +2,16 @@
 #define WEAPONSLIST_H
 #include "listbox.qc"
 CLASS(XonoticWeaponsList, XonoticListBox)
-	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity))
-	METHOD(XonoticWeaponsList, toString, string(entity))
+	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity));
+	METHOD(XonoticWeaponsList, toString, string(entity));
 	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1)
-	METHOD(XonoticWeaponsList, draw, void(entity))
-	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticWeaponsList, draw, void(entity));
+	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float));
 	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticWeaponsList, realUpperMargin, float, 0)
-	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector))
+	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector));
 ENDCLASS(XonoticWeaponsList)
 entity makeXonoticWeaponsList();
 void WeaponsList_MoveUp_Click(entity btn, entity me);

@@ -163,6 +163,7 @@ void InitGameplayMode()
 	if(g_onslaught)
 	{
 		ActivateTeamplay();
+		fraglimit_override = autocvar_g_onslaught_point_limit;
 		have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_onslaught);
 	}

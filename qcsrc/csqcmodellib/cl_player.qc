@@ -143,7 +143,7 @@ void PM_Movement_Move()
 {
 	runstandardplayerphysics(self);
 #ifdef CSQC
-	self.flags = 
+	self.flags =
 			((self.pmove_flags & PMF_DUCKED) ? FL_DUCKED : 0) |
 			(!(self.pmove_flags & PMF_JUMP_HELD) ? FL_JUMPRELEASED : 0) |
 			((self.pmove_flags & PMF_ONGROUND) ? FL_ONGROUND : 0);

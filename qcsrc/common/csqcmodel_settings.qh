@@ -61,7 +61,7 @@
 	CSQCMODEL_PROPERTY(1024, float, ReadAngle, WriteAngle, v_angle_x) \
 	CSQCMODEL_PROPERTY_SCALED(4096, float, ReadByte, WriteByte, scale, 16, 0, 255) \
 	CSQCMODEL_PROPERTY(8192, int, ReadInt24_t, WriteInt24_t, dphitcontentsmask) \
-	CSQCMODEL_PROPERTY(16384, TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) 
+	CSQCMODEL_PROPERTY(16384, TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME)
 // TODO get rid of colormod/glowmod here, find good solution for vortex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here

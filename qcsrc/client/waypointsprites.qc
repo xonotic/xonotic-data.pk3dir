@@ -172,11 +172,8 @@ float spritelookupblinkvalue(string s)
 
 	switch(s)
 	{
-		case "ons-cp-atck-neut": return 2;
-		case "ons-cp-atck-red":  return 2;
-		case "ons-cp-atck-blue": return 2;
-		case "ons-cp-dfnd-red":  return 0.5;
-		case "ons-cp-dfnd-blue": return 0.5;
+		case "ons-cp-atck":      return 2;
+		case "ons-cp-dfnd":      return 0.5;
 		case "item_health_mega": return 2;
 		case "item_armor_large": return 2;
 		case "item-invis":       return 2;
@@ -238,17 +235,11 @@ string spritelookuptext(string s)
 		case "neutralbase": return _("White base");
 		case "pinkbase": return _("Pink base");
 		case "waypoint": return _("Waypoint");
-		case "ons-gen-red": return _("Generator");
-		case "ons-gen-blue": return _("Generator");
+		case "ons-gen": return _("Generator");
 		case "ons-gen-shielded": return _("Generator");
-		case "ons-cp-neut": return _("Control point");
-		case "ons-cp-red": return _("Control point");
-		case "ons-cp-blue": return _("Control point");
-		case "ons-cp-atck-neut": return _("Control point");
-		case "ons-cp-atck-red": return _("Control point");
-		case "ons-cp-atck-blue": return _("Control point");
-		case "ons-cp-dfnd-red": return _("Control point");
-		case "ons-cp-dfnd-blue": return _("Control point");
+		case "ons-cp": return _("Control point");
+		case "ons-cp-atck": return _("Control point");
+		case "ons-cp-dfnd": return _("Control point");
 		case "race-checkpoint": return _("Checkpoint");
 		case "race-finish": return _("Finish");
 		case "race-start": return _("Start");

@@ -636,14 +636,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	}
 }
 
-const int S_MOUSE1 = 1;
-const int S_MOUSE2 = 2;
-const int S_MOUSE3 = 4;
-int mouseClicked;
-int prevMouseClicked; // previous state
-float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
-vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
-
 void HUD_Panel_EnableMenu();
 entity tab_panels[HUD_PANEL_MAX];
 entity tab_panel;

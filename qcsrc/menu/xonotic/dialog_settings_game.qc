@@ -2,7 +2,7 @@
 #define DIALOG_SETTINGS_GAME_H
 #include "tab.qc"
 CLASS(XonoticGameSettingsTab, XonoticTab)
-	METHOD(XonoticGameSettingsTab, fill, void(entity))
+	METHOD(XonoticGameSettingsTab, fill, void(entity));
 	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticGameSettingsTab, columns, float, 6.5)

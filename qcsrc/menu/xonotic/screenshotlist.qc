@@ -2,20 +2,20 @@
 #define SCREENSHOTLIST_H
 #include "listbox.qc"
 CLASS(XonoticScreenshotList, XonoticListBox)
-	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity))
+	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity));
 	ATTRIB(XonoticScreenshotList, rowsPerItem, float, 1)
-	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticScreenshotList, setSelected, void(entity, float))
-	METHOD(XonoticScreenshotList, draw, void(entity))
-	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticScreenshotList, getScreenshots, void(entity))
-	METHOD(XonoticScreenshotList, previewScreenshot, void(entity))
-	METHOD(XonoticScreenshotList, startScreenshot, void(entity))
-	METHOD(XonoticScreenshotList, screenshotName, string(entity, float))
-	METHOD(XonoticScreenshotList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticScreenshotList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticScreenshotList, destroy, void(entity))
-	METHOD(XonoticScreenshotList, showNotify, void(entity))
+	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticScreenshotList, setSelected, void(entity, float));
+	METHOD(XonoticScreenshotList, draw, void(entity));
+	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticScreenshotList, getScreenshots, void(entity));
+	METHOD(XonoticScreenshotList, previewScreenshot, void(entity));
+	METHOD(XonoticScreenshotList, startScreenshot, void(entity));
+	METHOD(XonoticScreenshotList, screenshotName, string(entity, float));
+	METHOD(XonoticScreenshotList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticScreenshotList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticScreenshotList, destroy, void(entity));
+	METHOD(XonoticScreenshotList, showNotify, void(entity));
 	ATTRIB(XonoticScreenshotList, listScreenshot, float, -1)
 	ATTRIB(XonoticScreenshotList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticScreenshotList, columnNameOrigin, float, 0)
@@ -33,9 +33,9 @@ CLASS(XonoticScreenshotList, XonoticListBox)
 	ATTRIB(XonoticScreenshotList, screenshotBrowserDialog, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotPreview, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotViewerDialog, entity, NULL)
-	METHOD(XonoticScreenshotList, goScreenshot, void(entity, float))
-	METHOD(XonoticScreenshotList, startSlideShow, void(entity))
-	METHOD(XonoticScreenshotList, stopSlideShow, void(entity))
+	METHOD(XonoticScreenshotList, goScreenshot, void(entity, float));
+	METHOD(XonoticScreenshotList, startSlideShow, void(entity));
+	METHOD(XonoticScreenshotList, stopSlideShow, void(entity));
 ENDCLASS(XonoticScreenshotList)
 
 entity makeXonoticScreenshotList();

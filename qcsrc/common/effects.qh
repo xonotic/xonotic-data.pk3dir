@@ -91,7 +91,7 @@
     EFFECT(0, EFFECT_ITEM_PICKUP,               "item_pickup") \
     EFFECT(0, EFFECT_ITEM_RESPAWN,              "item_respawn") \
     EFFECT(0, EFFECT_JUMPPAD,                   "jumppad_activate") \
-    EFFECT(1, EFFECT_BULLET,                    "tr_bullet") 
+    EFFECT(1, EFFECT_BULLET,                    "tr_bullet")
 
 
 

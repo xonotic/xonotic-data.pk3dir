@@ -2,8 +2,8 @@
 #define CROSSHAIRPREVIEW_H
 #include "../item.qc"
 CLASS(XonoticCrosshairPreview, Item)
-	METHOD(XonoticCrosshairPreview, configureXonoticCrosshairPreview, void(entity))
-	METHOD(XonoticCrosshairPreview, draw, void(entity))
+	METHOD(XonoticCrosshairPreview, configureXonoticCrosshairPreview, void(entity));
+	METHOD(XonoticCrosshairPreview, draw, void(entity));
 	ATTRIB(XonoticCrosshairPreview, src, string, string_null)
 	ATTRIB(XonoticCrosshairPreview, src2, string, string_null)
 	ATTRIB(XonoticCrosshairPreview, disabled, float, 0)

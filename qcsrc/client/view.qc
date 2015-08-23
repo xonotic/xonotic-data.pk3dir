@@ -10,6 +10,8 @@
 #include "shownames.qh"
 #include "waypointsprites.qh"
 
+#include "mutators/events.qh"
+
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
@@ -801,6 +803,8 @@ void UpdateCrosshair()
 		wcross_alpha_prev = wcross_alpha;
 		wcross_color_prev = wcross_color;
 
+		MUTATOR_CALLHOOK(UpdateCrosshair);
+
 		wcross_scale *= 1 - autocvar__menu_alpha;
 		wcross_alpha *= 1 - autocvar__menu_alpha;
 		wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
@@ -1109,16 +1113,35 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
-		if(WantEventchase())
+		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && getstati(STAT_ROUNDLOST));
+		entity gen = world;
+
+		if(ons_roundlost)
+		{
+			entity e;
+			for(e = world; (e = find(e, classname, "onslaught_generator")); )
+			{
+				if(e.health <= 0)
+				{
+					gen = e;
+					break;
+				}
+			}
+			if(!gen)
+				ons_roundlost = FALSE; // don't enforce the 3rd person camera if there is no dead generator to show
+		}
+		if(WantEventchase() || (!autocvar_cl_orthoview && ons_roundlost))
 		{
 			eventchase_running = true;
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
+			if(ons_roundlost) { current_view_origin = gen.origin; }
 
 			// detect maximum viewoffset and use it
 			vector view_offset = autocvar_cl_eventchase_viewoffset;
 			if(vehicle_chase && autocvar_cl_eventchase_vehicle_viewoffset) { view_offset = autocvar_cl_eventchase_vehicle_viewoffset; }
+			if(ons_roundlost) { view_offset = autocvar_cl_eventchase_generator_viewoffset; }
 
 			if(view_offset)
 			{
@@ -1135,6 +1158,7 @@ void CSQC_UpdateView(float w, float h)
 			// make the camera smooth back
 			float chase_distance = autocvar_cl_eventchase_distance;
 			if(vehicle_chase && autocvar_cl_eventchase_vehicle_distance) { chase_distance = autocvar_cl_eventchase_vehicle_distance; }
+			if(ons_roundlost) { chase_distance = autocvar_cl_eventchase_generator_distance; }
 
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < chase_distance)
 				eventchase_current_distance += autocvar_cl_eventchase_speed * (chase_distance - eventchase_current_distance) * frametime; // slow down the further we get
@@ -1811,6 +1835,8 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
+	else
+		HUD_Radar_Mouse();
 
     if(hud && !intermission)
     if(hud == HUD_BUMBLEBEE_GUN)

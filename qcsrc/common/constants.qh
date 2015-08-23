@@ -31,6 +31,14 @@ const int AS_INT = 2;
 const int AS_FLOAT_TRUNCATED = 2;
 const int AS_FLOAT = 8;
 
+const int TE_CSQC_MUTATOR = 99;
+#define MUTATOR_HASH(s) crc16(true, s)
+#define WriteMutator(to, s) do { \
+    WriteByte(to, TE_CSQC_MUTATOR); \
+    WriteLong(to, MUTATOR_HASH(#s)); \
+} while (0)
+#define ReadMutator() ReadLong()
+#define ReadMutatorEquals(read, s) (read == MUTATOR_HASH(#s))
 const int TE_CSQC_PICTURE = 100;
 const int TE_CSQC_RACE = 101;
 const int TE_CSQC_VORTEXBEAMPARTICLE = 103;
@@ -115,7 +123,9 @@ const int ENT_CLIENT_TRIGGER_IMPULSE = 68;
 const int ENT_CLIENT_SWAMP = 69;
 const int ENT_CLIENT_CORNER = 70;
 const int ENT_CLIENT_KEYLOCK = 71;
-const int ENT_CLIENT_EFFECT = 72;
+const int ENT_CLIENT_GENERATOR = 72;
+const int ENT_CLIENT_CONTROLPOINT_ICON = 73;
+const int ENT_CLIENT_EFFECT = 74;
 const int ENT_CLIENT_VIEWLOC = 78;
 const int ENT_CLIENT_VIEWLOC_TRIGGER = 79;
 

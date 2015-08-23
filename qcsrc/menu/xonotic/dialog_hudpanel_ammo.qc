@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_AMMO_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDAmmoDialog, XonoticRootDialog)
-	METHOD(XonoticHUDAmmoDialog, fill, void(entity))
+	METHOD(XonoticHUDAmmoDialog, fill, void(entity));
 	ATTRIB(XonoticHUDAmmoDialog, title, string, _("Ammo Panel"))
 	ATTRIB(XonoticHUDAmmoDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDAmmoDialog, intendedWidth, float, 0.4)

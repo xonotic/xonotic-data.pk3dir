@@ -1,7 +1,10 @@
-#ifdef REGISTER_VEHICLE
-REGISTER_VEHICLE(
+#ifndef VEHICLE_RACER
+#define VEHICLE_RACER
+#ifndef MENUQC
+int v_racer(int);
+#endif
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RACER,
-/* function   */ v_racer,
 /* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
 /* mins,maxs  */ '-120 -120 -40' * 0.5, '120 120 40' * 0.5,
 /* model	  */ "models/vehicles/wakizashi.dpm",
@@ -10,8 +13,15 @@ REGISTER_VEHICLE(
 /* tags	   	  */ "", "", "tag_viewport",
 /* netname	  */ "racer",
 /* fullname   */ _("Racer")
-);
-#else
+) {
+    this.m_icon = "vehicle_racer";
+#ifndef MENUQC
+    this.vehicle_func = v_racer;
+#endif
+}
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 #include "../../effects.qh"
 #include "../../triggers/trigger/impulse.qh"
@@ -124,7 +134,7 @@ void racer_align4point(float _delta)
 	self.velocity += push_vector * _delta;
 
 	float uforce = autocvar_g_vehicle_racer_upforcedamper;
-	
+
 	int cont = pointcontents(self.origin - '0 0 64');
 	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 	{
@@ -135,7 +145,7 @@ void racer_align4point(float _delta)
 		else
 			self.velocity_z += 200;
 	}
-	
+
 
 	// Anti ocilation
 	if(self.velocity_z > 0)
@@ -218,7 +228,7 @@ void racer_rocket_groundhugger()
 		self.velocity = olddir * newvel;
 		self.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
 	}
-	
+
 	int cont = pointcontents(self.origin - '0 0 32');
 	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		self.velocity_z += 200;
@@ -568,7 +578,7 @@ void racer_think()
 
 	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -642,10 +652,10 @@ void racer_blowup()
 void racer_blowup_think()
 {
 	self.nextthink = time;
-	
+
 	if(time >= self.delay)
 		racer_blowup();
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -694,7 +704,7 @@ void racer_draw()
 
 	self.move_angles_x *= 1 - (getstatf(STAT_VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
 	self.move_angles_z *= 1 - (getstatf(STAT_VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
-	
+
 	Movetype_Physics_MatchServer(false);
 }
 #endif
@@ -726,7 +736,7 @@ bool v_racer(int req)
 
 			self.move_movetype = MOVETYPE_BOUNCE;
 		#endif
-			   
+
 			return true;
 		}
 
@@ -757,9 +767,9 @@ bool v_racer(int req)
 			self.solid		  = SOLID_SLIDEBOX;
 			self.delay		  = time;
 			self.scale		  = 0.5;
-			
+
 			self.PlayerPhysplug = racer_frame;
-			
+
 			self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
 			self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
 			self.damageforcescale = 0.5;
@@ -804,7 +814,7 @@ bool v_racer(int req)
 #ifdef CSQC
 		case VR_HUD:
 		{
-			Vehicles_drawHUD("vehicle_racer", "vehicle_racer_weapon1", "vehicle_racer_weapon2",
+			Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 vCROSS_GUIDE);
@@ -856,9 +866,10 @@ bool v_racer(int req)
 
 			precache_model ("models/vhshield.md3");
 		#endif
-
+		#ifndef MENUQC
 			precache_model ("models/vehicles/wakizashi.dpm");
 			precache_model ("models/vehicles/wakizashi_cockpit.dpm");
+		#endif
 			return true;
 		}
 	}

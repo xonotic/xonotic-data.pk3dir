@@ -5,7 +5,7 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_model, string, string_null)
     ATTRIB(Pickup, m_sound, string, "misc/itempickup.wav")
     ATTRIB(Pickup, m_name, string, string_null)
-    METHOD(Pickup, show, void(entity this))
+    METHOD(Pickup, show, void(entity this));
     void Pickup_show(entity this) { printf("%s: %s\n", etos(this), this.m_name); }
 #ifdef SVQC
     ATTRIB(Pickup, m_botvalue, int, 0)
@@ -14,7 +14,7 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc)
     ATTRIB(Pickup, m_respawntime, float(), func_null)
     ATTRIB(Pickup, m_respawntimejitter, float(), func_null)
-    METHOD(Pickup, giveTo, bool(entity this, entity item, entity player))
+    METHOD(Pickup, giveTo, bool(entity this, entity item, entity player));
     bool Pickup_giveTo(entity this, entity item, entity player) { return Item_GiveTo(item, player); }
     bool ITEM_HANDLE(Pickup, entity this, entity item, entity player);
 #endif

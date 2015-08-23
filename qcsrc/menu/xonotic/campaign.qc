@@ -4,16 +4,16 @@
 #define CAMPAIGN_H
 #include "listbox.qc"
 CLASS(XonoticCampaignList, XonoticListBox)
-	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity))
+	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity));
 	ATTRIB(XonoticCampaignList, rowsPerItem, float, 10)
-	METHOD(XonoticCampaignList, draw, void(entity))
-	METHOD(XonoticCampaignList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticCampaignList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticCampaignList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticCampaignList, setSelected, void(entity, float))
-	METHOD(XonoticCampaignList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticCampaignList, campaignGo, void(entity, float))
-	METHOD(XonoticCampaignList, destroy, void(entity))
+	METHOD(XonoticCampaignList, draw, void(entity));
+	METHOD(XonoticCampaignList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticCampaignList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticCampaignList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticCampaignList, setSelected, void(entity, float));
+	METHOD(XonoticCampaignList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticCampaignList, campaignGo, void(entity, float));
+	METHOD(XonoticCampaignList, destroy, void(entity));
 
 	ATTRIB(XonoticCampaignList, campaignGlob, float, 0)
 	ATTRIB(XonoticCampaignList, realFontSize, vector, '0 0 0')
@@ -34,8 +34,8 @@ CLASS(XonoticCampaignList, XonoticListBox)
 
 	ATTRIB(XonoticCampaignList, campaignIndex, float, 0)
 	ATTRIB(XonoticCampaignList, cvarName, string, string_null)
-	METHOD(XonoticCampaignList, loadCvars, void(entity))
-	METHOD(XonoticCampaignList, saveCvars, void(entity))
+	METHOD(XonoticCampaignList, loadCvars, void(entity));
+	METHOD(XonoticCampaignList, saveCvars, void(entity));
 
 	ATTRIB(XonoticCampaignList, buttonNext, entity, NULL)
 	ATTRIB(XonoticCampaignList, buttonPrev, entity, NULL)

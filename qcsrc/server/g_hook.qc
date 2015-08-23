@@ -8,7 +8,7 @@
 #include "cl_player.qh"
 #include "command/common.qh"
 #include "round_handler.qh"
-#include "../common/vehicles/sv_vehicles.qh"
+#include "../common/vehicles/all.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"

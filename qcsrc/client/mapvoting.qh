@@ -11,4 +11,6 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void Ent_MapVote();
 
 void Net_MapVote_Picture();
+
+float mv_active;
 #endif

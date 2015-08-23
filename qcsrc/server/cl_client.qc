@@ -25,7 +25,7 @@
 #include "bot/bot.qh"
 #include "bot/navigation.qh"
 
-#include "../common/vehicles/sv_vehicles.qh"
+#include "../common/vehicles/all.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"

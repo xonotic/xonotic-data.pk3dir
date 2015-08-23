@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
-find . -type f -print0 |                                    \
+cd ${0%[\\/]*}
+find . -name .git -prune -o -type f -print0 |                                    \
     xargs -0 sed -i                                         \
         `# strip trailing spaces`                           \
         -e 's/[[:space:]]*$//'                              \

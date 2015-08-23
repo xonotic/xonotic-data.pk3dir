@@ -56,6 +56,13 @@ entity frag_target;
 int frag_deathtype;
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
+/** called when a player dies to e.g. remove stuff he was carrying. */
+#define EV_PlayHitsound(i, o) \
+    /**/ i(entity, frag_victim) \
+    /**/
+entity frag_victim;
+MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
+
 /** called when a player presses the jump key */
 #define EV_PlayerJump(i, o) \
     /**/ i(float, player_multijump) \
@@ -94,6 +101,16 @@ MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
     /**/ i(entity, self) \
     /**/
 MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
+
+/** called when formatting a chat message to replace fancy functions */
+#define EV_FormatMessage(i, o) \
+    /**/ i(string, format_escape) \
+    /**/ i(string, format_replacement) \
+    /**/ o(string, format_replacement) \
+    /**/
+string format_escape;
+string format_replacement;
+MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
 
 /** returns 1 if throwing the current weapon shall not be allowed */
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_NO_ARGS);
@@ -252,6 +269,18 @@ float frag_damage;
 float frag_mirrordamage;
 vector frag_force;
 MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
+
+/**
+ * Called when a player is damaged
+ */
+#define EV_PlayerDamaged(i, o) \
+    /** attacker */ i(entity, mutator_argv_entity_0) \
+    /** target */ i(entity, mutator_argv_entity_1) \
+    /** health */ i(int, mutator_argv_int_0) \
+    /** armor */ i(int, mutator_argv_int_1) \
+    /** location */ i(vector, mutator_argv_vector_0) \
+    /**/
+MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
 
 /** called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items. */
 #define EV_PlayerPowerups(i, o) \

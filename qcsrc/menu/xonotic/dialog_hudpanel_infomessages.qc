@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_INFOMESSAGES_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDInfoMessagesDialog, XonoticRootDialog)
-	METHOD(XonoticHUDInfoMessagesDialog, fill, void(entity))
+	METHOD(XonoticHUDInfoMessagesDialog, fill, void(entity));
 	ATTRIB(XonoticHUDInfoMessagesDialog, title, string, _("Info Messages Panel"))
 	ATTRIB(XonoticHUDInfoMessagesDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDInfoMessagesDialog, intendedWidth, float, 0.4)

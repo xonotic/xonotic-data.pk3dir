@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_HEALTHARMOR_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDHealthArmorDialog, XonoticRootDialog)
-	METHOD(XonoticHUDHealthArmorDialog, fill, void(entity))
+	METHOD(XonoticHUDHealthArmorDialog, fill, void(entity));
 	ATTRIB(XonoticHUDHealthArmorDialog, title, string, _("Health/Armor Panel"))
 	ATTRIB(XonoticHUDHealthArmorDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDHealthArmorDialog, intendedWidth, float, 0.4)

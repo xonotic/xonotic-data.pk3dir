@@ -295,7 +295,7 @@ void Vehicles_drawHUD(
 	}
 
 	// Bumblebee gunner crosshairs
-	if(hud == VEH_BUMBLEBEE)
+	if(hud == VEH_BUMBLEBEE.vehicleid)
 	{
 		tmpSize = '1 1 1' * hud_fontsize;
 		tmpPos.x = hudPos.x + hudSize.x * (520/768);
@@ -314,7 +314,7 @@ void Vehicles_drawHUD(
 	}
 
 	// Raptor bomb crosshair
-	if(hud == VEH_RAPTOR && weapon2mode != RSM_FLARE)
+	if(hud == VEH_RAPTOR.vehicleid && weapon2mode != RSM_FLARE)
 	{
 		vector where;
 

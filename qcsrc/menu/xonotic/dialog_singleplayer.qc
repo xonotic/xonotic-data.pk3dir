@@ -2,7 +2,7 @@
 #define DIALOG_SINGLEPLAYER_H
 #include "dialog.qc"
 CLASS(XonoticSingleplayerDialog, XonoticDialog)
-	METHOD(XonoticSingleplayerDialog, fill, void(entity))
+	METHOD(XonoticSingleplayerDialog, fill, void(entity));
 	ATTRIB(XonoticSingleplayerDialog, title, string, _("Singleplayer"))
 	ATTRIB(XonoticSingleplayerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)
 	ATTRIB(XonoticSingleplayerDialog, intendedWidth, float, 0.80)
