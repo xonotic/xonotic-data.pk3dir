@@ -87,7 +87,6 @@ void menu_sub_null()
 }
 
 string forcefog;
-void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
@@ -153,8 +152,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
-
-	WaypointSprite_Load();
 
 	// precaches
 	precache_model("null");

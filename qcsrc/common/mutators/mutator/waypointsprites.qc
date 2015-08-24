@@ -783,6 +783,12 @@ void WaypointSprite_Load_Frames(string ext)
     search_end(dh);
 }
 
+void WaypointSprite_Load();
+STATIC_INIT(WaypointSprite_Load) {
+    WaypointSprite_Load();
+    WaypointSprite_Load_Frames(".tga");
+    WaypointSprite_Load_Frames(".jpg");
+}
 void WaypointSprite_Load()
 {
     waypointsprite_fadedistance = vlen(mi_scale);
@@ -807,13 +813,6 @@ void WaypointSprite_Load()
     waypointsprite_distancefadescale = autocvar_g_waypointsprite_distancefadescale;
     waypointsprite_distancefadedistance = waypointsprite_fadedistance * autocvar_g_waypointsprite_distancefadedistancemultiplier;
     waypointsprite_alpha = autocvar_g_waypointsprite_alpha * (1 - autocvar__menu_alpha);
-
-    if (!waypointsprite_initialized)
-    {
-        WaypointSprite_Load_Frames(".tga");
-        WaypointSprite_Load_Frames(".jpg");
-        waypointsprite_initialized = true;
-    }
 
     waypointsprite_count = waypointsprite_newcount;
     waypointsprite_newcount = 0;

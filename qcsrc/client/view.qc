@@ -1011,6 +1011,7 @@ float cl_notice_run();
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
+void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
