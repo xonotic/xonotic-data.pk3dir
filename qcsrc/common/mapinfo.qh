@@ -19,6 +19,13 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, model2, string, string_null)
     /** game type description */
     ATTRIB(Gametype, gametype_description, string, string_null)
+
+    METHOD(Gametype, describe, string(entity this)) { return this.gametype_description; }
+
+    METHOD(Gametype, display, void(entity this, void(string name, string icon) returns)) {
+        returns(this.message, strcat("gametype_", this.mdl));
+    }
+
     CONSTRUCTOR(Gametype, string hname, string sname, string g_name, bool gteamplay, string defaults, string gdescription)
     {
         CONSTRUCT(Gametype);
@@ -28,7 +35,6 @@ CLASS(Gametype, Object)
         this.team = gteamplay;
         this.model2 = defaults;
         this.gametype_description = gdescription;
-        return this;
     }
 ENDCLASS(Gametype)
 

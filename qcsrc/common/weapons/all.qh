@@ -183,6 +183,10 @@ CLASS(Weapon, Object)
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, message, string, "AOL CD Thrower");
 
+	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
+		returns(this.message, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
+	}
+
 	CONSTRUCTOR(Weapon,
 		bool(int) function,
 		.int ammotype,
@@ -213,7 +217,6 @@ CLASS(Weapon, Object)
 		this.model2 = strzone(wepimg);
 		this.netname = refname;
 		this.message = wepname;
-		return this;
 	}
 	void register_weapon(entity this, int id, WepSet bit)
 	{

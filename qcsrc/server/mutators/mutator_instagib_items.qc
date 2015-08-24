@@ -9,24 +9,26 @@ GETTER(float, instagib_respawntime_ammo)
 GETTER(float, instagib_respawntimejitter_ammo)
 
 REGISTER_ITEM(VaporizerCells, Ammo) {
-    this.m_model               =   "models/items/a_cells.md3";
-    this.m_sound               =   "misc/itempickup.wav";
-    this.m_name                =   "Vaporizer Ammo";
+    this.m_model                =   "models/items/a_cells.md3";
+    this.m_sound                =   "misc/itempickup.wav";
+    this.m_name                 =   "Vaporizer Ammo";
+    this.m_icon                 =   "ammo_supercells";
 #ifdef SVQC
-    this.m_botvalue            =   100;
-    this.m_itemid              =   IT_CELLS;
-    this.m_respawntime         =   GET(instagib_respawntime_ammo);
-    this.m_respawntimejitter   =   GET(instagib_respawntimejitter_ammo);
+    this.m_botvalue             =   100;
+    this.m_itemid               =   IT_CELLS;
+    this.m_respawntime          =   GET(instagib_respawntime_ammo);
+    this.m_respawntimejitter    =   GET(instagib_respawntimejitter_ammo);
 #endif
 }
 
 REGISTER_ITEM(ExtraLife, Powerup) {
-    this.m_model               =   "models/items/g_h100.md3";
-    this.m_sound               =   "misc/megahealth.wav";
-    this.m_name                =   "Extralife";
+    this.m_model                =   "models/items/g_h100.md3";
+    this.m_sound                =   "misc/megahealth.wav";
+    this.m_name                 =   "Extralife";
+    this.m_icon                 =   "item_mega_health";
 #ifdef SVQC
-    this.m_itemid              =   IT_NAILS;
-    this.m_botvalue            =   BOT_PICKUP_RATING_HIGH;
+    this.m_itemid               =   IT_NAILS;
+    this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
 #endif
 }
 
