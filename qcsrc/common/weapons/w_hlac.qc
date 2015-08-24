@@ -77,7 +77,7 @@ void W_HLAC_Attack(void)
     if(self.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
-	W_SetupShot(self, false, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
+	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
 	Send_Effect("laser_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
@@ -125,7 +125,7 @@ void W_HLAC_Attack2(void)
     if(self.crouch)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
-	W_SetupShot(self, false, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
+	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
 	Send_Effect("laser_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
@@ -241,10 +241,10 @@ bool W_HLAC(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_hlac.md3");
-			precache_model("models/weapons/v_hlac.md3");
-			precache_model("models/weapons/h_hlac.iqm");
-			precache_sound("weapons/lasergun_fire.wav");
+			precache_model(W_Model("g_hlac.md3"));
+			precache_model(W_Model("v_hlac.md3"));
+			precache_model(W_Model("h_hlac.iqm"));
+			precache_sound(W_Sound("lasergun_fire"));
 			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -267,7 +267,7 @@ bool W_HLAC(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -293,13 +293,13 @@ bool W_HLAC(int req)
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/laserimpact.wav");
+			precache_sound(W_Sound("laserimpact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

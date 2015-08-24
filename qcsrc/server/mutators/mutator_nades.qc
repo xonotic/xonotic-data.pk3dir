@@ -121,7 +121,7 @@ void nade_napalm_ball()
 	entity proj;
 	vector kick;
 
-	spamsound(self, CH_SHOTS, "weapons/fireball_fire.wav", VOL_BASE, ATTEN_NORM);
+	spamsound(self, CH_SHOTS, W_Sound("fireball_fire"), VOL_BASE, ATTEN_NORM);
 
 	proj = spawn ();
 	proj.owner = self.owner;
@@ -260,7 +260,7 @@ void nade_ice_think()
 				default:		 expef = "nade_neutral_explode"; break;
 			}
 			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
-			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, self, world, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
@@ -533,7 +533,7 @@ void nade_boom()
 		Send_Effect(expef, findbetterlocation(self.origin, 8), '0 0 0', 1);
 
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 	self.event_damage = func_null; // prevent somehow calling damage in the next call
 
@@ -577,7 +577,7 @@ void nade_touch()
 	//UpdateCSQCProjectile(self);
 	if(self.health == self.max_health)
 	{
-		spamsound(self, CH_SHOTS, strcat("weapons/grenade_bounce", ftos(1 + rint(random() * 5)), ".wav"), VOL_BASE, ATTEN_NORM);
+		spamsound(self, CH_SHOTS, W_Sound(strcat("grenade_bounce", ftos(1 + rint(random() * 5)))), VOL_BASE, ATTEN_NORM);
 		return;
 	}
 
@@ -682,7 +682,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 		offset = '0 0 0';
 
 	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
-	//setmodel(_nade, "models/weapons/v_ok_grenade.md3");
+	//setmodel(_nade, W_Model("v_ok_grenade.md3"));
 	//setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
@@ -815,7 +815,7 @@ void nade_prime()
 
 	n.nade_type = bound(1, n.nade_type, NADES_COUNT);
 
-	setmodel(n, "models/weapons/v_ok_grenade.md3");
+	setmodel(n, W_Model("v_ok_grenade.md3"));
 	//setattachment(n, self, "bip01 l hand");
 	n.exteriormodeltoclient = self;
 	n.customizeentityforclient = nade_customize;
@@ -830,7 +830,7 @@ void nade_prime()
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
 
-	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
+	setmodel(fn, W_Model("h_ok_grenade.iqm"));
 	setattachment(fn, self.weaponentity, "");
 	fn.realowner = fn.owner = self;
 	fn.colormod = NADES[n.nade_type].m_color;
@@ -1189,17 +1189,17 @@ void nades_Initialize()
 	addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
 
 	precache_model("models/ok_nade_counter/ok_nade_counter.md3");
-	precache_model("models/weapons/h_ok_grenade.iqm");
-	precache_model("models/weapons/v_ok_grenade.md3");
+	precache_model(W_Model("h_ok_grenade.iqm"));
+	precache_model(W_Model("v_ok_grenade.md3"));
 	precache_model("models/ctf/shield.md3");
 
-	precache_sound("weapons/rocket_impact.wav");
-	precache_sound("weapons/grenade_bounce1.wav");
-	precache_sound("weapons/grenade_bounce2.wav");
-	precache_sound("weapons/grenade_bounce3.wav");
-	precache_sound("weapons/grenade_bounce4.wav");
-	precache_sound("weapons/grenade_bounce5.wav");
-	precache_sound("weapons/grenade_bounce6.wav");
+	precache_sound(W_Sound("rocket_impact"));
+	precache_sound(W_Sound("grenade_bounce1"));
+	precache_sound(W_Sound("grenade_bounce2"));
+	precache_sound(W_Sound("grenade_bounce3"));
+	precache_sound(W_Sound("grenade_bounce4"));
+	precache_sound(W_Sound("grenade_bounce5"));
+	precache_sound(W_Sound("grenade_bounce6"));
 	precache_sound("overkill/grenadebip.ogg");
 }
 

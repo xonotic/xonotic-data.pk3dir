@@ -34,8 +34,8 @@ void generator_precache()
 
 	precache_model("models/onslaught/ons_ray.md3");
 	precache_sound("onslaught/shockwave.wav");
-	precache_sound("weapons/grenade_impact.wav");
-	precache_sound("weapons/rocket_impact.wav");
+	precache_sound(W_Sound("grenade_impact"));
+	precache_sound(W_Sound("rocket_impact"));
 	precache_sound("onslaught/electricity_explode.wav");
 
 	generator_precached = true;
@@ -132,7 +132,7 @@ void generator_draw()
 	if(random() < 0.25)
 	{
 		te_explosion(self.origin);
-		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
 	}
 
 	// Particles
@@ -145,7 +145,7 @@ void generator_draw()
 		org = self.origin;
 		te_explosion(org);
 		pointparticles(particleeffectnum("onslaught_generator_finalexplosion"), org, '0 0 0', 1);
-		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	}
 
 	self.move_time = time + 0.05;

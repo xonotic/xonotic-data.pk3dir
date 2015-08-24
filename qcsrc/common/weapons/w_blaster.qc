@@ -95,7 +95,7 @@ void W_Blaster_Attack(
 {
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(self, s_forward, false, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, atk_damage);
+	W_SetupShot_Dir(self, s_forward, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, atk_damage);
 	Send_Effect("laser_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = spawn();
@@ -227,10 +227,10 @@ bool W_Blaster(int request)
 
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_laser.md3");
-			precache_model("models/weapons/v_laser.md3");
-			precache_model("models/weapons/h_laser.iqm");
-			precache_sound("weapons/lasergun_fire.wav");
+			precache_model(W_Model("g_laser.md3"));
+			precache_model(W_Model("v_laser.md3"));
+			precache_model(W_Model("h_laser.iqm"));
+			precache_sound(W_Sound("lasergun_fire"));
 			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -276,13 +276,13 @@ bool W_Blaster(int request)
 			vector org2;
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
-			if(!w_issilent) { sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM); }
+			if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM); }
 			return true;
 		}
 
 		case WR_INIT:
 		{
-			precache_sound("weapons/laserimpact.wav");
+			precache_sound(W_Sound("laserimpact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

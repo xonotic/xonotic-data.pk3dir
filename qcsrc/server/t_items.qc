@@ -174,12 +174,12 @@ void ItemRead(float _IsNew)
                 self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
                 self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
             else
             {
                 self.draw = ItemDraw;
-                dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
+                dprint("Simple item requested for ", _fn, " but no model exists for it\n");
             }
         }
 
@@ -1185,10 +1185,17 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 }
 
+string Item_Model(string item_mdl)
+{
+	string output = strcat("models/items/", item_mdl);
+	MUTATOR_CALLHOOK(ItemModel, item_mdl, output);
+	return strzone(output);
+}
+
 void StartItemA (entity a)
 {
     self.itemdef = a;
-    StartItem(a.m_model, a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
+    StartItem(Item_Model(a.m_model), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
 }
 
 void spawnfunc_item_rockets (void) {
@@ -1398,7 +1405,7 @@ void spawnfunc_target_items (void)
 	precache_sound("misc/armor25.wav");
 	precache_sound("misc/powerup.wav");
 	precache_sound("misc/poweroff.wav");
-	precache_sound("weapons/weaponpickup.wav");
+	precache_sound(W_Sound("weaponpickup"));
 
 	n = tokenize_console(self.netname);
 	if(argv(0) == "give")
@@ -1808,7 +1815,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 		wi = get_weaponinfo(j);
 		if(wi.weapon)
 		{
-			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
+			POSTGIVE_WEAPON(e, j, W_Sound("weaponpickup"), string_null);
 			if (!(save_weapons & WepSet_FromWeapon(j)))
 				if(e.weapons & WepSet_FromWeapon(j))
 					WEP_ACTION(wi.weapon, WR_INIT);
