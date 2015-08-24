@@ -457,24 +457,13 @@ void Item_RespawnCountdown (void)
 		self.count += 1;
 		if(self.count == 1)
 		{
-			string name;
+			string name = string_null;
 			vector rgb = '1 0 1';
-			name = string_null;
-			switch (self.items)
-			{
-				case ITEM_JetpackRegen.m_itemid: name = "item-fuelregen"; rgb = '1 0.5 0'; break;
-				case ITEM_Jetpack.m_itemid:    name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
-				case ITEM_Strength.m_itemid:   name = "item-strength"; rgb = '0 0 1'; break;
-				case ITEM_Shield.m_itemid: name = "item-shield"; rgb = '1 0 1'; break;
-				case ITEM_HealthMega.m_itemid:
-					//if (self.classname == "item_health_mega")
-						{name = "item_health_mega"; rgb = '1 0 0';}
-					break;
-				case ITEM_ArmorMega.m_itemid:
-					if (self.itemdef == ITEM_ArmorMega)
-						{name = "item_armor_large"; rgb = '0 1 0';}
-					break;
-			}
+            entity e = self.itemdef;
+            if (e) {
+                name = e.m_waypoint;
+                rgb = e.m_color;
+            }
 			MUTATOR_CALLHOOK(Item_RespawnCountdown, name, rgb);
 			name = item_name;
 			rgb = item_color;
