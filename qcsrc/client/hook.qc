@@ -257,7 +257,7 @@ void Ent_ReadHook(float bIsNew, float type)
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_ARC_BEAM:
-				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
+				sound (self, CH_SHOTS_SINGLE, W_Sound("lgbeam_fly"), VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}
@@ -267,7 +267,7 @@ void Ent_ReadHook(float bIsNew, float type)
 
 void Hook_Precache()
 {
-	precache_sound("weapons/lgbeam_fly.wav");
+	precache_sound(W_Sound("lgbeam_fly"));
 	precache_model("models/hook.md3");
 }
 

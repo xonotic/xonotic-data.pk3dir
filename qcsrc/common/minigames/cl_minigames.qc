@@ -178,7 +178,6 @@ vector ReadVector2D() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = 0;
 vector ReadVector() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = ReadCoord(); return v; }
 string() ReadString_Raw = #366;
 string ReadString_Zoned() { return strzone(ReadString_Raw()); }
-#define ReadFloat ReadCoord
 #define ReadString ReadString_Zoned
 #define FIELD(Flags, Type,Name) if ( sf & (Flags) ) self.Name = Read##Type();
 #define MSLE(Name,Fields) \
@@ -264,7 +263,6 @@ void ent_read_minigame()
 		dprint(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 	}
 }
-#undef ReadFloat
 #undef ReadString
 #undef FIELD
 #undef MSLE

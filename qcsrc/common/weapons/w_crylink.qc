@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ CRYLINK,
 /* function  */ W_Crylink,
@@ -61,9 +61,10 @@ CRYLINK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity queuenext;
 .entity queueprev;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_crylink(void) { weapon_defaultspawnfunc(WEP_CRYLINK); }
+void spawnfunc_weapon_crylink(void) { weapon_defaultspawnfunc(WEP_CRYLINK.m_id); }
 
 void W_Crylink_CheckLinks(entity e)
 {
@@ -257,7 +258,7 @@ void W_Crylink_LinkJoinEffect_Think(void)
 					e.projectiledeathtype,
 					other
 				);
-				pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
+				Send_Effect("crylink_joinexplode", self.origin, '0 0 0', n);
 			}
 		}
 	}
@@ -353,13 +354,13 @@ void W_Crylink_Attack(void)
 	if(WEP_CVAR_PRI(crylink, joinexplode))
 		maxdmg += WEP_CVAR_PRI(crylink, joinexplode_damage);
 
-	W_SetupShot(self, false, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, false, 2, W_Sound("crylink_fire"), CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect("crylink_muzzleflash", w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -391,7 +392,7 @@ void W_Crylink_Attack(void)
 
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
 		PROJECTILE_MAKETRIGGER(proj);
-		proj.projectiledeathtype = WEP_CRYLINK;
+		proj.projectiledeathtype = WEP_CRYLINK.m_id;
 		//proj.gravity = 0.001;
 
 		setorigin(proj, w_shotorg);
@@ -437,7 +438,7 @@ void W_Crylink_Attack(void)
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
-		other = proj; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, proj);
 	}
 	if(WEP_CVAR_PRI(crylink, joinspread) != 0)
 	{
@@ -462,13 +463,13 @@ void W_Crylink_Attack2(void)
 	if(WEP_CVAR_SEC(crylink, joinexplode))
 		maxdmg += WEP_CVAR_SEC(crylink, joinexplode_damage);
 
-	W_SetupShot(self, false, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, false, 2, W_Sound("crylink_fire2"), CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect("crylink_muzzleflash", w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -500,7 +501,7 @@ void W_Crylink_Attack2(void)
 
 		proj.movetype = MOVETYPE_BOUNCEMISSILE;
 		PROJECTILE_MAKETRIGGER(proj);
-		proj.projectiledeathtype = WEP_CRYLINK | HITTYPE_SECONDARY;
+		proj.projectiledeathtype = WEP_CRYLINK.m_id | HITTYPE_SECONDARY;
 		//proj.gravity = 0.001;
 
 		setorigin(proj, w_shotorg);
@@ -553,7 +554,7 @@ void W_Crylink_Attack2(void)
 
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
-		other = proj; MUTATOR_CALLHOOK(EditProjectile);
+		MUTATOR_CALLHOOK(EditProjectile, self, proj);
 	}
 	if(WEP_CVAR_SEC(crylink, joinspread) != 0)
 	{
@@ -627,7 +628,7 @@ bool W_Crylink(int req)
 					if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						// ran out of ammo!
-						self.cnt = WEP_CRYLINK;
+						self.cnt = WEP_CRYLINK.m_id;
 						self.switchweapon = w_getbestweapon(self);
 					}
 				}
@@ -637,12 +638,12 @@ bool W_Crylink(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_crylink.md3");
-			precache_model("models/weapons/v_crylink.md3");
-			precache_model("models/weapons/h_crylink.iqm");
-			precache_sound("weapons/crylink_fire.wav");
-			precache_sound("weapons/crylink_fire2.wav");
-			precache_sound("weapons/crylink_linkjoin.wav");
+			precache_model(W_Model("g_crylink.md3"));
+			precache_model(W_Model("v_crylink.md3"));
+			precache_model(W_Model("h_crylink.iqm"));
+			precache_sound(W_Sound("crylink_fire"));
+			precache_sound(W_Sound("crylink_fire2"));
+			precache_sound(W_Sound("crylink_linkjoin"));
 			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -653,7 +654,7 @@ bool W_Crylink(int req)
 				return true;
 
 			ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_PRI(crylink, ammo);
-			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_PRI(crylink, ammo);
+			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -663,7 +664,7 @@ bool W_Crylink(int req)
 				return true;
 
 			ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_SEC(crylink, ammo);
-			ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= WEP_CVAR_SEC(crylink, ammo);
+			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:
@@ -673,7 +674,7 @@ bool W_Crylink(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -701,21 +702,21 @@ bool W_Crylink(int req)
 			{
 				pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("crylink_impact2"), VOL_BASE, ATTN_NORM);
 			}
 			else
 			{
 				pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("crylink_impact"), VOL_BASE, ATTN_NORM);
 			}
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/crylink_impact2.wav");
-			precache_sound("weapons/crylink_impact.wav");
+			precache_sound(W_Sound("crylink_impact2"));
+			precache_sound(W_Sound("crylink_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

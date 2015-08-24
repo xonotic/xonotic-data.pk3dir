@@ -47,7 +47,7 @@ void skeleton_loadinfo(entity e)
 	}
 	else
 		dprint("No model parameters for ", e.model, "\n");
-	dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
+	//dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
 	get_model_parameters(string_null, 0);
 	e.skeleton_info_modelindex = e.modelindex;
 	e.skeleton_info_skin = e.skin;
@@ -172,6 +172,8 @@ void skeleton_from_frames(entity e, float is_dead)
 
 	if(!is_dead)
 	{
+		if(self == csqcplayer)
+			self.v_angle_x = input_angles_x;
 		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{

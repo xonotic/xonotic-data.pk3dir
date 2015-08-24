@@ -2,16 +2,16 @@
 #define WEAPONSLIST_H
 #include "listbox.qc"
 CLASS(XonoticWeaponsList, XonoticListBox)
-	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity))
-	METHOD(XonoticWeaponsList, toString, string(entity))
+	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity));
+	METHOD(XonoticWeaponsList, toString, string(entity));
 	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1)
-	METHOD(XonoticWeaponsList, draw, void(entity))
-	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticWeaponsList, draw, void(entity));
+	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float));
 	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticWeaponsList, realUpperMargin, float, 0)
-	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector))
+	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector));
 ENDCLASS(XonoticWeaponsList)
 entity makeXonoticWeaponsList();
 void WeaponsList_MoveUp_Click(entity btn, entity me);
@@ -46,7 +46,7 @@ void WeaponsList_MoveUp_Click(entity box, entity me)
 	if(me.selectedItem > 0)
 	{
 		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem - 1, me.selectedItem));
-		me.selectedItem -= 1;
+		me.setSelected(me, me.selectedItem - 1);
 	}
 }
 void WeaponsList_MoveDown_Click(entity box, entity me)
@@ -54,7 +54,7 @@ void WeaponsList_MoveDown_Click(entity box, entity me)
 	if(me.selectedItem < me.nItems - 1)
 	{
 		cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, me.selectedItem + 1));
-		me.selectedItem += 1;
+		me.setSelected(me, me.selectedItem + 1);
 	}
 }
 void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

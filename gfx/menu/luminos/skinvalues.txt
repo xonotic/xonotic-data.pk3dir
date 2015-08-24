@@ -1,4 +1,4 @@
-title Luminos (default)
+title Luminos
 author sev
 
 // Colors: 'Red Green Blue'
@@ -32,9 +32,9 @@ HEIGHT_DIALOGBORDER             1
 
 // font sizes (used for everything)
 FONTSIZE_NORMAL                 12
-HEIGHT_NORMAL                   1.5
+HEIGHT_NORMAL                   1.45
 FONTSIZE_TITLE                  16
-HEIGHT_TITLE                    1.5
+HEIGHT_TITLE                    1.45
 HEIGHT_ZOOMEDTITLE              -1
 
 // general
@@ -109,7 +109,7 @@ ALPHA_LISTBOX_SELECTED          1
 COLOR_LISTBOX_WAITING           '1 1 1'
 ALPHA_LISTBOX_WAITING           0.5
 COLOR_LISTBOX_FOCUSED           '0 0.25 0.5'
-ALPHA_LISTBOX_FOCUSED           0.7
+ALPHA_LISTBOX_FOCUSED           0.6
 FADEALPHA_LISTBOX_FOCUSED       0.3
 
 // item: map list
@@ -196,6 +196,9 @@ COLOR_DIALOG_SCREENSHOTVIEWER   '1 1 1'
 COLOR_DIALOG_CVARS              '1 0 0'
 COLOR_DIALOG_HUDCONFIRM         '1 0 0'
 
+// gametypelist
+BOOL_GAMETYPELIST_ICON_BLUR     1
+
 // item: input box
 //   uses "inputbox" images
 COLOR_INPUTBOX_N                '1 1 1'
@@ -223,7 +226,7 @@ ALPHA_CHARMAP_CHAR              0.85
 COLOR_CHARMAP_CHAR              '1 1 1'
 
 // item: crosshairpicker
-ALPHA_CROSSHAIRPICKER_CROSSHAIR 0.85
+ALPHA_CROSSHAIRPICKER_CROSSHAIR 0.6
 COLOR_CROSSHAIRPICKER_CROSSHAIR '1 1 1'
 
 // item: radio button

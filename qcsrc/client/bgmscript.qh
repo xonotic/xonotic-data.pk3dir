@@ -10,6 +10,9 @@ class(BGMScript) .float bgmscriptrelease;
 
 class(BGMScript) .float just_toggled;
 
+#ifdef CSQC
 void BGMScript_InitEntity(entity e);
 float doBGMScript(entity e);
+#endif
+
 #endif

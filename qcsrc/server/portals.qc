@@ -2,12 +2,12 @@
 #include "_all.qh"
 
 #include "g_hook.qh"
-#include "g_subs.qh"
 #include "mutators/mutators_include.qh"
-#include "t_teleporters.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
 #include "../common/notifications.qh"
+#include "../common/triggers/teleporters.qh"
+#include "../common/triggers/subs.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
 #include "../csqcmodellib/sv_model.qh"
@@ -170,11 +170,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	// factor -1 allows chaining portals, but may be weird
 	player.right_vector = -1 * AnglesTransform_Apply(transform, player.right_vector);
 
-	entity oldself = self;
-	self = player;
-	MUTATOR_CALLHOOK(PortalTeleport);
-	player = self;
-	self = oldself;
+	MUTATOR_CALLHOOK(PortalTeleport, player);
 
 	if (!teleporter.enemy)
 	{
@@ -270,6 +266,10 @@ void Portal_Touch()
 	if(other.classname == "grapplinghook")
 		return; // handled by think
 
+	if(!autocvar_g_vehicles_teleportable)
+	if(other.vehicle_flags & VHF_ISVEHICLE)
+		return; // no teleporting vehicles?
+
 	if(!self.enemy)
 		error("Portal_Touch called for a broken portal\n");
 
@@ -306,8 +306,8 @@ void Portal_Touch()
 		return;
 
 	/*
-	if(other.mins_x < PL_MIN_x || other.mins_y < PL_MIN_y || other.mins_z < PL_MIN_z
-	|| other.maxs_x > PL_MAX_x || other.maxs_y > PL_MAX_y || other.maxs_z > PL_MAX_z)
+	if(other.mins_x < PL_MIN.x || other.mins_y < PL_MIN.y || other.mins_z < PL_MIN.z
+	|| other.maxs_x > PL_MAX.x || other.maxs_y > PL_MAX.y || other.maxs_z > PL_MAX.z)
 	{
 		// can't teleport this
 		return;
@@ -415,7 +415,7 @@ void Portal_Remove(entity portal, float killed)
 	{
 		fixedmakevectors(portal.mangle);
 		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
+		Send_Effect("rocket_explode", portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else

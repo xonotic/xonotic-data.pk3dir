@@ -1,0 +1,9 @@
+#ifndef RAPTOR_H
+#define RAPTOR_H
+
+const int RSM_FIRST = 1;
+const int RSM_BOMB = 1;
+const int RSM_FLARE = 2;
+const int RSM_LAST = 2;
+
+#endif

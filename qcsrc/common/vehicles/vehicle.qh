@@ -1,0 +1,40 @@
+#ifndef VEHICLE_H
+#define VEHICLE_H
+
+int v_null(int) { return 0; }
+
+CLASS(Vehicle, Object)
+    ATTRIB(Vehicle, vehicleid, int, 0)
+    /** hud icon */
+    ATTRIB(Vehicle, m_icon, string, string_null)
+    /** short name */
+    ATTRIB(Vehicle, netname, string, "")
+    /** human readable name */
+    ATTRIB(Vehicle, vehicle_name, string, "Vehicle")
+    /**  */
+    ATTRIB(Vehicle, vehicle_func, int(int), v_null)
+    /** full name of model */
+    ATTRIB(Vehicle, model, string, "")
+    /** currently a copy of the model */
+    ATTRIB(Vehicle, mdl, string, "")
+    /** full name of tur_head model */
+    ATTRIB(Vehicle, head_model, string, "")
+    /** cockpit model */
+    ATTRIB(Vehicle, hud_model, string, "")
+    /** tur_head model tag */
+    ATTRIB(Vehicle, tag_head, string, string_null)
+    /** hud model tag */
+    ATTRIB(Vehicle, tag_hud, string, string_null)
+    /** cockpit model tag */
+    ATTRIB(Vehicle, tag_view, string, string_null)
+    /** player physics mod */
+    ATTRIB(Vehicle, PlayerPhysplug, int(), func_null)
+    /**  */
+    ATTRIB(Vehicle, spawnflags, int, 0)
+    /** vehicle hitbox size */
+    ATTRIB(Vehicle, mins, vector, '-0 -0 -0')
+    /** vehicle hitbox size */
+    ATTRIB(Vehicle, maxs, vector, '0 0 0')
+ENDCLASS(Vehicle)
+
+#endif

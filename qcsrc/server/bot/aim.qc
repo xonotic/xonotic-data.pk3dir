@@ -143,8 +143,7 @@ float bot_shouldattack(entity e)
 	if(e.flags & FL_NOTARGET)
 		return false;
 
-	checkentity = e;
-	if(MUTATOR_CALLHOOK(BotShouldAttack))
+	if(MUTATOR_CALLHOOK(BotShouldAttack, e))
 		return false;
 
 	return true;
@@ -340,8 +339,8 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	hf = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	shotspeed *= g_weaponspeedfactor;
-	shotspeedupward *= g_weaponspeedfactor;
+	shotspeed *= W_WeaponSpeedFactor();
+	shotspeedupward *= W_WeaponSpeedFactor();
 	if (!shotspeed)
 	{
 		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");

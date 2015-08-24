@@ -5,6 +5,7 @@
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
 	#include "../common/util.qh"
 	#include "../dpdefs/dpextensions.qh"
 	#include "../dpdefs/progsdefs.qh"
@@ -131,6 +132,8 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		player.warpzone_teleport_finishtime += sys_frametime - dt;
 
 #ifndef WARPZONE_USE_FIXANGLE
+	if(IS_VEHICLE(player) && player.owner)
+		player = player.owner; // hax
 	if(IS_PLAYER(player))
 	{
 		// instead of fixangle, send the transform to the client for smoother operation

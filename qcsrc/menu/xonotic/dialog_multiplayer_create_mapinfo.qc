@@ -2,8 +2,8 @@
 #define DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
 #include "dialog.qc"
 CLASS(XonoticMapInfoDialog, XonoticDialog)
-	METHOD(XonoticMapInfoDialog, fill, void(entity))
-	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity))
+	METHOD(XonoticMapInfoDialog, fill, void(entity));
+	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity));
 	ATTRIB(XonoticMapInfoDialog, title, string, _("Map Information"))
 	ATTRIB(XonoticMapInfoDialog, color, vector, SKINCOLOR_DIALOG_MAPINFO)
 	ATTRIB(XonoticMapInfoDialog, intendedWidth, float, 1.0)

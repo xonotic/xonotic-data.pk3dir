@@ -2,7 +2,6 @@
 #include "../_all.qh"
 
 #include "../antilag.qh"
-#include "../g_subs.qh"
 #include "../../common/weapons/all.qh"
 
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
@@ -67,7 +66,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 
 		org = player.origin + player.view_ofs;
 		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
-		if(IS_CLIENT(trace_ent) || (trace_ent.flags & FL_MONSTER))
+		if(IS_CLIENT(trace_ent) || IS_MONSTER(trace_ent))
 		{
 			antilag_takeback(trace_ent, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);

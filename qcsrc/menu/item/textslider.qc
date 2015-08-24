@@ -4,14 +4,14 @@
 #define ITEM_TEXTSLIDER_H
 #include "slider.qc"
 CLASS(TextSlider, Slider)
-	METHOD(TextSlider, valueToText, string(entity, float))
-	METHOD(TextSlider, valueToIdentifier, string(entity, float))
-	METHOD(TextSlider, setValueFromIdentifier, void(entity, string))
-	METHOD(TextSlider, getIdentifier, string(entity))
-	METHOD(TextSlider, clearValues, void(entity))
-	METHOD(TextSlider, addValue, void(entity, string, string))
-	METHOD(TextSlider, insertValue, void(entity, float, string, string))
-	METHOD(TextSlider, configureTextSliderValues, void(entity, string))
+	METHOD(TextSlider, valueToText, string(entity, float));
+	METHOD(TextSlider, valueToIdentifier, string(entity, float));
+	METHOD(TextSlider, setValueFromIdentifier, void(entity, string));
+	METHOD(TextSlider, getIdentifier, string(entity));
+	METHOD(TextSlider, clearValues, void(entity));
+	METHOD(TextSlider, addValue, void(entity, string, string));
+	METHOD(TextSlider, insertValue, void(entity, float, string, string));
+	METHOD(TextSlider, configureTextSliderValues, void(entity, string));
 	ATTRIBARRAY(TextSlider, valueStrings, string, 256)
 	ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256)
 	ATTRIB(TextSlider, nValues, int, 0)

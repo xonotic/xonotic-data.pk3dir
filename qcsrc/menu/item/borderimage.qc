@@ -2,11 +2,11 @@
 #define ITEM_BORDERIMAGE_H
 #include "label.qc"
 CLASS(BorderImage, Label)
-	METHOD(BorderImage, configureBorderImage, void(entity, string, float, vector, string, float))
-	METHOD(BorderImage, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(BorderImage, recalcPositionWithText, void(entity, string))
+	METHOD(BorderImage, configureBorderImage, void(entity, string, float, vector, string, float));
+	METHOD(BorderImage, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(BorderImage, recalcPositionWithText, void(entity, string));
 	ATTRIB(BorderImage, isBold, float, 1)
-	METHOD(BorderImage, draw, void(entity))
+	METHOD(BorderImage, draw, void(entity));
 	ATTRIB(BorderImage, src, string, string_null)
 	ATTRIB(BorderImage, borderHeight, float, 0)
 	ATTRIB(BorderImage, borderVec, vector, '0 0 0')

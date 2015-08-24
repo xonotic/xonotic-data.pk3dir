@@ -275,7 +275,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	}
 	// in any case:
 	setattachment(key, world, "");
-	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN_z - KH_KEY_MIN_z));
+	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN.z - KH_KEY_MIN_z));
 	key.angles = key.owner.angles;
 #else
 	setorigin(key, key.owner.origin + key.origin.z * '0 0 1');
@@ -871,6 +871,8 @@ float kh_CheckPlayers(float num)
 	return 0;
 }
 
+#define KH_READY_TEAMS() (!p1 + !p2 + ((kh_teams >= 3) ? !p3 : p3) + ((kh_teams >= 4) ? !p4 : p4))
+#define KH_READY_TEAMS_OK() (KH_READY_TEAMS() == kh_teams)
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
 	if(time < game_starttime)
@@ -879,15 +881,35 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		return;
 	}
 
+	static float prev_missing_teams_mask;
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if (!(p1 || p2 || p3 || p4))
+	if(KH_READY_TEAMS_OK())
 	{
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 	}
 	else
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
+		if(player_count == 0)
+		{
+			if(prev_missing_teams_mask > 0)
+				Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			prev_missing_teams_mask = -1;
+		}
+		else
+		{
+			float missing_teams_mask = (!!p1) + (!!p2) * 2;
+			if(kh_teams >= 3) missing_teams_mask += (!!p3) * 4;
+			if(kh_teams >= 4) missing_teams_mask += (!!p4) * 8;
+			if(prev_missing_teams_mask != missing_teams_mask)
+			{
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+				prev_missing_teams_mask = missing_teams_mask;
+			}
+		}
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
 	}
 }
@@ -912,10 +934,9 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if(p1 || p2 || p3 || p4)
+	if(!KH_READY_TEAMS_OK())
 	{
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
 		return;
 	}
 

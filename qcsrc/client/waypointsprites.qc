@@ -54,7 +54,7 @@ void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, f
 	R_EndPolygon();
 }
 
-void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f)
+void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float theheight, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f)
 {
 	vector o, ri, up;
 	float owidth; // outer width
@@ -72,13 +72,13 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 	up = rotate(up, rot);
 
 	owidth = width + 2 * border;
-	o = o - up * (margin + border + height) + ri * (sz.x - owidth) * 0.5;
+	o = o - up * (margin + border + theheight) + ri * (sz.x - owidth) * 0.5;
 
 	drawquad(o - up * border,                               ri * owidth,    up * border, "", rgb,  a,  f);
-	drawquad(o + up * height,                               ri * owidth,    up * border, "", rgb,  a,  f);
-	drawquad(o,                                             ri * border,    up * height, "", rgb,  a,  f);
-	drawquad(o + ri * (owidth - border),                    ri * border,    up * height, "", rgb,  a,  f);
-	drawquad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * height, "", hrgb, ha, f);
+	drawquad(o + up * theheight,                               ri * owidth,    up * border, "", rgb,  a,  f);
+	drawquad(o,                                             ri * border,    up * theheight, "", rgb,  a,  f);
+	drawquad(o + ri * (owidth - border),                    ri * border,    up * theheight, "", rgb,  a,  f);
+	drawquad(o + ri * (border + align * ((1 - h) * width)), ri * width * h, up * theheight, "", hrgb, ha, f);
 }
 
 // returns location of sprite text
@@ -166,20 +166,21 @@ vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, 
 
 float spritelookupblinkvalue(string s)
 {
+	if(substring(s, 0, 4) == "wpn-")
+	if(get_weaponinfo(stof(substring(s, 4, strlen(s)))).spawnflags & WEP_FLAG_SUPERWEAPON)
+		return 2;
+
+	FOREACH(ITEMS, it.m_waypoint == s, LAMBDA(
+		return it.m_waypointblink;
+	));
+
 	switch(s)
 	{
-		case "ons-cp-atck-neut": return 2;
-		case "ons-cp-atck-red":  return 2;
-		case "ons-cp-atck-blue": return 2;
-		case "ons-cp-dfnd-red":  return 0.5;
-		case "ons-cp-dfnd-blue": return 0.5;
+		case "ons-cp-atck":      return 2;
+		case "ons-cp-dfnd":      return 0.5;
 		case "item-invis":       return 2;
 		case "item-extralife":   return 2;
 		case "item-speed":       return 2;
-		case "item-strength":    return 2;
-		case "item-shield":      return 2;
-		case "item-fuelregen":   return 2;
-		case "item-jetpack":     return 2;
 		case "tagged-target":    return 2;
 		default:                 return 1;
 	}
@@ -198,7 +199,15 @@ vector spritelookupcolor(string s, vector def)
 string spritelookuptext(string s)
 {
 	if(substring(s, 0, 4) == "wpn-") { return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).message); }
-	if(substring(s, 0, 5) == "buff-") { return Buff_PrettyName(Buff_Type_FromSprite(s)); }
+	if (substring(s, 0, 5) == "buff-")
+	{
+		entity buff = BUFF_NULL;
+		FOREACH(BUFFS, it.m_sprite == s, LAMBDA(
+			buff = it;
+			break;
+		));
+		return buff.m_prettyName;
+	}
 
 	switch(s)
 	{
@@ -220,18 +229,15 @@ string spritelookuptext(string s)
 		case "keycarrier-red": return _("Key carrier");
 		case "keycarrier-yellow": return _("Key carrier");
 		case "redbase": return _("Red base");
+		case "yellowbase": return _("Yellow base");
+		case "neutralbase": return _("White base");
+		case "pinkbase": return _("Pink base");
 		case "waypoint": return _("Waypoint");
-		case "ons-gen-red": return _("Generator");
-		case "ons-gen-blue": return _("Generator");
+		case "ons-gen": return _("Generator");
 		case "ons-gen-shielded": return _("Generator");
-		case "ons-cp-neut": return _("Control point");
-		case "ons-cp-red": return _("Control point");
-		case "ons-cp-blue": return _("Control point");
-		case "ons-cp-atck-neut": return _("Control point");
-		case "ons-cp-atck-red": return _("Control point");
-		case "ons-cp-atck-blue": return _("Control point");
-		case "ons-cp-dfnd-red": return _("Control point");
-		case "ons-cp-dfnd-blue": return _("Control point");
+		case "ons-cp": return _("Control point");
+		case "ons-cp-atck": return _("Control point");
+		case "ons-cp-dfnd": return _("Control point");
 		case "race-checkpoint": return _("Checkpoint");
 		case "race-finish": return _("Finish");
 		case "race-start": return _("Start");
@@ -248,13 +254,10 @@ string spritelookuptext(string s)
 		case "item-invis": return _("Invisibility");
 		case "item-extralife": return _("Extra life");
 		case "item-speed": return _("Speed");
-		case "item-strength": return _("Strength");
-		case "item-shield": return _("Shield");
-		case "item-fuelregen": return _("Fuel regen");
-		case "item-jetpack": return _("Jet Pack");
 		case "frozen": return _("Frozen!");
 		case "tagged-target": return _("Tagged");
 		case "vehicle": return _("Vehicle");
+		case "intruder": return _("Intruder!");
 		default: return s;
 	}
 }
@@ -346,6 +349,14 @@ void Draw_WaypointSprite()
 	// choose the sprite
 	switch(self.rule)
 	{
+		case SPRITERULE_SPECTATOR:
+			if(!(
+				(autocvar_g_waypointsprite_itemstime == 1 && t == NUM_SPECTATOR + 1)
+			||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage))
+				))
+				return;
+			spriteimage = self.netname;
+			break;
 		case SPRITERULE_DEFAULT:
 			if(self.team)
 			{
@@ -399,7 +410,7 @@ void Draw_WaypointSprite()
 	{
 		if(self.helpme && time < self.helpme)
 			a *= SPRITE_HELPME_BLINK;
-		else
+		else if(!self.lifetime) // fading out waypoints don't blink
 			a *= spritelookupblinkvalue(spriteimage);
 	}
 
@@ -409,7 +420,7 @@ void Draw_WaypointSprite()
 		a = 1;
 	}
 
-	if(a <= 0)
+	if(a <= 0.003)
 		return;
 
 	rgb = fixrgbexcess(rgb);
@@ -580,6 +591,7 @@ void Ent_RemoveWaypointSprite()
 		strunzone(self.netname3);
 }
 
+/** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 void Ent_WaypointSprite()
 {
 	int sendflags, f, t;
