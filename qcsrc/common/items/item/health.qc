@@ -34,6 +34,8 @@ REGISTER_ITEM(HealthLarge, Health) {
     this.m_sound                =   "misc/mediumhealth.wav";
     this.m_name                 =   "50 Health";
     this.m_icon                 =   "health";
+    this.m_color                =   '1 0 0';
+    this.m_waypoint             =   _("Large health");
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_MID;
     this.m_itemid               =   IT_25HP;
@@ -47,6 +49,9 @@ REGISTER_ITEM(HealthMega, Health) {
     this.m_sound                =   "misc/megahealth.wav";
     this.m_name                 =   "100 Health";
     this.m_icon                 =   "item_mega_health";
+    this.m_color                =   '1 0 0';
+    this.m_waypoint             =   _("Mega health");
+    this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_HEALTH;

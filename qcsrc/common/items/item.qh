@@ -7,6 +7,9 @@ CLASS(GameItem, Object)
     ATTRIB(GameItem, m_id, int, 0)
     ATTRIB(GameItem, m_name, string, string_null)
     ATTRIB(GameItem, m_icon, string, string_null)
+    ATTRIB(GameItem, m_color, vector, '1 1 1')
+    ATTRIB(GameItem, m_waypoint, string, string_null)
+    ATTRIB(GameItem, m_waypointblink, int, 1)
     METHOD(GameItem, display, void(entity this, void(string name, string icon) returns)) {
         returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }

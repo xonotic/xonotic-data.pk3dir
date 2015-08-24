@@ -21,4 +21,6 @@
 
 #pragma noref 0
 
+#define WriteFloat(to, f) WriteCoord(to, f)
+
 #endif

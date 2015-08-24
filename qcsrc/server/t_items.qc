@@ -412,179 +412,10 @@ void Item_Think()
 	}
 }
 
-float it_armor_large_time;
-float it_health_mega_time;
-float it_invisible_time;
-float it_speed_time;
-float it_extralife_time;
-float it_strength_time;
-float it_shield_time;
-float it_fuelregen_time;
-float it_jetpack_time;
-float it_superweapons_time;
-
-void Item_ItemsTime_Init()
-{
-	it_armor_large_time = -1;
-	it_health_mega_time = -1;
-	it_invisible_time = -1;
-	it_speed_time = -1;
-	it_extralife_time = -1;
-	it_strength_time = -1;
-	it_shield_time = -1;
-	it_fuelregen_time = -1;
-	it_jetpack_time = -1;
-	it_superweapons_time = -1;
-}
-void Item_ItemsTime_ResetTimes()
-{
-	it_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
-	it_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
-	it_invisible_time   = (it_invisible_time   == -1) ? -1 : 0;
-	it_speed_time       = (it_speed_time       == -1) ? -1 : 0;
-	it_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
-	it_strength_time    = (it_strength_time    == -1) ? -1 : 0;
-	it_shield_time      = (it_shield_time      == -1) ? -1 : 0;
-	it_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
-	it_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
-	it_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
-}
-void Item_ItemsTime_ResetTimesForPlayer(entity e)
-{
-	e.item_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
-	e.item_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
-	e.item_invisible_time   = (it_invisible_time   == -1) ? -1 : 0;
-	e.item_speed_time       = (it_speed_time       == -1) ? -1 : 0;
-	e.item_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
-	e.item_strength_time    = (it_strength_time    == -1) ? -1 : 0;
-	e.item_shield_time      = (it_shield_time      == -1) ? -1 : 0;
-	e.item_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
-	e.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
-	e.item_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
-}
-void Item_ItemsTime_SetTimesForPlayer(entity e)
-{
-	e.item_armor_large_time = it_armor_large_time;
-	e.item_health_mega_time = it_health_mega_time;
-	e.item_invisible_time = it_invisible_time;
-	e.item_speed_time = it_speed_time;
-	e.item_extralife_time = it_extralife_time;
-	e.item_strength_time = it_strength_time;
-	e.item_shield_time = it_shield_time;
-	e.item_fuelregen_time = it_fuelregen_time;
-	e.item_jetpack_time = it_jetpack_time;
-	e.item_superweapons_time = it_superweapons_time;
-}
-
-void Item_ItemsTime_SetTime(entity e, float t)
-{
-	if(!autocvar_sv_itemstime)
-		return;
-
-	if(g_instagib)
-	{
-		switch(e.items)
-		{
-			case IT_STRENGTH://"item-invis"
-				it_invisible_time = t;
-				break;
-			case IT_NAILS://"item-extralife"
-				it_extralife_time = t;
-				break;
-			case IT_INVINCIBLE://"item-speed"
-				it_speed_time = t;
-				break;
-		}
-	}
-	else
-	{
-		switch(e.items)
-		{
-			case IT_HEALTH:
-				// if(e.itemdef == ITEM_MegaHealth) // e.items == IT_HEALTH unequivocally identifies it
-					it_health_mega_time = t;
-				break;
-			case IT_ARMOR:
-				if(e.itemdef == ITEM_ArmorLarge) // e.items == IT_ARMOR doesn't unequivocally identifies it
-					it_armor_large_time = t;
-				break;
-			case IT_STRENGTH://"item-strength"
-				it_strength_time = t;
-				break;
-			case IT_INVINCIBLE://"item-shield"
-				it_shield_time = t;
-				break;
-			default:
-				if(e.weapons & WEPSET_SUPERWEAPONS)
-					it_superweapons_time = t;
-		}
-	}
-	switch(e.items)
-	{
-		case IT_FUEL_REGEN://"item-fuelregen"
-			it_fuelregen_time = t;
-			break;
-		case IT_JETPACK://"item-jetpack"
-			it_jetpack_time = t;
-			break;
-	}
-}
-void Item_ItemsTime_SetTimesForAllPlayers()
-{
-	entity e;
-	if(warmup_stage)
-	{
-		FOR_EACH_REALCLIENT(e)
-			Item_ItemsTime_SetTimesForPlayer(e);
-	}
-	else
-	{
-		FOR_EACH_REALCLIENT(e)
-		{
-			if(!IS_PLAYER(e))
-				Item_ItemsTime_SetTimesForPlayer(e);
-		}
-	}
-}
-
-float Item_ItemsTime_UpdateTime(entity e, float t)
-{
-	entity head;
-	bool isavailable = (t == 0);
-	if(e.weapons & WEPSET_SUPERWEAPONS)
-	{
-		for(head = world; (head = nextent(head)); )
-		{
-			if(clienttype(head) != CLIENTTYPE_NOTACLIENT || !(head.weapons & WEPSET_SUPERWEAPONS) || head.classname == "weapon_info")
-				continue;
-			if(e == head)
-				continue;
-
-			if(head.scheduledrespawntime <= time)
-				isavailable = true;
-			else if(t == 0 || head.scheduledrespawntime < t)
-				t = head.scheduledrespawntime;
-		}
-	}
-	else
-	{
-		for(head = world; (head = nextent(head)); )
-		{
-			if(head.itemdef != e.itemdef)
-				continue;
-			if(e == head)
-				continue;
-
-			if(head.scheduledrespawntime <= time)
-				isavailable = true;
-			else if(t == 0 || head.scheduledrespawntime < t)
-				t = head.scheduledrespawntime;
-		}
-	}
-	if(isavailable)
-		t = -t; // let know the client there's another available item
-	return t;
-}
+bool Item_ItemsTime_Allow(entity e);
+float Item_ItemsTime_UpdateTime(entity e, float t);
+void Item_ItemsTime_SetTime(entity e, float t);
+void Item_ItemsTime_SetTimesForAllPlayers();
 
 void Item_Respawn (void)
 {
@@ -598,7 +429,7 @@ void Item_Respawn (void)
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-	if(self.flags & FL_POWERUP || self.itemdef == ITEM_ArmorLarge || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
+    if (Item_ItemsTime_Allow(self))
 	{
 		float t = Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_SetTime(self, t);
@@ -626,24 +457,13 @@ void Item_RespawnCountdown (void)
 		self.count += 1;
 		if(self.count == 1)
 		{
-			string name;
+			string name = string_null;
 			vector rgb = '1 0 1';
-			name = string_null;
-			switch (self.items)
-			{
-				case ITEM_JetpackRegen.m_itemid: name = "item-fuelregen"; rgb = '1 0.5 0'; break;
-				case ITEM_Jetpack.m_itemid:    name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
-				case ITEM_Strength.m_itemid:   name = "item-strength"; rgb = '0 0 1'; break;
-				case ITEM_Shield.m_itemid: name = "item-shield"; rgb = '1 0 1'; break;
-				case ITEM_HealthMega.m_itemid:
-					//if (self.classname == "item_health_mega")
-						{name = "item_health_mega"; rgb = '1 0 0';}
-					break;
-				case ITEM_ArmorMega.m_itemid:
-					if (self.itemdef == ITEM_ArmorLarge)
-						{name = "item_armor_large"; rgb = '0 1 0';}
-					break;
-			}
+            entity e = self.itemdef;
+            if (e) {
+                name = e.m_waypoint;
+                rgb = e.m_color;
+            }
 			MUTATOR_CALLHOOK(Item_RespawnCountdown, name, rgb);
 			name = item_name;
 			rgb = item_color;
@@ -709,7 +529,7 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS) || e.itemdef == ITEM_ArmorLarge || e.items == IT_HEALTH)
+	if (Item_ItemsTime_Allow(e))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
