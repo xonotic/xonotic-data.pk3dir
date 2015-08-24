@@ -4,7 +4,6 @@
 #include "g_hook.qh"
 #include "mutators/mutators_include.qh"
 #include "scores.qh"
-#include "waypointsprites.qh"
 #include "spawnpoints.qh"
 #include "t_items.qh"
 #include "../common/vehicles/all.qh"

@@ -5,8 +5,6 @@
 #if defined(SVQC)
     #include "_all.qh"
 
-    #include "waypointsprites.qh"
-
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
 

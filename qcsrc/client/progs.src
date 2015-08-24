@@ -34,7 +34,6 @@ tuba.qc
 t_items.qc
 view.qc
 wall.qc
-waypointsprites.qc
 
 command/all.qc
 

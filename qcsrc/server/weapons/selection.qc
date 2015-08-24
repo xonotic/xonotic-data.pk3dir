@@ -3,7 +3,6 @@
 
 #include "weaponsystem.qh"
 #include "../t_items.qh"
-#include "../waypointsprites.qh"
 #include "../../common/constants.qh"
 #include "../../common/util.qh"
 #include "../../common/weapons/all.qh"

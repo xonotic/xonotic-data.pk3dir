@@ -10,7 +10,6 @@
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
-#include "waypointsprites.qh"
 
 #include "../common/weapons/all.qh"
 

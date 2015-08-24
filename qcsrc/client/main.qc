@@ -22,7 +22,6 @@
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"
-#include "waypointsprites.qh"
 
 #include "../common/vehicles/all.qh"
 

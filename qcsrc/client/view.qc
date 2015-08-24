@@ -8,7 +8,6 @@
 #include "noise.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "waypointsprites.qh"
 
 #include "mutators/events.qh"
 

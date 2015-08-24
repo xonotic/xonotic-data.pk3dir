@@ -5,7 +5,6 @@
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
-#include "waypointsprites.qh"
 #include "bot/waypoints.qh"
 #include "bot/navigation.qh"
 #include "command/getreplies.qh"

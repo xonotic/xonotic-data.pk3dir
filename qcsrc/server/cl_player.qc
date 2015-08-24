@@ -9,7 +9,6 @@
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
-#include "waypointsprites.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "../common/animdecide.qh"

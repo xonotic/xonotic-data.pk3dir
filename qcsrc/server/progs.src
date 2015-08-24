@@ -47,7 +47,6 @@ t_halflife.qc
 t_items.qc
 t_quake3.qc
 t_quake.qc
-waypointsprites.qc
 
 bot/aim.qc
 bot/bot.qc
