@@ -174,12 +174,12 @@ void ItemRead(float _IsNew)
                 self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
                 self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
             else
             {
                 self.draw = ItemDraw;
-                dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
+                dprint("Simple item requested for ", _fn, " but no model exists for it\n");
             }
         }
 
@@ -1365,10 +1365,17 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 }
 
+string Item_Model(string item_mdl)
+{
+	string output = strcat("models/items/", item_mdl);
+	MUTATOR_CALLHOOK(ItemModel, item_mdl, output);
+	return strzone(output);
+}
+
 void StartItemA (entity a)
 {
     self.itemdef = a;
-    StartItem(a.m_model, a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
+    StartItem(Item_Model(a.m_model), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
 }
 
 void spawnfunc_item_rockets (void) {
@@ -1520,7 +1527,7 @@ void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
 void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
 void spawnfunc_item_strength (void) {
-		precache_sound(W_Sound("strength_fire"));
+		precache_sound("weapons/strength_fire.wav");
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItemA (ITEM_Strength);

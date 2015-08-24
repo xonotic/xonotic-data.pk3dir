@@ -83,6 +83,16 @@ string weapon_model;
 string weapon_model_output;
 MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);
 
+/** called when an item model is about to be set, allows custom paths etc. */
+#define EV_ItemModel(i, o) \
+    /**/ i(string, item_model) \
+    /**/ i(string, item_model_output) \
+    /**/ o(string, item_model_output) \
+    /**/
+string item_model;
+string item_model_output;
+MUTATOR_HOOKABLE(ItemModel, EV_ItemModel);
+
 /** called when a player presses the jump key */
 #define EV_PlayerJump(i, o) \
     /**/ i(float, player_multijump) \
