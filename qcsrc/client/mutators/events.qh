@@ -49,4 +49,19 @@ MUTATOR_HOOKABLE(UpdateCrosshair, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(CSQC_Parse_TempEntity, EV_CSQC_Parse_TempEntity);
 
+/** Called when a projectile is linked with CSQC */
+#define EV_Ent_Projectile(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(Ent_Projectile, EV_Ent_Projectile);
+
+/** Called when a projectile's properties are being modified */
+#define EV_EditProjectile(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
+
+/* Called when projectiles are precached */
+MUTATOR_HOOKABLE(PrecacheProjectiles, EV_NO_ARGS);
+
 #endif
