@@ -591,6 +591,7 @@ void Ent_RemoveWaypointSprite()
 		strunzone(self.netname3);
 }
 
+/** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 void Ent_WaypointSprite()
 {
 	int sendflags, f, t;

@@ -79,7 +79,6 @@ const int ENT_CLIENT_POINTPARTICLES = 6;
 const int ENT_CLIENT_RAINSNOW = 7;
 const int ENT_CLIENT_LASER = 8;
 const int ENT_CLIENT_NAGGER = 9; // flags [votecalledvote]
-const int ENT_CLIENT_WAYPOINT = 10; // flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable]
 const int ENT_CLIENT_RADARLINK = 11; // flags [startorigin] [endorigin] [startcolor+16*endcolor]
 const int ENT_CLIENT_PROJECTILE = 12;
 const int ENT_CLIENT_GIBSPLASH = 13;
@@ -130,6 +129,8 @@ const int ENT_CLIENT_VIEWLOC = 78;
 const int ENT_CLIENT_VIEWLOC_TRIGGER = 79;
 
 const int ENT_CLIENT_HEALING_ORB = 80;
+
+const int ENT_CLIENT_MUTATOR = TE_CSQC_MUTATOR; // 99
 
 const int SPRITERULE_DEFAULT = 0;
 const int SPRITERULE_TEAMPLAY = 1;

@@ -845,6 +845,12 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	self.enttype = t;
 	switch(t)
 	{
+		case ENT_CLIENT_MUTATOR: {
+			int mutID = ReadMutator();
+			if (!MUTATOR_CALLHOOK(CSQC_Ent_Update, mutID, bIsNewEntity))
+			error(sprintf("Unknown mutator type in CSQC_Ent_Update (mutID: %d, edict: %d, classname: %s)\n", mutID, num_for_edict(self), self.classname));
+			break;
+		}
 		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(); break;
 		case ENT_CLIENT_SCORES: Ent_ReadPlayerScore(); break;
 		case ENT_CLIENT_TEAMSCORES: Ent_ReadTeamScore(); break;
@@ -853,7 +859,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_LASER: Ent_Laser(); break;
 		case ENT_CLIENT_NAGGER: Ent_Nagger(); break;
 		case ENT_CLIENT_ELIMINATEDPLAYERS: Ent_EliminatedPlayers(); break;
-		case ENT_CLIENT_WAYPOINT: Ent_WaypointSprite(); break;
 		case ENT_CLIENT_RADARLINK: Ent_RadarLink(); break;
 		case ENT_CLIENT_PROJECTILE: Ent_Projectile(); break;
 		case ENT_CLIENT_GIBSPLASH: Ent_GibSplash(bIsNewEntity); break;
