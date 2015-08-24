@@ -296,6 +296,8 @@ const int PROJECTILE_BUMBLE_BEAM = 31;
 const int PROJECTILE_MAGE_SPIKE = 32;
 const int PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
+// projectile IDs 40-50 reserved
+
 const int PROJECTILE_RPC = 60;
 
 const int SPECIES_HUMAN = 0;
