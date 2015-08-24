@@ -9,6 +9,7 @@
 REGISTER_ITEM(Jetpack, Powerup) {
     this.m_model                =   "models/items/g_jetpack.md3";
     this.m_name                 =   "Jet pack";
+    this.m_icon                 =   "jetpack";
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
     this.m_itemid               =   IT_JETPACK;
@@ -19,7 +20,7 @@ REGISTER_ITEM(Jetpack, Powerup) {
 REGISTER_ITEM(JetpackFuel, Ammo) {
     this.m_model    =   "models/items/g_fuel.md3";
     this.m_name     =   "Fuel";
-    this.m_ammoPic  =   "ammo_fuel";
+    this.m_icon     =   "ammo_fuel";
 #ifdef SVQC
     this.m_botvalue =   BOT_PICKUP_RATING_LOW;
     this.m_itemid   =   IT_FUEL;
@@ -29,6 +30,7 @@ REGISTER_ITEM(JetpackFuel, Ammo) {
 REGISTER_ITEM(JetpackRegen, Pickup) {
     this.m_model                =   "models/items/g_fuelregen.md3";
     this.m_name                 =   "Fuel regenerator";
+    this.m_icon                 =   "fuelregen";
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
     this.m_itemflags            =   FL_POWERUP;

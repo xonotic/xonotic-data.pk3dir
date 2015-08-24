@@ -318,6 +318,9 @@ void Ent_Projectile()
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
+				if(MUTATOR_CALLHOOK(Ent_Projectile, self))
+					break;
+
 				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 				{
 					setmodel(self, "models/weapons/v_ok_grenade.md3");
@@ -470,6 +473,8 @@ void Ent_Projectile()
 				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 		}
 
+		MUTATOR_CALLHOOK(EditProjectile, self);
+
 		setsize(self, self.mins, self.maxs);
 	}
 
@@ -520,4 +525,5 @@ void Projectile_Precache()
 	precache_sound("weapons/fireball_fly2.wav");
 	precache_sound("weapons/tag_rocket_fly.wav");
 
+	MUTATOR_CALLHOOK(PrecacheProjectiles);
 }

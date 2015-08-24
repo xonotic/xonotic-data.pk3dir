@@ -2,7 +2,6 @@
 #define AMMO_H
 #include "pickup.qh"
 CLASS(Ammo, Pickup)
-    ATTRIB(Ammo, m_ammoPic, string, string_null)
 #ifdef SVQC
     ATTRIB(Ammo, m_pickupevalfunc, float(entity player, entity item), commodity_pickupevalfunc)
     ATTRIB(Ammo, m_respawntime, float(), GET(g_pickup_respawntime_ammo))

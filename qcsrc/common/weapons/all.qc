@@ -291,12 +291,12 @@ string GetAmmoPicture(.int ammotype)
 {
 	switch (ammotype)
 	{
-		case ammo_shells:  return ITEM_Shells.m_ammoPic;
-		case ammo_nails:   return ITEM_Bullets.m_ammoPic;
-		case ammo_rockets: return ITEM_Rockets.m_ammoPic;
-		case ammo_cells:   return ITEM_Cells.m_ammoPic;
-		case ammo_plasma:  return ITEM_Plasma.m_ammoPic;
-		case ammo_fuel:    return ITEM_JetpackFuel.m_ammoPic;
+		case ammo_shells:  return ITEM_Shells.m_icon;
+		case ammo_nails:   return ITEM_Bullets.m_icon;
+		case ammo_rockets: return ITEM_Rockets.m_icon;
+		case ammo_cells:   return ITEM_Cells.m_icon;
+		case ammo_plasma:  return ITEM_Plasma.m_icon;
+		case ammo_fuel:    return ITEM_JetpackFuel.m_icon;
 		default: return ""; // wtf, no ammo type?
 	}
 }
