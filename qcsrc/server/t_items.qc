@@ -439,16 +439,6 @@ void Item_ItemsTime_Init()
 
 STATIC_INIT(ItemsTime_Init) {
     // items time
-    addstat(STAT_ARMOR_LARGE_TIME, AS_FLOAT, item_armor_large_time);
-    addstat(STAT_HEALTH_MEGA_TIME, AS_FLOAT, item_health_mega_time);
-    addstat(STAT_INVISIBLE_TIME, AS_FLOAT, item_invisible_time);
-    addstat(STAT_SPEED_TIME, AS_FLOAT, item_speed_time);
-    addstat(STAT_EXTRALIFE_TIME, AS_FLOAT, item_extralife_time);
-    addstat(STAT_STRENGTH_TIME, AS_FLOAT, item_strength_time);
-    addstat(STAT_SHIELD_TIME, AS_FLOAT, item_shield_time);
-    addstat(STAT_FUELREGEN_TIME, AS_FLOAT, item_fuelregen_time);
-    addstat(STAT_JETPACK_TIME, AS_FLOAT, item_jetpack_time);
-    addstat(STAT_SUPERWEAPONS_TIME, AS_FLOAT, item_superweapons_time);
     Item_ItemsTime_Init();
 }
 
@@ -465,31 +455,32 @@ void Item_ItemsTime_ResetTimes()
 	it_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
 	it_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
 }
+void IT_Write(entity, int, float);
 void Item_ItemsTime_ResetTimesForPlayer(entity e)
 {
-	e.item_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
-	e.item_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
-	e.item_invisible_time   = (it_invisible_time   == -1) ? -1 : 0;
-	e.item_speed_time       = (it_speed_time       == -1) ? -1 : 0;
-	e.item_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
-	e.item_strength_time    = (it_strength_time    == -1) ? -1 : 0;
-	e.item_shield_time      = (it_shield_time      == -1) ? -1 : 0;
-	e.item_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
-	e.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
-	e.item_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
+    IT_Write(e, item_armor_large_time , (it_armor_large_time  == -1) ? -1 : 0);
+    IT_Write(e, item_health_mega_time , (it_health_mega_time  == -1) ? -1 : 0);
+    IT_Write(e, item_invisible_time   , (it_invisible_time    == -1) ? -1 : 0);
+    IT_Write(e, item_speed_time       , (it_speed_time        == -1) ? -1 : 0);
+    IT_Write(e, item_extralife_time   , (it_extralife_time    == -1) ? -1 : 0);
+    IT_Write(e, item_strength_time    , (it_strength_time     == -1) ? -1 : 0);
+    IT_Write(e, item_shield_time      , (it_shield_time       == -1) ? -1 : 0);
+    IT_Write(e, item_fuelregen_time   , (it_fuelregen_time    == -1) ? -1 : 0);
+    IT_Write(e, item_jetpack_time     , (it_jetpack_time      == -1) ? -1 : 0);
+    IT_Write(e, item_superweapons_time, (it_superweapons_time == -1) ? -1 : 0);
 }
 void Item_ItemsTime_SetTimesForPlayer(entity e)
 {
-	e.item_armor_large_time = it_armor_large_time;
-	e.item_health_mega_time = it_health_mega_time;
-	e.item_invisible_time = it_invisible_time;
-	e.item_speed_time = it_speed_time;
-	e.item_extralife_time = it_extralife_time;
-	e.item_strength_time = it_strength_time;
-	e.item_shield_time = it_shield_time;
-	e.item_fuelregen_time = it_fuelregen_time;
-	e.item_jetpack_time = it_jetpack_time;
-	e.item_superweapons_time = it_superweapons_time;
+    IT_Write(e, item_armor_large_time , it_armor_large_time );
+    IT_Write(e, item_health_mega_time , it_health_mega_time );
+    IT_Write(e, item_invisible_time   , it_invisible_time   );
+    IT_Write(e, item_speed_time       , it_speed_time       );
+    IT_Write(e, item_extralife_time   , it_extralife_time   );
+    IT_Write(e, item_strength_time    , it_strength_time    );
+    IT_Write(e, item_shield_time      , it_shield_time      );
+    IT_Write(e, item_fuelregen_time   , it_fuelregen_time   );
+    IT_Write(e, item_jetpack_time     , it_jetpack_time     );
+    IT_Write(e, item_superweapons_time, it_superweapons_time);
 }
 
 void Item_ItemsTime_SetTime(entity e, float t)
@@ -516,12 +507,12 @@ void Item_ItemsTime_SetTime(entity e, float t)
 	{
 		switch(e.items)
 		{
-			case IT_HEALTH:
-				// if(e.itemdef == ITEM_MegaHealth) // e.items == IT_HEALTH unequivocally identifies it
+			case ITEM_HealthMega.m_itemid:
+				// if(e.itemdef == ITEM_HealthMega) // e.items == IT_HEALTH unequivocally identifies it
 					it_health_mega_time = t;
 				break;
-			case IT_ARMOR:
-				if(e.itemdef == ITEM_ArmorLarge) // e.items == IT_ARMOR doesn't unequivocally identifies it
+			case ITEM_ArmorMega.m_itemid:
+				if(e.itemdef == ITEM_ArmorMega) // e.items == IT_ARMOR doesn't unequivocally identifies it
 					it_armor_large_time = t;
 				break;
 			case IT_STRENGTH://"item-strength"
@@ -614,7 +605,7 @@ void Item_Respawn (void)
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-	if(self.flags & FL_POWERUP || self.itemdef == ITEM_ArmorLarge || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
+	if(self.flags & FL_POWERUP || self.itemdef == ITEM_ArmorMega || self.items == IT_HEALTH || (self.weapons & WEPSET_SUPERWEAPONS))
 	{
 		float t = Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_SetTime(self, t);
@@ -656,7 +647,7 @@ void Item_RespawnCountdown (void)
 						{name = "item_health_mega"; rgb = '1 0 0';}
 					break;
 				case ITEM_ArmorMega.m_itemid:
-					if (self.itemdef == ITEM_ArmorLarge)
+					if (self.itemdef == ITEM_ArmorMega)
 						{name = "item_armor_large"; rgb = '0 1 0';}
 					break;
 			}
@@ -725,7 +716,7 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS) || e.itemdef == ITEM_ArmorLarge || e.items == IT_HEALTH)
+	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS) || e.itemdef == ITEM_ArmorMega || e.items == IT_HEALTH)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);

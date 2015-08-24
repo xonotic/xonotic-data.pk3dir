@@ -513,16 +513,18 @@ const float ACTIVE_TOGGLE 	= 3;
 .void (float act_state) setactive;
 .entity realowner;
 
-.float item_armor_large_time;
-.float item_health_mega_time;
-.float item_invisible_time;
-.float item_speed_time;
-.float item_extralife_time;
-.float item_strength_time;
-.float item_shield_time;
-.float item_fuelregen_time;
-.float item_jetpack_time;
-.float item_superweapons_time;
+enum {
+	item_armor_large_time,
+	item_health_mega_time,
+	item_invisible_time,
+	item_speed_time,
+	item_extralife_time,
+	item_strength_time,
+	item_shield_time,
+	item_fuelregen_time,
+	item_jetpack_time,
+	item_superweapons_time
+};
 
 //float serverflags;
 

@@ -109,16 +109,16 @@ const int STAT_OK_AMMO_CHARGE         = 85;
 const int STAT_OK_AMMO_CHARGEPOOL     = 86;
 const int STAT_FROZEN                 = 87;
 const int STAT_REVIVE_PROGRESS        = 88;
-const int STAT_ARMOR_LARGE_TIME       = 89;
-const int STAT_HEALTH_MEGA_TIME       = 90;
-const int STAT_INVISIBLE_TIME         = 91;
-const int STAT_SPEED_TIME             = 92;
-const int STAT_EXTRALIFE_TIME         = 93;
-const int STAT_STRENGTH_TIME          = 94;
-const int STAT_SHIELD_TIME            = 95;
-const int STAT_FUELREGEN_TIME         = 96;
-const int STAT_JETPACK_TIME           = 97;
-const int STAT_SUPERWEAPONS_TIME      = 98;
+// 89 empty?
+// 90 empty?
+// 91 empty?
+// 92 empty?
+// 93 empty?
+// 94 empty?
+// 95 empty?
+// 96 empty?
+// 97 empty?
+// 98 empty?
 const int STAT_ROUNDLOST              = 99;
 
 /* The following stats change depending on the gamemode, so can share the same ID */

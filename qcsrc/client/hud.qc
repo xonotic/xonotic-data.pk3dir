@@ -4906,17 +4906,6 @@ void HUD_ItemsTime(void)
 			(autocvar_hud_panel_itemstime == 1 && spectatee_status != 0)
 		||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage))
 			)) { return; }
-
-		ItemsTime_time[0] = getstatf(STAT_ARMOR_LARGE_TIME);
-		ItemsTime_time[1] = getstatf(STAT_HEALTH_MEGA_TIME);
-		ItemsTime_time[2] = getstatf(STAT_INVISIBLE_TIME);
-		ItemsTime_time[3] = getstatf(STAT_SPEED_TIME);
-		ItemsTime_time[4] = getstatf(STAT_EXTRALIFE_TIME);
-		ItemsTime_time[5] = getstatf(STAT_STRENGTH_TIME);
-		ItemsTime_time[6] = getstatf(STAT_SHIELD_TIME);
-		ItemsTime_time[7] = getstatf(STAT_FUELREGEN_TIME);
-		ItemsTime_time[8] = getstatf(STAT_JETPACK_TIME);
-		ItemsTime_time[9] = getstatf(STAT_SUPERWEAPONS_TIME);
 	}
 	else
 	{
