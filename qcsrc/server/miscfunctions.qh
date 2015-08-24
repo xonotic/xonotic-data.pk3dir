@@ -8,6 +8,7 @@
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
+#include "../common/turrets/turrets.qh"
 
 #ifdef RELEASE
 #define cvar_string_normal builtin_cvar_string
@@ -47,8 +48,6 @@ float DistributeEvenly_Get(float weight);
 void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2);
 
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2);
-
-vector randompos(vector m1, vector m2);
 
 void play2team(float t, string filename);
 
@@ -159,7 +158,7 @@ const string STR_OBSERVER = "observer";
 
 #define IS_MONSTER(v)			(v.flags & FL_MONSTER)
 #define IS_VEHICLE(v)			(v.vehicle_flags & VHF_ISVEHICLE)
-#define IS_TURRET(v)			(v.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+#define IS_TURRET(v)			(v.turret_flags & TUR_FLAG_ISTURRET)
 
 #define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))

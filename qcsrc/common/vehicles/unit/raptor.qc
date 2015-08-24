@@ -1,7 +1,11 @@
-#ifdef REGISTER_VEHICLE
-REGISTER_VEHICLE(
+#ifndef VEHICLE_RAPTOR
+#define VEHICLE_RAPTOR
+#include "raptor.qh"
+#ifndef MENUQC
+int v_raptor(int);
+#endif
+REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RAPTOR,
-/* function   */ v_raptor,
 /* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
 /* mins,maxs  */ '-80 -80 0', '80 80 70',
 /* model	  */ "models/vehicles/raptor.dpm",
@@ -10,8 +14,15 @@ REGISTER_VEHICLE(
 /* tags	   	  */ "", "tag_hud", "tag_camera",
 /* netname	  */ "raptor",
 /* fullname   */ _("Raptor")
-);
-#else
+) {
+    this.m_icon = "vehicle_raptor";
+#ifndef MENUQC
+    this.vehicle_func = v_raptor;
+#endif
+}
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 bool autocvar_g_vehicle_raptor;
@@ -214,7 +225,7 @@ void raptor_land()
 	}
 
 	self.nextthink  = time;
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -310,7 +321,7 @@ float raptor_frame()
 	player = self;
 	raptor = self.vehicle;
 	self   = raptor;
-	
+
 	vehicles_painframe();
 	/*
 	ftmp = vlen(self.velocity);
@@ -642,11 +653,11 @@ float raptor_takeoff()
 	player = self;
 	raptor = self.vehicle;
 	self   = raptor;
-	
+
 	self.nextthink = time;
 	CSQCMODEL_AUTOUPDATE();
 	self.nextthink = 0; // will this work?
-	
+
 	if(self.sound_nexttime < time)
 	{
 		self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
@@ -720,7 +731,7 @@ void raptor_diethink()
 		Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 	self.nextthink = time;
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -792,7 +803,7 @@ float v_raptor(float req)
 		{
 			if(autocvar_g_vehicle_raptor_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
-				
+
 			return true;
 		}
 		case VR_ENTER:
@@ -919,12 +930,12 @@ float v_raptor(float req)
 			self.movetype	   = MOVETYPE_TOSS;
 			self.solid		  = SOLID_SLIDEBOX;
 			self.vehicle_energy = 1;
-			
+
 			self.PlayerPhysplug = raptor_frame;
 
 			self.bomb1.gun1.avelocity_y = 90;
 			self.bomb1.gun2.avelocity_y = -90;
-			
+
 			self.delay = time;
 
 			self.bouncefactor = autocvar_g_vehicle_raptor_bouncefactor;
@@ -947,13 +958,13 @@ float v_raptor(float req)
 
 			if(autocvar_g_vehicle_raptor_energy_regen)
 				self.vehicle_flags |= VHF_ENERGYREGEN;
-				
+
 			self.vehicle_exit = raptor_exit;
 			self.respawntime = autocvar_g_vehicle_raptor_respawntime;
 			self.vehicle_health = autocvar_g_vehicle_raptor_health;
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 			self.max_health = self.vehicle_health;
-				
+
 			return true;
 		}
 		case VR_PRECACHE:
@@ -968,7 +979,7 @@ float v_raptor(float req)
 			precache_sound ("vehicles/raptor_fly.wav");
 			precache_sound ("vehicles/raptor_speed.wav");
 			precache_sound ("vehicles/missile_alarm.wav");
-		
+
 			return true;
 		}
 	}
@@ -1037,8 +1048,8 @@ float v_raptor(float req)
 				case RSM_BOMB:  crosshair = vCROSS_BURST; break;
 				default:        crosshair = vCROSS_BURST;
 			}
-			
-			Vehicles_drawHUD("vehicle_raptor", "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
+
+			Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 crosshair);

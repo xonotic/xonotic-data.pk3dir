@@ -117,4 +117,8 @@
     #define BITSET(var, mask, flag) ((var) ^ (-(flag) ^ (var)) & (mask))
 #endif
 
+#define CVAR_DESCRIBE(var, desc)    localcmd(sprintf("\nset %s \"%s\" \"%s\"\n",        #var, ftos(autocvar_##var), desc))
+#define CVAR_DESCRIBESTR(var, desc) localcmd(sprintf("\nset %s \"%s\" \"%s\"\n",        #var, autocvar_##var, desc))
+#define CVAR_DESCRIBEVEC(var, desc) localcmd(sprintf("\nset %s \"%s %s %s\" \"%s\"\n",  #var, ftos(autocvar_##var##.x), ftos(autocvar_##var##.y), ftos(autocvar_##var##.z), desc))
+
 #endif

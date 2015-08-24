@@ -327,7 +327,7 @@ void PM_ClientMovement_Move()
 	vector trace1_plane_normal = '0 0 0';
 	vector trace2_plane_normal = '0 0 0';
 	vector trace3_plane_normal = '0 0 0';
-	
+
 
 	PM_ClientMovement_UpdateStatus(false);
 	primalvelocity = self.velocity;
@@ -1668,7 +1668,7 @@ void PM_Main()
 
 	PM_ClientMovement_UpdateStatus(true);
 #endif
-	
+
 
 #ifdef SVQC
 	WarpZone_PlayerPhysics_FixVAngle();
@@ -1936,7 +1936,7 @@ void CSQC_ClientMovement_PlayerMove_Frame(void)
 	PM_Main();
 
 #ifdef CSQC
-	self.pmove_flags = 
+	self.pmove_flags =
 			((self.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
 			(!(self.flags & FL_JUMPRELEASED) ? 0 : PMF_JUMP_HELD) |
 			((self.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);

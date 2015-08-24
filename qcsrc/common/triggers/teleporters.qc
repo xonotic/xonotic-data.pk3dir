@@ -15,8 +15,8 @@
     #include "../../server/constants.qh"
     #include "../../server/defs.qh"
     #include "../deathtypes.qh"
-    #include "../../server/tturrets/include/turrets_early.qh"
-    #include "../vehicles/sv_vehicles.qh"
+    #include "../turrets/sv_turrets.qh"
+    #include "../vehicles/all.qh"
     #include "../mapinfo.qh"
     #include "../../server/anticheat.qh"
 #endif

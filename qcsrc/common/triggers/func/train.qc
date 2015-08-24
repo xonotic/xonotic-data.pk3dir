@@ -200,7 +200,7 @@ void spawnfunc_func_train()
 	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
-	
+
 	if (self.spawnflags & 2)
 	{
 		self.platmovetype_turn = true;

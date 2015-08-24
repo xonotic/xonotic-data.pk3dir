@@ -14,6 +14,7 @@ cheats.qc
 cl_client.qc
 cl_impulse.qc
 cl_player.qc
+controlpoint.qc
 csqceffects.qc
 ent_cs.qc
 g_casings.qc
@@ -25,6 +26,7 @@ g_subs.qc
 g_tetris.qc
 g_violence.qc
 g_world.qc
+generator.qc
 ipban.qc
 item_key.qc
 mapvoting.qc
@@ -55,7 +57,6 @@ bot/waypoints.qc
 
 bot/havocbot/havocbot.qc
 bot/havocbot/role_keyhunt.qc
-bot/havocbot/role_onslaught.qc
 bot/havocbot/roles.qc
 
 command/all.qc
@@ -87,7 +88,6 @@ weapons/weaponsystem.qc
 ../common/campaign_setup.qc
 ../common/effects.qc
 ../common/mapinfo.qc
-../common/monsters/all.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
 ../common/movetypes/include.qc
@@ -102,12 +102,20 @@ weapons/weaponsystem.qc
 ../common/triggers/include.qc
 ../common/urllib.qc
 ../common/util.qc
-../common/vehicles/vehicles_include.qc
 
 ../common/items/all.qc
-
-../common/weapons/config.qc
+../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
 ../common/weapons/all.qc // TODO
+
+../common/turrets/sv_turrets.qc
+../common/turrets/config.qc
+../common/turrets/util.qc
+../common/turrets/turrets.qc
+../common/turrets/checkpoint.qc
+../common/turrets/targettrigger.qc
+../common/weapons/config.qc
 
 ../csqcmodellib/sv_model.qc
 

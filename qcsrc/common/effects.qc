@@ -34,7 +34,7 @@ void Read_Effect(bool is_new)
 		vel_y = ReadCoord();
 		vel_z = ReadCoord();
 	}
-	
+
 	if(!eff_trail)
 		eff_cnt = ReadByte();
 

@@ -280,7 +280,7 @@ void MapList_StringFilterBox_Change(entity box, entity me)
 		me.stringFilter = strzone(box.text);
 	else
 		me.stringFilter = string_null;
-	
+
 	me.refilter(me);
 }
 

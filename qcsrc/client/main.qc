@@ -2,9 +2,11 @@
 #include "_all.qh"
 
 #include "casings.qh"
+#include "controlpoint.qh"
 #include "csqcmodel_hooks.qh"
 #include "damage.qh"
 #include "effects.qh"
+#include "generator.qh"
 #include "gibs.qh"
 #include "hook.qh"
 #include "hud.qh"
@@ -17,17 +19,14 @@
 #include "scoreboard.qh"
 #include "shownames.qh"
 #include "sortlist.qh"
-#include "tturrets.qh"
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"
 #include "waypointsprites.qh"
 
-#include "mutators/events.qh"
+#include "../common/vehicles/all.qh"
 
-#include "../common/vehicles/unit/bumblebee.qh"
-#include "../common/vehicles/cl_vehicles.qh"
-#include "../common/vehicles/vehicles.qh"
+#include "mutators/events.qh"
 
 #include "weapons/projectile.qh"
 
@@ -52,6 +51,9 @@
 #include "../csqcmodellib/interpolate.qh"
 
 #include "../common/triggers/include.qh"
+
+#include "../common/turrets/cl_turrets.qh"
+#include "../common/turrets/turrets.qh"
 
 #include "../warpzonelib/client.qh"
 
@@ -147,11 +149,11 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
-	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 
 	WaypointSprite_Load();
 
@@ -160,11 +162,11 @@ void CSQC_Init(void)
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 
+	generator_precache();
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	turrets_precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 
@@ -368,6 +370,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	bSkipKey = false;
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
@@ -785,7 +790,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = false;
 		}
 	}
-
+	HUD_Radar_Hide_Maximized();
 	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum);
 }
 
@@ -872,6 +877,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
+		case ENT_CLIENT_GENERATOR: ent_generator(); break;
+		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
@@ -1259,69 +1266,55 @@ void Net_WeaponComplain()
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float CSQC_Parse_TempEntity()
 {
-	float bHandled;
-		bHandled  = true;
 	// Acquire TE ID
-	float nTEID;
-		nTEID = ReadByte();
+	int nTEID = ReadByte();
 
-	if(autocvar_developer_csqcentities)
+	if (autocvar_developer_csqcentities)
 		printf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
-		// NOTE: Could just do return instead of break...
-	switch(nTEID)
+	switch (nTEID)
 	{
+		case TE_CSQC_MUTATOR:
+			int mutID = ReadMutator();
+			if (MUTATOR_CALLHOOK(CSQC_Parse_TempEntity, mutID))
+			return true;
 		case TE_CSQC_TARGET_MUSIC:
 			Net_TargetMusic();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_PICTURE:
 			Net_MapVote_Picture();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_VORTEXBEAMPARTICLE:
 			Net_ReadVortexBeamParticle();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_TEAMNAGGER:
 			Net_TeamNagger();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_ARC:
 			Net_ReadArc();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_PINGPLREPORT:
 			Net_ReadPingPLReport();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_VEHICLESETUP:
 			Net_VehicleSetup();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_SVNOTICE:
 			cl_notice_read();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
 			Net_ReadShockwaveParticle();
-			bHandled = true;
-			break;
+			return true;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
-			bHandled = false;
-			break;
+			return false;
 	}
-
-	return bHandled;
 }
 
 string getcommandkey(string text, string command)
