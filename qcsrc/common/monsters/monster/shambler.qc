@@ -44,7 +44,7 @@ void shambler_smash()
 {
 	makevectors(self.angles);
 	Send_Effect("explosion_medium", (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * 500, MOVE_NORMAL, self);
 
@@ -67,7 +67,7 @@ void shambler_lightning_explode()
 {
 	entity head;
 
-	sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
 	Send_Effect("electro_impact", '0 0 0', '0 0 0', 1);
 
 	self.event_damage = func_null;

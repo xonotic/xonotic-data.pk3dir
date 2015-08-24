@@ -90,6 +90,9 @@ string GetAmmoPicture(.int ammotype);
 int GetAmmoStat(.int ammotype);
 #endif
 
+string W_Sound(string w_snd);
+string W_Model(string w_mdl);
+
 // ammo types
 .int ammo_shells;
 .int ammo_nails;
@@ -209,7 +212,7 @@ CLASS(Weapon, Object)
 		this.bot_pickupbasevalue = pickupbasevalue;
 		this.wpcolor = clr;
 		this.mdl = modelname;
-		this.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+		this.model = strzone(W_Model(strcat("g_", modelname, ".md3")));
 		this.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
 		this.w_crosshair = strzone(car(crosshair));
 		string s = cdr(crosshair);

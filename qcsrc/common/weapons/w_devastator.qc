@@ -295,7 +295,7 @@ void W_Devastator_Think(void)
 			{
 				Send_Effect("rocket_guide", self.origin, self.velocity, 1);
 				// TODO add a better sound here
-				sound(self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
+				sound(self.realowner, CH_WEAPON_B, W_Sound("rocket_mode"), VOL_BASE, ATTN_NORM);
 				self.count = 1;
 			}
 		}
@@ -342,7 +342,7 @@ void W_Devastator_Attack(void)
 
 	W_DecreaseAmmo(WEP_CVAR(devastator, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(devastator, damage));
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, W_Sound("rocket_fire"), CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	Send_Effect("rocketlauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -559,7 +559,7 @@ bool W_Devastator(int req)
 						}
 					}
 					if(rockfound)
-						sound(self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+						sound(self, CH_WEAPON_B, W_Sound("rocket_det"), VOL_BASE, ATTN_NORM);
 				}
 			}
 
@@ -570,12 +570,12 @@ bool W_Devastator(int req)
 			//if(autocvar_sv_precacheweapons)
 			//{
 				precache_model("models/flash.md3");
-				precache_model("models/weapons/g_rl.md3");
-				precache_model("models/weapons/v_rl.md3");
-				precache_model("models/weapons/h_rl.iqm");
-				precache_sound("weapons/rocket_det.wav");
-				precache_sound("weapons/rocket_fire.wav");
-				precache_sound("weapons/rocket_mode.wav");
+				precache_model(W_Model("g_rl.md3"));
+				precache_model(W_Model("v_rl.md3"));
+				precache_model(W_Model("h_rl.iqm"));
+				precache_sound(W_Sound("rocket_det"));
+				precache_sound(W_Sound("rocket_fire"));
+				precache_sound(W_Sound("rocket_mode"));
 			//}
 			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
@@ -637,7 +637,7 @@ bool W_Devastator(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(devastator, ammo), "weapons/reload.wav");
+			W_Reload(WEP_CVAR(devastator, ammo), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -666,13 +666,13 @@ bool W_Devastator(int req)
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/rocket_impact.wav");
+			precache_sound(W_Sound("rocket_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

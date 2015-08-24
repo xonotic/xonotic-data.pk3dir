@@ -4,7 +4,7 @@
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
-    this.m_model                =   "models/items/item_armor_small.md3";
+    this.m_model                =   "item_armor_small.md3";
     this.m_sound                =   "misc/armor1.wav";
     this.m_name                 =   "5 Armor";
     this.m_icon                 =   "armor";
@@ -17,7 +17,7 @@ REGISTER_ITEM(ArmorSmall, Armor) {
 }
 
 REGISTER_ITEM(ArmorMedium, Armor) {
-    this.m_model                =   "models/items/item_armor_medium.md3";
+    this.m_model                =   "item_armor_medium.md3";
     this.m_sound                =   "misc/armor10.wav";
     this.m_name                 =   "25 Armor";
     this.m_icon                 =   "armor";
@@ -30,7 +30,7 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 }
 
 REGISTER_ITEM(ArmorLarge, Armor) {
-    this.m_model                =   "models/items/item_armor_big.md3";
+    this.m_model                =   "item_armor_big.md3";
     this.m_sound                =   "misc/armor17_5.wav";
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
@@ -45,7 +45,7 @@ REGISTER_ITEM(ArmorLarge, Armor) {
 }
 
 REGISTER_ITEM(ArmorMega, Armor) {
-    this.m_model                =   "models/items/item_armor_large.md3";
+    this.m_model                =   "item_armor_large.md3";
     this.m_sound                =   "misc/armor25.wav";
     this.m_name                 =   "100 Armor";
     this.m_icon                 =   "item_large_armor";

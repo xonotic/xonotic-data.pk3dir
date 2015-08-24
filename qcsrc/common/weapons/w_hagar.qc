@@ -127,7 +127,7 @@ void W_Hagar_Attack(void)
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(hagar, ammo));
 
-	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
+	W_SetupShot(self, false, 2, W_Sound("hagar_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
 	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
@@ -170,7 +170,7 @@ void W_Hagar_Attack2(void)
 
 	W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
 
-	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	W_SetupShot(self, false, 2, W_Sound("hagar_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
 	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
@@ -223,7 +223,7 @@ void W_Hagar_Attack2_Load_Release(void)
 
 	weapon_prepareattack_do(1, WEP_CVAR_SEC(hagar, refire));
 
-	W_SetupShot(self, false, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
+	W_SetupShot(self, false, 2, W_Sound("hagar_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
@@ -317,7 +317,7 @@ void W_Hagar_Attack2_Load(void)
 				self.weaponentity.state = WS_READY;
 				W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo
 				self.hagar_load = 0;
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, W_Sound("hagar_beep"), VOL_BASE, ATTN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
 				self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_speed) * W_WeaponRateFactor();
@@ -336,7 +336,7 @@ void W_Hagar_Attack2_Load(void)
 					W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
 					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
-					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
+					sound(self, CH_WEAPON_B, W_Sound("hagar_load"), VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
 
 					if(self.hagar_load >= WEP_CVAR_SEC(hagar, load_max))
 						self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_hold) * W_WeaponRateFactor();
@@ -347,7 +347,7 @@ void W_Hagar_Attack2_Load(void)
 			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// if this is the last rocket we can load, play a beep sound to notify the player
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, W_Sound("hagar_beep"), VOL_BASE, ATTN_NORM);
 				self.hagar_loadbeep = true;
 			}
 		}
@@ -366,7 +366,7 @@ void W_Hagar_Attack2_Load(void)
 			if(!self.hagar_warning && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// we're about to automatically release after holding time, play a beep sound to notify the player
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, W_Sound("hagar_beep"), VOL_BASE, ATTN_NORM);
 				self.hagar_warning = true;
 			}
 		}
@@ -449,12 +449,12 @@ bool W_Hagar(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_hagar.md3");
-			precache_model("models/weapons/v_hagar.md3");
-			precache_model("models/weapons/h_hagar.iqm");
-			precache_sound("weapons/hagar_fire.wav");
-			precache_sound("weapons/hagar_load.wav");
-			precache_sound("weapons/hagar_beep.wav");
+			precache_model(W_Model("g_hagar.md3"));
+			precache_model(W_Model("v_hagar.md3"));
+			precache_model(W_Model("h_hagar.iqm"));
+			precache_sound(W_Sound("hagar_fire"));
+			precache_sound(W_Sound("hagar_load"));
+			precache_sound(W_Sound("hagar_beep"));
 			HAGAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -503,7 +503,7 @@ bool W_Hagar(int req)
 		case WR_RELOAD:
 		{
 			if(!self.hagar_load) // require releasing loaded rockets first
-				W_Reload(min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), "weapons/reload.wav");
+				W_Reload(min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), W_Sound("reload"));
 
 			return true;
 		}
@@ -535,20 +535,20 @@ bool W_Hagar(int req)
 			if(!w_issilent)
 			{
 				if(w_random<0.15)
-					sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("hagexp1"), VOL_BASE, ATTN_NORM);
 				else if(w_random<0.7)
-					sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("hagexp2"), VOL_BASE, ATTN_NORM);
 				else
-					sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("hagexp3"), VOL_BASE, ATTN_NORM);
 			}
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/hagexp1.wav");
-			precache_sound("weapons/hagexp2.wav");
-			precache_sound("weapons/hagexp3.wav");
+			precache_sound(W_Sound("hagexp1"));
+			precache_sound(W_Sound("hagexp2"));
+			precache_sound(W_Sound("hagexp3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

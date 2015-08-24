@@ -4,7 +4,7 @@
 #endif
 
 REGISTER_ITEM(Bullets, Ammo) {
-    this.m_model    =   "models/items/a_bullets.mdl";
+    this.m_model    =   "a_bullets.mdl";
     this.m_name     =   "bullets";
     this.m_icon     =   "ammo_bullets";
 #ifdef SVQC
@@ -13,7 +13,7 @@ REGISTER_ITEM(Bullets, Ammo) {
 #endif
 }
 REGISTER_ITEM(Cells, Ammo) {
-    this.m_model    =   "models/items/a_cells.md3";
+    this.m_model    =   "a_cells.md3";
     this.m_name     =   "cells";
     this.m_icon     =   "ammo_cells";
 #ifdef SVQC
@@ -22,7 +22,7 @@ REGISTER_ITEM(Cells, Ammo) {
 #endif
 }
 REGISTER_ITEM(Plasma, Ammo) {
-    this.m_model    =   "models/items/a_cells.md3";
+    this.m_model    =   "a_cells.md3";
     this.m_name     =   "plasma";
     this.m_icon     =   "ammo_plasma";
 #ifdef SVQC
@@ -31,7 +31,7 @@ REGISTER_ITEM(Plasma, Ammo) {
 #endif
 }
 REGISTER_ITEM(Rockets, Ammo) {
-    this.m_model    =   "models/items/a_rockets.md3";
+    this.m_model    =   "a_rockets.md3";
     this.m_name     =   "rockets";
     this.m_icon     =   "ammo_rockets";
 #ifdef SVQC
@@ -40,7 +40,7 @@ REGISTER_ITEM(Rockets, Ammo) {
 #endif
 }
 REGISTER_ITEM(Shells, Ammo) {
-    this.m_model    =   "models/items/a_shells.md3";
+    this.m_model    =   "a_shells.md3";
     this.m_name     =   "shells";
     this.m_icon     =   "ammo_shells";
 #ifdef SVQC

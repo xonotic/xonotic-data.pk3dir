@@ -32,7 +32,7 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
 		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
-			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTEN_NORM);
+			sound(player, CH_TRIGGER, W_Sound("strength_fire"), VOL_BASE, ATTEN_NORM);
 			player.prevstrengthsound = time;
 		}
 		player.prevstrengthsoundattempt = time;

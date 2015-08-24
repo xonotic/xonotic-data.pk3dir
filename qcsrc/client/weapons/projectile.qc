@@ -315,7 +315,7 @@ void Ent_Projectile()
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 
-			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_RPC: setmodel(self, W_Model("ok_rocket"));self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
 				if(MUTATOR_CALLHOOK(Ent_Projectile, self))
@@ -323,7 +323,7 @@ void Ent_Projectile()
 
 				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 				{
-					setmodel(self, "models/weapons/v_ok_grenade.md3");
+					setmodel(self, W_Model("v_ok_grenade"));
 					self.traileffect = particleeffectnum(Nade_TrailEffect(self.cnt, self.team));
 					break;
 				}
@@ -342,7 +342,7 @@ void Ent_Projectile()
 		{
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("electro_fly"), VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -352,7 +352,7 @@ void Ent_Projectile()
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("rocket_fly"), VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				break;
@@ -400,12 +400,12 @@ void Ent_Projectile()
 				break;
 			case PROJECTILE_NAPALM_FOUNTAIN:
 			case PROJECTILE_FIREBALL:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("fireball_fly2"), VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				break;
 			case PROJECTILE_FIREMINE:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("fireball_fly"), VOL_BASE, ATTEN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				self.mins = '-4 -4 -4';
@@ -420,7 +420,7 @@ void Ent_Projectile()
 				self.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
@@ -433,17 +433,17 @@ void Ent_Projectile()
             case PROJECTILE_RAPTORCANNON:
 				break;
             case PROJECTILE_SPIDERROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
 				break;
             case PROJECTILE_WAKIROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
 				break;
             /*
             case PROJECTILE_WAKICANNON:
 				break;
 			case PROJECTILE_BUMBLE_GUN:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("electro_fly"), VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -516,14 +516,14 @@ void Projectile_Precache()
 	precache_model("models/tracer.mdl");
 	precache_model("models/sphere/sphere.md3");
 
-	precache_model("models/weapons/v_ok_grenade.md3");
-	precache_model("models/weapons/ok_rocket.md3");
+	precache_model(W_Model("v_ok_grenade"));
+	precache_model(W_Model("ok_rocket"));
 
-	precache_sound("weapons/electro_fly.wav");
-	precache_sound("weapons/rocket_fly.wav");
-	precache_sound("weapons/fireball_fly.wav");
-	precache_sound("weapons/fireball_fly2.wav");
-	precache_sound("weapons/tag_rocket_fly.wav");
+	precache_sound(W_Sound("electro_fly"));
+	precache_sound(W_Sound("rocket_fly"));
+	precache_sound(W_Sound("fireball_fly"));
+	precache_sound(W_Sound("fireball_fly2"));
+	precache_sound(W_Sound("tag_rocket_fly"));
 
 	MUTATOR_CALLHOOK(PrecacheProjectiles);
 }

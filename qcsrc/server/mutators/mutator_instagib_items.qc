@@ -9,7 +9,7 @@ GETTER(float, instagib_respawntime_ammo)
 GETTER(float, instagib_respawntimejitter_ammo)
 
 REGISTER_ITEM(VaporizerCells, Ammo) {
-    this.m_model                =   "models/items/a_cells.md3";
+    this.m_model                =   "a_cells.md3";
     this.m_sound                =   "misc/itempickup.wav";
     this.m_name                 =   "Vaporizer Ammo";
     this.m_icon                 =   "ammo_supercells";
@@ -22,7 +22,7 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
 }
 
 REGISTER_ITEM(ExtraLife, Powerup) {
-    this.m_model                =   "models/items/g_h100.md3";
+    this.m_model                =   "g_h100.md3";
     this.m_sound                =   "misc/megahealth.wav";
     this.m_name                 =   "Extralife";
     this.m_icon                 =   "item_mega_health";

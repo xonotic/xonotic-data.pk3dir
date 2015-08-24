@@ -4,7 +4,7 @@
 #endif
 
 REGISTER_ITEM(HealthSmall, Health) {
-    this.m_model                =   "models/items/g_h1.md3";
+    this.m_model                =   "g_h1.md3";
     this.m_sound                =   "misc/minihealth.wav";
     this.m_name                 =   "5 Health";
     this.m_icon                 =   "health";
@@ -17,7 +17,7 @@ REGISTER_ITEM(HealthSmall, Health) {
 }
 
 REGISTER_ITEM(HealthMedium, Health) {
-    this.m_model                =   "models/items/g_h25.md3";
+    this.m_model                =   "g_h25.md3";
     this.m_sound                =   "misc/mediumhealth.wav";
     this.m_name                 =   "25 Health";
     this.m_icon                 =   "health";
@@ -30,7 +30,7 @@ REGISTER_ITEM(HealthMedium, Health) {
 }
 
 REGISTER_ITEM(HealthLarge, Health) {
-    this.m_model                =   "models/items/g_h50.md3";
+    this.m_model                =   "g_h50.md3";
     this.m_sound                =   "misc/mediumhealth.wav";
     this.m_name                 =   "50 Health";
     this.m_icon                 =   "health";
@@ -45,7 +45,7 @@ REGISTER_ITEM(HealthLarge, Health) {
 }
 
 REGISTER_ITEM(HealthMega, Health) {
-    this.m_model                =   "models/items/g_h100.md3";
+    this.m_model                =   "g_h100.md3";
     this.m_sound                =   "misc/megahealth.wav";
     this.m_name                 =   "100 Health";
     this.m_icon                 =   "item_mega_health";

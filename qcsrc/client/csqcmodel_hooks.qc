@@ -436,9 +436,9 @@ void CSQCModel_AutoTagIndex_Apply(void)
 			if(self.tag_entity)
 			{
 				// the best part is: IT EXISTS
-				if(substring(self.model, 0, 17) == "models/weapons/v_")
+				if(substring(self.model, 0, 14) == "models/weapons")
 				{
-					if(substring(self.tag_entity.model, 0, 17) == "models/weapons/h_")
+					if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
 					{
 						self.tag_index = gettagindex(self.tag_entity, "weapon");
 						if(!self.tag_index)
@@ -458,7 +458,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 					}
 				}
 
-				if(substring(self.tag_entity.model, 0, 17) == "models/weapons/v_")
+				if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
 				{
 					self.tag_index = gettagindex(self.tag_entity, "shot");
 					if(!self.tag_index)

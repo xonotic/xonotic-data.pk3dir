@@ -56,12 +56,42 @@ entity frag_target;
 int frag_deathtype;
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
-/** called when a player dies to e.g. remove stuff he was carrying. */
+/** called when a player dies to e.g. remove stuff he was carrying */
 #define EV_PlayHitsound(i, o) \
     /**/ i(entity, frag_victim) \
     /**/
 entity frag_victim;
 MUTATOR_HOOKABLE(PlayHitsound, EV_PlayHitsound);
+
+/** called when a weapon sound is about to be played, allows custom paths etc. */
+#define EV_WeaponSound(i, o) \
+    /**/ i(string, weapon_sound) \
+    /**/ i(string, weapon_sound_output) \
+    /**/ o(string, weapon_sound_output) \
+    /**/
+string weapon_sound;
+string weapon_sound_output;
+MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
+
+/** called when a weapon model is about to be set, allows custom paths etc. */
+#define EV_WeaponModel(i, o) \
+    /**/ i(string, weapon_model) \
+    /**/ i(string, weapon_model_output) \
+    /**/ o(string, weapon_model_output) \
+    /**/
+string weapon_model;
+string weapon_model_output;
+MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);
+
+/** called when an item model is about to be set, allows custom paths etc. */
+#define EV_ItemModel(i, o) \
+    /**/ i(string, item_model) \
+    /**/ i(string, item_model_output) \
+    /**/ o(string, item_model_output) \
+    /**/
+string item_model;
+string item_model_output;
+MUTATOR_HOOKABLE(ItemModel, EV_ItemModel);
 
 /** called when a player presses the jump key */
 #define EV_PlayerJump(i, o) \

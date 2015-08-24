@@ -283,7 +283,7 @@ float CheatImpulse(float i)
 				e = self;
 
 			Send_Effect("rocket_explode", e.origin, '0 0 0', 1);
-			sound(e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			sound(e, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
