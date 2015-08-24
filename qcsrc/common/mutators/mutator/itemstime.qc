@@ -194,4 +194,8 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
     return t;
 }
 
+MUTATOR_HOOKFUNCTION(itemstime, reset_map_global) {
+    Item_ItemsTime_ResetTimes();
+}
+
 #endif

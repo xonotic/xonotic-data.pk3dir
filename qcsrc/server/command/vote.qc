@@ -432,8 +432,6 @@ void ReadyRestart_think()
 	return;
 }
 
-void Item_ItemsTime_ResetTimes();
-
 // Forces a restart of the game without actually reloading the map // this is a mess...
 void ReadyRestart_force()
 {
@@ -463,8 +461,6 @@ void ReadyRestart_force()
 
 	// disable the warmup global for the server
 	warmup_stage = 0; // once the game is restarted the game is in match stage
-
-	Item_ItemsTime_ResetTimes();
 
 	// reset the .ready status of all players (also spectators)
 	FOR_EACH_REALCLIENT(tmp_player) { tmp_player.ready = 0; }
