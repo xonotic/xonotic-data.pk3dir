@@ -146,6 +146,7 @@ float old_p_healthtime, old_p_armortime;
 // set to -1 to forcedly stop effects when we switch spectated player (e.g. from playerX: 70h to playerY: 50h)
 int prev_p_health, prev_p_armor;
 
+void HUD_ItemsTime();
 
 #define HUD_PANELS(HUD_PANEL) \
 	HUD_PANEL(WEAPONS      , HUD_Weapons      , weapons) \

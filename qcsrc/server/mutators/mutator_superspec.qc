@@ -123,7 +123,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 
 		if((self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
 			(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
-			(self.autospec_flags & ASF_MEGA_AR && _item.itemdef == ITEM_ArmorLarge) ||
+			(self.autospec_flags & ASF_MEGA_AR && _item.itemdef == ITEM_ArmorMega) ||
 			(self.autospec_flags & ASF_MEGA_HP && _item.itemdef == ITEM_HealthMega) ||
 			(self.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
 		{

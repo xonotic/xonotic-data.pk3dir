@@ -103,10 +103,10 @@ void W_Vortex_Attack(float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(self, true, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
+	W_SetupShot(self, true, 5, W_Sound("nexfire"), CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
-		sound(self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
+		sound(self, CH_WEAPON_B, W_Sound("nexcharge"), VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
@@ -254,14 +254,14 @@ bool W_Vortex(int req)
 		case WR_INIT:
 		{
 			precache_model("models/nexflash.md3");
-			precache_model("models/weapons/g_nex.md3");
-			precache_model("models/weapons/v_nex.md3");
-			precache_model("models/weapons/h_nex.iqm");
-			precache_sound("weapons/nexfire.wav");
-			precache_sound("weapons/nexcharge.wav");
-			precache_sound("weapons/nexwhoosh1.wav");
-			precache_sound("weapons/nexwhoosh2.wav");
-			precache_sound("weapons/nexwhoosh3.wav");
+			precache_model(W_Model("g_nex.md3"));
+			precache_model(W_Model("v_nex.md3"));
+			precache_model(W_Model("h_nex.iqm"));
+			precache_sound(W_Sound("nexfire"));
+			precache_sound(W_Sound("nexcharge"));
+			precache_sound(W_Sound("nexwhoosh1"));
+			precache_sound(W_Sound("nexwhoosh2"));
+			precache_sound(W_Sound("nexwhoosh3"));
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -302,7 +302,7 @@ bool W_Vortex(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -329,13 +329,13 @@ bool W_Vortex(int req)
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/neximpact.wav");
+			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

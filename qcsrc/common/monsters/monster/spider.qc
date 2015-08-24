@@ -59,7 +59,7 @@ void spider_shootweb()
 {
 	monster_makevectors(self.enemy);
 
-	sound(self, CH_SHOTS, "weapons/electro_fire2.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("electro_fire2"), VOL_BASE, ATTEN_NORM);
 
 	entity proj = spawn ();
 	proj.classname = "plasma";
@@ -154,7 +154,7 @@ float m_spider(float req)
 		case MR_PRECACHE:
 		{
 			precache_model("models/monsters/spider.dpm");
-			precache_sound ("weapons/electro_fire2.wav");
+			precache_sound (W_Sound("electro_fire2"));
 			return true;
 		}
 	}

@@ -90,6 +90,9 @@ string GetAmmoPicture(.int ammotype);
 int GetAmmoStat(.int ammotype);
 #endif
 
+string W_Sound(string w_snd);
+string W_Model(string w_mdl);
+
 // ammo types
 .int ammo_shells;
 .int ammo_nails;
@@ -183,6 +186,10 @@ CLASS(Weapon, Object)
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, message, string, "AOL CD Thrower");
 
+	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
+		returns(this.message, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
+	}
+
 	CONSTRUCTOR(Weapon,
 		bool(int) function,
 		.int ammotype,
@@ -205,7 +212,7 @@ CLASS(Weapon, Object)
 		this.bot_pickupbasevalue = pickupbasevalue;
 		this.wpcolor = clr;
 		this.mdl = modelname;
-		this.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+		this.model = strzone(W_Model(strcat("g_", modelname, ".md3")));
 		this.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
 		this.w_crosshair = strzone(car(crosshair));
 		string s = cdr(crosshair);
@@ -213,7 +220,6 @@ CLASS(Weapon, Object)
 		this.model2 = strzone(wepimg);
 		this.netname = refname;
 		this.message = wepname;
-		return this;
 	}
 	void register_weapon(entity this, int id, WepSet bit)
 	{

@@ -60,7 +60,7 @@ void W_Vaporizer_Attack(void)
 	W_SetupShot(self, true, 0, "", CH_WEAPON_A, 10000);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
-	sound (self, CH_WEAPON_A, "weapons/minstanexfire.wav", VOL_BASE * 0.8, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, W_Sound("minstanexfire"), VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -191,13 +191,13 @@ float W_Vaporizer(float req)
 		case WR_INIT:
 		{
 			precache_model("models/nexflash.md3");
-			precache_model("models/weapons/g_minstanex.md3");
-			precache_model("models/weapons/v_minstanex.md3");
-			precache_model("models/weapons/h_minstanex.iqm");
-			precache_sound("weapons/minstanexfire.wav");
-			precache_sound("weapons/nexwhoosh1.wav");
-			precache_sound("weapons/nexwhoosh2.wav");
-			precache_sound("weapons/nexwhoosh3.wav");
+			precache_model(W_Model("g_minstanex.md3"));
+			precache_model(W_Model("v_minstanex.md3"));
+			precache_model(W_Model("h_minstanex.iqm"));
+			precache_sound(W_Sound("minstanexfire"));
+			precache_sound(W_Sound("nexwhoosh1"));
+			precache_sound(W_Sound("nexwhoosh2"));
+			precache_sound(W_Sound("nexwhoosh3"));
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
@@ -240,7 +240,7 @@ float W_Vaporizer(float req)
 			else
 				used_ammo = vaporizer_ammo;
 
-			W_Reload(used_ammo, "weapons/reload.wav");
+			W_Reload(used_ammo, W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -267,19 +267,19 @@ float W_Vaporizer(float req)
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
 				pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM); }
 			}
 			else
 			{
 				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM); }
 			}
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/laserimpact.wav");
-			precache_sound("weapons/neximpact.wav");
+			precache_sound(W_Sound("laserimpact"));
+			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

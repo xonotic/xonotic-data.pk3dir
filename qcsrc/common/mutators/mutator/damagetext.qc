@@ -60,7 +60,6 @@ CLASS(DamageText, Object)
         CONSTRUCT(DamageText);
         this.m_group = _group;
         DamageText_update(this, _origin, _health, _armor);
-        return this;
     }
 ENDCLASS(DamageText)
 #endif

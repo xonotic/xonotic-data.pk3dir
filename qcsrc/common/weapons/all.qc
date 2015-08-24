@@ -291,12 +291,12 @@ string GetAmmoPicture(.int ammotype)
 {
 	switch (ammotype)
 	{
-		case ammo_shells:  return ITEM_Shells.m_ammoPic;
-		case ammo_nails:   return ITEM_Bullets.m_ammoPic;
-		case ammo_rockets: return ITEM_Rockets.m_ammoPic;
-		case ammo_cells:   return ITEM_Cells.m_ammoPic;
-		case ammo_plasma:  return ITEM_Plasma.m_ammoPic;
-		case ammo_fuel:    return ITEM_JetpackFuel.m_ammoPic;
+		case ammo_shells:  return ITEM_Shells.m_icon;
+		case ammo_nails:   return ITEM_Bullets.m_icon;
+		case ammo_rockets: return ITEM_Rockets.m_icon;
+		case ammo_cells:   return ITEM_Cells.m_icon;
+		case ammo_plasma:  return ITEM_Plasma.m_icon;
+		case ammo_fuel:    return ITEM_JetpackFuel.m_icon;
 		default: return ""; // wtf, no ammo type?
 	}
 }
@@ -330,4 +330,23 @@ int GetAmmoStat(.int ammotype)
 	}
 }
 #endif
+
+string W_Sound(string w_snd)
+{
+	string output = strcat("weapons/", w_snd, ".wav");
+#ifdef SVQC
+	MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
+#endif
+	return output;
+}
+
+string W_Model(string w_mdl)
+{
+	string output = strcat("models/weapons/", w_mdl);
+#ifdef SVQC
+	MUTATOR_CALLHOOK(WeaponModel, w_mdl, output);
+#endif
+	return output;
+}
+
 #endif

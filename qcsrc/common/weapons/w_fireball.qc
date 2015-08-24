@@ -182,7 +182,7 @@ void W_Fireball_Attack1(void)
 {
 	entity proj;
 
-	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, "weapons/fireball_fire2.wav", CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, W_Sound("fireball_fire2"), CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
 
 	Send_Effect("fireball_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
@@ -251,7 +251,7 @@ void W_Fireball_Attack1_Frame1(void)
 void W_Fireball_Attack1_Frame0(void)
 {
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound(self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_WEAPON_SINGLE, W_Sound("fireball_prefire2"), VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
 }
 
@@ -316,8 +316,8 @@ void W_Fireball_Attack2(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
-	traceline(w_shotorg, w_shotorg + f_diff.x * v_up + f_diff.y * v_right, MOVE_NORMAL, self);
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, W_Sound("fireball_fire"), CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
 	Send_Effect("fireball_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
@@ -399,13 +399,13 @@ bool W_Fireball(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_fireball.md3");
-			precache_model("models/weapons/v_fireball.md3");
-			precache_model("models/weapons/h_fireball.iqm");
+			precache_model(W_Model("g_fireball.md3"));
+			precache_model(W_Model("v_fireball.md3"));
+			precache_model(W_Model("h_fireball.iqm"));
 			precache_model("models/sphere/sphere.md3");
-			precache_sound("weapons/fireball_fire.wav");
-			precache_sound("weapons/fireball_fire2.wav");
-			precache_sound("weapons/fireball_prefire2.wav");
+			precache_sound(W_Sound("fireball_fire"));
+			precache_sound(W_Sound("fireball_fire2"));
+			precache_sound(W_Sound("fireball_prefire2"));
 			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -464,14 +464,14 @@ bool W_Fireball(int req)
 				org2 = w_org + w_backoff * 16;
 				pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTEN_NORM * 0.25); // long range boom
+					sound(self, CH_SHOTS, W_Sound("fireball_impact2"), VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 			}
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/fireball_impact2.wav");
+			precache_sound(W_Sound("fireball_impact2"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

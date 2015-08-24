@@ -47,13 +47,14 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine) {
     OVERLOAD(spawn##cname, this, ##__VA_ARGS__)
 
 #define CONSTRUCTOR(cname, ...) \
-    cname OVERLOAD(spawn##cname, cname this, __VA_ARGS__)
+    cname OVERLOAD(spawn##cname, cname this, __VA_ARGS__) { return = this; } \
+    [[accumulate]] cname OVERLOAD(spawn##cname, cname this, __VA_ARGS__)
 
 .string vtblname;
 .entity vtblbase;
 
 void RegisterClasses() { }
-ACCUMULATE_FUNCTION(__static_init, RegisterClasses)
+STATIC_INIT(RegisterClasses) { RegisterClasses(); }
 
 #define VTBL(cname, base) \
     INIT_STATIC(cname); \
@@ -111,11 +112,26 @@ ACCUMULATE_FUNCTION(__static_init, RegisterClasses)
     [[last]] INIT(cname) { return this; }
 
 #define SUPER(cname) (cname##_vtbl.vtblbase)
+#define super (this.vtblbase.vtblbase)
 
 #define spawn_static(this)
 #define spawn_1(this)
 #define _vtbl NULL
-CLASS(Object, ); ENDCLASS(Object)
+CLASS(Object, );
+    METHOD(Object, describe, string(entity this)) {
+        string s = _("No description");
+        if (cvar("developer")) {
+            for (int i = 0, n = numentityfields(); i < n; ++i) {
+                string value = getentityfieldstring(i, this);
+                if (value != "") s = sprintf("%s\n%s = %s", s, entityfieldname(i), value);
+            }
+    	}
+        return s;
+    }
+    METHOD(Object, display, void(entity this, void(string name, string icon) returns)) {
+        returns(sprintf("entity %i", this), "nopreview_map");
+    }
+ENDCLASS(Object)
 #undef spawn_static
 #undef spawn_1
 #undef _vtbl

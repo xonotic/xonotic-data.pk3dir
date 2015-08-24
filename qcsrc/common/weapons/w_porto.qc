@@ -369,11 +369,17 @@ bool W_Porto(int req)
 
 			return true;
 		}
+		case WR_CHECKAMMO1:
+		case WR_CHECKAMMO2:
+		{
+			// always allow infinite ammo
+			return true;
+		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_porto.md3");
-			precache_model("models/weapons/v_porto.md3");
-			precache_model("models/weapons/h_porto.iqm");
+			precache_model(W_Model("g_porto.md3"));
+			precache_model(W_Model("v_porto.md3"));
+			precache_model(W_Model("h_porto.iqm"));
 			precache_model("models/portal.md3");
 			precache_sound("porto/bounce.wav");
 			precache_sound("porto/create.wav");

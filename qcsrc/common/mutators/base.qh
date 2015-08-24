@@ -24,7 +24,6 @@ CLASS(Callback, Object)
     CONSTRUCTOR(Callback, bool() func) {
         CONSTRUCT(Callback);
         this.cbc_func = func;
-        return this;
     }
 ENDCLASS(Callback)
 
@@ -40,7 +39,6 @@ CLASS(CallbackChain, Object)
             CONSTRUCT(CallbackNode);
             this.cbc = it;
             this.cbc_order = order;
-            return this;
         }
     ENDCLASS(CallbackNode)
 
@@ -49,7 +47,6 @@ CLASS(CallbackChain, Object)
     CONSTRUCTOR(CallbackChain, string _name) {
         CONSTRUCT(CallbackChain);
         this.netname = _name;
-        return this;
     }
 
     bool CallbackChain_Add(CallbackChain this, Callback cb, int order)
@@ -155,7 +152,6 @@ CLASS(Mutator, Object)
         CONSTRUCT(Mutator);
         this.mutatorname = _name;
         this.mutatorfunc = func;
-        return this;
     }
 ENDCLASS(Mutator)
 

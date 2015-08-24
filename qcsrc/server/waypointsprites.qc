@@ -260,7 +260,7 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 {
 	float dt;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WAYPOINT);
+	WriteMutator(MSG_ENTITY, waypointsprites);
 
 	sendflags = sendflags & 0x7F;
 

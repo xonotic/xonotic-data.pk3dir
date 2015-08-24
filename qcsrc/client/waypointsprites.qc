@@ -170,19 +170,17 @@ float spritelookupblinkvalue(string s)
 	if(get_weaponinfo(stof(substring(s, 4, strlen(s)))).spawnflags & WEP_FLAG_SUPERWEAPON)
 		return 2;
 
+	FOREACH(ITEMS, it.m_waypoint == s, LAMBDA(
+		return it.m_waypointblink;
+	));
+
 	switch(s)
 	{
 		case "ons-cp-atck":      return 2;
 		case "ons-cp-dfnd":      return 0.5;
-		case "item_health_mega": return 2;
-		case "item_armor_large": return 2;
 		case "item-invis":       return 2;
 		case "item-extralife":   return 2;
 		case "item-speed":       return 2;
-		case "item-strength":    return 2;
-		case "item-shield":      return 2;
-		case "item-fuelregen":   return 2;
-		case "item-jetpack":     return 2;
 		case "tagged-target":    return 2;
 		default:                 return 1;
 	}
@@ -253,15 +251,9 @@ string spritelookuptext(string s)
 		case "dom-blue": return _("Control point");
 		case "dom-yellow": return _("Control point");
 		case "dom-pink": return _("Control point");
-		case "item_health_mega": return _("Mega health");
-		case "item_armor_large": return _("Large armor");
 		case "item-invis": return _("Invisibility");
 		case "item-extralife": return _("Extra life");
 		case "item-speed": return _("Speed");
-		case "item-strength": return _("Strength");
-		case "item-shield": return _("Shield");
-		case "item-fuelregen": return _("Fuel regen");
-		case "item-jetpack": return _("Jet Pack");
 		case "frozen": return _("Frozen!");
 		case "tagged-target": return _("Tagged");
 		case "vehicle": return _("Vehicle");
@@ -599,6 +591,7 @@ void Ent_RemoveWaypointSprite()
 		strunzone(self.netname3);
 }
 
+/** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 void Ent_WaypointSprite()
 {
 	int sendflags, f, t;

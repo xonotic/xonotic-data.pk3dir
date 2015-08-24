@@ -117,12 +117,12 @@ void CL_WeaponEntity_SetModel(string name)
 		// if there is a child entity, hide it until we're sure we use it
 		if (self.weaponentity)
 			self.weaponentity.model = "";
-		setmodel(self, strcat("models/weapons/v_", name, ".md3")); // precision set below
+		setmodel(self, W_Model(strcat("v_", name, ".md3")));
 		v_shot_idx = gettagindex(self, "shot"); // used later
 		if(!v_shot_idx)
 			v_shot_idx = gettagindex(self, "tag_shot");
 
-		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
+		setmodel(self, W_Model(strcat("h_", name, ".iqm")));
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
 		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
@@ -135,14 +135,14 @@ void CL_WeaponEntity_SetModel(string name)
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setmodel(self.weaponentity, W_Model(strcat("v_", name, ".md3")));
 			setattachment(self.weaponentity, self, "weapon");
 		}
 		else if(gettagindex(self, "tag_weapon"))
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setmodel(self.weaponentity, W_Model(strcat("v_", name, ".md3")));
 			setattachment(self.weaponentity, self, "tag_weapon");
 		}
 		else
@@ -379,7 +379,7 @@ void CL_ExteriorWeaponentity_Think()
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
-			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
+			setmodel(self, W_Model(strcat("v_", self.owner.weaponname, ".md3")));
 		else
 			self.model = "";
 
@@ -482,7 +482,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_WEAPON_A, W_Sound("dryfire"), VOL_BASE, ATTEN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -740,7 +740,7 @@ void W_WeaponFrame()
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 			#endif
-				sound(self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_SINGLE, W_Sound("weapon_switch"), VOL_BASE, ATTN_NORM);
 				self.weaponentity.state = WS_DROP;
 				weapon_thinkf(WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
 			#ifndef INDEPENDENT_ATTACK_FINISHED
@@ -935,7 +935,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	{
 		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
-			play2(self, "weapons/unavailable.wav");
+			play2(self, W_Sound("unavailable"));
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", WEP_NAME(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}

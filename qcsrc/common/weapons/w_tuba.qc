@@ -417,13 +417,13 @@ bool W_Tuba(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_tuba.md3");
-			precache_model("models/weapons/v_tuba.md3");
-			precache_model("models/weapons/h_tuba.iqm");
-			precache_model("models/weapons/v_akordeon.md3");
-			precache_model("models/weapons/h_akordeon.iqm");
-			precache_model("models/weapons/v_kleinbottle.md3");
-			precache_model("models/weapons/h_kleinbottle.iqm");
+			precache_model(W_Model("g_tuba.md3"));
+			precache_model(W_Model("v_tuba.md3"));
+			precache_model(W_Model("h_tuba.iqm"));
+			precache_model(W_Model("v_akordeon.md3"));
+			precache_model(W_Model("h_akordeon.iqm"));
+			precache_model(W_Model("v_kleinbottle.md3"));
+			precache_model(W_Model("h_kleinbottle.iqm"));
 			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
