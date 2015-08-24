@@ -35,6 +35,7 @@
 "+showscores"                           "mostra punteggi"
 "screenshot"                            "screenshot"
 "+hud_panel_radar_maximized"            "massimizza radar"
+"cl_cmd hud minigame"                   "attiva/disattiva il menù dei giochini"
 ""                                      ""
 ""                                      "Comunicazione"
 "messagemode"                           "chat pubblica"

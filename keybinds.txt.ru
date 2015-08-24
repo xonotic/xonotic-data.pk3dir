@@ -35,6 +35,7 @@
 "+showscores"                           "показать очки"
 "screenshot"                            "снимок экрана"
 "+hud_panel_radar_maximized"            "maximize radar (FIXME)"
+"cl_cmd hud minigame"                   "toggle minigame menu (FIXME)"
 ""                                      ""
 ""                                      "Общение"
 "messagemode"                           "общий чат"

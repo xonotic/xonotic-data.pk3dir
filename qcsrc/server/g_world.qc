@@ -613,6 +613,8 @@ void spawnfunc_worldspawn (void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
+	initialize_minigames();
+
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
 	TemporaryDB = db_create();

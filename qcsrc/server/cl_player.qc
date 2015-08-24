@@ -19,6 +19,8 @@
 #include "../common/playerstats.qh"
 #include "../csqcmodellib/sv_model.qh"
 
+#include "../common/minigames/sv_minigames.qh"
+
 #include "weapons/weaponstats.qh"
 
 #include "../common/animdecide.qh"
@@ -868,6 +870,15 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
+		}
+		else if ( teamsay && source.active_minigame )
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			FOR_EACH_REALCLIENT(head) 
+				if(head != source)
+				if(head.active_minigame == source.active_minigame)
+					sprint(head, msgstr);
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{

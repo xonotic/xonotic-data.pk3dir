@@ -57,6 +57,9 @@ weapons/projectile.qc // TODO
 
 ../common/viewloc.qc
 
+../common/minigames/minigames.qc
+../common/minigames/cl_minigames.qc
+
 ../common/items/all.qc
 ../common/monsters/all.qc
 ../common/mutators/all.qc

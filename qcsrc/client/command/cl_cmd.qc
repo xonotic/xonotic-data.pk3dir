@@ -254,6 +254,15 @@ void LocalCommand_hud(int request, int argc)
 					return;
 				}
 
+				case "minigame":
+				{
+					if(HUD_MinigameMenu_IsOpened())
+						HUD_MinigameMenu_Close();
+					else
+						HUD_MinigameMenu_Open();
+					return;
+				}
+
 				case "save":
 				{
 					if(argv(2))
@@ -305,7 +314,7 @@ void LocalCommand_hud(int request, int argc)
 			print("  'configname' is the name to save to for \"save\" action,\n");
 			print("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
 			print("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
-			print("  Full list of commands here: \"configure, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
+			print("  Full list of commands here: \"configure, minigame, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
 			return;
 		}
 	}
