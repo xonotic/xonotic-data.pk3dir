@@ -33,6 +33,9 @@ CLASS(Buff, Pickup)
 	ATTRIB(Buff, m_prettyName, string, "Buff")
 	ATTRIB(Buff, m_skin, int, 0)
 	ATTRIB(Buff, m_sprite, string, "")
+	METHOD(Buff, display, void(entity this, void(string name, string icon) returns)) {
+		returns(this.m_prettyName, sprintf("/gfx/hud/%s/buff_%s", cvar_string("menu_skin"), this.m_name));
+	}
 #ifdef SVQC
 	METHOD(Buff, m_time, float(entity));
 	float Buff_m_time(entity this) { return cvar(strcat("g_buffs_", this.netname, "_time")); }
