@@ -1189,7 +1189,7 @@ string Item_Model(string item_mdl)
 {
 	string output = strcat("models/items/", item_mdl);
 	MUTATOR_CALLHOOK(ItemModel, item_mdl, output);
-	return strzone(output);
+	return strzone(item_model_output);
 }
 
 void StartItemA (entity a)
