@@ -198,4 +198,13 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global) {
     Item_ItemsTime_ResetTimes();
 }
 
+MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver) {
+    Item_ItemsTime_SetTimesForPlayer(self);
+}
+
+MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn) {
+    if (warmup_stage) return;
+    Item_ItemsTime_ResetTimesForPlayer(self);
+}
+
 #endif
