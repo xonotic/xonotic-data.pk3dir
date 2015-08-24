@@ -400,7 +400,7 @@ float m_mage(float req)
 		{
 			precache_model("models/monsters/mage.dpm");
 			precache_sound (W_Sound("grenade_impact"));
-			precache_sound ("weapons/tagexp1.wav");
+			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
 	}

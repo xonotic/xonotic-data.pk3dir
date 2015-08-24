@@ -347,13 +347,13 @@ bool W_Hook(int req)
 			org2 = w_org + w_backoff * 2;
 			pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("hookbomb_impact"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/hookbomb_impact.wav");
+			precache_sound(W_Sound("hookbomb_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

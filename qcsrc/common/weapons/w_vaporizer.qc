@@ -267,19 +267,19 @@ float W_Vaporizer(float req)
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
 				pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM); }
 			}
 			else
 			{
 				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM); }
 			}
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/laserimpact.wav");
-			precache_sound("weapons/neximpact.wav");
+			precache_sound(W_Sound("laserimpact"));
+			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

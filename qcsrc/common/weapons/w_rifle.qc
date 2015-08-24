@@ -277,20 +277,20 @@ bool W_Rifle(int req)
 			if(!w_issilent)
 			{
 				if(w_random < 0.2)
-					sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.4)
-					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.5)
-					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTN_NORM);
 			}
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/ric1.wav");
-			precache_sound("weapons/ric2.wav");
-			precache_sound("weapons/ric3.wav");
+			precache_sound(W_Sound("ric1"));
+			precache_sound(W_Sound("ric2"));
+			precache_sound(W_Sound("ric3"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

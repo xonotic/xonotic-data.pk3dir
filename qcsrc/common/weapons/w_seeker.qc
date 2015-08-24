@@ -739,7 +739,7 @@ bool W_Seeker(int req)
 				if(w_deathtype & HITTYPE_SECONDARY)
 				{
 					if(!w_issilent)
-						sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("tag_impact"), 1, ATTEN_NORM);
 				}
 				else
 				{
@@ -747,11 +747,11 @@ bool W_Seeker(int req)
 					if(!w_issilent)
 					{
 						if(w_random<0.15)
-							sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
 						else if(w_random<0.7)
-							sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, W_Sound("tagexp2"), 1, ATTEN_NORM);
 						else
-							sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, W_Sound("tagexp3"), 1, ATTEN_NORM);
 					}
 				}
 			}
@@ -761,24 +761,24 @@ bool W_Seeker(int req)
 				if(!w_issilent)
 				{
 					if(w_random<0.15)
-						sound(self, CH_SHOTS, "weapons/seekerexp1.wav", 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("seekerexp1"), 1, ATTEN_NORM);
 					else if(w_random<0.7)
-						sound(self, CH_SHOTS, "weapons/seekerexp2.wav", 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("seekerexp2"), 1, ATTEN_NORM);
 					else
-						sound(self, CH_SHOTS, "weapons/seekerexp3.wav", 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("seekerexp3"), 1, ATTEN_NORM);
 				}
 			}
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/seekerexp1.wav");
-			precache_sound("weapons/seekerexp2.wav");
-			precache_sound("weapons/seekerexp3.wav");
-			precache_sound("weapons/tagexp1.wav");
-			precache_sound("weapons/tagexp2.wav");
-			precache_sound("weapons/tagexp3.wav");
-			precache_sound("weapons/tag_impact.wav");
+			precache_sound(W_Sound("seekerexp1"));
+			precache_sound(W_Sound("seekerexp2"));
+			precache_sound(W_Sound("seekerexp3"));
+			precache_sound(W_Sound("tagexp1"));
+			precache_sound(W_Sound("tagexp2"));
+			precache_sound(W_Sound("tagexp3"));
+			precache_sound(W_Sound("tag_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

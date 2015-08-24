@@ -702,21 +702,21 @@ bool W_Crylink(int req)
 			{
 				pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/crylink_impact2.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("crylink_impact2"), VOL_BASE, ATTN_NORM);
 			}
 			else
 			{
 				pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/crylink_impact.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("crylink_impact"), VOL_BASE, ATTN_NORM);
 			}
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/crylink_impact2.wav");
-			precache_sound("weapons/crylink_impact.wav");
+			precache_sound(W_Sound("crylink_impact2"));
+			precache_sound(W_Sound("crylink_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

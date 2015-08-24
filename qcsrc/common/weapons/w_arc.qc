@@ -1187,7 +1187,7 @@ void Ent_ReadArcBeam(float isnew)
 		self.draw = Draw_ArcBeam;
 		self.entremove = Remove_ArcBeam;
 		self.move_time = time;
-		loopsound(self, CH_SHOTS_SINGLE, "weapons/arc_loop.wav", VOL_BASE, ATTEN_NORM);
+		loopsound(self, CH_SHOTS_SINGLE, W_Sound("arc_loop"), VOL_BASE, ATTEN_NORM);
 
 		flash = spawn();
 		flash.owner = self;
@@ -1531,7 +1531,7 @@ bool W_Arc(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/arc_loop.wav");
+			precache_sound(W_Sound("arc_loop"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

@@ -293,13 +293,13 @@ bool W_HLAC(int req)
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/laserimpact.wav");
+			precache_sound(W_Sound("laserimpact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

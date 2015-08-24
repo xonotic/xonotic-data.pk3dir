@@ -243,13 +243,13 @@ bool W_RocketPropelledChainsaw(int req)
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/rocket_impact.wav");
+			precache_sound(W_Sound("rocket_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

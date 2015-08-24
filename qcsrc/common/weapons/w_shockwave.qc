@@ -879,9 +879,9 @@ bool W_Shockwave(int req)
 		}
 		case WR_INIT:
 		{
-			//precache_sound("weapons/ric1.wav");
-			//precache_sound("weapons/ric2.wav");
-			//precache_sound("weapons/ric3.wav");
+			//precache_sound(W_Sound("ric1"));
+			//precache_sound(W_Sound("ric2"));
+			//precache_sound(W_Sound("ric3"));
 			return false;
 		}
 		case WR_ZOOMRETICLE:

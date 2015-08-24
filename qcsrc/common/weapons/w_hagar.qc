@@ -535,20 +535,20 @@ bool W_Hagar(int req)
 			if(!w_issilent)
 			{
 				if(w_random<0.15)
-					sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("hagexp1"), VOL_BASE, ATTN_NORM);
 				else if(w_random<0.7)
-					sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("hagexp2"), VOL_BASE, ATTN_NORM);
 				else
-					sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("hagexp3"), VOL_BASE, ATTN_NORM);
 			}
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/hagexp1.wav");
-			precache_sound("weapons/hagexp2.wav");
-			precache_sound("weapons/hagexp3.wav");
+			precache_sound(W_Sound("hagexp1"));
+			precache_sound(W_Sound("hagexp2"));
+			precache_sound(W_Sound("hagexp3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

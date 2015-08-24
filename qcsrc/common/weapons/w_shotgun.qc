@@ -363,11 +363,11 @@ float W_Shotgun(float req)
 			if(!w_issilent && time - self.prevric > 0.25)
 			{
 				if(w_random < 0.0165)
-					sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.033)
-					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.05)
-					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTEN_NORM);
 				self.prevric = time;
 			}
 
@@ -375,9 +375,9 @@ float W_Shotgun(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/ric1.wav");
-			precache_sound("weapons/ric2.wav");
-			precache_sound("weapons/ric3.wav");
+			precache_sound(W_Sound("ric1"));
+			precache_sound(W_Sound("ric2"));
+			precache_sound(W_Sound("ric3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

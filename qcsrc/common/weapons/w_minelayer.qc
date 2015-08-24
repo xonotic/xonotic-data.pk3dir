@@ -602,13 +602,13 @@ bool W_MineLayer(int req)
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("mine_exp"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/mine_exp.wav");
+			precache_sound(W_Sound("mine_exp"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

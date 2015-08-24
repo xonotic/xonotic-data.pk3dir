@@ -329,13 +329,13 @@ bool W_Vortex(int req)
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/neximpact.wav");
+			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

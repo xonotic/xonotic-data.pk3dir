@@ -582,7 +582,7 @@ bool W_Electro(int req)
 			{
 				pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
 			}
 			else
 			{
@@ -591,13 +591,13 @@ bool W_Electro(int req)
 					// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
 					pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
 					if(!w_issilent)
-						sound(self, CH_SHOTS, "weapons/electro_impact_combo.wav", VOL_BASE, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("electro_impact_combo"), VOL_BASE, ATTEN_NORM);
 				}
 				else
 				{
 					pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
 					if(!w_issilent)
-						sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
 				}
 			}
 
@@ -605,8 +605,8 @@ bool W_Electro(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/electro_impact.wav");
-			precache_sound("weapons/electro_impact_combo.wav");
+			precache_sound(W_Sound("electro_impact"));
+			precache_sound(W_Sound("electro_impact_combo"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

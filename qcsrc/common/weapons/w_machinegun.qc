@@ -351,7 +351,7 @@ bool W_MachineGun(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), "weapons/reload.wav");
+			W_Reload(min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -381,19 +381,19 @@ bool W_MachineGun(int req)
 			pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				if(w_random < 0.05)
-					sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.1)
-					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.2)
-					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/ric1.wav");
-			precache_sound("weapons/ric2.wav");
-			precache_sound("weapons/ric3.wav");
+			precache_sound(W_Sound("ric1"));
+			precache_sound(W_Sound("ric2"));
+			precache_sound(W_Sound("ric3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:
