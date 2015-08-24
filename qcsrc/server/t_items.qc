@@ -436,6 +436,22 @@ void Item_ItemsTime_Init()
 	it_jetpack_time = -1;
 	it_superweapons_time = -1;
 }
+
+STATIC_INIT(ItemsTime_Init) {
+    // items time
+    addstat(STAT_ARMOR_LARGE_TIME, AS_FLOAT, item_armor_large_time);
+    addstat(STAT_HEALTH_MEGA_TIME, AS_FLOAT, item_health_mega_time);
+    addstat(STAT_INVISIBLE_TIME, AS_FLOAT, item_invisible_time);
+    addstat(STAT_SPEED_TIME, AS_FLOAT, item_speed_time);
+    addstat(STAT_EXTRALIFE_TIME, AS_FLOAT, item_extralife_time);
+    addstat(STAT_STRENGTH_TIME, AS_FLOAT, item_strength_time);
+    addstat(STAT_SHIELD_TIME, AS_FLOAT, item_shield_time);
+    addstat(STAT_FUELREGEN_TIME, AS_FLOAT, item_fuelregen_time);
+    addstat(STAT_JETPACK_TIME, AS_FLOAT, item_jetpack_time);
+    addstat(STAT_SUPERWEAPONS_TIME, AS_FLOAT, item_superweapons_time);
+    Item_ItemsTime_Init();
+}
+
 void Item_ItemsTime_ResetTimes()
 {
 	it_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
