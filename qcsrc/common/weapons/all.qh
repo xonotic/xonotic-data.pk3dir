@@ -214,7 +214,11 @@ CLASS(Weapon, Object)
 		this.bot_pickupbasevalue = pickupbasevalue;
 		this.wpcolor = clr;
 		this.mdl = modelname;
+		#ifdef SVQC
+		this.model = strzone(W_Model(strcat("g_", modelname, ".md3")));
+		#elif defined(CSQC)
 		this.model = strzone(strcat("models/weapons/g_", modelname, ".md3"));
+		#endif
 		this.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
 		this.w_crosshair = strzone(car(crosshair));
 		string s = cdr(crosshair);

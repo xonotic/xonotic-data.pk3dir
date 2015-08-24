@@ -215,7 +215,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		{
 			entity wep = spawn();
 			setorigin(wep, self.origin);
-			setmodel(wep, "models/weapons/g_ok_hmg.md3");
+			setmodel(wep, W_Model("g_ok_hmg.md3"));
 			wep.classname = "weapon_hmg";
 			wep.ok_item = true;
 			wep.noalign = self.noalign;
@@ -232,7 +232,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		{
 			entity wep = spawn();
 			setorigin(wep, self.origin);
-			setmodel(wep, "models/weapons/g_ok_rl.md3");
+			setmodel(wep, W_Model("g_ok_rl.md3"));
 			wep.classname = "weapon_rpc";
 			wep.ok_item = true;
 			wep.noalign = self.noalign;
@@ -317,17 +317,17 @@ void ok_Initialize()
 
 	precache_all_playermodels("models/ok_player/*.dpm");
 
-	precache_model("models/weapons/h_ok_mg.iqm");
-	precache_model("models/weapons/v_ok_mg.md3");
-	precache_model("models/weapons/g_ok_mg.md3");
+	precache_model(W_Model("h_ok_mg.iqm"));
+	precache_model(W_Model("v_ok_mg.md3"));
+	precache_model(W_Model("g_ok_mg.md3"));
 
-	precache_model("models/weapons/h_ok_shotgun.iqm");
-	precache_model("models/weapons/v_ok_shotgun.md3");
-	precache_model("models/weapons/g_ok_shotgun.md3");
+	precache_model(W_Model("h_ok_shotgun.iqm"));
+	precache_model(W_Model("v_ok_shotgun.md3"));
+	precache_model(W_Model("g_ok_shotgun.md3"));
 
-	precache_model("models/weapons/h_ok_sniper.iqm");
-	precache_model("models/weapons/v_ok_sniper.md3");
-	precache_model("models/weapons/g_ok_sniper.md3");
+	precache_model(W_Model("h_ok_sniper.iqm"));
+	precache_model(W_Model("v_ok_sniper.md3"));
+	precache_model(W_Model("g_ok_sniper.md3"));
 
 	precache_sound(W_Sound("dryfire"));
 
