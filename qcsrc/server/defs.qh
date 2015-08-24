@@ -513,17 +513,6 @@ const float ACTIVE_TOGGLE 	= 3;
 .void (float act_state) setactive;
 .entity realowner;
 
-.float item_armor_large_time;
-.float item_health_mega_time;
-.float item_invisible_time;
-.float item_speed_time;
-.float item_extralife_time;
-.float item_strength_time;
-.float item_shield_time;
-.float item_fuelregen_time;
-.float item_jetpack_time;
-.float item_superweapons_time;
-
 //float serverflags;
 
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
