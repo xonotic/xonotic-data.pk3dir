@@ -12,9 +12,8 @@ void IT_Write(entity e, int i, float f) {
 #endif
 
 #ifdef CSQC
-const float ITEMSTIME_MAXITEMS = 10;
-float ItemsTime_time[ITEMSTIME_MAXITEMS];
-float ItemsTime_availableTime[ITEMSTIME_MAXITEMS];
+float ItemsTime_time[MAX_ITEMS];
+float ItemsTime_availableTime[MAX_ITEMS];
 MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
     if (MUTATOR_RETURNVALUE) return false;
     if (!ReadMutatorEquals(mutator_argv_int_0, itemstime)) return false;
@@ -26,29 +25,13 @@ MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
 #endif
 
 #ifdef SVQC
-float it_armor_large_time;
-float it_health_mega_time;
-float it_invisible_time;
-float it_speed_time;
-float it_extralife_time;
-float it_strength_time;
-float it_shield_time;
-float it_fuelregen_time;
-float it_jetpack_time;
-float it_superweapons_time;
+float it_times[MAX_ITEMS];
 
 void Item_ItemsTime_Init()
 {
-    it_armor_large_time = -1;
-    it_health_mega_time = -1;
-    it_invisible_time = -1;
-    it_speed_time = -1;
-    it_extralife_time = -1;
-    it_strength_time = -1;
-    it_shield_time = -1;
-    it_fuelregen_time = -1;
-    it_jetpack_time = -1;
-    it_superweapons_time = -1;
+    FOREACH(ITEMS, true, LAMBDA(
+        it_times[it.m_id] = -1;
+    ));
 }
 
 STATIC_INIT(ItemsTime_Init) {
@@ -58,44 +41,23 @@ STATIC_INIT(ItemsTime_Init) {
 
 void Item_ItemsTime_ResetTimes()
 {
-    it_armor_large_time  = (it_armor_large_time  == -1) ? -1 : 0;
-    it_health_mega_time  = (it_health_mega_time  == -1) ? -1 : 0;
-    it_invisible_time    = (it_invisible_time    == -1) ? -1 : 0;
-    it_speed_time        = (it_speed_time        == -1) ? -1 : 0;
-    it_extralife_time    = (it_extralife_time    == -1) ? -1 : 0;
-    it_strength_time     = (it_strength_time     == -1) ? -1 : 0;
-    it_shield_time       = (it_shield_time       == -1) ? -1 : 0;
-    it_fuelregen_time    = (it_fuelregen_time    == -1) ? -1 : 0;
-    it_jetpack_time      = (it_jetpack_time      == -1) ? -1 : 0;
-    it_superweapons_time = (it_superweapons_time == -1) ? -1 : 0;
+    FOREACH(ITEMS, true, LAMBDA(
+        it_times[it.m_id] = (it_times[it.m_id] == -1) ? -1 : 0;
+    ));
 }
 
 void Item_ItemsTime_ResetTimesForPlayer(entity e)
 {
-    IT_Write(e, item_armor_large_time , (it_armor_large_time  == -1) ? -1 : 0);
-    IT_Write(e, item_health_mega_time , (it_health_mega_time  == -1) ? -1 : 0);
-    IT_Write(e, item_invisible_time   , (it_invisible_time    == -1) ? -1 : 0);
-    IT_Write(e, item_speed_time       , (it_speed_time        == -1) ? -1 : 0);
-    IT_Write(e, item_extralife_time   , (it_extralife_time    == -1) ? -1 : 0);
-    IT_Write(e, item_strength_time    , (it_strength_time     == -1) ? -1 : 0);
-    IT_Write(e, item_shield_time      , (it_shield_time       == -1) ? -1 : 0);
-    IT_Write(e, item_fuelregen_time   , (it_fuelregen_time    == -1) ? -1 : 0);
-    IT_Write(e, item_jetpack_time     , (it_jetpack_time      == -1) ? -1 : 0);
-    IT_Write(e, item_superweapons_time, (it_superweapons_time == -1) ? -1 : 0);
+    FOREACH(ITEMS, true, LAMBDA(
+        IT_Write(e, it.m_id, (it_times[it.m_id] == -1) ? -1 : 0);
+    ));
 }
 
 void Item_ItemsTime_SetTimesForPlayer(entity e)
 {
-    IT_Write(e, item_armor_large_time , it_armor_large_time );
-    IT_Write(e, item_health_mega_time , it_health_mega_time );
-    IT_Write(e, item_invisible_time   , it_invisible_time   );
-    IT_Write(e, item_speed_time       , it_speed_time       );
-    IT_Write(e, item_extralife_time   , it_extralife_time   );
-    IT_Write(e, item_strength_time    , it_strength_time    );
-    IT_Write(e, item_shield_time      , it_shield_time      );
-    IT_Write(e, item_fuelregen_time   , it_fuelregen_time   );
-    IT_Write(e, item_jetpack_time     , it_jetpack_time     );
-    IT_Write(e, item_superweapons_time, it_superweapons_time);
+    FOREACH(ITEMS, true, LAMBDA(
+        IT_Write(e, it.m_id, it_times[it.m_id]);
+    ));
 }
 
 void Item_ItemsTime_SetTime(entity e, float t)
@@ -103,53 +65,8 @@ void Item_ItemsTime_SetTime(entity e, float t)
     if (!autocvar_sv_itemstime)
         return;
 
-    if (g_instagib)
-    {
-        switch (e.items)
-        {
-            case IT_STRENGTH://"item-invis"
-                it_invisible_time = t;
-                break;
-            case IT_NAILS://"item-extralife"
-                it_extralife_time = t;
-                break;
-            case IT_INVINCIBLE://"item-speed"
-                it_speed_time = t;
-                break;
-        }
-    }
-    else
-    {
-        switch (e.items)
-        {
-            case ITEM_HealthMega.m_itemid:
-                // if (e.itemdef == ITEM_HealthMega) // e.items == IT_HEALTH unequivocally identifies it
-                    it_health_mega_time = t;
-                break;
-            case ITEM_ArmorMega.m_itemid:
-                if (e.itemdef == ITEM_ArmorMega) // e.items == IT_ARMOR doesn't unequivocally identifies it
-                    it_armor_large_time = t;
-                break;
-            case IT_STRENGTH://"item-strength"
-                it_strength_time = t;
-                break;
-            case IT_INVINCIBLE://"item-shield"
-                it_shield_time = t;
-                break;
-            default:
-                if (e.weapons & WEPSET_SUPERWEAPONS)
-                    it_superweapons_time = t;
-        }
-    }
-    switch (e.items)
-    {
-        case IT_FUEL_REGEN://"item-fuelregen"
-            it_fuelregen_time = t;
-            break;
-        case IT_JETPACK://"item-jetpack"
-            it_jetpack_time = t;
-            break;
-    }
+    GameItem item = e.itemdef;
+    it_times[item.m_id] = t;
 }
 
 void Item_ItemsTime_SetTimesForAllPlayers()
@@ -214,33 +131,15 @@ MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn) {
 
 #ifdef CSQC
 
-string GetItemsTimePicture(float i)
-{
-    switch(i)
-    {
-        case 0: return "item_large_armor";
-        case 1: return "item_mega_health";
-        case 2: return "strength";
-        case 3: return "shield";
-        case 4: return "item_mega_health";
-        case 5: return "strength";
-        case 6: return "shield";
-        case 7: return "fuelregen";
-        case 8: return "jetpack";
-        case 9: return "superweapons";
-        default: return "";
-    }
-}
-
-void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, float item_time, bool item_available, float item_availableTime)
+void DrawItemsTimeItem(vector myPos, vector mySize, float ar, entity item, float item_time, bool item_available, float item_availableTime)
 {
     float t = 0;
     vector color = '0 0 0';
     float picalpha;
 
-    if(autocvar_hud_panel_itemstime_hidespawned == 2)
+    if (autocvar_hud_panel_itemstime_hidespawned == 2)
         picalpha = 1;
-    else if(item_available)
+    else if (item_available)
     {
         float BLINK_FACTOR = 0.15;
         float BLINK_BASE = 0.85;
@@ -250,15 +149,15 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
     else
         picalpha = 0.5;
     t = floor(item_time - time + 0.999);
-    if(t < 5)
+    if (t < 5)
         color = '0.7 0 0';
-    else if(t < 10)
+    else if (t < 10)
         color = '0.7 0.7 0';
     else
         color = '1 1 1';
 
     vector picpos, numpos;
-    if(autocvar_hud_panel_itemstime_iconalign)
+    if (autocvar_hud_panel_itemstime_iconalign)
     {
         numpos = myPos;
         picpos = myPos + eX * (ar - 1) * mySize_y;
@@ -269,10 +168,10 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
         picpos = myPos;
     }
 
-    if(t > 0 && autocvar_hud_panel_itemstime_progressbar)
+    if (t > 0 && autocvar_hud_panel_itemstime_progressbar)
     {
         vector p_pos, p_size;
-        if(autocvar_hud_panel_itemstime_progressbar_reduced)
+        if (autocvar_hud_panel_itemstime_progressbar_reduced)
         {
             p_pos = numpos;
             p_size = eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y;
@@ -285,49 +184,42 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, fl
         HUD_Panel_DrawProgressBar(p_pos, p_size, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_progressbar_maxtime, 0, autocvar_hud_panel_itemstime_iconalign, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
     }
 
-    if(t > 0 && autocvar_hud_panel_itemstime_text)
+    if (t > 0 && autocvar_hud_panel_itemstime_text)
         drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
     else
         picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
-    if(item_availableTime)
-        drawpic_aspect_skin_expanding(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
-    drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
+    if (item_availableTime)
+        drawpic_aspect_skin_expanding(picpos, item.m_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
+    drawpic_aspect_skin(picpos, item.m_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_ItemsTime()
 {
-    if(!autocvar__hud_configure)
+    if (!autocvar__hud_configure)
     {
-        if(!(
+        if (!(
             (autocvar_hud_panel_itemstime == 1 && spectatee_status != 0)
         ||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage))
             )) { return; }
     }
     else
     {
-        // do not show here mutator-dependent items
-        ItemsTime_time[0] = time + 0;
-        ItemsTime_time[1] = time + 8;
-        ItemsTime_time[2] = -1; // mutator-dependent
-        ItemsTime_time[3] = -1; // mutator-dependent
-        ItemsTime_time[4] = -1; // mutator-dependent
-        ItemsTime_time[5] = time + 0;
-        ItemsTime_time[6] = time + 4;
-        ItemsTime_time[7] = time + 49;
-        ItemsTime_time[8] = -1;
-        ItemsTime_time[9] = time + 28;
+        ItemsTime_time[ITEM_ArmorMega.m_id] = time + 0;
+        ItemsTime_time[ITEM_HealthMega.m_id] = time + 8;
+        ItemsTime_time[ITEM_Strength.m_id] = time + 0;
+        ItemsTime_time[ITEM_Shield.m_id] = time + 4;
     }
 
     float i;
     float count = 0;
-    if(autocvar_hud_panel_itemstime_hidespawned == 1)
-        for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
+    if (autocvar_hud_panel_itemstime_hidespawned == 1)
+        for (i = 0; i < MAX_ITEMS; ++i)
             count += (ItemsTime_time[i] > time || -ItemsTime_time[i] > time);
-    else if(autocvar_hud_panel_itemstime_hidespawned == 2)
-        for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
+    else if (autocvar_hud_panel_itemstime_hidespawned == 2)
+        for (i = 0; i < MAX_ITEMS; ++i)
             count += (ItemsTime_time[i] > time);
     else
-        for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
+        for (i = 0; i < MAX_ITEMS; ++i)
             count += (ItemsTime_time[i] != -1);
     if (count == 0)
         return;
@@ -338,7 +230,7 @@ void HUD_ItemsTime()
     pos = panel_pos;
     mySize = panel_size;
 
-    if(panel_bg_padding)
+    if (panel_bg_padding)
     {
         pos += '1 1 0' * panel_bg_padding;
         mySize -= '2 2 0' * panel_bg_padding;
@@ -353,14 +245,14 @@ void HUD_ItemsTime()
 
     vector offset = '0 0 0';
     float newSize;
-    if(autocvar_hud_panel_itemstime_dynamicsize)
+    if (autocvar_hud_panel_itemstime_dynamicsize)
     {
-        if(autocvar__hud_configure)
-        if(menu_enabled != 2)
+        if (autocvar__hud_configure)
+        if (menu_enabled != 2)
             HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
 
         // reduce panel to avoid spacing items
-        if(itemstime_size.x / itemstime_size.y < ar)
+        if (itemstime_size.x / itemstime_size.y < ar)
         {
             newSize = rows * itemstime_size.x / ar;
             pos.y += (mySize.y - newSize) / 2;
@@ -379,7 +271,7 @@ void HUD_ItemsTime()
     }
     else
     {
-        if(itemstime_size.x/itemstime_size.y > ar)
+        if (itemstime_size.x/itemstime_size.y > ar)
         {
             newSize = ar * itemstime_size.y;
             offset.x = itemstime_size.x - newSize;
@@ -399,12 +291,9 @@ void HUD_ItemsTime()
 
     float row = 0, column = 0;
     bool item_available;
-    for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
-        if (ItemsTime_time[i] == -1)
-            continue;
-
+    FOREACH(ITEMS, ItemsTime_time[i] != -1, LAMBDA(
         float item_time = ItemsTime_time[i];
-        if(item_time < -1)
+        if (item_time < -1)
         {
             item_available = true;
             item_time = -item_time;
@@ -412,35 +301,35 @@ void HUD_ItemsTime()
         else
             item_available = (item_time <= time);
 
-        if(ItemsTime_time[i] >= 0)
+        if (ItemsTime_time[i] >= 0)
         {
-            if(time <= ItemsTime_time[i])
+            if (time <= ItemsTime_time[i])
                 ItemsTime_availableTime[i] = 0;
-            else if(ItemsTime_availableTime[i] == 0)
+            else if (ItemsTime_availableTime[i] == 0)
                 ItemsTime_availableTime[i] = time;
         }
-        else if(ItemsTime_availableTime[i] == 0)
+        else if (ItemsTime_availableTime[i] == 0)
             ItemsTime_availableTime[i] = time;
 
         float f = (time - ItemsTime_availableTime[i]) * 2;
         f = (f > 1) ? 0 : bound(0, f, 1);
 
-        if(autocvar_hud_panel_itemstime_hidespawned == 1)
-            if(!(ItemsTime_time[i] > time || -ItemsTime_time[i] > time))
+        if (autocvar_hud_panel_itemstime_hidespawned == 1)
+            if (!(ItemsTime_time[i] > time || -ItemsTime_time[i] > time))
                 continue;
 
-        if(autocvar_hud_panel_itemstime_hidespawned == 2)
-            if(!(ItemsTime_time[i] > time))
+        if (autocvar_hud_panel_itemstime_hidespawned == 2)
+            if (!(ItemsTime_time[i] > time))
                 continue;
 
-        DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i, item_time, item_available, f);
+        DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, it, item_time, item_available, f);
         ++row;
-        if(row >= rows)
+        if (row >= rows)
         {
             row = 0;
             column = column + 1;
         }
-    }
+    ));
 }
 
 #endif

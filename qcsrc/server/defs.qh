@@ -513,19 +513,6 @@ const float ACTIVE_TOGGLE 	= 3;
 .void (float act_state) setactive;
 .entity realowner;
 
-enum {
-	item_armor_large_time,
-	item_health_mega_time,
-	item_invisible_time,
-	item_speed_time,
-	item_extralife_time,
-	item_strength_time,
-	item_shield_time,
-	item_fuelregen_time,
-	item_jetpack_time,
-	item_superweapons_time
-};
-
 //float serverflags;
 
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
