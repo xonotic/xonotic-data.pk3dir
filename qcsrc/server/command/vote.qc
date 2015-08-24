@@ -432,6 +432,8 @@ void ReadyRestart_think()
 	return;
 }
 
+void Item_ItemsTime_ResetTimes();
+
 // Forces a restart of the game without actually reloading the map // this is a mess...
 void ReadyRestart_force()
 {
