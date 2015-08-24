@@ -1144,7 +1144,9 @@ float monster_spawn()
 
 	MonsterSound(monstersound_spawn, 0, false, CH_VOICE);
 
-	WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs.z + 15), world, self.team, self, sprite, true, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
+	entity wp = WaypointSprite_Spawn(WP_Monster, 0, 1024, self, '0 0 1' * (self.maxs.z + 15), world, self.team, self, sprite, true, RADARICON_DANGER);
+	wp.wp_extra = self.monsterid;
+	wp.colormod = ((self.team) ? Team_ColorRGB(self.team) : '1 0 0');
 	if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
 	{
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);

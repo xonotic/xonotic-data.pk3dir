@@ -16,6 +16,7 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
         sendflags |= 0x80;
 
     WriteByte(MSG_ENTITY, sendflags);
+    WriteByte(MSG_ENTITY, self.wp_extra);
 
     if (sendflags & 0x80)
     {
@@ -127,6 +128,7 @@ void Ent_RemoveWaypointSprite()
 void Ent_WaypointSprite()
 {
     int sendflags = ReadByte();
+    self.wp_extra = ReadByte();
 
     if (!self.spawntime)
         self.spawntime = time;
@@ -231,100 +233,47 @@ void Ent_WaypointSprite()
 #ifdef CSQC
 float spritelookupblinkvalue(string s)
 {
-    if (substring(s, 0, 4) == "wpn-")
-    if (get_weaponinfo(stof(substring(s, 4, strlen(s)))).spawnflags & WEP_FLAG_SUPERWEAPON)
-        return 2;
-
-    FOREACH(ITEMS, it.m_waypoint == s, LAMBDA(
-        return it.m_waypointblink;
-    ));
+    if (s == WP_Weapon.netname) {
+        if (get_weaponinfo(self.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
+            return 2;
+    }
+    if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_waypointblink;
 
     switch (s)
     {
-        case "ons-cp-atck":      return 2;
-        case "ons-cp-dfnd":      return 0.5;
         case "item-invis":       return 2;
         case "item-extralife":   return 2;
         case "item-speed":       return 2;
-        case "tagged-target":    return 2;
         default:                 return 1;
     }
 }
 
 vector spritelookupcolor(string s, vector def)
 {
-    if (substring(s, 0, 4) == "wpn-")
-        return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).wpcolor);
-
-    switch (s)
-    {
-        case "keycarrier-friend": return '0 1 0';
-        default:                  return def;
-    }
+    if (s == WP_Weapon.netname) return get_weaponinfo(self.wp_extra).wpcolor;
+    if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_color;
+    if (s == WP_Buff.netname) return BUFFS[self.wp_extra].m_color;
+    return def;
 }
 
 string spritelookuptext(string s)
 {
-    if (substring(s, 0, 4) == "wpn-") { return (get_weaponinfo(stof(substring(s, 4, strlen(s)))).message); }
-    if (substring(s, 0, 5) == "buff-")
-    {
-        entity buff = BUFF_NULL;
-        FOREACH(BUFFS, it.m_sprite == s, LAMBDA(
-            buff = it;
-            break;
-        ));
-        return buff.m_prettyName;
-    }
+    if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
+    if (s == WP_Weapon.netname) return get_weaponinfo(self.wp_extra).message;
+    if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_waypoint;
+    if (s == WP_Buff.netname) return BUFFS[self.wp_extra].m_prettyName;
+    if (s == WP_Monster.netname) return get_monsterinfo(self.wp_extra).monster_name;
+
+    // need to loop, as our netname could be one of three
+    FOREACH(WAYPOINTS, it.netname == s, LAMBDA(
+        return it.m_name;
+    ));
 
     switch (s)
     {
-        case "as-push": return _("Push");
-        case "as-destroy": return _("Destroy");
-        case "as-defend": return _("Defend");
-        case "bluebase": return _("Blue base");
-        case "danger": return _("DANGER");
-        case "enemyflagcarrier": return _("Enemy carrier");
-        case "flagcarrier": return _("Flag carrier");
-        case "flagdropped": return _("Dropped flag");
-        case "helpme": return _("Help me!");
-        case "here": return _("Here");
-        case "key-dropped": return _("Dropped key");
-        case "keycarrier-blue": return _("Key carrier");
-        case "keycarrier-finish": return _("Run here");
-        case "keycarrier-friend": return _("Key carrier");
-        case "keycarrier-pink": return _("Key carrier");
-        case "keycarrier-red": return _("Key carrier");
-        case "keycarrier-yellow": return _("Key carrier");
-        case "redbase": return _("Red base");
-        case "yellowbase": return _("Yellow base");
-        case "neutralbase": return _("White base");
-        case "pinkbase": return _("Pink base");
-        case "waypoint": return _("Waypoint");
-        case "ons-gen": return _("Generator");
-        case "ons-gen-shielded": return _("Generator");
-        case "ons-cp": return _("Control point");
-        case "ons-cp-atck": return _("Control point");
-        case "ons-cp-dfnd": return _("Control point");
-        case "race-checkpoint": return _("Checkpoint");
-        case "race-finish": return _("Finish");
-        case "race-start": return _("Start");
-        case "race-start-finish": return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-        case "goal": return _("Goal");
-        case "nb-ball": return _("Ball");
-        case "ka-ball": return _("Ball");
-        case "ka-ballcarrier": return _("Ball carrier");
-        case "dom-neut": return _("Control point");
-        case "dom-red": return _("Control point");
-        case "dom-blue": return _("Control point");
-        case "dom-yellow": return _("Control point");
-        case "dom-pink": return _("Control point");
         case "item-invis": return _("Invisibility");
         case "item-extralife": return _("Extra life");
         case "item-speed": return _("Speed");
-        case "frozen": return _("Frozen!");
-        case "tagged-target": return _("Tagged");
-        case "vehicle": return _("Vehicle");
-        case "intruder": return _("Intruder!");
         default: return s;
     }
 }
@@ -820,8 +769,11 @@ void WaypointSprite_Load()
 #endif
 
 #ifdef SVQC
-void WaypointSprite_UpdateSprites(entity e, string m1, string m2, string m3)
+void WaypointSprite_UpdateSprites(entity e, entity _m1, entity _m2, entity _m3)
 {
+    string m1 = _m1.netname;
+    string m2 = _m2.netname;
+    string m3 = _m3.netname;
     if (m1 != e.model1)
     {
         e.model1 = m1;
@@ -1055,13 +1007,13 @@ void WaypointSprite_Reset()
 }
 
 entity WaypointSprite_Spawn(
-    string spr, // sprite
+    entity spr, // sprite
     float _lifetime, float maxdistance, // lifetime, max distance
     entity ref, vector ofs, // position
     entity showto, float t, // show to whom? Use a flag to indicate a team
     entity own, .entity ownfield, // remove when own gets killed
     float hideable, // true when it should be controlled by cl_hidewaypoints
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 )
 {
     entity wp = new(sprite_waypoint);
@@ -1089,32 +1041,32 @@ entity WaypointSprite_Spawn(
     wp.fade_rate = maxdistance;
     wp.think = WaypointSprite_Think;
     wp.nextthink = time;
-    wp.model1 = spr;
+    wp.model1 = spr.netname;
     wp.customizeentityforclient = WaypointSprite_Customize;
     wp.waypointsprite_visible_for_player = WaypointSprite_visible_for_player;
     wp.reset2 = WaypointSprite_Reset;
     wp.cnt = icon;
-    wp.colormod = rgb;
+    wp.colormod = spr.m_color;
     Net_LinkEntity(wp, false, 0, WaypointSprite_SendEntity);
     return wp;
 }
 
 entity WaypointSprite_SpawnFixed(
-    string spr,
+    entity spr,
     vector ofs,
     entity own,
     .entity ownfield,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 )
 {
-    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, true, icon, rgb);
+    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, true, icon);
 }
 
 entity WaypointSprite_DeployFixed(
-    string spr,
+    entity spr,
     float limited_range,
     vector ofs,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 )
 {
     float t;
@@ -1127,22 +1079,22 @@ entity WaypointSprite_DeployFixed(
         maxdistance = waypointsprite_limitedrange;
     else
         maxdistance = 0;
-    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, false, icon, rgb);
+    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, false, icon);
 }
 
 entity WaypointSprite_DeployPersonal(
-    string spr,
+    entity spr,
     vector ofs,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 )
 {
-    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, false, icon, rgb);
+    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, false, icon);
 }
 
 entity WaypointSprite_Attach(
-    string spr,
+    entity spr,
     float limited_range,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 )
 {
     float t;
@@ -1157,17 +1109,17 @@ entity WaypointSprite_Attach(
         maxdistance = waypointsprite_limitedrange;
     else
         maxdistance = 0;
-    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, false, icon, rgb);
+    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, false, icon);
 }
 
 entity WaypointSprite_AttachCarrier(
-    string spr,
+    entity spr,
     entity carrier,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon and color
 )
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
-    entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon, rgb);
+    entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
     if (e)
     {
         WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);

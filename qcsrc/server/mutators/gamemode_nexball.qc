@@ -144,7 +144,7 @@ void GiveBall(entity plyr, entity ball)
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
 
-	WaypointSprite_AttachCarrier("nb-ball", plyr, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
+	WaypointSprite_AttachCarrier(WP_NbBall, plyr, RADARICON_FLAGCARRIER);
 	WaypointSprite_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 
 	if(autocvar_g_nexball_basketball_delay_hold)
@@ -188,7 +188,7 @@ void DropBall(entity ball, vector org, vector vel)
 	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
-	WaypointSprite_Spawn("nb-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR); // no health bar please
+	WaypointSprite_Spawn(WP_NbBall, 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER); // no health bar please
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 
 	ball.owner.ballcarried = world;
@@ -530,7 +530,7 @@ void SpawnBall(void)
 	precache_sound(self.noise1);
 	precache_sound(self.noise2);
 
-	WaypointSprite_AttachCarrier("nb-ball", self, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR); // the ball's team is not set yet, no rule update needed
+	WaypointSprite_AttachCarrier(WP_NbBall, self, RADARICON_FLAGCARRIER); // the ball's team is not set yet, no rule update needed
 
 	self.reset = ball_restart;
 	self.think = InitBall;
@@ -589,7 +589,8 @@ void SpawnGoal(void)
 
 	if(self.team != GOAL_OUT && Team_TeamToNumber(self.team) != -1)
 	{
-		WaypointSprite_SpawnFixed("goal", (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE, ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0'));
+		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE);
+		wp.colormod = ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0');
 		self.sprite.customizeentityforclient = nb_Goal_Customize;
 	}
 

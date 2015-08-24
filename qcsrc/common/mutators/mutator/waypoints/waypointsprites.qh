@@ -1,6 +1,11 @@
 #ifndef WAYPOINTSPRITES_H
 #define WAYPOINTSPRITES_H
 
+#include "all.qh"
+
+/** Additional networked waypoint state, used for items, weapons, buffs */
+.int wp_extra;
+
 #ifdef CSQC
 entityclass(WaypointSprite);
 class(WaypointSprite) .float helpme;
@@ -125,7 +130,7 @@ float autocvar_sv_waypointsprite_limitedrange;
 
 .float(entity) waypointsprite_visible_for_player;
 
-void WaypointSprite_UpdateSprites(entity e, string m1, string m2, string m3);
+void WaypointSprite_UpdateSprites(entity e, entity m1, entity m2, entity m3);
 
 void WaypointSprite_UpdateHealth(entity e, float f);
 
@@ -171,50 +176,50 @@ float WaypointSprite_SendEntity(entity to, float sendflags);
 void WaypointSprite_Reset();
 
 entity WaypointSprite_Spawn(
-    string spr, // sprite
+    entity spr, // sprite
     float lifetime, float maxdistance, // lifetime, max distance
     entity ref, vector ofs, // position
     entity showto, float t, // show to whom? Use a flag to indicate a team
     entity own, .entity ownfield, // remove when own gets killed
     float hideable, // true when it should be controlled by cl_hidewaypoints
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 );
 
 entity WaypointSprite_SpawnFixed(
-    string spr,
+    entity spr,
     vector ofs,
     entity own,
     .entity ownfield,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 );
 
 .entity waypointsprite_deployed_fixed;
 entity WaypointSprite_DeployFixed(
-    string spr,
+    entity spr,
     float limited_range,
     vector ofs,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 );
 
 .entity waypointsprite_deployed_personal;
 entity WaypointSprite_DeployPersonal(
-    string spr,
+    entity spr,
     vector ofs,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 );
 
 .entity waypointsprite_attached;
 .entity waypointsprite_attachedforcarrier;
 entity WaypointSprite_Attach(
-    string spr,
+    entity spr,
     float limited_range,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 );
 
 entity WaypointSprite_AttachCarrier(
-    string spr,
+    entity spr,
     entity carrier,
-    float icon, vector rgb // initial icon and color
+    float icon // initial icon
 );
 
 void WaypointSprite_DetachCarrier(entity carrier);

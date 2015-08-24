@@ -546,7 +546,7 @@ void W_Seeker_Tag_Touch(void)
 
 		if(WEP_CVAR(seeker, type) == 1)
 		{
-			WaypointSprite_Spawn("tagged-target", WEP_CVAR(seeker, tag_tracker_lifetime), 0, other, '0 0 64', self.realowner, 0, other, wps_tag_tracker, true, RADARICON_TAGGED, '0.5 1 0');
+			WaypointSprite_Spawn(WP_Seeker, WEP_CVAR(seeker, tag_tracker_lifetime), 0, other, '0 0 64', self.realowner, 0, other, wps_tag_tracker, true, RADARICON_TAGGED);
 			WaypointSprite_UpdateRule(other.wps_tag_tracker, 0, SPRITERULE_DEFAULT);
 		}
 	}

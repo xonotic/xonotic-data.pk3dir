@@ -167,14 +167,14 @@ void ImpulseCommands (void)
 		switch(imp)
 		{
 			case 30:
-				wp = WaypointSprite_DeployPersonal("waypoint", self.origin, RADARICON_WAYPOINT, '0 1 1');
+				wp = WaypointSprite_DeployPersonal(WP_Waypoint, self.origin, RADARICON_WAYPOINT);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "personal waypoint spawned at location\n");
 				break;
 			case 31:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployPersonal("waypoint", trace_endpos, RADARICON_WAYPOINT, '0 1 1');
+				wp = WaypointSprite_DeployPersonal(WP_Waypoint, trace_endpos, RADARICON_WAYPOINT);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "personal waypoint spawned at crosshair\n");
@@ -182,7 +182,7 @@ void ImpulseCommands (void)
 			case 32:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin, RADARICON_WAYPOINT, '0 1 1');
+					wp = WaypointSprite_DeployPersonal(WP_Waypoint, self.death_origin, RADARICON_WAYPOINT);
 					if(wp)
 						WaypointSprite_Ping(wp);
 					sprint(self, "personal waypoint spawned at death location\n");
@@ -193,7 +193,7 @@ void ImpulseCommands (void)
 				{
 					if (!MUTATOR_CALLHOOK(HelpMePing, self))
 					{
-						wp = WaypointSprite_Attach("helpme", true, RADARICON_HELPME, '1 0.5 0');
+						wp = WaypointSprite_Attach(WP_Helpme, true, RADARICON_HELPME);
 						if(!wp)
 							WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
 						else
@@ -203,14 +203,14 @@ void ImpulseCommands (void)
 				}
 				break;
 			case 34:
-				wp = WaypointSprite_DeployFixed("here", false, self.origin, RADARICON_HERE, '0 1 0');
+				wp = WaypointSprite_DeployFixed(WP_Here, false, self.origin, RADARICON_HERE);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "HERE spawned at location\n");
 				break;
 			case 35:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("here", false, trace_endpos, RADARICON_HERE, '0 1 0');
+				wp = WaypointSprite_DeployFixed(WP_Here, false, trace_endpos, RADARICON_HERE);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "HERE spawned at crosshair\n");
@@ -218,21 +218,21 @@ void ImpulseCommands (void)
 			case 36:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("here", false, self.death_origin, RADARICON_HERE, '0 1 0');
+					wp = WaypointSprite_DeployFixed(WP_Here, false, self.death_origin, RADARICON_HERE);
 					if(wp)
 						WaypointSprite_Ping(wp);
 					sprint(self, "HERE spawned at death location\n");
 				}
 				break;
 			case 37:
-				wp = WaypointSprite_DeployFixed("danger", false, self.origin, RADARICON_DANGER, '1 0.5 0');
+				wp = WaypointSprite_DeployFixed(WP_Danger, false, self.origin, RADARICON_DANGER);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "DANGER spawned at location\n");
 				break;
 			case 38:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("danger", false, trace_endpos, RADARICON_DANGER, '1 0.5 0');
+				wp = WaypointSprite_DeployFixed(WP_Danger, false, trace_endpos, RADARICON_DANGER);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "DANGER spawned at crosshair\n");
@@ -240,7 +240,7 @@ void ImpulseCommands (void)
 			case 39:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("danger", false, self.death_origin, RADARICON_DANGER, '1 0.5 0');
+					wp = WaypointSprite_DeployFixed(WP_Danger, false, self.death_origin, RADARICON_DANGER);
 					if(wp)
 						WaypointSprite_Ping(wp);
 					sprint(self, "DANGER spawned at death location\n");

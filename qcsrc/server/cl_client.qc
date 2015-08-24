@@ -33,7 +33,7 @@
 
 #include "../common/items/all.qc"
 
-#include "../common/mutators/mutator/waypointsprites.qh"
+#include "../common/mutators/mutator/waypoints/all.qh"
 
 #include "../common/triggers/subs.qh"
 #include "../common/triggers/triggers.qh"
