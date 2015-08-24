@@ -90,6 +90,11 @@ string GetAmmoPicture(.int ammotype);
 int GetAmmoStat(.int ammotype);
 #endif
 
+#ifdef SVQC
+string W_Sound(string w_snd);
+string W_Model(string w_mdl);
+#endif
+
 // ammo types
 .int ammo_shells;
 .int ammo_nails;

@@ -21,6 +21,10 @@ void turrets_common_precache()
 	precache_model ("models/turrets/c512.md3");
 	precache_model ("models/marker.md3");
 
+#ifdef SVQC
+	precache_sound(W_Sound("rocket_impact"));
+#endif
+
 #ifdef TURRET_DEBUG
 	precache_model ("models/turrets/c512.md3");
 	precache_model ("models/pathlib/goodsquare.md3");

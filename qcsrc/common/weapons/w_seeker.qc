@@ -250,7 +250,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	W_DecreaseAmmo(WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0);
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("seeker_fire.wav"), CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
 	Send_Effect("seeker_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
@@ -341,7 +341,7 @@ void W_Seeker_Fire_Flac(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/flac_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("flac_fire"), CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
 	w_shotorg += f_diff;
 
 	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
@@ -560,7 +560,7 @@ void W_Seeker_Fire_Tag(void)
 	entity missile;
 	W_DecreaseAmmo(WEP_CVAR(seeker, tag_ammo));
 
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/tag_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("tag_fire"), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
 	missile                 = spawn();
 	missile.owner           = missile.realowner = self;
@@ -663,12 +663,12 @@ bool W_Seeker(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_seeker.md3");
-			precache_model("models/weapons/v_seeker.md3");
-			precache_model("models/weapons/h_seeker.iqm");
-			precache_sound("weapons/tag_fire.wav");
-			precache_sound("weapons/flac_fire.wav");
-			precache_sound("weapons/seeker_fire.wav");
+			precache_model(W_Model("g_seeker.md3"));
+			precache_model(W_Model("v_seeker.md3"));
+			precache_model(W_Model("h_seeker.iqm"));
+			precache_sound(W_Sound("tag_fire"));
+			precache_sound(W_Sound("flac_fire"));
+			precache_sound(W_Sound("seeker_fire"));
 			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -707,7 +707,7 @@ bool W_Seeker(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:

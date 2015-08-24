@@ -330,4 +330,21 @@ int GetAmmoStat(.int ammotype)
 	}
 }
 #endif
+
+#ifdef SVQC
+string W_Sound(string w_snd)
+{
+	string output = strcat("weapons/", w_snd, ".wav");
+	MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
+	return output;
+}
+
+string W_Model(string w_mdl)
+{
+	string output = strcat("models/weapons/", w_mdl);
+	MUTATOR_CALLHOOK(WeaponModel, w_mdl, output);
+	return output;
+}
+#endif
+
 #endif

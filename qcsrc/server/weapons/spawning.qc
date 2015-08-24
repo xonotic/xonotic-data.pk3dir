@@ -179,7 +179,7 @@ void weapon_defaultspawnfunc(float wpn)
 	if(self.team)
 		f |= FL_NO_WEAPON_STAY;
 
-	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	StartItem(e.model, W_Sound("weaponpickup"), self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	#if 0 // WEAPONTODO
 	if (self.modelindex) // don't precache if self was removed
 		WEP_ACTION(e.weapon, WR_INIT);

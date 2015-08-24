@@ -1520,7 +1520,7 @@ void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
 void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
 void spawnfunc_item_strength (void) {
-		precache_sound("weapons/strength_fire.wav");
+		precache_sound(W_Sound("strength_fire"));
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItemA (ITEM_Strength);
@@ -1578,7 +1578,7 @@ void spawnfunc_target_items (void)
 	precache_sound("misc/armor25.wav");
 	precache_sound("misc/powerup.wav");
 	precache_sound("misc/poweroff.wav");
-	precache_sound("weapons/weaponpickup.wav");
+	precache_sound(W_Sound("weaponpickup"));
 
 	n = tokenize_console(self.netname);
 	if(argv(0) == "give")
@@ -1988,7 +1988,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 		wi = get_weaponinfo(j);
 		if(wi.weapon)
 		{
-			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
+			POSTGIVE_WEAPON(e, j, W_Sound("weaponpickup"), string_null);
 			if (!(save_weapons & WepSet_FromWeapon(j)))
 				if(e.weapons & WepSet_FromWeapon(j))
 					WEP_ACTION(wi.weapon, WR_INIT);

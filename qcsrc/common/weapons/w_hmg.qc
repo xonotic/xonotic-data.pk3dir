@@ -61,7 +61,7 @@ void W_HeavyMachineGun_Attack_Auto()
 
 	W_DecreaseAmmo(WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (self, true, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (self, true, 0, W_Sound("uzi_fire"), CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
@@ -119,10 +119,10 @@ bool W_HeavyMachineGun(int req)
 		case WR_INIT:
 		{
 			precache_model ("models/uziflash.md3");
-			precache_model ("models/weapons/g_ok_hmg.md3");
-			precache_model ("models/weapons/v_ok_hmg.md3");
-			precache_model ("models/weapons/h_ok_hmg.iqm");
-			precache_sound ("weapons/uzi_fire.wav");
+			precache_model(W_Model("g_ok_hmg.md3"));
+			precache_model(W_Model("v_ok_hmg.md3"));
+			precache_model(W_Model("h_ok_hmg.iqm"));
+			precache_sound (W_Sound("uzi_fire"));
 			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -151,7 +151,7 @@ bool W_HeavyMachineGun(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(hmg, ammo), "weapons/reload.wav");
+			W_Reload(WEP_CVAR(hmg, ammo), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
