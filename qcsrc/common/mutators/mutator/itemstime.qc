@@ -25,6 +25,18 @@ MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
 #endif
 
 #ifdef SVQC
+
+bool Item_ItemsTime_Allow(entity e)
+{
+    GameItem it = e.itemdef;
+	return (false
+	|| it.instanceOfPowerup
+	|| it == ITEM_ArmorMega     || it == ITEM_ArmorLarge
+	|| it == ITEM_HealthMega    || it == ITEM_HealthLarge
+	|| (e.weapons & WEPSET_SUPERWEAPONS)
+	);
+}
+
 float it_times[MAX_ITEMS];
 
 void Item_ItemsTime_Init()
