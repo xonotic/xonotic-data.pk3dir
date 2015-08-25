@@ -24,14 +24,33 @@ MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
 }
 #endif
 
+#ifdef CSQC
+int autocvar_hud_panel_itemstime = 2;
+float autocvar_hud_panel_itemstime_dynamicsize = 1;
+float autocvar_hud_panel_itemstime_ratio = 2;
+int autocvar_hud_panel_itemstime_iconalign;
+bool autocvar_hud_panel_itemstime_progressbar = 0;
+float autocvar_hud_panel_itemstime_progressbar_maxtime = 30;
+string autocvar_hud_panel_itemstime_progressbar_name = "progressbar";
+float autocvar_hud_panel_itemstime_progressbar_reduced;
+bool autocvar_hud_panel_itemstime_hidespawned = 1;
+bool autocvar_hud_panel_itemstime_hidelarge = false;
+int autocvar_hud_panel_itemstime_text = 1;
+#define hud_panel_itemstime_hidelarge autocvar_hud_panel_itemstime_hidelarge
+#endif
+
+#ifdef SVQC
+#define hud_panel_itemstime_hidelarge false
+#endif
+
 bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons)
 {
-	return (false
-	|| it.instanceOfPowerup
-	|| it == ITEM_ArmorMega     || it == ITEM_ArmorLarge
-	|| it == ITEM_HealthMega    || it == ITEM_HealthLarge
-	|| (_weapons & WEPSET_SUPERWEAPONS)
-	);
+    return (false
+    || it.instanceOfPowerup
+    || it == ITEM_ArmorMega     || (it == ITEM_ArmorLarge && !hud_panel_itemstime_hidelarge)
+    || it == ITEM_HealthMega    || (it == ITEM_HealthLarge && !hud_panel_itemstime_hidelarge)
+    || (_weapons & WEPSET_SUPERWEAPONS)
+    );
 }
 
 #ifdef SVQC
