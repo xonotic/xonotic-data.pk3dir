@@ -555,7 +555,7 @@ void GameCommand(string command)
 	// continue as usual and scan for normal commands
 	if (GenericCommand(command)// handled by common/command/generic.qc
 	|| LocalCommand_macro_command(argc) // handled by one of the above LocalCommand_* functions
-	|| MUTATOR_CALLHOOK(CSQC_ConsoleCommand, s, argc, command) // handled by a mutator
+	|| MUTATOR_CALLHOOK(GameCommand, s, argc, command) // handled by a mutator
 	) return;
 
 	// nothing above caught the command, must be invalid

@@ -36,10 +36,10 @@ void _dumptree_close(entity pass, entity me)
 
 float updateConwidths(float width, float height, float pixelheight);
 
-void GameCommand(string theCommand)
+void GameCommand(string command)
 {
-	float argc;
-	argc = tokenize_console(theCommand);
+	int argc = tokenize_console(command);
+	string s = strtolower(argv(0));
 
 	if(argv(0) == "help" || argc == 0)
 	{
@@ -53,7 +53,7 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	if(GenericCommand(theCommand))
+	if(GenericCommand(command))
 		return;
 
 	if(argv(0) == "sync")
@@ -129,6 +129,8 @@ void GameCommand(string theCommand)
 		depthfirst(main, parent, firstChild, nextSibling, _dumptree_open, _dumptree_close, NULL);
 		return;
 	}
+
+	if (MUTATOR_CALLHOOK(GameCommand, s, argc, command)) return; // handled by a mutator
 
 	print(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
 }
