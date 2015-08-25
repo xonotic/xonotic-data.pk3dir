@@ -24,18 +24,17 @@ MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
 }
 #endif
 
-#ifdef SVQC
-
-bool Item_ItemsTime_Allow(entity e)
+bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons)
 {
-    GameItem it = e.itemdef;
 	return (false
 	|| it.instanceOfPowerup
 	|| it == ITEM_ArmorMega     || it == ITEM_ArmorLarge
 	|| it == ITEM_HealthMega    || it == ITEM_HealthLarge
-	|| (e.weapons & WEPSET_SUPERWEAPONS)
+	|| (_weapons & WEPSET_SUPERWEAPONS)
 	);
 }
+
+#ifdef SVQC
 
 float it_times[MAX_ITEMS];
 
@@ -222,17 +221,19 @@ void HUD_ItemsTime()
         ItemsTime_time[ITEM_Shield.m_id] = time + 4;
     }
 
-    float i;
-    float count = 0;
+    int count = 0;
     if (autocvar_hud_panel_itemstime_hidespawned == 1)
-        for (i = 0; i < MAX_ITEMS; ++i)
+        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] > time || -ItemsTime_time[i] > time);
+        ));
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
-        for (i = 0; i < MAX_ITEMS; ++i)
+        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] > time);
+        ));
     else
-        for (i = 0; i < MAX_ITEMS; ++i)
+        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] != -1);
+        ));
     if (count == 0)
         return;
 
@@ -303,7 +304,7 @@ void HUD_ItemsTime()
 
     float row = 0, column = 0;
     bool item_available;
-    FOREACH(ITEMS, ItemsTime_time[i] != -1, LAMBDA(
+    FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0') && ItemsTime_time[i] != -1, LAMBDA(
         float item_time = ItemsTime_time[i];
         if (item_time < -1)
         {
