@@ -37,6 +37,7 @@
 #include "xonotic/crosshairpicker.qc"
 #include "xonotic/crosshairpreview.qc"
 #include "xonotic/cvarlist.qc"
+#include "xonotic/datasource.qc"
 #include "xonotic/demolist.qc"
 #include "xonotic/dialog.qc"
 #include "xonotic/dialog_credits.qc"
