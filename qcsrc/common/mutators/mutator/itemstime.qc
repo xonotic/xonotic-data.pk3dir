@@ -146,6 +146,15 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
 
 MUTATOR_HOOKFUNCTION(itemstime, reset_map_global) {
     Item_ItemsTime_ResetTimes();
+    // ALL the times need to be reset before .reset()ing each item
+    // since Item_Reset schedules respawn of superweapons and powerups
+    for (self = world; (self = nextent(self)); )
+    if (IS_NOT_A_CLIENT(self))
+    {
+        if (self.reset)
+            Item_ItemsTime_SetTime(self, 0);
+    }
+    Item_ItemsTime_SetTimesForAllPlayers();
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver) {
