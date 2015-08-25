@@ -26,6 +26,7 @@ xonotic/util.qc
 
 ../common/items/all.qc
 ../common/monsters/all.qc
+../common/mutators/all.qc
 ../common/vehicles/all.qc
 ../common/weapons/all.qc
 

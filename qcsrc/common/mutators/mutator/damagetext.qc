@@ -1,6 +1,6 @@
 REGISTER_MUTATOR(damagetext, true);
 
-#ifdef CSQC
+#if defined(CSQC) || defined(MENUQC)
 bool autocvar_cl_damagetext = false;
 string autocvar_cl_damagetext_format = "-%3$d";
 vector autocvar_cl_damagetext_color = '1 1 0';
@@ -10,6 +10,7 @@ float autocvar_cl_damagetext_alpha_lifetime = 3;
 vector autocvar_cl_damagetext_velocity = '0 0 20';
 vector autocvar_cl_damagetext_offset = '0 -40 0';
 float autocvar_cl_damagetext_accumulate_range = 30;
+
 STATIC_INIT(cl_damagetext) {
     CVAR_DESCRIBE(cl_damagetext, _("Draw damage dealt. 0: disabled, 1: enabled"));
     CVAR_DESCRIBESTR(cl_damagetext_format, _("How to format the damage text. 1$ is health, 2$ is armor, 3$ is both"));
@@ -21,7 +22,9 @@ STATIC_INIT(cl_damagetext) {
     CVAR_DESCRIBEVEC(cl_damagetext_offset, _("Damage text offset"));
     CVAR_DESCRIBE(cl_damagetext_accumulate_range, _("Damage text spawned within this range is accumulated"));
 }
+#endif
 
+#ifdef CSQC
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color)
     ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size)
@@ -121,4 +124,35 @@ MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
     }
     return true;
 }
+#endif
+
+#ifdef MENUQC
+#include "../../../menu/xonotic/tab.qc"
+CLASS(XonoticDamageTextSettings, XonoticTab)
+    #include "../../../menu/gamesettings.qh"
+    REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
+    ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"))
+    ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9)
+    ATTRIB(XonoticDamageTextSettings, rows, float, 13)
+    ATTRIB(XonoticDamageTextSettings, columns, float, 5)
+    INIT(XonoticDamageTextSettings) { this.configureDialog(this); }
+    METHOD(XonoticDamageTextSettings, showNotify, void(entity this)) { loadAllCvars(this); }
+    METHOD(XonoticDamageTextSettings, fill, void(entity this))
+    {
+        this.gotoRC(this, 0, 1); this.setFirstColumn(this, this.currentColumn);
+            this.TD(this, 1, 3, makeXonoticCheckBox(0, "cl_damagetext", _("Draw damage numbers")));
+        this.TR(this);
+            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Font size:")));
+            this.TD(this, 1, 2, makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+        this.TR(this);
+            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Accumulate range:")));
+            this.TD(this, 1, 2, makeXonoticSlider(0, 500, 1, "cl_damagetext_accumulate_range"));
+        this.TR(this);
+            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Lifetime:")));
+            this.TD(this, 1, 2, makeXonoticSlider(0, 10, 1, "cl_damagetext_alpha_lifetime"));
+        this.TR(this);
+            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Color:")));
+            this.TD(this, 2, 2, makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
+    }
+ENDCLASS(XonoticDamageTextSettings)
 #endif
