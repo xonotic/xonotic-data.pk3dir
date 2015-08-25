@@ -4,6 +4,8 @@
 ../dpdefs/csprogsdefs.qh
 ../common/util-post.qh
 
+../lib/_all.inc
+
 announcer.qc
 bgmscript.qc
 casings.qc

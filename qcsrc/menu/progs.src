@@ -5,6 +5,8 @@
 ../dpdefs/keycodes.qh
 ../common/util-post.qh
 
+../lib/_all.inc
+
 oo/classes.qc
 
 draw.qc
