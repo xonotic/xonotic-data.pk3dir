@@ -5,15 +5,16 @@
 #define STATSLIST_H
 #include "listbox.qc"
 CLASS(XonoticStatsList, XonoticListBox)
-	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity))
+	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity));
 	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)
-	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticStatsList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticStatsList, getStats, void(entity))
-	METHOD(XonoticStatsList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticStatsList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticStatsList, destroy, void(entity))
-	METHOD(XonoticStatsList, showNotify, void(entity))
+	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticStatsList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticStatsList, getStats, void(entity));
+	METHOD(XonoticStatsList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticStatsList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticStatsList, destroy, void(entity));
+	METHOD(XonoticStatsList, showNotify, void(entity));
+	ATTRIB(XonoticStatsList, selectionDoesntMatter, bool, true)
 
 	ATTRIB(XonoticStatsList, listStats, float, -1)
 	ATTRIB(XonoticStatsList, realFontSize, vector, '0 0 0')
@@ -317,9 +318,7 @@ void XonoticStatsList_resizeNotify(entity me, vector relOrigin, vector relSize, 
 
 void XonoticStatsList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	if(isSelected)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(isFocused)
+	if(isFocused)
 	{
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);

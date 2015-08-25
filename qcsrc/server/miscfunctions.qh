@@ -3,11 +3,12 @@
 
 #include "t_items.qh"
 
-#include "mutators/base.qh"
+#include "mutators/events.qh"
 #include "mutators/gamemode_race.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
+#include "../common/turrets/turrets.qh"
 
 #ifdef RELEASE
 #define cvar_string_normal builtin_cvar_string
@@ -48,8 +49,6 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2);
 
-vector randompos(vector m1, vector m2);
-
 void play2team(float t, string filename);
 
 void GetCvars_handleFloat(string thisname, float f, .float field, string name);
@@ -75,7 +74,6 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual);
 
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
-var void remove(entity e);
 void objerror(string s);
 void droptofloor();
 void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
@@ -157,6 +155,10 @@ const string STR_OBSERVER = "observer";
 #define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
 #define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
 #define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
+
+#define IS_MONSTER(v)			(v.flags & FL_MONSTER)
+#define IS_VEHICLE(v)			(v.vehicle_flags & VHF_ISVEHICLE)
+#define IS_TURRET(v)			(v.turret_flags & TUR_FLAG_ISTURRET)
 
 #define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))

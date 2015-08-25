@@ -2,25 +2,19 @@
 #define GAMEITEM_H
 #include "../oo.qh"
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
+/** If you register a new item, make sure to add it to all.inc */
 CLASS(GameItem, Object)
     ATTRIB(GameItem, m_id, int, 0)
-    METHOD(GameItem, show, void(entity this))
-    void GameItem_show(entity this) { print("A game item\n"); }
+    ATTRIB(GameItem, m_name, string, string_null)
+    ATTRIB(GameItem, m_icon, string, string_null)
+    ATTRIB(GameItem, m_color, vector, '1 1 1')
+    ATTRIB(GameItem, m_waypoint, string, string_null)
+    ATTRIB(GameItem, m_waypointblink, int, 1)
+    METHOD(GameItem, display, void(entity this, void(string name, string icon) returns)) {
+        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+    }
+    METHOD(GameItem, show, void(entity this)) { print("A game item\n"); }
     void ITEM_HANDLE(Show, entity this) { this.show(this); }
 ENDCLASS(GameItem)
-
-
-int ITEM_COUNT;
-/** If you register a new item, make sure to add it to all.inc */
-#define REGISTER_ITEM(id, class, body)          \
-    entity ITEM_##id;                           \
-    void RegisterItems_##id() {                 \
-        const entity this = NEW(class);         \
-        ITEM_##id = this;                       \
-        this.m_id = ITEM_COUNT;                 \
-        ITEMS[ITEM_COUNT++] = this;             \
-        body                                    \
-    }                                           \
-    ACCUMULATE_FUNCTION(RegisterItems, RegisterItems_##id)
 
 #endif

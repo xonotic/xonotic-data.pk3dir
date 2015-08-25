@@ -33,9 +33,13 @@ float vlen_maxnorm2d(vector v);
 
 float vlen_minnorm2d(vector v);
 
+vector teamradar_2dcoord_to_texcoord(vector in);
+
 vector teamradar_3dcoord_to_texcoord(vector in);
 
 vector teamradar_texcoord_to_2dcoord(vector in);
+
+vector teamradar_texcoord_to_3dcoord(vector in,float z);
 
 vector yinvert(vector v);
 

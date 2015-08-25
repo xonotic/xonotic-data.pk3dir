@@ -1,7 +1,0 @@
-#ifndef BUFF_H
-#define BUFF_H
-#include "pickup.qh"
-CLASS(Buff, Pickup)
-    ATTRIB(Buff, m_name, string, "Buff")
-ENDCLASS(Buff)
-#endif

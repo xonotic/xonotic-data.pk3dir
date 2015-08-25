@@ -110,12 +110,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_POWERUPS:
-					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_strength");
-					HUD_Write_PanelCvar_q("_progressbar_shield");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
@@ -203,6 +200,15 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo_minalpha");
 					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
 					HUD_Write_PanelCvar_q("_fade_minfontsize");
+					break;
+				case HUD_PANEL_ITEMSTIME:
+					HUD_Write_PanelCvar_q("_iconalign");
+					HUD_Write_PanelCvar_q("_progressbar");
+					HUD_Write_PanelCvar_q("_progressbar_name");
+					HUD_Write_PanelCvar_q("_progressbar_reduced");
+					HUD_Write_PanelCvar_q("_text");
+					HUD_Write_PanelCvar_q("_ratio");
+					HUD_Write_PanelCvar_q("_dynamicsize");
 					break;
 			}
 			HUD_Write("\n");
@@ -629,14 +635,6 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		highlightedPanel_backup = highlightedPanel;
 	}
 }
-
-const int S_MOUSE1 = 1;
-const int S_MOUSE2 = 2;
-const int S_MOUSE3 = 4;
-int mouseClicked;
-int prevMouseClicked; // previous state
-float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
-vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
 
 void HUD_Panel_EnableMenu();
 entity tab_panels[HUD_PANEL_MAX];

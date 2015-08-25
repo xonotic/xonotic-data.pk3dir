@@ -10,6 +10,7 @@
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
 #include "../common/teams.qh"
+#include "../common/triggers/trigger/viewloc.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/cl_player.qh"
@@ -400,6 +401,12 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	if(self.tag_entity && wasfreed(self.tag_entity))
 		self.tag_entity = world;
 
+	if(self.viewloc && wasfreed(self.viewloc))
+		self.viewloc = world;
+
+	if(self.viewloc.entnum != self.tag_networkviewloc)
+		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+
 	if(self.tag_networkentity)
 	{
 		// we are ATTACHED!
@@ -429,9 +436,9 @@ void CSQCModel_AutoTagIndex_Apply(void)
 			if(self.tag_entity)
 			{
 				// the best part is: IT EXISTS
-				if(substring(self.model, 0, 17) == "models/weapons/v_")
+				if(substring(self.model, 0, 14) == "models/weapons")
 				{
-					if(substring(self.tag_entity.model, 0, 17) == "models/weapons/h_")
+					if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
 					{
 						self.tag_index = gettagindex(self.tag_entity, "weapon");
 						if(!self.tag_index)
@@ -451,7 +458,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 					}
 				}
 
-				if(substring(self.tag_entity.model, 0, 17) == "models/weapons/v_")
+				if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
 				{
 					self.tag_index = gettagindex(self.tag_entity, "shot");
 					if(!self.tag_index)

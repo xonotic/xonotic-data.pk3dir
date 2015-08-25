@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ SEEKER,
 /* function  */ W_Seeker,
@@ -81,9 +81,10 @@ SEEKER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity tag_target, wps_tag_tracker;
 .float tag_time;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_seeker(void) { weapon_defaultspawnfunc(WEP_SEEKER); }
+void spawnfunc_weapon_seeker(void) { weapon_defaultspawnfunc(WEP_SEEKER.m_id); }
 
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
@@ -249,9 +250,9 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	W_DecreaseAmmo(WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0);
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("seeker_fire.wav"), CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
-	pointparticles(particleeffectnum("seeker_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("seeker_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	//self.detornator         = false;
 
@@ -276,9 +277,9 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	//missile.think           = W_Seeker_Missile_Animate; // csqc projectiles.
 
 	if(missile.enemy != world)
-		missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
+		missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
 	else
-		missile.projectiledeathtype = WEP_SEEKER;
+		missile.projectiledeathtype = WEP_SEEKER.m_id;
 
 
 	setorigin(missile, w_shotorg);
@@ -293,7 +294,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 
 	CSQCProjectile(missile, false, PROJECTILE_SEEKER, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -340,10 +341,10 @@ void W_Seeker_Fire_Flac(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/flac_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("flac_fire"), CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
 	w_shotorg += f_diff;
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	missile 				= spawn();
 	missile.owner 			= missile.realowner = self;
@@ -356,8 +357,8 @@ void W_Seeker_Fire_Flac(void)
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
 	missile.solid 			= SOLID_BBOX;
 	missile.movetype 		= MOVETYPE_FLY;
-	missile.projectiledeathtype = WEP_SEEKER;
-	missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
+	missile.projectiledeathtype = WEP_SEEKER.m_id;
+	missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
 	missile.flags 				= FL_PROJECTILE;
 	missile.missile_flags       = MIF_SPLASH;
 
@@ -371,7 +372,7 @@ void W_Seeker_Fire_Flac(void)
 	W_SetupProjVelocity_UP_PRE(missile, seeker, flac_);
 	CSQCProjectile(missile, true, PROJECTILE_FLAC, true);
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -416,7 +417,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 	entity oldself,oldenemy;
 	self.cnt = self.cnt - 1;
 
-	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.WEP_AMMO(SEEKER) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER))
+	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.WEP_AMMO(SEEKER) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER.m_id))
 	{
 		remove(self);
 		return;
@@ -455,7 +456,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 void W_Seeker_Tracker_Think(void)
 {
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
-	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER)
+	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER.m_id)
 	|| (time > self.tag_time + WEP_CVAR(seeker, tag_tracker_lifetime)))
 	{
 		if(self)
@@ -477,7 +478,7 @@ void W_Seeker_Tag_Explode(void)
 {
 	//if(other==self.realowner)
 	//    return;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_BOUNCE, other.species, self);
+	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, other.species, self);
 
 	remove(self);
 }
@@ -505,7 +506,7 @@ void W_Seeker_Tag_Touch(void)
 	te_knightspike(org2);
 
 	self.event_damage = func_null;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_BOUNCE | HITTYPE_SECONDARY, other.species, self);
+	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, other.species, self);
 
 	if(other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)
 	{
@@ -559,7 +560,7 @@ void W_Seeker_Fire_Tag(void)
 	entity missile;
 	W_DecreaseAmmo(WEP_CVAR(seeker, tag_ammo));
 
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, "weapons/tag_fire.wav", CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("tag_fire"), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
 	missile                 = spawn();
 	missile.owner           = missile.realowner = self;
@@ -589,7 +590,7 @@ void W_Seeker_Fire_Tag(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_TAG, false); // has sound
 
-	other = missile; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
 // ============================
@@ -662,12 +663,12 @@ bool W_Seeker(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_seeker.md3");
-			precache_model("models/weapons/v_seeker.md3");
-			precache_model("models/weapons/h_seeker.iqm");
-			precache_sound("weapons/tag_fire.wav");
-			precache_sound("weapons/flac_fire.wav");
-			precache_sound("weapons/seeker_fire.wav");
+			precache_model(W_Model("g_seeker.md3"));
+			precache_model(W_Model("v_seeker.md3"));
+			precache_model(W_Model("h_seeker.iqm"));
+			precache_sound(W_Sound("tag_fire"));
+			precache_sound(W_Sound("flac_fire"));
+			precache_sound(W_Sound("seeker_fire"));
 			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -676,12 +677,12 @@ bool W_Seeker(int req)
 			if(WEP_CVAR(seeker, type) == 1)
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, missile_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, missile_ammo);
+				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
 			}
 			else
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, tag_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, tag_ammo);
+				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
 			}
 			return ammo_amount;
 		}
@@ -690,12 +691,12 @@ bool W_Seeker(int req)
 			if(WEP_CVAR(seeker, type) == 1)
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, tag_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, tag_ammo);
+				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
 			}
 			else
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, flac_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER]) >= WEP_CVAR(seeker, flac_ammo);
+				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
 			}
 			return ammo_amount;
 		}
@@ -706,7 +707,7 @@ bool W_Seeker(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -738,7 +739,7 @@ bool W_Seeker(int req)
 				if(w_deathtype & HITTYPE_SECONDARY)
 				{
 					if(!w_issilent)
-						sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("tag_impact"), 1, ATTEN_NORM);
 				}
 				else
 				{
@@ -746,11 +747,11 @@ bool W_Seeker(int req)
 					if(!w_issilent)
 					{
 						if(w_random<0.15)
-							sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
 						else if(w_random<0.7)
-							sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, W_Sound("tagexp2"), 1, ATTEN_NORM);
 						else
-							sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, W_Sound("tagexp3"), 1, ATTEN_NORM);
 					}
 				}
 			}
@@ -760,24 +761,24 @@ bool W_Seeker(int req)
 				if(!w_issilent)
 				{
 					if(w_random<0.15)
-						sound(self, CH_SHOTS, "weapons/seekerexp1.wav", 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("seekerexp1"), 1, ATTEN_NORM);
 					else if(w_random<0.7)
-						sound(self, CH_SHOTS, "weapons/seekerexp2.wav", 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("seekerexp2"), 1, ATTEN_NORM);
 					else
-						sound(self, CH_SHOTS, "weapons/seekerexp3.wav", 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, W_Sound("seekerexp3"), 1, ATTEN_NORM);
 				}
 			}
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/seekerexp1.wav");
-			precache_sound("weapons/seekerexp2.wav");
-			precache_sound("weapons/seekerexp3.wav");
-			precache_sound("weapons/tagexp1.wav");
-			precache_sound("weapons/tagexp2.wav");
-			precache_sound("weapons/tagexp3.wav");
-			precache_sound("weapons/tag_impact.wav");
+			precache_sound(W_Sound("seekerexp1"));
+			precache_sound(W_Sound("seekerexp2"));
+			precache_sound(W_Sound("seekerexp3"));
+			precache_sound(W_Sound("tagexp1"));
+			precache_sound(W_Sound("tagexp2"));
+			precache_sound(W_Sound("tagexp3"));
+			precache_sound(W_Sound("tag_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

@@ -12,6 +12,7 @@
 var float(string name) cvar;
 var string(string name) cvar_string;
 var void(string name, string value) cvar_set;
+var void remove(entity e);
 
 #pragma noref 0
 

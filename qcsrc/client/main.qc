@@ -2,9 +2,11 @@
 #include "_all.qh"
 
 #include "casings.qh"
+#include "controlpoint.qh"
 #include "csqcmodel_hooks.qh"
 #include "damage.qh"
 #include "effects.qh"
+#include "generator.qh"
 #include "gibs.qh"
 #include "hook.qh"
 #include "hud.qh"
@@ -17,19 +19,20 @@
 #include "scoreboard.qh"
 #include "shownames.qh"
 #include "sortlist.qh"
-#include "tturrets.qh"
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"
 #include "waypointsprites.qh"
 
-#include "vehicles/bumblebee.qh"
-#include "vehicles/all.qh"
+#include "../common/vehicles/all.qh"
+
+#include "mutators/events.qh"
 
 #include "weapons/projectile.qh"
 
 #include "../common/buffs.qh"
 #include "../common/deathtypes.qh"
+#include "../common/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/nades.qh"
@@ -40,12 +43,17 @@
 
 #include "../common/items/all.qh"
 
+#include "../common/mutators/base.qh"
+
 #include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/interpolate.qh"
 
 #include "../common/triggers/include.qh"
+
+#include "../common/turrets/cl_turrets.qh"
+#include "../common/turrets/turrets.qh"
 
 #include "../warpzonelib/client.qh"
 
@@ -119,6 +127,9 @@ void CSQC_Init(void)
 	registercvar("cl_nade_type", "3");
 	registercvar("cl_pokenade_type", "zombie");
 
+	registercvar("cl_jumpspeedcap_min", "");
+	registercvar("cl_jumpspeedcap_max", "");
+
 	gametype = 0;
 
 	// hud_fields uses strunzone on the titles!
@@ -137,14 +148,14 @@ void CSQC_Init(void)
 	GetTeam(NUM_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterItems);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	static_init();
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+
+	initialize_minigames();
 
 	WaypointSprite_Load();
 
@@ -153,12 +164,11 @@ void CSQC_Init(void)
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 
+	generator_precache();
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	Vehicles_Precache();
-	turrets_precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 
@@ -221,6 +231,9 @@ void Shutdown(void)
 		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
+
+	deactivate_minigame();
+	HUD_MinigameMenu_Close();
 }
 
 .float has_team;
@@ -364,7 +377,13 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
+	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
+		return true;
+
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if(menu_visible && menu_action)
@@ -779,7 +798,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = false;
 		}
 	}
-
+	HUD_Radar_Hide_Maximized();
 	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum);
 }
 
@@ -834,6 +853,12 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	self.enttype = t;
 	switch(t)
 	{
+		case ENT_CLIENT_MUTATOR: {
+			int mutID = ReadMutator();
+			if (!MUTATOR_CALLHOOK(CSQC_Ent_Update, mutID, bIsNewEntity))
+			error(sprintf("Unknown mutator type in CSQC_Ent_Update (mutID: %d, edict: %d, classname: %s)\n", mutID, num_for_edict(self), self.classname));
+			break;
+		}
 		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(); break;
 		case ENT_CLIENT_SCORES: Ent_ReadPlayerScore(); break;
 		case ENT_CLIENT_TEAMSCORES: Ent_ReadTeamScore(); break;
@@ -842,7 +867,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_LASER: Ent_Laser(); break;
 		case ENT_CLIENT_NAGGER: Ent_Nagger(); break;
 		case ENT_CLIENT_ELIMINATEDPLAYERS: Ent_EliminatedPlayers(); break;
-		case ENT_CLIENT_WAYPOINT: Ent_WaypointSprite(); break;
 		case ENT_CLIENT_RADARLINK: Ent_RadarLink(); break;
 		case ENT_CLIENT_PROJECTILE: Ent_Projectile(); break;
 		case ENT_CLIENT_GIBSPLASH: Ent_GibSplash(bIsNewEntity); break;
@@ -866,6 +890,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
+		case ENT_CLIENT_GENERATOR: ent_generator(); break;
+		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
@@ -873,6 +899,9 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
+		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
+		case ENT_CLIENT_VIEWLOC: ent_viewloc(); break;
+		case ENT_CLIENT_VIEWLOC_TRIGGER: ent_viewloc_trigger(); break;
 		case ENT_CLIENT_LADDER: ent_func_ladder(); break;
 		case ENT_CLIENT_TRIGGER_PUSH: ent_trigger_push(); break;
 		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;
@@ -884,6 +913,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_KEYLOCK: ent_keylock(); break;
 		case ENT_CLIENT_TRAIN: ent_train(); break;
 		case ENT_CLIENT_TRIGGER_IMPULSE: ent_trigger_impulse(); break;
+		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
@@ -1250,69 +1280,55 @@ void Net_WeaponComplain()
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float CSQC_Parse_TempEntity()
 {
-	float bHandled;
-		bHandled  = true;
 	// Acquire TE ID
-	float nTEID;
-		nTEID = ReadByte();
+	int nTEID = ReadByte();
 
-	if(autocvar_developer_csqcentities)
+	if (autocvar_developer_csqcentities)
 		printf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
-		// NOTE: Could just do return instead of break...
-	switch(nTEID)
+	switch (nTEID)
 	{
+		case TE_CSQC_MUTATOR:
+			int mutID = ReadMutator();
+			if (MUTATOR_CALLHOOK(CSQC_Parse_TempEntity, mutID))
+			return true;
 		case TE_CSQC_TARGET_MUSIC:
 			Net_TargetMusic();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_PICTURE:
 			Net_MapVote_Picture();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_RACE:
 			Net_ReadRace();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_VORTEXBEAMPARTICLE:
 			Net_ReadVortexBeamParticle();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_TEAMNAGGER:
 			Net_TeamNagger();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_ARC:
 			Net_ReadArc();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_PINGPLREPORT:
 			Net_ReadPingPLReport();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_VEHICLESETUP:
 			Net_VehicleSetup();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_SVNOTICE:
 			cl_notice_read();
-			bHandled = true;
-			break;
+			return true;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
 			Net_ReadShockwaveParticle();
-			bHandled = true;
-			break;
+			return true;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
-			bHandled = false;
-			break;
+			return false;
 	}
-
-	return bHandled;
 }
 
 string getcommandkey(string text, string command)

@@ -2,7 +2,7 @@
 #define DIALOG_SETTINGS_AUDIO_H
 #include "tab.qc"
 CLASS(XonoticAudioSettingsTab, XonoticTab)
-	METHOD(XonoticAudioSettingsTab, fill, void(entity))
+	METHOD(XonoticAudioSettingsTab, fill, void(entity));
 	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticAudioSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space

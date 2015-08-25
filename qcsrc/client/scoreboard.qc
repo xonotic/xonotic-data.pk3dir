@@ -7,6 +7,7 @@
 #include "../common/constants.qh"
 #include "../common/counting.qh"
 #include "../common/mapinfo.qh"
+#include "../common/minigames/cl_minigames.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
@@ -302,7 +303,7 @@ void Cmd_HUD_Help()
 #define HUD_DefaultColumnLayout() \
 "ping pl name | " \
 "-teams,race,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,race,ka/suicides +ft,tdm/suicides -race,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
-"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns " \
+"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
 "+lms/lives +lms/rank " \
 "+kh/caps +kh/pushes +kh/destroyed " \
 "?+race/laps ?+race/time ?+race/fastest " \
@@ -960,13 +961,15 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 float HUD_WouldDrawScoreboard() {
 	if (autocvar__hud_configure)
 		return 0;
+	else if (HUD_Radar_Clickable())
+		return 0;
 	else if (scoreboard_showscores)
 		return 1;
 	else if (intermission == 1)
 		return 1;
 	else if (intermission == 2)
 		return 0;
-	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS)
+	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS && !active_minigame)
 		return 1;
 	else if (scoreboard_showscores_force)
 		return 1;

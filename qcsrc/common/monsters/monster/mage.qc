@@ -1,15 +1,19 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool m_mage(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ MAGE,
-/* function   */ m_mage,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -24', '36 36 50',
 /* model      */ "mage.dpm",
 /* netname    */ "mage",
 /* fullname   */ _("Mage")
-);
+) {
+#ifndef MENUQC
+    this.monster_func = m_mage;
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_attack_spike_damage;
@@ -63,8 +67,8 @@ float friend_needshelp(entity e)
 	if(e.frozen)
 		return false;
 	if(!IS_PLAYER(e))
-		return ((e.flags & FL_MONSTER) && e.health < e.max_health);
-	if(e.items & IT_INVINCIBLE)
+		return (IS_MONSTER(e) && e.health < e.max_health);
+	if(e.items & ITEM_Shield.m_itemid)
 		return false;
 
 	switch(self.skin)
@@ -82,11 +86,11 @@ void mage_spike_explode()
 {
 	self.event_damage = func_null;
 
-	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
 
 	self.realowner.mage_spike = world;
 
-	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
+	Send_Effect("explosion_small", self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE, other);
 
 	remove (self);
@@ -228,11 +232,11 @@ void mage_heal()
 					break;
 			}
 
-			pointparticles(particleeffectnum(fx), head.origin, '0 0 0', 1);
+			Send_Effect(fx, head.origin, '0 0 0', 1);
 		}
 		else
 		{
-			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
+			Send_Effect("healing_fx", head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
 			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE))
 				WaypointSprite_UpdateHealth(head.sprite, head.health);
@@ -248,9 +252,9 @@ void mage_heal()
 
 void mage_push()
 {
-	sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
-	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
+	Send_Effect("TE_EXPLOSION", self.origin, '0 0 0', 1);
 
 	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
@@ -267,7 +271,7 @@ void mage_teleport()
 	if(trace_fraction < 1)
 		return;
 
-	pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1);
+	Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1);
 	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
 
 	self.attack_finished_single = time + 0.2;
@@ -337,7 +341,7 @@ void spawnfunc_monster_mage()
 {
 	self.classname = "monster_mage";
 
-	if(!monster_initialize(MON_MAGE)) { remove(self); return; }
+	if(!monster_initialize(MON_MAGE.monsterid)) { remove(self); return; }
 }
 
 // compatibility with old spawns
@@ -395,8 +399,8 @@ float m_mage(float req)
 		case MR_PRECACHE:
 		{
 			precache_model("models/monsters/mage.dpm");
-			precache_sound ("weapons/grenade_impact.wav");
-			precache_sound ("weapons/tagexp1.wav");
+			precache_sound (W_Sound("grenade_impact"));
+			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
 	}
@@ -420,4 +424,3 @@ float m_mage(float req)
 }
 
 #endif // CSQC
-#endif // REGISTER_MONSTER

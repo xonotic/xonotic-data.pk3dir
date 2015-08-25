@@ -78,6 +78,7 @@ void Draw_WaypointSprite();
 // they are drawn using a .draw function
 
 void Ent_RemoveWaypointSprite();
+
 void Ent_WaypointSprite();
 
 void WaypointSprite_Load_Frames(string ext);

@@ -42,7 +42,7 @@
 \g_weaponarena\Seleccionando un arma, dara a todos los jugadores cual arma se eligió asi como infinita munición, y deshabilita cualquier otra toma de arma.
 \g_instagib\Los jugadores tendran Minstanex, el cual es un railgun con daño infinito. Si el jugador queda sin munición, tendra 10 segundos para buscar mas o morira. El modo de disparo secundario es un laser que no inflige daño y es bueno para hacer bromas.
 \g_nix\Xonotic sin items - en vez de recoger items, todos juegan con la misma arma. Despues de algún tiempo, comienza una cuenta regresiva, despues del cual todos juegan con otra arma.
-\g_nix_with_laser\Siempre lleva el láser como arma adicional en Nix
+\g_nix_with_blaster\Siempre lleva el láser como arma adicional en Nix
 \XonoticMultiplayerDialog/Select all\Seleccionar todos los mapas
 \XonoticMultiplayerDialog/Select none\Deseleccionar todos los mapas
 

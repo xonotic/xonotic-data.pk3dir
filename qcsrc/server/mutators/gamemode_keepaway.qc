@@ -47,8 +47,8 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	self.think = ka_RespawnBall;
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
-	pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
-	pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
+	Send_Effect("electro_combo", oldballorigin, '0 0 0', 1);
+	Send_Effect("electro_combo", self.origin, '0 0 0', 1);
 
 	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
@@ -81,7 +81,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if(other.frozen) { return; }
 	if (!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
-		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
+		Send_Effect("kaball_sparks", self.origin, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTEN_NORM);
 		return;
 	}

@@ -6,7 +6,7 @@
 
 #include "../warpzonelib/mathlib.qh"
 
-#define TUBA_STARTNOTE(i, n) strcat("weapons/tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n), ".wav")
+#define TUBA_STARTNOTE(i, n) W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n)))
 
 const int TUBA_MIN = -18;
 const int TUBA_MAX = 27;

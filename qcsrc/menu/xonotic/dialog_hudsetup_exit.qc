@@ -2,7 +2,7 @@
 #define DIALOG_HUDSETUP_EXIT_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDExitDialog, XonoticRootDialog)
-	METHOD(XonoticHUDExitDialog, fill, void(entity))
+	METHOD(XonoticHUDExitDialog, fill, void(entity));
 	ATTRIB(XonoticHUDExitDialog, title, string, _("Panel HUD Setup"))
 	ATTRIB(XonoticHUDExitDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDExitDialog, intendedWidth, float, 0.4)

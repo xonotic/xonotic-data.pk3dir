@@ -158,9 +158,9 @@ void GiveBall(entity plyr, entity ball)
 	self.weaponentity.weapons = self.weapons;
 	self.weaponentity.switchweapon = self.weapon;
 	self.weapons = WEPSET_PORTO;
-	WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
-	self.switchweapon = WEP_PORTO;
-	W_SwitchWeapon(WEP_PORTO);
+	WEP_ACTION(WEP_PORTO.m_id, WR_RESETPLAYER);
+	self.switchweapon = WEP_PORTO.m_id;
+	W_SwitchWeapon(WEP_PORTO.m_id);
 	self = ownr;
 }
 
@@ -777,7 +777,7 @@ void W_Nexball_Attack2(void)
 	if(!(balls & BALL_BASKET))
 		return;
 	W_SetupShot(self, false, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0);
-//	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+//	Send_Effect("grenadelauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 	missile = spawn();
 
 	missile.owner = self;
@@ -863,9 +863,9 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_INIT)
 	{
-		precache_model("models/weapons/g_porto.md3");
-		precache_model("models/weapons/v_porto.md3");
-		precache_model("models/weapons/h_porto.iqm");
+		precache_model(W_Model("g_porto.md3"));
+		precache_model(W_Model("v_porto.md3"));
+		precache_model(W_Model("h_porto.iqm"));
 		precache_model("models/elaser.mdl");
 		precache_sound("nexball/shoot1.wav");
 		precache_sound("nexball/shoot2.wav");
@@ -873,7 +873,7 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_SETUP)
 	{
-		//weapon_setup(WEP_PORTO);
+		//weapon_setup(WEP_PORTO.m_id);
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return true
 	return true;
@@ -936,7 +936,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			if(self.weaponentity.weapons)
 			{
 				self.weapons = self.weaponentity.weapons;
-				WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
+				WEP_ACTION(WEP_PORTO.m_id, WR_RESETPLAYER);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 
@@ -982,7 +982,7 @@ MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {
-	if(self.weapon == WEP_MORTAR)
+	if(self.weapon == WEP_MORTAR.m_id)
 		return true;
 
 	return false;
@@ -991,7 +991,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 {
 	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_MORTAR)
+	if(self.weapon == WEP_MORTAR.m_id)
 		return true;
 
 	return false;

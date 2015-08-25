@@ -2,8 +2,8 @@
 #define GAMETYPEBUTTON_H
 #include "../item/radiobutton.qc"
 CLASS(XonoticGametypeButton, RadioButton)
-	METHOD(XonoticGametypeButton, configureXonoticGametypeButton, void(entity, float, string, string))
-	METHOD(XonoticGametypeButton, setChecked, void(entity, float))
+	METHOD(XonoticGametypeButton, configureXonoticGametypeButton, void(entity, float, string, string));
+	METHOD(XonoticGametypeButton, setChecked, void(entity, float));
 	ATTRIB(XonoticGametypeButton, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticGametypeButton, image, string, SKINGFX_BUTTON_BIG)
 	ATTRIB(XonoticGametypeButton, color, vector, SKINCOLOR_BUTTON_N)
@@ -14,8 +14,8 @@ CLASS(XonoticGametypeButton, RadioButton)
 	ATTRIB(XonoticGametypeButton, useDownAsChecked, float, 1)
 
 	ATTRIB(XonoticGametypeButton, cvarName, string, string_null)
-	METHOD(XonoticGametypeButton, loadCvars, void(entity))
-	METHOD(XonoticGametypeButton, saveCvars, void(entity))
+	METHOD(XonoticGametypeButton, loadCvars, void(entity));
+	METHOD(XonoticGametypeButton, saveCvars, void(entity));
 
 	ATTRIB(XonoticGametypeButton, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticGametypeButton, disabledAlpha, float, SKINALPHA_DISABLED)

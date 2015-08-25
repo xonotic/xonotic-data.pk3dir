@@ -2,8 +2,8 @@
 #define DIALOG_SETTINGS_INPUT_USERBIND_H
 #include "dialog.qc"
 CLASS(XonoticUserbindEditDialog, XonoticDialog)
-	METHOD(XonoticUserbindEditDialog, loadUserBind, void(entity, string, string, string))
-	METHOD(XonoticUserbindEditDialog, fill, void(entity))
+	METHOD(XonoticUserbindEditDialog, loadUserBind, void(entity, string, string, string));
+	METHOD(XonoticUserbindEditDialog, fill, void(entity));
 	ATTRIB(XonoticUserbindEditDialog, title, string, _("User defined key bind"))
 	ATTRIB(XonoticUserbindEditDialog, color, vector, SKINCOLOR_DIALOG_USERBIND)
 	ATTRIB(XonoticUserbindEditDialog, intendedWidth, float, 0.7)

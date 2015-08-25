@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011 Rudolf Polzer
+ * Copyright (c) 2015 Micah Talkiewicz
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -23,6 +24,7 @@
 	#include "../dpdefs/csprogsdefs.qh"
 	#include "../client/defs.qh"
 	#include "../common/constants.qh"
+	#include "../common/p2mathlib.qh"
 	#include "../common/stats.qh"
 	#include "../common/util.qh"
 	#include "interpolate.qh"
@@ -30,6 +32,8 @@
 	#include "common.qh"
 	#include "cl_model.qh"
 	#include "cl_player.qh"
+ 	#include "../common/triggers/trigger/viewloc.qh"
+ 	#include "../common/viewloc.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif
@@ -139,7 +143,7 @@ void PM_Movement_Move()
 {
 	runstandardplayerphysics(self);
 #ifdef CSQC
-	self.flags = 
+	self.flags =
 			((self.pmove_flags & PMF_DUCKED) ? FL_DUCKED : 0) |
 			(!(self.pmove_flags & PMF_JUMP_HELD) ? FL_JUMPRELEASED : 0) |
 			((self.pmove_flags & PMF_ONGROUND) ? FL_ONGROUND : 0);
@@ -203,6 +207,11 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 bool CSQCPlayer_IsLocalPlayer()
 {
 	return (self == csqcplayer);
+}
+
+void CSQCPlayer_SetViewLocation()
+{
+	viewloc_SetViewLocation();
 }
 
 void CSQCPlayer_SetCamera()

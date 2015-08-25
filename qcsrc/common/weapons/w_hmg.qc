@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id	 */ HMG,
 /* function	 */ W_HeavyMachineGun,
@@ -37,10 +37,11 @@ REGISTER_WEAPON(
 #ifdef SVQC
 HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 
-void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG); }
+void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG.m_id); }
 
 void W_HeavyMachineGun_Attack_Auto()
 {
@@ -60,7 +61,7 @@ void W_HeavyMachineGun_Attack_Auto()
 
 	W_DecreaseAmmo(WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (self, true, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (self, true, 0, W_Sound("uzi_fire"), CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
@@ -69,11 +70,11 @@ void W_HeavyMachineGun_Attack_Auto()
 	}
 
 	float hmg_spread = bound(WEP_CVAR(hmg, spread_min), WEP_CVAR(hmg, spread_min) + (WEP_CVAR(hmg, spread_add) * self.misc_bulletcounter), WEP_CVAR(hmg, spread_max));
-	fireBullet(w_shotorg, w_shotdir, hmg_spread, WEP_CVAR(hmg, solidpenetration), WEP_CVAR(hmg, damage), WEP_CVAR(hmg, force), WEP_HMG, 0);
+	fireBullet(w_shotorg, w_shotdir, hmg_spread, WEP_CVAR(hmg, solidpenetration), WEP_CVAR(hmg, damage), WEP_CVAR(hmg, force), WEP_HMG.m_id, 0);
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("uzi_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -118,10 +119,10 @@ bool W_HeavyMachineGun(int req)
 		case WR_INIT:
 		{
 			precache_model ("models/uziflash.md3");
-			precache_model ("models/weapons/g_ok_hmg.md3");
-			precache_model ("models/weapons/v_ok_hmg.md3");
-			precache_model ("models/weapons/h_ok_hmg.iqm");
-			precache_sound ("weapons/uzi_fire.wav");
+			precache_model(W_Model("g_ok_hmg.md3"));
+			precache_model(W_Model("v_ok_hmg.md3"));
+			precache_model(W_Model("h_ok_hmg.iqm"));
+			precache_sound (W_Sound("uzi_fire"));
 			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -130,7 +131,7 @@ bool W_HeavyMachineGun(int req)
 			ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
 
 			if(autocvar_g_balance_hmg_reload_ammo)
-				ammo_amount += self.(weapon_load[WEP_HMG]) >= WEP_CVAR(hmg, ammo);
+				ammo_amount += self.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
 
 			return ammo_amount;
 		}
@@ -139,7 +140,7 @@ bool W_HeavyMachineGun(int req)
 			ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
 
 			if(autocvar_g_balance_hmg_reload_ammo)
-				ammo_amount += self.(weapon_load[WEP_HMG]) >= WEP_CVAR(hmg, ammo);
+				ammo_amount += self.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
 
 			return ammo_amount;
 		}
@@ -150,7 +151,7 @@ bool W_HeavyMachineGun(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(hmg, ammo), "weapons/reload.wav");
+			W_Reload(WEP_CVAR(hmg, ammo), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -180,19 +181,19 @@ bool W_HeavyMachineGun(int req)
 			pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				if(w_random < 0.05)
-					sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.1)
-					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.2)
-					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTEN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/ric1.wav");
-			precache_sound("weapons/ric2.wav");
-			precache_sound("weapons/ric3.wav");
+			precache_sound(W_Sound("ric1"));
+			precache_sound(W_Sound("ric2"));
+			precache_sound(W_Sound("ric3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

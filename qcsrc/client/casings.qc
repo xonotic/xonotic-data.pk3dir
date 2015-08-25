@@ -2,6 +2,7 @@
 #include "_all.qh"
 
 #include "../common/movetypes/movetypes.qh"
+#include "../common/weapons/all.qh"
 #include "prandom.qh"
 #include "rubble.qh"
 
@@ -63,10 +64,10 @@ void Casing_Touch()
 				switch(self.state)
 				{
 					case 1:
-						s = strcat("weapons/casings", itos(f), ".wav");
+						s = W_Sound(strcat("casings", itos(f)));
 						break;
 					default:
-						s = strcat("weapons/brass", itos(f), ".wav");
+						s = W_Sound(strcat("brass", itos(f)));
 						break;
 				}
 
@@ -145,10 +146,10 @@ void Casings_Precache()
 {
 	precache_model("models/casing_shell.mdl");
 	precache_model("models/casing_bronze.iqm");
-	precache_sound("weapons/brass1.wav");
-	precache_sound("weapons/brass2.wav");
-	precache_sound("weapons/brass3.wav");
-	precache_sound("weapons/casings1.wav");
-	precache_sound("weapons/casings2.wav");
-	precache_sound("weapons/casings3.wav");
+	precache_sound(W_Sound("brass1.wav"));
+	precache_sound(W_Sound("brass2.wav"));
+	precache_sound(W_Sound("brass3.wav"));
+	precache_sound(W_Sound("casings1.wav"));
+	precache_sound(W_Sound("casings2.wav"));
+	precache_sound(W_Sound("casings3.wav"));
 }
