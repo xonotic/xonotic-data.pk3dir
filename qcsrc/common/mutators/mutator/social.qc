@@ -3,6 +3,8 @@ REGISTER_MUTATOR(social, true);
 
 void Social_send(int to, string msg);
 
+string Social_invite_accept;
+
 void Social_parse(entity fh, entity pass, int status)
 {
 	switch (status) {
@@ -30,6 +32,12 @@ void Social_parse(entity fh, entity pass, int status)
                         print(input, "\n");
                     }
                     break;
+                case "invite": {
+                    string s = url_fgets(fh);
+                    printf("Player %d has invited you to %s; `menu_cmd saccept` to join\n", id, s);
+                    Social_invite_accept = sprintf("\nconnect %s\n", s);
+                    break;
+                }
 		        default:
                     printf("Social_parse(): '%s'\n", cmd);
                     break;
@@ -78,6 +86,15 @@ MUTATOR_HOOKFUNCTION(social, GameCommand) {
         int to = stoi(argv(1));
         string msg = substring(cmd_string, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
         Social_send(to, msg);
+        return true;
+    }
+    if (cmd_name == "sinvite" && cmd_argc == 2) {
+        int to = stoi(argv(1));
+        Social_send(to, sprintf("%s\n%s", "invite", g_server));
+        return true;
+    }
+    if (cmd_name == "saccept") {
+        ServerList_Connect(Social_invite_accept);
         return true;
     }
     if (cmd_name == "srecv") {

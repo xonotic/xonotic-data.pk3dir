@@ -66,6 +66,8 @@ CLASS(XonoticServerList, XonoticListBox)
 ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
+string g_server;
+
 #ifndef IMPLEMENTATION
 float autocvar_menu_slist_categories;
 float autocvar_menu_slist_categories_onlyifmultiple;
@@ -948,13 +950,16 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 		me.setSortOrder(me, f, me.currentSortOrder); // force resetting the sort order
 	}
 }
+void ServerList_Connect(string s)
+{
+	g_server = s;
+	localcmd(sprintf("connect %s\n", g_server));
+}
 void ServerList_Connect_Click(entity btn, entity me)
 {
-	localcmd(sprintf("connect %s\n",
-		((me.ipAddressBox.text != "") ?
-			me.ipAddressBox.text : me.selectedServer
-		)
-	));
+	ServerList_Connect((me.ipAddressBox.text != "")
+				? me.ipAddressBox.text
+				: me.selectedServer);
 }
 void ServerList_Favorite_Click(entity btn, entity me)
 {
