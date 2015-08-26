@@ -5,6 +5,19 @@ void Social_send(int to, string msg);
 
 string Social_invite_accept;
 
+int Social_db = -1;
+
+STATIC_INIT(Social) {
+    Social_db = db_load("social.db");
+}
+
+string Social_get(int id)
+{
+    string s = db_get(Social_db, itos(id));
+    if (s == "") s = sprintf("Player %d", id);
+    return s;
+}
+
 void Social_parse(entity fh, entity pass, int status)
 {
 	switch (status) {
@@ -25,7 +38,8 @@ void Social_parse(entity fh, entity pass, int status)
 		        case "ping":
 		            Social_send(id, "pong");
 		        case "pong":
-		            printf("Player %d is online\n", id);
+		            string who = Social_get(id);
+		            printf("%s is online\n", who);
 		            break;
 		        case "msg":
 		            for (string input; (input = url_fgets(fh)); ) {
@@ -34,7 +48,8 @@ void Social_parse(entity fh, entity pass, int status)
                     break;
                 case "invite": {
                     string s = url_fgets(fh);
-                    printf("Player %d has invited you to %s; `menu_cmd saccept` to join\n", id, s);
+                    string who = Social_get(id);
+                    printf("%s has invited you to %s; `menu_cmd saccept` to join\n", who, s);
                     Social_invite_accept = sprintf("\nconnect %s\n", s);
                     break;
                 }
@@ -82,6 +97,23 @@ void Social_recv()
 
 MUTATOR_HOOKFUNCTION(social, GameCommand) {
     if (MUTATOR_RETURNVALUE) return false; // command was already handled
+    if (cmd_name == "sadd" && cmd_argc >= 3) {
+        int id = stoi(argv(1));
+        string nick = substring(cmd_string, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
+        db_put(Social_db, itos(id), nick);
+        return true;
+    }
+    if (cmd_name == "sremove" && cmd_argc == 2) {
+        int id = stoi(argv(1));
+        db_delete(Social_db, itos(id));
+        return true;
+    }
+    if (cmd_name == "slist") {
+        FOREACH_DB(Social_db, LAMBDA(
+            printf("%s: %s\n", k, v);
+        ));
+        return true;
+    }
     if (cmd_name == "ssend" && cmd_argc >= 3) {
         int to = stoi(argv(1));
         string msg = substring(cmd_string, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));

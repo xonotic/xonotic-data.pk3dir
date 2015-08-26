@@ -89,6 +89,25 @@ int db_load(string filename);
 void db_close(int db);
 string db_get(int db, string key);
 void db_put(int db, string key, string value);
+void db_delete(float db, string pKey);
+#define FOREACH_INFO(s, f) do { \
+	string __s = s; \
+	int __m = tokenizebyseparator(__s, "\\"); \
+	for (int __j = 2; __j < __m; __j += 2) { \
+		string k = argv(__j - 1), v = argv(__j); \
+		f; \
+	} \
+} while (0)
+#define FOREACH_BUF(db, f) do { \
+    int __db = db; \
+    int __n = buf_getsize(__db); \
+    for (int __i = 0; __i < __n; ++__i) { \
+    	f; \
+	} \
+} while (0)
+#define FOREACH_DB(db, f) do { \
+    FOREACH_BUF(db, FOREACH_INFO(bufstr_get(__db, __i), f)); \
+} while (0)
 
 // stringbuffer loading/saving
 int buf_load(string filename);

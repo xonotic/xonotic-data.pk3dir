@@ -343,20 +343,15 @@ int db_load(string pFilename)
 	return db;
 }
 
-void db_dump(float db, string pFilename)
+void db_dump(int db, string pFilename)
 {
-	float fh, i, j, n, m;
-	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0)
+	int fh = fopen(pFilename, FILE_WRITE);
+	if (fh < 0)
 		error(strcat("Can't dump DB to ", pFilename));
-	n = buf_getsize(db);
 	fputs(fh, "0\n");
-	for(i = 0; i < n; ++i)
-	{
-		m = tokenizebyseparator(bufstr_get(db, i), "\\");
-		for(j = 2; j < m; j += 2)
-			fputs(fh, strcat("\\", argv(j-1), "\\", argv(j), "\n"));
-	}
+	FOREACH_DB(db, LAMBDA(
+		fputs(fh, strcat("\\", k, "\\", v, "\n"));
+	));
 	fclose(fh);
 }
 
@@ -367,16 +362,19 @@ void db_close(float db)
 
 string db_get(float db, string pKey)
 {
-	float h;
-	h = crc16(false, pKey) % DB_BUCKETS;
+	int h = crc16(false, pKey) % DB_BUCKETS;
 	return uri_unescape(infoget(bufstr_get(db, h), pKey));
 }
 
 void db_put(float db, string pKey, string pValue)
 {
-	float h;
-	h = crc16(false, pKey) % DB_BUCKETS;
+	int h = crc16(false, pKey) % DB_BUCKETS;
 	bufstr_set(db, h, infoadd(bufstr_get(db, h), pKey, uri_escape(pValue)));
+}
+
+void db_delete(float db, string pKey)
+{
+	db_put(db, pKey, string_null);
 }
 
 void db_test()
