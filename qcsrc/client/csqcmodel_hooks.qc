@@ -12,6 +12,8 @@
 #include "../common/teams.qh"
 #include "../common/triggers/trigger/viewloc.qh"
 
+#include "mutators/events.qh"
+
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/cl_player.qh"
 #include "../csqcmodellib/interpolate.qh"
@@ -407,6 +409,8 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	if(self.viewloc.entnum != self.tag_networkviewloc)
 		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
 
+	MUTATOR_CALLHOOK(TagIndex_Update, self);
+
 	if(self.tag_networkentity)
 	{
 		// we are ATTACHED!
@@ -464,6 +468,8 @@ void CSQCModel_AutoTagIndex_Apply(void)
 					if(!self.tag_index)
 						self.tag_index = gettagindex(self.tag_entity, "tag_shot");
 				}
+
+				MUTATOR_CALLHOOK(TagIndex_Apply, self);
 			}
 			else
 			{

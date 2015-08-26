@@ -76,4 +76,16 @@ MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
 /* Called when projectiles are precached */
 MUTATOR_HOOKABLE(PrecacheProjectiles, EV_NO_ARGS);
 
+/** Called when updating the attached tags index */
+#define EV_TagIndex_Update(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(TagIndex_Update, EV_TagIndex_Update);
+
+/** Called when setting the attached tags */
+#define EV_TagIndex_Apply(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(TagIndex_Apply, EV_TagIndex_Apply);
+
 #endif
