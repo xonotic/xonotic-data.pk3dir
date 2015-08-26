@@ -23,6 +23,7 @@ void skeleton_loadinfo(entity e)
 		e.bone_weapon = gettagindex(e, "tag_weapon");
 	if(!e.bone_weapon)
 		e.bone_weapon = gettagindex(e, "bip01 r hand");
+	MUTATOR_CALLHOOK(Skeleton_CheckBones, e);
 	for(i = 0; i < MAX_AIM_BONES; ++i)
 	{
 		e.(bone_aim[i]) = 0;
@@ -37,6 +38,7 @@ void skeleton_loadinfo(entity e)
 			e.fixbone = get_model_parameters_fixbone;
 		if(get_model_parameters_bone_weapon)
 			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
+		MUTATOR_CALLHOOK(Skeleton_CheckModel, e);
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(get_model_parameters_bone_aim[i])

@@ -88,4 +88,27 @@ MUTATOR_HOOKABLE(TagIndex_Update, EV_TagIndex_Update);
     /**/
 MUTATOR_HOOKABLE(TagIndex_Apply, EV_TagIndex_Apply);
 
+/** Called when setting up skeleton bones */
+#define EV_Skeleton_CheckBones(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(Skeleton_CheckBones, EV_Skeleton_CheckBones);
+
+/** Called when setting up bones from the loaded model */
+#define EV_Skeleton_CheckModel(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(Skeleton_CheckModel, EV_Skeleton_CheckModel);
+
+/** Called when clearing the global parameters for a model */
+MUTATOR_HOOKABLE(ClearModelParams, EV_NO_ARGS);
+
+/** Called when getting the global parameters for a model */
+#define EV_GetModelParams(i, o) \
+    /** entity id */ i(string, checkmodel_input) \
+    /** entity id */ i(string, checkmodel_command) \
+    /**/
+string checkmodel_input, checkmodel_command;
+MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
+
 #endif
