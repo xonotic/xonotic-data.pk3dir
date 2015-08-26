@@ -1,0 +1,14 @@
+#ifdef MENUQC
+#ifndef SOCIAL_H
+#define SOCIAL_H
+#include "../base.qh"
+/** Called when a friend is added */
+#define EV_Social_Add(i, o) \
+    /**/ i(int, mutator_argv_int_0) \
+    /**/ i(string, mutator_argv_string_0) \
+    /**/
+MUTATOR_HOOKABLE(Social_Add, EV_Social_Add);
+
+int Social_db = -1;
+#endif
+#endif

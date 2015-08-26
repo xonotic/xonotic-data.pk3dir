@@ -1,11 +1,10 @@
 #ifdef MENUQC
+#include "social.qh"
 REGISTER_MUTATOR(social, true);
 
 void Social_send(int to, string msg);
 
 string Social_invite_accept;
-
-int Social_db = -1;
 
 STATIC_INIT(Social) {
     Social_db = db_load("social.db");
@@ -101,6 +100,7 @@ MUTATOR_HOOKFUNCTION(social, GameCommand) {
         int id = stoi(argv(1));
         string nick = substring(cmd_string, argv_start_index(2), argv_end_index(-1) - argv_start_index(2));
         db_put(Social_db, itos(id), nick);
+        MUTATOR_CALLHOOK(Social_Add, id, nick);
         return true;
     }
     if (cmd_name == "sremove" && cmd_argc == 2) {
@@ -109,7 +109,7 @@ MUTATOR_HOOKFUNCTION(social, GameCommand) {
         return true;
     }
     if (cmd_name == "slist") {
-        FOREACH_DB(Social_db, LAMBDA(
+        FOREACH_DB(Social_db, true, LAMBDA(
             printf("%s: %s\n", k, v);
         ));
         return true;

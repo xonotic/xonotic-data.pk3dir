@@ -238,6 +238,12 @@ void MainWindow_configureMainWindow(entity me)
 		n.setNexposee(n, i, SKINPOSITION_DIALOG_CREDITS, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
 		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / conheight));
 
+		i = NEW(XonoticSocialDialog);
+		i.configureDialog(i);
+		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+		n.setNexposee(n, i, SKINPOSITION_DIALOG_SOCIAL, SKINALPHAS_MAINMENU_x, SKINALPHAS_MAINMENU_y);
+		n.pullNexposee(n, i, eY * (SKINHEIGHT_TITLE * SKINFONTSIZE_TITLE / conheight));
+
 		i = NEW(XonoticQuitDialog);
 		i.configureDialog(i);
 		n.addItemCentered(n, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);

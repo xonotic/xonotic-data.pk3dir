@@ -99,6 +99,7 @@
 #include "xonotic/dialog_settings_video.qc"
 #include "xonotic/dialog_singleplayer.qc"
 #include "xonotic/dialog_singleplayer_winner.qc"
+#include "xonotic/dialog_social.qc"
 #include "xonotic/dialog_teamselect.qc"
 #include "xonotic/gametypelist.qc"
 #include "xonotic/image.qc"

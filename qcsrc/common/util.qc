@@ -349,7 +349,7 @@ void db_dump(int db, string pFilename)
 	if (fh < 0)
 		error(strcat("Can't dump DB to ", pFilename));
 	fputs(fh, "0\n");
-	FOREACH_DB(db, LAMBDA(
+	FOREACH_DB(db, true, LAMBDA(
 		fputs(fh, strcat("\\", k, "\\", v, "\n"));
 	));
 	fclose(fh);
