@@ -1,7 +1,5 @@
 #include "cl_client.qh"
 
-#include "waypointsprites.qh"
-
 #include "anticheat.qh"
 #include "cl_impulse.qh"
 #include "cl_player.qh"
@@ -34,6 +32,8 @@
 #include "../common/physics.qh"
 
 #include "../common/items/all.qc"
+
+#include "../common/mutators/mutator/waypoints/all.qh"
 
 #include "../common/triggers/subs.qh"
 #include "../common/triggers/triggers.qh"

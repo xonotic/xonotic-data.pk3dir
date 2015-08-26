@@ -470,7 +470,7 @@ int pong_server_event(entity minigame, string event, ...)
 
 #elif defined(CSQC)
 
-#include "waypointsprites.qh" // drawrotpic
+void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f);
 
 float pong_team_to_angle(int nteam)
 {

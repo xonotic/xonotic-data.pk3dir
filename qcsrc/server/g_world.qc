@@ -18,7 +18,6 @@
 #include "race.qh"
 #include "scores.qh"
 #include "teamplay.qh"
-#include "waypointsprites.qh"
 #include "weapons/weaponstats.qh"
 #include "../common/buffs.qh"
 #include "../common/constants.qh"

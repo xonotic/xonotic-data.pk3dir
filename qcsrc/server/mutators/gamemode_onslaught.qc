@@ -604,26 +604,25 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	onslaught_controlpoint_icon_link(e, ons_ControlPoint_Icon_BuildThink);
 }
 
-string ons_ControlPoint_Waypoint(entity e)
+entity ons_ControlPoint_Waypoint(entity e)
 {
 	if(e.team)
 	{
 		int a = ons_ControlPoint_Attackable(e, e.team);
 
-		if(a == -2) { return "ons-cp-dfnd"; } // defend now
-		if(a == -1 || a == 1 || a == 2) { return "ons-cp"; } // touch
-		if(a == 3 || a == 4) { return "ons-cp-atck"; } // attack
+		if(a == -2) { return WP_OnsCPDefend; } // defend now
+		if(a == -1 || a == 1 || a == 2) { return WP_OnsCP; } // touch
+		if(a == 3 || a == 4) { return WP_OnsCPAttack; } // attack
 	}
 	else
-		return "ons-cp";
+		return WP_OnsCP;
 
-	return "";
+	return WP_Null;
 }
 
 void ons_ControlPoint_UpdateSprite(entity e)
 {
-	string s1;
-	s1 = ons_ControlPoint_Waypoint(e);
+	entity s1 = ons_ControlPoint_Waypoint(e);
 	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
 	bool sh;
@@ -807,7 +806,7 @@ void ons_ControlPoint_Setup(entity cp)
 	}
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(string_null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE, '0 0 0');
+	WaypointSprite_SpawnFixed(WP_Null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE);
 	WaypointSprite_UpdateRule(self.sprite, self.team, SPRITERULE_TEAMPLAY);
 
 	InitializeEntity(cp, ons_DelayedControlPoint_Setup, INITPRIO_SETLOCATION);
@@ -818,16 +817,16 @@ void ons_ControlPoint_Setup(entity cp)
 // Main Generator Functions
 // =========================
 
-string ons_Generator_Waypoint(entity e)
+entity ons_Generator_Waypoint(entity e)
 {
-	if(e.isshielded)
-		return "ons-gen-shielded";
-	return "ons-gen";
+	if (e.isshielded)
+		return WP_OnsGenShielded;
+	return WP_OnsGen;
 }
 
 void ons_Generator_UpdateSprite(entity e)
 {
-	string s1 = ons_Generator_Waypoint(e);
+	entity s1 = ons_Generator_Waypoint(e);
 	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
 	if(e.lastteam != e.team + 2 || e.lastshielded != e.isshielded)
@@ -1061,7 +1060,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	droptofloor();
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(string_null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE, '0 0 0');
+	WaypointSprite_SpawnFixed(WP_Null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE);
 	WaypointSprite_UpdateRule(self.sprite, self.team, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);

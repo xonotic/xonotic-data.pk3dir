@@ -5,8 +5,6 @@
 #if defined(SVQC)
     #include "_all.qh"
 
-    #include "waypointsprites.qh"
-
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
 
@@ -457,40 +455,22 @@ void Item_RespawnCountdown (void)
 		self.count += 1;
 		if(self.count == 1)
 		{
-			string name = string_null;
-			vector rgb = '1 0 1';
+			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
+			int wpextra = 0;
             entity e = self.itemdef;
-            if (e) {
-                name = e.m_waypoint;
-                rgb = e.m_color;
-            }
-			MUTATOR_CALLHOOK(Item_RespawnCountdown, name, rgb);
-			name = item_name;
-			rgb = item_color;
-			if(self.flags & FL_WEAPON)
-			{
+            if (e) wpextra = e.m_id;
+			if (self.flags & FL_WEAPON) {
 				entity wi = get_weaponinfo(self.weapon);
-				if(wi)
-				{
-					name = wi.wpmodel;
-					rgb = '1 0 0';
-				}
+				if (wi) wpextra = wi.m_id;
 			}
-			if(name)
-			{
-				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP, rgb);
-				if(self.waypointsprite_attached)
-				{
-					if (self.items == IT_HEALTH || self.items == IT_ARMOR)
-						WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
-					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
-				}
-			}
-			else
-			{
-				print("Unknown powerup-marked item is wanting to respawn\n");
-				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
-			}
+            entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+            wp.wp_extra = wpextra;
+            if(self.waypointsprite_attached)
+            {
+                if (self.items == IT_HEALTH || self.items == IT_ARMOR)
+                    WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
+                WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+            }
 		}
 
 		if(self.waypointsprite_attached)

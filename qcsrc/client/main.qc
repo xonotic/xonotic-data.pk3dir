@@ -22,7 +22,6 @@
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"
-#include "waypointsprites.qh"
 
 #include "../common/vehicles/all.qh"
 
@@ -88,7 +87,6 @@ void menu_sub_null()
 }
 
 string forcefog;
-void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
@@ -156,8 +154,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	initialize_minigames();
-
-	WaypointSprite_Load();
 
 	// precaches
 	precache_model("null");

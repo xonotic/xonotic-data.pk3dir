@@ -53,7 +53,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 
 void ctf_FlagcarrierWaypoints(entity player)
 {
-	WaypointSprite_Spawn("flagcarrier", 0, 0, player, FLAG_WAYPOINT_OFFSET, world, player.team, player, wps_flagcarrier, true, RADARICON_FLAG, WPCOLOR_FLAGCARRIER(player.team));
+	WaypointSprite_Spawn(WP_FlagCarrier, 0, 0, player, FLAG_WAYPOINT_OFFSET, world, player.team, player, wps_flagcarrier, true, RADARICON_FLAG);
 	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);
 	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, WPCOLOR_FLAGCARRIER(player.team));
@@ -248,8 +248,10 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 
 	// waypoints
-	if(autocvar_g_ctf_flag_dropped_waypoint)
-		WaypointSprite_Spawn("flagdropped", 0, 0, flag, FLAG_WAYPOINT_OFFSET, world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, true, RADARICON_FLAG, WPCOLOR_DROPPEDFLAG(flag.team));
+	if(autocvar_g_ctf_flag_dropped_waypoint) {
+		entity wp = WaypointSprite_Spawn(WP_FlagDropped, 0, 0, flag, FLAG_WAYPOINT_OFFSET, world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, true, RADARICON_FLAG);
+		wp.colormod = WPCOLOR_DROPPEDFLAG(flag.team);
+	}
 
 	if(autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health))
 	{
@@ -712,7 +714,8 @@ void ctf_CheckStalemate(void)
 		{
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 			{
-				WaypointSprite_Spawn(((ctf_oneflag) ? "flagcarrier" : "enemyflagcarrier"), 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
+				entity wp = WaypointSprite_Spawn(((ctf_oneflag) ? WP_FlagCarrier : WP_FlagCarrierEnemy), 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG);
+				wp.colormod = WPCOLOR_ENEMYFC(tmp_entity.owner.team);
 				tmp_entity.owner.wps_enemyflagcarrier.customizeentityforclient = ctf_Stalemate_Customize;
 			}
 		}
@@ -1063,18 +1066,18 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	self.bot_basewaypoint = self.nearestwaypoint;
 
 	// waypointsprites
-	string basename = "base";
-
-	switch(self.team)
+	entity basename;
+	switch (self.team)
 	{
-		case NUM_TEAM_1: basename = "redbase"; break;
-		case NUM_TEAM_2: basename = "bluebase"; break;
-		case NUM_TEAM_3: basename = "yellowbase"; break;
-		case NUM_TEAM_4: basename = "pinkbase"; break;
-		default: basename = "neutralbase"; break;
+		case NUM_TEAM_1: basename = WP_FlagBaseRed; break;
+		case NUM_TEAM_2: basename = WP_FlagBaseBlue; break;
+		case NUM_TEAM_3: basename = WP_FlagBaseYellow; break;
+		case NUM_TEAM_4: basename = WP_FlagBasePink; break;
+		default: basename = WP_FlagBaseNeutral; break;
 	}
 
-	WaypointSprite_SpawnFixed(basename, self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, ((self.team) ? Team_ColorRGB(self.team) : '1 1 1'));
+	entity wp = WaypointSprite_SpawnFixed(basename, self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG);
+	wp.colormod = ((self.team) ? Team_ColorRGB(self.team) : '1 1 1');
 	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, ((self.team) ? colormapPaletteColor(self.team - 1, false) : '1 1 1'));
 
 	// captureshield setup
@@ -2126,7 +2129,7 @@ MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
 	}
 	else // create a normal help me waypointsprite
 	{
-		WaypointSprite_Spawn("helpme", waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, false, RADARICON_HELPME, '1 0.5 0');
+		WaypointSprite_Spawn(WP_Helpme, waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, false, RADARICON_HELPME);
 		WaypointSprite_Ping(self.wps_helpme);
 	}
 

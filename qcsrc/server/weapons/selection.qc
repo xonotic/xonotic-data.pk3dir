@@ -3,7 +3,6 @@
 
 #include "weaponsystem.qh"
 #include "../t_items.qh"
-#include "../waypointsprites.qh"
 #include "../../common/constants.qh"
 #include "../../common/util.qh"
 #include "../../common/weapons/all.qh"
@@ -92,15 +91,16 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 						continue;
 					if(!(e.flags & FL_ITEM))
 						continue;
-					WaypointSprite_Spawn(
-						(get_weaponinfo(wpn)).wpmodel,
+					entity wp = WaypointSprite_Spawn(
+						WP_Weapon,
 						1, 0,
 						world, e.origin + ('0 0 1' * e.maxs.z) * 1.2,
 						self, 0,
 						world, enemy,
 						0,
-						RADARICON_NONE, '0 0 0'
+						RADARICON_NONE
 					);
+					wp.wp_extra = wpn;
 				}
 			}
 		}
