@@ -18,7 +18,6 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
-#include "../common/urllib.qh"
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include "../common/weapons/all.qh"

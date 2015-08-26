@@ -362,16 +362,6 @@ const int SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM = 100;
 const int SPAWN_PRIO_RACE_PREVIOUS_SPAWN = 50;
 const int SPAWN_PRIO_GOOD_DISTANCE = 10;
 
-// URI handles
-const int URI_GET_DISCARD = 0;
-const int URI_GET_IPBAN = 1;
-const int URI_GET_IPBAN_END = 16;
-const int URI_GET_CURL = 17;
-const int URI_GET_CURL_END = 32;
-const int URI_GET_UPDATENOTIFICATION = 33;
-const int URI_GET_URLLIB = 128;
-const int URI_GET_URLLIB_END = 191;
-
 // gametype vote flags
 const int GTV_FORBIDDEN = 0; // Cannot be voted
 const int GTV_AVAILABLE = 1; // Can be voted

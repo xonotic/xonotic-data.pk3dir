@@ -53,7 +53,6 @@ weapons/projectile.qc // TODO
 ../common/playerstats.qc
 ../common/p2mathlib.qc
 ../common/test.qc
-../common/urllib.qc
 ../common/util.qc
 
 ../common/viewloc.qc

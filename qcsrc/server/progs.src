@@ -102,7 +102,6 @@ weapons/weaponsystem.qc
 ../common/test.qc
 ../common/viewloc.qc
 ../common/triggers/include.qc
-../common/urllib.qc
 ../common/util.qc
 
 ../common/items/all.qc
