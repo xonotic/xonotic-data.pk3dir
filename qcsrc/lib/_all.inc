@@ -1,2 +1,7 @@
+#include "Accumulate.qh"
 #include "Cvar.qh"
 #include "Lazy.qh"
+#include "Nil.qh"
+#include "OO.qh"
+#include "Progname.qh"
+#include "Registry.qh"
