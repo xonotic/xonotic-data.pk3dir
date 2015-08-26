@@ -4,12 +4,15 @@
 CLASS(XonoticGameHUDSettingsTab, XonoticTab)
 	METHOD(XonoticGameHUDSettingsTab, fill, void(entity));
 	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGameHUDSettingsTab, title, string, _("HUD"))
 	ATTRIB(XonoticGameHUDSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameHUDSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameHUDSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameHUDSettingsTab)
 entity makeXonoticGameHUDSettingsTab();
 void HUDSetup_Start(entity me, entity btn);
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(HUD, makeXonoticGameHUDSettingsTab());
 #endif
 
 #ifdef IMPLEMENTATION
