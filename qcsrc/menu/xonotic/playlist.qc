@@ -2,21 +2,21 @@
 #define PLAYLIST_H
 #include "listbox.qc"
 CLASS(XonoticPlayList, XonoticListBox)
-	METHOD(XonoticPlayList, configureXonoticPlayList, void(entity))
+	METHOD(XonoticPlayList, configureXonoticPlayList, void(entity));
 	ATTRIB(XonoticPlayList, rowsPerItem, float, 1)
-	METHOD(XonoticPlayList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayList, draw, void(entity))
-	METHOD(XonoticPlayList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticPlayList, stopSound, void(entity))
-	METHOD(XonoticPlayList, startSound, void(entity, float))
-	METHOD(XonoticPlayList, resumeSound, void(entity))
-	METHOD(XonoticPlayList, pauseSound, void(entity))
-	METHOD(XonoticPlayList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticPlayList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticPlayList, mouseDrag, float(entity, vector))
+	METHOD(XonoticPlayList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticPlayList, draw, void(entity));
+	METHOD(XonoticPlayList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticPlayList, stopSound, void(entity));
+	METHOD(XonoticPlayList, startSound, void(entity, float));
+	METHOD(XonoticPlayList, resumeSound, void(entity));
+	METHOD(XonoticPlayList, pauseSound, void(entity));
+	METHOD(XonoticPlayList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticPlayList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticPlayList, mouseDrag, float(entity, vector));
 
-	METHOD(XonoticPlayList, addToPlayList, void(entity, string))
-	METHOD(XonoticPlayList, removeSelectedFromPlayList, void(entity))
+	METHOD(XonoticPlayList, addToPlayList, void(entity, string));
+	METHOD(XonoticPlayList, removeSelectedFromPlayList, void(entity));
 	ATTRIB(XonoticPlayList, playingTrack, float, -1)
 
 	ATTRIB(XonoticPlayList, realFontSize, vector, '0 0 0')

@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_POWERUPS_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDPowerupsDialog, XonoticRootDialog)
-	METHOD(XonoticHUDPowerupsDialog, fill, void(entity))
+	METHOD(XonoticHUDPowerupsDialog, fill, void(entity));
 	ATTRIB(XonoticHUDPowerupsDialog, title, string, _("Powerups Panel"))
 	ATTRIB(XonoticHUDPowerupsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDPowerupsDialog, intendedWidth, float, 0.4)

@@ -170,7 +170,6 @@ void assault_roundstart_use()
 	activator = self;
 	SUB_UseTargets();
 
-#ifdef TTURRETS_ENABLED
 	entity ent, oldself;
 
 	//(Re)spawn all turrets
@@ -186,12 +185,11 @@ void assault_roundstart_use()
 		self = ent;
 
 		// Dubbles as teamchange
-		turret_stdproc_respawn();
+		turret_respawn();
 
 		ent = find(ent, classname, "turret_main");
 	}
 	self = oldself;
-#endif
 }
 
 void assault_wall_think()
@@ -212,8 +210,31 @@ void assault_wall_think()
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
+void vehicles_clearreturn(entity veh);
+void vehicles_spawn();
 void assault_new_round()
 {
+    entity oldself;
+	//bprint("ASSAULT: new round\n");
+
+	oldself = self;
+	// Eject players from vehicles
+    FOR_EACH_PLAYER(self)
+    {
+        if(self.vehicle)
+            vehicles_exit(VHEF_RELEASE);
+    }
+
+    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
+    while(self)
+    {
+        vehicles_clearreturn(self);
+        vehicles_spawn();
+        self = self.chain;
+    }
+
+    self = oldself;
+
 	// up round counter
 	self.winning = self.winning + 1;
 
@@ -551,6 +572,11 @@ MUTATOR_HOOKFUNCTION(assault_BotRoles)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(assault_PlayHitsound)
+{
+	return (frag_victim.classname == "func_assault_destructible");
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {
@@ -566,6 +592,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayHitsound, assault_PlayHitsound, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

@@ -327,7 +327,7 @@ void PM_ClientMovement_Move()
 	vector trace1_plane_normal = '0 0 0';
 	vector trace2_plane_normal = '0 0 0';
 	vector trace3_plane_normal = '0 0 0';
-	
+
 
 	PM_ClientMovement_UpdateStatus(false);
 	primalvelocity = self.velocity;
@@ -553,12 +553,12 @@ bool PlayerJump (void)
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY;
 
+#ifdef SVQC
+	if (MUTATOR_CALLHOOK(PlayerJump, doublejump, mjumpheight))
+#elif defined(CSQC)
 	player_multijump = doublejump;
 	player_jumpheight = mjumpheight;
-#ifdef SVQC
-	if (MUTATOR_CALLHOOK(PlayerJump))
-#elif defined(CSQC)
-	if(PM_multijump_checkjump())
+	if (PM_multijump_checkjump())
 #endif
 		return true;
 
@@ -709,7 +709,7 @@ void CheckPlayerJump()
 		float activate = JETPACK_JUMP(self) && air_jump && PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self);
 		float has_fuel = !PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) || ITEMS_STAT(self) & IT_UNLIMITED_WEAPON_AMMO;
 
-		if (!(ITEMS_STAT(self) & IT_JETPACK)) { }
+		if (!(ITEMS_STAT(self) & ITEM_Jetpack.m_itemid)) { }
 		else if (self.jetpack_stopped) { }
 		else if (!has_fuel)
 		{
@@ -1193,7 +1193,7 @@ void PM_check_vortex(void)
 #ifdef SVQC
 	// WEAPONTODO
 	float xyspeed = vlen(vec2(self.velocity));
-	if (self.weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
+	if (self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
 	{
 		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
 	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
@@ -1668,7 +1668,7 @@ void PM_Main()
 
 	PM_ClientMovement_UpdateStatus(true);
 #endif
-	
+
 
 #ifdef SVQC
 	WarpZone_PlayerPhysics_FixVAngle();
@@ -1885,7 +1885,7 @@ void PM_Main()
 		RaceCarPhysics();
 #endif
 
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY || (BUFFS(self) & BUFF_FLIGHT))
+	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY || (BUFFS_STAT(self) & BUFF_FLIGHT.m_itemid))
 		PM_fly(maxspeed_mod);
 
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
@@ -1936,7 +1936,7 @@ void CSQC_ClientMovement_PlayerMove_Frame(void)
 	PM_Main();
 
 #ifdef CSQC
-	self.pmove_flags = 
+	self.pmove_flags =
 			((self.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
 			(!(self.flags & FL_JUMPRELEASED) ? 0 : PMF_JUMP_HELD) |
 			((self.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);

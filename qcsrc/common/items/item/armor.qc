@@ -4,9 +4,10 @@
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
-    this.m_model                =   "models/items/item_armor_small.md3";
+    this.m_model                =   "item_armor_small.md3";
     this.m_sound                =   "misc/armor1.wav";
     this.m_name                 =   "5 Armor";
+    this.m_icon                 =   "armor";
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
     this.m_itemid               =   IT_ARMOR_SHARD;
@@ -16,9 +17,10 @@ REGISTER_ITEM(ArmorSmall, Armor) {
 }
 
 REGISTER_ITEM(ArmorMedium, Armor) {
-    this.m_model                =   "models/items/item_armor_medium.md3";
+    this.m_model                =   "item_armor_medium.md3";
     this.m_sound                =   "misc/armor10.wav";
     this.m_name                 =   "25 Armor";
+    this.m_icon                 =   "armor";
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_MID;
     this.m_itemid               =   IT_ARMOR;
@@ -27,10 +29,13 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 #endif
 }
 
-REGISTER_ITEM(ArmorBig, Armor) {
-    this.m_model                =   "models/items/item_armor_big.md3";
+REGISTER_ITEM(ArmorLarge, Armor) {
+    this.m_model                =   "item_armor_big.md3";
     this.m_sound                =   "misc/armor17_5.wav";
     this.m_name                 =   "50 Armor";
+    this.m_icon                 =   "armor";
+    this.m_color                =   '0 1 0';
+    this.m_waypoint             =   _("Large armor");
 #ifdef SVQC
     this.m_botvalue             =   20000; // FIXME: higher than BOT_PICKUP_RATING_HIGH?
     this.m_itemid               =   IT_ARMOR;
@@ -39,10 +44,14 @@ REGISTER_ITEM(ArmorBig, Armor) {
 #endif
 }
 
-REGISTER_ITEM(ArmorLarge, Armor) {
-    this.m_model                =   "models/items/item_armor_large.md3";
+REGISTER_ITEM(ArmorMega, Armor) {
+    this.m_model                =   "item_armor_large.md3";
     this.m_sound                =   "misc/armor25.wav";
     this.m_name                 =   "100 Armor";
+    this.m_icon                 =   "item_large_armor";
+    this.m_color                =   '0 1 0';
+    this.m_waypoint             =   _("Mega armor");
+    this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
     this.m_itemid               =   IT_ARMOR;

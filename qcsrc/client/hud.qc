@@ -2,15 +2,19 @@
 #include "_all.qh"
 
 #include "hud_config.qh"
+#include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "sortlist.qh"
 #include "teamradar.qh"
 #include "t_items.qh"
 
+#include "../dpdefs/keycodes.qh"
+
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
 #include "../common/counting.qh"
 #include "../common/deathtypes.qh"
+#include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
 
@@ -1358,7 +1362,7 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 	return 2;
 }
 
-void HUD_Powerups(void)
+void HUD_Powerups()
 {
 	if(intermission == 2) return;
 
@@ -1372,7 +1376,7 @@ void HUD_Powerups(void)
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
 		if(getstati(STAT_HEALTH) <= 0) return;
-		if(!(allItems & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) && !allBuffs) return;
+		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
 		shieldTime = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
@@ -1403,10 +1407,9 @@ void HUD_Powerups(void)
 	if(superTime)
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
-	entity item;
-	for(item = Buff_Type_first; item; item = item.enemy)
-		if(allBuffs & item.items)
-			addPowerupItem(item.message, strcat("buff_", item.netname), item.colormod, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+	FOREACH(BUFFS, it.m_itemid & allBuffs, LAMBDA(
+		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+	));
 
 	if(!powerupItemsCount)
 		return;
@@ -1474,7 +1477,7 @@ void HUD_Powerups(void)
 	int row = 0;
 
 	draw_beginBoldFont();
-	for(item = powerupItems; item.count; item = item.chain)
+	for(entity item = powerupItems; item.count; item = item.chain)
 	{
 		itemPos = eX * (pos.x + column * itemSize.x) + eY * (pos.y + row * itemSize.y);
 
@@ -2017,6 +2020,167 @@ void HUD_Timer(void)
 
 // Radar (#6)
 //
+
+float HUD_Radar_Clickable()
+{
+	return hud_panel_radar_mouse && !hud_panel_radar_temp_hidden;
+}
+
+void HUD_Radar_Show_Maximized(bool doshow,float clickable)
+{
+	hud_panel_radar_maximized = doshow;
+	hud_panel_radar_temp_hidden = 0;
+
+	if ( doshow )
+	{
+		if (clickable)
+		{
+			if(autocvar_hud_cursormode)
+				setcursormode(1);
+			hud_panel_radar_mouse = 1;
+		}
+	}
+	else if ( hud_panel_radar_mouse )
+	{
+		hud_panel_radar_mouse = 0;
+		mouseClicked = 0;
+		if(autocvar_hud_cursormode)
+		if(!mv_active)
+			setcursormode(0);
+	}
+}
+void HUD_Radar_Hide_Maximized()
+{
+	HUD_Radar_Show_Maximized(false,false);
+}
+
+
+float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse ||
+		autocvar__hud_configure || mv_active)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
+
+	if(nPrimary == K_MOUSE1)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+	else if ( nPrimary == K_ESCAPE && bInputType == 0 )
+	{
+		HUD_Radar_Hide_Maximized();
+	}
+	else
+	{
+		// allow console/use binds to work without hiding the map
+		string con_keys;
+		float keys;
+		float i;
+		con_keys = strcat(findkeysforcommand("toggleconsole", 0)," ",findkeysforcommand("+use", 0)) ;
+		keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false;
+		}
+
+		if ( getstati(STAT_HEALTH) <= 0 )
+		{
+			// Show scoreboard
+			if ( bInputType < 2 )
+			{
+				con_keys = findkeysforcommand("+showscores", 0);
+				keys = tokenize(con_keys);
+				for (i = 0; i < keys; ++i)
+				{
+					if ( nPrimary == stof(argv(i)) )
+					{
+						hud_panel_radar_temp_hidden = bInputType == 0;
+						return false;
+					}
+				}
+			}
+		}
+		else if ( bInputType == 0 )
+			HUD_Radar_Hide_Maximized();
+
+		return false;
+	}
+
+	return true;
+}
+
+void HUD_Radar_Mouse()
+{
+	if ( !hud_panel_radar_mouse ) return;
+	if(mv_active) return;
+
+	if ( intermission )
+	{
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+
+	if(mouseClicked & S_MOUSE2)
+	{
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
+	HUD_Panel_UpdateCvars();
+
+
+	panel_size = autocvar_hud_panel_radar_maximized_size;
+	panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
+	panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
+	panel_pos_x = (vid_conwidth - panel_size_x) / 2;
+	panel_pos_y = (vid_conheight - panel_size_y) / 2;
+
+	if(mouseClicked & S_MOUSE1)
+	{
+		// click outside
+		if ( mousepos_x < panel_pos_x || mousepos_x > panel_pos_x + panel_size_x ||
+			 mousepos_y < panel_pos_y || mousepos_y > panel_pos_y + panel_size_y )
+		{
+			HUD_Radar_Hide_Maximized();
+			return;
+		}
+		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos),view_origin_z);
+		localcmd(sprintf("cmd ons_spawn %f %f %f",pos_x,pos_y,pos_z));
+
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+
+
+	const vector cursor_size = '32 32 0';
+	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursor_size, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+}
+
 void HUD_Radar(void)
 {
 	if(intermission == 2) return;
@@ -2037,6 +2201,9 @@ void HUD_Radar(void)
 			}
 		}
 	}
+
+	if ( hud_panel_radar_temp_hidden )
+		return;
 
 	HUD_Panel_UpdateCvars();
 
@@ -2191,8 +2358,27 @@ void HUD_Radar(void)
 
 	for(tm = world; (tm = find(tm, classname, "radarlink")); )
 		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
+
+	vector coord;
+	vector brightcolor;
 	for(tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
+	{
+		if ( hud_panel_radar_mouse )
+		if ( tm.health > 0 )
+		if ( tm.team == myteam+1 )
+		{
+			coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(tm.origin));
+			if ( vlen(mousepos-coord) < 8 )
+			{
+				brightcolor_x = min(1,tm.teamradar_color_x*1.5);
+				brightcolor_y = min(1,tm.teamradar_color_y*1.5);
+				brightcolor_z = min(1,tm.teamradar_color_z*1.5);
+				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
+			}
+		}
+
 		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, panel_fg_alpha);
+	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{
 		color2 = GetPlayerColor(tm.sv_entnum);
@@ -2202,6 +2388,21 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
+
+	if ( hud_panel_radar_mouse )
+	{
+		string message = "Click to select teleport destination";
+
+		if ( getstati(STAT_HEALTH) <= 0 )
+		{
+			message = "Click to select spawn location";
+		}
+
+		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, true, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,
+							 message, hud_fontsize, hud_panel_radar_foreground_alpha, DRAWFLAG_NORMAL);
+
+		hud_panel_radar_bottom = pos_y + mySize_y + hud_fontsize_y;
+	}
 }
 
 // Score (#7)
@@ -4428,7 +4629,15 @@ void HUD_CenterPrint (void)
 	}
 	HUD_Panel_UpdateCvars();
 
-	if(scoreboard_fade_alpha)
+	if ( HUD_Radar_Clickable() )
+	{
+		if (hud_panel_radar_bottom >= 0.96 * vid_conheight)
+			return;
+
+		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
+		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
+	}
+	else if(scoreboard_fade_alpha)
 	{
 		hud_fade_alpha = hud_fade_alpha_save;
 
@@ -4604,257 +4813,30 @@ void HUD_CenterPrint (void)
 	}
 }
 
-// ItemsTime (#XX)
+
+// Minigame
 //
-const float ITEMSTIME_MAXITEMS = 10;
-float ItemsTime_time[ITEMSTIME_MAXITEMS];
-float ItemsTime_availableTime[ITEMSTIME_MAXITEMS];
-string GetItemsTimePicture(float i)
-{
-	switch(i)
-	{
-		case 0: return "item_large_armor";
-		case 1: return "item_mega_health";
-		case 2: return "strength";
-		case 3: return "shield";
-		case 4: return "item_mega_health";
-		case 5: return "strength";
-		case 6: return "shield";
-		case 7: return "fuelregen";
-		case 8: return "jetpack";
-		case 9: return "superweapons";
-		default: return "";
-	}
-}
-
-void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode, float item_time, bool item_available, float item_availableTime)
-{
-	float t = 0;
-	vector color = '0 0 0';
-	float picalpha;
-
-	if(autocvar_hud_panel_itemstime_hidespawned == 2)
-		picalpha = 1;
-	else if(item_available)
-	{
-		float BLINK_FACTOR = 0.15;
-		float BLINK_BASE = 0.85;
-		float BLINK_FREQ = 5;
-		picalpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
-	}
-	else
-		picalpha = 0.5;
-	t = floor(item_time - time + 0.999);
-	if(t < 5)
-		color = '0.7 0 0';
-	else if(t < 10)
-		color = '0.7 0.7 0';
-	else
-		color = '1 1 1';
-
-	vector picpos, numpos;
-	if(autocvar_hud_panel_itemstime_iconalign)
-	{
-		numpos = myPos;
-		picpos = myPos + eX * (ar - 1) * mySize_y;
-	}
-	else
-	{
-		numpos = myPos + eX * mySize_y;
-		picpos = myPos;
-	}
-
-	if(t > 0 && autocvar_hud_panel_itemstime_progressbar)
-	{
-		vector p_pos, p_size;
-		if(autocvar_hud_panel_itemstime_progressbar_reduced)
-		{
-			p_pos = numpos;
-			p_size = eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y;
-		}
-		else
-		{
-			p_pos = myPos;
-			p_size = mySize;
-		}
-		HUD_Panel_DrawProgressBar(p_pos, p_size, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_progressbar_maxtime, 0, autocvar_hud_panel_itemstime_iconalign, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
-
-	if(t > 0 && autocvar_hud_panel_itemstime_text)
-		drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-	else
-		picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
-	if(item_availableTime)
-		drawpic_aspect_skin_expanding(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
-	drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
-}
-
-void HUD_ItemsTime(void)
-{
-	if(!autocvar__hud_configure)
-	{
-		if(!(
-			(autocvar_hud_panel_itemstime == 1 && spectatee_status != 0)
-		||	(autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage))
-			)) { return; }
-
-		ItemsTime_time[0] = getstatf(STAT_ARMOR_LARGE_TIME);
-		ItemsTime_time[1] = getstatf(STAT_HEALTH_MEGA_TIME);
-		ItemsTime_time[2] = getstatf(STAT_INVISIBLE_TIME);
-		ItemsTime_time[3] = getstatf(STAT_SPEED_TIME);
-		ItemsTime_time[4] = getstatf(STAT_EXTRALIFE_TIME);
-		ItemsTime_time[5] = getstatf(STAT_STRENGTH_TIME);
-		ItemsTime_time[6] = getstatf(STAT_SHIELD_TIME);
-		ItemsTime_time[7] = getstatf(STAT_FUELREGEN_TIME);
-		ItemsTime_time[8] = getstatf(STAT_JETPACK_TIME);
-		ItemsTime_time[9] = getstatf(STAT_SUPERWEAPONS_TIME);
-	}
-	else
-	{
-		// do not show here mutator-dependent items
-		ItemsTime_time[0] = time + 0;
-		ItemsTime_time[1] = time + 8;
-		ItemsTime_time[2] = -1; // mutator-dependent
-		ItemsTime_time[3] = -1; // mutator-dependent
-		ItemsTime_time[4] = -1; // mutator-dependent
-		ItemsTime_time[5] = time + 0;
-		ItemsTime_time[6] = time + 4;
-		ItemsTime_time[7] = time + 49;
-		ItemsTime_time[8] = -1;
-		ItemsTime_time[9] = time + 28;
-	}
-
-	float i;
-	float count = 0;
-	if(autocvar_hud_panel_itemstime_hidespawned == 1)
-		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
-			count += (ItemsTime_time[i] > time || -ItemsTime_time[i] > time);
-	else if(autocvar_hud_panel_itemstime_hidespawned == 2)
-		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
-			count += (ItemsTime_time[i] > time);
-	else
-		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
-			count += (ItemsTime_time[i] != -1);
-	if (count == 0)
-		return;
-
-	HUD_Panel_UpdateCvars();
-
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
-
-	if(panel_bg_padding)
-	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
-	}
-
-	float rows, columns;
-	float ar = max(2, autocvar_hud_panel_itemstime_ratio) + 1;
-	rows = HUD_GetRowCount(count, mySize, ar);
-	columns = ceil(count/rows);
-
-	vector itemstime_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
-
-	vector offset = '0 0 0';
-	float newSize;
-	if(autocvar_hud_panel_itemstime_dynamicsize)
-	{
-		if(autocvar__hud_configure)
-		if(menu_enabled != 2)
-			HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
-
-		// reduce panel to avoid spacing items
-		if(itemstime_size.x / itemstime_size.y < ar)
-		{
-			newSize = rows * itemstime_size.x / ar;
-			pos.y += (mySize.y - newSize) / 2;
-			mySize.y = newSize;
-			itemstime_size.y = mySize.y / rows;
-		}
-		else
-		{
-			newSize = columns * itemstime_size.y * ar;
-			pos.x += (mySize.x - newSize) / 2;
-			mySize.x = newSize;
-			itemstime_size.x = mySize.x / columns;
-		}
-		panel_pos = pos - '1 1 0' * panel_bg_padding;
-		panel_size = mySize + '2 2 0' * panel_bg_padding;
-	}
-	else
-	{
-		if(itemstime_size.x/itemstime_size.y > ar)
-		{
-			newSize = ar * itemstime_size.y;
-			offset.x = itemstime_size.x - newSize;
-			pos.x += offset.x/2;
-			itemstime_size.x = newSize;
-		}
-		else
-		{
-			newSize = 1/ar * itemstime_size.x;
-			offset.y = itemstime_size.y - newSize;
-			pos.y += offset.y/2;
-			itemstime_size.y = newSize;
-		}
-	}
-
-	HUD_Panel_DrawBg(1);
-
-	float row = 0, column = 0;
-	bool item_available;
-	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
-		if (ItemsTime_time[i] == -1)
-			continue;
-
-		float item_time = ItemsTime_time[i];
-		if(item_time < -1)
-		{
-			item_available = true;
-			item_time = -item_time;
-		}
-		else
-			item_available = (item_time <= time);
-
-		if(ItemsTime_time[i] >= 0)
-		{
-			if(time <= ItemsTime_time[i])
-				ItemsTime_availableTime[i] = 0;
-			else if(ItemsTime_availableTime[i] == 0)
-				ItemsTime_availableTime[i] = time;
-		}
-		else if(ItemsTime_availableTime[i] == 0)
-			ItemsTime_availableTime[i] = time;
-
-		float f = (time - ItemsTime_availableTime[i]) * 2;
-		f = (f > 1) ? 0 : bound(0, f, 1);
-
-		if(autocvar_hud_panel_itemstime_hidespawned == 1)
-			if(!(ItemsTime_time[i] > time || -ItemsTime_time[i] > time))
-				continue;
-
-		if(autocvar_hud_panel_itemstime_hidespawned == 2)
-			if(!(ItemsTime_time[i] > time))
-				continue;
-
-		DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, i, item_time, item_available, f);
-		++row;
-		if(row >= rows)
-		{
-			row = 0;
-			column = column + 1;
-		}
-	}
-}
-
+#include "../common/minigames/cl_minigames_hud.qc"
 
 /*
 ==================
 Main HUD system
 ==================
 */
+
+bool HUD_Panel_CheckFlags(int showflags)
+{
+	if ( HUD_Minigame_Showpanels() )
+		return showflags & PANEL_SHOW_MINIGAME;
+	return showflags & PANEL_SHOW_MAINGAME;
+}
+
+void HUD_Panel_Draw(entity panent)
+{
+	panel = panent;
+	if ( HUD_Panel_CheckFlags(panel.panel_showflags) )
+		panel.panel_draw();
+}
 
 void HUD_Reset (void)
 {
@@ -4881,12 +4863,17 @@ void HUD_Main (void)
 	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
-		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
 		return;
 	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
+	{
+		hud_fade_alpha = 1;
+		HUD_Panel_Draw(HUD_PANEL(VOTE));
+		hud_fade_alpha = 0;
 		return;
+	}
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
@@ -4985,14 +4972,14 @@ void HUD_Main (void)
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-		(panel = hud_panel[panel_order[i]]).panel_draw();
+		HUD_Panel_Draw(hud_panel[panel_order[i]]);
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
 	if(hud_panel_radar_maximized)
-		(panel = HUD_PANEL(RADAR)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
-		(panel = HUD_PANEL(CHAT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CHAT));
 
 	HUD_Configure_PostDraw();
 

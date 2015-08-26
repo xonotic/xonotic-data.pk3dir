@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_SCORE_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDScoreDialog, XonoticRootDialog)
-	METHOD(XonoticHUDScoreDialog, fill, void(entity))
+	METHOD(XonoticHUDScoreDialog, fill, void(entity));
 	ATTRIB(XonoticHUDScoreDialog, title, string, _("Score Panel"))
 	ATTRIB(XonoticHUDScoreDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDScoreDialog, intendedWidth, float, 0.4)

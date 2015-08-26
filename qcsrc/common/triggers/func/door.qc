@@ -27,7 +27,7 @@ void() door_rotating_go_up;
 
 void door_blocked()
 {
-	if((self.spawnflags & 8) 
+	if((self.spawnflags & 8)
 #ifdef SVQC
 		&& (other.takedamage != DAMAGE_NO)
 #elif defined(CSQC)

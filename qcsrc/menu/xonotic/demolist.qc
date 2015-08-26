@@ -2,18 +2,18 @@
 #define DEMOLIST_H
 #include "listbox.qc"
 CLASS(XonoticDemoList, XonoticListBox)
-	METHOD(XonoticDemoList, configureXonoticDemoList, void(entity))
+	METHOD(XonoticDemoList, configureXonoticDemoList, void(entity));
 	ATTRIB(XonoticDemoList, rowsPerItem, float, 1)
-	METHOD(XonoticDemoList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticDemoList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticDemoList, getDemos, void(entity))
-	METHOD(XonoticDemoList, startDemo, void(entity))
-	METHOD(XonoticDemoList, timeDemo, void(entity))
-	METHOD(XonoticDemoList, demoName, string(entity, float))
-	METHOD(XonoticDemoList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticDemoList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticDemoList, destroy, void(entity))
-	METHOD(XonoticDemoList, showNotify, void(entity))
+	METHOD(XonoticDemoList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticDemoList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticDemoList, getDemos, void(entity));
+	METHOD(XonoticDemoList, startDemo, void(entity));
+	METHOD(XonoticDemoList, timeDemo, void(entity));
+	METHOD(XonoticDemoList, demoName, string(entity, float));
+	METHOD(XonoticDemoList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticDemoList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticDemoList, destroy, void(entity));
+	METHOD(XonoticDemoList, showNotify, void(entity));
 
 	ATTRIB(XonoticDemoList, listDemo, float, -1)
 	ATTRIB(XonoticDemoList, realFontSize, vector, '0 0 0')

@@ -2,16 +2,16 @@
 #define MAPLIST_H
 #include "listbox.qc"
 CLASS(XonoticMapList, XonoticListBox)
-	METHOD(XonoticMapList, configureXonoticMapList, void(entity))
+	METHOD(XonoticMapList, configureXonoticMapList, void(entity));
 	ATTRIB(XonoticMapList, rowsPerItem, float, 4)
-	METHOD(XonoticMapList, draw, void(entity))
-	METHOD(XonoticMapList, drawListBoxItem, void(entity, int, vector, bool, bool))
-	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticMapList, refilter, void(entity))
-	METHOD(XonoticMapList, refilterCallback, void(entity, entity))
-	METHOD(XonoticMapList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticMapList, draw, void(entity));
+	METHOD(XonoticMapList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticMapList, refilter, void(entity));
+	METHOD(XonoticMapList, refilterCallback, void(entity, entity));
+	METHOD(XonoticMapList, keyDown, float(entity, float, float, float));
 
 	ATTRIB(XonoticMapList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticMapList, columnPreviewOrigin, float, 0)
@@ -30,20 +30,20 @@ CLASS(XonoticMapList, XonoticListBox)
 	ATTRIB(XonoticMapList, itemAbsSize, vector, '0 0 0')
 
 	ATTRIB(XonoticMapList, g_maplistCache, string, string_null)
-	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float))
-	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float))
+	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float));
+	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float));
 
 	ATTRIB(XonoticMapList, stringFilter, string, string_null)
 	ATTRIB(XonoticMapList, stringFilterBox, entity, NULL)
 
 	ATTRIB(XonoticMapList, startButton, entity, NULL)
 
-	METHOD(XonoticMapList, loadCvars, void(entity))
+	METHOD(XonoticMapList, loadCvars, void(entity));
 
 	ATTRIB(XonoticMapList, typeToSearchString, string, string_null)
 	ATTRIB(XonoticMapList, typeToSearchTime, float, 0)
 
-	METHOD(XonoticMapList, destroy, void(entity))
+	METHOD(XonoticMapList, destroy, void(entity));
 
 	ATTRIB(XonoticMapList, alphaBG, float, 0)
 ENDCLASS(XonoticMapList)
@@ -280,7 +280,7 @@ void MapList_StringFilterBox_Change(entity box, entity me)
 		me.stringFilter = strzone(box.text);
 	else
 		me.stringFilter = string_null;
-	
+
 	me.refilter(me);
 }
 

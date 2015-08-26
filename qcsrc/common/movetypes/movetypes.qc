@@ -42,7 +42,7 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 
 	for(i = 0; i <= MAX_CLIP_PLANES; ++i)
 		planes[i] = '0 0 0';
-	
+
 	grav = 0;
 
 	restore_velocity = self.move_velocity;

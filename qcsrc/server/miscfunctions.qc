@@ -6,7 +6,6 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mutators/mutators_include.qh"
-#include "tturrets/include/turrets_early.qh"
 #include "t_items.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
@@ -21,6 +20,7 @@
 #include "../common/triggers/subs.qh"
 #include "../common/urllib.qh"
 #include "../common/util.qh"
+#include "../common/turrets/sv_turrets.qh"
 #include "../common/weapons/all.qh"
 #include "../csqcmodellib/sv_model.qh"
 #include "../warpzonelib/anglestransform.qh"
@@ -249,8 +249,15 @@ string formatmessage(string msg)
 	entity cursor_ent;
 	string escape;
 	string replacement;
+	string ammoitems;
 	p = 0;
 	n = 7;
+
+	ammoitems = "batteries";
+	if(self.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
+	if(self.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
+	if(self.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
+	if(self.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
 
 	WarpZone_crosshair_trace(self);
 	cursor = trace_endpos;
@@ -278,45 +285,27 @@ string formatmessage(string msg)
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
-		if (escape == "%")
-			replacement = "%";
-		else if (escape == "\\")
-			replacement = "\\";
-		else if (escape == "n")
-			replacement = "\n";
-		else if (escape == "a")
-			replacement = ftos(floor(self.armorvalue));
-		else if (escape == "h")
-			replacement = ftos(floor(self.health));
-		else if (escape == "l")
-			replacement = NearestLocation(self.origin);
-		else if (escape == "y")
-			replacement = NearestLocation(cursor);
-		else if (escape == "d")
-			replacement = NearestLocation(self.death_origin);
-		else if (escape == "w") {
-			float wep;
-			wep = self.weapon;
-			if (!wep)
-				wep = self.switchweapon;
-			if (!wep)
-				wep = self.cnt;
-			replacement = WEP_NAME(wep);
-		} else if (escape == "W") {
-			if (self.items & IT_SHELLS) replacement = "shells";
-			else if (self.items & IT_NAILS) replacement = "bullets";
-			else if (self.items & IT_ROCKETS) replacement = "rockets";
-			else if (self.items & IT_CELLS) replacement = "cells";
-			else if (self.items & IT_PLASMA) replacement = "plasma";
-			else replacement = "batteries"; // ;)
-		} else if (escape == "x") {
-			replacement = cursor_ent.netname;
-			if (replacement == "" || !cursor_ent)
-				replacement = "nothing";
-		} else if (escape == "s")
-			replacement = ftos(vlen(self.velocity - self.velocity.z * '0 0 1'));
-		else if (escape == "S")
-			replacement = ftos(vlen(self.velocity));
+		switch(escape)
+		{
+			case "%": replacement = "%"; break;
+			case "\\":replacement = "\\"; break;
+			case "n": replacement = "\n"; break;
+			case "a": replacement = ftos(floor(self.armorvalue)); break;
+			case "h": replacement = ftos(floor(self.health)); break;
+			case "l": replacement = NearestLocation(self.origin); break;
+			case "y": replacement = NearestLocation(cursor); break;
+			case "d": replacement = NearestLocation(self.death_origin); break;
+			case "w": replacement = WEP_NAME((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon); break;
+			case "W": replacement = ammoitems; break;
+			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
+			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
+			case "S": replacement = ftos(vlen(self.velocity)); break;
+			default:
+			{
+				MUTATOR_CALLHOOK(FormatMessage, escape, replacement);
+				break;
+			}
+		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
@@ -427,7 +416,6 @@ void GetCvars(float f)
 
 	get_cvars_f = f;
 	get_cvars_s = s;
-
 	MUTATOR_CALLHOOK(GetCvars);
 
 	Notification_GetCvars();
@@ -490,16 +478,6 @@ string playername(entity p)
         return p.netname;
 }
 
-vector randompos(vector m1, vector m2)
-{
-    vector v;
-    m2 = m2 - m1;
-    v.x = m2_x * random() + m1_x;
-    v.y = m2_y * random() + m1_y;
-    v.z = m2_z * random() + m1_z;
-    return  v;
-}
-
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
 {
 	int i = weaponinfo.weapon;
@@ -516,14 +494,14 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 			d = false;
 	}
 	else if (g_cts)
-		d = (i == WEP_SHOTGUN);
+		d = (i == WEP_SHOTGUN.m_id);
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
 		d = !(!weaponinfo.weaponstart);
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-		d |= (i == WEP_HOOK);
+		d |= (i == WEP_HOOK.m_id);
 	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
@@ -725,13 +703,13 @@ void readplayerstartcvars()
 	}
 
 	if (g_jetpack)
-		start_items |= IT_JETPACK;
+		start_items |= ITEM_Jetpack.m_itemid;
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
-	if ((start_items & IT_JETPACK) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
+	if ((start_items & ITEM_Jetpack.m_itemid) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
 	{
-		start_items |= IT_FUEL_REGEN;
+		start_items |= ITEM_JetpackRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
@@ -1000,11 +978,6 @@ void precache()
     precache_model ("models/misc/chatbubble.spr");
 	precache_model("models/ice/ice.md3");
 
-#ifdef TTURRETS_ENABLED
-    if (autocvar_g_turrets)
-        turrets_precash();
-#endif
-
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
     {
@@ -1076,15 +1049,15 @@ void precache()
     precache_model ("models/sprites/10.spr32");
 
     // common weapon precaches
-	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound ("weapons/weapon_switch.wav");
-    precache_sound ("weapons/weaponpickup.wav");
-    precache_sound ("weapons/unavailable.wav");
-    precache_sound ("weapons/dryfire.wav");
+	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
+    precache_sound (W_Sound("weapon_switch"));
+    precache_sound (W_Sound("weaponpickup"));
+    precache_sound (W_Sound("unavailable"));
+    precache_sound (W_Sound("dryfire"));
     if (g_grappling_hook)
     {
-        precache_sound ("weapons/hook_fire.wav"); // hook
-        precache_sound ("weapons/hook_impact.wav"); // hook
+        precache_sound (W_Sound("hook_fire")); // hook
+        precache_sound (W_Sound("hook_impact")); // hook
     }
 
     precache_model("models/elaser.mdl");

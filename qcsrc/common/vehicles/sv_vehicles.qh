@@ -1,0 +1,108 @@
+#ifndef VEHICLES_DEF_H
+#define VEHICLES_DEF_H
+#ifdef SVQC
+
+#include "../turrets/sv_turrets.qh"
+
+// #define VEHICLES_USE_ODE
+
+// vehicle cvars
+float autocvar_g_vehicles;
+float autocvar_g_vehicles_enter;
+float autocvar_g_vehicles_enter_radius;
+float autocvar_g_vehicles_steal;
+float autocvar_g_vehicles_steal_show_waypoint;
+float autocvar_g_vehicles_crush_dmg;
+float autocvar_g_vehicles_crush_force;
+float autocvar_g_vehicles_delayspawn;
+float autocvar_g_vehicles_delayspawn_jitter;
+float autocvar_g_vehicles_allow_bots;
+float autocvar_g_vehicles_teams;
+float autocvar_g_vehicles_teleportable;
+float autocvar_g_vehicles_vortex_damagerate = 0.5;
+float autocvar_g_vehicles_machinegun_damagerate = 0.5;
+float autocvar_g_vehicles_rifle_damagerate = 0.75;
+float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
+float autocvar_g_vehicles_tag_damagerate = 5;
+float autocvar_g_vehicles_weapon_damagerate = 1;
+
+// flags:
+.int vehicle_flags;
+
+// vehicle definitions
+.entity gun1;
+.entity gun2;
+.entity gun3;
+.entity vehicle_shieldent;  /// Entity to disply the shild effect on damage
+.entity vehicle;
+.entity vehicle_viewport;
+.entity vehicle_hudmodel;
+.entity vehicle_controller;
+
+.entity gunner1;
+.entity gunner2;
+
+.float vehicle_health;  /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
+.float vehicle_energy;  /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
+.float vehicle_shield;  /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
+
+.float vehicle_ammo1;   /// If self is player this is 0..100 indicating percentage of primary ammo left UNLESS value is already stored in vehicle_energy. If self is vehile, this is the real ammo1 value.
+.float vehicle_reload1; /// If self is player this is 0..100 indicating percentage of primary reload status. If self is vehile, this is the real reload1 value.
+.float vehicle_ammo2;   /// If self is player this is 0..100 indicating percentage of secondary ammo left. If self is vehile, this is the real ammo2 value.
+.float vehicle_reload2; /// If self is player this is 0..100 indicating percentage of secondary reload status. If self is vehile, this is the real reload2 value.
+
+.float sound_nexttime;
+const float VOL_VEHICLEENGINE = 1;
+
+const float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05
+const float SVC_SETVIEWANGLES = 10;  // Net.Protocol 0x0A
+const float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
+
+const float VHSF_NORMAL = 0;
+const float VHSF_FACTORY = 2;
+
+.int hud;
+.float dmg_time;
+
+.int volly_counter;
+
+const int MAX_AXH = 4;
+.entity AuxiliaryXhair[MAX_AXH];
+
+.entity wps_intruder;
+
+.entity lock_target;
+.float  lock_strength;
+.float  lock_time;
+.float  lock_soundtime;
+const float	DAMAGE_TARGETDRONE = 10;
+
+// vehicle functions
+.void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
+.bool(int _imp) vehicles_impulse;
+.int vehicle_weapon2mode;
+.void(int exit_flags) vehicle_exit;
+.bool() vehicle_enter;
+const int VHEF_NORMAL = 0;  /// User pressed exit key
+const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
+const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
+
+float  force_fromtag_power;
+float  force_fromtag_normpower;
+vector force_fromtag_origin;
+
+float vehicles_exit_running;
+
+// macros
+#define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
+	ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
+
+.float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
+
+void vehicles_exit(float eject);
+float vehicle_initialize(entity vehicle, float nodrop);
+bool vehicle_impulse(int imp);
+bool vehicles_crushable(entity e);
+
+#endif
+#endif

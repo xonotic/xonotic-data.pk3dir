@@ -78,7 +78,7 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 		d = damage + (edgedamage - damage) * (d / dist);
 		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
 		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+		Send_Effect("fireball_laser", self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
 }
 
@@ -121,7 +121,7 @@ void nade_napalm_ball()
 	entity proj;
 	vector kick;
 
-	spamsound(self, CH_SHOTS, "weapons/fireball_fire.wav", VOL_BASE, ATTEN_NORM);
+	spamsound(self, CH_SHOTS, W_Sound("fireball_fire"), VOL_BASE, ATTEN_NORM);
 
 	proj = spawn ();
 	proj.owner = self.owner;
@@ -225,7 +225,7 @@ void nade_napalm_boom()
 void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 {
 	frost_target.frozen_by = freezefield.realowner;
-	pointparticles(particleeffectnum("electro_impact"), frost_target.origin, '0 0 0', 1);
+	Send_Effect("electro_impact", frost_target.origin, '0 0 0', 1);
 	Freeze(frost_target, 1/freeze_time, 3, false);
 	if(frost_target.ballcarried)
 	if(g_keepaway) { ka_DropEvent(frost_target); }
@@ -259,8 +259,8 @@ void nade_ice_think()
 				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
 				default:		 expef = "nade_neutral_explode"; break;
 			}
-			pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
-			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
+			sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, self, world, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
@@ -284,15 +284,15 @@ void nade_ice_think()
 	randomp.x = randomr*cos(randomw);
 	randomp.y = randomr*sin(randomw);
 	randomp.z = 1;
-	pointparticles(particleeffectnum("electro_muzzleflash"), self.origin + randomp, '0 0 0', 1);
+	Send_Effect("electro_muzzleflash", self.origin + randomp, '0 0 0', 1);
 
 	if(time >= self.nade_special_time)
 	{
 		self.nade_special_time = time+0.7;
 
 
-		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
-		pointparticles(particleeffectnum("icefield"), self.origin, '0 0 0', 1);
+		Send_Effect("electro_impact", self.origin, '0 0 0', 1);
+		Send_Effect("icefield", self.origin, '0 0 0', 1);
 	}
 
 
@@ -360,11 +360,7 @@ void nade_translocate_boom()
 
 	makevectors(self.realowner.angles);
 
-	entity oldself = self;
-	self = self.realowner;
-	MUTATOR_CALLHOOK(PortalTeleport);
-	self.realowner = self;
-	self = oldself;
+	MUTATOR_CALLHOOK(PortalTeleport, self.realowner);
 
 	TeleportPlayer(self, self.realowner, locout, self.realowner.angles, v_forward * vlen(self.realowner.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 }
@@ -412,7 +408,7 @@ void nade_heal_touch()
 {
 	float maxhealth;
 	float health_factor;
-	if(IS_PLAYER(other) || (other.flags & FL_MONSTER))
+	if(IS_PLAYER(other) || IS_MONSTER(other))
 	if(other.deadflag == DEAD_NO)
 	if(!other.frozen)
 	{
@@ -426,11 +422,11 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			maxhealth = (other.flags & FL_MONSTER) ? other.max_health : g_pickup_healthmega_max;
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : g_pickup_healthmega_max;
 			if ( other.health < maxhealth )
 			{
 				if ( self.nade_show_particles )
-					pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
+					Send_Effect("healing_fx", other.origin, '0 0 0', 1);
 				other.health = min(other.health+health_factor, maxhealth);
 			}
 			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
@@ -442,9 +438,9 @@ void nade_heal_touch()
 
 	}
 
-	if ( IS_REAL_CLIENT(other) || (other.vehicle_flags & VHF_ISVEHICLE) )
+	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
 	{
-		entity show_red = (other.vehicle_flags & VHF_ISVEHICLE) ? other.owner : other;
+		entity show_red = (IS_VEHICLE(other)) ? other.owner : other;
 		show_red.stat_healing_orb = time+0.1;
 		show_red.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
 	}
@@ -534,10 +530,10 @@ void nade_boom()
 	}
 
 	if(expef != "")
-		pointparticles(particleeffectnum(expef), findbetterlocation(self.origin, 8), '0 0 0', 1);
+		Send_Effect(expef, findbetterlocation(self.origin, 8), '0 0 0', 1);
 
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 	self.event_damage = func_null; // prevent somehow calling damage in the next call
 
@@ -581,7 +577,7 @@ void nade_touch()
 	//UpdateCSQCProjectile(self);
 	if(self.health == self.max_health)
 	{
-		spamsound(self, CH_SHOTS, strcat("weapons/grenade_bounce", ftos(1 + rint(random() * 5)), ".wav"), VOL_BASE, ATTEN_NORM);
+		spamsound(self, CH_SHOTS, W_Sound(strcat("grenade_bounce", ftos(1 + rint(random() * 5)))), VOL_BASE, ATTEN_NORM);
 		return;
 	}
 
@@ -608,28 +604,28 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE.m_id || self.nade_type == NADE_TYPE_SPAWN.m_id)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER.m_id))
 	{
 		force *= 1.5;
 		damage = 0;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id) && (deathtype & HITTYPE_SECONDARY))
 	{
 		force *= 0.5; // too much
 		frag_damage = 0;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX.m_id) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id))
 	{
 		force *= 6;
 		damage = self.max_health * 0.55;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN.m_id) || DEATH_ISWEAPON(deathtype, WEP_HMG.m_id))
 		damage = self.max_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE.m_id) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN.m_id)) // WEAPONTODO
 	if(deathtype & HITTYPE_SECONDARY)
 	{
 		damage = self.max_health * 0.1;
@@ -686,7 +682,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 		offset = '0 0 0';
 
 	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
-	//setmodel(_nade, "models/weapons/v_ok_grenade.md3");
+	//setmodel(_nade, W_Model("v_ok_grenade.md3"));
 	//setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
@@ -803,7 +799,7 @@ void nade_prime()
 	n.classname = "nade";
 	fn.classname = "fake_nade";
 
-	if(self.items & IT_STRENGTH && autocvar_g_nades_bonus_onstrength)
+	if(self.items & ITEM_Strength.m_itemid && autocvar_g_nades_bonus_onstrength)
 		n.nade_type = self.nade_type;
 	else if (self.bonus_nades >= 1)
 	{
@@ -819,7 +815,7 @@ void nade_prime()
 
 	n.nade_type = bound(1, n.nade_type, NADES_COUNT);
 
-	setmodel(n, "models/weapons/v_ok_grenade.md3");
+	setmodel(n, W_Model("v_ok_grenade.md3"));
 	//setattachment(n, self, "bip01 l hand");
 	n.exteriormodeltoclient = self;
 	n.customizeentityforclient = nade_customize;
@@ -834,7 +830,7 @@ void nade_prime()
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
 
-	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
+	setmodel(fn, W_Model("h_ok_grenade.iqm"));
 	setattachment(fn, self.weaponentity, "");
 	fn.realowner = fn.owner = self;
 	fn.colormod = NADES[n.nade_type].m_color;
@@ -861,7 +857,7 @@ float CanThrowNade()
 	if (!autocvar_g_nades)
 		return false; // allow turning them off mid match
 
-	if(forbidWeaponUse())
+	if(forbidWeaponUse(self))
 		return false;
 
 	if (!IS_PLAYER(self))
@@ -929,7 +925,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	float key_pressed = self.BUTTON_HOOK;
 	float time_score;
 
-	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, false, false) || (weaponsInMap & WEPSET_HOOK))
+	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK.m_id, false, false) || (weaponsInMap & WEPSET_HOOK))
 		key_pressed = self.button16; // if hook is enabled, use an alternate key
 
 	if(self.nade)
@@ -1124,7 +1120,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
 	{
 		Unfreeze(frag_target);
 		frag_target.health = autocvar_g_freezetag_revive_nade_health;
-		pointparticles(particleeffectnum("iceorglass"), frag_target.origin, '0 0 0', 3);
+		Send_Effect("iceorglass", frag_target.origin, '0 0 0', 3);
 		frag_damage = 0;
 		frag_force = '0 0 0';
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
@@ -1193,17 +1189,17 @@ void nades_Initialize()
 	addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
 
 	precache_model("models/ok_nade_counter/ok_nade_counter.md3");
-	precache_model("models/weapons/h_ok_grenade.iqm");
-	precache_model("models/weapons/v_ok_grenade.md3");
+	precache_model(W_Model("h_ok_grenade.iqm"));
+	precache_model(W_Model("v_ok_grenade.md3"));
 	precache_model("models/ctf/shield.md3");
 
-	precache_sound("weapons/rocket_impact.wav");
-	precache_sound("weapons/grenade_bounce1.wav");
-	precache_sound("weapons/grenade_bounce2.wav");
-	precache_sound("weapons/grenade_bounce3.wav");
-	precache_sound("weapons/grenade_bounce4.wav");
-	precache_sound("weapons/grenade_bounce5.wav");
-	precache_sound("weapons/grenade_bounce6.wav");
+	precache_sound(W_Sound("rocket_impact"));
+	precache_sound(W_Sound("grenade_bounce1"));
+	precache_sound(W_Sound("grenade_bounce2"));
+	precache_sound(W_Sound("grenade_bounce3"));
+	precache_sound(W_Sound("grenade_bounce4"));
+	precache_sound(W_Sound("grenade_bounce5"));
+	precache_sound(W_Sound("grenade_bounce6"));
 	precache_sound("overkill/grenadebip.ogg");
 }
 

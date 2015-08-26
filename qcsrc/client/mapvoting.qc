@@ -12,7 +12,6 @@
 
 int mv_num_maps;
 
-float mv_active;
 string mv_maps[MAPVOTE_COUNT];
 string mv_pics[MAPVOTE_COUNT];
 string mv_pk3[MAPVOTE_COUNT]; // map pk3 name or gametype human readable name

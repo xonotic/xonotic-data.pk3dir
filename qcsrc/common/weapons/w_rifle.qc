@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ RIFLE,
 /* function  */ W_Rifle,
@@ -44,9 +44,10 @@ REGISTER_WEAPON(
 RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float rifle_accumulator;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE); }
+void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE.m_id); }
 void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }
 void spawnfunc_weapon_sniperrifle(void) { spawnfunc_weapon_rifle(); }
 
@@ -58,7 +59,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 	W_SetupShot(self, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
-	pointparticles(particleeffectnum("rifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
+	Send_Effect("rifle_muzzleflash", w_shotorg, w_shotdir * 2000, 1);
 
 	if(self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) // if zoomed, shoot from the eye
 	{
@@ -75,12 +76,12 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 void W_Rifle_Attack(void)
 {
-	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), "weapons/campingrifle_fire.wav");
+	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), W_Sound("campingrifle_fire"));
 }
 
 void W_Rifle_Attack2(void)
 {
-	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), "weapons/campingrifle_fire2.wav");
+	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), W_Sound("campingrifle_fire2"));
 }
 
 .void(void) rifle_bullethail_attackfunc;
@@ -203,24 +204,24 @@ bool W_Rifle(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_campingrifle.md3");
-			precache_model("models/weapons/v_campingrifle.md3");
-			precache_model("models/weapons/h_campingrifle.iqm");
-			precache_sound("weapons/campingrifle_fire.wav");
-			precache_sound("weapons/campingrifle_fire2.wav");
+			precache_model(W_Model("g_sniperrifle.md3"));
+			precache_model(W_Model("v_sniperrifle.md3"));
+			precache_model(W_Model("h_sniperrifle.iqm"));
+			precache_sound(W_Sound("campingrifle_fire"));
+			precache_sound(W_Sound("campingrifle_fire2"));
 			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_PRI(rifle, ammo);
-			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= WEP_CVAR_PRI(rifle, ammo);
+			ammo_amount += self.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
 		{
 			ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_SEC(rifle, ammo);
-			ammo_amount += self.(weapon_load[WEP_RIFLE]) >= WEP_CVAR_SEC(rifle, ammo);
+			ammo_amount += self.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:
@@ -235,7 +236,7 @@ bool W_Rifle(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -276,20 +277,20 @@ bool W_Rifle(int req)
 			if(!w_issilent)
 			{
 				if(w_random < 0.2)
-					sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.4)
-					sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.5)
-					sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTN_NORM);
 			}
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/ric1.wav");
-			precache_sound("weapons/ric2.wav");
-			precache_sound("weapons/ric3.wav");
+			precache_sound(W_Sound("ric1"));
+			precache_sound(W_Sound("ric2"));
+			precache_sound(W_Sound("ric3"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

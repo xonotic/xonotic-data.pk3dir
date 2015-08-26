@@ -8,6 +8,8 @@
 #define TRUE _TRUE
 #define FALSE _FALSE
 
+#define spawn _spawn
+
 #include "upstream/progsdefs.qc"
 
 #undef true
@@ -15,6 +17,10 @@
 #undef TRUE
 #undef FALSE
 
+#undef spawn
+
 #pragma noref 0
+
+#define WriteFloat(to, f) WriteCoord(to, f)
 
 #endif

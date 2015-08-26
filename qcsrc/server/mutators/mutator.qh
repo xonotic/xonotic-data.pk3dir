@@ -1,7 +1,7 @@
 #ifndef MUTATOR_H
 #define MUTATOR_H
 
-#include "base.qh"
+#include "../../common/mutators/base.qh"
 #include "mutator_nades.qh"
 
 #include "../cl_client.qh"

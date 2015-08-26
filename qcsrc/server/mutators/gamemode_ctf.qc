@@ -4,7 +4,7 @@
 #include "gamemode.qh"
 
 #ifdef SVQC
-#include "../vehicles/vehicle.qh"
+#include "../../common/vehicles/all.qh"
 #endif
 
 #include "../../warpzonelib/common.qh"
@@ -372,7 +372,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 		{
 			makevectors((player.v_angle.y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle.x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
 
-			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
+			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & ITEM_Strength.m_itemid) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
 			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, false);
 			ctf_Handle_Drop(flag, player, droptype);
 			break;
@@ -418,7 +418,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 
 	if(!player) { return; } // without someone to give the reward to, we can't possibly cap
 	if(CTF_DIFFTEAM(player, flag)) { return; }
-	
+
 	if(ctf_oneflag)
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 	if(SAME_TEAM(tmp_entity, player))
@@ -454,7 +454,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
+	Send_Effect(flag.capeffect, flag.origin, '0 0 0', 1);
 	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
@@ -475,7 +475,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	if(player.flags & FL_MONSTER)
+	if(IS_MONSTER(player))
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_MONSTER_), player.monster_name);
 	}
@@ -556,13 +556,13 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	else { Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((SAME_TEAM(player, flag)) ? CENTER_CTF_PICKUP_TEAM : CENTER_CTF_PICKUP_TEAM_ENEMY), Team_ColorCode(flag.team)); }
 
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, ((flag.team) ? APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_TEAM_) : CHOICE_CTF_PICKUP_TEAM_NEUTRAL), Team_ColorCode(player.team), player.netname);
-	
+
 	if(!flag.team)
 	FOR_EACH_PLAYER(tmp_entity)
 	if(tmp_entity != player)
 	if(DIFF_TEAM(player, tmp_entity))
 		Send_Notification(NOTIF_ONE, tmp_entity, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY_NEUTRAL, Team_ColorCode(player.team), player.netname);
-	
+
 	if(flag.team)
 	FOR_EACH_PLAYER(tmp_entity)
 	if(tmp_entity != player)
@@ -608,7 +608,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	}
 
 	// effects
-	pointparticles(particleeffectnum(flag.toucheffect), player.origin, '0 0 0', 1);
+	Send_Effect(flag.toucheffect, player.origin, '0 0 0', 1);
 
 	// waypoints
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
@@ -906,7 +906,7 @@ void ctf_FlagTouch()
 	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	entity toucher = other, tmp_entity;
-	bool is_not_monster = (!(toucher.flags & FL_MONSTER)), num_perteam = 0;
+	bool is_not_monster = (!IS_MONSTER(toucher)), num_perteam = 0;
 
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
@@ -923,14 +923,14 @@ void ctf_FlagTouch()
 
 	// special touch behaviors
 	if(toucher.frozen) { return; }
-	else if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
 		else
 			return; // do nothing
 	}
-	else if(toucher.flags & FL_MONSTER)
+	else if(IS_MONSTER(toucher))
 	{
 		if(!autocvar_g_ctf_allow_monster_touch)
 			return; // do nothing
@@ -939,7 +939,7 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
+			Send_Effect(self.toucheffect, self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
@@ -1184,7 +1184,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 			default:		 flag.effects |= EF_DIMLIGHT; break;
 		}
 	}
-	
+
 	// flag placement
 	if((flag.spawnflags & 1) || flag.noalign) // don't drop to floor, just stay at fixed location
 	{
@@ -1900,7 +1900,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	int t = 0, t2 = 0, t3 = 0;
 
 	// initially clear items so they can be set as necessary later.
-	self.ctf_flagstatus &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST 
+	self.ctf_flagstatus &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
 						   | CTF_BLUE_FLAG_CARRYING		| CTF_BLUE_FLAG_TAKEN		| CTF_BLUE_FLAG_LOST
 						   | CTF_YELLOW_FLAG_CARRYING	| CTF_YELLOW_FLAG_TAKEN 	| CTF_YELLOW_FLAG_LOST
 						   | CTF_PINK_FLAG_CARRYING 	| CTF_PINK_FLAG_TAKEN		| CTF_PINK_FLAG_LOST
@@ -1923,7 +1923,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 			{
 				if((flag.owner == self) || (flag.pass_sender == self))
 					self.ctf_flagstatus |= t; // carrying: self is currently carrying the flag
-				else 
+				else
 					self.ctf_flagstatus |= t2; // taken: someone else is carrying the flag
 				break;
 			}
@@ -2325,13 +2325,13 @@ void spawnfunc_item_flag_team2()
 
 /*QUAKED spawnfunc_item_flag_team3 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
 CTF flag for team three (Yellow).
-Keys: 
-"angle" Angle the flag will point (minus 90 degrees)... 
+Keys:
+"angle" Angle the flag will point (minus 90 degrees)...
 "model" model to use, note this needs red, blue yellow and pink as skins 0, 1, 2 and 3...
 "noise" sound played when flag is picked up...
 "noise1" sound played when flag is returned by a teammate...
 "noise2" sound played when flag is captured...
-"noise3" sound played when flag is lost in the field and respawns itself... 
+"noise3" sound played when flag is lost in the field and respawns itself...
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team3()
@@ -2343,13 +2343,13 @@ void spawnfunc_item_flag_team3()
 
 /*QUAKED spawnfunc_item_flag_team4 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
 CTF flag for team four (Pink).
-Keys: 
-"angle" Angle the flag will point (minus 90 degrees)... 
+Keys:
+"angle" Angle the flag will point (minus 90 degrees)...
 "model" model to use, note this needs red, blue yellow and pink as skins 0, 1, 2 and 3...
 "noise" sound played when flag is picked up...
 "noise1" sound played when flag is returned by a teammate...
 "noise2" sound played when flag is captured...
-"noise3" sound played when flag is lost in the field and respawns itself... 
+"noise3" sound played when flag is lost in the field and respawns itself...
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team4()
@@ -2361,13 +2361,13 @@ void spawnfunc_item_flag_team4()
 
 /*QUAKED spawnfunc_item_flag_neutral (0 0.5 0.8) (-48 -48 -37) (48 48 37)
 CTF flag (Neutral).
-Keys: 
-"angle" Angle the flag will point (minus 90 degrees)... 
+Keys:
+"angle" Angle the flag will point (minus 90 degrees)...
 "model" model to use, note this needs red, blue yellow and pink as skins 0, 1, 2 and 3...
 "noise" sound played when flag is picked up...
 "noise1" sound played when flag is returned by a teammate...
 "noise2" sound played when flag is captured...
-"noise3" sound played when flag is lost in the field and respawns itself... 
+"noise3" sound played when flag is lost in the field and respawns itself...
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_neutral()

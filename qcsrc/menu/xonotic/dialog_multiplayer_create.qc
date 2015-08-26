@@ -2,9 +2,9 @@
 #define DIALOG_MULTIPLAYER_CREATE_H
 #include "tab.qc"
 CLASS(XonoticServerCreateTab, XonoticTab)
-	METHOD(XonoticServerCreateTab, fill, void(entity))
-	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
-	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
+	METHOD(XonoticServerCreateTab, fill, void(entity));
+	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity));
+	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity));
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 23)
 	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space

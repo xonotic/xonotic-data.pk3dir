@@ -23,9 +23,11 @@
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
+#include "../common/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
+#include "../common/vehicles/all.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
@@ -334,7 +336,6 @@ void cvar_changes_init()
 		BADCVAR("pausable");
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
-		BADCVAR("sv_fraginfo");
 		BADCVAR("sv_timeout");
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("crypto_");
@@ -345,7 +346,6 @@ void cvar_changes_init()
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_cullentities_");
-		BADPREFIX("sv_fraginfo_");
 		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
@@ -560,12 +560,10 @@ void spawnfunc___init_dedicated_server(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -574,7 +572,6 @@ void spawnfunc___init_dedicated_server(void)
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
-void Item_ItemsTime_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
@@ -611,12 +608,12 @@ void spawnfunc_worldspawn (void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+
+	initialize_minigames();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -698,8 +695,7 @@ void spawnfunc_worldspawn (void)
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
 		s = ":gameinfo:mutators:LIST";
 
-		ret_string = s;
-		MUTATOR_CALLHOOK(BuildMutatorsString);
+		MUTATOR_CALLHOOK(BuildMutatorsString, s);
 		s = ret_string;
 
 		// simple, probably not good in the mutator system
@@ -816,19 +812,6 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
 
 	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
-
-	// items time
-	addstat(STAT_ARMOR_LARGE_TIME, AS_FLOAT, item_armor_large_time);
-	addstat(STAT_HEALTH_MEGA_TIME, AS_FLOAT, item_health_mega_time);
-	addstat(STAT_INVISIBLE_TIME, AS_FLOAT, item_invisible_time);
-	addstat(STAT_SPEED_TIME, AS_FLOAT, item_speed_time);
-	addstat(STAT_EXTRALIFE_TIME, AS_FLOAT, item_extralife_time);
-	addstat(STAT_STRENGTH_TIME, AS_FLOAT, item_strength_time);
-	addstat(STAT_SHIELD_TIME, AS_FLOAT, item_shield_time);
-	addstat(STAT_FUELREGEN_TIME, AS_FLOAT, item_fuelregen_time);
-	addstat(STAT_JETPACK_TIME, AS_FLOAT, item_jetpack_time);
-	addstat(STAT_SUPERWEAPONS_TIME, AS_FLOAT, item_superweapons_time);
-	Item_ItemsTime_Init();
 
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
@@ -1708,48 +1691,6 @@ void ClearWinners(void)
 		head.winning = 0;
 }
 
-// Onslaught winning condition:
-// game terminates if only one team has a working generator (or none)
-float WinningCondition_Onslaught()
-{
-	entity head;
-	float t1, t2, t3, t4;
-
-	WinningConditionHelper(); // set worldstatus
-
-	if(warmup_stage)
-		return WINNING_NO;
-
-	// first check if the game has ended
-	t1 = t2 = t3 = t4 = 0;
-	head = find(world, classname, "onslaught_generator");
-	while (head)
-	{
-		if (head.health > 0)
-		{
-			if (head.team == NUM_TEAM_1) t1 = 1;
-			if (head.team == NUM_TEAM_2) t2 = 1;
-			if (head.team == NUM_TEAM_3) t3 = 1;
-			if (head.team == NUM_TEAM_4) t4 = 1;
-		}
-		head = find(head, classname, "onslaught_generator");
-	}
-	if (t1 + t2 + t3 + t4 < 2)
-	{
-		// game over, only one team remains (or none)
-		ClearWinners();
-		if (t1) SetWinners(team, NUM_TEAM_1);
-		if (t2) SetWinners(team, NUM_TEAM_2);
-		if (t3) SetWinners(team, NUM_TEAM_3);
-		if (t4) SetWinners(team, NUM_TEAM_4);
-		dprint("Have a winner, ending game.\n");
-		return WINNING_YES;
-	}
-
-	// Two or more teams remain
-	return WINNING_NO;
-}
-
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win. Otherwise the defending team wins once the timelimit passes.
 void assault_new_round();
@@ -2118,9 +2059,6 @@ void CheckRules_World()
 		return;
 	}
 
-	if(g_onslaught)
-		timelimit = 0; // ONS has its own overtime rule
-
 	float wantovertime;
 	wantovertime = 0;
 
@@ -2205,10 +2143,6 @@ void CheckRules_World()
 	else if(g_lms)
 	{
 		checkrules_status = WinningCondition_LMS();
-	}
-	else if (g_onslaught)
-	{
-		checkrules_status = WinningCondition_Onslaught(); // TODO remove this?
 	}
 	else
 	{

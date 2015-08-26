@@ -14,6 +14,8 @@
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
 
+#include "../mutators/events.qh"
+
 #include "../../common/mapinfo.qh"
 
 #include "../../common/command/generic.qh"
@@ -252,6 +254,15 @@ void LocalCommand_hud(int request, int argc)
 					return;
 				}
 
+				case "minigame":
+				{
+					if(HUD_MinigameMenu_IsOpened())
+						HUD_MinigameMenu_Close();
+					else
+						HUD_MinigameMenu_Open();
+					return;
+				}
+
 				case "save":
 				{
 					if(argv(2))
@@ -280,9 +291,15 @@ void LocalCommand_hud(int request, int argc)
 				case "radar":
 				{
 					if(argv(2))
-						hud_panel_radar_maximized = InterpretBoolean(argv(2));
+						HUD_Radar_Show_Maximized(InterpretBoolean(argv(2)),0);
 					else
-						hud_panel_radar_maximized = !hud_panel_radar_maximized;
+						HUD_Radar_Show_Maximized(!hud_panel_radar_maximized,0);
+					return;
+				}
+
+				case "clickradar":
+				{
+					HUD_Radar_Show_Maximized(!hud_panel_radar_mouse,1);
 					return;
 				}
 			}
@@ -297,7 +314,7 @@ void LocalCommand_hud(int request, int argc)
 			print("  'configname' is the name to save to for \"save\" action,\n");
 			print("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
 			print("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
-			print("  Full list of commands here: \"configure, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
+			print("  Full list of commands here: \"configure, minigame, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
 			return;
 		}
 	}
@@ -510,8 +527,8 @@ void GameCommand(string command)
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
-
-	if(strtolower(argv(0)) == "help")
+	string s = strtolower(argv(0));
+	if (s == "help")
 	{
 		if(argc == 1)
 		{
@@ -535,14 +552,11 @@ void GameCommand(string command)
 			return;
 		}
 	}
-	else if(GenericCommand(command))
-	{
-		return; // handled by common/command/generic.qc
-	}
-	else if(LocalCommand_macro_command(argc)) // continue as usual and scan for normal commands
-	{
-		return; // handled by one of the above LocalCommand_* functions
-	}
+	// continue as usual and scan for normal commands
+	if (GenericCommand(command)// handled by common/command/generic.qc
+	|| LocalCommand_macro_command(argc) // handled by one of the above LocalCommand_* functions
+	|| MUTATOR_CALLHOOK(CSQC_ConsoleCommand, s, argc, command) // handled by a mutator
+	) return;
 
 	// nothing above caught the command, must be invalid
 	print(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.\n");
@@ -605,14 +619,12 @@ void ConsoleCommand_macro_init()
 	#ifndef CAMERATEST
 	}
 	#endif
-
-	return;
 }
 
-bool ConsoleCommand_macro_normal(int argc)
+bool ConsoleCommand_macro_normal(string s, int argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
-		{ if(name == strtolower(argv(0))) { { execution } return true; } }
+		{ if (name == s) { { execution } return true; } }
 
 	CONSOLE_COMMANDS_NORMAL();
 	#undef CONSOLE_COMMAND
@@ -620,12 +632,12 @@ bool ConsoleCommand_macro_normal(int argc)
 	return false;
 }
 
-bool ConsoleCommand_macro_movement(int argc)
+bool ConsoleCommand_macro_movement(string s, int argc)
 {
 	if(camera_active)
 	{
 		#define CONSOLE_COMMAND(name,execution) \
-			{ if(name == strtolower(argv(0))) { { execution } return true; } }
+			{ if (name == s) { { execution } return true; } }
 
 		CONSOLE_COMMANDS_MOVEMENT();
 		#undef CONSOLE_COMMAND
@@ -643,17 +655,9 @@ bool ConsoleCommand_macro_movement(int argc)
 bool CSQC_ConsoleCommand(string command)
 {
 	int argc = tokenize_console(command);
-
-	if(ConsoleCommand_macro_normal(argc))
-	{
-		return true;
-	}
-	else if(ConsoleCommand_macro_movement(argc))
-	{
-		return true;
-	}
-
-	// Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
-
-	return false;
+	string s = strtolower(argv(0));
+	// Return value should be true if CSQC handled the command, otherwise return false to have the engine handle it.
+	return (ConsoleCommand_macro_normal(s, argc)
+	|| ConsoleCommand_macro_movement(s, argc)
+	);
 }

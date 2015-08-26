@@ -113,10 +113,6 @@ const float ITEM_RESPAWN_TICKS = 10;
 .float max_armorvalue;
 .float pickup_anyway;
 
-void Item_ItemsTime_SetTimesForPlayer(entity e);
-
-void Item_ItemsTime_ResetTimesForPlayer(entity e);
-
 void Item_Show (entity e, float mode);
 
 void Item_Respawn (void);

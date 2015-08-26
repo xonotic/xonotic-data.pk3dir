@@ -8,84 +8,157 @@
 #include "teams.qh"
 #include "util.qh"
 
-entity Buff_Type_first;
-entity Buff_Type_last;
-.entity enemy; // internal next pointer
+#include "registry.qh"
 
-int BUFF_LAST = 1;
-int BUFF_ALL;
+void RegisterBuffs();
+const int BUFFS_MAX = 16;
+entity BUFFS[BUFFS_MAX], BUFFS_first, BUFFS_last;
+int BUFFS_COUNT;
+#define REGISTER_BUFF(id) \
+    REGISTER(RegisterBuffs, BUFF, BUFFS, BUFFS_COUNT, id, m_id, NEW(Buff)); \
+    REGISTER_INIT_POST(BUFF, id) { \
+        this.netname = this.m_name; \
+        this.m_itemid = BIT(this.m_id - 1); \
+        this.m_sprite = strzone(strcat("buff-", this.m_name)); \
+    } \
+    REGISTER_INIT(BUFF, id)
+REGISTER_REGISTRY(RegisterBuffs)
 
-.int items; // buff ID
-.string netname; // buff name
-.string message; // human readable name
-.vector colormod; // buff color
-.string model2; // buff sprite
-.int skin; // buff skin
-.float buff_time;
-
-// hacky function to return the cvar value only to server - TODO: do this properly!
-float sv_cvar(string cvarname)
-{
+#include "items/item/pickup.qh"
+CLASS(Buff, Pickup)
+	/** bit index */
+	ATTRIB(Buff, m_itemid, int, 0)
+	ATTRIB(Buff, m_name, string, "buff")
+	ATTRIB(Buff, m_color, vector, '1 1 1')
+	ATTRIB(Buff, m_prettyName, string, "Buff")
+	ATTRIB(Buff, m_skin, int, 0)
+	ATTRIB(Buff, m_sprite, string, "")
+	METHOD(Buff, display, void(entity this, void(string name, string icon) returns)) {
+		returns(this.m_prettyName, sprintf("/gfx/hud/%s/buff_%s", cvar_string("menu_skin"), this.m_name));
+	}
 #ifdef SVQC
-	return cvar(cvarname);
-#else
-	return 0;
+	METHOD(Buff, m_time, float(entity));
+	float Buff_m_time(entity this) { return cvar(strcat("g_buffs_", this.netname, "_time")); }
 #endif
+ENDCLASS(Buff)
+
+REGISTER_BUFF(NULL);
+
+REGISTER_BUFF(AMMO) {
+	this.m_prettyName = _("Ammo");
+	this.m_name = "ammo";
+	this.m_skin = 3;
+	this.m_color = '0.76 1 0.1';
 }
 
-#define REGISTER_BUFF(hname,sname,NAME,bskin,bcolor) \
-	int BUFF_##NAME; \
-	entity Buff_Type##sname; \
-	void RegisterBuffs_##sname() \
-	{ \
-		BUFF_##NAME = BUFF_LAST * 2; \
-		BUFF_LAST = BUFF_##NAME; \
-		BUFF_ALL |= BUFF_##NAME; \
-		Buff_Type##sname = spawn(); \
-		Buff_Type##sname.items = BUFF_##NAME; \
-		Buff_Type##sname.netname = #sname; \
-		Buff_Type##sname.message = hname; \
-		Buff_Type##sname.skin = bskin; \
-		Buff_Type##sname.colormod = bcolor; \
-		Buff_Type##sname.buff_time = sv_cvar(strcat("g_buffs_", #sname, "_time")); \
-		Buff_Type##sname.model2 = strzone(strcat("buff-", #sname)); \
-		if(!Buff_Type_first) \
-			Buff_Type_first = Buff_Type##sname; \
-		if(Buff_Type_last) \
-			Buff_Type_last.enemy = Buff_Type##sname; \
-		Buff_Type_last = Buff_Type##sname; \
-	} \
-	ACCUMULATE_FUNCTION(RegisterBuffs, RegisterBuffs_##sname)
+REGISTER_BUFF(RESISTANCE) {
+	this.m_prettyName = _("Resistance");
+	this.m_name = "resistance";
+	this.m_skin = 0;
+	this.m_color = '0.36 1 0.07';
+}
 
-REGISTER_BUFF(_("Ammo"),ammo,AMMO,3,'0.76 1 0.1');
-REGISTER_BUFF(_("Resistance"),resistance,RESISTANCE,0,'0.36 1 0.07');
-REGISTER_BUFF(_("Speed"),speed,SPEED,9,'0.1 1 0.84');
-REGISTER_BUFF(_("Medic"),medic,MEDIC,1,'1 0.12 0');
-REGISTER_BUFF(_("Bash"),bash,BASH,5,'1 0.39 0');
-REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,2,'1 0 0.24');
-REGISTER_BUFF(_("Disability"),disability,DISABILITY,7,'0.94 0.3 1');
-REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'1 0.23 0.61');
-REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.24 0.78 1');
-REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'0.33 0.56 1');
-REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.5 0.5 1');
-REGISTER_BUFF(_("Inferno"),inferno,INFERNO,16,'1 0.62 0');
-REGISTER_BUFF(_("Swapper"),swapper,SWAPPER,17,'0.63 0.36 1');
-REGISTER_BUFF(_("Magnet"),magnet,MAGNET,18,'1 0.95 0.18');
-#undef REGISTER_BUFF
+REGISTER_BUFF(SPEED) {
+	this.m_prettyName = _("Speed");
+	this.m_name = "speed";
+	this.m_skin = 9;
+	this.m_color = '0.1 1 0.84';
+}
+
+REGISTER_BUFF(MEDIC) {
+	this.m_prettyName = _("Medic");
+	this.m_name = "medic";
+	this.m_skin = 1;
+	this.m_color = '1 0.12 0';
+}
+
+REGISTER_BUFF(BASH) {
+	this.m_prettyName = _("Bash");
+	this.m_name = "bash";
+	this.m_skin = 5;
+	this.m_color = '1 0.39 0';
+}
+
+REGISTER_BUFF(VAMPIRE) {
+	this.m_prettyName = _("Vampire");
+	this.m_name = "vampire";
+	this.m_skin = 2;
+	this.m_color = '1 0 0.24';
+}
+
+REGISTER_BUFF(DISABILITY) {
+	this.m_prettyName = _("Disability");
+	this.m_name = "disability";
+	this.m_skin = 7;
+	this.m_color = '0.94 0.3 1';
+}
+
+REGISTER_BUFF(VENGEANCE) {
+	this.m_prettyName = _("Vengeance");
+	this.m_name = "vengeance";
+	this.m_skin = 15;
+	this.m_color = '1 0.23 0.61';
+}
+
+REGISTER_BUFF(JUMP) {
+	this.m_prettyName = _("Jump");
+	this.m_name = "jump";
+	this.m_skin = 10;
+	this.m_color = '0.24 0.78 1';
+}
+
+REGISTER_BUFF(FLIGHT) {
+	this.m_prettyName = _("Flight");
+	this.m_name = "flight";
+	this.m_skin = 11;
+	this.m_color = '0.33 0.56 1';
+}
+
+REGISTER_BUFF(INVISIBLE) {
+	this.m_prettyName = _("Invisible");
+	this.m_name = "invisible";
+	this.m_skin = 12;
+	this.m_color = '0.5 0.5 1';
+}
+
+REGISTER_BUFF(INFERNO) {
+	this.m_prettyName = _("Inferno");
+	this.m_name = "inferno";
+	this.m_skin = 16;
+	this.m_color = '1 0.62 0';
+}
+
+REGISTER_BUFF(SWAPPER) {
+	this.m_prettyName = _("Swapper");
+	this.m_name = "swapper";
+	this.m_skin = 17;
+	this.m_color = '0.63 0.36 1';
+}
+
+REGISTER_BUFF(MAGNET) {
+	this.m_prettyName = _("Magnet");
+	this.m_name = "magnet";
+	this.m_skin = 18;
+	this.m_color = '1 0.95 0.18';
+}
 
 #ifdef SVQC
 .int buffs;
 void buff_Init(entity ent);
-void buff_Init_Compat(entity ent, int replacement);
+void buff_Init_Compat(entity ent, entity replacement);
 
-#define BUFF_SPAWNFUNC(e,b,t) void spawnfunc_item_buff_##e() { self.buffs = b; self.team = t; buff_Init(self); }
-#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o,r) void spawnfunc_item_##o() { buff_Init_Compat(self,r); }
-#define BUFF_SPAWNFUNCS(e,b)                         \
-        BUFF_SPAWNFUNC(e,           b,  0)           \
-        BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
-        BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
-        BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
-        BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
+#define BUFF_SPAWNFUNC(e, b, t) void spawnfunc_item_buff_##e() { \
+	self.buffs = b.m_itemid; \
+	self.team = t; \
+	buff_Init(self); \
+}
+#define BUFF_SPAWNFUNCS(e, b)                       \
+		BUFF_SPAWNFUNC(e,           b,  0)          \
+		BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
+		BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
+		BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
+		BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
+#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o, r) void spawnfunc_item_##o() { buff_Init_Compat(self, r); }
 
 BUFF_SPAWNFUNCS(resistance,		BUFF_RESISTANCE)
 BUFF_SPAWNFUNCS(ammo,			BUFF_AMMO)
@@ -101,7 +174,7 @@ BUFF_SPAWNFUNCS(invisible,		BUFF_INVISIBLE)
 BUFF_SPAWNFUNCS(inferno,		BUFF_INFERNO)
 BUFF_SPAWNFUNCS(swapper,		BUFF_SWAPPER)
 BUFF_SPAWNFUNCS(magnet,			BUFF_MAGNET)
-BUFF_SPAWNFUNCS(random,			0)
+BUFF_SPAWNFUNCS(random,			BUFF_NULL)
 
 BUFF_SPAWNFUNC_Q3TA_COMPAT(doubler,    BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(resistance, BUFF_RESISTANCE)
@@ -118,12 +191,4 @@ BUFF_SPAWNFUNC_Q3TA_COMPAT(medic,	BUFF_MEDIC)
 #undef BUFF_SPAWNFUNCS
 #endif
 
-vector Buff_Color(int buff_id);
-string Buff_PrettyName(int buff_id);
-string Buff_Name(int buff_id);
-int Buff_Type_FromName(string buff_name);
-int Buff_Type_FromSprite(string buff_sprite);
-int Buff_Skin(int buff_id);
-string Buff_Sprite(int buff_id);
-float Buff_Timer(int buff_id);
 #endif
