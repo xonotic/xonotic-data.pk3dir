@@ -41,12 +41,19 @@ int autocvar_hud_panel_itemstime_text = 1;
 #define hud_panel_itemstime_hidelarge false
 #endif
 
+bool Item_ItemsTime_SpectatorOnly(GameItem it)
+{
+    return (false
+    || it == ITEM_ArmorMega     || (it == ITEM_ArmorLarge && !hud_panel_itemstime_hidelarge)
+    || it == ITEM_HealthMega    || (it == ITEM_HealthLarge && !hud_panel_itemstime_hidelarge)
+    );
+}
+
 bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons)
 {
     return (false
     || it.instanceOfPowerup
-    || it == ITEM_ArmorMega     || (it == ITEM_ArmorLarge && !hud_panel_itemstime_hidelarge)
-    || it == ITEM_HealthMega    || (it == ITEM_HealthLarge && !hud_panel_itemstime_hidelarge)
+    || Item_ItemsTime_SpectatorOnly(it)
     || (_weapons & WEPSET_SUPERWEAPONS)
     );
 }

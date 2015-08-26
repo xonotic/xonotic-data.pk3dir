@@ -410,6 +410,7 @@ void Item_Think()
 	}
 }
 
+bool Item_ItemsTime_SpectatorOnly(GameItem it);
 bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons);
 float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
@@ -467,7 +468,8 @@ void Item_RespawnCountdown (void)
             wp.wp_extra = wpextra;
             if(self.waypointsprite_attached)
             {
-                if (self.items == IT_HEALTH || self.items == IT_ARMOR)
+                GameItem def = self.itemdef;
+                if (Item_ItemsTime_SpectatorOnly(def))
                     WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
                 WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
             }
