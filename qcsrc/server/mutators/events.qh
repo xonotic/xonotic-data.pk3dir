@@ -536,4 +536,15 @@ enum {
 	MUT_ACCADD_INVALID, // return this flag to make the function always continue
 	MUT_ACCADD_INDIFFERENT // return this flag to make the function always return
 };
+
+/** Called when clearing the global parameters for a model */
+MUTATOR_HOOKABLE(ClearModelParams, EV_NO_ARGS);
+
+/** Called when getting the global parameters for a model */
+#define EV_GetModelParams(i, o) \
+    /** entity id */ i(string, checkmodel_input) \
+    /** entity id */ i(string, checkmodel_command) \
+    /**/
+string checkmodel_input, checkmodel_command;
+MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
 #endif

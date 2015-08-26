@@ -5,6 +5,7 @@
     #include "../client/defs.qh"
     #include "constants.qh"
     #include "../warpzonelib/mathlib.qh"
+	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications.qh"
     #include "deathtypes.qh"
@@ -16,6 +17,7 @@
     #include "constants.qh"
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"
+	#include "../server/mutators/events.qh"
     #include "notifications.qh"
     #include "deathtypes.qh"
     #include "mapinfo.qh"
@@ -2059,6 +2061,10 @@ float get_model_parameters(string m, float sk)
 	}
 	get_model_parameters_fixbone = 0;
 
+#ifndef MENUQC
+	MUTATOR_CALLHOOK(ClearModelParams);
+#endif
+
 	if (!m)
 		return 1;
 
@@ -2120,6 +2126,9 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
+	#ifndef MENUQC
+		MUTATOR_CALLHOOK(GetModelParams, c, s);
+	#endif
 		for(int i = 0; i < MAX_AIM_BONES; ++i)
 			if(c == strcat("bone_aim", ftos(i)))
 			{
