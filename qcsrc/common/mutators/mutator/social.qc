@@ -1,6 +1,8 @@
 #ifdef MENUQC
 REGISTER_MUTATOR(social, true);
 
+void Social_send(int to, string msg);
+
 void Social_parse(entity fh, entity pass, int status)
 {
 	switch (status) {
@@ -16,19 +18,30 @@ void Social_parse(entity fh, entity pass, int status)
 		    if (first == "") return;
 		    int id = stoi(first);
 		    printf("from player %d:\n", id);
-			for (string input; (input = url_fgets(fh)); ) {
-				print(input, "\n");
-			}
+		    string cmd = url_fgets(fh);
+		    switch (cmd) {
+		        case "ping":
+		            Social_send(id, "pong");
+		        case "pong":
+		            printf("Player %d is online\n", id);
+		            break;
+		        case "msg":
+		            for (string input; (input = url_fgets(fh)); ) {
+                        print(input, "\n");
+                    }
+                    break;
+		        default:
+                    printf("Social_parse(): '%s'\n", cmd);
+                    break;
+		    }
 			url_fclose(fh);
 			break;
 		}
 		case URL_READY_CLOSED: break;
 		case URL_READY_ERROR:
 		default:
-		{
 			printf("Social_parse(): %s\n", ftos(status));
 			break;
-		}
 	}
 }
 
