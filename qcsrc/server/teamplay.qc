@@ -41,6 +41,7 @@ void ActivateTeamplay()
 {
 	serverflags |= SERVERFLAG_TEAMPLAY;
 	teamplay = 1;
+	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
 }
 
 void InitGameplayMode()
@@ -57,8 +58,9 @@ void InitGameplayMode()
 	world.maxs = mi_max;
 
 	MapInfo_LoadMapSettings(mapname);
-	teamplay = 0;
 	serverflags &= ~SERVERFLAG_TEAMPLAY;
+	teamplay = 0;
+	cvar_set("teamplay", "0");  // DP needs this for sending proper getstatus replies.
 
 	if (!cvar_value_issafe(world.fog))
 	{
@@ -161,6 +163,7 @@ void InitGameplayMode()
 	if(g_onslaught)
 	{
 		ActivateTeamplay();
+		fraglimit_override = autocvar_g_onslaught_point_limit;
 		have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_onslaught);
 	}
@@ -281,8 +284,7 @@ string getwelcomemessage(void)
 {
 	string s, modifications, motd;
 
-	ret_string = "";
-	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
+	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
 	modifications = ret_string;
 
 	if(g_weaponarena)
@@ -430,8 +432,7 @@ void CheckAllowedTeams (entity for_whom)
 		// cover anything else by treating it like tdm with no teams spawned
 		dm = 2;
 
-		ret_float = dm;
-		MUTATOR_CALLHOOK(GetTeamCount);
+		MUTATOR_CALLHOOK(GetTeamCount, dm);
 		dm = ret_float;
 
 		if(dm >= 4)
@@ -845,7 +846,11 @@ void SV_ChangeTeam(float _color)
 		TeamchangeFrags(self);
 	}
 
-	SetPlayerTeam(self, dteam, steam, false);
+	// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
+	if(!IS_CLIENT(self))
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_CONNECTING, self.netname);
+
+	SetPlayerTeam(self, dteam, steam, !IS_CLIENT(self));
 
 	if(IS_PLAYER(self) && steam != dteam)
 	{

@@ -3,13 +3,14 @@
 ../common/util-pre.qh
 ../dpdefs/menudefs.qh
 ../dpdefs/keycodes.qh
+../common/util-post.qh
 
 oo/classes.qc
 
 draw.qc
 menu.qc
 
-command/commands.qc
+command/all.qc
 
 xonotic/util.qc
 
@@ -21,8 +22,11 @@ xonotic/util.qc
 ../common/urllib.qc
 ../common/util.qc
 
-../common/monsters/monsters.qc
-
-../common/weapons/weapons.qc // TODO
+../common/items/all.qc
+../common/monsters/all.qc
+../common/vehicles/all.qc
+../common/weapons/all.qc
 
 ../warpzonelib/mathlib.qc
+
+../../mod/menu/progs.inc

@@ -1,0 +1,18 @@
+#include "../registry.qh"
+
+#ifndef ITEMS_ALL_H
+#define ITEMS_ALL_H
+
+void RegisterItems();
+const int MAX_ITEMS = 24;
+entity ITEMS[MAX_ITEMS], ITEMS_first, ITEMS_last;
+int ITEM_COUNT;
+/** If you register a new item, make sure to add it to all.inc */
+#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, m_id, NEW(class))
+REGISTER_REGISTRY(RegisterItems)
+
+void Dump_Items();
+
+#endif
+
+#include "inventory.qh"

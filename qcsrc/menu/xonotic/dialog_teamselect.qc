@@ -2,8 +2,8 @@
 #define DIALOG_TEAMSELECT_H
 #include "rootdialog.qc"
 CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
-	METHOD(XonoticTeamSelectDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	METHOD(XonoticTeamSelectDialog, showNotify, void(entity))
+	METHOD(XonoticTeamSelectDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
+	METHOD(XonoticTeamSelectDialog, showNotify, void(entity));
 	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection")) // ;)
 	ATTRIB(XonoticTeamSelectDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticTeamSelectDialog, intendedWidth, float, 0.4)

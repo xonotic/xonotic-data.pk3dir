@@ -5,7 +5,6 @@
 #include "command/common.qh"
 
 #include "g_damage.qh"
-#include "g_subs.qh"
 #include "item_key.qh"
 
 #include "../common/constants.qh"
@@ -13,7 +12,7 @@
 #include "../common/notifications.qh"
 #include "../common/util.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/sv_model.qh"
 

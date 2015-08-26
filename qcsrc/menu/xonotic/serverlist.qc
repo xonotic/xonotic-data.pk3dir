@@ -2,14 +2,14 @@
 #define SERVERLIST_H
 #include "listbox.qc"
 CLASS(XonoticServerList, XonoticListBox)
-	METHOD(XonoticServerList, configureXonoticServerList, void(entity))
+	METHOD(XonoticServerList, configureXonoticServerList, void(entity));
 	ATTRIB(XonoticServerList, rowsPerItem, float, 1)
-	METHOD(XonoticServerList, draw, void(entity))
-	METHOD(XonoticServerList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticServerList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticServerList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticServerList, toggleFavorite, void(entity, string))
+	METHOD(XonoticServerList, draw, void(entity));
+	METHOD(XonoticServerList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticServerList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticServerList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticServerList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticServerList, toggleFavorite, void(entity, string));
 
 	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85)
 
@@ -27,10 +27,11 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, columnTypeSize, float, 0)
 	ATTRIB(XonoticServerList, columnPlayersOrigin, float, 0)
 	ATTRIB(XonoticServerList, columnPlayersSize, float, 0)
+	ATTRIB(XonoticServerList, lockedSelectedItem, bool, true) // initially keep selected the first item of the list, avoiding an unwanted scrolling
 
 	ATTRIB(XonoticServerList, selectedServer, string, string_null) // to restore selected server when needed
-	METHOD(XonoticServerList, setSelected, void(entity, float))
-	METHOD(XonoticServerList, setSortOrder, void(entity, float, float))
+	METHOD(XonoticServerList, setSelected, void(entity, float));
+	METHOD(XonoticServerList, setSortOrder, void(entity, float, float));
 	ATTRIB(XonoticServerList, filterShowEmpty, float, 1)
 	ATTRIB(XonoticServerList, filterShowFull, float, 1)
 	ATTRIB(XonoticServerList, filterString, string, string_null)
@@ -38,10 +39,10 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, ipAddressBox, entity, NULL)
 	ATTRIB(XonoticServerList, favoriteButton, entity, NULL)
 	ATTRIB(XonoticServerList, nextRefreshTime, float, 0)
-	METHOD(XonoticServerList, refreshServerList, void(entity, float)) // refresh mode: REFRESHSERVERLIST_*
+	METHOD(XonoticServerList, refreshServerList, void(entity, float)); // refresh mode: REFRESHSERVERLIST_*
 	ATTRIB(XonoticServerList, needsRefresh, float, 1)
-	METHOD(XonoticServerList, focusEnter, void(entity))
-	METHOD(XonoticServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)))
+	METHOD(XonoticServerList, focusEnter, void(entity));
+	METHOD(XonoticServerList, positionSortButton, void(entity, entity, float, float, string, void(entity, entity)));
 	ATTRIB(XonoticServerList, sortButton1, entity, NULL)
 	ATTRIB(XonoticServerList, sortButton2, entity, NULL)
 	ATTRIB(XonoticServerList, sortButton3, entity, NULL)
@@ -58,10 +59,10 @@ CLASS(XonoticServerList, XonoticListBox)
 	ATTRIB(XonoticServerList, seenIPv6, float, 0)
 	ATTRIB(XonoticServerList, categoriesHeight, float, 1.25)
 
-	METHOD(XonoticServerList, getTotalHeight, float(entity))
-	METHOD(XonoticServerList, getItemAtPos, float(entity, float))
-	METHOD(XonoticServerList, getItemStart, float(entity, float))
-	METHOD(XonoticServerList, getItemHeight, float(entity, float))
+	METHOD(XonoticServerList, getTotalHeight, float(entity));
+	METHOD(XonoticServerList, getItemAtPos, float(entity, float));
+	METHOD(XonoticServerList, getItemStart, float(entity, float));
+	METHOD(XonoticServerList, getItemHeight, float(entity, float));
 ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
 
@@ -460,6 +461,7 @@ void XonoticServerList_configureXonoticServerList(entity me)
 }
 void XonoticServerList_setSelected(entity me, int i)
 {
+	me.lockedSelectedItem = false;
 	//int save = me.selectedItem;
 	SUPER(XonoticServerList).setSelected(me, i);
 	/*
@@ -717,12 +719,26 @@ void XonoticServerList_draw(entity me)
 	me.infoButton.disabled = ((me.nItems == 0) || !owned);
 	me.favoriteButton.disabled = ((me.nItems == 0) && (me.ipAddressBox.text == ""));
 
-	if(me.selectedServer)
+	if(me.lockedSelectedItem)
+	{
+		if(me.nItems > 0)
+		{
+			if(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem) != me.selectedServer)
+			{
+				if(me.selectedServer)
+					strunzone(me.selectedServer);
+				me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
+			}
+			found = true;
+		}
+	}
+	else if(me.selectedServer)
 	{
 		for(i = 0; i < me.nItems; ++i)
 		{
 			if(gethostcachestring(SLIST_FIELD_CNAME, i) == me.selectedServer)
 			{
+				// don't follow the selected item with SUPER(XonoticServerList).setSelected(me, i);
 				me.selectedItem = i;
 				found = true;
 				break;
@@ -733,8 +749,9 @@ void XonoticServerList_draw(entity me)
 	{
 		if(me.nItems > 0)
 		{
+			// selected server disappeared, select the last server (scrolling to it)
 			if(me.selectedItem >= me.nItems)
-				me.selectedItem = me.nItems - 1;
+				SUPER(XonoticServerList).setSelected(me, me.nItems - 1);
 			if(me.selectedServer)
 				strunzone(me.selectedServer);
 			me.selectedServer = strzone(gethostcachestring(SLIST_FIELD_CNAME, me.selectedItem));
@@ -963,7 +980,7 @@ void XonoticServerList_doubleClickListBoxItem(entity me, int i, vector where)
 {
 	ServerList_Connect_Click(NULL, me);
 }
-void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected)
+void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
 	float p;
@@ -1019,6 +1036,11 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	m = tokenizebyseparator(s, ":");
@@ -1155,57 +1177,46 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	iconPos_x = (me.columnIconsSize - 3 * iconSize.x) * 0.5;
 	iconPos_y = (1 - iconSize.y) * 0.5;
 
-	string n;
-
-	if (!(me.seenIPv4 && me.seenIPv6))
+	// IP
+	if(me.seenIPv4 && me.seenIPv6)
 	{
-		iconPos.x += iconSize.x * 0.5;
-	}
-	else if(me.seenIPv4 && me.seenIPv6)
-	{
-		n = string_null;
 		if(isv6)
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), 0); // PRECACHE_PIC_MIPMAP
+			draw_Picture(iconPos, "icon_ipv6", iconSize, '1 1 1', 1);
 		else if(isv4)
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), 0); // PRECACHE_PIC_MIPMAP
-		if(n)
-			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		iconPos.x += iconSize.x;
+			draw_Picture(iconPos, "icon_ipv4", iconSize, '1 1 1', 1);
 	}
 
-	if(q > 0)
-	{
-		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), 0); // PRECACHE_PIC_MIPMAP
-		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-	}
 	iconPos.x += iconSize.x;
 
+	// AES
+	if(q > 0)
+		draw_Picture(iconPos, strcat("icon_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+
+	iconPos.x += iconSize.x;
+
+	// Mod
 	if(modname == "Xonotic")
 	{
 		if(pure == 0)
-		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), PRECACHE_PIC_MIPMAP);
-			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-		}
+			draw_Picture(iconPos, "icon_pure1", iconSize, '1 1 1', 1);
 	}
 	else
 	{
-		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname), PRECACHE_PIC_MIPMAP);
-		if(draw_PictureSize(n) == '0 0 0')
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_"), PRECACHE_PIC_MIPMAP);
+		string icon = strcat("icon_mod_", modname);
+		if(draw_PictureSize(icon) == '0 0 0')
+			icon = "icon_mod_";
+
 		if(pure == 0)
-			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+			draw_Picture(iconPos, icon, iconSize, '1 1 1', 1);
 		else
-			draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
+			draw_Picture(iconPos, icon, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
 	}
+
 	iconPos.x += iconSize.x;
 
+	// Stats
 	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
-	{
-		draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), 0); // PRECACHE_PIC_MIPMAP
-		draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-	}
-	iconPos.x += iconSize.x;
+		draw_Picture(iconPos, "icon_stats1", iconSize, '1 1 1', 1);
 
 	// --------------
 	//  RENDER TEXT

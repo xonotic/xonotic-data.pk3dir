@@ -37,21 +37,88 @@
     const int false = 0;
 #endif
 
-#ifndef QCC_SUPPORT_ENTITYCLASS
-    #define entityclass(name) typedef entity name
-    #define class(name)
-    #define new(class) spawn()
-#else
-    #define entityclass(name) entityclass name {}
-    #define class(name) [[class(name)]]
-    #define new(class) ((class) spawn())
-#endif
-
 // Transitional aliases
 [[deprecated("use true")]] [[alias("true")]] const bool TRUE;
 [[deprecated("use false")]] [[alias("false")]] const bool FALSE;
 
+#define FOREACH_ARRAY(arr, start, end, cond, body) do { \
+    for (int i = start; i < end; ++i) {                 \
+        const noref entity it = arr[i];                 \
+        if (cond) { body }                              \
+    }                                                   \
+} while(0)
+
+#define FOREACH_LIST(list, next, cond, body) do {               \
+    noref int i = 0;                                            \
+    for (entity it = list##_first; it; (it = it.next, ++i)) {   \
+        if (cond) { body }                                      \
+    }                                                           \
+} while(0)
+
+#define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
+
+#ifdef GMQCC
+    #define OVERLOAD(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)
+#else
+    #define OVERLOAD_(F,_9,_8,_7,_6,_5,_4,_3,_2,_1,n,...) F##_##n
+    #define OVERLOAD(F, ...) OVERLOAD_(F,__VA_ARGS__,9,8,7,6,5,4,3,2,1)(__VA_ARGS__)
+#endif
+
+#define LAMBDA(...) { __VA_ARGS__ ; }
+
+#define MAP(f, ...) OVERLOAD(MAP, f, __VA_ARGS__)
+#define MAP_2(f, it) f(it)
+#define MAP_3(f, it, ...) f(it)MAP_2(f, __VA_ARGS__)
+#define MAP_4(f, it, ...) f(it)MAP_3(f, __VA_ARGS__)
+#define MAP_5(f, it, ...) f(it)MAP_4(f, __VA_ARGS__)
+#define MAP_6(f, it, ...) f(it)MAP_5(f, __VA_ARGS__)
+#define MAP_7(f, it, ...) f(it)MAP_6(f, __VA_ARGS__)
+#define MAP_8(f, it, ...) f(it)MAP_7(f, __VA_ARGS__)
+#define MAP_9(f, it, ...) f(it)MAP_8(f, __VA_ARGS__)
+#define MAP_10(f, it, ...) f(it)MAP_9(f, __VA_ARGS__)
+#define MAP_11(f, it, ...) f(it)MAP_10(f, __VA_ARGS__)
+#define MAP_12(f, it, ...) f(it)MAP_11(f, __VA_ARGS__)
+#define MAP_13(f, it, ...) f(it)MAP_12(f, __VA_ARGS__)
+#define MAP_14(f, it, ...) f(it)MAP_13(f, __VA_ARGS__)
+#define MAP_15(f, it, ...) f(it)MAP_14(f, __VA_ARGS__)
+#define MAP_16(f, it, ...) f(it)MAP_15(f, __VA_ARGS__)
+#define MAP_17(f, it, ...) f(it)MAP_16(f, __VA_ARGS__)
+#define MAP_18(f, it, ...) f(it)MAP_17(f, __VA_ARGS__)
+#define MAP_19(f, it, ...) f(it)MAP_18(f, __VA_ARGS__)
+#define MAP_20(f, it, ...) f(it)MAP_19(f, __VA_ARGS__)
+
+#define IDENTITY(it) it
+
+#define UNWORDS(...) MAP(IDENTITY, __VA_ARGS__)
+
+#define APPLY(f, ...) f(__VA_ARGS__)
+
+#ifdef SVQC
+    #define SV(f, ...) f(__VA_ARGS__)
+#else
+    #define SV(f, ...)
+#endif
+
+#ifdef CSQC
+    #define CL(f, ...) f(__VA_ARGS__)
+#else
+    #define CL(f, ...)
+#endif
+
+#define IF(cond, f, ...) cond(f, __VA_ARGS__)
+
+#define GET(name) name##get
+#define GETTER(type, name) type GET(name)() { return name; }
+
 #define BIT(n) (1 << (n))
-#define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
+#ifndef BRANCHLESS_BITSET
+    #define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
+#else
+    #define BITSET(var, mask, flag) ((var) ^ (-(flag) ^ (var)) & (mask))
+#endif
+
+#define CVAR_DESCRIBE(var, desc)    localcmd(sprintf("\nset %s \"%s\" \"%s\"\n",        #var, ftos(autocvar_##var), desc))
+#define CVAR_DESCRIBESTR(var, desc) localcmd(sprintf("\nset %s \"%s\" \"%s\"\n",        #var, autocvar_##var, desc))
+#define CVAR_DESCRIBEVEC(var, desc) localcmd(sprintf("\nset %s \"%s %s %s\" \"%s\"\n",  #var, ftos(autocvar_##var##.x), ftos(autocvar_##var##.y), ftos(autocvar_##var##.z), desc))
 
 #endif

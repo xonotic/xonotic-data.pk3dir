@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_NOTIFICATION_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDNotificationDialog, XonoticRootDialog)
-	METHOD(XonoticHUDNotificationDialog, fill, void(entity))
+	METHOD(XonoticHUDNotificationDialog, fill, void(entity));
 	ATTRIB(XonoticHUDNotificationDialog, title, string, _("Notification Panel"))
 	ATTRIB(XonoticHUDNotificationDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDNotificationDialog, intendedWidth, float, 0.4)

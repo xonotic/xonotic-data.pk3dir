@@ -8,12 +8,9 @@
 #include "../cl_impulse.qh"
 #include "../cheats.qh"
 #include "../g_damage.qh"
-#include "../g_subs.qh"
-#include "../t_teleporters.qh"
 #include "../round_handler.qh"
 #include "../scores.qh"
 #include "../scores_rules.qh"
-#include "../waypointsprites.qh"
 
 #include "../bot/bot.qh"
 #include "../bot/navigation.qh"
@@ -25,7 +22,7 @@
 
 #include "../command/vote.qh"
 
-#include "../../common/monsters/monsters.qh"
+#include "../../common/monsters/all.qh"
 
 #include "../command/common.qh"
 
@@ -34,6 +31,8 @@
 
 #include "../../common/deathtypes.qh"
 #include "../../common/notifications.qh"
+#include "../../common/triggers/teleporters.qh"
+#include "../../common/triggers/subs.qh"
 #include "../../common/stats.qh"
 #include "../../common/teams.qh"
 

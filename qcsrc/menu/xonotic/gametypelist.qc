@@ -2,15 +2,15 @@
 #define GAMETYPELIST_H
 #include "listbox.qc"
 CLASS(XonoticGametypeList, XonoticListBox)
-	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity))
+	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity));
 	ATTRIB(XonoticGametypeList, rowsPerItem, float, 2)
-	METHOD(XonoticGametypeList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticGametypeList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticGametypeList, setSelected, void(entity, float))
-	METHOD(XonoticGametypeList, loadCvars, void(entity))
-	METHOD(XonoticGametypeList, saveCvars, void(entity))
-	METHOD(XonoticGametypeList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticGametypeList, clickListBoxItem, void(entity, float, vector))
+	METHOD(XonoticGametypeList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticGametypeList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticGametypeList, setSelected, void(entity, float));
+	METHOD(XonoticGametypeList, loadCvars, void(entity));
+	METHOD(XonoticGametypeList, saveCvars, void(entity));
+	METHOD(XonoticGametypeList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticGametypeList, clickListBoxItem, void(entity, float, vector));
 
 	ATTRIB(XonoticGametypeList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticGametypeList, realUpperMargin, float, 0)
@@ -36,9 +36,11 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 	me.configureXonoticListBox(me);
 	me.nItems = GameType_GetCount();
 
-	// we want the pics mipmapped
-	for(int i = 0; i < GameType_GetCount(); ++i)
-		draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
+	if(SKINBOOL_GAMETYPELIST_ICON_BLUR)
+	{
+		for(int i = 0; i < GameType_GetCount(); ++i)
+			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
+	}
 
 	me.loadCvars(me);
 }
@@ -78,12 +80,17 @@ void XonoticGametypeList_saveCvars(entity me)
 		owner.gameTypeChangeNotify(owner);
 	}
 }
-void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticGametypeList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s1, s2;
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	draw_Picture(me.columnIconOrigin * eX, GameType_GetIcon(i), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 	s1 = GameType_GetName(i);

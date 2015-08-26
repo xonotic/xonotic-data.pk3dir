@@ -2,8 +2,7 @@
 #define DIALOG_MULTIPLAYER_JOIN_H
 #include "tab.qc"
 CLASS(XonoticServerListTab, XonoticTab)
-	METHOD(XonoticServerListTab, fill, void(entity))
-	ATTRIB(XonoticServerListTab, title, string, _("Join"))
+	METHOD(XonoticServerListTab, fill, void(entity));
 	ATTRIB(XonoticServerListTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerListTab, rows, float, 23)
 	ATTRIB(XonoticServerListTab, columns, float, 6.5)

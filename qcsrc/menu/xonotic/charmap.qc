@@ -1,33 +1,26 @@
 #ifndef CHARMAP_H
 #define CHARMAP_H
-#include "../item.qc"
-CLASS(XonoticCharmap, Item)
-	METHOD(XonoticCharmap, configureXonoticCharmap, void(entity, entity))
-	METHOD(XonoticCharmap, mousePress, float(entity, vector))
-	METHOD(XonoticCharmap, mouseRelease, float(entity, vector))
-	METHOD(XonoticCharmap, mouseMove, float(entity, vector))
-	METHOD(XonoticCharmap, mouseDrag, float(entity, vector))
-	METHOD(XonoticCharmap, keyDown, float(entity, float, float, float))
-	METHOD(XonoticCharmap, focusLeave, void(entity))
-	METHOD(XonoticCharmap, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticCharmap, draw, void(entity))
-	ATTRIB(XonoticCharmap, focusable, float, 1)
-
-	METHOD(XonoticCharmap, moveFocus, void(entity, vector, vector))
-	METHOD(XonoticCharmap, enterChar, void(entity))
+#include "picker.qc"
+CLASS(XonoticCharmap, XonoticPicker)
+	METHOD(XonoticCharmap, configureXonoticCharmap, void(entity, entity));
+	METHOD(XonoticCharmap, focusLeave, void(entity));
+	METHOD(XonoticCharmap, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticCharmap, keyDown, float(entity, float, float, float));
 	ATTRIB(XonoticCharmap, inputBox, entity, NULL)
 	ATTRIB(XonoticCharmap, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticCharmap, realCellSize, vector, '0 0 0')
-	ATTRIB(XonoticCharmap, focusedCell, vector, '-1 -1 0')
-	ATTRIB(XonoticCharmap, previouslyFocusedCell, vector, '-1 -1 0')
+
+	ATTRIB(XonoticCharmap, rows, float, 10)
+	ATTRIB(XonoticCharmap, columns, float, 14)
+
+	METHOD(XonoticCharmap, cellSelect, void(entity, vector));
+	METHOD(XonoticCharmap, cellIsValid, bool(entity, vector));
+	METHOD(XonoticCharmap, cellDraw, void(entity, vector, vector));
+	ATTRIB(XonoticCharmap, charOffset, vector, '0 0 0')
 ENDCLASS(XonoticCharmap)
 entity makeXonoticCharmap(entity controlledInputBox);
 #endif
 
 #ifdef IMPLEMENTATION
-
-const float CHARMAP_COLS = 14;
-const float CHARMAP_ROWS = 10;
 
 string CHARMAP =
 	"★◆■▮▰▬◣◤◥◢◀▲▶▼"
@@ -46,11 +39,11 @@ string CHARMAP =
 	"\xEE\x83\x8F\xEE\x83\x90\xEE\x83\x91\xEE\x83\x92\xEE\x83\x93\xEE\x83\x94\xEE\x83\x95"
 	"\xEE\x83\x96\xEE\x83\x97\xEE\x83\x98\xEE\x83\x99\xEE\x83\x9A\xEE\x81\x9B\xEE\x81\x9D";
 
-string charmap_cellToChar(vector cell)
+string charmap_cellToChar(entity me, vector cell)
 {
-	string character = substring(CHARMAP, cell.y * CHARMAP_COLS + cell.x, 1);
+	string character = substring(CHARMAP, cell.y * me.columns + cell.x, 1);
 
-	if (character != " ")
+	if(character != " ")
 		return character;
 	else
 		return "";
@@ -67,7 +60,7 @@ entity makeXonoticCharmap(entity controlledInputBox)
 void XonoticCharmap_configureXonoticCharmap(entity me, entity controlledInputBox)
 {
 	me.inputBox = controlledInputBox;
-	me.realCellSize = eX / CHARMAP_COLS + eY / CHARMAP_ROWS;
+	me.configureXonoticPicker(me);
 }
 
 void XonoticCharmap_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
@@ -90,153 +83,38 @@ void XonoticCharmap_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 
 	if(me.realFontSize.x > maxFontWidth || me.realFontSize.y > maxFontHeight)
 		me.realFontSize = eX * maxFontWidth + eY * maxFontHeight;
-}
 
-float XonoticCharmap_mouseMove(entity me, vector coords)
-{
-	me.focusedCell_x = floor(coords.x * CHARMAP_COLS);
-	me.focusedCell_y = floor(coords.y * CHARMAP_ROWS);
-
-	if(me.focusedCell.x < 0 || me.focusedCell.y < 0 ||
-	   me.focusedCell.x >= CHARMAP_COLS || me.focusedCell.y >= CHARMAP_ROWS)
-	{
-		me.focusedCell = '-1 -1 0';
-		return 0;
-	}
-
-	return 1;
-}
-
-float XonoticCharmap_mouseDrag(entity me, vector coords)
-{
-	return me.mouseMove(me, coords);
-}
-
-float XonoticCharmap_mousePress(entity me, vector coords)
-{
-	me.mouseMove(me, coords);
-
-	if(me.focusedCell.x >= 0)
-	{
-		me.pressed = 1;
-		me.previouslyFocusedCell = me.focusedCell;
-	}
-
-	return 1;
-}
-
-float XonoticCharmap_mouseRelease(entity me, vector coords)
-{
-	if(!me.pressed)
-		return 0;
-
-	me.mouseMove(me, coords);
-
-	if(me.focusedCell == me.previouslyFocusedCell)
-		me.enterChar(me);
-
-	me.pressed = 0;
-	return 1;
+	me.charOffset = eX * me.realCellSize.x / 2 + eY * ((me.realCellSize.y - me.realFontSize.y) / 2);
 }
 
 float XonoticCharmap_keyDown(entity me, float key, float ascii, float shift)
 {
-	switch(key)
-	{
-		case K_LEFTARROW:
-		case K_KP_LEFTARROW:
-			me.moveFocus(me, me.focusedCell, '-1 0 0');
-			return 1;
-		case K_RIGHTARROW:
-		case K_KP_RIGHTARROW:
-			me.moveFocus(me, me.focusedCell, '1 0 0');
-			return 1;
-		case K_UPARROW:
-		case K_KP_UPARROW:
-			me.moveFocus(me, me.focusedCell, '0 -1 0');
-			return 1;
-		case K_DOWNARROW:
-		case K_KP_DOWNARROW:
-			me.moveFocus(me, me.focusedCell, '0 1 0');
-			return 1;
-		case K_HOME:
-		case K_KP_HOME:
-			me.focusedCell = '0 0 0';
-			return 1;
-		case K_END:
-		case K_KP_END:
-			me.focusedCell_x = CHARMAP_COLS - 1;
-			me.focusedCell_y = CHARMAP_ROWS - 1;
-			return 1;
-		case K_ENTER:
-		case K_KP_ENTER:
-		case K_INS:
-		case K_KP_INS:
-			me.enterChar(me);
-			return 1;
-		default:
-			return me.inputBox.keyDown(me.inputBox, key, ascii, shift);
-	}
+	if(SUPER(XonoticCharmap).keyDown(me, key, ascii, shift))
+		return 1;
+	return me.inputBox.keyDown(me.inputBox, key, ascii, shift);
 }
 
-void XonoticCharmap_moveFocus(entity me, vector initialCell, vector step)
+void XonoticCharmap_cellSelect(entity me, vector cell)
 {
-	me.focusedCell_x = mod(me.focusedCell.x + step.x + CHARMAP_COLS, CHARMAP_COLS);
-	me.focusedCell_y = mod(me.focusedCell.y + step.y + CHARMAP_ROWS, CHARMAP_ROWS);
-
-	if(me.focusedCell != initialCell) // Recursion break
-		if(charmap_cellToChar(me.focusedCell) == "")
-			me.moveFocus(me, initialCell, step);
-}
-
-void XonoticCharmap_enterChar(entity me)
-{
-	string character = charmap_cellToChar(me.focusedCell);
+	string character = charmap_cellToChar(me, cell);
 	if(character != "")
 		me.inputBox.enterText(me.inputBox, character);
+}
+
+bool XonoticCharmap_cellIsValid(entity me, vector cell)
+{
+	if(charmap_cellToChar(me, cell) == "")
+		return false;
+	return true;
+}
+
+void XonoticCharmap_cellDraw(entity me, vector cell, vector cellPos)
+{
+	draw_CenterText(cellPos + me.charOffset, charmap_cellToChar(me, cell), me.realFontSize, SKINCOLOR_CHARMAP_CHAR, SKINALPHA_CHARMAP_CHAR, 0);
 }
 
 void XonoticCharmap_focusLeave(entity me)
 {
 	me.inputBox.saveCvars(me.inputBox);
-}
-
-void XonoticCharmap_draw(entity me)
-{
-	string character;
-	vector cell, cellPos, charPos;
-	cell = '0 0 0';
-	cellPos = '0 0 0';
-	charPos = '0 0 0';
-
-	float CHAR_OFFSET_X = me.realCellSize.x / 2;
-	float CHAR_OFFSET_Y = (me.realCellSize.y - me.realFontSize.y) / 2;
-
-	for(cell_y = 0; cell.y < CHARMAP_ROWS; ++cell.y)
-	{
-		charPos_y = cell.y / CHARMAP_ROWS + CHAR_OFFSET_Y;
-		for(cell_x = 0; cell.x < CHARMAP_COLS; ++cell.x)
-		{
-			character = charmap_cellToChar(cell);
-
-			if(character == "")
-				continue;
-
-			// Draw focused cell
-			if(cell == me.focusedCell && me.focused)
-			{
-				if(!me.pressed || me.focusedCell == me.previouslyFocusedCell)
-				{
-					cellPos_x = mod(me.focusedCell.x, CHARMAP_COLS) / CHARMAP_COLS;
-					cellPos_y = mod(me.focusedCell.y, CHARMAP_ROWS) / CHARMAP_ROWS;
-					draw_Fill(cellPos, me.realCellSize, SKINCOLOR_CHARMAP_FOCUS, SKINALPHA_CHARMAP_FOCUS);
-				}
-			}
-
-			// Draw character
-			charPos_x = cell.x / CHARMAP_COLS + CHAR_OFFSET_X;
-			draw_CenterText(charPos, character, me.realFontSize, SKINCOLOR_CHARMAP_CHAR, SKINALPHA_CHARMAP_CHAR, 0);
-		}
-	}
 }
 #endif

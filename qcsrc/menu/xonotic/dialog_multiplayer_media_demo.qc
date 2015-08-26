@@ -2,8 +2,7 @@
 #define DIALOG_MULTIPLAYER_MEDIA_DEMO_H
 #include "tab.qc"
 CLASS(XonoticDemoBrowserTab, XonoticTab)
-	METHOD(XonoticDemoBrowserTab, fill, void(entity))
-	ATTRIB(XonoticDemoBrowserTab, title, string, _("Demo"))
+	METHOD(XonoticDemoBrowserTab, fill, void(entity));
 	ATTRIB(XonoticDemoBrowserTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticDemoBrowserTab, rows, float, 21)
 	ATTRIB(XonoticDemoBrowserTab, columns, float, 6.5)

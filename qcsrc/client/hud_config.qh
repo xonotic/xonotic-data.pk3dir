@@ -9,7 +9,6 @@ int prevMouseClicked; // previous state
 float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
 vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
 
-
 void HUD_Panel_ExportCfg(string cfgname);
 
 void HUD_Panel_Mouse();

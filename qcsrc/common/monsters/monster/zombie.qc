@@ -1,15 +1,19 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool m_zombie(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ ZOMBIE,
-/* function   */ m_zombie,
 /* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
 /* model      */ "zombie.dpm",
 /* netname    */ "zombie",
 /* fullname   */ _("Zombie")
-);
+) {
+#ifndef MENUQC
+	this.monster_func = m_zombie;
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
 float autocvar_g_monster_zombie_attack_melee_damage;
@@ -130,7 +134,7 @@ void spawnfunc_monster_zombie()
 {
 	self.classname = "monster_zombie";
 
-	if(!monster_initialize(MON_ZOMBIE)) { remove(self); return; }
+	if(!monster_initialize(MON_ZOMBIE.monsterid)) { remove(self); return; }
 }
 
 float m_zombie(float req)
@@ -193,4 +197,3 @@ float m_zombie(float req)
 }
 
 #endif // CSQC
-#endif // REGISTER_MONSTER

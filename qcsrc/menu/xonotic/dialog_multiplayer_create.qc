@@ -2,10 +2,9 @@
 #define DIALOG_MULTIPLAYER_CREATE_H
 #include "tab.qc"
 CLASS(XonoticServerCreateTab, XonoticTab)
-	METHOD(XonoticServerCreateTab, fill, void(entity))
-	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity))
-	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity))
-	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
+	METHOD(XonoticServerCreateTab, fill, void(entity));
+	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity));
+	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity));
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 23)
 	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space
@@ -66,6 +65,8 @@ entity makeXonoticServerCreateTab()
 void XonoticServerCreateTab_fill(entity me)
 {
 	entity e, e0;
+
+	// the left half begins here
 
 	me.gotoRC(me, 0.5, 0);
 		me.TD(me, 1, 3, makeXonoticHeaderLabel(_("Gametype")));
@@ -132,32 +133,63 @@ void XonoticServerCreateTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "bot_number", 0, -1);
 
-	me.gotoRC(me, me.rows - 3.5, 0);
+	me.gotoRC(me, me.rows - 3.8, 0);
 		me.TD(me, 1, 3, e0 = makeXonoticTextLabel(0.5, string_null));
 			e0.textEntity = main.mutatorsDialog;
 			e0.allowCut = 1;
 			//e0.allowWrap = 1;
-	me.TR(me);
+
+	// mapListBox is in the right column but the ref is needed for mutators dialog here
+	me.mapListBox = makeXonoticMapList();
+	// here we use the following line instead of me.TR(me) for better visual spacing;
+	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
+	me.gotoRC(me, me.rows - 2.5, 0);
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators"), '0 0 0'));
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
 			main.mutatorsDialog.refilterEntity = me.mapListBox;
 
+	// The right half begins here
+
 	me.gotoRC(me, 0.5, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.mapListBox = makeXonoticMapList();
+		// the maplistbox
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Maplist")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
 	me.TR(me);
-		me.TD(me, me.rows - 4, 3, me.mapListBox);
-	me.gotoRC(me, me.rows - 2.5, 3.2);
-		me.TDempty(me, 0.375);
-		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select all"), '0 0 0'));
-			e.onClick = MapList_All;
+		// we use 5.8 here to visually match the bottom line of the component on the left (Bot Skill)
+		me.TD(me, me.rows - 6.8, 3, me.mapListBox);
+
+	me.gotoRC(me, me.rows - 4.5, me.firstColumn);
+		// string filter label and box
+		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
+		me.mapListBox.stringFilterBox = makeXonoticMapListStringFilterBox(me, 0, string_null);
+		me.mapListBox.stringFilterBox.tooltip = getZonedTooltipForIdentifier("XonoticMultiplayerDialog_StringFilterBox");
+		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
+			e.onChange = MapList_StringFilterBox_Change;
+			e.keyDown = MapList_StringFilterBox_keyDown;
+			e.onChangeEntity = me.mapListBox;
+			me.mapListBox.controlledTextbox = e;
+
+	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
+		// the selection buttons
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Add shown"), '0 0 0'));
+			e.onClick = MapList_Add_Shown;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1.125, e = makeXonoticButton(_("Select none"), '0 0 0'));
-			e.onClick = MapList_None;
+		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Remove shown"), '0 0 0'));
+			e.onClick = MapList_Remove_Shown;
 			e.onClickEntity = me.mapListBox;
+	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Add all"), '0 0 0'));
+			e.onClick = MapList_Add_All;
+			e.onClickEntity = me.mapListBox;
+		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Remove all"), '0 0 0'));
+			e.onClick = MapList_Remove_All;
+			e.onClickEntity = me.mapListBox;
+
+	// The big button at the bottom
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Multiplayer!"), '0 0 0'));

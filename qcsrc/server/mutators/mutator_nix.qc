@@ -24,7 +24,7 @@ float NIX_CanChooseWeapon(float wpn)
 	}
 	else
 	{
-		if(wpn == WEP_BLASTER && g_nix_with_blaster) // WEAPONTODO: rename to g_nix_with_blaster
+		if(wpn == WEP_BLASTER.m_id && g_nix_with_blaster) // WEAPONTODO: rename to g_nix_with_blaster
 			return false;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return false;
@@ -180,16 +180,19 @@ MUTATOR_HOOKFUNCTION(nix_FilterItem)
 {
 	switch (self.items)
 	{
-		case IT_HEALTH:
-		case IT_5HP:
-		case IT_25HP:
-		case IT_ARMOR:
-		case IT_ARMOR_SHARD:
+		case ITEM_HealthSmall.m_itemid:
+		case ITEM_HealthMedium.m_itemid:
+		case ITEM_HealthLarge.m_itemid:
+		case ITEM_HealthMega.m_itemid:
+		case ITEM_ArmorSmall.m_itemid:
+		case ITEM_ArmorMedium.m_itemid:
+		case ITEM_ArmorLarge.m_itemid:
+		case ITEM_ArmorMega.m_itemid:
 			if (autocvar_g_nix_with_healtharmor)
 				return 0;
 			break;
-		case IT_STRENGTH:
-		case IT_INVINCIBLE:
+		case ITEM_Strength.m_itemid:
+		case ITEM_Shield.m_itemid:
 			if (autocvar_g_nix_with_powerups)
 				return 0;
 			break;

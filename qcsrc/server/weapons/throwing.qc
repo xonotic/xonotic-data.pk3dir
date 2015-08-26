@@ -5,11 +5,10 @@
 #include "../mutators/mutators_include.qh"
 #include "../t_items.qh"
 #include "../g_damage.qh"
-#include "../g_subs.qh"
 #include "../../common/mapinfo.qh"
 #include "../../common/notifications.qh"
 #include "../../common/util.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
 void thrown_wep_think()
 {
@@ -145,7 +144,7 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_cts)
 		return 0;
-	if (g_nexball && w == WEP_MORTAR)
+	if (g_nexball && w == WEP_MORTAR.m_id)
 		return 0;
     if(w == 0)
         return 0;

@@ -2,17 +2,17 @@
 #define ITEM_INPUTBOX_H
 #include "label.qc"
 CLASS(InputBox, Label)
-	METHOD(InputBox, configureInputBox, void(entity, string, float, float, string))
-	METHOD(InputBox, draw, void(entity))
-	METHOD(InputBox, setText, void(entity, string))
-	METHOD(InputBox, enterText, void(entity, string))
-	METHOD(InputBox, keyDown, float(entity, float, float, float))
-	METHOD(InputBox, mouseMove, float(entity, vector))
-	METHOD(InputBox, mouseRelease, float(entity, vector))
-	METHOD(InputBox, mousePress, float(entity, vector))
-	METHOD(InputBox, mouseDrag, float(entity, vector))
-	METHOD(InputBox, showNotify, void(entity))
-	METHOD(InputBox, resizeNotify, void(entity, vector, vector, vector, vector))
+	METHOD(InputBox, configureInputBox, void(entity, string, float, float, string));
+	METHOD(InputBox, draw, void(entity));
+	METHOD(InputBox, setText, void(entity, string));
+	METHOD(InputBox, enterText, void(entity, string));
+	METHOD(InputBox, keyDown, float(entity, float, float, float));
+	METHOD(InputBox, mouseMove, float(entity, vector));
+	METHOD(InputBox, mouseRelease, float(entity, vector));
+	METHOD(InputBox, mousePress, float(entity, vector));
+	METHOD(InputBox, mouseDrag, float(entity, vector));
+	METHOD(InputBox, showNotify, void(entity));
+	METHOD(InputBox, resizeNotify, void(entity, vector, vector, vector, vector));
 
 	ATTRIB(InputBox, src, string, string_null)
 

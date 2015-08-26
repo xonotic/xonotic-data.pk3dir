@@ -5,7 +5,7 @@
 #include "../../common/constants.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
 float accuracy_byte(float n, float d)
 {
@@ -113,9 +113,7 @@ void accuracy_add(entity e, int w, float fired, float hit)
 
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
-	frag_attacker = attacker;
-	frag_target = targ;
-	float mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid);
+	float mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
 
 	if(!warmup_stage)
 	if(targ.deadflag == DEAD_NO)

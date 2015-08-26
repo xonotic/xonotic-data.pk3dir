@@ -2,8 +2,7 @@
 #define DIALOG_SETTINGS_USER_H
 #include "tab.qc"
 CLASS(XonoticUserSettingsTab, XonoticTab)
-	METHOD(XonoticUserSettingsTab, fill, void(entity))
-	ATTRIB(XonoticUserSettingsTab, title, string, _("User"))
+	METHOD(XonoticUserSettingsTab, fill, void(entity));
 	ATTRIB(XonoticUserSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticUserSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticUserSettingsTab, columns, float, 6)

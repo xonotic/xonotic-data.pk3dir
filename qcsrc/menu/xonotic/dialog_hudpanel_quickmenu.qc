@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_QUICKMENU_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDQuickMenuDialog, XonoticRootDialog)
-	METHOD(XonoticHUDQuickMenuDialog, fill, void(entity))
+	METHOD(XonoticHUDQuickMenuDialog, fill, void(entity));
 	ATTRIB(XonoticHUDQuickMenuDialog, title, string, _("Quick Menu Panel"))
 	ATTRIB(XonoticHUDQuickMenuDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDQuickMenuDialog, intendedWidth, float, 0.4)

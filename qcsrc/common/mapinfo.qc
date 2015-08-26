@@ -3,7 +3,7 @@
     #include "../client/defs.qh"
     #include "util.qh"
     #include "buffs.qh"
-    #include "weapons/weapons.qh"
+    #include "weapons/all.qh"
     #include "mapinfo.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -11,7 +11,7 @@
     #include "../dpdefs/dpextensions.qh"
     #include "util.qh"
     #include "buffs.qh"
-    #include "monsters/monsters.qh"
+    #include "monsters/all.qh"
     #include "mapinfo.qh"
 #endif
 
@@ -186,6 +186,32 @@ float MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, i
 	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
 
 	return 1;
+}
+void MapInfo_FilterString(string sf)
+{
+	// this function further filters _MapInfo_filtered, which is prepared by MapInfo_FilterGametype by string
+	float i, j;
+	string title;
+
+	for(i = 0, j = -1; i < MapInfo_count; ++i)
+	{
+		if (MapInfo_Get_ByID(i))
+		{
+			// prepare for keyword filter
+			if (MapInfo_Map_title && strstrofs(MapInfo_Map_title, "<TITLE>", 0) == -1)
+				title = MapInfo_Map_title;
+			else
+				title = MapInfo_Map_bspname;
+			// keyword filter
+			if((strstrofs(strtolower(title), strtolower(sf), 0)) >= 0)
+				bufstr_set(_MapInfo_filtered, ++j, bufstr_get(_MapInfo_filtered, i));
+		}
+	}
+	MapInfo_count = j + 1;
+	MapInfo_ClearTemps();
+
+	// sometimes the glob isn't sorted nicely, so fix it here...
+	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
 }
 
 void MapInfo_Filter_Free()
@@ -576,19 +602,13 @@ void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int lo
 
 string _MapInfo_GetDefaultEx(float t)
 {
-	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.model2;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.model2));
 	return "";
 }
 
 float _MapInfo_GetTeamPlayBool(float t)
 {
-	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.team;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.team));
 	return false;
 }
 
@@ -689,7 +709,6 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 
 float MapInfo_Type_FromString(string t)
 {
-	entity e;
 	if(t == "nexball")
 	{
 		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
@@ -728,38 +747,27 @@ float MapInfo_Type_FromString(string t)
 	}
 	if(t == "all")
 		return MAPINFO_TYPE_ALL;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.mdl)
-			return e.items;
+	FOREACH(MAPINFO_TYPES, it.mdl == t, LAMBDA(return it.items));
 	return 0;
 }
 
 string MapInfo_Type_Description(float t)
 {
-	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.gametype_description;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.gametype_description));
 	return "";
 }
 
 string MapInfo_Type_ToString(float t)
 {
-	entity e;
 	if(t == MAPINFO_TYPE_ALL)
 	 	return "all";
-	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.mdl;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.mdl));
 	return "";
 }
 
 string MapInfo_Type_ToText(float t)
 {
-	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.items)
-			return e.message;
+	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.message));
 	/* xgettext:no-c-format */
 	return _("@!#%'n Tuba Throwing");
 }
@@ -1140,7 +1148,13 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 		else if(t == "cdtrack")
 		{
 			t = car(s); s = cdr(s);
-			if(pGametypeToSet) // FIXME is this check right here?
+			// We do this only if pGametypeToSet even though this
+			// content is theoretically game type independent,
+			// because MapInfo_Map_clientstuff contains otherwise
+			// game type dependent stuff. That way this value stays
+			// empty when not setting a game type to not set any
+			// false expectations.
+			if(pGametypeToSet)
 			{
 				if (!cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
@@ -1257,14 +1271,9 @@ int MapInfo_CurrentFeatures()
 
 int MapInfo_CurrentGametype()
 {
-	entity e;
 	int prev = cvar("gamecfg");
-	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(cvar(e.netname))
-			if(prev != e.items)
-				return e.items;
-	if(prev)
-		return prev;
+	FOREACH(MAPINFO_TYPES, cvar(it.netname) && it.items != prev, LAMBDA(return it.items));
+	if (prev) return prev;
 	return MAPINFO_TYPE_DEATHMATCH;
 }
 
@@ -1289,9 +1298,9 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 
 void MapInfo_SwitchGameType(int t)
 {
-	for (entity e = MapInfo_Type_first; e; e = e.enemy) {
-		cvar_set(e.netname, (t == e.items) ? "1" : "0");
-	}
+	FOREACH(MAPINFO_TYPES, true, LAMBDA(
+		cvar_set(it.netname, (it.items == t) ? "1" : "0")
+	));
 }
 
 void MapInfo_LoadMap(string s, float reinit)

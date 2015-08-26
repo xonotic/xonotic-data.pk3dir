@@ -2,7 +2,7 @@
 #define IMAGE_H
 #include "../item/image.qc"
 CLASS(XonoticImage, Image)
-	METHOD(XonoticImage, configureXonoticImage, void(entity, string, float))
+	METHOD(XonoticImage, configureXonoticImage, void(entity, string, float));
 ENDCLASS(XonoticImage)
 entity makeXonoticImage(string theImage, float theAspect);
 #endif

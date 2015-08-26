@@ -3,21 +3,21 @@
 #include "skin.qh"
 #include "oo/base.qh"
 CLASS(Item, Object)
-	METHOD(Item, draw, void(entity))
-	METHOD(Item, keyDown, float(entity, float, float, float))
-	METHOD(Item, keyUp, float(entity, float, float, float))
-	METHOD(Item, mouseMove, float(entity, vector))
-	METHOD(Item, mousePress, float(entity, vector))
-	METHOD(Item, mouseDrag, float(entity, vector))
-	METHOD(Item, mouseRelease, float(entity, vector))
-	METHOD(Item, focusEnter, void(entity))
-	METHOD(Item, focusLeave, void(entity))
-	METHOD(Item, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Item, relinquishFocus, void(entity))
-	METHOD(Item, showNotify, void(entity))
-	METHOD(Item, hideNotify, void(entity))
-	METHOD(Item, toString, string(entity))
-	METHOD(Item, destroy, void(entity))
+	METHOD(Item, draw, void(entity));
+	METHOD(Item, keyDown, float(entity, float, float, float));
+	METHOD(Item, keyUp, float(entity, float, float, float));
+	METHOD(Item, mouseMove, float(entity, vector));
+	METHOD(Item, mousePress, float(entity, vector));
+	METHOD(Item, mouseDrag, float(entity, vector));
+	METHOD(Item, mouseRelease, float(entity, vector));
+	METHOD(Item, focusEnter, void(entity));
+	METHOD(Item, focusLeave, void(entity));
+	METHOD(Item, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Item, relinquishFocus, void(entity));
+	METHOD(Item, showNotify, void(entity));
+	METHOD(Item, hideNotify, void(entity));
+	METHOD(Item, toString, string(entity));
+	METHOD(Item, destroy, void(entity));
 	ATTRIB(Item, focused, float, 0)
 	ATTRIB(Item, focusable, float, 0)
 	ATTRIB(Item, allowFocusSound, float, 0)

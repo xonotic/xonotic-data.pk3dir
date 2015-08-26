@@ -1,0 +1,18 @@
+#ifdef SVQC
+    // For FL_POWERUP
+    #include "../../../server/constants.qh"
+#endif
+
+#ifndef POWERUP_H
+#define POWERUP_H
+#include "pickup.qh"
+CLASS(Powerup, Pickup)
+#ifdef SVQC
+    ATTRIB(Powerup, m_botvalue, int, 100000)
+    ATTRIB(Powerup, m_itemflags, int, FL_POWERUP)
+    ATTRIB(Powerup, m_respawntime, float(), GET(g_pickup_respawntime_powerup))
+    ATTRIB(Powerup, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_powerup))
+#endif
+ENDCLASS(Powerup)
+
+#endif

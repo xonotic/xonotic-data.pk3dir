@@ -2,14 +2,14 @@
 #define KEYBINDER_H
 #include "listbox.qc"
 CLASS(XonoticKeyBinder, XonoticListBox)
-	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity))
+	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity));
 	ATTRIB(XonoticKeyBinder, rowsPerItem, int, 1)
-	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticKeyBinder, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticKeyBinder, setSelected, void(entity, float))
-	METHOD(XonoticKeyBinder, keyDown, float(entity, float, float, float))
-	METHOD(XonoticKeyBinder, keyGrabbed, void(entity, float, float))
+	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticKeyBinder, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticKeyBinder, setSelected, void(entity, float));
+	METHOD(XonoticKeyBinder, keyDown, float(entity, float, float, float));
+	METHOD(XonoticKeyBinder, keyGrabbed, void(entity, float, float));
 
 	ATTRIB(XonoticKeyBinder, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticKeyBinder, realUpperMargin, float, 0)
@@ -24,7 +24,7 @@ CLASS(XonoticKeyBinder, XonoticListBox)
 	ATTRIB(XonoticKeyBinder, keyGrabButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, clearButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, userbindEditDialog, entity, NULL)
-	METHOD(XonoticKeyBinder, editUserbind, void(entity, string, string, string))
+	METHOD(XonoticKeyBinder, editUserbind, void(entity, string, string, string));
 ENDCLASS(XonoticKeyBinder)
 entity makeXonoticKeyBinder();
 void KeyBinder_Bind_Change(entity btn, entity me);
@@ -302,7 +302,7 @@ float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 	}
 	return r;
 }
-void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected)
+void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	int j, n;
@@ -331,6 +331,12 @@ void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isS
 			else
 				draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 		}
+		else if(isFocused)
+		{
+			me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+		}
+
 		theAlpha = SKINALPHA_KEYGRABBER_KEYS;
 		theColor = SKINCOLOR_KEYGRABBER_KEYS;
 		extraMargin = me.realFontSize.x * 0.5;

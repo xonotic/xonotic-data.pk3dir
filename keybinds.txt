@@ -35,6 +35,7 @@
 "+showscores"                           "show scores"
 "screenshot"                            "screen shot"
 "+hud_panel_radar_maximized"            "maximize radar"
+"cl_cmd hud minigame"                   "toggle minigame menu"
 ""                                      ""
 ""                                      "Communicate"
 "messagemode"                           "public chat"
