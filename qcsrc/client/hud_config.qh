@@ -1,6 +1,14 @@
 #ifndef HUD_CONFIG_H
 #define HUD_CONFIG_H
 
+const int S_MOUSE1 = 1;
+const int S_MOUSE2 = 2;
+const int S_MOUSE3 = 4;
+int mouseClicked;
+int prevMouseClicked; // previous state
+float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
+vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
+
 void HUD_Panel_ExportCfg(string cfgname);
 
 void HUD_Panel_Mouse();
@@ -10,13 +18,5 @@ void HUD_Configure_Frame();
 void HUD_Configure_PostDraw();
 
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary);
-
-const int S_MOUSE1 = 1;
-const int S_MOUSE2 = 2;
-const int S_MOUSE3 = 4;
-int mouseClicked;
-int prevMouseClicked; // previous state
-float prevMouseClickedTime; // time during previous left mouse click, to check for doubleclicks
-vector prevMouseClickedPos; // pos during previous left mouse click, to check for doubleclicks
 
 #endif

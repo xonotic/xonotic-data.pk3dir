@@ -4814,11 +4814,29 @@ void HUD_CenterPrint (void)
 }
 
 
+// Minigame
+//
+#include "../common/minigames/cl_minigames_hud.qc"
+
 /*
 ==================
 Main HUD system
 ==================
 */
+
+bool HUD_Panel_CheckFlags(int showflags)
+{
+	if ( HUD_Minigame_Showpanels() )
+		return showflags & PANEL_SHOW_MINIGAME;
+	return showflags & PANEL_SHOW_MAINGAME;
+}
+
+void HUD_Panel_Draw(entity panent)
+{
+	panel = panent;
+	if ( HUD_Panel_CheckFlags(panel.panel_showflags) )
+		panel.panel_draw();
+}
 
 void HUD_Reset (void)
 {
@@ -4845,12 +4863,17 @@ void HUD_Main (void)
 	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
-		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
 		return;
 	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
+	{
+		hud_fade_alpha = 1;
+		HUD_Panel_Draw(HUD_PANEL(VOTE));
+		hud_fade_alpha = 0;
 		return;
+	}
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
@@ -4949,14 +4972,14 @@ void HUD_Main (void)
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-		(panel = hud_panel[panel_order[i]]).panel_draw();
+		HUD_Panel_Draw(hud_panel[panel_order[i]]);
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
 	if(hud_panel_radar_maximized)
-		(panel = HUD_PANEL(RADAR)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
-		(panel = HUD_PANEL(CHAT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CHAT));
 
 	HUD_Configure_PostDraw();
 

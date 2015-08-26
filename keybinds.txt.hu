@@ -35,6 +35,7 @@
 "+showscores"                           "pontszámok"
 "screenshot"                            "kép mentés"
 "+hud_panel_radar_maximized"            "maximize radar (FIXME)"
+"cl_cmd hud minigame"                   "toggle minigame menu (FIXME)"
 ""                                      ""
 ""                                      "Kommunikáció"
 "messagemode"                           "nyilvános beszélgetés"

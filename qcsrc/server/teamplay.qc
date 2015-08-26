@@ -846,7 +846,11 @@ void SV_ChangeTeam(float _color)
 		TeamchangeFrags(self);
 	}
 
-	SetPlayerTeam(self, dteam, steam, false);
+	// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
+	if(!IS_CLIENT(self))
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_CONNECTING, self.netname);
+
+	SetPlayerTeam(self, dteam, steam, !IS_CLIENT(self));
 
 	if(IS_PLAYER(self) && steam != dteam)
 	{

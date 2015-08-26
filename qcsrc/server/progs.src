@@ -23,7 +23,6 @@ g_hook.qc
 // g_lights.qc // TODO: was never used
 g_models.qc
 g_subs.qc
-g_tetris.qc
 g_violence.qc
 g_world.qc
 generator.qc
@@ -90,6 +89,8 @@ weapons/weaponsystem.qc
 ../common/mapinfo.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
+../common/minigames/minigames.qc
+../common/minigames/sv_minigames.qc
 ../common/movetypes/include.qc
 ../common/nades.qc
 ../common/net_notice.qc
