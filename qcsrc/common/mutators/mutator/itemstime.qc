@@ -37,9 +37,7 @@ bool autocvar_hud_panel_itemstime_hidespawned = 1;
 bool autocvar_hud_panel_itemstime_hidelarge = false;
 int autocvar_hud_panel_itemstime_text = 1;
 #define hud_panel_itemstime_hidelarge autocvar_hud_panel_itemstime_hidelarge
-#endif
-
-#ifdef SVQC
+#else
 #define hud_panel_itemstime_hidelarge false
 #endif
 
