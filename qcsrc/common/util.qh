@@ -223,12 +223,6 @@ float vercmp(string v1, string v2);
 
 float u8_strsize(string s);
 
-// translation helpers
-string prvm_language;
-string language_filename(string s);
-string CTX(string s);
-#define ZCTX(s) strzone(CTX(s))
-
 // x-encoding (encoding as zero length invisible string)
 // encodes approx. 14 bits into 5 bytes of color code string
 const float XENCODE_MAX = 21295; // 2*22*22*22-1

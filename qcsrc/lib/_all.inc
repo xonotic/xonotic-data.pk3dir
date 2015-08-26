@@ -1,5 +1,7 @@
 #include "Accumulate.qh"
+#include "Counting.qh"
 #include "Cvar.qh"
+#include "I18N.qh"
 #include "Lazy.qh"
 #include "Nil.qh"
 #include "OO.qh"

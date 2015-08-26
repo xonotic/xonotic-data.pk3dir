@@ -12,7 +12,6 @@
 
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
-#include "../common/counting.qh"
 #include "../common/deathtypes.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"

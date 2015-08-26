@@ -5,7 +5,6 @@
     #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "teams.qh"
-    #include "counting.qh"
     #include "../server/autocvars.qh"
     #include "../server/constants.qh"
     #include "../server/defs.qh"

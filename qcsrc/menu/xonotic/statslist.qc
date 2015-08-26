@@ -1,4 +1,3 @@
-#include "../../common/counting.qh"
 #include "../../common/playerstats.qh"
 
 #ifndef STATSLIST_H
