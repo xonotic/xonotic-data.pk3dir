@@ -250,7 +250,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	W_DecreaseAmmo(WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("seeker_fire.wav"), CH_WEAPON_A, 0);
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("seeker_fire"), CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
 	Send_Effect("seeker_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 

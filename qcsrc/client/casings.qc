@@ -146,10 +146,10 @@ void Casings_Precache()
 {
 	precache_model("models/casing_shell.mdl");
 	precache_model("models/casing_bronze.iqm");
-	precache_sound(W_Sound("brass1.wav"));
-	precache_sound(W_Sound("brass2.wav"));
-	precache_sound(W_Sound("brass3.wav"));
-	precache_sound(W_Sound("casings1.wav"));
-	precache_sound(W_Sound("casings2.wav"));
-	precache_sound(W_Sound("casings3.wav"));
+	precache_sound(W_Sound("brass1"));
+	precache_sound(W_Sound("brass2"));
+	precache_sound(W_Sound("brass3"));
+	precache_sound(W_Sound("casings1"));
+	precache_sound(W_Sound("casings2"));
+	precache_sound(W_Sound("casings3"));
 }
