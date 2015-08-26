@@ -7475,19 +7475,3 @@ msgstr "Abilita pannello"
 #, c-format
 msgid "%s (mutator weapon)"
 msgstr "%s (arma mutatore)"
-
-
-#: command title is translated
-msgid "QMCMD^nice one"
-msgstr "bella"
-
-#: missing translation for this command
-msgid "QMCMD^:-) / nice one"
-msgstr ""
-
-#: fully translated command (title and command are the same)
-msgid "QMCMD^good game"
-msgstr "bella partita"
-
-msgid "QMCMD^Chat"
-msgstr "Parla"
