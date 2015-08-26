@@ -52,7 +52,6 @@ weapons/projectile.qc // TODO
 ../common/physics.qc
 ../common/playerstats.qc
 ../common/p2mathlib.qc
-../common/test.qc
 ../common/util.qc
 
 ../common/viewloc.qc

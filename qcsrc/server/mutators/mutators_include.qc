@@ -14,7 +14,6 @@
     #include "../../common/util.qh"
     #include "../../common/nades.qh"
     #include "../../common/buffs.qh"
-    #include "../../common/test.qh"
     #include "../../common/command/markup.qh"
     #include "../../common/command/rpn.qh"
     #include "../../common/command/generic.qh"

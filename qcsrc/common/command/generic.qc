@@ -5,7 +5,6 @@
 #include "rpn.qh"
 
 #include "../mapinfo.qh"
-#include "../test.qh"
 
 #ifndef MENUQC
 	#include "../notifications.qh"

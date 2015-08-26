@@ -20,7 +20,6 @@ xonotic/util.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
 ../common/playerstats.qc
-../common/test.qc
 ../common/util.qc
 
 ../common/items/all.qc

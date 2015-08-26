@@ -7,4 +7,5 @@
 #include "OO.qh"
 #include "Progname.qh"
 #include "Registry.qh"
+#include "test.qc"
 #include "urllib.qc"
