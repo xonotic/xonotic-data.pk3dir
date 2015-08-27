@@ -40,9 +40,10 @@ MUTATOR_HOOKABLE(UpdateCrosshair, EV_NO_ARGS);
 
 /**
  * Called when a temp entity is parsed
- * NOTE: hooks MUST start with `if (MUTATOR_RETURNVALUE) return false;`
- * NOTE: hooks MUST start with `if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return false;`
- * NOTE: return true if you handled the command, return false to continue handling
+ * NOTE: hooks MUST start with:
+ *     if (MUTATOR_RETURNVALUE) return;
+ *     if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return;
+ *     return = true;
  */
 #define EV_CSQC_Parse_TempEntity(i, o) \
     /** mutator id */ i(int, mutator_argv_int_0) \
@@ -51,9 +52,9 @@ MUTATOR_HOOKABLE(CSQC_Parse_TempEntity, EV_CSQC_Parse_TempEntity);
 
 /**
  * Called when a shared entity is updated
- * NOTE: hooks MUST start with `if (MUTATOR_RETURNVALUE) return false;`
- * NOTE: hooks MUST start with `if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return false;`
- * NOTE: return true if you handled the command, return false to continue handling
+ *     if (MUTATOR_RETURNVALUE) return;
+ *     if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return;
+ *     return = true;
  */
 #define EV_CSQC_Ent_Update(i, o) \
     /** mutator id */ i(int, mutator_argv_int_0) \

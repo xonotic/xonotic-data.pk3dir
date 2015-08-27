@@ -8,7 +8,6 @@
 
 announcer.qc
 bgmscript.qc
-casings.qc
 controlpoint.qc
 csqcmodel_hooks.qc
 damage.qc
@@ -26,7 +25,6 @@ movelib.qc
 noise.qc
 particles.qc
 player_skeleton.qc
-prandom.qc
 rubble.qc
 scoreboard.qc
 shownames.qc

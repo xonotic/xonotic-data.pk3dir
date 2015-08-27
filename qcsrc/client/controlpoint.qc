@@ -1,7 +1,9 @@
 #include "controlpoint.qh"
 #include "gibs.qh"
 #include "teamradar.qh"
+#include "../common/movetypes/movetypes.qh"
 
+.float alpha;
 bool cpicon_precached;
 .int count;
 .float pain_finished;
