@@ -5,6 +5,7 @@
 #include "Lazy.qh"
 #include "Nil.qh"
 #include "OO.qh"
+#include "prandom.qc"
 #include "Progname.qh"
 #include "Registry.qh"
 #include "test.qc"

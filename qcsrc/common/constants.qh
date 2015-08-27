@@ -83,7 +83,6 @@ const int ENT_CLIENT_RADARLINK = 11; // flags [startorigin] [endorigin] [startco
 const int ENT_CLIENT_PROJECTILE = 12;
 const int ENT_CLIENT_GIBSPLASH = 13;
 const int ENT_CLIENT_DAMAGEINFO = 14;
-const int ENT_CLIENT_CASING = 15;
 const int ENT_CLIENT_INIT = 16;
 const int ENT_CLIENT_MAPVOTE = 17;
 const int ENT_CLIENT_CLIENTDATA = 18;
