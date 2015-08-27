@@ -717,7 +717,18 @@ void ClientCommand_tell(float request, float argc, string command)
 				{
 					if(tell_to != self) // and we're allowed to send to them :D
 					{
-						Say(self, false, tell_to, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)), true);
+						// workaround for argv indexes indexing ascii chars instead of utf8 chars
+						// In this case when the player name contains utf8 chars
+						// the message gets partially trimmed in the beginning.
+						// Potentially this bug affects any substring call that uses
+						// argv_start_index and argv_end_index.
+
+						string utf8_enable_save = cvar_string("utf8_enable");
+						cvar_set("utf8_enable", "0");
+						string msg = substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token));
+						cvar_set("utf8_enable", utf8_enable_save);
+
+						Say(self, false, tell_to, msg, true);
 						return;
 					}
 					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
