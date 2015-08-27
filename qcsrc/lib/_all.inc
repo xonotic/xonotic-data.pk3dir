@@ -18,6 +18,7 @@
 #include "Registry.qh"
 #include "sortlist.qc"
 #include "String.qh"
+#include "Struct.qh"
 #include "test.qc"
 #include "urllib.qc"
 #include "Vector.qh"
