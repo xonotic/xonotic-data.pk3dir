@@ -296,16 +296,18 @@ void W_Hagar_Attack2_Load(void)
 	if(time < game_starttime)
 		return;
 
-	float loaded, enough_ammo;
-	loaded = self.hagar_load >= WEP_CVAR_SEC(hagar, load_max);
+	bool loaded = self.hagar_load >= WEP_CVAR_SEC(hagar, load_max);
 
 	// this is different than WR_CHECKAMMO when it comes to reloading
+	bool enough_ammo;
 	if(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		enough_ammo = true;
 	else if(autocvar_g_balance_hagar_reload_ammo)
 		enough_ammo = self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 	else
 		enough_ammo = self.WEP_AMMO(HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
+
+	bool stopped = loaded || !enough_ammo;
 
 	if(self.BUTTON_ATCK2)
 	{
@@ -329,7 +331,7 @@ void W_Hagar_Attack2_Load(void)
 		else
 		{
 			// check if we can attempt to load another rocket
-			if(!loaded && enough_ammo)
+			if(!stopped)
 			{
 				if(!self.hagar_loadblock && self.hagar_loadstep < time)
 				{
@@ -339,16 +341,17 @@ void W_Hagar_Attack2_Load(void)
 					sound(self, CH_WEAPON_B, W_Sound("hagar_load"), VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
 
 					if(self.hagar_load >= WEP_CVAR_SEC(hagar, load_max))
-						self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_hold) * W_WeaponRateFactor();
+						stopped = true;
 					else
 						self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_speed) * W_WeaponRateFactor();
 				}
 			}
-			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
+			if(stopped && !self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// if this is the last rocket we can load, play a beep sound to notify the player
 				sound(self, CH_WEAPON_A, W_Sound("hagar_beep"), VOL_BASE, ATTN_NORM);
 				self.hagar_loadbeep = true;
+				self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_hold) * W_WeaponRateFactor();
 			}
 		}
 	}
@@ -361,9 +364,9 @@ void W_Hagar_Attack2_Load(void)
 	if(self.hagar_load)
 	{
 		// play warning sound if we're about to release
-		if((loaded || !enough_ammo) && self.hagar_loadstep - 0.5 < time && WEP_CVAR_SEC(hagar, load_hold) >= 0)
+		if(stopped && self.hagar_loadstep - 0.5 < time && WEP_CVAR_SEC(hagar, load_hold) >= 0)
 		{
-			if(!self.hagar_warning && self.hagar_load) // prevents the beep from playing each frame
+			if(!self.hagar_warning) // prevents the beep from playing each frame
 			{
 				// we're about to automatically release after holding time, play a beep sound to notify the player
 				sound(self, CH_WEAPON_A, W_Sound("hagar_beep"), VOL_BASE, ATTN_NORM);
@@ -372,7 +375,7 @@ void W_Hagar_Attack2_Load(void)
 		}
 
 		// release if player let go of button or if they've held it in too long
-		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && WEP_CVAR_SEC(hagar, load_hold) >= 0))
+		if(!self.BUTTON_ATCK2 || (stopped && self.hagar_loadstep < time && WEP_CVAR_SEC(hagar, load_hold) >= 0))
 		{
 			self.weaponentity.state = WS_READY;
 			W_Hagar_Attack2_Load_Release();
@@ -382,15 +385,15 @@ void W_Hagar_Attack2_Load(void)
 	{
 		self.hagar_loadbeep = false;
 		self.hagar_warning = false;
-	}
 
-	// we aren't checking ammo during an attack, so we must do it here
-	if(!(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
-	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-	{
-		// note: this doesn't force the switch
-		W_SwitchToOtherWeapon(self);
-		return;
+		// we aren't checking ammo during an attack, so we must do it here
+		if(!(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
+		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+		{
+			// note: this doesn't force the switch
+			W_SwitchToOtherWeapon(self);
+			return;
+		}
 	}
 }
 
@@ -433,7 +436,6 @@ bool W_Hagar(int req)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, refire), w_ready);
 				}
 			}
-
 			return true;
 		}
 		case WR_GONETHINK:
