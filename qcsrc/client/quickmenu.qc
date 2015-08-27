@@ -762,8 +762,6 @@ void QuickMenu_Default(string target_submenu)
 		QuickMenu_Buffer_Size = QUICKMENU_BUFFER_MAXENTRIES; // forbids load of next entries until target_submenu
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Chat")), "Chat")
-		if(prvm_language != "en")
-		QUICKMENU_ENTRY(CTX(_("QMCMD^Send untranslated")), "toggle hud_panel_quickmenu_translatecommands 0 1")
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^nice one")), "say %s", ":-) / nice one", CTX(_("QMCMD^:-) / nice one")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^good game")), "say %s", "good game", CTX(_("QMCMD^good game")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^hi / good luck")), "say %s", "hi / good luck and have fun", CTX(_("QMCMD^hi / good luck and have fun")))
@@ -827,6 +825,8 @@ void QuickMenu_Default(string target_submenu)
 		}
 
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Fullscreen")), "toggle vid_fullscreen; vid_restart")
+		if(prvm_language != "en")
+		QUICKMENU_ENTRY(CTX(_("QMCMD^Translate chat messages")), "toggle hud_panel_quickmenu_translatecommands")
 	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
