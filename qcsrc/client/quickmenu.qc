@@ -788,7 +788,7 @@ void QuickMenu_Default(string target_submenu)
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	}
 
-	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send private message to")), "Send private message to", "commandmode tell \"%s\" ^7", 0, 1)
+	QUICKMENU_SMENU_PL(CTX(_("QMCMD^Send private message to")), "Send private message to", "commandmode tell \"%s^7\"", 0, 1)
 
 	QUICKMENU_SMENU(CTX(_("QMCMD^Settings")), "Settings")
 		QUICKMENU_SMENU(CTX(_("QMCMD^View/HUD settings")), "View/HUD settings")
