@@ -6,6 +6,7 @@
 #include "Draw.qh"
 #include "I18N.qh"
 #include "Lazy.qh"
+#include "Mean.qh"
 #include "Nil.qh"
 #include "noise.qc"
 #include "OO.qh"
