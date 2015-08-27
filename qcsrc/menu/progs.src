@@ -28,6 +28,5 @@ xonotic/util.qc
 ../common/vehicles/all.qc
 ../common/weapons/all.qc
 
-../warpzonelib/mathlib.qc
 
 ../../mod/menu/progs.inc

@@ -16,7 +16,6 @@
 #include "particles.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "sortlist.qh"
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"

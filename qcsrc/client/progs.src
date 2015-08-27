@@ -22,13 +22,11 @@ mapvoting.qc
 miscfunctions.qc
 modeleffects.qc
 movelib.qc
-noise.qc
 particles.qc
 player_skeleton.qc
 rubble.qc
 scoreboard.qc
 shownames.qc
-sortlist.qc
 teamradar.qc
 tuba.qc
 t_items.qc
@@ -49,7 +47,6 @@ weapons/projectile.qc // TODO
 ../common/notifications.qc
 ../common/physics.qc
 ../common/playerstats.qc
-../common/p2mathlib.qc
 ../common/util.qc
 
 ../common/viewloc.qc
@@ -77,7 +74,6 @@ weapons/projectile.qc // TODO
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc
 ../warpzonelib/common.qc
-../warpzonelib/mathlib.qc
 ../warpzonelib/util_server.qc
 
 ../../mod/client/progs.inc

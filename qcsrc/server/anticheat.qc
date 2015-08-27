@@ -8,7 +8,6 @@
 #include "../dpdefs/progsdefs.qh"
 #include "../dpdefs/dpextensions.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 #include "command/common.qh"
 

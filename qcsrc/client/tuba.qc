@@ -4,7 +4,6 @@
 #include "../common/constants.qh"
 #include "../common/util.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 #define TUBA_STARTNOTE(i, n) W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n)))
 

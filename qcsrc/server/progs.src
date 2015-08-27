@@ -97,7 +97,6 @@ weapons/weaponsystem.qc
 ../common/notifications.qc
 ../common/physics.qc
 ../common/playerstats.qc
-../common/p2mathlib.qc
 ../common/viewloc.qc
 ../common/triggers/include.qc
 ../common/util.qc
@@ -120,7 +119,6 @@ weapons/weaponsystem.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/common.qc
-../warpzonelib/mathlib.qc
 ../warpzonelib/server.qc
 ../warpzonelib/util_server.qc
 

@@ -1,7 +1,6 @@
 #include "command.qh"
 #include "rpn.qh"
 
-#include "../../warpzonelib/mathlib.qh"
 
 // ========================================
 //  RPN command code, written by divVerent

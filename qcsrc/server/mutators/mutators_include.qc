@@ -4,7 +4,6 @@
     #include "../../dpdefs/progsdefs.qh"
     #include "../../dpdefs/dpextensions.qh"
     #include "../../warpzonelib/anglestransform.qh"
-    #include "../../warpzonelib/mathlib.qh"
     #include "../../warpzonelib/common.qh"
     #include "../../warpzonelib/util_server.qh"
     #include "../../warpzonelib/server.qh"

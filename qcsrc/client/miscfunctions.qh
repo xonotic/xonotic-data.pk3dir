@@ -34,7 +34,6 @@ float PreviewExists(string name);
 
 vector rotate(vector v, float a);
 
-int ColorTranslateMode;
 
 string ColorTranslateRGB(string s);
 

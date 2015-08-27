@@ -27,12 +27,6 @@ float hud_panel_radar_maximized_zoommode;
 float hud_panel_radar_maximized_rotation;
 
 
-float vlen2d(vector v);
-
-float vlen_maxnorm2d(vector v);
-
-float vlen_minnorm2d(vector v);
-
 vector teamradar_2dcoord_to_texcoord(vector in);
 
 vector teamradar_3dcoord_to_texcoord(vector in);

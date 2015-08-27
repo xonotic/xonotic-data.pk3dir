@@ -177,10 +177,6 @@ const int CTF_STATE_COMMANDER = 3;
 const int HUD_NORMAL = 0;
 const int HUD_BUMBLEBEE_GUN = 25;
 
-const vector eX = '1 0 0';
-const vector eY = '0 1 0';
-const vector eZ = '0 0 1';
-
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
 const int MAPVOTE_COUNT = 30;

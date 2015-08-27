@@ -7,21 +7,6 @@
 
 #include "../csqcmodellib/interpolate.qh"
 
-float vlen2d(vector v)
-{
-	return sqrt(v.x * v.x + v.y * v.y);
-}
-
-float vlen_maxnorm2d(vector v)
-{
-	return max(v.x, v.y, -v.x, -v.y);
-}
-
-float vlen_minnorm2d(vector v)
-{
-	return min(max(v.x, -v.x), max(v.y, -v.y));
-}
-
 vector teamradar_3dcoord_to_texcoord(vector in)
 {
 	vector out;

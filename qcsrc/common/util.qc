@@ -4,7 +4,6 @@
 	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
-    #include "../warpzonelib/mathlib.qh"
 	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications.qh"
@@ -13,7 +12,6 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/mathlib.qh"
     #include "constants.qh"
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"

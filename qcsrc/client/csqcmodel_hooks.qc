@@ -3,7 +3,6 @@
 
 #include "gibs.qh"
 #include "player_skeleton.qh"
-#include "sortlist.qh"
 
 #include "weapons/projectile.qh"
 
@@ -18,7 +17,6 @@
 #include "../csqcmodellib/cl_player.qh"
 #include "../csqcmodellib/interpolate.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 .float death_time;
 .int modelflags;

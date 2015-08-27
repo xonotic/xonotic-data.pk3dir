@@ -5,7 +5,6 @@
 #include "hud.qh"
 #include "hud_config.qh"
 #include "mapvoting.qh"
-#include "noise.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
 
@@ -25,7 +24,6 @@
 
 #include "../warpzonelib/client.qh"
 #include "../warpzonelib/common.qh"
-#include "../warpzonelib/mathlib.qh"
 
 entity porto;
 vector polyline[16];

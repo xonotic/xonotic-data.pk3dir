@@ -2,7 +2,6 @@
 #include "_all.qh"
 
 #include "hud.qh"
-#include "sortlist.qh"
 
 #include "../common/command/generic.qh"
 
@@ -11,7 +10,6 @@
 
 #include "../csqcmodellib/cl_model.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 void AuditLists()
 {
@@ -166,14 +164,6 @@ vector rotate(vector v, float a)
 	w.x =      v.x * cos(a) + v.y * sin(a);
 	w.y = -1 * v.x * sin(a) + v.y * cos(a);
 	return w;
-}
-
-string ColorTranslateRGB(string s)
-{
-	if(ColorTranslateMode & 1)
-		return strdecolorize(s);
-	else
-		return s;
 }
 
 // decolorizes and team colors the player name when needed
