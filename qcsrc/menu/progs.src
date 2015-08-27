@@ -5,6 +5,8 @@
 ../dpdefs/keycodes.qh
 ../common/util-post.qh
 
+../lib/_all.inc
+
 oo/classes.qc
 
 draw.qc
@@ -18,15 +20,13 @@ xonotic/util.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
 ../common/playerstats.qc
-../common/test.qc
-../common/urllib.qc
 ../common/util.qc
 
 ../common/items/all.qc
 ../common/monsters/all.qc
+../common/mutators/all.qc
 ../common/vehicles/all.qc
 ../common/weapons/all.qc
 
-../warpzonelib/mathlib.qc
 
 ../../mod/menu/progs.inc

@@ -1,8 +1,6 @@
 #ifndef BASE_H
 #define BASE_H
 
-#include "../../common/oo.qh"
-
 #include "../../common/util.qh"
 #include "../../dpdefs/keycodes.qh"
 

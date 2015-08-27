@@ -1,5 +1,3 @@
-#include "../../warpzonelib/mathlib.qh"
-
 #ifndef SLIDER_DECIBELS_H
 #define SLIDER_DECIBELS_H
 #include "slider.qc"

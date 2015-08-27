@@ -3,7 +3,7 @@
 
 entityclass(Sort);
 //.float(entity,entity) sort_cmp;
-class(Sort) .entity sort_next, sort_prev;
+class(Sort) .entity chain, sort_next, sort_prev;
 
 entity Sort_Spawn();
 

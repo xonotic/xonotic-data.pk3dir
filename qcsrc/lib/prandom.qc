@@ -1,7 +1,4 @@
 #include "prandom.qh"
-#include "_all.qh"
-
-#include "../warpzonelib/mathlib.qh"
 
 // prandom - PREDICTABLE random number generator (not seeded yet)
 

@@ -4,16 +4,6 @@ bool generator_precached;
 .int count;
 .float max_health;
 
-vector randompos(vector m1, vector m2)
-{
-	vector v;
-	m2 = m2 - m1;
-	v_x = m2_x * random() + m1_x;
-	v_y = m2_y * random() + m1_y;
-	v_z = m2_z * random() + m1_z;
-	return	v;
-}
-
 void generator_precache()
 {
 	if(generator_precached)

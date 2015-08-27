@@ -9,7 +9,6 @@
 #include "xonotic/util.qh"
 
 #include "../common/constants.qh"
-#include "../common/test.qh"
 #include "../common/util.qh"
 
 #define localcmd cmd

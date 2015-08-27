@@ -2,10 +2,8 @@
 #include "_all.qh"
 
 #include "hud.qh"
-#include "sortlist.qh"
 
 #include "../common/constants.qh"
-#include "../common/counting.qh"
 #include "../common/mapinfo.qh"
 #include "../common/minigames/cl_minigames.qh"
 #include "../common/stats.qh"

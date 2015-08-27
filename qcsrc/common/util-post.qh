@@ -3,6 +3,4 @@
 
 #define spawn() new(entity)
 
-#include "oo.qh"
-
 #endif

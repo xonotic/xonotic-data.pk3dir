@@ -24,7 +24,6 @@
 	#include "../dpdefs/csprogsdefs.qh"
 	#include "../client/defs.qh"
 	#include "../common/constants.qh"
-	#include "../common/p2mathlib.qh"
 	#include "../common/stats.qh"
 	#include "../common/util.qh"
 	#include "interpolate.qh"

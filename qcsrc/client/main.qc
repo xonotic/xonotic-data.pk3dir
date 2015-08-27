@@ -1,7 +1,6 @@
 #include "main.qh"
 #include "_all.qh"
 
-#include "casings.qh"
 #include "controlpoint.qh"
 #include "csqcmodel_hooks.qh"
 #include "damage.qh"
@@ -15,10 +14,8 @@
 #include "mapvoting.qh"
 #include "modeleffects.qh"
 #include "particles.qh"
-#include "prandom.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "sortlist.qh"
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"
@@ -164,7 +161,6 @@ void CSQC_Init(void)
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
-	Casings_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 
@@ -870,7 +866,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_PROJECTILE: Ent_Projectile(); break;
 		case ENT_CLIENT_GIBSPLASH: Ent_GibSplash(bIsNewEntity); break;
 		case ENT_CLIENT_DAMAGEINFO: Ent_DamageInfo(bIsNewEntity); break;
-		case ENT_CLIENT_CASING: Ent_Casing(bIsNewEntity); break;
 		case ENT_CLIENT_INIT: Ent_Init(); break;
 		case ENT_CLIENT_SCORES_INFO: Ent_ScoresInfo(); break;
 		case ENT_CLIENT_MAPVOTE: Ent_MapVote(); break;

@@ -4,11 +4,14 @@
 CLASS(XonoticGameModelSettingsTab, XonoticTab)
 	METHOD(XonoticGameModelSettingsTab, fill, void(entity));
 	METHOD(XonoticGameModelSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGameModelSettingsTab, title, string, _("Models"))
 	ATTRIB(XonoticGameModelSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameModelSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameModelSettingsTab, columns, float, 5)
 ENDCLASS(XonoticGameModelSettingsTab)
 entity makeXonoticGameModelSettingsTab();
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(Models, makeXonoticGameModelSettingsTab());
 #endif
 
 #ifdef IMPLEMENTATION

@@ -8,7 +8,6 @@
 #endif
 
 #include "../../warpzonelib/common.qh"
-#include "../../warpzonelib/mathlib.qh"
 
 void ctf_FakeTimeLimit(entity e, float t)
 {

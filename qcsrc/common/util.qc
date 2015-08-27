@@ -4,7 +4,6 @@
 	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
-    #include "../warpzonelib/mathlib.qh"
 	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications.qh"
@@ -13,7 +12,6 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/mathlib.qh"
     #include "constants.qh"
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"
@@ -2245,30 +2243,6 @@ float u8_strsize(string s)
 	return l;
 }
 
-// translation helpers
-string language_filename(string s)
-{
-	string fn;
-	float fh;
-	fn = prvm_language;
-	if(fn == "" || fn == "dump")
-		return s;
-	fn = strcat(s, ".", fn);
-	if((fh = fopen(fn, FILE_READ)) >= 0)
-	{
-		fclose(fh);
-		return fn;
-	}
-	return s;
-}
-string CTX(string s)
-{
-	float p = strstrofs(s, "^", 0);
-	if(p < 0)
-		return s;
-	return substring(s, p+1, -1);
-}
-
 // x-encoding (encoding as zero length invisible string)
 const string XENCODE_2  = "xX";
 const string XENCODE_22 = "0123456789abcdefABCDEF";
@@ -2599,29 +2573,6 @@ vector get_corner_position(entity box, float corner)
 	}
 }
 #endif
-
-// todo: this sucks, lets find a better way to do backtraces?
-void backtrace(string msg)
-{
-	float dev, war;
-	#ifdef SVQC
-	dev = autocvar_developer;
-	war = autocvar_prvm_backtraceforwarnings;
-	#else
-	dev = cvar("developer");
-	war = cvar("prvm_backtraceforwarnings");
-	#endif
-	cvar_set("developer", "1");
-	cvar_set("prvm_backtraceforwarnings", "1");
-	print("\n");
-	print("--- CUT HERE ---\nWARNING: ");
-	print(msg);
-	print("\n");
-	remove(world); // isn't there any better way to cause a backtrace?
-	print("\n--- CUT UNTIL HERE ---\n");
-	cvar_set("developer", ftos(dev));
-	cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)

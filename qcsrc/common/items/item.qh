@@ -1,6 +1,5 @@
 #ifndef GAMEITEM_H
 #define GAMEITEM_H
-#include "../oo.qh"
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 /** If you register a new item, make sure to add it to all.inc */
 CLASS(GameItem, Object)

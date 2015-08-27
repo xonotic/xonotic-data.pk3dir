@@ -529,7 +529,6 @@ int autocvar_leadlimit_override;
 int autocvar_loddebug;
 int autocvar_minplayers;
 string autocvar_nextmap;
-bool autocvar_prvm_backtraceforwarnings;
 string autocvar_quit_and_redirect;
 float autocvar_quit_and_redirect_timer;
 bool autocvar_quit_when_empty;

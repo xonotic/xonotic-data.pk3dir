@@ -5,7 +5,6 @@
 #include "../race.qh"
 
 #include "../../common/constants.qh"
-#include "../../common/counting.qh"
 #include "../../common/mapinfo.qh"
 #include "../../common/util.qh"
 

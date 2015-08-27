@@ -8,8 +8,6 @@
 #include "teams.qh"
 #include "util.qh"
 
-#include "registry.qh"
-
 void RegisterBuffs();
 const int BUFFS_MAX = 16;
 entity BUFFS[BUFFS_MAX], BUFFS_first, BUFFS_last;
