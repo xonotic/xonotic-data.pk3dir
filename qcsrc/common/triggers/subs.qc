@@ -6,18 +6,6 @@ void() SUB_CalcAngleMoveDone;
 
 /*
 ==================
-SUB_Remove
-
-Remove self
-==================
-*/
-void SUB_Remove()
-{
-	remove (self);
-}
-
-/*
-==================
 SUB_Friction
 
 Applies some friction to self

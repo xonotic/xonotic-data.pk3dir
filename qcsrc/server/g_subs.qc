@@ -280,48 +280,6 @@ vector findbetterlocation (vector org, float mindist)
 	return org;
 }
 
-/*
-==================
-crandom
-
-Returns a random number between -1.0 and 1.0
-==================
-*/
-float crandom (void)
-{
-	return 2 * (random () - 0.5);
-}
-
-/*
-==================
-Angc used for animations
-==================
-*/
-
-
-float angc (float a1, float a2)
-{
-	float	a;
-
-	while (a1 > 180)
-		a1 = a1 - 360;
-	while (a1 < -179)
-		a1 = a1 + 360;
-
-	while (a2 > 180)
-		a2 = a2 - 360;
-	while (a2 < -179)
-		a2 = a2 + 360;
-
-	a = a1 - a2;
-	while (a > 180)
-		a = a - 360;
-	while (a < -179)
-		a = a + 360;
-
-	return a;
-}
-
 float LOD_customize()
 {
 	float d;

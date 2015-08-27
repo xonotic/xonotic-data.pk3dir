@@ -1931,33 +1931,6 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 }
 
 
-void defer_think()
-{
-    entity oself;
-
-    oself           = self;
-    self            = self.owner;
-    oself.think     = SUB_Remove;
-    oself.nextthink = time;
-
-    oself.use();
-}
-
-/*
-    Execute func() after time + fdelay.
-    self when func is executed = self when defer is called
-*/
-void defer(float fdelay, void() func)
-{
-    entity e;
-
-    e           = spawn();
-    e.owner     = self;
-    e.use       = func;
-    e.think     = defer_think;
-    e.nextthink = time + fdelay;
-}
-
 .string aiment_classname;
 .float aiment_deadflag;
 void SetMovetypeFollow(entity ent, entity e)

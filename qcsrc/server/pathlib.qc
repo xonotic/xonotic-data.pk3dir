@@ -63,22 +63,6 @@ void pathlib_deletepath(entity start)
     }
 }
 
-float fsnap(float val,float fsize)
-{
-    return rint(val / fsize) * fsize;
-}
-
-vector vsnap(vector point,float fsize)
-{
-    vector vret;
-
-    vret.x = rint(point.x / fsize) * fsize;
-    vret.y = rint(point.y / fsize) * fsize;
-    vret.z = ceil(point.z / fsize) * fsize;
-
-    return vret;
-}
-
 float  walknode_stepsize;
 vector walknode_stepup;
 vector walknode_maxdrop;
