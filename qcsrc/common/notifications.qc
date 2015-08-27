@@ -1960,6 +1960,12 @@ void Send_Notification(
 
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 	{
+		string s =
+		#ifdef NOTIFICATIONS_DEBUG
+		Get_Notif_BroadcastName(broadcast);
+		#else
+		ftos(broadcast);
+		#endif
 		backtrace(sprintf(
 			strcat(
 				"Not enough arguments for Send_Notification(%s, ...)! ",
@@ -1967,13 +1973,8 @@ void Send_Notification(
 				"Check the definition and function call for accuracy...?\n"
 			),
 			sprintf(
-				#ifdef NOTIFICATIONS_DEBUG
 				"%s, '%s', %s, %s",
-				Get_Notif_BroadcastName(broadcast),
-				#else
-				"%d, '%s', %s, %s",
-				broadcast,
-				#endif
+				s,
 				client.classname,
 				Get_Notif_TypeName(net_type),
 				notif.nent_name
@@ -1986,6 +1987,12 @@ void Send_Notification(
 	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
 	{
+		string s =
+		#ifdef NOTIFICATIONS_DEBUG
+		Get_Notif_BroadcastName(broadcast);
+		#else
+		ftos(broadcast);
+		#endif
 		backtrace(sprintf(
 			strcat(
 				"Too many arguments for Send_Notification(%s, ...)! ",
@@ -1993,13 +2000,8 @@ void Send_Notification(
 				"Check the definition and function call for accuracy...?\n"
 			),
 			sprintf(
-				#ifdef NOTIFICATIONS_DEBUG
 				"%s, '%s', %s, %s",
-				Get_Notif_BroadcastName(broadcast),
-				#else
-				"%d, '%s', %s, %s",
-				broadcast,
-				#endif
+				s,
 				client.classname,
 				Get_Notif_TypeName(net_type),
 				notif.nent_name
