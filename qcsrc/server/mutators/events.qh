@@ -547,4 +547,20 @@ MUTATOR_HOOKABLE(ClearModelParams, EV_NO_ARGS);
     /**/
 string checkmodel_input, checkmodel_command;
 MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
+
+/** called when a bullet has hit a target */
+#define EV_FireBullet_Hit(i, o) \
+    /**/ i(entity, self) \
+    /**/ i(entity, bullet_hit) \
+    /**/ i(vector, bullet_startpos) \
+    /**/ i(vector, bullet_endpos) \
+    /**/ i(float, frag_damage) \
+    /**/ o(float, frag_damage) \
+    /**/
+entity bullet_hit;
+//vector bullet_hitloc; // the end pos matches the hit location, apparently
+vector bullet_startpos;
+vector bullet_endpos;
+//float frag_damage;
+MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
 #endif
