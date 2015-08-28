@@ -8,36 +8,10 @@
 #include "../dpdefs/progsdefs.qh"
 #include "../dpdefs/dpextensions.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 #include "command/common.qh"
 
 .float anticheat_jointime;
-
-void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
-{
-	if (weight == 0)
-		return;
-	if (mean == 0)
-		e.(a) *= pow(value, weight);
-	else
-		e.(a) += pow(value, mean) * weight;
-	e.(c) += weight;
-}
-
-float mean_evaluate(entity e, .float a, .float c, float mean)
-{
-	if (e.(c) == 0)
-		return 0;
-	if (mean == 0)
-		return pow(e.(a), 1.0 / e.(c));
-	else
-		return pow(e.(a) / e.(c), 1.0 / mean);
-}
-
-#define MEAN_ACCUMULATE(prefix,v,w) mean_accumulate(self,prefix##_accumulator,prefix##_count,prefix##_mean,v,w)
-#define MEAN_EVALUATE(prefix) mean_evaluate(self,prefix##_accumulator,prefix##_count,prefix##_mean)
-#define MEAN_DECLARE(prefix,m) float prefix##_mean = m; .float prefix##_count, prefix##_accumulator
 
 .float anticheat_fixangle_endtime;
 

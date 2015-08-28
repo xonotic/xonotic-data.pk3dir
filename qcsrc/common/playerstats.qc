@@ -5,7 +5,6 @@
     #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "util.qh"
-    #include "urllib.qh"
     #include "weapons/all.qh"
     #include "../server/weapons/accuracy.qh"
     #include "../server/defs.qh"

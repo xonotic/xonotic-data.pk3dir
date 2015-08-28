@@ -17,7 +17,6 @@
 #include "../csqcmodellib/sv_model.qh"
 
 #include "../warpzonelib/common.qh"
-#include "../warpzonelib/mathlib.qh"
 #include "../warpzonelib/util_server.qh"
 
 .float height;

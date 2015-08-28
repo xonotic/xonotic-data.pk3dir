@@ -1,5 +1,3 @@
-#include "../registry.qh"
-
 #ifndef ITEMS_ALL_H
 #define ITEMS_ALL_H
 

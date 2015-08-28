@@ -12,7 +12,6 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 #include "../scores_rules.qh"
-#include "../waypointsprites.qh"
 
 #include "../bot/bot.qh"
 #include "../bot/navigation.qh"
@@ -40,7 +39,6 @@
 #include "../../common/monsters/all.qh"
 
 #include "../../warpzonelib/anglestransform.qh"
-#include "../../warpzonelib/mathlib.qh"
 #include "../../warpzonelib/server.qh"
 #include "../../warpzonelib/util_server.qh"
 

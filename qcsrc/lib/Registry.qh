@@ -1,8 +1,7 @@
 #ifndef REGISTRY_H
 #define REGISTRY_H
 
-#include "oo.qh"
-#include "util.qh"
+#include "OO.qh"
 
 #define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
 #define REGISTER_INIT_POST(ns, id) [[accumulate]] void Register_##ns##_##id##_init_post(entity this)

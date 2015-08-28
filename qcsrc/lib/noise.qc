@@ -1,6 +1,4 @@
-#include "noise.qh"
-#include "_all.qh"
-
+// noises "usually" start in the range -1..1
 entityclass(Noise);
 class(Noise) .float noise_baccum;
 class(Noise) .float noise_paccum;
@@ -30,6 +28,7 @@ float Noise_White(entity e, float dt)
 {
 	return random() * 2 - 1;
 }
+/** +1 or -1 */
 float Noise_Burst(entity e, float dt, float p)
 {
 	if(random() > pow(p, dt))

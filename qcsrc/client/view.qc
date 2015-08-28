@@ -5,10 +5,8 @@
 #include "hud.qh"
 #include "hud_config.qh"
 #include "mapvoting.qh"
-#include "noise.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "waypointsprites.qh"
 
 #include "mutators/events.qh"
 
@@ -26,7 +24,6 @@
 
 #include "../warpzonelib/client.qh"
 #include "../warpzonelib/common.qh"
-#include "../warpzonelib/mathlib.qh"
 
 entity porto;
 vector polyline[16];
@@ -1014,6 +1011,7 @@ float cl_notice_run();
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
+void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;

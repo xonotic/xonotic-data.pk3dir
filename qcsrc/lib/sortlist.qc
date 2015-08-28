@@ -4,7 +4,7 @@ entity Sort_Spawn()
 {
 	entity sort;
 	sort = spawn();
-	sort.sort_next = world;
+	sort.sort_next = NULL;
 	sort.chain = sort;
 	return sort;
 }

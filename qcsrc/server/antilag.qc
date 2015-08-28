@@ -58,11 +58,6 @@ float antilag_find(entity e, float t)
 	return -1;
 }
 
-vector lerpv(float t0, vector v0, float t1, vector v1, float t)
-{
-	return v0 + (v1 - v0) * ((t - t0) / (t1 - t0));
-}
-
 vector antilag_takebackorigin(entity e, float t)
 {
 	int i0 = antilag_find(e, t);

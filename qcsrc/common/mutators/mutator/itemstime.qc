@@ -24,18 +24,41 @@ MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
 }
 #endif
 
-#ifdef SVQC
+#ifdef CSQC
+int autocvar_hud_panel_itemstime = 2;
+float autocvar_hud_panel_itemstime_dynamicsize = 1;
+float autocvar_hud_panel_itemstime_ratio = 2;
+int autocvar_hud_panel_itemstime_iconalign;
+bool autocvar_hud_panel_itemstime_progressbar = 0;
+float autocvar_hud_panel_itemstime_progressbar_maxtime = 30;
+string autocvar_hud_panel_itemstime_progressbar_name = "progressbar";
+float autocvar_hud_panel_itemstime_progressbar_reduced;
+bool autocvar_hud_panel_itemstime_hidespawned = 1;
+bool autocvar_hud_panel_itemstime_hidelarge = false;
+int autocvar_hud_panel_itemstime_text = 1;
+#define hud_panel_itemstime_hidelarge autocvar_hud_panel_itemstime_hidelarge
+#else
+#define hud_panel_itemstime_hidelarge false
+#endif
 
-bool Item_ItemsTime_Allow(entity e)
+bool Item_ItemsTime_SpectatorOnly(GameItem it)
 {
-    GameItem it = e.itemdef;
-	return (false
-	|| it.instanceOfPowerup
-	|| it == ITEM_ArmorMega     || it == ITEM_ArmorLarge
-	|| it == ITEM_HealthMega    || it == ITEM_HealthLarge
-	|| (e.weapons & WEPSET_SUPERWEAPONS)
-	);
+    return (false
+    || it == ITEM_ArmorMega     || (it == ITEM_ArmorLarge && !hud_panel_itemstime_hidelarge)
+    || it == ITEM_HealthMega    || (it == ITEM_HealthLarge && !hud_panel_itemstime_hidelarge)
+    );
 }
+
+bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons)
+{
+    return (false
+    || it.instanceOfPowerup
+    || Item_ItemsTime_SpectatorOnly(it)
+    || (_weapons & WEPSET_SUPERWEAPONS)
+    );
+}
+
+#ifdef SVQC
 
 float it_times[MAX_ITEMS];
 
@@ -128,6 +151,15 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
 
 MUTATOR_HOOKFUNCTION(itemstime, reset_map_global) {
     Item_ItemsTime_ResetTimes();
+    // ALL the times need to be reset before .reset()ing each item
+    // since Item_Reset schedules respawn of superweapons and powerups
+    for (self = world; (self = nextent(self)); )
+    if (IS_NOT_A_CLIENT(self))
+    {
+        if (self.reset)
+            Item_ItemsTime_SetTime(self, 0);
+    }
+    Item_ItemsTime_SetTimesForAllPlayers();
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver) {
@@ -222,17 +254,19 @@ void HUD_ItemsTime()
         ItemsTime_time[ITEM_Shield.m_id] = time + 4;
     }
 
-    float i;
-    float count = 0;
+    int count = 0;
     if (autocvar_hud_panel_itemstime_hidespawned == 1)
-        for (i = 0; i < MAX_ITEMS; ++i)
+        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] > time || -ItemsTime_time[i] > time);
+        ));
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
-        for (i = 0; i < MAX_ITEMS; ++i)
+        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] > time);
+        ));
     else
-        for (i = 0; i < MAX_ITEMS; ++i)
+        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] != -1);
+        ));
     if (count == 0)
         return;
 
@@ -303,7 +337,7 @@ void HUD_ItemsTime()
 
     float row = 0, column = 0;
     bool item_available;
-    FOREACH(ITEMS, ItemsTime_time[i] != -1, LAMBDA(
+    FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0') && ItemsTime_time[i] != -1, LAMBDA(
         float item_time = ItemsTime_time[i];
         if (item_time < -1)
         {

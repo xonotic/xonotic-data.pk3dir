@@ -4,9 +4,10 @@
 ../dpdefs/csprogsdefs.qh
 ../common/util-post.qh
 
+../lib/_all.inc
+
 announcer.qc
 bgmscript.qc
-casings.qc
 controlpoint.qc
 csqcmodel_hooks.qc
 damage.qc
@@ -21,20 +22,16 @@ mapvoting.qc
 miscfunctions.qc
 modeleffects.qc
 movelib.qc
-noise.qc
 particles.qc
 player_skeleton.qc
-prandom.qc
 rubble.qc
 scoreboard.qc
 shownames.qc
-sortlist.qc
 teamradar.qc
 tuba.qc
 t_items.qc
 view.qc
 wall.qc
-waypointsprites.qc
 
 command/all.qc
 
@@ -50,9 +47,6 @@ weapons/projectile.qc // TODO
 ../common/notifications.qc
 ../common/physics.qc
 ../common/playerstats.qc
-../common/p2mathlib.qc
-../common/test.qc
-../common/urllib.qc
 ../common/util.qc
 
 ../common/viewloc.qc
@@ -80,7 +74,6 @@ weapons/projectile.qc // TODO
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc
 ../warpzonelib/common.qc
-../warpzonelib/mathlib.qc
 ../warpzonelib/util_server.qc
 
 ../../mod/client/progs.inc

@@ -529,7 +529,8 @@ void vehicles_showwp()
 		rgb = Team_ColorRGB(self.team);
 	else
 		rgb = '1 1 1';
-	WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP, rgb);
+	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+	wp.colormod = rgb;
 	if(self.waypointsprite_attached)
 	{
 		WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
@@ -1023,8 +1024,10 @@ void vehicles_enter(entity pl, entity veh)
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
-		if(autocvar_g_vehicles_steal_show_waypoint)
-			WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, true, RADARICON_DANGER, Team_ColorRGB(pl.team));
+		if (autocvar_g_vehicles_steal_show_waypoint) {
+			entity wp = WaypointSprite_Spawn(WP_VehicleIntruder, 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, true, RADARICON_DANGER);
+			wp.colormod = Team_ColorRGB(pl.team);
+		}
 	}
 	else return;
 

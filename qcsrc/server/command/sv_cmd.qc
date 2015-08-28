@@ -31,7 +31,6 @@
 
 #include "../../common/monsters/sv_monsters.qh"
 
-#include "../../warpzonelib/mathlib.qh"
 
 void PutObserverInServer (void);
 

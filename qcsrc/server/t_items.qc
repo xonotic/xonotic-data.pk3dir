@@ -5,8 +5,6 @@
 #if defined(SVQC)
     #include "_all.qh"
 
-    #include "waypointsprites.qh"
-
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
 
@@ -412,7 +410,8 @@ void Item_Think()
 	}
 }
 
-bool Item_ItemsTime_Allow(entity e);
+bool Item_ItemsTime_SpectatorOnly(GameItem it);
+bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons);
 float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
@@ -429,7 +428,7 @@ void Item_Respawn (void)
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-    if (Item_ItemsTime_Allow(self))
+    if (Item_ItemsTime_Allow(self.itemdef, self.weapons))
 	{
 		float t = Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_SetTime(self, t);
@@ -457,40 +456,23 @@ void Item_RespawnCountdown (void)
 		self.count += 1;
 		if(self.count == 1)
 		{
-			string name = string_null;
-			vector rgb = '1 0 1';
+			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
+			int wpextra = 0;
             entity e = self.itemdef;
-            if (e) {
-                name = e.m_waypoint;
-                rgb = e.m_color;
-            }
-			MUTATOR_CALLHOOK(Item_RespawnCountdown, name, rgb);
-			name = item_name;
-			rgb = item_color;
-			if(self.flags & FL_WEAPON)
-			{
+            if (e) wpextra = e.m_id;
+			if (self.flags & FL_WEAPON) {
 				entity wi = get_weaponinfo(self.weapon);
-				if(wi)
-				{
-					name = wi.wpmodel;
-					rgb = '1 0 0';
-				}
+				if (wi) wpextra = wi.m_id;
 			}
-			if(name)
-			{
-				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP, rgb);
-				if(self.waypointsprite_attached)
-				{
-					if (self.items == IT_HEALTH || self.items == IT_ARMOR)
-						WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
-					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
-				}
-			}
-			else
-			{
-				print("Unknown powerup-marked item is wanting to respawn\n");
-				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
-			}
+            entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+            wp.wp_extra = wpextra;
+            if(self.waypointsprite_attached)
+            {
+                GameItem def = self.itemdef;
+                if (Item_ItemsTime_SpectatorOnly(def))
+                    WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
+                WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+            }
 		}
 
 		if(self.waypointsprite_attached)
@@ -529,7 +511,7 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if (Item_ItemsTime_Allow(e))
+	if (Item_ItemsTime_Allow(e.itemdef, e.weapons))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);

@@ -1,7 +1,8 @@
 #ifndef OO_H
 #define OO_H
 
-#include "registry.qh"
+#include "Nil.qh"
+#include "Registry.qh"
 
 #ifdef MENUQC
     #define NULL (null_entity)
@@ -125,7 +126,7 @@ CLASS(Object, );
                 string value = getentityfieldstring(i, this);
                 if (value != "") s = sprintf("%s\n%s = %s", s, entityfieldname(i), value);
             }
-    	}
+        }
         return s;
     }
     METHOD(Object, display, void(entity this, void(string name, string icon) returns)) {

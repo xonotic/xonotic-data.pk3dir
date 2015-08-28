@@ -1,16 +1,4 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "constants.qh"
-	#include "util.qh"
-	#include "urllib.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "constants.qh"
-    #include "util.qh"
-    #include "urllib.qh"
-#endif
+#include "urllib.qh"
 
 // files
 .float url_fh;
@@ -52,7 +40,7 @@ float url_URI_Get_Callback(int id, float status, string data)
 	}
 
 	// whatever happens, we will remove the URL from the list of IDs
-	url_fromid[id] = world;
+	url_fromid[id] = NULL;
 
 	// if we get here, we MUST have both buffers cleared
 	if(e.url_rbuf != -1 || e.url_wbuf != -1 || e.url_fh != URL_FH_CURL)
@@ -135,17 +123,17 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 
 				// get slot for HTTP request
 				for(i = autocvar__urllib_nextslot; i < NUM_URL_ID; ++i)
-					if(url_fromid[i] == world)
+					if(url_fromid[i] == NULL)
 						break;
 				if(i >= NUM_URL_ID)
 				{
 					for(i = 0; i < autocvar__urllib_nextslot; ++i)
-						if(url_fromid[i] == world)
+						if(url_fromid[i] == NULL)
 							break;
 					if(i >= autocvar__urllib_nextslot)
 					{
 						print("url_single_fopen: too many concurrent requests\n");
-						rdy(world, pass, URL_READY_ERROR);
+						rdy(NULL, pass, URL_READY_ERROR);
 						return;
 					}
 				}
@@ -154,7 +142,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				if(!crypto_uri_postbuf(url, i + MIN_URL_ID, string_null, string_null, -1, 0))
 				{
 					print("url_single_fopen: failure in crypto_uri_postbuf\n");
-					rdy(world, pass, URL_READY_ERROR);
+					rdy(NULL, pass, URL_READY_ERROR);
 					return;
 				}
 
@@ -192,7 +180,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				break;
 			case FILE_READ:
 				print("url_single_fopen: cannot open '-' for reading\n");
-				rdy(world, pass, URL_READY_ERROR);
+				rdy(NULL, pass, URL_READY_ERROR);
 				break;
 		}
 	}
@@ -202,7 +190,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 		fh = fopen(url, mode);
 		if(fh < 0)
 		{
-			rdy(world, pass, URL_READY_ERROR);
+			rdy(NULL, pass, URL_READY_ERROR);
 			return;
 		}
 		else
@@ -238,12 +226,12 @@ void url_fclose(entity e)
 
 			// get slot for HTTP request
 			for(i = autocvar__urllib_nextslot; i < NUM_URL_ID; ++i)
-				if(url_fromid[i] == world)
+				if(url_fromid[i] == NULL)
 					break;
 			if(i >= NUM_URL_ID)
 			{
 				for(i = 0; i < autocvar__urllib_nextslot; ++i)
-					if(url_fromid[i] == world)
+					if(url_fromid[i] == NULL)
 						break;
 				if(i >= autocvar__urllib_nextslot)
 				{
@@ -384,7 +372,7 @@ void url_multi_fopen(string url, int mode, url_ready_func rdy, entity pass)
 	if(n <= 0)
 	{
 		print("url_multi_fopen: need at least one URL\n");
-		rdy(world, pass, URL_READY_ERROR);
+		rdy(NULL, pass, URL_READY_ERROR);
 		return;
 	}
 
