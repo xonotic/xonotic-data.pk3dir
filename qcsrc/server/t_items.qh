@@ -95,7 +95,10 @@ void spawnfunc_item_invincible();
 void spawnfunc_item_armor_small();
 void spawnfunc_item_shells();
 void spawnfunc_item_bullets();
+void spawnfunc_item_cells();
+void spawnfunc_item_plasma();
 void spawnfunc_item_rockets();
+void spawnfunc_item_fuel();
 
 float autocvar_sv_simple_items;
 bool ItemSend(entity to, int sf);

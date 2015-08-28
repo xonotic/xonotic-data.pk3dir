@@ -12,10 +12,11 @@ float autocvar_g_balance_ammodistribution_distance_medium = 512 + 1;
 float autocvar_g_balance_ammodistribution_modifier_shells = 1;
 float autocvar_g_balance_ammodistribution_modifier_bullets = 1;
 float autocvar_g_balance_ammodistribution_modifier_cells = 1;
+float autocvar_g_balance_ammodistribution_modifier_plasma = 1;
 float autocvar_g_balance_ammodistribution_modifier_rockets = 1;
 float autocvar_g_balance_ammodistribution_modifier_fuel = 1;
 
-#define ITEM_AMMO_COUNT 5
+#define ITEM_AMMO_COUNT 6
 void() item_ammo_spawnfunc(float i)
 {
 	switch (i)
@@ -23,8 +24,9 @@ void() item_ammo_spawnfunc(float i)
 		case 0: return spawnfunc_item_shells;
 		case 1: return spawnfunc_item_bullets;
 		case 2: return spawnfunc_item_cells;
-		case 3: return spawnfunc_item_rockets;
-		case 4: return spawnfunc_item_fuel;
+		case 3: return spawnfunc_item_plasma;
+		case 4: return spawnfunc_item_rockets;
+		case 5: return spawnfunc_item_fuel;
 		default: error("item_ammo_wtf");
 	}
 	return spawnfunc_item_shells;
@@ -47,8 +49,9 @@ float item_ammo_modifier(float i)
 		case 0: m = autocvar_g_balance_ammodistribution_modifier_shells; break;
 		case 1: m = autocvar_g_balance_ammodistribution_modifier_bullets; break;
 		case 2: m = autocvar_g_balance_ammodistribution_modifier_cells; break;
-		case 3: m = autocvar_g_balance_ammodistribution_modifier_rockets; break;
-		case 4: m = autocvar_g_balance_ammodistribution_modifier_fuel; break;
+		case 3: m = autocvar_g_balance_ammodistribution_modifier_plasma; break;
+		case 4: m = autocvar_g_balance_ammodistribution_modifier_rockets; break;
+		case 5: m = autocvar_g_balance_ammodistribution_modifier_fuel; break;
 		default: error("item_ammo_wtf");
 	}
 	if (m == 0)
@@ -64,8 +67,9 @@ float item_ammo_type(float i)
 		case 0: return IT_SHELLS;
 		case 1: return IT_NAILS;
 		case 2: return IT_CELLS;
-		case 3: return IT_ROCKETS;
-		case 4: return IT_FUEL;
+		case 3: return IT_PLASMA;
+		case 4: return IT_ROCKETS;
+		case 5: return IT_FUEL;
 		default: error("item_ammo_wtf");
 	}
 	return 0;
