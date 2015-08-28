@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ SHOCKWAVE,
 /* function  */ W_Shockwave,
@@ -79,7 +79,8 @@ void Net_ReadShockwaveParticle(void);
 .float sw_spread_min;
 .float sw_time;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_shockwave(void)
 {
@@ -87,10 +88,10 @@ void spawnfunc_weapon_shockwave(void)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(WEP_MACHINEGUN);
+		weapon_defaultspawnfunc(WEP_MACHINEGUN.m_id);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_SHOCKWAVE);
+	weapon_defaultspawnfunc(WEP_SHOCKWAVE.m_id);
 }
 
 const float MAX_SHOCKWAVE_HITS = 10;
@@ -158,7 +159,7 @@ void W_Shockwave_Melee_Think(void)
 		te_customflash(targpos, 40,  2, '1 1 1');
 #endif
 
-		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self if necessary
 			&& (trace_ent.takedamage == DAMAGE_AIM)
@@ -178,14 +179,14 @@ void W_Shockwave_Melee_Think(void)
 				self.realowner,
 				self.realowner,
 				swing_damage,
-				(WEP_SHOCKWAVE | HITTYPE_SECONDARY),
+				(WEP_SHOCKWAVE.m_id | HITTYPE_SECONDARY),
 				(self.realowner.origin + self.realowner.view_ofs),
 				(v_forward * WEP_CVAR(shockwave, melee_force))
 			);
 
 			// handle accuracy
 			if(accuracy_isgooddamage(self.realowner, target_victim))
-				{ accuracy_add(self.realowner, WEP_SHOCKWAVE, 0, swing_damage); }
+				{ accuracy_add(self.realowner, WEP_SHOCKWAVE.m_id, 0, swing_damage); }
 
 			#ifdef DEBUG_SHOCKWAVE
 			print(sprintf(
@@ -228,7 +229,7 @@ void W_Shockwave_Melee_Think(void)
 
 void W_Shockwave_Melee(void)
 {
-	sound(self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
 	entity meleetemp;
@@ -359,7 +360,7 @@ void W_Shockwave_Attack(void)
 	float i, queue = 0;
 
 	// set up the shot direction
-	W_SetupShot(self, false, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
+	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(shockwave, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
@@ -375,7 +376,7 @@ void W_Shockwave_Attack(void)
 		WEP_CVAR(shockwave, blast_splash_edgedamage),
 		WEP_CVAR(shockwave, blast_splash_radius),
 		w_shotdir * WEP_CVAR(shockwave, blast_splash_force),
-		WEP_SHOCKWAVE,
+		WEP_SHOCKWAVE.m_id,
 		0,
 		self
 	);
@@ -455,7 +456,7 @@ void W_Shockwave_Attack(void)
 					self,
 					self,
 					final_damage,
-					WEP_SHOCKWAVE,
+					WEP_SHOCKWAVE.m_id,
 					head.origin,
 					final_force
 				);
@@ -553,13 +554,11 @@ void W_Shockwave_Attack(void)
 			center = CENTER_OR_VIEWOFS(head);
 
 			// find the closest point on the enemy to the center of the attack
-			float ang; // angle between shotdir and h
 			float h; // hypotenuse, which is the distance between attacker to head
 			float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 
 			h = vlen(center - self.origin);
-			ang = acos(dotproduct(normalize(center - self.origin), w_shotdir));
-			a = h * cos(ang);
+			a = h * (normalize(center - self.origin) * w_shotdir);
 			// WEAPONTODO: replace with simpler method
 
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
@@ -641,7 +640,7 @@ void W_Shockwave_Attack(void)
 			self,
 			self,
 			final_damage,
-			WEP_SHOCKWAVE,
+			WEP_SHOCKWAVE.m_id,
 			head.origin,
 			final_force
 		);
@@ -649,7 +648,7 @@ void W_Shockwave_Attack(void)
 		if(accuracy_isgooddamage(self.realowner, head))
 		{
 			print("wtf\n");
-			accuracy_add(self.realowner, WEP_SHOCKWAVE, 0, final_damage);
+			accuracy_add(self.realowner, WEP_SHOCKWAVE.m_id, 0, final_damage);
 		}
 
 		#ifdef DEBUG_SHOCKWAVE
@@ -667,7 +666,7 @@ void W_Shockwave_Attack(void)
 	}
 }
 
-float W_Shockwave(float req)
+bool W_Shockwave(int req)
 {
 	switch(req)
 	{
@@ -710,12 +709,12 @@ float W_Shockwave(float req)
 		case WR_INIT:
 		{
 			precache_model("models/uziflash.md3");
-			precache_model("models/weapons/g_shotgun.md3");
-			precache_model("models/weapons/v_shotgun.md3");
-			precache_model("models/weapons/h_shotgun.iqm");
+			precache_model(W_Model("g_shotgun.md3"));
+			precache_model(W_Model("v_shotgun.md3"));
+			precache_model(W_Model("h_shotgun.iqm"));
 			precache_sound("misc/itempickup.wav");
-			precache_sound("weapons/lasergun_fire.wav");
-			precache_sound("weapons/shotgun_melee.wav");
+			precache_sound(W_Sound("lasergun_fire"));
+			precache_sound(W_Sound("shotgun_melee"));
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -866,7 +865,7 @@ void Net_ReadShockwaveParticle(void)
 	shockwave.sw_time = time;
 }
 
-float W_Shockwave(float req)
+bool W_Shockwave(int req)
 {
 	switch(req)
 	{
@@ -880,9 +879,9 @@ float W_Shockwave(float req)
 		}
 		case WR_INIT:
 		{
-			//precache_sound("weapons/ric1.wav");
-			//precache_sound("weapons/ric2.wav");
-			//precache_sound("weapons/ric3.wav");
+			//precache_sound(W_Sound("ric1"));
+			//precache_sound(W_Sound("ric2"));
+			//precache_sound(W_Sound("ric3"));
 			return false;
 		}
 		case WR_ZOOMRETICLE:

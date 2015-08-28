@@ -1,6 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include "../common/constants.qh"
+
 // --------------------------------------------------------------------------
 // MENU Functionality
 
@@ -106,6 +108,8 @@ float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
 
+void Fog_Force();
+
 string getcommandkey(string text, string command);
 
 string vote_called_vote;
@@ -149,4 +153,6 @@ entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 float hud;
 float view_quality;
 int framecount;
+.float health;
+
 #endif

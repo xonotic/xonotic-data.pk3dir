@@ -1,3 +1,8 @@
+#include "gamemode_domination.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
@@ -19,7 +24,6 @@ void dompoint_captured ()
 {
 	entity head;
 	float old_delay, old_team, real_team;
-	string msg = "dom-neut";
 
 	// now that the delay has expired, switch to the latest team to lay claim to this point
 	head = self.owner;
@@ -75,15 +79,16 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 
+	entity msg = WP_DomNeut;
 	switch(self.team)
 	{
-		case NUM_TEAM_1: msg = "dom-red"; break;
-		case NUM_TEAM_2: msg = "dom-blue"; break;
-		case NUM_TEAM_3: msg = "dom-yellow"; break;
-		case NUM_TEAM_4: msg = "dom-pink"; break;
+		case NUM_TEAM_1: msg = WP_DomRed; break;
+		case NUM_TEAM_2: msg = WP_DomBlue; break;
+		case NUM_TEAM_3: msg = WP_DomYellow; break;
+		case NUM_TEAM_4: msg = WP_DomPink; break;
 	}
 
-	WaypointSprite_UpdateSprites(self.sprite, msg, "", "");
+	WaypointSprite_UpdateSprites(self.sprite, msg, WP_Null, WP_Null);
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
@@ -221,7 +226,7 @@ void dompointtouch()
 	if(head == world)
 		return;
 
-	WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
+	WaypointSprite_UpdateSprites(self.sprite, WP_DomNeut, WP_Null, WP_Null);
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
 	WaypointSprite_Ping(self.sprite);
 
@@ -287,7 +292,7 @@ void dom_controlpoint_setup()
 	droptofloor();
 
 	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
+	WaypointSprite_SpawnFixed(WP_DomNeut, self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT);
 }
 
 float total_controlpoints, redowned, blueowned, yellowowned, pinkowned;

@@ -1,3 +1,10 @@
+#include "gamemode_assault.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+.entity sprite;
+
 // random functions
 void assault_objective_use()
 {
@@ -124,20 +131,20 @@ void target_objective_decrease_activate()
 				ent.sprite = world;
 		}
 
-		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE, '1 0.5 0');
+		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE);
 		spr.assault_decreaser = self;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
 		if(ent.classname == "func_assault_destructible")
 		{
-			WaypointSprite_UpdateSprites(spr, "as-defend", "as-destroy", "as-destroy");
+			WaypointSprite_UpdateSprites(spr, WP_AssaultDefend, WP_AssaultDestroy, WP_AssaultDestroy);
 			WaypointSprite_UpdateMaxHealth(spr, ent.max_health);
 			WaypointSprite_UpdateHealth(spr, ent.health);
 			ent.sprite = spr;
 		}
 		else
-			WaypointSprite_UpdateSprites(spr, "as-defend", "as-push", "as-push");
+			WaypointSprite_UpdateSprites(spr, WP_AssaultDefend, WP_AssaultPush, WP_AssaultPush);
 	}
 }
 
@@ -163,7 +170,6 @@ void assault_roundstart_use()
 	activator = self;
 	SUB_UseTargets();
 
-#ifdef TTURRETS_ENABLED
 	entity ent, oldself;
 
 	//(Re)spawn all turrets
@@ -179,12 +185,11 @@ void assault_roundstart_use()
 		self = ent;
 
 		// Dubbles as teamchange
-		turret_stdproc_respawn();
+		turret_respawn();
 
 		ent = find(ent, classname, "turret_main");
 	}
 	self = oldself;
-#endif
 }
 
 void assault_wall_think()
@@ -205,8 +210,31 @@ void assault_wall_think()
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
+void vehicles_clearreturn(entity veh);
+void vehicles_spawn();
 void assault_new_round()
 {
+    entity oldself;
+	//bprint("ASSAULT: new round\n");
+
+	oldself = self;
+	// Eject players from vehicles
+    FOR_EACH_PLAYER(self)
+    {
+        if(self.vehicle)
+            vehicles_exit(VHEF_RELEASE);
+    }
+
+    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
+    while(self)
+    {
+        vehicles_clearreturn(self);
+        vehicles_spawn();
+        self = self.chain;
+    }
+
+    self = oldself;
+
 	// up round counter
 	self.winning = self.winning + 1;
 
@@ -525,8 +553,8 @@ MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
 {
-	if (!self.team)
-		self.team = 14;
+	if(!self.team || self.team == MAX_SHOT_DISTANCE)
+		self.team = 5; // this gets reversed when match starts?
 
 	return false;
 }
@@ -544,6 +572,11 @@ MUTATOR_HOOKFUNCTION(assault_BotRoles)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(assault_PlayHitsound)
+{
+	return (frag_victim.classname == "func_assault_destructible");
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {
@@ -559,6 +592,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayHitsound, assault_PlayHitsound, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

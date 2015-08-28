@@ -1,26 +1,31 @@
 #include "cheats.qh"
+#include "_all.qh"
+
 #include "g_damage.qh"
 #include "race.qh"
-#include "t_teleporters.qh"
+#include "../common/triggers/teleporters.qh"
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/anglestransform.qh"
-    #include "../warpzonelib/util_server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/monsters/monsters.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/tracing.qh"
-    #include "autocvars.qh"
-    #include "defs.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "../csqcmodellib/sv_model.qh"
-#endif
+#include "mutators/mutators_include.qh"
+
+#include "weapons/tracing.qh"
+
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/effects.qh"
+#include "../common/util.qh"
+
+#include "../common/monsters/all.qh"
+
+#include "../common/weapons/all.qh"
+
+#include "../common/triggers/subs.qh"
+
+#include "../common/triggers/func/breakable.qh"
+
+#include "../csqcmodellib/sv_model.qh"
+
+#include "../warpzonelib/anglestransform.qh"
+#include "../warpzonelib/util_server.qh"
 
 void CopyBody(float keepvelocity);
 
@@ -40,15 +45,7 @@ void Drag_MoveDrag(entity from, entity to) { }
 .float maycheat;
 float gamestart_sv_cheats;
 
-const float CHIMPULSE_SPEEDRUN_INIT = 30;
-const float CHIMPULSE_GIVE_ALL = 99;
-const float CHIMPULSE_CLONE_MOVING = 140;
-const float CHIMPULSE_SPEEDRUN = 141;
-const float CHIMPULSE_CLONE_STANDING = 142;
-const float CHIMPULSE_TELEPORT = 143;
-const float CHIMPULSE_R00T = 148;
 
-const float CHRAME_DRAG = 8;
 
 void CheatInit()
 {
@@ -216,7 +213,7 @@ float CheatImpulse(float i)
 					self.angles = self.personal.v_angle;
 					self.fixangle = true;
 
-					MUTATOR_CALLHOOK(AbortSpeedrun);
+					MUTATOR_CALLHOOK(AbortSpeedrun, self);
 				}
 
 				self.ammo_rockets = self.personal.ammo_rockets;
@@ -285,8 +282,8 @@ float CheatImpulse(float i)
 			else
 				e = self;
 
-			pointparticles(particleeffectnum("rocket_explode"), e.origin, '0 0 0', 1);
-			sound(e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			Send_Effect("rocket_explode", e.origin, '0 0 0', 1);
+			sound(e, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
@@ -324,13 +321,12 @@ float CheatCommand(float argc)
 				//   origin (0..1, on crosshair line)
 				//   velocity
 				//   howmany
-				effectnum = particleeffectnum(argv(1));
 				f = stof(argv(2));
 				crosshair_trace(self);
 				start = (1-f) * self.origin + f * trace_endpos;
 				end = stov(argv(3));
 				f = stof(argv(4));
-				pointparticles(effectnum, start, end, f);
+				Send_Effect(argv(1), start, end, f);
 				DID_CHEAT();
 				break;
 			}

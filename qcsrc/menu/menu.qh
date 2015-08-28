@@ -9,13 +9,9 @@
 #include "xonotic/util.qh"
 
 #include "../common/constants.qh"
-#include "../common/test.qh"
 #include "../common/util.qh"
 
 #define localcmd cmd
-
-#define NULL (null_entity)
-#define world NULL
 
 // constants
 
@@ -52,6 +48,8 @@ void preMenuDraw(); // this is run before the menu is drawn. You may put some st
 void postMenuDraw(); // this is run just after the menu is drawn (or not). Useful to draw something over everything else.
 
 void m_sync();
+
+void draw_reset_cropped();
 
 // sounds
 

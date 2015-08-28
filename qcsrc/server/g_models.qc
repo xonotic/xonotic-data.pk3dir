@@ -1,14 +1,11 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../csqcmodellib/sv_model.qh"
-#endif
+#include "_all.qh"
+
+#include "../common/triggers/subs.qh"
+
+#include "../client/bgmscript.qh"
+
+#include "../common/constants.qh"
+#include "../csqcmodellib/sv_model.qh"
 
 .float modelscale;
 
@@ -29,7 +26,22 @@ void g_model_setcolormaptoactivator (void)
 void g_clientmodel_setcolormaptoactivator (void)
 {
 	g_model_setcolormaptoactivator();
-	self.SendFlags |= 1;
+	self.SendFlags |= (8 | 1);
+}
+
+void g_clientmodel_use(void)
+{
+	if (self.antiwall_flag == 1)
+	{
+		self.inactive = 1;
+		self.solid = SOLID_NOT;
+	}
+	else if (self.antiwall_flag == 2)
+	{
+		self.inactive = 0;
+		self.solid = self.default_solid;
+	}
+	g_clientmodel_setcolormaptoactivator();
 }
 
 void g_model_dropbyspawnflags()
@@ -60,12 +72,12 @@ void g_clientmodel_dropbyspawnflags()
 		self.SendFlags |= 2;
 }
 
-float g_clientmodel_genericsendentity (entity to, float sf)
+float g_clientmodel_genericsendentity (entity to, int sf)
 {
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')
 		sf |= 0x10;
-	if(self.solid && (self.mins != '0 0 0' || self.maxs != '0 0 0'))
+	if(self.mins != '0 0 0' || self.maxs != '0 0 0')
 		sf |= 0x20;
 	if(self.colormap != 0)
 		sf |= 0x40;
@@ -133,6 +145,12 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 			WriteCoord(MSG_ENTITY, self.movedir.z);
 			WriteByte(MSG_ENTITY, floor(self.lip * 255));
 		}
+		WriteShort(MSG_ENTITY, self.fade_start);
+		WriteShort(MSG_ENTITY, self.fade_end);
+		WriteShort(MSG_ENTITY, self.alpha_max);
+		WriteShort(MSG_ENTITY, self.alpha_min);
+		WriteShort(MSG_ENTITY, self.inactive);
+		WriteShort(MSG_ENTITY, self.fade_vertical_offset);
 	}
 
 	return true;
@@ -151,11 +169,12 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 	if(self.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) self.movetype = MOVETYPE_PHYSICS; \
 	if(!self.scale) self.scale = self.modelscale; \
 	SetBrushEntityModel(); \
-	self.use = g_clientmodel_setcolormaptoactivator; \
+	self.use = g_clientmodel_use; \
 	InitializeEntity(self, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0; \
-	Net_LinkEntity(self, true, 0, g_clientmodel_genericsendentity);
+	Net_LinkEntity(self, true, 0, g_clientmodel_genericsendentity); \
+	self.default_solid = sol;
 
 // non-solid model entities:
 void spawnfunc_misc_gamemodel()         { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity

@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ HOOK,
 /* function  */ W_Hook,
@@ -55,7 +55,8 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float hook_time_hooked;
 .float hook_time_fueldecrease;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 
 void spawnfunc_weapon_hook(void)
@@ -66,7 +67,7 @@ void spawnfunc_weapon_hook(void)
 		remove(self);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_HOOK);
+	weapon_defaultspawnfunc(WEP_HOOK.m_id);
 }
 
 void W_Hook_ExplodeThink(void)
@@ -108,7 +109,7 @@ void W_Hook_Explode2(void)
 	self.movetype = MOVETYPE_NONE;
 }
 
-void W_Hook_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Hook_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -133,7 +134,7 @@ void W_Hook_Attack2(void)
 	entity gren;
 
 	//W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(self, false, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(self, false, 4, W_Sound("hookbomb_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn();
 	gren.owner = gren.realowner = self;
@@ -142,7 +143,7 @@ void W_Hook_Attack2(void)
 	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
 	gren.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_HOOK | HITTYPE_SECONDARY;
+	gren.projectiledeathtype = WEP_HOOK.m_id | HITTYPE_SECONDARY;
 	setorigin(gren, w_shotorg);
 	setsize(gren, '0 0 0', '0 0 0');
 
@@ -170,10 +171,10 @@ void W_Hook_Attack2(void)
 
 	CSQCProjectile(gren, true, PROJECTILE_HOOKBOMB, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-float W_Hook(float req)
+bool W_Hook(int req)
 {
 	float hooked_time_max, hooked_fuel;
 
@@ -287,12 +288,12 @@ float W_Hook(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_hookgun.md3");
-			precache_model("models/weapons/v_hookgun.md3");
-			precache_model("models/weapons/h_hookgun.iqm");
-			precache_sound("weapons/hook_impact.wav"); // done by g_hook.qc
-			precache_sound("weapons/hook_fire.wav");
-			precache_sound("weapons/hookbomb_fire.wav");
+			precache_model(W_Model("g_hookgun.md3"));
+			precache_model(W_Model("v_hookgun.md3"));
+			precache_model(W_Model("h_hookgun.iqm"));
+			precache_sound(W_Sound("hook_impact")); // done by g_hook.qc
+			precache_sound(W_Sound("hook_fire"));
+			precache_sound(W_Sound("hookbomb_fire"));
 			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -336,7 +337,7 @@ float W_Hook(float req)
 }
 #endif
 #ifdef CSQC
-float W_Hook(float req)
+bool W_Hook(int req)
 {
 	switch(req)
 	{
@@ -346,13 +347,13 @@ float W_Hook(float req)
 			org2 = w_org + w_backoff * 2;
 			pointparticles(particleeffectnum("hookbomb_explode"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/hookbomb_impact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("hookbomb_impact"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/hookbomb_impact.wav");
+			precache_sound(W_Sound("hookbomb_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

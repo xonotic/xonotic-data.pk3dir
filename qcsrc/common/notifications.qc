@@ -5,7 +5,6 @@
     #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "teams.qh"
-    #include "counting.qh"
     #include "../server/autocvars.qh"
     #include "../server/constants.qh"
     #include "../server/defs.qh"
@@ -946,8 +945,7 @@ void Create_Notification_Entity(
 #ifdef SVQC
 void Notification_GetCvars(void)
 {
-	float i;
-	for(i = 0; i <= NOTIF_CHOICE_COUNT; ++i)
+	for(int i = 0; i <= NOTIF_CHOICE_COUNT; ++i)
 	{
 		GetCvars_handleFloat(
 			get_cvars_s,
@@ -1562,6 +1560,14 @@ void Local_Notification(int net_type, int net_name, ...count)
 			#ifdef CSQC
 			if(notif.nent_icon != "")
 			{
+				if ( notif.nent_iconargs != "" )
+				{
+					notif.nent_icon = Local_Notification_sprintf(
+						notif.nent_icon,notif.nent_iconargs,
+						s1, s2, s3, s4, f1, f2, f3, f4);
+					// remove the newline added by Local_Notification_sprintf
+					notif.nent_icon = strzone(substring(notif.nent_icon,0,strlen(notif.nent_icon)-1));
+				}
 				Local_Notification_HUD_Notify_Push(
 					notif.nent_icon,
 					notif.nent_hudargs,
@@ -1633,7 +1639,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 
 			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2)))
 			{
-				switch(cvar_string(sprintf("notification_%s", notif.nent_name)))
+				switch(cvar(sprintf("notification_%s", notif.nent_name)))
 				{
 					case 1: found_choice = notif.nent_optiona; break;
 					case 2: found_choice = notif.nent_optionb; break;
@@ -1763,21 +1769,19 @@ void Net_Notification_Remove()
 	));
 	#endif
 
-	float i;
-	for(i = 0; i < 4; ++i) { if(self.nent_strings[i]) { strunzone(self.nent_strings[i]); } }
+	for(int i = 0; i < 4; ++i) { if(self.nent_strings[i]) { strunzone(self.nent_strings[i]); } }
 	remove(self);
 }
 
-float Net_Write_Notification(entity client, float sf)
+float Net_Write_Notification(entity client, int sf)
 {
 	if(Notification_ShouldSend(self.nent_broadcast, client, self.nent_client))
 	{
-		float i;
 		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
 		WriteByte(MSG_ENTITY, self.nent_net_type);
 		WriteShort(MSG_ENTITY, self.nent_net_name);
-		for(i = 0; i < self.nent_stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); }
-		for(i = 0; i < self.nent_floatcount; ++i) { WriteLong(MSG_ENTITY, self.nent_floats[i]); }
+		for(int i = 0; i < self.nent_stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); }
+		for(int i = 0; i < self.nent_floatcount; ++i) { WriteLong(MSG_ENTITY, self.nent_floats[i]); }
 		return true;
 	}
 	else { return false; }
@@ -1956,6 +1960,12 @@ void Send_Notification(
 
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 	{
+		string s =
+		#ifdef NOTIFICATIONS_DEBUG
+		Get_Notif_BroadcastName(broadcast);
+		#else
+		ftos(broadcast);
+		#endif
 		backtrace(sprintf(
 			strcat(
 				"Not enough arguments for Send_Notification(%s, ...)! ",
@@ -1963,13 +1973,8 @@ void Send_Notification(
 				"Check the definition and function call for accuracy...?\n"
 			),
 			sprintf(
-				#ifdef NOTIFICATIONS_DEBUG
 				"%s, '%s', %s, %s",
-				Get_Notif_BroadcastName(broadcast),
-				#else
-				"%d, '%s', %s, %s",
-				broadcast,
-				#endif
+				s,
 				client.classname,
 				Get_Notif_TypeName(net_type),
 				notif.nent_name
@@ -1982,6 +1987,12 @@ void Send_Notification(
 	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
 	{
+		string s =
+		#ifdef NOTIFICATIONS_DEBUG
+		Get_Notif_BroadcastName(broadcast);
+		#else
+		ftos(broadcast);
+		#endif
 		backtrace(sprintf(
 			strcat(
 				"Too many arguments for Send_Notification(%s, ...)! ",
@@ -1989,13 +2000,8 @@ void Send_Notification(
 				"Check the definition and function call for accuracy...?\n"
 			),
 			sprintf(
-				#ifdef NOTIFICATIONS_DEBUG
 				"%s, '%s', %s, %s",
-				Get_Notif_BroadcastName(broadcast),
-				#else
-				"%d, '%s', %s, %s",
-				broadcast,
-				#endif
+				s,
 				client.classname,
 				Get_Notif_TypeName(net_type),
 				notif.nent_name
@@ -2098,10 +2104,9 @@ void Send_Notification(
 		net_notif.nent_stringcount = notif.nent_stringcount;
 		net_notif.nent_floatcount = notif.nent_floatcount;
 
-		float i;
-		for(i = 0; i < net_notif.nent_stringcount; ++i)
+		for(int i = 0; i < net_notif.nent_stringcount; ++i)
 			{ net_notif.nent_strings[i] = strzone(...(i, string)); }
-		for(i = 0; i < net_notif.nent_floatcount; ++i)
+		for(int i = 0; i < net_notif.nent_floatcount; ++i)
 			{ net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float); }
 
 		net_notif.think = Net_Notification_Remove;

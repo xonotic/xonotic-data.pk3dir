@@ -1,8 +1,7 @@
-#ifndef GENERIC_H
-#define GENERIC_H
+#ifndef COMMAND_GENERIC_H
+#define COMMAND_GENERIC_H
 
-#include "markup.qh"
-#include "rpn.qh"
+#include "../constants.qh"
 
 // =========================================================
 //  Declarations for common command code, written by Samual

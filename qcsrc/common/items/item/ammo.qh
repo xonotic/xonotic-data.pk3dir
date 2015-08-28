@@ -1,0 +1,11 @@
+#ifndef AMMO_H
+#define AMMO_H
+#include "pickup.qh"
+CLASS(Ammo, Pickup)
+#ifdef SVQC
+    ATTRIB(Ammo, m_pickupevalfunc, float(entity player, entity item), commodity_pickupevalfunc)
+    ATTRIB(Ammo, m_respawntime, float(), GET(g_pickup_respawntime_ammo))
+    ATTRIB(Ammo, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_ammo))
+#endif
+ENDCLASS(Ammo)
+#endif

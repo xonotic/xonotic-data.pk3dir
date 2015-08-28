@@ -1,11 +1,10 @@
+#include "mathlib.qh"
 #if defined(CSQC)
 	#include "../dpdefs/csprogsdefs.qh"
-    #include "mathlib.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "mathlib.qh"
+	#include "../dpdefs/progsdefs.qh"
 #endif
 
 int fpclassify(float x)
@@ -94,6 +93,10 @@ int ilogb(float x)
 float ldexp(float x, int e)
 {
 	return x * pow(2, e);
+}
+float logn(float x, float base)
+{
+	return log(x) / log(base);
 }
 float log10(float x)
 {
@@ -289,4 +292,12 @@ int islessgreater(float x, float y)
 int isunordered(float x, float y)
 {
 	return !(x < y || x == y || x > y);
+}
+
+vector cross(vector a, vector b)
+{
+	return
+		'1 0 0' * (a.y * b.z - a.z * b.y)
+	+	'0 1 0' * (a.z * b.x - a.x * b.z)
+	+	'0 0 1' * (a.x * b.y - a.y * b.x);
 }

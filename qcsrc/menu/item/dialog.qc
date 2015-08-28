@@ -13,20 +13,22 @@
 //
 // a subclass may help with using this as a tab
 
-#ifdef INTERFACE
-CLASS(Dialog) EXTENDS(InputContainer)
-	METHOD(Dialog, configureDialog, void(entity)) // no runtime configuration, all parameters are given in the code!
-	METHOD(Dialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	METHOD(Dialog, keyDown, float(entity, float, float, float))
-	METHOD(Dialog, close, void(entity))
-	METHOD(Dialog, addItemSimple, void(entity, float, float, float, float, entity, vector))
+#ifndef ITEM_DIALOG_H
+#define ITEM_DIALOG_H
+#include "inputcontainer.qc"
+CLASS(Dialog, InputContainer)
+	METHOD(Dialog, configureDialog, void(entity)); // no runtime configuration, all parameters are given in the code!
+	METHOD(Dialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
+	METHOD(Dialog, keyDown, float(entity, float, float, float));
+	METHOD(Dialog, close, void(entity));
+	METHOD(Dialog, addItemSimple, void(entity, float, float, float, float, entity, vector));
 
-	METHOD(Dialog, TD, void(entity, float, float, entity))
-	METHOD(Dialog, TDNoMargin, void(entity, float, float, entity, vector))
-	METHOD(Dialog, TDempty, void(entity, float))
-	METHOD(Dialog, setFirstColumn, void(entity, float))
-	METHOD(Dialog, TR, void(entity))
-	METHOD(Dialog, gotoRC, void(entity, float, float))
+	METHOD(Dialog, TD, void(entity, float, float, entity));
+	METHOD(Dialog, TDNoMargin, void(entity, float, float, entity, vector));
+	METHOD(Dialog, TDempty, void(entity, float));
+	METHOD(Dialog, setFirstColumn, void(entity, float));
+	METHOD(Dialog, TR, void(entity));
+	METHOD(Dialog, gotoRC, void(entity, float, float));
 
 	ATTRIB(Dialog, isTabRoot, float, 1)
 	ATTRIB(Dialog, closeButton, entity, NULL)
@@ -128,12 +130,15 @@ void Dialog_configureDialog(entity me)
 {
 	float absWidth, absHeight;
 
-	me.frame = spawnBorderImage();
-	me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.borderLines * me.titleHeight);
-	me.frame.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
-	me.frame.zoomedOutTitleBar = me.zoomedOutTitleBar;
-	me.frame.alpha = me.alpha;
-	me.addItem(me, me.frame, '0 0 0', '1 1 0', 1);
+	if(me.isTabRoot)
+	{
+		me.frame = NEW(BorderImage);
+		me.frame.configureBorderImage(me.frame, me.title, me.titleFontSize, me.color, me.backgroundImage, me.borderLines * me.titleHeight);
+		me.frame.zoomedOutTitleBarPosition = me.zoomedOutTitleBarPosition;
+		me.frame.zoomedOutTitleBar = me.zoomedOutTitleBar;
+		me.frame.alpha = me.alpha;
+		me.addItem(me, me.frame, '0 0 0', '1 1 0', 1);
+	}
 
 	if (!me.titleFontSize)
 		me.titleHeight = 0; // no title bar
@@ -153,10 +158,10 @@ void Dialog_configureDialog(entity me)
 
 	me.fill(me);
 
-	if(me.closable && me.borderLines > 0)
+	if(me.isTabRoot && me.closable && me.borderLines > 0)
 	{
 		entity closebutton;
-		closebutton = me.closeButton = me.frame.closeButton = spawnButton();
+		closebutton = me.closeButton = me.frame.closeButton = NEW(Button);
 		closebutton.configureButton(closebutton, "", 0, me.closeButtonImage);
 		closebutton.onClick = Dialog_Close; closebutton.onClickEntity = me;
 		closebutton.srcMulti = 0;

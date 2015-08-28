@@ -1,23 +1,19 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/animdecide.qh"
-    #include "../../common/monsters/monsters.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "weaponsystem.qh"
-    #include "../t_items.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../command/common.qh"
-    #include "../../csqcmodellib/sv_model.qh"
-    #include "../round_handler.qh"
-#endif
+#include "weaponsystem.qh"
+#include "../_all.qh"
+
+#include "selection.qh"
+
+#include "../command/common.qh"
+#include "../mutators/mutators_include.qh"
+#include "../round_handler.qh"
+#include "../t_items.qh"
+#include "../../common/animdecide.qh"
+#include "../../common/constants.qh"
+#include "../../common/monsters/all.qh"
+#include "../../common/notifications.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/all.qh"
+#include "../../csqcmodellib/sv_model.qh"
 
 /*
 ===========================================================================
@@ -32,12 +28,20 @@
 
 float W_WeaponRateFactor()
 {
-	float t;
-	t = 1.0 / g_weaponratefactor;
+	float t = 1.0 / g_weaponratefactor;
 
-	weapon_rate = t;
-	MUTATOR_CALLHOOK(WeaponRateFactor);
+	MUTATOR_CALLHOOK(WeaponRateFactor, t);
 	t = weapon_rate;
+
+	return t;
+}
+
+float W_WeaponSpeedFactor()
+{
+	float t = 1.0 * g_weaponspeedfactor;
+
+	MUTATOR_CALLHOOK(WeaponSpeedFactor, t);
+	t = ret_float;
 
 	return t;
 }
@@ -113,12 +117,12 @@ void CL_WeaponEntity_SetModel(string name)
 		// if there is a child entity, hide it until we're sure we use it
 		if (self.weaponentity)
 			self.weaponentity.model = "";
-		setmodel(self, strcat("models/weapons/v_", name, ".md3")); // precision set below
+		setmodel(self, W_Model(strcat("v_", name, ".md3")));
 		v_shot_idx = gettagindex(self, "shot"); // used later
 		if(!v_shot_idx)
 			v_shot_idx = gettagindex(self, "tag_shot");
 
-		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
+		setmodel(self, W_Model(strcat("h_", name, ".iqm")));
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
 		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
@@ -131,14 +135,14 @@ void CL_WeaponEntity_SetModel(string name)
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setmodel(self.weaponentity, W_Model(strcat("v_", name, ".md3")));
 			setattachment(self.weaponentity, self, "weapon");
 		}
 		else if(gettagindex(self, "tag_weapon"))
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setmodel(self.weaponentity, W_Model(strcat("v_", name, ".md3")));
 			setattachment(self.weaponentity, self, "tag_weapon");
 		}
 		else
@@ -375,7 +379,7 @@ void CL_ExteriorWeaponentity_Think()
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
-			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
+			setmodel(self, W_Model(strcat("v_", self.owner.weaponname, ".md3")));
 		else
 			self.model = "";
 
@@ -468,17 +472,17 @@ float weapon_prepareattack_checkammo(float secondary)
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
 		entity mine;
-		if(self.weapon == WEP_MINE_LAYER)
+		if(self.weapon == WEP_MINE_LAYER.m_id)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return false;
 
-		if(self.weapon == WEP_SHOTGUN)
+		if(self.weapon == WEP_SHOTGUN.m_id)
 		if(!secondary && WEP_CVAR(shotgun, secondary) == 1)
 			return false; // no clicking, just allow
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_WEAPON_A, W_Sound("dryfire"), VOL_BASE, ATTEN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -633,7 +637,7 @@ void weapon_thinkf(float fr, float t, void() func)
 
 	if((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		if((self.weapon == WEP_SHOCKWAVE || self.weapon == WEP_SHOTGUN) && fr == WFRAME_FIRE2)
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && fr == WFRAME_FIRE2)
 			animdecide_setaction(self, ANIMACTION_MELEE, restartanim);
 		else
 			animdecide_setaction(self, ANIMACTION_SHOOT, restartanim);
@@ -645,17 +649,17 @@ void weapon_thinkf(float fr, float t, void() func)
 	}
 }
 
-float forbidWeaponUse()
+float forbidWeaponUse(entity player)
 {
 	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
 		return 1;
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return 1;
-	if(self.player_blocked)
+	if(player.player_blocked)
 		return 1;
-	if(self.frozen)
+	if(player.frozen)
 		return 1;
-	if(self.weapon_blocked)
+	if(player.weapon_blocked)
 		return 1;
 	return 0;
 }
@@ -670,7 +674,7 @@ void W_WeaponFrame()
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
-	if(forbidWeaponUse())
+	if(forbidWeaponUse(self))
 	if(self.weaponentity.state != WS_CLEAR)
 	{
 		w_ready();
@@ -736,7 +740,7 @@ void W_WeaponFrame()
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 			#endif
-				sound(self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_SINGLE, W_Sound("weapon_switch"), VOL_BASE, ATTN_NORM);
 				self.weaponentity.state = WS_DROP;
 				weapon_thinkf(WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
 			#ifndef INDEPENDENT_ATTACK_FINISHED
@@ -931,7 +935,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	{
 		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
-			play2(self, "weapons/unavailable.wav");
+			play2(self, W_Sound("unavailable"));
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", WEP_NAME(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}

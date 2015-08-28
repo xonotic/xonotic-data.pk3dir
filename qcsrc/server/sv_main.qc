@@ -1,26 +1,31 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "vehicles/vehicles_def.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/common.qh"
-    #include "../csqcmodellib/sv_model.qh"
-    #include "anticheat.qh"
-    #include "g_hook.qh"
-#endif
+#include "_all.qh"
+
+#include "anticheat.qh"
+#include "g_hook.qh"
+#include "g_world.qh"
+
+#include "bot/bot.qh"
+#include "bot/waypoints.qh"
+
+#include "command/common.qh"
+
+#include "mutators/mutators_include.qh"
+#include "weapons/csqcprojectile.qh"
+
+#include "../common/constants.qh"
+#include "../common/deathtypes.qh"
+#include "../common/mapinfo.qh"
+#include "../common/util.qh"
+
+#include "../common/vehicles/all.qh"
+#include "../common/weapons/all.qh"
+
+#include "../csqcmodellib/sv_model.qh"
+
+#include "../warpzonelib/common.qh"
+#include "../warpzonelib/server.qh"
+
+.float lastground;
 
 void CreatureFrame (void)
 {
@@ -32,9 +37,9 @@ void CreatureFrame (void)
 	{
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 
-		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
+		float vehic = IS_VEHICLE(self);
 		float projectile = (self.flags & FL_PROJECTILE);
-		float monster = (self.flags & FL_MONSTER);
+		float monster = IS_MONSTER(self);
 
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
@@ -135,6 +140,7 @@ void CreatureFrame (void)
 			if (g_footsteps)
 			if (!gameover)
 			if (self.flags & FL_ONGROUND)
+			if (!self.crouch)
 			if (velocity_len > autocvar_sv_maxspeed * 0.6)
 			if (!self.deadflag)
 			if (time < self.lastground + 0.2)

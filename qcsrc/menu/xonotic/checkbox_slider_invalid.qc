@@ -1,8 +1,10 @@
-#ifdef INTERFACE
-CLASS(XonoticSliderCheckBox) EXTENDS(CheckBox)
-	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string))
-	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float))
-	METHOD(XonoticSliderCheckBox, draw, void(entity))
+#ifndef CHECKBOX_SLIDER_INVALID_H
+#define CHECKBOX_SLIDER_INVALID_H
+#include "../item/checkbox.qc"
+CLASS(XonoticSliderCheckBox, CheckBox)
+	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string));
+	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float));
+	METHOD(XonoticSliderCheckBox, draw, void(entity));
 	ATTRIB(XonoticSliderCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticSliderCheckBox, image, string, SKINGFX_CHECKBOX)
 
@@ -26,7 +28,7 @@ entity makeXonoticSliderCheckBox(float, float, entity, string);
 entity makeXonoticSliderCheckBox(float theOffValue, float isInverted, entity theControlledSlider, string theText)
 {
 	entity me;
-	me = spawnXonoticSliderCheckBox();
+	me = NEW(XonoticSliderCheckBox);
 	me.configureXonoticSliderCheckBox(me, theOffValue, isInverted, theControlledSlider, theText);
 	return me;
 }

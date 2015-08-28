@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ VORTEX,
 /* function  */ W_Vortex,
@@ -53,10 +53,13 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+
+.float vortex_lasthit;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX); }
+void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX.m_id); }
 void spawnfunc_weapon_nex(void) { spawnfunc_weapon_vortex(); }
 
 void SendCSQCVortexBeamParticle(float charge) {
@@ -100,17 +103,25 @@ void W_Vortex_Attack(float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(self, true, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
+	W_SetupShot(self, true, 5, W_Sound("nexfire"), CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
-		sound(self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
+		sound(self, CH_WEAPON_B, W_Sound("nexcharge"), VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
-	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX);
+	damage_goodhits = 0;
+	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX.m_id);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && self.vortex_lasthit)
+	{
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
+	}
+
+	self.vortex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
@@ -121,7 +132,7 @@ void W_Vortex_Attack(float issecondary)
 void spawnfunc_weapon_vortex(void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	float dt;
 	float ammo_amount;
@@ -204,7 +215,7 @@ float W_Vortex(float req)
 											{
 												self.clip_load = max(WEP_CVAR_SEC(vortex, ammo), self.clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
 											}
-											self.(weapon_load[WEP_VORTEX]) = self.clip_load;
+											self.(weapon_load[WEP_VORTEX.m_id]) = self.clip_load;
 										}
 										else
 										{
@@ -243,21 +254,26 @@ float W_Vortex(float req)
 		case WR_INIT:
 		{
 			precache_model("models/nexflash.md3");
-			precache_model("models/weapons/g_nex.md3");
-			precache_model("models/weapons/v_nex.md3");
-			precache_model("models/weapons/h_nex.iqm");
-			precache_sound("weapons/nexfire.wav");
-			precache_sound("weapons/nexcharge.wav");
-			precache_sound("weapons/nexwhoosh1.wav");
-			precache_sound("weapons/nexwhoosh2.wav");
-			precache_sound("weapons/nexwhoosh3.wav");
+			precache_model(W_Model("g_nex.md3"));
+			precache_model(W_Model("v_nex.md3"));
+			precache_model(W_Model("h_nex.iqm"));
+			precache_sound(W_Sound("nexfire"));
+			precache_sound(W_Sound("nexcharge"));
+			precache_sound(W_Sound("nexwhoosh1"));
+			precache_sound(W_Sound("nexwhoosh2"));
+			precache_sound(W_Sound("nexwhoosh3"));
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
+			return true;
+		}
+		case WR_SETUP:
+		{
+			self.vortex_lasthit = 0;
 			return true;
 		}
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_PRI(vortex, ammo);
-			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX]) >= WEP_CVAR_PRI(vortex, ammo));
+			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -266,7 +282,7 @@ float W_Vortex(float req)
 			{
 				// don't allow charging if we don't have enough ammo
 				ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_SEC(vortex, ammo);
-				ammo_amount += self.(weapon_load[WEP_VORTEX]) >= WEP_CVAR_SEC(vortex, ammo);
+				ammo_amount += self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
 				return ammo_amount;
 			}
 			else
@@ -279,9 +295,14 @@ float W_Vortex(float req)
 			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
+		case WR_RESETPLAYER:
+		{
+			self.vortex_lasthit = 0;
+			return true;
+		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -298,7 +319,7 @@ float W_Vortex(float req)
 #endif
 #ifdef CSQC
 float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
-float W_Vortex(float req)
+bool W_Vortex(int req)
 {
 	switch(req)
 	{
@@ -308,13 +329,13 @@ float W_Vortex(float req)
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/neximpact.wav");
+			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

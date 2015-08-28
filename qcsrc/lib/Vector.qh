@@ -1,0 +1,34 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
+const vector eX = '1 0 0';
+const vector eY = '0 1 0';
+const vector eZ = '0 0 1';
+
+vector randompos(vector m1, vector m2)
+{
+	vector v;
+	m2 = m2 - m1;
+	v_x = m2_x * random() + m1_x;
+	v_y = m2_y * random() + m1_y;
+	v_z = m2_z * random() + m1_z;
+	return	v;
+}
+
+float vlen2d(vector v)
+{
+	return sqrt(v.x * v.x + v.y * v.y);
+}
+
+float vlen_maxnorm2d(vector v)
+{
+	return max(v.x, v.y, -v.x, -v.y);
+}
+
+float vlen_minnorm2d(vector v)
+{
+	return min(max(v.x, -v.x), max(v.y, -v.y));
+}
+
+
+#endif

@@ -1,5 +1,27 @@
+#include "command.qh"
 #include "generic.qh"
-#include "shared_defs.qh"
+
+#include "markup.qh"
+#include "rpn.qh"
+
+#include "../mapinfo.qh"
+
+#ifndef MENUQC
+	#include "../notifications.qh"
+#endif
+
+#ifdef CSQC
+	#include "../../client/command/cl_cmd.qh"
+#endif
+
+#ifdef SVQC
+	#include "../../server/command/banning.qh"
+	#include "../../server/command/cmd.qh"
+	#include "../../server/command/common.qh"
+	#include "../../server/command/sv_cmd.qh"
+	#include "../../common/turrets/config.qh"
+	#include "../../common/weapons/config.qh"
+#endif
 
 // =========================================================
 //  Generic program common command code, written by Samual
@@ -218,6 +240,25 @@ void GenericCommand_dumpcommands(float request)
 	}
 }
 
+void GenericCommand_dumpitems(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			Dump_Items();
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			printf("\nUsage:^3 %s dumpitems", GetProgramCommandPrefix());
+			return;
+		}
+	}
+}
+
 void GenericCommand_dumpnotifs(float request)
 {
 	switch(request)
@@ -314,6 +355,59 @@ void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work wit
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
 			print("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
+			print("  if supplied with '-' output to console as well as default,\n");
+			print("  if left blank, it will only write to default.\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_dumpturrets(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifdef SVQC
+			tur_config_file = -1;
+			tur_config_alsoprint = -1;
+			string filename = argv(1);
+
+			if(filename == "")
+			{
+				filename = "turrets_dump.cfg";
+				tur_config_alsoprint = FALSE;
+			}
+			else if(filename == "-")
+			{
+				filename = "turrets_dump.cfg";
+				tur_config_alsoprint = TRUE;
+			}
+			tur_config_file = fopen(filename, FILE_WRITE);
+
+			if(tur_config_file >= 0)
+			{
+				Dump_Turret_Settings();
+				print(sprintf("Dumping turrets... File located in ^2data/data/%s^7.\n", filename));
+				fclose(tur_config_file);
+				tur_config_file = -1;
+				tur_config_alsoprint = -1;
+			}
+			else
+			{
+				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+			}
+			#else
+			print(_("Turrets dump command only works with sv_cmd.\n"));
+			#endif
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpturrets [filename]"));
+			print("  Where 'filename' is the file to write (default is turrets_dump.cfg),\n");
 			print("  if supplied with '-' output to console as well as default,\n");
 			print("  if left blank, it will only write to default.\n");
 			return;
@@ -628,7 +722,9 @@ void GenericCommand_(float request)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
+	GENERIC_COMMAND("dumpitems", GenericCommand_dumpitems(request), "Dump all items to the console") \
 	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
+	GENERIC_COMMAND("dumpturrets", GenericCommand_dumpturrets(request), "Dump all turrets into turrets_dump.txt") \
 	GENERIC_COMMAND("dumpweapons", GenericCommand_dumpweapons(request), "Dump all weapons into weapons_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \

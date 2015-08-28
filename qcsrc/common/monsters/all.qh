@@ -1,11 +1,55 @@
-// TODO: include once
-//#ifndef MONSTERS_ALL_H
-//#define MONSTERS_ALL_H
+#ifndef MONSTERS_ALL_H
+#define MONSTERS_ALL_H
 
-#include "monster/zombie.qc"
-#include "monster/spider.qc"
-#include "monster/mage.qc"
-#include "monster/wyvern.qc"
-#include "monster/shambler.qc"
+void RegisterMonsters();
+const int MON_MAXCOUNT = 24;
+entity monster_info[MON_MAXCOUNT], monster_info_first, monster_info_last;
+entity get_monsterinfo(float id);
+int MON_COUNT;
+const int MON_FIRST = 1;
+#define MON_LAST (MON_FIRST + MON_COUNT - 1)
+/** If you register a new monster, make sure to add it to all.inc */
+#define REGISTER_MONSTER(id, class) REGISTER(RegisterMonsters, MON, monster_info, MON_COUNT, id, monsterid, NEW(class))
+#include "monster.qh"
+#define REGISTER_MONSTER_SIMPLE(id, monsterflags, min_s, max_s, modelname, shortname, mname) \
+    REGISTER_MONSTER(id, Monster) {                                     \
+        this.netname = shortname;                                       \
+        this.monster_name = mname;                                      \
+        this.mdl = modelname;                                           \
+        this.spawnflags = monsterflags;                                 \
+        this.mins = min_s;                                              \
+        this.maxs = max_s;                                              \
+        this.model = strzone(strcat("models/monsters/", modelname));    \
+    }                                                                   \
+    REGISTER_INIT(MON, id)
+REGISTER_REGISTRY(RegisterMonsters)
 
-//#endif
+#include "../util.qh"
+
+// monster requests
+const int MR_SETUP = 1; // (SERVER) setup monster data
+const int MR_THINK = 2; // (SERVER) logic to run every frame
+const int MR_DEATH = 3; // (SERVER) called when monster dies
+const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
+
+// special spawn flags
+const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
+const int MONSTER_TYPE_FLY = 32;
+const int MONSTER_TYPE_SWIM = 64;
+const int MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are replaced
+const int MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
+const int MON_FLAG_RANGED = 512; // monster shoots projectiles
+const int MON_FLAG_MELEE = 1024;
+
+// entity properties of monsterinfo:
+.string netname; // short name
+.string mdl; // currently a copy of the model
+.string model; // full name of model
+.int spawnflags;
+.vector mins, maxs; // monster hitbox size
+
+// other useful macros
+#define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
+#define M_NAME(monstertype) (get_monsterinfo(monstertype)).monster_name
+
+#endif

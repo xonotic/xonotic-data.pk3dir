@@ -1,13 +1,15 @@
-#ifdef INTERFACE
-CLASS(XonoticWeaponarenaCheckBox) EXTENDS(CheckBox)
-	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string))
-	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float))
+#ifndef WEAPONARENACHECKBOX_H
+#define WEAPONARENACHECKBOX_H
+#include "../item/checkbox.qc"
+CLASS(XonoticWeaponarenaCheckBox, CheckBox)
+	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string));
+	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float));
 	ATTRIB(XonoticWeaponarenaCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticWeaponarenaCheckBox, image, string, SKINGFX_CHECKBOX)
 	ATTRIB(XonoticWeaponarenaCheckBox, netname, string, string_null)
 
-	METHOD(XonoticWeaponarenaCheckBox, loadCvars, void(entity))
-	METHOD(XonoticWeaponarenaCheckBox, saveCvars, void(entity))
+	METHOD(XonoticWeaponarenaCheckBox, loadCvars, void(entity));
+	METHOD(XonoticWeaponarenaCheckBox, saveCvars, void(entity));
 ENDCLASS(XonoticWeaponarenaCheckBox)
 entity makeXonoticWeaponarenaCheckBox(string, string);
 #endif
@@ -16,7 +18,7 @@ entity makeXonoticWeaponarenaCheckBox(string, string);
 entity makeXonoticWeaponarenaCheckBox(string theWeapon, string theText)
 {
 	entity me;
-	me = spawnXonoticWeaponarenaCheckBox();
+	me = NEW(XonoticWeaponarenaCheckBox);
 	me.configureXonoticWeaponarenaCheckBox(me, theWeapon, theText);
 	return me;
 }

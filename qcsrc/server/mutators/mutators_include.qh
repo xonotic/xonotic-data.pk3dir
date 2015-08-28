@@ -1,7 +1,7 @@
 #ifndef MUTATORS_INCLUDE_H
 #define MUTATORS_INCLUDE_H
 
-#include "base.qh"
+#include "../../common/mutators/base.qh"
 #include "mutators.qh"
 #include "gamemode_assault.qh"
 #include "gamemode_ca.qh"
@@ -14,6 +14,7 @@
 #include "gamemode_invasion.qh"
 #include "gamemode_race.qh"
 #include "gamemode_cts.qh"
+#include "gamemode_onslaught.qh"
 
 #include "mutator_dodging.qh"
 #include "mutator_overkill.qh"

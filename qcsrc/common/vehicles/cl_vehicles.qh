@@ -1,0 +1,13 @@
+#ifndef CL_VEHICLES_H
+#define CL_VEHICLES_H
+
+void Net_AuXair2(float bIsNew);
+
+void Net_VehicleSetup();
+
+void RaptorCBShellfragDraw();
+void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
+
+#define weapon2mode getstati(STAT_VEHICLESTAT_W2MODE)
+
+#endif

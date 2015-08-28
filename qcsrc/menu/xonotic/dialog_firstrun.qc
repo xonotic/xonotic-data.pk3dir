@@ -1,6 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticFirstRunDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticFirstRunDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
+#ifndef DIALOG_FIRSTRUN_H
+#define DIALOG_FIRSTRUN_H
+#include "rootdialog.qc"
+CLASS(XonoticFirstRunDialog, XonoticRootDialog)
+	METHOD(XonoticFirstRunDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
 	ATTRIB(XonoticFirstRunDialog, title, string, _("Welcome"))
 	ATTRIB(XonoticFirstRunDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN)
 	ATTRIB(XonoticFirstRunDialog, intendedWidth, float, 0.7)
@@ -59,7 +61,8 @@ void XonoticFirstRunDialog_fill(entity me)
 		me.TD(me, 1, 3.75, box = makeXonoticInputBox(1, "_cl_name"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 1;
+			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
+			box.enableClearButton = 0;
 			label.textEntity = box;
 	me.TR(me);
 		me.TD(me, 5, 1.25, e = makeXonoticColorpicker(box));

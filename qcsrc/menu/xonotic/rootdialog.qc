@@ -1,5 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticRootDialog) EXTENDS(XonoticDialog)
+#ifndef ROOTDIALOG_H
+#define ROOTDIALOG_H
+#include "dialog.qc"
+CLASS(XonoticRootDialog, XonoticDialog)
 	// still to be customized by user
 	/*
 	ATTRIB(XonoticDialog, closable, float, 1)
@@ -9,7 +11,7 @@ CLASS(XonoticRootDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticDialog, rows, float, 3)
 	ATTRIB(XonoticDialog, columns, float, 2)
 	*/
-	METHOD(XonoticRootDialog, close, void(entity))
+	METHOD(XonoticRootDialog, close, void(entity));
 ENDCLASS(XonoticRootDialog)
 #endif
 

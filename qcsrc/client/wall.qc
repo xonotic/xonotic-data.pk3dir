@@ -1,4 +1,55 @@
 #include "wall.qh"
+#include "_all.qh"
+
+#include "bgmscript.qh"
+
+#include "../common/util.qh"
+
+#include "../csqcmodellib/interpolate.qh"
+
+.float alpha;
+.float scale;
+.vector movedir;
+
+void Ent_Wall_PreDraw()
+{
+	if (self.inactive)
+	{
+		self.alpha = 0;
+	}
+	else
+	{
+		vector org = getpropertyvec(VF_ORIGIN);
+		if(!checkpvs(org, self))
+			self.alpha = 0;
+		else if(self.fade_start || self.fade_end) {
+			vector offset = '0 0 0';
+			offset_z = self.fade_vertical_offset;
+			float player_dist = vlen(org - self.origin - 0.5 * (self.mins + self.maxs) + offset);
+			if (self.fade_end == self.fade_start)
+			{
+				if (player_dist >= self.fade_start)
+					self.alpha = 0;
+				else
+					self.alpha = 1;
+			}
+			else
+			{
+				self.alpha = (self.alpha_min + self.alpha_max * bound(0,
+							   (self.fade_end - player_dist)
+							   / (self.fade_end - self.fade_start), 1)) / 100.0;
+			}
+		}
+		else
+		{
+			self.alpha = 1;
+		}
+	}
+	if(self.alpha <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
+}
 
 void Ent_Wall_Draw()
 {
@@ -9,7 +60,7 @@ void Ent_Wall_Draw()
 		fld = angles;
 	else
 		fld = origin;
-	self.fld = self.saved;
+	self.(fld) = self.saved;
 
 	if(self.lodmodelindex1)
 	{
@@ -38,16 +89,16 @@ void Ent_Wall_Draw()
 
 	InterpolateOrigin_Do();
 
-	self.saved = self.fld;
+	self.saved = self.(fld);
 
-	f = BGMScript(self);
+	f = doBGMScript(self);
 	if(f >= 0)
 	{
 		if(self.lip < 0) // < 0: alpha goes from 1 to 1-|lip| when toggled (toggling subtracts lip)
 			self.alpha = 1 + self.lip * f;
 		else // > 0: alpha goes from 1-|lip| to 1 when toggled (toggling adds lip)
 			self.alpha = 1 - self.lip * (1 - f);
-		self.fld = self.fld + self.movedir * f;
+		self.(fld) = self.(fld) + self.movedir * f;
 	}
 	else
 		self.alpha = 1;
@@ -77,7 +128,7 @@ void Ent_Wall()
 		fld = angles;
 	else
 		fld = origin;
-	self.fld = self.saved;
+	self.(fld) = self.saved;
 
 	f = ReadByte();
 
@@ -164,13 +215,20 @@ void Ent_Wall()
 			self.movedir_z = ReadCoord();
 			self.lip = ReadByte() / 255.0;
 		}
+		self.fade_start = ReadShort();
+		self.fade_end = ReadShort();
+		self.alpha_max = ReadShort();
+		self.alpha_min = ReadShort();
+		self.inactive = ReadShort();
+		self.fade_vertical_offset = ReadShort();
 		BGMScript_InitEntity(self);
 	}
 
 	InterpolateOrigin_Note();
 
-	self.saved = self.fld;
+	self.saved = self.(fld);
 
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;
+	self.predraw = Ent_Wall_PreDraw;
 }

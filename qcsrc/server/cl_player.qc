@@ -1,9 +1,28 @@
 #include "cl_player.qh"
-#include "g_triggers.qh"
+#include "_all.qh"
+
+#include "bot/bot.qh"
+#include "cheats.qh"
+#include "g_damage.qh"
+#include "g_subs.qh"
 #include "g_violence.qh"
 #include "miscfunctions.qh"
+#include "portals.qh"
+#include "teamplay.qh"
+#include "weapons/throwing.qh"
+#include "command/common.qh"
+#include "../common/animdecide.qh"
+#include "../common/csqcmodel_settings.qh"
+#include "../common/deathtypes.qh"
+#include "../common/triggers/subs.qh"
+#include "../common/playerstats.qh"
+#include "../csqcmodellib/sv_model.qh"
+
+#include "../common/minigames/sv_minigames.qh"
 
 #include "weapons/weaponstats.qh"
+
+#include "../common/animdecide.qh"
 
 void CopyBody_Think(void)
 {
@@ -147,7 +166,7 @@ void player_anim (void)
 	}
 }
 
-void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	float take, save;
 	vector v;
@@ -304,7 +323,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
+	if(DEATH_ISWEAPON(deathtype, WEP_TUBA.m_id))
 	{
 		// tuba causes blood to come out of the ears
 		vector ear1, ear2;
@@ -367,14 +386,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		self.istypefrag = 0;
 	}
 
-	frag_inflictor = inflictor;
-	frag_attacker = attacker;
-	frag_target = self;
 	frag_damage = damage;
-	damage_take = take;
-	damage_save = save;
-	damage_force = force;
-	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor);
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, self, force, take, save);
 	take = bound(0, damage_take, self.health);
 	save = bound(0, damage_save, self.armorvalue);
 	excess = max(0, damage - take - save);
@@ -480,6 +493,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		dh = dh - max(self.health, 0);
 		da = da - max(self.armorvalue, 0);
 		WeaponStats_LogDamage(awep, abot, self.weapon, vbot, dh + da);
+		MUTATOR_CALLHOOK(PlayerDamaged, attacker, self, dh, da, hitloc);
 	}
 
 	if (self.health < 1)
@@ -517,7 +531,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			if(deathtype == DEATH_KILL)
 			{
 				// for the lemmings fans, a small harmless explosion
-				pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+				Send_Effect("rocket_explode", self.origin, '0 0 0', 1);
 			}
 		}
 
@@ -531,11 +545,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
-		frag_attacker = attacker;
-		frag_inflictor = inflictor;
-		frag_target = self;
-		frag_deathtype = deathtype;
-		MUTATOR_CALLHOOK(PlayerDies);
+		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 
 		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 
@@ -767,9 +777,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 				flood = 2;
 			}
 
-			if(time >= source.flood_field)
+			if (time >= source.(flood_field))
 			{
-				source.flood_field = max(time - flood_burst * flood_spl, source.flood_field) + lines * flood_spl;
+				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + lines * flood_spl;
 			}
 			else
 			{
@@ -779,14 +789,14 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else
 		{
-			if(time >= source.flood_field)
-				source.flood_field = max(time - flood_burst * flood_spl, source.flood_field) + flood_spl;
+			if (time >= source.(flood_field))
+				source.(flood_field) = max(time - flood_burst * flood_spl, source.(flood_field)) + flood_spl;
 			else
 				flood = 1;
 		}
 
 		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
-			source.flood_field = flood = 0;
+			source.(flood_field) = flood = 0;
 	}
 
 	if(flood == 2) // cannot happen for empty msgstr
@@ -831,9 +841,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 	else if(flood == 1)
 	{
-		if(autocvar_g_chat_flood_notify_flooder)
+		if (autocvar_g_chat_flood_notify_flooder)
 		{
-			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.flood_field - time), "^3 seconds\n"));
+			sprint(source, strcat("^3FLOOD CONTROL: ^7wait ^1", ftos(source.(flood_field) - time), "^3 seconds\n"));
 			ret = 0;
 		}
 		else
@@ -859,6 +869,15 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
+		}
+		else if ( teamsay && source.active_minigame )
+		{
+			sprint(source, sourcemsgstr);
+			dedicated_print(msgstr); // send to server console too
+			FOR_EACH_REALCLIENT(head) 
+				if(head != source)
+				if(head.active_minigame == source.active_minigame)
+					sprint(head, msgstr);
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -1003,9 +1022,9 @@ float LoadPlayerSounds(string f, float first)
 			field = GetVoiceMessageSampleField(argv(0));
 		if(GetPlayerSoundSampleField_notFound)
 			continue;
-		if(self.field)
-			strunzone(self.field);
-		self.field = strzone(strcat(argv(1), " ", argv(2)));
+		if (self.(field))
+			strunzone(self.(field));
+		self.(field) = strzone(strcat(argv(1), " ", argv(2)));
 	}
 	fclose(fh);
 	return 1;
@@ -1200,7 +1219,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 
 void PlayerSound(.string samplefield, float chan, float voicetype)
 {
-	GlobalSound(self.samplefield, chan, voicetype);
+	GlobalSound(self.(samplefield), chan, voicetype);
 }
 
 void VoiceMessage(string type, string msg)
@@ -1221,10 +1240,10 @@ void VoiceMessage(string type, string msg)
 
 	flood = Say(self, ownteam, world, msg, 1);
 
-	if(IS_SPEC(self) || IS_OBSERVER(self) || flood < 0)
-		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
+	if (IS_SPEC(self) || IS_OBSERVER(self) || flood < 0)
+		FakeGlobalSound(self.(sample), CH_VOICE, voicetype);
 	else if (flood > 0)
-		GlobalSound(self.sample, CH_VOICE, voicetype);
+		GlobalSound(self.(sample), CH_VOICE, voicetype);
 }
 
 void MoveToTeam(entity client, float team_colour, float type)

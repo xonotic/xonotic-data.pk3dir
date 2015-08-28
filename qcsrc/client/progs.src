@@ -2,72 +2,78 @@
 
 ../common/util-pre.qh
 ../dpdefs/csprogsdefs.qh
+../common/util-post.qh
+
+../lib/_all.inc
 
 announcer.qc
 bgmscript.qc
-casings.qc
+controlpoint.qc
 csqcmodel_hooks.qc
 damage.qc
 effects.qc
+generator.qc
 gibs.qc
 hook.qc
-hud_config.qc
 hud.qc
-laser.qc
+hud_config.qc
 main.qc
 mapvoting.qc
 miscfunctions.qc
 modeleffects.qc
-movetypes.qc
-noise.qc
+movelib.qc
 particles.qc
 player_skeleton.qc
-prandom.qc
 rubble.qc
 scoreboard.qc
 shownames.qc
-sortlist.qc
-target_music.qc
 teamradar.qc
-tturrets.qc
 tuba.qc
-vehicles/vehicles.qc
+t_items.qc
 view.qc
 wall.qc
-waypointsprites.qc
 
-command/cl_cmd.qc
+command/all.qc
 
 weapons/projectile.qc // TODO
 
 ../common/animdecide.qc
 ../common/buffs.qc
+../common/effects.qc
 ../common/mapinfo.qc
+../common/movetypes/include.qc
 ../common/nades.qc
 ../common/net_notice.qc
 ../common/notifications.qc
+../common/physics.qc
 ../common/playerstats.qc
-../common/test.qc
-../common/urllib.qc
 ../common/util.qc
 
-../common/command/generic.qc
-../common/command/markup.qc
-../common/command/rpn.qc
+../common/viewloc.qc
 
-../common/monsters/monsters.qc
+../common/minigames/minigames.qc
+../common/minigames/cl_minigames.qc
 
-../common/weapons/weapons.qc // TODO
+../common/items/all.qc
+../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
+../common/weapons/all.qc
+
+../common/turrets/cl_turrets.qc
+../common/turrets/turrets.qc
+
+../common/triggers/include.qc
 
 ../csqcmodellib/cl_model.qc
 ../csqcmodellib/cl_player.qc
 ../csqcmodellib/interpolate.qc
 
-../server/movelib.qc
-../server/t_items.qc
-../server/vehicles/bumblebee.qc
+../server/mutators/mutator_multijump.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc
 ../warpzonelib/common.qc
-../warpzonelib/mathlib.qc
+../warpzonelib/util_server.qc
+
+../../mod/client/progs.inc

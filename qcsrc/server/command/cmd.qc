@@ -1,31 +1,38 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/common.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/teams.qh"
-    #include "../../common/util.qh"
-    #include "../../common/command/shared_defs.qh"
-    #include "../../common/monsters/monsters.qh"
-    #include "../../common/monsters/sv_monsters.qh"
-    #include "../../common/monsters/spawn.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../../common/deathtypes.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../vehicles/vehicles_def.qh"
-    #include "../campaign.qh"
-    #include "../../common/mapinfo.qh"
-    #include "common.qh"
-    #include "vote.qh"
-    #include "cmd.qh"
-    #include "../cheats.qh"
-    #include "../scores.qh"
-    #include "../ipban.qh"
+#include "../../common/command/command.qh"
+#include "cmd.qh"
+#include "../_all.qh"
+
+#include "common.qh"
+#include "vote.qh"
+
+#include "../campaign.qh"
+#include "../cheats.qh"
+#include "../cl_player.qh"
+#include "../ipban.qh"
+#include "../mapvoting.qh"
+#include "../scores.qh"
+#include "../teamplay.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#ifdef SVQC
+	#include "../../common/vehicles/all.qh"
 #endif
+
+#include "../../common/constants.qh"
+#include "../../common/deathtypes.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/monsters/all.qc"
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
+
+#include "../../warpzonelib/common.qh"
+
+void ClientKill_TeamChange (float targetteam); // 0 = don't change, -1 = auto, -2 = spec
 
 // =========================================================
 //  Server side networked commands code, reworked by Samual
@@ -225,14 +232,14 @@ void ClientCommand_mobedit(float request, float argc)
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 
 				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); return; }
-				if(trace_ent.flags & FL_MONSTER)
+				if(IS_MONSTER(trace_ent))
 				{
 					if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
 					switch(argv(1))
 					{
 						case "skin":
 						{
-							if(trace_ent.monsterid != MON_MAGE)
+							if(trace_ent.monsterid != MON_MAGE.monsterid)
 								trace_ent.skin = stof(argv(2));
 							return;
 						}
@@ -266,7 +273,7 @@ void ClientCommand_mobkill(float request)
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 
-			if(trace_ent.flags & FL_MONSTER)
+			if(IS_MONSTER(trace_ent))
 			{
 				if(trace_ent.realowner != self)
 				{
@@ -365,6 +372,46 @@ void ClientCommand_mobspawn(float request, float argc)
 			sprint(self, "  See 'cmd mobspawn list' for available monsters.\n");
 			sprint(self, "  Argument 'random' spawns a random monster.\n");
 			sprint(self, "  Monster will follow the owner if second argument is not defined.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_physics(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string command = strtolower(argv(1));
+
+			if(!autocvar_g_physics_clientselect)
+			{
+				sprint(self, "Client physics selection is currently disabled.\n");
+				return;
+			}
+
+			if(command == "list" || command == "help")
+			{
+				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
+				return;
+			}
+
+			if(Physics_Valid(command) || command == "default")
+			{
+				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
+				sprint(self, strcat("^2Physics set successfully changed to ^3", command, "\n"));
+				return;
+			}
+		}
+
+		default:
+			sprint(self, strcat("Current physics set: ^3", self.cvar_cl_physics, "\n"));
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd physics <physics>\n");
+			sprint(self, "  See 'cmd physics list' for available physics sets.\n");
+			sprint(self, "  Argument 'default' resets to standard physics.\n");
 			return;
 		}
 	}
@@ -762,6 +809,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
 	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \
 	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
+	CLIENT_COMMAND("physics", ClientCommand_physics(request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
@@ -772,6 +820,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
+	CLIENT_COMMAND("minigame", ClientCommand_minigame(request, arguments, command), "Start a minigame") \
 	/* nothing */
 
 void ClientCommand_macro_help()
@@ -825,16 +874,20 @@ void ClientCommand_macro_write_aliases(float fh)
 
 void SV_ParseClientCommand(string command)
 {
+	// If invalid UTF-8, don't even parse it
+	string command2 = "";
+	float len = strlen(command);
+	float i;
+	for (i = 0; i < len; ++i)
+		command2 = strcat(command2, chr2str(str2chr(command, i)));
+	if (command != command2)
+		return;
+
 	// if we're banned, don't even parse the command
 	if(Ban_MaybeEnforceBanOnce(self))
 		return;
 
 	float argc = tokenize_console(command);
-
-	// for the mutator hook system
-	cmd_name = strtolower(argv(0));
-	cmd_argc = argc;
-	cmd_string = command;
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
@@ -884,7 +937,7 @@ void SV_ParseClientCommand(string command)
 			return;
 		}
 	}
-	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
+	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand, strtolower(argv(0)), argc, command))
 	{
 		return; // handled by a mutator
 	}

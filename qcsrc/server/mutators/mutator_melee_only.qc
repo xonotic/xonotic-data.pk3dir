@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 MUTATOR_HOOKFUNCTION(melee_SetStartItems)
 {
 	start_ammo_shells = warmup_start_ammo_shells = 0;
@@ -15,8 +19,8 @@ MUTATOR_HOOKFUNCTION(melee_FilterItem)
 {
 	switch (self.items)
 	{
-		case IT_5HP:
-		case IT_ARMOR_SHARD:
+		case ITEM_HealthSmall.m_itemid:
+		case ITEM_ArmorSmall.m_itemid:
 			return false;
 	}
 

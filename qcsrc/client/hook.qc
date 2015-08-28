@@ -1,39 +1,20 @@
+#include "hook.qh"
+#include "_all.qh"
+
 #include "hud.qh"
-#include "noise.qh"
+
+#include "../common/teams.qh"
+
+#include "../csqcmodellib/interpolate.qh"
+
 #include "../warpzonelib/common.qh"
 
-.float HookType; // ENT_CLIENT_*
-.vector origin;
-.vector velocity;
-.float HookSilent;
-.float HookRange;
-
-void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
-{
-	// I want to draw a quad...
-	// from and to are MIDPOINTS.
-
-	vector axis, thickdir, A, B, C, D;
-	float length_tex;
-
-	axis = normalize(to - from);
-	length_tex = aspect * vlen(to - from) / thickness;
-
-	// direction is perpendicular to the view normal, and perpendicular to the axis
-	thickdir = normalize(cross(axis, vieworg - from));
-
-	A = from - thickdir * (thickness / 2);
-	B = from + thickdir * (thickness / 2);
-	C = to + thickdir * (thickness / 2);
-	D = to - thickdir * (thickness / 2);
-
-	R_BeginPolygon(texture, drawflag);
-	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
-	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, theAlpha);
-	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
-	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
-	R_EndPolygon();
-}
+entityclass(Hook);
+class(Hook) .float HookType; // ENT_CLIENT_*
+class(Hook) .vector origin;
+class(Hook) .vector velocity;
+class(Hook) .float HookSilent;
+class(Hook) .float HookRange;
 
 string Draw_GrapplingHook_trace_callback_tex;
 float Draw_GrapplingHook_trace_callback_rnd;
@@ -49,7 +30,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 	Draw_GrapplingHook_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
 }
 
-.float teleport_time;
+class(Hook) .float teleport_time;
 void Draw_GrapplingHook()
 {
 	vector a, b, atrans;
@@ -247,7 +228,7 @@ void Ent_ReadHook(float bIsNew, float type)
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_ARC_BEAM:
-				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
+				sound (self, CH_SHOTS_SINGLE, W_Sound("lgbeam_fly"), VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}
@@ -257,7 +238,7 @@ void Ent_ReadHook(float bIsNew, float type)
 
 void Hook_Precache()
 {
-	precache_sound("weapons/lgbeam_fly.wav");
+	precache_sound(W_Sound("lgbeam_fly"));
 	precache_model("models/hook.md3");
 }
 

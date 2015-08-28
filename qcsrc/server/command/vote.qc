@@ -1,24 +1,22 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/command/shared_defs.qh"
-    #include "../autocvars.qh"
-    #include "../constants.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../../common/mapinfo.qh"
-    #include "common.qh"
-    #include "vote.qh"
-    #include "../../common/playerstats.qh"
-    #include "../scores.qh"
-    #include "../race.qh"
-    #include "../round_handler.qh"
-#endif
+#include "../../common/command/command.qh"
+#include "vote.qh"
+#include "../_all.qh"
+
+#include "common.qh"
+
+#include "../g_damage.qh"
+#include "../g_world.qh"
+#include "../race.qh"
+#include "../round_handler.qh"
+#include "../scores.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/notifications.qh"
+#include "../../common/playerstats.qh"
+#include "../../common/util.qh"
 
 // =============================================
 //  Server side voting code, reworked by Samual
@@ -117,6 +115,13 @@ void Nagger_ReadyCounted()
 		nagger.SendFlags |= 1;
 }
 
+// If the vote_caller is still here, return their name, otherwise vote_caller_name
+string OriginalCallerName()
+{
+	if (IS_REAL_CLIENT(vote_caller))
+		return vote_caller.netname;
+	return vote_caller_name;
+}
 
 // =======================
 //  Game logic for voting
@@ -132,10 +137,12 @@ void VoteReset()
 	{
 		strunzone(vote_called_command);
 		strunzone(vote_called_display);
+		strunzone(vote_caller_name);
 	}
 
 	vote_called = VOTE_NULL;
 	vote_caller = world;
+	vote_caller_name = string_null;
 	vote_endtime = 0;
 
 	vote_called_command = string_null;
@@ -149,7 +156,7 @@ void VoteReset()
 
 void VoteStop(entity stopper)
 {
-	bprint("\{1}^2* ^3", GetCallerName(stopper), "^2 stopped ^3", GetCallerName(vote_caller), "^2's vote\n");
+	bprint("\{1}^2* ^3", GetCallerName(stopper), "^2 stopped ^3", OriginalCallerName(), "^2's vote\n");
 	if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vstop:", ftos(stopper.playerid))); }
 
 	// Don't force them to wait for next vote, this way they can e.g. correct their vote.
@@ -160,7 +167,7 @@ void VoteStop(entity stopper)
 
 void VoteAccept()
 {
-	bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2's vote for ^1", vote_called_display, "^2 was accepted\n");
+	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ^1", vote_called_display, "^2 was accepted\n");
 
 	if((vote_called == VOTE_MASTER) && vote_caller)
 		vote_caller.vote_master = 1;
@@ -175,14 +182,14 @@ void VoteAccept()
 
 void VoteReject()
 {
-	bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2's vote for ", vote_called_display, "^2 was rejected\n");
+	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ", vote_called_display, "^2 was rejected\n");
 	VoteReset();
 	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteTimeout()
 {
-	bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2's vote for ", vote_called_display, "^2 timed out\n");
+	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ", vote_called_display, "^2 timed out\n");
 	VoteReset();
 	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
@@ -235,7 +242,7 @@ void VoteCount(float first_count)
 		switch(tmp_player.vote_selection)
 		{
 			case VOTE_SELECT_REJECT: { ++vote_reject_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
-			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(IS_PLAYER(tmp_player)) ++vote_real_accept_count; } break; }
 			case VOTE_SELECT_ABSTAIN: { ++vote_abstain_count; { if(IS_PLAYER(tmp_player)) ++vote_real_abstain_count; } break; }
 			default: break;
 		}
@@ -823,6 +830,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			else // everything went okay, continue with calling the vote
 			{
 				vote_caller = caller; // remember who called the vote
+				vote_caller_name = strzone(GetCallerName(vote_caller));
 				vote_called = VOTE_NORMAL;
 				vote_called_command = strzone(vote_parsed_command);
 				vote_called_display = strzone(vote_parsed_display);
@@ -838,7 +846,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				FOR_EACH_REALCLIENT(tmp_player) { ++tmp_playercount; }
 				if(tmp_playercount > 1) { Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_CALL); } // don't announce a "vote now" sound if player is alone
 
-				bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote for ", vote_called_display, "\n");
+				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");
 				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 				Nagger_VoteChanged();
 				VoteCount(true); // needed if you are the only one
@@ -919,6 +927,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						else // everything went okay, continue with creating vote
 						{
 							vote_caller = caller;
+							vote_caller_name = strzone(GetCallerName(vote_caller));
 							vote_called = VOTE_MASTER;
 							vote_called_command = strzone("XXX");
 							vote_called_display = strzone("^3master");
@@ -927,7 +936,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 							caller.vote_selection = VOTE_SELECT_ACCEPT;
 							caller.vote_waittime = time + autocvar_sv_vote_wait;
 
-							bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote to become ^3master^2.\n");
+							bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote to become ^3master^2.\n");
 							if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 							Nagger_VoteChanged();
 							VoteCount(true); // needed if you are the only one
@@ -991,7 +1000,7 @@ void VoteCommand_status(float request, entity caller) // BOTH
 		case CMD_REQUEST_COMMAND:
 		{
 			if(vote_called)
-				print_to(caller, strcat("^7Vote for ", vote_called_display, "^7 called by ^7", GetCallerName(vote_caller), "^7."));
+				print_to(caller, strcat("^7Vote for ", vote_called_display, "^7 called by ^7", OriginalCallerName(), "^7."));
 			else
 				print_to(caller, "^1No vote called.");
 

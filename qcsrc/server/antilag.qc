@@ -3,7 +3,7 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "vehicles/vehicles_def.qh"
+    #include "../common/vehicles/all.qh"
     #include "antilag.qh"
 #endif
 
@@ -58,17 +58,10 @@ float antilag_find(entity e, float t)
 	return -1;
 }
 
-vector lerpv(float t0, vector v0, float t1, vector v1, float t)
-{
-	return v0 + (v1 - v0) * ((t - t0) / (t1 - t0));
-}
-
 vector antilag_takebackorigin(entity e, float t)
 {
-	float i0, i1;
-
-	i0 = antilag_find(e, t);
-	if(i0 < 0)
+	int i0 = antilag_find(e, t);
+	if (i0 < 0)
 	{
 		// IN THE PRESENT
 		if(e.antilag_takenback)
@@ -76,8 +69,8 @@ vector antilag_takebackorigin(entity e, float t)
 		else
 			return e.origin;
 	}
-	i1 = i0 + 1;
-	if(i1 >= ANTILAG_MAX_ORIGINS)
+	int i1 = i0 + 1;
+	if (i1 >= ANTILAG_MAX_ORIGINS)
 		i1 = 0;
 
 	return lerpv(e.(antilag_times[i0]), e.(antilag_origins[i0]), e.(antilag_times[i1]), e.(antilag_origins[i1]), t);
@@ -127,10 +120,8 @@ void antilag_restore(entity e)
 
 void antilag_clear(entity e)
 {
-	float i;
-
 	antilag_restore(e);
-	for(i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
+	for (int i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
 	{
 		e.(antilag_times[i]) = -2342;
 		e.(antilag_origins[i]) = e.origin;

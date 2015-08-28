@@ -1,6 +1,10 @@
+#include "../../common/command/command.qh"
 #include "common.qh"
+#include "../_all.qh"
 
-#include "../../common/counting.qh"
+#include "../scores.qh"
+
+#include "../../common/notifications.qh"
 
 
 // ====================================================

@@ -4,7 +4,7 @@
 	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
-    #include "../warpzonelib/mathlib.qh"
+	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications.qh"
     #include "deathtypes.qh"
@@ -12,10 +12,10 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/mathlib.qh"
     #include "constants.qh"
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"
+	#include "../server/mutators/events.qh"
     #include "notifications.qh"
     #include "deathtypes.qh"
     #include "mapinfo.qh"
@@ -184,26 +184,26 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 	entity e;
 	e = start;
 	funcPre(pass, e);
-	while(e.downleft)
+	while (e.(downleft))
 	{
-		e = e.downleft;
+		e = e.(downleft);
 		funcPre(pass, e);
 	}
 	funcPost(pass, e);
 	while(e != start)
 	{
-		if(e.right)
+		if (e.(right))
 		{
-			e = e.right;
+			e = e.(right);
 			funcPre(pass, e);
-			while(e.downleft)
+			while (e.(downleft))
 			{
-				e = e.downleft;
+				e = e.(downleft);
 				funcPre(pass, e);
 			}
 		}
 		else
-			e = e.up;
+			e = e.(up);
 		funcPost(pass, e);
 	}
 }
@@ -498,19 +498,6 @@ string ScoreString(int pFlags, float pValue)
 		valstr = ftos(pValue);
 
 	return valstr;
-}
-
-float dotproduct(vector a, vector b)
-{
-	return a.x * b.x + a.y * b.y + a.z * b.z;
-}
-
-vector cross(vector a, vector b)
-{
-	return
-		'1 0 0' * (a.y * b.z - a.z * b.y)
-	+	'0 1 0' * (a.z * b.x - a.x * b.z)
-	+	'0 0 1' * (a.x * b.y - a.y * b.x);
 }
 
 // compressed vector format:
@@ -1856,7 +1843,7 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 }
 
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype)
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
@@ -1880,7 +1867,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage)
+vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage)
 {
 	vector v;
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...
@@ -2072,6 +2059,10 @@ float get_model_parameters(string m, float sk)
 	}
 	get_model_parameters_fixbone = 0;
 
+#ifndef MENUQC
+	MUTATOR_CALLHOOK(ClearModelParams);
+#endif
+
 	if (!m)
 		return 1;
 
@@ -2133,6 +2124,9 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
+	#ifndef MENUQC
+		MUTATOR_CALLHOOK(GetModelParams, c, s);
+	#endif
 		for(int i = 0; i < MAX_AIM_BONES; ++i)
 			if(c == strcat("bone_aim", ftos(i)))
 			{
@@ -2249,30 +2243,6 @@ float u8_strsize(string s)
 	return l;
 }
 
-// translation helpers
-string language_filename(string s)
-{
-	string fn;
-	float fh;
-	fn = prvm_language;
-	if(fn == "" || fn == "dump")
-		return s;
-	fn = strcat(s, ".", fn);
-	if((fh = fopen(fn, FILE_READ)) >= 0)
-	{
-		fclose(fh);
-		return fn;
-	}
-	return s;
-}
-string CTX(string s)
-{
-	float p = strstrofs(s, "^", 0);
-	if(p < 0)
-		return s;
-	return substring(s, p+1, -1);
-}
-
 // x-encoding (encoding as zero length invisible string)
 const string XENCODE_2  = "xX";
 const string XENCODE_22 = "0123456789abcdefABCDEF";
@@ -2307,7 +2277,7 @@ float xdecode(string s)
 	return ((a * 22 + b) * 22 + c) * 22 + d;
 }
 
-float lowestbit(int f)
+int lowestbit(int f)
 {
 	f &= ~(f * 2);
 	f &= ~(f * 4);
@@ -2552,11 +2522,11 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 	// start with a 1-element queue
 	queue_start = queue_end = e;
-	queue_end.fld = world;
+	queue_end.(fld) = world;
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
-	for (; queue_start; queue_start = queue_start.fld)
+	for (; queue_start; queue_start = queue_start.(fld))
 	{
 		// find all neighbors of queue_start
 		entity t;
@@ -2567,23 +2537,23 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 			if(iscon(t, queue_start, pass))
 			{
 				// it is connected? ADD IT. It will look for neighbors soon too.
-				queue_end.fld = t;
+				queue_end.(fld) = t;
 				queue_end = t;
-				queue_end.fld = world;
+				queue_end.(fld) = world;
 				queue_end.FindConnectedComponent_processing = 1;
 			}
 		}
 	}
 
 	// unmark
-	for(queue_start = e; queue_start; queue_start = queue_start.fld)
+	for (queue_start = e; queue_start; queue_start = queue_start.(fld))
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
 #ifdef SVQC
 vector combine_to_vector(float x, float y, float z)
 {
-	vector result; result.x = x; result.y = y; result.z = z;
+	vector result; result_x = x; result_y = y; result_z = z;
 	return result;
 }
 
@@ -2603,29 +2573,6 @@ vector get_corner_position(entity box, float corner)
 	}
 }
 #endif
-
-// todo: this sucks, lets find a better way to do backtraces?
-void backtrace(string msg)
-{
-	float dev, war;
-	#ifdef SVQC
-	dev = autocvar_developer;
-	war = autocvar_prvm_backtraceforwarnings;
-	#else
-	dev = cvar("developer");
-	war = cvar("prvm_backtraceforwarnings");
-	#endif
-	cvar_set("developer", "1");
-	cvar_set("prvm_backtraceforwarnings", "1");
-	print("\n");
-	print("--- CUT HERE ---\nWARNING: ");
-	print(msg);
-	print("\n");
-	remove(world); // isn't there any better way to cause a backtrace?
-	print("\n--- CUT UNTIL HERE ---\n");
-	cvar_set("developer", ftos(dev));
-	cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)

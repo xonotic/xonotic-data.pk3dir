@@ -1,6 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticBigButton) EXTENDS(XonoticButton)
-	METHOD(XonoticBigButton, configureXonoticBigButton, void(entity, string, vector))
+#ifndef BIGBUTTON_H
+#define BIGBUTTON_H
+#include "button.qc"
+CLASS(XonoticBigButton, XonoticButton)
+	METHOD(XonoticBigButton, configureXonoticBigButton, void(entity, string, vector));
 	ATTRIB(XonoticBigButton, image, string, SKINGFX_BUTTON_BIG)
 	ATTRIB(XonoticBigButton, grayImage, string, SKINGFX_BUTTON_BIG_GRAY)
 ENDCLASS(XonoticBigButton)
@@ -11,7 +13,7 @@ entity makeXonoticButton(string theText, vector theColor);
 entity makeXonoticBigButton(string theText, vector theColor)
 {
 	entity me;
-	me = spawnXonoticBigButton();
+	me = NEW(XonoticBigButton);
 	me.configureXonoticBigButton(me, theText, theColor);
 	return me;
 }

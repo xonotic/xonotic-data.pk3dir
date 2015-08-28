@@ -1,8 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticProfileTab) EXTENDS(XonoticTab)
-	METHOD(XonoticProfileTab, fill, void(entity))
-	METHOD(XonoticProfileTab, draw, void(entity))
-	ATTRIB(XonoticProfileTab, title, string, _("Profile"))
+#ifndef DIALOG_MULTIPLAYER_PROFILE_H
+#define DIALOG_MULTIPLAYER_PROFILE_H
+#include "tab.qc"
+CLASS(XonoticProfileTab, XonoticTab)
+	METHOD(XonoticProfileTab, fill, void(entity));
+	METHOD(XonoticProfileTab, draw, void(entity));
 	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticProfileTab, rows, float, 23)
 	ATTRIB(XonoticProfileTab, columns, float, 6.1) // added extra .2 for center space
@@ -16,7 +17,7 @@ entity makeXonoticProfileTab();
 entity makeXonoticProfileTab()
 {
 	entity me;
-	me = spawnXonoticProfileTab();
+	me = NEW(XonoticProfileTab);
 	me.configureDialog(me);
 	return me;
 }
@@ -51,7 +52,7 @@ void XonoticProfileTab_fill(entity me)
 		me.TD(me, 1, 3.0, box = makeXonoticInputBox(1, "_cl_name"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 1;
+			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
 			box.enableClearButton = 0;
 			label.textEntity = box;
 	me.TR(me);

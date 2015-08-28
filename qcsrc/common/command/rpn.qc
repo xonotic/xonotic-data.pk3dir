@@ -1,4 +1,6 @@
+#include "command.qh"
 #include "rpn.qh"
+
 
 // ========================================
 //  RPN command code, written by divVerent

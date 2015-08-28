@@ -1,4 +1,17 @@
 #include "race.qh"
+#include "_all.qh"
+
+#include "cl_client.qh"
+#include "portals.qh"
+#include "scores.qh"
+#include "spawnpoints.qh"
+#include "bot/waypoints.qh"
+#include "bot/navigation.qh"
+#include "command/getreplies.qh"
+#include "../common/deathtypes.qh"
+#include "../common/notifications.qh"
+#include "../common/mapinfo.qh"
+#include "../warpzonelib/util_server.qh"
 
 void W_Porto_Fail(float failhard);
 
@@ -79,7 +92,6 @@ void spawnfunc_target_checkpoint();
 .float race_penalty_accumulator;
 .string race_penalty_reason;
 .float race_checkpoint; // player: next checkpoint that has to be reached
-.float race_laptime;
 .entity race_lastpenalty;
 
 .entity sprite;
@@ -174,6 +186,27 @@ void race_send_recordtime(float msg)
 	WriteByte(msg, TE_CSQC_RACE);
 	WriteByte(msg, RACE_NET_SERVER_RECORD);
 	WriteInt24_t(msg, race_readTime(GetMapname(), 1));
+}
+
+
+void race_send_speedaward(float msg)
+{
+	// send the best speed of the round
+	WriteByte(msg, SVC_TEMPENTITY);
+	WriteByte(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_SPEED_AWARD);
+	WriteInt24_t(msg, floor(speedaward_speed+0.5));
+	WriteString(msg, speedaward_holder);
+}
+
+void race_send_speedaward_alltimebest(float msg)
+{
+	// send the best speed
+	WriteByte(msg, SVC_TEMPENTITY);
+	WriteByte(msg, TE_CSQC_RACE);
+	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
+	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
+	WriteString(msg, speedaward_alltimebest_holder);
 }
 
 void race_SendRankings(float pos, float prevpos, float del, float msg)
@@ -794,9 +827,9 @@ void trigger_race_checkpoint_verify()
 		if(defrag_ents)
 		{
 			for(cp = world; (cp = find(cp, classname, "target_startTimer"));)
-				WaypointSprite_UpdateSprites(cp.sprite, "race-start", "", "");
+				WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
 			for(cp = world; (cp = find(cp, classname, "target_stopTimer"));)
-				WaypointSprite_UpdateSprites(cp.sprite, "race-finish", "", "");
+				WaypointSprite_UpdateSprites(cp.sprite, WP_RaceFinish, WP_Null, WP_Null);
 
 			for(cp = world; (cp = find(cp, classname, "target_checkpoint"));)
 			{
@@ -829,9 +862,9 @@ void trigger_race_checkpoint_verify()
 				if(cp.sprite)
 				{
 					if(cp.race_checkpoint == 0)
-						WaypointSprite_UpdateSprites(cp.sprite, "race-start", "", "");
+						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
 					else if(cp.race_checkpoint == race_timed_checkpoint)
-						WaypointSprite_UpdateSprites(cp.sprite, "race-finish", "", "");
+						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceFinish, WP_Null, WP_Null);
 				}
 		}
 	}
@@ -934,9 +967,9 @@ void spawnfunc_trigger_race_checkpoint()
 	if(!self.race_penalty)
 	{
 		if(self.race_checkpoint)
-			WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+			WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, self, sprite, RADARICON_NONE);
 		else
-			WaypointSprite_SpawnFixed("race-start-finish", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+			WaypointSprite_SpawnFixed(WP_RaceStartFinish, o, self, sprite, RADARICON_NONE);
 	}
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
@@ -977,9 +1010,9 @@ void spawnfunc_target_checkpoint() // defrag entity
 	race_timed_checkpoint = 1;
 
 	if(self.race_checkpoint == 0)
-		WaypointSprite_SpawnFixed("race-start", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+		WaypointSprite_SpawnFixed(WP_RaceStart, o, self, sprite, RADARICON_NONE);
 	else
-		WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, self, sprite, RADARICON_NONE);
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 

@@ -3,16 +3,16 @@
 ../common/util-pre.qh
 ../dpdefs/menudefs.qh
 ../dpdefs/keycodes.qh
+../common/util-post.qh
 
-oo/interface.qh
-	classes.qc
-oo/implementation.qh
-	classes.qc
+../lib/_all.inc
+
+oo/classes.qc
 
 draw.qc
 menu.qc
 
-command/menu_cmd.qc
+command/all.qc
 
 xonotic/util.qc
 
@@ -20,16 +20,13 @@ xonotic/util.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
 ../common/playerstats.qc
-../common/test.qc
-../common/urllib.qc
 ../common/util.qc
 
-../common/command/generic.qc
-../common/command/markup.qc
-../common/command/rpn.qc
+../common/items/all.qc
+../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
+../common/weapons/all.qc
 
-../common/monsters/monsters.qc
 
-../common/weapons/weapons.qc // TODO
-
-../warpzonelib/mathlib.qc
+../../mod/menu/progs.inc

@@ -1,3 +1,9 @@
+#include "../_all.qh"
+
+#include "pathlib.qh"
+#include "utility.qh"
+#include "../command/common.qh"
+
 void pathlib_deletepath(entity start)
 {
     entity e;

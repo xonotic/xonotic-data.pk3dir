@@ -1,7 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticCheckBoxString) EXTENDS(CheckBox)
-	METHOD(XonoticCheckBoxString, configureXonoticCheckBoxString, void(entity, string, string, string, string))
-	METHOD(XonoticCheckBoxString, setChecked, void(entity, float))
+#ifndef CHECKBOX_STRING_H
+#define CHECKBOX_STRING_H
+#include "../item/checkbox.qc"
+CLASS(XonoticCheckBoxString, CheckBox)
+	METHOD(XonoticCheckBoxString, configureXonoticCheckBoxString, void(entity, string, string, string, string));
+	METHOD(XonoticCheckBoxString, setChecked, void(entity, float));
 	ATTRIB(XonoticCheckBoxString, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticCheckBoxString, image, string, SKINGFX_CHECKBOX)
 	ATTRIB(XonoticCheckBoxString, yesString, string, string_null)
@@ -13,8 +15,8 @@ CLASS(XonoticCheckBoxString) EXTENDS(CheckBox)
 	ATTRIB(XonoticCheckBoxString, colorD, vector, SKINCOLOR_CHECKBOX_D)
 
 	ATTRIB(XonoticCheckBoxString, cvarName, string, string_null)
-	METHOD(XonoticCheckBoxString, loadCvars, void(entity))
-	METHOD(XonoticCheckBoxString, saveCvars, void(entity))
+	METHOD(XonoticCheckBoxString, loadCvars, void(entity));
+	METHOD(XonoticCheckBoxString, saveCvars, void(entity));
 	ATTRIB(XonoticCheckBoxString, sendCvars, float, 0)
 
 	ATTRIB(XonoticCheckBoxString, alpha, float, SKINALPHA_TEXT)
@@ -27,7 +29,7 @@ entity makeXonoticCheckBoxString(string, string, string, string);
 entity makeXonoticCheckBoxString(string theYesValue, string theNoValue, string theCvar, string theText)
 {
 	entity me;
-	me = spawnXonoticCheckBoxString();
+	me = NEW(XonoticCheckBoxString);
 	me.configureXonoticCheckBoxString(me, theYesValue, theNoValue, theCvar, theText);
 	return me;
 }

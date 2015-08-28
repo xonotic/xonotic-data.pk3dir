@@ -1,11 +1,13 @@
-#ifdef INTERFACE
-CLASS(Label) EXTENDS(Item)
-	METHOD(Label, configureLabel, void(entity, string, float, float))
-	METHOD(Label, draw, void(entity))
-	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Label, setText, void(entity, string))
-	METHOD(Label, toString, string(entity))
-	METHOD(Label, recalcPositionWithText, void(entity, string))
+#ifndef ITEM_LABEL_H
+#define ITEM_LABEL_H
+#include "../item.qc"
+CLASS(Label, Item)
+	METHOD(Label, configureLabel, void(entity, string, float, float));
+	METHOD(Label, draw, void(entity));
+	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Label, setText, void(entity, string));
+	METHOD(Label, toString, string(entity));
+	METHOD(Label, recalcPositionWithText, void(entity, string));
 	ATTRIB(Label, isBold, float, 0)
 	ATTRIB(Label, text, string, string_null)
 	ATTRIB(Label, currentText, string, string_null)

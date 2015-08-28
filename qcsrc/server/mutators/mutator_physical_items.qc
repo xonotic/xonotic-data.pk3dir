@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .vector spawn_origin, spawn_angles;
 
 void physical_item_think()
@@ -45,7 +49,7 @@ void physical_item_touch()
 	}
 }
 
-void physical_item_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void physical_item_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(!self.cnt) // not for dropped items
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))

@@ -1,16 +1,18 @@
-#ifdef INTERFACE
-CLASS(XonoticColorpicker) EXTENDS(Image)
-	METHOD(XonoticColorpicker, configureXonoticColorpicker, void(entity, entity))
-	METHOD(XonoticColorpicker, mousePress, float(entity, vector))
-	METHOD(XonoticColorpicker, mouseRelease, float(entity, vector))
-	METHOD(XonoticColorpicker, mouseDrag, float(entity, vector))
+#ifndef COLORPICKER_H
+#define COLORPICKER_H
+#include "../item/image.qc"
+CLASS(XonoticColorpicker, Image)
+	METHOD(XonoticColorpicker, configureXonoticColorpicker, void(entity, entity));
+	METHOD(XonoticColorpicker, mousePress, float(entity, vector));
+	METHOD(XonoticColorpicker, mouseRelease, float(entity, vector));
+	METHOD(XonoticColorpicker, mouseDrag, float(entity, vector));
 	ATTRIB(XonoticColorpicker, controlledTextbox, entity, NULL)
 	ATTRIB(XonoticColorpicker, image, string, SKINGFX_COLORPICKER)
 	ATTRIB(XonoticColorpicker, imagemargin, vector, SKINMARGIN_COLORPICKER)
 	ATTRIB(XonoticColorpicker, focusable, float, 1)
-	METHOD(XonoticColorpicker, focusLeave, void(entity))
-	METHOD(XonoticColorpicker, keyDown, float(entity, float, float, float))
-	METHOD(XonoticColorpicker, draw, void(entity))
+	METHOD(XonoticColorpicker, focusLeave, void(entity));
+	METHOD(XonoticColorpicker, keyDown, float(entity, float, float, float));
+	METHOD(XonoticColorpicker, draw, void(entity));
 ENDCLASS(XonoticColorpicker)
 entity makeXonoticColorpicker(entity theTextbox);
 #endif
@@ -19,7 +21,7 @@ entity makeXonoticColorpicker(entity theTextbox);
 entity makeXonoticColorpicker(entity theTextbox)
 {
 	entity me;
-	me = spawnXonoticColorpicker();
+	me = NEW(XonoticColorpicker);
 	me.configureXonoticColorpicker(me, theTextbox);
 	return me;
 }

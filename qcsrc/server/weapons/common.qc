@@ -1,17 +1,12 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "common.qh"
-    #include "../t_items.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../../common/deathtypes.qh"
-#endif
+#include "common.qh"
+#include "../_all.qh"
+
+#include "../t_items.qh"
+#include "../../common/constants.qh"
+#include "../../common/deathtypes.qh"
+#include "../../common/notifications.qh"
+#include "../../common/util.qh"
+#include "../../common/weapons/all.qh"
 
 void W_GiveWeapon (entity e, float wep)
 {
@@ -33,17 +28,17 @@ void W_GiveWeapon (entity e, float wep)
 
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 {
-	if((player.items & IT_STRENGTH)
+	if((player.items & ITEM_Strength.m_itemid)
 		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
 		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
-			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTEN_NORM);
+			sound(player, CH_TRIGGER, W_Sound("strength_fire"), VOL_BASE, ATTEN_NORM);
 			player.prevstrengthsound = time;
 		}
 		player.prevstrengthsoundattempt = time;
 }
 
-float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception)
+float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception)
 {
 	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
 	float is_from_owner = (inflictor == projowner);

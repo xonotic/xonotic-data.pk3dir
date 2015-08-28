@@ -1,7 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticTabController) EXTENDS(ModalController)
-	METHOD(XonoticTabController, configureXonoticTabController, void(entity, float))
-	METHOD(XonoticTabController, makeTabButton, entity(entity, string, entity))
+#ifndef TABCONTROLLER_H
+#define TABCONTROLLER_H
+#include "../item/modalcontroller.qc"
+CLASS(XonoticTabController, ModalController)
+	METHOD(XonoticTabController, configureXonoticTabController, void(entity, float));
+	METHOD(XonoticTabController, makeTabButton, entity(entity, string, entity));
 	ATTRIB(XonoticTabController, rows, float, 0)
 	ATTRIB(XonoticTabController, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticTabController, image, string, SKINGFX_BUTTON)
@@ -13,7 +15,7 @@ entity makeXonoticTabController(float theRows);
 entity makeXonoticTabController(float theRows)
 {
 	entity me;
-	me = spawnXonoticTabController();
+	me = NEW(XonoticTabController);
 	me.configureXonoticTabController(me, theRows);
 	return me;
 }

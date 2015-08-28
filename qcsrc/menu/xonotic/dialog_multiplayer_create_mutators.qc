@@ -1,11 +1,13 @@
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticMutatorsDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticMutatorsDialog, toString, string(entity))
-	METHOD(XonoticMutatorsDialog, fill, void(entity))
-	METHOD(XonoticMutatorsDialog, showNotify, void(entity))
-	METHOD(XonoticMutatorsDialog, close, void(entity))
+#ifndef DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
+#define DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
+#include "dialog.qc"
+CLASS(XonoticMutatorsDialog, XonoticDialog)
+	METHOD(XonoticMutatorsDialog, toString, string(entity));
+	METHOD(XonoticMutatorsDialog, fill, void(entity));
+	METHOD(XonoticMutatorsDialog, showNotify, void(entity));
+	METHOD(XonoticMutatorsDialog, close, void(entity));
 	ATTRIB(XonoticMutatorsDialog, title, string, _("Mutators"))
 	ATTRIB(XonoticMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
 	ATTRIB(XonoticMutatorsDialog, intendedWidth, float, 0.9)

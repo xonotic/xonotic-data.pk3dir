@@ -1,0 +1,15 @@
+#ifndef MONSTER_H
+#define MONSTER_H
+
+bool m_null(int) { return false; }
+
+/** If you register a new monster, make sure to add it to all.inc */
+CLASS(Monster, Object)
+    ATTRIB(Monster, monsterid, int, 0)
+    ATTRIB(Monster, classname, string, "monster_info")
+    /** human readable name */
+    ATTRIB(Monster, monster_name, string, string_null)
+    ATTRIB(Monster, monster_func, bool(int), m_null)
+ENDCLASS(Monster)
+
+#endif

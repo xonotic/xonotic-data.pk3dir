@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ FIREBALL,
 /* function  */ W_Fireball,
@@ -52,9 +52,10 @@ FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .vector fireball_impactvec;
 .float fireball_primarytime;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_fireball(void) { weapon_defaultspawnfunc(WEP_FIREBALL); }
+void spawnfunc_weapon_fireball(void) { weapon_defaultspawnfunc(WEP_FIREBALL.m_id); }
 
 void W_Fireball_Explode(void)
 {
@@ -96,10 +97,10 @@ void W_Fireball_Explode(void)
 			dir = normalize(e.origin + e.view_ofs - self.origin);
 
 			if(accuracy_isgooddamage(self.realowner, e))
-				accuracy_add(self.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
+				accuracy_add(self.realowner, WEP_FIREBALL.m_id, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
 			Damage(e, self, self.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
-			pointparticles(particleeffectnum("fireball_bfgdamage"), e.origin, -1 * dir, 1);
+			Send_Effect("fireball_bfgdamage", e.origin, -1 * dir, 1);
 		}
 	}
 
@@ -142,7 +143,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 		d = damage + (edgedamage - damage) * (d / dist);
 		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
 		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+		Send_Effect("fireball_laser", self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
 }
 
@@ -161,7 +162,7 @@ void W_Fireball_Think(void)
 	self.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void W_Fireball_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.health <= 0)
 		return;
@@ -181,9 +182,9 @@ void W_Fireball_Attack1(void)
 {
 	entity proj;
 
-	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, "weapons/fireball_fire2.wav", CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, W_Sound("fireball_fire2"), CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
 
-	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("fireball_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.classname = "plasma_prim";
@@ -200,7 +201,7 @@ void W_Fireball_Attack1(void)
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = WEP_CVAR_PRI(fireball, damageforcescale);
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_FIREBALL;
+	proj.projectiledeathtype = WEP_FIREBALL.m_id;
 	setorigin(proj, w_shotorg);
 
 	proj.movetype = MOVETYPE_FLY;
@@ -213,14 +214,14 @@ void W_Fireball_Attack1(void)
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREBALL, true);
 
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
 {
 	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 0, "", 0, 0);
 	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
-	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("fireball_preattack_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 }
 
 void W_Fireball_Attack1_Frame4(void)
@@ -250,7 +251,7 @@ void W_Fireball_Attack1_Frame1(void)
 void W_Fireball_Attack1_Frame0(void)
 {
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound(self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_WEAPON_SINGLE, W_Sound("fireball_prefire2"), VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
 }
 
@@ -315,11 +316,11 @@ void W_Fireball_Attack2(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
-	traceline(w_shotorg, w_shotorg + f_diff.x * v_up + f_diff.y * v_right, MOVE_NORMAL, self);
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, W_Sound("fireball_fire"), CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
-	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("fireball_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.owner = proj.realowner = self;
@@ -327,7 +328,7 @@ void W_Fireball_Attack2(void)
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(fireball, damage);
 	proj.movetype = MOVETYPE_BOUNCE;
-	proj.projectiledeathtype = WEP_FIREBALL | HITTYPE_SECONDARY;
+	proj.projectiledeathtype = WEP_FIREBALL.m_id | HITTYPE_SECONDARY;
 	proj.touch = W_Fireball_Firemine_Touch;
 	PROJECTILE_MAKETRIGGER(proj);
 	setsize(proj, '-4 -4 -4', '4 4 4');
@@ -344,10 +345,10 @@ void W_Fireball_Attack2(void)
 
 	CSQCProjectile(proj, true, PROJECTILE_FIREMINE, true);
 
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-float W_Fireball(float req)
+bool W_Fireball(int req)
 {
 	switch(req)
 	{
@@ -398,13 +399,13 @@ float W_Fireball(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_fireball.md3");
-			precache_model("models/weapons/v_fireball.md3");
-			precache_model("models/weapons/h_fireball.iqm");
+			precache_model(W_Model("g_fireball.md3"));
+			precache_model(W_Model("v_fireball.md3"));
+			precache_model(W_Model("h_fireball.iqm"));
 			precache_model("models/sphere/sphere.md3");
-			precache_sound("weapons/fireball_fire.wav");
-			precache_sound("weapons/fireball_fire2.wav");
-			precache_sound("weapons/fireball_prefire2.wav");
+			precache_sound(W_Sound("fireball_fire"));
+			precache_sound(W_Sound("fireball_fire2"));
+			precache_sound(W_Sound("fireball_prefire2"));
 			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -447,7 +448,7 @@ float W_Fireball(float req)
 }
 #endif
 #ifdef CSQC
-float W_Fireball(float req)
+bool W_Fireball(int req)
 {
 	switch(req)
 	{
@@ -463,14 +464,14 @@ float W_Fireball(float req)
 				org2 = w_org + w_backoff * 16;
 				pointparticles(particleeffectnum("fireball_explode"), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTEN_NORM * 0.25); // long range boom
+					sound(self, CH_SHOTS, W_Sound("fireball_impact2"), VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 			}
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/fireball_impact2.wav");
+			precache_sound(W_Sound("fireball_impact2"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

@@ -1,3 +1,10 @@
+#include "../../_all.qh"
+
+#include "havocbot.qh"
+#include "role_keyhunt.qh"
+
+#include "../bot.qh"
+#include "../navigation.qh"
 
 .float max_armorvalue;
 .float havocbot_role_timeout;
@@ -234,12 +241,10 @@ void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
+	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole, self))
 		return;
 	else if (g_keyhunt)
 		havocbot_chooserole_kh();
-	else if (g_onslaught)
-		havocbot_chooserole_ons();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 }
