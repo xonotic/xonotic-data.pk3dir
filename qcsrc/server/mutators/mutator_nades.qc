@@ -290,7 +290,6 @@ void nade_ice_think()
 	{
 		self.nade_special_time = time+0.7;
 
-
 		Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
 		Send_Effect(EFFECT_ICEFIELD, self.origin, '0 0 0', 1);
 	}
@@ -554,6 +553,11 @@ void nade_boom()
 		case NADE_TYPE_MONSTER: nade_monster_boom(); break;
 	}
 
+	entity head;
+	for(head = world; (head = find(head, classname, "grapplinghook")); )
+	if(head.aiment == self)
+		RemoveGrapplingHook(head.realowner);
+
 	remove(self);
 }
 
@@ -566,6 +570,10 @@ void nade_touch()
 		is_weapclip = 1;*/
 	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
+		entity head;
+		for(head = world; (head = find(head, classname, "grapplinghook")); )
+		if(head.aiment == self)
+			RemoveGrapplingHook(head.realowner);
 		remove(self);
 		return;
 	}
