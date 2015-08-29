@@ -59,7 +59,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 	W_SetupShot(self, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
-	Send_Effect("rifle_muzzleflash", w_shotorg, w_shotdir * 2000, 1);
+	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
 	if(self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) // if zoomed, shoot from the eye
 	{
@@ -96,7 +96,7 @@ void W_Rifle_BulletHail_Continue(void)
 	af = ATTACK_FINISHED(self);
 	self.switchweapon = self.weapon;
 	ATTACK_FINISHED(self) = time;
-	print(ftos(self.WEP_AMMO(RIFLE)), "\n");
+	LOG_INFO(ftos(self.WEP_AMMO(RIFLE)), "\n");
 	r = weapon_prepareattack(self.rifle_bullethail_frame == WFRAME_FIRE2, self.rifle_bullethail_refire);
 	if(self.switchweapon == self.weapon)
 		self.switchweapon = sw;
@@ -104,12 +104,12 @@ void W_Rifle_BulletHail_Continue(void)
 	{
 		self.rifle_bullethail_attackfunc();
 		weapon_thinkf(self.rifle_bullethail_frame, self.rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
-		print("thinkf set\n");
+		LOG_INFO("thinkf set\n");
 	}
 	else
 	{
 		ATTACK_FINISHED(self) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
-		print("out of ammo... ", ftos(self.weaponentity.state), "\n");
+		LOG_INFO("out of ammo... ", ftos(self.weaponentity.state), "\n");
 	}
 }
 
@@ -273,7 +273,7 @@ bool W_Rifle(int req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+			pointparticles(particleeffectnum(EFFECT_RIFLE_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 			{
 				if(w_random < 0.2)

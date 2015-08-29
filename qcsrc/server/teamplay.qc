@@ -64,7 +64,7 @@ void InitGameplayMode()
 
 	if (!cvar_value_issafe(world.fog))
 	{
-		print("The current map contains a potentially harmful fog setting, ignored\n");
+		LOG_INFO("The current map contains a potentially harmful fog setting, ignored\n");
 		world.fog = string_null;
 	}
 	if(MapInfo_Map_fog != "")
@@ -84,6 +84,7 @@ void InitGameplayMode()
 
 	if(g_dm)
 	{
+		MUTATOR_ADD(gamemode_deathmatch);
 	}
 
 	if(g_tdm)

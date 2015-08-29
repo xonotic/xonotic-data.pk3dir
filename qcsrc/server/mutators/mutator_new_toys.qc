@@ -225,7 +225,7 @@ MUTATOR_DEFINITION(mutator_new_toys)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime\n");
 		return -1;
 	}
 

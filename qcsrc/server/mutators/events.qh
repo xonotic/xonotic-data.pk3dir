@@ -236,6 +236,13 @@ MUTATOR_HOOKABLE(MonsterSpawn, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(MonsterDies, EV_MonsterDies);
 
+/** called when a monster dies */
+#define EV_MonsterRemove(i, o) \
+    /**/ i(entity, rem_mon) \
+    /**/
+entity rem_mon; // avoiding ovewriting self & other
+MUTATOR_HOOKABLE(MonsterRemove, EV_MonsterRemove);
+
 /** called when a monster wants to respawn */
 #define EV_MonsterRespawn(i, o) \
     /**/ i(entity, other) \
@@ -583,4 +590,7 @@ MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
     /**/ o(string, ret_string) \
     /**/
 MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
+
+/** Return error to play frag remaining announcements */
+MUTATOR_HOOKABLE(Scores_CountFragsRemaining, EV_NO_ARGS);
 #endif

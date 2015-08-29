@@ -419,7 +419,7 @@ int ttt_ai_random(int piecemask)
 		f <<= 1;
 	}
 	
-	dprint(sprintf("TTT AI: selected %x from %x\n",
+	LOG_TRACE(sprintf("TTT AI: selected %x from %x\n",
 			RandomSelection_chosen_float, piecemask) );
 	return RandomSelection_chosen_float;
 }
@@ -437,7 +437,7 @@ int ttt_ai_block3 ( int piecemask, int piecemask_free )
 	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A3,TTT_AI_POSFLAG_B3,TTT_AI_POSFLAG_C3);
 	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A1,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_C3);
 	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A3,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_C1);
-	dprint(sprintf("TTT AI: possible 3 in a rows in %x: %x (%x)\n",piecemask,r, r&piecemask_free));
+	LOG_TRACE(sprintf("TTT AI: possible 3 in a rows in %x: %x (%x)\n",piecemask,r, r&piecemask_free));
 	r &= piecemask_free;
 	return ttt_ai_random(r);
 }
@@ -450,15 +450,15 @@ string ttt_ai_choose_simple(int piecemask_self, int piecemask_opponent, int piec
 {
 	int move = 0;
 	
-	dprint("TTT AI: checking winning move\n");
+	LOG_TRACE("TTT AI: checking winning move\n");
 	if (( move = ttt_ai_block3(piecemask_self,piecemask_free) ))
 		return ttt_ai_piece_flag2pos(move); // place winning move
 		
-	dprint("TTT AI: checking opponent's winning move\n");
+	LOG_TRACE("TTT AI: checking opponent's winning move\n");
 	if (( move = ttt_ai_block3(piecemask_opponent,piecemask_free) ))
 		return ttt_ai_piece_flag2pos(move); // block opponent
 		
-	dprint("TTT AI: random move\n");
+	LOG_TRACE("TTT AI: random move\n");
 	return ttt_ai_piece_flag2pos(ttt_ai_random(piecemask_free));
 }
 
@@ -508,12 +508,12 @@ void ttt_aimove(entity minigame)
 		}
 			
 		// TODO multiple AI difficulties
-		dprint(sprintf("TTT AI: self: %x opponent: %x free: %x\n",
+		LOG_TRACE(sprintf("TTT AI: self: %x opponent: %x free: %x\n",
 				piecemask_self, piecemask_opponent, piecemask_free));
 		pos = ttt_ai_choose_simple(piecemask_self, piecemask_opponent, piecemask_free);
-		dprint("TTT AI: chosen move: ",pos,"\n\n");
+		LOG_TRACE("TTT AI: chosen move: ",pos,"\n\n");
 		if ( !pos )
-			dprint("Tic Tac Toe AI has derped!\n");
+			LOG_TRACE("Tic Tac Toe AI has derped!\n");
 		else
 			ttt_move(minigame,aiplayer,pos);
 	}

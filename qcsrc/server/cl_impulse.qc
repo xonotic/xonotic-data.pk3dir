@@ -311,7 +311,7 @@ void ImpulseCommands (void)
 					{
 						if(e.wpcost >= 10000000)
 						{
-							print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_z = 8;
 							e.effects |= EF_NODEPTHTEST | EF_BLUE;
 							++i;
@@ -319,14 +319,14 @@ void ImpulseCommands (void)
 						}
 					}
 					if(i)
-						print(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
+						LOG_INFO(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
 					navigation_markroutes_inverted(e2);
 					i = 0;
 					for(e = findchain(classname, "waypoint"); e; e = e.chain)
 					{
 						if(e.wpcost >= 10000000)
 						{
-							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_x = 8;
 							if(!(e.effects & EF_NODEPTHTEST)) // not already reported before
 								++m;
@@ -335,9 +335,9 @@ void ImpulseCommands (void)
 						}
 					}
 					if(i)
-						print(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
+						LOG_INFO(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
 					if(m)
-						print(ftos(m), " waypoints have been marked total\n");
+						LOG_INFO(ftos(m), " waypoints have been marked total\n");
 					i = 0;
 					for(e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
 					{
@@ -353,7 +353,7 @@ void ImpulseCommands (void)
 						else
 						{
 							setorigin(e, org);
-							print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST;
 							setmodel(e, self.model);
 							e.frame = self.frame;
@@ -364,7 +364,7 @@ void ImpulseCommands (void)
 						}
 					}
 					if(i)
-						print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
+						LOG_INFO(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
 					i = 0;
 					entity start;
 					start = findchainflags(flags, FL_ITEM);
@@ -380,14 +380,14 @@ void ImpulseCommands (void)
 						}
 						else
 						{
-							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST | EF_RED;
 							e.colormod_x = 8;
 							++i;
 						}
 					}
 					if(i)
-						print(ftos(i), " items have no nearest waypoint and cannot be walked away from (marked with red light)\n");
+						LOG_INFO(ftos(i), " items have no nearest waypoint and cannot be walked away from (marked with red light)\n");
 					i = 0;
 					for(e = start; e; e = e.chain)
 					{
@@ -397,14 +397,14 @@ void ImpulseCommands (void)
 						}
 						else
 						{
-							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST | EF_BLUE;
 							e.colormod_z = 8;
 							++i;
 						}
 					}
 					if(i)
-						print(ftos(i), " items have no nearest waypoint and cannot be walked to (marked with blue light)\n");
+						LOG_INFO(ftos(i), " items have no nearest waypoint and cannot be walked to (marked with blue light)\n");
 					break;
 			}
 		}

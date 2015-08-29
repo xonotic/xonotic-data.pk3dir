@@ -246,10 +246,6 @@ string strtolower(string s);
 
 string MakeConsoleSafe(string input);
 
-#ifndef MENUQC
-float InterpretBoolean(string input);
-#endif
-
 // generic shutdown handler
 void Shutdown();
 

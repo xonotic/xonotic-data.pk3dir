@@ -26,7 +26,7 @@ void _Movetype_PushMove(float dt)  // SV_PushMove
 			_Movetype_LinkEdict(true);
 			return;
 		default:
-			dprintf("_Movetype_PushMove: entity %e, unrecognized solid type %d\n", self, self.solid);
+			LOG_TRACEF("_Movetype_PushMove: entity %e, unrecognized solid type %d\n", self, self.solid);
 			return;
 	}
 

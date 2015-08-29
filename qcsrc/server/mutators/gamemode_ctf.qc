@@ -364,7 +364,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 			// other
 			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTEN_NORM);
-			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), player.origin, targ_origin);
+			WarpZone_TrailParticles(world, _particleeffectnum(flag.passeffect), player.origin, targ_origin);
 			ctf_EventLog("pass", flag.team, player);
 			break;
 		}
@@ -455,7 +455,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	Send_Effect(flag.capeffect, flag.origin, '0 0 0', 1);
+	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
 	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
@@ -591,7 +591,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 		{
 			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
 			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
-			dprint("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
+			LOG_TRACE("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
 			PlayerTeamScore_AddScore(player, pickup_dropped_score);
 			ctf_EventLog("pickup", flag.team, player);
 			break;
@@ -609,7 +609,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	}
 
 	// effects
-	Send_Effect(flag.toucheffect, player.origin, '0 0 0', 1);
+	Send_Effect_(flag.toucheffect, player.origin, '0 0 0', 1);
 
 	// waypoints
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
@@ -767,7 +767,7 @@ void ctf_FlagThink()
 
 	// sanity checks
 	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
-		dprint("wtf the flag got squashed?\n");
+		LOG_TRACE("wtf the flag got squashed?\n");
 		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
 		if(!trace_startsolid || self.noalign) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
@@ -896,7 +896,7 @@ void ctf_FlagThink()
 
 		default: // this should never happen
 		{
-			dprint("ctf_FlagThink(): Flag exists with no status?\n");
+			LOG_TRACE("ctf_FlagThink(): Flag exists with no status?\n");
 			return;
 		}
 	}
@@ -941,7 +941,7 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			Send_Effect(self.toucheffect, self.origin, '0 0 0', 1);
+			Send_Effect_(self.toucheffect, self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
@@ -978,7 +978,7 @@ void ctf_FlagTouch()
 
 		case FLAG_CARRY:
 		{
-			dprint("Someone touched a flag even though it was being carried?\n");
+			LOG_TRACE("Someone touched a flag even though it was being carried?\n");
 			break;
 		}
 
@@ -1848,47 +1848,47 @@ void havocbot_role_ctf_defense()
 
 void havocbot_role_ctf_setrole(entity bot, int role)
 {
-	dprint(strcat(bot.netname," switched to "));
+	LOG_TRACE(strcat(bot.netname," switched to "));
 	switch(role)
 	{
 		case HAVOCBOT_CTF_ROLE_CARRIER:
-			dprint("carrier");
+			LOG_TRACE("carrier");
 			bot.havocbot_role = havocbot_role_ctf_carrier;
 			bot.havocbot_role_timeout = 0;
 			bot.havocbot_cantfindflag = time + 10;
 			bot.bot_strategytime = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_DEFENSE:
-			dprint("defense");
+			LOG_TRACE("defense");
 			bot.havocbot_role = havocbot_role_ctf_defense;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_MIDDLE:
-			dprint("middle");
+			LOG_TRACE("middle");
 			bot.havocbot_role = havocbot_role_ctf_middle;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_OFFENSE:
-			dprint("offense");
+			LOG_TRACE("offense");
 			bot.havocbot_role = havocbot_role_ctf_offense;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_RETRIEVER:
-			dprint("retriever");
+			LOG_TRACE("retriever");
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_retriever;
 			bot.havocbot_role_timeout = time + 10;
 			bot.bot_strategytime = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_ESCORT:
-			dprint("escort");
+			LOG_TRACE("escort");
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_escort;
 			bot.havocbot_role_timeout = time + 30;
 			bot.bot_strategytime = 0;
 			break;
 	}
-	dprint("\n");
+	LOG_TRACE("\n");
 }
 
 
@@ -2457,7 +2457,7 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
 	{
-		print("No ""ctf_team"" entities found on this map, creating them anyway.\n");
+		LOG_INFO("No ""ctf_team"" entities found on this map, creating them anyway.\n");
 		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
 		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
 		if(ctf_teams >= 3)
@@ -2518,7 +2518,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

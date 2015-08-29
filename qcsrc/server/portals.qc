@@ -146,7 +146,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		print("'safe' teleport location is not safe!\n");
+		LOG_INFO("'safe' teleport location is not safe!\n");
 		// FAIL TODO why does this happen?
 		return 0;
 	}
@@ -154,7 +154,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		print("trace_endpos in solid, this can't be!\n");
+		LOG_INFO("trace_endpos in solid, this can't be!\n");
 		// FAIL TODO why does this happen? (reported by MrBougo)
 		return 0;
 	}
@@ -213,7 +213,7 @@ float Portal_FindSafeOrigin(entity portal)
 	if(!move_out_of_solid(portal))
 	{
 #ifdef DEBUG
-		print("NO SAFE ORIGIN\n");
+		LOG_INFO("NO SAFE ORIGIN\n");
 #endif
 		return 0;
 	}
@@ -415,7 +415,7 @@ void Portal_Remove(entity portal, float killed)
 	{
 		fixedmakevectors(portal.mangle);
 		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTEN_NORM);
-		Send_Effect("rocket_explode", portal.origin + v_forward * 16, v_forward * 1024, 4);
+		Send_Effect(EFFECT_ROCKET_EXPLODE, portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else

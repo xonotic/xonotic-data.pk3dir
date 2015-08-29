@@ -6,7 +6,7 @@ CLASS(Pickup, GameItem)
     ATTRIB(Pickup, m_sound, string, "misc/itempickup.wav")
     ATTRIB(Pickup, m_name, string, string_null)
     METHOD(Pickup, show, void(entity this));
-    void Pickup_show(entity this) { printf("%s: %s\n", etos(this), this.m_name); }
+    void Pickup_show(entity this) { LOG_INFOF("%s: %s\n", etos(this), this.m_name); }
 #ifdef SVQC
     ATTRIB(Pickup, m_botvalue, int, 0)
     ATTRIB(Pickup, m_itemflags, int, 0)

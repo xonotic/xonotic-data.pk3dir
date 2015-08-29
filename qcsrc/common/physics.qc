@@ -625,7 +625,7 @@ bool PlayerJump (void)
 	{
 #ifdef SVQC
 		if(autocvar_speedmeter)
-			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
+			LOG_TRACE(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
 #endif
 		if(self.lastground < time - 0.3)
 		{
@@ -634,7 +634,7 @@ bool PlayerJump (void)
 		}
 #ifdef SVQC
 		if(self.jumppadcount > 1)
-			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
+			LOG_TRACE(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
 #endif
 	}
@@ -971,7 +971,7 @@ void SpecialCommand()
 	TetrisImpulse();
 #else
 	if (!CheatImpulse(99))
-		print("A hollow voice says \"Plugh\".\n");
+		LOG_INFO("A hollow voice says \"Plugh\".\n");
 #endif
 #endif
 }
@@ -1484,13 +1484,13 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	{
 #ifdef SVQC
 		if (autocvar_speedmeter)
-			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
+			LOG_TRACE(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
 #endif
 		if (self.lastground < time - 0.3)
 			self.velocity *= (1 - PHYS_FRICTION_ONLAND);
 #ifdef SVQC
 		if (self.jumppadcount > 1)
-			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
+			LOG_TRACE(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
 #endif
 	}

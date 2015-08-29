@@ -161,7 +161,7 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			break;
 		case ENT_CLIENT_ARC_BEAM:
-			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
+			pointparticles(particleeffectnum(EFFECT_ARC_LIGHTNING2), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
 	}
 }

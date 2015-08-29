@@ -177,7 +177,7 @@ void ItemRead(float _IsNew)
             else
             {
                 self.draw = ItemDraw;
-                dprint("Simple item requested for ", _fn, " but no model exists for it\n");
+                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it\n");
             }
         }
 
@@ -186,7 +186,7 @@ void ItemRead(float _IsNew)
 
 
         if(self.mdl == "")
-            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
+            LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
 
         precache_model(self.mdl);
         setmodel(self, self.mdl);
@@ -270,7 +270,7 @@ bool ItemSend(entity to, int sf)
     {
 
         if(self.mdl == "")
-            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+            LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
 
         WriteString(MSG_ENTITY, self.mdl);
     }
@@ -438,8 +438,8 @@ void Item_Respawn (void)
 	self.think = Item_Think;
 	self.nextthink = time;
 
-	//Send_Effect("item_respawn", self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
-	Send_Effect("item_respawn", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	//Send_Effect(EFFECT_ITEM_RESPAWN, self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 }
 
 void Item_RespawnCountdown (void)
@@ -733,7 +733,7 @@ void Item_Touch (void)
 
 	other.last_pickup = time;
 
-	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
@@ -785,7 +785,7 @@ void Item_FindTeam()
 	if(self.effects & EF_NODRAW)
 	{
 		// marker for item team search
-		dprint("Initializing item team ", ftos(self.team), "\n");
+		LOG_TRACE("Initializing item team ", ftos(self.team), "\n");
 		RandomSelection_Init();
 		for(head = world; (head = findfloat(head, team, self.team)); ) if(head.flags & FL_ITEM)
 			RandomSelection_Add(head, 0, string_null, head.cnt, 0);
@@ -812,7 +812,7 @@ void Item_FindTeam()
 // TODO: perhaps nice special effect?
 void RemoveItem(void)
 {
-	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
 }
 
@@ -1075,8 +1075,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			    // why not flags & fl_item?
 				if(otheritem.is_item)
 				{
-					dprint("XXX Found duplicated item: ", itemname, vtos(self.origin));
-					dprint(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
+					LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(self.origin));
+					LOG_TRACE(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
 					error("Mapper sucks.");
 				}
 			}
@@ -1421,7 +1421,7 @@ void spawnfunc_target_items (void)
 					}
 				}
 				if(j > WEP_LAST)
-					print("target_items: invalid item ", argv(i), "\n");
+					LOG_INFO("target_items: invalid item ", argv(i), "\n");
 			}
 		}
 
@@ -1781,7 +1781,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 					}
 				}
 				if(j > WEP_LAST)
-					print("give: invalid item ", cmd, "\n");
+					LOG_INFO("give: invalid item ", cmd, "\n");
 				break;
 		}
 		val = 999;

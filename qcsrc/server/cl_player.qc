@@ -531,7 +531,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			if(deathtype == DEATH_KILL)
 			{
 				// for the lemmings fans, a small harmless explosion
-				Send_Effect("rocket_explode", self.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 			}
 		}
 
@@ -828,7 +828,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(flood)
-		print("NOTE: ", playername(source), "^7 is flooding.\n");
+		LOG_INFO("NOTE: ", playername(source), "^7 is flooding.\n");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)
@@ -978,7 +978,7 @@ void PrecachePlayerSounds(string f)
 	{
 		if(tokenize_console(s) != 3)
 		{
-			dprint("Invalid sound info line: ", s, "\n");
+			LOG_TRACE("Invalid sound info line: ", s, "\n");
 			continue;
 		}
 		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
@@ -1010,7 +1010,7 @@ float LoadPlayerSounds(string f, float first)
 	fh = fopen(f, FILE_READ);
 	if(fh < 0)
 	{
-		dprint("Player sound file not found: ", f, "\n");
+		LOG_TRACE("Player sound file not found: ", f, "\n");
 		return 0;
 	}
 	while((s = fgets(fh)))

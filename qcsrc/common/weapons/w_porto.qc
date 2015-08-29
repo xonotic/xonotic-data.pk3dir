@@ -243,7 +243,7 @@ void W_Porto_Attack(float type)
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 
-	//Send_Effect("grenadelauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	//Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn();
 	gren.cnt = type;
@@ -411,7 +411,7 @@ bool W_Porto(int req)
 	{
 		case WR_IMPACTEFFECT:
 		{
-			print("Since when does Porto send DamageInfo?\n");
+			LOG_INFO("Since when does Porto send DamageInfo?\n");
 			return true;
 		}
 		case WR_INIT:

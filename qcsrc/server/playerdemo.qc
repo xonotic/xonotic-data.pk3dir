@@ -22,7 +22,7 @@ void playerdemo_shutdown()
 {
 	if(self.playerdemo_mode != PLAYERDEMO_MODE_OFF)
 	{
-		print("playerdemo: ", self.netname, " closed\n");
+		LOG_INFO("playerdemo: ", self.netname, " closed\n");
 		fclose(self.playerdemo_fh);
 	}
 	self.playerdemo_mode = 0;
@@ -36,7 +36,7 @@ void playerdemo_open_read(string f)
 	self.playerdemo_time = stof(fgets(self.playerdemo_fh));
 	self.playerdemo_time += self.playerdemo_starttime;
 	self.movetype = MOVETYPE_NONE;
-	print("playerdemo: ", self.netname, " reading from ", f, "\n");
+	LOG_INFO("playerdemo: ", self.netname, " reading from ", f, "\n");
 }
 void playerdemo_open_write(string f)
 {
@@ -44,8 +44,8 @@ void playerdemo_open_write(string f)
 	self.playerdemo_mode = PLAYERDEMO_MODE_WRITING;
 	self.playerdemo_fh = fopen(f, FILE_WRITE);
 	self.playerdemo_starttime = time - 1;
-	print("playerdemo: ", self.netname, " writing to ", f, "\n");
-	print("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
+	LOG_INFO("playerdemo: ", self.netname, " writing to ", f, "\n");
+	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
 }
 #define PLAYERDEMO_FIELD(func,t,f) func##t(f,#f);
 #define PLAYERDEMO_FIELDS(func) \

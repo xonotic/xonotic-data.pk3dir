@@ -305,8 +305,8 @@ void PieceMinsMaxs(float rot, float pc)
 		// TODO OPTIMIZE
 	}
 #ifdef VERIFY
-	print(vtos(tet_piecemins), "-");
-	print(vtos(tet_piecemaxs), "\n");
+	LOG_INFO(vtos(tet_piecemins), "-");
+	LOG_INFO(vtos(tet_piecemaxs), "\n");
 	if(tet_piecemins.x > tet_piecemaxs.x)
 		error("inconsistent mins/maxs");
 	if(tet_piecemins.y > tet_piecemaxs.y)
@@ -548,12 +548,12 @@ void PrintField()
 	for(r = 1; r <= TET_LINES; ++r)
 	{
 		l = GetLine(r);
-		print(">");
+		LOG_INFO(">");
 		for(c = 1; c <= TET_WIDTH; ++c)
 		{
-			print(ftos(GetXBlock(c, l)));
+			LOG_INFO(ftos(GetXBlock(c, l)));
 		}
-		print("\n");
+		LOG_INFO("\n");
 	}
 }
 
@@ -706,7 +706,7 @@ float BastetPiece()
 	b = buf_create(); bastet_piece[6] = 7; bastet_score[6] = BastetSearch(b, 7, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[6]; buf_del(b);
 
 	float t2 = gettime(GETTIME_HIRES);
-	dprintf("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1));
+	LOG_TRACEF("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1));
 
 	// sort
 	float i, j, k, p, s;
@@ -1256,7 +1256,7 @@ float TetrisPostFrame()
 	if (autocvar_g_bastet)
 	{
 		cvar_set("g_bastet", "0");
-		print("The useless cvar has been toggled.\n");
+		LOG_INFO("The useless cvar has been toggled.\n");
 	}
 	return 0;
 }

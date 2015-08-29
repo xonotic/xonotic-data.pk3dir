@@ -22,7 +22,7 @@ float CampaignBailout(string s)
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
 	cvar_set("g_campaign", "0");
-	print("^4campaign initialization failed: ", s, "\n");
+	LOG_INFO("^4campaign initialization failed: ", s, "\n");
 	if(autocvar__campaign_testrun)
 		error("CAMPAIGN FAIL AHAHAHAHAHAHAHAHAH))");
 	return 1;
@@ -265,7 +265,7 @@ void CampaignPostIntermission()
 	if(campaign_won && campaign_entries < 2)
 	{
 		// last map won!
-		print("^2test run: campaign looks GOOD\n");
+		LOG_INFO("^2test run: campaign looks GOOD\n");
 		localcmd("togglemenu 1\n");
 		CampaignFile_Unload();
 		return;

@@ -1,3 +1,5 @@
+#include "Bool.qh"
+
 #include "../warpzonelib/mathlib.qc"
 
 #include "Accumulate.qh"

@@ -60,7 +60,7 @@ void turret_checkpoint_init()
     {
         self.enemy = find(world, targetname, self.target);
         if(self.enemy == world)
-            dprint("A turret_checkpoint faild to find its target!\n");
+            LOG_TRACE("A turret_checkpoint faild to find its target!\n");
     }
     //self.think = turret_checkpoint_think;
     //self.nextthink = time + tc_acum + 0.25;

@@ -239,7 +239,7 @@ void havocbot_chooserole_dm()
 
 void havocbot_chooserole()
 {
-	dprint("choosing a role...\n");
+	LOG_TRACE("choosing a role...\n");
 	self.bot_strategytime = 0;
 	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole, self))
 		return;

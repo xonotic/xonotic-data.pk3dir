@@ -10,6 +10,8 @@
 
 #define spawn _spawn
 
+#define particleeffectnum _particleeffectnum
+
 #include "upstream/csprogsdefs.qc"
 
 #undef true
@@ -18,6 +20,8 @@
 #undef FALSE
 
 #undef spawn
+
+#undef particleeffectnum
 
 #pragma noref 0
 

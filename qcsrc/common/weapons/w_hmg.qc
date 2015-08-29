@@ -74,7 +74,7 @@ void W_HeavyMachineGun_Attack_Auto()
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	Send_Effect("uzi_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -178,7 +178,7 @@ bool W_HeavyMachineGun(int req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+			pointparticles(particleeffectnum(EFFECT_MACHINEGUN_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				if(w_random < 0.05)
 					sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
