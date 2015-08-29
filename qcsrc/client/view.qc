@@ -131,6 +131,7 @@ vector GetCurrentFov(float fov)
 
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
+	if(switchweapon == activeweapon)
 	if((activeweapon == WEP_VORTEX.m_id && vortex_scope) || (activeweapon == WEP_RIFLE.m_id && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
