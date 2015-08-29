@@ -112,4 +112,15 @@ MUTATOR_HOOKABLE(ClearModelParams, EV_NO_ARGS);
 string checkmodel_input, checkmodel_command;
 MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
 
+/** called when a player presses the jump key */
+#define EV_PlayerJump(i, o) \
+    /**/ i(float, player_multijump) \
+    /**/ i(float, player_jumpheight) \
+    /**/ o(float, player_multijump) \
+    /**/ o(float, player_jumpheight) \
+    /**/
+float player_multijump;
+float player_jumpheight;
+MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
+
 #endif
