@@ -60,20 +60,35 @@ float item_ammo_modifier(float i)
 		return 0;
 	return m;
 };
-float item_ammo_type(float i)
+Ammo item_ammo_type(int i)
 {
 	switch (i)
 	{
-		case 0: return IT_SHELLS;
-		case 1: return IT_NAILS;
-		case 2: return IT_CELLS;
-		case 3: return IT_PLASMA;
-		case 4: return IT_ROCKETS;
-		case 5: return IT_FUEL;
+		case 0: return ITEM_Shells;
+		case 1: return ITEM_Bullets;
+		case 2: return ITEM_Cells;
+		case 3: return ITEM_Plasma;
+		case 4: return ITEM_Rockets;
+		case 5: return ITEM_JetpackFuel;
 		default: error("item_ammo_wtf");
 	}
-	return 0;
-};
+	return ITEM_Shells;
+}
+
+string Item_CounterFieldName(Ammo a) { return a.m_name; }
+.int Item_CounterField(Ammo a)
+{
+	switch (a) {
+		case ITEM_Shells: return ammo_shells;
+		case ITEM_Bullets: return ammo_nails;
+		case ITEM_Cells: return ammo_cells;
+		case ITEM_Plasma: return ammo_plasma;
+		case ITEM_Rockets: return ammo_rockets;
+		case ITEM_JetpackFuel: return ammo_fuel;
+		default: return ammo_none;
+    }
+}
+
 float item_ammo_mincount[ITEM_AMMO_COUNT];
 float item_ammo_count[ITEM_AMMO_COUNT];
 .float item_ammo_weight[ITEM_AMMO_COUNT];
@@ -100,6 +115,7 @@ const float ITEM_AMMO_PRIORITY_MEDIUM = 6;
 const float ITEM_AMMO_PRIORITY_SHORT = 8;
 
 float item_ammo_picked;
+.string save_classname;
 void item_ammo_pick()
 {
 	entity w, a;
@@ -128,7 +144,7 @@ void item_ammo_pick()
 	for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		if (start_weapons & get_weaponinfo(j).weapons)
 			for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-				if (get_weaponinfo(j).items & item_ammo_type(i))
+				if (get_weaponinfo(j).items & item_ammo_type(i).m_itemid)
 				{
 					item_ammo_mincount[i] = 1;
 					// Just 1, even in teamplay! On
@@ -141,7 +157,7 @@ void item_ammo_pick()
 	{
 		float n_ammotypes = 0;
 		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-			if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
+			if (get_weaponinfo(w.weapon).items & item_ammo_type(i).m_itemid)
 				++n_ammotypes;
 		if (!n_ammotypes)
 			continue;
@@ -163,7 +179,7 @@ void item_ammo_pick()
 		// types it uses.
 		float weight = 1.0 / (n_ammotypes * n_itemteams);
 		for (i = 0; i < ITEM_AMMO_COUNT; ++i)
-			if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
+			if (get_weaponinfo(w.weapon).items & item_ammo_type(i).m_itemid)
 			{
 				item_ammo_count[i] += item_ammo_modifier(i) * item_ammo_weaponmodifier(w.weapon) * weight;
 				// Weapon exists on the map! No "bonus" for
@@ -217,7 +233,7 @@ void item_ammo_pick()
 			float sum = 0;
 			float mindist = -1;
 			for (w = weaponlist; w; w = w.chain)
-				if (get_weaponinfo(w.weapon).items & item_ammo_type(i))
+				if (get_weaponinfo(w.weapon).items & item_ammo_type(i).m_itemid)
 				{
 					float dist = vlen(w.origin - a.item_ammo_origin);
 					if (mindist < 0 || dist < mindist)
