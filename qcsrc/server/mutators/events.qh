@@ -577,4 +577,10 @@ vector bullet_startpos;
 vector bullet_endpos;
 //float frag_damage;
 MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
+
+#define EV_FixPlayermodel(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
 #endif
