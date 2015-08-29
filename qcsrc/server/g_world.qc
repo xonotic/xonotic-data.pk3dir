@@ -350,6 +350,8 @@ void cvar_changes_init()
 		BADPREFIX("timelimit_");
 		BADCVAR("gameversion");
 		BADPREFIX("gameversion_");
+		BADCVAR("sv_minigames");
+		BADPREFIX("sv_minigames_");
 		BADCVAR("sv_namechangetimer");
 
 		// allowed changes to server admins (please sync this to server.cfg)
