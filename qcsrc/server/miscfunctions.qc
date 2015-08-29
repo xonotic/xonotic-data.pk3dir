@@ -312,10 +312,6 @@ string formatmessage(string msg)
 	return msg;
 }
 
-float boolean(float value) { // if value is 0 return false (0), otherwise return true (1)
-	return (value == 0) ? false : true;
-}
-
 /*
 =============
 GetCvars

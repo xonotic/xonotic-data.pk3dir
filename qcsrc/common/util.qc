@@ -2306,27 +2306,6 @@ string MakeConsoleSafe(string input)
 	return input;
 }
 
-#ifndef MENUQC
-// get true/false value of a string with multiple different inputs
-float InterpretBoolean(string input)
-{
-	switch(strtolower(input))
-	{
-		case "yes":
-		case "true":
-		case "on":
-			return true;
-
-		case "no":
-		case "false":
-		case "off":
-			return false;
-
-		default: return stof(input);
-	}
-}
-#endif
-
 #ifdef CSQC
 entity ReadCSQCEntity()
 {

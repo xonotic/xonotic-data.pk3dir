@@ -1,0 +1,39 @@
+#ifndef BOOL_H
+#define BOOL_H
+
+#ifndef QCC_SUPPORT_BOOL
+    #define bool float
+
+    // Boolean Constants
+    const int true 	= 1;
+    const int false = 0;
+#endif
+
+// Transitional aliases
+[[deprecated("use true")]] [[alias("true")]] const bool TRUE;
+[[deprecated("use false")]] [[alias("false")]] const bool FALSE;
+
+// get true/false value of a string with multiple different inputs
+float InterpretBoolean(string input)
+{
+    switch (strtolower(input))
+    {
+        case "yes":
+        case "true":
+        case "on":
+            return true;
+
+        case "no":
+        case "false":
+        case "off":
+            return false;
+
+        default: return stof(input);
+    }
+}
+
+float boolean(float value) { // if value is 0 return false (0), otherwise return true (1)
+    return (value == 0) ? false : true;
+}
+
+#endif
