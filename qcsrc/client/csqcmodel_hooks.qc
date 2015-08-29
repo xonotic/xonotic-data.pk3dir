@@ -639,11 +639,8 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
-		if(isplayer)
-		{
-			CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
-			CSQCPlayer_LOD_Apply();
-		}
+		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
+		CSQCPlayer_LOD_Apply();
 
 		if(!isplayer)
 		{
