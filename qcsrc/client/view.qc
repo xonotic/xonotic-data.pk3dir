@@ -457,8 +457,6 @@ bool WantEventchase()
 
 vector damage_blurpostprocess, content_blurpostprocess;
 
-float checkfail[16];
-
 float unaccounted_damage = 0;
 void UpdateDamage()
 {
@@ -1048,22 +1046,6 @@ void CSQC_UpdateView(float w, float h)
 
 	button_attack2 = (input_buttons & BUTTON_3);
 	button_zoom = (input_buttons & BUTTON_4);
-
-#define CHECKFAIL_ASSERT(flag,func,parm,val) do {                                                                   \
-	float checkfailv = (func)(parm);                                                                                \
-	if (checkfailv != (val)) {                                                                                      \
-		if (!checkfail[(flag)])                                                                                     \
-		localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv));                           \
-		checkfail[(flag)] = 1;                                                                                      \
-	}                                                                                                               \
-} while(0)
-	CHECKFAIL_ASSERT(0, cvar_type, "\{100}\{105}\{118}\{48}\{95}\{101}\{118}\{97}\{100}\{101}", 0);
-	CHECKFAIL_ASSERT(1, cvar_type, "\{97}\{97}\{95}\{101}\{110}\{97}\{98}\{108}\{101}", 0);
-	CHECKFAIL_ASSERT(2, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{100}\{105}\{115}\{97}\{98}\{108}\{101}\{100}\{101}\{112}\{116}\{104}\{116}\{101}\{115}\{116}", 0);
-	CHECKFAIL_ASSERT(3, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
-	CHECKFAIL_ASSERT(4, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{108}\{105}\{103}\{104}\{116}", 0);
-	CHECKFAIL_ASSERT(5, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{115}\{104}\{97}\{100}\{111}\{119}\{118}\{111}\{108}\{117}\{109}\{101}\{115}", 0);
-	CHECKFAIL_ASSERT(6, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
 
 	vf_size = getpropertyvec(VF_SIZE);
 	vf_min = getpropertyvec(VF_MIN);
