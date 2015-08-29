@@ -123,4 +123,10 @@ float player_multijump;
 float player_jumpheight;
 MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 
+/** Called checking if 3rd person mode should be forced on */
+#define EV_WantEventchase(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(WantEventchase, EV_WantEventchase);
+
 #endif

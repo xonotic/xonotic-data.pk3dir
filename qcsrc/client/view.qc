@@ -437,6 +437,8 @@ bool WantEventchase()
 	{
 		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
 			return true;
+		if(MUTATOR_CALLHOOK(WantEventchase, self))
+			return true;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO.m_id)))
 			return true;
 		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
