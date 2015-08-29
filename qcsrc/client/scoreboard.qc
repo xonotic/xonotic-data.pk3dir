@@ -386,41 +386,38 @@ void Cmd_HUD_SetFields(float argc)
 		hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 		str = strtolower(str);
 
-		if(str == "ping") {
-			hud_field[hud_num_fields] = SP_PING;
-		} else if(str == "pl") {
-			hud_field[hud_num_fields] = SP_PL;
-		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
-			hud_field[hud_num_fields] = SP_KDRATIO;
-		} else if(str == "sum" || str == "diff" || str == "k-d") {
-			hud_field[hud_num_fields] = SP_SUM;
-		} else if(str == "name" || str == "nick") {
-			hud_field[hud_num_fields] = SP_NAME;
-			have_name = 1;
-		} else if(str == "|") {
-			hud_field[hud_num_fields] = SP_SEPARATOR;
-			have_separator = 1;
-		} else {
-			for(j = 0; j < MAX_SCORE; ++j)
-				if(str == strtolower(scores_label[j]))
-					goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
+		switch(str)
+		{
+			case "ping": hud_field[hud_num_fields] = SP_PING; break;
+			case "pl": hud_field[hud_num_fields] = SP_PL; break;
+			case "pl": hud_field[hud_num_fields] = SP_PL; break;
+			case "kd": case "kdr": case "kdratio": case "k/d": hud_field[hud_num_fields] = SP_KDRATIO; break;
+			case "sum": case "diff": case "k-d": hud_field[hud_num_fields] = SP_SUM; break;
+			case "name": case "nick": hud_field[hud_num_fields] = SP_NAME; have_name = true; break;
+			case "|": hud_field[hud_num_fields] = SP_SEPARATOR; have_separator = true; break;
+			default:
+			{
+				for(j = 0; j < MAX_SCORE; ++j)
+					if(str == strtolower(scores_label[j]))
+						goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
+
 :notfound
-			if(str == "frags")
-			{
-				j = SP_FRAGS;
-			}
-			else
-			{
-				if (!nocomplain)
-					LOG_INFOF("^1Error:^7 Unknown score field: '%s'\n", str);
-				continue;
-			}
+				if(str == "frags")
+					j = SP_FRAGS;
+				else
+				{
+					if(!nocomplain)
+						LOG_INFOF("^1Error:^7 Unknown score field: '%s'\n", str);
+					continue;
+				}
 :found
-			hud_field[hud_num_fields] = j;
-			if(j == ps_primary)
-				have_primary = 1;
-			if(j == ps_secondary)
-				have_secondary = 1;
+				hud_field[hud_num_fields] = j;
+				if(j == ps_primary)
+					have_primary = 1;
+				if(j == ps_secondary)
+					have_secondary = 1;
+
+			}
 		}
 		++hud_num_fields;
 		if(hud_num_fields >= MAX_HUD_FIELDS)
