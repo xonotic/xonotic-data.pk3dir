@@ -411,7 +411,7 @@ bool W_Porto(int req)
 	{
 		case WR_IMPACTEFFECT:
 		{
-			print("Since when does Porto send DamageInfo?\n");
+			LOG_INFO("Since when does Porto send DamageInfo?\n");
 			return true;
 		}
 		case WR_INIT:

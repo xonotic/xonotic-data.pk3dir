@@ -98,7 +98,7 @@ void _TEST_XonoticDecibelsSlider()
 		float v = fromDecibelOfSquare(db, -40);
 		float dbv = toDecibelOfSquare(v, -40);
 		float d = dbv - db;
-		printf("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d);
+		LOG_INFOF("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d);
 		TEST_Check(fabs(d) > 0.02);
 	}
 	TEST_OK();

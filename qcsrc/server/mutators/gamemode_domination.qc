@@ -597,7 +597,7 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
 	{
-		print("No ""dom_team"" entities found on this map, creating them anyway.\n");
+		LOG_INFO("No ""dom_team"" entities found on this map, creating them anyway.\n");
 		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}
@@ -652,7 +652,7 @@ MUTATOR_DEFINITION(gamemode_domination)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

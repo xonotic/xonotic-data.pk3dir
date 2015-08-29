@@ -79,8 +79,8 @@ void ons_debug(string input)
 {
 	switch(autocvar_g_onslaught_debug)
 	{
-		case 1: dprint(input); break;
-		case 2: print(input); break;
+		case 1: LOG_TRACE(input); break;
+		case 2: LOG_INFO(input); break;
 	}
 }
 
@@ -2179,7 +2179,7 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

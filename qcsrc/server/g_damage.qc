@@ -297,7 +297,7 @@ float Obituary_WeaponDeath(
 		}
 		else
 		{
-			dprintf(
+			LOG_TRACEF(
 				"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
 				deathtype,
 				death_weapon
@@ -1040,13 +1040,13 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
 
 						if(autocvar_g_throughfloor_debug)
-							printf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
+							LOG_INFOF("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
 
 
 						total = 0.25 * pow(max(mininv_f, mininv_d), 2);
 
 						if(autocvar_g_throughfloor_debug)
-							printf(" steps=%f", total);
+							LOG_INFOF(" steps=%f", total);
 
 
 						if (IS_PLAYER(targ))
@@ -1055,7 +1055,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 							total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
 
 						if(autocvar_g_throughfloor_debug)
-							printf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total)));
+							LOG_INFOF(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total)));
 
 						for(c = 0; c < total; ++c)
 						{
@@ -1082,7 +1082,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						force = force * a;
 
 						if(autocvar_g_throughfloor_debug)
-							printf(" D=%f F=%f\n", finaldmg, vlen(force));
+							LOG_INFOF(" D=%f F=%f\n", finaldmg, vlen(force));
 					}
 
 					//if (targ == attacker)

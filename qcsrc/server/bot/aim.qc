@@ -343,12 +343,12 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	shotspeedupward *= W_WeaponSpeedFactor();
 	if (!shotspeed)
 	{
-		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
 		maxshottime = 1;
 	}
 	makevectors(self.v_angle);

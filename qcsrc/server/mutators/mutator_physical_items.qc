@@ -111,7 +111,7 @@ MUTATOR_DEFINITION(mutator_physical_items)
 	{
 		if (!(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")))
 		{
-			dprint("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
+			LOG_TRACE("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
 			return -1;
 		}
 	}
@@ -123,7 +123,7 @@ MUTATOR_DEFINITION(mutator_physical_items)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime\n");
 		return -1;
 	}
 

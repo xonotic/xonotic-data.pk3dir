@@ -605,14 +605,14 @@ bool W_Devastator(int req)
 			#if 0
 			if(self.rl_release == 0)
 			{
-				printf("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo));
+				LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo));
 				return true;
 			}
 			else
 			{
 				ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
 				ammo_amount += self.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
-				printf("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
+				LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
 				return ammo_amount;
 			}
 			#else

@@ -13,8 +13,8 @@ void bot_debug(string input)
 {
 	switch(autocvar_bot_debug)
 	{
-		case 1: dprint(input); break;
-		case 2: print(input); break;
+		case 1: LOG_TRACE(input); break;
+		case 2: LOG_INFO(input); break;
 	}
 }
 

@@ -572,7 +572,7 @@ void vehicles_setreturn(entity veh)
 
 void vehicle_use()
 {
-	dprint("vehicle ",self.netname, " used by ", activator.classname, "\n");
+	LOG_TRACE("vehicle ",self.netname, " used by ", activator.classname, "\n");
 
 	self.tur_head.team = activator.team;
 
@@ -583,7 +583,7 @@ void vehicle_use()
 
 	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
 	{
-		dprint("Respawning vehicle: ", self.netname, "\n");
+		LOG_TRACE("Respawning vehicle: ", self.netname, "\n");
 		if(self.effects & EF_NODRAW)
 		{
 			self.think = vehicles_spawn;
@@ -832,7 +832,7 @@ void vehicles_exit(bool eject)
 
 	if(vehicles_exit_running)
 	{
-		dprint("^1vehicles_exit allready running! this is not good..\n");
+		LOG_TRACE("^1vehicles_exit allready running! this is not good..\n");
 		return;
 	}
 
@@ -1138,7 +1138,7 @@ void vehicles_think()
 // initialization
 void vehicles_spawn()
 {
-	dprint("Spawning vehicle: ", self.classname, "\n");
+	LOG_TRACE("Spawning vehicle: ", self.classname, "\n");
 
 	// disown & reset
 	self.vehicle_hudmodel.viewmodelforclient = self;

@@ -211,7 +211,7 @@ void PrecacheMonsterSounds(string f)
 	{
 		if(tokenize_console(s) != 3)
 		{
-			dprint("Invalid sound info line: ", s, "\n");
+			LOG_TRACE("Invalid sound info line: ", s, "\n");
 			continue;
 		}
 		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
@@ -266,7 +266,7 @@ float LoadMonsterSounds(string f, float first)
 	fh = fopen(f, FILE_READ);
 	if(fh < 0)
 	{
-		dprint("Monster sound file not found: ", f, "\n");
+		LOG_TRACE("Monster sound file not found: ", f, "\n");
 		return 0;
 	}
 	while((s = fgets(fh)))

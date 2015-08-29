@@ -86,10 +86,10 @@ void relocate_nexball(void)
 		o = self.origin;
 		if(!move_out_of_solid(self))
 			objerror("could not get out of solid at all!");
-		print("^1NOTE: this map needs FIXING. ", self.classname, " at ", vtos(o - '0 0 1'));
-		print(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
-		print(" ", ftos(self.origin.y - o.y));
-		print(" ", ftos(self.origin.z - o.z), "'\n");
+		LOG_INFO("^1NOTE: this map needs FIXING. ", self.classname, " at ", vtos(o - '0 0 1'));
+		LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
+		LOG_INFO(" ", ftos(self.origin.y - o.y));
+		LOG_INFO(" ", ftos(self.origin.z - o.z), "'\n");
 		self.origin = o;
 	}
 }
@@ -241,7 +241,7 @@ void ResetBall(void)
 	{
 //		dprint("Step 4: time: ", ftos(time), "\n");
 		if(vlen(self.origin - self.spawnorigin) > 10)  // should not happen anymore
-			dprint("The ball moved too far away from its spawn origin.\nOffset: ",
+			LOG_TRACE("The ball moved too far away from its spawn origin.\nOffset: ",
 				   vtos(self.origin - self.spawnorigin), " Velocity: ", vtos(self.velocity), "\n");
 		self.velocity = '0 0 0';
 		setorigin(self, self.spawnorigin); // make sure it's positioned correctly anyway
@@ -423,7 +423,7 @@ void spawnfunc_nexball_team(void)
 
 void nb_spawnteam(string teamname, float teamcolor)
 {
-	dprint("^2spawned team ", teamname, "\n");
+	LOG_TRACE("^2spawned team ", teamname, "\n");
 	entity e;
 	e = spawn();
 	e.classname = "nexball_team";
@@ -1039,7 +1039,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

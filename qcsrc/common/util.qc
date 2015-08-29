@@ -288,7 +288,7 @@ void db_save(float db, string pFilename)
 	fh = fopen(pFilename, FILE_WRITE);
 	if(fh < 0)
 	{
-		print(strcat("^1Can't write DB to ", pFilename));
+		LOG_INFO(strcat("^1Can't write DB to ", pFilename));
 		return;
 	}
 	n = buf_getsize(db);
@@ -382,16 +382,16 @@ void db_put(float db, string pKey, string pValue)
 void db_test()
 {
 	float db, i;
-	print("LOAD...\n");
+	LOG_INFO("LOAD...\n");
 	db = db_load("foo.db");
-	print("LOADED. FILL...\n");
+	LOG_INFO("LOADED. FILL...\n");
 	for(i = 0; i < DB_BUCKETS; ++i)
 		db_put(db, ftos(random()), "X");
-	print("FILLED. SAVE...\n");
+	LOG_INFO("FILLED. SAVE...\n");
 	db_save(db, "foo.db");
-	print("SAVED. CLOSE...\n");
+	LOG_INFO("SAVED. CLOSE...\n");
 	db_close(db);
-	print("CLOSED.\n");
+	LOG_INFO("CLOSED.\n");
 }
 
 // Multiline text file buffers
@@ -620,17 +620,17 @@ void compressShortVector_init()
 
 	if(cvar("developer"))
 	{
-		print("Verifying vector compression table...\n");
+		LOG_INFO("Verifying vector compression table...\n");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				print("BROKEN vector compression: ", ftos(i));
-				print(" -> ", vtos(decompressShortVector(i)));
-				print(" -> ", ftos(compressShortVector(decompressShortVector(i))));
-				print("\n");
+				LOG_INFO("BROKEN vector compression: ", ftos(i));
+				LOG_INFO(" -> ", vtos(decompressShortVector(i)));
+				LOG_INFO(" -> ", ftos(compressShortVector(decompressShortVector(i))));
+				LOG_INFO("\n");
 				error("b0rk");
 			}
-		print("Done.\n");
+		LOG_INFO("Done.\n");
 	}
 }
 
@@ -892,13 +892,13 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if (!(tmp_cvar || tmp_value))
 	{
-		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		LOG_TRACE("Error: Invalid usage of cvar_settemp(string, string); !\n");
 		return 0;
 	}
 
 	if(!cvar_type(tmp_cvar))
 	{
-		printf("Error: cvar %s doesn't exist!\n", tmp_cvar);
+		LOG_INFOF("Error: cvar %s doesn't exist!\n", tmp_cvar);
 		return 0;
 	}
 
@@ -935,7 +935,7 @@ float cvar_settemp_restore()
 			++i;
 		}
 		else
-			printf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
+			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
 	}
 
 	return i;
@@ -1735,17 +1735,17 @@ float compressShotOrigin(vector v)
 	z = rint(v.z * 4) + 128;
 	if(x > 255 || x < 0)
 	{
-		print("shot origin ", vtos(v), " x out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " x out of bounds\n");
 		x = bound(0, x, 255);
 	}
 	if(y > 255 || y < 0)
 	{
-		print("shot origin ", vtos(v), " y out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " y out of bounds\n");
 		y = bound(0, y, 255);
 	}
 	if(z > 255 || z < 0)
 	{
-		print("shot origin ", vtos(v), " z out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " z out of bounds\n");
 		z = bound(0, z, 255);
 	}
 	return x * 0x10000 + y * 0x100 + z;
@@ -2350,7 +2350,7 @@ void m_shutdown()
 {
 	if(shutdown_running)
 	{
-		print("Recursive shutdown detected! Only restoring cvars...\n");
+		LOG_INFO("Recursive shutdown detected! Only restoring cvars...\n");
 	}
 	else
 	{
@@ -2628,7 +2628,7 @@ vector animfixfps(entity e, vector a, vector b)
 #ifdef SVQC
 void dedicated_print(string input) // print(), but only print if the server is not local
 {
-	if(server_is_dedicated) { print(input); }
+	if(server_is_dedicated) { LOG_INFO(input); }
 }
 #endif
 

@@ -93,7 +93,7 @@ void ClientCommand_checkfail(float request, string command) // internal command,
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			printf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			LOG_INFOF("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 			self.checkfail = 1;
 			return; // never fall through to usage
 		}

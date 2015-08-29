@@ -36,7 +36,7 @@ void tdm_DelayedInit()
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "tdm_team") == world)
 	{
-		print("No ""tdm_team"" entities found on this map, creating them anyway.\n");
+		LOG_INFO("No ""tdm_team"" entities found on this map, creating them anyway.\n");
 
 		float numteams = min(4, autocvar_g_tdm_teams_override);
 
@@ -75,7 +75,7 @@ MUTATOR_DEFINITION(gamemode_tdm)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

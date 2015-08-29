@@ -1072,7 +1072,7 @@ void ClientConnect (void)
 
 	if(IS_CLIENT(self))
 	{
-		print("Warning: ClientConnect, but already connected!\n");
+		LOG_INFO("Warning: ClientConnect, but already connected!\n");
 		return;
 	}
 
@@ -1092,7 +1092,7 @@ void ClientConnect (void)
 
 	if(player_count<0)
 	{
-		dprint("BUG player count is lower than zero, this cannot happen!\n");
+		LOG_TRACE("BUG player count is lower than zero, this cannot happen!\n");
 		player_count = 0;
 	}
 
@@ -1294,7 +1294,7 @@ void ClientDisconnect (void)
 
 	if (!IS_CLIENT(self))
 	{
-		print("Warning: ClientDisconnect without ClientConnect\n");
+		LOG_INFO("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
 
@@ -2323,7 +2323,7 @@ void PlayerPreThink (void)
 					if(strstr(autocvar_g_xonoticversion, "git", 0) >= 0 || strstr(autocvar_g_xonoticversion, "autobuild", 0) >= 0)
 					{
 						// notify release users if connecting to git
-						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
+						LOG_TRACE("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 						Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, self.cvar_g_xonoticversion);
 					}
 					else
@@ -2333,13 +2333,13 @@ void PlayerPreThink (void)
 						if(r < 0)
 						{
 							// give users new version
-							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n");
+							LOG_TRACE("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n");
 							Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, self.cvar_g_xonoticversion);
 						}
 						else if(r > 0)
 						{
 							// notify users about old server version
-							print("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
+							LOG_INFO("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 							Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, self.cvar_g_xonoticversion);
 						}
 					}

@@ -118,7 +118,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 					if (trace_ent == ent.cursor_trace_ent)
 						w_shotdir = normalize(ent.cursor_trace_ent.origin - w_shotorg);
 					else
-						print("antilag fail\n");
+						LOG_INFO("antilag fail\n");
 				}
 			}
 		}
@@ -182,7 +182,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
 	mspercallcount += 1;
-	print("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
+	LOG_INFO("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
 	#endif
 
 	proj.velocity = W_CalculateProjectileVelocity(proj.owner.velocity, pSpeed * dir, forceAbsolute);

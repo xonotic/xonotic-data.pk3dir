@@ -2731,7 +2731,7 @@ void HUD_Vote(void)
 		{
 			vote_yescount = 0;
 			vote_nocount = 0;
-			print(_("^1You must answer before entering hud configure mode\n"));
+			LOG_INFO(_("^1You must answer before entering hud configure mode\n"));
 			cvar_set("_hud_configure", "0");
 		}
 		if(vote_called_vote)
@@ -4811,7 +4811,7 @@ void HUD_Main (void)
 			}
 		}
 		if (warning)
-			dprint("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
+			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)

@@ -471,7 +471,7 @@ void UpdateDamage()
 	if (damage_dealt_time != damage_dealt_time_prev)
 	{
 		unaccounted_damage += unaccounted_damage_new;
-		dprint("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
+		LOG_TRACE("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
 	}
 	damage_dealt_time_prev = damage_dealt_time;
 
@@ -511,7 +511,7 @@ void UpdateHitsound()
 				pitch_shift = mirror_value + (mirror_value - pitch_shift);
 			}
 
-			dprint("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift), "\n");
+			LOG_TRACE("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift), "\n");
 
 			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
 			// todo: normalize sound pressure levels? seems unnecessary
@@ -1258,7 +1258,7 @@ void CSQC_UpdateView(float w, float h)
 		setproperty(VF_ANGLES, '90 0 0');
 
 		#if 0
-		printf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
 			vtos(ov_org),
 			vtos(getpropertyvec(VF_ANGLES)),
 			ov_distance,
