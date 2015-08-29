@@ -345,21 +345,17 @@ MUTATOR_HOOKABLE(PlayerPowerups, EV_PlayerPowerups);
  * called every player think frame
  * return 1 to disable regen
  */
-#define EV_PlayerRegen(i, o) \
-    /**/ i(float, regen_mod_max) \
-    /**/ o(float, regen_mod_max) \
-    /**/ i(float, regen_mod_regen) \
-    /**/ o(float, regen_mod_regen) \
-    /**/ i(float, regen_mod_rot) \
-    /**/ o(float, regen_mod_rot) \
-    /**/ i(float, regen_mod_limit) \
-    /**/ o(float, regen_mod_limit) \
-    /**/
 float regen_mod_max;
 float regen_mod_regen;
 float regen_mod_rot;
 float regen_mod_limit;
-MUTATOR_HOOKABLE(PlayerRegen, EV_PlayerRegen);
+float regen_health;
+float regen_health_linear;
+float regen_health_rot;
+float regen_health_rotlinear;
+float regen_health_stable;
+float regen_health_rotstable;
+MUTATOR_HOOKABLE(PlayerRegen, EV_NO_ARGS);
 
 /**
  * called when the use key is pressed

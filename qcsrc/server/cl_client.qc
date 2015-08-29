@@ -1635,13 +1635,22 @@ void player_regen (void)
 {
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
-	if(!MUTATOR_CALLHOOK(PlayerRegen, max_mod, regen_mod, rot_mod, limit_mod))
+	regen_mod_max = max_mod;
+	regen_mod_regen = regen_mod;
+	regen_mod_rot = rot_mod;
+	regen_mod_limit = limit_mod;
+
+	regen_health = autocvar_g_balance_health_regen;
+	regen_health_linear = autocvar_g_balance_health_regenlinear;
+	regen_health_rot = autocvar_g_balance_health_rot;
+	regen_health_rotlinear = autocvar_g_balance_health_rotlinear;
+	regen_health_stable = autocvar_g_balance_health_regenstable;
+	regen_health_rotstable = autocvar_g_balance_health_rotstable;
+	if(!MUTATOR_CALLHOOK(PlayerRegen))
 	if(!self.frozen)
 	{
-		float minh, mina, maxh, maxa, limith, limita;
-		maxh = autocvar_g_balance_health_rotstable;
+		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
-		minh = autocvar_g_balance_health_regenstable;
 		mina = autocvar_g_balance_armor_regenstable;
 		limith = autocvar_g_balance_health_limit;
 		limita = autocvar_g_balance_armor_limit;
@@ -1651,13 +1660,13 @@ void player_regen (void)
 		rot_mod = regen_mod_rot;
 		limit_mod = regen_mod_limit;
 
-		maxh = maxh * max_mod;
-		minh = minh * max_mod;
+		regen_health_rotstable = regen_health_rotstable * max_mod;
+		regen_health_stable = regen_health_stable * max_mod;
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
 
 		self.armorvalue = CalcRotRegen(self.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
-		self.health = CalcRotRegen(self.health, minh, autocvar_g_balance_health_regen, autocvar_g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, autocvar_g_balance_health_rot, autocvar_g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
+		self.health = CalcRotRegen(self.health, regen_health_stable, regen_health, regen_health_linear, regen_mod * frametime * (time > self.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
 	}
 
 	// if player rotted to death...  die!

@@ -516,8 +516,8 @@ void Projectile_Precache()
 	precache_model("models/tracer.mdl");
 	precache_model("models/sphere/sphere.md3");
 
-	precache_model(W_Model("v_ok_grenade"));
-	precache_model(W_Model("ok_rocket"));
+	precache_model(W_Model("v_ok_grenade.md3"));
+	precache_model(W_Model("ok_rocket.md3"));
 
 	precache_sound(W_Sound("electro_fly"));
 	precache_sound(W_Sound("rocket_fly"));
