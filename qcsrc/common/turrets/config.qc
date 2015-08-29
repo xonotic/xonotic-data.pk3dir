@@ -48,7 +48,7 @@ void Dump_Turret_Settings(void)
 		TUR_CONFIG_WRITETOFILE("// }}}\n")
 
 		// step 5: debug info
-		print(sprintf("#%d: %s: %d settings...\n", i, TUR_NAME(i), TUR_CONFIG_COUNT));
+		LOG_INFO(sprintf("#%d: %s: %d settings...\n", i, TUR_NAME(i), TUR_CONFIG_COUNT));
 		totalsettings += TUR_CONFIG_COUNT;
 	}
 
@@ -58,5 +58,5 @@ void Dump_Turret_Settings(void)
 		{ tur_config_queue[x] = string_null; }
 
 	// extra information
-	print(sprintf("Totals: %d turrets, %d settings\n", (i - 1), totalsettings));
+	LOG_INFO(sprintf("Totals: %d turrets, %d settings\n", (i - 1), totalsettings));
 }

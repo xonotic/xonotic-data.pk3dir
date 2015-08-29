@@ -545,7 +545,7 @@ void Draw_WaypointSprite()
     if (rgb == '0 0 0')
     {
         self.teamradar_color = '1 0 1';
-        printf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
+        LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
     }
 
     if (time - floor(time) > 0.5)

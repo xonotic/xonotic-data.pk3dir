@@ -324,7 +324,7 @@ bool bumblebee_gunner_enter()
 	}
 	else if(!vehic.gunner1 && time >= vehic.gun1.phase) 	{ gunner = vehic.gun1; vehic.gunner1 = player; }
 	else if(!vehic.gunner2 && time >= vehic.gun2.phase)		{ gunner = vehic.gun2; vehic.gunner2 = player; }
-	else { dprint("Vehicle is full, fail\n"); return false; }
+	else { LOG_TRACE("Vehicle is full, fail\n"); return false; }
 
 	player.vehicle 			= gunner;
 	player.angles 			= vehic.angles;

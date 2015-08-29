@@ -105,7 +105,7 @@ float pathlib_expandnode_star(entity node, vector start, vector goal)
 
     if(node.pathlib_node_edgeflags == pathlib_node_edgeflag_none)
     {
-        dprint("Node at ", vtos(node.origin), " not expanable");
+        LOG_TRACE("Node at ", vtos(node.origin), " not expanable");
         return pathlib_open_cnt;
     }
 

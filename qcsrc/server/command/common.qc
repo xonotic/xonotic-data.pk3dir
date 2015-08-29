@@ -169,7 +169,7 @@ void print_to(entity to, string input)
     if(to)
         sprint(to, strcat(input, "\n"));
     else
-        print(input, "\n");
+        LOG_INFO(input, "\n");
 }
 
 // ==========================================
@@ -518,7 +518,7 @@ void CommonCommand_timein(float request, entity caller)
 							return;
 						}
 
-						default: dprint("timeout status was inactive, but this code was executed anyway?"); return;
+						default: LOG_TRACE("timeout status was inactive, but this code was executed anyway?"); return;
 					}
 				}
 			}

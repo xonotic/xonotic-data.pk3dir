@@ -62,8 +62,8 @@ void DistributeEvenly_Init(float amount, float totalweight)
 {
     if (DistributeEvenly_amount)
     {
-        dprint("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ");
-        dprint(ftos(DistributeEvenly_totalweight), " left!)\n");
+        LOG_TRACE("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ");
+        LOG_TRACE(ftos(DistributeEvenly_totalweight), " left!)\n");
     }
     if (totalweight == 0)
         DistributeEvenly_amount = 0;
@@ -122,7 +122,7 @@ void GameLogEcho(string s)
     }
     if (autocvar_sv_eventlog_console)
     {
-        print(s, "\n");
+        LOG_INFO(s, "\n");
     }
 }
 
@@ -195,9 +195,9 @@ entity findnearest(vector point, .string field, string value, vector axismod)
         {
             if (i != 0)
             {
-                dprint("Nearest point (");
-                dprint(nearest_entity[0].netname);
-                dprint(") is not visible, using a visible one.\n");
+                LOG_TRACE("Nearest point (");
+                LOG_TRACE(nearest_entity[0].netname);
+                LOG_TRACE(") is not visible, using a visible one.\n");
             }
             return nearest_entity[i];
         }
@@ -206,7 +206,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     if (num_nearest == 0)
         return world;
 
-    dprint("Not seeing any location point, using nearest as fallback.\n");
+    LOG_TRACE("Not seeing any location point, using nearest as fallback.\n");
     /* DEBUGGING CODE:
     dprint("Candidates were: ");
     for(j = 0; j < num_nearest; ++j)
@@ -601,7 +601,7 @@ void readplayerstartcvars()
 			}
 			if (j > WEP_LAST)
 			{
-				print("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
+				LOG_INFO("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
 			}
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
@@ -1390,7 +1390,7 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		dprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -1403,11 +1403,11 @@ float SUB_NoImpactCheck()
         traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
         if (trace_fraction >= 1)
         {
-            dprint("Odd... did not hit...?\n");
+            LOG_TRACE("Odd... did not hit...?\n");
         }
         else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         {
-            dprint("Detected and prevented the sky-grapple bug.\n");
+            LOG_TRACE("Detected and prevented the sky-grapple bug.\n");
             return 1;
         }
     }
@@ -1465,7 +1465,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".\n");
 	}
 }
 
@@ -1594,7 +1594,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
-        dprint("Needed ", ftos(i + 1), " attempts\n");
+        LOG_TRACE("Needed ", ftos(i + 1), " attempts\n");
         return true;
     }
     else
@@ -1911,7 +1911,7 @@ void randombit_test(float bits, float iter)
 {
 	while(iter > 0)
 	{
-		print(ftos(randombit(bits)), "\n");
+		LOG_INFO(ftos(randombit(bits)), "\n");
 		--iter;
 	}
 }

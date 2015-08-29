@@ -17,7 +17,7 @@ string tur_config_queue[MAX_TUR_CONFIG];
 
 #define TUR_CONFIG_WRITETOFILE(a) { \
 	fputs(tur_config_file, a); \
-	if(tur_config_alsoprint) { print(a); } }
+	if(tur_config_alsoprint) { LOG_INFO(a); } }
 
 #define TUR_CONFIG_WRITE_CVARS(turret,name) \
 		{ TUR_CONFIG_QUEUE( \

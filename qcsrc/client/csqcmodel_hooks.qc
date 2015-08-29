@@ -137,7 +137,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(void)
 		self.forceplayermodels_isgoodmodel = fexists(self.forceplayermodels_savemodel);
 		self.forceplayermodels_isgoodmodel_mdl = self.forceplayermodels_savemodel;
 		if(!self.forceplayermodels_isgoodmodel)
-			printf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
+			LOG_INFOF("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
 	}
 }
 void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
@@ -379,7 +379,7 @@ int CSQCPlayer_FallbackFrame(int f)
 		case 29: return 4; // anim_duckwalkbackright -> anim_duckwalk
 		case 30: return 4; // anim_duckwalkbackleft -> anim_duckwalk
 	}
-	printf("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
+	LOG_INFOF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
 	return f;
 }
 void CSQCPlayer_FallbackFrame_Apply(void)
@@ -450,7 +450,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 							// we need to prevent this from 'appening
 							self.tag_entity = world;
 							self.drawmask = 0;
-							dprint("h_ model lacks weapon attachment, but v_ model is attached to it\n");
+							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it\n");
 						}
 					}
 					else if(self.tag_entity.isplayermodel)

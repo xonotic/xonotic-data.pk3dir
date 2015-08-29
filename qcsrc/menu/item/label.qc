@@ -81,7 +81,7 @@ void Label_recalcPositionWithText(entity me, string t)
 			me.realOrigin_x = me.keepspaceLeft;
 		if(!me.overrideCondenseFactor)
 			me.condenseFactor = spaceAvail / spaceUsed;
-		dprintf("NOTE: label text %s too wide for label, condensed by factor %f\n", t, me.condenseFactor);
+		LOG_TRACEF("NOTE: label text %s too wide for label, condensed by factor %f\n", t, me.condenseFactor);
 	}
 
 	if(!me.overrideRealOrigin_y)

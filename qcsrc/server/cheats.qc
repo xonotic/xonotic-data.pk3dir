@@ -290,7 +290,7 @@ float CheatImpulse(float i)
 			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
 			remove(e2);
 
-			print("404 Sportsmanship not found.\n");
+			LOG_INFO("404 Sportsmanship not found.\n");
 			DID_CHEAT();
 			break;
 	}

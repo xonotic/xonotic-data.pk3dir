@@ -21,7 +21,7 @@ void trigger_disablerelay_use()
 	}
 
 	if((!a) == (!b))
-		print("Invalid use of trigger_disablerelay: ", ftos(a), " relays were on, ", ftos(b), " relays were off!\n");
+		LOG_INFO("Invalid use of trigger_disablerelay: ", ftos(a), " relays were on, ", ftos(b), " relays were off!\n");
 }
 
 void spawnfunc_trigger_disablerelay()
