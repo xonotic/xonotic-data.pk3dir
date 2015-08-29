@@ -62,6 +62,20 @@ bool QuickMenu_Open(string mode, string submenu)
 			mode = "file";
 	}
 
+	if(mode == "file")
+	{
+		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
+			printf("No file name is set in hud_panel_quickmenu_file, loading default quickmenu\n");
+		else
+		{
+			fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
+			if(fh < 0)
+				printf("Couldn't open file \"%s\", loading default quickmenu\n", autocvar_hud_panel_quickmenu_file);
+		}
+		if(fh < 0)
+			mode = "default";
+	}
+
 	if(mode == "default")
 	{
 		QuickMenu_Buffer = buf_create();
@@ -72,15 +86,6 @@ bool QuickMenu_Open(string mode, string submenu)
 	}
 	else if(mode == "file")
 	{
-		if(autocvar_hud_panel_quickmenu_file != "")
-		if(autocvar_hud_panel_quickmenu_file != "0")
-			fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
-		if(fh < 0)
-		{
-			printf("Couldn't open file \"%s\"\n", autocvar_hud_panel_quickmenu_file);
-			return false;
-		}
-
 		QuickMenu_Buffer = buf_create();
 		if(QuickMenu_Buffer < 0)
 		{
