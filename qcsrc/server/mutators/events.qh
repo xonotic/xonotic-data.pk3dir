@@ -583,4 +583,7 @@ MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
     /**/ o(string, ret_string) \
     /**/
 MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
+
+/** Return error to play frag remaining announcements */
+MUTATOR_HOOKABLE(Scores_CountFragsRemaining, EV_NO_ARGS);
 #endif

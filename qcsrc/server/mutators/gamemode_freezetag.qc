@@ -555,7 +555,7 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 {
 	ret_float = freezetag_teams;
-	return 0;
+	return false;
 }
 
 void freezetag_Initialize()

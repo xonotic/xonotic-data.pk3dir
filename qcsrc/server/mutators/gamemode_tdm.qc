@@ -55,9 +55,16 @@ MUTATOR_HOOKFUNCTION(tdm_GetTeamCount)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(tdm_CountFrags)
+{
+	// announce remaining frags
+	return true;
+}
+
 MUTATOR_DEFINITION(gamemode_tdm)
 {
 	MUTATOR_HOOK(GetTeamCount, tdm_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(Scores_CountFragsRemaining, tdm_CountFrags, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

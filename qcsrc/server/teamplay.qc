@@ -84,6 +84,7 @@ void InitGameplayMode()
 
 	if(g_dm)
 	{
+		MUTATOR_ADD(gamemode_deathmatch);
 	}
 
 	if(g_tdm)
