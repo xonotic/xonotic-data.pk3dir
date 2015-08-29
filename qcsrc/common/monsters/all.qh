@@ -31,6 +31,8 @@ const int MR_SETUP = 1; // (SERVER) setup monster data
 const int MR_THINK = 2; // (SERVER) logic to run every frame
 const int MR_DEATH = 3; // (SERVER) called when monster dies
 const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
+const int MR_PAIN = 5; // (SERVER) called when monster is damaged
+const int MR_ANIM = 6; // (BOTH?) sets animations for monster
 
 // special spawn flags
 const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
@@ -47,9 +49,21 @@ const int MON_FLAG_MELEE = 1024;
 .string model; // full name of model
 .int spawnflags;
 .vector mins, maxs; // monster hitbox size
+.bool(int) monster_attackfunc;
+
+// animations
+.vector anim_blockend;
+.vector anim_blockstart;
+.vector anim_melee1;
+.vector anim_melee2;
+.vector anim_melee3;
+.vector anim_pain3;
+.vector anim_pain4;
+.vector anim_pain5;
+.vector anim_walk;
+.vector anim_spawn;
 
 // other useful macros
 #define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
-#define M_NAME(monstertype) (get_monsterinfo(monstertype)).monster_name
 
 #endif

@@ -642,6 +642,7 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 	{
 		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply();
+
 		if(!isplayer)
 		{
 			skeleton_loadinfo(self);
