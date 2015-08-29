@@ -327,7 +327,7 @@ bool W_Vortex(int req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
+			pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM);
 

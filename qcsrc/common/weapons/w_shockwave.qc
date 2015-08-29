@@ -874,7 +874,7 @@ bool W_Shockwave(int req)
 			// handled by Net_ReadShockwaveParticle
 			//vector org2;
 			//org2 = w_org + w_backoff * 2;
-			//pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+			//pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
 			return false;
 		}
 		case WR_INIT:

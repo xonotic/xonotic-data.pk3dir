@@ -59,7 +59,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 	W_SetupShot(self, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
-	Send_Effect("rifle_muzzleflash", w_shotorg, w_shotdir * 2000, 1);
+	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
 	if(self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) // if zoomed, shoot from the eye
 	{
@@ -273,7 +273,7 @@ bool W_Rifle(int req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
+			pointparticles(particleeffectnum(EFFECT_RIFLE_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 			{
 				if(w_random < 0.2)

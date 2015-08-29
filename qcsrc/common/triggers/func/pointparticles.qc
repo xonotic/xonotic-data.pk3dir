@@ -141,7 +141,7 @@ void spawnfunc_func_pointparticles()
 		setsize(self, '0 0 0', self.maxs - self.mins);
 	}
 	if(!self.cnt)
-		self.cnt = particleeffectnum(self.mdl);
+		self.cnt = _particleeffectnum(self.mdl);
 
 	Net_LinkEntity(self, (self.spawnflags & 4), 0, pointparticles_SendEntity);
 
