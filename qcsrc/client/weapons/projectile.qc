@@ -323,7 +323,7 @@ void Ent_Projectile()
 
 				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 				{
-					setmodel(self, W_Model("v_ok_grenade"));
+					setmodel(self, W_Model("v_ok_grenade.md3"));
 					self.traileffect = _particleeffectnum(Nade_TrailEffect(self.cnt, self.team));
 					break;
 				}
