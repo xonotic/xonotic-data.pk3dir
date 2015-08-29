@@ -537,7 +537,7 @@ void havocbot_movetogoal()
 				threshold = maxspeed * 0.2;
 				if(sxy < threshold)
 				{
-					dprint("Warning: ", self.netname, " got stuck on a jumppad (velocity in xy is ", ftos(sxy), "), trying to get out of it now\n");
+					LOG_TRACE("Warning: ", self.netname, " got stuck on a jumppad (velocity in xy is ", ftos(sxy), "), trying to get out of it now\n");
 					self.aistatus |= AI_STATUS_OUT_JUMPPAD;
 				}
 				return;
@@ -600,7 +600,7 @@ void havocbot_movetogoal()
 		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity.z < 0)
-			if(client_hasweapon(self, WEP_DEVASTATOR, true, false))
+			if(client_hasweapon(self, WEP_DEVASTATOR.m_id, true, false))
 			{
 				self.movement_x = maxspeed;
 
@@ -614,7 +614,7 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_DEVASTATOR;
+				self.switchweapon = WEP_DEVASTATOR.m_id;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = true;
 				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
@@ -788,7 +788,7 @@ void havocbot_movetogoal()
 						if(tracebox_hits_trigger_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
-							dprint("bot ", self.netname, " avoided the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
+							LOG_TRACE("bot ", self.netname, " avoided the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
 							navigation_clearroute();
 							return;
 						}
@@ -930,7 +930,7 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_RIFLE
+		if(best || self.weapons) // || self.weapon == WEP_RIFLE.m_id
 			break;
 		if(i)
 			break;
@@ -980,7 +980,7 @@ void havocbot_chooseweapon()
 	// ;)
 	if(g_weaponarena_weapons == WEPSET_TUBA)
 	{
-		self.switchweapon = WEP_TUBA;
+		self.switchweapon = WEP_TUBA.m_id;
 		return;
 	}
 
@@ -989,7 +989,7 @@ void havocbot_chooseweapon()
 	{
 		// If no weapon was chosen get the first available weapon
 		if(self.weapon==0)
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER)
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER.m_id)
 		{
 			if(client_hasweapon(self, i, true, false))
 			{
@@ -1117,7 +1117,7 @@ float havocbot_moveto(vector pos)
 		// Step 4: Move to waypoint
 		if(self.havocbot_personal_waypoint==world)
 		{
-			dprint("Error: ", self.netname, " trying to walk to a non existent personal waypoint\n");
+			LOG_TRACE("Error: ", self.netname, " trying to walk to a non existent personal waypoint\n");
 			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			return CMD_STATUS_ERROR;
 		}
@@ -1128,7 +1128,7 @@ float havocbot_moveto(vector pos)
 			bot_strategytoken_taken = true;
 			if(havocbot_moveto_refresh_route())
 			{
-				dprint(self.netname, " walking to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts)\n");
+				LOG_TRACE(self.netname, " walking to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts)\n");
 				self.havocbot_personal_waypoint_searchtime = time + 10;
 				self.havocbot_personal_waypoint_failcounter = 0;
 			}
@@ -1138,13 +1138,13 @@ float havocbot_moveto(vector pos)
 				self.havocbot_personal_waypoint_searchtime = time + 2;
 				if(self.havocbot_personal_waypoint_failcounter >= 30)
 				{
-					dprint("Warning: can't walk to the personal waypoint located at ", vtos(self.havocbot_personal_waypoint.origin),"\n");
+					LOG_TRACE("Warning: can't walk to the personal waypoint located at ", vtos(self.havocbot_personal_waypoint.origin),"\n");
 					self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 					remove(self.havocbot_personal_waypoint);
 					return CMD_STATUS_ERROR;
 				}
 				else
-					dprint(self.netname, " can't walk to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts), trying later\n");
+					LOG_TRACE(self.netname, " can't walk to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts), trying later\n");
 			}
 		}
 
@@ -1162,7 +1162,7 @@ float havocbot_moveto(vector pos)
 		if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_REACHED)
 		{
 			// Step 5: Waypoint reached
-			dprint(self.netname, "'s personal waypoint reached\n");
+			LOG_TRACE(self.netname, "'s personal waypoint reached\n");
 			remove(self.havocbot_personal_waypoint);
 			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			return CMD_STATUS_FINISHED;
@@ -1177,7 +1177,7 @@ float havocbot_moveto(vector pos)
 		// Wait until it is linked
 		if(!self.havocbot_personal_waypoint.wplinked)
 		{
-			dprint(self.netname, " waiting for personal waypoint to be linked\n");
+			LOG_TRACE(self.netname, " waiting for personal waypoint to be linked\n");
 			return CMD_STATUS_EXECUTING;
 		}
 
@@ -1186,7 +1186,7 @@ float havocbot_moveto(vector pos)
 		self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_GOING;
 
 		// Step 3: Route to waypoint
-		dprint(self.netname, " walking to its personal waypoint\n");
+		LOG_TRACE(self.netname, " walking to its personal waypoint\n");
 
 		return CMD_STATUS_EXECUTING;
 	}
@@ -1195,7 +1195,7 @@ float havocbot_moveto(vector pos)
 	wp = waypoint_spawnpersonal(pos);
 	if(wp==world)
 	{
-		dprint("Error: Can't spawn personal waypoint at ",vtos(pos),"\n");
+		LOG_TRACE("Error: Can't spawn personal waypoint at ",vtos(pos),"\n");
 		return CMD_STATUS_ERROR;
 	}
 

@@ -24,7 +24,6 @@
 	#include "../dpdefs/csprogsdefs.qh"
 	#include "../client/defs.qh"
 	#include "../common/constants.qh"
-	#include "../common/p2mathlib.qh"
 	#include "../common/stats.qh"
 	#include "../common/util.qh"
 	#include "interpolate.qh"
@@ -143,7 +142,7 @@ void PM_Movement_Move()
 {
 	runstandardplayerphysics(self);
 #ifdef CSQC
-	self.flags = 
+	self.flags =
 			((self.pmove_flags & PMF_DUCKED) ? FL_DUCKED : 0) |
 			(!(self.pmove_flags & PMF_JUMP_HELD) ? FL_JUMPRELEASED : 0) |
 			((self.pmove_flags & PMF_ONGROUND) ? FL_ONGROUND : 0);
@@ -178,7 +177,7 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
-		print("the Weird code path got hit\n");
+		LOG_INFO("the Weird code path got hit\n");
 		return;
 	}
 #endif

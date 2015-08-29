@@ -17,7 +17,6 @@
 #include "../csqcmodellib/sv_model.qh"
 
 #include "../warpzonelib/common.qh"
-#include "../warpzonelib/mathlib.qh"
 #include "../warpzonelib/util_server.qh"
 
 .float height;
@@ -1388,10 +1387,10 @@ void LinkDoors()
 	FindConnectedComponent(self, enemy, LinkDoors_nextent, LinkDoors_isconnected, world);
 
 	// set owner, and make a loop of the chain
-	dprint("LinkDoors: linking doors:");
+	LOG_TRACE("LinkDoors: linking doors:");
 	for(t = self; ; t = t.enemy)
 	{
-		dprint(" ", etos(t));
+		LOG_TRACE(" ", etos(t));
 		t.owner = self;
 		if(t.enemy == world)
 		{
@@ -1399,7 +1398,7 @@ void LinkDoors()
 			break;
 		}
 	}
-	dprint("\n");
+	LOG_TRACE("\n");
 
 	// collect health, targetname, message, size
 	cmins = self.absmin;

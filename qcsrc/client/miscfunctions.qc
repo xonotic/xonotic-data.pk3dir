@@ -2,17 +2,14 @@
 #include "_all.qh"
 
 #include "hud.qh"
-#include "sortlist.qh"
 
 #include "../common/command/generic.qh"
 
 #include "../common/teams.qh"
-#include "../common/urllib.qh"
 #include "../common/util.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 void AuditLists()
 {
@@ -110,7 +107,7 @@ void RemoveTeam(entity Team)
 
 	if(!tm)
 	{
-		print(_("Trying to remove a team which is not in the teamlist!"));
+		LOG_INFO(_("Trying to remove a team which is not in the teamlist!"));
 		return;
 	}
 	parent.sort_next = Team.sort_next;
@@ -167,14 +164,6 @@ vector rotate(vector v, float a)
 	w.x =      v.x * cos(a) + v.y * sin(a);
 	w.y = -1 * v.x * sin(a) + v.y * cos(a);
 	return w;
-}
-
-string ColorTranslateRGB(string s)
-{
-	if(ColorTranslateMode & 1)
-		return strdecolorize(s);
-	else
-		return s;
 }
 
 // decolorizes and team colors the player name when needed
@@ -577,7 +566,7 @@ void URI_Get_Callback(int id, float status, string data)
 	}
 	else
 	{
-		printf("Received HTTP request data for an invalid id %d.\n", id);
+		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 
@@ -602,7 +591,7 @@ void Accuracy_LoadLevels()
 		if(acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;
 		if(acc_levels < 2)
-			print("Warning: accuracy_color_levels must contain at least 2 values\n");
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values\n");
 
 		int i;
 		for(i = 0; i < acc_levels; ++i)

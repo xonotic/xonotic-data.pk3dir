@@ -5,7 +5,6 @@
 #include "../scores.qh"
 
 #include "../../common/notifications.qh"
-#include "../../common/counting.qh"
 
 
 // ====================================================
@@ -170,7 +169,7 @@ void print_to(entity to, string input)
     if(to)
         sprint(to, strcat(input, "\n"));
     else
-        print(input, "\n");
+        LOG_INFO(input, "\n");
 }
 
 // ==========================================
@@ -312,7 +311,7 @@ void CommonCommand_cvar_purechanges(float request, entity caller)
 	}
 }
 
-void CommonCommand_editmob(float request, entity caller, float argc)
+void CommonCommand_editmob(int request, entity caller, int argc)
 {
 	switch(request)
 	{
@@ -328,7 +327,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 			}
 
 			entity mon = trace_ent;
-			float is_visible = (mon.flags & FL_MONSTER);
+			bool is_visible = IS_MONSTER(mon);
 			string argument = argv(2);
 
 			switch(argv(1))
@@ -344,7 +343,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 					string mon_oldname = mon.monster_name;
 
 					mon.monster_name = argument;
-					if(mon.sprite) { WaypointSprite_UpdateSprites(mon.sprite, strzone(mon.monster_name), string_null, string_null); }
+					if(mon.sprite) { WaypointSprite_UpdateSprites(mon.sprite, WP_Monster, WP_Null, WP_Null); }
 					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
 					return;
 				}
@@ -353,7 +352,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 					if(!caller) { print_to(caller, "Only players can spawn monsters"); return; }
 					if(!argv(2)) { break; } // escape to usage
 
-					float moveflag, tmp_moncount = 0;
+					int moveflag, tmp_moncount = 0;
 					string arg_lower = strtolower(argument);
 					moveflag = (argv(3)) ? stof(argv(3)) : 1; // follow owner if not defined
 					ret_string = "Monster spawning is currently disabled by a mutator";
@@ -372,8 +371,8 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 					if(tmp_moncount >= autocvar_g_monsters_max) { print_to(caller, "The maximum monster count has been reached"); return; }
 					if(tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
 
-					float i = 0, found = false;
-					for(i = MON_FIRST; i <= MON_LAST; ++i)
+					bool found = false;
+					for(int i = MON_FIRST; i <= MON_LAST; ++i)
 					{
 						mon = get_monsterinfo(i);
 						if(mon.netname == arg_lower) { found = true; break; }
@@ -404,7 +403,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 					if(!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
 					if(!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 					if(mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
-					if(mon.monsterid == MON_MAGE) { print_to(caller, "Mage skins can't be changed"); return; } // TODO
+					if(mon.monsterid == MON_MAGE.monsterid) { print_to(caller, "Mage skins can't be changed"); return; } // TODO
 
 					mon.skin = stof(argument);
 					print_to(caller, strcat("Monster skin successfully changed to ", ftos(mon.skin)));
@@ -427,7 +426,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 					if(caller) { print_to(caller, "This command is not available to players"); return; }
 					if(g_invasion) { print_to(caller, "This command does not work during an invasion!"); return; }
 
-					float tmp_remcount = 0;
+					int tmp_remcount = 0;
 					entity tmp_entity;
 
 					FOR_EACH_MONSTER(tmp_entity) { Monster_Remove(tmp_entity); ++tmp_remcount; }
@@ -660,7 +659,7 @@ void CommonCommand_timein(float request, entity caller)
 							return;
 						}
 
-						default: dprint("timeout status was inactive, but this code was executed anyway?"); return;
+						default: LOG_TRACE("timeout status was inactive, but this code was executed anyway?"); return;
 					}
 				}
 			}

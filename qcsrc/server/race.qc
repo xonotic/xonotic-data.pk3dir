@@ -5,7 +5,6 @@
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
-#include "waypointsprites.qh"
 #include "bot/waypoints.qh"
 #include "bot/navigation.qh"
 #include "command/getreplies.qh"
@@ -549,22 +548,22 @@ void dumpsurface(entity e)
 {
 	float n, si, ni;
 	vector norm, vec;
-	print("Surfaces of ", etos(e), ":\n");
+	LOG_INFO("Surfaces of ", etos(e), ":\n");
 
-	print("TEST = ", ftos(getsurfacenearpoint(e, '0 0 0')), "\n");
+	LOG_INFO("TEST = ", ftos(getsurfacenearpoint(e, '0 0 0')), "\n");
 
 	for(si = 0; ; ++si)
 	{
 		n = getsurfacenumpoints(e, si);
 		if(n <= 0)
 			break;
-		print("  Surface ", ftos(si), ":\n");
+		LOG_INFO("  Surface ", ftos(si), ":\n");
 		norm = getsurfacenormal(e, si);
-		print("    Normal = ", vtos(norm), "\n");
+		LOG_INFO("    Normal = ", vtos(norm), "\n");
 		for(ni = 0; ni < n; ++ni)
 		{
 			vec = getsurfacepoint(e, si, ni);
-			print("    Point ", ftos(ni), " = ", vtos(vec), " (", ftos(norm * vec), ")\n");
+			LOG_INFO("    Point ", ftos(ni), " = ", vtos(vec), " (", ftos(norm * vec), ")\n");
 		}
 	}
 }
@@ -828,9 +827,9 @@ void trigger_race_checkpoint_verify()
 		if(defrag_ents)
 		{
 			for(cp = world; (cp = find(cp, classname, "target_startTimer"));)
-				WaypointSprite_UpdateSprites(cp.sprite, "race-start", "", "");
+				WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
 			for(cp = world; (cp = find(cp, classname, "target_stopTimer"));)
-				WaypointSprite_UpdateSprites(cp.sprite, "race-finish", "", "");
+				WaypointSprite_UpdateSprites(cp.sprite, WP_RaceFinish, WP_Null, WP_Null);
 
 			for(cp = world; (cp = find(cp, classname, "target_checkpoint"));)
 			{
@@ -863,9 +862,9 @@ void trigger_race_checkpoint_verify()
 				if(cp.sprite)
 				{
 					if(cp.race_checkpoint == 0)
-						WaypointSprite_UpdateSprites(cp.sprite, "race-start", "", "");
+						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
 					else if(cp.race_checkpoint == race_timed_checkpoint)
-						WaypointSprite_UpdateSprites(cp.sprite, "race-finish", "", "");
+						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceFinish, WP_Null, WP_Null);
 				}
 		}
 	}
@@ -968,9 +967,9 @@ void spawnfunc_trigger_race_checkpoint()
 	if(!self.race_penalty)
 	{
 		if(self.race_checkpoint)
-			WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+			WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, self, sprite, RADARICON_NONE);
 		else
-			WaypointSprite_SpawnFixed("race-start-finish", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+			WaypointSprite_SpawnFixed(WP_RaceStartFinish, o, self, sprite, RADARICON_NONE);
 	}
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
@@ -1011,9 +1010,9 @@ void spawnfunc_target_checkpoint() // defrag entity
 	race_timed_checkpoint = 1;
 
 	if(self.race_checkpoint == 0)
-		WaypointSprite_SpawnFixed("race-start", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+		WaypointSprite_SpawnFixed(WP_RaceStart, o, self, sprite, RADARICON_NONE);
 	else
-		WaypointSprite_SpawnFixed("race-checkpoint", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+		WaypointSprite_SpawnFixed(WP_RaceCheckpoint, o, self, sprite, RADARICON_NONE);
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
 

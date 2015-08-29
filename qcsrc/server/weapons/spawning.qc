@@ -55,9 +55,7 @@ void weapon_defaultspawnfunc(float wpn)
 		}
 
 		s = W_Apply_Weaponreplace(e.netname);
-		ret_string = s;
-		other = e;
-		MUTATOR_CALLHOOK(SetWeaponreplace);
+		MUTATOR_CALLHOOK(SetWeaponreplace, self, e, s);
 		s = ret_string;
 		if(s == "")
 		{
@@ -87,7 +85,7 @@ void weapon_defaultspawnfunc(float wpn)
 				}
 				if(j > WEP_LAST)
 				{
-					print("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+					LOG_INFO("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 				}
 			}
 			self = oldself;
@@ -107,7 +105,7 @@ void weapon_defaultspawnfunc(float wpn)
 			}
 			if(j > WEP_LAST)
 			{
-				print("The weapon replace list for ", self.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+				LOG_INFO("The weapon replace list for ", self.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 			}
 		}
 		if(wpn == 0)

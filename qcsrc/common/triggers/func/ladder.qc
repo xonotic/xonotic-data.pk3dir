@@ -3,7 +3,7 @@ void func_ladder_touch()
 #ifdef SVQC
 	if (!other.iscreature)
 		return;
-	if (other.vehicle_flags & VHF_ISVEHICLE)
+	if(IS_VEHICLE(other))
 		return;
 #endif
 #ifdef CSQC

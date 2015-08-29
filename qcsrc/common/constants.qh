@@ -31,6 +31,14 @@ const int AS_INT = 2;
 const int AS_FLOAT_TRUNCATED = 2;
 const int AS_FLOAT = 8;
 
+const int TE_CSQC_MUTATOR = 99;
+#define MUTATOR_HASH(s) crc16(true, s)
+#define WriteMutator(to, s) do { \
+    WriteByte(to, TE_CSQC_MUTATOR); \
+    WriteLong(to, MUTATOR_HASH(#s)); \
+} while (0)
+#define ReadMutator() ReadLong()
+#define ReadMutatorEquals(read, s) (read == MUTATOR_HASH(#s))
 const int TE_CSQC_PICTURE = 100;
 const int TE_CSQC_RACE = 101;
 const int TE_CSQC_VORTEXBEAMPARTICLE = 103;
@@ -71,12 +79,10 @@ const int ENT_CLIENT_POINTPARTICLES = 6;
 const int ENT_CLIENT_RAINSNOW = 7;
 const int ENT_CLIENT_LASER = 8;
 const int ENT_CLIENT_NAGGER = 9; // flags [votecalledvote]
-const int ENT_CLIENT_WAYPOINT = 10; // flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable]
 const int ENT_CLIENT_RADARLINK = 11; // flags [startorigin] [endorigin] [startcolor+16*endcolor]
 const int ENT_CLIENT_PROJECTILE = 12;
 const int ENT_CLIENT_GIBSPLASH = 13;
 const int ENT_CLIENT_DAMAGEINFO = 14;
-const int ENT_CLIENT_CASING = 15;
 const int ENT_CLIENT_INIT = 16;
 const int ENT_CLIENT_MAPVOTE = 17;
 const int ENT_CLIENT_CLIENTDATA = 18;
@@ -115,13 +121,19 @@ const int ENT_CLIENT_TRIGGER_IMPULSE = 68;
 const int ENT_CLIENT_SWAMP = 69;
 const int ENT_CLIENT_CORNER = 70;
 const int ENT_CLIENT_KEYLOCK = 71;
+const int ENT_CLIENT_GENERATOR = 72;
+const int ENT_CLIENT_CONTROLPOINT_ICON = 73;
+const int ENT_CLIENT_EFFECT = 74;
+const int ENT_CLIENT_MINIGAME = 75;
 const int ENT_CLIENT_VIEWLOC = 78;
 const int ENT_CLIENT_VIEWLOC_TRIGGER = 79;
-
 const int ENT_CLIENT_HEALING_ORB = 80;
+
+const int ENT_CLIENT_MUTATOR = TE_CSQC_MUTATOR; // 99
 
 const int SPRITERULE_DEFAULT = 0;
 const int SPRITERULE_TEAMPLAY = 1;
+const int SPRITERULE_SPECTATOR = 2;
 
 const int RADARICON_NONE = 0;
 const int RADARICON_FLAG = 1;
@@ -163,17 +175,7 @@ const int CTF_STATE_DEFEND = 2;
 const int CTF_STATE_COMMANDER = 3;
 
 const int HUD_NORMAL = 0;
-const int HUD_VEHICLE_FIRST = 10;
-const int HUD_SPIDERBOT = 10;
-const int HUD_WAKIZASHI = 11;
-const int HUD_RAPTOR = 12;
-const int HUD_BUMBLEBEE = 13;
-const int HUD_BUMBLEBEE_GUN = 14;
-const int HUD_VEHICLE_LAST = 14;
-
-const vector eX = '1 0 0';
-const vector eY = '0 1 0';
-const vector eZ = '0 0 1';
+const int HUD_BUMBLEBEE_GUN = 25;
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
@@ -290,6 +292,8 @@ const int PROJECTILE_BUMBLE_BEAM = 31;
 const int PROJECTILE_MAGE_SPIKE = 32;
 const int PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
+// projectile IDs 40-50 reserved
+
 const int PROJECTILE_RPC = 60;
 
 const int SPECIES_HUMAN = 0;
@@ -352,16 +356,6 @@ const int SPAWN_PRIO_NEAR_TEAMMATE_FOUND = 200;
 const int SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM = 100;
 const int SPAWN_PRIO_RACE_PREVIOUS_SPAWN = 50;
 const int SPAWN_PRIO_GOOD_DISTANCE = 10;
-
-// URI handles
-const int URI_GET_DISCARD = 0;
-const int URI_GET_IPBAN = 1;
-const int URI_GET_IPBAN_END = 16;
-const int URI_GET_CURL = 17;
-const int URI_GET_CURL_END = 32;
-const int URI_GET_UPDATENOTIFICATION = 33;
-const int URI_GET_URLLIB = 128;
-const int URI_GET_URLLIB_END = 191;
 
 // gametype vote flags
 const int GTV_FORBIDDEN = 0; // Cannot be voted

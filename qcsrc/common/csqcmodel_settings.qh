@@ -41,12 +41,12 @@
 	CSQCMODEL_PROPERTY(64, float, ReadByte, WriteByte, solid) \
 	CSQCMODEL_IF(!isplayer) \
 		CSQCMODEL_PROPERTY(128, TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_x, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_y, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_z, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_x, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_y, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_z, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_x, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_y, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_z, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_x, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_y, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_z, 254, -1, 254) \
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_IF(isplayer) \
 		CSQCMODEL_PROPERTY(128, int, ReadByte, WriteByte, anim_state) \
@@ -61,7 +61,7 @@
 	CSQCMODEL_PROPERTY(1024, float, ReadAngle, WriteAngle, v_angle_x) \
 	CSQCMODEL_PROPERTY_SCALED(4096, float, ReadByte, WriteByte, scale, 16, 0, 255) \
 	CSQCMODEL_PROPERTY(8192, int, ReadInt24_t, WriteInt24_t, dphitcontentsmask) \
-	CSQCMODEL_PROPERTY(16384, TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) 
+	CSQCMODEL_PROPERTY(16384, TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME)
 // TODO get rid of colormod/glowmod here, find good solution for vortex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here

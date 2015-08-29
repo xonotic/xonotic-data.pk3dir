@@ -16,21 +16,21 @@ void _dumptree_open(entity pass, entity me)
 		s = me.classname;
 	else
 		s = strcat(me.classname, ": ", s);
-	print(_dumptree_space, etos(me), " (", s, ")");
+	LOG_INFO(_dumptree_space, etos(me), " (", s, ")");
 	if(me.firstChild)
 	{
-		print(" {\n");
+		LOG_INFO(" {\n");
 		_dumptree_space = strcat(_dumptree_space, "  ");
 	}
 	else
-		print("\n");
+		LOG_INFO("\n");
 }
 void _dumptree_close(entity pass, entity me)
 {
 	if(me.firstChild)
 	{
 		_dumptree_space = substring(_dumptree_space, 0, strlen(_dumptree_space) - 2);
-		print(_dumptree_space, "}\n");
+		LOG_INFO(_dumptree_space, "}\n");
 	}
 }
 
@@ -43,11 +43,11 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "help" || argc == 0)
 	{
-		print(_("Usage: menu_cmd command..., where possible commands are:\n"));
-		print(_("  sync - reloads all cvars on the current menu page\n"));
-		print(_("  directmenu ITEM - select a menu item as main item\n"));
+		LOG_INFO(_("Usage: menu_cmd command..., where possible commands are:\n"));
+		LOG_INFO(_("  sync - reloads all cvars on the current menu page\n"));
+		LOG_INFO(_("  directmenu ITEM - select a menu item as main item\n"));
 
-		print("\nGeneric commands shared by all programs:\n");
+		LOG_INFO("\nGeneric commands shared by all programs:\n");
 		GenericCommand_macro_help();
 
 		return;
@@ -76,7 +76,7 @@ void GameCommand(string theCommand)
 
 		if(argc == 1)
 		{
-			print(_("Available options:\n"));
+			LOG_INFO(_("Available options:\n"));
 			float i;
 			entity e;
 			string s;
@@ -91,7 +91,7 @@ void GameCommand(string theCommand)
 							continue;
 						s = substring(s, strlen(filter), strlen(s) - strlen(filter));
 					}
-					print(strcat(" ", s ,"\n"));
+					LOG_INFO(strcat(" ", s ,"\n"));
 					++i;
 				}
 		}
@@ -130,5 +130,5 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	print(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
+	LOG_INFO(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
 }

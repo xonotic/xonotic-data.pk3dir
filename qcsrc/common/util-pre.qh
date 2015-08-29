@@ -29,27 +29,21 @@
     #define itos(i) ftos(i)
 #endif
 
-#ifndef QCC_SUPPORT_BOOL
-    #define bool float
+#define FOREACH_ARRAY(arr, start, end, cond, body) do { \
+    for (int i = start; i < end; ++i) {                 \
+        const noref entity it = arr[i];                 \
+        if (cond) { body }                              \
+    }                                                   \
+} while(0)
 
-    // Boolean Constants
-    const int true 	= 1;
-    const int false = 0;
-#endif
+#define FOREACH_LIST(list, next, cond, body) do {               \
+    noref int i = 0;                                            \
+    for (entity it = list##_first; it; (it = it.next, ++i)) {   \
+        if (cond) { body }                                      \
+    }                                                           \
+} while(0)
 
-#ifndef QCC_SUPPORT_ENTITYCLASS
-    #define entityclass(name) typedef entity name
-    #define class(name)
-    #define new(class) spawn()
-#else
-    #define entityclass(name) entityclass name {}
-    #define class(name) [[class(name)]]
-    #define new(class) ((class) spawn())
-#endif
-
-// Transitional aliases
-[[deprecated("use true")]] [[alias("true")]] const bool TRUE;
-[[deprecated("use false")]] [[alias("false")]] const bool FALSE;
+#define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
 
 #ifdef GMQCC
     #define OVERLOAD(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)

@@ -42,7 +42,7 @@
 \g_weaponarena\Sélectionner une arène avec une seule arme fera apparaître les joueurs avec cette arme et des munitions illimitées, et désactive toutes les autres armes
 \g_instagib\Tous les joueurs reçoivent un Minstanex, qui est un fusil de précision d'une puissance infinie. Si vous êtes à court de munition, vous mourrez dans les 10 secondes à moins de parvenir à recharger votre arme. Le tir secondaire est un laser qui n'inflige aucun dégât et qui est utile pour sauter sur de longues distances.
 \g_nix\No Items Xonotic - tous les joueurs jouent avec la même arme, et celle-ci change régulièrement.
-\g_nix_with_laser\Autoriser le laser en plus de l'arme courante dans le mode Nix
+\g_nix_with_blaster\Autoriser le laser en plus de l'arme courante dans le mode Nix
 \XonoticMultiplayerDialog/Select all\Sélectionner toutes les cartes
 \XonoticMultiplayerDialog/Select none\Désélectionner toutes les cartes
 

@@ -109,17 +109,17 @@ const int STAT_OK_AMMO_CHARGE         = 85;
 const int STAT_OK_AMMO_CHARGEPOOL     = 86;
 const int STAT_FROZEN                 = 87;
 const int STAT_REVIVE_PROGRESS        = 88;
-const int STAT_BUFF_TIME              = 90;
-const int STAT_WEAPONSINMAP           = 91;
-const int STAT_WEAPONSINMAP2          = 92;
-const int STAT_WEAPONSINMAP3          = 93;
-const int STAT_CTF_FLAGSTATUS         = 94;
+// 89 empty?
+// 90 empty?
+// 91 empty?
+// 92 empty?
+// 93 empty?
+// 94 empty?
 // 95 empty?
 // 96 empty?
 // 97 empty?
 // 98 empty?
-// 99 empty?
-
+const int STAT_ROUNDLOST              = 99;
 
 /* The following stats change depending on the gamemode, so can share the same ID */
 // IDs 100 to 104 reserved for gamemodes
@@ -170,11 +170,11 @@ const int STAT_PL_CROUCH_MAX3         = 119;
 const int STAT_PL_CROUCH_VIEW_OFS1    = 117;
 const int STAT_PL_CROUCH_VIEW_OFS2    = 118;
 const int STAT_PL_CROUCH_VIEW_OFS3    = 119;
-// 120 empty?
-// 121 empty?
-// 122 empty?
-// 123 empty?
-// 124 empty?
+const int STAT_WEAPONSINMAP           = 120;
+const int STAT_WEAPONSINMAP2          = 121;
+const int STAT_WEAPONSINMAP3          = 122;
+const int STAT_BUFF_TIME              = 123;
+const int STAT_CTF_FLAGSTATUS         = 124;
 // 125 empty?
 // 126 empty?
 // 127 empty?
@@ -190,22 +190,22 @@ const int STAT_PL_CROUCH_VIEW_OFS3    = 119;
 // 137 empty?
 // 138 empty?
 // 139 empty?
-// 140 empty?
-// 141 empty?
-// 142 empty?
-// 143 empty?
-// 144 empty?
-// 145 empty?
-// 146 empty?
-// 147 empty?
-// 148 empty?
-// 149 empty?
-// 150 empty?
-// 151 empty?
-// 152 empty?
-// 153 empty?
-// 154 empty?
-// 155 empty?
+// 140 reserved
+// 141 reserved
+// 142 reserved
+// 143 reserved
+// 144 reserved
+// 145 reserved
+// 146 reserved
+// 147 reserved
+// 148 reserved
+// 149 reserved
+// 150 reserved
+// 151 reserved
+// 152 reserved
+// 153 reserved
+// 154 reserved
+// 155 reserved
 // 156 empty?
 // 157 empty?
 // 158 empty?

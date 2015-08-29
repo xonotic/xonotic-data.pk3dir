@@ -1,15 +1,20 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool M_Zombie(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ ZOMBIE,
-/* functions  */ M_Zombie, M_Zombie_Attack,
 /* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
 /* model      */ "zombie.dpm",
 /* netname    */ "zombie",
 /* fullname   */ _("Zombie")
-);
+) {
+#ifndef MENUQC
+	this.monster_func = M_Zombie;
+	this.monster_func(MR_PRECACHE);
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
 float autocvar_g_monster_zombie_damageforcescale = 0.55;
@@ -133,7 +138,7 @@ float M_Zombie_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE); }
+void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 bool M_Zombie(int req)
@@ -197,6 +202,7 @@ bool M_Zombie(int req)
 			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
 			self.monster_loot = spawnfunc_item_health_medium;
+			self.monster_attackfunc = M_Zombie_Attack;
 			self.spawnshieldtime = self.spawn_time;
 			self.respawntime = 0.2;
 			self.damageforcescale = 0.0001; // no push while spawning
@@ -216,5 +222,3 @@ bool M_Zombie(int req)
 
 	return true;
 }
-
-#endif // REGISTER_MONSTER

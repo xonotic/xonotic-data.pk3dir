@@ -18,14 +18,15 @@
 #include "race.qh"
 #include "scores.qh"
 #include "teamplay.qh"
-#include "waypointsprites.qh"
 #include "weapons/weaponstats.qh"
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
+#include "../common/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
+#include "../common/vehicles/all.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
@@ -145,7 +146,7 @@ void GotoFirstMap()
 	else
 	{
 		self.nextthink = time + 1;
-		print("Waiting for _sv_init being set to 1 by initialization scripts...\n");
+		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...\n");
 	}
 }
 
@@ -334,7 +335,6 @@ void cvar_changes_init()
 		BADCVAR("pausable");
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
-		BADCVAR("sv_fraginfo");
 		BADCVAR("sv_timeout");
 		BADPREFIX("sv_timeout_");
 		BADPREFIX("crypto_");
@@ -345,12 +345,13 @@ void cvar_changes_init()
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_cullentities_");
-		BADPREFIX("sv_fraginfo_");
 		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
 		BADCVAR("gameversion");
 		BADPREFIX("gameversion_");
+		BADCVAR("sv_minigames");
+		BADPREFIX("sv_minigames_");
 		BADCVAR("sv_namechangetimer");
 
 		// allowed changes to server admins (please sync this to server.cfg)
@@ -502,7 +503,7 @@ void detect_maptype()
 			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, world);
 	if(trace_fraction == 1)
 		continue;
-			print(ftos(i), " -> ", vtos(trace_endpos), "\n");
+			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos), "\n");
 		}
 
 		break;
@@ -559,13 +560,11 @@ void spawnfunc___init_dedicated_server(void)
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterItems);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	static_init();
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -609,13 +608,13 @@ void spawnfunc_worldspawn (void)
 	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterItems);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	static_init();
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+
+	initialize_minigames();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -697,8 +696,7 @@ void spawnfunc_worldspawn (void)
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
 		s = ":gameinfo:mutators:LIST";
 
-		ret_string = s;
-		MUTATOR_CALLHOOK(BuildMutatorsString);
+		MUTATOR_CALLHOOK(BuildMutatorsString, s);
 		s = ret_string;
 
 		// simple, probably not good in the mutator system
@@ -759,23 +757,23 @@ void spawnfunc_worldspawn (void)
 					continue;
 				if(argv(0) == "cd")
 				{
-					print("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:\n");
-					print("  cdtrack ", argv(2), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:\n");
+					LOG_INFO("  cdtrack ", argv(2), "\n");
 				}
 				else if(argv(0) == "fog")
 				{
-					print("Found ^1UNSUPPORTED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:\n");
-					print("  \"fog\" \"", s, "\"\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:\n");
+					LOG_INFO("  \"fog\" \"", s, "\"\n");
 				}
 				else if(argv(0) == "set")
 				{
-					print("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
-					print("  clientsettemp_for_type all ", argv(1), " ", argv(2), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
+					LOG_INFO("  clientsettemp_for_type all ", argv(1), " ", argv(2), "\n");
 				}
 				else if(argv(0) != "//")
 				{
-					print("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
-					print("  clientsettemp_for_type all ", argv(0), " ", argv(1), "\n");
+					LOG_INFO("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
+					LOG_INFO("  clientsettemp_for_type all ", argv(0), " ", argv(1), "\n");
 				}
 			}
 			fclose(fd);
@@ -976,39 +974,39 @@ float MapHasRightSize(string map)
 	if(currentbots || autocvar_bot_number || player_count < autocvar_minplayers)
 	if(autocvar_g_maplist_check_waypoints)
 	{
-		dprint("checkwp "); dprint(map);
+		LOG_TRACE("checkwp "); LOG_TRACE(map);
 		if(!fexists(strcat("maps/", map, ".waypoints")))
 		{
-			dprint(": no waypoints\n");
+			LOG_TRACE(": no waypoints\n");
 			return false;
 		}
-		dprint(": has waypoints\n");
+		LOG_TRACE(": has waypoints\n");
 	}
 
 	// open map size restriction file
-	dprint("opensize "); dprint(map);
+	LOG_TRACE("opensize "); LOG_TRACE(map);
 	fh = fopen(strcat("maps/", map, ".sizes"), FILE_READ);
 	if(fh >= 0)
 	{
 		float mapmin, mapmax;
-		dprint(": ok, ");
+		LOG_TRACE(": ok, ");
 		mapmin = stof(fgets(fh));
 		mapmax = stof(fgets(fh));
 		fclose(fh);
 		if(player_count < mapmin)
 		{
-			dprint("not enough\n");
+			LOG_TRACE("not enough\n");
 			return false;
 		}
 		if(player_count > mapmax)
 		{
-			dprint("too many\n");
+			LOG_TRACE("too many\n");
 			return false;
 		}
-		dprint("right size\n");
+		LOG_TRACE("right size\n");
 		return true;
 	}
-	dprint(": not found\n");
+	LOG_TRACE(": not found\n");
 	return true;
 }
 
@@ -1063,7 +1061,7 @@ float Map_Check(float position, float pass)
 		return 0;
 	}
 	else
-		dprint( "Couldn't select '", filename, "'..\n" );
+		LOG_TRACE( "Couldn't select '", filename, "'..\n" );
 
 	return 0;
 }
@@ -1096,7 +1094,7 @@ float() MaplistMethod_Iterate = // usual method
 {
 	float pass, i;
 
-	dprint("Trying MaplistMethod_Iterate\n");
+	LOG_TRACE("Trying MaplistMethod_Iterate\n");
 
 	for(pass = 1; pass <= 2; ++pass)
 	{
@@ -1113,7 +1111,7 @@ float() MaplistMethod_Iterate = // usual method
 
 float() MaplistMethod_Repeat = // fallback method
 {
-	dprint("Trying MaplistMethod_Repeat\n");
+	LOG_TRACE("Trying MaplistMethod_Repeat\n");
 
 	if(Map_Check(Map_Current, 2))
 		return Map_Current;
@@ -1124,7 +1122,7 @@ float() MaplistMethod_Random = // random map selection
 {
 	float i, imax;
 
-	dprint("Trying MaplistMethod_Random\n");
+	LOG_TRACE("Trying MaplistMethod_Random\n");
 
 	imax = 42;
 
@@ -1144,7 +1142,7 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 {
 	float i, j, imax, insertpos;
 
-	dprint("Trying MaplistMethod_Shuffle\n");
+	LOG_TRACE("Trying MaplistMethod_Shuffle\n");
 
 	imax = 42;
 
@@ -1156,7 +1154,7 @@ float(float exponent) MaplistMethod_Shuffle = // more clever shuffling
 		insertpos = pow(random(), 1 / exponent);       // ]0, 1]
 		insertpos = insertpos * (Map_Count - 1);       // ]0, Map_Count - 1]
 		insertpos = ceil(insertpos) + 1;               // {2, 3, 4, ..., Map_Count}
-		dprint("SHUFFLE: insert pos = ", ftos(insertpos), "\n");
+		LOG_TRACE("SHUFFLE: insert pos = ", ftos(insertpos), "\n");
 
 		// insert the current map there
 		newlist = "";
@@ -1432,7 +1430,7 @@ void DumpStats(float final)
 	s = strcat(s, GetGametype(), "_", GetMapname(), ":", ftos(rint(time)));
 
 	if(to_console)
-		print(s, "\n");
+		LOG_INFO(s, "\n");
 	if(to_eventlog)
 		GameLogEcho(s);
 
@@ -1448,7 +1446,7 @@ void DumpStats(float final)
 
 	s = strcat(":labels:player:", GetPlayerScoreString(world, 0));
 	if(to_console)
-		print(s, "\n");
+		LOG_INFO(s, "\n");
 	if(to_eventlog)
 		GameLogEcho(s);
 	if(to_file)
@@ -1466,7 +1464,7 @@ void DumpStats(float final)
 				s = strcat(s, "spectator:");
 
 			if(to_console)
-				print(s, other.netname, "\n");
+				LOG_INFO(s, other.netname, "\n");
 			if(to_eventlog)
 				GameLogEcho(strcat(s, ftos(other.playerid), ":", other.netname));
 			if(to_file)
@@ -1478,7 +1476,7 @@ void DumpStats(float final)
 	{
 		s = strcat(":labels:teamscores:", GetTeamScoreString(0, 0));
 		if(to_console)
-			print(s, "\n");
+			LOG_INFO(s, "\n");
 		if(to_eventlog)
 			GameLogEcho(s);
 		if(to_file)
@@ -1489,7 +1487,7 @@ void DumpStats(float final)
 			s = strcat(":teamscores:see-labels:", GetTeamScoreString(i, 0));
 			s = strcat(s, ":", ftos(i));
 			if(to_console)
-				print(s, "\n");
+				LOG_INFO(s, "\n");
 			if(to_eventlog)
 				GameLogEcho(s);
 			if(to_file)
@@ -1498,7 +1496,7 @@ void DumpStats(float final)
 	}
 
 	if(to_console)
-		print(":end\n");
+		LOG_INFO(":end\n");
 	if(to_eventlog)
 		GameLogEcho(":end");
 	if(to_file)
@@ -1694,48 +1692,6 @@ void ClearWinners(void)
 		head.winning = 0;
 }
 
-// Onslaught winning condition:
-// game terminates if only one team has a working generator (or none)
-float WinningCondition_Onslaught()
-{
-	entity head;
-	float t1, t2, t3, t4;
-
-	WinningConditionHelper(); // set worldstatus
-
-	if(warmup_stage)
-		return WINNING_NO;
-
-	// first check if the game has ended
-	t1 = t2 = t3 = t4 = 0;
-	head = find(world, classname, "onslaught_generator");
-	while (head)
-	{
-		if (head.health > 0)
-		{
-			if (head.team == NUM_TEAM_1) t1 = 1;
-			if (head.team == NUM_TEAM_2) t2 = 1;
-			if (head.team == NUM_TEAM_3) t3 = 1;
-			if (head.team == NUM_TEAM_4) t4 = 1;
-		}
-		head = find(head, classname, "onslaught_generator");
-	}
-	if (t1 + t2 + t3 + t4 < 2)
-	{
-		// game over, only one team remains (or none)
-		ClearWinners();
-		if (t1) SetWinners(team, NUM_TEAM_1);
-		if (t2) SetWinners(team, NUM_TEAM_2);
-		if (t3) SetWinners(team, NUM_TEAM_3);
-		if (t4) SetWinners(team, NUM_TEAM_4);
-		dprint("Have a winner, ending game.\n");
-		return WINNING_YES;
-	}
-
-	// Two or more teams remain
-	return WINNING_NO;
-}
-
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win. Otherwise the defending team wins once the timelimit passes.
 void assault_new_round();
@@ -1845,7 +1801,7 @@ float WinningCondition_LMS()
 		{
 			// SNAFU (maybe a draw game?)
 			ClearWinners();
-			dprint("No players, ending game.\n");
+			LOG_TRACE("No players, ending game.\n");
 			return WINNING_YES;
 		}
 	}
@@ -1901,7 +1857,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
-	if(g_dm || g_tdm || g_ca || g_freezetag || (g_race && !g_race_qualifying) || g_nexball)
+	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	// these modes always score in increments of 1, thus this makes sense
 	{
 		if(leaderfrags != WinningConditionHelper_topscore)
@@ -2104,9 +2060,6 @@ void CheckRules_World()
 		return;
 	}
 
-	if(g_onslaught)
-		timelimit = 0; // ONS has its own overtime rule
-
 	float wantovertime;
 	wantovertime = 0;
 
@@ -2191,10 +2144,6 @@ void CheckRules_World()
 	else if(g_lms)
 	{
 		checkrules_status = WinningCondition_LMS();
-	}
-	else if (g_onslaught)
-	{
-		checkrules_status = WinningCondition_Onslaught(); // TODO remove this?
 	}
 	else
 	{
@@ -2319,7 +2268,7 @@ float RedirectionThink()
 	FOR_EACH_REALCLIENT(self)
 	{
 		// TODO add timer
-		print("Redirecting: sending connect command to ", self.netname, "\n");
+		LOG_INFO("Redirecting: sending connect command to ", self.netname, "\n");
 		if(redirection_target == "self")
 			stuffcmd(self, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
 		else
@@ -2327,7 +2276,7 @@ float RedirectionThink()
 		++clients_found;
 	}
 
-	print("Redirecting: ", ftos(clients_found), " clients left.\n");
+	LOG_INFO("Redirecting: ", ftos(clients_found), " clients left.\n");
 
 	if(time > redirection_timeout || clients_found == 0)
 		localcmd("\nwait; wait; wait; quit\n");
@@ -2360,7 +2309,7 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
-		print("Saving persistent data...\n");
+		LOG_INFO("Saving persistent data...\n");
 		Ban_SaveBans();
 
 		// playerstats with unfinished match
@@ -2383,7 +2332,7 @@ void Shutdown()
 		CheatShutdown(); // must be after cheatcount check
 		db_close(ServerProgsDB);
 		db_close(TemporaryDB);
-		print("done!\n");
+		LOG_INFO("done!\n");
 		// tell the bot system the game is ending now
 		bot_endgame();
 
@@ -2392,6 +2341,6 @@ void Shutdown()
 	}
 	else if(world_initialized == 0)
 	{
-		print("NOTE: crashed before even initializing the world, not saving persistent data\n");
+		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data\n");
 	}
 }

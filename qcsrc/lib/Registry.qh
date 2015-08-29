@@ -1,0 +1,37 @@
+#ifndef REGISTRY_H
+#define REGISTRY_H
+
+#include "OO.qh"
+
+#define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
+#define REGISTER_INIT_POST(ns, id) [[accumulate]] void Register_##ns##_##id##_init_post(entity this)
+
+#define REGISTER(initfunc, ns, array, counter, id, fld, inst)   \
+    entity ns##_##id;                                           \
+    REGISTER_INIT(ns, id) { }                                   \
+    REGISTER_INIT_POST(ns, id) { }                              \
+    .entity enemy; /* internal next pointer */                  \
+    void Register_##ns##_##id() {                               \
+        entity this = inst;                                     \
+        ns##_##id = this;                                       \
+        this.fld = counter;                                     \
+        array[counter++] = this;                                \
+        if (!array##_first)    array##_first = this;            \
+        if ( array##_last)     array##_last.enemy = this;       \
+        array##_last = this;                                    \
+        Register_##ns##_##id##_init(this);                      \
+        Register_##ns##_##id##_init_post(this);                 \
+    }                                                           \
+    ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id)         \
+    REGISTER_INIT(ns, id)
+
+void __static_init() { }
+#define static_init() CALL_ACCUMULATED_FUNCTION(__static_init)
+#define REGISTER_REGISTRY(func) ACCUMULATE_FUNCTION(__static_init, func)
+
+#define STATIC_INIT(func) \
+    void _static_##func(); \
+    ACCUMULATE_FUNCTION(__static_init, _static_##func) \
+    void _static_##func()
+
+#endif

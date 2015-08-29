@@ -12,7 +12,6 @@
 
 int mv_num_maps;
 
-float mv_active;
 string mv_maps[MAPVOTE_COUNT];
 string mv_pics[MAPVOTE_COUNT];
 string mv_pk3[MAPVOTE_COUNT]; // map pk3 name or gametype human readable name
@@ -496,7 +495,7 @@ void Cmd_MapVote_MapDownload(float argc)
 
 	if(argc != 2 || !mv_pk3list)
 	{
-		print(_("mv_mapdownload: ^3You're not supposed to use this command on your own!\n"));
+		LOG_INFO(_("mv_mapdownload: ^3You're not supposed to use this command on your own!\n"));
 		return;
 	}
 
@@ -506,7 +505,7 @@ void Cmd_MapVote_MapDownload(float argc)
 			break;
 
 	if(!pak || pak.sv_entnum != id) {
-		print(_("^1Error:^7 Couldn't find pak index.\n"));
+		LOG_INFO(_("^1Error:^7 Couldn't find pak index.\n"));
 		return;
 	}
 
@@ -515,7 +514,7 @@ void Cmd_MapVote_MapDownload(float argc)
 		mv_preview[id] = true;
 		return;
 	} else {
-		print(_("Requesting preview...\n"));
+		LOG_INFO(_("Requesting preview...\n"));
 		localcmd(strcat("\ncmd mv_getpicture ", ftos(id), "\n"));
 	}
 }

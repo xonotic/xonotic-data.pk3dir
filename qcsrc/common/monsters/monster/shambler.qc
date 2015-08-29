@@ -1,15 +1,20 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool M_Shambler(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ SHAMBLER,
-/* functions  */ M_Shambler, M_Shambler_Attack,
 /* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-41 -41 -31', '41 41 65',
 /* model      */ "shambler.mdl",
 /* netname    */ "shambler",
 /* fullname   */ _("Shambler")
-);
+) {
+#ifndef MENUQC
+	this.monster_func = M_Shambler;
+	this.monster_func(MR_PRECACHE);
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
 float autocvar_g_monster_shambler_damageforcescale = 0.1;
@@ -44,8 +49,8 @@ const float shambler_anim_death		= 8;
 void M_Shambler_Attack_Smash()
 {
 	makevectors(self.angles);
-	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	Send_Effect("explosion_medium", (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
+	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 	// RadiusDamage does NOT support custom starting location, which means we must use this hack...
 
@@ -70,8 +75,8 @@ void M_Shambler_Attack_Lightning_Explode()
 {
 	entity head;
 
-	sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("electro_impact"), '0 0 0', '0 0 0', 1);
+	sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
+	Send_Effect("electro_impact", '0 0 0', '0 0 0', 1);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -206,7 +211,7 @@ float M_Shambler_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER); }
+void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 bool M_Shambler(int req)
@@ -258,11 +263,12 @@ bool M_Shambler(int req)
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_shambler_damageforcescale); }
 
 			self.monster_loot = spawnfunc_item_health_mega;
-			self.weapon = WEP_ELECTRO; // matches attacks better than WEP_VORTEX
+			self.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
 
 			setanim(self, self.anim_shoot, false, true, true);
 			self.spawn_time = self.animstate_endtime;
 			self.spawnshieldtime = self.spawn_time;
+			self.monster_attackfunc	= M_Shambler_Attack;
 
 			return true;
 		}
@@ -276,5 +282,3 @@ bool M_Shambler(int req)
 
 	return true;
 }
-
-#endif // REGISTER_MONSTER

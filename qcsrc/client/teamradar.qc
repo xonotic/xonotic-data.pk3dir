@@ -7,21 +7,6 @@
 
 #include "../csqcmodellib/interpolate.qh"
 
-float vlen2d(vector v)
-{
-	return sqrt(v.x * v.x + v.y * v.y);
-}
-
-float vlen_maxnorm2d(vector v)
-{
-	return max(v.x, v.y, -v.x, -v.y);
-}
-
-float vlen_minnorm2d(vector v)
-{
-	return min(max(v.x, -v.x), max(v.y, -v.y));
-}
-
 vector teamradar_3dcoord_to_texcoord(vector in)
 {
 	vector out;
@@ -43,6 +28,34 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	if(v_flipped)
 		out.x = -out.x;
 	out += teamradar_origin2d;
+	return out;
+}
+
+
+vector teamradar_2dcoord_to_texcoord(vector in)
+{
+	vector out;
+	out = in;
+
+	out -= teamradar_origin2d;
+	if(v_flipped)
+		out_x = -out_x;
+	out = out / teamradar_size;
+
+	out_y = - out_y; // screen space is reversed
+	out = rotate(out, -teamradar_angle * DEG2RAD);
+
+	out += teamradar_origin3d_in_texcoord;
+
+	return out;
+}
+
+vector teamradar_texcoord_to_3dcoord(vector in,float z)
+{
+	vector out;
+	out_x = in_x * (mi_picmax_x - mi_picmin_x) + mi_picmin_x;
+	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
+	out_z = z;
 	return out;
 }
 

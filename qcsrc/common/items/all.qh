@@ -1,17 +1,14 @@
-#ifndef ALL_H
-#define ALL_H
-
-const int MAX_ITEMS = 24;
-entity ITEMS[MAX_ITEMS];
-
-#define ITEMS_FOREACH(pred, body) do {      \
-    for (int i = 0; i < ITEM_COUNT; i++) {  \
-        const noref entity it = ITEMS[i];   \
-        if (pred) { body }                  \
-    }                                       \
-} while(0)
+#ifndef ITEMS_ALL_H
+#define ITEMS_ALL_H
 
 void RegisterItems();
+const int MAX_ITEMS = 24;
+entity ITEMS[MAX_ITEMS], ITEMS_first, ITEMS_last;
+int ITEM_COUNT;
+/** If you register a new item, make sure to add it to all.inc */
+#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, m_id, NEW(class))
+REGISTER_REGISTRY(RegisterItems)
+
 void Dump_Items();
 
 #endif

@@ -3,7 +3,6 @@
 
 #include "../g_world.qh"
 
-#include "../../common/urllib.qh"
 #include "../../common/weapons/all.qh"
 
 void WeaponStats_Init()
@@ -49,21 +48,21 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 		case URL_READY_CANREAD:
 			// url_fclose is processing, we got a response for writing the data
 			// this must come from HTTP
-			print("Got response from weapon stats server:\n");
+			LOG_INFO("Got response from weapon stats server:\n");
 			while((s = url_fgets(fh)))
-				print("  ", s, "\n");
-			print("End of response.\n");
+				LOG_INFO("  ", s, "\n");
+			LOG_INFO("End of response.\n");
 			url_fclose(fh);
 			break;
 		case URL_READY_CLOSED:
 			// url_fclose has finished
-			print("Weapon stats written\n");
+			LOG_INFO("Weapon stats written\n");
 			buf_del(weaponstats_buffer);
 			weaponstats_buffer = -1;
 			break;
 		case URL_READY_ERROR:
 		default:
-			print("Weapon stats writing failed: ", ftos(status), "\n");
+			LOG_INFO("Weapon stats writing failed: ", ftos(status), "\n");
 			buf_del(weaponstats_buffer);
 			weaponstats_buffer = -1;
 			break;

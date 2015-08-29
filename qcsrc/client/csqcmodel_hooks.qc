@@ -3,7 +3,6 @@
 
 #include "gibs.qh"
 #include "player_skeleton.qh"
-#include "sortlist.qh"
 
 #include "weapons/projectile.qh"
 
@@ -12,11 +11,12 @@
 #include "../common/teams.qh"
 #include "../common/triggers/trigger/viewloc.qh"
 
+#include "mutators/events.qh"
+
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/cl_player.qh"
 #include "../csqcmodellib/interpolate.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 .float death_time;
 .int modelflags;
@@ -137,7 +137,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(void)
 		self.forceplayermodels_isgoodmodel = fexists(self.forceplayermodels_savemodel);
 		self.forceplayermodels_isgoodmodel_mdl = self.forceplayermodels_savemodel;
 		if(!self.forceplayermodels_isgoodmodel)
-			printf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
+			LOG_INFOF("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
 	}
 }
 void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
@@ -379,7 +379,7 @@ int CSQCPlayer_FallbackFrame(int f)
 		case 29: return 4; // anim_duckwalkbackright -> anim_duckwalk
 		case 30: return 4; // anim_duckwalkbackleft -> anim_duckwalk
 	}
-	printf("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
+	LOG_INFOF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
 	return f;
 }
 void CSQCPlayer_FallbackFrame_Apply(void)
@@ -406,6 +406,8 @@ void CSQCModel_AutoTagIndex_Apply(void)
 
 	if(self.viewloc.entnum != self.tag_networkviewloc)
 		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+
+	MUTATOR_CALLHOOK(TagIndex_Update, self);
 
 	if(self.tag_networkentity)
 	{
@@ -436,9 +438,9 @@ void CSQCModel_AutoTagIndex_Apply(void)
 			if(self.tag_entity)
 			{
 				// the best part is: IT EXISTS
-				if(substring(self.model, 0, 17) == "models/weapons/v_")
+				if(substring(self.model, 0, 14) == "models/weapons")
 				{
-					if(substring(self.tag_entity.model, 0, 17) == "models/weapons/h_")
+					if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
 					{
 						self.tag_index = gettagindex(self.tag_entity, "weapon");
 						if(!self.tag_index)
@@ -448,7 +450,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 							// we need to prevent this from 'appening
 							self.tag_entity = world;
 							self.drawmask = 0;
-							dprint("h_ model lacks weapon attachment, but v_ model is attached to it\n");
+							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it\n");
 						}
 					}
 					else if(self.tag_entity.isplayermodel)
@@ -458,12 +460,14 @@ void CSQCModel_AutoTagIndex_Apply(void)
 					}
 				}
 
-				if(substring(self.tag_entity.model, 0, 17) == "models/weapons/v_")
+				if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
 				{
 					self.tag_index = gettagindex(self.tag_entity, "shot");
 					if(!self.tag_index)
 						self.tag_index = gettagindex(self.tag_entity, "tag_shot");
 				}
+
+				MUTATOR_CALLHOOK(TagIndex_Apply, self);
 			}
 			else
 			{

@@ -10,7 +10,6 @@
 #include "command/common.qh"
 
 #include "mutators/mutators_include.qh"
-#include "vehicles/vehicle.qh"
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
@@ -18,6 +17,7 @@
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
+#include "../common/vehicles/all.qh"
 #include "../common/weapons/all.qh"
 
 #include "../csqcmodellib/sv_model.qh"
@@ -37,9 +37,9 @@ void CreatureFrame (void)
 	{
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 
-		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
+		float vehic = IS_VEHICLE(self);
 		float projectile = (self.flags & FL_PROJECTILE);
-		float monster = (self.flags & FL_MONSTER);
+		float monster = IS_MONSTER(self);
 
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
@@ -200,7 +200,7 @@ void StartFrame (void)
 		float t, pp, c_seeing, c_seen;
 		entity cl;
 		t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
-		print("CEFC time: ", ftos(t * 1000), "ms; ");
+		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
 		c_seeing = 0;
 		c_seen = 0;
 		FOR_EACH_CLIENT(cl)
@@ -210,8 +210,8 @@ void StartFrame (void)
 			if(IS_PLAYER(cl))
 				++c_seen;
 		}
-		print("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
-		print("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
+		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
+		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
 
 		client_cefc_accumulatortime = time;
 		client_cefc_accumulator = 0;

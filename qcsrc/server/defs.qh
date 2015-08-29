@@ -110,6 +110,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 .float species;
 
+.float	scheduledrespawntime;
 .float	respawntime;
 .float	respawntimejitter;
 //.float	chasecam;

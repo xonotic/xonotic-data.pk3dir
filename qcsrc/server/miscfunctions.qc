@@ -6,7 +6,6 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mutators/mutators_include.qh"
-#include "tturrets/include/turrets_early.qh"
 #include "t_items.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
@@ -19,8 +18,8 @@
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
-#include "../common/urllib.qh"
 #include "../common/util.qh"
+#include "../common/turrets/sv_turrets.qh"
 #include "../common/weapons/all.qh"
 #include "../csqcmodellib/sv_model.qh"
 #include "../warpzonelib/anglestransform.qh"
@@ -63,8 +62,8 @@ void DistributeEvenly_Init(float amount, float totalweight)
 {
     if (DistributeEvenly_amount)
     {
-        dprint("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ");
-        dprint(ftos(DistributeEvenly_totalweight), " left!)\n");
+        LOG_TRACE("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ");
+        LOG_TRACE(ftos(DistributeEvenly_totalweight), " left!)\n");
     }
     if (totalweight == 0)
         DistributeEvenly_amount = 0;
@@ -123,7 +122,7 @@ void GameLogEcho(string s)
     }
     if (autocvar_sv_eventlog_console)
     {
-        print(s, "\n");
+        LOG_INFO(s, "\n");
     }
 }
 
@@ -196,9 +195,9 @@ entity findnearest(vector point, .string field, string value, vector axismod)
         {
             if (i != 0)
             {
-                dprint("Nearest point (");
-                dprint(nearest_entity[0].netname);
-                dprint(") is not visible, using a visible one.\n");
+                LOG_TRACE("Nearest point (");
+                LOG_TRACE(nearest_entity[0].netname);
+                LOG_TRACE(") is not visible, using a visible one.\n");
             }
             return nearest_entity[i];
         }
@@ -207,7 +206,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     if (num_nearest == 0)
         return world;
 
-    dprint("Not seeing any location point, using nearest as fallback.\n");
+    LOG_TRACE("Not seeing any location point, using nearest as fallback.\n");
     /* DEBUGGING CODE:
     dprint("Candidates were: ");
     for(j = 0; j < num_nearest; ++j)
@@ -249,8 +248,15 @@ string formatmessage(string msg)
 	entity cursor_ent;
 	string escape;
 	string replacement;
+	string ammoitems;
 	p = 0;
 	n = 7;
+
+	ammoitems = "batteries";
+	if(self.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
+	if(self.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
+	if(self.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
+	if(self.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
 
 	WarpZone_crosshair_trace(self);
 	cursor = trace_endpos;
@@ -278,54 +284,32 @@ string formatmessage(string msg)
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
-		if (escape == "%")
-			replacement = "%";
-		else if (escape == "\\")
-			replacement = "\\";
-		else if (escape == "n")
-			replacement = "\n";
-		else if (escape == "a")
-			replacement = ftos(floor(self.armorvalue));
-		else if (escape == "h")
-			replacement = ftos(floor(self.health));
-		else if (escape == "l")
-			replacement = NearestLocation(self.origin);
-		else if (escape == "y")
-			replacement = NearestLocation(cursor);
-		else if (escape == "d")
-			replacement = NearestLocation(self.death_origin);
-		else if (escape == "w") {
-			float wep;
-			wep = self.weapon;
-			if (!wep)
-				wep = self.switchweapon;
-			if (!wep)
-				wep = self.cnt;
-			replacement = WEP_NAME(wep);
-		} else if (escape == "W") {
-			if (self.items & IT_SHELLS) replacement = "shells";
-			else if (self.items & IT_NAILS) replacement = "bullets";
-			else if (self.items & IT_ROCKETS) replacement = "rockets";
-			else if (self.items & IT_CELLS) replacement = "cells";
-			else if (self.items & IT_PLASMA) replacement = "plasma";
-			else replacement = "batteries"; // ;)
-		} else if (escape == "x") {
-			replacement = cursor_ent.netname;
-			if (replacement == "" || !cursor_ent)
-				replacement = "nothing";
-		} else if (escape == "s")
-			replacement = ftos(vlen(self.velocity - self.velocity.z * '0 0 1'));
-		else if (escape == "S")
-			replacement = ftos(vlen(self.velocity));
+		switch(escape)
+		{
+			case "%": replacement = "%"; break;
+			case "\\":replacement = "\\"; break;
+			case "n": replacement = "\n"; break;
+			case "a": replacement = ftos(floor(self.armorvalue)); break;
+			case "h": replacement = ftos(floor(self.health)); break;
+			case "l": replacement = NearestLocation(self.origin); break;
+			case "y": replacement = NearestLocation(cursor); break;
+			case "d": replacement = NearestLocation(self.death_origin); break;
+			case "w": replacement = WEP_NAME((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon); break;
+			case "W": replacement = ammoitems; break;
+			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
+			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
+			case "S": replacement = ftos(vlen(self.velocity)); break;
+			default:
+			{
+				MUTATOR_CALLHOOK(FormatMessage, escape, replacement);
+				break;
+			}
+		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
 	}
 	return msg;
-}
-
-float boolean(float value) { // if value is 0 return false (0), otherwise return true (1)
-	return (value == 0) ? false : true;
 }
 
 /*
@@ -427,7 +411,6 @@ void GetCvars(float f)
 
 	get_cvars_f = f;
 	get_cvars_s = s;
-
 	MUTATOR_CALLHOOK(GetCvars);
 
 	Notification_GetCvars();
@@ -490,16 +473,6 @@ string playername(entity p)
         return p.netname;
 }
 
-vector randompos(vector m1, vector m2)
-{
-    vector v;
-    m2 = m2 - m1;
-    v.x = m2_x * random() + m1_x;
-    v.y = m2_y * random() + m1_y;
-    v.z = m2_z * random() + m1_z;
-    return  v;
-}
-
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
 {
 	int i = weaponinfo.weapon;
@@ -516,14 +489,14 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 			d = false;
 	}
 	else if (g_cts)
-		d = (i == WEP_SHOTGUN);
+		d = (i == WEP_SHOTGUN.m_id);
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
 		d = !(!weaponinfo.weaponstart);
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-		d |= (i == WEP_HOOK);
+		d |= (i == WEP_HOOK.m_id);
 	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
@@ -628,7 +601,7 @@ void readplayerstartcvars()
 			}
 			if (j > WEP_LAST)
 			{
-				print("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
+				LOG_INFO("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
 			}
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
@@ -725,13 +698,13 @@ void readplayerstartcvars()
 	}
 
 	if (g_jetpack)
-		start_items |= IT_JETPACK;
+		start_items |= ITEM_Jetpack.m_itemid;
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
-	if ((start_items & IT_JETPACK) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
+	if ((start_items & ITEM_Jetpack.m_itemid) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
 	{
-		start_items |= IT_FUEL_REGEN;
+		start_items |= ITEM_JetpackRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
@@ -1000,11 +973,6 @@ void precache()
     precache_model ("models/misc/chatbubble.spr");
 	precache_model("models/ice/ice.md3");
 
-#ifdef TTURRETS_ENABLED
-    if (autocvar_g_turrets)
-        turrets_precash();
-#endif
-
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
     {
@@ -1076,15 +1044,15 @@ void precache()
     precache_model ("models/sprites/10.spr32");
 
     // common weapon precaches
-	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound ("weapons/weapon_switch.wav");
-    precache_sound ("weapons/weaponpickup.wav");
-    precache_sound ("weapons/unavailable.wav");
-    precache_sound ("weapons/dryfire.wav");
+	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
+    precache_sound (W_Sound("weapon_switch"));
+    precache_sound (W_Sound("weaponpickup"));
+    precache_sound (W_Sound("unavailable"));
+    precache_sound (W_Sound("dryfire"));
     if (g_grappling_hook)
     {
-        precache_sound ("weapons/hook_fire.wav"); // hook
-        precache_sound ("weapons/hook_impact.wav"); // hook
+        precache_sound (W_Sound("hook_fire")); // hook
+        precache_sound (W_Sound("hook_impact")); // hook
     }
 
     precache_model("models/elaser.mdl");
@@ -1422,7 +1390,7 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		dprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -1435,11 +1403,11 @@ float SUB_NoImpactCheck()
         traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
         if (trace_fraction >= 1)
         {
-            dprint("Odd... did not hit...?\n");
+            LOG_TRACE("Odd... did not hit...?\n");
         }
         else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         {
-            dprint("Detected and prevented the sky-grapple bug.\n");
+            LOG_TRACE("Detected and prevented the sky-grapple bug.\n");
             return 1;
         }
     }
@@ -1497,7 +1465,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".\n");
 	}
 }
 
@@ -1626,7 +1594,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
-        dprint("Needed ", ftos(i + 1), " attempts\n");
+        LOG_TRACE("Needed ", ftos(i + 1), " attempts\n");
         return true;
     }
     else
@@ -1943,7 +1911,7 @@ void randombit_test(float bits, float iter)
 {
 	while(iter > 0)
 	{
-		print(ftos(randombit(bits)), "\n");
+		LOG_INFO(ftos(randombit(bits)), "\n");
 		--iter;
 	}
 }
@@ -1958,33 +1926,6 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 		return 1;
 }
 
-
-void defer_think()
-{
-    entity oself;
-
-    oself           = self;
-    self            = self.owner;
-    oself.think     = SUB_Remove;
-    oself.nextthink = time;
-
-    oself.use();
-}
-
-/*
-    Execute func() after time + fdelay.
-    self when func is executed = self when defer is called
-*/
-void defer(float fdelay, void() func)
-{
-    entity e;
-
-    e           = spawn();
-    e.owner     = self;
-    e.use       = func;
-    e.think     = defer_think;
-    e.nextthink = time + fdelay;
-}
 
 .string aiment_classname;
 .float aiment_deadflag;

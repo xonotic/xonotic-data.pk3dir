@@ -29,7 +29,7 @@ CLASS(XonoticDialog, Dialog)
 
 	ATTRIB(XonoticDialog, alpha, float, SKINALPHA_TEXT)
 
-	METHOD(XonoticDialog, configureDialog, void(entity))
+	METHOD(XonoticDialog, configureDialog, void(entity));
 ENDCLASS(XonoticDialog)
 #ifndef IMPLEMENTATION
 entity currentDialog;

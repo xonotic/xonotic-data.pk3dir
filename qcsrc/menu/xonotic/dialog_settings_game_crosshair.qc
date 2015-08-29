@@ -2,13 +2,16 @@
 #define DIALOG_SETTINGS_GAME_CROSSHAIR_H
 #include "tab.qc"
 CLASS(XonoticGameCrosshairSettingsTab, XonoticTab)
-	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity))
-	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity))
+	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity));
+	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGameCrosshairSettingsTab, title, string, _("Crosshair"))
 	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameCrosshairSettingsTab)
 entity makeXonoticGameCrosshairSettingsTab();
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(Crosshair, makeXonoticGameCrosshairSettingsTab());
 #endif
 
 #ifdef IMPLEMENTATION

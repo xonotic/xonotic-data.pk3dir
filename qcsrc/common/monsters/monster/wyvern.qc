@@ -1,15 +1,20 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool M_Wyvern(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ WYVERN,
-/* functions  */ M_Wyvern, M_Wyvern_Attack,
 /* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED,
 /* mins,maxs  */ '-20 -20 -58', '20 20 20',
 /* model      */ "wizard.mdl",
 /* netname    */ "wyvern",
 /* fullname   */ _("Wyvern")
-);
+) {
+#ifndef MENUQC
+	this.monster_func = M_Wyvern;
+	this.monster_func(MR_PRECACHE);
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_wyvern_health;
 float autocvar_g_monster_wyvern_damageforcescale = 0.6;
@@ -36,7 +41,7 @@ void M_Wyvern_Attack_Fireball_Explode()
 	entity e;
 	if(self)
 	{
-		pointparticles(particleeffectnum("fireball_explode"), self.origin, '0 0 0', 1);
+		Send_Effect("fireball_explode", self.origin, '0 0 0', 1);
 
 		RadiusDamage(self, self.realowner, (autocvar_g_monster_wyvern_attack_fireball_damage), (autocvar_g_monster_wyvern_attack_fireball_edgedamage), (autocvar_g_monster_wyvern_attack_fireball_force), world, world, (autocvar_g_monster_wyvern_attack_fireball_radius), self.projectiledeathtype, world);
 
@@ -96,8 +101,7 @@ float M_Wyvern_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN); }
-
+void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN.monsterid); }
 #endif // SVQC
 
 bool M_Wyvern(int req)
@@ -148,6 +152,7 @@ bool M_Wyvern(int req)
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
 
 			self.monster_loot = spawnfunc_item_cells;
+			self.monster_attackfunc = M_Wyvern_Attack;
 
 			return true;
 		}
@@ -161,5 +166,3 @@ bool M_Wyvern(int req)
 
 	return true;
 }
-
-#endif // REGISTER_MONSTER

@@ -11,6 +11,7 @@
 
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
+#include "../common/effects.qh"
 #include "../common/util.qh"
 
 #include "../common/monsters/all.qh"
@@ -212,7 +213,7 @@ float CheatImpulse(float i)
 					self.angles = self.personal.v_angle;
 					self.fixangle = true;
 
-					MUTATOR_CALLHOOK(AbortSpeedrun);
+					MUTATOR_CALLHOOK(AbortSpeedrun, self);
 				}
 
 				self.ammo_rockets = self.personal.ammo_rockets;
@@ -281,15 +282,15 @@ float CheatImpulse(float i)
 			else
 				e = self;
 
-			pointparticles(particleeffectnum("rocket_explode"), e.origin, '0 0 0', 1);
-			sound(e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			Send_Effect("rocket_explode", e.origin, '0 0 0', 1);
+			sound(e, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
 			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
 			remove(e2);
 
-			print("404 Sportsmanship not found.\n");
+			LOG_INFO("404 Sportsmanship not found.\n");
 			DID_CHEAT();
 			break;
 	}
@@ -320,13 +321,12 @@ float CheatCommand(float argc)
 				//   origin (0..1, on crosshair line)
 				//   velocity
 				//   howmany
-				effectnum = particleeffectnum(argv(1));
 				f = stof(argv(2));
 				crosshair_trace(self);
 				start = (1-f) * self.origin + f * trace_endpos;
 				end = stov(argv(3));
 				f = stof(argv(4));
-				pointparticles(effectnum, start, end, f);
+				Send_Effect(argv(1), start, end, f);
 				DID_CHEAT();
 				break;
 			}

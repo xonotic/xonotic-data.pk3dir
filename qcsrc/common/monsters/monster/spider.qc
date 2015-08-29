@@ -1,15 +1,20 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool M_Spider(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ SPIDER,
-/* functions  */ M_Spider, M_Spider_Attack,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-18 -18 -25', '18 18 30',
 /* model      */ "spider.dpm",
 /* netname    */ "spider",
 /* fullname   */ _("Spider")
-);
+) {
+#ifndef MENUQC
+	this.monster_func = M_Spider;
+	this.monster_func(MR_PRECACHE);
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_spider_health;
 float autocvar_g_monster_spider_damageforcescale = 0.6;
@@ -37,10 +42,10 @@ void M_Spider_Attack_Web_Explode()
 	entity e;
 	if(self)
 	{
-		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
+		Send_Effect("electro_impact", self.origin, '0 0 0', 1);
 		RadiusDamage(self, self.realowner, 0, 0, 25, world, world, 25, self.projectiledeathtype, world);
 
-		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != self.realowner.monsterid)
+		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != MON_SPIDER.monsterid)
 			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 
 		remove(self);
@@ -58,7 +63,7 @@ void M_Spider_Attack_Web()
 {
 	monster_makevectors(self.enemy);
 
-	sound(self, CH_SHOTS, "weapons/electro_fire2.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("electro_fire2"), VOL_BASE, ATTEN_NORM);
 
 	entity proj = spawn ();
 	proj.classname = "plasma";
@@ -92,7 +97,7 @@ void M_Spider_Attack_Web()
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, true);
 }
 
-float M_Spider_Attack(float attack_type)
+bool M_Spider_Attack(int attack_type)
 {
 	switch(attack_type)
 	{
@@ -119,7 +124,7 @@ float M_Spider_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_spider() { Monster_Spawn(MON_SPIDER); }
+void spawnfunc_monster_spider() { Monster_Spawn(MON_SPIDER.monsterid); }
 #endif // SVQC
 
 bool M_Spider(int req)
@@ -165,13 +170,14 @@ bool M_Spider(int req)
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
 			self.monster_loot = spawnfunc_item_health_medium;
+			self.monster_attackfunc = M_Spider_Attack;
 
 			return true;
 		}
 		case MR_PRECACHE:
 		{
 			precache_model("models/monsters/spider.dpm");
-			precache_sound ("weapons/electro_fire2.wav");
+			precache_sound (W_Sound("electro_fire2"));
 			return true;
 		}
 		#endif
@@ -179,5 +185,3 @@ bool M_Spider(int req)
 
 	return true;
 }
-
-#endif // REGISTER_MONSTER

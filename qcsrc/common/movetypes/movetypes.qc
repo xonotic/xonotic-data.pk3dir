@@ -42,7 +42,7 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 
 	for(i = 0; i <= MAX_CLIP_PLANES; ++i)
 		planes[i] = '0 0 0';
-	
+
 	grav = 0;
 
 	restore_velocity = self.move_velocity;
@@ -452,11 +452,11 @@ bool _Movetype_UnstickEntity()  // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition('0 0 -1' * i)) goto success;
 		if(!_Movetype_TestEntityPosition('0 0 1' * i)) goto success;
 	}
-	dprintf("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
+	LOG_TRACEF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
 		num_for_edict(self), self.classname, vtos(self.move_origin));
 	return false;
 	: success;
-	dprintf("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
+	LOG_TRACEF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
 		num_for_edict(self), self.classname, vtos(self.move_origin));
 	_Movetype_LinkEdict(true);
 	return true;

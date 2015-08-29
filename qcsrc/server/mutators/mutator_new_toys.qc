@@ -87,11 +87,11 @@ float nt_IsNewToy(float w)
 {
 	switch(w)
 	{
-		case WEP_SEEKER:
-		case WEP_MINE_LAYER:
-		case WEP_HLAC:
-		case WEP_RIFLE:
-		case WEP_SHOCKWAVE:
+		case WEP_SEEKER.m_id:
+		case WEP_MINE_LAYER.m_id:
+		case WEP_HLAC.m_id:
+		case WEP_RIFLE.m_id:
+		case WEP_SHOCKWAVE.m_id:
 			return true;
 		default:
 			return false;
@@ -190,7 +190,7 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {
 	if(nt_IsNewToy(self.weapon))
-		self.item_pickupsound = "weapons/weaponpickup_new_toys.wav";
+		self.item_pickupsound = W_Sound("weaponpickup_new_toys");
 	return 0;
 }
 
@@ -206,7 +206,7 @@ MUTATOR_DEFINITION(mutator_new_toys)
 		if(time > 1) // game loads at time 1
 			error("This cannot be added at runtime\n");
 
-		precache_sound("weapons/weaponpickup_new_toys.wav");
+		precache_sound(W_Sound("weaponpickup_new_toys"));
 
 		// mark the guns as ok to use by e.g. impulse 99
 		float i;
@@ -225,7 +225,7 @@ MUTATOR_DEFINITION(mutator_new_toys)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime\n");
 		return -1;
 	}
 

@@ -156,7 +156,7 @@ void bot_setnameandstuff()
 
 	if(file < 0)
 	{
-		print(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		LOG_INFO(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
 		readfile = "";
 	}
 	else
@@ -383,7 +383,7 @@ void bot_relinkplayerlist()
 		}
 		e = e.chain;
 	}
-	dprint(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
+	LOG_TRACE(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
 }
@@ -524,18 +524,18 @@ void autoskill(float factor)
 			bestbot = max(bestbot, head.totalfrags - head.totalfrags_lastcheck);
 	}
 
-	dprint("autoskill: best player got ", ftos(bestplayer), ", ");
-	dprint("best bot got ", ftos(bestbot), "; ");
+	LOG_TRACE("autoskill: best player got ", ftos(bestplayer), ", ");
+	LOG_TRACE("best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		dprint("not doing anything\n");
+		LOG_TRACE("not doing anything\n");
 		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(autocvar_skill < 17)
 		{
-			dprint("2 frags difference, increasing skill\n");
+			LOG_TRACE("2 frags difference, increasing skill\n");
 			cvar_set("skill", ftos(autocvar_skill + 1));
 			bprint("^2SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
@@ -544,14 +544,14 @@ void autoskill(float factor)
 	{
 		if(autocvar_skill > 0)
 		{
-			dprint("2 frags difference, decreasing skill\n");
+			LOG_TRACE("2 frags difference, decreasing skill\n");
 			cvar_set("skill", ftos(autocvar_skill - 1));
 			bprint("^1SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else
 	{
-		dprint("not doing anything\n");
+		LOG_TRACE("not doing anything\n");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}

@@ -2,15 +2,17 @@
 #include "_all.qh"
 
 #include "hud_config.qh"
+#include "mapvoting.qh"
 #include "scoreboard.qh"
-#include "sortlist.qh"
 #include "teamradar.qh"
 #include "t_items.qh"
 
+#include "../dpdefs/keycodes.qh"
+
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
-#include "../common/counting.qh"
 #include "../common/deathtypes.qh"
+#include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
 #include "../common/nades.qh"
 
@@ -20,96 +22,12 @@
 
 #include "../csqcmodellib/cl_player.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 /*
 ==================
 Misc HUD functions
 ==================
 */
-
-// a border picture is a texture containing nine parts:
-//   1/4 width: left part
-//   1/2 width: middle part (stretched)
-//   1/4 width: right part
-// divided into
-//   1/4 height: top part
-//   1/2 height: middle part (stretched)
-//   1/4 height: bottom part
-void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize)
-{
-    if (theBorderSize.x < 0 && theBorderSize.y < 0) // draw whole image as it is
-    {
-		drawpic(theOrigin, pic, theSize, theColor, theAlpha, 0);
-		return;
-    }
-	if (theBorderSize.x == 0 && theBorderSize.y == 0) // no border
-	{
-		// draw only the central part
-		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
-		return;
-	}
-
-	vector dX, dY;
-	vector width, height;
-	vector bW, bH;
-	//pic = draw_UseSkinFor(pic);
-	width = eX * theSize.x;
-	height = eY * theSize.y;
-	if(theSize.x <= theBorderSize.x * 2)
-	{
-		// not wide enough... draw just left and right then
-		bW = eX * (0.25 * theSize.x / (theBorderSize.x * 2));
-		if(theSize.y <= theBorderSize.y * 2)
-		{
-			// not high enough... draw just corners
-			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
-			drawsubpic(theOrigin,                 width * 0.5 + height * 0.5, pic, '0 0 0',           bW + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width   * 0.5, width * 0.5 + height * 0.5, pic, eX - bW,           bW + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height  * 0.5, width * 0.5 + height * 0.5, pic, eY - bH,           bW + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + theSize * 0.5, width * 0.5 + height * 0.5, pic, eX + eY - bW - bH, bW + bH, theColor, theAlpha, 0);
-		}
-		else
-		{
-			dY = theBorderSize.x * eY;
-			drawsubpic(theOrigin,                             width * 0.5          +     dY, pic, '0 0    0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5,               width * 0.5          +     dY, pic, '0 0    0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin                        + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0',           '0 0.5  0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5          + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0' + eX - bW, '0 0.5  0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin               + height - dY, width * 0.5          +     dY, pic, '0 0.75 0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5 + height - dY, width * 0.5          +     dY, pic, '0 0.75 0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
-		}
-	}
-	else
-	{
-		if(theSize.y <= theBorderSize.y * 2)
-		{
-			// not high enough... draw just top and bottom then
-			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
-			dX = theBorderSize.x * eX;
-			drawsubpic(theOrigin,                                         dX + height * 0.5, pic, '0    0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + dX,                        width - 2 * dX + height * 0.5, pic, '0.25 0 0',           '0.5  0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width - dX,                            dX + height * 0.5, pic, '0.75 0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin              + height * 0.5,             dX + height * 0.5, pic, '0    0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + dX         + height * 0.5, width - 2 * dX + height * 0.5, pic, '0.25 0 0' + eY - bH, '0.5  0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width - dX + height * 0.5,             dX + height * 0.5, pic, '0.75 0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
-		}
-		else
-		{
-			dX = theBorderSize.x * eX;
-			dY = theBorderSize.x * eY;
-			drawsubpic(theOrigin,                                        dX          +     dY, pic, '0    0    0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin                  + dX,      width - 2 * dX          +     dY, pic, '0.25 0    0', '0.5  0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + width - dX,                  dX          +     dY, pic, '0.75 0    0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY,                          dX + height - 2 * dY, pic, '0    0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY         + dX, width - 2 * dX + height - 2 * dY, pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY + width - dX,             dX + height - 2 * dY, pic, '0.75 0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY,                          dX          +     dY, pic, '0    0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY         + dX, width - 2 * dX          +     dY, pic, '0.25 0.75 0', '0.5  0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY + width - dX,             dX          +     dY, pic, '0.75 0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
-		}
-	}
-}
 
 vector HUD_Get_Num_Color (float x, float maxvalue)
 {
@@ -202,28 +120,6 @@ vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspe
 		return eX * best_columns + eY * best_rows;
 }
 
-float stringwidth_colors(string s, vector theSize)
-{
-	return stringwidth(s, true, theSize);
-}
-
-float stringwidth_nocolors(string s, vector theSize)
-{
-	return stringwidth(s, false, theSize);
-}
-
-void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
-{
-	position.x -= 2 / 3 * strlen(text) * theScale.x;
-	drawstring(position, text, theScale, rgb, theAlpha, flag);
-}
-
-void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
-{
-	position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
-	drawstring(position, text, theScale, rgb, theAlpha, flag);
-}
-
 // return the string of the onscreen race timer
 string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname)
 {
@@ -302,30 +198,6 @@ int race_CheckName(string net_name)
 			return i+1;
 	return 0;
 }
-
-int GetPlayerColorForce(int i)
-{
-	if(!teamplay)
-		return 0;
-	else
-		return stof(getplayerkeyvalue(i, "colors")) & 15;
-}
-
-int GetPlayerColor(int i)
-{
-	if(!playerslots[i].gotscores) // unconnected
-		return NUM_SPECTATOR;
-	else if(stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR)
-		return NUM_SPECTATOR;
-	else
-		return GetPlayerColorForce(i);
-}
-
-string GetPlayerName(int i)
-{
-	return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
-}
-
 
 /*
 ==================
@@ -978,8 +850,8 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 	float bonusNades    = getstatf(STAT_NADE_BONUS);
 	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
 	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
-	vector nadeColor    = Nade_Color(bonusType);
-	string nadeIcon     = Nade_Icon(bonusType);
+	vector nadeColor    = NADES[bonusType].m_color;
+	string nadeIcon     = NADES[bonusType].m_icon;
 
 	vector iconPos, textPos;
 
@@ -1358,7 +1230,7 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 	return 2;
 }
 
-void HUD_Powerups(void)
+void HUD_Powerups()
 {
 	if(intermission == 2) return;
 
@@ -1372,7 +1244,7 @@ void HUD_Powerups(void)
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
 		if(getstati(STAT_HEALTH) <= 0) return;
-		if(!(allItems & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) && !allBuffs) return;
+		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
 		shieldTime = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
@@ -1403,10 +1275,9 @@ void HUD_Powerups(void)
 	if(superTime)
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
-	entity item;
-	for(item = Buff_Type_first; item; item = item.enemy)
-		if(allBuffs & item.items)
-			addPowerupItem(item.message, strcat("buff_", item.netname), item.colormod, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+	FOREACH(BUFFS, it.m_itemid & allBuffs, LAMBDA(
+		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+	));
 
 	if(!powerupItemsCount)
 		return;
@@ -1474,7 +1345,7 @@ void HUD_Powerups(void)
 	int row = 0;
 
 	draw_beginBoldFont();
-	for(item = powerupItems; item.count; item = item.chain)
+	for(entity item = powerupItems; item.count; item = item.chain)
 	{
 		itemPos = eX * (pos.x + column * itemSize.x) + eY * (pos.y + row * itemSize.y);
 
@@ -1945,18 +1816,6 @@ void HUD_Notify(void)
 	notify_count = count;
 }
 
-// Timer (#5)
-//
-// TODO: macro
-string seconds_tostring(float sec)
-{
-	float minutes;
-	minutes = floor(sec / 60);
-
-	sec -= minutes * 60;
-	return sprintf("%d:%02d", minutes, sec);
-}
-
 void HUD_Timer(void)
 {
 	if(intermission == 2) return;
@@ -2017,6 +1876,167 @@ void HUD_Timer(void)
 
 // Radar (#6)
 //
+
+float HUD_Radar_Clickable()
+{
+	return hud_panel_radar_mouse && !hud_panel_radar_temp_hidden;
+}
+
+void HUD_Radar_Show_Maximized(bool doshow,float clickable)
+{
+	hud_panel_radar_maximized = doshow;
+	hud_panel_radar_temp_hidden = 0;
+
+	if ( doshow )
+	{
+		if (clickable)
+		{
+			if(autocvar_hud_cursormode)
+				setcursormode(1);
+			hud_panel_radar_mouse = 1;
+		}
+	}
+	else if ( hud_panel_radar_mouse )
+	{
+		hud_panel_radar_mouse = 0;
+		mouseClicked = 0;
+		if(autocvar_hud_cursormode)
+		if(!mv_active)
+			setcursormode(0);
+	}
+}
+void HUD_Radar_Hide_Maximized()
+{
+	HUD_Radar_Show_Maximized(false,false);
+}
+
+
+float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse ||
+		autocvar__hud_configure || mv_active)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
+
+	if(nPrimary == K_MOUSE1)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+	else if ( nPrimary == K_ESCAPE && bInputType == 0 )
+	{
+		HUD_Radar_Hide_Maximized();
+	}
+	else
+	{
+		// allow console/use binds to work without hiding the map
+		string con_keys;
+		float keys;
+		float i;
+		con_keys = strcat(findkeysforcommand("toggleconsole", 0)," ",findkeysforcommand("+use", 0)) ;
+		keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false;
+		}
+
+		if ( getstati(STAT_HEALTH) <= 0 )
+		{
+			// Show scoreboard
+			if ( bInputType < 2 )
+			{
+				con_keys = findkeysforcommand("+showscores", 0);
+				keys = tokenize(con_keys);
+				for (i = 0; i < keys; ++i)
+				{
+					if ( nPrimary == stof(argv(i)) )
+					{
+						hud_panel_radar_temp_hidden = bInputType == 0;
+						return false;
+					}
+				}
+			}
+		}
+		else if ( bInputType == 0 )
+			HUD_Radar_Hide_Maximized();
+
+		return false;
+	}
+
+	return true;
+}
+
+void HUD_Radar_Mouse()
+{
+	if ( !hud_panel_radar_mouse ) return;
+	if(mv_active) return;
+
+	if ( intermission )
+	{
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+
+	if(mouseClicked & S_MOUSE2)
+	{
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
+	HUD_Panel_UpdateCvars();
+
+
+	panel_size = autocvar_hud_panel_radar_maximized_size;
+	panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
+	panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
+	panel_pos_x = (vid_conwidth - panel_size_x) / 2;
+	panel_pos_y = (vid_conheight - panel_size_y) / 2;
+
+	if(mouseClicked & S_MOUSE1)
+	{
+		// click outside
+		if ( mousepos_x < panel_pos_x || mousepos_x > panel_pos_x + panel_size_x ||
+			 mousepos_y < panel_pos_y || mousepos_y > panel_pos_y + panel_size_y )
+		{
+			HUD_Radar_Hide_Maximized();
+			return;
+		}
+		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos),view_origin_z);
+		localcmd(sprintf("cmd ons_spawn %f %f %f",pos_x,pos_y,pos_z));
+
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
+
+
+	const vector cursor_size = '32 32 0';
+	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursor_size, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+}
+
 void HUD_Radar(void)
 {
 	if(intermission == 2) return;
@@ -2037,6 +2057,9 @@ void HUD_Radar(void)
 			}
 		}
 	}
+
+	if ( hud_panel_radar_temp_hidden )
+		return;
 
 	HUD_Panel_UpdateCvars();
 
@@ -2191,8 +2214,27 @@ void HUD_Radar(void)
 
 	for(tm = world; (tm = find(tm, classname, "radarlink")); )
 		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
+
+	vector coord;
+	vector brightcolor;
 	for(tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
+	{
+		if ( hud_panel_radar_mouse )
+		if ( tm.health > 0 )
+		if ( tm.team == myteam+1 )
+		{
+			coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(tm.origin));
+			if ( vlen(mousepos-coord) < 8 )
+			{
+				brightcolor_x = min(1,tm.teamradar_color_x*1.5);
+				brightcolor_y = min(1,tm.teamradar_color_y*1.5);
+				brightcolor_z = min(1,tm.teamradar_color_z*1.5);
+				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
+			}
+		}
+
 		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, panel_fg_alpha);
+	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{
 		color2 = GetPlayerColor(tm.sv_entnum);
@@ -2202,6 +2244,21 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
+
+	if ( hud_panel_radar_mouse )
+	{
+		string message = "Click to select teleport destination";
+
+		if ( getstati(STAT_HEALTH) <= 0 )
+		{
+			message = "Click to select spawn location";
+		}
+
+		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, true, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,
+							 message, hud_fontsize, hud_panel_radar_foreground_alpha, DRAWFLAG_NORMAL);
+
+		hud_panel_radar_bottom = pos_y + mySize_y + hud_fontsize_y;
+	}
 }
 
 // Score (#7)
@@ -2674,7 +2731,7 @@ void HUD_Vote(void)
 		{
 			vote_yescount = 0;
 			vote_nocount = 0;
-			print(_("^1You must answer before entering hud configure mode\n"));
+			LOG_INFO(_("^1You must answer before entering hud configure mode\n"));
 			cvar_set("_hud_configure", "0");
 		}
 		if(vote_called_vote)
@@ -4428,7 +4485,15 @@ void HUD_CenterPrint (void)
 	}
 	HUD_Panel_UpdateCvars();
 
-	if(scoreboard_fade_alpha)
+	if ( HUD_Radar_Clickable() )
+	{
+		if (hud_panel_radar_bottom >= 0.96 * vid_conheight)
+			return;
+
+		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
+		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
+	}
+	else if(scoreboard_fade_alpha)
 	{
 		hud_fade_alpha = hud_fade_alpha_save;
 
@@ -4604,11 +4669,30 @@ void HUD_CenterPrint (void)
 	}
 }
 
+
+// Minigame
+//
+#include "../common/minigames/cl_minigames_hud.qc"
+
 /*
 ==================
 Main HUD system
 ==================
 */
+
+bool HUD_Panel_CheckFlags(int showflags)
+{
+	if ( HUD_Minigame_Showpanels() )
+		return showflags & PANEL_SHOW_MINIGAME;
+	return showflags & PANEL_SHOW_MAINGAME;
+}
+
+void HUD_Panel_Draw(entity panent)
+{
+	panel = panent;
+	if ( HUD_Panel_CheckFlags(panel.panel_showflags) )
+		panel.panel_draw();
+}
 
 void HUD_Reset (void)
 {
@@ -4635,12 +4719,17 @@ void HUD_Main (void)
 	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
-		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
 		return;
 	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
+	{
+		hud_fade_alpha = 1;
+		HUD_Panel_Draw(HUD_PANEL(VOTE));
+		hud_fade_alpha = 0;
 		return;
+	}
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
@@ -4722,7 +4811,7 @@ void HUD_Main (void)
 			}
 		}
 		if (warning)
-			dprint("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
+			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)
@@ -4739,14 +4828,14 @@ void HUD_Main (void)
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-		(panel = hud_panel[panel_order[i]]).panel_draw();
+		HUD_Panel_Draw(hud_panel[panel_order[i]]);
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
 	if(hud_panel_radar_maximized)
-		(panel = HUD_PANEL(RADAR)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
-		(panel = HUD_PANEL(CHAT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CHAT));
 
 	HUD_Configure_PostDraw();
 

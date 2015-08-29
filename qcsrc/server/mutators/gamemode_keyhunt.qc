@@ -351,17 +351,18 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		if(key.kh_next == world)
 		{
 			// player is now a key carrier
-			WaypointSprite_AttachCarrier("", player, RADARICON_FLAGCARRIER, colormapPaletteColor(player.team - 1, 0));
+			entity wp = WaypointSprite_AttachCarrier(WP_Null, player, RADARICON_FLAGCARRIER);
+			wp.colormod = colormapPaletteColor(player.team - 1, 0);
 			player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
 			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team, SPRITERULE_TEAMPLAY);
 			if(player.team == NUM_TEAM_1)
-				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-red", "keycarrier-friend", "keycarrier-red");
+				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierRed, WP_KeyCarrierFriend, WP_KeyCarrierRed);
 			else if(player.team == NUM_TEAM_2)
-				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-blue", "keycarrier-friend", "keycarrier-blue");
+				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierBlue, WP_KeyCarrierFriend, WP_KeyCarrierBlue);
 			else if(player.team == NUM_TEAM_3)
-				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-yellow", "keycarrier-friend", "keycarrier-yellow");
+				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierYellow, WP_KeyCarrierFriend, WP_KeyCarrierYellow);
 			else if(player.team == NUM_TEAM_4)
-				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-pink", "keycarrier-friend", "keycarrier-pink");
+				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierPink, WP_KeyCarrierFriend, WP_KeyCarrierPink);
 			if(!kh_no_radar_circles)
 				WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
 		}
@@ -383,8 +384,12 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k)
 			{
-				if(k.owner)
-					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.model1, "keycarrier-finish", k.owner.waypointsprite_attachedforcarrier.model3);
+				if (!k.owner) continue;
+				entity first = WP_Null;
+				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				entity third = WP_Null;
+				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFinish, third);
 			}
 		}
 		else
@@ -394,8 +399,12 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k)
 			{
-				if(k.owner)
-					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.model1, "keycarrier-friend", k.owner.waypointsprite_attachedforcarrier.model3);
+				if (!k.owner) continue;
+				entity first = WP_Null;
+				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				entity third = WP_Null;
+				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFriend, third);
 			}
 		}
 	}
@@ -773,7 +782,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 
 	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM_4(initial_owner.team, CENTER_KEYHUNT_START_));
 
-	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG, '0 1 1');
+	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
 
 	kh_Key_AssignTo(key, initial_owner);
@@ -1131,7 +1140,7 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

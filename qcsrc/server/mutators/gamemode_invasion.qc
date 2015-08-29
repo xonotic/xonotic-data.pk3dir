@@ -20,7 +20,7 @@ void spawnfunc_invasion_spawnpoint()
 float invasion_PickMonster(float supermonster_count)
 {
 	if(autocvar_g_invasion_zombies_only)
-		return MON_ZOMBIE;
+		return MON_ZOMBIE.monsterid;
 
 	float i;
 	entity mon;
@@ -62,7 +62,7 @@ void invasion_SpawnChosenMonster(float mon)
 
 	if(spawn_point == world)
 	{
-		dprint("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations\n");
+		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations\n");
 		entity e = spawn();
 		setsize(e, (get_monsterinfo(mon)).mins, (get_monsterinfo(mon)).maxs);
 
@@ -366,7 +366,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
 {
-	if(!(checkentity.flags & FL_MONSTER))
+	if(!IS_MONSTER(checkentity))
 		return true;
 
 	return false;
@@ -382,7 +382,7 @@ MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
 {
-	if(frag_target.flags & FL_MONSTER)
+	if(IS_MONSTER(frag_target))
 		return MUT_ACCADD_INVALID;
 	return MUT_ACCADD_INDIFFERENT;
 }
@@ -431,7 +431,7 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 void invasion_Initialize()
 {
 	if(autocvar_g_invasion_zombies_only)
-		MON_ACTION(MON_ZOMBIE, MR_PRECACHE);
+		MON_ACTION(MON_ZOMBIE.monsterid, MR_PRECACHE);
 	else
 	{
 		float i;
@@ -483,7 +483,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

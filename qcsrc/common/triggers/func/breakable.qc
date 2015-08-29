@@ -3,7 +3,6 @@
 #include "../../../server/_all.qh"
 
 #include "../../../server/g_subs.qh"
-#include "../../../server/waypointsprites.qh"
 #include "../../../server/g_damage.qh"
 #include "../../../server/bot/bot.qh"
 #include "../../common/csqcmodel_settings.qh"
@@ -212,7 +211,7 @@ void func_breakable_destroy() {
 	if(self.dmg)
 		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, world, self.dmg_force, DEATH_HURTTRIGGER, world);
 
-	if(self.cnt)
+	if(self.cnt) // TODO
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
 
 	if(self.respawntime)

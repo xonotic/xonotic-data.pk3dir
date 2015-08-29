@@ -35,6 +35,7 @@
 "+showscores"                           "mostrar puntaje"
 "screenshot"                            "captura de pantalla"
 "+hud_panel_radar_maximized"            "maximize radar (FIXME)"
+"cl_cmd hud minigame"                   "toggle minigame menu (FIXME)"
 ""                                      ""
 ""                                      "Communicación"
 "messagemode"                           "chat público"

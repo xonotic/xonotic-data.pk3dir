@@ -16,7 +16,7 @@
 #include "../mutators/mutators_include.qh"
 
 #ifdef SVQC
-	#include "../vehicles/vehicle.qh"
+	#include "../../common/vehicles/all.qh"
 #endif
 
 #include "../../common/constants.qh"
@@ -25,6 +25,10 @@
 #include "../../common/notifications.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
+
+#include "../../common/monsters/all.qc"
+#include "../../common/monsters/spawn.qh"
+#include "../../common/monsters/sv_monsters.qh"
 
 #include "../../warpzonelib/common.qh"
 
@@ -89,7 +93,7 @@ void ClientCommand_checkfail(float request, string command) // internal command,
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			printf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			LOG_INFOF("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 			self.checkfail = 1;
 			return; // never fall through to usage
 		}
@@ -223,7 +227,7 @@ void ClientCommand_physics(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			string command = strtolower(argv(1));
-			
+
 			if(!autocvar_g_physics_clientselect)
 			{
 				sprint(self, "Client physics selection is currently disabled.\n");
@@ -235,7 +239,7 @@ void ClientCommand_physics(float request, float argc)
 				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
 				return;
 			}
-			
+
 			if(Physics_Valid(command) || command == "default")
 			{
 				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
@@ -243,7 +247,7 @@ void ClientCommand_physics(float request, float argc)
 				return;
 			}
 		}
-	
+
 		default:
 			sprint(self, strcat("Current physics set: ^3", self.cvar_cl_physics, "\n"));
 		case CMD_REQUEST_USAGE:
@@ -656,6 +660,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
+	CLIENT_COMMAND("minigame", ClientCommand_minigame(request, arguments, command), "Start a minigame") \
 	/* nothing */
 
 void ClientCommand_macro_help()
@@ -724,11 +729,6 @@ void SV_ParseClientCommand(string command)
 
 	float argc = tokenize_console(command);
 
-	// for the mutator hook system
-	cmd_name = strtolower(argv(0));
-	cmd_argc = argc;
-	cmd_string = command;
-
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3
@@ -777,7 +777,7 @@ void SV_ParseClientCommand(string command)
 			return;
 		}
 	}
-	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
+	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand, strtolower(argv(0)), argc, command))
 	{
 		return; // handled by a mutator
 	}

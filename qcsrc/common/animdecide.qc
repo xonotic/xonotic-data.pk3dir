@@ -10,11 +10,64 @@
     #include "../server/defs.qh"
 #endif
 
+bool monsters_animoverride(entity e)
+{
+	int monster_id = 0;
+	for(int i = MON_FIRST; i <= MON_LAST; ++i)
+	{
+		entity mon = get_monsterinfo(i);
+
+		//if(substring(e.model, 0, strlen(mon.model) - 4) == substring(mon.model, 0, strlen(mon.model) - 4))
+		if(e.model == mon.model)
+		{
+			monster_id = i;
+			break;
+		}
+	}
+
+	if(!monster_id) { return false; }
+
+	MON_ACTION(monster_id, MR_ANIM);
+
+	vector none = '0 0 0';
+	e.anim_duckwalk = e.anim_walk;
+	e.anim_duckjump = animfixfps(e, '5 1 10', none);
+	e.anim_duckidle = e.anim_idle;
+	e.anim_jump = animfixfps(e, '8 1 10', none);
+	e.anim_taunt = animfixfps(e, '12 1 0.33', none);
+	e.anim_runbackwards = e.anim_run;
+	e.anim_strafeleft = e.anim_run;
+	e.anim_straferight = e.anim_run;
+	e.anim_forwardright = e.anim_run;
+	e.anim_forwardleft = e.anim_run;
+	e.anim_backright = e.anim_run;
+	e.anim_backleft  = e.anim_run;
+	e.anim_duckwalkbackwards = e.anim_walk;
+	e.anim_duckwalkstrafeleft = e.anim_walk;
+	e.anim_duckwalkstraferight = e.anim_walk;
+	e.anim_duckwalkforwardright = e.anim_walk;
+	e.anim_duckwalkforwardleft = e.anim_walk;
+	e.anim_duckwalkbackright = e.anim_walk;
+	e.anim_duckwalkbackleft  = e.anim_walk;
+
+	// these anims ought to stay until stopped explicitly by weaponsystem
+	e.anim_shoot_z = 0.001;
+	e.anim_melee_z = 0.001;
+
+	return true;
+}
+
 void animdecide_load_if_needed(entity e)
 {
 	if(e.modelindex == e.animdecide_modelindex)
 		return;
 	e.animdecide_modelindex = e.modelindex;
+
+	if(substring(e.model, 0, 16) == "models/monsters/")
+	{
+		if(monsters_animoverride(e))
+			return;
+	}
 
 	vector none = '0 0 0';
 	e.anim_die1 = animfixfps(e, '0 1 0.5', none); // 2 seconds

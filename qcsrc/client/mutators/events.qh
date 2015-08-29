@@ -1,0 +1,126 @@
+#ifndef CLIENT_MUTATORS_EVENTS_H
+#define CLIENT_MUTATORS_EVENTS_H
+
+#include "../../common/mutators/base.qh"
+
+// globals
+
+string cmd_name;
+int cmd_argc;
+string cmd_string;
+
+/**
+ * Called when a client command is parsed
+ * NOTE: hooks MUST start with if (MUTATOR_RETURNVALUE) return false;
+ * NOTE: return true if you handled the command, return false to continue handling
+ * NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
+ * // example:
+ * MUTATOR_HOOKFUNCTION(foo, CSQC_ConsoleCommand) {
+ *     if (MUTATOR_RETURNVALUE) return false; // command was already handled
+ *     if (cmd_name == "echocvar" && cmd_argc >= 2) {
+ *         print(cvar_string(argv(1)), "\n");
+ *         return true;
+ *     }
+ *     if (cmd_name == "echostring" && cmd_argc >= 2) {
+ *         print(substring(cmd_string, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), "\n");
+ *         return true;
+ *     }
+ *     return false;
+ * }
+ */
+#define EV_CSQC_ConsoleCommand(i, o) \
+    /** command name */ i(string, cmd_name) \
+    /** also, argv() can be used */ i(int, cmd_argc) \
+    /** whole command, use only if you really have to */ i(string, cmd_string) \
+    /**/
+MUTATOR_HOOKABLE(CSQC_ConsoleCommand, EV_CSQC_ConsoleCommand);
+
+/* Called when the crosshair is being updated */
+MUTATOR_HOOKABLE(UpdateCrosshair, EV_NO_ARGS);
+
+/**
+ * Called when a temp entity is parsed
+ * NOTE: hooks MUST start with:
+ *     if (MUTATOR_RETURNVALUE) return;
+ *     if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return;
+ *     return = true;
+ */
+#define EV_CSQC_Parse_TempEntity(i, o) \
+    /** mutator id */ i(int, mutator_argv_int_0) \
+    /**/
+MUTATOR_HOOKABLE(CSQC_Parse_TempEntity, EV_CSQC_Parse_TempEntity);
+
+/**
+ * Called when a shared entity is updated
+ *     if (MUTATOR_RETURNVALUE) return;
+ *     if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return;
+ *     return = true;
+ */
+#define EV_CSQC_Ent_Update(i, o) \
+    /** mutator id */ i(int, mutator_argv_int_0) \
+    /** bIsNewEntity */ i(bool, mutator_argv_bool_0) \
+    /**/
+MUTATOR_HOOKABLE(CSQC_Ent_Update, EV_CSQC_Ent_Update);
+
+/** Called when a projectile is linked with CSQC */
+#define EV_Ent_Projectile(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(Ent_Projectile, EV_Ent_Projectile);
+
+/** Called when a projectile's properties are being modified */
+#define EV_EditProjectile(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
+
+/* Called when projectiles are precached */
+MUTATOR_HOOKABLE(PrecacheProjectiles, EV_NO_ARGS);
+
+/** Called when updating the attached tags index */
+#define EV_TagIndex_Update(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(TagIndex_Update, EV_TagIndex_Update);
+
+/** Called when setting the attached tags */
+#define EV_TagIndex_Apply(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(TagIndex_Apply, EV_TagIndex_Apply);
+
+/** Called when setting up skeleton bones */
+#define EV_Skeleton_CheckBones(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(Skeleton_CheckBones, EV_Skeleton_CheckBones);
+
+/** Called when setting up bones from the loaded model */
+#define EV_Skeleton_CheckModel(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(Skeleton_CheckModel, EV_Skeleton_CheckModel);
+
+/** Called when clearing the global parameters for a model */
+MUTATOR_HOOKABLE(ClearModelParams, EV_NO_ARGS);
+
+/** Called when getting the global parameters for a model */
+#define EV_GetModelParams(i, o) \
+    /** entity id */ i(string, checkmodel_input) \
+    /** entity id */ i(string, checkmodel_command) \
+    /**/
+string checkmodel_input, checkmodel_command;
+MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
+
+/** called when a player presses the jump key */
+#define EV_PlayerJump(i, o) \
+    /**/ i(float, player_multijump) \
+    /**/ i(float, player_jumpheight) \
+    /**/ o(float, player_multijump) \
+    /**/ o(float, player_jumpheight) \
+    /**/
+float player_multijump;
+float player_jumpheight;
+MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
+
+#endif

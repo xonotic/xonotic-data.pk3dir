@@ -2,9 +2,9 @@
 #define TEXTSLIDER_H
 #include "../item/textslider.qc"
 CLASS(XonoticTextSlider, TextSlider)
-	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string))
-	METHOD(XonoticTextSlider, setValue, void(entity, float))
-	METHOD(XonoticTextSlider, configureXonoticTextSliderValues, void(entity))
+	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string));
+	METHOD(XonoticTextSlider, setValue, void(entity, float));
+	METHOD(XonoticTextSlider, configureXonoticTextSliderValues, void(entity));
 	ATTRIB(XonoticTextSlider, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticTextSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT)
 	ATTRIB(XonoticTextSlider, image, string, SKINGFX_SLIDER)
@@ -17,8 +17,8 @@ CLASS(XonoticTextSlider, TextSlider)
 	ATTRIB(XonoticTextSlider, color2, vector, SKINCOLOR_SLIDER_S)
 
 	ATTRIB(XonoticTextSlider, cvarName, string, string_null)
-	METHOD(XonoticTextSlider, loadCvars, void(entity))
-	METHOD(XonoticTextSlider, saveCvars, void(entity))
+	METHOD(XonoticTextSlider, loadCvars, void(entity));
+	METHOD(XonoticTextSlider, saveCvars, void(entity));
 	ATTRIB(XonoticTextSlider, sendCvars, float, 0)
 
 	ATTRIB(XonoticTextSlider, alpha, float, SKINALPHA_TEXT)

@@ -21,104 +21,116 @@ const int PROJECTILE_NADE_HEAL_BURN = 81;
 const int PROJECTILE_NADE_MONSTER = 82;
 const int PROJECTILE_NADE_MONSTER_BURN = 83;
 
-const int NADE_TYPE_NORMAL = 1;
-const int NADE_TYPE_NAPALM = 2;
-const int NADE_TYPE_ICE = 3;
-const int NADE_TYPE_TRANSLOCATE = 4;
-const int NADE_TYPE_SPAWN = 5;
-const int NADE_TYPE_HEAL = 6;
-const int NADE_TYPE_MONSTER = 7;
+void RegisterNades();
+const int NADES_MAX = 8;
+entity NADES[NADES_MAX], NADES_first, NADES_last;
+int NADES_COUNT;
+#define REGISTER_NADE(id) REGISTER(RegisterNades, NADE_TYPE, NADES, NADES_COUNT, id, m_id, NEW(Nade))
+REGISTER_REGISTRY(RegisterNades)
 
-const int NADE_TYPE_LAST = 7; // a check to prevent using higher values & crashing
+CLASS(Nade, Object)
+    ATTRIB(Nade, m_id, int, 0)
+    ATTRIB(Nade, m_color, vector, '0 0 0')
+    ATTRIB(Nade, m_name, string, _("Grenade"))
+    ATTRIB(Nade, m_icon, string, "nade_normal")
+    ATTRIBARRAY(Nade, m_projectile, int, 2)
+    ATTRIBARRAY(Nade, m_trail, string, 2)
+    METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
+        returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
+    }
+ENDCLASS(Nade)
 
-vector Nade_Color(int nadeid)
-{
-	switch(nadeid)
-	{
-		case NADE_TYPE_NORMAL: return '1 1 1';
-		case NADE_TYPE_NAPALM: return '2 0.5 0';
-		case NADE_TYPE_ICE: return '0 0.5 2';
-		case NADE_TYPE_TRANSLOCATE: return '1 0 1';
-		case NADE_TYPE_SPAWN: return '1 0.9 0';
-		case NADE_TYPE_HEAL: return '1 0 0';
-		case NADE_TYPE_MONSTER: return '0.25 0.75 0';
-	}
+REGISTER_NADE(NULL);
 
-	return '0 0 0';
+#define NADE_PROJECTILE(i, projectile, trail) do { \
+    this.m_projectile[i] = projectile; \
+    this.m_trail[i] = trail; \
+} while (0)
+
+REGISTER_NADE(NORMAL) {
+    this.m_color = '1 1 1';
+    NADE_PROJECTILE(0, PROJECTILE_NADE, string_null);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_BURN, string_null);
 }
 
-string Nade_Icon(int nadeid)
-{
-	switch(nadeid)
-	{
-		case NADE_TYPE_NORMAL: return "nade_normal";
-		case NADE_TYPE_NAPALM: return "nade_napalm";
-		case NADE_TYPE_ICE: return "nade_ice";
-		case NADE_TYPE_TRANSLOCATE: return "nade_translocate";
-		case NADE_TYPE_SPAWN: return "nade_spawn";
-		case NADE_TYPE_HEAL: return "nade_heal";
-		case NADE_TYPE_MONSTER: return "nade_monster";
-	}
-
-	return "nade_normal";
+REGISTER_NADE(NAPALM) {
+    this.m_color = '2 0.5 0';
+    this.m_name = _("Napalm grenade");
+    this.m_icon = "nade_napalm";
+    NADE_PROJECTILE(0, PROJECTILE_NADE_NAPALM, "TR_ROCKET");
+    NADE_PROJECTILE(1, PROJECTILE_NADE_NAPALM_BURN, "spiderbot_rocket_thrust");
 }
 
-int Nade_IDFromProjectile(float proj)
-{
-	switch(proj)
-	{
-		case PROJECTILE_NADE:
-		case PROJECTILE_NADE_BURN: return NADE_TYPE_NORMAL;
-		case PROJECTILE_NADE_NAPALM:
-		case PROJECTILE_NADE_NAPALM_BURN: return NADE_TYPE_NAPALM;
-		case PROJECTILE_NADE_ICE:
-		case PROJECTILE_NADE_ICE_BURN: return NADE_TYPE_ICE;
-		case PROJECTILE_NADE_TRANSLOCATE: return NADE_TYPE_TRANSLOCATE;
-		case PROJECTILE_NADE_SPAWN: return NADE_TYPE_SPAWN;
-		case PROJECTILE_NADE_HEAL:
-		case PROJECTILE_NADE_HEAL_BURN: return NADE_TYPE_HEAL;
-		case PROJECTILE_NADE_MONSTER:
-		case PROJECTILE_NADE_MONSTER_BURN: return NADE_TYPE_MONSTER;
-	}
-
-	return 0;
+REGISTER_NADE(ICE) {
+    this.m_color = '0 0.5 2';
+    this.m_name = _("Ice grenade");
+    this.m_icon = "nade_ice";
+    NADE_PROJECTILE(0, PROJECTILE_NADE_ICE, "TR_NEXUIZPLASMA");
+    NADE_PROJECTILE(1, PROJECTILE_NADE_ICE_BURN, "wakizashi_rocket_thrust");
 }
 
-int Nade_ProjectileFromID(int proj, bool burn)
-{
-	switch(proj)
-	{
-		case NADE_TYPE_NORMAL: return (burn) ? PROJECTILE_NADE_BURN : PROJECTILE_NADE;
-		case NADE_TYPE_NAPALM: return (burn) ? PROJECTILE_NADE_NAPALM_BURN : PROJECTILE_NADE_NAPALM;
-		case NADE_TYPE_ICE: return (burn) ? PROJECTILE_NADE_ICE_BURN : PROJECTILE_NADE_ICE;
-		case NADE_TYPE_TRANSLOCATE: return PROJECTILE_NADE_TRANSLOCATE;
-		case NADE_TYPE_SPAWN: return PROJECTILE_NADE_SPAWN;
-		case NADE_TYPE_HEAL: return (burn) ? PROJECTILE_NADE_HEAL_BURN : PROJECTILE_NADE_HEAL;
-		case NADE_TYPE_MONSTER: return (burn) ? PROJECTILE_NADE_MONSTER_BURN : PROJECTILE_NADE_MONSTER;
-	}
+REGISTER_NADE(TRANSLOCATE) {
+    this.m_color = '1 0 1';
+    this.m_name = _("Translocate grenade");
+    this.m_icon = "nade_translocate";
+    NADE_PROJECTILE(0, PROJECTILE_NADE_TRANSLOCATE, "TR_CRYLINKPLASMA");
+    NADE_PROJECTILE(1, PROJECTILE_NADE_TRANSLOCATE, "TR_CRYLINKPLASMA");
+}
 
-	return 0;
+REGISTER_NADE(SPAWN) {
+    this.m_color = '1 0.9 0';
+    this.m_name = _("Spawn grenade");
+    this.m_icon = "nade_spawn";
+    NADE_PROJECTILE(0, PROJECTILE_NADE_SPAWN, "nade_yellow");
+    NADE_PROJECTILE(1, PROJECTILE_NADE_SPAWN, "nade_yellow");
+}
+
+REGISTER_NADE(HEAL) {
+    this.m_color = '1 0 0';
+    this.m_name = _("Heal grenade");
+    this.m_icon = "nade_heal";
+    NADE_PROJECTILE(0, PROJECTILE_NADE_HEAL, "nade_red");
+    NADE_PROJECTILE(1, PROJECTILE_NADE_HEAL_BURN, "nade_red_burn");
+}
+
+REGISTER_NADE(MONSTER) {
+    this.m_color = '0.25 0.75 0';
+    this.m_name = _("Monster grenade");
+    this.m_icon = "nade_monster";
+    NADE_PROJECTILE(0, PROJECTILE_NADE_MONSTER, "nade_red");
+    NADE_PROJECTILE(1, PROJECTILE_NADE_MONSTER_BURN, "nade_red_burn");
+}
+
+entity Nade_FromProjectile(float proj)
+{
+    FOREACH(NADES, true, LAMBDA(
+        for (int j = 0; j < 2; j++)
+        {
+            if (it.m_projectile[j] == proj) return it;
+        }
+    ));
+    return NADE_TYPE_NULL;
 }
 
 string Nade_TrailEffect(float proj, float nade_team)
 {
-	switch(proj)
-	{
-		case PROJECTILE_NADE: return strcat("nade_", Static_Team_ColorName_Lower(nade_team));
-		case PROJECTILE_NADE_BURN: return strcat("nade_", Static_Team_ColorName_Lower(nade_team), "_burn");
-		case PROJECTILE_NADE_NAPALM: return "TR_ROCKET";
-		case PROJECTILE_NADE_NAPALM_BURN: return "spiderbot_rocket_thrust";
-		case PROJECTILE_NADE_ICE: return "TR_NEXUIZPLASMA";
-		case PROJECTILE_NADE_ICE_BURN: return "wakizashi_rocket_thrust";
-		case PROJECTILE_NADE_TRANSLOCATE: return "TR_CRYLINKPLASMA";
-		case PROJECTILE_NADE_SPAWN: return "nade_yellow";
-		case PROJECTILE_NADE_HEAL: return "nade_red";
-		case PROJECTILE_NADE_HEAL_BURN: return "nade_red_burn";
-		case PROJECTILE_NADE_MONSTER: return "nade_red";
-		case PROJECTILE_NADE_MONSTER_BURN: return "nade_red_burn";
-	}
-
-	return "";
+    FOREACH(NADES, true, LAMBDA(
+        for (int j = 0; j < 2; j++)
+        {
+            if (it.m_projectile[j] == proj)
+            {
+                string trail = it.m_trail[j];
+                if (trail) return trail;
+                break;
+            }
+        }
+    ));
+    switch (proj)
+    {
+        case PROJECTILE_NADE: return strcat("nade_", Static_Team_ColorName_Lower(nade_team));
+        case PROJECTILE_NADE_BURN: return strcat("nade_", Static_Team_ColorName_Lower(nade_team), "_burn");
+    }
+    return "";
 }
 
 #ifdef SVQC

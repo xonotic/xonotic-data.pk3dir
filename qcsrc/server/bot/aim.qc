@@ -143,8 +143,7 @@ float bot_shouldattack(entity e)
 	if(e.flags & FL_NOTARGET)
 		return false;
 
-	checkentity = e;
-	if(MUTATOR_CALLHOOK(BotShouldAttack))
+	if(MUTATOR_CALLHOOK(BotShouldAttack, e))
 		return false;
 
 	return true;
@@ -344,12 +343,12 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	shotspeedupward *= W_WeaponSpeedFactor();
 	if (!shotspeed)
 	{
-		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
 		maxshottime = 1;
 	}
 	makevectors(self.v_angle);

@@ -2,11 +2,10 @@
 #include "_all.qh"
 
 #include "hud.qh"
-#include "sortlist.qh"
 
 #include "../common/constants.qh"
-#include "../common/counting.qh"
 #include "../common/mapinfo.qh"
+#include "../common/minigames/cl_minigames.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
@@ -246,63 +245,63 @@ void HUD_UpdateTeamPos(entity Team)
 
 void Cmd_HUD_Help()
 {
-	print(_("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"));
-	print(_("^3|---------------------------------------------------------------|\n"));
-	print(_("Usage:\n"));
-	print(_("^2scoreboard_columns_set default\n"));
-	print(_("^2scoreboard_columns_set ^7field1 field2 ...\n"));
-	print(_("The following field names are recognized (case insensitive):\n"));
-	print(_("You can use a ^3|^7 to start the right-aligned fields.\n\n"));
+	LOG_INFO(_("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"));
+	LOG_INFO(_("^3|---------------------------------------------------------------|\n"));
+	LOG_INFO(_("Usage:\n"));
+	LOG_INFO(_("^2scoreboard_columns_set default\n"));
+	LOG_INFO(_("^2scoreboard_columns_set ^7field1 field2 ...\n"));
+	LOG_INFO(_("The following field names are recognized (case insensitive):\n"));
+	LOG_INFO(_("You can use a ^3|^7 to start the right-aligned fields.\n\n"));
 
-	print(_("^3name^7 or ^3nick^7             Name of a player\n"));
-	print(_("^3ping^7                     Ping time\n"));
-	print(_("^3pl^7                       Packet loss\n"));
-	print(_("^3kills^7                    Number of kills\n"));
-	print(_("^3deaths^7                   Number of deaths\n"));
-	print(_("^3suicides^7                 Number of suicides\n"));
-	print(_("^3frags^7                    kills - suicides\n"));
-	print(_("^3kd^7                       The kill-death ratio\n"));
-	print(_("^3sum^7                      frags - deaths\n"));
-	print(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
-	print(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
-	print(_("^3captime^7                  Time of fastest cap (CTF)\n"));
-	print(_("^3fckills^7                  Number of flag carrier kills\n"));
-	print(_("^3returns^7                  Number of flag returns\n"));
-	print(_("^3drops^7                    Number of flag drops\n"));
-	print(_("^3lives^7                    Number of lives (LMS)\n"));
-	print(_("^3rank^7                     Player rank\n"));
-	print(_("^3pushes^7                   Number of players pushed into void\n"));
-	print(_("^3destroyed^7                Number of keys destroyed by pushing them into void\n"));
-	print(_("^3kckills^7                  Number of keys carrier kills\n"));
-	print(_("^3losses^7                   Number of times a key was lost\n"));
-	print(_("^3laps^7                     Number of laps finished (race/cts)\n"));
-	print(_("^3time^7                     Total time raced (race/cts)\n"));
-	print(_("^3fastest^7                  Time of fastest lap (race/cts)\n"));
-	print(_("^3ticks^7                    Number of ticks (DOM)\n"));
-	print(_("^3takes^7                    Number of domination points taken (DOM)\n"));
-	print(_("^3bckills^7                  Number of ball carrier kills\n"));
-	print(_("^3bctime^7                   Total amount of time holding the ball in Keepaway\n"));
-	print(_("^3score^7                    Total score\n\n"));
+	LOG_INFO(_("^3name^7 or ^3nick^7             Name of a player\n"));
+	LOG_INFO(_("^3ping^7                     Ping time\n"));
+	LOG_INFO(_("^3pl^7                       Packet loss\n"));
+	LOG_INFO(_("^3kills^7                    Number of kills\n"));
+	LOG_INFO(_("^3deaths^7                   Number of deaths\n"));
+	LOG_INFO(_("^3suicides^7                 Number of suicides\n"));
+	LOG_INFO(_("^3frags^7                    kills - suicides\n"));
+	LOG_INFO(_("^3kd^7                       The kill-death ratio\n"));
+	LOG_INFO(_("^3sum^7                      frags - deaths\n"));
+	LOG_INFO(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
+	LOG_INFO(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
+	LOG_INFO(_("^3captime^7                  Time of fastest cap (CTF)\n"));
+	LOG_INFO(_("^3fckills^7                  Number of flag carrier kills\n"));
+	LOG_INFO(_("^3returns^7                  Number of flag returns\n"));
+	LOG_INFO(_("^3drops^7                    Number of flag drops\n"));
+	LOG_INFO(_("^3lives^7                    Number of lives (LMS)\n"));
+	LOG_INFO(_("^3rank^7                     Player rank\n"));
+	LOG_INFO(_("^3pushes^7                   Number of players pushed into void\n"));
+	LOG_INFO(_("^3destroyed^7                Number of keys destroyed by pushing them into void\n"));
+	LOG_INFO(_("^3kckills^7                  Number of keys carrier kills\n"));
+	LOG_INFO(_("^3losses^7                   Number of times a key was lost\n"));
+	LOG_INFO(_("^3laps^7                     Number of laps finished (race/cts)\n"));
+	LOG_INFO(_("^3time^7                     Total time raced (race/cts)\n"));
+	LOG_INFO(_("^3fastest^7                  Time of fastest lap (race/cts)\n"));
+	LOG_INFO(_("^3ticks^7                    Number of ticks (DOM)\n"));
+	LOG_INFO(_("^3takes^7                    Number of domination points taken (DOM)\n"));
+	LOG_INFO(_("^3bckills^7                  Number of ball carrier kills\n"));
+	LOG_INFO(_("^3bctime^7                   Total amount of time holding the ball in Keepaway\n"));
+	LOG_INFO(_("^3score^7                    Total score\n\n"));
 
-	print(_("Before a field you can put a + or - sign, then a comma separated list\n"
+	LOG_INFO(_("Before a field you can put a + or - sign, then a comma separated list\n"
 	        "of game types, then a slash, to make the field show up only in these\n"
 	        "or in all but these game types. You can also specify 'all' as a\n"
 	        "field to show all fields available for the current game mode.\n\n"));
 
-	print(_("The special game type names 'teams' and 'noteams' can be used to\n"
+	LOG_INFO(_("The special game type names 'teams' and 'noteams' can be used to\n"
 	        "include/exclude ALL teams/noteams game modes.\n\n"));
 
-	print(_("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"));
-	print(_("will display name, ping and pl aligned to the left, and the fields\n"
+	LOG_INFO(_("Example: scoreboard_columns_set name ping pl | +ctf/field3 -dm/field4\n"));
+	LOG_INFO(_("will display name, ping and pl aligned to the left, and the fields\n"
 	        "right of the vertical bar aligned to the right.\n"));
-	print(_("'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
+	LOG_INFO(_("'field3' will only be shown in CTF, and 'field4' will be shown in all\n"
 	        "other gamemodes except DM.\n"));
 }
 
 #define HUD_DefaultColumnLayout() \
 "ping pl name | " \
 "-teams,race,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,race,ka/suicides +ft,tdm/suicides -race,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
-"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns " \
+"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
 "+lms/lives +lms/rank " \
 "+kh/caps +kh/pushes +kh/destroyed " \
 "?+race/laps ?+race/time ?+race/fastest " \
@@ -413,7 +412,7 @@ void Cmd_HUD_SetFields(float argc)
 			else
 			{
 				if (!nocomplain)
-					printf("^1Error:^7 Unknown score field: '%s'\n", str);
+					LOG_INFOF("^1Error:^7 Unknown score field: '%s'\n", str);
 				continue;
 			}
 :found
@@ -450,7 +449,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_title[0] = strzone(TranslateScoresLabel("name"));
 			hud_field[0] = SP_NAME;
 			++hud_num_fields;
-			print("fixed missing field 'name'\n");
+			LOG_INFO("fixed missing field 'name'\n");
 
 			if(!have_separator)
 			{
@@ -465,7 +464,7 @@ void Cmd_HUD_SetFields(float argc)
 				hud_field[1] = SP_SEPARATOR;
 				hud_size[1] = stringwidth("|", false, hud_fontsize);
 				++hud_num_fields;
-				print("fixed missing field '|'\n");
+				LOG_INFO("fixed missing field '|'\n");
 			}
 		}
 		else if(!have_separator)
@@ -475,7 +474,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth("|", false, hud_fontsize);
 			hud_field[hud_num_fields] = SP_SEPARATOR;
 			++hud_num_fields;
-			print("fixed missing field '|'\n");
+			LOG_INFO("fixed missing field '|'\n");
 		}
 		if(!have_secondary)
 		{
@@ -484,7 +483,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
-			printf("fixed missing field '%s'\n", scores_label[ps_secondary]);
+			LOG_INFOF("fixed missing field '%s'\n", scores_label[ps_secondary]);
 		}
 		if(!have_primary)
 		{
@@ -493,7 +492,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
-			printf("fixed missing field '%s'\n", scores_label[ps_primary]);
+			LOG_INFOF("fixed missing field '%s'\n", scores_label[ps_primary]);
 		}
 	}
 
@@ -960,13 +959,15 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 float HUD_WouldDrawScoreboard() {
 	if (autocvar__hud_configure)
 		return 0;
+	else if (HUD_Radar_Clickable())
+		return 0;
 	else if (scoreboard_showscores)
 		return 1;
 	else if (intermission == 1)
 		return 1;
 	else if (intermission == 2)
 		return 0;
-	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS)
+	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS && !active_minigame)
 		return 1;
 	else if (scoreboard_showscores_force)
 		return 1;

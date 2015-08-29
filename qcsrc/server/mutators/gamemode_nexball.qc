@@ -86,10 +86,10 @@ void relocate_nexball(void)
 		o = self.origin;
 		if(!move_out_of_solid(self))
 			objerror("could not get out of solid at all!");
-		print("^1NOTE: this map needs FIXING. ", self.classname, " at ", vtos(o - '0 0 1'));
-		print(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
-		print(" ", ftos(self.origin.y - o.y));
-		print(" ", ftos(self.origin.z - o.z), "'\n");
+		LOG_INFO("^1NOTE: this map needs FIXING. ", self.classname, " at ", vtos(o - '0 0 1'));
+		LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
+		LOG_INFO(" ", ftos(self.origin.y - o.y));
+		LOG_INFO(" ", ftos(self.origin.z - o.z), "'\n");
 		self.origin = o;
 	}
 }
@@ -144,7 +144,7 @@ void GiveBall(entity plyr, entity ball)
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
 
-	WaypointSprite_AttachCarrier("nb-ball", plyr, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR);
+	WaypointSprite_AttachCarrier(WP_NbBall, plyr, RADARICON_FLAGCARRIER);
 	WaypointSprite_UpdateRule(plyr.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 
 	if(autocvar_g_nexball_basketball_delay_hold)
@@ -158,9 +158,9 @@ void GiveBall(entity plyr, entity ball)
 	self.weaponentity.weapons = self.weapons;
 	self.weaponentity.switchweapon = self.weapon;
 	self.weapons = WEPSET_PORTO;
-	WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
-	self.switchweapon = WEP_PORTO;
-	W_SwitchWeapon(WEP_PORTO);
+	WEP_ACTION(WEP_PORTO.m_id, WR_RESETPLAYER);
+	self.switchweapon = WEP_PORTO.m_id;
+	W_SwitchWeapon(WEP_PORTO.m_id);
 	self = ownr;
 }
 
@@ -188,7 +188,7 @@ void DropBall(entity ball, vector org, vector vel)
 	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
-	WaypointSprite_Spawn("nb-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR); // no health bar please
+	WaypointSprite_Spawn(WP_NbBall, 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER); // no health bar please
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 
 	ball.owner.ballcarried = world;
@@ -241,7 +241,7 @@ void ResetBall(void)
 	{
 //		dprint("Step 4: time: ", ftos(time), "\n");
 		if(vlen(self.origin - self.spawnorigin) > 10)  // should not happen anymore
-			dprint("The ball moved too far away from its spawn origin.\nOffset: ",
+			LOG_TRACE("The ball moved too far away from its spawn origin.\nOffset: ",
 				   vtos(self.origin - self.spawnorigin), " Velocity: ", vtos(self.velocity), "\n");
 		self.velocity = '0 0 0';
 		setorigin(self, self.spawnorigin); // make sure it's positioned correctly anyway
@@ -423,7 +423,7 @@ void spawnfunc_nexball_team(void)
 
 void nb_spawnteam(string teamname, float teamcolor)
 {
-	dprint("^2spawned team ", teamname, "\n");
+	LOG_TRACE("^2spawned team ", teamname, "\n");
 	entity e;
 	e = spawn();
 	e.classname = "nexball_team";
@@ -530,7 +530,7 @@ void SpawnBall(void)
 	precache_sound(self.noise1);
 	precache_sound(self.noise2);
 
-	WaypointSprite_AttachCarrier("nb-ball", self, RADARICON_FLAGCARRIER, BALL_SPRITECOLOR); // the ball's team is not set yet, no rule update needed
+	WaypointSprite_AttachCarrier(WP_NbBall, self, RADARICON_FLAGCARRIER); // the ball's team is not set yet, no rule update needed
 
 	self.reset = ball_restart;
 	self.think = InitBall;
@@ -589,7 +589,8 @@ void SpawnGoal(void)
 
 	if(self.team != GOAL_OUT && Team_TeamToNumber(self.team) != -1)
 	{
-		WaypointSprite_SpawnFixed("goal", (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE, ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0'));
+		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE);
+		wp.colormod = ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0');
 		self.sprite.customizeentityforclient = nb_Goal_Customize;
 	}
 
@@ -777,7 +778,6 @@ void W_Nexball_Attack2(void)
 	if(!(balls & BALL_BASKET))
 		return;
 	W_SetupShot(self, false, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0);
-//	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	missile = spawn();
 
 	missile.owner = self;
@@ -863,9 +863,9 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_INIT)
 	{
-		precache_model("models/weapons/g_porto.md3");
-		precache_model("models/weapons/v_porto.md3");
-		precache_model("models/weapons/h_porto.iqm");
+		precache_model(W_Model("g_porto.md3"));
+		precache_model(W_Model("v_porto.md3"));
+		precache_model(W_Model("h_porto.iqm"));
 		precache_model("models/elaser.mdl");
 		precache_sound("nexball/shoot1.wav");
 		precache_sound("nexball/shoot2.wav");
@@ -873,7 +873,7 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_SETUP)
 	{
-		//weapon_setup(WEP_PORTO);
+		//weapon_setup(WEP_PORTO.m_id);
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return true
 	return true;
@@ -936,7 +936,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			if(self.weaponentity.weapons)
 			{
 				self.weapons = self.weaponentity.weapons;
-				WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
+				WEP_ACTION(WEP_PORTO.m_id, WR_RESETPLAYER);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 
@@ -982,7 +982,7 @@ MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {
-	if(self.weapon == WEP_MORTAR)
+	if(self.weapon == WEP_MORTAR.m_id)
 		return true;
 
 	return false;
@@ -991,7 +991,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 {
 	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_MORTAR)
+	if(self.weapon == WEP_MORTAR.m_id)
 		return true;
 
 	return false;
@@ -1038,7 +1038,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

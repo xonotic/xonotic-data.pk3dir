@@ -1,0 +1,8 @@
+#ifndef CVAR_H
+#define CVAR_H
+
+#define CVAR_DESCRIBE(var, desc)    localcmd(sprintf("\nseta %s \"%s\" \"%s\"\n", #var, ftos(autocvar_##var), desc))
+#define CVAR_DESCRIBESTR(var, desc) localcmd(sprintf("\nseta %s \"%s\" \"%s\"\n", #var, autocvar_##var, desc))
+#define CVAR_DESCRIBEVEC(var, desc) localcmd(sprintf("\nseta %s \"%v\" \"%s\"\n", #var, autocvar_##var, desc))
+
+#endif

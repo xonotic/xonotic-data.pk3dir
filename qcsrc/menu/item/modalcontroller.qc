@@ -2,17 +2,17 @@
 #define ITEM_MODALCONTROLLER_H
 #include "container.qc"
 CLASS(ModalController, Container)
-	METHOD(ModalController, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(ModalController, draw, void(entity))
-	METHOD(ModalController, showChild, void(entity, entity, vector, vector, float))
-	METHOD(ModalController, hideChild, void(entity, entity, float))
-	METHOD(ModalController, hideAll, void(entity, float))
-	METHOD(ModalController, addItem, void(entity, entity, vector, vector, float))
-	METHOD(ModalController, addTab, void(entity, entity, entity))
+	METHOD(ModalController, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(ModalController, draw, void(entity));
+	METHOD(ModalController, showChild, void(entity, entity, vector, vector, float));
+	METHOD(ModalController, hideChild, void(entity, entity, float));
+	METHOD(ModalController, hideAll, void(entity, float));
+	METHOD(ModalController, addItem, void(entity, entity, vector, vector, float));
+	METHOD(ModalController, addTab, void(entity, entity, entity));
 
-	METHOD(ModalController, initializeDialog, void(entity, entity))
+	METHOD(ModalController, initializeDialog, void(entity, entity));
 
-	METHOD(ModalController, switchState, void(entity, entity, float, float))
+	METHOD(ModalController, switchState, void(entity, entity, float, float));
 	ATTRIB(ModalController, origin, vector, '0 0 0')
 	ATTRIB(ModalController, size, vector, '0 0 0')
 	ATTRIB(ModalController, previousButton, entity, NULL)

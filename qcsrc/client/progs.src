@@ -2,13 +2,17 @@
 
 ../common/util-pre.qh
 ../dpdefs/csprogsdefs.qh
+../common/util-post.qh
+
+../lib/_all.inc
 
 announcer.qc
 bgmscript.qc
-casings.qc
+controlpoint.qc
 csqcmodel_hooks.qc
 damage.qc
 effects.qc
+generator.qc
 gibs.qc
 hook.qc
 hud.qc
@@ -18,31 +22,24 @@ mapvoting.qc
 miscfunctions.qc
 modeleffects.qc
 movelib.qc
-noise.qc
 particles.qc
 player_skeleton.qc
-prandom.qc
 rubble.qc
 scoreboard.qc
 shownames.qc
-sortlist.qc
 teamradar.qc
-tturrets.qc
 tuba.qc
 t_items.qc
 view.qc
 wall.qc
-waypointsprites.qc
 
 command/all.qc
-
-vehicles/bumblebee.qc
-vehicles/all.qc
 
 weapons/projectile.qc // TODO
 
 ../common/animdecide.qc
 ../common/buffs.qc
+../common/effects.qc
 ../common/mapinfo.qc
 ../common/movetypes/include.qc
 ../common/nades.qc
@@ -50,18 +47,21 @@ weapons/projectile.qc // TODO
 ../common/notifications.qc
 ../common/physics.qc
 ../common/playerstats.qc
-../common/p2mathlib.qc
-../common/test.qc
-../common/urllib.qc
 ../common/util.qc
 
 ../common/viewloc.qc
 
+../common/minigames/minigames.qc
+../common/minigames/cl_minigames.qc
+
 ../common/items/all.qc
-
 ../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
+../common/weapons/all.qc
 
-../common/weapons/all.qc // TODO
+../common/turrets/cl_turrets.qc
+../common/turrets/turrets.qc
 
 ../common/triggers/include.qc
 
@@ -74,5 +74,6 @@ weapons/projectile.qc // TODO
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/client.qc
 ../warpzonelib/common.qc
-../warpzonelib/mathlib.qc
 ../warpzonelib/util_server.qc
+
+../../mod/client/progs.inc

@@ -1,8 +1,0 @@
-#ifndef TTURRETS_H
-#define TTURRETS_H
-
-void ent_turret();
-void turrets_precache();
-entityclass(Turret);
-class(Turret) .entity tur_head;
-#endif

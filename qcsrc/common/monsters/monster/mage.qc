@@ -1,15 +1,20 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
+#ifndef MENUQC
+bool M_Mage(int);
+#endif
+REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ MAGE,
-/* functions  */ M_Mage, M_Mage_Attack,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -24', '36 36 50',
 /* model      */ "mage.dpm",
 /* netname    */ "mage",
 /* fullname   */ _("Mage")
-);
+) {
+#ifndef MENUQC
+    this.monster_func = M_Mage;
+    this.monster_func(MR_PRECACHE);
+#endif
+}
 
-#else
 #ifdef SVQC
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_damageforcescale = 0.5;
@@ -67,8 +72,8 @@ float M_Mage_Defend_Heal_Check(entity e)
 	if(e.frozen)
 		return false;
 	if(!IS_PLAYER(e))
-		return ((e.flags & FL_MONSTER) && e.health < e.max_health);
-	if(e.items & IT_INVINCIBLE)
+		return (IS_MONSTER(e) && e.health < e.max_health);
+	if(e.items & ITEM_Shield.m_itemid)
 		return false;
 
 	switch(self.skin)
@@ -86,11 +91,11 @@ void M_Mage_Attack_Spike_Explode()
 {
 	self.event_damage = func_null;
 
-	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
 
 	self.realowner.mage_spike = world;
 
-	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
+	Send_Effect("explosion_small", self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE, other);
 
 	remove (self);
@@ -232,11 +237,11 @@ void M_Mage_Defend_Heal()
 					break;
 			}
 
-			pointparticles(particleeffectnum(fx), head.origin, '0 0 0', 1);
+			Send_Effect(fx, head.origin, '0 0 0', 1);
 		}
 		else
 		{
-			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
+			Send_Effect("healing_fx", head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
 			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE) && head.sprite)
 				WaypointSprite_UpdateHealth(head.sprite, head.health);
@@ -253,9 +258,9 @@ void M_Mage_Defend_Heal()
 
 void M_Mage_Attack_Push()
 {
-	sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
-	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
+	Send_Effect("TE_EXPLOSION", self.origin, '0 0 0', 1);
 
 	setanim(self, self.anim_shoot, true, true, true);
 	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
@@ -272,7 +277,7 @@ void M_Mage_Attack_Teleport()
 	if(trace_fraction < 1)
 		return;
 
-	pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1);
+	Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1);
 	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
 
 	self.attack_finished_single = time + 0.2;
@@ -338,7 +343,7 @@ float M_Mage_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE); }
+void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE.monsterid); }
 
 #endif // SVQC
 
@@ -411,14 +416,15 @@ bool M_Mage(int req)
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
 
 			self.monster_loot = spawnfunc_item_health_large;
+			self.monster_attackfunc = M_Mage_Attack;
 
 			return true;
 		}
 		case MR_PRECACHE:
 		{
 			precache_model("models/monsters/mage.dpm");
-			precache_sound ("weapons/grenade_impact.wav");
-			precache_sound ("weapons/tagexp1.wav");
+			precache_sound (W_Sound("grenade_impact"));
+			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
 		#endif
@@ -426,5 +432,3 @@ bool M_Mage(int req)
 
 	return true;
 }
-
-#endif // REGISTER_MONSTER

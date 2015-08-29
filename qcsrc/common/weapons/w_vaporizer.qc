@@ -1,4 +1,4 @@
-#ifdef REGISTER_WEAPON
+#ifndef IMPLEMENTATION
 REGISTER_WEAPON(
 /* WEP_##id  */ VAPORIZER,
 /* function  */ W_Vaporizer,
@@ -46,9 +46,10 @@ VAPORIZER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float vaporizer_lasthit;
 .float jump_interval;
 #endif
-#else
+#endif
+#ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER); }
+void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER.m_id); }
 void spawnfunc_weapon_minstanex(void) { spawnfunc_weapon_vaporizer(); }
 
 void W_Vaporizer_Attack(void)
@@ -59,11 +60,11 @@ void W_Vaporizer_Attack(void)
 	W_SetupShot(self, true, 0, "", CH_WEAPON_A, 10000);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
-	sound (self, CH_WEAPON_A, "weapons/minstanexfire.wav", VOL_BASE * 0.8, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, W_Sound("minstanexfire"), VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_VAPORIZER);
+	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
 
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
@@ -75,7 +76,7 @@ void W_Vaporizer_Attack(void)
 
 	self.vaporizer_lasthit = damage_goodhits;
 
-	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect("nex_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
 	vector v;
@@ -84,33 +85,33 @@ void W_Vaporizer_Attack(void)
 	{
 		case NUM_TEAM_1:   // Red
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3RED_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3RED", w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_2:   // Blue
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3BLUE_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3BLUE", w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_3:   // Yellow
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3YELLOW_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3YELLOW", w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_4:   // Pink
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3PINK_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3PINK", w_shotorg, v, 1);
 			break;
 		default:
 			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3_HIT"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3_HIT", w_shotorg, v, 1);
 			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
+				Send_Effect("TE_TEI_G3", w_shotorg, v, 1);
 			break;
 	}
 
@@ -165,9 +166,9 @@ float W_Vaporizer(float req)
 
 					// ugly instagib hack to reuse the fire mode of the laser
 					int oldwep = self.weapon; // we can't avoid this hack
-					self.weapon = WEP_BLASTER;
+					self.weapon = WEP_BLASTER.m_id;
 					W_Blaster_Attack(
-						WEP_BLASTER | HITTYPE_SECONDARY,
+						WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 						WEP_CVAR_SEC(vaporizer, shotangle),
 						WEP_CVAR_SEC(vaporizer, damage),
 						WEP_CVAR_SEC(vaporizer, edgedamage),
@@ -190,13 +191,13 @@ float W_Vaporizer(float req)
 		case WR_INIT:
 		{
 			precache_model("models/nexflash.md3");
-			precache_model("models/weapons/g_minstanex.md3");
-			precache_model("models/weapons/v_minstanex.md3");
-			precache_model("models/weapons/h_minstanex.iqm");
-			precache_sound("weapons/minstanexfire.wav");
-			precache_sound("weapons/nexwhoosh1.wav");
-			precache_sound("weapons/nexwhoosh2.wav");
-			precache_sound("weapons/nexwhoosh3.wav");
+			precache_model(W_Model("g_minstanex.md3"));
+			precache_model(W_Model("v_minstanex.md3"));
+			precache_model(W_Model("h_minstanex.iqm"));
+			precache_sound(W_Sound("minstanexfire"));
+			precache_sound(W_Sound("nexwhoosh1"));
+			precache_sound(W_Sound("nexwhoosh2"));
+			precache_sound(W_Sound("nexwhoosh3"));
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
@@ -210,7 +211,7 @@ float W_Vaporizer(float req)
 		case WR_CHECKAMMO1:
 		{
 			ammo_amount = self.WEP_AMMO(VAPORIZER) >= vaporizer_ammo;
-			ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= vaporizer_ammo;
+			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
 			return ammo_amount;
 		}
 		case WR_CHECKAMMO2:
@@ -218,7 +219,7 @@ float W_Vaporizer(float req)
 			if(!WEP_CVAR_SEC(vaporizer, ammo))
 				return true;
 			ammo_amount = self.WEP_AMMO(VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
-			ammo_amount += self.(weapon_load[WEP_VAPORIZER]) >= WEP_CVAR_SEC(vaporizer, ammo);
+			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
 			return ammo_amount;
 		}
 		case WR_CONFIG:
@@ -239,7 +240,7 @@ float W_Vaporizer(float req)
 			else
 				used_ammo = vaporizer_ammo;
 
-			W_Reload(used_ammo, "weapons/reload.wav");
+			W_Reload(used_ammo, W_Sound("reload"));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -266,19 +267,19 @@ float W_Vaporizer(float req)
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
 				pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM); }
 			}
 			else
 			{
 				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM); }
 			}
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/laserimpact.wav");
-			precache_sound("weapons/neximpact.wav");
+			precache_sound(W_Sound("laserimpact"));
+			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

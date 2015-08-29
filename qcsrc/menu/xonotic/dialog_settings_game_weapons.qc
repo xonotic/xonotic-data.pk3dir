@@ -2,14 +2,17 @@
 #define DIALOG_SETTINGS_GAME_WEAPONS_H
 #include "tab.qc"
 CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
-	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity))
-	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity))
+	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity));
+	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity));
+	ATTRIB(XonoticGameWeaponsSettingsTab, title, string, _("Weapons"))
 	ATTRIB(XonoticGameWeaponsSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6)
 	ATTRIB(XonoticGameWeaponsSettingsTab, weaponsList, entity, NULL)
 ENDCLASS(XonoticGameWeaponsSettingsTab)
 entity makeXonoticGameWeaponsSettingsTab();
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(Weapons, makeXonoticGameWeaponsSettingsTab());
 #endif
 
 #ifdef IMPLEMENTATION
@@ -31,7 +34,7 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, 1, 2.5, e = makeXonoticHeaderLabel(_("Weapon Priority List")));
+		me.TD(me, 1, 2.5, e = makeXonoticHeaderLabel(_("Weapon Priority List (* = mutator weapon)")));
 	me.TR(me);
 		me.TDempty(me, 0.25);
 		me.TD(me, 10, 2.5, e = me.weaponsList = makeXonoticWeaponsList());

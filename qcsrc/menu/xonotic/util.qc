@@ -4,7 +4,6 @@
 #include "../../common/campaign_common.qh"
 #include "../../common/constants.qh"
 #include "../../common/mapinfo.qh"
-#include "../../common/urllib.qh"
 #include "../../common/util.qh"
 #include "../../common/command/generic.qh"
 
@@ -47,7 +46,7 @@ string getZonedTooltipForIdentifier(string s)
 		if(t != "" && t != "custom cvar")
 			return strzone(t);
 	}
-	dprint("WARNING: no tooltip set for ", s, "\n");
+	LOG_TRACE("WARNING: no tooltip set for ", s, "\n");
 	return string_null;
 }
 
@@ -304,7 +303,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		printf("Received HTTP request data for an invalid id %d.\n", id);
+		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 
@@ -319,22 +318,22 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 	if(_Nex_ExtResponseSystem_UpdateTo)
 	{
-		dprint("error: UpdateNotification_URI_Get_Callback has been called before\n");
+		LOG_TRACE("error: UpdateNotification_URI_Get_Callback has been called before\n");
 		return;
 	}
 	if(status != 0)
 	{
-		dprintf("error receiving update notification: status is %d\n", status);
+		LOG_TRACEF("error receiving update notification: status is %d\n", status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		dprint("error: received HTML instead of an update notification\n");
+		LOG_TRACE("error: received HTML instead of an update notification\n");
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		dprint("error: received carriage returns from update notification server\n");
+		LOG_TRACE("error: received carriage returns from update notification server\n");
 		return;
 	}
 
@@ -412,7 +411,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			// update needed
 			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
-			if(un_download) { printf(_("Update can be downloaded at:\n%s\n"), un_download); }
+			if(un_download) { LOG_INFOF(_("Update can be downloaded at:\n%s\n"), un_download); }
 			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
 			DisableServerBackwardsCompatibility();
 		}
@@ -643,7 +642,7 @@ float updateCompression()
 		cvar_set("gl_texturecompression", "1");
 		cvar_set("r_texture_dds_load", "1");
 		if(!can_dds)
-			print(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems.\n"));
+			LOG_INFO(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems.\n"));
 		return 0;
 	}
 	else
@@ -810,7 +809,7 @@ void CheckSendCvars(entity me, string cvarnamestring)
 {
 	if(me.sendCvars)
 	{
-		printf("Sending cvar: %s -> %s\n", cvarnamestring, cvar_string(cvarnamestring));
+		LOG_INFOF("Sending cvar: %s -> %s\n", cvarnamestring, cvar_string(cvarnamestring));
 		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 		{
 			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));

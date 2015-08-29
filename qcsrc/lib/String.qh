@@ -1,0 +1,38 @@
+#ifndef STRING_H
+#define STRING_H
+
+#ifndef SVQC
+float stringwidth_colors(string s, vector theSize)
+{
+	return stringwidth(s, true, theSize);
+}
+
+float stringwidth_nocolors(string s, vector theSize)
+{
+	return stringwidth(s, false, theSize);
+}
+#endif
+
+// Timer (#5)
+//
+// TODO: macro
+string seconds_tostring(float sec)
+{
+	float minutes;
+	minutes = floor(sec / 60);
+
+	sec -= minutes * 60;
+	return sprintf("%d:%02d", minutes, sec);
+}
+
+int ColorTranslateMode;
+
+string ColorTranslateRGB(string s)
+{
+	if(ColorTranslateMode & 1)
+		return strdecolorize(s);
+	else
+		return s;
+}
+
+#endif
