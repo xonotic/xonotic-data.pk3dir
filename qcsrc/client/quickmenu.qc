@@ -99,7 +99,7 @@ bool QuickMenu_Open(string mode, string submenu)
 			// first skip invalid entries, so we don't check them anymore
 			float argc;
 			argc = tokenize_console(s);
-			if(argc == 0 || argv(0) == "" || substring(argv(0), 0, 2) == "////")
+			if(argc == 0 || argv(0) == "")
 				continue;
 			if(argc == 1)
 				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
