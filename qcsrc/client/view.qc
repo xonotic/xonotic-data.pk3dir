@@ -1006,6 +1006,14 @@ void UpdateCrosshair()
 	}
 }
 
+bool ov_enabled;
+float oldr_nearclip;
+float oldr_farclip_base;
+float oldr_farclip_world;
+float oldr_novis;
+float oldr_useportalculling;
+float oldr_useinfinitefarclip;
+
 const int BUTTON_3 = 4;
 const int BUTTON_4 = 8;
 float cl_notice_run();
@@ -1232,6 +1240,16 @@ void CSQC_UpdateView(float w, float h)
 		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 
+		if(!ov_enabled)
+		{
+			oldr_nearclip = cvar("r_nearclip");
+			oldr_farclip_base = cvar("r_farclip_base");
+			oldr_farclip_world = cvar("r_farclip_world");
+			oldr_novis = cvar("r_novis");
+			oldr_useportalculling = cvar("r_useportalculling");
+			oldr_useinfinitefarclip = cvar("r_useinfinitefarclip");
+		}
+
 		cvar_settemp("r_nearclip", ftos(ov_nearest));
 		cvar_settemp("r_farclip_base", ftos(ov_furthest));
 		cvar_settemp("r_farclip_world", "0");
@@ -1242,6 +1260,8 @@ void CSQC_UpdateView(float w, float h)
 		setproperty(VF_ORIGIN, ov_org);
 		setproperty(VF_ANGLES, '90 0 0');
 
+		ov_enabled = true;
+
 		#if 0
 		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
 			vtos(ov_org),
@@ -1250,6 +1270,19 @@ void CSQC_UpdateView(float w, float h)
 			ov_nearest,
 			ov_furthest);
 		#endif
+	}
+	else
+	{
+		if(ov_enabled)
+		{
+			cvar_set("r_nearclip", ftos(oldr_nearclip));
+			cvar_set("r_farclip_base", ftos(oldr_farclip_base));
+			cvar_set("r_farclip_world", ftos(oldr_farclip_world));
+			cvar_set("r_novis", ftos(oldr_novis));
+			cvar_set("r_useportalculling", ftos(oldr_useportalculling));
+			cvar_set("r_useinfinitefarclip", ftos(oldr_useinfinitefarclip));
+		}
+		ov_enabled = false;
 	}
 
 	// Render the Scene
