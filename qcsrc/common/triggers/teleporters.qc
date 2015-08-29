@@ -82,8 +82,8 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
-				Send_Effect("teleport", player.origin, '0 0 0', 1);
-				Send_Effect("teleport", to + v_forward * 32, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, to + v_forward * 32, '0 0 0', 1);
 			}
 			self.pushltime = time + 0.2;
 		}

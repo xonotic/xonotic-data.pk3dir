@@ -95,7 +95,7 @@ void M_Mage_Attack_Spike_Explode()
 
 	self.realowner.mage_spike = world;
 
-	Send_Effect("explosion_small", self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE, other);
 
 	remove (self);
@@ -214,7 +214,7 @@ void M_Mage_Defend_Heal()
 			{
 				case 0:
 					if(head.health < autocvar_g_balance_health_regenstable) head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_health_regenstable);
-					fx = "healing_fx";
+					fx = EFFECT_HEALING.eent_eff_name;
 					break;
 				case 1:
 					if(head.ammo_cells) head.ammo_cells = bound(head.ammo_cells, head.ammo_cells + 1, g_pickup_cells_max);
@@ -233,15 +233,15 @@ void M_Mage_Defend_Heal()
 					break;
 				case 3:
 					head.health = bound(0, head.health - ((head == self)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
-					fx = "rage";
+					fx = EFFECT_RAGE.eent_eff_name;
 					break;
 			}
 
-			Send_Effect(fx, head.origin, '0 0 0', 1);
+			Send_Effect_(fx, head.origin, '0 0 0', 1);
 		}
 		else
 		{
-			Send_Effect("healing_fx", head.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_HEALING, head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
 			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE) && head.sprite)
 				WaypointSprite_UpdateHealth(head.sprite, head.health);
@@ -260,7 +260,7 @@ void M_Mage_Attack_Push()
 {
 	sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
-	Send_Effect("TE_EXPLOSION", self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_TE_EXPLOSION, self.origin, '0 0 0', 1);
 
 	setanim(self, self.anim_shoot, true, true, true);
 	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
@@ -277,7 +277,7 @@ void M_Mage_Attack_Teleport()
 	if(trace_fraction < 1)
 		return;
 
-	Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1);
 	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
 
 	self.attack_finished_single = time + 0.2;

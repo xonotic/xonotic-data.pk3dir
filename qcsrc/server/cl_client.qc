@@ -190,7 +190,7 @@ void PutObserverInServer (void)
 	entity	spot;
     self.hud = HUD_NORMAL;
 
-	if(IS_PLAYER(self)) { Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 
 	spot = SelectSpawnPoint (true);
 	if(!spot)
@@ -1306,7 +1306,7 @@ void ClientDisconnect (void)
 	if ( self.active_minigame )
 		part_minigame(self);
 
-	if(IS_PLAYER(self)) { Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 
 	CheatShutdownClient();
 
@@ -1449,7 +1449,7 @@ void respawn(void)
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
-		Send_Effect("respawn_ghost", self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_RESPAWN_GHOST, self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}

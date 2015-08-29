@@ -8,6 +8,7 @@
 
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
+#include "../common/effects.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/trigger/viewloc.qh"
 
@@ -527,7 +528,7 @@ void CSQCModel_Effects_Apply(void)
 	self.traileffect = 0;
 
 	if(eff & EF_BRIGHTFIELD)
-		self.traileffect = particleeffectnum("TR_NEXUIZPLASMA");
+		self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA);
 	// ignoring EF_MUZZLEFLASH
 	if(eff & EF_BRIGHTLIGHT)
 		adddynamiclight(self.origin, 400, '3 3 3');
@@ -545,9 +546,9 @@ void CSQCModel_Effects_Apply(void)
 	if(eff & EF_FULLBRIGHT)
 		self.renderflags |= RF_FULLBRIGHT;
 	if(eff & EF_FLAME)
-		pointparticles(particleeffectnum("EF_FLAME"), self.origin, '0 0 0', bound(0, frametime, 0.1));
+		pointparticles(particleeffectnum(EFFECT_EF_FLAME), self.origin, '0 0 0', bound(0, frametime, 0.1));
 	if(eff & EF_STARDUST)
-		pointparticles(particleeffectnum("EF_STARDUST"), self.origin, '0 0 0', bound(0, frametime, 0.1));
+		pointparticles(particleeffectnum(EFFECT_EF_STARDUST), self.origin, '0 0 0', bound(0, frametime, 0.1));
 	if(eff & EF_NOSHADOW)
 		self.renderflags |= RF_NOSHADOW;
 	if(eff & EF_NODEPTHTEST)
@@ -561,24 +562,24 @@ void CSQCModel_Effects_Apply(void)
 		self.renderflags |= RF_DYNAMICMODELLIGHT;
 	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(self.csqcmodel_modelflags & MF_ROCKET)
-		self.traileffect = particleeffectnum("TR_ROCKET");
+		self.traileffect = particleeffectnum(EFFECT_TR_ROCKET);
 	if(self.csqcmodel_modelflags & MF_GRENADE)
-		self.traileffect = particleeffectnum("TR_GRENADE");
+		self.traileffect = particleeffectnum(EFFECT_TR_GRENADE);
 	if(self.csqcmodel_modelflags & MF_GIB)
-		self.traileffect = particleeffectnum("TR_BLOOD");
+		self.traileffect = particleeffectnum(EFFECT_TR_BLOOD);
 	if(self.csqcmodel_modelflags & MF_ROTATE)
 	{
 		self.renderflags |= RF_USEAXIS;
 		makevectors(self.angles + '0 100 0' * fmod(time, 3.6));
 	}
 	if(self.csqcmodel_modelflags & MF_TRACER)
-		self.traileffect = particleeffectnum("TR_WIZSPIKE");
+		self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE);
 	if(self.csqcmodel_modelflags & MF_ZOMGIB)
-		self.traileffect = particleeffectnum("TR_SLIGHTBLOOD");
+		self.traileffect = particleeffectnum(EFFECT_TR_SLIGHTBLOOD);
 	if(self.csqcmodel_modelflags & MF_TRACER2)
-		self.traileffect = particleeffectnum("TR_KNIGHTSPIKE");
+		self.traileffect = particleeffectnum(EFFECT_TR_KNIGHTSPIKE);
 	if(self.csqcmodel_modelflags & MF_TRACER3)
-		self.traileffect = particleeffectnum("TR_VORESPIKE");
+		self.traileffect = particleeffectnum(EFFECT_TR_VORESPIKE);
 
 	if(self.drawmask)
 		Projectile_DrawTrail(self.origin);

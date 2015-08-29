@@ -642,42 +642,42 @@ void GameCommand_effectindexdump(float request)
 
 			d = db_create();
 			LOG_INFO("begin of effects list\n");
-			db_put(d, "TE_GUNSHOT", "1"); LOG_INFO("effect TE_GUNSHOT is ", ftos(particleeffectnum("TE_GUNSHOT")), "\n");
-			db_put(d, "TE_GUNSHOTQUAD", "1"); LOG_INFO("effect TE_GUNSHOTQUAD is ", ftos(particleeffectnum("TE_GUNSHOTQUAD")), "\n");
-			db_put(d, "TE_SPIKE", "1"); LOG_INFO("effect TE_SPIKE is ", ftos(particleeffectnum("TE_SPIKE")), "\n");
-			db_put(d, "TE_SPIKEQUAD", "1"); LOG_INFO("effect TE_SPIKEQUAD is ", ftos(particleeffectnum("TE_SPIKEQUAD")), "\n");
-			db_put(d, "TE_SUPERSPIKE", "1"); LOG_INFO("effect TE_SUPERSPIKE is ", ftos(particleeffectnum("TE_SUPERSPIKE")), "\n");
-			db_put(d, "TE_SUPERSPIKEQUAD", "1"); LOG_INFO("effect TE_SUPERSPIKEQUAD is ", ftos(particleeffectnum("TE_SUPERSPIKEQUAD")), "\n");
-			db_put(d, "TE_WIZSPIKE", "1"); LOG_INFO("effect TE_WIZSPIKE is ", ftos(particleeffectnum("TE_WIZSPIKE")), "\n");
-			db_put(d, "TE_KNIGHTSPIKE", "1"); LOG_INFO("effect TE_KNIGHTSPIKE is ", ftos(particleeffectnum("TE_KNIGHTSPIKE")), "\n");
-			db_put(d, "TE_EXPLOSION", "1"); LOG_INFO("effect TE_EXPLOSION is ", ftos(particleeffectnum("TE_EXPLOSION")), "\n");
-			db_put(d, "TE_EXPLOSIONQUAD", "1"); LOG_INFO("effect TE_EXPLOSIONQUAD is ", ftos(particleeffectnum("TE_EXPLOSIONQUAD")), "\n");
-			db_put(d, "TE_TAREXPLOSION", "1"); LOG_INFO("effect TE_TAREXPLOSION is ", ftos(particleeffectnum("TE_TAREXPLOSION")), "\n");
-			db_put(d, "TE_TELEPORT", "1"); LOG_INFO("effect TE_TELEPORT is ", ftos(particleeffectnum("TE_TELEPORT")), "\n");
-			db_put(d, "TE_LAVASPLASH", "1"); LOG_INFO("effect TE_LAVASPLASH is ", ftos(particleeffectnum("TE_LAVASPLASH")), "\n");
-			db_put(d, "TE_SMALLFLASH", "1"); LOG_INFO("effect TE_SMALLFLASH is ", ftos(particleeffectnum("TE_SMALLFLASH")), "\n");
-			db_put(d, "TE_FLAMEJET", "1"); LOG_INFO("effect TE_FLAMEJET is ", ftos(particleeffectnum("TE_FLAMEJET")), "\n");
-			db_put(d, "EF_FLAME", "1"); LOG_INFO("effect EF_FLAME is ", ftos(particleeffectnum("EF_FLAME")), "\n");
-			db_put(d, "TE_BLOOD", "1"); LOG_INFO("effect TE_BLOOD is ", ftos(particleeffectnum("TE_BLOOD")), "\n");
-			db_put(d, "TE_SPARK", "1"); LOG_INFO("effect TE_SPARK is ", ftos(particleeffectnum("TE_SPARK")), "\n");
-			db_put(d, "TE_PLASMABURN", "1"); LOG_INFO("effect TE_PLASMABURN is ", ftos(particleeffectnum("TE_PLASMABURN")), "\n");
-			db_put(d, "TE_TEI_G3", "1"); LOG_INFO("effect TE_TEI_G3 is ", ftos(particleeffectnum("TE_TEI_G3")), "\n");
-			db_put(d, "TE_TEI_SMOKE", "1"); LOG_INFO("effect TE_TEI_SMOKE is ", ftos(particleeffectnum("TE_TEI_SMOKE")), "\n");
-			db_put(d, "TE_TEI_BIGEXPLOSION", "1"); LOG_INFO("effect TE_TEI_BIGEXPLOSION is ", ftos(particleeffectnum("TE_TEI_BIGEXPLOSION")), "\n");
-			db_put(d, "TE_TEI_PLASMAHIT", "1"); LOG_INFO("effect TE_TEI_PLASMAHIT is ", ftos(particleeffectnum("TE_TEI_PLASMAHIT")), "\n");
-			db_put(d, "EF_STARDUST", "1"); LOG_INFO("effect EF_STARDUST is ", ftos(particleeffectnum("EF_STARDUST")), "\n");
-			db_put(d, "TR_ROCKET", "1"); LOG_INFO("effect TR_ROCKET is ", ftos(particleeffectnum("TR_ROCKET")), "\n");
-			db_put(d, "TR_GRENADE", "1"); LOG_INFO("effect TR_GRENADE is ", ftos(particleeffectnum("TR_GRENADE")), "\n");
-			db_put(d, "TR_BLOOD", "1"); LOG_INFO("effect TR_BLOOD is ", ftos(particleeffectnum("TR_BLOOD")), "\n");
-			db_put(d, "TR_WIZSPIKE", "1"); LOG_INFO("effect TR_WIZSPIKE is ", ftos(particleeffectnum("TR_WIZSPIKE")), "\n");
-			db_put(d, "TR_SLIGHTBLOOD", "1"); LOG_INFO("effect TR_SLIGHTBLOOD is ", ftos(particleeffectnum("TR_SLIGHTBLOOD")), "\n");
-			db_put(d, "TR_KNIGHTSPIKE", "1"); LOG_INFO("effect TR_KNIGHTSPIKE is ", ftos(particleeffectnum("TR_KNIGHTSPIKE")), "\n");
-			db_put(d, "TR_VORESPIKE", "1"); LOG_INFO("effect TR_VORESPIKE is ", ftos(particleeffectnum("TR_VORESPIKE")), "\n");
-			db_put(d, "TR_NEHAHRASMOKE", "1"); LOG_INFO("effect TR_NEHAHRASMOKE is ", ftos(particleeffectnum("TR_NEHAHRASMOKE")), "\n");
-			db_put(d, "TR_NEXUIZPLASMA", "1"); LOG_INFO("effect TR_NEXUIZPLASMA is ", ftos(particleeffectnum("TR_NEXUIZPLASMA")), "\n");
-			db_put(d, "TR_GLOWTRAIL", "1"); LOG_INFO("effect TR_GLOWTRAIL is ", ftos(particleeffectnum("TR_GLOWTRAIL")), "\n");
-			db_put(d, "TR_SEEKER", "1"); LOG_INFO("effect TR_SEEKER is ", ftos(particleeffectnum("TR_SEEKER")), "\n");
-			db_put(d, "SVC_PARTICLE", "1"); LOG_INFO("effect SVC_PARTICLE is ", ftos(particleeffectnum("SVC_PARTICLE")), "\n");
+			db_put(d, "TE_GUNSHOT", "1"); LOG_INFO("effect TE_GUNSHOT is ", ftos(_particleeffectnum("TE_GUNSHOT")), "\n");
+			db_put(d, "TE_GUNSHOTQUAD", "1"); LOG_INFO("effect TE_GUNSHOTQUAD is ", ftos(_particleeffectnum("TE_GUNSHOTQUAD")), "\n");
+			db_put(d, "TE_SPIKE", "1"); LOG_INFO("effect TE_SPIKE is ", ftos(_particleeffectnum("TE_SPIKE")), "\n");
+			db_put(d, "TE_SPIKEQUAD", "1"); LOG_INFO("effect TE_SPIKEQUAD is ", ftos(_particleeffectnum("TE_SPIKEQUAD")), "\n");
+			db_put(d, "TE_SUPERSPIKE", "1"); LOG_INFO("effect TE_SUPERSPIKE is ", ftos(_particleeffectnum("TE_SUPERSPIKE")), "\n");
+			db_put(d, "TE_SUPERSPIKEQUAD", "1"); LOG_INFO("effect TE_SUPERSPIKEQUAD is ", ftos(_particleeffectnum("TE_SUPERSPIKEQUAD")), "\n");
+			db_put(d, "TE_WIZSPIKE", "1"); LOG_INFO("effect TE_WIZSPIKE is ", ftos(_particleeffectnum("TE_WIZSPIKE")), "\n");
+			db_put(d, "TE_KNIGHTSPIKE", "1"); LOG_INFO("effect TE_KNIGHTSPIKE is ", ftos(_particleeffectnum("TE_KNIGHTSPIKE")), "\n");
+			db_put(d, "TE_EXPLOSION", "1"); LOG_INFO("effect TE_EXPLOSION is ", ftos(_particleeffectnum("TE_EXPLOSION")), "\n");
+			db_put(d, "TE_EXPLOSIONQUAD", "1"); LOG_INFO("effect TE_EXPLOSIONQUAD is ", ftos(_particleeffectnum("TE_EXPLOSIONQUAD")), "\n");
+			db_put(d, "TE_TAREXPLOSION", "1"); LOG_INFO("effect TE_TAREXPLOSION is ", ftos(_particleeffectnum("TE_TAREXPLOSION")), "\n");
+			db_put(d, "TE_TELEPORT", "1"); LOG_INFO("effect TE_TELEPORT is ", ftos(_particleeffectnum("TE_TELEPORT")), "\n");
+			db_put(d, "TE_LAVASPLASH", "1"); LOG_INFO("effect TE_LAVASPLASH is ", ftos(_particleeffectnum("TE_LAVASPLASH")), "\n");
+			db_put(d, "TE_SMALLFLASH", "1"); LOG_INFO("effect TE_SMALLFLASH is ", ftos(_particleeffectnum("TE_SMALLFLASH")), "\n");
+			db_put(d, "TE_FLAMEJET", "1"); LOG_INFO("effect TE_FLAMEJET is ", ftos(_particleeffectnum("TE_FLAMEJET")), "\n");
+			db_put(d, "EF_FLAME", "1"); LOG_INFO("effect EF_FLAME is ", ftos(_particleeffectnum("EF_FLAME")), "\n");
+			db_put(d, "TE_BLOOD", "1"); LOG_INFO("effect TE_BLOOD is ", ftos(_particleeffectnum("TE_BLOOD")), "\n");
+			db_put(d, "TE_SPARK", "1"); LOG_INFO("effect TE_SPARK is ", ftos(_particleeffectnum("TE_SPARK")), "\n");
+			db_put(d, "TE_PLASMABURN", "1"); LOG_INFO("effect TE_PLASMABURN is ", ftos(_particleeffectnum("TE_PLASMABURN")), "\n");
+			db_put(d, "TE_TEI_G3", "1"); LOG_INFO("effect TE_TEI_G3 is ", ftos(_particleeffectnum("TE_TEI_G3")), "\n");
+			db_put(d, "TE_TEI_SMOKE", "1"); LOG_INFO("effect TE_TEI_SMOKE is ", ftos(_particleeffectnum("TE_TEI_SMOKE")), "\n");
+			db_put(d, "TE_TEI_BIGEXPLOSION", "1"); LOG_INFO("effect TE_TEI_BIGEXPLOSION is ", ftos(_particleeffectnum("TE_TEI_BIGEXPLOSION")), "\n");
+			db_put(d, "TE_TEI_PLASMAHIT", "1"); LOG_INFO("effect TE_TEI_PLASMAHIT is ", ftos(_particleeffectnum("TE_TEI_PLASMAHIT")), "\n");
+			db_put(d, "EF_STARDUST", "1"); LOG_INFO("effect EF_STARDUST is ", ftos(_particleeffectnum("EF_STARDUST")), "\n");
+			db_put(d, "TR_ROCKET", "1"); LOG_INFO("effect TR_ROCKET is ", ftos(_particleeffectnum("TR_ROCKET")), "\n");
+			db_put(d, "TR_GRENADE", "1"); LOG_INFO("effect TR_GRENADE is ", ftos(_particleeffectnum("TR_GRENADE")), "\n");
+			db_put(d, "TR_BLOOD", "1"); LOG_INFO("effect TR_BLOOD is ", ftos(_particleeffectnum("TR_BLOOD")), "\n");
+			db_put(d, "TR_WIZSPIKE", "1"); LOG_INFO("effect TR_WIZSPIKE is ", ftos(_particleeffectnum("TR_WIZSPIKE")), "\n");
+			db_put(d, "TR_SLIGHTBLOOD", "1"); LOG_INFO("effect TR_SLIGHTBLOOD is ", ftos(_particleeffectnum("TR_SLIGHTBLOOD")), "\n");
+			db_put(d, "TR_KNIGHTSPIKE", "1"); LOG_INFO("effect TR_KNIGHTSPIKE is ", ftos(_particleeffectnum("TR_KNIGHTSPIKE")), "\n");
+			db_put(d, "TR_VORESPIKE", "1"); LOG_INFO("effect TR_VORESPIKE is ", ftos(_particleeffectnum("TR_VORESPIKE")), "\n");
+			db_put(d, "TR_NEHAHRASMOKE", "1"); LOG_INFO("effect TR_NEHAHRASMOKE is ", ftos(_particleeffectnum("TR_NEHAHRASMOKE")), "\n");
+			db_put(d, "TR_NEXUIZPLASMA", "1"); LOG_INFO("effect TR_NEXUIZPLASMA is ", ftos(_particleeffectnum("TR_NEXUIZPLASMA")), "\n");
+			db_put(d, "TR_GLOWTRAIL", "1"); LOG_INFO("effect TR_GLOWTRAIL is ", ftos(_particleeffectnum("TR_GLOWTRAIL")), "\n");
+			db_put(d, "TR_SEEKER", "1"); LOG_INFO("effect TR_SEEKER is ", ftos(_particleeffectnum("TR_SEEKER")), "\n");
+			db_put(d, "SVC_PARTICLE", "1"); LOG_INFO("effect SVC_PARTICLE is ", ftos(_particleeffectnum("SVC_PARTICLE")), "\n");
 
 			fh = fopen("effectinfo.txt", FILE_READ);
 			while((s = fgets(fh)))
@@ -687,8 +687,9 @@ void GameCommand_effectindexdump(float request)
 				{
 					if(db_get(d, argv(1)) != "1")
 					{
-						if(particleeffectnum(argv(1)) >= 0)
-							LOG_INFO("effect ", argv(1), " is ", ftos(particleeffectnum(argv(1))), "\n");
+						int i = _particleeffectnum(argv(1));
+						if(i >= 0)
+							LOG_INFO("effect ", argv(1), " is ", ftos(i), "\n");
 						db_put(d, argv(1), "1");
 					}
 				}
@@ -1657,8 +1658,8 @@ void GameCommand_trace(float request, float argc)
 						vv = stov(argv(2));
 						dv = stov(argv(3));
 						traceline(vv, dv, MOVE_NORMAL, world);
-						trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), vv, trace_endpos);
-						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
+						trailparticles(world, particleeffectnum(EFFECT_TR_NEXUIZPLASMA), vv, trace_endpos);
+						trailparticles(world, particleeffectnum(EFFECT_TR_CRYLINKPLASMA), trace_endpos, dv);
 						return;
 					}
 				}

@@ -82,7 +82,7 @@ void LocalCommand_boxparticles(int request, int argc)
 		{
 			if (argc == 9)
 			{
-				int effect = particleeffectnum(argv(1));
+				int effect = _particleeffectnum(argv(1));
 				if (effect >= 0)
 				{
 					int index = stoi(argv(2));

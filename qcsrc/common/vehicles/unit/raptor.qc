@@ -195,7 +195,7 @@ void raptor_bombdrop()
 
 void raptor_fire_cannon(entity gun, string tagname)
 {
-	vehicles_projectile("raptor_cannon_muzzleflash", W_Sound("lasergun_fire"),
+	vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, W_Sound("lasergun_fire"),
 						   gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
 						   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
 						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, self.owner);
@@ -728,7 +728,7 @@ void raptor_diethink()
 	if(random() < 0.05)
 	{
 		sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-		Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 	self.nextthink = time;
 
@@ -842,7 +842,7 @@ float v_raptor(float req)
 			self.nextthink			= time;
 			self.wait				= time + 5 + (random() * 5);
 
-			Send_Effect("explosion_medium", findbetterlocation (self.origin, 16), '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (self.origin, 16), '0 0 0', 1);
 
 			self.velocity_z += 600;
 

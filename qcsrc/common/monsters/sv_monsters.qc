@@ -579,7 +579,7 @@ vector Monster_Move_Target(entity targ)
 
 		if(self.enemy)
 		{
-			/*WarpZone_TrailParticles(world, particleeffectnum("red_pass"), self.origin, targ_origin);
+			/*WarpZone_TrailParticles(world, particleeffectnum(EFFECT_RED_PASS), self.origin, targ_origin);
 			print("Trace origin: ", vtos(targ_origin), "\n");
 			print("Target origin: ", vtos(self.enemy.origin), "\n");
 			print("My origin: ", vtos(self.origin), "\n"); */
@@ -915,7 +915,7 @@ void Monster_Remove(entity mon)
 	if(!mon) { return; }
 
 	if(!MUTATOR_CALLHOOK(MonsterRemove, mon))
-		Send_Effect("item_pickup", mon.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_ITEM_PICKUP, mon.origin, '0 0 0', 1);
 
 	if(mon.weaponentity) { remove(mon.weaponentity); }
 	if(mon.iceblock) { remove(mon.iceblock); }

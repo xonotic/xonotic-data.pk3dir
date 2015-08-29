@@ -114,7 +114,7 @@ void W_Hagar_Touch2(void)
 		self.use();
 	} else {
 		self.cnt++;
-		Send_Effect("hagar_bounce", self.origin, self.velocity, 1);
+		Send_Effect(EFFECT_HAGAR_BOUNCE, self.origin, self.velocity, 1);
 		self.angles = vectoangles(self.velocity);
 		self.owner = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -129,7 +129,7 @@ void W_Hagar_Attack(void)
 
 	W_SetupShot(self, false, 2, W_Sound("hagar_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
-	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -172,7 +172,7 @@ void W_Hagar_Attack2(void)
 
 	W_SetupShot(self, false, 2, W_Sound("hagar_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
-	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -224,7 +224,7 @@ void W_Hagar_Attack2_Load_Release(void)
 	weapon_prepareattack_do(1, WEP_CVAR_SEC(hagar, refire));
 
 	W_SetupShot(self, false, 2, W_Sound("hagar_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
-	Send_Effect("hagar_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
 	right = v_right;
@@ -533,7 +533,7 @@ bool W_Hagar(int req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+			pointparticles(particleeffectnum(EFFECT_HAGAR_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
 			{
 				if(w_random<0.15)

@@ -49,7 +49,7 @@ const float shambler_anim_death		= 8;
 void M_Shambler_Attack_Smash()
 {
 	makevectors(self.angles);
-	Send_Effect("explosion_medium", (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_MEDIUM, (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 	// RadiusDamage does NOT support custom starting location, which means we must use this hack...
@@ -76,7 +76,7 @@ void M_Shambler_Attack_Lightning_Explode()
 	entity head;
 
 	sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
-	Send_Effect("electro_impact", '0 0 0', '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_IMPACT, '0 0 0', '0 0 0', 1);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;

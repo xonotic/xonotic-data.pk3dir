@@ -357,11 +357,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	float total_damage = 0;
 
 	if(tracereffects & EF_RED)
-		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_RIFLE);
 	else if(tracereffects & EF_BLUE)
-		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle_weak");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_RIFLE_WEAK);
 	else
-		fireBullet_trace_callback_eff = particleeffectnum("tr_bullet");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_BULLET);
 
 	float lag = ANTILAG_LATENCY(self);
 	if(lag < 0.001)
