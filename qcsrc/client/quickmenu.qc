@@ -25,6 +25,16 @@ int QuickMenu_Buffer_Size;
 int QuickMenu_Buffer_Index;
 string QuickMenu_CurrentSubMenu;
 float QuickMenu_TimeOut;
+
+// QuickMenu_Buffer are labeled with these tags
+#define QM_TAG_TITLE "T"
+#define QM_TAG_SUBMENU "S"
+#define QM_TAG_COMMAND "C"
+#define QM_TAG_PLCOMMAND "P"
+
+#define QuickMenu_Buffer_Set(tag, string) bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat(tag, string))
+#define QuickMenu_Buffer_Get() bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index)
+
 // if s1 is not empty s will be displayed as command otherwise as submenu
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
@@ -102,14 +112,14 @@ bool QuickMenu_Open(string mode, string submenu)
 			if(argc == 0 || argv(0) == "")
 				continue;
 			if(argc == 1)
-				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
+				QuickMenu_Buffer_Set(QM_TAG_SUBMENU, argv(0));
 			else if(argc == 2)
 			{
 				if(argv(1) == "")
 					continue;
-				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", argv(0))); // command Title
+				QuickMenu_Buffer_Set(QM_TAG_TITLE, argv(0)); 
 				++QuickMenu_Buffer_Size;
-				bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("C", argv(1))); // command
+				QuickMenu_Buffer_Set(QM_TAG_COMMAND, argv(1));
 			}
 			else if(argc == 3)
 			{
@@ -127,13 +137,13 @@ bool QuickMenu_Open(string mode, string submenu)
 
 				if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES)
 				{
-					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
+					QuickMenu_Buffer_Set(QM_TAG_SUBMENU, argv(0));
 					++QuickMenu_Buffer_Size;
-					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", ftos(teamplayers), ftos(without_me))); // command arguments
+					QuickMenu_Buffer_Set(QM_TAG_TITLE, strcat(ftos(teamplayers), ftos(without_me))); // put PLCOMMAND arguments in the title string
 					++QuickMenu_Buffer_Size;
-					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("P", argv(1))); // command for each player
+					QuickMenu_Buffer_Set(QM_TAG_PLCOMMAND, argv(1));
 					++QuickMenu_Buffer_Size;
-					bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", argv(0))); // Submenu
+					QuickMenu_Buffer_Set(QM_TAG_SUBMENU, argv(0));
 				}
 			}
 			++QuickMenu_Buffer_Size;
@@ -203,8 +213,8 @@ void QuickMenu_skip_submenu(string submenu)
 	z_submenu = strzone(submenu);
 	for(++QuickMenu_Buffer_Index ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
 	{
-		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
-		if(substring(s, 0, 1) != "S")
+		s = QuickMenu_Buffer_Get();
+		if(substring(s, 0, 1) != QM_TAG_SUBMENU)
 			continue;
 		if(substring(s, 1, -1) == z_submenu) // submenu end
 			break;
@@ -266,8 +276,8 @@ bool QuickMenu_Page_Load(string target_submenu, int new_page)
 		// skip everything until the submenu open tag is found
 		for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
 		{
-			s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
-			if(substring(s, 0, 1) == "S" && substring(s, 1, -1) == z_submenu)
+			s = QuickMenu_Buffer_Get();
+			if(substring(s, 0, 1) == QM_TAG_SUBMENU && substring(s, 1, -1) == z_submenu)
 			{
 				// printf("^3 beginning of %s\n", z_submenu);
 				++QuickMenu_Buffer_Index;
@@ -286,7 +296,7 @@ bool QuickMenu_Page_Load(string target_submenu, int new_page)
 	int entry_num = 0; // counts entries in target_submenu
 	for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
 	{
-		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+		s = QuickMenu_Buffer_Get();
 
 		if(z_submenu != "" && substring(s, 1, -1) == z_submenu)
 		{
@@ -309,20 +319,20 @@ bool QuickMenu_Page_Load(string target_submenu, int new_page)
 		}
 
 		// NOTE: entries are loaded starting from 1, not from 0
-		if(substring(s, 0, 1) == "S") // submenu
+		if(substring(s, 0, 1) == QM_TAG_SUBMENU)
 		{
 			if(entry_num >= first_entry)
 				QuickMenu_Page_LoadEntry(QuickMenu_Page_Entries, substring(s, 1, -1), "");
 			QuickMenu_skip_submenu(substring(s, 1, -1));
 		}
-		else if(entry_num >= first_entry && substring(s, 0, 1) == "T")
+		else if(entry_num >= first_entry && substring(s, 0, 1) == QM_TAG_TITLE)
 		{
 			++QuickMenu_Buffer_Index;
-			cmd = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
+			cmd = QuickMenu_Buffer_Get();
 			string command_code = substring(cmd, 0, 1);
-			if(command_code == "C")
+			if(command_code == QM_TAG_COMMAND)
 				cmd = substring(cmd, 1, -1);
-			else if(command_code == "P")
+			else if(command_code == QM_TAG_PLCOMMAND)
 			{
 				// throw away the current quickmenu buffer and load a new one
 				cmd = substring(cmd, 1, -1);
@@ -693,7 +703,7 @@ void HUD_QuickMenu(void)
 	if(target_submenu == eng_submenu && target_submenu_found) \
 		return; /* target_submenu entries are now loaded, exit */ \
 	if(QuickMenu_Buffer_Size < QUICKMENU_BUFFER_MAXENTRIES) \
-		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("S", submenu)); \
+		QuickMenu_Buffer_Set(QM_TAG_SUBMENU, submenu); \
 	++QuickMenu_Buffer_Size; \
 	if(target_submenu == eng_submenu && !target_submenu_found) { \
 		QuickMenu_Buffer_Size = 0; /* enable load of next entries */ \
@@ -704,9 +714,9 @@ void HUD_QuickMenu(void)
 #define QUICKMENU_ENTRY(title,command) { \
 	if(QuickMenu_Buffer_Size + 1 < QUICKMENU_BUFFER_MAXENTRIES) \
 	{ \
-		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", title)); \
+		QuickMenu_Buffer_Set(QM_TAG_TITLE, title); \
 		++QuickMenu_Buffer_Size; \
-		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("C", command)); \
+		QuickMenu_Buffer_Set(QM_TAG_COMMAND, command); \
 	} \
 	++QuickMenu_Buffer_Size; \
 }
@@ -714,9 +724,9 @@ void HUD_QuickMenu(void)
 #define QUICKMENU_SMENU_PL(submenu,eng_submenu,command,teamplayers,without_me) { \
 	if(QuickMenu_Buffer_Size + 3 < QUICKMENU_BUFFER_MAXENTRIES) {\
 		QUICKMENU_SMENU(submenu,eng_submenu) \
-		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("T", ftos(teamplayers), ftos(without_me))); \
+		QuickMenu_Buffer_Set(QM_TAG_TITLE, strcat(ftos(teamplayers), ftos(without_me))); \
 		++QuickMenu_Buffer_Size; \
-		bufstr_set(QuickMenu_Buffer, QuickMenu_Buffer_Size, strcat("P", command)); \
+		QuickMenu_Buffer_Set(QM_TAG_PLCOMMAND, command); \
 		++QuickMenu_Buffer_Size; \
 		QUICKMENU_SMENU(submenu,eng_submenu) \
 	} \
