@@ -438,8 +438,8 @@ void Item_Respawn (void)
 	self.think = Item_Think;
 	self.nextthink = time;
 
-	//Send_Effect("item_respawn", self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
-	Send_Effect("item_respawn", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	//Send_Effect(EFFECT_ITEM_RESPAWN, self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 }
 
 void Item_RespawnCountdown (void)
@@ -733,7 +733,7 @@ void Item_Touch (void)
 
 	other.last_pickup = time;
 
-	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
@@ -812,7 +812,7 @@ void Item_FindTeam()
 // TODO: perhaps nice special effect?
 void RemoveItem(void)
 {
-	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
 }
 

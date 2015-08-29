@@ -65,7 +65,7 @@ void W_Shotgun_Attack(float isprimary)
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
-	Send_Effect("shotgun_muzzleflash", w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
+	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
 	// casing code
 	if(autocvar_g_casings >= 1)
@@ -359,7 +359,7 @@ float W_Shotgun(float req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum("shotgun_impact"), org2, w_backoff * 1000, 1);
+			pointparticles(particleeffectnum(EFFECT_SHOTGUN_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent && time - self.prevric > 0.25)
 			{
 				if(w_random < 0.0165)

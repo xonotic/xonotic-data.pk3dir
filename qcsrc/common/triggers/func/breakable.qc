@@ -282,7 +282,7 @@ void spawnfunc_func_breakable()
 	if(!self.debristimejitter) self.debristime = 2.5;
 
 	if(self.mdl != "")
-		self.cnt = particleeffectnum(self.mdl);
+		self.cnt = _particleeffectnum(self.mdl);
 	if(self.count == 0)
 		self.count = 1;
 

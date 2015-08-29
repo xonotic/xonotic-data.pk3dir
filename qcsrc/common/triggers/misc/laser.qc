@@ -218,16 +218,16 @@ void spawnfunc_misc_laser()
 			self.cnt = -1;
 		else
 		{
-			self.cnt = particleeffectnum(self.mdl);
+			self.cnt = _particleeffectnum(self.mdl);
 			if(self.cnt < 0)
 				if(self.dmg)
-					self.cnt = particleeffectnum("laser_deadly");
+					self.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
 		}
 	}
 	else if(!self.cnt)
 	{
 		if(self.dmg)
-			self.cnt = particleeffectnum("laser_deadly");
+			self.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
 		else
 			self.cnt = -1;
 	}

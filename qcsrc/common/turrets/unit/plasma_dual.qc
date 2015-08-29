@@ -28,15 +28,15 @@ float t_plasma_dual(float req)
                                    800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
 
-                Send_Effect("nex_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+                Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
                 // teamcolor / hit beam effect
                 vector v;
                 string s;
                 v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-                s = strcat("TE_TEI_G3", ((self.team) ? Static_Team_ColorName_Upper(self.team) : ""));
+                s = strcat(EFFECT_VAPORIZER_NEUTRAL.eent_eff_name, ((self.team) ? Static_Team_ColorName_Upper(self.team) : ""));
 
-                WarpZone_TrailParticles(world, particleeffectnum(s), self.tur_shotorg, v);
+                WarpZone_TrailParticles(world, _particleeffectnum(s), self.tur_shotorg, v);
 
                 self.tur_head.frame += 1;
             }
@@ -44,7 +44,7 @@ float t_plasma_dual(float req)
             {
                 entity missile = turret_projectile(W_Sound("hagar_fire"), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
                 missile.missile_flags = MIF_SPLASH;
-                Send_Effect("laser_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+                Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
                 self.tur_head.frame += 1;
             }
 

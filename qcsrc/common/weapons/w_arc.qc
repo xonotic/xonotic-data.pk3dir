@@ -265,7 +265,7 @@ void W_Arc_Beam_Think(void)
 
 			if ( WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max) )
 			{
-				Send_Effect("arc_overheat",
+				Send_Effect_("arc_overheat",
 					self.beam_start, self.beam_wantdir, 1 );
 				sound(self, CH_WEAPON_A, W_Sound("arc_stop"), VOL_BASE, ATTN_NORM);
 			}
@@ -608,10 +608,10 @@ void Arc_Smoke()
 	if ( self.arc_overheat > time )
 	{
 		if ( random() < self.arc_heat_percent )
-			Send_Effect("arc_smoke", smoke_origin, '0 0 0', 1 );
+			Send_Effect_("arc_smoke", smoke_origin, '0 0 0', 1 );
 		if ( self.BUTTON_ATCK || self.BUTTON_ATCK2 )
 		{
-			Send_Effect("arc_overheat_fire", smoke_origin, w_shotdir, 1 );
+			Send_Effect_("arc_overheat_fire", smoke_origin, w_shotdir, 1 );
 			if ( !self.arc_smoke_sound )
 			{
 				self.arc_smoke_sound = 1;
@@ -624,7 +624,7 @@ void Arc_Smoke()
 	{
 		if ( random() < (self.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) /
 				( WEP_CVAR(arc, overheat_max)-WEP_CVAR(arc, overheat_min) ) )
-			Send_Effect("arc_smoke", smoke_origin, '0 0 0', 1 );
+			Send_Effect_("arc_smoke", smoke_origin, '0 0 0', 1 );
 	}
 
 	if (  self.arc_smoke_sound && ( self.arc_overheat <= time ||
@@ -1281,13 +1281,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
+				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
@@ -1306,13 +1306,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
+				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; // particleeffectnum("grenadelauncher_muzzleflash");
+				self.beam_muzzleeffect = -1; // particleeffectnum(EFFECT_GRENADE_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
@@ -1332,13 +1332,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum("arc_beam_heal");
-				self.beam_hiteffect = particleeffectnum("arc_beam_healimpact");
+				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM_HEAL);
+				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_BEAM_HEAL_IMPACT);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
@@ -1358,13 +1358,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
+				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 20;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 0;
 				self.beam_hitlight[3] = 0;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 50;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 0;
@@ -1384,13 +1384,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
+				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
@@ -1410,13 +1410,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
+				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
@@ -1436,13 +1436,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum("arc_beam_heal");
-				self.beam_hiteffect = particleeffectnum("healray_impact");
+				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM_HEAL);
+				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_BEAM_HEAL_IMPACT2);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
@@ -1462,13 +1462,13 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
+				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
@@ -1496,7 +1496,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;

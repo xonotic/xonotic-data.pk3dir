@@ -174,7 +174,7 @@ void racer_fire_cannon(string tagname)
 	entity bolt;
 
 	v = gettaginfo(self, gettagindex(self, tagname));
-	bolt = vehicles_projectile("wakizashi_gun_muzzleflash", W_Sound("lasergun_fire"),
+	bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, W_Sound("lasergun_fire"),
 						   v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
 						   autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
 						   DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, self.owner);
@@ -292,7 +292,7 @@ void racer_rocket_tracker()
 void racer_fire_rocket(string tagname, entity trg)
 {
 	vector v = gettaginfo(self, gettagindex(self, tagname));
-	entity rocket = vehicles_projectile("wakizashi_rocket_launch", W_Sound("rocket_fire"),
+	entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, W_Sound("rocket_fire"),
 						   v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
 						   autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
 						   DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
@@ -406,7 +406,7 @@ float racer_frame()
 	{
 #ifdef SVQC
 		if(time - racer.wait > 0.2)
-			pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
+			pointparticles(particleeffectnum(EFFECT_RACER_BOOSTER), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
 #endif
 
 		racer.wait = time;
@@ -427,7 +427,7 @@ float racer_frame()
 		{
 			traceline(racer.origin, racer.origin - '0 0 256', MOVE_NORMAL, self);
 			if(trace_fraction != 1.0)
-				pointparticles(particleeffectnum("smoke_small"), trace_endpos, '0 0 0', 1);
+				pointparticles(particleeffectnum(EFFECT_SMOKE_SMALL), trace_endpos, '0 0 0', 1);
 
 			racer.invincible_finished = time + 0.1 + (random() * 0.1);
 		}
@@ -794,7 +794,7 @@ bool v_racer(int req)
 			self.cnt			= 1 + random() * 2;
 			self.touch			= racer_deadtouch;
 
-			Send_Effect("explosion_medium", self.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, self.origin, '0 0 0', 1);
 
 			if(random() < 0.5)
 				self.avelocity_z = 32;

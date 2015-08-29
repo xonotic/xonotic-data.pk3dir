@@ -148,7 +148,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	initialize_minigames();
 
@@ -727,14 +726,14 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 			{
 				switch(teamnum)
 				{
-					case NUM_TEAM_1: self.cnt = particleeffectnum("spawn_point_red"); break;
-					case NUM_TEAM_2: self.cnt = particleeffectnum("spawn_point_blue"); break;
-					case NUM_TEAM_3: self.cnt = particleeffectnum("spawn_point_yellow"); break;
-					case NUM_TEAM_4: self.cnt = particleeffectnum("spawn_point_pink"); break;
-					default: self.cnt = particleeffectnum("spawn_point_neutral"); break;
+					case NUM_TEAM_1: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_RED); break;
+					case NUM_TEAM_2: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_BLUE); break;
+					case NUM_TEAM_3: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_YELLOW); break;
+					case NUM_TEAM_4: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_PINK); break;
+					default: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); break;
 				}
 			}
-			else { self.cnt = particleeffectnum("spawn_point_neutral"); }
+			else { self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
 
 			self.draw = Spawn_Draw;
 		}
@@ -764,11 +763,11 @@ void Ent_ReadSpawnEvent(float is_new)
 			{
 				switch(teamnum)
 				{
-					case NUM_TEAM_1: pointparticles(particleeffectnum("spawn_event_red"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_2: pointparticles(particleeffectnum("spawn_event_blue"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_3: pointparticles(particleeffectnum("spawn_event_yellow"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_4: pointparticles(particleeffectnum("spawn_event_pink"), self.origin, '0 0 0', 1); break;
-					default: pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_1: pointparticles(particleeffectnum(EFFECT_SPAWN_RED), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_2: pointparticles(particleeffectnum(EFFECT_SPAWN_BLUE), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_3: pointparticles(particleeffectnum(EFFECT_SPAWN_YELLOW), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_4: pointparticles(particleeffectnum(EFFECT_SPAWN_PINK), self.origin, '0 0 0', 1); break;
+					default: pointparticles(particleeffectnum(EFFECT_SPAWN_NEUTRAL), self.origin, '0 0 0', 1); break;
 				}
 			}
 			if(autocvar_cl_spawn_event_sound)

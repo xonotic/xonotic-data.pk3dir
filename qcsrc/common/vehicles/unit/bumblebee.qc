@@ -104,7 +104,7 @@ float bumble_raygun_send(entity to, int sf);
 void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
 {
 	vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-	vehicles_projectile("bigplasma_muzzleflash", W_Sound("flacexp3"),
+	vehicles_projectile(EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, W_Sound("flacexp3"),
 						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
 						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
 						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
@@ -717,7 +717,7 @@ void bumblebee_blowup()
 				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-	Send_Effect("explosion_big", (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_BIG, (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 
 	if(self.owner.deadflag == DEAD_DYING)
 		self.owner.deadflag = DEAD_DEAD;
@@ -733,7 +733,7 @@ void bumblebee_diethink()
 	if(random() < 0.1)
 	{
 		sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-		Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 
 	self.nextthink = time + 0.1;
@@ -877,7 +877,7 @@ float v_bumblebee(float req)
 			_body.scale = 1.5;
 			_body.angles = self.angles;
 
-			Send_Effect("explosion_medium", findbetterlocation(self.origin, 16), '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation(self.origin, 16), '0 0 0', 1);
 
 			self.health			= 0;
 			self.event_damage	= func_null;
@@ -1078,8 +1078,8 @@ void bumble_raygun_read(bool bIsNew)
 		else
 			self.colormod = '0 1 0';
 
-		self.traileffect = particleeffectnum("healray_muzzleflash");
-		self.lip = particleeffectnum("healray_impact");
+		self.traileffect = particleeffectnum(EFFECT_BUMBLEBEE_HEAL_MUZZLEFLASH);
+		self.lip = particleeffectnum(EFFECT_BUMBLEBEE_HEAL_IMPACT);
 
 		self.draw = bumble_raygun_draw;
 	}
