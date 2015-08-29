@@ -34,6 +34,7 @@ view.qc
 wall.qc
 
 command/all.qc
+mutators/all.qc
 
 weapons/projectile.qc // TODO
 

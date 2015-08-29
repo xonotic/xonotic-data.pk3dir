@@ -188,11 +188,11 @@ float IsMoveInDirection(vector mv, float ang) // key mix factor
 	return ang > 1 ? 0 : ang < -1 ? 0 : 1 - fabs(ang);
 }
 
-float GeomLerp(float a, float lerp, float b)
+float GeomLerp(float a, float _lerp, float b)
 {
-	return a == 0 ? (lerp < 1 ? 0 : b)
-		: b == 0 ? (lerp > 0 ? 0 : a)
-		: a * pow(fabs(b / a), lerp);
+	return a == 0 ? (_lerp < 1 ? 0 : b)
+		: b == 0 ? (_lerp > 0 ? 0 : a)
+		: a * pow(fabs(b / a), _lerp);
 }
 
 noref float pmove_waterjumptime;
