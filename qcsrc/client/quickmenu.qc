@@ -112,9 +112,9 @@ bool QuickMenu_Open(string mode, string submenu)
 				float teamplayers = 0, without_me = 0;
 				switch(argv(2))
 				{
-					case "ALLPLAYERS_BUT_ME":		without_me = 1;
+					case "ALLPLAYERS_BUT_ME":		without_me = 1; // fall through
 					case "ALLPLAYERS":				teamplayers = 0; break;
-					case "OWNTEAMPLAYERS_BUT_ME":	without_me = 1;
+					case "OWNTEAMPLAYERS_BUT_ME":	without_me = 1; // fall through
 					case "OWNTEAMPLAYERS":			teamplayers = 1; break;
 					case "ENEMYTEAMPLAYERS":		teamplayers = 2; break;
 					default: continue;
@@ -802,7 +802,7 @@ void QuickMenu_Default(string target_submenu)
 
 		QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
 			QUICKMENU_ENTRY(CTX(_("QMCMD^Hit sound")), "toggle cl_hitsound")
-			QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound")), "toggle cl_chatsound")
+			QUICKMENU_ENTRY(CTX(_("QMCMD^Chat sound")), "toggle con_chatsound")
 		QUICKMENU_SMENU(CTX(_("QMCMD^Sound settings")), "Sound settings")
 
 		if(spectatee_status > 0)
