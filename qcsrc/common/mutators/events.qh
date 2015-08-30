@@ -39,4 +39,11 @@ MUTATOR_HOOKABLE(BuildMutatorsString, EV_BuildMutatorsString);
     /**/
 MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
 
+/** appends mutator string for displaying extra gameplay tips */
+#define EV_BuildGameplayTipsString(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+MUTATOR_HOOKABLE(BuildGameplayTipsString, EV_BuildGameplayTipsString);
+
 #endif
