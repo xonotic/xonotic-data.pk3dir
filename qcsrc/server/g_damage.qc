@@ -498,13 +498,17 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			// For now, we're just forcing HURTTRIGGER to behave as "DEATH_VOID" and giving it no special options...
 			// Later on you will only be able to make custom messages using DEATH_CUSTOM,
 			// and there will be a REAL DEATH_VOID implementation which mappers will use.
-			/*case DEATH_HURTTRIGGER:
+			case DEATH_HURTTRIGGER:
 			{
-				s1 = targ.netname;
-				s2 = inflictor.message;
-				if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
+				Obituary_SpecialDeath(targ, false, deathtype,
+					targ.netname,
+					inflictor.message,
+					deathlocation,
+					targ.killcount,
+					0,
+					0);
 				break;
-			}*/
+			}
 
 			case DEATH_CUSTOM:
 			{
@@ -744,7 +748,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		MUTATOR_CALLHOOK(PlayerDamage_Calculate, attacker, targ, deathtype, damage, mirrordamage, force);
+		MUTATOR_CALLHOOK(PlayerDamage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
 		damage = frag_damage;
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
