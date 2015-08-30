@@ -669,6 +669,13 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
+	// crude hack to enforce switching weapons
+	if(g_cts && (item.flags & FL_WEAPON))
+	{
+		W_SwitchWeapon_Force(player, item.weapon);
+		return 1;
+	}
+
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
