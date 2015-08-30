@@ -7,9 +7,11 @@
 .float msnt_timer;
 .vector msnt_deathloc;
 
+.float cvar_cl_spawn_near_teammate;
+
 MUTATOR_HOOKFUNCTION(msnt_Spawn_Score)
 {
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint)
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && self.cvar_cl_spawn_near_teammate))
 		return 0;
 
 	entity p;
@@ -46,7 +48,7 @@ MUTATOR_HOOKFUNCTION(msnt_Spawn_Score)
 MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 {
 	// Note: when entering this, fixangle is already set.
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint)
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && self.cvar_cl_spawn_near_teammate))
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			self.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
@@ -158,11 +160,18 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerDies)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(msnt_GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_spawn_near_teammate, "cl_spawn_near_teammate");
+	return false;
+}
+
 MUTATOR_DEFINITION(mutator_spawn_near_teammate)
 {
 	MUTATOR_HOOK(Spawn_Score, msnt_Spawn_Score, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, msnt_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, msnt_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, msnt_GetCvars, CBC_ORDER_ANY);
 
 	return 0;
 }
