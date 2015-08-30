@@ -597,6 +597,7 @@
     MSG_CENTER_NOTIF(1, CENTER_LMS_NOLIVES,                 0, 0, "",              CPID_LMS,              "0 0", _("^BGYou have no lives left, you must wait until the next match"), "")
     MSG_CENTER_NOTIF(1, CENTER_MISSING_TEAMS,               0, 1, "missing_teams", CPID_MISSING_TEAMS,    "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "")
     MSG_CENTER_NOTIF(1, CENTER_MISSING_PLAYERS,             0, 1, "f1",            CPID_MISSING_PLAYERS,  "-1 0", _("^BGWaiting for %s player(s) to join..."), "")
+    MSG_CENTER_NOTIF(1, CENTER_INSTAGIB_DOWNGRADE,          0, 0, "",              CPID_INSTAGIB_FINDAMMO,"5 0", _("^BGYour weapon has been downgraded until you find some ammo!"), "")
     MSG_CENTER_NOTIF(1, CENTER_INSTAGIB_FINDAMMO,           0, 0, "",              CPID_INSTAGIB_FINDAMMO,"1 9", _("^F4^COUNT^BG left to find some ammo!"), "")
     MSG_CENTER_NOTIF(1, CENTER_INSTAGIB_FINDAMMO_FIRST,     0, 0, "",              CPID_INSTAGIB_FINDAMMO,"1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("^BGGet some ammo! ^F4^COUNT^BG left!"))
     MSG_CENTER_NOTIF(1, CENTER_INSTAGIB_LIVES_REMAINING,    0, 1, "f1",            NO_CPID,               "0 0", _("^F2Extra lives remaining: ^K1%s"), "")

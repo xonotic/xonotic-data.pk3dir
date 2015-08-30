@@ -42,6 +42,14 @@ void instagib_ammocheck()
 		instagib_stop_countdown(self);
 	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
 		instagib_stop_countdown(self);
+	else if(autocvar_g_rm && autocvar_g_rm_laser)
+	{
+		if(!self.instagib_needammo)
+		{
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_INSTAGIB_DOWNGRADE);
+			self.instagib_needammo = true;
+		}
+	}
 	else
 	{
 		self.instagib_needammo = true;

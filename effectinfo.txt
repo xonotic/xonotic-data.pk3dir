@@ -9599,3 +9599,148 @@ airfriction 0.2
 liquidfriction 0.8
 originjitter 8 8 32
 velocityjitter 64 64 32
+
+// rocketminsta laser trail - red
+effect rocketminsta_laser_red
+trailspacing 2
+type static
+color 0xFF0F0F 0xFF0F0F
+size 3 3
+tex 38 38
+alpha 256 256 968
+//velocityjitter 16 16 16
+lightradius 90
+lighttime 0
+lightcolor 1.5 3 6
+velocitymultiplier -0.1
+// bright sparks
+effect rocketminsta_laser_red
+trailspacing 12
+count 1.5
+type snow
+tex 42 42
+color 0xFF0F0F 0xFF0F0F
+size 2 4
+sizeincrease -20
+alpha 444 512 1866
+bounce 1
+velocityoffset 0 0 15
+airfriction 12
+originjitter 1 1 1
+velocityjitter 50 50 50
+
+// rocketminsta laser trail - blue
+effect rocketminsta_laser_blue
+trailspacing 2
+type static
+color 0x0F0FFF 0x0F0FFF
+size 3 3
+tex 38 38
+alpha 256 256 968
+//velocityjitter 16 16 16
+lightradius 90
+lighttime 0
+lightcolor 1.5 3 6
+velocitymultiplier -0.1
+// bright sparks
+effect rocketminsta_laser_blue
+trailspacing 12
+count 1.5
+type snow
+tex 42 42
+color 0x0F0FFF 0x0F0FFF
+size 2 4
+sizeincrease -20
+alpha 444 512 1866
+bounce 1
+velocityoffset 0 0 15
+airfriction 12
+originjitter 1 1 1
+velocityjitter 50 50 50
+
+// rocketminsta laser trail - yellow
+effect rocketminsta_laser_yellow
+trailspacing 2
+type static
+color 0xFFFF0F 0xFFFF0F
+size 3 3
+tex 38 38
+alpha 256 256 968
+//velocityjitter 16 16 16
+lightradius 90
+lighttime 0
+lightcolor 1.5 3 6
+velocitymultiplier -0.1
+// bright sparks
+effect rocketminsta_laser_yellow
+trailspacing 12
+count 1.5
+type snow
+tex 42 42
+color 0xFFFF0F 0xFFFF0F
+size 2 4
+sizeincrease -20
+alpha 444 512 1866
+bounce 1
+velocityoffset 0 0 15
+airfriction 12
+originjitter 1 1 1
+velocityjitter 50 50 50
+
+// rocketminsta laser trail - pink
+effect rocketminsta_laser_pink
+trailspacing 2
+type static
+color 0xFF0FFF 0xFF0FFF
+size 3 3
+tex 38 38
+alpha 256 256 968
+//velocityjitter 16 16 16
+lightradius 90
+lighttime 0
+lightcolor 1.5 3 6
+velocitymultiplier -0.1
+// bright sparks
+effect rocketminsta_laser_pink
+trailspacing 12
+count 1.5
+type snow
+tex 42 42
+color 0xFF0FFF 0xFF0FFF
+size 2 4
+sizeincrease -20
+alpha 444 512 1866
+bounce 1
+velocityoffset 0 0 15
+airfriction 12
+originjitter 1 1 1
+velocityjitter 50 50 50
+
+// rocketminsta laser trail - neutral
+effect rocketminsta_laser_neutral
+trailspacing 2
+type static
+color 0xFFFFFF 0xFFFFFF
+size 3 3
+tex 38 38
+alpha 256 256 968
+//velocityjitter 16 16 16
+lightradius 90
+lighttime 0
+lightcolor 1.5 3 6
+velocitymultiplier -0.1
+// bright sparks
+effect rocketminsta_laser_neutral
+trailspacing 12
+count 1.5
+type snow
+tex 42 42
+color 0xFFFFFF 0xFFFFFF
+size 2 4
+sizeincrease -20
+alpha 444 512 1866
+bounce 1
+velocityoffset 0 0 15
+airfriction 12
+originjitter 1 1 1
+velocityjitter 50 50 50
