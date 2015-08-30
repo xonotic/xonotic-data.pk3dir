@@ -399,6 +399,17 @@ int cmd_argc;
 string cmd_string;
 MUTATOR_HOOKABLE(SV_ParseClientCommand, EV_SV_ParseClientCommand);
 
+/** please read EV_SV_ParseClientCommand description before using */
+#define EV_SV_ParseServerCommand(i, o) \
+    /** command name */ i(string, cmd_name) \
+    /** also, argv() can be used */ i(int, cmd_argc) \
+    /** whole command, use only if you really have to */ i(string, cmd_string) \
+    /**/
+//string cmd_name;
+//int cmd_argc;
+//string cmd_string;
+MUTATOR_HOOKABLE(SV_ParseServerCommand, EV_SV_ParseServerCommand);
+
 /**
  * called when a spawnpoint is being evaluated
  * return 1 to make the spawnpoint unusable

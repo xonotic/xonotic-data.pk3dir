@@ -462,6 +462,7 @@ int autocvar_g_respawn_delay_small_count;
 float autocvar_g_respawn_delay_large;
 int autocvar_g_respawn_delay_large_count;
 float autocvar_g_respawn_delay_max;
+bool autocvar_g_respawn_delay_forced;
 bool autocvar_g_respawn_ghosts;
 float autocvar_g_respawn_ghosts_maxtime;
 float autocvar_g_respawn_ghosts_speed;
