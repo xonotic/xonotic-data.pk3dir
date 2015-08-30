@@ -608,4 +608,18 @@ int hook_tarzan;
 entity hook_pullentity;
 float hook_velmultiplier;
 MUTATOR_HOOKABLE(GrappleHookThink, EV_GrappleHookThink);
+
+#define EV_BuffModel_Customize(i, o) \
+    /**/ i(entity, self) \
+    /**/ i(entity, buff_player) \
+    /**/
+entity buff_player;
+MUTATOR_HOOKABLE(BuffModel_Customize, EV_BuffModel_Customize);
+
+/** called at when a buff is touched. Called early, can edit buff properties. */
+#define EV_BuffTouch(i, o) \
+    /** item */ i(entity, self) \
+    /** player */ i(entity, other) \
+    /**/
+MUTATOR_HOOKABLE(BuffTouch, EV_BuffTouch);
 #endif

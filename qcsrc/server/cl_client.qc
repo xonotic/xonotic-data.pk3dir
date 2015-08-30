@@ -467,7 +467,7 @@ void PutClientInServer (void)
 		self.frags = FRAGS_PLAYER;
 		if(INDEPENDENT_PLAYERS)
 			MAKE_INDEPENDENT_PLAYER(self);
-		self.flags = FL_CLIENT;
+		self.flags = FL_CLIENT | FL_PICKUPITEMS;
 		if(autocvar__notarget)
 			self.flags |= FL_NOTARGET;
 		self.takedamage = DAMAGE_AIM;

@@ -690,18 +690,13 @@ void Item_Touch (void)
 		}
 	}
 
-	if (!IS_PLAYER(other))
-		return;
-	if (other.frozen)
-		return;
-	if (other.deadflag)
-		return;
-	if (self.solid != SOLID_TRIGGER)
-		return;
-	if (self.owner == other)
-		return;
-	if (time < self.item_spawnshieldtime)
-		return;
+	if(!(other.flags & FL_PICKUPITEMS)
+	|| other.frozen
+	|| other.deadflag
+	|| (self.solid != SOLID_TRIGGER)
+	|| (self.owner == other)
+	|| (time < self.item_spawnshieldtime)
+	) { return;}
 
 	switch(MUTATOR_CALLHOOK(ItemTouch, self, other))
 	{
