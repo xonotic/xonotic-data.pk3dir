@@ -301,7 +301,9 @@ string formatmessage(string msg)
 			case "S": replacement = ftos(vlen(self.velocity)); break;
 			default:
 			{
-				MUTATOR_CALLHOOK(FormatMessage, escape, replacement);
+				MUTATOR_CALLHOOK(FormatMessage, escape, replacement, msg);
+				escape = format_escape;
+				replacement = format_replacement;
 				break;
 			}
 		}

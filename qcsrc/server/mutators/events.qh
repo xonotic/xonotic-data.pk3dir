@@ -137,9 +137,11 @@ MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
     /**/ i(string, format_escape) \
     /**/ i(string, format_replacement) \
     /**/ o(string, format_replacement) \
+    /**/ i(string, format_message) \
     /**/
 string format_escape;
 string format_replacement;
+string format_message;
 MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
 
 /** returns 1 if throwing the current weapon shall not be allowed */
