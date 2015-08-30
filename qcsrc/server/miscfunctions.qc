@@ -1968,9 +1968,11 @@ float LostMovetypeFollow(entity ent)
 
 float isPushable(entity e)
 {
-	if(e.iscreature)
-		return true;
 	if(e.pushable)
+		return true;
+	if(IS_VEHICLE(e))
+		return false;
+	if(e.iscreature)
 		return true;
 	switch(e.classname)
 	{
