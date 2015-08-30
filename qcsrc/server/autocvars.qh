@@ -410,6 +410,8 @@ float autocvar_g_movement_highspeed = 1;
 int autocvar_g_multijump;
 float autocvar_g_multijump_add;
 float autocvar_g_multijump_speed;
+float autocvar_g_multijump_maxspeed;
+float autocvar_g_multijump_dodging = 1;
 string autocvar_g_mutatormsg;
 float autocvar_g_nexball_basketball_bouncefactor;
 float autocvar_g_nexball_basketball_bouncestop;
