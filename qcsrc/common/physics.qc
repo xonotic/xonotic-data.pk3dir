@@ -976,15 +976,6 @@ void SpecialCommand()
 #endif
 }
 
-float PM_check_keepaway(void)
-{
-#ifdef SVQC
-	return (self.ballcarried && g_keepaway) ? autocvar_g_keepaway_ballcarrier_highspeed : 1;
-#else
-	return 1;
-#endif
-}
-
 void PM_check_race_movetime(void)
 {
 #ifdef SVQC
@@ -1675,7 +1666,6 @@ void PM_Main()
 	WarpZone_PlayerPhysics_FixVAngle();
 #endif
 	float maxspeed_mod = 1;
-	maxspeed_mod *= PM_check_keepaway();
 	maxspeed_mod *= PHYS_HIGHSPEED;
 
 #ifdef SVQC
