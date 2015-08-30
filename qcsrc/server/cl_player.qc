@@ -707,12 +707,28 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else if(teamsay)
 		{
-			msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			if(strstrofs(msgin, "/me", 0) >= 0)
+			{
+				//msgin = strreplace("/me", "", msgin);
+				//msgin = substring(msgin, 3, strlen(msgin));
+				msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
+				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
+			}
+			else
+				msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
 			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
 		}
 		else
 		{
-			msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
+			if(strstrofs(msgin, "/me", 0) >= 0)
+			{
+				//msgin = strreplace("/me", "", msgin);
+				//msgin = substring(msgin, 3, strlen(msgin));
+				msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
+				msgstr = strcat("\{1}^4* ", "^7", msgin);
+			}
+			else
+				msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
