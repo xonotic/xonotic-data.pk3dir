@@ -40,11 +40,8 @@ entity makeXonoticRadioButton(float theGroup, string theCvar, string theValue, s
 }
 void XonoticRadioButton_configureXonoticRadioButton(entity me, float theGroup, string theCvar, string theValue, string theText, string theTooltip)
 {
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
 	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);
 }

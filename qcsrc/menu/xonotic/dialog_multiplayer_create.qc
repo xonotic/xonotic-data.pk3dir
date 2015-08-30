@@ -25,7 +25,6 @@ void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, fl
 {
 	if(pCvar == "")
 	{
-		e.cvarName = string_null; // FIXME XonoticTextSlider doesn't clear cvarName in configureXonoticTextSlider as it's not thought to re-configure itself
 		e.configureXonoticTextSlider(e, string_null, string_null);
 		l.setText(l, pLabel);
 		e.disabled = l.disabled = true;
@@ -246,8 +245,6 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_KEYHUNT:          x = "g_keyhunt_teams_override";     break;
 		case MAPINFO_TYPE_TEAM_DEATHMATCH:  x = "g_tdm_teams_override";         break;
 	}
-	if(!x)
-		e.cvarName = string_null; // FIXME XonoticTextSlider doesn't clear cvarName in configureXonoticTextSlider as it's not thought to re-configure itself
 	e.configureXonoticTextSlider(e, x, theTooltip);
 	e.configureXonoticTextSliderValues(e);
 	if(!x)

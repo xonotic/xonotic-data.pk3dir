@@ -33,11 +33,8 @@ entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar)
 void XonoticColorpickerString_configureXonoticColorpickerString(entity me, string theCvar, string theDefaultCvar)
 {
 	me.configureImage(me, me.image);
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
 }
 
 void XonoticColorpickerString_loadCvars(entity me)

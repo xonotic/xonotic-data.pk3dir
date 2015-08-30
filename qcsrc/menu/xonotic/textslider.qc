@@ -43,11 +43,8 @@ entity makeXonoticTextSlider(string theCvar)
 void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar, string theTooltip)
 {
 	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		// me.loadCvars(me); // don't load it yet
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	// me.loadCvars(me); // don't load it yet
 	setZonedTooltip(me, theTooltip, theCvar);
 }
 void XonoticTextSlider_setValue(entity me, float val)

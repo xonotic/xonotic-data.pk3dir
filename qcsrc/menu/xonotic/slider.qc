@@ -48,16 +48,14 @@ void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float th
 
 	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
 
+	me.cvarName = (theCvar) ? theCvar : string_null;
 	if(theCvar)
-	{
 		// Prevent flickering of the slider button by initialising the
 		// slider out of bounds to hide the button before loading the cvar
 		me.configureSliderValues(me, theValueMin, theValueMin-theValueStep, theValueMax, theValueStep, theValueStep, vp);
-		me.cvarName = theCvar;
-		me.loadCvars(me);
-	}
 	else
 		me.configureSliderValues(me, theValueMin, theValueMin, theValueMax, theValueStep, theValueStep, vp);
+	me.loadCvars(me);
 	setZonedTooltip(me, theTooltip, theCvar);
 }
 void XonoticSlider_setValue(entity me, float val)

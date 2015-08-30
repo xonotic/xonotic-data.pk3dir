@@ -53,11 +53,8 @@ void XonoticInputBox_configureXonoticInputBox(entity me, float doEditColorCodes,
 {
 	me.configureInputBox(me, "", 0, me.fontSize, me.image);
 	me.editColorCodes = doEditColorCodes;
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
 	setZonedTooltip(me, theTooltip, theCvar);
 	me.cursorPos = strlen(me.text);
 }
