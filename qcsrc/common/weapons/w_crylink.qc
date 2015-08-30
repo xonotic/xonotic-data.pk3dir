@@ -258,7 +258,7 @@ void W_Crylink_LinkJoinEffect_Think(void)
 					e.projectiledeathtype,
 					other
 				);
-				Send_Effect("crylink_joinexplode", self.origin, '0 0 0', n);
+				Send_Effect(EFFECT_CRYLINK_JOINEXPLODE, self.origin, '0 0 0', n);
 			}
 		}
 	}
@@ -360,7 +360,7 @@ void W_Crylink_Attack(void)
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	Send_Effect("crylink_muzzleflash", w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -469,7 +469,7 @@ void W_Crylink_Attack2(void)
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	Send_Effect("crylink_muzzleflash", w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -700,13 +700,13 @@ bool W_Crylink(int req)
 			org2 = w_org + w_backoff * 2;
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
-				pointparticles(particleeffectnum("crylink_impact"), org2, '0 0 0', 1);
+				pointparticles(particleeffectnum(EFFECT_CRYLINK_IMPACT2), org2, '0 0 0', 1);
 				if(!w_issilent)
 					sound(self, CH_SHOTS, W_Sound("crylink_impact2"), VOL_BASE, ATTN_NORM);
 			}
 			else
 			{
-				pointparticles(particleeffectnum("crylink_impactbig"), org2, '0 0 0', 1);
+				pointparticles(particleeffectnum(EFFECT_CRYLINK_IMPACT), org2, '0 0 0', 1);
 				if(!w_issilent)
 					sound(self, CH_SHOTS, W_Sound("crylink_impact"), VOL_BASE, ATTN_NORM);
 			}

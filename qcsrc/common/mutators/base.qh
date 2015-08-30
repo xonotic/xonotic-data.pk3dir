@@ -262,7 +262,7 @@ STATIC_INIT(Mutators) {
 #define MUTATOR_HOOK(cb, func, order) do {                              \
     MUTATOR_ONADD {                                                     \
         if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
-            print("HOOK FAILED: ", #cb, ":", #func, "\n");              \
+            LOG_INFO("HOOK FAILED: ", #cb, ":", #func, "\n");              \
             return true;                                                \
         }                                                               \
     }                                                                   \

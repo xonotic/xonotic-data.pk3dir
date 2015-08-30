@@ -182,6 +182,20 @@ MUTATOR_HOOKABLE(FilterItem, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(TurretSpawn, EV_TurretSpawn);
 
+/** return error to not attack */
+#define EV_TurretFire(i, o) \
+    /** turret */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(TurretFire, EV_TurretFire);
+
+/** return error to not attack */
+#define EV_Turret_CheckFire(i, o) \
+    /**/ i(bool, ret_bool) \
+    /**/ o(bool, ret_bool) \
+    /**/
+bool ret_bool;
+MUTATOR_HOOKABLE(Turret_CheckFire, EV_Turret_CheckFire);
+
 /** return error to prevent entity spawn, or modify the entity */
 MUTATOR_HOOKABLE(OnEntityPreSpawn, EV_NO_ARGS);
 
@@ -221,6 +235,13 @@ MUTATOR_HOOKABLE(MonsterSpawn, EV_NO_ARGS);
     /**/ i(entity, frag_attacker) \
     /**/
 MUTATOR_HOOKABLE(MonsterDies, EV_MonsterDies);
+
+/** called when a monster dies */
+#define EV_MonsterRemove(i, o) \
+    /**/ i(entity, rem_mon) \
+    /**/
+entity rem_mon; // avoiding ovewriting self & other
+MUTATOR_HOOKABLE(MonsterRemove, EV_MonsterRemove);
 
 /** called when a monster wants to respawn */
 #define EV_MonsterRespawn(i, o) \
@@ -324,21 +345,17 @@ MUTATOR_HOOKABLE(PlayerPowerups, EV_PlayerPowerups);
  * called every player think frame
  * return 1 to disable regen
  */
-#define EV_PlayerRegen(i, o) \
-    /**/ i(float, regen_mod_max) \
-    /**/ o(float, regen_mod_max) \
-    /**/ i(float, regen_mod_regen) \
-    /**/ o(float, regen_mod_regen) \
-    /**/ i(float, regen_mod_rot) \
-    /**/ o(float, regen_mod_rot) \
-    /**/ i(float, regen_mod_limit) \
-    /**/ o(float, regen_mod_limit) \
-    /**/
 float regen_mod_max;
 float regen_mod_regen;
 float regen_mod_rot;
 float regen_mod_limit;
-MUTATOR_HOOKABLE(PlayerRegen, EV_PlayerRegen);
+float regen_health;
+float regen_health_linear;
+float regen_health_rot;
+float regen_health_rotlinear;
+float regen_health_stable;
+float regen_health_rotstable;
+MUTATOR_HOOKABLE(PlayerRegen, EV_NO_ARGS);
 
 /**
  * called when the use key is pressed
@@ -547,4 +564,29 @@ MUTATOR_HOOKABLE(ClearModelParams, EV_NO_ARGS);
     /**/
 string checkmodel_input, checkmodel_command;
 MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
+
+/** called when a bullet has hit a target */
+#define EV_FireBullet_Hit(i, o) \
+    /**/ i(entity, self) \
+    /**/ i(entity, bullet_hit) \
+    /**/ i(vector, bullet_startpos) \
+    /**/ i(vector, bullet_endpos) \
+    /**/ i(float, frag_damage) \
+    /**/ o(float, frag_damage) \
+    /**/
+entity bullet_hit;
+//vector bullet_hitloc; // the end pos matches the hit location, apparently
+vector bullet_startpos;
+vector bullet_endpos;
+//float frag_damage;
+MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
+
+#define EV_FixPlayermodel(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
+
+/** Return error to play frag remaining announcements */
+MUTATOR_HOOKABLE(Scores_CountFragsRemaining, EV_NO_ARGS);
 #endif

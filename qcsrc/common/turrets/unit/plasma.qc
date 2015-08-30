@@ -27,7 +27,7 @@ float t_plasma(float req)
                 FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
                                    800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
-                Send_Effect("nex_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+                Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
                 // teamcolor / hit beam effect
                 vector v;
@@ -35,7 +35,7 @@ float t_plasma(float req)
                 v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
                 s = strcat("TE_TEI_G3", ((self.team) ? Static_Team_ColorName_Upper(self.team) : ""));
 
-                WarpZone_TrailParticles(world, particleeffectnum(s), self.tur_shotorg, v);
+                WarpZone_TrailParticles(world, _particleeffectnum(s), self.tur_shotorg, v);
 
                 if (self.tur_head.frame == 0)
                     self.tur_head.frame = 1;
@@ -45,7 +45,7 @@ float t_plasma(float req)
                 entity missile = turret_projectile(W_Sound("hagar_fire"), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
                 missile.missile_flags = MIF_SPLASH;
 
-                Send_Effect("laser_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+                Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
                 if (self.tur_head.frame == 0)
                     self.tur_head.frame = 1;
             }

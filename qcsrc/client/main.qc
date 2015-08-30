@@ -90,7 +90,7 @@ void CSQC_Init(void)
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	dprintf("^4CSQC Build information: ^1%s\n", WATERMARK);
+	LOG_TRACEF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	int i;
@@ -148,7 +148,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	initialize_minigames();
 
@@ -245,7 +244,7 @@ float SetTeam(entity o, int Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					dprintf("trying to switch to unsupported team %d\n", Team);
+					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -261,7 +260,7 @@ float SetTeam(entity o, int Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					dprintf("trying to switch to unsupported team %d\n", Team);
+					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -460,7 +459,7 @@ void Ent_ReadPlayerScore()
 	if(!isNew && n != self.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		printf("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(self), self.classname);
+		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(self), self.classname);
 		isNew = true;
 		Ent_Remove();
 		self.enttype = ENT_CLIENT_SCORES;
@@ -730,14 +729,14 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 			{
 				switch(teamnum)
 				{
-					case NUM_TEAM_1: self.cnt = particleeffectnum("spawn_point_red"); break;
-					case NUM_TEAM_2: self.cnt = particleeffectnum("spawn_point_blue"); break;
-					case NUM_TEAM_3: self.cnt = particleeffectnum("spawn_point_yellow"); break;
-					case NUM_TEAM_4: self.cnt = particleeffectnum("spawn_point_pink"); break;
-					default: self.cnt = particleeffectnum("spawn_point_neutral"); break;
+					case NUM_TEAM_1: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_RED); break;
+					case NUM_TEAM_2: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_BLUE); break;
+					case NUM_TEAM_3: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_YELLOW); break;
+					case NUM_TEAM_4: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_PINK); break;
+					default: self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); break;
 				}
 			}
-			else { self.cnt = particleeffectnum("spawn_point_neutral"); }
+			else { self.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
 
 			self.draw = Spawn_Draw;
 		}
@@ -767,11 +766,11 @@ void Ent_ReadSpawnEvent(float is_new)
 			{
 				switch(teamnum)
 				{
-					case NUM_TEAM_1: pointparticles(particleeffectnum("spawn_event_red"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_2: pointparticles(particleeffectnum("spawn_event_blue"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_3: pointparticles(particleeffectnum("spawn_event_yellow"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_4: pointparticles(particleeffectnum("spawn_event_pink"), self.origin, '0 0 0', 1); break;
-					default: pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_1: pointparticles(particleeffectnum(EFFECT_SPAWN_RED), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_2: pointparticles(particleeffectnum(EFFECT_SPAWN_BLUE), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_3: pointparticles(particleeffectnum(EFFECT_SPAWN_YELLOW), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_4: pointparticles(particleeffectnum(EFFECT_SPAWN_PINK), self.origin, '0 0 0', 1); break;
+					default: pointparticles(particleeffectnum(EFFECT_SPAWN_NEUTRAL), self.origin, '0 0 0', 1); break;
 				}
 			}
 			if(autocvar_cl_spawn_event_sound)
@@ -809,7 +808,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	t = ReadByte();
 
 	if(autocvar_developer_csqcentities)
-		printf("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t);
+		LOG_INFOF("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t);
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
 	savetime = time;
@@ -830,7 +829,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		if(t != self.enttype || bIsNewEntity)
 		{
 			//print("A CSQC entity changed its type!\n");
-			printf("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(self), self.entnum, self.enttype, t);
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(self), self.entnum, self.enttype, t);
 			Ent_Remove();
 			clearentity(self);
 			bIsNewEntity = 1;
@@ -840,7 +839,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	{
 		if(!bIsNewEntity)
 		{
-			printf("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(self), self.entnum, t);
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(self), self.entnum, t);
 			bIsNewEntity = 1;
 		}
 	}
@@ -947,11 +946,11 @@ void Ent_Remove()
 void CSQC_Ent_Remove()
 {
 	if(autocvar_developer_csqcentities)
-		printf("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype);
+		LOG_INFOF("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype);
 
 	if(wasfreed(self))
 	{
-		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		LOG_INFO("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
 	if(self.enttype)
@@ -972,7 +971,7 @@ void Gamemode_Init()
 void CSQC_Parse_StuffCmd(string strMessage)
 {
 	if(autocvar_developer_csqcentities)
-		printf("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage);
+		LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage);
 
 	localcmd(strMessage);
 }
@@ -980,16 +979,16 @@ void CSQC_Parse_StuffCmd(string strMessage)
 void CSQC_Parse_Print(string strMessage)
 {
 	if(autocvar_developer_csqcentities)
-		printf("CSQC_Parse_Print(\"%s\")\n", strMessage);
+		LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
 
-	print(ColorTranslateRGB(strMessage));
+	LOG_INFO(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
 	if(autocvar_developer_csqcentities)
-		printf("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage);
+		LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage);
 
 	centerprint_hud(strMessage);
 }
@@ -1278,7 +1277,7 @@ float CSQC_Parse_TempEntity()
 	int nTEID = ReadByte();
 
 	if (autocvar_developer_csqcentities)
-		printf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
+		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
 	switch (nTEID)
 	{

@@ -225,7 +225,7 @@ void Net_TargetMusic()
 		sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
-			dprintf("Cannot initialize sound %s\n", e.noise);
+			LOG_TRACEF("Cannot initialize sound %s\n", e.noise);
 			strunzone(e.noise);
 			e.noise = string_null;
 		}
@@ -312,7 +312,7 @@ void Ent_ReadTriggerMusic()
 			sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
 			if(getsoundtime(self, CH_BGM_SINGLE) < 0)
 			{
-				dprintf("Cannot initialize sound %s\n", self.noise);
+				LOG_TRACEF("Cannot initialize sound %s\n", self.noise);
 				strunzone(self.noise);
 				self.noise = string_null;
 			}

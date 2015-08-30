@@ -76,7 +76,7 @@ void W_Vaporizer_Attack(void)
 
 	self.vaporizer_lasthit = damage_goodhits;
 
-	Send_Effect("nex_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
 	vector v;
@@ -85,33 +85,33 @@ void W_Vaporizer_Attack(void)
 	{
 		case NUM_TEAM_1:   // Red
 			if(damage_goodhits)
-				Send_Effect("TE_TEI_G3RED_HIT", w_shotorg, v, 1);
+				Send_Effect(EFFECT_VAPORIZER_RED_HIT, w_shotorg, v, 1);
 			else
-				Send_Effect("TE_TEI_G3RED", w_shotorg, v, 1);
+				Send_Effect(EFFECT_VAPORIZER_RED, w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_2:   // Blue
 			if(damage_goodhits)
-				Send_Effect("TE_TEI_G3BLUE_HIT", w_shotorg, v, 1);
+				Send_Effect(EFFECT_VAPORIZER_BLUE_HIT, w_shotorg, v, 1);
 			else
-				Send_Effect("TE_TEI_G3BLUE", w_shotorg, v, 1);
+				Send_Effect(EFFECT_VAPORIZER_BLUE, w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_3:   // Yellow
 			if(damage_goodhits)
-				Send_Effect("TE_TEI_G3YELLOW_HIT", w_shotorg, v, 1);
+				Send_Effect(EFFECT_VAPORIZER_YELLOW_HIT, w_shotorg, v, 1);
 			else
-				Send_Effect("TE_TEI_G3YELLOW", w_shotorg, v, 1);
+				Send_Effect(EFFECT_VAPORIZER_YELLOW, w_shotorg, v, 1);
 			break;
 		case NUM_TEAM_4:   // Pink
 			if(damage_goodhits)
-				Send_Effect("TE_TEI_G3PINK_HIT", w_shotorg, v, 1);
+				Send_Effect(EFFECT_VAPORIZER_PINK_HIT, w_shotorg, v, 1);
 			else
-				Send_Effect("TE_TEI_G3PINK", w_shotorg, v, 1);
+				Send_Effect(EFFECT_VAPORIZER_PINK, w_shotorg, v, 1);
 			break;
 		default:
 			if(damage_goodhits)
-				Send_Effect("TE_TEI_G3_HIT", w_shotorg, v, 1);
+				Send_Effect_("TE_TEI_G3_HIT", w_shotorg, v, 1);
 			else
-				Send_Effect("TE_TEI_G3", w_shotorg, v, 1);
+				Send_Effect_("TE_TEI_G3", w_shotorg, v, 1);
 			break;
 	}
 
@@ -266,12 +266,12 @@ float W_Vaporizer(float req)
 			org2 = w_org + w_backoff * 6;
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
-				pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+				pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
 				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM); }
 			}
 			else
 			{
-				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
+				pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
 				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM); }
 			}
 			return true;

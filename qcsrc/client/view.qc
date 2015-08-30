@@ -131,6 +131,7 @@ vector GetCurrentFov(float fov)
 
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
+	if(switchweapon == activeweapon)
 	if((activeweapon == WEP_VORTEX.m_id && vortex_scope) || (activeweapon == WEP_RIFLE.m_id && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
@@ -437,6 +438,8 @@ bool WantEventchase()
 	{
 		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
 			return true;
+		if(MUTATOR_CALLHOOK(WantEventchase, self))
+			return true;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO.m_id)))
 			return true;
 		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
@@ -455,8 +458,6 @@ bool WantEventchase()
 
 vector damage_blurpostprocess, content_blurpostprocess;
 
-float checkfail[16];
-
 float unaccounted_damage = 0;
 void UpdateDamage()
 {
@@ -471,7 +472,7 @@ void UpdateDamage()
 	if (damage_dealt_time != damage_dealt_time_prev)
 	{
 		unaccounted_damage += unaccounted_damage_new;
-		dprint("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
+		LOG_TRACE("dmg total: ", ftos(unaccounted_damage), " (+", ftos(unaccounted_damage_new), ")", "\n");
 	}
 	damage_dealt_time_prev = damage_dealt_time;
 
@@ -511,7 +512,7 @@ void UpdateHitsound()
 				pitch_shift = mirror_value + (mirror_value - pitch_shift);
 			}
 
-			dprint("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift), "\n");
+			LOG_TRACE("dmg total (dmg): ", ftos(unaccounted_damage), " , pitch shift: ", ftos(pitch_shift), "\n");
 
 			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
 			// todo: normalize sound pressure levels? seems unnecessary
@@ -1005,6 +1006,14 @@ void UpdateCrosshair()
 	}
 }
 
+bool ov_enabled;
+float oldr_nearclip;
+float oldr_farclip_base;
+float oldr_farclip_world;
+float oldr_novis;
+float oldr_useportalculling;
+float oldr_useinfinitefarclip;
+
 const int BUTTON_3 = 4;
 const int BUTTON_4 = 8;
 float cl_notice_run();
@@ -1046,22 +1055,6 @@ void CSQC_UpdateView(float w, float h)
 
 	button_attack2 = (input_buttons & BUTTON_3);
 	button_zoom = (input_buttons & BUTTON_4);
-
-#define CHECKFAIL_ASSERT(flag,func,parm,val) do {                                                                   \
-	float checkfailv = (func)(parm);                                                                                \
-	if (checkfailv != (val)) {                                                                                      \
-		if (!checkfail[(flag)])                                                                                     \
-		localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv));                           \
-		checkfail[(flag)] = 1;                                                                                      \
-	}                                                                                                               \
-} while(0)
-	CHECKFAIL_ASSERT(0, cvar_type, "\{100}\{105}\{118}\{48}\{95}\{101}\{118}\{97}\{100}\{101}", 0);
-	CHECKFAIL_ASSERT(1, cvar_type, "\{97}\{97}\{95}\{101}\{110}\{97}\{98}\{108}\{101}", 0);
-	CHECKFAIL_ASSERT(2, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{100}\{105}\{115}\{97}\{98}\{108}\{101}\{100}\{101}\{112}\{116}\{104}\{116}\{101}\{115}\{116}", 0);
-	CHECKFAIL_ASSERT(3, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
-	CHECKFAIL_ASSERT(4, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{108}\{105}\{103}\{104}\{116}", 0);
-	CHECKFAIL_ASSERT(5, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{115}\{104}\{97}\{100}\{111}\{119}\{118}\{111}\{108}\{117}\{109}\{101}\{115}", 0);
-	CHECKFAIL_ASSERT(6, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
 
 	vf_size = getpropertyvec(VF_SIZE);
 	vf_min = getpropertyvec(VF_MIN);
@@ -1247,6 +1240,16 @@ void CSQC_UpdateView(float w, float h)
 		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 
+		if(!ov_enabled)
+		{
+			oldr_nearclip = cvar("r_nearclip");
+			oldr_farclip_base = cvar("r_farclip_base");
+			oldr_farclip_world = cvar("r_farclip_world");
+			oldr_novis = cvar("r_novis");
+			oldr_useportalculling = cvar("r_useportalculling");
+			oldr_useinfinitefarclip = cvar("r_useinfinitefarclip");
+		}
+
 		cvar_settemp("r_nearclip", ftos(ov_nearest));
 		cvar_settemp("r_farclip_base", ftos(ov_furthest));
 		cvar_settemp("r_farclip_world", "0");
@@ -1257,14 +1260,29 @@ void CSQC_UpdateView(float w, float h)
 		setproperty(VF_ORIGIN, ov_org);
 		setproperty(VF_ANGLES, '90 0 0');
 
+		ov_enabled = true;
+
 		#if 0
-		printf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+		LOG_INFOF("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
 			vtos(ov_org),
 			vtos(getpropertyvec(VF_ANGLES)),
 			ov_distance,
 			ov_nearest,
 			ov_furthest);
 		#endif
+	}
+	else
+	{
+		if(ov_enabled)
+		{
+			cvar_set("r_nearclip", ftos(oldr_nearclip));
+			cvar_set("r_farclip_base", ftos(oldr_farclip_base));
+			cvar_set("r_farclip_world", ftos(oldr_farclip_world));
+			cvar_set("r_novis", ftos(oldr_novis));
+			cvar_set("r_useportalculling", ftos(oldr_useportalculling));
+			cvar_set("r_useinfinitefarclip", ftos(oldr_useinfinitefarclip));
+		}
+		ov_enabled = false;
 	}
 
 	// Render the Scene

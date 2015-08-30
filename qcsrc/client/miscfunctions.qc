@@ -107,7 +107,7 @@ void RemoveTeam(entity Team)
 
 	if(!tm)
 	{
-		print(_("Trying to remove a team which is not in the teamlist!"));
+		LOG_INFO(_("Trying to remove a team which is not in the teamlist!"));
 		return;
 	}
 	parent.sort_next = Team.sort_next;
@@ -566,7 +566,7 @@ void URI_Get_Callback(int id, float status, string data)
 	}
 	else
 	{
-		printf("Received HTTP request data for an invalid id %d.\n", id);
+		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 
@@ -591,7 +591,7 @@ void Accuracy_LoadLevels()
 		if(acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;
 		if(acc_levels < 2)
-			print("Warning: accuracy_color_levels must contain at least 2 values\n");
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values\n");
 
 		int i;
 		for(i = 0; i < acc_levels; ++i)

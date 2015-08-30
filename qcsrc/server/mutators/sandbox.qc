@@ -31,7 +31,7 @@ void sandbox_ObjectFunction_Touch()
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
 	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTEN_NORM);
-	Send_Effect(strcat("impact_", self.material), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
+	Send_Effect_(strcat("impact_", self.material), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
 void sandbox_ObjectFunction_Think()
@@ -393,7 +393,7 @@ void sandbox_Database_Load()
 	if(file_get < 0)
 	{
 		if(autocvar_g_sandbox_info > 0)
-			print(strcat("^3SANDBOX - SERVER: ^7could not find storage file ^3", file_name, "^7, no objects were loaded\n"));
+			LOG_INFO(strcat("^3SANDBOX - SERVER: ^7could not find storage file ^3", file_name, "^7, no objects were loaded\n"));
 	}
 	else
 	{
@@ -418,7 +418,7 @@ void sandbox_Database_Load()
 			}
 		}
 		if(autocvar_g_sandbox_info > 0)
-			print(strcat("^3SANDBOX - SERVER: ^7successfully loaded storage file ^3", file_name, "\n"));
+			LOG_INFO(strcat("^3SANDBOX - SERVER: ^7successfully loaded storage file ^3", file_name, "\n"));
 	}
 	fclose(file_get);
 }
@@ -505,7 +505,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
-					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
+					LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
 				return true;
 
 			// ---------------- COMMAND: OBJECT, REMOVE ----------------
@@ -514,7 +514,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				if(e != world)
 				{
 					if(autocvar_g_sandbox_info > 0)
-						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " removed an object at origin ^3", vtos(e.origin), "\n"));
+						LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", self.netname, " removed an object at origin ^3", vtos(e.origin), "\n"));
 					sandbox_ObjectRemove(e);
 					return true;
 				}
@@ -563,7 +563,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info > 0)
-							print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " pasted an object at origin ^3", vtos(e.origin), "\n"));
+							LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", self.netname, " pasted an object at origin ^3", vtos(e.origin), "\n"));
 						return true;
 				}
 				return true;
@@ -598,7 +598,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							self.object_attach = world; // object was attached, no longer keep it scheduled for attachment
 							print_to(self, "^2SANDBOX - INFO: ^7Object attached successfully");
 							if(autocvar_g_sandbox_info > 1)
-								print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " attached objects at origin ^3", vtos(e.origin), "\n"));
+								LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", self.netname, " attached objects at origin ^3", vtos(e.origin), "\n"));
 							return true;
 						}
 						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be attached to the parent. Make sure you are facing an object that you have edit rights over");
@@ -611,7 +611,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							sandbox_ObjectAttach_Remove(e);
 							print_to(self, "^2SANDBOX - INFO: ^7Child objects detached successfully");
 							if(autocvar_g_sandbox_info > 1)
-								print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " detached objects at origin ^3", vtos(e.origin), "\n"));
+								LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", self.netname, " detached objects at origin ^3", vtos(e.origin), "\n"));
 							return true;
 						}
 						print_to(self, "^1SANDBOX - WARNING: ^7Child objects could not be detached. Make sure you are facing an object that you have edit rights over");
@@ -702,7 +702,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S"));
 
 					if(autocvar_g_sandbox_info > 1)
-						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin), "\n"));
+						LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", self.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin), "\n"));
 					return true;
 				}
 

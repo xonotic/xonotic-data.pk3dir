@@ -81,7 +81,7 @@ string XonoticStatsList_convertDate(string input)
 
 void XonoticStatsList_getStats(entity me)
 {
-	dprint("XonoticStatsList_getStats() at time: ", ftos(time), "\n");
+	LOG_TRACE("XonoticStatsList_getStats() at time: ", ftos(time), "\n");
 	// delete the old buffer if it exists
 	if(me.listStats >= 0)
 		buf_del(me.listStats);

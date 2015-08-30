@@ -200,7 +200,7 @@ void StartFrame (void)
 		float t, pp, c_seeing, c_seen;
 		entity cl;
 		t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
-		print("CEFC time: ", ftos(t * 1000), "ms; ");
+		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
 		c_seeing = 0;
 		c_seen = 0;
 		FOR_EACH_CLIENT(cl)
@@ -210,8 +210,8 @@ void StartFrame (void)
 			if(IS_PLAYER(cl))
 				++c_seen;
 		}
-		print("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
-		print("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
+		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
+		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
 
 		client_cefc_accumulatortime = time;
 		client_cefc_accumulator = 0;

@@ -11,33 +11,33 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
-float turret_fusionreactor_firecheck()
+bool turret_fusionreactor_firecheck()
 {
     if (self.attack_finished_single > time)
-        return 0;
+        return false;
 
     if (self.enemy.deadflag != DEAD_NO)
-        return 0;
+        return false;
 
     if (self.enemy == world)
-        return 0;
+        return false;
 
     if (self.ammo < self.shot_dmg)
-        return 0;
+        return false;
 
     if (self.enemy.ammo >= self.enemy.ammo_max)
-        return 0;
+        return false;
 
     if (vlen(self.enemy.origin - self.origin) > self.target_range)
-        return 0;
+        return false;
 
     if(self.team != self.enemy.team)
-        return 0;
+        return false;
 
     if(!(self.enemy.ammo_flags & TFL_AMMO_ENERGY))
-        return 0;
+        return false;
 
-    return 1;
+    return true;
 }
 
 void spawnfunc_turret_fusionreactor() { if(!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }

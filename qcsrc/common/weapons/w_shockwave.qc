@@ -189,7 +189,7 @@ void W_Shockwave_Melee_Think(void)
 				{ accuracy_add(self.realowner, WEP_SHOCKWAVE.m_id, 0, swing_damage); }
 
 			#ifdef DEBUG_SHOCKWAVE
-			print(sprintf(
+			LOG_INFO(sprintf(
 				"MELEE: %s hitting %s with %f damage (factor: %f) at %f time.\n",
 				self.realowner.netname,
 				target_victim.netname,
@@ -462,7 +462,7 @@ void W_Shockwave_Attack(void)
 				);
 
 				#ifdef DEBUG_SHOCKWAVE
-				print(sprintf(
+				LOG_INFO(sprintf(
 					"SELF HIT: multiplier = %f, damage = %f, force = %f... "
 					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
 					multiplier,
@@ -525,7 +525,7 @@ void W_Shockwave_Attack(void)
 				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { queue = min(queue + 1, MAX_SHOCKWAVE_HITS); }
 
 				#ifdef DEBUG_SHOCKWAVE
-				print(sprintf(
+				LOG_INFO(sprintf(
 					"SPLASH HIT: multiplier = %f, damage = %f, force = %f... "
 					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
 					multiplier,
@@ -614,7 +614,7 @@ void W_Shockwave_Attack(void)
 				if(W_Shockwave_Attack_CheckHit(queue, head, final_force, final_damage)) { queue = min(queue + 1, MAX_SHOCKWAVE_HITS); }
 
 				#ifdef DEBUG_SHOCKWAVE
-				print(sprintf(
+				LOG_INFO(sprintf(
 					"BLAST HIT: multiplier = %f, damage = %f, force = %f... "
 					"multiplier_from_accuracy = %f, multiplier_from_distance = %f.\n",
 					multiplier,
@@ -647,12 +647,12 @@ void W_Shockwave_Attack(void)
 
 		if(accuracy_isgooddamage(self.realowner, head))
 		{
-			print("wtf\n");
+			LOG_INFO("wtf\n");
 			accuracy_add(self.realowner, WEP_SHOCKWAVE.m_id, 0, final_damage);
 		}
 
 		#ifdef DEBUG_SHOCKWAVE
-		print(sprintf(
+		LOG_INFO(sprintf(
 			"SHOCKWAVE by %s: damage = %f, force = %f.\n",
 			self.netname,
 			final_damage,
@@ -874,7 +874,7 @@ bool W_Shockwave(int req)
 			// handled by Net_ReadShockwaveParticle
 			//vector org2;
 			//org2 = w_org + w_backoff * 2;
-			//pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+			//pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
 			return false;
 		}
 		case WR_INIT:

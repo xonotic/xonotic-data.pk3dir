@@ -748,7 +748,7 @@ float GameTypeVote_Finished(float pos)
 
 	if ( !GameTypeVote_SetGametype(GameTypeVote_Type_FromString(mapvote_maps[pos])) )
 	{
-		dprint("Selected gametype is not supported by any map");
+		LOG_TRACE("Selected gametype is not supported by any map");
 	}
 
 	localcmd("sv_vote_gametype_hook_all\n");

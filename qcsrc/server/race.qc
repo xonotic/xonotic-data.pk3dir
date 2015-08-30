@@ -548,22 +548,22 @@ void dumpsurface(entity e)
 {
 	float n, si, ni;
 	vector norm, vec;
-	print("Surfaces of ", etos(e), ":\n");
+	LOG_INFO("Surfaces of ", etos(e), ":\n");
 
-	print("TEST = ", ftos(getsurfacenearpoint(e, '0 0 0')), "\n");
+	LOG_INFO("TEST = ", ftos(getsurfacenearpoint(e, '0 0 0')), "\n");
 
 	for(si = 0; ; ++si)
 	{
 		n = getsurfacenumpoints(e, si);
 		if(n <= 0)
 			break;
-		print("  Surface ", ftos(si), ":\n");
+		LOG_INFO("  Surface ", ftos(si), ":\n");
 		norm = getsurfacenormal(e, si);
-		print("    Normal = ", vtos(norm), "\n");
+		LOG_INFO("    Normal = ", vtos(norm), "\n");
 		for(ni = 0; ni < n; ++ni)
 		{
 			vec = getsurfacepoint(e, si, ni);
-			print("    Point ", ftos(ni), " = ", vtos(vec), " (", ftos(norm * vec), ")\n");
+			LOG_INFO("    Point ", ftos(ni), " = ", vtos(vec), " (", ftos(norm * vec), ")\n");
 		}
 	}
 }

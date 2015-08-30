@@ -78,7 +78,7 @@ void W_HLAC_Attack(void)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
 	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
-	Send_Effect("laser_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -126,7 +126,7 @@ void W_HLAC_Attack2(void)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
 	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
-	Send_Effect("laser_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -291,7 +291,7 @@ bool W_HLAC(int req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
+			pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM);
 

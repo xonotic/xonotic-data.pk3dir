@@ -151,7 +151,7 @@ void W_Mortar_Grenade_Touch1(void)
 			spamsound(self, CH_SHOTS, W_Sound("grenade_bounce5"), VOL_BASE, ATTN_NORM);
 		else
 			spamsound(self, CH_SHOTS, W_Sound("grenade_bounce6"), VOL_BASE, ATTN_NORM);
-		Send_Effect("hagar_bounce", self.origin, self.velocity, 1);
+		Send_Effect(EFFECT_HAGAR_BOUNCE, self.origin, self.velocity, 1);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 	}
@@ -196,7 +196,7 @@ void W_Mortar_Grenade_Touch2(void)
 			spamsound(self, CH_SHOTS, W_Sound("grenade_bounce5"), VOL_BASE, ATTN_NORM);
 		else
 			spamsound(self, CH_SHOTS, W_Sound("grenade_bounce6"), VOL_BASE, ATTN_NORM);
-		Send_Effect("hagar_bounce", self.origin, self.velocity, 1);
+		Send_Effect(EFFECT_HAGAR_BOUNCE, self.origin, self.velocity, 1);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 
@@ -231,7 +231,7 @@ void W_Mortar_Attack(void)
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, W_Sound("grenade_fire"), CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	Send_Effect("grenadelauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn();
 	gren.owner = gren.realowner = self;
@@ -280,7 +280,7 @@ void W_Mortar_Attack2(void)
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, W_Sound("grenade_fire"), CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	Send_Effect("grenadelauncher_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn();
 	gren.owner = gren.realowner = self;
@@ -468,7 +468,7 @@ bool W_Mortar(int req)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
-			pointparticles(particleeffectnum("grenade_explode"), org2, '0 0 0', 1);
+			pointparticles(particleeffectnum(EFFECT_GRENADE_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, W_Sound("grenade_impact"), VOL_BASE, ATTN_NORM);
 

@@ -260,7 +260,7 @@ void W_Electro_Attack_Bolt(void)
 		WEP_CVAR_PRI(electro, damage)
 	);
 
-	Send_Effect("electro_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.classname = "electro_bolt";
@@ -360,7 +360,7 @@ void W_Electro_Attack_Orb(void)
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	Send_Effect("electro_muzzleflash", w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity proj = spawn();
 	proj.classname = "electro_orb";
@@ -580,7 +580,7 @@ bool W_Electro(int req)
 			org2 = w_org + w_backoff * 6;
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
-				pointparticles(particleeffectnum("electro_ballexplode"), org2, '0 0 0', 1);
+				pointparticles(particleeffectnum(EFFECT_ELECTRO_BALLEXPLODE), org2, '0 0 0', 1);
 				if(!w_issilent)
 					sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
 			}
@@ -589,13 +589,13 @@ bool W_Electro(int req)
 				if(w_deathtype & HITTYPE_BOUNCE)
 				{
 					// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
-					pointparticles(particleeffectnum("electro_combo"), org2, '0 0 0', 1);
+					pointparticles(particleeffectnum(EFFECT_ELECTRO_COMBO), org2, '0 0 0', 1);
 					if(!w_issilent)
 						sound(self, CH_SHOTS, W_Sound("electro_impact_combo"), VOL_BASE, ATTEN_NORM);
 				}
 				else
 				{
-					pointparticles(particleeffectnum("electro_impact"), org2, '0 0 0', 1);
+					pointparticles(particleeffectnum(EFFECT_ELECTRO_IMPACT), org2, '0 0 0', 1);
 					if(!w_issilent)
 						sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
 				}

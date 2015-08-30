@@ -43,8 +43,8 @@ bool IsFlying(entity a);
 	#define IS_PLAYER(s)						(s).isplayermodel
 	#define isPushable(s)						(s).isplayermodel
 
-	float player_multijump;
-	float player_jumpheight;
+	//float player_multijump;
+	//float player_jumpheight;
 
 	#define PHYS_INPUT_ANGLES(s)   				input_angles
 // TODO

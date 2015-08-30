@@ -111,7 +111,7 @@ void XonoticSkinList_getSkins(entity me)
 		fh = fopen(language_filename(s), FILE_READ);
 		if(fh < 0)
 		{
-			print("Warning: can't open skinvalues.txt file\n");
+			LOG_INFO("Warning: can't open skinvalues.txt file\n");
 			continue;
 		}
 		while((s = fgets(fh)))

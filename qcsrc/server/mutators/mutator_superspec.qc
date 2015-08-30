@@ -48,7 +48,7 @@ void superspec_save_client_conf()
 	fh = fopen(fn, FILE_WRITE);
 	if(fh < 0)
 	{
-		dprint("^1ERROR: ^7 superspec can not open ", fn, " for writing.\n");
+		LOG_TRACE("^1ERROR: ^7 superspec can not open ", fn, " for writing.\n");
 	}
 	else
 	{
@@ -465,14 +465,14 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
-		dprint("^1ERROR: ^7 superspec can not open ", fn, " for reading.\n");
+		LOG_TRACE("^1ERROR: ^7 superspec can not open ", fn, " for reading.\n");
 	}
 	else
 	{
 		string _magic = fgets(fh);
 		if(_magic != _SSMAGIX)
 		{
-			dprint("^1ERROR^7 While reading superspec options file: unknown magic\n");
+			LOG_TRACE("^1ERROR^7 While reading superspec options file: unknown magic\n");
 		}
 		else
 		{

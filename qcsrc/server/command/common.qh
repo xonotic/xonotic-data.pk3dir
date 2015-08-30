@@ -2,6 +2,7 @@
 #define COMMAND_COMMON_H
 
 #include "vote.qh"
+#include "../../common/monsters/spawn.qh"
 
 #include "../../common/command/generic.qh"
 #include "../../common/command/command.qh"
@@ -92,6 +93,8 @@ void CommonCommand_cvar_changes(float request, entity caller);
 
 void CommonCommand_cvar_purechanges(float request, entity caller);
 
+void CommonCommand_editmob(float request, entity caller, float argc);
+
 void CommonCommand_info(float request, entity caller, float argc);
 
 void CommonCommand_ladder(float request, entity caller);
@@ -123,6 +126,7 @@ void CommonCommand_who(float request, entity caller, float argc);
 #define COMMON_COMMANDS(request,caller,arguments,command) \
 	COMMON_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, caller), "Prints a list of all changed server cvars") \
 	COMMON_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, caller), "Prints a list of all changed gameplay cvars") \
+	COMMON_COMMAND("editmob", CommonCommand_editmob(request, caller, arguments), "Modifies a monster or all monsters") \
 	COMMON_COMMAND("info", CommonCommand_info(request, caller, arguments), "Request for unique server information set up by admin") \
 	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
 	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \

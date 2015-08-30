@@ -827,7 +827,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	*/
 
 #ifdef TURRET_DEBUG_TARGETSELECT
-	dprint("Target:",e_target.netname," is a valid target for ",e_turret.netname,"\n");
+	LOG_TRACE("Target:",e_target.netname," is a valid target for ",e_turret.netname,"\n");
 #endif
 
 	return 1;
@@ -974,9 +974,21 @@ float turret_firecheck()
 	return 1;
 }
 
+bool turret_checkfire()
+{
+	bool ret = false; // dummy
+	if(MUTATOR_CALLHOOK(Turret_CheckFire, ret))
+		return ret_bool;
+
+	return self.turret_firecheckfunc();
+}
+
 void turret_fire()
 {
 	if (autocvar_g_turrets_nofire != 0)
+		return;
+
+	if(MUTATOR_CALLHOOK(TurretFire, self))
 		return;
 
 	TUR_ACTION(self.turretid, TR_ATTACK);
@@ -1060,7 +1072,7 @@ void turret_think()
 
 					turret_do_updates(self);
 
-					if (self.turret_firecheckfunc())
+					if (turret_checkfire())
 						turret_fire();
 				}
 			}
@@ -1084,7 +1096,7 @@ void turret_think()
 		turret_do_updates(self);
 
 		// Fire?
-		if (self.turret_firecheckfunc())
+		if (turret_checkfire())
 			turret_fire();
 	}
 	else
@@ -1104,7 +1116,7 @@ void turret_think()
 				turret_do_updates(self);
 
 				// Fire!
-				if (self.turret_firecheckfunc() != 0)
+				if (turret_checkfire())
 					turret_fire();
 
 				TUR_ACTION(self.turretid, TR_THINK);
@@ -1164,7 +1176,7 @@ void turret_think()
 		turret_do_updates(self);
 
 		// Fire?
-		if (self.turret_firecheckfunc())
+		if (turret_checkfire())
 			turret_fire();
 	}
 
@@ -1177,7 +1189,7 @@ void turret_think()
 */
 void turret_use()
 {
-	dprint("Turret ",self.netname, " used by ", activator.classname, "\n");
+	LOG_TRACE("Turret ",self.netname, " used by ", activator.classname, "\n");
 
 	self.team = activator.team;
 
@@ -1361,7 +1373,7 @@ float turret_initialize(float tur_id)
 		if (self.tur_defend == world)
 		{
 			self.target = "";
-			dprint("Turret has invalid defendpoint!\n");
+			LOG_TRACE("Turret has invalid defendpoint!\n");
 		}
 	}
 
