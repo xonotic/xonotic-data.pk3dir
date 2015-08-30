@@ -20,6 +20,7 @@ void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValu
 void setDependentWeird(entity e, float(entity) func);
 
 void setZonedTooltip(entity e, string theTooltip, string theCvar);
+void clearTooltip(entity e);
 
 string resolvemod(string m);
 

@@ -437,7 +437,7 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 	if(IsFavorite(me.ipAddressBox.text))
 	{
 		e.setText(e, _("Remove"));
-		setZonedTooltip(e, string_null, string_null);
+		clearTooltip(e);
 	}
 	else
 	{

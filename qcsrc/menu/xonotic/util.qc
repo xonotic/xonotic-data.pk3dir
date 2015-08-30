@@ -38,6 +38,11 @@ void setZonedTooltip(entity e, string theTooltip, string theCvar)
 	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
 }
 
+void clearTooltip(entity e)
+{
+	setZonedTooltip(e, string_null, string_null);
+}
+
 .entity parent, firstChild, nextSibling;
 void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
 {
