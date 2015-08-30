@@ -308,6 +308,7 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor, EV_PlayerDamage_SplitHealthArmor
  * i'm not sure if I should change this around slightly (Naming of the entities, and also how they're done in g_damage).
  */
 #define EV_PlayerDamage_Calculate(i, o) \
+    /**/ i(entity, frag_inflictor) \
     /**/ i(entity, frag_attacker) \
     /**/ i(entity, frag_target) \
     /**/ i(float, frag_deathtype) \

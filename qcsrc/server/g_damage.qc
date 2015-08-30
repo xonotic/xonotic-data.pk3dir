@@ -748,7 +748,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		MUTATOR_CALLHOOK(PlayerDamage_Calculate, attacker, targ, deathtype, damage, mirrordamage, force);
+		MUTATOR_CALLHOOK(PlayerDamage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
 		damage = frag_damage;
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
