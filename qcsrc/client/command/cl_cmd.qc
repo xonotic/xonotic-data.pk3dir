@@ -254,6 +254,15 @@ void LocalCommand_hud(int request, int argc)
 					return;
 				}
 
+				case "quickmenu":
+				{
+					if(QuickMenu_IsOpened())
+						QuickMenu_Close();
+					else
+						QuickMenu_Open(argv(2), argv(3)); // mode, submenu
+					return;
+				}
+
 				case "minigame":
 				{
 					if(HUD_MinigameMenu_IsOpened())
@@ -314,6 +323,9 @@ void LocalCommand_hud(int request, int argc)
 			LOG_INFO("  'configname' is the name to save to for \"save\" action,\n");
 			LOG_INFO("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
 			LOG_INFO("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
+			LOG_INFO("  quickmenu [[default | file | \"\"] submenu]\n");
+			LOG_INFO("    Called without options (or with "") loads either the default quickmenu or a quickmenu file if hud_panel_quickmenu_file is set to a valid filename.\n");
+			LOG_INFO("    Submenu option allows to open quickmenu directly in a submenu, it requires to specify 'default', 'file' or '\"\"' option.\n");
 			LOG_INFO("  Full list of commands here: \"configure, minigame, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
 			return;
 		}

@@ -209,6 +209,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_text");
 					HUD_Write_PanelCvar_q("_ratio");
 					HUD_Write_PanelCvar_q("_dynamicsize");
+				case HUD_PANEL_QUICKMENU:
+					HUD_Write_PanelCvar_q("_align");
 					break;
 			}
 			HUD_Write("\n");

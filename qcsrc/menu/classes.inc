@@ -54,6 +54,7 @@
 #include "xonotic/dialog_hudpanel_physics.qc"
 #include "xonotic/dialog_hudpanel_powerups.qc"
 #include "xonotic/dialog_hudpanel_pressedkeys.qc"
+#include "xonotic/dialog_hudpanel_quickmenu.qc"
 #include "xonotic/dialog_hudpanel_racetimer.qc"
 #include "xonotic/dialog_hudpanel_radar.qc"
 #include "xonotic/dialog_hudpanel_score.qc"
