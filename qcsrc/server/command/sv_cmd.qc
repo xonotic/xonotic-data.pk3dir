@@ -1905,6 +1905,10 @@ void GameCommand(string command)
 			return;
 		}
 	}
+	else if(MUTATOR_CALLHOOK(SV_ParseServerCommand, strtolower(argv(0)), argc, command))
+	{
+		return; // handled by a mutator
+	}
 	else if(BanCommand(command))
 	{
 		return; // handled by server/command/ipban.qc
