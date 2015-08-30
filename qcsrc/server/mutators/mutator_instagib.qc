@@ -249,12 +249,17 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 
 	if(IS_PLAYER(frag_target))
 	{
-		if ((frag_deathtype == DEATH_FALL)  ||
-			(frag_deathtype == DEATH_DROWN) ||
-			(frag_deathtype == DEATH_SLIME) ||
-			(frag_deathtype == DEATH_LAVA))
+		if(frag_deathtype == DEATH_FALL)
+			frag_damage = 0; // never count fall damage
+
+		if(!autocvar_g_instagib_damagedbycontents)
+		switch(frag_deathtype)
 		{
-			frag_damage = 0;
+			case DEATH_DROWN:
+			case DEATH_SLIME:
+			case DEATH_LAVA:
+				frag_damage = 0;
+				break;
 		}
 
 		if(IS_PLAYER(frag_attacker))
@@ -335,11 +340,13 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 
 	if(self.weapon == WEP_DEVASTATOR.m_id || self.weapon == WEP_VORTEX.m_id)
 	{
-		entity e = spawn();
+		entity e = spawn(), oldself;
 		setorigin(e, self.origin);
-		entity oldself;
 		oldself = self;
 		self = e;
+		self.noalign = oldself.noalign;
+		self.cnt = oldself.cnt;
+		self.team = oldself.team;
 		spawnfunc_item_minst_cells();
 		self = oldself;
 		return true;
