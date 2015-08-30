@@ -1,27 +1,15 @@
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
-bool autocvar_cl_damagetext = false;
-string autocvar_cl_damagetext_format = "-%3$d";
-vector autocvar_cl_damagetext_color = '1 1 0';
-float autocvar_cl_damagetext_size = 8;
-float autocvar_cl_damagetext_alpha_start = 1;
-float autocvar_cl_damagetext_alpha_lifetime = 3;
-vector autocvar_cl_damagetext_velocity = '0 0 20';
-vector autocvar_cl_damagetext_offset = '0 -40 0';
-float autocvar_cl_damagetext_accumulate_range = 30;
-
-STATIC_INIT(cl_damagetext) {
-    CVAR_DESCRIBE(cl_damagetext, _("Draw damage dealt. 0: disabled, 1: enabled"));
-    CVAR_DESCRIBESTR(cl_damagetext_format, _("How to format the damage text. 1$ is health, 2$ is armor, 3$ is both"));
-    CVAR_DESCRIBEVEC(cl_damagetext_color, _("Default damage text color"));
-    CVAR_DESCRIBE(cl_damagetext_size, _("Damage text font size"));
-    CVAR_DESCRIBE(cl_damagetext_alpha_start, _("Damage text initial alpha"));
-    CVAR_DESCRIBE(cl_damagetext_alpha_lifetime, _("Damage text lifetime in seconds"));
-    CVAR_DESCRIBEVEC(cl_damagetext_velocity, _("Damage text move direction"));
-    CVAR_DESCRIBEVEC(cl_damagetext_offset, _("Damage text offset"));
-    CVAR_DESCRIBE(cl_damagetext_accumulate_range, _("Damage text spawned within this range is accumulated"));
-}
+AUTOCVAR(cl_damagetext,                     bool,   false,      _("Draw damage dealt. 0: disabled, 1: enabled"));
+AUTOCVAR(cl_damagetext_format,              string, "-%3$d",    _("How to format the damage text. 1$ is health, 2$ is armor, 3$ is both"));
+AUTOCVAR(cl_damagetext_color,               vector, '1 1 0',    _("Default damage text color"));
+AUTOCVAR(cl_damagetext_size,                float,  8,          _("Damage text font size"));
+AUTOCVAR(cl_damagetext_alpha_start,         float,  1,          _("Damage text initial alpha"));
+AUTOCVAR(cl_damagetext_alpha_lifetime,      float,  3,          _("Damage text lifetime in seconds"));
+AUTOCVAR(cl_damagetext_velocity,            vector, '0 0 20',   _("Damage text move direction"));
+AUTOCVAR(cl_damagetext_offset,              vector, '0 -40 0',  _("Damage text offset"));
+AUTOCVAR(cl_damagetext_accumulate_range,    float,  30,         _("Damage text spawned within this range is accumulated"));
 #endif
 
 #ifdef CSQC
