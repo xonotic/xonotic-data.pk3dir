@@ -1068,8 +1068,6 @@ Called when a client connects to the server
 =============
 */
 void DecodeLevelParms (void);
-//void dom_player_join_team(entity pl);
-void set_dom_state(entity e);
 void ClientConnect (void)
 {
 	float t;
