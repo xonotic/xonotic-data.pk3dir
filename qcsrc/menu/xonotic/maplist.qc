@@ -48,7 +48,6 @@ CLASS(XonoticMapList, XonoticListBox)
 	ATTRIB(XonoticMapList, alphaBG, float, 0)
 ENDCLASS(XonoticMapList)
 entity makeXonoticMapList();
-entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar);
 void MapList_StringFilterBox_Change(entity box, entity me);
 float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
 void MapList_Add_Shown(entity btn, entity me);
@@ -64,10 +63,6 @@ void XonoticMapList_destroy(entity me)
 	MapInfo_Shutdown();
 }
 
-entity makeXonoticMapListStringFilterBox(entity me, float doEditColorCodes, string theCvar)
-{
-	return makeXonoticInputBox(doEditColorCodes, theCvar);
-}
 entity makeXonoticMapList()
 {
 	entity me;

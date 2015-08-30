@@ -19,7 +19,7 @@ entity makeXonoticScoreboardFadeTimeSlider()
 }
 void XonoticScoreboardFadeTimeSlider_configureXonoticScoreboardFadeTimeSlider(entity me)
 {
-	me.configureXonoticTextSlider(me, "scoreboard_fadeinspeed");
+	me.configureXonoticTextSlider(me, "scoreboard_fadeinspeed", string_null);
 	me.addValue(me, ZCTX(_("PART^Slow")),     "5 2.5");
 	me.addValue(me, ZCTX(_("PART^Normal")),   "10 5");
 	me.addValue(me, ZCTX(_("PART^Fast")),     "15 7.5");

@@ -19,10 +19,7 @@ void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theC
 void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValue);
 void setDependentWeird(entity e, float(entity) func);
 
-int tooltipdb;
-void loadTooltips();
-void unloadTooltips();
-string getZonedTooltipForIdentifier(string s);
+string getZonedTooltip(string theTooltip, string theCvar);
 
 string resolvemod(string m);
 

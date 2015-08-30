@@ -75,7 +75,8 @@ void XonoticUserSettingsTab_fill(entity me)
 			e.onClickEntity = sk;
 
 	me.gotoRC(me, 11.5, 3.25); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 2.5, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects and harsh language")));
+		me.TD(me, 1, 2.5, e = makeXonoticCheckBox_T(0, "cl_gentle", _("Disable gore effects and harsh language"),
+			_("Replace blood and gibs with content that does not have any gore effects (default: disabled)")));
 
 	//me.TR(me);
 	//	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));

@@ -213,10 +213,8 @@ void m_init_delayed()
 
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 
-	loadTooltips();
 	anim = NEW(AnimHost);
 	main = NEW(MainWindow); main.configureMainWindow(main);
-	unloadTooltips();
 
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 	main.focused = 1;

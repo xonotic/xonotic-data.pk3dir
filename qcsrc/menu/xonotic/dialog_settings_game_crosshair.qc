@@ -36,7 +36,8 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 	me.TR(me); //me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_enabled", "0", _("No crosshair")));
 	//me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_per_weapon", string_null, _("Per weapon")));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton_T(3, "crosshair_per_weapon", string_null, _("Per weapon"),
+			_("Set a different crosshair for each weapon, good if you play without weapon models")));
 		makeMulti(e, "crosshair_enabled");
 	//me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom")));
@@ -52,13 +53,15 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));
 			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 1, 1.9, e = makeXonoticSlider(0.1, 1.0, 0.01, "crosshair_size"));
+		me.TD(me, 1, 1.9, e = makeXonoticSlider_T(0.1, 1.0, 0.01, "crosshair_size",
+			_("Adjust the size of the crosshair")));
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair alpha:")));
 			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
+		me.TD(me, 1, 1.9, e = makeXonoticSlider_T(0, 1, 0.1, "crosshair_alpha",
+			_("Adjust the opacity of the crosshair")));
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);
@@ -139,7 +142,8 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_enabled", 1, 2);
 	/*me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Hit testing:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("crosshair_hittest"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("crosshair_hittest",
+			_("None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy")));
 			e.addValue(e, ZCTX(_("HTTST^Disabled")), "0");
 			e.addValue(e, ZCTX(_("HTTST^TrueAim")), "1");
 			e.addValue(e, ZCTX(_("HTTST^Enemies")), "1.25");

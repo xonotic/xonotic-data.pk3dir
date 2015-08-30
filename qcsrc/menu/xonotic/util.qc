@@ -17,36 +17,20 @@ float GL_Have_TextureCompression()
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
 }
 
-void loadTooltips()
+string getZonedTooltip(string theTooltip, string theCvar)
 {
-	tooltipdb = db_load(language_filename("tooltips.db"));
-}
-void unloadTooltips()
-{
-	if(tooltipdb >= 0)
-		db_close(tooltipdb);
-	tooltipdb = -1;
-}
-string getZonedTooltipForIdentifier(string s)
-{
-	string t;
-	if(s == "")
-		return string_null;
-	if(tooltipdb >= 0)
+	if(theTooltip == "")
 	{
-		t = db_get(tooltipdb, s);
-		if(t == "-")
-			return string_null;
-		if(t != "")
-			return strzone(t);
+		if(theCvar != "" && prvm_language == "en")
+		{
+			string t = cvar_description(theCvar);
+			if(t != "" && t != "custom cvar")
+				return strzone(t);
+		}
 	}
-	if(prvm_language == "en")
-	{
-		t = cvar_description(s);
-		if(t != "" && t != "custom cvar")
-			return strzone(t);
-	}
-	LOG_TRACE("WARNING: no tooltip set for ", s, "\n");
+	else if(theTooltip != "-")
+		return strzone(theTooltip);
+
 	return string_null;
 }
 

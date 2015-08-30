@@ -20,7 +20,8 @@ entity makeXonoticPicmipSlider()
 }
 void XonoticPicmipSlider_configureXonoticPicmipSlider(entity me)
 {
-	me.configureXonoticTextSlider(me, "gl_picmip");
+	me.configureXonoticTextSlider(me, "gl_picmip",
+		_("Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)"));
 	me.autofix(me);
 	me.have_s3tc = GL_Have_TextureCompression();
 }

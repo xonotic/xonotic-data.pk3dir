@@ -129,7 +129,8 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 float autocvar_menu_vid_allowdualscreenresolution;
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 {
-	me.configureXonoticTextSlider(me, "_menu_vid_width");
+	me.configureXonoticTextSlider(me, "_menu_vid_width",
+		_("Screen resolution"));
 	me.loadResolutions(me, cvar("vid_fullscreen"));
 }
 void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)

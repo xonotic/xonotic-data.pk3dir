@@ -20,6 +20,6 @@ entity makeXonoticBigCommandButton(string theText, vector theColor, string theCo
 
 void XonoticBigCommandButton_configureXonoticBigCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags)
 {
-	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags);
+	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags, string_null);
 }
 #endif
