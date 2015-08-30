@@ -75,6 +75,26 @@ void ItemDrawSimple()
     }
 }
 
+void Item_PreDraw()
+{
+	vector org;
+	float alph;
+	org = getpropertyvec(VF_ORIGIN);
+	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+		alph = 0;
+	else if(self.fade_start)
+		alph = bound(0, (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.fade_end - self.fade_start), 1);
+	else
+		alph = 1;
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
+	if(self.ItemStatus & ITS_AVAILABLE)
+		self.alpha = alph;
+	if(alph <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
+}
+
 void ItemRead(float _IsNew)
 {
     int sf = ReadByte();
@@ -90,21 +110,16 @@ void ItemRead(float _IsNew)
 
     if(sf & ISF_ANGLES)
     {
-        self.angles_x = ReadCoord();
-        self.angles_y = ReadCoord();
-        self.angles_z = ReadCoord();
+        self.angles_x = ReadAngle();
+        self.angles_y = ReadAngle();
+        self.angles_z = ReadAngle();
         self.move_angles = self.angles;
     }
 
     if(sf & ISF_SIZE)
     {
-        self.mins_x = ReadCoord();
-        self.mins_y = ReadCoord();
-        self.mins_z = ReadCoord();
-        self.maxs_x = ReadCoord();
-        self.maxs_y = ReadCoord();
-        self.maxs_z = ReadCoord();
-        setsize(self, self.mins, self.maxs);
+        float use_bigsize = ReadByte();
+        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
@@ -150,8 +165,13 @@ void ItemRead(float _IsNew)
     if(sf & ISF_MODEL)
     {
         self.drawmask  = MASK_NORMAL;
-        self.movetype  = MOVETYPE_TOSS;
+		self.move_movetype = self.movetype = MOVETYPE_TOSS;
         self.draw       = ItemDraw;
+
+        self.fade_end = ReadShort();
+        self.fade_start = ReadShort();
+        if(self.fade_start && !autocvar_cl_items_nofade)
+        	self.predraw = Item_PreDraw;
 
         if(self.mdl)
             strunzone(self.mdl);
@@ -163,8 +183,6 @@ void ItemRead(float _IsNew)
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             self.draw = ItemDrawSimple;
-
-
 
             if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
                 self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
@@ -230,63 +248,60 @@ void ItemRead(float _IsNew)
 #ifdef SVQC
 bool ItemSend(entity to, int sf)
 {
-    if(self.gravity)
-        sf |= ISF_DROP;
-    else
-        sf &= ~ISF_DROP;
+	if(self.gravity)
+		sf |= ISF_DROP;
+	else
+		sf &= ~ISF_DROP;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
 	//WriteByte(MSG_ENTITY, self.cnt);
-    if(sf & ISF_LOCATION)
-    {
-        WriteCoord(MSG_ENTITY, self.origin.x);
-        WriteCoord(MSG_ENTITY, self.origin.y);
-        WriteCoord(MSG_ENTITY, self.origin.z);
-    }
+	if(sf & ISF_LOCATION)
+	{
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
+	}
 
-    if(sf & ISF_ANGLES)
-    {
-        WriteCoord(MSG_ENTITY, self.angles.x);
-        WriteCoord(MSG_ENTITY, self.angles.y);
-        WriteCoord(MSG_ENTITY, self.angles.z);
-    }
+	if(sf & ISF_ANGLES)
+	{
+		WriteAngle(MSG_ENTITY, self.angles_x);
+		WriteAngle(MSG_ENTITY, self.angles_y);
+		WriteAngle(MSG_ENTITY, self.angles_z);
+	}
 
-    if(sf & ISF_SIZE)
-    {
-        WriteCoord(MSG_ENTITY, self.mins.x);
-        WriteCoord(MSG_ENTITY, self.mins.y);
-        WriteCoord(MSG_ENTITY, self.mins.z);
-        WriteCoord(MSG_ENTITY, self.maxs.x);
-        WriteCoord(MSG_ENTITY, self.maxs.y);
-        WriteCoord(MSG_ENTITY, self.maxs.z);
-    }
+	if(sf & ISF_SIZE)
+	{
+		WriteByte(MSG_ENTITY, ((self.flags & FL_POWERUP) || self.health || self.armorvalue));
+	}
 
-    if(sf & ISF_STATUS)
-        WriteByte(MSG_ENTITY, self.ItemStatus);
+	if(sf & ISF_STATUS)
+		WriteByte(MSG_ENTITY, self.ItemStatus);
 
-    if(sf & ISF_MODEL)
-    {
+	if(sf & ISF_MODEL)
+	{
+		WriteShort(MSG_ENTITY, self.fade_end);
+		WriteShort(MSG_ENTITY, self.fade_start);
 
-        if(self.mdl == "")
-            LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+		if(self.mdl == "")
+			LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
 
-        WriteString(MSG_ENTITY, self.mdl);
-    }
+		WriteString(MSG_ENTITY, self.mdl);
+	}
 
 
-    if(sf & ISF_COLORMAP)
-        WriteShort(MSG_ENTITY, self.colormap);
+	if(sf & ISF_COLORMAP)
+		WriteShort(MSG_ENTITY, self.colormap);
 
-    if(sf & ISF_DROP)
-    {
-        WriteCoord(MSG_ENTITY, self.velocity.x);
-        WriteCoord(MSG_ENTITY, self.velocity.y);
-        WriteCoord(MSG_ENTITY, self.velocity.z);
-    }
+	if(sf & ISF_DROP)
+	{
+		WriteCoord(MSG_ENTITY, self.velocity.x);
+		WriteCoord(MSG_ENTITY, self.velocity.y);
+		WriteCoord(MSG_ENTITY, self.velocity.z);
+	}
 
-    return true;
+	return true;
 }
 
 void ItemUpdate(entity item)
@@ -383,21 +398,21 @@ void Item_Show (entity e, float mode)
 	}
 
 	if (e.items & ITEM_Strength.m_itemid || e.items & ITEM_Shield.m_itemid)
-	    e.ItemStatus |= ITS_POWERUP;
+		e.ItemStatus |= ITS_POWERUP;
 
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
 
 
-    if (autocvar_g_fullbrightitems)
+	if (autocvar_g_fullbrightitems)
 		e.ItemStatus |= ITS_ALLOWFB;
 
 	if (autocvar_sv_simple_items)
-        e.ItemStatus |= ITS_ALLOWSI;
+		e.ItemStatus |= ITS_ALLOWSI;
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
-    e.SendFlags |= ISF_STATUS;
+	e.SendFlags |= ISF_STATUS;
 }
 
 void Item_Think()
@@ -748,6 +763,7 @@ void Item_Touch (void)
 			for(head = world; (head = findfloat(head, team, self.team)); )
 			{
 				if(head.flags & FL_ITEM)
+				if(head.classname != "item_flag_team" && head.classname != "item_key_team")
 				{
 					Item_Show(head, -1);
 					RandomSelection_Add(head, 0, string_null, head.cnt, 0);
@@ -789,13 +805,17 @@ void Item_FindTeam()
 		// marker for item team search
 		LOG_TRACE("Initializing item team ", ftos(self.team), "\n");
 		RandomSelection_Init();
-		for(head = world; (head = findfloat(head, team, self.team)); ) if(head.flags & FL_ITEM)
+		for(head = world; (head = findfloat(head, team, self.team)); )
+		if(head.flags & FL_ITEM)
+		if(head.classname != "item_flag_team" && head.classname != "item_key_team")
 			RandomSelection_Add(head, 0, string_null, head.cnt, 0);
 		e = RandomSelection_chosen_ent;
 		e.state = 0;
 		Item_Show(e, 1);
 
-		for(head = world; (head = findfloat(head, team, self.team)); ) if(head.flags & FL_ITEM)
+		for(head = world; (head = findfloat(head, team, self.team)); )
+		if(head.flags & FL_ITEM)
+		if(head.classname != "item_flag_team" && head.classname != "item_key_team")
 		{
 			if(head != e)
 			{
@@ -814,6 +834,7 @@ void Item_FindTeam()
 // TODO: perhaps nice special effect?
 void RemoveItem(void)
 {
+	if(wasfreed(self) || !self) { return; }
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
 }
@@ -970,6 +991,12 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.items = itemid;
 	self.weapon = weaponid;
 
+	if(!self.fade_end)
+	{
+		self.fade_start = autocvar_g_items_mindist;
+		self.fade_end = autocvar_g_items_maxdist;
+	}
+
 	if(weaponid)
 		self.weapons = WepSet_FromWeapon(weaponid);
 
@@ -1031,6 +1058,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
+		if(self.angles != '0 0 0')
+			self.SendFlags |= ISF_ANGLES;
+
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -1049,7 +1079,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				setsize (self, '-16 -16 0', '16 16 48');
 			else
 				setsize (self, '-16 -16 0', '16 16 32');
-
+			self.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			droptofloor();
 			waypoint_spawnforitem(self);
@@ -1114,29 +1144,31 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	//self.effects |= EF_LOWPRECISION;
 
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-    {
-        self.pos1 = '-16 -16 0';
-        self.pos2 = '16 16 48';
-    }
+	{
+		self.pos1 = '-16 -16 0';
+		self.pos2 = '16 16 48';
+	}
 	else
-    {
-        self.pos1 = '-16 -16 0';
-        self.pos2 = '16 16 32';
-    }
-    setsize (self, self.pos1, self.pos2);
+	{
+		self.pos1 = '-16 -16 0';
+		self.pos2 = '16 16 32';
+	}
+	setsize (self, self.pos1, self.pos2);
 
-    if(itemflags & FL_POWERUP)
-        self.ItemStatus |= ITS_ANIMATE1;
+	self.SendFlags |= ISF_SIZE;
+
+	if(itemflags & FL_POWERUP)
+		self.ItemStatus |= ITS_ANIMATE1;
 
 	if(self.armorvalue || self.health)
-        self.ItemStatus |= ITS_ANIMATE2;
+		self.ItemStatus |= ITS_ANIMATE2;
 
 	if(itemflags & FL_WEAPON)
 	{
 		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
-            self.colormap = 1024; // color shirt=0 pants=0 grey
-        else
-            self.gravity = 1;
+			self.colormap = 1024; // color shirt=0 pants=0 grey
+		else
+			self.gravity = 1;
 
 		self.ItemStatus |= ITS_ANIMATE1;
 		self.ItemStatus |= ISF_COLORMAP;
@@ -1154,11 +1186,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	else
 		Item_Reset();
 
-    Net_LinkEntity(self, false, 0, ItemSend);
-
-	self.SendFlags |= ISF_SIZE;
-	if(self.angles)
-		self.SendFlags |= ISF_ANGLES;
+	Net_LinkEntity(self, !((itemflags & FL_POWERUP) || self.health || self.armorvalue), 0, ItemSend);
 
 	// call this hook after everything else has been done
 	if(MUTATOR_CALLHOOK(Item_Spawn, self))
