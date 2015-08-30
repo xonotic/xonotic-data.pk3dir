@@ -594,4 +594,18 @@ MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
 
 /** Return error to play frag remaining announcements */
 MUTATOR_HOOKABLE(Scores_CountFragsRemaining, EV_NO_ARGS);
+
+#define EV_GrappleHookThink(i, o) \
+    /**/ i(entity, self) \
+    /**/ i(int, hook_tarzan) \
+    /**/ o(int, hook_tarzan) \
+    /**/ i(entity, hook_pullentity) \
+    /**/ o(entity, hook_pullentity) \
+    /**/ i(float, hook_velmultiplier) \
+    /**/ o(float, hook_velmultiplier) \
+    /**/
+int hook_tarzan;
+entity hook_pullentity;
+float hook_velmultiplier;
+MUTATOR_HOOKABLE(GrappleHookThink, EV_GrappleHookThink);
 #endif

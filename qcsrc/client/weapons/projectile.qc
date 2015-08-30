@@ -270,6 +270,9 @@ void Ent_Projectile()
 
 	if(f & 2)
 	{
+		string rm_suffix = strcat("rocketminsta_laser_", Static_Team_ColorName_Lower(self.team));
+		if(_particleeffectnum(rm_suffix) < 0 || Team_TeamToNumber(self.team) == -1) { rm_suffix = "TR_NEXUIZPLASMA"; }
+
 		self.cnt = ReadByte();
 
 		self.silent = (self.cnt & 0x80);
@@ -316,6 +319,8 @@ void Ent_Projectile()
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
 
 			case PROJECTILE_RPC: setmodel(self, W_Model("ok_rocket"));self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); break;
+
+			case PROJECTILE_ROCKETMINSTA_LASER: setmodel(self, "models/elaser.mdl");self.traileffect = _particleeffectnum(rm_suffix); break;
 
 			default:
 				if(MUTATOR_CALLHOOK(Ent_Projectile, self))

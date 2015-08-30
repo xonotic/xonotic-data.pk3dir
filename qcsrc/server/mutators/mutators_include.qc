@@ -113,3 +113,6 @@
 #include "mutator_nades.qc"
 #include "mutator_campcheck.qc"
 #include "mutator_buffs.qc"
+#include "mutator_rocketminsta.qc"
+#include "mutator_vampirehook.qc"
+#include "mutator_breakablehook.qc"
