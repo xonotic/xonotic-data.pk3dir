@@ -66,6 +66,7 @@ const int ANIMSTATE_DEAD1 = 1; // base frames: die1
 const int ANIMSTATE_DEAD2 = 2; // base frames: die2
 const int ANIMSTATE_DUCK = 4; // turns walk into duckwalk, jump into duckjump, etc.
 const int ANIMSTATE_FROZEN = 8; // force idle
+const int ANIMSTATE_FOLLOW = 16; // also force idle
 
 // implicit anim states (inferred from velocity, etc.)
 const int ANIMIMPLICITSTATE_INAIR = 1;
