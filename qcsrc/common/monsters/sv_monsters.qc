@@ -867,7 +867,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 
 	if(vlen(self.origin - self.moveto) > 100)
 	{
-		float do_run = !!(self.enemy);
+		float do_run = (self.enemy || self.monster_moveto);
 		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 			Monster_CalculateVelocity(self, self.moveto, self.origin, true, ((do_run) ? runspeed : walkspeed));
 

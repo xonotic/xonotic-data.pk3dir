@@ -15,16 +15,19 @@ entity buff_FirstFromFlags(int _buffs)
 	return BUFF_NULL;
 }
 
-float buffs_BuffModel_Customize()
+bool buffs_BuffModel_Customize()
 {
 	entity player, myowner;
-	float same_team;
+	bool same_team;
 
 	player = WaypointSprite_getviewentity(other);
 	myowner = self.owner;
 	same_team = (SAME_TEAM(player, myowner) || SAME_TEAM(player, myowner));
 
 	if(myowner.alpha <= 0.5 && !same_team && myowner.alpha != 0)
+		return false;
+
+	if(MUTATOR_CALLHOOK(BuffModel_Customize, self, player))
 		return false;
 
 	if(player == myowner || (IS_SPEC(other) && other.enemy == myowner))
@@ -153,13 +156,18 @@ void buff_Touch()
 	if((self.team && DIFF_TEAM(other, self))
 	|| (other.frozen)
 	|| (other.vehicle)
-	|| (!IS_PLAYER(other))
 	|| (!self.buff_active)
 	)
 	{
 		// can't touch this
 		return;
 	}
+
+	if(MUTATOR_CALLHOOK(BuffTouch, self, other))
+		return;
+
+	if(!IS_PLAYER(other))
+		return; // incase mutator changed other
 
 	if (other.buffs)
 	{
