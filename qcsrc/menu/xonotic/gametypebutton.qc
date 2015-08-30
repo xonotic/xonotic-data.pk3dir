@@ -37,9 +37,9 @@ void XonoticGametypeButton_configureXonoticGametypeButton(entity me, float theGr
 	if(theCvar)
 	{
 		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltip(theTooltip, theCvar);
 		me.loadCvars(me);
 	}
+	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);
 	me.align = 0.5;
 	me.onClick = GameTypeButton_Click;

@@ -17,21 +17,25 @@ float GL_Have_TextureCompression()
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
 }
 
-string getZonedTooltip(string theTooltip, string theCvar)
+void setZonedTooltip(entity e, string theTooltip, string theCvar)
 {
-	if(theTooltip == "")
+	if(theTooltip == "") // no tooltip, use cvar description then
 	{
 		if(theCvar != "" && prvm_language == "en")
 		{
 			string t = cvar_description(theCvar);
 			if(t != "" && t != "custom cvar")
-				return strzone(t);
+				theTooltip = t;
 		}
 	}
-	else if(theTooltip != "-")
-		return strzone(theTooltip);
+	else if(theTooltip == "-") // no cvar description as tooltip
+	{
+		theTooltip = string_null;
+	}
 
-	return string_null;
+	if(e.tooltip)
+		strunzone(e.tooltip);
+	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
 }
 
 .entity parent, firstChild, nextSibling;

@@ -46,9 +46,9 @@ void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar, str
 	if(theCvar)
 	{
 		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltip(theTooltip, theCvar);
 		// me.loadCvars(me); // don't load it yet
 	}
+	setZonedTooltip(me, theTooltip, theCvar);
 }
 void XonoticTextSlider_setValue(entity me, float val)
 {

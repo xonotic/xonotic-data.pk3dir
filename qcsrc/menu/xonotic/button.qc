@@ -45,6 +45,6 @@ void XonoticButton_configureXonoticButton(entity me, string theText, vector theC
 		me.colorC = theColor;
 		me.colorF = theColor;
 	}
-	me.tooltip = strzone(theTooltip);
+	setZonedTooltip(me, theTooltip, string_null);
 }
 #endif

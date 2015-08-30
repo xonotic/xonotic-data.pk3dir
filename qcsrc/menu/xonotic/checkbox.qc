@@ -79,9 +79,9 @@ void XonoticCheckBox_configureXonoticCheckBox(entity me, float theYesValue, floa
 	if(theCvar)
 	{
 		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltip(theTooltip, theCvar);
 		me.loadCvars(me);
 	}
+	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 }
 void XonoticCheckBox_setChecked(entity me, float val)

@@ -54,11 +54,11 @@ void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float th
 		// slider out of bounds to hide the button before loading the cvar
 		me.configureSliderValues(me, theValueMin, theValueMin-theValueStep, theValueMax, theValueStep, theValueStep, vp);
 		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltip(theTooltip, theCvar);
 		me.loadCvars(me);
 	}
 	else
 		me.configureSliderValues(me, theValueMin, theValueMin, theValueMax, theValueStep, theValueStep, vp);
+	setZonedTooltip(me, theTooltip, theCvar);
 }
 void XonoticSlider_setValue(entity me, float val)
 {

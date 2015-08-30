@@ -43,9 +43,9 @@ void XonoticRadioButton_configureXonoticRadioButton(entity me, float theGroup, s
 	if(theCvar)
 	{
 		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltip(theTooltip, theCvar);
 		me.loadCvars(me);
 	}
+	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);
 }
 void XonoticRadioButton_setChecked(entity me, float val)

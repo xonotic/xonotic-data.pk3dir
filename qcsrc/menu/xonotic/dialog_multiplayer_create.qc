@@ -21,17 +21,18 @@ entity makeXonoticServerCreateTab();
 
 #ifdef IMPLEMENTATION
 
-void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, float pMax, float pStep, string pCvar)
+void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, float pMax, float pStep, string pCvar, string theTooltip)
 {
 	if(pCvar == "")
 	{
+		e.cvarName = string_null; // FIXME XonoticTextSlider doesn't clear cvarName in configureXonoticTextSlider as it's not thought to re-configure itself
 		e.configureXonoticTextSlider(e, string_null, string_null);
 		l.setText(l, pLabel);
 		e.disabled = l.disabled = true;
 	}
 	else
 	{
-		e.configureXonoticTextSlider(e, pCvar, "-");
+		e.configureXonoticTextSlider(e, pCvar, theTooltip);
 
 		// clear old values
 		int i;
@@ -100,14 +101,10 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
-		// TODO add logic to update tooltip. fraglimit_override tooltip:
-		// _("The amount of frags needed before the match will end")
-			GameType_ConfigureSliders(me.sliderFraglimit, me.labelFraglimit, _("Frag limit:"), 5, 100, 5, "fraglimit_override");
 
 	me.gotoRC(me, 15, 0);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
 		me.TD(me, 1, 2, e = me.sliderTeams = makeXonoticTextSlider(string_null));
-			// TODO add logic to change the default tooltip: _("The amount of frags needed before the match will end")
 			e.addValue(e, _("Default"), "0");
 			e.addValue(e, _("2 teams"), "2");
 			e.addValue(e, _("3 teams"), "3");
@@ -223,32 +220,35 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 
 	switch(gt)
 	{
-		case MAPINFO_TYPE_CTF:        GameType_ConfigureSliders(e, l, _("Capture limit:"),   1,   20, 1, "capturelimit_override");     break;
-		case MAPINFO_TYPE_DOMINATION: GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "g_domination_point_limit"); break;
-		case MAPINFO_TYPE_KEYHUNT:    GameType_ConfigureSliders(e, l, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit");    break;
-		case MAPINFO_TYPE_LMS:        GameType_ConfigureSliders(e, l, _("Lives:"),           3,   50,  1, "g_lms_lives_override");     break;
-		case MAPINFO_TYPE_RACE:       GameType_ConfigureSliders(e, l, _("Laps:"),            1,   25,  1, "g_race_laps_limit");        break;
-		case MAPINFO_TYPE_NEXBALL:    GameType_ConfigureSliders(e, l, _("Goals:"),           1,   50,  1, "g_nexball_goallimit");      break;
-		case MAPINFO_TYPE_ASSAULT:    GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
-		case MAPINFO_TYPE_ONSLAUGHT:  GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
-		case MAPINFO_TYPE_CTS:        GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
-		case MAPINFO_TYPE_INVASION:   GameType_ConfigureSliders(e, l, _("Point limit:"),     5,    0,  5, "");                         break;
-	case MAPINFO_TYPE_TEAM_DEATHMATCH:GameType_ConfigureSliders(e, l, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit");        break;
-		default:                      GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
+		case MAPINFO_TYPE_CTF:            GameType_ConfigureSliders(e, l, _("Capture limit:"),   1,   20, 1,  "capturelimit_override", string_null); break;
+		case MAPINFO_TYPE_DOMINATION:     GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "g_domination_point_limit", string_null); break;
+		case MAPINFO_TYPE_KEYHUNT:        GameType_ConfigureSliders(e, l, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit", string_null); break;
+		case MAPINFO_TYPE_LMS:            GameType_ConfigureSliders(e, l, _("Lives:"),           3,   50,  1, "g_lms_lives_override", string_null); break;
+		case MAPINFO_TYPE_RACE:           GameType_ConfigureSliders(e, l, _("Laps:"),            1,   25,  1, "g_race_laps_limit", string_null); break;
+		case MAPINFO_TYPE_NEXBALL:        GameType_ConfigureSliders(e, l, _("Goals:"),           1,   50,  1, "g_nexball_goallimit", string_null); break;
+		case MAPINFO_TYPE_ASSAULT:        GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
+		case MAPINFO_TYPE_ONSLAUGHT:      GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
+		case MAPINFO_TYPE_CTS:            GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
+		case MAPINFO_TYPE_INVASION:       GameType_ConfigureSliders(e, l, _("Point limit:"),     5,    0,  5, "", string_null); break;
+		case MAPINFO_TYPE_TEAM_DEATHMATCH:GameType_ConfigureSliders(e, l, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit", string_null); break;
+		default:                          GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "fraglimit_override", _("The amount of frags needed before the match will end")); break;
 	}
 
 	string x = string_null;
+	string theTooltip = string_null;
 	e = me.sliderTeams;
 	switch(gt)
 	{
+		// old tooltip: _("Override the default amount of teams in teamgames")
 		case MAPINFO_TYPE_CA:               x = "g_ca_teams_override";          break;
 		case MAPINFO_TYPE_DOMINATION:       x = "g_domination_teams_override";  break;
 		case MAPINFO_TYPE_FREEZETAG:        x = "g_freezetag_teams_override";   break;
 		case MAPINFO_TYPE_KEYHUNT:          x = "g_keyhunt_teams_override";     break;
 		case MAPINFO_TYPE_TEAM_DEATHMATCH:  x = "g_tdm_teams_override";         break;
-		// TODO add logic to update tooltip
 	}
-	e.configureXonoticTextSlider(e, x, string_null);
+	if(!x)
+		e.cvarName = string_null; // FIXME XonoticTextSlider doesn't clear cvarName in configureXonoticTextSlider as it's not thought to re-configure itself
+	e.configureXonoticTextSlider(e, x, theTooltip);
 	e.configureXonoticTextSliderValues(e);
 	if(!x)
 		e.value = 0;

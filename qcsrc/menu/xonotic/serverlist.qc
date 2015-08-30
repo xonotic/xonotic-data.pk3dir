@@ -437,17 +437,12 @@ void ServerList_Update_favoriteButton(entity btn, entity me)
 	if(IsFavorite(me.ipAddressBox.text))
 	{
 		e.setText(e, _("Remove"));
-		if(e.tooltip)
-		{
-			strunzone(e.tooltip);
-			e.tooltip = string_null;
-		}
+		setZonedTooltip(e, string_null, string_null);
 	}
 	else
 	{
 		e.setText(e, _("Favorite"));
-		if(!e.tooltip)
-			e.tooltip = strzone(_("Bookmark the currently highlighted server so that it's faster to find in the future"));
+		setZonedTooltip(e, _("Bookmark the currently highlighted server so that it's faster to find in the future"), string_null);
 	}
 }
 
