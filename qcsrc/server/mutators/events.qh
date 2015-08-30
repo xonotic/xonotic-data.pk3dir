@@ -584,7 +584,10 @@ MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
 #define EV_FixPlayermodel(i, o) \
     /**/ i(string, ret_string) \
     /**/ o(string, ret_string) \
+    /**/ i(int, ret_int) \
+    /**/ o(int, ret_int) \
     /**/
+int ret_int;
 MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
 
 /** Return error to play frag remaining announcements */
