@@ -344,6 +344,12 @@ string getwelcomemessage(void)
 		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
 	}
 
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = ret_string;
+
+	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
+
 	motd = autocvar_sv_motd;
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
