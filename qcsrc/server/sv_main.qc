@@ -28,7 +28,7 @@
 .float lastground;
 
 void CreatureFrame (void)
-{
+{SELFPARAM();
 	entity oldself;
 	float dm;
 
@@ -186,7 +186,7 @@ float game_delay_last;
 
 float RedirectionThink();
 void StartFrame (void)
-{
+{SELFPARAM();
 	execute_next_frame();
 
 	remove = remove_unsafely; // not during spawning!
@@ -279,7 +279,7 @@ void StartFrame (void)
 .string cvarfilter;
 float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
-{
+{SELFPARAM();
 	if (self)
 	if (self.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))

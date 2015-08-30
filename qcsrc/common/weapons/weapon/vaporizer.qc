@@ -58,7 +58,7 @@ void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER.m_
 void spawnfunc_weapon_minstanex(void) { spawnfunc_weapon_vaporizer(); }
 
 void W_RocketMinsta_Explosion(vector loc)
-{
+{SELFPARAM();
 	if(accuracy_canbegooddamage(self))
 		accuracy_add(self, WEP_DEVASTATOR.m_id, autocvar_g_rm_damage, 0);
 	entity dmgent = spawn();
@@ -69,7 +69,7 @@ void W_RocketMinsta_Explosion(vector loc)
 }
 
 void W_Vaporizer_Attack(void)
-{
+{SELFPARAM();
 	float flying;
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
@@ -139,7 +139,7 @@ void W_Vaporizer_Attack(void)
 }
 
 void W_RocketMinsta_Laser_Explode (void)
-{
+{SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -154,7 +154,7 @@ void W_RocketMinsta_Laser_Explode (void)
 }
 
 void W_RocketMinsta_Laser_Touch (void)
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 	//W_RocketMinsta_Laser_Explode ();
 	RadiusDamage (self, self.realowner, self.rm_damage, self.rm_edmg, autocvar_g_rm_laser_radius, world, world, self.rm_force, self.projectiledeathtype, other);
@@ -162,7 +162,7 @@ void W_RocketMinsta_Laser_Touch (void)
 }
 
 void W_RocketMinsta_Attack2(void)
-{
+{SELFPARAM();
 	makevectors(self.v_angle);
 	
 	entity proj;
@@ -217,7 +217,7 @@ void W_RocketMinsta_Attack2(void)
 }
 
 void W_RocketMinsta_Attack3 (void)
-{
+{SELFPARAM();
 	makevectors(self.v_angle);
 	
 	entity proj;
@@ -268,7 +268,7 @@ void W_RocketMinsta_Attack3 (void)
 }
 
 float W_Vaporizer(float req)
-{
+{SELFPARAM();
 	float ammo_amount;
 	float vaporizer_ammo;
 	float rapid = autocvar_g_rm_laser_rapid;
@@ -428,7 +428,7 @@ float W_Vaporizer(float req)
 #endif
 #ifdef CSQC
 float W_Vaporizer(float req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

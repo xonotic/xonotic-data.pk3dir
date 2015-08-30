@@ -32,7 +32,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 
 class(Hook) .float teleport_time;
 void Draw_GrapplingHook()
-{
+{SELFPARAM();
 	vector a, b, atrans;
 	string tex;
 	vector rgb;
@@ -167,12 +167,12 @@ void Draw_GrapplingHook()
 }
 
 void Remove_GrapplingHook()
-{
+{SELFPARAM();
 	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 }
 
 void Ent_ReadHook(float bIsNew, float type)
-{
+{SELFPARAM();
 	self.HookType = type;
 
 	int sf = ReadByte();

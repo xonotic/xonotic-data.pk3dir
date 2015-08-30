@@ -427,7 +427,7 @@ vector liquidcolor_prev;
 float eventchase_current_distance;
 float eventchase_running;
 bool WantEventchase()
-{
+{SELFPARAM();
 	if(autocvar_cl_orthoview)
 		return false;
 	if(intermission)
@@ -533,7 +533,7 @@ void UpdateHitsound()
 }
 
 void UpdateCrosshair()
-{
+{SELFPARAM();
 	static float rainbow_last_flicker;
     static vector rainbow_prev_color;
 	entity e = self;
@@ -1022,7 +1022,7 @@ int lasthud;
 float vh_notice_time;
 void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
-{
+{SELFPARAM();
 	entity e;
 	float fov;
 	float f;

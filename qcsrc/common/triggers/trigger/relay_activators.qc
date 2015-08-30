@@ -1,6 +1,6 @@
 #ifdef SVQC
 void relay_activators_use()
-{
+{SELFPARAM();
 	entity trg, os;
 
 	os = self;
@@ -26,19 +26,19 @@ void relay_activators_use()
 }
 
 void spawnfunc_relay_activate()
-{
+{SELFPARAM();
 	self.cnt = ACTIVE_ACTIVE;
 	self.use = relay_activators_use;
 }
 
 void spawnfunc_relay_deactivate()
-{
+{SELFPARAM();
 	self.cnt = ACTIVE_NOT;
 	self.use = relay_activators_use;
 }
 
 void spawnfunc_relay_activatetoggle()
-{
+{SELFPARAM();
 	self.cnt = ACTIVE_TOGGLE;
 	self.use = relay_activators_use;
 }

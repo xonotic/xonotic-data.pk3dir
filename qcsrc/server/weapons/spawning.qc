@@ -35,7 +35,7 @@ string W_Apply_Weaponreplace(string in)
 }
 
 void weapon_defaultspawnfunc(float wpn)
-{
+{SELFPARAM();
 	entity e;
 	float t;
 	string s;

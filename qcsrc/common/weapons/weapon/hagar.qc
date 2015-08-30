@@ -61,7 +61,7 @@ void spawnfunc_weapon_hagar(void) { weapon_defaultspawnfunc(WEP_HAGAR.m_id); }
 // NO bounce protection, as bounces are limited!
 
 void W_Hagar_Explode(void)
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 	RadiusDamage(self, self.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), world, world, WEP_CVAR_PRI(hagar, force), self.projectiledeathtype, other);
 
@@ -69,7 +69,7 @@ void W_Hagar_Explode(void)
 }
 
 void W_Hagar_Explode2(void)
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 	RadiusDamage(self, self.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), world, world, WEP_CVAR_SEC(hagar, force), self.projectiledeathtype, other);
 
@@ -77,7 +77,7 @@ void W_Hagar_Explode2(void)
 }
 
 void W_Hagar_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -101,13 +101,13 @@ void W_Hagar_Damage(entity inflictor, entity attacker, float damage, int deathty
 }
 
 void W_Hagar_Touch(void)
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 	self.use();
 }
 
 void W_Hagar_Touch2(void)
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 
 	if(self.cnt > 0 || other.takedamage == DAMAGE_AIM) {
@@ -122,7 +122,7 @@ void W_Hagar_Touch2(void)
 }
 
 void W_Hagar_Attack(void)
-{
+{SELFPARAM();
 	entity missile;
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(hagar, ammo));
@@ -165,7 +165,7 @@ void W_Hagar_Attack(void)
 }
 
 void W_Hagar_Attack2(void)
-{
+{SELFPARAM();
 	entity missile;
 
 	W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
@@ -210,7 +210,7 @@ void W_Hagar_Attack2(void)
 
 .float hagar_loadstep, hagar_loadblock, hagar_loadbeep, hagar_warning;
 void W_Hagar_Attack2_Load_Release(void)
-{
+{SELFPARAM();
 	// time to release the rockets we've loaded
 
 	entity missile;
@@ -290,7 +290,7 @@ void W_Hagar_Attack2_Load_Release(void)
 }
 
 void W_Hagar_Attack2_Load(void)
-{
+{SELFPARAM();
 	// loadable hagar secondary attack, must always run each frame
 
 	if(time < game_starttime)
@@ -398,7 +398,7 @@ void W_Hagar_Attack2_Load(void)
 }
 
 bool W_Hagar(int req)
-{
+{SELFPARAM();
 	float ammo_amount;
 	switch(req)
 	{
@@ -526,7 +526,7 @@ bool W_Hagar(int req)
 #endif
 #ifdef CSQC
 bool W_Hagar(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

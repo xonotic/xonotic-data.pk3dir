@@ -64,14 +64,14 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_SplitHealthArmor)
-{
+{SELFPARAM();
 	if(damage_take)
 		self.ok_pauseregen_finished = max(self.ok_pauseregen_finished, time + 2);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
-{
+{SELFPARAM();
 	entity oldself = self;
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
@@ -101,7 +101,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
-{
+{SELFPARAM();
 	// overkill's values are different, so use custom regen
 	if(!self.frozen)
 	{
@@ -125,7 +125,7 @@ MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
-{
+{SELFPARAM();
 	if(intermission_running || gameover)
 		return false;
 
@@ -189,7 +189,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
-{
+{SELFPARAM();
 	if(autocvar_g_overkill_ammo_charge)
 	{
 		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -207,7 +207,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
-{
+{SELFPARAM();
 	if(autocvar_g_powerups)
 	if(autocvar_g_overkill_powerups_replace)
 	{
@@ -250,7 +250,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ok_ItemRemove)
-{
+{SELFPARAM();
 	if(self.ok_item)
 		return false;
 
@@ -264,7 +264,7 @@ MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 }
 
 MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
-{
+{SELFPARAM();
 	self.ammo_charge[self.weapon] = other.ammo_charge[other.weapon];
 	self.ok_use_ammocharge = other.ok_use_ammocharge;
 

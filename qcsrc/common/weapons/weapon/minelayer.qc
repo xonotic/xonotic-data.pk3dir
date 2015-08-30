@@ -60,7 +60,7 @@ void W_MineLayer_Think(void);
 void spawnfunc_weapon_minelayer(void) { weapon_defaultspawnfunc(WEP_MINE_LAYER.m_id); }
 
 void W_MineLayer_Stick(entity to)
-{
+{SELFPARAM();
 	spamsound(self, CH_SHOTS, W_Sound("mine_stick"), VOL_BASE, ATTN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
@@ -107,7 +107,7 @@ void W_MineLayer_Stick(entity to)
 }
 
 void W_MineLayer_Explode(void)
-{
+{SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -138,7 +138,7 @@ void W_MineLayer_Explode(void)
 }
 
 void W_MineLayer_DoRemoteExplode(void)
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
@@ -165,7 +165,7 @@ void W_MineLayer_DoRemoteExplode(void)
 }
 
 void W_MineLayer_RemoteExplode(void)
-{
+{SELFPARAM();
 	if(self.realowner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
@@ -177,7 +177,7 @@ void W_MineLayer_RemoteExplode(void)
 }
 
 void W_MineLayer_ProximityExplode(void)
-{
+{SELFPARAM();
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
 	if(WEP_CVAR(minelayer, protection) && self.mine_explodeanyway == 0)
 	{
@@ -206,7 +206,7 @@ int W_MineLayer_Count(entity e)
 }
 
 void W_MineLayer_Think(void)
-{
+{SELFPARAM();
 	entity head;
 
 	self.nextthink = time;
@@ -269,7 +269,7 @@ void W_MineLayer_Think(void)
 }
 
 void W_MineLayer_Touch(void)
-{
+{SELFPARAM();
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
 
@@ -292,7 +292,7 @@ void W_MineLayer_Touch(void)
 }
 
 void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -309,7 +309,7 @@ void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, int dea
 }
 
 void W_MineLayer_Attack(void)
-{
+{SELFPARAM();
 	entity mine;
 	entity flash;
 
@@ -381,7 +381,7 @@ void W_MineLayer_Attack(void)
 }
 
 float W_MineLayer_PlacedMines(float detonate)
-{
+{SELFPARAM();
 	entity mine;
 	float minfound = 0;
 
@@ -402,7 +402,7 @@ float W_MineLayer_PlacedMines(float detonate)
 }
 
 bool W_MineLayer(int req)
-{
+{SELFPARAM();
 	entity mine;
 	float ammo_amount;
 	switch(req)
@@ -593,7 +593,7 @@ bool W_MineLayer(int req)
 #endif
 #ifdef CSQC
 bool W_MineLayer(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

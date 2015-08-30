@@ -52,7 +52,7 @@ void spawnfunc_weapon_blaster(void) { weapon_defaultspawnfunc(WEP_BLASTER.m_id);
 void spawnfunc_weapon_laser(void) { spawnfunc_weapon_blaster(); }
 
 void W_Blaster_Touch(void)
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
@@ -74,7 +74,7 @@ void W_Blaster_Touch(void)
 }
 
 void W_Blaster_Think(void)
-{
+{SELFPARAM();
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;
 	self.nextthink = time + self.blaster_lifetime;
@@ -92,7 +92,7 @@ void W_Blaster_Attack(
 	float atk_spread,
 	float atk_delay,
 	float atk_lifetime)
-{
+{SELFPARAM();
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
 	W_SetupShot_Dir(self, s_forward, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, atk_damage);
@@ -149,7 +149,7 @@ void W_Blaster_Attack(
 	}
 }
 bool W_Blaster(int request)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case WR_AIM:
@@ -268,7 +268,7 @@ bool W_Blaster(int request)
 #endif
 #ifdef CSQC
 bool W_Blaster(int request)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case WR_IMPACTEFFECT:

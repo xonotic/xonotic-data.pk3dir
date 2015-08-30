@@ -13,7 +13,7 @@ Applies some friction to self
 */
 .float friction;
 void SUB_Friction (void)
-{
+{SELFPARAM();
 	self.SUB_NEXTTHINK = time;
 	if(self.SUB_FLAGS & FL_ONGROUND)
 		self.SUB_VELOCITY = self.SUB_VELOCITY * (1 - frametime * self.friction);
@@ -46,7 +46,7 @@ void SUB_VanishOrRemove (entity ent)
 }
 
 void SUB_SetFade_Think (void)
-{
+{SELFPARAM();
 	if(self.alpha == 0)
 		self.alpha = 1;
 	self.SUB_THINK = SUB_SetFade_Think;
@@ -81,7 +81,7 @@ self.SUB_ORIGIN traveling at speed
 ===============
 */
 void SUB_CalcMoveDone (void)
-{
+{SELFPARAM();
 	// After moving, set origin to exact final destination
 
 	SUB_SETORIGIN (self, self.finaldest);
@@ -93,7 +93,7 @@ void SUB_CalcMoveDone (void)
 
 .float platmovetype_turn;
 void SUB_CalcMove_controller_think (void)
-{
+{SELFPARAM();
 	entity oldself;
 	float traveltime;
 	float phasepos;
@@ -185,7 +185,7 @@ float TSPEED_END = 2;
 // TODO average too?
 
 void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func)
-{
+{SELFPARAM();
 	float	traveltime;
 	entity controller;
 
@@ -244,7 +244,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 }
 
 void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
-{
+{SELFPARAM();
 	vector	delta;
 	float	traveltime;
 
@@ -293,7 +293,7 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 }
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func)
-{
+{SELFPARAM();
 	entity	oldself;
 
 	oldself = self;
@@ -315,7 +315,7 @@ The calling function should make sure self.SUB_THINK is valid
 ===============
 */
 void SUB_CalcAngleMoveDone (void)
-{
+{SELFPARAM();
 	// After rotating, set angle to exact final angle
 	self.angles = self.finalangle;
 	self.SUB_AVELOCITY = '0 0 0';
@@ -326,7 +326,7 @@ void SUB_CalcAngleMoveDone (void)
 
 // FIXME: I fixed this function only for rotation around the main axes
 void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func)
-{
+{SELFPARAM();
 	vector	delta;
 	float	traveltime;
 
@@ -368,7 +368,7 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 }
 
 void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)
-{
+{SELFPARAM();
 	entity	oldself;
 
 	oldself = self;

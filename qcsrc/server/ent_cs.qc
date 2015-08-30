@@ -26,7 +26,7 @@ void entcs_init()
 }
 
 float entcs_customize()
-{
+{SELFPARAM();
 	entity o;
 	o = self.owner;
 	if(o.deadflag != DEAD_NO)
@@ -43,7 +43,7 @@ float entcs_customize()
 }
 
 float entcs_send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
@@ -64,7 +64,7 @@ float entcs_send(entity to, int sf)
 }
 
 void entcs_think()
-{
+{SELFPARAM();
 	self.nextthink = time + 0.033333333333; // increase this to like 0.15 once the client can do smoothing
 
 	entity o;
@@ -93,7 +93,7 @@ void entcs_think()
 }
 
 entity attach_entcs()
-{
+{SELFPARAM();
 	entity ent;
 
 	ent = spawn();
@@ -111,7 +111,7 @@ entity attach_entcs()
 }
 
 void detach_entcs()
-{
+{SELFPARAM();
 	remove(self.entcs);
 	self.entcs = world;
 }

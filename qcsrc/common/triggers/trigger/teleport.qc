@@ -1,6 +1,6 @@
 #ifdef SVQC
 void trigger_teleport_use()
-{
+{SELFPARAM();
 	if(teamplay)
 		self.team = activator.team;
 #ifdef SVQC
@@ -9,7 +9,7 @@ void trigger_teleport_use()
 }
 
 void Teleport_Touch (void)
-{
+{SELFPARAM();
 	entity oldself;
 	string s;
 
@@ -53,7 +53,7 @@ void Teleport_Touch (void)
 }
 
 void spawnfunc_trigger_teleport()
-{
+{SELFPARAM();
 	self.angles = '0 0 0';
 
 	EXACTTRIGGER_INIT;

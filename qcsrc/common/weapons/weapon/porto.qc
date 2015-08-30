@@ -44,7 +44,7 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
 
 void W_Porto_Success(void)
-{
+{SELFPARAM();
 	if(self.realowner == world)
 	{
 		objerror("Cannot succeed successfully: no owner\n");
@@ -57,7 +57,7 @@ void W_Porto_Success(void)
 
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
 void W_Porto_Fail(float failhard)
-{
+{SELFPARAM();
 	if(self.realowner == world)
 	{
 		objerror("Cannot fail successfully: no owner\n");
@@ -92,7 +92,7 @@ void W_Porto_Fail(float failhard)
 }
 
 void W_Porto_Remove(entity p)
-{
+{SELFPARAM();
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
 		entity oldself;
@@ -104,7 +104,7 @@ void W_Porto_Remove(entity p)
 }
 
 void W_Porto_Think(void)
-{
+{SELFPARAM();
 	trace_plane_normal = '0 0 0';
 	if(self.realowner.playerid != self.playerid)
 		remove(self);
@@ -113,7 +113,7 @@ void W_Porto_Think(void)
 }
 
 void W_Porto_Touch(void)
-{
+{SELFPARAM();
 	vector norm;
 
 	// do not use PROJECTILE_TOUCH here
@@ -235,7 +235,7 @@ void W_Porto_Touch(void)
 }
 
 void W_Porto_Attack(float type)
-{
+{SELFPARAM();
 	entity gren;
 
 	W_SetupShot(self, false, 4, "porto/fire.wav", CH_WEAPON_A, 0);
@@ -289,7 +289,7 @@ void W_Porto_Attack(float type)
 
 bool w_nexball_weapon(int req); // WEAPONTODO
 bool W_Porto(int req)
-{
+{SELFPARAM();
 	//vector v_angle_save;
 
 	if(g_nexball) { return w_nexball_weapon(req); }
@@ -406,7 +406,7 @@ bool W_Porto(int req)
 #endif
 #ifdef CSQC
 bool W_Porto(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

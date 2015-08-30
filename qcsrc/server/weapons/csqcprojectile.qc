@@ -11,7 +11,7 @@
 .float csqcprojectile_type;
 
 bool CSQCProjectile_SendEntity(entity to, int sf)
-{
+{SELFPARAM();
 	float ft, fr;
 
 	// note: flag 0x08 = no trail please (teleport bit)

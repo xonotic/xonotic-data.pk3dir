@@ -58,7 +58,7 @@ vector func_vectormamamam_origin(entity o, float t)
 }
 
 void func_vectormamamam_controller_think()
-{
+{SELFPARAM();
 	self.nextthink = time + 0.1;
 
 	if(self.owner.active != ACTIVE_ACTIVE)
@@ -72,7 +72,7 @@ void func_vectormamamam_controller_think()
 }
 
 void func_vectormamamam_findtarget()
-{
+{SELFPARAM();
 	if(self.target != "")
 		self.wp00 = find(world, targetname, self.target);
 
@@ -99,7 +99,7 @@ void func_vectormamamam_findtarget()
 }
 
 void spawnfunc_func_vectormamamam()
-{
+{SELFPARAM();
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);

@@ -25,7 +25,7 @@
 #include "../common/animdecide.qh"
 
 void CopyBody_Think(void)
-{
+{SELFPARAM();
 	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
 	{
 		self.CopyBody_think();
@@ -35,11 +35,11 @@ void CopyBody_Think(void)
 		self.CopyBody_think = self.think;
 		self.think = CopyBody_Think;
 	}
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 	self.nextthink = time;
 }
 void CopyBody(float keepvelocity)
-{
+{SELFPARAM();
 	entity oldself;
 	if (self.effects & EF_NODRAW)
 		return;
@@ -105,7 +105,7 @@ void CopyBody(float keepvelocity)
 	if(self.colormap <= maxclients && self.colormap > 0)
 		self.colormap = 1024 + oldself.clientcolors;
 
-	CSQCMODEL_AUTOINIT();
+	CSQCMODEL_AUTOINIT(self);
 	self.CopyBody_nextthink = oldself.nextthink;
 	self.CopyBody_think = oldself.think;
 	self.nextthink = time;
@@ -118,7 +118,7 @@ void CopyBody(float keepvelocity)
 }
 
 float player_getspecies()
-{
+{SELFPARAM();
 	float s;
 	get_model_parameters(self.model, self.skin);
 	s = get_model_parameters_species;
@@ -129,14 +129,14 @@ float player_getspecies()
 }
 
 void player_setupanimsformodel()
-{
+{SELFPARAM();
 	// load animation info
 	animdecide_load_if_needed(self);
 	animdecide_setstate(self, 0, false);
 }
 
 void player_anim (void)
-{
+{SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(self.deadflag) {
 		if (!deadbits) {
@@ -169,7 +169,7 @@ void player_anim (void)
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	float take, save;
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
@@ -221,7 +221,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int de
 }
 
 void calculate_player_respawn_time()
-{
+{SELFPARAM();
 	if(g_ca)
 		return;
 
@@ -308,7 +308,7 @@ void calculate_player_respawn_time()
 }
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	float take, save, dh, da;
 	int j;
 	vector v;
@@ -1013,7 +1013,7 @@ void PrecachePlayerSounds(string f)
 }
 
 void ClearPlayerSounds()
-{
+{SELFPARAM();
 #define _VOICEMSG(m) if(self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = string_null; }
 	ALLPLAYERSOUNDS
 	ALLVOICEMSGS
@@ -1021,7 +1021,7 @@ void ClearPlayerSounds()
 }
 
 float LoadPlayerSounds(string f, float first)
-{
+{SELFPARAM();
 	float fh;
 	string s;
 	var .string field;
@@ -1049,7 +1049,7 @@ float LoadPlayerSounds(string f, float first)
 }
 
 void UpdatePlayerSounds()
-{
+{SELFPARAM();
 	if(self.modelindex == self.modelindex_for_playersound)
 	if(self.skin == self.skin_for_playersound)
 		return;
@@ -1063,7 +1063,7 @@ void UpdatePlayerSounds()
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)
-{
+{SELFPARAM();
 	float n;
 	float tauntrand;
 
@@ -1138,7 +1138,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 }
 
 void GlobalSound(string sample, float chan, float voicetype)
-{
+{SELFPARAM();
 	float n;
 	float tauntrand;
 
@@ -1236,12 +1236,12 @@ void GlobalSound(string sample, float chan, float voicetype)
 }
 
 void PlayerSound(.string samplefield, float chan, float voicetype)
-{
+{SELFPARAM();
 	GlobalSound(self.(samplefield), chan, voicetype);
 }
 
 void VoiceMessage(string type, string msg)
-{
+{SELFPARAM();
 	var .string sample;
 	float voicetype, ownteam;
 	float flood;

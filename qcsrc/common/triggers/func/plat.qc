@@ -8,7 +8,7 @@ void plat_delayedinit()
 }
 
 float plat_send(entity to, float sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PLAT);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -60,7 +60,7 @@ void plat_link()
 }
 
 void spawnfunc_func_plat()
-{
+{SELFPARAM();
 	if (self.sounds == 0)
 		self.sounds = 2;
 
@@ -134,7 +134,7 @@ void plat_draw()
 }
 
 void ent_plat()
-{
+{SELFPARAM();
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)

@@ -38,7 +38,7 @@
 #include "../../warpzonelib/util_server.qh"
 
 entity bot_spawn()
-{
+{SELFPARAM();
 	entity oldself, bot;
 	bot = spawnclient();
 	if (bot)
@@ -55,7 +55,7 @@ entity bot_spawn()
 }
 
 void bot_think()
-{
+{SELFPARAM();
 	if (self.bot_nextthink > time)
 		return;
 
@@ -133,7 +133,7 @@ void bot_think()
 }
 
 void bot_setnameandstuff()
-{
+{SELFPARAM();
 	string readfile, s;
 	float file, tokens, prio;
 	entity p;
@@ -389,7 +389,7 @@ void bot_relinkplayerlist()
 }
 
 void bot_clientdisconnect()
-{
+{SELFPARAM();
 	if (!IS_BOT_CLIENT(self))
 		return;
 	bot_clearqueue(self);
@@ -412,7 +412,7 @@ void bot_clientdisconnect()
 }
 
 void bot_clientconnect()
-{
+{SELFPARAM();
 	if (!IS_BOT_CLIENT(self))
 		return;
 	self.bot_preferredcolors = self.clientcolors;

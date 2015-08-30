@@ -2,7 +2,7 @@
 // TODO add a way to do looped sounds with sound(); then complete this entity
 void target_speaker_use_off();
 void target_speaker_use_activator()
-{
+{SELFPARAM();
 	if (!IS_REAL_CLIENT(activator))
 		return;
 	string snd;
@@ -31,7 +31,7 @@ void target_speaker_use_activator()
 	soundto(MSG_ONE, self, CH_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
 }
 void target_speaker_use_on()
-{
+{SELFPARAM();
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
 	{
@@ -59,12 +59,12 @@ void target_speaker_use_on()
 		self.use = target_speaker_use_off;
 }
 void target_speaker_use_off()
-{
+{SELFPARAM();
 	sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASE * self.volume, self.atten);
 	self.use = target_speaker_use_on;
 }
 void target_speaker_reset()
-{
+{SELFPARAM();
 	if(self.spawnflags & 1) // LOOPED_ON
 	{
 		if(self.use == target_speaker_use_on)
@@ -78,7 +78,7 @@ void target_speaker_reset()
 }
 
 void spawnfunc_target_speaker()
-{
+{SELFPARAM();
 	// TODO: "*" prefix to sound file name
 	// TODO: wait and random (just, HOW? random is not a field)
 	if(self.noise)

@@ -23,7 +23,7 @@
 #include "../warpzonelib/common.qh"
 
 float Damage_DamageInfo_SendEntity(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
 	WriteCoord(MSG_ENTITY, floor(self.origin.x));
@@ -67,7 +67,7 @@ void UpdateFrags(entity player, float f)
 }
 
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
-{
+{SELFPARAM();
 	// TODO route through PlayerScores instead
 	if(gameover) return;
 
@@ -544,7 +544,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 }
 
 void Ice_Think()
-{
+{SELFPARAM();
 	if(!self.owner.frozen || self.owner.iceblock != self)
 	{
 		remove(self);
@@ -555,7 +555,7 @@ void Ice_Think()
 }
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
-{
+{SELFPARAM();
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 
@@ -624,7 +624,7 @@ void Unfreeze (entity targ)
 }
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	float mirrordamage;
 	float mirrorforce;
 	float complainteamdamage = 0;
@@ -1313,7 +1313,7 @@ void Fire_ApplyEffect(entity e)
 }
 
 void fireburner_think()
-{
+{SELFPARAM();
 	// for players, this is done in the regular loop
 	if(wasfreed(self.owner))
 	{

@@ -29,7 +29,7 @@
 
 #ifdef CSQC
 void ItemDraw()
-{
+{SELFPARAM();
     if(self.gravity)
     {
         Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
@@ -65,7 +65,7 @@ void ItemDraw()
 }
 
 void ItemDrawSimple()
-{
+{SELFPARAM();
     if(self.gravity)
     {
         Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
@@ -76,7 +76,7 @@ void ItemDrawSimple()
 }
 
 void ItemRead(float _IsNew)
-{
+{SELFPARAM();
     int sf = ReadByte();
 
     if(sf & ISF_LOCATION)
@@ -229,7 +229,7 @@ void ItemRead(float _IsNew)
 
 #ifdef SVQC
 bool ItemSend(entity to, int sf)
-{
+{SELFPARAM();
     if(self.gravity)
         sf |= ISF_DROP;
     else
@@ -295,7 +295,7 @@ void ItemUpdate(entity item)
 }
 
 float have_pickup_item(void)
-{
+{SELFPARAM();
 	if(self.flags & FL_POWERUP)
 	{
 		if(autocvar_g_powerups > 0)
@@ -401,7 +401,7 @@ void Item_Show (entity e, float mode)
 }
 
 void Item_Think()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if(self.origin != self.oldorigin)
 	{
@@ -417,7 +417,7 @@ void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
 
 void Item_Respawn (void)
-{
+{SELFPARAM();
 	Item_Show(self, 1);
 	// this is ugly...
 	if(self.items == ITEM_Strength.m_itemid)
@@ -443,7 +443,7 @@ void Item_Respawn (void)
 }
 
 void Item_RespawnCountdown (void)
-{
+{SELFPARAM();
 	if(self.count >= ITEM_RESPAWN_TICKS)
 	{
 		if(self.waypointsprite_attached)
@@ -497,7 +497,7 @@ void Item_RespawnCountdown (void)
 }
 
 void Item_RespawnThink()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if(self.origin != self.oldorigin)
 	{
@@ -677,7 +677,7 @@ float Item_GiveTo(entity item, entity player)
 }
 
 void Item_Touch (void)
-{
+{SELFPARAM();
 	entity e, head;
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
@@ -756,7 +756,7 @@ void Item_Touch (void)
 }
 
 void Item_Reset()
-{
+{SELFPARAM();
 	Item_Show(self, !self.state);
 	setorigin (self, self.origin);
 
@@ -774,7 +774,7 @@ void Item_Reset()
 }
 
 void Item_FindTeam()
-{
+{SELFPARAM();
 	entity head, e;
 
 	if(self.effects & EF_NODRAW)
@@ -806,7 +806,7 @@ void Item_FindTeam()
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
 void RemoveItem(void)
-{
+{SELFPARAM();
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
 }
@@ -939,7 +939,7 @@ void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype,
 }
 
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
-{
+{SELFPARAM();
 	startitem_failed = false;
 
 	if(self.model == "")
@@ -1170,12 +1170,13 @@ string Item_Model(string item_mdl)
 }
 
 void StartItemA (entity a)
-{
+{SELFPARAM();
     self.itemdef = a;
     StartItem(Item_Model(a.m_model), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
 }
 
-void spawnfunc_item_rockets (void) {
+void spawnfunc_item_rockets()
+{SELFPARAM();
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;
 	if(!self.pickup_anyway)
@@ -1183,7 +1184,8 @@ void spawnfunc_item_rockets (void) {
     StartItemA (ITEM_Rockets);
 }
 
-void spawnfunc_item_bullets (void) {
+void spawnfunc_item_bullets()
+{SELFPARAM();
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
@@ -1201,7 +1203,8 @@ void spawnfunc_item_bullets (void) {
     StartItemA (ITEM_Bullets);
 }
 
-void spawnfunc_item_cells (void) {
+void spawnfunc_item_cells()
+{SELFPARAM();
 	if(!self.ammo_cells)
 		self.ammo_cells = g_pickup_cells;
 	if(!self.pickup_anyway)
@@ -1210,7 +1213,7 @@ void spawnfunc_item_cells (void) {
 }
 
 void spawnfunc_item_plasma()
-{
+{SELFPARAM();
 	if(!self.ammo_plasma)
 		self.ammo_plasma = g_pickup_plasma;
 	if(!self.pickup_anyway)
@@ -1218,7 +1221,8 @@ void spawnfunc_item_plasma()
 	StartItemA (ITEM_Plasma);
 }
 
-void spawnfunc_item_shells (void) {
+void spawnfunc_item_shells()
+{SELFPARAM();
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
@@ -1236,7 +1240,8 @@ void spawnfunc_item_shells (void) {
 	StartItemA (ITEM_Shells);
 }
 
-void spawnfunc_item_armor_small (void) {
+void spawnfunc_item_armor_small()
+{SELFPARAM();
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorsmall;
 	if(!self.max_armorvalue)
@@ -1246,7 +1251,8 @@ void spawnfunc_item_armor_small (void) {
 	StartItemA (ITEM_ArmorSmall);
 }
 
-void spawnfunc_item_armor_medium (void) {
+void spawnfunc_item_armor_medium()
+{SELFPARAM();
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armormedium;
 	if(!self.max_armorvalue)
@@ -1256,7 +1262,8 @@ void spawnfunc_item_armor_medium (void) {
 	StartItemA (ITEM_ArmorMedium);
 }
 
-void spawnfunc_item_armor_big (void) {
+void spawnfunc_item_armor_big()
+{SELFPARAM();
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorbig;
 	if(!self.max_armorvalue)
@@ -1266,7 +1273,8 @@ void spawnfunc_item_armor_big (void) {
 	StartItemA (ITEM_ArmorLarge);
 }
 
-void spawnfunc_item_armor_large (void) {
+void spawnfunc_item_armor_large()
+{SELFPARAM();
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorlarge;
 	if(!self.max_armorvalue)
@@ -1276,7 +1284,8 @@ void spawnfunc_item_armor_large (void) {
 	StartItemA (ITEM_ArmorMega);
 }
 
-void spawnfunc_item_health_small (void) {
+void spawnfunc_item_health_small()
+{SELFPARAM();
 	if(!self.max_health)
 		self.max_health = g_pickup_healthsmall_max;
 	if(!self.health)
@@ -1286,7 +1295,8 @@ void spawnfunc_item_health_small (void) {
 	StartItemA (ITEM_HealthSmall);
 }
 
-void spawnfunc_item_health_medium (void) {
+void spawnfunc_item_health_medium()
+{SELFPARAM();
 	if(!self.max_health)
 		self.max_health = g_pickup_healthmedium_max;
 	if(!self.health)
@@ -1296,7 +1306,8 @@ void spawnfunc_item_health_medium (void) {
     StartItemA (ITEM_HealthMedium);
 }
 
-void spawnfunc_item_health_large (void) {
+void spawnfunc_item_health_large()
+{SELFPARAM();
 	if(!self.max_health)
 		self.max_health = g_pickup_healthlarge_max;
 	if(!self.health)
@@ -1306,7 +1317,8 @@ void spawnfunc_item_health_large (void) {
 	StartItemA (ITEM_HealthLarge);
 }
 
-void spawnfunc_item_health_mega (void) {
+void spawnfunc_item_health_mega()
+{SELFPARAM();
     if(!self.max_health)
         self.max_health = g_pickup_healthmega_max;
     if(!self.health)
@@ -1323,24 +1335,26 @@ void spawnfunc_item_health1() { spawnfunc_item_health_small(); }
 void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
 void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
-void spawnfunc_item_strength (void) {
+void spawnfunc_item_strength()
+{SELFPARAM();
 		precache_sound("weapons/strength_fire.wav");
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItemA (ITEM_Strength);
 }
 
-void spawnfunc_item_invincible (void) {
+void spawnfunc_item_invincible()
+{SELFPARAM();
 		if(!self.invincible_finished)
 			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 		StartItemA (ITEM_Shield);
 }
 
 // compatibility:
-void spawnfunc_item_quad (void) {self.classname = "item_strength";spawnfunc_item_strength();}
+void spawnfunc_item_quad() {SELFPARAM(); self.classname = "item_strength";spawnfunc_item_strength();}
 
-void target_items_use (void)
-{
+void target_items_use()
+{SELFPARAM();
 	if(activator.classname == "droppedweapon")
 	{
 		EXACTTRIGGER_TOUCH;
@@ -1364,7 +1378,7 @@ void target_items_use (void)
 }
 
 void spawnfunc_target_items (void)
-{
+{SELFPARAM();
 	float n, i, j;
 	entity e;
 	string s;
@@ -1489,7 +1503,7 @@ void spawnfunc_target_items (void)
 }
 
 void spawnfunc_item_fuel(void)
-{
+{SELFPARAM();
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel;
 	if(!self.pickup_anyway)
@@ -1508,7 +1522,7 @@ void spawnfunc_item_fuel_regen(void)
 }
 
 void spawnfunc_item_jetpack(void)
-{
+{SELFPARAM();
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel_jetpack;
 	if(start_items & ITEM_Jetpack.m_itemid)
@@ -1629,7 +1643,7 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
 float GiveItems(entity e, float beginarg, float endarg)
-{
+{SELFPARAM();
 	float got, i, j, val, op;
 	float _switchweapon;
 	entity wi;

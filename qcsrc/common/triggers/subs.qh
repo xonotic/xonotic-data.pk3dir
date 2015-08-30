@@ -27,7 +27,7 @@
 	#define SUB_FLAGS		move_flags
 
 	void SUB_SETORIGIN(entity s, vector v)
-	{
+	{SELFPARAM();
 		s.move_origin = v;
 		entity oldself = self;
 		self = s;

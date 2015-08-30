@@ -2,7 +2,7 @@
  * trigger given targets
  */
 void trigger_keylock_trigger(string s)
-{
+{SELFPARAM();
 	entity stemp = self;
 	entity otemp = other;
 	entity atemp = activator;
@@ -33,7 +33,7 @@ void trigger_keylock_kill(string s)
 }
 
 void trigger_keylock_touch()
-{
+{SELFPARAM();
 	bool key_used = false;
 	bool started_delay = false;
 
@@ -97,7 +97,7 @@ void trigger_keylock_touch()
 
 #ifdef SVQC
 bool trigger_keylock_send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_KEYLOCK);
 
 	WriteInt24_t(MSG_ENTITY, self.itemkeys);
@@ -134,7 +134,7 @@ If spawned without any key specified in itemkeys, this trigger will display an e
 message2 and noise2 will be resent to the player every 2 seconds while he is in the trigger zone.
 */
 void spawnfunc_trigger_keylock(void)
-{
+{SELFPARAM();
 	if(!self.itemkeys) { remove(self); return; }
 
 	// set unlocked message
@@ -176,7 +176,7 @@ void spawnfunc_trigger_keylock(void)
 }
 #elif defined(CSQC)
 void keylock_remove()
-{
+{SELFPARAM();
 	if(self.target) { strunzone(self.target); }
 	self.target = string_null;
 
@@ -197,7 +197,7 @@ void keylock_remove()
 }
 
 void ent_keylock()
-{
+{SELFPARAM();
 	self.itemkeys = ReadInt24_t();
 	self.height = ReadByte();
 

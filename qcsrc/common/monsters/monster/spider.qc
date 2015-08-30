@@ -38,7 +38,7 @@ const float spider_anim_attack2		= 3;
 .float spider_web_delay;
 
 void M_Spider_Attack_Web_Explode()
-{
+{SELFPARAM();
 	entity e;
 	if(self)
 	{
@@ -60,7 +60,7 @@ void M_Spider_Attack_Web_Touch()
 }
 
 void M_Spider_Attack_Web()
-{
+{SELFPARAM();
 	monster_makevectors(self.enemy);
 
 	sound(self, CH_SHOTS, W_Sound("electro_fire2"), VOL_BASE, ATTEN_NORM);
@@ -98,7 +98,7 @@ void M_Spider_Attack_Web()
 }
 
 bool M_Spider_Attack(int attack_type)
-{
+{SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -128,7 +128,7 @@ void spawnfunc_monster_spider() { Monster_Spawn(MON_SPIDER.monsterid); }
 #endif // SVQC
 
 bool M_Spider(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		#ifdef SVQC

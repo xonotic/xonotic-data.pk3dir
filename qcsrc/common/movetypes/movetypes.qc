@@ -33,7 +33,7 @@ void _Movetype_WallFriction(vector stepnormal)  // SV_WallFriction
 
 vector planes[MAX_CLIP_PLANES];
 int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
-{
+{SELFPARAM();
 	int blocked = 0, bumpcount;
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
@@ -321,7 +321,7 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 }
 
 void _Movetype_Impact(entity oth)  // SV_Impact
-{
+{SELFPARAM();
 	entity oldself = self;
 	entity oldother = other;
 
@@ -347,7 +347,7 @@ void _Movetype_Impact(entity oth)  // SV_Impact
 }
 
 void _Movetype_LinkEdict_TouchAreaGrid()  // SV_LinkEdict_TouchAreaGrid
-{
+{SELFPARAM();
 	entity oldself = self;
 	entity oldother = other;
 
@@ -377,7 +377,7 @@ void _Movetype_LinkEdict_TouchAreaGrid()  // SV_LinkEdict_TouchAreaGrid
 }
 
 void _Movetype_LinkEdict(bool touch_triggers)  // SV_LinkEdict
-{
+{SELFPARAM();
 	vector mi, ma;
 	if(self.solid == SOLID_BSP)
 	{
@@ -420,7 +420,7 @@ void _Movetype_LinkEdict(bool touch_triggers)  // SV_LinkEdict
 }
 
 bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
-{
+{SELFPARAM();
 //	vector org = self.move_origin + ofs;
 
 	int cont = self.dphitcontentsmask;
@@ -437,7 +437,7 @@ bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 }
 
 bool _Movetype_UnstickEntity()  // SV_UnstickEntity
-{
+{SELFPARAM();
 	if(!_Movetype_TestEntityPosition('0 0 0')) return true;
 	if(!_Movetype_TestEntityPosition('-1 0 0')) goto success;
 	if(!_Movetype_TestEntityPosition('1 0 0')) goto success;
@@ -474,7 +474,7 @@ vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // SV_ClipVeloc
 }
 
 void _Movetype_PushEntityTrace(vector push)
-{
+{SELFPARAM();
 	vector end = self.move_origin + push;
 	int type;
 	if(self.move_nomonsters)
@@ -490,7 +490,7 @@ void _Movetype_PushEntityTrace(vector push)
 }
 
 float _Movetype_PushEntity(vector push, bool failonstartsolid)  // SV_PushEntity
-{
+{SELFPARAM();
 	_Movetype_PushEntityTrace(push);
 
 	if(trace_startsolid && failonstartsolid)
@@ -564,7 +564,7 @@ void makevectors_matrix(vector myangles)  // AngleVectorsFLU
 }
 
 void _Movetype_Physics_Frame(float movedt)
-{
+{SELFPARAM();
 	self.move_didgravity = -1;
 	switch (self.move_movetype)
 	{
@@ -600,7 +600,7 @@ void _Movetype_Physics_Frame(float movedt)
 }
 
 void Movetype_Physics_NoMatchServer()  // optimized
-{
+{SELFPARAM();
 	float movedt = time - self.move_time;
 	self.move_time = time;
 
@@ -620,7 +620,7 @@ void Movetype_Physics_MatchServer(bool sloppy)
 }
 
 void Movetype_Physics_MatchTicrate(float tr, bool sloppy)  // SV_Physics_Entity
-{
+{SELFPARAM();
 	if(tr <= 0)
 	{
 		Movetype_Physics_NoMatchServer();

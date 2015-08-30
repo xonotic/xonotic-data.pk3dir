@@ -51,14 +51,14 @@ void LogNB(string mode, entity actor)
 }
 
 void ball_restart(void)
-{
+{SELFPARAM();
 	if(self.owner)
 		DropBall(self, self.owner.origin, '0 0 0');
 	ResetBall();
 }
 
 void nexball_setstatus(void)
-{
+{SELFPARAM();
 	entity oldself;
 	self.items &= ~IT_KEY1;
 	if(self.ballcarried)
@@ -78,7 +78,7 @@ void nexball_setstatus(void)
 }
 
 void relocate_nexball(void)
-{
+{SELFPARAM();
 	tracebox(self.origin, BALL_MINS, BALL_MAXS, self.origin, true, self);
 	if(trace_startsolid)
 	{
@@ -95,7 +95,7 @@ void relocate_nexball(void)
 }
 
 void DropOwner(void)
-{
+{SELFPARAM();
 	entity ownr;
 	ownr = self.owner;
 	DropBall(self, ownr.origin, ownr.velocity);
@@ -105,7 +105,7 @@ void DropOwner(void)
 }
 
 void GiveBall(entity plyr, entity ball)
-{
+{SELFPARAM();
 	entity ownr;
 
 	if((ownr = ball.owner))
@@ -196,7 +196,7 @@ void DropBall(entity ball, vector org, vector vel)
 }
 
 void InitBall(void)
-{
+{SELFPARAM();
 	if(gameover) return;
 	self.flags &= ~FL_ONGROUND;
 	self.movetype = MOVETYPE_BOUNCE;
@@ -216,7 +216,7 @@ void InitBall(void)
 }
 
 void ResetBall(void)
-{
+{SELFPARAM();
 	if(self.cnt < 2)	// step 1
 	{
 		if(time == self.teamtime)
@@ -252,7 +252,7 @@ void ResetBall(void)
 }
 
 void football_touch(void)
-{
+{SELFPARAM();
 	if(other.solid == SOLID_BSP)
 	{
 		if(time > self.lastground + 0.1)
@@ -298,7 +298,7 @@ void football_touch(void)
 }
 
 void basketball_touch(void)
-{
+{SELFPARAM();
 	if(other.ballcarried)
 	{
 		football_touch();
@@ -320,7 +320,7 @@ void basketball_touch(void)
 }
 
 void GoalTouch(void)
-{
+{SELFPARAM();
 	entity ball;
 	float isclient, pscore, otherteam;
 	string pname;
@@ -412,7 +412,7 @@ void GoalTouch(void)
 //	   team ents	   //
 //=======================//
 void spawnfunc_nexball_team(void)
-{
+{SELFPARAM();
 	if(!g_nexball)
 	{
 		remove(self);
@@ -486,7 +486,7 @@ void nb_delayedinit(void)
 //=======================//
 
 void SpawnBall(void)
-{
+{SELFPARAM();
 	if(!g_nexball) { remove(self); return; }
 
 //	balls += 4; // using the remaining bits to count balls will leave more than the max edict count, so it's fine
@@ -538,7 +538,7 @@ void SpawnBall(void)
 }
 
 void spawnfunc_nexball_basketball(void)
-{
+{SELFPARAM();
 	nexball_mode |= NBM_BASKETBALL;
 	self.classname = "nexball_basketball";
 	if (!(balls & BALL_BASKET))
@@ -561,7 +561,7 @@ void spawnfunc_nexball_basketball(void)
 }
 
 void spawnfunc_nexball_football(void)
-{
+{SELFPARAM();
 	nexball_mode |= NBM_FOOTBALL;
 	self.classname = "nexball_football";
 	self.solid = SOLID_TRIGGER;
@@ -572,7 +572,7 @@ void spawnfunc_nexball_football(void)
 }
 
 float nb_Goal_Customize()
-{
+{SELFPARAM();
 	entity e, wp_owner;
 	e = WaypointSprite_getviewentity(other);
 	wp_owner = self.owner;
@@ -582,7 +582,7 @@ float nb_Goal_Customize()
 }
 
 void SpawnGoal(void)
-{
+{SELFPARAM();
 	if(!g_nexball) { remove(self); return; }
 
 	EXACTTRIGGER_INIT;
@@ -602,28 +602,28 @@ void SpawnGoal(void)
 }
 
 void spawnfunc_nexball_redgoal(void)
-{
+{SELFPARAM();
 	self.team = NUM_TEAM_1;
 	SpawnGoal();
 }
 void spawnfunc_nexball_bluegoal(void)
-{
+{SELFPARAM();
 	self.team = NUM_TEAM_2;
 	SpawnGoal();
 }
 void spawnfunc_nexball_yellowgoal(void)
-{
+{SELFPARAM();
 	self.team = NUM_TEAM_3;
 	SpawnGoal();
 }
 void spawnfunc_nexball_pinkgoal(void)
-{
+{SELFPARAM();
 	self.team = NUM_TEAM_4;
 	SpawnGoal();
 }
 
 void spawnfunc_nexball_fault(void)
-{
+{SELFPARAM();
 	self.team = GOAL_FAULT;
 	if(self.noise == "")
 		self.noise = "misc/typehit.wav";
@@ -631,7 +631,7 @@ void spawnfunc_nexball_fault(void)
 }
 
 void spawnfunc_nexball_out(void)
-{
+{SELFPARAM();
 	self.team = GOAL_OUT;
 	if(self.noise == "")
 		self.noise = "misc/typehit.wav";
@@ -678,7 +678,7 @@ void spawnfunc_ball_bound(void)
 
 
 void W_Nexball_Think()
-{
+{SELFPARAM();
 	//dprint("W_Nexball_Think\n");
 	//vector new_dir = steerlib_arrive(self.enemy.origin, 2500);
 	vector new_dir = normalize(self.enemy.origin + '0 0 50' - self.origin);
@@ -693,7 +693,7 @@ void W_Nexball_Think()
 }
 
 void W_Nexball_Touch(void)
-{
+{SELFPARAM();
 	entity ball, attacker;
 	attacker = self.owner;
 	//self.think = func_null;
@@ -724,7 +724,7 @@ void W_Nexball_Touch(void)
 }
 
 void W_Nexball_Attack(float t)
-{
+{SELFPARAM();
 	entity ball;
 	float mul, mi, ma;
 	if(!(ball = self.ballcarried))
@@ -760,7 +760,7 @@ void W_Nexball_Attack(float t)
 }
 
 void W_Nexball_Attack2(void)
-{
+{SELFPARAM();
 	if(self.ballcarried.enemy)
 	{
 		entity _ball = self.ballcarried;
@@ -803,7 +803,7 @@ void W_Nexball_Attack2(void)
 }
 
 float ball_customize()
-{
+{SELFPARAM();
 	if(!self.owner)
 	{
 		self.effects &= ~EF_FLAME;
@@ -830,7 +830,7 @@ float ball_customize()
 }
 
 float w_nexball_weapon(float req)
-{
+{SELFPARAM();
 	if(req == WR_THINK)
 	{
 		if(self.BUTTON_ATCK)
@@ -880,7 +880,7 @@ float w_nexball_weapon(float req)
 }
 
 MUTATOR_HOOKFUNCTION(nexball_BallDrop)
-{
+{SELFPARAM();
 	if(self.ballcarried && g_nexball)
 		DropBall(self.ballcarried, self.origin, self.velocity);
 
@@ -888,7 +888,7 @@ MUTATOR_HOOKFUNCTION(nexball_BallDrop)
 }
 
 MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
-{
+{SELFPARAM();
 	makevectors(self.v_angle);
 	if(nexball_mode & NBM_BASKETBALL)
 	{
@@ -952,7 +952,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
-{
+{SELFPARAM();
 	self.weaponentity.weapons = '0 0 0';
 
 	if(nexball_mode & NBM_BASKETBALL)
@@ -964,7 +964,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
-{
+{SELFPARAM();
 	if(self.ballcarried)
 	{
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_nexball_basketball_carrier_highspeed;
@@ -981,7 +981,7 @@ MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 }
 
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
-{
+{SELFPARAM();
 	if(self.weapon == WEP_MORTAR.m_id)
 		return true;
 
@@ -989,7 +989,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 }
 
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
-{
+{SELFPARAM();
 	if(self.classname == "droppedweapon")
 	if(self.weapon == WEP_MORTAR.m_id)
 		return true;

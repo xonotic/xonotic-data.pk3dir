@@ -9,7 +9,7 @@
 #include "../../common/weapons/all.qh"
 
 void W_GiveWeapon (entity e, float wep)
-{
+{SELFPARAM();
 	entity oldself;
 
 	if (!wep)
@@ -81,7 +81,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype,
 }
 
 void W_PrepareExplosionByDamage(entity attacker, void() explode)
-{
+{SELFPARAM();
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = func_null;
 

@@ -3,7 +3,7 @@
 // LordHavoc: rewrote this file, it was really bad code
 
 void RubbleLimit(string cname, float limit, void() deleteproc)
-{
+{SELFPARAM();
 	entity e;
 	entity oldest;
 	entity oldself;

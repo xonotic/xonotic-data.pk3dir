@@ -21,7 +21,7 @@ void set_dom_state(entity e)
 }
 
 void dompoint_captured ()
-{
+{SELFPARAM();
 	entity head;
 	float old_delay, old_team, real_team;
 
@@ -129,7 +129,7 @@ void dompoint_captured ()
 }
 
 void AnimateDomPoint()
-{
+{SELFPARAM();
 	if(self.pain_finished > time)
 		return;
 	self.pain_finished = time + self.t_width;
@@ -142,7 +142,7 @@ void AnimateDomPoint()
 }
 
 void dompointthink()
-{
+{SELFPARAM();
 	float fragamt;
 
 	self.nextthink = time + 0.1;
@@ -186,7 +186,7 @@ void dompointthink()
 }
 
 void dompointtouch()
-{
+{SELFPARAM();
 	entity head;
 	if (!IS_PLAYER(other))
 		return;
@@ -241,7 +241,7 @@ void dompointtouch()
 }
 
 void dom_controlpoint_setup()
-{
+{SELFPARAM();
 	entity head;
 	// find the spawnfunc_dom_team representing unclaimed points
 	head = find(world, classname, "dom_team");
@@ -385,7 +385,7 @@ void Domination_RoundStart()
 
 //go to best items, or control points you don't own
 void havocbot_role_dom()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -408,7 +408,7 @@ MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
 }
 
 MUTATOR_HOOKFUNCTION(dom_ResetMap)
-{
+{SELFPARAM();
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	FOR_EACH_PLAYER(self)
 	{
@@ -421,7 +421,7 @@ MUTATOR_HOOKFUNCTION(dom_ResetMap)
 }
 
 MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
-{
+{SELFPARAM();
 	if(domination_roundbased)
 	if(!round_handler_IsRoundStarted())
 		self.player_blocked = 1;
@@ -431,13 +431,13 @@ MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(dom_ClientConnect)
-{
+{SELFPARAM();
 	set_dom_state(self);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_BotRoles)
-{
+{SELFPARAM();
 	self.havocbot_role = havocbot_role_dom;
 	return true;
 }
@@ -446,7 +446,7 @@ MUTATOR_HOOKFUNCTION(dom_BotRoles)
 Control point for Domination gameplay.
 */
 void spawnfunc_dom_controlpoint()
-{
+{SELFPARAM();
 	if(!g_domination)
 	{
 		remove(self);
@@ -491,7 +491,7 @@ Keys:
 */
 
 void spawnfunc_dom_team()
-{
+{SELFPARAM();
 	if(!g_domination || autocvar_g_domination_teams_override >= 2)
 	{
 		remove(self);
@@ -541,7 +541,7 @@ void ScoreRules_dom(float teams)
 
 // code from here on is just to support maps that don't have control point and team entities
 void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage)
-{
+{SELFPARAM();
 	entity oldself;
 	oldself = self;
 	self = spawn();
@@ -568,7 +568,7 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 }
 
 void dom_spawnpoint(vector org)
-{
+{SELFPARAM();
 	entity oldself;
 	oldself = self;
 	self = spawn();

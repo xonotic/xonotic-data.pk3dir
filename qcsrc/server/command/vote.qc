@@ -348,7 +348,7 @@ void VoteThink()
 
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
 void reset_map(float dorespawn)
-{
+{SELFPARAM();
 	entity oldself;
 	oldself = self;
 
@@ -423,7 +423,7 @@ void reset_map(float dorespawn)
 
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think()
-{
+{SELFPARAM();
 	restart_mapalreadyrestarted = 1;
 	reset_map(true);
 	Score_ClearAll();

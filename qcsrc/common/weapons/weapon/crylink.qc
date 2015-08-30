@@ -107,7 +107,7 @@ void W_Crylink_Dequeue(entity e)
 }
 
 void W_Crylink_Reset(void)
-{
+{SELFPARAM();
 	W_Crylink_Dequeue(self);
 	remove(self);
 }
@@ -224,7 +224,7 @@ vector W_Crylink_LinkJoin(entity e, float jspeed)
 }
 
 void W_Crylink_LinkJoinEffect_Think(void)
-{
+{SELFPARAM();
 	// is there at least 2 projectiles very close?
 	entity e, p;
 	float n;
@@ -289,7 +289,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 
 // NO bounce protection, as bounces are limited!
 void W_Crylink_Touch(void)
-{
+{SELFPARAM();
 	float finalhit;
 	float f;
 	float isprimary = !(self.projectiledeathtype & HITTYPE_SECONDARY);
@@ -334,13 +334,13 @@ void W_Crylink_Touch(void)
 }
 
 void W_Crylink_Fadethink(void)
-{
+{SELFPARAM();
 	W_Crylink_Dequeue(self);
 	remove(self);
 }
 
 void W_Crylink_Attack(void)
-{
+{SELFPARAM();
 	float counter, shots;
 	entity proj, prevproj, firstproj;
 	vector s;
@@ -449,7 +449,7 @@ void W_Crylink_Attack(void)
 }
 
 void W_Crylink_Attack2(void)
-{
+{SELFPARAM();
 	float counter, shots;
 	entity proj, prevproj, firstproj;
 	vector s;
@@ -565,7 +565,7 @@ void W_Crylink_Attack2(void)
 }
 
 bool W_Crylink(int req)
-{
+{SELFPARAM();
 	float ammo_amount;
 	switch(req)
 	{
@@ -691,7 +691,7 @@ bool W_Crylink(int req)
 #endif
 #ifdef CSQC
 bool W_Crylink(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

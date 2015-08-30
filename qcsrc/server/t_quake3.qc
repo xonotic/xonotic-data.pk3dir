@@ -85,7 +85,7 @@ void target_init_verify()
 }
 
 void spawnfunc_target_init()
-{
+{SELFPARAM();
 	self.spawnflags = 0; // remove all weapons except the ones listed below
 	self.netname = "shotgun"; // keep these weapons through the remove trigger
 	spawnfunc_target_items();
@@ -94,7 +94,7 @@ void spawnfunc_target_init()
 
 // weapon give ent from defrag
 void target_give_init()
-{
+{SELFPARAM();
 	entity targ;
 	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
 		if (targ.classname == "weapon_rocketlauncher" || targ.classname == "weapon_devastator") {
@@ -136,7 +136,7 @@ void target_give_init()
 }
 
 void spawnfunc_target_give()
-{
+{SELFPARAM();
 	InitializeEntity(self, target_give_init, INITPRIO_FINDTARGET);
 }
 
@@ -152,7 +152,7 @@ void spawnfunc_target_give()
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
 void spawnfunc_item_flight()
-{
+{SELFPARAM();
 	if(!cvar("g_buffs") || !cvar("g_buffs_flight"))
 		spawnfunc_item_jetpack();
 	else
@@ -166,7 +166,7 @@ void spawnfunc_item_flight()
 .float notta;
 .string gametype;
 float DoesQ3ARemoveThisEntity()
-{
+{SELFPARAM();
 	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
 
 	if(self.notq3a)

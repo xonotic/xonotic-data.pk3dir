@@ -267,7 +267,8 @@ void InitGameplayMode()
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
 
-string GetClientVersionMessage() {
+string GetClientVersionMessage()
+{SELFPARAM();
 	string versionmsg;
 	if (self.version_mismatch) {
 		if(self.version < autocvar_gameversion) {
@@ -396,7 +397,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
-{
+{SELFPARAM();
 	float dm;
 	entity head;
 	string teament_name;
@@ -702,7 +703,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 }
 
 float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
-{
+{SELFPARAM();
 	float smallest, selectedteam;
 
 	// don't join a team if we're not playing a team game
@@ -779,7 +780,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 //void() ctf_playerchanged;
 void SV_ChangeTeam(float _color)
-{
+{SELFPARAM();
 	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done

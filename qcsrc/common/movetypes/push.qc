@@ -1,5 +1,5 @@
 void _Movetype_PushMove(float dt)  // SV_PushMove
-{
+{SELFPARAM();
 	if (self.move_velocity == '0 0 0' && self.move_avelocity == '0 0 0')
 	{
 		self.move_ltime += dt;
@@ -131,7 +131,7 @@ void _Movetype_PushMove(float dt)  // SV_PushMove
 }
 
 void _Movetype_Physics_Pusher(float dt)  // SV_Physics_Pusher
-{
+{SELFPARAM();
 	float oldltime = self.move_ltime;
 	float thinktime = self.move_nextthink;
 	float movetime;

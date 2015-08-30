@@ -18,7 +18,7 @@ float accuracy_byte(float n, float d)
 }
 
 float accuracy_send(entity to, int sf)
-{
+{SELFPARAM();
 	int w, f;
 	entity a;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);

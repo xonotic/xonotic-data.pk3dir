@@ -25,7 +25,7 @@
 .float stat_multijump_add;
 
 void multijump_UpdateStats()
-{
+{SELFPARAM();
 	self.stat_multijump = PHYS_MULTIJUMP;
 	self.stat_multijump_speed = PHYS_MULTIJUMP_SPEED;
 	self.stat_multijump_add = PHYS_MULTIJUMP_ADD;
@@ -41,7 +41,7 @@ void multijump_AddStats()
 #endif
 
 void PM_multijump()
-{
+{SELFPARAM();
 	if(!PHYS_MULTIJUMP) { return; }
 
 	if(IS_ONGROUND(self))
@@ -51,7 +51,7 @@ void PM_multijump()
 }
 
 float PM_multijump_checkjump()
-{
+{SELFPARAM();
 	if(!PHYS_MULTIJUMP) { return false; }
 
 	if (!IS_JUMP_HELD(self) && !IS_ONGROUND(self)) // jump button pressed this frame and we are in midair

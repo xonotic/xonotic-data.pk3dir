@@ -352,7 +352,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 }
 
 void HUD_Weapons(void)
-{
+{SELFPARAM();
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();
 	int i;

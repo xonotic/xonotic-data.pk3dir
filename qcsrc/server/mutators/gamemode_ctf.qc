@@ -179,7 +179,7 @@ void ctf_CaptureShield_Update(entity player, bool wanted_status)
 }
 
 bool ctf_CaptureShield_Customize()
-{
+{SELFPARAM();
 	if(!other.ctf_captureshielded) { return false; }
 	if(CTF_SAMETEAM(self, other)) { return false; }
 
@@ -187,7 +187,7 @@ bool ctf_CaptureShield_Customize()
 }
 
 void ctf_CaptureShield_Touch()
-{
+{SELFPARAM();
 	if(!other.ctf_captureshielded) { return; }
 	if(CTF_SAMETEAM(self, other)) { return; }
 
@@ -199,7 +199,7 @@ void ctf_CaptureShield_Touch()
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
-{
+{SELFPARAM();
 	entity shield = spawn();
 
 	shield.enemy = self;
@@ -649,7 +649,7 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 }
 
 bool ctf_Stalemate_Customize()
-{
+{SELFPARAM();
 	// make spectators see what the player would see
 	entity e, wp_owner;
 	e = WaypointSprite_getviewentity(other);
@@ -730,7 +730,7 @@ void ctf_CheckStalemate(void)
 }
 
 void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		if(autocvar_g_ctf_flag_return_damage_delay)
@@ -754,7 +754,7 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathty
 }
 
 void ctf_FlagThink()
-{
+{SELFPARAM();
 	// declarations
 	entity tmp_entity;
 
@@ -903,7 +903,7 @@ void ctf_FlagThink()
 }
 
 void ctf_FlagTouch()
-{
+{SELFPARAM();
 	if(gameover) { return; }
 	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
@@ -1049,7 +1049,7 @@ void ctf_RespawnFlag(entity flag)
 }
 
 void ctf_Reset()
-{
+{SELFPARAM();
 	if(self.owner)
 		if(IS_PLAYER(self.owner))
 			ctf_Handle_Throw(self.owner, world, DROP_RESET);
@@ -1058,7 +1058,7 @@ void ctf_Reset()
 }
 
 void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf_FlagSetup()
-{
+{SELFPARAM();
 	// bot waypoints
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
@@ -1090,7 +1090,7 @@ void set_flag_string(entity flag, .string field, string value, string teamname)
 }
 
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
-{
+{SELFPARAM();
 	// declarations
 	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	self = flag; // for later usage with droptofloor()
@@ -1293,7 +1293,7 @@ int havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 }
 
 void havocbot_goalrating_ctf_ourflag(float ratingscale)
-{
+{SELFPARAM();
 	entity head;
 	head = ctf_worldflaglist;
 	while (head)
@@ -1307,7 +1307,7 @@ void havocbot_goalrating_ctf_ourflag(float ratingscale)
 }
 
 void havocbot_goalrating_ctf_ourbase(float ratingscale)
-{
+{SELFPARAM();
 	entity head;
 	head = ctf_worldflaglist;
 	while (head)
@@ -1323,7 +1323,7 @@ void havocbot_goalrating_ctf_ourbase(float ratingscale)
 }
 
 void havocbot_goalrating_ctf_enemyflag(float ratingscale)
-{
+{SELFPARAM();
 	entity head;
 	head = ctf_worldflaglist;
 	while (head)
@@ -1350,7 +1350,7 @@ void havocbot_goalrating_ctf_enemyflag(float ratingscale)
 }
 
 void havocbot_goalrating_ctf_enemybase(float ratingscale)
-{
+{SELFPARAM();
 	if (!bot_waypoints_for_items)
 	{
 		havocbot_goalrating_ctf_enemyflag(ratingscale);
@@ -1368,7 +1368,7 @@ void havocbot_goalrating_ctf_enemybase(float ratingscale)
 }
 
 void havocbot_goalrating_ctf_ourstolenflag(float ratingscale)
-{
+{SELFPARAM();
 	entity mf;
 
 	mf = havocbot_ctf_find_flag(self);
@@ -1404,7 +1404,7 @@ void havocbot_goalrating_ctf_droppedflags(float ratingscale, vector org, float d
 }
 
 void havocbot_goalrating_ctf_carrieritems(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	float t;
 	head = findchainfloat(bot_pickup, true);
@@ -1491,7 +1491,7 @@ void havocbot_ctf_reset_role(entity bot)
 }
 
 void havocbot_role_ctf_carrier()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 	{
 		havocbot_ctf_reset_role(self);
@@ -1532,7 +1532,7 @@ void havocbot_role_ctf_carrier()
 }
 
 void havocbot_role_ctf_escort()
-{
+{SELFPARAM();
 	entity mf, ef;
 
 	if(self.deadflag != DEAD_NO)
@@ -1592,7 +1592,7 @@ void havocbot_role_ctf_escort()
 }
 
 void havocbot_role_ctf_offense()
-{
+{SELFPARAM();
 	entity mf, ef;
 	vector pos;
 
@@ -1674,7 +1674,7 @@ void havocbot_role_ctf_offense()
 
 // Retriever (temporary role):
 void havocbot_role_ctf_retriever()
-{
+{SELFPARAM();
 	entity mf;
 
 	if(self.deadflag != DEAD_NO)
@@ -1722,7 +1722,7 @@ void havocbot_role_ctf_retriever()
 }
 
 void havocbot_role_ctf_middle()
-{
+{SELFPARAM();
 	entity mf;
 
 	if(self.deadflag != DEAD_NO)
@@ -1773,7 +1773,7 @@ void havocbot_role_ctf_middle()
 }
 
 void havocbot_role_ctf_defense()
-{
+{SELFPARAM();
 	entity mf;
 
 	if(self.deadflag != DEAD_NO)
@@ -1897,7 +1897,7 @@ void havocbot_role_ctf_setrole(entity bot, int role)
 // ==============
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
-{
+{SELFPARAM();
 	entity flag;
 	int t = 0, t2 = 0, t3 = 0;
 
@@ -2001,7 +2001,7 @@ MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
 }
 
 MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
-{
+{SELFPARAM();
 	entity flag; // temporary entity for the search method
 
 	if(self.flagcarried)
@@ -2018,7 +2018,7 @@ MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
-{
+{SELFPARAM();
 	if(self.flagcarried)
 	if(!autocvar_g_ctf_portalteleport)
 		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
@@ -2027,7 +2027,7 @@ MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
 	entity player = self;
@@ -2120,7 +2120,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 }
 
 MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
-{
+{SELFPARAM();
 	if(self.wps_flagcarrier) // update the flagcarrier waypointsprite with "NEEDING HELP" notification
 	{
 		self.wps_helpme_time = time;
@@ -2174,7 +2174,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 }
 
 MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
-{
+{SELFPARAM();
 	if(self.flagcarried)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, ((self.flagcarried.team) ? APP_TEAM_ENT_4(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_) : INFO_CTF_FLAGRETURN_ABORTRUN_NEUTRAL));
@@ -2220,7 +2220,7 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 }
 
 MUTATOR_HOOKFUNCTION(ctf_BotRoles)
-{
+{SELFPARAM();
 	havocbot_ctf_reset_role(self);
 	return true;
 }
@@ -2233,7 +2233,7 @@ MUTATOR_HOOKFUNCTION(ctf_GetTeamCount)
 }
 
 MUTATOR_HOOKFUNCTION(ctf_SpectateCopy)
-{
+{SELFPARAM();
 	self.ctf_flagstatus = other.ctf_flagstatus;
 	return false;
 }
@@ -2255,7 +2255,7 @@ Keys:
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team1()
-{
+{SELFPARAM();
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_1, self);
@@ -2273,7 +2273,7 @@ Keys:
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team2()
-{
+{SELFPARAM();
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_2, self);
@@ -2291,7 +2291,7 @@ Keys:
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team3()
-{
+{SELFPARAM();
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_3, self);
@@ -2309,7 +2309,7 @@ Keys:
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team4()
-{
+{SELFPARAM();
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_4, self);
@@ -2327,7 +2327,7 @@ Keys:
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_neutral()
-{
+{SELFPARAM();
 	if(!g_ctf) { remove(self); return; }
 	if(!cvar("g_ctf_oneflag")) { remove(self); return; }
 
@@ -2341,7 +2341,7 @@ Keys:
 "netname" Name of the team (for example Red, Blue, Green, Yellow, Life, Death, Offense, Defense, etc)...
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 void spawnfunc_ctf_team()
-{
+{SELFPARAM();
 	if(!g_ctf) { remove(self); return; }
 
 	self.classname = "ctf_team";
@@ -2381,7 +2381,7 @@ void ctf_ScoreRules(int teams)
 
 // code from here on is just to support maps that don't have flag and team entities
 void ctf_SpawnTeam (string teamname, int teamcolor)
-{
+{SELFPARAM();
 	entity oldself;
 	oldself = self;
 	self = spawn();

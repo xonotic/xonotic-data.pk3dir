@@ -1,7 +1,7 @@
 .float train_wait_turning;
 void() train_next;
 void train_wait()
-{
+{SELFPARAM();
 	entity oldself;
 	oldself = self;
 	self = self.enemy;
@@ -53,7 +53,7 @@ void train_wait()
 }
 
 void train_next()
-{
+{SELFPARAM();
 	entity targ, cp = world;
 	vector cp_org = '0 0 0';
 
@@ -107,7 +107,7 @@ void train_next()
 
 #ifdef SVQC
 float train_send(entity to, float sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TRAIN);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -166,7 +166,7 @@ void train_link()
 }
 
 void func_train_find()
-{
+{SELFPARAM();
 	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
@@ -188,7 +188,7 @@ target : targetname of first spawnfunc_path_corner (starts here)
 */
 #ifdef SVQC
 void spawnfunc_func_train()
-{
+{SELFPARAM();
 	if (self.noise != "")
 		precache_sound(self.noise);
 
@@ -236,7 +236,7 @@ void train_draw()
 }
 
 void ent_train()
-{
+{SELFPARAM();
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)

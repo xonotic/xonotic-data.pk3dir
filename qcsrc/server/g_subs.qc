@@ -6,7 +6,7 @@
 #include "../warpzonelib/common.qh"
 
 void spawnfunc_info_null (void)
-{
+{SELFPARAM();
 	remove(self);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
 }
@@ -281,7 +281,7 @@ vector findbetterlocation (vector org, float mindist)
 }
 
 float LOD_customize()
-{
+{SELFPARAM();
 	float d;
 
 	if(autocvar_loddebug)
@@ -309,12 +309,12 @@ float LOD_customize()
 }
 
 void LOD_uncustomize()
-{
+{SELFPARAM();
 	self.modelindex = self.lodmodelindex0;
 }
 
 void LODmodel_attach()
-{
+{SELFPARAM();
 	entity e;
 
 	if(!self.loddistance1)
@@ -374,7 +374,7 @@ void LODmodel_attach()
 }
 
 void ApplyMinMaxScaleAngles(entity e)
-{
+{SELFPARAM();
 	if(e.angles.x != 0 || e.angles.z != 0 || self.avelocity.x != 0 || self.avelocity.z != 0) // "weird" rotation
 	{
 		e.maxs = '1 1 1' * vlen(
@@ -401,7 +401,7 @@ void ApplyMinMaxScaleAngles(entity e)
 }
 
 void SetBrushEntityModel()
-{
+{SELFPARAM();
  	if(self.model != "")
  	{
  		precache_model(self.model);
@@ -421,7 +421,7 @@ void SetBrushEntityModel()
 }
 
 void SetBrushEntityModelNoLOD()
-{
+{SELFPARAM();
  	if(self.model != "")
  	{
  		precache_model(self.model);
@@ -446,7 +446,7 @@ InitTrigger
 */
 
 void SetMovedir()
-{
+{SELFPARAM();
 	if (self.movedir != '0 0 0')
 		self.movedir = normalize(self.movedir);
 	else
@@ -459,7 +459,7 @@ void SetMovedir()
 }
 
 void InitTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir ();
@@ -471,7 +471,7 @@ void InitTrigger()
 }
 
 void InitSolidBSPTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir ();
@@ -483,7 +483,7 @@ void InitSolidBSPTrigger()
 }
 
 float InitMovingBrushTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	self.solid = SOLID_BSP;

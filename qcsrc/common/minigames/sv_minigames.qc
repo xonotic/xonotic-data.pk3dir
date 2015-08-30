@@ -61,7 +61,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 // Send an entity to a client
 // only use on minigame entities or entities with a minigame owner
 bool minigame_SendEntity(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
 	WriteByte(MSG_ENTITY, sf);
 	
@@ -115,7 +115,7 @@ void minigame_resend(entity minigame)
 }
 
 bool minigame_CheckSend()
-{
+{SELFPARAM();
 	entity e;
 	for ( e = self.owner.minigame_players; e != world; e = e.list_next )
 		if ( e.minigame_players == other )
@@ -124,7 +124,7 @@ bool minigame_CheckSend()
 }
 
 int minigame_addplayer(entity minigame_session, entity player)
-{
+{SELFPARAM();
 	if ( player.active_minigame )
 	{
 		if ( player.active_minigame == minigame_session )
@@ -317,7 +317,7 @@ entity minigame_find_player(entity client)
 }
 
 bool MinigameImpulse(int imp)
-{
+{SELFPARAM();
 	entity e = minigame_find_player(self);
 	if ( imp && self.active_minigame && e )
 	{
@@ -329,7 +329,7 @@ bool MinigameImpulse(int imp)
 
 
 void ClientCommand_minigame(int request, int argc, string command)
-{
+{SELFPARAM();
 	if ( !autocvar_sv_minigames )
 	{
 		sprint(self,"Minigames are not enabled!\n");

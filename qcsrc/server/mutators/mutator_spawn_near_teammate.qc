@@ -8,7 +8,7 @@
 .vector msnt_deathloc;
 
 MUTATOR_HOOKFUNCTION(msnt_Spawn_Score)
-{
+{SELFPARAM();
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint)
 		return 0;
 
@@ -44,7 +44,7 @@ MUTATOR_HOOKFUNCTION(msnt_Spawn_Score)
 }
 
 MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
-{
+{SELFPARAM();
 	// Note: when entering this, fixangle is already set.
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint)
 	{
@@ -153,7 +153,7 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(msnt_PlayerDies)
-{
+{SELFPARAM();
 	self.msnt_deathloc = self.origin;
 	return 0;
 }

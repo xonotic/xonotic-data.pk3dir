@@ -16,20 +16,16 @@ Remove self
 ==================
 */
 void SUB_Remove()
-{
+{SELFPARAM();
 	remove (self);
 }
 
 void defer_think()
-{
-    entity oself;
-
-    oself           = self;
-    self            = self.owner;
-    oself.think     = SUB_Remove;
-    oself.nextthink = time;
-
-    oself.use();
+{SELFPARAM();
+    self.think     = SUB_Remove;
+    self.nextthink = time;
+    SELFCALL(self.owner, self.use());
+    SELFCALL_DONE();
 }
 
 /*
@@ -37,7 +33,7 @@ void defer_think()
     self when func is executed = self when defer is called
 */
 void defer(float fdelay, void() func)
-{
+{SELFPARAM();
     entity e;
 
     e           = spawn();

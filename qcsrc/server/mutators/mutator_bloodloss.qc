@@ -5,7 +5,7 @@
 .float bloodloss_timer;
 
 MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
-{
+{SELFPARAM();
 	if(IS_PLAYER(self))
 	if(self.health <= autocvar_g_bloodloss && self.deadflag == DEAD_NO)
 	{
@@ -22,7 +22,7 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss_PlayerJump)
-{
+{SELFPARAM();
 	if(self.health <= autocvar_g_bloodloss)
 		return true;
 

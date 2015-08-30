@@ -1,7 +1,7 @@
 #ifdef SVQC
 .float triggerhealtime;
 void trigger_heal_touch()
-{
+{SELFPARAM();
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 
@@ -26,7 +26,7 @@ void trigger_heal_touch()
 }
 
 void spawnfunc_trigger_heal()
-{
+{SELFPARAM();
 	self.active = ACTIVE_ACTIVE;
 
 	EXACTTRIGGER_INIT;

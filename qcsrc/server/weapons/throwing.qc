@@ -11,7 +11,7 @@
 #include "../../common/weapons/all.qh"
 
 void thrown_wep_think()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if(self.oldorigin != self.origin)
 	{
@@ -30,7 +30,7 @@ void thrown_wep_think()
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
-{
+{SELFPARAM();
 	entity oldself, wep;
 	float thisammo, i;
 	string s;
@@ -166,7 +166,7 @@ float W_IsWeaponThrowable(float w)
 
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce)
-{
+{SELFPARAM();
 	float w;
 	string a;
 
@@ -194,7 +194,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 }
 
 void SpawnThrownWeapon(vector org, float w)
-{
+{SELFPARAM();
 	if(self.weapons & WepSet_FromWeapon(self.weapon))
 		if(W_IsWeaponThrowable(self.weapon))
 			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');

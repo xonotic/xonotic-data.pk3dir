@@ -25,7 +25,7 @@ const float SSF_ITEMMSG = 4;
 .string superspec_itemfilter; //"classname1 classname2 ..."
 
 float _spectate(entity _player)
-{
+{SELFPARAM();
 	if(Spectate(_player) == 1)
 		self.classname = "spectator";
 
@@ -33,7 +33,7 @@ float _spectate(entity _player)
 }
 
 void superspec_save_client_conf()
-{
+{SELFPARAM();
 	string fn = "superspec-local.options";
 	float fh;
 
@@ -99,7 +99,7 @@ float superspec_filteritem(entity _for, entity _item)
 }
 
 MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
-{
+{SELFPARAM();
 	entity _oldself = self;
 	entity _item = self;
 
@@ -152,7 +152,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 }
 
 MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
-{
+{SELFPARAM();
 #define OPTIONINFO(flag,var,test,text,long,short) \
     var = strcat(var, ((flag & test) ? "^2[ON]  ^7" : "^1[OFF] ^7")); \
     var = strcat(var, text," ^7(^3 ", long, "^7 | ^3", short, " ^7)\n")
@@ -431,7 +431,7 @@ MUTATOR_HOOKFUNCTION(superspec_BuildMutatorsPrettyString)
 }
 
 void superspec_hello()
-{
+{SELFPARAM();
 	if(self.enemy.crypto_idfp == "")
 		Send_Notification(NOTIF_ONE_ONLY, self.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 
@@ -439,7 +439,7 @@ void superspec_hello()
 }
 
 MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
-{
+{SELFPARAM();
 	if(!IS_REAL_CLIENT(self))
 		return false;
 
@@ -487,7 +487,7 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(superspec_PlayerDies)
-{
+{SELFPARAM();
 	entity _old_self = self;
 
 	FOR_EACH_SPEC(self)

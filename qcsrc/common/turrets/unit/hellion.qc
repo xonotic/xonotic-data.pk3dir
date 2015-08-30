@@ -15,7 +15,7 @@ float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
 void turret_hellion_missile_think()
-{
+{SELFPARAM();
     vector olddir,newdir;
     vector pre_pos;
     float itime;
@@ -76,10 +76,10 @@ void turret_hellion_missile_think()
     UpdateCSQCProjectile(self);
 }
 
-void spawnfunc_turret_hellion() { if(!turret_initialize(TUR_HELLION)) remove(self); }
+void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION)) remove(self); }
 
 float t_hellion(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:

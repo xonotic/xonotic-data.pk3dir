@@ -54,7 +54,7 @@ void send_CSQC_teamnagger() {
 }
 
 float ClientData_Send(entity to, int sf)
-{
+{SELFPARAM();
 	if(to != self.owner)
 	{
 		error("wtf");
@@ -94,14 +94,14 @@ float ClientData_Send(entity to, int sf)
 }
 
 void ClientData_Attach()
-{
+{SELFPARAM();
 	Net_LinkEntity(self.clientdata = spawn(), false, 0, ClientData_Send);
 	self.clientdata.drawonlytoclient = self;
 	self.clientdata.owner = self;
 }
 
 void ClientData_Detach()
-{
+{SELFPARAM();
 	remove(self.clientdata);
 	self.clientdata = world;
 }
@@ -186,7 +186,7 @@ putting a client as observer in the server
 */
 void FixPlayermodel();
 void PutObserverInServer (void)
-{
+{SELFPARAM();
 	entity	spot;
     self.hud = HUD_NORMAL;
 
@@ -316,7 +316,7 @@ void PutObserverInServer (void)
 
 .float model_randomizer;
 void FixPlayermodel()
-{
+{SELFPARAM();
 	string defaultmodel;
 	float defaultskin, chmdl, oldskin, n, i;
 	vector m1, m2;
@@ -406,15 +406,11 @@ void FixPlayermodel()
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));
 }
 
-/*
-=============
-PutClientInServer
 
-Called when a client spawns in the server
-=============
-*/
-void PutClientInServer (void)
+/** Called when a client spawns in the server */
+void PutClientInServer()
 {
+	SELFPARAM();
 	if(IS_BOT_CLIENT(self))
 		self.classname = "player";
 	else if(IS_REAL_CLIENT(self))
@@ -609,7 +605,7 @@ void PutClientInServer (void)
 			self.killcount = 0;
 		}
 
-		CL_SpawnWeaponentity();
+		CL_SpawnWeaponentity(self);
 		self.alpha = default_player_alpha;
 		self.colormod = '1 1 1' * autocvar_g_player_brightness;
 		self.exteriorweaponentity.alpha = default_weapon_alpha;
@@ -675,7 +671,7 @@ void PutClientInServer (void)
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
 float ClientInit_SendEntity(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
@@ -707,7 +703,7 @@ float ClientInit_SendEntity(entity to, int sf)
 }
 
 void ClientInit_CheckUpdate()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if(self.count != autocvar_g_balance_armor_blockpercent)
 	{
@@ -737,7 +733,7 @@ void ClientInit_CheckUpdate()
 }
 
 void ClientInit_Spawn()
-{
+{SELFPARAM();
 	entity o;
 	entity e;
 	e = spawn();
@@ -768,7 +764,7 @@ SetChangeParms
 =============
 */
 void SetChangeParms (void)
-{
+{SELFPARAM();
 	// save parms for level change
 	parm1 = self.parm_idlesince - time;
 }
@@ -779,7 +775,7 @@ DecodeLevelParms
 =============
 */
 void DecodeLevelParms (void)
-{
+{SELFPARAM();
 	// load parms
 	self.parm_idlesince = parm1;
 	if(self.parm_idlesince == -(86400 * 366))
@@ -799,7 +795,7 @@ Called when a client types 'kill' in the console
 
 .float clientkill_nexttime;
 void ClientKill_Now_TeamChange()
-{
+{SELFPARAM();
 	if(self.killindicator_teamchange == -1)
 	{
 		JoinBestTeam( self, false, true );
@@ -816,7 +812,7 @@ void ClientKill_Now_TeamChange()
 }
 
 void ClientKill_Now()
-{
+{SELFPARAM();
 	if(self.vehicle)
 	{
 	    vehicles_exit(VHEF_RELEASE);
@@ -841,7 +837,7 @@ void ClientKill_Now()
 	// now I am sure the player IS dead
 }
 void KillIndicator_Think()
-{
+{SELFPARAM();
 	if (gameover)
 	{
 		self.owner.killindicator = world;
@@ -883,7 +879,7 @@ void KillIndicator_Think()
 
 float clientkilltime;
 void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2 = spec
-{
+{SELFPARAM();
 	float killtime;
 	float starttime;
 	entity e;
@@ -987,7 +983,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 }
 
 void ClientKill (void)
-{
+{SELFPARAM();
 	if(gameover) return;
 	if(self.player_blocked) return;
 	if(self.frozen) return;
@@ -1048,7 +1044,7 @@ Called once (not at each match start) when a client begins a connection to the s
 =============
 */
 void ClientPreConnect (void)
-{
+{SELFPARAM();
 	if(autocvar_sv_eventlog)
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
@@ -1069,7 +1065,7 @@ Called when a client connects to the server
 */
 void DecodeLevelParms (void);
 void ClientConnect (void)
-{
+{SELFPARAM();
 	float t;
 
 	if(IS_CLIENT(self))
@@ -1264,7 +1260,7 @@ void ClientConnect (void)
 
 	CheatInitClient();
 
-	CSQCMODEL_AUTOINIT();
+	CSQCMODEL_AUTOINIT(self);
 
 	self.model_randomizer = random();
 
@@ -1290,7 +1286,7 @@ Called when a client disconnects from the server
 .entity chatbubbleentity;
 void ReadyCount();
 void ClientDisconnect (void)
-{
+{SELFPARAM();
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELEASE);
 
@@ -1374,7 +1370,7 @@ void ClientDisconnect (void)
 
 .float BUTTON_CHAT;
 void ChatBubbleThink()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if ((self.owner.alpha < 0) || self.owner.chatbubbleentity != self)
 	{
@@ -1400,7 +1396,7 @@ void ChatBubbleThink()
 }
 
 void UpdateChatBubble()
-{
+{SELFPARAM();
 	if (self.alpha < 0)
 		return;
 	// spawn a chatbubble entity if needed
@@ -1439,7 +1435,7 @@ void UpdateChatBubble()
 }*/
 
 void respawn(void)
-{
+{SELFPARAM();
 	if(self.alpha >= 0 && autocvar_g_respawn_ghosts)
 	{
 		self.solid = SOLID_NOT;
@@ -1460,7 +1456,7 @@ void respawn(void)
 }
 
 void play_countdown(float finished, string samp)
-{
+{SELFPARAM();
 	if(IS_REAL_CLIENT(self))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
@@ -1468,7 +1464,7 @@ void play_countdown(float finished, string samp)
 }
 
 void player_powerups (void)
-{
+{SELFPARAM();
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = self.items;
 
@@ -1631,7 +1627,7 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 }
 
 void player_regen (void)
-{
+{SELFPARAM();
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
 	regen_mod_max = max_mod;
@@ -1691,7 +1687,7 @@ void player_regen (void)
 
 float zoomstate_set;
 void SetZoomState(float z)
-{
+{SELFPARAM();
 	if(z != self.zoomstate)
 	{
 		self.zoomstate = z;
@@ -1700,7 +1696,8 @@ void SetZoomState(float z)
 	zoomstate_set = 1;
 }
 
-void GetPressedKeys(void) {
+void GetPressedKeys()
+{SELFPARAM();
 	MUTATOR_CALLHOOK(GetPressedKeys);
 	#define X(var,bit,flag) (flag ? var |= bit : var &= ~bit)
 	X(self.pressedkeys, KEY_FORWARD, 	self.movement_x > 0);
@@ -1721,7 +1718,8 @@ spectate mode routines
 ======================
 */
 
-void SpectateCopy(entity spectatee) {
+void SpectateCopy(entity spectatee)
+{SELFPARAM();
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, self);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
@@ -1797,7 +1795,7 @@ void SpectateCopy(entity spectatee) {
 }
 
 bool SpectateUpdate()
-{
+{SELFPARAM();
 	if(!self.enemy)
 	    return false;
 
@@ -1813,7 +1811,7 @@ bool SpectateUpdate()
 }
 
 bool SpectateSet()
-{
+{SELFPARAM();
 	if(!IS_PLAYER(self.enemy))
 		return false;
 
@@ -1842,7 +1840,7 @@ void SetSpectator(entity player, entity spectatee)
 }
 
 bool Spectate(entity pl)
-{
+{SELFPARAM();
 	if(g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
 	if(DIFF_TEAM(pl, self))
 		return false;
@@ -1853,7 +1851,7 @@ bool Spectate(entity pl)
 
 // Returns next available player to spectate if g_ca_spectate_enemies == 0
 entity CA_SpectateNext(entity start)
-{
+{SELFPARAM();
 	if(SAME_TEAM(start, self))
 		return start;
 
@@ -1874,7 +1872,7 @@ entity CA_SpectateNext(entity start)
 }
 
 bool SpectateNext()
-{
+{SELFPARAM();
 	other = find(self.enemy, classname, "player");
 
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
@@ -1893,7 +1891,7 @@ bool SpectateNext()
 }
 
 bool SpectatePrev()
-{
+{SELFPARAM();
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, "player");
 	if (!other) // no player
@@ -1938,7 +1936,7 @@ Update a respawn countdown display.
 =============
 */
 void ShowRespawnCountdown()
-{
+{SELFPARAM();
 	float number;
 	if(self.deadflag == DEAD_NO) // just respawned?
 		return;
@@ -1957,7 +1955,7 @@ void ShowRespawnCountdown()
 }
 
 void LeaveSpectatorMode()
-{
+{SELFPARAM();
 	if(self.caplayer)
 		return;
 	if(nJoinAllowed(self))
@@ -1995,7 +1993,8 @@ void LeaveSpectatorMode()
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-float nJoinAllowed(entity ignore) {
+float nJoinAllowed(entity ignore)
+{SELFPARAM();
 	if(!ignore)
 	// this is called that way when checking if anyone may be able to join (to build qcstatus)
 	// so report 0 free slots if restricted
@@ -2034,7 +2033,8 @@ float nJoinAllowed(entity ignore) {
  * Checks whether the client is an observer or spectator, if so, he will get kicked after
  * g_maxplayers_spectator_blocktime seconds
  */
-void checkSpectatorBlock() {
+void checkSpectatorBlock()
+{SELFPARAM();
 	if(IS_SPEC(self) || IS_OBSERVER(self))
 	if(!self.caplayer)
 	if(IS_REAL_CLIENT(self))
@@ -2047,7 +2047,7 @@ void checkSpectatorBlock() {
 }
 
 void PrintWelcomeMessage()
-{
+{SELFPARAM();
 	if(self.motd_actived_time == 0)
 	{
 		if (autocvar_g_campaign) {
@@ -2094,7 +2094,7 @@ void PrintWelcomeMessage()
 }
 
 void ObserverThink()
-{
+{SELFPARAM();
 	if ( self.impulse )
 	{
 		MinigameImpulse(self.impulse);
@@ -2129,7 +2129,7 @@ void ObserverThink()
 }
 
 void SpectatorThink()
-{
+{SELFPARAM();
 	if ( self.impulse )
 	{
 		if(MinigameImpulse(self.impulse))
@@ -2184,7 +2184,7 @@ void SpectatorThink()
 
 void vehicles_enter (entity pl, entity veh);
 void PlayerUseKey()
-{
+{SELFPARAM();
 	if (!IS_PLAYER(self))
 		return;
 
@@ -2270,7 +2270,7 @@ void() nexball_setstatus;
 .float last_vehiclecheck;
 .int items_added;
 void PlayerPreThink (void)
-{
+{SELFPARAM();
 	WarpZone_PlayerPhysics_FixVAngle();
 
 	self.stat_game_starttime = game_starttime;
@@ -2661,7 +2661,7 @@ Called every frame for each client after the physics are run
 */
 .float idlekick_lasttimeleft;
 void PlayerPostThink (void)
-{
+{SELFPARAM();
 	if(sv_maxidle > 0 && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if(IS_PLAYER(self) || sv_maxidle_spectatorsareidle)
 	{
@@ -2732,5 +2732,5 @@ void PlayerPostThink (void)
 
 	playerdemo_write();
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }

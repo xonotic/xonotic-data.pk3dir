@@ -10,7 +10,7 @@ float object_count;
 
 .float touch_timer;
 void sandbox_ObjectFunction_Touch()
-{
+{SELFPARAM();
 	// apply material impact effects
 
 	if(!self.material)
@@ -35,7 +35,7 @@ void sandbox_ObjectFunction_Touch()
 }
 
 void sandbox_ObjectFunction_Think()
-{
+{SELFPARAM();
 	entity e;
 
 	// decide if and how this object can be grabbed
@@ -61,12 +61,12 @@ void sandbox_ObjectFunction_Think()
 
 	self.nextthink = time;
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 .float old_solid, old_movetype;
 entity sandbox_ObjectEdit_Get(float permissions)
-{
+{SELFPARAM();
 	// Returns the traced entity if the player can edit it, and world if not.
 	// If permissions if false, the object is returned regardless of editing rights.
 	// Attached objects are SOLID_NOT and do not get traced.
@@ -140,7 +140,7 @@ void sandbox_ObjectAttach_Remove(entity e)
 }
 
 entity sandbox_ObjectSpawn(float database)
-{
+{SELFPARAM();
 	// spawn a new object with default properties
 
 	entity e, oldself;
@@ -181,7 +181,7 @@ entity sandbox_ObjectSpawn(float database)
 
 	oldself = self;
 	self = e;
-	CSQCMODEL_AUTOINIT();
+	CSQCMODEL_AUTOINIT(self);
 	self = oldself;
 
 	object_count += 1;
@@ -424,7 +424,7 @@ void sandbox_Database_Load()
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 	if(cmd_name == "g_sandbox")

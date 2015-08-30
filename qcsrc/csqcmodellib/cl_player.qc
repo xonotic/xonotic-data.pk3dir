@@ -100,7 +100,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 }
 
 void CSQCPlayer_Unpredict()
-{
+{SELFPARAM();
 	if(csqcplayer_status == CSQCPLAYERSTATUS_UNPREDICTED)
 		return;
 	if(csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED)
@@ -112,7 +112,7 @@ void CSQCPlayer_Unpredict()
 }
 
 void CSQCPlayer_SetMinsMaxs()
-{
+{SELFPARAM();
 	if(self.flags & FL_DUCKED)
 	{
 		self.mins = PL_CROUCH_MIN;
@@ -128,7 +128,7 @@ void CSQCPlayer_SetMinsMaxs()
 }
 
 void CSQCPlayer_SavePrediction()
-{
+{SELFPARAM();
 	player_pmflags = self.flags;
 	csqcplayer_origin = self.origin;
 	csqcplayer_velocity = self.velocity;
@@ -139,7 +139,7 @@ void CSQCPlayer_SavePrediction()
 void CSQC_ClientMovement_PlayerMove_Frame();
 
 void PM_Movement_Move()
-{
+{SELFPARAM();
 	runstandardplayerphysics(self);
 #ifdef CSQC
 	self.flags =
@@ -159,7 +159,7 @@ void CSQCPlayer_Physics(void)
 }
 
 void CSQCPlayer_PredictTo(float endframe, float apply_error)
-{
+{SELFPARAM();
 	CSQCPlayer_Unpredict();
 	if(apply_error)
 	{
@@ -204,7 +204,7 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 }
 
 bool CSQCPlayer_IsLocalPlayer()
-{
+{SELFPARAM();
 	return (self == csqcplayer);
 }
 
@@ -214,7 +214,7 @@ void CSQCPlayer_SetViewLocation()
 }
 
 void CSQCPlayer_SetCamera()
-{
+{SELFPARAM();
 	vector v0;
 	v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
 
@@ -353,7 +353,7 @@ void CSQCPlayer_Remove()
 }
 
 float CSQCPlayer_PreUpdate()
-{
+{SELFPARAM();
 	if(self != csqcplayer)
 		return 0;
 	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
@@ -362,7 +362,7 @@ float CSQCPlayer_PreUpdate()
 }
 
 float CSQCPlayer_PostUpdate()
-{
+{SELFPARAM();
 	if(self.entnum != player_localnum + 1)
 		return 0;
 	csqcplayer = self;

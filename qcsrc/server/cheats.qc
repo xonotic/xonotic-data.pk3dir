@@ -65,7 +65,7 @@ void CheatShutdownClient()
 }
 
 float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
-{
+{SELFPARAM();
 	// dead people cannot cheat
 	if(self.deadflag != DEAD_NO)
 		return 0;
@@ -115,7 +115,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 
 float num_autoscreenshot;
 void info_autoscreenshot_findtarget()
-{
+{SELFPARAM();
 	entity e;
 	e = find(world, targetname, self.target);
 	if(!e)
@@ -130,7 +130,7 @@ void info_autoscreenshot_findtarget()
 	// we leave Rick Roll alone
 }
 void spawnfunc_info_autoscreenshot()
-{
+{SELFPARAM();
 	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
 	{
 		objerror("Too many info_autoscreenshot entitites. FAIL!");
@@ -142,7 +142,7 @@ void spawnfunc_info_autoscreenshot()
 }
 
 float CheatImpulse(float i)
-{
+{SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
 	switch(i)
 	{
@@ -301,7 +301,7 @@ float CheatImpulse(float i)
 void DragBox_Think();
 float drag_lastcnt;
 float CheatCommand(float argc)
-{
+{SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
 	string cmd;
 	cmd = argv(0);
@@ -755,7 +755,7 @@ void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
 float CheatFrame()
-{
+{SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
 
 	// Dragging can be used as either a cheat, or a function for some objects. If sv_cheats is active,
@@ -799,7 +799,7 @@ float CheatFrame()
 .float dragmovetype;
 
 float Drag(float force_allow_pick, float ischeat)
-{
+{SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
 
 	// returns true when an entity has been picked up
@@ -1075,7 +1075,7 @@ void Drag_MoveDrag(entity from, entity to)
 }
 
 void DragBox_Think()
-{
+{SELFPARAM();
 	if(self.aiment && self.enemy)
 	{
 		self.origin_x = (self.aiment.origin.x + self.enemy.origin.x) * 0.5;

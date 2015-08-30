@@ -149,7 +149,8 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
     return t;
 }
 
-MUTATOR_HOOKFUNCTION(itemstime, reset_map_global) {
+MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
+{SELFPARAM();
     Item_ItemsTime_ResetTimes();
     // ALL the times need to be reset before .reset()ing each item
     // since Item_Reset schedules respawn of superweapons and powerups
@@ -162,11 +163,13 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global) {
     Item_ItemsTime_SetTimesForAllPlayers();
 }
 
-MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver) {
+MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver)
+{SELFPARAM();
     Item_ItemsTime_SetTimesForPlayer(self);
 }
 
-MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn) {
+MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
+{SELFPARAM();
     if (warmup_stage) return;
     Item_ItemsTime_ResetTimesForPlayer(self);
 }

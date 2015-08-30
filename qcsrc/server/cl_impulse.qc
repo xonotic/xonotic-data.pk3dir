@@ -51,7 +51,7 @@
  */
 
 void ImpulseCommands (void)
-{
+{SELFPARAM();
 	int imp;
 	vector org;
 	float i;

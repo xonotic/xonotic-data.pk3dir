@@ -56,7 +56,7 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
  */
 
 float TeamScore_SendEntity(entity to, float sendflags)
-{
+{SELFPARAM();
 	float i, p, longflags;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
@@ -231,7 +231,7 @@ void ScoreInfo_Init(float teams)
  */
 
 float PlayerScore_SendEntity(entity to, float sendflags)
-{
+{SELFPARAM();
 	float i, p, longflags;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES);

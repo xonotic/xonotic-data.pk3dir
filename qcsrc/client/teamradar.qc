@@ -202,7 +202,7 @@ void teamradar_loadcvars()
 // radar links
 
 void Ent_RadarLink()
-{
+{SELFPARAM();
 	int sendflags = ReadByte();
 
 	InterpolateOrigin_Undo();

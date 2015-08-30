@@ -7,7 +7,7 @@
 
 // random functions
 void assault_objective_use()
-{
+{SELFPARAM();
 	// activate objective
 	self.health = 100;
 	//print("^2Activated objective ", self.targetname, "=", etos(self), "\n");
@@ -26,7 +26,7 @@ void assault_objective_use()
 }
 
 vector target_objective_spawn_evalfunc(entity player, entity spot, vector current)
-{
+{SELFPARAM();
 	if(self.health < 0 || self.health >= ASSAULT_VALUE_INACTIVE)
 		return '-1 0 0';
 	return current;
@@ -35,13 +35,13 @@ vector target_objective_spawn_evalfunc(entity player, entity spot, vector curren
 // reset this objective. Used when spawning an objective
 // and when a new round starts
 void assault_objective_reset()
-{
+{SELFPARAM();
 	self.health = ASSAULT_VALUE_INACTIVE;
 }
 
 // decrease the health of targeted objectives
 void assault_objective_decrease_use()
-{
+{SELFPARAM();
 	if(activator.team != assault_attacker_team)
 	{
 		// wrong team triggered decrease
@@ -88,7 +88,7 @@ void assault_objective_decrease_use()
 }
 
 void assault_setenemytoobjective()
-{
+{SELFPARAM();
 	entity objective;
 	for(objective = world; (objective = find(objective, targetname, self.target)); )
 	{
@@ -107,7 +107,7 @@ void assault_setenemytoobjective()
 }
 
 float assault_decreaser_sprite_visible(entity e)
-{
+{SELFPARAM();
 	entity decreaser;
 
 	decreaser = self.assault_decreaser;
@@ -119,7 +119,7 @@ float assault_decreaser_sprite_visible(entity e)
 }
 
 void target_objective_decrease_activate()
-{
+{SELFPARAM();
 	entity ent, spr;
 	self.owner = world;
 	for(ent = world; (ent = find(ent, target, self.targetname)); )
@@ -154,19 +154,19 @@ void target_objective_decrease_findtarget()
 }
 
 void target_assault_roundend_reset()
-{
+{SELFPARAM();
 	//print("round end reset\n");
 	self.cnt = self.cnt + 1; // up round counter
 	self.winning = 0; // up round
 }
 
 void target_assault_roundend_use()
-{
+{SELFPARAM();
 	self.winning = 1; // round has been won by attackers
 }
 
 void assault_roundstart_use()
-{
+{SELFPARAM();
 	activator = self;
 	SUB_UseTargets();
 
@@ -193,7 +193,7 @@ void assault_roundstart_use()
 }
 
 void assault_wall_think()
-{
+{SELFPARAM();
 	if(self.enemy.health < 0)
 	{
 		self.model = "";
@@ -213,7 +213,7 @@ void assault_wall_think()
 void vehicles_clearreturn(entity veh);
 void vehicles_spawn();
 void assault_new_round()
-{
+{SELFPARAM();
     entity oldself;
 	//bprint("ASSAULT: new round\n");
 
@@ -263,7 +263,7 @@ void assault_new_round()
 
 // spawnfuncs
 void spawnfunc_info_player_attacker()
-{
+{SELFPARAM();
 	if (!g_assault) { remove(self); return; }
 
 	self.team = NUM_TEAM_1; // red, gets swapped every round
@@ -271,7 +271,7 @@ void spawnfunc_info_player_attacker()
 }
 
 void spawnfunc_info_player_defender()
-{
+{SELFPARAM();
 	if (!g_assault) { remove(self); return; }
 
 	self.team = NUM_TEAM_2; // blue, gets swapped every round
@@ -279,7 +279,7 @@ void spawnfunc_info_player_defender()
 }
 
 void spawnfunc_target_objective()
-{
+{SELFPARAM();
 	if (!g_assault) { remove(self); return; }
 
 	self.classname = "target_objective";
@@ -290,7 +290,7 @@ void spawnfunc_target_objective()
 }
 
 void spawnfunc_target_objective_decrease()
-{
+{SELFPARAM();
 	if (!g_assault) { remove(self); return; }
 
 	self.classname = "target_objective_decrease";
@@ -308,7 +308,7 @@ void spawnfunc_target_objective_decrease()
 
 // destructible walls that can be used to trigger target_objective_decrease
 void spawnfunc_func_assault_destructible()
-{
+{SELFPARAM();
 	if (!g_assault) { remove(self); return; }
 
 	self.spawnflags = 3;
@@ -323,7 +323,7 @@ void spawnfunc_func_assault_destructible()
 }
 
 void spawnfunc_func_assault_wall()
-{
+{SELFPARAM();
 	if (!g_assault) { remove(self); return; }
 
 	self.classname = "func_assault_wall";
@@ -336,7 +336,7 @@ void spawnfunc_func_assault_wall()
 }
 
 void spawnfunc_target_assault_roundend()
-{
+{SELFPARAM();
 	if (!g_assault) { remove(self); return; }
 
 	self.winning = 0; // round not yet won by attackers
@@ -347,7 +347,7 @@ void spawnfunc_target_assault_roundend()
 }
 
 void spawnfunc_target_assault_roundstart()
-{
+{SELFPARAM();
 	if (!g_assault) { remove(self); return; }
 
 	assault_attacker_team = NUM_TEAM_1;
@@ -359,7 +359,7 @@ void spawnfunc_target_assault_roundstart()
 
 // legacy bot code
 void havocbot_goalrating_ast_targets(float ratingscale)
-{
+{SELFPARAM();
 	entity ad, best, wp, tod;
 	float radius, found, bestvalue;
 	vector p;
@@ -445,7 +445,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 }
 
 void havocbot_role_ast_offense()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 	{
 		self.havocbot_attack_time = 0;
@@ -479,7 +479,7 @@ void havocbot_role_ast_offense()
 }
 
 void havocbot_role_ast_defense()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 	{
 		self.havocbot_attack_time = 0;
@@ -530,7 +530,7 @@ void havocbot_role_ast_setrole(entity bot, float role)
 }
 
 void havocbot_ast_reset_role(entity bot)
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -542,7 +542,7 @@ void havocbot_ast_reset_role(entity bot)
 
 // mutator hooks
 MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
-{
+{SELFPARAM();
 	if(self.team == assault_attacker_team)
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
@@ -552,7 +552,7 @@ MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
-{
+{SELFPARAM();
 	if(!self.team || self.team == MAX_SHOT_DISTANCE)
 		self.team = 5; // this gets reversed when match starts?
 
@@ -560,14 +560,14 @@ MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(assault_VehicleSpawn)
-{
+{SELFPARAM();
 	self.nextthink = time + 0.5;
 
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(assault_BotRoles)
-{
+{SELFPARAM();
 	havocbot_ast_reset_role(self);
 	return true;
 }

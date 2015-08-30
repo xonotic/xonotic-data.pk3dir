@@ -241,7 +241,7 @@ string NearestLocation(vector p)
 }
 
 string formatmessage(string msg)
-{
+{SELFPARAM();
 	float p, p1, p2;
 	float n;
 	vector cursor;
@@ -323,7 +323,7 @@ Called with:
   >0: receives a cvar from name=argv(f) value=argv(f+1)
 */
 void GetCvars_handleString(string thisname, float f, .string field, string name)
-{
+{SELFPARAM();
 	if (f < 0)
 	{
 		if (self.(field))
@@ -343,7 +343,7 @@ void GetCvars_handleString(string thisname, float f, .string field, string name)
 		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 }
 void GetCvars_handleString_Fixup(string thisname, float f, .string field, string name, string(string) func)
-{
+{SELFPARAM();
 	GetCvars_handleString(thisname, f, field, name);
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
@@ -357,7 +357,7 @@ void GetCvars_handleString_Fixup(string thisname, float f, .string field, string
 		}
 }
 void GetCvars_handleFloat(string thisname, float f, .float field, string name)
-{
+{SELFPARAM();
 	if (f < 0)
 	{
 	}
@@ -370,7 +370,7 @@ void GetCvars_handleFloat(string thisname, float f, .float field, string name)
 		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 }
 void GetCvars_handleFloatOnce(string thisname, float f, .float field, string name)
-{
+{SELFPARAM();
 	if (f < 0)
 	{
 	}
@@ -393,7 +393,7 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 	}
 }
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
-{
+{SELFPARAM();
 	string o;
 	o = W_FixWeaponOrder_ForceComplete(wo);
 	if(self.weaponorder_byimpulse)
@@ -405,7 +405,7 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 	return o;
 }
 void GetCvars(float f)
-{
+{SELFPARAM();
 	string s = string_null;
 
 	if (f > 0)
@@ -970,7 +970,7 @@ void precache_all_playermodels(string pattern)
 }
 
 void precache()
-{
+{SELFPARAM();
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
 	precache_model("models/ice/ice.md3");
@@ -1111,7 +1111,7 @@ void make_safe_for_remove(entity e)
 }
 
 void objerror(string s)
-{
+{SELFPARAM();
     make_safe_for_remove(self);
     builtin_objerror(s);
 }
@@ -1173,7 +1173,7 @@ void InitializeEntity(entity e, void(void) func, float order)
     }
 }
 void InitializeEntitiesRun()
-{
+{SELFPARAM();
     entity startoflist;
     startoflist = initialize_entity_first;
     initialize_entity_first = world;
@@ -1213,7 +1213,7 @@ void InitializeEntitiesRun()
 }
 
 void UncustomizeEntitiesRun()
-{
+{SELFPARAM();
     entity oldself;
     oldself = self;
     for (self = world; (self = findfloat(self, uncustomizeentityforclient_set, 1)); )
@@ -1228,7 +1228,7 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
 }
 
 void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc)
-{
+{SELFPARAM();
     vector mi, ma;
 
     if (e.classname == "")
@@ -1293,7 +1293,7 @@ void EliminatedPlayers_Init(float(entity) isEliminated_func)
 
 
 void adaptor_think2touch()
-{
+{SELFPARAM();
     entity o;
     o = other;
     other = world;
@@ -1302,7 +1302,7 @@ void adaptor_think2touch()
 }
 
 void adaptor_think2use()
-{
+{SELFPARAM();
     entity o, a;
     o = other;
     a = activator;
@@ -1314,7 +1314,7 @@ void adaptor_think2use()
 }
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation
-{
+{SELFPARAM();
 	if(!(self.flags & FL_ONGROUND)) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 	adaptor_think2use();
@@ -1322,13 +1322,13 @@ void adaptor_think2use_hittype_splash() // for timed projectile detonation
 
 // deferred dropping
 void DropToFloor_Handler()
-{
+{SELFPARAM();
     builtin_droptofloor();
     self.dropped_origin = self.origin;
 }
 
 void droptofloor()
-{
+{SELFPARAM();
     InitializeEntity(self, DropToFloor_Handler, INITPRIO_DROPTOFLOOR);
 }
 
@@ -1384,7 +1384,7 @@ float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector t
 }
 
 float SUB_NoImpactCheck()
-{
+{SELFPARAM();
 	// zero hitcontents = this is not the real impact, but either the
 	// mirror-impact of something hitting the projectile instead of the
 	// projectile hitting the something, or a touchareagrid one. Neither of
@@ -1421,7 +1421,7 @@ float SUB_NoImpactCheck()
 
 void W_Crylink_Dequeue(entity e);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
-{
+{SELFPARAM();
 	if(SUB_OwnerCheck())
 		return true;
 	if(SUB_NoImpactCheck())
@@ -1697,7 +1697,7 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 }
 
 vector shotorg_adjust(vector vecs, float y_is_right, float visual)
-{
+{SELFPARAM();
 	return shotorg_adjust_values(vecs, y_is_right, visual, self.owner.cvar_cl_gunalign);
 }
 
@@ -1787,7 +1787,7 @@ vector gettaginfo_relative(entity e, float tag)
 .float scale2;
 
 float modeleffect_SendEntity(entity to, int sf)
-{
+{SELFPARAM();
 	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
 

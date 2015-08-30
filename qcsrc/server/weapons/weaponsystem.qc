@@ -50,7 +50,7 @@ float W_WeaponSpeedFactor()
 void(float fr, float t, void() func) weapon_thinkf;
 
 float CL_Weaponentity_CustomizeEntityForClient()
-{
+{SELFPARAM();
 	self.viewmodelforclient = self.owner;
 	if(IS_SPEC(other))
 		if(other.enemy == self.owner)
@@ -110,7 +110,7 @@ float CL_Weaponentity_CustomizeEntityForClient()
 //   call again with ""
 //   remove the ent
 void CL_WeaponEntity_SetModel(string name)
-{
+{SELFPARAM();
 	float v_shot_idx;
 	if (name != "")
 	{
@@ -269,7 +269,7 @@ void CL_WeaponEntity_SetModel(string name)
 }
 
 vector CL_Weapon_GetShotOrg(float wpn)
-{
+{SELFPARAM();
 	entity wi, oldself;
 	vector ret;
 	wi = get_weaponinfo(wpn);
@@ -284,7 +284,7 @@ vector CL_Weapon_GetShotOrg(float wpn)
 }
 
 void CL_Weaponentity_Think()
-{
+{SELFPARAM();
 	int tb;
 	self.nextthink = time;
 	if (intermission_running)
@@ -360,7 +360,7 @@ void CL_Weaponentity_Think()
 }
 
 void CL_ExteriorWeaponentity_Think()
-{
+{SELFPARAM();
 	float tag_found;
 	self.nextthink = time;
 	if (self.owner.exteriorweaponentity != self)
@@ -404,46 +404,41 @@ void CL_ExteriorWeaponentity_Think()
 	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 // spawning weaponentity for client
-void CL_SpawnWeaponentity()
+void CL_SpawnWeaponentity(entity e)
 {
-	self.weaponentity = spawn();
-	self.weaponentity.classname = "weaponentity";
-	self.weaponentity.solid = SOLID_NOT;
-	self.weaponentity.owner = self;
-	setmodel(self.weaponentity, ""); // precision set when changed
-	setorigin(self.weaponentity, '0 0 0');
-	self.weaponentity.angles = '0 0 0';
-	self.weaponentity.viewmodelforclient = self;
-	self.weaponentity.flags = 0;
-	self.weaponentity.think = CL_Weaponentity_Think;
-	self.weaponentity.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
-	self.weaponentity.nextthink = time;
+	entity view = e.weaponentity = spawn();
+	view.classname = "weaponentity";
+	view.solid = SOLID_NOT;
+	view.owner = e;
+	setmodel(view, ""); // precision set when changed
+	setorigin(view, '0 0 0');
+	view.angles = '0 0 0';
+	view.viewmodelforclient = e;
+	view.flags = 0;
+	view.think = CL_Weaponentity_Think;
+	view.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+	view.nextthink = time;
 
-	self.exteriorweaponentity = spawn();
-	self.exteriorweaponentity.classname = "exteriorweaponentity";
-	self.exteriorweaponentity.solid = SOLID_NOT;
-	self.exteriorweaponentity.exteriorweaponentity = self.exteriorweaponentity;
-	self.exteriorweaponentity.owner = self;
-	setorigin(self.exteriorweaponentity, '0 0 0');
-	self.exteriorweaponentity.angles = '0 0 0';
-	self.exteriorweaponentity.think = CL_ExteriorWeaponentity_Think;
-	self.exteriorweaponentity.nextthink = time;
+	entity exterior = e.exteriorweaponentity = spawn();
+	exterior.classname = "exteriorweaponentity";
+	exterior.solid = SOLID_NOT;
+	exterior.exteriorweaponentity = exterior;
+	exterior.owner = e;
+	setorigin(exterior, '0 0 0');
+	exterior.angles = '0 0 0';
+	exterior.think = CL_ExteriorWeaponentity_Think;
+	exterior.nextthink = time;
 
-	{
-		entity oldself = self;
-		self = self.exteriorweaponentity;
-		CSQCMODEL_AUTOINIT();
-		self = oldself;
-	}
+	CSQCMODEL_AUTOINIT(exterior);
 }
 
 // Weapon subs
 void w_clear()
-{
+{SELFPARAM();
 	if (self.weapon != -1)
 	{
 		self.weapon = 0;
@@ -457,7 +452,7 @@ void w_clear()
 }
 
 void w_ready()
-{
+{SELFPARAM();
 	if (self.weaponentity)
 		self.weaponentity.state = WS_READY;
 	weapon_thinkf(WFRAME_IDLE, 1000000, w_ready);
@@ -466,7 +461,7 @@ void w_ready()
 .float prevdryfire;
 .float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
-{
+{SELFPARAM();
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
@@ -513,7 +508,7 @@ float weapon_prepareattack_checkammo(float secondary)
 }
 .float race_penalty;
 float weapon_prepareattack_check(float secondary, float attacktime)
-{
+{SELFPARAM();
 	if(!weapon_prepareattack_checkammo(secondary))
 		return false;
 
@@ -543,7 +538,7 @@ float weapon_prepareattack_check(float secondary, float attacktime)
 	return true;
 }
 float weapon_prepareattack_do(float secondary, float attacktime)
-{
+{SELFPARAM();
 	self.weaponentity.state = WS_INUSE;
 
 	self.spawnshieldtime = min(self.spawnshieldtime, time); // kill spawn shield when you fire
@@ -574,7 +569,7 @@ float weapon_prepareattack(float secondary, float attacktime)
 }
 
 void weapon_thinkf(float fr, float t, void() func)
-{
+{SELFPARAM();
 	vector a;
 	vector of, or, ou;
 	float restartanim;
@@ -665,7 +660,7 @@ float forbidWeaponUse(entity player)
 }
 
 void W_WeaponFrame()
-{
+{SELFPARAM();
 	vector fo, ri, up;
 
 	if (frametime)
@@ -796,7 +791,7 @@ void W_WeaponFrame()
 }
 
 void W_AttachToShotorg(entity flash, vector offset)
-{
+{SELFPARAM();
 	entity xflash;
 	flash.owner = self;
 	flash.angles_z = random() * 360;
@@ -828,7 +823,7 @@ void W_AttachToShotorg(entity flash, vector offset)
 }
 
 void W_DecreaseAmmo(float ammo_use)
-{
+{SELFPARAM();
 	entity wep = get_weaponinfo(self.weapon);
 
 	if(cvar("g_overkill"))
@@ -872,7 +867,7 @@ void W_DecreaseAmmo(float ammo_use)
 .string reload_sound;
 
 void W_ReloadedAndReady()
-{
+{SELFPARAM();
 	// finish the reloading process, and do the ammo transfer
 
 	self.clip_load = self.old_clip_load; // restore the ammo counter, in case we still had ammo in the weapon before reloading
@@ -899,7 +894,7 @@ void W_ReloadedAndReady()
 }
 
 void W_Reload(float sent_ammo_min, string sent_sound)
-{
+{SELFPARAM();
 	// set global values to work with
 	entity e;
 	e = get_weaponinfo(self.weapon);
@@ -976,7 +971,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 }
 
 void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item)
-{
+{SELFPARAM();
 	entity oldself = self;
 	self = player;
 	weapon_dropevent_item = weapon_item;

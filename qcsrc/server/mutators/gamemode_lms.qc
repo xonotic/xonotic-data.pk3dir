@@ -35,7 +35,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetMap)
 }
 
 MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
-{
+{SELFPARAM();
 	if(restart_mapalreadyrestarted || (time < game_starttime))
 	FOR_EACH_CLIENT(self)
 	if(IS_PLAYER(self))
@@ -45,7 +45,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
 }
 
 MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
-{
+{SELFPARAM();
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
@@ -55,14 +55,14 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(lms_PlayerDies)
-{
+{SELFPARAM();
 	self.respawn_flags |= RESPAWN_FORCE;
 
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
-{
+{SELFPARAM();
 	// Only if the player cannot play at all
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
 		self.frags = FRAGS_SPECTATOR;
@@ -79,7 +79,7 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 }
 
 MUTATOR_HOOKFUNCTION(lms_ClientConnect)
-{
+{SELFPARAM();
 	self.classname = "player";
 	campaign_bots_may_start = 1;
 
@@ -93,7 +93,7 @@ MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(lms_PlayerThink)
-{
+{SELFPARAM();
 	if(self.deadflag == DEAD_DYING)
 		self.deadflag = DEAD_RESPAWNING;
 
@@ -156,7 +156,7 @@ MUTATOR_HOOKFUNCTION(lms_KeepScore)
 }
 
 MUTATOR_HOOKFUNCTION(lms_FilterItem)
-{
+{SELFPARAM();
 	if(autocvar_g_lms_extra_lives)
 	if(self.itemdef == ITEM_HealthMega)
 	{
@@ -168,7 +168,7 @@ MUTATOR_HOOKFUNCTION(lms_FilterItem)
 }
 
 MUTATOR_HOOKFUNCTION(lms_ItemTouch)
-{
+{SELFPARAM();
 	// give extra lives for mega health
 	if (self.items & ITEM_HealthMega.m_itemid)
 	{

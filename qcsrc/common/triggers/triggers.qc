@@ -3,7 +3,7 @@ void SUB_DontUseTargets() { }
 void() SUB_UseTargets;
 
 void DelayThink()
-{
+{SELFPARAM();
 	activator = self.enemy;
 	SUB_UseTargets ();
 	remove(self);
@@ -22,7 +22,7 @@ void FixSize(entity e)
 
 #ifdef SVQC
 void trigger_common_write(bool withtarget)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, self.warpzone_isboxy);
 	WriteByte(MSG_ENTITY, self.scale);
 
@@ -59,7 +59,7 @@ void trigger_common_write(bool withtarget)
 #elif defined(CSQC)
 
 void trigger_common_read(bool withtarget)
-{
+{SELFPARAM();
 	self.warpzone_isboxy = ReadByte();
 	self.scale = ReadByte();
 
@@ -96,7 +96,7 @@ void trigger_common_read(bool withtarget)
 }
 
 void trigger_remove_generic()
-{
+{SELFPARAM();
 	if(self.target) { strunzone(self.target); }
 	self.target = string_null;
 
@@ -137,7 +137,7 @@ match (string)self.target and call their .use function
 ==============================
 */
 void SUB_UseTargets()
-{
+{SELFPARAM();
 	entity t, stemp, otemp, act;
 	string s;
 	float i;
@@ -247,7 +247,7 @@ void SUB_UseTargets()
 
 #ifdef CSQC
 void trigger_touch_generic(void() touchfunc)
-{
+{SELFPARAM();
 	entity e;
 	for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
 	if(e.isplayermodel || e.classname == "csqcprojectile")
@@ -267,7 +267,7 @@ void trigger_touch_generic(void() touchfunc)
 	}
 }
 void trigger_draw_generic()
-{
+{SELFPARAM();
 	float dt = time - self.move_time;
 	self.move_time = time;
 	if(dt <= 0) { return; }

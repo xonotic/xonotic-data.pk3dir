@@ -41,7 +41,7 @@ const float LATENCY_THINKRATE = 10;
 .float latency_time;
 entity pingplreport;
 void PingPLReport_Think()
-{
+{SELFPARAM();
 	float delta;
 	entity e;
 
@@ -117,7 +117,7 @@ void SetDefaultAlpha()
 }
 
 void GotoFirstMap()
-{
+{SELFPARAM();
 	float n;
 	if(autocvar__sv_init)
 	{
@@ -513,20 +513,20 @@ void detect_maptype()
 
 entity randomseed;
 float RandomSeed_Send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
 	return true;
 }
 void RandomSeed_Think()
-{
+{SELFPARAM();
 	self.cnt = bound(0, floor(random() * 65536), 65535);
 	self.nextthink = time + 5;
 
 	self.SendFlags |= 1;
 }
 void RandomSeed_Spawn()
-{
+{SELFPARAM();
 	randomseed = spawn();
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
@@ -539,7 +539,7 @@ void RandomSeed_Spawn()
 }
 
 void spawnfunc___init_dedicated_server(void)
-{
+{SELFPARAM();
 	// handler for _init/_init map (only for dedicated server initialization)
 
 	world_initialized = -1; // don't complain
@@ -577,7 +577,7 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 void Physics_AddStats();
 void spawnfunc_worldspawn (void)
-{
+{SELFPARAM();
 	float fd, l, j, n;
 	string s;
 
@@ -926,7 +926,7 @@ void spawnfunc_worldspawn (void)
 }
 
 void spawnfunc_light (void)
-{
+{SELFPARAM();
 	//makestatic (self); // Who the f___ did that?
 	remove(self);
 }
@@ -1318,7 +1318,7 @@ When the player presses attack or jump, change to the next level
 */
 .float autoscreenshot;
 void IntermissionThink()
-{
+{SELFPARAM();
 	FixIntermissionClient(self);
 
 	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
@@ -1595,7 +1595,7 @@ Exit deathmatch games upon conditions
 ============
 */
 void CheckRules_Player()
-{
+{SELFPARAM();
 	if (gameover)	// someone else quit the game already
 		return;
 
@@ -1694,7 +1694,7 @@ void ClearWinners(void)
 // they win. Otherwise the defending team wins once the timelimit passes.
 void assault_new_round();
 float WinningCondition_Assault()
-{
+{SELFPARAM();
 	float status;
 
 	WinningConditionHelper(); // set worldstatus
@@ -2202,7 +2202,7 @@ string GotoMap(string m)
 
 
 void EndFrame()
-{
+{SELFPARAM();
 	anticheat_endframe();
 
 	float altime;
@@ -2241,7 +2241,7 @@ void EndFrame()
 float redirection_timeout;
 float redirection_nextthink;
 float RedirectionThink()
-{
+{SELFPARAM();
 	float clients_found;
 
 	if(redirection_target == "")

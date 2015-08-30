@@ -23,17 +23,17 @@ float target_spawn_spawnfunc_field;
 float target_spawn_count;
 
 void target_spawn_helper_setmodel()
-{
+{SELFPARAM();
 	setmodel(self, self.model);
 }
 
 void target_spawn_helper_setsize()
-{
+{SELFPARAM();
 	setsize(self, self.mins, self.maxs);
 }
 
 void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act)
-{
+{SELFPARAM();
 	float i, n, valuefieldpos;
 	string key, value, valuefield, valueoffset, valueoffsetrandom;
 	entity valueent;
@@ -244,7 +244,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 }
 
 void target_spawn_useon(entity e)
-{
+{SELFPARAM();
 	self.target_spawn_activator = activator;
 	target_spawn_edit_entity(
 		e,
@@ -258,7 +258,7 @@ void target_spawn_useon(entity e)
 }
 
 float target_spawn_cancreate()
-{
+{SELFPARAM();
 	float c;
 	entity e;
 
@@ -277,7 +277,7 @@ float target_spawn_cancreate()
 }
 
 void target_spawn_use()
-{
+{SELFPARAM();
 	entity e;
 
 	if(self.target == "")
@@ -304,7 +304,7 @@ void target_spawn_use()
 }
 
 void target_spawn_spawnfirst()
-{
+{SELFPARAM();
 	activator = self.target_spawn_activator;
 	if(self.spawnflags & 2)
 		target_spawn_use();
@@ -339,7 +339,7 @@ void initialize_field_db()
 }
 
 void spawnfunc_target_spawn()
-{
+{SELFPARAM();
 	initialize_field_db();
 	self.use = target_spawn_use;
 	self.message = strzone(strreplace("'", "\"", self.message));

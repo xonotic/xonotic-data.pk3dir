@@ -66,7 +66,7 @@ void spawnfunc_weapon_devastator(void) { weapon_defaultspawnfunc(WEP_DEVASTATOR.
 void spawnfunc_weapon_rocketlauncher(void) { spawnfunc_weapon_devastator(); }
 
 void W_Devastator_Unregister(void)
-{
+{SELFPARAM();
 	if(self.realowner && self.realowner.lastrocket == self)
 	{
 		self.realowner.lastrocket = world;
@@ -75,7 +75,7 @@ void W_Devastator_Unregister(void)
 }
 
 void W_Devastator_Explode(void)
-{
+{SELFPARAM();
 	W_Devastator_Unregister();
 
 	if(other.takedamage == DAMAGE_AIM)
@@ -115,7 +115,7 @@ void W_Devastator_Explode(void)
 }
 
 void W_Devastator_DoRemoteExplode(void)
-{
+{SELFPARAM();
 	W_Devastator_Unregister();
 
 	self.event_damage = func_null;
@@ -194,7 +194,7 @@ void W_Devastator_DoRemoteExplode(void)
 }
 
 void W_Devastator_RemoteExplode(void)
-{
+{SELFPARAM();
 	if(self.realowner.deadflag == DEAD_NO)
 	if(self.realowner.lastrocket)
 	{
@@ -242,7 +242,7 @@ vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)
 //   normalize(0)
 
 void W_Devastator_Think(void)
-{
+{SELFPARAM();
 	vector desireddir, olddir, newdir, desiredorigin, goal;
 	float velspeed, f;
 	self.nextthink = time;
@@ -309,7 +309,7 @@ void W_Devastator_Think(void)
 }
 
 void W_Devastator_Touch(void)
-{
+{SELFPARAM();
 	if(WarpZone_Projectile_Touch())
 	{
 		if(wasfreed(self))
@@ -321,7 +321,7 @@ void W_Devastator_Touch(void)
 }
 
 void W_Devastator_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -336,7 +336,7 @@ void W_Devastator_Damage(entity inflictor, entity attacker, float damage, int de
 }
 
 void W_Devastator_Attack(void)
-{
+{SELFPARAM();
 	entity missile;
 	entity flash;
 
@@ -393,7 +393,7 @@ void W_Devastator_Attack(void)
 }
 
 bool W_Devastator(int req)
-{
+{SELFPARAM();
 	entity rock;
 	float rockfound;
 	float ammo_amount;
@@ -657,7 +657,7 @@ bool W_Devastator(int req)
 #endif
 #ifdef CSQC
 bool W_Devastator(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:
