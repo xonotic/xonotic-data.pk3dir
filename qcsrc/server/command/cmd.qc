@@ -87,28 +87,6 @@ void ClientCommand_autoswitch(float request, float argc)
 	}
 }
 
-void ClientCommand_checkfail(float request, string command) // internal command, used only by code
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			LOG_INFOF("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-			self.checkfail = 1;
-			return; // never fall through to usage
-		}
-
-		default:
-			sprint(self, "Incorrect parameters for ^2checkfail^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd checkfail <message>\n");
-			sprint(self, "  Where 'message' is the message reported by client about the fail.\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_clientversion(float request, float argc) // internal command, used only by code
 {
 	switch(request)
@@ -656,7 +634,6 @@ void ClientCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS(request,arguments,command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments), "Whether or not to switch automatically when getting a better weapon") \
-	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
