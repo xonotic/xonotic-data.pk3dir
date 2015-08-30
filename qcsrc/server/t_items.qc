@@ -166,7 +166,6 @@ void ItemRead(float _IsNew)
     {
         self.drawmask  = MASK_NORMAL;
 		self.move_movetype = self.movetype = MOVETYPE_TOSS;
-		//self.renderflags |= RF_DEPTHHACK;
         self.draw       = ItemDraw;
 
         self.fade_end = ReadShort();
