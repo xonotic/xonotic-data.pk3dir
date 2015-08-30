@@ -1796,49 +1796,36 @@ void SpectateCopy(entity spectatee) {
     }
 }
 
-float SpectateUpdate()
+bool SpectateUpdate()
 {
 	if(!self.enemy)
-	    return 0;
+	    return false;
 
 	if(!IS_PLAYER(self.enemy) || self == self.enemy)
 	{
 		SetSpectator(self, world);
-		return 0;
+		return false;
 	}
 
 	SpectateCopy(self.enemy);
 
-	return 1;
+	return true;
 }
 
-float SpectateSet()
+bool SpectateSet()
 {
-	if(self.enemy.classname != "player")
+	if(!IS_PLAYER(self.enemy))
 		return false;
-	/*if(self.enemy.vehicle)
-	{
 
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-		//stuffcmd(self, "set viewsize $tmpviewsize \n");
+	msg_entity = self;
+	WriteByte(MSG_ONE, SVC_SETVIEW);
+	WriteEntity(MSG_ONE, self.enemy);
+	self.movetype = MOVETYPE_NONE;
+	accuracy_resend(self);
 
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
-	}
-	else
-	{*/
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-		//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
+	if(!SpectateUpdate())
+		PutObserverInServer();
 
-		if(!SpectateUpdate())
-			PutObserverInServer();
-	//}
 	return true;
 }
 
