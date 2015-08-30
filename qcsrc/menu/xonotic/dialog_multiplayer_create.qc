@@ -247,8 +247,6 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 	}
 	e.configureXonoticTextSlider(e, x, theTooltip);
 	e.configureXonoticTextSliderValues(e);
-	if(!x)
-		e.value = 0;
 	me.sliderTeams.disabled = me.labelTeams.disabled = !x;
 
 	me.mapListBox.refilter(me.mapListBox);
