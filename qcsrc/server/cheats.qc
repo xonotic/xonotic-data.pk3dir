@@ -1033,7 +1033,13 @@ void Drag_Update(entity dragger)
 
 	draggee.ltime = max(servertime + serverframetime, draggee.ltime); // fixes func_train breakage
 
-	te_lightning1(dragger, dragger.origin + dragger.view_ofs, curorigin);
+	vector vecs = '0 0 0';
+	if(dragger.weaponentity.movedir_x > 0)
+		vecs = dragger.weaponentity.movedir;
+
+	vector dv = v_right * -vecs_y + v_up * vecs_z;
+
+	te_lightning1(draggee, dragger.origin + dragger.view_ofs + dv, curorigin);
 }
 
 float Drag_CanDrag(entity dragger)

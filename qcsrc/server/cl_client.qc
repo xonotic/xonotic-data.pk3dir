@@ -362,8 +362,9 @@ void FixPlayermodel()
 		}
 	}
 
-	MUTATOR_CALLHOOK(FixPlayermodel, defaultmodel);
+	MUTATOR_CALLHOOK(FixPlayermodel, defaultmodel, defaultskin);
 	defaultmodel = ret_string;
+	defaultskin = ret_int;
 
 	if(defaultmodel != "")
 	{

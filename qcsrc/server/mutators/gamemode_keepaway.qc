@@ -356,6 +356,14 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
+{
+	// if neither player has ball then don't attack unless the ball is on the ground
+	if(!checkentity.ballcarried && !self.ballcarried && ka_ball.owner)
+		return true;
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(ka_BotRoles)
 {
 	if (self.ballcarried)
@@ -430,6 +438,7 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BotShouldAttack, ka_BotShouldAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, ka_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

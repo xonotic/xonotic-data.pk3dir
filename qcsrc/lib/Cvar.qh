@@ -1,8 +1,15 @@
 #ifndef CVAR_H
 #define CVAR_H
 
-#define CVAR_DESCRIBE(var, desc)    localcmd(sprintf("\nseta %s \"%s\" \"%s\"\n", #var, ftos(autocvar_##var), desc))
-#define CVAR_DESCRIBESTR(var, desc) localcmd(sprintf("\nseta %s \"%s\" \"%s\"\n", #var, autocvar_##var, desc))
-#define CVAR_DESCRIBEVEC(var, desc) localcmd(sprintf("\nseta %s \"%v\" \"%s\"\n", #var, autocvar_##var, desc))
+#define CVAR_DESCRIBE(set, var, desc)    localcmd(sprintf("\n"set" %1$s \"$%1$s\" \"%2$s\"\n", #var, desc))
+
+#define AUTOCVAR_4(set, var, type, desc) \
+    STATIC_INIT(autocvar_##var) { CVAR_DESCRIBE(set, var, desc); } \
+    type autocvar_##var
+#define AUTOCVAR_5(set, var, type, default, desc) \
+    AUTOCVAR_4(set, var, type, desc) = default
+#define _AUTOCVAR(...) OVERLOAD(AUTOCVAR, __VA_ARGS__)
+#define AUTOCVAR_SAVE(...) _AUTOCVAR("seta", __VA_ARGS__)
+#define AUTOCVAR(...) _AUTOCVAR("set", __VA_ARGS__)
 
 #endif
