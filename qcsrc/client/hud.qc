@@ -4674,6 +4674,12 @@ void HUD_CenterPrint (void)
 //
 #include "../common/minigames/cl_minigames_hud.qc"
 
+
+// QuickMenu (#23)
+//
+#include "quickmenu.qc"
+
+
 /*
 ==================
 Main HUD system
@@ -4836,6 +4842,8 @@ void HUD_Main (void)
 		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
 		HUD_Panel_Draw(HUD_PANEL(CHAT));
+	if(hud_panel_quickmenu)
+		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 
 	HUD_Configure_PostDraw();
 

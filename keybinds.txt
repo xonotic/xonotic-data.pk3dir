@@ -46,6 +46,7 @@
 "ready"                                 "ready"
 ""                                      ""
 ""                                      "Client"
+"quickmenu"                             "quick menu"
 "+show_info"                            "server info"
 "toggleconsole"                         "enter console"
 "disconnect"                            "disconnect"

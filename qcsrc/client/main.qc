@@ -87,7 +87,7 @@ string forcefog;
 void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
-	prvm_language = cvar_string("prvm_language");
+	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
 	LOG_TRACEF("^4CSQC Build information: ^1%s\n", WATERMARK);
@@ -366,6 +366,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	bSkipKey = false;
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if (QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
