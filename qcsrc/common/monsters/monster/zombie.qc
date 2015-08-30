@@ -3,7 +3,7 @@ bool M_Zombie(int);
 #endif
 REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ ZOMBIE,
-/* spawnflags */ MON_FLAG_MELEE,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RIDE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
 /* model      */ "zombie.dpm",
 /* netname    */ "zombie",
