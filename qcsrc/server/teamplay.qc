@@ -141,6 +141,8 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_keyhunt_point_limit;
 		leadlimit_override = autocvar_g_keyhunt_point_leadlimit;
+		if(autocvar_g_keyhunt_team_spawns)
+			have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_keyhunt);
 	}
 

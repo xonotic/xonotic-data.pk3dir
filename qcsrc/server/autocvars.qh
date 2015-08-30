@@ -369,6 +369,7 @@ int autocvar_g_keepawayball_effects;
 float autocvar_g_keepawayball_respawntime;
 int autocvar_g_keepawayball_trail_color;
 int autocvar_g_keyhunt_point_leadlimit;
+bool autocvar_g_keyhunt_team_spawns;
 #define autocvar_g_keyhunt_point_limit cvar("g_keyhunt_point_limit")
 int autocvar_g_keyhunt_teams;
 int autocvar_g_keyhunt_teams_override;
