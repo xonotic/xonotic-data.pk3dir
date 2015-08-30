@@ -1841,47 +1841,47 @@ void SetSpectator(entity player, entity spectatee)
 	if(player.enemy && player.enemy.arc_beam) { player.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 }
 
-float Spectate(entity pl)
+bool Spectate(entity pl)
 {
 	if(g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
-	if(pl.team != self.team)
-		return 0;
+	if(DIFF_TEAM(pl, self))
+		return false;
 
 	SetSpectator(self, pl);
 	return SpectateSet();
 }
 
 // Returns next available player to spectate if g_ca_spectate_enemies == 0
-entity CA_SpectateNext(entity start) {
-	if (start.team == self.team) {
+entity CA_SpectateNext(entity start)
+{
+	if(SAME_TEAM(start, self))
 		return start;
-	}
 
 	other = start;
 	// continue from current player
-	while(other && other.team != self.team) {
+	while(other && DIFF_TEAM(other, self))
 		other = find(other, classname, "player");
-	}
 
-	if (!other) {
+	if (!other)
+	{
 		// restart from begining
 		other = find(other, classname, "player");
-		while(other && other.team != self.team) {
+		while(other && DIFF_TEAM(other, self))
 			other = find(other, classname, "player");
-		}
 	}
 
 	return other;
 }
 
-float SpectateNext()
+bool SpectateNext()
 {
 	other = find(self.enemy, classname, "player");
 
-	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
+	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
-	} else {
+	else
+	{
 		// other modes and ca spectators or spectating enemies is allowed
 		if (!other)
 			other = find(other, classname, "player");
@@ -1892,7 +1892,7 @@ float SpectateNext()
 	return SpectateSet();
 }
 
-float SpectatePrev()
+bool SpectatePrev()
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, "player");
@@ -1908,12 +1908,12 @@ float SpectatePrev()
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
 	{
 		do { other = other.chain; }
-		while(other && other.team != self.team);
+		while(other && DIFF_TEAM(other, self));
 
 		if (!other)
 		{
 			other = first;
-			while(other.team != self.team)
+			while(other && DIFF_TEAM(other, self))
 				other = other.chain;
 			if(other == self.enemy)
 				return true;
