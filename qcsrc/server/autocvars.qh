@@ -439,6 +439,8 @@ bool autocvar_g_nix_with_powerups;
 bool autocvar_g_nodepthtestitems;
 bool autocvar_g_nodepthtestplayers;
 bool autocvar_g_norecoil;
+float autocvar_g_items_mindist;
+float autocvar_g_items_maxdist;
 int autocvar_g_pickup_cells_max;
 int autocvar_g_pickup_plasma_max;
 int autocvar_g_pickup_fuel_max;

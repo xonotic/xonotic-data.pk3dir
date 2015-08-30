@@ -456,4 +456,5 @@ vector autocvar_crosshair_rpc_color = '0.2 1.0 0.2';
 float autocvar_crosshair_rpc_alpha = 1;
 float autocvar_crosshair_rpc_size = 1;
 int autocvar_cl_nade_timer;
+bool autocvar_cl_items_nofade;
 #endif
