@@ -327,7 +327,7 @@
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_SPID_ROCKET,      2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"), "")
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_DEATH,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 got caught in the blast of a Racer explosion%s%s"), "")
     MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_ROCKET,      2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"), "")
-    MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VOID,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_void",          _("^BG%s^K1 was in the wrong place%s%s"), "")
+    MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VOID,                3, 1, "s1 s2 s2loc spree_lost", "s1",    "notify_void",            "^BG%s^K1 %s^K1%s%s", "")
     MULTITEAM_INFO(1, INFO_DEATH_TEAMKILL_, 4,             3, 1, "s1 s2 s3loc spree_end", "s2 s1",  "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "")
     MSG_INFO_NOTIF(1, INFO_DOMINATION_CAPTURE_TIME,        2, 2, "s1 s2 f1 f2", "",                 "",                     _("^BG%s^BG%s^BG (%s points every %s seconds)"), "")
     MSG_INFO_NOTIF(1, INFO_FREEZETAG_FREEZE,               2, 0, "s1 s2", "",                       "",                     _("^BG%s^K1 was frozen by ^BG%s"), "")
