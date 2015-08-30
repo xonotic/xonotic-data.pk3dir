@@ -766,6 +766,7 @@ int autocvar_g_nades_bonus_type;
 bool autocvar_g_nades_bonus;
 bool autocvar_g_nades_bonus_onstrength;
 bool autocvar_g_nades_bonus_client_select;
+bool autocvar_g_nades_bonus_only;
 int autocvar_g_nades_bonus_max;
 int autocvar_g_nades_bonus_score_max;
 int autocvar_g_nades_bonus_score_time;
