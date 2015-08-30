@@ -76,8 +76,6 @@ float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
 void objerror(string s);
 void droptofloor();
-void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
-void() spawnpoint_use;
 void() SUB_Remove;
 
 void attach_sameorigin(entity e, entity to, string tag);

@@ -125,6 +125,10 @@ void CSQC_Init(void)
 	registercvar("cl_jumpspeedcap_min", "");
 	registercvar("cl_jumpspeedcap_max", "");
 
+	registercvar("cl_multijump", "1");
+
+	registercvar("cl_spawn_near_teammate", "1");
+
 	gametype = 0;
 
 	// hud_fields uses strunzone on the titles!
