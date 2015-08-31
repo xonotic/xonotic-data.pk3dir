@@ -3,21 +3,21 @@
 
 #include "Static.qh"
 
-void RegisterCvars(void(string name, string desc, bool archive) f) { }
+void RegisterCvars(void(string name, string desc, bool archive, string file) f) { }
 
-void RegisterCvars_Set(string name, string desc, bool archive)
+void RegisterCvars_Set(string name, string desc, bool archive, string file)
 {
     localcmd(sprintf("\n%1$s %2$s \"$%2$s\" \"%3$s\"\n", (archive ? "seta" : "set"), name, desc));
 }
 
 STATIC_INIT_LATE(Cvars) { RegisterCvars(RegisterCvars_Set); }
 
-#define AUTOCVAR_4(archive, var, type, desc) \
-    [[accumulate]] void RegisterCvars(void(string, string, bool) f) { f(#var, desc, archive); } \
+#define AUTOCVAR_5(file, archive, var, type, desc) \
+    [[accumulate]] void RegisterCvars(void(string, string, bool, string) f) { f(#var, desc, archive, file); } \
     type autocvar_##var
-#define AUTOCVAR_5(archive, var, type, default, desc) \
-    AUTOCVAR_4(archive, var, type, desc) = default
-#define _AUTOCVAR(...) OVERLOAD(AUTOCVAR, __VA_ARGS__)
+#define AUTOCVAR_6(file, archive, var, type, default, desc) \
+    AUTOCVAR_5(file, archive, var, type, desc) = default
+#define _AUTOCVAR(...) OVERLOAD(AUTOCVAR, __FILE__, __VA_ARGS__)
 #define AUTOCVAR_SAVE(...) _AUTOCVAR(true, __VA_ARGS__)
 #define AUTOCVAR(...) _AUTOCVAR(false, __VA_ARGS__)
 
