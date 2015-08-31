@@ -498,7 +498,7 @@ void turret_do_updates(entity t_turret)
 	entity oldself;
 
 	oldself = self;
-	self = t_turret;
+	setself(t_turret);
 
 	enemy_pos = real_origin(self.enemy);
 
@@ -527,7 +527,7 @@ void turret_do_updates(entity t_turret)
 	self.tur_impactent			 = trace_ent;
 	self.tur_impacttime			= vlen(self.tur_shotorg - trace_endpos) / self.shot_speed;
 
-	self = oldself;
+	setself(oldself);
 }
 
 /**

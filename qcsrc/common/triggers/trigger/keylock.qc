@@ -11,13 +11,13 @@ void trigger_keylock_trigger(string s)
 	for(t = world; (t = find(t, targetname, s)); )
 		if(t.use)
 		{
-			self = t;
+			setself(t);
 			other = stemp;
 			activator = atemp;
 			self.use();
 		}
 
-	self = stemp;
+	setself(stemp);
 	other = otemp;
 	activator = atemp;
 }

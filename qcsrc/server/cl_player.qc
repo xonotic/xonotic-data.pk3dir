@@ -44,7 +44,7 @@ void CopyBody(float keepvelocity)
 	if (self.effects & EF_NODRAW)
 		return;
 	oldself = self;
-	self = spawn();
+	setself(spawn());
 	self.enemy = oldself;
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
@@ -114,7 +114,7 @@ void CopyBody(float keepvelocity)
 	animdecide_load_if_needed(self);
 	animdecide_setframes(self, false, frame, frame1time, frame2, frame2time);
 
-	self = oldself;
+	setself(oldself);
 }
 
 float player_getspecies()

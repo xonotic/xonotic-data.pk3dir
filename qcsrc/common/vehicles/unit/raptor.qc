@@ -320,7 +320,7 @@ float raptor_frame()
 
 	player = self;
 	raptor = self.vehicle;
-	self   = raptor;
+	setself(raptor);
 
 	vehicles_painframe();
 	/*
@@ -349,7 +349,7 @@ float raptor_frame()
 
 	if(raptor.deadflag != DEAD_NO)
 	{
-		self = player;
+		setself(player);
 		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
 		return 1;
 	}
@@ -642,7 +642,7 @@ float raptor_frame()
 
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
 
-	self = player;
+	setself(player);
 	return 1;
 }
 
@@ -652,7 +652,7 @@ float raptor_takeoff()
 
 	player = self;
 	raptor = self.vehicle;
-	self   = raptor;
+	setself(raptor);
 
 	self.nextthink = time;
 	CSQCMODEL_AUTOUPDATE(self);
@@ -698,7 +698,7 @@ float raptor_takeoff()
 		VEHICLE_UPDATE_PLAYER(player, shield, raptor);
 
 	player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
-	self = player;
+	setself(player);
 	return 1;
 }
 

@@ -432,7 +432,7 @@ void PutClientInServer()
 
 	if(IS_PLAYER(self))
 	{
-		entity spot, oldself;
+		entity spot;
 
 		accuracy_resend(self);
 
@@ -628,16 +628,13 @@ void PutClientInServer()
 				self.(weapon_load[j]) = e.reloading_ammo;
 		}
 
-		oldself = self;
-		self = spot;
-			activator = oldself;
-				string s;
-				s = self.target;
-				self.target = string_null;
-				SUB_UseTargets();
-				self.target = s;
-			activator = world;
-		self = oldself;
+		string s = spot.target;
+		spot.target = string_null;
+		activator = self;
+		SELFCALL(spot, SUB_UseTargets());
+		SELFCALL_DONE();
+		activator = world;
+		spot.target = s;
 
 		Unfreeze(self);
 
@@ -734,17 +731,13 @@ void ClientInit_CheckUpdate()
 
 void ClientInit_Spawn()
 {SELFPARAM();
-	entity o;
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	e.classname = "clientinit";
 	e.think = ClientInit_CheckUpdate;
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 
-	o = self;
-	self = e;
-	ClientInit_CheckUpdate();
-	self = o;
+	SELFCALL(e, ClientInit_CheckUpdate());
+	SELFCALL_DONE();
 }
 
 /*
@@ -854,7 +847,7 @@ void KillIndicator_Think()
 
 	if(self.cnt <= 0)
 	{
-		self = self.owner;
+		setself(self.owner);
 		ClientKill_Now(); // no oldself needed
 		return;
 	}
@@ -1268,10 +1261,8 @@ void ClientConnect (void)
 		sv_notice_join();
 
 	for (entity e = world; (e = findfloat(e, init_for_player_needed, 1)); ) {
-		entity oldself = self;
-		self = e;
-		e.init_for_player(oldself);
-		self = oldself;
+		SELFCALL(e, e.init_for_player(this));
+		SELFCALL_DONE();
 	}
 
 	MUTATOR_CALLHOOK(ClientConnect, self);
@@ -2626,15 +2617,15 @@ void PlayerPreThink (void)
 	{
 		self.teamkill_soundtime = 0;
 
-		entity oldpusher, oldself;
-
-		oldself = self; self = self.teamkill_soundsource;
-		oldpusher = self.pusher; self.pusher = oldself;
+		entity oldself = self;
+		setself(self.teamkill_soundsource);
+		entity oldpusher = self.pusher;
+		self.pusher = oldself;
 
 		PlayerSound(playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
 
 		self.pusher = oldpusher;
-		self = oldself;
+		setself(oldself);
 	}
 
 	if(self.taunt_soundtime)

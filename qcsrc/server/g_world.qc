@@ -531,11 +531,8 @@ void RandomSeed_Spawn()
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	entity oldself;
-	oldself = self;
-	self = randomseed;
-	self.think(); // sets random seed and nextthink
-	self = oldself;
+	SELFCALL(randomseed, randomseed.think()); // sets random seed and nextthink
+	SELFCALL_DONE();
 }
 
 void spawnfunc___init_dedicated_server(void)
@@ -1727,11 +1724,8 @@ float WinningCondition_Assault()
 			}
 			else
 			{
-				entity oldself;
-				oldself = self;
-				self = ent;
-				assault_new_round();
-				self = oldself;
+				SELFCALL(ent, assault_new_round());
+				SELFCALL_DONE();
 			}
 		}
 	}
@@ -2206,15 +2200,16 @@ void EndFrame()
 	anticheat_endframe();
 
 	float altime;
-	FOR_EACH_REALCLIENT(self)
+	entity e_;
+	FOR_EACH_REALCLIENT(e_)
 	{
-		entity e = IS_SPEC(self) ? self.enemy : self;
+		entity e = IS_SPEC(e_) ? e_.enemy : e_;
 		if(e.typehitsound)
-			self.typehit_time = time;
+			e_.typehit_time = time;
 		else if(e.damage_dealt)
 		{
-			self.hit_time = time;
-			self.damage_dealt_total += ceil(e.damage_dealt);
+			e_.hit_time = time;
+			e_.damage_dealt_total += ceil(e.damage_dealt);
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
@@ -2223,14 +2218,18 @@ void EndFrame()
 	// add another frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0). The last +1 however should not be
 	// needed!
-	FOR_EACH_CLIENT(self)
+	FOR_EACH_CLIENT(e_)
 	{
-		self.typehitsound = false;
-		self.damage_dealt = 0;
-		antilag_record(self, altime);
+		e_.typehitsound = false;
+		e_.damage_dealt = 0;
+		setself(e_);
+		antilag_record(e_, altime);
 	}
-	FOR_EACH_MONSTER(self)
-		antilag_record(self, altime);
+	FOR_EACH_MONSTER(e_)
+	{
+		setself(e_);
+		antilag_record(e_, altime);
+	}
 }
 
 
@@ -2263,8 +2262,10 @@ float RedirectionThink()
 	redirection_nextthink = time + 1;
 
 	clients_found = 0;
-	FOR_EACH_REALCLIENT(self)
+	entity e;
+	FOR_EACH_REALCLIENT(e)
 	{
+		setself(e);
 		// TODO add timer
 		LOG_INFO("Redirecting: sending connect command to ", self.netname, "\n");
 		if(redirection_target == "self")

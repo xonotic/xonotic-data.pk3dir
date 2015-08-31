@@ -236,9 +236,9 @@ void door_fire()
 				{
 					door_rotating_go_down ();
 				}
-				self = self.enemy;
+				setself(self.enemy);
 			} while ( (self != starte) && (self != world) );
-			self = oself;
+			setself(oself);
 			return;
 		}
 	}
@@ -265,29 +265,24 @@ void door_fire()
 				door_rotating_go_up ();
 			}
 		}
-		self = self.enemy;
+		setself(self.enemy);
 	} while ( (self != starte) && (self != world) );
-	self = oself;
+	setself(oself);
 }
 
 void door_use()
 {SELFPARAM();
-	entity oself;
-
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
 
 	if (self.owner)
 	{
-		oself = self;
-		self = self.owner;
-		door_fire ();
-		self = oself;
+		SELFCALL(self.owner, door_fire());
+		SELFCALL_DONE();
 	}
 }
 
 void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
-	entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
@@ -301,12 +296,10 @@ void door_damage(entity inflictor, entity attacker, float damage, int deathtype,
 
 	if (self.health <= 0)
 	{
-		oself = self;
-		self = self.owner;
-		self.health = self.max_health;
-		self.takedamage = DAMAGE_NO;	// wil be reset upon return
-		door_use ();
-		self = oself;
+		self.owner.health = self.owner.max_health;
+		self.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
+		SELFCALL(self.owner, door_use());
+		SELFCALL_DONE();
 	}
 }
 
@@ -465,7 +458,7 @@ void door_trigger_touch()
 
 	activator = other;
 
-	self = self.owner;
+	setself(self.owner);
 	door_use ();
 }
 

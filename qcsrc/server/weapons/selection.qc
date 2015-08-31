@@ -48,7 +48,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			else
 			{
 				oldself = self;
-				self = cl;
+				setself(cl);
 				f = WEP_ACTION(wpn, WR_CHECKAMMO1);
 				f = f + WEP_ACTION(wpn, WR_CHECKAMMO2);
 
@@ -58,7 +58,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
 
-				self = oldself;
+				setself(oldself);
 			}
 			if (!f)
 			{

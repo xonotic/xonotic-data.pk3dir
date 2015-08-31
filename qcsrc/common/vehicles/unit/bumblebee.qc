@@ -115,7 +115,7 @@ float bumblebee_gunner_frame()
 	entity vehic    = self.vehicle.owner;
 	entity gun      = self.vehicle;
 	entity gunner   = self;
-	self = vehic;
+	setself(vehic);
 
 	vehic.solid = SOLID_NOT;
 	//setorigin(gunner, vehic.origin);
@@ -216,7 +216,7 @@ float bumblebee_gunner_frame()
 	gunner.BUTTON_ATCK = gunner.BUTTON_ATCK2 = gunner.BUTTON_CROUCH = 0;
 	gunner.vehicle_energy = (gun.vehicle_energy / autocvar_g_vehicle_bumblebee_cannon_ammo) * 100;
 
-	self = gunner;
+	setself(gunner);
 	return 1;
 }
 
@@ -440,11 +440,11 @@ float bumblebee_pilot_frame()
 
 	pilot = self;
 	vehic = self.vehicle;
-	self   = vehic;
+	setself(vehic);
 
 	if(vehic.deadflag != DEAD_NO)
 	{
-		self = pilot;
+		setself(pilot);
 		pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = 0;
 		return 1;
 	}
@@ -643,7 +643,7 @@ float bumblebee_pilot_frame()
 	setorigin(pilot, vehic.origin + v_up * 48 + v_forward * 160);
 
 	pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = pilot.BUTTON_CROUCH = 0;
-	self = pilot;
+	setself(pilot);
 
 	return 1;
 }
@@ -804,11 +804,11 @@ float v_bumblebee(float req)
 				entity oldself = self;
 				if(self.gunner1)
 				{
-					self = self.gunner1;
+					setself(self.gunner1);
 					oldself.gun1.vehicle_exit(VHEF_EJECT);
 					entity oldother = other;
 					other = self;
-					self = oldself;
+					setself(oldself);
 					self.phase = 0;
 					self.touch();
 					other = oldother;
@@ -817,11 +817,11 @@ float v_bumblebee(float req)
 
 				if(self.gunner2)
 				{
-					self = self.gunner2;
+					setself(self.gunner2);
 					oldself.gun2.vehicle_exit(VHEF_EJECT);
 					entity oldother = other;
 					other = self;
-					self = oldself;
+					setself(oldself);
 					self.phase = 0;
 					self.touch();
 					other = oldother;
@@ -843,16 +843,16 @@ float v_bumblebee(float req)
 
 			if(self.gunner1)
 			{
-				self = self.gunner1;
+				setself(self.gunner1);
 				oldself.gun1.vehicle_exit(VHEF_EJECT);
-				self = oldself;
+				setself(oldself);
 			}
 
 			if(self.gunner2)
 			{
-				self = self.gunner2;
+				setself(self.gunner2);
 				oldself.gun2.vehicle_exit(VHEF_EJECT);
-				self = oldself;
+				setself(oldself);
 			}
 
 			self.vehicle_exit(VHEF_EJECT);

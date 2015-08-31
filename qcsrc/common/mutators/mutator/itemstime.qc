@@ -154,9 +154,10 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
     Item_ItemsTime_ResetTimes();
     // ALL the times need to be reset before .reset()ing each item
     // since Item_Reset schedules respawn of superweapons and powerups
-    for (self = world; (self = nextent(self)); )
-    if (IS_NOT_A_CLIENT(self))
+    for (entity e = NULL; (e = nextent(e)); )
+    if (IS_NOT_A_CLIENT(e))
     {
+        setself(e);
         if (self.reset)
             Item_ItemsTime_SetTime(self, 0);
     }

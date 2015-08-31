@@ -373,10 +373,8 @@ float CheatCommand(float argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					oldself = self;
-					self = e;
-					spawnfunc_func_breakable();
-					self = oldself;
+					SELFCALL(e, spawnfunc_func_breakable());
+					SELFCALL_DONE();
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -698,29 +696,29 @@ float CheatCommand(float argc)
 		case "usetarget":
 			IS_CHEAT(0, argc, 0);
 			e = self;
-			self = spawn();
+			setself(spawn());
 			self.target = argv(1);
 			activator = e;
 			SUB_UseTargets();
 			remove(self);
-			self = e;
+			setself(e);
 			DID_CHEAT();
 			break;
 		case "killtarget":
 			IS_CHEAT(0, argc, 0);
 			e = self;
-			self = spawn();
+			setself(spawn());
 			self.killtarget = argv(1);
 			activator = e;
 			SUB_UseTargets();
 			remove(self);
-			self = e;
+			setself(e);
 			DID_CHEAT();
 			break;
 		case "teleporttotarget":
 			IS_CHEAT(0, argc, 0);
 			e = self;
-			self = spawn();
+			setself(spawn());
 			setorigin(self, self.origin);
 			self.classname = "cheattriggerteleport";
 			self.target = argv(1);
@@ -729,11 +727,11 @@ float CheatCommand(float argc)
 			{
 				Simple_TeleportPlayer(self, e);
 				remove(self);
-				self = e;
+				setself(e);
 				DID_CHEAT();
 			}
 			else
-				self = e;
+				setself(e);
 			break;
 	}
 

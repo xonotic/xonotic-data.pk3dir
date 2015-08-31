@@ -144,7 +144,7 @@ void SUB_CalcMove_controller_think (void)
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
 		oldself = self;
 		self.owner.SUB_THINK = self.think1;
-		self = self.owner;
+		setself(self.owner);
 		remove(oldself);
 		self.SUB_THINK();
 	}
@@ -238,9 +238,9 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	self.SUB_NEXTTHINK = self.SUB_LTIME + traveltime;
 
 	// invoke controller
-	self = controller;
+	setself(controller);
 	self.think();
-	self = self.owner;
+	setself(self.owner);
 }
 
 void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
@@ -294,14 +294,8 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func)
 {SELFPARAM();
-	entity	oldself;
-
-	oldself = self;
-	self = ent;
-
-	SUB_CalcMove (tdest, tspeedtype, tspeed, func);
-
-	self = oldself;
+	SELFCALL(ent, SUB_CalcMove (tdest, tspeedtype, tspeed, func));
+	SELFCALL_DONE();
 }
 
 /*
@@ -369,12 +363,6 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 
 void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)
 {SELFPARAM();
-	entity	oldself;
-
-	oldself = self;
-	self = ent;
-
-	SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func);
-
-	self = oldself;
+	SELFCALL(ent, SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func));
+	SELFCALL_DONE();
 }

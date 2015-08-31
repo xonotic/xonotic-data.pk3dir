@@ -107,10 +107,8 @@ void HUD_MinigameMenu_Click(entity menuitem)
 {SELFPARAM();
 	if ( menuitem )
 	{
-		entity e = self;
-		self = menuitem;
-		menuitem.use();
-		self = e;
+		SELFCALL(menuitem, menuitem.use());
+		SELFCALL_DONE();
 	}
 }
 

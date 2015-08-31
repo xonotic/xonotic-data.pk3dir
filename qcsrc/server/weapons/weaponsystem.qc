@@ -270,16 +270,13 @@ void CL_WeaponEntity_SetModel(string name)
 
 vector CL_Weapon_GetShotOrg(float wpn)
 {SELFPARAM();
-	entity wi, oldself;
-	vector ret;
-	wi = get_weaponinfo(wpn);
-	oldself = self;
-	self = spawn();
+	entity wi = get_weaponinfo(wpn);
+	setself(spawn());
 	CL_WeaponEntity_SetModel(wi.mdl);
-	ret = self.movedir;
+	vector ret = self.movedir;
 	CL_WeaponEntity_SetModel("");
 	remove(self);
-	self = oldself;
+	setself(this);
 	return ret;
 }
 
@@ -972,9 +969,8 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 
 void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item)
 {SELFPARAM();
-	entity oldself = self;
-	self = player;
+	setself(player);
 	weapon_dropevent_item = weapon_item;
 	WEP_ACTION(weapon_type, event);
-	self = oldself;
+	setself(this);
 }

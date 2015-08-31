@@ -426,7 +426,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 	self.nextthink = time + WEP_CVAR(seeker, missile_delay) * W_WeaponRateFactor();
 
 	oldself = self;
-	self = self.realowner;
+	setself(self.realowner);
 
 	oldenemy = self.enemy;
 	self.enemy = oldself.enemy;
@@ -450,7 +450,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 	}
 
 	self.enemy = oldenemy;
-	self = oldself;
+	setself(oldself);
 }
 
 void W_Seeker_Tracker_Think(void)

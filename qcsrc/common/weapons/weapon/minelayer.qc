@@ -100,7 +100,7 @@ void W_MineLayer_Stick(entity to)
 	newmine.flags = self.flags;
 
 	remove(self);
-	self = newmine;
+	setself(newmine);
 
 	if(to)
 		SetMovetypeFollow(self, to);
@@ -122,16 +122,14 @@ void W_MineLayer_Explode(void)
 
 	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
-		entity oldself;
-		oldself = self;
-		self = self.realowner;
+		setself(self.realowner);
 		if(!WEP_ACTION(WEP_MINE_LAYER.m_id, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
-		self = oldself;
+		setself(this);
 	}
 	self.realowner.minelayer_mines -= 1;
 	remove(self);
@@ -149,16 +147,14 @@ void W_MineLayer_DoRemoteExplode(void)
 
 	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
-		entity oldself;
-		oldself = self;
-		self = self.realowner;
+		setself(self.realowner);
 		if(!WEP_ACTION(WEP_MINE_LAYER.m_id, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
-		self = oldself;
+		setself(this);
 	}
 	self.realowner.minelayer_mines -= 1;
 	remove(self);

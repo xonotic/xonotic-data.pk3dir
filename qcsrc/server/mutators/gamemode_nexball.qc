@@ -67,10 +67,10 @@ void nexball_setstatus(void)
 		{
 			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
 			oldself = self;
-			self = self.ballcarried;
+			setself(self.ballcarried);
 			DropBall(self, self.owner.origin, '0 0 0');
 			ResetBall();
-			self = oldself;
+			setself(oldself);
 		}
 		else
 			self.items |= IT_KEY1;
@@ -154,14 +154,14 @@ void GiveBall(entity plyr, entity ball)
 	}
 
 	ownr = self;
-	self = plyr;
+	setself(plyr);
 	self.weaponentity.weapons = self.weapons;
 	self.weaponentity.switchweapon = self.weapon;
 	self.weapons = WEPSET_PORTO;
 	WEP_ACTION(WEP_PORTO.m_id, WR_RESETPLAYER);
 	self.switchweapon = WEP_PORTO.m_id;
 	W_SwitchWeapon(WEP_PORTO.m_id);
-	self = ownr;
+	setself(ownr);
 }
 
 void DropBall(entity ball, vector org, vector vel)

@@ -273,14 +273,14 @@ void W_Arc_Beam_Think(void)
 
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		entity oldself = self;
-		self = self.owner;
+		setself(self.owner);
 		if(!WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO2))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(self);
 		}
-		self = oldself;
+		setself(oldself);
 		remove(self);
 		return;
 	}
@@ -593,10 +593,8 @@ void W_Arc_Beam(float burst)
 	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
-	entity oldself = self;
-	self = beam;
-	self.think();
-	self = oldself;
+	SELFCALL(beam, beam.think());
+	SELFCALL_DONE();
 }
 
 void Arc_Smoke()

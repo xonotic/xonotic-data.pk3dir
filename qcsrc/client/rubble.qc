@@ -6,11 +6,8 @@ void RubbleLimit(string cname, float limit, void() deleteproc)
 {SELFPARAM();
 	entity e;
 	entity oldest;
-	entity oldself;
 	float c;
 	float oldesttime;
-
-	oldself = self;
 
 	// remove rubble of the same type if it's at the limit
 	// remove multiple rubble if the limit has been decreased
@@ -42,9 +39,8 @@ void RubbleLimit(string cname, float limit, void() deleteproc)
 			break;
 
 		// delete this oldest one and search again
-		self = oldest;
-		deleteproc();
-		self = oldself;
+		SELFCALL(oldest, deleteproc());
+		SELFCALL_DONE();
 	}
 }
 

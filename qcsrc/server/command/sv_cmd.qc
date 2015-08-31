@@ -207,10 +207,10 @@ void GameCommand_allspec(float request, float argc)
 
 			FOR_EACH_REALPLAYER(client)
 			{
-				self = client;
-				if(self.caplayer)
-					self.caplayer = 0;
-				PutObserverInServer();
+				if (client.caplayer)
+					client.caplayer = 0;
+				SELFCALL(client, PutObserverInServer());
+				SELFCALL_DONE();
 				++i;
 			}
 			if(i) { bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n")); }
@@ -240,8 +240,8 @@ void GameCommand_anticheat(float request, float argc)
 
 			if(accepted > 0)
 			{
-				self = client;
-				anticheat_report();
+				SELFCALL(client, anticheat_report());
+				SELFCALL_DONE();
 				return;
 			}
 			else
@@ -1039,10 +1039,10 @@ void GameCommand_moveplayer(float request, float argc)
 					{
 						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							self = client;
-							if(self.caplayer)
-								self.caplayer = 0;
-							PutObserverInServer();
+							if (client.caplayer)
+								client.caplayer = 0;
+							SELFCALL(client, PutObserverInServer());
+							SELFCALL_DONE();
 
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
 						}
@@ -1194,8 +1194,8 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						self = client;
-						playerdemo_open_read(argv(next_token));
+						SELFCALL(client, playerdemo_open_read(argv(next_token)));
+						SELFCALL_DONE();
 						return;
 					}
 
@@ -1210,8 +1210,8 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						self = client;
-						playerdemo_open_write(argv(next_token));
+						SELFCALL(client, playerdemo_open_write(argv(next_token)));
+						SELFCALL_DONE();
 						return;
 					}
 
@@ -1409,7 +1409,7 @@ void GameCommand_shuffleteams(float request)
 								continue; // not a player, move on to next random slot
 
 							if(VerifyClientNumber(shuffleteams_players[z]))
-								self = edict_num(shuffleteams_players[z]);
+								setself(edict_num(shuffleteams_players[z]));
 
 							if(self.team != team_color)
 								MoveToTeam(self, team_color, 6);

@@ -103,8 +103,10 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 	entity _oldself = self;
 	entity _item = self;
 
-	FOR_EACH_SPEC(self)
+	entity e;
+	FOR_EACH_SPEC(e)
 	{
+		setself(e);
 		if(self.superspec_flags & SSF_ITEMMSG)
 			if(superspec_filteritem(self, _item))
 			{
@@ -116,7 +118,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 				{
 					_spectate(other);
 
-					self = _oldself;
+					setself(_oldself);
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
@@ -146,7 +148,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 		}
 	}
 
-	self = _oldself;
+	setself(_oldself);
 
 	return MUT_ITEMTOUCH_CONTINUE;
 }
@@ -488,11 +490,11 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 
 MUTATOR_HOOKFUNCTION(superspec_PlayerDies)
 {SELFPARAM();
-	entity _old_self = self;
-
-	FOR_EACH_SPEC(self)
+	entity e;
+	FOR_EACH_SPEC(e)
 	{
-		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == _old_self)
+		setself(e);
+		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == this)
 		{
 			if(self.autospec_flags & ASF_SHOWWHAT)
 				superspec_msg("", "", self, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
@@ -501,7 +503,7 @@ MUTATOR_HOOKFUNCTION(superspec_PlayerDies)
 		}
 	}
 
-	self = _old_self;
+	setself(this);
 	return false;
 }
 

@@ -143,8 +143,7 @@ entity sandbox_ObjectSpawn(float database)
 {SELFPARAM();
 	// spawn a new object with default properties
 
-	entity e, oldself;
-	e = spawn();
+	entity e = spawn();
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
@@ -179,10 +178,8 @@ entity sandbox_ObjectSpawn(float database)
 		e.angles_y = self.v_angle.y;
 	}
 
-	oldself = self;
-	self = e;
-	CSQCMODEL_AUTOINIT(self);
-	self = oldself;
+	SELFCALL(e, CSQCMODEL_AUTOINIT(e));
+	SELFCALL_DONE();
 
 	object_count += 1;
 	return e;

@@ -6,6 +6,7 @@
 // Step 1: auto oldself
 #if 1
 #define SELFPARAM() noref entity this = __self
+#define setself(s) (__self = s)
 #define self __self
 #define SELFCALL(s, f) (__self = s, f)
 #define SELFCALL_DONE() (__self = this)
@@ -14,6 +15,7 @@
 // Step 2: check SELFPARAM() is present for functions that use self
 #if 0
 #define SELFPARAM() [[alias("__self")]] noref entity this = __self
+#define setself(s) (__self = s)
 #define self this
 #define SELFCALL(s, f) (this = s, f)
 #define SELFCALL_DONE() (this = this)

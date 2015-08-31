@@ -336,10 +336,8 @@ void W_Tuba_NoteOn(float hittype)
 	{
 		if(self.tuba_note.cnt != n || self.tuba_note.tuba_instrument != self.tuba_instrument)
 		{
-			entity oldself = self;
-			self = self.tuba_note;
-			W_Tuba_NoteOff();
-			self = oldself;
+			SELFCALL(self.tuba_note, W_Tuba_NoteOff());
+			SELFCALL_DONE();
 		}
 	}
 
@@ -406,10 +404,8 @@ bool W_Tuba(int req)
 			{
 				if(!self.BUTTON_ATCK && !self.BUTTON_ATCK2)
 				{
-					entity oldself = self;
-					self = self.tuba_note;
-					W_Tuba_NoteOff();
-					self = oldself;
+					SELFCALL(self.tuba_note, W_Tuba_NoteOff());
+					SELFCALL_DONE();
 				}
 			}
 

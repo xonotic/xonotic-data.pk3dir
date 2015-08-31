@@ -81,7 +81,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 		other = world;
 	}
 
-	self = spawn();
+	setself(spawn());
 	self.ok_item = true;
 	self.noalign = true;
 	self.pickup_anyway = true;
@@ -93,7 +93,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
 	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
-	self = oldself;
+	setself(oldself);
 
 	self.ok_lastwep = self.switchweapon;
 

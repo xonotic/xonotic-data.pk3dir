@@ -142,17 +142,9 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
-	entity oldself;
-	oldself = self;
-	self = attacker;
-	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, self, attacker, targ, f))
 	{
 		f = frag_score;
-		self = oldself;
-	}
-	else
-	{
-		self = oldself;
 	}
 
 	attacker.totalfrags += f;
@@ -584,11 +576,8 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	entity oldself;
-	oldself = self;
-	self = ice;
-	Ice_Think();
-	self = oldself;
+	SELFCALL(ice, Ice_Think());
+	SELFCALL_DONE();
 
 	RemoveGrapplingHook(targ);
 
@@ -635,9 +624,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (gameover || targ.killcount == -666)
 		return;
 
-	entity oldself;
-	oldself = self;
-	self = targ;
+	entity oldself = self;
+	setself(targ);
         damage_targ = targ;
         damage_inflictor = inflictor;
         damage_attacker = attacker;
@@ -655,7 +643,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		if(IS_PLAYER(targ))
 			if(SAME_TEAM(targ, attacker))
 			{
-				self = oldself;
+				setself(oldself);
 				return;
 			}
 	}
@@ -776,7 +764,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
 			entity oldself = self;
-			self = targ;
+			setself(targ);
 			entity spot = SelectSpawnPoint (false);
 
 			if(spot)
@@ -806,7 +794,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				Send_Effect(EFFECT_TELEPORT, self.origin, '0 0 0', 1);
 			}
 
-			self = oldself;
+			setself(oldself);
 		}
 
 		if(!g_instagib)
@@ -923,7 +911,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (damage != 0 || (self.damageforcescale && vlen(force)))
 	if (self.event_damage)
 		self.event_damage (inflictor, attacker, damage, deathtype, hitloc, force);
-	self = oldself;
+	setself(oldself);
 
 	// apply mirror damage if any
 	if(mirrordamage > 0 || mirrorforce > 0)

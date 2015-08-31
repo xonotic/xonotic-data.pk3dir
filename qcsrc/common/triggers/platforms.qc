@@ -107,7 +107,7 @@ void plat_center_touch()
 		return;
 #endif
 
-	self = self.enemy;
+	setself(self.enemy);
 	if (self.state == 2)
 		plat_go_up ();
 	else if (self.state == 1)
@@ -127,7 +127,7 @@ void plat_outside_touch()
 		return;
 #endif
 
-	self = self.enemy;
+	setself(self.enemy);
 	if (self.state == 1)
 		plat_go_down ();
 }

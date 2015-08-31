@@ -31,12 +31,11 @@ void thrown_wep_think()
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
 {SELFPARAM();
-	entity oldself, wep;
 	float thisammo, i;
 	string s;
 	var .int ammotype = (get_weaponinfo(wpn)).ammo_field;
 
-	wep = spawn();
+	entity wep = spawn();
 
 	setorigin(wep, org);
 	wep.classname = "droppedweapon";
@@ -75,10 +74,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 	}
 
-	oldself = self;
-	self = wep;
-	weapon_defaultspawnfunc(wpn);
-	self = oldself;
+	SELFCALL(wep, weapon_defaultspawnfunc(wpn));
+	SELFCALL_DONE();
 	if(startitem_failed)
 		return string_null;
 	wep.glowmod = own.weaponentity_glowmod;

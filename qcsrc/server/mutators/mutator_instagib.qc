@@ -337,11 +337,8 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	{
 		entity e = spawn();
 		setorigin(e, self.origin);
-		entity oldself;
-		oldself = self;
-		self = e;
-		spawnfunc_item_minst_cells();
-		self = oldself;
+		SELFCALL(e, spawnfunc_item_minst_cells());
+		SELFCALL_DONE();
 		return true;
 	}
 

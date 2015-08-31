@@ -407,12 +407,14 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 {SELFPARAM();
-	FOR_EACH_PLAYER(self)
+	entity e;
+	FOR_EACH_PLAYER(e)
 	{
-		self.killcount = 0;
-		self.freezetag_frozen_timeout = -1;
+		e.killcount = 0;
+		e.freezetag_frozen_timeout = -1;
+		setself(e);
 		PutClientInServer();
-		self.freezetag_frozen_timeout = 0;
+		e.freezetag_frozen_timeout = 0;
 	}
 	freezetag_count_alive_players();
 	return 1;

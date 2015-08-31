@@ -13,16 +13,16 @@ void assault_objective_use()
 	//print("^2Activated objective ", self.targetname, "=", etos(self), "\n");
 	//print("Activator is ", activator.classname, "\n");
 
-	entity oldself;
-	oldself = self;
-
-	for(self = world; (self = find(self, target, oldself.targetname)); )
+	for (entity e = world; (e = find(e, target, this.targetname)); )
 	{
-		if(self.classname == "target_objective_decrease")
-			target_objective_decrease_activate();
+		if (e.classname == "target_objective_decrease")
+		{
+			SELFCALL(e, target_objective_decrease_activate());
+			SELFCALL_DONE();
+		}
 	}
 
-	self = oldself;
+	setself(this);
 }
 
 vector target_objective_spawn_evalfunc(entity player, entity spot, vector current)
@@ -73,7 +73,7 @@ void assault_objective_decrease_use()
 			entity oldself, oldactivator, head;
 
 			oldself = self;
-			self = oldself.enemy;
+			setself(oldself.enemy);
 			if(self.message)
 			FOR_EACH_PLAYER(head)
 				centerprint(head, self.message);
@@ -82,7 +82,7 @@ void assault_objective_decrease_use()
 			activator = oldself;
 			SUB_UseTargets();
 			activator = oldactivator;
-			self = oldself;
+			setself(oldself);
 		}
 	}
 }
@@ -170,26 +170,18 @@ void assault_roundstart_use()
 	activator = self;
 	SUB_UseTargets();
 
-	entity ent, oldself;
-
 	//(Re)spawn all turrets
-	oldself = self;
-	ent = find(world, classname, "turret_main");
-	while(ent) {
+	for(entity ent = NULL; (ent = find(ent, classname, "turret_main")); ) {
 		// Swap turret teams
 		if(ent.team == NUM_TEAM_1)
 			ent.team = NUM_TEAM_2;
 		else
 			ent.team = NUM_TEAM_1;
 
-		self = ent;
-
 		// Dubbles as teamchange
-		turret_respawn();
-
-		ent = find(ent, classname, "turret_main");
+		SELFCALL(ent, turret_respawn());
+		SELFCALL_DONE();
 	}
-	self = oldself;
 }
 
 void assault_wall_think()
@@ -214,26 +206,27 @@ void vehicles_clearreturn(entity veh);
 void vehicles_spawn();
 void assault_new_round()
 {SELFPARAM();
-    entity oldself;
 	//bprint("ASSAULT: new round\n");
 
-	oldself = self;
 	// Eject players from vehicles
-    FOR_EACH_PLAYER(self)
+	entity e;
+    FOR_EACH_PLAYER(e)
     {
-        if(self.vehicle)
-            vehicles_exit(VHEF_RELEASE);
+        if(e.vehicle)
+        {
+        	SELFCALL(e, vehicles_exit(VHEF_RELEASE));
+            SELFCALL_DONE();
+        }
     }
 
-    self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
-    while(self)
+    for (entity e_ = findchainflags(vehicle_flags, VHF_ISVEHICLE); e_; e_ = e_.chain)
     {
+    	setself(e_);
         vehicles_clearreturn(self);
         vehicles_spawn();
-        self = self.chain;
     }
 
-    self = oldself;
+    setself(this);
 
 	// up round counter
 	self.winning = self.winning + 1;

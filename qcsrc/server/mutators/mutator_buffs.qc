@@ -337,8 +337,7 @@ void buff_Init(entity ent)
 
 	entity buff = buff_FirstFromFlags(self.buffs);
 
-	entity oldself = self;
-	self = ent;
+	setself(ent);
 	if(!self.buffs || buff_Available(buff))
 		buff_NewType(self, 0);
 
@@ -375,7 +374,7 @@ void buff_Init(entity ent)
 	if(cvar("g_buffs_random_location") || (self.spawnflags & 64))
 		buff_Respawn(self);
 
-	self = oldself;
+	setself(this);
 }
 
 void buff_Init_Compat(entity ent, entity replacement)
@@ -784,13 +783,12 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		for(other = world; (other = findflags(other, flags, FL_ITEM)); )
 		if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, other.absmin, other.absmax))
 		{
-			entity oldself = self;
-			self = other;
-			other = oldself;
+			setself(other);
+			other = this;
 			if(self.touch)
 				self.touch();
 			other = self;
-			self = oldself;
+			setself(this);
 		}
 	}
 

@@ -220,9 +220,8 @@ void CSQCPlayer_SetCamera()
 
 	if(csqcplayer)
 	{
-		entity oldself;
-		oldself = self;
-		self = csqcplayer;
+		entity oldself = self;
+		setself(csqcplayer);
 
 		if(servercommandframe == 0 || clientcommandframe == 0)
 		{
@@ -299,7 +298,7 @@ void CSQCPlayer_SetCamera()
 		// relink
 		setorigin(self, self.origin);
 
-		self = oldself;
+		setself(oldself);
 	}
 
 	entity view;
@@ -307,11 +306,9 @@ void CSQCPlayer_SetCamera()
 
 	if(view && view != csqcplayer)
 	{
-		entity oldself = self;
-		self = view;
-		InterpolateOrigin_Do();
+		SELFCALL(view, InterpolateOrigin_Do());
 		self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
-		self = oldself;
+		SELFCALL_DONE();
 	}
 
 	if(view)

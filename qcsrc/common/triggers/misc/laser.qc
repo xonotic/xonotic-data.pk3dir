@@ -59,7 +59,6 @@ void misc_laser_init()
 void misc_laser_think()
 {SELFPARAM();
 	vector o;
-	entity oldself;
 	entity hitent;
 	vector hitloc;
 
@@ -98,11 +97,9 @@ void misc_laser_think()
 			{
 				self.count = 1;
 
-				oldself = self;
-				self = self.enemy;
-				activator = self.pusher;
-				SUB_UseTargets();
-				self = oldself;
+				activator = self.enemy.pusher;
+				SELFCALL(self.enemy, SUB_UseTargets());
+				SELFCALL_DONE();
 			}
 		}
 		else
@@ -111,11 +108,9 @@ void misc_laser_think()
 			{
 				self.count = 0;
 
-				oldself = self;
-				self = self.enemy;
-				activator = self.pusher;
-				SUB_UseTargets();
-				self = oldself;
+				activator = self.enemy.pusher;
+				SELFCALL(self.enemy, SUB_UseTargets());
+				SELFCALL_DONE();
 			}
 		}
 	}

@@ -577,7 +577,7 @@ void checkpoint_passed()
 	{
 		// do not allow portalling through checkpoints
 		trace_plane_normal = normalize(-1 * other.velocity);
-		self = other;
+		setself(other);
 		W_Porto_Fail(0);
 		return;
 	}
@@ -747,7 +747,7 @@ void trigger_race_checkpoint_verify()
 	qual = g_race_qualifying;
 
 	oldself = self;
-	self = spawn();
+	setself(spawn());
 	self.classname = "player";
 
 	if(g_race)
@@ -895,7 +895,7 @@ void trigger_race_checkpoint_verify()
 				}
 	}
 	remove(self);
-	self = oldself;
+	setself(oldself);
 }
 
 vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector current)
@@ -1075,7 +1075,6 @@ void spawnfunc_info_player_race (void)
 void race_ClearRecords()
 {SELFPARAM();
 	float i;
-	entity e;
 
 	for(i = 0; i < MAX_CHECKPOINTS; ++i)
 	{
@@ -1085,15 +1084,14 @@ void race_ClearRecords()
 		race_checkpoint_recordholders[i] = string_null;
 	}
 
-	e = self;
-	FOR_EACH_CLIENT(self)
+	entity e;
+	FOR_EACH_CLIENT(e)
 	{
-		float p;
-		p = self.race_place;
-		race_PreparePlayer();
-		self.race_place = p;
+		float p = e.race_place;
+		SELFCALL(e, race_PreparePlayer());
+		SELFCALL_DONE();
+		e.race_place = p;
 	}
-	self = e;
 }
 
 void race_ImposePenaltyTime(entity pl, float penalty, string reason)

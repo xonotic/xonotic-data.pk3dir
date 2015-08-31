@@ -106,6 +106,7 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 
 /** called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill */
 #define EV_GiveFragsForKill(i, o) \
+    /**/ i(entity, __self) \
     /** same as self */ i(entity, frag_attacker) \
     /**/ i(entity, frag_target) \
     /**/ i(float, frag_score) \

@@ -1466,11 +1466,10 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	e = self;
-	for(self = world; (self = nextent(self)); )
-		if(self.draw)
-			self.draw();
-	self = e;
+	for(entity e = NULL; (e = nextent(e)); ) if (e.draw) {
+		SELFCALL(e, e.draw());
+		SELFCALL_DONE();
+	}
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -1805,11 +1804,10 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	e = self;
-	for(self = world; (self = nextent(self)); )
-		if(self.draw2d)
-			self.draw2d();
-	self = e;
+	for (entity e = NULL; (e = nextent(e)); ) if (e.draw2d) {
+		SELFCALL(e, e.draw2d());
+		SELFCALL_DONE();
+	}
 	Draw_ShowNames_All();
 
 	scoreboard_active = HUD_WouldDrawScoreboard();

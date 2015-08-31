@@ -95,11 +95,8 @@ void W_Porto_Remove(entity p)
 {SELFPARAM();
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
-		entity oldself;
-		oldself = self;
-		self = p.porto_current;
-		W_Porto_Fail(1);
-		self = oldself;
+		SELFCALL(p.porto_current, W_Porto_Fail(1));
+		SELFCALL_DONE();
 	}
 }
 

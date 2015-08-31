@@ -47,7 +47,7 @@ void monster_dropitem()
 
 	if(e && e.monster_loot)
 	{
-		self = e;
+		setself(e);
 		e.noalign = true;
 		e.monster_loot();
 		e.gravity = 1;
@@ -58,7 +58,7 @@ void monster_dropitem()
 		e.item_spawnshieldtime = time + 0.7;
 		e.classname = "droppedweapon"; // use weapon handling to remove it on touch
 		SUB_SetFade(e, time + autocvar_g_monsters_drop_time, 1);
-		self = oldself;
+		setself(oldself);
 	}
 }
 
@@ -198,7 +198,7 @@ void monster_changeteam(entity ent, float newteam)
 void Monster_Delay_Action()
 {SELFPARAM();
 	entity oldself = self;
-	self = self.owner;
+	setself(self.owner);
 	if(Monster_ValidTarget(self, self.enemy)) { oldself.use(); }
 
 	if(oldself.cnt > 0)

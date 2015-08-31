@@ -76,7 +76,7 @@ void weapon_defaultspawnfunc(float wpn)
 					e = get_weaponinfo(j);
 					if(e.netname == s)
 					{
-						self = spawn();
+						setself(spawn());
 						copyentity(oldself, self);
 						self.classname = "replacedweapon";
 						weapon_defaultspawnfunc(j);
@@ -88,7 +88,7 @@ void weapon_defaultspawnfunc(float wpn)
 					LOG_INFO("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 				}
 			}
-			self = oldself;
+			setself(oldself);
 		}
 		if(t >= 1) // always the case!
 		{

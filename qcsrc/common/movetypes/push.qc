@@ -93,26 +93,22 @@ void _Movetype_PushMove(float dt)  // SV_PushMove
 			if (check.move_movetype == 32)  // MOVETYPE_PHYSICS
 			{
 				check.move_origin = check.move_origin + move;
-				entity oldself = self;
-				self = check;
-				_Movetype_LinkEdict(true);
-				self = oldself;
+				SELFCALL(check, _Movetype_LinkEdict(true));
+				SELFCALL_DONE();
 				continue;
 			}
 
 			// try moving the contacted entity
 			self.solid = SOLID_NOT;
-			entity oldself = self;
-			self = check;
-			if (!_Movetype_PushEntity(move, true))
+			bool flag = SELFCALL(check, _Movetype_PushEntity(move, true));
+			SELFCALL_DONE();
+			if (!flag)
 			{
-				self = oldself;
 				// entity "check" got teleported
 				check.move_angles_y += trace_fraction * moveangle.y;
 				self.solid = savesolid;
 				continue;  // pushed enough
 			}
-			self = oldself;
 			// FIXME: turn players specially
 			check.move_angles_y += trace_fraction * moveangle.y;
 			self.solid = savesolid;

@@ -5,15 +5,14 @@ void turret_targettrigger_touch()
 {SELFPARAM();
     entity e;
     if (self.cnt > time) return;
-    entity oldself;
-    oldself = self;
+    entity oldself = this;
 
     e = find(world, targetname, self.target);
     while (e)
     {
         if (e.turret_flags & TUR_FLAG_RECIEVETARGETS)
         {
-            self = e;
+            setself(e);
             if(e.turret_addtarget)
                 e.turret_addtarget(other,oldself);
         }
@@ -23,7 +22,7 @@ void turret_targettrigger_touch()
 
     oldself.cnt = time + 0.5;
 
-    self = oldself;
+    setself(this);
 }
 
 /*QUAKED turret_targettrigger (.5 .5 .5) ?

@@ -59,8 +59,9 @@ void spawnfunc_target_music()
 }
 void TargetMusic_RestoreGame()
 {SELFPARAM();
-	for(self = world; (self = find(self, classname, "target_music")); )
+	for(entity e = world; (e = find(e, classname, "target_music")); )
 	{
+		setself(e);
 		if(self.targetname == "")
 			target_music_sendto(MSG_INIT, 1);
 		else

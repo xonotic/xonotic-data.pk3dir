@@ -347,7 +347,7 @@ float spiderbot_frame()
 
 	player = self;
 	spider = self.vehicle;
-	self   = spider;
+	setself(spider);
 
 	vehicles_painframe();
 
@@ -547,7 +547,7 @@ float spiderbot_frame()
 			vector v;
 			spider.misc_bulletcounter += 1;
 
-			self = player;
+			setself(player);
 
 			gun = (spider.misc_bulletcounter % 2) ? spider.gun1 : spider.gun2;
 
@@ -562,7 +562,7 @@ float spiderbot_frame()
 			//trailparticles(self, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
 			pointparticles(particleeffectnum(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH), v, v_forward * 2500, 1);
 
-			self = spider;
+			setself(spider);
 
 			spider.vehicle_ammo1 -= autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
 			spider.tur_head.attack_finished_single = time + autocvar_g_vehicle_spiderbot_minigun_refire;
@@ -607,7 +607,7 @@ float spiderbot_frame()
 	if(self.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(player, shield, spiderbot);
 
-	self = player;
+	setself(player);
 	return 1;
 }
 

@@ -10,7 +10,6 @@ void trigger_teleport_use()
 
 void Teleport_Touch (void)
 {SELFPARAM();
-	entity oldself;
 	string s;
 
 	if (self.active != ACTIVE_ACTIVE)
@@ -38,18 +37,15 @@ void Teleport_Touch (void)
 	if(IS_PLAYER(other))
 		RemoveGrapplingHook(other);
 
-	entity e;
-	e = Simple_TeleportPlayer(self, other);
+	entity e = Simple_TeleportPlayer(self, other);
 
 	activator = other;
 	s = self.target; self.target = string_null;
 	SUB_UseTargets();
 	if (!self.target) self.target = s;
 
-	oldself = self;
-	self = e;
-	SUB_UseTargets();
-	self = oldself;
+	SELFCALL(e, SUB_UseTargets());
+	SELFCALL_DONE();
 }
 
 void spawnfunc_trigger_teleport()

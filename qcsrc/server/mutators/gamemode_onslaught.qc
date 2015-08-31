@@ -405,10 +405,10 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 
 		// Use targets now (somebody make sure this is in the right place..)
 		oself = self;
-		self = self.owner;
+		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		self = oself;
+		setself(oself);
 
 		self.owner.waslinked = self.owner.islinked;
 		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
@@ -479,10 +479,10 @@ void ons_ControlPoint_Icon_Think()
 			self.owner.team = 0;
 
 		oself = self;
-		self = self.owner;
+		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		self = oself;
+		setself(oself);
 
 		self.owner.team = t;
 
@@ -546,10 +546,10 @@ void ons_ControlPoint_Icon_BuildThink()
 
 		// Use targets now (somebody make sure this is in the right place..)
 		oself = self;
-		self = self.owner;
+		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		self = oself;
+		setself(oself);
 
 		self.SendFlags |= CPSF_SETUP;
 	}
@@ -737,7 +737,7 @@ void ons_DelayedControlPoint_Setup(void)
 void ons_ControlPoint_Setup(entity cp)
 {SELFPARAM();
 	// declarations
-	self = cp; // for later usage with droptofloor()
+	setself(cp); // for later usage with droptofloor()
 
 	// main setup
 	cp.ons_worldcpnext = ons_worldcplist; // link control point into ons_worldcplist
@@ -790,7 +790,7 @@ void ons_ControlPoint_Setup(entity cp)
 	{
 		setorigin(cp, cp.origin + '0 0 20');
 		cp.noalign = false;
-		self = cp;
+		setself(cp);
 		droptofloor();
 		cp.movetype = MOVETYPE_TOSS;
 	}
@@ -1002,7 +1002,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 {SELFPARAM();
 	// declarations
 	int teamnumber = gen.team;
-	self = gen; // for later usage with droptofloor()
+	setself(gen); // for later usage with droptofloor()
 
 	// main setup
 	gen.ons_worldgeneratornext = ons_worldgeneratorlist; // link generator into ons_worldgeneratorlist
@@ -1046,7 +1046,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.colormap = 1024 + (teamnumber - 1) * 17;
 
 	// generator placement
-	self = gen;
+	setself(gen);
 	droptofloor();
 
 	// waypointsprites
@@ -1703,11 +1703,13 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 
 MUTATOR_HOOKFUNCTION(ons_ResetMap)
 {SELFPARAM();
-	FOR_EACH_PLAYER(self)
+	entity e;
+	FOR_EACH_PLAYER(e)
 	{
-		self.ons_roundlost = false;
-		self.ons_deathloc = '0 0 0';
-		PutClientInServer();
+		e.ons_roundlost = false;
+		e.ons_deathloc = '0 0 0';
+		SELFCALL(e, PutClientInServer());
+		SELFCALL_DONE();
 	}
 	return false;
 }

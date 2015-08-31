@@ -223,7 +223,7 @@ void SUB_UseTargets()
 				{
 					if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
 						t.antiwall_flag = aw_flag;
-					self = t;
+					setself(t);
 					other = stemp;
 					activator = act;
 					self.use();
@@ -234,14 +234,14 @@ void SUB_UseTargets()
 
 	if(stemp.target_random && RandomSelection_chosen_ent)
 	{
-		self = RandomSelection_chosen_ent;
+		setself(RandomSelection_chosen_ent);
 		other = stemp;
 		activator = act;
 		self.use();
 	}
 
 	activator = act;
-	self = stemp;
+	setself(stemp);
 	other = otemp;
 }
 

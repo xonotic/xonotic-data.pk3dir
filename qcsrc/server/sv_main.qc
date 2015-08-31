@@ -29,12 +29,11 @@
 
 void CreatureFrame (void)
 {SELFPARAM();
-	entity oldself;
 	float dm;
 
-	oldself = self;
-	for(self = world; (self = findfloat(self, damagedbycontents, true)); )
+	for(entity e = world; (e = findfloat(e, damagedbycontents, true)); )
 	{
+		setself(e);
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 
 		float vehic = IS_VEHICLE(self);
@@ -169,7 +168,7 @@ void CreatureFrame (void)
 
         self.oldvelocity = self.velocity;
 	}
-	self = oldself;
+	setself(this);
 }
 
 
@@ -218,8 +217,7 @@ void StartFrame (void)
 	}
 #endif
 
-	entity e;
-	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
+	for(entity e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
 		CSQCProjectile_Check(e);
 
 	if(RedirectionThink())
@@ -264,8 +262,9 @@ void StartFrame (void)
 
 	bot_serverframe();
 
-	FOR_EACH_PLAYER(self)
-		self.porto_forbidden = max(0, self.porto_forbidden - 1);
+	entity e;
+	FOR_EACH_PLAYER(e)
+		e.porto_forbidden = max(0, e.porto_forbidden - 1);
 
 	anticheat_startframe();
 

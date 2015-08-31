@@ -159,8 +159,9 @@ void Ent_DamageInfo(float isNew)
 	else
 		forcemul = 1;
 
-	for(self = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); self; self = self.chain)
+	for(entity e = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); e; e = e.chain)
 	{
+		setself(e);
 		// attached ents suck
 		if(self.tag_entity)
 			continue;
@@ -211,8 +212,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.isplayermodel)
 			hitplayer = true; // this impact damaged a player
 	}
-
-	self = oldself;
+	setself(oldself);
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{

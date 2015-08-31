@@ -1,28 +1,24 @@
 #ifdef SVQC
 void relay_activators_use()
 {SELFPARAM();
-	entity trg, os;
-
-	os = self;
-
-	for(trg = world; (trg = find(trg, targetname, os.target)); )
+	for(entity trg = world; (trg = find(trg, targetname, this.target)); )
 	{
-		self = trg;
+		setself(trg);
 		if (trg.setactive)
-			trg.setactive(os.cnt);
+			trg.setactive(this.cnt);
 		else
 		{
 			//bprint("Not using setactive\n");
-			if(os.cnt == ACTIVE_TOGGLE)
+			if(this.cnt == ACTIVE_TOGGLE)
 				if(trg.active == ACTIVE_ACTIVE)
 					trg.active = ACTIVE_NOT;
 				else
 					trg.active = ACTIVE_ACTIVE;
 			else
-				trg.active = os.cnt;
+				trg.active = this.cnt;
 		}
 	}
-	self = os;
+	setself(this);
 }
 
 void spawnfunc_relay_activate()

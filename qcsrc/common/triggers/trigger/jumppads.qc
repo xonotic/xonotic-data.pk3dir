@@ -218,12 +218,9 @@ void trigger_push_touch()
 
 	if(self.enemy.target)
 	{
-		entity oldself;
-		oldself = self;
 		activator = other;
-		self = self.enemy;
-		SUB_UseTargets();
-		self = oldself;
+		SELFCALL(self.enemy, SUB_UseTargets());
+		SELFCALL_DONE();
 	}
 
 	if (other.flags & FL_PROJECTILE)

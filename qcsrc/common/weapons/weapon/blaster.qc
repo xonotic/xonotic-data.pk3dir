@@ -141,11 +141,8 @@ void W_Blaster_Attack(
 
 	if(time >= missile.nextthink)
 	{
-		entity oldself;
-		oldself = self;
-		self = missile;
-		self.think();
-		self = oldself;
+		SELFCALL(missile, missile.think());
+		SELFCALL_DONE();
 	}
 }
 bool W_Blaster(int request)

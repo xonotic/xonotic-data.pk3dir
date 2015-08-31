@@ -322,7 +322,6 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 
 void _Movetype_Impact(entity oth)  // SV_Impact
 {SELFPARAM();
-	entity oldself = self;
 	entity oldother = other;
 
 	if(self.move_touch)
@@ -337,11 +336,10 @@ void _Movetype_Impact(entity oth)  // SV_Impact
 	if(oth.move_touch)
 	{
 		other = self;
-		self = oth;
 
-		self.move_touch();
+		SELFCALL(oth, oth.move_touch());
+		SELFCALL_DONE();
 
-		self = oldself;
 		other = oldother;
 	}
 }
@@ -355,7 +353,7 @@ void _Movetype_LinkEdict_TouchAreaGrid()  // SV_LinkEdict_TouchAreaGrid
 	{
 		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, oldself.absmin, oldself.absmax))
 		{
-			self = e;
+			setself(e);
 			other = oldself;
 
 			trace_allsolid = false;
@@ -373,7 +371,7 @@ void _Movetype_LinkEdict_TouchAreaGrid()  // SV_LinkEdict_TouchAreaGrid
 	}
 
 	other = oldother;
-	self = oldself;
+	setself(oldself);
 }
 
 void _Movetype_LinkEdict(bool touch_triggers)  // SV_LinkEdict

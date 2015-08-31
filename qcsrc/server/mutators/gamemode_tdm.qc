@@ -19,16 +19,14 @@ void spawnfunc_tdm_team()
 // code from here on is just to support maps that don't have team entities
 void tdm_SpawnTeam (string teamname, float teamcolor)
 {SELFPARAM();
-	entity oldself;
-	oldself = self;
-	self = spawn();
+	setself(spawn());
 	self.classname = "tdm_team";
 	self.netname = teamname;
 	self.cnt = teamcolor;
 
 	spawnfunc_tdm_team();
 
-	self = oldself;
+	setself(this);
 }
 
 void tdm_DelayedInit()

@@ -45,7 +45,7 @@ void beam_think()
     self.owner.attack_finished_single = time + frametime;
     entity oldself;
     oldself = self;
-    self = self.owner;
+    setself(self.owner);
     FireImoBeam (   self.tur_shotorg,
                     self.tur_shotorg + self.tur_shotdir_updated * self.target_range,
                     '-1 -1 -1' * self.shot_radius,
@@ -54,7 +54,7 @@ void beam_think()
                     oldself.shot_dmg,
                     0.75,
                     DEATH_TURRET_PHASER);
-    self = oldself;
+    setself(oldself);
     self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
 
 }

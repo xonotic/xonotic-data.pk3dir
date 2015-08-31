@@ -2,11 +2,8 @@
 void() train_next;
 void train_wait()
 {SELFPARAM();
-	entity oldself;
-	oldself = self;
-	self = self.enemy;
-	SUB_UseTargets();
-	self = oldself;
+	SELFCALL(self.enemy, SUB_UseTargets());
+	SELFCALL_DONE();
 	self.enemy = world;
 
 	// if turning is enabled, the train will turn toward the next point while waiting

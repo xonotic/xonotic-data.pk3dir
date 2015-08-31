@@ -410,8 +410,10 @@ MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
 MUTATOR_HOOKFUNCTION(dom_ResetMap)
 {SELFPARAM();
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	FOR_EACH_PLAYER(self)
+	entity e;
+	FOR_EACH_PLAYER(e)
 	{
+		setself(e);
 		PutClientInServer();
 		self.player_blocked = 1;
 		if(IS_REAL_CLIENT(self))
@@ -542,9 +544,8 @@ void ScoreRules_dom(float teams)
 // code from here on is just to support maps that don't have control point and team entities
 void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage)
 {SELFPARAM();
-	entity oldself;
-	oldself = self;
-	self = spawn();
+	entity oldself = self;
+	setself(spawn());
 	self.classname = "dom_team";
 	self.netname = teamname;
 	self.cnt = teamcolor;
@@ -564,20 +565,19 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.team = self.cnt + 1;
 
 	//eprint(self);
-	self = oldself;
+	setself(oldself);
 }
 
 void dom_spawnpoint(vector org)
 {SELFPARAM();
-	entity oldself;
-	oldself = self;
-	self = spawn();
+	entity oldself = self;
+	setself(spawn());
 	self.classname = "dom_controlpoint";
 	self.think = spawnfunc_dom_controlpoint;
 	self.nextthink = time;
 	setorigin(self, org);
 	spawnfunc_dom_controlpoint();
-	self = oldself;
+	setself(oldself);
 }
 
 // spawn some default teams if the map is not set up for domination

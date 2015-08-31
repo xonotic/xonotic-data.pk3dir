@@ -39,17 +39,15 @@
 
 entity bot_spawn()
 {SELFPARAM();
-	entity oldself, bot;
-	bot = spawnclient();
+	entity bot = spawnclient();
 	if (bot)
 	{
 		currentbots = currentbots + 1;
-		oldself = self;
-		self = bot;
+		setself(bot);
 		bot_setnameandstuff();
 		ClientConnect();
 		PutClientInServer();
-		self = oldself;
+		setself(this);
 	}
 	return bot;
 }

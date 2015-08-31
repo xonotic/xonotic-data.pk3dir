@@ -10,20 +10,18 @@
 
 void W_GiveWeapon (entity e, float wep)
 {SELFPARAM();
-	entity oldself;
 
 	if (!wep)
 		return;
 
 	e.weapons |= WepSet_FromWeapon(wep);
 
-	oldself = self;
-	self = e;
+	setself(e);
 
 	if(IS_PLAYER(other))
 		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
 
-	self = oldself;
+	setself(this);
 }
 
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound

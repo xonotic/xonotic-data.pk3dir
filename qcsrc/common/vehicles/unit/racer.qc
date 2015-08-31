@@ -324,7 +324,7 @@ float racer_frame()
 
 	player  = self;
 	racer   = self.vehicle;
-	self	= racer;
+	setself(racer);
 
 	vehicles_painframe();
 
@@ -333,7 +333,7 @@ float racer_frame()
 
 	if(racer.deadflag != DEAD_NO)
 	{
-		self = player;
+		setself(player);
 		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
 		return 1;
 	}
@@ -545,7 +545,7 @@ float racer_frame()
 	setorigin(player,racer.origin + '0 0 32');
 	player.velocity = racer.velocity;
 
-	self = player;
+	setself(player);
 	return 1;
 }
 
