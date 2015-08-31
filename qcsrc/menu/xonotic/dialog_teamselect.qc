@@ -51,14 +51,10 @@ void XonoticTeamSelectDialog_fill(entity me)
 			e.preferredFocusPriority = 1;
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 2, 1, e = me.team1 = makeTeamButton_T(_("red"), '1 0.5 0.5', "cmd selectteam red; cmd join",
-			_("Join the red team")));
-		me.TD(me, 2, 1, e = me.team2 = makeTeamButton_T(_("blue"), '0.5 0.5 1', "cmd selectteam blue; cmd join",
-			_("Join the blue team")));
-		me.TD(me, 2, 1, e = me.team3 = makeTeamButton_T(_("yellow"), '1 1 0.5', "cmd selectteam yellow; cmd join",
-			_("Join the yellow team")));
-		me.TD(me, 2, 1, e = me.team4 = makeTeamButton_T(_("pink"), '1 0.5 1', "cmd selectteam pink; cmd join",
-			_("Join the pink team")));
+		me.TD(me, 2, 1, e = me.team1 = makeTeamButton(_("red"), '1 0.5 0.5', "cmd selectteam red; cmd join"));
+		me.TD(me, 2, 1, e = me.team2 = makeTeamButton(_("blue"), '0.5 0.5 1', "cmd selectteam blue; cmd join"));
+		me.TD(me, 2, 1, e = me.team3 = makeTeamButton(_("yellow"), '1 1 0.5', "cmd selectteam yellow; cmd join"));
+		me.TD(me, 2, 1, e = me.team4 = makeTeamButton(_("pink"), '1 0.5 1', "cmd selectteam pink; cmd join"));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", 1));

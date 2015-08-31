@@ -53,15 +53,13 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));
 			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 1, 1.9, e = makeXonoticSlider_T(0.1, 1.0, 0.01, "crosshair_size",
-			_("Adjust the size of the crosshair")));
+		me.TD(me, 1, 1.9, e = makeXonoticSlider(0.1, 1.0, 0.01, "crosshair_size"));
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair alpha:")));
 			setDependent(e, "crosshair_enabled", 1, 2);
-		me.TD(me, 1, 1.9, e = makeXonoticSlider_T(0, 1, 0.1, "crosshair_alpha",
-			_("Adjust the opacity of the crosshair")));
+		me.TD(me, 1, 1.9, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);
