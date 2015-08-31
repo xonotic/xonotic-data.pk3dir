@@ -388,6 +388,14 @@ MUTATOR_HOOKFUNCTION(instagib_ItemCountdown)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
+{	
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER.m_id))
+		frag_damage = 1000; // always gib if it was a vaporizer death
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 {
 	if(self.ammo_cells)
@@ -473,6 +481,7 @@ MUTATOR_DEFINITION(mutator_instagib)
 	MUTATOR_HOOK(FilterItem, instagib_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(CustomizeWaypoint, instagib_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, instagib_ItemCountdown, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, instagib_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, instagib_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, instagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, instagib_ForbidThrowing, CBC_ORDER_ANY);

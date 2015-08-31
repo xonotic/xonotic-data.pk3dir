@@ -548,6 +548,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
+		excess = frag_damage;
 
 		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 
