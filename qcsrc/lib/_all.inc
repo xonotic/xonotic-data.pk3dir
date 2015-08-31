@@ -20,6 +20,7 @@
 #include "Progname.qh"
 #include "Registry.qh"
 #include "sortlist.qc"
+#include "Static.qh"
 #include "String.qh"
 #include "Struct.qh"
 #include "test.qc"
