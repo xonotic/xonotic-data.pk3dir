@@ -1144,10 +1144,8 @@ void InitializeEntity(entity e, void(void) func, float order)
     if (!e || e.initialize_entity)
     {
         // make a proxy initializer entity
-        entity e_old;
-        e_old = e;
-        e = spawn();
-        e.classname = "initialize_entity";
+        entity e_old = e;
+        e = new(initialize_entity);
         e.enemy = e_old;
     }
 
@@ -1174,45 +1172,46 @@ void InitializeEntity(entity e, void(void) func, float order)
 }
 void InitializeEntitiesRun()
 {SELFPARAM();
-    entity startoflist;
-    startoflist = initialize_entity_first;
-    initialize_entity_first = world;
+    entity startoflist = initialize_entity_first;
+    initialize_entity_first = NULL;
     remove = remove_except_protected;
     for (entity e = startoflist; e; e = e.initialize_entity_next)
     {
 		e.remove_except_protected_forbidden = 1;
     }
-    for (entity e_ = startoflist; e_; )
+    for (entity e = startoflist; e; )
     {
-        setself(e_);
-        entity e = e_.initialize_entity_next;
-        var void(void) func = e_.initialize_entity;
-        e_.initialize_entity_order = 0;
-        e_.initialize_entity = func_null;
-        e_.initialize_entity_next = world;
-		e_.remove_except_protected_forbidden = 0;
-        if (e_.classname == "initialize_entity")
+		e.remove_except_protected_forbidden = 0;
+        e.initialize_entity_order = 0;
+    	entity next = e.initialize_entity_next;
+        e.initialize_entity_next = NULL;
+        var void() func = e.initialize_entity;
+        e.initialize_entity = func_null;
+        if (e.classname == "initialize_entity")
         {
-            entity e_old = e_.enemy;
-            builtin_remove(e_);
-            e_ = e_old;
+            entity wrappee = e.enemy;
+            builtin_remove(e);
+            e = wrappee;
         }
-        //dprint("Delayed initialization: ", e_.classname, "\n");
-        if(func)
-            func();
+        //dprint("Delayed initialization: ", e.classname, "\n");
+        if (func)
+        {
+        	SELFCALL(e, func());
+            SELFCALL_DONE();
+        }
         else
         {
-            eprint(e_);
-            backtrace(strcat("Null function in: ", e_.classname, "\n"));
+            eprint(e);
+            backtrace(strcat("Null function in: ", e.classname, "\n"));
         }
-        e_ = e;
+        e = next;
     }
     remove = remove_unsafely;
 }
 
 void UncustomizeEntitiesRun()
 {SELFPARAM();
-    for (entity e = world; (e = findfloat(e, uncustomizeentityforclient_set, 1)); )
+    for (entity e = NULL; (e = findfloat(e, uncustomizeentityforclient_set, 1)); )
     {
         SELFCALL(e, e.uncustomizeentityforclient());
         SELFCALL_DONE();
