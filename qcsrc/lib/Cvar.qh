@@ -1,15 +1,24 @@
 #ifndef CVAR_H
 #define CVAR_H
 
-#define CVAR_DESCRIBE(set, var, desc)    localcmd(sprintf("\n"set" %1$s \"$%1$s\" \"%2$s\"\n", #var, desc))
+#include "Static.qh"
 
-#define AUTOCVAR_4(set, var, type, desc) \
-    STATIC_INIT(autocvar_##var) { CVAR_DESCRIBE(set, var, desc); } \
+void RegisterCvars(void(string name, string desc, bool archive) f) { }
+
+void RegisterCvars_Set(string name, string desc, bool archive)
+{
+    localcmd(sprintf("\n%1$s %2$s \"$%2$s\" \"%3$s\"\n", (archive ? "seta" : "set"), name, desc));
+}
+
+STATIC_INIT_LATE(Cvars) { RegisterCvars(RegisterCvars_Set); }
+
+#define AUTOCVAR_4(archive, var, type, desc) \
+    [[accumulate]] void RegisterCvars(void(string, string, bool) f) { f(#var, desc, archive); } \
     type autocvar_##var
-#define AUTOCVAR_5(set, var, type, default, desc) \
-    AUTOCVAR_4(set, var, type, desc) = default
+#define AUTOCVAR_5(archive, var, type, default, desc) \
+    AUTOCVAR_4(archive, var, type, desc) = default
 #define _AUTOCVAR(...) OVERLOAD(AUTOCVAR, __VA_ARGS__)
-#define AUTOCVAR_SAVE(...) _AUTOCVAR("seta", __VA_ARGS__)
-#define AUTOCVAR(...) _AUTOCVAR("set", __VA_ARGS__)
+#define AUTOCVAR_SAVE(...) _AUTOCVAR(true, __VA_ARGS__)
+#define AUTOCVAR(...) _AUTOCVAR(false, __VA_ARGS__)
 
 #endif

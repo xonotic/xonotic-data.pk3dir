@@ -11,8 +11,6 @@
 #include "../common/constants.qh"
 #include "../common/util.qh"
 
-#define localcmd cmd
-
 // constants
 
 const int GAME_ISSERVER 	= 1;
