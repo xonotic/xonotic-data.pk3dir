@@ -4,7 +4,7 @@
 	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
-    #include "../warpzonelib/mathlib.qh"
+	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications.qh"
     #include "deathtypes.qh"
@@ -12,10 +12,10 @@
 #elif defined(SVQC)
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/mathlib.qh"
     #include "constants.qh"
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"
+	#include "../server/mutators/events.qh"
     #include "notifications.qh"
     #include "deathtypes.qh"
     #include "mapinfo.qh"
@@ -184,26 +184,26 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 	entity e;
 	e = start;
 	funcPre(pass, e);
-	while(e.downleft)
+	while (e.(downleft))
 	{
-		e = e.downleft;
+		e = e.(downleft);
 		funcPre(pass, e);
 	}
 	funcPost(pass, e);
 	while(e != start)
 	{
-		if(e.right)
+		if (e.(right))
 		{
-			e = e.right;
+			e = e.(right);
 			funcPre(pass, e);
-			while(e.downleft)
+			while (e.(downleft))
 			{
-				e = e.downleft;
+				e = e.(downleft);
 				funcPre(pass, e);
 			}
 		}
 		else
-			e = e.up;
+			e = e.(up);
 		funcPost(pass, e);
 	}
 }
@@ -288,7 +288,7 @@ void db_save(float db, string pFilename)
 	fh = fopen(pFilename, FILE_WRITE);
 	if(fh < 0)
 	{
-		print(strcat("^1Can't write DB to ", pFilename));
+		LOG_INFO(strcat("^1Can't write DB to ", pFilename));
 		return;
 	}
 	n = buf_getsize(db);
@@ -382,16 +382,16 @@ void db_put(float db, string pKey, string pValue)
 void db_test()
 {
 	float db, i;
-	print("LOAD...\n");
+	LOG_INFO("LOAD...\n");
 	db = db_load("foo.db");
-	print("LOADED. FILL...\n");
+	LOG_INFO("LOADED. FILL...\n");
 	for(i = 0; i < DB_BUCKETS; ++i)
 		db_put(db, ftos(random()), "X");
-	print("FILLED. SAVE...\n");
+	LOG_INFO("FILLED. SAVE...\n");
 	db_save(db, "foo.db");
-	print("SAVED. CLOSE...\n");
+	LOG_INFO("SAVED. CLOSE...\n");
 	db_close(db);
-	print("CLOSED.\n");
+	LOG_INFO("CLOSED.\n");
 }
 
 // Multiline text file buffers
@@ -620,17 +620,17 @@ void compressShortVector_init()
 
 	if(cvar("developer"))
 	{
-		print("Verifying vector compression table...\n");
+		LOG_INFO("Verifying vector compression table...\n");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				print("BROKEN vector compression: ", ftos(i));
-				print(" -> ", vtos(decompressShortVector(i)));
-				print(" -> ", ftos(compressShortVector(decompressShortVector(i))));
-				print("\n");
+				LOG_INFO("BROKEN vector compression: ", ftos(i));
+				LOG_INFO(" -> ", vtos(decompressShortVector(i)));
+				LOG_INFO(" -> ", ftos(compressShortVector(decompressShortVector(i))));
+				LOG_INFO("\n");
 				error("b0rk");
 			}
-		print("Done.\n");
+		LOG_INFO("Done.\n");
 	}
 }
 
@@ -892,13 +892,13 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if (!(tmp_cvar || tmp_value))
 	{
-		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		LOG_TRACE("Error: Invalid usage of cvar_settemp(string, string); !\n");
 		return 0;
 	}
 
 	if(!cvar_type(tmp_cvar))
 	{
-		printf("Error: cvar %s doesn't exist!\n", tmp_cvar);
+		LOG_INFOF("Error: cvar %s doesn't exist!\n", tmp_cvar);
 		return 0;
 	}
 
@@ -935,7 +935,7 @@ float cvar_settemp_restore()
 			++i;
 		}
 		else
-			printf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
+			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
 	}
 
 	return i;
@@ -1735,17 +1735,17 @@ float compressShotOrigin(vector v)
 	z = rint(v.z * 4) + 128;
 	if(x > 255 || x < 0)
 	{
-		print("shot origin ", vtos(v), " x out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " x out of bounds\n");
 		x = bound(0, x, 255);
 	}
 	if(y > 255 || y < 0)
 	{
-		print("shot origin ", vtos(v), " y out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " y out of bounds\n");
 		y = bound(0, y, 255);
 	}
 	if(z > 255 || z < 0)
 	{
-		print("shot origin ", vtos(v), " z out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " z out of bounds\n");
 		z = bound(0, z, 255);
 	}
 	return x * 0x10000 + y * 0x100 + z;
@@ -1843,7 +1843,7 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 }
 
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype)
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
@@ -1867,7 +1867,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage)
+vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage)
 {
 	vector v;
 	if (deathtype == DEATH_DROWN)  // Why should armor help here...
@@ -2059,6 +2059,10 @@ float get_model_parameters(string m, float sk)
 	}
 	get_model_parameters_fixbone = 0;
 
+#ifndef MENUQC
+	MUTATOR_CALLHOOK(ClearModelParams);
+#endif
+
 	if (!m)
 		return 1;
 
@@ -2120,6 +2124,9 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
+	#ifndef MENUQC
+		MUTATOR_CALLHOOK(GetModelParams, c, s);
+	#endif
 		for(int i = 0; i < MAX_AIM_BONES; ++i)
 			if(c == strcat("bone_aim", ftos(i)))
 			{
@@ -2236,30 +2243,6 @@ float u8_strsize(string s)
 	return l;
 }
 
-// translation helpers
-string language_filename(string s)
-{
-	string fn;
-	float fh;
-	fn = prvm_language;
-	if(fn == "" || fn == "dump")
-		return s;
-	fn = strcat(s, ".", fn);
-	if((fh = fopen(fn, FILE_READ)) >= 0)
-	{
-		fclose(fh);
-		return fn;
-	}
-	return s;
-}
-string CTX(string s)
-{
-	float p = strstrofs(s, "^", 0);
-	if(p < 0)
-		return s;
-	return substring(s, p+1, -1);
-}
-
 // x-encoding (encoding as zero length invisible string)
 const string XENCODE_2  = "xX";
 const string XENCODE_22 = "0123456789abcdefABCDEF";
@@ -2294,7 +2277,7 @@ float xdecode(string s)
 	return ((a * 22 + b) * 22 + c) * 22 + d;
 }
 
-float lowestbit(int f)
+int lowestbit(int f)
 {
 	f &= ~(f * 2);
 	f &= ~(f * 4);
@@ -2323,27 +2306,6 @@ string MakeConsoleSafe(string input)
 	return input;
 }
 
-#ifndef MENUQC
-// get true/false value of a string with multiple different inputs
-float InterpretBoolean(string input)
-{
-	switch(strtolower(input))
-	{
-		case "yes":
-		case "true":
-		case "on":
-			return true;
-
-		case "no":
-		case "false":
-		case "off":
-			return false;
-
-		default: return stof(input);
-	}
-}
-#endif
-
 #ifdef CSQC
 entity ReadCSQCEntity()
 {
@@ -2367,7 +2329,7 @@ void m_shutdown()
 {
 	if(shutdown_running)
 	{
-		print("Recursive shutdown detected! Only restoring cvars...\n");
+		LOG_INFO("Recursive shutdown detected! Only restoring cvars...\n");
 	}
 	else
 	{
@@ -2539,11 +2501,11 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 	// start with a 1-element queue
 	queue_start = queue_end = e;
-	queue_end.fld = world;
+	queue_end.(fld) = world;
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
-	for (; queue_start; queue_start = queue_start.fld)
+	for (; queue_start; queue_start = queue_start.(fld))
 	{
 		// find all neighbors of queue_start
 		entity t;
@@ -2554,23 +2516,23 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 			if(iscon(t, queue_start, pass))
 			{
 				// it is connected? ADD IT. It will look for neighbors soon too.
-				queue_end.fld = t;
+				queue_end.(fld) = t;
 				queue_end = t;
-				queue_end.fld = world;
+				queue_end.(fld) = world;
 				queue_end.FindConnectedComponent_processing = 1;
 			}
 		}
 	}
 
 	// unmark
-	for(queue_start = e; queue_start; queue_start = queue_start.fld)
+	for (queue_start = e; queue_start; queue_start = queue_start.(fld))
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
 #ifdef SVQC
 vector combine_to_vector(float x, float y, float z)
 {
-	vector result; result.x = x; result.y = y; result.z = z;
+	vector result; result_x = x; result_y = y; result_z = z;
 	return result;
 }
 
@@ -2590,29 +2552,6 @@ vector get_corner_position(entity box, float corner)
 	}
 }
 #endif
-
-// todo: this sucks, lets find a better way to do backtraces?
-void backtrace(string msg)
-{
-	float dev, war;
-	#ifdef SVQC
-	dev = autocvar_developer;
-	war = autocvar_prvm_backtraceforwarnings;
-	#else
-	dev = cvar("developer");
-	war = cvar("prvm_backtraceforwarnings");
-	#endif
-	cvar_set("developer", "1");
-	cvar_set("prvm_backtraceforwarnings", "1");
-	print("\n");
-	print("--- CUT HERE ---\nWARNING: ");
-	print(msg);
-	print("\n");
-	remove(world); // isn't there any better way to cause a backtrace?
-	print("\n--- CUT UNTIL HERE ---\n");
-	cvar_set("developer", ftos(dev));
-	cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)
@@ -2668,7 +2607,7 @@ vector animfixfps(entity e, vector a, vector b)
 #ifdef SVQC
 void dedicated_print(string input) // print(), but only print if the server is not local
 {
-	if(server_is_dedicated) { print(input); }
+	if(server_is_dedicated) { LOG_INFO(input); }
 }
 #endif
 

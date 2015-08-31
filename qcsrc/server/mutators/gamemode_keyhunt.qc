@@ -1,4 +1,8 @@
-#define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
+#include "gamemode_keyhunt.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
 
 // #define KH_PLAYER_USE_ATTACHMENT
 // #define KH_PLAYER_USE_CARRIEDMODEL
@@ -271,7 +275,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	}
 	// in any case:
 	setattachment(key, world, "");
-	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN_z - KH_KEY_MIN_z));
+	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN.z - KH_KEY_MIN_z));
 	key.angles = key.owner.angles;
 #else
 	setorigin(key, key.owner.origin + key.origin.z * '0 0 1');
@@ -347,17 +351,18 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		if(key.kh_next == world)
 		{
 			// player is now a key carrier
-			WaypointSprite_AttachCarrier("", player, RADARICON_FLAGCARRIER, colormapPaletteColor(player.team - 1, 0));
+			entity wp = WaypointSprite_AttachCarrier(WP_Null, player, RADARICON_FLAGCARRIER);
+			wp.colormod = colormapPaletteColor(player.team - 1, 0);
 			player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
 			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team, SPRITERULE_TEAMPLAY);
 			if(player.team == NUM_TEAM_1)
-				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-red", "keycarrier-friend", "keycarrier-red");
+				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierRed, WP_KeyCarrierFriend, WP_KeyCarrierRed);
 			else if(player.team == NUM_TEAM_2)
-				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-blue", "keycarrier-friend", "keycarrier-blue");
+				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierBlue, WP_KeyCarrierFriend, WP_KeyCarrierBlue);
 			else if(player.team == NUM_TEAM_3)
-				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-yellow", "keycarrier-friend", "keycarrier-yellow");
+				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierYellow, WP_KeyCarrierFriend, WP_KeyCarrierYellow);
 			else if(player.team == NUM_TEAM_4)
-				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-pink", "keycarrier-friend", "keycarrier-pink");
+				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierPink, WP_KeyCarrierFriend, WP_KeyCarrierPink);
 			if(!kh_no_radar_circles)
 				WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
 		}
@@ -379,8 +384,12 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k)
 			{
-				if(k.owner)
-					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.model1, "keycarrier-finish", k.owner.waypointsprite_attachedforcarrier.model3);
+				if (!k.owner) continue;
+				entity first = WP_Null;
+				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				entity third = WP_Null;
+				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFinish, third);
 			}
 		}
 		else
@@ -390,14 +399,18 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k)
 			{
-				if(k.owner)
-					WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, k.owner.waypointsprite_attachedforcarrier.model1, "keycarrier-friend", k.owner.waypointsprite_attachedforcarrier.model3);
+				if (!k.owner) continue;
+				entity first = WP_Null;
+				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				entity third = WP_Null;
+				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFriend, third);
 			}
 		}
 	}
 }
 
-void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(self.owner)
 		return;
@@ -769,7 +782,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 
 	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM_4(initial_owner.team, CENTER_KEYHUNT_START_));
 
-	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG, '0 1 1');
+	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
 
 	kh_Key_AssignTo(key, initial_owner);
@@ -867,6 +880,8 @@ float kh_CheckPlayers(float num)
 	return 0;
 }
 
+#define KH_READY_TEAMS() (!p1 + !p2 + ((kh_teams >= 3) ? !p3 : p3) + ((kh_teams >= 4) ? !p4 : p4))
+#define KH_READY_TEAMS_OK() (KH_READY_TEAMS() == kh_teams)
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
 	if(time < game_starttime)
@@ -875,15 +890,35 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		return;
 	}
 
+	static float prev_missing_teams_mask;
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if (!(p1 || p2 || p3 || p4))
+	if(KH_READY_TEAMS_OK())
 	{
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 	}
 	else
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
+		if(player_count == 0)
+		{
+			if(prev_missing_teams_mask > 0)
+				Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			prev_missing_teams_mask = -1;
+		}
+		else
+		{
+			float missing_teams_mask = (!!p1) + (!!p2) * 2;
+			if(kh_teams >= 3) missing_teams_mask += (!!p3) * 4;
+			if(kh_teams >= 4) missing_teams_mask += (!!p4) * 8;
+			if(prev_missing_teams_mask != missing_teams_mask)
+			{
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+				prev_missing_teams_mask = missing_teams_mask;
+			}
+		}
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
 	}
 }
@@ -908,10 +943,9 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if(p1 || p2 || p3 || p4)
+	if(!KH_READY_TEAMS_OK())
 	{
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
 		return;
 	}
 
@@ -1106,7 +1140,7 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

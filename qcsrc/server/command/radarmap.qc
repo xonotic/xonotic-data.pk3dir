@@ -1,13 +1,12 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/util.qh"
-    #include "../defs.qh"
-    #include "radarmap.qh"
-    #include "../../csqcmodellib/sv_model.qh"
-#endif
+#include "../../common/command/command.qh"
+#include "radarmap.qh"
+#include "../_all.qh"
+
+#include "../g_world.qh"
+
+#include "../../common/util.qh"
+
+#include "../../csqcmodellib/sv_model.qh"
 
 // ===============================================
 //	Generates radar map images for use in the HUD
@@ -46,7 +45,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 	}
 
 	if(n > 200)
-		dprint("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations\n");
+		LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations\n");
 
 	return white / (black + white);
 }
@@ -167,7 +166,7 @@ void sharpen_set(int x, float v)
 {
 	sharpen_buffer[x + 2 * RADAR_WIDTH_MAX] = v;
 }
-float sharpen_getpixel(float x, float y)
+float sharpen_getpixel(int x, int y)
 {
 	if(x < 0)
 		return 0;
@@ -246,7 +245,7 @@ void RadarMap_Think()
 		self.maxs_x = (mi_picmax.x - mi_picmin.x) / self.size.x;
 		self.maxs_y = (mi_picmax.y - mi_picmin.y) / self.size.y;
 		self.maxs_z = mi_max.z - mi_min.z;
-		print("Picture mins/maxs: ", ftos(self.maxs.x), " and ", ftos(self.maxs.y), " should match\n");
+		LOG_INFO("Picture mins/maxs: ", ftos(self.maxs.x), " and ", ftos(self.maxs.y), " should match\n");
 		self.netname = strzone(strcat("gfx/", mi_shortname, "_radar.xpm"));
 		if(!(self.count & 1))
 		{
@@ -267,7 +266,7 @@ void RadarMap_Think()
 			{
 				fclose(self.cnt);
 
-				print(self.netname, " already exists, aborting (you may want to specify --force)\n");
+				LOG_INFO(self.netname, " already exists, aborting (you may want to specify --force)\n");
 				RadarMap_Next();
 				return;
 			}
@@ -275,12 +274,12 @@ void RadarMap_Think()
 		self.cnt = fopen(self.netname, FILE_WRITE);
 		if(self.cnt < 0)
 		{
-			print("Error writing ", self.netname, "\n");
+			LOG_INFO("Error writing ", self.netname, "\n");
 			remove(self);
 			radarmapper = world;
 			return;
 		}
-		print("Writing to ", self.netname, "...\n");
+		LOG_INFO("Writing to ", self.netname, "...\n");
 		fputs(self.cnt, "/* XPM */\n");
 		fputs(self.cnt, "static char *RadarMap[] = {\n");
 		fputs(self.cnt, "/* columns rows colors chars-per-pixel */\n");
@@ -348,7 +347,7 @@ void RadarMap_Think()
 			else
 			{
 				fputs(self.cnt, "\",\n");
-				print(ftos(self.size.y - self.frame), " lines left\n");
+				LOG_INFO(ftos(self.size.y - self.frame), " lines left\n");
 			}
 		}
 
@@ -368,7 +367,7 @@ void RadarMap_Think()
 			else
 			{
 				fputs(self.cnt, "\",\n");
-				print(ftos(self.size.y - self.frame), " lines left\n");
+				LOG_INFO(ftos(self.size.y - self.frame), " lines left\n");
 			}
 		}
 
@@ -380,7 +379,7 @@ void RadarMap_Think()
 		// close the file
 		fputs(self.cnt, "};\n");
 		fclose(self.cnt);
-		print("Finished. Please edit data/", self.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
+		LOG_INFO("Finished. Please edit data/", self.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
 		RadarMap_Next();
 	}
 }
@@ -426,7 +425,7 @@ float RadarMap_Make(float argc)
 
 		if(radarmapper) // after doing the arguments, see if we successfully went forward.
 		{
-			print("Radarmap entity spawned.\n");
+			LOG_INFO("Radarmap entity spawned.\n");
 			return true; // if so, don't print usage.
 		}
 	}

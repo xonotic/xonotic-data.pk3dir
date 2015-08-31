@@ -1,15 +1,17 @@
+#include "server.qh"
+
+#include "common.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-	#include "../dpdefs/dpextensions.qh"
-	#include "common.qh"
-	#include "server.qh"
 	#include "../common/constants.qh"
+	#include "../common/triggers/subs.qh"
 	#include "../common/util.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "../dpdefs/progsdefs.qh"
+	#include "../server/command/common.qh"
 	#include "../server/constants.qh"
 	#include "../server/defs.qh"
-	#include "../server/command/common.qh"
 #endif
 
 #ifdef WARPZONELIB_KEEPDEBUG
@@ -51,7 +53,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 	WarpZone_PostTeleportPlayer_Callback(player);
 }
 
-float WarpZone_Teleported_Send(entity to, float sf)
+bool WarpZone_Teleported_Send(entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);
@@ -110,7 +112,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		}
 		else
 		{
-			print("would have to put player in solid, won't do that\n");
+			LOG_INFO("would have to put player in solid, won't do that\n");
 			setorigin(player, o0 - player.view_ofs);
 			return 0;
 		}
@@ -130,6 +132,8 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		player.warpzone_teleport_finishtime += sys_frametime - dt;
 
 #ifndef WARPZONE_USE_FIXANGLE
+	if(IS_VEHICLE(player) && player.owner)
+		player = player.owner; // hax
 	if(IS_PLAYER(player))
 	{
 		// instead of fixangle, send the transform to the client for smoother operation
@@ -212,11 +216,11 @@ void WarpZone_Touch (void)
 	}
 	else
 	{
-		dprint("WARPZONE FAIL AHAHAHAHAH))\n");
+		LOG_TRACE("WARPZONE FAIL AHAHAHAHAH))\n");
 	}
 }
 
-float WarpZone_Send(entity to, float sendflags)
+bool WarpZone_Send(entity to, int sendflags)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
@@ -270,7 +274,7 @@ float WarpZone_Send(entity to, float sendflags)
 	return true;
 }
 
-float WarpZone_Camera_Send(entity to, float sendflags)
+bool WarpZone_Camera_Send(entity to, int sendflags)
 {
 	int f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
@@ -334,13 +338,13 @@ float WarpZone_CheckProjectileImpact(entity player)
 		return 0;
 
 #ifdef WARPZONELIB_REMOVEHACK
-	print("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now\n");
+	LOG_INFO("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now\n");
 #else
-	print("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
+	LOG_INFO("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
 #endif
-	print("Entity type: ", player.classname, "\n");
-	print("Origin: ", vtos(player.origin), "\n");
-	print("Velocity: ", vtos(player.velocity), "\n");
+	LOG_INFO("Entity type: ", player.classname, "\n");
+	LOG_INFO("Origin: ", vtos(player.origin), "\n");
+	LOG_INFO("Velocity: ", vtos(player.velocity), "\n");
 
 #ifdef WARPZONELIB_REMOVEHACK
 	return 0;
@@ -573,7 +577,7 @@ void WarpZone_InitStep_UpdateTransform()
 		point = point * (1 / (3 * area));
 		if(vlen(norm) < 0.99)
 		{
-			print("trigger_warpzone near ", vtos(self.aiment.origin), " is nonplanar. BEWARE.\n");
+			LOG_INFO("trigger_warpzone near ", vtos(self.aiment.origin), " is nonplanar. BEWARE.\n");
 			area = 0; // no autofixing in this case
 		}
 		norm = normalize(norm);
@@ -590,15 +594,15 @@ void WarpZone_InitStep_UpdateTransform()
 			makevectors(ang);
 			if(norm * v_forward < 0)
 			{
-				print("Position target of trigger_warpzone near ", vtos(self.aiment.origin), " points into trigger_warpzone. BEWARE.\n");
+				LOG_INFO("Position target of trigger_warpzone near ", vtos(self.aiment.origin), " points into trigger_warpzone. BEWARE.\n");
 				norm = -1 * norm;
 			}
 			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
 			ang.x = -ang.x;
 			if(norm * v_forward < 0.99)
-				print("trigger_warpzone near ", vtos(self.aiment.origin), " has been turned to match plane orientation (", vtos(self.aiment.angles), " -> ", vtos(ang), "\n");
+				LOG_INFO("trigger_warpzone near ", vtos(self.aiment.origin), " has been turned to match plane orientation (", vtos(self.aiment.angles), " -> ", vtos(ang), "\n");
 			if(vlen(org - self.aiment.origin) > 0.5)
-				print("trigger_warpzone near ", vtos(self.aiment.origin), " has been moved to match the plane (", vtos(self.aiment.origin), " -> ", vtos(org), ").\n");
+				LOG_INFO("trigger_warpzone near ", vtos(self.aiment.origin), " has been moved to match the plane (", vtos(self.aiment.origin), " -> ", vtos(org), ").\n");
 		}
 	}
 	else if(area > 0)

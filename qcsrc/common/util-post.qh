@@ -1,0 +1,6 @@
+#ifndef UTIL_POST_H
+#define UTIL_POST_H
+
+#define spawn() new(entity)
+
+#endif

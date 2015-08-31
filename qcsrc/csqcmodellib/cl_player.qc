@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011 Rudolf Polzer
+ * Copyright (c) 2015 Micah Talkiewicz
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -30,11 +31,14 @@
 	#include "common.qh"
 	#include "cl_model.qh"
 	#include "cl_player.qh"
+ 	#include "../common/triggers/trigger/viewloc.qh"
+ 	#include "../common/viewloc.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif
 
 float autocvar_cl_movement_errorcompensation = 0;
+int autocvar_cl_movement = 1;
 
 // engine stuff
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
@@ -104,12 +108,12 @@ void CSQCPlayer_Unpredict()
 	self.origin = csqcplayer_origin;
 	self.velocity = csqcplayer_velocity;
 	csqcplayer_moveframe = csqcplayer_sequence+1; //+1 because the recieved frame has the move already done (server side)
-	self.pmove_flags = player_pmflags;
+	self.flags = player_pmflags;
 }
 
 void CSQCPlayer_SetMinsMaxs()
 {
-	if(self.pmove_flags & PMF_DUCKED)
+	if(self.flags & FL_DUCKED)
 	{
 		self.mins = PL_CROUCH_MIN;
 		self.maxs = PL_CROUCH_MAX;
@@ -125,11 +129,33 @@ void CSQCPlayer_SetMinsMaxs()
 
 void CSQCPlayer_SavePrediction()
 {
-	player_pmflags = self.pmove_flags;
+	player_pmflags = self.flags;
 	csqcplayer_origin = self.origin;
 	csqcplayer_velocity = self.velocity;
 	csqcplayer_sequence = servercommandframe;
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
+}
+
+void CSQC_ClientMovement_PlayerMove_Frame();
+
+void PM_Movement_Move()
+{
+	runstandardplayerphysics(self);
+#ifdef CSQC
+	self.flags =
+			((self.pmove_flags & PMF_DUCKED) ? FL_DUCKED : 0) |
+			(!(self.pmove_flags & PMF_JUMP_HELD) ? FL_JUMPRELEASED : 0) |
+			((self.pmove_flags & PMF_ONGROUND) ? FL_ONGROUND : 0);
+#endif
+}
+
+void CSQCPlayer_Physics(void)
+{
+	switch(autocvar_cl_movement)
+	{
+		case 1: CSQC_ClientMovement_PlayerMove_Frame(); break;
+		case 2: PM_Movement_Move(); break;
+	}
 }
 
 void CSQCPlayer_PredictTo(float endframe, float apply_error)
@@ -151,7 +177,7 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
-		print("the Weird code path got hit\n");
+		LOG_INFO("the Weird code path got hit\n");
 		return;
 	}
 #endif
@@ -166,7 +192,7 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 		{
 			if (!getinputstate(csqcplayer_moveframe))
 				break;
-			runstandardplayerphysics(self);
+			CSQCPlayer_Physics();
 			CSQCPlayer_SetMinsMaxs();
 			csqcplayer_moveframe++;
 		}
@@ -177,9 +203,14 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	input_angles = view_angles;
 }
 
-float CSQCPlayer_IsLocalPlayer()
+bool CSQCPlayer_IsLocalPlayer()
 {
 	return (self == csqcplayer);
+}
+
+void CSQCPlayer_SetViewLocation()
+{
+	viewloc_SetViewLocation();
 }
 
 void CSQCPlayer_SetCamera()
@@ -199,16 +230,16 @@ void CSQCPlayer_SetCamera()
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
 			// get crouch state from the server
-			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-				self.pmove_flags &= ~PMF_DUCKED;
-			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
-				self.pmove_flags |= PMF_DUCKED;
+			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
+				self.flags &= ~FL_DUCKED;
+			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
+				self.flags |= FL_DUCKED;
 
 			// get onground state from the server
 			if(pmove_onground)
-				self.pmove_flags |= PMF_ONGROUND;
+				self.flags |= FL_ONGROUND;
 			else
-				self.pmove_flags &= ~PMF_ONGROUND;
+				self.flags &= ~FL_ONGROUND;
 
 			CSQCPlayer_SetMinsMaxs();
 
@@ -232,21 +263,21 @@ void CSQCPlayer_SetCamera()
 				v = v0;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 				CSQCPlayer_PredictTo(servercommandframe + 1, false);
-				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.pmove_flags & PMF_ONGROUND));
+				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.flags & FL_ONGROUND));
 				self.origin = o;
 				self.velocity = v;
 
 				// get crouch state from the server
-				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-					self.pmove_flags &= ~PMF_DUCKED;
-				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
-					self.pmove_flags |= PMF_DUCKED;
+				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
+					self.flags &= ~FL_DUCKED;
+				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
+					self.flags |= FL_DUCKED;
 
 				// get onground state from the server
 				if(pmove_onground)
-					self.pmove_flags |= PMF_ONGROUND;
+					self.flags |= FL_ONGROUND;
 				else
-					self.pmove_flags &= ~PMF_ONGROUND;
+					self.flags &= ~FL_ONGROUND;
 
 				CSQCPlayer_SavePrediction();
 			}
@@ -254,10 +285,10 @@ void CSQCPlayer_SetCamera()
 
 #ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)
-			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-				self.pmove_flags &= ~PMF_DUCKED;
-			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
-				self.pmove_flags |= PMF_DUCKED;
+			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
+				self.flags &= ~FL_DUCKED;
+			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
+				self.flags |= FL_DUCKED;
 #endif
 
 			CSQCPlayer_SetMinsMaxs();

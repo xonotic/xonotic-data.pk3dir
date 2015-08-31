@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 // Random Gravity
 //
 // Mutator by Mario
@@ -19,7 +23,7 @@ MUTATOR_HOOKFUNCTION(gravity_StartFrame)
 
 	gravity_delay = time + autocvar_g_random_gravity_delay;
 
-	dprint("Gravity is now: ", ftos(autocvar_sv_gravity), "\n");
+	LOG_TRACE("Gravity is now: ", ftos(autocvar_sv_gravity), "\n");
 
 	return false;
 }

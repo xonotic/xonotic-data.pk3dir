@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL ((edict_num(1) == self) ? true : false)
 
@@ -44,7 +48,7 @@ void superspec_save_client_conf()
 	fh = fopen(fn, FILE_WRITE);
 	if(fh < 0)
 	{
-		dprint("^1ERROR: ^7 superspec can not open ", fn, " for writing.\n");
+		LOG_TRACE("^1ERROR: ^7 superspec can not open ", fn, " for writing.\n");
 	}
 	else
 	{
@@ -118,10 +122,10 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 			}
 
 		if((self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
-				(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
-				(self.autospec_flags & ASF_MEGA_AR && _item.classname == "item_armor_large") ||
-				(self.autospec_flags & ASF_MEGA_HP && _item.classname == "item_health_mega") ||
-				(self.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
+			(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
+			(self.autospec_flags & ASF_MEGA_AR && _item.itemdef == ITEM_ArmorMega) ||
+			(self.autospec_flags & ASF_MEGA_HP && _item.itemdef == ITEM_HealthMega) ||
+			(self.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
 		{
 
 			if((self.enemy != other) || IS_OBSERVER(self))
@@ -383,15 +387,18 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			return true;
 
 		entity _player;
-		float _team = 0;
-		float found = false;
+		int _team = 0;
+		bool found = false;
 
 		if(cmd_argc == 2)
 		{
-			if(argv(1) == "red")
-				_team = NUM_TEAM_1;
-			else
-				_team = NUM_TEAM_2;
+			switch(argv(1))
+			{
+				case "red": _team = NUM_TEAM_1; break;
+				case "blue": _team = NUM_TEAM_2; break;
+				case "yellow": if(ctf_teams >= 3) _team = NUM_TEAM_3; break;
+				case "pink": if(ctf_teams >= 4) _team = NUM_TEAM_4; break;
+			}
 		}
 
 		FOR_EACH_PLAYER(_player)
@@ -461,14 +468,14 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 	fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
-		dprint("^1ERROR: ^7 superspec can not open ", fn, " for reading.\n");
+		LOG_TRACE("^1ERROR: ^7 superspec can not open ", fn, " for reading.\n");
 	}
 	else
 	{
 		string _magic = fgets(fh);
 		if(_magic != _SSMAGIX)
 		{
-			dprint("^1ERROR^7 While reading superspec options file: unknown magic\n");
+			LOG_TRACE("^1ERROR^7 While reading superspec options file: unknown magic\n");
 		}
 		else
 		{

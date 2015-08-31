@@ -1,11 +1,13 @@
-#ifdef INTERFACE
-CLASS(Label) EXTENDS(Item)
-	METHOD(Label, configureLabel, void(entity, string, float, float))
-	METHOD(Label, draw, void(entity))
-	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Label, setText, void(entity, string))
-	METHOD(Label, toString, string(entity))
-	METHOD(Label, recalcPositionWithText, void(entity, string))
+#ifndef ITEM_LABEL_H
+#define ITEM_LABEL_H
+#include "../item.qc"
+CLASS(Label, Item)
+	METHOD(Label, configureLabel, void(entity, string, float, float));
+	METHOD(Label, draw, void(entity));
+	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Label, setText, void(entity, string));
+	METHOD(Label, toString, string(entity));
+	METHOD(Label, recalcPositionWithText, void(entity, string));
 	ATTRIB(Label, isBold, float, 0)
 	ATTRIB(Label, text, string, string_null)
 	ATTRIB(Label, currentText, string, string_null)
@@ -79,7 +81,7 @@ void Label_recalcPositionWithText(entity me, string t)
 			me.realOrigin_x = me.keepspaceLeft;
 		if(!me.overrideCondenseFactor)
 			me.condenseFactor = spaceAvail / spaceUsed;
-		dprintf("NOTE: label text %s too wide for label, condensed by factor %f\n", t, me.condenseFactor);
+		LOG_TRACEF("NOTE: label text %s too wide for label, condensed by factor %f\n", t, me.condenseFactor);
 	}
 
 	if(!me.overrideRealOrigin_y)

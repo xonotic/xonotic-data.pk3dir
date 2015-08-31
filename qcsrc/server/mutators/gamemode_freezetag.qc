@@ -1,8 +1,7 @@
-.float freezetag_frozen_time;
-.float freezetag_frozen_timeout;
-const float ICE_MAX_ALPHA = 1;
-const float ICE_MIN_ALPHA = 0.1;
-float freezetag_teams;
+#include "gamemode_freezetag.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
 
 const float SP_FREEZETAG_REVIVALS = 4;
 void freezetag_ScoreRules(float teams)
@@ -266,7 +265,7 @@ void havocbot_role_ft_offense()
 	// If only one left on team or if role has timed out then start trying to free players.
 	if (((unfrozen == 0) && (!self.frozen)) || (time > self.havocbot_role_timeout))
 	{
-		dprint("changing role to freeing\n");
+		LOG_TRACE("changing role to freeing\n");
 		self.havocbot_role = havocbot_role_ft_freeing;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -295,7 +294,7 @@ void havocbot_role_ft_freeing()
 
 	if (time > self.havocbot_role_timeout)
 	{
-		dprint("changing role to offense\n");
+		LOG_TRACE("changing role to offense\n");
 		self.havocbot_role = havocbot_role_ft_offense;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -425,7 +424,6 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 	return 1;
 }
 
-.float reviving; // temp var
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
 	float n;
@@ -526,6 +524,21 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_SetStartItems)
+{
+	start_items &= ~IT_UNLIMITED_AMMO;
+	//start_health       = warmup_start_health       = cvar("g_lms_start_health");
+	//start_armorvalue   = warmup_start_armorvalue   = cvar("g_lms_start_armor");
+	start_ammo_shells  = warmup_start_ammo_shells  = cvar("g_lms_start_ammo_shells");
+	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
+	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
+
+	return 0;
+}
+
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 {
 	if (!self.deadflag)
@@ -542,7 +555,7 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 {
 	ret_float = freezetag_teams;
-	return 0;
+	return false;
 }
 
 void freezetag_Initialize()
@@ -573,6 +586,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(reset_map_players, freezetag_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, freezetag_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(SetStartItems, freezetag_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, freezetag_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 
@@ -592,7 +606,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

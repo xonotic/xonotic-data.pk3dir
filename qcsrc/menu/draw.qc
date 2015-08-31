@@ -1,7 +1,6 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "draw.qh"
+#include "../common/util.qh"
+#include "../common/constants.qh"
 
 string draw_mousepointer;
 vector draw_mousepointer_offset;
@@ -282,7 +281,7 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 void draw_Text(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz)
 {
 	if(theSize.x <= 0 || theSize.y <= 0) {
-		dprint("Drawing zero size text?\n");
+		LOG_TRACE("Drawing zero size text?\n");
 		return;
 	}
 

@@ -1,7 +1,11 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "menu.qh"
+#include "oo/classes.qc"
+#include "xonotic/util.qh"
+
+#include "../common/items/all.qh"
+#include "../common/weapons/all.qh"
+#include "../common/mapinfo.qh"
+#include "../common/mutators/base.qh"
 
 ///////////////////////////////////////////////
 // Menu Source File
@@ -59,7 +63,7 @@ void m_init()
 	cvar_set("_menu_prvm_language", prvm_language);
 
 #ifdef WATERMARK
-	dprintf("^4MQC Build information: ^1%s\n", WATERMARK);
+	LOG_TRACEF("^4MQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	// list all game dirs (TEST)
@@ -72,13 +76,12 @@ void m_init()
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
 			if (!s)
 				break;
-			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
+			LOG_TRACE(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	static_init();
 
 	RegisterSLCategories();
 
@@ -211,8 +214,8 @@ void m_init_delayed()
 	draw_setMousePointer(SKINGFX_CURSOR, SKINSIZE_CURSOR, SKINOFFSET_CURSOR);
 
 	loadTooltips();
-	anim = spawnAnimHost();
-	main = spawnMainWindow(); main.configureMainWindow(main);
+	anim = NEW(AnimHost);
+	main = NEW(MainWindow); main.configureMainWindow(main);
 	unloadTooltips();
 
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
@@ -249,7 +252,7 @@ void m_keyup (float key, float ascii)
 		if(mouseButtonsPressed < 0)
 		{
 			mouseButtonsPressed = 0;
-			dprint("Warning: released an already released button\n");
+			LOG_TRACE("Warning: released an already released button\n");
 		}
 	}
 	if(key == K_ALT) menuShiftState -= (menuShiftState & S_ALT);
@@ -300,7 +303,7 @@ void m_keydown(float key, float ascii)
 		if(mouseButtonsPressed > 10)
 		{
 			mouseButtonsPressed = 10;
-			dprint("Warning: pressed an already pressed button\n");
+			LOG_TRACE("Warning: pressed an already pressed button\n");
 		}
 	}
 	if(key == K_ALT) menuShiftState |= S_ALT;
@@ -960,7 +963,10 @@ void m_setpointerfocus(entity wnd)
 			menuMousePos = focus.origin + 0.5 * focus.size;
 			menuMousePos.x *= 1 / conwidth;
 			menuMousePos.y *= 1 / conheight;
-			if(wnd.focused) // why does this never happen?
+			entity par = wnd.parent;
+			if(par.focused)
+				par.setFocus(par, wnd);
+			if(wnd.focused)
 				m_focus_item_chain(wnd, focus);
 		}
 	}

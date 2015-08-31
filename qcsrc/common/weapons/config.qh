@@ -19,7 +19,7 @@ string wep_config_queue[MAX_WEP_CONFIG];
 
 #define WEP_CONFIG_WRITETOFILE(a) do { \
 	fputs(wep_config_file, a); \
-	if(wep_config_alsoprint) { print(a); } \
+	if(wep_config_alsoprint) { LOG_INFO(a); } \
 } while(0)
 
 #define WEP_CONFIG_WRITE_CVARS_NONE(wepname,name) \

@@ -1,5 +1,5 @@
-#ifndef DEFS_H
-#define DEFS_H
+#ifndef CLIENT_DEFS_H
+#define CLIENT_DEFS_H
 
 // Additional OPTIONAL Fields and Globals
 //float		intermission;

@@ -22,7 +22,7 @@ void playerdemo_shutdown()
 {
 	if(self.playerdemo_mode != PLAYERDEMO_MODE_OFF)
 	{
-		print("playerdemo: ", self.netname, " closed\n");
+		LOG_INFO("playerdemo: ", self.netname, " closed\n");
 		fclose(self.playerdemo_fh);
 	}
 	self.playerdemo_mode = 0;
@@ -36,7 +36,7 @@ void playerdemo_open_read(string f)
 	self.playerdemo_time = stof(fgets(self.playerdemo_fh));
 	self.playerdemo_time += self.playerdemo_starttime;
 	self.movetype = MOVETYPE_NONE;
-	print("playerdemo: ", self.netname, " reading from ", f, "\n");
+	LOG_INFO("playerdemo: ", self.netname, " reading from ", f, "\n");
 }
 void playerdemo_open_write(string f)
 {
@@ -44,8 +44,8 @@ void playerdemo_open_write(string f)
 	self.playerdemo_mode = PLAYERDEMO_MODE_WRITING;
 	self.playerdemo_fh = fopen(f, FILE_WRITE);
 	self.playerdemo_starttime = time - 1;
-	print("playerdemo: ", self.netname, " writing to ", f, "\n");
-	print("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
+	LOG_INFO("playerdemo: ", self.netname, " writing to ", f, "\n");
+	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
 }
 #define PLAYERDEMO_FIELD(func,t,f) func##t(f,#f);
 #define PLAYERDEMO_FIELDS(func) \
@@ -71,27 +71,27 @@ void playerdemo_open_write(string f)
 
 void playerdemo_write_originvector(.vector f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(vtos(self.f), "\n"));
+	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_sizevector(.vector f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(vtos(self.f), "\n"));
+	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_vector(.vector f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(vtos(self.f), "\n"));
+	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_string(.string f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(self.f, "\n"));
+	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
 }
 void playerdemo_write_modelstring(.string f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(self.f, "\n"));
+	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
 }
 void playerdemo_write_float(.float f, string name)
 {
-	fputs(self.playerdemo_fh, strcat(ftos(self.f), "\n"));
+	fputs(self.playerdemo_fh, strcat(ftos(self.(f)), "\n"));
 }
 void playerdemo_write()
 {
@@ -106,36 +106,34 @@ void playerdemo_read_originvector(.vector f, string name)
 }
 void playerdemo_read_sizevector(.vector f, string name)
 {
-	self.f = stov(fgets(self.playerdemo_fh));
+	self.(f) = stov(fgets(self.playerdemo_fh));
 	setsize(self, self.mins, self.maxs);
 }
 void playerdemo_read_vector(.vector f, string name)
 {
-	self.f = stov(fgets(self.playerdemo_fh));
+	self.(f) = stov(fgets(self.playerdemo_fh));
 }
 void playerdemo_read_string(.string f, string name)
 {
-	string s;
-	s = fgets(self.playerdemo_fh);
-	if(s != self.f)
+	string s = fgets(self.playerdemo_fh);
+	if (s != self.(f))
 	{
 		/*
 		if(self.f)
 			strunzone(self.f);
 		*/
-		self.f = strzone(s);
+		self.(f) = strzone(s);
 	}
 }
 void playerdemo_read_modelstring(.string f, string name)
 {
-	string s;
-	s = fgets(self.playerdemo_fh);
-	if(s != self.f)
+	string s = fgets(self.playerdemo_fh);
+	if (s != self.(f))
 		setmodel(self, s);
 }
 void playerdemo_read_float(.float f, string name)
 {
-	self.f = stof(fgets(self.playerdemo_fh));
+	self.(f) = stof(fgets(self.playerdemo_fh));
 }
 float playerdemo_read()
 {

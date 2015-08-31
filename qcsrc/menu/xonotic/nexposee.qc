@@ -1,7 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticNexposee) EXTENDS(Nexposee)
-	METHOD(XonoticNexposee, configureXonoticNexposee, void(entity))
-	METHOD(XonoticNexposee, close, void(entity))
+#ifndef NEXPOSEE_H
+#define NEXPOSEE_H
+#include "../item/nexposee.qc"
+CLASS(XonoticNexposee, Nexposee)
+	METHOD(XonoticNexposee, configureXonoticNexposee, void(entity));
+	METHOD(XonoticNexposee, close, void(entity));
 ENDCLASS(XonoticNexposee)
 entity makeXonoticNexposee();
 #endif
@@ -10,7 +12,7 @@ entity makeXonoticNexposee();
 entity makeXonoticNexposee()
 {
 	entity me;
-	me = spawnXonoticNexposee();
+	me = NEW(XonoticNexposee);
 	me.configureXonoticNexposee(me);
 	return me;
 }

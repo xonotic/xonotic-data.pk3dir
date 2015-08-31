@@ -1,17 +1,20 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/common.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "tracing.qh"
-    #include "../autocvars.qh"
-    #include "../defs.qh"
-    #include "../antilag.qh"
-#endif
+#include "tracing.qh"
+#include "../_all.qh"
+
+#include "accuracy.qh"
+#include "common.qh"
+#include "hitplot.qh"
+
+#include "../g_damage.qh"
+#include "../g_subs.qh"
+#include "../antilag.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/util.qh"
+
+#include "../../common/weapons/all.qh"
+
+#include "../../warpzonelib/common.qh"
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
@@ -22,7 +25,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(ent.weapon == WEP_RIFLE)
+	if(ent.weapon == WEP_RIFLE.m_id)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -115,7 +118,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 					if (trace_ent == ent.cursor_trace_ent)
 						w_shotdir = normalize(ent.cursor_trace_ent.origin - w_shotorg);
 					else
-						print("antilag fail\n");
+						LOG_INFO("antilag fail\n");
 				}
 			}
 		}
@@ -145,7 +148,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 	float mspeed;
 	vector outvelocity;
 
-	mvelocity = mvelocity * g_weaponspeedfactor;
+	mvelocity = mvelocity * W_WeaponSpeedFactor();
 
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
@@ -179,7 +182,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
 	mspercallcount += 1;
-	print("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
+	LOG_INFO("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
 	#endif
 
 	proj.velocity = W_CalculateProjectileVelocity(proj.owner.velocity, pSpeed * dir, forceAbsolute);
@@ -190,7 +193,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 //  Ballistics Tracing
 // ====================
 
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
+void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
 {
 	vector hitloc, force, endpoint, dir;
 	entity ent, endent;
@@ -270,7 +273,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	//explosion = spawn();
 
 	// Find all non-hit players the beam passed close by
-	if(deathtype == WEP_VAPORIZER || deathtype == WEP_VORTEX)
+	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
 	{
 		FOR_EACH_REALCLIENT(msg_entity)
 		if(msg_entity != self)
@@ -284,7 +287,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			if(f <= 0)
 				continue;
 
-			snd = strcat("weapons/nexwhoosh", ftos(floor(random() * 3) + 1), ".wav");
+			snd = W_Sound(strcat("nexwhoosh", ftos(floor(random() * 3) + 1)));
 
 			if(!pseudoprojectile)
 				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
@@ -354,11 +357,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	float total_damage = 0;
 
 	if(tracereffects & EF_RED)
-		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_RIFLE);
 	else if(tracereffects & EF_BLUE)
-		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle_weak");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_RIFLE_WEAK);
 	else
-		fireBullet_trace_callback_eff = particleeffectnum("tr_bullet");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_BULLET);
 
 	float lag = ANTILAG_LATENCY(self);
 	if(lag < 0.001)
@@ -419,6 +422,8 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		{
 			fireBullet_last_hit = hit;
 			yoda = 0;
+			MUTATOR_CALLHOOK(FireBullet_Hit, self, hit, start, end, damage);
+			damage = frag_damage;
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons

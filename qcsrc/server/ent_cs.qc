@@ -1,13 +1,7 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "mutators/mutators_include.qh"
-#endif
+#include "_all.qh"
+
+#include "defs.qh"
+#include "mutators/mutators_include.qh"
 
 /**
  * The point of these entities is to avoid the problems
@@ -28,7 +22,7 @@
 
 void entcs_init()
 {
-	print("Initializing ClientSide information entities\n");
+	LOG_INFO("Initializing ClientSide information entities\n");
 }
 
 float entcs_customize()

@@ -1,8 +1,10 @@
-#ifdef INTERFACE
-CLASS(XonoticColorButton) EXTENDS(RadioButton)
-	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float))
-	METHOD(XonoticColorButton, setChecked, void(entity, float))
-	METHOD(XonoticColorButton, draw, void(entity))
+#ifndef COLORBUTTON_H
+#define COLORBUTTON_H
+#include "../item/radiobutton.qc"
+CLASS(XonoticColorButton, RadioButton)
+	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float));
+	METHOD(XonoticColorButton, setChecked, void(entity, float));
+	METHOD(XonoticColorButton, draw, void(entity));
 	ATTRIB(XonoticColorButton, fontSize, float, 0)
 	ATTRIB(XonoticColorButton, image, string, SKINGFX_COLORBUTTON)
 
@@ -11,8 +13,8 @@ CLASS(XonoticColorButton) EXTENDS(RadioButton)
 	ATTRIB(XonoticColorButton, cvarPart, float, 0)
 	ATTRIB(XonoticColorButton, cvarName, string, string_null)
 	ATTRIB(XonoticColorButton, cvarValueFloat, float, 0)
-	METHOD(XonoticColorButton, loadCvars, void(entity))
-	METHOD(XonoticColorButton, saveCvars, void(entity))
+	METHOD(XonoticColorButton, loadCvars, void(entity));
+	METHOD(XonoticColorButton, saveCvars, void(entity));
 ENDCLASS(XonoticColorButton)
 entity makeXonoticColorButton(float, float, float);
 #endif
@@ -21,7 +23,7 @@ entity makeXonoticColorButton(float, float, float);
 entity makeXonoticColorButton(float theGroup, float theColor, float theValue)
 {
 	entity me;
-	me = spawnXonoticColorButton();
+	me = NEW(XonoticColorButton);
 	me.configureXonoticColorButton(me, theGroup, theColor, theValue);
 	return me;
 }

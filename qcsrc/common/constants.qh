@@ -1,11 +1,44 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+// COMMIT-TODO: Update if necessary before committing
+// Revision 1: additional statistics sent (flag caps, returns, deaths)
+// Revision 2: Mapvote preview pictures
+// Revision 3: optimized map vote protocol
+// Revision 4: CSQC config var system
+// Revision 5: mapvote time fix
+// Revision 6: more robust against packet loss/delays, also show not yet connected clients
+// Revision 7: packet loss column
+// Revision 8: race
+// Revision 9: race delta
+// Revision 10: scoreboard force
+// Revision 11: scoreboard unforce; spectator support beginning
+// Revision 12: smaller scores updates (SERVER: requires new engine)
+// Revision 13: pointparticles
+// Revision 14: laser
+// Revision 15: zoom
+// Revision 16: multi-weapons
+// Revision 17: multi-weaponimpulses
+// Revision 18: warmup
+// Revision 19: fog
+// Revision 20: naggers
+// Revision 21: entcs for players optimized (position data down from 12 to 7 bytes); waypointsprites in csqc for team radar
+// Revision 22: hook shot origin
+#define CSQC_REVISION 22
+
 const int AS_STRING = 1;
 const int AS_INT = 2;
 const int AS_FLOAT_TRUNCATED = 2;
 const int AS_FLOAT = 8;
 
+const int TE_CSQC_MUTATOR = 99;
+#define MUTATOR_HASH(s) crc16(true, s)
+#define WriteMutator(to, s) do { \
+    WriteByte(to, TE_CSQC_MUTATOR); \
+    WriteLong(to, MUTATOR_HASH(#s)); \
+} while (0)
+#define ReadMutator() ReadLong()
+#define ReadMutatorEquals(read, s) (read == MUTATOR_HASH(#s))
 const int TE_CSQC_PICTURE = 100;
 const int TE_CSQC_RACE = 101;
 const int TE_CSQC_VORTEXBEAMPARTICLE = 103;
@@ -46,12 +79,10 @@ const int ENT_CLIENT_POINTPARTICLES = 6;
 const int ENT_CLIENT_RAINSNOW = 7;
 const int ENT_CLIENT_LASER = 8;
 const int ENT_CLIENT_NAGGER = 9; // flags [votecalledvote]
-const int ENT_CLIENT_WAYPOINT = 10; // flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable]
 const int ENT_CLIENT_RADARLINK = 11; // flags [startorigin] [endorigin] [startcolor+16*endcolor]
 const int ENT_CLIENT_PROJECTILE = 12;
 const int ENT_CLIENT_GIBSPLASH = 13;
 const int ENT_CLIENT_DAMAGEINFO = 14;
-const int ENT_CLIENT_CASING = 15;
 const int ENT_CLIENT_INIT = 16;
 const int ENT_CLIENT_MAPVOTE = 17;
 const int ENT_CLIENT_CLIENTDATA = 18;
@@ -64,6 +95,7 @@ const int ENT_CLIENT_WARPZONE = 24;
 const int ENT_CLIENT_WARPZONE_CAMERA = 25;
 const int ENT_CLIENT_TRIGGER_MUSIC = 26;
 const int ENT_CLIENT_HOOK = 27;
+const int ENT_CLIENT_INVENTORY = 28;
 const int ENT_CLIENT_ARC_BEAM = 29; // WEAPONTODO: fix numbers
 const int ENT_CLIENT_ACCURACY = 30;
 const int ENT_CLIENT_SHOWNAMES = 31;
@@ -78,11 +110,30 @@ const int ENT_CLIENT_ELIMINATEDPLAYERS = 39;
 const int ENT_CLIENT_TURRET = 40;
 const int ENT_CLIENT_AUXILIARYXHAIR = 50;
 const int ENT_CLIENT_VEHICLE = 60;
-
+const int ENT_CLIENT_LADDER = 61;
+const int ENT_CLIENT_TRIGGER_PUSH = 62;
+const int ENT_CLIENT_TARGET_PUSH = 63;
+const int ENT_CLIENT_CONVEYOR = 64;
+const int ENT_CLIENT_DOOR = 65;
+const int ENT_CLIENT_TRAIN = 66;
+const int ENT_CLIENT_PLAT = 67;
+const int ENT_CLIENT_TRIGGER_IMPULSE = 68;
+const int ENT_CLIENT_SWAMP = 69;
+const int ENT_CLIENT_CORNER = 70;
+const int ENT_CLIENT_KEYLOCK = 71;
+const int ENT_CLIENT_GENERATOR = 72;
+const int ENT_CLIENT_CONTROLPOINT_ICON = 73;
+const int ENT_CLIENT_EFFECT = 74;
+const int ENT_CLIENT_MINIGAME = 75;
+const int ENT_CLIENT_VIEWLOC = 78;
+const int ENT_CLIENT_VIEWLOC_TRIGGER = 79;
 const int ENT_CLIENT_HEALING_ORB = 80;
+
+const int ENT_CLIENT_MUTATOR = TE_CSQC_MUTATOR; // 99
 
 const int SPRITERULE_DEFAULT = 0;
 const int SPRITERULE_TEAMPLAY = 1;
+const int SPRITERULE_SPECTATOR = 2;
 
 const int RADARICON_NONE = 0;
 const int RADARICON_FLAG = 1;
@@ -124,17 +175,7 @@ const int CTF_STATE_DEFEND = 2;
 const int CTF_STATE_COMMANDER = 3;
 
 const int HUD_NORMAL = 0;
-const int HUD_VEHICLE_FIRST = 10;
-const int HUD_SPIDERBOT = 10;
-const int HUD_WAKIZASHI = 11;
-const int HUD_RAPTOR = 12;
-const int HUD_BUMBLEBEE = 13;
-const int HUD_BUMBLEBEE_GUN = 14;
-const int HUD_VEHICLE_LAST = 14;
-
-const vector eX = '1 0 0';
-const vector eY = '0 1 0';
-const vector eZ = '0 0 1';
+const int HUD_BUMBLEBEE_GUN = 25;
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
@@ -251,6 +292,10 @@ const int PROJECTILE_BUMBLE_BEAM = 31;
 const int PROJECTILE_MAGE_SPIKE = 32;
 const int PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
+const int PROJECTILE_ROCKETMINSTA_LASER = 34;
+
+// projectile IDs 40-50 reserved
+
 const int PROJECTILE_RPC = 60;
 
 const int SPECIES_HUMAN = 0;
@@ -276,7 +321,7 @@ const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
 const int SERVERFLAG_TEAMPLAY = 2;
 const int SERVERFLAG_PLAYERSTATS = 4;
 
-// FIXME/EXPLAINME: why?
+// FIXME/EXPLAINME: why? Mario: because
 vector autocvar_sv_player_maxs = '16 16 45';
 vector autocvar_sv_player_mins = '-16 -16 -24';
 vector autocvar_sv_player_viewoffset = '0 0 20';
@@ -285,6 +330,9 @@ vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
 vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
 vector autocvar_sv_player_headsize = '24 24 12';
 
+
+// not so constant
+#ifdef SVQC
 #define PL_VIEW_OFS autocvar_sv_player_viewoffset
 #define PL_MIN autocvar_sv_player_mins
 #define PL_MAX autocvar_sv_player_maxs
@@ -292,16 +340,18 @@ vector autocvar_sv_player_headsize = '24 24 12';
 #define PL_CROUCH_MIN autocvar_sv_player_crouch_mins
 #define PL_CROUCH_MAX autocvar_sv_player_crouch_maxs
 #define PL_HEAD autocvar_sv_player_headsize
+#elif defined(CSQC)
+#define PL_VIEW_OFS vec3(getstatf(STAT_PL_VIEW_OFS1), getstatf(STAT_PL_VIEW_OFS2), getstatf(STAT_PL_VIEW_OFS3))
+#define PL_MIN vec3(getstatf(STAT_PL_MIN1), getstatf(STAT_PL_MIN2), getstatf(STAT_PL_MIN3))
+#define PL_MAX vec3(getstatf(STAT_PL_MAX1), getstatf(STAT_PL_MAX2), getstatf(STAT_PL_MAX3))
+#define PL_CROUCH_VIEW_OFS vec3(getstatf(STAT_PL_CROUCH_VIEW_OFS1), getstatf(STAT_PL_CROUCH_VIEW_OFS2), getstatf(STAT_PL_CROUCH_VIEW_OFS3))
+#define PL_CROUCH_MIN vec3(getstatf(STAT_PL_CROUCH_MIN1), getstatf(STAT_PL_CROUCH_MIN2), getstatf(STAT_PL_CROUCH_MIN3))
+#define PL_CROUCH_MAX vec3(getstatf(STAT_PL_CROUCH_MAX1), getstatf(STAT_PL_CROUCH_MAX2), getstatf(STAT_PL_CROUCH_MAX3))
+#endif
 
-// helpers
-#define PL_VIEW_OFS_z autocvar_sv_player_viewoffset.z
-#define PL_MIN_z autocvar_sv_player_mins.z
-#define PL_MAX_z autocvar_sv_player_maxs.z
-#define PL_CROUCH_VIEW_OFS_z autocvar_sv_player_crouch_viewoffset.z
-#define PL_CROUCH_MIN_z autocvar_sv_player_mins.z
-#define PL_HEAD_x autocvar_sv_player_headsize.x
-#define PL_HEAD_y autocvar_sv_player_headsize.y
-#define PL_HEAD_z autocvar_sv_player_headsize.z
+// a bit more constant
+const vector PL_MAX_CONST = '16 16 45';
+const vector PL_MIN_CONST = '-16 -16 -24';
 
 // spawnpoint prios
 const int SPAWN_PRIO_NEAR_TEAMMATE_FOUND = 200;
@@ -309,18 +359,8 @@ const int SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM = 100;
 const int SPAWN_PRIO_RACE_PREVIOUS_SPAWN = 50;
 const int SPAWN_PRIO_GOOD_DISTANCE = 10;
 
-// URI handles
-const int URI_GET_DISCARD = 0;
-const int URI_GET_IPBAN = 1;
-const int URI_GET_IPBAN_END = 16;
-const int URI_GET_CURL = 17;
-const int URI_GET_CURL_END = 32;
-const int URI_GET_UPDATENOTIFICATION = 33;
-const int URI_GET_URLLIB = 128;
-const int URI_GET_URLLIB_END = 191;
-
-// gametype votes
-const int GTV_AVAILABLE = 0;
-// for later use in per-map gametype filtering
-const int GTV_FORBIDDEN = 2;
+// gametype vote flags
+const int GTV_FORBIDDEN = 0; // Cannot be voted
+const int GTV_AVAILABLE = 1; // Can be voted
+const int GTV_CUSTOM    = 2; // Custom entry
 #endif

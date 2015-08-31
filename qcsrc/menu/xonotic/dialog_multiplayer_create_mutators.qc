@@ -1,11 +1,13 @@
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticMutatorsDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticMutatorsDialog, toString, string(entity))
-	METHOD(XonoticMutatorsDialog, fill, void(entity))
-	METHOD(XonoticMutatorsDialog, showNotify, void(entity))
-	METHOD(XonoticMutatorsDialog, close, void(entity))
+#ifndef DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
+#define DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
+#include "dialog.qc"
+CLASS(XonoticMutatorsDialog, XonoticDialog)
+	METHOD(XonoticMutatorsDialog, toString, string(entity));
+	METHOD(XonoticMutatorsDialog, fill, void(entity));
+	METHOD(XonoticMutatorsDialog, showNotify, void(entity));
+	METHOD(XonoticMutatorsDialog, close, void(entity));
 	ATTRIB(XonoticMutatorsDialog, title, string, _("Mutators"))
 	ATTRIB(XonoticMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
 	ATTRIB(XonoticMutatorsDialog, intendedWidth, float, 0.9)
@@ -80,7 +82,7 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Invincible Projectiles"));
 	if(cvar_string("g_weaponarena") != "0")
 		s = strcat(s, ", ", WeaponArenaString());
-	if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstart") == 0)
 		s = strcat(s, ", ", _("No start weapons"));
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		s = strcat(s, ", ", _("Low gravity"));
@@ -234,7 +236,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_weaponarena", "menu_weaponarena", _("Weapon arenas:")));
-			e.getCvarValueFromCvar = true;
+			e.cvarValueIsAnotherCvar = true;
 			e.cvarOffValue = "0";
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{

@@ -1,3 +1,8 @@
+#include "../_all.qh"
+
+#include "pathlib.qh"
+#include "utility.qh"
+
 vector pathlib_wateroutnode(vector start,vector end, float doedge)
 {
     vector surface;
@@ -80,7 +85,7 @@ vector pathlib_walknode(vector start,vector end,float doedge)
     vector direction,point,last_point,s,e;
     float steps, distance, i;
 
-    dprint("Walking node from ", vtos(start), " to ", vtos(end), "\n");
+    LOG_TRACE("Walking node from ", vtos(start), " to ", vtos(end), "\n");
 
     pathlib_movenode_goodnode = 0;
 
@@ -102,7 +107,7 @@ vector pathlib_walknode(vector start,vector end,float doedge)
         //start - movenode_maxdrop
         a.cnt = time + 10;
 
-        dprint("I cant walk on air!\n");
+        LOG_TRACE("I cant walk on air!\n");
         return trace_endpos;
     }
 

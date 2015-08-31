@@ -1,8 +1,10 @@
-#ifdef INTERFACE
-CLASS(XonoticInputBox) EXTENDS(InputBox)
-	METHOD(XonoticInputBox, configureXonoticInputBox, void(entity, float, string))
-	METHOD(XonoticInputBox, focusLeave, void(entity))
-	METHOD(XonoticInputBox, setText, void(entity, string))
+#ifndef INPUTBOX_H
+#define INPUTBOX_H
+#include "../item/inputbox.qc"
+CLASS(XonoticInputBox, InputBox)
+	METHOD(XonoticInputBox, configureXonoticInputBox, void(entity, float, string));
+	METHOD(XonoticInputBox, focusLeave, void(entity));
+	METHOD(XonoticInputBox, setText, void(entity, string));
 	ATTRIB(XonoticInputBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticInputBox, image, string, SKINGFX_INPUTBOX)
 	ATTRIB(XonoticInputBox, onChange, void(entity, entity), func_null)
@@ -24,10 +26,10 @@ CLASS(XonoticInputBox) EXTENDS(InputBox)
 	ATTRIB(XonoticInputBox, cb_colorC, vector, SKINCOLOR_CLEARBUTTON_C)
 
 	ATTRIB(XonoticInputBox, cvarName, string, string_null)
-	METHOD(XonoticInputBox, loadCvars, void(entity))
-	METHOD(XonoticInputBox, saveCvars, void(entity))
+	METHOD(XonoticInputBox, loadCvars, void(entity));
+	METHOD(XonoticInputBox, saveCvars, void(entity));
 	ATTRIB(XonoticInputBox, sendCvars, float, 0)
-	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float))
+	METHOD(XonoticInputBox, keyDown, float(entity, float, float, float));
 
 	ATTRIB(XonoticInputBox, saveImmediately, float, 0)
 ENDCLASS(XonoticInputBox)
@@ -38,7 +40,7 @@ entity makeXonoticInputBox(float, string);
 entity makeXonoticInputBox(float doEditColorCodes, string theCvar)
 {
 	entity me;
-	me = spawnXonoticInputBox();
+	me = NEW(XonoticInputBox);
 	me.configureXonoticInputBox(me, doEditColorCodes, theCvar);
 	return me;
 }
@@ -58,18 +60,18 @@ void XonoticInputBox_focusLeave(entity me)
 {
 	me.saveCvars(me);
 }
-void XonoticInputBox_setText(entity me, string new)
+void XonoticInputBox_setText(entity me, string val)
 {
-	if(me.text != new)
+	if(me.text != val)
 	{
-		SUPER(XonoticInputBox).setText(me, new);
+		SUPER(XonoticInputBox).setText(me, val);
 		if(me.onChange)
 			me.onChange(me, me.onChangeEntity);
 		if(me.saveImmediately)
 			me.saveCvars(me);
 	}
 	else
-		SUPER(XonoticInputBox).setText(me, new);
+		SUPER(XonoticInputBox).setText(me, val);
 }
 void XonoticInputBox_loadCvars(entity me)
 {

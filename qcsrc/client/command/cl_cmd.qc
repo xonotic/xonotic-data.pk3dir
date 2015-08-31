@@ -3,8 +3,22 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
+#include "../../common/command/command.qh"
+#include "cl_cmd.qh"
+
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../hud.qh"
+#include "../hud_config.qh"
+#include "../main.qh"
+#include "../mapvoting.qh"
+#include "../miscfunctions.qh"
+
+#include "../mutators/events.qh"
+
+#include "../../common/mapinfo.qh"
+
 #include "../../common/command/generic.qh"
-#include "../../common/command/shared_defs.qh"
 
 void DrawDebugModel()
 {
@@ -39,22 +53,22 @@ void LocalCommand_blurtest(int request)
 			blurtest_time1 = time + stof(argv(1));
 			blurtest_radius = stof(argv(2));
 			blurtest_power = stof(argv(3));
-			print("Enabled blurtest\n");
+			LOG_INFO("Enabled blurtest\n");
 			return;
 		}
 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd blurtest\n");
-			print("  No arguments required.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd blurtest\n");
+			LOG_INFO("  No arguments required.\n");
 			return;
 		}
 	}
 	#else
 	if(request)
 	{
-		print("Blurtest is not enabled on this client.\n");
+		LOG_INFO("Blurtest is not enabled on this client.\n");
 		return;
 	}
 	#endif
@@ -68,7 +82,7 @@ void LocalCommand_boxparticles(int request, int argc)
 		{
 			if (argc == 9)
 			{
-				int effect = particleeffectnum(argv(1));
+				int effect = _particleeffectnum(argv(1));
 				if (effect >= 0)
 				{
 					int index = stoi(argv(2));
@@ -90,22 +104,22 @@ void LocalCommand_boxparticles(int request, int argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2boxparticles^7\n");
+			LOG_INFO("Incorrect parameters for ^2boxparticles^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 lv_cmd boxparticles effectname own org_from org_to, dir_from, dir_to, countmultiplier, flags\n");
-			print("  'effectname' is the name of a particle effect in effectinfo.txt\n");
-			print("  'own' is the entity number of the owner (negative for csqc ent, positive for svqc ent)\n");
-			print("  'org_from' is the starting origin of the box\n");
-			print("  'org_to' is the ending origin of the box\n");
-			print("  'dir_from' is the minimum velocity\n");
-			print("  'dir_to' is the maximum velocity\n");
-			print("  'countmultiplier' defines a multiplier for the particle count (affects count only, not countabsolute or trailspacing)\n");
-			print("  'flags' can contain:\n");
-			print("    1 to respect globals particles_alphamin, particles_alphamax (set right before via prvm_globalset client)\n");
-			print("    2 to respect globals particles_colormin, particles_colormax (set right before via prvm_globalset client)\n");
-			print("    4 to respect globals particles_fade (set right before via prvm_globalset client)\n");
-			print("    128 to draw a trail, not a box\n");
+			LOG_INFO("\nUsage:^3 lv_cmd boxparticles effectname own org_from org_to, dir_from, dir_to, countmultiplier, flags\n");
+			LOG_INFO("  'effectname' is the name of a particle effect in effectinfo.txt\n");
+			LOG_INFO("  'own' is the entity number of the owner (negative for csqc ent, positive for svqc ent)\n");
+			LOG_INFO("  'org_from' is the starting origin of the box\n");
+			LOG_INFO("  'org_to' is the ending origin of the box\n");
+			LOG_INFO("  'dir_from' is the minimum velocity\n");
+			LOG_INFO("  'dir_to' is the maximum velocity\n");
+			LOG_INFO("  'countmultiplier' defines a multiplier for the particle count (affects count only, not countabsolute or trailspacing)\n");
+			LOG_INFO("  'flags' can contain:\n");
+			LOG_INFO("    1 to respect globals particles_alphamin, particles_alphamax (set right before via prvm_globalset client)\n");
+			LOG_INFO("    2 to respect globals particles_colormin, particles_colormax (set right before via prvm_globalset client)\n");
+			LOG_INFO("    4 to respect globals particles_fade (set right before via prvm_globalset client)\n");
+			LOG_INFO("    128 to draw a trail, not a box\n");
 			return;
 		}
 	}
@@ -128,13 +142,13 @@ void LocalCommand_create_scrshot_ent(int request)
 				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles.x), " ", ftos(view_angles.y), " ", ftos(view_angles.z)), "\"\n"));
 				fputs(fh, "}\n");
 
-				print("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
+				LOG_INFO("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
 
 				fclose(fh);
 			}
 			else
 			{
-				print("^1Error: ^7Could not dump to file!\n");
+				LOG_INFO("^1Error: ^7Could not dump to file!\n");
 			}
 			return;
 		}
@@ -142,8 +156,8 @@ void LocalCommand_create_scrshot_ent(int request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd create_scrshot_ent\n");
-			print("  No arguments required.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd create_scrshot_ent\n");
+			LOG_INFO("  No arguments required.\n");
 			return;
 		}
 	}
@@ -172,8 +186,8 @@ void LocalCommand_debugmodel(int request, int argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd debugmodel model\n");
-			print("  Where 'model' is a string of the model name to use for the debug model.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd debugmodel model\n");
+			LOG_INFO("  Where 'model' is a string of the model name to use for the debug model.\n");
 			return;
 		}
 	}
@@ -216,11 +230,11 @@ void LocalCommand_handlevote(int request, int argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2handlevote^7\n");
+			LOG_INFO("Incorrect parameters for ^2handlevote^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd handlevote vote\n");
-			print("  Where 'vote' is the selection for either the current poll or uid2name.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd handlevote vote\n");
+			LOG_INFO("  Where 'vote' is the selection for either the current poll or uid2name.\n");
 			return;
 		}
 	}
@@ -237,6 +251,24 @@ void LocalCommand_hud(int request, int argc)
 				case "configure":
 				{
 					cvar_set("_hud_configure", ftos(!autocvar__hud_configure));
+					return;
+				}
+
+				case "quickmenu":
+				{
+					if(QuickMenu_IsOpened())
+						QuickMenu_Close();
+					else
+						QuickMenu_Open(argv(2), argv(3)); // mode, submenu
+					return;
+				}
+
+				case "minigame":
+				{
+					if(HUD_MinigameMenu_IsOpened())
+						HUD_MinigameMenu_Close();
+					else
+						HUD_MinigameMenu_Open();
 					return;
 				}
 
@@ -268,24 +300,33 @@ void LocalCommand_hud(int request, int argc)
 				case "radar":
 				{
 					if(argv(2))
-						hud_panel_radar_maximized = InterpretBoolean(argv(2));
+						HUD_Radar_Show_Maximized(InterpretBoolean(argv(2)),0);
 					else
-						hud_panel_radar_maximized = !hud_panel_radar_maximized;
+						HUD_Radar_Show_Maximized(!hud_panel_radar_maximized,0);
+					return;
+				}
+
+				case "clickradar":
+				{
+					HUD_Radar_Show_Maximized(!hud_panel_radar_mouse,1);
 					return;
 				}
 			}
 		}
 
 		default:
-			print("Incorrect parameters for ^2hud^7\n");
+			LOG_INFO("Incorrect parameters for ^2hud^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd hud action [configname | radartoggle | layout]\n");
-			print("  Where 'action' is the command to complete,\n");
-			print("  'configname' is the name to save to for \"save\" action,\n");
-			print("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
-			print("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
-			print("  Full list of commands here: \"configure, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
+			LOG_INFO("\nUsage:^3 cl_cmd hud action [configname | radartoggle | layout]\n");
+			LOG_INFO("  Where 'action' is the command to complete,\n");
+			LOG_INFO("  'configname' is the name to save to for \"save\" action,\n");
+			LOG_INFO("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
+			LOG_INFO("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
+			LOG_INFO("  quickmenu [[default | file | \"\"] submenu]\n");
+			LOG_INFO("    Called without options (or with "") loads either the default quickmenu or a quickmenu file if hud_panel_quickmenu_file is set to a valid filename.\n");
+			LOG_INFO("    Submenu option allows to open quickmenu directly in a submenu, it requires to specify 'default', 'file' or '\"\"' option.\n");
+			LOG_INFO("  Full list of commands here: \"configure, minigame, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
 			return;
 		}
 	}
@@ -305,11 +346,11 @@ void LocalCommand_localprint(int request, int argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2localprint^7\n");
+			LOG_INFO("Incorrect parameters for ^2localprint^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd localprint \"message\"\n");
-			print("  'message' is the centerprint message to send to yourself.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd localprint \"message\"\n");
+			LOG_INFO("  'message' is the centerprint message to send to yourself.\n");
 			return;
 		}
 	}
@@ -329,11 +370,36 @@ void LocalCommand_mv_download(int request, int argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2mv_download^7\n");
+			LOG_INFO("Incorrect parameters for ^2mv_download^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd mv_download mapid\n");
-			print("  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd mv_download mapid\n");
+			LOG_INFO("  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
+			return;
+		}
+	}
+}
+
+void LocalCommand_find(int request, int argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity client;
+
+			for(client = world; (client = find(client, classname, argv(1))); )
+				LOG_INFO(etos(client), "\n");
+
+			return;
+		}
+
+		default:
+			LOG_INFO("Incorrect parameters for ^2find^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("\nUsage:^3 cl_cmd find classname\n");
+			LOG_INFO("  Where 'classname' is the classname to search for.\n");
 			return;
 		}
 	}
@@ -363,11 +429,11 @@ void LocalCommand_sendcvar(int request, int argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2sendcvar^7\n");
+			LOG_INFO("Incorrect parameters for ^2sendcvar^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd sendcvar <cvar>\n");
-			print("  Where 'cvar' is the cvar plus arguments to send to the server.\n");
+			LOG_INFO("\nUsage:^3 cl_cmd sendcvar <cvar>\n");
+			LOG_INFO("  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
 		}
 	}
@@ -410,6 +476,7 @@ void LocalCommand_(int request)
 	CLIENT_COMMAND("handlevote", LocalCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
 	CLIENT_COMMAND("hud", LocalCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
+	CLIENT_COMMAND("find", LocalCommand_find(request, arguments), "Search through entities for matching classname") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
 	/* nothing */
@@ -417,7 +484,7 @@ void LocalCommand_(int request)
 void LocalCommand_macro_help()
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(strtolower(description) != "") { print("  ^2", name, "^7: ", description, "\n"); } }
+		{ if(strtolower(description) != "") { LOG_INFO("  ^2", name, "^7: ", description, "\n"); } }
 
 	CLIENT_COMMANDS(0, 0);
 	#undef CLIENT_COMMAND
@@ -472,19 +539,19 @@ void GameCommand(string command)
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
-
-	if(strtolower(argv(0)) == "help")
+	string s = strtolower(argv(0));
+	if (s == "help")
 	{
 		if(argc == 1)
 		{
-			print("\nClient console commands:\n");
+			LOG_INFO("\nClient console commands:\n");
 			LocalCommand_macro_help();
 
-			print("\nGeneric commands shared by all programs:\n");
+			LOG_INFO("\nGeneric commands shared by all programs:\n");
 			GenericCommand_macro_help();
 
-			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are listed above.\n");
-			print("For help about a specific command, type cl_cmd help COMMAND\n");
+			LOG_INFO("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are listed above.\n");
+			LOG_INFO("For help about a specific command, type cl_cmd help COMMAND\n");
 
 			return;
 		}
@@ -497,17 +564,14 @@ void GameCommand(string command)
 			return;
 		}
 	}
-	else if(GenericCommand(command))
-	{
-		return; // handled by common/command/generic.qc
-	}
-	else if(LocalCommand_macro_command(argc)) // continue as usual and scan for normal commands
-	{
-		return; // handled by one of the above LocalCommand_* functions
-	}
+	// continue as usual and scan for normal commands
+	if (GenericCommand(command)// handled by common/command/generic.qc
+	|| LocalCommand_macro_command(argc) // handled by one of the above LocalCommand_* functions
+	|| MUTATOR_CALLHOOK(CSQC_ConsoleCommand, s, argc, command) // handled by a mutator
+	) return;
 
 	// nothing above caught the command, must be invalid
-	print(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.\n");
+	LOG_INFO(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.\n");
 
 	return;
 }
@@ -567,14 +631,12 @@ void ConsoleCommand_macro_init()
 	#ifndef CAMERATEST
 	}
 	#endif
-
-	return;
 }
 
-bool ConsoleCommand_macro_normal(int argc)
+bool ConsoleCommand_macro_normal(string s, int argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
-		{ if(name == strtolower(argv(0))) { { execution } return true; } }
+		{ if (name == s) { { execution } return true; } }
 
 	CONSOLE_COMMANDS_NORMAL();
 	#undef CONSOLE_COMMAND
@@ -582,12 +644,12 @@ bool ConsoleCommand_macro_normal(int argc)
 	return false;
 }
 
-bool ConsoleCommand_macro_movement(int argc)
+bool ConsoleCommand_macro_movement(string s, int argc)
 {
 	if(camera_active)
 	{
 		#define CONSOLE_COMMAND(name,execution) \
-			{ if(name == strtolower(argv(0))) { { execution } return true; } }
+			{ if (name == s) { { execution } return true; } }
 
 		CONSOLE_COMMANDS_MOVEMENT();
 		#undef CONSOLE_COMMAND
@@ -605,17 +667,9 @@ bool ConsoleCommand_macro_movement(int argc)
 bool CSQC_ConsoleCommand(string command)
 {
 	int argc = tokenize_console(command);
-
-	if(ConsoleCommand_macro_normal(argc))
-	{
-		return true;
-	}
-	else if(ConsoleCommand_macro_movement(argc))
-	{
-		return true;
-	}
-
-	// Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
-
-	return false;
+	string s = strtolower(argv(0));
+	// Return value should be true if CSQC handled the command, otherwise return false to have the engine handle it.
+	return (ConsoleCommand_macro_normal(s, argc)
+	|| ConsoleCommand_macro_movement(s, argc)
+	);
 }

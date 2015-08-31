@@ -1,19 +1,21 @@
-#ifdef INTERFACE
-CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
-	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity))
+#ifndef SCREENSHOTLIST_H
+#define SCREENSHOTLIST_H
+#include "listbox.qc"
+CLASS(XonoticScreenshotList, XonoticListBox)
+	METHOD(XonoticScreenshotList, configureXonoticScreenshotList, void(entity));
 	ATTRIB(XonoticScreenshotList, rowsPerItem, float, 1)
-	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticScreenshotList, setSelected, void(entity, float))
-	METHOD(XonoticScreenshotList, draw, void(entity))
-	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticScreenshotList, getScreenshots, void(entity))
-	METHOD(XonoticScreenshotList, previewScreenshot, void(entity))
-	METHOD(XonoticScreenshotList, startScreenshot, void(entity))
-	METHOD(XonoticScreenshotList, screenshotName, string(entity, float))
-	METHOD(XonoticScreenshotList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticScreenshotList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticScreenshotList, destroy, void(entity))
-	METHOD(XonoticScreenshotList, showNotify, void(entity))
+	METHOD(XonoticScreenshotList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticScreenshotList, setSelected, void(entity, float));
+	METHOD(XonoticScreenshotList, draw, void(entity));
+	METHOD(XonoticScreenshotList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticScreenshotList, getScreenshots, void(entity));
+	METHOD(XonoticScreenshotList, previewScreenshot, void(entity));
+	METHOD(XonoticScreenshotList, startScreenshot, void(entity));
+	METHOD(XonoticScreenshotList, screenshotName, string(entity, float));
+	METHOD(XonoticScreenshotList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticScreenshotList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticScreenshotList, destroy, void(entity));
+	METHOD(XonoticScreenshotList, showNotify, void(entity));
 	ATTRIB(XonoticScreenshotList, listScreenshot, float, -1)
 	ATTRIB(XonoticScreenshotList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticScreenshotList, columnNameOrigin, float, 0)
@@ -27,14 +29,13 @@ CLASS(XonoticScreenshotList) EXTENDS(XonoticListBox)
 
 	ATTRIB(XonoticScreenshotList, newScreenshotTime, float, 0)
 	ATTRIB(XonoticScreenshotList, newSlideShowScreenshotTime, float, 0)
-	ATTRIB(XonoticScreenshotList, prevSelectedItem, float, 0)
 
 	ATTRIB(XonoticScreenshotList, screenshotBrowserDialog, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotPreview, entity, NULL)
 	ATTRIB(XonoticScreenshotList, screenshotViewerDialog, entity, NULL)
-	METHOD(XonoticScreenshotList, goScreenshot, void(entity, float))
-	METHOD(XonoticScreenshotList, startSlideShow, void(entity))
-	METHOD(XonoticScreenshotList, stopSlideShow, void(entity))
+	METHOD(XonoticScreenshotList, goScreenshot, void(entity, float));
+	METHOD(XonoticScreenshotList, startSlideShow, void(entity));
+	METHOD(XonoticScreenshotList, stopSlideShow, void(entity));
 ENDCLASS(XonoticScreenshotList)
 
 entity makeXonoticScreenshotList();
@@ -49,7 +50,7 @@ void ScreenshotList_Filter_Change(entity box, entity me);
 entity makeXonoticScreenshotList()
 {
 	entity me;
-	me = spawnXonoticScreenshotList();
+	me = NEW(XonoticScreenshotList);
 	me.configureXonoticScreenshotList(me);
 	return me;
 }
@@ -150,13 +151,12 @@ void XonoticScreenshotList_setSelected(entity me, float i)
 {
 	if (me.newSlideShowScreenshotTime)
 		me.startSlideShow(me);
-	me.prevSelectedItem = me.selectedItem;
+	float selectedItem_save = me.selectedItem;
 	SUPER(XonoticScreenshotList).setSelected(me, i);
-	if (me.pressed && me.selectedItem != me.prevSelectedItem)
+	if (me.pressed && me.selectedItem != selectedItem_save)
 	{
-		// while dragging the scrollbar (or an item)
-		// for a smooth mouse movement do not load immediately the new selected images
-		me.newScreenshotTime = time + 0.22; // dragging an item we need a delay > 0.2 (from listbox: me.dragScrollTimer = time + 0.2;)
+		// avoid immediate image loading on quick repeated selection changes
+		me.newScreenshotTime = time + 0.22;
 	}
 	else if (time > me.newScreenshotTime)
 	{
@@ -165,11 +165,16 @@ void XonoticScreenshotList_setSelected(entity me, float i)
 	}
 }
 
-void XonoticScreenshotList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticScreenshotList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.screenshotName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
@@ -289,8 +294,6 @@ float XonoticScreenshotList_keyDown(entity me, float scan, float ascii, float sh
 		me.startScreenshot(me);
 		return 1;
 	}
-	if(scan == K_MWHEELUP || scan == K_MWHEELDOWN)
-		me.newScreenshotTime = time + 0.2;
 	return SUPER(XonoticScreenshotList).keyDown(me, scan, ascii, shift);
 }
 #endif

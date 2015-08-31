@@ -14,13 +14,13 @@
 #undef SKINFLOAT
 #undef SKINVECTOR
 
-#define SKINBEGIN void Skin_ApplySetting(string key, string value) { switch(key) {
-#define SKINVECTOR(name,def) case #name: SKIN##name = stov(value); break
-#define SKINFLOAT(name,def) case #name: SKIN##name = stof(value); break
+#define SKINBEGIN void Skin_ApplySetting(string key, string _value) { switch(key) {
+#define SKINVECTOR(name,def) case #name: SKIN##name = stov(_value); break
+#define SKINFLOAT(name,def) case #name: SKIN##name = stof(_value); break
 //#define SKINSTRING(name,def) case #name: break
-#define SKINSTRING(name,def) case #name: SKIN##name = strzone(value); break
+#define SKINSTRING(name,def) case #name: SKIN##name = strzone(_value); break
 	// I know this leaks memory when skin is read multiple times. Screw it.
-#define SKINEND case "": break; case "//": break; default: dprint("Invalid key in skin file: ", key, "\n"); } }
+#define SKINEND case "": break; case "//": break; default: LOG_TRACE("Invalid key in skin file: ", key, "\n"); } }
 #include "skin-customizables.inc"
 #undef SKINEND
 #undef SKINSTRING

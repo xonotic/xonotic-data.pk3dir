@@ -1,5 +1,22 @@
 #include "projectile.qh"
 
+#include "../autocvars.qh"
+#include "../defs.qh"
+#include "../main.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/nades.qh"
+#include "../../common/movetypes/movetypes.qh"
+#include "../../common/util.qh"
+
+#include "../../csqcmodellib/interpolate.qh"
+
+#include "../../warpzonelib/anglestransform.qh"
+
+.float alpha;
+.float scale;
+.vector colormod;
+
 void SUB_Stop()
 {
 	self.move_velocity = self.move_avelocity = '0 0 0';
@@ -97,7 +114,7 @@ void Projectile_Draw()
 				break;
 		}
 
-		if(Nade_IDFromProjectile(self.cnt) != 0)
+		if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 			rot = self.avelocity;
 
 		self.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(self.angles), rot * (t - self.spawntime)));
@@ -125,7 +142,7 @@ void Projectile_Draw()
 			break;
 	}
 
-	if(Nade_IDFromProjectile(self.cnt) != 0)
+	if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 		trailorigin += v_up * 4;
 
 	if(drawn)
@@ -253,6 +270,9 @@ void Ent_Projectile()
 
 	if(f & 2)
 	{
+		string rm_suffix = strcat("rocketminsta_laser_", Static_Team_ColorName_Lower(self.team));
+		if(_particleeffectnum(rm_suffix) < 0 || Team_TeamToNumber(self.team) == -1) { rm_suffix = "TR_NEXUIZPLASMA"; }
+
 		self.cnt = ReadByte();
 
 		self.silent = (self.cnt & 0x80);
@@ -262,46 +282,56 @@ void Ent_Projectile()
 		self.traileffect = 0;
 		switch(self.cnt)
 		{
-			case PROJECTILE_ELECTRO: setmodel(self, "models/ebomb.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
-			case PROJECTILE_ROCKET: setmodel(self, "models/rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); self.scale = 2; break;
-			case PROJECTILE_CRYLINK: setmodel(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
-			case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
-			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
-			case PROJECTILE_GRENADE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
-			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
-			case PROJECTILE_MINE: setmodel(self, "models/mine.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
-			case PROJECTILE_BLASTER: setmodel(self, "models/laser.mdl");self.traileffect = particleeffectnum(""); break;
-			case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3");self.traileffect = particleeffectnum(""); break;
-			case PROJECTILE_PORTO_RED: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
-			case PROJECTILE_PORTO_BLUE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
-			case PROJECTILE_HOOKBOMB: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_KNIGHTSPIKE"); break;
-			case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
-			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
-			case PROJECTILE_NAPALM_FOUNTAIN: //self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("torch_small"); break;
-			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
-			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
-			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
-			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_SEEKER"); break;
-			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.traileffect = particleeffectnum("TR_SEEKER"); break;
+			case PROJECTILE_ELECTRO: setmodel(self, "models/ebomb.mdl");self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
+			case PROJECTILE_ROCKET: setmodel(self, "models/rocket.md3");self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); self.scale = 2; break;
+			case PROJECTILE_CRYLINK: setmodel(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum(EFFECT_TR_CRYLINKPLASMA); break;
+			case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum(EFFECT_TR_CRYLINKPLASMA); break;
+			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
+			case PROJECTILE_GRENADE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
+			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
+			case PROJECTILE_MINE: setmodel(self, "models/mine.md3");self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
+			case PROJECTILE_BLASTER: setmodel(self, "models/laser.mdl");self.traileffect = particleeffectnum(EFFECT_NULL); break;
+			case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3");self.traileffect = particleeffectnum(EFFECT_NULL); break;
+			case PROJECTILE_PORTO_RED: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE); self.scale = 4; break;
+			case PROJECTILE_PORTO_BLUE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE); self.scale = 4; break;
+			case PROJECTILE_HOOKBOMB: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_KNIGHTSPIKE); break;
+			case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum(EFFECT_HAGAR_ROCKET); self.scale = 0.75; break;
+			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum(EFFECT_HAGAR_ROCKET); self.scale = 0.75; break;
+			case PROJECTILE_NAPALM_FOUNTAIN: //self.model = ""; self.modelindex = 0; self.traileffect = _particleeffectnum("torch_small"); break;
+			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum(EFFECT_FIREBALL); break; // particle effect is good enough
+			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum(EFFECT_FIREMINE); break; // particle effect is good enough
+			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); break;
+			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum(EFFECT_FLAC_TRAIL); break;
+			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.traileffect = particleeffectnum(EFFECT_SEEKER_TRAIL); break;
 
-			case PROJECTILE_MAGE_SPIKE: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_VORESPIKE"); break;
-			case PROJECTILE_SHAMBLER_LIGHTNING: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			case PROJECTILE_MAGE_SPIKE: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum(EFFECT_TR_VORESPIKE); break;
+			case PROJECTILE_SHAMBLER_LIGHTNING: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
 
-			case PROJECTILE_RAPTORBOMB:    setmodel(self, "models/vehicles/clusterbomb.md3"); self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
-			case PROJECTILE_RAPTORBOMBLET: setmodel(self, "models/vehicles/bomblet.md3");     self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
-			case PROJECTILE_RAPTORCANNON:  setmodel(self, "models/plasmatrail.mdl"); self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
+			case PROJECTILE_RAPTORBOMB:    setmodel(self, "models/vehicles/clusterbomb.md3"); self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(EFFECT_NULL); break;
+			case PROJECTILE_RAPTORBOMBLET: setmodel(self, "models/vehicles/bomblet.md3");     self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(EFFECT_NULL); break;
+			case PROJECTILE_RAPTORCANNON:  setmodel(self, "models/plasmatrail.mdl"); self.traileffect = particleeffectnum(EFFECT_TR_CRYLINKPLASMA); break;
 
-			case PROJECTILE_SPIDERROCKET: setmodel(self, "models/vehicles/rocket02.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
-			case PROJECTILE_WAKIROCKET:   setmodel(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
-			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_SPIDERROCKET: setmodel(self, "models/vehicles/rocket02.md3"); self.traileffect = particleeffectnum(EFFECT_SPIDERBOT_ROCKET_TRAIL); break;
+			case PROJECTILE_WAKIROCKET:   setmodel(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum(EFFECT_RACER_ROCKET_TRAIL); break;
+			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(EFFECT_NULL); break;
 
-			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
-			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
+			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
 
-			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_RPC: setmodel(self, W_Model("ok_rocket"));self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); break;
+
+			case PROJECTILE_ROCKETMINSTA_LASER: setmodel(self, "models/elaser.mdl");self.traileffect = _particleeffectnum(rm_suffix); break;
 
 			default:
-				if(Nade_IDFromProjectile(self.cnt) != 0) { setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(Nade_TrailEffect(self.cnt, self.team)); break; }
+				if(MUTATOR_CALLHOOK(Ent_Projectile, self))
+					break;
+
+				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
+				{
+					setmodel(self, W_Model("v_ok_grenade.md3"));
+					self.traileffect = _particleeffectnum(Nade_TrailEffect(self.cnt, self.team));
+					break;
+				}
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
 		}
@@ -317,7 +347,7 @@ void Ent_Projectile()
 		{
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("electro_fly"), VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -327,7 +357,7 @@ void Ent_Projectile()
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("rocket_fly"), VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				break;
@@ -375,12 +405,12 @@ void Ent_Projectile()
 				break;
 			case PROJECTILE_NAPALM_FOUNTAIN:
 			case PROJECTILE_FIREBALL:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("fireball_fly2"), VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				break;
 			case PROJECTILE_FIREMINE:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("fireball_fly"), VOL_BASE, ATTEN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				self.mins = '-4 -4 -4';
@@ -395,7 +425,7 @@ void Ent_Projectile()
 				self.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
@@ -408,17 +438,17 @@ void Ent_Projectile()
             case PROJECTILE_RAPTORCANNON:
 				break;
             case PROJECTILE_SPIDERROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
 				break;
             case PROJECTILE_WAKIROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
 				break;
             /*
             case PROJECTILE_WAKICANNON:
 				break;
 			case PROJECTILE_BUMBLE_GUN:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, W_Sound("electro_fly"), VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -431,12 +461,12 @@ void Ent_Projectile()
 				break;
 		}
 
-		if(Nade_IDFromProjectile(self.cnt) != 0)
+		if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
 		{
-			int nade_type = Nade_IDFromProjectile(self.cnt);
+			entity nade_type = Nade_FromProjectile(self.cnt);
 			self.mins = '-16 -16 -16';
 			self.maxs = '16 16 16';
-			self.colormod = Nade_Color(nade_type);
+			self.colormod = nade_type.m_color;
 			self.move_movetype = MOVETYPE_BOUNCE;
 			self.move_touch = func_null;
 			self.scale = 1.5;
@@ -447,6 +477,8 @@ void Ent_Projectile()
 			else
 				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 		}
+
+		MUTATOR_CALLHOOK(EditProjectile, self);
 
 		setsize(self, self.mins, self.maxs);
 	}
@@ -469,6 +501,7 @@ void Ent_Projectile()
 	if(!(self.count & 0x80))
 		InterpolateOrigin_Note();
 
+	self.classname = "csqcprojectile";
 	self.draw = Projectile_Draw;
 	self.entremove = Ent_RemoveProjectile;
 }
@@ -488,13 +521,14 @@ void Projectile_Precache()
 	precache_model("models/tracer.mdl");
 	precache_model("models/sphere/sphere.md3");
 
-	precache_model("models/weapons/v_ok_grenade.md3");
-	precache_model("models/weapons/ok_rocket.md3");
+	precache_model(W_Model("v_ok_grenade.md3"));
+	precache_model(W_Model("ok_rocket.md3"));
 
-	precache_sound("weapons/electro_fly.wav");
-	precache_sound("weapons/rocket_fly.wav");
-	precache_sound("weapons/fireball_fly.wav");
-	precache_sound("weapons/fireball_fly2.wav");
-	precache_sound("weapons/tag_rocket_fly.wav");
+	precache_sound(W_Sound("electro_fly"));
+	precache_sound(W_Sound("rocket_fly"));
+	precache_sound(W_Sound("fireball_fly"));
+	precache_sound(W_Sound("fireball_fly2"));
+	precache_sound(W_Sound("tag_rocket_fly"));
 
+	MUTATOR_CALLHOOK(PrecacheProjectiles);
 }

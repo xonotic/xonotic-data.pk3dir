@@ -1,3 +1,10 @@
+#include "gamemode_cts.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#include "../race.qh"
+
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_cts()
@@ -318,7 +325,7 @@ MUTATOR_DEFINITION(gamemode_cts)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

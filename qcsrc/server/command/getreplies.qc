@@ -1,17 +1,14 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/util.qh"
-    #include "../../common/counting.qh"
-    #include "../../common/monsters/monsters.qh"
-    #include "../defs.qh"
-    #include "../../common/mapinfo.qh"
-    #include "getreplies.qh"
-    #include "../race.qh"
-#endif
+#include "../../common/command/command.qh"
+#include "getreplies.qh"
+#include "../_all.qh"
+
+#include "../race.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/util.qh"
+
+#include "../../common/monsters/all.qh"
 
 // =========================================================
 //  Reply messages for common commands, re-worked by Samual

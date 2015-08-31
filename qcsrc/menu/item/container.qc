@@ -1,26 +1,29 @@
-#ifdef INTERFACE
-CLASS(Container) EXTENDS(Item)
-	METHOD(Container, draw, void(entity))
-	METHOD(Container, keyUp, float(entity, float, float, float))
-	METHOD(Container, keyDown, float(entity, float, float, float))
-	METHOD(Container, mouseMove, float(entity, vector))
-	METHOD(Container, mousePress, float(entity, vector))
-	METHOD(Container, mouseDrag, float(entity, vector))
-	METHOD(Container, mouseRelease, float(entity, vector))
-	METHOD(Container, focusLeave, void(entity))
-	METHOD(Container, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(Container, resizeNotifyLie, void(entity, vector, vector, vector, vector, .vector, .vector, .vector))
-	METHOD(Container, addItem, void(entity, entity, vector, vector, float))
-	METHOD(Container, addItemCentered, void(entity, entity, vector, float))
-	METHOD(Container, moveItemAfter, void(entity, entity, entity))
-	METHOD(Container, removeItem, void(entity, entity))
-	METHOD(Container, setFocus, void(entity, entity))
-	METHOD(Container, saveFocus, void(entity))
-	METHOD(Container, setAlphaOf, void(entity, entity, float))
-	METHOD(Container, itemFromPoint, entity(entity, vector))
-	METHOD(Container, showNotify, void(entity))
-	METHOD(Container, hideNotify, void(entity))
-	METHOD(Container, preferredFocusedGrandChild, entity(entity))
+#ifndef ITEM_CONTAINER_H
+#define ITEM_CONTAINER_H
+#include "../item.qc"
+CLASS(Container, Item)
+	METHOD(Container, draw, void(entity));
+	METHOD(Container, keyUp, float(entity, float, float, float));
+	METHOD(Container, keyDown, float(entity, float, float, float));
+	METHOD(Container, mouseMove, float(entity, vector));
+	METHOD(Container, mousePress, float(entity, vector));
+	METHOD(Container, mouseDrag, float(entity, vector));
+	METHOD(Container, mouseRelease, float(entity, vector));
+	METHOD(Container, focusLeave, void(entity));
+	METHOD(Container, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(Container, resizeNotifyLie, void(entity, vector, vector, vector, vector, .vector, .vector, .vector));
+	METHOD(Container, addItem, void(entity, entity, vector, vector, float));
+	METHOD(Container, addItemCentered, void(entity, entity, vector, float));
+	METHOD(Container, addItemRightCentered, void(entity, entity, vector, float));
+	METHOD(Container, moveItemAfter, void(entity, entity, entity));
+	METHOD(Container, removeItem, void(entity, entity));
+	METHOD(Container, setFocus, void(entity, entity));
+	METHOD(Container, saveFocus, void(entity));
+	METHOD(Container, setAlphaOf, void(entity, entity, float));
+	METHOD(Container, itemFromPoint, entity(entity, vector));
+	METHOD(Container, showNotify, void(entity));
+	METHOD(Container, hideNotify, void(entity));
+	METHOD(Container, preferredFocusedGrandChild, entity(entity));
 	ATTRIB(Container, focusable, float, 0)
 	ATTRIB(Container, firstChild, entity, NULL)
 	ATTRIB(Container, lastChild, entity, NULL)
@@ -28,9 +31,9 @@ CLASS(Container) EXTENDS(Item)
 	ATTRIB(Container, savedFocus, entity, NULL)
 	ATTRIB(Container, shown, float, 0)
 
-	METHOD(Container, enterSubitem, void(entity, entity))
-	METHOD(Container, enterLieSubitem, void(entity, vector, vector, vector, float))
-	METHOD(Container, leaveSubitem, void(entity))
+	METHOD(Container, enterSubitem, void(entity, entity));
+	METHOD(Container, enterLieSubitem, void(entity, vector, vector, vector, float));
+	METHOD(Container, leaveSubitem, void(entity));
 ENDCLASS(Container)
 .entity nextSibling;
 .entity prevSibling;
@@ -117,9 +120,9 @@ void Container_resizeNotifyLie(entity me, vector relOrigin, vector relSize, vect
 	float d;
 	for(e = me.firstChild; e; e = e.nextSibling)
 	{
-		o = e.originField;
-		s = e.sizeField;
-		me.enterLieSubitem(me, o, s, e.fontScaleField, e.Container_alpha);
+		o = e.(originField);
+		s = e.(sizeField);
+		me.enterLieSubitem(me, o, s, e.(fontScaleField), e.Container_alpha);
 		e.resizeNotify(e, o, s, boxToGlobal(o, absOrigin, absSize), boxToGlobalSize(s, absSize));
 		me.leaveSubitem(me);
 	}
@@ -131,9 +134,9 @@ void Container_resizeNotifyLie(entity me, vector relOrigin, vector relSize, vect
 			{
 				e.resized = 0;
 				d = 1;
-				o = e.originField;
-				s = e.sizeField;
-				me.enterLieSubitem(me, o, s, e.fontScaleField, e.Container_alpha);
+				o = e.(originField);
+				s = e.(sizeField);
+				me.enterLieSubitem(me, o, s, e.(fontScaleField), e.Container_alpha);
 				e.resizeNotify(e, o, s, boxToGlobal(o, absOrigin, absSize), boxToGlobalSize(s, absSize));
 				me.leaveSubitem(me);
 			}
@@ -278,6 +281,11 @@ float Container_mouseRelease(entity me, vector pos)
 void Container_addItemCentered(entity me, entity other, vector theSize, float theAlpha)
 {
 	me.addItem(me, other, '0.5 0.5 0' - 0.5 * theSize, theSize, theAlpha);
+}
+
+void Container_addItemRightCentered(entity me, entity other, vector theSize, float theAlpha)
+{
+	me.addItem(me, other, '1 0.5 0' - 0.5 * theSize, theSize, theAlpha);
 }
 
 void Container_addItem(entity me, entity other, vector theOrigin, vector theSize, float theAlpha)

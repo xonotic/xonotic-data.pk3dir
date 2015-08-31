@@ -1,8 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticGameMessageSettingsTab) EXTENDS(XonoticTab)
-	//METHOD(XonoticGameWeaponsSettingsTab, toString, string(entity))
-	METHOD(XonoticGameMessageSettingsTab, fill, void(entity))
-	METHOD(XonoticGameMessageSettingsTab, showNotify, void(entity))
+#ifndef DIALOG_SETTINGS_GAME_MESSAGES_H
+#define DIALOG_SETTINGS_GAME_MESSAGES_H
+#include "tab.qc"
+CLASS(XonoticGameMessageSettingsTab, XonoticTab)
+	METHOD(XonoticGameMessageSettingsTab, fill, void(entity));
+	METHOD(XonoticGameMessageSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameMessageSettingsTab, title, string, _("Messages"))
 	ATTRIB(XonoticGameMessageSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameMessageSettingsTab, rows, float, 13)
@@ -10,6 +11,8 @@ CLASS(XonoticGameMessageSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticGameMessageSettingsTab, weaponsList, entity, NULL)
 ENDCLASS(XonoticGameMessageSettingsTab)
 entity makeXonoticGameMessageSettingsTab();
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(Messages, makeXonoticGameMessageSettingsTab());
 #endif
 
 #ifdef IMPLEMENTATION
@@ -20,7 +23,7 @@ void XonoticGameMessageSettingsTab_showNotify(entity me)
 entity makeXonoticGameMessageSettingsTab()
 {
 	entity me;
-	me = spawnXonoticGameMessageSettingsTab();
+	me = NEW(XonoticGameMessageSettingsTab);
 	me.configureDialog(me);
 	return me;
 }

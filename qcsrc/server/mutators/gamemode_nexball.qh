@@ -6,7 +6,6 @@ const float BALL_EFFECTMASK = 1229;
 const vector BALL_MINS = '-16 -16 -16'; // The model is 24*24*24
 const vector BALL_MAXS = '16 16 16';
 const vector BALL_ATTACHORG = '3 0 16';
-const vector BALL_SPRITECOLOR = '0.91 0.85 0.62';
 const float BALL_FOOT = 1;
 const float BALL_BASKET = 2;
 //spawnflags

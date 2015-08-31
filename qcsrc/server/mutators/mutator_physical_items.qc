@@ -1,3 +1,7 @@
+#include "../_all.qh"
+
+#include "mutator.qh"
+
 .vector spawn_origin, spawn_angles;
 
 void physical_item_think()
@@ -16,15 +20,17 @@ void physical_item_think()
 		// if the item is not spawned, make sure the invisible / ghost item returns to its origin and stays there
 		if(autocvar_g_physical_items_reset)
 		{
-			if(self.owner.nextthink > time) // awaiting respawn
+			if(self.owner.wait > time) // awaiting respawn
 			{
 				setorigin(self, self.spawn_origin);
 				self.angles = self.spawn_angles;
 				self.solid = SOLID_NOT;
+				self.alpha = -1;
 				self.movetype = MOVETYPE_NONE;
 			}
 			else
 			{
+				self.alpha = 1;
 				self.solid = SOLID_CORPSE;
 				self.movetype = MOVETYPE_PHYSICS;
 			}
@@ -45,7 +51,7 @@ void physical_item_touch()
 	}
 }
 
-void physical_item_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void physical_item_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(!self.cnt) // not for dropped items
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
@@ -88,12 +94,24 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.touch = physical_item_touch;
 	wep.event_damage = physical_item_damage;
 
-	wep.spawn_origin = self.origin;
+	if(!wep.cnt)
+	{
+		// fix the spawn origin
+		setorigin(wep, wep.origin + '0 0 1');
+		entity oldself;
+		oldself = self;
+		self = wep;
+		builtin_droptofloor();
+		self = oldself;
+	}
+
+	wep.spawn_origin = wep.origin;
 	wep.spawn_angles = self.angles;
 
 	self.effects |= EF_NODRAW; // hide the original weapon
 	self.movetype = MOVETYPE_FOLLOW;
 	self.aiment = wep; // attach the original weapon
+	self.SendEntity = func_null;
 
 	return false;
 }
@@ -107,7 +125,7 @@ MUTATOR_DEFINITION(mutator_physical_items)
 	{
 		if (!(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")))
 		{
-			dprint("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
+			LOG_TRACE("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
 			return -1;
 		}
 	}
@@ -119,7 +137,7 @@ MUTATOR_DEFINITION(mutator_physical_items)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime\n");
 		return -1;
 	}
 

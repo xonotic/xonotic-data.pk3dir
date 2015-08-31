@@ -1,19 +1,16 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "csqcprojectile.qh"
-    #include "../t_items.qh"
-    #include "../constants.qh"
-    #include "../defs.qh"
-    #include "../command/common.qh"
-#endif
+#include "csqcprojectile.qh"
+#include "../_all.qh"
+
+#include "../t_items.qh"
+
+#include "../command/common.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/weapons/all.qh"
 
 .float csqcprojectile_type;
 
-float CSQCProjectile_SendEntity(entity to, int sf)
+bool CSQCProjectile_SendEntity(entity to, int sf)
 {
 	float ft, fr;
 
@@ -68,7 +65,7 @@ float CSQCProjectile_SendEntity(entity to, int sf)
 	if(sf & 2)
 		WriteByte(MSG_ENTITY, self.csqcprojectile_type); // TODO maybe put this into sf?
 
-	return 1;
+	return true;
 }
 
 .vector csqcprojectile_oldorigin;

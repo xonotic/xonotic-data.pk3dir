@@ -1,9 +1,11 @@
-#ifdef INTERFACE
-CLASS(XonoticScreenshotViewerDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticScreenshotViewerDialog, fill, void(entity))
-	METHOD(XonoticScreenshotViewerDialog, keyDown, float(entity, float, float, float))
-	METHOD(XonoticScreenshotViewerDialog, loadScreenshot, void(entity, string))
-	METHOD(XonoticScreenshotViewerDialog, close, void(entity))
+#ifndef DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_VIEWER_H
+#define DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_VIEWER_H
+#include "dialog.qc"
+CLASS(XonoticScreenshotViewerDialog, XonoticDialog)
+	METHOD(XonoticScreenshotViewerDialog, fill, void(entity));
+	METHOD(XonoticScreenshotViewerDialog, keyDown, float(entity, float, float, float));
+	METHOD(XonoticScreenshotViewerDialog, loadScreenshot, void(entity, string));
+	METHOD(XonoticScreenshotViewerDialog, close, void(entity));
 	ATTRIB(XonoticScreenshotViewerDialog, title, string, "Screenshot Viewer")
 	ATTRIB(XonoticScreenshotViewerDialog, name, string, "ScreenshotViewer")
 	ATTRIB(XonoticScreenshotViewerDialog, intendedWidth, float, 1)

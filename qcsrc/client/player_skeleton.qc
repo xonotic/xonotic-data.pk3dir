@@ -1,14 +1,16 @@
 #include "player_skeleton.qh"
 
+#include "../common/csqcmodel_settings.qh"
+
 #include "../warpzonelib/anglestransform.qh"
 
-.float skeleton_info_modelindex;
-.float skeleton_info_skin;
+class(Skeleton) .float skeleton_info_modelindex;
+class(Skeleton) .float skeleton_info_skin;
 const int BONETYPE_LOWER = 0;
 const int BONETYPE_UPPER = 1;
 const int MAX_BONES = 128;
-.float skeleton_bonetype[MAX_BONES];
-.float skeleton_numbones;
+class(Skeleton) .float skeleton_bonetype[MAX_BONES];
+class(Skeleton) .float skeleton_numbones;
 
 void skeleton_loadinfo(entity e)
 {
@@ -21,6 +23,7 @@ void skeleton_loadinfo(entity e)
 		e.bone_weapon = gettagindex(e, "tag_weapon");
 	if(!e.bone_weapon)
 		e.bone_weapon = gettagindex(e, "bip01 r hand");
+	MUTATOR_CALLHOOK(Skeleton_CheckBones, e);
 	for(i = 0; i < MAX_AIM_BONES; ++i)
 	{
 		e.(bone_aim[i]) = 0;
@@ -35,6 +38,7 @@ void skeleton_loadinfo(entity e)
 			e.fixbone = get_model_parameters_fixbone;
 		if(get_model_parameters_bone_weapon)
 			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
+		MUTATOR_CALLHOOK(Skeleton_CheckModel, e);
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(get_model_parameters_bone_aim[i])
@@ -44,8 +48,8 @@ void skeleton_loadinfo(entity e)
 		}
 	}
 	else
-		dprint("No model parameters for ", e.model, "\n");
-	dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
+		LOG_TRACE("No model parameters for ", e.model, "\n");
+	//dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
 	get_model_parameters(string_null, 0);
 	e.skeleton_info_modelindex = e.modelindex;
 	e.skeleton_info_skin = e.skin;
@@ -170,6 +174,8 @@ void skeleton_from_frames(entity e, float is_dead)
 
 	if(!is_dead)
 	{
+		if(self == csqcplayer)
+			self.v_angle_x = input_angles_x;
 		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{

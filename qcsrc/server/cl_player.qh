@@ -16,7 +16,7 @@ void player_setupanimsformodel();
 
 void player_anim (void);
 
-void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 // g_<gametype>_str:
 // If 0, default is used.
@@ -26,7 +26,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 #define GAMETYPE_DEFAULTED_SETTING(str) \
 	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
 	 (gametype_setting_tmp < 0) ? 0 : \
-	 (gametype_setting_tmp == 0) ? max(0, autocvar_g_##str) : \
+	 (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) : \
 	 gametype_setting_tmp)
 
 

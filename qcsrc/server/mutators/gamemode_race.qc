@@ -1,3 +1,10 @@
+#include "gamemode_race.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#include "../race.qh"
+
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_race()
@@ -266,6 +273,15 @@ MUTATOR_HOOKFUNCTION(race_GetTeamCount)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(race_CountFrags)
+{
+	// announce remaining frags if not in qualifying mode
+	if(!g_race_qualifying)
+		return true;
+
+	return false;
+}
+
 void race_Initialize()
 {
 	race_ScoreRules();
@@ -287,6 +303,7 @@ MUTATOR_DEFINITION(gamemode_race)
 	MUTATOR_HOOK(GetPressedKeys, race_PlayerPostThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, race_ForbidClearPlayerScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, race_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(Scores_CountFragsRemaining, race_CountFrags, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
@@ -304,7 +321,7 @@ MUTATOR_DEFINITION(gamemode_race)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

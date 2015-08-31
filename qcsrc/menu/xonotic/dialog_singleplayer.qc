@@ -1,6 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticSingleplayerDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticSingleplayerDialog, fill, void(entity))
+#ifndef DIALOG_SINGLEPLAYER_H
+#define DIALOG_SINGLEPLAYER_H
+#include "dialog.qc"
+CLASS(XonoticSingleplayerDialog, XonoticDialog)
+	METHOD(XonoticSingleplayerDialog, fill, void(entity));
 	ATTRIB(XonoticSingleplayerDialog, title, string, _("Singleplayer"))
 	ATTRIB(XonoticSingleplayerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)
 	ATTRIB(XonoticSingleplayerDialog, intendedWidth, float, 0.80)
@@ -131,7 +133,6 @@ void XonoticSingleplayerDialog_fill(entity me)
 			me.campaignBox.buttonNext = btnNext;
 			me.campaignBox.buttonPrev = btnPrev;
 			me.campaignBox.labelTitle = lblTitle;
-			me.campaignBox.campaignGo(me.campaignBox, 0);
 
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Campaign Difficulty:")));

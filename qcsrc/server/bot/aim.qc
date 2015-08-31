@@ -1,3 +1,9 @@
+#include "aim.qh"
+#include "../_all.qh"
+
+#include "bot.qh"
+
+#include "../mutators/mutators_include.qh"
 
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,
@@ -113,12 +119,6 @@ float bot_shouldattack(entity e)
 	if(e.frozen)
 		return false;
 
-	// If neither player has ball then don't attack unless the ball is on the
-	// ground.
-	if (g_keepaway)
-		if (!e.ballcarried && !self.ballcarried && ka_ball.owner)
-			return false;
-
 	if(teamplay)
 	{
 		if(e.team==0)
@@ -137,8 +137,7 @@ float bot_shouldattack(entity e)
 	if(e.flags & FL_NOTARGET)
 		return false;
 
-	checkentity = e;
-	if(MUTATOR_CALLHOOK(BotShouldAttack))
+	if(MUTATOR_CALLHOOK(BotShouldAttack, e))
 		return false;
 
 	return true;
@@ -334,16 +333,16 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	hf = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	shotspeed *= g_weaponspeedfactor;
-	shotspeedupward *= g_weaponspeedfactor;
+	shotspeed *= W_WeaponSpeedFactor();
+	shotspeedupward *= W_WeaponSpeedFactor();
 	if (!shotspeed)
 	{
-		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
 		maxshottime = 1;
 	}
 	makevectors(self.v_angle);

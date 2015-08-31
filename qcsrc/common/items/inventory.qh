@@ -1,0 +1,65 @@
+#ifndef INVENTORY_H
+#define INVENTORY_H
+
+#include "all.qh"
+#include "item/pickup.qh"
+
+entityclass(Inventory);
+/** Stores counts of items, the id being the index */
+class(Inventory) .int inv_items[MAX_ITEMS];
+
+/** Player inventory; Inventories also have one inventory for storing the previous state */
+.Inventory inventory;
+
+#ifdef CSQC
+void Inventory_Read(Inventory data)
+{
+    const int bits = ReadInt24_t();
+    FOREACH(ITEMS, bits & BIT(i), LAMBDA(
+        .int fld = inv_items[i];
+        int prev = data.(fld);
+        int next = data.(fld) = ReadByte();
+        LOG_TRACEF("%s: %.0f -> %.0f\n", ITEMS[i].m_name, prev, next);
+    ));
+}
+#endif
+
+#ifdef SVQC
+void Inventory_Write(Inventory data)
+{
+    int bits = 0;
+    FOREACH(ITEMS, true, LAMBDA(
+        .int fld = inv_items[i];
+        bits = BITSET(bits, BIT(i), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
+    ));
+    WriteInt24_t(MSG_ENTITY, bits);
+    FOREACH(ITEMS, bits & BIT(i), LAMBDA(
+        WriteByte(MSG_ENTITY, data.inv_items[i]);
+    ));
+}
+#endif
+
+#ifdef SVQC
+bool Inventory_Send(entity to, int sf)
+{
+    WriteByte(MSG_ENTITY, ENT_CLIENT_INVENTORY);
+    entity e = self.owner;
+    if (IS_SPEC(e)) e = e.enemy;
+    Inventory data = e.inventory;
+    Inventory_Write(data);
+    return true;
+}
+
+void Inventory_new(entity e)
+{
+    Inventory inv = new(Inventory), bak = new(Inventory);
+    inv.classname = "inventory", bak.classname = "inventory";
+    inv.inventory = bak;
+    inv.drawonlytoclient = e;
+    Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);
+}
+void Inventory_delete(entity e) { remove(e.inventory.inventory); remove(e.inventory); }
+void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
+#endif
+
+#endif

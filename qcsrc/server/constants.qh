@@ -7,6 +7,7 @@ const int FL_PROJECTILE = 32768;
 const int FL_TOSSED = 65536;
 const int FL_NO_WEAPON_STAY = 131072;
 const int FL_SPAWNING = 262144;
+const int FL_PICKUPITEMS = 524288;
 
 const int SVC_SOUND = 6;
 const int SVC_STOPSOUND = 16;
@@ -23,5 +24,4 @@ const int NUM_PLAYERSKINS_TEAMPLAY = 3;
 
 const int ASSAULT_VALUE_INACTIVE = 1000;
 
-const int DOOR_NOSPLASH = 256; // generic anti-splashdamage spawnflag
 #endif

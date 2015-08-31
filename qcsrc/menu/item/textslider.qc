@@ -1,23 +1,25 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
-#ifdef INTERFACE
-CLASS(TextSlider) EXTENDS(Slider)
-	METHOD(TextSlider, valueToText, string(entity, float))
-	METHOD(TextSlider, valueToIdentifier, string(entity, float))
-	METHOD(TextSlider, setValueFromIdentifier, void(entity, string))
-	METHOD(TextSlider, getIdentifier, string(entity))
-	METHOD(TextSlider, clearValues, void(entity))
-	METHOD(TextSlider, addValue, void(entity, string, string))
-	METHOD(TextSlider, insertValue, void(entity, float, string, string))
-	METHOD(TextSlider, configureTextSliderValues, void(entity, string))
+#ifndef ITEM_TEXTSLIDER_H
+#define ITEM_TEXTSLIDER_H
+#include "slider.qc"
+CLASS(TextSlider, Slider)
+	METHOD(TextSlider, valueToText, string(entity, float));
+	METHOD(TextSlider, valueToIdentifier, string(entity, float));
+	METHOD(TextSlider, setValueFromIdentifier, void(entity, string));
+	METHOD(TextSlider, getIdentifier, string(entity));
+	METHOD(TextSlider, clearValues, void(entity));
+	METHOD(TextSlider, addValue, void(entity, string, string));
+	METHOD(TextSlider, insertValue, void(entity, float, string, string));
+	METHOD(TextSlider, configureTextSliderValues, void(entity, string));
 	ATTRIBARRAY(TextSlider, valueStrings, string, 256)
 	ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256)
-	ATTRIB(TextSlider, nValues, float, 0)
+	ATTRIB(TextSlider, nValues, int, 0)
 ENDCLASS(TextSlider)
 #endif
 
 #ifdef IMPLEMENTATION
-string TextSlider_valueToIdentifier(entity me, float val)
+string TextSlider_valueToIdentifier(entity me, int val)
 {
 	if(val >= me.nValues)
 		return "custom";
@@ -25,7 +27,7 @@ string TextSlider_valueToIdentifier(entity me, float val)
 		return "custom";
 	return me.(valueIdentifiers[val]);
 }
-string TextSlider_valueToText(entity me, float val)
+string TextSlider_valueToText(entity me, int val)
 {
 	if(val >= me.nValues)
 		return _("Custom");
@@ -35,7 +37,7 @@ string TextSlider_valueToText(entity me, float val)
 }
 void TextSlider_setValueFromIdentifier(entity me, string id)
 {
-	float i;
+	int i;
 	for(i = 0; i < me.nValues; ++i)
 		if(me.valueToIdentifier(me, i) == id)
 		{
@@ -58,9 +60,9 @@ void TextSlider_addValue(entity me, string theString, string theIdentifier)
 	me.(valueIdentifiers[me.nValues]) = theIdentifier;
 	me.nValues += 1;
 }
-void TextSlider_insertValue(entity me, float pos, string theString, string theIdentifier)
+void TextSlider_insertValue(entity me, int pos, string theString, string theIdentifier)
 {
-	float i;
+	int i;
 	for (i = me.nValues; i > pos; --i)
 	{
 		me.(valueStrings[i]) = me.(valueStrings[i-1]);

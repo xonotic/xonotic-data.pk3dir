@@ -5,73 +5,70 @@ sys-pre.qh
 ../dpdefs/progsdefs.qh
 ../dpdefs/dpextensions.qh
 sys-post.qh
+../common/util-post.qh
+
+../lib/_all.inc
 
 anticheat.qc
 antilag.qc
-// assault.qc
 campaign.qc
 cheats.qc
 cl_client.qc
 cl_impulse.qc
-cl_physics.qc
 cl_player.qc
+controlpoint.qc
 csqceffects.qc
-// ctf.qc
-// domination.qc
 ent_cs.qc
-func_breakable.qc
-g_casings.qc
 g_damage.qc
 g_hook.qc
+// g_lights.qc // TODO: was never used
 g_models.qc
 g_subs.qc
-g_tetris.qc
-g_triggers.qc
 g_violence.qc
 g_world.qc
+generator.qc
 ipban.qc
 item_key.qc
 mapvoting.qc
 miscfunctions.qc
-// mode_onslaught.qc
 movelib.qc
-// nexball.qc
+// pathlib.qc // TODO: was never used. Seems to duplicate `pathlib/`
 playerdemo.qc
 portals.qc
 race.qc
 round_handler.qc
-// runematch.qc
 scores.qc
 scores_rules.qc
-secret.qc
 spawnpoints.qc
 steerlib.qc
 sv_main.qc
-target_music.qc
-target_spawn.qc
 teamplay.qc
 t_halflife.qc
 t_items.qc
-t_jumppads.qc
-t_plats.qc
 t_quake3.qc
 t_quake.qc
-t_swamp.qc
-t_teleporters.qc
-waypointsprites.qc
 
+bot/aim.qc
 bot/bot.qc
+bot/navigation.qc
+bot/scripting.qc
+bot/waypoints.qc
 
-command/banning.qc
-command/cmd.qc
-command/common.qc
-command/getreplies.qc
-command/radarmap.qc
-command/sv_cmd.qc
-command/vote.qc
+bot/havocbot/havocbot.qc
+bot/havocbot/role_keyhunt.qc
+bot/havocbot/roles.qc
+
+command/all.qc
 
 mutators/mutators_include.qc
 mutators/mutators.qc
+
+pathlib/costs.qc
+pathlib/expandnode.qc
+pathlib/main.qc
+pathlib/movenode.qc
+pathlib/path_waypoint.qc
+pathlib/utility.qc
 
 weapons/accuracy.qc
 weapons/common.qc
@@ -88,27 +85,41 @@ weapons/weaponsystem.qc
 ../common/buffs.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
-../common/command/generic.qc
-../common/command/markup.qc
-../common/command/rpn.qc
+../common/effects.qc
 ../common/mapinfo.qc
-../common/monsters/monsters.qc
 ../common/monsters/spawn.qc
 ../common/monsters/sv_monsters.qc
+../common/minigames/minigames.qc
+../common/minigames/sv_minigames.qc
+../common/movetypes/include.qc
 ../common/nades.qc
 ../common/net_notice.qc
 ../common/notifications.qc
+../common/physics.qc
 ../common/playerstats.qc
-../common/test.qc
-../common/urllib.qc
+../common/viewloc.qc
+../common/triggers/include.qc
 ../common/util.qc
+
+../common/items/all.qc
+../common/monsters/all.qc
+../common/mutators/all.qc
+../common/vehicles/all.qc
+../common/weapons/all.qc // TODO
+
+../common/turrets/sv_turrets.qc
+../common/turrets/config.qc
+../common/turrets/util.qc
+../common/turrets/turrets.qc
+../common/turrets/checkpoint.qc
+../common/turrets/targettrigger.qc
 ../common/weapons/config.qc
-../common/weapons/weapons.qc // TODO
 
 ../csqcmodellib/sv_model.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/common.qc
-../warpzonelib/mathlib.qc
 ../warpzonelib/server.qc
 ../warpzonelib/util_server.qc
+
+../../mod/server/progs.inc

@@ -1,37 +1,41 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/common.qh"
-    #include "../../warpzonelib/util_server.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/teams.qh"
-    #include "../../common/util.qh"
-    #include "../../common/weapons/weapons.qh"
-    #include "../weapons/accuracy.qh"
-    #include "../t_items.qh"
-    #include "../autocvars.qh"
-    #include "../constants.qh"
-    #include "../defs.qh"
-    #include "../mutators/mutators_include.qh"
-    #include "../campaign.qh"
-    #include "../../common/mapinfo.qh"
-    #include "../../csqcmodellib/sv_model.qh"
-    #include "../antilag.qh"
-#endif
-
 #include "bot.qh"
+#include "../_all.qh"
+
 #include "aim.qh"
 #include "navigation.qh"
+#include "scripting.qh"
 #include "waypoints.qh"
 
-#include "aim.qc"
-#include "navigation.qc"
-#include "waypoints.qc"
-#include "scripting.qc"
+#include "havocbot/havocbot.qh"
+#include "havocbot/scripting.qh"
 
-#include "havocbot/havocbot.qc"
+#include "../antilag.qh"
+#include "../autocvars.qh"
+#include "../campaign.qh"
+#include "../cl_client.qh"
+#include "../constants.qh"
+#include "../defs.qh"
+#include "../race.qh"
+#include "../t_items.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../weapons/accuracy.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/weapons/all.qh"
+
+#include "../../csqcmodellib/sv_model.qh"
+
+#include "../../dpdefs/dpextensions.qh"
+#include "../../dpdefs/progsdefs.qh"
+
+#include "../../warpzonelib/common.qh"
+#include "../../warpzonelib/util_server.qh"
 
 entity bot_spawn()
 {
@@ -152,7 +156,7 @@ void bot_setnameandstuff()
 
 	if(file < 0)
 	{
-		print(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		LOG_INFO(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
 		readfile = "";
 	}
 	else
@@ -379,7 +383,7 @@ void bot_relinkplayerlist()
 		}
 		e = e.chain;
 	}
-	dprint(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
+	LOG_TRACE(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = true;
 }
@@ -520,18 +524,18 @@ void autoskill(float factor)
 			bestbot = max(bestbot, head.totalfrags - head.totalfrags_lastcheck);
 	}
 
-	dprint("autoskill: best player got ", ftos(bestplayer), ", ");
-	dprint("best bot got ", ftos(bestbot), "; ");
+	LOG_TRACE("autoskill: best player got ", ftos(bestplayer), ", ");
+	LOG_TRACE("best bot got ", ftos(bestbot), "; ");
 	if(bestbot < 0 || bestplayer < 0)
 	{
-		dprint("not doing anything\n");
+		LOG_TRACE("not doing anything\n");
 		// don't return, let it reset all counters below
 	}
 	else if(bestbot <= bestplayer * factor - 2)
 	{
 		if(autocvar_skill < 17)
 		{
-			dprint("2 frags difference, increasing skill\n");
+			LOG_TRACE("2 frags difference, increasing skill\n");
 			cvar_set("skill", ftos(autocvar_skill + 1));
 			bprint("^2SKILL UP!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
@@ -540,14 +544,14 @@ void autoskill(float factor)
 	{
 		if(autocvar_skill > 0)
 		{
-			dprint("2 frags difference, decreasing skill\n");
+			LOG_TRACE("2 frags difference, decreasing skill\n");
 			cvar_set("skill", ftos(autocvar_skill - 1));
 			bprint("^1SKILL DOWN!^7 Now at level ", ftos(autocvar_skill), "\n");
 		}
 	}
 	else
 	{
-		dprint("not doing anything\n");
+		LOG_TRACE("not doing anything\n");
 		return;
 		// don't reset counters, wait for them to accumulate
 	}

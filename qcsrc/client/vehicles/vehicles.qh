@@ -1,9 +1,0 @@
-#ifndef VEHICLES_H
-#define VEHICLES_H
-
-void RaptorCBShellfragDraw();
-void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
-void Vehicles_Precache();
-void Net_AuXair2(bool bIsNew);
-void Net_VehicleSetup();
-#endif

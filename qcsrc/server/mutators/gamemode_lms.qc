@@ -1,3 +1,11 @@
+#include "gamemode_lms.qh"
+#include "../_all.qh"
+
+#include "gamemode.qh"
+
+#include "../campaign.qh"
+#include "../command/cmd.qh"
+
 // main functions
 float LMS_NewPlayerLives()
 {
@@ -41,7 +49,10 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
+	{
 		self.classname = "observer";
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
+	}
 
 	return false;
 }
@@ -150,7 +161,7 @@ MUTATOR_HOOKFUNCTION(lms_KeepScore)
 MUTATOR_HOOKFUNCTION(lms_FilterItem)
 {
 	if(autocvar_g_lms_extra_lives)
-	if(self.classname == "item_health_mega")
+	if(self.itemdef == ITEM_HealthMega)
 	{
 		self.max_health = 1;
 		return false;
@@ -162,7 +173,7 @@ MUTATOR_HOOKFUNCTION(lms_FilterItem)
 MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 {
 	// give extra lives for mega health
-	if(self.items & IT_HEALTH)
+	if (self.items & ITEM_HealthMega.m_itemid)
 	{
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
 		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
@@ -221,7 +232,7 @@ MUTATOR_DEFINITION(gamemode_lms)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 
