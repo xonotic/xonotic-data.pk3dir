@@ -346,15 +346,14 @@ void _Movetype_Impact(entity oth)  // SV_Impact
 
 void _Movetype_LinkEdict_TouchAreaGrid()  // SV_LinkEdict_TouchAreaGrid
 {SELFPARAM();
-	entity oldself = self;
 	entity oldother = other;
 
 	for (entity e = findradius(0.5 * (self.absmin + self.absmax), 0.5 * vlen(self.absmax - self.absmin)); e; e = e.chain)
 	{
-		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, oldself.absmin, oldself.absmax))
+		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, this.absmin, this.absmax))
 		{
 			setself(e);
-			other = oldself;
+			other = this;
 
 			trace_allsolid = false;
 			trace_startsolid = false;
@@ -364,14 +363,14 @@ void _Movetype_LinkEdict_TouchAreaGrid()  // SV_LinkEdict_TouchAreaGrid
 			trace_endpos = e.origin;
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
-			trace_ent = oldself;
+			trace_ent = this;
 
 			e.move_touch();
 		}
 	}
 
 	other = oldother;
-	setself(oldself);
+	setself(this);
 }
 
 void _Movetype_LinkEdict(bool touch_triggers)  // SV_LinkEdict

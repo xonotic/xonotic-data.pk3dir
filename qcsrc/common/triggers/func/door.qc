@@ -213,13 +213,10 @@ float door_check_keys(void)
 
 void door_fire()
 {SELFPARAM();
-	entity 	oself;
 	entity	starte;
 
 	if (self.owner != self)
 		objerror ("door_fire: self.owner != self");
-
-	oself = self;
 
 	if (self.spawnflags & DOOR_TOGGLE)
 	{
@@ -238,7 +235,7 @@ void door_fire()
 				}
 				setself(self.enemy);
 			} while ( (self != starte) && (self != world) );
-			setself(oself);
+			setself(this);
 			return;
 		}
 	}
@@ -267,7 +264,7 @@ void door_fire()
 		}
 		setself(self.enemy);
 	} while ( (self != starte) && (self != world) );
-	setself(oself);
+	setself(this);
 }
 
 void door_use()

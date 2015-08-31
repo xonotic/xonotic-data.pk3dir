@@ -414,7 +414,7 @@ void W_Seeker_Attack(void)
 void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Attack
 {SELFPARAM();
 	float c;
-	entity oldself,oldenemy;
+	entity oldenemy;
 	self.cnt = self.cnt - 1;
 
 	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.WEP_AMMO(SEEKER) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER.m_id))
@@ -425,11 +425,10 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 
 	self.nextthink = time + WEP_CVAR(seeker, missile_delay) * W_WeaponRateFactor();
 
-	oldself = self;
 	setself(self.realowner);
 
 	oldenemy = self.enemy;
-	self.enemy = oldself.enemy;
+	self.enemy = this.enemy;
 
 	c = self.cnt % 4;
 	switch(c)
@@ -450,7 +449,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 	}
 
 	self.enemy = oldenemy;
-	setself(oldself);
+	setself(this);
 }
 
 void W_Seeker_Tracker_Think(void)

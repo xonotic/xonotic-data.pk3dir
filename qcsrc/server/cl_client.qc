@@ -847,8 +847,8 @@ void KillIndicator_Think()
 
 	if(self.cnt <= 0)
 	{
-		setself(self.owner);
-		ClientKill_Now(); // no oldself needed
+		SELFCALL(self.owner, ClientKill_Now());
+		SELFCALL_DONE();
 		return;
 	}
     else if(g_cts && self.health == 1) // health == 1 means that it's silent
@@ -2617,15 +2617,14 @@ void PlayerPreThink (void)
 	{
 		self.teamkill_soundtime = 0;
 
-		entity oldself = self;
 		setself(self.teamkill_soundsource);
 		entity oldpusher = self.pusher;
-		self.pusher = oldself;
+		self.pusher = this;
 
 		PlayerSound(playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
 
 		self.pusher = oldpusher;
-		setself(oldself);
+		setself(this);
 	}
 
 	if(self.taunt_soundtime)

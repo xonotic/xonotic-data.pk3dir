@@ -3,7 +3,6 @@
  */
 void trigger_keylock_trigger(string s)
 {SELFPARAM();
-	entity stemp = self;
 	entity otemp = other;
 	entity atemp = activator;
 
@@ -12,12 +11,12 @@ void trigger_keylock_trigger(string s)
 		if(t.use)
 		{
 			setself(t);
-			other = stemp;
+			other = this;
 			activator = atemp;
 			self.use();
 		}
 
-	setself(stemp);
+	setself(this);
 	other = otemp;
 	activator = atemp;
 }

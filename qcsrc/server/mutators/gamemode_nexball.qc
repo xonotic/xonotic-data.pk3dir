@@ -59,18 +59,16 @@ void ball_restart(void)
 
 void nexball_setstatus(void)
 {SELFPARAM();
-	entity oldself;
 	self.items &= ~IT_KEY1;
 	if(self.ballcarried)
 	{
 		if(self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
 		{
 			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
-			oldself = self;
 			setself(self.ballcarried);
 			DropBall(self, self.owner.origin, '0 0 0');
 			ResetBall();
-			setself(oldself);
+			setself(this);
 		}
 		else
 			self.items |= IT_KEY1;
@@ -153,15 +151,14 @@ void GiveBall(entity plyr, entity ball)
 		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
 	}
 
-	ownr = self;
+	plyr.weaponentity.weapons = plyr.weapons;
+	plyr.weaponentity.switchweapon = plyr.weapon;
+	plyr.weapons = WEPSET_PORTO;
 	setself(plyr);
-	self.weaponentity.weapons = self.weapons;
-	self.weaponentity.switchweapon = self.weapon;
-	self.weapons = WEPSET_PORTO;
 	WEP_ACTION(WEP_PORTO.m_id, WR_RESETPLAYER);
-	self.switchweapon = WEP_PORTO.m_id;
+	plyr.switchweapon = WEP_PORTO.m_id;
 	W_SwitchWeapon(WEP_PORTO.m_id);
-	setself(ownr);
+	setself(this);
 }
 
 void DropBall(entity ball, vector org, vector vel)

@@ -495,9 +495,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 void turret_do_updates(entity t_turret)
 {SELFPARAM();
 	vector enemy_pos;
-	entity oldself;
 
-	oldself = self;
 	setself(t_turret);
 
 	enemy_pos = real_origin(self.enemy);
@@ -527,7 +525,7 @@ void turret_do_updates(entity t_turret)
 	self.tur_impactent			 = trace_ent;
 	self.tur_impacttime			= vlen(self.tur_shotorg - trace_endpos) / self.shot_speed;
 
-	setself(oldself);
+	setself(this);
 }
 
 /**

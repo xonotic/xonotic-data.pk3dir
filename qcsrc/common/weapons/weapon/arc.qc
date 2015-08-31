@@ -272,7 +272,6 @@ void W_Arc_Beam_Think(void)
 		}
 
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
-		entity oldself = self;
 		setself(self.owner);
 		if(!WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO2))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -280,7 +279,7 @@ void W_Arc_Beam_Think(void)
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(self);
 		}
-		setself(oldself);
+		setself(this);
 		remove(self);
 		return;
 	}

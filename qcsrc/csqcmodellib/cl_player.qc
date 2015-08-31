@@ -220,7 +220,6 @@ void CSQCPlayer_SetCamera()
 
 	if(csqcplayer)
 	{
-		entity oldself = self;
 		setself(csqcplayer);
 
 		if(servercommandframe == 0 || clientcommandframe == 0)
@@ -298,7 +297,7 @@ void CSQCPlayer_SetCamera()
 		// relink
 		setorigin(self, self.origin);
 
-		setself(oldself);
+		setself(this);
 	}
 
 	entity view;

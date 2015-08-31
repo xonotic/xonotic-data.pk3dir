@@ -846,11 +846,10 @@ void ctf_FlagThink()
 				self.health = 0;
 				ctf_CheckFlagReturn(self, RETURN_SPEEDRUN);
 
-				tmp_entity = self;
 				setself(self.owner);
 				self.impulse = CHIMPULSE_SPEEDRUN; // move the player back to the waypoint they set
 				ImpulseCommands();
-				setself(tmp_entity);
+				setself(this);
 			}
 			if(autocvar_g_ctf_stalemate)
 			{
@@ -2382,7 +2381,6 @@ void ctf_ScoreRules(int teams)
 // code from here on is just to support maps that don't have flag and team entities
 void ctf_SpawnTeam (string teamname, int teamcolor)
 {SELFPARAM();
-	entity oldself = self;
 	setself(spawn());
 	self.classname = "ctf_team";
 	self.netname = teamname;
@@ -2390,7 +2388,7 @@ void ctf_SpawnTeam (string teamname, int teamcolor)
 
 	spawnfunc_ctf_team();
 
-	setself(oldself);
+	setself(this);
 }
 
 void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.

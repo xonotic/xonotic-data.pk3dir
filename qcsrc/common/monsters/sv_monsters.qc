@@ -38,7 +38,7 @@ void monster_dropitem()
 		return;
 
 	vector org = self.origin + ((self.mins + self.maxs) * 0.5);
-	entity e = spawn(), oldself = self;
+	entity e = spawn();
 
 	e.monster_loot = self.monster_loot;
 
@@ -58,7 +58,7 @@ void monster_dropitem()
 		e.item_spawnshieldtime = time + 0.7;
 		e.classname = "droppedweapon"; // use weapon handling to remove it on touch
 		SUB_SetFade(e, time + autocvar_g_monsters_drop_time, 1);
-		setself(oldself);
+		setself(this);
 	}
 }
 

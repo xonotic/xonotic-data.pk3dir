@@ -159,8 +159,6 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 void WarpZone_Touch (void)
 {SELFPARAM();
-	entity oldself;
-
 	if(other.classname == "trigger_warpzone")
 		return;
 
@@ -205,14 +203,13 @@ void WarpZone_Touch (void)
 		if (!self.target) self.target = save1;
 		if (!self.target3) self.target3 = save2;
 
-		oldself = self;
 		setself(self.enemy);
 		save1 = self.target; self.target = string_null;
 		save2 = self.target2; self.target2 = string_null;
 		SUB_UseTargets();
 		if (!self.target) self.target = save1;
 		if (!self.target2) self.target2 = save2;
-		setself(oldself);
+		setself(this);
 	}
 	else
 	{
@@ -776,16 +773,14 @@ void WarpZone_Think()
 	|| self.warpzone_save_eorigin != self.enemy.origin
 	|| self.warpzone_save_eangles != self.enemy.angles)
 	{
-		entity oldself;
-		oldself = self;
 		WarpZone_InitStep_UpdateTransform();
 		setself(self.enemy);
 		WarpZone_InitStep_UpdateTransform();
-		setself(oldself);
+		setself(this);
 		WarpZone_InitStep_FinalizeTransform();
 		setself(self.enemy);
 		WarpZone_InitStep_FinalizeTransform();
-		setself(oldself);
+		setself(this);
 		self.warpzone_save_origin = self.origin;
 		self.warpzone_save_angles = self.angles;
 		self.warpzone_save_eorigin = self.enemy.origin;
@@ -811,8 +806,7 @@ void WarpZone_StartFrame()
 		WarpZone_PostInitialize_Callback();
 	}
 
-	entity oldself, oldother;
-	oldself = self;
+	entity oldother;
 	oldother = other;
 	for(e = world; (e = nextent(e)); )
 	{
@@ -849,7 +843,7 @@ void WarpZone_StartFrame()
 			break;
 		}
 	}
-	setself(oldself);
+	setself(this);
 	other = oldother;
 }
 

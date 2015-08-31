@@ -39,7 +39,6 @@ void weapon_defaultspawnfunc(float wpn)
 	entity e;
 	float t;
 	string s;
-	entity oldself;
 	float i, j;
 	int f;
 
@@ -67,7 +66,6 @@ void weapon_defaultspawnfunc(float wpn)
 		if(t >= 2)
 		{
 			self.team = --internalteam;
-			oldself = self;
 			for(i = 1; i < t; ++i)
 			{
 				s = argv(i);
@@ -77,7 +75,7 @@ void weapon_defaultspawnfunc(float wpn)
 					if(e.netname == s)
 					{
 						setself(spawn());
-						copyentity(oldself, self);
+						copyentity(this, self);
 						self.classname = "replacedweapon";
 						weapon_defaultspawnfunc(j);
 						break;
@@ -85,10 +83,10 @@ void weapon_defaultspawnfunc(float wpn)
 				}
 				if(j > WEP_LAST)
 				{
-					LOG_INFO("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+					LOG_INFO("The weapon replace list for ", this.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 				}
 			}
-			setself(oldself);
+			setself(this);
 		}
 		if(t >= 1) // always the case!
 		{

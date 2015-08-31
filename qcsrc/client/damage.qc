@@ -130,9 +130,6 @@ void Ent_DamageInfo(float isNew)
 	bool hitplayer = false;
 	int species, forcemul;
 	vector force, thisforce;
-	entity oldself;
-
-	oldself = self;
 
 	w_deathtype = ReadShort();
 	w_issilent = (w_deathtype & 0x8000);
@@ -212,7 +209,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.isplayermodel)
 			hitplayer = true; // this impact damaged a player
 	}
-	setself(oldself);
+	setself(this);
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{

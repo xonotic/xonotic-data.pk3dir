@@ -534,13 +534,13 @@ void vehicles_showwp()
 	if(self.waypointsprite_attached)
 	{
 		WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
-		if(oldself == world)
+		if(this == NULL)
 			WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, self.nextthink);
 		WaypointSprite_Ping(self.waypointsprite_attached);
 	}
 
-	if(oldself != world)
-		setself(oldself);
+	if(this)
+		setself(this);
 }
 
 void vehicles_setreturn(entity veh)
@@ -828,7 +828,6 @@ void vehicles_exit(bool eject)
 {SELFPARAM();
 	entity _vehicle;
 	entity _player;
-	entity _oldself = self;
 
 	if(vehicles_exit_running)
 	{
@@ -844,7 +843,7 @@ void vehicles_exit(bool eject)
 		if (_vehicle.vehicle_flags & VHF_PLAYERSLOT)
 		{
 			_vehicle.vehicle_exit(eject);
-			setself(_oldself);
+			setself(this);
 			vehicles_exit_running = false;
 			return;
 		}
@@ -920,7 +919,7 @@ void vehicles_exit(bool eject)
 
 	CSQCMODEL_AUTOINIT(self);
 
-	setself(_oldself);
+	setself(this);
 	vehicles_exit_running = false;
 }
 
@@ -987,7 +986,6 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
 	if(veh.owner)
 	{
-		entity oldself = self;
 		setself(veh);
 		other = pl; // TODO: fix
 
@@ -996,7 +994,7 @@ void vehicles_enter(entity pl, entity veh)
 		if(veh.gun1.vehicle_enter)
 		if(veh.gun1.vehicle_enter())
 		{
-			setself(oldself);
+			setself(this);
 			return;
 		}
 
@@ -1005,11 +1003,11 @@ void vehicles_enter(entity pl, entity veh)
 		if(veh.gun2.vehicle_enter)
 		if(veh.gun2.vehicle_enter())
 		{
-			setself(oldself);
+			setself(this);
 			return;
 		}
 
-		setself(oldself);
+		setself(this);
 	}
 
 	if(teamplay)
@@ -1113,11 +1111,10 @@ void vehicles_enter(entity pl, entity veh)
 
 	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
-	entity oldself = self;
 	setself(veh);
 	CSQCModel_UnlinkEntity();
 	VEH_ACTION(veh.vehicleid, VR_ENTER);
-	setself(oldself);
+	setself(this);
 
 	antilag_clear(pl);
 }

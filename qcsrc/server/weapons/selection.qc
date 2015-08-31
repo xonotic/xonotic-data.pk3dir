@@ -20,7 +20,6 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {SELFPARAM();
 	float f;
-	entity oldself;
 
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
@@ -47,7 +46,6 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			}
 			else
 			{
-				oldself = self;
 				setself(cl);
 				f = WEP_ACTION(wpn, WR_CHECKAMMO1);
 				f = f + WEP_ACTION(wpn, WR_CHECKAMMO2);
@@ -58,7 +56,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
 
-				setself(oldself);
+				setself(this);
 			}
 			if (!f)
 			{

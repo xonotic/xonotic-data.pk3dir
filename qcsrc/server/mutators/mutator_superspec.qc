@@ -100,7 +100,6 @@ float superspec_filteritem(entity _for, entity _item)
 
 MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 {SELFPARAM();
-	entity _oldself = self;
 	entity _item = self;
 
 	entity e;
@@ -118,7 +117,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 				{
 					_spectate(other);
 
-					setself(_oldself);
+					setself(this);
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
@@ -148,7 +147,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 		}
 	}
 
-	setself(_oldself);
+	setself(this);
 
 	return MUT_ITEMTOUCH_CONTINUE;
 }

@@ -345,8 +345,6 @@ int ons_ControlPoint_Attackable(entity cp, int teamnumber)
 
 void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
-	entity oself;
-
 	if(damage <= 0) { return; }
 
 	if (self.owner.isshielded)
@@ -404,11 +402,10 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		oself = self;
 		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		setself(oself);
+		setself(this);
 
 		self.owner.waslinked = self.owner.islinked;
 		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
@@ -423,7 +420,6 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 
 void ons_ControlPoint_Icon_Think()
 {SELFPARAM();
-	entity oself;
 	self.nextthink = time + ONS_CP_THINKRATE;
 
 	if(autocvar_g_onslaught_cp_proxydecap)
@@ -478,11 +474,10 @@ void ons_ControlPoint_Icon_Think()
 		if(!self.owner.islinked)
 			self.owner.team = 0;
 
-		oself = self;
 		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		setself(oself);
+		setself(this);
 
 		self.owner.team = t;
 
@@ -503,7 +498,6 @@ void ons_ControlPoint_Icon_Think()
 
 void ons_ControlPoint_Icon_BuildThink()
 {SELFPARAM();
-	entity oself;
 	int a;
 
 	self.nextthink = time + ONS_CP_THINKRATE;
@@ -545,11 +539,10 @@ void ons_ControlPoint_Icon_BuildThink()
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		oself = self;
 		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		setself(oself);
+		setself(this);
 
 		self.SendFlags |= CPSF_SETUP;
 	}

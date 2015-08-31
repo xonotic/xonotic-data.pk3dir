@@ -624,7 +624,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (gameover || targ.killcount == -666)
 		return;
 
-	entity oldself = self;
 	setself(targ);
         damage_targ = targ;
         damage_inflictor = inflictor;
@@ -643,7 +642,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		if(IS_PLAYER(targ))
 			if(SAME_TEAM(targ, attacker))
 			{
-				setself(oldself);
+				setself(this);
 				return;
 			}
 	}
@@ -763,7 +762,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
-			entity oldself = self;
 			setself(targ);
 			entity spot = SelectSpawnPoint (false);
 
@@ -794,7 +792,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				Send_Effect(EFFECT_TELEPORT, self.origin, '0 0 0', 1);
 			}
 
-			setself(oldself);
+			setself(this);
 		}
 
 		if(!g_instagib)
@@ -911,7 +909,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (damage != 0 || (self.damageforcescale && vlen(force)))
 	if (self.event_damage)
 		self.event_damage (inflictor, attacker, damage, deathtype, hitloc, force);
-	setself(oldself);
+	setself(this);
 
 	// apply mirror damage if any
 	if(mirrordamage > 0 || mirrorforce > 0)

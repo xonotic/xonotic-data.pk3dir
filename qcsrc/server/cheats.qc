@@ -307,7 +307,6 @@ float CheatCommand(float argc)
 	cmd = argv(0);
 	switch(cmd)
 	{
-		entity e;
 		float effectnum, f;
 		vector start, end;
 		entity oldself;
@@ -362,7 +361,7 @@ float CheatCommand(float argc)
 				}
 				else
 				{
-					e = spawn();
+					entity e = spawn();
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
 					e.health = 1000;
@@ -404,9 +403,9 @@ float CheatCommand(float argc)
 			}
 			sprint(self, "Usage: sv_cheats 1; restart; cmd penalty 5.0 AHAHAHAHAHAHAH))\n");
 			break;
-		case "dragbox_spawn":
+		case "dragbox_spawn": {
 			IS_CHEAT(0, argc, 0);
-			e = spawn();
+			entity e = spawn();
 			e.classname = "dragbox_box";
 			e.think = DragBox_Think;
 			e.nextthink = time;
@@ -458,9 +457,10 @@ float CheatCommand(float argc)
 			setorigin(e.killindicator.killindicator, '0 0 8');
 			DID_CHEAT();
 			break;
-		case "dragpoint_spawn":
+		}
+		case "dragpoint_spawn": {
 			IS_CHEAT(0, argc, 0);
-			e = spawn();
+			entity e = spawn();
 			e.classname = "dragpoint";
 			e.think = DragBox_Think;
 			e.nextthink = time;
@@ -493,13 +493,14 @@ float CheatCommand(float argc)
 			setorigin(e.killindicator.killindicator, '0 0 56');
 			DID_CHEAT();
 			break;
+		}
 		case "drag_remove":
 			IS_CHEAT(0, argc, 0);
 			RandomSelection_Init();
 			crosshair_trace(self);
-			for(e = world; (e = find(e, classname, "dragbox_box")); )
+			for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
-			for(e = world; (e = find(e, classname, "dragpoint")); )
+			for(entity e = world; (e = find(e, classname, "dragpoint")); )
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			if(RandomSelection_chosen_ent)
 			{
@@ -519,9 +520,9 @@ float CheatCommand(float argc)
 			{
 				RandomSelection_Init();
 				crosshair_trace(self);
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = world; (e = find(e, classname, "dragpoint")); )
 					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				if(RandomSelection_chosen_ent)
 				{
@@ -541,11 +542,11 @@ float CheatCommand(float argc)
 			{
 				f = fopen(argv(1), FILE_WRITE);
 				fputs(f, "cmd drag_clear\n");
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 				{
 					fputs(f, strcat("cmd dragbox_spawn ", ftos(e.cnt), " \"", vtos(e.aiment.origin), "\" \"", vtos(e.enemy.origin), "\"\n"));
 				}
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = world; (e = find(e, classname, "dragpoint")); )
 				{
 					fputs(f, strcat("cmd dragpoint_spawn ", ftos(e.cnt), " \"", vtos(e.origin), "\"\n"));
 				}
@@ -560,7 +561,7 @@ float CheatCommand(float argc)
 			if(argc == 2)
 			{
 				f = fopen(argv(1), FILE_WRITE);
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 				{
 					fputs(f, "{\n");
 					fputs(f, "\"classname\" \"trigger_race_checkpoint\"\n");
@@ -570,7 +571,7 @@ float CheatCommand(float argc)
 					fputs(f, strcat("\"targetname\" \"checkpoint", ftos(e.cnt), "\"\n"));
 					fputs(f, "}\n");
 				}
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = world; (e = find(e, classname, "dragpoint")); )
 				{
 					start = '0 0 0';
 					effectnum = 0;
@@ -626,15 +627,15 @@ float CheatCommand(float argc)
 			break;
 		case "drag_clear":
 			IS_CHEAT(0, argc, 0);
-			for(e = world; (e = find(e, classname, "dragbox_box")); )
+			for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragbox_corner_1")); )
+			for(entity e = world; (e = find(e, classname, "dragbox_corner_1")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragbox_corner_2")); )
+			for(entity e = world; (e = find(e, classname, "dragbox_corner_2")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragpoint")); )
+			for(entity e = world; (e = find(e, classname, "dragpoint")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "drag_digit")); )
+			for(entity e = world; (e = find(e, classname, "drag_digit")); )
 				remove(e);
 			DID_CHEAT();
 			break;
@@ -695,29 +696,26 @@ float CheatCommand(float argc)
 			break;
 		case "usetarget":
 			IS_CHEAT(0, argc, 0);
-			e = self;
 			setself(spawn());
 			self.target = argv(1);
-			activator = e;
+			activator = this;
 			SUB_UseTargets();
 			remove(self);
-			setself(e);
+			setself(this);
 			DID_CHEAT();
 			break;
 		case "killtarget":
 			IS_CHEAT(0, argc, 0);
-			e = self;
 			setself(spawn());
 			self.killtarget = argv(1);
-			activator = e;
+			activator = this;
 			SUB_UseTargets();
 			remove(self);
-			setself(e);
+			setself(this);
 			DID_CHEAT();
 			break;
 		case "teleporttotarget":
 			IS_CHEAT(0, argc, 0);
-			e = self;
 			setself(spawn());
 			setorigin(self, self.origin);
 			self.classname = "cheattriggerteleport";
@@ -725,13 +723,11 @@ float CheatCommand(float argc)
 			teleport_findtarget();
 			if(!wasfreed(self))
 			{
-				Simple_TeleportPlayer(self, e);
+				Simple_TeleportPlayer(self, this);
 				remove(self);
-				setself(e);
 				DID_CHEAT();
 			}
-			else
-				setself(e);
+			setself(this);
 			break;
 	}
 

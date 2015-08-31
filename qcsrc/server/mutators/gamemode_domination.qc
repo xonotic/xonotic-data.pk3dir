@@ -544,7 +544,6 @@ void ScoreRules_dom(float teams)
 // code from here on is just to support maps that don't have control point and team entities
 void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage)
 {SELFPARAM();
-	entity oldself = self;
 	setself(spawn());
 	self.classname = "dom_team";
 	self.netname = teamname;
@@ -565,19 +564,18 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.team = self.cnt + 1;
 
 	//eprint(self);
-	setself(oldself);
+	setself(this);
 }
 
 void dom_spawnpoint(vector org)
 {SELFPARAM();
-	entity oldself = self;
 	setself(spawn());
 	self.classname = "dom_controlpoint";
 	self.think = spawnfunc_dom_controlpoint;
 	self.nextthink = time;
 	setorigin(self, org);
 	spawnfunc_dom_controlpoint();
-	setself(oldself);
+	setself(this);
 }
 
 // spawn some default teams if the map is not set up for domination

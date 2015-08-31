@@ -138,7 +138,7 @@ match (string)self.target and call their .use function
 */
 void SUB_UseTargets()
 {SELFPARAM();
-	entity t, stemp, otemp, act;
+	entity t, otemp, act;
 	string s;
 	float i;
 
@@ -191,10 +191,9 @@ void SUB_UseTargets()
 // fire targets
 //
 	act = activator;
-	stemp = self;
 	otemp = other;
 
-	if(stemp.target_random)
+	if(this.target_random)
 		RandomSelection_Init();
 
 	for(i = 0; i < 4; ++i)
@@ -202,10 +201,10 @@ void SUB_UseTargets()
 		switch(i)
 		{
 			default:
-			case 0: s = stemp.target; break;
-			case 1: s = stemp.target2; break;
-			case 2: s = stemp.target3; break;
-			case 3: s = stemp.target4; break;
+			case 0: s = this.target; break;
+			case 1: s = this.target2; break;
+			case 2: s = this.target3; break;
+			case 3: s = this.target4; break;
 		}
 		if (s != "")
 		{
@@ -215,7 +214,7 @@ void SUB_UseTargets()
 			for(t = world; (t = find(t, targetname, s)); )
 			if(t.use)
 			{
-				if(stemp.target_random)
+				if(this.target_random)
 				{
 					RandomSelection_Add(t, 0, string_null, 1, 0);
 				}
@@ -224,7 +223,7 @@ void SUB_UseTargets()
 					if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
 						t.antiwall_flag = aw_flag;
 					setself(t);
-					other = stemp;
+					other = this;
 					activator = act;
 					self.use();
 				}
@@ -232,16 +231,16 @@ void SUB_UseTargets()
 		}
 	}
 
-	if(stemp.target_random && RandomSelection_chosen_ent)
+	if(this.target_random && RandomSelection_chosen_ent)
 	{
 		setself(RandomSelection_chosen_ent);
-		other = stemp;
+		other = this;
 		activator = act;
 		self.use();
 	}
 
 	activator = act;
-	setself(stemp);
+	setself(this);
 	other = otemp;
 }
 

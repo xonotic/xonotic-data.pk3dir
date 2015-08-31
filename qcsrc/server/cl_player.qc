@@ -40,81 +40,79 @@ void CopyBody_Think(void)
 }
 void CopyBody(float keepvelocity)
 {SELFPARAM();
-	entity oldself;
 	if (self.effects & EF_NODRAW)
 		return;
-	oldself = self;
 	setself(spawn());
-	self.enemy = oldself;
-	self.lip = oldself.lip;
-	self.colormap = oldself.colormap;
-	self.iscreature = oldself.iscreature;
-	self.teleportable = oldself.teleportable;
-	self.damagedbycontents = oldself.damagedbycontents;
-	self.angles = oldself.angles;
-	self.v_angle = oldself.v_angle;
-	self.avelocity = oldself.avelocity;
+	self.enemy = this;
+	self.lip = this.lip;
+	self.colormap = this.colormap;
+	self.iscreature = this.iscreature;
+	self.teleportable = this.teleportable;
+	self.damagedbycontents = this.damagedbycontents;
+	self.angles = this.angles;
+	self.v_angle = this.v_angle;
+	self.avelocity = this.avelocity;
 	self.classname = "body";
-	self.damageforcescale = oldself.damageforcescale;
-	self.effects = oldself.effects;
-	self.glowmod = oldself.glowmod;
-	self.event_damage = oldself.event_damage;
-	self.anim_state = oldself.anim_state;
-	self.anim_time = oldself.anim_time;
-	self.anim_lower_action = oldself.anim_lower_action;
-	self.anim_lower_time = oldself.anim_lower_time;
-	self.anim_upper_action = oldself.anim_upper_action;
-	self.anim_upper_time = oldself.anim_upper_time;
-	self.anim_implicit_state = oldself.anim_implicit_state;
-	self.anim_implicit_time = oldself.anim_implicit_time;
-	self.anim_lower_implicit_action = oldself.anim_lower_implicit_action;
-	self.anim_lower_implicit_time = oldself.anim_lower_implicit_time;
-	self.anim_upper_implicit_action = oldself.anim_upper_implicit_action;
-	self.anim_upper_implicit_time = oldself.anim_upper_implicit_time;
-	self.dphitcontentsmask = oldself.dphitcontentsmask;
-	self.death_time = oldself.death_time;
-	self.pain_finished = oldself.pain_finished;
-	self.health = oldself.health;
-	self.armorvalue = oldself.armorvalue;
-	self.armortype = oldself.armortype;
-	self.model = oldself.model;
-	self.modelindex = oldself.modelindex;
-	self.skin = oldself.skin;
-	self.species = oldself.species;
-	self.movetype = oldself.movetype;
-	self.solid = oldself.solid;
-	self.ballistics_density = oldself.ballistics_density;
-	self.takedamage = oldself.takedamage;
-	self.customizeentityforclient = oldself.customizeentityforclient;
-	self.uncustomizeentityforclient = oldself.uncustomizeentityforclient;
-	self.uncustomizeentityforclient_set = oldself.uncustomizeentityforclient_set;
+	self.damageforcescale = this.damageforcescale;
+	self.effects = this.effects;
+	self.glowmod = this.glowmod;
+	self.event_damage = this.event_damage;
+	self.anim_state = this.anim_state;
+	self.anim_time = this.anim_time;
+	self.anim_lower_action = this.anim_lower_action;
+	self.anim_lower_time = this.anim_lower_time;
+	self.anim_upper_action = this.anim_upper_action;
+	self.anim_upper_time = this.anim_upper_time;
+	self.anim_implicit_state = this.anim_implicit_state;
+	self.anim_implicit_time = this.anim_implicit_time;
+	self.anim_lower_implicit_action = this.anim_lower_implicit_action;
+	self.anim_lower_implicit_time = this.anim_lower_implicit_time;
+	self.anim_upper_implicit_action = this.anim_upper_implicit_action;
+	self.anim_upper_implicit_time = this.anim_upper_implicit_time;
+	self.dphitcontentsmask = this.dphitcontentsmask;
+	self.death_time = this.death_time;
+	self.pain_finished = this.pain_finished;
+	self.health = this.health;
+	self.armorvalue = this.armorvalue;
+	self.armortype = this.armortype;
+	self.model = this.model;
+	self.modelindex = this.modelindex;
+	self.skin = this.skin;
+	self.species = this.species;
+	self.movetype = this.movetype;
+	self.solid = this.solid;
+	self.ballistics_density = this.ballistics_density;
+	self.takedamage = this.takedamage;
+	self.customizeentityforclient = this.customizeentityforclient;
+	self.uncustomizeentityforclient = this.uncustomizeentityforclient;
+	self.uncustomizeentityforclient_set = this.uncustomizeentityforclient_set;
 	if (keepvelocity == 1)
-		self.velocity = oldself.velocity;
+		self.velocity = this.velocity;
 	self.oldvelocity = self.velocity;
-	self.alpha = oldself.alpha;
-	self.fade_time = oldself.fade_time;
-	self.fade_rate = oldself.fade_rate;
-	//self.weapon = oldself.weapon;
-	setorigin(self, oldself.origin);
-	setsize(self, oldself.mins, oldself.maxs);
-	self.prevorigin = oldself.origin;
+	self.alpha = this.alpha;
+	self.fade_time = this.fade_time;
+	self.fade_rate = this.fade_rate;
+	//self.weapon = this.weapon;
+	setorigin(self, this.origin);
+	setsize(self, this.mins, this.maxs);
+	self.prevorigin = this.origin;
 	self.reset = SUB_Remove;
 
-	Drag_MoveDrag(oldself, self);
+	Drag_MoveDrag(this, self);
 
 	if(self.colormap <= maxclients && self.colormap > 0)
-		self.colormap = 1024 + oldself.clientcolors;
+		self.colormap = 1024 + this.clientcolors;
 
 	CSQCMODEL_AUTOINIT(self);
-	self.CopyBody_nextthink = oldself.nextthink;
-	self.CopyBody_think = oldself.think;
+	self.CopyBody_nextthink = this.nextthink;
+	self.CopyBody_think = this.think;
 	self.nextthink = time;
 	self.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
 	animdecide_load_if_needed(self);
 	animdecide_setframes(self, false, frame, frame1time, frame2, frame2time);
 
-	setself(oldself);
+	setself(this);
 }
 
 float player_getspecies()

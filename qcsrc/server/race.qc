@@ -736,7 +736,7 @@ float race_waypointsprite_visible_for_player(entity e)
 float have_verified;
 void trigger_race_checkpoint_verify()
 {SELFPARAM();
-	entity oldself, cp;
+	entity cp;
 	float i, p;
 	float qual;
 
@@ -746,7 +746,6 @@ void trigger_race_checkpoint_verify()
 
 	qual = g_race_qualifying;
 
-	oldself = self;
 	setself(spawn());
 	self.classname = "player";
 
@@ -895,7 +894,7 @@ void trigger_race_checkpoint_verify()
 				}
 	}
 	remove(self);
-	setself(oldself);
+	setself(this);
 }
 
 vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector current)

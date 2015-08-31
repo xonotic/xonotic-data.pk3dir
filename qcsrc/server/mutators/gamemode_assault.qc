@@ -70,19 +70,18 @@ void assault_objective_decrease_use()
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldself, oldactivator, head;
+			entity oldactivator, head;
 
-			oldself = self;
-			setself(oldself.enemy);
+			setself(this.enemy);
 			if(self.message)
 			FOR_EACH_PLAYER(head)
 				centerprint(head, self.message);
 
 			oldactivator = activator;
-			activator = oldself;
+			activator = this;
 			SUB_UseTargets();
 			activator = oldactivator;
-			setself(oldself);
+			setself(this);
 		}
 	}
 }
