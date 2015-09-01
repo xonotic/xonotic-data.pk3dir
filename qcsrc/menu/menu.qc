@@ -560,6 +560,9 @@ void m_tooltip(vector pos)
 		{
 			it = m_findtooltipitem(main, pos);
 
+			if(it.instanceOfListBox && it.isScrolling(it))
+				it = world;
+
 			if(it && prev_tooltip != it.tooltip)
 			{
 				// fade out if tooltip of a certain item has changed

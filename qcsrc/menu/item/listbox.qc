@@ -22,6 +22,7 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, origin, vector, '0 0 0')
 	ATTRIB(ListBox, scrollPos, float, 0) // measured in window heights, fixed when needed
 	ATTRIB(ListBox, scrollPosTarget, float, 0)
+	METHOD(ListBox, isScrolling, bool(entity));
 	ATTRIB(ListBox, needScrollToItem, float, -1)
 	METHOD(ListBox, scrollToItem, void(entity, int));
 	ATTRIB(ListBox, previousValue, float, 0)
@@ -86,6 +87,11 @@ ENDCLASS(ListBox)
 #endif
 
 #ifdef IMPLEMENTATION
+bool ListBox_isScrolling(entity me)
+{
+	return (me.scrollPos != me.scrollPosTarget);
+}
+
 void ListBox_scrollToItem(entity me, int i)
 {
 	// scroll doesn't work properly until itemHeight is set to the correct value
