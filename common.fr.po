@@ -8202,3 +8202,623 @@ msgstr "Couleur de l'Équipe :"
 #: qcsrc/menu/xonotic/util.qh:48
 msgid "Enable panel"
 msgstr "Afficher le tableau de bord"
+
+
+msgid "Moving"
+msgstr "Mouvement"
+
+msgid "forward"
+msgstr "avancer"
+
+msgid "backpedal"
+msgstr "reculer"
+
+msgid "strafe left"
+msgstr "gauche"
+
+msgid "strafe right"
+msgstr "droite"
+
+msgid "jump / swim"
+msgstr "sauter / nager"
+
+msgid "crouch / sink"
+msgstr "s'accroupir / couler"
+
+msgid "off-hand hook"
+msgstr "grappin"
+
+msgid "jet pack"
+msgstr "jet pack"
+
+msgid "Attacking"
+msgstr "Attaque"
+
+msgid "primary fire"
+msgstr "tir primaire"
+
+msgid "secondary fire"
+msgstr "tir secondaire"
+
+msgid "Weapon switching"
+msgstr "Changement d'armes"
+
+msgid "previous"
+msgstr "arme précédente"
+
+msgid "next"
+msgstr "arme suivante"
+
+msgid "previously used"
+msgstr "dernière utilisée"
+
+msgid "best"
+msgstr "meilleure arme"
+
+msgid "reload"
+msgstr "recharger"
+
+msgid "View"
+msgstr "Vue"
+
+msgid "hold zoom"
+msgstr "zoom"
+
+msgid "toggle zoom"
+msgstr "zoom 2 clics"
+
+msgid "show scores"
+msgstr "afficher les scores"
+
+msgid "screen shot"
+msgstr "capture d'écran"
+
+msgid "maximize radar"
+msgstr "agrandir le radar"
+
+msgid "toggle minigame menu"
+msgstr "activer/désactiver le menu de mini-jeu"
+
+msgid "Communicate"
+msgstr "Communication"
+
+msgid "public chat"
+msgstr "tchat public"
+
+msgid "team chat"
+msgstr "tchat d'équipe"
+
+msgid "show chat history"
+msgstr "historique du tchat"
+
+msgid "vote YES"
+msgstr "voter OUI"
+
+msgid "vote NO"
+msgstr "voter NON"
+
+msgid "ready"
+msgstr "prêt"
+
+msgid "Client"
+msgstr "Client"
+
+msgid "quick menu"
+msgstr ""
+
+msgid "server info"
+msgstr "information serveur"
+
+msgid "enter console"
+msgstr "ouvrir la console"
+
+msgid "disconnect"
+msgstr "se déconnecter"
+
+msgid "quit"
+msgstr "quitter"
+
+msgid "Teamplay"
+msgstr "Équipe"
+
+msgid "team chat"
+msgstr "tchat d'équipe"
+
+msgid "auto-join team"
+msgstr "auto-joindre une équipe"
+
+msgid "team menu"
+msgstr "sélection d'équipe"
+
+msgid "sandbox menu"
+msgstr "menu bac à sable"
+
+msgid "enter spectator mode"
+msgstr "mode spectateur"
+
+msgid "drop weapon"
+msgstr "lâcher l'arme"
+
+msgid "drop key / drop flag"
+msgstr "lâcher la clef / drapeau"
+
+msgid "drag object"
+msgstr "traîner l'objet"
+
+msgid "3rd person view"
+msgstr "vue à la 3ème personne"
+
+msgid "User defined"
+msgstr "Raccourcis personnalisés"
+
+msgid "userbind"
+msgstr ""
+
+
+msgid "Add every available map to your selection"
+msgstr ""
+
+msgid "Add the maps shown in Maplist above to your selection"
+msgstr ""
+
+msgid "Advanced server settings"
+msgstr "Paramètres serveur avancés"
+
+msgid "Advanced settings where you can tweak every single variable of the game"
+msgstr "Paramètres avancés pour configuer le jeu dans ses moindres détails"
+
+msgid "All players are almost invisible"
+msgstr "Tous les joueurs sont presque invisibles"
+
+msgid "Allow the console toggling bind to also close the console"
+msgstr "Permet de fermer la console avec le même raccourci utilisé pour l'ouvrir"
+
+msgid "Always carry the laser as an additional weapon in Nix"
+msgstr "Autoriser le laser en plus de l'arme courante dans le mode Nix"
+
+msgid "Ambient lighting, if set too high it tends to make light on maps look dull and flat (default: 4)"
+msgstr "Lumière ambiante, si elle est trop élévée, les cartes auront un éclairage plus \"plat\" et moins contrasté (par défaut : 4)"
+
+msgid "Amount of bots on your server"
+msgstr "Nombre d'adversaires contrôlés par ordinateur"
+
+msgid "Amount of health below which your player gets stunned because of blood loss"
+msgstr "Si vous avez moins de santé que spécifié ici, vous perdrez du sang et mourrez progressivement"
+
+msgid "Anisotropic filtering quality (default: 1x)"
+msgstr "Qualité du filtrage anistrope (par défaut : 1x)"
+
+msgid "Announcer sound telling you the remaining minutes of the match"
+msgstr "Voix (en anglais) qui annonce le temps restant avant la fin du match"
+
+msgid "Audio settings"
+msgstr "Paramètres audio"
+
+msgid "Automatically switch to newly picked up weapons if they are better than what you are carrying"
+msgstr "Automatiquement changer d'arme si vous ramassez une meilleure arme que celle que vous portez"
+
+msgid "Automatically taunt enemies after fragging them"
+msgstr "Automatiquement narguer les ennemis lorsque vous les tuez"
+
+msgid "Autoselect team (recommended)"
+msgstr "Auto-séléction de l'équipe (recommandé)"
+
+msgid "Back to work..."
+msgstr "Retour au boulot..."
+
+msgid "Benchmark how fast your computer can run the highlighted demo"
+msgstr "Faire un test de performance en utilisant la démo sélectionnée"
+
+msgid "Bookmark the currently highlighted server so that it's faster to find in the future"
+msgstr "Mettre le serveur en haut de la liste pour pouvoir le repérer plus facilement plus tard"
+
+msgid "Brightness of black (default: 0)"
+msgstr "Luminosité du noir (par défaut : 0)"
+
+msgid "Brightness of white (default: 1)"
+msgstr "Luminosité du blanc (par défaut : 1)"
+
+msgid "Browse and view demos"
+msgstr "Parcourir et regarder vos démos"
+
+msgid "By how much to multiply the contrast in dark areas (default: 1)"
+msgstr "Multiplier le constraste dans les salles sombres (par défaut : 1)"
+
+msgid "Change the game settings"
+msgstr "Changer les paramètres du jeu"
+
+msgid "Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)"
+msgstr "Ajuster la qualité des textures. La baisser diminue l'utilisation des ressources, mais rend les textures floues. (par défaut : bon)"
+
+msgid "Change the smoothness of the curves on the map (default: normal)"
+msgstr "Ajuster la qualité des modèles 3D de la carte (courbes, tuyaux) (par défaut : normal)"
+
+msgid "Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done."
+msgstr ""
+
+msgid "Compress the textures for video cards with small amounts of video memory available (default: None)"
+msgstr "Compresser les textures pour économiser de la mémoire graphique (par défaut : aucun)"
+
+msgid "Control transparency of the waypoints"
+msgstr "Ajuster l'opacité des waypoints"
+
+msgid "Customize your player settings"
+msgstr "Personnaliser vos paramètres joueur"
+
+msgid "Damage done to your enemy gets added to your own health"
+msgstr "Les dégâts infligés à vos ennemis vous rendent la santé"
+
+msgid "Decals further away than this will not be drawn (default: 300)"
+msgstr "Toutes les marques d'impacts qui sont plus loin que cette distance ne seront pas affichées (par défaut : 300)"
+
+msgid "Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly. (default: disabled)"
+msgstr "Désactiver les textures et les remplacer par des couleurs unies. Utile pour les configurations très légères, mais le rendu est très laid. (par défaut : désactivé)"
+
+msgid "Distance from which taunts can be heard"
+msgstr "Distance jusqu'à laquelle les voix demeurent audibles"
+
+msgid "Draw the weapon model"
+msgstr "Afficher l'arme à la première personne"
+
+msgid "Effect settings"
+msgstr "Paramètres des effets graphiques"
+
+msgid "Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts (default: disabled)"
+msgstr "Éviter des problèmes de profondeur de rendu en faisant un rendu de profondeur de la carte/joueurs avant le rendu \"standard\" (par défaut : désactivé)"
+
+msgid "Enable OpenGL 2.0 pixel shaders for lightning (default: enabled)"
+msgstr "Activer les Shaders OpenGL 2.0 pour des effets de lumière améliorés (par défaut : désactivé)"
+
+msgid "Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot (default: disabled)"
+msgstr "Activer l'anticrénelage, réduit l'effet d'escalier sur les modèles 3D, mais augmente fortement l'utilisation des ressources (par défaut : désactivé)"
+
+msgid "Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)"
+msgstr "Activer l'effet \"bloom\", qui éclaire les pixels situés au voisinage de pixels très brillants. A un gros impact sur la performance (par défaut : désactivé)"
+
+msgid "Enable clientside movement prediction"
+msgstr "Activer la prédiction des mouvements du joueur pour éviter les saccades lors de parties en réseau"
+
+msgid "Enable corona flares around certain lights (default: enabled)"
+msgstr "Activer des effets d'éblouissement peu gourmands autour de certaines sources de lumière (par défaut : activé)"
+
+msgid "Enable decals (bullet holes and blood) (default: enabled)"
+msgstr "Activer les marques d'impacts et de sang (par défaut : activé)"
+
+msgid "Enable directional voices"
+msgstr "Activer les voix directionnelles des personnages sur la carte"
+
+msgid "Enable dodging"
+msgstr "Activer les esquives"
+
+msgid "Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)"
+msgstr "Activer les lumières dynamiques rapides - mais plus laides - en affichant des couronnes de lumière à la place des vraies lumières dynamiques (par défaut : désactivé)"
+
+msgid "Enable footstep sounds"
+msgstr "Activer les bruits de pas"
+
+msgid "Enable fullscreen mode (default: enabled)"
+msgstr "Activer le mode plein écran (par défaut : activé)"
+
+msgid "Enable network update smoothing"
+msgstr "Algorithme pour éviter les saccades lors de parties en réseau"
+
+msgid "Enable rendering of dynamic lights such as explosions and rocket lights (default: enabled)"
+msgstr "Activer le rendu des lumières dynamiques des explosions et des roquettes (par défaut : activé)"
+
+msgid "Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance. (default: disabled)"
+msgstr "Activer le rendu des lumières carte en temps réel, a un gros impact sur la performance (par défaut : désactivé)"
+
+msgid "Enable rendering of shadows from dynamic lights (default: disabled)"
+msgstr "Activer le rendu des ombres depuis les lumières dynamiques en temps réel (par défaut : désactivé)"
+
+msgid "Enable rendering of shadows from realtime world lights (default: disabled)"
+msgstr "Activer le rendu des ombres depuis les lumières carte en temps réel (par défaut : désactivé)"
+
+msgid "Enable spatialization (blend the right and left channel slightly to decrease stereo separation a bit for headphones)"
+msgstr "Essayer de diminuer le \"contraste\" entre la partie gauche et droite du casque pour un meilleur son"
+
+msgid "Enable the use of glossmaps on textures supporting it (default: enabled)"
+msgstr "Utiliser le reflet des textures (par défaut : activé)"
+
+msgid "Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot (default: disabled)"
+msgstr "Utiliser GLSL pour corriger le gamma, attention, cela risque d'augementer fortement l'utilisation de ressources (par défaut : désactivé)"
+
+msgid "Enable use of directional shading on textures (default: enabled)"
+msgstr "Utiliser des effets d'ombrage de lumière sur les textures (par défaut : activé)"
+
+msgid "Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)"
+msgstr "Activer la syncronisation verticale pour éviter des problèmes d'affichage, limite le nombre maximum d'images par seconde (par défaut : désactivé)"
+
+msgid "Enable/disable the HUD background"
+msgstr "Enable/Désactiver l'arrière plan de l'interface"
+
+msgid "Enables special postprocessing effects for when damaged or under water or using a powerup (default: disabled)"
+msgstr "Activer des effets de postprocessing spéciaux lorque vous êtes touché, lorsque vous êtes sous l'eau ou lorsque vous utilisez un bonus (par défaut : désactivé)"
+
+msgid "Fade coronas according to visibility (default: enabled)"
+msgstr "Estomper les effets d'éblouissement pour ne pas perdre en visibilité (par défaut : activé)"
+
+msgid "Field of vision in degrees from 60 to 130, default is 90"
+msgstr "Champ de vision en degrés, par défaut 90, certains joueurs préfèrent entre 110 et 130"
+
+msgid "Find servers to play on"
+msgstr "Trouver des serveurs où jouer"
+
+msgid "Force client to use chosen port unless it is set to 0"
+msgstr "Forcer le client à passer par le port choisi sauf s'il est défini à 0"
+
+msgid "Global rendering brightness (default: 1)"
+msgstr "Éclairage du rendu global (par défaut : 1)"
+
+msgid "Higher quality offset mapping, which also has a huge impact on performance (default: disabled)"
+msgstr "Augmenter la qualité des effets de relief sur les textures, a un gros impact sur la performance (par défaut : désactivé)"
+
+msgid "Higher quality version of bloom, which has a huge impact on performance. (default: disabled)"
+msgstr "Effet \"bloom\" de qualité encore supérieure, mais encore plus gourmand (par défaut : désactivé)"
+
+msgid "Host your own game"
+msgstr "Héberger votre propre partie"
+
+msgid "How big the zoom factor is when the zoom button is pressed"
+msgstr "Facteur du zoom lorsque vous appuyez sur le bouton de zoom"
+
+msgid "How fast the view will be zoomed, disable to zoom instantly"
+msgstr "Facteur \"d'adoucissement\" du zoom, 0 le désactive complètement"
+
+msgid "How long a view kick from damage lasts (default: 0)"
+msgstr "Faire trembler la vue lorsque vous êtes touché (durée par défaut : 0)"
+
+msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
+msgstr "Profondeur des couleurs : 16 bits est plus rapide, mais 32 bits est de meilleure qualité (recommandé)"
+
+msgid "How many input packets to send to the server each second"
+msgstr "Nombre maximum de paquets à envoyer au serveur chaque seconde"
+
+msgid "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)"
+msgstr "Changer la sensibilité du zoom : 0 est la valeur la plus basse, 1 correspond à l'absence de zoom"
+
+msgid "I got some more fragging to do!"
+msgstr "'Faut que je fragge plus de monde!"
+
+msgid "If set, only reduce the texture quality of models (default: enabled)"
+msgstr "Si activé, réduira uniquement la qualité des textures des joueurs (par défaut : activé)"
+
+msgid "Input settings"
+msgstr "Paramètres contrôle souris/clavier"
+
+msgid "Inverse gamma correction value, a brightness effect that does not affect white or black (default: 1.125)"
+msgstr "Correction du gamma n'affectant pas la luminosité du noir ou du blanc (par défaut : 1.125)"
+
+msgid "Invert mouse movement on the Y-axis"
+msgstr "Inverser la souris sur l'axe vertical (mode jeu d'avion)"
+
+msgid "Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines (default: disabled)"
+msgstr "Demander au processeur d'attendre la fin du rendu graphique afin éviter des problèmes d'affichage divers (par défaut : désactivé)"
+
+msgid "Make things fall to the ground slower, lower value means lower gravity"
+msgstr "Vous tombez plus lentement, une valeur peu élevée correspond à une faible gravité"
+
+msgid "Make use of DGA mouse input"
+msgstr "Utiliser une souris DGA"
+
+msgid "Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)"
+msgstr "Utiliser les VBOs pour stocker les modèles 3D statiques dans la mémoire pour une meilleure performance (par défaut : Points et Triangles)"
+
+msgid "Make use of the list above when cycling through weapons with the mouse wheel"
+msgstr "Utiliser la liste de priorité pour le changement d'armes avec la molette de la souris"
+
+msgid "Maximum download speed"
+msgstr "Vitesse maximale de téléchargement"
+
+msgid "Maximum number of concurrent HTTP/FTP downloads"
+msgstr "Nombre maximum de téléchargements simultanés en HTTP/FTP"
+
+msgid "Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)"
+msgstr "Info-bulles : désactivé, standard ou avancé (affiche aussi la cvar ou la commande associée)"
+
+msgid "Misc settings"
+msgstr "Autres paramètres"
+
+msgid "Motion blur strength - 0.4 recommended"
+msgstr "Intensité du flou de mouvement - 0.4 est recommandé"
+
+msgid "Mouse speed multiplier"
+msgstr "Sensibilité de la souris"
+
+msgid "Mouse speed multiplier in the menu, does not affect aiming in the game"
+msgstr "Sensibilité de la souris dans les menus, n'affecte pas le jeu"
+
+msgid "Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1)"
+msgstr "Nombre de particules ; moins de particules consomment moins de ressources (par défaut : 1)"
+
+msgid "Mutators and weapon arenas"
+msgstr "Mutators et arènes avec une seule arme"
+
+msgid "Name under which you will appear in the game"
+msgstr "Pseudonyme utilisé pour vous reconnaître dans le jeu"
+
+msgid "Network settings"
+msgstr "Paramètres réseau"
+
+msgid "No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon."
+msgstr "No Items Xonotic - tous les joueurs jouent avec la même arme, et celle-ci change régulièrement."
+
+msgid "None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy"
+msgstr "Aucun: aucun effet de viseur - TrueAim: rendre le viseur flou si vous risquez de tirer dans un mur - Ennemis: rendre le viseur plus grand si vous pouvez toucher un ennemi"
+
+msgid "Number of channels for the sound output"
+msgstr "Nombre de canaux pour la sortie audio"
+
+msgid "Number of maps that are shown in the map voting at the end of a match"
+msgstr "Le nombre de cartes pouvant être votées à la fin du match"
+
+msgid "Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface (default: disabled)"
+msgstr "Activer l'effet de relief sur les textures, a un léger impact sur la performance (par défaut : désactivé)"
+
+msgid "Only possible to inflict damage on your enemy while he's airborne"
+msgstr "Il faut que votre adversaire soit en l'air pour lui infliger des dégâts"
+
+msgid "Override the default amount of teams in teamgames"
+msgstr "Outrepasser le nombre d'équipes définies par la carte"
+
+msgid "Particles further away than this will not be drawn (default: 1000)"
+msgstr "Toutes les particules situées au-delà de cette distance ne seront pas affichées (par défaut : 1000)"
+
+msgid "Pause updating the server list to prevent servers from \"jumping around\""
+msgstr "Ne pas mettre à jour la liste de serveurs pour éviter de \"glisser\" sur un autre serveur"
+
+msgid "Percentage of damage dealt to teammates"
+msgstr "Pourcentage de dégâts infligés aux équipiers si vous les touchez"
+
+msgid "Percentage of teamdamage that will be mirrored to you"
+msgstr "Pourcentage de dégâts infligés aux équipiers qui vous sera renvoyé"
+
+msgid "Play a hit indicator sound when your shot hits an enemy"
+msgstr "Jouer un son lorsque vous touchez un ennemi"
+
+msgid "Play online, against your friends in LAN, view demos or change player settings"
+msgstr "Jouer en ligne, en LAN avec vos amis, voir vos démos et modifier vos paramètres joueur"
+
+msgid "Play sounds when clicking or hovering over menu items"
+msgstr "Jouer des sons en cliquant ou en survolant des boutons"
+
+msgid "Play the singleplayer campaign or instant action matches against bots"
+msgstr "Jouer tout seul contre des adversaires contrôlés par ordinateur"
+
+msgid "Players spawn with the grappling hook"
+msgstr "Tous les joueurs ont un grappin"
+
+msgid "Players spawn with the jetpack"
+msgstr "Tous les joueurs ont un jetpack"
+
+msgid "Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps."
+msgstr ""
+
+msgid "Players will drop all weapons they possessed when they are killed"
+msgstr "Les joueurs lâchent toutes leurs armes quand ils meurent"
+
+msgid "Poor man's left handed mode (default: off)"
+msgstr "Mode miroir (par défaut : désactivé)"
+
+msgid "Position of the weapon model; requires reconnect"
+msgstr "Position de l'arme à l'écran, reconnection au serveur nécessaire pour prendre effet"
+
+msgid "Quit the game"
+msgstr "Quitter Xonotic"
+
+msgid "Reduce the amount of gibs or remove them completely (default: lots)"
+msgstr "Réduire les effets gores ou les désactiver totalement (par défaut : beaucoup)"
+
+msgid "Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces (default: disabled)"
+msgstr "Qualité des reflets et de la réfraction de l'eau et des portails, a un gros impact sur la performance dans les cartes avec des surfaces réfléchissantes (par défaut : désactivé)"
+
+msgid "Remove all the maps from your selection"
+msgstr ""
+
+msgid "Remove the maps shown in Maplist above from your selection"
+msgstr ""
+
+msgid "Replace blood and gibs with content that does not have any gore effects (default: disabled)"
+msgstr "Remplacer les effets gores par des effets moins violents (par défaut : désactivé)"
+
+msgid "Resolution of reflections/refractions (default: good)"
+msgstr "Résolution des reflets/réfractions (par défaut : bon)"
+
+msgid "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), requires GLSL color control (default: 1)"
+msgstr "Ajustement de la saturation (0 = noir et blanc, 1 = normal, 2 = saturé) des couleurs (par défaut : 1)"
+
+msgid "Scale multiplier of the waypoints"
+msgstr "Ajuster la taille des waypoints"
+
+msgid "Screen resolution"
+msgstr "Résolution de l'écran"
+
+msgid "Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups."
+msgstr "Sélectionner une arène avec une seule arme fera apparaître les joueurs avec cette arme et des munitions illimitées, et désactive toutes les autres armes"
+
+msgid "Set a different crosshair for each weapon, good if you play without weapon models"
+msgstr "Définir un viseur différent pour chaque arme, utile si vous jouez sans afficher l'arme"
+
+msgid "Set the color of the crosshair depending on the weapon you are currently holding"
+msgstr "Définir la couleur du viseur selon l'arme que vous utilisez"
+
+msgid "Set your most preferred weapons, autoswitch and weapon model settings"
+msgstr "Paramétrer les armes (affichage, priorité)"
+
+msgid "Show a graph of packet sizes and other information"
+msgstr "Afficher la taille des paquets et d'autres informations dans un graphique"
+
+msgid "Show current date, useful on screenshots"
+msgstr "Afficher la date, utile pour les captures d'écran"
+
+msgid "Show current time of day, useful on screenshots"
+msgstr "Afficher l'heure, utile pour les captures d'écran"
+
+msgid "Show empty servers"
+msgstr "Montrer les serveurs vides"
+
+msgid "Show full servers that have no slots available"
+msgstr "Montrer les serveurs où toutes les places sont prises"
+
+msgid "Show more information about the currently highlighted server"
+msgstr "Montrer plus d'informations sur le serveur sélectionné"
+
+msgid "Show the name of the player you are aiming at"
+msgstr "Afficher le nom du joueur que vous avez dans votre viseur"
+
+msgid "Show various gametype specific waypoints"
+msgstr "Afficher les waypoints (flèches 3D)"
+
+msgid "Show your rendered frames per second"
+msgstr "Afficher le nombre d'images par seconde actuel (FPS = Frames Per Second)"
+
+msgid "Simple majority wins a vote"
+msgstr "La majorité simple remporte un vote"
+
+msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
+msgstr "Adoucit le mouvement de souris, mais crée une légère latence"
+
+msgid "Sound output frequency"
+msgstr "Fréquence de la sortie audio"
+
+msgid "Specify how experienced the bots will be"
+msgstr "Spécifier la difficulté des adversaires ordinateur"
+
+msgid "Specify your network speed with this slider"
+msgstr "Spécifier la vitesse de votre réseau avec ce curseur"
+
+msgid "Swap left/right channels"
+msgstr "Inverser les canaux stéréo gauche/droite"
+
+msgid "The Xonotic credits"
+msgstr "Les crédits de Xonotic"
+
+msgid "The amount of frags needed before the match will end"
+msgstr "Limite de frags pour le match, le match se termine lorsque celle-ci est atteinte"
+
+msgid "The maximum amount of players or bots that can be connected to your server at once"
+msgstr "Le nombre maximum de personnes pouvant jouer sur votre serveur en même temps"
+
+msgid "Time in seconds before decals fade away (default: 2)"
+msgstr "Durée en secondes avant que les marques d'impacts ne disparaissent (par défaut : 2)"
+
+msgid "Timelimit in minutes that when hit, will end the match"
+msgstr "Limite de temps, le match se termine lorsque celle-ci est atteinte"
+
+msgid "Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)"
+msgstr "Utiliser des lightmaps haute résolution, augmente l'utilisation de la mémoire, mais rend les lightmaps plus nettes (par défaut : activé)"
+
+msgid "Use per-pixel lighting effects (default: enabled)"
+msgstr "Utiliser les effets lumineux avancés (par défaut : activé)"
+
+msgid "Use the old HUD layout"
+msgstr "Utiliser l'ancienne interface HUD"
+
+msgid "Video settings"
+msgstr "Paramètres vidéo"
+
+msgid "View bobbing frequency, disable for no bobbing"
+msgstr "Effet de \"tremblement\" de la vue lorsque vous courez"
+
+msgid "Weapons stay after they are picked up"
+msgstr "Les armes restent où elles sont lorsqu'elles sont ramassées"
