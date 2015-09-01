@@ -407,7 +407,7 @@ vector menuTooltipOrigin;
 vector menuTooltipSize;
 float menuTooltipAlpha;
 string menuTooltipText;
-float menuTooltipState; // 0: static, 1: fading in, 2: fading out
+float menuTooltipState; // 0: static, 1: fading in, 2: fading out, 3: forced fading out
 float m_testmousetooltipbox(vector pos)
 {
 	if(pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
@@ -534,6 +534,7 @@ string gettooltip()
 	}
 	return menuTooltipItem.tooltip;
 }
+string prev_tooltip;
 void m_tooltip(vector pos)
 {
 	float f, i, w;
@@ -556,13 +557,24 @@ void m_tooltip(vector pos)
 		menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
 		f = vlen(pos - menuTooltipAveragedMousePos);
 		if(f < 0.01)
+		{
 			it = m_findtooltipitem(main, pos);
+
+			if(it && prev_tooltip != it.tooltip)
+			{
+				// fade out if tooltip of a certain item has changed
+				menuTooltipState = 3;
+				if(prev_tooltip)
+					strunzone(prev_tooltip);
+				prev_tooltip = strzone(it.tooltip);
+			}
+		}
 		else
 			it = world;
 	}
 	fontsize = '1 0 0' * (SKINFONTSIZE_TOOLTIP / conwidth) + '0 1 0' * (SKINFONTSIZE_TOOLTIP / conheight);
 
-	// float menuTooltipState; // 0: static, 1: fading in, 2: fading out
+	// float menuTooltipState; // 0: static, 1: fading in, 2: fading out, 3: forced fading out
 	if(it != menuTooltipItem)
 	{
 		switch(menuTooltipState)
@@ -619,12 +631,13 @@ void m_tooltip(vector pos)
 
 	switch(menuTooltipState)
 	{
-		case 1:
+		case 1: // fade in
 			menuTooltipAlpha = bound(0, menuTooltipAlpha + 5 * frametime, 1);
 			if(menuTooltipAlpha == 1)
 				menuTooltipState = 0;
 			break;
-		case 2:
+		case 2: // fade out
+		case 3: // forced fade out
 			menuTooltipAlpha = bound(0, menuTooltipAlpha - 2 * frametime, 1);
 			if(menuTooltipAlpha == 0)
 			{
