@@ -22,7 +22,7 @@ ENDCLASS(XonoticTeamSelectDialog)
 entity makeTeamButton_T(string theName, vector theColor, string commandtheName, string theTooltip)
 {
 	entity b;
-	b = makeXonoticBigCommandButton(theName, theColor, commandtheName, 1);
+	b = makeXonoticBigCommandButton_T(theName, theColor, commandtheName, 1, theTooltip);
 	return b;
 }
 entity makeTeamButton(string theName, vector theColor, string commandtheName)
