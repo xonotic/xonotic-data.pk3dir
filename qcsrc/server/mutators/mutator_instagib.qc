@@ -279,12 +279,14 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				frag_damage = frag_mirrordamage = 0;
+				if(!autocvar_g_instagib_blaster_keepdamage)
+					frag_damage = frag_mirrordamage = 0;
 
 				if(frag_target != frag_attacker)
 				{
-					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
-					frag_force = '0 0 0';
+					if(frag_damage <= 0 && frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
+					if(!autocvar_g_instagib_blaster_keepforce)
+						frag_force = '0 0 0';
 				}
 			}
 		}
@@ -298,7 +300,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			frag_attacker.armorvalue -= 1;
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_attacker.armorvalue);
-			frag_attacker.damage_dealt += 1;
+			frag_attacker.damage_dealt += frag_mirrordamage;
 		}
 		frag_mirrordamage = 0;
 	}
@@ -388,6 +390,14 @@ MUTATOR_HOOKFUNCTION(instagib_ItemCountdown)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
+{	
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER.m_id))
+		frag_damage = 1000; // always gib if it was a vaporizer death
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 {
 	if(self.ammo_cells)
@@ -473,6 +483,7 @@ MUTATOR_DEFINITION(mutator_instagib)
 	MUTATOR_HOOK(FilterItem, instagib_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(CustomizeWaypoint, instagib_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, instagib_ItemCountdown, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, instagib_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, instagib_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, instagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, instagib_ForbidThrowing, CBC_ORDER_ANY);

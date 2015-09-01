@@ -1,0 +1,17 @@
+#ifndef STATIC_H
+#define STATIC_H
+
+void __static_init_early() { }
+void __static_init() { CALL_ACCUMULATED_FUNCTION(__static_init_early); }
+#define static_init() CALL_ACCUMULATED_FUNCTION(__static_init)
+#define REGISTER_REGISTRY(func) ACCUMULATE_FUNCTION(__static_init_early, func)
+
+#define _STATIC_INIT(where, func) \
+    void _static_##func(); \
+    ACCUMULATE_FUNCTION(where, _static_##func) \
+    void _static_##func()
+
+#define STATIC_INIT(func)       _STATIC_INIT(__static_init_early,   func##_early)
+#define STATIC_INIT_LATE(func)  _STATIC_INIT(__static_init,         func)
+
+#endif
