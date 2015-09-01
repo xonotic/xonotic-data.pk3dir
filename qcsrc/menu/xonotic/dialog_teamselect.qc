@@ -5,7 +5,6 @@ CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
 	METHOD(XonoticTeamSelectDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
 	METHOD(XonoticTeamSelectDialog, showNotify, void(entity));
 	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection")) // ;)
-	ATTRIB(XonoticTeamSelectDialog, tooltip, string, _("Join \"best\" team (auto-select) / Autoselect team (recommended)"))
 	ATTRIB(XonoticTeamSelectDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticTeamSelectDialog, intendedWidth, float, 0.4)
 	ATTRIB(XonoticTeamSelectDialog, rows, float, 5)
@@ -47,7 +46,7 @@ void XonoticTeamSelectDialog_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, 2, 4, e = makeTeamButton_T(_("join 'best' team (auto-select)"), '0 0 0', "cmd selectteam auto; cmd join",
-			_("Join 'best' team (auto-select) / Autoselect team (recommended)")));
+			_("Autoselect team (recommended)")));
 			e.preferredFocusPriority = 1;
 	me.TR(me);
 	me.TR(me);
