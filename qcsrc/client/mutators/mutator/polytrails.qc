@@ -1,6 +1,7 @@
 bool autocvar_cl_polytrails = false;
 float autocvar_cl_polytrail_segmentsize = 10;
 float autocvar_cl_polytrail_lifetime = .2;
+float autocvar_cl_polytrail_noise = 10;
 
 CLASS(PolyTrail, Object)
     ATTRIB(PolyTrail, polytrail_follow, entity, NULL)
@@ -19,6 +20,8 @@ CLASS(PolyTrail, Object)
     const int POLYTRAIL_BUFSIZE = 1 << 7;
     /** One or more positional points */
     ATTRIBARRAY(PolyTrail, polytrail_bufpos, vector, POLYTRAIL_BUFSIZE)
+    /** Noise for ending position */
+    ATTRIBARRAY(PolyTrail, polytrail_bufnoise, vector, POLYTRAIL_BUFSIZE)
     /** Time of input */
     ATTRIBARRAY(PolyTrail, polytrail_buftime, float, POLYTRAIL_BUFSIZE)
     /** Current read index */
@@ -43,6 +46,8 @@ CLASS(PolyTrail, Object)
             if (this.polytrail_cnt < 0 || vlen(this.origin - this.polytrail_bufpos[this.polytrail_bufidx]) >= autocvar_cl_polytrail_segmentsize) {
                 int i = POLYTRAIL_SEEK(this, 1);
                 this.polytrail_bufpos[i] = this.origin;
+                float f = autocvar_cl_polytrail_noise;
+                this.polytrail_bufnoise[i] = randompos(f * '-1 -1 -1', f * '1 1 1');
                 this.polytrail_buftime[i] = time;
                 this.polytrail_bufidx = i;
                 this.polytrail_cnt = bound(this.polytrail_cnt, i + 1, POLYTRAIL_BUFSIZE);
@@ -67,6 +72,7 @@ CLASS(PolyTrail, Object)
             // head: 0, tail: 1
             float rtime = (time - when) / this.polytrail_lifetime;
             noref float rdist = i / n;
+            to += lerpvratio('0 0 0', this.polytrail_bufnoise[idx], rtime);
             vector rgb = lerpv3ratio(this.polytrail_rgb[0], this.polytrail_rgb[1], this.polytrail_rgb[2], rtime);
             float a = lerp3ratio(this.polytrail_alpha[0], this.polytrail_thickness[1], this.polytrail_alpha[2], rtime);
             int thickness = lerp3ratio(this.polytrail_thickness[0], this.polytrail_thickness[1], this.polytrail_thickness[2], rtime);
