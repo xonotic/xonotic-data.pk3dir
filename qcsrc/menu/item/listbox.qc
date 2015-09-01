@@ -14,6 +14,7 @@ CLASS(ListBox, Item)
 	ATTRIB(ListBox, focusable, float, 1)
 	ATTRIB(ListBox, focusedItem, int, -1)
 	ATTRIB(ListBox, focusedItemAlpha, float, 0.3)
+	METHOD(ListBox, setFocusedItem, void(entity, int));
 	ATTRIB(ListBox, mouseMoveOffset, float, -1) // let know where the cursor is when the list scrolls without moving the cursor
 	ATTRIB(ListBox, allowFocusSound, float, 1)
 	ATTRIB(ListBox, selectedItem, int, 0)
@@ -53,6 +54,7 @@ CLASS(ListBox, Item)
 	METHOD(ListBox, clickListBoxItem, void(entity, float, vector)); // item number, relative clickpos
 	METHOD(ListBox, doubleClickListBoxItem, void(entity, float, vector)); // item number, relative clickpos
 	METHOD(ListBox, setSelected, void(entity, float));
+	METHOD(ListBox, focusedItemChangeNotify, void(entity));
 
 	METHOD(ListBox, getLastFullyVisibleItemAtScrollPos, float(entity, float));
 	METHOD(ListBox, getFirstFullyVisibleItemAtScrollPos, float(entity, float));
@@ -246,7 +248,7 @@ float ListBox_mouseMove(entity me, vector pos)
 		me.mouseMoveOffset = pos.y;
 	else
 	{
-		me.focusedItem = -1;
+		me.setFocusedItem(me, -1);
 		me.mouseMoveOffset = -1;
 	}
 	return 1;
@@ -278,7 +280,7 @@ float ListBox_mouseDrag(entity me, vector pos)
 	else if(me.pressed == 2)
 	{
 		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
-		me.focusedItem = me.selectedItem;
+		me.setFocusedItem(me, me.selectedItem);
 		me.mouseMoveOffset = -1;
 	}
 	return 1;
@@ -317,9 +319,20 @@ float ListBox_mousePress(entity me, vector pos)
 		me.pressed = 2;
 		// an item has been clicked. Select it, ...
 		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
-		me.focusedItem = me.selectedItem;
+		me.setFocusedItem(me, me.selectedItem);
 	}
 	return 1;
+}
+void ListBox_setFocusedItem(entity me, int item)
+{
+	float focusedItem_save = me.focusedItem;
+	me.focusedItem = item;
+	if(focusedItem_save != me.focusedItem)
+	{
+		me.focusedItemChangeNotify(me);
+		if(me.focusedItem >= 0)
+			me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
+	}
 }
 float ListBox_mouseRelease(entity me, vector pos)
 {
@@ -334,7 +347,7 @@ float ListBox_mouseRelease(entity me, vector pos)
 		// item dragging mode
 		// select current one one last time...
 		me.setSelected(me, me.getItemAtPos(me, me.scrollPos + pos.y));
-		me.focusedItem = me.selectedItem;
+		me.setFocusedItem(me, me.selectedItem);
 		// and give it a nice click event
 		if(me.nItems > 0)
 		{
@@ -358,7 +371,7 @@ void ListBox_focusLeave(entity me)
 	// by a mouse click on an item of the list
 	// for example showing a dialog on right click
 	me.pressed = 0;
-	me.focusedItem = -1;
+	me.setFocusedItem(me, -1);
 	me.mouseMoveOffset = -1;
 }
 void ListBox_updateControlTopBottom(entity me)
@@ -404,12 +417,8 @@ void ListBox_draw(entity me)
 	vector oldshift, oldscale;
 
 	// we can't do this in mouseMove as the list can scroll without moving the cursor
-	float focusedItem_save = me.focusedItem;
 	if(me.mouseMoveOffset != -1)
-		me.focusedItem = me.getItemAtPos(me, me.scrollPos + me.mouseMoveOffset);
-	if(me.focusedItem >= 0)
-	if(focusedItem_save != me.focusedItem)
-		me.focusedItemAlpha = SKINALPHA_LISTBOX_FOCUSED;
+		me.setFocusedItem(me, me.getItemAtPos(me, me.scrollPos + me.mouseMoveOffset));
 
 	if(me.needScrollToItem >= 0)
 	{
@@ -471,6 +480,10 @@ void ListBox_draw(entity me)
 	draw_shift = oldshift;
 	draw_scale = oldscale;
 	SUPER(ListBox).draw(me);
+}
+
+void ListBox_focusedItemChangeNotify(entity me)
+{
 }
 
 void ListBox_clickListBoxItem(entity me, float i, vector where)
