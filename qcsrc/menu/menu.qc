@@ -568,6 +568,9 @@ void m_tooltip(vector pos)
 					strunzone(prev_tooltip);
 				prev_tooltip = strzone(it.tooltip);
 			}
+			else if(menuTooltipItem && !m_testmousetooltipbox(pos))
+				menuTooltipState = 3; // fade out if mouse touches it
+
 		}
 		else
 			it = world;
@@ -624,10 +627,6 @@ void m_tooltip(vector pos)
 	}
 	else if(menuTooltipState == 2) // re-fade in?
 		menuTooltipState = 1;
-
-	if(menuTooltipItem)
-		if(!m_testmousetooltipbox(pos))
-			menuTooltipState = 2; // fade out if mouse touches it
 
 	switch(menuTooltipState)
 	{
