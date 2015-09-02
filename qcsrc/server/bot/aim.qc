@@ -119,12 +119,6 @@ float bot_shouldattack(entity e)
 	if(e.frozen)
 		return false;
 
-	// If neither player has ball then don't attack unless the ball is on the
-	// ground.
-	if (g_keepaway)
-		if (!e.ballcarried && !self.ballcarried && ka_ball.owner)
-			return false;
-
 	if(teamplay)
 	{
 		if(e.team==0)
@@ -343,12 +337,12 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	shotspeedupward *= W_WeaponSpeedFactor();
 	if (!shotspeed)
 	{
-		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " shotspeed is zero!\n");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		dprint("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", WEP_NAME(self.weapon), " maxshottime is zero!\n");
 		maxshottime = 1;
 	}
 	makevectors(self.v_angle);

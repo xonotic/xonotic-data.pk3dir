@@ -42,6 +42,14 @@ void instagib_ammocheck()
 		instagib_stop_countdown(self);
 	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
 		instagib_stop_countdown(self);
+	else if(autocvar_g_rm && autocvar_g_rm_laser)
+	{
+		if(!self.instagib_needammo)
+		{
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_INSTAGIB_DOWNGRADE);
+			self.instagib_needammo = true;
+		}
+	}
 	else
 	{
 		self.instagib_needammo = true;
@@ -241,12 +249,17 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 
 	if(IS_PLAYER(frag_target))
 	{
-		if ((frag_deathtype == DEATH_FALL)  ||
-			(frag_deathtype == DEATH_DROWN) ||
-			(frag_deathtype == DEATH_SLIME) ||
-			(frag_deathtype == DEATH_LAVA))
+		if(frag_deathtype == DEATH_FALL)
+			frag_damage = 0; // never count fall damage
+
+		if(!autocvar_g_instagib_damagedbycontents)
+		switch(frag_deathtype)
 		{
-			frag_damage = 0;
+			case DEATH_DROWN:
+			case DEATH_SLIME:
+			case DEATH_LAVA:
+				frag_damage = 0;
+				break;
 		}
 
 		if(IS_PLAYER(frag_attacker))
@@ -266,12 +279,14 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				frag_damage = frag_mirrordamage = 0;
+				if(!autocvar_g_instagib_blaster_keepdamage)
+					frag_damage = frag_mirrordamage = 0;
 
 				if(frag_target != frag_attacker)
 				{
-					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
-					frag_force = '0 0 0';
+					if(frag_damage <= 0 && frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
+					if(!autocvar_g_instagib_blaster_keepforce)
+						frag_force = '0 0 0';
 				}
 			}
 		}
@@ -285,7 +300,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			frag_attacker.armorvalue -= 1;
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_attacker.armorvalue);
-			frag_attacker.damage_dealt += 1;
+			frag_attacker.damage_dealt += frag_mirrordamage;
 		}
 		frag_mirrordamage = 0;
 	}
@@ -327,11 +342,13 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 
 	if(self.weapon == WEP_DEVASTATOR.m_id || self.weapon == WEP_VORTEX.m_id)
 	{
-		entity e = spawn();
+		entity e = spawn(), oldself;
 		setorigin(e, self.origin);
-		entity oldself;
 		oldself = self;
 		self = e;
+		self.noalign = oldself.noalign;
+		self.cnt = oldself.cnt;
+		self.team = oldself.team;
 		spawnfunc_item_minst_cells();
 		self = oldself;
 		return true;
@@ -371,6 +388,14 @@ MUTATOR_HOOKFUNCTION(instagib_ItemCountdown)
 		case ITEM_Shield.m_itemid:    item_name = "item-speed";     item_color = '1 0 1'; break;
 	}
 	return false;
+}
+
+MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
+{	
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER.m_id))
+		frag_damage = 1000; // always gib if it was a vaporizer death
+
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
@@ -458,6 +483,7 @@ MUTATOR_DEFINITION(mutator_instagib)
 	MUTATOR_HOOK(FilterItem, instagib_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(CustomizeWaypoint, instagib_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, instagib_ItemCountdown, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, instagib_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, instagib_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, instagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, instagib_ForbidThrowing, CBC_ORDER_ANY);

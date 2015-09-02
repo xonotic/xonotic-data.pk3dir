@@ -8,7 +8,6 @@
 #endif
 
 #include "../../warpzonelib/common.qh"
-#include "../../warpzonelib/mathlib.qh"
 
 void ctf_FakeTimeLimit(entity e, float t)
 {
@@ -53,7 +52,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 
 void ctf_FlagcarrierWaypoints(entity player)
 {
-	WaypointSprite_Spawn("flagcarrier", 0, 0, player, FLAG_WAYPOINT_OFFSET, world, player.team, player, wps_flagcarrier, true, RADARICON_FLAG, WPCOLOR_FLAGCARRIER(player.team));
+	WaypointSprite_Spawn(WP_FlagCarrier, 0, 0, player, FLAG_WAYPOINT_OFFSET, world, player.team, player, wps_flagcarrier, true, RADARICON_FLAG);
 	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);
 	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, WPCOLOR_FLAGCARRIER(player.team));
@@ -248,8 +247,10 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 
 	// waypoints
-	if(autocvar_g_ctf_flag_dropped_waypoint)
-		WaypointSprite_Spawn("flagdropped", 0, 0, flag, FLAG_WAYPOINT_OFFSET, world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, true, RADARICON_FLAG, WPCOLOR_DROPPEDFLAG(flag.team));
+	if(autocvar_g_ctf_flag_dropped_waypoint) {
+		entity wp = WaypointSprite_Spawn(WP_FlagDropped, 0, 0, flag, FLAG_WAYPOINT_OFFSET, world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, true, RADARICON_FLAG);
+		wp.colormod = WPCOLOR_DROPPEDFLAG(flag.team);
+	}
 
 	if(autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health))
 	{
@@ -363,7 +364,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 
 			// other
 			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTEN_NORM);
-			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), player.origin, targ_origin);
+			WarpZone_TrailParticles(world, _particleeffectnum(flag.passeffect), player.origin, targ_origin);
 			ctf_EventLog("pass", flag.team, player);
 			break;
 		}
@@ -454,7 +455,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	Send_Effect(flag.capeffect, flag.origin, '0 0 0', 1);
+	Send_Effect_(flag.capeffect, flag.origin, '0 0 0', 1);
 	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
@@ -590,7 +591,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 		{
 			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
 			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
-			dprint("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
+			LOG_TRACE("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
 			PlayerTeamScore_AddScore(player, pickup_dropped_score);
 			ctf_EventLog("pickup", flag.team, player);
 			break;
@@ -608,7 +609,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	}
 
 	// effects
-	Send_Effect(flag.toucheffect, player.origin, '0 0 0', 1);
+	Send_Effect_(flag.toucheffect, player.origin, '0 0 0', 1);
 
 	// waypoints
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
@@ -712,7 +713,8 @@ void ctf_CheckStalemate(void)
 		{
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 			{
-				WaypointSprite_Spawn(((ctf_oneflag) ? "flagcarrier" : "enemyflagcarrier"), 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
+				entity wp = WaypointSprite_Spawn(((ctf_oneflag) ? WP_FlagCarrier : WP_FlagCarrierEnemy), 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG);
+				wp.colormod = WPCOLOR_ENEMYFC(tmp_entity.owner.team);
 				tmp_entity.owner.wps_enemyflagcarrier.customizeentityforclient = ctf_Stalemate_Customize;
 			}
 		}
@@ -765,7 +767,7 @@ void ctf_FlagThink()
 
 	// sanity checks
 	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
-		dprint("wtf the flag got squashed?\n");
+		LOG_TRACE("wtf the flag got squashed?\n");
 		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
 		if(!trace_startsolid || self.noalign) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
@@ -894,7 +896,7 @@ void ctf_FlagThink()
 
 		default: // this should never happen
 		{
-			dprint("ctf_FlagThink(): Flag exists with no status?\n");
+			LOG_TRACE("ctf_FlagThink(): Flag exists with no status?\n");
 			return;
 		}
 	}
@@ -939,7 +941,7 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			Send_Effect(self.toucheffect, self.origin, '0 0 0', 1);
+			Send_Effect_(self.toucheffect, self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
@@ -976,7 +978,7 @@ void ctf_FlagTouch()
 
 		case FLAG_CARRY:
 		{
-			dprint("Someone touched a flag even though it was being carried?\n");
+			LOG_TRACE("Someone touched a flag even though it was being carried?\n");
 			break;
 		}
 
@@ -1063,18 +1065,18 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	self.bot_basewaypoint = self.nearestwaypoint;
 
 	// waypointsprites
-	string basename = "base";
-
-	switch(self.team)
+	entity basename;
+	switch (self.team)
 	{
-		case NUM_TEAM_1: basename = "redbase"; break;
-		case NUM_TEAM_2: basename = "bluebase"; break;
-		case NUM_TEAM_3: basename = "yellowbase"; break;
-		case NUM_TEAM_4: basename = "pinkbase"; break;
-		default: basename = "neutralbase"; break;
+		case NUM_TEAM_1: basename = WP_FlagBaseRed; break;
+		case NUM_TEAM_2: basename = WP_FlagBaseBlue; break;
+		case NUM_TEAM_3: basename = WP_FlagBaseYellow; break;
+		case NUM_TEAM_4: basename = WP_FlagBasePink; break;
+		default: basename = WP_FlagBaseNeutral; break;
 	}
 
-	WaypointSprite_SpawnFixed(basename, self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, ((self.team) ? Team_ColorRGB(self.team) : '1 1 1'));
+	entity wp = WaypointSprite_SpawnFixed(basename, self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG);
+	wp.colormod = ((self.team) ? Team_ColorRGB(self.team) : '1 1 1');
 	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, ((self.team) ? colormapPaletteColor(self.team - 1, false) : '1 1 1'));
 
 	// captureshield setup
@@ -1846,47 +1848,47 @@ void havocbot_role_ctf_defense()
 
 void havocbot_role_ctf_setrole(entity bot, int role)
 {
-	dprint(strcat(bot.netname," switched to "));
+	LOG_TRACE(strcat(bot.netname," switched to "));
 	switch(role)
 	{
 		case HAVOCBOT_CTF_ROLE_CARRIER:
-			dprint("carrier");
+			LOG_TRACE("carrier");
 			bot.havocbot_role = havocbot_role_ctf_carrier;
 			bot.havocbot_role_timeout = 0;
 			bot.havocbot_cantfindflag = time + 10;
 			bot.bot_strategytime = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_DEFENSE:
-			dprint("defense");
+			LOG_TRACE("defense");
 			bot.havocbot_role = havocbot_role_ctf_defense;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_MIDDLE:
-			dprint("middle");
+			LOG_TRACE("middle");
 			bot.havocbot_role = havocbot_role_ctf_middle;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_OFFENSE:
-			dprint("offense");
+			LOG_TRACE("offense");
 			bot.havocbot_role = havocbot_role_ctf_offense;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_RETRIEVER:
-			dprint("retriever");
+			LOG_TRACE("retriever");
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_retriever;
 			bot.havocbot_role_timeout = time + 10;
 			bot.bot_strategytime = 0;
 			break;
 		case HAVOCBOT_CTF_ROLE_ESCORT:
-			dprint("escort");
+			LOG_TRACE("escort");
 			bot.havocbot_previous_role = bot.havocbot_role;
 			bot.havocbot_role = havocbot_role_ctf_escort;
 			bot.havocbot_role_timeout = time + 30;
 			bot.bot_strategytime = 0;
 			break;
 	}
-	dprint("\n");
+	LOG_TRACE("\n");
 }
 
 
@@ -2126,7 +2128,7 @@ MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
 	}
 	else // create a normal help me waypointsprite
 	{
-		WaypointSprite_Spawn("helpme", waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, false, RADARICON_HELPME, '1 0.5 0');
+		WaypointSprite_Spawn(WP_Helpme, waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, false, RADARICON_HELPME);
 		WaypointSprite_Ping(self.wps_helpme);
 	}
 
@@ -2240,52 +2242,6 @@ MUTATOR_HOOKFUNCTION(ctf_SpectateCopy)
 // ==========
 // Spawnfuncs
 // ==========
-
-/*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team one (Red).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team1()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_1; // red
-	spawnfunc_info_player_deathmatch();
-}
-
-
-/*QUAKED spawnfunc_info_player_team2 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team two (Blue).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team2()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_2; // blue
-	spawnfunc_info_player_deathmatch();
-}
-
-/*QUAKED spawnfunc_info_player_team3 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team three (Yellow).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team3()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_3; // yellow
-	spawnfunc_info_player_deathmatch();
-}
-
-
-/*QUAKED spawnfunc_info_player_team4 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team four (Purple).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team4()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_4; // purple
-	spawnfunc_info_player_deathmatch();
-}
 
 /*QUAKED spawnfunc_item_flag_team1 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
 CTF flag for team one (Red).
@@ -2455,7 +2411,7 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
 	{
-		print("No ""ctf_team"" entities found on this map, creating them anyway.\n");
+		LOG_INFO("No ""ctf_team"" entities found on this map, creating them anyway.\n");
 		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
 		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
 		if(ctf_teams >= 3)
@@ -2516,7 +2472,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

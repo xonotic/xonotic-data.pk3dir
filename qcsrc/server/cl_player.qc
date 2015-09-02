@@ -9,7 +9,6 @@
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
-#include "waypointsprites.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
 #include "../common/animdecide.qh"
@@ -154,6 +153,8 @@ void player_anim (void)
 	int animbits = deadbits;
 	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
+	if(self.movetype == MOVETYPE_FOLLOW)
+		animbits |= ANIMSTATE_FOLLOW;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
@@ -532,7 +533,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			if(deathtype == DEATH_KILL)
 			{
 				// for the lemmings fans, a small harmless explosion
-				Send_Effect("rocket_explode", self.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 			}
 		}
 
@@ -547,6 +548,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
+		excess = frag_damage;
 
 		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 
@@ -708,12 +710,28 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else if(teamsay)
 		{
-			msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			if(strstrofs(msgin, "/me", 0) >= 0)
+			{
+				//msgin = strreplace("/me", "", msgin);
+				//msgin = substring(msgin, 3, strlen(msgin));
+				msgin = strreplace("/me", strcat(colorstr, "(", colorprefix, namestr, colorstr, ")^7"), msgin);
+				msgstr = strcat("\{1}\{13}^4* ", "^7", msgin);
+			}
+			else
+				msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
 			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
 		}
 		else
 		{
-			msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
+			if(strstrofs(msgin, "/me", 0) >= 0)
+			{
+				//msgin = strreplace("/me", "", msgin);
+				//msgin = substring(msgin, 3, strlen(msgin));
+				msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
+				msgstr = strcat("\{1}^4* ", "^7", msgin);
+			}
+			else
+				msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
@@ -829,7 +847,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(flood)
-		print("NOTE: ", playername(source), "^7 is flooding.\n");
+		LOG_INFO("NOTE: ", playername(source), "^7 is flooding.\n");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)
@@ -979,7 +997,7 @@ void PrecachePlayerSounds(string f)
 	{
 		if(tokenize_console(s) != 3)
 		{
-			dprint("Invalid sound info line: ", s, "\n");
+			LOG_TRACE("Invalid sound info line: ", s, "\n");
 			continue;
 		}
 		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
@@ -1011,7 +1029,7 @@ float LoadPlayerSounds(string f, float first)
 	fh = fopen(f, FILE_READ);
 	if(fh < 0)
 	{
-		dprint("Player sound file not found: ", f, "\n");
+		LOG_TRACE("Player sound file not found: ", f, "\n");
 		return 0;
 	}
 	while((s = fgets(fh)))

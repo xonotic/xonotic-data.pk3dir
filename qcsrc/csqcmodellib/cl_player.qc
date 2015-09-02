@@ -24,7 +24,6 @@
 	#include "../dpdefs/csprogsdefs.qh"
 	#include "../client/defs.qh"
 	#include "../common/constants.qh"
-	#include "../common/p2mathlib.qh"
 	#include "../common/stats.qh"
 	#include "../common/util.qh"
 	#include "interpolate.qh"
@@ -178,7 +177,7 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
-		print("the Weird code path got hit\n");
+		LOG_INFO("the Weird code path got hit\n");
 		return;
 	}
 #endif

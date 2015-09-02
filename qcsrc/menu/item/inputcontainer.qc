@@ -10,7 +10,7 @@ CLASS(InputContainer, Container)
 	METHOD(InputContainer, focusLeave, void(entity));
 	METHOD(InputContainer, resizeNotify, void(entity, vector, vector, vector, vector));
 
-	METHOD(InputContainer, _changeFocusXY, float(entity, vector));
+	METHOD(InputContainer, _changeFocusXY, bool(entity this, vector pos));
 	ATTRIB(InputContainer, mouseFocusedChild, entity, NULL)
 	ATTRIB(InputContainer, isTabRoot, float, 0)
 ENDCLASS(InputContainer)
@@ -104,26 +104,21 @@ float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
 	return 0;
 }
 
-float InputContainer__changeFocusXY(entity me, vector pos)
+bool InputContainer__changeFocusXY(entity this, vector pos)
 {
-	entity e, ne;
-	e = me.mouseFocusedChild;
-	ne = me.itemFromPoint(me, pos);
-	if(ne)
-		if (!ne.focusable)
-			ne = NULL;
-	me.mouseFocusedChild = ne;
-	if(ne)
-		if(ne != e)
-		{
-			me.setFocus(me, ne);
-			if(ne.instanceOfInputContainer)
-			{
-				ne.focusedChild = NULL;
-				ne._changeFocusXY(e, globalToBox(pos, ne.Container_origin, ne.Container_size));
-			}
+	entity e = this.itemFromPoint(this, pos);
+	if (e && !e.focusable) e = NULL;
+	entity prev = this.mouseFocusedChild;
+	this.mouseFocusedChild = e;
+	if (!e) return false; // keep focus when hovering over non-focusable elements
+	if (e != prev) {
+		this.setFocus(this, e);
+		if (e.instanceOfInputContainer) {
+			e.focusedChild = NULL;
+			e._changeFocusXY(e, globalToBox(pos, e.Container_origin, e.Container_size));
 		}
-	return (ne != NULL);
+	}
+	return true; // have focus
 }
 
 float InputContainer_mouseDrag(entity me, vector pos)

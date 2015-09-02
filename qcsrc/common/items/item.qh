@@ -1,6 +1,5 @@
 #ifndef GAMEITEM_H
 #define GAMEITEM_H
-#include "../oo.qh"
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 /** If you register a new item, make sure to add it to all.inc */
 CLASS(GameItem, Object)
@@ -13,7 +12,7 @@ CLASS(GameItem, Object)
     METHOD(GameItem, display, void(entity this, void(string name, string icon) returns)) {
         returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }
-    METHOD(GameItem, show, void(entity this)) { print("A game item\n"); }
+    METHOD(GameItem, show, void(entity this)) { LOG_INFO("A game item\n"); }
     void ITEM_HANDLE(Show, entity this) { this.show(this); }
 ENDCLASS(GameItem)
 

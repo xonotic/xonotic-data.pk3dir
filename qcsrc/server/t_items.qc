@@ -5,8 +5,6 @@
 #if defined(SVQC)
     #include "_all.qh"
 
-    #include "waypointsprites.qh"
-
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
 
@@ -77,6 +75,26 @@ void ItemDrawSimple()
     }
 }
 
+void Item_PreDraw()
+{
+	vector org;
+	float alph;
+	org = getpropertyvec(VF_ORIGIN);
+	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+		alph = 0;
+	else if(self.fade_start)
+		alph = bound(0, (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.fade_end - self.fade_start), 1);
+	else
+		alph = 1;
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
+	if(self.ItemStatus & ITS_AVAILABLE)
+		self.alpha = alph;
+	if(alph <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
+}
+
 void ItemRead(float _IsNew)
 {
     int sf = ReadByte();
@@ -92,21 +110,16 @@ void ItemRead(float _IsNew)
 
     if(sf & ISF_ANGLES)
     {
-        self.angles_x = ReadCoord();
-        self.angles_y = ReadCoord();
-        self.angles_z = ReadCoord();
+        self.angles_x = ReadAngle();
+        self.angles_y = ReadAngle();
+        self.angles_z = ReadAngle();
         self.move_angles = self.angles;
     }
 
     if(sf & ISF_SIZE)
     {
-        self.mins_x = ReadCoord();
-        self.mins_y = ReadCoord();
-        self.mins_z = ReadCoord();
-        self.maxs_x = ReadCoord();
-        self.maxs_y = ReadCoord();
-        self.maxs_z = ReadCoord();
-        setsize(self, self.mins, self.maxs);
+        float use_bigsize = ReadByte();
+        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
@@ -152,8 +165,13 @@ void ItemRead(float _IsNew)
     if(sf & ISF_MODEL)
     {
         self.drawmask  = MASK_NORMAL;
-        self.movetype  = MOVETYPE_TOSS;
+		self.move_movetype = self.movetype = MOVETYPE_TOSS;
         self.draw       = ItemDraw;
+
+        self.fade_end = ReadShort();
+        self.fade_start = ReadShort();
+        if(self.fade_start && !autocvar_cl_items_nofade)
+        	self.predraw = Item_PreDraw;
 
         if(self.mdl)
             strunzone(self.mdl);
@@ -166,8 +184,6 @@ void ItemRead(float _IsNew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             self.draw = ItemDrawSimple;
 
-
-
             if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
                 self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
@@ -179,7 +195,7 @@ void ItemRead(float _IsNew)
             else
             {
                 self.draw = ItemDraw;
-                dprint("Simple item requested for ", _fn, " but no model exists for it\n");
+                LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it\n");
             }
         }
 
@@ -188,7 +204,7 @@ void ItemRead(float _IsNew)
 
 
         if(self.mdl == "")
-            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
+            LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
 
         precache_model(self.mdl);
         setmodel(self, self.mdl);
@@ -232,63 +248,60 @@ void ItemRead(float _IsNew)
 #ifdef SVQC
 bool ItemSend(entity to, int sf)
 {
-    if(self.gravity)
-        sf |= ISF_DROP;
-    else
-        sf &= ~ISF_DROP;
+	if(self.gravity)
+		sf |= ISF_DROP;
+	else
+		sf &= ~ISF_DROP;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
 	//WriteByte(MSG_ENTITY, self.cnt);
-    if(sf & ISF_LOCATION)
-    {
-        WriteCoord(MSG_ENTITY, self.origin.x);
-        WriteCoord(MSG_ENTITY, self.origin.y);
-        WriteCoord(MSG_ENTITY, self.origin.z);
-    }
+	if(sf & ISF_LOCATION)
+	{
+		WriteCoord(MSG_ENTITY, self.origin.x);
+		WriteCoord(MSG_ENTITY, self.origin.y);
+		WriteCoord(MSG_ENTITY, self.origin.z);
+	}
 
-    if(sf & ISF_ANGLES)
-    {
-        WriteCoord(MSG_ENTITY, self.angles.x);
-        WriteCoord(MSG_ENTITY, self.angles.y);
-        WriteCoord(MSG_ENTITY, self.angles.z);
-    }
+	if(sf & ISF_ANGLES)
+	{
+		WriteAngle(MSG_ENTITY, self.angles_x);
+		WriteAngle(MSG_ENTITY, self.angles_y);
+		WriteAngle(MSG_ENTITY, self.angles_z);
+	}
 
-    if(sf & ISF_SIZE)
-    {
-        WriteCoord(MSG_ENTITY, self.mins.x);
-        WriteCoord(MSG_ENTITY, self.mins.y);
-        WriteCoord(MSG_ENTITY, self.mins.z);
-        WriteCoord(MSG_ENTITY, self.maxs.x);
-        WriteCoord(MSG_ENTITY, self.maxs.y);
-        WriteCoord(MSG_ENTITY, self.maxs.z);
-    }
+	if(sf & ISF_SIZE)
+	{
+		WriteByte(MSG_ENTITY, ((self.flags & FL_POWERUP) || self.health || self.armorvalue));
+	}
 
-    if(sf & ISF_STATUS)
-        WriteByte(MSG_ENTITY, self.ItemStatus);
+	if(sf & ISF_STATUS)
+		WriteByte(MSG_ENTITY, self.ItemStatus);
 
-    if(sf & ISF_MODEL)
-    {
+	if(sf & ISF_MODEL)
+	{
+		WriteShort(MSG_ENTITY, self.fade_end);
+		WriteShort(MSG_ENTITY, self.fade_start);
 
-        if(self.mdl == "")
-            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+		if(self.mdl == "")
+			LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
 
-        WriteString(MSG_ENTITY, self.mdl);
-    }
+		WriteString(MSG_ENTITY, self.mdl);
+	}
 
 
-    if(sf & ISF_COLORMAP)
-        WriteShort(MSG_ENTITY, self.colormap);
+	if(sf & ISF_COLORMAP)
+		WriteShort(MSG_ENTITY, self.colormap);
 
-    if(sf & ISF_DROP)
-    {
-        WriteCoord(MSG_ENTITY, self.velocity.x);
-        WriteCoord(MSG_ENTITY, self.velocity.y);
-        WriteCoord(MSG_ENTITY, self.velocity.z);
-    }
+	if(sf & ISF_DROP)
+	{
+		WriteCoord(MSG_ENTITY, self.velocity.x);
+		WriteCoord(MSG_ENTITY, self.velocity.y);
+		WriteCoord(MSG_ENTITY, self.velocity.z);
+	}
 
-    return true;
+	return true;
 }
 
 void ItemUpdate(entity item)
@@ -385,21 +398,21 @@ void Item_Show (entity e, float mode)
 	}
 
 	if (e.items & ITEM_Strength.m_itemid || e.items & ITEM_Shield.m_itemid)
-	    e.ItemStatus |= ITS_POWERUP;
+		e.ItemStatus |= ITS_POWERUP;
 
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
 
 
-    if (autocvar_g_fullbrightitems)
+	if (autocvar_g_fullbrightitems)
 		e.ItemStatus |= ITS_ALLOWFB;
 
 	if (autocvar_sv_simple_items)
-        e.ItemStatus |= ITS_ALLOWSI;
+		e.ItemStatus |= ITS_ALLOWSI;
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
-    e.SendFlags |= ISF_STATUS;
+	e.SendFlags |= ISF_STATUS;
 }
 
 void Item_Think()
@@ -412,7 +425,8 @@ void Item_Think()
 	}
 }
 
-bool Item_ItemsTime_Allow(entity e);
+bool Item_ItemsTime_SpectatorOnly(GameItem it);
+bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons);
 float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
@@ -429,7 +443,7 @@ void Item_Respawn (void)
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-    if (Item_ItemsTime_Allow(self))
+    if (Item_ItemsTime_Allow(self.itemdef, self.weapons))
 	{
 		float t = Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_SetTime(self, t);
@@ -439,8 +453,8 @@ void Item_Respawn (void)
 	self.think = Item_Think;
 	self.nextthink = time;
 
-	//Send_Effect("item_respawn", self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
-	Send_Effect("item_respawn", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	//Send_Effect(EFFECT_ITEM_RESPAWN, self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 }
 
 void Item_RespawnCountdown (void)
@@ -457,40 +471,23 @@ void Item_RespawnCountdown (void)
 		self.count += 1;
 		if(self.count == 1)
 		{
-			string name = string_null;
-			vector rgb = '1 0 1';
+			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
+			int wpextra = 0;
             entity e = self.itemdef;
-            if (e) {
-                name = e.m_waypoint;
-                rgb = e.m_color;
-            }
-			MUTATOR_CALLHOOK(Item_RespawnCountdown, name, rgb);
-			name = item_name;
-			rgb = item_color;
-			if(self.flags & FL_WEAPON)
-			{
+            if (e) wpextra = e.m_id;
+			if (self.flags & FL_WEAPON) {
 				entity wi = get_weaponinfo(self.weapon);
-				if(wi)
-				{
-					name = wi.wpmodel;
-					rgb = '1 0 0';
-				}
+				if (wi) wpextra = wi.m_id;
 			}
-			if(name)
-			{
-				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP, rgb);
-				if(self.waypointsprite_attached)
-				{
-					if (self.items == IT_HEALTH || self.items == IT_ARMOR)
-						WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
-					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
-				}
-			}
-			else
-			{
-				print("Unknown powerup-marked item is wanting to respawn\n");
-				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
-			}
+            entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+            wp.wp_extra = wpextra;
+            if(self.waypointsprite_attached)
+            {
+                GameItem def = self.itemdef;
+                if (Item_ItemsTime_SpectatorOnly(def))
+                    WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
+                WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+            }
 		}
 
 		if(self.waypointsprite_attached)
@@ -529,7 +526,7 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if (Item_ItemsTime_Allow(e))
+	if (Item_ItemsTime_Allow(e.itemdef, e.weapons))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -687,6 +684,13 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
+	// crude hack to enforce switching weapons
+	if(g_cts && (item.flags & FL_WEAPON))
+	{
+		W_SwitchWeapon_Force(player, item.weapon);
+		return 1;
+	}
+
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
@@ -708,18 +712,13 @@ void Item_Touch (void)
 		}
 	}
 
-	if (!IS_PLAYER(other))
-		return;
-	if (other.frozen)
-		return;
-	if (other.deadflag)
-		return;
-	if (self.solid != SOLID_TRIGGER)
-		return;
-	if (self.owner == other)
-		return;
-	if (time < self.item_spawnshieldtime)
-		return;
+	if(!(other.flags & FL_PICKUPITEMS)
+	|| other.frozen
+	|| other.deadflag
+	|| (self.solid != SOLID_TRIGGER)
+	|| (self.owner == other)
+	|| (time < self.item_spawnshieldtime)
+	) { return;}
 
 	switch(MUTATOR_CALLHOOK(ItemTouch, self, other))
 	{
@@ -751,7 +750,7 @@ void Item_Touch (void)
 
 	other.last_pickup = time;
 
-	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
@@ -764,6 +763,7 @@ void Item_Touch (void)
 			for(head = world; (head = findfloat(head, team, self.team)); )
 			{
 				if(head.flags & FL_ITEM)
+				if(head.classname != "item_flag_team" && head.classname != "item_key_team")
 				{
 					Item_Show(head, -1);
 					RandomSelection_Add(head, 0, string_null, head.cnt, 0);
@@ -803,15 +803,19 @@ void Item_FindTeam()
 	if(self.effects & EF_NODRAW)
 	{
 		// marker for item team search
-		dprint("Initializing item team ", ftos(self.team), "\n");
+		LOG_TRACE("Initializing item team ", ftos(self.team), "\n");
 		RandomSelection_Init();
-		for(head = world; (head = findfloat(head, team, self.team)); ) if(head.flags & FL_ITEM)
+		for(head = world; (head = findfloat(head, team, self.team)); )
+		if(head.flags & FL_ITEM)
+		if(head.classname != "item_flag_team" && head.classname != "item_key_team")
 			RandomSelection_Add(head, 0, string_null, head.cnt, 0);
 		e = RandomSelection_chosen_ent;
 		e.state = 0;
 		Item_Show(e, 1);
 
-		for(head = world; (head = findfloat(head, team, self.team)); ) if(head.flags & FL_ITEM)
+		for(head = world; (head = findfloat(head, team, self.team)); )
+		if(head.flags & FL_ITEM)
+		if(head.classname != "item_flag_team" && head.classname != "item_key_team")
 		{
 			if(head != e)
 			{
@@ -830,7 +834,8 @@ void Item_FindTeam()
 // TODO: perhaps nice special effect?
 void RemoveItem(void)
 {
-	Send_Effect("item_pickup", CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	if(wasfreed(self) || !self) { return; }
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
 }
 
@@ -986,6 +991,12 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.items = itemid;
 	self.weapon = weaponid;
 
+	if(!self.fade_end)
+	{
+		self.fade_start = autocvar_g_items_mindist;
+		self.fade_end = autocvar_g_items_maxdist;
+	}
+
 	if(weaponid)
 		self.weapons = WepSet_FromWeapon(weaponid);
 
@@ -1047,6 +1058,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
+		if(self.angles != '0 0 0')
+			self.SendFlags |= ISF_ANGLES;
+
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -1065,7 +1079,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				setsize (self, '-16 -16 0', '16 16 48');
 			else
 				setsize (self, '-16 -16 0', '16 16 32');
-
+			self.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			droptofloor();
 			waypoint_spawnforitem(self);
@@ -1093,8 +1107,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			    // why not flags & fl_item?
 				if(otheritem.is_item)
 				{
-					dprint("XXX Found duplicated item: ", itemname, vtos(self.origin));
-					dprint(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
+					LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(self.origin));
+					LOG_TRACE(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
 					error("Mapper sucks.");
 				}
 			}
@@ -1130,29 +1144,31 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	//self.effects |= EF_LOWPRECISION;
 
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-    {
-        self.pos1 = '-16 -16 0';
-        self.pos2 = '16 16 48';
-    }
+	{
+		self.pos1 = '-16 -16 0';
+		self.pos2 = '16 16 48';
+	}
 	else
-    {
-        self.pos1 = '-16 -16 0';
-        self.pos2 = '16 16 32';
-    }
-    setsize (self, self.pos1, self.pos2);
+	{
+		self.pos1 = '-16 -16 0';
+		self.pos2 = '16 16 32';
+	}
+	setsize (self, self.pos1, self.pos2);
 
-    if(itemflags & FL_POWERUP)
-        self.ItemStatus |= ITS_ANIMATE1;
+	self.SendFlags |= ISF_SIZE;
+
+	if(itemflags & FL_POWERUP)
+		self.ItemStatus |= ITS_ANIMATE1;
 
 	if(self.armorvalue || self.health)
-        self.ItemStatus |= ITS_ANIMATE2;
+		self.ItemStatus |= ITS_ANIMATE2;
 
 	if(itemflags & FL_WEAPON)
 	{
 		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
-            self.colormap = 1024; // color shirt=0 pants=0 grey
-        else
-            self.gravity = 1;
+			self.colormap = 1024; // color shirt=0 pants=0 grey
+		else
+			self.gravity = 1;
 
 		self.ItemStatus |= ITS_ANIMATE1;
 		self.ItemStatus |= ISF_COLORMAP;
@@ -1170,11 +1186,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	else
 		Item_Reset();
 
-    Net_LinkEntity(self, false, 0, ItemSend);
-
-	self.SendFlags |= ISF_SIZE;
-	if(self.angles)
-		self.SendFlags |= ISF_ANGLES;
+	Net_LinkEntity(self, !((itemflags & FL_POWERUP) || self.health || self.armorvalue), 0, ItemSend);
 
 	// call this hook after everything else has been done
 	if(MUTATOR_CALLHOOK(Item_Spawn, self))
@@ -1439,7 +1451,7 @@ void spawnfunc_target_items (void)
 					}
 				}
 				if(j > WEP_LAST)
-					print("target_items: invalid item ", argv(i), "\n");
+					LOG_INFO("target_items: invalid item ", argv(i), "\n");
 			}
 		}
 
@@ -1799,7 +1811,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 					}
 				}
 				if(j > WEP_LAST)
-					print("give: invalid item ", cmd, "\n");
+					LOG_INFO("give: invalid item ", cmd, "\n");
 				break;
 		}
 		val = 999;

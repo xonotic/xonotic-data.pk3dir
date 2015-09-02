@@ -95,7 +95,7 @@ MINIGAME_SIMPLELINKED_ENTITIES
 
 void minigame_autoclean_entity(entity e)
 {
-	dprint("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+	LOG_TRACE("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
 	remove(e);
 }
 
@@ -142,7 +142,7 @@ void activate_minigame(entity minigame)
 	
 	if ( !minigame.descriptor || minigame.classname != "minigame" )
 	{
-		dprint("Trying to activate unregistered minigame ",minigame.netname," in client\n");
+		LOG_TRACE("Trying to activate unregistered minigame ",minigame.netname," in client\n");
 		return;
 	}
 	
@@ -197,7 +197,7 @@ void minigame_read_owner()
 		self.owner = find(self.owner,netname,owner_name);
 	while ( self.owner && self.owner.classname != "minigame" );
 	if ( !self.owner )
-		dprint("Got a minigame entity without a minigame!\n");
+		LOG_TRACE("Got a minigame entity without a minigame!\n");
 }
 void ent_read_minigame()
 {
@@ -219,7 +219,7 @@ void ent_read_minigame()
 			self.entremove = minigame_entremove;
 			self.descriptor = minigame_get_descriptor(ReadString_Raw());
 			if ( !self.descriptor )
-				dprint("Got a minigame without a client-side descriptor!\n");
+				LOG_TRACE("Got a minigame without a client-side descriptor!\n");
 			else
 				self.minigame_event = self.descriptor.minigame_event;
 		}
@@ -235,7 +235,7 @@ void ent_read_minigame()
 			minigame_read_owner();
 			float ent = ReadLong();
 			self.minigame_playerslot = ent;
-			dprint("Player: ",GetPlayerName(ent-1),"\n");
+			LOG_TRACE("Player: ",GetPlayerName(ent-1),"\n");
 			
 			activate = (ent == player_localnum+1 && self.owner && self.owner != active_minigame);
 			
@@ -258,9 +258,9 @@ void ent_read_minigame()
 
 	if ( sf & MINIG_SF_CREATE )
 	{
-		dprint("CL Reading entity: ",ftos(num_for_edict(self)),
+		LOG_TRACE("CL Reading entity: ",ftos(num_for_edict(self)),
 			" classname:",self.classname," enttype:",ftos(self.enttype) );
-		dprint(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+		LOG_TRACE(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 	}
 }
 #undef ReadString

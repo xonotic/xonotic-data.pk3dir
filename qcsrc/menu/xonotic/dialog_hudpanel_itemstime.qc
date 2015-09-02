@@ -41,6 +41,8 @@ void XonoticHUDItemsTimeDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_hidespawned", _("Hide spawned items")));
 	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_hidelarge", _("Hide large armor and health")));
+	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_dynamicsize", _("Dynamic size")));
 }
 #endif

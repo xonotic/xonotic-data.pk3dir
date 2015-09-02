@@ -1,7 +1,5 @@
 #include "cl_client.qh"
 
-#include "waypointsprites.qh"
-
 #include "anticheat.qh"
 #include "cl_impulse.qh"
 #include "cl_player.qh"
@@ -34,6 +32,8 @@
 #include "../common/physics.qh"
 
 #include "../common/items/all.qc"
+
+#include "../common/mutators/mutator/waypoints/all.qh"
 
 #include "../common/triggers/subs.qh"
 #include "../common/triggers/triggers.qh"
@@ -190,7 +190,7 @@ void PutObserverInServer (void)
 	entity	spot;
     self.hud = HUD_NORMAL;
 
-	if(IS_PLAYER(self)) { Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 
 	spot = SelectSpawnPoint (true);
 	if(!spot)
@@ -362,6 +362,10 @@ void FixPlayermodel()
 		}
 	}
 
+	MUTATOR_CALLHOOK(FixPlayermodel, defaultmodel, defaultskin);
+	defaultmodel = ret_string;
+	defaultskin = ret_int;
+
 	if(defaultmodel != "")
 	{
 		if (defaultmodel != self.model)
@@ -463,7 +467,7 @@ void PutClientInServer (void)
 		self.frags = FRAGS_PLAYER;
 		if(INDEPENDENT_PLAYERS)
 			MAKE_INDEPENDENT_PLAYER(self);
-		self.flags = FL_CLIENT;
+		self.flags = FL_CLIENT | FL_PICKUPITEMS;
 		if(autocvar__notarget)
 			self.flags |= FL_NOTARGET;
 		self.takedamage = DAMAGE_AIM;
@@ -1064,15 +1068,13 @@ Called when a client connects to the server
 =============
 */
 void DecodeLevelParms (void);
-//void dom_player_join_team(entity pl);
-void set_dom_state(entity e);
 void ClientConnect (void)
 {
 	float t;
 
 	if(IS_CLIENT(self))
 	{
-		print("Warning: ClientConnect, but already connected!\n");
+		LOG_INFO("Warning: ClientConnect, but already connected!\n");
 		return;
 	}
 
@@ -1092,7 +1094,7 @@ void ClientConnect (void)
 
 	if(player_count<0)
 	{
-		dprint("BUG player count is lower than zero, this cannot happen!\n");
+		LOG_TRACE("BUG player count is lower than zero, this cannot happen!\n");
 		player_count = 0;
 	}
 
@@ -1294,7 +1296,7 @@ void ClientDisconnect (void)
 
 	if (!IS_CLIENT(self))
 	{
-		print("Warning: ClientDisconnect without ClientConnect\n");
+		LOG_INFO("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
 
@@ -1303,7 +1305,7 @@ void ClientDisconnect (void)
 	if ( self.active_minigame )
 		part_minigame(self);
 
-	if(IS_PLAYER(self)) { Send_Effect("spawn_event_neutral", self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 
 	CheatShutdownClient();
 
@@ -1446,7 +1448,7 @@ void respawn(void)
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
-		Send_Effect("respawn_ghost", self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_RESPAWN_GHOST, self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
@@ -1632,13 +1634,22 @@ void player_regen (void)
 {
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
-	if(!MUTATOR_CALLHOOK(PlayerRegen, max_mod, regen_mod, rot_mod, limit_mod))
+	regen_mod_max = max_mod;
+	regen_mod_regen = regen_mod;
+	regen_mod_rot = rot_mod;
+	regen_mod_limit = limit_mod;
+
+	regen_health = autocvar_g_balance_health_regen;
+	regen_health_linear = autocvar_g_balance_health_regenlinear;
+	regen_health_rot = autocvar_g_balance_health_rot;
+	regen_health_rotlinear = autocvar_g_balance_health_rotlinear;
+	regen_health_stable = autocvar_g_balance_health_regenstable;
+	regen_health_rotstable = autocvar_g_balance_health_rotstable;
+	if(!MUTATOR_CALLHOOK(PlayerRegen))
 	if(!self.frozen)
 	{
-		float minh, mina, maxh, maxa, limith, limita;
-		maxh = autocvar_g_balance_health_rotstable;
+		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
-		minh = autocvar_g_balance_health_regenstable;
 		mina = autocvar_g_balance_armor_regenstable;
 		limith = autocvar_g_balance_health_limit;
 		limita = autocvar_g_balance_armor_limit;
@@ -1648,13 +1659,13 @@ void player_regen (void)
 		rot_mod = regen_mod_rot;
 		limit_mod = regen_mod_limit;
 
-		maxh = maxh * max_mod;
-		minh = minh * max_mod;
+		regen_health_rotstable = regen_health_rotstable * max_mod;
+		regen_health_stable = regen_health_stable * max_mod;
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
 
 		self.armorvalue = CalcRotRegen(self.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
-		self.health = CalcRotRegen(self.health, minh, autocvar_g_balance_health_regen, autocvar_g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, autocvar_g_balance_health_rot, autocvar_g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
+		self.health = CalcRotRegen(self.health, regen_health_stable, regen_health, regen_health_linear, regen_mod * frametime * (time > self.pauseregen_finished), regen_health_rotstable, regen_health_rot, regen_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
 	}
 
 	// if player rotted to death...  die!
@@ -1785,49 +1796,36 @@ void SpectateCopy(entity spectatee) {
     }
 }
 
-float SpectateUpdate()
+bool SpectateUpdate()
 {
 	if(!self.enemy)
-	    return 0;
+	    return false;
 
 	if(!IS_PLAYER(self.enemy) || self == self.enemy)
 	{
 		SetSpectator(self, world);
-		return 0;
+		return false;
 	}
 
 	SpectateCopy(self.enemy);
 
-	return 1;
+	return true;
 }
 
-float SpectateSet()
+bool SpectateSet()
 {
-	if(self.enemy.classname != "player")
+	if(!IS_PLAYER(self.enemy))
 		return false;
-	/*if(self.enemy.vehicle)
-	{
 
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-		//stuffcmd(self, "set viewsize $tmpviewsize \n");
+	msg_entity = self;
+	WriteByte(MSG_ONE, SVC_SETVIEW);
+	WriteEntity(MSG_ONE, self.enemy);
+	self.movetype = MOVETYPE_NONE;
+	accuracy_resend(self);
 
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
-	}
-	else
-	{*/
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-		//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
+	if(!SpectateUpdate())
+		PutObserverInServer();
 
-		if(!SpectateUpdate())
-			PutObserverInServer();
-	//}
 	return true;
 }
 
@@ -1843,47 +1841,47 @@ void SetSpectator(entity player, entity spectatee)
 	if(player.enemy && player.enemy.arc_beam) { player.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 }
 
-float Spectate(entity pl)
+bool Spectate(entity pl)
 {
 	if(g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
-	if(pl.team != self.team)
-		return 0;
+	if(DIFF_TEAM(pl, self))
+		return false;
 
 	SetSpectator(self, pl);
 	return SpectateSet();
 }
 
 // Returns next available player to spectate if g_ca_spectate_enemies == 0
-entity CA_SpectateNext(entity start) {
-	if (start.team == self.team) {
+entity CA_SpectateNext(entity start)
+{
+	if(SAME_TEAM(start, self))
 		return start;
-	}
 
 	other = start;
 	// continue from current player
-	while(other && other.team != self.team) {
+	while(other && DIFF_TEAM(other, self))
 		other = find(other, classname, "player");
-	}
 
-	if (!other) {
+	if (!other)
+	{
 		// restart from begining
 		other = find(other, classname, "player");
-		while(other && other.team != self.team) {
+		while(other && DIFF_TEAM(other, self))
 			other = find(other, classname, "player");
-		}
 	}
 
 	return other;
 }
 
-float SpectateNext()
+bool SpectateNext()
 {
 	other = find(self.enemy, classname, "player");
 
-	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
+	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
-	} else {
+	else
+	{
 		// other modes and ca spectators or spectating enemies is allowed
 		if (!other)
 			other = find(other, classname, "player");
@@ -1894,7 +1892,7 @@ float SpectateNext()
 	return SpectateSet();
 }
 
-float SpectatePrev()
+bool SpectatePrev()
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, "player");
@@ -1910,12 +1908,12 @@ float SpectatePrev()
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
 	{
 		do { other = other.chain; }
-		while(other && other.team != self.team);
+		while(other && DIFF_TEAM(other, self));
 
 		if (!other)
 		{
 			other = first;
-			while(other.team != self.team)
+			while(other && DIFF_TEAM(other, self))
 				other = other.chain;
 			if(other == self.enemy)
 				return true;
@@ -2296,7 +2294,7 @@ void PlayerPreThink (void)
 
 	// Savage: Check for nameless players
 	if (isInvisibleString(self.netname)) {
-		string new_name = strzone(strcat("Player@", self.netaddress));
+		string new_name = strzone(strcat("Player@", ftos(self.playerid)));
 		if(autocvar_sv_eventlog)
 			GameLogEcho(strcat(":name:", ftos(self.playerid), ":", new_name));
 		if(self.netname_previous)
@@ -2323,7 +2321,7 @@ void PlayerPreThink (void)
 					if(strstr(autocvar_g_xonoticversion, "git", 0) >= 0 || strstr(autocvar_g_xonoticversion, "autobuild", 0) >= 0)
 					{
 						// notify release users if connecting to git
-						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
+						LOG_TRACE("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 						Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, self.cvar_g_xonoticversion);
 					}
 					else
@@ -2333,13 +2331,13 @@ void PlayerPreThink (void)
 						if(r < 0)
 						{
 							// give users new version
-							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n");
+							LOG_TRACE("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n");
 							Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, self.cvar_g_xonoticversion);
 						}
 						else if(r > 0)
 						{
 							// notify users about old server version
-							print("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
+							LOG_INFO("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 							Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, self.cvar_g_xonoticversion);
 						}
 					}
@@ -2665,6 +2663,7 @@ Called every frame for each client after the physics are run
 void PlayerPostThink (void)
 {
 	if(sv_maxidle > 0 && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
+	if(IS_REAL_CLIENT(self))
 	if(IS_PLAYER(self) || sv_maxidle_spectatorsareidle)
 	{
 		if (time - self.parm_idlesince < 1) // instead of (time == self.parm_idlesince) to support sv_maxidle <= 10

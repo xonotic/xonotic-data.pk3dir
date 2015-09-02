@@ -206,7 +206,7 @@ void RegisterSLCategories()
 				} \
 				else \
 				{ \
-					printf( \
+					LOG_INFOF( \
 						"RegisterSLCategories(): Improper override '%s' for category '%s'!\n", \
 						s, \
 						categories[i].cat_name \
@@ -373,7 +373,7 @@ int CheckCategoryForEntry(int entry)
 			case "cts":
 			case "xdf": { return CAT_DEFRAG; }
 
-			default: { dprintf("Found strange mod type: %s\n", modtype); return CAT_MODIFIED; }
+			default: { LOG_TRACEF("Found strange mod type: %s\n", modtype); return CAT_MODIFIED; }
 		}
 	}
 

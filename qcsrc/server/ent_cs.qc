@@ -22,7 +22,7 @@
 
 void entcs_init()
 {
-	print("Initializing ClientSide information entities\n");
+	LOG_INFO("Initializing ClientSide information entities\n");
 }
 
 float entcs_customize()

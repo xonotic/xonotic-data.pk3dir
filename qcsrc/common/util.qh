@@ -1,54 +1,6 @@
 #ifndef COMMON_UTIL_H
 #define COMMON_UTIL_H
 
-#ifdef QCC_SUPPORT_ACCUMULATE
-# define ACCUMULATE_FUNCTION(func,otherfunc) \
-	[[accumulate]] void func() { otherfunc(); }
-# define CALL_ACCUMULATED_FUNCTION(func) \
-	func()
-#else
-#ifdef HAVE_YO_DAWG_CPP
-// TODO make ascii art pic of xzibit
-// YO DAWG!
-// I HERD YO LIEK MACROS
-// SO I PUT A MACRO DEFINITION IN YO MACRO DEFINITION
-// SO YO CAN EXPAND MACROS WHILE YO EXPAND MACROS
-# define ACCUMULATE_FUNCTION(func,otherfunc) \
-	#ifdef func \
-	void __merge__##otherfunc() { func(); otherfunc(); } \
-	#undef func \
-	#define func __merge__##otherfunc \
-	#else \
-	#define func otherfunc \
-	#endif
-# define CALL_ACCUMULATED_FUNCTION(func) \
-	func()
-#else
-# define ACCUMULATE_FUNCTION(func,otherfunc) \
-	.float _ACCUMULATE_##func##__##otherfunc
-void ACCUMULATE_call(string func)
-{
-	float i;
-	float n = numentityfields();
-	string funcprefix = strcat("_ACCUMULATE_", func, "__");
-	float funcprefixlen = strlen(funcprefix);
-	for(i = 0; i < n; ++i)
-	{
-		string name = entityfieldname(i);
-		if(substring(name, 0, funcprefixlen) == funcprefix)
-			callfunction(substring(name, funcprefixlen, -1));
-	}
-}
-# define CALL_ACCUMULATED_FUNCTION(func) \
-	ACCUMULATE_call(#func)
-#endif
-#endif
-
-// used for simplifying ACCUMULATE_FUNCTIONs
-#define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
-#define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
-#define CHECK_MAX_COUNT(name,max,count,type) if(count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
-
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
 string wordwrap(string s, float l);
@@ -232,14 +184,6 @@ void WriteInt72_t(float dest, vector val);
 #endif
 #endif
 
-// the NULL function
-#ifdef QCC_SUPPORT_NIL
-#define func_null nil
-#define string_null nil
-#else
-var void func_null(void);
-string string_null;
-#endif
 float float2range11(float f);
 float float2range01(float f);
 
@@ -279,12 +223,6 @@ float vercmp(string v1, string v2);
 
 float u8_strsize(string s);
 
-// translation helpers
-string prvm_language;
-string language_filename(string s);
-string CTX(string s);
-#define ZCTX(s) strzone(CTX(s))
-
 // x-encoding (encoding as zero length invisible string)
 // encodes approx. 14 bits into 5 bytes of color code string
 const float XENCODE_MAX = 21295; // 2*22*22*22-1
@@ -307,10 +245,6 @@ string strtolower(string s);
 #endif
 
 string MakeConsoleSafe(string input);
-
-#ifndef MENUQC
-float InterpretBoolean(string input);
-#endif
 
 // generic shutdown handler
 void Shutdown();
@@ -360,14 +294,8 @@ vector get_corner_position(entity box, float corner);
 #define XPD(...) __VA_ARGS__
 
 // Some common varargs functions. Lowercase as they match C.
-#define printf(...) print(sprintf(__VA_ARGS__))
-#define dprintf(...) dprint(sprintf(__VA_ARGS__))
 #define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
-
-//#ifndef MENUQC
-void backtrace(string msg);
-//#endif
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
@@ -406,17 +334,6 @@ vector animfixfps(entity e, vector a, vector b);
 
 #ifdef SVQC
 void dedicated_print(string input);
-#endif
-
-// todo: better way to do this?
-#ifdef MENUQC
-#define PROGNAME "MENUQC"
-#else
-#ifdef SVQC
-#define PROGNAME "SVQC"
-#else
-#define PROGNAME "CSQC"
-#endif
 #endif
 
 #ifndef MENUQC

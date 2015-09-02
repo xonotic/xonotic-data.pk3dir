@@ -292,7 +292,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 		sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
 	if(_mzlfx)
-		Send_Effect(_mzlfx, proj.origin, proj.velocity, 1);
+		Send_Effect_(_mzlfx, proj.origin, proj.velocity, 1);
 
 	setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
@@ -304,8 +304,8 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 void vehicles_gib_explode()
 {
 	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-	Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
-	Send_Effect("explosion_small", self.wp00.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, self.wp00.origin + '0 0 64', '0 0 0', 1);
 	remove(self);
 }
 
@@ -479,7 +479,7 @@ void vehicles_clearreturn(entity veh)
 void vehicles_spawn();
 void vehicles_return()
 {
-	Send_Effect("teleport", self.wp00.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect(EFFECT_TELEPORT, self.wp00.origin + '0 0 64', '0 0 0', 1);
 
 	self.wp00.think	 = vehicles_spawn;
 	self.wp00.nextthink = time;
@@ -529,7 +529,8 @@ void vehicles_showwp()
 		rgb = Team_ColorRGB(self.team);
 	else
 		rgb = '1 1 1';
-	WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP, rgb);
+	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+	wp.colormod = rgb;
 	if(self.waypointsprite_attached)
 	{
 		WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
@@ -571,7 +572,7 @@ void vehicles_setreturn(entity veh)
 
 void vehicle_use()
 {
-	dprint("vehicle ",self.netname, " used by ", activator.classname, "\n");
+	LOG_TRACE("vehicle ",self.netname, " used by ", activator.classname, "\n");
 
 	self.tur_head.team = activator.team;
 
@@ -582,7 +583,7 @@ void vehicle_use()
 
 	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
 	{
-		dprint("Respawning vehicle: ", self.netname, "\n");
+		LOG_TRACE("Respawning vehicle: ", self.netname, "\n");
 		if(self.effects & EF_NODRAW)
 		{
 			self.think = vehicles_spawn;
@@ -634,7 +635,7 @@ void vehicles_painframe()
 		float _ftmp;
 		_ftmp = self.owner.vehicle_health / 50;
 		self.pain_frame = time + 0.1 + (random() * 0.5 * _ftmp);
-		pointparticles(particleeffectnum("smoke_small"), (self.origin + (randomvec() * 80)), '0 0 0', 1);
+		pointparticles(particleeffectnum(EFFECT_SMOKE_SMALL), (self.origin + (randomvec() * 80)), '0 0 0', 1);
 
 		if(self.vehicle_flags & VHF_DMGSHAKE)
 			self.velocity += randomvec() * 30;
@@ -831,7 +832,7 @@ void vehicles_exit(bool eject)
 
 	if(vehicles_exit_running)
 	{
-		dprint("^1vehicles_exit allready running! this is not good..\n");
+		LOG_TRACE("^1vehicles_exit allready running! this is not good..\n");
 		return;
 	}
 
@@ -1023,8 +1024,10 @@ void vehicles_enter(entity pl, entity veh)
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
-		if(autocvar_g_vehicles_steal_show_waypoint)
-			WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, true, RADARICON_DANGER, Team_ColorRGB(pl.team));
+		if (autocvar_g_vehicles_steal_show_waypoint) {
+			entity wp = WaypointSprite_Spawn(WP_VehicleIntruder, 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, true, RADARICON_DANGER);
+			wp.colormod = Team_ColorRGB(pl.team);
+		}
 	}
 	else return;
 
@@ -1135,7 +1138,7 @@ void vehicles_think()
 // initialization
 void vehicles_spawn()
 {
-	dprint("Spawning vehicle: ", self.classname, "\n");
+	LOG_TRACE("Spawning vehicle: ", self.classname, "\n");
 
 	// disown & reset
 	self.vehicle_hudmodel.viewmodelforclient = self;
@@ -1166,7 +1169,7 @@ void vehicles_spawn()
 	self.angles = self.pos2;
 	setorigin(self, self.pos1);
 	// Show it
-	Send_Effect("teleport", self.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect(EFFECT_TELEPORT, self.origin + '0 0 64', '0 0 0', 1);
 
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;

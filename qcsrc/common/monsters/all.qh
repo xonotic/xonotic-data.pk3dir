@@ -1,5 +1,3 @@
-#include "../registry.qh"
-
 #ifndef MONSTERS_ALL_H
 #define MONSTERS_ALL_H
 
@@ -33,6 +31,8 @@ const int MR_SETUP = 1; // (SERVER) setup monster data
 const int MR_THINK = 2; // (SERVER) logic to run every frame
 const int MR_DEATH = 3; // (SERVER) called when monster dies
 const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
+const int MR_PAIN = 5; // (SERVER) called when monster is damaged
+const int MR_ANIM = 6; // (BOTH?) sets animations for monster
 
 // special spawn flags
 const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
@@ -42,6 +42,8 @@ const int MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are replace
 const int MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
 const int MON_FLAG_RANGED = 512; // monster shoots projectiles
 const int MON_FLAG_MELEE = 1024;
+const int MON_FLAG_CRUSH = 2048; // monster can be stomped in special modes
+const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
 
 // entity properties of monsterinfo:
 .string netname; // short name
@@ -49,9 +51,21 @@ const int MON_FLAG_MELEE = 1024;
 .string model; // full name of model
 .int spawnflags;
 .vector mins, maxs; // monster hitbox size
+.bool(int) monster_attackfunc;
+
+// animations
+.vector anim_blockend;
+.vector anim_blockstart;
+.vector anim_melee1;
+.vector anim_melee2;
+.vector anim_melee3;
+.vector anim_pain3;
+.vector anim_pain4;
+.vector anim_pain5;
+.vector anim_walk;
+.vector anim_spawn;
 
 // other useful macros
 #define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
-#define M_NAME(monstertype) (get_monsterinfo(monstertype)).monster_name
 
 #endif

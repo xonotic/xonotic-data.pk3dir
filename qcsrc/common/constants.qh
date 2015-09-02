@@ -83,7 +83,6 @@ const int ENT_CLIENT_RADARLINK = 11; // flags [startorigin] [endorigin] [startco
 const int ENT_CLIENT_PROJECTILE = 12;
 const int ENT_CLIENT_GIBSPLASH = 13;
 const int ENT_CLIENT_DAMAGEINFO = 14;
-const int ENT_CLIENT_CASING = 15;
 const int ENT_CLIENT_INIT = 16;
 const int ENT_CLIENT_MAPVOTE = 17;
 const int ENT_CLIENT_CLIENTDATA = 18;
@@ -177,10 +176,6 @@ const int CTF_STATE_COMMANDER = 3;
 
 const int HUD_NORMAL = 0;
 const int HUD_BUMBLEBEE_GUN = 25;
-
-const vector eX = '1 0 0';
-const vector eY = '0 1 0';
-const vector eZ = '0 0 1';
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
@@ -297,6 +292,8 @@ const int PROJECTILE_BUMBLE_BEAM = 31;
 const int PROJECTILE_MAGE_SPIKE = 32;
 const int PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
+const int PROJECTILE_ROCKETMINSTA_LASER = 34;
+
 // projectile IDs 40-50 reserved
 
 const int PROJECTILE_RPC = 60;
@@ -361,16 +358,6 @@ const int SPAWN_PRIO_NEAR_TEAMMATE_FOUND = 200;
 const int SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM = 100;
 const int SPAWN_PRIO_RACE_PREVIOUS_SPAWN = 50;
 const int SPAWN_PRIO_GOOD_DISTANCE = 10;
-
-// URI handles
-const int URI_GET_DISCARD = 0;
-const int URI_GET_IPBAN = 1;
-const int URI_GET_IPBAN_END = 16;
-const int URI_GET_CURL = 17;
-const int URI_GET_CURL_END = 32;
-const int URI_GET_UPDATENOTIFICATION = 33;
-const int URI_GET_URLLIB = 128;
-const int URI_GET_URLLIB_END = 191;
 
 // gametype vote flags
 const int GTV_FORBIDDEN = 0; // Cannot be voted

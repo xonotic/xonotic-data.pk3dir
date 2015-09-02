@@ -265,7 +265,7 @@ void havocbot_role_ft_offense()
 	// If only one left on team or if role has timed out then start trying to free players.
 	if (((unfrozen == 0) && (!self.frozen)) || (time > self.havocbot_role_timeout))
 	{
-		dprint("changing role to freeing\n");
+		LOG_TRACE("changing role to freeing\n");
 		self.havocbot_role = havocbot_role_ft_freeing;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -294,7 +294,7 @@ void havocbot_role_ft_freeing()
 
 	if (time > self.havocbot_role_timeout)
 	{
-		dprint("changing role to offense\n");
+		LOG_TRACE("changing role to offense\n");
 		self.havocbot_role = havocbot_role_ft_offense;
 		self.havocbot_role_timeout = 0;
 		return;
@@ -555,7 +555,7 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 {
 	ret_float = freezetag_teams;
-	return 0;
+	return false;
 }
 
 void freezetag_Initialize()
@@ -606,7 +606,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

@@ -24,7 +24,6 @@ void dompoint_captured ()
 {
 	entity head;
 	float old_delay, old_team, real_team;
-	string msg = "dom-neut";
 
 	// now that the delay has expired, switch to the latest team to lay claim to this point
 	head = self.owner;
@@ -80,15 +79,16 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 
+	entity msg = WP_DomNeut;
 	switch(self.team)
 	{
-		case NUM_TEAM_1: msg = "dom-red"; break;
-		case NUM_TEAM_2: msg = "dom-blue"; break;
-		case NUM_TEAM_3: msg = "dom-yellow"; break;
-		case NUM_TEAM_4: msg = "dom-pink"; break;
+		case NUM_TEAM_1: msg = WP_DomRed; break;
+		case NUM_TEAM_2: msg = WP_DomBlue; break;
+		case NUM_TEAM_3: msg = WP_DomYellow; break;
+		case NUM_TEAM_4: msg = WP_DomPink; break;
 	}
 
-	WaypointSprite_UpdateSprites(self.sprite, msg, "", "");
+	WaypointSprite_UpdateSprites(self.sprite, msg, WP_Null, WP_Null);
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
@@ -226,7 +226,7 @@ void dompointtouch()
 	if(head == world)
 		return;
 
-	WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
+	WaypointSprite_UpdateSprites(self.sprite, WP_DomNeut, WP_Null, WP_Null);
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
 	WaypointSprite_Ping(self.sprite);
 
@@ -292,7 +292,7 @@ void dom_controlpoint_setup()
 	droptofloor();
 
 	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
+	WaypointSprite_SpawnFixed(WP_DomNeut, self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT);
 }
 
 float total_controlpoints, redowned, blueowned, yellowowned, pinkowned;
@@ -597,7 +597,7 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
 	{
-		print("No ""dom_team"" entities found on this map, creating them anyway.\n");
+		LOG_INFO("No ""dom_team"" entities found on this map, creating them anyway.\n");
 		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}
@@ -652,7 +652,7 @@ MUTATOR_DEFINITION(gamemode_domination)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

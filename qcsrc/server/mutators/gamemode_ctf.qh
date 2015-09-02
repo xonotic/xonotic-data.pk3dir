@@ -37,7 +37,7 @@ const float VEHICLE_FLAG_SCALE = 1.0;
 
 // waypoint colors
 #define WPCOLOR_ENEMYFC(t) ((t) ? colormapPaletteColor(t - 1, false) * 0.75 : '1 1 1')
-#define WPCOLOR_FLAGCARRIER(t) ('0.8 0.8 0')
+#define WPCOLOR_FLAGCARRIER(t) (WP_FlagCarrier.m_color)
 #define WPCOLOR_DROPPEDFLAG(t) ((t) ? ('0.25 0.25 0.25' + colormapPaletteColor(t - 1, false)) * 0.5 : '1 1 1')
 
 // sounds

@@ -82,8 +82,8 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
-				Send_Effect("teleport", player.origin, '0 0 0', 1);
-				Send_Effect("teleport", to + v_forward * 32, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, to + v_forward * 32, '0 0 0', 1);
 			}
 			self.pushltime = time + 0.2;
 		}
@@ -190,7 +190,7 @@ void teleport_findtarget (void)
 		if(e.movetype == MOVETYPE_NONE)
 			waypoint_spawnforteleporter(self, e.origin, 0);
 		if(e.classname != "info_teleport_destination")
-			print("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
+			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
 	}
 
 	if(n == 0)
@@ -239,7 +239,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	if(pl.owner == pl.realowner)
 	{
 		if(!(pl.flags & FL_PROJECTILE))
-			print("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
+			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
 		pl.owner = world;
 	}
 	if(IS_PLAYER(pl))

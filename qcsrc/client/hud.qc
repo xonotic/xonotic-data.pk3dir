@@ -4,7 +4,6 @@
 #include "hud_config.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
-#include "sortlist.qh"
 #include "teamradar.qh"
 #include "t_items.qh"
 
@@ -12,7 +11,6 @@
 
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
-#include "../common/counting.qh"
 #include "../common/deathtypes.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
@@ -24,96 +22,12 @@
 
 #include "../csqcmodellib/cl_player.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 /*
 ==================
 Misc HUD functions
 ==================
 */
-
-// a border picture is a texture containing nine parts:
-//   1/4 width: left part
-//   1/2 width: middle part (stretched)
-//   1/4 width: right part
-// divided into
-//   1/4 height: top part
-//   1/2 height: middle part (stretched)
-//   1/4 height: bottom part
-void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize)
-{
-    if (theBorderSize.x < 0 && theBorderSize.y < 0) // draw whole image as it is
-    {
-		drawpic(theOrigin, pic, theSize, theColor, theAlpha, 0);
-		return;
-    }
-	if (theBorderSize.x == 0 && theBorderSize.y == 0) // no border
-	{
-		// draw only the central part
-		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
-		return;
-	}
-
-	vector dX, dY;
-	vector width, height;
-	vector bW, bH;
-	//pic = draw_UseSkinFor(pic);
-	width = eX * theSize.x;
-	height = eY * theSize.y;
-	if(theSize.x <= theBorderSize.x * 2)
-	{
-		// not wide enough... draw just left and right then
-		bW = eX * (0.25 * theSize.x / (theBorderSize.x * 2));
-		if(theSize.y <= theBorderSize.y * 2)
-		{
-			// not high enough... draw just corners
-			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
-			drawsubpic(theOrigin,                 width * 0.5 + height * 0.5, pic, '0 0 0',           bW + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width   * 0.5, width * 0.5 + height * 0.5, pic, eX - bW,           bW + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height  * 0.5, width * 0.5 + height * 0.5, pic, eY - bH,           bW + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + theSize * 0.5, width * 0.5 + height * 0.5, pic, eX + eY - bW - bH, bW + bH, theColor, theAlpha, 0);
-		}
-		else
-		{
-			dY = theBorderSize.x * eY;
-			drawsubpic(theOrigin,                             width * 0.5          +     dY, pic, '0 0    0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5,               width * 0.5          +     dY, pic, '0 0    0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin                        + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0',           '0 0.5  0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5          + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0' + eX - bW, '0 0.5  0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin               + height - dY, width * 0.5          +     dY, pic, '0 0.75 0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width * 0.5 + height - dY, width * 0.5          +     dY, pic, '0 0.75 0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
-		}
-	}
-	else
-	{
-		if(theSize.y <= theBorderSize.y * 2)
-		{
-			// not high enough... draw just top and bottom then
-			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
-			dX = theBorderSize.x * eX;
-			drawsubpic(theOrigin,                                         dX + height * 0.5, pic, '0    0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + dX,                        width - 2 * dX + height * 0.5, pic, '0.25 0 0',           '0.5  0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width - dX,                            dX + height * 0.5, pic, '0.75 0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin              + height * 0.5,             dX + height * 0.5, pic, '0    0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + dX         + height * 0.5, width - 2 * dX + height * 0.5, pic, '0.25 0 0' + eY - bH, '0.5  0 0' + bH, theColor, theAlpha, 0);
-			drawsubpic(theOrigin + width - dX + height * 0.5,             dX + height * 0.5, pic, '0.75 0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
-		}
-		else
-		{
-			dX = theBorderSize.x * eX;
-			dY = theBorderSize.x * eY;
-			drawsubpic(theOrigin,                                        dX          +     dY, pic, '0    0    0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin                  + dX,      width - 2 * dX          +     dY, pic, '0.25 0    0', '0.5  0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + width - dX,                  dX          +     dY, pic, '0.75 0    0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY,                          dX + height - 2 * dY, pic, '0    0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY         + dX, width - 2 * dX + height - 2 * dY, pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin          + dY + width - dX,             dX + height - 2 * dY, pic, '0.75 0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY,                          dX          +     dY, pic, '0    0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY         + dX, width - 2 * dX          +     dY, pic, '0.25 0.75 0', '0.5  0.25 0', theColor, theAlpha, 0);
-			drawsubpic(theOrigin + height - dY + width - dX,             dX          +     dY, pic, '0.75 0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
-		}
-	}
-}
 
 vector HUD_Get_Num_Color (float x, float maxvalue)
 {
@@ -206,28 +120,6 @@ vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspe
 		return eX * best_columns + eY * best_rows;
 }
 
-float stringwidth_colors(string s, vector theSize)
-{
-	return stringwidth(s, true, theSize);
-}
-
-float stringwidth_nocolors(string s, vector theSize)
-{
-	return stringwidth(s, false, theSize);
-}
-
-void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
-{
-	position.x -= 2 / 3 * strlen(text) * theScale.x;
-	drawstring(position, text, theScale, rgb, theAlpha, flag);
-}
-
-void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
-{
-	position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
-	drawstring(position, text, theScale, rgb, theAlpha, flag);
-}
-
 // return the string of the onscreen race timer
 string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname)
 {
@@ -306,30 +198,6 @@ int race_CheckName(string net_name)
 			return i+1;
 	return 0;
 }
-
-int GetPlayerColorForce(int i)
-{
-	if(!teamplay)
-		return 0;
-	else
-		return stof(getplayerkeyvalue(i, "colors")) & 15;
-}
-
-int GetPlayerColor(int i)
-{
-	if(!playerslots[i].gotscores) // unconnected
-		return NUM_SPECTATOR;
-	else if(stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR)
-		return NUM_SPECTATOR;
-	else
-		return GetPlayerColorForce(i);
-}
-
-string GetPlayerName(int i)
-{
-	return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
-}
-
 
 /*
 ==================
@@ -1948,18 +1816,6 @@ void HUD_Notify(void)
 	notify_count = count;
 }
 
-// Timer (#5)
-//
-// TODO: macro
-string seconds_tostring(float sec)
-{
-	float minutes;
-	minutes = floor(sec / 60);
-
-	sec -= minutes * 60;
-	return sprintf("%d:%02d", minutes, sec);
-}
-
 void HUD_Timer(void)
 {
 	if(intermission == 2) return;
@@ -2875,7 +2731,7 @@ void HUD_Vote(void)
 		{
 			vote_yescount = 0;
 			vote_nocount = 0;
-			print(_("^1You must answer before entering hud configure mode\n"));
+			LOG_INFO(_("^1You must answer before entering hud configure mode\n"));
 			cvar_set("_hud_configure", "0");
 		}
 		if(vote_called_vote)
@@ -4818,6 +4674,12 @@ void HUD_CenterPrint (void)
 //
 #include "../common/minigames/cl_minigames_hud.qc"
 
+
+// QuickMenu (#23)
+//
+#include "quickmenu.qc"
+
+
 /*
 ==================
 Main HUD system
@@ -4955,7 +4817,7 @@ void HUD_Main (void)
 			}
 		}
 		if (warning)
-			dprint("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
+			LOG_TRACE("Automatically fixed wrong/missing panel numbers in _hud_panelorder\n");
 
 		cvar_set("_hud_panelorder", s);
 		if(hud_panelorder_prev)
@@ -4980,6 +4842,8 @@ void HUD_Main (void)
 		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
 		HUD_Panel_Draw(HUD_PANEL(CHAT));
+	if(hud_panel_quickmenu)
+		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 
 	HUD_Configure_PostDraw();
 

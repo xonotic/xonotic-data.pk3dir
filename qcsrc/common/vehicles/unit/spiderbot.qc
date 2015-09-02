@@ -269,7 +269,7 @@ void spiderbot_rocket_do()
 	switch(self.vehicle_weapon2mode)
 	{
 		case SBRM_VOLLY:
-			rocket = vehicles_projectile("spiderbot_rocket_launch", W_Sound("rocket_fire"),
+			rocket = vehicles_projectile(EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, W_Sound("rocket_fire"),
 								   v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 								   autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
 								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, self.owner);
@@ -283,7 +283,7 @@ void spiderbot_rocket_do()
 				self.wait = -10;
 			break;
 		case SBRM_GUIDE:
-			rocket = vehicles_projectile("spiderbot_rocket_launch", W_Sound("rocket_fire"),
+			rocket = vehicles_projectile(EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, W_Sound("rocket_fire"),
 								   v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 								   autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
 								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, false, self.owner);
@@ -295,7 +295,7 @@ void spiderbot_rocket_do()
 
 		break;
 		case SBRM_ARTILLERY:
-			rocket = vehicles_projectile("spiderbot_rocket_launch", W_Sound("rocket_fire"),
+			rocket = vehicles_projectile(EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, W_Sound("rocket_fire"),
 								   v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
 								   autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
 								   DEATH_VH_SPID_ROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, self.owner);
@@ -559,8 +559,8 @@ float spiderbot_frame()
                                 autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0);
 
 			sound (gun, CH_WEAPON_A, W_Sound("uzi_fire"), VOL_BASE, ATTEN_NORM);
-			//trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
-			pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), v, v_forward * 2500, 1);
+			//trailparticles(self, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
+			pointparticles(particleeffectnum(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH), v, v_forward * 2500, 1);
 
 			self = spider;
 
@@ -679,7 +679,7 @@ void spiderbot_headfade()
 		if(self.alpha > 0.1)
 		{
 			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-			Send_Effect("explosion_big", self.origin + '0 0 100', '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_BIG, self.origin + '0 0 100', '0 0 0', 1);
 		}
 		remove(self);
 	}
@@ -692,7 +692,7 @@ void spiderbot_blowup()
 		if(random() < 0.1)
 		{
 			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-			Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 		}
 		self.nextthink = time + 0.1;
 		return;

@@ -29,18 +29,6 @@
     #define itos(i) ftos(i)
 #endif
 
-#ifndef QCC_SUPPORT_BOOL
-    #define bool float
-
-    // Boolean Constants
-    const int true 	= 1;
-    const int false = 0;
-#endif
-
-// Transitional aliases
-[[deprecated("use true")]] [[alias("true")]] const bool TRUE;
-[[deprecated("use false")]] [[alias("false")]] const bool FALSE;
-
 #define FOREACH_ARRAY(arr, start, end, cond, body) do { \
     for (int i = start; i < end; ++i) {                 \
         const noref entity it = arr[i];                 \
@@ -116,9 +104,5 @@
 #else
     #define BITSET(var, mask, flag) ((var) ^ (-(flag) ^ (var)) & (mask))
 #endif
-
-#define CVAR_DESCRIBE(var, desc)    localcmd(sprintf("\nset %s \"%s\" \"%s\"\n",        #var, ftos(autocvar_##var), desc))
-#define CVAR_DESCRIBESTR(var, desc) localcmd(sprintf("\nset %s \"%s\" \"%s\"\n",        #var, autocvar_##var, desc))
-#define CVAR_DESCRIBEVEC(var, desc) localcmd(sprintf("\nset %s \"%s %s %s\" \"%s\"\n",  #var, ftos(autocvar_##var##.x), ftos(autocvar_##var##.y), ftos(autocvar_##var##.z), desc))
 
 #endif

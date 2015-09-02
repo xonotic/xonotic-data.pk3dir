@@ -3,20 +3,21 @@
 
 #include "gibs.qh"
 #include "player_skeleton.qh"
-#include "sortlist.qh"
 
 #include "weapons/projectile.qh"
 
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
+#include "../common/effects.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/trigger/viewloc.qh"
+
+#include "mutators/events.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/cl_player.qh"
 #include "../csqcmodellib/interpolate.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 .float death_time;
 .int modelflags;
@@ -137,7 +138,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(void)
 		self.forceplayermodels_isgoodmodel = fexists(self.forceplayermodels_savemodel);
 		self.forceplayermodels_isgoodmodel_mdl = self.forceplayermodels_savemodel;
 		if(!self.forceplayermodels_isgoodmodel)
-			printf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
+			LOG_INFOF("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
 	}
 }
 void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
@@ -379,7 +380,7 @@ int CSQCPlayer_FallbackFrame(int f)
 		case 29: return 4; // anim_duckwalkbackright -> anim_duckwalk
 		case 30: return 4; // anim_duckwalkbackleft -> anim_duckwalk
 	}
-	printf("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
+	LOG_INFOF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
 	return f;
 }
 void CSQCPlayer_FallbackFrame_Apply(void)
@@ -406,6 +407,8 @@ void CSQCModel_AutoTagIndex_Apply(void)
 
 	if(self.viewloc.entnum != self.tag_networkviewloc)
 		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+
+	MUTATOR_CALLHOOK(TagIndex_Update, self);
 
 	if(self.tag_networkentity)
 	{
@@ -448,7 +451,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 							// we need to prevent this from 'appening
 							self.tag_entity = world;
 							self.drawmask = 0;
-							dprint("h_ model lacks weapon attachment, but v_ model is attached to it\n");
+							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it\n");
 						}
 					}
 					else if(self.tag_entity.isplayermodel)
@@ -464,6 +467,8 @@ void CSQCModel_AutoTagIndex_Apply(void)
 					if(!self.tag_index)
 						self.tag_index = gettagindex(self.tag_entity, "tag_shot");
 				}
+
+				MUTATOR_CALLHOOK(TagIndex_Apply, self);
 			}
 			else
 			{
@@ -523,7 +528,7 @@ void CSQCModel_Effects_Apply(void)
 	self.traileffect = 0;
 
 	if(eff & EF_BRIGHTFIELD)
-		self.traileffect = particleeffectnum("TR_NEXUIZPLASMA");
+		self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA);
 	// ignoring EF_MUZZLEFLASH
 	if(eff & EF_BRIGHTLIGHT)
 		adddynamiclight(self.origin, 400, '3 3 3');
@@ -541,9 +546,9 @@ void CSQCModel_Effects_Apply(void)
 	if(eff & EF_FULLBRIGHT)
 		self.renderflags |= RF_FULLBRIGHT;
 	if(eff & EF_FLAME)
-		pointparticles(particleeffectnum("EF_FLAME"), self.origin, '0 0 0', bound(0, frametime, 0.1));
+		pointparticles(particleeffectnum(EFFECT_EF_FLAME), self.origin, '0 0 0', bound(0, frametime, 0.1));
 	if(eff & EF_STARDUST)
-		pointparticles(particleeffectnum("EF_STARDUST"), self.origin, '0 0 0', bound(0, frametime, 0.1));
+		pointparticles(particleeffectnum(EFFECT_EF_STARDUST), self.origin, '0 0 0', bound(0, frametime, 0.1));
 	if(eff & EF_NOSHADOW)
 		self.renderflags |= RF_NOSHADOW;
 	if(eff & EF_NODEPTHTEST)
@@ -557,24 +562,24 @@ void CSQCModel_Effects_Apply(void)
 		self.renderflags |= RF_DYNAMICMODELLIGHT;
 	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(self.csqcmodel_modelflags & MF_ROCKET)
-		self.traileffect = particleeffectnum("TR_ROCKET");
+		self.traileffect = particleeffectnum(EFFECT_TR_ROCKET);
 	if(self.csqcmodel_modelflags & MF_GRENADE)
-		self.traileffect = particleeffectnum("TR_GRENADE");
+		self.traileffect = particleeffectnum(EFFECT_TR_GRENADE);
 	if(self.csqcmodel_modelflags & MF_GIB)
-		self.traileffect = particleeffectnum("TR_BLOOD");
+		self.traileffect = particleeffectnum(EFFECT_TR_BLOOD);
 	if(self.csqcmodel_modelflags & MF_ROTATE)
 	{
 		self.renderflags |= RF_USEAXIS;
 		makevectors(self.angles + '0 100 0' * fmod(time, 3.6));
 	}
 	if(self.csqcmodel_modelflags & MF_TRACER)
-		self.traileffect = particleeffectnum("TR_WIZSPIKE");
+		self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE);
 	if(self.csqcmodel_modelflags & MF_ZOMGIB)
-		self.traileffect = particleeffectnum("TR_SLIGHTBLOOD");
+		self.traileffect = particleeffectnum(EFFECT_TR_SLIGHTBLOOD);
 	if(self.csqcmodel_modelflags & MF_TRACER2)
-		self.traileffect = particleeffectnum("TR_KNIGHTSPIKE");
+		self.traileffect = particleeffectnum(EFFECT_TR_KNIGHTSPIKE);
 	if(self.csqcmodel_modelflags & MF_TRACER3)
-		self.traileffect = particleeffectnum("TR_VORESPIKE");
+		self.traileffect = particleeffectnum(EFFECT_TR_VORESPIKE);
 
 	if(self.drawmask)
 		Projectile_DrawTrail(self.origin);
@@ -637,6 +642,7 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 	{
 		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply();
+
 		if(!isplayer)
 		{
 			skeleton_loadinfo(self);
@@ -734,7 +740,7 @@ void CSQCModel_Hook_PreUpdate(bool isnew, bool isplayer, bool islocalplayer)
 void CSQCModel_Hook_PostUpdate(bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
-	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/");
+	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/" || (substring(self.model, 0, 16) == "models/monsters/" && (self.entnum >= 1 && self.entnum <= maxclients)));
 
 	// save values set by server
 	if(self.isplayermodel)

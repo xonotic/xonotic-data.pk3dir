@@ -53,7 +53,7 @@ void spawnpoint_use()
 		self.team = activator.team;
 		some_spawn_has_been_used = 1;
 	}
-	print("spawnpoint was used!\n");
+	//LOG_INFO("spawnpoint was used!\n");
 }
 
 void relocate_spawnpoint()
@@ -70,14 +70,14 @@ void relocate_spawnpoint()
         self.maxs = PL_MAX_CONST;
         if (!move_out_of_solid(self))
             objerror("could not get out of solid at all!");
-        print("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
-        print(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
-        print(" ", ftos(self.origin.y - o.y));
-        print(" ", ftos(self.origin.z - o.z), "'\n");
+        LOG_INFO("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
+        LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
+        LOG_INFO(" ", ftos(self.origin.y - o.y));
+        LOG_INFO(" ", ftos(self.origin.z - o.z), "'\n");
         if (autocvar_g_spawnpoints_auto_move_out_of_solid)
         {
             if (!spawnpoint_nag)
-                print("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
+                LOG_INFO("\{1}^1NOTE: this map needs FIXING (it contains spawnpoints in solid, see server log)\n");
             spawnpoint_nag = 1;
         }
         else
@@ -157,6 +157,52 @@ void spawnfunc_info_player_deathmatch (void)
 	relocate_spawnpoint();
 }
 
+/*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
+Starting point for a player in team one (Red).
+Keys: "angle" viewing angle when spawning. */
+void spawnfunc_info_player_team1()
+{
+	if(g_assault) { remove(self); return; }
+
+	self.team = NUM_TEAM_1; // red
+	spawnfunc_info_player_deathmatch();
+}
+
+
+/*QUAKED spawnfunc_info_player_team2 (1 0 0) (-16 -16 -24) (16 16 24)
+Starting point for a player in team two (Blue).
+Keys: "angle" viewing angle when spawning. */
+void spawnfunc_info_player_team2()
+{
+	if(g_assault) { remove(self); return; }
+
+	self.team = NUM_TEAM_2; // blue
+	spawnfunc_info_player_deathmatch();
+}
+
+/*QUAKED spawnfunc_info_player_team3 (1 0 0) (-16 -16 -24) (16 16 24)
+Starting point for a player in team three (Yellow).
+Keys: "angle" viewing angle when spawning. */
+void spawnfunc_info_player_team3()
+{
+	if(g_assault) { remove(self); return; }
+
+	self.team = NUM_TEAM_3; // yellow
+	spawnfunc_info_player_deathmatch();
+}
+
+
+/*QUAKED spawnfunc_info_player_team4 (1 0 0) (-16 -16 -24) (16 16 24)
+Starting point for a player in team four (Purple).
+Keys: "angle" viewing angle when spawning. */
+void spawnfunc_info_player_team4()
+{
+	if(g_assault) { remove(self); return; }
+
+	self.team = NUM_TEAM_4; // purple
+	spawnfunc_info_player_deathmatch();
+}
+
 // Returns:
 //   _x: prio (-1 if unusable)
 //   _y: weight
@@ -223,7 +269,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 
 		if(!found)
 		{
-			dprint("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target, "\n");
+			LOG_TRACE("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target, "\n");
 			return '-1 0 0';
 		}
 	}

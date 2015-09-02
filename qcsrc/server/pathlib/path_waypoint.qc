@@ -163,7 +163,7 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     pathlib_searched_cnt     = 0;
     pathlib_foundgoal      = false;
 
-    dprint("pathlib_waypointpath init\n");
+    LOG_TRACE("pathlib_waypointpath init\n");
 
     // Initialize waypoint grid
     // FIXME! presisted chain for better preformance
@@ -185,10 +185,10 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     start_node = wp_from;
 
     start_node.pathlib_list = closedlist;
-    dprint("Expanding ",ftos(pathlib_wpp_expand(start_node))," links\n");
+    LOG_TRACE("Expanding ",ftos(pathlib_wpp_expand(start_node))," links\n");
     if(pathlib_open_cnt <= 0)
     {
-        dprint("pathlib_waypointpath: Start waypoint not linked! aborting.\n");
+        LOG_TRACE("pathlib_waypointpath: Start waypoint not linked! aborting.\n");
         return world;
     }
 
@@ -202,17 +202,17 @@ entity pathlib_waypointpath_step()
     n = pathlib_wpp_bestopen();
     if(!n)
     {
-        dprint("Cannot find best open node, abort.\n");
+        LOG_TRACE("Cannot find best open node, abort.\n");
         return world;
     }
     pathlib_wpp_close(n);
-	dprint("Expanding ",ftos(pathlib_wpp_expand(n))," links\n");
+	LOG_TRACE("Expanding ",ftos(pathlib_wpp_expand(n))," links\n");
 
     if(pathlib_foundgoal)
     {
         entity start, end, open, ln;
 
-        dprint("Target found. Rebuilding and filtering path...\n");
+        LOG_TRACE("Target found. Rebuilding and filtering path...\n");
 
 		buildpath_nodefilter = buildpath_nodefilter_none;
 		start = path_build(world, start_node.origin, world, world);

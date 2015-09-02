@@ -7,6 +7,8 @@ sys-pre.qh
 sys-post.qh
 ../common/util-post.qh
 
+../lib/_all.inc
+
 anticheat.qc
 antilag.qc
 campaign.qc
@@ -17,7 +19,6 @@ cl_player.qc
 controlpoint.qc
 csqceffects.qc
 ent_cs.qc
-g_casings.qc
 g_damage.qc
 g_hook.qc
 // g_lights.qc // TODO: was never used
@@ -46,7 +47,6 @@ t_halflife.qc
 t_items.qc
 t_quake3.qc
 t_quake.qc
-waypointsprites.qc
 
 bot/aim.qc
 bot/bot.qc
@@ -97,11 +97,8 @@ weapons/weaponsystem.qc
 ../common/notifications.qc
 ../common/physics.qc
 ../common/playerstats.qc
-../common/p2mathlib.qc
-../common/test.qc
 ../common/viewloc.qc
 ../common/triggers/include.qc
-../common/urllib.qc
 ../common/util.qc
 
 ../common/items/all.qc
@@ -122,7 +119,6 @@ weapons/weaponsystem.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/common.qc
-../warpzonelib/mathlib.qc
 ../warpzonelib/server.qc
 ../warpzonelib/util_server.qc
 

@@ -19,7 +19,7 @@ void Inventory_Read(Inventory data)
         .int fld = inv_items[i];
         int prev = data.(fld);
         int next = data.(fld) = ReadByte();
-        dprintf("%s: %.0f -> %.0f\n", ITEMS[i].m_name, prev, next);
+        LOG_TRACEF("%s: %.0f -> %.0f\n", ITEMS[i].m_name, prev, next);
     ));
 }
 #endif

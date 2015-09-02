@@ -131,20 +131,20 @@ void target_objective_decrease_activate()
 				ent.sprite = world;
 		}
 
-		spr = WaypointSprite_SpawnFixed("<placeholder>", 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE, '1 0.5 0');
+		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE);
 		spr.assault_decreaser = self;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
 		if(ent.classname == "func_assault_destructible")
 		{
-			WaypointSprite_UpdateSprites(spr, "as-defend", "as-destroy", "as-destroy");
+			WaypointSprite_UpdateSprites(spr, WP_AssaultDefend, WP_AssaultDestroy, WP_AssaultDestroy);
 			WaypointSprite_UpdateMaxHealth(spr, ent.max_health);
 			WaypointSprite_UpdateHealth(spr, ent.health);
 			ent.sprite = spr;
 		}
 		else
-			WaypointSprite_UpdateSprites(spr, "as-defend", "as-push", "as-push");
+			WaypointSprite_UpdateSprites(spr, WP_AssaultDefend, WP_AssaultPush, WP_AssaultPush);
 	}
 }
 
@@ -553,8 +553,8 @@ MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
 {
-	if (!self.team)
-		self.team = 14;
+	if(!self.team || self.team == MAX_SHOT_DISTANCE)
+		self.team = 5; // this gets reversed when match starts?
 
 	return false;
 }
@@ -610,7 +610,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

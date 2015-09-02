@@ -30,13 +30,6 @@ const int IT_PLASMA     				=   65536;
 	#define IT_KEY1							131072
 	// -Wdouble-declaration
 	#define IT_KEY2							262144
-	// for players:
-	const int IT_RED_FLAG_TAKEN    		=   32768;
-	const int IT_RED_FLAG_LOST     		=   65536;
-	const int IT_RED_FLAG_CARRYING 		=   98304;
-	const int IT_BLUE_FLAG_TAKEN   		=  131072;
-	const int IT_BLUE_FLAG_LOST    		=  262144;
-	const int IT_BLUE_FLAG_CARRYING		=  393216;
 // end
 
 const int IT_5HP                       	=  524288;
@@ -68,6 +61,9 @@ const int ISF_ANGLES 			= 64;
 const int ISF_SIZE 				= 128;
 
 .int ItemStatus;
+
+.float fade_start;
+.float fade_end;
 
 #ifdef CSQC
 

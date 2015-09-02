@@ -172,7 +172,7 @@ void CL_WeaponEntity_SetModel(string name)
 				self.movedir = gettaginfo(self, idx);
 			else
 			{
-				print("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
+				LOG_INFO("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
 				self.movedir = '0 0 0';
 			}
 		}
@@ -196,7 +196,7 @@ void CL_WeaponEntity_SetModel(string name)
 				self.spawnorigin = gettaginfo(self, idx);
 			else
 			{
-				print("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
+				LOG_INFO("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
 				self.spawnorigin = self.movedir;
 			}
 		}
@@ -225,7 +225,7 @@ void CL_WeaponEntity_SetModel(string name)
 			}
 			else
 			{
-				print("WARNING: weapon model ", self.model, " does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
+				LOG_INFO("WARNING: weapon model ", self.model, " does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
 				self.oldorigin = '0 0 0'; // there is no way to recover from this
 			}
 		}
@@ -916,7 +916,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	// don't reload weapons that don't have the RELOADABLE flag
 	if (!(e.spawnflags & WEP_FLAG_RELOADABLE))
 	{
-		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
+		LOG_TRACE("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
 		return;
 	}
 

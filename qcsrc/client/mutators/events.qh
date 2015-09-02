@@ -40,9 +40,10 @@ MUTATOR_HOOKABLE(UpdateCrosshair, EV_NO_ARGS);
 
 /**
  * Called when a temp entity is parsed
- * NOTE: hooks MUST start with `if (MUTATOR_RETURNVALUE) return false;`
- * NOTE: hooks MUST start with `if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return false;`
- * NOTE: return true if you handled the command, return false to continue handling
+ * NOTE: hooks MUST start with:
+ *     if (MUTATOR_RETURNVALUE) return;
+ *     if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return;
+ *     return = true;
  */
 #define EV_CSQC_Parse_TempEntity(i, o) \
     /** mutator id */ i(int, mutator_argv_int_0) \
@@ -51,9 +52,9 @@ MUTATOR_HOOKABLE(CSQC_Parse_TempEntity, EV_CSQC_Parse_TempEntity);
 
 /**
  * Called when a shared entity is updated
- * NOTE: hooks MUST start with `if (MUTATOR_RETURNVALUE) return false;`
- * NOTE: hooks MUST start with `if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return false;`
- * NOTE: return true if you handled the command, return false to continue handling
+ *     if (MUTATOR_RETURNVALUE) return;
+ *     if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return;
+ *     return = true;
  */
 #define EV_CSQC_Ent_Update(i, o) \
     /** mutator id */ i(int, mutator_argv_int_0) \
@@ -75,5 +76,57 @@ MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
 
 /* Called when projectiles are precached */
 MUTATOR_HOOKABLE(PrecacheProjectiles, EV_NO_ARGS);
+
+/** Called when updating the attached tags index */
+#define EV_TagIndex_Update(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(TagIndex_Update, EV_TagIndex_Update);
+
+/** Called when setting the attached tags */
+#define EV_TagIndex_Apply(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(TagIndex_Apply, EV_TagIndex_Apply);
+
+/** Called when setting up skeleton bones */
+#define EV_Skeleton_CheckBones(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(Skeleton_CheckBones, EV_Skeleton_CheckBones);
+
+/** Called when setting up bones from the loaded model */
+#define EV_Skeleton_CheckModel(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(Skeleton_CheckModel, EV_Skeleton_CheckModel);
+
+/** Called when clearing the global parameters for a model */
+MUTATOR_HOOKABLE(ClearModelParams, EV_NO_ARGS);
+
+/** Called when getting the global parameters for a model */
+#define EV_GetModelParams(i, o) \
+    /** entity id */ i(string, checkmodel_input) \
+    /** entity id */ i(string, checkmodel_command) \
+    /**/
+string checkmodel_input, checkmodel_command;
+MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
+
+/** called when a player presses the jump key */
+#define EV_PlayerJump(i, o) \
+    /**/ i(float, player_multijump) \
+    /**/ i(float, player_jumpheight) \
+    /**/ o(float, player_multijump) \
+    /**/ o(float, player_jumpheight) \
+    /**/
+float player_multijump;
+float player_jumpheight;
+MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
+
+/** Called checking if 3rd person mode should be forced on */
+#define EV_WantEventchase(i, o) \
+    /** entity id */ i(entity, self) \
+    /**/
+MUTATOR_HOOKABLE(WantEventchase, EV_WantEventchase);
 
 #endif

@@ -47,10 +47,10 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	self.think = ka_RespawnBall;
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
-	Send_Effect("electro_combo", oldballorigin, '0 0 0', 1);
-	Send_Effect("electro_combo", self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, self.origin, '0 0 0', 1);
 
-	WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER, '0 1 1');
+	WaypointSprite_Spawn(WP_KaBall, 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 
 	sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
@@ -81,7 +81,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if(other.frozen) { return; }
 	if (!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
-		Send_Effect("kaball_sparks", self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_BALL_SPARKS, self.origin, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTEN_NORM);
 		return;
 	}
@@ -118,7 +118,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
 
 	// waypoints
-	WaypointSprite_AttachCarrier("ka-ballcarrier", other, RADARICON_FLAGCARRIER, '1 0 0');
+	WaypointSprite_AttachCarrier(WP_KaBallCarrier, other, RADARICON_FLAGCARRIER);
 	other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ka_ballcarrier_waypointsprite_visible_for_player;
 	WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_Ping(other.waypointsprite_attachedforcarrier);
@@ -160,7 +160,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
 
 	// waypoints
-	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER, '0 1 1');
+	WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
@@ -356,6 +356,24 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
+{
+	if(self.ballcarried)
+	{
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
+		self.stat_sv_maxspeed *= autocvar_g_keepaway_ballcarrier_highspeed;
+	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
+{
+	// if neither player has ball then don't attack unless the ball is on the ground
+	if(!checkentity.ballcarried && !self.ballcarried && ka_ball.owner)
+		return true;
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(ka_BotRoles)
 {
 	if (self.ballcarried)
@@ -430,6 +448,8 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, ka_PlayerPhysics, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BotShouldAttack, ka_BotShouldAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, ka_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
@@ -448,7 +468,7 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

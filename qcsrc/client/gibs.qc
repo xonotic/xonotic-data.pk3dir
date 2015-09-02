@@ -1,7 +1,6 @@
 #include "gibs.qh"
 #include "_all.qh"
 
-#include "prandom.qh"
 #include "rubble.qh"
 
 #include "../common/constants.qh"
@@ -87,7 +86,7 @@ void Gib_Touch()
 
 	if(!self.silent)
 		sound(self, CH_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
+	pointparticles(_particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
 
 	Gib_Delete();
 }
@@ -103,9 +102,9 @@ void Gib_Draw()
 
 	if(self.touch == Gib_Touch) // don't do this for the "chunk" thingie...
 		// TODO somehow make it spray in a direction dependent on self.angles
-		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_SLIGHTBLOOD")), oldorg, self.origin);
+		trailparticles(self, _particleeffectnum(strcat(species_prefix(self.cnt), EFFECT_TR_SLIGHTBLOOD.eent_eff_name)), oldorg, self.origin);
 	else
-		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_BLOOD")), oldorg, self.origin);
+		trailparticles(self, _particleeffectnum(strcat(species_prefix(self.cnt), EFFECT_TR_BLOOD.eent_eff_name)), oldorg, self.origin);
 
 	self.renderflags = 0;
 
@@ -223,7 +222,7 @@ void Ent_GibSplash(bool isNew)
 
 			if(prandom() < amount)
 				TossGib ("models/gibs/eye.md3", org, org, vel, prandomvec() * 150, specnum, 0, issilent);
-			new_te_bloodshower(particleeffectnum(strcat(specstr, "bloodshower")), org, 1200, amount);
+			new_te_bloodshower(_particleeffectnum(strcat(specstr, "bloodshower")), org, 1200, amount);
 			if(prandom() < amount)
 				TossGib ("models/gibs/bloodyskull.md3", org, org + 16 * prandomvec(), vel, prandomvec() * 100, specnum, 0, issilent);
 
@@ -256,17 +255,17 @@ void Ent_GibSplash(bool isNew)
 			}
 			break;
 		case 0x02:
-			pointparticles(particleeffectnum(strcat(specstr, "blood")), org, vel, amount * 16);
+			pointparticles(_particleeffectnum(strcat(specstr, "blood")), org, vel, amount * 16);
 			break;
 		case 0x03:
 			if(prandom() < amount)
 				TossGib ("models/gibs/chunk.mdl", org, org, vel, prandomvec() * (prandom() * 30 + 20), specnum, 1, issilent); // TODO maybe adjust to more randomization?
 			break;
 		case 0x81:
-			pointparticles(particleeffectnum(strcat(gentle_prefix, "damage_dissolve")), org, vel, amount);
+			pointparticles(_particleeffectnum(strcat(gentle_prefix, "damage_dissolve")), org, vel, amount);
 			break;
 		case 0x82:
-			pointparticles(particleeffectnum(strcat(gentle_prefix, "damage_hit")), org, vel, amount * 16);
+			pointparticles(_particleeffectnum(strcat(gentle_prefix, "damage_hit")), org, vel, amount * 16);
 			break;
 		case 0x83:
 			// no gibs in gentle mode, sorry

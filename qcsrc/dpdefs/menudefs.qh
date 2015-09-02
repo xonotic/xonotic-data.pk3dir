@@ -19,6 +19,8 @@
 
 #undef spawn
 
+#define localcmd cmd
+
 int(string str, string sub, int startpos) _strstrofs = #221;
 #define strstrofs _strstrofs
 int(string str, int ofs) _str2chr = #222;

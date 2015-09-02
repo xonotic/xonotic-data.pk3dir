@@ -57,8 +57,8 @@ float updateConwidths(float width, float height, float pixelheight)
 
 	minfactor = min(1, 640 / c.x);            // can be > 1 only if c_x is <640
 	maxfactor = max(1, r.x / c.x, r.y / c.y); // can be < 1 only if r_x < c_x and r_y < c_y
-	dprint("min factor: ", ftos(minfactor), "\n");
-	dprint("max factor: ", ftos(maxfactor), "\n");
+	LOG_TRACE("min factor: ", ftos(minfactor), "\n");
+	LOG_TRACE("max factor: ", ftos(maxfactor), "\n");
 
 	if(sz < 0)
 		f = 1 - (maxfactor - 1) * sz;
@@ -166,7 +166,7 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 		r = getresolution(-1);
 		if(r.x != 0 || r.y != 0)
 			me.addResolution(me, r.x, r.y, r.z);
-		dprint("Added system resolutions.\n");
+		LOG_TRACE("Added system resolutions.\n");
 	}
 
 	if(me.nValues == 0)
@@ -201,9 +201,9 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 		me.addResolution(me, 1280, 960, 1); // pc res
 		me.addResolution(me, 1280, 1024, 1); // pc res
 		me.addResolution(me, 1920, 1080, 1); // 1080p
-		dprint("Added default resolutions.\n");
+		LOG_TRACE("Added default resolutions.\n");
 	}
-	dprint("Total number of resolutions detected: ", ftos(me.nValues), "\n");
+	LOG_TRACE("Total number of resolutions detected: ", ftos(me.nValues), "\n");
 
 	me.vid_fullscreen = fullscreen;
 

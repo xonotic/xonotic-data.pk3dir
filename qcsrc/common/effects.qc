@@ -1,14 +1,3 @@
-void Create_Effect_Entity(int eff_name, string eff_string, bool eff_trail)
-{
-	entity eff;
-	effects_ent[eff_name - 1] = eff = spawn();
-
-	eff.classname = "effect_entity";
-	eff.eent_net_name = eff_name;
-	eff.eent_eff_name = eff_string;
-	eff.eent_eff_trail = eff_trail;
-}
-
 #ifdef CSQC
 void Read_Effect(bool is_new)
 {
@@ -18,7 +7,7 @@ void Read_Effect(bool is_new)
 	int net_name = ReadByte();
 #endif
 
-	entity eff = effects_ent[net_name - 1];
+	entity eff = effects_ent[net_name];
 
 	vector v, vel = '0 0 0';
 	int eff_cnt = 1;
@@ -41,9 +30,9 @@ void Read_Effect(bool is_new)
 	if(is_new)
 	{
 		if(eff_trail)
-			WarpZone_TrailParticles(world, particleeffectnum(eff.eent_eff_name), v, vel);
+			WarpZone_TrailParticles(world, particleeffectnum(eff), v, vel);
 		else
-			pointparticles(particleeffectnum(eff.eent_eff_name), v, vel, eff_cnt);
+			pointparticles(particleeffectnum(eff), v, vel, eff_cnt);
 	}
 }
 #endif
@@ -53,9 +42,9 @@ bool Net_Write_Effect(entity client, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_EFFECT);
 #if EFFECTS_COUNT >= 255
-	WriteShort(MSG_ENTITY, self.eent_net_name);
+	WriteShort(MSG_ENTITY, self.m_id);
 #else
-	WriteByte(MSG_ENTITY, self.eent_net_name);
+	WriteByte(MSG_ENTITY, self.m_id);
 #endif
 	WriteCoord(MSG_ENTITY, self.eent_net_location_x);
 	WriteCoord(MSG_ENTITY, self.eent_net_location_y);
@@ -75,38 +64,15 @@ bool Net_Write_Effect(entity client, int sf)
 	return true;
 }
 
-// problem with this is, we might not have all the available effects for it
-int Effect_NameToID(string eff_name)
+void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 {
-	int i;
-	for(i = EFFECT_FIRST; i < MAX_EFFECTS; ++i)
-	{
-		if((effects_ent[i - 1]).eent_eff_name == eff_name)
-			return (effects_ent[i - 1]).eent_net_name;
-	}
-
-	return 0;
-}
-
-void Send_Effect(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
-{
-	int eff_id = Effect_NameToID(eff_name);
-
-	if(!eff_id)
-	{
-		// revert to engine handling?
-		pointparticles(particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
-		return;
-	}
-
-	entity eff = effects_ent[eff_id - 1];
 	if(!eff) { return; }
 	if(!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
 	entity net_eff = spawn();
 	net_eff.owner = eff;
 	net_eff.classname = "net_effect";
 	//net_eff.eent_broadcast = broadcast;
-	net_eff.eent_net_name = eff_id;
+	net_eff.m_id = eff.m_id;
 	net_eff.eent_net_velocity = eff_vel;
 	net_eff.eent_net_location = eff_loc;
 	net_eff.eent_net_count = eff_cnt;
@@ -116,5 +82,16 @@ void Send_Effect(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 	net_eff.nextthink = time + 0.2; // don't need to keep this long
 
 	Net_LinkEntity(net_eff, false, 0, Net_Write_Effect);
+}
+
+void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
+{
+	// problem with this is, we might not have all the available effects for it
+	FOREACH(effects_ent, it.eent_eff_name == eff_name, LAMBDA(
+		Send_Effect(it, eff_loc, eff_vel, eff_cnt);
+		return;
+	));
+	// revert to engine handling
+	pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }
 #endif

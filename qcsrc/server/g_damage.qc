@@ -4,7 +4,6 @@
 #include "g_hook.qh"
 #include "mutators/mutators_include.qh"
 #include "scores.qh"
-#include "waypointsprites.qh"
 #include "spawnpoints.qh"
 #include "t_items.qh"
 #include "../common/vehicles/all.qh"
@@ -298,7 +297,7 @@ float Obituary_WeaponDeath(
 		}
 		else
 		{
-			dprintf(
+			LOG_TRACEF(
 				"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
 				deathtype,
 				death_weapon
@@ -499,13 +498,17 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			// For now, we're just forcing HURTTRIGGER to behave as "DEATH_VOID" and giving it no special options...
 			// Later on you will only be able to make custom messages using DEATH_CUSTOM,
 			// and there will be a REAL DEATH_VOID implementation which mappers will use.
-			/*case DEATH_HURTTRIGGER:
+			case DEATH_HURTTRIGGER:
 			{
-				s1 = targ.netname;
-				s2 = inflictor.message;
-				if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
+				Obituary_SpecialDeath(targ, false, deathtype,
+					targ.netname,
+					inflictor.message,
+					deathlocation,
+					targ.killcount,
+					0,
+					0);
 				break;
-			}*/
+			}
 
 			case DEATH_CUSTOM:
 			{
@@ -595,7 +598,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	// add waypoint
 	if(show_waypoint)
-		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT, '0.25 0.90 1');
+		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
 void Unfreeze (entity targ)
@@ -745,7 +748,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 
 		// should this be changed at all? If so, in what way?
-		MUTATOR_CALLHOOK(PlayerDamage_Calculate, attacker, targ, deathtype, damage, mirrordamage, force);
+		MUTATOR_CALLHOOK(PlayerDamage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
 		damage = frag_damage;
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
@@ -759,7 +762,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			{
 				Unfreeze(targ);
 				targ.health = autocvar_g_freezetag_revive_falldamage_health;
-				Send_Effect("iceorglass", targ.origin, '0 0 0', 3);
+				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
@@ -770,7 +773,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freezetag_frozen_damage_trigger)
 		{
-			Send_Effect("teleport", targ.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
 			entity oldself = self;
 			self = targ;
@@ -800,7 +803,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				self.oldorigin = self.origin;
 				self.prevorigin = self.origin;
 
-				Send_Effect("teleport", self.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, self.origin, '0 0 0', 1);
 			}
 
 			self = oldself;
@@ -1041,13 +1044,13 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
 
 						if(autocvar_g_throughfloor_debug)
-							printf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
+							LOG_INFOF("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f);
 
 
 						total = 0.25 * pow(max(mininv_f, mininv_d), 2);
 
 						if(autocvar_g_throughfloor_debug)
-							printf(" steps=%f", total);
+							LOG_INFOF(" steps=%f", total);
 
 
 						if (IS_PLAYER(targ))
@@ -1056,7 +1059,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 							total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
 
 						if(autocvar_g_throughfloor_debug)
-							printf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total)));
+							LOG_INFOF(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total)));
 
 						for(c = 0; c < total; ++c)
 						{
@@ -1083,7 +1086,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 						force = force * a;
 
 						if(autocvar_g_throughfloor_debug)
-							printf(" D=%f F=%f\n", finaldmg, vlen(force));
+							LOG_INFOF(" D=%f F=%f\n", finaldmg, vlen(force));
 					}
 
 					//if (targ == attacker)

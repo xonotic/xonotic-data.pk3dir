@@ -353,6 +353,12 @@ MUTATOR_HOOKFUNCTION(ca_PlayerRegen)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ca_CountFrags)
+{
+	// announce remaining frags
+	return true;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = true;
@@ -394,6 +400,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(FilterItem, ca_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, ca_PlayerRegen, CBC_ORDER_ANY);
+	MUTATOR_HOOK(Scores_CountFragsRemaining, ca_CountFrags, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
@@ -404,7 +411,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

@@ -282,7 +282,7 @@ float CheatImpulse(float i)
 			else
 				e = self;
 
-			Send_Effect("rocket_explode", e.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_ROCKET_EXPLODE, e.origin, '0 0 0', 1);
 			sound(e, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			e2 = spawn();
@@ -290,7 +290,7 @@ float CheatImpulse(float i)
 			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
 			remove(e2);
 
-			print("404 Sportsmanship not found.\n");
+			LOG_INFO("404 Sportsmanship not found.\n");
 			DID_CHEAT();
 			break;
 	}
@@ -326,7 +326,7 @@ float CheatCommand(float argc)
 				start = (1-f) * self.origin + f * trace_endpos;
 				end = stov(argv(3));
 				f = stof(argv(4));
-				Send_Effect(argv(1), start, end, f);
+				Send_Effect_(argv(1), start, end, f);
 				DID_CHEAT();
 				break;
 			}
@@ -338,7 +338,7 @@ float CheatCommand(float argc)
 			{
 				// arguments:
 				//   effectname
-				effectnum = particleeffectnum(argv(1));
+				effectnum = _particleeffectnum(argv(1));
 				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 				trailparticles(self, effectnum, w_shotorg, trace_endpos);
@@ -1033,7 +1033,13 @@ void Drag_Update(entity dragger)
 
 	draggee.ltime = max(servertime + serverframetime, draggee.ltime); // fixes func_train breakage
 
-	te_lightning1(dragger, dragger.origin + dragger.view_ofs, curorigin);
+	vector vecs = '0 0 0';
+	if(dragger.weaponentity.movedir_x > 0)
+		vecs = dragger.weaponentity.movedir;
+
+	vector dv = v_right * -vecs_y + v_up * vecs_z;
+
+	te_lightning1(draggee, dragger.origin + dragger.view_ofs + dv, curorigin);
 }
 
 float Drag_CanDrag(entity dragger)

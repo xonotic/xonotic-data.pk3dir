@@ -1,8 +1,6 @@
 #ifndef NADES_H
 #define NADES_H
 
-#include "oo.qh"
-#include "registry.qh"
 #include "teams.qh"
 
 .float healer_lifetime;

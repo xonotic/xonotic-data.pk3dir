@@ -1,0 +1,33 @@
+#ifndef WAYPOINTS_ALL_H
+#define WAYPOINTS_ALL_H
+
+#include "waypointsprites.qh"
+
+void RegisterWaypoints();
+const int MAX_WAYPOINTS = 240;
+entity WAYPOINTS[MAX_WAYPOINTS], WAYPOINTS_first, WAYPOINTS_last;
+int WAYPOINT_COUNT;
+/** If you register a new waypoint, make sure to add it to all.inc */
+#define REGISTER_WAYPOINT_(id, init) REGISTER(RegisterWaypoints, WP, WAYPOINTS, WAYPOINT_COUNT, id, m_id, init)
+REGISTER_REGISTRY(RegisterWaypoints)
+
+CLASS(Waypoint, Object)
+    ATTRIB(Waypoint, m_id, int, 0)
+    ATTRIB(Waypoint, netname, string, string_null)
+    ATTRIB(Waypoint, m_name, string, string_null)
+    ATTRIB(Waypoint, m_color, vector, '1 1 1')
+    ATTRIB(Waypoint, m_blink, int, 1)
+    CONSTRUCTOR(Waypoint, string _netname, string _name, vector _color, int _blink) {
+        CONSTRUCT(Waypoint);
+        this.netname = _netname;
+        this.m_name = _name;
+        this.m_color = _color;
+        this.m_blink = _blink;
+    }
+ENDCLASS(Waypoint)
+
+#define REGISTER_WAYPOINT(id, text, color, blink) REGISTER_WAYPOINT_(id, NEW(Waypoint, #id, text, color, blink))
+
+#include "all.inc"
+
+#endif

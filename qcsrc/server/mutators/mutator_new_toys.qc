@@ -73,6 +73,7 @@ roflsound "New toys, new toys!" sound.
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
+bool autocvar_g_new_toys_use_pickupsound = true;
 const float NT_AUTOREPLACE_NEVER = 0;
 const float NT_AUTOREPLACE_ALWAYS = 1;
 const float NT_AUTOREPLACE_RANDOM = 2;
@@ -106,7 +107,7 @@ string nt_GetFullReplacement(string w)
 		case "devastator": return "minelayer";
 		case "machinegun": return "hlac";
 		case "vortex": return "rifle";
-		case "shotgun": return "shockwave";
+		//case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }
@@ -189,7 +190,7 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 
 MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {
-	if(nt_IsNewToy(self.weapon))
+	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound)
 		self.item_pickupsound = W_Sound("weaponpickup_new_toys");
 	return 0;
 }
@@ -225,7 +226,7 @@ MUTATOR_DEFINITION(mutator_new_toys)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This cannot be removed at runtime\n");
+		LOG_INFO("This cannot be removed at runtime\n");
 		return -1;
 	}
 

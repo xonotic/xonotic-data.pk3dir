@@ -118,7 +118,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 					if (trace_ent == ent.cursor_trace_ent)
 						w_shotdir = normalize(ent.cursor_trace_ent.origin - w_shotorg);
 					else
-						print("antilag fail\n");
+						LOG_INFO("antilag fail\n");
 				}
 			}
 		}
@@ -182,7 +182,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	#if 0
 	mspercallsum += gettime(GETTIME_HIRES);
 	mspercallcount += 1;
-	print("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
+	LOG_INFO("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
 	#endif
 
 	proj.velocity = W_CalculateProjectileVelocity(proj.owner.velocity, pSpeed * dir, forceAbsolute);
@@ -357,11 +357,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	float total_damage = 0;
 
 	if(tracereffects & EF_RED)
-		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_RIFLE);
 	else if(tracereffects & EF_BLUE)
-		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle_weak");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_RIFLE_WEAK);
 	else
-		fireBullet_trace_callback_eff = particleeffectnum("tr_bullet");
+		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_BULLET);
 
 	float lag = ANTILAG_LATENCY(self);
 	if(lag < 0.001)
@@ -422,6 +422,8 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		{
 			fireBullet_last_hit = hit;
 			yoda = 0;
+			MUTATOR_CALLHOOK(FireBullet_Hit, self, hit, start, end, damage);
+			damage = frag_damage;
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons

@@ -105,7 +105,7 @@ void XonoticWeaponsList_drawListBoxItem(entity me, int i, vector absSize, bool i
 	e = get_weaponinfo(stof(argv(i)));
 	string msg = e.message;
 	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-		msg = sprintf(_("%s (mutator weapon)"), msg);
+		msg = strcat(msg, "*");
 
 	vector save_fontscale = draw_fontscale;
 	float f = draw_CondensedFontFactor(msg, false, me.realFontSize, 1);

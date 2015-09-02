@@ -5,7 +5,6 @@
     #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "util.qh"
-    #include "urllib.qh"
     #include "weapons/all.qh"
     #include "../server/weapons/accuracy.qh"
     #include "../server/defs.qh"
@@ -395,9 +394,9 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			// url_fclose is processing, we got a response for writing the data
 			// this must come from HTTP
-			dprint("Got response from player stats server:\n");
-			while((s = url_fgets(fh))) { dprint("  ", s, "\n"); }
-			dprint("End of response.\n");
+			LOG_TRACE("Got response from player stats server:\n");
+			while((s = url_fgets(fh))) { LOG_TRACE("  ", s, "\n"); }
+			LOG_TRACE("End of response.\n");
 			url_fclose(fh);
 			break;
 		}
@@ -405,7 +404,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			dprint("Player stats written\n");
+			LOG_TRACE("Player stats written\n");
 			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -418,7 +417,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_ERROR:
 		default:
 		{
-			print("Player stats writing failed: ", ftos(status), "\n");
+			LOG_INFO("Player stats writing failed: ", ftos(status), "\n");
 			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -444,7 +443,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 
 			// now request the information
 			uri = strcat(uri, "/player/", uri_escape(uri_escape(joiningplayer.crypto_idfp)), "/elo.txt");
-			dprint("Retrieving playerstats from URL: ", uri, "\n");
+			LOG_TRACE("Retrieving playerstats from URL: ", uri, "\n");
 			url_single_fopen(
 				uri,
 				FILE_APPEND,
@@ -485,7 +484,7 @@ void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer)
 	// determine whether we should retrieve playerbasic information again
 
 	#if 0
-	printf("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f\n",
+	LOG_INFOF("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f\n",
 		joiningplayer.netname,
 		time
 	);
@@ -509,7 +508,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			dprint("-- Sending data to player stats server\n");
+			LOG_TRACE("-- Sending data to player stats server\n");
 			/*url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -527,11 +526,11 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 		case URL_READY_CANREAD:
 		{
 			string s = "";
-			dprint("-- Got response from player stats server:\n");
+			LOG_TRACE("-- Got response from player stats server:\n");
 			//string gametype = string_null;
 			while((s = url_fgets(fh)))
 			{
-				dprint("  ", s, "\n");
+				LOG_TRACE("  ", s, "\n");
 				/*
 				string key = "", value = "", data = "";
 
@@ -582,21 +581,21 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 				continue;
 				*/
 			}
-			dprint("-- End of response.\n");
+			LOG_TRACE("-- End of response.\n");
 			url_fclose(fh);
 			break;
 		}
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			print("Player stats synchronized with server\n");
+			LOG_INFO("Player stats synchronized with server\n");
 			break;
 		}
 
 		case URL_READY_ERROR:
 		default:
 		{
-			print("Receiving player stats failed: ", ftos(status), "\n");
+			LOG_INFO("Receiving player stats failed: ", ftos(status), "\n");
 			break;
 		}
 	}
@@ -611,7 +610,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	float i = 0;
 	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
 	{
-		print(sprintf("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e))));
+		LOG_INFO(sprintf("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e))));
 		++i;
 	}
 #endif
@@ -635,7 +634,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 
 	// now actually set the event data
 	db_put(PS_D_IN_DB, sprintf("#%s", event), data);
-	dprint("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
+	LOG_TRACE("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
 }
 
 void PlayerStats_PlayerDetail(void)
@@ -648,7 +647,7 @@ void PlayerStats_PlayerDetail(void)
 			PS_D_IN_DB = db_create();
 
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
-		dprint("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri, "\n");
+		LOG_TRACE("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri, "\n");
 		url_single_fopen(
 			autocvar_g_playerstats_playerdetail_uri,
 			FILE_APPEND,
@@ -677,7 +676,7 @@ void PlayerStats_PlayerDetail_CheckUpdate(void)
 	float gamecount = cvar("cl_matchcount");
 
 	#if 0
-	printf("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d\n",
+	LOG_INFOF("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d\n",
 		time,
 		PS_D_NEXTUPDATETIME,
 		PS_D_LASTGAMECOUNT,
@@ -703,7 +702,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			dprint("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...\n");
+			LOG_TRACE("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...\n");
 			url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -776,7 +775,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 
 					default:
 					{
-						printf(
+						LOG_INFOF(
 							"PlayerStats_PlayerDetail_Handler(): ERROR: "
 							"Key went unhandled? Is our version outdated?\n"
 							"PlayerStats_PlayerDetail_Handler(): "
@@ -790,7 +789,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 				}
 
 				#if 0
-				print(sprintf(
+				LOG_INFO(sprintf(
 					"PlayerStats_PlayerDetail_Handler(): "
 					"Key '%s', Event '%s', Data '%s'\n",
 					key,
@@ -809,14 +808,14 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			print("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.\n");
+			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.\n");
 			break;
 		}
 
 		case URL_READY_ERROR:
 		default:
 		{
-			print("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status), "\n");
+			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status), "\n");
 			PlayerStats_PlayerDetail_Status = PS_D_STATUS_ERROR;
 			if(PS_D_IN_DB >= 0)
 			{

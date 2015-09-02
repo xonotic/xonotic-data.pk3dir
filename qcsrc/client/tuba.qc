@@ -4,7 +4,6 @@
 #include "../common/constants.qh"
 #include "../common/util.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 #define TUBA_STARTNOTE(i, n) W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n)))
 
@@ -164,7 +163,7 @@ void Tuba_Precache()
 	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
 	if (Tuba_PitchStep) {
 		if (!checkextension("DP_SND_SOUND7_WIP2") && !checkextension("DP_SND_SOUND7")) {
-			print("^1NOTE:^7 requested pitch shifting, but not supported by this engine build\n");
+			LOG_INFO("^1NOTE:^7 requested pitch shifting, but not supported by this engine build\n");
 			Tuba_PitchStep = 0;
 		}
 	}

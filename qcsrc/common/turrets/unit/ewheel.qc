@@ -139,7 +139,7 @@ float t_ewheel(float req)
                 _mis = turret_projectile(W_Sound("lasergun_fire"), 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, TRUE, TRUE);
                 _mis.missile_flags = MIF_SPLASH;
 
-                Send_Effect("laser_muzzleflash", self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+                Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
                 self.tur_head.frame += 2;
 
@@ -212,12 +212,12 @@ float t_ewheel(float req)
                     e = find(world, targetname, self.target);
                     if (!e)
                     {
-                        dprint("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
+                        LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
                         self.target = "";
                     }
 
                     if (e.classname != "turret_checkpoint")
-                        dprint("Warning: not a turrret path\n");
+                        LOG_TRACE("Warning: not a turrret path\n");
                     else
                     {
 

@@ -35,8 +35,8 @@ float t_mlrs(float req)
             self.tur_head.frame = bound(0, 6 - floor(0.1 + self.ammo / self.shot_dmg), 6);
             if(self.tur_head.frame < 0)
             {
-                dprint("ammo:",ftos(self.ammo),"\n");
-                dprint("shot_dmg:",ftos(self.shot_dmg),"\n");
+                LOG_TRACE("ammo:",ftos(self.ammo),"\n");
+                LOG_TRACE("shot_dmg:",ftos(self.shot_dmg),"\n");
             }
 
             return true;

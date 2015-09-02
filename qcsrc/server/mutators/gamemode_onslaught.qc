@@ -4,16 +4,6 @@
 #include "../controlpoint.qh"
 #include "../generator.qh"
 
-vector randompos(vector m1, vector m2)
-{
-	vector v;
-	m2 = m2 - m1;
-	v_x = m2_x * random() + m1_x;
-	v_y = m2_y * random() + m1_y;
-	v_z = m2_z * random() + m1_z;
-	return	v;
-}
-
 // =======================
 // CaptureShield Functions
 // =======================
@@ -89,8 +79,8 @@ void ons_debug(string input)
 {
 	switch(autocvar_g_onslaught_debug)
 	{
-		case 1: dprint(input); break;
-		case 2: print(input); break;
+		case 1: LOG_TRACE(input); break;
+		case 2: LOG_INFO(input); break;
 	}
 }
 
@@ -387,7 +377,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 		WaypointSprite_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / ONS_CP_THINKRATE));
 	self.pain_finished = time + 1;
 	// particles on every hit
-	pointparticles(particleeffectnum("sparks"), hitloc, force*-1, 1);
+	pointparticles(particleeffectnum(EFFECT_SPARKS), hitloc, force*-1, 1);
 	//sound on every hit
 	if (random() < 0.5)
 		sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE+0.3, ATTEN_NORM);
@@ -397,7 +387,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 	if (self.health < 0)
 	{
 		sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+		pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_CPDESTROYED_), self.owner.message, attacker.netname);
 
 		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
@@ -502,7 +492,7 @@ void ons_ControlPoint_Icon_Think()
 	// damaged fx
 	if(random() < 0.6 - self.health / self.max_health)
 	{
-		Send_Effect("electricity_sparks", self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
+		Send_Effect(EFFECT_ELECTRIC_SPARKS, self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
 			sound(self, CH_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTEN_NORM);
@@ -536,7 +526,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		self.owner.iscaptured = true;
 		self.solid = SOLID_BBOX;
 
-		Send_Effect(sprintf("%s_cap", Static_Team_ColorName_Lower(self.owner.team)), self.owner.origin, '0 0 0', 1);
+		Send_Effect_(sprintf("%s_cap", Static_Team_ColorName_Lower(self.owner.team)), self.owner.origin, '0 0 0', 1);
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
@@ -567,7 +557,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		setmodel_fixsize(self.owner, "models/onslaught/controlpoint_pad2.md3");
 
 	if(random() < 0.9 - self.health / self.max_health)
-		Send_Effect("rage", self.origin + 10 * randomvec(), '0 0 -1', 1);
+		Send_Effect(EFFECT_RAGE, self.origin + 10 * randomvec(), '0 0 -1', 1);
 }
 
 void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
@@ -595,7 +585,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	cp.team = e.team;
 	cp.colormap = e.colormap;
 
-	Send_Effect(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team)), e.origin, '0 0 0', 1);
+	Send_Effect_(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team)), e.origin, '0 0 0', 1);
 
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / ONS_CP_THINKRATE));
 	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
@@ -604,26 +594,25 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	onslaught_controlpoint_icon_link(e, ons_ControlPoint_Icon_BuildThink);
 }
 
-string ons_ControlPoint_Waypoint(entity e)
+entity ons_ControlPoint_Waypoint(entity e)
 {
 	if(e.team)
 	{
 		int a = ons_ControlPoint_Attackable(e, e.team);
 
-		if(a == -2) { return "ons-cp-dfnd"; } // defend now
-		if(a == -1 || a == 1 || a == 2) { return "ons-cp"; } // touch
-		if(a == 3 || a == 4) { return "ons-cp-atck"; } // attack
+		if(a == -2) { return WP_OnsCPDefend; } // defend now
+		if(a == -1 || a == 1 || a == 2) { return WP_OnsCP; } // touch
+		if(a == 3 || a == 4) { return WP_OnsCPAttack; } // attack
 	}
 	else
-		return "ons-cp";
+		return WP_OnsCP;
 
-	return "";
+	return WP_Null;
 }
 
 void ons_ControlPoint_UpdateSprite(entity e)
 {
-	string s1;
-	s1 = ons_ControlPoint_Waypoint(e);
+	entity s1 = ons_ControlPoint_Waypoint(e);
 	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
 	bool sh;
@@ -807,7 +796,7 @@ void ons_ControlPoint_Setup(entity cp)
 	}
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(string_null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE, '0 0 0');
+	WaypointSprite_SpawnFixed(WP_Null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE);
 	WaypointSprite_UpdateRule(self.sprite, self.team, SPRITERULE_TEAMPLAY);
 
 	InitializeEntity(cp, ons_DelayedControlPoint_Setup, INITPRIO_SETLOCATION);
@@ -818,16 +807,16 @@ void ons_ControlPoint_Setup(entity cp)
 // Main Generator Functions
 // =========================
 
-string ons_Generator_Waypoint(entity e)
+entity ons_Generator_Waypoint(entity e)
 {
-	if(e.isshielded)
-		return "ons-gen-shielded";
-	return "ons-gen";
+	if (e.isshielded)
+		return WP_OnsGenShielded;
+	return WP_OnsGen;
 }
 
 void ons_Generator_UpdateSprite(entity e)
 {
-	string s1 = ons_Generator_Waypoint(e);
+	entity s1 = ons_Generator_Waypoint(e);
 	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
 	if(e.lastteam != e.team + 2 || e.lastshielded != e.isshielded)
@@ -923,7 +912,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 	else
 	{
 		// particles on every hit
-		Send_Effect("sparks", hitloc, force * -1, 1);
+		Send_Effect(EFFECT_SPARKS, hitloc, force * -1, 1);
 
 		//sound on every hit
 		if (random() < 0.5)
@@ -1061,7 +1050,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	droptofloor();
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(string_null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE, '0 0 0');
+	WaypointSprite_SpawnFixed(WP_Null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE);
 	WaypointSprite_UpdateRule(self.sprite, self.team, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -1689,7 +1678,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 			{
 				if ( tele_effects )
 				{
-					Send_Effect("teleport", player.origin, '0 0 0', 1);
+					Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
 					sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 				}
 				setorigin(player, loc);
@@ -1699,7 +1688,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 				player.teleport_antispam = time + autocvar_g_onslaught_teleport_wait;
 
 				if ( tele_effects )
-					Send_Effect("teleport", player.origin + v_forward * 32, '0 0 0', 1);
+					Send_Effect(EFFECT_TELEPORT, player.origin + v_forward * 32, '0 0 0', 1);
 				return true;
 			}
 		}
@@ -2190,7 +2179,7 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 
 	MUTATOR_ONREMOVE
 	{
-		print("This is a game type and it cannot be removed at runtime.");
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
 		return -1;
 	}
 

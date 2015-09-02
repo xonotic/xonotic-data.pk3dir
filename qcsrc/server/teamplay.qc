@@ -64,7 +64,7 @@ void InitGameplayMode()
 
 	if (!cvar_value_issafe(world.fog))
 	{
-		print("The current map contains a potentially harmful fog setting, ignored\n");
+		LOG_INFO("The current map contains a potentially harmful fog setting, ignored\n");
 		world.fog = string_null;
 	}
 	if(MapInfo_Map_fog != "")
@@ -84,6 +84,7 @@ void InitGameplayMode()
 
 	if(g_dm)
 	{
+		MUTATOR_ADD(gamemode_deathmatch);
 	}
 
 	if(g_tdm)
@@ -140,6 +141,8 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_keyhunt_point_limit;
 		leadlimit_override = autocvar_g_keyhunt_point_leadlimit;
+		if(autocvar_g_keyhunt_team_spawns)
+			have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_keyhunt);
 	}
 
@@ -294,7 +297,7 @@ string getwelcomemessage(void)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstart") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -340,6 +343,12 @@ string getwelcomemessage(void)
 	if (cache_mutatormsg != "") {
 		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
 	}
+
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = ret_string;
+
+	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
 
 	motd = autocvar_sv_motd;
 	if (motd != "") {
@@ -846,7 +855,11 @@ void SV_ChangeTeam(float _color)
 		TeamchangeFrags(self);
 	}
 
-	SetPlayerTeam(self, dteam, steam, false);
+	// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
+	if(!IS_CLIENT(self))
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_CONNECTING, self.netname);
+
+	SetPlayerTeam(self, dteam, steam, !IS_CLIENT(self));
 
 	if(IS_PLAYER(self) && steam != dteam)
 	{

@@ -63,22 +63,6 @@ void pathlib_deletepath(entity start)
     }
 }
 
-float fsnap(float val,float fsize)
-{
-    return rint(val / fsize) * fsize;
-}
-
-vector vsnap(vector point,float fsize)
-{
-    vector vret;
-
-    vret.x = rint(point.x / fsize) * fsize;
-    vret.y = rint(point.y / fsize) * fsize;
-    vret.z = ceil(point.z / fsize) * fsize;
-
-    return vret;
-}
-
 float  walknode_stepsize;
 vector walknode_stepup;
 vector walknode_maxdrop;
@@ -650,7 +634,7 @@ void pathlib_close_node(entity node,vector goal)
 
     if(node.owner == closedlist)
     {
-        dprint("Pathlib: Tried to close a closed node!\n");
+        LOG_TRACE("Pathlib: Tried to close a closed node!\n");
         return;
     }
 
@@ -883,12 +867,12 @@ entity pathlib_astar(vector from,vector to)
     to.x = fsnap(to.x,pathlib_gridsize);
     to.y = fsnap(to.y,pathlib_gridsize);
 
-    dprint("AStar init. ", ftos(pathlib_scraplist_cnt), " nodes on scrap\n");
+    LOG_TRACE("AStar init. ", ftos(pathlib_scraplist_cnt), " nodes on scrap\n");
     path = pathlib_mknode(from,world);
     pathlib_close_node(path,to);
     if(pathlib_foundgoal)
     {
-        dprint("AStar: Goal found on first node!\n");
+        LOG_TRACE("AStar: Goal found on first node!\n");
 
         open           = spawn();
         open.owner     = open;
@@ -902,7 +886,7 @@ entity pathlib_astar(vector from,vector to)
 
     if(pathlib_expandnode(path,from,to) <= 0)
     {
-        dprint("AStar path fail.\n");
+        LOG_TRACE("AStar path fail.\n");
         pathlib_cleanup();
 
         return world;
@@ -929,7 +913,7 @@ entity pathlib_astar(vector from,vector to)
 
         if(pathlib_foundgoal)
         {
-            dprint("Target found. Rebuilding and filtering path...\n");
+            LOG_TRACE("Target found. Rebuilding and filtering path...\n");
             ftime = gettime(GETTIME_REALTIME);
             ptime = ftime - ptime;
 
@@ -956,32 +940,32 @@ entity pathlib_astar(vector from,vector to)
 #ifdef DEBUGPATHING
             pathlib_showpath2(start);
 
-            dprint("Time used -      pathfinding: ", ftos(ptime),"\n");
-            dprint("Time used - rebuild & filter: ", ftos(ftime),"\n");
-            dprint("Time used -          cleanup: ", ftos(ctime),"\n");
-            dprint("Time used -            total: ", ftos(ptime + ftime + ctime),"\n");
-            dprint("Time used -         # frames: ", ftos(ceil((ptime + ftime + ctime) / sys_frametime)),"\n\n");
-            dprint("Nodes -         created: ", ftos(pathlib_made_cnt),"\n");
-            dprint("Nodes -            open: ", ftos(pathlib_open_cnt),"\n");
-            dprint("Nodes -          merged: ", ftos(pathlib_merge_cnt),"\n");
-            dprint("Nodes -          closed: ", ftos(pathlib_closed_cnt),"\n");
-            dprint("Nodes -        searched: ", ftos(pathlib_searched_cnt),"\n");
+            LOG_TRACE("Time used -      pathfinding: ", ftos(ptime),"\n");
+            LOG_TRACE("Time used - rebuild & filter: ", ftos(ftime),"\n");
+            LOG_TRACE("Time used -          cleanup: ", ftos(ctime),"\n");
+            LOG_TRACE("Time used -            total: ", ftos(ptime + ftime + ctime),"\n");
+            LOG_TRACE("Time used -         # frames: ", ftos(ceil((ptime + ftime + ctime) / sys_frametime)),"\n\n");
+            LOG_TRACE("Nodes -         created: ", ftos(pathlib_made_cnt),"\n");
+            LOG_TRACE("Nodes -            open: ", ftos(pathlib_open_cnt),"\n");
+            LOG_TRACE("Nodes -          merged: ", ftos(pathlib_merge_cnt),"\n");
+            LOG_TRACE("Nodes -          closed: ", ftos(pathlib_closed_cnt),"\n");
+            LOG_TRACE("Nodes -        searched: ", ftos(pathlib_searched_cnt),"\n");
 
         if(pathlib_recycle_cnt)
-            dprint("Nodes -      make/reuse: ", ftos(pathlib_made_cnt / pathlib_recycle_cnt),"\n");
+            LOG_TRACE("Nodes -      make/reuse: ", ftos(pathlib_made_cnt / pathlib_recycle_cnt),"\n");
         if(pathlib_recycle_cnt)
-            dprint("Nodes -          reused: ", ftos(pathlib_recycle_cnt),"\n");
+            LOG_TRACE("Nodes -          reused: ", ftos(pathlib_recycle_cnt),"\n");
 
-            dprint("Nodes bestopen searched: ", ftos(pathlib_bestopen_seached),"\n");
-            dprint("Nodes bestcash -   hits: ", ftos(pathlib_bestcash_hits),"\n");
-            dprint("Nodes bestcash -   save: ", ftos(pathlib_bestcash_saved),"\n");
-            dprint("AStar done. ", ftos(pathlib_scraplist_cnt), " nodes on scrap\n\n");
+            LOG_TRACE("Nodes bestopen searched: ", ftos(pathlib_bestopen_seached),"\n");
+            LOG_TRACE("Nodes bestcash -   hits: ", ftos(pathlib_bestcash_hits),"\n");
+            LOG_TRACE("Nodes bestcash -   save: ", ftos(pathlib_bestcash_saved),"\n");
+            LOG_TRACE("AStar done. ", ftos(pathlib_scraplist_cnt), " nodes on scrap\n\n");
 #endif
             return start;
         }
     }
 
-    dprint("A* Faild to find a path! Try a smaller gridsize.\n");
+    LOG_TRACE("A* Faild to find a path! Try a smaller gridsize.\n");
 
     pathlib_cleanup();
 

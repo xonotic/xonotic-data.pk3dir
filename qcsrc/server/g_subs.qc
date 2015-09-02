@@ -187,10 +187,10 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 
 		if(c == 50)
 		{
-			dprint("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2), "\n");
-			dprint("  Nudging gets us nowhere at ", vtos(pos), "\n");
-			dprint("  trace_endpos is ", vtos(trace_endpos), "\n");
-			dprint("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
+			LOG_TRACE("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2), "\n");
+			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos), "\n");
+			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos), "\n");
+			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
 		}
 
 		stopentity = trace_ent;
@@ -278,48 +278,6 @@ vector findbetterlocation (vector org, float mindist)
 	}
 
 	return org;
-}
-
-/*
-==================
-crandom
-
-Returns a random number between -1.0 and 1.0
-==================
-*/
-float crandom (void)
-{
-	return 2 * (random () - 0.5);
-}
-
-/*
-==================
-Angc used for animations
-==================
-*/
-
-
-float angc (float a1, float a2)
-{
-	float	a;
-
-	while (a1 > 180)
-		a1 = a1 - 360;
-	while (a1 < -179)
-		a1 = a1 + 360;
-
-	while (a2 > 180)
-		a2 = a2 - 360;
-	while (a2 < -179)
-		a2 = a2 + 360;
-
-	a = a1 - a2;
-	while (a > 180)
-		a = a - 360;
-	while (a < -179)
-		a = a + 360;
-
-	return a;
 }
 
 float LOD_customize()

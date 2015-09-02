@@ -4,16 +4,6 @@ bool generator_precached;
 .int count;
 .float max_health;
 
-vector randompos(vector m1, vector m2)
-{
-	vector v;
-	m2 = m2 - m1;
-	v_x = m2_x * random() + m1_x;
-	v_y = m2_y * random() + m1_y;
-	v_z = m2_z * random() + m1_z;
-	return	v;
-}
-
 void generator_precache()
 {
 	if(generator_precached)
@@ -91,11 +81,11 @@ void generator_draw()
 		if(random() < 0.9 - self.health / self.max_health)
 		if(random() < 0.01)
 		{
-			pointparticles(particleeffectnum("electro_ballexplode"), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
+			pointparticles(particleeffectnum(EFFECT_ELECTRO_BALLEXPLODE), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
 			sound(self, CH_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);
 		}
 		else
-			pointparticles(particleeffectnum("torch_small"), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
+			pointparticles(particleeffectnum(EFFECT_ONS_GENERATOR_DAMAGED), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
 
 		self.move_time = time + 0.1;
 
@@ -112,7 +102,7 @@ void generator_draw()
 	if(self.count==40||self.count==20)
 	{
 		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 6);
+		pointparticles(particleeffectnum(EFFECT_ELECTRO_COMBO), self.origin, '0 0 0', 6);
 	}
 
 	// rays
@@ -125,7 +115,7 @@ void generator_draw()
 	for(i=0;i < 10;++i)
 	{
 		org = self.origin + randompos('-30 -30 -30' * i + '0 0 -20', '30 30 30' * i + '0 0 20');
-		pointparticles(particleeffectnum("onslaught_generator_gib_explode"), org, '0 0 0', 1);
+		pointparticles(particleeffectnum(EFFECT_ONS_GENERATOR_GIB), org, '0 0 0', 1);
 	}
 
 	// Short explosion sound + small explosion
@@ -137,14 +127,14 @@ void generator_draw()
 
 	// Particles
 	org = self.origin + randompos(self.mins + '8 8 8', self.maxs + '-8 -8 -8');
-	pointparticles(particleeffectnum("onslaught_generator_smallexplosion"), org, '0 0 0', 1);
+	pointparticles(particleeffectnum(EFFECT_ONS_GENERATOR_EXPLODE), org, '0 0 0', 1);
 
 	// Final explosion
 	if(self.count==1)
 	{
 		org = self.origin;
 		te_explosion(org);
-		pointparticles(particleeffectnum("onslaught_generator_finalexplosion"), org, '0 0 0', 1);
+		pointparticles(particleeffectnum(EFFECT_ONS_GENERATOR_EXPLODE2), org, '0 0 0', 1);
 		sound(self, CH_TRIGGER, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	}
 

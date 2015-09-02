@@ -1,0 +1,236 @@
+#ifndef WAYPOINTSPRITES_H
+#define WAYPOINTSPRITES_H
+
+#include "all.qh"
+
+/** Additional networked waypoint state, used for items, weapons, buffs */
+.int wp_extra;
+
+#ifdef CSQC
+entityclass(WaypointSprite);
+class(WaypointSprite) .float helpme;
+class(WaypointSprite) .float rule;
+class(WaypointSprite) .string netname; // primary picture
+class(WaypointSprite) .string netname2; // secondary picture
+class(WaypointSprite) .string netname3; // tertiary picture
+class(WaypointSprite) .int team; // team that gets netname2
+class(WaypointSprite) .float lifetime;
+class(WaypointSprite) .float fadetime;
+class(WaypointSprite) .float maxdistance;
+class(WaypointSprite) .int hideflags;
+class(WaypointSprite) .float spawntime;
+class(WaypointSprite) .float health;
+class(WaypointSprite) .float build_started;
+class(WaypointSprite) .float build_starthealth;
+class(WaypointSprite) .float build_finished;
+
+bool autocvar_g_waypointsprite_uppercase;
+float autocvar_g_waypointsprite_alpha;
+float autocvar_g_waypointsprite_crosshairfadealpha;
+float autocvar_g_waypointsprite_crosshairfadedistance;
+float autocvar_g_waypointsprite_crosshairfadescale;
+float autocvar_g_waypointsprite_distancealphaexponent;
+float autocvar_g_waypointsprite_distancefadealpha;
+float autocvar_g_waypointsprite_distancefadedistancemultiplier;
+float autocvar_g_waypointsprite_distancefadescale;
+float autocvar_g_waypointsprite_edgefadealpha;
+float autocvar_g_waypointsprite_edgefadedistance;
+float autocvar_g_waypointsprite_edgefadescale;
+float autocvar_g_waypointsprite_edgeoffset_bottom;
+float autocvar_g_waypointsprite_edgeoffset_left;
+float autocvar_g_waypointsprite_edgeoffset_right;
+float autocvar_g_waypointsprite_edgeoffset_top;
+float autocvar_g_waypointsprite_fontsize;
+int autocvar_g_waypointsprite_itemstime;
+float autocvar_g_waypointsprite_minalpha;
+float autocvar_g_waypointsprite_minscale;
+float autocvar_g_waypointsprite_normdistance;
+float autocvar_g_waypointsprite_scale;
+int autocvar_g_waypointsprite_spam;
+float autocvar_g_waypointsprite_timealphaexponent;
+bool autocvar_g_waypointsprite_turrets = true;
+float autocvar_g_waypointsprite_turrets_maxdist = 5000;
+
+float waypointsprite_fadedistance;
+float waypointsprite_normdistance;
+float waypointsprite_minscale;
+float waypointsprite_minalpha;
+float waypointsprite_distancealphaexponent;
+float waypointsprite_timealphaexponent;
+float waypointsprite_scale;
+float waypointsprite_fontsize;
+float waypointsprite_edgefadealpha;
+float waypointsprite_edgefadescale;
+float waypointsprite_edgefadedistance;
+float waypointsprite_edgeoffset_bottom;
+float waypointsprite_edgeoffset_left;
+float waypointsprite_edgeoffset_right;
+float waypointsprite_edgeoffset_top;
+float waypointsprite_crosshairfadealpha;
+float waypointsprite_crosshairfadescale;
+float waypointsprite_crosshairfadedistance;
+float waypointsprite_distancefadealpha;
+float waypointsprite_distancefadescale;
+float waypointsprite_distancefadedistance;
+float waypointsprite_alpha;
+
+const float SPRITE_HEALTHBAR_WIDTH = 144;
+const float SPRITE_HEALTHBAR_HEIGHT = 9;
+const float SPRITE_HEALTHBAR_MARGIN = 6;
+const float SPRITE_HEALTHBAR_BORDER = 2;
+const float SPRITE_HEALTHBAR_BORDERALPHA = 1;
+const float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
+const float SPRITE_ARROW_SCALE = 1.0;
+const float SPRITE_HELPME_BLINK = 2;
+
+float waypointsprite_count, waypointsprite_newcount;
+
+void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f);
+
+void drawquad(vector o, vector ri, vector up, string pic, vector rgb, float a, float f);
+
+void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, float width, float height, float margin, float border, float align, vector rgb, float a, vector hrgb, float ha, float f);
+
+// returns location of sprite text
+vector drawspritearrow(vector o, float ang, vector rgb, float a, float t);
+
+// returns location of sprite healthbar
+vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s);
+
+float spritelookupblinkvalue(string s);
+vector spritelookupcolor(string s, vector def);
+string spritelookuptext(string s);
+
+vector fixrgbexcess_move(vector rgb, vector src, vector dst);
+vector fixrgbexcess(vector rgb);
+
+// they are drawn using a .draw function
+
+void Ent_RemoveWaypointSprite();
+
+void Ent_WaypointSprite();
+
+void WaypointSprite_Load_Frames(string ext);
+
+void WaypointSprite_Load();
+.float alpha;
+void Draw_WaypointSprite();
+#endif
+
+#ifdef SVQC
+float autocvar_sv_waypointsprite_deadlifetime;
+float autocvar_sv_waypointsprite_deployed_lifetime;
+float autocvar_sv_waypointsprite_limitedrange;
+
+..entity owned_by_field;
+.float rule;
+.string model1;
+.string model2;
+.string model3;
+
+.float(entity) waypointsprite_visible_for_player;
+
+void WaypointSprite_UpdateSprites(entity e, entity m1, entity m2, entity m3);
+
+void WaypointSprite_UpdateHealth(entity e, float f);
+
+void WaypointSprite_UpdateMaxHealth(entity e, float f);
+
+void WaypointSprite_UpdateBuildFinished(entity e, float f);
+
+void WaypointSprite_UpdateOrigin(entity e, vector o);
+
+void WaypointSprite_UpdateRule(entity e, float t, float r);
+
+void WaypointSprite_UpdateTeamRadar(entity e, float icon, vector col);
+
+.float waypointsprite_pingtime;
+.float waypointsprite_helpmetime;
+void WaypointSprite_Ping(entity e);
+
+float waypointsprite_limitedrange, waypointsprite_deployed_lifetime, waypointsprite_deadlifetime;
+
+void WaypointSprite_HelpMePing(entity e);
+
+void WaypointSprite_FadeOutIn(entity e, float t);
+
+void WaypointSprite_Init();
+void WaypointSprite_InitClient(entity e);
+
+void WaypointSprite_Kill(entity wp);
+
+void WaypointSprite_Disown(entity wp, float fadetime);
+
+void WaypointSprite_Think();
+
+float WaypointSprite_visible_for_player(entity e);
+
+entity WaypointSprite_getviewentity(entity e);
+
+float WaypointSprite_isteammate(entity e, entity e2);
+
+float WaypointSprite_Customize();
+
+float WaypointSprite_SendEntity(entity to, float sendflags);
+
+void WaypointSprite_Reset();
+
+entity WaypointSprite_Spawn(
+    entity spr, // sprite
+    float lifetime, float maxdistance, // lifetime, max distance
+    entity ref, vector ofs, // position
+    entity showto, float t, // show to whom? Use a flag to indicate a team
+    entity own, .entity ownfield, // remove when own gets killed
+    float hideable, // true when it should be controlled by cl_hidewaypoints
+    float icon // initial icon
+);
+
+entity WaypointSprite_SpawnFixed(
+    entity spr,
+    vector ofs,
+    entity own,
+    .entity ownfield,
+    float icon // initial icon
+);
+
+.entity waypointsprite_deployed_fixed;
+entity WaypointSprite_DeployFixed(
+    entity spr,
+    float limited_range,
+    vector ofs,
+    float icon // initial icon
+);
+
+.entity waypointsprite_deployed_personal;
+entity WaypointSprite_DeployPersonal(
+    entity spr,
+    vector ofs,
+    float icon // initial icon
+);
+
+.entity waypointsprite_attached;
+.entity waypointsprite_attachedforcarrier;
+entity WaypointSprite_Attach(
+    entity spr,
+    float limited_range,
+    float icon // initial icon
+);
+
+entity WaypointSprite_AttachCarrier(
+    entity spr,
+    entity carrier,
+    float icon // initial icon
+);
+
+void WaypointSprite_DetachCarrier(entity carrier);
+
+void WaypointSprite_ClearPersonal();
+
+void WaypointSprite_ClearOwned();
+
+void WaypointSprite_PlayerDead();
+
+void WaypointSprite_PlayerGone();
+#endif
+
+#endif

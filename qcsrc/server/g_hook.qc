@@ -90,7 +90,7 @@ void GrapplingHookReset(void)
 void GrapplingHookThink();
 void GrapplingHook_Stop()
 {
-	Send_Effect("grapple_impact", self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_HOOK_IMPACT, self.origin, '0 0 0', 1);
 	sound (self, CH_SHOTS, W_Sound("hook_impact"), VOL_BASE, ATTEN_NORM);
 
 	self.state = 1;
@@ -138,7 +138,7 @@ void GrapplingHookThink()
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self) || intermission_running || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
+	if(LostMovetypeFollow(self) || intermission_running || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || ((self.aiment.flags & FL_PROJECTILE) && self.aiment.classname != "nade"))
 	{
 		RemoveGrapplingHook(self.realowner);
 		return;
@@ -160,6 +160,14 @@ void GrapplingHookThink()
 
 	if(self.hook_length < 0)
 		self.hook_length = vlen(myorg - self.origin);
+
+	int tarzan = autocvar_g_grappling_hook_tarzan;
+	entity pull_entity = self.realowner;
+	float velocity_multiplier = 1;
+	MUTATOR_CALLHOOK(GrappleHookThink, self, tarzan, pull_entity, velocity_multiplier);
+	tarzan = hook_tarzan;
+	pull_entity = hook_pullentity;
+	velocity_multiplier = hook_velmultiplier;
 
 	if(self.state == 1)
 	{
@@ -184,13 +192,15 @@ void GrapplingHookThink()
 		// while hanging on the rope, this friction component will help you a
 		// bit to control the rope
 
+		bool frozen_pulling = (autocvar_g_grappling_hook_tarzan >= 2 && autocvar_g_balance_grapplehook_pull_frozen);
+
 		dir = self.origin - myorg;
 		dist = vlen(dir);
 		dir = normalize(dir);
 
-		if(autocvar_g_grappling_hook_tarzan)
+		if(tarzan)
 		{
-			v = v0 = WarpZone_RefSys_TransformVelocity(self.realowner, self, self.realowner.velocity);
+			v = v0 = WarpZone_RefSys_TransformVelocity(pull_entity, self, pull_entity.velocity);
 
 			// first pull the rope...
 			if(self.realowner.hook_state & HOOK_PULLING)
@@ -208,6 +218,9 @@ void GrapplingHookThink()
 				self.hook_length = newlength;
 			}
 
+			if(pull_entity.movetype == MOVETYPE_FLY)
+				pull_entity.movetype = MOVETYPE_WALK;
+
 			if(self.realowner.hook_state & HOOK_RELEASING)
 			{
 				newlength = dist;
@@ -221,23 +234,38 @@ void GrapplingHookThink()
 				v = v + frametime * dir * spd * rubberforce;
 
 				dv = ((v - v0) * dir) * dir;
-				if(autocvar_g_grappling_hook_tarzan >= 2)
+				if(tarzan >= 2)
 				{
-					if(self.aiment.movetype == MOVETYPE_WALK)
+					if(self.aiment.movetype == MOVETYPE_WALK || self.aiment.classname == "nade")
 					{
+						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
-						self.aiment.velocity = self.aiment.velocity - dv * 0.5;
-						self.aiment.flags &= ~FL_ONGROUND;
-						self.aiment.pusher = self.realowner;
-						self.aiment.pushltime = time + autocvar_g_maxpushtime;
-						self.aiment.istypefrag = self.aiment.BUTTON_CHAT;
+						if((frozen_pulling && self.aiment.frozen) || !frozen_pulling)
+						{
+							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
+							self.aiment.flags &= ~FL_ONGROUND;
+							if(self.aiment.flags & FL_PROJECTILE)
+								UpdateCSQCProjectile(self.aiment);
+						}
+						if(self.aiment.classname == "nade")
+							self.aiment.nextthink = time + autocvar_g_balance_grapplehook_nade_time; // set time after letting go?
+						aim_ent.pusher = self.realowner;
+						aim_ent.pushltime = time + autocvar_g_maxpushtime;
+						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;
 					}
 				}
 
-				self.realowner.flags &= ~FL_ONGROUND;
+				pull_entity.flags &= ~FL_ONGROUND;
 			}
 
-			self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
+			if(!frozen_pulling && !(self.aiment.flags & FL_PROJECTILE))
+				pull_entity.velocity = WarpZone_RefSys_TransformVelocity(self, pull_entity, v * velocity_multiplier);
+
+			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !self.aiment.frozen)
+			{
+				RemoveGrapplingHook(self.realowner);
+				return;
+			}
 		}
 		else
 		{
@@ -273,6 +301,8 @@ void GrapplingHookThink()
 
 void GrapplingHookTouch (void)
 {
+	if(other.movetype == MOVETYPE_FOLLOW)
+		return;
 	PROJECTILE_TOUCH;
 
 	GrapplingHook_Stop();
@@ -333,7 +363,7 @@ void FireGrapplingHook (void)
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
 	org = trace_endpos;
 
-	Send_Effect("grapple_muzzleflash", org, '0 0 0', 1);
+	Send_Effect(EFFECT_HOOK_MUZZLEFLASH, org, '0 0 0', 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
@@ -342,7 +372,7 @@ void FireGrapplingHook (void)
 	missile.classname = "grapplinghook";
 	missile.flags = FL_PROJECTILE;
 
-	missile.movetype = MOVETYPE_FLY;
+	missile.movetype = ((autocvar_g_balance_grapplehook_gravity) ? MOVETYPE_TOSS : MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	//setmodel (missile, "models/hook.md3"); // precision set below
@@ -394,7 +424,7 @@ void FireGrapplingHook (void)
 
 void GrapplingHookFrame()
 {
-	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id)
+	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id && !self.vehicle)
 	{
 		// offhand hook controls
 		if(self.BUTTON_HOOK)
@@ -412,7 +442,7 @@ void GrapplingHookFrame()
 		}
 
 		self.hook_state &= ~HOOK_RELEASING;
-		if(self.BUTTON_CROUCH)
+		if(self.BUTTON_CROUCH && autocvar_g_balance_grapplehook_crouchslide)
 		{
 			self.hook_state &= ~HOOK_PULLING;
 			//self.hook_state |= HOOK_RELEASING;
@@ -423,7 +453,7 @@ void GrapplingHookFrame()
 			//self.hook_state &= ~HOOK_RELEASING;
 		}
 	}
-	else if(!g_grappling_hook && self.switchweapon != WEP_HOOK.m_id)
+	else if(!g_grappling_hook && self.switchweapon != WEP_HOOK.m_id && !self.vehicle)
 	{
 		if(self.BUTTON_HOOK && !self.hook_switchweapon)
 			W_SwitchWeapon(WEP_HOOK.m_id);

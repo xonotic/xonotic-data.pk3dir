@@ -552,15 +552,16 @@ bool PlayerJump (void)
 
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY;
-
-#ifdef SVQC
-	if (MUTATOR_CALLHOOK(PlayerJump, doublejump, mjumpheight))
-#elif defined(CSQC)
+#ifdef CSQC
 	player_multijump = doublejump;
 	player_jumpheight = mjumpheight;
-	if (PM_multijump_checkjump())
 #endif
-		return true;
+
+	if (MUTATOR_CALLHOOK(PlayerJump, doublejump, mjumpheight)
+#ifdef CSQC
+		|| PM_multijump_checkjump()
+#endif
+		) { return true; }
 
 	doublejump = player_multijump;
 	mjumpheight = player_jumpheight;
@@ -624,7 +625,7 @@ bool PlayerJump (void)
 	{
 #ifdef SVQC
 		if(autocvar_speedmeter)
-			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
+			LOG_TRACE(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
 #endif
 		if(self.lastground < time - 0.3)
 		{
@@ -633,7 +634,7 @@ bool PlayerJump (void)
 		}
 #ifdef SVQC
 		if(self.jumppadcount > 1)
-			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
+			LOG_TRACE(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
 #endif
 	}
@@ -970,17 +971,8 @@ void SpecialCommand()
 	TetrisImpulse();
 #else
 	if (!CheatImpulse(99))
-		print("A hollow voice says \"Plugh\".\n");
+		LOG_INFO("A hollow voice says \"Plugh\".\n");
 #endif
-#endif
-}
-
-float PM_check_keepaway(void)
-{
-#ifdef SVQC
-	return (self.ballcarried && g_keepaway) ? autocvar_g_keepaway_ballcarrier_highspeed : 1;
-#else
-	return 1;
 #endif
 }
 
@@ -1483,13 +1475,13 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 	{
 #ifdef SVQC
 		if (autocvar_speedmeter)
-			dprint(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
+			LOG_TRACE(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
 #endif
 		if (self.lastground < time - 0.3)
 			self.velocity *= (1 - PHYS_FRICTION_ONLAND);
 #ifdef SVQC
 		if (self.jumppadcount > 1)
-			dprint(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
+			LOG_TRACE(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
 		self.jumppadcount = 0;
 #endif
 	}
@@ -1674,7 +1666,6 @@ void PM_Main()
 	WarpZone_PlayerPhysics_FixVAngle();
 #endif
 	float maxspeed_mod = 1;
-	maxspeed_mod *= PM_check_keepaway();
 	maxspeed_mod *= PHYS_HIGHSPEED;
 
 #ifdef SVQC

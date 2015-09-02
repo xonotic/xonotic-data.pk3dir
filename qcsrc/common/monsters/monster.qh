@@ -3,7 +3,6 @@
 
 bool m_null(int) { return false; }
 
-#include "../oo.qh"
 /** If you register a new monster, make sure to add it to all.inc */
 CLASS(Monster, Object)
     ATTRIB(Monster, monsterid, int, 0)

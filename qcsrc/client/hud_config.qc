@@ -209,17 +209,19 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_text");
 					HUD_Write_PanelCvar_q("_ratio");
 					HUD_Write_PanelCvar_q("_dynamicsize");
+				case HUD_PANEL_QUICKMENU:
+					HUD_Write_PanelCvar_q("_align");
 					break;
 			}
 			HUD_Write("\n");
 		}
 		HUD_Write("menu_sync\n"); // force the menu to reread the cvars, so that the dialogs are updated
 
-		printf(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename);
+		LOG_INFOF(_("^2Successfully exported to %s! (Note: It's saved in data/data/)\n"), filename);
 		fclose(fh);
 	}
 	else
-		printf(_("^1Couldn't write to %s\n"), filename);
+		LOG_INFOF(_("^1Couldn't write to %s\n"), filename);
 }
 
 void HUD_Configure_Exit_Force()
