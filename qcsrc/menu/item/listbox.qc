@@ -171,7 +171,7 @@ float ListBox_keyDown(entity me, float key, float ascii, float shift)
 	}
 	else if(key == K_MWHEELDOWN)
 	{
-		me.scrollPosTarget = min(me.scrollPosTarget + 0.5, me.getTotalHeight(me) - 1);
+		me.scrollPosTarget = min(me.scrollPosTarget + 0.5, max(0, me.getTotalHeight(me) - 1));
 	}
 	else if(key == K_PGUP || key == K_KP_PGUP)
 	{
