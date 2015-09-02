@@ -217,8 +217,8 @@ const int STAT_CTF_FLAGSTATUS         = 124;
 // 163 empty?
 // 164 empty?
 // 165 empty?
-// 166 empty?
-// 167 empty?
+const int STAT_MULTIJUMP_DODGING                      = 166;
+const int STAT_MULTIJUMP_MAXSPEED                     = 167;
 const int STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND   = 168;
 const int STAT_BUGRIGS_REVERSE_STOPPING               = 169;
 const int STAT_BUGRIGS_REVERSE_SPINNING               = 170;

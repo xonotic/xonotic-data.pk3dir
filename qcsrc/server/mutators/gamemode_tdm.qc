@@ -10,7 +10,7 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 void spawnfunc_tdm_team()
 {SELFPARAM();
-	if(!g_tdm) { remove(self); return; }
+	if(!g_tdm || !self.cnt) { remove(self); return; }
 
 	self.classname = "tdm_team";
 	self.team = self.cnt + 1;
@@ -36,7 +36,7 @@ void tdm_DelayedInit()
 	{
 		LOG_INFO("No ""tdm_team"" entities found on this map, creating them anyway.\n");
 
-		float numteams = min(4, autocvar_g_tdm_teams_override);
+		int numteams = min(4, autocvar_g_tdm_teams_override);
 
 		if(numteams < 2) { numteams = autocvar_g_tdm_teams; }
 		numteams = bound(2, numteams, 4);

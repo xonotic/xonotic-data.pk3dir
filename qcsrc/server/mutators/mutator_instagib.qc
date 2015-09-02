@@ -249,12 +249,17 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 
 	if(IS_PLAYER(frag_target))
 	{
-		if ((frag_deathtype == DEATH_FALL)  ||
-			(frag_deathtype == DEATH_DROWN) ||
-			(frag_deathtype == DEATH_SLIME) ||
-			(frag_deathtype == DEATH_LAVA))
+		if(frag_deathtype == DEATH_FALL)
+			frag_damage = 0; // never count fall damage
+
+		if(!autocvar_g_instagib_damagedbycontents)
+		switch(frag_deathtype)
 		{
-			frag_damage = 0;
+			case DEATH_DROWN:
+			case DEATH_SLIME:
+			case DEATH_LAVA:
+				frag_damage = 0;
+				break;
 		}
 
 		if(IS_PLAYER(frag_attacker))
@@ -337,6 +342,9 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	{
 		entity e = spawn();
 		setorigin(e, self.origin);
+		e.noalign = self.noalign;
+        e.cnt = self.cnt;
+        e.team = self.team;
 		SELFCALL(e, spawnfunc_item_minst_cells());
 		SELFCALL_DONE();
 		return true;

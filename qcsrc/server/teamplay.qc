@@ -141,6 +141,8 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_keyhunt_point_limit;
 		leadlimit_override = autocvar_g_keyhunt_point_leadlimit;
+		if(autocvar_g_keyhunt_team_spawns)
+			have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_keyhunt);
 	}
 
@@ -296,7 +298,7 @@ string getwelcomemessage(void)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstart") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -342,6 +344,12 @@ string getwelcomemessage(void)
 	if (cache_mutatormsg != "") {
 		s = strcat(s, "\n\n^8special gameplay tips: ^7", cache_mutatormsg);
 	}
+
+	string mutator_msg = "";
+	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
+	mutator_msg = ret_string;
+
+	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
 
 	motd = autocvar_sv_motd;
 	if (motd != "") {

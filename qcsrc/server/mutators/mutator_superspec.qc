@@ -388,15 +388,18 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			return true;
 
 		entity _player;
-		float _team = 0;
-		float found = false;
+		int _team = 0;
+		bool found = false;
 
 		if(cmd_argc == 2)
 		{
-			if(argv(1) == "red")
-				_team = NUM_TEAM_1;
-			else
-				_team = NUM_TEAM_2;
+			switch(argv(1))
+			{
+				case "red": _team = NUM_TEAM_1; break;
+				case "blue": _team = NUM_TEAM_2; break;
+				case "yellow": if(ctf_teams >= 3) _team = NUM_TEAM_3; break;
+				case "pink": if(ctf_teams >= 4) _team = NUM_TEAM_4; break;
+			}
 		}
 
 		FOR_EACH_PLAYER(_player)
