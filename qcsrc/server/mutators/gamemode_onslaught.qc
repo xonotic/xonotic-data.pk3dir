@@ -1701,8 +1701,7 @@ MUTATOR_HOOKFUNCTION(ons_ResetMap)
 	{
 		e.ons_roundlost = false;
 		e.ons_deathloc = '0 0 0';
-		SELFCALL(e, PutClientInServer());
-		SELFCALL_DONE();
+		WITH(entity, self, e, PutClientInServer());
 	}
 	return false;
 }

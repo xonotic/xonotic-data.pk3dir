@@ -24,8 +24,7 @@ void defer_think()
 {SELFPARAM();
     self.think     = SUB_Remove;
     self.nextthink = time;
-    SELFCALL(self.owner, self.use());
-    SELFCALL_DONE();
+    WITH(entity, self, self.owner, self.use());
 }
 
 /*

@@ -631,8 +631,7 @@ void PutClientInServer()
 		string s = spot.target;
 		spot.target = string_null;
 		activator = self;
-		SELFCALL(spot, SUB_UseTargets());
-		SELFCALL_DONE();
+		WITH(entity, self, spot, SUB_UseTargets());
 		activator = world;
 		spot.target = s;
 
@@ -736,8 +735,7 @@ void ClientInit_Spawn()
 	e.think = ClientInit_CheckUpdate;
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 
-	SELFCALL(e, ClientInit_CheckUpdate());
-	SELFCALL_DONE();
+	WITH(entity, self, e, ClientInit_CheckUpdate());
 }
 
 /*
@@ -847,8 +845,7 @@ void KillIndicator_Think()
 
 	if(self.cnt <= 0)
 	{
-		SELFCALL(self.owner, ClientKill_Now());
-		SELFCALL_DONE();
+		WITH(entity, self, self.owner, ClientKill_Now());
 		return;
 	}
     else if(g_cts && self.health == 1) // health == 1 means that it's silent
@@ -1261,8 +1258,7 @@ void ClientConnect (void)
 		sv_notice_join();
 
 	for (entity e = world; (e = findfloat(e, init_for_player_needed, 1)); ) {
-		SELFCALL(e, e.init_for_player(this));
-		SELFCALL_DONE();
+		WITH(entity, self, e, e.init_for_player(this));
 	}
 
 	MUTATOR_CALLHOOK(ClientConnect, self);

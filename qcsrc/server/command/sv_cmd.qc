@@ -209,8 +209,7 @@ void GameCommand_allspec(float request, float argc)
 			{
 				if (client.caplayer)
 					client.caplayer = 0;
-				SELFCALL(client, PutObserverInServer());
-				SELFCALL_DONE();
+				WITH(entity, self, client, PutObserverInServer());
 				++i;
 			}
 			if(i) { bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n")); }
@@ -240,8 +239,7 @@ void GameCommand_anticheat(float request, float argc)
 
 			if(accepted > 0)
 			{
-				SELFCALL(client, anticheat_report());
-				SELFCALL_DONE();
+				WITH(entity, self, client, anticheat_report());
 				return;
 			}
 			else
@@ -1041,8 +1039,7 @@ void GameCommand_moveplayer(float request, float argc)
 						{
 							if (client.caplayer)
 								client.caplayer = 0;
-							SELFCALL(client, PutObserverInServer());
-							SELFCALL_DONE();
+							WITH(entity, self, client, PutObserverInServer());
 
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
 						}
@@ -1194,8 +1191,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						SELFCALL(client, playerdemo_open_read(argv(next_token)));
-						SELFCALL_DONE();
+						WITH(entity, self, client, playerdemo_open_read(argv(next_token)));
 						return;
 					}
 
@@ -1210,8 +1206,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						SELFCALL(client, playerdemo_open_write(argv(next_token)));
-						SELFCALL_DONE();
+						WITH(entity, self, client, playerdemo_open_write(argv(next_token)));
 						return;
 					}
 

@@ -141,8 +141,7 @@ void W_Blaster_Attack(
 
 	if(time >= missile.nextthink)
 	{
-		SELFCALL(missile, missile.think());
-		SELFCALL_DONE();
+		WITH(entity, self, missile, missile.think());
 	}
 }
 bool W_Blaster(int request)

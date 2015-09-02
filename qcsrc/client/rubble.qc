@@ -39,8 +39,7 @@ void RubbleLimit(string cname, float limit, void() deleteproc)
 			break;
 
 		// delete this oldest one and search again
-		SELFCALL(oldest, deleteproc());
-		SELFCALL_DONE();
+		WITH(entity, self, oldest, deleteproc());
 	}
 }
 

@@ -98,8 +98,7 @@ void misc_laser_think()
 				self.count = 1;
 
 				activator = self.enemy.pusher;
-				SELFCALL(self.enemy, SUB_UseTargets());
-				SELFCALL_DONE();
+				WITH(entity, self, self.enemy, SUB_UseTargets());
 			}
 		}
 		else
@@ -109,8 +108,7 @@ void misc_laser_think()
 				self.count = 0;
 
 				activator = self.enemy.pusher;
-				SELFCALL(self.enemy, SUB_UseTargets());
-				SELFCALL_DONE();
+				WITH(entity, self, self.enemy, SUB_UseTargets());
 			}
 		}
 	}

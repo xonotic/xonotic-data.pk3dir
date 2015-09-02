@@ -1467,8 +1467,7 @@ void CSQC_UpdateView(float w, float h)
 	 */
 
 	for(entity e = NULL; (e = nextent(e)); ) if (e.draw) {
-		SELFCALL(e, e.draw());
-		SELFCALL_DONE();
+		WITH(entity, self, e, e.draw());
 	}
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
@@ -1805,8 +1804,7 @@ void CSQC_UpdateView(float w, float h)
 
 	// draw 2D entities
 	for (entity e = NULL; (e = nextent(e)); ) if (e.draw2d) {
-		SELFCALL(e, e.draw2d());
-		SELFCALL_DONE();
+		WITH(entity, self, e, e.draw2d());
 	}
 	Draw_ShowNames_All();
 

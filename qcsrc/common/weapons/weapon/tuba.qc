@@ -336,8 +336,7 @@ void W_Tuba_NoteOn(float hittype)
 	{
 		if(self.tuba_note.cnt != n || self.tuba_note.tuba_instrument != self.tuba_instrument)
 		{
-			SELFCALL(self.tuba_note, W_Tuba_NoteOff());
-			SELFCALL_DONE();
+			WITH(entity, self, self.tuba_note, W_Tuba_NoteOff());
 		}
 	}
 
@@ -404,8 +403,7 @@ bool W_Tuba(int req)
 			{
 				if(!self.BUTTON_ATCK && !self.BUTTON_ATCK2)
 				{
-					SELFCALL(self.tuba_note, W_Tuba_NoteOff());
-					SELFCALL_DONE();
+					WITH(entity, self, self.tuba_note, W_Tuba_NoteOff());
 				}
 			}
 

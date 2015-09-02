@@ -345,8 +345,7 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 		e.noalign = self.noalign;
         e.cnt = self.cnt;
         e.team = self.team;
-		SELFCALL(e, spawnfunc_item_minst_cells());
-		SELFCALL_DONE();
+		WITH(entity, self, e, spawnfunc_item_minst_cells());
 		return true;
 	}
 

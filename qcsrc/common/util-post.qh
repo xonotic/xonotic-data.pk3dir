@@ -3,13 +3,18 @@
 
 [[alias("self")]] entity __self;
 
+#define WITH(type, name, value, block) do { \
+    type __with_save = (name); \
+    name = (value); \
+    LAMBDA(block) \
+    name = __with_save; \
+} while (0)
+
 // Step 1: auto oldself
 #if 1
 #define SELFPARAM() noref entity this = __self
 #define setself(s) (__self = s)
 #define self __self
-#define SELFCALL(s, f) (__self = s, f)
-#define SELFCALL_DONE() (__self = this)
 #endif
 
 // Step 2: check SELFPARAM() is present for functions that use self
@@ -17,8 +22,6 @@
 #define SELFPARAM() [[alias("__self")]] noref entity this = __self
 #define setself(s) (__self = s)
 #define self this
-#define SELFCALL(s, f) (this = s, f)
-#define SELFCALL_DONE() (this = this)
 #endif
 
 // Step 3: const self
@@ -27,16 +30,12 @@
 entity setself(entity e) { return self = e; }
 entity getself() { return self; }
 #define self getself()
-#define SELFCALL(s, f) (__self = s, f)
-#define SELFCALL_DONE() (__self = this)
 #endif
 
 // Step 4: enable when possible
 #if 0
 #define SELFPARAM() noref const entity this = __self
 #define self this
-#define SELFCALL(s, f) (__self = s, f)
-#define SELFCALL_DONE() (__self = this)
 #endif
 
 #define spawn() new(entity)

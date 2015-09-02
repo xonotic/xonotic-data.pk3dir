@@ -41,8 +41,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
 	FOR_EACH_CLIENT(e)
 	if(IS_PLAYER(e))
 	{
-		SELFCALL(e, PlayerScore_Add(e, SP_LMS_LIVES, LMS_NewPlayerLives()));
-		SELFCALL_DONE();
+		WITH(entity, self, e, PlayerScore_Add(e, SP_LMS_LIVES, LMS_NewPlayerLives()));
 	}
 
 	return false;

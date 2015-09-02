@@ -531,8 +531,7 @@ void RandomSeed_Spawn()
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	SELFCALL(randomseed, randomseed.think()); // sets random seed and nextthink
-	SELFCALL_DONE();
+	WITH(entity, self, randomseed, randomseed.think()); // sets random seed and nextthink
 }
 
 void spawnfunc___init_dedicated_server(void)
@@ -1724,8 +1723,7 @@ float WinningCondition_Assault()
 			}
 			else
 			{
-				SELFCALL(ent, assault_new_round());
-				SELFCALL_DONE();
+				WITH(entity, self, ent, assault_new_round());
 			}
 		}
 	}

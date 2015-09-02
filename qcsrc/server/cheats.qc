@@ -372,8 +372,7 @@ float CheatCommand(float argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					SELFCALL(e, spawnfunc_func_breakable());
-					SELFCALL_DONE();
+					WITH(entity, self, e, spawnfunc_func_breakable());
 					// now, is it valid?
 					if(f == 0)
 					{

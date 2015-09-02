@@ -74,8 +74,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 	}
 
-	SELFCALL(wep, weapon_defaultspawnfunc(wpn));
-	SELFCALL_DONE();
+	WITH(entity, self, wep, weapon_defaultspawnfunc(wpn));
 	if(startitem_failed)
 		return string_null;
 	wep.glowmod = own.weaponentity_glowmod;

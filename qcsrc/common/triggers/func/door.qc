@@ -273,8 +273,7 @@ void door_use()
 
 	if (self.owner)
 	{
-		SELFCALL(self.owner, door_fire());
-		SELFCALL_DONE();
+		WITH(entity, self, self.owner, door_fire());
 	}
 }
 
@@ -295,8 +294,7 @@ void door_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	{
 		self.owner.health = self.owner.max_health;
 		self.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
-		SELFCALL(self.owner, door_use());
-		SELFCALL_DONE();
+		WITH(entity, self, self.owner, door_use());
 	}
 }
 

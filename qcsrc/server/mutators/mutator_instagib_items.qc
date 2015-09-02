@@ -1,8 +1,5 @@
 #include "../../common/items/item.qh"
 
-#define WITH(it) this.m_##it;
-#define CONFIGURE(...) MAP(WITH, __VA_ARGS__)
-
 float instagib_respawntime_ammo = 45;
 float instagib_respawntimejitter_ammo = 0;
 GETTER(float, instagib_respawntime_ammo)
@@ -31,6 +28,3 @@ REGISTER_ITEM(ExtraLife, Powerup) {
     this.m_botvalue             =   BOT_PICKUP_RATING_HIGH;
 #endif
 }
-
-#undef WITH
-#undef CONFIGURE

@@ -237,8 +237,7 @@ void anticheat_endframe()
 	entity e;
 	FOR_EACH_CLIENT(e)
 		if (e.fixangle) {
-			SELFCALL(e, anticheat_fixangle());
-			SELFCALL_DONE();
+			WITH(entity, self, e, anticheat_fixangle());
 		}
 	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
 }

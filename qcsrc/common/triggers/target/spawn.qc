@@ -222,8 +222,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 			oldactivator = activator;
 
 			activator = act;
-			SELFCALL(e, e.target_spawn_spawnfunc());
-			SELFCALL_DONE();
+			WITH(entity, self, e, e.target_spawn_spawnfunc());
 			activator = oldactivator;
 
 			// We called an external function, so we have to re-tokenize msg.

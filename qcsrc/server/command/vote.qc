@@ -392,8 +392,7 @@ void reset_map(float dorespawn)
 	FOR_EACH_PLAYER(e)
 	if(e.frozen)
 	{
-		SELFCALL(e, Unfreeze(self));
-		SELFCALL_DONE();
+		WITH(entity, self, e, Unfreeze(self));
 	}
 
 	// Moving the player reset code here since the player-reset depends

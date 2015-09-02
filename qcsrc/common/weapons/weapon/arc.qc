@@ -592,8 +592,7 @@ void W_Arc_Beam(float burst)
 	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
-	SELFCALL(beam, beam.think());
-	SELFCALL_DONE();
+	WITH(entity, self, beam, beam.think());
 }
 
 void Arc_Smoke()

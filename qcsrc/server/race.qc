@@ -1087,8 +1087,7 @@ void race_ClearRecords()
 	FOR_EACH_CLIENT(e)
 	{
 		float p = e.race_place;
-		SELFCALL(e, race_PreparePlayer());
-		SELFCALL_DONE();
+		WITH(entity, self, e, race_PreparePlayer());
 		e.race_place = p;
 	}
 }

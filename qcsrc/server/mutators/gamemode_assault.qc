@@ -17,8 +17,7 @@ void assault_objective_use()
 	{
 		if (e.classname == "target_objective_decrease")
 		{
-			SELFCALL(e, target_objective_decrease_activate());
-			SELFCALL_DONE();
+			WITH(entity, self, e, target_objective_decrease_activate());
 		}
 	}
 
@@ -178,8 +177,7 @@ void assault_roundstart_use()
 			ent.team = NUM_TEAM_1;
 
 		// Dubbles as teamchange
-		SELFCALL(ent, turret_respawn());
-		SELFCALL_DONE();
+		WITH(entity, self, ent, turret_respawn());
 	}
 }
 
@@ -213,8 +211,7 @@ void assault_new_round()
     {
         if(e.vehicle)
         {
-        	SELFCALL(e, vehicles_exit(VHEF_RELEASE));
-            SELFCALL_DONE();
+        	WITH(entity, self, e, vehicles_exit(VHEF_RELEASE));
         }
     }
 

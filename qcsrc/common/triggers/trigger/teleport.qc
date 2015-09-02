@@ -44,8 +44,7 @@ void Teleport_Touch (void)
 	SUB_UseTargets();
 	if (!self.target) self.target = s;
 
-	SELFCALL(e, SUB_UseTargets());
-	SELFCALL_DONE();
+	WITH(entity, self, e, SUB_UseTargets());
 }
 
 void spawnfunc_trigger_teleport()

@@ -300,14 +300,12 @@ void CSQCPlayer_SetCamera()
 		setself(this);
 	}
 
-	entity view;
-	view = CSQCModel_server2csqc(player_localentnum);
+	entity view = CSQCModel_server2csqc(player_localentnum);
 
 	if(view && view != csqcplayer)
 	{
-		SELFCALL(view, InterpolateOrigin_Do());
-		self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
-		SELFCALL_DONE();
+		WITH(entity, self, view, InterpolateOrigin_Do());
+		view.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 	}
 
 	if(view)

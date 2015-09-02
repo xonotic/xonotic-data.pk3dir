@@ -258,8 +258,9 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 			++found;
 			if(ent.spawn_evalfunc)
 			{
-				spawn_score = SELFCALL(ent, ent.spawn_evalfunc(this, spot, spawn_score));
-				SELFCALL_DONE();
+				WITH(entity, self, ent, {
+					spawn_score = ent.spawn_evalfunc(this, spot, spawn_score);
+				});
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}

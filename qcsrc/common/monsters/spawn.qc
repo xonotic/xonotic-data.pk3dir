@@ -64,8 +64,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	}
 	
 	// Monster_Spawn checks if monster is valid
-	SELFCALL(e, Monster_Spawn(monster_id));
-	SELFCALL_DONE();
+	WITH(entity, self, e, Monster_Spawn(monster_id));
 
 	return e;
 }

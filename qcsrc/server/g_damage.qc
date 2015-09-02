@@ -576,8 +576,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	SELFCALL(ice, Ice_Think());
-	SELFCALL_DONE();
+	WITH(entity, self, ice, Ice_Think());
 
 	RemoveGrapplingHook(targ);
 

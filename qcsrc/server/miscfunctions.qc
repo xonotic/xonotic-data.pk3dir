@@ -1196,8 +1196,7 @@ void InitializeEntitiesRun()
         //dprint("Delayed initialization: ", e.classname, "\n");
         if (func)
         {
-        	SELFCALL(e, func());
-            SELFCALL_DONE();
+        	WITH(entity, self, e, func());
         }
         else
         {
@@ -1213,8 +1212,7 @@ void UncustomizeEntitiesRun()
 {SELFPARAM();
     for (entity e = NULL; (e = findfloat(e, uncustomizeentityforclient_set, 1)); )
     {
-        SELFCALL(e, e.uncustomizeentityforclient());
-        SELFCALL_DONE();
+        WITH(entity, self, e, e.uncustomizeentityforclient());
     }
 }
 void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)

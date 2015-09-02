@@ -337,8 +337,7 @@ void _Movetype_Impact(entity oth)  // SV_Impact
 	{
 		other = self;
 
-		SELFCALL(oth, oth.move_touch());
-		SELFCALL_DONE();
+		WITH(entity, self, oth, oth.move_touch());
 
 		other = oldother;
 	}

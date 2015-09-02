@@ -93,15 +93,16 @@ void _Movetype_PushMove(float dt)  // SV_PushMove
 			if (check.move_movetype == 32)  // MOVETYPE_PHYSICS
 			{
 				check.move_origin = check.move_origin + move;
-				SELFCALL(check, _Movetype_LinkEdict(true));
-				SELFCALL_DONE();
+				WITH(entity, self, check, _Movetype_LinkEdict(true));
 				continue;
 			}
 
 			// try moving the contacted entity
 			self.solid = SOLID_NOT;
-			bool flag = SELFCALL(check, _Movetype_PushEntity(move, true));
-			SELFCALL_DONE();
+			bool flag;
+			WITH(entity, self, check, {
+				flag = _Movetype_PushEntity(move, true);
+			});
 			if (!flag)
 			{
 				// entity "check" got teleported
