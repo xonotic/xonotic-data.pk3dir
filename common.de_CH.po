@@ -749,7 +749,7 @@ msgstr "^2scoreboard_columns_set ^7field1 field2 ...\n"
 #: qcsrc/client/scoreboard.qc:253
 msgid "The following field names are recognized (case insensitive):\n"
 msgstr ""
-"Die folgenden Feldnamen werden akzeptiert (in Groß- oder Kleinschreibung):\n"
+"Die folgenden Feldnamen werden akzeptiert (in Gross- oder Kleinschreibung):\n"
 
 #: qcsrc/client/scoreboard.qc:254
 msgid ""
@@ -838,14 +838,14 @@ msgstr "^3rank^7                     Rang des Spielers\n"
 #: qcsrc/client/scoreboard.qc:273
 msgid "^3pushes^7                   Number of players pushed into void\n"
 msgstr ""
-"^3pushes^7                   Anzahl der in die Leere gestoßenen Gegner\n"
+"^3pushes^7                   Anzahl der in die Leere gestossenen Gegner\n"
 
 #: qcsrc/client/scoreboard.qc:274
 msgid ""
 "^3destroyed^7                Number of keys destroyed by pushing them into "
 "void\n"
 msgstr ""
-"^3destroyed^7                Anzahl der in die Leere gestoßenen Schlüssel\n"
+"^3destroyed^7                Anzahl der in die Leere gestossenen Schlüssel\n"
 
 #: qcsrc/client/scoreboard.qc:275
 msgid "^3kckills^7                  Number of keys carrier kills\n"
@@ -902,10 +902,10 @@ msgid ""
 "field to show all fields available for the current game mode.\n"
 "\n"
 msgstr ""
-"Vor ein Feld kannst du ein + bzw. - setzen, anschließend eine\n"
+"Vor ein Feld kannst du ein + bzw. - setzen, anschliessend eine\n"
 "durch Kommata getrennte Liste von Spieltypen, dann einen Slash (/);\n"
-"sodass das Feld nur in diesen, bzw. in allen außer diesen Spieltypen\n"
-"erscheint. Außerdem kann 'all' als Feldname verwendet werden,\n"
+"sodass das Feld nur in diesen, bzw. in allen ausser diesen Spieltypen\n"
+"erscheint. Ausserdem kann 'all' als Feldname verwendet werden,\n"
 "um alle im aktuellen Spieltyp zu verfügbaren Felder zu zeigen.\n"
 "\n"
 
@@ -916,7 +916,7 @@ msgid ""
 "\n"
 msgstr ""
 "Die speziellen Spieltypen 'teams' und 'noteams' können verwendet werden,\n"
-"um ALLE Teamplay- oder Nicht-Teamplay-Spieltypen ein-/auszuschließen.\n"
+"um ALLE Teamplay- oder Nicht-Teamplay-Spieltypen ein-/auszuschliessen.\n"
 "\n"
 
 #: qcsrc/client/scoreboard.qc:294
@@ -937,7 +937,7 @@ msgid ""
 "other gamemodes except DM.\n"
 msgstr ""
 "'feld3' wird nur in CTF sichtbar sein, und 'feld4' wird in allen Spieltypen\n"
-"außer DM erscheinen.\n"
+"ausser DM erscheinen.\n"
 
 #: qcsrc/client/scoreboard.qc:533 qcsrc/client/scoreboard.qc:540
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:125
@@ -1128,7 +1128,7 @@ msgstr ""
 
 #: qcsrc/common/items/item/armor.qc:38
 msgid "Large armor"
-msgstr "Große Armor"
+msgstr "Grosse Armor"
 
 #: qcsrc/common/items/item/armor.qc:53
 msgid "Mega armor"
@@ -2153,12 +2153,12 @@ msgstr "^BG%s^K1 starb%s%s"
 #: qcsrc/common/notifications.inc:287
 #, c-format
 msgid "^BG%s^K1 found a hot place%s%s"
-msgstr "^BG%s^K1 fand ein heißes Plätzchen%s%s"
+msgstr "^BG%s^K1 fand ein heisses Plätzchen%s%s"
 
 #: qcsrc/common/notifications.inc:287
 #, c-format
 msgid "^BG%s^K1 turned into hot slag%s%s"
-msgstr "^BG%s^K1 wurde zu heißer Schlacke%s%s"
+msgstr "^BG%s^K1 wurde zu heisser Schlacke%s%s"
 
 #: qcsrc/common/notifications.inc:288
 #, c-format
@@ -2168,7 +2168,7 @@ msgstr "^BG%s^K1 explodierte durch einen Magier%s%s"
 #: qcsrc/common/notifications.inc:289
 #, c-format
 msgid "^BG%s^K1's innards became outwards by a Shambler%s%s"
-msgstr "^BG%s^K1's Eingeweide wurden nach außen gekehrtvon einem Shambler%s%s"
+msgstr "^BG%s^K1's Eingeweide wurden nach aussen gekehrtvon einem Shambler%s%s"
 
 #: qcsrc/common/notifications.inc:290
 #, c-format
@@ -2321,7 +2321,7 @@ msgstr "^BG%s^K1 wurde von einem Geschützturm ausgemustert%s%s"
 #: qcsrc/common/notifications.inc:317
 #, c-format
 msgid "^BG%s^K1 got served some superheated plasma from a turret%s%s"
-msgstr "^BG%s^K1 bekam superheißes Plasma von einem Geschützturm serviert%s%s"
+msgstr "^BG%s^K1 bekam superheisses Plasma von einem Geschützturm serviert%s%s"
 
 #: qcsrc/common/notifications.inc:318
 #, c-format
@@ -2490,7 +2490,7 @@ msgstr "^BGDu hast nicht genug Munition für ^F1%s"
 #: qcsrc/common/notifications.inc:352 qcsrc/common/notifications.inc:583
 #, c-format
 msgid "^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"
-msgstr "^F1%s %s^BG kann nicht schießen, aber sein ^F1%s^BG kann"
+msgstr "^F1%s %s^BG kann nicht schiessen, aber sein ^F1%s^BG kann"
 
 #: qcsrc/common/notifications.inc:353 qcsrc/common/notifications.inc:584
 #, c-format
@@ -2530,7 +2530,7 @@ msgstr "^BG%s^BG eroberte die Schlüssel für Team ^TC^TT"
 #: qcsrc/common/notifications.inc:360
 #, c-format
 msgid "^BG%s^BG dropped the ^TC^TT Key"
-msgstr "^BG%s^BG ließ den ^TC^TT Schlüssel fallen"
+msgstr "^BG%s^BG liess den ^TC^TT Schlüssel fallen"
 
 #: qcsrc/common/notifications.inc:361
 #, c-format
@@ -2688,7 +2688,7 @@ msgstr "^BG%s^K1 hat eine Superwaffe aufgesammelt"
 
 #: qcsrc/common/notifications.inc:390
 msgid "^BGYou cannot change to a larger team"
-msgstr "^BGDu kannst nicht in ein größeres Team wechseln."
+msgstr "^BGDu kannst nicht in ein grösseres Team wechseln."
 
 #: qcsrc/common/notifications.inc:391
 msgid "^BGYou are not allowed to change teams"
@@ -2729,7 +2729,7 @@ msgstr "^F3SVQC Build-Information: ^F4%s"
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"
 msgstr ""
-"^BG%s%s^K1 starb von ^BG%s^K1's großartigen Spielkünsten auf dem @!#%%'n "
+"^BG%s%s^K1 starb von ^BG%s^K1's grossartigen Spielkünsten auf dem @!#%%'n "
 "Accordeon%s%s"
 
 #: qcsrc/common/notifications.inc:397
@@ -2873,7 +2873,7 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1's Hook-Gravity-Bombe erfasst%s%s"
 msgid ""
 "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Klein Bottle%s%s"
 msgstr ""
-"^BG%s%s^K1 starb von ^BG%s^K1's großartigen Spielkünsten auf der @!#%%'n "
+"^BG%s%s^K1 starb von ^BG%s^K1's grossartigen Spielkünsten auf der @!#%%'n "
 "Kleinschen Flasche%s%s"
 
 #: qcsrc/common/notifications.inc:424
@@ -2991,7 +2991,7 @@ msgstr "^BG%s%s^K1 wurde von ^BG%s^K1's Shockwave abgeknallt%s%s"
 #: qcsrc/common/notifications.inc:446
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shockwave%s%s"
-msgstr "^BG%s%s^K1 schlug ^BG%s^K1 eine runter mit ner großen Schockwave%s%s"
+msgstr "^BG%s%s^K1 schlug ^BG%s^K1 eine runter mit ner grossen Schockwave%s%s"
 
 #: qcsrc/common/notifications.inc:447
 #, c-format
@@ -3001,7 +3001,7 @@ msgstr "^BG%s%s^K1 wurde mit ^BG%s^K1s Schrotflinte abgeknallt%s%s"
 #: qcsrc/common/notifications.inc:448
 #, c-format
 msgid "^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s"
-msgstr "^BG%s%s^K1 schlug ^BG%s^K1 eine runter mit ner großen Shotgun%s%s"
+msgstr "^BG%s%s^K1 schlug ^BG%s^K1 eine runter mit ner grossen Shotgun%s%s"
 
 #: qcsrc/common/notifications.inc:449
 #, c-format
@@ -3012,7 +3012,7 @@ msgstr "^BG%s^K1denkt nun auch an Portale%s%s"
 #, c-format
 msgid "^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"
 msgstr ""
-"^BG%s%s^K1 starb durch ^BG%s^K1's großartigem Spiel auf der @!#%%'n Tuba%s%s"
+"^BG%s%s^K1 starb durch ^BG%s^K1's grossartigem Spiel auf der @!#%%'n Tuba%s%s"
 
 #: qcsrc/common/notifications.inc:451
 #, c-format
@@ -3324,7 +3324,7 @@ msgstr "^K1Nicht gegen deine Teamkameraden agieren!"
 
 #: qcsrc/common/notifications.inc:524
 msgid "^K1Don't shoot your team mates!"
-msgstr "^K1Nicht auf deine Teamkameraden einschießen!"
+msgstr "^K1Nicht auf deine Teamkameraden einschiessen!"
 
 #: qcsrc/common/notifications.inc:525
 msgid "^K1Die camper!"
@@ -3353,7 +3353,7 @@ msgstr "^K1Du bist mit einem Krachen auf dem Boden aufgeschlagen!"
 
 #: qcsrc/common/notifications.inc:530
 msgid "^K1You felt a little too hot!"
-msgstr "^K1Dir wurde etwas zu heiß!"
+msgstr "^K1Dir wurde etwas zu heiss!"
 
 #: qcsrc/common/notifications.inc:530
 msgid "^K1You got a little bit too crispy!"
@@ -4704,7 +4704,7 @@ msgstr "Alpha der inaktiven:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:35
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:55
 msgid "Noncurrent scale:"
-msgstr "Größe der inaktiven:"
+msgstr "Grösse der inaktiven:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.qc:39
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:31
@@ -4762,7 +4762,7 @@ msgstr "Mittig"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.qc:44
 msgid "Font scale:"
-msgstr "Schriftgröße:"
+msgstr "Schriftgrösse:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:6
 msgid "Chat Panel"
@@ -4774,7 +4774,7 @@ msgstr "Chat-Zeilen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:28
 msgid "Chat size:"
-msgstr "Chat-Größe:"
+msgstr "Chat-Grösse:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.qc:32
 msgid "Chat lifetime:"
@@ -4823,7 +4823,7 @@ msgstr "Innen"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:46
 msgid "Outward"
-msgstr "Außen"
+msgstr "Aussen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.qc:40
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.qc:40
@@ -4880,7 +4880,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_itemstime.qc:46
 msgid "Dynamic size"
-msgstr "Dynamische Größe"
+msgstr "Dynamische Grösse"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.qc:6
 msgid "Mod Icons Panel"
@@ -4952,7 +4952,7 @@ msgstr "Innen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:39
 msgid "Outward align"
-msgstr "Außen"
+msgstr "Aussen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.qc:43
 msgid "Flip speed/acceleration positions"
@@ -5090,7 +5090,7 @@ msgstr "Zoom-Modus:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:55
 msgid "Zoomed in"
-msgstr "Vergrößert"
+msgstr "Vergrössert"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:56
 msgid "Zoomed out"
@@ -5098,11 +5098,11 @@ msgstr "Verkleinert"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:57
 msgid "Always zoomed"
-msgstr "Immer vergrößert"
+msgstr "Immer vergrössert"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.qc:58
 msgid "Never zoomed"
-msgstr "Nie vergrößert"
+msgstr "Nie vergrössert"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.qc:6
 msgid "Score Panel"
@@ -5213,7 +5213,7 @@ msgstr "Taste"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:65
 msgid "Weapon ID scale:"
-msgstr "Waffen-ID-Größe:"
+msgstr "Waffen-ID-Grösse:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.qc:70
 msgid "Show Accuracy"
@@ -5256,7 +5256,7 @@ msgstr "Aus"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:38
 #: qcsrc/menu/xonotic/util.qc:762
 msgid "Border size:"
-msgstr "Rahmengröße:"
+msgstr "Rahmengrösse:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:53
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:92
@@ -5291,7 +5291,7 @@ msgstr "Mittel"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:76
 msgid "DOCK^Large"
-msgstr "Groß"
+msgstr "Gross"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.qc:99
 msgid "Grid settings:"
@@ -5636,7 +5636,7 @@ msgstr "Spieltyp:"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:115
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:332
 msgid "Close"
-msgstr "Schließen"
+msgstr "Schliessen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.qc:118
 msgid "MAP^Play"
@@ -6211,7 +6211,7 @@ msgstr "Physik-Eigenschaften"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:77
 msgid "Set scale:"
-msgstr "Größe:"
+msgstr "Grösse:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.qc:79
 msgid "Set force:"
@@ -6725,7 +6725,7 @@ msgstr "Pro Waffe"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:53
 msgid "Crosshair size:"
-msgstr "Größe:"
+msgstr "Grösse:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:59
 msgid "Crosshair alpha:"
@@ -6753,7 +6753,7 @@ msgstr "Punkt in der Mitte aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:101
 msgid "Dot size:"
-msgstr "Punktgröße:"
+msgstr "Punktgrösse:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:107
 msgid "Dot alpha:"
@@ -6777,7 +6777,7 @@ msgstr "Verschwommenes Fadenkreuz für unterbrochene Schusslinie"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:132
 msgid "Enlarge crosshair if targeting an enemy"
-msgstr "Fadenkreuz vergrößern, wenn über Gegner"
+msgstr "Fadenkreuz vergrössern, wenn über Gegner"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:135
 msgid "Animate crosshair when hitting an enemy"
@@ -6818,7 +6818,7 @@ msgstr "Wegpunkte für feste Ziele anzeigen"
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:83
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:133
 msgid "Fontsize:"
-msgstr "Schriftgröße:"
+msgstr "Schriftgrösse:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:89
 msgid "Edge offset:"
@@ -6838,7 +6838,7 @@ msgstr "Vollbild-Indikation:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:108
 msgid "Factor:"
-msgstr "Vergrößerungsfaktor:"
+msgstr "Vergrösserungsfaktor:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_hud.qc:113
 msgid "Fade rate:"
@@ -7091,7 +7091,7 @@ msgstr "Aus eigenen Augen schauen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:39
 msgid "Slide to third person upon death"
-msgstr "Nach Tod von außen anschauen"
+msgstr "Nach Tod von aussen anschauen"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:43
 msgid "Smooth the view when landing from a jump"
@@ -7199,7 +7199,7 @@ msgstr "Automatisch auf beste Waffe wechseln"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:57
 msgid "Release attack buttons when you switch weapons"
-msgstr "Beim Waffenwechsel mit dem Schießen aufhören"
+msgstr "Beim Waffenwechsel mit dem Schiessen aufhören"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_weapons.qc:60
 msgid "Draw 1st person weapon model"
@@ -7265,7 +7265,7 @@ msgstr "System-Mausbeschleunigung deaktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:88
 msgid "Pressing \"enter console\" key also closes it"
-msgstr "\"Konsole öffnen\" schließt auch"
+msgstr "\"Konsole öffnen\" schliesst auch"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.qc:90
 msgid "Automatically repeat jumping if holding jump"
@@ -7618,7 +7618,7 @@ msgstr "Auflösung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:30
 msgid "Font/UI size:"
-msgstr "Schriftgröße:"
+msgstr "Schriftgrösse:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:32
 msgid "SZ^Unreadable"
@@ -7642,7 +7642,7 @@ msgstr "Mittel"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:37
 msgid "SZ^Large"
-msgstr "Groß"
+msgstr "Gross"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:38
 msgid "SZ^Huge"

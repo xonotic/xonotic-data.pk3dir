@@ -404,6 +404,8 @@ int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 float autocvar_g_instagib_invis_alpha;
 bool autocvar_g_instagib_damagedbycontents = true;
+bool autocvar_g_instagib_blaster_keepdamage = false;
+bool autocvar_g_instagib_blaster_keepforce = false;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 

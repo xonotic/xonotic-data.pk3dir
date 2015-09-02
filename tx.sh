@@ -21,6 +21,11 @@ tx pull -f -a
 for f in common.*.po; do
 	lang=${f%.po}
 	lang=${lang#common.}
+	case "$lang" in
+		de_CH)
+			continue
+			;;
+	esac
 	tcurfile=translations/xonotic.commonpot/$lang..po
 	goldfile=translations/xonotic.commonpot/$lang..po.orig
 	gnewfile=common.$lang.po
@@ -66,6 +71,16 @@ for f in translations/xonotic.commonpot/*..po; do
 done
 tx push -t --skip
 date > .tx/merge-base
+
+# Generate Swiss Standard German from German.
+msgfilter -i common.de.po -o common.de_CH.po perl -pe '
+	# Character filters go here.
+	s/ß/ss/g;
+	# Word filters go here. By default we match even inside words, as there
+	# are constructs like ^BGflag where "flag" is the actual word. Make
+	# sure to not commit the clbuttical mistake.
+	s/eventuell/allfällig/g;
+'
 
 # Build new languages list.
 sh check-translations.sh txt > languages.txt.new
