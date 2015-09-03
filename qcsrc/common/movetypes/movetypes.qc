@@ -38,14 +38,10 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
 	vector push;
-	vector primal_velocity, original_velocity, new_velocity = '0 0 0', restore_velocity;
+	vector primal_velocity, original_velocity, restore_velocity;
 
-	for(i = 0; i <= MAX_CLIP_PLANES; ++i)
+	for(i = 0; i < MAX_CLIP_PLANES; ++i)
 		planes[i] = '0 0 0';
-
-	grav = 0;
-
-	restore_velocity = self.move_velocity;
 
 	if(applygravity)
 	{
@@ -61,15 +57,17 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 		}
 	}
 
-	original_velocity = primal_velocity = self.move_velocity;
+	original_velocity = primal_velocity = restore_velocity = self.move_velocity;
 
 	for(bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
 	{
-		if(!self.move_velocity_x && !self.move_velocity_y && !self.move_velocity_z)
+		if(self.move_velocity == '0 0 0')
 			break;
 
 		push = self.move_velocity * time_left;
-		if(!_Movetype_PushEntity(push, false))
+		vector prev_origin = self.move_origin;
+		_Movetype_PushEntity(push, true);
+		if(trace_startsolid && self.move_origin != prev_origin)
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -87,6 +85,10 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 
 		if(trace_fraction == 1)
 			break;
+
+		float my_trace_fraction = trace_fraction;
+		vector my_trace_plane_normal = trace_plane_normal;
+
 		if(trace_plane_normal_z)
 		{
 			if(trace_plane_normal_z > 0.7)
@@ -107,45 +109,40 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 		else if(stepheight)
 		{
 			// step - handle it immediately
-			vector org;
-			vector steppush;
-			//Con_Printf("step %f %f %f : ", self.move_origin_x, PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
-			steppush = '0 0 1' * stepheight;
-			org = self.move_origin;
-			if(!_Movetype_PushEntity(steppush, false))
+			vector org = self.move_origin;
+			vector steppush = '0 0 1' * stepheight;
+
+			_Movetype_PushEntity(steppush, true);
+			if(trace_startsolid && self.move_origin != org)
 			{
 				blocked |= 8;
 				break;
 			}
-			//Con_Printf("%f %f %f : ", self.move_origin_x, PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
-			if(!_Movetype_PushEntity(push, false))
+			_Movetype_PushEntity(push, true);
+			if(trace_startsolid && self.move_origin != org)
 			{
 				blocked |= 8;
 				break;
 			}
 			float trace2_fraction = trace_fraction;
-			//Con_Printf("%f %f %f : ", self.move_origin_x, PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
 			steppush = '0 0 1' * (org_z - self.move_origin_z);
-			if(!_Movetype_PushEntity(steppush, false))
+			_Movetype_PushEntity(steppush, true);
+			if(trace_startsolid && self.move_origin != org)
 			{
 				blocked |= 8;
 				break;
 			}
-			//Con_Printf("%f %f %f : ", self.move_origin_x, PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
+
 			// accept the new position if it made some progress...
 			if(fabs(self.move_origin_x - org_x) >= 0.03125 || fabs(self.move_origin_y - org_y) >= 0.03125)
 			{
-				//Con_Printf("accepted (delta %f %f %f)\n", self.move_origin_x - org_x, PRVM_serveredictvector(ent, origin)[1] - org[1], PRVM_serveredictvector(ent, origin)[2] - org[2]);
 				trace_endpos = self.move_origin;
 				time_left *= 1 - trace2_fraction;
 				numplanes = 0;
 				continue;
 			}
 			else
-			{
-				//Con_Printf("REJECTED (delta %f %f %f)\n", self.move_origin_x - org_x, PRVM_serveredictvector(ent, origin)[1] - org[1], PRVM_serveredictvector(ent, origin)[2] - org[2]);
 				self.move_origin = org;
-			}
 		}
 		else
 		{
@@ -155,14 +152,15 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 			if(stepnormal)
 				stepnormal = trace_plane_normal;
 		}
-		if(trace_fraction >= 0.001)
+
+		if(my_trace_fraction >= 0.001)
 		{
 			// actually covered some distance
 			original_velocity = self.move_velocity;
 			numplanes = 0;
 		}
 
-		time_left *= 1 - trace_fraction;
+		time_left *= 1 - my_trace_fraction;
 
 		// clipped to another plane
 		if(numplanes >= MAX_CLIP_PLANES)
@@ -173,10 +171,11 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 			break;
 		}
 
-		planes[numplanes] = trace_plane_normal;
+		planes[numplanes] = my_trace_plane_normal;
 		numplanes++;
 
 		// modify original_velocity so it parallels all of the clip planes
+		vector new_velocity = '0 0 0';
 		for (i = 0;i < numplanes;i++)
 		{
 			new_velocity = _Movetype_ClipVelocity(original_velocity, planes[i], 1);
@@ -207,10 +206,7 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 				blocked = 7;
 				break;
 			}
-			vector dir;
-			dir.x = planes[0].y * planes[1].z - planes[0].z * planes[1].y;
-			dir.y = planes[0].z * planes[1].x - planes[0].x * planes[1].z;
-			dir.z = planes[0].x * planes[1].y - planes[0].y * planes[1].x;
+			vector dir = cross(planes[0], planes[1]);
 			// LordHavoc: thanks to taniwha of QuakeForge for pointing out this fix for slowed falling in corners
 			float ilength = sqrt((dir * dir));
 			if(ilength)
