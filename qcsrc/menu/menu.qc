@@ -145,6 +145,7 @@ void UpdateConWidthHeight(float w, float h, float p)
 		{
 			draw_reset_cropped();
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
+			loading.resizeNotify(loading, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
 	}
 	else
@@ -216,10 +217,13 @@ void m_init_delayed()
 	loadTooltips();
 	anim = NEW(AnimHost);
 	main = NEW(MainWindow); main.configureMainWindow(main);
+	loading = NEW(LoadingWindow);
 	unloadTooltips();
 
 	main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 	main.focused = 1;
+	loading.resizeNotify(loading, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
+	loading.focused = true;
 	menuShiftState = 0;
 	menuMousePos = '0.5 0.5 0';
 
@@ -677,10 +681,11 @@ void m_tooltip(vector pos)
 	}
 }
 
+float realFrametime;
+
 void m_draw(float width, float height)
 {
 	float t;
-	float realFrametime;
 
 	m_gamestatus();
 
@@ -1025,4 +1030,31 @@ void m_play_click_sound(string soundfile)
 {
 	if(cvar("menu_sounds"))
 		localsound(soundfile);
+}
+
+void m_loading(bool signingon)
+{
+	if (!menuInitialized) return;
+
+	static float fadetime = 2;
+	static float a;
+	a = bound(0, a - 1 / fadetime * realFrametime, 1);
+
+	if (!(gamestatus & GAME_CONNECTED)) return;
+	if (signingon) a = 1;
+	cvar_set("scr_loadingscreen_scale", "0");
+	if (a) {
+		drawfill('0 0 0', eX * realconwidth + eY * realconheight, '0 0 0', a, DRAWFLAG_NORMAL);
+		string s = "gfx/loading";
+		string mapshot = cvar_string("cl_worldnamenoextension");
+		if (mapshot != "" && precache_pic(mapshot)) s = mapshot;
+		drawpic('0 0 0', s, eX * realconwidth + eY * realconheight, '1 1 1', a, DRAWFLAG_NORMAL);
+
+		float _draw_alpha = draw_alpha;
+		draw_alpha = a;
+		loading.draw(loading);
+		draw_alpha = _draw_alpha;
+	} else {
+		cvar_set("cl_worldnamenoextension", "");
+	}
 }

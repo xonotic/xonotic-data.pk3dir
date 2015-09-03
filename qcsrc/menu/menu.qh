@@ -31,6 +31,7 @@ float time;
 
 entity anim;
 entity main;
+entity loading;
 void m_hide();
 void m_display();
 void m_goto(string name);
