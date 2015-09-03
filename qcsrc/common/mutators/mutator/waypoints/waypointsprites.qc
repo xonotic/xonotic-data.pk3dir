@@ -239,13 +239,7 @@ float spritelookupblinkvalue(string s)
     }
     if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_waypointblink;
 
-    switch (s)
-    {
-        case "item-invis":       return 2;
-        case "item-extralife":   return 2;
-        case "item-speed":       return 2;
-        default:                 return 1;
-    }
+    return 1;
 }
 
 vector spritelookupcolor(string s, vector def)
@@ -269,13 +263,7 @@ string spritelookuptext(string s)
         return it.m_name;
     ));
 
-    switch (s)
-    {
-        case "item-invis": return _("Invisibility");
-        case "item-extralife": return _("Extra life");
-        case "item-speed": return _("Speed");
-        default: return s;
-    }
+    return s;
 }
 #endif
 
