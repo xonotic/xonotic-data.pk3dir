@@ -28,7 +28,7 @@ void XonoticScoreboardFadeTimeSlider_configureXonoticScoreboardFadeTimeSlider(en
 }
 void XonoticScoreboardFadeTimeSlider_loadCvars(entity me)
 {
-	me.setValueFromIdentifier(me, sprintf("%s %s",
+	me.setValueFromIdentifier_noAnim(me, sprintf("%s %s",
 		cvar_string("scoreboard_fadeinspeed"),
 		cvar_string("scoreboard_fadeoutspeed")
 	));

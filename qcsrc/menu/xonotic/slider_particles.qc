@@ -31,7 +31,7 @@ void XonoticParticlesSlider_configureXonoticParticlesSlider(entity me)
 }
 void XonoticParticlesSlider_loadCvars(entity me)
 {
-	me.setValueFromIdentifier(me, sprintf("%s %s %s",
+	me.setValueFromIdentifier_noAnim(me, sprintf("%s %s %s",
 		cvar_string("cl_particles_quality"),
 		cvar_string("r_drawparticles_drawdistance"),
 		cvar_string("cl_damageeffect")

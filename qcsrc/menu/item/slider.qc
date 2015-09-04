@@ -15,6 +15,8 @@ CLASS(Slider, Label)
 	METHOD(Slider, mouseRelease, float(entity, vector));
 	METHOD(Slider, valueToText, string(entity, float));
 	METHOD(Slider, toString, string(entity));
+	METHOD(Slider, setValue_allowAnim, void(entity, float, bool));
+	METHOD(Slider, setValue_noAnim, void(entity, float));
 	METHOD(Slider, setValue, void(entity, float));
 	METHOD(Slider, setSliderValue, void(entity, float));
 	METHOD(Slider, showNotify, void(entity));
@@ -49,9 +51,9 @@ ENDCLASS(Slider)
 #endif
 
 #ifdef IMPLEMENTATION
-void Slider_setValue(entity me, float val)
+void Slider_setValue_allowAnim(entity me, float val, bool allowAnim)
 {
-	if (me.animated) {
+	if(allowAnim && me.animated) {
 		float t = 0.5;
 		if(me.pressed == 2)
 			t = 0.3; // slightly more responsive while dragging the handle
@@ -63,6 +65,14 @@ void Slider_setValue(entity me, float val)
 		me.setSliderValue(me, val);
 	}
 	me.value = val;
+}
+void Slider_setValue_noAnim(entity me, float val)
+{
+	Slider_setValue_allowAnim(me, val, false);
+}
+void Slider_setValue(entity me, float val)
+{
+	Slider_setValue_allowAnim(me, val, true);
 }
 void Slider_setSliderValue(entity me, float val)
 {
