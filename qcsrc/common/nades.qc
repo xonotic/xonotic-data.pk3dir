@@ -17,7 +17,7 @@
 
 #ifdef SVQC
 float healer_send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HEALING_ORB);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -41,7 +41,7 @@ float healer_send(entity to, int sf)
 #ifdef CSQC
 .float ltime;
 void healer_draw()
-{
+{SELFPARAM();
 	float dt = time - self.move_time;
 	self.move_time = time;
 	if(dt <= 0)
@@ -53,7 +53,7 @@ void healer_draw()
 }
 
 void healer_setup()
-{
+{SELFPARAM();
 	setmodel(self, "models/ctf/shield.md3");
 
 	setorigin(self, self.origin);
@@ -75,7 +75,7 @@ void healer_setup()
 }
 
 void ent_healer()
-{
+{SELFPARAM();
 	int sf = ReadByte();
 
 	if(sf & TNSF_SETUP)

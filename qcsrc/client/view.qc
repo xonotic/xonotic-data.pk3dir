@@ -427,7 +427,7 @@ vector liquidcolor_prev;
 float eventchase_current_distance;
 float eventchase_running;
 bool WantEventchase()
-{
+{SELFPARAM();
 	if(autocvar_cl_orthoview)
 		return false;
 	if(intermission)
@@ -533,7 +533,7 @@ void UpdateHitsound()
 }
 
 void UpdateCrosshair()
-{
+{SELFPARAM();
 	static float rainbow_last_flicker;
     static vector rainbow_prev_color;
 	entity e = self;
@@ -1022,7 +1022,7 @@ int lasthud;
 float vh_notice_time;
 void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
-{
+{SELFPARAM();
 	entity e;
 	float fov;
 	float f;
@@ -1466,11 +1466,9 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	e = self;
-	for(self = world; (self = nextent(self)); )
-		if(self.draw)
-			self.draw();
-	self = e;
+	for(entity e = NULL; (e = nextent(e)); ) if (e.draw) {
+		WITH(entity, self, e, e.draw());
+	}
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -1805,11 +1803,9 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	e = self;
-	for(self = world; (self = nextent(self)); )
-		if(self.draw2d)
-			self.draw2d();
-	self = e;
+	for (entity e = NULL; (e = nextent(e)); ) if (e.draw2d) {
+		WITH(entity, self, e, e.draw2d());
+	}
 	Draw_ShowNames_All();
 
 	scoreboard_active = HUD_WouldDrawScoreboard();

@@ -38,12 +38,12 @@
 .vector ivup1, ivup2;
 .float itime1, itime2;
 void InterpolateOrigin_Reset()
-{
+{SELFPARAM();
 	self.iflags &= ~IFLAG_INTERNALMASK;
 	self.itime1 = self.itime2 = 0;
 }
 void InterpolateOrigin_Note()
-{
+{SELFPARAM();
 	float dt;
 	int f0;
 
@@ -138,7 +138,7 @@ void InterpolateOrigin_Note()
 	}
 }
 void InterpolateOrigin_Do()
-{
+{SELFPARAM();
 	vector forward, up;
 	if(self.itime1 && self.itime2 && self.itime1 != self.itime2)
 	{
@@ -165,7 +165,7 @@ void InterpolateOrigin_Do()
 	}
 }
 void InterpolateOrigin_Undo()
-{
+{SELFPARAM();
 	if(self.iflags & IFLAG_ORIGIN)
 		setorigin(self, self.iorigin2);
 	if(self.iflags & IFLAG_ANGLES)

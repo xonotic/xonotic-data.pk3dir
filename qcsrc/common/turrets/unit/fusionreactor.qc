@@ -12,7 +12,7 @@ REGISTER_TURRET(
 #else
 #ifdef SVQC
 bool turret_fusionreactor_firecheck()
-{
+{SELFPARAM();
     if (self.attack_finished_single > time)
         return false;
 
@@ -40,10 +40,10 @@ bool turret_fusionreactor_firecheck()
     return true;
 }
 
-void spawnfunc_turret_fusionreactor() { if(!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
+void spawnfunc_turret_fusionreactor() { SELFPARAM(); if(!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
 
 float t_fusionreactor(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:

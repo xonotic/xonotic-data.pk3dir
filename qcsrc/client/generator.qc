@@ -32,7 +32,7 @@ void generator_precache()
 }
 
 void ons_generator_ray_draw()
-{
+{SELFPARAM();
 	if(time < self.move_time)
 		return;
 
@@ -71,7 +71,7 @@ void ons_generator_ray_spawn(vector org)
 }
 
 void generator_draw()
-{
+{SELFPARAM();
 	if(time < self.move_time)
 		return;
 
@@ -144,7 +144,7 @@ void generator_draw()
 }
 
 void generator_damage(float hp)
-{
+{SELFPARAM();
 	if(hp <= 0)
 		setmodel(self, "models/onslaught/generator_dead.md3");
 	else if(hp < self.max_health * 0.10)
@@ -172,7 +172,7 @@ void generator_damage(float hp)
 }
 
 void generator_construct()
-{
+{SELFPARAM();
 	self.netname = "Generator";
 	self.classname = "onslaught_generator";
 
@@ -192,7 +192,7 @@ void generator_construct()
 
 .vector glowmod;
 void generator_changeteam()
-{
+{SELFPARAM();
 	if(self.team)
 	{
 		self.glowmod = Team_ColorRGB(self.team - 1);
@@ -208,7 +208,7 @@ void generator_changeteam()
 }
 
 void ent_generator()
-{
+{SELFPARAM();
 	int sf = ReadByte();
 
 	if(sf & GSF_SETUP)

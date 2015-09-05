@@ -83,7 +83,7 @@
 #elif defined(SVQC)
 
 void dodging_UpdateStats()
-{
+{SELFPARAM();
 	self.stat_dodging = PHYS_DODGING;
 	self.stat_dodging_delay = PHYS_DODGING_DELAY;
 	self.stat_dodging_horiz_speed_frozen = PHYS_DODGING_HORIZ_SPEED_FROZEN;
@@ -116,7 +116,7 @@ void dodging_Initialize()
 
 // returns 1 if the player is close to a wall
 bool check_close_to_wall(float threshold)
-{
+{SELFPARAM();
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
 	#define X(OFFSET)																\
@@ -133,12 +133,12 @@ bool check_close_to_wall(float threshold)
 }
 
 bool check_close_to_ground(float threshold)
-{
+{SELFPARAM();
 	return IS_ONGROUND(self) ? true : false;
 }
 
 float PM_dodging_checkpressedkeys()
-{
+{SELFPARAM();
 	if(!PHYS_DODGING)
 		return false;
 
@@ -199,7 +199,7 @@ float PM_dodging_checkpressedkeys()
 }
 
 void PM_dodging()
-{
+{SELFPARAM();
 	if (!PHYS_DODGING)
 		return;
 

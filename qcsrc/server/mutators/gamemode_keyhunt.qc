@@ -92,7 +92,7 @@ void kh_ScoreRules(float teams)
 }
 
 float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the time
-{
+{SELFPARAM();
 	if(!IS_PLAYER(e) || self.team != e.team)
 		if(!kh_tracking_enabled)
 			return false;
@@ -101,7 +101,7 @@ float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the
 }
 
 float kh_Key_waypointsprite_visible_for_player(entity e) // ??
-{
+{SELFPARAM();
 	if(!kh_tracking_enabled)
 		return false;
 	if(!self.owner)
@@ -154,7 +154,7 @@ void kh_Controller_SetThink(float t, kh_Think_t func)  // runs occasionaly
 }
 void kh_WaitForPlayers();
 void kh_Controller_Think()  // called a lot
-{
+{SELFPARAM();
 	if(intermission_running)
 		return;
 	if(self.cnt > 0)
@@ -411,7 +411,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 }
 
 void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.owner)
 		return;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
@@ -444,7 +444,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 }
 
 void kh_Key_Touch()  // runs many, many times when a key has been dropped and can be picked up
-{
+{SELFPARAM();
 	if(intermission_running)
 		return;
 
@@ -671,7 +671,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 }
 
 void kh_Key_Think()  // runs all the time
-{
+{SELFPARAM();
 	entity head;
 	//entity player;  // needed by FOR_EACH_PLAYER
 
@@ -729,7 +729,7 @@ void kh_Key_Think()  // runs all the time
 }
 
 void key_reset()
-{
+{SELFPARAM();
 	kh_Key_AssignTo(self, world);
 	kh_Key_Remove(self);
 }
@@ -1058,13 +1058,13 @@ void kh_finalize()
 // register this as a mutator
 
 MUTATOR_HOOKFUNCTION(kh_Key_DropAll)
-{
+{SELFPARAM();
 	kh_Key_DropAll(self, true);
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PlayerDies)
-{
+{SELFPARAM();
 	if(self == other)
 		kh_Key_DropAll(self, true);
 	else if(IS_PLAYER(other))
@@ -1093,13 +1093,13 @@ MUTATOR_HOOKFUNCTION(kh_GetTeamCount)
 }
 
 MUTATOR_HOOKFUNCTION(kh_SpectateCopy)
-{
+{SELFPARAM();
 	self.kh_state = other.kh_state;
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE == 0)
 	{
 		entity k;

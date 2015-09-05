@@ -8,26 +8,26 @@
 #include "../../common/items/all.qc"
 
 void spawnfunc_item_minst_cells()
-{
+{SELFPARAM();
 	if (!g_instagib) { remove(self); return; }
 	if (!self.ammo_cells) self.ammo_cells = autocvar_g_instagib_ammo_drop;
 	StartItemA(ITEM_VaporizerCells);
 }
 
 void instagib_invisibility()
-{
+{SELFPARAM();
 	self.strength_finished = autocvar_g_balance_powerup_strength_time;
 	StartItemA(ITEM_Invisibility);
 }
 
 void instagib_extralife()
-{
+{SELFPARAM();
 	self.max_health = 1;
 	StartItemA(ITEM_ExtraLife);
 }
 
 void instagib_speed()
-{
+{SELFPARAM();
 	self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 	StartItemA(ITEM_Speed);
 }
@@ -42,7 +42,7 @@ void instagib_stop_countdown(entity e)
 	e.instagib_needammo = false;
 }
 void instagib_ammocheck()
-{
+{SELFPARAM();
 	if(time < self.instagib_nextthink)
 		return;
 	if(!IS_PLAYER(self))
@@ -140,7 +140,7 @@ MUTATOR_HOOKFUNCTION(instagib_MonsterLoot)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
-{
+{SELFPARAM();
 	// always refill ammo
 	if(self.monsterid == MON_MAGE.monsterid)
 		self.skin = 1;
@@ -157,13 +157,13 @@ MUTATOR_HOOKFUNCTION(instagib_BotShouldAttack)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_MakePlayerObserver)
-{
+{SELFPARAM();
 	instagib_stop_countdown(self);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerSpawn)
-{
+{SELFPARAM();
 	self.effects |= EF_FULLBRIGHT;
 	return false;
 }
@@ -181,7 +181,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerRegen)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
-{
+{SELFPARAM();
 	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
 
@@ -230,7 +230,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerPhysics)
-{
+{SELFPARAM();
 	if(self.items & ITEM_Speed.m_itemid)
 		self.stat_sv_maxspeed = self.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
 
@@ -340,7 +340,7 @@ MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_FilterItem)
-{
+{SELFPARAM();
 	if(self.classname == "item_cells")
 		return true; // no normal cells?
 
@@ -352,15 +352,12 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 
 	if(self.weapon == WEP_DEVASTATOR.m_id || self.weapon == WEP_VORTEX.m_id)
 	{
-		entity e = spawn(), oldself;
+		entity e = spawn();
 		setorigin(e, self.origin);
-		oldself = self;
-		self = e;
-		self.noalign = oldself.noalign;
-		self.cnt = oldself.cnt;
-		self.team = oldself.team;
-		spawnfunc_item_minst_cells();
-		self = oldself;
+		e.noalign = self.noalign;
+        e.cnt = self.cnt;
+        e.team = self.team;
+		WITH(entity, self, e, spawnfunc_item_minst_cells());
 		return true;
 	}
 
@@ -377,7 +374,7 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_CustomizeWaypoint)
-{
+{SELFPARAM();
 	entity e = WaypointSprite_getviewentity(other);
 
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
@@ -398,7 +395,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
-{
+{SELFPARAM();
 	if(self.ammo_cells)
 	{
 		// play some cool sounds ;)
@@ -427,7 +424,7 @@ MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
-{
+{SELFPARAM();
 	if (!autocvar_g_powerups) { return false; }
 	// Can't use .itemdef here
 	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))

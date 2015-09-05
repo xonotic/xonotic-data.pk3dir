@@ -44,7 +44,7 @@ void NIX_ChooseNextWeapon()
 }
 
 void NIX_GiveCurrentWeapon()
-{
+{SELFPARAM();
 	float dt;
 
 	if(!nix_nextweapon)
@@ -177,7 +177,7 @@ MUTATOR_HOOKFUNCTION(nix_BuildMutatorsPrettyString)
 }
 
 MUTATOR_HOOKFUNCTION(nix_FilterItem)
-{
+{SELFPARAM();
 	switch (self.items)
 	{
 		case ITEM_HealthSmall.m_itemid:
@@ -202,14 +202,14 @@ MUTATOR_HOOKFUNCTION(nix_FilterItem)
 }
 
 MUTATOR_HOOKFUNCTION(nix_OnEntityPreSpawn)
-{
+{SELFPARAM();
 	if(self.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
 		return 1;
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
-{
+{SELFPARAM();
 	if(!intermission_running)
 	if(self.deadflag == DEAD_NO)
 	if(IS_PLAYER(self))
@@ -218,7 +218,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
-{
+{SELFPARAM();
 	self.nix_lastchange_id = -1;
 	NIX_GiveCurrentWeapon(); // overrides the weapons you got when spawning
 	self.items |= IT_UNLIMITED_SUPERWEAPONS;
@@ -232,7 +232,7 @@ MUTATOR_HOOKFUNCTION(nix_SetModname)
 }
 
 MUTATOR_DEFINITION(mutator_nix)
-{
+{SELFPARAM();
 	entity e;
 
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nix_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);

@@ -1,6 +1,6 @@
 #ifdef SVQC
 void func_rotating_setactive(float astate)
-{
+{SELFPARAM();
 
 	if (astate == ACTIVE_TOGGLE)
 	{
@@ -27,7 +27,7 @@ dmgtime : See above.
 */
 
 void spawnfunc_func_rotating()
-{
+{SELFPARAM();
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);

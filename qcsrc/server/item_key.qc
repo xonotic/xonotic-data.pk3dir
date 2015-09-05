@@ -69,7 +69,8 @@ item_key
 /**
  * Key touch handler.
  */
-void item_key_touch(void) {
+void item_key_touch()
+{SELFPARAM();
 	if (!IS_PLAYER(other))
 		return;
 
@@ -86,7 +87,8 @@ void item_key_touch(void) {
 /**
  * Spawn a key with given model, key code and color.
  */
-void spawn_item_key() {
+void spawn_item_key()
+{SELFPARAM();
 	precache_model(self.model);
 
 	if (self.spawnflags & 1) // FLOATING
@@ -146,7 +148,8 @@ This is the only correct way to put keys on the map!
 
 itemkeys MUST always have exactly one bit set.
 */
-void spawnfunc_item_key() {
+void spawnfunc_item_key()
+{SELFPARAM();
 	string _netname;
 	vector _colormod;
 
@@ -252,7 +255,8 @@ FLOATING: the item will float in air, instead of aligning to the floor by fallin
 ---------NOTES----------
 Don't use this entity on new maps! Use item_key instead.
 */
-void spawnfunc_item_key1(void) {
+void spawnfunc_item_key1(void)
+{SELFPARAM();
 	self.classname = "item_key";
 	self.itemkeys = ITEM_KEY_BIT(1);
 	spawnfunc_item_key();
@@ -270,7 +274,8 @@ FLOATING: the item will float in air, instead of aligning to the floor by fallin
 ---------NOTES----------
 Don't use this entity on new maps! Use item_key instead.
 */
-void spawnfunc_item_key2(void) {
+void spawnfunc_item_key2(void)
+{SELFPARAM();
 	self.classname = "item_key";
 	self.itemkeys = ITEM_KEY_BIT(0);
 	spawnfunc_item_key();

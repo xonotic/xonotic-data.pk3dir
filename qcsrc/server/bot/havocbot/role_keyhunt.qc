@@ -15,7 +15,7 @@ void() havocbot_role_kh_freelancer;
 
 
 void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
-{
+{SELFPARAM();
 	entity head;
 	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
@@ -44,7 +44,7 @@ void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, f
 }
 
 void havocbot_role_kh_carrier()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -71,7 +71,7 @@ void havocbot_role_kh_carrier()
 }
 
 void havocbot_role_kh_defense()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -112,7 +112,7 @@ void havocbot_role_kh_defense()
 }
 
 void havocbot_role_kh_offense()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -154,7 +154,7 @@ void havocbot_role_kh_offense()
 }
 
 void havocbot_role_kh_freelancer()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -204,7 +204,7 @@ void havocbot_role_kh_freelancer()
 }
 
 void havocbot_chooserole_kh()
-{
+{SELFPARAM();
 	float r;
 
 	if(self.deadflag != DEAD_NO)

@@ -7,7 +7,7 @@
 #include "../../common/monsters/sv_monsters.qh"
 
 void spawnfunc_invasion_spawnpoint()
-{
+{SELFPARAM();
 	if(!g_invasion) { remove(self); return; }
 
 	self.classname = "invasion_spawnpoint";
@@ -261,7 +261,7 @@ void Invasion_RoundStart()
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
-{
+{SELFPARAM();
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		inv_numkilled += 1;
@@ -283,7 +283,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
-{
+{SELFPARAM();
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
 
@@ -304,7 +304,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(invasion_OnEntityPreSpawn)
-{
+{SELFPARAM();
 	if(startsWith(self.classname, "monster_"))
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
@@ -327,7 +327,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerRegen)
 }
 
 MUTATOR_HOOKFUNCTION(invasion_PlayerSpawn)
-{
+{SELFPARAM();
 	self.bot_attack = false;
 	return false;
 }
@@ -344,7 +344,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerDamage)
 }
 
 MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 

@@ -9,7 +9,7 @@
 #ifdef SVQC
 
 void viewloc_think()
-{
+{SELFPARAM();
 	entity e;
 
 	// we abuse this method, rather than using normal .touch, because touch isn't reliable with multiple clients inside the same trigger, and can't "untouch" entities
@@ -39,7 +39,7 @@ void viewloc_think()
 }
 
 bool trigger_viewloc_send(entity to, int sf)
-{
+{SELFPARAM();
 	// CSQC doesn't need to know our origin (yet), as we're only available for referencing
 	WriteByte(MSG_ENTITY, ENT_CLIENT_VIEWLOC_TRIGGER);
 
@@ -54,7 +54,7 @@ bool trigger_viewloc_send(entity to, int sf)
 }
 
 void viewloc_init()
-{
+{SELFPARAM();
 	entity e;
 	for(e = world; (e = find(e, targetname, self.target)); )
 		if(e.classname == "target_viewlocation_start")
@@ -81,7 +81,7 @@ void viewloc_init()
 }
 
 void spawnfunc_trigger_viewlocation()
-{
+{SELFPARAM();
 	// we won't check target2 here yet, as it may not even need to exist
 	if(self.target == "") { LOG_INFO("^1FAIL!\n"); remove(self); return; }
 
@@ -90,7 +90,7 @@ void spawnfunc_trigger_viewlocation()
 }
 
 bool viewloc_send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_VIEWLOC);
 
 	WriteByte(MSG_ENTITY, self.cnt);
@@ -108,20 +108,20 @@ bool viewloc_send(entity to, int sf)
 
 .float angle;
 void viewloc_link()
-{
+{SELFPARAM();
 	if(self.angle)
 		self.angles_y = self.angle;
 	Net_LinkEntity(self, false, 0, viewloc_send);
 }
 
 void spawnfunc_target_viewlocation_start()
-{
+{SELFPARAM();
 	self.classname = "target_viewlocation_start";
 	self.cnt = 1;
 	viewloc_link();
 }
 void spawnfunc_target_viewlocation_end()
-{
+{SELFPARAM();
 	self.classname = "target_viewlocation_end";
 	self.cnt = 2;
 	viewloc_link();
@@ -133,13 +133,13 @@ void spawnfunc_target_viewlocation() { spawnfunc_target_viewlocation_start(); }
 #elif defined(CSQC)
 
 void trigger_viewloc_updatelink()
-{
+{SELFPARAM();
 	self.enemy = findfloat(world, entnum, self.cnt);
 	self.goalentity = findfloat(world, entnum, self.count);
 }
 
 void ent_viewloc_trigger()
-{
+{SELFPARAM();
 	float point1 = ReadShort();
 	float point2 = ReadShort();
 
@@ -162,7 +162,7 @@ void ent_viewloc_trigger()
 }
 
 void ent_viewloc()
-{
+{SELFPARAM();
 	self.cnt = ReadByte();
 
 	self.origin_x = ReadCoord();

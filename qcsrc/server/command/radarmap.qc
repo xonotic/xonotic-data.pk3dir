@@ -227,7 +227,7 @@ void RadarMap_Next()
 	radarmapper = world;
 }
 void RadarMap_Think()
-{
+{SELFPARAM();
 	// rough map entity
 	//   cnt: current line
 	//   size: pixel width/height

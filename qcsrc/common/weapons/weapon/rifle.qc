@@ -52,7 +52,7 @@ void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }
 void spawnfunc_weapon_sniperrifle(void) { spawnfunc_weapon_rifle(); }
 
 void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, string pSound)
-{
+{SELFPARAM();
 	float i;
 
 	W_DecreaseAmmo(pAmmo);
@@ -89,7 +89,7 @@ void W_Rifle_Attack2(void)
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
 void W_Rifle_BulletHail_Continue(void)
-{
+{SELFPARAM();
 	float r, sw, af;
 
 	sw = self.switchweapon; // make it not detect weapon changes as reason to abort firing
@@ -114,7 +114,7 @@ void W_Rifle_BulletHail_Continue(void)
 }
 
 void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animtime, float refire)
-{
+{SELFPARAM();
 	// if we get here, we have at least one bullet to fire
 	AttackFunc();
 	if(mode)
@@ -135,7 +135,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 
 .float bot_secondary_riflemooth;
 bool W_Rifle(int req)
-{
+{SELFPARAM();
 	float ammo_amount;
 
 	switch(req)
@@ -266,7 +266,7 @@ bool W_Rifle(int req)
 #endif
 #ifdef CSQC
 bool W_Rifle(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

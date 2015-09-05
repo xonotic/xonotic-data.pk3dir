@@ -1,6 +1,6 @@
 #ifdef SVQC
 float rainsnow_SendEntity(entity to, float sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
 	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
@@ -27,7 +27,7 @@ Keys:
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
 */
 void spawnfunc_func_rain()
-{
+{SELFPARAM();
 	self.dest = self.velocity;
 	self.velocity = '0 0 0';
 	if (!self.dest)
@@ -65,7 +65,7 @@ Keys:
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
 */
 void spawnfunc_func_snow()
-{
+{SELFPARAM();
 	self.dest = self.velocity;
 	self.velocity = '0 0 0';
 	if (!self.dest)
@@ -91,17 +91,17 @@ void spawnfunc_func_snow()
 }
 #elif defined(CSQC)
 void Draw_Rain()
-{
+{SELFPARAM();
     te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
 void Draw_Snow()
-{
+{SELFPARAM();
     te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
 void Ent_RainOrSnow()
-{
+{SELFPARAM();
 	self.impulse = ReadByte(); // Rain, Snow, or Whatever
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();

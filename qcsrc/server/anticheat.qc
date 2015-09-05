@@ -63,7 +63,7 @@ float movement_oddity(vector m0, vector m1)
 }
 
 void anticheat_physics()
-{
+{SELFPARAM();
 	float f;
 
 	// div0_evade -> SPECTATORS
@@ -150,13 +150,13 @@ void anticheat_physics()
 }
 
 void anticheat_spectatecopy(entity spectatee)
-{
+{SELFPARAM();
 	// div0_evade -> SPECTATORS
 	self.angles = spectatee.anticheat_div0_evade_v_angle;
 }
 
 void anticheat_prethink()
-{
+{SELFPARAM();
 	// div0_evade -> SPECTATORS
 	self.anticheat_div0_evade_offset = 0;
 }
@@ -173,7 +173,7 @@ string anticheat_display(float f, float tmin, float mi, float ma)
 }
 
 void anticheat_report()
-{
+{SELFPARAM();
 	if(!autocvar_sv_eventlog)
 		return;
 	// TODO(divVerent): Use xonstat to acquire good thresholds.
@@ -198,7 +198,7 @@ void anticheat_report()
 }
 
 float anticheat_getvalue(string id)
-{
+{SELFPARAM();
 	switch(id) {
 		case "_time": return servertime - self.anticheat_jointime;
 		case "speedhack": return MEAN_EVALUATE(anticheat_speedhack);
@@ -228,22 +228,22 @@ void anticheat_startframe()
 }
 
 void anticheat_fixangle()
-{
+{SELFPARAM();
 	self.anticheat_fixangle_endtime = servertime + ANTILAG_LATENCY(self) + 0.2;
 }
 
 void anticheat_endframe()
-{
-	entity oldself = self;
-	FOR_EACH_CLIENT(self)
-		if (self.fixangle)
-			anticheat_fixangle();
-	self = oldself;
+{SELFPARAM();
+	entity e;
+	FOR_EACH_CLIENT(e)
+		if (e.fixangle) {
+			WITH(entity, self, e, anticheat_fixangle());
+		}
 	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
 }
 
 void anticheat_init()
-{
+{SELFPARAM();
 	self.anticheat_speedhack_offset = 0;
 	self.anticheat_jointime = servertime;
 }

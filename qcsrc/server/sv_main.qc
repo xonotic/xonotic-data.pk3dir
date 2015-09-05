@@ -28,13 +28,12 @@
 .float lastground;
 
 void CreatureFrame (void)
-{
-	entity oldself;
+{SELFPARAM();
 	float dm;
 
-	oldself = self;
-	for(self = world; (self = findfloat(self, damagedbycontents, true)); )
+	for(entity e = world; (e = findfloat(e, damagedbycontents, true)); )
 	{
+		setself(e);
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 
 		float vehic = IS_VEHICLE(self);
@@ -169,7 +168,7 @@ void CreatureFrame (void)
 
         self.oldvelocity = self.velocity;
 	}
-	self = oldself;
+	setself(this);
 }
 
 
@@ -186,7 +185,7 @@ float game_delay_last;
 
 float RedirectionThink();
 void StartFrame (void)
-{
+{SELFPARAM();
 	execute_next_frame();
 
 	remove = remove_unsafely; // not during spawning!
@@ -218,8 +217,7 @@ void StartFrame (void)
 	}
 #endif
 
-	entity e;
-	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
+	for(entity e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
 		CSQCProjectile_Check(e);
 
 	if(RedirectionThink())
@@ -264,8 +262,9 @@ void StartFrame (void)
 
 	bot_serverframe();
 
-	FOR_EACH_PLAYER(self)
-		self.porto_forbidden = max(0, self.porto_forbidden - 1);
+	entity e;
+	FOR_EACH_PLAYER(e)
+		e.porto_forbidden = max(0, e.porto_forbidden - 1);
 
 	anticheat_startframe();
 
@@ -279,7 +278,7 @@ void StartFrame (void)
 .string cvarfilter;
 float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
-{
+{SELFPARAM();
 	if (self)
 	if (self.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))

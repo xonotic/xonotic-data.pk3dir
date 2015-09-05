@@ -16,7 +16,7 @@ MUTATOR_HOOKFUNCTION(melee_ForbidThrowing)
 }
 
 MUTATOR_HOOKFUNCTION(melee_FilterItem)
-{
+{SELFPARAM();
 	switch (self.items)
 	{
 		case ITEM_HealthSmall.m_itemid:

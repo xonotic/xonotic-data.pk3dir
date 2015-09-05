@@ -41,7 +41,7 @@ string wordwrap(string s, float l)
 #ifndef MENUQC
 #ifndef CSQC
 void wordwrap_buffer_sprint(string s)
-{
+{SELFPARAM();
 	wordwrap_buffer = strcat(wordwrap_buffer, s);
 	if(s == "\n")
 	{
@@ -51,7 +51,7 @@ void wordwrap_buffer_sprint(string s)
 }
 
 void wordwrap_sprint(string s, float l)
-{
+{SELFPARAM();
 	wordwrap_buffer = "";
 	wordwrap_cb(s, l, wordwrap_buffer_sprint);
 	if(wordwrap_buffer != "")

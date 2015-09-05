@@ -9,21 +9,19 @@
 #include "../../common/weapons/all.qh"
 
 void W_GiveWeapon (entity e, float wep)
-{
-	entity oldself;
+{SELFPARAM();
 
 	if (!wep)
 		return;
 
 	e.weapons |= WepSet_FromWeapon(wep);
 
-	oldself = self;
-	self = e;
+	setself(e);
 
 	if(IS_PLAYER(other))
 		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
 
-	self = oldself;
+	setself(this);
 }
 
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
@@ -81,7 +79,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype,
 }
 
 void W_PrepareExplosionByDamage(entity attacker, void() explode)
-{
+{SELFPARAM();
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = func_null;
 

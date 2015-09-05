@@ -20,7 +20,7 @@
 .bool isplayermodel;
 
 void DamageEffect_Think()
-{
+{SELFPARAM();
 	// if particle distribution is enabled, slow ticrate by total number of damages
 	if(autocvar_cl_damageeffect_distribute)
 		self.nextthink = time + autocvar_cl_damageeffect_ticrate * self.owner.total_damages;
@@ -53,7 +53,7 @@ void DamageEffect_Think()
 }
 
 void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
-{
+{SELFPARAM();
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
 	int nearestbone = 0;
@@ -125,14 +125,11 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 }
 
 void Ent_DamageInfo(float isNew)
-{
+{SELFPARAM();
 	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
 	int species, forcemul;
 	vector force, thisforce;
-	entity oldself;
-
-	oldself = self;
 
 	w_deathtype = ReadShort();
 	w_issilent = (w_deathtype & 0x8000);
@@ -159,8 +156,9 @@ void Ent_DamageInfo(float isNew)
 	else
 		forcemul = 1;
 
-	for(self = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); self; self = self.chain)
+	for(entity e = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); e; e = e.chain)
 	{
+		setself(e);
 		// attached ents suck
 		if(self.tag_entity)
 			continue;
@@ -211,8 +209,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.isplayermodel)
 			hitplayer = true; // this impact damaged a player
 	}
-
-	self = oldself;
+	setself(this);
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{

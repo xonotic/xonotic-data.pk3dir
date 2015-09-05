@@ -18,19 +18,19 @@
 .vector colormod;
 
 void SUB_Stop()
-{
+{SELFPARAM();
 	self.move_velocity = self.move_avelocity = '0 0 0';
 	self.move_movetype = MOVETYPE_NONE;
 }
 
 void Projectile_ResetTrail(vector to)
-{
+{SELFPARAM();
 	self.trail_oldorigin = to;
 	self.trail_oldtime = time;
 }
 
 void Projectile_DrawTrail(vector to)
-{
+{SELFPARAM();
 	vector from;
 	float t0;
 
@@ -52,7 +52,7 @@ void Projectile_DrawTrail(vector to)
 }
 
 void Projectile_Draw()
-{
+{SELFPARAM();
 	vector rot;
 	vector trailorigin;
 	int f;
@@ -166,7 +166,7 @@ void Projectile_Draw()
 }
 
 void loopsound(entity e, int ch, string samp, float vol, float attn)
-{
+{SELFPARAM();
 	if(self.silent)
 		return;
 
@@ -175,7 +175,7 @@ void loopsound(entity e, int ch, string samp, float vol, float attn)
 }
 
 void Ent_RemoveProjectile()
-{
+{SELFPARAM();
 	if(self.count & 0x80)
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, MOVE_NORMAL, self);
@@ -184,7 +184,7 @@ void Ent_RemoveProjectile()
 }
 
 void Ent_Projectile()
-{
+{SELFPARAM();
 	int f;
 
 	// projectile properties:

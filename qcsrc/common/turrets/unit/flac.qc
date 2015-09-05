@@ -12,7 +12,7 @@ REGISTER_TURRET(
 #else
 #ifdef SVQC
 void turret_flac_projectile_think_explode()
-{
+{SELFPARAM();
     if(self.enemy != world)
     if(vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 3)
         setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
@@ -28,10 +28,10 @@ void turret_flac_projectile_think_explode()
     remove(self);
 }
 
-void spawnfunc_turret_flac() { if(!turret_initialize(TUR_FLAC)) remove(self); }
+void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC)) remove(self); }
 
 float t_flac(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:

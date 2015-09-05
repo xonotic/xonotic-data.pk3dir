@@ -1,5 +1,5 @@
 void turret_remove()
-{
+{SELFPARAM();
 	remove(self.tur_head);
 	//remove(self.enemy);
 	self.tur_head = world;
@@ -7,7 +7,7 @@ void turret_remove()
 
 .vector glowmod;
 void turret_changeteam()
-{
+{SELFPARAM();
 	self.glowmod = Team_ColorRGB(self.team - 1) * 2;
 	self.teamradar_color = Team_ColorRGB(self.team - 1);
 
@@ -20,12 +20,12 @@ void turret_changeteam()
 }
 
 void turret_head_draw()
-{
+{SELFPARAM();
 	self.drawmask = MASK_NORMAL;
 }
 
 void turret_draw()
-{
+{SELFPARAM();
 	float dt;
 
 	dt = time - self.move_time;
@@ -54,7 +54,7 @@ void turret_draw()
 }
 
 void turret_draw2d()
-{
+{SELFPARAM();
 	if(self.netname == "")
 		return;
 
@@ -202,7 +202,7 @@ void turret_draw2d()
 }
 
 void turret_construct()
-{
+{SELFPARAM();
 	entity tur = get_turretinfo(self.turretid);
 
 	if(self.tur_head == world)
@@ -247,7 +247,7 @@ void turret_construct()
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
 void turret_gibboom();
 void turret_gib_draw()
-{
+{SELFPARAM();
 	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 
 	self.drawmask = MASK_NORMAL;
@@ -269,7 +269,7 @@ void turret_gib_draw()
 }
 
 void turret_gibboom()
-{
+{SELFPARAM();
 	float i;
 
 	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
@@ -317,7 +317,7 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 }
 
 void turret_die()
-{
+{SELFPARAM();
 	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
 	if (!autocvar_cl_nogibs)
@@ -356,7 +356,7 @@ void turret_die()
 }
 
 void ent_turret()
-{
+{SELFPARAM();
 	float sf;
 	sf = ReadByte();
 

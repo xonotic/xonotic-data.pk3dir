@@ -116,7 +116,7 @@ void Physics_AddStats()
 }
 
 void Physics_UpdateStats(float maxspd_mod)
-{
+{SELFPARAM();
 	// blah
 	self.stat_pl_view_ofs = PL_VIEW_OFS;
 	self.stat_pl_crouch_view_ofs = PL_CROUCH_VIEW_OFS;
@@ -222,7 +222,7 @@ vector unstick_offsets[unstick_count] =
 };
 
 void PM_ClientMovement_Unstick()
-{
+{SELFPARAM();
 	float i;
 	for (i = 0; i < unstick_count; i++)
 	{
@@ -237,7 +237,7 @@ void PM_ClientMovement_Unstick()
 }
 
 void PM_ClientMovement_UpdateStatus(bool ground)
-{
+{SELFPARAM();
 	// make sure player is not stuck
 	PM_ClientMovement_Unstick();
 
@@ -308,7 +308,7 @@ void PM_ClientMovement_UpdateStatus(bool ground)
 }
 
 void PM_ClientMovement_Move()
-{
+{SELFPARAM();
 #ifdef CSQC
 	int bump;
 	float t;
@@ -397,7 +397,7 @@ void PM_ClientMovement_Move()
 }
 
 void CPM_PM_Aircontrol(vector wishdir, float wishspeed)
-{
+{SELFPARAM();
 	float k = 32 * (2 * IsMoveInDirection(self.movement, 0) - 1);
 	if (k <= 0)
 		return;
@@ -434,7 +434,7 @@ float AdjustAirAccelQW(float accelqw, float factor)
 //   prvm_globalset server speedclamp_mode 1
 //     (or 2)
 void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float accel, float accelqw, float stretchfactor, float sidefric, float speedlimit)
-{
+{SELFPARAM();
 	float speedclamp = stretchfactor > 0 ? stretchfactor
 	: accelqw < 0 ? 1 // full clamping, no stretch
 	: -1; // no clamping
@@ -498,7 +498,7 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 }
 
 void PM_AirAccelerate(vector wishdir, float wishspeed)
-{
+{SELFPARAM();
 	if (wishspeed == 0)
 		return;
 
@@ -541,7 +541,7 @@ returns true if handled
 =============
 */
 bool PlayerJump (void)
-{
+{SELFPARAM();
 	if (PHYS_FROZEN(self))
 		return true; // no jumping in freezetag when frozen
 
@@ -657,7 +657,7 @@ bool PlayerJump (void)
 }
 
 void CheckWaterJump()
-{
+{SELFPARAM();
 // check for a jump-out-of-water
 	makevectors(self.v_angle);
 	vector start = self.origin;
@@ -697,7 +697,7 @@ void CheckWaterJump()
 // Hack: shouldn't need to know about this
 .float multijump_count;
 void CheckPlayerJump()
-{
+{SELFPARAM();
 #ifdef SVQC
 	float was_flying = ITEMS_STAT(self) & IT_USING_JETPACK;
 #endif
@@ -757,7 +757,7 @@ float racecar_angle(float forward, float down)
 }
 
 void RaceCarPhysics()
-{
+{SELFPARAM();
 #ifdef SVQC
 	// using this move type for "big rigs"
 	// the engine does not push the entity!
@@ -977,7 +977,7 @@ void SpecialCommand()
 }
 
 void PM_check_race_movetime(void)
-{
+{SELFPARAM();
 #ifdef SVQC
 	self.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
 	float f = floor(self.race_movetime_frac);
@@ -988,7 +988,7 @@ void PM_check_race_movetime(void)
 }
 
 float PM_check_specialcommand(float buttons)
-{
+{SELFPARAM();
 #ifdef SVQC
 	string c;
 	if (!buttons)
@@ -1025,7 +1025,7 @@ float PM_check_specialcommand(float buttons)
 }
 
 void PM_check_nickspam(void)
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (time >= self.nickspamtime)
 		return;
@@ -1047,7 +1047,7 @@ void PM_check_nickspam(void)
 }
 
 void PM_check_punch()
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (self.punchangle != '0 0 0')
 	{
@@ -1070,7 +1070,7 @@ void PM_check_punch()
 }
 
 void PM_check_spider(void)
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (time >= self.spider_slowness)
 		return;
@@ -1083,7 +1083,7 @@ void PM_check_spider(void)
 
 // predict frozen movement, as frozen players CAN move in some cases
 void PM_check_frozen(void)
-{
+{SELFPARAM();
 	if (!PHYS_FROZEN(self))
 		return;
 	if (PHYS_DODGING_FROZEN
@@ -1110,7 +1110,7 @@ void PM_check_frozen(void)
 }
 
 void PM_check_hitground()
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (IS_ONGROUND(self))
 	if (IS_PLAYER(self)) // no fall sounds for observers thank you very much
@@ -1137,7 +1137,7 @@ void PM_check_hitground()
 }
 
 void PM_check_blocked(void)
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (!self.player_blocked)
 		return;
@@ -1151,7 +1151,7 @@ float speedaward_lastsent;
 float speedaward_lastupdate;
 #endif
 void PM_check_race(void)
-{
+{SELFPARAM();
 #ifdef SVQC
 	if(!(g_cts || g_race))
 		return;
@@ -1181,7 +1181,7 @@ void PM_check_race(void)
 }
 
 void PM_check_vortex(void)
-{
+{SELFPARAM();
 #ifdef SVQC
 	// WEAPONTODO
 	float xyspeed = vlen(vec2(self.velocity));
@@ -1197,7 +1197,7 @@ void PM_check_vortex(void)
 }
 
 void PM_fly(float maxspd_mod)
-{
+{SELFPARAM();
 	// noclipping or flying
 	UNSET_ONGROUND(self);
 
@@ -1218,7 +1218,7 @@ void PM_fly(float maxspd_mod)
 }
 
 void PM_swim(float maxspd_mod)
-{
+{SELFPARAM();
 	// swimming
 	UNSET_ONGROUND(self);
 
@@ -1301,7 +1301,7 @@ void PM_swim(float maxspd_mod)
 }
 
 void PM_ladder(float maxspd_mod)
-{
+{SELFPARAM();
 	// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
 	UNSET_ONGROUND(self);
 
@@ -1354,7 +1354,7 @@ void PM_ladder(float maxspd_mod)
 }
 
 void PM_jetpack(float maxspd_mod)
-{
+{SELFPARAM();
 	//makevectors(self.v_angle.y * '0 1 0');
 	makevectors(self.v_angle);
 	vector wishvel = v_forward * self.movement_x
@@ -1470,7 +1470,7 @@ void PM_jetpack(float maxspd_mod)
 }
 
 void PM_walk(float buttons_prev, float maxspd_mod)
-{
+{SELFPARAM();
 	if (!WAS_ONGROUND(self))
 	{
 #ifdef SVQC
@@ -1555,7 +1555,7 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 }
 
 void PM_air(float buttons_prev, float maxspd_mod)
-{
+{SELFPARAM();
 	makevectors(self.v_angle.y * '0 1 0');
 	vector wishvel = v_forward * self.movement.x
 					+ v_right * self.movement.y;
@@ -1641,7 +1641,7 @@ bool IsFlying(entity a)
 }
 
 void PM_Main()
-{
+{SELFPARAM();
 	int buttons = PHYS_INPUT_BUTTON_MASK(self);
 #ifdef CSQC
 	self.items = getstati(STAT_ITEMS, 0, 24);
@@ -1923,7 +1923,7 @@ void SV_PlayerPhysics(void)
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(void)
 #endif
-{
+{SELFPARAM();
 	PM_Main();
 
 #ifdef CSQC

@@ -10,7 +10,7 @@
 .float modelscale;
 
 void g_model_setcolormaptoactivator (void)
-{
+{SELFPARAM();
 	if(teamplay)
 	{
 		if(activator.team)
@@ -24,13 +24,13 @@ void g_model_setcolormaptoactivator (void)
 }
 
 void g_clientmodel_setcolormaptoactivator (void)
-{
+{SELFPARAM();
 	g_model_setcolormaptoactivator();
 	self.SendFlags |= (8 | 1);
 }
 
 void g_clientmodel_use(void)
-{
+{SELFPARAM();
 	if (self.antiwall_flag == 1)
 	{
 		self.inactive = 1;
@@ -45,7 +45,7 @@ void g_clientmodel_use(void)
 }
 
 void g_model_dropbyspawnflags()
-{
+{SELFPARAM();
 	if((self.spawnflags & 3) == 1) // ALIGN_ORIGIN
 	{
 		traceline(self.origin, self.origin - '0 0 4096', MOVE_NOMONSTERS, self);
@@ -64,7 +64,7 @@ void g_model_dropbyspawnflags()
 }
 
 void g_clientmodel_dropbyspawnflags()
-{
+{SELFPARAM();
 	vector o0;
 	o0 = self.origin;
 	g_model_dropbyspawnflags();
@@ -73,7 +73,7 @@ void g_clientmodel_dropbyspawnflags()
 }
 
 float g_clientmodel_genericsendentity (entity to, int sf)
-{
+{SELFPARAM();
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')
 		sf |= 0x10;
@@ -177,15 +177,15 @@ float g_clientmodel_genericsendentity (entity to, int sf)
 	self.default_solid = sol;
 
 // non-solid model entities:
-void spawnfunc_misc_gamemodel()         { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity
-void spawnfunc_misc_clientmodel()       { self.angles_x = -self.angles.x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
-void spawnfunc_misc_models()            { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
+void spawnfunc_misc_gamemodel()         { SELFPARAM(); self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity
+void spawnfunc_misc_clientmodel()       { SELFPARAM(); self.angles_x = -self.angles.x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
+void spawnfunc_misc_models()            { SELFPARAM(); self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
 
 // non-solid brush entities:
-void spawnfunc_func_illusionary()       { G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
-void spawnfunc_func_clientillusionary() { G_CLIENTMODEL_INIT(SOLID_NOT) } // brush entity
-void spawnfunc_func_static()            { G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old alias name from some other game
+void spawnfunc_func_illusionary()       { SELFPARAM(); G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
+void spawnfunc_func_clientillusionary() { SELFPARAM(); G_CLIENTMODEL_INIT(SOLID_NOT) } // brush entity
+void spawnfunc_func_static()            { SELFPARAM(); G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old alias name from some other game
 
 // solid brush entities
-void spawnfunc_func_wall()              { G_MODEL_INIT      (SOLID_BSP) } // Q1 name
-void spawnfunc_func_clientwall()        { G_CLIENTMODEL_INIT(SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+void spawnfunc_func_wall()              { SELFPARAM(); G_MODEL_INIT      (SOLID_BSP) } // Q1 name
+void spawnfunc_func_clientwall()        { SELFPARAM(); G_CLIENTMODEL_INIT(SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)

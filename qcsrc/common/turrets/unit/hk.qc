@@ -25,7 +25,7 @@ float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 #endif
 
 float hk_is_valid_target(entity e_target)
-{
+{SELFPARAM();
     if (e_target == world)
         return 0;
 
@@ -59,7 +59,7 @@ float hk_is_valid_target(entity e_target)
 }
 
 void turret_hk_missile_think()
-{
+{SELFPARAM();
     vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
     float  fu, fd, ff, fl, fr, fe;  // Fraction to solid
     vector olddir,wishdir,newdir;   // Final direction
@@ -260,7 +260,7 @@ void turret_hk_missile_think()
 }
 
 float turret_hk_addtarget(entity e_target,entity e_sender)
-{
+{SELFPARAM();
     if (e_target)
     {
         if (turret_validate_target(self,e_target,self.target_validate_flags) > 0)
@@ -273,10 +273,10 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
     return 0;
 }
 
-void spawnfunc_turret_hk() { if(!turret_initialize(TUR_HK)) remove(self); }
+void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK)) remove(self); }
 
 float t_hk(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:

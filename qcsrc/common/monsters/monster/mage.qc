@@ -62,7 +62,7 @@ void() M_Mage_Defend_Shield;
 .float mage_shield_time;
 
 float M_Mage_Defend_Heal_Check(entity e)
-{
+{SELFPARAM();
 	if(e == world)
 		return false;
 	if(e.health <= 0)
@@ -88,7 +88,7 @@ float M_Mage_Defend_Heal_Check(entity e)
 }
 
 void M_Mage_Attack_Spike_Explode()
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 
 	sound(self, CH_SHOTS, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
@@ -110,7 +110,7 @@ void M_Mage_Attack_Spike_Touch()
 
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think()
-{
+{SELFPARAM();
 	entity e;
 	vector desireddir, olddir, newdir, eorg;
 	float turnrate;
@@ -173,7 +173,7 @@ void M_Mage_Attack_Spike_Think()
 }
 
 void M_Mage_Attack_Spike()
-{
+{SELFPARAM();
 	entity missile;
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 
@@ -200,7 +200,7 @@ void M_Mage_Attack_Spike()
 }
 
 void M_Mage_Defend_Heal()
-{
+{SELFPARAM();
 	entity head;
 	float washealed = false;
 
@@ -257,7 +257,7 @@ void M_Mage_Defend_Heal()
 }
 
 void M_Mage_Attack_Push()
-{
+{SELFPARAM();
 	sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, self.origin, '0 0 0', 1);
@@ -267,7 +267,7 @@ void M_Mage_Attack_Push()
 }
 
 void M_Mage_Attack_Teleport()
-{
+{SELFPARAM();
 	if(vlen(self.enemy.origin - self.origin) >= 500)
 		return;
 
@@ -284,13 +284,13 @@ void M_Mage_Attack_Teleport()
 }
 
 void M_Mage_Defend_Shield_Remove()
-{
+{SELFPARAM();
 	self.effects &= ~(EF_ADDITIVE | EF_BLUE);
 	self.armorvalue = autocvar_g_monsters_armor_blockpercent;
 }
 
 void M_Mage_Defend_Shield()
-{
+{SELFPARAM();
 	self.effects |= (EF_ADDITIVE | EF_BLUE);
 	self.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
 	self.armorvalue = (autocvar_g_monster_mage_shield_blockpercent);
@@ -301,7 +301,7 @@ void M_Mage_Defend_Shield()
 }
 
 float M_Mage_Attack(float attack_type)
-{
+{SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -348,7 +348,7 @@ void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE.monsterid); }
 #endif // SVQC
 
 bool M_Mage(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		#ifdef SVQC
