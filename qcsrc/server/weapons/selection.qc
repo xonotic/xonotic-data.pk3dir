@@ -18,9 +18,8 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 }
 
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
-{
+{SELFPARAM();
 	float f;
-	entity oldself;
 
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
@@ -47,8 +46,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			}
 			else
 			{
-				oldself = self;
-				self = cl;
+				setself(cl);
 				f = WEP_ACTION(wpn, WR_CHECKAMMO1);
 				f = f + WEP_ACTION(wpn, WR_CHECKAMMO2);
 
@@ -58,7 +56,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
 
-				self = oldself;
+				setself(this);
 			}
 			if (!f)
 			{
@@ -115,7 +113,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 }
 
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing)
-{
+{SELFPARAM();
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
 	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast;
@@ -254,7 +252,7 @@ void W_SwitchToOtherWeapon(entity pl)
 }
 
 void W_SwitchWeapon(float imp)
-{
+{SELFPARAM();
 	if (self.switchweapon != imp)
 	{
 		if (client_hasweapon(self, imp, true, true))
@@ -266,7 +264,7 @@ void W_SwitchWeapon(float imp)
 }
 
 void W_CycleWeapon(string weaponorder, float dir)
-{
+{SELFPARAM();
 	float w;
 	w = W_GetCycleWeapon(self, weaponorder, dir, -1, 1, true);
 	if(w > 0)
@@ -274,7 +272,7 @@ void W_CycleWeapon(string weaponorder, float dir)
 }
 
 void W_NextWeaponOnImpulse(float imp)
-{
+{SELFPARAM();
 	float w;
 	w = W_GetCycleWeapon(self, self.cvar_cl_weaponpriority, +1, imp, 1, (self.cvar_cl_weaponimpulsemode == 0));
 	if(w > 0)
@@ -283,7 +281,7 @@ void W_NextWeaponOnImpulse(float imp)
 
 // next weapon
 void W_NextWeapon(float list)
-{
+{SELFPARAM();
 	if(list == 0)
 		W_CycleWeapon(weaponorder_byid, -1);
 	else if(list == 1)
@@ -294,7 +292,7 @@ void W_NextWeapon(float list)
 
 // prev weapon
 void W_PreviousWeapon(float list)
-{
+{SELFPARAM();
 	if(list == 0)
 		W_CycleWeapon(weaponorder_byid, +1);
 	else if(list == 1)
@@ -305,7 +303,7 @@ void W_PreviousWeapon(float list)
 
 // previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon(void)
-{
+{SELFPARAM();
 	if(client_hasweapon(self, self.cnt, true, false))
 		W_SwitchWeapon(self.cnt);
 	else

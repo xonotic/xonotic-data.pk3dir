@@ -1,7 +1,7 @@
 #ifdef SVQC
 .float freq;
 void func_pendulum_controller_think()
-{
+{SELFPARAM();
 	float v;
 	self.nextthink = time + 0.1;
 
@@ -22,7 +22,7 @@ void func_pendulum_controller_think()
 }
 
 void spawnfunc_func_pendulum()
-{
+{SELFPARAM();
 	entity controller;
 	if (self.noise != "")
 	{

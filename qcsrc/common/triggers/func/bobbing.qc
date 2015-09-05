@@ -1,7 +1,7 @@
 #ifdef SVQC
 .float height;
 void func_bobbing_controller_think()
-{
+{SELFPARAM();
 	vector v;
 	self.nextthink = time + 0.1;
 
@@ -29,7 +29,7 @@ dmg : Do this mutch dmg every .dmgtime intervall when blocked
 dmgtime : See above.
 */
 void spawnfunc_func_bobbing()
-{
+{SELFPARAM();
 	entity controller;
 	if (self.noise != "")
 	{

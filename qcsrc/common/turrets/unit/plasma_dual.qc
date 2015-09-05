@@ -11,10 +11,10 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
-void spawnfunc_turret_plasma_dual() { if(!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
+void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
 
 float t_plasma_dual(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:

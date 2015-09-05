@@ -14,7 +14,7 @@
 #include "../../../warpzonelib/common.qh"
 
 void havocbot_ai()
-{
+{SELFPARAM();
 	if(self.draggedby)
 		return;
 
@@ -179,7 +179,7 @@ void havocbot_ai()
 }
 
 void havocbot_keyboard_movement(vector destorg)
-{
+{SELFPARAM();
 	vector keyboard;
 	float blend, maxspeed;
 	float sk;
@@ -254,7 +254,7 @@ void havocbot_keyboard_movement(vector destorg)
 }
 
 void havocbot_bunnyhop(vector dir)
-{
+{SELFPARAM();
 	float bunnyhopdistance;
 	vector deviation;
 	float maxspeed;
@@ -397,7 +397,7 @@ void havocbot_bunnyhop(vector dir)
 }
 
 void havocbot_movetogoal()
-{
+{SELFPARAM();
 	vector destorg;
 	vector diff;
 	vector dir;
@@ -854,7 +854,7 @@ void havocbot_movetogoal()
 }
 
 void havocbot_chooseenemy()
-{
+{SELFPARAM();
 	entity head, best, head2;
 	float rating, bestrating, i, hf;
 	vector eye, v;
@@ -949,7 +949,7 @@ void havocbot_chooseenemy()
 }
 
 float havocbot_chooseweapon_checkreload(int new_weapon)
-{
+{SELFPARAM();
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
 	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
@@ -974,7 +974,7 @@ float havocbot_chooseweapon_checkreload(int new_weapon)
 }
 
 void havocbot_chooseweapon()
-{
+{SELFPARAM();
 	int i;
 
 	// ;)
@@ -1076,7 +1076,7 @@ void havocbot_chooseweapon()
 }
 
 void havocbot_aim()
-{
+{SELFPARAM();
 	vector selfvel, enemyvel;
 //	if(self.flags & FL_INWATER)
 //		return;
@@ -1098,7 +1098,7 @@ void havocbot_aim()
 }
 
 float havocbot_moveto_refresh_route()
-{
+{SELFPARAM();
 	// Refresh path to goal if necessary
 	entity wp;
 	wp = self.havocbot_personal_waypoint;
@@ -1109,7 +1109,7 @@ float havocbot_moveto_refresh_route()
 }
 
 float havocbot_moveto(vector pos)
-{
+{SELFPARAM();
 	entity wp;
 
 	if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
@@ -1231,7 +1231,7 @@ float havocbot_resetgoal()
 }
 
 void havocbot_setupbot()
-{
+{SELFPARAM();
 	self.bot_ai = havocbot_ai;
 	self.cmd_moveto = havocbot_moveto;
 	self.cmd_resetgoal = havocbot_resetgoal;
@@ -1240,7 +1240,7 @@ void havocbot_setupbot()
 }
 
 vector havocbot_dodge()
-{
+{SELFPARAM();
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
 #if 0

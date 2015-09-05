@@ -25,7 +25,7 @@ const float ewheel_anim_bck_fast = 4;
 
 //#define EWHEEL_FANCYPATH
 void ewheel_move_path()
-{
+{SELFPARAM();
 #ifdef EWHEEL_FANCYPATH
     // Are we close enougth to a path node to switch to the next?
     if (vlen(self.origin  - self.pathcurrent.origin) < 64)
@@ -68,7 +68,7 @@ void ewheel_move_path()
 }
 
 void ewheel_move_enemy()
-{
+{SELFPARAM();
     float newframe;
 
     self.steerto = steerlib_arrive(self.enemy.origin,self.target_range_optimal);
@@ -109,7 +109,7 @@ void ewheel_move_enemy()
 }
 
 void ewheel_move_idle()
-{
+{SELFPARAM();
     if(self.frame != 0)
     {
         self.SendFlags |= TNSF_ANIM;
@@ -121,10 +121,10 @@ void ewheel_move_idle()
         movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
-void spawnfunc_turret_ewheel() { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
+void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
 float t_ewheel(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:
@@ -265,7 +265,7 @@ float t_ewheel(float req)
 #ifdef CSQC
 
 void ewheel_draw()
-{
+{SELFPARAM();
     float dt;
 
     dt = time - self.move_time;
@@ -284,7 +284,7 @@ void ewheel_draw()
 }
 
 float t_ewheel(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_SETUP:

@@ -27,7 +27,7 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 
 void ka_TouchEvent();
 void ka_RespawnBall() // runs whenever the ball needs to be relocated
-{
+{SELFPARAM();
 	if(gameover) { return; }
 	vector oldballorigin = self.origin;
 
@@ -57,7 +57,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 }
 
 void ka_TimeScoring()
-{
+{SELFPARAM();
 	if(self.owner.ballcarried)
 	{ // add points for holding the ball after a certain amount of time
 		if(autocvar_g_keepaway_score_timepoints)
@@ -69,7 +69,7 @@ void ka_TimeScoring()
 }
 
 void ka_TouchEvent() // runs any time that the ball comes in contact with something
-{
+{SELFPARAM();
 	if(gameover) { return; }
 	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -167,7 +167,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 }
 
 void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
-{
+{SELFPARAM();
 	if((self.owner) && (IS_PLAYER(self.owner)))
 		ka_DropEvent(self.owner);
 
@@ -187,7 +187,7 @@ void ka_Reset() // used to clear the ballcarrier whenever the match switches fro
 // ================
 
 void havocbot_goalrating_ball(float ratingscale, vector org)
-{
+{SELFPARAM();
 	float t;
 	entity ball_owner;
 	ball_owner = ka_ball.owner;
@@ -206,7 +206,7 @@ void havocbot_goalrating_ball(float ratingscale, vector org)
 }
 
 void havocbot_role_ka_carrier()
-{
+{SELFPARAM();
 	if (self.deadflag != DEAD_NO)
 		return;
 
@@ -229,7 +229,7 @@ void havocbot_role_ka_carrier()
 }
 
 void havocbot_role_ka_collector()
-{
+{SELFPARAM();
 	if (self.deadflag != DEAD_NO)
 		return;
 
@@ -257,7 +257,7 @@ void havocbot_role_ka_collector()
 // ==============
 
 MUTATOR_HOOKFUNCTION(ka_Scoring)
-{
+{SELFPARAM();
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
@@ -284,7 +284,7 @@ MUTATOR_HOOKFUNCTION(ka_GiveFragsForKill)
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
-{
+{SELFPARAM();
 	// clear the item used for the ball in keepaway
 	self.items &= ~IT_KEY1;
 
@@ -296,7 +296,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerUseKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE == 0)
 	if(self.ballcarried)
 	{
@@ -338,13 +338,13 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values th
 }
 
 MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
-{
+{SELFPARAM();
 	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has left the match, drop it
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
-{
+{SELFPARAM();
 	// In the future this hook is supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
 	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player()
 
@@ -357,7 +357,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
-{
+{SELFPARAM();
 	if(self.ballcarried)
 	{
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
@@ -367,7 +367,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
 }
 
 MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
-{
+{SELFPARAM();
 	// if neither player has ball then don't attack unless the ball is on the ground
 	if(!checkentity.ballcarried && !self.ballcarried && ka_ball.owner)
 		return true;
@@ -375,7 +375,7 @@ MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
 }
 
 MUTATOR_HOOKFUNCTION(ka_BotRoles)
-{
+{SELFPARAM();
 	if (self.ballcarried)
 		self.havocbot_role = havocbot_role_ka_carrier;
 	else

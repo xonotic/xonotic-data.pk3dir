@@ -1,13 +1,13 @@
 #ifdef SVQC
 void gamestart_use()
-{
+{SELFPARAM();
 	activator = self;
 	SUB_UseTargets();
 	remove(self);
 }
 
 void spawnfunc_trigger_gamestart()
-{
+{SELFPARAM();
 	self.use = gamestart_use;
 	self.reset2 = spawnfunc_trigger_gamestart;
 

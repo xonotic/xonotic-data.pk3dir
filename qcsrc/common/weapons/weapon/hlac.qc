@@ -51,7 +51,7 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
 
 void W_HLAC_Touch(void)
-{
+{SELFPARAM();
 	float isprimary;
 
 	PROJECTILE_TOUCH;
@@ -66,7 +66,7 @@ void W_HLAC_Touch(void)
 }
 
 void W_HLAC_Attack(void)
-{
+{SELFPARAM();
 	entity missile;
     float spread;
 
@@ -115,7 +115,7 @@ void W_HLAC_Attack(void)
 }
 
 void W_HLAC_Attack2(void)
-{
+{SELFPARAM();
 	entity missile;
     float spread;
 
@@ -160,7 +160,7 @@ void W_HLAC_Attack2(void)
 
 // weapon frames
 void W_HLAC_Attack_Frame(void)
-{
+{SELFPARAM();
 	if(self.weapon != self.switchweapon) // abort immediately if switching
 	{
 		w_ready();
@@ -189,7 +189,7 @@ void W_HLAC_Attack_Frame(void)
 }
 
 void W_HLAC_Attack2_Frame(void)
-{
+{SELFPARAM();
     float i;
 
 	W_DecreaseAmmo(WEP_CVAR_SEC(hlac, ammo));
@@ -205,7 +205,7 @@ void W_HLAC_Attack2_Frame(void)
 }
 
 bool W_HLAC(int req)
-{
+{SELFPARAM();
 	float ammo_amount;
 	switch(req)
 	{
@@ -284,7 +284,7 @@ bool W_HLAC(int req)
 #endif
 #ifdef CSQC
 bool W_HLAC(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

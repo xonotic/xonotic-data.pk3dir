@@ -27,7 +27,7 @@ void vehicle_alarm(entity e, int ch, string s0und)
 }
 
 void AuxiliaryXhair_Draw2D()
-{
+{SELFPARAM();
 	if (scoreboard_showscores)
 		return;
 
@@ -73,7 +73,7 @@ void Net_AuXair2(bool bIsNew)
 }
 
 void Net_VehicleSetup()
-{
+{SELFPARAM();
 	int hud_id = ReadByte();
 
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
@@ -119,7 +119,7 @@ void Vehicles_drawHUD(
 	string iconAmmo2,
 	vector colorAmmo2,
 	string crosshair)
-{
+{SELFPARAM();
 	if(autocvar_r_letterbox)
 		return;
 

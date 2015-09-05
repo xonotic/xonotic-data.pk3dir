@@ -25,7 +25,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, time_prev, float, time)
 
     void DamageText_draw() {
-        entity this = self;
+        SELFPARAM();
         float dt = time - this.time_prev;
         this.time_prev = time;
         setorigin(this, this.origin + dt * this.velocity);

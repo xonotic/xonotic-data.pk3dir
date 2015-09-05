@@ -63,7 +63,7 @@ const float zombie_anim_spawn				= 30;
 */
 
 void M_Zombie_Attack_Leap_Touch()
-{
+{SELFPARAM();
 	if (self.health <= 0)
 		return;
 
@@ -86,7 +86,7 @@ void M_Zombie_Attack_Leap_Touch()
 }
 
 void M_Zombie_Defend_Block_End()
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -95,7 +95,7 @@ void M_Zombie_Defend_Block_End()
 }
 
 float M_Zombie_Defend_Block()
-{
+{SELFPARAM();
 	self.armorvalue = 0.9;
 	self.state = MONSTER_ATTACK_MELEE; // freeze monster
 	self.attack_finished_single = time + 2.1;
@@ -108,7 +108,7 @@ float M_Zombie_Defend_Block()
 }
 
 float M_Zombie_Attack(float attack_type)
-{
+{SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -142,7 +142,7 @@ void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 bool M_Zombie(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		#ifdef SVQC

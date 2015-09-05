@@ -88,7 +88,7 @@ string minigame_texture(string name)
 #define MSLE_CLEAN_Vector2D(x)
 
 #define MSLE(Name,Fields) \
-	void msle_entremove_##Name() { strunzone(self.netname); Fields }
+	void msle_entremove_##Name() { SELFPARAM(); strunzone(self.netname); Fields }
 MINIGAME_SIMPLELINKED_ENTITIES
 #undef MSLE
 #undef FIELD
@@ -127,7 +127,7 @@ void deactivate_minigame()
 }
 
 void minigame_entremove()
-{
+{SELFPARAM();
 	if ( self == active_minigame )
 		deactivate_minigame();
 }
@@ -169,7 +169,7 @@ void activate_minigame(entity minigame)
 }
 
 void minigame_player_entremove()
-{
+{SELFPARAM();
 	if ( self.owner == active_minigame && self.minigame_playerslot == player_localentnum )
 		deactivate_minigame();
 }
@@ -190,7 +190,7 @@ string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 		Fields \
 	}
 void minigame_read_owner()
-{
+{SELFPARAM();
 	string owner_name = ReadString_Raw();
 	self.owner = world;
 	do
@@ -200,7 +200,7 @@ void minigame_read_owner()
 		LOG_TRACE("Got a minigame entity without a minigame!\n");
 }
 void ent_read_minigame()
-{
+{SELFPARAM();
 	float sf = ReadByte();
 	if ( sf & MINIG_SF_CREATE )
 	{

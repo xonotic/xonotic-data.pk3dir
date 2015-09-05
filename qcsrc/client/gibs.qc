@@ -13,7 +13,7 @@
 .float gravity;
 
 void Gib_Delete()
-{
+{SELFPARAM();
 	remove(self);
 }
 
@@ -75,7 +75,7 @@ void SUB_RemoveOnNoImpact()
 }
 
 void Gib_Touch()
-{
+{SELFPARAM();
 	// TODO maybe bounce of walls, make more gibs, etc.
 
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -92,7 +92,7 @@ void Gib_Touch()
 }
 
 void Gib_Draw()
-{
+{SELFPARAM();
 	vector oldorg;
 	oldorg = self.origin;
 
@@ -164,7 +164,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 }
 
 void Ent_GibSplash(bool isNew)
-{
+{SELFPARAM();
 	int amount, type, specnum;
 	vector org, vel;
 	string specstr;

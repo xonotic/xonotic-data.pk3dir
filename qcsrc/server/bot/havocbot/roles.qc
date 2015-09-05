@@ -13,7 +13,7 @@
 .void() havocbot_role;
 
 void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	entity player;
 	float rating, d, discard, distance, friend_distance, enemy_distance;
@@ -138,7 +138,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 }
 
 void havocbot_goalrating_controlpoints(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	head = findchain(classname, "dom_controlpoint");
 	while (head)
@@ -157,7 +157,7 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 }
 
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	int t;
 	float distance;
@@ -214,7 +214,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 // legacy bot role for standard gamemodes
 // go to best items
 void havocbot_role_generic()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -230,12 +230,12 @@ void havocbot_role_generic()
 }
 
 void havocbot_chooserole_generic()
-{
+{SELFPARAM();
 	self.havocbot_role = havocbot_role_generic;
 }
 
 void havocbot_chooserole()
-{
+{SELFPARAM();
 	LOG_TRACE("choosing a role...\n");
 	self.bot_strategytime = 0;
 	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole, self))

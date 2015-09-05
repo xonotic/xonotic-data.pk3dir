@@ -29,4 +29,4 @@ xonotic/util.qc
 ../common/weapons/all.qc
 
 
-../../mod/menu/progs.inc
+../mod/menu/progs.inc

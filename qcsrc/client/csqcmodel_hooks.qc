@@ -31,7 +31,7 @@ void CSQCModel_Hook_PreDraw(bool isplayer);
 .int lodmodelindex1;
 .int lodmodelindex2;
 void CSQCPlayer_LOD_Apply(void)
-{
+{SELFPARAM();
 	// LOD model loading
 	if(self.lodmodelindex0 != self.modelindex)
 	{
@@ -120,14 +120,14 @@ int forceplayermodels_goodmodelindex;
 .vector old_glowmod;
 
 void CSQCPlayer_ModelAppearance_PreUpdate(void)
-{
+{SELFPARAM();
 	self.model = self.forceplayermodels_savemodel;
 	self.modelindex = self.forceplayermodels_savemodelindex;
 	self.skin = self.forceplayermodels_saveskin;
 	self.colormap = self.forceplayermodels_savecolormap;
 }
 void CSQCPlayer_ModelAppearance_PostUpdate(void)
-{
+{SELFPARAM();
 	self.forceplayermodels_savemodel = self.model;
 	self.forceplayermodels_savemodelindex = self.modelindex;
 	self.forceplayermodels_saveskin = self.skin;
@@ -142,7 +142,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(void)
 	}
 }
 void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
-{
+{SELFPARAM();
 	// FORCEMODEL
 	// which one is ALWAYS good?
 	if (!forceplayermodels_goodmodel)
@@ -325,7 +325,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
 void CSQCPlayer_FallbackFrame_PreUpdate(void)
-{
+{SELFPARAM();
 	self.frame = self.csqcmodel_saveframe;
 	self.frame2 = self.csqcmodel_saveframe2;
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
@@ -334,7 +334,7 @@ void CSQCPlayer_FallbackFrame_PreUpdate(void)
 #endif
 }
 void CSQCPlayer_FallbackFrame_PostUpdate(bool isnew)
-{
+{SELFPARAM();
 	self.csqcmodel_saveframe = self.frame;
 	self.csqcmodel_saveframe2 = self.frame2;
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
@@ -360,11 +360,11 @@ void CSQCPlayer_FallbackFrame_PostUpdate(bool isnew)
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
 }
 void CSQCPlayer_AnimDecide_PostUpdate(bool isnew)
-{
+{SELFPARAM();
 	self.csqcmodel_isdead = !!(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 }
 int CSQCPlayer_FallbackFrame(int f)
-{
+{SELFPARAM();
 	if(frameduration(self.modelindex, f) > 0)
 		return f; // goooooood
 	if(frameduration(self.modelindex, 1) <= 0)
@@ -384,7 +384,7 @@ int CSQCPlayer_FallbackFrame(int f)
 	return f;
 }
 void CSQCPlayer_FallbackFrame_Apply(void)
-{
+{SELFPARAM();
 	self.frame = CSQCPlayer_FallbackFrame(self.frame);
 	self.frame2 = CSQCPlayer_FallbackFrame(self.frame2);
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
@@ -398,7 +398,7 @@ void CSQCPlayer_FallbackFrame_Apply(void)
 .int tag_entity_lastmodelindex;
 .int tag_index;
 void CSQCModel_AutoTagIndex_Apply(void)
-{
+{SELFPARAM();
 	if(self.tag_entity && wasfreed(self.tag_entity))
 		self.tag_entity = world;
 
@@ -423,10 +423,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
 		if(self.tag_entity.classname == "csqcmodel")
 		{
-			entity oldself = self;
-			self = self.tag_entity;
-			CSQCModel_Hook_PreDraw((self.entnum >= 1 && self.entnum <= maxclients));
-			self = oldself;
+			WITH(entity, self, self.tag_entity, CSQCModel_Hook_PreDraw((self.entnum >= 1 && self.entnum <= maxclients)));
 		}
 
 		if(self.tag_entity.modelindex != self.tag_entity_lastmodelindex)
@@ -499,13 +496,13 @@ const int MF_TRACER3 = 128; // purple trail
 .int csqcmodel_effects;
 .int csqcmodel_modelflags;
 void CSQCModel_Effects_PreUpdate(void)
-{
+{SELFPARAM();
 	self.effects = self.csqcmodel_effects;
 	self.modelflags = self.csqcmodel_modelflags;
 }
 void Reset_ArcBeam(void);
 void CSQCModel_Effects_PostUpdate(void)
-{
+{SELFPARAM();
 	if (self == csqcplayer) {
 		if (self.csqcmodel_teleported) {
 			Reset_ArcBeam();
@@ -520,7 +517,7 @@ void CSQCModel_Effects_PostUpdate(void)
 }
 .int snd_looping;
 void CSQCModel_Effects_Apply(void)
-{
+{SELFPARAM();
 	int eff = self.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
 
 	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
@@ -625,7 +622,7 @@ void CSQCPlayer_Precache()
 .int anim_saveframe2time;
 .int anim_prev_pmove_flags;
 void CSQCModel_Hook_PreDraw(bool isplayer)
-{
+{SELFPARAM();
 	if(self.csqcmodel_predraw_run == framecount)
 		return;
 	self.csqcmodel_predraw_run = framecount;
@@ -724,7 +721,7 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 }
 
 void CSQCModel_Hook_PreUpdate(bool isnew, bool isplayer, bool islocalplayer)
-{
+{SELFPARAM();
 	// interpolate v_angle
 	self.iflags |= IFLAG_V_ANGLE_X;
 	// revert to values from server
@@ -738,7 +735,7 @@ void CSQCModel_Hook_PreUpdate(bool isnew, bool isplayer, bool islocalplayer)
 }
 
 void CSQCModel_Hook_PostUpdate(bool isnew, bool isplayer, bool islocalplayer)
-{
+{SELFPARAM();
 	// is it a player model? (shared state)
 	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/" || (substring(self.model, 0, 16) == "models/monsters/" && (self.entnum >= 1 && self.entnum <= maxclients)));
 

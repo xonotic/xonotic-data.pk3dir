@@ -47,7 +47,7 @@ const float shambler_anim_death		= 8;
 .float shambler_lastattack; // delay attacks separately
 
 void M_Shambler_Attack_Smash()
-{
+{SELFPARAM();
 	makevectors(self.angles);
 	Send_Effect(EFFECT_EXPLOSION_MEDIUM, (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
@@ -61,7 +61,7 @@ void M_Shambler_Attack_Smash()
 }
 
 void M_Shambler_Attack_Swing()
-{
+{SELFPARAM();
 	float r = (random() < 0.5);
 	if(r && Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? self.anim_melee2 : self.anim_melee3), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, true))
 	{
@@ -72,7 +72,7 @@ void M_Shambler_Attack_Swing()
 }
 
 void M_Shambler_Attack_Lightning_Explode()
-{
+{SELFPARAM();
 	entity head;
 
 	sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
@@ -99,7 +99,7 @@ void M_Shambler_Attack_Lightning_Explode()
 }
 
 void M_Shambler_Attack_Lightning_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if (self.health <= 0)
 		return;
 
@@ -113,14 +113,14 @@ void M_Shambler_Attack_Lightning_Damage(entity inflictor, entity attacker, float
 }
 
 void M_Shambler_Attack_Lightning_Touch()
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 
 	self.use ();
 }
 
 void M_Shambler_Attack_Lightning_Think()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if (time > self.cnt)
 	{
@@ -131,7 +131,7 @@ void M_Shambler_Attack_Lightning_Think()
 }
 
 void M_Shambler_Attack_Lightning()
-{
+{SELFPARAM();
 	entity gren;
 
 	monster_makevectors(self.enemy);
@@ -169,7 +169,7 @@ void M_Shambler_Attack_Lightning()
 }
 
 float M_Shambler_Attack(float attack_type)
-{
+{SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -215,7 +215,7 @@ void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 bool M_Shambler(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		#ifdef SVQC

@@ -14,7 +14,7 @@ const float SECRET_NO_SHOOT = 8;		// only opened by trigger
 const float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
 void fd_secret_use()
-{
+{SELFPARAM();
 	float temp;
 	string message_save;
 
@@ -70,7 +70,7 @@ void fd_secret_damage(entity inflictor, entity attacker, float damage, int death
 
 // Wait after first movement...
 void fd_secret_move1()
-{
+{SELFPARAM();
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
 	self.think = fd_secret_move2;
 	if (self.noise3 != "")
@@ -79,7 +79,7 @@ void fd_secret_move1()
 
 // Start moving sideways w/sound...
 void fd_secret_move2()
-{
+{SELFPARAM();
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.dest2, TSPEED_LINEAR, self.speed, fd_secret_move3);
@@ -87,7 +87,7 @@ void fd_secret_move2()
 
 // Wait here until time to go back...
 void fd_secret_move3()
-{
+{SELFPARAM();
 	if (self.noise3 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 	if (!(self.spawnflags & SECRET_OPEN_ONCE))
@@ -99,7 +99,7 @@ void fd_secret_move3()
 
 // Move backward...
 void fd_secret_move4()
-{
+{SELFPARAM();
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move5);
@@ -107,7 +107,7 @@ void fd_secret_move4()
 
 // Wait 1 second...
 void fd_secret_move5()
-{
+{SELFPARAM();
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
 	self.think = fd_secret_move6;
 	if (self.noise3 != "")
@@ -115,14 +115,14 @@ void fd_secret_move5()
 }
 
 void fd_secret_move6()
-{
+{SELFPARAM();
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.oldorigin, TSPEED_LINEAR, self.speed, fd_secret_done);
 }
 
 void fd_secret_done()
-{
+{SELFPARAM();
 	if (self.spawnflags&SECRET_YES_SHOOT)
 	{
 		self.health = 10000;
@@ -134,7 +134,7 @@ void fd_secret_done()
 }
 
 void secret_blocked()
-{
+{SELFPARAM();
 	if (time < self.attack_finished_single)
 		return;
 	self.attack_finished_single = time + 0.5;
@@ -149,7 +149,7 @@ Prints messages
 ================
 */
 void secret_touch()
-{
+{SELFPARAM();
 	if (!other.iscreature)
 		return;
 	if (self.attack_finished_single > time)
@@ -166,7 +166,7 @@ void secret_touch()
 }
 
 void secret_reset()
-{
+{SELFPARAM();
 	if (self.spawnflags&SECRET_YES_SHOOT)
 	{
 		self.health = 10000;
@@ -195,7 +195,7 @@ If a secret door has a targetname, it will only be opened by it's botton or trig
 */
 
 void spawnfunc_func_door_secret()
-{
+{SELFPARAM();
 	/*if (!self.deathtype) // map makers can override this
 		self.deathtype = " got in the way";*/
 

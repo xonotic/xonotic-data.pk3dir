@@ -1,5 +1,5 @@
 void _Movetype_Physics_Walk(float dt)  // SV_WalkMove
-{
+{SELFPARAM();
 	vector stepnormal = '0 0 0';
 
 	// if frametime is 0 (due to client sending the same timestamp twice), don't move
@@ -89,7 +89,11 @@ void _Movetype_Physics_Walk(float dt)  // SV_WalkMove
 
 		// move up
 		vector upmove = '0 0 1' * PHYS_STEPHEIGHT;
-		if (!_Movetype_PushEntity(upmove, true))
+		vector prev_origin = self.move_origin;
+		_Movetype_PushEntity(upmove, true);
+		if(wasfreed(self))
+			return;
+		if(trace_startsolid && self.move_origin != prev_origin)
 		{
 			// we got teleported when upstepping... must abort the move
 			return;
@@ -130,7 +134,7 @@ void _Movetype_Physics_Walk(float dt)  // SV_WalkMove
 		// Con_Printf("step - ");
 
 		// extra friction based on view angle
-		if (clip & 2 && PHYS_WALLFRICTION)
+		if ((clip & 2) && PHYS_WALLFRICTION)
 			_Movetype_WallFriction(stepnormal);
 	}
 	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
@@ -141,7 +145,12 @@ void _Movetype_Physics_Walk(float dt)  // SV_WalkMove
 
 	// move down
 	vector downmove = '0 0 1' * (-PHYS_STEPHEIGHT + start_velocity.z * dt);
-	if (!_Movetype_PushEntity(downmove, true))
+	vector prev_origin = self.move_origin;
+	_Movetype_PushEntity(downmove, true);
+	if(wasfreed(self))
+		return;
+
+	if(trace_startsolid && self.move_origin != prev_origin)
 	{
 		// we got teleported when downstepping... must abort the move
 		return;

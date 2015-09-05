@@ -117,7 +117,7 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 }
 
 void W_Electro_ExplodeCombo(void)
-{
+{SELFPARAM();
 	W_Electro_TriggerCombo(self.origin, WEP_CVAR(electro, combo_comboradius), self.realowner);
 
 	self.event_damage = func_null;
@@ -139,7 +139,7 @@ void W_Electro_ExplodeCombo(void)
 }
 
 void W_Electro_Explode(void)
-{
+{SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -192,7 +192,7 @@ void W_Electro_TouchExplode(void)
 }
 
 void W_Electro_Bolt_Think(void)
-{
+{SELFPARAM();
 	if(time >= self.ltime)
 	{
 		self.use();
@@ -244,7 +244,7 @@ void W_Electro_Bolt_Think(void)
 }
 
 void W_Electro_Attack_Bolt(void)
-{
+{SELFPARAM();
 	entity proj;
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(electro, ammo));
@@ -289,7 +289,7 @@ void W_Electro_Attack_Bolt(void)
 }
 
 void W_Electro_Orb_Touch(void)
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM)
 		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(); } }
@@ -302,7 +302,7 @@ void W_Electro_Orb_Touch(void)
 }
 
 void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -344,7 +344,7 @@ void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int d
 }
 
 void W_Electro_Attack_Orb(void)
-{
+{SELFPARAM();
 	W_DecreaseAmmo(WEP_CVAR_SEC(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
@@ -405,7 +405,7 @@ void W_Electro_Attack_Orb(void)
 }
 
 void W_Electro_CheckAttack(void)
-{
+{SELFPARAM();
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)
 	if(weapon_prepareattack(1, -1))
@@ -421,7 +421,7 @@ void W_Electro_CheckAttack(void)
 
 .float bot_secondary_electromooth;
 bool W_Electro(int req)
-{
+{SELFPARAM();
 	float ammo_amount;
 	switch(req)
 	{
@@ -571,7 +571,7 @@ bool W_Electro(int req)
 #endif
 #ifdef CSQC
 bool W_Electro(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

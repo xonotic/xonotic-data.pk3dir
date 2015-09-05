@@ -65,7 +65,7 @@ void CheatShutdownClient()
 }
 
 float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
-{
+{SELFPARAM();
 	// dead people cannot cheat
 	if(self.deadflag != DEAD_NO)
 		return 0;
@@ -115,7 +115,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 
 float num_autoscreenshot;
 void info_autoscreenshot_findtarget()
-{
+{SELFPARAM();
 	entity e;
 	e = find(world, targetname, self.target);
 	if(!e)
@@ -130,7 +130,7 @@ void info_autoscreenshot_findtarget()
 	// we leave Rick Roll alone
 }
 void spawnfunc_info_autoscreenshot()
-{
+{SELFPARAM();
 	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
 	{
 		objerror("Too many info_autoscreenshot entitites. FAIL!");
@@ -142,7 +142,7 @@ void spawnfunc_info_autoscreenshot()
 }
 
 float CheatImpulse(float i)
-{
+{SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
 	switch(i)
 	{
@@ -301,13 +301,12 @@ float CheatImpulse(float i)
 void DragBox_Think();
 float drag_lastcnt;
 float CheatCommand(float argc)
-{
+{SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
 	string cmd;
 	cmd = argv(0);
 	switch(cmd)
 	{
-		entity e;
 		float effectnum, f;
 		vector start, end;
 		entity oldself;
@@ -362,7 +361,7 @@ float CheatCommand(float argc)
 				}
 				else
 				{
-					e = spawn();
+					entity e = spawn();
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
 					e.health = 1000;
@@ -373,10 +372,7 @@ float CheatCommand(float argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					oldself = self;
-					self = e;
-					spawnfunc_func_breakable();
-					self = oldself;
+					WITH(entity, self, e, spawnfunc_func_breakable());
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -406,9 +402,9 @@ float CheatCommand(float argc)
 			}
 			sprint(self, "Usage: sv_cheats 1; restart; cmd penalty 5.0 AHAHAHAHAHAHAH))\n");
 			break;
-		case "dragbox_spawn":
+		case "dragbox_spawn": {
 			IS_CHEAT(0, argc, 0);
-			e = spawn();
+			entity e = spawn();
 			e.classname = "dragbox_box";
 			e.think = DragBox_Think;
 			e.nextthink = time;
@@ -460,9 +456,10 @@ float CheatCommand(float argc)
 			setorigin(e.killindicator.killindicator, '0 0 8');
 			DID_CHEAT();
 			break;
-		case "dragpoint_spawn":
+		}
+		case "dragpoint_spawn": {
 			IS_CHEAT(0, argc, 0);
-			e = spawn();
+			entity e = spawn();
 			e.classname = "dragpoint";
 			e.think = DragBox_Think;
 			e.nextthink = time;
@@ -495,13 +492,14 @@ float CheatCommand(float argc)
 			setorigin(e.killindicator.killindicator, '0 0 56');
 			DID_CHEAT();
 			break;
+		}
 		case "drag_remove":
 			IS_CHEAT(0, argc, 0);
 			RandomSelection_Init();
 			crosshair_trace(self);
-			for(e = world; (e = find(e, classname, "dragbox_box")); )
+			for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
-			for(e = world; (e = find(e, classname, "dragpoint")); )
+			for(entity e = world; (e = find(e, classname, "dragpoint")); )
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			if(RandomSelection_chosen_ent)
 			{
@@ -521,9 +519,9 @@ float CheatCommand(float argc)
 			{
 				RandomSelection_Init();
 				crosshair_trace(self);
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = world; (e = find(e, classname, "dragpoint")); )
 					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				if(RandomSelection_chosen_ent)
 				{
@@ -543,11 +541,11 @@ float CheatCommand(float argc)
 			{
 				f = fopen(argv(1), FILE_WRITE);
 				fputs(f, "cmd drag_clear\n");
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 				{
 					fputs(f, strcat("cmd dragbox_spawn ", ftos(e.cnt), " \"", vtos(e.aiment.origin), "\" \"", vtos(e.enemy.origin), "\"\n"));
 				}
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = world; (e = find(e, classname, "dragpoint")); )
 				{
 					fputs(f, strcat("cmd dragpoint_spawn ", ftos(e.cnt), " \"", vtos(e.origin), "\"\n"));
 				}
@@ -562,7 +560,7 @@ float CheatCommand(float argc)
 			if(argc == 2)
 			{
 				f = fopen(argv(1), FILE_WRITE);
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 				{
 					fputs(f, "{\n");
 					fputs(f, "\"classname\" \"trigger_race_checkpoint\"\n");
@@ -572,7 +570,7 @@ float CheatCommand(float argc)
 					fputs(f, strcat("\"targetname\" \"checkpoint", ftos(e.cnt), "\"\n"));
 					fputs(f, "}\n");
 				}
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = world; (e = find(e, classname, "dragpoint")); )
 				{
 					start = '0 0 0';
 					effectnum = 0;
@@ -628,15 +626,15 @@ float CheatCommand(float argc)
 			break;
 		case "drag_clear":
 			IS_CHEAT(0, argc, 0);
-			for(e = world; (e = find(e, classname, "dragbox_box")); )
+			for(entity e = world; (e = find(e, classname, "dragbox_box")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragbox_corner_1")); )
+			for(entity e = world; (e = find(e, classname, "dragbox_corner_1")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragbox_corner_2")); )
+			for(entity e = world; (e = find(e, classname, "dragbox_corner_2")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragpoint")); )
+			for(entity e = world; (e = find(e, classname, "dragpoint")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "drag_digit")); )
+			for(entity e = world; (e = find(e, classname, "drag_digit")); )
 				remove(e);
 			DID_CHEAT();
 			break;
@@ -697,43 +695,38 @@ float CheatCommand(float argc)
 			break;
 		case "usetarget":
 			IS_CHEAT(0, argc, 0);
-			e = self;
-			self = spawn();
+			setself(spawn());
 			self.target = argv(1);
-			activator = e;
+			activator = this;
 			SUB_UseTargets();
 			remove(self);
-			self = e;
+			setself(this);
 			DID_CHEAT();
 			break;
 		case "killtarget":
 			IS_CHEAT(0, argc, 0);
-			e = self;
-			self = spawn();
+			setself(spawn());
 			self.killtarget = argv(1);
-			activator = e;
+			activator = this;
 			SUB_UseTargets();
 			remove(self);
-			self = e;
+			setself(this);
 			DID_CHEAT();
 			break;
 		case "teleporttotarget":
 			IS_CHEAT(0, argc, 0);
-			e = self;
-			self = spawn();
+			setself(spawn());
 			setorigin(self, self.origin);
 			self.classname = "cheattriggerteleport";
 			self.target = argv(1);
 			teleport_findtarget();
 			if(!wasfreed(self))
 			{
-				Simple_TeleportPlayer(self, e);
+				Simple_TeleportPlayer(self, this);
 				remove(self);
-				self = e;
 				DID_CHEAT();
 			}
-			else
-				self = e;
+			setself(this);
 			break;
 	}
 
@@ -755,7 +748,7 @@ void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
 float CheatFrame()
-{
+{SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
 
 	// Dragging can be used as either a cheat, or a function for some objects. If sv_cheats is active,
@@ -799,7 +792,7 @@ float CheatFrame()
 .float dragmovetype;
 
 float Drag(float force_allow_pick, float ischeat)
-{
+{SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
 
 	// returns true when an entity has been picked up
@@ -1075,7 +1068,7 @@ void Drag_MoveDrag(entity from, entity to)
 }
 
 void DragBox_Think()
-{
+{SELFPARAM();
 	if(self.aiment && self.enemy)
 	{
 		self.origin_x = (self.aiment.origin.x + self.enemy.origin.x) * 0.5;

@@ -63,7 +63,7 @@ void spawn_tdeath(vector v0, entity e, vector v)
 }
 
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
-{
+{SELFPARAM();
 	entity telefragger;
 	vector from;
 
@@ -179,7 +179,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 }
 
 void teleport_findtarget (void)
-{
+{SELFPARAM();
 	entity e;
 	float n;
 
@@ -224,15 +224,12 @@ entity Teleport_Find(vector mi, vector ma)
 }
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
-{
+{SELFPARAM();
 	makevectors(pl.angles);
 	Reset_ArcBeam(pl, v_forward);
 	UpdateCSQCProjectileAfterTeleport(pl);
 	{
-		entity oldself = self;
-		self = pl;
-		anticheat_fixangle();
-		self = oldself;
+		WITH(entity, self, pl, anticheat_fixangle());
 	}
 	// "disown" projectiles after teleport
 	if(pl.owner)

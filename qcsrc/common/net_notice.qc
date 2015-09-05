@@ -2,7 +2,7 @@
 
 #ifdef SVQC
 void sv_notice_join_think()
-{
+{SELFPARAM();
     //NextLevel();
     float argc = tokenizebyseparator(autocvar_sv_join_notices, "|");
     if(argc > 0)
@@ -15,7 +15,7 @@ void sv_notice_join_think()
 }
 
 void sv_notice_join()
-{
+{SELFPARAM();
     // to-do: make sv_join_notices support per-entry times
     if(autocvar_sv_join_notices == "")
         return;

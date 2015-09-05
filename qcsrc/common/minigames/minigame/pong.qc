@@ -53,7 +53,7 @@ void pong_ball_throw(entity ball)
 
 // Think equivalent of pong_ball_throw, used to delay throws
 void pong_ball_throwthink()
-{
+{SELFPARAM();
 	pong_ball_throw(self);
 }
 
@@ -144,7 +144,7 @@ bool pong_goal(entity ball, int pteam)
 
 // Moves the ball around
 void pong_ball_think()
-{
+{SELFPARAM();
 	float think_speed = autocvar_sys_ticrate;
 	self.nextthink = time + think_speed;
 	
@@ -200,7 +200,7 @@ void pong_ball_think()
 
 // AI action
 void pong_ai_think()
-{
+{SELFPARAM();
 	float think_speed = autocvar_sv_minigames_pong_ai_thinkspeed;
 	self.nextthink = time + think_speed;
 	
@@ -265,7 +265,7 @@ entity pong_ai_spawn(entity paddle)
 
 // Moves the paddle
 void pong_paddle_think()
-{
+{SELFPARAM();
 	float think_speed = autocvar_sys_ticrate;
 	self.nextthink = time + think_speed;
 

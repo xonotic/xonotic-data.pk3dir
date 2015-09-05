@@ -48,7 +48,7 @@ RPC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 void spawnfunc_weapon_rpc() { weapon_defaultspawnfunc(WEP_RPC.m_id); }
 
 void W_RocketPropelledChainsaw_Explode()
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
@@ -58,7 +58,7 @@ void W_RocketPropelledChainsaw_Explode()
 }
 
 void W_RocketPropelledChainsaw_Touch (void)
-{
+{SELFPARAM();
 	if(WarpZone_Projectile_Touch())
 		if(wasfreed(self))
 			return;
@@ -67,7 +67,7 @@ void W_RocketPropelledChainsaw_Touch (void)
 }
 
 void W_RocketPropelledChainsaw_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if (self.health <= 0)
 		return;
 
@@ -81,7 +81,7 @@ void W_RocketPropelledChainsaw_Damage (entity inflictor, entity attacker, float 
 }
 
 void W_RocketPropelledChainsaw_Think()
-{
+{SELFPARAM();
 	if(self.cnt <= time)
 	{
 		remove(self);
@@ -103,7 +103,7 @@ void W_RocketPropelledChainsaw_Think()
 }
 
 void W_RocketPropelledChainsaw_Attack (void)
-{
+{SELFPARAM();
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(self);
 	entity flash = spawn ();
 
@@ -148,7 +148,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 }
 
 bool W_RocketPropelledChainsaw(int req)
-{
+{SELFPARAM();
 	float ammo_amount = false;
 	switch(req)
 	{
@@ -234,7 +234,7 @@ bool W_RocketPropelledChainsaw(int req)
 
 #ifdef CSQC
 bool W_RocketPropelledChainsaw(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

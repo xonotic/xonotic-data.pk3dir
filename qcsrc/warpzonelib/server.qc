@@ -54,7 +54,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 }
 
 bool WarpZone_Teleported_Send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);
 	WriteCoord(MSG_ENTITY, self.angles.y);
@@ -158,9 +158,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 }
 
 void WarpZone_Touch (void)
-{
-	entity oldself;
-
+{SELFPARAM();
 	if(other.classname == "trigger_warpzone")
 		return;
 
@@ -205,14 +203,13 @@ void WarpZone_Touch (void)
 		if (!self.target) self.target = save1;
 		if (!self.target3) self.target3 = save2;
 
-		oldself = self;
-		self = self.enemy;
+		setself(self.enemy);
 		save1 = self.target; self.target = string_null;
 		save2 = self.target2; self.target2 = string_null;
 		SUB_UseTargets();
 		if (!self.target) self.target = save1;
 		if (!self.target2) self.target2 = save2;
-		self = oldself;
+		setself(this);
 	}
 	else
 	{
@@ -221,7 +218,7 @@ void WarpZone_Touch (void)
 }
 
 bool WarpZone_Send(entity to, int sendflags)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
 	// we must send this flag for clientside to match properly too
@@ -275,7 +272,7 @@ bool WarpZone_Send(entity to, int sendflags)
 }
 
 bool WarpZone_Camera_Send(entity to, int sendflags)
-{
+{SELFPARAM();
 	int f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
@@ -321,7 +318,7 @@ bool WarpZone_Camera_Send(entity to, int sendflags)
 
 #ifdef WARPZONELIB_KEEPDEBUG
 float WarpZone_CheckProjectileImpact(entity player)
-{
+{SELFPARAM();
 	vector o0, v0;
 
 	o0 = player.origin + player.view_ofs;
@@ -388,7 +385,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 #endif
 
 float WarpZone_Projectile_Touch()
-{
+{SELFPARAM();
 	if(other.classname == "trigger_warpzone")
 		return true;
 
@@ -456,7 +453,7 @@ float WarpZone_Projectile_Touch()
 }
 
 void WarpZone_InitStep_FindOriginTarget()
-{
+{SELFPARAM();
 	if(self.killtarget != "")
 	{
 		self.aiment = find(world, targetname, self.killtarget);
@@ -470,7 +467,7 @@ void WarpZone_InitStep_FindOriginTarget()
 }
 
 void WarpZonePosition_InitStep_FindTarget()
-{
+{SELFPARAM();
 	if(self.target == "")
 	{
 		error("Warp zone position with no target");
@@ -492,7 +489,7 @@ void WarpZonePosition_InitStep_FindTarget()
 }
 
 void WarpZoneCamera_Think(void)
-{
+{SELFPARAM();
 	if(self.warpzone_save_origin != self.origin
 	|| self.warpzone_save_angles != self.angles
 	|| self.warpzone_save_eorigin != self.enemy.origin
@@ -508,7 +505,7 @@ void WarpZoneCamera_Think(void)
 }
 
 void WarpZoneCamera_InitStep_FindTarget()
-{
+{SELFPARAM();
 	entity e;
 	float i;
 	if(self.target == "")
@@ -538,7 +535,7 @@ void WarpZoneCamera_InitStep_FindTarget()
 }
 
 void WarpZone_InitStep_UpdateTransform()
-{
+{SELFPARAM();
 	vector org, ang, norm, point;
 	float area;
 	vector tri, a, b, c, n;
@@ -619,7 +616,7 @@ void WarpZone_InitStep_UpdateTransform()
 }
 
 void WarpZone_InitStep_ClearTarget()
-{
+{SELFPARAM();
 	if(self.enemy)
 		self.enemy.enemy = world;
 	self.enemy = world;
@@ -627,7 +624,7 @@ void WarpZone_InitStep_ClearTarget()
 
 entity warpzone_first; .entity warpzone_next;
 void WarpZone_InitStep_FindTarget()
-{
+{SELFPARAM();
 	float i;
 	entity e, e2;
 
@@ -658,7 +655,7 @@ void WarpZone_InitStep_FindTarget()
 
 void WarpZone_Think();
 void WarpZone_InitStep_FinalizeTransform()
-{
+{SELFPARAM();
 	if(!self.enemy || self.enemy.enemy != self)
 	{
 		error("Invalid warp zone detected. Killed.");
@@ -684,7 +681,7 @@ entity warpzone_position_first;
 entity warpzone_camera_first;
 .entity warpzone_next;
 void spawnfunc_misc_warpzone_position(void)
-{
+{SELFPARAM();
 	// "target", "angles", "origin"
 	self.warpzone_next = warpzone_position_first;
 	warpzone_position_first = self;
@@ -694,7 +691,7 @@ void spawnfunc_trigger_warpzone_position(void)
 	spawnfunc_misc_warpzone_position();
 }
 void spawnfunc_trigger_warpzone(void)
-{
+{SELFPARAM();
 	// warp zone entities must have:
 	// "killtarget" pointing to a target_position with a direction arrow
 	//              that points AWAY from the warp zone, and that is inside
@@ -732,7 +729,7 @@ void spawnfunc_trigger_warpzone(void)
 	warpzone_first = self;
 }
 void spawnfunc_func_camera(void)
-{
+{SELFPARAM();
 	if(!self.scale)
 		self.scale = self.modelscale;
 	if(!self.scale)
@@ -757,37 +754,33 @@ void spawnfunc_func_camera(void)
 	warpzone_camera_first = self;
 }
 void WarpZones_Reconnect()
-{
-	entity e;
-	e = self;
-	for(self = warpzone_first; self; self = self.warpzone_next)
+{SELFPARAM();
+	for(setself(warpzone_first); self; setself(self.warpzone_next))
 		WarpZone_InitStep_ClearTarget();
-	for(self = warpzone_first; self; self = self.warpzone_next)
+	for(setself(warpzone_first); self; setself(self.warpzone_next))
 		WarpZone_InitStep_FindTarget();
-	for(self = warpzone_camera_first; self; self = self.warpzone_next)
+	for(setself(warpzone_camera_first); self; setself(self.warpzone_next))
 		WarpZoneCamera_InitStep_FindTarget();
-	for(self = warpzone_first; self; self = self.warpzone_next)
+	for(setself(warpzone_first); self; setself(self.warpzone_next))
 		WarpZone_InitStep_FinalizeTransform();
-	self = e;
+	setself(this);
 }
 
 void WarpZone_Think()
-{
+{SELFPARAM();
 	if(self.warpzone_save_origin != self.origin
 	|| self.warpzone_save_angles != self.angles
 	|| self.warpzone_save_eorigin != self.enemy.origin
 	|| self.warpzone_save_eangles != self.enemy.angles)
 	{
-		entity oldself;
-		oldself = self;
 		WarpZone_InitStep_UpdateTransform();
-		self = self.enemy;
+		setself(self.enemy);
 		WarpZone_InitStep_UpdateTransform();
-		self = oldself;
+		setself(this);
 		WarpZone_InitStep_FinalizeTransform();
-		self = self.enemy;
+		setself(self.enemy);
 		WarpZone_InitStep_FinalizeTransform();
-		self = oldself;
+		setself(this);
 		self.warpzone_save_origin = self.origin;
 		self.warpzone_save_angles = self.angles;
 		self.warpzone_save_eorigin = self.enemy.origin;
@@ -797,25 +790,23 @@ void WarpZone_Think()
 }
 
 void WarpZone_StartFrame()
-{
+{SELFPARAM();
 	entity e;
 	if(warpzone_initialized == 0)
 	{
 		warpzone_initialized = 1;
-		e = self;
-		for(self = warpzone_first; self; self = self.warpzone_next)
+		for(setself(warpzone_first); self; setself(self.warpzone_next))
 			WarpZone_InitStep_FindOriginTarget();
-		for(self = warpzone_position_first; self; self = self.warpzone_next)
+		for(setself(warpzone_position_first); self; setself(self.warpzone_next))
 			WarpZonePosition_InitStep_FindTarget();
-		for(self = warpzone_first; self; self = self.warpzone_next)
+		for(setself(warpzone_first); self; setself(self.warpzone_next))
 			WarpZone_InitStep_UpdateTransform();
-		self = e;
+		setself(this);
 		WarpZones_Reconnect();
 		WarpZone_PostInitialize_Callback();
 	}
 
-	entity oldself, oldother;
-	oldself = self;
+	entity oldother;
 	oldother = other;
 	for(e = world; (e = nextent(e)); )
 	{
@@ -830,14 +821,14 @@ void WarpZone_StartFrame()
 
 				// warpzones
 				if(warpzone_warpzones_exist) {
-				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
+				setself(WarpZone_Find(e.origin + e.mins, e.origin + e.maxs));
 				if(self)
 				if(!WarpZoneLib_ExactTrigger_Touch())
 					if(WarpZone_PlaneDist(self, e.origin + e.view_ofs) <= 0)
 						WarpZone_Teleport(self, e, -1, 0); } // NOT triggering targets by this!
 
 				// teleporters
-				self = Teleport_Find(e.origin + e.mins, e.origin + e.maxs);
+				setself(Teleport_Find(e.origin + e.mins, e.origin + e.maxs));
 				if(self)
 				if(!WarpZoneLib_ExactTrigger_Touch())
 					Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
@@ -852,7 +843,7 @@ void WarpZone_StartFrame()
 			break;
 		}
 	}
-	self = oldself;
+	setself(this);
 	other = oldother;
 }
 
@@ -867,32 +858,32 @@ float visible_to_some_client(entity ent)
 	return 0;
 }
 void trigger_warpzone_reconnect_use()
-{
+{SELFPARAM();
 	entity e;
 	e = self;
 	// NOTE: this matches for target, not targetname, but of course
 	// targetname must be set too on the other entities
-	for(self = warpzone_first; self; self = self.warpzone_next)
+	for(setself(warpzone_first); self; setself(self.warpzone_next))
 		self.warpzone_reconnecting = ((e.target == "" || self.target == e.target) && !((e.spawnflags & 1) && (visible_to_some_client(self) || visible_to_some_client(self.enemy))));
-	for(self = warpzone_camera_first; self; self = self.warpzone_next)
+	for(setself(warpzone_camera_first); self; setself(self.warpzone_next))
 		self.warpzone_reconnecting = ((e.target == "" || self.target == e.target) && !((e.spawnflags & 1) && visible_to_some_client(self)));
-	for(self = warpzone_first; self; self = self.warpzone_next)
+	for(setself(warpzone_first); self; setself(self.warpzone_next))
 		if(self.warpzone_reconnecting)
 			WarpZone_InitStep_ClearTarget();
-	for(self = warpzone_first; self; self = self.warpzone_next)
+	for(setself(warpzone_first); self; setself(self.warpzone_next))
 		if(self.warpzone_reconnecting)
 			WarpZone_InitStep_FindTarget();
-	for(self = warpzone_camera_first; self; self = self.warpzone_next)
+	for(setself(warpzone_camera_first); self; setself(self.warpzone_next))
 		if(self.warpzone_reconnecting)
 			WarpZoneCamera_InitStep_FindTarget();
-	for(self = warpzone_first; self; self = self.warpzone_next)
+	for(setself(warpzone_first); self; setself(self.warpzone_next))
 		if(self.warpzone_reconnecting || self.enemy.warpzone_reconnecting)
 			WarpZone_InitStep_FinalizeTransform();
-	self = e;
+	setself(e);
 }
 
 void spawnfunc_trigger_warpzone_reconnect()
-{
+{SELFPARAM();
 	self.use = trigger_warpzone_reconnect_use;
 }
 
@@ -902,7 +893,7 @@ void spawnfunc_target_warpzone_reconnect()
 }
 
 void WarpZone_PlayerPhysics_FixVAngle(void)
-{
+{SELFPARAM();
 #ifndef WARPZONE_DONT_FIX_VANGLE
 	if(IS_REAL_CLIENT(self))
 	if(self.v_angle.z <= 360) // if not already adjusted

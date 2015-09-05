@@ -39,7 +39,7 @@ bool vehicle_send(entity to, int sf)
 #endif
 
 bool SendAuxiliaryXhair(entity to, int sf)
-{
+{SELFPARAM();
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
 
@@ -94,7 +94,7 @@ void CSQCVehicleSetup(entity own, int vehicle_id)
 }
 
 vector targetdrone_getnewspot()
-{
+{SELFPARAM();
 	vector spot;
 	int i;
 	for(i = 0; i < 100; ++i)
@@ -108,7 +108,7 @@ vector targetdrone_getnewspot()
 }
 
 void vehicles_locktarget(float incr, float decr, float _lock_time)
-{
+{SELFPARAM();
 	if(self.lock_target && self.lock_target.deadflag != DEAD_NO)
 	{
 		self.lock_target	= world;
@@ -181,7 +181,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 }
 
 vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float max_power)
-{
+{SELFPARAM();
 	force_fromtag_origin = gettaginfo(self, gettagindex(self, tag_name));
 	v_forward  = normalize(v_forward) * -1;
 	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, self);
@@ -193,7 +193,7 @@ vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float 
 }
 
 vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float max_power)
-{
+{SELFPARAM();
 
 	force_fromtag_origin = gettaginfo(self, gettagindex(self, tag_name));
 	v_forward  = normalize(v_forward) * -1;
@@ -214,7 +214,7 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 
 // projectile handling
 void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	// Ignore damage from oterh projectiles from my owner (dont mess up volly's)
 	if(inflictor.owner == self.owner)
 		return;
@@ -231,7 +231,7 @@ void vehicles_projectile_damage(entity inflictor, entity attacker, float damage,
 }
 
 void vehicles_projectile_explode()
-{
+{SELFPARAM();
 	if(self.owner && other != world)
 	{
 		if(other == self.owner.vehicle)
@@ -254,7 +254,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 						   float _dmg, float _radi, float _force,  float _size,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
-{
+{SELFPARAM();
 	entity proj;
 
 	proj = spawn();
@@ -302,7 +302,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 }
 
 void vehicles_gib_explode()
-{
+{SELFPARAM();
 	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, self.wp00.origin + '0 0 64', '0 0 0', 1);
@@ -310,7 +310,7 @@ void vehicles_gib_explode()
 }
 
 void vehicles_gib_think()
-{
+{SELFPARAM();
 	self.alpha -= 0.1;
 	if(self.cnt >= time)
 		remove(self);
@@ -319,7 +319,7 @@ void vehicles_gib_think()
 }
 
 entity vehicle_tossgib(entity _template, vector _vel, string _tag, bool _burn, bool _explode, float _maxtime, vector _rot)
-{
+{SELFPARAM();
 	entity _gib = spawn();
 	setmodel(_gib, _template.model);
 	setorigin(_gib, gettaginfo(self, gettagindex(self, _tag)));
@@ -397,7 +397,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 }
 
 void vehicles_reset_colors()
-{
+{SELFPARAM();
 	entity e;
 	float _effects = 0, _colormap;
 	vector _glowmod, _colormod;
@@ -478,7 +478,7 @@ void vehicles_clearreturn(entity veh)
 
 void vehicles_spawn();
 void vehicles_return()
-{
+{SELFPARAM();
 	Send_Effect(EFFECT_TELEPORT, self.wp00.origin + '0 0 64', '0 0 0', 1);
 
 	self.wp00.think	 = vehicles_spawn;
@@ -491,7 +491,7 @@ void vehicles_return()
 }
 
 void vehicles_showwp_goaway()
-{
+{SELFPARAM();
 	if(self.waypointsprite_attached)
 		WaypointSprite_Kill(self.waypointsprite_attached);
 
@@ -500,7 +500,7 @@ void vehicles_showwp_goaway()
 }
 
 void vehicles_showwp()
-{
+{SELFPARAM();
 	entity oldself = world;
 	vector rgb;
 
@@ -515,7 +515,7 @@ void vehicles_showwp()
 		self.nextthink  = time +1;
 
 		oldself = self;
-		self = spawn();
+		setself(spawn());
 		setmodel(self, "null");
 		self.team = oldself.wp00.team;
 		self.wp00 = oldself.wp00;
@@ -534,13 +534,13 @@ void vehicles_showwp()
 	if(self.waypointsprite_attached)
 	{
 		WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
-		if(oldself == world)
+		if(this == NULL)
 			WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, self.nextthink);
 		WaypointSprite_Ping(self.waypointsprite_attached);
 	}
 
-	if(oldself != world)
-		self = oldself;
+	if(this)
+		setself(this);
 }
 
 void vehicles_setreturn(entity veh)
@@ -571,7 +571,7 @@ void vehicles_setreturn(entity veh)
 }
 
 void vehicle_use()
-{
+{SELFPARAM();
 	LOG_TRACE("vehicle ",self.netname, " used by ", activator.classname, "\n");
 
 	self.tur_head.team = activator.team;
@@ -598,7 +598,7 @@ void vehicle_use()
 }
 
 void vehicles_regen(float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
-{
+{SELFPARAM();
 	if(self.regen_field < field_max)
 	if(timer + rpause < time)
 	{
@@ -613,7 +613,7 @@ void vehicles_regen(float timer, .float regen_field, float field_max, float rpau
 }
 
 void shieldhit_think()
-{
+{SELFPARAM();
 	self.alpha -= 0.1;
 	if (self.alpha <= 0)
 	{
@@ -628,7 +628,7 @@ void shieldhit_think()
 }
 
 void vehicles_painframe()
-{
+{SELFPARAM();
 	if(self.owner.vehicle_health <= 50)
 	if(self.pain_frame < time)
 	{
@@ -650,7 +650,7 @@ void vehicles_painframe()
 }
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	self.dmg_time = time;
 
 	// WEAPONTODO
@@ -754,7 +754,7 @@ float vehicles_crushable(entity e)
 }
 
 void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
-{
+{SELFPARAM();
 	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		return;
 
@@ -777,7 +777,7 @@ void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
 
 // vehicle enter/exit handling
 vector vehicles_findgoodexit(vector prefer_spot)
-{
+{SELFPARAM();
 	//vector exitspot;
 	float mysize;
 
@@ -825,10 +825,9 @@ vector vehicles_findgoodexit(vector prefer_spot)
 }
 
 void vehicles_exit(bool eject)
-{
+{SELFPARAM();
 	entity _vehicle;
 	entity _player;
-	entity _oldself = self;
 
 	if(vehicles_exit_running)
 	{
@@ -844,7 +843,7 @@ void vehicles_exit(bool eject)
 		if (_vehicle.vehicle_flags & VHF_PLAYERSLOT)
 		{
 			_vehicle.vehicle_exit(eject);
-			self = _oldself;
+			setself(this);
 			vehicles_exit_running = false;
 			return;
 		}
@@ -854,7 +853,7 @@ void vehicles_exit(bool eject)
 
 	_player = _vehicle.owner;
 
-	self = _vehicle;
+	setself(_vehicle);
 
 	if (_player)
 	{
@@ -918,15 +917,14 @@ void vehicles_exit(bool eject)
 	vehicles_reset_colors();
 	_vehicle.owner = world;
 
-	CSQCMODEL_AUTOINIT();
+	CSQCMODEL_AUTOINIT(self);
 
-	self = _oldself;
-
+	setself(this);
 	vehicles_exit_running = false;
 }
 
 void vehicles_touch()
-{
+{SELFPARAM();
 	if(MUTATOR_CALLHOOK(VehicleTouch, self, other))
 		return;
 
@@ -957,7 +955,7 @@ void vehicles_touch()
 }
 
 bool vehicle_impulse(int imp)
-{
+{SELFPARAM();
 	switch(imp)
 	{
 		case 17:
@@ -971,7 +969,7 @@ bool vehicle_impulse(int imp)
 }
 
 void vehicles_enter(entity pl, entity veh)
-{
+{SELFPARAM();
    // Remove this when bots know how to use vehicles
 	if((IS_BOT_CLIENT(pl) && !autocvar_g_vehicles_allow_bots))
 		return;
@@ -988,8 +986,7 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
 	if(veh.owner)
 	{
-		entity oldself = self;
-		self = veh;
+		setself(veh);
 		other = pl; // TODO: fix
 
 		if(!veh.gunner1)
@@ -997,7 +994,7 @@ void vehicles_enter(entity pl, entity veh)
 		if(veh.gun1.vehicle_enter)
 		if(veh.gun1.vehicle_enter())
 		{
-			self = oldself;
+			setself(this);
 			return;
 		}
 
@@ -1006,11 +1003,11 @@ void vehicles_enter(entity pl, entity veh)
 		if(veh.gun2.vehicle_enter)
 		if(veh.gun2.vehicle_enter())
 		{
-			self = oldself;
+			setself(this);
 			return;
 		}
 
-		self = oldself;
+		setself(this);
 	}
 
 	if(teamplay)
@@ -1114,17 +1111,16 @@ void vehicles_enter(entity pl, entity veh)
 
 	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
-	entity oldself = self;
-	self = veh;
+	setself(veh);
 	CSQCModel_UnlinkEntity();
 	VEH_ACTION(veh.vehicleid, VR_ENTER);
-	self = oldself;
+	setself(this);
 
 	antilag_clear(pl);
 }
 
 void vehicles_think()
-{
+{SELFPARAM();
 	self.nextthink = time;
 
 	if(self.owner)
@@ -1132,12 +1128,12 @@ void vehicles_think()
 
 	VEH_ACTION(self.vehicleid, VR_THINK);
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 // initialization
 void vehicles_spawn()
-{
+{SELFPARAM();
 	LOG_TRACE("Spawning vehicle: ", self.classname, "\n");
 
 	// disown & reset
@@ -1183,11 +1179,11 @@ void vehicles_spawn()
 
 	VEH_ACTION(self.vehicleid, VR_SPAWN);
 
-	CSQCMODEL_AUTOINIT();
+	CSQCMODEL_AUTOINIT(self);
 }
 
 bool vehicle_initialize(entity veh, bool nodrop)
-{
+{SELFPARAM();
 	if(!autocvar_g_vehicles)
 		return false;
 
