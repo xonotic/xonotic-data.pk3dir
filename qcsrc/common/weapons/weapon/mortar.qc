@@ -60,7 +60,7 @@ void spawnfunc_weapon_mortar(void) { weapon_defaultspawnfunc(WEP_MORTAR.m_id); }
 void spawnfunc_weapon_grenadelauncher(void) { spawnfunc_weapon_mortar(); }
 
 void W_Mortar_Grenade_Explode(void)
-{
+{SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -80,7 +80,7 @@ void W_Mortar_Grenade_Explode(void)
 }
 
 void W_Mortar_Grenade_Explode2(void)
-{
+{SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -101,7 +101,7 @@ void W_Mortar_Grenade_Explode2(void)
 
 
 void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -115,7 +115,7 @@ void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, in
 }
 
 void W_Mortar_Grenade_Think1(void)
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if(time > self.cnt)
 	{
@@ -129,7 +129,7 @@ void W_Mortar_Grenade_Think1(void)
 }
 
 void W_Mortar_Grenade_Touch1(void)
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
@@ -174,7 +174,7 @@ void W_Mortar_Grenade_Touch1(void)
 }
 
 void W_Mortar_Grenade_Touch2(void)
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
@@ -223,7 +223,7 @@ void W_Mortar_Grenade_Touch2(void)
 }
 
 void W_Mortar_Attack(void)
-{
+{SELFPARAM();
 	entity gren;
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(mortar, ammo));
@@ -272,7 +272,7 @@ void W_Mortar_Attack(void)
 }
 
 void W_Mortar_Attack2(void)
-{
+{SELFPARAM();
 	entity gren;
 
 	W_DecreaseAmmo(WEP_CVAR_SEC(mortar, ammo));
@@ -321,7 +321,7 @@ void W_Mortar_Attack2(void)
 
 .float bot_secondary_grenademooth;
 bool W_Mortar(int req)
-{
+{SELFPARAM();
 	entity nade;
 	float nadefound;
 	float ammo_amount;
@@ -461,7 +461,7 @@ bool W_Mortar(int req)
 #endif
 #ifdef CSQC
 bool W_Mortar(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

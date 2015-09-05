@@ -56,7 +56,7 @@ MACHINEGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 
 void spawnfunc_weapon_machinegun(void)
-{
+{SELFPARAM();
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
@@ -68,7 +68,7 @@ void spawnfunc_weapon_machinegun(void)
 void spawnfunc_weapon_uzi(void) { spawnfunc_weapon_machinegun(); }
 
 void W_MachineGun_MuzzleFlash_Think(void)
-{
+{SELFPARAM();
 	self.frame = self.frame + 2;
 	self.scale = self.scale * 0.5;
 	self.alpha = self.alpha - 0.25;
@@ -85,7 +85,7 @@ void W_MachineGun_MuzzleFlash_Think(void)
 }
 
 void W_MachineGun_MuzzleFlash(void)
-{
+{SELFPARAM();
 	if(self.muzzle_flash == world)
 		self.muzzle_flash = spawn();
 
@@ -103,7 +103,7 @@ void W_MachineGun_MuzzleFlash(void)
 }
 
 void W_MachineGun_Attack(int deathtype)
-{
+{SELFPARAM();
 	W_SetupShot(self, true, 0, W_Sound("uzi_fire"), CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
 	if(!autocvar_g_norecoil)
 	{
@@ -136,7 +136,7 @@ void W_MachineGun_Attack(int deathtype)
 
 // weapon frames
 void W_MachineGun_Attack_Frame(void)
-{
+{SELFPARAM();
 	if(self.weapon != self.switchweapon) // abort immediately if switching
 	{
 		w_ready();
@@ -161,7 +161,7 @@ void W_MachineGun_Attack_Frame(void)
 
 
 void W_MachineGun_Attack_Auto(void)
-{
+{SELFPARAM();
 	float machinegun_spread;
 
 	if(!self.BUTTON_ATCK)
@@ -205,7 +205,7 @@ void W_MachineGun_Attack_Auto(void)
 }
 
 void W_MachineGun_Attack_Burst(void)
-{
+{SELFPARAM();
 	W_SetupShot(self, true, 0, W_Sound("uzi_fire"), CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
 	if(!autocvar_g_norecoil)
 	{
@@ -237,7 +237,7 @@ void W_MachineGun_Attack_Burst(void)
 }
 
 bool W_MachineGun(int req)
-{
+{SELFPARAM();
 	float ammo_amount;
 	switch(req)
 	{
@@ -371,7 +371,7 @@ bool W_MachineGun(int req)
 #endif
 #ifdef CSQC
 bool W_MachineGun(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

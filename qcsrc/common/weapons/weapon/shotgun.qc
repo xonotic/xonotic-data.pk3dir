@@ -55,7 +55,7 @@ SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN.m_id); }
 
 void W_Shotgun_Attack(float isprimary)
-{
+{SELFPARAM();
 	float	sc;
 	entity flash;
 
@@ -84,7 +84,7 @@ void W_Shotgun_Attack(float isprimary)
 .float swing_prev;
 .entity swing_alreadyhit;
 void W_Shotgun_Melee_Think(void)
-{
+{SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
@@ -180,7 +180,7 @@ void W_Shotgun_Melee_Think(void)
 }
 
 void W_Shotgun_Attack2(void)
-{
+{SELFPARAM();
 	sound(self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
 
@@ -194,7 +194,7 @@ void W_Shotgun_Attack2(void)
 
 // alternate secondary weapon frames
 void W_Shotgun_Attack3_Frame2()
-{
+{SELFPARAM();
 	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
@@ -208,7 +208,7 @@ void W_Shotgun_Attack3_Frame2()
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
 void W_Shotgun_Attack3_Frame1()
-{
+{SELFPARAM();
 	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
@@ -224,7 +224,7 @@ void W_Shotgun_Attack3_Frame1()
 .float shotgun_primarytime;
 
 float W_Shotgun(float req)
-{
+{SELFPARAM();
 	float ammo_amount;
 	switch(req)
 	{
@@ -352,7 +352,7 @@ float W_Shotgun(float req)
 #ifdef CSQC
 .float prevric;
 float W_Shotgun(float req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

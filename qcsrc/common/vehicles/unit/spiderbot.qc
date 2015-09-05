@@ -86,13 +86,13 @@ float autocvar_g_vehicle_spiderbot_rocket_lifetime;
 vector autocvar_g_vehicle_spiderbot_bouncepain;
 
 void spiderbot_rocket_artillery()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	UpdateCSQCProjectile(self);
 }
 
 void spiderbot_rocket_unguided()
-{
+{SELFPARAM();
 	vector newdir, olddir;
 
 	self.nextthink  = time;
@@ -108,7 +108,7 @@ void spiderbot_rocket_unguided()
 }
 
 void spiderbot_rocket_guided()
-{
+{SELFPARAM();
 	vector newdir, olddir;
 
 	self.nextthink  = time;
@@ -128,7 +128,7 @@ void spiderbot_rocket_guided()
 }
 
 void spiderbot_guide_release()
-{
+{SELFPARAM();
 	entity rkt;
 	rkt = findchainentity(realowner, self.owner);
 	if(!rkt)
@@ -221,7 +221,7 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 }
 
 void spiderbot_rocket_do()
-{
+{SELFPARAM();
 	vector v;
 	entity rocket = world;
 
@@ -333,7 +333,7 @@ void spiderbot_rocket_do()
 
 .float jump_delay;
 float spiderbot_frame()
-{
+{SELFPARAM();
 	vector ad, vf;
 	entity player, spider;
 	float ftmp;
@@ -347,7 +347,7 @@ float spiderbot_frame()
 
 	player = self;
 	spider = self.vehicle;
-	self   = spider;
+	setself(spider);
 
 	vehicles_painframe();
 
@@ -547,7 +547,7 @@ float spiderbot_frame()
 			vector v;
 			spider.misc_bulletcounter += 1;
 
-			self = player;
+			setself(player);
 
 			gun = (spider.misc_bulletcounter % 2) ? spider.gun1 : spider.gun2;
 
@@ -562,7 +562,7 @@ float spiderbot_frame()
 			//trailparticles(self, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
 			pointparticles(particleeffectnum(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH), v, v_forward * 2500, 1);
 
-			self = spider;
+			setself(spider);
 
 			spider.vehicle_ammo1 -= autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
 			spider.tur_head.attack_finished_single = time + autocvar_g_vehicle_spiderbot_minigun_refire;
@@ -607,12 +607,12 @@ float spiderbot_frame()
 	if(self.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(player, shield, spiderbot);
 
-	self = player;
+	setself(player);
 	return 1;
 }
 
 void spiderbot_exit(float eject)
-{
+{SELFPARAM();
 	entity e;
 	vector spot;
 
@@ -669,7 +669,7 @@ void spiderbot_exit(float eject)
 }
 
 void spiderbot_headfade()
-{
+{SELFPARAM();
 	self.think = spiderbot_headfade;
 	self.nextthink = self.fade_time;
 	self.alpha = 1 - (time - self.fade_time) * self.fade_rate;
@@ -686,7 +686,7 @@ void spiderbot_headfade()
 }
 
 void spiderbot_blowup()
-{
+{SELFPARAM();
 	if(self.cnt > time)
 	{
 		if(random() < 0.1)
@@ -759,7 +759,7 @@ void spiderbot_blowup()
 }
 
 bool spiderbot_impulse(int _imp)
-{
+{SELFPARAM();
 	switch(_imp)
 	{
 		case 1:
@@ -812,13 +812,13 @@ bool spiderbot_impulse(int _imp)
 }
 
 void spawnfunc_vehicle_spiderbot()
-{
+{SELFPARAM();
 	if(!autocvar_g_vehicle_spiderbot) { remove(self); return; }
 	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
 float v_spiderbot(float req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case VR_IMPACT:

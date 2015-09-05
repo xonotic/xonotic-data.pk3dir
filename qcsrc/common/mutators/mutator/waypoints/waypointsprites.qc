@@ -5,7 +5,7 @@ REGISTER_MUTATOR(waypointsprites, true);
 #ifdef SVQC
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 float WaypointSprite_SendEntity(entity to, float sendflags)
-{
+{SELFPARAM();
     WriteMutator(MSG_ENTITY, waypointsprites);
 
     sendflags = sendflags & 0x7F;
@@ -118,7 +118,7 @@ MUTATOR_HOOKFUNCTION(waypointsprites, CSQC_Ent_Update) {
 }
 
 void Ent_RemoveWaypointSprite()
-{
+{SELFPARAM();
     if (self.netname) strunzone(self.netname);
     if (self.netname2) strunzone(self.netname2);
     if (self.netname3) strunzone(self.netname3);
@@ -126,7 +126,7 @@ void Ent_RemoveWaypointSprite()
 
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 void Ent_WaypointSprite()
-{
+{SELFPARAM();
     int sendflags = ReadByte();
     self.wp_extra = ReadByte();
 
@@ -232,24 +232,18 @@ void Ent_WaypointSprite()
 
 #ifdef CSQC
 float spritelookupblinkvalue(string s)
-{
+{SELFPARAM();
     if (s == WP_Weapon.netname) {
         if (get_weaponinfo(self.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
             return 2;
     }
     if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_waypointblink;
 
-    switch (s)
-    {
-        case "item-invis":       return 2;
-        case "item-extralife":   return 2;
-        case "item-speed":       return 2;
-        default:                 return 1;
-    }
+    return 1;
 }
 
 vector spritelookupcolor(string s, vector def)
-{
+{SELFPARAM();
     if (s == WP_Weapon.netname) return get_weaponinfo(self.wp_extra).wpcolor;
     if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_color;
     if (s == WP_Buff.netname) return BUFFS[self.wp_extra].m_color;
@@ -257,7 +251,7 @@ vector spritelookupcolor(string s, vector def)
 }
 
 string spritelookuptext(string s)
-{
+{SELFPARAM();
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return get_weaponinfo(self.wp_extra).message;
     if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_waypoint;
@@ -269,13 +263,7 @@ string spritelookuptext(string s)
         return it.m_name;
     ));
 
-    switch (s)
-    {
-        case "item-invis": return _("Invisibility");
-        case "item-extralife": return _("Extra life");
-        case "item-speed": return _("Speed");
-        default: return s;
-    }
+    return s;
 }
 #endif
 
@@ -468,7 +456,7 @@ vector fixrgbexcess(vector rgb)
 }
 
 void Draw_WaypointSprite()
-{
+{SELFPARAM();
     if (self.lifetime)
         self.alpha = pow(bound(0, (self.fadetime - time) / self.lifetime, 1), waypointsprite_timealphaexponent);
     else
@@ -924,7 +912,7 @@ void WaypointSprite_Disown(entity wp, float fadetime)
 }
 
 void WaypointSprite_Think()
-{
+{SELFPARAM();
     bool doremove = false;
 
     if (self.fade_time && time >= self.teleport_time)
@@ -942,7 +930,7 @@ void WaypointSprite_Think()
 }
 
 float WaypointSprite_visible_for_player(entity e)
-{
+{SELFPARAM();
     // personal waypoints
     if (self.enemy && self.enemy != e)
         return false;
@@ -984,7 +972,7 @@ float WaypointSprite_isteammate(entity e, entity e2)
 }
 
 float WaypointSprite_Customize()
-{
+{SELFPARAM();
     // this is not in SendEntity because it shall run every frame, not just every update
 
     // make spectators see what the player would see
@@ -999,7 +987,7 @@ float WaypointSprite_Customize()
 float WaypointSprite_SendEntity(entity to, float sendflags);
 
 void WaypointSprite_Reset()
-{
+{SELFPARAM();
     // if a WP wants to time out, let it time out immediately; other WPs ought to be reset/killed by their owners
 
     if (self.fade_time) // there was there before: || g_keyhunt, do we really need this?
@@ -1068,7 +1056,7 @@ entity WaypointSprite_DeployFixed(
     vector ofs,
     float icon // initial icon
 )
-{
+{SELFPARAM();
     float t;
     if (teamplay)
         t = self.team;
@@ -1087,7 +1075,7 @@ entity WaypointSprite_DeployPersonal(
     vector ofs,
     float icon // initial icon
 )
-{
+{SELFPARAM();
     return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, false, icon);
 }
 
@@ -1096,7 +1084,7 @@ entity WaypointSprite_Attach(
     float limited_range,
     float icon // initial icon
 )
-{
+{SELFPARAM();
     float t;
     if (self.waypointsprite_attachedforcarrier)
         return world; // can't attach to FC
@@ -1134,25 +1122,25 @@ void WaypointSprite_DetachCarrier(entity carrier)
 }
 
 void WaypointSprite_ClearPersonal()
-{
+{SELFPARAM();
     WaypointSprite_Kill(self.waypointsprite_deployed_personal);
 }
 
 void WaypointSprite_ClearOwned()
-{
+{SELFPARAM();
     WaypointSprite_Kill(self.waypointsprite_deployed_fixed);
     WaypointSprite_Kill(self.waypointsprite_deployed_personal);
     WaypointSprite_Kill(self.waypointsprite_attached);
 }
 
 void WaypointSprite_PlayerDead()
-{
+{SELFPARAM();
     WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);
     WaypointSprite_DetachCarrier(self);
 }
 
 void WaypointSprite_PlayerGone()
-{
+{SELFPARAM();
     WaypointSprite_Disown(self.waypointsprite_deployed_fixed, waypointsprite_deadlifetime);
     WaypointSprite_Kill(self.waypointsprite_deployed_personal);
     WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);

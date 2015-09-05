@@ -1,7 +1,7 @@
 #include "controlpoint.qh"
 
 bool cpicon_send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CONTROLPOINT_ICON);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & CPSF_SETUP)

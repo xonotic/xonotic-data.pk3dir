@@ -162,7 +162,7 @@ void waypoint_addlink(entity from, entity to)
 // (precompile a list of all reachable waypoints from this spawnfunc_waypoint)
 // (SLOW!)
 void waypoint_think()
-{
+{SELFPARAM();
 	entity e;
 	vector sv, sm1, sm2, ev, em1, em2, dv;
 
@@ -294,7 +294,7 @@ void waypoint_schedulerelink(entity wp)
 
 // spawnfunc_waypoint map entity
 void spawnfunc_waypoint()
-{
+{SELFPARAM();
 	setorigin(self, self.origin);
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(self);
@@ -808,7 +808,7 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 }
 
 entity waypoint_spawnpersonal(vector position)
-{
+{SELFPARAM();
 	entity w;
 
 	// drop the waypoint to a proper location:

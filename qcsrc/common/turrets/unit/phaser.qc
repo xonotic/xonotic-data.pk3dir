@@ -14,13 +14,13 @@ REGISTER_TURRET(
 .float fireflag;
 
 float turret_phaser_firecheck()
-{
+{SELFPARAM();
     if (self.fireflag != 0) return 0;
     return turret_firecheck();
 }
 
 void beam_think()
-{
+{SELFPARAM();
     if ((time > self.cnt) || (self.owner.deadflag != DEAD_NO))
     {
         self.owner.attack_finished_single = time + self.owner.shot_refire;
@@ -43,26 +43,24 @@ void beam_think()
     self.nextthink = time + self.ticrate;
 
     self.owner.attack_finished_single = time + frametime;
-    entity oldself;
-    oldself = self;
-    self = self.owner;
+    setself(self.owner);
     FireImoBeam (   self.tur_shotorg,
                     self.tur_shotorg + self.tur_shotdir_updated * self.target_range,
                     '-1 -1 -1' * self.shot_radius,
                     '1 1 1' * self.shot_radius,
                     self.shot_force,
-                    oldself.shot_dmg,
+                    this.shot_dmg,
                     0.75,
                     DEATH_TURRET_PHASER);
-    self = oldself;
+    setself(this);
     self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
 
 }
 
-void spawnfunc_turret_phaser() { if(!turret_initialize(TUR_PHASER)) remove(self); }
+void spawnfunc_turret_phaser() { SELFPARAM(); if(!turret_initialize(TUR_PHASER)) remove(self); }
 
 float t_phaser(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:

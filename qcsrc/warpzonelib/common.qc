@@ -43,7 +43,7 @@ void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
 .vector(vector, vector) camera_transform;
 float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
-{
+{SELFPARAM();
 	vector vf, vr, vu;
 	if(self.warpzone_fadestart)
 		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
@@ -81,7 +81,7 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 }
 
 vector WarpZone_Camera_camera_transform(vector org, vector ang)
-{
+{SELFPARAM();
 	// a fixed camera view
 	if(self.warpzone_fadestart)
 		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
@@ -698,7 +698,7 @@ entity WarpZone_FindRadius(vector org, float rad, float needlineofsight)
 
 .entity WarpZone_refsys;
 void WarpZone_RefSys_GC()
-{
+{SELFPARAM();
 	// garbage collect unused reference systems
 	self.nextthink = time + 1;
 	if(self.owner.WarpZone_refsys != self)
@@ -818,7 +818,7 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 }
 
 float WarpZoneLib_ExactTrigger_Touch()
-{
+{SELFPARAM();
 	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, self, other);
 }
 

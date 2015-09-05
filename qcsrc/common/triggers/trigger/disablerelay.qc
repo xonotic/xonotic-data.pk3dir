@@ -1,6 +1,6 @@
 #ifdef SVQC
 void trigger_disablerelay_use()
-{
+{SELFPARAM();
 	entity e;
 
 	float a, b;
@@ -25,7 +25,7 @@ void trigger_disablerelay_use()
 }
 
 void spawnfunc_trigger_disablerelay()
-{
+{SELFPARAM();
 	self.use = trigger_disablerelay_use;
 }
 #endif

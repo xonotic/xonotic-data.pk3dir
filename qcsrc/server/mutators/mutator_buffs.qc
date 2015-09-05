@@ -16,7 +16,7 @@ entity buff_FirstFromFlags(int _buffs)
 }
 
 bool buffs_BuffModel_Customize()
-{
+{SELFPARAM();
 	entity player, myowner;
 	bool same_team;
 
@@ -65,7 +65,7 @@ vector buff_GlowColor(entity buff)
 }
 
 void buff_Effect(entity player, string eff)
-{
+{SELFPARAM();
 	if(!autocvar_g_buffs_effects) { return; }
 
 	if(time >= self.buff_effect_delay)
@@ -77,7 +77,7 @@ void buff_Effect(entity player, string eff)
 
 // buff item
 float buff_Waypoint_visible_for_player(entity plr)
-{
+{SELFPARAM();
 	if(!self.owner.buff_active && !self.owner.buff_activetime)
 		return false;
 
@@ -99,7 +99,7 @@ void buff_Waypoint_Spawn(entity e)
 }
 
 void buff_SetCooldown(float cd)
-{
+{SELFPARAM();
 	cd = max(0, cd);
 
 	if(!self.buff_waypoint)
@@ -111,7 +111,7 @@ void buff_SetCooldown(float cd)
 }
 
 void buff_Respawn(entity ent)
-{
+{SELFPARAM();
 	if(gameover) { return; }
 
 	vector oldbufforigin = ent.origin;
@@ -144,7 +144,7 @@ void buff_Respawn(entity ent)
 }
 
 void buff_Touch()
-{
+{SELFPARAM();
 	if(gameover) { return; }
 
 	if(ITEM_TOUCH_NEEDKILL())
@@ -220,7 +220,7 @@ void buff_NewType(entity ent, float cb)
 }
 
 void buff_Think()
-{
+{SELFPARAM();
 	if(self.buffs != self.oldbuffs)
 	{
 		entity buff = buff_FirstFromFlags(self.buffs);
@@ -291,14 +291,14 @@ void buff_Think()
 }
 
 void buff_Waypoint_Reset()
-{
+{SELFPARAM();
 	WaypointSprite_Kill(self.buff_waypoint);
 
 	if(self.buff_activetime) { buff_Waypoint_Spawn(self); }
 }
 
 void buff_Reset()
-{
+{SELFPARAM();
 	if(autocvar_g_buffs_randomize)
 		buff_NewType(self, self.buffs);
 	self.owner = world;
@@ -311,7 +311,7 @@ void buff_Reset()
 }
 
 float buff_Customize()
-{
+{SELFPARAM();
 	entity player = WaypointSprite_getviewentity(other);
 	if(!self.buff_active || (self.team && DIFF_TEAM(player, self)))
 	{
@@ -330,15 +330,14 @@ float buff_Customize()
 }
 
 void buff_Init(entity ent)
-{
+{SELFPARAM();
 	if(!cvar("g_buffs")) { remove(ent); return; }
 
 	if(!teamplay && ent.team) { ent.team = 0; }
 
 	entity buff = buff_FirstFromFlags(self.buffs);
 
-	entity oldself = self;
-	self = ent;
+	setself(ent);
 	if(!self.buffs || buff_Available(buff))
 		buff_NewType(self, 0);
 
@@ -375,7 +374,7 @@ void buff_Init(entity ent)
 	if(cvar("g_buffs_random_location") || (self.spawnflags & 64))
 		buff_Respawn(self);
 
-	self = oldself;
+	setself(this);
 }
 
 void buff_Init_Compat(entity ent, entity replacement)
@@ -400,7 +399,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 }
 
 void buff_Vengeance_DelayedDamage()
-{
+{SELFPARAM();
 	if(self.enemy)
 		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF, self.enemy.origin, '0 0 0');
 
@@ -520,7 +519,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
-{
+{SELFPARAM();
 	self.buffs = 0;
 	// reset timers here to prevent them continuing after re-spawn
 	self.buff_disability_time = 0;
@@ -529,7 +528,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
-{
+{SELFPARAM();
 	if(self.buffs & BUFF_SPEED.m_itemid)
 	{
 		self.stat_sv_maxspeed *= autocvar_g_buffs_speed_speed;
@@ -552,7 +551,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
-{
+{SELFPARAM();
 	if(self.buffs & BUFF_JUMP.m_itemid)
 		player_jumpheight = autocvar_g_buffs_jump_height;
 
@@ -560,7 +559,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_MonsterMove)
-{
+{SELFPARAM();
 	if(time < self.buff_disability_time)
 	{
 		monster_speed_walk *= autocvar_g_buffs_disability_speed;
@@ -571,7 +570,7 @@ MUTATOR_HOOKFUNCTION(buffs_MonsterMove)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
-{
+{SELFPARAM();
 	if(self.buffs)
 	{
 		int buffid = buff_FirstFromFlags(self.buffs).m_id;
@@ -588,7 +587,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 	if(self.buffs)
 	{
@@ -604,7 +603,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
 	if(self.buffs & BUFF_SWAPPER.m_itemid)
@@ -674,7 +673,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
-{
+{SELFPARAM();
 	if(self.buff_model)
 	{
 		remove(self.buff_model);
@@ -689,7 +688,7 @@ MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_CustomizeWaypoint)
-{
+{SELFPARAM();
 	entity e = WaypointSprite_getviewentity(other);
 
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
@@ -702,7 +701,7 @@ MUTATOR_HOOKFUNCTION(buffs_CustomizeWaypoint)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
-{
+{SELFPARAM();
 	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
 	{
@@ -718,7 +717,7 @@ MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
-{
+{SELFPARAM();
 	if(self.buffs & BUFF_SPEED.m_itemid)
 		weapon_rate *= autocvar_g_buffs_speed_rate;
 
@@ -729,7 +728,7 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
-{
+{SELFPARAM();
 	if(self.buffs & BUFF_SPEED.m_itemid)
 		ret_float *= autocvar_g_buffs_speed_weaponspeed;
 
@@ -742,7 +741,7 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
 .float buff_time;
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
-{
+{SELFPARAM();
 	if(gameover || self.deadflag != DEAD_NO) { return false; }
 
 	if(time < self.buff_disability_time)
@@ -784,13 +783,12 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		for(other = world; (other = findflags(other, flags, FL_ITEM)); )
 		if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, other.absmin, other.absmax))
 		{
-			entity oldself = self;
-			self = other;
-			other = oldself;
+			setself(other);
+			other = this;
 			if(self.touch)
 				self.touch();
 			other = self;
-			self = oldself;
+			setself(this);
 		}
 	}
 
@@ -889,7 +887,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_SpectateCopy)
-{
+{SELFPARAM();
 	self.buffs = other.buffs;
 	return false;
 }
@@ -909,7 +907,7 @@ MUTATOR_HOOKFUNCTION(buffs_VehicleExit)
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
-{
+{SELFPARAM();
 	if(self.buffs & BUFF_MEDIC.m_itemid)
 	{
 		regen_mod_rot = autocvar_g_buffs_medic_rot;

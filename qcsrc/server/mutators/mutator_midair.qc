@@ -5,7 +5,7 @@
 .float midair_shieldtime;
 
 MUTATOR_HOOKFUNCTION(midair_PlayerDamage)
-{
+{SELFPARAM();
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
 	if(time < self.midair_shieldtime)
@@ -15,7 +15,7 @@ MUTATOR_HOOKFUNCTION(midair_PlayerDamage)
 }
 
 MUTATOR_HOOKFUNCTION(midair_PlayerPowerups)
-{
+{SELFPARAM();
 	if(time >= game_starttime)
 	if(self.flags & FL_ONGROUND)
 	{
@@ -27,7 +27,7 @@ MUTATOR_HOOKFUNCTION(midair_PlayerPowerups)
 }
 
 MUTATOR_HOOKFUNCTION(midair_PlayerSpawn)
-{
+{SELFPARAM();
 	if(IS_BOT_CLIENT(self))
 		self.bot_moveskill = 0; // disable bunnyhopping
 

@@ -5,7 +5,7 @@
 .vector spawn_origin, spawn_angles;
 
 void physical_item_think()
-{
+{SELFPARAM();
 	self.nextthink = time;
 
 	self.alpha = self.owner.alpha; // apply fading and ghosting
@@ -42,7 +42,7 @@ void physical_item_think()
 }
 
 void physical_item_touch()
-{
+{SELFPARAM();
 	if(!self.cnt) // not for dropped items
 	if (ITEM_TOUCH_NEEDKILL())
 	{
@@ -52,7 +52,7 @@ void physical_item_touch()
 }
 
 void physical_item_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(!self.cnt) // not for dropped items
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -62,7 +62,7 @@ void physical_item_damage(entity inflictor, entity attacker, float damage, int d
 }
 
 MUTATOR_HOOKFUNCTION(item_spawning)
-{
+{SELFPARAM();
 	if(self.owner == world && autocvar_g_physical_items <= 1)
 		return false;
 	if (self.spawnflags & 1) // floating item
@@ -100,9 +100,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 		setorigin(wep, wep.origin + '0 0 1');
 		entity oldself;
 		oldself = self;
-		self = wep;
-		builtin_droptofloor();
-		self = oldself;
+		WITH(entity, self, wep, builtin_droptofloor());
 	}
 
 	wep.spawn_origin = wep.origin;

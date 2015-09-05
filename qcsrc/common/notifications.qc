@@ -1756,7 +1756,7 @@ void Read_Notification(float is_new)
 
 #ifdef SVQC
 void Net_Notification_Remove()
-{
+{SELFPARAM();
 	if (!self) { backtrace(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
 
 	#ifdef NOTIFICATIONS_DEBUG
@@ -1774,7 +1774,7 @@ void Net_Notification_Remove()
 }
 
 float Net_Write_Notification(entity client, int sf)
-{
+{SELFPARAM();
 	if(Notification_ShouldSend(self.nent_broadcast, client, self.nent_client))
 	{
 		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);

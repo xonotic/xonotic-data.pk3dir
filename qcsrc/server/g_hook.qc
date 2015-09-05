@@ -80,7 +80,7 @@ void RemoveGrapplingHook(entity pl)
 }
 
 void GrapplingHookReset(void)
-{
+{SELFPARAM();
 	if(self.realowner.hook == self)
 		RemoveGrapplingHook(self.owner);
 	else // in any case:
@@ -89,7 +89,7 @@ void GrapplingHookReset(void)
 
 void GrapplingHookThink();
 void GrapplingHook_Stop()
-{
+{SELFPARAM();
 	Send_Effect(EFFECT_HOOK_IMPACT, self.origin, '0 0 0', 1);
 	sound (self, CH_SHOTS, W_Sound("hook_impact"), VOL_BASE, ATTEN_NORM);
 
@@ -104,7 +104,7 @@ void GrapplingHook_Stop()
 
 .vector hook_start, hook_end;
 float GrapplingHookSend(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
 	sf = sf & 0x7F;
 	if(sound_allowed(MSG_BROADCAST, self.realowner))
@@ -130,7 +130,7 @@ float GrapplingHookSend(entity to, int sf)
 }
 
 void GrapplingHookThink()
-{
+{SELFPARAM();
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
@@ -300,7 +300,7 @@ void GrapplingHookThink()
 }
 
 void GrapplingHookTouch (void)
-{
+{SELFPARAM();
 	if(other.movetype == MOVETYPE_FOLLOW)
 		return;
 	PROJECTILE_TOUCH;
@@ -318,7 +318,7 @@ void GrapplingHookTouch (void)
 }
 
 void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -340,7 +340,7 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int 
 }
 
 void FireGrapplingHook (void)
-{
+{SELFPARAM();
 	entity missile;
 	vector org;
 	vector vs;
@@ -423,7 +423,7 @@ void FireGrapplingHook (void)
 //         if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
 
 void GrapplingHookFrame()
-{
+{SELFPARAM();
 	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id && !self.vehicle)
 	{
 		// offhand hook controls
@@ -531,7 +531,7 @@ void GrappleHookInit()
 }
 
 void SetGrappleHookBindings()
-{
+{SELFPARAM();
 	// this function has been modified for Xonotic
 	// don't remove these lines! old server or demos coud overwrite the new aliases
 	stuffcmd(self, "alias +hook +button6\n");

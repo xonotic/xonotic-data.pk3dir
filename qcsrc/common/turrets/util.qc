@@ -114,7 +114,7 @@ vector angleofs3(vector from, vector from_a, entity to)
 * NOTICE this func overwrites the global v_forward, v_right and v_up vectors.
 */
 float turret_tag_fire_update()
-{
+{SELFPARAM();
 	if(!self.tur_head)
 	{
 		error("Call to turret_tag_fire_update with self.tur_head missing!\n");
@@ -134,7 +134,7 @@ float turret_tag_fire_update()
 void FireImoBeam (vector start, vector end, vector smin, vector smax,
 				  float bforce, float f_dmg, float f_velfactor, int deathtype)
 
-{
+{SELFPARAM();
 	vector hitloc, force, endpoint, dir;
 	entity ent;
 
@@ -206,7 +206,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 #ifdef TURRET_DEBUG
 void SUB_Remove();
 void marker_think()
-{
+{SELFPARAM();
 	if(self.cnt)
 	if(self.cnt < time)
 	{

@@ -5,7 +5,7 @@
 #include "../common/util.qh"
 
 void round_handler_Think()
-{
+{SELFPARAM();
 	float f;
 
 	if(time < game_starttime)

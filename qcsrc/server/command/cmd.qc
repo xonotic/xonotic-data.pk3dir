@@ -40,7 +40,7 @@ void ClientKill_TeamChange (float targetteam); // 0 = don't change, -1 = auto, -
 // =========================================================
 
 float SV_ParseClientCommand_floodcheck()
-{
+{SELFPARAM();
 	if (!timeout_status) // not while paused
 	{
 		if(time <= (self.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
@@ -63,7 +63,7 @@ float SV_ParseClientCommand_floodcheck()
 // =======================
 
 void ClientCommand_autoswitch(float request, float argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -88,7 +88,7 @@ void ClientCommand_autoswitch(float request, float argc)
 }
 
 void ClientCommand_clientversion(float request, float argc) // internal command, used only by code
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -131,7 +131,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 }
 
 void ClientCommand_mv_getpicture(float request, float argc) // internal command, used only by code
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -157,7 +157,7 @@ void ClientCommand_mv_getpicture(float request, float argc) // internal command,
 }
 
 void ClientCommand_join(float request)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -199,7 +199,7 @@ void ClientCommand_join(float request)
 }
 
 void ClientCommand_physics(float request, float argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -239,7 +239,7 @@ void ClientCommand_physics(float request, float argc)
 }
 
 void ClientCommand_ready(float request) // todo: anti-spam for toggling readyness
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -285,7 +285,7 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 }
 
 void ClientCommand_say(float request, float argc, string command)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -305,7 +305,7 @@ void ClientCommand_say(float request, float argc, string command)
 }
 
 void ClientCommand_say_team(float request, float argc, string command)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -325,7 +325,7 @@ void ClientCommand_say_team(float request, float argc, string command)
 }
 
 void ClientCommand_selectteam(float request, float argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -397,7 +397,7 @@ void ClientCommand_selectteam(float request, float argc)
 }
 
 void ClientCommand_selfstuff(float request, string command)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -421,7 +421,7 @@ void ClientCommand_selfstuff(float request, string command)
 }
 
 void ClientCommand_sentcvar(float request, float argc, string command)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -455,7 +455,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 }
 
 void ClientCommand_spectate(float request)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -500,7 +500,7 @@ void ClientCommand_spectate(float request)
 }
 
 void ClientCommand_suggestmap(float request, float argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -524,7 +524,7 @@ void ClientCommand_suggestmap(float request, float argc)
 }
 
 void ClientCommand_tell(float request, float argc, string command)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -575,7 +575,7 @@ void ClientCommand_tell(float request, float argc, string command)
 }
 
 void ClientCommand_voice(float request, float argc, string command)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -652,7 +652,7 @@ void ClientCommand_(float request)
 	/* nothing */
 
 void ClientCommand_macro_help()
-{
+{SELFPARAM();
 	#define CLIENT_COMMAND(name,function,description) \
 		{ sprint(self, "  ^2", name, "^7: ", description, "\n"); }
 
@@ -701,7 +701,7 @@ void ClientCommand_macro_write_aliases(float fh)
 // If this function exists, server game code parses clientcommand before the engine code gets it.
 
 void SV_ParseClientCommand(string command)
-{
+{SELFPARAM();
 	// If invalid UTF-8, don't even parse it
 	string command2 = "";
 	float len = strlen(command);

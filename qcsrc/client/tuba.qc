@@ -70,7 +70,7 @@ void tubasound(entity e, bool restart)
 }
 
 void Ent_TubaNote_Think()
-{
+{SELFPARAM();
 	float f = autocvar_g_balance_tuba_fadetime;
 	if (f > 0) {
 		self.tuba_volume -= frametime * self.tuba_volume_initial / f;
@@ -91,7 +91,7 @@ void Ent_TubaNote_Think()
 }
 
 void Ent_TubaNote_UpdateSound()
-{
+{SELFPARAM();
 	self.enemy.tuba_volume = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
 	self.enemy.tuba_volume_initial = self.enemy.tuba_volume;
 	self.enemy.note = self.note;
@@ -100,13 +100,13 @@ void Ent_TubaNote_UpdateSound()
 }
 
 void Ent_TubaNote_StopSound()
-{
+{SELFPARAM();
 	self.enemy.nextthink = time;
 	self.enemy = world;
 }
 
 void Ent_TubaNote(bool isNew)
-{
+{SELFPARAM();
 	bool upd = false;
 	int f = ReadByte();
 	if (f & 1) {

@@ -1,7 +1,7 @@
 #ifdef SVQC
 
 void spawnfunc_info_teleport_destination (void)
-{
+{SELFPARAM();
 	self.classname = "info_teleport_destination";
 
 	self.mangle = self.angles;

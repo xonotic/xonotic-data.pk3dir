@@ -11,7 +11,7 @@
 #include "../../common/weapons/all.qh"
 
 void thrown_wep_think()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if(self.oldorigin != self.origin)
 	{
@@ -30,13 +30,12 @@ void thrown_wep_think()
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
-{
-	entity oldself, wep;
+{SELFPARAM();
 	float thisammo, i;
 	string s;
 	var .int ammotype = (get_weaponinfo(wpn)).ammo_field;
 
-	wep = spawn();
+	entity wep = spawn();
 
 	setorigin(wep, org);
 	wep.classname = "droppedweapon";
@@ -75,10 +74,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 	}
 
-	oldself = self;
-	self = wep;
-	weapon_defaultspawnfunc(wpn);
-	self = oldself;
+	WITH(entity, self, wep, weapon_defaultspawnfunc(wpn));
 	if(startitem_failed)
 		return string_null;
 	wep.glowmod = own.weaponentity_glowmod;
@@ -166,7 +162,7 @@ float W_IsWeaponThrowable(float w)
 
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce)
-{
+{SELFPARAM();
 	float w;
 	string a;
 
@@ -194,7 +190,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 }
 
 void SpawnThrownWeapon(vector org, float w)
-{
+{SELFPARAM();
 	if(self.weapons & WepSet_FromWeapon(self.weapon))
 		if(W_IsWeaponThrowable(self.weapon))
 			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');

@@ -77,7 +77,7 @@ void SendCSQCVortexBeamParticle(float charge) {
 }
 
 void W_Vortex_Attack(float issecondary)
-{
+{SELFPARAM();
 	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
 
 	mydmg = WEP_CVAR_BOTH(vortex, !issecondary, damage);
@@ -133,7 +133,7 @@ void spawnfunc_weapon_vortex(void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
 bool W_Vortex(int req)
-{
+{SELFPARAM();
 	float dt;
 	float ammo_amount;
 	switch(req)
@@ -320,7 +320,7 @@ bool W_Vortex(int req)
 #ifdef CSQC
 float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
 bool W_Vortex(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

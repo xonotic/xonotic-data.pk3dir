@@ -234,7 +234,7 @@ entity pathlib_waypointpath_step()
     return world;
 }
 void plas_think()
-{
+{SELFPARAM();
     pathlib_waypointpath_step();
     if(pathlib_foundgoal)
         return;

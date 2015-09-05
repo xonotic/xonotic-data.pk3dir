@@ -352,7 +352,7 @@ int weaponorder_cmp(int i, int j, entity pass)
 }
 
 void HUD_Weapons(void)
-{
+{SELFPARAM();
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();
 	int i;
@@ -413,7 +413,7 @@ void HUD_Weapons(void)
 		weapon_cnt = 0;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
-			self = get_weaponinfo(i);
+			setself(get_weaponinfo(i));
 			if(self.impulse >= 0)
 			{
 				weaponorder[weapon_cnt] = self;
@@ -673,7 +673,7 @@ void HUD_Weapons(void)
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
-		self = weaponorder[i];
+		setself(weaponorder[i]);
 		weapon_id = self.impulse;
 		isCurrent = (self.weapon == switchweapon);
 

@@ -11,10 +11,10 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
-void spawnfunc_turret_mlrs() { if(!turret_initialize(TUR_MLRS)) remove(self); }
+void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS)) remove(self); }
 
 float t_mlrs(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:

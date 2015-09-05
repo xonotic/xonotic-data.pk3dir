@@ -18,13 +18,13 @@ void pathlib_showpath(entity start)
 }
 
 void path_dbg_think()
-{
+{SELFPARAM();
     pathlib_showpath(self);
     self.nextthink = time + 1;
 }
 
 void __showpath2_think()
-{
+{SELFPARAM();
     #ifdef TURRET_DEBUG
 	mark_info(self.origin,1);
 	#endif

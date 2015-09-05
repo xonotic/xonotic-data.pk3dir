@@ -304,7 +304,7 @@ float SetTeam(entity o, int Team)
 }
 
 void Playerchecker_Think()
-{
+{SELFPARAM();
     int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)
@@ -398,11 +398,11 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 // BEGIN OPTIONAL CSQC FUNCTIONS
 
 void Ent_RemoveEntCS()
-{
+{SELFPARAM();
 	entcs_receiver[self.sv_entnum] = world;
 }
 void Ent_ReadEntCS()
-{
+{SELFPARAM();
     int sf;
 	InterpolateOrigin_Undo();
 
@@ -438,7 +438,7 @@ void Ent_ReadEntCS()
 void Ent_Remove();
 
 void Ent_RemovePlayerScore()
-{
+{SELFPARAM();
 	if(self.owner) {
 		SetTeam(self.owner, -1);
 		self.owner.gotscores = 0;
@@ -449,7 +449,7 @@ void Ent_RemovePlayerScore()
 }
 
 void Ent_ReadPlayerScore()
-{
+{SELFPARAM();
 	int i, n;
 	bool isNew;
 	entity o;
@@ -507,7 +507,7 @@ void Ent_ReadPlayerScore()
 }
 
 void Ent_ReadTeamScore()
-{
+{SELFPARAM();
 	int i;
 	entity o;
 
@@ -699,12 +699,12 @@ void Ent_ReadAccuracy(void)
 }
 
 void Spawn_Draw(void)
-{
+{SELFPARAM();
 	pointparticles(self.cnt, self.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
 void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
-{
+{SELFPARAM();
 	float teamnum = (ReadByte() - 1);
 	vector spn_origin;
 	spn_origin.x = ReadShort();
@@ -750,7 +750,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 }
 
 void Ent_ReadSpawnEvent(float is_new)
-{
+{SELFPARAM();
 	// If entnum is 0, ONLY do the local spawn actions
 	// this way the server can disable the sending of
 	// spawn origin or such to clients if wanted.
@@ -806,7 +806,7 @@ void Ent_RadarLink();
 void Ent_Init();
 void Ent_ScoresInfo();
 void CSQC_Ent_Update(float bIsNewEntity)
-{
+{SELFPARAM();
 	float t;
 	float savetime;
 	t = ReadByte();
@@ -924,7 +924,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.
 void Ent_Remove()
-{
+{SELFPARAM();
 	if(self.entremove)
 		self.entremove();
 
@@ -948,7 +948,7 @@ void Ent_Remove()
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
 void CSQC_Ent_Remove()
-{
+{SELFPARAM();
 	if(autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype);
 
@@ -1011,7 +1011,7 @@ void Fog_Force()
 
 void Gamemode_Init();
 void Ent_ScoresInfo()
-{
+{SELFPARAM();
     int i;
 	self.classname = "ent_client_scores_info";
 	gametype = ReadInt24_t();
@@ -1035,7 +1035,7 @@ void Ent_ScoresInfo()
 }
 
 void Ent_Init()
-{
+{SELFPARAM();
 	self.classname = "ent_client_init";
 
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th

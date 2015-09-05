@@ -1,6 +1,6 @@
 #ifdef SVQC
 void trigger_relay_teamcheck_use()
-{
+{SELFPARAM();
 	if(activator.team)
 	{
 		if(self.spawnflags & 2)
@@ -22,12 +22,12 @@ void trigger_relay_teamcheck_use()
 }
 
 void trigger_relay_teamcheck_reset()
-{
+{SELFPARAM();
 	self.team = self.team_saved;
 }
 
 void spawnfunc_trigger_relay_teamcheck()
-{
+{SELFPARAM();
 	self.team_saved = self.team;
 	self.use = trigger_relay_teamcheck_use;
 	self.reset = trigger_relay_teamcheck_reset;

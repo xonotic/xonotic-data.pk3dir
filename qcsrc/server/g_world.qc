@@ -41,7 +41,7 @@ const float LATENCY_THINKRATE = 10;
 .float latency_time;
 entity pingplreport;
 void PingPLReport_Think()
-{
+{SELFPARAM();
 	float delta;
 	entity e;
 
@@ -117,7 +117,7 @@ void SetDefaultAlpha()
 }
 
 void GotoFirstMap()
-{
+{SELFPARAM();
 	float n;
 	if(autocvar__sv_init)
 	{
@@ -513,33 +513,29 @@ void detect_maptype()
 
 entity randomseed;
 float RandomSeed_Send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
 	return true;
 }
 void RandomSeed_Think()
-{
+{SELFPARAM();
 	self.cnt = bound(0, floor(random() * 65536), 65535);
 	self.nextthink = time + 5;
 
 	self.SendFlags |= 1;
 }
 void RandomSeed_Spawn()
-{
+{SELFPARAM();
 	randomseed = spawn();
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	entity oldself;
-	oldself = self;
-	self = randomseed;
-	self.think(); // sets random seed and nextthink
-	self = oldself;
+	WITH(entity, self, randomseed, randomseed.think()); // sets random seed and nextthink
 }
 
 void spawnfunc___init_dedicated_server(void)
-{
+{SELFPARAM();
 	// handler for _init/_init map (only for dedicated server initialization)
 
 	world_initialized = -1; // don't complain
@@ -577,7 +573,7 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 void Physics_AddStats();
 void spawnfunc_worldspawn (void)
-{
+{SELFPARAM();
 	float fd, l, j, n;
 	string s;
 
@@ -926,7 +922,7 @@ void spawnfunc_worldspawn (void)
 }
 
 void spawnfunc_light (void)
-{
+{SELFPARAM();
 	//makestatic (self); // Who the f___ did that?
 	remove(self);
 }
@@ -1318,7 +1314,7 @@ When the player presses attack or jump, change to the next level
 */
 .float autoscreenshot;
 void IntermissionThink()
-{
+{SELFPARAM();
 	FixIntermissionClient(self);
 
 	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
@@ -1595,7 +1591,7 @@ Exit deathmatch games upon conditions
 ============
 */
 void CheckRules_Player()
-{
+{SELFPARAM();
 	if (gameover)	// someone else quit the game already
 		return;
 
@@ -1694,7 +1690,7 @@ void ClearWinners(void)
 // they win. Otherwise the defending team wins once the timelimit passes.
 void assault_new_round();
 float WinningCondition_Assault()
-{
+{SELFPARAM();
 	float status;
 
 	WinningConditionHelper(); // set worldstatus
@@ -1727,11 +1723,7 @@ float WinningCondition_Assault()
 			}
 			else
 			{
-				entity oldself;
-				oldself = self;
-				self = ent;
-				assault_new_round();
-				self = oldself;
+				WITH(entity, self, ent, assault_new_round());
 			}
 		}
 	}
@@ -2202,19 +2194,20 @@ string GotoMap(string m)
 
 
 void EndFrame()
-{
+{SELFPARAM();
 	anticheat_endframe();
 
 	float altime;
-	FOR_EACH_REALCLIENT(self)
+	entity e_;
+	FOR_EACH_REALCLIENT(e_)
 	{
-		entity e = IS_SPEC(self) ? self.enemy : self;
+		entity e = IS_SPEC(e_) ? e_.enemy : e_;
 		if(e.typehitsound)
-			self.typehit_time = time;
+			e_.typehit_time = time;
 		else if(e.damage_dealt)
 		{
-			self.hit_time = time;
-			self.damage_dealt_total += ceil(e.damage_dealt);
+			e_.hit_time = time;
+			e_.damage_dealt_total += ceil(e.damage_dealt);
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
@@ -2223,14 +2216,18 @@ void EndFrame()
 	// add another frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0). The last +1 however should not be
 	// needed!
-	FOR_EACH_CLIENT(self)
+	FOR_EACH_CLIENT(e_)
 	{
-		self.typehitsound = false;
-		self.damage_dealt = 0;
-		antilag_record(self, altime);
+		e_.typehitsound = false;
+		e_.damage_dealt = 0;
+		setself(e_);
+		antilag_record(e_, altime);
 	}
-	FOR_EACH_MONSTER(self)
-		antilag_record(self, altime);
+	FOR_EACH_MONSTER(e_)
+	{
+		setself(e_);
+		antilag_record(e_, altime);
+	}
 }
 
 
@@ -2241,7 +2238,7 @@ void EndFrame()
 float redirection_timeout;
 float redirection_nextthink;
 float RedirectionThink()
-{
+{SELFPARAM();
 	float clients_found;
 
 	if(redirection_target == "")
@@ -2263,8 +2260,10 @@ float RedirectionThink()
 	redirection_nextthink = time + 1;
 
 	clients_found = 0;
-	FOR_EACH_REALCLIENT(self)
+	entity e;
+	FOR_EACH_REALCLIENT(e)
 	{
+		setself(e);
 		// TODO add timer
 		LOG_INFO("Redirecting: sending connect command to ", self.netname, "\n");
 		if(redirection_target == "self")

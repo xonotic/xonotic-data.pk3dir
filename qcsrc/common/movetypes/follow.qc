@@ -1,5 +1,5 @@
 void _Movetype_Physics_Follow() // SV_Physics_Follow
-{
+{SELFPARAM();
 	entity e = self.move_aiment; // TODO: networking?
 
 	// LordHavoc: implemented rotation on MOVETYPE_FOLLOW objects

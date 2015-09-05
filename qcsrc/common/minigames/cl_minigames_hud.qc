@@ -104,13 +104,10 @@ entity HUD_MinigameMenu_activeitem;
 
 // Click the given item
 void HUD_MinigameMenu_Click(entity menuitem)
-{
+{SELFPARAM();
 	if ( menuitem )
 	{
-		entity e = self;
-		self = menuitem;
-		menuitem.use();
-		self = e;
+		WITH(entity, self, menuitem, menuitem.use());
 	}
 }
 
@@ -167,14 +164,14 @@ entity HUD_MinigameMenu_SpawnSubEntry(string s, void() click, entity parent)
 
 // Click action for Create sub-entries
 void HUD_MinigameMenu_ClickCreate_Entry()
-{
+{SELFPARAM();
 	minigame_cmd("create ",self.netname);
 }
 
 // Helper click action for collapsible entries
 // returns true when you have to create the sub-entries
 bool HUD_MinigameMenu_Click_ExpandCollapse()
-{
+{SELFPARAM();
 	entity e;
 	if ( self.flags & 2 )
 	{
@@ -211,7 +208,7 @@ bool HUD_MinigameMenu_Click_ExpandCollapse()
 
 // Click action for the Create menu
 void HUD_MinigameMenu_ClickCreate()
-{
+{SELFPARAM();
 	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
 	{
 		entity e;
@@ -231,14 +228,14 @@ void HUD_MinigameMenu_ClickCreate()
 
 // Click action for Join sub-entries
 void HUD_MinigameMenu_ClickJoin_Entry()
-{
+{SELFPARAM();
 	minigame_cmd("join ",self.netname);
 	HUD_MinigameMenu_EraseEntry(self);
 }
 
 // Click action for the Join menu
 void HUD_MinigameMenu_ClickJoin()
-{
+{SELFPARAM();
 	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
 	{
 		entity e = world;
@@ -274,13 +271,13 @@ void HUD_MinigameMenu_ClickQuit()
 
 // Click action for Invite sub-entries
 void HUD_MinigameMenu_ClickInvite_Entry()
-{
+{SELFPARAM();
 	minigame_cmd("invite #",self.netname);
 }
 
 // Click action for the Invite menu
 void HUD_MinigameMenu_ClickInvite()
-{
+{SELFPARAM();
 	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
 	{
 		entity e;
@@ -304,7 +301,7 @@ void HUD_MinigameMenu_ClickInvite()
 }
 
 void HUD_MinigameMenu_ClickCustomEntry()
-{
+{SELFPARAM();
 	if ( active_minigame )
 		active_minigame.minigame_event(active_minigame,"menu_click",self.netname);
 }
@@ -321,7 +318,7 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string menumessage, string even
 
 // Click action for the Current Game menu
 void HUD_MinigameMenu_ClickCurrentGame()
-{
+{SELFPARAM();
 	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
 	{
 		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(

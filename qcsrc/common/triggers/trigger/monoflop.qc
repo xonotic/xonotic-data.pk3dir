@@ -3,7 +3,7 @@
 "Mono-flop" trigger gate... turns one trigger event into one "on" and one "off" event, separated by a delay of "wait"
 */
 void monoflop_use()
-{
+{SELFPARAM();
 	self.nextthink = time + self.wait;
 	self.enemy = activator;
 	if(self.state)
@@ -12,7 +12,7 @@ void monoflop_use()
 	SUB_UseTargets();
 }
 void monoflop_fixed_use()
-{
+{SELFPARAM();
 	if(self.state)
 		return;
 	self.nextthink = time + self.wait;
@@ -22,20 +22,20 @@ void monoflop_fixed_use()
 }
 
 void monoflop_think()
-{
+{SELFPARAM();
 	self.state = 0;
 	activator = self.enemy;
 	SUB_UseTargets();
 }
 
 void monoflop_reset()
-{
+{SELFPARAM();
 	self.state = 0;
 	self.nextthink = 0;
 }
 
 void spawnfunc_trigger_monoflop()
-{
+{SELFPARAM();
 	if(!self.wait)
 		self.wait = 1;
 	if(self.spawnflags & 1)

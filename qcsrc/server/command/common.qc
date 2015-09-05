@@ -178,7 +178,7 @@ void print_to(entity to, string input)
 
 // used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
 void timeout_handler_reset()
-{
+{SELFPARAM();
 	timeout_caller = world;
 	timeout_time = 0;
 	timeout_leadtime = 0;
@@ -187,7 +187,7 @@ void timeout_handler_reset()
 }
 
 void timeout_handler_think()
-{
+{SELFPARAM();
 	entity tmp_player;
 
 	switch(timeout_status)
@@ -312,7 +312,7 @@ void CommonCommand_cvar_purechanges(float request, entity caller)
 }
 
 void CommonCommand_editmob(int request, entity caller, int argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:

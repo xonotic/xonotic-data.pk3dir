@@ -1,5 +1,5 @@
 void _Movetype_PushMove(float dt)  // SV_PushMove
-{
+{SELFPARAM();
 	if (self.move_velocity == '0 0 0' && self.move_avelocity == '0 0 0')
 	{
 		self.move_ltime += dt;
@@ -93,26 +93,23 @@ void _Movetype_PushMove(float dt)  // SV_PushMove
 			if (check.move_movetype == 32)  // MOVETYPE_PHYSICS
 			{
 				check.move_origin = check.move_origin + move;
-				entity oldself = self;
-				self = check;
-				_Movetype_LinkEdict(true);
-				self = oldself;
+				WITH(entity, self, check, _Movetype_LinkEdict(true));
 				continue;
 			}
 
 			// try moving the contacted entity
 			self.solid = SOLID_NOT;
-			entity oldself = self;
-			self = check;
-			if (!_Movetype_PushEntity(move, true))
+			bool flag;
+			WITH(entity, self, check, {
+				flag = _Movetype_PushEntity(move, true);
+			});
+			if (!flag)
 			{
-				self = oldself;
 				// entity "check" got teleported
 				check.move_angles_y += trace_fraction * moveangle.y;
 				self.solid = savesolid;
 				continue;  // pushed enough
 			}
-			self = oldself;
 			// FIXME: turn players specially
 			check.move_angles_y += trace_fraction * moveangle.y;
 			self.solid = savesolid;
@@ -131,7 +128,7 @@ void _Movetype_PushMove(float dt)  // SV_PushMove
 }
 
 void _Movetype_Physics_Pusher(float dt)  // SV_Physics_Pusher
-{
+{SELFPARAM();
 	float oldltime = self.move_ltime;
 	float thinktime = self.move_nextthink;
 	float movetime;

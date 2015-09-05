@@ -1,6 +1,6 @@
 #ifdef SVQC
 void trigger_hurt_use()
-{
+{SELFPARAM();
 	if(IS_PLAYER(activator))
 		self.enemy = activator;
 	else
@@ -9,7 +9,7 @@ void trigger_hurt_use()
 
 .float triggerhurttime;
 void trigger_hurt_touch()
-{
+{SELFPARAM();
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 
@@ -58,7 +58,7 @@ defalt dmg = 5
 entity trigger_hurt_last;
 entity trigger_hurt_first;
 void spawnfunc_trigger_hurt()
-{
+{SELFPARAM();
 	EXACTTRIGGER_INIT;
 	self.active = ACTIVE_ACTIVE;
 	self.touch = trigger_hurt_touch;

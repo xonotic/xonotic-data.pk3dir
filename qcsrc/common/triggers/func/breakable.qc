@@ -50,7 +50,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, int 
 // - basically func_assault_destructible for general gameplay use
 //
 void LaunchDebris (string debrisname, vector force)
-{
+{SELFPARAM();
 	entity dbr = spawn();
 	setorigin(dbr, self.absmin
 	           + '1 0 0' * random() * (self.absmax.x - self.absmin.x)
@@ -78,7 +78,7 @@ void LaunchDebris (string debrisname, vector force)
 }
 
 void func_breakable_colormod()
-{
+{SELFPARAM();
 	float h;
 	if (!(self.spawnflags & 2))
 		return;
@@ -90,11 +90,11 @@ void func_breakable_colormod()
 	else
 		self.colormod = '1 1 1';
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 void func_breakable_look_destroyed()
-{
+{SELFPARAM();
 	float floorZ;
 
 	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
@@ -112,26 +112,26 @@ void func_breakable_look_destroyed()
 		self.effects &= ~EF_NODRAW;
 	}
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 
 	self.solid = SOLID_NOT;
 }
 
 void func_breakable_look_restore()
-{
+{SELFPARAM();
 	setmodel(self, self.mdl);
 	self.effects &= ~EF_NODRAW;
 
 	if(self.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
 		setorigin(self, self.dropped_origin);
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 
 	self.solid = SOLID_BSP;
 }
 
 void func_breakable_behave_destroyed()
-{
+{SELFPARAM();
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
 	self.bot_attack = false;
@@ -145,7 +145,7 @@ void func_breakable_behave_destroyed()
 }
 
 void func_breakable_behave_restore()
-{
+{SELFPARAM();
 	self.health = self.max_health;
 	if(self.sprite)
 	{
@@ -166,7 +166,7 @@ void func_breakable_behave_restore()
 }
 
 void func_breakable_init_for_player(entity player)
-{
+{SELFPARAM();
 	if (self.noise1 && self.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
 	{
 		msg_entity = player;
@@ -175,23 +175,24 @@ void func_breakable_init_for_player(entity player)
 }
 
 void func_breakable_destroyed()
-{
+{SELFPARAM();
 	func_breakable_look_destroyed();
 	func_breakable_behave_destroyed();
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 void func_breakable_restore()
-{
+{SELFPARAM();
 	func_breakable_look_restore();
 	func_breakable_behave_restore();
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 vector debrisforce; // global, set before calling this
-void func_breakable_destroy() {
+void func_breakable_destroy()
+{SELFPARAM();
 	float n, i;
 	string oldmsg;
 
@@ -227,7 +228,7 @@ void func_breakable_destroy() {
 }
 
 void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.state == 1)
 		return;
 	if(self.spawnflags & DOOR_NOSPLASH)
@@ -253,7 +254,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, int 
 }
 
 void func_breakable_reset()
-{
+{SELFPARAM();
 	self.team = self.team_saved;
 	func_breakable_look_restore();
 	if(self.spawnflags & 1)
@@ -261,12 +262,12 @@ void func_breakable_reset()
 	else
 		func_breakable_behave_restore();
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
 void spawnfunc_func_breakable()
-{
+{SELFPARAM();
 	float n, i;
 	if(!self.health)
 		self.health = 100;
@@ -330,7 +331,7 @@ void spawnfunc_func_breakable()
 	self.init_for_player_needed = 1;
 	self.init_for_player = func_breakable_init_for_player;
 
-	CSQCMODEL_AUTOINIT();
+	CSQCMODEL_AUTOINIT(self);
 }
 
 // for use in maps with a "model" key set

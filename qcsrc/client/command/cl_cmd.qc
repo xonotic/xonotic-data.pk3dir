@@ -21,7 +21,7 @@
 #include "../../common/command/generic.qh"
 
 void DrawDebugModel()
-{
+{SELFPARAM();
 	if(time - floor(time) > 0.5)
 	{
 		PolyDrawModel(self);
