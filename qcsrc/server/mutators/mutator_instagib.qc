@@ -7,19 +7,29 @@
 
 #include "../../common/items/all.qc"
 
-void spawnfunc_item_minst_cells (void)
+void spawnfunc_item_minst_cells()
 {SELFPARAM();
 	if (!g_instagib) { remove(self); return; }
-	if (!self.ammo_cells)
-		self.ammo_cells = autocvar_g_instagib_ammo_drop;
-
-	StartItemA (ITEM_VaporizerCells);
+	if (!self.ammo_cells) self.ammo_cells = autocvar_g_instagib_ammo_drop;
+	StartItemA(ITEM_VaporizerCells);
 }
 
-void instagib_health_mega()
+void instagib_invisibility()
+{
+	self.strength_finished = autocvar_g_balance_powerup_strength_time;
+	StartItemA(ITEM_Invisibility);
+}
+
+void instagib_extralife()
 {SELFPARAM();
 	self.max_health = 1;
-	StartItemA (ITEM_ExtraLife);
+	StartItemA(ITEM_ExtraLife);
+}
+
+void instagib_speed()
+{
+	self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	StartItemA(ITEM_Speed);
 }
 
 .float instagib_nextthink;
@@ -140,7 +150,7 @@ MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
 
 MUTATOR_HOOKFUNCTION(instagib_BotShouldAttack)
 {
-	if(checkentity.items & ITEM_Strength.m_itemid)
+	if (checkentity.items & ITEM_Invisibility.m_itemid)
 		return true;
 
 	return false;
@@ -175,14 +185,14 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
 
-	if (self.items & ITEM_Strength.m_itemid)
+	if (self.items & ITEM_Invisibility.m_itemid)
 	{
 		play_countdown(self.strength_finished, "misc/poweroff.wav");
 		if (time > self.strength_finished)
 		{
 			self.alpha = default_player_alpha;
 			self.exteriorweaponentity.alpha = default_weapon_alpha;
-			self.items &= ~ITEM_Strength.m_itemid;
+			self.items &= ~ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
 	}
@@ -192,18 +202,18 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 		{
 			self.alpha = autocvar_g_instagib_invis_alpha;
 			self.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
-			self.items |= ITEM_Strength.m_itemid;
+			self.items |= ITEM_Invisibility.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
 		}
 	}
 
-	if (self.items & ITEM_Shield.m_itemid)
+	if (self.items & ITEM_Speed.m_itemid)
 	{
 		play_countdown(self.invincible_finished, "misc/poweroff.wav");
 		if (time > self.invincible_finished)
 		{
-			self.items &= ~ITEM_Shield.m_itemid;
+			self.items &= ~ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
 		}
 	}
@@ -211,7 +221,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 	{
 		if (time < self.invincible_finished)
 		{
-			self.items |= ITEM_Shield.m_itemid;
+			self.items |= ITEM_Speed.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
 		}
@@ -221,7 +231,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerPhysics)
 {SELFPARAM();
-	if(self.items & ITEM_Shield.m_itemid)
+	if(self.items & ITEM_Speed.m_itemid)
 		self.stat_sv_maxspeed = self.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
 
 	return false;
@@ -305,7 +315,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		frag_mirrordamage = 0;
 	}
 
-	if((frag_target.buffs & BUFF_INVISIBLE.m_itemid) || (frag_target.items & ITEM_Strength.m_itemid))
+	if((frag_target.buffs & BUFF_INVISIBLE.m_itemid) || (frag_target.items & ITEM_Invisibility.m_itemid))
 		yoda = 1;
 
 	return false;
@@ -369,21 +379,10 @@ MUTATOR_HOOKFUNCTION(instagib_CustomizeWaypoint)
 
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
-	if((self.owner.flags & FL_CLIENT) && (self.owner.items & ITEM_Strength.m_itemid) && (e == other))
+	if((self.owner.flags & FL_CLIENT) && (self.owner.items & ITEM_Invisibility.m_itemid) && (e == other))
 	if(DIFF_TEAM(self.owner, e))
 		return true;
 
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(instagib_ItemCountdown)
-{SELFPARAM();
-	switch (self.items)
-	{
-		case ITEM_Strength.m_itemid:  item_name = "item-invis";     item_color = '0 0 1'; break;
-		case ITEM_ExtraLife.m_itemid: item_name = "item-extralife"; item_color = '1 0 0'; break;
-		case ITEM_Shield.m_itemid:    item_name = "item-speed";     item_color = '1 0 1'; break;
-	}
 	return false;
 }
 
@@ -427,17 +426,19 @@ MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
 {SELFPARAM();
 	if (!autocvar_g_powerups) { return false; }
-	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.itemdef == ITEM_HealthMega))
+	// Can't use .itemdef here
+	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
 		return false;
 
 	entity e = spawn();
 
-	if(random() < 0.3)
-		e.think = spawnfunc_item_strength;
-	else if(random() < 0.6)
-		e.think = instagib_health_mega;
+	float r = random();
+	if (r < 0.3)
+		e.think = instagib_invisibility;
+	else if (r < 0.6)
+		e.think = instagib_extralife;
 	else
-		e.think = spawnfunc_item_invincible;
+		e.think = instagib_speed;
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = self.spawnflags;
@@ -479,7 +480,6 @@ MUTATOR_DEFINITION(mutator_instagib)
 	MUTATOR_HOOK(ItemTouch, instagib_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, instagib_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(CustomizeWaypoint, instagib_CustomizeWaypoint, CBC_ORDER_ANY);
-	MUTATOR_HOOK(Item_RespawnCountdown, instagib_ItemCountdown, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, instagib_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, instagib_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, instagib_PlayerPowerups, CBC_ORDER_ANY);
