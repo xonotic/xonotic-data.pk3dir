@@ -15,7 +15,7 @@ void spawnfunc_item_minst_cells()
 }
 
 void instagib_invisibility()
-{
+{SELFPARAM();
 	self.strength_finished = autocvar_g_balance_powerup_strength_time;
 	StartItemA(ITEM_Invisibility);
 }
@@ -27,7 +27,7 @@ void instagib_extralife()
 }
 
 void instagib_speed()
-{
+{SELFPARAM();
 	self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 	StartItemA(ITEM_Speed);
 }

@@ -100,9 +100,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 		setorigin(wep, wep.origin + '0 0 1');
 		entity oldself;
 		oldself = self;
-		self = wep;
-		builtin_droptofloor();
-		self = oldself;
+		WITH(entity, self, wep, builtin_droptofloor());
 	}
 
 	wep.spawn_origin = wep.origin;

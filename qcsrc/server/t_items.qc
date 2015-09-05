@@ -76,7 +76,7 @@ void ItemDrawSimple()
 }
 
 void Item_PreDraw()
-{
+{SELFPARAM();
 	vector org;
 	float alph;
 	org = getpropertyvec(VF_ORIGIN);
