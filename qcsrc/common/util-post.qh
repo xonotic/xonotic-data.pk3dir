@@ -3,12 +3,15 @@
 
 [[alias("self")]] entity __self;
 
-#define WITH(type, name, value, block) do { \
+// Can't wrap with do-while as block may contain continue or break
+#define WITH(type, name, value, block) { \
     type __with_save = (name); \
     name = (value); \
     LAMBDA(block) \
     name = __with_save; \
-} while (0)
+} do { } while (0)
+
+// Transition from global 'self' to local 'this'
 
 // Step 1: auto oldself
 #if 1
@@ -33,6 +36,7 @@ entity getself() { return self; }
 #endif
 
 // Step 4: enable when possible
+// TODO: Remove SELFPARAM in favor of a parameter
 #if 0
 #define SELFPARAM() noref const entity this = __self
 #define self this
