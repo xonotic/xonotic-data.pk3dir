@@ -55,8 +55,6 @@ void Slider_setValue_allowAnim(entity me, float val, bool allowAnim)
 {
 	if(allowAnim && me.animated) {
 		float t = 0.5;
-		if(me.pressed == 2)
-			t = 0.3; // slightly more responsive while dragging the handle
 		if(!me.sliderAnim)
 			me.sliderAnim = makeHostedEasing(me, Slider_setSliderValue, easingQuadOut, t, me.sliderValue, val);
 		else
@@ -212,7 +210,7 @@ float Slider_mouseDrag(entity me, vector pos)
 			v = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 			if(me.valueStep)
 				v = floor(0.5 + v / me.valueStep) * me.valueStep;
-			me.setValue(me, v);
+			me.setValue_noAnim(me, v);
 		}
 		else
 			me.setValue(me, me.previousValue);
