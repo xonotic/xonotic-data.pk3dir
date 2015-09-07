@@ -155,7 +155,7 @@ CLASS(Mutator, Object)
     }
 ENDCLASS(Mutator)
 
-const int MAX_MUTATORS = 15;
+const int MAX_MUTATORS = 20;
 Mutator loaded_mutators[MAX_MUTATORS];
 
 bool Mutator_Add(Mutator mut)
