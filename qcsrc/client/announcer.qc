@@ -8,7 +8,7 @@
 bool announcer_1min;
 bool announcer_5min;
 void Announcer_Countdown()
-{
+{SELFPARAM();
 	float starttime = getstatf(STAT_GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime == -1)

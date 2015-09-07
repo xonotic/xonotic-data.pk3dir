@@ -37,7 +37,7 @@ const float wyvern_anim_death	= 4;
 */
 
 void M_Wyvern_Attack_Fireball_Explode()
-{
+{SELFPARAM();
 	entity e;
 	if(self)
 	{
@@ -60,7 +60,7 @@ void M_Wyvern_Attack_Fireball_Touch()
 }
 
 void M_Wyvern_Attack_Fireball()
-{
+{SELFPARAM();
 	entity missile = spawn();
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 
@@ -83,7 +83,7 @@ void M_Wyvern_Attack_Fireball()
 }
 
 float M_Wyvern_Attack(float attack_type)
-{
+{SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -105,7 +105,7 @@ void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN.monsterid); }
 #endif // SVQC
 
 bool M_Wyvern(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		#ifdef SVQC

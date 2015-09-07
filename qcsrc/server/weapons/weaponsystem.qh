@@ -14,7 +14,7 @@ const float WFRAME_FIRE2 = 1;
 const float WFRAME_IDLE = 2;
 const float WFRAME_RELOAD = 3;
 
-void CL_SpawnWeaponentity();
+void CL_SpawnWeaponentity(entity e);
 
 vector CL_Weapon_GetShotOrg(float wpn);
 

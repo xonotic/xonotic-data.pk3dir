@@ -8,7 +8,7 @@
     self.velocity = movelib_dragvec(self.velocity,0.02,0.5);
 **/
 vector movelib_dragvec(float drag, float exp_)
-{
+{SELFPARAM();
     float lspeed,ldrag;
 
     lspeed = vlen(self.velocity);
@@ -40,7 +40,7 @@ float movelib_dragflt(float fspeed,float drag,float exp_)
     self.velocity = movelib_inertmove_byspeed(self.velocity,newvel,1000,0.1,0.9);
 **/
 vector movelib_inertmove_byspeed(vector vel_new, float vel_max,float newmin,float oldmax)
-{
+{SELFPARAM();
     float influense;
 
     influense = vlen(self.velocity) * (1 / vel_max);
@@ -51,12 +51,12 @@ vector movelib_inertmove_byspeed(vector vel_new, float vel_max,float newmin,floa
 }
 
 vector movelib_inertmove(vector new_vel,float new_bias)
-{
+{SELFPARAM();
     return new_vel * new_bias + self.velocity * (1-new_bias);
 }
 
 void movelib_move(vector force,float max_velocity,float drag,float theMass,float breakforce)
-{
+{SELFPARAM();
     float deltatime;
     float acceleration;
     float mspeed;
@@ -164,7 +164,7 @@ void movelib_update(vector dir,float force)
 */
 
 void movelib_beak_simple(float force)
-{
+{SELFPARAM();
     float mspeed;
     vector mdir;
     float vz;
@@ -183,7 +183,7 @@ Yed need to set v_up and v_forward (generally by calling makevectors) before cal
 #endif
 
 void movelib_groundalign4point(float spring_length, float spring_up, float blendrate, float _max)
-{
+{SELFPARAM();
     vector a, b, c, d, e, r, push_angle, ahead, side;
 
     push_angle.y = 0;

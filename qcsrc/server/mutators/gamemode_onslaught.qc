@@ -9,7 +9,7 @@
 // =======================
 
 bool ons_CaptureShield_Customize()
-{
+{SELFPARAM();
 	entity e = WaypointSprite_getviewentity(other);
 
 	if(!self.enemy.isshielded && (ons_ControlPoint_Attackable(self.enemy, e.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return false; }
@@ -19,7 +19,7 @@ bool ons_CaptureShield_Customize()
 }
 
 void ons_CaptureShield_Touch()
-{
+{SELFPARAM();
 	if(!self.enemy.isshielded && (ons_ControlPoint_Attackable(self.enemy, other.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return; }
 	if(!IS_PLAYER(other)) { return; }
 	if(SAME_TEAM(other, self)) { return; }
@@ -41,7 +41,7 @@ void ons_CaptureShield_Touch()
 }
 
 void ons_CaptureShield_Reset()
-{
+{SELFPARAM();
 	self.colormap = self.enemy.colormap;
 	self.team = self.enemy.team;
 }
@@ -229,7 +229,7 @@ void onslaught_updatelinks()
 // ===================
 
 bool ons_Link_Send(entity to, int sendflags)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RADARLINK);
 	WriteByte(MSG_ENTITY, sendflags);
 	if(sendflags & 1)
@@ -252,7 +252,7 @@ bool ons_Link_Send(entity to, int sendflags)
 }
 
 void ons_Link_CheckUpdate()
-{
+{SELFPARAM();
 	// TODO check if the two sides have moved (currently they won't move anyway)
 	float cc = 0, cc1 = 0, cc2 = 0;
 
@@ -271,7 +271,7 @@ void ons_Link_CheckUpdate()
 }
 
 void ons_DelayedLinkSetup()
-{
+{SELFPARAM();
 	self.goalentity = find(world, targetname, self.target);
 	self.enemy = find(world, targetname, self.target2);
 	if(!self.goalentity) { objerror("can not find target\n"); }
@@ -344,9 +344,7 @@ int ons_ControlPoint_Attackable(entity cp, int teamnumber)
 }
 
 void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
-	entity oself;
-
+{SELFPARAM();
 	if(damage <= 0) { return; }
 
 	if (self.owner.isshielded)
@@ -404,11 +402,10 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		oself = self;
-		self = self.owner;
+		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		self = oself;
+		setself(this);
 
 		self.owner.waslinked = self.owner.islinked;
 		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
@@ -422,8 +419,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 }
 
 void ons_ControlPoint_Icon_Think()
-{
-	entity oself;
+{SELFPARAM();
 	self.nextthink = time + ONS_CP_THINKRATE;
 
 	if(autocvar_g_onslaught_cp_proxydecap)
@@ -478,11 +474,10 @@ void ons_ControlPoint_Icon_Think()
 		if(!self.owner.islinked)
 			self.owner.team = 0;
 
-		oself = self;
-		self = self.owner;
+		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		self = oself;
+		setself(this);
 
 		self.owner.team = t;
 
@@ -502,8 +497,7 @@ void ons_ControlPoint_Icon_Think()
 }
 
 void ons_ControlPoint_Icon_BuildThink()
-{
-	entity oself;
+{SELFPARAM();
 	int a;
 
 	self.nextthink = time + ONS_CP_THINKRATE;
@@ -545,11 +539,10 @@ void ons_ControlPoint_Icon_BuildThink()
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		oself = self;
-		self = self.owner;
+		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
-		self = oself;
+		setself(this);
 
 		self.SendFlags |= CPSF_SETUP;
 	}
@@ -655,7 +648,7 @@ void ons_ControlPoint_UpdateSprite(entity e)
 }
 
 void ons_ControlPoint_Touch()
-{
+{SELFPARAM();
 	entity toucher = other;
 	int attackable;
 
@@ -692,13 +685,13 @@ void ons_ControlPoint_Touch()
 }
 
 void ons_ControlPoint_Think()
-{
+{SELFPARAM();
 	self.nextthink = time + ONS_CP_THINKRATE;
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 void ons_ControlPoint_Reset()
-{
+{SELFPARAM();
 	if(self.goalentity)
 		remove(self.goalentity);
 
@@ -721,23 +714,23 @@ void ons_ControlPoint_Reset()
 	activator = self;
 	SUB_UseTargets(); // to reset the structures, playerspawns etc.
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 void ons_DelayedControlPoint_Setup(void)
-{
+{SELFPARAM();
 	onslaught_updatelinks();
 
 	// captureshield setup
 	ons_CaptureShield_Spawn(self, false);
 
-	CSQCMODEL_AUTOINIT();
+	CSQCMODEL_AUTOINIT(self);
 }
 
 void ons_ControlPoint_Setup(entity cp)
-{
+{SELFPARAM();
 	// declarations
-	self = cp; // for later usage with droptofloor()
+	setself(cp); // for later usage with droptofloor()
 
 	// main setup
 	cp.ons_worldcpnext = ons_worldcplist; // link control point into ons_worldcplist
@@ -790,7 +783,7 @@ void ons_ControlPoint_Setup(entity cp)
 	{
 		setorigin(cp, cp.origin + '0 0 20');
 		cp.noalign = false;
-		self = cp;
+		setself(cp);
 		droptofloor();
 		cp.movetype = MOVETYPE_TOSS;
 	}
@@ -842,7 +835,7 @@ void ons_Generator_UpdateSprite(entity e)
 }
 
 void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(damage <= 0) { return; }
 	if(warmup_stage || gameover) { return; }
 	if(!round_handler_IsRoundStarted()) { return; }
@@ -925,7 +918,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 }
 
 void ons_GeneratorThink()
-{
+{SELFPARAM();
 	entity e;
 	self.nextthink = time + GEN_THINKRATE;
 	if (!gameover)
@@ -948,7 +941,7 @@ void ons_GeneratorThink()
 }
 
 void ons_GeneratorReset()
-{
+{SELFPARAM();
 	self.team = self.team_saved;
 	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
 	self.takedamage = DAMAGE_AIM;
@@ -973,7 +966,7 @@ void ons_GeneratorReset()
 }
 
 void ons_DelayedGeneratorSetup()
-{
+{SELFPARAM();
 	// bot waypoints
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
@@ -989,7 +982,7 @@ void ons_DelayedGeneratorSetup()
 
 
 void onslaught_generator_touch()
-{
+{SELFPARAM();
 	if ( IS_PLAYER(other) )
 	if ( SAME_TEAM(self,other) )
 	if ( self.iscaptured )
@@ -999,10 +992,10 @@ void onslaught_generator_touch()
 }
 
 void ons_GeneratorSetup(entity gen) // called when spawning a generator entity on the map as a spawnfunc
-{
+{SELFPARAM();
 	// declarations
 	int teamnumber = gen.team;
-	self = gen; // for later usage with droptofloor()
+	setself(gen); // for later usage with droptofloor()
 
 	// main setup
 	gen.ons_worldgeneratornext = ons_worldgeneratorlist; // link generator into ons_worldgeneratorlist
@@ -1046,7 +1039,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.colormap = 1024 + (teamnumber - 1) * 17;
 
 	// generator placement
-	self = gen;
+	setself(gen);
 	droptofloor();
 
 	// waypointsprites
@@ -1210,7 +1203,7 @@ void Onslaught_RoundStart()
 // NOTE: LEGACY CODE, needs to be re-written!
 
 void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	float t, c;
 	int i;
@@ -1284,7 +1277,7 @@ void havocbot_role_ons_setrole(entity bot, int role)
 }
 
 int havocbot_ons_teamcount(entity bot, int role)
-{
+{SELFPARAM();
 	int c = 0;
 	entity head;
 
@@ -1297,7 +1290,7 @@ int havocbot_ons_teamcount(entity bot, int role)
 }
 
 void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
-{
+{SELFPARAM();
 	entity cp, cp1, cp2, best, pl, wp;
 	float radius, bestvalue;
 	int c;
@@ -1415,7 +1408,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 }
 
 bool havocbot_goalrating_ons_generator_attack(float ratingscale)
-{
+{SELFPARAM();
 	entity g, wp, bestwp;
 	bool found;
 	int best;
@@ -1471,7 +1464,7 @@ bool havocbot_goalrating_ons_generator_attack(float ratingscale)
 }
 
 void havocbot_role_ons_offense()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 	{
 		self.havocbot_attack_time = 0;
@@ -1506,17 +1499,17 @@ void havocbot_role_ons_offense()
 }
 
 void havocbot_role_ons_assistant()
-{
+{SELFPARAM();
 	havocbot_ons_reset_role(self);
 }
 
 void havocbot_role_ons_defense()
-{
+{SELFPARAM();
 	havocbot_ons_reset_role(self);
 }
 
 void havocbot_ons_reset_role(entity bot)
-{
+{SELFPARAM();
 	entity head;
 	int c = 0;
 
@@ -1548,7 +1541,7 @@ void havocbot_ons_reset_role(entity bot)
  * if max_dist is positive, only control points within this range will be considered
  */
 entity ons_Nearest_ControlPoint(vector pos, float max_dist)
-{
+{SELFPARAM();
 	entity tmp_entity, closest_target = world;
 	tmp_entity = findchain(classname, "onslaught_controlpoint");
 	while(tmp_entity)
@@ -1579,7 +1572,7 @@ entity ons_Nearest_ControlPoint(vector pos, float max_dist)
  * This function only check distances on the XY plane, disregarding Z
  */
 entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
-{
+{SELFPARAM();
 	entity tmp_entity, closest_target = world;
 	vector delta;
 	float smallest_distance = 0, distance;
@@ -1626,7 +1619,7 @@ entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
  * find the number of control points and generators in the same team as self
  */
 int ons_Count_SelfControlPoints()
-{
+{SELFPARAM();
 	entity tmp_entity;
 	tmp_entity = findchain(classname, "onslaught_controlpoint");
 	int n = 0;
@@ -1702,24 +1695,25 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 // ==============
 
 MUTATOR_HOOKFUNCTION(ons_ResetMap)
-{
-	FOR_EACH_PLAYER(self)
+{SELFPARAM();
+	entity e;
+	FOR_EACH_PLAYER(e)
 	{
-		self.ons_roundlost = false;
-		self.ons_deathloc = '0 0 0';
-		PutClientInServer();
+		e.ons_roundlost = false;
+		e.ons_deathloc = '0 0 0';
+		WITH(entity, self, e, PutClientInServer());
 	}
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ons_RemovePlayer)
-{
+{SELFPARAM();
 	self.ons_deathloc = '0 0 0';
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
-{
+{SELFPARAM();
 	if(!round_handler_IsRoundStarted())
 	{
 		self.player_blocked = true;
@@ -1845,7 +1839,7 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ons_PlayerDies)
-{
+{SELFPARAM();
 	frag_target.ons_deathloc = frag_target.origin;
 	entity l;
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
@@ -1865,7 +1859,7 @@ MUTATOR_HOOKFUNCTION(ons_PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(ons_MonsterThink)
-{
+{SELFPARAM();
 	entity e = find(world, targetname, self.target);
 	if (e != world)
 		self.team = e.team;
@@ -1874,7 +1868,7 @@ MUTATOR_HOOKFUNCTION(ons_MonsterThink)
 }
 
 void ons_MonsterSpawn_Delayed()
-{
+{SELFPARAM();
 	entity e, own = self.owner;
 
 	if(!own) { remove(self); return; }
@@ -1895,7 +1889,7 @@ void ons_MonsterSpawn_Delayed()
 }
 
 MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
-{
+{SELFPARAM();
 	entity e = spawn();
 	e.owner = self;
 	InitializeEntity(e, ons_MonsterSpawn_Delayed, INITPRIO_FINDTARGET);
@@ -1904,7 +1898,7 @@ MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 }
 
 void ons_TurretSpawn_Delayed()
-{
+{SELFPARAM();
 	entity e, own = self.owner;
 
 	if(!own) { remove(self); return; }
@@ -1926,7 +1920,7 @@ void ons_TurretSpawn_Delayed()
 }
 
 MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
-{
+{SELFPARAM();
 	entity e = spawn();
 	e.owner = self;
 	InitializeEntity(e, ons_TurretSpawn_Delayed, INITPRIO_FINDTARGET);
@@ -1935,7 +1929,7 @@ MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ons_BotRoles)
-{
+{SELFPARAM();
 	havocbot_ons_reset_role(self);
 	return true;
 }
@@ -1959,13 +1953,13 @@ MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
 }
 
 MUTATOR_HOOKFUNCTION(ons_SpectateCopy)
-{
+{SELFPARAM();
 	self.ons_roundlost = other.ons_roundlost; // make spectators see it too
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 
@@ -2029,7 +2023,7 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 }
 
 MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
 	if((time > self.teleport_antispam) && (self.deadflag == DEAD_NO) && !self.vehicle)
@@ -2065,7 +2059,7 @@ keys:
 "target2" - second control point.
  */
 void spawnfunc_onslaught_link()
-{
+{SELFPARAM();
 	if(!g_onslaught) { remove(self); return; }
 
 	if (self.target == "" || self.target2 == "")
@@ -2090,7 +2084,7 @@ keys:
  */
 
 void spawnfunc_onslaught_controlpoint()
-{
+{SELFPARAM();
 	if(!g_onslaught) { remove(self); return; }
 
 	ons_ControlPoint_Setup(self);
@@ -2106,7 +2100,7 @@ keys:
 "targetname" - name that spawnfunc_onslaught_link entities will use to target this.
  */
 void spawnfunc_onslaught_generator()
-{
+{SELFPARAM();
 	if(!g_onslaught) { remove(self); return; }
 	if(!self.team) { objerror("team must be set"); }
 

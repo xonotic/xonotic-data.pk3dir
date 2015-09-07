@@ -12,7 +12,7 @@
 #include "common.qh"
 
 void WarpZoneLib_ExactTrigger_Init()
-{
+{SELFPARAM();
 	vector mi, ma;
 	if (self.movedir == '0 0 0')
 	if (self.angles != '0 0 0')

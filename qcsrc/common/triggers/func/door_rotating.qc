@@ -28,7 +28,7 @@ FIXME: only one sound set available at the time being
 */
 
 void door_rotating_reset()
-{
+{SELFPARAM();
 	self.angles = self.pos1;
 	self.avelocity = '0 0 0';
 	self.state = STATE_BOTTOM;
@@ -37,7 +37,7 @@ void door_rotating_reset()
 }
 
 void door_rotating_init_startopen()
-{
+{SELFPARAM();
 	self.angles = self.movedir;
 	self.pos2 = '0 0 0';
 	self.pos1 = self.movedir;
@@ -45,7 +45,7 @@ void door_rotating_init_startopen()
 
 
 void spawnfunc_func_door_rotating()
-{
+{SELFPARAM();
 
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";

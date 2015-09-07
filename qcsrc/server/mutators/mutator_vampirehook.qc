@@ -8,7 +8,7 @@ float autocvar_g_vampirehook_health_steal;
 .float last_dmg;
 
 MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
-{	
+{SELFPARAM();
 	entity dmgent = ((SAME_TEAM(self.owner, self.aiment) && autocvar_g_vampirehook_teamheal) ? self.owner : self.aiment);
 
 	if(IS_PLAYER(self.aiment))

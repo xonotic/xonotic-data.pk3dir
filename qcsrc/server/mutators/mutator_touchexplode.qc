@@ -5,7 +5,7 @@
 .float touchexplode_time;
 
 void PlayerTouchExplode(entity p1, entity p2)
-{
+{SELFPARAM();
 	vector org;
 	org = (p1.origin + p2.origin) * 0.5;
 	org.z += (p1.mins.z + p2.mins.z) * 0.5;
@@ -21,7 +21,7 @@ void PlayerTouchExplode(entity p1, entity p2)
 }
 
 MUTATOR_HOOKFUNCTION(touchexplode_PlayerThink)
-{
+{SELFPARAM();
 	if(time > self.touchexplode_time)
 	if(!gameover)
 	if(!self.frozen)

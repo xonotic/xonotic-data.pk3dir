@@ -11,12 +11,12 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
-void spawnfunc_turret_machinegun() { if(!turret_initialize(TUR_MACHINEGUN)) remove(self); }
+void spawnfunc_turret_machinegun() { SELFPARAM(); if(!turret_initialize(TUR_MACHINEGUN)) remove(self); }
 
 void W_MachineGun_MuzzleFlash(void);
 
 float t_machinegun(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:

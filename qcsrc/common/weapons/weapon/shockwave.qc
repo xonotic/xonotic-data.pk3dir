@@ -83,7 +83,7 @@ void Net_ReadShockwaveParticle(void);
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_weapon_shockwave(void)
-{
+{SELFPARAM();
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
@@ -106,7 +106,7 @@ vector shockwave_hit_force[MAX_SHOCKWAVE_HITS];
 
 // MELEE ATTACK MODE
 void W_Shockwave_Melee_Think(void)
-{
+{SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
@@ -228,7 +228,7 @@ void W_Shockwave_Melee_Think(void)
 }
 
 void W_Shockwave_Melee(void)
-{
+{SELFPARAM();
 	sound(self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
@@ -274,7 +274,7 @@ float W_Shockwave_Attack_IsVisible(
 	vector nearest_on_line,
 	vector sw_shotorg,
 	vector attack_endpos)
-{
+{SELFPARAM();
 	vector nearest_to_attacker = head.WarpZone_findradius_nearest;
 	vector center = (head.origin + (head.mins + head.maxs) * 0.5);
 	vector corner;
@@ -334,7 +334,7 @@ float W_Shockwave_Attack_CheckHit(
 }
 
 void W_Shockwave_Send(void)
-{
+{SELFPARAM();
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
@@ -350,7 +350,7 @@ void W_Shockwave_Send(void)
 }
 
 void W_Shockwave_Attack(void)
-{
+{SELFPARAM();
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
 	float final_damage;
@@ -667,7 +667,7 @@ void W_Shockwave_Attack(void)
 }
 
 bool W_Shockwave(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_AIM:
@@ -750,7 +750,7 @@ const float SW_MAXALPHA = 0.5;
 const float SW_FADETIME = 0.4;
 const float SW_DISTTOMIN = 200;
 void Draw_Shockwave()
-{
+{SELFPARAM();
 	// fading/removal control
 	float a = bound(0, (SW_MAXALPHA - ((time - self.sw_time) / SW_FADETIME)), SW_MAXALPHA);
 	if(a < ALPHA_MIN_VISIBLE) { remove(self); }
@@ -866,7 +866,7 @@ void Net_ReadShockwaveParticle(void)
 }
 
 bool W_Shockwave(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

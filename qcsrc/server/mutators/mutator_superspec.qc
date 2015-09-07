@@ -25,7 +25,7 @@ const float SSF_ITEMMSG = 4;
 .string superspec_itemfilter; //"classname1 classname2 ..."
 
 float _spectate(entity _player)
-{
+{SELFPARAM();
 	if(Spectate(_player) == 1)
 		self.classname = "spectator";
 
@@ -33,7 +33,7 @@ float _spectate(entity _player)
 }
 
 void superspec_save_client_conf()
-{
+{SELFPARAM();
 	string fn = "superspec-local.options";
 	float fh;
 
@@ -99,12 +99,13 @@ float superspec_filteritem(entity _for, entity _item)
 }
 
 MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
-{
-	entity _oldself = self;
+{SELFPARAM();
 	entity _item = self;
 
-	FOR_EACH_SPEC(self)
+	entity e;
+	FOR_EACH_SPEC(e)
 	{
+		setself(e);
 		if(self.superspec_flags & SSF_ITEMMSG)
 			if(superspec_filteritem(self, _item))
 			{
@@ -116,7 +117,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 				{
 					_spectate(other);
 
-					self = _oldself;
+					setself(this);
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
@@ -146,13 +147,13 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 		}
 	}
 
-	self = _oldself;
+	setself(this);
 
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
-{
+{SELFPARAM();
 #define OPTIONINFO(flag,var,test,text,long,short) \
     var = strcat(var, ((flag & test) ? "^2[ON]  ^7" : "^1[OFF] ^7")); \
     var = strcat(var, text," ^7(^3 ", long, "^7 | ^3", short, " ^7)\n")
@@ -434,7 +435,7 @@ MUTATOR_HOOKFUNCTION(superspec_BuildMutatorsPrettyString)
 }
 
 void superspec_hello()
-{
+{SELFPARAM();
 	if(self.enemy.crypto_idfp == "")
 		Send_Notification(NOTIF_ONE_ONLY, self.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 
@@ -442,7 +443,7 @@ void superspec_hello()
 }
 
 MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
-{
+{SELFPARAM();
 	if(!IS_REAL_CLIENT(self))
 		return false;
 
@@ -490,12 +491,12 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(superspec_PlayerDies)
-{
-	entity _old_self = self;
-
-	FOR_EACH_SPEC(self)
+{SELFPARAM();
+	entity e;
+	FOR_EACH_SPEC(e)
 	{
-		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == _old_self)
+		setself(e);
+		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == this)
 		{
 			if(self.autospec_flags & ASF_SHOWWHAT)
 				superspec_msg("", "", self, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
@@ -504,7 +505,7 @@ MUTATOR_HOOKFUNCTION(superspec_PlayerDies)
 		}
 	}
 
-	self = _old_self;
+	setself(this);
 	return false;
 }
 

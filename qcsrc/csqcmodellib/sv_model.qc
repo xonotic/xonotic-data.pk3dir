@@ -37,7 +37,7 @@
 // generic CSQC model code
 
 bool CSQCModel_Send(entity to, int sf)
-{
+{SELFPARAM();
 	// some nice flags for CSQCMODEL_IF
 	float isplayer = (IS_CLIENT(self));
 	float islocalplayer = (self == to);
@@ -70,10 +70,10 @@ bool CSQCModel_Send(entity to, int sf)
 #ifdef CSQCPLAYER_FORCE_UPDATES
 .float csqcmodel_nextforcedupdate;
 #endif
-void CSQCModel_CheckUpdate()
+void CSQCModel_CheckUpdate(entity e)
 {
 	// some nice flags for CSQCMODEL_IF
-	float isplayer = (IS_CLIENT(self));
+	float isplayer = (IS_CLIENT(e));
 	float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 	float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 
@@ -82,43 +82,43 @@ void CSQCModel_CheckUpdate()
 	unused_float = isnolocalplayer;
 
 #ifdef CSQCPLAYER_FORCE_UPDATES
-	if(isplayer && time > self.csqcmodel_nextforcedupdate)
+	if(isplayer && time > e.csqcmodel_nextforcedupdate)
 	{
-		self.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
-		self.csqcmodel_nextforcedupdate = time + CSQCPLAYER_FORCE_UPDATES * (0.5 + random()); // ensure about 4 origin sends per sec
+		e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
+		e.csqcmodel_nextforcedupdate = time + CSQCPLAYER_FORCE_UPDATES * (0.5 + random()); // ensure about 4 origin sends per sec
 	}
 #endif
 
-	if(self.effects & EF_RESTARTANIM_BIT)
+	if(e.effects & EF_RESTARTANIM_BIT)
 	{
-		self.SendFlags |= CSQCMODEL_PROPERTY_FRAME | CSQCMODEL_PROPERTY_FRAME2; // full anim resend please
-		self.effects &= ~EF_RESTARTANIM_BIT;
+		e.SendFlags |= CSQCMODEL_PROPERTY_FRAME | CSQCMODEL_PROPERTY_FRAME2; // full anim resend please
+		e.effects &= ~EF_RESTARTANIM_BIT;
 	}
 
-	if(self.effects & EF_TELEPORT_BIT)
+	if(e.effects & EF_TELEPORT_BIT)
 	{
-		self.SendFlags |= CSQCMODEL_PROPERTY_TELEPORTED; // no interpolation please
-		self.effects &= ~EF_TELEPORT_BIT;
+		e.SendFlags |= CSQCMODEL_PROPERTY_TELEPORTED; // no interpolation please
+		e.effects &= ~EF_TELEPORT_BIT;
 	}
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
 #define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	{ \
-		t tmp = self.f; \
-		if(tmp != self.csqcmodel_##f) \
+		t tmp = e.f; \
+		if(tmp != e.csqcmodel_##f) \
 		{ \
-			self.csqcmodel_##f = tmp; \
-			self.SendFlags |= flag; \
+			e.csqcmodel_##f = tmp; \
+			e.SendFlags |= flag; \
 		} \
 	}
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
 	{ \
-		t tmp = rint(bound(mi, s * self.f, ma) - mi); \
-		if(tmp != self.csqcmodel_##f) \
+		t tmp = rint(bound(mi, s * e.f, ma) - mi); \
+		if(tmp != e.csqcmodel_##f) \
 		{ \
-			self.csqcmodel_##f = tmp; \
-			self.SendFlags |= flag; \
+			e.csqcmodel_##f = tmp; \
+			e.SendFlags |= flag; \
 		} \
 	}
 	ALLPROPERTIES
@@ -128,14 +128,14 @@ void CSQCModel_CheckUpdate()
 #undef CSQCMODEL_IF
 }
 
-void CSQCModel_LinkEntity()
+void CSQCModel_LinkEntity(entity e)
 {
-	self.SendEntity = CSQCModel_Send;
-	self.SendFlags = 0xFFFFFF;
-	CSQCModel_CheckUpdate();
+	e.SendEntity = CSQCModel_Send;
+	e.SendFlags = 0xFFFFFF;
+	CSQCModel_CheckUpdate(e);
 }
 
 void CSQCModel_UnlinkEntity()
-{
+{SELFPARAM();
 	self.SendEntity = func_null;
 }

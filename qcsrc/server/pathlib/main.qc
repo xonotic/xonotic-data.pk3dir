@@ -370,7 +370,7 @@ entity path_build(entity next, vector where, entity prev, entity start)
 }
 
 entity pathlib_astar(vector from,vector to)
-{
+{SELFPARAM();
     entity path, start, end, open, n, ln;
     float ptime, ftime, ctime;
 

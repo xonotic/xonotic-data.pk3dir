@@ -44,7 +44,7 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG.m_id); }
 
 void W_HeavyMachineGun_Attack_Auto()
-{
+{SELFPARAM();
 	if (!self.BUTTON_ATCK)
 	{
 		w_ready();
@@ -87,7 +87,7 @@ void W_HeavyMachineGun_Attack_Auto()
 }
 
 bool W_HeavyMachineGun(int req)
-{
+{SELFPARAM();
 	float ammo_amount;
 	switch(req)
 	{
@@ -171,7 +171,7 @@ bool W_HeavyMachineGun(int req)
 #endif
 #ifdef CSQC
 bool W_HeavyMachineGun(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

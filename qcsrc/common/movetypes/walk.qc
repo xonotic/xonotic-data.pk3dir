@@ -1,5 +1,5 @@
 void _Movetype_Physics_Walk(float dt)  // SV_WalkMove
-{
+{SELFPARAM();
 	vector stepnormal = '0 0 0';
 
 	// if frametime is 0 (due to client sending the same timestamp twice), don't move

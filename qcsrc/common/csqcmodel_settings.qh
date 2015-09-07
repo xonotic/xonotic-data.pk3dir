@@ -86,8 +86,8 @@
 //vector PL_CROUCH_VIEW_OFS  = ...;
 
 #ifdef SVQC
-# define CSQCMODEL_AUTOINIT() CSQCModel_LinkEntity()
-# define CSQCMODEL_AUTOUPDATE() CSQCModel_CheckUpdate()
+# define CSQCMODEL_AUTOINIT(e) CSQCModel_LinkEntity(e)
+# define CSQCMODEL_AUTOUPDATE(e) CSQCModel_CheckUpdate(e)
 #endif
 
 #define CSQCMODEL_EF_RESPAWNGHOST EF_SELECTABLE

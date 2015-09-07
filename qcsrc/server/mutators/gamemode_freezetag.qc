@@ -134,7 +134,7 @@ float freezetag_CheckWinner()
 }
 
 entity freezetag_LastPlayerForTeam()
-{
+{SELFPARAM();
 	entity pl, last_pl = world;
 	FOR_EACH_PLAYER(pl)
 	{
@@ -162,7 +162,7 @@ void freezetag_LastPlayerForTeam_Notify()
 }
 
 void freezetag_Add_Score(entity attacker)
-{
+{SELFPARAM();
 	if(attacker == self)
 	{
 		// you froze your own dumb self
@@ -180,7 +180,7 @@ void freezetag_Add_Score(entity attacker)
 }
 
 void freezetag_Freeze(entity attacker)
-{
+{SELFPARAM();
 	if(self.frozen)
 		return;
 
@@ -195,7 +195,7 @@ void freezetag_Freeze(entity attacker)
 }
 
 void freezetag_Unfreeze(entity attacker)
-{
+{SELFPARAM();
 	self.freezetag_frozen_time = 0;
 	self.freezetag_frozen_timeout = 0;
 
@@ -218,7 +218,7 @@ void() havocbot_role_ft_freeing;
 void() havocbot_role_ft_offense;
 
 void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	float distance;
 
@@ -244,7 +244,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 }
 
 void havocbot_role_ft_offense()
-{
+{SELFPARAM();
 	entity head;
 	float unfrozen;
 
@@ -285,7 +285,7 @@ void havocbot_role_ft_offense()
 }
 
 void havocbot_role_ft_freeing()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -319,7 +319,7 @@ void havocbot_role_ft_freeing()
 // ==============
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
-{
+{SELFPARAM();
 	self.health = 0; // neccessary to update correctly alive stats
 	if(!self.frozen)
 		freezetag_LastPlayerForTeam_Notify();
@@ -329,7 +329,7 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
-{
+{SELFPARAM();
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
 	{
@@ -383,7 +383,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
-{
+{SELFPARAM();
 	if(self.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return 1; // do nothing, round is starting right now
 
@@ -406,13 +406,15 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
-{
-	FOR_EACH_PLAYER(self)
+{SELFPARAM();
+	entity e;
+	FOR_EACH_PLAYER(e)
 	{
-		self.killcount = 0;
-		self.freezetag_frozen_timeout = -1;
+		e.killcount = 0;
+		e.freezetag_frozen_timeout = -1;
+		setself(e);
 		PutClientInServer();
-		self.freezetag_frozen_timeout = 0;
+		e.freezetag_frozen_timeout = 0;
 	}
 	freezetag_count_alive_players();
 	return 1;
@@ -425,7 +427,7 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
-{
+{SELFPARAM();
 	float n;
 
 	if(gameover)
@@ -540,7 +542,7 @@ MUTATOR_HOOKFUNCTION(freezetag_SetStartItems)
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
-{
+{SELFPARAM();
 	if (!self.deadflag)
 	{
 		if (random() < 0.5)

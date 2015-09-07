@@ -9,7 +9,8 @@
 
 #ifdef SVQC
 
-void secrets_setstatus() {
+void secrets_setstatus()
+{SELFPARAM();
 	self.stat_secrets_total = secrets_total;
 	self.stat_secrets_found = secrets_found;
 }
@@ -17,7 +18,8 @@ void secrets_setstatus() {
 /**
  * A secret has been found (maybe :P)
  */
-void trigger_secret_touch() {
+void trigger_secret_touch()
+{SELFPARAM();
 	// only a player can trigger this
 	if (!IS_PLAYER(other))
 		return;
@@ -49,7 +51,8 @@ killtarget: remove all entities with this targetname when triggered
 You should create a common/trigger textured brush covering the entrance to a secret room/area.
 Trigger secret can only be trigger by a player's touch and can not be a target itself.
 */
-void spawnfunc_trigger_secret() {
+void spawnfunc_trigger_secret()
+{SELFPARAM();
 	// FIXME: should it be disabled in most modes?
 
 	// update secrets count

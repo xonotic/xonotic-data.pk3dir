@@ -1,6 +1,6 @@
 #ifdef SVQC
 bool corner_send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CORNER);
 
 	WriteString(MSG_ENTITY, self.platmovetype);
@@ -27,7 +27,7 @@ void corner_link()
 }
 
 void spawnfunc_path_corner()
-{
+{SELFPARAM();
 	// setup values for overriding train movement
 	// if a second value does not exist, both start and end speeds are the single value specified
 	set_platmovetype(self, self.platmovetype);
@@ -37,7 +37,7 @@ void spawnfunc_path_corner()
 #elif defined(CSQC)
 
 void corner_remove()
-{
+{SELFPARAM();
 	if(self.target) { strunzone(self.target); }
 	self.target = string_null;
 
@@ -58,7 +58,7 @@ void corner_remove()
 }
 
 void ent_corner()
-{
+{SELFPARAM();
 	self.platmovetype = strzone(ReadString());
 
 	self.origin_x = ReadCoord();

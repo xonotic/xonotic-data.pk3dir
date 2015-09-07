@@ -11,7 +11,7 @@
 
 // client movement
 void viewloc_PlayerPhysics()
-{
+{SELFPARAM();
 	if(self.viewloc)
 	{
 		vector oldmovement = self.movement;
@@ -58,7 +58,7 @@ void viewloc_PlayerPhysics()
 #ifdef CSQC
 
 void viewloc_SetTags()
-{
+{SELFPARAM();
 	if(self.viewloc && wasfreed(self.viewloc))
 		self.viewloc = world;
 

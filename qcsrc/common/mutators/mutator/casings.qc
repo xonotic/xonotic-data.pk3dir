@@ -9,7 +9,7 @@ REGISTER_MUTATOR(casings, true);
 
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
-{
+{SELFPARAM();
     vector org = self.origin + self.view_ofs + self.weaponentity.spawnorigin.x * v_forward - self.weaponentity.spawnorigin.y * v_right + self.weaponentity.spawnorigin.z * v_up;
 
     if (!sound_allowed(MSG_BROADCAST, casingowner))
@@ -36,12 +36,12 @@ class(Casing) .int state;
 class(Casing) .float cnt;
 
 void Casing_Delete()
-{
+{SELFPARAM();
     remove(self);
 }
 
 void Casing_Draw()
-{
+{SELFPARAM();
     if (self.move_flags & FL_ONGROUND)
     {
         self.move_angles_x = 0;
@@ -64,7 +64,7 @@ void Casing_Draw()
 }
 
 void Casing_Touch()
-{
+{SELFPARAM();
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
         Casing_Delete();
@@ -100,7 +100,7 @@ void Casing_Touch()
 }
 
 void Casing_Damage(float thisdmg, int hittype, vector org, vector thisforce)
-{
+{SELFPARAM();
     if (thisforce.z < 0)
         thisforce.z = 0;
     self.move_velocity = self.move_velocity + thisforce + '0 0 100';

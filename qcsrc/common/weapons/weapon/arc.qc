@@ -129,7 +129,7 @@ vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as 
 void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC.m_id); }
 
 float W_Arc_Beam_Send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 
 	// Truncate information when this beam is displayed to the owner client
@@ -213,7 +213,7 @@ void Arc_Player_SetHeat(entity player)
 }
 
 void W_Arc_Beam_Think(void)
-{
+{SELFPARAM();
 	if(self != self.owner.arc_beam)
 	{
 		remove(self);
@@ -272,15 +272,14 @@ void W_Arc_Beam_Think(void)
 		}
 
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
-		entity oldself = self;
-		self = self.owner;
+		setself(self.owner);
 		if(!WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO2))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
 			W_SwitchToOtherWeapon(self);
 		}
-		self = oldself;
+		setself(this);
 		remove(self);
 		return;
 	}
@@ -576,7 +575,7 @@ void W_Arc_Beam_Think(void)
 }
 
 void W_Arc_Beam(float burst)
-{
+{SELFPARAM();
 
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
@@ -593,14 +592,11 @@ void W_Arc_Beam(float burst)
 	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
-	entity oldself = self;
-	self = beam;
-	self.think();
-	self = oldself;
+	WITH(entity, self, beam, beam.think());
 }
 
 void Arc_Smoke()
-{
+{SELFPARAM();
 	makevectors(self.v_angle);
 	W_SetupShot_Range(self,true,0,"",0,0,0);
 
@@ -636,7 +632,7 @@ void Arc_Smoke()
 }
 
 bool W_Arc(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_AIM:
@@ -870,7 +866,7 @@ void Reset_ArcBeam(void)
 }
 
 void Draw_ArcBeam(void)
-{
+{SELFPARAM();
 	float dt = time - self.move_time;
 	self.move_time = time;
 	if(dt <= 0) { return; }
@@ -1163,13 +1159,13 @@ void Draw_ArcBeam(void)
 }
 
 void Remove_ArcBeam(void)
-{
+{SELFPARAM();
 	remove(self.beam_muzzleentity);
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 }
 
 void Ent_ReadArcBeam(float isnew)
-{
+{SELFPARAM();
 	int sf = ReadByte();
 	entity flash;
 
@@ -1521,7 +1517,7 @@ void Ent_ReadArcBeam(float isnew)
 }
 
 bool W_Arc(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

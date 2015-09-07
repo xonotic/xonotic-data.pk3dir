@@ -72,7 +72,7 @@ entity pathlib_nodeatpoint(vector where)
 }
 
 float tile_check_cross(vector where)
-{
+{SELFPARAM();
     vector p,f,r;
 
     f = PLIB_FORWARD * tile_check_size;
@@ -107,7 +107,7 @@ float tile_check_cross(vector where)
 }
 
 float tile_check_plus(vector where)
-{
+{SELFPARAM();
     vector p,f,r;
 
     f = PLIB_FORWARD * tile_check_size;
@@ -142,7 +142,7 @@ float tile_check_plus(vector where)
 }
 
 float tile_check_plus2(vector where)
-{
+{SELFPARAM();
     vector p,f,r;
     float i = 0, e = 0;
 

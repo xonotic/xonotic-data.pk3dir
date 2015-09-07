@@ -26,7 +26,7 @@ void() door_rotating_go_down;
 void() door_rotating_go_up;
 
 void door_blocked()
-{
+{SELFPARAM();
 	if((self.spawnflags & 8)
 #ifdef SVQC
 		&& (other.takedamage != DAMAGE_NO)
@@ -85,7 +85,7 @@ void door_blocked()
 }
 
 void door_hit_top()
-{
+{SELFPARAM();
 	if (self.noise1 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_TOP;
@@ -102,14 +102,14 @@ void door_hit_top()
 }
 
 void door_hit_bottom()
-{
+{SELFPARAM();
 	if (self.noise1 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_BOTTOM;
 }
 
 void door_go_down()
-{
+{SELFPARAM();
 	if (self.noise2 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	if (self.max_health)
@@ -123,7 +123,7 @@ void door_go_down()
 }
 
 void door_go_up()
-{
+{SELFPARAM();
 	if (self.state == STATE_UP)
 		return;		// already going up
 
@@ -155,7 +155,7 @@ ACTIVATION FUNCTIONS
 */
 
 float door_check_keys(void)
-{
+{SELFPARAM();
 	local entity door;
 
 
@@ -212,14 +212,11 @@ float door_check_keys(void)
 }
 
 void door_fire()
-{
-	entity 	oself;
+{SELFPARAM();
 	entity	starte;
 
 	if (self.owner != self)
 		objerror ("door_fire: self.owner != self");
-
-	oself = self;
 
 	if (self.spawnflags & DOOR_TOGGLE)
 	{
@@ -236,9 +233,9 @@ void door_fire()
 				{
 					door_rotating_go_down ();
 				}
-				self = self.enemy;
+				setself(self.enemy);
 			} while ( (self != starte) && (self != world) );
-			self = oself;
+			setself(this);
 			return;
 		}
 	}
@@ -265,29 +262,23 @@ void door_fire()
 				door_rotating_go_up ();
 			}
 		}
-		self = self.enemy;
+		setself(self.enemy);
 	} while ( (self != starte) && (self != world) );
-	self = oself;
+	setself(this);
 }
 
 void door_use()
-{
-	entity oself;
-
+{SELFPARAM();
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
 
 	if (self.owner)
 	{
-		oself = self;
-		self = self.owner;
-		door_fire ();
-		self = oself;
+		WITH(entity, self, self.owner, door_fire());
 	}
 }
 
 void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
-	entity oself;
+{SELFPARAM();
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
@@ -301,12 +292,9 @@ void door_damage(entity inflictor, entity attacker, float damage, int deathtype,
 
 	if (self.health <= 0)
 	{
-		oself = self;
-		self = self.owner;
-		self.health = self.max_health;
-		self.takedamage = DAMAGE_NO;	// wil be reset upon return
-		door_use ();
-		self = oself;
+		self.owner.health = self.owner.max_health;
+		self.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
+		WITH(entity, self, self.owner, door_use());
 	}
 }
 
@@ -320,7 +308,7 @@ Prints messages
 */
 
 void door_touch()
-{
+{SELFPARAM();
 	if (!IS_PLAYER(other))
 		return;
 	if (self.owner.attack_finished_single > time)
@@ -339,7 +327,7 @@ void door_touch()
 }
 
 void door_generic_plat_blocked()
-{
+{SELFPARAM();
 
 	if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
 #ifdef SVQC
@@ -377,7 +365,7 @@ void door_generic_plat_blocked()
 }
 
 void door_rotating_hit_top()
-{
+{SELFPARAM();
 	if (self.noise1 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_TOP;
@@ -388,7 +376,7 @@ void door_rotating_hit_top()
 }
 
 void door_rotating_hit_bottom()
-{
+{SELFPARAM();
 	if (self.noise1 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	if (self.lip==666) // self.lip is used to remember reverse opening direction for door_rotating
@@ -400,7 +388,7 @@ void door_rotating_hit_bottom()
 }
 
 void door_rotating_go_down()
-{
+{SELFPARAM();
 	if (self.noise2 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	if (self.max_health)
@@ -414,7 +402,7 @@ void door_rotating_go_down()
 }
 
 void door_rotating_go_up()
-{
+{SELFPARAM();
 	if (self.state == STATE_UP)
 		return;		// already going up
 
@@ -445,7 +433,7 @@ Spawned if a door lacks a real activator
 */
 
 void door_trigger_touch()
-{
+{SELFPARAM();
 	if (other.health < 1)
 #ifdef SVQC
 		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !PHYS_DEAD(other)))
@@ -465,12 +453,12 @@ void door_trigger_touch()
 
 	activator = other;
 
-	self = self.owner;
+	setself(self.owner);
 	door_use ();
 }
 
 void spawn_field(vector fmins, vector fmaxs)
-{
+{SELFPARAM();
 	entity	trigger;
 	vector	t1 = fmins, t2 = fmaxs;
 
@@ -500,7 +488,7 @@ LinkDoors
 */
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
-{
+{SELFPARAM();
 	while((cur = find(cur, classname, self.classname)) && ((cur.spawnflags & 4) || cur.enemy))
 	{
 	}
@@ -524,7 +512,7 @@ bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 void door_link();
 #endif
 void LinkDoors()
-{
+{SELFPARAM();
 	entity	t;
 	vector	cmins, cmaxs;
 
@@ -647,7 +635,7 @@ FIXME: only one sound set available at the time being
 */
 
 float door_send(entity to, float sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DOOR);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -709,7 +697,7 @@ void door_link()
 #endif
 
 void door_init_startopen()
-{
+{SELFPARAM();
 	SUB_SETORIGIN(self, self.pos2);
 	self.pos2 = self.pos1;
 	self.pos1 = self.origin;
@@ -720,7 +708,7 @@ void door_init_startopen()
 }
 
 void door_reset()
-{
+{SELFPARAM();
 	SUB_SETORIGIN(self, self.pos1);
 	self.SUB_VELOCITY = '0 0 0';
 	self.state = STATE_BOTTOM;
@@ -736,7 +724,7 @@ void door_reset()
 
 // spawnflags require key (for now only func_door)
 void spawnfunc_func_door()
-{
+{SELFPARAM();
 	// Quake 1 keys compatibility
 	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
 		self.itemkeys |= ITEM_KEY_BIT(0);
@@ -815,7 +803,7 @@ void door_draw()
 }
 
 void ent_door()
-{
+{SELFPARAM();
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)

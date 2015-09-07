@@ -1,6 +1,6 @@
 // targeted (directional) mode
 void trigger_impulse_touch1()
-{
+{SELFPARAM();
 	entity targ;
 	float pushdeltatime;
 	float str;
@@ -54,7 +54,7 @@ void trigger_impulse_touch1()
 
 // Directionless (accelerator/decelerator) mode
 void trigger_impulse_touch2()
-{
+{SELFPARAM();
 	float pushdeltatime;
 
 	if (self.active != ACTIVE_ACTIVE)
@@ -79,7 +79,7 @@ void trigger_impulse_touch2()
 
 // Spherical (gravity/repulsor) mode
 void trigger_impulse_touch3()
-{
+{SELFPARAM();
 	float pushdeltatime;
 	float str;
 
@@ -132,7 +132,7 @@ in directional and sperical mode. For damper/accelerator mode this is not nesses
 */
 #ifdef SVQC
 bool trigger_impulse_send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_IMPULSE);
 
 	WriteCoord(MSG_ENTITY, self.radius);
@@ -151,7 +151,7 @@ void trigger_impulse_link()
 }
 
 void spawnfunc_trigger_impulse()
-{
+{SELFPARAM();
 	self.active = ACTIVE_ACTIVE;
 
 	EXACTTRIGGER_INIT;
@@ -181,7 +181,7 @@ void spawnfunc_trigger_impulse()
 }
 #elif defined(CSQC)
 void ent_trigger_impulse()
-{
+{SELFPARAM();
 	self.radius = ReadCoord();
 	self.strength = ReadCoord();
 	self.falloff = ReadByte();

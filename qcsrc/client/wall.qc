@@ -12,7 +12,7 @@
 .vector movedir;
 
 void Ent_Wall_PreDraw()
-{
+{SELFPARAM();
 	if (self.inactive)
 	{
 		self.alpha = 0;
@@ -52,7 +52,7 @@ void Ent_Wall_PreDraw()
 }
 
 void Ent_Wall_Draw()
-{
+{SELFPARAM();
 	float f;
 	var .vector fld;
 
@@ -110,14 +110,14 @@ void Ent_Wall_Draw()
 }
 
 void Ent_Wall_Remove()
-{
+{SELFPARAM();
 	if(self.bgmscript)
 		strunzone(self.bgmscript);
 	self.bgmscript = string_null;
 }
 
 void Ent_Wall()
-{
+{SELFPARAM();
 	int f;
 	var .vector fld;
 

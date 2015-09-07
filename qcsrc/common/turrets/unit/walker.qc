@@ -53,7 +53,7 @@ float autocvar_g_turrets_unit_walker_turn_run;
 #define WALKER_PATH(s,e) pathlib_astar(s,e)
 
 float walker_firecheck()
-{
+{SELFPARAM();
     if (self.animflag == ANIM_MELEE)
         return 0;
 
@@ -61,7 +61,7 @@ float walker_firecheck()
 }
 
 void walker_melee_do_dmg()
-{
+{SELFPARAM();
     vector where;
     entity e;
 
@@ -80,18 +80,18 @@ void walker_melee_do_dmg()
 }
 
 void walker_setnoanim()
-{
+{SELFPARAM();
     turrets_setframe(ANIM_NO, false);
     self.animflag = self.frame;
 }
 void walker_rocket_explode()
-{
+{SELFPARAM();
     RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, world, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET, world);
     remove (self);
 }
 
 void walker_rocket_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
-{
+{SELFPARAM();
     self.health = self.health - damage;
     self.velocity = self.velocity + vforce;
 
@@ -102,7 +102,7 @@ void walker_rocket_damage (entity inflictor, entity attacker, float damage, floa
 #define WALKER_ROCKET_MOVE movelib_move_simple(newdir, (autocvar_g_turrets_unit_walker_rocket_speed), (autocvar_g_turrets_unit_walker_rocket_turnrate)); UpdateCSQCProjectile(self)
 void walker_rocket_loop();
 void walker_rocket_think()
-{
+{SELFPARAM();
     vector newdir;
     float edist;
     float itime;
@@ -157,7 +157,7 @@ void walker_rocket_think()
 }
 
 void walker_rocket_loop3()
-{
+{SELFPARAM();
     vector newdir;
     self.nextthink = time;
 
@@ -180,7 +180,7 @@ void walker_rocket_loop3()
 }
 
 void walker_rocket_loop2()
-{
+{SELFPARAM();
     vector newdir;
 
     self.nextthink = time;
@@ -203,7 +203,7 @@ void walker_rocket_loop2()
 }
 
 void walker_rocket_loop()
-{
+{SELFPARAM();
     self.nextthink = time;
     self.tur_shotorg = self.origin + '0 0 300';
     self.think = walker_rocket_loop2;
@@ -211,7 +211,7 @@ void walker_rocket_loop()
 }
 
 void walker_fire_rocket(vector org)
-{
+{SELFPARAM();
     entity rocket;
 
     fixedmakevectors(self.angles);
@@ -258,7 +258,7 @@ void walker_fire_rocket(vector org)
 .vector enemy_last_loc;
 .float enemy_last_time;
 void walker_move_to(vector _target, float _dist)
-{
+{SELFPARAM();
     switch (self.waterlevel)
     {
         case WATERLEVEL_NONE:
@@ -290,7 +290,7 @@ void walker_move_to(vector _target, float _dist)
 //#define WALKER_FANCYPATHING
 
 void walker_move_path()
-{
+{SELFPARAM();
 #ifdef WALKER_FANCYPATHING
     // Are we close enougth to a path node to switch to the next?
     if (vlen(self.origin  - self.pathcurrent.origin) < 64)
@@ -334,10 +334,10 @@ void walker_move_path()
 #endif
 }
 
-void spawnfunc_turret_walker() { if(!turret_initialize(TUR_WALKER)) remove(self); }
+void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER)) remove(self); }
 
 float t_walker(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_ATTACK:
@@ -651,7 +651,7 @@ float t_walker(float req)
 #include "../../../server/movelib.qh"
 
 void walker_draw()
-{
+{SELFPARAM();
     float dt;
 
     dt = time - self.move_time;
@@ -671,7 +671,7 @@ void walker_draw()
 }
 
 float t_walker(float req)
-{
+{SELFPARAM();
     switch(req)
     {
         case TR_SETUP:

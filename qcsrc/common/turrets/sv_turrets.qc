@@ -3,7 +3,7 @@
 
 // Generic aiming
 vector turret_aim_generic()
-{
+{SELFPARAM();
 
 	vector pre_pos, prep;
 	float distance, impact_time = 0, i, mintime;
@@ -165,14 +165,14 @@ float turret_targetscore_generic(entity _turret, entity _target)
 
 // Generic damage handling
 void turret_hide()
-{
+{SELFPARAM();
 	self.effects   |= EF_NODRAW;
 	self.nextthink = time + self.respawntime - 0.2;
 	self.think	 = turret_respawn;
 }
 
 void turret_die()
-{
+{SELFPARAM();
 	self.deadflag		  = DEAD_DEAD;
 	self.tur_head.deadflag = self.deadflag;
 
@@ -207,7 +207,7 @@ void turret_die()
 }
 
 void turret_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
-{
+{SELFPARAM();
 	// Enough already!
 	if(self.deadflag == DEAD_DEAD)
 		return;
@@ -252,7 +252,7 @@ void turret_damage (entity inflictor, entity attacker, float damage, int deathty
 
 void() turret_think;
 void turret_respawn()
-{
+{SELFPARAM();
 	// Make sure all parts belong to the same team since
 	// this function doubles as "teamchange" function.
 	self.tur_head.team 	= self.team;
@@ -283,7 +283,7 @@ void turret_respawn()
 #define cvar_base "g_turrets_unit_"
 .float clientframe;
 void turrets_setframe(float _frame, float client_only)
-{
+{SELFPARAM();
 	if((client_only ? self.clientframe : self.frame ) != _frame)
 	{
 		self.SendFlags |= TNSF_ANIM;
@@ -298,7 +298,7 @@ void turrets_setframe(float _frame, float client_only)
 }
 
 float turret_send(entity to, float sf)
-{
+{SELFPARAM();
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
 	WriteByte(MSG_ENTITY, sf);
@@ -359,7 +359,7 @@ float turret_send(entity to, float sf)
 }
 
 void load_unit_settings(entity ent, string unitname, float is_reload)
-{
+{SELFPARAM();
 	string sbase;
 
 	if (ent == world)
@@ -423,7 +423,7 @@ void load_unit_settings(entity ent, string unitname, float is_reload)
 }
 
 void turret_projectile_explode()
-{
+{SELFPARAM();
 
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = func_null;
@@ -445,7 +445,7 @@ void turret_projectile_touch()
 }
 
 void turret_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
-{
+{SELFPARAM();
 	self.velocity  += vforce;
 	self.health	-= damage;
 	//self.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
@@ -454,7 +454,7 @@ void turret_projectile_damage(entity inflictor, entity attacker, float damage, i
 }
 
 entity turret_projectile(string _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)
-{
+{SELFPARAM();
 	entity proj;
 
 	sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTEN_NORM);
@@ -493,12 +493,10 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 ** and updated aim<->predict impact distance.
 **/
 void turret_do_updates(entity t_turret)
-{
+{SELFPARAM();
 	vector enemy_pos;
-	entity oldself;
 
-	oldself = self;
-	self = t_turret;
+	setself(t_turret);
 
 	enemy_pos = real_origin(self.enemy);
 
@@ -527,7 +525,7 @@ void turret_do_updates(entity t_turret)
 	self.tur_impactent			 = trace_ent;
 	self.tur_impacttime			= vlen(self.tur_shotorg - trace_endpos) / self.shot_speed;
 
-	self = oldself;
+	setself(this);
 }
 
 /**
@@ -536,7 +534,7 @@ void turret_do_updates(entity t_turret)
 **/
 .float turret_framecounter;
 void turret_track()
-{
+{SELFPARAM();
 	vector target_angle; // This is where we want to aim
 	vector move_angle;   // This is where we can aim
 	float f_tmp;
@@ -834,7 +832,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 }
 
 entity turret_select_target()
-{
+{SELFPARAM();
 	entity e;		// target looper entity
 	float  score;	// target looper entity score
 	entity e_enemy;  // currently best scoreing target
@@ -901,7 +899,7 @@ entity turret_select_target()
 ** Preforms pre-fire checks based on the uints firecheck_flags
 **/
 float turret_firecheck()
-{
+{SELFPARAM();
 	// This one just dont care =)
 	if (self.firecheck_flags & TFL_FIRECHECK_NO)
 		return 1;
@@ -975,7 +973,7 @@ float turret_firecheck()
 }
 
 bool turret_checkfire()
-{
+{SELFPARAM();
 	bool ret = false; // dummy
 	if(MUTATOR_CALLHOOK(Turret_CheckFire, ret))
 		return ret_bool;
@@ -984,7 +982,7 @@ bool turret_checkfire()
 }
 
 void turret_fire()
-{
+{SELFPARAM();
 	if (autocvar_g_turrets_nofire != 0)
 		return;
 
@@ -1014,7 +1012,7 @@ void turret_fire()
 }
 
 void turret_think()
-{
+{SELFPARAM();
 	entity e;
 
 	self.nextthink = time + self.ticrate;
@@ -1188,7 +1186,7 @@ void turret_think()
 	If activator is world, the turret go inactive.
 */
 void turret_use()
-{
+{SELFPARAM();
 	LOG_TRACE("Turret ",self.netname, " used by ", activator.classname, "\n");
 
 	self.team = activator.team;
@@ -1201,7 +1199,7 @@ void turret_use()
 }
 
 void turret_link()
-{
+{SELFPARAM();
 	Net_LinkEntity(self, true, 0, turret_send);
 	self.think	 = turret_think;
 	self.nextthink = time;
@@ -1209,7 +1207,7 @@ void turret_link()
 }
 
 void turrets_manager_think()
-{
+{SELFPARAM();
 	self.nextthink = time + 1;
 
 	entity e;
@@ -1231,7 +1229,7 @@ void turrets_manager_think()
 }
 
 float turret_initialize(float tur_id)
-{
+{SELFPARAM();
 	if(!autocvar_g_turrets)
 		return false;
 

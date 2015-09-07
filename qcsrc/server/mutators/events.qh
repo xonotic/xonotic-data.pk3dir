@@ -12,7 +12,7 @@ MUTATOR_HOOKABLE(MakePlayerObserver, EV_MakePlayerObserver)
 
 /** */
 #define EV_PutClientInServer(i, o) \
-    /** client wanting to spawn */ i(entity, self) \
+    /** client wanting to spawn */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
 
@@ -106,6 +106,7 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 
 /** called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill */
 #define EV_GiveFragsForKill(i, o) \
+    /**/ i(entity, __self) \
     /** same as self */ i(entity, frag_attacker) \
     /**/ i(entity, frag_target) \
     /**/ i(float, frag_score) \
@@ -128,7 +129,7 @@ MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
 /** copies variables for spectating "other" to "self" */
 #define EV_SpectateCopy(i, o) \
     /**/ i(entity, other) \
-    /**/ i(entity, self) \
+    /**/ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
 
@@ -167,7 +168,7 @@ MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
 
 /** called every frame. customizes the waypoint for spectators */
 #define EV_CustomizeWaypoint(i, o) \
-    /** waypoint */ i(entity, self) \
+    /** waypoint */ i(entity, __self) \
     /** player; other.enemy = spectator */ i(entity, other) \
     /**/
 MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
@@ -180,13 +181,13 @@ MUTATOR_HOOKABLE(FilterItem, EV_NO_ARGS);
 
 /** return error to request removal */
 #define EV_TurretSpawn(i, o) \
-    /** turret */ i(entity, self) \
+    /** turret */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(TurretSpawn, EV_TurretSpawn);
 
 /** return error to not attack */
 #define EV_TurretFire(i, o) \
-    /** turret */ i(entity, self) \
+    /** turret */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(TurretFire, EV_TurretFire);
 
@@ -224,7 +225,7 @@ MUTATOR_HOOKABLE(GetCvars, EV_NO_ARGS); // NOTE: Can't use EV_GetCvars because o
 
 /** can edit any "just fired" projectile */
 #define EV_EditProjectile(i, o) \
-    /**/ i(entity, self) \
+    /**/ i(entity, __self) \
     /**/ i(entity, other) \
     /**/
 MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
@@ -338,7 +339,7 @@ MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
 
 /** called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items. */
 #define EV_PlayerPowerups(i, o) \
-    /**/ i(entity, self) \
+    /**/ i(entity, __self) \
     /**/ i(int, olditems) \
     /**/
 int olditems;
@@ -416,7 +417,7 @@ MUTATOR_HOOKABLE(SV_ParseServerCommand, EV_SV_ParseServerCommand);
  * return 1 to make the spawnpoint unusable
  */
 #define EV_Spawn_Score(i, o) \
-    /** player wanting to spawn */ i(entity, self) \
+    /** player wanting to spawn */ i(entity, __self) \
     /** spot to be evaluated */ i(entity, spawn_spot) \
     /** _x is priority, _y is "distance" */ i(vector, spawn_score) \
     /**/ o(vector, spawn_score) \
@@ -438,12 +439,12 @@ MUTATOR_HOOKABLE(SetModname, EV_SetModname);
  * return 1 to remove an item
  */
 #define EV_Item_Spawn(i, o) \
-    /** the item */ i(entity, self) \
+    /** the item */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(Item_Spawn, EV_Item_Spawn);
 
 #define EV_SetWeaponreplace(i, o) \
-    /** map entity */ i(entity, self) \
+    /** map entity */ i(entity, __self) \
     /** weapon info */ i(entity, other) \
     /**/ i(string, ret_string) \
     /**/ o(string, ret_string) \
@@ -473,7 +474,7 @@ MUTATOR_HOOKABLE(BotShouldAttack, EV_BotShouldAttack);
  * allows you to strip a player of an item if they go through the teleporter to help prevent cheating
  */
 #define EV_PortalTeleport(i, o) \
-    /**/ i(entity, self) \
+    /**/ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(PortalTeleport, EV_PortalTeleport);
 
@@ -484,7 +485,7 @@ MUTATOR_HOOKABLE(PortalTeleport, EV_PortalTeleport);
  * in a special manner using this hook
  */
 #define EV_HelpMePing(i, o) \
-    /** the player who pressed impulse 33 */ i(entity, self) \
+    /** the player who pressed impulse 33 */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(HelpMePing, EV_HelpMePing);
 
@@ -511,7 +512,7 @@ MUTATOR_HOOKABLE(VehicleEnter, EV_VehicleEnter);
  * return true to stop player from entering the vehicle
  */
 #define EV_VehicleTouch(i, o) \
-    /** vehicle */ i(entity, self) \
+    /** vehicle */ i(entity, __self) \
     /** player */ i(entity, other) \
     /**/
 MUTATOR_HOOKABLE(VehicleTouch, EV_VehicleTouch);
@@ -528,13 +529,13 @@ MUTATOR_HOOKABLE(VehicleExit, EV_VehicleExit);
 
 /** called when a speedrun is aborted and the player is teleported back to start position */
 #define EV_AbortSpeedrun(i, o) \
-    /** player */ i(entity, self) \
+    /** player */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(AbortSpeedrun, EV_AbortSpeedrun);
 
 /** called at when a item is touched. Called early, can edit item properties. */
 #define EV_ItemTouch(i, o) \
-    /** item */ i(entity, self) \
+    /** item */ i(entity, __self) \
     /** player */ i(entity, other) \
     /**/
 MUTATOR_HOOKABLE(ItemTouch, EV_ItemTouch);
@@ -547,12 +548,12 @@ enum {
 
 /** called at when a player connect */
 #define EV_ClientConnect(i, o) \
-    /** player */ i(entity, self) \
+    /** player */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(ClientConnect, EV_ClientConnect);
 
 #define EV_HavocBot_ChooseRole(i, o) \
-    /**/ i(entity, self) \
+    /**/ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(HavocBot_ChooseRole, EV_HavocBot_ChooseRole);
 
@@ -581,7 +582,7 @@ MUTATOR_HOOKABLE(GetModelParams, EV_GetModelParams);
 
 /** called when a bullet has hit a target */
 #define EV_FireBullet_Hit(i, o) \
-    /**/ i(entity, self) \
+    /**/ i(entity, __self) \
     /**/ i(entity, bullet_hit) \
     /**/ i(vector, bullet_startpos) \
     /**/ i(vector, bullet_endpos) \
@@ -608,7 +609,7 @@ MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
 MUTATOR_HOOKABLE(Scores_CountFragsRemaining, EV_NO_ARGS);
 
 #define EV_GrappleHookThink(i, o) \
-    /**/ i(entity, self) \
+    /**/ i(entity, __self) \
     /**/ i(int, hook_tarzan) \
     /**/ o(int, hook_tarzan) \
     /**/ i(entity, hook_pullentity) \
@@ -622,7 +623,7 @@ float hook_velmultiplier;
 MUTATOR_HOOKABLE(GrappleHookThink, EV_GrappleHookThink);
 
 #define EV_BuffModel_Customize(i, o) \
-    /**/ i(entity, self) \
+    /**/ i(entity, __self) \
     /**/ i(entity, buff_player) \
     /**/
 entity buff_player;
@@ -630,7 +631,7 @@ MUTATOR_HOOKABLE(BuffModel_Customize, EV_BuffModel_Customize);
 
 /** called at when a buff is touched. Called early, can edit buff properties. */
 #define EV_BuffTouch(i, o) \
-    /** item */ i(entity, self) \
+    /** item */ i(entity, __self) \
     /** player */ i(entity, other) \
     /**/
 MUTATOR_HOOKABLE(BuffTouch, EV_BuffTouch);

@@ -10,7 +10,7 @@
 #include "../warpzonelib/util_server.qh"
 
 float SpawnPoint_Send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, self.team);
@@ -22,7 +22,7 @@ float SpawnPoint_Send(entity to, int sf)
 }
 
 float SpawnEvent_Send(entity to, int sf)
-{
+{SELFPARAM();
 	float send;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
@@ -46,7 +46,7 @@ float SpawnEvent_Send(entity to, int sf)
 }
 
 void spawnpoint_use()
-{
+{SELFPARAM();
 	if(teamplay)
 	if(have_team_spawns > 0)
 	{
@@ -57,7 +57,7 @@ void spawnpoint_use()
 }
 
 void relocate_spawnpoint()
-{
+{SELFPARAM();
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
@@ -152,7 +152,7 @@ void spawnfunc_info_player_start (void)
 }
 
 void spawnfunc_info_player_deathmatch (void)
-{
+{SELFPARAM();
 	self.classname = "info_player_deathmatch";
 	relocate_spawnpoint();
 }
@@ -161,7 +161,7 @@ void spawnfunc_info_player_deathmatch (void)
 Starting point for a player in team one (Red).
 Keys: "angle" viewing angle when spawning. */
 void spawnfunc_info_player_team1()
-{
+{SELFPARAM();
 	if(g_assault) { remove(self); return; }
 
 	self.team = NUM_TEAM_1; // red
@@ -173,7 +173,7 @@ void spawnfunc_info_player_team1()
 Starting point for a player in team two (Blue).
 Keys: "angle" viewing angle when spawning. */
 void spawnfunc_info_player_team2()
-{
+{SELFPARAM();
 	if(g_assault) { remove(self); return; }
 
 	self.team = NUM_TEAM_2; // blue
@@ -184,7 +184,7 @@ void spawnfunc_info_player_team2()
 Starting point for a player in team three (Yellow).
 Keys: "angle" viewing angle when spawning. */
 void spawnfunc_info_player_team3()
-{
+{SELFPARAM();
 	if(g_assault) { remove(self); return; }
 
 	self.team = NUM_TEAM_3; // yellow
@@ -196,7 +196,7 @@ void spawnfunc_info_player_team3()
 Starting point for a player in team four (Purple).
 Keys: "angle" viewing angle when spawning. */
 void spawnfunc_info_player_team4()
-{
+{SELFPARAM();
 	if(g_assault) { remove(self); return; }
 
 	self.team = NUM_TEAM_4; // purple
@@ -207,7 +207,7 @@ void spawnfunc_info_player_team4()
 //   _x: prio (-1 if unusable)
 //   _y: weight
 vector Spawn_Score(entity spot, float mindist, float teamcheck)
-{
+{SELFPARAM();
 	float shortest, thisdist;
 	float prio;
 	entity player;
@@ -258,10 +258,9 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 			++found;
 			if(ent.spawn_evalfunc)
 			{
-				entity oldself = self;
-				self = ent;
-				spawn_score = ent.spawn_evalfunc(oldself, spot, spawn_score);
-				self = oldself;
+				WITH(entity, self, ent, {
+					spawn_score = ent.spawn_evalfunc(this, spot, spawn_score);
+				});
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}
@@ -332,7 +331,7 @@ Finds a point to respawn
 =============
 */
 entity SelectSpawnPoint (float anypoint)
-{
+{SELFPARAM();
 	float teamcheck;
 	entity spot, firstspot;
 

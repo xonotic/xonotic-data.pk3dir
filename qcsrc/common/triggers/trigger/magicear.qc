@@ -2,10 +2,9 @@
 float magicear_matched;
 float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
 string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin)
-{
+{SELFPARAM();
 	float domatch, dotrigger, matchstart, l;
 	string s, msg;
-	entity oldself;
 	string savemessage;
 
 	magicear_matched = false;
@@ -29,14 +28,13 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 		if(dotrigger)
 		{
-			oldself = self;
 			activator = source;
-			self = ear;
+			setself(ear);
 			savemessage = self.message;
 			self.message = string_null;
 			SUB_UseTargets();
 			self.message = savemessage;
-			self = oldself;
+			setself(this);
 		}
 
 		if(ear.netname != "")
@@ -120,14 +118,13 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	if(dotrigger)
 	{
-		oldself = self;
 		activator = source;
-		self = ear;
+		setself(ear);
 		savemessage = self.message;
 		self.message = string_null;
 		SUB_UseTargets();
 		self.message = savemessage;
-		self = oldself;
+		setself(this);
 	}
 
 	if(ear.spawnflags & 16)
@@ -166,7 +163,7 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 }
 
 void spawnfunc_trigger_magicear()
-{
+{SELFPARAM();
 	self.enemy = magicears;
 	magicears = self;
 

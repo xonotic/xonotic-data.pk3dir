@@ -13,7 +13,7 @@ void trigger_gravity_remove(entity own)
 	own.trigger_gravity_check = world;
 }
 void trigger_gravity_check_think()
-{
+{SELFPARAM();
 	// This spawns when a player enters the gravity zone and checks if he left.
 	// Each frame, self.count is set to 2 by trigger_gravity_touch() and decreased by 1 here.
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
@@ -33,12 +33,12 @@ void trigger_gravity_check_think()
 }
 
 void trigger_gravity_use()
-{
+{SELFPARAM();
 	self.state = !self.state;
 }
 
 void trigger_gravity_touch()
-{
+{SELFPARAM();
 	float g;
 
 	if(self.state != true)
@@ -86,7 +86,7 @@ void trigger_gravity_touch()
 }
 
 void spawnfunc_trigger_gravity()
-{
+{SELFPARAM();
 	if(self.gravity == 1)
 		return;
 

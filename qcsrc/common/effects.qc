@@ -39,7 +39,7 @@ void Read_Effect(bool is_new)
 
 #ifdef SVQC
 bool Net_Write_Effect(entity client, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_EFFECT);
 #if EFFECTS_COUNT >= 255
 	WriteShort(MSG_ENTITY, self.m_id);

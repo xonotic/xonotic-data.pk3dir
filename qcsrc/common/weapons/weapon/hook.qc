@@ -60,7 +60,7 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 
 void spawnfunc_weapon_hook(void)
-{
+{SELFPARAM();
 	if(g_grappling_hook) // offhand hook
 	{
 		startitem_failed = true;
@@ -71,7 +71,7 @@ void spawnfunc_weapon_hook(void)
 }
 
 void W_Hook_ExplodeThink(void)
-{
+{SELFPARAM();
 	float dt, dmg_remaining_next, f;
 
 	dt = time - self.teleport_time;
@@ -91,7 +91,7 @@ void W_Hook_ExplodeThink(void)
 }
 
 void W_Hook_Explode2(void)
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 	self.touch = func_null;
 	self.effects |= EF_NODRAW;
@@ -110,7 +110,7 @@ void W_Hook_Explode2(void)
 }
 
 void W_Hook_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -124,13 +124,13 @@ void W_Hook_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 }
 
 void W_Hook_Touch2(void)
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 	self.use();
 }
 
 void W_Hook_Attack2(void)
-{
+{SELFPARAM();
 	entity gren;
 
 	//W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
@@ -175,7 +175,7 @@ void W_Hook_Attack2(void)
 }
 
 bool W_Hook(int req)
-{
+{SELFPARAM();
 	float hooked_time_max, hooked_fuel;
 
 	switch(req)
@@ -338,7 +338,7 @@ bool W_Hook(int req)
 #endif
 #ifdef CSQC
 bool W_Hook(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_IMPACTEFFECT:

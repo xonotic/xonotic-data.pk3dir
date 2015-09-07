@@ -148,7 +148,7 @@ bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch
 }
 
 void W_Tuba_NoteOff(void)
-{
+{SELFPARAM();
 	// we have a note:
 	//   on: self.spawnshieldtime
 	//   off: time
@@ -252,7 +252,7 @@ int W_Tuba_GetNote(entity pl, int hittype)
 }
 
 bool W_Tuba_NoteSendEntity(entity to, int sf)
-{
+{SELFPARAM();
 	int f;
 
 	msg_entity = to;
@@ -280,7 +280,7 @@ bool W_Tuba_NoteSendEntity(entity to, int sf)
 }
 
 void W_Tuba_NoteThink(void)
-{
+{SELFPARAM();
 	float dist_mult;
 	float vol0, vol1;
 	vector dir0, dir1;
@@ -318,7 +318,7 @@ void W_Tuba_NoteThink(void)
 }
 
 void W_Tuba_NoteOn(float hittype)
-{
+{SELFPARAM();
 	vector o;
 	float n;
 
@@ -336,10 +336,7 @@ void W_Tuba_NoteOn(float hittype)
 	{
 		if(self.tuba_note.cnt != n || self.tuba_note.tuba_instrument != self.tuba_instrument)
 		{
-			entity oldself = self;
-			self = self.tuba_note;
-			W_Tuba_NoteOff();
-			self = oldself;
+			WITH(entity, self, self.tuba_note, W_Tuba_NoteOff());
 		}
 	}
 
@@ -369,7 +366,7 @@ void W_Tuba_NoteOn(float hittype)
 }
 
 bool W_Tuba(int req)
-{
+{SELFPARAM();
 	switch(req)
 	{
 		case WR_AIM:
@@ -406,10 +403,7 @@ bool W_Tuba(int req)
 			{
 				if(!self.BUTTON_ATCK && !self.BUTTON_ATCK2)
 				{
-					entity oldself = self;
-					self = self.tuba_note;
-					W_Tuba_NoteOff();
-					self = oldself;
+					WITH(entity, self, self.tuba_note, W_Tuba_NoteOff());
 				}
 			}
 
@@ -495,7 +489,7 @@ bool W_Tuba(int req)
 #endif
 #ifdef CSQC
 bool W_Tuba(int req)
-{
+{SELFPARAM();
 	// nothing to do here; particles of tuba are handled differently
 	// WEAPONTODO
 

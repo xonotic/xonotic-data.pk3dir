@@ -8,7 +8,7 @@
 .float campcheck_traveled_distance;
 
 MUTATOR_HOOKFUNCTION(campcheck_PlayerDies)
-{
+{SELFPARAM();
 	Kill_Notification(NOTIF_ONE, self, MSG_CENTER_CPID, CPID_CAMPCHECK);
 
 	return false;
@@ -28,7 +28,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerDamage)
 }
 
 MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
-{
+{SELFPARAM();
 	if(!gameover)
 	if(!warmup_stage) // don't consider it camping during warmup?
 	if(time >= game_starttime)
@@ -74,7 +74,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 }
 
 MUTATOR_HOOKFUNCTION(campcheck_PlayerSpawn)
-{
+{SELFPARAM();
 	self.campcheck_nextcheck = time + autocvar_g_campcheck_interval * 2;
 	self.campcheck_traveled_distance = 0;
 

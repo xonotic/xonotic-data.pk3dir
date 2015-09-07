@@ -617,7 +617,7 @@ string nmm_turn_to_string(int turnflags)
 
 // Required function, handle client events
 int nmm_client_event(entity minigame, string event, ...)
-{
+{SELFPARAM();
 	if ( event == "activate" )
 	{
 		nmm_fromtile = world;

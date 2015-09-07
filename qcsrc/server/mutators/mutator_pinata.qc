@@ -3,7 +3,7 @@
 #include "mutator.qh"
 
 MUTATOR_HOOKFUNCTION(pinata_PlayerDies)
-{
+{SELFPARAM();
 	float j;
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	if(self.weapons & WepSet_FromWeapon(j))
