@@ -141,7 +141,7 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF(""                                      , _("User defined"));
 
 	for(i = 1; i <= 32; ++i)
-		KEYBIND_DEF(strcat("+userbind ", itos(i)), strcat("$$", _("userbind"), itos(i)));
+		KEYBIND_DEF(strcat("+userbind ", itos(i)), strcat("$userbind", itos(i)));
 
 	#undef KEYBIND_DEF
 }
