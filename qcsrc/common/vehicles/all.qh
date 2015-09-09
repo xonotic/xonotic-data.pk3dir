@@ -76,7 +76,7 @@ const int VEH_FIRST = 1;
     REGISTER_INIT(VEH, id)
 REGISTER_REGISTRY(RegisterVehicles)
 
-REGISTER_VEHICLE(NULL, Vehicle);
+REGISTER_VEHICLE(Null, Vehicle);
 
 #include "all.inc"
 

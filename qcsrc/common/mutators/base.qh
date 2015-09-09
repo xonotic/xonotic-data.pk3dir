@@ -254,7 +254,7 @@ STATIC_INIT_LATE(Mutators) {
     bool HOOKFUNCTION_##name()
 
 #define MUTATOR_HOOKFUNCTION_2(mut, cb) \
-    MUTATOR_HOOKFUNCTION(mut, cb, CBC_ORDER_ANY)
+    MUTATOR_HOOKFUNCTION_3(mut, cb, CBC_ORDER_ANY)
 
 #define MUTATOR_HOOKFUNCTION_3(mut, cb, order) \
     _MUTATOR_CALLBACK(mut##_##cb, mut##_##cb) \

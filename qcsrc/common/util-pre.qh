@@ -13,7 +13,7 @@
 
 #ifndef QCC_SUPPORT_NIL
     #ifdef GMQCC
-        #define QCC_SUPPORT_NIL
+        #define QCC_SUPPORT_NIL 1
     #endif
 #endif
 
@@ -48,8 +48,8 @@
 #ifdef GMQCC
     #define OVERLOAD(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)
 #else
-    #define OVERLOAD_(F,_9,_8,_7,_6,_5,_4,_3,_2,_1,n,...) F##_##n
-    #define OVERLOAD(F, ...) OVERLOAD_(F,__VA_ARGS__,9,8,7,6,5,4,3,2,1)(__VA_ARGS__)
+    #define OVERLOAD_(F,_16,_15,_14,_13,_12,_11,_10,_9,_8,_7,_6,_5,_4,_3,_2,_1,n,...) F##_##n
+    #define OVERLOAD(F, ...) OVERLOAD_(F,__VA_ARGS__,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)(__VA_ARGS__)
 #endif
 
 #define LAMBDA(...) { __VA_ARGS__ ; }

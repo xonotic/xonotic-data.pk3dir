@@ -12,7 +12,7 @@ entity buff_FirstFromFlags(int _buffs)
 	{
 		FOREACH(BUFFS, it.m_itemid & _buffs, LAMBDA(return it));
 	}
-	return BUFF_NULL;
+	return BUFF_Null;
 }
 
 bool buffs_BuffModel_Customize()
@@ -197,7 +197,7 @@ void buff_Touch()
 
 float buff_Available(entity buff)
 {
-	if (buff == BUFF_NULL)
+	if (buff == BUFF_Null)
 		return false;
 	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
 		return false;
@@ -806,7 +806,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 	if(self.buffs != self.oldbuffs)
 	{
 		entity buff = buff_FirstFromFlags(self.buffs);
-		float bufftime = buff != BUFF_NULL ? buff.m_time(buff) : 0;
+		float bufftime = buff != BUFF_Null ? buff.m_time(buff) : 0;
 		self.buff_time = (bufftime) ? time + bufftime : 0;
 
 		BUFF_ONADD(BUFF_AMMO)

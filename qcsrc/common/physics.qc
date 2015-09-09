@@ -25,15 +25,15 @@ float Physics_ClientOption(entity pl, string option)
 {
 	if(Physics_Valid(pl.cvar_cl_physics))
 	{
-		string var = sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option);
-		if(cvar_type(var) & CVAR_TYPEFLAG_EXISTS)
-			return cvar(var);
+		string s = sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option);
+		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
+			return cvar(s);
 	}
 	if(autocvar_g_physics_clientselect && autocvar_g_physics_clientselect_default)
 	{
-		string var = sprintf("g_physics_%s_%s", autocvar_g_physics_clientselect_default, option);
-		if(cvar_type(var) & CVAR_TYPEFLAG_EXISTS)
-			return cvar(var);
+		string s = sprintf("g_physics_%s_%s", autocvar_g_physics_clientselect_default, option);
+		if(cvar_type(s) & CVAR_TYPEFLAG_EXISTS)
+			return cvar(s);
 	}
 	return cvar(strcat("sv_", option));
 }

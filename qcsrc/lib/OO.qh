@@ -40,7 +40,7 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine) {
 // Classes have a `spawn##cname(entity)` constructor
 // The parameter is used across [[accumulate]] functions
 
-// Macro to hide this implementation detail
+// Macros to hide this implementation detail:
 #define NEW(cname, ...) \
     OVERLOAD(spawn##cname, new(cname), ##__VA_ARGS__)
 
