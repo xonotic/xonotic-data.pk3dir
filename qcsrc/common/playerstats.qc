@@ -1036,8 +1036,7 @@ void PlayerInfo_Details()
 #endif
 
 #ifdef CSQC
-/*
- * FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qh:885)
+// FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qh:885)
 void PlayerInfo_Details()
 {
         print("-- Getting detailed PlayerInfo for local player (CSQC)\n");
