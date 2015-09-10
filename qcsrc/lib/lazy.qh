@@ -1,7 +1,7 @@
 #ifndef LAZY_H
 #define LAZY_H
 
-#include "OO.qh"
+#include "oo.qh"
 
 CLASS(Lazy, Object)
     ATTRIB(Lazy, m_get, entity(), func_null);

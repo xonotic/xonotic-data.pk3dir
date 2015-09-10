@@ -1,8 +1,8 @@
 #ifndef OO_H
 #define OO_H
 
-#include "Nil.qh"
-#include "Registry.qh"
+#include "nil.qh"
+#include "registry.qh"
 
 #ifdef MENUQC
     #define NULL (null_entity)
