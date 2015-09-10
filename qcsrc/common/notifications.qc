@@ -69,7 +69,7 @@ string Notification_CheckArgs_TypeName(float net_type, float net_name)
 {
 	// check supplied type and name for errors
 	string checkargs = "";
-	#define CHECKARG_TYPENAME(type) case MSG_##type##: \
+	#define CHECKARG_TYPENAME(type) case MSG_##type: \
 		{ if(!net_name || (net_name > NOTIF_##type##_COUNT)) \
 		{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
 	switch(net_type)

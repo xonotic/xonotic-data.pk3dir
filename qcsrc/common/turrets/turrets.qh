@@ -183,6 +183,6 @@ float TUR_LAST;
 #include "all.qh"
 
 #undef REGISTER_TURRET
-ACCUMULATE_FUNCTION(RegisterTurrets, register_turrets_done);
+ACCUMULATE_FUNCTION(RegisterTurrets, register_turrets_done)
 
 #endif

@@ -17,7 +17,7 @@ STATIC_INIT_LATE(Cvars) { RegisterCvars(RegisterCvars_Set); }
     type autocvar_##var
 #define AUTOCVAR_6(file, archive, var, type, default, desc) \
     AUTOCVAR_5(file, archive, var, type, desc) = default
-#define _AUTOCVAR(...) OVERLOAD(AUTOCVAR, __FILE__, __VA_ARGS__)
+#define _AUTOCVAR(...) EVAL(OVERLOAD(AUTOCVAR, __FILE__, __VA_ARGS__))
 #define AUTOCVAR_SAVE(...) _AUTOCVAR(true, __VA_ARGS__)
 #define AUTOCVAR(...) _AUTOCVAR(false, __VA_ARGS__)
 
