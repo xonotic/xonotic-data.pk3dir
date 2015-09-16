@@ -62,7 +62,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 
 		e.angles_y = spawnedby.angles_y;
 	}
-	
+
 	// Monster_Spawn checks if monster is valid
 	WITH(entity, self, e, Monster_Spawn(monster_id));
 

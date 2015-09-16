@@ -1366,9 +1366,9 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	
+
 	self.mdl = "";
-	
+
 	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
 	{
 		if ( self.owner.active_minigame )
@@ -1376,7 +1376,7 @@ void ChatBubbleThink()
 		else if ( self.owner.BUTTON_CHAT )
 			self.mdl = "models/misc/chatbubble.spr";
 	}
-	
+
 	if ( self.model != self.mdl )
 		setmodel(self, self.mdl);
 

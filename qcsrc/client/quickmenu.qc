@@ -117,7 +117,7 @@ bool QuickMenu_Open(string mode, string submenu)
 			{
 				if(argv(1) == "")
 					continue;
-				QuickMenu_Buffer_Set(QM_TAG_TITLE, argv(0)); 
+				QuickMenu_Buffer_Set(QM_TAG_TITLE, argv(0));
 				++QuickMenu_Buffer_Size;
 				QuickMenu_Buffer_Set(QM_TAG_COMMAND, argv(1));
 			}

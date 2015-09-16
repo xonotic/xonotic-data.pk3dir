@@ -891,7 +891,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) 
+			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 				if(head.active_minigame == source.active_minigame)
 					sprint(head, msgstr);

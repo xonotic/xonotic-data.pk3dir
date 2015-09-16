@@ -58,7 +58,7 @@ bool pp_winning_piece(entity piece)
 	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number-1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number-1)).team == 5)
 	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number+1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number+1)).team == 5)
 		return true;
-	
+
 	return false;
 }
 
@@ -233,8 +233,8 @@ int pp_server_event(entity minigame, string event, ...)
 		{
 			switch(argv(0))
 			{
-				case "move": 
-					pp_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null ); 
+				case "move":
+					pp_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null );
 					return true;
 				case "next":
 					pp_next_match(minigame,...(0,entity));
@@ -257,7 +257,7 @@ int pp_server_event(entity minigame, string event, ...)
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -275,7 +275,7 @@ void pp_hud_board(vector pos, vector mySize)
 	minigame_hud_fitsqare(pos, mySize);
 	pp_boardpos = pos;
 	pp_boardsize = mySize;
-	
+
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("pp/board"));
 
 	vector tile_size = minigame_hud_denormalize_size('1 1 0'/PP_TILE_SIZE,pos,mySize);
@@ -305,7 +305,7 @@ void pp_hud_board(vector pos, vector mySize)
 				case 2: tile_color = '0.3 0.3 1'; break;
 				// 3, 4 coming later?
 			}
-			
+
 			string tile_name = strcat("pp/piece",ftos(e.team));
 			if(e.team == 5) { tile_name = "pp/piece_taken"; }
 
@@ -314,12 +314,12 @@ void pp_hud_board(vector pos, vector mySize)
 				tile_name = "pp/piece_current";
 
 				// draw the splat too
-				minigame_drawpic_centered( tile_pos,  
+				minigame_drawpic_centered( tile_pos,
 						minigame_texture("pp/piece_taken"),
 						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 			}
 
-			minigame_drawpic_centered( tile_pos,  
+			minigame_drawpic_centered( tile_pos,
 					minigame_texture(tile_name),
 					tile_size, tile_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
@@ -330,7 +330,7 @@ void pp_hud_board(vector pos, vector mySize)
 	{
 		tile_pos = minigame_tile_pos(pp_curr_pos,PP_LET_CNT,PP_NUM_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
-		minigame_drawpic_centered( tile_pos,  
+		minigame_drawpic_centered( tile_pos,
 				minigame_texture("pp/piece_current"),
 				tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 	}
@@ -338,7 +338,7 @@ void pp_hud_board(vector pos, vector mySize)
 	{
 		tile_pos = minigame_tile_pos(pp_curr_pos,PP_LET_CNT,PP_NUM_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
-		minigame_drawpic_centered( tile_pos,  
+		minigame_drawpic_centered( tile_pos,
 				minigame_texture("pp/piece_selected"),
 				tile_size, '1 1 1', panel_fg_alpha / 2, DRAWFLAG_NORMAL );
 	}
@@ -348,20 +348,20 @@ void pp_hud_board(vector pos, vector mySize)
 		vector winfs = hud_fontsize*2;
 		string playername = "";
 		FOREACH_MINIGAME_ENTITY(e)
-			if ( e.classname == "minigame_player" && 
+			if ( e.classname == "minigame_player" &&
 					e.team == (active_minigame.minigame_flags & PP_TURN_TEAM) )
 				playername = GetPlayerName(e.minigame_playerslot-1);
-		
+
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername), 
+			sprintf("%s^7 won the game!",playername),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
-		
+
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-		
+
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername), 
+			sprintf("%s^7 won the game!",playername),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -374,10 +374,10 @@ void pp_hud_status(vector pos, vector mySize)
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
-	
+
 	pos_y += ts_y;
 	mySize_y -= ts_y;
-	
+
 	vector player_fontsize = hud_fontsize * 1.75;
 	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
 	ts_x = mySize_x;
@@ -410,17 +410,17 @@ void pp_hud_status(vector pos, vector mySize)
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				GetPlayerName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			
+
 			mypos_y += player_fontsize_y;
-			drawpic( mypos,  
+			drawpic( mypos,
 					minigame_texture(strcat("pp/piece",ftos(e.team))),
 					tile_size, tile_color, panel_fg_alpha, DRAWFLAG_NORMAL );
-			
+
 			mypos_x += tile_size_x;
 			int myscore = 0;
 			if(e.team == 1) { myscore = active_minigame.pp_team1_score; }
 			if(e.team == 2) { myscore = active_minigame.pp_team2_score; }
-			
+
 			drawstring(mypos,ftos(myscore),tile_size,
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
@@ -432,27 +432,27 @@ string pp_turn_to_string(int turnflags)
 {
 	if ( turnflags & PP_TURN_DRAW )
 		return _("Draw");
-	
+
 	if ( turnflags & PP_TURN_WIN )
 	{
 		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
 			return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!");
 		return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
 	}
-	
+
 	if ( turnflags & PP_TURN_NEXT )
 	{
 		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
 			return _("Select \"^1Next Match^7\" on the menu to start a new match!");
 		return _("Wait for your opponent to confirm the rematch");
 	}
-	
+
 	if ( (turnflags & PP_TURN_TEAM) != minigame_self.team )
 		return _("Wait for your opponent to make their move");
-	
+
 	if ( turnflags & PP_TURN_PLACE )
 		return _("Click on the game board to place your piece");
-	
+
 	return "";
 }
 

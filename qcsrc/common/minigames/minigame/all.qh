@@ -47,7 +47,7 @@ used as send flags for minigame entities:
 * MINIG_SF_UPDATE
 	A miscellaneous update, can be safely used if the entity has just a few fields
 * MINIG_SF_CUSTOM
-	Starting value for custom flags, since there are bit-wise flags, 
+	Starting value for custom flags, since there are bit-wise flags,
 	the following values shall be MINIG_SF_CUSTOM*2, MINIG_SF_CUSTOM*4 and MINIG_SF_CUSTOM*8.
 * MINIG_SF_MAX
 	Maximum flag value that will be networked
@@ -89,7 +89,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
  * Set up automatic entity read/write functionality
  * To ensure that everything is handled automatically, spawn on the server using msle_spawn
  * Syntax:
- * 	MSLE(classname,Field...) \ 
+ * 	MSLE(classname,Field...) \
  * 		classname: Identifier used to recognize the type of the entity
  * 		           (must be set as .classname on the sent entities)
  * 		Field... : List of FIELD calls
@@ -116,4 +116,4 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 	MSLE(pong_paddle,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(MINIG_SF_UPDATE,Vector2D,origin)) \
 	MSLE(pong_ball,FIELD(MINIG_SF_CREATE,Float,pong_length) FIELD(PONG_SF_BALLTEAM,Byte,team) FIELD(MINIG_SF_UPDATE, Vector2D, velocity) FIELD(MINIG_SF_UPDATE, Vector2D, origin)) \
 	MSLE(pong_ai, FIELD(MINIG_SF_CREATE,Byte,team) FIELD(PONG_SF_PLAYERSCORE, Long, pong_score)) \
-	/*empty line*/ 
+	/*empty line*/

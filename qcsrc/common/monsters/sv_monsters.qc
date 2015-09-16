@@ -181,11 +181,11 @@ void monster_setupcolors(entity mon)
 void monster_changeteam(entity ent, float newteam)
 {
 	if(!teamplay) { return; }
-	
+
 	ent.team = newteam;
 	ent.monster_attack = true; // new team, activate attacking
 	monster_setupcolors(ent);
-	
+
 	if(ent.sprite)
 	{
 		WaypointSprite_UpdateTeamRadar(ent.sprite, RADARICON_DANGER, ((newteam) ? Team_ColorRGB(newteam) : '1 0 0'));
@@ -831,7 +831,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 				self.moveto = WarpZone_RefSys_TransformOrigin(self.enemy, self, (0.5 * (self.enemy.absmin + self.enemy.absmax)));
 				self.monster_moveto = '0 0 0';
 				self.monster_face = '0 0 0';
-				
+
 				self.pass_distance = vlen((('1 0 0' * self.enemy.origin_x) + ('0 1 0' * self.enemy.origin_y)) - (('1 0 0' *  self.origin_x) + ('0 1 0' *  self.origin_y)));
 				Monster_Sound(monstersound_sight, 0, false, CH_VOICE);
 			}
@@ -1140,22 +1140,22 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 
 	float reverse = FALSE;
 	vector a, b;
-	
+
 	makevectors(self.angles);
 	a = self.origin + '0 0 16';
 	b = self.origin + '0 0 16' + v_forward * 32;
-	
+
 	traceline(a, b, MOVE_NORMAL, self);
-	
+
 	if(trace_fraction != 1.0)
 	{
 		reverse = TRUE;
-		
+
 		if(trace_ent)
 		if(IS_PLAYER(trace_ent) && !(trace_ent.items & IT_STRENGTH))
 			reverse = FALSE;
 	}
-	
+
 	// TODO: fix this... tracing is broken if the floor is thin
 	/*
 	if(!allow_jumpoff)
@@ -1165,13 +1165,13 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 		if(trace_fraction == 1.0)
 			reverse = TRUE;
 	} */
-	
+
 	if(reverse)
 	{
 		self.angles_y = anglemods(self.angles_y - 180);
 		makevectors(self.angles);
 	}
-	
+
 	movelib_move_simple_gravity(v_forward, mspeed, 1);
 
 	if(time > self.pain_finished)
@@ -1361,7 +1361,7 @@ bool Monster_Spawn(int mon_id)
 	self.monster_moveto		= '0 0 0';
 	self.monster_face 		= '0 0 0';
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
-	
+
 	if(!self.scale) { self.scale = 1; }
 	if(autocvar_g_monsters_edit) { self.grab = 1; }
 	if(autocvar_g_fullbrightplayers) { self.effects |= EF_FULLBRIGHT; }
