@@ -985,7 +985,7 @@ void CSQC_Parse_Print(string strMessage)
 	if(autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
 
-	LOG_INFO(ColorTranslateRGB(strMessage));
+	print(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.

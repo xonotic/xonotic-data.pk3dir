@@ -1550,7 +1550,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 
 		case MSG_INFO:
 		{
-			LOG_INFO(
+			print(
 				Local_Notification_sprintf(
 					notif.nent_string,
 					notif.nent_args,
