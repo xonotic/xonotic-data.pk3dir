@@ -397,6 +397,9 @@ void ListBox_updateControlTopBottom(entity me)
 		}
 	}
 }
+AUTOCVAR(menu_scroll_averaging_time, float, 0.16, "smooth scroll averaging time");
+// scroll faster while dragging the scrollbar
+AUTOCVAR(menu_scroll_averaging_time_pressed, float, 0.06, "smooth scroll averaging time when dragging the scrollbar");
 void ListBox_draw(entity me)
 {
 	float i;
@@ -418,11 +421,11 @@ void ListBox_draw(entity me)
 	}
 	if(me.scrollPos != me.scrollPosTarget)
 	{
-		float averaging_time = 0.16;
-		if(me.pressed == 1)
-			averaging_time = 0.06; // scroll faster while dragging the scrollbar
+		float averaging_time = (me.pressed == 1)
+			? autocvar_menu_scroll_averaging_time_pressed
+			: autocvar_menu_scroll_averaging_time;
 		// this formula works with whatever framerate
-		float f = exp(-frametime / averaging_time);
+		float f = averaging_time ? exp(-frametime / averaging_time) : 0;
 		me.scrollPos = me.scrollPos * f + me.scrollPosTarget * (1 - f);
 		if(fabs(me.scrollPos - me.scrollPosTarget) < 0.001)
 			me.scrollPos = me.scrollPosTarget;
