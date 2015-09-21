@@ -158,7 +158,7 @@ void register_turret(float id, float(float) func, float turretflags, vector min_
 void register_turrets_done();
 
 const float TUR_MAXCOUNT = 24;
-#define TUR_FIRST 1
+const int TUR_FIRST = 1;
 float TUR_COUNT;
 float TUR_LAST;
 
@@ -180,23 +180,9 @@ float TUR_LAST;
 	REGISTER_TURRET_2(TUR_##id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
 #endif
 
-#define TUR_DUPECHECK(dupecheck,cvar) \
-	#ifndef dupecheck \
-		#define dupecheck \
-		float cvar; \
-	#else \
-		#error DUPLICATE TURRET CVAR: cvar \
-	#endif
-
-#define TUR_ADD_CVAR(turret,name) \
-		TUR_DUPECHECK(TUR_CVAR_##turret##_##name, autocvar_g_turrets_unit_##turret##_##name)
-
-#define TUR_CVAR(turret,name) autocvar_g_turrets_unit_##turret##_##name
-
 #include "all.qh"
 
-#undef TUR_ADD_CVAR
 #undef REGISTER_TURRET
-ACCUMULATE_FUNCTION(RegisterTurrets, register_turrets_done);
+ACCUMULATE_FUNCTION(RegisterTurrets, register_turrets_done)
 
 #endif

@@ -8,15 +8,14 @@ void target_speaker_use_activator()
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
 	{
-		var .string sample;
-		sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
+		var .string sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
 			snd = "misc/null.wav";
-		else if(activator.sample == "")
+		else if(activator.(sample) == "")
 			snd = "misc/null.wav";
 		else
 		{
-			tokenize_console(activator.sample);
+			tokenize_console(activator.(sample));
 			float n;
 			n = stof(argv(1));
 			if(n > 0)
@@ -35,15 +34,14 @@ void target_speaker_use_on()
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
 	{
-		var .string sample;
-		sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
+		var .string sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
 			snd = "misc/null.wav";
-		else if(activator.sample == "")
+		else if(activator.(sample) == "")
 			snd = "misc/null.wav";
 		else
 		{
-			tokenize_console(activator.sample);
+			tokenize_console(activator.(sample));
 			float n;
 			n = stof(argv(1));
 			if(n > 0)

@@ -114,7 +114,7 @@ void Projectile_Draw()
 				break;
 		}
 
-		if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
+		if(Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
 			rot = self.avelocity;
 
 		self.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(self.angles), rot * (t - self.spawntime)));
@@ -142,7 +142,7 @@ void Projectile_Draw()
 			break;
 	}
 
-	if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
+	if(Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
 		trailorigin += v_up * 4;
 
 	if(drawn)
@@ -290,8 +290,8 @@ void Ent_Projectile()
 			case PROJECTILE_GRENADE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
 			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
 			case PROJECTILE_MINE: setmodel(self, "models/mine.md3");self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
-			case PROJECTILE_BLASTER: setmodel(self, "models/laser.mdl");self.traileffect = particleeffectnum(EFFECT_NULL); break;
-			case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3");self.traileffect = particleeffectnum(EFFECT_NULL); break;
+			case PROJECTILE_BLASTER: setmodel(self, "models/laser.mdl");self.traileffect = particleeffectnum(EFFECT_Null); break;
+			case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3");self.traileffect = particleeffectnum(EFFECT_Null); break;
 			case PROJECTILE_PORTO_RED: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE); self.scale = 4; break;
 			case PROJECTILE_PORTO_BLUE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE); self.scale = 4; break;
 			case PROJECTILE_HOOKBOMB: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum(EFFECT_TR_KNIGHTSPIKE); break;
@@ -307,13 +307,13 @@ void Ent_Projectile()
 			case PROJECTILE_MAGE_SPIKE: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum(EFFECT_TR_VORESPIKE); break;
 			case PROJECTILE_SHAMBLER_LIGHTNING: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
 
-			case PROJECTILE_RAPTORBOMB:    setmodel(self, "models/vehicles/clusterbomb.md3"); self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(EFFECT_NULL); break;
-			case PROJECTILE_RAPTORBOMBLET: setmodel(self, "models/vehicles/bomblet.md3");     self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(EFFECT_NULL); break;
+			case PROJECTILE_RAPTORBOMB:    setmodel(self, "models/vehicles/clusterbomb.md3"); self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(EFFECT_Null); break;
+			case PROJECTILE_RAPTORBOMBLET: setmodel(self, "models/vehicles/bomblet.md3");     self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(EFFECT_Null); break;
 			case PROJECTILE_RAPTORCANNON:  setmodel(self, "models/plasmatrail.mdl"); self.traileffect = particleeffectnum(EFFECT_TR_CRYLINKPLASMA); break;
 
 			case PROJECTILE_SPIDERROCKET: setmodel(self, "models/vehicles/rocket02.md3"); self.traileffect = particleeffectnum(EFFECT_SPIDERBOT_ROCKET_TRAIL); break;
 			case PROJECTILE_WAKIROCKET:   setmodel(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum(EFFECT_RACER_ROCKET_TRAIL); break;
-			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(EFFECT_NULL); break;
+			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(EFFECT_Null); break;
 
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
@@ -326,7 +326,7 @@ void Ent_Projectile()
 				if(MUTATOR_CALLHOOK(Ent_Projectile, self))
 					break;
 
-				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
+				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
 				{
 					setmodel(self, W_Model("v_ok_grenade.md3"));
 					self.traileffect = _particleeffectnum(Nade_TrailEffect(self.cnt, self.team));
@@ -461,7 +461,7 @@ void Ent_Projectile()
 				break;
 		}
 
-		if(Nade_FromProjectile(self.cnt) != NADE_TYPE_NULL)
+		if(Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
 		{
 			entity nade_type = Nade_FromProjectile(self.cnt);
 			self.mins = '-16 -16 -16';

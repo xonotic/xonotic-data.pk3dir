@@ -48,9 +48,9 @@ STATIC_INIT(vehicles_common_initialize)
 
 entity get_vehicleinfo(int id)
 {
-	if (id < VEH_FIRST || id > VEH_LAST) return VEH_NULL;
+	if (id < VEH_FIRST || id > VEH_LAST) return VEH_Null;
 	entity m = vehicle_info[id];
-	return m ? m : VEH_NULL;
+	return m ? m : VEH_Null;
 }
 
 #endif

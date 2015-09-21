@@ -123,9 +123,11 @@ void SUB_CalcMove_controller_think (void)
 			destangle_x = -destangle_x; // flip up / down orientation
 
 			// take the shortest distance for the angles
-			SUB_ANGLES(self.owner)_x -= 360 * floor((SUB_ANGLES(self.owner)_x - destangle_x) / 360 + 0.5);
-			SUB_ANGLES(self.owner)_y -= 360 * floor((SUB_ANGLES(self.owner)_y - destangle_y) / 360 + 0.5);
-			SUB_ANGLES(self.owner)_z -= 360 * floor((SUB_ANGLES(self.owner)_z - destangle_z) / 360 + 0.5);
+			vector v = SUB_ANGLES(self.owner);
+			v.x -= 360 * floor((v.x - destangle_x) / 360 + 0.5);
+			v.y -= 360 * floor((v.y - destangle_y) / 360 + 0.5);
+			v.z -= 360 * floor((v.z - destangle_z) / 360 + 0.5);
+			SUB_ANGLES(self.owner) = v;
 			angloc = destangle - SUB_ANGLES(self.owner);
 			angloc = angloc * (1 / PHYS_INPUT_FRAMETIME); // so it arrives for the next frame
 			self.owner.SUB_AVELOCITY = angloc;

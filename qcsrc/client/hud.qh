@@ -198,7 +198,7 @@ void HUD_ItemsTime();
 		hud_panelent.panel_showflags = showflags;		 															\
 		HUD_PANEL_NUM++; 																							\
 	} 																												\
-	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME);
+	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME)
 
 HUD_PANELS(HUD_PANEL)
 #undef HUD_PANEL

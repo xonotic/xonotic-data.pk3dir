@@ -623,7 +623,7 @@ float notif_global_error;
             NO_MSG,   /* optiona     */ \
             NO_MSG);  /* optionb     */ \
     } \
-    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
+    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
     NOTIF_ADD_AUTOCVAR(name, default) \
@@ -665,7 +665,7 @@ float notif_global_error;
             NO_MSG,   /* optiona     */ \
             NO_MSG);  /* optionb     */ \
     } \
-    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
+    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 .string nent_iconargs;
 #define MULTIICON_INFO(default,name,strnum,flnum,args,hudargs,iconargs,icon,normal,gentle) \
@@ -709,7 +709,7 @@ float notif_global_error;
             NO_MSG);  /* optionb     */ \
         msg_info_notifs[name - 1].nent_iconargs = iconargs; \
     } \
-    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
+    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_CENTER_NOTIF(default,name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
     NOTIF_ADD_AUTOCVAR(name, default) \
@@ -751,7 +751,7 @@ float notif_global_error;
             NO_MSG,   /* optiona     */ \
             NO_MSG);  /* optionb     */ \
     } \
-    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
+    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_MULTI_NOTIF(default,name,anncename,infoname,centername) \
     NOTIF_ADD_AUTOCVAR(name, default) \
@@ -793,7 +793,7 @@ float notif_global_error;
             NO_MSG,   /* optiona     */ \
             NO_MSG);  /* optionb     */ \
     } \
-    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
+    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define ACVNN(name) autocvar_notification_##name
 
@@ -838,7 +838,7 @@ float notif_global_error;
             optiona,                                 /* optiona     */ \
             optionb);                                /* optionb     */ \
     } \
-    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
+    ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 void RegisterNotifications_First()
 {
@@ -882,8 +882,8 @@ void RegisterNotifications_Done()
 }
 
 // NOW we actually activate the declarations
-ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First);
+ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First)
 #include "notifications.inc"
-ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done);
+ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done)
 
 #endif

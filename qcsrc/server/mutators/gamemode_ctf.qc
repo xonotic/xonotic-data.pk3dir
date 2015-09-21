@@ -1084,8 +1084,8 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 
 void set_flag_string(entity flag, .string field, string value, string teamname)
 {
-	if(flag.field == "")
-		flag.field = strzone(sprintf(value,teamname));
+	if(flag.(field) == "")
+		flag.(field) = strzone(sprintf(value,teamname));
 }
 
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc

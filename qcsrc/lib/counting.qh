@@ -1,7 +1,7 @@
 #ifndef COUNTING_H
 #define COUNTING_H
 
-#include "I18N.qh"
+#include "i18n.qh"
 
 // ===============================================
 //  Time processing and counting functions/macros

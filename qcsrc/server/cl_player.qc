@@ -1241,10 +1241,9 @@ void PlayerSound(.string samplefield, float chan, float voicetype)
 
 void VoiceMessage(string type, string msg)
 {SELFPARAM();
-	var .string sample;
 	float voicetype, ownteam;
 	float flood;
-	sample = GetVoiceMessageSampleField(type);
+	var .string sample = GetVoiceMessageSampleField(type);
 
 	if(GetPlayerSoundSampleField_notFound)
 	{

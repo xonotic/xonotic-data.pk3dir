@@ -599,16 +599,16 @@ void vehicle_use()
 
 void vehicles_regen(float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
 {SELFPARAM();
-	if(self.regen_field < field_max)
+	if(self.(regen_field) < field_max)
 	if(timer + rpause < time)
 	{
 		if(_healthscale)
 			regen = regen * (self.vehicle_health / self.max_health);
 
-		self.regen_field = min(self.regen_field + regen * delta_time, field_max);
+		self.(regen_field) = min(self.(regen_field) + regen * delta_time, field_max);
 
 		if(self.owner)
-			self.owner.regen_field = (self.regen_field / field_max) * 100;
+			self.owner.(regen_field) = (self.(regen_field) / field_max) * 100;
 	}
 }
 

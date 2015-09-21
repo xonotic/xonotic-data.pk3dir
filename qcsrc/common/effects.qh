@@ -53,9 +53,9 @@ void RegisterEffects_Done()
 }
 
 // NOW we actually activate the declarations
-ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffects_First);
-EFFECT(0, NULL, string_null)
+ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffects_First)
+EFFECT(0, Null, string_null)
 #include "effects.inc"
-ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffects_Done);
+ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffects_Done)
 
 #endif

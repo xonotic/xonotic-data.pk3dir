@@ -678,8 +678,8 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
-	//GAMETYPE(MAPINFO_TYPE_INVASION) \
-	/* nothing */
+	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
+	/**/
 
 int GameType_GetID(int cnt)
 {

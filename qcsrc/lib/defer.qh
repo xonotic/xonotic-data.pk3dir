@@ -1,7 +1,7 @@
 #ifndef MENUQC
 #ifndef DEFER_H
 #define DEFER_H
-#include "OO.qh"
+#include "oo.qh"
 
 entityclass(Defer);
 class(Defer) .entity owner;
