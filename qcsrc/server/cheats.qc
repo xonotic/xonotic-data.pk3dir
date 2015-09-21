@@ -11,7 +11,7 @@
 
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
-#include "../common/effects.qh"
+#include "../common/effects/effects.qh"
 #include "../common/util.qh"
 
 #include "../common/monsters/all.qh"

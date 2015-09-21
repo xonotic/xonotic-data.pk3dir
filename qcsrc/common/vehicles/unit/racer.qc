@@ -23,7 +23,7 @@ REGISTER_VEHICLE_SIMPLE(
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-#include "../../effects.qh"
+#include "../../effects/effects.qh"
 #include "../../triggers/trigger/impulse.qh"
 
 bool autocvar_g_vehicle_racer;

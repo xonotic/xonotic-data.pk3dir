@@ -7,7 +7,7 @@
 
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
-#include "../common/effects.qh"
+#include "../common/effects/effects.qh"
 #include "../common/movetypes/movetypes.qh"
 #include "../common/util.qh"
 

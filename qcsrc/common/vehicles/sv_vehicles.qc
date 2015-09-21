@@ -1,5 +1,5 @@
 #include "sv_vehicles.qh"
-#include "../effects.qh"
+#include "../effects/effects.qh"
 
 #if 0
 bool vehicle_send(entity to, int sf)

@@ -8,7 +8,7 @@
 
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
-#include "../common/effects.qh"
+#include "../common/effects/effects.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/trigger/viewloc.qh"
 
