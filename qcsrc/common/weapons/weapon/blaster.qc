@@ -223,9 +223,6 @@ bool W_Blaster(int request)
 
 		case WR_INIT:
 		{
-			precache_model(W_Model("g_laser.md3"));
-			precache_model(W_Model("v_laser.md3"));
-			precache_model(W_Model("h_laser.iqm"));
 			precache_sound(W_Sound("lasergun_fire"));
 			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;

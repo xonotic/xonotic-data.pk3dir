@@ -399,10 +399,6 @@ bool W_Fireball(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model(W_Model("g_fireball.md3"));
-			precache_model(W_Model("v_fireball.md3"));
-			precache_model(W_Model("h_fireball.iqm"));
-			precache_model("models/sphere/sphere.md3");
 			precache_sound(W_Sound("fireball_fire"));
 			precache_sound(W_Sound("fireball_fire2"));
 			precache_sound(W_Sound("fireball_prefire2"));

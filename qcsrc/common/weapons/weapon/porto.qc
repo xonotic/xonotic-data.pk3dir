@@ -373,10 +373,6 @@ bool W_Porto(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model(W_Model("g_porto.md3"));
-			precache_model(W_Model("v_porto.md3"));
-			precache_model(W_Model("h_porto.iqm"));
-			precache_model("models/portal.md3");
 			precache_sound("porto/bounce.wav");
 			precache_sound("porto/create.wav");
 			precache_sound("porto/expire.wav");

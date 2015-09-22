@@ -972,8 +972,6 @@ void precache_all_playermodels(string pattern)
 void precache()
 {SELFPARAM();
     // gamemode related things
-    precache_model ("models/misc/chatbubble.spr");
-	precache_model("models/ice/ice.md3");
 
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
@@ -1014,7 +1012,6 @@ void precache()
 
     // gore and miscellaneous sounds
     //precache_sound ("misc/h2ohit.wav");
-    precache_model ("models/hook.md3");
     precache_sound ("misc/armorimpact.wav");
     precache_sound ("misc/bodyimpact1.wav");
     precache_sound ("misc/bodyimpact2.wav");
@@ -1033,18 +1030,6 @@ void precache()
     precache_sound ("player/lava.wav");
     precache_sound ("player/slime.wav");
 
-    precache_model ("models/sprites/0.spr32");
-    precache_model ("models/sprites/1.spr32");
-    precache_model ("models/sprites/2.spr32");
-    precache_model ("models/sprites/3.spr32");
-    precache_model ("models/sprites/4.spr32");
-    precache_model ("models/sprites/5.spr32");
-    precache_model ("models/sprites/6.spr32");
-    precache_model ("models/sprites/7.spr32");
-    precache_model ("models/sprites/8.spr32");
-    precache_model ("models/sprites/9.spr32");
-    precache_model ("models/sprites/10.spr32");
-
     // common weapon precaches
 	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
     precache_sound (W_Sound("weapon_switch"));
@@ -1056,10 +1041,6 @@ void precache()
         precache_sound (W_Sound("hook_fire")); // hook
         precache_sound (W_Sound("hook_impact")); // hook
     }
-
-    precache_model("models/elaser.mdl");
-    precache_model("models/laser.mdl");
-    precache_model("models/ebomb.mdl");
 
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
@@ -1233,7 +1214,7 @@ void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc)
     {
         mi = e.mins;
         ma = e.maxs;
-        setmodel(e, "null");
+        setmodel(e, MDL_Null);
         setsize(e, mi, ma);
     }
 
@@ -1834,7 +1815,7 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 	float sz;
 	e = spawn();
 	e.classname = "modeleffect";
-	setmodel(e, m);
+	_setmodel(e, m);
 	e.frame = f;
 	setorigin(e, o);
 	e.velocity = v;

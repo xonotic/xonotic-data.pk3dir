@@ -90,7 +90,7 @@ void W_MachineGun_MuzzleFlash(void)
 		self.muzzle_flash = spawn();
 
 	// muzzle flash for 1st person view
-	setmodel(self.muzzle_flash, "models/uziflash.md3"); // precision set below
+	setmodel(self.muzzle_flash, MDL_MACHINEGUN_MUZZLEFLASH); // precision set below
 
 	self.muzzle_flash.scale = 0.75;
 	self.muzzle_flash.think = W_MachineGun_MuzzleFlash_Think;
@@ -304,10 +304,6 @@ bool W_MachineGun(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/uziflash.md3");
-			precache_model(W_Model("g_uzi.md3"));
-			precache_model(W_Model("v_uzi.md3"));
-			precache_model(W_Model("h_uzi.iqm"));
 			precache_sound(W_Sound("uzi_fire"));
 			MACHINEGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;

@@ -26,11 +26,6 @@ void cpicon_precache()
 	if(cpicon_precached)
 		return; // already precached
 
-	precache_model("models/onslaught/controlpoint_icon_dmg3.md3");
-	precache_model("models/onslaught/controlpoint_icon_dmg2.md3");
-	precache_model("models/onslaught/controlpoint_icon_dmg1.md3");
-	precache_model("models/onslaught/controlpoint_icon.md3");
-
 	cpicon_precached = true;
 }
 
@@ -103,13 +98,13 @@ void cpicon_damage(float hp)
 	if(!self.iscaptured) { return; }
 
 	if(hp < self.max_health * 0.25)
-		setmodel(self, "models/onslaught/controlpoint_icon_dmg3.md3");
+		setmodel(self, MDL_ONS_CP3);
 	else if(hp < self.max_health * 0.50)
-		setmodel(self, "models/onslaught/controlpoint_icon_dmg2.md3");
+		setmodel(self, MDL_ONS_CP2);
 	else if(hp < self.max_health * 0.75)
-		setmodel(self, "models/onslaught/controlpoint_icon_dmg1.md3");
+		setmodel(self, MDL_ONS_CP1);
 	else if(hp <= self.max_health || hp >= self.max_health)
-		setmodel(self, "models/onslaught/controlpoint_icon.md3");
+		setmodel(self, MDL_ONS_CP);
 
 	self.punchangle = (2 * randomvec() - '1 1 1') * 45;
 
@@ -124,13 +119,13 @@ void cpicon_construct()
 {SELFPARAM();
 	self.netname = "Control Point Icon";
 
-	setmodel(self, "models/onslaught/controlpoint_icon.md3");
+	setmodel(self, MDL_ONS_CP);
 	setsize(self, CPICON_MIN, CPICON_MAX);
 
 	if(self.icon_realmodel == world)
 	{
 		self.icon_realmodel = spawn();
-		setmodel(self.icon_realmodel, "null");
+		setmodel(self.icon_realmodel, MDL_Null);
 		setorigin(self.icon_realmodel, self.origin);
 		setsize(self.icon_realmodel, CPICON_MIN, CPICON_MAX);
 		self.icon_realmodel.movetype = MOVETYPE_NOCLIP;

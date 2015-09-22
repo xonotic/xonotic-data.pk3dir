@@ -91,7 +91,7 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 	if(e.scale)
 	{
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
-		setmodel(e, e.model); // reset mins and maxs based on mesh
+		_setmodel(e, e.model); // reset mins and maxs based on mesh
 		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 	}
 }
@@ -323,7 +323,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		setmodel(e, argv(argv_num));	++argv_num;
+		_setmodel(e, argv(argv_num));	++argv_num;
 		e.skin = stof(argv(argv_num));	++argv_num;
 		e.alpha = stof(argv(argv_num));	++argv_num;
 		e.colormod = stov(argv(argv_num));	++argv_num;
@@ -498,7 +498,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 
 				e = sandbox_ObjectSpawn(false);
-				setmodel(e, argv(2));
+				_setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
 					LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));

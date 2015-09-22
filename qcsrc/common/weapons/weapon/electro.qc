@@ -395,7 +395,7 @@ void W_Electro_Attack_Orb(void)
 	entity p2;
 	p2 = spawn();
 	copyentity(proj, p2);
-	setmodel(p2, "models/ebomb.mdl");
+	setmodel(p2, MDL_PROJECTILE_ELECTRO);
 	setsize(p2, proj.mins, proj.maxs);
 #endif
 
@@ -498,9 +498,6 @@ bool W_Electro(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model(W_Model("g_electro.md3"));
-			precache_model(W_Model("v_electro.md3"));
-			precache_model(W_Model("h_electro.iqm"));
 			precache_sound(W_Sound("electro_bounce"));
 			precache_sound(W_Sound("electro_fire"));
 			precache_sound(W_Sound("electro_fire2"));

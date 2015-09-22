@@ -29,7 +29,7 @@ void nade_burn_spawn(entity _nade)
 void nade_spawn(entity _nade)
 {
 	entity timer = spawn();
-	setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
+	setmodel(timer, MDL_NADE_TIMER);
 	setattachment(timer, _nade, "");
 	timer.classname = "nade_timer";
 	timer.colormap = _nade.colormap;
@@ -133,7 +133,7 @@ void nade_napalm_ball()
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = DEATH_NADE_NAPALM;
 	PROJECTILE_MAKETRIGGER(proj);
-	setmodel(proj, "null");
+	setmodel(proj, MDL_Null);
 	proj.scale = 1;//0.5;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, self.origin);
@@ -331,9 +331,9 @@ void nade_ice_boom()
 
 	if ( autocvar_g_nades_ice_explode )
 	{
-		setmodel(fountain, "models/grenademodel.md3");
+		setmodel(fountain, MDL_PROJECTILE_GRENADE);
 		entity timer = spawn();
-		setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
+		setmodel(timer, MDL_NADE_TIMER);
 		setattachment(timer, fountain, "");
 		timer.classname = "nade_timer";
 		timer.colormap = self.colormap;
@@ -345,7 +345,7 @@ void nade_ice_boom()
 		timer.skin = 10;
 	}
 	else
-		setmodel(fountain, "null");
+		setmodel(fountain, MDL_Null);
 }
 
 void nade_translocate_boom()
@@ -459,7 +459,7 @@ void nade_heal_boom()
 	healer.solid = SOLID_TRIGGER;
 	healer.touch = nade_heal_touch;
 
-	setmodel(healer, "models/ctf/shield.md3");
+	setmodel(healer, MDL_NADE_HEAL);
 	healer.healer_radius = autocvar_g_nades_nade_radius;
 	vector size = '1 1 1' * healer.healer_radius / 2;
 	setsize(healer,-size,size);
@@ -689,7 +689,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 		offset = '0 0 0';
 
 	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
-	//setmodel(_nade, W_Model("v_ok_grenade.md3"));
+	//setmodel(_nade, MDL_PROJECTILE_NADE);
 	//setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
@@ -826,7 +826,7 @@ void nade_prime()
 
 	n.nade_type = bound(1, n.nade_type, NADES_COUNT);
 
-	setmodel(n, W_Model("v_ok_grenade.md3"));
+	setmodel(n, MDL_PROJECTILE_NADE);
 	//setattachment(n, self, "bip01 l hand");
 	n.exteriormodeltoclient = self;
 	n.customizeentityforclient = nade_customize;
@@ -841,7 +841,7 @@ void nade_prime()
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
 
-	setmodel(fn, W_Model("h_ok_grenade.iqm"));
+	setmodel(fn, MDL_NADE_VIEW);
 	setattachment(fn, self.weaponentity, "");
 	fn.realowner = fn.owner = self;
 	fn.colormod = NADES[n.nade_type].m_color;
@@ -1198,11 +1198,6 @@ void nades_Initialize()
 	addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
 	addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
 	addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
-
-	precache_model("models/ok_nade_counter/ok_nade_counter.md3");
-	precache_model(W_Model("h_ok_grenade.iqm"));
-	precache_model(W_Model("v_ok_grenade.md3"));
-	precache_model("models/ctf/shield.md3");
 
 	precache_sound(W_Sound("rocket_impact"));
 	precache_sound(W_Sound("grenade_bounce1"));

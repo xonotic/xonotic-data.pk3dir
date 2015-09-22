@@ -362,10 +362,6 @@ float W_Vaporizer(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/nexflash.md3");
-			precache_model(W_Model("g_minstanex.md3"));
-			precache_model(W_Model("v_minstanex.md3"));
-			precache_model(W_Model("h_minstanex.iqm"));
 			precache_sound(W_Sound("minstanexfire"));
 			precache_sound(W_Sound("nexwhoosh1"));
 			precache_sound(W_Sound("nexwhoosh2"));

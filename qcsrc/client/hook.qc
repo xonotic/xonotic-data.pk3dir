@@ -224,7 +224,7 @@ void Ent_ReadHook(float bIsNew, float type)
 			default:
 			case ENT_CLIENT_HOOK:
 				// for the model
-				setmodel(self, "models/hook.md3");
+				setmodel(self, MDL_HOOK);
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_ARC_BEAM:
@@ -239,7 +239,6 @@ void Ent_ReadHook(float bIsNew, float type)
 void Hook_Precache()
 {
 	precache_sound(W_Sound("lgbeam_fly"));
-	precache_model("models/hook.md3");
 }
 
 // TODO: hook: temporarily transform self.origin for drawing the model along warpzones!

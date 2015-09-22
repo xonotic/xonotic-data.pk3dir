@@ -9,6 +9,7 @@
 #define FALSE _FALSE
 
 #define spawn _spawn
+#define setmodel _setmodel
 
 #include "upstream/progsdefs.qc"
 
@@ -18,6 +19,7 @@
 #undef FALSE
 
 #undef spawn
+#undef setmodel
 
 #pragma noref 0
 

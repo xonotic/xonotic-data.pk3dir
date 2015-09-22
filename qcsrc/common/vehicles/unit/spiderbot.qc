@@ -704,10 +704,10 @@ void spiderbot_blowup()
 	g1 = spawn();
 	g2 = spawn();
 
-	setmodel(b, "models/vehicles/spiderbot.dpm");
-	setmodel(h, "models/vehicles/spiderbot_top.dpm");
-	setmodel(g1, "models/vehicles/spiderbot_barrels.dpm");
-	setmodel(g2, "models/vehicles/spiderbot_barrels.dpm");
+	setmodel(b, MDL_VEH_SPIDERBOT_BODY);
+	setmodel(h, MDL_VEH_SPIDERBOT_TOP);
+	setmodel(g1, MDL_VEH_SPIDERBOT_GUN);
+	setmodel(g2, MDL_VEH_SPIDERBOT_GUN);
 
 	setorigin(b, self.origin);
 	b.frame = 11;
@@ -878,8 +878,8 @@ float v_spiderbot(float req)
 				self.vehicles_impulse = spiderbot_impulse;
 				self.gun1 = spawn();
 				self.gun2 = spawn();
-				setmodel(self.gun1, "models/vehicles/spiderbot_barrels.dpm");
-				setmodel(self.gun2, "models/vehicles/spiderbot_barrels.dpm");
+				setmodel(self.gun1, MDL_VEH_SPIDERBOT_GUN);
+				setmodel(self.gun2, MDL_VEH_SPIDERBOT_GUN);
 				setattachment(self.gun1, self.tur_head, "tag_hardpoint01");
 				setattachment(self.gun2, self.tur_head, "tag_hardpoint02");
 				self.gravity = 2;
@@ -925,13 +925,6 @@ float v_spiderbot(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/spiderbot.dpm");
-			precache_model ("models/vehicles/spiderbot_top.dpm");
-			precache_model ("models/vehicles/spiderbot_barrels.dpm");
-			precache_model ("models/vehicles/spiderbot_cockpit.dpm");
-			precache_model ( "models/uziflash.md3");
-
 			precache_sound (W_Sound("uzi_fire") );
 			precache_sound (W_Sound("rocket_impact"));
 

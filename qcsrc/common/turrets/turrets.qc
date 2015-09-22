@@ -7,26 +7,12 @@ entity dummy_turret_info;
 void turrets_common_precache()
 {
 	precache_sound (W_Sound("rocket_impact"));
-	precache_model ("models/turrets/base-gib1.md3");
-	precache_model ("models/turrets/base-gib2.md3");
-	precache_model ("models/turrets/base-gib3.md3");
-	precache_model ("models/turrets/base-gib4.md3");
-	precache_model ("models/turrets/head-gib1.md3");
-	precache_model ("models/turrets/head-gib2.md3");
-	precache_model ("models/turrets/head-gib3.md3");
-	precache_model ("models/turrets/head-gib4.md3");
-	precache_model ("models/turrets/base.md3");
-	precache_model ("models/turrets/rocket.md3");
-
-	precache_model ("models/turrets/c512.md3");
-	precache_model ("models/marker.md3");
 
 #ifdef SVQC
 	precache_sound(W_Sound("rocket_impact"));
 #endif
 
 #ifdef TURRET_DEBUG
-	precache_model ("models/turrets/c512.md3");
 	precache_model ("models/pathlib/goodsquare.md3");
 	precache_model ("models/pathlib/badsquare.md3");
 	precache_model ("models/pathlib/square.md3");

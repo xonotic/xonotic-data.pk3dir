@@ -156,7 +156,6 @@ void CSQC_Init(void)
 	initialize_minigames();
 
 	// precaches
-	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 

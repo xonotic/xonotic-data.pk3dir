@@ -214,7 +214,6 @@ bool M_Zombie(int req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/zombie.dpm");
 			return true;
 		}
 		#endif

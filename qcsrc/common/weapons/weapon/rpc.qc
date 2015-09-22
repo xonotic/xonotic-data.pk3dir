@@ -138,7 +138,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 
 	CSQCProjectile(missile, true, PROJECTILE_RPC, false);
 
-	setmodel(flash, "models/flash.md3"); // precision set below
+	setmodel(flash, MDL_RPC_MUZZLEFLASH); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
@@ -182,10 +182,6 @@ bool W_RocketPropelledChainsaw(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/flash.md3");
-			precache_model(W_Model("g_ok_rl.md3"));
-			precache_model(W_Model("v_ok_rl.md3"));
-			precache_model(W_Model("h_ok_rl.iqm"));
 			precache_sound (W_Sound("rocket_fire"));
 			RPC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;

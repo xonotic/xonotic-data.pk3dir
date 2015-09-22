@@ -42,9 +42,9 @@ void Gib_setmodel(entity gib, string mdlname, int specnum)
 			if(specnum != SPECIES_ROBOT_SOLID || mdlname == "models/gibs/chunk.mdl")
 			{
 				if(mdlname == "models/gibs/bloodyskull.md3")
-					setmodel(gib, "models/gibs/robo.md3");
+					setmodel(gib, MDL_GIB_ROBO);
 				else
-					setmodel(gib, strcat("models/gibs/robo", ftos(floor(random() * 8) + 1), ".md3"));
+					setmodel(gib, MDL_GIB_ROBO_RANDOM());
 				if(specnum == SPECIES_ROBOT_SHINY)
 				{
 					gib.skin = 1;
@@ -54,7 +54,7 @@ void Gib_setmodel(entity gib, string mdlname, int specnum)
 				break;
 			}
 		default:
-			setmodel(gib, mdlname);
+			_setmodel(gib, mdlname);
 			gib.skin = specnum;
 			break;
 	}
@@ -275,25 +275,6 @@ void Ent_GibSplash(bool isNew)
 
 void GibSplash_Precache()
 {
-	precache_model("models/gibs/chunk.mdl");
-	precache_model("models/gibs/leg1.md3");
-	precache_model("models/gibs/leg2.md3");
-	precache_model("models/gibs/chest.md3");
-	precache_model("models/gibs/smallchest.md3");
-	precache_model("models/gibs/arm.md3");
-	precache_model("models/gibs/bloodyskull.md3");
-	precache_model("models/gibs/eye.md3");
-
-	precache_model("models/gibs/robo.md3");
-	precache_model("models/gibs/robo1.md3");
-	precache_model("models/gibs/robo2.md3");
-	precache_model("models/gibs/robo3.md3");
-	precache_model("models/gibs/robo4.md3");
-	precache_model("models/gibs/robo5.md3");
-	precache_model("models/gibs/robo6.md3");
-	precache_model("models/gibs/robo7.md3");
-	precache_model("models/gibs/robo8.md3");
-
 	precache_sound ("misc/gib.wav");
     precache_sound ("misc/gib_splat01.wav");
     precache_sound ("misc/gib_splat02.wav");

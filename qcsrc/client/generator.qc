@@ -9,20 +9,6 @@ void generator_precache()
 	if(generator_precached)
 		return; // already precached
 
-	precache_model("models/onslaught/generator.md3");
-	precache_model("models/onslaught/generator_dead.md3");
-	precache_model("models/onslaught/generator_dmg1.md3");
-	precache_model("models/onslaught/generator_dmg2.md3");
-	precache_model("models/onslaught/generator_dmg3.md3");
-	precache_model("models/onslaught/generator_dmg4.md3");
-	precache_model("models/onslaught/generator_dmg5.md3");
-	precache_model("models/onslaught/generator_dmg6.md3");
-	precache_model("models/onslaught/generator_dmg7.md3");
-	precache_model("models/onslaught/generator_dmg8.md3");
-	precache_model("models/onslaught/generator_dmg9.md3");
-	precache_model("models/onslaught/generator_dead.md3");
-
-	precache_model("models/onslaught/ons_ray.md3");
 	precache_sound("onslaught/shockwave.wav");
 	precache_sound(W_Sound("grenade_impact"));
 	precache_sound(W_Sound("rocket_impact"));
@@ -58,7 +44,7 @@ void ons_generator_ray_spawn(vector org)
 	entity e;
 	e = spawn();
 	e.classname = "ons_ray";
-	setmodel(e, "models/onslaught/ons_ray.md3");
+	setmodel(e, MDL_ONS_RAY);
 	setorigin(e, org);
 	e.angles = randomvec() * 360;
 	e.move_origin = org;
@@ -146,27 +132,27 @@ void generator_draw()
 void generator_damage(float hp)
 {SELFPARAM();
 	if(hp <= 0)
-		setmodel(self, "models/onslaught/generator_dead.md3");
+		setmodel(self, MDL_ONS_GEN_DEAD);
 	else if(hp < self.max_health * 0.10)
-		setmodel(self, "models/onslaught/generator_dmg9.md3");
+		setmodel(self, MDL_ONS_GEN9);
 	else if(hp < self.max_health * 0.20)
-		setmodel(self, "models/onslaught/generator_dmg8.md3");
+		setmodel(self, MDL_ONS_GEN8);
 	else if(hp < self.max_health * 0.30)
-		setmodel(self, "models/onslaught/generator_dmg7.md3");
+		setmodel(self, MDL_ONS_GEN7);
 	else if(hp < self.max_health * 0.40)
-		setmodel(self, "models/onslaught/generator_dmg6.md3");
+		setmodel(self, MDL_ONS_GEN6);
 	else if(hp < self.max_health * 0.50)
-		setmodel(self, "models/onslaught/generator_dmg5.md3");
+		setmodel(self, MDL_ONS_GEN5);
 	else if(hp < self.max_health * 0.60)
-		setmodel(self, "models/onslaught/generator_dmg4.md3");
+		setmodel(self, MDL_ONS_GEN4);
 	else if(hp < self.max_health * 0.70)
-		setmodel(self, "models/onslaught/generator_dmg3.md3");
+		setmodel(self, MDL_ONS_GEN3);
 	else if(hp < self.max_health * 0.80)
-		setmodel(self, "models/onslaught/generator_dmg2.md3");
+		setmodel(self, MDL_ONS_GEN2);
 	else if(hp < self.max_health * 0.90)
-		setmodel(self, "models/onslaught/generator_dmg1.md3");
+		setmodel(self, MDL_ONS_GEN1);
 	else if(hp <= self.max_health || hp >= self.max_health)
-		setmodel(self, "models/onslaught/generator.md3");
+		setmodel(self, MDL_ONS_GEN);
 
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 }
@@ -177,7 +163,7 @@ void generator_construct()
 	self.classname = "onslaught_generator";
 
 	setorigin(self, self.origin);
-	setmodel(self, "models/onslaught/generator.md3");
+	setmodel(self, MDL_ONS_GEN);
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 
 	self.move_movetype	= MOVETYPE_NOCLIP;

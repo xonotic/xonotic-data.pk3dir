@@ -588,7 +588,7 @@ float raptor_frame()
 			for(i = 0; i < 3; ++i)
 			{
 			_flare = spawn();
-			setmodel(_flare, "models/runematch/rune.mdl");
+			setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
 			_flare.effects = EF_LOWPRECISION | EF_FLAME;
 			_flare.scale = 0.5;
 			setorigin(_flare, self.origin - '0 0 16');
@@ -872,11 +872,11 @@ float v_raptor(float req)
 				self.gun1  = spawn();
 				self.gun2  = spawn();
 
-				setmodel(self.bomb1,"models/vehicles/clusterbomb_folded.md3");
-				setmodel(self.bomb2,"models/vehicles/clusterbomb_folded.md3");
-				setmodel(self.gun1, "models/vehicles/raptor_gun.dpm");
-				setmodel(self.gun2, "models/vehicles/raptor_gun.dpm");
-				setmodel(self.tur_head, "models/vehicles/raptor_body.dpm");
+				setmodel(self.bomb1, MDL_VEH_RAPTOR_CB_FOLDED);
+				setmodel(self.bomb2, MDL_VEH_RAPTOR_CB_FOLDED);
+				setmodel(self.gun1, MDL_VEH_RAPTOR_GUN);
+				setmodel(self.gun2, MDL_VEH_RAPTOR_GUN);
+				setmodel(self.tur_head, MDL_VEH_RAPTOR_TAIL);
 
 				setattachment(self.bomb1, self, "bombmount_left");
 				setattachment(self.bomb2, self, "bombmount_right");
@@ -903,7 +903,7 @@ float v_raptor(float req)
 
 				spinner = spawn();
 				spinner.owner = self;
-				setmodel(spinner,"models/vehicles/spinner.dpm");
+				setmodel(spinner, MDL_VEH_RAPTOR_PROP);
 				setattachment(spinner, self, "engine_left");
 				spinner.movetype = MOVETYPE_NOCLIP;
 				spinner.avelocity = '0 90 0';
@@ -911,7 +911,7 @@ float v_raptor(float req)
 
 				spinner = spawn();
 				spinner.owner = self;
-				setmodel(spinner,"models/vehicles/spinner.dpm");
+				setmodel(spinner, MDL_VEH_RAPTOR_PROP);
 				setattachment(spinner, self, "engine_right");
 				spinner.movetype = MOVETYPE_NOCLIP;
 				spinner.avelocity = '0 -90 0';
@@ -969,13 +969,6 @@ float v_raptor(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model ("models/vehicles/raptor.dpm");
-			precache_model ("models/vehicles/raptor_gun.dpm");
-			precache_model ("models/vehicles/spinner.dpm");
-			precache_model ("models/vehicles/raptor_cockpit.dpm");
-			precache_model ("models/vehicles/clusterbomb_folded.md3");
-			precache_model ("models/vehicles/raptor_body.dpm");
-
 			precache_sound ("vehicles/raptor_fly.wav");
 			precache_sound ("vehicles/raptor_speed.wav");
 			precache_sound ("vehicles/missile_alarm.wav");
@@ -1011,7 +1004,7 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 	entity sfrag;
 
 	sfrag = spawn();
-	setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
+	setmodel(sfrag, MDL_VEH_RAPTOR_CB_FRAGMENT);
 	setorigin(sfrag, _org);
 
 	sfrag.move_movetype = MOVETYPE_BOUNCE;

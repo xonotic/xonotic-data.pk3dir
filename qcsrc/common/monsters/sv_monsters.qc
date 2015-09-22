@@ -538,7 +538,7 @@ void Monster_Dead_Fade()
 		setorigin(self, self.pos1);
 		self.angles = self.pos2;
 		self.health = self.max_health;
-		setmodel(self, "null");
+		setmodel(self, MDL_Null);
 	}
 	else
 	{
@@ -1325,7 +1325,7 @@ bool Monster_Spawn(int mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	setmodel(self, self.mdl);
+	_setmodel(self, self.mdl);
 	self.flags				= FL_MONSTER;
 	self.classname			= "monster";
 	self.takedamage			= DAMAGE_AIM;

@@ -66,7 +66,7 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 
 	precache_model(shield.model);
 	setorigin(shield, generator.origin);
-	setmodel(shield, shield.model);
+	_setmodel(shield, shield.model);
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
@@ -84,7 +84,7 @@ void ons_debug(string input)
 	}
 }
 
-void setmodel_fixsize(entity e, string m)
+void setmodel_fixsize(entity e, Model m)
 {
 	setmodel(e, m);
 	FixSize(e);
@@ -409,7 +409,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 
 		self.owner.waslinked = self.owner.islinked;
 		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
-			setmodel_fixsize(self.owner, "models/onslaught/controlpoint_pad.md3");
+			setmodel_fixsize(self.owner, MDL_ONS_CP_PAD1);
 		//setsize(self, '-32 -32 0', '32 32 8');
 
 		remove(self);
@@ -546,8 +546,8 @@ void ons_ControlPoint_Icon_BuildThink()
 
 		self.SendFlags |= CPSF_SETUP;
 	}
-	if(self.owner.model != "models/onslaught/controlpoint_pad2.md3")
-		setmodel_fixsize(self.owner, "models/onslaught/controlpoint_pad2.md3");
+	if(self.owner.model != MDL_ONS_CP_PAD2.model_str())
+		setmodel_fixsize(self.owner, MDL_ONS_CP_PAD2);
 
 	if(random() < 0.9 - self.health / self.max_health)
 		Send_Effect(EFFECT_RAGE, self.origin + 10 * randomvec(), '0 0 -1', 1);
@@ -704,7 +704,7 @@ void ons_ControlPoint_Reset()
 	self.think = ons_ControlPoint_Think;
 	self.ons_toucher = world;
 	self.nextthink = time + ONS_CP_THINKRATE;
-	setmodel_fixsize(self, "models/onslaught/controlpoint_pad.md3");
+	setmodel_fixsize(self, MDL_ONS_CP_PAD1);
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
 	WaypointSprite_UpdateRule(self.sprite,self.team,SPRITERULE_TEAMPLAY);
@@ -752,16 +752,6 @@ void ons_ControlPoint_Setup(entity cp)
 	if(cp.message == "") { cp.message = "a"; }
 
 	// precache - TODO: clean up!
-	precache_model("models/onslaught/controlpoint_pad.md3");
-	precache_model("models/onslaught/controlpoint_pad2.md3");
-	precache_model("models/onslaught/controlpoint_shield.md3");
-	precache_model("models/onslaught/controlpoint_icon.md3");
-	precache_model("models/onslaught/controlpoint_icon_dmg1.md3");
-	precache_model("models/onslaught/controlpoint_icon_dmg2.md3");
-	precache_model("models/onslaught/controlpoint_icon_dmg3.md3");
-	precache_model("models/onslaught/controlpoint_icon_gib1.md3");
-	precache_model("models/onslaught/controlpoint_icon_gib2.md3");
-	precache_model("models/onslaught/controlpoint_icon_gib4.md3");
 	precache_sound("onslaught/controlpoint_build.wav");
 	precache_sound("onslaught/controlpoint_built.wav");
 	precache_sound(W_Sound("grenade_impact"));
@@ -771,7 +761,7 @@ void ons_ControlPoint_Setup(entity cp)
 	precache_sound("onslaught/ons_spark2.wav");
 
 	// appearence
-	setmodel_fixsize(cp, "models/onslaught/controlpoint_pad.md3");
+	setmodel_fixsize(cp, MDL_ONS_CP_PAD1);
 
 	// control point placement
 	if((cp.spawnflags & 1) || cp.noalign) // don't drop to floor, just stay at fixed location
@@ -1019,10 +1009,6 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.touch = onslaught_generator_touch;
 
 	// precache - TODO: clean up!
-	precache_model("models/onslaught/generator_shield.md3");
-	precache_model("models/onslaught/gen_gib1.md3");
-	precache_model("models/onslaught/gen_gib2.md3");
-	precache_model("models/onslaught/gen_gib3.md3");
 	precache_sound("onslaught/generator_decay.wav");
 	precache_sound(W_Sound("grenade_impact"));
 	precache_sound(W_Sound("rocket_impact"));

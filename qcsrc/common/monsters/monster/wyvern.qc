@@ -158,7 +158,6 @@ bool M_Wyvern(int req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/wizard.mdl");
 			return true;
 		}
 		#endif

@@ -662,7 +662,6 @@ void spawnfunc_worldspawn (void)
 
 	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
-	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();

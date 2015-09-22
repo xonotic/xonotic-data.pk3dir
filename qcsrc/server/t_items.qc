@@ -207,7 +207,7 @@ void ItemRead(float _IsNew)
             LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
 
         precache_model(self.mdl);
-        setmodel(self, self.mdl);
+        _setmodel(self, self.mdl);
     }
 
     if(sf & ISF_COLORMAP)
@@ -1139,7 +1139,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.mdl = self.model;
 	self.netname = itemname;
 	self.touch = Item_Touch;
-	setmodel(self, "null"); // precision set below
+	setmodel(self, MDL_Null); // precision set below
 	//self.effects |= EF_LOWPRECISION;
 
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
