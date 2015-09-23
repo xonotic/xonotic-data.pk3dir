@@ -762,14 +762,6 @@ float sound_allowed(float destin, entity e)
     return true;
 }
 
-#undef sound
-void sound(entity e, float chan, string samp, float vol, float attenu)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-    sound7(e, chan, samp, vol, attenu, 0, 0);
-}
-
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float attenu)
 {
     float entno, idx;
@@ -845,7 +837,7 @@ void stopsoundto(float _dest, entity e, float chan)
     if (entno >= 8192 || chan < 0 || chan > 7)
     {
         float idx, sflags;
-        idx = precache_sound_index("misc/null.wav");
+        idx = precache_sound_index(SND(Null));
         sflags = SND_LARGEENTITY;
         if (idx >= 256)
             sflags |= SND_LARGESOUND;
@@ -893,7 +885,7 @@ float spamsound(entity e, float chan, string samp, float vol, float _atten)
     if (time > e.spamtime)
     {
         e.spamtime = time;
-        sound(e, chan, samp, vol, _atten);
+        _sound(e, chan, samp, vol, _atten);
         return true;
     }
     return false;
@@ -918,7 +910,7 @@ void play2all(string samp)
     if (autocvar_bot_sound_monopoly)
         return;
 
-    sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
+    _sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
 }
 
 void PrecachePlayerSounds(string f);

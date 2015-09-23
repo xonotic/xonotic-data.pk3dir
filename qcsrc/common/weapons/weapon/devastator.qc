@@ -295,7 +295,7 @@ void W_Devastator_Think(void)
 			{
 				Send_Effect(EFFECT_ROCKET_GUIDE, self.origin, self.velocity, 1);
 				// TODO add a better sound here
-				sound(self.realowner, CH_WEAPON_B, W_Sound("rocket_mode"), VOL_BASE, ATTN_NORM);
+				sound(self.realowner, CH_WEAPON_B, SND_ROCKET_MODE, VOL_BASE, ATTN_NORM);
 				self.count = 1;
 			}
 		}
@@ -342,7 +342,7 @@ void W_Devastator_Attack(void)
 
 	W_DecreaseAmmo(WEP_CVAR(devastator, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, W_Sound("rocket_fire"), CH_WEAPON_A, WEP_CVAR(devastator, damage));
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKET_FIRE), CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -559,7 +559,7 @@ bool W_Devastator(int req)
 						}
 					}
 					if(rockfound)
-						sound(self, CH_WEAPON_B, W_Sound("rocket_det"), VOL_BASE, ATTN_NORM);
+						sound(self, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
 				}
 			}
 
@@ -627,7 +627,7 @@ bool W_Devastator(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(devastator, ammo), W_Sound("reload"));
+			W_Reload(WEP_CVAR(devastator, ammo), SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -656,7 +656,7 @@ bool W_Devastator(int req)
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 
 			return true;
 		}

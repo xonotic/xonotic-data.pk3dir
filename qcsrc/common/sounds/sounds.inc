@@ -1,4 +1,5 @@
 // Global list of sounds
+// TODO: remove uses of _sound
 
 string W_Sound(string w_snd);
 
@@ -33,6 +34,9 @@ SOUND(GRENADE_BOUNCE3, W_Sound("grenade_bounce3"));
 SOUND(GRENADE_BOUNCE4, W_Sound("grenade_bounce4"));
 SOUND(GRENADE_BOUNCE5, W_Sound("grenade_bounce5"));
 SOUND(GRENADE_BOUNCE6, W_Sound("grenade_bounce6"));
+Sound SND_GRENADE_BOUNCE_RANDOM() {
+    return SOUNDS[SND_GRENADE_BOUNCE1.m_id + rint(random() * 5)];
+}
 SOUND(GRENADE_FIRE, W_Sound("grenade_fire"));
 SOUND(GRENADE_IMPACT, W_Sound("grenade_impact"));
 SOUND(GRENADE_STICK, W_Sound("grenade_stick"));
@@ -42,6 +46,10 @@ SOUND(HAGAR_LOAD, W_Sound("hagar_load"));
 SOUND(HAGEXP1, W_Sound("hagexp1"));
 SOUND(HAGEXP2, W_Sound("hagexp2"));
 SOUND(HAGEXP3, W_Sound("hagexp3"));
+Sound SND_HAGEXP_RANDOM() {
+    return SOUNDS[SND_HAGEXP1.m_id + rint(random() * 2)];
+}
+
 SOUND(HOOKBOMB_FIRE, W_Sound("hookbomb_fire"));
 SOUND(HOOKBOMB_IMPACT, W_Sound("hookbomb_impact"));
 SOUND(HOOK_FIRE, W_Sound("hook_fire"));
@@ -61,10 +69,18 @@ SOUND(NEXIMPACT, W_Sound("neximpact"));
 SOUND(NEXWHOOSH1, W_Sound("nexwhoosh1"));
 SOUND(NEXWHOOSH2, W_Sound("nexwhoosh2"));
 SOUND(NEXWHOOSH3, W_Sound("nexwhoosh3"));
+Sound SND_NEXWHOOSH_RANDOM() {
+    return SOUNDS[SND_NEXWHOOSH1.m_id + rint(random() * 2)];
+}
 SOUND(RELOAD, W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
+
 SOUND(RIC1, W_Sound("ric1"));
 SOUND(RIC2, W_Sound("ric2"));
 SOUND(RIC3, W_Sound("ric3"));
+Sound SND_RIC_RANDOM() {
+    return SOUNDS[SND_RIC1.m_id + rint(random() * 2)];
+}
+
 SOUND(ROCKET_DET, W_Sound("rocket_det"));
 SOUND(ROCKET_FIRE, W_Sound("rocket_fire"));
 SOUND(ROCKET_FLY, W_Sound("rocket_fly"));
@@ -89,10 +105,70 @@ SOUND(WEAPONPICKUP, W_Sound("weaponpickup"));
 SOUND(WEAPONPICKUP_NEW_TOYS, W_Sound("weaponpickup_new_toys"));
 SOUND(WEAPON_SWITCH, W_Sound("weapon_switch"));
 
+SOUND(CTF_CAPTURE_NEUTRAL, "ctf/capture.ogg");
 SOUND(CTF_CAPTURE_RED, "ctf/red_capture.wav");
 SOUND(CTF_CAPTURE_BLUE, "ctf/blue_capture.wav");
 SOUND(CTF_CAPTURE_YELLOW, "ctf/yellow_capture.ogg");
 SOUND(CTF_CAPTURE_PINK, "ctf/pink_capture.ogg");
+Sound SND_CTF_CAPTURE(string teamname) {
+    switch (teamname) {
+        case "red": return SND_CTF_CAPTURE_RED;
+        case "blue": return SND_CTF_CAPTURE_BLUE;
+        case "yellow": return SND_CTF_CAPTURE_YELLOW;
+        case "pink": return SND_CTF_CAPTURE_PINK;
+    }
+    return SND_CTF_CAPTURE_NEUTRAL;
+}
+
+SOUND(CTF_DROPPED_NEUTRAL,  "ctf/neutral_dropped.wav");
+SOUND(CTF_DROPPED_RED,      "ctf/red_dropped.wav");
+SOUND(CTF_DROPPED_BLUE,     "ctf/blue_dropped.wav");
+SOUND(CTF_DROPPED_YELLOW,   "ctf/yellow_dropped.wav");
+SOUND(CTF_DROPPED_PINK,     "ctf/pink_dropped.wav");
+Sound SND_CTF_DROPPED(string teamname) {
+    switch (teamname) {
+        case "red": return      SND_CTF_DROPPED_RED;
+        case "blue": return     SND_CTF_DROPPED_BLUE;
+        case "yellow": return   SND_CTF_DROPPED_YELLOW;
+        case "pink": return     SND_CTF_DROPPED_PINK;
+        default: return         SND_CTF_DROPPED_NEUTRAL;
+    }
+}
+
+SOUND(CTF_PASS, "ctf/pass.wav");
+SOUND(CTF_RESPAWN, "ctf/flag_respawn.wav");
+
+SOUND(CTF_RETURNED_NEUTRAL,  "ctf/return.wav");
+SOUND(CTF_RETURNED_RED,      "ctf/red_returned.wav");
+SOUND(CTF_RETURNED_BLUE,     "ctf/blue_returned.wav");
+SOUND(CTF_RETURNED_YELLOW,   "ctf/yellow_returned.wav");
+SOUND(CTF_RETURNED_PINK,     "ctf/pink_returned.wav");
+Sound SND_CTF_RETURNED(string teamname) {
+    switch (teamname) {
+        case "red": return      SND_CTF_RETURNED_RED;
+        case "blue": return     SND_CTF_RETURNED_BLUE;
+        case "yellow": return   SND_CTF_RETURNED_YELLOW;
+        case "pink": return     SND_CTF_RETURNED_PINK;
+        default: return         SND_CTF_RETURNED_NEUTRAL;
+    }
+}
+
+SOUND(CTF_TAKEN_NEUTRAL,  "ctf/neutral_taken.wav");
+SOUND(CTF_TAKEN_RED,      "ctf/red_taken.wav");
+SOUND(CTF_TAKEN_BLUE,     "ctf/blue_taken.wav");
+SOUND(CTF_TAKEN_YELLOW,   "ctf/yellow_taken.wav");
+SOUND(CTF_TAKEN_PINK,     "ctf/pink_taken.wav");
+Sound SND_CTF_TAKEN(string teamname) {
+    switch (teamname) {
+        case "red": return      SND_CTF_TAKEN_RED;
+        case "blue": return     SND_CTF_TAKEN_BLUE;
+        case "yellow": return   SND_CTF_TAKEN_YELLOW;
+        case "pink": return     SND_CTF_TAKEN_PINK;
+        default: return         SND_CTF_TAKEN_NEUTRAL;
+    }
+}
+
+SOUND(CTF_TOUCH, "ctf/touch.wav");
 
 SOUND(DOM_CLAIM, "domination/claim.wav");
 
@@ -101,8 +177,17 @@ SOUND(KA_PICKEDUP, "keepaway/pickedup.wav");
 SOUND(KA_RESPAWN, "keepaway/respawn.wav");
 SOUND(KA_TOUCH, "keepaway/touch.wav");
 
+SOUND(KH_ALARM, "kh/alarm.wav");
+SOUND(KH_CAPTURE, "kh/capture.wav");
+SOUND(KH_COLLECT, "kh/collect.wav");
+SOUND(KH_DESTROY, "kh/destroy.wav");
+SOUND(KH_DROP, "kh/drop.wav");
+
+SOUND(NB_BOUNCE, "nexball/bounce.ogg");
+SOUND(NB_DROP, "nexball/drop.ogg");
 SOUND(NB_SHOOT1, "nexball/shoot1.ogg");
 SOUND(NB_SHOOT2, "nexball/shoot2.ogg");
+SOUND(NB_STEAL, "nexball/steal.ogg");
 
 SOUND(ONS_CONTROLPOINT_BUILD, "onslaught/controlpoint_build.ogg");
 SOUND(ONS_CONTROLPOINT_BUILT, "onslaught/controlpoint_built.ogg");
@@ -129,6 +214,8 @@ SOUND(TUR_PHASER, "turrets/phaser.ogg");
 SOUND(VEH_ALARM, "vehicles/alarm.wav");
 SOUND(VEH_ALARM_SHIELD, "vehicles/alarm_shield.wav");
 SOUND(VEH_MISSILE_ALARM, "vehicles/missile_alarm.wav");
+
+SOUND(VEH_BUMBLEBEE_FIRE, W_Sound("flacexp3"));
 
 SOUND(VEH_RACER_BOOST, "vehicles/racer_boost.wav");
 SOUND(VEH_RACER_IDLE, "vehicles/racer_idle.wav");
@@ -171,6 +258,9 @@ SOUND(GIB_SPLAT01, "misc/gib_splat01.wav");
 SOUND(GIB_SPLAT02, "misc/gib_splat02.wav");
 SOUND(GIB_SPLAT03, "misc/gib_splat03.wav");
 SOUND(GIB_SPLAT04, "misc/gib_splat04.wav");
+Sound SND_GIB_SPLAT_RANDOM() {
+    return SOUNDS[SND_GIB_SPLAT01.m_id + floor(prandom() * 4)];
+}
 
 SOUND(HIT, "misc/hit.wav");
 SOUND(TYPEHIT, "misc/typehit.wav");

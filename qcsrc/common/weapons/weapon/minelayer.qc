@@ -61,7 +61,7 @@ void spawnfunc_weapon_minelayer(void) { weapon_defaultspawnfunc(WEP_MINE_LAYER.m
 
 void W_MineLayer_Stick(entity to)
 {SELFPARAM();
-	spamsound(self, CH_SHOTS, W_Sound("mine_stick"), VOL_BASE, ATTN_NORM);
+	spamsound(self, CH_SHOTS, SND(MINE_STICK), VOL_BASE, ATTN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -221,7 +221,7 @@ void W_MineLayer_Think(void)
 	if((time > self.cnt) && (!self.mine_time) && (self.cnt > 0))
 	{
 		if(WEP_CVAR(minelayer, lifetime_countdown) > 0)
-			spamsound(self, CH_SHOTS, W_Sound("mine_trigger"), VOL_BASE, ATTN_NORM);
+			spamsound(self, CH_SHOTS, SND(MINE_TRIGGER), VOL_BASE, ATTN_NORM);
 		self.mine_time = time + WEP_CVAR(minelayer, lifetime_countdown);
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
@@ -244,7 +244,7 @@ void W_MineLayer_Think(void)
 		if(head != self.realowner && DIFF_TEAM(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
-			spamsound(self, CH_SHOTS, W_Sound("mine_trigger"), VOL_BASE, ATTN_NORM);
+			spamsound(self, CH_SHOTS, SND(MINE_TRIGGER), VOL_BASE, ATTN_NORM);
 			self.mine_time = time + WEP_CVAR(minelayer, time);
 		}
 		head = head.chain;
@@ -316,14 +316,14 @@ void W_MineLayer_Attack(void)
 		{
 			// the refire delay keeps this message from being spammed
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, WEAPON_MINELAYER_LIMIT, WEP_CVAR(minelayer, limit));
-			play2(self, W_Sound("unavailable"));
+			play2(self, SND(UNAVAILABLE));
 			return;
 		}
 	}
 
 	W_DecreaseAmmo(WEP_CVAR(minelayer, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, W_Sound("mine_fire"), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, SND(MINE_FIRE), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -523,7 +523,7 @@ bool W_MineLayer(int req)
 			if(self.BUTTON_ATCK2)
 			{
 				if(W_MineLayer_PlacedMines(true))
-					sound(self, CH_WEAPON_B, W_Sound("mine_det"), VOL_BASE, ATTN_NORM);
+					sound(self, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
 			}
 
 			return true;
@@ -563,7 +563,7 @@ bool W_MineLayer(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(minelayer, ammo), W_Sound("reload"));
+			W_Reload(WEP_CVAR(minelayer, ammo), SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -589,7 +589,7 @@ bool W_MineLayer(int req)
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, W_Sound("mine_exp"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
 
 			return true;
 		}

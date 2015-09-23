@@ -182,11 +182,11 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int de
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM);
 	}
 
 	if (take > 50)
@@ -395,11 +395,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM); // FIXME possibly remove them?
+			sound (self, CH_SHOTS, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM); // FIXME possibly remove them?
 	}
 
 	if (take > 50)
@@ -1226,7 +1226,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			}
 			break;
 		case VOICETYPE_PLAYERSOUND:
-			sound(self, chan, sample, VOL_BASE, ATTEN_NORM);
+			_sound(self, chan, sample, VOL_BASE, ATTEN_NORM);
 			break;
 		default:
 			backtrace("Invalid voice type!");

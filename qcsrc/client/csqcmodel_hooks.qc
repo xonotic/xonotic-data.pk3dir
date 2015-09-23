@@ -590,7 +590,7 @@ void CSQCModel_Effects_Apply(void)
 	{
 		if(!self.snd_looping)
 		{
-			sound(self, CH_TRIGGER_SINGLE, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+			sound(self, CH_TRIGGER_SINGLE, SND_JETPACK_FLY, VOL_BASE, autocvar_g_jetpack_attenuation);
 			self.snd_looping = CH_TRIGGER_SINGLE;
 		}
 	}
@@ -598,7 +598,7 @@ void CSQCModel_Effects_Apply(void)
 	{
 		if(self.snd_looping)
 		{
-			sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+			sound(self, self.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
 			self.snd_looping = 0;
 		}
 	}

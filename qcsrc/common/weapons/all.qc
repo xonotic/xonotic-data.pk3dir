@@ -339,7 +339,7 @@ string W_Sound(string w_snd)
 		#undef tryext
 		#undef extensions
 		output = strcat("weapons/", w_snd);
-	} while(0);
+	} while (0);
 
 #ifdef SVQC
 	MUTATOR_CALLHOOK(WeaponSound, w_snd, output);

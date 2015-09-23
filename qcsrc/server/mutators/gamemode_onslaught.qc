@@ -31,7 +31,7 @@ void ons_CaptureShield_Touch()
 
 	if(IS_REAL_CLIENT(other))
 	{
-		play2(other, "onslaught/damageblockedbyshield.wav");
+		play2(other, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
 
 		if(self.enemy.classname == "onslaught_generator")
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
@@ -353,7 +353,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 		if (time > self.pain_finished)
 			if (IS_PLAYER(attacker))
 			{
-				play2(attacker, "onslaught/damageblockedbyshield.wav");
+				play2(attacker, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
 				self.pain_finished = time + 1;
 				attacker.typehitsound += 1; // play both sounds (shield is way too quiet)
 			}
@@ -364,7 +364,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 	if(IS_PLAYER(attacker))
 	if(time - ons_notification_time[self.team] > 10)
 	{
-		play2team(self.team, "onslaught/controlpoint_underattack.wav");
+		play2team(self.team, SND(ONS_CONTROLPOINT_UNDERATTACK));
 		ons_notification_time[self.team] = time;
 	}
 
@@ -378,13 +378,13 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 	pointparticles(particleeffectnum(EFFECT_SPARKS), hitloc, force*-1, 1);
 	//sound on every hit
 	if (random() < 0.5)
-		sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE+0.3, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_ONS_HIT1, VOL_BASE+0.3, ATTEN_NORM);
 	else
-		sound(self, CH_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE+0.3, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE+0.3, ATTEN_NORM);
 
 	if (self.health < 0)
 	{
-		sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_CPDESTROYED_), self.owner.message, attacker.netname);
 
@@ -490,9 +490,9 @@ void ons_ControlPoint_Icon_Think()
 		Send_Effect(EFFECT_ELECTRIC_SPARKS, self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
-			sound(self, CH_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_PAIN, SND_ONS_SPARK1, VOL_BASE, ATTEN_NORM);
 		else if (random() > 0.5)
-			sound(self, CH_PAIN, "onslaught/ons_spark2.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_PAIN, SND_ONS_SPARK2, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -516,7 +516,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		self.health = self.max_health;
 		self.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
 		self.think = ons_ControlPoint_Icon_Think;
-		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
 		self.owner.iscaptured = true;
 		self.solid = SOLID_BBOX;
 
@@ -572,7 +572,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	e.colormap = 1024 + (e.team - 1) * 17;
 	e.count = (e.max_health - e.health) * ONS_CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
 
-	sound(e, CH_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTEN_NORM);
+	sound(e, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILD, VOL_BASE, ATTEN_NORM);
 
 	cp.goalentity = e;
 	cp.team = e.team;
@@ -829,7 +829,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 			if (time > self.pain_finished)
 				if (IS_PLAYER(attacker))
 				{
-					play2(attacker, "onslaught/damageblockedbyshield.wav");
+					play2(attacker, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
 					attacker.typehitsound += 1;
 					self.pain_finished = time + 1;
 				}
@@ -840,7 +840,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 			self.pain_finished = time + 10;
 			entity head;
 			FOR_EACH_REALPLAYER(head) if(SAME_TEAM(head, self)) { Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK); }
-			play2team(self.team, "onslaught/generator_underattack.wav");
+			play2team(self.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
 	self.health = self.health - damage;
@@ -881,7 +881,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)
 	{
-		sound(self, CH_TRIGGER, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 	else
 	{
@@ -890,9 +890,9 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 
 		//sound on every hit
 		if (random() < 0.5)
-			sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_TRIGGER, SND_ONS_HIT1, VOL_BASE, ATTEN_NORM);
 		else
-			sound(self, CH_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE, ATTEN_NORM);
 	}
 
 	self.SendFlags |= GSF_STATUS;
@@ -912,7 +912,7 @@ void ons_GeneratorThink()
 				if(SAME_TEAM(e, self))
 				{
 					Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
-                    soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
+                    soundto(MSG_ONE, e, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
                 }
 				else
 					Send_Notification(NOTIF_ONE, e, MSG_CENTER, APP_TEAM_NUM_4(self.team, CENTER_ONS_NOTSHIELDED_));
@@ -1076,7 +1076,7 @@ bool Onslaught_CheckWinner()
 		if (!wpforenemy_announced)
 		{
 			Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
-			sound(world, CH_INFO, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NONE);
+			sound(world, CH_INFO, SND_ONS_GENERATOR_DECAY, VOL_BASE, ATTEN_NONE);
 
 			wpforenemy_announced = true;
 		}
@@ -1130,7 +1130,7 @@ bool Onslaught_CheckWinner()
 
 	ons_stalemate = false;
 
-	play2all(sprintf("ctf/%s_capture.wav", Static_Team_ColorName_Lower(winner_team)));
+	play2all(SND(CTF_CAPTURE(Static_Team_ColorName_Lower(winner_team))));
 
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 
@@ -1639,7 +1639,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 				if ( tele_effects )
 				{
 					Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
-					sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
+					sound (player, CH_TRIGGER, SND_TELEPORT, VOL_BASE, ATTEN_NORM);
 				}
 				setorigin(player, loc);
 				player.angles = '0 1 0' * ( theta * RAD2DEG + 180 );

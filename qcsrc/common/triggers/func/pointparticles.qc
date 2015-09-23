@@ -230,7 +230,7 @@ void Draw_PointParticles()
 			if(self.noise != "")
 			{
 				setorigin(self, p);
-				sound(self, CH_AMBIENT, self.noise, VOL_BASE * self.volume, self.atten);
+				_sound(self, CH_AMBIENT, self.noise, VOL_BASE * self.volume, self.atten);
 			}
 			self.just_toggled = 0;
 		}

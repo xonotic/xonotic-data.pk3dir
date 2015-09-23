@@ -140,7 +140,7 @@ void buff_Respawn(entity ent)
 
 	WaypointSprite_Ping(ent.buff_waypoint);
 
-	sound(ent, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	sound(ent, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
 void buff_Touch()
@@ -178,7 +178,7 @@ void buff_Touch()
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, buffid);
 
 			other.buffs = 0;
-			//sound(other, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
+			//sound(other, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		}
 		else { return; } // do nothing
 	}
@@ -191,7 +191,7 @@ void buff_Touch()
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, buffid);
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
-	sound(other, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
+	sound(other, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
 	other.buffs |= (self.buffs);
 }
 
@@ -271,7 +271,7 @@ void buff_Think()
 		if(!self.buff_activetime)
 		{
 			self.buff_active = true;
-			sound(self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTN_NORM);
 			Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 		}
 	}
@@ -596,7 +596,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
 		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
 
 		self.buffs = 0;
-		sound(self, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
 	return false;
@@ -661,8 +661,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
 			Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
 			Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
 
-			sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NORM);
-			sound(closest, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
+			sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
 
 			// TODO: add a counter to handle how many times one can teleport, and a delay to prevent spam
 			self.buffs = 0;
@@ -771,7 +771,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			if(buff_lost >= 2)
 			{
 				Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
-				sound(self, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 			}
 			self.buffs = 0;
 		}

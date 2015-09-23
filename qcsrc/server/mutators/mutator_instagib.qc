@@ -187,7 +187,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 
 	if (self.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		play_countdown(self.strength_finished, SND(POWEROFF));
 		if (time > self.strength_finished)
 		{
 			self.alpha = default_player_alpha;
@@ -210,7 +210,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 
 	if (self.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
+		play_countdown(self.invincible_finished, SND(POWEROFF));
 		if (time > self.invincible_finished)
 		{
 			self.items &= ~ITEM_Speed.m_itemid;

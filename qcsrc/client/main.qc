@@ -771,7 +771,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			}
 			if(autocvar_cl_spawn_event_sound)
 			{
-				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}
@@ -928,7 +928,7 @@ void Ent_Remove()
 
 	if(self.snd_looping > 0)
 	{
-		sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+		sound(self, self.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
 		self.snd_looping = 0;
 	}
 

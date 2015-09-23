@@ -229,7 +229,7 @@ void W_Shockwave_Melee_Think(void)
 
 void W_Shockwave_Melee(void)
 {SELFPARAM();
-	sound(self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTN_NORM);
+	sound(self, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
 	entity meleetemp;
@@ -360,7 +360,7 @@ void W_Shockwave_Attack(void)
 	float i, queue = 0;
 
 	// set up the shot direction
-	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
+	W_SetupShot(self, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(shockwave, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;

@@ -182,7 +182,7 @@ void W_Fireball_Attack1(void)
 {SELFPARAM();
 	entity proj;
 
-	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, W_Sound("fireball_fire2"), CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, SND(FIREBALL_FIRE2), CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
 
 	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -251,7 +251,7 @@ void W_Fireball_Attack1_Frame1(void)
 void W_Fireball_Attack1_Frame0(void)
 {SELFPARAM();
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound(self, CH_WEAPON_SINGLE, W_Sound("fireball_prefire2"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_WEAPON_SINGLE, SND_FIREBALL_PREFIRE2, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
 }
 
@@ -316,7 +316,7 @@ void W_Fireball_Attack2(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, W_Sound("fireball_fire"), CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, SND(FIREBALL_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
@@ -457,7 +457,7 @@ bool W_Fireball(int req)
 				org2 = w_org + w_backoff * 16;
 				pointparticles(particleeffectnum(EFFECT_FIREBALL_EXPLODE), org2, '0 0 0', 1);
 				if(!w_issilent)
-					sound(self, CH_SHOTS, W_Sound("fireball_impact2"), VOL_BASE, ATTEN_NORM * 0.25); // long range boom
+					sound(self, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 			}
 
 			return true;

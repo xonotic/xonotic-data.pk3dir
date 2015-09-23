@@ -174,7 +174,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
-			play2(self, W_Sound("dryfire"));
+			play2(self, SND(DRYFIRE));
 		}
 		if(self.weaponentity.state != WS_CLEAR)
 			w_ready();
