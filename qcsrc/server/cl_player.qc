@@ -986,16 +986,15 @@ void PrecacheGlobalSound(string samplestring)
 
 void PrecachePlayerSounds(string f)
 {
-	float fh;
-	string s;
-	fh = fopen(f, FILE_READ);
-	if(fh < 0)
+	int fh = fopen(f, FILE_READ);
+	if (fh < 0)
 		return;
-	while((s = fgets(fh)))
+	for (string s; (s = fgets(fh)); )
 	{
-		if(tokenize_console(s) != 3)
+		int n = tokenize_console(s);
+		if (n != 3)
 		{
-			LOG_TRACE("Invalid sound info line: ", s, "\n");
+			if (n != 0) LOG_TRACEF("Invalid sound info line: %s\n", s);
 			continue;
 		}
 		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
