@@ -173,7 +173,7 @@ bool QuickMenu_Open(string mode, string submenu)
 		setcursormode(1);
 	hudShiftState = 0;
 
-	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
 	return true;
 }
 
@@ -357,7 +357,7 @@ bool QuickMenu_Page_Load(string target_submenu, int new_page)
 		QuickMenu_Close();
 		return false;
 	}
-	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
 	return true;
 }
 
@@ -380,7 +380,7 @@ bool QuickMenu_ActionForNumber(int num)
 	if (QuickMenu_Page_Command[num] != "")
 	{
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
-		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+		QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
 		return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
@@ -586,6 +586,7 @@ void HUD_QuickMenu(void)
 		//if(!autocvar_hud_panel_quickmenu) return;
 		if(!hud_panel_quickmenu) return;
 
+		if(QuickMenu_TimeOut)
 		if(time > QuickMenu_TimeOut)
 		{
 			QuickMenu_Close();
