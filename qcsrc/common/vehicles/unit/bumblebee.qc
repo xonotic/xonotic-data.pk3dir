@@ -902,7 +902,7 @@ float v_bumblebee(float req)
 				// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
 				self.vehicle_shieldent = spawn();
 				self.vehicle_shieldent.effects = EF_LOWPRECISION;
-				setmodel(self.vehicle_shieldent, "models/vhshield.md3");
+				setmodel(self.vehicle_shieldent, MDL_VEH_BUMBLEBEE_SHIELD);
 				setattachment(self.vehicle_shieldent, self, "");
 				setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
 				self.vehicle_shieldent.scale       = 512 / vlen(self.maxs - self.mins);
@@ -922,9 +922,9 @@ float v_bumblebee(float req)
 
 				self.gun1.classname = self.gun2.classname = "vehicle_playerslot";
 
-				setmodel(self.gun1, "models/vehicles/bumblebee_plasma_right.dpm");
-				setmodel(self.gun2, "models/vehicles/bumblebee_plasma_left.dpm");
-				setmodel(self.gun3, "models/vehicles/bumblebee_ray.dpm");
+				setmodel(self.gun1, MDL_VEH_BUMBLEBEE_CANNON_RIGHT);
+				setmodel(self.gun2, MDL_VEH_BUMBLEBEE_CANNON_LEFT);
+				setmodel(self.gun3, MDL_VEH_BUMBLEBEE_CANNON_CENTER);
 
 				setattachment(self.gun1, self, "cannon_right");
 				setattachment(self.gun2, self, "cannon_left");
@@ -1000,13 +1000,6 @@ float v_bumblebee(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model("models/vehicles/bumblebee_body.dpm");
-			precache_model("models/vehicles/bumblebee_plasma_left.dpm");
-			precache_model("models/vehicles/bumblebee_plasma_right.dpm");
-			precache_model("models/vehicles/bumblebee_ray.dpm");
-			precache_model("models/vehicles/wakizashi_cockpit.dpm");
-			precache_model("models/vehicles/spiderbot_cockpit.dpm");
-			precache_model("models/vehicles/raptor_cockpit.dpm");
 			return true;
 		}
 	}

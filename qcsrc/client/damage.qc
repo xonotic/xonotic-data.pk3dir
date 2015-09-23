@@ -7,7 +7,7 @@
 
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
-#include "../common/effects.qh"
+#include "../common/effects/effects.qh"
 #include "../common/movetypes/movetypes.qh"
 #include "../common/util.qh"
 
@@ -113,7 +113,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 	}
 
 	e = spawn();
-	setmodel(e, "null"); // necessary to attach and read origin
+	setmodel(e, MDL_Null); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.classname = "damage";
 	e.owner = self;

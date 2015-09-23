@@ -172,7 +172,7 @@ string CheckPlayerModel(string plyermodel) {
 void setplayermodel(entity e, string modelname)
 {
 	precache_model(modelname);
-	setmodel(e, modelname);
+	_setmodel(e, modelname);
 	player_setupanimsformodel();
 	UpdatePlayerSounds();
 }
@@ -292,7 +292,7 @@ void PutObserverInServer (void)
 	self.weapons = '0 0 0';
 	self.model = "";
 	FixPlayermodel();
-	setmodel(self, "null");
+	setmodel(self, MDL_Null);
 	self.drawonlytoclient = self;
 
 	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
@@ -856,7 +856,7 @@ void KillIndicator_Think()
 	else
 	{
 		if(self.cnt <= 10)
-			setmodel(self, strcat("models/sprites/", ftos(self.cnt), ".spr32"));
+			setmodel(self, MDL_NUM(self.cnt));
 		if(IS_REAL_CLIENT(self.owner))
 		{
 			if(self.cnt <= 10)
@@ -1366,9 +1366,9 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	
+
 	self.mdl = "";
-	
+
 	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
 	{
 		if ( self.owner.active_minigame )
@@ -1376,9 +1376,9 @@ void ChatBubbleThink()
 		else if ( self.owner.BUTTON_CHAT )
 			self.mdl = "models/misc/chatbubble.spr";
 	}
-	
+
 	if ( self.model != self.mdl )
-		setmodel(self, self.mdl);
+		_setmodel(self, self.mdl);
 
 }
 
@@ -1394,7 +1394,7 @@ void UpdateChatBubble()
 		self.chatbubbleentity.exteriormodeltoclient = self;
 		self.chatbubbleentity.think = ChatBubbleThink;
 		self.chatbubbleentity.nextthink = time;
-		setmodel(self.chatbubbleentity, "models/misc/chatbubble.spr"); // precision set below
+		setmodel(self.chatbubbleentity, MDL_CHAT); // precision set below
 		//setorigin(self.chatbubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
 		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth

@@ -267,5 +267,5 @@ entity dummy_weapon_info;
 #undef WEP_ADD_CVAR
 #undef WEP_ADD_PROP
 void register_weapons_done();
-ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done);
+ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done)
 #endif

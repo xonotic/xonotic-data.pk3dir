@@ -165,7 +165,7 @@ void W_RocketMinsta_Laser_Touch (void)
 void W_RocketMinsta_Attack2(void)
 {SELFPARAM();
 	makevectors(self.v_angle);
-	
+
 	entity proj;
 	float counter = 0;
 	float total = autocvar_g_rm_laser_count;
@@ -192,11 +192,11 @@ void W_RocketMinsta_Attack2(void)
         PROJECTILE_MAKETRIGGER(proj);
         proj.projectiledeathtype = WEP_ELECTRO.m_id;
         setorigin(proj, w_shotorg);
-		
+
 		proj.rm_force = autocvar_g_rm_laser_force / total;
 		proj.rm_damage = autocvar_g_rm_laser_damage / total;
 		proj.rm_edmg = proj.rm_damage;
-        
+
         //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
         proj.movetype = MOVETYPE_BOUNCEMISSILE;
@@ -220,7 +220,7 @@ void W_RocketMinsta_Attack2(void)
 void W_RocketMinsta_Attack3 (void)
 {SELFPARAM();
 	makevectors(self.v_angle);
-	
+
 	entity proj;
 	float counter = 0;
 	float total = 1;
@@ -245,11 +245,11 @@ void W_RocketMinsta_Attack3 (void)
         PROJECTILE_MAKETRIGGER(proj);
         proj.projectiledeathtype = WEP_ELECTRO.m_id;
         setorigin(proj, w_shotorg);
-		
+
 		proj.rm_force = autocvar_g_rm_laser_force / total;
 		proj.rm_damage = autocvar_g_rm_laser_damage / total;
 		proj.rm_edmg = proj.rm_damage;
-        
+
         //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
         proj.movetype = MOVETYPE_BOUNCEMISSILE;
@@ -357,15 +357,11 @@ float W_Vaporizer(float req)
 			}
 			else
 				self.held_down = false;
-			
+
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_model("models/nexflash.md3");
-			precache_model(W_Model("g_minstanex.md3"));
-			precache_model(W_Model("v_minstanex.md3"));
-			precache_model(W_Model("h_minstanex.iqm"));
 			precache_sound(W_Sound("minstanexfire"));
 			precache_sound(W_Sound("nexwhoosh1"));
 			precache_sound(W_Sound("nexwhoosh2"));

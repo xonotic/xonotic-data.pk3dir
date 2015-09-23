@@ -274,7 +274,6 @@ bool M_Shambler(int req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/shambler.mdl");
 			return true;
 		}
 		#endif

@@ -560,7 +560,7 @@ void UpdateCrosshair()
 			CSQC_common_hud();
 
 	// crosshair goes VERY LAST
-	if(!scoreboard_active && !camera_active && intermission != 2 && 
+	if(!scoreboard_active && !camera_active && intermission != 2 &&
 		spectatee_status != -1 && hud == HUD_NORMAL && !csqcplayer.viewloc &&
 		!HUD_MinigameMenu_IsOpened() )
 	{

@@ -118,10 +118,6 @@ bool W_HeavyMachineGun(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model ("models/uziflash.md3");
-			precache_model(W_Model("g_ok_hmg.md3"));
-			precache_model(W_Model("v_ok_hmg.md3"));
-			precache_model(W_Model("h_ok_hmg.iqm"));
 			precache_sound (W_Sound("uzi_fire"));
 			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;

@@ -662,9 +662,6 @@ bool W_Seeker(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model(W_Model("g_seeker.md3"));
-			precache_model(W_Model("v_seeker.md3"));
-			precache_model(W_Model("h_seeker.iqm"));
 			precache_sound(W_Sound("tag_fire"));
 			precache_sound(W_Sound("flac_fire"));
 			precache_sound(W_Sound("seeker_fire"));

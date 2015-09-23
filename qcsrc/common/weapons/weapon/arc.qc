@@ -716,9 +716,6 @@ bool W_Arc(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model(W_Model("g_arc.md3"));
-			precache_model(W_Model("v_arc.md3"));
-			precache_model(W_Model("h_arc.iqm"));
 			precache_sound(W_Sound("arc_fire"));
 			precache_sound(W_Sound("arc_loop"));
 			precache_sound(W_Sound("arc_stop"));
@@ -1290,7 +1287,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_muzzlelight[3] = 1;
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;
@@ -1316,7 +1313,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;
@@ -1342,7 +1339,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;
@@ -1368,7 +1365,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;
@@ -1394,7 +1391,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;
@@ -1420,7 +1417,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;
@@ -1446,7 +1443,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;
@@ -1472,7 +1469,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;
@@ -1500,7 +1497,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					setmodel(flash, "models/flash.md3");
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
 					flash.scale = 0.5;

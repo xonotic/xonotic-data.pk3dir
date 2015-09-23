@@ -2,7 +2,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "String.qh"
+#include "string.qh"
 
 #include "../client/main.qh"
 #include "../common/teams.qh"

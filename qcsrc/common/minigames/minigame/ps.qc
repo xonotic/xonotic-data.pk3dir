@@ -102,7 +102,7 @@ bool ps_winning_piece(entity minigame)
 					return false; // a move is valid, abort!
 			}
 		}
-	
+
 	return true;
 }
 
@@ -248,7 +248,7 @@ int ps_server_event(entity minigame, string event, ...)
 		{
 			switch(argv(0))
 			{
-				case "move": 
+				case "move":
 
 					ps_move(minigame, ...(0,entity), (...(1,int) == 3 ? argv(1) : string_null), (...(1,int) == 3 ? argv(2) : string_null));
 					return true;
@@ -257,7 +257,7 @@ int ps_server_event(entity minigame, string event, ...)
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -275,7 +275,7 @@ void ps_hud_board(vector pos, vector mySize)
 	minigame_hud_fitsqare(pos, mySize);
 	ps_boardpos = pos;
 	ps_boardsize = mySize;
-	
+
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("ps/board"));
 
 	vector tile_size = minigame_hud_denormalize_size('1 1 0' / PS_TILE_SIZE,pos,mySize);
@@ -353,7 +353,7 @@ void ps_hud_board(vector pos, vector mySize)
 				draw_pos = true;
 		}
 	}
-	
+
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
@@ -368,18 +368,18 @@ void ps_hud_board(vector pos, vector mySize)
 			if(e.netname == ps_curr_pos)
 			if(ps_curr_piece.netname != ps_curr_pos)
 			{
-				minigame_drawpic_centered( tile_pos,  
+				minigame_drawpic_centered( tile_pos,
 						minigame_texture("ps/tile_available"),
 						tile_size, tile_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 			}
 			if(e == ps_curr_piece)
 			{
-				minigame_drawpic_centered( tile_pos,  
+				minigame_drawpic_centered( tile_pos,
 						minigame_texture("ps/tile_selected"),
 						tile_size, tile_color, panel_fg_alpha, DRAWFLAG_ADDITIVE );
 			}
 
-			minigame_drawpic_centered( tile_pos,  
+			minigame_drawpic_centered( tile_pos,
 					minigame_texture("ps/piece"),
 					tile_size * 0.8, tile_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
@@ -408,17 +408,17 @@ void ps_hud_board(vector pos, vector mySize)
 			remaining_text = "All pieces cleared!";
 		else
 			remaining_text = strcat("Remaining pieces: ", ftos(remaining));
-		
+
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("Game over! %s", remaining_text), 
+			sprintf("Game over! %s", remaining_text),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
-		
+
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-		
+
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("Game over! %s", remaining_text), 
+			sprintf("Game over! %s", remaining_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -431,10 +431,10 @@ void ps_hud_status(vector pos, vector mySize)
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
-	
+
 	pos_y += ts_y;
 	mySize_y -= ts_y;
-	
+
 	vector player_fontsize = hud_fontsize * 1.75;
 	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
 	ts_x = mySize_x;
@@ -464,12 +464,12 @@ void ps_hud_status(vector pos, vector mySize)
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				GetPlayerName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			
+
 			mypos_y += player_fontsize_y;
-			//drawpic( mypos,  
+			//drawpic( mypos,
 			//		minigame_texture("ps/piece"),
 			//		tile_size, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL );
-			
+
 			//mypos_x += tile_size_x;
 
 			drawstring(mypos,sprintf(_("Pieces left: %s"), ftos(remaining)),'28 28 0',
@@ -486,10 +486,10 @@ string ps_turn_to_string(int turnflags)
 
 	if ( turnflags & PS_TURN_WIN )
 		return _("Well done, you win!");
-	
+
 	if ( turnflags & PS_TURN_MOVE )
 		return _("Jump a piece over another to capture it");
-	
+
 	return "";
 }
 

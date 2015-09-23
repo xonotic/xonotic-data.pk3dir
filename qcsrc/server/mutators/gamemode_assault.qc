@@ -317,7 +317,7 @@ void spawnfunc_func_assault_wall()
 
 	self.classname = "func_assault_wall";
 	self.mdl = self.model;
-	setmodel(self, self.mdl);
+	_setmodel(self, self.mdl);
 	self.solid = SOLID_BSP;
 	self.think = assault_wall_think;
 	self.nextthink = time;

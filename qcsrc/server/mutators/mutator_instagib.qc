@@ -387,7 +387,7 @@ MUTATOR_HOOKFUNCTION(instagib_CustomizeWaypoint)
 }
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
-{	
+{
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER.m_id))
 		frag_damage = 1000; // always gib if it was a vaporizer death
 

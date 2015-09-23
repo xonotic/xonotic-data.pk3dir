@@ -2,8 +2,8 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-#include "I18N.qh"
-#include "Vector.qh"
+#include "i18n.qh"
+#include "vector.qh"
 
 #include "../client/defs.qh"
 

@@ -9,8 +9,8 @@
 #define FALSE _FALSE
 
 #define spawn _spawn
-
 #define particleeffectnum _particleeffectnum
+#define setmodel _setmodel
 
 #include "upstream/csprogsdefs.qc"
 
@@ -20,8 +20,8 @@
 #undef FALSE
 
 #undef spawn
-
 #undef particleeffectnum
+#undef setmodel
 
 #pragma noref 0
 

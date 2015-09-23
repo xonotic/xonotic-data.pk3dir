@@ -247,14 +247,14 @@ STATIC_INIT_LATE(Mutators) {
     [[accumulate]] void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
 
 #define MUTATOR_HOOKFUNCTION(...) \
-    OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__)
+    EVAL(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
 
 #define MUTATOR_HOOKFUNCTION_1(name) \
     _MUTATOR_CALLBACK(name, HOOKFUNCTION_##name) \
     bool HOOKFUNCTION_##name()
 
 #define MUTATOR_HOOKFUNCTION_2(mut, cb) \
-    MUTATOR_HOOKFUNCTION(mut, cb, CBC_ORDER_ANY)
+    MUTATOR_HOOKFUNCTION_3(mut, cb, CBC_ORDER_ANY)
 
 #define MUTATOR_HOOKFUNCTION_3(mut, cb, order) \
     _MUTATOR_CALLBACK(mut##_##cb, mut##_##cb) \

@@ -15,7 +15,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 {
 	entity e;
 	entity p = minigame_session.minigame_players;
-	
+
 	if ( p.minigame_players == player )
 	{
 		if ( p.list_next == world )
@@ -64,22 +64,22 @@ bool minigame_SendEntity(entity to, int sf)
 {SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
 	WriteByte(MSG_ENTITY, sf);
-	
+
 	if ( sf & MINIG_SF_CREATE )
 	{
 		WriteShort(MSG_ENTITY,msle_id(self.classname));
 		WriteString(MSG_ENTITY,self.netname);
 	}
-	
+
 	entity minigame_ent = self.owner;
-	
+
 	if ( self.classname == "minigame" )
 	{
 		minigame_ent = self;
-		
+
 		if ( sf & MINIG_SF_CREATE )
 			WriteString(MSG_ENTITY,self.descriptor.netname);
-		
+
 		if ( sf & MINIG_SF_UPDATE )
 			WriteLong(MSG_ENTITY,self.minigame_flags);
 	}
@@ -94,11 +94,11 @@ bool minigame_SendEntity(entity to, int sf)
 			WriteByte(MSG_ENTITY,self.team);
 	}
 	MINIGAME_SIMPLELINKED_ENTITIES
-	
+
 	minigame_ent.minigame_event(minigame_ent,"network_send",self,sf);
-	
+
 	return true;
-	
+
 }
 #undef FIELD
 #undef MSLE
@@ -131,9 +131,9 @@ int minigame_addplayer(entity minigame_session, entity player)
 			return 0;
 		minigame_rmplayer(player.active_minigame,player);
 	}
-	
+
 	int mgteam = minigame_session.minigame_event(minigame_session,"join",player);
-	
+
 	if ( mgteam )
 	{
 		entity player_pointer = spawn();
@@ -154,12 +154,12 @@ int minigame_addplayer(entity minigame_session, entity player)
 		}
 		if ( autocvar_sv_minigames_observer == 2 )
 			player.team_forced = -1;
-		
+
 		minigame_resend(minigame_session);
 	}
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
 		ftos(num_for_edict(player)),":",player.netname));
-	
+
 	return mgteam;
 }
 
@@ -167,9 +167,9 @@ entity start_minigame(entity player, string minigame )
 {
 	if ( !autocvar_sv_minigames || !IS_REAL_CLIENT(player) )
 		return world;
-	
+
 	entity e = minigame_get_descriptor(minigame);
-	if ( e ) 
+	if ( e )
 	{
 		entity minig = spawn();
 		minig.classname = "minigame";
@@ -185,7 +185,7 @@ entity start_minigame(entity player, string minigame )
 			return world;
 		}
 		Net_LinkEntity(minig, false, 0, minigame_SendEntity);
-		
+
 		if ( !minigame_sessions )
 			minigame_sessions = minig;
 		else
@@ -196,7 +196,7 @@ entity start_minigame(entity player, string minigame )
 		}
 		return minig;
 	}
-		
+
 	return world;
 }
 
@@ -204,7 +204,7 @@ entity join_minigame(entity player, string game_id )
 {
 	if ( !autocvar_sv_minigames || !IS_REAL_CLIENT(player) )
 		return world;
-	
+
 	entity minig;
 	for ( minig = minigame_sessions; minig != world; minig = minig.list_next )
 	{
@@ -212,14 +212,14 @@ entity join_minigame(entity player, string game_id )
 		if ( minigame_addplayer(minig,player) )
 			return minig;
 	}
-	
+
 	return world;
 }
 
 void part_minigame(entity player )
 {
 	entity minig = player.active_minigame;
-	
+
 	if ( minig && minig.classname == "minigame" )
 		minigame_rmplayer(minig,player);
 }
@@ -230,11 +230,11 @@ void end_minigame(entity minigame_session)
 		minigame_session.owner.list_next = minigame_session.list_next;
 	else
 		minigame_sessions = minigame_session.list_next;
-	
+
 	minigame_session.minigame_event(minigame_session,"end");
 	GameLogEcho(strcat(":minigame:end:",minigame_session.netname));
-	
-	
+
+
 	entity e = world;
 	while( (e = findentity(e, owner, minigame_session)) )
 		if ( e.minigame_autoclean )
@@ -242,7 +242,7 @@ void end_minigame(entity minigame_session)
 			LOG_TRACE("SV Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
 			remove(e);
 		}
-	
+
 	entity p;
 	for ( e = minigame_session.minigame_players; e != world; e = p )
 	{
@@ -250,7 +250,7 @@ void end_minigame(entity minigame_session)
 		player_clear_minigame(e.minigame_players);
 		remove(e);
 	}
-	
+
 	strunzone(minigame_session.netname);
 	remove(minigame_session);
 }
@@ -276,9 +276,9 @@ void initialize_minigames()
 		if ( !last_minig ) minigame_descriptors = minig; \
 		else last_minig.list_next = minig; \
 		last_minig = minig;
-		
+
 	REGISTERED_MINIGAMES
-	
+
 	#undef MINIGAME
 }
 
@@ -292,13 +292,13 @@ string invite_minigame(entity inviter, entity player)
 		return "You can't invite yourself";
 	if ( player.active_minigame == inviter.active_minigame )
 		return strcat(player.netname," is already playing");
-	
-	Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_MINIGAME_INVITE, 
+
+	Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_MINIGAME_INVITE,
 		inviter.active_minigame.netname, inviter.netname );
-	
+
 	GameLogEcho(strcat(":minigame:invite:",inviter.active_minigame.netname,":",
 		ftos(num_for_edict(player)),":",player.netname));
-	
+
 	return "";
 }
 
@@ -332,7 +332,7 @@ void ClientCommand_minigame(int request, int argc, string command)
 		sprint(self,"Minigames are not enabled!\n");
 		return;
 	}
-	
+
 	if (request == CMD_REQUEST_COMMAND )
 	{
 		string minig_cmd = argv(1);
@@ -407,11 +407,11 @@ void ClientCommand_minigame(int request, int argc, string command)
 			int arg_c = tokenize_console(subcommand);
 			if ( self.active_minigame.minigame_event(self.active_minigame,"cmd",e,arg_c,subcommand) )
 				return;
-				
+
 		}
 		else sprint(self,strcat("Wrong command:^1 ",command,"\n"));
 	}
-	
+
 	sprint(self, "\nUsage:^3 cmd minigame create <minigame>\n");
 	sprint(self, "  Start a new minigame session\n");
 	sprint(self, "Usage:^3 cmd minigame join <session>\n");

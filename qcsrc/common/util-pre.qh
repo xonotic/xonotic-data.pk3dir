@@ -13,7 +13,7 @@
 
 #ifndef QCC_SUPPORT_NIL
     #ifdef GMQCC
-        #define QCC_SUPPORT_NIL
+        #define QCC_SUPPORT_NIL 1
     #endif
 #endif
 
@@ -46,15 +46,30 @@
 #define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
 
 #ifdef GMQCC
-    #define OVERLOAD(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)
+    #define EVAL(...)           __VA_ARGS__
+
+    #define OVERLOAD_(F, ...)   F##_##__VA_COUNT__(__VA_ARGS__)
+    #define OVERLOAD(F, ...)    F##_##__VA_COUNT__(__VA_ARGS__)
 #else
-    #define OVERLOAD_(F,_9,_8,_7,_6,_5,_4,_3,_2,_1,n,...) F##_##n
-    #define OVERLOAD(F, ...) OVERLOAD_(F,__VA_ARGS__,9,8,7,6,5,4,3,2,1)(__VA_ARGS__)
+    #define EMPTY()
+    #define DEFER(id) id EMPTY()
+
+    #define EVAL(...)  EVAL1(EVAL1(EVAL1(__VA_ARGS__)))
+    #define EVAL1(...) EVAL2(EVAL2(EVAL2(__VA_ARGS__)))
+    #define EVAL2(...) EVAL3(EVAL3(EVAL3(__VA_ARGS__)))
+    #define EVAL3(...) EVAL4(EVAL4(EVAL4(__VA_ARGS__)))
+    #define EVAL4(...) EVAL5(EVAL5(EVAL5(__VA_ARGS__)))
+    #define EVAL5(...) __VA_ARGS__
+
+    #define OVERLOAD___(F,_16,_15,_14,_13,_12,_11,_10,_9,_8,_7,_6,_5,_4,_3,_2,_1,n,...) F##_##n
+    #define OVERLOAD__(F, ...)  OVERLOAD___(F,##__VA_ARGS__,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0)
+    #define OVERLOAD_(...)      DEFER(OVERLOAD__(__VA_ARGS__))
+    #define OVERLOAD(F, ...)    OVERLOAD_(F,##__VA_ARGS__)(__VA_ARGS__)
 #endif
 
 #define LAMBDA(...) { __VA_ARGS__ ; }
 
-#define MAP(f, ...) OVERLOAD(MAP, f, __VA_ARGS__)
+#define MAP(f, ...) EVAL(OVERLOAD(MAP, f, __VA_ARGS__))
 #define MAP_2(f, it) f(it)
 #define MAP_3(f, it, ...) f(it)MAP_2(f, __VA_ARGS__)
 #define MAP_4(f, it, ...) f(it)MAP_3(f, __VA_ARGS__)

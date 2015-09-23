@@ -638,9 +638,6 @@ bool W_Crylink(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model(W_Model("g_crylink.md3"));
-			precache_model(W_Model("v_crylink.md3"));
-			precache_model(W_Model("h_crylink.iqm"));
 			precache_sound(W_Sound("crylink_fire"));
 			precache_sound(W_Sound("crylink_fire2"));
 			precache_sound(W_Sound("crylink_linkjoin"));

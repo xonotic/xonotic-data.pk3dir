@@ -120,7 +120,7 @@ bool c4_winning_piece(entity piece)
 
 	if(found >= C4_WIN_CNT)
 		return true;
-	
+
 	return false;
 }
 
@@ -222,15 +222,15 @@ int c4_server_event(entity minigame, string event, ...)
 		{
 			switch(argv(0))
 			{
-				case "move": 
-					c4_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null ); 
+				case "move":
+					c4_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null );
 					return true;
 			}
 
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -248,7 +248,7 @@ void c4_hud_board(vector pos, vector mySize)
 	minigame_hud_fitsqare(pos, mySize);
 	c4_boardpos = pos;
 	c4_boardsize = mySize;
-	
+
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("c4/board_under"));
 
 	drawpic(pos, minigame_texture("c4/board_over"), mySize, '1 1 1', 1, 0);
@@ -261,11 +261,11 @@ void c4_hud_board(vector pos, vector mySize)
 	{
 		tile_pos = minigame_tile_pos(c4_curr_pos,C4_NUM_CNT,C4_LET_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
-		minigame_drawpic_centered( tile_pos,  
+		minigame_drawpic_centered( tile_pos,
 				minigame_texture(strcat("c4/piece",ftos(minigame_self.team))),
 				tile_size, '1 1 1', panel_fg_alpha/2, DRAWFLAG_NORMAL );
 	}
-	
+
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
@@ -273,11 +273,11 @@ void c4_hud_board(vector pos, vector mySize)
 		{
 			tile_pos = minigame_tile_pos(e.netname,C4_NUM_CNT,C4_LET_CNT);
 			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
-			
+
 			if ( active_minigame.minigame_flags & C4_TURN_WIN )
 			if ( !e.c4_checkwin )
 				e.c4_checkwin = c4_winning_piece(e) ? 1 : -1;
-			
+
 			float icon_color = 1;
 			if ( e.c4_checkwin == -1 )
 				icon_color = 0.4;
@@ -287,8 +287,8 @@ void c4_hud_board(vector pos, vector mySize)
 				minigame_drawpic_centered( tile_pos, minigame_texture("c4/winglow"),
 						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE );
 			}
-				
-			minigame_drawpic_centered( tile_pos,  
+
+			minigame_drawpic_centered( tile_pos,
 					minigame_texture(strcat("c4/piece",ftos(e.team))),
 					tile_size, '1 1 1'*icon_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
@@ -299,20 +299,20 @@ void c4_hud_board(vector pos, vector mySize)
 		vector winfs = hud_fontsize*2;
 		string playername = "";
 		FOREACH_MINIGAME_ENTITY(e)
-			if ( e.classname == "minigame_player" && 
+			if ( e.classname == "minigame_player" &&
 					e.team == (active_minigame.minigame_flags & C4_TURN_TEAM) )
 				playername = GetPlayerName(e.minigame_playerslot-1);
-		
+
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername), 
+			sprintf("%s^7 won the game!",playername),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
-		
+
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-		
+
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername), 
+			sprintf("%s^7 won the game!",playername),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -325,10 +325,10 @@ void c4_hud_status(vector pos, vector mySize)
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
-	
+
 	pos_y += ts_y;
 	mySize_y -= ts_y;
-	
+
 	vector player_fontsize = hud_fontsize * 1.75;
 	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
 	ts_x = mySize_x;
@@ -353,12 +353,12 @@ void c4_hud_status(vector pos, vector mySize)
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				GetPlayerName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			
+
 			mypos_y += player_fontsize_y;
-			drawpic( mypos,  
+			drawpic( mypos,
 					minigame_texture(strcat("c4/piece",ftos(e.team))),
 					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-			
+
 			mypos_x += tile_size_x;
 		}
 	}
@@ -369,20 +369,20 @@ string c4_turn_to_string(int turnflags)
 {
 	if ( turnflags & C4_TURN_DRAW )
 		return _("Draw");
-	
+
 	if ( turnflags & C4_TURN_WIN )
 	{
 		if ( (turnflags&C4_TURN_TEAM) != minigame_self.team )
 			return _("You lost the game!");
 		return _("You win!");
 	}
-	
+
 	if ( (turnflags & C4_TURN_TEAM) != minigame_self.team )
 		return _("Wait for your opponent to make their move");
-	
+
 	if ( turnflags & C4_TURN_PLACE )
 		return _("Click on the game board to place your piece");
-	
+
 	return "";
 }
 

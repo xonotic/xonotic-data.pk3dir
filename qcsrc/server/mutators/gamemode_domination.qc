@@ -252,7 +252,7 @@ void dom_controlpoint_setup()
 
 	// copy important properties from spawnfunc_dom_team entity
 	self.goalentity = head;
-	setmodel(self, head.mdl); // precision already set
+	_setmodel(self, head.mdl); // precision already set
 	self.skin = head.skin;
 
 	self.cnt = -1;
@@ -505,7 +505,7 @@ void spawnfunc_dom_team()
 	if (self.noise1 != "")
 		precache_sound(self.noise1);
 	self.classname = "dom_team";
-	setmodel(self, self.model); // precision not needed
+	_setmodel(self, self.model); // precision not needed
 	self.mdl = self.model;
 	self.dmg = self.modelindex;
 	self.model = "";
@@ -555,7 +555,7 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.message = capmessage;
 
 	// this code is identical to spawnfunc_dom_team
-	setmodel(self, self.model); // precision not needed
+	_setmodel(self, self.model); // precision not needed
 	self.mdl = self.model;
 	self.dmg = self.modelindex;
 	self.model = "";
@@ -622,11 +622,6 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 
 void dom_Initialize()
 {
-	precache_model("models/domination/dom_red.md3");
-	precache_model("models/domination/dom_blue.md3");
-	precache_model("models/domination/dom_yellow.md3");
-	precache_model("models/domination/dom_pink.md3");
-	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);

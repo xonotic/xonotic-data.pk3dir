@@ -69,7 +69,7 @@ float t_phaser(float req)
 
             beam = spawn();
             beam.ticrate = 0.1; //autocvar_sys_ticrate;
-            setmodel(beam,"models/turrets/phaser_beam.md3");
+            setmodel(beam, MDL_TUR_PHASER_BEAM);
             beam.effects = EF_LOWPRECISION;
             beam.solid = SOLID_NOT;
             beam.think = beam_think;
@@ -137,9 +137,6 @@ float t_phaser(float req)
         }
         case TR_PRECACHE:
         {
-            precache_model ("models/turrets/base.md3");
-            precache_model ("models/turrets/phaser.md3");
-            precache_model ("models/turrets/phaser_beam.md3");
             precache_sound ("turrets/phaser.wav");
             return true;
         }

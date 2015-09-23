@@ -48,25 +48,25 @@ bool minigame_hud_mouse_in(vector pos, vector sz);
 // Like drawstring, but wrapping words to fit maxwidth
 // returns the size of the drawn area
 // align selects the string alignment (0 = left, 0.5 = center, 1 = right)
-vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
+vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text,
 	vector fontsize, vector color, float theAlpha, int drawflags, float align );
 
 // Like drawcolorcodedstring, but wrapping words to fit maxwidth
 // returns the size of the drawn area
 // align selects the string alignment (0 = left, 0.5 = center, 1 = right)
-vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos, 
+vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos,
 	string text, vector fontsize, float theAlpha, int drawflags, float align );
 
 // Like drawstring but truncates the text to fit maxwidth
-void minigame_drawstring_trunc(float maxwidth, vector pos, string text, 
+void minigame_drawstring_trunc(float maxwidth, vector pos, string text,
 	vector fontsize, vector color, float theAlpha, int drawflags );
 
 // Like drawcolorcodedstring but truncates the text to fit maxwidth
-void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
+void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text,
 	vector fontsize, float theAlpha, int drawflags );
 
 // like drawpic but pos represent the center rather than the topleft corner
-void minigame_drawpic_centered( vector pos, string texture, vector sz, 
+void minigame_drawpic_centered( vector pos, string texture, vector sz,
 	vector color, float thealpha, int drawflags );
 
 // Get full path of a minigame texture
@@ -103,7 +103,7 @@ void minigame_cmd_workaround(float dummy, string...cmdargc);
 // Read a minigame entity from the server
 void ent_read_minigame();
 
-// Prompt the player to play in the current minigame 
+// Prompt the player to play in the current minigame
 // (ie: it's their turn and they should get back to the minigame)
 void minigame_prompt();
 
@@ -116,6 +116,6 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_ar
 
 #define FOREACH_MINIGAME_ENTITY(entityvar) \
 	entityvar=world; \
-	while( (entityvar = findentity(entityvar,owner,active_minigame)) ) 
+	while( (entityvar = findentity(entityvar,owner,active_minigame)) )
 
 #endif

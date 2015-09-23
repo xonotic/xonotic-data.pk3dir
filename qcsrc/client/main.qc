@@ -28,7 +28,7 @@
 
 #include "../common/buffs.qh"
 #include "../common/deathtypes.qh"
-#include "../common/effects.qh"
+#include "../common/effects/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/nades.qh"
@@ -156,7 +156,6 @@ void CSQC_Init(void)
 	initialize_minigames();
 
 	// precaches
-	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 

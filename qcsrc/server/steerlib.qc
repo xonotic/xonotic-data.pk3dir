@@ -545,6 +545,7 @@ void flocker_think()
         self.nextthink = time + 0.1;
 }
 
+MODEL(FLOCKER, "models/turrets/rocket.md3");
 
 void spawn_flocker()
 {SELFPARAM();
@@ -553,7 +554,7 @@ void spawn_flocker()
     flocker = spawn ();
 
     setorigin(flocker, self.origin + '0 0 32');
-    setmodel (flocker, "models/turrets/rocket.md3");
+    setmodel (flocker, MDL_FLOCKER);
     setsize (flocker, '-3 -3 -3', '3 3 3');
 
     flocker.flock_id   = self.flock_id;
@@ -641,8 +642,6 @@ void flocker_hunter_think()
 float globflockcnt;
 void spawnfunc_flockerspawn()
 {SELFPARAM();
-    precache_model ( "models/turrets/rocket.md3");
-    precache_model("models/turrets/c512.md3");
     ++globflockcnt;
 
     if(!self.cnt)      self.cnt = 20;
@@ -654,7 +653,7 @@ void spawnfunc_flockerspawn()
 
     self.enemy = spawn();
 
-    setmodel(self.enemy, "models/turrets/rocket.md3");
+    setmodel(self.enemy, MDL_FLOCKER);
     setorigin(self.enemy,self.origin + '0 0 768' + (randomvec() * 128));
 
     self.enemy.classname = "FLock Hunter";

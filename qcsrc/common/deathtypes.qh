@@ -104,7 +104,7 @@ entity deathtypes[DT_MAX];
 		if (msg_death_by != NO_MSG) \
 			deathent.death_msgmurder = msg_multi_notifs[msg_death_by - 1]; \
 	} \
-	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name);
+	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name)
 
 DEATHTYPES
 #undef DEATHTYPE

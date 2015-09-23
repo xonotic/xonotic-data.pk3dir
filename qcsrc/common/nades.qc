@@ -54,7 +54,7 @@ void healer_draw()
 
 void healer_setup()
 {SELFPARAM();
-	setmodel(self, "models/ctf/shield.md3");
+	setmodel(self, MDL_NADE_HEAL);
 
 	setorigin(self, self.origin);
 

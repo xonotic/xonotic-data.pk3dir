@@ -17,12 +17,6 @@
 STATIC_INIT(vehicles_common_initialize)
 {
 #ifdef CSQC
-	precache_model("models/vehicles/bomblet.md3");
-	precache_model("models/vehicles/clusterbomb.md3");
-	precache_model("models/vehicles/clusterbomb_fragment.md3");
-	precache_model("models/vehicles/rocket01.md3");
-	precache_model("models/vehicles/rocket02.md3");
-
 	precache_sound ("vehicles/alarm.wav");
 	precache_sound ("vehicles/alarm_shield.wav");
 #endif // CSQC
@@ -48,9 +42,9 @@ STATIC_INIT(vehicles_common_initialize)
 
 entity get_vehicleinfo(int id)
 {
-	if (id < VEH_FIRST || id > VEH_LAST) return VEH_NULL;
+	if (id < VEH_FIRST || id > VEH_LAST) return VEH_Null;
 	entity m = vehicle_info[id];
-	return m ? m : VEH_NULL;
+	return m ? m : VEH_Null;
 }
 
 #endif

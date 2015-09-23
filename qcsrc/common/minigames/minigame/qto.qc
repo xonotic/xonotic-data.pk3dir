@@ -34,7 +34,7 @@ bool qto_winning_piece(entity minigame)
 			if(!e.cnt)
 				return false;
 		}
-	
+
 	return true;
 }
 
@@ -180,8 +180,8 @@ int qto_server_event(entity minigame, string event, ...)
 		{
 			switch(argv(0))
 			{
-				case "move": 
-					qto_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null ); 
+				case "move":
+					qto_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null );
 					return true;
 				case "restart":
 					qto_restart_match(minigame,...(0,entity));
@@ -205,7 +205,7 @@ int qto_server_event(entity minigame, string event, ...)
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -222,7 +222,7 @@ void qto_hud_board(vector pos, vector mySize)
 	minigame_hud_fitsqare(pos, mySize);
 	qto_boardpos = pos;
 	qto_boardsize = mySize;
-	
+
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("qto/board"));
 
 	vector tile_size = minigame_hud_denormalize_size('1 1 0' / QTO_TILE_SIZE,pos,mySize);
@@ -235,7 +235,7 @@ void qto_hud_board(vector pos, vector mySize)
 	string pos2 = minigame_tile_buildname(letter+1,number);
 	string pos3 = minigame_tile_buildname(letter,number-1);
 	string pos4 = minigame_tile_buildname(letter,number+1);
-	
+
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
@@ -254,8 +254,8 @@ void qto_hud_board(vector pos, vector mySize)
 					tile_color = '0.8 0.8 0.8';
 					break;
 			}
-				
-			minigame_drawpic_centered( tile_pos,  
+
+			minigame_drawpic_centered( tile_pos,
 					minigame_texture(strcat("qto/piece", ftos(e.cnt))),
 					tile_size, tile_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
@@ -270,10 +270,10 @@ void qto_hud_status(vector pos, vector mySize)
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
-	
+
 	pos_y += ts_y;
 	mySize_y -= ts_y;
-	
+
 	vector player_fontsize = hud_fontsize * 1.75;
 	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
 	ts_x = mySize_x;
@@ -294,12 +294,12 @@ void qto_hud_status(vector pos, vector mySize)
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				GetPlayerName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-			
+
 			mypos_y += player_fontsize_y;
-			//drawpic( mypos,  
+			//drawpic( mypos,
 			//		minigame_texture("qto/piece"),
 			//		tile_size, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL );
-			
+
 			//mypos_x += tile_size_x;
 
 			drawstring(mypos,sprintf(_("Moves: %s"), ftos(e.qto_moves)),'32 32 0',
@@ -313,10 +313,10 @@ string qto_turn_to_string(int turnflags)
 {
 	if ( turnflags & QTO_TURN_WIN )
 		return _("Well done, you win!");
-	
+
 	if ( turnflags & QTO_TURN_MOVE )
 		return _("Turn all the angry faces into happy faces");
-	
+
 	return "";
 }
 

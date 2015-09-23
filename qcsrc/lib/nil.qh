@@ -1,7 +1,7 @@
 #ifndef NIL_H
 #define NIL_H
 
-#ifdef QCC_SUPPORT_NIL
+#if QCC_SUPPORT_NIL
 #define func_null nil
 #define string_null nil
 #else

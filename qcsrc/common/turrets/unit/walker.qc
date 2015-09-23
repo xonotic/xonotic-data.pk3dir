@@ -634,9 +634,6 @@ float t_walker(float req)
         }
         case TR_PRECACHE:
         {
-            precache_model ("models/turrets/walker_body.md3");
-            precache_model ("models/turrets/walker_head_minigun.md3");
-            precache_model ("models/turrets/rocket.md3");
             precache_sound (W_Sound("rocket_impact"));
             return true;
         }

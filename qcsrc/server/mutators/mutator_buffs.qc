@@ -12,7 +12,7 @@ entity buff_FirstFromFlags(int _buffs)
 	{
 		FOREACH(BUFFS, it.m_itemid & _buffs, LAMBDA(return it));
 	}
-	return BUFF_NULL;
+	return BUFF_Null;
 }
 
 bool buffs_BuffModel_Customize()
@@ -47,7 +47,7 @@ bool buffs_BuffModel_Customize()
 void buffs_BuffModel_Spawn(entity player)
 {
 	player.buff_model = spawn();
-	setmodel(player.buff_model, BUFF_MODEL);
+	setmodel(player.buff_model, MDL_BUFF);
 	setsize(player.buff_model, '0 0 -40', '0 0 40');
 	setattachment(player.buff_model, player, "");
 	setorigin(player.buff_model, '0 0 1' * (player.buff_model.maxs.z * 1));
@@ -197,7 +197,7 @@ void buff_Touch()
 
 float buff_Available(entity buff)
 {
-	if (buff == BUFF_NULL)
+	if (buff == BUFF_Null)
 		return false;
 	if (buff == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
 		return false;
@@ -228,7 +228,7 @@ void buff_Think()
 		self.glowmod = buff_GlowColor(buff);
 		self.skin = buff.m_skin;
 
-		setmodel(self, BUFF_MODEL);
+		setmodel(self, MDL_BUFF);
 
 		if(self.buff_waypoint)
 		{
@@ -368,7 +368,7 @@ void buff_Init(entity ent)
 	if(self.noalign)
 		self.movetype = MOVETYPE_NONE; // reset by random location
 
-	setmodel(self, BUFF_MODEL);
+	setmodel(self, MDL_BUFF);
 	setsize(self, BUFF_MIN, BUFF_MAX);
 
 	if(cvar("g_buffs_random_location") || (self.spawnflags & 64))
@@ -806,7 +806,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 	if(self.buffs != self.oldbuffs)
 	{
 		entity buff = buff_FirstFromFlags(self.buffs);
-		float bufftime = buff != BUFF_NULL ? buff.m_time(buff) : 0;
+		float bufftime = buff != BUFF_Null ? buff.m_time(buff) : 0;
 		self.buff_time = (bufftime) ? time + bufftime : 0;
 
 		BUFF_ONADD(BUFF_AMMO)
@@ -957,7 +957,6 @@ void buffs_DelayedInit()
 
 void buffs_Initialize()
 {
-	precache_model(BUFF_MODEL);
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("relics/relic_effect.wav");

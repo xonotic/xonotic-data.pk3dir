@@ -707,48 +707,25 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 	}
 }
 
-float MapInfo_Type_FromString(string t)
+int MapInfo_Type_FromString(string t)
 {
-	if(t == "nexball")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "nb";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "freezetag")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "ft";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "keepaway")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "ka";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "invasion")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "inv";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "assault")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "as";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "race")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "rc";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "all")
-		return MAPINFO_TYPE_ALL;
+#define deprecate(from, to) do { \
+	if (t == #from) { \
+		string replacement = #to; \
+		LOG_WARNINGF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.\n", MapInfo_Map_bspname, t, replacement); \
+		t = replacement; \
+	} \
+} while (0)
+	deprecate(nexball, nb);
+	deprecate(freezetag, ft);
+	deprecate(keepaway, ka);
+	deprecate(invasion, inv);
+	deprecate(assault, as);
+	deprecate(race, rc);
+	if (t == "all") return MAPINFO_TYPE_ALL;
 	FOREACH(MAPINFO_TYPES, it.mdl == t, LAMBDA(return it.items));
 	return 0;
+#undef deprecate
 }
 
 string MapInfo_Type_Description(float t)
@@ -1062,7 +1039,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 		{
 			t = car(s); s = cdr(s);
 			f = MapInfo_Type_FromString(t);
-			LOG_TRACE("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
+			LOG_WARNING("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
 			else

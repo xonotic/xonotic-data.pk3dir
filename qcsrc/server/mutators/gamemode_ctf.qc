@@ -214,7 +214,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 	shield.scale = 0.5;
 
 	setorigin(shield, self.origin);
-	setmodel(shield, "models/ctf/shield.md3");
+	setmodel(shield, MDL_CTF_SHIELD);
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
@@ -1084,8 +1084,8 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 
 void set_flag_string(entity flag, .string field, string value, string teamname)
 {
-	if(flag.field == "")
-		flag.field = strzone(sprintf(value,teamname));
+	if(flag.(field) == "")
+		flag.(field) = strzone(sprintf(value,teamname));
 }
 
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
@@ -1150,11 +1150,9 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	precache_sound(flag.snd_flag_touch);
 	precache_sound(flag.snd_flag_pass);
 	precache_model(flag.model);
-	precache_model("models/ctf/shield.md3");
-	precache_model("models/ctf/shockwavetransring.md3");
 
 	// appearence
-	setmodel(flag, flag.model); // precision set below
+	_setmodel(flag, flag.model); // precision set below
 	setsize(flag, FLAG_MIN, FLAG_MAX);
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
 
