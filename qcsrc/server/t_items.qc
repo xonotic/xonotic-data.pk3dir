@@ -1119,14 +1119,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		precache_model (self.model);
 		precache_sound (self.item_pickupsound);
 
-		precache_sound ("misc/itemrespawncountdown.wav");
-		if(itemid == ITEM_Strength.m_itemid)
-			precache_sound ("misc/strength_respawn.wav");
-		else if(itemid == ITEM_Shield.m_itemid)
-			precache_sound ("misc/shield_respawn.wav");
-		else
-			precache_sound ("misc/itemrespawn.wav");
-
 		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
 			self.target = "###item###"; // for finding the nearest item using find()
 
@@ -1371,7 +1363,6 @@ void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
 void spawnfunc_item_strength()
 {SELFPARAM();
-		precache_sound("weapons/strength_fire.wav");
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItemA (ITEM_Strength);
@@ -1424,13 +1415,6 @@ void spawnfunc_target_items (void)
 		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 	if(!self.superweapons_finished)
 		self.superweapons_finished = autocvar_g_balance_superweapons_time;
-
-	precache_sound("misc/itempickup.wav");
-	precache_sound("misc/megahealth.wav");
-	precache_sound("misc/armor25.wav");
-	precache_sound("misc/powerup.wav");
-	precache_sound("misc/poweroff.wav");
-	precache_sound(W_Sound("weaponpickup"));
 
 	n = tokenize_console(self.netname);
 	if(argv(0) == "give")

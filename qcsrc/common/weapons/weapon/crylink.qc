@@ -638,9 +638,6 @@ bool W_Crylink(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("crylink_fire"));
-			precache_sound(W_Sound("crylink_fire2"));
-			precache_sound(W_Sound("crylink_linkjoin"));
 			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -712,8 +709,6 @@ bool W_Crylink(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("crylink_impact2"));
-			precache_sound(W_Sound("crylink_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

@@ -856,14 +856,6 @@ bool v_racer(int req)
 
 		case VR_PRECACHE:
 		{
-		#ifdef SVQC
-			precache_sound (W_Sound("lasergun_fire"));
-			precache_sound (W_Sound("rocket_fire"));
-
-			precache_sound ("vehicles/racer_idle.wav");
-			precache_sound ("vehicles/racer_move.wav");
-			precache_sound ("vehicles/racer_boost.wav");
-		#endif
 			return true;
 		}
 	}

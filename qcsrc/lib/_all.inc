@@ -7,6 +7,7 @@
 #include "cvar.qh"
 #include "defer.qh"
 #include "draw.qh"
+#include "file.qh"
 #include "i18n.qh"
 #include "lazy.qh"
 #include "log.qh"

@@ -708,9 +708,6 @@ bool W_Shockwave(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("misc/itempickup.wav");
-			precache_sound(W_Sound("lasergun_fire"));
-			precache_sound(W_Sound("shotgun_melee"));
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -875,9 +872,6 @@ bool W_Shockwave(int req)
 		}
 		case WR_INIT:
 		{
-			//precache_sound(W_Sound("ric1"));
-			//precache_sound(W_Sound("ric2"));
-			//precache_sound(W_Sound("ric3"));
 			return false;
 		}
 		case WR_ZOOMRETICLE:

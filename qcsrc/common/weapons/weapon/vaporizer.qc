@@ -362,10 +362,6 @@ float W_Vaporizer(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("minstanexfire"));
-			precache_sound(W_Sound("nexwhoosh1"));
-			precache_sound(W_Sound("nexwhoosh2"));
-			precache_sound(W_Sound("nexwhoosh3"));
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
@@ -445,8 +441,6 @@ float W_Vaporizer(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("laserimpact"));
-			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

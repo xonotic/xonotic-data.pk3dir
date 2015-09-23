@@ -272,12 +272,3 @@ void Ent_GibSplash(bool isNew)
 			break;
 	}
 }
-
-void GibSplash_Precache()
-{
-	precache_sound ("misc/gib.wav");
-    precache_sound ("misc/gib_splat01.wav");
-    precache_sound ("misc/gib_splat02.wav");
-    precache_sound ("misc/gib_splat03.wav");
-    precache_sound ("misc/gib_splat04.wav");
-}

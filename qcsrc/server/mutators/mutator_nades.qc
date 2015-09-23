@@ -1198,15 +1198,6 @@ void nades_Initialize()
 	addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
 	addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
 	addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
-
-	precache_sound(W_Sound("rocket_impact"));
-	precache_sound(W_Sound("grenade_bounce1"));
-	precache_sound(W_Sound("grenade_bounce2"));
-	precache_sound(W_Sound("grenade_bounce3"));
-	precache_sound(W_Sound("grenade_bounce4"));
-	precache_sound(W_Sound("grenade_bounce5"));
-	precache_sound(W_Sound("grenade_bounce6"));
-	precache_sound("overkill/grenadebip.ogg");
 }
 
 MUTATOR_DEFINITION(mutator_nades)

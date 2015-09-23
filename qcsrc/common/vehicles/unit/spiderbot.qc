@@ -925,15 +925,6 @@ float v_spiderbot(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_sound (W_Sound("uzi_fire") );
-			precache_sound (W_Sound("rocket_impact"));
-
-			precache_sound ("vehicles/spiderbot_die.wav");
-			precache_sound ("vehicles/spiderbot_idle.wav");
-			precache_sound ("vehicles/spiderbot_jump.wav");
-			precache_sound ("vehicles/spiderbot_strafe.wav");
-			precache_sound ("vehicles/spiderbot_walk.wav");
-			precache_sound ("vehicles/spiderbot_land.wav");
 			return true;
 		}
 	}

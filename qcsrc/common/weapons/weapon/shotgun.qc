@@ -286,9 +286,6 @@ float W_Shotgun(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("misc/itempickup.wav");
-			precache_sound(W_Sound("shotgun_fire"));
-			precache_sound(W_Sound("shotgun_melee"));
 			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -371,9 +368,6 @@ float W_Shotgun(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("ric1"));
-			precache_sound(W_Sound("ric2"));
-			precache_sound(W_Sound("ric3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

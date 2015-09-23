@@ -860,9 +860,6 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_INIT)
 	{
-		precache_sound("nexball/shoot1.wav");
-		precache_sound("nexball/shoot2.wav");
-		precache_sound("misc/typehit.wav");
 	}
 	else if(req == WR_SETUP)
 	{

@@ -236,9 +236,4 @@ void Ent_ReadHook(float bIsNew, float type)
 	self.teleport_time = time + 10;
 }
 
-void Hook_Precache()
-{
-	precache_sound(W_Sound("lgbeam_fly"));
-}
-
 // TODO: hook: temporarily transform self.origin for drawing the model along warpzones!

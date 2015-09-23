@@ -2,7 +2,6 @@
 #include "_all.qh"
 
 #include "controlpoint.qh"
-#include "csqcmodel_hooks.qh"
 #include "damage.qh"
 #include "effects.qh"
 #include "generator.qh"
@@ -156,15 +155,9 @@ void CSQC_Init(void)
 	initialize_minigames();
 
 	// precaches
-	precache_sound("misc/hit.wav");
-	precache_sound("misc/typehit.wav");
 
-	generator_precache();
 	Projectile_Precache();
-	Hook_Precache();
-	GibSplash_Precache();
 	Tuba_Precache();
-	CSQCPlayer_Precache();
 
 	if(autocvar_cl_reticle)
 	{

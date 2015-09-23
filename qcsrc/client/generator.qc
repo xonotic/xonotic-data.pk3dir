@@ -1,21 +1,7 @@
 #include "generator.qh"
 
-bool generator_precached;
 .int count;
 .float max_health;
-
-void generator_precache()
-{
-	if(generator_precached)
-		return; // already precached
-
-	precache_sound("onslaught/shockwave.wav");
-	precache_sound(W_Sound("grenade_impact"));
-	precache_sound(W_Sound("rocket_impact"));
-	precache_sound("onslaught/electricity_explode.wav");
-
-	generator_precached = true;
-}
 
 void ons_generator_ray_draw()
 {SELFPARAM();
@@ -213,7 +199,6 @@ void ent_generator()
 			self.count = 40;
 
 		generator_changeteam();
-		generator_precache();
 		generator_construct();
 	}
 

@@ -957,12 +957,6 @@ void buffs_DelayedInit()
 
 void buffs_Initialize()
 {
-	precache_sound("misc/strength_respawn.wav");
-	precache_sound("misc/shield_respawn.wav");
-	precache_sound("relics/relic_effect.wav");
-	precache_sound(W_Sound("rocket_impact"));
-	precache_sound("keepaway/respawn.wav");
-
 	addstat(STAT_BUFFS, AS_INT, buffs);
 	addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
 

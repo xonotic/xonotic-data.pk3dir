@@ -530,10 +530,6 @@ bool W_MineLayer(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("mine_det"));
-			precache_sound(W_Sound("mine_fire"));
-			precache_sound(W_Sound("mine_stick"));
-			precache_sound(W_Sound("mine_trigger"));
 			MINELAYER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -599,7 +595,6 @@ bool W_MineLayer(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("mine_exp"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

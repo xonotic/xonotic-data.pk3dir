@@ -622,8 +622,6 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 
 void dom_Initialize()
 {
-	precache_sound("domination/claim.wav");
-
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 

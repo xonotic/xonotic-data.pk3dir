@@ -498,11 +498,6 @@ bool W_Electro(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("electro_bounce"));
-			precache_sound(W_Sound("electro_fire"));
-			precache_sound(W_Sound("electro_fire2"));
-			precache_sound(W_Sound("electro_impact"));
-			precache_sound(W_Sound("electro_impact_combo"));
 			ELECTRO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -602,8 +597,6 @@ bool W_Electro(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("electro_impact"));
-			precache_sound(W_Sound("electro_impact_combo"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

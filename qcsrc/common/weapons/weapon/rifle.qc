@@ -204,8 +204,6 @@ bool W_Rifle(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("campingrifle_fire"));
-			precache_sound(W_Sound("campingrifle_fire2"));
 			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -285,9 +283,6 @@ bool W_Rifle(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("ric1"));
-			precache_sound(W_Sound("ric2"));
-			precache_sound(W_Sound("ric3"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

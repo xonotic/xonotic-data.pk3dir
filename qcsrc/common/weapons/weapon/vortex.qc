@@ -253,11 +253,6 @@ bool W_Vortex(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("nexfire"));
-			precache_sound(W_Sound("nexcharge"));
-			precache_sound(W_Sound("nexwhoosh1"));
-			precache_sound(W_Sound("nexwhoosh2"));
-			precache_sound(W_Sound("nexwhoosh3"));
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -331,7 +326,6 @@ bool W_Vortex(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

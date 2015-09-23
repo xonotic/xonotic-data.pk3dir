@@ -405,14 +405,6 @@ bool W_Mortar(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("grenade_bounce1"));
-			precache_sound(W_Sound("grenade_bounce2"));
-			precache_sound(W_Sound("grenade_bounce3"));
-			precache_sound(W_Sound("grenade_bounce4"));
-			precache_sound(W_Sound("grenade_bounce5"));
-			precache_sound(W_Sound("grenade_bounce6"));
-			precache_sound(W_Sound("grenade_stick"));
-			precache_sound(W_Sound("grenade_fire"));
 			MORTAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -473,7 +465,6 @@ bool W_Mortar(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("grenade_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

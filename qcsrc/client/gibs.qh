@@ -23,5 +23,4 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 void Ent_GibSplash(bool isNew);
 
-void GibSplash_Precache();
 #endif

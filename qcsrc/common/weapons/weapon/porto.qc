@@ -373,12 +373,6 @@ bool W_Porto(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("porto/bounce.wav");
-			precache_sound("porto/create.wav");
-			precache_sound("porto/expire.wav");
-			precache_sound("porto/explode.wav");
-			precache_sound("porto/fire.wav");
-			precache_sound("porto/unsupported.wav");
 			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}

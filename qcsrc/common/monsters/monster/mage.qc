@@ -422,8 +422,6 @@ bool M_Mage(int req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_sound (W_Sound("grenade_impact"));
-			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
 		#endif

@@ -451,9 +451,6 @@ bool W_Hagar(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("hagar_fire"));
-			precache_sound(W_Sound("hagar_load"));
-			precache_sound(W_Sound("hagar_beep"));
 			HAGAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -545,9 +542,6 @@ bool W_Hagar(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("hagexp1"));
-			precache_sound(W_Sound("hagexp2"));
-			precache_sound(W_Sound("hagexp3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

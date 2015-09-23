@@ -428,11 +428,6 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 	if(!g_keepaway)
 		return;
 
-	precache_sound("keepaway/pickedup.wav");
-	precache_sound("keepaway/dropped.wav");
-	precache_sound("keepaway/respawn.wav");
-	precache_sound("keepaway/touch.wav");
-
 	ka_ScoreRules();
 	ka_SpawnBall();
 }

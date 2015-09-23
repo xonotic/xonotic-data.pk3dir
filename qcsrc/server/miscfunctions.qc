@@ -1011,36 +1011,8 @@ void precache()
     }
 
     // gore and miscellaneous sounds
-    //precache_sound ("misc/h2ohit.wav");
-    precache_sound ("misc/armorimpact.wav");
-    precache_sound ("misc/bodyimpact1.wav");
-    precache_sound ("misc/bodyimpact2.wav");
-    precache_sound ("misc/gib.wav");
-    precache_sound ("misc/gib_splat01.wav");
-    precache_sound ("misc/gib_splat02.wav");
-    precache_sound ("misc/gib_splat03.wav");
-    precache_sound ("misc/gib_splat04.wav");
     PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
     PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
-    precache_sound ("misc/null.wav");
-    precache_sound ("misc/spawn.wav");
-    precache_sound ("misc/talk.wav");
-    precache_sound ("misc/teleport.wav");
-    precache_sound ("misc/poweroff.wav");
-    precache_sound ("player/lava.wav");
-    precache_sound ("player/slime.wav");
-
-    // common weapon precaches
-	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound (W_Sound("weapon_switch"));
-    precache_sound (W_Sound("weaponpickup"));
-    precache_sound (W_Sound("unavailable"));
-    precache_sound (W_Sound("dryfire"));
-    if (g_grappling_hook)
-    {
-        precache_sound (W_Sound("hook_fire")); // hook
-        precache_sound (W_Sound("hook_impact")); // hook
-    }
 
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
@@ -1055,8 +1027,6 @@ void precache()
         ambientsound ('0 0 0', self.noise, VOL_BASE, ATTEN_NONE);
     }
 #endif
-
-#include "precache-for-csqc.inc"
 }
 
 

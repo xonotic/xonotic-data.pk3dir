@@ -176,7 +176,6 @@ bool M_Spider(int req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_sound (W_Sound("electro_fire2"));
 			return true;
 		}
 		#endif

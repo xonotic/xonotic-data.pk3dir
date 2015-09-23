@@ -1,4 +1,3 @@
-#include "csqcmodel_hooks.qh"
 #include "_all.qh"
 
 #include "gibs.qh"
@@ -603,11 +602,6 @@ void CSQCModel_Effects_Apply(void)
 			self.snd_looping = 0;
 		}
 	}
-}
-
-void CSQCPlayer_Precache()
-{
-	precache_sound("misc/jetpack_fly.wav");
 }
 
 // general functions

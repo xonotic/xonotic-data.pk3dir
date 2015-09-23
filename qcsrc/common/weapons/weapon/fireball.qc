@@ -399,9 +399,6 @@ bool W_Fireball(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("fireball_fire"));
-			precache_sound(W_Sound("fireball_fire2"));
-			precache_sound(W_Sound("fireball_prefire2"));
 			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -467,7 +464,6 @@ bool W_Fireball(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("fireball_impact2"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

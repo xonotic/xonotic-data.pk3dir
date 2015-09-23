@@ -288,9 +288,6 @@ bool W_Hook(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("hook_impact")); // done by g_hook.qc
-			precache_sound(W_Sound("hook_fire"));
-			precache_sound(W_Sound("hookbomb_fire"));
 			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -350,7 +347,6 @@ bool W_Hook(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("hookbomb_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

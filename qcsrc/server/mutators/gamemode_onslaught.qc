@@ -751,15 +751,6 @@ void ons_ControlPoint_Setup(entity cp)
 
 	if(cp.message == "") { cp.message = "a"; }
 
-	// precache - TODO: clean up!
-	precache_sound("onslaught/controlpoint_build.wav");
-	precache_sound("onslaught/controlpoint_built.wav");
-	precache_sound(W_Sound("grenade_impact"));
-	precache_sound("onslaught/damageblockedbyshield.wav");
-	precache_sound("onslaught/controlpoint_underattack.wav");
-	precache_sound("onslaught/ons_spark1.wav");
-	precache_sound("onslaught/ons_spark2.wav");
-
 	// appearence
 	setmodel_fixsize(cp, MDL_ONS_CP_PAD1);
 
@@ -1007,16 +998,6 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.islinked = true;
 	gen.isshielded = true;
 	gen.touch = onslaught_generator_touch;
-
-	// precache - TODO: clean up!
-	precache_sound("onslaught/generator_decay.wav");
-	precache_sound(W_Sound("grenade_impact"));
-	precache_sound(W_Sound("rocket_impact"));
-	precache_sound("onslaught/generator_underattack.wav");
-	precache_sound("onslaught/shockwave.wav");
-	precache_sound("onslaught/ons_hit1.wav");
-	precache_sound("onslaught/ons_hit2.wav");
-	precache_sound("onslaught/generator_underattack.wav");
 
 	// appearence
 	// model handled by CSQC
@@ -2114,11 +2095,6 @@ void ons_DelayedInit() // Do this check with a delay so we can wait for teams to
 
 void ons_Initialize()
 {
-	precache_sound("ctf/red_capture.wav");
-	precache_sound("ctf/blue_capture.wav");
-	precache_sound("ctf/yellow_capture.wav");
-	precache_sound("ctf/pink_capture.wav");
-
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;
 
 	addstat(STAT_ROUNDLOST, AS_INT, ons_roundlost);

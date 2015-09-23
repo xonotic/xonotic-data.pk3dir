@@ -316,8 +316,6 @@ void ok_Initialize()
 
 	precache_all_playermodels("models/ok_player/*.dpm");
 
-	precache_sound(W_Sound("dryfire"));
-
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);
 

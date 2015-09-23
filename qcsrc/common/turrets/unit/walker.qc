@@ -634,7 +634,6 @@ float t_walker(float req)
         }
         case TR_PRECACHE:
         {
-            precache_sound (W_Sound("rocket_impact"));
             return true;
         }
     }

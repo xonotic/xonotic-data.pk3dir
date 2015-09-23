@@ -223,7 +223,6 @@ bool W_Blaster(int request)
 
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("lasergun_fire"));
 			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -275,7 +274,6 @@ bool W_Blaster(int request)
 
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("laserimpact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

@@ -662,9 +662,6 @@ bool W_Seeker(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("tag_fire"));
-			precache_sound(W_Sound("flac_fire"));
-			precache_sound(W_Sound("seeker_fire"));
 			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -768,13 +765,6 @@ bool W_Seeker(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("seekerexp1"));
-			precache_sound(W_Sound("seekerexp2"));
-			precache_sound(W_Sound("seekerexp3"));
-			precache_sound(W_Sound("tagexp1"));
-			precache_sound(W_Sound("tagexp2"));
-			precache_sound(W_Sound("tagexp3"));
-			precache_sound(W_Sound("tag_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

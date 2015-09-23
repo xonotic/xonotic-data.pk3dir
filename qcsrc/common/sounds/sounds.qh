@@ -1,0 +1,44 @@
+#ifndef SOUNDS_H
+#define SOUNDS_H
+
+#define SND(id) (SND_##id.sound_str())
+
+void RegisterSounds();
+const int MAX_SOUNDS = 128;
+entity SOUNDS[MAX_SOUNDS], SOUNDS_first, SOUNDS_last;
+int SOUNDS_COUNT;
+
+CLASS(Sound, Object)
+    ATTRIB(Sound, m_id, int, 0)
+    ATTRIB(Sound, sound_str, string(), func_null)
+    CONSTRUCTOR(Sound, string() path)
+    {
+        CONSTRUCT(Sound);
+        this.sound_str = path;
+    }
+    METHOD(Sound, sound_precache, void(entity this)) {
+        string s = this.sound_str();
+        if (s && s != "" && !fexists(strcat("sound/", s))) {
+            LOG_WARNINGF("Missing sound: \"%s\"\n", s);
+            return;
+        }
+        LOG_TRACEF("precache_sound(\"%s\")\n", s);
+        precache_sound(s);
+    }
+ENDCLASS(Sound)
+
+#define SOUND(name, path) \
+    string SND_##name##_get() { return path; } \
+    REGISTER(RegisterSounds, SND, SOUNDS, SOUNDS_COUNT, name, m_id, NEW(Sound, SND_##name##_get))
+REGISTER_REGISTRY(RegisterSounds)
+
+STATIC_INIT(RegisterSounds_precache) {
+    FOREACH(SOUNDS, true, LAMBDA({
+        it.sound_precache(it);
+    }));
+}
+
+SOUND(Null, "misc/null.wav");
+#include "sounds.inc"
+
+#endif

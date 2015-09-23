@@ -163,13 +163,11 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
     RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
 }
 
-STATIC_INIT(Casings)
-{
-    precache_sound(W_Sound("brass1"));
-    precache_sound(W_Sound("brass2"));
-    precache_sound(W_Sound("brass3"));
-    precache_sound(W_Sound("casings1"));
-    precache_sound(W_Sound("casings2"));
-    precache_sound(W_Sound("casings3"));
-}
+SOUND(BRASS1, W_Sound("brass1"));
+SOUND(BRASS2, W_Sound("brass2"));
+SOUND(BRASS3, W_Sound("brass3"));
+SOUND(CASINGS1, W_Sound("casings1"));
+SOUND(CASINGS2, W_Sound("casings2"));
+SOUND(CASINGS3, W_Sound("casings3"));
+
 #endif

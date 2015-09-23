@@ -137,7 +137,6 @@ float t_phaser(float req)
         }
         case TR_PRECACHE:
         {
-            precache_sound ("turrets/phaser.wav");
             return true;
         }
     }

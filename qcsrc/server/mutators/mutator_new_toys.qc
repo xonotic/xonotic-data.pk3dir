@@ -207,8 +207,6 @@ MUTATOR_DEFINITION(mutator_new_toys)
 		if(time > 1) // game loads at time 1
 			error("This cannot be added at runtime\n");
 
-		precache_sound(W_Sound("weaponpickup_new_toys"));
-
 		// mark the guns as ok to use by e.g. impulse 99
 		float i;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)

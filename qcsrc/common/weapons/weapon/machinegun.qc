@@ -304,7 +304,6 @@ bool W_MachineGun(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("uzi_fire"));
 			MACHINEGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -387,9 +386,6 @@ bool W_MachineGun(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("ric1"));
-			precache_sound(W_Sound("ric2"));
-			precache_sound(W_Sound("ric3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

@@ -969,10 +969,6 @@ float v_raptor(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_sound ("vehicles/raptor_fly.wav");
-			precache_sound ("vehicles/raptor_speed.wav");
-			precache_sound ("vehicles/missile_alarm.wav");
-
 			return true;
 		}
 	}

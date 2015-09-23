@@ -567,12 +567,6 @@ bool W_Devastator(int req)
 		}
 		case WR_INIT:
 		{
-			//if(autocvar_sv_precacheweapons)
-			//{
-				precache_sound(W_Sound("rocket_det"));
-				precache_sound(W_Sound("rocket_fire"));
-				precache_sound(W_Sound("rocket_mode"));
-			//}
 			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -668,7 +662,6 @@ bool W_Devastator(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("rocket_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

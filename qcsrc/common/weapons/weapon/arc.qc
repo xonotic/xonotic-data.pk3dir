@@ -716,10 +716,6 @@ bool W_Arc(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("arc_fire"));
-			precache_sound(W_Sound("arc_loop"));
-			precache_sound(W_Sound("arc_stop"));
-			precache_sound(W_Sound("arc_loop_overheat"));
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 1);
@@ -1524,7 +1520,6 @@ bool W_Arc(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("arc_loop"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

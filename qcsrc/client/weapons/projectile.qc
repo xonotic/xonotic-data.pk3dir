@@ -508,11 +508,5 @@ void Ent_Projectile()
 
 void Projectile_Precache()
 {
-	precache_sound(W_Sound("electro_fly"));
-	precache_sound(W_Sound("rocket_fly"));
-	precache_sound(W_Sound("fireball_fly"));
-	precache_sound(W_Sound("fireball_fly2"));
-	precache_sound(W_Sound("tag_rocket_fly"));
-
 	MUTATOR_CALLHOOK(PrecacheProjectiles);
 }

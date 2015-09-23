@@ -16,14 +16,7 @@
 #ifndef MENUQC
 STATIC_INIT(vehicles_common_initialize)
 {
-#ifdef CSQC
-	precache_sound ("vehicles/alarm.wav");
-	precache_sound ("vehicles/alarm_shield.wav");
-#endif // CSQC
 #ifdef SVQC
-	precache_sound("onslaught/ons_hit2.wav");
-	precache_sound("onslaught/electricity_explode.wav");
-
 	addstat(STAT_HUD, AS_INT, hud);
 	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
 	addstat(STAT_VEHICLESTAT_SHIELD,  AS_INT, vehicle_shield);
