@@ -383,7 +383,7 @@ void W_Devastator_Attack(void)
 
 	// muzzle flash for 1st person view
 	flash = spawn();
-	setmodel(flash, "models/flash.md3"); // precision set below
+	setmodel(flash, MDL_DEVASTATOR_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
@@ -569,10 +569,6 @@ bool W_Devastator(int req)
 		{
 			//if(autocvar_sv_precacheweapons)
 			//{
-				precache_model("models/flash.md3");
-				precache_model(W_Model("g_rl.md3"));
-				precache_model(W_Model("v_rl.md3"));
-				precache_model(W_Model("h_rl.iqm"));
 				precache_sound(W_Sound("rocket_det"));
 				precache_sound(W_Sound("rocket_fire"));
 				precache_sound(W_Sound("rocket_mode"));

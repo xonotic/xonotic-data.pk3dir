@@ -22,7 +22,7 @@
 #include "../common/buffs.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
-#include "../common/effects.qh"
+#include "../common/effects/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
@@ -662,7 +662,6 @@ void spawnfunc_worldspawn (void)
 
 	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
-	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();

@@ -355,7 +355,7 @@ void ImpulseCommands (void)
 							setorigin(e, org);
 							LOG_INFO("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST;
-							setmodel(e, self.model);
+							_setmodel(e, self.model);
 							e.frame = self.frame;
 							e.skin = self.skin;
 							e.colormod = '8 0.5 8';

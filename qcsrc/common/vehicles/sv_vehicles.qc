@@ -1,5 +1,5 @@
 #include "sv_vehicles.qh"
-#include "../effects.qh"
+#include "../effects/effects.qh"
 
 #if 0
 bool vehicle_send(entity to, int sf)
@@ -321,7 +321,7 @@ void vehicles_gib_think()
 entity vehicle_tossgib(entity _template, vector _vel, string _tag, bool _burn, bool _explode, float _maxtime, vector _rot)
 {SELFPARAM();
 	entity _gib = spawn();
-	setmodel(_gib, _template.model);
+	_setmodel(_gib, _template.model);
 	setorigin(_gib, gettaginfo(self, gettagindex(self, _tag)));
 	_gib.velocity = _vel;
 	_gib.movetype = MOVETYPE_TOSS;
@@ -369,8 +369,8 @@ bool vehicle_addplayerslot(	entity _owner,
 	_slot.vehicle_hudmodel.viewmodelforclient = _slot;
 	_slot.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
 
-	setmodel(_slot.vehicle_hudmodel, _hud_model);
-	setmodel(_slot.vehicle_viewport, "null");
+	_setmodel(_slot.vehicle_hudmodel, _hud_model);
+	setmodel(_slot.vehicle_viewport, MDL_Null);
 
 	setattachment(_slot.vehicle_hudmodel, _slot, "");
 	setattachment(_slot.vehicle_viewport, _slot.vehicle_hudmodel, "");
@@ -516,7 +516,7 @@ void vehicles_showwp()
 
 		oldself = self;
 		setself(spawn());
-		setmodel(self, "null");
+		setmodel(self, MDL_Null);
 		self.team = oldself.wp00.team;
 		self.wp00 = oldself.wp00;
 		setorigin(self, oldself.wp00.pos1);
@@ -565,7 +565,7 @@ void vehicles_setreturn(entity veh)
 		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 1);
 	}
 
-	setmodel(ret, "null");
+	setmodel(ret, MDL_Null);
 	setorigin(ret, veh.pos1 + '0 0 96');
 
 }
@@ -617,7 +617,7 @@ void shieldhit_think()
 	self.alpha -= 0.1;
 	if (self.alpha <= 0)
 	{
-		//setmodel(self, "");
+		// setmodel(self, MDL_Null);
 		self.alpha = -1;
 		self.effects |= EF_NODRAW;
 	}
@@ -683,7 +683,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, int deatht
 			self.vehicle_shieldent = spawn();
 			self.vehicle_shieldent.effects = EF_LOWPRECISION;
 
-			setmodel(self.vehicle_shieldent, "models/vhshield.md3");
+			setmodel(self.vehicle_shieldent, MDL_VEH_SHIELD);
 			setattachment(self.vehicle_shieldent, self, "");
 			setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
 			self.vehicle_shieldent.scale	   = 256 / vlen(self.maxs - self.mins);
@@ -1220,9 +1220,9 @@ bool vehicle_initialize(entity veh, bool nodrop)
 		self.team = 0;
 
 	if(self.mdl == "" || !self.mdl)
-		setmodel(self, veh.model);
+		_setmodel(self, veh.model);
 	else
-		setmodel(self, self.mdl);
+		_setmodel(self, self.mdl);
 
 	self.vehicle_flags |= VHF_ISVEHICLE;
 
@@ -1253,12 +1253,12 @@ bool vehicle_initialize(entity veh, bool nodrop)
 	if(autocvar_g_fullbrightplayers)
 		self.effects |= EF_FULLBRIGHT;
 
-	setmodel(self.vehicle_hudmodel, veh.hud_model);
-	setmodel(self.vehicle_viewport, "null");
+	_setmodel(self.vehicle_hudmodel, veh.hud_model);
+	setmodel(self.vehicle_viewport, MDL_Null);
 
 	if(veh.head_model != "")
 	{
-		setmodel(self.tur_head, veh.head_model);
+		_setmodel(self.tur_head, veh.head_model);
 		setattachment(self.tur_head, self, veh.tag_head);
 		setattachment(self.vehicle_hudmodel, self.tur_head, veh.tag_hud);
 		setattachment(self.vehicle_viewport, self.vehicle_hudmodel, veh.tag_view);

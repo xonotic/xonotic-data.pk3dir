@@ -23,7 +23,7 @@ REGISTER_VEHICLE_SIMPLE(
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-#include "../../effects.qh"
+#include "../../effects/effects.qh"
 #include "../../triggers/trigger/impulse.qh"
 
 bool autocvar_g_vehicle_racer;
@@ -863,12 +863,6 @@ bool v_racer(int req)
 			precache_sound ("vehicles/racer_idle.wav");
 			precache_sound ("vehicles/racer_move.wav");
 			precache_sound ("vehicles/racer_boost.wav");
-
-			precache_model ("models/vhshield.md3");
-		#endif
-		#ifndef MENUQC
-			precache_model ("models/vehicles/wakizashi.dpm");
-			precache_model ("models/vehicles/wakizashi_cockpit.dpm");
 		#endif
 			return true;
 		}

@@ -76,7 +76,7 @@ void W_MineLayer_Stick(entity to)
 	newmine.realowner = self.realowner;
 	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, self.origin);
-	setmodel(newmine, "models/mine.md3");
+	setmodel(newmine, MDL_MINELAYER_MINE);
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
 	newmine.mine_orientation = -trace_plane_normal;
@@ -364,7 +364,7 @@ void W_MineLayer_Attack(void)
 
 	// muzzle flash for 1st person view
 	flash = spawn();
-	setmodel(flash, "models/flash.md3"); // precision set below
+	setmodel(flash, MDL_MINELAYER_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
@@ -530,11 +530,6 @@ bool W_MineLayer(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/flash.md3");
-			precache_model("models/mine.md3");
-			precache_model(W_Model("g_minelayer.md3"));
-			precache_model(W_Model("v_minelayer.md3"));
-			precache_model(W_Model("h_minelayer.iqm"));
 			precache_sound(W_Sound("mine_det"));
 			precache_sound(W_Sound("mine_fire"));
 			precache_sound(W_Sound("mine_stick"));

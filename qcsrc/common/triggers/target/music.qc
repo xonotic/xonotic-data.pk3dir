@@ -128,7 +128,7 @@ void trigger_music_use()
 void spawnfunc_trigger_music()
 {SELFPARAM();
 	if(self.model != "")
-		setmodel(self, self.model);
+		_setmodel(self, self.model);
 	if(!self.volume)
 		self.volume = 1;
 	if(!self.modelindex)

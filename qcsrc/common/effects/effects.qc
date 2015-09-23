@@ -1,11 +1,7 @@
 #ifdef CSQC
 void Read_Effect(bool is_new)
 {
-#if EFFECTS_COUNT >= 255
-	int net_name = ReadShort();
-#else
-	int net_name = ReadByte();
-#endif
+	int net_name = (EFFECT_COUNT >= 255) ? ReadShort() : ReadByte();
 
 	entity eff = effects_ent[net_name];
 
@@ -41,11 +37,9 @@ void Read_Effect(bool is_new)
 bool Net_Write_Effect(entity client, int sf)
 {SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_EFFECT);
-#if EFFECTS_COUNT >= 255
-	WriteShort(MSG_ENTITY, self.m_id);
-#else
-	WriteByte(MSG_ENTITY, self.m_id);
-#endif
+	(EFFECT_COUNT >= 255)
+	? WriteShort(MSG_ENTITY, self.m_id)
+	: WriteByte(MSG_ENTITY, self.m_id);
 	WriteCoord(MSG_ENTITY, self.eent_net_location_x);
 	WriteCoord(MSG_ENTITY, self.eent_net_location_y);
 	WriteCoord(MSG_ENTITY, self.eent_net_location_z);

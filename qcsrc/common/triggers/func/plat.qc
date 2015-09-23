@@ -145,7 +145,7 @@ void ent_plat()
 		self.spawnflags = ReadByte();
 
 		self.model = strzone(ReadString());
-		setmodel(self, self.model);
+		_setmodel(self, self.model);
 
 		trigger_common_read(true);
 

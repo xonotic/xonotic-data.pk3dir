@@ -56,7 +56,7 @@ void LaunchDebris (string debrisname, vector force)
 	           + '1 0 0' * random() * (self.absmax.x - self.absmin.x)
 	           + '0 1 0' * random() * (self.absmax.y - self.absmin.y)
 	           + '0 0 1' * random() * (self.absmax.z - self.absmin.z));
-	setmodel (dbr, debrisname );
+	_setmodel (dbr, debrisname );
 	dbr.skin = self.debrisskin;
 	dbr.colormap = self.colormap; // inherit team colors
 	dbr.owner = self; // do not be affected by our own explosion
@@ -108,7 +108,7 @@ void func_breakable_look_destroyed()
 			setorigin(self,((self.absmax+self.absmin)*.5));
 			self.origin_z = floorZ;
 		}
-		setmodel(self, self.mdl_dead);
+		_setmodel(self, self.mdl_dead);
 		self.effects &= ~EF_NODRAW;
 	}
 
@@ -119,7 +119,7 @@ void func_breakable_look_destroyed()
 
 void func_breakable_look_restore()
 {SELFPARAM();
-	setmodel(self, self.mdl);
+	_setmodel(self, self.mdl);
 	self.effects &= ~EF_NODRAW;
 
 	if(self.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow

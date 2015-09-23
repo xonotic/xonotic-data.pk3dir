@@ -288,9 +288,6 @@ bool W_Hook(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model(W_Model("g_hookgun.md3"));
-			precache_model(W_Model("v_hookgun.md3"));
-			precache_model(W_Model("h_hookgun.iqm"));
 			precache_sound(W_Sound("hook_impact")); // done by g_hook.qc
 			precache_sound(W_Sound("hook_fire"));
 			precache_sound(W_Sound("hookbomb_fire"));

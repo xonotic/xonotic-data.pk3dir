@@ -211,8 +211,8 @@ void turret_construct()
 	self.netname = TUR_NAME(self.turretid);
 
 	setorigin(self, self.origin);
-	setmodel(self, tur.model);
-	setmodel(self.tur_head, tur.head_model);
+	_setmodel(self, tur.model);
+	_setmodel(self.tur_head, tur.head_model);
 	setsize(self, tur.mins, tur.maxs);
 	setsize(self.tur_head, '0 0 0', '0 0 0');
 
@@ -289,7 +289,7 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 
 	gib = spawn();
 	setorigin(gib, _from);
-	setmodel(gib, _model);
+	_setmodel(gib, _model);
 	gib.colormod	= _cmod;
 	gib.solid	   = SOLID_CORPSE;
 	gib.draw		= turret_gib_draw;
@@ -351,8 +351,8 @@ void turret_die()
 		}
 	}
 
-	setmodel(self, "null");
-	setmodel(self.tur_head, "null");
+	setmodel(self, MDL_Null);
+	setmodel(self.tur_head, MDL_Null);
 }
 
 void ent_turret()

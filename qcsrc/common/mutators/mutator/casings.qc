@@ -149,11 +149,11 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
     switch (casing.state)
     {
         case 1:
-            setmodel(casing, "models/casing_shell.mdl");
+            setmodel(casing, MDL_CASING_SHELL);
             casing.cnt = time + autocvar_cl_casings_shell_time;
             break;
         default:
-            setmodel(casing, "models/casing_bronze.iqm");
+            setmodel(casing, MDL_CASING_BULLET);
             casing.cnt = time + autocvar_cl_casings_bronze_time;
             break;
     }
@@ -165,8 +165,6 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
 
 STATIC_INIT(Casings)
 {
-    precache_model("models/casing_shell.mdl");
-    precache_model("models/casing_bronze.iqm");
     precache_sound(W_Sound("brass1"));
     precache_sound(W_Sound("brass2"));
     precache_sound(W_Sound("brass3"));

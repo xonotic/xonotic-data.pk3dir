@@ -708,10 +708,6 @@ bool W_Shockwave(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/uziflash.md3");
-			precache_model(W_Model("g_shotgun.md3"));
-			precache_model(W_Model("v_shotgun.md3"));
-			precache_model(W_Model("h_shotgun.iqm"));
 			precache_sound("misc/itempickup.wav");
 			precache_sound(W_Sound("lasergun_fire"));
 			precache_sound(W_Sound("shotgun_melee"));

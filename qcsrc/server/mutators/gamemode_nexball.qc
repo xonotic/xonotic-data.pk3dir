@@ -495,7 +495,7 @@ void SpawnBall(void)
 	}
 
 	precache_model(self.model);
-	setmodel(self, self.model);
+	_setmodel(self, self.model);
 	setsize(self, BALL_MINS, BALL_MAXS);
 	ball_scale = self.scale;
 
@@ -860,10 +860,6 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_INIT)
 	{
-		precache_model(W_Model("g_porto.md3"));
-		precache_model(W_Model("v_porto.md3"));
-		precache_model(W_Model("h_porto.iqm"));
-		precache_model("models/elaser.mdl");
 		precache_sound("nexball/shoot1.wav");
 		precache_sound("nexball/shoot2.wav");
 		precache_sound("misc/typehit.wav");

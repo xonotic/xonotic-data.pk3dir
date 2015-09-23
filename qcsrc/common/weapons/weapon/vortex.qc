@@ -253,10 +253,6 @@ bool W_Vortex(int req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/nexflash.md3");
-			precache_model(W_Model("g_nex.md3"));
-			precache_model(W_Model("v_nex.md3"));
-			precache_model(W_Model("h_nex.iqm"));
 			precache_sound(W_Sound("nexfire"));
 			precache_sound(W_Sound("nexcharge"));
 			precache_sound(W_Sound("nexwhoosh1"));

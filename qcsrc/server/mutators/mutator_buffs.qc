@@ -47,7 +47,7 @@ bool buffs_BuffModel_Customize()
 void buffs_BuffModel_Spawn(entity player)
 {
 	player.buff_model = spawn();
-	setmodel(player.buff_model, BUFF_MODEL);
+	setmodel(player.buff_model, MDL_BUFF);
 	setsize(player.buff_model, '0 0 -40', '0 0 40');
 	setattachment(player.buff_model, player, "");
 	setorigin(player.buff_model, '0 0 1' * (player.buff_model.maxs.z * 1));
@@ -228,7 +228,7 @@ void buff_Think()
 		self.glowmod = buff_GlowColor(buff);
 		self.skin = buff.m_skin;
 
-		setmodel(self, BUFF_MODEL);
+		setmodel(self, MDL_BUFF);
 
 		if(self.buff_waypoint)
 		{
@@ -368,7 +368,7 @@ void buff_Init(entity ent)
 	if(self.noalign)
 		self.movetype = MOVETYPE_NONE; // reset by random location
 
-	setmodel(self, BUFF_MODEL);
+	setmodel(self, MDL_BUFF);
 	setsize(self, BUFF_MIN, BUFF_MAX);
 
 	if(cvar("g_buffs_random_location") || (self.spawnflags & 64))
@@ -957,7 +957,6 @@ void buffs_DelayedInit()
 
 void buffs_Initialize()
 {
-	precache_model(BUFF_MODEL);
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("relics/relic_effect.wav");

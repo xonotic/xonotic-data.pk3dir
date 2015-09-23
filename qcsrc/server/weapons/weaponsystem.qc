@@ -117,12 +117,12 @@ void CL_WeaponEntity_SetModel(string name)
 		// if there is a child entity, hide it until we're sure we use it
 		if (self.weaponentity)
 			self.weaponentity.model = "";
-		setmodel(self, W_Model(strcat("v_", name, ".md3")));
+		_setmodel(self, W_Model(strcat("v_", name, ".md3")));
 		v_shot_idx = gettagindex(self, "shot"); // used later
 		if(!v_shot_idx)
 			v_shot_idx = gettagindex(self, "tag_shot");
 
-		setmodel(self, W_Model(strcat("h_", name, ".iqm")));
+		_setmodel(self, W_Model(strcat("h_", name, ".iqm")));
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
 		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
@@ -135,14 +135,14 @@ void CL_WeaponEntity_SetModel(string name)
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			setmodel(self.weaponentity, W_Model(strcat("v_", name, ".md3")));
+			_setmodel(self.weaponentity, W_Model(strcat("v_", name, ".md3")));
 			setattachment(self.weaponentity, self, "weapon");
 		}
 		else if(gettagindex(self, "tag_weapon"))
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			setmodel(self.weaponentity, W_Model(strcat("v_", name, ".md3")));
+			_setmodel(self.weaponentity, W_Model(strcat("v_", name, ".md3")));
 			setattachment(self.weaponentity, self, "tag_weapon");
 		}
 		else
@@ -376,7 +376,7 @@ void CL_ExteriorWeaponentity_Think()
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
-			setmodel(self, W_Model(strcat("v_", self.owner.weaponname, ".md3")));
+			_setmodel(self, W_Model(strcat("v_", self.owner.weaponname, ".md3")));
 		else
 			self.model = "";
 
@@ -411,7 +411,7 @@ void CL_SpawnWeaponentity(entity e)
 	view.classname = "weaponentity";
 	view.solid = SOLID_NOT;
 	view.owner = e;
-	setmodel(view, ""); // precision set when changed
+	setmodel(view, MDL_Null); // precision set when changed
 	setorigin(view, '0 0 0');
 	view.angles = '0 0 0';
 	view.viewmodelforclient = e;

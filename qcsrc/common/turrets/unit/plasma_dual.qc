@@ -77,8 +77,6 @@ float t_plasma_dual(float req)
         }
         case TR_PRECACHE:
         {
-            precache_model ("models/turrets/base.md3");
-            precache_model ("models/turrets/plasmad.md3");
             return true;
         }
     }

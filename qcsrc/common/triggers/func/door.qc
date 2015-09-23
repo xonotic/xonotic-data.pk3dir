@@ -812,7 +812,7 @@ void ent_door()
 		self.spawnflags = ReadByte();
 
 		self.mdl = strzone(ReadString());
-		setmodel(self, self.mdl);
+		_setmodel(self, self.mdl);
 
 		trigger_common_read(true);
 
