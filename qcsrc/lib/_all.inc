@@ -19,6 +19,7 @@
 #include "prandom.qc"
 #include "progname.qh"
 #include "registry.qh"
+#include "replicate.qh"
 #include "sortlist.qc"
 #include "static.qh"
 #include "string.qh"

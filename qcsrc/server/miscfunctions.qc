@@ -417,6 +417,8 @@ void GetCvars(float f)
 
 	Notification_GetCvars();
 
+	ReplicateVars(this, s, f);
+
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleFloat(s, f, cvar_cl_jetpack_jump, "cl_jetpack_jump");
