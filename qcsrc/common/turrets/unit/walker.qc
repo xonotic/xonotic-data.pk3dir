@@ -334,7 +334,7 @@ void walker_move_path()
 #endif
 }
 
-void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER)) remove(self); }
+spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 
 float t_walker(float req)
 {SELFPARAM();

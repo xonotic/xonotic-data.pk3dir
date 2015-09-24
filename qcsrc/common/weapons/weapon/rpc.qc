@@ -45,7 +45,7 @@ RPC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_rpc() { weapon_defaultspawnfunc(WEP_RPC.m_id); }
+spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(WEP_RPC.m_id); }
 
 void W_RocketPropelledChainsaw_Explode()
 {SELFPARAM();

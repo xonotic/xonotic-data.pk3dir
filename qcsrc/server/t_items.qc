@@ -1209,8 +1209,8 @@ void StartItemA (entity a)
     StartItem(Item_Model(a.m_model), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
 }
 
-void spawnfunc_item_rockets()
-{SELFPARAM();
+spawnfunc(item_rockets)
+{
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;
 	if(!self.pickup_anyway)
@@ -1218,14 +1218,14 @@ void spawnfunc_item_rockets()
     StartItemA (ITEM_Rockets);
 }
 
-void spawnfunc_item_bullets()
-{SELFPARAM();
+spawnfunc(item_bullets)
+{
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weaponswapping = true;
-		spawnfunc_item_shells();
+		spawnfunc_item_shells(this);
 		weaponswapping = false;
 		return;
 	}
@@ -1237,8 +1237,8 @@ void spawnfunc_item_bullets()
     StartItemA (ITEM_Bullets);
 }
 
-void spawnfunc_item_cells()
-{SELFPARAM();
+spawnfunc(item_cells)
+{
 	if(!self.ammo_cells)
 		self.ammo_cells = g_pickup_cells;
 	if(!self.pickup_anyway)
@@ -1246,8 +1246,8 @@ void spawnfunc_item_cells()
 	StartItemA (ITEM_Cells);
 }
 
-void spawnfunc_item_plasma()
-{SELFPARAM();
+spawnfunc(item_plasma)
+{
 	if(!self.ammo_plasma)
 		self.ammo_plasma = g_pickup_plasma;
 	if(!self.pickup_anyway)
@@ -1255,14 +1255,14 @@ void spawnfunc_item_plasma()
 	StartItemA (ITEM_Plasma);
 }
 
-void spawnfunc_item_shells()
-{SELFPARAM();
+spawnfunc(item_shells)
+{
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weaponswapping = true;
-		spawnfunc_item_bullets();
+		spawnfunc_item_bullets(this);
 		weaponswapping = false;
 		return;
 	}
@@ -1274,8 +1274,8 @@ void spawnfunc_item_shells()
 	StartItemA (ITEM_Shells);
 }
 
-void spawnfunc_item_armor_small()
-{SELFPARAM();
+spawnfunc(item_armor_small)
+{
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorsmall;
 	if(!self.max_armorvalue)
@@ -1285,8 +1285,8 @@ void spawnfunc_item_armor_small()
 	StartItemA (ITEM_ArmorSmall);
 }
 
-void spawnfunc_item_armor_medium()
-{SELFPARAM();
+spawnfunc(item_armor_medium)
+{
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armormedium;
 	if(!self.max_armorvalue)
@@ -1296,8 +1296,8 @@ void spawnfunc_item_armor_medium()
 	StartItemA (ITEM_ArmorMedium);
 }
 
-void spawnfunc_item_armor_big()
-{SELFPARAM();
+spawnfunc(item_armor_big)
+{
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorbig;
 	if(!self.max_armorvalue)
@@ -1307,8 +1307,8 @@ void spawnfunc_item_armor_big()
 	StartItemA (ITEM_ArmorLarge);
 }
 
-void spawnfunc_item_armor_large()
-{SELFPARAM();
+spawnfunc(item_armor_large)
+{
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorlarge;
 	if(!self.max_armorvalue)
@@ -1318,8 +1318,8 @@ void spawnfunc_item_armor_large()
 	StartItemA (ITEM_ArmorMega);
 }
 
-void spawnfunc_item_health_small()
-{SELFPARAM();
+spawnfunc(item_health_small)
+{
 	if(!self.max_health)
 		self.max_health = g_pickup_healthsmall_max;
 	if(!self.health)
@@ -1329,8 +1329,8 @@ void spawnfunc_item_health_small()
 	StartItemA (ITEM_HealthSmall);
 }
 
-void spawnfunc_item_health_medium()
-{SELFPARAM();
+spawnfunc(item_health_medium)
+{
 	if(!self.max_health)
 		self.max_health = g_pickup_healthmedium_max;
 	if(!self.health)
@@ -1340,8 +1340,8 @@ void spawnfunc_item_health_medium()
     StartItemA (ITEM_HealthMedium);
 }
 
-void spawnfunc_item_health_large()
-{SELFPARAM();
+spawnfunc(item_health_large)
+{
 	if(!self.max_health)
 		self.max_health = g_pickup_healthlarge_max;
 	if(!self.health)
@@ -1351,8 +1351,8 @@ void spawnfunc_item_health_large()
 	StartItemA (ITEM_HealthLarge);
 }
 
-void spawnfunc_item_health_mega()
-{SELFPARAM();
+spawnfunc(item_health_mega)
+{
     if(!self.max_health)
         self.max_health = g_pickup_healthmega_max;
     if(!self.health)
@@ -1363,29 +1363,29 @@ void spawnfunc_item_health_mega()
 }
 
 // support old misnamed entities
-void spawnfunc_item_armor1() { spawnfunc_item_armor_small(); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-void spawnfunc_item_armor25() { spawnfunc_item_armor_large(); }
-void spawnfunc_item_health1() { spawnfunc_item_health_small(); }
-void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
-void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
+spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
+spawnfunc(item_armor25) { spawnfunc_item_armor_large(this); }
+spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
+spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
+spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
 
-void spawnfunc_item_strength()
-{SELFPARAM();
+spawnfunc(item_strength)
+{
 		precache_sound("weapons/strength_fire.wav");
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItemA (ITEM_Strength);
 }
 
-void spawnfunc_item_invincible()
-{SELFPARAM();
+spawnfunc(item_invincible)
+{
 		if(!self.invincible_finished)
 			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 		StartItemA (ITEM_Shield);
 }
 
 // compatibility:
-void spawnfunc_item_quad() {SELFPARAM(); self.classname = "item_strength";spawnfunc_item_strength();}
+spawnfunc(item_quad) { self.classname = "item_strength";spawnfunc_item_strength(this);}
 
 void target_items_use()
 {SELFPARAM();
@@ -1411,8 +1411,8 @@ void target_items_use()
 		centerprint(activator, self.message);
 }
 
-void spawnfunc_target_items (void)
-{SELFPARAM();
+spawnfunc(target_items)
+{
 	float n, i, j;
 	entity e;
 	string s;
@@ -1536,8 +1536,8 @@ void spawnfunc_target_items (void)
 	}
 }
 
-void spawnfunc_item_fuel(void)
-{SELFPARAM();
+spawnfunc(item_fuel)
+{
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel;
 	if(!self.pickup_anyway)
@@ -1545,23 +1545,23 @@ void spawnfunc_item_fuel(void)
 	StartItemA (ITEM_JetpackFuel);
 }
 
-void spawnfunc_item_fuel_regen(void)
+spawnfunc(item_fuel_regen)
 {
 	if(start_items & ITEM_JetpackRegen.m_itemid)
 	{
-		spawnfunc_item_fuel();
+		spawnfunc_item_fuel(this);
 		return;
 	}
 	StartItemA (ITEM_JetpackRegen);
 }
 
-void spawnfunc_item_jetpack(void)
-{SELFPARAM();
+spawnfunc(item_jetpack)
+{
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel_jetpack;
 	if(start_items & ITEM_Jetpack.m_itemid)
 	{
-		spawnfunc_item_fuel();
+		spawnfunc_item_fuel(this);
 		return;
 	}
 	StartItemA (ITEM_Jetpack);

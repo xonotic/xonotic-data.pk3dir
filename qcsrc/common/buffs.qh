@@ -145,8 +145,7 @@ REGISTER_BUFF(MAGNET) {
 void buff_Init(entity ent);
 void buff_Init_Compat(entity ent, entity replacement);
 
-#define BUFF_SPAWNFUNC(e, b, t) void spawnfunc_item_buff_##e() { \
-	SELFPARAM(); \
+#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
 	self.buffs = b.m_itemid; \
 	self.team = t; \
 	buff_Init(self); \
@@ -157,7 +156,7 @@ void buff_Init_Compat(entity ent, entity replacement);
 		BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
 		BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
 		BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
-#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o, r) void spawnfunc_item_##o() { SELFPARAM(); buff_Init_Compat(self, r); }
+#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o, r) spawnfunc(item_##o) { buff_Init_Compat(self, r); }
 
 BUFF_SPAWNFUNCS(resistance,		BUFF_RESISTANCE)
 BUFF_SPAWNFUNCS(ammo,			BUFF_AMMO)

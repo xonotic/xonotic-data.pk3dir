@@ -266,8 +266,8 @@ void func_breakable_reset()
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
-void spawnfunc_func_breakable()
-{SELFPARAM();
+spawnfunc(func_breakable)
+{
 	float n, i;
 	if(!self.health)
 		self.health = 100;
@@ -335,7 +335,7 @@ void spawnfunc_func_breakable()
 }
 
 // for use in maps with a "model" key set
-void spawnfunc_misc_breakablemodel() {
-	spawnfunc_func_breakable();
+spawnfunc(misc_breakablemodel) {
+	spawnfunc_func_breakable(this);
 }
 #endif

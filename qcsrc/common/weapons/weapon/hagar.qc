@@ -56,7 +56,7 @@ HAGAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_hagar(void) { weapon_defaultspawnfunc(WEP_HAGAR.m_id); }
+spawnfunc(weapon_hagar) { weapon_defaultspawnfunc(WEP_HAGAR.m_id); }
 
 // NO bounce protection, as bounces are limited!
 

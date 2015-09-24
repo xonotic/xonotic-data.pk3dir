@@ -112,8 +112,8 @@ void pointparticles_reset()
 		self.state = 0;
 }
 
-void spawnfunc_func_pointparticles()
-{SELFPARAM();
+spawnfunc(func_pointparticles)
+{
 	if(self.model != "")
 		_setmodel(self, self.model);
 	if(self.noise != "")
@@ -157,8 +157,8 @@ void spawnfunc_func_pointparticles()
 	self.nextthink = time;
 }
 
-void spawnfunc_func_sparks()
-{SELFPARAM();
+spawnfunc(func_sparks)
+{
 	// self.cnt is the amount of sparks that one burst will spawn
 	if(self.cnt < 1) {
 		self.cnt = 25.0; // nice default value
@@ -179,7 +179,7 @@ void spawnfunc_func_sparks()
 	self.wait = 0;
 	self.cnt = 0; // use mdl
 
-	spawnfunc_func_pointparticles();
+	spawnfunc_func_pointparticles(this);
 }
 #elif defined(CSQC)
 

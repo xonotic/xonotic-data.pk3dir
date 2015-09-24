@@ -723,8 +723,8 @@ void door_reset()
 #ifdef SVQC
 
 // spawnflags require key (for now only func_door)
-void spawnfunc_func_door()
-{SELFPARAM();
+spawnfunc(func_door)
+{
 	// Quake 1 keys compatibility
 	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
 		self.itemkeys |= ITEM_KEY_BIT(0);

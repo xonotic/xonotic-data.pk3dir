@@ -46,8 +46,8 @@ void target_music_use()
 	entity head;
 	FOR_EACH_SPEC(head) if(head.enemy == activator) { msg_entity = head; target_music_sendto(MSG_ONE, 1); }
 }
-void spawnfunc_target_music()
-{SELFPARAM();
+spawnfunc(target_music)
+{
 	self.use = target_music_use;
 	self.reset = target_music_reset;
 	if(!self.volume)
@@ -125,8 +125,8 @@ void trigger_music_use()
 	self.cnt = !self.cnt;
 	self.SendFlags |= 0x80;
 }
-void spawnfunc_trigger_music()
-{SELFPARAM();
+spawnfunc(trigger_music)
+{
 	if(self.model != "")
 		_setmodel(self, self.model);
 	if(!self.volume)

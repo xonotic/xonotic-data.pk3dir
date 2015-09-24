@@ -59,8 +59,8 @@ void plat_link()
 	//Net_LinkEntity(self, 0, false, plat_send);
 }
 
-void spawnfunc_func_plat()
-{SELFPARAM();
+spawnfunc(func_plat)
+{
 	if (self.sounds == 0)
 		self.sounds = 2;
 

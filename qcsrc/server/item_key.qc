@@ -148,8 +148,8 @@ This is the only correct way to put keys on the map!
 
 itemkeys MUST always have exactly one bit set.
 */
-void spawnfunc_item_key()
-{SELFPARAM();
+spawnfunc(item_key)
+{
 	string _netname;
 	vector _colormod;
 
@@ -255,11 +255,11 @@ FLOATING: the item will float in air, instead of aligning to the floor by fallin
 ---------NOTES----------
 Don't use this entity on new maps! Use item_key instead.
 */
-void spawnfunc_item_key1(void)
-{SELFPARAM();
-	self.classname = "item_key";
-	self.itemkeys = ITEM_KEY_BIT(1);
-	spawnfunc_item_key();
+spawnfunc(item_key1)
+{
+	this.classname = "item_key";
+	this.itemkeys = ITEM_KEY_BIT(1);
+	spawnfunc_item_key(this);
 };
 
 /*QUAKED item_key2 (0 .5 .8) (-16 -16 -24) (16 16 32) FLOATING
@@ -274,9 +274,9 @@ FLOATING: the item will float in air, instead of aligning to the floor by fallin
 ---------NOTES----------
 Don't use this entity on new maps! Use item_key instead.
 */
-void spawnfunc_item_key2(void)
-{SELFPARAM();
-	self.classname = "item_key";
-	self.itemkeys = ITEM_KEY_BIT(0);
-	spawnfunc_item_key();
+spawnfunc(item_key2)
+{
+	this.classname = "item_key";
+	this.itemkeys = ITEM_KEY_BIT(0);
+	spawnfunc_item_key(this);
 };

@@ -62,8 +62,8 @@ DEVASTATOR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_devastator(void) { weapon_defaultspawnfunc(WEP_DEVASTATOR.m_id); }
-void spawnfunc_weapon_rocketlauncher(void) { spawnfunc_weapon_devastator(); }
+spawnfunc(weapon_devastator) { weapon_defaultspawnfunc(WEP_DEVASTATOR.m_id); }
+spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
 void W_Devastator_Unregister(void)
 {SELFPARAM();

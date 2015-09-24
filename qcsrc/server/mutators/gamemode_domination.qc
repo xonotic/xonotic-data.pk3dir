@@ -447,8 +447,8 @@ MUTATOR_HOOKFUNCTION(dom_BotRoles)
 /*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)
 Control point for Domination gameplay.
 */
-void spawnfunc_dom_controlpoint()
-{SELFPARAM();
+spawnfunc(dom_controlpoint)
+{
 	if(!g_domination)
 	{
 		remove(self);
@@ -492,8 +492,8 @@ Keys:
  (this is a global sound, like "Red team has captured a control point")
 */
 
-void spawnfunc_dom_team()
-{SELFPARAM();
+spawnfunc(dom_team)
+{
 	if(!g_domination || autocvar_g_domination_teams_override >= 2)
 	{
 		remove(self);
@@ -567,14 +567,15 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	setself(this);
 }
 
+void _spawnfunc_dom_controlpoint() { SELFPARAM(); spawnfunc_dom_controlpoint(self); }
 void dom_spawnpoint(vector org)
 {SELFPARAM();
 	setself(spawn());
 	self.classname = "dom_controlpoint";
-	self.think = spawnfunc_dom_controlpoint;
+	self.think = _spawnfunc_dom_controlpoint;
 	self.nextthink = time;
 	setorigin(self, org);
-	spawnfunc_dom_controlpoint();
+	spawnfunc_dom_controlpoint(this);
 	setself(this);
 }
 

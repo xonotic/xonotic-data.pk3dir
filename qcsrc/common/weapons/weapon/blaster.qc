@@ -48,8 +48,8 @@ BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_blaster(void) { weapon_defaultspawnfunc(WEP_BLASTER.m_id); }
-void spawnfunc_weapon_laser(void) { spawnfunc_weapon_blaster(); }
+spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(WEP_BLASTER.m_id); }
+spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
 void W_Blaster_Touch(void)
 {SELFPARAM();

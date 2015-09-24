@@ -5,8 +5,6 @@
 
 #define INDEPENDENT_ATTACK_FINISHED
 
-noref float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
-
 #define BUTTON_ATCK       button0
 #define BUTTON_JUMP       button2
 #define BUTTON_ATCK2      button3

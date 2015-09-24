@@ -76,7 +76,7 @@ void turret_hellion_missile_think()
     UpdateCSQCProjectile(self);
 }
 
-void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION)) remove(self); }
+spawnfunc(turret_hellion) { if(!turret_initialize(TUR_HELLION)) remove(self); }
 
 float t_hellion(float req)
 {SELFPARAM();

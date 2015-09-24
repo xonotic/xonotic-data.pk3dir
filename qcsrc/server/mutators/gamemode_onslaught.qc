@@ -2044,8 +2044,8 @@ keys:
 "target" - first control point.
 "target2" - second control point.
  */
-void spawnfunc_onslaught_link()
-{SELFPARAM();
+spawnfunc(onslaught_link)
+{
 	if(!g_onslaught) { remove(self); return; }
 
 	if (self.target == "" || self.target2 == "")
@@ -2069,8 +2069,8 @@ keys:
 "message" - name of this control point (should reflect the location in the map, such as "center bridge", "north tower", etc)
  */
 
-void spawnfunc_onslaught_controlpoint()
-{SELFPARAM();
+spawnfunc(onslaught_controlpoint)
+{
 	if(!g_onslaught) { remove(self); return; }
 
 	ons_ControlPoint_Setup(self);
@@ -2085,8 +2085,8 @@ keys:
 "team" - team that owns this generator (5 = red, 14 = blue, etc), MUST BE SET.
 "targetname" - name that spawnfunc_onslaught_link entities will use to target this.
  */
-void spawnfunc_onslaught_generator()
-{SELFPARAM();
+spawnfunc(onslaught_generator)
+{
 	if(!g_onslaught) { remove(self); return; }
 	if(!self.team) { objerror("team must be set"); }
 

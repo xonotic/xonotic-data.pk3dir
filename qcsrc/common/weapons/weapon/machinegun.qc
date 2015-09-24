@@ -55,8 +55,8 @@ MACHINEGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-void spawnfunc_weapon_machinegun(void)
-{SELFPARAM();
+spawnfunc(weapon_machinegun)
+{
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
@@ -65,7 +65,7 @@ void spawnfunc_weapon_machinegun(void)
 	}
 	weapon_defaultspawnfunc(WEP_MACHINEGUN.m_id);
 }
-void spawnfunc_weapon_uzi(void) { spawnfunc_weapon_machinegun(); }
+spawnfunc(weapon_uzi) { spawnfunc_weapon_machinegun(this); }
 
 void W_MachineGun_MuzzleFlash_Think(void)
 {SELFPARAM();

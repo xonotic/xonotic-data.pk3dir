@@ -55,8 +55,8 @@ VAPORIZER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_vaporizer(void) { weapon_defaultspawnfunc(WEP_VAPORIZER.m_id); }
-void spawnfunc_weapon_minstanex(void) { spawnfunc_weapon_vaporizer(); }
+spawnfunc(weapon_vaporizer) { weapon_defaultspawnfunc(WEP_VAPORIZER.m_id); }
+spawnfunc(weapon_minstanex) { spawnfunc_weapon_vaporizer(this); }
 
 void W_RocketMinsta_Explosion(vector loc)
 {SELFPARAM();

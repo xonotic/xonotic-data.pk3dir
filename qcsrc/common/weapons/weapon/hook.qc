@@ -59,8 +59,8 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-void spawnfunc_weapon_hook(void)
-{SELFPARAM();
+spawnfunc(weapon_hook)
+{
 	if(g_grappling_hook) // offhand hook
 	{
 		startitem_failed = true;

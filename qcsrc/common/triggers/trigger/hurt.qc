@@ -57,8 +57,8 @@ defalt dmg = 5
 .entity trigger_hurt_next;
 entity trigger_hurt_last;
 entity trigger_hurt_first;
-void spawnfunc_trigger_hurt()
-{SELFPARAM();
+spawnfunc(trigger_hurt)
+{
 	EXACTTRIGGER_INIT;
 	self.active = ACTIVE_ACTIVE;
 	self.touch = trigger_hurt_touch;

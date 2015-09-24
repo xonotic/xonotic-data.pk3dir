@@ -59,8 +59,8 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_vortex(void) { weapon_defaultspawnfunc(WEP_VORTEX.m_id); }
-void spawnfunc_weapon_nex(void) { spawnfunc_weapon_vortex(); }
+spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(WEP_VORTEX.m_id); }
+spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 
 void SendCSQCVortexBeamParticle(float charge) {
 	vector v;
@@ -129,7 +129,7 @@ void W_Vortex_Attack(float issecondary)
 	W_DecreaseAmmo(myammo);
 }
 
-void spawnfunc_weapon_vortex(void); // defined in t_items.qc
+spawnfunc(weapon_vortex); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
 bool W_Vortex(int req)

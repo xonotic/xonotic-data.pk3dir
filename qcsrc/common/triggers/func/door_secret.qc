@@ -194,8 +194,8 @@ If a secret door has a targetname, it will only be opened by it's botton or trig
 3) base
 */
 
-void spawnfunc_func_door_secret()
-{SELFPARAM();
+spawnfunc(func_door_secret)
+{
 	/*if (!self.deathtype) // map makers can override this
 		self.deathtype = " got in the way";*/
 

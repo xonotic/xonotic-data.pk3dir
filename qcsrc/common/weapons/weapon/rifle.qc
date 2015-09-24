@@ -47,9 +47,9 @@ RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE.m_id); }
-void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }
-void spawnfunc_weapon_sniperrifle(void) { spawnfunc_weapon_rifle(); }
+spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(WEP_RIFLE.m_id); }
+spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
+spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 
 void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, string pSound)
 {SELFPARAM();

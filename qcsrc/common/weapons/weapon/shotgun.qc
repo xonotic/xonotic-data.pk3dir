@@ -52,7 +52,7 @@ SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN.m_id); }
+spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(WEP_SHOTGUN.m_id); }
 
 void W_Shotgun_Attack(float isprimary)
 {SELFPARAM();

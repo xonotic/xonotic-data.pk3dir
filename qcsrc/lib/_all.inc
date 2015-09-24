@@ -20,6 +20,7 @@
 #include "progname.qh"
 #include "registry.qh"
 #include "sortlist.qc"
+#include "spawnfunc.qh"
 #include "static.qh"
 #include "string.qh"
 #include "struct.qh"

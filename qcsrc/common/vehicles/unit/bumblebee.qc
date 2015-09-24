@@ -768,8 +768,8 @@ float bumble_raygun_send(entity to, float sf)
 	return true;
 }
 
-void spawnfunc_vehicle_bumblebee()
-{SELFPARAM();
+spawnfunc(vehicle_bumblebee)
+{
 	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }

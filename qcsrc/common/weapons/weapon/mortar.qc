@@ -56,8 +56,8 @@ MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-void spawnfunc_weapon_mortar(void) { weapon_defaultspawnfunc(WEP_MORTAR.m_id); }
-void spawnfunc_weapon_grenadelauncher(void) { spawnfunc_weapon_mortar(); }
+spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(WEP_MORTAR.m_id); }
+spawnfunc(weapon_grenadelauncher) { spawnfunc_weapon_mortar(this); }
 
 void W_Mortar_Grenade_Explode(void)
 {SELFPARAM();

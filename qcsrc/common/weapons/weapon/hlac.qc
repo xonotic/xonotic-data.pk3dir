@@ -48,7 +48,7 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
+spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
 
 void W_HLAC_Touch(void)
 {SELFPARAM();

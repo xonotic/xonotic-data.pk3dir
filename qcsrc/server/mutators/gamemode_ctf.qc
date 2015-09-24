@@ -2251,8 +2251,8 @@ Keys:
 "noise3" sound played when flag is lost in the field and respawns itself...
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
-void spawnfunc_item_flag_team1()
-{SELFPARAM();
+spawnfunc(item_flag_team1)
+{
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_1, self);
@@ -2269,8 +2269,8 @@ Keys:
 "noise3" sound played when flag is lost in the field and respawns itself...
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
-void spawnfunc_item_flag_team2()
-{SELFPARAM();
+spawnfunc(item_flag_team2)
+{
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_2, self);
@@ -2287,8 +2287,8 @@ Keys:
 "noise3" sound played when flag is lost in the field and respawns itself...
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
-void spawnfunc_item_flag_team3()
-{SELFPARAM();
+spawnfunc(item_flag_team3)
+{
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_3, self);
@@ -2305,8 +2305,8 @@ Keys:
 "noise3" sound played when flag is lost in the field and respawns itself...
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
-void spawnfunc_item_flag_team4()
-{SELFPARAM();
+spawnfunc(item_flag_team4)
+{
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_4, self);
@@ -2323,8 +2323,8 @@ Keys:
 "noise3" sound played when flag is lost in the field and respawns itself...
 "noise4" sound played when flag is dropped by a player...
 "noise5" sound played when flag touches the ground... */
-void spawnfunc_item_flag_neutral()
-{SELFPARAM();
+spawnfunc(item_flag_neutral)
+{
 	if(!g_ctf) { remove(self); return; }
 	if(!cvar("g_ctf_oneflag")) { remove(self); return; }
 
@@ -2337,8 +2337,8 @@ Note: If you use spawnfunc_ctf_team entities you must define at least 2!  Howeve
 Keys:
 "netname" Name of the team (for example Red, Blue, Green, Yellow, Life, Death, Offense, Defense, etc)...
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
-void spawnfunc_ctf_team()
-{SELFPARAM();
+spawnfunc(ctf_team)
+{
 	if(!g_ctf) { remove(self); return; }
 
 	self.classname = "ctf_team";
@@ -2346,15 +2346,15 @@ void spawnfunc_ctf_team()
 }
 
 // compatibility for quake maps
-void spawnfunc_team_CTF_redflag()    { spawnfunc_item_flag_team1();    }
-void spawnfunc_team_CTF_blueflag()   { spawnfunc_item_flag_team2();    }
-void spawnfunc_team_CTF_redplayer()  { spawnfunc_info_player_team1();  }
-void spawnfunc_team_CTF_blueplayer() { spawnfunc_info_player_team2();  }
-void spawnfunc_team_CTF_redspawn()   { spawnfunc_info_player_team1();  }
-void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
+spawnfunc(team_CTF_redflag)    { spawnfunc_item_flag_team1(this);    }
+spawnfunc(team_CTF_blueflag)   { spawnfunc_item_flag_team2(this);    }
+spawnfunc(team_CTF_redplayer)  { spawnfunc_info_player_team1(this);  }
+spawnfunc(team_CTF_blueplayer) { spawnfunc_info_player_team2(this);  }
+spawnfunc(team_CTF_redspawn)   { spawnfunc_info_player_team1(this);  }
+spawnfunc(team_CTF_bluespawn)  { spawnfunc_info_player_team2(this);  }
 
-void team_CTF_neutralflag()			 { spawnfunc_item_flag_neutral();  }
-void team_neutralobelisk()			 { spawnfunc_item_flag_neutral();  }
+void team_CTF_neutralflag()			 { SELFPARAM(); spawnfunc_item_flag_neutral(self);  }
+void team_neutralobelisk()			 { SELFPARAM(); spawnfunc_item_flag_neutral(self);  }
 
 
 // ==============
@@ -2378,15 +2378,12 @@ void ctf_ScoreRules(int teams)
 
 // code from here on is just to support maps that don't have flag and team entities
 void ctf_SpawnTeam (string teamname, int teamcolor)
-{SELFPARAM();
-	setself(spawn());
-	self.classname = "ctf_team";
-	self.netname = teamname;
-	self.cnt = teamcolor;
-
-	spawnfunc_ctf_team();
-
-	setself(this);
+{
+	entity this = new(ctf_team);
+	this.netname = teamname;
+	this.cnt = teamcolor;
+	this.spawnfunc_checked = true;
+	WITH(entity, self, this, spawnfunc_ctf_team(this));
 }
 
 void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.

@@ -75,8 +75,8 @@ void target_speaker_reset()
 	}
 }
 
-void spawnfunc_target_speaker()
-{SELFPARAM();
+spawnfunc(target_speaker)
+{
 	// TODO: "*" prefix to sound file name
 	// TODO: wait and random (just, HOW? random is not a field)
 	if(self.noise)

@@ -80,8 +80,8 @@ void viewloc_init()
 	self.nextthink = time;
 }
 
-void spawnfunc_trigger_viewlocation()
-{SELFPARAM();
+spawnfunc(trigger_viewlocation)
+{
 	// we won't check target2 here yet, as it may not even need to exist
 	if(self.target == "") { LOG_INFO("^1FAIL!\n"); remove(self); return; }
 
@@ -114,21 +114,21 @@ void viewloc_link()
 	Net_LinkEntity(self, false, 0, viewloc_send);
 }
 
-void spawnfunc_target_viewlocation_start()
-{SELFPARAM();
+spawnfunc(target_viewlocation_start)
+{
 	self.classname = "target_viewlocation_start";
 	self.cnt = 1;
 	viewloc_link();
 }
-void spawnfunc_target_viewlocation_end()
-{SELFPARAM();
+spawnfunc(target_viewlocation_end)
+{
 	self.classname = "target_viewlocation_end";
 	self.cnt = 2;
 	viewloc_link();
 }
 
 // compatibility
-void spawnfunc_target_viewlocation() { spawnfunc_target_viewlocation_start(); }
+spawnfunc(target_viewlocation) { spawnfunc_target_viewlocation_start(this); }
 
 #elif defined(CSQC)
 
