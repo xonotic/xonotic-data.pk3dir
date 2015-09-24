@@ -32,7 +32,7 @@ bool entityfieldassignablefromeditor(int i) {
             if (fieldname == "") continue; \
             FIELDS_COMMON(_spawnfunc_check) \
             whitelist(_spawnfunc_check) \
-            LOG_WARNINGF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue.\n"), fieldname, #id, value); \
+            LOG_WARNINGF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue.\n"), #id, fieldname, value); \
         } \
         this.spawnfunc_checked = true; \
     } \
