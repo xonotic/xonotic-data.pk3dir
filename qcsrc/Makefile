@@ -2,7 +2,7 @@ SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git
 PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"'
 QCC ?= gmqcc
-
+ 
 QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
 # We eventually need to get rid of these.
