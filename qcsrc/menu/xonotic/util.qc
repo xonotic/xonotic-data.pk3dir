@@ -17,39 +17,6 @@ float GL_Have_TextureCompression()
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
 }
 
-void loadTooltips()
-{
-	tooltipdb = db_load(language_filename("tooltips.db"));
-}
-void unloadTooltips()
-{
-	if(tooltipdb >= 0)
-		db_close(tooltipdb);
-	tooltipdb = -1;
-}
-string getZonedTooltipForIdentifier(string s)
-{
-	string t;
-	if(s == "")
-		return string_null;
-	if(tooltipdb >= 0)
-	{
-		t = db_get(tooltipdb, s);
-		if(t == "-")
-			return string_null;
-		if(t != "")
-			return strzone(t);
-	}
-	if(prvm_language == "en")
-	{
-		t = cvar_description(s);
-		if(t != "" && t != "custom cvar")
-			return strzone(t);
-	}
-	LOG_TRACE("WARNING: no tooltip set for ", s, "\n");
-	return string_null;
-}
-
 .entity parent, firstChild, nextSibling;
 void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
 {
@@ -272,6 +239,32 @@ void setDependentWeird(entity e, float(entity) func)
 	e.func_setDependent = func;
 	e.draw = setDependent_Draw;
 	setDependent_Check(e);
+}
+
+void setZonedTooltip(entity e, string theTooltip, string theCvar)
+{
+	if(theTooltip == "") // no tooltip, use cvar description then
+	{
+		if(theCvar != "" && prvm_language == "en")
+		{
+			string t = cvar_description(theCvar);
+			if(t != "" && t != "custom cvar")
+				theTooltip = t;
+		}
+	}
+	else if(theTooltip == "-") // no cvar description as tooltip
+	{
+		theTooltip = string_null;
+	}
+
+	if(e.tooltip)
+		strunzone(e.tooltip);
+	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
+}
+
+void clearTooltip(entity e)
+{
+	setZonedTooltip(e, string_null, string_null);
 }
 
 // URI SYSTEM ////////////////////////////////////////////////////////

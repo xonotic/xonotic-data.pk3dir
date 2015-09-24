@@ -19,7 +19,8 @@ entity makeXonoticParticlesSlider()
 }
 void XonoticParticlesSlider_configureXonoticParticlesSlider(entity me)
 {
-	me.configureXonoticTextSlider(me, "cl_particles_quality");
+	me.configureXonoticTextSlider(me, "cl_particles_quality",
+		_("Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1)"));
 	if(cvar("developer")) { me.addValue(me, ZCTX(_("PART^OMG")),      "0.4 250 0"); }
 	me.addValue(me,                         ZCTX(_("PART^Low")),      "0.4 500 0");
 	me.addValue(me,                         ZCTX(_("PART^Medium")),   "0.8 750 0");

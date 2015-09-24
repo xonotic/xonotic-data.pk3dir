@@ -45,24 +45,105 @@ int Xonotic_KeyBinds_Count = -1;
 
 void Xonotic_KeyBinds_Read()
 {
-	int fh;
-	string s;
-
 	Xonotic_KeyBinds_Count = 0;
-	fh = fopen(language_filename("keybinds.txt"), FILE_READ);
-	if(fh < 0)
-		return;
-	while((s = fgets(fh)))
+
+	#define KEYBIND_DEF(func, desc) do { \
+		if((Xonotic_KeyBinds_Count < MAX_KEYBINDS)) { \
+			Xonotic_KeyBinds_Functions[Xonotic_KeyBinds_Count] = strzone(func); \
+			Xonotic_KeyBinds_Descriptions[Xonotic_KeyBinds_Count] = strzone(desc); \
+			++Xonotic_KeyBinds_Count; \
+		} \
+	} while(0)
+
+	KEYBIND_DEF(""                                      , _("Moving"));
+	KEYBIND_DEF("+forward"                              , _("forward"));
+	KEYBIND_DEF("+back"                                 , _("backpedal"));
+	KEYBIND_DEF("+moveleft"                             , _("strafe left"));
+	KEYBIND_DEF("+moveright"                            , _("strafe right"));
+	KEYBIND_DEF("+jump"                                 , _("jump / swim"));
+	KEYBIND_DEF("+crouch"                               , _("crouch / sink"));
+	KEYBIND_DEF("+hook"                                 , _("off-hand hook"));
+	KEYBIND_DEF("+jetpack"                              , _("jet pack"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Attacking"));
+	KEYBIND_DEF("+fire"                                 , _("primary fire"));
+	KEYBIND_DEF("+fire2"                                , _("secondary fire"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Weapon switching"));
+	KEYBIND_DEF("weapprev"                              , _("previous"));
+	KEYBIND_DEF("weapnext"                              , _("next"));
+	KEYBIND_DEF("weaplast"                              , _("previously used"));
+	KEYBIND_DEF("weapbest"                              , _("best"));
+	KEYBIND_DEF("reload"                                , _("reload"));
+
+	int i;
+
+	#define ADD_TO_W_LIST(pred) do { \
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i) \
+		{ \
+			wep = get_weaponinfo(i); \
+			if(wep.impulse == imp && (pred)) \
+				w_list = strcat(w_list, WEP_NAME(i), " / "); \
+		} \
+	} while(0)
+
+	int imp;
+	entity wep;
+	string w_list = "";
+	for(imp = 1; imp <= 9; ++imp)
 	{
-		if(tokenize_console(s) != 2)
-			continue;
-		Xonotic_KeyBinds_Functions[Xonotic_KeyBinds_Count] = strzone(argv(0));
-		Xonotic_KeyBinds_Descriptions[Xonotic_KeyBinds_Count] = strzone(argv(1));
-		++Xonotic_KeyBinds_Count;
-		if(Xonotic_KeyBinds_Count >= MAX_KEYBINDS)
+		ADD_TO_W_LIST(!(wep.flags & WEP_FLAG_MUTATORBLOCKED) && !(wep.flags & WEP_FLAG_SUPERWEAPON));
+		ADD_TO_W_LIST(wep.flags & WEP_FLAG_SUPERWEAPON);
+		ADD_TO_W_LIST(wep.flags & WEP_FLAG_MUTATORBLOCKED);
+		if(w_list)
+			KEYBIND_DEF(strcat("weapon_group_", itos(imp)), substring(w_list, 0, -4));
+		w_list = "";
+		if(imp == 0)
 			break;
+		if(imp == 9)
+			imp = -1;
 	}
-	fclose(fh);
+	#undef ADD_TO_W_LIST
+
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("View"));
+	KEYBIND_DEF("+zoom"                                 , _("hold zoom"));
+	KEYBIND_DEF("togglezoom"                            , _("toggle zoom"));
+	KEYBIND_DEF("+showscores"                           , _("show scores"));
+	KEYBIND_DEF("screenshot"                            , _("screen shot"));
+	KEYBIND_DEF("+hud_panel_radar_maximized"            , _("maximize radar"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Communicate"));
+	KEYBIND_DEF("messagemode"                           , _("public chat"));
+	KEYBIND_DEF("messagemode2"                          , _("team chat"));
+	KEYBIND_DEF("+con_chat_maximize"                    , _("show chat history"));
+	KEYBIND_DEF("vyes"                                  , _("vote YES"));
+	KEYBIND_DEF("vno"                                   , _("vote NO"));
+	KEYBIND_DEF("ready"                                 , _("ready"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Client"));
+	KEYBIND_DEF("+show_info"                            , _("server info"));
+	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
+	KEYBIND_DEF("disconnect"                            , _("disconnect"));
+	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Teamplay"));
+	KEYBIND_DEF("messagemode2"                          , _("team chat"));
+	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
+	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
+	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
+	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
+	KEYBIND_DEF("dropweapon"                            , _("drop weapon"));
+	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
+	KEYBIND_DEF("+button8"                              , _("drag object"));
+	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("User defined"));
+
+	for(i = 1; i <= 32; ++i)
+		KEYBIND_DEF(strcat("+userbind ", itos(i)), strcat("$userbind", itos(i)));
+
+	#undef KEYBIND_DEF
 }
 
 entity makeXonoticKeyBinder()

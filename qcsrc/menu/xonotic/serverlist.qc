@@ -433,11 +433,17 @@ void XonoticServerList_toggleFavorite(entity me, string srv)
 
 void ServerList_Update_favoriteButton(entity btn, entity me)
 {
-	me.favoriteButton.setText(me.favoriteButton,
-		(IsFavorite(me.ipAddressBox.text) ?
-			_("Remove") : _("Favorite")
-		)
-	);
+	entity e = me.favoriteButton;
+	if(IsFavorite(me.ipAddressBox.text))
+	{
+		e.setText(e, _("Remove"));
+		clearTooltip(e);
+	}
+	else
+	{
+		e.setText(e, _("Favorite"));
+		setZonedTooltip(e, _("Bookmark the currently highlighted server so that it's faster to find in the future"), string_null);
+	}
 }
 
 entity makeXonoticServerList()

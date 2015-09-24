@@ -2,7 +2,7 @@
 #define BUTTON_H
 #include "../item/button.qc"
 CLASS(XonoticButton, Button)
-	METHOD(XonoticButton, configureXonoticButton, void(entity, string, vector));
+	METHOD(XonoticButton, configureXonoticButton, void(entity, string, vector, string));
 	ATTRIB(XonoticButton, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticButton, image, string, SKINGFX_BUTTON)
 	ATTRIB(XonoticButton, grayImage, string, SKINGFX_BUTTON_GRAY)
@@ -15,19 +15,24 @@ CLASS(XonoticButton, Button)
 	ATTRIB(XonoticButton, marginLeft, float, SKINMARGIN_BUTTON) // chars
 	ATTRIB(XonoticButton, marginRight, float, SKINMARGIN_BUTTON) // chars
 ENDCLASS(XonoticButton)
+entity makeXonoticButton_T(string theText, vector theColor, string theTooltip);
 entity makeXonoticButton(string theText, vector theColor);
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeXonoticButton(string theText, vector theColor)
+entity makeXonoticButton_T(string theText, vector theColor, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticButton);
-	me.configureXonoticButton(me, theText, theColor);
+	me.configureXonoticButton(me, theText, theColor, theTooltip);
 	return me;
 }
+entity makeXonoticButton(string theText, vector theColor)
+{
+	return makeXonoticButton_T(theText, theColor, string_null);
+}
 
-void XonoticButton_configureXonoticButton(entity me, string theText, vector theColor)
+void XonoticButton_configureXonoticButton(entity me, string theText, vector theColor, string theTooltip)
 {
 	if(theColor == '0 0 0')
 	{
@@ -40,6 +45,6 @@ void XonoticButton_configureXonoticButton(entity me, string theText, vector theC
 		me.colorC = theColor;
 		me.colorF = theColor;
 	}
-	me.tooltip = getZonedTooltipForIdentifier(strcat(currentDialog.classname, "/", me.text));
+	setZonedTooltip(me, theTooltip, string_null);
 }
 #endif

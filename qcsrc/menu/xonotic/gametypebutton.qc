@@ -29,17 +29,14 @@ entity makeXonoticGametypeButton(float theGroup, string theCvar, string theText)
 {
 	entity me;
 	me = NEW(XonoticGametypeButton);
-	me.configureXonoticGametypeButton(me, theGroup, theCvar, theText);
+	me.configureXonoticGametypeButton(me, theGroup, theCvar, theText, theTooltip);
 	return me;
 }
-void XonoticGametypeButton_configureXonoticGametypeButton(entity me, float theGroup, string theCvar, string theText)
+void XonoticGametypeButton_configureXonoticGametypeButton(entity me, float theGroup, string theCvar, string theText, string theTooltip)
 {
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
+	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);
 	me.align = 0.5;
 	me.onClick = GameTypeButton_Click;

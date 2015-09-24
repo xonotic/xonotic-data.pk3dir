@@ -2,7 +2,7 @@
 #define CHECKBOX_H
 #include "../item/checkbox.qc"
 CLASS(XonoticCheckBox, CheckBox)
-	METHOD(XonoticCheckBox, configureXonoticCheckBox, void(entity, float, float, string, string));
+	METHOD(XonoticCheckBox, configureXonoticCheckBox, void(entity, float, float, string, string, string));
 	METHOD(XonoticCheckBox, setChecked, void(entity, float));
 	ATTRIB(XonoticCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticCheckBox, image, string, SKINGFX_CHECKBOX)
@@ -22,12 +22,14 @@ CLASS(XonoticCheckBox, CheckBox)
 	ATTRIB(XonoticCheckBox, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticCheckBox, disabledAlpha, float, SKINALPHA_DISABLED)
 ENDCLASS(XonoticCheckBox)
+entity makeXonoticCheckBox_T(float, string, string, string);
 entity makeXonoticCheckBox(float, string, string);
+entity makeXonoticCheckBoxEx_T(float, float, string, string, string);
 entity makeXonoticCheckBoxEx(float, float, string, string);
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeXonoticCheckBox(float isInverted, string theCvar, string theText)
+entity makeXonoticCheckBox_T(float isInverted, string theCvar, string theText, string theTooltip)
 {
 	float y, n;
 	if(isInverted > 1)
@@ -50,26 +52,33 @@ entity makeXonoticCheckBox(float isInverted, string theCvar, string theText)
 		n = 0;
 		y = 1;
 	}
-	return makeXonoticCheckBoxEx(y, n, theCvar, theText);
+	return makeXonoticCheckBoxEx_T(y, n, theCvar, theText, theTooltip);
 }
-entity makeXonoticCheckBoxEx(float theYesValue, float theNoValue, string theCvar, string theText)
+entity makeXonoticCheckBox(float isInverted, string theCvar, string theText)
+{
+	return makeXonoticCheckBox_T(isInverted, theCvar, theText, string_null);
+}
+
+entity makeXonoticCheckBoxEx_T(float theYesValue, float theNoValue, string theCvar, string theText, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticCheckBox);
-	me.configureXonoticCheckBox(me, theYesValue, theNoValue, theCvar, theText);
+	me.configureXonoticCheckBox(me, theYesValue, theNoValue, theCvar, theText, theTooltip);
 	return me;
 }
-void XonoticCheckBox_configureXonoticCheckBox(entity me, float theYesValue, float theNoValue, string theCvar, string theText)
+entity makeXonoticCheckBoxEx(float theYesValue, float theNoValue, string theCvar, string theText)
+{
+	return makeXonoticCheckBoxEx_T(theYesValue, theNoValue, theCvar, theText, string_null);
+}
+
+void XonoticCheckBox_configureXonoticCheckBox(entity me, float theYesValue, float theNoValue, string theCvar, string theText, string theTooltip)
 {
 	me.yesValue = theYesValue;
 	me.noValue = theNoValue;
 	me.checked = 0;
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
+	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 }
 void XonoticCheckBox_setChecked(entity me, float val)

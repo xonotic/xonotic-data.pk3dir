@@ -8073,3 +8073,623 @@ msgstr "Колір команди:"
 #: qcsrc/menu/xonotic/util.qh:48
 msgid "Enable panel"
 msgstr "Увімкнути панель"
+
+
+msgid "Moving"
+msgstr "Рух"
+
+msgid "forward"
+msgstr "вперед"
+
+msgid "backpedal"
+msgstr "назад"
+
+msgid "strafe left"
+msgstr "крок ліворуч"
+
+msgid "strafe right"
+msgstr "крок праворуч"
+
+msgid "jump / swim"
+msgstr "стрибок / плисти нагору"
+
+msgid "crouch / sink"
+msgstr "присідання / занурення"
+
+msgid "off-hand hook"
+msgstr "гак"
+
+msgid "jet pack"
+msgstr "реактивний ранець"
+
+msgid "Attacking"
+msgstr "Бій"
+
+msgid "primary fire"
+msgstr "основний вогонь"
+
+msgid "secondary fire"
+msgstr "альтернативний вогонь"
+
+msgid "Weapon switching"
+msgstr "Вибір зброї"
+
+msgid "previous"
+msgstr "попередня"
+
+msgid "next"
+msgstr "наступна"
+
+msgid "previously used"
+msgstr "використана раніше"
+
+msgid "best"
+msgstr "найкраща"
+
+msgid "reload"
+msgstr "перезарядити"
+
+msgid "View"
+msgstr "Вид"
+
+msgid "hold zoom"
+msgstr "утримувати для зуму"
+
+msgid "toggle zoom"
+msgstr "увімк / вимк зум"
+
+msgid "show scores"
+msgstr "показати рахунок"
+
+msgid "screen shot"
+msgstr "скриншот"
+
+msgid "maximize radar"
+msgstr ""
+
+msgid "toggle minigame menu"
+msgstr ""
+
+msgid "Communicate"
+msgstr "Спілкування"
+
+msgid "public chat"
+msgstr "публічний чат"
+
+msgid "team chat"
+msgstr "командний чат"
+
+msgid "show chat history"
+msgstr "показувати історію чату"
+
+msgid "vote YES"
+msgstr "проголосувати ТАК"
+
+msgid "vote NO"
+msgstr "проголосувати НІ"
+
+msgid "ready"
+msgstr "готовий"
+
+msgid "Client"
+msgstr "Клієнт"
+
+msgid "quick menu"
+msgstr ""
+
+msgid "server info"
+msgstr "відомості про сервер"
+
+msgid "enter console"
+msgstr "увійти в консоль"
+
+msgid "disconnect"
+msgstr "роз'єднатися"
+
+msgid "quit"
+msgstr "вийти"
+
+msgid "Teamplay"
+msgstr "Командна гра"
+
+msgid "team chat"
+msgstr "командний чат"
+
+msgid "auto-join team"
+msgstr "автовибір команди"
+
+msgid "team menu"
+msgstr "командне меню"
+
+msgid "sandbox menu"
+msgstr ""
+
+msgid "enter spectator mode"
+msgstr "увійти в режим спостерігача"
+
+msgid "drop weapon"
+msgstr "викинути зброю"
+
+msgid "drop key / drop flag"
+msgstr "викинути ключ / прапор"
+
+msgid "drag object"
+msgstr ""
+
+msgid "3rd person view"
+msgstr ""
+
+msgid "User defined"
+msgstr "Визначені користувачем"
+
+msgid "userbind"
+msgstr ""
+
+
+msgid "Add every available map to your selection"
+msgstr ""
+
+msgid "Add the maps shown in Maplist above to your selection"
+msgstr ""
+
+msgid "Advanced server settings"
+msgstr "Додаткові налаштування сервера"
+
+msgid "Advanced settings where you can tweak every single variable of the game"
+msgstr "Тут ви зможете змінити будь-які деталі гри"
+
+msgid "All players are almost invisible"
+msgstr "Всі гравці майже невидимі"
+
+msgid "Allow the console toggling bind to also close the console"
+msgstr "Дозволяє закривати і відкривати консоль однією клавішею"
+
+msgid "Always carry the laser as an additional weapon in Nix"
+msgstr "Зробити лазер доступним у Нікс"
+
+msgid "Ambient lighting, if set too high it tends to make light on maps look dull and flat (default: 4)"
+msgstr "Навколишнє освітлення, якщо значення надто високе, то освітлення на мапах стає приглушеним та плоским (за замовчуванням: 4)"
+
+msgid "Amount of bots on your server"
+msgstr "Кількість ботів на вашому сервері"
+
+msgid "Amount of health below which your player gets stunned because of blood loss"
+msgstr "Кількість здоров'я, нижче за яку гравець буде паралізований від втрати крові"
+
+msgid "Anisotropic filtering quality (default: 1x)"
+msgstr "Якість анізотропної фільтрації (за замовчуванням: 1x)"
+
+msgid "Announcer sound telling you the remaining minutes of the match"
+msgstr "Увімкнути попередження про те, скільки залишилося часу до кінця матчу"
+
+msgid "Audio settings"
+msgstr "Налаштування аудіо"
+
+msgid "Automatically switch to newly picked up weapons if they are better than what you are carrying"
+msgstr "Автоматично перемикатися на щойно підняту зброю, якщо вона краща за ту, що ви тримаєте у руках"
+
+msgid "Automatically taunt enemies after fragging them"
+msgstr "Автоматично глузувати над ворогами після того, як ви вбили їх"
+
+msgid "Autoselect team (recommended)"
+msgstr "Автоматично обрати команду (рекомендується)"
+
+msgid "Back to work..."
+msgstr "Назад до роботи..."
+
+msgid "Benchmark how fast your computer can run the highlighted demo"
+msgstr "Перевірте як швидко ваш комп'ютер зможе програти обране демо"
+
+msgid "Bookmark the currently highlighted server so that it's faster to find in the future"
+msgstr "Зробити закладку на цьому сервері для того, щоб потім знаходити його швидше"
+
+msgid "Brightness of black (default: 0)"
+msgstr "Яскравіcть чорного (за замовчуванням: 0)"
+
+msgid "Brightness of white (default: 1)"
+msgstr "Яскравість білого (за замовчуванням: 1)"
+
+msgid "Browse and view demos"
+msgstr "Знайдіть та перегляньте демо записи"
+
+msgid "By how much to multiply the contrast in dark areas (default: 1)"
+msgstr "На скільки збільшувати контраст в темних місцях (за замовчуванням: 1)"
+
+msgid "Change the game settings"
+msgstr "Змінити налаштування гри"
+
+msgid "Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)"
+msgstr "Чіткість текстур. Зниження параметру зменшить використання відеопам'яті, але зробить текстури нечіткими (за замовчуванням: добре)"
+
+msgid "Change the smoothness of the curves on the map (default: normal)"
+msgstr "Змінити рівність кривих на мапі (за замовчуванням: нормально)"
+
+msgid "Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done."
+msgstr ""
+
+msgid "Compress the textures for video cards with small amounts of video memory available (default: None)"
+msgstr "Стискати текстури для відеокарт з малою кількістю відеопам'яті (за замовчуванням: вимкнуто)"
+
+msgid "Control transparency of the waypoints"
+msgstr "Вкажіть прозорість дороговказів"
+
+msgid "Customize your player settings"
+msgstr "Налаштування вашого гравця"
+
+msgid "Damage done to your enemy gets added to your own health"
+msgstr "Шкода яку ви наносите ворогам додається до вашого здоров'я"
+
+msgid "Decals further away than this will not be drawn (default: 300)"
+msgstr "Сліди на відстані більшій ніж ця не будуть створюватись (за замовчуванням: 300)"
+
+msgid "Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly. (default: disabled)"
+msgstr "Вимикає текстури повністю, для дуже слабких систем. Покращує продуктивність, але виглядає погано (за замовчуванням: вимкнуто)"
+
+msgid "Distance from which taunts can be heard"
+msgstr "Відстань на якій можливо почути глузування"
+
+msgid "Draw the weapon model"
+msgstr "Показувати модель зброї"
+
+msgid "Effect settings"
+msgstr "Налаштування ефектів"
+
+msgid "Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts (default: disabled)"
+msgstr "Прибирає перекриття одних пікселів іншими створюючи спочатку версію сцени з лише глибиною (за замовчуванням: вимкнуто)"
+
+msgid "Enable OpenGL 2.0 pixel shaders for lightning (default: enabled)"
+msgstr "Вмикає піксельні шейдери OpenGL 2.0 для освітлення (за замовчуванням: увімкнуто)"
+
+msgid "Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot (default: disabled)"
+msgstr "Увімкнути антиаліасинг, який буде згладжувати грані 3D поверхонь. Прийміть до уваги, що це може сильно зменшити продуктивність. (за замовчуванням: вимкнуто)"
+
+msgid "Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)"
+msgstr "Увімкнути ефект bloom, який освітлює ближні пікселі дуже яскравих пікселів. Має сильний вплив на продуктивність (за замовчуванням: вимкнуто)"
+
+msgid "Enable clientside movement prediction"
+msgstr "Увімкнути передбачення руху зі сторони клієнта"
+
+msgid "Enable corona flares around certain lights (default: enabled)"
+msgstr "Увімкнути сонячні корони навколо деяких джерел освітлення (за замовчуванням: увімкнуто)"
+
+msgid "Enable decals (bullet holes and blood) (default: enabled)"
+msgstr "Сліди від куль та пострілів (за замовчуванням: увімкнуто)"
+
+msgid "Enable directional voices"
+msgstr "Вмикає просторові голоси"
+
+msgid "Enable dodging"
+msgstr "Вмикає ухилення"
+
+msgid "Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)"
+msgstr "Вмикає швидкіше, але не таке гарне динамічне освітлення за допомогою яскравих корон, а не справжніх динамічних вогнів (за замовчуванням: вимкнуто)"
+
+msgid "Enable footstep sounds"
+msgstr "Вмикає звуки кроків"
+
+msgid "Enable fullscreen mode (default: enabled)"
+msgstr "На повний екран (за замовчуванням: увімкнуто)"
+
+msgid "Enable network update smoothing"
+msgstr "Увімкнути згладжування оновлення мережі"
+
+msgid "Enable rendering of dynamic lights such as explosions and rocket lights (default: enabled)"
+msgstr "Вмикає рендеринг динамічних вогнів від вибухів та ракет (за замовчуванням: увімкнуто)"
+
+msgid "Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance. (default: disabled)"
+msgstr "Вмикає повний рендеринг динамічного освітлення світу, може мати сильний вплив на продуктивність. (за замовчуванням: вимкнуто)"
+
+msgid "Enable rendering of shadows from dynamic lights (default: disabled)"
+msgstr "Вмикає тіні від динамічних джерел освітлення (за замовчуванням: вимкнуто)"
+
+msgid "Enable rendering of shadows from realtime world lights (default: disabled)"
+msgstr "Вмикає тіні від динамічних джерел освітлення світу (за замовчуванням: увімкнуто)"
+
+msgid "Enable spatialization (blend the right and left channel slightly to decrease stereo separation a bit for headphones)"
+msgstr "Злегка змішати правий та лівий канали щоб трохи зменшити розділення стерео для навушників"
+
+msgid "Enable the use of glossmaps on textures supporting it (default: enabled)"
+msgstr "Вмикає використання мап блиску на текстурах, які їх підтримують (за замовчуванням: увімкнуто)"
+
+msgid "Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot (default: disabled)"
+msgstr "Вмикає GLSL для використання корекції гамми, може мати сильній вплив на продуктивність (за замовчуванням: вимкнуто)"
+
+msgid "Enable use of directional shading on textures (default: enabled)"
+msgstr "Вмикає використання directional shading на текстурах (за замовчуванням: увімкнуто)"
+
+msgid "Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)"
+msgstr "Вмикає вертикальну синхронізацію щоб запобігти розривам зображення, ваші FPS не будуть підніматися вище швидкості оновлення монітору (за замовчуванням: увімкнуто)"
+
+msgid "Enable/disable the HUD background"
+msgstr "Увімкнути/вимкнути фон HUD"
+
+msgid "Enables special postprocessing effects for when damaged or under water or using a powerup (default: disabled)"
+msgstr ""
+
+msgid "Fade coronas according to visibility (default: enabled)"
+msgstr "Прибирати корони відповідно з видимістю (за замовчуванням: увімкнуто)"
+
+msgid "Field of vision in degrees from 60 to 130, default is 90"
+msgstr "Поле огляду у градусах, від 60 до 130, 90 за замовчуванням"
+
+msgid "Find servers to play on"
+msgstr "Знайти сервери для гри"
+
+msgid "Force client to use chosen port unless it is set to 0"
+msgstr "Змушувати клієнта використовувати обраний порт, але тільки якщо значення не 0"
+
+msgid "Global rendering brightness (default: 1)"
+msgstr "Яскравість (за замовчуванням: 1)"
+
+msgid "Higher quality offset mapping, which also has a huge impact on performance (default: disabled)"
+msgstr "Якісніше офсетне текстурування, має великий вплив на продуктивність (за замовчуванням: вимкнуто)"
+
+msgid "Higher quality version of bloom, which has a huge impact on performance. (default: disabled)"
+msgstr "Якісніша версія ефекту bloom, сильно впливає на продуктивність (за замовчуванням: вимкнуто)"
+
+msgid "Host your own game"
+msgstr "Почніть свою власну гру"
+
+msgid "How big the zoom factor is when the zoom button is pressed"
+msgstr "Сила зуму коли натиснута клавіша"
+
+msgid "How fast the view will be zoomed, disable to zoom instantly"
+msgstr "Швидкість зуму, вимкніть щоб збільшувати зображення миттєво"
+
+msgid "How long a view kick from damage lasts (default: 0)"
+msgstr "Як довго триватиме поштовх від ураження (за замовчуванням: 0)"
+
+msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
+msgstr "Скільки використовувати бітів на піксель (BPP), рекомендується 32"
+
+msgid "How many input packets to send to the server each second"
+msgstr "Скільки вхідних пакетів посилати серверу кожну секунду"
+
+msgid "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)"
+msgstr "Як зум змінює чутливість миші, від 0 (зменшує чутливість) до 1 (без змін)"
+
+msgid "I got some more fragging to do!"
+msgstr "На мене чекають ще кілька фрагів!"
+
+msgid "If set, only reduce the texture quality of models (default: enabled)"
+msgstr "Знижує якість текстур тільки на моделях (за замовчуванням: увімкнуто)"
+
+msgid "Input settings"
+msgstr "Налаштування керування"
+
+msgid "Inverse gamma correction value, a brightness effect that does not affect white or black (default: 1.125)"
+msgstr "Яскравість що не впливає на білий та чорний колір (за замовчуванням: 1.125)"
+
+msgid "Invert mouse movement on the Y-axis"
+msgstr "Інвертувати рух миші по осі Y"
+
+msgid "Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines (default: disabled)"
+msgstr "Центральний процесор буде чекати, поки GPU відеокарти не закінчить кадр, може допомогти на деяких системах при деяких проблемах (за замовчуванням: вимкнуто)"
+
+msgid "Make things fall to the ground slower, lower value means lower gravity"
+msgstr "Предмети падатимуть повільніше, менше значення робить гравітацію нижче"
+
+msgid "Make use of DGA mouse input"
+msgstr "Використовувати ввід DGA для миші"
+
+msgid "Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)"
+msgstr "Використовувати Vertex Buffer Objects щоб зберігати нерухому геометрію у відеопам'яті для прискорення рендеренгу (за замовчуванням: вершини та трикутники)"
+
+msgid "Make use of the list above when cycling through weapons with the mouse wheel"
+msgstr "Використовувати список вгорі під час вибору зброї колесиком миші"
+
+msgid "Maximum download speed"
+msgstr "Максимальна швидкість завантаження"
+
+msgid "Maximum number of concurrent HTTP/FTP downloads"
+msgstr "Максимальна кількість одночасних HTTP/FTP завантажень"
+
+msgid "Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)"
+msgstr "Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)"
+
+msgid "Misc settings"
+msgstr "Різні налаштування"
+
+msgid "Motion blur strength - 0.4 recommended"
+msgstr "Сила ефекту motion blur - рекомендується 0.4"
+
+msgid "Mouse speed multiplier"
+msgstr "Швидкість миші"
+
+msgid "Mouse speed multiplier in the menu, does not affect aiming in the game"
+msgstr "Швидкість миші у меню, не впливає на ігровий процес"
+
+msgid "Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1)"
+msgstr "Кількість часток, чим менша кількість тим менший вплив на продуктивність (за замовчуванням: 1.0)"
+
+msgid "Mutators and weapon arenas"
+msgstr "Мутатори і арени"
+
+msgid "Name under which you will appear in the game"
+msgstr "Ім'я під яким ви з'явитесь у грі"
+
+msgid "Network settings"
+msgstr "Налаштування мережі"
+
+msgid "No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon."
+msgstr "Нікс (No items Xonotic) - замість того щоб підбирати предмети, всі гравці грають з однією зброєю. Через деякий час почнеться відлік, і зброя у всіх зміниться на іншу"
+
+msgid "None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy"
+msgstr "Жодного: не проводити тест на влучання для прицілу; TrueAim: робити приціл нечітким коли ви не влучите у стіну; Вороги: також збільшувати приціл коли ви влучите у ворога"
+
+msgid "Number of channels for the sound output"
+msgstr "Кількість каналів"
+
+msgid "Number of maps that are shown in the map voting at the end of a match"
+msgstr "Кількість мап які будуть доступні для голосування у кінці матчу"
+
+msgid "Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface (default: disabled)"
+msgstr "Офсетне текстурування, що змусить текстури з мапами висот виглядати об'ємними (за замовчуванням: вимкнуто)"
+
+msgid "Only possible to inflict damage on your enemy while he's airborne"
+msgstr "Шкоду можливо нанести тільки коли ворог у повітрі"
+
+msgid "Override the default amount of teams in teamgames"
+msgstr "Переписати клькість команд за замовчуванням в командних іграх"
+
+msgid "Particles further away than this will not be drawn (default: 1000)"
+msgstr "Частки на відстані більшій ніж ця не будуть створюватись (за замовчуванням: 1000)"
+
+msgid "Pause updating the server list to prevent servers from \"jumping around\""
+msgstr "Призупинити оновлення списку серверів для зручнішого вибору"
+
+msgid "Percentage of damage dealt to teammates"
+msgstr "Процент шкоди яку ви будете наносити товаришам по команді"
+
+msgid "Percentage of teamdamage that will be mirrored to you"
+msgstr "Процент від шкоди що ви нанесли товаришу по команді який буде віддзеркалений вам"
+
+msgid "Play a hit indicator sound when your shot hits an enemy"
+msgstr "Грати спеціальний звук коли ви влучаєте у ворога"
+
+msgid "Play online, against your friends in LAN, view demos or change player settings"
+msgstr "Грайте по інтернету, локальній мережі, переглядайте демо та змінюйте налаштування гравця"
+
+msgid "Play sounds when clicking or hovering over menu items"
+msgstr "Увімкнути звуки меню"
+
+msgid "Play the singleplayer campaign or instant action matches against bots"
+msgstr "Почніть одиночну кампанію або випадковий бій проти ботів"
+
+msgid "Players spawn with the grappling hook"
+msgstr "Гравці отримують гак"
+
+msgid "Players spawn with the jetpack"
+msgstr "Гравці отримують реактивний ранець"
+
+msgid "Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps."
+msgstr ""
+
+msgid "Players will drop all weapons they possessed when they are killed"
+msgstr "Після того, як гравця вб'ють, з нього випаде вся зброя яку він мав"
+
+msgid "Poor man's left handed mode (default: off)"
+msgstr "Простий режим для лівші (за замовчуванням: вимкнуто)"
+
+msgid "Position of the weapon model; requires reconnect"
+msgstr "Положення моделі зброї, потрібно буде з'єднатися знову"
+
+msgid "Quit the game"
+msgstr "Вийти з гри"
+
+msgid "Reduce the amount of gibs or remove them completely (default: lots)"
+msgstr "Зменшити кількість шматків тіла, або відключити їх зовсім (за замовчуванням: багато)"
+
+msgid "Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces (default: disabled)"
+msgstr "Якість віддзеркалень та заломлень, сильно впливає на продуктивність на мапах, де є дзеркальні поверхні (за замовчуванням: вимкнуто)"
+
+msgid "Remove all the maps from your selection"
+msgstr ""
+
+msgid "Remove the maps shown in Maplist above from your selection"
+msgstr ""
+
+msgid "Replace blood and gibs with content that does not have any gore effects (default: disabled)"
+msgstr "Замінити шматки тіла та кров не жорстокими елементами (за замовчуванням: вимкнуто)"
+
+msgid "Resolution of reflections/refractions (default: good)"
+msgstr "Роздільність віддзеркалень/заломлень (за замовчуванням: увімкнуто)"
+
+msgid "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), requires GLSL color control (default: 1)"
+msgstr "Корекція насиченості (0 = чорно-біла, 1 = нормальна, 2 = перенасичена), необхідно використовувати шейдери GLSL для контролю кольором (за замовчуванням: 1)"
+
+msgid "Scale multiplier of the waypoints"
+msgstr "Вкажіть розмір дороговказів"
+
+msgid "Screen resolution"
+msgstr "Роздільність екрану"
+
+msgid "Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups."
+msgstr "Вибір арени з окремою зброєю дасть гравцям цю зброю і необмежену кількість боєприпасів до неї, і прибере з мапи всю іншу зброю"
+
+msgid "Set a different crosshair for each weapon, good if you play without weapon models"
+msgstr "Встановити приціл для кожної зброї окремо, корисно для гри без моделей зброї"
+
+msgid "Set the color of the crosshair depending on the weapon you are currently holding"
+msgstr "Колір прицілу буде залежати від кожної окремої зброї"
+
+msgid "Set your most preferred weapons, autoswitch and weapon model settings"
+msgstr "Вкажіть зброю якій ви надаєте перевагу, налаштуйте автоматичне перемикання та моделі зброї"
+
+msgid "Show a graph of packet sizes and other information"
+msgstr "Показувати графік розмірів пакетів та іншої інформації"
+
+msgid "Show current date, useful on screenshots"
+msgstr "Показувати поточну дату, корисно для скриншотів"
+
+msgid "Show current time of day, useful on screenshots"
+msgstr "Показувати поточний час, корисно для скриншотів"
+
+msgid "Show empty servers"
+msgstr "Показувати порожні сервери"
+
+msgid "Show full servers that have no slots available"
+msgstr "Показувати повні сервери без вільних місць"
+
+msgid "Show more information about the currently highlighted server"
+msgstr "Показати більше інформації про виділений сервер"
+
+msgid "Show the name of the player you are aiming at"
+msgstr "Показувати ім'я гравця в якого ви цілитися"
+
+msgid "Show various gametype specific waypoints"
+msgstr "Показувати дороговкази різний ігрових режимів"
+
+msgid "Show your rendered frames per second"
+msgstr "Показувати лічильник кадрів за секунду"
+
+msgid "Simple majority wins a vote"
+msgstr "Проста більшість перемагає в голосуванні"
+
+msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
+msgstr "Згладжування руху миші"
+
+msgid "Sound output frequency"
+msgstr "Частотність звуку"
+
+msgid "Specify how experienced the bots will be"
+msgstr "Вкажіть досвідченість ботів"
+
+msgid "Specify your network speed with this slider"
+msgstr "Вкажіть швидкість вашої мережі"
+
+msgid "Swap left/right channels"
+msgstr "Поміняти місцями лівий та правий канал"
+
+msgid "The Xonotic credits"
+msgstr "Розробники Xonotic"
+
+msgid "The amount of frags needed before the match will end"
+msgstr "Кількість фрагів, яка потрібна для закінчення матчу"
+
+msgid "The maximum amount of players or bots that can be connected to your server at once"
+msgstr "Максимальна кількість гравців та ботів на вашому сервері"
+
+msgid "Time in seconds before decals fade away (default: 2)"
+msgstr "Час у секундах після якого сліди зникатимуть (за замовчуванням: 2)"
+
+msgid "Timelimit in minutes that when hit, will end the match"
+msgstr "Час, після якого матч закінчиться"
+
+msgid "Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)"
+msgstr "Використовувати мапи освітлення з високою роздільністю, красиві, але використовують більше відеопам'яті (за замовчуванням: увімкнуто)"
+
+msgid "Use per-pixel lighting effects (default: enabled)"
+msgstr "Використовувати попіксельні ефекти освітлення (за замовчуванням: увімкнуто)"
+
+msgid "Use the old HUD layout"
+msgstr "Використовувати старе розміщення HUD"
+
+msgid "Video settings"
+msgstr "Налаштування відео"
+
+msgid "View bobbing frequency, disable for no bobbing"
+msgstr "Частота гойдання, вимкнути щоб прибрати гойдання"
+
+msgid "Weapons stay after they are picked up"
+msgstr "Зброя залишається після того, як була підібраною"

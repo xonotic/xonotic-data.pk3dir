@@ -77,16 +77,19 @@ void XonoticGameViewSettingsTab_fill(entity me)
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 5, "fov"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(60, 130, 5, "fov",
+			_("Field of vision in degrees from 60 to 130, default is 90")));
 	me.TR(me);
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom factor:"))));
-		me.TD(me, 1, 2, e = makeXonoticSlider(2, 30, 0.5, "cl_zoomfactor"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(2, 30, 0.5, "cl_zoomfactor",
+			_("How big the zoom factor is when the zoom button is pressed")));
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom speed:"))));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_zoomspeed"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("cl_zoomspeed",
+			_("How fast the view will be zoomed, disable to zoom instantly")));
 			e.addValue(e, "1", "1"); // Samual: for() loop doesn't work here, even though it would make sense.
 			e.addValue(e, "2", "2");
 			e.addValue(e, "3", "3");
@@ -100,7 +103,8 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom sensitivity:"))));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "cl_zoomsensitivity"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1, 0.1, "cl_zoomsensitivity",
+			_("How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_velocityzoom_enabled", _("Velocity zoom")));

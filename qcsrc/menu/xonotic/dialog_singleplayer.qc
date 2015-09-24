@@ -4,6 +4,7 @@
 CLASS(XonoticSingleplayerDialog, XonoticDialog)
 	METHOD(XonoticSingleplayerDialog, fill, void(entity));
 	ATTRIB(XonoticSingleplayerDialog, title, string, _("Singleplayer"))
+	ATTRIB(XonoticSingleplayerDialog, tooltip, string, _("Play the singleplayer campaign or instant action matches against bots"))
 	ATTRIB(XonoticSingleplayerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)
 	ATTRIB(XonoticSingleplayerDialog, intendedWidth, float, 0.80)
 	ATTRIB(XonoticSingleplayerDialog, rows, float, 24)

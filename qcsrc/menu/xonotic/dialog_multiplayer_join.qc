@@ -36,15 +36,18 @@ void XonoticServerListTab_fill(entity me)
 		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "menu_slist_categories", ZCTX(_("SRVS^Categories"))));
 			e.onClickEntity = slist;
 			e.onClick = ServerList_Categories_Click;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showempty", ZCTX(_("SRVS^Empty"))));
+		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "menu_slist_showempty", ZCTX(_("SRVS^Empty")),
+			_("Show empty servers")));
 			slist.filterShowEmpty = e.checked;
 			e.onClickEntity = slist;
 			e.onClick = ServerList_ShowEmpty_Click;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "menu_slist_showfull", ZCTX(_("SRVS^Full"))));
+		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "menu_slist_showfull", ZCTX(_("SRVS^Full")),
+			_("Show full servers that have no slots available")));
 			slist.filterShowFull = e.checked;
 			e.onClickEntity = slist;
 			e.onClick = ServerList_ShowFull_Click;
-		me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "net_slist_pause", _("Pause")));
+		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "net_slist_pause", _("Pause"),
+			_("Pause updating the server list to prevent servers from \"jumping around\"")));
 
 	me.gotoRC(me, 2, 0);
 		me.TD(me, 1, 1, slist.sortButton1 = makeXonoticButton(string_null, '0 0 0'));
@@ -67,7 +70,8 @@ void XonoticServerListTab_fill(entity me)
 			e.onClick = ServerList_Favorite_Click;
 			e.onClickEntity = slist;
 			slist.favoriteButton = e;
-		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Info..."), '0 0 0'));
+		me.TD(me, 1, 1.5, e = makeXonoticButton_T(_("Info..."), '0 0 0',
+			_("Show more information about the currently highlighted server")));
 			e.onClick = ServerList_Info_Click;
 			e.onClickEntity = slist;
 			slist.infoButton = e;

@@ -38,12 +38,8 @@ void XonoticCheckBoxString_configureXonoticCheckBoxString(entity me, string theY
 	me.yesString = theYesValue;
 	me.noString = theNoValue;
 	me.checked = 0;
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
 }
 void XonoticCheckBoxString_setChecked(entity me, float foo)
