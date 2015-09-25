@@ -1,19 +1,20 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ PORTO,
-/* function  */ W_Porto,
-/* ammotype  */ ammo_none,
-/* impulse   */ 0,
-/* flags     */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
-/* rating    */ 0,
-/* color     */ '0.5 0.5 0.5',
-/* modelname */ "porto",
-/* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairporto 0.6",
-/* wepimg    */ "weaponporto",
-/* refname   */ "porto",
-/* wepname   */ _("Port-O-Launch")
-);
+CLASS(PortoLaunch, Weapon)
+/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none)
+/* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0)
+/* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON);
+/* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
+/* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
+/* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
+/* model     */ ATTRIB(PortoLaunch, model, string, strzone(W_Model(strcat("g_", this.mdl, ".md3"))));
+/* simplemdl */ ATTRIB(PortoLaunch, w_simplemdl, string, "foobar");
+/* crosshair */ ATTRIB(PortoLaunch, w_crosshair, string, "gfx/crosshairporto");
+/* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");
+/* refname   */ ATTRIB(PortoLaunch, netname, string, "porto");
+/* wepname   */ ATTRIB(PortoLaunch, message, string, _("Port-O-Launch"));
+ENDCLASS(PortoLaunch)
+REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 
 #define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, PORTO, porto)
 #define PORTO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -284,16 +285,15 @@ void W_Porto_Attack(float type)
 }
 
 bool w_nexball_weapon(int req); // WEAPONTODO
-bool W_Porto(entity thiswep, int req)
-{SELFPARAM();
-	//vector v_angle_save;
 
+METHOD(PortoLaunch, weapon_func, bool(entity this, int req)) {
 	if(g_nexball) { return w_nexball_weapon(req); }
+	return super.weapon_func(this, req);
+}
 
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(PortoLaunch, wr_aim, bool(entity thiswep))
 		{
+			SELFPARAM();
 			self.BUTTON_ATCK = false;
 			self.BUTTON_ATCK2 = false;
 			if(!WEP_CVAR(porto, secondary))
@@ -302,13 +302,14 @@ bool W_Porto(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_CONFIG:
+		METHOD(PortoLaunch, wr_config, bool(entity this))
 		{
 			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_THINK:
+		METHOD(PortoLaunch, wr_think, bool(entity thiswep))
 		{
+			SELFPARAM();
 			if(WEP_CVAR(porto, secondary))
 			{
 				if(self.BUTTON_ATCK)
@@ -365,13 +366,17 @@ bool W_Porto(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_CHECKAMMO1:
-		case WR_CHECKAMMO2:
+		METHOD(PortoLaunch, wr_checkammo1, bool(entity this))
 		{
 			// always allow infinite ammo
 			return true;
 		}
-		case WR_INIT:
+		METHOD(PortoLaunch, wr_checkammo2, bool(entity this))
+		{
+			// always allow infinite ammo
+			return true;
+		}
+		METHOD(PortoLaunch, wr_init, bool(entity this))
 		{
 			precache_sound("porto/bounce.wav");
 			precache_sound("porto/create.wav");
@@ -382,42 +387,31 @@ bool W_Porto(entity thiswep, int req)
 			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_SETUP:
+		METHOD(PortoLaunch, wr_setup, bool(entity thiswep))
 		{
+			SELFPARAM();
 			self.ammo_field = ammo_none;
 			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(PortoLaunch, wr_resetplayer, bool(entity thiswep))
 		{
+			SELFPARAM();
 			self.porto_current = world;
 			return true;
 		}
-	}
-	return false;
-}
 #endif
 #ifdef CSQC
-bool W_Porto(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
-		{
-			LOG_INFO("Since when does Porto send DamageInfo?\n");
+		METHOD(PortoLaunch, wr_impacteffect, bool(entity this)) {
+			LOG_WARNING("Since when does Porto send DamageInfo?\n");
 			return true;
 		}
-		case WR_INIT:
-		{
+		METHOD(PortoLaunch, wr_init, bool(entity this)) {
 			// nothing to do
 			return true;
 		}
-		case WR_ZOOMRETICLE:
-		{
+		METHOD(PortoLaunch, wr_zoomreticle, bool(entity this)) {
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
 #endif
 #endif
