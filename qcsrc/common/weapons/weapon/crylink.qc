@@ -564,7 +564,7 @@ void W_Crylink_Attack2(void)
 	}
 }
 
-bool W_Crylink(int req)
+bool W_Crylink(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount;
 	switch(req)
@@ -581,7 +581,7 @@ bool W_Crylink(int req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 
 			if(self.BUTTON_ATCK)
 			{
@@ -624,7 +624,7 @@ bool W_Crylink(int req)
 						setorigin(linkjoineffect, pos);
 					}
 					self.crylink_waitrelease = 0;
-					if(!W_Crylink(WR_CHECKAMMO1) && !W_Crylink(WR_CHECKAMMO2))
+					if(!W_Crylink(WEP_CRYLINK, WR_CHECKAMMO1) && !W_Crylink(WEP_CRYLINK, WR_CHECKAMMO2))
 					if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						// ran out of ammo!
@@ -687,7 +687,7 @@ bool W_Crylink(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Crylink(int req)
+bool W_Crylink(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

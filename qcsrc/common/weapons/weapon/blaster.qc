@@ -144,7 +144,7 @@ void W_Blaster_Attack(
 		WITH(entity, self, missile, missile.think());
 	}
 }
-bool W_Blaster(int request)
+bool W_Blaster(entity thiswep, int request)
 {SELFPARAM();
 	switch(request)
 	{
@@ -260,7 +260,7 @@ bool W_Blaster(int request)
 }
 #endif
 #ifdef CSQC
-bool W_Blaster(int request)
+bool W_Blaster(entity thiswep, int request)
 {SELFPARAM();
 	switch(request)
 	{

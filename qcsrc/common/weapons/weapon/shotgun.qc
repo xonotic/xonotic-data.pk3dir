@@ -195,7 +195,7 @@ void W_Shotgun_Attack2(void)
 // alternate secondary weapon frames
 void W_Shotgun_Attack3_Frame2()
 {SELFPARAM();
-	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+	if (!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -209,7 +209,7 @@ void W_Shotgun_Attack3_Frame2()
 }
 void W_Shotgun_Attack3_Frame1()
 {SELFPARAM();
-	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+	if (!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -223,7 +223,7 @@ void W_Shotgun_Attack3_Frame1()
 
 .float shotgun_primarytime;
 
-float W_Shotgun(float req)
+float W_Shotgun(entity thiswep, float req)
 {SELFPARAM();
 	float ammo_amount;
 	switch(req)
@@ -243,7 +243,7 @@ float W_Shotgun(float req)
 			{
 				// don't force reload an empty shotgun if its melee attack is active
 				if(WEP_CVAR(shotgun, secondary) < 2)
-					WEP_ACTION(self.weapon, WR_RELOAD);
+					_WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else
 			{
@@ -347,7 +347,7 @@ float W_Shotgun(float req)
 #endif
 #ifdef CSQC
 .float prevric;
-float W_Shotgun(float req)
+float W_Shotgun(entity thiswep, float req)
 {SELFPARAM();
 	switch(req)
 	{

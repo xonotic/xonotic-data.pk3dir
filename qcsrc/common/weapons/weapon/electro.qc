@@ -420,7 +420,7 @@ void W_Electro_CheckAttack(void)
 }
 
 .float bot_secondary_electromooth;
-bool W_Electro(int req)
+bool W_Electro(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount;
 	switch(req)
@@ -467,7 +467,7 @@ bool W_Electro(int req)
 
 				if(!ammo_amount)
 				{
-					WEP_ACTION(self.weapon, WR_RELOAD);
+					_WEP_ACTION(self.weapon, WR_RELOAD);
 					return false;
 				}
 
@@ -567,7 +567,7 @@ bool W_Electro(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Electro(int req)
+bool W_Electro(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

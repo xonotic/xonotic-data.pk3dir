@@ -460,7 +460,7 @@ void w_ready()
 float weapon_prepareattack_checkammo(float secondary)
 {SELFPARAM();
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO1 + secondary))
+	if (!_WEP_ACTION(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
 		entity mine;
@@ -478,7 +478,7 @@ float weapon_prepareattack_checkammo(float secondary)
 			self.prevdryfire = time;
 		}
 
-		if(WEP_ACTION(self.weapon, WR_CHECKAMMO2 - secondary)) // check if the other firing mode has enough ammo
+		if(_WEP_ACTION(self.weapon, WR_CHECKAMMO2 - secondary)) // check if the other firing mode has enough ammo
 		{
 			if(time - self.prevwarntime > 1)
 			{
@@ -702,7 +702,7 @@ void W_WeaponFrame()
 			self.weaponname = newwep.mdl;
 			self.bulletcounter = 0;
 			self.ammo_field = newwep.ammo_field;
-			WEP_ACTION(self.switchweapon, WR_SETUP);
+			_WEP_ACTION(self.switchweapon, WR_SETUP);
 			self.weaponentity.state = WS_RAISE;
 
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
@@ -768,9 +768,9 @@ void W_WeaponFrame()
 		v_up = up;
 
 		if(w)
-			WEP_ACTION(self.weapon, WR_THINK);
+			_WEP_ACTION(self.weapon, WR_THINK);
 		else
-			WEP_ACTION(self.weapon, WR_GONETHINK);
+			_WEP_ACTION(self.weapon, WR_GONETHINK);
 
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
 		{
@@ -932,7 +932,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 			self.reload_complain = time + 1;
 		}
 		// switch away if the amount of ammo is not enough to keep using this weapon
-		if (!(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
+		if (!(_WEP_ACTION(self.weapon, WR_CHECKAMMO1) + _WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
 		{
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);
@@ -971,6 +971,6 @@ void W_DropEvent(float event, entity player, float weapon_type, entity weapon_it
 {SELFPARAM();
 	setself(player);
 	weapon_dropevent_item = weapon_item;
-	WEP_ACTION(weapon_type, event);
+	_WEP_ACTION(weapon_type, event);
 	setself(this);
 }

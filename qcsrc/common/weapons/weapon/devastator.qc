@@ -392,7 +392,7 @@ void W_Devastator_Attack(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-bool W_Devastator(int req)
+bool W_Devastator(entity thiswep, int req)
 {SELFPARAM();
 	entity rock;
 	float rockfound;
@@ -530,7 +530,7 @@ bool W_Devastator(int req)
 		case WR_THINK:
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && self.clip_load < WEP_CVAR(devastator, ammo)) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
 				if(self.BUTTON_ATCK)
@@ -652,7 +652,7 @@ bool W_Devastator(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Devastator(int req)
+bool W_Devastator(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

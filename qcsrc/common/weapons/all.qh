@@ -30,22 +30,60 @@ const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutato
 
 // weapon requests
 const int WR_SETUP          =  1; // (SERVER) setup weapon data
+.bool(entity this) wr_setup;
 const int WR_THINK          =  2; // (SERVER) logic to run every frame
+.bool(entity this) wr_think;
 const int WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon primary
+.bool(entity this) wr_checkammo1;
 const int WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon second
+.bool(entity this) wr_checkammo2;
 const int WR_AIM            =  5; // (SERVER) runs bot aiming code for this weapon
+.bool(entity this) wr_aim;
 const int WR_INIT           =  6; // (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties
+.bool(entity this) wr_init;
 const int WR_SUICIDEMESSAGE =  7; // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
+.bool(entity this) wr_suicidemessage;
 const int WR_KILLMESSAGE    =  8; // (SERVER) notification number for kill message (may inspect w_deathtype for details)
+.bool(entity this) wr_killmessage;
 const int WR_RELOAD         =  9; // (SERVER) handles reloading for weapon
+.bool(entity this) wr_reload;
 const int WR_RESETPLAYER    = 10; // (SERVER) clears fields that the weapon may use
+.bool(entity this) wr_resetplayer;
 const int WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect for weapon explosion
+.bool(entity this) wr_impacteffect;
 const int WR_PLAYERDEATH    = 12; // (SERVER) called whenever a player dies
+.bool(entity this) wr_playerdeath;
 const int WR_GONETHINK      = 13; // (SERVER) logic to run when weapon is lost
+.bool(entity this) wr_gonethink;
 const int WR_CONFIG         = 14; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
+.bool(entity this) wr_config;
 const int WR_ZOOMRETICLE    = 15; // (CLIENT) weapon specific zoom reticle
+.bool(entity this) wr_zoomreticle;
 const int WR_DROP           = 16; // (SERVER) the weapon is dropped
+.bool(entity this) wr_drop;
 const int WR_PICKUP         = 17; // (SERVER) a weapon is picked up
+.bool(entity this) wr_pickup;
+
+bool w_new(entity this, int req) {
+    if (req == WR_SETUP) return this.wr_setup ? this.wr_setup(this) : false;
+    if (req == WR_THINK) return this.wr_think ? this.wr_think(this) : false;
+    if (req == WR_CHECKAMMO1) return this.wr_checkammo1 ? this.wr_checkammo1(this) : false;
+    if (req == WR_CHECKAMMO2) return this.wr_checkammo2 ? this.wr_checkammo2(this) : false;
+    if (req == WR_AIM) return this.wr_aim ? this.wr_aim(this) : false;
+    if (req == WR_INIT) return this.wr_init ? this.wr_init(this) : false;
+    if (req == WR_SUICIDEMESSAGE) return this.wr_suicidemessage ? this.wr_suicidemessage(this) : false;
+    if (req == WR_KILLMESSAGE) return this.wr_killmessage ? this.wr_killmessage(this) : false;
+    if (req == WR_RELOAD) return this.wr_reload ? this.wr_reload(this) : false;
+    if (req == WR_RESETPLAYER) return this.wr_resetplayer ? this.wr_resetplayer(this) : false;
+    if (req == WR_IMPACTEFFECT) return this.wr_impacteffect ? this.wr_impacteffect(this) : false;
+    if (req == WR_PLAYERDEATH) return this.wr_playerdeath ? this.wr_playerdeath(this) : false;
+    if (req == WR_GONETHINK) return this.wr_gonethink ? this.wr_gonethink(this) : false;
+    if (req == WR_CONFIG) return this.wr_config ? this.wr_config(this) : false;
+    if (req == WR_ZOOMRETICLE) return this.wr_zoomreticle ? this.wr_zoomreticle(this) : false;
+    if (req == WR_DROP) return this.wr_drop ? this.wr_drop(this) : false;
+    if (req == WR_PICKUP) return this.wr_pickup ? this.wr_pickup(this) : false;
+    return false;
+}
 
 // variables:
 string weaponorder_byid;
@@ -103,7 +141,8 @@ string W_Model(string w_mdl);
 .int ammo_none;
 
 // other useful macros
-#define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
+#define WEP_ACTION(wpn,wrequest) wpn.weapon_func(wpn, wrequest)
+#define _WEP_ACTION(wpn,wrequest) WEP_ACTION(get_weaponinfo(wpn), wrequest)
 #define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
 #define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
 
@@ -143,8 +182,6 @@ string W_Model(string w_mdl);
 //  Weapon Registration
 // =====================
 
-bool w_null(int) { return false; }
-
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
 CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_id, int, 0)
@@ -156,7 +193,7 @@ CLASS(Weapon, Object)
     /** A: WEPSET_id : WEPSET_... */
     ATTRIB(Weapon, weapons, WepSet, '0 0 0');
     /** M: function  : w_... */
-    ATTRIB(Weapon, weapon_func, bool(int), w_null);
+    ATTRIB(Weapon, weapon_func, bool(entity thiswep, int req), w_new);
     /** M: ammotype  : main ammo field */
     ATTRIB(Weapon, ammo_field, .int, ammo_none);
     /** M: impulse   : weapon impulse */
@@ -191,7 +228,7 @@ CLASS(Weapon, Object)
 	}
 
 	CONSTRUCTOR(Weapon,
-		bool(int) function,
+		bool(entity this, int req) function,
 		.int ammotype,
 		int i,
 		int weapontype,
@@ -228,7 +265,7 @@ CLASS(Weapon, Object)
 		this.weapons = bit;
 		this.wpmodel = strzone(strcat("wpn-", ftos(id)));
 		#ifdef CSQC
-		this.weapon_func(WR_INIT);
+		this.weapon_func(this, WR_INIT);
 		#endif
 	}
 ENDCLASS(Weapon)
@@ -238,24 +275,27 @@ REGISTER_REGISTRY(RegisterWeapons)
 entity weapon_info[WEP_MAXCOUNT], weapon_info_first, weapon_info_last;
 entity dummy_weapon_info;
 
-#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+#define REGISTER_WEAPON(...) EVAL(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+
+#define REGISTER_WEAPON_2(id, inst) \
 	WepSet WEPSET_##id; \
-	REGISTER(RegisterWeapons, WEP, weapon_info, WEP_COUNT, id, m_id, \
-		NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-	) { \
+	REGISTER(RegisterWeapons, WEP, weapon_info, WEP_COUNT, id, m_id, inst) { \
 		this.m_id++; \
 		WEPSET_ALL |= (WEPSET_##id = WepSet_FromWeapon(this.m_id)); \
-		if ((flags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= WEPSET_##id; \
+		if ((this.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= WEPSET_##id; \
 		register_weapon(this, this.m_id, WEPSET_##id); \
 	}
 
+#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+	REGISTER_WEAPON_2(id, NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname))
+
 #ifndef MENUQC
-	#define REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-    	bool function(int); \
+	#define REGISTER_WEAPON_13(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+    	bool function(entity this, int); \
     	_REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
 #else
-	#define REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-		_REGISTER_WEAPON(id, w_null,   ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
+	#define REGISTER_WEAPON_13(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+		_REGISTER_WEAPON(id, w_new,   ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
 #endif
 
 #include "all.inc"

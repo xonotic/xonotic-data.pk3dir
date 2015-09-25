@@ -51,7 +51,7 @@ void W_HeavyMachineGun_Attack_Auto()
 		return;
 	}
 
-	if(!WEP_ACTION(self.weapon, WR_CHECKAMMO1))
+	if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO1))
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -86,7 +86,7 @@ void W_HeavyMachineGun_Attack_Auto()
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
-bool W_HeavyMachineGun(int req)
+bool W_HeavyMachineGun(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount;
 	switch(req)
@@ -103,7 +103,7 @@ bool W_HeavyMachineGun(int req)
 		case WR_THINK:
 		{
 			if(WEP_CVAR(hmg, reload_ammo) && self.clip_load < WEP_CVAR(hmg, ammo)) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
 				if (self.BUTTON_ATCK)
@@ -166,7 +166,7 @@ bool W_HeavyMachineGun(int req)
 }
 #endif
 #ifdef CSQC
-bool W_HeavyMachineGun(int req)
+bool W_HeavyMachineGun(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

@@ -147,7 +147,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-bool W_RocketPropelledChainsaw(int req)
+bool W_RocketPropelledChainsaw(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount = false;
 	switch(req)
@@ -160,7 +160,7 @@ bool W_RocketPropelledChainsaw(int req)
 		case WR_THINK:
 		{
 			if(WEP_CVAR(rpc, reload_ammo) && self.clip_load < WEP_CVAR(rpc, ammo))
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
 				if (self.BUTTON_ATCK)
@@ -229,7 +229,7 @@ bool W_RocketPropelledChainsaw(int req)
 #endif
 
 #ifdef CSQC
-bool W_RocketPropelledChainsaw(int req)
+bool W_RocketPropelledChainsaw(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

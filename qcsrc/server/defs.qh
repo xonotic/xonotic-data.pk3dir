@@ -162,7 +162,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 // WEAPONTODO
 .float autoswitch;
-//float WEP_ACTION(float wpn, float wrequest);
+//float _WEP_ACTION(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
 void w_clear();
 void w_ready();

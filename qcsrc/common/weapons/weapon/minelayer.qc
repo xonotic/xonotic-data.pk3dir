@@ -123,7 +123,7 @@ void W_MineLayer_Explode(void)
 	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
 		setself(self.realowner);
-		if(!WEP_ACTION(WEP_MINE_LAYER.m_id, WR_CHECKAMMO1))
+		if(!WEP_ACTION(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
@@ -148,7 +148,7 @@ void W_MineLayer_DoRemoteExplode(void)
 	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
 		setself(self.realowner);
-		if(!WEP_ACTION(WEP_MINE_LAYER.m_id, WR_CHECKAMMO1))
+		if(!WEP_ACTION(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
@@ -397,7 +397,7 @@ float W_MineLayer_PlacedMines(float detonate)
 	return minfound;
 }
 
-bool W_MineLayer(int req)
+bool W_MineLayer(entity thiswep, int req)
 {SELFPARAM();
 	entity mine;
 	float ammo_amount;
@@ -509,7 +509,7 @@ bool W_MineLayer(int req)
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
 				if(!(W_MineLayer_PlacedMines(false) && self.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo)))
-					WEP_ACTION(self.weapon, WR_RELOAD);
+					_WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else if(self.BUTTON_ATCK)
 			{
@@ -583,7 +583,7 @@ bool W_MineLayer(int req)
 }
 #endif
 #ifdef CSQC
-bool W_MineLayer(int req)
+bool W_MineLayer(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

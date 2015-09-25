@@ -666,7 +666,7 @@ void W_Shockwave_Attack(void)
 	}
 }
 
-bool W_Shockwave(int req)
+bool W_Shockwave(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{
@@ -861,7 +861,7 @@ void Net_ReadShockwaveParticle(void)
 	shockwave.sw_time = time;
 }
 
-bool W_Shockwave(int req)
+bool W_Shockwave(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

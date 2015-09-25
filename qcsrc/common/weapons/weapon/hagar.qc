@@ -387,7 +387,7 @@ void W_Hagar_Attack2_Load(void)
 		self.hagar_warning = false;
 
 		// we aren't checking ammo during an attack, so we must do it here
-		if(!(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
+		if(!(_WEP_ACTION(self.weapon, WR_CHECKAMMO1) + _WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -397,7 +397,7 @@ void W_Hagar_Attack2_Load(void)
 	}
 }
 
-bool W_Hagar(int req)
+bool W_Hagar(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount;
 	switch(req)
@@ -419,7 +419,7 @@ bool W_Hagar(int req)
 			if(loadable_secondary)
 				W_Hagar_Attack2_Load(); // must always run each frame
 			if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(hagar, refire)))
@@ -522,7 +522,7 @@ bool W_Hagar(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Hagar(int req)
+bool W_Hagar(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

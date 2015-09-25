@@ -548,7 +548,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 		excess = frag_damage;
 
-		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
+		_WEP_ACTION(self.weapon, WR_PLAYERDEATH);
 
 		RemoveGrapplingHook(self);
 
@@ -630,7 +630,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		// reset fields the weapons may use just in case
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			WEP_ACTION(j, WR_RESETPLAYER);
+			_WEP_ACTION(j, WR_RESETPLAYER);
 			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}

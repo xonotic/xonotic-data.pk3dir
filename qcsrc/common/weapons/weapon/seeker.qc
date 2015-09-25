@@ -596,7 +596,7 @@ void W_Seeker_Fire_Tag(void)
 // Begin: Genereal weapon functions
 // ============================
 
-bool W_Seeker(int req)
+bool W_Seeker(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount;
 
@@ -616,7 +616,7 @@ bool W_Seeker(int req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 
 			else if(self.BUTTON_ATCK)
 			{
@@ -722,7 +722,7 @@ bool W_Seeker(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Seeker(int req)
+bool W_Seeker(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

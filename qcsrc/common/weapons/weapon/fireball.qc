@@ -348,7 +348,7 @@ void W_Fireball_Attack2(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-bool W_Fireball(int req)
+bool W_Fireball(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{
@@ -444,7 +444,7 @@ bool W_Fireball(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Fireball(int req)
+bool W_Fireball(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

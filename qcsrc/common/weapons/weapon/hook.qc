@@ -174,7 +174,7 @@ void W_Hook_Attack2(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-bool W_Hook(int req)
+bool W_Hook(entity thiswep, int req)
 {SELFPARAM();
 	float hooked_time_max, hooked_fuel;
 
@@ -334,7 +334,7 @@ bool W_Hook(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Hook(int req)
+bool W_Hook(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

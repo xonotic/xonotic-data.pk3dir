@@ -47,8 +47,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			else
 			{
 				setself(cl);
-				f = WEP_ACTION(wpn, WR_CHECKAMMO1);
-				f = f + WEP_ACTION(wpn, WR_CHECKAMMO2);
+				f = _WEP_ACTION(wpn, WR_CHECKAMMO1);
+				f = f + _WEP_ACTION(wpn, WR_CHECKAMMO2);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				entity mine;
@@ -260,7 +260,7 @@ void W_SwitchWeapon(float imp)
 		else
 			self.selectweapon = imp; // update selectweapon ANYWAY
 	}
-	else if(!forbidWeaponUse(self)) { WEP_ACTION(self.weapon, WR_RELOAD); }
+	else if(!forbidWeaponUse(self)) { _WEP_ACTION(self.weapon, WR_RELOAD); }
 }
 
 void W_CycleWeapon(string weaponorder, float dir)

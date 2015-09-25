@@ -132,7 +132,7 @@ void W_Vortex_Attack(float issecondary)
 void spawnfunc_weapon_vortex(void); // defined in t_items.qc
 
 .float vortex_chargepool_pauseregen_finished;
-bool W_Vortex(int req)
+bool W_Vortex(entity thiswep, int req)
 {SELFPARAM();
 	float dt;
 	float ammo_amount;
@@ -163,7 +163,7 @@ bool W_Vortex(int req)
 				}
 
 			if(autocvar_g_balance_vortex_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
 				if(self.BUTTON_ATCK)
@@ -315,7 +315,7 @@ bool W_Vortex(int req)
 #endif
 #ifdef CSQC
 float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
-bool W_Vortex(int req)
+bool W_Vortex(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

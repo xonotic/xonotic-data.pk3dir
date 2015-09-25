@@ -320,7 +320,7 @@ void W_Mortar_Attack2(void)
 }
 
 .float bot_secondary_grenademooth;
-bool W_Mortar(int req)
+bool W_Mortar(entity thiswep, int req)
 {SELFPARAM();
 	entity nade;
 	float nadefound;
@@ -369,7 +369,7 @@ bool W_Mortar(int req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(self.BUTTON_ATCK)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(mortar, refire)))
@@ -457,7 +457,7 @@ bool W_Mortar(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Mortar(int req)
+bool W_Mortar(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

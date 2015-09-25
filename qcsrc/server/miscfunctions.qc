@@ -720,7 +720,7 @@ void readplayerstartcvars()
 	{
 		e = get_weaponinfo(i);
 		if(precache_weapons & WepSet_FromWeapon(i))
-			WEP_ACTION(i, WR_INIT);
+			_WEP_ACTION(i, WR_INIT);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);

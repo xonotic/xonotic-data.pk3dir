@@ -144,7 +144,7 @@ void W_MachineGun_Attack_Frame(void)
 	}
 	if(self.BUTTON_ATCK)
 	{
-		if(!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+		if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -170,7 +170,7 @@ void W_MachineGun_Attack_Auto(void)
 		return;
 	}
 
-	if(!WEP_ACTION(self.weapon, WR_CHECKAMMO1))
+	if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO1))
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -236,7 +236,7 @@ void W_MachineGun_Attack_Burst(void)
 
 }
 
-bool W_MachineGun(int req)
+bool W_MachineGun(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount;
 	switch(req)
@@ -253,7 +253,7 @@ bool W_MachineGun(int req)
 		case WR_THINK:
 		{
 			if(WEP_CVAR(machinegun, reload_ammo) && self.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(WEP_CVAR(machinegun, mode) == 1)
 			{
 				if(self.BUTTON_ATCK)
@@ -266,7 +266,7 @@ bool W_MachineGun(int req)
 				if(self.BUTTON_ATCK2)
 				if(weapon_prepareattack(1, 0))
 				{
-					if(!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+					if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 					if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -366,7 +366,7 @@ bool W_MachineGun(int req)
 }
 #endif
 #ifdef CSQC
-bool W_MachineGun(int req)
+bool W_MachineGun(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

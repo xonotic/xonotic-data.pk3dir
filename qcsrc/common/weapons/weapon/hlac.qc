@@ -169,7 +169,7 @@ void W_HLAC_Attack_Frame(void)
 
 	if(self.BUTTON_ATCK)
 	{
-		if(!WEP_ACTION(self.weapon, WR_CHECKAMMO1))
+		if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO1))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -204,7 +204,7 @@ void W_HLAC_Attack2_Frame(void)
 	}
 }
 
-bool W_HLAC(int req)
+bool W_HLAC(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount;
 	switch(req)
@@ -217,7 +217,7 @@ bool W_HLAC(int req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(self.BUTTON_ATCK)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(hlac, refire)))
@@ -280,7 +280,7 @@ bool W_HLAC(int req)
 }
 #endif
 #ifdef CSQC
-bool W_HLAC(int req)
+bool W_HLAC(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

@@ -134,7 +134,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 }
 
 .float bot_secondary_riflemooth;
-bool W_Rifle(int req)
+bool W_Rifle(entity thiswep, int req)
 {SELFPARAM();
 	float ammo_amount;
 
@@ -168,7 +168,7 @@ bool W_Rifle(int req)
 		case WR_THINK:
 		{
 			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
 				self.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), self.rifle_accumulator, time);
@@ -185,7 +185,7 @@ bool W_Rifle(int req)
 					if(WEP_CVAR(rifle, secondary))
 					{
 						if(WEP_CVAR_SEC(rifle, reload))
-							WEP_ACTION(self.weapon, WR_RELOAD);
+							_WEP_ACTION(self.weapon, WR_RELOAD);
 						else
 						{
 							if(weapon_prepareattack_check(1, WEP_CVAR_SEC(rifle, refire)))
@@ -262,7 +262,7 @@ bool W_Rifle(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Rifle(int req)
+bool W_Rifle(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

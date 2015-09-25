@@ -35,7 +35,7 @@ void Dump_Weapon_Settings(void)
 			{ wep_config_queue[x] = string_null; }
 
 		// step 2: build new queue
-		WEP_ACTION(i, WR_CONFIG);
+		_WEP_ACTION(i, WR_CONFIG);
 
 		// step 3: sort queue
 		heapsort(WEP_CONFIG_COUNT, W_Config_Queue_Swap, W_Config_Queue_Compare, world);

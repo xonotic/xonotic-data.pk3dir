@@ -60,7 +60,7 @@ void NIX_GiveCurrentWeapon()
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		//WEP_ACTION(nix_weapon, WR_INIT); // forget it, too slow
+		//_WEP_ACTION(nix_weapon, WR_INIT); // forget it, too slow
 	}
 
 	// get weapon info
@@ -101,7 +101,7 @@ void NIX_GiveCurrentWeapon()
 		else
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
-		WEP_ACTION(nix_weapon, WR_RESETPLAYER);
+		_WEP_ACTION(nix_weapon, WR_RESETPLAYER);
 
 		// all weapons must be fully loaded when we spawn
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
@@ -156,7 +156,7 @@ void NIX_precache()
 	float i;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		if (NIX_CanChooseWeapon(i))
-			WEP_ACTION(i, WR_INIT);
+			_WEP_ACTION(i, WR_INIT);
 }
 
 MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)

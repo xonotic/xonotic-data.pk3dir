@@ -1540,7 +1540,7 @@ void CSQC_UpdateView(float w, float h)
 			// no zoom reticle while dead
 			reticle_type = 0;
 		}
-		else if(WEP_ACTION(activeweapon, WR_ZOOMRETICLE) && autocvar_cl_reticle_weapon)
+		else if(_WEP_ACTION(activeweapon, WR_ZOOMRETICLE) && autocvar_cl_reticle_weapon)
 		{
 			if(reticle_image != "") { reticle_type = 2; }
 			else { reticle_type = 0; }

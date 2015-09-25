@@ -365,7 +365,7 @@ void W_Tuba_NoteOn(float hittype)
 	}
 }
 
-bool W_Tuba(int req)
+bool W_Tuba(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{
@@ -481,7 +481,7 @@ bool W_Tuba(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Tuba(int req)
+bool W_Tuba(entity thiswep, int req)
 {SELFPARAM();
 	// nothing to do here; particles of tuba are handled differently
 	// WEAPONTODO

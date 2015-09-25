@@ -273,7 +273,7 @@ void W_Arc_Beam_Think(void)
 
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		setself(self.owner);
-		if(!WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO2))
+		if(!WEP_ACTION(WEP_ARC, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC, WR_CHECKAMMO2))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -631,7 +631,7 @@ void Arc_Smoke()
 	}
 }
 
-bool W_Arc(int req)
+bool W_Arc(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{
@@ -1513,7 +1513,7 @@ void Ent_ReadArcBeam(float isnew)
 	}
 }
 
-bool W_Arc(int req)
+bool W_Arc(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

@@ -284,7 +284,7 @@ void W_Porto_Attack(float type)
 }
 
 bool w_nexball_weapon(int req); // WEAPONTODO
-bool W_Porto(int req)
+bool W_Porto(entity thiswep, int req)
 {SELFPARAM();
 	//vector v_angle_save;
 
@@ -397,7 +397,7 @@ bool W_Porto(int req)
 }
 #endif
 #ifdef CSQC
-bool W_Porto(int req)
+bool W_Porto(entity thiswep, int req)
 {SELFPARAM();
 	switch(req)
 	{

@@ -268,7 +268,7 @@ void W_RocketMinsta_Attack3 (void)
     }
 }
 
-float W_Vaporizer(float req)
+float W_Vaporizer(entity thiswep, float req)
 {SELFPARAM();
 	float ammo_amount;
 	float vaporizer_ammo;
@@ -292,9 +292,9 @@ float W_Vaporizer(float req)
 		{
 			// if the laser uses load, we also consider its ammo for reloading
 			if(WEP_CVAR(vaporizer, reload_ammo) && WEP_CVAR_SEC(vaporizer, ammo) && self.clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(WEP_CVAR(vaporizer, reload_ammo) && self.clip_load < vaporizer_ammo) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
+				_WEP_ACTION(self.weapon, WR_RELOAD);
 			if(self.BUTTON_ATCK && (self.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(self))
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
@@ -424,7 +424,7 @@ float W_Vaporizer(float req)
 }
 #endif
 #ifdef CSQC
-float W_Vaporizer(float req)
+float W_Vaporizer(entity thiswep, float req)
 {SELFPARAM();
 	switch(req)
 	{
