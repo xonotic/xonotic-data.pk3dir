@@ -33,7 +33,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bandwidth:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("_cl_rate",
-			_("Specify your network speed with this slider")));
+			_("Specify your network speed")));
 			e.addValue(e, _("56k"), "4000");
 			e.addValue(e, _("ISDN"), "7000");
 			e.addValue(e, _("Slow ADSL"), "15000");

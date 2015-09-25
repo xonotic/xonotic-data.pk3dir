@@ -168,7 +168,7 @@ void XonoticServerCreateTab_fill(entity me)
 		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
 		me.mapListBox.stringFilterBox = makeXonoticInputBox_T(0, string_null,
-			_("Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done."));
+			_("Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-Delete to clear; Enter when done."));
 		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
 			e.onChange = MapList_StringFilterBox_Change;
 			e.keyDown = MapList_StringFilterBox_keyDown;
@@ -179,11 +179,11 @@ void XonoticServerCreateTab_fill(entity me)
 		// the selection buttons
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.3, e = makeXonoticButton_T(_("Add shown"), '0 0 0',
-			_("Add the maps shown in Maplist above to your selection")));
+			_("Add the maps shown in the list to your selection")));
 			e.onClick = MapList_Add_Shown;
 			e.onClickEntity = me.mapListBox;
 		me.TD(me, 1, 1.3, e = makeXonoticButton_T(_("Remove shown"), '0 0 0',
-			_("Remove the maps shown in Maplist above from your selection")));
+			_("Remove the maps shown in the list from your selection")));
 			e.onClick = MapList_Remove_Shown;
 			e.onClickEntity = me.mapListBox;
 	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
