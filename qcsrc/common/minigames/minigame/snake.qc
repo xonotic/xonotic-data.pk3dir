@@ -10,7 +10,8 @@ const int SNAKE_NUM_CNT = 15;
 
 const int SNAKE_TILE_SIZE = 15;
 
-const int SNAKE_DELAY_INITIAL = 0.7;
+float autocvar_sv_minigames_snake_delay_initial = 0.7;
+float autocvar_sv_minigames_snake_delay_multiplier = 50;
 
 .int snake_score;
 .entity snake_head;
@@ -52,8 +53,9 @@ bool snake_valid_tile(string tile)
 void snake_new_mouse(entity minigame)
 {
 	RandomSelection_Init();
-	for(int i = 0; i < SNAKE_LET_CNT; ++i)
-	for(int j = 0; j < SNAKE_NUM_CNT; ++j)
+	int i, j;
+	for(i = 0; i < SNAKE_LET_CNT; ++i)
+	for(j = 0; j < SNAKE_NUM_CNT; ++j)
 	{
 		string pos = minigame_tile_buildname(i, j);
 		if(!snake_find_piece(minigame, pos))
@@ -139,7 +141,7 @@ void snake_move_body(entity minigame, bool ate_mouse)
 	if(tail && ate_mouse)
 	{
 		int newcnt = tail.cnt + 1;
-		minigame.snake_delay = max(0.1, SNAKE_DELAY_INITIAL - (newcnt / 100));
+		minigame.snake_delay = max(0.1, autocvar_sv_minigames_snake_delay_initial - (newcnt / autocvar_sv_minigames_snake_delay_multiplier));
 		snake_add_score(minigame, 1);
 
 		entity piece = msle_spawn(minigame,"minigame_board_piece");
@@ -236,7 +238,7 @@ int snake_server_event(entity minigame, string event, ...)
 		case "start":
 		{
 			snake_setup_pieces(minigame);
-			minigame.snake_delay = SNAKE_DELAY_INITIAL;
+			minigame.snake_delay = autocvar_sv_minigames_snake_delay_initial;
 			minigame.minigame_flags = SNAKE_TURN_WAIT;
 			return true;
 		}

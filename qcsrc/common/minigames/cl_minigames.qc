@@ -258,9 +258,9 @@ void ent_read_minigame()
 
 	if ( sf & MINIG_SF_CREATE )
 	{
-		LOG_TRACE("CL Reading entity: ",ftos(num_for_edict(self)),
-			" classname:",self.classname," enttype:",ftos(self.enttype) );
-		LOG_TRACE(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+		//LOG_TRACE("CL Reading entity: ",ftos(num_for_edict(self)),
+		//	" classname:",self.classname," enttype:",ftos(self.enttype) );
+		//LOG_TRACE(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 	}
 }
 #undef ReadString
