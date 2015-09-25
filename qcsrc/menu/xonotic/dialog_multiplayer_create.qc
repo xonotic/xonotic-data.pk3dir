@@ -77,26 +77,28 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("timelimit_override",
 			_("Timelimit in minutes that when hit, will end the match")));
+			#define ADDVALUE_MINUTES(i) e.addValue(e, strzone(sprintf(_("%d minutes"), i)), #i)
 			e.addValue(e, ZCTX(_("TIMLIM^Default")), "-1");
-			e.addValue(e, ZCTX(_("TIMLIM^1 minute")), "1");
-			e.addValue(e, ZCTX(_("TIMLIM^2 minutes")), "2");
-			e.addValue(e, ZCTX(_("TIMLIM^3 minutes")), "3");
-			e.addValue(e, ZCTX(_("TIMLIM^4 minutes")), "4");
-			e.addValue(e, ZCTX(_("TIMLIM^5 minutes")), "5");
-			e.addValue(e, ZCTX(_("TIMLIM^6 minutes")), "6");
-			e.addValue(e, ZCTX(_("TIMLIM^7 minutes")), "7");
-			e.addValue(e, ZCTX(_("TIMLIM^8 minutes")), "8");
-			e.addValue(e, ZCTX(_("TIMLIM^9 minutes")), "9");
-			e.addValue(e, ZCTX(_("TIMLIM^10 minutes")), "10");
-			e.addValue(e, ZCTX(_("TIMLIM^15 minutes")), "15");
-			e.addValue(e, ZCTX(_("TIMLIM^20 minutes")), "20");
-			e.addValue(e, ZCTX(_("TIMLIM^25 minutes")), "25");
-			e.addValue(e, ZCTX(_("TIMLIM^30 minutes")), "30");
-			e.addValue(e, ZCTX(_("TIMLIM^40 minutes")), "40");
-			e.addValue(e, ZCTX(_("TIMLIM^50 minutes")), "50");
-			e.addValue(e, ZCTX(_("TIMLIM^60 minutes")), "60");
+			e.addValue(e, _("1 minute"), "1");
+			ADDVALUE_MINUTES(2);
+			ADDVALUE_MINUTES(3);
+			ADDVALUE_MINUTES(4);
+			ADDVALUE_MINUTES(5);
+			ADDVALUE_MINUTES(6);
+			ADDVALUE_MINUTES(7);
+			ADDVALUE_MINUTES(8);
+			ADDVALUE_MINUTES(9);
+			ADDVALUE_MINUTES(10);
+			ADDVALUE_MINUTES(15);
+			ADDVALUE_MINUTES(20);
+			ADDVALUE_MINUTES(25);
+			ADDVALUE_MINUTES(30);
+			ADDVALUE_MINUTES(40);
+			ADDVALUE_MINUTES(50);
+			ADDVALUE_MINUTES(60);
 			e.addValue(e, ZCTX(_("TIMLIM^Infinite")), "0");
 			e.configureXonoticTextSliderValues(e);
+			#undef ADDVALUE_MINUTES
 	me.TR(me);
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
 		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
