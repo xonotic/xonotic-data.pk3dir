@@ -1,0 +1,12973 @@
+DEF(TE_WIZSPIKE);
+SUB(TE_WIZSPIKE) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x63F2EA";
+	MY(color_max) = "0x63f2EA";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '0.4 0.9 0.9';
+	MY(lightradiusfade) = 200;
+	MY(lightradius) = 200;
+	MY(size_min) = 20;
+	MY(size_max) = 20;
+	MY(type) = "static";
+}
+SUB(TE_WIZSPIKE) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x63F2EA";
+	MY(color_max) = "0x63f2EA";
+	MY(count) = 50;
+	MY(liquidfriction) = 2;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+}
+
+DEF(TE_KNIGHTSPIKE);
+SUB(TE_KNIGHTSPIKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 0.2 0.2';
+	MY(lightradiusfade) = 1000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(TE_KNIGHTSPIKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xFF2010";
+	MY(color_max) = "0xFF2010";
+	MY(countabsolute) = 1;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 39;
+	MY(tex_max) = 39;
+	MY(type) = "static";
+}
+SUB(TE_KNIGHTSPIKE) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x800000";
+	MY(color_max) = "0xFF8020";
+	MY(count) = 128;
+	MY(liquidfriction) = 6;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+
+DEF(TE_SPIKE);
+SUB(TE_SPIKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 56;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(TE_SPIKE) {
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x101010";
+	MY(color_max) = "0x101010";
+	MY(count) = 4;
+	MY(sizeincrease) = 3;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '8.0 8.0 8.0';
+}
+SUB(TE_SPIKE) {
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x505050";
+	MY(color_max) = "0x505050";
+	MY(count) = 0.500000;
+	MY(sizeincrease) = 4;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+}
+SUB(TE_SPIKE) {
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 10;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_SPIKEQUAD);
+SUB(TE_SPIKEQUAD) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '2.0 2.5 3.0';
+	MY(lightradiusfade) = 200;
+	MY(lightradius) = 400;
+	MY(originjitter) = '34.0 34.0 34.0';
+	MY(size_min) = 64;
+	MY(size_max) = 64;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(TE_SPIKEQUAD) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+}
+SUB(TE_SPIKEQUAD) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x2030FF";
+	MY(color_max) = "0x80C0FF";
+	MY(count) = 10;
+	MY(liquidfriction) = 16;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(type) = "static";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+
+DEF(TE_SUPERSPIKE);
+SUB(TE_SUPERSPIKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 56;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(TE_SUPERSPIKE) {
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x101010";
+	MY(color_max) = "0x101010";
+	MY(count) = 4;
+	MY(sizeincrease) = 3;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '8.0 8.0 8.0';
+}
+SUB(TE_SUPERSPIKE) {
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x505050";
+	MY(color_max) = "0x505050";
+	MY(count) = 0.500000;
+	MY(sizeincrease) = 4;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+}
+SUB(TE_SUPERSPIKE) {
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 15;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_SUPERSPIKEQUAD);
+SUB(TE_SUPERSPIKEQUAD) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '0.2 0.2 1.5';
+	MY(lightradiusfade) = 500;
+	MY(lightradius) = 100;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 56;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(TE_SUPERSPIKEQUAD) {
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x101010";
+	MY(color_max) = "0x101010";
+	MY(count) = 4;
+	MY(sizeincrease) = 3;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '8.0 8.0 8.0';
+}
+SUB(TE_SUPERSPIKEQUAD) {
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x505050";
+	MY(color_max) = "0x505050";
+	MY(count) = 0.500000;
+	MY(sizeincrease) = 4;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+}
+SUB(TE_SUPERSPIKEQUAD) {
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 15;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_GUNSHOT);
+SUB(TE_GUNSHOT) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 56;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(TE_GUNSHOT) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x101010";
+	MY(color_max) = "0x101010";
+	MY(count) = 0.800000;
+	MY(sizeincrease) = 3;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '8.0 8.0 8.0';
+}
+SUB(TE_GUNSHOT) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x505050";
+	MY(color_max) = "0x505050";
+	MY(count) = 0.200000;
+	MY(sizeincrease) = 4;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+}
+SUB(TE_GUNSHOT) {
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 2.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_GUNSHOTQUAD);
+SUB(TE_GUNSHOTQUAD) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '12.0 12.0 12.0';
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(TE_GUNSHOTQUAD) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x504060";
+	MY(color_max) = "0x504060";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 39;
+	MY(tex_max) = 39;
+	MY(type) = "static";
+}
+SUB(TE_GUNSHOTQUAD) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 384;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xA040C0";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 6;
+	MY(gravity) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(type) = "spark";
+	MY(velocityjitter) = '128.0 128.0 128.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_EXPLOSION);
+SUB(TE_EXPLOSION) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 2.0 0.5';
+	MY(lightradiusfade) = 300;
+	MY(lightradius) = 150;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(TE_EXPLOSION) {
+	MY(alpha_min) = 192;
+	MY(alpha_max) = 192;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x404040";
+	MY(countabsolute) = 1;
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 35;
+	MY(tex_max) = 37;
+	MY(type) = "static";
+}
+SUB(TE_EXPLOSION) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x902010";
+	MY(color_max) = "0xFFD080";
+	MY(count) = 64;
+	MY(liquidfriction) = 4;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(TE_EXPLOSION) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 16;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+SUB(TE_EXPLOSION) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 384;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x903010";
+	MY(color_max) = "0xFFD030";
+	MY(count) = 16;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_EXPLOSIONQUAD);
+SUB(TE_EXPLOSIONQUAD) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 2.0 8.0';
+	MY(lightradiusfade) = 700;
+	MY(lightradius) = 350;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(TE_EXPLOSIONQUAD) {
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 16;
+	MY(notunderwater) = true;
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '48.0 48.0 48.0';
+}
+SUB(TE_EXPLOSIONQUAD) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 16;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+SUB(TE_EXPLOSIONQUAD) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x903010";
+	MY(color_max) = "0xFFD030";
+	MY(count) = 64;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_TAREXPLOSION);
+SUB(TE_TAREXPLOSION) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '1.6 0.8 2.0';
+	MY(lightradiusfade) = 1200;
+	MY(lightradius) = 600;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(TE_TAREXPLOSION) {
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 16;
+	MY(notunderwater) = true;
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '48.0 48.0 48.0';
+}
+SUB(TE_TAREXPLOSION) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 16;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+SUB(TE_TAREXPLOSION) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x903010";
+	MY(color_max) = "0xFFD030";
+	MY(count) = 64;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_BLOOD);
+SUB(TE_BLOOD) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(count) = 0.167000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 1;
+}
+
+DEF(TE_SPARK);
+SUB(TE_SPARK) {
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.600000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 1;
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_PLASMABURN);
+SUB(TE_PLASMABURN) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '1.0 1.0 1.0';
+	MY(lightradiusfade) = 400;
+	MY(lightradius) = 200;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(TE_PLASMABURN) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 37;
+	MY(tex_max) = 37;
+	MY(type) = "static";
+}
+SUB(TE_PLASMABURN) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 2;
+	MY(color_min) = "0x2030FF";
+	MY(color_max) = "0x80C0FF";
+	MY(count) = 128;
+	MY(liquidfriction) = 8;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(type) = "spark";
+	MY(velocityjitter) = '128.0 128.0 128.0';
+}
+
+DEF(TE_SMALLFLASH);
+SUB(TE_SMALLFLASH) {
+	MY(lightcolor) = '2.0 2.0 2.0';
+	MY(lightradiusfade) = 1000;
+	MY(lightradius) = 200;
+}
+
+DEF(TE_FLAMEJET);
+SUB(TE_FLAMEJET) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 384;
+	MY(bounce) = 1.100000;
+	MY(color_min) = "0x6f0f00";
+	MY(color_max) = "0xe3974f";
+	MY(count) = 0.500000;
+	MY(gravity) = -1;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '128.0 128.0 128.0';
+	MY(velocitymultiplier) = 1;
+}
+
+DEF(TE_LAVASPLASH);
+SUB(TE_LAVASPLASH) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x6f0f00";
+	MY(color_max) = "0xe3974f";
+	MY(count) = 32;
+	MY(gravity) = 0.050000;
+	MY(originjitter) = '128.0 128.0 32.0';
+	MY(originoffset) = '0.0 0.0 32.0';
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '128.0 128.0 0.0';
+	MY(velocityoffset) = '0.0 0.0 256.0';
+}
+
+DEF(TE_TELEPORT);
+SUB(TE_TELEPORT) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xA0A0A0";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 56;
+	MY(liquidfriction) = 4;
+	MY(originjitter) = '16.0 16.0 28.0';
+	MY(originoffset) = '0.0 0.0 28.0';
+	MY(size_min) = 10;
+	MY(size_max) = 10;
+	MY(type) = "static";
+	MY(velocityjitter) = '0.0 0.0 256.0';
+}
+
+DEF(TE_TEI_G3);
+SUB(TE_TEI_G3) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(trailspacing) = 4;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '8.0 8.0 8.0';
+}
+
+DEF(TE_TEI_SMOKE);
+SUB(TE_TEI_SMOKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 0.167000;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 1;
+}
+
+DEF(TE_TEI_BIGEXPLOSION);
+SUB(TE_TEI_BIGEXPLOSION) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 2.0 0.5';
+	MY(lightradiusfade) = 500;
+	MY(lightradius) = 500;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(TE_TEI_BIGEXPLOSION) {
+	MY(alpha_min) = 192;
+	MY(alpha_max) = 192;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x404040";
+	MY(countabsolute) = 1;
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 35;
+	MY(tex_max) = 37;
+	MY(type) = "static";
+}
+SUB(TE_TEI_BIGEXPLOSION) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x902010";
+	MY(color_max) = "0xFFD080";
+	MY(count) = 128;
+	MY(liquidfriction) = 4;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(TE_TEI_BIGEXPLOSION) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '144.0 144.0 144.0';
+}
+SUB(TE_TEI_BIGEXPLOSION) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 384;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x903010";
+	MY(color_max) = "0xFFD030";
+	MY(count) = 64;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(type) = "spark";
+	MY(velocityjitter) = '384.0 384.0 384.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(TE_TEI_PLASMAHIT);
+SUB(TE_TEI_PLASMAHIT) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '2.4 4.8 8.0';
+	MY(lightradiusfade) = 600;
+	MY(lightradius) = 200;
+	MY(originjitter) = '20.0 20.0 20.0';
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(TE_TEI_PLASMAHIT) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+}
+SUB(TE_TEI_PLASMAHIT) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x2030FF";
+	MY(color_max) = "0x80C0FF";
+	MY(count) = 0.500000;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+
+DEF(blood);
+SUB(blood) {
+	MY(airfriction) = 0.400000;
+	MY(alpha_min) = 1560;
+	MY(alpha_max) = 2560;
+	MY(alpha_fade) = 7000;
+	MY(blend) = "invmod";
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 0.400000;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 11;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(stainsize_min) = 1;
+	MY(stainsize_max) = 2;
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(stretchfactor) = 20;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "spark";
+	MY(velocityjitter) = '99.0 99.0 55.0';
+}
+SUB(blood) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(blend) = "invmod";
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x420000";
+	MY(countabsolute) = 1;
+	MY(originjitter) = '11.0 11.0 11.0';
+	MY(sizeincrease) = 20;
+	MY(size_min) = 25;
+	MY(size_max) = 30;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "alphastatic";
+}
+
+DEF(teleport);
+SUB(teleport) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 100;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x807aff";
+	MY(color_max) = "0x4463d5";
+	MY(count) = 500;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1000.0 1000.0 1500.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(teleport) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0x807aff";
+	MY(color_max) = "0x4463d5";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 150;
+	MY(size_max) = 150;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(TR_BLOOD);
+SUB(TR_BLOOD) {
+	MY(airfriction) = -2;
+	MY(alpha_min) = 384;
+	MY(alpha_max) = 984;
+	MY(alpha_fade) = 1492;
+	MY(blend) = "invmod";
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFF";
+	MY(gravity) = 0.400000;
+	MY(liquidfriction) = 1;
+	MY(sizeincrease) = -5;
+	MY(size_min) = 4;
+	MY(size_max) = 19;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(stainsize_min) = 1;
+	MY(stainsize_max) = 2;
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(stretchfactor) = 7;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 20;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(TR_BLOOD) {
+	MY(alpha_min) = 684;
+	MY(alpha_max) = 684;
+	MY(alpha_fade) = 7492;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFF";
+	MY(sizeincrease) = 500;
+	MY(size_min) = 4;
+	MY(size_max) = 6;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 42;
+	MY(type) = "blood";
+}
+
+DEF(TR_SLIGHTBLOOD);
+SUB(TR_SLIGHTBLOOD) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 384;
+	MY(alpha_max) = 384;
+	MY(alpha_fade) = 192;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFF";
+	MY(liquidfriction) = 4;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "blood";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(EF_STARDUST);
+SUB(EF_STARDUST) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0xfff368";
+	MY(color_max) = "0xfff368";
+	MY(count) = 37.500000;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 64.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 0.0';
+}
+
+DEF(item_respawn);
+SUB(item_respawn) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x63F2EA";
+	MY(color_max) = "0x63f2EA";
+	MY(countabsolute) = 1;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(type) = "static";
+}
+SUB(item_respawn) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1280;
+	MY(color_min) = "0x63F2EA";
+	MY(color_max) = "0x63f2EA";
+	MY(count) = 128;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+
+DEF(jumppad_activate);
+SUB(jumppad_activate) {
+	MY(lightcolor) = '2.0 2.0 2.0';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+}
+
+DEF(laser_muzzleflash);
+SUB(laser_muzzleflash) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xcc0000";
+	MY(color_max) = "0xff0000";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '3.0 0.1 0.1';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 10;
+	MY(size_max) = 15;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+SUB(laser_muzzleflash) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xb44215";
+	MY(color_max) = "0xff0000";
+	MY(count) = 3;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 5;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 2.300000;
+	MY(tex_min) = 43;
+	MY(tex_max) = 43;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(laser_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xff4200";
+	MY(color_max) = "0xff0000";
+	MY(count) = 6;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -100;
+	MY(size_min) = 7;
+	MY(size_max) = 9;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+
+DEF(laser_impact);
+SUB(laser_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 0.4 0.4';
+	MY(lightradiusfade) = 500;
+	MY(lightradius) = 200;
+	MY(originjitter) = '14.0 14.0 14.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(laser_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xFF2010";
+	MY(color_max) = "0xFF2010";
+	MY(countabsolute) = 1;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 39;
+	MY(tex_max) = 39;
+	MY(type) = "static";
+}
+SUB(laser_impact) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x800000";
+	MY(color_max) = "0xFF8020";
+	MY(count) = 128;
+	MY(liquidfriction) = 6;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(laser_impact) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x800000";
+	MY(color_max) = "0xFF8020";
+	MY(count) = 4;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = 6;
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+
+DEF(shotgun_muzzleflash);
+SUB(shotgun_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 1.500000;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(sizeincrease) = 12;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.050000;
+}
+SUB(shotgun_muzzleflash) {
+	MY(airfriction) = 5;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xffdb96";
+	MY(color_max) = "0xff5400";
+	MY(count) = 16;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(stretchfactor) = 2.500000;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(shotgun_impact);
+SUB(shotgun_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(size_min) = 5;
+	MY(size_max) = 8;
+	MY(tex_min) = 56;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(shotgun_impact) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 550;
+	MY(alpha_fade) = 756;
+	MY(color_min) = "0x473a37";
+	MY(color_max) = "0x0b0a07";
+	MY(count) = 1;
+	MY(notunderwater) = true;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -50;
+	MY(spin_max) = 50;
+	MY(sizeincrease) = 25;
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(shotgun_impact) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 350;
+	MY(alpha_fade) = 500;
+	MY(bounce) = 6;
+	MY(color_min) = "0x201d1a";
+	MY(color_max) = "0x000000";
+	MY(count) = 0.200000;
+	MY(notunderwater) = true;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -50;
+	MY(spin_max) = 50;
+	MY(sizeincrease) = 74;
+	MY(size_min) = 10;
+	MY(size_max) = 11;
+	MY(tex_min) = 36;
+	MY(tex_max) = 36;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 11.0';
+	MY(velocitymultiplier) = 0.030000;
+}
+SUB(shotgun_impact) {
+	MY(airfriction) = 1.100000;
+	MY(alpha_max) = 356;
+	MY(alpha_fade) = 268;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFDFFD9";
+	MY(color_max) = "0xFDFFD9";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(notunderwater) = true;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.600000;
+	MY(size_max) = 0.600000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+
+DEF(uzi_muzzleflash);
+SUB(uzi_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 1;
+	MY(gravity) = -0.100000;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "static";
+	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocitymultiplier) = 0.030000;
+}
+SUB(uzi_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 6000;
+	MY(color_min) = "0xff9c00";
+	MY(color_max) = "0xffd200";
+	MY(count) = 3;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.300000;
+	MY(size_max) = 0.400000;
+	MY(stretchfactor) = 0.150000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '555.0 555.0 555.0';
+	MY(velocitymultiplier) = 3;
+}
+
+DEF(machinegun_impact);
+SUB(machinegun_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '6.0 3.6 0.6';
+	MY(lightradiusfade) = 800;
+	MY(lightradius) = 80;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 56;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(machinegun_impact) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 550;
+	MY(alpha_fade) = 456;
+	MY(color_min) = "0x473a37";
+	MY(color_max) = "0x0b0a07";
+	MY(count) = 1.500000;
+	MY(notunderwater) = true;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -50;
+	MY(spin_max) = 50;
+	MY(sizeincrease) = 15;
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.100000;
+}
+SUB(machinegun_impact) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 350;
+	MY(alpha_fade) = 500;
+	MY(bounce) = 6;
+	MY(color_min) = "0x201d1a";
+	MY(color_max) = "0x000000";
+	MY(count) = 0.500000;
+	MY(notunderwater) = true;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -50;
+	MY(spin_max) = 50;
+	MY(sizeincrease) = 74;
+	MY(size_min) = 10;
+	MY(size_max) = 11;
+	MY(tex_min) = 36;
+	MY(tex_max) = 36;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 11.0';
+	MY(velocitymultiplier) = 0.030000;
+}
+SUB(machinegun_impact) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 550;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.700000;
+	MY(color_min) = "0x63493e";
+	MY(color_max) = "0xffffff";
+	MY(count) = 1;
+	MY(gravity) = 1.400000;
+	MY(notunderwater) = true;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -500;
+	MY(spin_max) = 500;
+	MY(size_min) = 1;
+	MY(size_max) = 5;
+	MY(tex_min) = 66;
+	MY(tex_max) = 68;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(machinegun_impact) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 168;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFDFFD9";
+	MY(color_max) = "0xFDFFD9";
+	MY(count) = 1;
+	MY(gravity) = 1;
+	MY(notunderwater) = true;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.300000;
+	MY(size_max) = 0.300000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+
+DEF(grenadelauncher_muzzleflash);
+SUB(grenadelauncher_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 1.500000;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '20.0 20.0 20.0';
+	MY(velocitymultiplier) = 0.030000;
+}
+SUB(grenadelauncher_muzzleflash) {
+	MY(airfriction) = 5;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xffdb96";
+	MY(color_max) = "0xff5400";
+	MY(count) = 16;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(stretchfactor) = 2.500000;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(TR_GRENADE);
+SUB(TR_GRENADE) {
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 400;
+	MY(alpha_fade) = 780;
+	MY(bounce) = 1;
+	MY(color_min) = "0x101010";
+	MY(color_max) = "0x000000";
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 3;
+	MY(size_max) = 2;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 4;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocitymultiplier) = -0.020000;
+}
+SUB(TR_GRENADE) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 144;
+	MY(alpha_fade) = 988;
+	MY(color_min) = "0xffdf72";
+	MY(color_max) = "0x811200";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -15;
+	MY(size_min) = 5;
+	MY(size_max) = 2;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = -1;
+}
+SUB(TR_GRENADE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(TR_KNIGHTSPIKE);
+SUB(TR_KNIGHTSPIKE) {
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 400;
+	MY(alpha_fade) = 600;
+	MY(bounce) = 1;
+	MY(color_min) = "0x303030";
+	MY(color_max) = "0x000000";
+	MY(gravity) = -0.110000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = 11;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 6;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocitymultiplier) = -0.020000;
+}
+SUB(TR_KNIGHTSPIKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 720;
+	MY(color_min) = "0x666666";
+	MY(color_max) = "0x000000";
+	MY(sizeincrease) = -0.100000;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 2;
+	MY(type) = "alphastatic";
+}
+SUB(TR_KNIGHTSPIKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 32;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(grenade_explode);
+SUB(grenade_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightradiusfade) = 400;
+	MY(lightradius) = 250;
+	MY(originjitter) = '26.0 26.0 26.0';
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(grenade_explode) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 228;
+	MY(alpha_fade) = 356;
+	MY(bounce) = 4.500000;
+	MY(color_min) = "0xe03f00";
+	MY(color_max) = "0x5e0000";
+	MY(count) = 40;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 20;
+	MY(size_min) = 16;
+	MY(size_max) = 26;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(grenade_explode) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 228;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 756;
+	MY(bounce) = 1;
+	MY(color_min) = "0xe03f00";
+	MY(color_max) = "0xffdf92";
+	MY(count) = 15;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 40;
+	MY(size_min) = 6;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(grenade_explode) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 550;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 6;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 10;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 34;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(grenade_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '196.0 196.0 196.0';
+}
+SUB(grenade_explode) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 300;
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1500;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(underwater) = true;
+	MY(velocitymultiplier) = 0.300000;
+}
+SUB(grenade_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 484;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 16;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 0.100000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(grenade_explode) {
+	MY(airfriction) = 0.500000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0x6a3d25";
+	MY(color_max) = "0xcac5b4";
+	MY(count) = 12;
+	MY(gravity) = 1.300000;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -1000;
+	MY(spin_max) = 1000;
+	MY(size_min) = 2;
+	MY(size_max) = 6;
+	MY(tex_min) = 66;
+	MY(tex_max) = 68;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '324.0 324.0 524.0';
+}
+
+DEF(electro_muzzleflash);
+SUB(electro_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x283880";
+	MY(color_max) = "0x283880";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 15;
+	MY(size_max) = 15;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(electro_muzzleflash) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 110;
+	MY(alpha_max) = 228;
+	MY(alpha_fade) = 2024;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0xD9FDFF";
+	MY(count) = 7;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 5;
+	MY(size_max) = 15;
+	MY(stretchfactor) = 1.500000;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(electro_muzzleflash) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 110;
+	MY(alpha_max) = 228;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0xD9FDFF";
+	MY(count) = 5;
+	MY(gravity) = 1.300000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 7;
+	MY(size_max) = 6;
+	MY(stretchfactor) = 0.100000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocitymultiplier) = 2.500000;
+}
+
+DEF(TR_NEXUIZPLASMA);
+SUB(TR_NEXUIZPLASMA) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 968;
+	MY(color_min) = "0x283880";
+	MY(color_max) = "0x283880";
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradius) = 90;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(trailspacing) = 2;
+	MY(type) = "static";
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(TR_NEXUIZPLASMA) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0x629dff";
+	MY(color_max) = "0x0018ff";
+	MY(count) = 1.500000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -20;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(trailspacing) = 12;
+	MY(type) = "snow";
+	MY(velocityjitter) = '50.0 50.0 50.0';
+	MY(velocityoffset) = '0.0 0.0 15.0';
+}
+
+DEF(electro_impact);
+SUB(electro_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightradiusfade) = 250;
+	MY(lightradius) = 250;
+	MY(originjitter) = '17.0 17.0 17.0';
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(electro_impact) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 350;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1000;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(electro_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 12;
+	MY(size_max) = 32;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+}
+SUB(electro_impact) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 2;
+	MY(color_min) = "0x629dff";
+	MY(color_max) = "0x0018ff";
+	MY(count) = 30;
+	MY(gravity) = -0.300000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -9999;
+	MY(spin_max) = 9999;
+	MY(sizeincrease) = -50;
+	MY(size_min) = 36;
+	MY(size_max) = 36;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(electro_impact) {
+	MY(airfriction) = 30;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x629dff";
+	MY(color_max) = "0x0018ff";
+	MY(count) = 30;
+	MY(originjitter) = '20.0 20.0 20.0';
+	MY(sizeincrease) = 50;
+	MY(size_min) = 20;
+	MY(size_max) = 24;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '320.0 320.0 320.0';
+}
+
+DEF(electro_ballexplode);
+SUB(electro_ballexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightradiusfade) = 250;
+	MY(lightradius) = 250;
+	MY(originjitter) = '17.0 17.0 17.0';
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(electro_ballexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+}
+SUB(electro_ballexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 2;
+	MY(color_min) = "0xFDFFD9";
+	MY(color_max) = "0xFDFFD9";
+	MY(count) = 64;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(stretchfactor) = 0.400000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(electro_ballexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 8;
+	MY(originjitter) = '20.0 20.0 20.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+}
+
+DEF(electro_combo);
+SUB(electro_combo) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 5.0 6.0';
+	MY(lightradiusfade) = 300;
+	MY(lightradius) = 400;
+	MY(originjitter) = '17.0 17.0 17.0';
+	MY(size_min) = 64;
+	MY(size_max) = 64;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(electro_combo) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+}
+SUB(electro_combo) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 156;
+	MY(bounce) = 2;
+	MY(color_min) = "0x2030FF";
+	MY(color_max) = "0x80C0FF";
+	MY(count) = 5;
+	MY(liquidfriction) = 16;
+	MY(sizeincrease) = 50;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_max) = 7;
+	MY(type) = "static";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(electro_combo) {
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 700;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xa9cacf";
+	MY(color_max) = "0x0054ff";
+	MY(count) = 32;
+	MY(gravity) = 0.300000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '312.0 312.0 312.0';
+	MY(velocitymultiplier) = 3;
+}
+SUB(electro_combo) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 0.125000;
+	MY(originjitter) = '20.0 20.0 20.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+}
+SUB(electro_combo) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 100;
+	MY(color_min) = "0xa9cacf";
+	MY(color_max) = "0x0054ff";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 600;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 0.300000;
+}
+
+DEF(crylink_muzzleflash);
+SUB(crylink_muzzleflash) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 2024;
+	MY(color_min) = "0xdd9cff";
+	MY(color_max) = "0xff0090";
+	MY(count) = 0.500000;
+	MY(lightcolor) = '1.6 0.2 2.0';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(size_min) = 15;
+	MY(size_max) = 20;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(crylink_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xA080C0";
+	MY(color_max) = "0xA080C0";
+	MY(count) = 5;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(stretchfactor) = 1.500000;
+	MY(tex_min) = 35;
+	MY(tex_max) = 36;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.300000;
+}
+
+DEF(crylink_impact);
+SUB(crylink_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '12.0 12.0 12.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(crylink_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x504060";
+	MY(color_max) = "0x504060";
+	MY(countabsolute) = 1;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 39;
+	MY(tex_max) = 39;
+	MY(type) = "static";
+}
+SUB(crylink_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 2;
+	MY(color_min) = "0xA040C0";
+	MY(color_max) = "0xA040C0";
+	MY(count) = 40;
+	MY(size_min) = 6;
+	MY(size_max) = 6;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(crylink_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xE070FF";
+	MY(color_max) = "0xE070FF";
+	MY(count) = 1.500000;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+}
+SUB(crylink_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xE070FF";
+	MY(color_max) = "0xE070FF";
+	MY(count) = 3;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(type) = "static";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+
+DEF(nex_muzzleflash);
+SUB(nex_muzzleflash) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 328;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 4000;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x0072ff";
+	MY(count) = 12;
+	MY(lightcolor) = '2.0 2.5 3.0';
+	MY(lightradiusfade) = 200;
+	MY(lightradius) = 200;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(sizeincrease) = -100;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '180.0 180.0 180.0';
+	MY(velocitymultiplier) = 1.400000;
+}
+SUB(nex_muzzleflash) {
+	MY(airfriction) = 9;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0xD9FDFF";
+	MY(count) = 50;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '600.0 600.0 600.0';
+	MY(velocitymultiplier) = 1.500000;
+}
+
+DEF(nex_beam);
+SUB(nex_beam) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x1680A0";
+	MY(color_max) = "0x1680A0";
+	MY(sizeincrease) = 2;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 32;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "static";
+}
+SUB(nex_beam) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 32;
+	MY(color_min) = "0x5080A0";
+	MY(color_max) = "0x5080A0";
+	MY(sizeincrease) = 8;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+}
+SUB(nex_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1280;
+	MY(color_min) = "0x80CDFF";
+	MY(color_max) = "0x80CDFF";
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+}
+SUB(nex_beam) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 80;
+	MY(color_min) = "0x1680A0";
+	MY(color_max) = "0x1680A0";
+	MY(gravity) = -0.010000;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 63;
+	MY(tex_max) = 63;
+	MY(trailspacing) = 16;
+	MY(type) = "snow";
+}
+
+DEF(nex_impact);
+SUB(nex_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 6.0 8.0';
+	MY(lightradiusfade) = 250;
+	MY(lightradius) = 200;
+	MY(originjitter) = '14.0 14.0 14.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(nex_impact) {
+	MY(alpha_min) = 55;
+	MY(alpha_max) = 55;
+	MY(alpha_fade) = 50;
+	MY(color_min) = "0x1680A0";
+	MY(color_max) = "0x1680A0";
+	MY(count) = 5;
+	MY(startangle_min) = 180;
+	MY(startangle_max) = -180;
+	MY(spin_min) = 500;
+	MY(spin_max) = -500;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 25;
+	MY(size_max) = 28;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(type) = "smoke";
+}
+SUB(nex_impact) {
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 50;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x1680A0";
+	MY(color_max) = "0x1680A0";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 900;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "static";
+}
+SUB(nex_impact) {
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 50;
+	MY(alpha_fade) = 100;
+	MY(color_min) = "0x1680A0";
+	MY(color_max) = "0x1680A0";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 500;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "static";
+}
+SUB(nex_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 37;
+	MY(tex_max) = 37;
+	MY(type) = "static";
+}
+SUB(nex_impact) {
+	MY(airfriction) = 9;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 512;
+	MY(bounce) = 2;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0xD9FDFF";
+	MY(count) = 64;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(stretchfactor) = 3;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '600.0 600.0 600.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(nex_impact) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 112;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0xD9FDFF";
+	MY(count) = 16;
+	MY(gravity) = 1;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(stretchfactor) = 0.700000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 600.0';
+	MY(velocitymultiplier) = 2.500000;
+}
+
+DEF(hagar_muzzleflash);
+SUB(hagar_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 2;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(hagar_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xff8400";
+	MY(color_max) = "0xff4200";
+	MY(count) = 15;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -400;
+	MY(spin_max) = 400;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(hagar_bounce);
+SUB(hagar_bounce) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 2;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 300;
+	MY(lightradius) = 60;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(hagar_bounce) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFDD9";
+	MY(color_max) = "0xFFFDD9";
+	MY(count) = 15;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '600.0 600.0 600.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(hagar_explode);
+SUB(hagar_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightradiusfade) = 400;
+	MY(lightradius) = 120;
+	MY(originjitter) = '14.0 14.0 14.0';
+	MY(size_min) = 28;
+	MY(size_max) = 38;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(hagar_explode) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 80;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 356;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xffe955";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 3.500000;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 16;
+	MY(size_max) = 26;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '156.0 156.0 156.0';
+}
+SUB(hagar_explode) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 456;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 12;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 15;
+	MY(size_min) = 20;
+	MY(size_max) = 26;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '286.0 286.0 286.0';
+}
+SUB(hagar_explode) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 500;
+	MY(alpha_fade) = 600;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 7;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '244.0 244.0 244.0';
+}
+SUB(hagar_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 16;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+SUB(hagar_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 4;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 0.100000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '224.0 224.0 224.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(rocketlauncher_muzzleflash);
+SUB(rocketlauncher_muzzleflash) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 10;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(sizeincrease) = 20;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '40.0 40.0 40.0';
+	MY(velocitymultiplier) = -0.130000;
+}
+SUB(rocketlauncher_muzzleflash) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 10;
+	MY(alpha_max) = 25;
+	MY(alpha_fade) = 20;
+	MY(color_min) = "0xFFFDD9";
+	MY(color_max) = "0xFFFDD9";
+	MY(count) = 6;
+	MY(originjitter) = '3.0 3.0 3.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_min) = 35;
+	MY(tex_max) = 36;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 0.300000;
+}
+
+DEF(TR_ROCKET);
+SUB(TR_ROCKET) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x666666";
+	MY(lightcolor) = '6.0 3.0 1.0';
+	MY(lightradius) = 150;
+	MY(notunderwater) = true;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 11;
+	MY(size_min) = 3;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 10;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocitymultiplier) = -0.020000;
+}
+SUB(TR_ROCKET) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 144;
+	MY(alpha_fade) = 588;
+	MY(color_min) = "0xffdf72";
+	MY(color_max) = "0x811200";
+	MY(sizeincrease) = -30;
+	MY(size_min) = 7;
+	MY(size_max) = 7;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = -1.500000;
+}
+SUB(TR_ROCKET) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocitymultiplier) = -0.310000;
+}
+SUB(TR_ROCKET) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFFFDD9";
+	MY(color_max) = "0xFFFDD9";
+	MY(notunderwater) = true;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.500000;
+	MY(size_max) = 0.500000;
+	MY(stretchfactor) = 0.300000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(trailspacing) = 20;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = -0.310000;
+}
+
+DEF(rocket_explode);
+SUB(rocket_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightradiusfade) = 750;
+	MY(lightradius) = 400;
+	MY(originjitter) = '23.0 23.0 23.0';
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(rocket_explode) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 32;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 45;
+	MY(size_min) = 33;
+	MY(size_max) = 44;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(rocket_explode) {
+	MY(airfriction) = 19;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 612;
+	MY(bounce) = 2.500000;
+	MY(color_min) = "0xea691b";
+	MY(color_max) = "0xeed05a";
+	MY(count) = 14;
+	MY(liquidfriction) = 19;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 55;
+	MY(size_min) = 33;
+	MY(size_max) = 44;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '912.0 912.0 912.0';
+}
+SUB(rocket_explode) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 450;
+	MY(alpha_fade) = 456;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 32;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 44;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '444.0 444.0 444.0';
+}
+SUB(rocket_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '144.0 144.0 144.0';
+}
+SUB(rocket_explode) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 300;
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1900;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(underwater) = true;
+	MY(velocitymultiplier) = 0.300000;
+}
+SUB(rocket_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 484;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 16;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 0.100000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(rocket_explode) {
+	MY(airfriction) = 0.500000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0x6a3d25";
+	MY(color_max) = "0xcac5b4";
+	MY(count) = 12;
+	MY(gravity) = 1.300000;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -1000;
+	MY(spin_max) = 1000;
+	MY(size_min) = 2;
+	MY(size_max) = 6;
+	MY(tex_min) = 66;
+	MY(tex_max) = 68;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '324.0 324.0 524.0';
+}
+
+DEF(grapple_muzzleflash);
+SUB(grapple_muzzleflash) {
+	MY(lightcolor) = '1.0 0.0 0.0';
+	MY(lightradiusfade) = 800;
+	MY(lightradius) = 160;
+}
+
+DEF(grapple_impact);
+SUB(grapple_impact) {
+	MY(lightcolor) = '1.0 0.0 0.0';
+	MY(lightradiusfade) = 800;
+	MY(lightradius) = 160;
+}
+
+DEF(nex242_misc_laser_beam);
+SUB(nex242_misc_laser_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff0000";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_beam_end);
+SUB(nex242_misc_laser_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_beam_fast);
+SUB(nex242_misc_laser_beam_fast) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 640;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff0000";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 0.100000;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_beam_fast_end);
+SUB(nex242_misc_laser_beam_fast_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_green_beam);
+SUB(nex242_misc_laser_green_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x00ff00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_green_beam_end);
+SUB(nex242_misc_laser_green_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_blue_beam);
+SUB(nex242_misc_laser_blue_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x0000ff";
+	MY(color_max) = "0x0000ff";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_blue_beam_end);
+SUB(nex242_misc_laser_blue_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_yellow_beam);
+SUB(nex242_misc_laser_yellow_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xffff00";
+	MY(color_max) = "0xffff00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_yellow_beam_end);
+SUB(nex242_misc_laser_yellow_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_cyan_beam);
+SUB(nex242_misc_laser_cyan_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x00ffff";
+	MY(color_max) = "0x00ffff";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_cyan_beam_end);
+SUB(nex242_misc_laser_cyan_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_magenta_beam);
+SUB(nex242_misc_laser_magenta_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xff00ff";
+	MY(color_max) = "0xff00ff";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_magenta_beam_end);
+SUB(nex242_misc_laser_magenta_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_white_beam);
+SUB(nex242_misc_laser_white_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0xffffff";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_white_beam_end);
+SUB(nex242_misc_laser_white_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_black_beam);
+SUB(nex242_misc_laser_black_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x000000";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_black_beam_end);
+SUB(nex242_misc_laser_black_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(nex242_misc_laser_orange_beam);
+SUB(nex242_misc_laser_orange_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xff6600";
+	MY(color_max) = "0xff6600";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+
+DEF(nex242_misc_laser_orange_beam_end);
+SUB(nex242_misc_laser_orange_beam_end) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = -1;
+	MY(color_min) = "0x8f4333";
+	MY(color_max) = "0xfff31b";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(size_min) = 0.400000;
+	MY(size_max) = 0.400000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(crylink_impactbig);
+SUB(crylink_impactbig) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '12.0 12.0 12.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(crylink_impactbig) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x504060";
+	MY(color_max) = "0x504060";
+	MY(countabsolute) = 1;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 39;
+	MY(tex_max) = 39;
+	MY(type) = "static";
+}
+SUB(crylink_impactbig) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 2;
+	MY(color_min) = "0xA040C0";
+	MY(color_max) = "0xA040C0";
+	MY(count) = 40;
+	MY(size_min) = 6;
+	MY(size_max) = 6;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(crylink_impactbig) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xE070FF";
+	MY(color_max) = "0xE070FF";
+	MY(count) = 1.500000;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+}
+SUB(crylink_impactbig) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xE070FF";
+	MY(color_max) = "0xE070FF";
+	MY(count) = 3;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(type) = "static";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+
+DEF(damage_hit);
+SUB(damage_hit) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 192;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x00FFFF";
+	MY(color_max) = "0xFF00FF";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 10;
+	MY(sizeincrease) = -24;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(damage_hit) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 192;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF00FF";
+	MY(color_max) = "0xFFFF00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 10;
+	MY(sizeincrease) = -24;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(damage_hit) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 192;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFF00";
+	MY(color_max) = "0x00FFFF";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 10;
+	MY(sizeincrease) = -24;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+
+DEF(damage_dissolve);
+SUB(damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x00FFFF";
+	MY(color_max) = "0xFF00FF";
+	MY(count) = 15;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 6;
+	MY(sizeincrease) = -16;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF00FF";
+	MY(color_max) = "0xFFFF00";
+	MY(count) = 15;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 6;
+	MY(sizeincrease) = -16;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFF00";
+	MY(color_max) = "0x00FFFF";
+	MY(count) = 15;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 6;
+	MY(sizeincrease) = -16;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+
+DEF(laser_deadly);
+SUB(laser_deadly) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 56;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(laser_deadly) {
+	MY(airfriction) = 7;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 0.025000;
+	MY(liquidfriction) = 16;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = 2;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '15.0 15.0 15.0';
+	MY(velocitymultiplier) = 20;
+}
+SUB(laser_deadly) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 768;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFDFFD9";
+	MY(color_max) = "0xFDFFD9";
+	MY(count) = 0.025000;
+	MY(gravity) = 1;
+	MY(notunderwater) = true;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.600000;
+	MY(size_max) = 0.600000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 100;
+}
+
+DEF(torch_small);
+SUB(torch_small) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 8;
+	MY(gravity) = -0.500000;
+	MY(originjitter) = '5.0 5.0 5.0';
+	MY(sizeincrease) = -1;
+	MY(size_min) = 1;
+	MY(size_max) = 11;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '1.0 1.0 50.0';
+}
+SUB(torch_small) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 4;
+	MY(gravity) = -0.300000;
+	MY(originjitter) = '3.0 3.0 3.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(fountain01);
+SUB(fountain01) {
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 100;
+	MY(bounce) = 1;
+	MY(color_min) = "0x7cbaff";
+	MY(color_max) = "0xcfd1ff";
+	MY(count) = 16;
+	MY(gravity) = 0.600000;
+	MY(originjitter) = '5.0 5.0 5.0';
+	MY(sizeincrease) = 20;
+	MY(size_min) = 10;
+	MY(size_max) = 15;
+	MY(tex_max) = 8;
+	MY(type) = "snow";
+	MY(velocityjitter) = '81.0 81.0 150.0';
+	MY(velocitymultiplier) = 2;
+}
+
+DEF(hookbomb_explode);
+SUB(hookbomb_explode) {
+	MY(airfriction) = 10;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x807aff";
+	MY(color_max) = "0x4463d5";
+	MY(count) = 25;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = -160;
+	MY(size_min) = 150;
+	MY(size_max) = 200;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+	MY(velocityjitter) = '550.0 550.0 550.0';
+}
+SUB(hookbomb_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 265;
+	MY(alpha_fade) = 100;
+	MY(color_min) = "0x807aff";
+	MY(color_max) = "0x4463d5";
+	MY(countabsolute) = 3;
+	MY(originoffset) = '0.0 0.0 6.0';
+	MY(sizeincrease) = -60;
+	MY(size_min) = 160;
+	MY(size_max) = 200;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+}
+SUB(hookbomb_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(size_min) = 80;
+	MY(size_max) = 100;
+	MY(tex_min) = 39;
+	MY(tex_max) = 39;
+	MY(type) = "decal";
+}
+SUB(hookbomb_explode) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 456;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x807aff";
+	MY(color_max) = "0x4463d5";
+	MY(count) = 30;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -60;
+	MY(size_min) = 20;
+	MY(size_max) = 30;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1900.0 1900.0 1300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(EF_MGTURRETTRAIL);
+SUB(EF_MGTURRETTRAIL) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 196;
+	MY(alpha_fade) = 768;
+	MY(color_min) = "0xd0d0a0";
+	MY(color_max) = "0xffffff";
+	MY(gravity) = -0.010000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -8;
+	MY(size_min) = 5;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 10;
+	MY(type) = "smoke";
+}
+SUB(EF_MGTURRETTRAIL) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 32;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(fire_big);
+SUB(fire_big) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 356;
+	MY(alpha_fade) = 512;
+	MY(bounce) = 2;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 26;
+	MY(gravity) = -0.500000;
+	MY(originjitter) = '33.0 33.0 33.0';
+	MY(sizeincrease) = -3;
+	MY(size_min) = 11;
+	MY(size_max) = 31;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(fire_big) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 11;
+	MY(gravity) = -0.300000;
+	MY(originjitter) = '44.0 44.0 44.0';
+	MY(sizeincrease) = 11;
+	MY(size_min) = 22;
+	MY(size_max) = 33;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(red_flare);
+SUB(red_flare) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 160;
+	MY(bounce) = 1;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xdc7171";
+	MY(count) = 10.500000;
+	MY(gravity) = -0.240000;
+	MY(originjitter) = '2.0 2.0 0.0';
+	MY(sizeincrease) = 11;
+	MY(size_min) = 1;
+	MY(size_max) = 11;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '15.0 15.0 30.0';
+}
+
+DEF(blue_flare);
+SUB(blue_flare) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 160;
+	MY(bounce) = 1;
+	MY(color_min) = "0x0000ff";
+	MY(color_max) = "0x7194dc";
+	MY(count) = 10.500000;
+	MY(gravity) = -0.240000;
+	MY(originjitter) = '2.0 2.0 0.0';
+	MY(sizeincrease) = 11;
+	MY(size_min) = 1;
+	MY(size_max) = 11;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '15.0 15.0 30.0';
+}
+
+DEF(smoke_ring);
+SUB(smoke_ring) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.100000;
+	MY(color_min) = "0x111111";
+	MY(color_max) = "0x979797";
+	MY(count) = 45;
+	MY(gravity) = 0.100000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 21;
+	MY(size_min) = 1;
+	MY(size_max) = 11;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '190.0 190.0 50.0';
+}
+
+DEF(smoke_large);
+SUB(smoke_large) {
+	MY(airfriction) = 7;
+	MY(alpha_min) = 140;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 190;
+	MY(bounce) = 1.100000;
+	MY(color_min) = "0x9e895f";
+	MY(color_max) = "0xffd39b";
+	MY(count) = 25;
+	MY(gravity) = -0.150000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 21;
+	MY(size_min) = 11;
+	MY(size_max) = 21;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '390.0 390.0 390.0';
+}
+
+DEF(sparks);
+SUB(sparks) {
+	MY(airfriction) = 3;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFDD9";
+	MY(color_max) = "0xFFFDD9";
+	MY(count) = 15;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 200.0';
+	MY(velocitymultiplier) = 1.500000;
+}
+
+DEF(electricity_sparks);
+SUB(electricity_sparks) {
+	MY(airfriction) = 3;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x807aff";
+	MY(color_max) = "0x4463d5";
+	MY(count) = 35;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(steam);
+SUB(steam) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 140;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 190;
+	MY(bounce) = 1.100000;
+	MY(color_min) = "0xfffbdf";
+	MY(color_max) = "0xffffff";
+	MY(count) = 1;
+	MY(gravity) = -0.250000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 7;
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '19.0 19.0 19.0';
+	MY(velocitymultiplier) = 14;
+}
+
+DEF(smoking);
+SUB(smoking) {
+	MY(airfriction) = -1;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 100;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x292929";
+	MY(color_max) = "0x000000";
+	MY(count) = 10;
+	MY(gravity) = -0.100000;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 10;
+	MY(size_max) = 40;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '5.0 5.0 20.0';
+}
+
+DEF(goldendust);
+SUB(goldendust) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 70;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xff9600";
+	MY(color_max) = "0xffefb8";
+	MY(count) = 25;
+	MY(originjitter) = '500.0 500.0 500.0';
+	MY(sizeincrease) = -0.300000;
+	MY(size_min) = 2;
+	MY(size_max) = 3;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "snow";
+	MY(velocityjitter) = '0.1 0.1 0.1';
+}
+
+DEF(healing_fx);
+SUB(healing_fx) {
+	MY(airfriction) = -0.500000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 170;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff0000";
+	MY(count) = 25;
+	MY(gravity) = -0.100000;
+	MY(originjitter) = '5.0 5.0 100.0';
+	MY(sizeincrease) = -0.050000;
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '50.0 50.0 0.0';
+}
+
+DEF(armorrepair_fx);
+SUB(armorrepair_fx) {
+	MY(airfriction) = -0.500000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 170;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x00ff00";
+	MY(count) = 25;
+	MY(gravity) = -0.100000;
+	MY(originjitter) = '5.0 5.0 50.0';
+	MY(sizeincrease) = -0.050000;
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '50.0 50.0 0.0';
+}
+
+DEF(ammoregen_fx);
+SUB(ammoregen_fx) {
+	MY(airfriction) = -0.500000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 170;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x0000ff";
+	MY(color_max) = "0x0000ff";
+	MY(count) = 25;
+	MY(gravity) = -0.100000;
+	MY(originjitter) = '5.0 5.0 50.0';
+	MY(sizeincrease) = -0.050000;
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '50.0 50.0 0.0';
+}
+
+DEF(rage);
+SUB(rage) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 190;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff7800";
+	MY(count) = 2.500000;
+	MY(gravity) = -0.060000;
+	MY(originjitter) = '5.0 5.0 5.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 35;
+	MY(tex_max) = 36;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '25.0 25.0 25.0';
+}
+
+DEF(iceorglass);
+SUB(iceorglass) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(bounce) = 2;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0xb2d3e6";
+	MY(count) = 15;
+	MY(gravity) = 1.300000;
+	MY(originjitter) = '30.0 30.0 30.0';
+	MY(size_min) = 3;
+	MY(size_max) = 7;
+	MY(tex_min) = 44;
+	MY(tex_max) = 44;
+	MY(time_min) = 1;
+	MY(time_max) = 3;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+}
+
+DEF(poisonfield);
+SUB(poisonfield) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 50;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x7db843";
+	MY(count) = 15;
+	MY(gravity) = -0.010000;
+	MY(originjitter) = '333.0 333.0 50.0';
+	MY(sizeincrease) = 30;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '5.0 5.0 5.0';
+}
+
+DEF(icefield);
+SUB(icefield) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 50;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x008aff";
+	MY(color_max) = "0x75e7ff";
+	MY(count) = 10;
+	MY(gravity) = -0.010000;
+	MY(originjitter) = '333.0 333.0 0.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '5.0 5.0 30.0';
+}
+SUB(icefield) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 50;
+	MY(color_min) = "0x008aff";
+	MY(color_max) = "0x75e7ff";
+	MY(count) = 5;
+	MY(gravity) = -0.001000;
+	MY(originjitter) = '333.0 333.0 0.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+}
+
+DEF(firefield);
+SUB(firefield) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 100;
+	MY(gravity) = -0.060000;
+	MY(originjitter) = '180.0 180.0 0.0';
+	MY(sizeincrease) = 20;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '5.0 5.0 30.0';
+}
+SUB(firefield) {
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 50;
+	MY(originjitter) = '180.0 180.0 0.0';
+	MY(sizeincrease) = 40;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+}
+SUB(firefield) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 70;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 20;
+	MY(gravity) = -0.020000;
+	MY(originjitter) = '180.0 180.0 0.0';
+	MY(sizeincrease) = 7;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(flamethrower);
+SUB(flamethrower) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 250;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 3;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '40.0 40.0 11.0';
+	MY(velocitymultiplier) = 30;
+}
+SUB(flamethrower) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 2.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '40.0 40.0 40.0';
+	MY(velocitymultiplier) = 20;
+}
+SUB(flamethrower) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 1.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 10;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '30.0 30.0 30.0';
+	MY(velocitymultiplier) = 10;
+}
+SUB(flamethrower) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 2;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 20;
+	MY(size_max) = 30;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocitymultiplier) = 15;
+}
+SUB(flamethrower) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 90;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 0.500000;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 7;
+	MY(size_min) = 5;
+	MY(size_max) = 15;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocitymultiplier) = 20;
+	MY(velocityoffset) = '0.0 0.0 10.0';
+}
+
+DEF(TR_WIZSPIKE);
+SUB(TR_WIZSPIKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 968;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x404040";
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradius) = 90;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 4;
+	MY(type) = "static";
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(TR_WIZSPIKE) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x404040";
+	MY(count) = 1.500000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -20;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(trailspacing) = 12;
+	MY(type) = "snow";
+	MY(velocityjitter) = '50.0 50.0 50.0';
+	MY(velocityoffset) = '0.0 0.0 15.0';
+}
+
+DEF(TR_VORESPIKE);
+SUB(TR_VORESPIKE) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 968;
+	MY(color_min) = "0x804000";
+	MY(color_max) = "0x804000";
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradius) = 90;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 4;
+	MY(type) = "static";
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(TR_VORESPIKE) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0xff8000";
+	MY(color_max) = "0xff8000";
+	MY(count) = 1.500000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -20;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(trailspacing) = 12;
+	MY(type) = "snow";
+	MY(velocityjitter) = '50.0 50.0 50.0';
+	MY(velocityoffset) = '0.0 0.0 15.0';
+}
+
+DEF(flac_explode);
+SUB(flac_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightradiusfade) = 400;
+	MY(lightradius) = 150;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(size_min) = 18;
+	MY(size_max) = 28;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(flac_explode) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 456;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xffe955";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 3;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 6;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '156.0 156.0 156.0';
+}
+SUB(flac_explode) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 456;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 6;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 15;
+	MY(size_min) = 10;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+SUB(flac_explode) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 500;
+	MY(alpha_max) = 600;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 5;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '244.0 244.0 244.0';
+}
+SUB(flac_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 8;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+SUB(flac_explode) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 384;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x903010";
+	MY(color_max) = "0xFFD030";
+	MY(count) = 4;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(tr_bullet);
+SUB(tr_bullet) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 2560;
+	MY(color_min) = "0xff8960";
+	MY(color_max) = "0xff8533";
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(stretchfactor) = 0.200000;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(trailspacing) = 750;
+	MY(type) = "spark";
+	MY(velocitymultiplier) = 3;
+}
+
+DEF(smoking_smallemitter);
+SUB(smoking_smallemitter) {
+	MY(airfriction) = -1;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 100;
+	MY(color_min) = "0x292929";
+	MY(color_max) = "0x000000";
+	MY(count) = 10;
+	MY(gravity) = -0.100000;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 20;
+	MY(size_min) = 6;
+	MY(size_max) = 15;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '5.0 5.0 20.0';
+}
+
+DEF(TR_CRYLINKPLASMA);
+SUB(TR_CRYLINKPLASMA) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x5522aa";
+	MY(color_max) = "0x6622ff";
+	MY(sizeincrease) = 8;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 32;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 128;
+	MY(type) = "static";
+	MY(velocityjitter) = '8.0 8.0 8.0';
+	MY(velocitymultiplier) = -0.010000;
+}
+SUB(TR_CRYLINKPLASMA) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 2600;
+	MY(color_min) = "0x5522aa";
+	MY(color_max) = "0x6622ff";
+	MY(sizeincrease) = 15;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 3;
+	MY(tex_max) = 3;
+	MY(trailspacing) = 16;
+	MY(type) = "static";
+	MY(velocityjitter) = '2.0 2.0 2.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+
+DEF(cherryblossom);
+SUB(cherryblossom) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 32;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xb123ff";
+	MY(color_max) = "0xb183ff";
+	MY(count) = 1.500000;
+	MY(gravity) = 0.050000;
+	MY(liquidfriction) = 1;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 0.0';
+}
+
+DEF(alien_blood);
+SUB(alien_blood) {
+	MY(airfriction) = 0.400000;
+	MY(alpha_min) = 1560;
+	MY(alpha_max) = 2560;
+	MY(alpha_fade) = 7000;
+	MY(blend) = "invmod";
+	MY(bounce) = -1;
+	MY(color_min) = "0xDC9BCD";
+	MY(color_max) = "0xDC9BCD";
+	MY(count) = 0.400000;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 11;
+	MY(staincolor_min) = "0xDC9BCD";
+	MY(staincolor_max) = "0xDC9BCD";
+	MY(stainsize_min) = 1;
+	MY(stainsize_max) = 2;
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(stretchfactor) = 25;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "spark";
+	MY(velocityjitter) = '99.0 99.0 55.0';
+}
+SUB(alien_blood) {
+	MY(alpha_min) = 3000;
+	MY(alpha_max) = 5560;
+	MY(alpha_fade) = 12000;
+	MY(blend) = "invmod";
+	MY(color_min) = "0xDC9BCD";
+	MY(color_max) = "0xDC9BCD";
+	MY(countabsolute) = 1;
+	MY(originjitter) = '11.0 11.0 11.0';
+	MY(sizeincrease) = 20;
+	MY(size_min) = 25;
+	MY(size_max) = 30;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "smoke";
+}
+
+DEF(robot_blood);
+SUB(robot_blood) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xff3000";
+	MY(color_max) = "0xff7373";
+	MY(count) = 0.167000;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(type) = "spark";
+	MY(velocityjitter) = '264.0 264.0 264.0';
+	MY(velocityoffset) = '0.0 0.0 100.0';
+}
+SUB(robot_blood) {
+	MY(alpha_max) = 90;
+	MY(alpha_fade) = 1000;
+	MY(color_min) = "0xff8400";
+	MY(color_max) = "0xffbb72";
+	MY(countabsolute) = 1;
+	MY(originjitter) = '11.0 11.0 11.0';
+	MY(sizeincrease) = 800;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 74;
+	MY(tex_max) = 74;
+	MY(type) = "smoke";
+}
+SUB(robot_blood) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 5120;
+	MY(color_min) = "0xff3000";
+	MY(color_max) = "0xff8585";
+	MY(count) = 0.100000;
+	MY(originjitter) = '41.0 41.0 21.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(type) = "smoke";
+}
+
+DEF(alien_TR_BLOOD);
+SUB(alien_TR_BLOOD) {
+	MY(airfriction) = -2;
+	MY(alpha_min) = 384;
+	MY(alpha_max) = 984;
+	MY(alpha_fade) = 1492;
+	MY(blend) = "invmod";
+	MY(bounce) = -1;
+	MY(color_min) = "0xC080B0";
+	MY(color_max) = "0xC080B0";
+	MY(gravity) = 0.400000;
+	MY(liquidfriction) = 1;
+	MY(sizeincrease) = -5;
+	MY(size_min) = 4;
+	MY(size_max) = 19;
+	MY(staincolor_min) = "0xC080B0";
+	MY(staincolor_max) = "0xC080B0";
+	MY(stainsize_min) = 1;
+	MY(stainsize_max) = 2;
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(stretchfactor) = 7;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 20;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = -0.100000;
+}
+
+SUB(TR_BLOOD) {
+	MY(alpha_min) = 684;
+	MY(alpha_max) = 684;
+	MY(alpha_fade) = 7492;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFF";
+	MY(sizeincrease) = 500;
+	MY(size_min) = 4;
+	MY(size_max) = 6;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 42;
+	MY(type) = "blood";
+}
+
+DEF(robot_TR_BLOOD);
+SUB(robot_TR_BLOOD) {
+	MY(airfriction) = -2;
+	MY(alpha_min) = 384;
+	MY(alpha_max) = 984;
+	MY(alpha_fade) = 1892;
+	MY(blend) = "invmod";
+	MY(bounce) = -1;
+	MY(color_min) = "0xC0D890";
+	MY(color_max) = "0xC0D890";
+	MY(gravity) = 0.400000;
+	MY(liquidfriction) = 1;
+	MY(sizeincrease) = -6;
+	MY(size_min) = 4;
+	MY(size_max) = 13;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(stainsize_min) = 1;
+	MY(stainsize_max) = 3;
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(stretchfactor) = 6;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 16;
+	MY(type) = "spark";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = -0.300000;
+}
+SUB(robot_TR_BLOOD) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 900;
+	MY(color_min) = "0x902010";
+	MY(color_max) = "0xff3600";
+	MY(gravity) = -1;
+	MY(liquidfriction) = 4;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 10;
+	MY(size_min) = 5;
+	MY(size_max) = 20;
+	MY(stretchfactor) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 16;
+	MY(type) = "spark";
+	MY(velocityjitter) = '44.0 44.0 44.0';
+}
+SUB(robot_TR_BLOOD) {
+	MY(alpha_min) = 1128;
+	MY(alpha_max) = 1256;
+	MY(alpha_fade) = 44900;
+	MY(color_min) = "0xff3000";
+	MY(color_max) = "0xff8585";
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(size_min) = 25;
+	MY(size_max) = 30;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(trailspacing) = 128;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '44.0 44.0 44.0';
+}
+
+DEF(alien_TR_SLIGHTBLOOD);
+SUB(alien_TR_SLIGHTBLOOD) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 384;
+	MY(alpha_max) = 384;
+	MY(alpha_fade) = 192;
+	MY(bounce) = -1;
+	MY(color_min) = "0xC080B0";
+	MY(color_max) = "0xC080B0";
+	MY(liquidfriction) = 4;
+	MY(size_min) = 80;
+	MY(size_max) = 80;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "blood";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(robot_TR_SLIGHTBLOOD);
+SUB(robot_TR_SLIGHTBLOOD) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 384;
+	MY(alpha_max) = 384;
+	MY(alpha_fade) = 192;
+	MY(bounce) = -1;
+	MY(color_min) = "0xC0D890";
+	MY(color_max) = "0xC0D890";
+	MY(liquidfriction) = 4;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "blood";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(item_pickup);
+SUB(item_pickup) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x63F2EA";
+	MY(color_max) = "0xB0C5C4";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 16;
+	MY(type) = "static";
+}
+SUB(item_pickup) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1280;
+	MY(color_min) = "0x63F2EA";
+	MY(color_max) = "0xB0C5C4";
+	MY(count) = 32;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+
+DEF(bloodshower);
+SUB(bloodshower) {
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 1664;
+	MY(blend) = "invmod";
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 125;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 8;
+	MY(size_max) = 28;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(stainsize_min) = 1;
+	MY(stainsize_max) = 2;
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(stretchfactor) = 3;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "spark";
+	MY(velocityjitter) = '764.0 764.0 764.0';
+}
+SUB(bloodshower) {
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 1664;
+	MY(blend) = "invmod";
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(countabsolute) = 0.100000;
+	MY(originjitter) = '50.0 50.0 50.0';
+	MY(sizeincrease) = 300;
+	MY(size_min) = 1;
+	MY(size_max) = 28;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "smoke";
+}
+
+DEF(alien_bloodshower);
+SUB(alien_bloodshower) {
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 1664;
+	MY(blend) = "invmod";
+	MY(bounce) = -1;
+	MY(color_min) = "0xC080B0";
+	MY(color_max) = "0xC080B0";
+	MY(count) = 125;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 8;
+	MY(size_max) = 28;
+	MY(staincolor_min) = "0xC080B0";
+	MY(staincolor_max) = "0xC080B0";
+	MY(stainsize_min) = 1;
+	MY(stainsize_max) = 2;
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(stretchfactor) = 3;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "spark";
+	MY(velocityjitter) = '764.0 764.0 764.0';
+}
+
+SUB(bloodshower) {
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 1664;
+	MY(blend) = "invmod";
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(countabsolute) = 0.100000;
+	MY(originjitter) = '50.0 50.0 50.0';
+	MY(sizeincrease) = 300;
+	MY(size_min) = 1;
+	MY(size_max) = 28;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "smoke";
+}
+
+DEF(robot_bloodshower);
+SUB(robot_bloodshower) {
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 1664;
+	MY(blend) = "invmod";
+	MY(bounce) = -1;
+	MY(color_min) = "0xC0D890";
+	MY(color_max) = "0xC0D890";
+	MY(count) = 100;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 8;
+	MY(size_max) = 28;
+	MY(staincolor_min) = "0xC0D890";
+	MY(staincolor_max) = "0xC0D890";
+	MY(stainsize_min) = 1;
+	MY(stainsize_max) = 2;
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(stretchfactor) = 3;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "spark";
+	MY(velocityjitter) = '764.0 764.0 764.0';
+}
+
+SUB(robot_bloodshower) {
+	MY(alpha_min) = 1128;
+	MY(alpha_max) = 1256;
+	MY(alpha_fade) = 4200;
+	MY(color_min) = "0xff3000";
+	MY(color_max) = "0xff8585";
+	MY(count) = 2.500000;
+	MY(originjitter) = '150.0 150.0 150.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 99;
+	MY(spin_max) = -99;
+	MY(size_min) = 25;
+	MY(size_max) = 40;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '44.0 44.0 44.0';
+}
+SUB(robot_bloodshower) {
+	MY(alpha_min) = 11;
+	MY(alpha_max) = 125;
+	MY(alpha_fade) = 990;
+	MY(color_min) = "0xff3000";
+	MY(color_max) = "0xff8585";
+	MY(count) = 2.500000;
+	MY(sizeincrease) = 3000;
+	MY(size_min) = 5;
+	MY(size_max) = 50;
+	MY(tex_min) = 74;
+	MY(tex_max) = 74;
+	MY(type) = "smoke";
+}
+
+DEF(red_ground_quake);
+SUB(red_ground_quake) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 126;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.100000;
+	MY(color_min) = "0x111111";
+	MY(color_max) = "0xbbbbbb";
+	MY(count) = 90;
+	MY(gravity) = 0.500000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 100;
+	MY(size_min) = 20;
+	MY(size_max) = 50;
+	MY(tex_max) = 8;
+	MY(time_min) = 5;
+	MY(time_max) = 10;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '190.0 190.0 50.0';
+}
+SUB(red_ground_quake) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 126;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.200000;
+	MY(color_min) = "0x111111";
+	MY(color_max) = "0x979797";
+	MY(count) = 40;
+	MY(gravity) = 0.200000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 60;
+	MY(size_min) = 10;
+	MY(size_max) = 30;
+	MY(tex_max) = 8;
+	MY(time_min) = 10;
+	MY(time_max) = 15;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '190.0 190.0 50.0';
+}
+SUB(red_ground_quake) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 356;
+	MY(alpha_fade) = 512;
+	MY(bounce) = 6;
+	MY(color_min) = "0x9E6A64";
+	MY(color_max) = "0x91302D";
+	MY(count) = 16;
+	MY(gravity) = -0.500000;
+	MY(originjitter) = '33.0 33.0 33.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 4;
+	MY(size_max) = 20;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(time_min) = 15;
+	MY(time_max) = 25;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(red_ground_quake) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0xffffff";
+	MY(count) = 11;
+	MY(gravity) = -0.300000;
+	MY(originjitter) = '44.0 44.0 44.0';
+	MY(sizeincrease) = 11;
+	MY(size_min) = 22;
+	MY(size_max) = 33;
+	MY(tex_max) = 8;
+	MY(time_min) = 25;
+	MY(time_max) = 35;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(blue_ground_quake);
+SUB(blue_ground_quake) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 126;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.100000;
+	MY(color_min) = "0x111111";
+	MY(color_max) = "0xbbbbbb";
+	MY(count) = 90;
+	MY(gravity) = 0.500000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 100;
+	MY(size_min) = 20;
+	MY(size_max) = 50;
+	MY(tex_max) = 8;
+	MY(time_min) = 5;
+	MY(time_max) = 10;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '190.0 190.0 50.0';
+}
+SUB(blue_ground_quake) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 126;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.200000;
+	MY(color_min) = "0x111111";
+	MY(color_max) = "0x979797";
+	MY(count) = 40;
+	MY(gravity) = 0.200000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 60;
+	MY(size_min) = 10;
+	MY(size_max) = 30;
+	MY(tex_max) = 8;
+	MY(time_min) = 10;
+	MY(time_max) = 15;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '190.0 190.0 50.0';
+}
+SUB(blue_ground_quake) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 356;
+	MY(alpha_fade) = 512;
+	MY(bounce) = 6;
+	MY(color_min) = "0x64679E";
+	MY(color_max) = "0x2D4C91";
+	MY(count) = 16;
+	MY(gravity) = -0.500000;
+	MY(originjitter) = '33.0 33.0 33.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 4;
+	MY(size_max) = 20;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(time_min) = 15;
+	MY(time_max) = 25;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(blue_ground_quake) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0xffffff";
+	MY(count) = 11;
+	MY(gravity) = -0.300000;
+	MY(originjitter) = '44.0 44.0 44.0';
+	MY(sizeincrease) = 11;
+	MY(size_min) = 22;
+	MY(size_max) = 33;
+	MY(tex_max) = 8;
+	MY(time_min) = 25;
+	MY(time_max) = 35;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(morphed_damage_hit);
+SUB(morphed_damage_hit) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 292;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0x9271fb";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 10;
+	MY(sizeincrease) = -24;
+	MY(size_min) = 14;
+	MY(size_max) = 24;
+	MY(tex_min) = 43;
+	MY(tex_max) = 43;
+	MY(type) = "spark";
+	MY(velocityjitter) = '356.0 356.0 456.0';
+}
+SUB(morphed_damage_hit) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 292;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0x9271fb";
+	MY(count) = 0.500000;
+	MY(liquidfriction) = 10;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = -24;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+}
+
+DEF(morphed_damage_dissolve);
+SUB(morphed_damage_dissolve) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 456;
+	MY(alpha_max) = 456;
+	MY(alpha_fade) = 1828;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0x9271fb";
+	MY(count) = 10;
+	MY(gravity) = -1.900000;
+	MY(liquidfriction) = 6;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -399;
+	MY(spin_max) = -99;
+	MY(sizeincrease) = -16;
+	MY(size_min) = 40;
+	MY(size_max) = 40;
+	MY(tex_min) = 43;
+	MY(tex_max) = 43;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '256.0 256.0 512.0';
+}
+SUB(morphed_damage_dissolve) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 628;
+	MY(color_min) = "0x7bdbff";
+	MY(color_max) = "0xbed2ff";
+	MY(count) = 2.500000;
+	MY(gravity) = -0.800000;
+	MY(liquidfriction) = 6;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(sizeincrease) = -16;
+	MY(size_min) = 40;
+	MY(size_max) = 40;
+	MY(tex_min) = 43;
+	MY(tex_max) = 43;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '256.0 256.0 512.0';
+}
+SUB(morphed_damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0x9271fb";
+	MY(count) = 5;
+	MY(liquidfriction) = 6;
+	MY(originjitter) = '22.0 22.0 76.0';
+	MY(sizeincrease) = -16;
+	MY(size_min) = 44;
+	MY(size_max) = 44;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+SUB(morphed_damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 56;
+	MY(alpha_max) = 56;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0x9271fb";
+	MY(count) = 15;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 6;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 999;
+	MY(spin_max) = -999;
+	MY(sizeincrease) = -16;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '400.0 400.0 0.0';
+}
+
+DEF(TE_TEI_G3RED);
+SUB(TE_TEI_G3RED) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0xFF0000";
+	MY(countabsolute) = 1;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3RED) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x200000";
+	MY(color_max) = "0x400000";
+	MY(sizeincrease) = 3;
+	MY(size_min) = 0.300000;
+	MY(size_max) = 0.300000;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+}
+
+DEF(TE_TEI_G3RED_HIT);
+SUB(TE_TEI_G3RED_HIT) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0xFF0000";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3RED_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFF0011";
+	MY(sizeincrease) = -2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(trailspacing) = 20;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '2.0 2.0 2.0';
+}
+SUB(TE_TEI_G3RED_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0xFF0011";
+	MY(sizeincrease) = -6;
+	MY(size_min) = 10;
+	MY(size_max) = 10;
+	MY(trailspacing) = 40;
+	MY(type) = "smoke";
+}
+
+DEF(TE_TEI_G3BLUE);
+SUB(TE_TEI_G3BLUE) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x1100FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3BLUE) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x000020";
+	MY(color_max) = "0x000040";
+	MY(sizeincrease) = 3;
+	MY(size_min) = 0.300000;
+	MY(size_max) = 0.300000;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+}
+
+DEF(TE_TEI_G3BLUE_HIT);
+SUB(TE_TEI_G3BLUE_HIT) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x1100FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3BLUE_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0x100FF";
+	MY(sizeincrease) = -2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(trailspacing) = 20;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '2.0 2.0 2.0';
+}
+SUB(TE_TEI_G3BLUE_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x1100FF";
+	MY(sizeincrease) = -6;
+	MY(size_min) = 10;
+	MY(size_max) = 10;
+	MY(trailspacing) = 40;
+	MY(type) = "smoke";
+}
+
+DEF(TE_TEI_G3YELLOW);
+SUB(TE_TEI_G3YELLOW) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xffff00";
+	MY(color_max) = "0xffff11";
+	MY(countabsolute) = 1;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3YELLOW) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202000";
+	MY(color_max) = "0x404000";
+	MY(sizeincrease) = 3;
+	MY(size_min) = 0.300000;
+	MY(size_max) = 0.300000;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+}
+
+DEF(TE_TEI_G3YELLOW_HIT);
+SUB(TE_TEI_G3YELLOW_HIT) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xffff00";
+	MY(color_max) = "0xffff11";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3YELLOW_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xffff10";
+	MY(sizeincrease) = -2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(trailspacing) = 20;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '2.0 2.0 2.0';
+}
+SUB(TE_TEI_G3YELLOW_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xffff00";
+	MY(color_max) = "0xffff11";
+	MY(sizeincrease) = -6;
+	MY(size_min) = 10;
+	MY(size_max) = 10;
+	MY(trailspacing) = 40;
+	MY(type) = "smoke";
+}
+
+DEF(TE_TEI_G3PINK);
+SUB(TE_TEI_G3PINK) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xFF00FF";
+	MY(color_max) = "0xFF11FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3PINK) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x200020";
+	MY(color_max) = "0x400040";
+	MY(sizeincrease) = 3;
+	MY(size_min) = 0.300000;
+	MY(size_max) = 0.300000;
+	MY(tex_min) = 46;
+	MY(tex_max) = 46;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+}
+
+DEF(TE_TEI_G3PINK_HIT);
+SUB(TE_TEI_G3PINK_HIT) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xFF00FF";
+	MY(color_max) = "0xFF11FF";
+	MY(countabsolute) = 1;
+	MY(size_min) = 8;
+	MY(size_max) = 8;
+	MY(tex_min) = 200;
+	MY(tex_max) = 200;
+	MY(type) = "beam";
+}
+SUB(TE_TEI_G3PINK_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFF10FF";
+	MY(sizeincrease) = -2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(trailspacing) = 20;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '2.0 2.0 2.0';
+}
+SUB(TE_TEI_G3PINK_HIT) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFF00FF";
+	MY(color_max) = "0xFF11FF";
+	MY(sizeincrease) = -6;
+	MY(size_min) = 10;
+	MY(size_max) = 10;
+	MY(trailspacing) = 40;
+	MY(type) = "smoke";
+}
+
+DEF(particlegibs_damage_hit);
+SUB(particlegibs_damage_hit) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 428;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 0.500000;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 6;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_max) = 8;
+	MY(type) = "blood";
+	MY(velocityjitter) = '156.0 156.0 212.0';
+}
+SUB(particlegibs_damage_hit) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 328;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 0.100000;
+	MY(gravity) = 0.500000;
+	MY(liquidfriction) = 3;
+	MY(sizeincrease) = -15;
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '6.0 6.0 30.0';
+	MY(velocitymultiplier) = -1;
+}
+SUB(particlegibs_damage_hit) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 328;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 0.100000;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 3;
+	MY(originjitter) = '3.0 3.0 3.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 5;
+	MY(size_max) = 15;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '26.0 26.0 112.0';
+	MY(velocitymultiplier) = 2;
+}
+
+DEF(particlegibs_damage_dissolve);
+SUB(particlegibs_damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 328;
+	MY(color_min) = "0x00ffff";
+	MY(color_max) = "0x82ffff";
+	MY(count) = 32;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 6;
+	MY(originjitter) = '10.0 10.0 25.0';
+	MY(size_min) = 15;
+	MY(size_max) = 20;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_max) = 8;
+	MY(type) = "blood";
+	MY(velocityjitter) = '256.0 256.0 312.0';
+}
+SUB(particlegibs_damage_dissolve) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 528;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 12;
+	MY(gravity) = 2;
+	MY(liquidfriction) = 6;
+	MY(originjitter) = '10.0 10.0 25.0';
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_max) = 8;
+	MY(type) = "blood";
+	MY(velocityjitter) = '356.0 356.0 412.0';
+}
+SUB(particlegibs_damage_dissolve) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 328;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 32;
+	MY(gravity) = 0.500000;
+	MY(liquidfriction) = 3;
+	MY(originjitter) = '5.0 5.0 10.0';
+	MY(sizeincrease) = -15;
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '56.0 56.0 212.0';
+	MY(velocitymultiplier) = -0.300000;
+}
+SUB(particlegibs_damage_dissolve) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 328;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 32;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 3;
+	MY(originjitter) = '5.0 5.0 10.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 5;
+	MY(size_max) = 15;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '56.0 56.0 212.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(particlegibs_damage_dissolve) {
+	MY(airfriction) = 1.500000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 328;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 75;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 3;
+	MY(originjitter) = '10.0 10.0 25.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '656.0 656.0 912.0';
+}
+
+DEF(onslaught_generator_gib_explode);
+SUB(onslaught_generator_gib_explode) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 356;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 17;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 45;
+	MY(size_min) = 20;
+	MY(size_max) = 26;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '286.0 286.0 286.0';
+}
+SUB(onslaught_generator_gib_explode) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 500;
+	MY(alpha_fade) = 600;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 6;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 90;
+	MY(size_min) = 1;
+	MY(size_max) = 10;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '244.0 244.0 244.0';
+}
+SUB(onslaught_generator_gib_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 16;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+
+DEF(onslaught_generator_gib_flame);
+SUB(onslaught_generator_gib_flame) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 356;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 15;
+	MY(gravity) = -0.500000;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '3.0 3.0 3.0';
+	MY(sizeincrease) = 25;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '86.0 86.0 86.0';
+}
+SUB(onslaught_generator_gib_flame) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 500;
+	MY(alpha_fade) = 600;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 1;
+	MY(gravity) = -0.800000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 30;
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '44.0 44.0 44.0';
+}
+SUB(onslaught_generator_gib_flame) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 16;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+
+DEF(firemine);
+SUB(firemine) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 250;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 5;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 2;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '10.0 10.0 2.0';
+}
+SUB(firemine) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 5;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 2;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+}
+SUB(firemine) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 2;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '8.0 8.0 8.0';
+}
+SUB(firemine) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = -3;
+	MY(size_min) = 5;
+	MY(size_max) = 7;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+}
+SUB(firemine) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 90;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 0.500000;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityoffset) = '0.0 0.0 3.0';
+}
+SUB(firemine) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1600;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(size_min) = 12;
+	MY(size_max) = 12;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(firemine) {
+	MY(lightcolor) = '2.7 2.7 0.6';
+	MY(lightradiusfade) = 50000;
+	MY(lightradius) = 50;
+	MY(trailspacing) = 16;
+}
+
+DEF(fireball);
+SUB(fireball) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 250;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 2;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '40.0 40.0 11.0';
+}
+SUB(fireball) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 2;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '40.0 40.0 40.0';
+}
+SUB(fireball) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 10;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '30.0 30.0 30.0';
+}
+SUB(fireball) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 20;
+	MY(size_max) = 30;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+}
+SUB(fireball) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 90;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 0.500000;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 7;
+	MY(size_min) = 5;
+	MY(size_max) = 15;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityoffset) = '0.0 0.0 10.0';
+}
+SUB(fireball) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1600;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 0.500000;
+	MY(size_min) = 48;
+	MY(size_max) = 48;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(fireball) {
+	MY(lightcolor) = '2.7 2.7 0.6';
+	MY(lightradiusfade) = 3000;
+	MY(lightradius) = 300;
+	MY(trailspacing) = 16;
+}
+
+DEF(fireball_laser);
+SUB(fireball_laser) {
+	MY(alpha_min) = 192;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 2560;
+	MY(color_min) = "0x800000";
+	MY(color_max) = "0xFF8020";
+	MY(count) = 10;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.700000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocitymultiplier) = 10;
+}
+
+DEF(fireball_explode);
+SUB(fireball_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '4.0 2.0 0.5';
+	MY(lightradiusfade) = 500;
+	MY(lightradius) = 500;
+	MY(originjitter) = '56.0 56.0 56.0';
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(fireball_explode) {
+	MY(alpha_min) = 192;
+	MY(alpha_max) = 192;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x404040";
+	MY(countabsolute) = 1;
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 35;
+	MY(tex_max) = 37;
+	MY(type) = "static";
+}
+SUB(fireball_explode) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x902010";
+	MY(color_max) = "0xFFD080";
+	MY(count) = 128;
+	MY(liquidfriction) = 4;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(fireball_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '144.0 144.0 144.0';
+}
+SUB(fireball_explode) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 384;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x903010";
+	MY(color_max) = "0xFFD030";
+	MY(count) = 64;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(type) = "spark";
+	MY(velocityjitter) = '384.0 384.0 384.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(fireball_muzzleflash);
+SUB(fireball_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 2;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(fireball_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xFFFDD9";
+	MY(color_max) = "0xFFFDD9";
+	MY(count) = 15;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(fireball_preattack_muzzleflash);
+SUB(fireball_preattack_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 2;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(fireball_preattack_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xFFFDD9";
+	MY(color_max) = "0xFFFDD9";
+	MY(count) = 15;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(fireball_bfgdamage);
+SUB(fireball_bfgdamage) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(count) = 2;
+	MY(lightcolor) = '2.0 1.5 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(fireball_bfgdamage) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xFFFDD9";
+	MY(color_max) = "0xFFFDD9";
+	MY(count) = 15;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(EF_FLAME);
+SUB(EF_FLAME) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 356;
+	MY(alpha_fade) = 512;
+	MY(bounce) = 2;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 100;
+	MY(gravity) = -0.500000;
+	MY(originjitter) = '12.0 12.0 34.0';
+	MY(originoffset) = '0.0 0.0 10.0';
+	MY(sizeincrease) = -1;
+	MY(size_min) = 5;
+	MY(size_max) = 21;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(EF_FLAME) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 2;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 50;
+	MY(gravity) = -0.300000;
+	MY(originjitter) = '12.0 12.0 34.0';
+	MY(originoffset) = '0.0 0.0 10.0';
+	MY(sizeincrease) = 6;
+	MY(size_min) = 11;
+	MY(size_max) = 15;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+SUB(EF_FLAME) {
+	MY(count) = 0.500000;
+	MY(lightcolor) = '0.9 0.9 0.2';
+	MY(lightradiusfade) = 10000;
+	MY(lightradius) = 200;
+}
+
+DEF(tr_rifle);
+SUB(tr_rifle) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 2560;
+	MY(color_min) = "0x800000";
+	MY(color_max) = "0xFF8020";
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(stretchfactor) = 1;
+	MY(trailspacing) = 128;
+	MY(type) = "spark";
+	MY(velocitymultiplier) = 0.700000;
+}
+SUB(tr_rifle) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 0.400000;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '4.0 4.0 4.0';
+}
+SUB(tr_rifle) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 32;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(rocket_guide);
+SUB(rocket_guide) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 2;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '48.0 48.0 48.0';
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(rocket_guide) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 984;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x903010";
+	MY(color_max) = "0xFFD030";
+	MY(count) = 8;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(size_min) = 0.300000;
+	MY(size_max) = 0.700000;
+	MY(stretchfactor) = 0.400000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '156.0 156.0 156.0';
+	MY(velocitymultiplier) = -0.300000;
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(rocket_guide) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 500;
+	MY(color_min) = "0x903010";
+	MY(color_max) = "0xFFD030";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 300;
+	MY(size_min) = 10;
+	MY(size_max) = 10;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(laser_gauntlet);
+SUB(laser_gauntlet) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xb44215";
+	MY(color_max) = "0x880000";
+	MY(count) = 3;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 7;
+	MY(size_max) = 10;
+	MY(stretchfactor) = 2.300000;
+	MY(tex_min) = 43;
+	MY(tex_max) = 43;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(laser_gauntlet) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xff4200";
+	MY(color_max) = "0xff0000";
+	MY(count) = 6;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -100;
+	MY(size_min) = 7;
+	MY(size_max) = 9;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+
+DEF(laser_gauntletmuzzleflash);
+SUB(laser_gauntletmuzzleflash) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0x220000";
+	MY(color_max) = "0x880000";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '3.0 0.1 0.1';
+	MY(lightradiusfade) = 500;
+	MY(lightradius) = 150;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 10;
+	MY(size_max) = 15;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+SUB(laser_gauntletmuzzleflash) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xb44215";
+	MY(color_max) = "0x880000";
+	MY(count) = 3;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 7;
+	MY(size_max) = 10;
+	MY(stretchfactor) = 2.300000;
+	MY(tex_min) = 43;
+	MY(tex_max) = 43;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(laser_gauntletmuzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xff4200";
+	MY(color_max) = "0xff0000";
+	MY(count) = 6;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -100;
+	MY(size_min) = 7;
+	MY(size_max) = 9;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+
+DEF(torchflame);
+SUB(torchflame) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 3;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '40.0 40.0 11.0';
+	MY(velocitymultiplier) = 30;
+}
+SUB(torchflame) {
+	MY(airfriction) = 1.200000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 2.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '40.0 40.0 40.0';
+	MY(velocitymultiplier) = 20;
+}
+SUB(torchflame) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 1.500000;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = 10;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '30.0 30.0 30.0';
+	MY(velocitymultiplier) = 10;
+}
+SUB(torchflame) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 200;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 2;
+	MY(gravity) = -0.060000;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 20;
+	MY(size_max) = 30;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocitymultiplier) = 15;
+}
+SUB(torchflame) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 90;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 0.500000;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 7;
+	MY(size_min) = 5;
+	MY(size_max) = 15;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocitymultiplier) = 20;
+	MY(velocityoffset) = '0.0 0.0 10.0';
+}
+
+DEF(happy_damage_dissolve);
+SUB(happy_damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 228;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x00FFFF";
+	MY(color_max) = "0xFF00FF";
+	MY(count) = 15;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 6;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 69;
+	MY(tex_max) = 69;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '312.0 312.0 312.0';
+}
+SUB(happy_damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 228;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF00FF";
+	MY(color_max) = "0xFFFF00";
+	MY(count) = 15;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 6;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 69;
+	MY(tex_max) = 69;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '312.0 312.0 312.0';
+}
+SUB(happy_damage_dissolve) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 228;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFF00";
+	MY(color_max) = "0x00FFFF";
+	MY(count) = 15;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 6;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 69;
+	MY(tex_max) = 69;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '312.0 312.0 312.0';
+}
+
+DEF(happy_damage_hit);
+SUB(happy_damage_hit) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 192;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x00FFFF";
+	MY(color_max) = "0xFF00FF";
+	MY(count) = 0.100000;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 10;
+	MY(sizeincrease) = -28;
+	MY(size_min) = 26;
+	MY(size_max) = 26;
+	MY(tex_min) = 69;
+	MY(tex_max) = 69;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '156.0 156.0 156.0';
+}
+SUB(happy_damage_hit) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 192;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF00FF";
+	MY(color_max) = "0xFFFF00";
+	MY(count) = 0.100000;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 10;
+	MY(sizeincrease) = -28;
+	MY(size_min) = 26;
+	MY(size_max) = 26;
+	MY(tex_min) = 69;
+	MY(tex_max) = 69;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '156.0 156.0 156.0';
+}
+SUB(happy_damage_hit) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 192;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFF00";
+	MY(color_max) = "0x00FFFF";
+	MY(count) = 0.100000;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 10;
+	MY(sizeincrease) = -28;
+	MY(size_min) = 26;
+	MY(size_max) = 26;
+	MY(tex_min) = 69;
+	MY(tex_max) = 69;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '156.0 156.0 156.0';
+}
+
+DEF(electro_lightning);
+SUB(electro_lightning) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightradiusfade) = 500;
+	MY(lightradius) = 50;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(electro_lightning) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 206;
+	MY(alpha_fade) = 1724;
+	MY(color_min) = "0x2030FF";
+	MY(color_max) = "0x80C0FF";
+	MY(count) = 300;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 6;
+	MY(size_max) = 6;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "spark";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 2000;
+}
+SUB(electro_lightning) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 110;
+	MY(alpha_max) = 170;
+	MY(alpha_fade) = 1500;
+	MY(color_min) = "0xDDFDFF";
+	MY(color_max) = "0xFDFDFF";
+	MY(count) = 30;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 2;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 1.500000;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(electro_lightning) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 110;
+	MY(alpha_max) = 170;
+	MY(alpha_fade) = 1500;
+	MY(color_min) = "0xFDFDFF";
+	MY(color_max) = "0xF9FDFF";
+	MY(count) = 50;
+	MY(gravity) = 1.300000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 2;
+	MY(size_max) = 3;
+	MY(stretchfactor) = 0.100000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocitymultiplier) = 2.500000;
+}
+
+DEF(gauntlet_lightning);
+SUB(gauntlet_lightning) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x280000";
+	MY(color_max) = "0x280000";
+	MY(count) = 300;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(sizeincrease) = 15;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "spark";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 2000;
+}
+SUB(gauntlet_lightning) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 110;
+	MY(alpha_max) = 228;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xDD0000";
+	MY(color_max) = "0xFD0000";
+	MY(count) = 30;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 2;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 1.500000;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(gauntlet_lightning) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 110;
+	MY(alpha_max) = 228;
+	MY(alpha_fade) = 600;
+	MY(color_min) = "0xFD0000";
+	MY(color_max) = "0xF90000";
+	MY(count) = 50;
+	MY(gravity) = 1.300000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 2;
+	MY(size_max) = 3;
+	MY(stretchfactor) = 0.100000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocitymultiplier) = 2.500000;
+}
+
+DEF(crylink_joinexplode);
+SUB(crylink_joinexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '12.0 12.0 12.0';
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(crylink_joinexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x504060";
+	MY(color_max) = "0x504060";
+	MY(countabsolute) = 1;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 39;
+	MY(tex_max) = 39;
+	MY(type) = "static";
+}
+SUB(crylink_joinexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(bounce) = 2;
+	MY(color_min) = "0xA040C0";
+	MY(color_max) = "0xA040C0";
+	MY(count) = 40;
+	MY(size_min) = 6;
+	MY(size_max) = 6;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(crylink_joinexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xE070FF";
+	MY(color_max) = "0xE070FF";
+	MY(count) = 1.500000;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+}
+SUB(crylink_joinexplode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0xE070FF";
+	MY(color_max) = "0xE070FF";
+	MY(count) = 3;
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(type) = "static";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+
+DEF(kaball_sparks);
+SUB(kaball_sparks) {
+	MY(airfriction) = 3;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xa9cacf";
+	MY(color_max) = "0x0054ff";
+	MY(count) = 35;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(tr_rifle_weak);
+SUB(tr_rifle_weak) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 2560;
+	MY(color_min) = "0x800000";
+	MY(color_max) = "0xFF8020";
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(stretchfactor) = 1;
+	MY(trailspacing) = 128;
+	MY(type) = "spark";
+	MY(velocitymultiplier) = 0.700000;
+}
+SUB(tr_rifle_weak) {
+	MY(airfriction) = -4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x202020";
+	MY(color_max) = "0x404040";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 0.400000;
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 48;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '4.0 4.0 4.0';
+}
+SUB(tr_rifle_weak) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 128;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 192;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(red_smoke);
+SUB(red_smoke) {
+	MY(airfriction) = -1;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 32;
+	MY(color_min) = "0xff8866";
+	MY(color_max) = "0x331100";
+	MY(count) = 2;
+	MY(gravity) = -0.007000;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(size_min) = 60;
+	MY(size_max) = 120;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 5;
+}
+
+DEF(pipe_smoke);
+SUB(pipe_smoke) {
+	MY(airfriction) = -1;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 48;
+	MY(color_min) = "0x999999";
+	MY(color_max) = "0x555555";
+	MY(count) = 2;
+	MY(gravity) = -0.015000;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -180;
+	MY(spin_max) = 180;
+	MY(sizeincrease) = 35;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '0.0 0.0 5.0';
+	MY(velocitymultiplier) = 15;
+}
+
+DEF(TR_SEEKER);
+SUB(TR_SEEKER) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 200;
+	MY(bounce) = 1;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x666666";
+	MY(lightcolor) = '6.0 3.0 1.0';
+	MY(lightradius) = 100;
+	MY(notunderwater) = true;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 11;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 10;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocitymultiplier) = -0.020000;
+}
+SUB(TR_SEEKER) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 144;
+	MY(alpha_fade) = 588;
+	MY(color_min) = "0xffdf72";
+	MY(color_max) = "0x811200";
+	MY(sizeincrease) = -30;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = -1.500000;
+}
+SUB(TR_SEEKER) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+	MY(velocitymultiplier) = -0.310000;
+}
+SUB(TR_SEEKER) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFFFDD9";
+	MY(color_max) = "0xFFFDD9";
+	MY(notunderwater) = true;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 0.500000;
+	MY(size_max) = 0.500000;
+	MY(stretchfactor) = 0.300000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(trailspacing) = 20;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = -0.310000;
+}
+
+DEF(spiderbot_minigun_trail);
+SUB(spiderbot_minigun_trail) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 20;
+	MY(alpha_max) = 50;
+	MY(alpha_fade) = 100;
+	MY(color_min) = "0xd0d0a0";
+	MY(color_max) = "0xffffff";
+	MY(gravity) = -0.030000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 2;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 10;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '5.0 5.0 5.0';
+}
+
+DEF(spiderbot_minigun_muzzleflash);
+SUB(spiderbot_minigun_muzzleflash) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xff9c00";
+	MY(color_max) = "0xff8400";
+	MY(count) = 3;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 10;
+	MY(size_max) = 15;
+	MY(stretchfactor) = 1.300000;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.350000;
+}
+SUB(spiderbot_minigun_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xff9c00";
+	MY(color_max) = "0xff8400";
+	MY(count) = 6;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 5;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 0.800000;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(spiderbot_minigun_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6680;
+	MY(color_min) = "0xff9c00";
+	MY(color_max) = "0xff8400";
+	MY(countabsolute) = 2;
+	MY(lightcolor) = '3.0 3.0 0.0';
+	MY(lightradiusfade) = 8000;
+	MY(lightradius) = 120;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(stretchfactor) = 0.100000;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+}
+
+DEF(spiderbot_minigun_impact);
+SUB(spiderbot_minigun_impact) {
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 1680;
+	MY(color_min) = "0xff9c00";
+	MY(color_max) = "0xf6ff00";
+	MY(countabsolute) = 1;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 52;
+	MY(size_max) = 52;
+	MY(stretchfactor) = 0.100000;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "static";
+}
+SUB(spiderbot_minigun_impact) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xff9c00";
+	MY(color_max) = "0xff8400";
+	MY(count) = 7;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = 100;
+	MY(size_min) = 9;
+	MY(size_max) = 15;
+	MY(stretchfactor) = 3;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '250.0 250.0 150.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(spiderbot_minigun_impact) {
+	MY(airfriction) = 10;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 50;
+	MY(alpha_fade) = 190;
+	MY(color_min) = "0xd0d0a0";
+	MY(color_max) = "0xffffff";
+	MY(count) = 6;
+	MY(gravity) = 1.300000;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(sizeincrease) = 80;
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '100.0 100.0 250.0';
+	MY(velocitymultiplier) = 0.490000;
+}
+SUB(spiderbot_minigun_impact) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 25;
+	MY(alpha_max) = 51;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0xd0d0a0";
+	MY(color_max) = "0xffffff";
+	MY(count) = 7;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = 100;
+	MY(size_min) = 15;
+	MY(size_max) = 19;
+	MY(stretchfactor) = 7.600000;
+	MY(tex_max) = 8;
+	MY(type) = "spark";
+	MY(velocityjitter) = '250.0 250.0 150.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(spiderbot_minigun_impact) {
+	MY(airfriction) = 0.400000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 756;
+	MY(alpha_fade) = 1484;
+	MY(color_min) = "0x99977D";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 3;
+	MY(gravity) = 1.100000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -1000;
+	MY(spin_max) = 1000;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 6;
+	MY(size_max) = 8;
+	MY(tex_min) = 66;
+	MY(tex_max) = 68;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '124.0 124.0 224.0';
+	MY(velocitymultiplier) = 0.150000;
+}
+SUB(spiderbot_minigun_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(size_min) = 20;
+	MY(size_max) = 25;
+	MY(tex_min) = 56;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+
+DEF(spiderbot_rocket_explode);
+SUB(spiderbot_rocket_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 4.0 0.0';
+	MY(lightradiusfade) = 1750;
+	MY(lightradius) = 300;
+	MY(originjitter) = '23.0 23.0 23.0';
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(spiderbot_rocket_explode) {
+	MY(alpha_min) = 56;
+	MY(alpha_max) = 56;
+	MY(alpha_fade) = 230;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2400;
+	MY(size_min) = 22;
+	MY(size_max) = 22;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "static";
+}
+SUB(spiderbot_rocket_explode) {
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 830;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 240;
+	MY(size_min) = 120;
+	MY(size_max) = 120;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "static";
+}
+SUB(spiderbot_rocket_explode) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 812;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 32;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '100.0 100.0 100.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -50;
+	MY(spin_max) = 50;
+	MY(sizeincrease) = 495;
+	MY(size_min) = 12;
+	MY(size_max) = 21;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(spiderbot_rocket_explode) {
+	MY(airfriction) = -2;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 912;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 16;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -150;
+	MY(spin_max) = 150;
+	MY(sizeincrease) = 120;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(stretchfactor) = 10;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '412.0 412.0 412.0';
+}
+SUB(spiderbot_rocket_explode) {
+	MY(airfriction) = -3;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1600;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 10;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(sizeincrease) = 120;
+	MY(size_min) = 13;
+	MY(size_max) = 54;
+	MY(stretchfactor) = 10;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '712.0 712.0 712.0';
+}
+SUB(spiderbot_rocket_explode) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 650;
+	MY(alpha_fade) = 756;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 10;
+	MY(notunderwater) = true;
+	MY(originjitter) = '100.0 100.0 100.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -20;
+	MY(spin_max) = 20;
+	MY(sizeincrease) = 280;
+	MY(size_min) = 10;
+	MY(size_max) = 15;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+}
+SUB(spiderbot_rocket_explode) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 650;
+	MY(alpha_fade) = 556;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 3;
+	MY(gravity) = -0.500000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -20;
+	MY(spin_max) = 20;
+	MY(sizeincrease) = 30;
+	MY(size_min) = 100;
+	MY(size_max) = 150;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+}
+SUB(spiderbot_rocket_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '160.0 160.0 160.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '144.0 144.0 144.0';
+}
+SUB(spiderbot_rocket_explode) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 300;
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1200;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(underwater) = true;
+}
+
+DEF(spiderbot_rocket_thrust);
+SUB(spiderbot_rocket_thrust) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1600;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 3;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -40;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(stretchfactor) = 0.900000;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '20.0 20.0 20.0';
+	MY(velocitymultiplier) = -1.400000;
+}
+SUB(spiderbot_rocket_thrust) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 9000;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 4;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -500;
+	MY(spin_max) = 500;
+	MY(sizeincrease) = -3000;
+	MY(size_min) = 25;
+	MY(size_max) = 25;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '60.0 60.0 60.0';
+	MY(velocitymultiplier) = -1.400000;
+}
+
+DEF(spiderbot_rocket_launch);
+SUB(spiderbot_rocket_launch) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 60;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xD9C4B0";
+	MY(count) = 8;
+	MY(gravity) = -0.010000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '60.0 60.0 60.0';
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(spiderbot_rocket_launch) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 260;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xD9C4B0";
+	MY(count) = 14;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '160.0 160.0 60.0';
+}
+SUB(spiderbot_rocket_launch) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1960;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 14;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 40;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(stretchfactor) = 3;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '60.0 60.0 60.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(spiderbot_rocket_launch) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1000;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xD9C4B0";
+	MY(count) = 10;
+	MY(notunderwater) = true;
+	MY(size_min) = 1;
+	MY(size_max) = 4;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '160.0 160.0 160.0';
+	MY(velocitymultiplier) = -0.500000;
+}
+
+DEF(wakizashi_gun_impact);
+SUB(wakizashi_gun_impact) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1180;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xc03535";
+	MY(count) = 15;
+	MY(gravity) = 3;
+	MY(originjitter) = '40.0 40.0 10.0';
+	MY(size_min) = 4;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 0.900000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '350.0 350.0 550.0';
+	MY(velocityoffset) = '0.0 0.0 700.0';
+}
+SUB(wakizashi_gun_impact) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 90;
+	MY(alpha_fade) = 150;
+	MY(color_min) = "0xd0d0a0";
+	MY(color_max) = "0xc03535";
+	MY(count) = 24;
+	MY(originjitter) = '40.0 40.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(sizeincrease) = 80;
+	MY(size_min) = 10;
+	MY(size_max) = 20;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '250.0 250.0 450.0';
+	MY(velocityoffset) = '0.0 0.0 600.0';
+}
+SUB(wakizashi_gun_impact) {
+	MY(alpha_min) = 250;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 680;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xc03535";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -180;
+	MY(size_min) = 82;
+	MY(size_max) = 82;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+SUB(wakizashi_gun_impact) {
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 620;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xc03535";
+	MY(countabsolute) = 1;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 400;
+	MY(spin_max) = -400;
+	MY(sizeincrease) = 900;
+	MY(size_min) = 40;
+	MY(size_max) = 40;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+}
+SUB(wakizashi_gun_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(size_min) = 14;
+	MY(size_max) = 14;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+
+DEF(wakizashi_gun_muzzleflash);
+SUB(wakizashi_gun_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 6280;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xc03535";
+	MY(count) = 16;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 5;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 0.700000;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+
+DEF(wakizashi_rocket_explode);
+SUB(wakizashi_rocket_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 4.0 0.0';
+	MY(lightradiusfade) = 1750;
+	MY(lightradius) = 300;
+	MY(originjitter) = '23.0 23.0 23.0';
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(wakizashi_rocket_explode) {
+	MY(alpha_min) = 56;
+	MY(alpha_max) = 56;
+	MY(alpha_fade) = 230;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2400;
+	MY(size_min) = 22;
+	MY(size_max) = 22;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "static";
+}
+SUB(wakizashi_rocket_explode) {
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 830;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 240;
+	MY(size_min) = 120;
+	MY(size_max) = 120;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "static";
+}
+SUB(wakizashi_rocket_explode) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xFFAE00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 64;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -50;
+	MY(spin_max) = 50;
+	MY(sizeincrease) = 195;
+	MY(size_min) = 12;
+	MY(size_max) = 21;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(wakizashi_rocket_explode) {
+	MY(airfriction) = -3;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1600;
+	MY(color_min) = "0xFFEA00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 10;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(sizeincrease) = 120;
+	MY(size_min) = 43;
+	MY(size_max) = 54;
+	MY(stretchfactor) = 10;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(wakizashi_rocket_explode) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 450;
+	MY(alpha_fade) = 556;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 32;
+	MY(notunderwater) = true;
+	MY(originjitter) = '100.0 100.0 100.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -20;
+	MY(spin_max) = 20;
+	MY(sizeincrease) = 230;
+	MY(size_min) = 10;
+	MY(size_max) = 15;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+}
+SUB(wakizashi_rocket_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 884;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 14;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '60.0 60.0 60.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '524.0 524.0 524.0';
+	MY(velocityoffset) = '0.0 0.0 170.0';
+}
+SUB(wakizashi_rocket_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '160.0 160.0 160.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '144.0 144.0 144.0';
+}
+SUB(wakizashi_rocket_explode) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 300;
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1200;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(underwater) = true;
+}
+
+DEF(wakizashi_rocket_thrust);
+SUB(wakizashi_rocket_thrust) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1600;
+	MY(color_min) = "0x00FFDD";
+	MY(color_max) = "0x6200FF";
+	MY(countabsolute) = 3;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -2;
+	MY(size_min) = 14;
+	MY(size_max) = 19;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '60.0 60.0 60.0';
+	MY(velocitymultiplier) = -1.100000;
+}
+SUB(wakizashi_rocket_thrust) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1900;
+	MY(color_min) = "0xFFFF33";
+	MY(color_max) = "0xFFEE00";
+	MY(countabsolute) = 2;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -2;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(stretchfactor) = 3;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '60.0 60.0 60.0';
+	MY(velocitymultiplier) = -0.300000;
+}
+
+DEF(wakizashi_rocket_launch);
+SUB(wakizashi_rocket_launch) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 60;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xD9C4B0";
+	MY(count) = 8;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 3;
+	MY(size_max) = 30;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '160.0 160.0 60.0';
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(wakizashi_rocket_launch) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 156;
+	MY(alpha_fade) = 260;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xD9C4B0";
+	MY(count) = 14;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 20;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '160.0 160.0 60.0';
+	MY(velocitymultiplier) = 0.400000;
+}
+SUB(wakizashi_rocket_launch) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1000;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xD9C4B0";
+	MY(count) = 10;
+	MY(notunderwater) = true;
+	MY(size_min) = 1;
+	MY(size_max) = 4;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '60.0 60.0 60.0';
+	MY(velocitymultiplier) = -1.500000;
+}
+
+DEF(wakizashi_booster_smoke);
+SUB(wakizashi_booster_smoke) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 750;
+	MY(alpha_fade) = 200;
+	MY(color_min) = "0xA69A80";
+	MY(color_max) = "0xB3B39F";
+	MY(count) = 3;
+	MY(gravity) = -0.100000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '60.0 60.0 60.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -20;
+	MY(spin_max) = 20;
+	MY(sizeincrease) = 10;
+	MY(size_min) = 60;
+	MY(size_max) = 100;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '40.0 40.0 40.0';
+}
+
+DEF(raptor_cannon_impact);
+SUB(raptor_cannon_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(size_min) = 24;
+	MY(size_max) = 24;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "decal";
+}
+SUB(raptor_cannon_impact) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 784;
+	MY(color_min) = "0xD400FF";
+	MY(color_max) = "0x571863";
+	MY(count) = 6;
+	MY(gravity) = 1;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '124.0 124.0 524.0';
+	MY(velocityoffset) = '0.0 0.0 150.0';
+}
+SUB(raptor_cannon_impact) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 428;
+	MY(alpha_max) = 428;
+	MY(alpha_fade) = 600;
+	MY(color_min) = "0x646364";
+	MY(color_max) = "0x151515";
+	MY(count) = 4;
+	MY(gravity) = 0.700000;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(size_min) = 50;
+	MY(size_max) = 50;
+	MY(tex_max) = 7;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '200.0 200.0 300.0';
+	MY(velocityoffset) = '0.0 0.0 340.0';
+}
+SUB(raptor_cannon_impact) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 812;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xD400FF";
+	MY(color_max) = "0x571863";
+	MY(count) = 10;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 25;
+	MY(size_min) = 33;
+	MY(size_max) = 44;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '312.0 312.0 312.0';
+}
+
+DEF(raptor_cannon_muzzleflash);
+SUB(raptor_cannon_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 1256;
+	MY(alpha_max) = 1512;
+	MY(alpha_fade) = 56280;
+	MY(color_min) = "0xD400FF";
+	MY(color_max) = "0x571863";
+	MY(count) = 16;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 10;
+	MY(size_max) = 17;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.200000;
+}
+SUB(raptor_cannon_muzzleflash) {
+	MY(alpha_min) = 6056;
+	MY(alpha_max) = 20112;
+	MY(alpha_fade) = 406280;
+	MY(color_min) = "0xD400FF";
+	MY(color_max) = "0x571863";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '3.0 0.0 6.0';
+	MY(lightradiusfade) = 6000;
+	MY(lightradius) = 150;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = -100;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(stretchfactor) = 0.100000;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+}
+
+DEF(raptor_bomb_impact);
+SUB(raptor_bomb_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(size_min) = 84;
+	MY(size_max) = 84;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(raptor_bomb_impact) {
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 600;
+	MY(color_min) = "0xff9c00";
+	MY(color_max) = "0xff3c00";
+	MY(count) = 3;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 50;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(stretchfactor) = 210;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '40.0 40.0 120.0';
+}
+SUB(raptor_bomb_impact) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 500;
+	MY(color_min) = "0xff9c00";
+	MY(color_max) = "0xff3c00";
+	MY(count) = 4;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = 230;
+	MY(size_min) = 30;
+	MY(size_max) = 120;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '950.0 950.0 0.0';
+}
+SUB(raptor_bomb_impact) {
+	MY(alpha_min) = 428;
+	MY(alpha_max) = 428;
+	MY(alpha_fade) = 600;
+	MY(blend) = "alpha";
+	MY(color_min) = "0x646364";
+	MY(color_max) = "0x151515";
+	MY(count) = 4;
+	MY(originjitter) = '30.0 30.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(size_min) = 120;
+	MY(size_max) = 180;
+	MY(stretchfactor) = 10;
+	MY(tex_max) = 7;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 280.0';
+	MY(velocityoffset) = '0.0 0.0 280.0';
+}
+SUB(raptor_bomb_impact) {
+	MY(airfriction) = 0.600000;
+	MY(alpha_min) = 328;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 350;
+	MY(blend) = "alpha";
+	MY(color_min) = "0x646364";
+	MY(color_max) = "0x151515";
+	MY(count) = 4;
+	MY(gravity) = 2;
+	MY(originjitter) = '30.0 30.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(sizeincrease) = 60;
+	MY(size_min) = 40;
+	MY(size_max) = 100;
+	MY(tex_max) = 7;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 300.0';
+	MY(velocityoffset) = '0.0 0.0 580.0';
+}
+SUB(raptor_bomb_impact) {
+	MY(airfriction) = 0.300000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 984;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 5;
+	MY(gravity) = 1;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '174.0 174.0 924.0';
+	MY(velocityoffset) = '0.0 0.0 350.0';
+}
+
+DEF(raptor_bomb_spread);
+SUB(raptor_bomb_spread) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 1284;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 34;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '110.0 110.0 110.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '324.0 324.0 324.0';
+}
+
+DEF(explosion_big);
+SUB(explosion_big) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 4.0 0.0';
+	MY(lightradiusfade) = 1750;
+	MY(lightradius) = 600;
+	MY(originjitter) = '23.0 23.0 23.0';
+	MY(size_min) = 172;
+	MY(size_max) = 172;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(explosion_big) {
+	MY(alpha_min) = 56;
+	MY(alpha_max) = 56;
+	MY(alpha_fade) = 330;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 4400;
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "static";
+}
+SUB(explosion_big) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 712;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 64;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '80.0 80.0 80.0';
+	MY(sizeincrease) = 45;
+	MY(size_min) = 133;
+	MY(size_max) = 144;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '2512.0 2512.0 2512.0';
+}
+SUB(explosion_big) {
+	MY(airfriction) = -5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 800;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 64;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(sizeincrease) = 45;
+	MY(size_min) = 133;
+	MY(size_max) = 144;
+	MY(stretchfactor) = 10;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(explosion_big) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 650;
+	MY(alpha_fade) = 456;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 32;
+	MY(notunderwater) = true;
+	MY(sizeincrease) = 244;
+	MY(size_min) = 50;
+	MY(size_max) = 100;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '3444.0 3444.0 3444.0';
+}
+SUB(explosion_big) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 1284;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 34;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '160.0 160.0 160.0';
+	MY(size_min) = 3;
+	MY(size_max) = 4;
+	MY(stretchfactor) = 0.700000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '924.0 924.0 924.0';
+	MY(velocityoffset) = '0.0 0.0 370.0';
+}
+SUB(explosion_big) {
+	MY(airfriction) = 0.500000;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 1356;
+	MY(alpha_fade) = 1184;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xcac5b4";
+	MY(count) = 16;
+	MY(gravity) = 2.300000;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -1000;
+	MY(spin_max) = 1000;
+	MY(sizeincrease) = -5;
+	MY(size_min) = 10;
+	MY(size_max) = 16;
+	MY(tex_min) = 66;
+	MY(tex_max) = 68;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '1800.0 1800.0 1800.0';
+	MY(velocityoffset) = '0.0 0.0 970.0';
+}
+SUB(explosion_big) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '160.0 160.0 160.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '444.0 444.0 444.0';
+}
+SUB(explosion_big) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 300;
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2900;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(underwater) = true;
+	MY(velocitymultiplier) = 0.300000;
+}
+
+DEF(explosion_medium);
+SUB(explosion_medium) {
+	MY(alpha_min) = 56;
+	MY(alpha_max) = 56;
+	MY(alpha_fade) = 330;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2400;
+	MY(size_min) = 72;
+	MY(size_max) = 72;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "static";
+}
+SUB(explosion_medium) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 712;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 32;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '30.0 30.0 30.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -500;
+	MY(spin_max) = 500;
+	MY(sizeincrease) = 45;
+	MY(size_min) = 133;
+	MY(size_max) = 144;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '1512.0 1512.0 1512.0';
+}
+SUB(explosion_medium) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 612;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 32;
+	MY(gravity) = -2;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '30.0 30.0 30.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -150;
+	MY(spin_max) = 150;
+	MY(sizeincrease) = 40;
+	MY(size_min) = 73;
+	MY(size_max) = 94;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '1512.0 1512.0 1512.0';
+}
+SUB(explosion_medium) {
+	MY(airfriction) = -3;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 800;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 14;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(sizeincrease) = 40;
+	MY(size_min) = 43;
+	MY(size_max) = 74;
+	MY(stretchfactor) = 8;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(explosion_medium) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 650;
+	MY(alpha_fade) = 756;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 5;
+	MY(notunderwater) = true;
+	MY(originjitter) = '100.0 100.0 100.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -20;
+	MY(spin_max) = 20;
+	MY(sizeincrease) = -30;
+	MY(size_min) = 250;
+	MY(size_max) = 300;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+}
+SUB(explosion_medium) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 650;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 10;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '100.0 100.0 100.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -20;
+	MY(spin_max) = 20;
+	MY(sizeincrease) = 50;
+	MY(size_min) = 50;
+	MY(size_max) = 100;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '500.0 500.0 500.0';
+	MY(velocityoffset) = '0.0 0.0 200.0';
+}
+SUB(explosion_medium) {
+	MY(alpha_min) = 140;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 350;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 13;
+	MY(notunderwater) = true;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(sizeincrease) = 100;
+	MY(size_min) = 150;
+	MY(size_max) = 200;
+	MY(stretchfactor) = 50;
+	MY(tex_max) = 8;
+	MY(type) = "spark";
+	MY(velocityjitter) = '250.0 250.0 250.0';
+}
+SUB(explosion_medium) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 984;
+	MY(color_min) = "0xffa35b";
+	MY(color_max) = "0xfff2be";
+	MY(count) = 14;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '100.0 100.0 100.0';
+	MY(size_min) = 2;
+	MY(size_max) = 3;
+	MY(stretchfactor) = 0.700000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '624.0 624.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 370.0';
+}
+SUB(explosion_medium) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '160.0 160.0 160.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '444.0 444.0 444.0';
+}
+SUB(explosion_medium) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 300;
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2900;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(underwater) = true;
+	MY(velocitymultiplier) = 0.300000;
+}
+
+DEF(explosion_small);
+SUB(explosion_small) {
+	MY(alpha_min) = 56;
+	MY(alpha_max) = 56;
+	MY(alpha_fade) = 330;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2400;
+	MY(size_min) = 22;
+	MY(size_max) = 22;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "static";
+}
+SUB(explosion_small) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1212;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 16;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -500;
+	MY(spin_max) = 500;
+	MY(sizeincrease) = 45;
+	MY(size_min) = 1;
+	MY(size_max) = 44;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(explosion_small) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 812;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 16;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -150;
+	MY(spin_max) = 150;
+	MY(sizeincrease) = 40;
+	MY(size_min) = 73;
+	MY(size_max) = 94;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '912.0 912.0 912.0';
+}
+SUB(explosion_small) {
+	MY(airfriction) = -3;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1300;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 14;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '40.0 40.0 40.0';
+	MY(sizeincrease) = 30;
+	MY(size_min) = 13;
+	MY(size_max) = 54;
+	MY(stretchfactor) = 8;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '512.0 512.0 512.0';
+}
+SUB(explosion_small) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '160.0 160.0 160.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '144.0 144.0 144.0';
+}
+SUB(explosion_small) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 300;
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1200;
+	MY(size_min) = 30;
+	MY(size_max) = 30;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(underwater) = true;
+}
+
+DEF(smoke_big);
+SUB(smoke_big) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 750;
+	MY(alpha_fade) = 200;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 3;
+	MY(gravity) = -0.500000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '55.0 55.0 55.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -20;
+	MY(spin_max) = 20;
+	MY(sizeincrease) = 15;
+	MY(size_min) = 30;
+	MY(size_max) = 60;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '140.0 140.0 200.0';
+	MY(velocityoffset) = '0.0 0.0 200.0';
+}
+
+DEF(smoke_small);
+SUB(smoke_small) {
+	MY(airfriction) = 4;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 750;
+	MY(alpha_fade) = 200;
+	MY(color_min) = "0x4F4B46";
+	MY(color_max) = "0x000000";
+	MY(count) = 3;
+	MY(gravity) = -0.500000;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -20;
+	MY(spin_max) = 20;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 60;
+	MY(size_max) = 100;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '40.0 40.0 400.0';
+	MY(velocityoffset) = '0.0 0.0 200.0';
+}
+
+DEF(impact_metal);
+SUB(impact_metal) {
+	MY(alpha_min) = 25;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 50;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x886666";
+	MY(count) = 1;
+	MY(gravity) = -0.010000;
+	MY(originjitter) = '20.0 20.0 5.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+SUB(impact_metal) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 112;
+	MY(bounce) = 1.800000;
+	MY(color_min) = "0xFFCC22";
+	MY(color_max) = "0xFF4422";
+	MY(count) = 2;
+	MY(gravity) = 1;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(stretchfactor) = 0.500000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 300.0';
+	MY(velocitymultiplier) = 2;
+}
+
+DEF(impact_stone);
+SUB(impact_stone) {
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 75;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0xcc9966";
+	MY(count) = 1;
+	MY(gravity) = -0.010000;
+	MY(originjitter) = '20.0 20.0 5.0';
+	MY(sizeincrease) = 15;
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+SUB(impact_stone) {
+	MY(airfriction) = 0.500000;
+	MY(alpha_min) = 450;
+	MY(alpha_max) = 750;
+	MY(alpha_fade) = 300;
+	MY(bounce) = 1.200000;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x886644";
+	MY(count) = 1;
+	MY(gravity) = 1.300000;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -1000;
+	MY(spin_max) = 1000;
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 66;
+	MY(tex_max) = 68;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '124.0 124.0 324.0';
+}
+
+DEF(impact_wood);
+SUB(impact_wood) {
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 75;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0xcc9966";
+	MY(count) = 1;
+	MY(gravity) = -0.010000;
+	MY(originjitter) = '20.0 20.0 5.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+SUB(impact_wood) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 75;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x221100";
+	MY(color_max) = "0x221100";
+	MY(count) = 2;
+	MY(gravity) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 8;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '180.0 180.0 260.0';
+	MY(velocitymultiplier) = 2;
+}
+
+DEF(impact_flesh);
+SUB(impact_flesh) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x420000";
+	MY(count) = 0.500000;
+	MY(originjitter) = '11.0 11.0 11.0';
+	MY(size_min) = 8;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+SUB(impact_flesh) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 0.300000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 6;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '96.0 96.0 96.0';
+	MY(velocitymultiplier) = 5;
+}
+
+DEF(tr_hagar);
+SUB(tr_hagar) {
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 400;
+	MY(alpha_fade) = 780;
+	MY(bounce) = 1;
+	MY(color_min) = "0x101010";
+	MY(color_max) = "0x000000";
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 3;
+	MY(size_max) = 2;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 4;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '1.0 1.0 1.0';
+	MY(velocitymultiplier) = -0.020000;
+}
+SUB(tr_hagar) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 144;
+	MY(alpha_fade) = 988;
+	MY(color_min) = "0xffdf72";
+	MY(color_max) = "0x811200";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -15;
+	MY(size_min) = 5;
+	MY(size_max) = 2;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(trailspacing) = 4;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = -1;
+}
+SUB(tr_hagar) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(damage_laser);
+SUB(damage_laser) {
+	MY(airfriction) = -0.350000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 16;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x880000";
+	MY(color_max) = "0xff4400";
+	MY(count) = 3;
+	MY(notunderwater) = true;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 8;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '0.4 0.4 0.6';
+}
+
+DEF(damage_shotgun);
+SUB(damage_shotgun) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 0.600000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_shotgun) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x420000";
+	MY(count) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 8;
+	MY(size_max) = 16;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_shotgun_alien);
+SUB(damage_shotgun_alien) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xDC9BCD";
+	MY(color_max) = "0xDC9BCD";
+	MY(count) = 0.600000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_shotgun_alien) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x204010";
+	MY(count) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 8;
+	MY(size_max) = 16;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_shotgun_robot);
+SUB(damage_shotgun_robot) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xC0D890";
+	MY(color_max) = "0xC0D890";
+	MY(count) = 0.600000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_shotgun_robot) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x301860";
+	MY(count) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 8;
+	MY(size_max) = 16;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_uzi);
+SUB(damage_uzi) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 0.300000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_uzi) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x420000";
+	MY(count) = 1;
+	MY(size_min) = 6;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_uzi_alien);
+SUB(damage_uzi_alien) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xDC9BCD";
+	MY(color_max) = "0xDC9BCD";
+	MY(count) = 0.300000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_uzi_alien) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x204010";
+	MY(count) = 1;
+	MY(size_min) = 6;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_uzi_robot);
+SUB(damage_uzi_robot) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xC0D890";
+	MY(color_max) = "0xC0D890";
+	MY(count) = 0.300000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_uzi_robot) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x301860";
+	MY(count) = 1;
+	MY(size_min) = 6;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_minelayer);
+SUB(damage_minelayer) {
+	MY(alpha_min) = 512;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 3;
+	MY(gravity) = -0.500000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -15;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(damage_minelayer) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 2;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(damage_grenadelauncher);
+SUB(damage_grenadelauncher) {
+	MY(alpha_min) = 512;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 3;
+	MY(gravity) = -0.500000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -15;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(damage_grenadelauncher) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 2;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(damage_electro);
+SUB(damage_electro) {
+	MY(airfriction) = -0.500000;
+	MY(alpha_min) = 48;
+	MY(alpha_max) = 8;
+	MY(alpha_fade) = 48;
+	MY(color_min) = "0x66ffff";
+	MY(color_max) = "0x2288ff";
+	MY(count) = 2;
+	MY(gravity) = -0.000100;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '3.0 3.0 3.0';
+	MY(startangle_min) = 180;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = -14;
+	MY(size_min) = 6;
+	MY(size_max) = 10;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "static";
+	MY(velocityjitter) = '8.0 8.0 16.0';
+}
+SUB(damage_electro) {
+	MY(airfriction) = -0.350000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 16;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x2244ff";
+	MY(color_max) = "0x002266";
+	MY(count) = 4;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 10;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '0.4 0.4 0.6';
+}
+SUB(damage_electro) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 768;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x003090";
+	MY(color_max) = "0x00CCFF";
+	MY(count) = 0.500000;
+	MY(gravity) = 0.200000;
+	MY(liquidfriction) = 0.800000;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 66;
+	MY(tex_max) = 68;
+	MY(type) = "spark";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+}
+
+DEF(damage_crylink);
+SUB(damage_crylink) {
+	MY(airfriction) = -0.500000;
+	MY(alpha_min) = 48;
+	MY(alpha_max) = 16;
+	MY(alpha_fade) = 48;
+	MY(color_min) = "0xff44ff";
+	MY(color_max) = "0x9966ff";
+	MY(count) = 2;
+	MY(gravity) = -0.000100;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '3.0 3.0 3.0';
+	MY(startangle_min) = 180;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = -8;
+	MY(size_min) = 0.500000;
+	MY(size_max) = 1;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(type) = "static";
+	MY(velocityjitter) = '10.0 10.0 20.0';
+}
+SUB(damage_crylink) {
+	MY(airfriction) = -0.350000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 16;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x8844ff";
+	MY(color_max) = "0x662244";
+	MY(count) = 4;
+	MY(gravity) = 0.001000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 6;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '0.4 0.4 0.6';
+}
+SUB(damage_crylink) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 192;
+	MY(alpha_max) = 192;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x903090";
+	MY(color_max) = "0xFFD0FF";
+	MY(count) = 0.300000;
+	MY(liquidfriction) = 0.800000;
+	MY(sizeincrease) = -5;
+	MY(size_min) = 0.500000;
+	MY(size_max) = 0.500000;
+	MY(type) = "spark";
+	MY(velocityjitter) = '12.0 12.0 12.0';
+}
+
+DEF(damage_hlac);
+SUB(damage_hlac) {
+	MY(airfriction) = -0.350000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 16;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x880000";
+	MY(color_max) = "0xff4400";
+	MY(count) = 3;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 10;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '0.4 0.4 0.6';
+}
+
+DEF(damage_nex);
+SUB(damage_nex) {
+	MY(airfriction) = -0.500000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 8;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0x88ffff";
+	MY(count) = 1;
+	MY(gravity) = -0.000100;
+	MY(liquidfriction) = 0.600000;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(startangle_min) = 180;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = -14;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "static";
+	MY(velocityjitter) = '8.0 8.0 16.0';
+}
+SUB(damage_nex) {
+	MY(airfriction) = -0.350000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 16;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x6688ff";
+	MY(color_max) = "0x226688";
+	MY(count) = 2;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 8;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '0.5 0.5 0.8';
+}
+SUB(damage_nex) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 112;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0xD9FDFF";
+	MY(count) = 0.200000;
+	MY(gravity) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.700000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 300.0';
+	MY(velocitymultiplier) = 3;
+}
+
+DEF(damage_minstanex);
+SUB(damage_minstanex) {
+	MY(airfriction) = -0.500000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 8;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0x88ffff";
+	MY(count) = 2;
+	MY(gravity) = -0.000100;
+	MY(liquidfriction) = 0.600000;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(startangle_min) = 180;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = -14;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_min) = 47;
+	MY(tex_max) = 47;
+	MY(type) = "static";
+	MY(velocityjitter) = '8.0 8.0 16.0';
+}
+SUB(damage_minstanex) {
+	MY(airfriction) = -0.350000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 16;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x6688ff";
+	MY(color_max) = "0x226688";
+	MY(count) = 4;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_max) = 180;
+	MY(spin_min) = -30;
+	MY(spin_max) = 30;
+	MY(sizeincrease) = 8;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '0.5 0.5 0.8';
+}
+SUB(damage_minstanex) {
+	MY(airfriction) = 2;
+	MY(alpha_min) = 255;
+	MY(alpha_max) = 255;
+	MY(alpha_fade) = 112;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0xD9FDFF";
+	MY(count) = 0.200000;
+	MY(gravity) = 1;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.700000;
+	MY(tex_min) = 41;
+	MY(tex_max) = 41;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 300.0';
+	MY(velocitymultiplier) = 3;
+}
+
+DEF(damage_rifle);
+SUB(damage_rifle) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xA8FFFF";
+	MY(color_max) = "0xA8FFFFF";
+	MY(count) = 0.300000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_rifle) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x420000";
+	MY(count) = 1;
+	MY(size_min) = 6;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_rifle_alien);
+SUB(damage_rifle_alien) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xDC9BCD";
+	MY(color_max) = "0xDC9BCD";
+	MY(count) = 0.300000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_rifle_alien) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x204010";
+	MY(count) = 1;
+	MY(size_min) = 6;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_rifle_robot);
+SUB(damage_rifle_robot) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = -1;
+	MY(color_min) = "0xC0D890";
+	MY(color_max) = "0xC0D890";
+	MY(count) = 0.300000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(staincolor_min) = "0x808080";
+	MY(staincolor_max) = "0x808080";
+	MY(staintex_min) = 16;
+	MY(staintex_max) = 24;
+	MY(tex_min) = 24;
+	MY(tex_max) = 32;
+	MY(type) = "blood";
+	MY(velocityjitter) = '32.0 32.0 32.0';
+	MY(velocitymultiplier) = 5;
+}
+SUB(damage_rifle_robot) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 400;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x301860";
+	MY(count) = 1;
+	MY(size_min) = 6;
+	MY(size_max) = 12;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+}
+
+DEF(damage_seeker);
+SUB(damage_seeker) {
+	MY(alpha_min) = 512;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x8f0c00";
+	MY(color_max) = "0xff2200";
+	MY(count) = 3;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(damage_seeker) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 2;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(damage_hagar);
+SUB(damage_hagar) {
+	MY(alpha_min) = 512;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x8f0c00";
+	MY(color_max) = "0xff3a00";
+	MY(count) = 3;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(damage_hagar) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 2;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(damage_fireball);
+SUB(damage_fireball) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 16;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x8f0d00";
+	MY(color_max) = "0xff5a00";
+	MY(count) = 4;
+	MY(gravity) = -0.500000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 50.0';
+}
+SUB(damage_fireball) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 4;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(damage_rocketlauncher);
+SUB(damage_rocketlauncher) {
+	MY(alpha_min) = 512;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x8f0c00";
+	MY(color_max) = "0xff2a00";
+	MY(count) = 3;
+	MY(gravity) = -0.700000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '22.0 22.0 30.0';
+}
+SUB(damage_rocketlauncher) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 32;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x000000";
+	MY(color_max) = "0x111111";
+	MY(count) = 3;
+	MY(gravity) = -0.300000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '4.0 4.0 4.0';
+	MY(sizeincrease) = 10;
+	MY(size_min) = 4;
+	MY(size_max) = 8;
+	MY(tex_max) = 8;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '11.0 11.0 50.0';
+}
+
+DEF(fireflies);
+SUB(fireflies) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 70;
+	MY(bounce) = -1;
+	MY(color_min) = "0xff9600";
+	MY(color_max) = "0xffefb8";
+	MY(count) = 1;
+	MY(originjitter) = '32.0 32.0 32.0';
+	MY(originoffset) = '8.0 8.0 8.0';
+	MY(sizeincrease) = -0.300000;
+	MY(size_min) = 2;
+	MY(size_max) = 3;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(time_min) = 1;
+	MY(time_max) = 2;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+	MY(velocityoffset) = '2.0 2.0 2.0';
+}
+
+DEF(healray_muzzleflash);
+SUB(healray_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x283880";
+	MY(color_max) = "0x283880";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 20;
+	MY(size_max) = 20;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(healray_muzzleflash) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 150;
+	MY(alpha_fade) = 1924;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0x00f0ff";
+	MY(count) = 22;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = 3;
+	MY(size_min) = 1;
+	MY(size_max) = 15;
+	MY(stretchfactor) = 3.900000;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(type) = "spark";
+	MY(velocityjitter) = '150.0 150.0 150.0';
+	MY(velocitymultiplier) = 0.400000;
+}
+SUB(healray_muzzleflash) {
+	MY(alpha_min) = 110;
+	MY(alpha_max) = 228;
+	MY(alpha_fade) = 4024;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0x00f0ff";
+	MY(count) = 4;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.200000;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(type) = "spark";
+	MY(velocityjitter) = '650.0 650.0 650.0';
+	MY(velocitymultiplier) = 1.100000;
+}
+
+DEF(healray_impact);
+SUB(healray_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(color_min) = "0xd800ff";
+	MY(color_max) = "0xd800ff";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '0.0 4.4 0.0';
+	MY(lightradiusfade) = 450;
+	MY(lightradius) = 125;
+	MY(originjitter) = '17.0 17.0 17.0';
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(healray_impact) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 350;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x84c52f";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1400;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(healray_impact) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x84c52f";
+	MY(count) = 30;
+	MY(gravity) = 2;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1112.0 1112.0 1112.0';
+}
+SUB(healray_impact) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 456;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x84c52f";
+	MY(count) = 15;
+	MY(gravity) = -2;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -90;
+	MY(spin_max) = 90;
+	MY(size_min) = 2;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '120.0 120.0 420.0';
+}
+
+DEF(bigplasma_muzzleflash);
+SUB(bigplasma_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 812;
+	MY(color_min) = "0x283880";
+	MY(color_max) = "0x283880";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(sizeincrease) = -10;
+	MY(size_min) = 50;
+	MY(size_max) = 50;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(bigplasma_muzzleflash) {
+	MY(alpha_min) = 56;
+	MY(alpha_max) = 56;
+	MY(alpha_fade) = 1112;
+	MY(color_min) = "0x00f0ff";
+	MY(color_max) = "0x00f0ff";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 300;
+	MY(size_min) = 20;
+	MY(size_max) = 20;
+	MY(tex_min) = 74;
+	MY(tex_max) = 74;
+	MY(type) = "smoke";
+}
+SUB(bigplasma_muzzleflash) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 50;
+	MY(alpha_max) = 150;
+	MY(alpha_fade) = 1924;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0x00f0ff";
+	MY(count) = 14;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = 135;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(stretchfactor) = 1.900000;
+	MY(tex_min) = 51;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '350.0 350.0 350.0';
+	MY(velocitymultiplier) = 0.400000;
+}
+SUB(bigplasma_muzzleflash) {
+	MY(alpha_min) = 110;
+	MY(alpha_max) = 228;
+	MY(alpha_fade) = 4024;
+	MY(color_min) = "0xD9FDFF";
+	MY(color_max) = "0x00f0ff";
+	MY(count) = 4;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 20;
+	MY(size_max) = 20;
+	MY(stretchfactor) = 0.200000;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(type) = "spark";
+	MY(velocityjitter) = '650.0 650.0 650.0';
+	MY(velocitymultiplier) = 1.100000;
+}
+
+DEF(bigplasma_impact);
+SUB(bigplasma_impact) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightradiusfade) = 450;
+	MY(lightradius) = 125;
+	MY(originjitter) = '17.0 17.0 17.0';
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 59;
+	MY(tex_max) = 59;
+	MY(type) = "decal";
+}
+SUB(bigplasma_impact) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 350;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1400;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(bigplasma_impact) {
+	MY(airfriction) = 6;
+	MY(alpha_min) = 156;
+	MY(alpha_max) = 300;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x629dff";
+	MY(color_max) = "0x0018ff";
+	MY(count) = 30;
+	MY(gravity) = 2;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 70;
+	MY(tex_max) = 70;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1512.0 1512.0 1512.0';
+}
+SUB(bigplasma_impact) {
+	MY(airfriction) = 30;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 456;
+	MY(alpha_fade) = 1512;
+	MY(color_min) = "0x629dff";
+	MY(color_max) = "0x0018ff";
+	MY(count) = 15;
+	MY(originjitter) = '20.0 20.0 20.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -9;
+	MY(spin_max) = 9;
+	MY(sizeincrease) = 555;
+	MY(size_min) = 20;
+	MY(size_max) = 24;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '320.0 320.0 320.0';
+}
+SUB(bigplasma_impact) {
+	MY(airfriction) = 0.040000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 390;
+	MY(blend) = "alpha";
+	MY(color_min) = "0x222222";
+	MY(color_max) = "0x000000";
+	MY(count) = 16;
+	MY(gravity) = 0.400000;
+	MY(originjitter) = '80.0 80.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 2;
+	MY(spin_max) = -2;
+	MY(sizeincrease) = 30;
+	MY(size_min) = 60;
+	MY(size_max) = 30;
+	MY(tex_max) = 7;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '100.0 100.0 200.0';
+	MY(velocityoffset) = '0.0 0.0 180.0';
+}
+SUB(bigplasma_impact) {
+	MY(airfriction) = 0.040000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 310;
+	MY(color_min) = "0x222222";
+	MY(color_max) = "0x000000";
+	MY(count) = 10;
+	MY(gravity) = -0.200000;
+	MY(originjitter) = '80.0 80.0 80.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 20;
+	MY(spin_max) = -20;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 60;
+	MY(size_max) = 70;
+	MY(tex_max) = 7;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+}
+
+DEF(redflag_touch);
+SUB(redflag_touch) {
+	MY(airfriction) = 3;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0x970000";
+	MY(count) = 35;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(blueflag_touch);
+SUB(blueflag_touch) {
+	MY(airfriction) = 3;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x000097";
+	MY(count) = 35;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(red_pass);
+SUB(red_pass) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0x970000";
+	MY(sizeincrease) = 2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 32;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "static";
+}
+SUB(red_pass) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 32;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0x970000";
+	MY(sizeincrease) = 8;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+}
+SUB(red_pass) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1280;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0x970000";
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+}
+
+DEF(blue_pass);
+SUB(blue_pass) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x000097";
+	MY(sizeincrease) = 2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 32;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "static";
+}
+SUB(blue_pass) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 32;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x000097";
+	MY(sizeincrease) = 8;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+}
+SUB(blue_pass) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1280;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x000097";
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+}
+
+DEF(red_cap);
+SUB(red_cap) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 100;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0x970000";
+	MY(count) = 500;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1000.0 1000.0 1500.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(red_cap) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0xFF0000";
+	MY(color_max) = "0x970000";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 150;
+	MY(size_max) = 150;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(blue_cap);
+SUB(blue_cap) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 100;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x000097";
+	MY(count) = 500;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1000.0 1000.0 1500.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(blue_cap) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0x0000FF";
+	MY(color_max) = "0x000097";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 150;
+	MY(size_max) = 150;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(spawn_point_red);
+SUB(spawn_point_red) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0xFF0F0F";
+	MY(color_max) = "0xFF0F0F";
+	MY(count) = 37.500000;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 64.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 0.0';
+}
+
+DEF(spawn_point_blue);
+SUB(spawn_point_blue) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0x0F0FFF";
+	MY(color_max) = "0x0F0FFF";
+	MY(count) = 37.500000;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 64.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 0.0';
+}
+
+DEF(spawn_point_yellow);
+SUB(spawn_point_yellow) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(count) = 37.500000;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 64.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 0.0';
+}
+
+DEF(spawn_point_pink);
+SUB(spawn_point_pink) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(count) = 37.500000;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 64.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 0.0';
+}
+
+DEF(spawn_point_neutral);
+SUB(spawn_point_neutral) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 128;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 37.500000;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 64.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(type) = "static";
+	MY(velocityjitter) = '32.0 32.0 0.0';
+}
+
+DEF(spawn_event_red);
+SUB(spawn_event_red) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFF0F0F";
+	MY(color_max) = "0xFF0F0F";
+	MY(count) = 100;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '500.0 500.0 500.0';
+	MY(velocitymultiplier) = 0.100000;
+}
+SUB(spawn_event_red) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0xFF0F0F";
+	MY(color_max) = "0xFF0F0F";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 100;
+	MY(size_max) = 100;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(spawn_event_blue);
+SUB(spawn_event_blue) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1;
+	MY(color_min) = "0x0F0FFF";
+	MY(color_max) = "0x0F0FFF";
+	MY(count) = 100;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '500.0 500.0 500.0';
+	MY(velocitymultiplier) = 0.100000;
+}
+SUB(spawn_event_blue) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0x0F0FFF";
+	MY(color_max) = "0x0F0FFF";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 100;
+	MY(size_max) = 100;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(spawn_event_yellow);
+SUB(spawn_event_yellow) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(count) = 100;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '500.0 500.0 500.0';
+	MY(velocitymultiplier) = 0.100000;
+}
+SUB(spawn_event_yellow) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 100;
+	MY(size_max) = 100;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(spawn_event_pink);
+SUB(spawn_event_pink) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(count) = 100;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '500.0 500.0 500.0';
+	MY(velocitymultiplier) = 0.100000;
+}
+SUB(spawn_event_pink) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 100;
+	MY(size_max) = 100;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(spawn_event_neutral);
+SUB(spawn_event_neutral) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 100;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '500.0 500.0 500.0';
+	MY(velocitymultiplier) = 0.100000;
+}
+SUB(spawn_event_neutral) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 100;
+	MY(size_max) = 100;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(nade_blue);
+SUB(nade_blue) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0x006cff";
+	MY(color_max) = "0x0600ff";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_blue) {
+	MY(alpha_min) = 30;
+	MY(alpha_max) = 30;
+	MY(alpha_fade) = 150;
+	MY(color_min) = "0x0600ff";
+	MY(color_max) = "0x9794ff";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 15;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+}
+SUB(nade_blue) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x006cff";
+	MY(color_max) = "0x0600ff";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(nade_red);
+SUB(nade_red) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff3c00";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_red) {
+	MY(alpha_min) = 30;
+	MY(alpha_max) = 30;
+	MY(alpha_fade) = 150;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 15;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+}
+SUB(nade_red) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff3c00";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(nade_yellow);
+SUB(nade_yellow) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_yellow) {
+	MY(alpha_min) = 30;
+	MY(alpha_max) = 30;
+	MY(alpha_fade) = 150;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 15;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+}
+SUB(nade_yellow) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(nade_pink);
+SUB(nade_pink) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_pink) {
+	MY(alpha_min) = 30;
+	MY(alpha_max) = 30;
+	MY(alpha_fade) = 150;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 15;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+}
+SUB(nade_pink) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(nade_neutral);
+SUB(nade_neutral) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_neutral) {
+	MY(alpha_min) = 30;
+	MY(alpha_max) = 30;
+	MY(alpha_fade) = 150;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -10;
+	MY(size_min) = 15;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 8;
+	MY(type) = "smoke";
+}
+SUB(nade_neutral) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(nade_red_burn);
+SUB(nade_red_burn) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff3c00";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_red_burn) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 1000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -30;
+	MY(size_min) = 45;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 64;
+	MY(type) = "smoke";
+}
+SUB(nade_red_burn) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff3c00";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+SUB(nade_red_burn) {
+	MY(alpha_min) = 300;
+	MY(alpha_max) = 900;
+	MY(alpha_fade) = 1500;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff3c00";
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 20;
+	MY(spin_max) = -20;
+	MY(sizeincrease) = -40;
+	MY(size_min) = 15;
+	MY(size_max) = 25;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(trailspacing) = 16;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+}
+
+DEF(nade_blue_burn);
+SUB(nade_blue_burn) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0x006cff";
+	MY(color_max) = "0x0600ff";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_blue_burn) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 1000;
+	MY(color_min) = "0x0600ff";
+	MY(color_max) = "0x9794ff";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -30;
+	MY(size_min) = 45;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 64;
+	MY(type) = "smoke";
+}
+SUB(nade_blue_burn) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x006cff";
+	MY(color_max) = "0x0600ff";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+SUB(nade_blue_burn) {
+	MY(color_min) = "0x006cff";
+	MY(color_max) = "0x0600ff";
+	MY(sizeincrease) = -30;
+	MY(size_min) = 25;
+	MY(size_max) = 25;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(trailspacing) = 16;
+	MY(type) = "smoke";
+}
+
+DEF(nade_yellow_burn);
+SUB(nade_yellow_burn) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_yellow_burn) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 1000;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -30;
+	MY(size_min) = 45;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 64;
+	MY(type) = "smoke";
+}
+SUB(nade_yellow_burn) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+SUB(nade_yellow_burn) {
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(sizeincrease) = -30;
+	MY(size_min) = 25;
+	MY(size_max) = 25;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(trailspacing) = 16;
+	MY(type) = "smoke";
+}
+
+DEF(nade_pink_burn);
+SUB(nade_pink_burn) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_pink_burn) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 1000;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -30;
+	MY(size_min) = 45;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 64;
+	MY(type) = "smoke";
+}
+SUB(nade_pink_burn) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+SUB(nade_pink_burn) {
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(sizeincrease) = -30;
+	MY(size_min) = 25;
+	MY(size_max) = 25;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(trailspacing) = 16;
+	MY(type) = "smoke";
+}
+
+DEF(nade_neutral_burn);
+SUB(nade_neutral_burn) {
+	MY(alpha_min) = 100;
+	MY(alpha_max) = 100;
+	MY(alpha_fade) = 250;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = -1;
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 1;
+	MY(type) = "smoke";
+}
+SUB(nade_neutral_burn) {
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 1000;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(notunderwater) = true;
+	MY(sizeincrease) = -30;
+	MY(size_min) = 45;
+	MY(size_max) = 25;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(trailspacing) = 64;
+	MY(type) = "smoke";
+}
+SUB(nade_neutral_burn) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 4;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(trailspacing) = 16;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+SUB(nade_neutral_burn) {
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = -30;
+	MY(size_min) = 25;
+	MY(size_max) = 25;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(trailspacing) = 16;
+	MY(type) = "smoke";
+}
+
+DEF(nade_blue_explode);
+SUB(nade_blue_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '20.0 20.0 100.0';
+	MY(lightradiusfade) = 1500;
+	MY(lightradius) = 300;
+	MY(originjitter) = '26.0 26.0 26.0';
+	MY(size_min) = 88;
+	MY(size_max) = 88;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(nade_blue_explode) {
+	MY(alpha_min) = 80;
+	MY(alpha_max) = 80;
+	MY(alpha_fade) = 650;
+	MY(color_min) = "0x80C0FF";
+	MY(color_max) = "0x80C0FF";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 1800;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(nade_blue_explode) {
+	MY(airfriction) = 30;
+	MY(alpha_min) = 400;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 2000;
+	MY(color_min) = "0x629dff";
+	MY(color_max) = "0x0018ff";
+	MY(count) = 16;
+	MY(notunderwater) = true;
+	MY(originjitter) = '50.0 50.0 50.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -9;
+	MY(spin_max) = 9;
+	MY(sizeincrease) = 555;
+	MY(size_min) = 20;
+	MY(size_max) = 24;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '320.0 320.0 320.0';
+}
+SUB(nade_blue_explode) {
+	MY(airfriction) = -9;
+	MY(alpha_min) = 1500;
+	MY(alpha_max) = 3000;
+	MY(alpha_fade) = 13000;
+	MY(color_min) = "0x629dff";
+	MY(color_max) = "0x0018ff";
+	MY(count) = 8;
+	MY(sizeincrease) = 40;
+	MY(size_min) = 60;
+	MY(size_max) = 90;
+	MY(stretchfactor) = 80;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '30.0 30.0 30.0';
+}
+SUB(nade_blue_explode) {
+	MY(airfriction) = 0.040000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 390;
+	MY(blend) = "alpha";
+	MY(color_min) = "0x222222";
+	MY(color_max) = "0x000000";
+	MY(count) = 32;
+	MY(gravity) = 0.400000;
+	MY(originjitter) = '50.0 50.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 2;
+	MY(spin_max) = -2;
+	MY(sizeincrease) = 50;
+	MY(size_min) = 60;
+	MY(size_max) = 30;
+	MY(tex_max) = 7;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityoffset) = '0.0 0.0 180.0';
+}
+SUB(nade_blue_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '196.0 196.0 196.0';
+}
+SUB(nade_blue_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 484;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0x006cff";
+	MY(color_max) = "0x0600ff";
+	MY(count) = 8;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_blue_explode) {
+	MY(airfriction) = 0.700000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(color_min) = "0x006cff";
+	MY(color_max) = "0x0600ff";
+	MY(count) = 16;
+	MY(gravity) = 0.500000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_blue_explode) {
+	MY(airfriction) = 0.500000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0x6a3d25";
+	MY(color_max) = "0xcac5b4";
+	MY(count) = 12;
+	MY(gravity) = 1.300000;
+	MY(notunderwater) = true;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -1000;
+	MY(spin_max) = 1000;
+	MY(size_min) = 2;
+	MY(size_max) = 6;
+	MY(tex_min) = 66;
+	MY(tex_max) = 68;
+	MY(type) = "alphastatic";
+	MY(velocityjitter) = '324.0 324.0 524.0';
+}
+
+DEF(nade_red_explode);
+SUB(nade_red_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '100.0 20.0 20.0';
+	MY(lightradiusfade) = 1500;
+	MY(lightradius) = 300;
+	MY(originjitter) = '26.0 26.0 26.0';
+	MY(size_min) = 88;
+	MY(size_max) = 88;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(nade_red_explode) {
+	MY(alpha_min) = 80;
+	MY(alpha_max) = 80;
+	MY(alpha_fade) = 650;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2200;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(nade_red_explode) {
+	MY(airfriction) = 30;
+	MY(alpha_min) = 400;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 2000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff4200";
+	MY(count) = 16;
+	MY(notunderwater) = true;
+	MY(originjitter) = '50.0 50.0 50.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -9;
+	MY(spin_max) = 9;
+	MY(sizeincrease) = 555;
+	MY(size_min) = 20;
+	MY(size_max) = 24;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '320.0 320.0 320.0';
+}
+SUB(nade_red_explode) {
+	MY(airfriction) = -9;
+	MY(alpha_min) = 1500;
+	MY(alpha_max) = 3000;
+	MY(alpha_fade) = 13000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff4200";
+	MY(count) = 8;
+	MY(sizeincrease) = 40;
+	MY(size_min) = 60;
+	MY(size_max) = 90;
+	MY(stretchfactor) = 80;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '30.0 30.0 30.0';
+}
+SUB(nade_red_explode) {
+	MY(airfriction) = 0.040000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 390;
+	MY(blend) = "alpha";
+	MY(color_min) = "0x222222";
+	MY(color_max) = "0x000000";
+	MY(count) = 32;
+	MY(gravity) = 0.400000;
+	MY(originjitter) = '50.0 50.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 2;
+	MY(spin_max) = -2;
+	MY(sizeincrease) = 50;
+	MY(size_min) = 60;
+	MY(size_max) = 30;
+	MY(tex_max) = 7;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityoffset) = '0.0 0.0 180.0';
+}
+SUB(nade_red_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '196.0 196.0 196.0';
+}
+SUB(nade_red_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 484;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 8;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_red_explode) {
+	MY(airfriction) = 0.700000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 16;
+	MY(gravity) = 0.500000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_red_explode) {
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 2500;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '64.0 64.0 64.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -100;
+	MY(spin_max) = 100;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '324.0 324.0 324.0';
+}
+
+DEF(nade_yellow_explode);
+SUB(nade_yellow_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '100.0 20.0 20.0';
+	MY(lightradiusfade) = 1500;
+	MY(lightradius) = 300;
+	MY(originjitter) = '26.0 26.0 26.0';
+	MY(size_min) = 88;
+	MY(size_max) = 88;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(nade_yellow_explode) {
+	MY(alpha_min) = 80;
+	MY(alpha_max) = 80;
+	MY(alpha_fade) = 650;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2200;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(nade_yellow_explode) {
+	MY(airfriction) = 30;
+	MY(alpha_min) = 400;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 2000;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(count) = 16;
+	MY(notunderwater) = true;
+	MY(originjitter) = '50.0 50.0 50.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -9;
+	MY(spin_max) = 9;
+	MY(sizeincrease) = 555;
+	MY(size_min) = 20;
+	MY(size_max) = 24;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '320.0 320.0 320.0';
+}
+SUB(nade_yellow_explode) {
+	MY(airfriction) = -9;
+	MY(alpha_min) = 1500;
+	MY(alpha_max) = 3000;
+	MY(alpha_fade) = 13000;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(count) = 8;
+	MY(sizeincrease) = 40;
+	MY(size_min) = 60;
+	MY(size_max) = 90;
+	MY(stretchfactor) = 80;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '30.0 30.0 30.0';
+}
+SUB(nade_yellow_explode) {
+	MY(airfriction) = 0.040000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 390;
+	MY(blend) = "alpha";
+	MY(color_min) = "0x222222";
+	MY(color_max) = "0x000000";
+	MY(count) = 32;
+	MY(gravity) = 0.400000;
+	MY(originjitter) = '50.0 50.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 2;
+	MY(spin_max) = -2;
+	MY(sizeincrease) = 50;
+	MY(size_min) = 60;
+	MY(size_max) = 30;
+	MY(tex_max) = 7;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityoffset) = '0.0 0.0 180.0';
+}
+SUB(nade_yellow_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '196.0 196.0 196.0';
+}
+SUB(nade_yellow_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 484;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 8;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_yellow_explode) {
+	MY(airfriction) = 0.700000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 16;
+	MY(gravity) = 0.500000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_yellow_explode) {
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 2500;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '64.0 64.0 64.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -100;
+	MY(spin_max) = 100;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '324.0 324.0 324.0';
+}
+
+DEF(nade_pink_explode);
+SUB(nade_pink_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '100.0 20.0 20.0';
+	MY(lightradiusfade) = 1500;
+	MY(lightradius) = 300;
+	MY(originjitter) = '26.0 26.0 26.0';
+	MY(size_min) = 88;
+	MY(size_max) = 88;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(nade_pink_explode) {
+	MY(alpha_min) = 80;
+	MY(alpha_max) = 80;
+	MY(alpha_fade) = 650;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2200;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(nade_pink_explode) {
+	MY(airfriction) = 30;
+	MY(alpha_min) = 400;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 2000;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(count) = 16;
+	MY(notunderwater) = true;
+	MY(originjitter) = '50.0 50.0 50.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -9;
+	MY(spin_max) = 9;
+	MY(sizeincrease) = 555;
+	MY(size_min) = 20;
+	MY(size_max) = 24;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '320.0 320.0 320.0';
+}
+SUB(nade_pink_explode) {
+	MY(airfriction) = -9;
+	MY(alpha_min) = 1500;
+	MY(alpha_max) = 3000;
+	MY(alpha_fade) = 13000;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(count) = 8;
+	MY(sizeincrease) = 40;
+	MY(size_min) = 60;
+	MY(size_max) = 90;
+	MY(stretchfactor) = 80;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '30.0 30.0 30.0';
+}
+SUB(nade_pink_explode) {
+	MY(airfriction) = 0.040000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 390;
+	MY(blend) = "alpha";
+	MY(color_min) = "0x222222";
+	MY(color_max) = "0x000000";
+	MY(count) = 32;
+	MY(gravity) = 0.400000;
+	MY(originjitter) = '50.0 50.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 2;
+	MY(spin_max) = -2;
+	MY(sizeincrease) = 50;
+	MY(size_min) = 60;
+	MY(size_max) = 30;
+	MY(tex_max) = 7;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityoffset) = '0.0 0.0 180.0';
+}
+SUB(nade_pink_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '196.0 196.0 196.0';
+}
+SUB(nade_pink_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 484;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 8;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_pink_explode) {
+	MY(airfriction) = 0.700000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 16;
+	MY(gravity) = 0.500000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_pink_explode) {
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 2500;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '64.0 64.0 64.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -100;
+	MY(spin_max) = 100;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '324.0 324.0 324.0';
+}
+
+DEF(nade_neutral_explode);
+SUB(nade_neutral_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '100.0 20.0 20.0';
+	MY(lightradiusfade) = 1500;
+	MY(lightradius) = 300;
+	MY(originjitter) = '26.0 26.0 26.0';
+	MY(size_min) = 88;
+	MY(size_max) = 88;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+SUB(nade_neutral_explode) {
+	MY(alpha_min) = 80;
+	MY(alpha_max) = 80;
+	MY(alpha_fade) = 650;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = 2200;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(nade_neutral_explode) {
+	MY(airfriction) = 30;
+	MY(alpha_min) = 400;
+	MY(alpha_max) = 656;
+	MY(alpha_fade) = 2000;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 16;
+	MY(notunderwater) = true;
+	MY(originjitter) = '50.0 50.0 50.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -9;
+	MY(spin_max) = 9;
+	MY(sizeincrease) = 555;
+	MY(size_min) = 20;
+	MY(size_max) = 24;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '320.0 320.0 320.0';
+}
+SUB(nade_neutral_explode) {
+	MY(airfriction) = -9;
+	MY(alpha_min) = 1500;
+	MY(alpha_max) = 3000;
+	MY(alpha_fade) = 13000;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 8;
+	MY(sizeincrease) = 40;
+	MY(size_min) = 60;
+	MY(size_max) = 90;
+	MY(stretchfactor) = 80;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '30.0 30.0 30.0';
+}
+SUB(nade_neutral_explode) {
+	MY(airfriction) = 0.040000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 328;
+	MY(alpha_fade) = 390;
+	MY(blend) = "alpha";
+	MY(color_min) = "0x222222";
+	MY(color_max) = "0x000000";
+	MY(count) = 32;
+	MY(gravity) = 0.400000;
+	MY(originjitter) = '50.0 50.0 10.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 2;
+	MY(spin_max) = -2;
+	MY(sizeincrease) = 50;
+	MY(size_min) = 60;
+	MY(size_max) = 30;
+	MY(tex_max) = 7;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocityoffset) = '0.0 0.0 180.0';
+}
+SUB(nade_neutral_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 32;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 6;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '196.0 196.0 196.0';
+}
+SUB(nade_neutral_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 484;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 8;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_neutral_explode) {
+	MY(airfriction) = 0.700000;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 16;
+	MY(gravity) = 0.500000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 2;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '424.0 424.0 624.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+SUB(nade_neutral_explode) {
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 2500;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xffa2a2";
+	MY(count) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '64.0 64.0 64.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -100;
+	MY(spin_max) = 100;
+	MY(size_min) = 20;
+	MY(size_max) = 40;
+	MY(tex_min) = 71;
+	MY(tex_max) = 73;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '324.0 324.0 324.0';
+}
+
+DEF(shockwave_attack);
+SUB(shockwave_attack) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 4096;
+	MY(alpha_max) = 4096;
+	MY(alpha_fade) = 20000;
+	MY(color_min) = "0xb44215";
+	MY(color_max) = "0xff0000";
+	MY(count) = 1;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = 4000;
+	MY(spin_max) = -4000;
+	MY(sizeincrease) = 1.500000;
+	MY(size_min) = 5;
+	MY(size_max) = 7;
+	MY(stretchfactor) = 2.300000;
+	MY(tex_min) = 43;
+	MY(tex_max) = 43;
+	MY(type) = "spark";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocitymultiplier) = 10;
+}
+SUB(shockwave_attack) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 4096;
+	MY(alpha_max) = 4096;
+	MY(alpha_fade) = 20000;
+	MY(color_min) = "0xff4200";
+	MY(color_max) = "0xff0000";
+	MY(count) = 1;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(sizeincrease) = 1.500000;
+	MY(size_min) = 7;
+	MY(size_max) = 9;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 8;
+	MY(tex_max) = 15;
+	MY(type) = "spark";
+	MY(velocityjitter) = '10.0 10.0 10.0';
+	MY(velocitymultiplier) = 10;
+}
+
+DEF(arc_lightning);
+SUB(arc_lightning) {
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 32;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '3.1 4.4 10.0';
+	MY(lightradiusfade) = 200;
+	MY(lightradius) = 50;
+	MY(originjitter) = '2.0 2.0 2.0';
+	MY(size_min) = 16;
+	MY(size_max) = 16;
+	MY(tex_min) = 16;
+	MY(tex_max) = 32;
+	MY(type) = "decal";
+}
+SUB(arc_lightning) {
+	MY(airfriction) = 110;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xDDFDFF";
+	MY(color_max) = "0xFDFDFF";
+	MY(count) = 100;
+	MY(originjitter) = '20.0 20.0 20.0';
+	MY(startangle_max) = 360;
+	MY(spin_min) = -36000;
+	MY(spin_max) = 36000;
+	MY(sizeincrease) = -5;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 71;
+	MY(tex_max) = 74;
+	MY(type) = "static";
+	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocitymultiplier) = 100;
+}
+SUB(arc_lightning) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0xDDFDFF";
+	MY(color_max) = "0xFDFDFF";
+	MY(count) = 100;
+	MY(liquidfriction) = 5;
+	MY(orientation) = "spark";
+	MY(originjitter) = '20.0 20.0 20.0';
+	MY(startangle_max) = 360;
+	MY(spin_min) = -36000;
+	MY(spin_max) = 36000;
+	MY(sizeincrease) = -5;
+	MY(size_max) = 5;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 71;
+	MY(tex_max) = 74;
+	MY(type) = "static";
+	MY(underwater) = true;
+	MY(velocityjitter) = '250.0 250.0 250.0';
+	MY(velocitymultiplier) = 20;
+}
+
+DEF(arc_beam);
+SUB(arc_beam) {
+	MY(airfriction) = -10;
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 16384;
+	MY(color_min) = "0xfafad2";
+	MY(color_max) = "0xffffff";
+	MY(originjitter) = '3.0 3.0 3.0';
+	MY(relativeoriginoffset) = '10.0 0.0 0.0';
+	MY(startangle_max) = 360;
+	MY(spin_min) = 360;
+	MY(spin_max) = 1000;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 71;
+	MY(tex_max) = 74;
+	MY(time_min) = 0.050000;
+	MY(time_max) = 0.050000;
+	MY(trailspacing) = 10;
+	MY(type) = "spark";
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 200;
+}
+SUB(arc_beam) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 16384;
+	MY(color_min) = "0xfafad2";
+	MY(color_max) = "0xffffff";
+	MY(liquidfriction) = -10;
+	MY(originjitter) = '30.0 30.0 30.0';
+	MY(relativeoriginoffset) = '10.0 0.0 0.0';
+	MY(startangle_max) = 360;
+	MY(spin_min) = 360;
+	MY(spin_max) = 1000;
+	MY(stretchfactor) = 1;
+	MY(tex_min) = 71;
+	MY(tex_max) = 74;
+	MY(time_min) = 0.001000;
+	MY(time_max) = 0.001000;
+	MY(trailspacing) = 10;
+	MY(type) = "spark";
+	MY(underwater) = true;
+	MY(velocityjitter) = '100.0 100.0 100.0';
+	MY(velocitymultiplier) = 200;
+}
+
+DEF(arc_beam_heal);
+SUB(arc_beam_heal) {
+	MY(airfriction) = -20;
+	MY(alpha_min) = 2048;
+	MY(alpha_max) = 2048;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x20FF20";
+	MY(color_max) = "0x40FF40";
+	MY(relativeoriginoffset) = '5.0 0.0 0.0';
+	MY(relativevelocityoffset) = '100.0 0.0 0.0';
+	MY(sizeincrease) = 20;
+	MY(size_min) = 0.100000;
+	MY(size_max) = 0.100000;
+	MY(tex_min) = 74;
+	MY(tex_max) = 74;
+	MY(trailspacing) = 1500;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '3.0 3.0 3.0';
+	MY(velocitymultiplier) = 200;
+}
+
+DEF(arc_beam_healimpact);
+SUB(arc_beam_healimpact) {
+	MY(alpha_min) = 40;
+	MY(alpha_max) = 40;
+	MY(alpha_fade) = 350;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x84c52f";
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '0.0 4.4 0.0';
+	MY(lightradiusfade) = 150;
+	MY(lightradius) = 20;
+	MY(sizeincrease) = -1000;
+	MY(size_min) = 32;
+	MY(size_max) = 32;
+	MY(tex_min) = 33;
+	MY(tex_max) = 33;
+	MY(type) = "smoke";
+	MY(velocitymultiplier) = 44;
+}
+SUB(arc_beam_healimpact) {
+	MY(airfriction) = 3;
+	MY(alpha_min) = 200;
+	MY(alpha_max) = 456;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x84c52f";
+	MY(count) = 15;
+	MY(gravity) = -2;
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -90;
+	MY(spin_max) = 90;
+	MY(size_min) = 0.500000;
+	MY(size_max) = 1;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '120.0 120.0 420.0';
+}
+
+DEF(arc_smoke);
+SUB(arc_smoke) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 48;
+	MY(color_min) = "0x4c453f";
+	MY(color_max) = "0x2a241f";
+	MY(count) = 2;
+	MY(gravity) = -0.125000;
+	MY(notunderwater) = true;
+	MY(startangle_max) = 360;
+	MY(spin_min) = -180;
+	MY(spin_max) = 180;
+	MY(sizeincrease) = 10;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '0.0 0.0 16.0';
+}
+SUB(arc_smoke) {
+	MY(alpha_min) = 170;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 2;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(size_min) = 0.100000;
+	MY(size_max) = 1;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '16.0 16.0 16.0';
+}
+
+DEF(arc_overheat);
+SUB(arc_overheat) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 292;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0x9271fb";
+	MY(count) = 24;
+	MY(gravity) = -0.400000;
+	MY(liquidfriction) = 10;
+	MY(originjitter) = '10.0 10.0 10.0';
+	MY(sizeincrease) = -24;
+	MY(size_min) = 6;
+	MY(size_max) = 12;
+	MY(tex_min) = 43;
+	MY(tex_max) = 43;
+	MY(type) = "spark";
+	MY(velocityjitter) = '256.0 256.0 256.0';
+}
+
+DEF(arc_overheat_fire);
+SUB(arc_overheat_fire) {
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 640;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x4444ff";
+	MY(color_max) = "0xeeeeff";
+	MY(count) = 1;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 5;
+	MY(originjitter) = '6.0 6.0 6.0';
+	MY(size_min) = 0.400000;
+	MY(size_max) = 1;
+	MY(type) = "spark";
+	MY(velocityjitter) = '92.0 92.0 92.0';
+	MY(velocitymultiplier) = 80;
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}
+
+DEF(yellowflag_touch);
+SUB(yellowflag_touch) {
+	MY(airfriction) = 3;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(count) = 35;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(pinkflag_touch);
+SUB(pinkflag_touch) {
+	MY(airfriction) = 3;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(count) = 35;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(neutralflag_touch);
+SUB(neutralflag_touch) {
+	MY(airfriction) = 3;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 556;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 35;
+	MY(gravity) = 1;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 3;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '300.0 300.0 300.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(yellow_pass);
+SUB(yellow_pass) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(sizeincrease) = 2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 32;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "static";
+}
+SUB(yellow_pass) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 32;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(sizeincrease) = 8;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+}
+SUB(yellow_pass) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1280;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+}
+
+DEF(pink_pass);
+SUB(pink_pass) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = 2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 32;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "static";
+}
+SUB(pink_pass) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 32;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = 8;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+}
+SUB(pink_pass) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1280;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+}
+
+DEF(neutral_pass);
+SUB(neutral_pass) {
+	MY(airfriction) = 5;
+	MY(alpha_min) = 64;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 64;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = 2;
+	MY(size_min) = 2;
+	MY(size_max) = 2;
+	MY(tex_min) = 32;
+	MY(tex_max) = 32;
+	MY(trailspacing) = 64;
+	MY(type) = "static";
+}
+SUB(neutral_pass) {
+	MY(airfriction) = 9;
+	MY(alpha_min) = 32;
+	MY(alpha_max) = 64;
+	MY(alpha_fade) = 32;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(sizeincrease) = 8;
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(tex_max) = 8;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 64.0';
+}
+SUB(neutral_pass) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 1280;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(size_min) = 4;
+	MY(size_max) = 4;
+	MY(trailspacing) = 12;
+	MY(type) = "static";
+}
+
+DEF(yellow_cap);
+SUB(yellow_cap) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 100;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(count) = 500;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1000.0 1000.0 1500.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(yellow_cap) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 150;
+	MY(size_max) = 150;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(pink_cap);
+SUB(pink_cap) {
+	MY(airfriction) = 2;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 100;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(count) = 500;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(size_min) = 1;
+	MY(size_max) = 1;
+	MY(stretchfactor) = 0.600000;
+	MY(tex_min) = 64;
+	MY(tex_max) = 64;
+	MY(type) = "spark";
+	MY(velocityjitter) = '1000.0 1000.0 1500.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+SUB(pink_cap) {
+	MY(alpha_min) = 190;
+	MY(alpha_max) = 190;
+	MY(alpha_fade) = 180;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(countabsolute) = 1;
+	MY(sizeincrease) = -80;
+	MY(size_min) = 150;
+	MY(size_max) = 150;
+	MY(tex_min) = 65;
+	MY(tex_max) = 65;
+	MY(type) = "smoke";
+}
+
+DEF(relic_resistance);
+SUB(relic_resistance) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x00ff80";
+	MY(color_max) = "0x00ff80";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_regeneration);
+SUB(relic_regeneration) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x00ffff";
+	MY(color_max) = "0x00ffff";
+	MY(count) = 1;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_vampire);
+SUB(relic_vampire) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xff00ff";
+	MY(color_max) = "0xff00ff";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_ammo);
+SUB(relic_ammo) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x80ff00";
+	MY(color_max) = "0x80ff00";
+	MY(count) = 1;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_damage);
+SUB(relic_damage) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xff0000";
+	MY(color_max) = "0xff0000";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_ssplashdamage);
+SUB(relic_ssplashdamage) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xff8000";
+	MY(color_max) = "0xff8000";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_firingspeed);
+SUB(relic_firingspeed) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xffff00";
+	MY(color_max) = "0xffff00";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_disability);
+SUB(relic_disability) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x0000ff";
+	MY(color_max) = "0x0000ff";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_disability_curse);
+SUB(relic_disability_curse) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x000080";
+	MY(color_max) = "0x000080";
+	MY(count) = 1;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_teamboost);
+SUB(relic_teamboost) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xffffff";
+	MY(color_max) = "0xffffff";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_teamboost_boost);
+SUB(relic_teamboost_boost) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x808080";
+	MY(color_max) = "0x808080";
+	MY(count) = 1;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_speed);
+SUB(relic_speed) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x80ffff";
+	MY(color_max) = "0x80ffff";
+	MY(count) = 1;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_jump);
+SUB(relic_jump) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xffff80";
+	MY(color_max) = "0xffff80";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_flight);
+SUB(relic_flight) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x8080ff";
+	MY(color_max) = "0x8080ff";
+	MY(count) = 1;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_radioactive);
+SUB(relic_radioactive) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x00ff00";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_resurrection);
+SUB(relic_resurrection) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xff0080";
+	MY(color_max) = "0xff0080";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(relic_vengeance);
+SUB(relic_vengeance) {
+	MY(airfriction) = 0.200000;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 256;
+	MY(color_min) = "0xff8080";
+	MY(color_max) = "0xff8080";
+	MY(count) = 20;
+	MY(gravity) = -0.100000;
+	MY(liquidfriction) = 0.800000;
+	MY(originjitter) = '8.0 8.0 32.0';
+	MY(size_min) = 1.500000;
+	MY(size_max) = 1.500000;
+	MY(type) = "static";
+	MY(velocityjitter) = '64.0 64.0 32.0';
+}
+
+DEF(rocketminsta_laser_red);
+SUB(rocketminsta_laser_red) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 968;
+	MY(color_min) = "0xFF0F0F";
+	MY(color_max) = "0xFF0F0F";
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradius) = 90;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(trailspacing) = 2;
+	MY(type) = "static";
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(rocketminsta_laser_red) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFF0F0F";
+	MY(color_max) = "0xFF0F0F";
+	MY(count) = 1.500000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -20;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(trailspacing) = 12;
+	MY(type) = "snow";
+	MY(velocityjitter) = '50.0 50.0 50.0';
+	MY(velocityoffset) = '0.0 0.0 15.0';
+}
+
+DEF(rocketminsta_laser_blue);
+SUB(rocketminsta_laser_blue) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 968;
+	MY(color_min) = "0x0F0FFF";
+	MY(color_max) = "0x0F0FFF";
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradius) = 90;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(trailspacing) = 2;
+	MY(type) = "static";
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(rocketminsta_laser_blue) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0x0F0FFF";
+	MY(color_max) = "0x0F0FFF";
+	MY(count) = 1.500000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -20;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(trailspacing) = 12;
+	MY(type) = "snow";
+	MY(velocityjitter) = '50.0 50.0 50.0';
+	MY(velocityoffset) = '0.0 0.0 15.0';
+}
+
+DEF(rocketminsta_laser_yellow);
+SUB(rocketminsta_laser_yellow) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 968;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradius) = 90;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(trailspacing) = 2;
+	MY(type) = "static";
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(rocketminsta_laser_yellow) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFFFF0F";
+	MY(color_max) = "0xFFFF0F";
+	MY(count) = 1.500000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -20;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(trailspacing) = 12;
+	MY(type) = "snow";
+	MY(velocityjitter) = '50.0 50.0 50.0';
+	MY(velocityoffset) = '0.0 0.0 15.0';
+}
+
+DEF(rocketminsta_laser_pink);
+SUB(rocketminsta_laser_pink) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 968;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradius) = 90;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(trailspacing) = 2;
+	MY(type) = "static";
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(rocketminsta_laser_pink) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFF0FFF";
+	MY(color_max) = "0xFF0FFF";
+	MY(count) = 1.500000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -20;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(trailspacing) = 12;
+	MY(type) = "snow";
+	MY(velocityjitter) = '50.0 50.0 50.0';
+	MY(velocityoffset) = '0.0 0.0 15.0';
+}
+
+DEF(rocketminsta_laser_neutral);
+SUB(rocketminsta_laser_neutral) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 968;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(lightcolor) = '1.5 3.0 6.0';
+	MY(lightradius) = 90;
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 38;
+	MY(tex_max) = 38;
+	MY(trailspacing) = 2;
+	MY(type) = "static";
+	MY(velocitymultiplier) = -0.100000;
+}
+SUB(rocketminsta_laser_neutral) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 444;
+	MY(alpha_max) = 512;
+	MY(alpha_fade) = 1866;
+	MY(bounce) = 1;
+	MY(color_min) = "0xFFFFFF";
+	MY(color_max) = "0xFFFFFF";
+	MY(count) = 1.500000;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(sizeincrease) = -20;
+	MY(size_min) = 2;
+	MY(size_max) = 4;
+	MY(tex_min) = 42;
+	MY(tex_max) = 42;
+	MY(trailspacing) = 12;
+	MY(type) = "snow";
+	MY(velocityjitter) = '50.0 50.0 50.0';
+	MY(velocityoffset) = '0.0 0.0 15.0';
+}
