@@ -52,11 +52,10 @@ bool snake_valid_tile(string tile)
 void snake_new_mouse(entity minigame)
 {
 	RandomSelection_Init();
-	int i, t;
-	for(i = 0; i < SNAKE_LET_CNT; ++i)
-	for(t = 0; t < SNAKE_NUM_CNT; ++t)
+	for(int i = 0; i < SNAKE_LET_CNT; ++i)
+	for(int j = 0; j < SNAKE_NUM_CNT; ++j)
 	{
-		string pos = minigame_tile_buildname(i, t);
+		string pos = minigame_tile_buildname(i, j);
 		if(!snake_find_piece(minigame, pos))
 			RandomSelection_Add(world, 0, pos, 1, 1);
 	}
@@ -106,8 +105,8 @@ void snake_move_body(entity minigame, bool ate_mouse)
 	string tailpos = string_null;
 	vector taildir = '0 0 0';
 
-	int pieces = 0;
-	for(int i = (SNAKE_NUM_CNT * SNAKE_LET_CNT); i >= 2; --i)
+	int i, pieces = 0;
+	for(i = (SNAKE_NUM_CNT * SNAKE_LET_CNT); i >= 2; --i)
 	{
 		entity piece = snake_find_cnt(minigame, i);
 		entity nextpiece = snake_find_cnt(minigame, i - 1);
