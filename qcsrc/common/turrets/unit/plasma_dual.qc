@@ -11,6 +11,8 @@ REGISTER_TURRET(
 );
 #else
 
+#include "../../weapons/all.qh"
+
 CLASS(PlasmaDualAttack, PortoLaunch)
 /* flags     */ ATTRIB(PlasmaDualAttack, spawnflags, int, WEP_TYPE_OTHER);
 /* impulse   */ ATTRIB(PlasmaDualAttack, impulse, int, 5);
@@ -28,7 +30,6 @@ METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep)) {
 	SELFPARAM();
 	if (self.BUTTON_ATCK)
 	if (weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire))) {
-		if (!self.target_range) self.target_range = autocvar_g_monsters_target_range;
 		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
 		self.tur_shotdir_updated = w_shotdir;
 		self.tur_shotorg = w_shotorg;

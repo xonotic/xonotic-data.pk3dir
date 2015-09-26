@@ -15,9 +15,11 @@ REGISTER_MONSTER_SIMPLE(
 #endif
 }
 
+#include "../../weapons/all.qh"
+
 CLASS(MageSpike, PortoLaunch)
 /* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(MageSpike, impulse, int, 5);
+/* impulse   */ ATTRIB(MageSpike, impulse, int, 9);
 /* refname   */ ATTRIB(MageSpike, netname, string, "magespike");
 /* wepname   */ ATTRIB(MageSpike, message, string, _("Mage spike"));
 ENDCLASS(MageSpike)

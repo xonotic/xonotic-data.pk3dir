@@ -1,5 +1,6 @@
 #ifndef VEHICLE_RACER
 #define VEHICLE_RACER
+
 #ifndef MENUQC
 int v_racer(int);
 #endif
@@ -19,12 +20,37 @@ REGISTER_VEHICLE_SIMPLE(
     this.vehicle_func = v_racer;
 #endif
 }
+
+#include "../../weapons/all.qh"
+
+CLASS(RacerAttack, PortoLaunch)
+/* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(RacerAttack, impulse, int, 3);
+/* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
+/* wepname   */ ATTRIB(RacerAttack, message, string, _("Racer cannon"));
+ENDCLASS(RacerAttack)
+REGISTER_WEAPON(RACER, NEW(RacerAttack)) {
+	localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", this.netname, 230 + this.m_id - 1));
+}
+
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 #include "../../effects/effects.qh"
 #include "../../triggers/trigger/impulse.qh"
+
+void racer_fire_cannon(string tagname);
+METHOD(RacerAttack, wr_think, bool(entity thiswep)) {
+	SELFPARAM();
+	if (self.BUTTON_ATCK)
+	if (weapon_prepareattack(0, 0)) {
+		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("lasergun_fire"), CH_WEAPON_B, 0);
+		racer_fire_cannon("tag_fire1");
+		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), w_ready);
+	}
+	return true;
+}
 
 bool autocvar_g_vehicle_racer;
 
