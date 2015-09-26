@@ -10,7 +10,37 @@ REGISTER_TURRET(
 /* fullname   */ _("Dual Plasma Cannon")
 );
 #else
+
+CLASS(PlasmaDualAttack, PortoLaunch)
+/* flags     */ ATTRIB(PlasmaDualAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(PlasmaDualAttack, impulse, int, 5);
+/* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "plasmadual");
+/* wepname   */ ATTRIB(PlasmaDualAttack, message, string, _("Dual plasma"));
+ENDCLASS(PlasmaDualAttack)
+REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack)) {
+	localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", this.netname, 230 + this.m_id - 1));
+}
+
 #ifdef SVQC
+
+float t_plasma_dual(float req);
+METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep)) {
+	SELFPARAM();
+	if (self.BUTTON_ATCK)
+	if (weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire))) {
+		if (!self.target_range) self.target_range = autocvar_g_monsters_target_range;
+		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+		self.tur_shotdir_updated = w_shotdir;
+		self.tur_shotorg = w_shotorg;
+		self.tur_head = self;
+        self.shot_speed = max(1, ((!self.shot_speed) ? 2500 : self.shot_speed));
+        self.shot_spread = bound(0.0001, ((!self.shot_spread) ? 0.0125 : self.shot_spread), 500);
+		t_plasma_dual(TR_ATTACK);
+		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+	}
+	return true;
+}
+
 void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
 
 float t_plasma_dual(float req)
