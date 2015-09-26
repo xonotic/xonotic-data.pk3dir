@@ -63,12 +63,6 @@ float kh_interferemsg_time, kh_interferemsg_team;
 .float kh_previous_owner_playerid;
 .float kh_cp_duration;
 
-string kh_sound_capture = "kh/capture.wav";
-string kh_sound_destroy = "kh/destroy.wav";
-string kh_sound_drop = "kh/drop.wav";
-string kh_sound_collect = "kh/collect.wav";
-string kh_sound_alarm = "kh/alarm.wav";  // the new siren/alarm
-
 float kh_key_dropped, kh_key_carried;
 
 const float ST_KH_CAPS = 1;
@@ -430,7 +424,7 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key
 {
-	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTEN_NORM);
+	sound(player, CH_TRIGGER, SND_KH_COLLECT, VOL_BASE, ATTEN_NORM);
 
 	if(key.kh_dropperteam != player.team)
 	{
@@ -575,7 +569,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 	midpoint = midpoint * (1 / kh_teams);
 	te_customflash(midpoint, 1000, 1, Team_ColorRGB(teem) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
 
-	play2all(kh_sound_capture);
+	play2all(SND(KH_CAPTURE));
 	kh_FinishRound();
 }
 
@@ -664,7 +658,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
 
-	play2all(kh_sound_destroy);
+	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);
 
 	kh_FinishRound();
@@ -696,7 +690,7 @@ void kh_Key_Think()  // runs all the time
 	{
 		if(self.siren_time < time)
 		{
-			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTEN_NORM);  // play a simple alarm
+			sound(self.owner, CH_TRIGGER, SND_KH_ALARM, VOL_BASE, ATTEN_NORM);  // play a simple alarm
 			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
 		}
 
@@ -832,7 +826,7 @@ void kh_Key_DropOne(entity key)
 	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 	key.kh_dropperteam = key.team;
 
-	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
+	sound(player, CH_TRIGGER, SND_KH_DROP, VOL_BASE, ATTEN_NORM);
 }
 
 void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
@@ -858,7 +852,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			if(suicide)
 				key.kh_dropperteam = player.team;
 		}
-		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
+		sound(player, CH_TRIGGER, SND_KH_DROP, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1003,12 +997,6 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 
 void kh_Initialize()  // sets up th KH environment
 {
-	precache_sound(kh_sound_capture);
-	precache_sound(kh_sound_destroy);
-	precache_sound(kh_sound_drop);
-	precache_sound(kh_sound_collect);
-	precache_sound(kh_sound_alarm);  // the new siren
-
 	// setup variables
 	kh_teams = autocvar_g_keyhunt_teams_override;
 	if(kh_teams < 2)

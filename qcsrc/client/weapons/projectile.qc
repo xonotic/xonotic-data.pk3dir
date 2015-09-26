@@ -170,7 +170,7 @@ void loopsound(entity e, int ch, string samp, float vol, float attn)
 	if(self.silent)
 		return;
 
-	sound(e, ch, samp, vol, attn);
+	_sound(e, ch, samp, vol, attn);
 	e.snd_looping = ch;
 }
 
@@ -347,7 +347,7 @@ void Ent_Projectile()
 		{
 			case PROJECTILE_ELECTRO:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, W_Sound("electro_fly"), VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -357,7 +357,7 @@ void Ent_Projectile()
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
-				loopsound(self, CH_SHOTS_SINGLE, W_Sound("rocket_fly"), VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, SND(ROCKET_FLY), VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				break;
@@ -405,12 +405,12 @@ void Ent_Projectile()
 				break;
 			case PROJECTILE_NAPALM_FOUNTAIN:
 			case PROJECTILE_FIREBALL:
-				loopsound(self, CH_SHOTS_SINGLE, W_Sound("fireball_fly2"), VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				break;
 			case PROJECTILE_FIREMINE:
-				loopsound(self, CH_SHOTS_SINGLE, W_Sound("fireball_fly"), VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY), VOL_BASE, ATTEN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				self.mins = '-4 -4 -4';
@@ -425,7 +425,7 @@ void Ent_Projectile()
 				self.maxs = '2 2 2';
 				break;
 			case PROJECTILE_SEEKER:
-				loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
@@ -438,17 +438,17 @@ void Ent_Projectile()
             case PROJECTILE_RAPTORCANNON:
 				break;
             case PROJECTILE_SPIDERROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
 				break;
             case PROJECTILE_WAKIROCKET:
-                loopsound(self, CH_SHOTS_SINGLE, W_Sound("tag_rocket_fly"), VOL_BASE, ATTEN_NORM);
+                loopsound(self, CH_SHOTS_SINGLE, SND(TAG_ROCKET_FLY), VOL_BASE, ATTEN_NORM);
 				break;
             /*
             case PROJECTILE_WAKICANNON:
 				break;
 			case PROJECTILE_BUMBLE_GUN:
 				// only new engines support sound moving with object
-				loopsound(self, CH_SHOTS_SINGLE, W_Sound("electro_fly"), VOL_BASE, ATTEN_NORM);
+				loopsound(self, CH_SHOTS_SINGLE, SND(ELECTRO_FLY), VOL_BASE, ATTEN_NORM);
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -508,11 +508,5 @@ void Ent_Projectile()
 
 void Projectile_Precache()
 {
-	precache_sound(W_Sound("electro_fly"));
-	precache_sound(W_Sound("rocket_fly"));
-	precache_sound(W_Sound("fireball_fly"));
-	precache_sound(W_Sound("fireball_fly2"));
-	precache_sound(W_Sound("tag_rocket_fly"));
-
 	MUTATOR_CALLHOOK(PrecacheProjectiles);
 }

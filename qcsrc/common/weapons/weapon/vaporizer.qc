@@ -77,7 +77,7 @@ void W_Vaporizer_Attack(void)
 	W_SetupShot(self, true, 0, "", CH_WEAPON_A, vaporizer_damage);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
-	sound (self, CH_WEAPON_A, W_Sound("minstanexfire"), VOL_BASE * 0.8, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -174,7 +174,7 @@ void W_RocketMinsta_Attack2(void)
 
 	float w = self.weapon;
 	self.weapon = WEP_ELECTRO.m_id;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, W_Sound("crylink_fire"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND(CRYLINK_FIRE), CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	self.weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -227,7 +227,7 @@ void W_RocketMinsta_Attack3 (void)
 
 	int w = self.weapon;
 	self.weapon = WEP_ELECTRO.m_id;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, W_Sound("electro_fire2"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND(ELECTRO_FIRE2), CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	self.weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -362,10 +362,6 @@ float W_Vaporizer(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("minstanexfire"));
-			precache_sound(W_Sound("nexwhoosh1"));
-			precache_sound(W_Sound("nexwhoosh2"));
-			precache_sound(W_Sound("nexwhoosh3"));
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
@@ -408,7 +404,7 @@ float W_Vaporizer(float req)
 			else
 				used_ammo = vaporizer_ammo;
 
-			W_Reload(used_ammo, W_Sound("reload"));
+			W_Reload(used_ammo, SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -434,19 +430,17 @@ float W_Vaporizer(float req)
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
 				pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 			}
 			else
 			{
 				pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM); }
 			}
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("laserimpact"));
-			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

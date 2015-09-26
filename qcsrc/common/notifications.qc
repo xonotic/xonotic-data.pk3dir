@@ -1286,7 +1286,7 @@ void Local_Notification_sound(
 		));
 		#endif
 
-		sound(
+		_sound(
 			world,
 			soundchannel,
 			sprintf(
