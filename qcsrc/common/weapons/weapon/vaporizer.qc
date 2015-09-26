@@ -96,41 +96,8 @@ void W_Vaporizer_Attack(void)
 	Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
-	vector v;
-	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	switch(self.team)
-	{
-		case NUM_TEAM_1:   // Red
-			if(damage_goodhits)
-				Send_Effect(EFFECT_VAPORIZER_RED_HIT, w_shotorg, v, 1);
-			else
-				Send_Effect(EFFECT_VAPORIZER_RED, w_shotorg, v, 1);
-			break;
-		case NUM_TEAM_2:   // Blue
-			if(damage_goodhits)
-				Send_Effect(EFFECT_VAPORIZER_BLUE_HIT, w_shotorg, v, 1);
-			else
-				Send_Effect(EFFECT_VAPORIZER_BLUE, w_shotorg, v, 1);
-			break;
-		case NUM_TEAM_3:   // Yellow
-			if(damage_goodhits)
-				Send_Effect(EFFECT_VAPORIZER_YELLOW_HIT, w_shotorg, v, 1);
-			else
-				Send_Effect(EFFECT_VAPORIZER_YELLOW, w_shotorg, v, 1);
-			break;
-		case NUM_TEAM_4:   // Pink
-			if(damage_goodhits)
-				Send_Effect(EFFECT_VAPORIZER_PINK_HIT, w_shotorg, v, 1);
-			else
-				Send_Effect(EFFECT_VAPORIZER_PINK, w_shotorg, v, 1);
-			break;
-		default:
-			if(damage_goodhits)
-				Send_Effect_("TE_TEI_G3_HIT", w_shotorg, v, 1);
-			else
-				Send_Effect_("TE_TEI_G3", w_shotorg, v, 1);
-			break;
-	}
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	Send_Effect((damage_goodhits ? EFFECT_VAPORIZER_HIT(self.team) : EFFECT_VAPORIZER(self.team)), w_shotorg, v, 1);
 
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))

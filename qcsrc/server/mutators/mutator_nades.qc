@@ -250,15 +250,7 @@ void nade_ice_think()
 	{
 		if ( autocvar_g_nades_ice_explode )
 		{
-			entity expef = NULL;
-			switch(self.realowner.team)
-			{
-				case NUM_TEAM_1: expef = EFFECT_NADE_RED_EXPLODE; break;
-				case NUM_TEAM_2: expef = EFFECT_NADE_BLUE_EXPLODE; break;
-				case NUM_TEAM_3: expef = EFFECT_NADE_YELLOW_EXPLODE; break;
-				case NUM_TEAM_4: expef = EFFECT_NADE_PINK_EXPLODE; break;
-				default:		 expef = EFFECT_NADE_NEUTRAL_EXPLODE; break;
-			}
+			entity expef = EFFECT_NADE_EXPLODE(self.realowner.team);
 			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
 			sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
@@ -517,14 +509,8 @@ void nade_boom()
 
 		default:
 		case NADE_TYPE_NORMAL:
-			switch(self.realowner.team)
-			{
-				case NUM_TEAM_1: expef = EFFECT_NADE_RED_EXPLODE; break;
-				case NUM_TEAM_2: expef = EFFECT_NADE_BLUE_EXPLODE; break;
-				case NUM_TEAM_3: expef = EFFECT_NADE_YELLOW_EXPLODE; break;
-				case NUM_TEAM_4: expef = EFFECT_NADE_PINK_EXPLODE; break;
-				default:		 expef = EFFECT_NADE_NEUTRAL_EXPLODE; break;
-			}
+			expef = EFFECT_NADE_EXPLODE(self.realowner.team);
+			break;
 	}
 
 	if(expef)

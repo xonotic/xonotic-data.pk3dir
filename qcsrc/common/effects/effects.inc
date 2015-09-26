@@ -46,15 +46,15 @@ EFFECT(0, VORTEX_IMPACT,            "nex_impact")
 EFFECT(0, VORTEX_MUZZLEFLASH,       "nex_muzzleflash")
 
 EFFECT(1, VAPORIZER_RED,            "TE_TEI_G3RED")
-EFFECT(1, VAPORIZER_RED_HIT,        "TE_TEI_G3RED_HIT")
+EFFECT(1, VAPORIZER_HIT_RED,        "TE_TEI_G3RED_HIT")
 EFFECT(1, VAPORIZER_BLUE,           "TE_TEI_G3BLUE")
-EFFECT(1, VAPORIZER_BLUE_HIT,       "TE_TEI_G3BLUE_HIT")
+EFFECT(1, VAPORIZER_HIT_BLUE,       "TE_TEI_G3BLUE_HIT")
 EFFECT(1, VAPORIZER_YELLOW,         "TE_TEI_G3YELLOW")
-EFFECT(1, VAPORIZER_YELLOW_HIT,     "TE_TEI_G3YELLOW_HIT")
+EFFECT(1, VAPORIZER_HIT_YELLOW,     "TE_TEI_G3YELLOW_HIT")
 EFFECT(1, VAPORIZER_PINK,           "TE_TEI_G3PINK")
-EFFECT(1, VAPORIZER_PINK_HIT,       "TE_TEI_G3PINK_HIT")
+EFFECT(1, VAPORIZER_HIT_PINK,       "TE_TEI_G3PINK_HIT")
 EFFECT(1, VAPORIZER_NEUTRAL,        "TE_TEI_G3")
-EFFECT(1, VAPORIZER_NEUTRAL_HIT,    "TE_TEI_G3_HIT")
+EFFECT(1, VAPORIZER_HIT_NEUTRAL,    "TE_TEI_G3_HIT")
 entity EFFECT_VAPORIZER(int teamid)
 {
     switch (teamid) {
@@ -63,6 +63,16 @@ entity EFFECT_VAPORIZER(int teamid)
         case NUM_TEAM_3:    return EFFECT_VAPORIZER_YELLOW;
         case NUM_TEAM_4:    return EFFECT_VAPORIZER_PINK;
         default:            return EFFECT_VAPORIZER_NEUTRAL;
+    }
+}
+entity EFFECT_VAPORIZER_HIT(int teamid)
+{
+    switch (teamid) {
+        case NUM_TEAM_1:    return EFFECT_VAPORIZER_HIT_RED;
+        case NUM_TEAM_2:    return EFFECT_VAPORIZER_HIT_BLUE;
+        case NUM_TEAM_3:    return EFFECT_VAPORIZER_HIT_YELLOW;
+        case NUM_TEAM_4:    return EFFECT_VAPORIZER_HIT_PINK;
+        default:            return EFFECT_VAPORIZER_HIT_NEUTRAL;
     }
 }
 
@@ -134,11 +144,21 @@ EFFECT(0, SPAWN_PINK,               "spawn_event_pink")
 EFFECT(0, SPAWNPOINT_NEUTRAL,       "spawn_point_neutral")
 EFFECT(0, SPAWN_NEUTRAL,            "spawn_event_neutral")
 
-EFFECT(0, NADE_RED_EXPLODE,         "nade_red_explode")
-EFFECT(0, NADE_BLUE_EXPLODE,        "nade_blue_explode")
-EFFECT(0, NADE_YELLOW_EXPLODE,      "nade_yellow_explode")
-EFFECT(0, NADE_PINK_EXPLODE,        "nade_pink_explode")
-EFFECT(0, NADE_NEUTRAL_EXPLODE,     "nade_neutral_explode")
+EFFECT(0, NADE_EXPLODE_RED,         "nade_red_explode")
+EFFECT(0, NADE_EXPLODE_BLUE,        "nade_blue_explode")
+EFFECT(0, NADE_EXPLODE_YELLOW,      "nade_yellow_explode")
+EFFECT(0, NADE_EXPLODE_PINK,        "nade_pink_explode")
+EFFECT(0, NADE_EXPLODE_NEUTRAL,     "nade_neutral_explode")
+entity EFFECT_NADE_EXPLODE(int teamid)
+{
+    switch (teamid) {
+        case NUM_TEAM_1:    return EFFECT_NADE_EXPLODE_RED;
+        case NUM_TEAM_2:    return EFFECT_NADE_EXPLODE_BLUE;
+        case NUM_TEAM_3:    return EFFECT_NADE_EXPLODE_YELLOW;
+        case NUM_TEAM_4:    return EFFECT_NADE_EXPLODE_PINK;
+        default:		    return EFFECT_NADE_EXPLODE_NEUTRAL;
+    }
+}
 
 EFFECT(1, NADE_TRAIL_RED,           "nade_red")
 EFFECT(1, NADE_TRAIL_BLUE,          "nade_blue")
@@ -195,11 +215,11 @@ entity EFFECT_FLAG_TOUCH(int teamid)
     }
 }
 
-EFFECT(1, RED_PASS,                 "red_pass")
-EFFECT(1, BLUE_PASS,                "blue_pass")
-EFFECT(1, YELLOW_PASS,              "yellow_pass")
-EFFECT(1, PINK_PASS,                "pink_pass")
-EFFECT(1, NEUTRAL_PASS,             "neutral_pass")
+EFFECT(1, PASS_RED,                 "red_pass")
+EFFECT(1, PASS_BLUE,                "blue_pass")
+EFFECT(1, PASS_YELLOW,              "yellow_pass")
+EFFECT(1, PASS_PINK,                "pink_pass")
+EFFECT(1, PASS_NEUTRAL,             "neutral_pass")
 
 EFFECT(0, CAP_RED,                  "red_cap")
 EFFECT(0, CAP_BLUE,                 "blue_cap")
