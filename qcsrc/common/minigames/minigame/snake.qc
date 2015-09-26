@@ -160,16 +160,15 @@ void snake_move_body(entity minigame, bool ate_mouse)
 void snake_move_head(entity minigame)
 {
 	entity head = minigame.snake_head;
-
-	int myx = minigame_tile_letter(head.netname);
-	int myy = minigame_tile_number(head.netname);
-
 	string newpos;
 
 	if(autocvar_sv_minigames_snake_wrap)
 		newpos = minigame_relative_tile(head.netname, minigame.snake_dir_x, minigame.snake_dir_y, SNAKE_NUM_CNT, SNAKE_LET_CNT);
 	else
 	{
+		int myx = minigame_tile_letter(head.netname);
+		int myy = minigame_tile_number(head.netname);
+
 		myx += minigame.snake_dir_x;
 		myy += minigame.snake_dir_y;
 
