@@ -257,11 +257,13 @@ void effectinfo_read()
     fclose(fh);
 }
 
-void effectinfo_dump()
+void effectinfo_dump(int fh, bool alsoprint)
 {
     for (EffectInfo it = NULL; (it = findfloat(it, instanceOfEffectInfo, true)); ) {
         if (it.classname == "vtbl") continue;
-        print(it.dump(it));
+        string s = it.dump(it);
+        fputs(fh, s);
+        if (alsoprint) print(s);
     }
 }
 
@@ -284,7 +286,7 @@ REGISTER_REGISTRY(RegisterEffectInfo)
 #define MY(f) this.effectinfo_##f
 #define DEF(name) EFFECTINFO(name)
 #define SUB(name) \
-    [[accumulate]] void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { parent = EFFECTINFO_##name; parent.children[parent.children_count++] = this = NEW(EffectInfo); } \
+    [[accumulate]] void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { parent = EFFECTINFO_##name; parent.children[parent.children_count++] = this = NEW(EffectInfo, #name); } \
     [[accumulate]] void effectinfo_##name(EffectInfoGroup parent, EffectInfo this)
 #include "effectinfo.inc"
 #undef MY

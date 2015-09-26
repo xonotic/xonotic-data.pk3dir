@@ -240,6 +240,47 @@ void GenericCommand_dumpcommands(float request)
 	}
 }
 
+void effectinfo_dump(int fh, bool alsoprint);
+void GenericCommand_dumpeffectinfo(float request)
+{
+    switch (request) {
+        case CMD_REQUEST_COMMAND: {
+            #ifndef MENUQC
+            string filename = argv(1);
+			bool alsoprint = false;
+            if (filename == "") {
+                filename = "effectinfo_dump.txt";
+                alsoprint = false;
+            } else if (filename == "-") {
+                filename = "effectinfo_dump.txt";
+                alsoprint = true;
+            }
+            int fh = fopen(filename, FILE_WRITE);
+            if (fh >= 0) {
+            	effectinfo_dump(fh, alsoprint);
+                LOG_INFOF("Dumping effectinfo... File located at ^2data/data/%s^7.\n", filename);
+				LOG_INFOF("Reload with ^2cl_particles_reloadeffects data/%s^7.\n", filename);
+                fclose(fh);
+            } else {
+                LOG_WARNINGF("Could not open file '%s'!\n", filename);
+            }
+            #else
+            LOG_INFO(_("Effectinfo dump command only works with cl_cmd and sv_cmd.\n"));
+            #endif
+            return;
+        }
+        default:
+        case CMD_REQUEST_USAGE: {
+            LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpeffectinfo [filename]"));
+            LOG_INFO("  Where 'filename' is the file to write (default is effectinfo_dump.txt),\n");
+            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
+            LOG_INFO("  if left blank, it will only write to default.\n");
+            return;
+        }
+    }
+}
+STATIC_INIT(dumpeffectinfo) { localcmd("alias dumpeffectinfo \"qc_cmd_svcl dumpeffectinfo ${* ?}\"\n"); }
+
 void GenericCommand_dumpitems(float request)
 {
 	switch(request)
@@ -722,6 +763,7 @@ void GenericCommand_(float request)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
+	GENERIC_COMMAND("dumpeffectinfo", GenericCommand_dumpeffectinfo(request), "Dump all effectinfo to effectinfo_dump.txt") \
 	GENERIC_COMMAND("dumpitems", GenericCommand_dumpitems(request), "Dump all items to the console") \
 	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
 	GENERIC_COMMAND("dumpturrets", GenericCommand_dumpturrets(request), "Dump all turrets into turrets_dump.txt") \
