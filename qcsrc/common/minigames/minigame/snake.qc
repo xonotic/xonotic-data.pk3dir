@@ -10,6 +10,7 @@ const int SNAKE_NUM_CNT = 15;
 
 const int SNAKE_TILE_SIZE = 15;
 
+bool autocvar_sv_minigames_snake_wrap = false;
 float autocvar_sv_minigames_snake_delay_initial = 0.7;
 float autocvar_sv_minigames_snake_delay_multiplier = 50;
 float autocvar_sv_minigames_snake_delay_min = 0.1;
@@ -163,10 +164,17 @@ void snake_move_head(entity minigame)
 	int myx = minigame_tile_letter(head.netname);
 	int myy = minigame_tile_number(head.netname);
 
-	myx += minigame.snake_dir_x;
-	myy += minigame.snake_dir_y;
+	string newpos;
 
-	string newpos = minigame_tile_buildname(myx, myy);
+	if(autocvar_sv_minigames_snake_wrap)
+		newpos = minigame_relative_tile(head.netname, minigame.snake_dir_x, minigame.snake_dir_y, SNAKE_NUM_CNT, SNAKE_LET_CNT);
+	else
+	{
+		myx += minigame.snake_dir_x;
+		myy += minigame.snake_dir_y;
+
+		newpos = minigame_tile_buildname(myx, myy);
+	}
 
 	if(!snake_valid_tile(newpos) || (snake_find_piece(minigame, newpos)).cnt)
 	{
