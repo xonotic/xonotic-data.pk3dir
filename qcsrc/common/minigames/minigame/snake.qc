@@ -12,6 +12,7 @@ const int SNAKE_TILE_SIZE = 15;
 
 float autocvar_sv_minigames_snake_delay_initial = 0.7;
 float autocvar_sv_minigames_snake_delay_multiplier = 50;
+float autocvar_sv_minigames_snake_delay_min = 0.1;
 
 .int snake_score;
 .entity snake_head;
@@ -141,7 +142,7 @@ void snake_move_body(entity minigame, bool ate_mouse)
 	if(tail && ate_mouse)
 	{
 		int newcnt = tail.cnt + 1;
-		minigame.snake_delay = max(0.1, autocvar_sv_minigames_snake_delay_initial - (newcnt / autocvar_sv_minigames_snake_delay_multiplier));
+		minigame.snake_delay = max(autocvar_sv_minigames_snake_delay_min, autocvar_sv_minigames_snake_delay_initial - (newcnt / autocvar_sv_minigames_snake_delay_multiplier));
 		snake_add_score(minigame, 1);
 
 		entity piece = msle_spawn(minigame,"minigame_board_piece");
@@ -204,8 +205,8 @@ void snake_move(entity minigame, entity player, string dxs, string dys )
 		//if ( snake_valid_tile(pos) )
 		//if ( snake_find_piece(minigame, pos) )
 		{
-			int dx = ((dxs) ? stof(dxs) : 0);
-			int dy = ((dys) ? stof(dys) : 0);
+			int dx = ((dxs) ? bound(-1, stof(dxs), 1) : 0);
+			int dy = ((dys) ? bound(-1, stof(dys), 1) : 0);
 
 			int myl = minigame_tile_letter(minigame.snake_head.netname);
 			int myn = minigame_tile_number(minigame.snake_head.netname);
@@ -351,17 +352,81 @@ void snake_hud_board(vector pos, vector mySize)
 				thepiece = "snake/tail";
 			if(e.cnt == 1)
 			{
-				int dx = minigame_tile_letter(e.netname) + e.snake_dir_x;
-				int dy = minigame_tile_number(e.netname) + e.snake_dir_y;
+				int dx = minigame_tile_letter(e.netname) + e.snake_dir_x * 2;
+				int dy = minigame_tile_number(e.netname) + e.snake_dir_y * 2;
 				entity mouse = snake_find_piece(active_minigame, minigame_tile_buildname(dx, dy));
 				thepiece = "snake/head";
 				if(mouse && !mouse.cnt)
-					thepiece = "snake/feed";
+				{
+					float myang = 0;
+					int myx = minigame_tile_letter(e.netname);
+					int myy = minigame_tile_number(e.netname);
+					if(myx - 2 == dx)
+						myang = M_PI*3/2;
+					if(myx + 2 == dx)
+						myang = M_PI/2;
+					if(myy - 2 == dy)
+						myang = M_PI;
+
+					int newx = minigame_tile_letter(e.netname) + e.snake_dir_x;
+					int newy = minigame_tile_number(e.netname) + e.snake_dir_y;
+					string newpos = minigame_tile_buildname(newx, newy);
+
+					vector my_pos = minigame_tile_pos(newpos,SNAKE_NUM_CNT,SNAKE_LET_CNT);
+					my_pos = minigame_hud_denormalize(my_pos,pos,mySize);
+
+					drawrotpic(my_pos, myang, minigame_texture("snake/tongue"),
+							tile_size, tile_size/2, '1 1 1',
+							panel_fg_alpha, DRAWFLAG_NORMAL );
+				}
 			}
 
-			minigame_drawpic_centered( tile_pos,  
-					minigame_texture(thepiece),
-					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			if(e.cnt == 1 || e.cnt == tail.cnt)
+			{
+				vector thedir = e.snake_dir;
+				float theang = 0;
+				if(e.cnt == tail.cnt)
+				{
+					int thex = minigame_tile_letter(e.netname);
+					int they = minigame_tile_number(e.netname);
+					entity t = snake_find_cnt(active_minigame, e.cnt - 1);
+					int tx = minigame_tile_letter(t.netname);
+					int ty = minigame_tile_number(t.netname);
+
+					if(thex - 1 == tx)
+					{
+						thedir_y = 0;
+						thedir_x = -1;
+					}
+					if(they + 1 == ty)
+					{
+						thedir_x = 0;
+						thedir_y = 1;
+					}
+					if(they - 1 == ty)
+					{
+						thedir_x = 0;
+						thedir_y = -1;
+					}
+				}
+
+				if(thedir_y == -1)
+					theang = M_PI;
+				if(thedir_x == 1)
+					theang = M_PI/2;
+				if(thedir_x == -1)
+					theang = M_PI*3/2;
+
+				drawrotpic(tile_pos, theang, minigame_texture(thepiece),
+							tile_size, tile_size/2, '1 1 1',
+							panel_fg_alpha, DRAWFLAG_NORMAL );
+			}
+			else
+			{
+				minigame_drawpic_centered( tile_pos,  
+						minigame_texture(thepiece),
+						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			}
 		}
 	}
 
