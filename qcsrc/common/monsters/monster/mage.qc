@@ -15,7 +15,32 @@ REGISTER_MONSTER_SIMPLE(
 #endif
 }
 
+CLASS(MageSpike, PortoLaunch)
+/* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(MageSpike, impulse, int, 5);
+/* refname   */ ATTRIB(MageSpike, netname, string, "magespike");
+/* wepname   */ ATTRIB(MageSpike, message, string, _("Mage spike"));
+ENDCLASS(MageSpike)
+REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike)) {
+	localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", this.netname, 230 + this.m_id - 1));
+}
+
 #ifdef SVQC
+
+void M_Mage_Attack_Spike(vector dir);
+METHOD(MageSpike, wr_think, bool(entity thiswep)) {
+	SELFPARAM();
+	if (self.BUTTON_ATCK)
+	if (weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire))) {
+		if (!self.target_range) self.target_range = autocvar_g_monsters_target_range;
+		self.enemy = Monster_FindTarget(self);
+		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+		M_Mage_Attack_Spike(w_shotdir);
+		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+	}
+	return true;
+}
+
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_damageforcescale = 0.5;
 float autocvar_g_monster_mage_attack_spike_damage;
@@ -111,19 +136,12 @@ void M_Mage_Attack_Spike_Touch()
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think()
 {SELFPARAM();
-	entity e;
-	vector desireddir, olddir, newdir, eorg;
-	float turnrate;
-	float dist;
-	float spd;
-
-	if (time > self.ltime || self.enemy.health <= 0 || self.owner.health <= 0)
-	{
+	if (time > self.ltime || (self.enemy && self.enemy.health <= 0) || self.owner.health <= 0) {
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 		M_Mage_Attack_Spike_Explode();
 	}
 
-	spd = vlen(self.velocity);
+	float spd = vlen(self.velocity);
 	spd = bound(
 		spd - (autocvar_g_monster_mage_attack_spike_decel) * frametime,
 		(autocvar_g_monster_mage_attack_spike_speed_max),
@@ -136,12 +154,12 @@ void M_Mage_Attack_Spike_Think()
 
 	if (self.enemy != world)
 	{
-		e				= self.enemy;
-		eorg			= 0.5 * (e.absmin + e.absmax);
-		turnrate		= (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
-		desireddir		= normalize(eorg - self.origin);
-		olddir			= normalize(self.velocity); // get my current direction
-		dist			= vlen(eorg - self.origin);
+		entity e = self.enemy;
+		vector eorg = 0.5 * (e.absmin + e.absmax);
+		float turnrate = (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
+		vector desireddir = normalize(eorg - self.origin);
+		vector olddir = normalize(self.velocity); // get my current direction
+		float dist = vlen(eorg - self.origin);
 
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
 		if ((autocvar_g_monster_mage_attack_spike_smart) && (dist > (autocvar_g_monster_mage_attack_spike_smart_mindist)))
@@ -159,11 +177,9 @@ void M_Mage_Attack_Spike_Think()
 			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
 		}
 
-		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
+		vector newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
 		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
 	}
-	else
-		dist = 0;
 
 	///////////////
 
@@ -172,14 +188,19 @@ void M_Mage_Attack_Spike_Think()
 	UpdateCSQCProjectile(self);
 }
 
-void M_Mage_Attack_Spike()
-{SELFPARAM();
-	entity missile;
-	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+void M_Mage_Attack_Spike(vector dir);
+void M_Mage_Attack_Spike_Aim()
+{
+	SELFPARAM();
+	return M_Mage_Attack_Spike(normalize((self.enemy.origin + '0 0 10') - self.origin));
+}
 
+void M_Mage_Attack_Spike(vector dir)
+{
+	SELFPARAM();
 	makevectors(self.angles);
 
-	missile = spawn ();
+	entity missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.think = M_Mage_Attack_Spike_Think;
 	missile.ltime = time + 7;
@@ -188,7 +209,7 @@ void M_Mage_Attack_Spike()
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.flags = FL_PROJECTILE;
 	setorigin(missile, self.origin + v_forward * 14 + '0 0 30' + v_right * -14);
-	setsize (missile, '0 0 0', '0 0 0');
+	setsize(missile, '0 0 0', '0 0 0');
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.enemy = self.enemy;
@@ -328,7 +349,7 @@ float M_Mage_Attack(float attack_type)
 					setanim(self, self.anim_shoot, true, true, true);
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
-					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike);
+					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike_Aim);
 					return true;
 				}
 			}

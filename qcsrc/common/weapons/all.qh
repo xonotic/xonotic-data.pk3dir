@@ -284,7 +284,8 @@ entity dummy_weapon_info;
 		WEPSET_ALL |= (WEPSET_##id = WepSet_FromWeapon(this.m_id)); \
 		if ((this.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= WEPSET_##id; \
 		register_weapon(this, this.m_id, WEPSET_##id); \
-	}
+	} \
+	REGISTER_INIT(WEP, id)
 
 #define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
 	REGISTER_WEAPON_2(id, NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname))
