@@ -472,15 +472,24 @@ void Item_RespawnCountdown (void)
 		if(self.count == 1)
 		{
 			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
-			int wpextra = 0;
-            entity e = self.itemdef;
-            if (e) wpextra = e.m_id;
-			if (self.flags & FL_WEAPON) {
-				entity wi = get_weaponinfo(self.weapon);
-				if (wi) wpextra = wi.m_id;
-			}
-            entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
-            wp.wp_extra = wpextra;
+			do {
+				{
+					entity wi = get_weaponinfo(self.weapon);
+					if (wi.m_id) {
+						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+						wp.wp_extra = wi.m_id;
+						break;
+					}
+				}
+				{
+					entity ii = self.itemdef;
+					if (ii.m_id) {
+						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+						wp.wp_extra = ii.m_id;
+						break;
+					}
+				}
+			} while (0);
             if(self.waypointsprite_attached)
             {
                 GameItem def = self.itemdef;
