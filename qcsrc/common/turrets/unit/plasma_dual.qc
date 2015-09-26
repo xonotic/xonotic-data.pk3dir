@@ -19,9 +19,7 @@ CLASS(PlasmaDualAttack, PortoLaunch)
 /* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "plasmadual");
 /* wepname   */ ATTRIB(PlasmaDualAttack, message, string, _("Dual plasma"));
 ENDCLASS(PlasmaDualAttack)
-REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack)) {
-	localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", this.netname, 230 + this.m_id - 1));
-}
+REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
 
 #ifdef SVQC
 

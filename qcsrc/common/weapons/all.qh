@@ -193,7 +193,7 @@ CLASS(Weapon, Object)
     /** A: WEPSET_id : WEPSET_... */
     ATTRIB(Weapon, weapons, WepSet, '0 0 0');
     /** M: function  : w_... */
-    ATTRIB(Weapon, weapon_func, bool(entity thiswep, int req), w_new);
+    METHOD(Weapon, weapon_func, bool(entity this, int req)) { return w_new(this, req); }
     /** M: ammotype  : main ammo field */
     ATTRIB(Weapon, ammo_field, .int, ammo_none);
     /** M: impulse   : weapon impulse */
@@ -284,6 +284,7 @@ entity dummy_weapon_info;
 		WEPSET_ALL |= (WEPSET_##id = WepSet_FromWeapon(this.m_id)); \
 		if ((this.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= WEPSET_##id; \
 		register_weapon(this, this.m_id, WEPSET_##id); \
+		localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", this.netname, 230 + this.m_id - 1)); \
 	} \
 	REGISTER_INIT(WEP, id)
 

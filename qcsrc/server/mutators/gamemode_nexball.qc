@@ -3,6 +3,21 @@
 
 #include "gamemode.qh"
 
+float autocvar_g_nexball_basketball_bouncefactor;
+float autocvar_g_nexball_basketball_bouncestop;
+float autocvar_g_nexball_basketball_carrier_highspeed;
+bool autocvar_g_nexball_basketball_meter;
+float autocvar_g_nexball_basketball_meter_maxpower;
+float autocvar_g_nexball_basketball_meter_minpower;
+float autocvar_g_nexball_delay_collect;
+float autocvar_g_nexball_delay_goal;
+float autocvar_g_nexball_delay_start;
+float autocvar_g_nexball_football_bouncefactor;
+float autocvar_g_nexball_football_bouncestop;
+bool autocvar_g_nexball_radar_showallplayers;
+bool autocvar_g_nexball_sound_bounce;
+int autocvar_g_nexball_trail_color;
+
 float autocvar_g_nexball_safepass_turnrate;
 float autocvar_g_nexball_safepass_maxdist;
 float autocvar_g_nexball_safepass_holdtime;
@@ -153,11 +168,11 @@ void GiveBall(entity plyr, entity ball)
 
 	plyr.weaponentity.weapons = plyr.weapons;
 	plyr.weaponentity.switchweapon = plyr.weapon;
-	plyr.weapons = WEPSET_PORTO;
+	plyr.weapons = WEPSET_NEXBALL;
 	setself(plyr);
-	WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
-	plyr.switchweapon = WEP_PORTO.m_id;
-	W_SwitchWeapon(WEP_PORTO.m_id);
+	WEP_ACTION(WEP_NEXBALL, WR_RESETPLAYER);
+	plyr.switchweapon = WEP_NEXBALL.m_id;
+	W_SwitchWeapon(WEP_NEXBALL.m_id);
 	setself(this);
 }
 
@@ -826,6 +841,11 @@ float ball_customize()
 	return true;
 }
 
+float w_nexball_weapon(float req);
+METHOD(BallStealer, weapon_func, bool(entity this, int req)) {
+	return w_nexball_weapon(req);
+}
+
 float w_nexball_weapon(float req)
 {SELFPARAM();
 	if(req == WR_THINK)
@@ -929,7 +949,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			if(self.weaponentity.weapons)
 			{
 				self.weapons = self.weaponentity.weapons;
-				WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
+				WEP_ACTION(WEP_NEXBALL, WR_RESETPLAYER);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 
@@ -949,7 +969,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 	self.weaponentity.weapons = '0 0 0';
 
 	if(nexball_mode & NBM_BASKETBALL)
-		self.weapons |= WEPSET_PORTO;
+		self.weapons |= WEPSET_NEXBALL;
 	else
 		self.weapons = '0 0 0';
 
@@ -963,13 +983,6 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_nexball_basketball_carrier_highspeed;
 		self.stat_sv_maxspeed *= autocvar_g_nexball_basketball_carrier_highspeed;
 	}
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
-{
-	start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
-
 	return false;
 }
 
@@ -998,7 +1011,6 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, nexball_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, nexball_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nexball_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, nexball_FilterItem, CBC_ORDER_ANY);
 

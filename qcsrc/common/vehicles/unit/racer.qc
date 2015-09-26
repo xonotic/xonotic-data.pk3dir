@@ -29,9 +29,7 @@ CLASS(RacerAttack, PortoLaunch)
 /* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
 /* wepname   */ ATTRIB(RacerAttack, message, string, _("Racer cannon"));
 ENDCLASS(RacerAttack)
-REGISTER_WEAPON(RACER, NEW(RacerAttack)) {
-	localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", this.netname, 230 + this.m_id - 1));
-}
+REGISTER_WEAPON(RACER, NEW(RacerAttack));
 
 #endif
 

@@ -284,13 +284,6 @@ void W_Porto_Attack(float type)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-bool w_nexball_weapon(int req); // WEAPONTODO
-
-METHOD(PortoLaunch, weapon_func, bool(entity this, int req)) {
-	if(g_nexball) { return w_nexball_weapon(req); }
-	return super.weapon_func(this, req);
-}
-
 		METHOD(PortoLaunch, wr_aim, bool(entity thiswep))
 		{
 			SELFPARAM();

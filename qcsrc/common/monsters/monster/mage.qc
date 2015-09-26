@@ -23,9 +23,7 @@ CLASS(MageSpike, PortoLaunch)
 /* refname   */ ATTRIB(MageSpike, netname, string, "magespike");
 /* wepname   */ ATTRIB(MageSpike, message, string, _("Mage spike"));
 ENDCLASS(MageSpike)
-REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike)) {
-	localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", this.netname, 230 + this.m_id - 1));
-}
+REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 
 #ifdef SVQC
 

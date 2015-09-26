@@ -321,6 +321,7 @@ float TrueAimCheck()
 	{
 		case WEP_TUBA.m_id: // no aim
 		case WEP_PORTO.m_id: // shoots from eye
+		case WEP_NEXBALL.m_id: // shoots from eye
 		case WEP_HOOK.m_id: // no trueaim
 		case WEP_MORTAR.m_id: // toss curve
 			return SHOTTYPE_HITWORLD;
@@ -440,7 +441,7 @@ bool WantEventchase()
 			return true;
 		if(MUTATOR_CALLHOOK(WantEventchase, self))
 			return true;
-		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO.m_id)))
+		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_NEXBALL.m_id)))
 			return true;
 		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
 		{

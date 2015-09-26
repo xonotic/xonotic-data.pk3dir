@@ -1,0 +1,11 @@
+#ifndef IMPLEMENTATION
+
+CLASS(BallStealer, PortoLaunch)
+/* flags     */ ATTRIB(BallStealer, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(BallStealer, impulse, int, 2);
+/* refname   */ ATTRIB(BallStealer, netname, string, "ballstealer");
+/* wepname   */ ATTRIB(BallStealer, message, string, _("Ball Stealer"));
+ENDCLASS(BallStealer)
+REGISTER_WEAPON(NEXBALL, NEW(BallStealer));
+
+#endif
