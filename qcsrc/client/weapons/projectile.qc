@@ -270,9 +270,6 @@ void Ent_Projectile()
 
 	if(f & 2)
 	{
-		string rm_suffix = strcat("rocketminsta_laser_", Static_Team_ColorName_Lower(self.team));
-		if(_particleeffectnum(rm_suffix) < 0 || Team_TeamToNumber(self.team) == -1) { rm_suffix = "TR_NEXUIZPLASMA"; }
-
 		self.cnt = ReadByte();
 
 		self.silent = (self.cnt & 0x80);
@@ -320,7 +317,7 @@ void Ent_Projectile()
 
 			CASE(RPC)                self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); break;
 
-			CASE(ROCKETMINSTA_LASER) self.traileffect = _particleeffectnum(rm_suffix); break;
+			CASE(ROCKETMINSTA_LASER) self.traileffect = particleeffectnum(EFFECT_ROCKETMINSTA_LASER(self.team)); break;
 #undef CASE
 			default:
 				if(MUTATOR_CALLHOOK(Ent_Projectile, self))

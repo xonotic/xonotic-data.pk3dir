@@ -30,13 +30,8 @@ float t_plasma(float req)
                 Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
                 // teamcolor / hit beam effect
-                vector v;
-                string s;
-                v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-                s = strcat("TE_TEI_G3", ((self.team) ? Static_Team_ColorName_Upper(self.team) : ""));
-
-                WarpZone_TrailParticles(world, _particleeffectnum(s), self.tur_shotorg, v);
-
+                vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+                WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
                 if (self.tur_head.frame == 0)
                     self.tur_head.frame = 1;
             }

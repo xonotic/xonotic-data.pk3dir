@@ -520,7 +520,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		self.owner.iscaptured = true;
 		self.solid = SOLID_BBOX;
 
-		Send_Effect_(sprintf("%s_cap", Static_Team_ColorName_Lower(self.owner.team)), self.owner.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_CAP(self.owner.team), self.owner.origin, '0 0 0', 1);
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
@@ -578,7 +578,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	cp.team = e.team;
 	cp.colormap = e.colormap;
 
-	Send_Effect_(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team)), e.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_FLAG_TOUCH(player.team), e.origin, '0 0 0', 1);
 
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / ONS_CP_THINKRATE));
 	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
@@ -1130,7 +1130,7 @@ bool Onslaught_CheckWinner()
 
 	ons_stalemate = false;
 
-	play2all(SND(CTF_CAPTURE(Static_Team_ColorName_Lower(winner_team))));
+	play2all(SND(CTF_CAPTURE(winner_team)));
 
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 

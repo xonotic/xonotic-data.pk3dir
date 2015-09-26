@@ -110,14 +110,14 @@ SOUND(CTF_CAPTURE_RED, "ctf/red_capture.wav");
 SOUND(CTF_CAPTURE_BLUE, "ctf/blue_capture.wav");
 SOUND(CTF_CAPTURE_YELLOW, "ctf/yellow_capture.ogg");
 SOUND(CTF_CAPTURE_PINK, "ctf/pink_capture.ogg");
-Sound SND_CTF_CAPTURE(string teamname) {
-    switch (teamname) {
-        case "red": return SND_CTF_CAPTURE_RED;
-        case "blue": return SND_CTF_CAPTURE_BLUE;
-        case "yellow": return SND_CTF_CAPTURE_YELLOW;
-        case "pink": return SND_CTF_CAPTURE_PINK;
+Sound SND_CTF_CAPTURE(int teamid) {
+    switch (teamid) {
+        case NUM_TEAM_1:    return SND_CTF_CAPTURE_RED;
+        case NUM_TEAM_2:    return SND_CTF_CAPTURE_BLUE;
+        case NUM_TEAM_3:    return SND_CTF_CAPTURE_YELLOW;
+        case NUM_TEAM_4:    return SND_CTF_CAPTURE_PINK;
+        default:            return SND_CTF_CAPTURE_NEUTRAL;
     }
-    return SND_CTF_CAPTURE_NEUTRAL;
 }
 
 SOUND(CTF_DROPPED_NEUTRAL,  "ctf/neutral_dropped.wav");
@@ -125,13 +125,13 @@ SOUND(CTF_DROPPED_RED,      "ctf/red_dropped.wav");
 SOUND(CTF_DROPPED_BLUE,     "ctf/blue_dropped.wav");
 SOUND(CTF_DROPPED_YELLOW,   "ctf/yellow_dropped.wav");
 SOUND(CTF_DROPPED_PINK,     "ctf/pink_dropped.wav");
-Sound SND_CTF_DROPPED(string teamname) {
-    switch (teamname) {
-        case "red": return      SND_CTF_DROPPED_RED;
-        case "blue": return     SND_CTF_DROPPED_BLUE;
-        case "yellow": return   SND_CTF_DROPPED_YELLOW;
-        case "pink": return     SND_CTF_DROPPED_PINK;
-        default: return         SND_CTF_DROPPED_NEUTRAL;
+Sound SND_CTF_DROPPED(int teamid) {
+    switch (teamid) {
+        case NUM_TEAM_1:    return SND_CTF_DROPPED_RED;
+        case NUM_TEAM_2:    return SND_CTF_DROPPED_BLUE;
+        case NUM_TEAM_3:    return SND_CTF_DROPPED_YELLOW;
+        case NUM_TEAM_4:    return SND_CTF_DROPPED_PINK;
+        default:            return SND_CTF_DROPPED_NEUTRAL;
     }
 }
 
@@ -143,13 +143,13 @@ SOUND(CTF_RETURNED_RED,      "ctf/red_returned.wav");
 SOUND(CTF_RETURNED_BLUE,     "ctf/blue_returned.wav");
 SOUND(CTF_RETURNED_YELLOW,   "ctf/yellow_returned.wav");
 SOUND(CTF_RETURNED_PINK,     "ctf/pink_returned.wav");
-Sound SND_CTF_RETURNED(string teamname) {
-    switch (teamname) {
-        case "red": return      SND_CTF_RETURNED_RED;
-        case "blue": return     SND_CTF_RETURNED_BLUE;
-        case "yellow": return   SND_CTF_RETURNED_YELLOW;
-        case "pink": return     SND_CTF_RETURNED_PINK;
-        default: return         SND_CTF_RETURNED_NEUTRAL;
+Sound SND_CTF_RETURNED(int teamid) {
+    switch (teamid) {
+        case NUM_TEAM_1:    return SND_CTF_RETURNED_RED;
+        case NUM_TEAM_2:    return SND_CTF_RETURNED_BLUE;
+        case NUM_TEAM_3:    return SND_CTF_RETURNED_YELLOW;
+        case NUM_TEAM_4:    return SND_CTF_RETURNED_PINK;
+        default:            return SND_CTF_RETURNED_NEUTRAL;
     }
 }
 
@@ -158,13 +158,13 @@ SOUND(CTF_TAKEN_RED,      "ctf/red_taken.wav");
 SOUND(CTF_TAKEN_BLUE,     "ctf/blue_taken.wav");
 SOUND(CTF_TAKEN_YELLOW,   "ctf/yellow_taken.wav");
 SOUND(CTF_TAKEN_PINK,     "ctf/pink_taken.wav");
-Sound SND_CTF_TAKEN(string teamname) {
-    switch (teamname) {
-        case "red": return      SND_CTF_TAKEN_RED;
-        case "blue": return     SND_CTF_TAKEN_BLUE;
-        case "yellow": return   SND_CTF_TAKEN_YELLOW;
-        case "pink": return     SND_CTF_TAKEN_PINK;
-        default: return         SND_CTF_TAKEN_NEUTRAL;
+Sound SND_CTF_TAKEN(int teamid) {
+    switch (teamid) {
+        case NUM_TEAM_1:    return SND_CTF_TAKEN_RED;
+        case NUM_TEAM_2:    return SND_CTF_TAKEN_BLUE;
+        case NUM_TEAM_3:    return SND_CTF_TAKEN_YELLOW;
+        case NUM_TEAM_4:    return SND_CTF_TAKEN_PINK;
+        default:            return SND_CTF_TAKEN_NEUTRAL;
     }
 }
 

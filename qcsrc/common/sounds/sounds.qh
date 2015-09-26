@@ -1,6 +1,8 @@
 #ifndef SOUNDS_H
 #define SOUNDS_H
 
+#include "../teams.qh"
+
 // Play all sounds via sound7, for access to the extra channels.
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #ifdef SVQC

@@ -1091,7 +1091,6 @@ void set_flag_string(entity flag, .string field, string value, string teamname)
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {SELFPARAM();
 	// declarations
-	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	setself(flag); // for later usage with droptofloor()
 
 	// main setup
@@ -1124,6 +1123,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
 
+	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	// appearence
 	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
 	if(flag.skin == 0)			{ flag.skin = cvar(sprintf("g_ctf_flag_%s_skin", teamname)); }
@@ -1133,10 +1133,10 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	set_flag_string(flag, capeffect, 	"%s_cap", 		teamname);
 
 	// sounds
-	flag.snd_flag_taken = SND(CTF_TAKEN(teamname));
-	flag.snd_flag_returned = SND(CTF_RETURNED(teamname));
-	flag.snd_flag_capture = SND(CTF_CAPTURE(teamname));
-	flag.snd_flag_dropped = SND(CTF_DROPPED(teamname));
+	flag.snd_flag_taken = SND(CTF_TAKEN(teamnumber));
+	flag.snd_flag_returned = SND(CTF_RETURNED(teamnumber));
+	flag.snd_flag_capture = SND(CTF_CAPTURE(teamnumber));
+	flag.snd_flag_dropped = SND(CTF_DROPPED(teamnumber));
 	if (flag.snd_flag_respawn == "") flag.snd_flag_respawn = SND(CTF_RESPAWN); // if there is ever a team-based sound for this, update the code to match.
 	precache_sound(flag.snd_flag_respawn);
 	if (flag.snd_flag_touch == "") flag.snd_flag_touch = SND(CTF_TOUCH); // again has no team-based sound
