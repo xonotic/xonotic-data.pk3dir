@@ -1,4 +1,4 @@
-#include "turrets.qh"
+#include "all.qh"
 
 void turret_remove()
 {SELFPARAM();

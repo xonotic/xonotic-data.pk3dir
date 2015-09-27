@@ -48,7 +48,6 @@
 #include "../common/triggers/include.qh"
 
 #include "../common/turrets/cl_turrets.qh"
-#include "../common/turrets/turrets.qh"
 
 #include "../warpzonelib/client.qh"
 
