@@ -1,3 +1,5 @@
+REGISTER_MINIGAME(snake, "Snake");
+
 const float SNAKE_TURN_MOVE  = 0x0100; // the snake is moving, player must control it
 const float SNAKE_TURN_LOSS  = 0x0200; // they did it?!
 const float SNAKE_TURN_WAIT  = 0x0400; // the snake is waiting for the player to make their first move and begin the game

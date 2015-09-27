@@ -1,3 +1,5 @@
+REGISTER_MINIGAME(pp, "Push-Pull");
+
 const int PP_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int PP_TURN_WIN   = 0x0200; // player has won
 const int PP_TURN_DRAW  = 0x0400; // players have equal scores

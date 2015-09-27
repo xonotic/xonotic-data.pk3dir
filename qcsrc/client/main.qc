@@ -151,8 +151,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 
-	initialize_minigames();
-
 	// precaches
 
 	Projectile_Precache();

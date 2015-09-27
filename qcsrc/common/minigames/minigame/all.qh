@@ -70,22 +70,6 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 #include "snake.qc"
 
 /**
- * Registration:
- * 	MINIGAME(id,"Name")
- * 		id    (QuakeC symbol) Game identifier, used to find the functions explained above
- * 		"Name"(String)        Human readable name for the game, shown in the UI
- */
-#define REGISTERED_MINIGAMES \
-	MINIGAME(nmm, "Nine Men's Morris") \
-	MINIGAME(ttt, "Tic Tac Toe") \
-	MINIGAME(pong,"Pong") \
-	MINIGAME(c4,  "Connect Four") \
-	MINIGAME(ps,  "Peg Solitaire") \
-	MINIGAME(pp,  "Push-Pull") \
-	MINIGAME(snake,"Snake") \
-	/*empty line*/
-
-/**
  * Set up automatic entity read/write functionality
  * To ensure that everything is handled automatically, spawn on the server using msle_spawn
  * Syntax:

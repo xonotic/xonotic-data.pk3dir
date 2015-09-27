@@ -273,25 +273,6 @@ void end_minigames()
 	}
 }
 
-void initialize_minigames()
-{
-	entity last_minig = world;
-	entity minig;
-	#define MINIGAME(name,nicename) \
-		minig = spawn(); \
-		minig.classname = "minigame_descriptor"; \
-		minig.netname = #name; \
-		minig.message = nicename; \
-		minig.minigame_event = name##_server_event; \
-		if ( !last_minig ) minigame_descriptors = minig; \
-		else last_minig.list_next = minig; \
-		last_minig = minig;
-
-	REGISTERED_MINIGAMES
-
-	#undef MINIGAME
-}
-
 string invite_minigame(entity inviter, entity player)
 {
 	if ( !inviter || !inviter.active_minigame )
@@ -369,9 +350,10 @@ void ClientCommand_minigame(int request, int argc, string command)
 		}
 		else if ( minig_cmd == "list" )
 		{
-			entity e;
-			for ( e = minigame_descriptors; e != world; e = e.list_next )
-				sprint(self,e.netname," (",e.message,") ","\n");
+			FOREACH(MINIGAMES, true, LAMBDA(
+			{
+				sprint(self,it.netname," (",it.message,") ","\n");
+			}));
 			return;
 		}
 		else if ( minig_cmd == "list-sessions" )

@@ -42,27 +42,6 @@ bool minigame_hud_mouse_in(vector pos, vector sz)
 	       mousepos_y >= pos_y && mousepos_y < pos_y + sz_y ;
 }
 
-void initialize_minigames()
-{
-	entity last_minig = world;
-	entity minig;
-	#define MINIGAME(name,nicename) \
-		minig = spawn(); \
-		minig.classname = "minigame_descriptor"; \
-		minig.netname = strzone(strtolower(#name)); \
-		minig.message = nicename; \
-		minig.minigame_hud_board = name##_hud_board; \
-		minig.minigame_hud_status = name##_hud_status; \
-		minig.minigame_event = name##_client_event; \
-		if ( !last_minig ) minigame_descriptors = minig; \
-		else last_minig.list_next = minig; \
-		last_minig = minig;
-
-	REGISTERED_MINIGAMES
-
-	#undef MINIGAME
-}
-
 string minigame_texture_skin(string skinname, string name)
 {
 	return sprintf("gfx/hud/%s/minigames/%s", skinname, name);
