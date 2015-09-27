@@ -150,9 +150,11 @@ float TUR_COUNT;
 
 #define _REGISTER_TURRET(id, func, turretflags, min_s, max_s, modelname, headmodelname, shortname, mname) \
 	float func(float); \
-	REGISTER(RegisterTurrets, TUR, turret_info, TUR_COUNT, id, m_id, spawn()) { \
+	REGISTER(RegisterTurrets, TUR, turret_info, TUR_COUNT, id, m_id, NEW(Turret)) { \
 		register_turret(this, func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname); \
 	}
+void RegisterTurrets();
+REGISTER_REGISTRY(RegisterTurrets)
 
 #ifdef MENUQC
 #define REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
