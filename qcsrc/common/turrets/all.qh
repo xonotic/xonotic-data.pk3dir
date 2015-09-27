@@ -133,18 +133,6 @@ const int TNSF_ANIM         = 128;
 const int TNSF_FULL_UPDATE  = 16777215;
 
 
-// entity properties of turretinfo:
-.int turretid; // TUR_...
-.string netname; // short name
-.string turret_name; // human readable name
-.float(float) turret_func; // m_...
-.string mdl; // currently a copy of the model
-.string model; // full name of model
-.string head_model; // full name of tur_head model
-.string cvar_basename; // TODO: deprecate!
-.float spawnflags;
-.vector mins, maxs; // turret hitbox size
-
 // other useful macros
 #define TUR_ACTION(turrettype,mrequest) (get_turretinfo(turrettype)).turret_func(mrequest)
 #define TUR_NAME(turrettype) (get_turretinfo(turrettype)).turret_name
@@ -174,7 +162,38 @@ float TUR_COUNT;
 	_REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
 #endif
 
-void register_turret(entity e, float(float) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname)
+float t_null(float dummy) { return 0; }
+
+CLASS(Turret, Object)
+    ATTRIB(Turret, m_id, int, 0)
+
+    ATTRIB(Turret, turretid, int, 0)
+    /** short name */
+    ATTRIB(Turret, netname, string, string_null)
+    /** human readable name */
+    ATTRIB(Turret, turret_name, string, string_null)
+    /** t_... */
+    ATTRIB(Turret, turret_func, float(float), t_null)
+    /** currently a copy of the model */
+    ATTRIB(Turret, mdl, string, string_null)
+    /** full name of model */
+    ATTRIB(Turret, model, string, string_null)
+    /** full name of tur_head model */
+    ATTRIB(Turret, head_model, string, string_null)
+    /** TODO: deprecate! */
+    ATTRIB(Turret, cvar_basename, string, string_null)
+
+    ATTRIB(Turret, spawnflags, int, 0)
+    /** turret hitbox size */
+    ATTRIB(Turret, mins, vector, '0 0 0')
+    /** turret hitbox size */
+    ATTRIB(Turret, maxs, vector, '0 0 0')
+
+    METHOD(Turret, display, void(entity this, void(string name, string icon) returns)) {
+        returns(this.turret_name, string_null);
+    }
+
+void register_turret(Turret e, float(float) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname)
 {
 	e.classname = "turret_info";
 	e.turretid = e.m_id;
@@ -189,7 +208,7 @@ void register_turret(entity e, float(float) func, float turretflags, vector min_
 	e.model = strzone(strcat("models/turrets/", modelname));
 	e.head_model = strzone(strcat("models/turrets/", headmodelname));
 }
-float t_null(float dummy) { return 0; }
+ENDCLASS(Turret)
 
 
 REGISTER_TURRET(Null,
