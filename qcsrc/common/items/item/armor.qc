@@ -3,8 +3,14 @@
     #include "../../../server/t_items.qh"
 #endif
 
+#ifndef MENUQC
+MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
+#endif
+
 REGISTER_ITEM(ArmorSmall, Armor) {
-    this.m_model                =   "item_armor_small.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_ArmorSmall_ITEM;
+#endif
     this.m_sound                =   "misc/armor1.wav";
     this.m_name                 =   "5 Armor";
     this.m_icon                 =   "armor";
@@ -16,8 +22,14 @@ REGISTER_ITEM(ArmorSmall, Armor) {
 #endif
 }
 
+#ifndef MENUQC
+MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
+#endif
+
 REGISTER_ITEM(ArmorMedium, Armor) {
-    this.m_model                =   "item_armor_medium.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_ArmorMedium_ITEM;
+#endif
     this.m_sound                =   "misc/armor10.wav";
     this.m_name                 =   "25 Armor";
     this.m_icon                 =   "armor";
@@ -29,8 +41,14 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 #endif
 }
 
+#ifndef MENUQC
+MODEL(ArmorLarge_ITEM, Item_Model("item_armor_big.md3"));
+#endif
+
 REGISTER_ITEM(ArmorLarge, Armor) {
-    this.m_model                =   "item_armor_big.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_ArmorLarge_ITEM;
+#endif
     this.m_sound                =   "misc/armor17_5.wav";
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
@@ -44,8 +62,14 @@ REGISTER_ITEM(ArmorLarge, Armor) {
 #endif
 }
 
+#ifndef MENUQC
+MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
+#endif
+
 REGISTER_ITEM(ArmorMega, Armor) {
-    this.m_model                =   "item_armor_large.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_ArmorMega_ITEM;
+#endif
     this.m_sound                =   "misc/armor25.wav";
     this.m_name                 =   "100 Armor";
     this.m_icon                 =   "item_large_armor";
