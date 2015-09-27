@@ -308,6 +308,10 @@ int snake_server_event(entity minigame, string event, ...)
 			{
 				WriteLong(MSG_ENTITY,sent.snake_score);
 			}
+			else if ( sent.classname == "minigame" && (sf & MINIG_SF_UPDATE ) )
+			{
+				WriteByte(MSG_ENTITY,autocvar_sv_minigames_snake_wrap);
+			}
 			return false;
 		}
 	}
@@ -320,6 +324,8 @@ int snake_server_event(entity minigame, string event, ...)
 
 vector snake_boardpos; // HUD board position
 vector snake_boardsize;// HUD board size
+
+bool snake_wrap;
 
 // Required function, draw the game board
 void snake_hud_board(vector pos, vector mySize)
@@ -518,7 +524,10 @@ string snake_turn_to_string(int turnflags)
 		return _("Press an arrow key to begin the game");
 
 	if ( turnflags & SNAKE_TURN_MOVE )
-		return _("Avoid the walls and the snake's body, collect the mice!");
+		if(snake_wrap)
+			return _("Avoid the snake's body, collect the mice!");
+		else
+			return _("Avoid the screen edges and the snake's body, collect the mice!");
 	
 	return "";
 }
@@ -577,6 +586,7 @@ int snake_client_event(entity minigame, string event, ...)
 			{
 				if ( sf & MINIG_SF_UPDATE )
 				{
+					snake_wrap = ReadByte();
 					sent.message = snake_turn_to_string(sent.minigame_flags);
 					//if ( sent.minigame_flags & minigame_self.team )
 						minigame_prompt();
