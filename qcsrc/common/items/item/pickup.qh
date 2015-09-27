@@ -2,7 +2,9 @@
 #define PICKUP_H
 #include "../item.qh"
 CLASS(Pickup, GameItem)
-    ATTRIB(Pickup, m_model, string, string_null)
+#ifndef MENUQC
+    ATTRIB(Pickup, m_model, Model, NULL)
+#endif
     ATTRIB(Pickup, m_sound, string, "misc/itempickup.wav")
     ATTRIB(Pickup, m_name, string, string_null)
     METHOD(Pickup, show, void(entity this));

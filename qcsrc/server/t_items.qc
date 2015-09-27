@@ -1197,17 +1197,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 }
 
-string Item_Model(string item_mdl)
-{
-	string output = strcat("models/items/", item_mdl);
-	MUTATOR_CALLHOOK(ItemModel, item_mdl, output);
-	return strzone(item_model_output);
-}
-
 void StartItemA (entity a)
 {SELFPARAM();
     self.itemdef = a;
-    StartItem(Item_Model(a.m_model), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
+    StartItem(strzone(a.m_model.model_str()), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
 }
 
 void spawnfunc_item_rockets()
