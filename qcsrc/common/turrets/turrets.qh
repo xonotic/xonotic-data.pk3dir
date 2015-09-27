@@ -154,35 +154,66 @@ const int TNSF_FULL_UPDATE  = 16777215;
 // =====================
 
 float t_null(float dummy);
-void register_turret(float id, float(float) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname);
-void register_turrets_done();
+void register_turret(entity e, float(float) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname);
 
-const float TUR_MAXCOUNT = 24;
-const int TUR_FIRST = 1;
+const int TUR_MAXCOUNT = 24;
+entity turret_info[TUR_MAXCOUNT], turret_info_first, turret_info_last;
 float TUR_COUNT;
-float TUR_LAST;
 
-#define REGISTER_TURRET_2(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
-	float id; \
+#define _REGISTER_TURRET(id, func, turretflags, min_s, max_s, modelname, headmodelname, shortname, mname) \
 	float func(float); \
-	void RegisterTurrets_##id() \
-	{ \
-		TUR_LAST = (id = TUR_FIRST + TUR_COUNT); \
-		++TUR_COUNT; \
-		register_turret(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname); \
-	} \
-	ACCUMULATE_FUNCTION(RegisterTurrets, RegisterTurrets_##id)
+	REGISTER(RegisterTurrets, TUR, turret_info, TUR_COUNT, id, m_id, spawn()) { \
+		register_turret(this, func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname); \
+	}
+
 #ifdef MENUQC
 #define REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
-	REGISTER_TURRET_2(TUR_##id,t_null,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
+	_REGISTER_TURRET(id,t_null,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
 #else
 #define REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
-	REGISTER_TURRET_2(TUR_##id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
+	_REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
 #endif
 
-#include "all.qh"
+void register_turret(entity e, float(float) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname)
+{
+	e.classname = "turret_info";
+	e.turretid = e.m_id;
+	e.netname = shortname;
+	e.turret_name = mname;
+	e.turret_func = func;
+	e.mdl = modelname;
+	e.cvar_basename = shortname;
+	e.spawnflags = turretflags;
+	e.mins = min_s;
+	e.maxs = max_s;
+	e.model = strzone(strcat("models/turrets/", modelname));
+	e.head_model = strzone(strcat("models/turrets/", headmodelname));
+}
+float t_null(float dummy) { return 0; }
 
-#undef REGISTER_TURRET
-ACCUMULATE_FUNCTION(RegisterTurrets, register_turrets_done)
+
+REGISTER_TURRET(Null,
+	t_null,
+	0,
+	'-0 -0 -0',
+	'0 0 0',
+	"",
+	"",
+	"",
+	"Turret"
+);
+
+entity get_turretinfo(float id)
+{
+	entity m;
+	if(id < 1 || id > TUR_COUNT - 1)
+		return TUR_Null;
+	m = turret_info[id];
+	if(m)
+		return m;
+	return TUR_Null;
+}
+
+#include "all.inc"
 
 #endif

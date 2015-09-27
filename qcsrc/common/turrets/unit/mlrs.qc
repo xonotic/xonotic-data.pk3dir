@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ MLRS,
 /* function   */ t_mlrs,
@@ -11,7 +11,7 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
-void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS)) remove(self); }
+void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS.m_id)) remove(self); }
 
 float t_mlrs(float req)
 {SELFPARAM();

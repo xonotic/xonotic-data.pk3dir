@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ FLAC,
 /* function   */ t_flac,
@@ -28,7 +28,7 @@ void turret_flac_projectile_think_explode()
     remove(self);
 }
 
-void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC)) remove(self); }
+void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC.m_id)) remove(self); }
 
 float t_flac(float req)
 {SELFPARAM();

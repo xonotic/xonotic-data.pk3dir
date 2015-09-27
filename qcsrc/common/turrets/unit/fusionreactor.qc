@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ FUSIONREACTOR,
 /* function   */ t_fusionreactor,
@@ -40,7 +40,7 @@ bool turret_fusionreactor_firecheck()
     return true;
 }
 
-void spawnfunc_turret_fusionreactor() { SELFPARAM(); if(!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
+void spawnfunc_turret_fusionreactor() { SELFPARAM(); if(!turret_initialize(TUR_FUSIONREACTOR.m_id)) remove(self); }
 
 float t_fusionreactor(float req)
 {SELFPARAM();
