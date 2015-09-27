@@ -13,16 +13,20 @@
  *     #define REGISTER_FOO(id) \
  *         REGISTER(RegisterFoos, FOO, FOOS, FOOS_COUNT, id, m_id, NEW(Foo)); \
  *         REGISTER_INIT_POST(FOO, id) { \
- *             print("Registering foo #", this.m_id - 1, "\n"); \
+ *             print("Registering foo #", this.m_id + 1, "\n"); \
  *         } \
  *         REGISTER_INIT(FOO, id)
+ *
+ * Don't forget to forward declare `initfunc` and call `REGISTER_REGISTRY`:
+ *     void RegisterFoos();
+ *     REGISTER_REGISTRY(RegisterFoos)
  *
  * @param initfunc  The global constructor to accumulate into
  * @param ns        Short for namespace, prefix for each global (ns##_##id)
  * @param array     The array to add each entity to. Also requires `array##_first` and `array##_last` to be defined
  * @param counter   Global to count number of entries
  * @param id        The identifier of the current entity being registered
- * @param fld       This field to store the current count into
+ * @param fld       The field to store the current count into
  * @param inst      An expression to create a new instance, invoked for every registration
  */
 #define REGISTER(initfunc, ns, array, counter, id, fld, inst)   \
