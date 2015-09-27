@@ -644,7 +644,7 @@ float t_walker(float req)
 #endif // SVQC
 #ifdef CSQC
 
-#include "../../../server/movelib.qh"
+#include "../../../client/movelib.qh"
 
 void walker_draw()
 {SELFPARAM();
