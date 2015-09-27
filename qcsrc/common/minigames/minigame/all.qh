@@ -67,6 +67,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 #include "pong.qc"
 #include "ps.qc"
 #include "pp.qc"
+#include "snake.qc"
 
 /**
  * Registration:
@@ -81,6 +82,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 	MINIGAME(c4,  "Connect Four") \
 	MINIGAME(ps,  "Peg Solitaire") \
 	MINIGAME(pp,  "Push-Pull") \
+	MINIGAME(snake,"Snake") \
 	/*empty line*/
 
 /**
