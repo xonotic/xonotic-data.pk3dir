@@ -71,12 +71,14 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Waypoints")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_hidewaypoints", _("Display waypoint markers for objectives on the map")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(1, "cl_hidewaypoints", _("Display waypoint markers for objectives on the map"),
+			_("Show various gametype specific waypoints")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.05, "g_waypointsprite_alpha"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.05, "g_waypointsprite_alpha",
+			_("Control transparency of the waypoints")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);

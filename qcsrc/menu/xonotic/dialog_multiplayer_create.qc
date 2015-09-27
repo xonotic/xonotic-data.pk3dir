@@ -21,17 +21,17 @@ entity makeXonoticServerCreateTab();
 
 #ifdef IMPLEMENTATION
 
-void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, float pMax, float pStep, string pCvar)
+void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, float pMax, float pStep, string pCvar, string theTooltip)
 {
 	if(pCvar == "")
 	{
-		e.configureXonoticTextSlider(e, string_null);
+		e.configureXonoticTextSlider(e, string_null, string_null);
 		l.setText(l, pLabel);
 		e.disabled = l.disabled = true;
 	}
 	else
 	{
-		e.configureXonoticTextSlider(e, pCvar);
+		e.configureXonoticTextSlider(e, pCvar, theTooltip);
 
 		// clear old values
 		int i;
@@ -75,7 +75,8 @@ void XonoticServerCreateTab_fill(entity me)
 
 	me.gotoRC(me, 12.5, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time limit:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("timelimit_override"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("timelimit_override",
+			_("Timelimit in minutes that when hit, will end the match")));
 			e.addValue(e, ZCTX(_("TIMLIM^Default")), "-1");
 			e.addValue(e, ZCTX(_("TIMLIM^1 minute")), "1");
 			e.addValue(e, ZCTX(_("TIMLIM^2 minutes")), "2");
@@ -98,8 +99,7 @@ void XonoticServerCreateTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, me.labelFraglimit = makeXonoticTextLabel(0, _("Frag limit:")));
-		me.TD(me, 1, 2, me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
-			GameType_ConfigureSliders(me.sliderFraglimit, me.labelFraglimit, _("Frag limit:"), 5, 100, 5, "fraglimit_override");
+		me.TD(me, 1, 2, e = me.sliderFraglimit = makeXonoticTextSlider("fraglimit_override"));
 
 	me.gotoRC(me, 15, 0);
 		me.TD(me, 1, 1, me.labelTeams = makeXonoticTextLabel(0, _("Teams:")));
@@ -111,14 +111,17 @@ void XonoticServerCreateTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player slots:")));
-		me.TD(me, 1, 2, makeXonoticSlider(1, 32, 1, "menu_maxplayers"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 32, 1, "menu_maxplayers",
+			_("The maximum amount of players or bots that can be connected to your server at once")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Number of bots:")));
-		me.TD(me, 1, 2, makeXonoticSlider(0, 9, 1, "bot_number"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 9, 1, "bot_number",
+			_("Amount of bots on your server")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
 			setDependent(e, "bot_number", 0, -1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("skill"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("skill",
+			_("Specify how experienced the bots will be")));
 			e.addValue(e, _("Botlike"), "0");
 			e.addValue(e, _("Beginner"), "1");
 			e.addValue(e, _("You will win"), "2");
@@ -145,7 +148,8 @@ void XonoticServerCreateTab_fill(entity me)
 	// this decision was made in this poll: http://forums.xonotic.org/showthread.php?tid=5445
 	me.gotoRC(me, me.rows - 2.5, 0);
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Mutators..."), '0 0 0'));
+		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Mutators..."), '0 0 0',
+			_("Mutators and weapon arenas")));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.mutatorsDialog;
 			main.mutatorsDialog.refilterEntity = me.mapListBox;
@@ -163,8 +167,8 @@ void XonoticServerCreateTab_fill(entity me)
 	me.gotoRC(me, me.rows - 4.5, me.firstColumn);
 		// string filter label and box
 		me.TD(me, 1, 0.35, e = makeXonoticTextLabel(1, _("Filter:")));
-		me.mapListBox.stringFilterBox = makeXonoticMapListStringFilterBox(me, 0, string_null);
-		me.mapListBox.stringFilterBox.tooltip = getZonedTooltipForIdentifier("XonoticMultiplayerDialog_StringFilterBox");
+		me.mapListBox.stringFilterBox = makeXonoticInputBox_T(0, string_null,
+			_("Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done."));
 		me.TD(me, 1, me.columns - me.firstColumn - 0.35, e = me.mapListBox.stringFilterBox);
 			e.onChange = MapList_StringFilterBox_Change;
 			e.keyDown = MapList_StringFilterBox_keyDown;
@@ -174,18 +178,22 @@ void XonoticServerCreateTab_fill(entity me)
 	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
 		// the selection buttons
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Add shown"), '0 0 0'));
+		me.TD(me, 1, 1.3, e = makeXonoticButton_T(_("Add shown"), '0 0 0',
+			_("Add the maps shown in Maplist above to your selection")));
 			e.onClick = MapList_Add_Shown;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Remove shown"), '0 0 0'));
+		me.TD(me, 1, 1.3, e = makeXonoticButton_T(_("Remove shown"), '0 0 0',
+			_("Remove the maps shown in Maplist above from your selection")));
 			e.onClick = MapList_Remove_Shown;
 			e.onClickEntity = me.mapListBox;
 	me.gotoRC(me, me.rows - 2.5, me.firstColumn);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Add all"), '0 0 0'));
+		me.TD(me, 1, 1.3, e = makeXonoticButton_T(_("Add all"), '0 0 0',
+			_("Add every available map to your selection")));
 			e.onClick = MapList_Add_All;
 			e.onClickEntity = me.mapListBox;
-		me.TD(me, 1, 1.3, e = makeXonoticButton(_("Remove all"), '0 0 0'));
+		me.TD(me, 1, 1.3, e = makeXonoticButton_T(_("Remove all"), '0 0 0',
+			_("Remove all the maps from your selection")));
 			e.onClick = MapList_Remove_All;
 			e.onClickEntity = me.mapListBox;
 
@@ -211,34 +219,34 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 
 	switch(gt)
 	{
-		case MAPINFO_TYPE_CTF:        GameType_ConfigureSliders(e, l, _("Capture limit:"),   1,   20, 1, "capturelimit_override");     break;
-		case MAPINFO_TYPE_DOMINATION: GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "g_domination_point_limit"); break;
-		case MAPINFO_TYPE_KEYHUNT:    GameType_ConfigureSliders(e, l, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit");    break;
-		case MAPINFO_TYPE_LMS:        GameType_ConfigureSliders(e, l, _("Lives:"),           3,   50,  1, "g_lms_lives_override");     break;
-		case MAPINFO_TYPE_RACE:       GameType_ConfigureSliders(e, l, _("Laps:"),            1,   25,  1, "g_race_laps_limit");        break;
-		case MAPINFO_TYPE_NEXBALL:    GameType_ConfigureSliders(e, l, _("Goals:"),           1,   50,  1, "g_nexball_goallimit");      break;
-		case MAPINFO_TYPE_ASSAULT:    GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
-		case MAPINFO_TYPE_ONSLAUGHT:  GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
-		case MAPINFO_TYPE_CTS:        GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "");                         break;
-		case MAPINFO_TYPE_INVASION:   GameType_ConfigureSliders(e, l, _("Point limit:"),     5,    0,  5, "");                         break;
-	case MAPINFO_TYPE_TEAM_DEATHMATCH:GameType_ConfigureSliders(e, l, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit");        break;
-		default:                      GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "fraglimit_override");       break;
+		case MAPINFO_TYPE_CTF:            GameType_ConfigureSliders(e, l, _("Capture limit:"),   1,   20, 1,  "capturelimit_override", string_null); break;
+		case MAPINFO_TYPE_DOMINATION:     GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "g_domination_point_limit", string_null); break;
+		case MAPINFO_TYPE_KEYHUNT:        GameType_ConfigureSliders(e, l, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit", string_null); break;
+		case MAPINFO_TYPE_LMS:            GameType_ConfigureSliders(e, l, _("Lives:"),           3,   50,  1, "g_lms_lives_override", string_null); break;
+		case MAPINFO_TYPE_RACE:           GameType_ConfigureSliders(e, l, _("Laps:"),            1,   25,  1, "g_race_laps_limit", string_null); break;
+		case MAPINFO_TYPE_NEXBALL:        GameType_ConfigureSliders(e, l, _("Goals:"),           1,   50,  1, "g_nexball_goallimit", string_null); break;
+		case MAPINFO_TYPE_ASSAULT:        GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
+		case MAPINFO_TYPE_ONSLAUGHT:      GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
+		case MAPINFO_TYPE_CTS:            GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
+		case MAPINFO_TYPE_INVASION:       GameType_ConfigureSliders(e, l, _("Point limit:"),     5,    0,  5, "", string_null); break;
+		case MAPINFO_TYPE_TEAM_DEATHMATCH:GameType_ConfigureSliders(e, l, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit", string_null); break;
+		default:                          GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "fraglimit_override", _("The amount of frags needed before the match will end")); break;
 	}
 
 	string x = string_null;
+	string theTooltip = string_null;
 	e = me.sliderTeams;
 	switch(gt)
 	{
+		// old tooltip: _("Override the default amount of teams in teamgames")
 		case MAPINFO_TYPE_CA:               x = "g_ca_teams_override";          break;
 		case MAPINFO_TYPE_DOMINATION:       x = "g_domination_teams_override";  break;
 		case MAPINFO_TYPE_FREEZETAG:        x = "g_freezetag_teams_override";   break;
 		case MAPINFO_TYPE_KEYHUNT:          x = "g_keyhunt_teams_override";     break;
 		case MAPINFO_TYPE_TEAM_DEATHMATCH:  x = "g_tdm_teams_override";         break;
 	}
-	e.configureXonoticTextSlider(e, x);
+	e.configureXonoticTextSlider(e, x, theTooltip);
 	e.configureXonoticTextSliderValues(e);
-	if(!x)
-		e.value = 0;
 	me.sliderTeams.disabled = me.labelTeams.disabled = !x;
 
 	me.mapListBox.refilter(me.mapListBox);

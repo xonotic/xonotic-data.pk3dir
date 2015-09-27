@@ -91,7 +91,7 @@ void M_Mage_Attack_Spike_Explode()
 {SELFPARAM();
 	self.event_damage = func_null;
 
-	sound(self, CH_SHOTS, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	self.realowner.mage_spike = world;
 
@@ -258,7 +258,7 @@ void M_Mage_Defend_Heal()
 
 void M_Mage_Attack_Push()
 {SELFPARAM();
-	sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
+	sound(self, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, self.origin, '0 0 0', 1);
 
@@ -422,8 +422,6 @@ bool M_Mage(int req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_sound (W_Sound("grenade_impact"));
-			precache_sound (W_Sound("tagexp1"));
 			return true;
 		}
 		#endif

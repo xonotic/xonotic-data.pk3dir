@@ -48,7 +48,6 @@ float t_machinegun(float req)
         }
         case TR_PRECACHE:
         {
-            precache_sound (W_Sound("uzi_fire"));
             return true;
         }
     }

@@ -2,7 +2,7 @@
 #define SLIDER_H
 #include "../item/slider.qc"
 CLASS(XonoticSlider, Slider)
-	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string));
+	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string, string));
 	METHOD(XonoticSlider, setValue, void(entity, float));
 	ATTRIB(XonoticSlider, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT)
@@ -23,18 +23,23 @@ CLASS(XonoticSlider, Slider)
 	ATTRIB(XonoticSlider, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticSlider, disabledAlpha, float, SKINALPHA_DISABLED)
 ENDCLASS(XonoticSlider)
+entity makeXonoticSlider_T(float, float, float, string, string theTooltip);
 entity makeXonoticSlider(float, float, float, string);
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeXonoticSlider(float theValueMin, float theValueMax, float theValueStep, string theCvar)
+entity makeXonoticSlider_T(float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticSlider);
-	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar);
+	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar, theTooltip);
 	return me;
 }
-void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float theValueMax, float theValueStep, string theCvar)
+entity makeXonoticSlider(float theValueMin, float theValueMax, float theValueStep, string theCvar)
+{
+	return makeXonoticSlider_T(theValueMin, theValueMax, theValueStep, theCvar, string_null);
+}
+void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
 {
 	float vp;
 	vp = theValueStep * 10;
@@ -43,17 +48,15 @@ void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float th
 
 	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
 
+	me.cvarName = (theCvar) ? theCvar : string_null;
 	if(theCvar)
-	{
 		// Prevent flickering of the slider button by initialising the
 		// slider out of bounds to hide the button before loading the cvar
 		me.configureSliderValues(me, theValueMin, theValueMin-theValueStep, theValueMax, theValueStep, theValueStep, vp);
-		me.cvarName = theCvar;
-		me.loadCvars(me);
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-	}
 	else
 		me.configureSliderValues(me, theValueMin, theValueMin, theValueMax, theValueStep, theValueStep, vp);
+	me.loadCvars(me);
+	setZonedTooltip(me, theTooltip, theCvar);
 }
 void XonoticSlider_setValue(entity me, float val)
 {

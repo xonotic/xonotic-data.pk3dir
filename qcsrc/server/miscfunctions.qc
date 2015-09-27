@@ -417,6 +417,8 @@ void GetCvars(float f)
 
 	Notification_GetCvars();
 
+	ReplicateVars(this, s, f);
+
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleFloat(s, f, cvar_cl_jetpack_jump, "cl_jetpack_jump");
@@ -762,14 +764,6 @@ float sound_allowed(float destin, entity e)
     return true;
 }
 
-#undef sound
-void sound(entity e, float chan, string samp, float vol, float attenu)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-    sound7(e, chan, samp, vol, attenu, 0, 0);
-}
-
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float attenu)
 {
     float entno, idx;
@@ -845,7 +839,7 @@ void stopsoundto(float _dest, entity e, float chan)
     if (entno >= 8192 || chan < 0 || chan > 7)
     {
         float idx, sflags;
-        idx = precache_sound_index("misc/null.wav");
+        idx = precache_sound_index(SND(Null));
         sflags = SND_LARGEENTITY;
         if (idx >= 256)
             sflags |= SND_LARGESOUND;
@@ -893,7 +887,7 @@ float spamsound(entity e, float chan, string samp, float vol, float _atten)
     if (time > e.spamtime)
     {
         e.spamtime = time;
-        sound(e, chan, samp, vol, _atten);
+        _sound(e, chan, samp, vol, _atten);
         return true;
     }
     return false;
@@ -918,7 +912,7 @@ void play2all(string samp)
     if (autocvar_bot_sound_monopoly)
         return;
 
-    sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
+    _sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
 }
 
 void PrecachePlayerSounds(string f);
@@ -1011,36 +1005,8 @@ void precache()
     }
 
     // gore and miscellaneous sounds
-    //precache_sound ("misc/h2ohit.wav");
-    precache_sound ("misc/armorimpact.wav");
-    precache_sound ("misc/bodyimpact1.wav");
-    precache_sound ("misc/bodyimpact2.wav");
-    precache_sound ("misc/gib.wav");
-    precache_sound ("misc/gib_splat01.wav");
-    precache_sound ("misc/gib_splat02.wav");
-    precache_sound ("misc/gib_splat03.wav");
-    precache_sound ("misc/gib_splat04.wav");
     PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
     PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
-    precache_sound ("misc/null.wav");
-    precache_sound ("misc/spawn.wav");
-    precache_sound ("misc/talk.wav");
-    precache_sound ("misc/teleport.wav");
-    precache_sound ("misc/poweroff.wav");
-    precache_sound ("player/lava.wav");
-    precache_sound ("player/slime.wav");
-
-    // common weapon precaches
-	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound (W_Sound("weapon_switch"));
-    precache_sound (W_Sound("weaponpickup"));
-    precache_sound (W_Sound("unavailable"));
-    precache_sound (W_Sound("dryfire"));
-    if (g_grappling_hook)
-    {
-        precache_sound (W_Sound("hook_fire")); // hook
-        precache_sound (W_Sound("hook_impact")); // hook
-    }
 
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
@@ -1055,8 +1021,6 @@ void precache()
         ambientsound ('0 0 0', self.noise, VOL_BASE, ATTEN_NONE);
     }
 #endif
-
-#include "precache-for-csqc.inc"
 }
 
 

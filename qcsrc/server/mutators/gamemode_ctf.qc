@@ -239,7 +239,7 @@ void ctf_Handle_Drop(entity flag, entity player, int droptype)
 
 	// messages and sounds
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, ((flag.team) ? APP_TEAM_ENT_4(flag, INFO_CTF_LOST_) : INFO_CTF_LOST_NEUTRAL), player.netname);
-	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTEN_NONE);
+	_sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
@@ -296,7 +296,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
-	sound(player, CH_TRIGGER, flag.snd_flag_pass, VOL_BASE, ATTEN_NORM);
+	_sound(player, CH_TRIGGER, flag.snd_flag_pass, VOL_BASE, ATTEN_NORM);
 	ctf_EventLog("receive", flag.team, player);
 
 	FOR_EACH_REALPLAYER(tmp_player)
@@ -363,7 +363,7 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 			flag.ctf_status = FLAG_PASSING;
 
 			// other
-			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTEN_NORM);
+			_sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			WarpZone_TrailParticles(world, _particleeffectnum(flag.passeffect), player.origin, targ_origin);
 			ctf_EventLog("pass", flag.team, player);
 			break;
@@ -436,7 +436,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((enemy_flag.team) ? APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_) : CENTER_CTF_CAPTURE_NEUTRAL));
 	ctf_CaptureRecord(enemy_flag, player);
-	sound(player, CH_TRIGGER, ((ctf_oneflag) ? player_team_flag.snd_flag_capture : ((DIFF_TEAM(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture)), VOL_BASE, ATTEN_NONE);
+	_sound(player, CH_TRIGGER, ((ctf_oneflag) ? player_team_flag.snd_flag_capture : ((DIFF_TEAM(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture)), VOL_BASE, ATTEN_NONE);
 
 	switch(capturetype)
 	{
@@ -485,7 +485,7 @@ void ctf_Handle_Return(entity flag, entity player)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_RETURN_));
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_), player.netname);
 	}
-	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTEN_NONE);
+	_sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
 	// scoring
@@ -573,7 +573,7 @@ void ctf_Handle_Pickup(entity flag, entity player, int pickuptype)
 	else
 		Send_Notification(NOTIF_ONE, tmp_entity, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
 
-	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
+	_sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
 
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
@@ -641,7 +641,7 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 				case RETURN_TIMEOUT:
 					{ Send_Notification(NOTIF_ALL, world, MSG_INFO, ((flag.team) ? APP_TEAM_ENT_4(flag, INFO_CTF_FLAGRETURN_TIMEOUT_) : INFO_CTF_FLAGRETURN_TIMEOUT_NEUTRAL)); break; }
 			}
-			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTEN_NONE);
+			_sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTEN_NONE);
 			ctf_EventLog("returned", flag.team, world);
 			ctf_RespawnFlag(flag);
 		}
@@ -941,7 +941,7 @@ void ctf_FlagTouch()
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
 			Send_Effect_(self.toucheffect, self.origin, '0 0 0', 1);
-			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
+			_sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
 		return;
@@ -1091,7 +1091,6 @@ void set_flag_string(entity flag, .string field, string value, string teamname)
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {SELFPARAM();
 	// declarations
-	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	setself(flag); // for later usage with droptofloor()
 
 	// main setup
@@ -1124,6 +1123,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
 
+	string teamname = Static_Team_ColorName_Lower(teamnumber);
 	// appearence
 	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
 	if(flag.skin == 0)			{ flag.skin = cvar(sprintf("g_ctf_flag_%s_skin", teamname)); }
@@ -1133,22 +1133,18 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	set_flag_string(flag, capeffect, 	"%s_cap", 		teamname);
 
 	// sounds
-	set_flag_string(flag, snd_flag_taken, 		"ctf/%s_taken.wav", 	teamname);
-	set_flag_string(flag, snd_flag_returned, 	"ctf/%s_returned.wav", 	teamname);
-	set_flag_string(flag, snd_flag_capture, 	"ctf/%s_capture.wav", 	teamname);
-	set_flag_string(flag, snd_flag_dropped, 	"ctf/%s_dropped.wav", 	teamname);
-	if(flag.snd_flag_respawn == "")  	{ flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
-	if(flag.snd_flag_touch == "")    	{ flag.snd_flag_touch = "ctf/touch.wav"; } // again has no team-based sound
-	if(flag.snd_flag_pass == "")     	{ flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
+	flag.snd_flag_taken = SND(CTF_TAKEN(teamnumber));
+	flag.snd_flag_returned = SND(CTF_RETURNED(teamnumber));
+	flag.snd_flag_capture = SND(CTF_CAPTURE(teamnumber));
+	flag.snd_flag_dropped = SND(CTF_DROPPED(teamnumber));
+	if (flag.snd_flag_respawn == "") flag.snd_flag_respawn = SND(CTF_RESPAWN); // if there is ever a team-based sound for this, update the code to match.
+	precache_sound(flag.snd_flag_respawn);
+	if (flag.snd_flag_touch == "") flag.snd_flag_touch = SND(CTF_TOUCH); // again has no team-based sound
+	precache_sound(flag.snd_flag_touch);
+	if (flag.snd_flag_pass == "") flag.snd_flag_pass = SND(CTF_PASS); // same story here
+	precache_sound(flag.snd_flag_pass);
 
 	// precache
-	precache_sound(flag.snd_flag_taken);
-	precache_sound(flag.snd_flag_returned);
-	precache_sound(flag.snd_flag_capture);
-	precache_sound(flag.snd_flag_respawn);
-	precache_sound(flag.snd_flag_dropped);
-	precache_sound(flag.snd_flag_touch);
-	precache_sound(flag.snd_flag_pass);
 	precache_model(flag.model);
 
 	// appearence

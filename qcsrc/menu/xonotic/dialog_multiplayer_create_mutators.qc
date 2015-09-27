@@ -167,26 +167,31 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Gameplay mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_dodging", _("Dodging")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_dodging", _("Dodging"),
+			_("Enable dodging")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_touchexplode", _("Touch explode")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_cloaked", _("Cloaked")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_cloaked", _("Cloaked"),
+			_("All players are almost invisible")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_buffs", _("Buffs")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_midair", _("Midair")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_midair", _("Midair"),
+			_("Only possible to inflict damage on your enemy while he's airborne")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_vampire", _("Vampire")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_vampire", _("Vampire"),
+			_("Damage done to your enemy gets added to your own health")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticSlider(10, 50, 1, "g_bloodloss");
+		s = makeXonoticSlider_T(10, 50, 1, "g_bloodloss",
+			_("Amount of health below which your player gets stunned because of blood loss"));
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
@@ -194,7 +199,8 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 1.6, s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticSlider(80, 400, 8, "sv_gravity");
+		s = makeXonoticSlider_T(80, 400, 8, "sv_gravity",
+			_("Make things fall to the ground slower, lower value means lower gravity"));
 			s.valueDigits = 0;
 			s.valueDisplayMultiplier = 0.125; // show gravity in percent
 		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(800, 1, s, _("Low gravity")));
@@ -206,10 +212,12 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon & item mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_grappling_hook", _("Grappling hook")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_grappling_hook", _("Grappling hook"),
+			_("Players spawn with the grappling hook")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_jetpack", _("Jet pack")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_jetpack", _("Jet pack"),
+			_("Players spawn with the jetpack")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
@@ -224,18 +232,21 @@ void XonoticMutatorsDialog_fill(entity me)
 			setDependent(e, "g_instagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_pinata", _("Piñata"),
+			_("Players will drop all weapons they possessed when they are killed")));
 			setDependentWeird(e, checkCompatibility_pinata);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_weapon_stay", _("Weapons stay")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox_T(0, "g_weapon_stay", _("Weapons stay"),
+			_("Weapons stay after they are picked up")));
 			setDependentWeird(e, checkCompatibility_weaponstay);
 	me.TR(me);
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_weaponarena", "menu_weaponarena", _("Weapon arenas:")));
+		me.TD(me, 1, 2, e = makeXonoticRadioButton_T(1, "g_weaponarena", "menu_weaponarena", _("Weapon arenas:"),
+			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
 			e.cvarValueIsAnotherCvar = true;
 			e.cvarOffValue = "0";
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
@@ -252,25 +263,30 @@ void XonoticMutatorsDialog_fill(entity me)
 	}
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", "most", _("Most weapons")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "most", _("Most weapons"),
+			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", "all", _("All weapons")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_weaponarena", "all", _("All weapons"),
+			_("Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups.")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_instagib", "1", _("InstaGib")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_instagib", "1", _("InstaGib"),
+			_("Players will be given only one weapon, which can instantly kill the opponent with a single shot. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode does not inflict any damage but is good for doing trickjumps.")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_nix", "1", _("NIX")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton_T(1, "g_nix", "1", _("NIX"),
+			_("No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_blaster", _("with blaster")));
+		me.TD(me, 1, 1.6, e = makeXonoticCheckBox_T(0, "g_nix_with_blaster", _("with blaster"),
+			_("Always carry the blaster as an additional weapon in Nix")));
 			setDependent(e, "g_nix", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);

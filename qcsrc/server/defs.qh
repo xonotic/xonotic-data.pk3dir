@@ -147,7 +147,9 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float pauserothealth_finished;
 .float pauserotarmor_finished;
 .float pauserotfuel_finished;
+// string overrides entity
 .string item_pickupsound;
+.entity item_pickupsound_ent;
 
 // definitions for weaponsystem
 // more WEAPONTODO: move these to their proper files

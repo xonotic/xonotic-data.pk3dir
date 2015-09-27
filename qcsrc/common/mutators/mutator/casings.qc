@@ -63,6 +63,19 @@ void Casing_Draw()
     }
 }
 
+SOUND(BRASS1, W_Sound("brass1"));
+SOUND(BRASS2, W_Sound("brass2"));
+SOUND(BRASS3, W_Sound("brass3"));
+Sound SND_BRASS_RANDOM() {
+    return SOUNDS[SND_BRASS1.m_id + floor(prandom() * 3)];
+}
+SOUND(CASINGS1, W_Sound("casings1"));
+SOUND(CASINGS2, W_Sound("casings2"));
+SOUND(CASINGS3, W_Sound("casings3"));
+Sound SND_CASINGS_RANDOM() {
+    return SOUNDS[SND_CASINGS1.m_id + floor(prandom() * 3)];
+}
+
 void Casing_Touch()
 {SELFPARAM();
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -78,16 +91,14 @@ void Casing_Touch()
         {
             if (time >= self.nextthink)
             {
-                string s;
-                int f = floor(prandom() * 3) + 1;
-
+                Sound s;
                 switch (self.state)
                 {
                     case 1:
-                        s = W_Sound(strcat("casings", itos(f)));
+                        s = SND_CASINGS_RANDOM();
                         break;
                     default:
-                        s = W_Sound(strcat("brass", itos(f)));
+                        s = SND_BRASS_RANDOM();
                         break;
                 }
 
@@ -163,13 +174,4 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
     RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
 }
 
-STATIC_INIT(Casings)
-{
-    precache_sound(W_Sound("brass1"));
-    precache_sound(W_Sound("brass2"));
-    precache_sound(W_Sound("brass3"));
-    precache_sound(W_Sound("casings1"));
-    precache_sound(W_Sound("casings2"));
-    precache_sound(W_Sound("casings3"));
-}
 #endif

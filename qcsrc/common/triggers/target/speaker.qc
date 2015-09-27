@@ -10,9 +10,9 @@ void target_speaker_use_activator()
 	{
 		var .string sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
-			snd = "misc/null.wav";
+			snd = SND(Null);
 		else if(activator.(sample) == "")
-			snd = "misc/null.wav";
+			snd = SND(Null);
 		else
 		{
 			tokenize_console(activator.(sample));
@@ -36,9 +36,9 @@ void target_speaker_use_on()
 	{
 		var .string sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
-			snd = "misc/null.wav";
+			snd = SND(Null);
 		else if(activator.(sample) == "")
-			snd = "misc/null.wav";
+			snd = SND(Null);
 		else
 		{
 			tokenize_console(activator.(sample));
@@ -52,13 +52,13 @@ void target_speaker_use_on()
 	}
 	else
 		snd = self.noise;
-	sound(self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
+	_sound(self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
 	if(self.spawnflags & 3)
 		self.use = target_speaker_use_off;
 }
 void target_speaker_use_off()
 {SELFPARAM();
-	sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASE * self.volume, self.atten);
+	sound(self, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE * self.volume, self.atten);
 	self.use = target_speaker_use_on;
 }
 void target_speaker_reset()

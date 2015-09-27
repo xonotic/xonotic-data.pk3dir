@@ -436,11 +436,11 @@ void Item_Respawn (void)
 	Item_Show(self, 1);
 	// this is ugly...
 	if(self.items == ITEM_Strength.m_itemid)
-		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else if(self.items == ITEM_Shield.m_itemid)
-		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
-		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
     if (Item_ItemsTime_Allow(self.itemdef, self.weapons))
@@ -472,15 +472,24 @@ void Item_RespawnCountdown (void)
 		if(self.count == 1)
 		{
 			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
-			int wpextra = 0;
-            entity e = self.itemdef;
-            if (e) wpextra = e.m_id;
-			if (self.flags & FL_WEAPON) {
-				entity wi = get_weaponinfo(self.weapon);
-				if (wi) wpextra = wi.m_id;
-			}
-            entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
-            wp.wp_extra = wpextra;
+			do {
+				{
+					entity wi = get_weaponinfo(self.weapon);
+					if (wi.m_id) {
+						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+						wp.wp_extra = wi.m_id;
+						break;
+					}
+				}
+				{
+					entity ii = self.itemdef;
+					if (ii.m_id) {
+						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+						wp.wp_extra = ii.m_id;
+						break;
+					}
+				}
+			} while (0);
             if(self.waypointsprite_attached)
             {
                 GameItem def = self.itemdef;
@@ -498,7 +507,7 @@ void Item_RespawnCountdown (void)
 				if(self.waypointsprite_visible_for_player(e))
 				{
 					msg_entity = e;
-					soundto(MSG_ONE, this, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+					soundto(MSG_ONE, this, CH_TRIGGER, SND(ITEMRESPAWNCOUNTDOWN), VOL_BASE, ATTEN_NORM);	// play respawn sound
 				}
 			setself(this);
 
@@ -506,7 +515,7 @@ void Item_RespawnCountdown (void)
 			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
 		}
 		else
-			sound(self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+			sound(self, CH_TRIGGER, SND_ITEMRESPAWNCOUNTDOWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	}
 }
 
@@ -750,7 +759,7 @@ void Item_Touch (void)
 	other.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
-	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
+	_sound (other, CH_TRIGGER, (self.item_pickupsound ? self.item_pickupsound : self.item_pickupsound_ent.sound_str()), VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
 		remove (self);
@@ -1119,14 +1128,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		precache_model (self.model);
 		precache_sound (self.item_pickupsound);
 
-		precache_sound ("misc/itemrespawncountdown.wav");
-		if(itemid == ITEM_Strength.m_itemid)
-			precache_sound ("misc/strength_respawn.wav");
-		else if(itemid == ITEM_Shield.m_itemid)
-			precache_sound ("misc/shield_respawn.wav");
-		else
-			precache_sound ("misc/itemrespawn.wav");
-
 		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
 			self.target = "###item###"; // for finding the nearest item using find()
 
@@ -1371,7 +1372,6 @@ void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
 void spawnfunc_item_strength()
 {SELFPARAM();
-		precache_sound("weapons/strength_fire.wav");
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItemA (ITEM_Strength);
@@ -1424,13 +1424,6 @@ void spawnfunc_target_items (void)
 		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 	if(!self.superweapons_finished)
 		self.superweapons_finished = autocvar_g_balance_superweapons_time;
-
-	precache_sound("misc/itempickup.wav");
-	precache_sound("misc/megahealth.wav");
-	precache_sound("misc/armor25.wav");
-	precache_sound("misc/powerup.wav");
-	precache_sound("misc/poweroff.wav");
-	precache_sound(W_Sound("weaponpickup"));
 
 	n = tokenize_console(self.netname);
 	if(argv(0) == "give")
@@ -1660,12 +1653,12 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != "")
-			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
+			_sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != "")
-			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
+			_sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1831,31 +1824,31 @@ float GiveItems(entity e, float beginarg, float endarg)
 		op = OP_SET;
 	}
 
-	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, "misc/itempickup.wav", string_null);
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, "misc/powerup.wav", "misc/poweroff.wav");
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, "misc/powerup.wav", "misc/poweroff.wav");
-	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, "misc/itempickup.wav", string_null);
+	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, SND(ITEMPICKUP), string_null);
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND(POWERUP), SND(POWEROFF));
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND(POWERUP), SND(POWEROFF));
+	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND(ITEMPICKUP), string_null);
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	{
 		wi = get_weaponinfo(j);
 		if(wi.weapon)
 		{
-			POSTGIVE_WEAPON(e, j, W_Sound("weaponpickup"), string_null);
+			POSTGIVE_WEAPON(e, j, SND(WEAPONPICKUP), string_null);
 			if (!(save_weapons & WepSet_FromWeapon(j)))
 				if(e.weapons & WepSet_FromWeapon(j))
 					WEP_ACTION(wi.weapon, WR_INIT);
 		}
 	}
-	POSTGIVE_VALUE(e, strength_finished, 1, "misc/powerup.wav", "misc/poweroff.wav");
-	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", "misc/poweroff.wav");
-	POSTGIVE_VALUE(e, ammo_nails, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE(e, ammo_cells, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE(e, ammo_plasma, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE(e, ammo_shells, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE(e, ammo_rockets, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/armor25.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
+	POSTGIVE_VALUE(e, strength_finished, 1, SND(POWERUP), SND(POWEROFF));
+	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", SND(POWEROFF));
+	POSTGIVE_VALUE(e, ammo_nails, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE(e, ammo_cells, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE(e, ammo_plasma, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE(e, ammo_shells, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE(e, ammo_rockets, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND(ARMOR25), string_null);
+	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND(MEGAHEALTH), string_null);
 
 	if(e.superweapons_finished <= 0)
 		if(self.weapons & WEPSET_SUPERWEAPONS)

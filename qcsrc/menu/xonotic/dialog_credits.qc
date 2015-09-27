@@ -5,6 +5,7 @@ CLASS(XonoticCreditsDialog, XonoticDialog)
 	METHOD(XonoticCreditsDialog, fill, void(entity));
 	METHOD(XonoticCreditsDialog, focusEnter, void(entity));
 	ATTRIB(XonoticCreditsDialog, title, string, _("Credits"))
+	ATTRIB(XonoticCreditsDialog, tooltip, string, _("The Xonotic credits"))
 	ATTRIB(XonoticCreditsDialog, color, vector, SKINCOLOR_DIALOG_CREDITS)
 	ATTRIB(XonoticCreditsDialog, intendedWidth, float, SKINWIDTH_CREDITS)
 	ATTRIB(XonoticCreditsDialog, rows, float, SKINROWS_CREDITS)
