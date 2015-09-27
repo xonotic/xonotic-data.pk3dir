@@ -207,7 +207,7 @@ void InitBall(void)
 	self.teamtime = 0;
 	self.pusher = world;
 	self.team = false;
-	sound(self, CH_TRIGGER, self.noise1, VOL_BASE, ATTEN_NORM);
+	_sound(self, CH_TRIGGER, self.noise1, VOL_BASE, ATTEN_NORM);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 	LogNB("init", world);
 }
@@ -254,7 +254,7 @@ void football_touch(void)
 	{
 		if(time > self.lastground + 0.1)
 		{
-			sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+			_sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.lastground = time;
 		}
 		if(vlen(self.velocity) && !self.cnt)
@@ -310,7 +310,7 @@ void basketball_touch(void)
 	}
 	else if(other.solid == SOLID_BSP)
 	{
-		sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+		_sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 		if(vlen(self.velocity) && !self.cnt)
 			self.nextthink = min(time + autocvar_g_nexball_delay_idle, self.teamtime);
 	}
@@ -376,7 +376,7 @@ void GoalTouch(void)
 		pscore = 1;
 	}
 
-	sound(ball, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NONE);
+	_sound(ball, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NONE);
 
 	if(ball.team && pscore)
 	{
@@ -515,13 +515,13 @@ void SpawnBall(void)
 	if(!autocvar_g_nexball_sound_bounce)
 		self.noise = "";
 	else if(self.noise == "")
-		self.noise = "sound/nexball/bounce.wav";
+		self.noise = SND(NB_BOUNCE);
 	//bounce sound placeholder (FIXME)
 	if(self.noise1 == "")
-		self.noise1 = "sound/nexball/drop.wav";
+		self.noise1 = SND(NB_DROP);
 	//ball drop sound placeholder (FIXME)
 	if(self.noise2 == "")
-		self.noise2 = "sound/nexball/steal.wav";
+		self.noise2 = SND(NB_STEAL);
 	//stealing sound placeholder (FIXME)
 	if(self.noise) precache_sound(self.noise);
 	precache_sound(self.noise1);
@@ -623,7 +623,7 @@ void spawnfunc_nexball_fault(void)
 {SELFPARAM();
 	self.team = GOAL_FAULT;
 	if(self.noise == "")
-		self.noise = "misc/typehit.wav";
+		self.noise = SND(TYPEHIT);
 	SpawnGoal();
 }
 
@@ -631,7 +631,7 @@ void spawnfunc_nexball_out(void)
 {SELFPARAM();
 	self.team = GOAL_OUT;
 	if(self.noise == "")
-		self.noise = "misc/typehit.wav";
+		self.noise = SND(TYPEHIT);
 	SpawnGoal();
 }
 
@@ -705,7 +705,7 @@ void W_Nexball_Touch(void)
 			if(!attacker.ballcarried)
 			{
 				LogNB("stole", attacker);
-				sound(other, CH_TRIGGER, ball.noise2, VOL_BASE, ATTEN_NORM);
+				_sound(other, CH_TRIGGER, ball.noise2, VOL_BASE, ATTEN_NORM);
 
 				if(SAME_TEAM(attacker, other) && time > attacker.teamkill_complain)
 				{
@@ -727,7 +727,7 @@ void W_Nexball_Attack(float t)
 	if(!(ball = self.ballcarried))
 		return;
 
-	W_SetupShot(self, false, 4, "nexball/shoot1.wav", CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 4, SND(NB_SHOOT1), CH_WEAPON_A, 0);
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
@@ -761,7 +761,7 @@ void W_Nexball_Attack2(void)
 	if(self.ballcarried.enemy)
 	{
 		entity _ball = self.ballcarried;
-		W_SetupShot(self, false, 4, "nexball/shoot1.wav", CH_WEAPON_A, 0);
+		W_SetupShot(self, false, 4, SND(NB_SHOOT1), CH_WEAPON_A, 0);
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
 		_ball.think = W_Nexball_Think;
 		_ball.nextthink = time;
@@ -774,7 +774,7 @@ void W_Nexball_Attack2(void)
 	entity missile;
 	if(!(balls & BALL_BASKET))
 		return;
-	W_SetupShot(self, false, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 2, SND(NB_SHOOT2), CH_WEAPON_A, 0);
 	missile = spawn();
 
 	missile.owner = self;
@@ -860,9 +860,6 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_INIT)
 	{
-		precache_sound("nexball/shoot1.wav");
-		precache_sound("nexball/shoot2.wav");
-		precache_sound("misc/typehit.wav");
 	}
 	else if(req == WR_SETUP)
 	{

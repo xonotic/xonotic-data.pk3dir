@@ -27,11 +27,13 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Network")));
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Client UDP port:")));
-		me.TD(me, 1, 1.5, e = makeXonoticInputBox(0, "cl_port"));
+		me.TD(me, 1, 1.5, e = makeXonoticInputBox_T(0, "cl_port",
+			_("Force client to use chosen port unless it is set to 0")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bandwidth:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("_cl_rate"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("_cl_rate",
+			_("Specify your network speed with this slider")));
 			e.addValue(e, _("56k"), "4000");
 			e.addValue(e, _("ISDN"), "7000");
 			e.addValue(e, _("Slow ADSL"), "15000");
@@ -40,18 +42,21 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Input packets/s:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(20, 100, 5, "cl_netfps"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(20, 100, 5, "cl_netfps",
+			_("How many input packets to send to the server each second")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Server queries/s:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(20, 100, 10, "net_slist_queriespersecond"));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Downloads:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(1, 5, 1, "cl_curl_maxdownloads"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 5, 1, "cl_curl_maxdownloads",
+			_("Maximum number of concurrent HTTP/FTP downloads")));
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(10, 2000, 50, "cl_curl_maxspeed"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(10, 2000, 50, "cl_curl_maxspeed",
+			_("Maximum download speed")));
 	me.TR(me);
 		if(cvar("developer"))
 		{
@@ -59,9 +64,11 @@ void XonoticMiscSettingsTab_fill(entity me)
 			me.TD(me, 1, 2, e = makeXonoticSlider(0, 1000, 25, "cl_netlocalping"));
 		}
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "shownetgraph", _("Show netgraph")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "shownetgraph", _("Show netgraph"),
+			_("Show a graph of packet sizes and other information")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "cl_movement", _("Client-side movement prediction"),
+			_("Enable clientside movement prediction")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Movement error compensation")));
 		setDependent(e, "cl_movement", 1, 1);
@@ -113,26 +120,30 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", _("Save processing time for other apps")));
 		setDependent(e, "cl_maxfps", 1, 1000);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showfps", _("Show frames per second")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showfps", _("Show frames per second"),
+			_("Show your rendered frames per second")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("menu_tooltips",
+			_("Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)")));
 			e.addValue(e, ZCTX(_("TLTIP^Disabled")), "0");
 			e.addValue(e, ZCTX(_("TLTIP^Standard")), "1");
 			e.addValue(e, ZCTX(_("TLTIP^Advanced")), "2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showtime", _("Show current date and time")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "showtime", _("Show current date and time"),
+			_("Show current date and time of day, useful on screenshots")));
 			makeMulti(e, "showdate");
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "developer", _("Enable developer mode")));
 
 	me.TR(me);
 		me.TDempty(me, 0.5);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Advanced settings..."), '0 0 0'));
+		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Advanced settings..."), '0 0 0',
+			_("Advanced settings where you can tweak every single variable of the game")));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.cvarsDialog;
 	me.TR(me);

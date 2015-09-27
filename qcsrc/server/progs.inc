@@ -30,7 +30,6 @@
 #include "mapvoting.qc"
 #include "miscfunctions.qc"
 #include "movelib.qc"
-// #include "pathlib.qc" // TODO: was never used. Seems to duplicate `pathlib/`
 #include "playerdemo.qc"
 #include "portals.qc"
 #include "race.qc"

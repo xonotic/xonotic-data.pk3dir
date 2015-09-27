@@ -58,7 +58,8 @@ void XonoticFirstRunDialog_fill(entity me)
 			label.allowColors = 1;
 			label.alpha = 1;
 	me.TR(me);
-		me.TD(me, 1, 3.75, box = makeXonoticInputBox(1, "_cl_name"));
+		me.TD(me, 1, 3.75, box = makeXonoticInputBox_T(1, "_cl_name",
+			_("Name under which you will appear in the game")));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.

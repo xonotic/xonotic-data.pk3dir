@@ -18,10 +18,7 @@ CLASS(Model, Object)
     }
     METHOD(Model, model_precache, void(entity this)) {
         string s = this.model_str();
-        int fh = fopen(s, FILE_READ);
-        if (fh >= 0) {
-            fclose(fh);
-        } else if (s && s != "" && s != "null") {
+        if (s != "" && s != "null" && !fexists(s)) {
             LOG_WARNINGF("Missing model: \"%s\"\n", s);
             return;
         }

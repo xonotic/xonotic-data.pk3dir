@@ -2,7 +2,7 @@
 #define TEXTSLIDER_H
 #include "../item/textslider.qc"
 CLASS(XonoticTextSlider, TextSlider)
-	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string));
+	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string, string));
 	METHOD(XonoticTextSlider, setValue, void(entity, float));
 	METHOD(XonoticTextSlider, configureXonoticTextSliderValues, void(entity));
 	ATTRIB(XonoticTextSlider, fontSize, float, SKINFONTSIZE_NORMAL)
@@ -24,26 +24,28 @@ CLASS(XonoticTextSlider, TextSlider)
 	ATTRIB(XonoticTextSlider, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticTextSlider, disabledAlpha, float, SKINALPHA_DISABLED)
 ENDCLASS(XonoticTextSlider)
+entity makeXonoticTextSlider_T(string, string theTooltip);
 entity makeXonoticTextSlider(string); // note: you still need to call addValue and configureXonoticTextSliderValues!
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeXonoticTextSlider(string theCvar)
+entity makeXonoticTextSlider_T(string theCvar, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticTextSlider);
-	me.configureXonoticTextSlider(me, theCvar);
+	me.configureXonoticTextSlider(me, theCvar, theTooltip);
 	return me;
 }
-void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar)
+entity makeXonoticTextSlider(string theCvar)
+{
+	return makeXonoticTextSlider_T(theCvar, string_null);
+}
+void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar, string theTooltip)
 {
 	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		// don't load it yet
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	// me.loadCvars(me); // don't load it yet
+	setZonedTooltip(me, theTooltip, theCvar);
 }
 void XonoticTextSlider_setValue(entity me, float val)
 {

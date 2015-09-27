@@ -1,0 +1,49 @@
+#ifndef REPLICATE_H
+#define REPLICATE_H
+#ifndef MENUQC
+
+#define REPLICATE(...) EVAL(OVERLOAD(REPLICATE, __VA_ARGS__))
+
+[[accumulate]] void ReplicateVars(entity this, string thisname, int i) { }
+
+#define REPLICATE_3(fld, type, var)         REPLICATE_4(fld, type, var, )
+#define REPLICATE_4(fld, type, var, func)   REPLICATE_##type(fld, var, func)
+#define REPLICATE_string(fld, var, func)    REPLICATE_7(fld, string, var, , \
+    { if (field) strunzone(field); field = strzone(it); }, \
+    { if (field) strunzone(field); field = string_null; }, \
+    { \
+        /* also initialize to the default value of func when requesting cvars */ \
+        string s = func(field); \
+        if (s != field) { \
+            strunzone(field); \
+            field = strzone(s); \
+        } \
+    })
+#define REPLICATE_float(fld, var, func)     REPLICATE_7(fld, float, var, func,  { field = stof(it); },          , )
+#define REPLICATE_bool(fld, var, func)      REPLICATE_7(fld, bool, var, func,   { field = boolean(stoi(it)); }, , )
+#define REPLICATE_int(fld, var, func)       REPLICATE_7(fld, int, var, func,    { field = stoi(it); },          , )
+
+#if defined(SVQC)
+    #define REPLICATE_7(fld, type, var, func, create, destroy, after) \
+        void ReplicateVars(entity this, string thisname, int i) { \
+            type field = this.fld; \
+            if (i < 0) { destroy } \
+            else { \
+                string it = func(argv(i + 1)); \
+                bool current = thisname == var; \
+                if (i > 0) { \
+                    if (current) { create } \
+                } else { \
+                    stuffcmd(this, "cl_cmd sendcvar " var "\n"); \
+                } \
+                if (current) { after } \
+            } \
+            this.fld = field; \
+        }
+#elif defined(CSQC)
+    // TODO
+    #define REPLICATE_7(fld, type, var, func, create, destroy, after)
+#endif
+
+#endif
+#endif

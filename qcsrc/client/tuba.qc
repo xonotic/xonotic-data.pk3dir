@@ -65,7 +65,7 @@ void tubasound(entity e, bool restart)
 		if (restart) {
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		}
-		sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation);
+		_sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation);
 	}
 }
 
@@ -79,9 +79,9 @@ void Ent_TubaNote_Think()
 	}
 	self.nextthink = time;
 	if (self.tuba_volume <= 0) {
-		sound(self, CH_TUBA_SINGLE, "misc/null.wav", 0, 0);
+		sound(self, CH_TUBA_SINGLE, SND_Null, 0, 0);
 		if (self.enemy) {
-			sound(self.enemy, CH_TUBA_SINGLE, "misc/null.wav", 0, 0);
+			sound(self.enemy, CH_TUBA_SINGLE, SND_Null, 0, 0);
 			remove(self.enemy);
 		}
 		remove(self);

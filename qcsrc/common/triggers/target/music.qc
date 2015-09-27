@@ -182,9 +182,9 @@ void TargetMusic_Advance()
 		if(vol != vol0)
 		{
 			if(vol0 < 0)
-				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
+				_sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
 			else
-				sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
+				_sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
 			e.lastvol = vol;
 		}
 	}
@@ -223,7 +223,7 @@ void Net_TargetMusic()
 			strunzone(e.noise);
 		e.noise = strzone(noi);
 		precache_sound(e.noise);
-		sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
+		_sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
 			LOG_TRACEF("Cannot initialize sound %s\n", e.noise);
@@ -310,7 +310,7 @@ void Ent_ReadTriggerMusic()
 		if(self.noise != s)
 		{
 			precache_sound(self.noise);
-			sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
+			_sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
 			if(getsoundtime(self, CH_BGM_SINGLE) < 0)
 			{
 				LOG_TRACEF("Cannot initialize sound %s\n", self.noise);

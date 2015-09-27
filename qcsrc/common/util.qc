@@ -271,15 +271,6 @@ string fstrunzone(string s)
 	return sc;
 }
 
-bool fexists(string f)
-{
-    int fh = fopen(f, FILE_READ);
-    if (fh < 0)
-        return false;
-    fclose(fh);
-    return true;
-}
-
 // Databases (hash tables)
 const float DB_BUCKETS = 8192;
 void db_save(float db, string pFilename)

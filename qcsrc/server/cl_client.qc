@@ -329,9 +329,8 @@ void FixPlayermodel()
 	{
 		if(teamplay)
 		{
-			string s;
-			s = Static_Team_ColorName_Lower(self.team);
-			if(s != "neutral")
+			string s = Static_Team_ColorName_Lower(self.team);
+			if (s != "neutral")
 			{
 				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
 				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
@@ -1447,7 +1446,7 @@ void play_countdown(float finished, string samp)
 	if(IS_REAL_CLIENT(self))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
-				sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
+				_sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
 void player_powerups (void)
@@ -1472,7 +1471,7 @@ void player_powerups (void)
 	{
 		if (self.items & ITEM_Strength.m_itemid)
 		{
-			play_countdown(self.strength_finished, "misc/poweroff.wav");
+			play_countdown(self.strength_finished, SND(POWEROFF));
 			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.strength_finished)
 			{
@@ -1492,7 +1491,7 @@ void player_powerups (void)
 		}
 		if (self.items & ITEM_Shield.m_itemid)
 		{
-			play_countdown(self.invincible_finished, "misc/poweroff.wav");
+			play_countdown(self.invincible_finished, SND(POWEROFF));
 			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.invincible_finished)
 			{
@@ -1525,7 +1524,7 @@ void player_powerups (void)
 			}
 			else
 			{
-				play_countdown(self.superweapons_finished, "misc/poweroff.wav");
+				play_countdown(self.superweapons_finished, SND(POWEROFF));
 				if (time > self.superweapons_finished)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);

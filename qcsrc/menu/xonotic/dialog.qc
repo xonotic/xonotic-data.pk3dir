@@ -41,6 +41,5 @@ void XonoticDialog_configureDialog(entity me)
 {
 	currentDialog = me;
 	SUPER(XonoticDialog).configureDialog(me);
-	me.tooltip = getZonedTooltipForIdentifier(me.classname);
 }
 #endif

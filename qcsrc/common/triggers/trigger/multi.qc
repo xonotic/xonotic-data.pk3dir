@@ -32,7 +32,7 @@ void multi_trigger()
 	}
 
 	if (self.noise)
-		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+		_sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -149,8 +149,7 @@ void spawnfunc_trigger_multiple()
 	}
 	else if (self.sounds == 2)
 	{
-		precache_sound ("misc/talk.wav");
-		self.noise = "misc/talk.wav";
+		self.noise = SND(TALK);
 	}
 	else if (self.sounds == 3)
 	{

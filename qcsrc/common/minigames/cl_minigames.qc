@@ -95,7 +95,7 @@ MINIGAME_SIMPLELINKED_ENTITIES
 
 void minigame_autoclean_entity(entity e)
 {
-	LOG_TRACE("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+	LOG_DEBUG("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
 	remove(e);
 }
 
@@ -235,7 +235,7 @@ void ent_read_minigame()
 			minigame_read_owner();
 			float ent = ReadLong();
 			self.minigame_playerslot = ent;
-			LOG_TRACE("Player: ",GetPlayerName(ent-1),"\n");
+			LOG_DEBUG("Player: ",GetPlayerName(ent-1),"\n");
 
 			activate = (ent == player_localnum+1 && self.owner && self.owner != active_minigame);
 
@@ -258,9 +258,9 @@ void ent_read_minigame()
 
 	if ( sf & MINIG_SF_CREATE )
 	{
-		LOG_TRACE("CL Reading entity: ",ftos(num_for_edict(self)),
+		LOG_DEBUG("CL Reading entity: ",ftos(num_for_edict(self)),
 			" classname:",self.classname," enttype:",ftos(self.enttype) );
-		LOG_TRACE(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+		LOG_DEBUG(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 	}
 }
 #undef ReadString

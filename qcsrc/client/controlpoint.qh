@@ -8,6 +8,5 @@ const int CPSF_STATUS = 4;
 const int CPSF_SETUP = 8;
 
 void ent_cpicon();
-void cpicon_precache();
 
 #endif
