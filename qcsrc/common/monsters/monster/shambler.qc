@@ -1,17 +1,16 @@
+CLASS(Shambler, Monster)
+    ATTRIB(Shambler, spawnflags, int, MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Shambler, mins, vector, '-41 -41 -31');
+    ATTRIB(Shambler, maxs, vector, '41 41 65');
+    ATTRIB(Shambler, mdl, string, "shambler.mdl");
+    ATTRIB(Shambler, model, string, strzone(strcat("models/monsters/", this.mdl)));
+    ATTRIB(Shambler, netname, string, "shambler");
+    ATTRIB(Shambler, monster_name, string, _("Shambler"));
+ENDCLASS(Shambler)
+
+REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
 #ifndef MENUQC
-bool M_Shambler(Monster thismon, int);
-#endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ SHAMBLER,
-/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
-/* mins,maxs  */ '-41 -41 -31', '41 41 65',
-/* model      */ "shambler.mdl",
-/* netname    */ "shambler",
-/* fullname   */ _("Shambler")
-) {
-#ifndef MENUQC
-	this.monster_func = M_Shambler;
-	MON_ACTION(this, MR_PRECACHE);
+    MON_ACTION(this, MR_PRECACHE);
 #endif
 }
 
@@ -214,30 +213,29 @@ float M_Shambler_Attack(float attack_type)
 void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
-bool M_Shambler(Monster thismon, int req)
-{SELFPARAM();
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Shambler, mr_think, bool(Shambler thismon))
 		{
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Shambler, mr_pain, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			self.pain_finished = time + 0.5;
 			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Shambler, mr_death, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Shambler, mr_anim, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_die1 = animfixfps(self, '8 1 0.5', none); // 2 seconds
 			self.anim_walk = animfixfps(self, '1 1 1', none);
@@ -253,8 +251,9 @@ bool M_Shambler(Monster thismon, int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		METHOD(Shambler, mr_setup, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			if(!self.health) self.health = (autocvar_g_monster_shambler_health);
 			if(!self.attack_range) self.attack_range = 150;
 			if(!self.speed) { self.speed = (autocvar_g_monster_shambler_speed_walk); }
@@ -272,12 +271,8 @@ bool M_Shambler(Monster thismon, int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Shambler, mr_precache, bool(Shambler thismon))
 		{
 			return true;
 		}
 		#endif
-	}
-
-	return true;
-}
