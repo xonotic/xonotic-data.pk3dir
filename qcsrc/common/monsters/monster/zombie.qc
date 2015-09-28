@@ -1,5 +1,5 @@
 #ifndef MENUQC
-bool M_Zombie(int);
+bool M_Zombie(Monster thismon, int);
 #endif
 REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ ZOMBIE,
@@ -11,7 +11,7 @@ REGISTER_MONSTER_SIMPLE(
 ) {
 #ifndef MENUQC
 	this.monster_func = M_Zombie;
-	this.monster_func(MR_PRECACHE);
+	MON_ACTION(this, MR_PRECACHE);
 #endif
 }
 
@@ -141,7 +141,7 @@ float M_Zombie_Attack(float attack_type)
 void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
-bool M_Zombie(int req)
+bool M_Zombie(Monster thismon, int req)
 {SELFPARAM();
 	switch(req)
 	{

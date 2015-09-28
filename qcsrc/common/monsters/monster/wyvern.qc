@@ -1,5 +1,5 @@
 #ifndef MENUQC
-bool M_Wyvern(int);
+bool M_Wyvern(Monster thismon, int);
 #endif
 REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ WYVERN,
@@ -11,7 +11,7 @@ REGISTER_MONSTER_SIMPLE(
 ) {
 #ifndef MENUQC
 	this.monster_func = M_Wyvern;
-	this.monster_func(MR_PRECACHE);
+	MON_ACTION(this, MR_PRECACHE);
 #endif
 }
 
@@ -104,8 +104,9 @@ float M_Wyvern_Attack(float attack_type)
 void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN.monsterid); }
 #endif // SVQC
 
-bool M_Wyvern(int req)
-{SELFPARAM();
+bool M_Wyvern(Monster thismon, int req)
+{
+	SELFPARAM();
 	switch(req)
 	{
 		#ifdef SVQC

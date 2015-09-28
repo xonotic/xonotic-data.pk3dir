@@ -26,14 +26,6 @@ REGISTER_REGISTRY(RegisterMonsters)
 
 #include "../util.qh"
 
-// monster requests
-const int MR_SETUP = 1; // (SERVER) setup monster data
-const int MR_THINK = 2; // (SERVER) logic to run every frame
-const int MR_DEATH = 3; // (SERVER) called when monster dies
-const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
-const int MR_PAIN = 5; // (SERVER) called when monster is damaged
-const int MR_ANIM = 6; // (BOTH?) sets animations for monster
-
 // special spawn flags
 const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
 const int MONSTER_TYPE_FLY = 32;
@@ -64,8 +56,5 @@ const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
 .vector anim_pain5;
 .vector anim_walk;
 .vector anim_spawn;
-
-// other useful macros
-#define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
 
 #endif

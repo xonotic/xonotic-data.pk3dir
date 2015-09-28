@@ -1,5 +1,5 @@
 #ifndef MENUQC
-bool M_Mage(int);
+bool M_Mage(Monster thismon, int);
 #endif
 REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ MAGE,
@@ -11,7 +11,7 @@ REGISTER_MONSTER_SIMPLE(
 ) {
 #ifndef MENUQC
     this.monster_func = M_Mage;
-    this.monster_func(MR_PRECACHE);
+    MON_ACTION(this, MR_PRECACHE);
 #endif
 }
 
@@ -368,7 +368,7 @@ void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE.monsterid); }
 
 #endif // SVQC
 
-bool M_Mage(int req)
+bool M_Mage(Monster thismon, int req)
 {SELFPARAM();
 	switch(req)
 	{

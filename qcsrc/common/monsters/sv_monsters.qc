@@ -471,7 +471,7 @@ void Monster_UpdateModel()
 	self.anim_die2   = animfixfps(self, '9 1 0.01', '0 0 0');*/
 
 	// then get the real values
-	MON_ACTION(self.monsterid, MR_ANIM);
+	_MON_ACTION(self.monsterid, MR_ANIM);
 }
 
 void Monster_Touch()
@@ -1037,7 +1037,7 @@ void Monster_Dead(entity attacker, float gibbed)
 
 	CSQCModel_UnlinkEntity();
 
-	MON_ACTION(self.monsterid, MR_DEATH);
+	_MON_ACTION(self.monsterid, MR_DEATH);
 
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
@@ -1070,7 +1070,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 	damage_take = take;
 	frag_attacker = attacker;
 	frag_deathtype = deathtype;
-	MON_ACTION(self.monsterid, MR_PAIN);
+	_MON_ACTION(self.monsterid, MR_PAIN);
 	take = damage_take;
 
 	if(take)
@@ -1231,7 +1231,7 @@ void Monster_Think()
 		return;
 	}
 
-	if(MON_ACTION(self.monsterid, MR_THINK))
+	if(_MON_ACTION(self.monsterid, MR_THINK))
 		Monster_Move(self.speed2, self.speed, self.stopspeed);
 
 	Monster_Anim();
@@ -1241,7 +1241,7 @@ void Monster_Think()
 
 float Monster_Spawn_Setup()
 {SELFPARAM();
-	MON_ACTION(self.monsterid, MR_SETUP);
+	_MON_ACTION(self.monsterid, MR_SETUP);
 
 	// ensure some basic needs are met
 	if(!self.health) { self.health = 100; }

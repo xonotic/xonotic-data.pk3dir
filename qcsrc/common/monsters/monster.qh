@@ -1,7 +1,8 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
-bool m_null(int) { return false; }
+bool m_null(entity thismon, int) { return false; }
+bool m_new(entity thismon, int);
 
 /** If you register a new monster, make sure to add it to all.inc */
 CLASS(Monster, Object)
@@ -9,7 +10,35 @@ CLASS(Monster, Object)
     ATTRIB(Monster, classname, string, "monster_info")
     /** human readable name */
     ATTRIB(Monster, monster_name, string, string_null)
-    ATTRIB(Monster, monster_func, bool(int), m_null)
+    ATTRIB(Monster, monster_func, bool(Monster, int), m_new)
 ENDCLASS(Monster)
+
+// monster requests
+const int MR_SETUP = 1; // (SERVER) setup monster data
+.bool(Monster this) mr_setup;
+const int MR_THINK = 2; // (SERVER) logic to run every frame
+.bool(Monster this) mr_think;
+const int MR_DEATH = 3; // (SERVER) called when monster dies
+.bool(Monster this) mr_death;
+const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
+.bool(Monster this) mr_precache;
+const int MR_PAIN = 5; // (SERVER) called when monster is damaged
+.bool(Monster this) mr_pain;
+const int MR_ANIM = 6; // (BOTH?) sets animations for monster
+.bool(Monster this) mr_anim;
+
+// other useful macros
+#define MON_ACTION(mon,mrequest) mon.monster_func(mon, mrequest)
+#define _MON_ACTION(mon,mrequest) MON_ACTION(get_monsterinfo(mon), mrequest)
+
+bool m_new(entity this, int req) {
+    if (req == MR_SETUP) return this.mr_setup ? this.mr_setup(this) : false;
+    if (req == MR_THINK) return this.mr_think ? this.mr_think(this) : false;
+    if (req == MR_DEATH) return this.mr_death ? this.mr_death(this) : false;
+    if (req == MR_PRECACHE) return this.mr_precache ? this.mr_precache(this) : false;
+    if (req == MR_PAIN) return this.mr_pain ? this.mr_pain(this) : false;
+    if (req == MR_ANIM) return this.mr_anim ? this.mr_anim(this) : false;
+    return false;
+}
 
 #endif

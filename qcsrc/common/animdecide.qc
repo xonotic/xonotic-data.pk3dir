@@ -12,7 +12,7 @@
 
 bool monsters_animoverride(entity e)
 {
-	int monster_id = 0;
+	Monster monster_id = NULL;
 	for(int i = MON_FIRST; i <= MON_LAST; ++i)
 	{
 		entity mon = get_monsterinfo(i);
@@ -20,7 +20,7 @@ bool monsters_animoverride(entity e)
 		//if(substring(e.model, 0, strlen(mon.model) - 4) == substring(mon.model, 0, strlen(mon.model) - 4))
 		if(e.model == mon.model)
 		{
-			monster_id = i;
+			monster_id = mon;
 			break;
 		}
 	}

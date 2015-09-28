@@ -1,5 +1,5 @@
 #ifndef MENUQC
-bool M_Shambler(int);
+bool M_Shambler(Monster thismon, int);
 #endif
 REGISTER_MONSTER_SIMPLE(
 /* MON_##id   */ SHAMBLER,
@@ -11,7 +11,7 @@ REGISTER_MONSTER_SIMPLE(
 ) {
 #ifndef MENUQC
 	this.monster_func = M_Shambler;
-	this.monster_func(MR_PRECACHE);
+	MON_ACTION(this, MR_PRECACHE);
 #endif
 }
 
@@ -214,7 +214,7 @@ float M_Shambler_Attack(float attack_type)
 void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
-bool M_Shambler(int req)
+bool M_Shambler(Monster thismon, int req)
 {SELFPARAM();
 	switch(req)
 	{
