@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ HLAC,
-/* function  */ W_HLAC,
-/* ammotype  */ ammo_cells,
-/* impulse   */ 6,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '0 1 0',
-/* modelname */ "hlac",
-/* model     */ MDL_HLAC_ITEM,
-/* crosshair */ "gfx/crosshairhlac 0.6",
-/* wepimg    */ "weaponhlac",
-/* refname   */ "hlac",
-/* wepname   */ _("Heavy Laser Assault Cannon")
-);
+CLASS(HLAC, Weapon)
+/* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells)
+/* impulse   */ ATTRIB(HLAC, impulse, int, 6)
+/* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
+/* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
+#ifndef MENUQC
+/* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);
+#endif
+/* crosshair */ ATTRIB(HLAC, w_crosshair, string, "gfx/crosshairhlac");
+/* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(HLAC, model2, string, "weaponhlac");
+/* refname   */ ATTRIB(HLAC, netname, string, "hlac");
+/* wepname   */ ATTRIB(HLAC, message, string, _("Heavy Laser Assault Cannon"));
+ENDCLASS(HLAC)
+REGISTER_WEAPON(HLAC, NEW(HLAC));
 
 #define HLAC_SETTINGS(w_cvar,w_prop) HLAC_SETTINGS_LIST(w_cvar, w_prop, HLAC, hlac)
 #define HLAC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -204,17 +206,12 @@ void W_HLAC_Attack2_Frame(void)
 	}
 }
 
-bool W_HLAC(entity thiswep, int req)
-{SELFPARAM();
-	float ammo_amount;
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(HLAC, wr_aim, bool(entity thiswep))
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
 			return true;
 		}
-		case WR_THINK:
+		METHOD(HLAC, wr_think, bool(entity thiswep))
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
@@ -239,51 +236,46 @@ bool W_HLAC(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(HLAC, wr_init, bool(entity thiswep))
 		{
 			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(HLAC, wr_checkammo1, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_PRI(hlac, ammo);
+			float ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_PRI(hlac, ammo);
 			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(HLAC, wr_checkammo2, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_SEC(hlac, ammo);
+			float ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_SEC(hlac, ammo);
 			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
 			return ammo_amount;
 		}
-		case WR_CONFIG:
+		METHOD(HLAC, wr_config, bool(entity thiswep))
 		{
 			HLAC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(HLAC, wr_reload, bool(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND(RELOAD));
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(HLAC, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_HLAC_SUICIDE;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(HLAC, wr_killmessage, bool(entity thiswep))
 		{
 			return WEAPON_HLAC_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_HLAC(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(HLAC, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
@@ -293,17 +285,15 @@ bool W_HLAC(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(HLAC, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(HLAC, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
