@@ -1,15 +1,19 @@
 #ifndef TUR_FLAC_H
 #define TUR_FLAC_H
-REGISTER_TURRET(
-/* TUR_##id   */ FLAC,
-/* function   */ t_flac,
-/* spawnflags */ TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_MISSILE,
-/* mins,maxs  */ '-32 -32 0', '32 32 64',
-/* model	  */ "base.md3",
-/* head_model */ "flac.md3",
-/* netname	  */ "flac",
-/* fullname   */ _("FLAC Cannon")
-);
+
+CLASS(Flac, Turret)
+/* spawnflags */ ATTRIB(Flac, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_MISSILE);
+/* mins       */ ATTRIB(Flac, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(Flac, maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(Flac, mdl, string, "base.md3");
+/* model      */ ATTRIB(Flac, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(Flac, head_model, string, strzone(strcat("models/turrets/", "flac.md3")));
+/* netname    */ ATTRIB(Flac, netname, string, "flac");
+/* fullname   */ ATTRIB(Flac, turret_name, string, _("FLAC Cannon"));
+ENDCLASS(Flac)
+
+REGISTER_TURRET(FLAC, NEW(Flac));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -33,11 +37,7 @@ void turret_flac_projectile_think_explode()
 
 void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC.m_id)) remove(self); }
 
-float t_flac(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(Flac, tr_attack, bool(Flac thistur))
         {
             entity proj;
 
@@ -55,15 +55,15 @@ float t_flac(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(Flac, tr_think, bool(Flac thistur))
         {
             return true;
         }
-        case TR_DEATH:
+        METHOD(Flac, tr_death, bool(Flac thistur))
         {
             return true;
         }
-        case TR_SETUP:
+        METHOD(Flac, tr_setup, bool(Flac thistur))
         {
             self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
             self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
@@ -72,33 +72,21 @@ float t_flac(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(Flac, tr_precache, bool(Flac thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
-float t_flac(Turret thistur, float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(Flac, tr_setup, bool(Flac thistur))
         {
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(Flac, tr_precache, bool(Flac thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
