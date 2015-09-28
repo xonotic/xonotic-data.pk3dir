@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id	 */ RPC,
-/* function	 */ W_RocketPropelledChainsaw,
-/* ammotype	 */ ammo_rockets,
-/* impulse	 */ 7,
-/* flags	 */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON,
-/* rating	 */ BOT_PICKUP_RATING_HIGH,
-/* color     */ '0.5 0.5 0',
-/* modelname */ "ok_rl",
-/* model     */ MDL_RPC_ITEM,
-/* crosshair */ "gfx/crosshairrocketlauncher 0.7",
-/* wepimg    */ "weaponrpc",
-/* refname   */ "rpc",
-/* wepname	 */ _("Rocket Propelled Chainsaw")
-);
+CLASS(RocketPropelledChainsaw, Weapon)
+/* ammotype  */ ATTRIB(RocketPropelledChainsaw, ammo_field, .int, ammo_rockets)
+/* impulse   */ ATTRIB(RocketPropelledChainsaw, impulse, int, 7)
+/* flags     */ ATTRIB(RocketPropelledChainsaw, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON);
+/* rating    */ ATTRIB(RocketPropelledChainsaw, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* color     */ ATTRIB(RocketPropelledChainsaw, wpcolor, vector, '0.5 0.5 0');
+/* modelname */ ATTRIB(RocketPropelledChainsaw, mdl, string, "ok_rl");
+#ifndef MENUQC
+/* model     */ ATTRIB(RocketPropelledChainsaw, m_model, Model, MDL_RPC_ITEM);
+#endif
+/* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair, string, "gfx/crosshairrocketlauncher");
+/* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(RocketPropelledChainsaw, model2, string, "weaponrpc");
+/* refname   */ ATTRIB(RocketPropelledChainsaw, netname, string, "rpc");
+/* wepname   */ ATTRIB(RocketPropelledChainsaw, message, string, _("Rocket Propelled Chainsaw"));
+ENDCLASS(RocketPropelledChainsaw)
+REGISTER_WEAPON(RPC, NEW(RocketPropelledChainsaw));
 
 #define RPC_SETTINGS(w_cvar,w_prop) RPC_SETTINGS_LIST(w_cvar, w_prop, RPC, rpc)
 #define RPC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -147,17 +149,12 @@ void W_RocketPropelledChainsaw_Attack (void)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-bool W_RocketPropelledChainsaw(entity thiswep, int req)
-{SELFPARAM();
-	float ammo_amount = false;
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(RocketPropelledChainsaw, wr_aim, bool(entity thiswep))
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 			return true;
 		}
-		case WR_THINK:
+		METHOD(RocketPropelledChainsaw, wr_think, bool(entity thiswep))
 		{
 			if(WEP_CVAR(rpc, reload_ammo) && self.clip_load < WEP_CVAR(rpc, ammo))
 				_WEP_ACTION(self.weapon, WR_RELOAD);
@@ -180,39 +177,39 @@ bool W_RocketPropelledChainsaw(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(RocketPropelledChainsaw, wr_init, bool(entity thiswep))
 		{
 			RPC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(RPC) >= WEP_CVAR(rpc, ammo);
+			float ammo_amount = self.WEP_AMMO(RPC) >= WEP_CVAR(rpc, ammo);
 			ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep))
 		{
 			return false;
 		}
-		case WR_CONFIG:
+		METHOD(RocketPropelledChainsaw, wr_config, bool(entity thiswep))
 		{
 			RPC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(RocketPropelledChainsaw, wr_reload, bool(entity thiswep))
 		{
 			W_Reload(WEP_CVAR(rpc, ammo), SND(RELOAD));
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(RocketPropelledChainsaw, wr_suicidemessage, bool(entity thiswep))
 		{
 			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
 				return WEAPON_RPC_SUICIDE_SPLASH;
 			else
 				return WEAPON_RPC_SUICIDE_DIRECT;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(RocketPropelledChainsaw, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_BLASTER_MURDER;
@@ -221,18 +218,12 @@ bool W_RocketPropelledChainsaw(entity thiswep, int req)
 			else
 				return WEAPON_RPC_MURDER_DIRECT;
 		}
-	}
 
-	return false;
-}
 #endif
 
 #ifdef CSQC
-bool W_RocketPropelledChainsaw(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(RocketPropelledChainsaw, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
@@ -242,18 +233,15 @@ bool W_RocketPropelledChainsaw(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(RocketPropelledChainsaw, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(RocketPropelledChainsaw, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
 
-	return false;
-}
 #endif
 #endif
