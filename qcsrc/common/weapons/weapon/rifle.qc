@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ RIFLE,
-/* function  */ W_Rifle,
-/* ammotype  */ ammo_nails,
-/* impulse   */ 7,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '0.5 1 0',
-/* modelname */ "campingrifle",
-/* model     */ MDL_RIFLE_ITEM,
-/* crosshair */ "gfx/crosshairrifle 0.6",
-/* wepimg    */ "weaponrifle",
-/* refname   */ "rifle",
-/* wepname   */ _("Rifle")
-);
+CLASS(Rifle, Weapon)
+/* ammotype  */ ATTRIB(Rifle, ammo_field, .int, ammo_nails)
+/* impulse   */ ATTRIB(Rifle, impulse, int, 7)
+/* flags     */ ATTRIB(Rifle, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
+/* rating    */ ATTRIB(Rifle, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* color     */ ATTRIB(Rifle, wpcolor, vector, '0.5 1 0');
+/* modelname */ ATTRIB(Rifle, mdl, string, "campingrifle");
+#ifndef MENUQC
+/* model     */ ATTRIB(Rifle, m_model, Model, MDL_RIFLE_ITEM);
+#endif
+/* crosshair */ ATTRIB(Rifle, w_crosshair, string, "gfx/crosshairrifle");
+/* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
+/* refname   */ ATTRIB(Rifle, netname, string, "rifle");
+/* wepname   */ ATTRIB(Rifle, message, string, _("Rifle"));
+ENDCLASS(Rifle)
+REGISTER_WEAPON(RIFLE, NEW(Rifle));
 
 #define RIFLE_SETTINGS(w_cvar,w_prop) RIFLE_SETTINGS_LIST(w_cvar, w_prop, RIFLE, rifle)
 #define RIFLE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -134,13 +136,8 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 }
 
 .float bot_secondary_riflemooth;
-bool W_Rifle(entity thiswep, int req)
-{SELFPARAM();
-	float ammo_amount;
 
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Rifle, wr_aim, bool(entity thiswep))
 		{
 			self.BUTTON_ATCK=false;
 			self.BUTTON_ATCK2=false;
@@ -165,7 +162,7 @@ bool W_Rifle(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_THINK:
+		METHOD(Rifle, wr_think, bool(entity thiswep))
 		{
 			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
@@ -202,43 +199,43 @@ bool W_Rifle(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Rifle, wr_init, bool(entity thiswep))
 		{
 			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Rifle, wr_checkammo1, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_PRI(rifle, ammo);
+			float ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_PRI(rifle, ammo);
 			ammo_amount += self.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Rifle, wr_checkammo2, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_SEC(rifle, ammo);
+			float ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_SEC(rifle, ammo);
 			ammo_amount += self.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
 			return ammo_amount;
 		}
-		case WR_CONFIG:
+		METHOD(Rifle, wr_config, bool(entity thiswep))
 		{
 			RIFLE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(Rifle, wr_resetplayer, bool(entity thiswep))
 		{
 			self.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(Rifle, wr_reload, bool(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND(RELOAD));
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Rifle, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Rifle, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
@@ -255,16 +252,11 @@ bool W_Rifle(entity thiswep, int req)
 					return WEAPON_RIFLE_MURDER;
 			}
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Rifle(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Rifle, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
@@ -281,7 +273,7 @@ bool W_Rifle(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Rifle, wr_init, bool(entity thiswep))
 		{
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
@@ -289,7 +281,7 @@ bool W_Rifle(entity thiswep, int req)
 			}
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Rifle, wr_zoomreticle, bool(entity thiswep))
 		{
 			if(button_zoom || zoomscript_caught)
 			{
@@ -302,8 +294,6 @@ bool W_Rifle(entity thiswep, int req)
 				return false;
 			}
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
