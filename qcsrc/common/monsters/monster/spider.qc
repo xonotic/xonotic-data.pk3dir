@@ -1,17 +1,16 @@
+CLASS(Spider, Monster)
+    ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
+    ATTRIB(Spider, mins, vector, '-18 -18 -25');
+    ATTRIB(Spider, maxs, vector, '18 18 30');
+    ATTRIB(Spider, mdl, string, "spider.dpm");
+    ATTRIB(Spider, model, string, strzone(strcat("models/monsters/", this.mdl)));
+    ATTRIB(Spider, netname, string, "spider");
+    ATTRIB(Spider, monster_name, string, _("Spider"));
+ENDCLASS(Spider)
+
+REGISTER_MONSTER(SPIDER, NEW(Spider)) {
 #ifndef MENUQC
-bool M_Spider(Monster thismon, int);
-#endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ SPIDER,
-/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE,
-/* mins,maxs  */ '-18 -18 -25', '18 18 30',
-/* model      */ "spider.dpm",
-/* netname    */ "spider",
-/* fullname   */ _("Spider")
-) {
-#ifndef MENUQC
-	this.monster_func = M_Spider;
-	MON_ACTION(this, MR_PRECACHE);
+    MON_ACTION(this, MR_PRECACHE);
 #endif
 }
 
@@ -127,29 +126,27 @@ bool M_Spider_Attack(int attack_type)
 void spawnfunc_monster_spider() { Monster_Spawn(MON_SPIDER.monsterid); }
 #endif // SVQC
 
-bool M_Spider(Monster thismon, int req)
-{SELFPARAM();
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Spider, mr_think, bool(Spider thismon))
 		{
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Spider, mr_pain, bool(Spider thismon))
 		{
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Spider, mr_death, bool(Spider thismon))
 		{
+			SELFPARAM();
 			setanim(self, self.anim_melee, false, true, true);
 			self.angles_x = 180;
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Spider, mr_anim, bool(Spider thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_walk = animfixfps(self, '1 1 1', none);
 			self.anim_idle = animfixfps(self, '0 1 1', none);
@@ -161,8 +158,9 @@ bool M_Spider(Monster thismon, int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		METHOD(Spider, mr_setup, bool(Spider thismon))
 		{
+			SELFPARAM();
 			if(!self.health) self.health = (autocvar_g_monster_spider_health);
 			if(!self.speed) { self.speed = (autocvar_g_monster_spider_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_spider_speed_run); }
@@ -174,12 +172,8 @@ bool M_Spider(Monster thismon, int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Spider, mr_precache, bool(Spider thismon))
 		{
 			return true;
 		}
 		#endif
-	}
-
-	return true;
-}
