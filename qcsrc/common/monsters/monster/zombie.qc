@@ -1,17 +1,16 @@
+CLASS(Zombie, Monster)
+    ATTRIB(Zombie, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RIDE);
+    ATTRIB(Zombie, mins, vector, '-18 -18 -25');
+    ATTRIB(Zombie, maxs, vector, '18 18 47');
+    ATTRIB(Zombie, mdl, string, "zombie.dpm");
+    ATTRIB(Zombie, model, string, strzone(strcat("models/monsters/", this.mdl)));
+    ATTRIB(Zombie, netname, string, "zombie");
+    ATTRIB(Zombie, monster_name, string, _("Zombie"));
+ENDCLASS(Zombie)
+
+REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
 #ifndef MENUQC
-bool M_Zombie(Monster thismon, int);
-#endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ ZOMBIE,
-/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RIDE,
-/* mins,maxs  */ '-18 -18 -25', '18 18 47',
-/* model      */ "zombie.dpm",
-/* netname    */ "zombie",
-/* fullname   */ _("Zombie")
-) {
-#ifndef MENUQC
-	this.monster_func = M_Zombie;
-	MON_ACTION(this, MR_PRECACHE);
+    MON_ACTION(this, MR_PRECACHE);
 #endif
 }
 
@@ -141,25 +140,24 @@ float M_Zombie_Attack(float attack_type)
 void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
-bool M_Zombie(Monster thismon, int req)
-{SELFPARAM();
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Zombie, mr_think, bool(Zombie thismon))
 		{
+			SELFPARAM();
 			if(time >= self.spawn_time)
 				self.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Zombie, mr_pain, bool(Zombie thismon))
 		{
+			SELFPARAM();
 			self.pain_finished = time + 0.34;
 			setanim(self, ((random() > 0.5) ? self.anim_pain1 : self.anim_pain2), true, true, false);
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Zombie, mr_death, bool(Zombie thismon))
 		{
+			SELFPARAM();
 			self.armorvalue = autocvar_g_monsters_armor_blockpercent;
 
 			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
@@ -167,8 +165,9 @@ bool M_Zombie(Monster thismon, int req)
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Zombie, mr_anim, bool(Zombie thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_die1 = animfixfps(self, '9 1 0.5', none); // 2 seconds
 			self.anim_die2 = animfixfps(self, '12 1 0.5', none); // 2 seconds
@@ -189,7 +188,7 @@ bool M_Zombie(Monster thismon, int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		METHOD(Zombie, mr_setup, bool(Zombie thismon))
 		{
 			if(!self.health) self.health = (autocvar_g_monster_zombie_health);
 			if(!self.speed) { self.speed = (autocvar_g_monster_zombie_speed_walk); }
@@ -212,12 +211,8 @@ bool M_Zombie(Monster thismon, int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Zombie, mr_precache, bool(Zombie thismon))
 		{
 			return true;
 		}
 		#endif
-	}
-
-	return true;
-}
