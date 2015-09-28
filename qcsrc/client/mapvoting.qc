@@ -630,8 +630,6 @@ void GameTypeVote_ReadOption(int i)
 
 void MapVote_Init()
 {
-	precache_sound ("misc/invshot.wav");
-
 	mv_active = 1;
 	if(autocvar_hud_cursormode) { setcursormode(1); }
 	else { mv_mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight; }

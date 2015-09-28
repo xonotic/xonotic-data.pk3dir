@@ -77,7 +77,7 @@ void W_Vaporizer_Attack(void)
 	W_SetupShot(self, true, 0, "", CH_WEAPON_A, vaporizer_damage);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
-	sound (self, CH_WEAPON_A, W_Sound("minstanexfire"), VOL_BASE * 0.8, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -96,41 +96,8 @@ void W_Vaporizer_Attack(void)
 	Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
-	vector v;
-	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	switch(self.team)
-	{
-		case NUM_TEAM_1:   // Red
-			if(damage_goodhits)
-				Send_Effect(EFFECT_VAPORIZER_RED_HIT, w_shotorg, v, 1);
-			else
-				Send_Effect(EFFECT_VAPORIZER_RED, w_shotorg, v, 1);
-			break;
-		case NUM_TEAM_2:   // Blue
-			if(damage_goodhits)
-				Send_Effect(EFFECT_VAPORIZER_BLUE_HIT, w_shotorg, v, 1);
-			else
-				Send_Effect(EFFECT_VAPORIZER_BLUE, w_shotorg, v, 1);
-			break;
-		case NUM_TEAM_3:   // Yellow
-			if(damage_goodhits)
-				Send_Effect(EFFECT_VAPORIZER_YELLOW_HIT, w_shotorg, v, 1);
-			else
-				Send_Effect(EFFECT_VAPORIZER_YELLOW, w_shotorg, v, 1);
-			break;
-		case NUM_TEAM_4:   // Pink
-			if(damage_goodhits)
-				Send_Effect(EFFECT_VAPORIZER_PINK_HIT, w_shotorg, v, 1);
-			else
-				Send_Effect(EFFECT_VAPORIZER_PINK, w_shotorg, v, 1);
-			break;
-		default:
-			if(damage_goodhits)
-				Send_Effect_("TE_TEI_G3_HIT", w_shotorg, v, 1);
-			else
-				Send_Effect_("TE_TEI_G3", w_shotorg, v, 1);
-			break;
-	}
+	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	Send_Effect((damage_goodhits ? EFFECT_VAPORIZER_HIT(self.team) : EFFECT_VAPORIZER(self.team)), w_shotorg, v, 1);
 
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
@@ -174,7 +141,7 @@ void W_RocketMinsta_Attack2(void)
 
 	float w = self.weapon;
 	self.weapon = WEP_ELECTRO.m_id;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, W_Sound("crylink_fire"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND(CRYLINK_FIRE), CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	self.weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -227,7 +194,7 @@ void W_RocketMinsta_Attack3 (void)
 
 	int w = self.weapon;
 	self.weapon = WEP_ELECTRO.m_id;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, W_Sound("electro_fire2"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND(ELECTRO_FIRE2), CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	self.weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -362,10 +329,6 @@ float W_Vaporizer(entity thiswep, float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("minstanexfire"));
-			precache_sound(W_Sound("nexwhoosh1"));
-			precache_sound(W_Sound("nexwhoosh2"));
-			precache_sound(W_Sound("nexwhoosh3"));
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
@@ -408,7 +371,7 @@ float W_Vaporizer(entity thiswep, float req)
 			else
 				used_ammo = vaporizer_ammo;
 
-			W_Reload(used_ammo, W_Sound("reload"));
+			W_Reload(used_ammo, SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -434,19 +397,17 @@ float W_Vaporizer(entity thiswep, float req)
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
 				pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 			}
 			else
 			{
 				pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
-				if(!w_issilent) { sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM); }
+				if(!w_issilent) { sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM); }
 			}
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("laserimpact"));
-			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

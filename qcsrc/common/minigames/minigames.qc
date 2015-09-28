@@ -2,10 +2,11 @@
 
 entity minigame_get_descriptor(string id)
 {
-	entity e;
-	for ( e = minigame_descriptors; e != world; e = e.list_next )
-		if ( e.netname == id )
-			return e;
+	FOREACH(MINIGAMES, true, LAMBDA(
+	{
+		if(it.netname == id)
+			return it;
+	}));
 	return world;
 }
 

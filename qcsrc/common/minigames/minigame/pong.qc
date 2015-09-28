@@ -1,3 +1,5 @@
+REGISTER_MINIGAME(pong, "Pong");
+
 // minigame flags
 const int PONG_STATUS_WAIT = 0x0010; // waiting for players to join
 const int PONG_STATUS_PLAY = 0x0020; // playing

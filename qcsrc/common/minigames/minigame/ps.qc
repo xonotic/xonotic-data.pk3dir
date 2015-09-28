@@ -1,3 +1,5 @@
+REGISTER_MINIGAME(ps, "Peg Solitaire");
+
 const float PS_TURN_MOVE  = 0x0100; // player has to click on a piece on the board
 const float PS_TURN_WIN   = 0x0200; // player has won
 const float PS_TURN_DRAW  = 0x0400; // player can make no more moves

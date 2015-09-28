@@ -11,4 +11,14 @@ void Dump_Items()
     ));
 }
 
+string Item_Model(string item_mdl)
+{
+    string output = strcat("models/items/", item_mdl);
+#ifdef SVQC
+    MUTATOR_CALLHOOK(ItemModel, item_mdl, output);
+    output = item_model_output;
+#endif
+    return output;
+}
+
 #endif

@@ -61,7 +61,7 @@ void W_HeavyMachineGun_Attack_Auto()
 
 	W_DecreaseAmmo(WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (self, true, 0, W_Sound("uzi_fire"), CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (self, true, 0, SND(UZI_FIRE), CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
@@ -118,7 +118,6 @@ bool W_HeavyMachineGun(entity thiswep, int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound (W_Sound("uzi_fire"));
 			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -147,7 +146,7 @@ bool W_HeavyMachineGun(entity thiswep, int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(hmg, ammo), W_Sound("reload"));
+			W_Reload(WEP_CVAR(hmg, ammo), SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -177,19 +176,16 @@ bool W_HeavyMachineGun(entity thiswep, int req)
 			pointparticles(particleeffectnum(EFFECT_MACHINEGUN_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				if(w_random < 0.05)
-					sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.1)
-					sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.2)
-					sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTEN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("ric1"));
-			precache_sound(W_Sound("ric2"));
-			precache_sound(W_Sound("ric3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

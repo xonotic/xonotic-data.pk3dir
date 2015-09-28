@@ -1,3 +1,5 @@
+#include "all.qh"
+
 void turret_remove()
 {SELFPARAM();
 	remove(self.tur_head);
@@ -216,7 +218,7 @@ void turret_construct()
 	setsize(self, tur.mins, tur.maxs);
 	setsize(self.tur_head, '0 0 0', '0 0 0');
 
-	if(self.turretid == TUR_EWHEEL)
+	if(self.turretid == TUR_EWHEEL.m_id)
 		setattachment(self.tur_head, self, "");
 	else
 		setattachment(self.tur_head, self, "tag_head");
@@ -272,7 +274,7 @@ void turret_gibboom()
 {SELFPARAM();
 	float i;
 
-	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
 
 	for (i = 1; i < 5; i = i + 1)
@@ -318,16 +320,16 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 
 void turret_die()
 {SELFPARAM();
-	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
 	if (!autocvar_cl_nogibs)
 	{
 		// Base
-		if(self.turretid == TUR_EWHEEL)
+		if(self.turretid == TUR_EWHEEL.m_id)
 			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', true);
-		else if (self.turretid == TUR_WALKER)
+		else if (self.turretid == TUR_WALKER.m_id)
 			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', true);
-		else if (self.turretid == TUR_TESLA)
+		else if (self.turretid == TUR_TESLA.m_id)
 			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', false);
 		else
 		{

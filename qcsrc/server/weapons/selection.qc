@@ -63,7 +63,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				if (complain)
 				if(IS_REAL_CLIENT(cl))
 				{
-					play2(cl, W_Sound("unavailable"));
+					play2(cl, SND(UNAVAILABLE));
 					Send_WeaponComplain (cl, wpn, 0);
 				}
 				return false;
@@ -107,7 +107,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			Send_WeaponComplain (cl, wpn, 2);
 		}
 
-		play2(cl, W_Sound("unavailable"));
+		play2(cl, SND(UNAVAILABLE));
 	}
 	return false;
 }

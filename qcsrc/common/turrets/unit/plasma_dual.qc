@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ PLASMA_DUAL,
 /* function   */ t_plasma_dual,
@@ -40,7 +40,7 @@ METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep)) {
 	return true;
 }
 
-void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
+void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA_DUAL.m_id)) remove(self); }
 
 float t_plasma_dual(float req)
 {SELFPARAM();
@@ -60,18 +60,13 @@ float t_plasma_dual(float req)
                 Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
                 // teamcolor / hit beam effect
-                vector v;
-                string s;
-                v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-                s = strcat(EFFECT_VAPORIZER_NEUTRAL.eent_eff_name, ((self.team) ? Static_Team_ColorName_Upper(self.team) : ""));
-
-                WarpZone_TrailParticles(world, _particleeffectnum(s), self.tur_shotorg, v);
-
+                vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+                WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
                 self.tur_head.frame += 1;
             }
             else
             {
-                entity missile = turret_projectile(W_Sound("hagar_fire"), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
+                entity missile = turret_projectile(SND(HAGAR_FIRE), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
                 missile.missile_flags = MIF_SPLASH;
                 Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
                 self.tur_head.frame += 1;

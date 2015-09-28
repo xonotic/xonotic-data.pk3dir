@@ -108,7 +108,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(WEP_CVAR(rpc, ammo));
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, W_Sound("rocket_fire"), CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKET_FIRE), CH_WEAPON_A, WEP_CVAR(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -182,7 +182,6 @@ bool W_RocketPropelledChainsaw(entity thiswep, int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound (W_Sound("rocket_fire"));
 			RPC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -203,7 +202,7 @@ bool W_RocketPropelledChainsaw(entity thiswep, int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(rpc, ammo), W_Sound("reload"));
+			W_Reload(WEP_CVAR(rpc, ammo), SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -239,13 +238,12 @@ bool W_RocketPropelledChainsaw(entity thiswep, int req)
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("rocket_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

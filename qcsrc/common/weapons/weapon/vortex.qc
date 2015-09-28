@@ -103,10 +103,10 @@ void W_Vortex_Attack(float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(self, true, 5, W_Sound("nexfire"), CH_WEAPON_A, mydmg);
+	W_SetupShot(self, true, 5, SND(NEXFIRE), CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
-		sound(self, CH_WEAPON_B, W_Sound("nexcharge"), VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
+		sound(self, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
@@ -253,11 +253,6 @@ bool W_Vortex(entity thiswep, int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("nexfire"));
-			precache_sound(W_Sound("nexcharge"));
-			precache_sound(W_Sound("nexwhoosh1"));
-			precache_sound(W_Sound("nexwhoosh2"));
-			precache_sound(W_Sound("nexwhoosh3"));
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -298,7 +293,7 @@ bool W_Vortex(entity thiswep, int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), W_Sound("reload"));
+			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -325,13 +320,12 @@ bool W_Vortex(entity thiswep, int req)
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("neximpact"));
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");

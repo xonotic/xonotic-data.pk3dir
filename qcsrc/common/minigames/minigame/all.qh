@@ -65,25 +65,9 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 #include "ttt.qc"
 #include "c4.qc"
 #include "pong.qc"
-#include "qto.qc"
 #include "ps.qc"
 #include "pp.qc"
-
-/**
- * Registration:
- * 	MINIGAME(id,"Name")
- * 		id    (QuakeC symbol) Game identifier, used to find the functions explained above
- * 		"Name"(String)        Human readable name for the game, shown in the UI
- */
-#define REGISTERED_MINIGAMES \
-	MINIGAME(nmm, "Nine Men's Morris") \
-	MINIGAME(ttt, "Tic Tac Toe") \
-	MINIGAME(pong,"Pong") \
-	MINIGAME(c4,  "Connect Four") \
-	MINIGAME(qto, "Quinto") \
-	MINIGAME(ps,  "Peg Solitaire") \
-	MINIGAME(pp,  "Push-Pull") \
-	/*empty line*/
+#include "snake.qc"
 
 /**
  * Set up automatic entity read/write functionality

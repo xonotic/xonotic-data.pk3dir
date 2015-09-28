@@ -1,4 +1,4 @@
-#include "../pathlib.qh"
+#include "pathlib.qh"
 
 MODEL(SQUARE,       "models/pathlib/square.md3");
 MODEL(SQUARE_GOOD,  "models/pathlib/goodsquare.md3");
