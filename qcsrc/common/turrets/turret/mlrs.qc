@@ -1,26 +1,26 @@
 #ifndef TUR_MLRS_H
 #define TUR_MLRS_H
-REGISTER_TURRET(
-/* TUR_##id   */ MLRS,
-/* function   */ t_mlrs,
-/* spawnflags */ TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER,
-/* mins,maxs  */ '-32 -32 0', '32 32 64',
-/* model	  */ "base.md3",
-/* head_model */ "mlrs.md3",
-/* netname	  */ "mlrs",
-/* fullname   */ _("MLRS Turret")
-);
+
+CLASS(MLRSTurret, Turret)
+/* spawnflags */ ATTRIB(MLRSTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
+/* mins       */ ATTRIB(MLRSTurret, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(MLRSTurret, maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(MLRSTurret, mdl, string, "base.md3");
+/* model      */ ATTRIB(MLRSTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(MLRSTurret, head_model, string, strzone(strcat("models/turrets/", "mlrs.md3")));
+/* netname    */ ATTRIB(MLRSTurret, netname, string, "mlrs");
+/* fullname   */ ATTRIB(MLRSTurret, turret_name, string, _("MLRS Turret"));
+ENDCLASS(MLRSTurret)
+
+REGISTER_TURRET(MLRS, NEW(MLRSTurret));
+
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS.m_id)) remove(self); }
 
-float t_mlrs(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(MLRSTurret, tr_attack, bool(MLRSTurret thistur))
         {
             entity missile;
 
@@ -32,7 +32,7 @@ float t_mlrs(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(MLRSTurret, tr_think, bool(MLRSTurret thistur))
         {
             // 0 = full, 6 = empty
             self.tur_head.frame = bound(0, 6 - floor(0.1 + self.ammo / self.shot_dmg), 6);
@@ -44,11 +44,11 @@ float t_mlrs(Turret thistur, float req)
 
             return true;
         }
-        case TR_DEATH:
+        METHOD(MLRSTurret, tr_death, bool(MLRSTurret thistur))
         {
             return true;
         }
-        case TR_SETUP:
+        METHOD(MLRSTurret, tr_setup, bool(MLRSTurret thistur))
         {
             self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
             self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
@@ -59,33 +59,21 @@ float t_mlrs(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(MLRSTurret, tr_precache, bool(MLRSTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
-float t_mlrs(Turret thistur, float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(MLRSTurret, tr_setup, bool(MLRSTurret thistur))
         {
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(MLRSTurret, tr_precache, bool(MLRSTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
