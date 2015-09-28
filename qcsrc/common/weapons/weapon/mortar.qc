@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ MORTAR,
-/* function  */ W_Mortar,
-/* ammotype  */ ammo_rockets,
-/* impulse   */ 4,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '1 0 0',
-/* modelname */ "gl",
-/* model     */ MDL_MORTAR_ITEM,
-/* crosshair */ "gfx/crosshairgrenadelauncher 0.7",
-/* wepimg    */ "weapongrenadelauncher",
-/* refname   */ "mortar",
-/* wepname   */ _("Mortar")
-);
+CLASS(Mortar, Weapon)
+/* ammotype  */ ATTRIB(Mortar, ammo_field, .int, ammo_rockets)
+/* impulse   */ ATTRIB(Mortar, impulse, int, 4)
+/* flags     */ ATTRIB(Mortar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Mortar, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* color     */ ATTRIB(Mortar, wpcolor, vector, '1 0 0');
+/* modelname */ ATTRIB(Mortar, mdl, string, "gl");
+#ifndef MENUQC
+/* model     */ ATTRIB(Mortar, m_model, Model, MDL_MORTAR_ITEM);
+#endif
+/* crosshair */ ATTRIB(Mortar, w_crosshair, string, "gfx/crosshairgrenadelauncher");
+/* crosshair */ ATTRIB(Mortar, w_crosshair_size, float, 0.7);
+/* wepimg    */ ATTRIB(Mortar, model2, string, "weapongrenadelauncher");
+/* refname   */ ATTRIB(Mortar, netname, string, "mortar");
+/* wepname   */ ATTRIB(Mortar, message, string, _("Mortar"));
+ENDCLASS(Mortar)
+REGISTER_WEAPON(MORTAR, NEW(Mortar));
 
 #define MORTAR_SETTINGS(w_cvar,w_prop) MORTAR_SETTINGS_LIST(w_cvar, w_prop, MORTAR, mortar)
 #define MORTAR_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -294,14 +296,8 @@ void W_Mortar_Attack2(void)
 }
 
 .float bot_secondary_grenademooth;
-bool W_Mortar(entity thiswep, int req)
-{SELFPARAM();
-	entity nade;
-	float nadefound;
-	float ammo_amount;
-	switch(req)
-	{
-		case WR_AIM:
+
+		METHOD(Mortar, wr_aim, bool(entity thiswep))
 		{
 			self.BUTTON_ATCK = false;
 			self.BUTTON_ATCK2 = false;
@@ -340,7 +336,7 @@ bool W_Mortar(entity thiswep, int req)
 			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime))));
 			wepinfo_ter_dps = 0;
 			*/
-		case WR_THINK:
+		METHOD(Mortar, wr_think, bool(entity thiswep))
 		{
 			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
@@ -356,13 +352,14 @@ bool W_Mortar(entity thiswep, int req)
 			{
 				if(WEP_CVAR_SEC(mortar, remote_detonateprimary))
 				{
-					nadefound = 0;
+					bool nadefound = false;
+					entity nade;
 					for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == self)
 					{
 						if(!nade.gl_detonate_later)
 						{
 							nade.gl_detonate_later = true;
-							nadefound = 1;
+							nadefound = true;
 						}
 					}
 					if(nadefound)
@@ -377,57 +374,52 @@ bool W_Mortar(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Mortar, wr_init, bool(entity thiswep))
 		{
 			MORTAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Mortar, wr_checkammo1, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_PRI(mortar, ammo);
+			float ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_PRI(mortar, ammo);
 			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Mortar, wr_checkammo2, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_SEC(mortar, ammo);
+			float ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_SEC(mortar, ammo);
 			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
-		case WR_CONFIG:
+		METHOD(Mortar, wr_config, bool(entity thiswep))
 		{
 			MORTAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(Mortar, wr_reload, bool(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Mortar, wr_suicidemessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MORTAR_SUICIDE_BOUNCE;
 			else
 				return WEAPON_MORTAR_SUICIDE_EXPLODE;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Mortar, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MORTAR_MURDER_BOUNCE;
 			else
 				return WEAPON_MORTAR_MURDER_EXPLODE;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Mortar(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Mortar, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
@@ -437,17 +429,15 @@ bool W_Mortar(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Mortar, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Mortar, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
