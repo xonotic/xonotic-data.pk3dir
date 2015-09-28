@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ SEEKER,
-/* function  */ W_Seeker,
-/* ammotype  */ ammo_rockets,
-/* impulse   */ 8,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '0.5 1 0',
-/* modelname */ "seeker",
-/* model     */ MDL_SEEKER_ITEM,
-/* crosshair */ "gfx/crosshairseeker 0.8",
-/* wepimg    */ "weaponseeker",
-/* refname   */ "seeker",
-/* wepname   */ _("T.A.G. Seeker")
-);
+CLASS(Seeker, Weapon)
+/* ammotype  */ ATTRIB(Seeker, ammo_field, .int, ammo_rockets)
+/* impulse   */ ATTRIB(Seeker, impulse, int, 8)
+/* flags     */ ATTRIB(Seeker, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Seeker, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* color     */ ATTRIB(Seeker, wpcolor, vector, '0.5 1 0');
+/* modelname */ ATTRIB(Seeker, mdl, string, "seeker");
+#ifndef MENUQC
+/* model     */ ATTRIB(Seeker, m_model, Model, MDL_SEEKER_ITEM);
+#endif
+/* crosshair */ ATTRIB(Seeker, w_crosshair, string, "gfx/crosshairseeker");
+/* crosshair */ ATTRIB(Seeker, w_crosshair_size, float, 0.8);
+/* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
+/* refname   */ ATTRIB(Seeker, netname, string, "seeker");
+/* wepname   */ ATTRIB(Seeker, message, string, _("T.A.G. Seeker"));
+ENDCLASS(Seeker)
+REGISTER_WEAPON(SEEKER, NEW(Seeker));
 
 #define SEEKER_SETTINGS(w_cvar,w_prop) SEEKER_SETTINGS_LIST(w_cvar, w_prop, SEEKER, seeker)
 #define SEEKER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -596,13 +598,7 @@ void W_Seeker_Fire_Tag(void)
 // Begin: Genereal weapon functions
 // ============================
 
-bool W_Seeker(entity thiswep, int req)
-{SELFPARAM();
-	float ammo_amount;
-
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Seeker, wr_aim, bool(entity thiswep))
 		{
 			if(WEP_CVAR(seeker, type) == 1)
 				if(W_Seeker_Tagged_Info(self, self.enemy) != world)
@@ -613,7 +609,7 @@ bool W_Seeker(entity thiswep, int req)
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
 			return true;
 		}
-		case WR_THINK:
+		METHOD(Seeker, wr_think, bool(entity thiswep))
 		{
 			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
@@ -660,13 +656,14 @@ bool W_Seeker(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Seeker, wr_init, bool(entity thiswep))
 		{
 			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Seeker, wr_checkammo1, bool(entity thiswep))
 		{
+			float ammo_amount;
 			if(WEP_CVAR(seeker, type) == 1)
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, missile_ammo);
@@ -679,8 +676,9 @@ bool W_Seeker(entity thiswep, int req)
 			}
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Seeker, wr_checkammo2, bool(entity thiswep))
 		{
+			float ammo_amount;
 			if(WEP_CVAR(seeker, type) == 1)
 			{
 				ammo_amount = self.WEP_AMMO(SEEKER) >= WEP_CVAR(seeker, tag_ammo);
@@ -693,37 +691,32 @@ bool W_Seeker(entity thiswep, int req)
 			}
 			return ammo_amount;
 		}
-		case WR_CONFIG:
+		METHOD(Seeker, wr_config, bool(entity thiswep))
 		{
 			SEEKER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(Seeker, wr_reload, bool(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND(RELOAD));
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Seeker, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_SEEKER_SUICIDE;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Seeker, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_SEEKER_MURDER_TAG;
 			else
 				return WEAPON_SEEKER_MURDER_SPRAY;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Seeker(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Seeker, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
@@ -763,17 +756,15 @@ bool W_Seeker(entity thiswep, int req)
 			}
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Seeker, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Seeker, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
