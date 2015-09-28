@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ SHOTGUN,
-/* function  */ W_Shotgun,
-/* ammotype  */ ammo_shells,
-/* impulse   */ 2,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating    */ BOT_PICKUP_RATING_LOW,
-/* color     */ '0.5 0.25 0',
-/* modelname */ "shotgun",
-/* model     */ MDL_SHOTGUN_ITEM,
-/* crosshair */ "gfx/crosshairshotgun 0.65",
-/* wepimg    */ "weaponshotgun",
-/* refname   */ "shotgun",
-/* wepname   */ _("Shotgun")
-);
+CLASS(Shotgun, Weapon)
+/* ammotype  */ ATTRIB(Shotgun, ammo_field, .int, ammo_shells)
+/* impulse   */ ATTRIB(Shotgun, impulse, int, 2)
+/* flags     */ ATTRIB(Shotgun, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
+/* rating    */ ATTRIB(Shotgun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
+/* color     */ ATTRIB(Shotgun, wpcolor, vector, '0.5 0.25 0');
+/* modelname */ ATTRIB(Shotgun, mdl, string, "shotgun");
+#ifndef MENUQC
+/* model     */ ATTRIB(Shotgun, m_model, Model, MDL_SHOTGUN_ITEM);
+#endif
+/* crosshair */ ATTRIB(Shotgun, w_crosshair, string, "gfx/crosshairshotgun");
+/* crosshair */ ATTRIB(Shotgun, w_crosshair_size, float, 0.65);
+/* wepimg    */ ATTRIB(Shotgun, model2, string, "weaponshotgun");
+/* refname   */ ATTRIB(Shotgun, netname, string, "shotgun");
+/* wepname   */ ATTRIB(Shotgun, message, string, _("Shotgun"));
+ENDCLASS(Shotgun)
+REGISTER_WEAPON(SHOTGUN, NEW(Shotgun));
 
 #define SHOTGUN_SETTINGS(w_cvar,w_prop) SHOTGUN_SETTINGS_LIST(w_cvar, w_prop, SHOTGUN, shotgun)
 #define SHOTGUN_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -223,12 +225,7 @@ void W_Shotgun_Attack3_Frame1()
 
 .float shotgun_primarytime;
 
-float W_Shotgun(entity thiswep, float req)
-{SELFPARAM();
-	float ammo_amount;
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Shotgun, wr_aim, bool(entity thiswep))
 		{
 			if(vlen(self.origin-self.enemy.origin) <= WEP_CVAR_SEC(shotgun, melee_range))
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
@@ -237,7 +234,7 @@ float W_Shotgun(entity thiswep, float req)
 
 			return true;
 		}
-		case WR_THINK:
+		METHOD(Shotgun, wr_think, bool(entity thiswep))
 		{
 			if(WEP_CVAR(shotgun, reload_ammo) && self.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{
@@ -284,23 +281,23 @@ float W_Shotgun(entity thiswep, float req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Shotgun, wr_init, bool(entity thiswep))
 		{
 			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_SETUP:
+		METHOD(Shotgun, wr_setup, bool(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Shotgun, wr_checkammo1, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
+			float ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
 			ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
 		{
 			if(IS_BOT_CLIENT(self))
 			if(vlen(self.origin-self.enemy.origin) > WEP_CVAR_SEC(shotgun, melee_range))
@@ -310,45 +307,40 @@ float W_Shotgun(entity thiswep, float req)
 				case 1: return true; // melee does not use ammo
 				case 2: // secondary triple shot
 				{
-					ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
+					float ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
 					ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
 					return ammo_amount;
 				}
 				default: return false; // secondary unavailable
 			}
 		}
-		case WR_CONFIG:
+		METHOD(Shotgun, wr_config, bool(entity thiswep))
 		{
 			SHOTGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(Shotgun, wr_reload, bool(entity thiswep))
 		{
 			W_Reload(WEP_CVAR_PRI(shotgun, ammo), SND(RELOAD)); // WEAPONTODO
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Shotgun, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Shotgun, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_SHOTGUN_MURDER_SLAP;
 			else
 				return WEAPON_SHOTGUN_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
 .float prevric;
-float W_Shotgun(entity thiswep, float req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Shotgun, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
@@ -366,17 +358,15 @@ float W_Shotgun(entity thiswep, float req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Shotgun, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Shotgun, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
