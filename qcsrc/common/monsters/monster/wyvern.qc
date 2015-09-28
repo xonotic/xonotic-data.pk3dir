@@ -1,17 +1,16 @@
+CLASS(Wyvern, Monster)
+    ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE);
+    ATTRIB(Wyvern, mins, vector, '-20 -20 -58');
+    ATTRIB(Wyvern, maxs, vector, '20 20 20');
+    ATTRIB(Wyvern, mdl, string, "wizard.mdl");
+    ATTRIB(Wyvern, model, string, strzone(strcat("models/monsters/", this.mdl)));
+    ATTRIB(Wyvern, netname, string, "wyvern");
+    ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
+ENDCLASS(Wyvern)
+
+REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
 #ifndef MENUQC
-bool M_Wyvern(Monster thismon, int);
-#endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ WYVERN,
-/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE,
-/* mins,maxs  */ '-20 -20 -58', '20 20 20',
-/* model      */ "wizard.mdl",
-/* netname    */ "wyvern",
-/* fullname   */ _("Wyvern")
-) {
-#ifndef MENUQC
-	this.monster_func = M_Wyvern;
-	MON_ACTION(this, MR_PRECACHE);
+    MON_ACTION(this, MR_PRECACHE);
 #endif
 }
 
@@ -104,24 +103,21 @@ float M_Wyvern_Attack(float attack_type)
 void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN.monsterid); }
 #endif // SVQC
 
-bool M_Wyvern(Monster thismon, int req)
-{
-	SELFPARAM();
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Wyvern, mr_think, bool(Wyvern thismon))
 		{
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Wyvern, mr_pain, bool(Wyvern thismon))
 		{
+			SELFPARAM();
 			self.pain_finished = time + 0.5;
 			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Wyvern, mr_death, bool(Wyvern thismon))
 		{
+			SELFPARAM();
 			setanim(self, self.anim_die1, false, true, true);
 			self.velocity_x = -200 + 400 * random();
 			self.velocity_y = -200 + 400 * random();
@@ -130,8 +126,9 @@ bool M_Wyvern(Monster thismon, int req)
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Wyvern, mr_anim, bool(Wyvern thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
 			self.anim_walk = animfixfps(self, '1 1 1', none);
@@ -144,8 +141,9 @@ bool M_Wyvern(Monster thismon, int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		METHOD(Wyvern, mr_setup, bool(Wyvern thismon))
 		{
+			SELFPARAM();
 			if(!self.health) self.health = (autocvar_g_monster_wyvern_health);
 			if(!self.speed) { self.speed = (autocvar_g_monster_wyvern_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_wyvern_speed_run); }
@@ -157,12 +155,8 @@ bool M_Wyvern(Monster thismon, int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Wyvern, mr_precache, bool(Wyvern thismon))
 		{
 			return true;
 		}
 		#endif
-	}
-
-	return true;
-}
