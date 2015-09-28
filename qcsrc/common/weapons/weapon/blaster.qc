@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ BLASTER,
-/* function  */ W_Blaster,
-/* ammotype  */ ammo_none,
-/* impulse   */ 1,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating    */ 0,
-/* color     */ '1 0.5 0.5',
-/* modelname */ "laser",
-/* model     */ MDL_BLASTER_ITEM,
-/* crosshair */ "gfx/crosshairlaser 0.5",
-/* wepimg    */ "weaponlaser",
-/* refname   */ "blaster",
-/* wepname   */ _("Blaster")
-);
+CLASS(Blaster, Weapon)
+/* ammotype  */ //ATTRIB(Blaster, ammo_field, .int, ammo_none)
+/* impulse   */ ATTRIB(Blaster, impulse, int, 1)
+/* flags     */ ATTRIB(Blaster, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Blaster, bot_pickupbasevalue, float, 0);
+/* color     */ ATTRIB(Blaster, wpcolor, vector, '1 0.5 0.5');
+/* modelname */ ATTRIB(Blaster, mdl, string, "laser");
+#ifndef MENUQC
+/* model     */ ATTRIB(Blaster, m_model, Model, MDL_BLASTER_ITEM);
+#endif
+/* crosshair */ ATTRIB(Blaster, w_crosshair, string, "gfx/crosshairlaser");
+/* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
+/* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
+/* refname   */ ATTRIB(Blaster, netname, string, "blaster");
+/* wepname   */ ATTRIB(Blaster, message, string, _("Blaster"));
+ENDCLASS(Blaster)
+REGISTER_WEAPON(BLASTER, NEW(Blaster));
 
 #define BLASTER_SETTINGS(w_cvar,w_prop) BLASTER_SETTINGS_LIST(w_cvar, w_prop, BLASTER, blaster)
 #define BLASTER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -144,11 +146,8 @@ void W_Blaster_Attack(
 		WITH(entity, self, missile, missile.think());
 	}
 }
-bool W_Blaster(entity thiswep, int request)
-{SELFPARAM();
-	switch(request)
-	{
-		case WR_AIM:
+
+		METHOD(Blaster, wr_aim, bool(entity thiswep))
 		{
 			if(WEP_CVAR(blaster, secondary))
 			{
@@ -163,7 +162,7 @@ bool W_Blaster(entity thiswep, int request)
 			return true;
 		}
 
-		case WR_THINK:
+		METHOD(Blaster, wr_think, bool(entity thiswep))
 		{
 			if(self.BUTTON_ATCK)
 			{
@@ -221,49 +220,48 @@ bool W_Blaster(entity thiswep, int request)
 			return true;
 		}
 
-		case WR_INIT:
+		METHOD(Blaster, wr_init, bool(entity thiswep))
 		{
 			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
 
-		case WR_SETUP:
+		METHOD(Blaster, wr_setup, bool(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
 			return true;
 		}
 
-		case WR_CHECKAMMO1:
-		case WR_CHECKAMMO2:
+		METHOD(Blaster, wr_checkammo1, bool(entity thiswep))
 		{
-			return true; // laser has infinite ammo
+			return true; // infinite ammo
 		}
 
-		case WR_CONFIG:
+		METHOD(Blaster, wr_checkammo2, bool(entity thiswep))
+		{
+			return true; // blaster has infinite ammo
+		}
+
+		METHOD(Blaster, wr_config, bool(entity thiswep))
 		{
 			BLASTER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
 
-		case WR_SUICIDEMESSAGE:
+		METHOD(Blaster, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_BLASTER_SUICIDE;
 		}
 
-		case WR_KILLMESSAGE:
+		METHOD(Blaster, wr_killmessage, bool(entity thiswep))
 		{
 			return WEAPON_BLASTER_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Blaster(entity thiswep, int request)
-{SELFPARAM();
-	switch(request)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Blaster, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
@@ -272,17 +270,16 @@ bool W_Blaster(entity thiswep, int request)
 			return true;
 		}
 
-		case WR_INIT:
+		METHOD(Blaster, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+
+		METHOD(Blaster, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif

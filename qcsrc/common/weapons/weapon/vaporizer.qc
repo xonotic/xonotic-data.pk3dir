@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ VAPORIZER,
-/* function  */ W_Vaporizer,
-/* ammotype  */ ammo_cells,
-/* impulse   */ 7,
-/* flags     */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
-/* rating    */ BOT_PICKUP_RATING_HIGH,
-/* color     */ '0.5 1 1',
-/* modelname */ "minstanex",
-/* model     */ MDL_VAPORIZER_ITEM,
-/* crosshair */ "gfx/crosshairminstanex 0.6",
-/* wepimg    */ "weaponminstanex",
-/* refname   */ "vaporizer",
-/* wepname   */ _("Vaporizer")
-);
+CLASS(Vaporizer, Weapon)
+/* ammotype  */ ATTRIB(Vaporizer, ammo_field, .int, ammo_cells)
+/* impulse   */ ATTRIB(Vaporizer, impulse, int, 7)
+/* flags     */ ATTRIB(Vaporizer, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN);
+/* rating    */ ATTRIB(Vaporizer, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* color     */ ATTRIB(Vaporizer, wpcolor, vector, '0.5 1 1');
+/* modelname */ ATTRIB(Vaporizer, mdl, string, "minstanex");
+#ifndef MENUQC
+/* model     */ ATTRIB(Vaporizer, m_model, Model, MDL_VAPORIZER_ITEM);
+#endif
+/* crosshair */ ATTRIB(Vaporizer, w_crosshair, string, "gfx/crosshairminstanex");
+/* crosshair */ ATTRIB(Vaporizer, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponminstanex");
+/* refname   */ ATTRIB(Vaporizer, netname, string, "vaporizer");
+/* wepname   */ ATTRIB(Vaporizer, message, string, _("Vaporizer"));
+ENDCLASS(Vaporizer)
+REGISTER_WEAPON(VAPORIZER, NEW(Vaporizer));
 
 #define VAPORIZER_SETTINGS(w_cvar,w_prop) VAPORIZER_SETTINGS_LIST(w_cvar, w_prop, VAPORIZER, vaporizer)
 #define VAPORIZER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -235,18 +237,7 @@ void W_RocketMinsta_Attack3 (void)
     }
 }
 
-float W_Vaporizer(entity thiswep, float req)
-{SELFPARAM();
-	float ammo_amount;
-	float vaporizer_ammo;
-	float rapid = autocvar_g_rm_laser_rapid;
-
-	// now multiple WR_s use this
-	vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
-
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Vaporizer, wr_aim, bool(entity thiswep))
 		{
 			if(self.WEP_AMMO(VAPORIZER) > 0)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, false);
@@ -255,8 +246,9 @@ float W_Vaporizer(entity thiswep, float req)
 
 			return true;
 		}
-		case WR_THINK:
+		METHOD(Vaporizer, wr_think, bool(entity thiswep))
 		{
+			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			// if the laser uses load, we also consider its ammo for reloading
 			if(WEP_CVAR(vaporizer, reload_ammo) && WEP_CVAR_SEC(vaporizer, ammo) && self.clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
@@ -274,6 +266,7 @@ float W_Vaporizer(entity thiswep, float req)
 			{
 				if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
 				{
+					bool rapid = autocvar_g_rm_laser_rapid;
 					if(self.jump_interval <= time && !self.held_down)
 					{
 						if(rapid)
@@ -327,44 +320,46 @@ float W_Vaporizer(entity thiswep, float req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Vaporizer, wr_init, bool(entity thiswep))
 		{
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_SETUP:
+		METHOD(Vaporizer, wr_setup, bool(entity thiswep))
 		{
 			self.ammo_field = WEP_AMMO(VAPORIZER);
 			self.vaporizer_lasthit = 0;
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(VAPORIZER) >= vaporizer_ammo;
+			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
+			float ammo_amount = self.WEP_AMMO(VAPORIZER) >= vaporizer_ammo;
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep))
 		{
 			if(!WEP_CVAR_SEC(vaporizer, ammo))
 				return true;
-			ammo_amount = self.WEP_AMMO(VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
+			float ammo_amount = self.WEP_AMMO(VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
 			return ammo_amount;
 		}
-		case WR_CONFIG:
+		METHOD(Vaporizer, wr_config, bool(entity thiswep))
 		{
 			VAPORIZER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(Vaporizer, wr_resetplayer, bool(entity thiswep))
 		{
 			self.vaporizer_lasthit = 0;
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(Vaporizer, wr_reload, bool(entity thiswep))
 		{
+			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			float used_ammo;
 			if(WEP_CVAR_SEC(vaporizer, ammo))
 				used_ammo = min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo));
@@ -374,24 +369,19 @@ float W_Vaporizer(entity thiswep, float req)
 			W_Reload(used_ammo, SND(RELOAD));
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Vaporizer, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Vaporizer, wr_killmessage, bool(entity thiswep))
 		{
 			return WEAPON_VAPORIZER_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-float W_Vaporizer(entity thiswep, float req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Vaporizer, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2 = w_org + w_backoff * 6;
 			if(w_deathtype & HITTYPE_SECONDARY)
@@ -406,7 +396,7 @@ float W_Vaporizer(entity thiswep, float req)
 			}
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Vaporizer, wr_init, bool(entity thiswep))
 		{
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
@@ -414,7 +404,7 @@ float W_Vaporizer(entity thiswep, float req)
 			}
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Vaporizer, wr_zoomreticle, bool(entity thiswep))
 		{
 			if(button_zoom || zoomscript_caught)
 			{
@@ -427,8 +417,6 @@ float W_Vaporizer(entity thiswep, float req)
 				return false;
 			}
 		}
-	}
-	return false;
-}
+
 #endif
 #endif

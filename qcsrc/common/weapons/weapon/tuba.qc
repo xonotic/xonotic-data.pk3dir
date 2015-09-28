@@ -1,20 +1,22 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ TUBA,
-/* function  */ W_Tuba,
-/* ammotype  */ ammo_none,
-/* impulse   */ 1,
-/* flags     */ WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '0 1 0',
-/* modelname */ "tuba",
-/* model     */ MDL_TUBA_ITEM,
-/* crosshair */ "gfx/crosshairtuba",
-/* wepimg    */ "weapontuba",
-/* refname   */ "tuba",
+CLASS(Tuba, Weapon)
+/* ammotype  */ //ATTRIB(Tuba, ammo_field, .int, ammo_none)
+/* impulse   */ ATTRIB(Tuba, impulse, int, 1)
+/* flags     */ ATTRIB(Tuba, spawnflags, int, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Tuba, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* color     */ ATTRIB(Tuba, wpcolor, vector, '0 1 0');
+/* modelname */ ATTRIB(Tuba, mdl, string, "tuba");
+#ifndef MENUQC
+/* model     */ ATTRIB(Tuba, m_model, Model, MDL_TUBA_ITEM);
+#endif
+/* crosshair */ ATTRIB(Tuba, w_crosshair, string, "gfx/crosshairtuba");
+/* crosshair */ //ATTRIB(Tuba, w_crosshair_size, float, 0.65);
+/* wepimg    */ ATTRIB(Tuba, model2, string, "weapontuba");
+/* refname   */ ATTRIB(Tuba, netname, string, "tuba");
 /* xgettext:no-c-format */
-/* wepname   */ _("@!#%'n Tuba")
-);
+/* wepname   */ ATTRIB(Tuba, message, string, _("@!#%'n Tuba"));
+ENDCLASS(Tuba)
+REGISTER_WEAPON(TUBA, NEW(Tuba));
 
 #define TUBA_SETTINGS(w_cvar,w_prop) TUBA_SETTINGS_LIST(w_cvar, w_prop, TUBA, tuba)
 #define TUBA_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -365,11 +367,7 @@ void W_Tuba_NoteOn(float hittype)
 	}
 }
 
-bool W_Tuba(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Tuba, wr_aim, bool(entity thiswep))
 		{
 			// bots cannot play the Tuba well yet
 			// I think they should start with the recorder first
@@ -383,7 +381,7 @@ bool W_Tuba(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_THINK:
+		METHOD(Tuba, wr_think, bool(entity thiswep))
 		{
 			if(self.BUTTON_ATCK)
 			if(weapon_prepareattack(0, WEP_CVAR(tuba, refire)))
@@ -409,18 +407,18 @@ bool W_Tuba(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Tuba, wr_init, bool(entity thiswep))
 		{
 			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_SETUP:
+		METHOD(Tuba, wr_setup, bool(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
 			self.tuba_instrument = 0;
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(Tuba, wr_reload, bool(entity thiswep))
 		{
 			// switch to alternate instruments :)
 			if(self.weaponentity.state == WS_READY)
@@ -448,17 +446,20 @@ bool W_Tuba(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_CHECKAMMO1:
-		case WR_CHECKAMMO2:
+		METHOD(Tuba, wr_checkammo1, bool(entity thiswep))
+		{
+			return true; // infinite ammo
+		}
+		METHOD(Tuba, wr_checkammo2, bool(entity thiswep))
 		{
 			return true; // tuba has infinite ammo
 		}
-		case WR_CONFIG:
+		METHOD(Tuba, wr_config, bool(entity thiswep))
 		{
 			TUBA_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Tuba, wr_suicidemessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 				return WEAPON_KLEINBOTTLE_SUICIDE;
@@ -467,7 +468,7 @@ bool W_Tuba(entity thiswep, int req)
 			else
 				return WEAPON_TUBA_SUICIDE;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Tuba, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 				return WEAPON_KLEINBOTTLE_MURDER;
@@ -476,26 +477,15 @@ bool W_Tuba(entity thiswep, int req)
 			else
 				return WEAPON_TUBA_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Tuba(entity thiswep, int req)
-{SELFPARAM();
-	// nothing to do here; particles of tuba are handled differently
-	// WEAPONTODO
 
-	switch(req)
-	{
-		case WR_ZOOMRETICLE:
+		METHOD(Tuba, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
 
-	return false;
-}
 #endif
 #endif

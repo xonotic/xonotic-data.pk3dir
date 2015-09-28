@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ DEVASTATOR,
-/* function  */ W_Devastator,
-/* ammotype  */ ammo_rockets,
-/* impulse   */ 9,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_HIGH,
-/* color     */ '1 1 0',
-/* modelname */ "rl",
-/* model     */ MDL_DEVASTATOR_ITEM,
-/* crosshair */ "gfx/crosshairrocketlauncher 0.7",
-/* wepimg    */ "weaponrocketlauncher",
-/* refname   */ "devastator",
-/* wepname   */ _("Devastator")
-);
+CLASS(Devastator, Weapon)
+/* ammotype  */ ATTRIB(Devastator, ammo_field, .int, ammo_rockets)
+/* impulse   */ ATTRIB(Devastator, impulse, int, 9)
+/* flags     */ ATTRIB(Devastator, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Devastator, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* color     */ ATTRIB(Devastator, wpcolor, vector, '1 1 0');
+/* modelname */ ATTRIB(Devastator, mdl, string, "rl");
+#ifndef MENUQC
+/* model     */ ATTRIB(Devastator, m_model, Model, MDL_DEVASTATOR_ITEM);
+#endif
+/* crosshair */ ATTRIB(Devastator, w_crosshair, string, "gfx/crosshairrocketlauncher");
+/* crosshair */ ATTRIB(Devastator, w_crosshair_size, float, 0.7);
+/* wepimg    */ ATTRIB(Devastator, model2, string, "weaponrocketlauncher");
+/* refname   */ ATTRIB(Devastator, netname, string, "devastator");
+/* wepname   */ ATTRIB(Devastator, message, string, _("Devastator"));
+ENDCLASS(Devastator)
+REGISTER_WEAPON(DEVASTATOR, NEW(Devastator));
 
 #define DEVASTATOR_SETTINGS(w_cvar,w_prop) DEVASTATOR_SETTINGS_LIST(w_cvar, w_prop, DEVASTATOR, devastator)
 #define DEVASTATOR_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -392,15 +394,8 @@ void W_Devastator_Attack(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-bool W_Devastator(entity thiswep, int req)
-{SELFPARAM();
-	entity rock;
-	float rockfound;
-	float ammo_amount;
-	switch(req)
-	{
 		#if 0
-		case WR_AIM:
+		METHOD(Devastator, wr_aim, bool(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
@@ -429,7 +424,7 @@ bool W_Devastator(entity thiswep, int req)
 			return true;
 		}
 		#else
-		case WR_AIM:
+		METHOD(Devastator, wr_aim, bool(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
@@ -527,7 +522,7 @@ bool W_Devastator(entity thiswep, int req)
 			return true;
 		}
 		#endif
-		case WR_THINK:
+		METHOD(Devastator, wr_think, bool(entity thiswep))
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && self.clip_load < WEP_CVAR(devastator, ammo)) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
@@ -549,13 +544,14 @@ bool W_Devastator(entity thiswep, int req)
 				if(self.BUTTON_ATCK2)
 				if(self.switchweapon == WEP_DEVASTATOR.m_id)
 				{
-					rockfound = 0;
+					entity rock;
+					bool rockfound = false;
 					for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == self)
 					{
 						if(!rock.rl_detonate_later)
 						{
 							rock.rl_detonate_later = true;
-							rockfound = 1;
+							rockfound = true;
 						}
 					}
 					if(rockfound)
@@ -565,17 +561,17 @@ bool W_Devastator(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Devastator, wr_init, bool(entity thiswep))
 		{
 			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_SETUP:
+		METHOD(Devastator, wr_setup, bool(entity thiswep))
 		{
 			self.rl_release = 1;
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Devastator, wr_checkammo1, bool(entity thiswep))
 		{
 			#if 0
 			// don't switch while guiding a missile
@@ -606,51 +602,46 @@ bool W_Devastator(entity thiswep, int req)
 				return ammo_amount;
 			}
 			#else
-			ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
+			float ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
 			ammo_amount += self.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
 			return ammo_amount;
 			#endif
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Devastator, wr_checkammo2, bool(entity thiswep))
 		{
 			return false;
 		}
-		case WR_CONFIG:
+		METHOD(Devastator, wr_config, bool(entity thiswep))
 		{
 			DEVASTATOR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(Devastator, wr_resetplayer, bool(entity thiswep))
 		{
 			self.rl_release = 0;
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(Devastator, wr_reload, bool(entity thiswep))
 		{
 			W_Reload(WEP_CVAR(devastator, ammo), SND(RELOAD));
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Devastator, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_DEVASTATOR_SUICIDE;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Devastator, wr_killmessage, bool(entity thiswep))
 		{
 			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
 				return WEAPON_DEVASTATOR_MURDER_SPLASH;
 			else
 				return WEAPON_DEVASTATOR_MURDER_DIRECT;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Devastator(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Devastator, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
@@ -660,17 +651,15 @@ bool W_Devastator(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Devastator, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Devastator, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
