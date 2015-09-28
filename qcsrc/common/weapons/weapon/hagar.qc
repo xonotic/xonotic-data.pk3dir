@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '1 1 0.5',
 /* modelname */ "hagar",
+/* model     */ MDL_HAGAR_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhagar 0.8",
 /* wepimg    */ "weaponhagar",

@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '0.75 1 0',
 /* modelname */ "minelayer",
+/* model     */ MDL_MINELAYER_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairminelayer 0.9",
 /* wepimg    */ "weaponminelayer",

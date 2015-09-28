@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ 0,
 /* color     */ '1 0.5 0.5',
 /* modelname */ "laser",
+/* model     */ MDL_BLASTER_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairlaser 0.5",
 /* wepimg    */ "weaponlaser",

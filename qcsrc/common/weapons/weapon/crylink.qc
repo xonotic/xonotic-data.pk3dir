@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '1 0.5 1',
 /* modelname */ "crylink",
+/* model     */ MDL_CRYLINK_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshaircrylink 0.5",
 /* wepimg    */ "weaponcrylink",

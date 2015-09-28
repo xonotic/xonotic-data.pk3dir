@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating	 */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '0.5 0.5 0',
 /* modelname */ "ok_hmg",
+/* model     */ MDL_HMG_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairuzi 0.6",
 /* wepimg    */ "weaponhmg",

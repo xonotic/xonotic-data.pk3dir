@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '1 1 0',
 /* modelname */ "rl",
+/* model     */ MDL_DEVASTATOR_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairrocketlauncher 0.7",
 /* wepimg    */ "weaponrocketlauncher",

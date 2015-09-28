@@ -6,7 +6,9 @@ CLASS(PortoLaunch, Weapon)
 /* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
 /* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
 /* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
-/* model     */ ATTRIB(PortoLaunch, model, string, strzone(W_Model(strcat("g_", this.mdl, ".md3"))));
+#ifndef MENUQC
+/* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
+#endif
 /* simplemdl */ ATTRIB(PortoLaunch, w_simplemdl, string, "foobar");
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair, string, "gfx/crosshairporto");
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);

@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '0.5 1 0',
 /* modelname */ "seeker",
+/* model     */ MDL_SEEKER_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairseeker 0.8",
 /* wepimg    */ "weaponseeker",

@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_LOW,
 /* color     */ '0.5 0.25 0',
 /* modelname */ "shotgun",
+/* model     */ MDL_SHOTGUN_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairshotgun 0.65",
 /* wepimg    */ "weaponshotgun",

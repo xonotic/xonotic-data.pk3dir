@@ -3,12 +3,15 @@
 
 #ifndef MENUQC
 #include "calculations.qh"
+#include "../models/models.qh"
 #endif
 
 #include "../util.qh"
+
 #ifdef SVQC
 #include "../../server/bot/aim.qh"
 #endif
+
 const int MAX_SHOT_DISTANCE = 32768;
 
 // weapon pickup ratings for bot logic
@@ -96,6 +99,7 @@ void WepSet_AddStat();
 void WepSet_AddStat_InMap();
 void WriteWepSet(float dest, WepSet w);
 #endif
+
 #ifdef CSQC
 WepSet WepSet_GetFromStat();
 WepSet WepSet_GetFromStat_InMap();
@@ -208,8 +212,8 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, wpmodel, string, "");
     /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
     ATTRIB(Weapon, mdl, string, "");
-    /** A: modelname : full path to g_ model */
-    ATTRIB(Weapon, model, string, "");
+    /** M: model MDL_id_ITEM */
+    ATTRIB(Weapon, m_model, entity, NULL);
     /** M: simplemdl : simpleitems weapon model/image */
     ATTRIB(Weapon, w_simplemdl, string, "foobar");
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
@@ -235,6 +239,7 @@ CLASS(Weapon, Object)
 		float pickupbasevalue,
 		vector clr,
 		string modelname,
+		entity m,
 		string simplemdl,
 		string crosshair,
 		string wepimg,
@@ -249,7 +254,7 @@ CLASS(Weapon, Object)
 		this.bot_pickupbasevalue = pickupbasevalue;
 		this.wpcolor = clr;
 		this.mdl = modelname;
-		this.model = strzone(W_Model(strcat("g_", modelname, ".md3")));
+		this.m_model = m;
 		this.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
 		this.w_crosshair = strzone(car(crosshair));
 		string s = cdr(crosshair);
@@ -288,16 +293,16 @@ entity dummy_weapon_info;
 	} \
 	REGISTER_INIT(WEP, id)
 
-#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-	REGISTER_WEAPON_2(id, NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname))
+#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname) \
+	REGISTER_WEAPON_2(id, NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname))
 
 #ifndef MENUQC
-	#define REGISTER_WEAPON_13(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
+	#define REGISTER_WEAPON_14(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname) \
     	bool function(entity this, int); \
-    	_REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
+    	_REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname)
 #else
-	#define REGISTER_WEAPON_13(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-		_REGISTER_WEAPON(id, w_new,   ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
+	#define REGISTER_WEAPON_14(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname) \
+		_REGISTER_WEAPON(id, w_new,   ammotype, impulse, flags, rating, color, modelname, NULL, simplemdl, crosshair, wepimg, refname, wepname)
 #endif
 
 #include "all.inc"

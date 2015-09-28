@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ 0,
 /* color     */ '0 0.5 0',
 /* modelname */ "hookgun",
+/* model     */ MDL_HOOK_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhook 0.5",
 /* wepimg    */ "weaponhook",

@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '1 0.5 0',
 /* modelname */ "fireball",
+/* model     */ MDL_FIREBALL_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairfireball",
 /* wepimg    */ "weaponfireball",

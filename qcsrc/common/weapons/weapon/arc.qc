@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '1 1 1',
 /* modelname */ "arc",
+/* model     */ MDL_ARC_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.7",
 /* wepimg    */ "weaponarc",

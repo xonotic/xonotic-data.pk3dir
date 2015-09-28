@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '1 0 0',
 /* modelname */ "gl",
+/* model     */ MDL_MORTAR_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairgrenadelauncher 0.7",
 /* wepimg    */ "weapongrenadelauncher",

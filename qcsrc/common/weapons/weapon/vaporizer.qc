@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '0.5 1 1',
 /* modelname */ "minstanex",
+/* model     */ MDL_VAPORIZER_ITEM,
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairminstanex 0.6",
 /* wepimg    */ "weaponminstanex",
