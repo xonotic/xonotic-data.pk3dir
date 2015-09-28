@@ -1,15 +1,19 @@
 #ifndef TUR_EWHEEL_H
 #define TUR_EWHEEL_H
-REGISTER_TURRET(
-/* TUR_##id   */ EWHEEL,
-/* function   */ t_ewheel,
-/* spawnflags */ TUR_FLAG_PLAYER | TUR_FLAG_MOVE | TUR_FLAG_ROAM,
-/* mins,maxs  */ '-32 -32 0', '32 32 48',
-/* model      */ "ewheel-base2.md3",
-/* head_model */ "ewheel-gun1.md3",
-/* netname    */ "ewheel",
-/* fullname   */ _("eWheel Turret")
-);
+
+CLASS(EWheel, Turret)
+/* spawnflags */ ATTRIB(EWheel, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE | TUR_FLAG_ROAM);
+/* mins       */ ATTRIB(EWheel, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(EWheel, maxs, vector, '32 32 48');
+/* modelname  */ ATTRIB(EWheel, mdl, string, "ewheel-base2.md3");
+/* model      */ ATTRIB(EWheel, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(EWheel, head_model, string, strzone(strcat("models/turrets/", "ewheel-gun1.md3")));
+/* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
+/* fullname   */ ATTRIB(EWheel, turret_name, string, _("eWheel Turret"));
+ENDCLASS(EWheel)
+
+REGISTER_TURRET(EWHEEL, NEW(EWheel));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -126,12 +130,9 @@ void ewheel_move_idle()
 
 void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m_id)) remove(self); }
 
-float t_ewheel(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(EWheel, tr_attack, bool(EWheel thistur))
         {
+            SELFPARAM();
             float i;
             entity _mis;
 
@@ -152,8 +153,9 @@ float t_ewheel(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(EWheel, tr_think, bool(EWheel thistur))
         {
+            SELFPARAM();
             float vz;
             vector wish_angle, real_angle;
 
@@ -187,8 +189,9 @@ float t_ewheel(Turret thistur, float req)
 
             return true;
         }
-        case TR_DEATH:
+        METHOD(EWheel, tr_death, bool(EWheel thistur))
         {
+            SELFPARAM();
             self.velocity = '0 0 0';
 
 #ifdef EWHEEL_FANCYPATH
@@ -199,8 +202,9 @@ float t_ewheel(Turret thistur, float req)
 
             return true;
         }
-        case TR_SETUP:
+        METHOD(EWheel, tr_setup, bool(EWheel thistur))
         {
+            SELFPARAM();
             entity e;
 
             if(self.movetype == MOVETYPE_WALK)
@@ -253,14 +257,10 @@ float t_ewheel(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(EWheel, tr_precache, bool(EWheel thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
@@ -284,12 +284,9 @@ void ewheel_draw()
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-float t_ewheel(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(EWheel, tr_setup, bool(EWheel thistur))
         {
+            SELFPARAM();
             self.gravity		= 1;
             self.movetype		= MOVETYPE_BOUNCE;
             self.move_movetype	= MOVETYPE_BOUNCE;
@@ -299,14 +296,10 @@ float t_ewheel(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(EWheel, tr_precache, bool(EWheel thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
