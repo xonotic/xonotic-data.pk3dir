@@ -1,15 +1,19 @@
 #ifndef TUR_TESLA_H
 #define TUR_TESLA_H
-REGISTER_TURRET(
-/* TUR_##id   */ TESLA,
-/* function   */ t_tesla,
-/* spawnflags */ TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE,
-/* mins,maxs  */ '-60 -60 0', '60 60 128',
-/* model	  */ "tesla_base.md3",
-/* head_model */ "tesla_head.md3",
-/* netname	  */ "tesla",
-/* fullname   */ _("Tesla Coil")
-);
+
+CLASS(TeslaCoil, Turret)
+/* spawnflags */ ATTRIB(TeslaCoil, spawnflags, int, TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
+/* mins       */ ATTRIB(TeslaCoil, mins, vector, '-60 -60 0');
+/* maxs       */ ATTRIB(TeslaCoil, maxs, vector, '60 60 128');
+/* modelname  */ ATTRIB(TeslaCoil, mdl, string, "tesla_base.md3");
+/* model      */ ATTRIB(TeslaCoil, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(TeslaCoil, head_model, string, strzone(strcat("models/turrets/", "tesla_head.md3")));
+/* netname    */ ATTRIB(TeslaCoil, netname, string, "tesla");
+/* fullname   */ ATTRIB(TeslaCoil, turret_name, string, _("Tesla Coil"));
+ENDCLASS(TeslaCoil)
+
+REGISTER_TURRET(TESLA, NEW(TeslaCoil));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -94,11 +98,7 @@ float turret_tesla_firecheck()
 
 void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_id)) remove(self); }
 
-float t_tesla(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(TeslaCoil, tr_attack, bool(TeslaCoil thistur))
         {
             entity e, t;
             float d, r, i;
@@ -136,7 +136,7 @@ float t_tesla(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(TeslaCoil, tr_think, bool(TeslaCoil thistur))
         {
             if(!self.active)
             {
@@ -165,11 +165,11 @@ float t_tesla(Turret thistur, float req)
 
             return true;
         }
-        case TR_DEATH:
+        METHOD(TeslaCoil, tr_death, bool(TeslaCoil thistur))
         {
             return true;
         }
-        case TR_SETUP:
+        METHOD(TeslaCoil, tr_setup, bool(TeslaCoil thistur))
         {
             self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
                                  TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
@@ -186,33 +186,21 @@ float t_tesla(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(TeslaCoil, tr_precache, bool(TeslaCoil thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
-float t_tesla(Turret thistur, float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(TeslaCoil, tr_setup, bool(TeslaCoil thistur))
         {
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(TeslaCoil, tr_precache, bool(TeslaCoil thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
