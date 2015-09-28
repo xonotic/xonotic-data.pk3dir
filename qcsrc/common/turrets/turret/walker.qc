@@ -1,15 +1,19 @@
 #ifndef TUR_WALKER_H
 #define TUR_WALKER_H
-REGISTER_TURRET(
-/* TUR_##id   */ WALKER,
-/* function   */ t_walker,
-/* spawnflags */ TUR_FLAG_PLAYER | TUR_FLAG_MOVE,
-/* mins,maxs  */ '-70 -70 0', '70 70 95',
-/* model	  */ "walker_body.md3",
-/* head_model */ "walker_head_minigun.md3",
-/* netname	  */ "walker",
-/* fullname   */ _("Walker Turret")
-);
+
+CLASS(WalkerTurret, Turret)
+/* spawnflags */ ATTRIB(WalkerTurret, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE);
+/* mins       */ ATTRIB(WalkerTurret, mins, vector, '-70 -70 0');
+/* maxs       */ ATTRIB(WalkerTurret, maxs, vector, '70 70 95');
+/* modelname  */ ATTRIB(WalkerTurret, mdl, string, "walker_body.md3");
+/* model      */ ATTRIB(WalkerTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(WalkerTurret, head_model, string, strzone(strcat("models/turrets/", "walker_head_minigun.md3")));
+/* netname    */ ATTRIB(WalkerTurret, netname, string, "walker");
+/* fullname   */ ATTRIB(WalkerTurret, turret_name, string, _("Walker Turret"));
+ENDCLASS(WalkerTurret)
+
+REGISTER_TURRET(WALKER, NEW(WalkerTurret));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -339,11 +343,7 @@ void walker_move_path()
 
 void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER.m_id)) remove(self); }
 
-float t_walker(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(WalkerTurret, tr_attack, bool(WalkerTurret thistur))
         {
             sound (self, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
             fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0);
@@ -351,7 +351,7 @@ float t_walker(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(WalkerTurret, tr_think, bool(WalkerTurret thistur))
         {
             fixedmakevectors(self.angles);
 
@@ -563,7 +563,7 @@ float t_walker(Turret thistur, float req)
 
             return true;
         }
-        case TR_DEATH:
+        METHOD(WalkerTurret, tr_death, bool(WalkerTurret thistur))
         {
 #ifdef WALKER_FANCYPATHING
             if (self.pathcurrent)
@@ -573,7 +573,7 @@ float t_walker(Turret thistur, float req)
 
             return true;
         }
-        case TR_SETUP:
+        METHOD(WalkerTurret, tr_setup, bool(WalkerTurret thistur))
         {
             self.ticrate = 0.05;
 
@@ -635,14 +635,10 @@ float t_walker(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(WalkerTurret, tr_precache, bool(WalkerTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
@@ -669,11 +665,7 @@ void walker_draw()
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-float t_walker(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(WalkerTurret, tr_setup, bool(WalkerTurret thistur))
         {
             self.gravity		= 1;
             self.movetype		= MOVETYPE_BOUNCE;
@@ -684,14 +676,10 @@ float t_walker(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(WalkerTurret, tr_precache, bool(WalkerTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
