@@ -33,7 +33,7 @@ void turret_flac_projectile_think_explode()
 
 void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC.m_id)) remove(self); }
 
-float t_flac(float req)
+float t_flac(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -83,7 +83,7 @@ float t_flac(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_flac(float req)
+float t_flac(Turret thistur, float req)
 {
     switch(req)
     {

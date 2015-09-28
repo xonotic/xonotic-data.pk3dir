@@ -45,7 +45,7 @@ bool turret_fusionreactor_firecheck()
 
 void spawnfunc_turret_fusionreactor() { SELFPARAM(); if(!turret_initialize(TUR_FUSIONREACTOR.m_id)) remove(self); }
 
-float t_fusionreactor(float req)
+float t_fusionreactor(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -96,7 +96,7 @@ float t_fusionreactor(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_fusionreactor(float req)
+float t_fusionreactor(Turret thistur, float req)
 {
     switch(req)
     {

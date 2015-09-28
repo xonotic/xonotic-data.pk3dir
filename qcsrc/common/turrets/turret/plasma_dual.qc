@@ -26,7 +26,6 @@ REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
 
 #ifdef SVQC
 
-float t_plasma_dual(float req);
 METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep)) {
 	SELFPARAM();
 	if (self.BUTTON_ATCK)
@@ -37,7 +36,7 @@ METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep)) {
 		self.tur_head = self;
         self.shot_speed = max(1, ((!self.shot_speed) ? 2500 : self.shot_speed));
         self.shot_spread = bound(0.0001, ((!self.shot_spread) ? 0.0125 : self.shot_spread), 500);
-		t_plasma_dual(TR_ATTACK);
+        TUR_ACTION(TUR_PLASMA_DUAL.m_id, TR_ATTACK);
 		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 	}
 	return true;
@@ -45,7 +44,7 @@ METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep)) {
 
 void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA_DUAL.m_id)) remove(self); }
 
-float t_plasma_dual(float req)
+float t_plasma_dual(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -113,7 +112,7 @@ float t_plasma_dual(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_plasma_dual(float req)
+float t_plasma_dual(Turret thistur, float req)
 {
     switch(req)
     {

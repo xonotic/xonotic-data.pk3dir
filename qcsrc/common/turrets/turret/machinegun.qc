@@ -18,7 +18,7 @@ void spawnfunc_turret_machinegun() { SELFPARAM(); if(!turret_initialize(TUR_MACH
 
 void W_MachineGun_MuzzleFlash(void);
 
-float t_machinegun(float req)
+float t_machinegun(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -60,7 +60,7 @@ float t_machinegun(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_machinegun(float req)
+float t_machinegun(Turret thistur, float req)
 {
     switch(req)
     {

@@ -16,7 +16,7 @@ REGISTER_TURRET(
 #ifdef SVQC
 void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS.m_id)) remove(self); }
 
-float t_mlrs(float req)
+float t_mlrs(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -70,7 +70,7 @@ float t_mlrs(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_mlrs(float req)
+float t_mlrs(Turret thistur, float req)
 {
     switch(req)
     {

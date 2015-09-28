@@ -81,7 +81,7 @@ void turret_hellion_missile_think()
 
 void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION.m_id)) remove(self); }
 
-float t_hellion(float req)
+float t_hellion(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -140,7 +140,7 @@ float t_hellion(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_hellion(float req)
+float t_hellion(Turret thistur, float req)
 {
     switch(req)
     {

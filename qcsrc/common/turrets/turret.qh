@@ -1,14 +1,6 @@
 #ifndef TURRET_H
 #define TURRET_H
 
-// turret requests
-const int TR_SETUP = 1; // (BOTH) setup turret data
-const int TR_THINK = 2; // (SERVER) logic to run every frame
-const int TR_DEATH = 3; // (SERVER) called when turret dies
-const int TR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this turret
-const int TR_ATTACK = 5; // (SERVER) called when turret attacks
-const int TR_CONFIG = 6; // (ALL)
-
 // functions:
 entity get_turretinfo(int id);
 
@@ -134,29 +126,27 @@ const int TNSF_FULL_UPDATE  = 16777215;
 
 
 // other useful macros
-#define TUR_ACTION(turrettype,mrequest) (get_turretinfo(turrettype)).turret_func(mrequest)
+#define _TUR_ACTION(tur, mrequest) tur.turret_func(tur, mrequest)
+#define TUR_ACTION(tur, mrequest) _TUR_ACTION(get_turretinfo(tur), mrequest)
 #define TUR_NAME(turrettype) (get_turretinfo(turrettype)).turret_name
 
-float t_null(float dummy) { return 0; }
+bool t_new(entity this, int req);
 
 CLASS(Turret, Object)
     ATTRIB(Turret, m_id, int, 0)
 
-    ATTRIB(Turret, turretid, int, 0)
     /** short name */
     ATTRIB(Turret, netname, string, string_null)
     /** human readable name */
     ATTRIB(Turret, turret_name, string, string_null)
     /** t_... */
-    ATTRIB(Turret, turret_func, float(float), t_null)
+    ATTRIB(Turret, turret_func, float(Turret, int), t_new)
     /** currently a copy of the model */
     ATTRIB(Turret, mdl, string, string_null)
     /** full name of model */
     ATTRIB(Turret, model, string, string_null)
     /** full name of tur_head model */
     ATTRIB(Turret, head_model, string, string_null)
-    /** TODO: deprecate! */
-    ATTRIB(Turret, cvar_basename, string, string_null)
 
     ATTRIB(Turret, spawnflags, int, 0)
     /** turret hitbox size */
@@ -169,5 +159,30 @@ CLASS(Turret, Object)
     }
 
 ENDCLASS(Turret)
+
+// turret requests
+const int TR_SETUP = 1; // (BOTH) setup turret data
+.bool(Turret) tr_setup;
+const int TR_THINK = 2; // (SERVER) logic to run every frame
+.bool(Turret) tr_think;
+const int TR_DEATH = 3; // (SERVER) called when turret dies
+.bool(Turret) tr_death;
+const int TR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this turret
+.bool(Turret) tr_precache;
+const int TR_ATTACK = 5; // (SERVER) called when turret attacks
+.bool(Turret) tr_attack;
+const int TR_CONFIG = 6; // (ALL)
+.bool(Turret) tr_config;
+
+bool t_new(Turret this, int req)
+{
+    if (req == TR_SETUP) return this.tr_setup ? this.tr_setup(this) : false;
+    if (req == TR_THINK) return this.tr_think ? this.tr_think(this) : false;
+    if (req == TR_DEATH) return this.tr_death ? this.tr_death(this) : false;
+    if (req == TR_PRECACHE) return this.tr_precache ? this.tr_precache(this) : false;
+    if (req == TR_ATTACK) return this.tr_attack ? this.tr_attack(this) : false;
+    if (req == TR_CONFIG) return this.tr_config ? this.tr_config(this) : false;
+    return false;
+}
 
 #endif

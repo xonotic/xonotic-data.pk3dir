@@ -126,7 +126,7 @@ void ewheel_move_idle()
 
 void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m_id)) remove(self); }
 
-float t_ewheel(float req)
+float t_ewheel(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -284,7 +284,7 @@ void ewheel_draw()
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-float t_ewheel(float req)
+float t_ewheel(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {

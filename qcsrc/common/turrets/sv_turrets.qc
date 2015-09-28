@@ -190,7 +190,7 @@ void turret_die()
 
 	if(self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
 	{
-		TUR_ACTION(self.turretid, TR_DEATH);
+		TUR_ACTION(self.m_id, TR_DEATH);
 
 		remove(self.tur_head);
 		remove(self);
@@ -202,7 +202,7 @@ void turret_die()
 		self.nextthink	 = time + 0.2;
 		self.think		 = turret_hide;
 
-		TUR_ACTION(self.turretid, TR_DEATH);
+		TUR_ACTION(self.m_id, TR_DEATH);
 	}
 }
 
@@ -275,7 +275,7 @@ void turret_respawn()
 
 	self.SendFlags = TNSF_FULL_UPDATE;
 
-	TUR_ACTION(self.turretid, TR_SETUP);
+	TUR_ACTION(self.m_id, TR_SETUP);
 }
 
 
@@ -304,7 +304,7 @@ float turret_send(entity to, float sf)
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & TNSF_SETUP)
 	{
-		WriteByte(MSG_ENTITY, self.turretid);
+		WriteByte(MSG_ENTITY, self.m_id);
 
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
@@ -358,8 +358,9 @@ float turret_send(entity to, float sf)
 	return true;
 }
 
-void load_unit_settings(entity ent, string unitname, float is_reload)
+void load_unit_settings(entity ent, float is_reload)
 {SELFPARAM();
+	string unitname = ent.netname;
 	string sbase;
 
 	if (ent == world)
@@ -419,7 +420,7 @@ void load_unit_settings(entity ent, string unitname, float is_reload)
 	ent.track_blendrate  = cvar(strcat(sbase,"_track_blendrate"));
 
 	if(is_reload)
-		TUR_ACTION(self.turretid, TR_SETUP);
+		TUR_ACTION(self.m_id, TR_SETUP);
 }
 
 void turret_projectile_explode()
@@ -989,7 +990,7 @@ void turret_fire()
 	if(MUTATOR_CALLHOOK(TurretFire, self))
 		return;
 
-	TUR_ACTION(self.turretid, TR_ATTACK);
+	TUR_ACTION(self.m_id, TR_ATTACK);
 
 	self.attack_finished_single = time + self.shot_refire;
 	self.ammo -= self.shot_dmg;
@@ -1117,7 +1118,7 @@ void turret_think()
 				if (turret_checkfire())
 					turret_fire();
 
-				TUR_ACTION(self.turretid, TR_THINK);
+				TUR_ACTION(self.m_id, TR_THINK);
 
 				return;
 			}
@@ -1155,7 +1156,7 @@ void turret_think()
 			if(!(self.track_flags & TFL_TRACK_NO))
 				turret_track();
 
-			TUR_ACTION(self.turretid, TR_THINK);
+			TUR_ACTION(self.m_id, TR_THINK);
 
 			// And bail.
 			return;
@@ -1178,7 +1179,7 @@ void turret_think()
 			turret_fire();
 	}
 
-	TUR_ACTION(self.turretid, TR_THINK);
+	TUR_ACTION(self.m_id, TR_THINK);
 }
 
 /*
@@ -1218,8 +1219,8 @@ void turrets_manager_think()
 		{
 			if (IS_TURRET(e))
 			{
-				load_unit_settings(e,e.cvar_basename,1);
-				TUR_ACTION(self.turretid, TR_THINK);
+				load_unit_settings(e,1);
+				TUR_ACTION(self.m_id, TR_THINK);
 			}
 
 			e = nextent(e);
@@ -1235,7 +1236,7 @@ float turret_initialize(float tur_id)
 
 	entity e;
 	entity tur = get_turretinfo(tur_id);
-	if(tur.turretid == 0)
+	if(tur.m_id == 0)
 		return false; // invalid turret
 
 	if(!self.tur_head) { TUR_ACTION(tur_id, TR_PRECACHE); } // if tur_head exists, we can assume this turret re-spawned
@@ -1252,8 +1253,8 @@ float turret_initialize(float tur_id)
 	if(!(self.spawnflags & TSF_SUSPENDED))
 		builtin_droptofloor();
 
-	self.cvar_basename = tur.cvar_basename;
-	load_unit_settings(self, self.cvar_basename, 0);
+	self.netname = tur.netname;
+	load_unit_settings(self, 0);
 
 	if(!self.team || !teamplay)		{ self.team = MAX_SHOT_DISTANCE; }
 	if(!self.ticrate)				{ self.ticrate = ((self.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
@@ -1330,7 +1331,7 @@ float turret_initialize(float tur_id)
 	_setmodel(self, tur.model);
 	setsize(self, tur.mins, tur.maxs);
 
-	self.turretid				= tur_id;
+	self.m_id					= tur_id;
 	self.classname				= "turret_main";
 	self.active					= ACTIVE_ACTIVE;
 	self.effects				= EF_NODRAW;

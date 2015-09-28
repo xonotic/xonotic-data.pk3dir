@@ -3,48 +3,51 @@
 
 #include "turret.qh"
 
-void register_turret(entity e, float(float) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname);
+void register_turret(Turret e, bool(Turret, int) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname);
 
 const int TUR_MAXCOUNT = 24;
 entity turret_info[TUR_MAXCOUNT], turret_info_first, turret_info_last;
 float TUR_COUNT;
 
 #define _REGISTER_TURRET(id, func, turretflags, min_s, max_s, modelname, headmodelname, shortname, mname) \
-	float func(float); \
+	bool func(Turret, int); \
 	REGISTER(RegisterTurrets, TUR, turret_info, TUR_COUNT, id, m_id, NEW(Turret)) { \
 		register_turret(this, func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname); \
 	}
 void RegisterTurrets();
 REGISTER_REGISTRY(RegisterTurrets)
 
+#define REGISTER_TURRET(...) EVAL(OVERLOAD(REGISTER_TURRET, __VA_ARGS__))
+
+#define REGISTER_TURRET_2(id, inst) REGISTER(RegisterTurrets, TUR, turret_info, TUR_COUNT, id, m_id, inst)
+
 #ifdef MENUQC
-#define REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
-	_REGISTER_TURRET(id,t_null,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
+#define REGISTER_TURRET_9(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
+	_REGISTER_TURRET(id,t_new,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
 #else
-#define REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
+#define REGISTER_TURRET_9(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname) \
 	_REGISTER_TURRET(id,func,turretflags,min_s,max_s,modelname,headmodelname,shortname,mname)
 #endif
 
-void register_turret(Turret e, float(float) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname)
+void register_turret(Turret e, bool(Turret, int) func, float turretflags, vector min_s, vector max_s, string modelname, string headmodelname, string shortname, string mname)
 {
 	e.classname = "turret_info";
-	e.turretid = e.m_id;
-	e.netname = shortname;
-	e.turret_name = mname;
+
 	e.turret_func = func;
-	e.mdl = modelname;
-	e.cvar_basename = shortname;
 	e.spawnflags = turretflags;
 	e.mins = min_s;
 	e.maxs = max_s;
+	e.mdl = modelname;
 	e.model = strzone(strcat("models/turrets/", modelname));
 	e.head_model = strzone(strcat("models/turrets/", headmodelname));
+	e.netname = shortname;
+	e.turret_name = mname;
 }
 
 entity get_turretinfo(int id);
 
 REGISTER_TURRET(Null,
-	t_null,
+	t_new,
 	0,
 	'-0 -0 -0',
 	'0 0 0',

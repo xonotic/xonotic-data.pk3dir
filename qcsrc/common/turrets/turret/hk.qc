@@ -278,7 +278,7 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
 
 void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK.m_id)) remove(self); }
 
-float t_hk(float req)
+float t_hk(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -341,7 +341,7 @@ float t_hk(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_hk(float req)
+float t_hk(Turret thistur, float req)
 {
     switch(req)
     {

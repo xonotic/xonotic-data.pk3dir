@@ -62,7 +62,7 @@ void beam_think()
 
 void spawnfunc_turret_phaser() { SELFPARAM(); if(!turret_initialize(TUR_PHASER.m_id)) remove(self); }
 
-float t_phaser(float req)
+float t_phaser(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -149,7 +149,7 @@ float t_phaser(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_phaser(float req)
+float t_phaser(Turret thistur, float req)
 {
     switch(req)
     {

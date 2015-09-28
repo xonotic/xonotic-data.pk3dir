@@ -94,7 +94,7 @@ float turret_tesla_firecheck()
 
 void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_id)) remove(self); }
 
-float t_tesla(float req)
+float t_tesla(Turret thistur, float req)
 {SELFPARAM();
     switch(req)
     {
@@ -197,7 +197,7 @@ float t_tesla(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_tesla(float req)
+float t_tesla(Turret thistur, float req)
 {
     switch(req)
     {
