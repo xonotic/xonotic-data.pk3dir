@@ -3,16 +3,6 @@
 
 #include "all.qh"
 
-#if defined(SVQC)
-	#include "sv_vehicles.qc"
-#elif defined(CSQC)
-	#include "cl_vehicles.qc"
-#endif
-
-#define IMPLEMENTATION
-#include "all.inc"
-#undef IMPLEMENTATION
-
 #ifndef MENUQC
 STATIC_INIT(vehicles_common_initialize)
 {
@@ -39,5 +29,15 @@ entity get_vehicleinfo(int id)
 	entity m = vehicle_info[id];
 	return m ? m : VEH_Null;
 }
+
+#if defined(SVQC)
+	#include "sv_vehicles.qc"
+#elif defined(CSQC)
+	#include "cl_vehicles.qc"
+#endif
+
+#define IMPLEMENTATION
+#include "all.inc"
+#undef IMPLEMENTATION
 
 #endif

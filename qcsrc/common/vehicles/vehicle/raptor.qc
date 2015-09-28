@@ -2,7 +2,7 @@
 #define VEHICLE_RAPTOR
 #include "raptor.qh"
 #ifndef MENUQC
-int v_raptor(int);
+int v_raptor(entity, int);
 #endif
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RAPTOR,
@@ -795,7 +795,7 @@ void spawnfunc_vehicle_raptor()
 	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
 
-float v_raptor(float req)
+float v_raptor(Vehicle thisveh, float req)
 {SELFPARAM();
 	switch(req)
 	{
@@ -1023,7 +1023,7 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 	sfrag.drawmask = MASK_NORMAL;
 }
 
-float v_raptor(float req)
+float v_raptor(Vehicle thisveh, float req)
 {
 	switch(req)
 	{

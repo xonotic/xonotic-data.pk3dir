@@ -2,7 +2,7 @@
 #define VEHICLE_RACER
 
 #ifndef MENUQC
-int v_racer(int);
+int v_racer(entity, int);
 #endif
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ RACER,
@@ -734,7 +734,7 @@ void racer_draw()
 #endif
 #endif
 
-bool v_racer(int req)
+bool v_racer(Vehicle thisveh, int req)
 {SELFPARAM();
 	switch(req)
 	{

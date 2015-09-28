@@ -1,7 +1,7 @@
 #ifndef VEHICLE_SPIDERBOT
 #define VEHICLE_SPIDERBOT
 #ifndef MENUQC
-int v_spiderbot(int);
+int v_spiderbot(entity, int);
 #endif
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ SPIDERBOT,
@@ -817,7 +817,7 @@ void spawnfunc_vehicle_spiderbot()
 	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
-float v_spiderbot(float req)
+float v_spiderbot(Vehicle thisveh, float req)
 {SELFPARAM();
 	switch(req)
 	{
@@ -937,7 +937,7 @@ float v_spiderbot(float req)
 float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
 float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
-float v_spiderbot(float req)
+float v_spiderbot(Vehicle thisveh, float req)
 {
 	switch(req)
 	{

@@ -2,7 +2,7 @@
 #define VEHICLE_BUMBLEBEE
 #include "bumblebee.qh"
 #ifndef MENUQC
-int v_bumblebee(int);
+int v_bumblebee(entity, int);
 #endif
 REGISTER_VEHICLE_SIMPLE(
 /* VEH_##id   */ BUMBLEBEE,
@@ -774,7 +774,7 @@ void spawnfunc_vehicle_bumblebee()
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }
 
-float v_bumblebee(float req)
+float v_bumblebee(Vehicle thisveh, float req)
 {SELFPARAM();
 	switch(req)
 	{
@@ -1094,7 +1094,7 @@ void bumble_raygun_read(bool bIsNew)
 	}
 }
 
-float v_bumblebee(float req)
+float v_bumblebee(Vehicle thisveh, float req)
 {
 	switch(req)
 	{
