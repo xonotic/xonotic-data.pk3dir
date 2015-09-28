@@ -1,15 +1,19 @@
 #ifndef TUR_MACHINEGUN_H
 #define TUR_MACHINEGUN_H
-REGISTER_TURRET(
-/* TUR_##id   */ MACHINEGUN,
-/* function   */ t_machinegun,
-/* spawnflags */ TUR_FLAG_PLAYER,
-/* mins,maxs  */ '-32 -32 0', '32 32 64',
-/* model	  */ "base.md3",
-/* head_model */ "machinegun.md3",
-/* netname	  */ "machinegun",
-/* fullname   */ _("Machinegun Turret")
-);
+
+CLASS(MachineGunTurret, Turret)
+/* spawnflags */ ATTRIB(MachineGunTurret, spawnflags, int, TUR_FLAG_PLAYER);
+/* mins       */ ATTRIB(MachineGunTurret, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(MachineGunTurret, maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(MachineGunTurret, mdl, string, "base.md3");
+/* model      */ ATTRIB(MachineGunTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(MachineGunTurret, head_model, string, strzone(strcat("models/turrets/", "machinegun.md3")));
+/* netname    */ ATTRIB(MachineGunTurret, netname, string, "machinegun");
+/* fullname   */ ATTRIB(MachineGunTurret, turret_name, string, _("Machinegun Turret"));
+ENDCLASS(MachineGunTurret)
+
+REGISTER_TURRET(MACHINEGUN, NEW(MachineGunTurret));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -18,11 +22,7 @@ void spawnfunc_turret_machinegun() { SELFPARAM(); if(!turret_initialize(TUR_MACH
 
 void W_MachineGun_MuzzleFlash(void);
 
-float t_machinegun(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(MachineGunTurret, tr_attack, bool(MachineGunTurret thistur))
         {
             fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0);
 
@@ -31,15 +31,15 @@ float t_machinegun(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(MachineGunTurret, tr_think, bool(MachineGunTurret thistur))
         {
             return true;
         }
-        case TR_DEATH:
+        METHOD(MachineGunTurret, tr_death, bool(MachineGunTurret thistur))
         {
             return true;
         }
-        case TR_SETUP:
+        METHOD(MachineGunTurret, tr_setup, bool(MachineGunTurret thistur))
         {
             self.damage_flags |= TFL_DMG_HEADSHAKE;
             self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
@@ -49,33 +49,21 @@ float t_machinegun(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(MachineGunTurret, tr_precache, bool(MachineGunTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
-float t_machinegun(Turret thistur, float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(MachineGunTurret, tr_setup, bool(MachineGunTurret thistur))
         {
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(MachineGunTurret, tr_precache, bool(MachineGunTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
