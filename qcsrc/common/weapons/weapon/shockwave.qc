@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ SHOCKWAVE,
-/* function  */ W_Shockwave,
-/* ammotype  */ ammo_none,
-/* impulse   */ 2,
-/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED,
-/* rating    */ BOT_PICKUP_RATING_LOW,
-/* color     */ '0.5 0.25 0',
-/* modelname */ "shotgun",
-/* model     */ MDL_SHOCKWAVE_ITEM,
-/* crosshair */ "gfx/crosshairshotgun 0.7",
-/* wepimg    */ "weaponshotgun",
-/* refname   */ "shockwave",
-/* wepname   */ _("Shockwave")
-);
+CLASS(Shockwave, Weapon)
+/* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none)
+/* impulse   */ ATTRIB(Shockwave, impulse, int, 2)
+/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED);
+/* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
+/* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
+/* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");
+#ifndef MENUQC
+/* model     */ ATTRIB(Shockwave, m_model, Model, MDL_SHOCKWAVE_ITEM);
+#endif
+/* crosshair */ ATTRIB(Shockwave, w_crosshair, string, "gfx/crosshairshotgun");
+/* crosshair */ ATTRIB(Shockwave, w_crosshair_size, float, 0.7);
+/* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshotgun");
+/* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
+/* wepname   */ ATTRIB(Shockwave, message, string, _("Shockwave"));
+ENDCLASS(Shockwave)
+REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 
 #define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, SHOCKWAVE, shockwave)
 #define SHOCKWAVE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -666,11 +668,7 @@ void W_Shockwave_Attack(void)
 	}
 }
 
-bool W_Shockwave(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Shockwave, wr_aim, bool(entity thiswep))
 		{
 			if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
 				{ self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false); }
@@ -679,7 +677,7 @@ bool W_Shockwave(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_THINK:
+		METHOD(Shockwave, wr_think, bool(entity thiswep))
 		{
 			if(self.BUTTON_ATCK)
 			{
@@ -706,36 +704,37 @@ bool W_Shockwave(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Shockwave, wr_init, bool(entity thiswep))
 		{
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_CHECKAMMO1:
-		case WR_CHECKAMMO2:
+		METHOD(Shockwave, wr_checkammo1, bool(entity thiswep))
+		{
+			return true; // infinite ammo
+		}
+		METHOD(Shockwave, wr_checkammo2, bool(entity thiswep))
 		{
 			// shockwave has infinite ammo
 			return true;
 		}
-		case WR_CONFIG:
+		METHOD(Shockwave, wr_config, bool(entity thiswep))
 		{
 			SHOCKWAVE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Shockwave, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Shockwave, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_SHOCKWAVE_MURDER_SLAP;
 			else
 				return WEAPON_SHOCKWAVE_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
 // WEAPONTODO: add client side settings for these
@@ -858,11 +857,7 @@ void Net_ReadShockwaveParticle(void)
 	shockwave.sw_time = time;
 }
 
-bool W_Shockwave(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+		METHOD(Shockwave, wr_impacteffect, bool(entity thiswep))
 		{
 			// handled by Net_ReadShockwaveParticle
 			//vector org2;
@@ -870,17 +865,15 @@ bool W_Shockwave(entity thiswep, int req)
 			//pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
 			return false;
 		}
-		case WR_INIT:
+		METHOD(Shockwave, wr_init, bool(entity thiswep))
 		{
 			return false;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Shockwave, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
