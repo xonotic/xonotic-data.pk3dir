@@ -1,15 +1,19 @@
 #ifndef TUR_FUSIONREACTOR_H
 #define TUR_FUSIONREACTOR_H
-REGISTER_TURRET(
-/* TUR_##id   */ FUSIONREACTOR,
-/* function   */ t_fusionreactor,
-/* spawnflags */ TUR_FLAG_SUPPORT | TUR_FLAG_AMMOSOURCE,
-/* mins,maxs  */ '-34 -34 0', '34 34 90',
-/* model	  */ "base.md3",
-/* head_model */ "reactor.md3",
-/* netname	  */ "fusionreactor",
-/* fullname   */ _("Fusion Reactor")
-);
+
+CLASS(FusionReactor, Turret)
+/* spawnflags */ ATTRIB(FusionReactor, spawnflags, int, TUR_FLAG_SUPPORT | TUR_FLAG_AMMOSOURCE);
+/* mins       */ ATTRIB(FusionReactor, mins, vector, '-34 -34 0');
+/* maxs       */ ATTRIB(FusionReactor, maxs, vector, '34 34 90');
+/* modelname  */ ATTRIB(FusionReactor, mdl, string, "base.md3");
+/* model      */ ATTRIB(FusionReactor, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(FusionReactor, head_model, string, strzone(strcat("models/turrets/", "reactor.md3")));
+/* netname    */ ATTRIB(FusionReactor, netname, string, "fusionreactor");
+/* fullname   */ ATTRIB(FusionReactor, turret_name, string, _("Fusion Reactor"));
+ENDCLASS(FusionReactor)
+
+REGISTER_TURRET(FUSIONREACTOR, NEW(FusionReactor));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -45,11 +49,7 @@ bool turret_fusionreactor_firecheck()
 
 void spawnfunc_turret_fusionreactor() { SELFPARAM(); if(!turret_initialize(TUR_FUSIONREACTOR.m_id)) remove(self); }
 
-float t_fusionreactor(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(FusionReactor, tr_attack, bool(FusionReactor thistur))
         {
             vector fl_org;
 
@@ -59,17 +59,17 @@ float t_fusionreactor(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(FusionReactor, tr_think, bool(FusionReactor thistur))
         {
             self.tur_head.avelocity = '0 250 0' * (self.ammo / self.ammo_max);
 
             return true;
         }
-        case TR_DEATH:
+        METHOD(FusionReactor, tr_death, bool(FusionReactor thistur))
         {
             return true;
         }
-        case TR_SETUP:
+        METHOD(FusionReactor, tr_setup, bool(FusionReactor thistur))
         {
             self.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE;
             self.target_select_flags	= TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_OWNTEAM | TFL_TARGETSELECT_RANGELIMITS;
@@ -85,33 +85,21 @@ float t_fusionreactor(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(FusionReactor, tr_precache, bool(FusionReactor thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
-float t_fusionreactor(Turret thistur, float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(FusionReactor, tr_setup, bool(FusionReactor thistur))
         {
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(FusionReactor, tr_precache, bool(FusionReactor thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
