@@ -1,25 +1,24 @@
 #ifndef VEHICLE_BUMBLEBEE
 #define VEHICLE_BUMBLEBEE
 #include "bumblebee.qh"
-#ifndef MENUQC
-int v_bumblebee(entity, int);
-#endif
-REGISTER_VEHICLE_SIMPLE(
-/* VEH_##id   */ BUMBLEBEE,
-/* spawnflags */ VHF_DMGSHAKE,
-/* mins,maxs  */ '-245 -130 -130', '230 130 130',
-/* model	  */ "models/vehicles/bumblebee_body.dpm",
-/* head_model */ "",
-/* hud_model  */ "models/vehicles/spiderbot_cockpit.dpm",
-/* tags	   	  */ "", "", "tag_viewport",
-/* netname	  */ "bumblebee",
-/* fullname   */ _("Bumblebee")
-) {
-    this.m_icon = "vehicle_bumble";
-#ifndef MENUQC
-    this.vehicle_func = v_bumblebee;
-#endif
-}
+
+CLASS(Bumblebee, Vehicle)
+/* spawnflags */ ATTRIB(Bumblebee, spawnflags, int, VHF_DMGSHAKE);
+/* mins       */ ATTRIB(Bumblebee, mins, vector, '-245 -130 -130');
+/* maxs       */ ATTRIB(Bumblebee, maxs, vector, '230 130 130');
+/* model	  */ ATTRIB(Bumblebee, mdl, string, "models/vehicles/bumblebee_body.dpm");
+/* model	  */ ATTRIB(Bumblebee, model, string, "models/vehicles/bumblebee_body.dpm");
+/* head_model */ ATTRIB(Bumblebee, head_model, string, "");
+/* hud_model  */ ATTRIB(Bumblebee, hud_model, string, "models/vehicles/spiderbot_cockpit.dpm");
+/* tags       */ ATTRIB(Bumblebee, tag_head, string, "");
+/* tags       */ ATTRIB(Bumblebee, tag_hud, string, "");
+/* tags       */ ATTRIB(Bumblebee, tag_hview, string, "tag_viewport");
+/* netname    */ ATTRIB(Bumblebee, netname, string, "bumblebee");
+/* fullname   */ ATTRIB(Bumblebee, vehicle_name, string, _("Bumblebee"));
+/* icon       */ ATTRIB(Bumblebee, m_icon, string, "vehicle_bumble");
+ENDCLASS(Bumblebee)
+
+REGISTER_VEHICLE(BUMBLEBEE, NEW(Bumblebee));
 #endif
 
 #ifdef IMPLEMENTATION
@@ -774,26 +773,24 @@ void spawnfunc_vehicle_bumblebee()
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }
 
-float v_bumblebee(Vehicle thisveh, float req)
-{SELFPARAM();
-	switch(req)
-	{
-		case VR_IMPACT:
+		METHOD(Bumblebee, vr_impact, bool(Bumblebee thisveh))
 		{
 			if(autocvar_g_vehicle_bumblebee_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 
 			return true;
 		}
-		case VR_ENTER:
+		METHOD(Bumblebee, vr_enter, bool(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			self.touch = bumblebee_touch;
 			self.nextthink = 0;
 			self.movetype = MOVETYPE_BOUNCEMISSILE;
 			return true;
 		}
-		case VR_THINK:
+		METHOD(Bumblebee, vr_think, bool(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			self.angles_z *= 0.8;
 			self.angles_x *= 0.8;
 
@@ -831,8 +828,9 @@ float v_bumblebee(Vehicle thisveh, float req)
 
 			return true;
 		}
-		case VR_DEATH:
+		METHOD(Bumblebee, vr_death, bool(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			entity oldself = self;
 
 			CSQCModel_UnlinkEntity();
@@ -895,8 +893,9 @@ float v_bumblebee(Vehicle thisveh, float req)
 			setorigin(self, self.pos1);
 			return true;
 		}
-		case VR_SPAWN:
+		METHOD(Bumblebee, vr_spawn, bool(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			if(!self.gun1)
 			{
 				// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
@@ -975,8 +974,9 @@ float v_bumblebee(Vehicle thisveh, float req)
 			setorigin(self, self.origin + '0 0 25');
 			return true;
 		}
-		case VR_SETUP:
+		METHOD(Bumblebee, vr_setup, bool(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			if(autocvar_g_vehicle_bumblebee_energy)
 			if(autocvar_g_vehicle_bumblebee_energy_regen)
 				self.vehicle_flags |= VHF_ENERGYREGEN;
@@ -998,14 +998,10 @@ float v_bumblebee(Vehicle thisveh, float req)
 
 			return true;
 		}
-		case VR_PRECACHE:
+		METHOD(Bumblebee, vr_precache, bool(Bumblebee thisveh))
 		{
 			return true;
 		}
-	}
-
-	return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
@@ -1094,11 +1090,7 @@ void bumble_raygun_read(bool bIsNew)
 	}
 }
 
-float v_bumblebee(Vehicle thisveh, float req)
-{
-	switch(req)
-	{
-		case VR_HUD:
+		METHOD(Bumblebee, vr_hud, bool(Bumblebee thisveh))
 		{
 			Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
@@ -1106,21 +1098,17 @@ float v_bumblebee(Vehicle thisveh, float req)
 							 vCROSS_HEAL);
 			return true;
 		}
-		case VR_SETUP:
+		METHOD(Bumblebee, vr_setup, bool(Bumblebee thisveh))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_LOCK;  // Raygun-locked
 			AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1
 			AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
 			return true;
 		}
-		case VR_PRECACHE:
+		METHOD(Bumblebee, vr_precache, bool(Bumblebee thisveh))
 		{
 			return true;
 		}
-	}
-
-	return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_VEHICLE

@@ -46,7 +46,6 @@ entity get_vehicleinfo(int id);
 #define VEH_ACTION(veh, mrequest) _VEH_ACTION(get_vehicleinfo(veh), mrequest)
 #define VEH_NAME(veh) (get_vehicleinfo(veh)).vehicle_name
 
-bool v_null(entity, int) { return false; }
 bool v_new(entity, int);
 
 CLASS(Vehicle, Object)
@@ -58,7 +57,7 @@ CLASS(Vehicle, Object)
     /** human readable name */
     ATTRIB(Vehicle, vehicle_name, string, "Vehicle")
     /**  */
-    ATTRIB(Vehicle, vehicle_func, bool(Vehicle, int), v_null)
+    ATTRIB(Vehicle, vehicle_func, bool(Vehicle, int), v_new)
     /** full name of model */
     ATTRIB(Vehicle, model, string, "")
     /** currently a copy of the model */
