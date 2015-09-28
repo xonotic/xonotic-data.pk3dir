@@ -1,25 +1,25 @@
 #ifndef VEHICLE_RAPTOR
 #define VEHICLE_RAPTOR
 #include "raptor.qh"
-#ifndef MENUQC
-int v_raptor(entity, int);
-#endif
-REGISTER_VEHICLE_SIMPLE(
-/* VEH_##id   */ RAPTOR,
-/* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
-/* mins,maxs  */ '-80 -80 0', '80 80 70',
-/* model	  */ "models/vehicles/raptor.dpm",
-/* head_model */ "",
-/* hud_model  */ "models/vehicles/raptor_cockpit.dpm",
-/* tags	   	  */ "", "tag_hud", "tag_camera",
-/* netname	  */ "raptor",
-/* fullname   */ _("Raptor")
-) {
-    this.m_icon = "vehicle_raptor";
-#ifndef MENUQC
-    this.vehicle_func = v_raptor;
-#endif
-}
+
+CLASS(Raptor, Vehicle)
+/* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
+/* mins       */ ATTRIB(Raptor, mins, vector, '-80 -80 0');
+/* maxs       */ ATTRIB(Raptor, maxs, vector, '80 80 70');
+/* model	  */ ATTRIB(Raptor, mdl, string, "models/vehicles/raptor.dpm");
+/* model	  */ ATTRIB(Raptor, model, string, "models/vehicles/raptor.dpm");
+/* head_model */ ATTRIB(Raptor, head_model, string, "");
+/* hud_model  */ ATTRIB(Raptor, hud_model, string, "models/vehicles/raptor_cockpit.dpm");
+/* tags       */ ATTRIB(Raptor, tag_head, string, "");
+/* tags       */ ATTRIB(Raptor, tag_hud, string, "tag_hud");
+/* tags       */ ATTRIB(Raptor, tag_hview, string, "tag_camera");
+/* netname    */ ATTRIB(Raptor, netname, string, "raptor");
+/* fullname   */ ATTRIB(Raptor, vehicle_name, string, _("Raptor"));
+/* icon       */ ATTRIB(Raptor, m_icon, string, "vehicle_raptor");
+ENDCLASS(Raptor)
+
+REGISTER_VEHICLE(RAPTOR, NEW(Raptor));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -795,18 +795,14 @@ void spawnfunc_vehicle_raptor()
 	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
 
-float v_raptor(Vehicle thisveh, float req)
-{SELFPARAM();
-	switch(req)
-	{
-		case VR_IMPACT:
+		METHOD(Raptor, vr_impact, bool(Raptor thisveh))
 		{
 			if(autocvar_g_vehicle_raptor_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 
 			return true;
 		}
-		case VR_ENTER:
+		METHOD(Raptor, vr_enter, bool(Raptor thisveh))
 		{
 			self.vehicle_weapon2mode = RSM_BOMB;
 			self.owner.PlayerPhysplug = raptor_takeoff;
@@ -826,11 +822,11 @@ float v_raptor(Vehicle thisveh, float req)
 			CSQCVehicleSetup(self.owner, 0);
 			return true;
 		}
-		case VR_THINK:
+		METHOD(Raptor, vr_think, bool(Raptor thisveh))
 		{
 			return true;
 		}
-		case VR_DEATH:
+		METHOD(Raptor, vr_death, bool(Raptor thisveh))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -853,7 +849,7 @@ float v_raptor(Vehicle thisveh, float req)
 			self.touch = raptor_blowup;
 			return true;
 		}
-		case VR_SPAWN:
+		METHOD(Raptor, vr_spawn, bool(Raptor thisveh))
 		{
 			if(!self.gun1)
 			{
@@ -945,7 +941,7 @@ float v_raptor(Vehicle thisveh, float req)
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 			return true;
 		}
-		case VR_SETUP:
+		METHOD(Raptor, vr_setup, bool(Raptor thisveh))
 		{
 			if(autocvar_g_vehicle_raptor_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -967,14 +963,10 @@ float v_raptor(Vehicle thisveh, float req)
 
 			return true;
 		}
-		case VR_PRECACHE:
+		METHOD(Raptor, vr_precache, bool(Raptor thisveh))
 		{
 			return true;
 		}
-	}
-
-	return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
@@ -1023,11 +1015,7 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 	sfrag.drawmask = MASK_NORMAL;
 }
 
-float v_raptor(Vehicle thisveh, float req)
-{
-	switch(req)
-	{
-		case VR_HUD:
+		METHOD(Raptor, vr_hud, bool(Raptor thisveh))
 		{
 			string crosshair;
 
@@ -1044,19 +1032,15 @@ float v_raptor(Vehicle thisveh, float req)
 							 crosshair);
 			return true;
 		}
-		case VR_SETUP:
+		METHOD(Raptor, vr_setup, bool(Raptor thisveh))
 		{
 			AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
 			return true;
 		}
-		case VR_PRECACHE:
+		METHOD(Raptor, vr_precache, bool(Raptor thisveh))
 		{
 			return true;
 		}
-	}
-
-	return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_VEHICLE
