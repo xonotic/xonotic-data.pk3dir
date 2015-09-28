@@ -1,26 +1,26 @@
 #ifndef TUR_PLASMA_H
 #define TUR_PLASMA_H
-REGISTER_TURRET(
-/* TUR_##id   */ PLASMA,
-/* function   */ t_plasma,
-/* spawnflags */ TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER,
-/* mins,maxs  */ '-32 -32 0', '32 32 64',
-/* model	  */ "base.md3",
-/* head_model */ "plasma.md3",
-/* netname	  */ "plasma",
-/* fullname   */ _("Plasma Cannon")
-);
+
+CLASS(PlasmaTurret, Turret)
+/* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
+/* mins       */ ATTRIB(PlasmaTurret, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(PlasmaTurret, maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(PlasmaTurret, mdl, string, "base.md3");
+/* model      */ ATTRIB(PlasmaTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(PlasmaTurret, head_model, string, strzone(strcat("models/turrets/", "plasma.md3")));
+/* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
+/* fullname   */ ATTRIB(PlasmaTurret, turret_name, string, _("Plasma Cannon"));
+ENDCLASS(PlasmaTurret)
+
+REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
+
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA.m_id)) remove(self); }
 
-float t_plasma(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(PlasmaTurret, tr_attack, bool(PlasmaTurret thistur))
         {
             if(g_instagib)
             {
@@ -50,7 +50,7 @@ float t_plasma(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(PlasmaTurret, tr_think, bool(PlasmaTurret thistur))
         {
             if (self.tur_head.frame != 0)
                 self.tur_head.frame = self.tur_head.frame + 1;
@@ -60,11 +60,11 @@ float t_plasma(Turret thistur, float req)
 
             return true;
         }
-        case TR_DEATH:
+        METHOD(PlasmaTurret, tr_death, bool(PlasmaTurret thistur))
         {
             return true;
         }
-        case TR_SETUP:
+        METHOD(PlasmaTurret, tr_setup, bool(PlasmaTurret thistur))
         {
             self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
             self.damage_flags |= TFL_DMG_HEADSHAKE;
@@ -75,33 +75,21 @@ float t_plasma(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(PlasmaTurret, tr_precache, bool(PlasmaTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
-float t_plasma(Turret thistur, float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(PlasmaTurret, tr_setup, bool(PlasmaTurret thistur))
         {
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(PlasmaTurret, tr_precache, bool(PlasmaTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
