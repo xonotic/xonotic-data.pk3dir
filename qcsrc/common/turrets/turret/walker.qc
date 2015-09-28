@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_WALKER_H
+#define TUR_WALKER_H
 REGISTER_TURRET(
 /* TUR_##id   */ WALKER,
 /* function   */ t_walker,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "walker",
 /* fullname   */ _("Walker Turret")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 float autocvar_g_turrets_unit_walker_melee_damage;
 float autocvar_g_turrets_unit_walker_melee_force;

@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_HK_H
+#define TUR_HK_H
 REGISTER_TURRET(
 /* TUR_##id   */ HK,
 /* function   */ t_hk,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "hk",
 /* fullname   */ _("Hunter-Killer Turret")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 float autocvar_g_turrets_unit_hk_shot_speed;
 float autocvar_g_turrets_unit_hk_shot_speed_accel;

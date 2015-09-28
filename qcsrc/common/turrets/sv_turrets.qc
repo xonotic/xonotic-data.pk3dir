@@ -1,5 +1,4 @@
 #ifdef SVQC
-#include "all.qh"
 #include "../../server/autocvars.qh"
 
 // Generic aiming

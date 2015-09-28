@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_FUSIONREACTOR_H
+#define TUR_FUSIONREACTOR_H
 REGISTER_TURRET(
 /* TUR_##id   */ FUSIONREACTOR,
 /* function   */ t_fusionreactor,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "fusionreactor",
 /* fullname   */ _("Fusion Reactor")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 bool turret_fusionreactor_firecheck()
 {SELFPARAM();

@@ -1,48 +1,22 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_PLASMA_H
+#define TUR_PLASMA_H
 REGISTER_TURRET(
-/* TUR_##id   */ PLASMA_DUAL,
-/* function   */ t_plasma_dual,
+/* TUR_##id   */ PLASMA,
+/* function   */ t_plasma,
 /* spawnflags */ TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER,
 /* mins,maxs  */ '-32 -32 0', '32 32 64',
 /* model	  */ "base.md3",
-/* head_model */ "plasmad.md3",
-/* netname	  */ "plasma_dual",
-/* fullname   */ _("Dual Plasma Cannon")
+/* head_model */ "plasma.md3",
+/* netname	  */ "plasma",
+/* fullname   */ _("Plasma Cannon")
 );
-#else
+#endif
 
-#include "../../weapons/all.qh"
-
-CLASS(PlasmaDualAttack, PortoLaunch)
-/* flags     */ ATTRIB(PlasmaDualAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(PlasmaDualAttack, impulse, int, 5);
-/* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "plasmadual");
-/* wepname   */ ATTRIB(PlasmaDualAttack, message, string, _("Dual plasma"));
-ENDCLASS(PlasmaDualAttack)
-REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
-
+#ifdef IMPLEMENTATION
 #ifdef SVQC
+void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA.m_id)) remove(self); }
 
-float t_plasma_dual(float req);
-METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep)) {
-	SELFPARAM();
-	if (self.BUTTON_ATCK)
-	if (weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire))) {
-		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-		self.tur_shotdir_updated = w_shotdir;
-		self.tur_shotorg = w_shotorg;
-		self.tur_head = self;
-        self.shot_speed = max(1, ((!self.shot_speed) ? 2500 : self.shot_speed));
-        self.shot_spread = bound(0.0001, ((!self.shot_spread) ? 0.0125 : self.shot_spread), 500);
-		t_plasma_dual(TR_ATTACK);
-		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
-	}
-	return true;
-}
-
-void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA_DUAL.m_id)) remove(self); }
-
-float t_plasma_dual(float req)
+float t_plasma(float req)
 {SELFPARAM();
     switch(req)
     {
@@ -56,30 +30,32 @@ float t_plasma_dual(float req)
                 FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
                                    800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
-
                 Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
                 // teamcolor / hit beam effect
                 vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
                 WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
-                self.tur_head.frame += 1;
+                if (self.tur_head.frame == 0)
+                    self.tur_head.frame = 1;
             }
             else
             {
                 entity missile = turret_projectile(SND(HAGAR_FIRE), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
                 missile.missile_flags = MIF_SPLASH;
+
                 Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-                self.tur_head.frame += 1;
+                if (self.tur_head.frame == 0)
+                    self.tur_head.frame = 1;
             }
 
             return true;
         }
         case TR_THINK:
         {
-            if ((self.tur_head.frame != 0) && (self.tur_head.frame != 3))
+            if (self.tur_head.frame != 0)
                 self.tur_head.frame = self.tur_head.frame + 1;
 
-            if (self.tur_head.frame > 6)
+            if (self.tur_head.frame > 5)
                 self.tur_head.frame = 0;
 
             return true;
@@ -110,7 +86,7 @@ float t_plasma_dual(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float t_plasma_dual(float req)
+float t_plasma(float req)
 {
     switch(req)
     {

@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_HELLION_H
+#define TUR_HELLION_H
 REGISTER_TURRET(
 /* TUR_##id   */ HELLION,
 /* function   */ t_hellion,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "hellion",
 /* fullname   */ _("Hellion Missile Turret")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;

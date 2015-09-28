@@ -78,7 +78,7 @@ void ent_healer()
 {SELFPARAM();
 	int sf = ReadByte();
 
-	if(sf & TNSF_SETUP)
+	if(sf & 1)
 	{
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();

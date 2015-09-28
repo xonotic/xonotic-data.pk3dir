@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_PHASER_H
+#define TUR_PHASER_H
 REGISTER_TURRET(
 /* TUR_##id   */ PHASER,
 /* function   */ t_phaser,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "phaser",
 /* fullname   */ _("Phaser Cannon")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 .float fireflag;
 

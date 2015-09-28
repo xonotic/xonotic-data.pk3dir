@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_EWHEEL_H
+#define TUR_EWHEEL_H
 REGISTER_TURRET(
 /* TUR_##id   */ EWHEEL,
 /* function   */ t_ewheel,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname    */ "ewheel",
 /* fullname   */ _("eWheel Turret")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 float autocvar_g_turrets_unit_ewheel_speed_fast;
 float autocvar_g_turrets_unit_ewheel_speed_slow;

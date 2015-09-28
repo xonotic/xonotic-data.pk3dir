@@ -1,7 +1,11 @@
 #ifndef SV_TURRETS_H
 #define SV_TURRETS_H
 
-#include "all.qh"
+entity turret_projectile(string _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim);
+void turret_projectile_explode();
+float turret_validate_target(entity e_turret, entity e_target, float validate_flags);
+float turret_firecheck();
+entity turret_select_target();
 
 // turret fields
 .float ticrate; // interal ai think rate

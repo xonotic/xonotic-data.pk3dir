@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_TESLA_H
+#define TUR_TESLA_H
 REGISTER_TURRET(
 /* TUR_##id   */ TESLA,
 /* function   */ t_tesla,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "tesla",
 /* fullname   */ _("Tesla Coil")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 entity toast(entity from, float range, float damage)
 {SELFPARAM();

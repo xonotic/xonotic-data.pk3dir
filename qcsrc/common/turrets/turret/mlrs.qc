@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_MLRS_H
+#define TUR_MLRS_H
 REGISTER_TURRET(
 /* TUR_##id   */ MLRS,
 /* function   */ t_mlrs,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "mlrs",
 /* fullname   */ _("MLRS Turret")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS.m_id)) remove(self); }
 

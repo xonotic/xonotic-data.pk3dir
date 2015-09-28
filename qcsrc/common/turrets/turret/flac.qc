@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_FLAC_H
+#define TUR_FLAC_H
 REGISTER_TURRET(
 /* TUR_##id   */ FLAC,
 /* function   */ t_flac,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "flac",
 /* fullname   */ _("FLAC Cannon")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void turret_flac_projectile_think_explode()
 {SELFPARAM();

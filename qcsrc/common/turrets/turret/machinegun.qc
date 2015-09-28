@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef TUR_MACHINEGUN_H
+#define TUR_MACHINEGUN_H
 REGISTER_TURRET(
 /* TUR_##id   */ MACHINEGUN,
 /* function   */ t_machinegun,
@@ -9,7 +10,9 @@ REGISTER_TURRET(
 /* netname	  */ "machinegun",
 /* fullname   */ _("Machinegun Turret")
 );
-#else
+#endif
+
+#ifdef IMPLEMENTATION
 #ifdef SVQC
 void spawnfunc_turret_machinegun() { SELFPARAM(); if(!turret_initialize(TUR_MACHINEGUN.m_id)) remove(self); }
 

@@ -1,5 +1,3 @@
-#include "all.qh"
-
 void turret_remove()
 {SELFPARAM();
 	remove(self.tur_head);
