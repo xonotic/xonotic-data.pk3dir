@@ -1,15 +1,19 @@
 #ifndef TUR_HELLION_H
 #define TUR_HELLION_H
-REGISTER_TURRET(
-/* TUR_##id   */ HELLION,
-/* function   */ t_hellion,
-/* spawnflags */ TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE,
-/* mins,maxs  */ '-32 -32 0', '32 32 64',
-/* model	  */ "base.md3",
-/* head_model */ "hellion.md3",
-/* netname	  */ "hellion",
-/* fullname   */ _("Hellion Missile Turret")
-);
+
+CLASS(Hellion, Turret)
+/* spawnflags */ ATTRIB(Hellion, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
+/* mins       */ ATTRIB(Hellion, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(Hellion, maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(Hellion, mdl, string, "base.md3");
+/* model      */ ATTRIB(Hellion, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(Hellion, head_model, string, strzone(strcat("models/turrets/", "hellion.md3")));
+/* netname    */ ATTRIB(Hellion, netname, string, "hellion");
+/* fullname   */ ATTRIB(Hellion, turret_name, string, _("Hellion Missile Turret"));
+ENDCLASS(Hellion)
+
+REGISTER_TURRET(HELLION, NEW(Hellion));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -81,11 +85,7 @@ void turret_hellion_missile_think()
 
 void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION.m_id)) remove(self); }
 
-float t_hellion(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(Hellion, tr_attack, bool(Hellion thistur))
         {
             entity missile;
 
@@ -106,7 +106,7 @@ float t_hellion(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(Hellion, tr_think, bool(Hellion thistur))
         {
             if (self.tur_head.frame != 0)
                 self.tur_head.frame += 1;
@@ -116,11 +116,11 @@ float t_hellion(Turret thistur, float req)
 
             return true;
         }
-        case TR_DEATH:
+        METHOD(Hellion, tr_death, bool(Hellion thistur))
         {
             return true;
         }
-        case TR_SETUP:
+        METHOD(Hellion, tr_setup, bool(Hellion thistur))
         {
             self.aim_flags = TFL_AIM_SIMPLE;
             self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK ;
@@ -129,33 +129,21 @@ float t_hellion(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(Hellion, tr_precache, bool(Hellion thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
-float t_hellion(Turret thistur, float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(Hellion, tr_setup, bool(Hellion thistur))
         {
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(Hellion, tr_precache, bool(Hellion thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
