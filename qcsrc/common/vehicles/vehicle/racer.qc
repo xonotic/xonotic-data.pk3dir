@@ -1,25 +1,23 @@
 #ifndef VEHICLE_RACER
 #define VEHICLE_RACER
 
-#ifndef MENUQC
-int v_racer(entity, int);
-#endif
-REGISTER_VEHICLE_SIMPLE(
-/* VEH_##id   */ RACER,
-/* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
-/* mins,maxs  */ '-120 -120 -40' * 0.5, '120 120 40' * 0.5,
-/* model	  */ "models/vehicles/wakizashi.dpm",
-/* head_model */ "null",
-/* hud_model  */ "models/vehicles/wakizashi_cockpit.dpm",
-/* tags	   	  */ "", "", "tag_viewport",
-/* netname	  */ "racer",
-/* fullname   */ _("Racer")
-) {
-    this.m_icon = "vehicle_racer";
-#ifndef MENUQC
-    this.vehicle_func = v_racer;
-#endif
-}
+CLASS(Racer, Vehicle)
+/* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
+/* mins       */ ATTRIB(Racer, mins, vector, '-120 -120 -40' * 0.5);
+/* maxs       */ ATTRIB(Racer, maxs, vector, '120 120 40' * 0.5);
+/* model	  */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
+/* model	  */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
+/* head_model */ ATTRIB(Racer, head_model, string, "null");
+/* hud_model  */ ATTRIB(Racer, hud_model, string, "models/vehicles/wakizashi_cockpit.dpm");
+/* tags       */ ATTRIB(Racer, tag_head, string, "");
+/* tags       */ ATTRIB(Racer, tag_hud, string, "");
+/* tags       */ ATTRIB(Racer, tag_hview, string, "tag_viewport");
+/* netname    */ ATTRIB(Racer, netname, string, "racer");
+/* fullname   */ ATTRIB(Racer, vehicle_name, string, _("Racer"));
+/* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");
+ENDCLASS(Racer)
+
+REGISTER_VEHICLE(RACER, NEW(Racer));
 
 #include "../../weapons/all.qh"
 
@@ -734,11 +732,7 @@ void racer_draw()
 #endif
 #endif
 
-bool v_racer(Vehicle thisveh, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case VR_IMPACT:
+		METHOD(Racer, vr_impact, bool(Racer thisveh))
 		{
 		#ifdef SVQC
 			if(autocvar_g_vehicle_racer_bouncepain)
@@ -747,7 +741,7 @@ bool v_racer(Vehicle thisveh, int req)
 			return true;
 		}
 
-		case VR_ENTER:
+		METHOD(Racer, vr_enter, bool(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.movetype = MOVETYPE_BOUNCE;
@@ -764,7 +758,7 @@ bool v_racer(Vehicle thisveh, int req)
 			return true;
 		}
 
-		case VR_SPAWN:
+		METHOD(Racer, vr_spawn, bool(Racer thisveh))
 		{
 		#ifdef SVQC
 			if(self.scale != 0.5)
@@ -803,7 +797,7 @@ bool v_racer(Vehicle thisveh, int req)
 			return true;
 		}
 
-		case VR_DEATH:
+		METHOD(Racer, vr_death, bool(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.SendEntity		= func_null; // stop networking this racer (for now)
@@ -836,7 +830,7 @@ bool v_racer(Vehicle thisveh, int req)
 		}
 
 #ifdef CSQC
-		case VR_HUD:
+		METHOD(Racer, vr_hud, bool(Racer thisveh))
 		{
 			Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
@@ -845,7 +839,7 @@ bool v_racer(Vehicle thisveh, int req)
 			return true;
 		}
 #endif
-		case VR_SETUP:
+		METHOD(Racer, vr_setup, bool(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.vehicle_exit = racer_exit;
@@ -878,13 +872,9 @@ bool v_racer(Vehicle thisveh, int req)
 			return true;
 		}
 
-		case VR_PRECACHE:
+		METHOD(Racer, vr_precache, bool(Racer thisveh))
 		{
 			return true;
 		}
-	}
-
-	return true;
-}
 
 #endif // REGISTER_VEHICLE
