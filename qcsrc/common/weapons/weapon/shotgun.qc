@@ -9,7 +9,6 @@ REGISTER_WEAPON(
 /* color     */ '0.5 0.25 0',
 /* modelname */ "shotgun",
 /* model     */ MDL_SHOTGUN_ITEM,
-/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairshotgun 0.65",
 /* wepimg    */ "weaponshotgun",
 /* refname   */ "shotgun",

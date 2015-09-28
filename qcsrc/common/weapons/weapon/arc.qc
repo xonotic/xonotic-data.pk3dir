@@ -9,7 +9,6 @@ REGISTER_WEAPON(
 /* color     */ '1 1 1',
 /* modelname */ "arc",
 /* model     */ MDL_ARC_ITEM,
-/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.7",
 /* wepimg    */ "weaponarc",
 /* refname   */ "arc",

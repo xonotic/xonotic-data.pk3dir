@@ -9,7 +9,6 @@ REGISTER_WEAPON(
 /* color     */ '0 1 0',
 /* modelname */ "tuba",
 /* model     */ MDL_TUBA_ITEM,
-/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairtuba",
 /* wepimg    */ "weapontuba",
 /* refname   */ "tuba",

@@ -9,7 +9,6 @@ REGISTER_WEAPON(
 /* color     */ '0.5 0.5 0',
 /* modelname */ "ok_rl",
 /* model     */ MDL_RPC_ITEM,
-/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairrocketlauncher 0.7",
 /* wepimg    */ "weaponrpc",
 /* refname   */ "rpc",

@@ -9,7 +9,6 @@ REGISTER_WEAPON(
 /* color     */ '1 0 0',
 /* modelname */ "gl",
 /* model     */ MDL_MORTAR_ITEM,
-/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairgrenadelauncher 0.7",
 /* wepimg    */ "weapongrenadelauncher",
 /* refname   */ "mortar",

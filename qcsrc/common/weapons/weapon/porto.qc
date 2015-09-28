@@ -9,7 +9,6 @@ CLASS(PortoLaunch, Weapon)
 #ifndef MENUQC
 /* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
 #endif
-/* simplemdl */ ATTRIB(PortoLaunch, w_simplemdl, string, "foobar");
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair, string, "gfx/crosshairporto");
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");

@@ -9,7 +9,6 @@ REGISTER_WEAPON(
 /* color     */ '0.5 0.5 0',
 /* modelname */ "ok_hmg",
 /* model     */ MDL_HMG_ITEM,
-/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairuzi 0.6",
 /* wepimg    */ "weaponhmg",
 /* refname   */ "hmg",

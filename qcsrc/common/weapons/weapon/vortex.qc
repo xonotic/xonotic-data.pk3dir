@@ -9,7 +9,6 @@ REGISTER_WEAPON(
 /* color     */ '0.5 1 1',
 /* modelname */ "nex",
 /* model     */ MDL_VORTEX_ITEM,
-/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairnex 0.65",
 /* wepimg    */ "weaponnex",
 /* refname   */ "vortex",

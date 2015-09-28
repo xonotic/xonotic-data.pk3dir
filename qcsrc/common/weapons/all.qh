@@ -214,8 +214,6 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, mdl, string, "");
     /** M: model MDL_id_ITEM */
     ATTRIB(Weapon, m_model, entity, NULL);
-    /** M: simplemdl : simpleitems weapon model/image */
-    ATTRIB(Weapon, w_simplemdl, string, "foobar");
     /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
     ATTRIB(Weapon, w_crosshair, string, "gfx/crosshair1");
     /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
@@ -240,7 +238,6 @@ CLASS(Weapon, Object)
 		vector clr,
 		string modelname,
 		entity m,
-		string simplemdl,
 		string crosshair,
 		string wepimg,
 		string refname,
@@ -255,7 +252,6 @@ CLASS(Weapon, Object)
 		this.wpcolor = clr;
 		this.mdl = modelname;
 		this.m_model = m;
-		this.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
 		this.w_crosshair = strzone(car(crosshair));
 		string s = cdr(crosshair);
 		this.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
@@ -293,16 +289,16 @@ entity dummy_weapon_info;
 	} \
 	REGISTER_INIT(WEP, id)
 
-#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname) \
-	REGISTER_WEAPON_2(id, NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname))
+#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname) \
+	REGISTER_WEAPON_2(id, NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname))
 
 #ifndef MENUQC
-	#define REGISTER_WEAPON_14(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname) \
+	#define REGISTER_WEAPON_13(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname) \
     	bool function(entity this, int); \
-    	_REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname)
+    	_REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname)
 #else
-	#define REGISTER_WEAPON_14(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, simplemdl, crosshair, wepimg, refname, wepname) \
-		_REGISTER_WEAPON(id, w_new,   ammotype, impulse, flags, rating, color, modelname, NULL, simplemdl, crosshair, wepimg, refname, wepname)
+	#define REGISTER_WEAPON_13(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname) \
+		_REGISTER_WEAPON(id, w_new,   ammotype, impulse, flags, rating, color, modelname, NULL, crosshair, wepimg, refname, wepname)
 #endif
 
 #include "all.inc"

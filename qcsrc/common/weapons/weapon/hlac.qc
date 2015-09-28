@@ -9,7 +9,6 @@ REGISTER_WEAPON(
 /* color     */ '0 1 0',
 /* modelname */ "hlac",
 /* model     */ MDL_HLAC_ITEM,
-/* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.6",
 /* wepimg    */ "weaponhlac",
 /* refname   */ "hlac",
