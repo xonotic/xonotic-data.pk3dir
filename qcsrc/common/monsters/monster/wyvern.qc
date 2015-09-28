@@ -1,9 +1,17 @@
+#ifndef WYVERN_H
+#define WYVERN_H
+
+#ifndef MENUQC
+MODEL(MON_WYVERN, "models/monsters/wizard.mdl");
+#endif
+
 CLASS(Wyvern, Monster)
     ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE);
     ATTRIB(Wyvern, mins, vector, '-20 -20 -58');
     ATTRIB(Wyvern, maxs, vector, '20 20 20');
-    ATTRIB(Wyvern, mdl, string, "wizard.mdl");
-    ATTRIB(Wyvern, model, string, strzone(strcat("models/monsters/", this.mdl)));
+#ifndef MENUQC
+    ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
+#endif
     ATTRIB(Wyvern, netname, string, "wyvern");
     ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
 ENDCLASS(Wyvern)
@@ -13,6 +21,10 @@ REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
     MON_ACTION(this, MR_PRECACHE);
 #endif
 }
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 float autocvar_g_monster_wyvern_health;
@@ -160,3 +172,5 @@ void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN.monsterid); }
 			return true;
 		}
 		#endif
+
+#endif

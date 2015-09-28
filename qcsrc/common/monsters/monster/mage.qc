@@ -1,9 +1,17 @@
+#ifndef MAGE_H
+#define MAGE_H
+
+#ifndef MENUQC
+MODEL(MON_MAGE, "models/monsters/mage.dpm");
+#endif
+
 CLASS(Mage, Monster)
     ATTRIB(Mage, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Mage, mins, vector, '-36 -36 -24');
     ATTRIB(Mage, maxs, vector, '36 36 50');
-    ATTRIB(Mage, mdl, string, "mage.dpm");
-    ATTRIB(Mage, model, string, strzone(strcat("models/monsters/", this.mdl)));
+#ifndef MENUQC
+    ATTRIB(Mage, m_model, Model, MDL_MON_MAGE);
+#endif
     ATTRIB(Mage, netname, string, "mage");
     ATTRIB(Mage, monster_name, string, _("Mage"));
 ENDCLASS(Mage)
@@ -23,6 +31,10 @@ CLASS(MageSpike, PortoLaunch)
 /* wepname   */ ATTRIB(MageSpike, message, string, _("Mage spike"));
 ENDCLASS(MageSpike)
 REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 
@@ -445,3 +457,5 @@ void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE.monsterid); }
 			return true;
 		}
 		#endif
+
+#endif

@@ -261,7 +261,6 @@ CLASS(Weapon, Object)
 	}
 	void register_weapon(entity this, int id, WepSet bit)
 	{
-		this.classname = "weapon_info";
 		this.weapon = id;
 		this.weapons = bit;
 		this.wpmodel = strzone(strcat("wpn-", ftos(id)));

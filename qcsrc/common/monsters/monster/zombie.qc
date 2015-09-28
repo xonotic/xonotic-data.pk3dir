@@ -1,9 +1,17 @@
+#ifndef ZOMBIE_H
+#define ZOMBIE_H
+
+#ifndef MENUQC
+MODEL(MON_ZOMBIE, "models/monsters/zombie.dpm");
+#endif
+
 CLASS(Zombie, Monster)
     ATTRIB(Zombie, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RIDE);
     ATTRIB(Zombie, mins, vector, '-18 -18 -25');
     ATTRIB(Zombie, maxs, vector, '18 18 47');
-    ATTRIB(Zombie, mdl, string, "zombie.dpm");
-    ATTRIB(Zombie, model, string, strzone(strcat("models/monsters/", this.mdl)));
+#ifndef MENUQC
+    ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
+#endif
     ATTRIB(Zombie, netname, string, "zombie");
     ATTRIB(Zombie, monster_name, string, _("Zombie"));
 ENDCLASS(Zombie)
@@ -13,6 +21,10 @@ REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
     MON_ACTION(this, MR_PRECACHE);
 #endif
 }
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
@@ -216,3 +228,5 @@ void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE.monsterid); }
 			return true;
 		}
 		#endif
+
+#endif

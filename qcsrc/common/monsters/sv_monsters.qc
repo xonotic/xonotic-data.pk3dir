@@ -267,7 +267,7 @@ void Monster_Sound_Precache(string f)
 
 void Monster_Sounds_Precache()
 {SELFPARAM();
-	string m = (get_monsterinfo(self.monsterid)).model;
+	string m = (get_monsterinfo(self.monsterid)).m_model.model_str();
 	float globhandle, n, i;
 	string f;
 
@@ -1307,7 +1307,6 @@ bool Monster_Spawn(int mon_id)
 
 	if(!autocvar_g_monsters) { Monster_Remove(self); return false; }
 
-	self.mdl = mon.model;
 	if(Monster_Appear_Check(self, mon_id)) { return true; } // return true so the monster isn't removed
 
 	if(!self.monster_skill)
@@ -1325,7 +1324,7 @@ bool Monster_Spawn(int mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	_setmodel(self, self.mdl);
+	setmodel(self, mon.m_model);
 	self.flags				= FL_MONSTER;
 	self.classname			= "monster";
 	self.takedamage			= DAMAGE_AIM;

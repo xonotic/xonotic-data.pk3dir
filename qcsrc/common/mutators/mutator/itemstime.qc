@@ -118,7 +118,7 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
     {
         for (entity head = world; (head = nextent(head)); )
         {
-            if (clienttype(head) != CLIENTTYPE_NOTACLIENT || !(head.weapons & WEPSET_SUPERWEAPONS) || head.classname == "weapon_info")
+            if (clienttype(head) != CLIENTTYPE_NOTACLIENT || !(head.weapons & WEPSET_SUPERWEAPONS) || head.instanceOfWeapon)
                 continue;
             if (e == head)
                 continue;

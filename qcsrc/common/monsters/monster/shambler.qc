@@ -1,9 +1,17 @@
+#ifndef SHAMBLER_H
+#define SHAMBLER_H
+
+#ifndef MENUQC
+MODEL(MON_SHAMBLER, "models/monsters/shambler.mdl");
+#endif
+
 CLASS(Shambler, Monster)
     ATTRIB(Shambler, spawnflags, int, MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Shambler, mins, vector, '-41 -41 -31');
     ATTRIB(Shambler, maxs, vector, '41 41 65');
-    ATTRIB(Shambler, mdl, string, "shambler.mdl");
-    ATTRIB(Shambler, model, string, strzone(strcat("models/monsters/", this.mdl)));
+#ifndef MENUQC
+    ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
+#endif
     ATTRIB(Shambler, netname, string, "shambler");
     ATTRIB(Shambler, monster_name, string, _("Shambler"));
 ENDCLASS(Shambler)
@@ -13,6 +21,10 @@ REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
     MON_ACTION(this, MR_PRECACHE);
 #endif
 }
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
@@ -276,3 +288,5 @@ void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER.monsterid); }
 			return true;
 		}
 		#endif
+
+#endif

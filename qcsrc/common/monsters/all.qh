@@ -1,6 +1,8 @@
 #ifndef MONSTERS_ALL_H
 #define MONSTERS_ALL_H
 
+#include "monster.qh"
+
 void RegisterMonsters();
 const int MON_MAXCOUNT = 24;
 entity monster_info[MON_MAXCOUNT], monster_info_first, monster_info_last;
@@ -10,51 +12,12 @@ const int MON_FIRST = 1;
 #define MON_LAST (MON_FIRST + MON_COUNT - 1)
 /** If you register a new monster, make sure to add it to all.inc */
 #define REGISTER_MONSTER(id, inst) REGISTER(RegisterMonsters, MON, monster_info, MON_COUNT, id, monsterid, inst)
-#include "monster.qh"
-#define REGISTER_MONSTER_SIMPLE(id, monsterflags, min_s, max_s, modelname, shortname, mname) \
-    REGISTER_MONSTER(id, NEW(Monster)) {                                \
-        this.netname = shortname;                                       \
-        this.monster_name = mname;                                      \
-        this.mdl = modelname;                                           \
-        this.spawnflags = monsterflags;                                 \
-        this.mins = min_s;                                              \
-        this.maxs = max_s;                                              \
-        this.model = strzone(strcat("models/monsters/", modelname));    \
-    }                                                                   \
-    REGISTER_INIT(MON, id)
 REGISTER_REGISTRY(RegisterMonsters)
 
-#include "../util.qh"
+entity get_monsterinfo(int id);
 
-// special spawn flags
-const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
-const int MONSTER_TYPE_FLY = 32;
-const int MONSTER_TYPE_SWIM = 64;
-const int MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are replaced
-const int MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
-const int MON_FLAG_RANGED = 512; // monster shoots projectiles
-const int MON_FLAG_MELEE = 1024;
-const int MON_FLAG_CRUSH = 2048; // monster can be stomped in special modes
-const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
+REGISTER_MONSTER(Null, NEW(Monster));
 
-// entity properties of monsterinfo:
-.string netname; // short name
-.string mdl; // currently a copy of the model
-.string model; // full name of model
-.int spawnflags;
-.vector mins, maxs; // monster hitbox size
-.bool(int) monster_attackfunc;
-
-// animations
-.vector anim_blockend;
-.vector anim_blockstart;
-.vector anim_melee1;
-.vector anim_melee2;
-.vector anim_melee3;
-.vector anim_pain3;
-.vector anim_pain4;
-.vector anim_pain5;
-.vector anim_walk;
-.vector anim_spawn;
+#include "all.inc"
 
 #endif

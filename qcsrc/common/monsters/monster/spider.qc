@@ -1,9 +1,17 @@
+#ifndef SPIDER_H
+#define SPIDER_H
+
+#ifndef MENUQC
+MODEL(MON_SPIDER, "models/monsters/spider.dpm");
+#endif
+
 CLASS(Spider, Monster)
     ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
     ATTRIB(Spider, mins, vector, '-18 -18 -25');
     ATTRIB(Spider, maxs, vector, '18 18 30');
-    ATTRIB(Spider, mdl, string, "spider.dpm");
-    ATTRIB(Spider, model, string, strzone(strcat("models/monsters/", this.mdl)));
+#ifndef MENUQC
+    ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
+#endif
     ATTRIB(Spider, netname, string, "spider");
     ATTRIB(Spider, monster_name, string, _("Spider"));
 ENDCLASS(Spider)
@@ -13,6 +21,10 @@ REGISTER_MONSTER(SPIDER, NEW(Spider)) {
     MON_ACTION(this, MR_PRECACHE);
 #endif
 }
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 float autocvar_g_monster_spider_health;
@@ -177,3 +189,5 @@ void spawnfunc_monster_spider() { Monster_Spawn(MON_SPIDER.monsterid); }
 			return true;
 		}
 		#endif
+
+#endif
