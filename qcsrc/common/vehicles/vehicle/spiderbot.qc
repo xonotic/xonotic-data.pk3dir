@@ -1,24 +1,24 @@
 #ifndef VEHICLE_SPIDERBOT
 #define VEHICLE_SPIDERBOT
-#ifndef MENUQC
-int v_spiderbot(entity, int);
-#endif
-REGISTER_VEHICLE_SIMPLE(
-/* VEH_##id   */ SPIDERBOT,
-/* spawnflags */ VHF_DMGSHAKE,
-/* mins,maxs  */ '-75 -75 10', '75 75 125',
-/* model	  */ "models/vehicles/spiderbot.dpm",
-/* head_model */ "models/vehicles/spiderbot_top.dpm",
-/* hud_model  */ "models/vehicles/spiderbot_cockpit.dpm",
-/* tags	   	  */ "tag_head", "tag_hud", "",
-/* netname	  */ "spiderbot",
-/* fullname   */ _("Spiderbot")
-) {
-    this.m_icon = "vehicle_spider";
-#ifndef MENUQC
-    this.vehicle_func = v_spiderbot;
-#endif
-}
+
+CLASS(Spiderbot, Vehicle)
+/* spawnflags */ ATTRIB(Spiderbot, spawnflags, int, VHF_DMGSHAKE);
+/* mins       */ ATTRIB(Spiderbot, mins, vector, '-75 -75 10');
+/* maxs       */ ATTRIB(Spiderbot, maxs, vector, '75 75 125');
+/* model	  */ ATTRIB(Spiderbot, mdl, string, "models/vehicles/spiderbot.dpm");
+/* model	  */ ATTRIB(Spiderbot, model, string, "models/vehicles/spiderbot.dpm");
+/* head_model */ ATTRIB(Spiderbot, head_model, string, "models/vehicles/spiderbot_top.dpm");
+/* hud_model  */ ATTRIB(Spiderbot, hud_model, string, "models/vehicles/spiderbot_cockpit.dpm");
+/* tags       */ ATTRIB(Spiderbot, tag_head, string, "tag_head");
+/* tags       */ ATTRIB(Spiderbot, tag_hud, string, "tag_hud");
+/* tags       */ ATTRIB(Spiderbot, tag_hview, string, "");
+/* netname    */ ATTRIB(Spiderbot, netname, string, "spiderbot");
+/* fullname   */ ATTRIB(Spiderbot, vehicle_name, string, _("Spiderbot"));
+/* icon       */ ATTRIB(Spiderbot, m_icon, string, "vehicle_spider");
+ENDCLASS(Spiderbot)
+
+REGISTER_VEHICLE(SPIDERBOT, NEW(Spiderbot));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -817,18 +817,14 @@ void spawnfunc_vehicle_spiderbot()
 	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
-float v_spiderbot(Vehicle thisveh, float req)
-{SELFPARAM();
-	switch(req)
-	{
-		case VR_IMPACT:
+		METHOD(Spiderbot, vr_impact, bool(Spiderbot thisveh))
 		{
 			if(autocvar_g_vehicle_spiderbot_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
 
 			return true;
 		}
-		case VR_ENTER:
+		METHOD(Spiderbot, vr_enter, bool(Spiderbot thisveh))
 		{
 			self.vehicle_weapon2mode = SBRM_GUIDE;
 			self.movetype = MOVETYPE_WALK;
@@ -844,14 +840,14 @@ float v_spiderbot(Vehicle thisveh, float req)
 
 			return true;
 		}
-		case VR_THINK:
+		METHOD(Spiderbot, vr_think, bool(Spiderbot thisveh))
 		{
 			if(self.flags & FL_ONGROUND)
 				movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
 
 			return true;
 		}
-		case VR_DEATH:
+		METHOD(Spiderbot, vr_death, bool(Spiderbot thisveh))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -871,7 +867,7 @@ float v_spiderbot(Vehicle thisveh, float req)
 
 			return true;
 		}
-		case VR_SPAWN:
+		METHOD(Spiderbot, vr_spawn, bool(Spiderbot thisveh))
 		{
 			if(!self.gun1)
 			{
@@ -904,7 +900,7 @@ float v_spiderbot(Vehicle thisveh, float req)
 
 			return true;
 		}
-		case VR_SETUP:
+		METHOD(Spiderbot, vr_setup, bool(Spiderbot thisveh))
 		{
 			if(autocvar_g_vehicle_spiderbot_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -923,25 +919,17 @@ float v_spiderbot(Vehicle thisveh, float req)
 
 			return true;
 		}
-		case VR_PRECACHE:
+		METHOD(Spiderbot, vr_precache, bool(Spiderbot thisveh))
 		{
 			return true;
 		}
-	}
-
-	return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
 float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
 float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
-float v_spiderbot(Vehicle thisveh, float req)
-{
-	switch(req)
-	{
-		case VR_HUD:
+		METHOD(Spiderbot, vr_hud, bool(Spiderbot thisveh))
 		{
 			string crosshair;
 
@@ -959,21 +947,17 @@ float v_spiderbot(Vehicle thisveh, float req)
 							 crosshair);
 			return true;
 		}
-		case VR_SETUP:
+		METHOD(Spiderbot, vr_setup, bool(Spiderbot thisveh))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
 			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
 
 			return true;
 		}
-		case VR_PRECACHE:
+		METHOD(Spiderbot, vr_precache, bool(Spiderbot thisveh))
 		{
 			return true;
 		}
-	}
-
-	return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_VEHICLE
