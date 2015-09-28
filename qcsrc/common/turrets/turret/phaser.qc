@@ -1,15 +1,19 @@
 #ifndef TUR_PHASER_H
 #define TUR_PHASER_H
-REGISTER_TURRET(
-/* TUR_##id   */ PHASER,
-/* function   */ t_phaser,
-/* spawnflags */ TUR_FLAG_SNIPER | TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER,
-/* mins,maxs  */ '-32 -32 0', '32 32 64',
-/* model	  */ "base.md3",
-/* head_model */ "phaser.md3",
-/* netname	  */ "phaser",
-/* fullname   */ _("Phaser Cannon")
-);
+
+CLASS(PhaserTurret, Turret)
+/* spawnflags */ ATTRIB(PhaserTurret, spawnflags, int, TUR_FLAG_SNIPER | TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER);
+/* mins       */ ATTRIB(PhaserTurret, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(PhaserTurret, maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(PhaserTurret, mdl, string, "base.md3");
+/* model      */ ATTRIB(PhaserTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
+/* head_model */ ATTRIB(PhaserTurret, head_model, string, strzone(strcat("models/turrets/", "phaser.md3")));
+/* netname    */ ATTRIB(PhaserTurret, netname, string, "phaser");
+/* fullname   */ ATTRIB(PhaserTurret, turret_name, string, _("Phaser Cannon"));
+ENDCLASS(PhaserTurret)
+
+REGISTER_TURRET(PHASER, NEW(PhaserTurret));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -62,11 +66,7 @@ void beam_think()
 
 void spawnfunc_turret_phaser() { SELFPARAM(); if(!turret_initialize(TUR_PHASER.m_id)) remove(self); }
 
-float t_phaser(Turret thistur, float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
+        METHOD(PhaserTurret, tr_attack, bool(PhaserTurret thistur))
         {
             entity beam;
 
@@ -101,7 +101,7 @@ float t_phaser(Turret thistur, float req)
 
             return true;
         }
-        case TR_THINK:
+        METHOD(PhaserTurret, tr_think, bool(PhaserTurret thistur))
         {
             if (self.tur_head.frame != 0)
             {
@@ -125,11 +125,11 @@ float t_phaser(Turret thistur, float req)
 
             return true;
         }
-        case TR_DEATH:
+        METHOD(PhaserTurret, tr_death, bool(PhaserTurret thistur))
         {
             return true;
         }
-        case TR_SETUP:
+        METHOD(PhaserTurret, tr_setup, bool(PhaserTurret thistur))
         {
             self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
             self.aim_flags = TFL_AIM_LEAD;
@@ -138,33 +138,21 @@ float t_phaser(Turret thistur, float req)
 
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(PhaserTurret, tr_precache, bool(PhaserTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
-float t_phaser(Turret thistur, float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
+        METHOD(PhaserTurret, tr_setup, bool(PhaserTurret thistur))
         {
             return true;
         }
-        case TR_PRECACHE:
+        METHOD(PhaserTurret, tr_precache, bool(PhaserTurret thistur))
         {
             return true;
         }
-    }
-
-    return true;
-}
 
 #endif // CSQC
 #endif // REGISTER_TURRET
