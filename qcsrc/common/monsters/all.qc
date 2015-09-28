@@ -2,7 +2,7 @@
 #define MONSTERS_ALL_C
 #include "all.qh"
 
-REGISTER_MONSTER(Null, Monster) {
+REGISTER_MONSTER(Null, NEW(Monster)) {
 	this.netname = "";
 	this.monster_name = "Monster";
 	this.monster_func = m_null;

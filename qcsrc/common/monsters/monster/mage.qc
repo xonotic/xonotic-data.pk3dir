@@ -1,16 +1,15 @@
+CLASS(Mage, Monster)
+    ATTRIB(Mage, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Mage, mins, vector, '-36 -36 -24');
+    ATTRIB(Mage, maxs, vector, '36 36 50');
+    ATTRIB(Mage, mdl, string, "mage.dpm");
+    ATTRIB(Mage, model, string, strzone(strcat("models/monsters/", this.mdl)));
+    ATTRIB(Mage, netname, string, "mage");
+    ATTRIB(Mage, monster_name, string, _("Mage"));
+ENDCLASS(Mage)
+
+REGISTER_MONSTER(MAGE, NEW(Mage)) {
 #ifndef MENUQC
-bool M_Mage(Monster thismon, int);
-#endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ MAGE,
-/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
-/* mins,maxs  */ '-36 -36 -24', '36 36 50',
-/* model      */ "mage.dpm",
-/* netname    */ "mage",
-/* fullname   */ _("Mage")
-) {
-#ifndef MENUQC
-    this.monster_func = M_Mage;
     MON_ACTION(this, MR_PRECACHE);
 #endif
 }
@@ -368,13 +367,10 @@ void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE.monsterid); }
 
 #endif // SVQC
 
-bool M_Mage(Monster thismon, int req)
-{SELFPARAM();
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Mage, mr_think, bool(Monster thismon))
 		{
+			SELFPARAM();
 			entity head;
 			bool need_help = false;
 
@@ -403,19 +399,21 @@ bool M_Mage(Monster thismon, int req)
 
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Mage, mr_pain, bool(Monster thismon))
 		{
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Mage, mr_death, bool(Monster thismon))
 		{
+			SELFPARAM();
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Mage, mr_anim, bool(Monster thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
 			self.anim_walk = animfixfps(self, '1 1 1', none);
@@ -428,8 +426,9 @@ bool M_Mage(Monster thismon, int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		METHOD(Mage, mr_setup, bool(Monster thismon))
 		{
+			SELFPARAM();
 			if(!self.health) self.health = (autocvar_g_monster_mage_health);
 			if(!self.speed) { self.speed = (autocvar_g_monster_mage_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_mage_speed_run); }
@@ -441,12 +440,8 @@ bool M_Mage(Monster thismon, int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Mage, mr_precache, bool(Monster thismon))
 		{
 			return true;
 		}
 		#endif
-	}
-
-	return true;
-}
