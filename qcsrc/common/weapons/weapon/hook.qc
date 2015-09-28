@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ HOOK,
-/* function  */ W_Hook,
-/* ammotype  */ ammo_fuel,
-/* impulse   */ 0,
-/* flags     */ WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating    */ 0,
-/* color     */ '0 0.5 0',
-/* modelname */ "hookgun",
-/* model     */ MDL_HOOK_ITEM,
-/* crosshair */ "gfx/crosshairhook 0.5",
-/* wepimg    */ "weaponhook",
-/* refname   */ "hook",
-/* wepname   */ _("Grappling Hook")
-);
+CLASS(Hook, Weapon)
+/* ammotype  */ ATTRIB(Hook, ammo_field, .int, ammo_fuel)
+/* impulse   */ ATTRIB(Hook, impulse, int, 0)
+/* flags     */ ATTRIB(Hook, spawnflags, int, WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Hook, bot_pickupbasevalue, float, 0);
+/* color     */ ATTRIB(Hook, wpcolor, vector, '0 0.5 0');
+/* modelname */ ATTRIB(Hook, mdl, string, "hookgun");
+#ifndef MENUQC
+/* model     */ ATTRIB(Hook, m_model, Model, MDL_HOOK_ITEM);
+#endif
+/* crosshair */ ATTRIB(Hook, w_crosshair, string, "gfx/crosshairhook");
+/* crosshair */ ATTRIB(Hook, w_crosshair_size, float, 0.5);
+/* wepimg    */ ATTRIB(Hook, model2, string, "weaponhook");
+/* refname   */ ATTRIB(Hook, netname, string, "hook");
+/* wepname   */ ATTRIB(Hook, message, string, _("Grappling Hook"));
+ENDCLASS(Hook)
+REGISTER_WEAPON(HOOK, NEW(Hook));
 
 #define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, HOOK, hook)
 #define HOOK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -174,18 +176,12 @@ void W_Hook_Attack2(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-bool W_Hook(entity thiswep, int req)
-{SELFPARAM();
-	float hooked_time_max, hooked_fuel;
-
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Hook, wr_aim, bool(entity thiswep))
 		{
 			// no bot AI for hook (yet?)
 			return true;
 		}
-		case WR_THINK:
+		METHOD(Hook, wr_think, bool(entity thiswep))
 		{
 			if(self.BUTTON_ATCK || self.BUTTON_HOOK)
 			{
@@ -222,14 +218,14 @@ bool W_Hook(entity thiswep, int req)
 
 			if(self.hook && self.hook.state == 1)
 			{
-				hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);
+				float hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);
 				if(hooked_time_max > 0)
 				{
 					if( time > self.hook_time_hooked + hooked_time_max )
 						self.hook_state |= HOOK_REMOVING;
 				}
 
-				hooked_fuel = WEP_CVAR_PRI(hook, hooked_ammo);
+				float hooked_fuel = WEP_CVAR_PRI(hook, hooked_ammo);
 				if(hooked_fuel > 0)
 				{
 					if( time > self.hook_time_fueldecrease )
@@ -286,56 +282,51 @@ bool W_Hook(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Hook, wr_init, bool(entity thiswep))
 		{
 			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_SETUP:
+		METHOD(Hook, wr_setup, bool(entity thiswep))
 		{
 			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Hook, wr_checkammo1, bool(entity thiswep))
 		{
 			if(self.hook)
 				return self.ammo_fuel > 0;
 			else
 				return self.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Hook, wr_checkammo2, bool(entity thiswep))
 		{
 			// infinite ammo for now
 			return true; // self.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
 		}
-		case WR_CONFIG:
+		METHOD(Hook, wr_config, bool(entity thiswep))
 		{
 			HOOK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(Hook, wr_resetplayer, bool(entity thiswep))
 		{
 			self.hook_refire = time;
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Hook, wr_suicidemessage, bool(entity thiswep))
 		{
 			return false;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Hook, wr_killmessage, bool(entity thiswep))
 		{
 			return WEAPON_HOOK_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Hook(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Hook, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
@@ -345,17 +336,15 @@ bool W_Hook(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Hook, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Hook, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
