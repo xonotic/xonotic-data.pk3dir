@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ MACHINEGUN,
-/* function  */ W_MachineGun,
-/* ammotype  */ ammo_nails,
-/* impulse   */ 3,
-/* flags     */ WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '1 1 0',
-/* modelname */ "uzi",
-/* model     */ MDL_MACHINEGUN_ITEM,
-/* crosshair */ "gfx/crosshairuzi 0.6",
-/* wepimg    */ "weaponuzi",
-/* refname   */ "machinegun",
-/* wepname   */ _("Machine Gun")
-);
+CLASS(MachineGun, Weapon)
+/* ammotype  */ ATTRIB(MachineGun, ammo_field, .int, ammo_nails)
+/* impulse   */ ATTRIB(MachineGun, impulse, int, 3)
+/* flags     */ ATTRIB(MachineGun, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
+/* rating    */ ATTRIB(MachineGun, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* color     */ ATTRIB(MachineGun, wpcolor, vector, '1 1 0');
+/* modelname */ ATTRIB(MachineGun, mdl, string, "uzi");
+#ifndef MENUQC
+/* model     */ ATTRIB(MachineGun, m_model, Model, MDL_MACHINEGUN_ITEM);
+#endif
+/* crosshair */ ATTRIB(MachineGun, w_crosshair, string, "gfx/crosshairuzi");
+/* crosshair */ ATTRIB(MachineGun, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponuzi");
+/* refname   */ ATTRIB(MachineGun, netname, string, "machinegun");
+/* wepname   */ ATTRIB(MachineGun, message, string, _("MachineGun"));
+ENDCLASS(MachineGun)
+REGISTER_WEAPON(MACHINEGUN, NEW(MachineGun));
 
 #define MACHINEGUN_SETTINGS(w_cvar,w_prop) MACHINEGUN_SETTINGS_LIST(w_cvar, w_prop, MACHINEGUN, machinegun)
 #define MACHINEGUN_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -236,12 +238,7 @@ void W_MachineGun_Attack_Burst(void)
 
 }
 
-bool W_MachineGun(entity thiswep, int req)
-{SELFPARAM();
-	float ammo_amount;
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(MachineGun, wr_aim, bool(entity thiswep))
 		{
 			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
@@ -250,7 +247,7 @@ bool W_MachineGun(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_THINK:
+		METHOD(MachineGun, wr_think, bool(entity thiswep))
 		{
 			if(WEP_CVAR(machinegun, reload_ammo) && self.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
@@ -302,13 +299,14 @@ bool W_MachineGun(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(MachineGun, wr_init, bool(entity thiswep))
 		{
 			MACHINEGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(MachineGun, wr_checkammo1, bool(entity thiswep))
 		{
+			float ammo_amount;
 			if(WEP_CVAR(machinegun, mode) == 1)
 				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, sustained_ammo);
 			else
@@ -323,8 +321,9 @@ bool W_MachineGun(entity thiswep, int req)
 			}
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(MachineGun, wr_checkammo2, bool(entity thiswep))
 		{
+			float ammo_amount;
 			if(WEP_CVAR(machinegun, mode) == 1)
 				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, burst_ammo);
 			else
@@ -339,37 +338,32 @@ bool W_MachineGun(entity thiswep, int req)
 			}
 			return ammo_amount;
 		}
-		case WR_CONFIG:
+		METHOD(MachineGun, wr_config, bool(entity thiswep))
 		{
 			MACHINEGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RELOAD:
+		METHOD(MachineGun, wr_reload, bool(entity thiswep))
 		{
 			W_Reload(min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), SND(RELOAD));
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(MachineGun, wr_suicidemessage, bool(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(MachineGun, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MACHINEGUN_MURDER_SNIPE;
 			else
 				return WEAPON_MACHINEGUN_MURDER_SPRAY;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_MachineGun(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(MachineGun, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
@@ -384,17 +378,15 @@ bool W_MachineGun(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(MachineGun, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(MachineGun, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
