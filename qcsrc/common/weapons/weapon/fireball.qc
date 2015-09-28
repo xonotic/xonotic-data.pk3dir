@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ FIREBALL,
-/* function  */ W_Fireball,
-/* ammotype  */ ammo_none,
-/* impulse   */ 9,
-/* flags     */ WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '1 0.5 0',
-/* modelname */ "fireball",
-/* model     */ MDL_FIREBALL_ITEM,
-/* crosshair */ "gfx/crosshairfireball",
-/* wepimg    */ "weaponfireball",
-/* refname   */ "fireball",
-/* wepname   */ _("Fireball")
-);
+CLASS(Fireball, Weapon)
+/* ammotype  */ //ATTRIB(Fireball, ammo_field, .int, ammo_none)
+/* impulse   */ ATTRIB(Fireball, impulse, int, 9)
+/* flags     */ ATTRIB(Fireball, spawnflags, int, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Fireball, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* color     */ ATTRIB(Fireball, wpcolor, vector, '1 0.5 0');
+/* modelname */ ATTRIB(Fireball, mdl, string, "fireball");
+#ifndef MENUQC
+/* model     */ ATTRIB(Fireball, m_model, Model, MDL_FIREBALL_ITEM);
+#endif
+/* crosshair */ ATTRIB(Fireball, w_crosshair, string, "gfx/crosshairfireball");
+/* crosshair */ //ATTRIB(Fireball, w_crosshair_size, float, 0.65);
+/* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
+/* refname   */ ATTRIB(Fireball, netname, string, "fireball");
+/* wepname   */ ATTRIB(Fireball, message, string, _("Fireball"));
+ENDCLASS(Fireball)
+REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 
 #define FIREBALL_SETTINGS(w_cvar,w_prop) FIREBALL_SETTINGS_LIST(w_cvar, w_prop, FIREBALL, fireball)
 #define FIREBALL_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -348,11 +350,7 @@ void W_Fireball_Attack2(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-bool W_Fireball(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Fireball, wr_aim, bool(entity thiswep))
 		{
 			self.BUTTON_ATCK = false;
 			self.BUTTON_ATCK2 = false;
@@ -375,7 +373,7 @@ bool W_Fireball(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_THINK:
+		METHOD(Fireball, wr_think, bool(entity thiswep))
 		{
 			if(self.BUTTON_ATCK)
 			{
@@ -397,55 +395,53 @@ bool W_Fireball(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Fireball, wr_init, bool(entity thiswep))
 		{
 			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
-		case WR_SETUP:
+		METHOD(Fireball, wr_setup, bool(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
 			return true;
 		}
-		case WR_CHECKAMMO1:
-		case WR_CHECKAMMO2:
+		METHOD(Fireball, wr_checkammo1, bool(entity thiswep))
+		{
+			return true; // infinite ammo
+		}
+		METHOD(Fireball, wr_checkammo2, bool(entity thiswep))
 		{
 			return true; // fireball has infinite ammo
 		}
-		case WR_CONFIG:
+		METHOD(Fireball, wr_config, bool(entity thiswep))
 		{
 			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(Fireball, wr_resetplayer, bool(entity thiswep))
 		{
 			self.fireball_primarytime = time;
 			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Fireball, wr_suicidemessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_FIREBALL_SUICIDE_FIREMINE;
 			else
 				return WEAPON_FIREBALL_SUICIDE_BLAST;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Fireball, wr_killmessage, bool(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_FIREBALL_MURDER_FIREMINE;
 			else
 				return WEAPON_FIREBALL_MURDER_BLAST;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Fireball(entity thiswep, int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Fireball, wr_impacteffect, bool(entity thiswep))
 		{
 			vector org2;
 			if(w_deathtype & HITTYPE_SECONDARY)
@@ -462,17 +458,15 @@ bool W_Fireball(entity thiswep, int req)
 
 			return true;
 		}
-		case WR_INIT:
+		METHOD(Fireball, wr_init, bool(entity thiswep))
 		{
 			return true;
 		}
-		case WR_ZOOMRETICLE:
+		METHOD(Fireball, wr_zoomreticle, bool(entity thiswep))
 		{
 			// no weapon specific image for this weapon
 			return false;
 		}
-	}
-	return false;
-}
+
 #endif
 #endif
