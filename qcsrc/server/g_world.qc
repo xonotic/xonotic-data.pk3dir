@@ -688,10 +688,6 @@ void spawnfunc_worldspawn (void)
 		MUTATOR_CALLHOOK(BuildMutatorsString, s);
 		s = ret_string;
 
-		// simple, probably not good in the mutator system
-		if(autocvar_g_grappling_hook)
-			s = strcat(s, ":grappling_hook");
-
 		// initialiation stuff, not good in the mutator system
 		if(!autocvar_g_use_ammunition)
 			s = strcat(s, ":no_use_ammunition");

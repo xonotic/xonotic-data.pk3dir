@@ -129,6 +129,8 @@ float GrapplingHookSend(entity to, int sf)
 	return true;
 }
 
+int autocvar_g_grappling_hook_tarzan;
+
 void GrapplingHookThink()
 {SELFPARAM();
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
@@ -425,47 +427,39 @@ void FireGrapplingHook (void)
 void _GrapplingHookFrame();
 void GrapplingHookFrame()
 {SELFPARAM();
-	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id && !self.vehicle)
-	{
-		// offhand hook controls
-		if(self.BUTTON_HOOK)
-		{
-			if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)) && (time > self.hook_refire))
-			{
-				self.hook_state |= HOOK_FIRING;
-				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
-			}
-		}
-		else
-		{
-			self.hook_state |= HOOK_REMOVING;
-			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-		}
+	if (self.offhand == OFFHAND_HOOK) {
+        if (timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id && !self.vehicle) {
+            // offhand hook controls
+            if (self.BUTTON_HOOK) {
+                if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)) && (time > self.hook_refire)) {
+                    self.hook_state |= HOOK_FIRING;
+                    self.hook_state |= HOOK_WAITING_FOR_RELEASE;
+                }
+            } else {
+                self.hook_state |= HOOK_REMOVING;
+                self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
+            }
 
-		self.hook_state &= ~HOOK_RELEASING;
-		if(self.BUTTON_CROUCH && autocvar_g_balance_grapplehook_crouchslide)
-		{
-			self.hook_state &= ~HOOK_PULLING;
-			//self.hook_state |= HOOK_RELEASING;
+            self.hook_state &= ~HOOK_RELEASING;
+            if (self.BUTTON_CROUCH && autocvar_g_balance_grapplehook_crouchslide) {
+                self.hook_state &= ~HOOK_PULLING;
+                //self.hook_state |= HOOK_RELEASING;
+            } else {
+                self.hook_state |= HOOK_PULLING;
+                //self.hook_state &= ~HOOK_RELEASING;
+            }
+        }
+	} else {
+		if (self.switchweapon != WEP_HOOK.m_id && !self.vehicle) {
+			if (self.BUTTON_HOOK && !self.hook_switchweapon)
+				W_SwitchWeapon(WEP_HOOK.m_id);
 		}
-		else
-		{
-			self.hook_state |= HOOK_PULLING;
-			//self.hook_state &= ~HOOK_RELEASING;
+		if (self.weapon != WEP_HOOK.m_id && self.offhand != OFFHAND_HOOK) {
+			self.hook_state &= ~HOOK_FIRING;
+			self.hook_state |= HOOK_REMOVING;
 		}
-	}
-	else if(!g_grappling_hook && self.switchweapon != WEP_HOOK.m_id && !self.vehicle)
-	{
-		if(self.BUTTON_HOOK && !self.hook_switchweapon)
-			W_SwitchWeapon(WEP_HOOK.m_id);
 	}
 	self.hook_switchweapon = self.BUTTON_HOOK;
-
-	if(!g_grappling_hook && self.weapon != WEP_HOOK.m_id && self.offhand != OFFHAND_HOOK)
-	{
-		self.hook_state &= ~HOOK_FIRING;
-		self.hook_state |= HOOK_REMOVING;
-	}
 	_GrapplingHookFrame();
 }
 

@@ -335,8 +335,6 @@ float autocvar_g_freezetag_warmup;
 bool autocvar_g_full_getstatus_responses;
 bool autocvar_g_fullbrightitems;
 bool autocvar_g_fullbrightplayers;
-#define autocvar_g_grappling_hook cvar("g_grappling_hook")
-int autocvar_g_grappling_hook_tarzan;
 int autocvar_g_balance_grapplehook_pull_frozen;
 float autocvar_g_balance_grapplehook_nade_time;
 bool autocvar_g_balance_grapplehook_gravity;

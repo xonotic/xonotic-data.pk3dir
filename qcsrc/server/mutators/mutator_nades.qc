@@ -863,6 +863,8 @@ float CanThrowNade()
 	return true;
 }
 
+.bool nade_altbutton;
+
 void nades_CheckThrow()
 {SELFPARAM();
 	if(!CanThrowNade())
@@ -871,6 +873,7 @@ void nades_CheckThrow()
 	entity held_nade = self.nade;
 	if (!held_nade)
 	{
+		self.nade_altbutton = true;
 		if(time > self.nade_refire)
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_NADE_THROW);
@@ -880,6 +883,7 @@ void nades_CheckThrow()
 	}
 	else
 	{
+		self.nade_altbutton = false;
 		if (time >= held_nade.nade_time_primed + 1) {
 			makevectors(self.v_angle);
 			float _force = time - held_nade.nade_time_primed;
@@ -955,6 +959,8 @@ NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOff
 MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {SELFPARAM();
 	if (!IS_PLAYER(self)) { return false; }
+
+	if (self.nade && self.offhand != OFFHAND_NADE) OFFHAND_NADE.offhand_think(OFFHAND_NADE, self, self.nade_altbutton);
 
 	if(IS_PLAYER(self))
 	{
@@ -1054,7 +1060,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 
 	self.nade_timer = 0;
 
-	self.offhand = OFFHAND_NADE;
+	if (!self.offhand) self.offhand = OFFHAND_NADE;
 
 	if(self.nade_spawnloc)
 	{

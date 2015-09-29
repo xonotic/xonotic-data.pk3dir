@@ -768,12 +768,7 @@ void W_WeaponFrame()
 		v_up = up;
 
 		{
-			bool key_pressed;
-        	if (g_grappling_hook || client_hasweapon(self, WEP_HOOK.m_id, false, false) || (weaponsInMap & WEPSET_HOOK))
-        		key_pressed = self.button16; // if hook is enabled, use an alternate key
-        	else
-        		key_pressed = self.BUTTON_HOOK;
-
+			bool key_pressed = self.BUTTON_HOOK;
         	entity e = self.offhand;
         	if (e.offhand_think) e.offhand_think(e, self, key_pressed);
         }
