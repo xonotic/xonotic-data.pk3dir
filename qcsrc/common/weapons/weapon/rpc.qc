@@ -162,7 +162,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 			{
 				if (fire1)
 				{
-					if(weapon_prepareattack(0, WEP_CVAR(rpc, refire)))
+					if(weapon_prepareattack(false, WEP_CVAR(rpc, refire)))
 					{
 						W_RocketPropelledChainsaw_Attack(thiswep);
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);

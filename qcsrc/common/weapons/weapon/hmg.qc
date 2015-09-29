@@ -104,7 +104,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 			else
 			{
 				if (fire1)
-				if (weapon_prepareattack(0, 0))
+				if (weapon_prepareattack(false, 0))
 				{
 					self.misc_bulletcounter = 0;
 					W_HeavyMachineGun_Attack_Auto(thiswep, fire1, fire2);

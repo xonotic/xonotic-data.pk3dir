@@ -189,7 +189,7 @@ void W_Hook_Attack2(Weapon thiswep)
 				if(!(self.hook_state & HOOK_WAITING_FOR_RELEASE))
 				if(!(self.hook_state & HOOK_FIRING))
 				if(time > self.hook_refire)
-				if(weapon_prepareattack(0, -1))
+				if(weapon_prepareattack(false, -1))
 				{
 					W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(hook, ammo));
 					self.hook_state |= HOOK_FIRING;
@@ -199,7 +199,7 @@ void W_Hook_Attack2(Weapon thiswep)
 
 			if(fire2)
 			{
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(hook, refire)))
+				if(weapon_prepareattack(true, WEP_CVAR_SEC(hook, refire)))
 				{
 					W_Hook_Attack2(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);

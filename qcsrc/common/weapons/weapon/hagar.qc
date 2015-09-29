@@ -223,7 +223,7 @@ void W_Hagar_Attack2_Load_Release(void)
 	if(!self.hagar_load)
 		return;
 
-	weapon_prepareattack_do(1, WEP_CVAR_SEC(hagar, refire));
+	weapon_prepareattack_do(true, WEP_CVAR_SEC(hagar, refire));
 
 	W_SetupShot(self, false, 2, SND(HAGAR_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -419,7 +419,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(fire1 && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(hagar, refire)))
+				if(weapon_prepareattack(false, WEP_CVAR_PRI(hagar, refire)))
 				{
 					W_Hagar_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
@@ -427,7 +427,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 			}
 			else if(fire2 && !loadable_secondary && WEP_CVAR(hagar, secondary))
 			{
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(hagar, refire)))
+				if(weapon_prepareattack(true, WEP_CVAR_SEC(hagar, refire)))
 				{
 					W_Hagar_Attack2(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, refire), w_ready);

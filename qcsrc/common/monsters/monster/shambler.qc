@@ -179,7 +179,7 @@ void M_Shambler_Attack_Lightning()
 	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
 
-float M_Shambler_Attack(float attack_type)
+float M_Shambler_Attack(float attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{

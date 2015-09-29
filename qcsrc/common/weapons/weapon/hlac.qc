@@ -217,7 +217,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(fire1)
 			{
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(hlac, refire)))
+				if(weapon_prepareattack(false, WEP_CVAR_PRI(hlac, refire)))
 				{
 					self.misc_bulletcounter = 0;
 					W_HLAC_Attack(thiswep);
@@ -227,7 +227,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 
 			else if(fire2 && WEP_CVAR(hlac, secondary))
 			{
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(hlac, refire)))
+				if(weapon_prepareattack(true, WEP_CVAR_SEC(hlac, refire)))
 				{
 					W_HLAC_Attack2_Frame(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);

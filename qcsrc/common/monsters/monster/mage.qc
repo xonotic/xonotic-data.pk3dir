@@ -39,18 +39,38 @@ REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 #ifdef SVQC
 
 void M_Mage_Attack_Spike(vector dir);
-METHOD(MageSpike, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
-	SELFPARAM();
-	if (fire1)
-	if (weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire))) {
-		if (!self.target_range) self.target_range = autocvar_g_monsters_target_range;
-		self.enemy = Monster_FindTarget(self);
-		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-		M_Mage_Attack_Spike(w_shotdir);
-		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
-	}
-	return true;
+void M_Mage_Attack_Push();
+METHOD(MageSpike, wr_think, bool(MageSpike thiswep, bool fire1, bool fire2)) {
+    SELFPARAM();
+    if (fire1)
+    if (!IS_PLAYER(self) || weapon_prepareattack(false, 0.2)) {
+        if (!self.target_range) self.target_range = autocvar_g_monsters_target_range;
+        self.enemy = Monster_FindTarget(self);
+        W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+    	if (!IS_PLAYER(self)) w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+        M_Mage_Attack_Spike(w_shotdir);
+        weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+    }
+    if (fire2)
+    if (!IS_PLAYER(self) || weapon_prepareattack(true, 0.5)) {
+        M_Mage_Attack_Push();
+        weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
+    }
+    return true;
 }
+
+void M_Mage_Attack_Teleport();
+
+CLASS(OffhandMageTeleport, OffhandWeapon)
+    .bool OffhandMageTeleport_key_pressed;
+    METHOD(OffhandMageTeleport, offhand_think, void(OffhandMageTeleport this, entity player, bool key_pressed))
+    {
+        if (key_pressed && !player.OffhandMageTeleport_key_pressed)
+            WITH(entity, self, player, M_Mage_Attack_Teleport());
+        player.OffhandMageTeleport_key_pressed = key_pressed;
+    }
+ENDCLASS(OffhandMageTeleport)
+OffhandMageTeleport OFFHAND_MAGE_TELEPORT; STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
 
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_damageforcescale = 0.5;
@@ -199,13 +219,6 @@ void M_Mage_Attack_Spike_Think()
 	UpdateCSQCProjectile(self);
 }
 
-void M_Mage_Attack_Spike(vector dir);
-void M_Mage_Attack_Spike_Aim()
-{
-	SELFPARAM();
-	return M_Mage_Attack_Spike(normalize((self.enemy.origin + '0 0 10') - self.origin));
-}
-
 void M_Mage_Attack_Spike(vector dir)
 {
 	SELFPARAM();
@@ -300,17 +313,25 @@ void M_Mage_Attack_Push()
 
 void M_Mage_Attack_Teleport()
 {SELFPARAM();
-	if(vlen(self.enemy.origin - self.origin) >= 500)
-		return;
+	entity targ = self.enemy;
+	if (!targ) return;
+	if (vlen(targ.origin - self.origin) > 1500) return;
 
-	makevectors(self.enemy.angles);
-	tracebox(self.enemy.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
+	makevectors(targ.angles);
+	tracebox(targ.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
 
 	if(trace_fraction < 1)
 		return;
 
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1);
-	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
+	setorigin(self, targ.origin + ((v_forward * -1) * 200));
+
+	vector a = vectoangles(targ.origin - self.origin);
+	a.x = -a.x;
+	self.angles_x = a.x;
+	self.angles_y = a.y;
+	self.fixangle = true;
+	self.velocity *= 0.5;
 
 	self.attack_finished_single = time + 0.2;
 }
@@ -332,7 +353,7 @@ void M_Mage_Defend_Shield()
 	self.anim_finished = time + 1;
 }
 
-float M_Mage_Attack(float attack_type)
+float M_Mage_Attack(float attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{
@@ -340,7 +361,8 @@ float M_Mage_Attack(float attack_type)
 		{
 			if(random() <= 0.7)
 			{
-				M_Mage_Attack_Push();
+				Weapon wep = WEP_MAGE_SPIKE;
+				wep.wr_think(wep, false, true);
 				return true;
 			}
 
@@ -352,7 +374,8 @@ float M_Mage_Attack(float attack_type)
 			{
 				if(random() <= 0.4)
 				{
-					M_Mage_Attack_Teleport();
+					OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
+					off.offhand_think(off, self, true);
 					return true;
 				}
 				else
@@ -360,7 +383,8 @@ float M_Mage_Attack(float attack_type)
 					setanim(self, self.anim_shoot, true, true, true);
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
-					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike_Aim);
+					Weapon wep = WEP_MAGE_SPIKE;
+					wep.wr_think(wep, true, false);
 					return true;
 				}
 			}

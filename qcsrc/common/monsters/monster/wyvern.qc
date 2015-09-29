@@ -93,7 +93,7 @@ void M_Wyvern_Attack_Fireball()
 	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 }
 
-float M_Wyvern_Attack(float attack_type)
+float M_Wyvern_Attack(float attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{

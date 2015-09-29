@@ -384,14 +384,14 @@ void W_Tuba_NoteOn(float hittype)
 		METHOD(Tuba, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			if(fire1)
-			if(weapon_prepareattack(0, WEP_CVAR(tuba, refire)))
+			if(weapon_prepareattack(false, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(0);
 				//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
 				weapon_thinkf(WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
 			if(fire2)
-			if(weapon_prepareattack(1, WEP_CVAR(tuba, refire)))
+			if(weapon_prepareattack(true, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(HITTYPE_SECONDARY);
 				//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);

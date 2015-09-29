@@ -256,7 +256,7 @@ void W_RocketMinsta_Attack3 (void)
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			if(fire1 && (self.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(self))
 			{
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
+				if(weapon_prepareattack(false, WEP_CVAR_PRI(vaporizer, refire)))
 				{
 					W_Vaporizer_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);

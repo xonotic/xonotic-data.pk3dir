@@ -678,9 +678,9 @@ void Arc_Smoke()
 
 				if((!self.arc_beam) || wasfreed(self.arc_beam))
 				{
-					if(weapon_prepareattack(!!fire2, 0))
+					if(weapon_prepareattack(fire2, 0))
 					{
-						W_Arc_Beam(!!fire2);
+						W_Arc_Beam(fire2);
 
 						if(!self.arc_BUTTON_ATCK_prev)
 						{
@@ -703,7 +703,7 @@ void Arc_Smoke()
 
 			#if 0
 			if(fire2)
-			if(weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
+			if(weapon_prepareattack(true, autocvar_g_balance_arc_secondary_refire))
 			{
 				W_Arc_Attack2();
 				self.arc_count = autocvar_g_balance_arc_secondary_count;

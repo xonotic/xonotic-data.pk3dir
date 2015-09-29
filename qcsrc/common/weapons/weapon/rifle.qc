@@ -170,10 +170,10 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 			{
 				self.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), self.rifle_accumulator, time);
 				if(fire1)
-				if(weapon_prepareattack_check(0, WEP_CVAR_PRI(rifle, refire)))
+				if(weapon_prepareattack_check(false, WEP_CVAR_PRI(rifle, refire)))
 				if(time >= self.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
 				{
-					weapon_prepareattack_do(0, WEP_CVAR_PRI(rifle, refire));
+					weapon_prepareattack_do(false, WEP_CVAR_PRI(rifle, refire));
 					W_Rifle_BulletHail(WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
 					self.rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
 				}
@@ -185,10 +185,10 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 							_WEP_ACTION(self.weapon, WR_RELOAD);
 						else
 						{
-							if(weapon_prepareattack_check(1, WEP_CVAR_SEC(rifle, refire)))
+							if(weapon_prepareattack_check(true, WEP_CVAR_SEC(rifle, refire)))
 							if(time >= self.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
 							{
-								weapon_prepareattack_do(1, WEP_CVAR_SEC(rifle, refire));
+								weapon_prepareattack_do(true, WEP_CVAR_SEC(rifle, refire));
 								W_Rifle_BulletHail(WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
 								self.rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
 							}

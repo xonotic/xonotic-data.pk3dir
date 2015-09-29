@@ -378,7 +378,7 @@ void W_Fireball_Attack2(void)
 			if(fire1)
 			{
 				if(time >= self.fireball_primarytime)
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(fireball, refire)))
+				if(weapon_prepareattack(false, WEP_CVAR_PRI(fireball, refire)))
 				{
 					W_Fireball_Attack1_Frame0(thiswep, fire1, fire2);
 					self.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor();
@@ -386,7 +386,7 @@ void W_Fireball_Attack2(void)
 			}
 			else if(fire2)
 			{
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(fireball, refire)))
+				if(weapon_prepareattack(true, WEP_CVAR_SEC(fireball, refire)))
 				{
 					W_Fireball_Attack2();
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(fireball, animtime), w_ready);

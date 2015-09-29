@@ -40,7 +40,7 @@ void racer_fire_cannon(string tagname);
 METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
 	if (fire1)
-	if (weapon_prepareattack(0, 0)) {
+	if (weapon_prepareattack(false, 0)) {
 		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("lasergun_fire"), CH_WEAPON_B, 0);
 		racer_fire_cannon("tag_fire1");
 		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), w_ready);

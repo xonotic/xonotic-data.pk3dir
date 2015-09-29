@@ -509,7 +509,7 @@ float W_MineLayer_PlacedMines(float detonate)
 			}
 			else if(fire1)
 			{
-				if(weapon_prepareattack(0, WEP_CVAR(minelayer, refire)))
+				if(weapon_prepareattack(false, WEP_CVAR(minelayer, refire)))
 				{
 					W_MineLayer_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);

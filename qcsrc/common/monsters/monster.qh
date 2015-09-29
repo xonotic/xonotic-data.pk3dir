@@ -13,7 +13,7 @@ const int MON_FLAG_CRUSH = 2048; // monster can be stomped in special modes
 const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
 
 // entity properties of monsterinfo:
-.bool(int) monster_attackfunc;
+.bool(int, entity targ) monster_attackfunc;
 
 // animations
 .vector anim_blockend;

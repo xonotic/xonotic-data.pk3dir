@@ -248,7 +248,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 				{
 					if(time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 					{
-						if(weapon_prepareattack(0, WEP_CVAR_PRI(shotgun, animtime)))
+						if(weapon_prepareattack(false, WEP_CVAR_PRI(shotgun, animtime)))
 						{
 							W_Shotgun_Attack(thiswep, true);
 							self.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
@@ -260,7 +260,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 				{
 					if(time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 					{
-						if(weapon_prepareattack(0, WEP_CVAR_SEC(shotgun, alt_animtime)))
+						if(weapon_prepareattack(false, WEP_CVAR_SEC(shotgun, alt_animtime)))
 						{
 							W_Shotgun_Attack(thiswep, false);
 							self.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
@@ -273,7 +273,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 			if(!self.crouch) // no crouchmelee please
 			if(WEP_CVAR(shotgun, secondary) == 1)
 			if((fire1 && self.WEP_AMMO(SHOTGUN) <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)) || fire2)
-			if(weapon_prepareattack(1, WEP_CVAR_SEC(shotgun, refire)))
+			if(weapon_prepareattack(true, WEP_CVAR_SEC(shotgun, refire)))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);

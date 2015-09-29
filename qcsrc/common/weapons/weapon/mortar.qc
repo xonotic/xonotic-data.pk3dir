@@ -342,7 +342,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(fire1)
 			{
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(mortar, refire)))
+				if(weapon_prepareattack(false, WEP_CVAR_PRI(mortar, refire)))
 				{
 					W_Mortar_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
@@ -365,7 +365,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 					if(nadefound)
 						sound(self, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
 				}
-				else if(weapon_prepareattack(1, WEP_CVAR_SEC(mortar, refire)))
+				else if(weapon_prepareattack(true, WEP_CVAR_SEC(mortar, refire)))
 				{
 					W_Mortar_Attack2(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);

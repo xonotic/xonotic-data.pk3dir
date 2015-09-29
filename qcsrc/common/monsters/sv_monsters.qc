@@ -434,7 +434,7 @@ void Monster_Attack_Check(entity e, entity targ)
 
 	if(targ_vlen <= e.attack_range)
 	{
-		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_MELEE);
+		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_MELEE, targ);
 		if(attack_success == 1)
 			Monster_Sound(monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -443,7 +443,7 @@ void Monster_Attack_Check(entity e, entity targ)
 
 	if(targ_vlen > e.attack_range)
 	{
-		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_RANGED);
+		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_RANGED, targ);
 		if(attack_success == 1)
 			Monster_Sound(monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)

@@ -585,7 +585,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 			if(fire1)
 			{
 				if(self.crylink_waitrelease != 1)
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(crylink, refire)))
+				if(weapon_prepareattack(false, WEP_CVAR_PRI(crylink, refire)))
 				{
 					W_Crylink_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
@@ -595,7 +595,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 			if(fire2 && autocvar_g_balance_crylink_secondary)
 			{
 				if(self.crylink_waitrelease != 2)
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(crylink, refire)))
+				if(weapon_prepareattack(true, WEP_CVAR_SEC(crylink, refire)))
 				{
 					W_Crylink_Attack2(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);

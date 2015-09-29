@@ -118,7 +118,7 @@ float M_Zombie_Defend_Block()
 	return true;
 }
 
-float M_Zombie_Attack(float attack_type)
+float M_Zombie_Attack(float attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{

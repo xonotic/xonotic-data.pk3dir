@@ -531,7 +531,7 @@ void W_Devastator_Attack(Weapon thiswep)
 				if(fire1)
 				{
 					if(self.rl_release || WEP_CVAR(devastator, guidestop))
-					if(weapon_prepareattack(0, WEP_CVAR(devastator, refire)))
+					if(weapon_prepareattack(false, WEP_CVAR(devastator, refire)))
 					{
 						W_Devastator_Attack(thiswep);
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);

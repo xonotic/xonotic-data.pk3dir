@@ -410,7 +410,7 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)
-	if(weapon_prepareattack(1, -1))
+	if(weapon_prepareattack(true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO);
 		self.electro_count -= 1;
@@ -474,7 +474,7 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 
 			if(fire1)
 			{
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire)))
+				if(weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire)))
 				{
 						W_Electro_Attack_Bolt(thiswep);
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
@@ -483,7 +483,7 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 			else if(fire2)
 			{
 				if(time >= self.electro_secondarytime)
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(electro, refire)))
+				if(weapon_prepareattack(true, WEP_CVAR_SEC(electro, refire)))
 				{
 					W_Electro_Attack_Orb(thiswep);
 					self.electro_count = WEP_CVAR_SEC(electro, count);

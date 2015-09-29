@@ -255,14 +255,14 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 			if(WEP_CVAR(machinegun, mode) == 1)
 			{
 				if(fire1)
-				if(weapon_prepareattack(0, 0))
+				if(weapon_prepareattack(false, 0))
 				{
 					self.misc_bulletcounter = 0;
 					W_MachineGun_Attack_Auto(thiswep, fire1, fire2);
 				}
 
 				if(fire2)
-				if(weapon_prepareattack(1, 0))
+				if(weapon_prepareattack(true, 0))
 				{
 					if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 					if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -282,7 +282,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 			{
 
 				if(fire1)
-				if(weapon_prepareattack(0, 0))
+				if(weapon_prepareattack(false, 0))
 				{
 					self.misc_bulletcounter = 1;
 					W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id); // sets attack_finished
@@ -290,7 +290,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 				}
 
 				if(fire2 && WEP_CVAR(machinegun, first))
-				if(weapon_prepareattack(1, 0))
+				if(weapon_prepareattack(true, 0))
 				{
 					self.misc_bulletcounter = 1;
 					W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id | HITTYPE_SECONDARY); // sets attack_finished

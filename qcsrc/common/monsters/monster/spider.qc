@@ -108,7 +108,7 @@ void M_Spider_Attack_Web()
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, true);
 }
 
-bool M_Spider_Attack(int attack_type)
+bool M_Spider_Attack(int attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{
