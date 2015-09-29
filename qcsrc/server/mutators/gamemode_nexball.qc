@@ -841,16 +841,9 @@ float ball_customize()
 	return true;
 }
 
-float w_nexball_weapon(float req);
-METHOD(BallStealer, weapon_func, bool(entity this, int req)) {
-	return w_nexball_weapon(req);
-}
-
-float w_nexball_weapon(float req)
-{SELFPARAM();
-	if(req == WR_THINK)
+	METHOD(BallStealer, wr_think, bool(BallStealer thiswep, bool fire1, bool fire2))
 	{
-		if(self.BUTTON_ATCK)
+		if(fire1)
 			if(weapon_prepareattack(0, autocvar_g_balance_nexball_primary_refire))
 				if(autocvar_g_nexball_basketball_meter)
 				{
@@ -864,30 +857,42 @@ float w_nexball_weapon(float req)
 					W_Nexball_Attack(-1);
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 				}
-		if(self.BUTTON_ATCK2)
+		if(fire2)
 			if(weapon_prepareattack(1, autocvar_g_balance_nexball_secondary_refire))
 			{
 				W_Nexball_Attack2();
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
 			}
 
-		if(!self.BUTTON_ATCK && self.metertime && self.ballcarried)
+		if(!fire1 && self.metertime && self.ballcarried)
 		{
 			W_Nexball_Attack(time - self.metertime);
 			// DropBall or stealing will set metertime back to 0
 			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
+		return true;
 	}
-	else if(req == WR_INIT)
+	METHOD(BallStealer, wr_init, bool(BallStealer thiswep))
 	{
+		return true;
 	}
-	else if(req == WR_SETUP)
+	METHOD(BallStealer, wr_setup, bool(BallStealer thiswep))
 	{
 		//weapon_setup(WEP_PORTO.m_id);
+		return true;
 	}
-	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return true
-	return true;
-}
+	METHOD(BallStealer, wr_aim, bool(BallStealer thiswep))
+	{
+		return true;
+	}
+	METHOD(BallStealer, wr_checkammo1, bool(BallStealer thiswep))
+	{
+		return true;
+	}
+	METHOD(BallStealer, wr_checkammo2, bool(BallStealer thiswep))
+	{
+		return true;
+	}
 
 MUTATOR_HOOKFUNCTION(nexball_BallDrop)
 {SELFPARAM();

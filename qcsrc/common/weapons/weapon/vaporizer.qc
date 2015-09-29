@@ -246,7 +246,7 @@ void W_RocketMinsta_Attack3 (void)
 
 			return true;
 		}
-		METHOD(Vaporizer, wr_think, bool(entity thiswep))
+		METHOD(Vaporizer, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			// if the laser uses load, we also consider its ammo for reloading
@@ -254,7 +254,7 @@ void W_RocketMinsta_Attack3 (void)
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(WEP_CVAR(vaporizer, reload_ammo) && self.clip_load < vaporizer_ammo) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
-			if(self.BUTTON_ATCK && (self.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(self))
+			if(fire1 && (self.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(self))
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
 				{
@@ -262,7 +262,7 @@ void W_RocketMinsta_Attack3 (void)
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
 				}
 			}
-			if(self.BUTTON_ATCK2 || (self.BUTTON_ATCK && !self.ammo_cells && autocvar_g_rm))
+			if(fire2 || (fire1 && !self.ammo_cells && autocvar_g_rm))
 			{
 				if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
 				{

@@ -656,14 +656,14 @@ void Arc_Smoke()
 			}
 			return true;
 		}
-		METHOD(Arc, wr_think, bool(entity thiswep))
+		METHOD(Arc, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			SELFPARAM();
 			Arc_Player_SetHeat(self);
 			Arc_Smoke();
 
 			if ( self.arc_overheat <= time )
-			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting )
+			if(fire1 || fire2 || self.arc_beam.beam_bursting )
 			{
 
 				if(self.arc_BUTTON_ATCK_prev)
@@ -678,9 +678,9 @@ void Arc_Smoke()
 
 				if((!self.arc_beam) || wasfreed(self.arc_beam))
 				{
-					if(weapon_prepareattack(!!self.BUTTON_ATCK2, 0))
+					if(weapon_prepareattack(!!fire2, 0))
 					{
-						W_Arc_Beam(!!self.BUTTON_ATCK2);
+						W_Arc_Beam(!!fire2);
 
 						if(!self.arc_BUTTON_ATCK_prev)
 						{
@@ -702,7 +702,7 @@ void Arc_Smoke()
 			self.arc_BUTTON_ATCK_prev = 0;
 
 			#if 0
-			if(self.BUTTON_ATCK2)
+			if(fire2)
 			if(weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
 			{
 				W_Arc_Attack2();

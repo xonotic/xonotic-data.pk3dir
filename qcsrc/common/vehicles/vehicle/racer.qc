@@ -37,9 +37,9 @@ REGISTER_WEAPON(RACER, NEW(RacerAttack));
 #include "../../triggers/trigger/impulse.qh"
 
 void racer_fire_cannon(string tagname);
-METHOD(RacerAttack, wr_think, bool(entity thiswep)) {
+METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
-	if (self.BUTTON_ATCK)
+	if (fire1)
 	if (weapon_prepareattack(0, 0)) {
 		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("lasergun_fire"), CH_WEAPON_B, 0);
 		racer_fire_cannon("tag_fire1");

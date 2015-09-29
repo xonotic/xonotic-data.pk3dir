@@ -373,9 +373,9 @@ void W_Fireball_Attack2(void)
 
 			return true;
 		}
-		METHOD(Fireball, wr_think, bool(entity thiswep))
+		METHOD(Fireball, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(self.BUTTON_ATCK)
+			if(fire1)
 			{
 				if(time >= self.fireball_primarytime)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(fireball, refire)))
@@ -384,7 +384,7 @@ void W_Fireball_Attack2(void)
 					self.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor();
 				}
 			}
-			else if(self.BUTTON_ATCK2)
+			else if(fire2)
 			{
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(fireball, refire)))
 				{

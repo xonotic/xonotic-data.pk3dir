@@ -301,12 +301,12 @@ void W_Porto_Attack(float type)
 			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 			return true;
 		}
-		METHOD(PortoLaunch, wr_think, bool(entity thiswep))
+		METHOD(PortoLaunch, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			SELFPARAM();
 			if(WEP_CVAR(porto, secondary))
 			{
-				if(self.BUTTON_ATCK)
+				if(fire1)
 				if(!self.porto_current)
 				if(!self.porto_forbidden)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
@@ -315,7 +315,7 @@ void W_Porto_Attack(float type)
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 
-				if(self.BUTTON_ATCK2)
+				if(fire2)
 				if(!self.porto_current)
 				if(!self.porto_forbidden)
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(porto, refire)))
@@ -328,7 +328,7 @@ void W_Porto_Attack(float type)
 			{
 				if(self.porto_v_angle_held)
 				{
-					if(!self.BUTTON_ATCK2)
+					if(!fire2)
 					{
 						self.porto_v_angle_held = 0;
 
@@ -337,7 +337,7 @@ void W_Porto_Attack(float type)
 				}
 				else
 				{
-					if(self.BUTTON_ATCK2)
+					if(fire2)
 					{
 						self.porto_v_angle = self.v_angle;
 						self.porto_v_angle_held = 1;
@@ -348,7 +348,7 @@ void W_Porto_Attack(float type)
 				if(self.porto_v_angle_held)
 					makevectors(self.porto_v_angle); // override the previously set angles
 
-				if(self.BUTTON_ATCK)
+				if(fire1)
 				if(!self.porto_current)
 				if(!self.porto_forbidden)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))

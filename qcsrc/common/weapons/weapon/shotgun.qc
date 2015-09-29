@@ -234,7 +234,7 @@ void W_Shotgun_Attack3_Frame1()
 
 			return true;
 		}
-		METHOD(Shotgun, wr_think, bool(entity thiswep))
+		METHOD(Shotgun, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(shotgun, reload_ammo) && self.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{
@@ -244,7 +244,7 @@ void W_Shotgun_Attack3_Frame1()
 			}
 			else
 			{
-				if(self.BUTTON_ATCK)
+				if(fire1)
 				{
 					if(time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 					{
@@ -256,7 +256,7 @@ void W_Shotgun_Attack3_Frame1()
 						}
 					}
 				}
-				else if(self.BUTTON_ATCK2 && WEP_CVAR(shotgun, secondary) == 2)
+				else if(fire2 && WEP_CVAR(shotgun, secondary) == 2)
 				{
 					if(time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 					{
@@ -272,7 +272,7 @@ void W_Shotgun_Attack3_Frame1()
 			if(self.clip_load >= 0) // we are not currently reloading
 			if(!self.crouch) // no crouchmelee please
 			if(WEP_CVAR(shotgun, secondary) == 1)
-			if((self.BUTTON_ATCK && self.WEP_AMMO(SHOTGUN) <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)) || self.BUTTON_ATCK2)
+			if((fire1 && self.WEP_AMMO(SHOTGUN) <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)) || fire2)
 			if(weapon_prepareattack(1, WEP_CVAR_SEC(shotgun, refire)))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...

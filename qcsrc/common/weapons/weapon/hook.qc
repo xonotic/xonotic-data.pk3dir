@@ -17,6 +17,15 @@ CLASS(Hook, Weapon)
 ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, NEW(Hook));
 
+CLASS(OffhandHook, OffhandWeapon)
+    METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity player, bool key_pressed))
+    {
+    	Weapon wep = WEP_HOOK;
+    	WITH(entity, self, player, wep.wr_think(wep, key_pressed, false));
+    }
+ENDCLASS(OffhandHook)
+OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
+
 #define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, HOOK, hook)
 #define HOOK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
 	w_cvar(id, sn, BOTH, animtime) \
@@ -181,9 +190,9 @@ void W_Hook_Attack2(void)
 			// no bot AI for hook (yet?)
 			return true;
 		}
-		METHOD(Hook, wr_think, bool(entity thiswep))
+		METHOD(Hook, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(self.BUTTON_ATCK || self.BUTTON_HOOK)
+			if(fire1 || self.BUTTON_HOOK)
 			{
 				if(!self.hook)
 				if(!(self.hook_state & HOOK_WAITING_FOR_RELEASE))
@@ -197,7 +206,7 @@ void W_Hook_Attack2(void)
 				}
 			}
 
-			if(self.BUTTON_ATCK2)
+			if(fire2)
 			{
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(hook, refire)))
 				{
@@ -257,7 +266,7 @@ void W_Hook_Attack2(void)
 			if(self.BUTTON_CROUCH)
 			{
 				self.hook_state &= ~HOOK_PULLING;
-				if(self.BUTTON_ATCK || self.BUTTON_HOOK)
+				if(fire1 || self.BUTTON_HOOK)
 					self.hook_state &= ~HOOK_RELEASING;
 				else
 					self.hook_state |= HOOK_RELEASING;
@@ -267,7 +276,7 @@ void W_Hook_Attack2(void)
 				self.hook_state |= HOOK_PULLING;
 				self.hook_state &= ~HOOK_RELEASING;
 
-				if(self.BUTTON_ATCK || self.BUTTON_HOOK)
+				if(fire1 || self.BUTTON_HOOK)
 				{
 					// already fired
 					if(self.hook)
@@ -279,6 +288,8 @@ void W_Hook_Attack2(void)
 					self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 				}
 			}
+
+			_GrapplingHookFrame();
 
 			return true;
 		}

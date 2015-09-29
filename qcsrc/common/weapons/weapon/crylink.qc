@@ -576,13 +576,13 @@ void W_Crylink_Attack2(void)
 
 			return true;
 		}
-		METHOD(Crylink, wr_think, bool(entity thiswep))
+		METHOD(Crylink, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			SELFPARAM();
 			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 
-			if(self.BUTTON_ATCK)
+			if(fire1)
 			{
 				if(self.crylink_waitrelease != 1)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(crylink, refire)))
@@ -592,7 +592,7 @@ void W_Crylink_Attack2(void)
 				}
 			}
 
-			if(self.BUTTON_ATCK2 && autocvar_g_balance_crylink_secondary)
+			if(fire2 && autocvar_g_balance_crylink_secondary)
 			{
 				if(self.crylink_waitrelease != 2)
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(crylink, refire)))
@@ -602,7 +602,7 @@ void W_Crylink_Attack2(void)
 				}
 			}
 
-			if((self.crylink_waitrelease == 1 && !self.BUTTON_ATCK) || (self.crylink_waitrelease == 2 && !self.BUTTON_ATCK2))
+			if((self.crylink_waitrelease == 1 && !fire1) || (self.crylink_waitrelease == 2 && !fire2))
 			{
 				if(!self.crylink_lastgroup || time > self.crylink_lastgroup.teleport_time)
 				{

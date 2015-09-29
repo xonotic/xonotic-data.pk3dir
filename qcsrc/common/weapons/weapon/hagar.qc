@@ -408,7 +408,7 @@ void W_Hagar_Attack2_Load(void)
 
 			return true;
 		}
-		METHOD(Hagar, wr_think, bool(entity thiswep))
+		METHOD(Hagar, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			float loadable_secondary;
 			loadable_secondary = (WEP_CVAR_SEC(hagar, load) && WEP_CVAR(hagar, secondary));
@@ -417,7 +417,7 @@ void W_Hagar_Attack2_Load(void)
 				W_Hagar_Attack2_Load(); // must always run each frame
 			if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
+			else if(fire1 && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(hagar, refire)))
 				{
@@ -425,7 +425,7 @@ void W_Hagar_Attack2_Load(void)
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
 				}
 			}
-			else if(self.BUTTON_ATCK2 && !loadable_secondary && WEP_CVAR(hagar, secondary))
+			else if(fire2 && !loadable_secondary && WEP_CVAR(hagar, secondary))
 			{
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(hagar, refire)))
 				{

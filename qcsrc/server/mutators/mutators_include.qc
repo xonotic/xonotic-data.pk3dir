@@ -109,6 +109,7 @@
 #include "mutator_bloodloss.qc"
 #include "mutator_random_gravity.qc"
 #include "mutator_multijump.qc"
+#include "mutator_hook.qc"
 #include "mutator_melee_only.qc"
 #include "mutator_nades.qc"
 #include "mutator_campcheck.qc"

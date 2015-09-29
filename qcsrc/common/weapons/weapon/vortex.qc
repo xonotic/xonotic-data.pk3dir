@@ -144,7 +144,7 @@ void W_Vortex_Attack(float issecondary)
 			}
 			return true;
 		}
-		METHOD(Vortex, wr_think, bool(entity thiswep))
+		METHOD(Vortex, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(vortex, charge) && self.vortex_charge < WEP_CVAR(vortex, charge_limit))
 				self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
@@ -161,7 +161,7 @@ void W_Vortex_Attack(float issecondary)
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
-				if(self.BUTTON_ATCK)
+				if(fire1)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR_PRI(vortex, refire)))
 					{
@@ -169,7 +169,7 @@ void W_Vortex_Attack(float issecondary)
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
 					}
 				}
-				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) : self.BUTTON_ATCK2)
+				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) : fire2)
 				{
 					if(WEP_CVAR(vortex, charge))
 					{
@@ -196,7 +196,7 @@ void W_Vortex_Attack(float issecondary)
 
 							else if(WEP_CVAR_SEC(vortex, ammo))
 							{
-								if(self.BUTTON_ATCK2) // only eat ammo when the button is pressed
+								if(fire2) // only eat ammo when the button is pressed
 								{
 									dt = min(dt, (1 - self.vortex_charge) / WEP_CVAR(vortex, charge_rate));
 									if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))

@@ -677,9 +677,9 @@ void W_Shockwave_Attack(void)
 
 			return true;
 		}
-		METHOD(Shockwave, wr_think, bool(entity thiswep))
+		METHOD(Shockwave, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(self.BUTTON_ATCK)
+			if(fire1)
 			{
 				if(time >= self.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
 				{
@@ -691,7 +691,7 @@ void W_Shockwave_Attack(void)
 					}
 				}
 			}
-			else if(self.BUTTON_ATCK2)
+			else if(fire2)
 			{
 				//if(self.clip_load >= 0) // we are not currently reloading
 				if(!self.crouch) // no crouchmelee please

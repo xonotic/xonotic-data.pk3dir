@@ -162,9 +162,9 @@ void W_Blaster_Attack(
 			return true;
 		}
 
-		METHOD(Blaster, wr_think, bool(entity thiswep))
+		METHOD(Blaster, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(self.BUTTON_ATCK)
+			if(fire1)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(blaster, refire)))
 				{
@@ -183,7 +183,7 @@ void W_Blaster_Attack(
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
 				}
 			}
-			else if(self.BUTTON_ATCK2)
+			else if(fire2)
 			{
 				switch(WEP_CVAR(blaster, secondary))
 				{

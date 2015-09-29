@@ -422,6 +422,7 @@ void FireGrapplingHook (void)
 //         // if I have no hook or it's not pulling yet, make sure I'm not flying!
 //         if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
 
+void _GrapplingHookFrame();
 void GrapplingHookFrame()
 {SELFPARAM();
 	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id && !self.vehicle)
@@ -460,12 +461,16 @@ void GrapplingHookFrame()
 	}
 	self.hook_switchweapon = self.BUTTON_HOOK;
 
-	if(!g_grappling_hook && self.weapon != WEP_HOOK.m_id)
+	if(!g_grappling_hook && self.weapon != WEP_HOOK.m_id && self.offhand != OFFHAND_HOOK)
 	{
 		self.hook_state &= ~HOOK_FIRING;
 		self.hook_state |= HOOK_REMOVING;
 	}
+	_GrapplingHookFrame();
+}
 
+void _GrapplingHookFrame()
+{
 	if (self.hook_state & HOOK_FIRING)
 	{
 		if (self.hook)

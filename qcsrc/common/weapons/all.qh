@@ -34,8 +34,8 @@ const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutato
 // weapon requests
 const int WR_SETUP          =  1; // (SERVER) setup weapon data
 .bool(entity this) wr_setup;
-const int WR_THINK          =  2; // (SERVER) logic to run every frame
-.bool(entity this) wr_think;
+/** (SERVER) logic to run every frame */
+.bool(entity this, bool fire1, bool fire2) wr_think;
 const int WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon primary
 .bool(entity this) wr_checkammo1;
 const int WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon second
@@ -69,7 +69,6 @@ const int WR_PICKUP         = 17; // (SERVER) a weapon is picked up
 
 bool w_new(entity this, int req) {
     if (req == WR_SETUP) return this.wr_setup ? this.wr_setup(this) : false;
-    if (req == WR_THINK) return this.wr_think ? this.wr_think(this) : false;
     if (req == WR_CHECKAMMO1) return this.wr_checkammo1 ? this.wr_checkammo1(this) : false;
     if (req == WR_CHECKAMMO2) return this.wr_checkammo2 ? this.wr_checkammo2(this) : false;
     if (req == WR_AIM) return this.wr_aim ? this.wr_aim(this) : false;
@@ -269,6 +268,14 @@ CLASS(Weapon, Object)
 		#endif
 	}
 ENDCLASS(Weapon)
+
+CLASS(OffhandWeapon, Object)
+    METHOD(OffhandWeapon, offhand_think, void(OffhandWeapon this, entity player, bool key_pressed)) {}
+ENDCLASS(OffhandWeapon)
+
+#ifdef SVQC
+.OffhandWeapon offhand;
+#endif
 
 void RegisterWeapons();
 REGISTER_REGISTRY(RegisterWeapons)

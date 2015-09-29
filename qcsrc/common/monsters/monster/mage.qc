@@ -39,9 +39,9 @@ REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 #ifdef SVQC
 
 void M_Mage_Attack_Spike(vector dir);
-METHOD(MageSpike, wr_think, bool(entity thiswep)) {
+METHOD(MageSpike, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
-	if (self.BUTTON_ATCK)
+	if (fire1)
 	if (weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire))) {
 		if (!self.target_range) self.target_range = autocvar_g_monsters_target_range;
 		self.enemy = Monster_FindTarget(self);

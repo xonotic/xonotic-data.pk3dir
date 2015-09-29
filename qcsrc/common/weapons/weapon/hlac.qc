@@ -211,11 +211,11 @@ void W_HLAC_Attack2_Frame(void)
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
 			return true;
 		}
-		METHOD(HLAC, wr_think, bool(entity thiswep))
+		METHOD(HLAC, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(self.BUTTON_ATCK)
+			else if(fire1)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(hlac, refire)))
 				{
@@ -225,7 +225,7 @@ void W_HLAC_Attack2_Frame(void)
 				}
 			}
 
-			else if(self.BUTTON_ATCK2 && WEP_CVAR(hlac, secondary))
+			else if(fire2 && WEP_CVAR(hlac, secondary))
 			{
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(hlac, refire)))
 				{

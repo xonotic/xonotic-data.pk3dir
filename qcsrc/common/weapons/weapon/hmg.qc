@@ -97,13 +97,13 @@ void W_HeavyMachineGun_Attack_Auto()
 
 			return true;
 		}
-		METHOD(HeavyMachineGun, wr_think, bool(entity thiswep))
+		METHOD(HeavyMachineGun, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(hmg, reload_ammo) && self.clip_load < WEP_CVAR(hmg, ammo)) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else
 			{
-				if (self.BUTTON_ATCK)
+				if (fire1)
 				if (weapon_prepareattack(0, 0))
 				{
 					self.misc_bulletcounter = 0;

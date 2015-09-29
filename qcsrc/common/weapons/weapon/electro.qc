@@ -453,7 +453,7 @@ void W_Electro_CheckAttack(void)
 
 			return true;
 		}
-		METHOD(Electro, wr_think, bool(entity thiswep))
+		METHOD(Electro, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
 			{
@@ -472,7 +472,7 @@ void W_Electro_CheckAttack(void)
 				return true;
 			}
 
-			if(self.BUTTON_ATCK)
+			if(fire1)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire)))
 				{
@@ -480,7 +480,7 @@ void W_Electro_CheckAttack(void)
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 				}
 			}
-			else if(self.BUTTON_ATCK2)
+			else if(fire2)
 			{
 				if(time >= self.electro_secondarytime)
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(electro, refire)))

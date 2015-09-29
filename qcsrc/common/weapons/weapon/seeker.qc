@@ -609,12 +609,12 @@ void W_Seeker_Fire_Tag(void)
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
 			return true;
 		}
-		METHOD(Seeker, wr_think, bool(entity thiswep))
+		METHOD(Seeker, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 
-			else if(self.BUTTON_ATCK)
+			else if(fire1)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{
@@ -634,7 +634,7 @@ void W_Seeker_Fire_Tag(void)
 				}
 			}
 
-			else if(self.BUTTON_ATCK2)
+			else if(fire2)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{

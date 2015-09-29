@@ -247,20 +247,20 @@ void W_MachineGun_Attack_Burst(void)
 
 			return true;
 		}
-		METHOD(MachineGun, wr_think, bool(entity thiswep))
+		METHOD(MachineGun, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(machinegun, reload_ammo) && self.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(WEP_CVAR(machinegun, mode) == 1)
 			{
-				if(self.BUTTON_ATCK)
+				if(fire1)
 				if(weapon_prepareattack(0, 0))
 				{
 					self.misc_bulletcounter = 0;
 					W_MachineGun_Attack_Auto();
 				}
 
-				if(self.BUTTON_ATCK2)
+				if(fire2)
 				if(weapon_prepareattack(1, 0))
 				{
 					if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
@@ -280,7 +280,7 @@ void W_MachineGun_Attack_Burst(void)
 			else
 			{
 
-				if(self.BUTTON_ATCK)
+				if(fire1)
 				if(weapon_prepareattack(0, 0))
 				{
 					self.misc_bulletcounter = 1;
@@ -288,7 +288,7 @@ void W_MachineGun_Attack_Burst(void)
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), W_MachineGun_Attack_Frame);
 				}
 
-				if(self.BUTTON_ATCK2 && WEP_CVAR(machinegun, first))
+				if(fire2 && WEP_CVAR(machinegun, first))
 				if(weapon_prepareattack(1, 0))
 				{
 					self.misc_bulletcounter = 1;

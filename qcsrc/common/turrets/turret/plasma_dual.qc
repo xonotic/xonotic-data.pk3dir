@@ -30,9 +30,9 @@ REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
 
 #ifdef SVQC
 
-METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep)) {
+METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
-	if (self.BUTTON_ATCK)
+	if (fire1)
 	if (weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire))) {
 		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
 		self.tur_shotdir_updated = w_shotdir;
