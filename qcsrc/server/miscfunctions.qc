@@ -1432,7 +1432,7 @@ string uid2name(string myuid) {
 	return s;
 }
 
-float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
@@ -1441,8 +1441,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
 
-    org = world.mins;
-    delta = world.maxs - world.mins;
+    org = boundmin;
+    delta = boundmax - boundmin;
 
     start = end = org;
 
@@ -1541,6 +1541,11 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     }
     else
         return false;
+}
+
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+{
+	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance);
 }
 
 void write_recordmarker(entity pl, float tstart, float dt)
