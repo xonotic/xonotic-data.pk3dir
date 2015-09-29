@@ -84,7 +84,7 @@ const int ARC_SF_LOCALMASK =   14;
 #ifdef SVQC
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity arc_beam;
-.float arc_BUTTON_ATCK_prev; // for better animation control
+.bool arc_BUTTON_ATCK_prev; // for better animation control
 .float beam_prev;
 .float beam_initialized;
 .float beam_bursting;
@@ -662,8 +662,8 @@ void Arc_Smoke()
 			Arc_Player_SetHeat(self);
 			Arc_Smoke();
 
-			if ( self.arc_overheat <= time )
-			if(fire1 || fire2 || self.arc_beam.beam_bursting )
+			if (time >= self.arc_overheat)
+			if (fire1 || fire2 || self.arc_beam.beam_bursting)
 			{
 
 				if(self.arc_BUTTON_ATCK_prev)
@@ -685,7 +685,7 @@ void Arc_Smoke()
 						if(!self.arc_BUTTON_ATCK_prev)
 						{
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-							self.arc_BUTTON_ATCK_prev = 1;
+							self.arc_BUTTON_ATCK_prev = true;
 						}
 					}
 				}
@@ -693,13 +693,13 @@ void Arc_Smoke()
 				return true;
 			}
 
-			if(self.arc_BUTTON_ATCK_prev != 0)
+			if(self.arc_BUTTON_ATCK_prev)
 			{
 				sound(self, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
 				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 				ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
 			}
-			self.arc_BUTTON_ATCK_prev = 0;
+			self.arc_BUTTON_ATCK_prev = false;
 
 			#if 0
 			if(fire2)

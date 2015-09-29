@@ -137,11 +137,11 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype)
 }
 
 // weapon frames
-void W_MachineGun_Attack_Frame(void)
+void W_MachineGun_Attack_Frame(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if(self.weapon != self.switchweapon) // abort immediately if switching
 	{
-		w_ready();
+		w_ready(thiswep, fire1, fire2);
 		return;
 	}
 	if(self.BUTTON_ATCK)
@@ -150,7 +150,7 @@ void W_MachineGun_Attack_Frame(void)
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
-			w_ready();
+			w_ready(thiswep, fire1, fire2);
 			return;
 		}
 		self.misc_bulletcounter = self.misc_bulletcounter + 1;
@@ -162,13 +162,13 @@ void W_MachineGun_Attack_Frame(void)
 }
 
 
-void W_MachineGun_Attack_Auto(void)
+void W_MachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	float machinegun_spread;
 
-	if(!self.BUTTON_ATCK)
+	if(!fire1)
 	{
-		w_ready();
+		w_ready(thiswep, fire1, fire2);
 		return;
 	}
 
@@ -176,7 +176,7 @@ void W_MachineGun_Attack_Auto(void)
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
-		w_ready();
+		w_ready(thiswep, fire1, fire2);
 		return;
 	}
 
@@ -206,7 +206,7 @@ void W_MachineGun_Attack_Auto(void)
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), W_MachineGun_Attack_Auto);
 }
 
-void W_MachineGun_Attack_Burst(void)
+void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	W_SetupShot(self, true, 0, SND(UZI_FIRE), CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
 	if(!autocvar_g_norecoil)
@@ -251,13 +251,14 @@ void W_MachineGun_Attack_Burst(void)
 		{
 			if(WEP_CVAR(machinegun, reload_ammo) && self.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(WEP_CVAR(machinegun, mode) == 1)
+			else
+			if(WEP_CVAR(machinegun, mode) == 1)
 			{
 				if(fire1)
 				if(weapon_prepareattack(0, 0))
 				{
 					self.misc_bulletcounter = 0;
-					W_MachineGun_Attack_Auto();
+					W_MachineGun_Attack_Auto(thiswep, fire1, fire2);
 				}
 
 				if(fire2)
@@ -267,14 +268,14 @@ void W_MachineGun_Attack_Burst(void)
 					if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						W_SwitchWeapon_Force(self, w_getbestweapon(self));
-						w_ready();
+						w_ready(thiswep, fire1, fire2);
 						return false;
 					}
 
 					W_DecreaseAmmo(thiswep, WEP_CVAR(machinegun, burst_ammo));
 
 					self.misc_bulletcounter = WEP_CVAR(machinegun, burst) * -1;
-					W_MachineGun_Attack_Burst();
+					W_MachineGun_Attack_Burst(thiswep, fire1, fire2);
 				}
 			}
 			else

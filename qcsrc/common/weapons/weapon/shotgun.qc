@@ -181,7 +181,7 @@ void W_Shotgun_Melee_Think(void)
 	}
 }
 
-void W_Shotgun_Attack2(void)
+void W_Shotgun_Attack2(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	sound(self, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
@@ -195,13 +195,13 @@ void W_Shotgun_Attack2(void)
 }
 
 // alternate secondary weapon frames
-void W_Shotgun_Attack3_Frame2()
+void W_Shotgun_Attack3_Frame2(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if (!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
-		w_ready();
+		w_ready(thiswep, fire1, fire2);
 		return;
 	}
 
@@ -209,13 +209,13 @@ void W_Shotgun_Attack3_Frame2()
 	W_Shotgun_Attack(WEP_SHOTGUN, true); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
-void W_Shotgun_Attack3_Frame1()
+void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if (!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
-		w_ready();
+		w_ready(thiswep, fire1, fire2);
 		return;
 	}
 

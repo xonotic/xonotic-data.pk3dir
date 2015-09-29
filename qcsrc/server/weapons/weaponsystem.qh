@@ -40,6 +40,6 @@ float weapon_prepareattack_check(float secondary, float attacktime);
 
 float weapon_prepareattack_do(float secondary, float attacktime);
 
-void weapon_thinkf(float fr, float t, void() func);
+void weapon_thinkf(float fr, float t, void(Weapon thiswep, bool fire1, bool fire2) func);
 
 #endif

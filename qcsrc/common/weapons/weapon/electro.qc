@@ -406,7 +406,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-void W_Electro_CheckAttack(void)
+void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)
@@ -418,7 +418,7 @@ void W_Electro_CheckAttack(void)
 		return;
 	}
 	// WEAPONTODO: when the player releases the button, cut down the length of refire2?
-	w_ready();
+	w_ready(thiswep, fire1, fire2);
 }
 
 .float bot_secondary_electromooth;

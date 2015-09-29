@@ -90,7 +90,7 @@ void W_Rifle_Attack2(void)
 .float rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
-void W_Rifle_BulletHail_Continue(void)
+void W_Rifle_BulletHail_Continue(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	float r, sw, af;
 

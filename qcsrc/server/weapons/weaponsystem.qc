@@ -47,7 +47,7 @@ float W_WeaponSpeedFactor()
 }
 
 
-void(float fr, float t, void() func) weapon_thinkf;
+void weapon_thinkf(float fr, float t, void(Weapon thiswep, bool fire1, bool fire2) func);
 
 float CL_Weaponentity_CustomizeEntityForClient()
 {SELFPARAM();
@@ -434,7 +434,7 @@ void CL_SpawnWeaponentity(entity e)
 }
 
 // Weapon subs
-void w_clear()
+void w_clear(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if (self.weapon != -1)
 	{
@@ -448,7 +448,7 @@ void w_clear()
 	}
 }
 
-void w_ready()
+void w_ready(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if (self.weaponentity)
 		self.weaponentity.state = WS_READY;
@@ -565,7 +565,7 @@ float weapon_prepareattack(float secondary, float attacktime)
 		return false;
 }
 
-void weapon_thinkf(float fr, float t, void() func)
+void weapon_thinkf(float fr, float t, void(Weapon thiswep, bool fire1, bool fire2) func)
 {SELFPARAM();
 	vector a;
 	vector of, or, ou;
@@ -669,7 +669,8 @@ void W_WeaponFrame()
 	if(forbidWeaponUse(self))
 	if(self.weaponentity.state != WS_CLEAR)
 	{
-		w_ready();
+		Weapon wpn = get_weaponinfo(self.weapon);
+		w_ready(wpn, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 		return;
 	}
 
@@ -769,8 +770,8 @@ void W_WeaponFrame()
 
 		{
 			bool key_pressed = self.BUTTON_HOOK;
-        	entity e = self.offhand;
-        	if (e.offhand_think) e.offhand_think(e, self, key_pressed);
+        	Weapon wpn = self.offhand;
+        	if (wpn.offhand_think) wpn.offhand_think(wpn, self, key_pressed);
         }
 
 		if (w) {
@@ -787,7 +788,8 @@ void W_WeaponFrame()
 				v_forward = fo;
 				v_right = ri;
 				v_up = up;
-				self.weapon_think();
+				Weapon wpn = get_weaponinfo(self.weapon);
+				self.weapon_think(wpn, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 			}
 			else
 				bprint("\{1}^1ERROR: undefined weapon think function for ", self.netname, "\n");
@@ -870,7 +872,7 @@ void W_DecreaseAmmo(Weapon wep, float ammo_use)
 .float reload_complain;
 .string reload_sound;
 
-void W_ReloadedAndReady()
+void W_ReloadedAndReady(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	// finish the reloading process, and do the ammo transfer
 
@@ -894,7 +896,8 @@ void W_ReloadedAndReady()
 
 	//ATTACK_FINISHED(self) -= self.reload_time - 1;
 
-	w_ready();
+	Weapon wpn = get_weaponinfo(self.weapon);
+	w_ready(wpn, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 }
 
 void W_Reload(float sent_ammo_min, string sent_sound)

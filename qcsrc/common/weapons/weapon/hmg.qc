@@ -45,11 +45,11 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG.m_id); }
 
-void W_HeavyMachineGun_Attack_Auto()
+void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if (!self.BUTTON_ATCK)
 	{
-		w_ready();
+		w_ready(thiswep, fire1, fire2);
 		return;
 	}
 
@@ -57,7 +57,7 @@ void W_HeavyMachineGun_Attack_Auto()
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
-		w_ready();
+		w_ready(thiswep, fire1, fire2);
 		return;
 	}
 
@@ -107,7 +107,7 @@ void W_HeavyMachineGun_Attack_Auto()
 				if (weapon_prepareattack(0, 0))
 				{
 					self.misc_bulletcounter = 0;
-					W_HeavyMachineGun_Attack_Auto();
+					W_HeavyMachineGun_Attack_Auto(thiswep, fire1, fire2);
 				}
 			}
 

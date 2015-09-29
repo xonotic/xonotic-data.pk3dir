@@ -161,11 +161,11 @@ void W_HLAC_Attack2(void)
 }
 
 // weapon frames
-void W_HLAC_Attack_Frame(void)
+void W_HLAC_Attack_Frame(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	if(self.weapon != self.switchweapon) // abort immediately if switching
 	{
-		w_ready();
+		w_ready(thiswep, fire1, fire2);
 		return;
 	}
 
@@ -175,7 +175,7 @@ void W_HLAC_Attack_Frame(void)
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
-			w_ready();
+			w_ready(thiswep, fire1, fire2);
 			return;
 		}
 

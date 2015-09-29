@@ -176,8 +176,9 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 			self.ok_notice_time = time + 2;
 			play2(self, SND(DRYFIRE));
 		}
+		Weapon wpn = get_weaponinfo(self.weapon);
 		if(self.weaponentity.state != WS_CLEAR)
-			w_ready();
+			w_ready(wpn, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 
 		self.weapon_blocked = true;
 	}

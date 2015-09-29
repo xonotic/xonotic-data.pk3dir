@@ -229,7 +229,7 @@ void W_Shockwave_Melee_Think(void)
 	}
 }
 
-void W_Shockwave_Melee(void)
+void W_Shockwave_Melee(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
 	sound(self, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
