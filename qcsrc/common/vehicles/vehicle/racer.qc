@@ -36,14 +36,21 @@ REGISTER_WEAPON(RACER, NEW(RacerAttack));
 #include "../../effects/effects.qh"
 #include "../../triggers/trigger/impulse.qh"
 
-void racer_fire_cannon(string tagname);
+void racer_fire_cannon(vector org, vector dir);
+void racer_fire_rocket(vector org, vector dir, entity trg);
 METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
 	if (fire1)
-	if (weapon_prepareattack(false, 0)) {
-		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("lasergun_fire"), CH_WEAPON_B, 0);
-		racer_fire_cannon("tag_fire1");
-		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), w_ready);
+	if (weapon_prepareattack(false, 0.2)) {
+		W_SetupShot_Dir(self, v_forward, false, 0, "", CH_WEAPON_B, 0);
+		racer_fire_cannon(w_shotorg, w_shotdir);
+		weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+	}
+	if (fire2)
+	if (weapon_prepareattack(false, 0.2)) {
+		W_SetupShot_Dir(self, v_forward, false, 0, "", CH_WEAPON_B, 0);
+		racer_fire_rocket(w_shotorg, w_shotdir, NULL);
+		weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
 	}
 	return true;
 }
@@ -190,21 +197,22 @@ void racer_align4point(float _delta)
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
 }
 
-void racer_fire_cannon(string tagname)
+void racer_fire_cannon(vector org, vector dir)
 {SELFPARAM();
-	vector v;
-	entity bolt;
-
-	v = gettaginfo(self, gettagindex(self, tagname));
-	bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
-						   v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
+	entity bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
+						   org, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
 						   autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
 						   DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, self.owner);
-
+	bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
+}
+void racer_fire_cannon_aim(string tagname)
+{
+	SELFPARAM();
+	vector org = gettaginfo(self, gettagindex(self, tagname));
 	// Fix z-aim (for chase mode)
-	v = normalize(trace_endpos - bolt.origin);
-	v_forward_z = v_z * 0.5;
-	bolt.velocity = v_forward * autocvar_g_vehicle_racer_cannon_speed;
+	vector dir = normalize(trace_endpos - org);
+	v_forward.z = dir.z * 0.5;
+	racer_fire_cannon(org, v_forward);
 }
 
 void racer_rocket_groundhugger()
@@ -311,11 +319,10 @@ void racer_rocket_tracker()
 	return;
 }
 
-void racer_fire_rocket(string tagname, entity trg)
+void racer_fire_rocket(vector org, vector dir, entity trg)
 {SELFPARAM();
-	vector v = gettaginfo(self, gettagindex(self, tagname));
 	entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND(ROCKET_FIRE),
-						   v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
+						   org, dir * autocvar_g_vehicle_racer_rocket_speed,
 						   autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
 						   DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
 
@@ -329,6 +336,13 @@ void racer_fire_rocket(string tagname, entity trg)
 		rocket.think			= racer_rocket_tracker;
 	else
 		rocket.think			= racer_rocket_groundhugger;
+}
+
+void racer_fire_rocket_aim(string tagname, entity trg)
+{
+	SELFPARAM();
+	vector v = gettaginfo(self, gettagindex(self, tagname));
+	racer_fire_rocket(v, v_forward, trg);
 }
 
 float racer_frame()
@@ -489,12 +503,12 @@ float racer_frame()
 		crosshair_trace(player);
 		if(racer.cnt)
 		{
-			racer_fire_cannon("tag_fire1");
+			racer_fire_cannon_aim("tag_fire1");
 			racer.cnt = 0;
 		}
 		else
 		{
-			racer_fire_cannon("tag_fire2");
+			racer_fire_cannon_aim("tag_fire2");
 			racer.cnt = 1;
 		}
 		racer.attack_finished_single = time + autocvar_g_vehicle_racer_cannon_refire;
@@ -526,12 +540,12 @@ float racer_frame()
 
 		if(racer.misc_bulletcounter == 1)
 		{
-			racer_fire_rocket("tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+			racer_fire_rocket_aim("tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
 			player.vehicle_ammo2 = 50;
 		}
 		else if(racer.misc_bulletcounter == 2)
 		{
-			racer_fire_rocket("tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+			racer_fire_rocket_aim("tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
 			racer.lock_strength  = 0;
 			racer.lock_target	= world;
 			racer.misc_bulletcounter = 0;
