@@ -38,8 +38,12 @@ METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		self.tur_shotdir_updated = w_shotdir;
 		self.tur_shotorg = w_shotorg;
 		self.tur_head = self;
+		self.shot_refire = bound(0.01, ((!self.shot_refire) ? 1 : self.shot_refire), 9999);
+		self.shot_dmg = max(1, ((!self.shot_dmg) ? self.shot_refire * 50 : self.shot_dmg));
+        self.shot_radius = max(1, ((!self.shot_radius) ? self.shot_dmg * 0.5 : self.shot_radius));
         self.shot_speed = max(1, ((!self.shot_speed) ? 2500 : self.shot_speed));
         self.shot_spread = bound(0.0001, ((!self.shot_spread) ? 0.0125 : self.shot_spread), 500);
+        self.shot_force = bound(0.001, ((!self.shot_force) ? self.shot_dmg * 0.5 + self.shot_radius * 0.5 : self.shot_force), 5000);
         TUR_ACTION(TUR_PLASMA_DUAL.m_id, TR_ATTACK);
 		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 	}
