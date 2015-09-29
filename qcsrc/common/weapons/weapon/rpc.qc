@@ -104,12 +104,12 @@ void W_RocketPropelledChainsaw_Think()
 	self.nextthink = time;
 }
 
-void W_RocketPropelledChainsaw_Attack (void)
+void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 {SELFPARAM();
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(self);
 	entity flash = spawn ();
 
-	W_DecreaseAmmo(WEP_CVAR(rpc, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR(rpc, ammo));
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKET_FIRE), CH_WEAPON_A, WEP_CVAR(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
@@ -164,7 +164,7 @@ void W_RocketPropelledChainsaw_Attack (void)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR(rpc, refire)))
 					{
-						W_RocketPropelledChainsaw_Attack();
+						W_RocketPropelledChainsaw_Attack(thiswep);
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
 					}
 				}

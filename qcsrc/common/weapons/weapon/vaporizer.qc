@@ -71,7 +71,7 @@ void W_RocketMinsta_Explosion(vector loc)
 	remove(dmgent);
 }
 
-void W_Vaporizer_Attack(void)
+void W_Vaporizer_Attack(Weapon thiswep)
 {SELFPARAM();
 	bool flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
@@ -105,7 +105,7 @@ void W_Vaporizer_Attack(void)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		W_RocketMinsta_Explosion(trace_endpos);
 
-	W_DecreaseAmmo(((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
+	W_DecreaseAmmo(thiswep, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
 }
 
 void W_RocketMinsta_Laser_Explode (void)
@@ -258,7 +258,7 @@ void W_RocketMinsta_Attack3 (void)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
 				{
-					W_Vaporizer_Attack();
+					W_Vaporizer_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
 				}
 			}
@@ -291,7 +291,7 @@ void W_RocketMinsta_Attack3 (void)
 
 					// decrease ammo for the laser?
 					if(WEP_CVAR_SEC(vaporizer, ammo))
-						W_DecreaseAmmo(WEP_CVAR_SEC(vaporizer, ammo));
+						W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(vaporizer, ammo));
 
 					// ugly instagib hack to reuse the fire mode of the laser
 					makevectors(self.v_angle);

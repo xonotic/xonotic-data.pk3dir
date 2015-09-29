@@ -245,11 +245,11 @@ void W_Seeker_Missile_Animate(void)
 }
 */
 
-void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
+void W_Seeker_Fire_Missile(Weapon thiswep, vector f_diff, entity m_target)
 {SELFPARAM();
 	entity missile;
 
-	W_DecreaseAmmo(WEP_CVAR(seeker, missile_ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(SEEKER_FIRE), CH_WEAPON_A, 0);
@@ -318,13 +318,13 @@ void W_Seeker_Flac_Touch(void)
 	W_Seeker_Flac_Explode();
 }
 
-void W_Seeker_Fire_Flac(void)
+void W_Seeker_Fire_Flac(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
 	vector f_diff;
 	float c;
 
-	W_DecreaseAmmo(WEP_CVAR(seeker, flac_ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR(seeker, flac_ammo));
 
 	c = self.bulletcounter % 4;
 	switch(c)
@@ -410,7 +410,7 @@ void W_Seeker_Attack(void)
 	if((!closest_target) || ((trace_fraction < 1) && (trace_ent != closest_target)))
 		closest_target = world;
 
-	W_Seeker_Fire_Missile('0 0 0', closest_target);
+	W_Seeker_Fire_Missile(WEP_SEEKER, '0 0 0', closest_target);
 }
 
 void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Attack
@@ -436,17 +436,17 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 	switch(c)
 	{
 		case 0:
-			W_Seeker_Fire_Missile('-1.25 -3.75 0', self.enemy);
+			W_Seeker_Fire_Missile(WEP_SEEKER, '-1.25 -3.75 0', self.enemy);
 			break;
 		case 1:
-			W_Seeker_Fire_Missile('+1.25 -3.75 0', self.enemy);
+			W_Seeker_Fire_Missile(WEP_SEEKER, '+1.25 -3.75 0', self.enemy);
 			break;
 		case 2:
-			W_Seeker_Fire_Missile('-1.25 +3.75 0', self.enemy);
+			W_Seeker_Fire_Missile(WEP_SEEKER, '-1.25 +3.75 0', self.enemy);
 			break;
 		case 3:
 		default:
-			W_Seeker_Fire_Missile('+1.25 +3.75 0', self.enemy);
+			W_Seeker_Fire_Missile(WEP_SEEKER, '+1.25 +3.75 0', self.enemy);
 			break;
 	}
 
@@ -556,10 +556,10 @@ void W_Seeker_Tag_Touch(void)
 	return;
 }
 
-void W_Seeker_Fire_Tag(void)
+void W_Seeker_Fire_Tag(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
-	W_DecreaseAmmo(WEP_CVAR(seeker, tag_ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR(seeker, tag_ammo));
 
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(TAG_FIRE), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
@@ -628,7 +628,7 @@ void W_Seeker_Fire_Tag(void)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR(seeker, tag_refire)))
 					{
-						W_Seeker_Fire_Tag();
+						W_Seeker_Fire_Tag(thiswep);
 						weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
 					}
 				}
@@ -640,7 +640,7 @@ void W_Seeker_Fire_Tag(void)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR(seeker, tag_refire)))
 					{
-						W_Seeker_Fire_Tag();
+						W_Seeker_Fire_Tag(thiswep);
 						weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
 					}
 				}
@@ -648,7 +648,7 @@ void W_Seeker_Fire_Tag(void)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR(seeker, flac_refire)))
 					{
-						W_Seeker_Fire_Flac();
+						W_Seeker_Fire_Flac(thiswep);
 						weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
 					}
 				}

@@ -341,7 +341,7 @@ void W_Crylink_Fadethink(void)
 	remove(self);
 }
 
-void W_Crylink_Attack(void)
+void W_Crylink_Attack(Weapon thiswep)
 {SELFPARAM();
 	float counter, shots;
 	entity proj, prevproj, firstproj;
@@ -349,7 +349,7 @@ void W_Crylink_Attack(void)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(WEP_CVAR_PRI(crylink, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(crylink, ammo));
 
 	maxdmg = WEP_CVAR_PRI(crylink, damage) * WEP_CVAR_PRI(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_PRI(crylink, bouncedamagefactor) * WEP_CVAR_PRI(crylink, bounces);
@@ -450,7 +450,7 @@ void W_Crylink_Attack(void)
 	}
 }
 
-void W_Crylink_Attack2(void)
+void W_Crylink_Attack2(Weapon thiswep)
 {SELFPARAM();
 	float counter, shots;
 	entity proj, prevproj, firstproj;
@@ -458,7 +458,7 @@ void W_Crylink_Attack2(void)
 	vector forward, right, up;
 	float maxdmg;
 
-	W_DecreaseAmmo(WEP_CVAR_SEC(crylink, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(crylink, ammo));
 
 	maxdmg = WEP_CVAR_SEC(crylink, damage) * WEP_CVAR_SEC(crylink, shots);
 	maxdmg *= 1 + WEP_CVAR_SEC(crylink, bouncedamagefactor) * WEP_CVAR_SEC(crylink, bounces);
@@ -587,7 +587,7 @@ void W_Crylink_Attack2(void)
 				if(self.crylink_waitrelease != 1)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(crylink, refire)))
 				{
-					W_Crylink_Attack();
+					W_Crylink_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
 				}
 			}
@@ -597,7 +597,7 @@ void W_Crylink_Attack2(void)
 				if(self.crylink_waitrelease != 2)
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(crylink, refire)))
 				{
-					W_Crylink_Attack2();
+					W_Crylink_Attack2(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);
 				}
 			}

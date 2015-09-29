@@ -123,11 +123,11 @@ void W_Hagar_Touch2(void)
 	}
 }
 
-void W_Hagar_Attack(void)
+void W_Hagar_Attack(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
 
-	W_DecreaseAmmo(WEP_CVAR_PRI(hagar, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(hagar, ammo));
 
 	W_SetupShot(self, false, 2, SND(HAGAR_FIRE), CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
@@ -166,11 +166,11 @@ void W_Hagar_Attack(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-void W_Hagar_Attack2(void)
+void W_Hagar_Attack2(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
 
-	W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hagar, ammo));
 
 	W_SetupShot(self, false, 2, SND(HAGAR_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
@@ -291,7 +291,7 @@ void W_Hagar_Attack2_Load_Release(void)
 	self.hagar_load = 0;
 }
 
-void W_Hagar_Attack2_Load(void)
+void W_Hagar_Attack2_Load(Weapon thiswep)
 {SELFPARAM();
 	// loadable hagar secondary attack, must always run each frame
 
@@ -319,7 +319,7 @@ void W_Hagar_Attack2_Load(void)
 			{
 				// if we pressed primary fire while loading, unload all rockets and abort
 				self.weaponentity.state = WS_READY;
-				W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo
+				W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo
 				self.hagar_load = 0;
 				sound(self, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
 
@@ -337,7 +337,7 @@ void W_Hagar_Attack2_Load(void)
 			{
 				if(!self.hagar_loadblock && self.hagar_loadstep < time)
 				{
-					W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
+					W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hagar, ammo));
 					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
 					sound(self, CH_WEAPON_B, SND_HAGAR_LOAD, VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
@@ -414,14 +414,14 @@ void W_Hagar_Attack2_Load(void)
 			loadable_secondary = (WEP_CVAR_SEC(hagar, load) && WEP_CVAR(hagar, secondary));
 
 			if(loadable_secondary)
-				W_Hagar_Attack2_Load(); // must always run each frame
+				W_Hagar_Attack2_Load(thiswep); // must always run each frame
 			if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) // forced reload
 				_WEP_ACTION(self.weapon, WR_RELOAD);
 			else if(fire1 && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(hagar, refire)))
 				{
-					W_Hagar_Attack();
+					W_Hagar_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
 				}
 			}
@@ -429,7 +429,7 @@ void W_Hagar_Attack2_Load(void)
 			{
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(hagar, refire)))
 				{
-					W_Hagar_Attack2();
+					W_Hagar_Attack2(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, refire), w_ready);
 				}
 			}
@@ -457,7 +457,7 @@ void W_Hagar_Attack2_Load(void)
 
 			if(self.hagar_load)
 			{
-				W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo if necessary
+				W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo if necessary
 				self.hagar_load = 0;
 			}
 

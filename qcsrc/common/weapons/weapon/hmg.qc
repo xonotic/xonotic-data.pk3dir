@@ -61,7 +61,7 @@ void W_HeavyMachineGun_Attack_Auto()
 		return;
 	}
 
-	W_DecreaseAmmo(WEP_CVAR(hmg, ammo));
+	W_DecreaseAmmo(WEP_HMG, WEP_CVAR(hmg, ammo));
 
 	W_SetupShot (self, true, 0, SND(UZI_FIRE), CH_WEAPON_A, WEP_CVAR(hmg, damage));
 

@@ -22,7 +22,7 @@ float forbidWeaponUse(entity player);
 
 void W_AttachToShotorg(entity flash, vector offset);
 
-void W_DecreaseAmmo(float ammo_use);
+void W_DecreaseAmmo(Weapon wep, float ammo_use);
 
 void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item);
 

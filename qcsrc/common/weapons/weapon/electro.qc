@@ -245,11 +245,11 @@ void W_Electro_Bolt_Think(void)
 	else { self.nextthink = self.ltime; }
 }
 
-void W_Electro_Attack_Bolt(void)
+void W_Electro_Attack_Bolt(Weapon thiswep)
 {SELFPARAM();
 	entity proj;
 
-	W_DecreaseAmmo(WEP_CVAR_PRI(electro, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
 		self,
@@ -345,9 +345,9 @@ void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int d
 	}
 }
 
-void W_Electro_Attack_Orb(void)
+void W_Electro_Attack_Orb(Weapon thiswep)
 {SELFPARAM();
-	W_DecreaseAmmo(WEP_CVAR_SEC(electro, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
 		self,
@@ -412,7 +412,7 @@ void W_Electro_CheckAttack(void)
 	if(self.BUTTON_ATCK2)
 	if(weapon_prepareattack(1, -1))
 	{
-		W_Electro_Attack_Orb();
+		W_Electro_Attack_Orb(WEP_ELECTRO);
 		self.electro_count -= 1;
 		weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
@@ -476,7 +476,7 @@ void W_Electro_CheckAttack(void)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(electro, refire)))
 				{
-						W_Electro_Attack_Bolt();
+						W_Electro_Attack_Bolt(thiswep);
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 				}
 			}
@@ -485,7 +485,7 @@ void W_Electro_CheckAttack(void)
 				if(time >= self.electro_secondarytime)
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(electro, refire)))
 				{
-					W_Electro_Attack_Orb();
+					W_Electro_Attack_Orb(thiswep);
 					self.electro_count = WEP_CVAR_SEC(electro, count);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 					self.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();

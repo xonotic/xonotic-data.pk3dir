@@ -56,12 +56,12 @@ SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN.m_id); }
 
-void W_Shotgun_Attack(float isprimary)
+void W_Shotgun_Attack(Weapon thiswep, float isprimary)
 {SELFPARAM();
 	float	sc;
 	entity flash;
 
-	W_DecreaseAmmo(WEP_CVAR_PRI(shotgun, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(shotgun, ammo));
 
 	W_SetupShot(self, true, 5, SND(SHOTGUN_FIRE), ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
@@ -206,7 +206,7 @@ void W_Shotgun_Attack3_Frame2()
 	}
 
 	sound(self, CH_WEAPON_SINGLE, SND_Null, VOL_BASE, ATTN_NORM); // kill previous sound
-	W_Shotgun_Attack(true); // actually is secondary, but we trick the last shot into playing full reload sound
+	W_Shotgun_Attack(WEP_SHOTGUN, true); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
 void W_Shotgun_Attack3_Frame1()
@@ -219,7 +219,7 @@ void W_Shotgun_Attack3_Frame1()
 		return;
 	}
 
-	W_Shotgun_Attack(false);
+	W_Shotgun_Attack(WEP_SHOTGUN, false);
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
@@ -250,7 +250,7 @@ void W_Shotgun_Attack3_Frame1()
 					{
 						if(weapon_prepareattack(0, WEP_CVAR_PRI(shotgun, animtime)))
 						{
-							W_Shotgun_Attack(true);
+							W_Shotgun_Attack(thiswep, true);
 							self.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
 						}
@@ -262,7 +262,7 @@ void W_Shotgun_Attack3_Frame1()
 					{
 						if(weapon_prepareattack(0, WEP_CVAR_SEC(shotgun, alt_animtime)))
 						{
-							W_Shotgun_Attack(false);
+							W_Shotgun_Attack(thiswep, false);
 							self.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
 						}

@@ -131,11 +131,11 @@ void W_Hook_Touch2(void)
 	self.use();
 }
 
-void W_Hook_Attack2(void)
+void W_Hook_Attack2(Weapon thiswep)
 {SELFPARAM();
 	entity gren;
 
-	//W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
+	//W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
 	W_SetupShot(self, false, 4, SND(HOOKBOMB_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn();
@@ -191,7 +191,7 @@ void W_Hook_Attack2(void)
 				if(time > self.hook_refire)
 				if(weapon_prepareattack(0, -1))
 				{
-					W_DecreaseAmmo(WEP_CVAR_PRI(hook, ammo));
+					W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(hook, ammo));
 					self.hook_state |= HOOK_FIRING;
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
 				}
@@ -201,7 +201,7 @@ void W_Hook_Attack2(void)
 			{
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(hook, refire)))
 				{
-					W_Hook_Attack2();
+					W_Hook_Attack2(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
 				}
 			}
@@ -234,7 +234,7 @@ void W_Hook_Attack2(void)
 						{
 							if( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
 							{
-								W_DecreaseAmmo((time - self.hook_time_fueldecrease) * hooked_fuel);
+								W_DecreaseAmmo(thiswep, (time - self.hook_time_fueldecrease) * hooked_fuel);
 								self.hook_time_fueldecrease = time;
 								// decrease next frame again
 							}

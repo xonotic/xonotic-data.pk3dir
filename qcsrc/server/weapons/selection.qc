@@ -24,8 +24,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
 
-	// ignore hook button when using nades without hook
-	if (autocvar_g_nades && cl.offhand != OFFHAND_HOOK)
+	// ignore hook button when using other offhand equipment
+	if (cl.offhand != OFFHAND_HOOK)
 	if (wpn == WEP_HOOK.m_id && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 	    complain = 0;
 

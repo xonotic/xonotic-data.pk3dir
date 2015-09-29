@@ -827,9 +827,8 @@ void W_AttachToShotorg(entity flash, vector offset)
 	}
 }
 
-void W_DecreaseAmmo(float ammo_use)
+void W_DecreaseAmmo(Weapon wep, float ammo_use)
 {SELFPARAM();
-	entity wep = get_weaponinfo(self.weapon);
 
 	if(cvar("g_overkill"))
 	if(self.ok_use_ammocharge)

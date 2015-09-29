@@ -67,12 +67,12 @@ void W_HLAC_Touch(void)
 	remove(self);
 }
 
-void W_HLAC_Attack(void)
+void W_HLAC_Attack(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
     float spread;
 
-	W_DecreaseAmmo(WEP_CVAR_PRI(hlac, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(hlac, ammo));
 
     spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * self.misc_bulletcounter);
     spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
@@ -180,7 +180,7 @@ void W_HLAC_Attack_Frame(void)
 		}
 
 		ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
-		W_HLAC_Attack();
+		W_HLAC_Attack(WEP_HLAC);
 		self.misc_bulletcounter = self.misc_bulletcounter + 1;
         weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
@@ -190,11 +190,11 @@ void W_HLAC_Attack_Frame(void)
 	}
 }
 
-void W_HLAC_Attack2_Frame(void)
+void W_HLAC_Attack2_Frame(Weapon thiswep)
 {SELFPARAM();
     float i;
 
-	W_DecreaseAmmo(WEP_CVAR_SEC(hlac, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hlac, ammo));
 
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
         W_HLAC_Attack2();
@@ -220,7 +220,7 @@ void W_HLAC_Attack2_Frame(void)
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(hlac, refire)))
 				{
 					self.misc_bulletcounter = 0;
-					W_HLAC_Attack();
+					W_HLAC_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 				}
 			}
@@ -229,7 +229,7 @@ void W_HLAC_Attack2_Frame(void)
 			{
 				if(weapon_prepareattack(1, WEP_CVAR_SEC(hlac, refire)))
 				{
-					W_HLAC_Attack2_Frame();
+					W_HLAC_Attack2_Frame(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
 				}
 			}

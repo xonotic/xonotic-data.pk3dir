@@ -306,7 +306,7 @@ void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, int dea
 		W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode);
 }
 
-void W_MineLayer_Attack(void)
+void W_MineLayer_Attack(Weapon thiswep)
 {SELFPARAM();
 	entity mine;
 	entity flash;
@@ -323,7 +323,7 @@ void W_MineLayer_Attack(void)
 		}
 	}
 
-	W_DecreaseAmmo(WEP_CVAR(minelayer, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR(minelayer, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, SND(MINE_FIRE), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -511,7 +511,7 @@ float W_MineLayer_PlacedMines(float detonate)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR(minelayer, refire)))
 				{
-					W_MineLayer_Attack();
+					W_MineLayer_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
 				}
 			}

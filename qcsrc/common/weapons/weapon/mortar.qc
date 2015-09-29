@@ -198,11 +198,11 @@ void W_Mortar_Grenade_Touch2(void)
 	}
 }
 
-void W_Mortar_Attack(void)
+void W_Mortar_Attack(Weapon thiswep)
 {SELFPARAM();
 	entity gren;
 
-	W_DecreaseAmmo(WEP_CVAR_PRI(mortar, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(mortar, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND(GRENADE_FIRE), CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -247,11 +247,11 @@ void W_Mortar_Attack(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-void W_Mortar_Attack2(void)
+void W_Mortar_Attack2(Weapon thiswep)
 {SELFPARAM();
 	entity gren;
 
-	W_DecreaseAmmo(WEP_CVAR_SEC(mortar, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(mortar, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND(GRENADE_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -344,7 +344,7 @@ void W_Mortar_Attack2(void)
 			{
 				if(weapon_prepareattack(0, WEP_CVAR_PRI(mortar, refire)))
 				{
-					W_Mortar_Attack();
+					W_Mortar_Attack(thiswep);
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
 				}
 			}
@@ -367,7 +367,7 @@ void W_Mortar_Attack2(void)
 				}
 				else if(weapon_prepareattack(1, WEP_CVAR_SEC(mortar, refire)))
 				{
-					W_Mortar_Attack2();
+					W_Mortar_Attack2(thiswep);
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
 				}
 			}

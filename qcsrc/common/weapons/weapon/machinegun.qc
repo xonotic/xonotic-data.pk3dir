@@ -104,7 +104,7 @@ void W_MachineGun_MuzzleFlash(void)
 	self.muzzle_flash.owner = self.muzzle_flash.realowner = self;
 }
 
-void W_MachineGun_Attack(int deathtype)
+void W_MachineGun_Attack(Weapon thiswep, int deathtype)
 {SELFPARAM();
 	W_SetupShot(self, true, 0, SND(UZI_FIRE), CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
 	if(!autocvar_g_norecoil)
@@ -131,9 +131,9 @@ void W_MachineGun_Attack(int deathtype)
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 
 	if(self.misc_bulletcounter == 1)
-		W_DecreaseAmmo(WEP_CVAR(machinegun, first_ammo));
+		W_DecreaseAmmo(thiswep, WEP_CVAR(machinegun, first_ammo));
 	else
-		W_DecreaseAmmo(WEP_CVAR(machinegun, sustained_ammo));
+		W_DecreaseAmmo(thiswep, WEP_CVAR(machinegun, sustained_ammo));
 }
 
 // weapon frames
@@ -154,7 +154,7 @@ void W_MachineGun_Attack_Frame(void)
 			return;
 		}
 		self.misc_bulletcounter = self.misc_bulletcounter + 1;
-		W_MachineGun_Attack(WEP_MACHINEGUN.m_id);
+		W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id);
 		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), W_MachineGun_Attack_Frame);
 	}
 	else
@@ -180,7 +180,7 @@ void W_MachineGun_Attack_Auto(void)
 		return;
 	}
 
-	W_DecreaseAmmo(WEP_CVAR(machinegun, sustained_ammo));
+	W_DecreaseAmmo(WEP_MACHINEGUN, WEP_CVAR(machinegun, sustained_ammo));
 
 	W_SetupShot(self, true, 0, SND(UZI_FIRE), CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
 	if(!autocvar_g_norecoil)
@@ -271,7 +271,7 @@ void W_MachineGun_Attack_Burst(void)
 						return false;
 					}
 
-					W_DecreaseAmmo(WEP_CVAR(machinegun, burst_ammo));
+					W_DecreaseAmmo(thiswep, WEP_CVAR(machinegun, burst_ammo));
 
 					self.misc_bulletcounter = WEP_CVAR(machinegun, burst) * -1;
 					W_MachineGun_Attack_Burst();
@@ -284,7 +284,7 @@ void W_MachineGun_Attack_Burst(void)
 				if(weapon_prepareattack(0, 0))
 				{
 					self.misc_bulletcounter = 1;
-					W_MachineGun_Attack(WEP_MACHINEGUN.m_id); // sets attack_finished
+					W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id); // sets attack_finished
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), W_MachineGun_Attack_Frame);
 				}
 
@@ -292,7 +292,7 @@ void W_MachineGun_Attack_Burst(void)
 				if(weapon_prepareattack(1, 0))
 				{
 					self.misc_bulletcounter = 1;
-					W_MachineGun_Attack(WEP_MACHINEGUN.m_id | HITTYPE_SECONDARY); // sets attack_finished
+					W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id | HITTYPE_SECONDARY); // sets attack_finished
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(machinegun, first_refire), w_ready);
 				}
 			}

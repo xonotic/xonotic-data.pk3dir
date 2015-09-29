@@ -53,11 +53,11 @@ void spawnfunc_weapon_rifle(void) { weapon_defaultspawnfunc(WEP_RIFLE.m_id); }
 void spawnfunc_weapon_campingrifle(void) { spawnfunc_weapon_rifle(); }
 void spawnfunc_weapon_sniperrifle(void) { spawnfunc_weapon_rifle(); }
 
-void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, string pSound)
+void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, string pSound)
 {SELFPARAM();
 	float i;
 
-	W_DecreaseAmmo(pAmmo);
+	W_DecreaseAmmo(thiswep, pAmmo);
 
 	W_SetupShot(self, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
@@ -78,12 +78,12 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 void W_Rifle_Attack(void)
 {
-	W_Rifle_FireBullet(WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND(CAMPINGRIFLE_FIRE));
+	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND(CAMPINGRIFLE_FIRE));
 }
 
 void W_Rifle_Attack2(void)
 {
-	W_Rifle_FireBullet(WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND(CAMPINGRIFLE_FIRE2));
+	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND(CAMPINGRIFLE_FIRE2));
 }
 
 .void(void) rifle_bullethail_attackfunc;

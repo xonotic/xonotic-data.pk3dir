@@ -337,12 +337,12 @@ void W_Devastator_Damage(entity inflictor, entity attacker, float damage, int de
 		W_PrepareExplosionByDamage(attacker, W_Devastator_Explode);
 }
 
-void W_Devastator_Attack(void)
+void W_Devastator_Attack(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
 	entity flash;
 
-	W_DecreaseAmmo(WEP_CVAR(devastator, ammo));
+	W_DecreaseAmmo(thiswep, WEP_CVAR(devastator, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKET_FIRE), CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -533,7 +533,7 @@ void W_Devastator_Attack(void)
 					if(self.rl_release || WEP_CVAR(devastator, guidestop))
 					if(weapon_prepareattack(0, WEP_CVAR(devastator, refire)))
 					{
-						W_Devastator_Attack();
+						W_Devastator_Attack(thiswep);
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
 						self.rl_release = 0;
 					}

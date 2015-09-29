@@ -78,7 +78,7 @@ void SendCSQCVortexBeamParticle(float charge) {
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
 
-void W_Vortex_Attack(float issecondary)
+void W_Vortex_Attack(Weapon thiswep, float issecondary)
 {SELFPARAM();
 	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
 
@@ -128,7 +128,7 @@ void W_Vortex_Attack(float issecondary)
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
 
-	W_DecreaseAmmo(myammo);
+	W_DecreaseAmmo(thiswep, myammo);
 }
 
 .float vortex_chargepool_pauseregen_finished;
@@ -165,7 +165,7 @@ void W_Vortex_Attack(float issecondary)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR_PRI(vortex, refire)))
 					{
-						W_Vortex_Attack(0);
+						W_Vortex_Attack(thiswep, 0);
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
 					}
 				}
@@ -237,7 +237,7 @@ void W_Vortex_Attack(float issecondary)
 					{
 						if(weapon_prepareattack(0, WEP_CVAR_SEC(vortex, refire)))
 						{
-							W_Vortex_Attack(1);
+							W_Vortex_Attack(thiswep, 1);
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
 						}
 					}
