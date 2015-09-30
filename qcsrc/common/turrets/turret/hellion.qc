@@ -85,7 +85,7 @@ void turret_hellion_missile_think()
 
 void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION.m_id)) remove(self); }
 
-        METHOD(Hellion, tr_attack, bool(Hellion thistur))
+        METHOD(Hellion, tr_attack, void(Hellion thistur))
         {
             entity missile;
 
@@ -103,8 +103,6 @@ void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION
             missile.tur_aimpos   = randomvec() * 128;
             missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
             self.tur_head.frame += 1;
-
-            return true;
         }
         METHOD(Hellion, tr_think, bool(Hellion thistur))
         {

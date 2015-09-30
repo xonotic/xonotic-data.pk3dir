@@ -20,7 +20,7 @@ REGISTER_TURRET(MLRS, NEW(MLRSTurret));
 #ifdef SVQC
 void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS.m_id)) remove(self); }
 
-        METHOD(MLRSTurret, tr_attack, bool(MLRSTurret thistur))
+        METHOD(MLRSTurret, tr_attack, void(MLRSTurret thistur))
         {
             entity missile;
 
@@ -29,8 +29,6 @@ void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS.m_id)
             missile.nextthink = time + max(self.tur_impacttime,(self.shot_radius * 2) / self.shot_speed);
             missile.missile_flags = MIF_SPLASH;
             te_explosion (missile.origin);
-
-            return true;
         }
         METHOD(MLRSTurret, tr_think, bool(MLRSTurret thistur))
         {

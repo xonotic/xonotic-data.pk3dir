@@ -282,7 +282,7 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
 
 void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK.m_id)) remove(self); }
 
-        METHOD(HunterKiller, tr_attack, bool(HunterKiller thistur))
+        METHOD(HunterKiller, tr_attack, void(HunterKiller thistur))
         {
             entity missile;
 
@@ -300,8 +300,6 @@ void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK.m_id)) re
 
             if (self.tur_head.frame == 0)
                 self.tur_head.frame = self.tur_head.frame + 1;
-
-            return true;
         }
         METHOD(HunterKiller, tr_think, bool(HunterKiller thistur))
         {

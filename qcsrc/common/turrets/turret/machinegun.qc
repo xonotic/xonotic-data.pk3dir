@@ -22,14 +22,12 @@ void spawnfunc_turret_machinegun() { SELFPARAM(); if(!turret_initialize(TUR_MACH
 
 void W_MachineGun_MuzzleFlash(void);
 
-        METHOD(MachineGunTurret, tr_attack, bool(MachineGunTurret thistur))
+        METHOD(MachineGunTurret, tr_attack, void(MachineGunTurret thistur))
         {
             fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0);
 
             W_MachineGun_MuzzleFlash();
             setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
-
-            return true;
         }
         METHOD(MachineGunTurret, tr_think, bool(MachineGunTurret thistur))
         {

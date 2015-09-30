@@ -343,13 +343,11 @@ void walker_move_path()
 
 void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER.m_id)) remove(self); }
 
-        METHOD(WalkerTurret, tr_attack, bool(WalkerTurret thistur))
+        METHOD(WalkerTurret, tr_attack, void(WalkerTurret thistur))
         {
             sound (self, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
             fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0);
             Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-
-            return true;
         }
         METHOD(WalkerTurret, tr_think, bool(WalkerTurret thistur))
         {

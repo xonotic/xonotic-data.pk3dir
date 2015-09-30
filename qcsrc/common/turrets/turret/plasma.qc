@@ -17,16 +17,44 @@ REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
 #endif
 
 #ifdef IMPLEMENTATION
+
+CLASS(PlasmaAttack, PortoLaunch)
+/* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(PlasmaAttack, impulse, int, 5);
+/* refname   */ ATTRIB(PlasmaAttack, netname, string, "plasma");
+/* wepname   */ ATTRIB(PlasmaAttack, message, string, _("Plasma"));
+ENDCLASS(PlasmaAttack)
+REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
+
 #ifdef SVQC
+
+void turret_initparams(entity tur);
+METHOD(PlasmaAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
+	if (fire1)
+	if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
+		if (isPlayer) {
+            turret_initparams(self);
+            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            self.tur_shotdir_updated = w_shotdir;
+            self.tur_shotorg = w_shotorg;
+            self.tur_head = self;
+            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+        }
+        entity missile = turret_projectile(SND(HAGAR_FIRE), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, true, true);
+        missile.missile_flags = MIF_SPLASH;
+        Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+	}
+	return true;
+}
+
 void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA.m_id)) remove(self); }
 
-        METHOD(PlasmaTurret, tr_attack, bool(PlasmaTurret thistur))
+        METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret thistur))
         {
             if(g_instagib)
             {
-                float flying;
-                flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
-
                 FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
                                    800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
@@ -35,20 +63,14 @@ void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA.m
                 // teamcolor / hit beam effect
                 vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
                 WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
-                if (self.tur_head.frame == 0)
-                    self.tur_head.frame = 1;
             }
             else
             {
-                entity missile = turret_projectile(SND(HAGAR_FIRE), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
-                missile.missile_flags = MIF_SPLASH;
-
-                Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-                if (self.tur_head.frame == 0)
-                    self.tur_head.frame = 1;
+                Weapon wep = WEP_PLASMA;
+                wep.wr_think(wep, true, false);
             }
-
-            return true;
+            if (self.tur_head.frame == 0)
+                self.tur_head.frame = 1;
         }
         METHOD(PlasmaTurret, tr_think, bool(PlasmaTurret thistur))
         {

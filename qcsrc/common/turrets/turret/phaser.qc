@@ -66,7 +66,7 @@ void beam_think()
 
 void spawnfunc_turret_phaser() { SELFPARAM(); if(!turret_initialize(TUR_PHASER.m_id)) remove(self); }
 
-        METHOD(PhaserTurret, tr_attack, bool(PhaserTurret thistur))
+        METHOD(PhaserTurret, tr_attack, void(PhaserTurret thistur))
         {
             entity beam;
 
@@ -98,8 +98,6 @@ void spawnfunc_turret_phaser() { SELFPARAM(); if(!turret_initialize(TUR_PHASER.m
 
             if (self.tur_head.frame == 0)
                 self.tur_head.frame = 1;
-
-            return true;
         }
         METHOD(PhaserTurret, tr_think, bool(PhaserTurret thistur))
         {

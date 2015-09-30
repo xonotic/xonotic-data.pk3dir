@@ -37,7 +37,7 @@ void turret_flac_projectile_think_explode()
 
 void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC.m_id)) remove(self); }
 
-        METHOD(Flac, tr_attack, bool(Flac thistur))
+        METHOD(Flac, tr_attack, void(Flac thistur))
         {
             entity proj;
 
@@ -52,8 +52,6 @@ void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC.m_id)
             self.tur_head.frame = self.tur_head.frame + 1;
             if (self.tur_head.frame >= 4)
                 self.tur_head.frame = 0;
-
-            return true;
         }
         METHOD(Flac, tr_think, bool(Flac thistur))
         {

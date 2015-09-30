@@ -30,35 +30,32 @@ REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
 
 #ifdef SVQC
 
+void turret_initparams(entity tur);
 METHOD(PlasmaDualAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
 	if (fire1)
-	if (weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
-		W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-		self.tur_shotdir_updated = w_shotdir;
-		self.tur_shotorg = w_shotorg;
-		self.tur_head = self;
-		self.shot_refire = bound(0.01, ((!self.shot_refire) ? 1 : self.shot_refire), 9999);
-		self.shot_dmg = max(1, ((!self.shot_dmg) ? self.shot_refire * 50 : self.shot_dmg));
-        self.shot_radius = max(1, ((!self.shot_radius) ? self.shot_dmg * 0.5 : self.shot_radius));
-        self.shot_speed = max(1, ((!self.shot_speed) ? 2500 : self.shot_speed));
-        self.shot_spread = bound(0.0001, ((!self.shot_spread) ? 0.0125 : self.shot_spread), 500);
-        self.shot_force = bound(0.001, ((!self.shot_force) ? self.shot_dmg * 0.5 + self.shot_radius * 0.5 : self.shot_force), 5000);
-        TUR_ACTION(TUR_PLASMA_DUAL.m_id, TR_ATTACK);
-		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+	if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
+		if (isPlayer) {
+            turret_initparams(self);
+            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            self.tur_shotdir_updated = w_shotdir;
+            self.tur_shotorg = w_shotorg;
+            self.tur_head = self;
+            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+        }
+        entity missile = turret_projectile(SND(HAGAR_FIRE), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, true, true);
+        missile.missile_flags = MIF_SPLASH;
+        Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 	}
 	return true;
 }
 
 void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA_DUAL.m_id)) remove(self); }
 
-        METHOD(DualPlasmaTurret, tr_attack, bool(DualPlasmaTurret thistur))
+        METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur))
         {
-            if(g_instagib)
-            {
-                float flying;
-                flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
-
+            if (g_instagib) {
                 FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
                                    800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
@@ -68,17 +65,11 @@ void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLA
                 // teamcolor / hit beam effect
                 vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
                 WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
-                self.tur_head.frame += 1;
+            } else {
+                Weapon wep = WEP_PLASMA_DUAL;
+                wep.wr_think(wep, true, false);
             }
-            else
-            {
-                entity missile = turret_projectile(SND(HAGAR_FIRE), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
-                missile.missile_flags = MIF_SPLASH;
-                Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-                self.tur_head.frame += 1;
-            }
-
-            return true;
+            self.tur_head.frame += 1;
         }
         METHOD(DualPlasmaTurret, tr_think, bool(DualPlasmaTurret thistur))
         {

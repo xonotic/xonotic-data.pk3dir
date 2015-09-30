@@ -990,7 +990,8 @@ void turret_fire()
 	if(MUTATOR_CALLHOOK(TurretFire, self))
 		return;
 
-	TUR_ACTION(self.m_id, TR_ATTACK);
+	Turret info = get_turretinfo(self.m_id);
+	info.tr_attack(info);
 
 	self.attack_finished_single = time + self.shot_refire;
 	self.ammo -= self.shot_dmg;
@@ -1229,6 +1230,35 @@ void turrets_manager_think()
 	}
 }
 
+void turret_initparams(entity tur)
+{
+	#define TRY(x) (x) ? (x)
+	tur.respawntime                 = max  (-1,              (TRY(tur.respawntime)               :  60                                         ));
+	tur.shot_refire                 = bound(0.01,            (TRY(tur.shot_refire)               :  1                                          ), 9999);
+	tur.shot_dmg                    = max  (1,               (TRY(tur.shot_dmg)                  :  tur.shot_refire * 50                       ));
+	tur.shot_radius                 = max  (1,               (TRY(tur.shot_radius)               :  tur.shot_dmg * 0.5                         ));
+	tur.shot_speed                  = max  (1,               (TRY(tur.shot_speed)                :  2500                                       ));
+	tur.shot_spread                 = bound(0.0001,          (TRY(tur.shot_spread)               :  0.0125                                     ), 500);
+	tur.shot_force                  = bound(0.001,           (TRY(tur.shot_force)                :  tur.shot_dmg * 0.5 + tur.shot_radius * 0.5 ), 5000);
+	tur.shot_volly                  = bound(1,               (TRY(tur.shot_volly)                :  1                                          ), floor(tur.ammo_max / tur.shot_dmg));
+	tur.shot_volly_refire           = bound(tur.shot_refire, (TRY(tur.shot_volly_refire)         :  tur.shot_refire * tur.shot_volly           ), 60);
+	tur.target_range                = bound(0,               (TRY(tur.target_range)              :  tur.shot_speed * 0.5                       ), MAX_SHOT_DISTANCE);
+	tur.target_range_min            = bound(0,               (TRY(tur.target_range_min)          :  tur.shot_radius * 2                        ), MAX_SHOT_DISTANCE);
+	tur.target_range_optimal        = bound(0,               (TRY(tur.target_range_optimal)      :  tur.target_range * 0.5                     ), MAX_SHOT_DISTANCE);
+	tur.aim_maxrotate               = bound(0,               (TRY(tur.aim_maxrotate)             :  90                                         ), 360);
+	tur.aim_maxpitch                = bound(0,               (TRY(tur.aim_maxpitch)              :  20                                         ), 90);
+	tur.aim_speed                   = bound(0.1,             (TRY(tur.aim_speed)                 :  36                                         ), 1000);
+	tur.aim_firetolerance_dist      = bound(0.1,             (TRY(tur.aim_firetolerance_dist)    :  5 + (tur.shot_radius * 2)                  ), MAX_SHOT_DISTANCE);
+	tur.target_select_rangebias     = bound(-10,             (TRY(tur.target_select_rangebias)   :  1                                          ), 10);
+	tur.target_select_samebias      = bound(-10,             (TRY(tur.target_select_samebias)    :  1                                          ), 10);
+	tur.target_select_anglebias     = bound(-10,             (TRY(tur.target_select_anglebias)   :  1                                          ), 10);
+	tur.target_select_missilebias   = bound(-10,             (TRY(tur.target_select_missilebias) :  1                                          ), 10);
+	tur.target_select_playerbias    = bound(-10,             (TRY(tur.target_select_playerbias)  :  1                                          ), 10);
+	tur.ammo_max                    = max  (tur.shot_dmg,    (TRY(tur.ammo_max)                  :  tur.shot_dmg * 10                          ));
+	tur.ammo_recharge               = max  (0,               (TRY(tur.ammo_recharge)             :  tur.shot_dmg * 0.5                         ));
+	#undef TRY
+}
+
 float turret_initialize(float tur_id)
 {SELFPARAM();
 	if(!autocvar_g_turrets)
@@ -1283,29 +1313,7 @@ float turret_initialize(float tur_id)
 		if(!self.track_blendrate)		{ self.track_blendrate = 0.35; }
 	}
 
-	self.respawntime 				= max(-1, ((!self.respawntime) ? 60 : self.respawntime));
-	self.shot_refire 				= bound(0.01, ((!self.shot_refire) ? 1 : self.shot_refire), 9999);
-	self.shot_dmg 					= max(1, ((!self.shot_dmg) ? self.shot_refire * 50 : self.shot_dmg));
-	self.shot_radius 				= max(1, ((!self.shot_radius) ? self.shot_dmg * 0.5 : self.shot_radius));
-	self.shot_speed 				= max(1, ((!self.shot_speed) ? 2500 : self.shot_speed));
-	self.shot_spread 				= bound(0.0001, ((!self.shot_spread) ? 0.0125 : self.shot_spread), 500);
-	self.shot_force 				= bound(0.001, ((!self.shot_force) ? self.shot_dmg * 0.5 + self.shot_radius * 0.5 : self.shot_force), 5000);
-	self.shot_volly 				= bound(1, ((!self.shot_volly) ? 1 : self.shot_volly), floor(self.ammo_max / self.shot_dmg));
-	self.shot_volly_refire 			= bound(self.shot_refire, ((!self.shot_volly_refire) ? self.shot_refire * self.shot_volly : self.shot_volly_refire), 60);
-	self.target_range 				= bound(0, ((!self.target_range) ? self.shot_speed * 0.5 : self.target_range), MAX_SHOT_DISTANCE);
-	self.target_range_min 			= bound(0, ((!self.target_range_min) ? self.shot_radius * 2 : self.target_range_min), MAX_SHOT_DISTANCE);
-	self.target_range_optimal 		= bound(0, ((!self.target_range_optimal) ? self.target_range * 0.5 : self.target_range_optimal), MAX_SHOT_DISTANCE);
-	self.aim_maxrotate				= bound(0, ((!self.aim_maxrotate) ? 90 : self.aim_maxrotate), 360);
-	self.aim_maxpitch				= bound(0, ((!self.aim_maxpitch) ? 20 : self.aim_maxpitch), 90);
-	self.aim_speed					= bound(0.1, ((!self.aim_speed) ? 36 : self.aim_speed), 1000);
-	self.aim_firetolerance_dist 	= bound(0.1, ((!self.aim_firetolerance_dist) ? 5 + (self.shot_radius * 2) : self.aim_firetolerance_dist), MAX_SHOT_DISTANCE);
-	self.target_select_rangebias	= bound(-10, ((!self.target_select_rangebias) ? 1 : self.target_select_rangebias), 10);
-	self.target_select_samebias 	= bound(-10, ((!self.target_select_samebias) ? 1 : self.target_select_samebias), 10);
-	self.target_select_anglebias	= bound(-10, ((!self.target_select_anglebias) ? 1 : self.target_select_anglebias), 10);
-	self.target_select_missilebias	= bound(-10, ((!self.target_select_missilebias) ? 1 : self.target_select_missilebias), 10);
-	self.target_select_playerbias	= bound(-10, ((!self.target_select_playerbias) ? 1 : self.target_select_playerbias), 10);
-	self.ammo_max					= max(self.shot_dmg, ((!self.ammo_max) ? self.shot_dmg * 10 : self.ammo_max));
-	self.ammo_recharge				= max(0, ((!self.ammo_recharge) ? self.shot_dmg * 0.5 : self.ammo_recharge));
+	turret_initparams(self);
 
 	self.turret_flags = TUR_FLAG_ISTURRET | (tur.spawnflags);
 

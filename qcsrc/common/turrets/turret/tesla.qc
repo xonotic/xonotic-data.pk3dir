@@ -98,7 +98,7 @@ float turret_tesla_firecheck()
 
 void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_id)) remove(self); }
 
-        METHOD(TeslaCoil, tr_attack, bool(TeslaCoil thistur))
+        METHOD(TeslaCoil, tr_attack, void(TeslaCoil thistur))
         {
             entity e, t;
             float d, r, i;
@@ -113,7 +113,7 @@ void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_i
             t = toast(e,r,d);
             remove(e);
 
-            if (t == world) return true;
+            if (t == world) return;
 
             self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_TEAMCHECK;
 
@@ -133,8 +133,6 @@ void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_i
                 e.railgunhit = 0;
                 e = e.chain;
             }
-
-            return true;
         }
         METHOD(TeslaCoil, tr_think, bool(TeslaCoil thistur))
         {

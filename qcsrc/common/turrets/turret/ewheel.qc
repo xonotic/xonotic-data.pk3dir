@@ -130,7 +130,7 @@ void ewheel_move_idle()
 
 void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m_id)) remove(self); }
 
-        METHOD(EWheel, tr_attack, bool(EWheel thistur))
+        METHOD(EWheel, tr_attack, void(EWheel thistur))
         {
             SELFPARAM();
             float i;
@@ -150,8 +150,6 @@ void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m
                 if (self.tur_head.frame > 3)
                     self.tur_head.frame = 0;
             }
-
-            return true;
         }
         METHOD(EWheel, tr_think, bool(EWheel thistur))
         {

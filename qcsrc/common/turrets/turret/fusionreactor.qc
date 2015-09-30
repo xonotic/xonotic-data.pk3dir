@@ -49,15 +49,13 @@ bool turret_fusionreactor_firecheck()
 
 void spawnfunc_turret_fusionreactor() { SELFPARAM(); if(!turret_initialize(TUR_FUSIONREACTOR.m_id)) remove(self); }
 
-        METHOD(FusionReactor, tr_attack, bool(FusionReactor thistur))
+        METHOD(FusionReactor, tr_attack, void(FusionReactor thistur))
         {
             vector fl_org;
 
             self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
             fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
             te_smallflash(fl_org);
-
-            return true;
         }
         METHOD(FusionReactor, tr_think, bool(FusionReactor thistur))
         {

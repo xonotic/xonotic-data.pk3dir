@@ -169,8 +169,8 @@ const int TR_DEATH = 3; // (SERVER) called when turret dies
 .bool(Turret) tr_death;
 const int TR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this turret
 .bool(Turret) tr_precache;
-const int TR_ATTACK = 5; // (SERVER) called when turret attacks
-.bool(Turret) tr_attack;
+/** (SERVER) called when turret attacks */
+.void(Turret) tr_attack;
 const int TR_CONFIG = 6; // (ALL)
 .bool(Turret) tr_config;
 
@@ -180,7 +180,6 @@ bool t_new(Turret this, int req)
     if (req == TR_THINK) return this.tr_think ? this.tr_think(this) : false;
     if (req == TR_DEATH) return this.tr_death ? this.tr_death(this) : false;
     if (req == TR_PRECACHE) return this.tr_precache ? this.tr_precache(this) : false;
-    if (req == TR_ATTACK) return this.tr_attack ? this.tr_attack(this) : false;
     if (req == TR_CONFIG) return this.tr_config ? this.tr_config(this) : false;
     return false;
 }
