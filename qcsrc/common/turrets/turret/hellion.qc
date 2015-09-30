@@ -14,10 +14,54 @@ ENDCLASS(Hellion)
 
 REGISTER_TURRET(HELLION, NEW(Hellion));
 
+CLASS(HellionAttack, PortoLaunch)
+/* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(HellionAttack, impulse, int, 9);
+/* refname   */ ATTRIB(HellionAttack, netname, string, "turret_hellion");
+/* wepname   */ ATTRIB(HellionAttack, message, string, _("Hellion"));
+ENDCLASS(HellionAttack)
+REGISTER_WEAPON(HELLION, NEW(HellionAttack));
+
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
+void turret_initparams(entity);
+void turret_hellion_missile_think();
+METHOD(HellionAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
+	if (fire1)
+	if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
+		if (isPlayer) {
+            turret_initparams(self);
+            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            self.tur_shotdir_updated = w_shotdir;
+            self.tur_shotorg = w_shotorg;
+            self.tur_head = self;
+            self.shot_radius = 500;
+            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+        }
+        if (!isPlayer) {
+            if (self.tur_head.frame != 0)
+                self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
+            else
+                self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
+        }
+
+        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
+        te_explosion (missile.origin);
+        missile.think		= turret_hellion_missile_think;
+        missile.nextthink	= time;
+        missile.flags		= FL_PROJECTILE;
+        missile.max_health   = time + 9;
+        missile.tur_aimpos   = randomvec() * 128;
+        missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
+        if (!isPlayer) self.tur_head.frame += 1;
+	}
+	return true;
+}
+
 float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
@@ -87,22 +131,8 @@ void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION
 
         METHOD(Hellion, tr_attack, void(Hellion thistur))
         {
-            entity missile;
-
-            if(self.tur_head.frame != 0)
-                self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
-            else
-                self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
-
-            missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
-            te_explosion (missile.origin);
-            missile.think		= turret_hellion_missile_think;
-            missile.nextthink	= time;
-            missile.flags		= FL_PROJECTILE;
-            missile.max_health   = time + 9;
-            missile.tur_aimpos   = randomvec() * 128;
-            missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
-            self.tur_head.frame += 1;
+            Weapon wep = WEP_HELLION;
+            wep.wr_think(wep, true, false);
         }
         METHOD(Hellion, tr_think, bool(Hellion thistur))
         {

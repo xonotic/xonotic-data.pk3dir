@@ -14,19 +14,19 @@ ENDCLASS(DualPlasmaTurret)
 
 REGISTER_TURRET(PLASMA_DUAL, NEW(DualPlasmaTurret));
 
-#endif
-
-#ifdef IMPLEMENTATION
-
 #include "../../weapons/all.qh"
 
 CLASS(PlasmaDualAttack, PortoLaunch)
 /* flags     */ ATTRIB(PlasmaDualAttack, spawnflags, int, WEP_TYPE_OTHER);
 /* impulse   */ ATTRIB(PlasmaDualAttack, impulse, int, 5);
-/* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "plasmadual");
+/* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "turret_plasmadual");
 /* wepname   */ ATTRIB(PlasmaDualAttack, message, string, _("Dual plasma"));
 ENDCLASS(PlasmaDualAttack)
 REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 

@@ -14,20 +14,47 @@ ENDCLASS(MachineGunTurret)
 
 REGISTER_TURRET(MACHINEGUN, NEW(MachineGunTurret));
 
+CLASS(MachineGunTurretAttack, PortoLaunch)
+/* flags     */ ATTRIB(MachineGunTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(MachineGunTurretAttack, impulse, int, 9);
+/* refname   */ ATTRIB(MachineGunTurretAttack, netname, string, "turret_machinegun");
+/* wepname   */ ATTRIB(MachineGunTurretAttack, message, string, _("Machinegun"));
+ENDCLASS(MachineGunTurretAttack)
+REGISTER_WEAPON(TUR_MACHINEGUN, NEW(MachineGunTurretAttack));
+
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_turret_machinegun() { SELFPARAM(); if(!turret_initialize(TUR_MACHINEGUN.m_id)) remove(self); }
+void turret_initparams(entity);
+void W_MachineGun_MuzzleFlash();
 
-void W_MachineGun_MuzzleFlash(void);
+METHOD(MachineGunTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
+	if (fire1)
+	if (!isPlayer || weapon_prepareattack(false, WEP_CVAR(machinegun, sustained_refire))) {
+		if (isPlayer) {
+            turret_initparams(self);
+            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            self.tur_shotdir_updated = w_shotdir;
+            self.tur_shotorg = w_shotorg;
+            self.tur_head = self;
+            weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+        }
+        fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0);
+        W_MachineGun_MuzzleFlash();
+        setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
+	}
+	return true;
+}
+
+void spawnfunc_turret_machinegun() { SELFPARAM(); if(!turret_initialize(TUR_MACHINEGUN.m_id)) remove(self); }
 
         METHOD(MachineGunTurret, tr_attack, void(MachineGunTurret thistur))
         {
-            fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0);
-
-            W_MachineGun_MuzzleFlash();
-            setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
+            Weapon wep = WEP_TUR_MACHINEGUN;
+            wep.wr_think(wep, true, false);
         }
         METHOD(MachineGunTurret, tr_think, bool(MachineGunTurret thistur))
         {

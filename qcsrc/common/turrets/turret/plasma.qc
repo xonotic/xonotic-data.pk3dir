@@ -14,17 +14,17 @@ ENDCLASS(PlasmaTurret)
 
 REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
 
-#endif
-
-#ifdef IMPLEMENTATION
-
 CLASS(PlasmaAttack, PortoLaunch)
 /* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_TYPE_OTHER);
 /* impulse   */ ATTRIB(PlasmaAttack, impulse, int, 5);
-/* refname   */ ATTRIB(PlasmaAttack, netname, string, "plasma");
+/* refname   */ ATTRIB(PlasmaAttack, netname, string, "turret_plasma");
 /* wepname   */ ATTRIB(PlasmaAttack, message, string, _("Plasma"));
 ENDCLASS(PlasmaAttack)
 REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 

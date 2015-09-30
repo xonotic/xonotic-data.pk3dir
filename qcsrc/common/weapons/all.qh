@@ -107,7 +107,7 @@ WepSet ReadWepSet();
 
 // weapon name macros
 const int WEP_FIRST = 1;
-#define WEP_MAXCOUNT 32 // Increase as needed. Can be up to 72.
+#define WEP_MAXCOUNT 72 // Increase as needed. Can be up to 72.
 int WEP_COUNT;
 #define WEP_LAST (WEP_FIRST + WEP_COUNT - 1)
 WepSet WEPSET_ALL;

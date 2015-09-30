@@ -14,10 +14,66 @@ ENDCLASS(TeslaCoil)
 
 REGISTER_TURRET(TESLA, NEW(TeslaCoil));
 
+CLASS(TeslaCoilTurretAttack, PortoLaunch)
+/* flags     */ ATTRIB(TeslaCoilTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(TeslaCoilTurretAttack, impulse, int, 9);
+/* refname   */ ATTRIB(TeslaCoilTurretAttack, netname, string, "turret_tesla");
+/* wepname   */ ATTRIB(TeslaCoilTurretAttack, message, string, _("Tesla Coil"));
+ENDCLASS(TeslaCoilTurretAttack)
+REGISTER_WEAPON(TESLA, NEW(TeslaCoilTurretAttack));
+
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
+entity toast(entity from, float range, float damage);
+METHOD(TeslaCoilTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+    SELFPARAM();
+    bool isPlayer = IS_PLAYER(self);
+    if (fire1)
+    if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
+        if (isPlayer) {
+            turret_initparams(self);
+            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            self.tur_shotdir_updated = w_shotdir;
+            self.tur_shotorg = w_shotorg;
+            self.tur_head = self;
+            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+        }
+
+        float d = self.shot_dmg;
+        float r = self.target_range;
+        entity e = spawn();
+        setorigin(e,self.tur_shotorg);
+
+        self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
+
+        entity t = toast(e,r,d);
+        remove(e);
+
+        if (t == NULL) return true;
+
+        self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_TEAMCHECK;
+
+        self.attack_finished_single = time + self.shot_refire;
+        for (int i = 0; i < 10; ++i) {
+            d *= 0.75;
+            r *= 0.85;
+            t = toast(t, r, d);
+            if (t == world) break;
+
+        }
+
+        e = findchainfloat(railgunhit, 1);
+        while (e) {
+            e.railgunhit = 0;
+            e = e.chain;
+        }
+
+    }
+    return true;
+}
+
 entity toast(entity from, float range, float damage)
 {SELFPARAM();
     entity e;
@@ -100,39 +156,8 @@ void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_i
 
         METHOD(TeslaCoil, tr_attack, void(TeslaCoil thistur))
         {
-            entity e, t;
-            float d, r, i;
-
-            d = self.shot_dmg;
-            r = self.target_range;
-            e = spawn();
-            setorigin(e,self.tur_shotorg);
-
-            self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
-
-            t = toast(e,r,d);
-            remove(e);
-
-            if (t == world) return;
-
-            self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_TEAMCHECK;
-
-            self.attack_finished_single = time + self.shot_refire;
-            for (i = 0; i < 10; ++i)
-            {
-                d *= 0.75;
-                r *= 0.85;
-                t = toast(t, r, d);
-                if (t == world) break;
-
-            }
-
-            e = findchainfloat(railgunhit, 1);
-            while (e)
-            {
-                e.railgunhit = 0;
-                e = e.chain;
-            }
+            Weapon wep = WEP_TESLA;
+            wep.wr_think(wep, true, false);
         }
         METHOD(TeslaCoil, tr_think, bool(TeslaCoil thistur))
         {

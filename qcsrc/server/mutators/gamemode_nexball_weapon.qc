@@ -1,4 +1,5 @@
-#ifndef IMPLEMENTATION
+#ifndef GAMEMODE_NEXBALL_WEAPON_H
+#define GAMEMODE_NEXBALL_WEAPON_H
 
 CLASS(BallStealer, PortoLaunch)
 /* flags     */ ATTRIB(BallStealer, spawnflags, int, WEP_TYPE_OTHER);
