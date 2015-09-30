@@ -57,13 +57,13 @@ METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 			veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
 			veh.wait = time;
 		}
-		if (isPlayer) W_SetupShot_Dir(self, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
+		if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
 		vector org = w_shotorg;
 		vector dir = w_shotdir;
 		entity bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
 							   org, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
 							   autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-							   DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, self.owner);
+							   DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, player);
 		bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
 		weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
 	}
