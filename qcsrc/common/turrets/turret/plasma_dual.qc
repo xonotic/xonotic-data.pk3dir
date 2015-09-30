@@ -1,5 +1,5 @@
-#ifndef TUR_PLASMA_DUAL_H
-#define TUR_PLASMA_DUAL_H
+#ifndef TURRET_PLASMA_DUAL_H
+#define TURRET_PLASMA_DUAL_H
 
 CLASS(PlasmaDualAttack, PlasmaAttack)
 /* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "turret_plasma_dual");
@@ -26,33 +26,33 @@ REGISTER_TURRET(PLASMA_DUAL, NEW(DualPlasmaTurret));
 
 #ifdef SVQC
 
-void spawnfunc_turret_plasma_dual() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
+void spawnfunc_turret_plasma_dual() { SELFPARAM(); if (!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
 
-        METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret this))
-        {
-            if (g_instagib) {
-                FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
-                                   800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
+METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret this))
+{
+    if (g_instagib) {
+        FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
+                           800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
 
-                Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+        Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
-                // teamcolor / hit beam effect
-                vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-                WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
-            } else {
-                super.vtblbase.tr_attack(this);
-            }
-            self.tur_head.frame += 1;
-        }
-        METHOD(DualPlasmaTurret, tr_think, void(DualPlasmaTurret thistur))
-        {
-            if ((self.tur_head.frame != 0) && (self.tur_head.frame != 3))
-                self.tur_head.frame = self.tur_head.frame + 1;
+        // teamcolor / hit beam effect
+        vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+        WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
+    } else {
+        super.vtblbase.tr_attack(this);
+    }
+    self.tur_head.frame += 1;
+}
+METHOD(DualPlasmaTurret, tr_think, void(DualPlasmaTurret thistur))
+{
+    if ((self.tur_head.frame != 0) && (self.tur_head.frame != 3))
+        self.tur_head.frame = self.tur_head.frame + 1;
 
-            if (self.tur_head.frame > 6)
-                self.tur_head.frame = 0;
-        }
+    if (self.tur_head.frame > 6)
+        self.tur_head.frame = 0;
+}
 
-#endif // SVQC
+#endif
 #endif

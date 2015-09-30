@@ -1,13 +1,7 @@
-#ifndef TUR_PLASMA_H
-#define TUR_PLASMA_H
+#ifndef TURRET_PLASMA_H
+#define TURRET_PLASMA_H
 
-CLASS(PlasmaAttack, PortoLaunch)
-/* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(PlasmaAttack, impulse, int, 5);
-/* refname   */ ATTRIB(PlasmaAttack, netname, string, "turret_plasma");
-/* wepname   */ ATTRIB(PlasmaAttack, message, string, _("Plasma"));
-ENDCLASS(PlasmaAttack)
-REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
+#include "plasma_weapon.qc"
 
 CLASS(PlasmaTurret, Turret)
 /* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
@@ -25,67 +19,50 @@ REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
 #endif
 
 #ifdef IMPLEMENTATION
+
+#include "plasma_weapon.qc"
+
 #ifdef SVQC
 
-METHOD(PlasmaAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
-	SELFPARAM();
-	bool isPlayer = IS_PLAYER(self);
-	if (fire1)
-	if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
-		if (isPlayer) {
-            turret_initparams(self);
-            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-            self.tur_shotdir_updated = w_shotdir;
-            self.tur_shotorg = w_shotorg;
-            self.tur_head = self;
-            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
-        }
-        entity missile = turret_projectile(SND(HAGAR_FIRE), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, true, true);
-        missile.missile_flags = MIF_SPLASH;
-        Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-	}
-	return true;
+void spawnfunc_turret_plasma() { SELFPARAM(); if (!turret_initialize(TUR_PLASMA)) remove(self); }
+
+METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this))
+{
+    if(g_instagib)
+    {
+        FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
+                           800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
+
+        Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+
+        // teamcolor / hit beam effect
+        vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+        WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
+    }
+    else
+    {
+        super.tr_attack(this);
+    }
+    if (self.tur_head.frame == 0)
+        self.tur_head.frame = 1;
+}
+METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur))
+{
+    if (self.tur_head.frame != 0)
+        self.tur_head.frame = self.tur_head.frame + 1;
+
+    if (self.tur_head.frame > 5)
+        self.tur_head.frame = 0;
+}
+METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
+{
+    it.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+    it.damage_flags |= TFL_DMG_HEADSHAKE;
+    it.firecheck_flags |= TFL_FIRECHECK_AFF;
+    it.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_SPLASH;
+
+    turret_do_updates(it);
 }
 
-void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA)) remove(self); }
-
-        METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this))
-        {
-            if(g_instagib)
-            {
-                FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
-                                   800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
-
-                Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-
-                // teamcolor / hit beam effect
-                vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-                WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
-            }
-            else
-            {
-                super.tr_attack(this);
-            }
-            if (self.tur_head.frame == 0)
-                self.tur_head.frame = 1;
-        }
-        METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur))
-        {
-            if (self.tur_head.frame != 0)
-                self.tur_head.frame = self.tur_head.frame + 1;
-
-            if (self.tur_head.frame > 5)
-                self.tur_head.frame = 0;
-        }
-        METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
-        {
-            it.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
-            it.damage_flags |= TFL_DMG_HEADSHAKE;
-            it.firecheck_flags |= TFL_FIRECHECK_AFF;
-            it.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_SPLASH;
-
-            turret_do_updates(it);
-        }
-
-#endif // SVQC
+#endif
 #endif
