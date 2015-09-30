@@ -20,11 +20,141 @@ ENDCLASS(Raptor)
 
 REGISTER_VEHICLE(RAPTOR, NEW(Raptor));
 
+#include "../../weapons/all.qh"
+
+CLASS(RaptorCannon, PortoLaunch)
+/* flags     */ ATTRIB(RaptorCannon, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(RaptorCannon, impulse, int, 3);
+/* refname   */ ATTRIB(RaptorCannon, netname, string, "raptorcannon");
+/* wepname   */ ATTRIB(RaptorCannon, message, string, _("Raptor cannon"));
+ENDCLASS(RaptorCannon)
+REGISTER_WEAPON(RAPTOR, NEW(RaptorCannon));
+
+CLASS(RaptorBomb, PortoLaunch)
+/* flags     */ ATTRIB(RaptorBomb, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(RaptorBomb, impulse, int, 3);
+/* refname   */ ATTRIB(RaptorBomb, netname, string, "raptorbomb");
+/* wepname   */ ATTRIB(RaptorBomb, message, string, _("Raptor bomb"));
+ENDCLASS(RaptorBomb)
+REGISTER_WEAPON(RAPTOR_BOMB, NEW(RaptorBomb));
+
+CLASS(RaptorFlare, PortoLaunch)
+/* flags     */ ATTRIB(RaptorFlare, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(RaptorFlare, impulse, int, 3);
+/* refname   */ ATTRIB(RaptorFlare, netname, string, "raptorflare");
+/* wepname   */ ATTRIB(RaptorFlare, message, string, _("Raptor flare"));
+ENDCLASS(RaptorFlare)
+REGISTER_WEAPON(RAPTOR_FLARE, NEW(RaptorFlare));
+
 #endif
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
+float autocvar_g_vehicle_raptor_cannon_cost;
+float autocvar_g_vehicle_raptor_cannon_damage;
+float autocvar_g_vehicle_raptor_cannon_radius;
+float autocvar_g_vehicle_raptor_cannon_refire;
+float autocvar_g_vehicle_raptor_cannon_speed;
+float autocvar_g_vehicle_raptor_cannon_spread;
+float autocvar_g_vehicle_raptor_cannon_force;
+
+METHOD(RaptorCannon, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
+	entity player = isPlayer ? self : self.owner;
+	entity veh = player.vehicle;
+	setself(player);
+	// 1 [wait] 1 [wait] 2 [wait] 2 [wait] [wait]
+	float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + veh.misc_bulletcounter == 4);
+	if (fire1)
+	if (weapon_prepareattack(false, t)) {
+		if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
+		vector org = w_shotorg;
+		vector dir = w_shotdir;
+		if (veh) {
+			veh.misc_bulletcounter += 1;
+			org = (veh.misc_bulletcounter <= 2) ? gettaginfo(veh.gun1, gettagindex(veh.gun1, "fire1"))
+			  : (((veh.misc_bulletcounter == 4) ? veh.misc_bulletcounter = 0 : 0), gettaginfo(veh.gun2, gettagindex(veh.gun2, "fire1")));
+			dir = v_forward;
+			veh.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
+			self.cnt = time;
+		}
+		vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
+							   org, normalize(dir + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
+							   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
+							   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, player);
+		weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+	}
+	setself(this);
+	return true;
+}
+METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
+	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
+	entity player = isPlayer ? self : self.owner;
+	entity veh = player.vehicle;
+	return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_raptor_cannon_cost;
+}
+
+float autocvar_g_vehicle_raptor_bombs_refire;
+
+void raptor_bombdrop();
+METHOD(RaptorBomb, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
+	entity player = isPlayer ? self : self.owner;
+	setself(player);
+	if (fire2)
+	if (weapon_prepareattack(false, autocvar_g_vehicle_raptor_bombs_refire)) {
+		raptor_bombdrop();
+		weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+	}
+	setself(this);
+	return true;
+}
+
+float autocvar_g_vehicle_raptor_flare_refire;
+float autocvar_g_vehicle_raptor_flare_lifetime;
+float autocvar_g_vehicle_raptor_flare_chase;
+float autocvar_g_vehicle_raptor_flare_range;
+
+void raptor_flare_think();
+void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void raptor_flare_touch();
+
+METHOD(RaptorFlare, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
+	entity player = isPlayer ? self : self.owner;
+	setself(player);
+	if (fire2)
+	if (weapon_prepareattack(true, autocvar_g_vehicle_raptor_flare_refire)) {
+		for(int i = 0; i < 3; ++i) {
+			entity _flare = spawn();
+			setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
+			_flare.effects = EF_LOWPRECISION | EF_FLAME;
+			_flare.scale = 0.5;
+			setorigin(_flare, self.origin - '0 0 16');
+			_flare.movetype = MOVETYPE_TOSS;
+			_flare.gravity = 0.15;
+			_flare.velocity = 0.25 * self.velocity + (v_forward + randomvec() * 0.25)* -500;
+			_flare.think = raptor_flare_think;
+			_flare.nextthink = time;
+			_flare.owner = self;
+			_flare.solid = SOLID_CORPSE;
+			_flare.takedamage = DAMAGE_YES;
+			_flare.event_damage = raptor_flare_damage;
+			_flare.health = 20;
+			_flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
+			_flare.touch = raptor_flare_touch;
+		}
+		weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
+	}
+	setself(this);
+	return true;
+}
+
 bool autocvar_g_vehicle_raptor;
 
 float autocvar_g_vehicle_raptor_respawntime;
@@ -50,12 +180,6 @@ float autocvar_g_vehicle_raptor_bomblet_edgedamage;
 float autocvar_g_vehicle_raptor_bomblet_radius;
 float autocvar_g_vehicle_raptor_bomblet_force;
 float autocvar_g_vehicle_raptor_bomblet_explode_delay;
-float autocvar_g_vehicle_raptor_bombs_refire;
-
-float autocvar_g_vehicle_raptor_flare_refire;
-float autocvar_g_vehicle_raptor_flare_lifetime;
-float autocvar_g_vehicle_raptor_flare_chase;
-float autocvar_g_vehicle_raptor_flare_range;
 
 float autocvar_g_vehicle_raptor_cannon_turnspeed;
 float autocvar_g_vehicle_raptor_cannon_turnlimit;
@@ -67,14 +191,6 @@ float autocvar_g_vehicle_raptor_cannon_locking_time;
 float autocvar_g_vehicle_raptor_cannon_locking_releasetime;
 float autocvar_g_vehicle_raptor_cannon_locked_time;
 float autocvar_g_vehicle_raptor_cannon_predicttarget;
-
-float autocvar_g_vehicle_raptor_cannon_cost;
-float autocvar_g_vehicle_raptor_cannon_damage;
-float autocvar_g_vehicle_raptor_cannon_radius;
-float autocvar_g_vehicle_raptor_cannon_refire;
-float autocvar_g_vehicle_raptor_cannon_speed;
-float autocvar_g_vehicle_raptor_cannon_spread;
-float autocvar_g_vehicle_raptor_cannon_force;
 
 float autocvar_g_vehicle_raptor_energy;
 float autocvar_g_vehicle_raptor_energy_regen;
@@ -192,14 +308,6 @@ void raptor_bombdrop()
 	CSQCProjectile(bomb_2, true, PROJECTILE_RAPTORBOMB, true);
 }
 
-
-void raptor_fire_cannon(entity gun, string tagname)
-{SELFPARAM();
-	vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
-						   gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
-						   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, self.owner);
-}
 
 void raptor_land()
 {SELFPARAM();
@@ -536,25 +644,12 @@ float raptor_frame()
 	UpdateAuxiliaryXhair(player, trace_endpos, '0 1 0', 0);
 	*/
 
+	Weapon wep1 = WEP_RAPTOR;
 	if(!forbidWeaponUse(player))
 	if(player.BUTTON_ATCK)
-	if(raptor.attack_finished_single <= time)
-	if(raptor.vehicle_energy > autocvar_g_vehicle_raptor_cannon_cost)
+	if (wep1.wr_checkammo1(wep1))
 	{
-		raptor.misc_bulletcounter += 1;
-		raptor.attack_finished_single = time + autocvar_g_vehicle_raptor_cannon_refire;
-		if(raptor.misc_bulletcounter <= 2)
-			raptor_fire_cannon(self.gun1, "fire1");
-		else if(raptor.misc_bulletcounter == 3)
-			raptor_fire_cannon(self.gun2, "fire1");
-		else
-		{
-			raptor.attack_finished_single = time + autocvar_g_vehicle_raptor_cannon_refire * 2;
-			raptor_fire_cannon(self.gun2, "fire1");
-			raptor.misc_bulletcounter = 0;
-		}
-		raptor.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
-		self.cnt = time;
+		wep1.wr_think(wep1, true, false);
 	}
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
@@ -566,45 +661,25 @@ float raptor_frame()
 	if(self.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, false);
 
+	Weapon wep2a = WEP_RAPTOR_BOMB;
 	if(!forbidWeaponUse(player))
 	if(raptor.vehicle_weapon2mode == RSM_BOMB)
 	{
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_bombs_refire)
 		if(player.BUTTON_ATCK2)
 		{
-			raptor_bombdrop();
+			wep2a.wr_think(wep2a, false, true);
 			raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
 			raptor.lip   = time;
 		}
 	}
 	else
 	{
+		Weapon wep2b = WEP_RAPTOR_FLARE;
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_flare_refire)
 		if(player.BUTTON_ATCK2)
 		{
-			float i;
-			entity _flare;
-
-			for(i = 0; i < 3; ++i)
-			{
-			_flare = spawn();
-			setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
-			_flare.effects = EF_LOWPRECISION | EF_FLAME;
-			_flare.scale = 0.5;
-			setorigin(_flare, self.origin - '0 0 16');
-			_flare.movetype = MOVETYPE_TOSS;
-			_flare.gravity = 0.15;
-			_flare.velocity = 0.25 * raptor.velocity + (v_forward + randomvec() * 0.25)* -500;
-			_flare.think = raptor_flare_think;
-			_flare.nextthink = time;
-			_flare.owner = raptor;
-			_flare.solid = SOLID_CORPSE;
-			_flare.takedamage = DAMAGE_YES;
-			_flare.event_damage = raptor_flare_damage;
-			_flare.health = 20;
-			_flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
-			_flare.touch = raptor_flare_touch;
-			}
+			wep2b.wr_think(wep2b, false, true);
 			raptor.delay = time + autocvar_g_vehicle_raptor_flare_refire;
 			raptor.lip   = time;
 		}
