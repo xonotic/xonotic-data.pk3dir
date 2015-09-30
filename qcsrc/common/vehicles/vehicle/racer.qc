@@ -36,19 +36,33 @@ REGISTER_WEAPON(RACER, NEW(RacerAttack));
 #include "../../effects/effects.qh"
 #include "../../triggers/trigger/impulse.qh"
 
-void racer_fire_cannon(vector org, vector dir);
+float autocvar_g_vehicle_racer_cannon_cost;
+float autocvar_g_vehicle_racer_cannon_damage;
+float autocvar_g_vehicle_racer_cannon_radius;
+float autocvar_g_vehicle_racer_cannon_refire;
+float autocvar_g_vehicle_racer_cannon_speed;
+float autocvar_g_vehicle_racer_cannon_spread;
+float autocvar_g_vehicle_racer_cannon_force;
+
 void racer_fire_rocket(vector org, vector dir, entity trg);
 METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
 	if (fire1)
-	if (weapon_prepareattack(false, 0.2)) {
-		W_SetupShot_Dir(self, v_forward, false, 0, "", CH_WEAPON_B, 0);
-		racer_fire_cannon(w_shotorg, w_shotdir);
+	if (!isPlayer || weapon_prepareattack(false, autocvar_g_vehicle_racer_cannon_refire)) {
+		if (isPlayer) W_SetupShot_Dir(self, v_forward, false, 0, "", CH_WEAPON_B, 0);
+		vector org = w_shotorg;
+		vector dir = w_shotdir;
+		entity bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
+							   org, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
+							   autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
+							   DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, self.owner);
+		bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
 		weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
 	}
 	if (fire2)
-	if (weapon_prepareattack(false, 0.2)) {
-		W_SetupShot_Dir(self, v_forward, false, 0, "", CH_WEAPON_B, 0);
+	if (!isPlayer || weapon_prepareattack(false, 0.2)) {
+		if (isPlayer) W_SetupShot_Dir(self, v_forward, false, 0, "", CH_WEAPON_B, 0);
 		racer_fire_rocket(w_shotorg, w_shotdir, NULL);
 		weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
 	}
@@ -100,14 +114,6 @@ float autocvar_g_vehicle_racer_health_regen_pause;
 float autocvar_g_vehicle_racer_shield;
 float autocvar_g_vehicle_racer_shield_regen;
 float autocvar_g_vehicle_racer_shield_regen_pause;
-
-float autocvar_g_vehicle_racer_cannon_cost;
-float autocvar_g_vehicle_racer_cannon_damage;
-float autocvar_g_vehicle_racer_cannon_radius;
-float autocvar_g_vehicle_racer_cannon_refire;
-float autocvar_g_vehicle_racer_cannon_speed;
-float autocvar_g_vehicle_racer_cannon_spread;
-float autocvar_g_vehicle_racer_cannon_force;
 
 float autocvar_g_vehicle_racer_rocket_accel;
 float autocvar_g_vehicle_racer_rocket_damage;
@@ -195,24 +201,6 @@ void racer_align4point(float _delta)
 	// Apply stabilizer
 	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
-}
-
-void racer_fire_cannon(vector org, vector dir)
-{SELFPARAM();
-	entity bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
-						   org, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
-						   autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-						   DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, self.owner);
-	bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
-}
-void racer_fire_cannon_aim(string tagname)
-{
-	SELFPARAM();
-	vector org = gettaginfo(self, gettagindex(self, tagname));
-	// Fix z-aim (for chase mode)
-	vector dir = normalize(trace_endpos - org);
-	v_forward.z = dir.z * 0.5;
-	racer_fire_cannon(org, v_forward);
 }
 
 void racer_rocket_groundhugger()
@@ -501,16 +489,17 @@ float racer_frame()
 		racer.wait = time;
 
 		crosshair_trace(player);
-		if(racer.cnt)
-		{
-			racer_fire_cannon_aim("tag_fire1");
-			racer.cnt = 0;
-		}
-		else
-		{
-			racer_fire_cannon_aim("tag_fire2");
-			racer.cnt = 1;
-		}
+		string tagname = (racer.cnt)
+		    ? (racer.cnt = 0, "tag_fire1")
+		    : (racer.cnt = 1, "tag_fire2");
+		vector org = gettaginfo(self, gettagindex(self, tagname));
+		// Fix z-aim (for chase mode)
+		vector dir = normalize(trace_endpos - org);
+		v_forward.z = dir.z * 0.5;
+		w_shotorg = org;
+		w_shotdir = v_forward;
+		Weapon wep = WEP_RACER;
+		wep.wr_think(wep, true, false);
 		racer.attack_finished_single = time + autocvar_g_vehicle_racer_cannon_refire;
 	}
 
