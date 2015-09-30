@@ -1,6 +1,14 @@
 #ifndef TUR_MLRS_H
 #define TUR_MLRS_H
 
+CLASS(MLRSTurretAttack, PortoLaunch)
+/* flags     */ ATTRIB(MLRSTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(MLRSTurretAttack, impulse, int, 9);
+/* refname   */ ATTRIB(MLRSTurretAttack, netname, string, "turret_mlrs");
+/* wepname   */ ATTRIB(MLRSTurretAttack, message, string, _("MLRS"));
+ENDCLASS(MLRSTurretAttack)
+REGISTER_WEAPON(TUR_MLRS, NEW(MLRSTurretAttack));
+
 CLASS(MLRSTurret, Turret)
 /* spawnflags */ ATTRIB(MLRSTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(MLRSTurret, mins, vector, '-32 -32 0');
@@ -10,23 +18,14 @@ CLASS(MLRSTurret, Turret)
 /* head_model */ ATTRIB(MLRSTurret, head_model, string, strzone(strcat("models/turrets/", "mlrs.md3")));
 /* netname    */ ATTRIB(MLRSTurret, netname, string, "mlrs");
 /* fullname   */ ATTRIB(MLRSTurret, turret_name, string, _("MLRS Turret"));
+    ATTRIB(MLRSTurret, m_weapon, Weapon, WEP_TUR_MLRS);
 ENDCLASS(MLRSTurret)
-
 REGISTER_TURRET(MLRS, NEW(MLRSTurret));
-
-CLASS(MLRSTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(MLRSTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(MLRSTurretAttack, impulse, int, 9);
-/* refname   */ ATTRIB(MLRSTurretAttack, netname, string, "turret_mlrs");
-/* wepname   */ ATTRIB(MLRSTurretAttack, message, string, _("MLRS"));
-ENDCLASS(MLRSTurretAttack)
-REGISTER_WEAPON(TUR_MLRS, NEW(MLRSTurretAttack));
 
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void turret_initparams(entity);
 METHOD(MLRSTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
 	bool isPlayer = IS_PLAYER(self);
@@ -50,14 +49,9 @@ METHOD(MLRSTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 	return true;
 }
 
-void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS.m_id)) remove(self); }
+void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS)) remove(self); }
 
-        METHOD(MLRSTurret, tr_attack, void(MLRSTurret thistur))
-        {
-            Weapon wep = WEP_TUR_MLRS;
-            wep.wr_think(wep, true, false);
-        }
-        METHOD(MLRSTurret, tr_think, bool(MLRSTurret thistur))
+        METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur))
         {
             // 0 = full, 6 = empty
             self.tur_head.frame = bound(0, 6 - floor(0.1 + self.ammo / self.shot_dmg), 6);
@@ -66,39 +60,16 @@ void spawnfunc_turret_mlrs() { SELFPARAM(); if(!turret_initialize(TUR_MLRS.m_id)
                 LOG_TRACE("ammo:",ftos(self.ammo),"\n");
                 LOG_TRACE("shot_dmg:",ftos(self.shot_dmg),"\n");
             }
-
-            return true;
         }
-        METHOD(MLRSTurret, tr_death, bool(MLRSTurret thistur))
+        METHOD(MLRSTurret, tr_setup, void(MLRSTurret this, entity it))
         {
-            return true;
-        }
-        METHOD(MLRSTurret, tr_setup, bool(MLRSTurret thistur))
-        {
-            self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-            self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
+            it.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
+            it.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
 
-            self.damage_flags |= TFL_DMG_HEADSHAKE;
-            self.shoot_flags  |= TFL_SHOOT_VOLLYALWAYS;
-            self.volly_counter = self.shot_volly;
-
-            return true;
-        }
-        METHOD(MLRSTurret, tr_precache, bool(MLRSTurret thistur))
-        {
-            return true;
+            it.damage_flags |= TFL_DMG_HEADSHAKE;
+            it.shoot_flags  |= TFL_SHOOT_VOLLYALWAYS;
+            it.volly_counter = it.shot_volly;
         }
 
 #endif // SVQC
-#ifdef CSQC
-        METHOD(MLRSTurret, tr_setup, bool(MLRSTurret thistur))
-        {
-            return true;
-        }
-        METHOD(MLRSTurret, tr_precache, bool(MLRSTurret thistur))
-        {
-            return true;
-        }
-
-#endif // CSQC
-#endif // REGISTER_TURRET
+#endif

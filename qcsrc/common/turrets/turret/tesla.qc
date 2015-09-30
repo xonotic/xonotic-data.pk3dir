@@ -1,6 +1,14 @@
 #ifndef TUR_TESLA_H
 #define TUR_TESLA_H
 
+CLASS(TeslaCoilTurretAttack, PortoLaunch)
+/* flags     */ ATTRIB(TeslaCoilTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(TeslaCoilTurretAttack, impulse, int, 9);
+/* refname   */ ATTRIB(TeslaCoilTurretAttack, netname, string, "turret_tesla");
+/* wepname   */ ATTRIB(TeslaCoilTurretAttack, message, string, _("Tesla Coil"));
+ENDCLASS(TeslaCoilTurretAttack)
+REGISTER_WEAPON(TESLA, NEW(TeslaCoilTurretAttack));
+
 CLASS(TeslaCoil, Turret)
 /* spawnflags */ ATTRIB(TeslaCoil, spawnflags, int, TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
 /* mins       */ ATTRIB(TeslaCoil, mins, vector, '-60 -60 0');
@@ -10,17 +18,9 @@ CLASS(TeslaCoil, Turret)
 /* head_model */ ATTRIB(TeslaCoil, head_model, string, strzone(strcat("models/turrets/", "tesla_head.md3")));
 /* netname    */ ATTRIB(TeslaCoil, netname, string, "tesla");
 /* fullname   */ ATTRIB(TeslaCoil, turret_name, string, _("Tesla Coil"));
+    ATTRIB(TeslaCoil, m_weapon, Weapon, WEP_TESLA);
 ENDCLASS(TeslaCoil)
-
 REGISTER_TURRET(TESLA, NEW(TeslaCoil));
-
-CLASS(TeslaCoilTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(TeslaCoilTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(TeslaCoilTurretAttack, impulse, int, 9);
-/* refname   */ ATTRIB(TeslaCoilTurretAttack, netname, string, "turret_tesla");
-/* wepname   */ ATTRIB(TeslaCoilTurretAttack, message, string, _("Tesla Coil"));
-ENDCLASS(TeslaCoilTurretAttack)
-REGISTER_WEAPON(TESLA, NEW(TeslaCoilTurretAttack));
 
 #endif
 
@@ -152,19 +152,14 @@ float turret_tesla_firecheck()
     return 0;
 }
 
-void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_id)) remove(self); }
+void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA)) remove(self); }
 
-        METHOD(TeslaCoil, tr_attack, void(TeslaCoil thistur))
-        {
-            Weapon wep = WEP_TESLA;
-            wep.wr_think(wep, true, false);
-        }
-        METHOD(TeslaCoil, tr_think, bool(TeslaCoil thistur))
+        METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur))
         {
             if(!self.active)
             {
                 self.tur_head.avelocity = '0 0 0';
-                return true;
+                return;
             }
 
             if(self.ammo < self.shot_dmg)
@@ -176,7 +171,7 @@ void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_i
                 self.tur_head.avelocity = '0 180 0' * (self.ammo / self.shot_dmg);
 
                 if(self.attack_finished_single > time)
-                    return true;
+                    return;
 
                 float f;
                 f = (self.ammo / self.ammo_max);
@@ -185,45 +180,22 @@ void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_i
                     if(random() < 0.1)
                         te_csqc_lightningarc(self.tur_shotorg,self.tur_shotorg + (randomvec() * 350));
             }
-
-            return true;
         }
-        METHOD(TeslaCoil, tr_death, bool(TeslaCoil thistur))
+        METHOD(TeslaCoil, tr_setup, void(TeslaCoil this, entity it))
         {
-            return true;
-        }
-        METHOD(TeslaCoil, tr_setup, bool(TeslaCoil thistur))
-        {
-            self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
+            it.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
                                  TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 
-            self.turret_firecheckfunc = turret_tesla_firecheck;
-            self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
+            it.turret_firecheckfunc = turret_tesla_firecheck;
+            it.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
                                TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 
-            self.firecheck_flags	= TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AMMO_OWN;
-            self.shoot_flags		= TFL_SHOOT_CUSTOM;
-            self.ammo_flags			= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
-            self.aim_flags			= TFL_AIM_NO;
-            self.track_flags		= TFL_TRACK_NO;
-
-            return true;
-        }
-        METHOD(TeslaCoil, tr_precache, bool(TeslaCoil thistur))
-        {
-            return true;
+            it.firecheck_flags	= TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AMMO_OWN;
+            it.shoot_flags		= TFL_SHOOT_CUSTOM;
+            it.ammo_flags			= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+            it.aim_flags			= TFL_AIM_NO;
+            it.track_flags		= TFL_TRACK_NO;
         }
 
 #endif // SVQC
-#ifdef CSQC
-        METHOD(TeslaCoil, tr_setup, bool(TeslaCoil thistur))
-        {
-            return true;
-        }
-        METHOD(TeslaCoil, tr_precache, bool(TeslaCoil thistur))
-        {
-            return true;
-        }
-
-#endif // CSQC
-#endif // REGISTER_TURRET
+#endif

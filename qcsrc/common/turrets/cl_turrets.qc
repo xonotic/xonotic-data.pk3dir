@@ -208,7 +208,7 @@ void turret_construct()
 	if(self.tur_head == world)
 		self.tur_head = spawn();
 
-	self.netname = TUR_NAME(self.m_id);
+	self.netname = tur.turret_name;
 
 	setorigin(self, self.origin);
 	_setmodel(self, tur.model);
@@ -241,7 +241,7 @@ void turret_construct()
 	self.teamradar_color = '1 0 0';
 	self.alpha = 1;
 
-	TUR_ACTION(self.m_id, TR_SETUP);
+	tur.tr_setup(tur, self);
 }
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);

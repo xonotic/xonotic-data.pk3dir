@@ -11,7 +11,6 @@ CLASS(FusionReactor, Turret)
 /* netname    */ ATTRIB(FusionReactor, netname, string, "fusionreactor");
 /* fullname   */ ATTRIB(FusionReactor, turret_name, string, _("Fusion Reactor"));
 ENDCLASS(FusionReactor)
-
 REGISTER_TURRET(FUSIONREACTOR, NEW(FusionReactor));
 
 #endif
@@ -47,57 +46,32 @@ bool turret_fusionreactor_firecheck()
     return true;
 }
 
-void spawnfunc_turret_fusionreactor() { SELFPARAM(); if(!turret_initialize(TUR_FUSIONREACTOR.m_id)) remove(self); }
+void spawnfunc_turret_fusionreactor() { SELFPARAM(); if(!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
 
-        METHOD(FusionReactor, tr_attack, void(FusionReactor thistur))
+        METHOD(FusionReactor, tr_attack, void(FusionReactor this))
         {
-            vector fl_org;
-
             self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
-            fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
+            vector fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
             te_smallflash(fl_org);
         }
-        METHOD(FusionReactor, tr_think, bool(FusionReactor thistur))
+        METHOD(FusionReactor, tr_think, void(FusionReactor thistur))
         {
             self.tur_head.avelocity = '0 250 0' * (self.ammo / self.ammo_max);
-
-            return true;
         }
-        METHOD(FusionReactor, tr_death, bool(FusionReactor thistur))
+        METHOD(FusionReactor, tr_setup, void(FusionReactor this, entity it))
         {
-            return true;
-        }
-        METHOD(FusionReactor, tr_setup, bool(FusionReactor thistur))
-        {
-            self.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE;
-            self.target_select_flags	= TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_OWNTEAM | TFL_TARGETSELECT_RANGELIMITS;
-            self.firecheck_flags		= TFL_FIRECHECK_AMMO_OWN | TFL_FIRECHECK_AMMO_OTHER | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_DEAD;
-            self.shoot_flags			= TFL_SHOOT_HITALLVALID;
-            self.aim_flags				= TFL_AIM_NO;
-            self.track_flags			= TFL_TRACK_NO;
+            it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE;
+            it.target_select_flags	= TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_OWNTEAM | TFL_TARGETSELECT_RANGELIMITS;
+            it.firecheck_flags		= TFL_FIRECHECK_AMMO_OWN | TFL_FIRECHECK_AMMO_OTHER | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_DEAD;
+            it.shoot_flags			= TFL_SHOOT_HITALLVALID;
+            it.aim_flags				= TFL_AIM_NO;
+            it.track_flags			= TFL_TRACK_NO;
 
-            self.tur_head.scale = 0.75;
-            self.tur_head.avelocity = '0 50 0';
+            it.tur_head.scale = 0.75;
+            it.tur_head.avelocity = '0 50 0';
 
-            self.turret_firecheckfunc = turret_fusionreactor_firecheck;
-
-            return true;
-        }
-        METHOD(FusionReactor, tr_precache, bool(FusionReactor thistur))
-        {
-            return true;
+            it.turret_firecheckfunc = turret_fusionreactor_firecheck;
         }
 
 #endif // SVQC
-#ifdef CSQC
-        METHOD(FusionReactor, tr_setup, bool(FusionReactor thistur))
-        {
-            return true;
-        }
-        METHOD(FusionReactor, tr_precache, bool(FusionReactor thistur))
-        {
-            return true;
-        }
-
-#endif // CSQC
-#endif // REGISTER_TURRET
+#endif

@@ -1,6 +1,16 @@
 #ifndef TUR_EWHEEL_H
 #define TUR_EWHEEL_H
 
+CLASS(EWheelAttack, PortoLaunch)
+/* flags     */ ATTRIB(EWheelAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(EWheelAttack, impulse, int, 5);
+/* refname   */ ATTRIB(EWheelAttack, netname, string, "turret_ewheel");
+/* wepname   */ ATTRIB(EWheelAttack, message, string, _("eWheel"));
+ENDCLASS(EWheelAttack)
+REGISTER_WEAPON(EWHEEL, NEW(EWheelAttack));
+
+//#define EWHEEL_FANCYPATH
+
 CLASS(EWheel, Turret)
 /* spawnflags */ ATTRIB(EWheel, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE | TUR_FLAG_ROAM);
 /* mins       */ ATTRIB(EWheel, mins, vector, '-32 -32 0');
@@ -10,17 +20,9 @@ CLASS(EWheel, Turret)
 /* head_model */ ATTRIB(EWheel, head_model, string, strzone(strcat("models/turrets/", "ewheel-gun1.md3")));
 /* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
 /* fullname   */ ATTRIB(EWheel, turret_name, string, _("eWheel Turret"));
+    ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
 ENDCLASS(EWheel)
-
 REGISTER_TURRET(EWHEEL, NEW(EWheel));
-
-CLASS(EWheelAttack, PortoLaunch)
-/* flags     */ ATTRIB(EWheelAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(EWheelAttack, impulse, int, 5);
-/* refname   */ ATTRIB(EWheelAttack, netname, string, "turret_ewheel");
-/* wepname   */ ATTRIB(EWheelAttack, message, string, _("eWheel"));
-ENDCLASS(EWheelAttack)
-REGISTER_WEAPON(EWHEEL, NEW(EWheelAttack));
 
 #endif
 
@@ -70,7 +72,6 @@ const float ewheel_anim_fwd_fast = 2;
 const float ewheel_anim_bck_slow = 3;
 const float ewheel_anim_bck_fast = 4;
 
-//#define EWHEEL_FANCYPATH
 void ewheel_move_path()
 {SELFPARAM();
 #ifdef EWHEEL_FANCYPATH
@@ -168,15 +169,9 @@ void ewheel_move_idle()
         movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
-void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m_id)) remove(self); }
+void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
-        METHOD(EWheel, tr_attack, void(EWheel thistur))
-        {
-            SELFPARAM();
-            Weapon wep = WEP_EWHEEL;
-            wep.wr_think(wep, true, false);
-        }
-        METHOD(EWheel, tr_think, bool(EWheel thistur))
+        METHOD(EWheel, tr_think, void(EWheel thistur))
         {
             SELFPARAM();
             float vz;
@@ -209,41 +204,35 @@ void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m
 
             if(vlen(self.velocity))
                 self.SendFlags |= TNSF_MOVE;
-
-            return true;
         }
-        METHOD(EWheel, tr_death, bool(EWheel thistur))
+        METHOD(EWheel, tr_death, void(EWheel this, entity it))
         {
-            SELFPARAM();
-            self.velocity = '0 0 0';
+            it.velocity = '0 0 0';
 
 #ifdef EWHEEL_FANCYPATH
             if (self.pathcurrent)
-                pathlib_deletepath(self.pathcurrent.owner);
+                pathlib_deletepath(it.pathcurrent.owner);
 #endif
-            self.pathcurrent = world;
-
-            return true;
+            it.pathcurrent = NULL;
         }
-        METHOD(EWheel, tr_setup, bool(EWheel thistur))
+        METHOD(EWheel, tr_setup, void(EWheel this, entity it))
         {
-            SELFPARAM();
             entity e;
 
-            if(self.movetype == MOVETYPE_WALK)
+            if(it.movetype == MOVETYPE_WALK)
             {
-                self.velocity = '0 0 0';
-                self.enemy = world;
+                it.velocity = '0 0 0';
+                it.enemy = world;
 
-                setorigin(self, self.pos1);
+                setorigin(it, it.pos1);
 
-                if (self.target != "")
+                if (it.target != "")
                 {
-                    e = find(world, targetname, self.target);
+                    e = find(world, targetname, it.target);
                     if (!e)
                     {
                         LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
-                        self.target = "";
+                        it.target = "";
                     }
 
                     if (e.classname != "turret_checkpoint")
@@ -252,37 +241,31 @@ void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m
                     {
 
 #ifdef EWHEEL_FANCYPATH
-                        self.pathcurrent = WALKER_PATH(self.origin,e.origin);
-                        self.pathgoal = e;
+                        it.pathcurrent = WALKER_PATH(it.origin,e.origin);
+                        it.pathgoal = e;
 #else
-                        self.pathcurrent  = e;
+                        it.pathcurrent  = e;
 #endif
                     }
                 }
             }
 
-            self.iscreature				= true;
-            self.teleportable			= TELEPORT_NORMAL;
-            self.damagedbycontents		= true;
-            self.movetype				= MOVETYPE_WALK;
-            self.solid					= SOLID_SLIDEBOX;
-            self.takedamage				= DAMAGE_AIM;
-            self.idle_aim				= '0 0 0';
-            self.pos1					= self.origin;
-            self.target_select_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-            self.target_validate_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-            self.frame					= self.tur_head.frame = 1;
-            self.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+            it.iscreature				= true;
+            it.teleportable			= TELEPORT_NORMAL;
+            it.damagedbycontents		= true;
+            it.movetype				= MOVETYPE_WALK;
+            it.solid					= SOLID_SLIDEBOX;
+            it.takedamage				= DAMAGE_AIM;
+            it.idle_aim				= '0 0 0';
+            it.pos1					= it.origin;
+            it.target_select_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+            it.target_validate_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+            it.frame					= it.tur_head.frame = 1;
+            it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
 
             // Convert from dgr / sec to dgr / tic
-            self.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
-            self.tur_head.aim_speed = self.tur_head.aim_speed / (1 / self.ticrate);
-
-            return true;
-        }
-        METHOD(EWheel, tr_precache, bool(EWheel thistur))
-        {
-            return true;
+            it.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
+            it.tur_head.aim_speed = it.tur_head.aim_speed / (1 / it.ticrate);
         }
 
 #endif // SVQC
@@ -307,22 +290,15 @@ void ewheel_draw()
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-        METHOD(EWheel, tr_setup, bool(EWheel thistur))
+        METHOD(EWheel, tr_setup, void(EWheel this, entity it))
         {
-            SELFPARAM();
-            self.gravity		= 1;
-            self.movetype		= MOVETYPE_BOUNCE;
-            self.move_movetype	= MOVETYPE_BOUNCE;
-            self.move_origin	= self.origin;
-            self.move_time		= time;
-            self.draw			= ewheel_draw;
-
-            return true;
-        }
-        METHOD(EWheel, tr_precache, bool(EWheel thistur))
-        {
-            return true;
+            it.gravity		= 1;
+            it.movetype		= MOVETYPE_BOUNCE;
+            it.move_movetype	= MOVETYPE_BOUNCE;
+            it.move_origin	= it.origin;
+            it.move_time		= time;
+            it.draw			= ewheel_draw;
         }
 
 #endif // CSQC
-#endif // REGISTER_TURRET
+#endif

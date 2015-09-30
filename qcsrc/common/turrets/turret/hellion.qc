@@ -1,6 +1,14 @@
 #ifndef TUR_HELLION_H
 #define TUR_HELLION_H
 
+CLASS(HellionAttack, PortoLaunch)
+/* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(HellionAttack, impulse, int, 9);
+/* refname   */ ATTRIB(HellionAttack, netname, string, "turret_hellion");
+/* wepname   */ ATTRIB(HellionAttack, message, string, _("Hellion"));
+ENDCLASS(HellionAttack)
+REGISTER_WEAPON(HELLION, NEW(HellionAttack));
+
 CLASS(Hellion, Turret)
 /* spawnflags */ ATTRIB(Hellion, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
 /* mins       */ ATTRIB(Hellion, mins, vector, '-32 -32 0');
@@ -10,23 +18,14 @@ CLASS(Hellion, Turret)
 /* head_model */ ATTRIB(Hellion, head_model, string, strzone(strcat("models/turrets/", "hellion.md3")));
 /* netname    */ ATTRIB(Hellion, netname, string, "hellion");
 /* fullname   */ ATTRIB(Hellion, turret_name, string, _("Hellion Missile Turret"));
+    ATTRIB(Hellion, m_weapon, Weapon, WEP_HELLION);
 ENDCLASS(Hellion)
-
 REGISTER_TURRET(HELLION, NEW(Hellion));
-
-CLASS(HellionAttack, PortoLaunch)
-/* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(HellionAttack, impulse, int, 9);
-/* refname   */ ATTRIB(HellionAttack, netname, string, "turret_hellion");
-/* wepname   */ ATTRIB(HellionAttack, message, string, _("Hellion"));
-ENDCLASS(HellionAttack)
-REGISTER_WEAPON(HELLION, NEW(HellionAttack));
 
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void turret_initparams(entity);
 void turret_hellion_missile_think();
 METHOD(HellionAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
@@ -127,51 +126,23 @@ void turret_hellion_missile_think()
     UpdateCSQCProjectile(self);
 }
 
-void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION.m_id)) remove(self); }
+void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION)) remove(self); }
 
-        METHOD(Hellion, tr_attack, void(Hellion thistur))
-        {
-            Weapon wep = WEP_HELLION;
-            wep.wr_think(wep, true, false);
-        }
-        METHOD(Hellion, tr_think, bool(Hellion thistur))
+        METHOD(Hellion, tr_think, void(Hellion thistur))
         {
             if (self.tur_head.frame != 0)
                 self.tur_head.frame += 1;
 
             if (self.tur_head.frame >= 7)
                 self.tur_head.frame = 0;
-
-            return true;
         }
-        METHOD(Hellion, tr_death, bool(Hellion thistur))
+        METHOD(Hellion, tr_setup, void(Hellion this, entity it))
         {
-            return true;
-        }
-        METHOD(Hellion, tr_setup, bool(Hellion thistur))
-        {
-            self.aim_flags = TFL_AIM_SIMPLE;
-            self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK ;
-            self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_TEAMCHECK | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF | TFL_FIRECHECK_AMMO_OWN;
-            self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-
-            return true;
-        }
-        METHOD(Hellion, tr_precache, bool(Hellion thistur))
-        {
-            return true;
+            it.aim_flags = TFL_AIM_SIMPLE;
+            it.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK ;
+            it.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_TEAMCHECK | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF | TFL_FIRECHECK_AMMO_OWN;
+            it.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
         }
 
 #endif // SVQC
-#ifdef CSQC
-        METHOD(Hellion, tr_setup, bool(Hellion thistur))
-        {
-            return true;
-        }
-        METHOD(Hellion, tr_precache, bool(Hellion thistur))
-        {
-            return true;
-        }
-
-#endif // CSQC
-#endif // REGISTER_TURRET
+#endif

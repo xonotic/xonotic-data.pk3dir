@@ -1,6 +1,14 @@
 #ifndef TUR_PLASMA_H
 #define TUR_PLASMA_H
 
+CLASS(PlasmaAttack, PortoLaunch)
+/* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(PlasmaAttack, impulse, int, 5);
+/* refname   */ ATTRIB(PlasmaAttack, netname, string, "turret_plasma");
+/* wepname   */ ATTRIB(PlasmaAttack, message, string, _("Plasma"));
+ENDCLASS(PlasmaAttack)
+REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
+
 CLASS(PlasmaTurret, Turret)
 /* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
 /* mins       */ ATTRIB(PlasmaTurret, mins, vector, '-32 -32 0');
@@ -10,25 +18,15 @@ CLASS(PlasmaTurret, Turret)
 /* head_model */ ATTRIB(PlasmaTurret, head_model, string, strzone(strcat("models/turrets/", "plasma.md3")));
 /* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
 /* fullname   */ ATTRIB(PlasmaTurret, turret_name, string, _("Plasma Cannon"));
+    ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);
 ENDCLASS(PlasmaTurret)
-
 REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
-
-CLASS(PlasmaAttack, PortoLaunch)
-/* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(PlasmaAttack, impulse, int, 5);
-/* refname   */ ATTRIB(PlasmaAttack, netname, string, "turret_plasma");
-/* wepname   */ ATTRIB(PlasmaAttack, message, string, _("Plasma"));
-ENDCLASS(PlasmaAttack)
-REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
 
 #endif
 
 #ifdef IMPLEMENTATION
-
 #ifdef SVQC
 
-void turret_initparams(entity tur);
 METHOD(PlasmaAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
 	bool isPlayer = IS_PLAYER(self);
@@ -49,9 +47,9 @@ METHOD(PlasmaAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	return true;
 }
 
-void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA.m_id)) remove(self); }
+void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA)) remove(self); }
 
-        METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret thistur))
+        METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this))
         {
             if(g_instagib)
             {
@@ -66,52 +64,28 @@ void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA.m
             }
             else
             {
-                Weapon wep = WEP_PLASMA;
-                wep.wr_think(wep, true, false);
+                super.tr_attack(this);
             }
             if (self.tur_head.frame == 0)
                 self.tur_head.frame = 1;
         }
-        METHOD(PlasmaTurret, tr_think, bool(PlasmaTurret thistur))
+        METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur))
         {
             if (self.tur_head.frame != 0)
                 self.tur_head.frame = self.tur_head.frame + 1;
 
             if (self.tur_head.frame > 5)
                 self.tur_head.frame = 0;
-
-            return true;
         }
-        METHOD(PlasmaTurret, tr_death, bool(PlasmaTurret thistur))
+        METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
         {
-            return true;
-        }
-        METHOD(PlasmaTurret, tr_setup, bool(PlasmaTurret thistur))
-        {
-            self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
-            self.damage_flags |= TFL_DMG_HEADSHAKE;
-            self.firecheck_flags |= TFL_FIRECHECK_AFF;
-            self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_SPLASH;
+            it.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+            it.damage_flags |= TFL_DMG_HEADSHAKE;
+            it.firecheck_flags |= TFL_FIRECHECK_AFF;
+            it.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_SPLASH;
 
-            turret_do_updates(self);
-
-            return true;
-        }
-        METHOD(PlasmaTurret, tr_precache, bool(PlasmaTurret thistur))
-        {
-            return true;
+            turret_do_updates(it);
         }
 
 #endif // SVQC
-#ifdef CSQC
-        METHOD(PlasmaTurret, tr_setup, bool(PlasmaTurret thistur))
-        {
-            return true;
-        }
-        METHOD(PlasmaTurret, tr_precache, bool(PlasmaTurret thistur))
-        {
-            return true;
-        }
-
-#endif // CSQC
-#endif // REGISTER_TURRET
+#endif

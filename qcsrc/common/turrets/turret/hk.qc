@@ -1,6 +1,14 @@
 #ifndef TUR_HK_H
 #define TUR_HK_H
 
+CLASS(HunterKillerAttack, PortoLaunch)
+/* flags     */ ATTRIB(HunterKillerAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(HunterKillerAttack, impulse, int, 9);
+/* refname   */ ATTRIB(HunterKillerAttack, netname, string, "turret_hk");
+/* wepname   */ ATTRIB(HunterKillerAttack, message, string, _("Hunter-Killer"));
+ENDCLASS(HunterKillerAttack)
+REGISTER_WEAPON(HK, NEW(HunterKillerAttack));
+
 CLASS(HunterKiller, Turret)
 /* spawnflags */ ATTRIB(HunterKiller, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS);
 /* mins       */ ATTRIB(HunterKiller, mins, vector, '-32 -32 0');
@@ -10,23 +18,14 @@ CLASS(HunterKiller, Turret)
 /* head_model */ ATTRIB(HunterKiller, head_model, string, strzone(strcat("models/turrets/", "hk.md3")));
 /* netname    */ ATTRIB(HunterKiller, netname, string, "hk");
 /* fullname   */ ATTRIB(HunterKiller, turret_name, string, _("Hunter-Killer Turret"));
+    ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
 ENDCLASS(HunterKiller)
-
 REGISTER_TURRET(HK, NEW(HunterKiller));
-
-CLASS(HunterKillerAttack, PortoLaunch)
-/* flags     */ ATTRIB(HunterKillerAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(HunterKillerAttack, impulse, int, 9);
-/* refname   */ ATTRIB(HunterKillerAttack, netname, string, "turret_hk");
-/* wepname   */ ATTRIB(HunterKillerAttack, message, string, _("Hunter-Killer"));
-ENDCLASS(HunterKillerAttack)
-REGISTER_WEAPON(HK, NEW(HunterKillerAttack));
 
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void turret_initparams(entity);
 void turret_hk_missile_think();
 METHOD(HunterKillerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
@@ -322,55 +321,27 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
     return 0;
 }
 
-void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK.m_id)) remove(self); }
+void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK)) remove(self); }
 
-        METHOD(HunterKiller, tr_attack, void(HunterKiller thistur))
-        {
-            Weapon wep = WEP_HK;
-            wep.wr_think(wep, true, false);
-        }
-        METHOD(HunterKiller, tr_think, bool(HunterKiller thistur))
+        METHOD(HunterKiller, tr_think, void(HunterKiller thistur))
         {
             if (self.tur_head.frame != 0)
                 self.tur_head.frame = self.tur_head.frame + 1;
 
             if (self.tur_head.frame > 5)
                 self.tur_head.frame = 0;
-
-            return true;
         }
-        METHOD(HunterKiller, tr_death, bool(HunterKiller thistur))
+        METHOD(HunterKiller, tr_setup, void(HunterKiller this, entity it))
         {
-            return true;
-        }
-        METHOD(HunterKiller, tr_setup, bool(HunterKiller thistur))
-        {
-            self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-            self.aim_flags = TFL_AIM_SIMPLE;
-            self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
-            self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCHECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
-            self.shoot_flags = TFL_SHOOT_CLEARTARGET;
-            self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TEAMCHECK;
+            it.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
+            it.aim_flags = TFL_AIM_SIMPLE;
+            it.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
+            it.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCHECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
+            it.shoot_flags = TFL_SHOOT_CLEARTARGET;
+            it.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TEAMCHECK;
 
-            self.turret_addtarget = turret_hk_addtarget;
-
-            return true;
-        }
-        METHOD(HunterKiller, tr_precache, bool(HunterKiller thistur))
-        {
-            return true;
+            it.turret_addtarget = turret_hk_addtarget;
         }
 
 #endif // SVQC
-#ifdef CSQC
-        METHOD(HunterKiller, tr_setup, bool(HunterKiller thistur))
-        {
-            return true;
-        }
-        METHOD(HunterKiller, tr_precache, bool(HunterKiller thistur))
-        {
-            return true;
-        }
-
-#endif // CSQC
-#endif // REGISTER_TURRET
+#endif

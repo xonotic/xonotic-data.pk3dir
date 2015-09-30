@@ -1,6 +1,16 @@
 #ifndef TUR_WALKER_H
 #define TUR_WALKER_H
 
+CLASS(WalkerTurretAttack, PortoLaunch)
+/* flags     */ ATTRIB(WalkerTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(WalkerTurretAttack, impulse, int, 5);
+/* refname   */ ATTRIB(WalkerTurretAttack, netname, string, "turret_walker");
+/* wepname   */ ATTRIB(WalkerTurretAttack, message, string, _("Walker"));
+ENDCLASS(WalkerTurretAttack)
+REGISTER_WEAPON(WALKER, NEW(WalkerTurretAttack));
+
+//#define WALKER_FANCYPATHING
+
 CLASS(WalkerTurret, Turret)
 /* spawnflags */ ATTRIB(WalkerTurret, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE);
 /* mins       */ ATTRIB(WalkerTurret, mins, vector, '-70 -70 0');
@@ -10,17 +20,9 @@ CLASS(WalkerTurret, Turret)
 /* head_model */ ATTRIB(WalkerTurret, head_model, string, strzone(strcat("models/turrets/", "walker_head_minigun.md3")));
 /* netname    */ ATTRIB(WalkerTurret, netname, string, "walker");
 /* fullname   */ ATTRIB(WalkerTurret, turret_name, string, _("Walker Turret"));
+    ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);
 ENDCLASS(WalkerTurret)
-
 REGISTER_TURRET(WALKER, NEW(WalkerTurret));
-
-CLASS(WalkerTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(WalkerTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(WalkerTurretAttack, impulse, int, 5);
-/* refname   */ ATTRIB(WalkerTurretAttack, netname, string, "turret_walker");
-/* wepname   */ ATTRIB(WalkerTurretAttack, message, string, _("Walker"));
-ENDCLASS(WalkerTurretAttack)
-REGISTER_WEAPON(WALKER, NEW(WalkerTurretAttack));
 
 #endif
 
@@ -69,18 +71,18 @@ float autocvar_g_turrets_unit_walker_turn_strafe;
 float autocvar_g_turrets_unit_walker_turn_swim;
 float autocvar_g_turrets_unit_walker_turn_run;
 
-#define ANIM_NO         0
-#define ANIM_TURN       1
-#define ANIM_WALK       2
-#define ANIM_RUN        3
-#define ANIM_STRAFE_L   4
-#define ANIM_STRAFE_R   5
-#define ANIM_JUMP       6
-#define ANIM_LAND       7
-#define ANIM_PAIN       8
-#define ANIM_MELEE      9
-#define ANIM_SWIM       10
-#define ANIM_ROAM       11
+const int ANIM_NO         = 0;
+const int ANIM_TURN       = 1;
+const int ANIM_WALK       = 2;
+const int ANIM_RUN        = 3;
+const int ANIM_STRAFE_L   = 4;
+const int ANIM_STRAFE_R   = 5;
+const int ANIM_JUMP       = 6;
+const int ANIM_LAND       = 7;
+const int ANIM_PAIN       = 8;
+const int ANIM_MELEE      = 9;
+const int ANIM_SWIM       = 10;
+const int ANIM_ROAM       = 11;
 
 .float animflag;
 .float idletime;
@@ -322,8 +324,6 @@ void walker_move_to(vector _target, float _dist)
     }
 }
 
-//#define WALKER_FANCYPATHING
-
 void walker_move_path()
 {SELFPARAM();
 #ifdef WALKER_FANCYPATHING
@@ -369,14 +369,9 @@ void walker_move_path()
 #endif
 }
 
-void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER.m_id)) remove(self); }
+void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER)) remove(self); }
 
-        METHOD(WalkerTurret, tr_attack, void(WalkerTurret thistur))
-        {
-            Weapon wep = WEP_WALKER;
-            wep.wr_think(wep, true, false);
-        }
-        METHOD(WalkerTurret, tr_think, bool(WalkerTurret thistur))
+        METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur))
         {
             fixedmakevectors(self.angles);
 
@@ -585,64 +580,60 @@ void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER.m
 
             self.oldorigin = self.origin;
             turrets_setframe(self.animflag, false);
-
-            return true;
         }
-        METHOD(WalkerTurret, tr_death, bool(WalkerTurret thistur))
+        METHOD(WalkerTurret, tr_death, void(WalkerTurret this, entity it))
         {
 #ifdef WALKER_FANCYPATHING
-            if (self.pathcurrent)
-                pathlib_deletepath(self.pathcurrent.owner);
+            if (it.pathcurrent)
+                pathlib_deletepath(it.pathcurrent.owner);
 #endif
-            self.pathcurrent = world;
-
-            return true;
+            it.pathcurrent = NULL;
         }
-        METHOD(WalkerTurret, tr_setup, bool(WalkerTurret thistur))
+        METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         {
-            self.ticrate = 0.05;
+            it.ticrate = 0.05;
 
             entity e;
 
             // Respawn is called & first spawn to, to set team. need to make sure we do not move the initial spawn.
-            if(self.movetype == MOVETYPE_WALK)
+            if(it.movetype == MOVETYPE_WALK)
             {
-                if(self.pos1)
-                    setorigin(self, self.pos1);
-                if(self.pos2)
-                    self.angles = self.pos2;
+                if(it.pos1)
+                    setorigin(it, it.pos1);
+                if(it.pos2)
+                    it.angles = it.pos2;
             }
 
-            self.ammo_flags = TFL_AMMO_BULLETS | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
-            self.aim_flags = TFL_AIM_LEAD;
-            self.turret_flags |= TUR_FLAG_HITSCAN;
+            it.ammo_flags = TFL_AMMO_BULLETS | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+            it.aim_flags = TFL_AIM_LEAD;
+            it.turret_flags |= TUR_FLAG_HITSCAN;
 
-            self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-            self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-            self.iscreature = true;
-            self.teleportable = TELEPORT_NORMAL;
-            self.damagedbycontents = true;
-            self.solid = SOLID_SLIDEBOX;
-            self.takedamage = DAMAGE_AIM;
-            if(self.movetype != MOVETYPE_WALK)
+            it.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+            it.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+            it.iscreature = true;
+            it.teleportable = TELEPORT_NORMAL;
+            it.damagedbycontents = true;
+            it.solid = SOLID_SLIDEBOX;
+            it.takedamage = DAMAGE_AIM;
+            if(it.movetype != MOVETYPE_WALK)
             {
-                setorigin(self, self.origin);
-                tracebox(self.origin + '0 0 128', self.mins, self.maxs, self.origin - '0 0 10000', MOVE_NORMAL, self);
-                setorigin(self, trace_endpos + '0 0 4');
-                self.pos1 = self.origin;
-                self.pos2 = self.angles;
+                setorigin(it, it.origin);
+                tracebox(it.origin + '0 0 128', it.mins, it.maxs, it.origin - '0 0 10000', MOVE_NORMAL, it);
+                setorigin(it, trace_endpos + '0 0 4');
+                it.pos1 = it.origin;
+                it.pos2 = it.angles;
             }
-            self.movetype = MOVETYPE_WALK;
-            self.idle_aim = '0 0 0';
-            self.turret_firecheckfunc = walker_firecheck;
+            it.movetype = MOVETYPE_WALK;
+            it.idle_aim = '0 0 0';
+            it.turret_firecheckfunc = walker_firecheck;
 
-            if (self.target != "")
+            if (it.target != "")
             {
-                e = find(world, targetname, self.target);
+                e = find(world, targetname, it.target);
                 if (!e)
                 {
                     LOG_TRACE("Initital waypoint for walker does NOT exsist, fix your map!\n");
-                    self.target = "";
+                    it.target = "";
                 }
 
                 if (e.classname != "turret_checkpoint")
@@ -650,19 +641,13 @@ void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER.m
                 else
                 {
 #ifdef WALKER_FANCYPATHING
-                    self.pathcurrent = WALKER_PATH(self.origin, e.origin);
-                    self.pathgoal = e;
+                    it.pathcurrent = WALKER_PATH(it.origin, e.origin);
+                    it.pathgoal = e;
 #else
-                    self.pathcurrent = e;
+                    it.pathcurrent = e;
 #endif
                 }
             }
-
-            return true;
-        }
-        METHOD(WalkerTurret, tr_precache, bool(WalkerTurret thistur))
-        {
-            return true;
         }
 
 #endif // SVQC
@@ -690,21 +675,15 @@ void walker_draw()
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
-        METHOD(WalkerTurret, tr_setup, bool(WalkerTurret thistur))
+        METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         {
-            self.gravity		= 1;
-            self.movetype		= MOVETYPE_BOUNCE;
-            self.move_movetype	= MOVETYPE_BOUNCE;
-            self.move_origin	= self.origin;
-            self.move_time		= time;
-            self.draw			= walker_draw;
-
-            return true;
-        }
-        METHOD(WalkerTurret, tr_precache, bool(WalkerTurret thistur))
-        {
-            return true;
+            it.gravity		= 1;
+            it.movetype		= MOVETYPE_BOUNCE;
+            it.move_movetype	= MOVETYPE_BOUNCE;
+            it.move_origin	= it.origin;
+            it.move_time		= time;
+            it.draw			= walker_draw;
         }
 
 #endif // CSQC
-#endif // REGISTER_TURRET
+#endif

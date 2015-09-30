@@ -1,6 +1,14 @@
 #ifndef TUR_FLAC_H
 #define TUR_FLAC_H
 
+CLASS(FlacAttack, PortoLaunch)
+/* flags     */ ATTRIB(FlacAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* impulse   */ ATTRIB(FlacAttack, impulse, int, 5);
+/* refname   */ ATTRIB(FlacAttack, netname, string, "turret_flac");
+/* wepname   */ ATTRIB(FlacAttack, message, string, _("FLAC"));
+ENDCLASS(FlacAttack)
+REGISTER_WEAPON(FLAC, NEW(FlacAttack));
+
 CLASS(Flac, Turret)
 /* spawnflags */ ATTRIB(Flac, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_MISSILE);
 /* mins       */ ATTRIB(Flac, mins, vector, '-32 -32 0');
@@ -10,23 +18,14 @@ CLASS(Flac, Turret)
 /* head_model */ ATTRIB(Flac, head_model, string, strzone(strcat("models/turrets/", "flac.md3")));
 /* netname    */ ATTRIB(Flac, netname, string, "flac");
 /* fullname   */ ATTRIB(Flac, turret_name, string, _("FLAC Cannon"));
+    ATTRIB(Flac, m_weapon, Weapon, WEP_FLAC);
 ENDCLASS(Flac)
-
 REGISTER_TURRET(FLAC, NEW(Flac));
-
-CLASS(FlacAttack, PortoLaunch)
-/* flags     */ ATTRIB(FlacAttack, spawnflags, int, WEP_TYPE_OTHER);
-/* impulse   */ ATTRIB(FlacAttack, impulse, int, 5);
-/* refname   */ ATTRIB(FlacAttack, netname, string, "turret_flac");
-/* wepname   */ ATTRIB(FlacAttack, message, string, _("FLAC"));
-ENDCLASS(FlacAttack)
-REGISTER_WEAPON(FLAC, NEW(FlacAttack));
 
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void turret_initparams(entity);
 void turret_flac_projectile_think_explode();
 METHOD(FlacAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
@@ -77,45 +76,15 @@ void turret_flac_projectile_think_explode()
     remove(self);
 }
 
-void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC.m_id)) remove(self); }
+void spawnfunc_turret_flac() { SELFPARAM(); if(!turret_initialize(TUR_FLAC)) remove(self); }
 
-        METHOD(Flac, tr_attack, void(Flac thistur))
+        METHOD(Flac, tr_setup, void(Flac this, entity it))
         {
-            Weapon wep = WEP_FLAC;
-            wep.wr_think(wep, true, false);
-        }
-        METHOD(Flac, tr_think, bool(Flac thistur))
-        {
-            return true;
-        }
-        METHOD(Flac, tr_death, bool(Flac thistur))
-        {
-            return true;
-        }
-        METHOD(Flac, tr_setup, bool(Flac thistur))
-        {
-            self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-            self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
-            self.damage_flags |= TFL_DMG_HEADSHAKE;
-            self.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
-
-            return true;
-        }
-        METHOD(Flac, tr_precache, bool(Flac thistur))
-        {
-            return true;
+            it.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
+            it.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
+            it.damage_flags |= TFL_DMG_HEADSHAKE;
+            it.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
         }
 
 #endif // SVQC
-#ifdef CSQC
-        METHOD(Flac, tr_setup, bool(Flac thistur))
-        {
-            return true;
-        }
-        METHOD(Flac, tr_precache, bool(Flac thistur))
-        {
-            return true;
-        }
-
-#endif // CSQC
-#endif // REGISTER_TURRET
+#endif

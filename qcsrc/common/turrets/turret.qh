@@ -1,8 +1,58 @@
 #ifndef TURRET_H
 #define TURRET_H
 
-// functions:
-entity get_turretinfo(int id);
+#include "../weapons/all.qh"
+
+CLASS(Turret, Object)
+    ATTRIB(Turret, m_id, int, 0)
+
+    /** short name */
+    ATTRIB(Turret, netname, string, string_null)
+    /** human readable name */
+    ATTRIB(Turret, turret_name, string, _("Turret"))
+    /** currently a copy of the model */
+    ATTRIB(Turret, mdl, string, string_null)
+    /** full name of model */
+    ATTRIB(Turret, model, string, string_null)
+    /** full name of tur_head model */
+    ATTRIB(Turret, head_model, string, string_null)
+
+    ATTRIB(Turret, spawnflags, int, 0)
+    /** turret hitbox size */
+    ATTRIB(Turret, mins, vector, '-0 -0 -0')
+    /** turret hitbox size */
+    ATTRIB(Turret, maxs, vector, '0 0 0')
+
+    METHOD(Turret, display, void(entity this, void(string name, string icon) returns)) {
+        returns(this.turret_name, string_null);
+    }
+    /** (BOTH) setup turret data */
+    METHOD(Turret, tr_setup, void(Turret this, entity it)) {
+
+    }
+    /** (SERVER) logic to run every frame */
+    METHOD(Turret, tr_think, void(Turret this)) {
+
+    }
+    /** (SERVER) called when turret dies */
+    METHOD(Turret, tr_death, void(Turret this, entity it)) {
+
+    }
+    /** (BOTH) precaches models/sounds used by this turret */
+    METHOD(Turret, tr_precache, void(Turret this)) {
+
+    }
+    ATTRIB(Turret, m_weapon, Weapon, WEP_Null)
+    /** (SERVER) called when turret attacks */
+    METHOD(Turret, tr_attack, void(Turret this)) {
+        Weapon w = this.m_weapon;
+        w.wr_think(w, true, false);
+    }
+    /** (ALL) */
+    METHOD(Turret, tr_config, void(Turret this)) {
+        // TODO
+    }
+ENDCLASS(Turret)
 
 // fields:
 .entity tur_head;
@@ -123,65 +173,5 @@ const int TNSF_MOVE         = 64;
 const int TNSF_ANIM         = 128;
 
 const int TNSF_FULL_UPDATE  = 16777215;
-
-
-// other useful macros
-#define _TUR_ACTION(tur, mrequest) tur.turret_func(tur, mrequest)
-#define TUR_ACTION(tur, mrequest) _TUR_ACTION(get_turretinfo(tur), mrequest)
-#define TUR_NAME(turrettype) (get_turretinfo(turrettype)).turret_name
-
-bool t_new(entity this, int req);
-
-CLASS(Turret, Object)
-    ATTRIB(Turret, m_id, int, 0)
-
-    /** short name */
-    ATTRIB(Turret, netname, string, string_null)
-    /** human readable name */
-    ATTRIB(Turret, turret_name, string, string_null)
-    /** t_... */
-    ATTRIB(Turret, turret_func, float(Turret, int), t_new)
-    /** currently a copy of the model */
-    ATTRIB(Turret, mdl, string, string_null)
-    /** full name of model */
-    ATTRIB(Turret, model, string, string_null)
-    /** full name of tur_head model */
-    ATTRIB(Turret, head_model, string, string_null)
-
-    ATTRIB(Turret, spawnflags, int, 0)
-    /** turret hitbox size */
-    ATTRIB(Turret, mins, vector, '-0 -0 -0')
-    /** turret hitbox size */
-    ATTRIB(Turret, maxs, vector, '0 0 0')
-
-    METHOD(Turret, display, void(entity this, void(string name, string icon) returns)) {
-        returns(this.turret_name, string_null);
-    }
-
-ENDCLASS(Turret)
-
-// turret requests
-const int TR_SETUP = 1; // (BOTH) setup turret data
-.bool(Turret) tr_setup;
-const int TR_THINK = 2; // (SERVER) logic to run every frame
-.bool(Turret) tr_think;
-const int TR_DEATH = 3; // (SERVER) called when turret dies
-.bool(Turret) tr_death;
-const int TR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this turret
-.bool(Turret) tr_precache;
-/** (SERVER) called when turret attacks */
-.void(Turret) tr_attack;
-const int TR_CONFIG = 6; // (ALL)
-.bool(Turret) tr_config;
-
-bool t_new(Turret this, int req)
-{
-    if (req == TR_SETUP) return this.tr_setup ? this.tr_setup(this) : false;
-    if (req == TR_THINK) return this.tr_think ? this.tr_think(this) : false;
-    if (req == TR_DEATH) return this.tr_death ? this.tr_death(this) : false;
-    if (req == TR_PRECACHE) return this.tr_precache ? this.tr_precache(this) : false;
-    if (req == TR_CONFIG) return this.tr_config ? this.tr_config(this) : false;
-    return false;
-}
 
 #endif

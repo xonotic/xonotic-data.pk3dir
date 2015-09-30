@@ -188,9 +188,10 @@ void turret_die()
 // Go boom
 	//RadiusDamage (self,self, min(self.ammo,50),min(self.ammo,50) * 0.25,250,world,min(self.ammo,50)*5,DEATH_TURRET,world);
 
+	Turret tur = get_turretinfo(self.m_id);
 	if(self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
 	{
-		TUR_ACTION(self.m_id, TR_DEATH);
+		tur.tr_death(tur, self);
 
 		remove(self.tur_head);
 		remove(self);
@@ -202,7 +203,7 @@ void turret_die()
 		self.nextthink	 = time + 0.2;
 		self.think		 = turret_hide;
 
-		TUR_ACTION(self.m_id, TR_DEATH);
+		tur.tr_death(tur, self);
 	}
 }
 
@@ -275,7 +276,8 @@ void turret_respawn()
 
 	self.SendFlags = TNSF_FULL_UPDATE;
 
-	TUR_ACTION(self.m_id, TR_SETUP);
+	Turret tur = get_turretinfo(self.m_id);
+	tur.tr_setup(tur, self);
 }
 
 
@@ -419,8 +421,10 @@ void load_unit_settings(entity ent, float is_reload)
 	ent.track_accel_rotate  = cvar(strcat(sbase,"_track_accel_rot"));
 	ent.track_blendrate  = cvar(strcat(sbase,"_track_blendrate"));
 
-	if(is_reload)
-		TUR_ACTION(self.m_id, TR_SETUP);
+	if(is_reload) {
+		Turret tur = get_turretinfo(self.m_id);
+		tur.tr_setup(tur, self);
+	}
 }
 
 void turret_projectile_explode()
@@ -1119,7 +1123,8 @@ void turret_think()
 				if (turret_checkfire())
 					turret_fire();
 
-				TUR_ACTION(self.m_id, TR_THINK);
+				Turret tur = get_turretinfo(self.m_id);
+				tur.tr_think(tur);
 
 				return;
 			}
@@ -1157,7 +1162,8 @@ void turret_think()
 			if(!(self.track_flags & TFL_TRACK_NO))
 				turret_track();
 
-			TUR_ACTION(self.m_id, TR_THINK);
+			Turret tur = get_turretinfo(self.m_id);
+			tur.tr_think(tur);
 
 			// And bail.
 			return;
@@ -1180,7 +1186,8 @@ void turret_think()
 			turret_fire();
 	}
 
-	TUR_ACTION(self.m_id, TR_THINK);
+	Turret tur = get_turretinfo(self.m_id);
+	tur.tr_think(tur);
 }
 
 /*
@@ -1221,7 +1228,8 @@ void turrets_manager_think()
 			if (IS_TURRET(e))
 			{
 				load_unit_settings(e,1);
-				TUR_ACTION(self.m_id, TR_THINK);
+				Turret tur = get_turretinfo(self.m_id);
+				tur.tr_think(tur);
 			}
 
 			e = nextent(e);
@@ -1259,19 +1267,20 @@ void turret_initparams(entity tur)
 	#undef TRY
 }
 
-float turret_initialize(float tur_id)
+float turret_initialize(Turret tur)
 {SELFPARAM();
 	if(!autocvar_g_turrets)
 		return false;
 
-	entity e;
-	entity tur = get_turretinfo(tur_id);
 	if(tur.m_id == 0)
 		return false; // invalid turret
 
-	if(!self.tur_head) { TUR_ACTION(tur_id, TR_PRECACHE); } // if tur_head exists, we can assume this turret re-spawned
+	// if tur_head exists, we can assume this turret re-spawned
+	if(!self.tur_head) {
+		tur.tr_precache(tur);
+	}
 
-	e = find(world, classname, "turret_manager");
+	entity e = find(world, classname, "turret_manager");
 	if(!e)
 	{
 		e = spawn();
@@ -1339,11 +1348,11 @@ float turret_initialize(float tur_id)
 	_setmodel(self, tur.model);
 	setsize(self, tur.mins, tur.maxs);
 
-	self.m_id					= tur_id;
+	self.m_id					= tur.m_id;
 	self.classname				= "turret_main";
 	self.active					= ACTIVE_ACTIVE;
 	self.effects				= EF_NODRAW;
-	self.netname				= TUR_NAME(tur_id);
+	self.netname				= tur.turret_name;
 	self.ticrate				= bound(sys_frametime, self.ticrate, 60);
 	self.max_health				= self.health;
 	self.target_validate_flags	= self.target_select_flags;
@@ -1403,7 +1412,7 @@ float turret_initialize(float tur_id)
 	turret_respawn();
 	turret_tag_fire_update();
 
-	TUR_ACTION(tur_id, TR_SETUP);
+	tur.tr_setup(tur, self);
 
 	if(MUTATOR_CALLHOOK(TurretSpawn, self))
 		return false;
