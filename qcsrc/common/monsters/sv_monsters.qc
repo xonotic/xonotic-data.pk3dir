@@ -118,7 +118,7 @@ bool Monster_ValidTarget(entity mon, entity player)
 		makevectors (mon.angles);
 		dot = normalize (player.origin - mon.origin) * v_forward;
 
-		if(dot <= 0.3) { return false; }
+		if(dot <= autocvar_g_monsters_target_infront_range) { return false; }
 	}
 
 	return true; // this target is valid!
