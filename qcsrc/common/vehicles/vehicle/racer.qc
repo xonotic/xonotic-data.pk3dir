@@ -48,9 +48,16 @@ void racer_fire_rocket(vector org, vector dir, entity trg);
 METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	SELFPARAM();
 	bool isPlayer = IS_PLAYER(self);
+	entity player = isPlayer ? self : self.owner;
+	entity veh = player.vehicle;
+	setself(player);
 	if (fire1)
-	if (!isPlayer || weapon_prepareattack(false, autocvar_g_vehicle_racer_cannon_refire)) {
-		if (isPlayer) W_SetupShot_Dir(self, v_forward, false, 0, "", CH_WEAPON_B, 0);
+	if (weapon_prepareattack(false, autocvar_g_vehicle_racer_cannon_refire)) {
+		if (veh) {
+			veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
+			veh.wait = time;
+		}
+		if (isPlayer) W_SetupShot_Dir(self, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
 		vector org = w_shotorg;
 		vector dir = w_shotdir;
 		entity bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
@@ -62,11 +69,19 @@ METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
 	}
 	if (fire2)
 	if (!isPlayer || weapon_prepareattack(false, 0.2)) {
-		if (isPlayer) W_SetupShot_Dir(self, v_forward, false, 0, "", CH_WEAPON_B, 0);
+		if (isPlayer) W_SetupShot_Dir(self, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
 		racer_fire_rocket(w_shotorg, w_shotdir, NULL);
 		weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
 	}
+	setself(this);
 	return true;
+}
+METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep)) {
+	SELFPARAM();
+	bool isPlayer = IS_PLAYER(self);
+	entity player = isPlayer ? self : self.owner;
+	entity veh = player.vehicle;
+	return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost;
 }
 
 bool autocvar_g_vehicle_racer;
@@ -480,27 +495,21 @@ float racer_frame()
 	player.movement = racer.velocity += df * PHYS_INPUT_TIMELENGTH;
 
 #ifdef SVQC
-	if(!forbidWeaponUse(player))
-	if(player.BUTTON_ATCK)
-	if(time > racer.attack_finished_single)
-	if(racer.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost)
+	Weapon wep1 = WEP_RACER;
+	if (!forbidWeaponUse(player))
+	if (player.BUTTON_ATCK)
+	if (wep1.wr_checkammo1(wep1))
 	{
-		racer.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
-		racer.wait = time;
-
-		crosshair_trace(player);
 		string tagname = (racer.cnt)
 		    ? (racer.cnt = 0, "tag_fire1")
 		    : (racer.cnt = 1, "tag_fire2");
 		vector org = gettaginfo(self, gettagindex(self, tagname));
-		// Fix z-aim (for chase mode)
-		vector dir = normalize(trace_endpos - org);
-		v_forward.z = dir.z * 0.5;
 		w_shotorg = org;
 		w_shotdir = v_forward;
-		Weapon wep = WEP_RACER;
-		wep.wr_think(wep, true, false);
-		racer.attack_finished_single = time + autocvar_g_vehicle_racer_cannon_refire;
+		// Fix z-aim (for chase mode)
+		crosshair_trace(player);
+		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
+		wep1.wr_think(wep1, true, false);
 	}
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
