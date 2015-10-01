@@ -12,22 +12,6 @@ const int VEH_FIRST = 1;
 #define VEH_LAST (VEH_FIRST + VEH_COUNT - 1)
 /** If you register a new vehicle, make sure to add it to all.inc */
 #define REGISTER_VEHICLE(id, inst) REGISTER(RegisterVehicles, VEH, vehicle_info, VEH_COUNT, id, vehicleid, inst)
-#define REGISTER_VEHICLE_SIMPLE(id, vehicleflags, min_s, max_s, modelname, headmodelname, hudmodelname, headtag, hudtag, viewtag, shortname, vname) \
-    REGISTER_VEHICLE(id, NEW(Vehicle)) {    \
-    	this.netname = shortname;           \
-    	this.vehicle_name = vname;          \
-    	this.mdl = modelname;               \
-    	this.spawnflags = vehicleflags;     \
-    	this.mins = min_s;                  \
-    	this.maxs = max_s;                  \
-    	this.model = modelname;             \
-    	this.head_model = headmodelname;    \
-    	this.hud_model = hudmodelname;      \
-    	this.tag_head = headtag;            \
-    	this.tag_hud = hudtag;              \
-    	this.tag_view = viewtag;            \
-    }                                       \
-    REGISTER_INIT(VEH, id)
 REGISTER_REGISTRY(RegisterVehicles)
 
 #if defined(SVQC)
