@@ -4,7 +4,7 @@
 #include "../../weapons/all.qh"
 
 CLASS(RaptorCannon, PortoLaunch)
-/* flags     */ ATTRIB(RaptorCannon, spawnflags, int, WEP_TYPE_OTHER);
+/* flags     */ ATTRIB(RaptorCannon, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
 /* impulse   */ ATTRIB(RaptorCannon, impulse, int, 3);
 /* refname   */ ATTRIB(RaptorCannon, netname, string, "raptorcannon");
 /* wepname   */ ATTRIB(RaptorCannon, message, string, _("Raptor cannon"));
@@ -12,7 +12,7 @@ ENDCLASS(RaptorCannon)
 REGISTER_WEAPON(RAPTOR, NEW(RaptorCannon));
 
 CLASS(RaptorBomb, PortoLaunch)
-/* flags     */ ATTRIB(RaptorBomb, spawnflags, int, WEP_TYPE_OTHER);
+/* flags     */ ATTRIB(RaptorBomb, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
 /* impulse   */ ATTRIB(RaptorBomb, impulse, int, 3);
 /* refname   */ ATTRIB(RaptorBomb, netname, string, "raptorbomb");
 /* wepname   */ ATTRIB(RaptorBomb, message, string, _("Raptor bomb"));
@@ -20,7 +20,7 @@ ENDCLASS(RaptorBomb)
 REGISTER_WEAPON(RAPTOR_BOMB, NEW(RaptorBomb));
 
 CLASS(RaptorFlare, PortoLaunch)
-/* flags     */ ATTRIB(RaptorFlare, spawnflags, int, WEP_TYPE_OTHER);
+/* flags     */ ATTRIB(RaptorFlare, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
 /* impulse   */ ATTRIB(RaptorFlare, impulse, int, 3);
 /* refname   */ ATTRIB(RaptorFlare, netname, string, "raptorflare");
 /* wepname   */ ATTRIB(RaptorFlare, message, string, _("Raptor flare"));

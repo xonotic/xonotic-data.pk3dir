@@ -4,7 +4,7 @@
 #include "../../weapons/all.qh"
 
 CLASS(RacerAttack, PortoLaunch)
-/* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
 /* impulse   */ ATTRIB(RacerAttack, impulse, int, 3);
 /* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
 /* wepname   */ ATTRIB(RacerAttack, message, string, _("Racer cannon"));

@@ -2,7 +2,7 @@
 #define TURRET_WALKER_WEAPON_H
 
 CLASS(WalkerTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(WalkerTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* flags     */ ATTRIB(WalkerTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
 /* impulse   */ ATTRIB(WalkerTurretAttack, impulse, int, 5);
 /* refname   */ ATTRIB(WalkerTurretAttack, netname, string, "turret_walker");
 /* wepname   */ ATTRIB(WalkerTurretAttack, message, string, _("Walker"));

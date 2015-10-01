@@ -2,7 +2,7 @@
 #define TURRET_MLRS_WEAPON_H
 
 CLASS(MLRSTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(MLRSTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* flags     */ ATTRIB(MLRSTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
 /* impulse   */ ATTRIB(MLRSTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(MLRSTurretAttack, netname, string, "turret_mlrs");
 /* wepname   */ ATTRIB(MLRSTurretAttack, message, string, _("MLRS"));

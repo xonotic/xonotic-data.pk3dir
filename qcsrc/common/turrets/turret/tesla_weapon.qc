@@ -2,7 +2,7 @@
 #define TURRET_TESLA_WEAPON_H
 
 CLASS(TeslaCoilTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(TeslaCoilTurretAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* flags     */ ATTRIB(TeslaCoilTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
 /* impulse   */ ATTRIB(TeslaCoilTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(TeslaCoilTurretAttack, netname, string, "turret_tesla");
 /* wepname   */ ATTRIB(TeslaCoilTurretAttack, message, string, _("Tesla Coil"));

@@ -25,7 +25,7 @@ REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
 #include "../../weapons/all.qh"
 
 CLASS(WyvernAttack, PortoLaunch)
-/* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_TYPE_OTHER);
+/* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
 /* impulse   */ ATTRIB(WyvernAttack, impulse, int, 9);
 /* refname   */ ATTRIB(WyvernAttack, netname, string, "wyvern");
 /* wepname   */ ATTRIB(WyvernAttack, message, string, _("Wyvern attack"));
