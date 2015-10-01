@@ -401,7 +401,7 @@ float W_MineLayer_PlacedMines(float detonate)
 	return minfound;
 }
 
-		METHOD(MineLayer, wr_aim, bool(entity thiswep))
+		METHOD(MineLayer, wr_aim, void(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
 			if(self.minelayer_mines >= WEP_CVAR(minelayer, limit))
@@ -498,10 +498,8 @@ float W_MineLayer_PlacedMines(float detonate)
 				//	dprint(ftos(desirabledamage),"\n");
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
-
-			return true;
 		}
-		METHOD(MineLayer, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(MineLayer, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
@@ -525,13 +523,10 @@ float W_MineLayer_PlacedMines(float detonate)
 				if(W_MineLayer_PlacedMines(true))
 					sound(self, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
 			}
-
-			return true;
 		}
-		METHOD(MineLayer, wr_init, bool(entity thiswep))
+		METHOD(MineLayer, wr_init, void(entity thiswep))
 		{
 			MINELAYER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(MineLayer, wr_checkammo1, bool(entity thiswep))
 		{
@@ -551,26 +546,23 @@ float W_MineLayer_PlacedMines(float detonate)
 			else
 				return false;
 		}
-		METHOD(MineLayer, wr_config, bool(entity thiswep))
+		METHOD(MineLayer, wr_config, void(entity thiswep))
 		{
 			MINELAYER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(MineLayer, wr_resetplayers, bool(entity thiswep))
+		METHOD(MineLayer, wr_resetplayers, void(entity thiswep))
 		{
 			self.minelayer_mines = 0;
-			return true;
 		}
-		METHOD(MineLayer, wr_reload, bool(entity thiswep))
+		METHOD(MineLayer, wr_reload, void(entity thiswep))
 		{
 			W_Reload(WEP_CVAR(minelayer, ammo), SND(RELOAD));
-			return true;
 		}
-		METHOD(MineLayer, wr_suicidemessage, bool(entity thiswep))
+		METHOD(MineLayer, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_MINELAYER_SUICIDE;
 		}
-		METHOD(MineLayer, wr_killmessage, bool(entity thiswep))
+		METHOD(MineLayer, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_MINELAYER_MURDER;
 		}
@@ -578,24 +570,13 @@ float W_MineLayer_PlacedMines(float detonate)
 #endif
 #ifdef CSQC
 
-		METHOD(MineLayer, wr_impacteffect, bool(entity thiswep))
+		METHOD(MineLayer, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
-
-			return true;
-		}
-		METHOD(MineLayer, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(MineLayer, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

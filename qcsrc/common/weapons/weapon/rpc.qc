@@ -149,12 +149,11 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-		METHOD(RocketPropelledChainsaw, wr_aim, bool(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep))
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
-			return true;
 		}
-		METHOD(RocketPropelledChainsaw, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(rpc, reload_ammo) && self.clip_load < WEP_CVAR(rpc, ammo)) {
 				Weapon w = get_weaponinfo(self.weapon);
@@ -175,13 +174,10 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 					// to-do
 				}
 			}
-
-			return true;
 		}
-		METHOD(RocketPropelledChainsaw, wr_init, bool(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_init, void(entity thiswep))
 		{
 			RPC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
 		{
@@ -193,24 +189,22 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		{
 			return false;
 		}
-		METHOD(RocketPropelledChainsaw, wr_config, bool(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_config, void(entity thiswep))
 		{
 			RPC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(RocketPropelledChainsaw, wr_reload, bool(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep))
 		{
 			W_Reload(WEP_CVAR(rpc, ammo), SND(RELOAD));
-			return true;
 		}
-		METHOD(RocketPropelledChainsaw, wr_suicidemessage, bool(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_suicidemessage, int(entity thiswep))
 		{
 			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
 				return WEAPON_RPC_SUICIDE_SPLASH;
 			else
 				return WEAPON_RPC_SUICIDE_DIRECT;
 		}
-		METHOD(RocketPropelledChainsaw, wr_killmessage, bool(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_BLASTER_MURDER;
@@ -224,24 +218,13 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 
 #ifdef CSQC
 
-		METHOD(RocketPropelledChainsaw, wr_impacteffect, bool(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-
-			return true;
-		}
-		METHOD(RocketPropelledChainsaw, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(RocketPropelledChainsaw, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

@@ -89,16 +89,14 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
-		METHOD(HeavyMachineGun, wr_aim, bool(entity thiswep))
+		METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
 		{
 			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
-
-			return true;
 		}
-		METHOD(HeavyMachineGun, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(hmg, reload_ammo) && self.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
 				Weapon w = get_weaponinfo(self.weapon);
@@ -112,13 +110,10 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 					W_HeavyMachineGun_Attack_Auto(thiswep, fire1, fire2);
 				}
 			}
-
-			return true;
 		}
-		METHOD(HeavyMachineGun, wr_init, bool(entity thiswep))
+		METHOD(HeavyMachineGun, wr_init, void(entity thiswep))
 		{
 			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep))
 		{
@@ -138,21 +133,19 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 
 			return ammo_amount;
 		}
-		METHOD(HeavyMachineGun, wr_config, bool(entity thiswep))
+		METHOD(HeavyMachineGun, wr_config, void(entity thiswep))
 		{
 			HMG_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(HeavyMachineGun, wr_reload, bool(entity thiswep))
+		METHOD(HeavyMachineGun, wr_reload, void(entity thiswep))
 		{
 			W_Reload(WEP_CVAR(hmg, ammo), SND(RELOAD));
-			return true;
 		}
-		METHOD(HeavyMachineGun, wr_suicidemessage, bool(entity thiswep))
+		METHOD(HeavyMachineGun, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(HeavyMachineGun, wr_killmessage, bool(entity thiswep))
+		METHOD(HeavyMachineGun, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_HMG_MURDER_SNIPE;
@@ -163,7 +156,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 #endif
 #ifdef CSQC
 
-		METHOD(HeavyMachineGun, wr_impacteffect, bool(entity thiswep))
+		METHOD(HeavyMachineGun, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
@@ -175,17 +168,6 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.2)
 					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTEN_NORM);
-
-			return true;
-		}
-		METHOD(HeavyMachineGun, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(HeavyMachineGun, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

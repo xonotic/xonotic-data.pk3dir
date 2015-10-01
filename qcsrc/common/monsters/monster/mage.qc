@@ -40,7 +40,7 @@ REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 
 void M_Mage_Attack_Spike(vector dir);
 void M_Mage_Attack_Push();
-METHOD(MageSpike, wr_think, bool(MageSpike thiswep, bool fire1, bool fire2)) {
+METHOD(MageSpike, wr_think, void(MageSpike thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     if (fire1)
     if (!IS_PLAYER(self) || weapon_prepareattack(false, 0.2)) {
@@ -56,7 +56,6 @@ METHOD(MageSpike, wr_think, bool(MageSpike thiswep, bool fire1, bool fire2)) {
         M_Mage_Attack_Push();
         weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
     }
-    return true;
 }
 
 void M_Mage_Attack_Teleport();

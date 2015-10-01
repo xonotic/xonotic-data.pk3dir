@@ -24,7 +24,7 @@ void W_AttachToShotorg(entity flash, vector offset);
 
 void W_DecreaseAmmo(Weapon wep, float ammo_use);
 
-void W_DropEvent(.bool(Weapon) event, entity player, float weapon_type, entity weapon_item);
+void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item);
 
 void W_Reload(float sent_ammo_min, string sent_sound);
 

@@ -842,7 +842,7 @@ float ball_customize()
 	return true;
 }
 
-	METHOD(BallStealer, wr_think, bool(BallStealer thiswep, bool fire1, bool fire2))
+	METHOD(BallStealer, wr_think, void(BallStealer thiswep, bool fire1, bool fire2))
 	{
 		if(fire1)
 			if(weapon_prepareattack(false, autocvar_g_balance_nexball_primary_refire))
@@ -871,20 +871,10 @@ float ball_customize()
 			// DropBall or stealing will set metertime back to 0
 			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
-		return true;
 	}
-	METHOD(BallStealer, wr_init, bool(BallStealer thiswep))
-	{
-		return true;
-	}
-	METHOD(BallStealer, wr_setup, bool(BallStealer thiswep))
+	METHOD(BallStealer, wr_setup, void(BallStealer thiswep))
 	{
 		//weapon_setup(WEP_PORTO.m_id);
-		return true;
-	}
-	METHOD(BallStealer, wr_aim, bool(BallStealer thiswep))
-	{
-		return true;
 	}
 	METHOD(BallStealer, wr_checkammo1, bool(BallStealer thiswep))
 	{

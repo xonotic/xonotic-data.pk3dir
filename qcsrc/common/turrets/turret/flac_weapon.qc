@@ -16,7 +16,7 @@ REGISTER_WEAPON(FLAC, NEW(FlacAttack));
 #ifdef SVQC
 
 void turret_flac_projectile_think_explode();
-METHOD(FlacAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(FlacAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     if (fire1)
@@ -45,7 +45,6 @@ METHOD(FlacAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
                 self.tur_head.frame = 0;
         }
     }
-    return true;
 }
 
 void turret_flac_projectile_think_explode()

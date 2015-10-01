@@ -566,17 +566,15 @@ void W_Crylink_Attack2(Weapon thiswep)
 	}
 }
 
-		METHOD(Crylink, wr_aim, bool(entity thiswep))
+		METHOD(Crylink, wr_aim, void(entity thiswep))
 		{
 			SELFPARAM();
 			if(random() < 0.10)
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
-
-			return true;
 		}
-		METHOD(Crylink, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Crylink, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			SELFPARAM();
 			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
@@ -634,13 +632,10 @@ void W_Crylink_Attack2(Weapon thiswep)
 					}
 				}
 			}
-
-			return true;
 		}
-		METHOD(Crylink, wr_init, bool(entity thiswep))
+		METHOD(Crylink, wr_init, void(entity thiswep))
 		{
 			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(Crylink, wr_checkammo1, bool(entity thiswep))
 		{
@@ -664,27 +659,25 @@ void W_Crylink_Attack2(Weapon thiswep)
 			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}
-		METHOD(Crylink, wr_config, bool(entity thiswep))
+		METHOD(Crylink, wr_config, void(entity thiswep))
 		{
 			CRYLINK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Crylink, wr_reload, bool(entity thiswep))
+		METHOD(Crylink, wr_reload, void(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND(RELOAD));
-			return true;
 		}
-		METHOD(Crylink, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Crylink, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_CRYLINK_SUICIDE;
 		}
-		METHOD(Crylink, wr_killmessage, bool(entity thiswep))
+		METHOD(Crylink, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_CRYLINK_MURDER;
 		}
 #endif
 #ifdef CSQC
-		METHOD(Crylink, wr_impacteffect, bool(entity thiswep))
+		METHOD(Crylink, wr_impacteffect, void(entity thiswep))
 		{
 			SELFPARAM();
 			vector org2;
@@ -701,17 +694,6 @@ void W_Crylink_Attack2(Weapon thiswep)
 				if(!w_issilent)
 					sound(self, CH_SHOTS, SND_CRYLINK_IMPACT, VOL_BASE, ATTN_NORM);
 			}
-
-			return true;
-		}
-		METHOD(Crylink, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Crylink, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 #endif
 #endif

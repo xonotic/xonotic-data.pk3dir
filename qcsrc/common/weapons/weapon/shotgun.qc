@@ -227,16 +227,14 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 
 .float shotgun_primarytime;
 
-		METHOD(Shotgun, wr_aim, bool(entity thiswep))
+		METHOD(Shotgun, wr_aim, void(entity thiswep))
 		{
 			if(vlen(self.origin-self.enemy.origin) <= WEP_CVAR_SEC(shotgun, melee_range))
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 			else
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
-
-			return true;
 		}
-		METHOD(Shotgun, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Shotgun, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(shotgun, reload_ammo) && self.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{
@@ -282,18 +280,14 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 				weapon_thinkf(WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 			}
-
-			return true;
 		}
-		METHOD(Shotgun, wr_init, bool(entity thiswep))
+		METHOD(Shotgun, wr_init, void(entity thiswep))
 		{
 			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(Shotgun, wr_setup, bool(entity thiswep))
+		METHOD(Shotgun, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
-			return true;
 		}
 		METHOD(Shotgun, wr_checkammo1, bool(entity thiswep))
 		{
@@ -318,21 +312,19 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 				default: return false; // secondary unavailable
 			}
 		}
-		METHOD(Shotgun, wr_config, bool(entity thiswep))
+		METHOD(Shotgun, wr_config, void(entity thiswep))
 		{
 			SHOTGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Shotgun, wr_reload, bool(entity thiswep))
+		METHOD(Shotgun, wr_reload, void(entity thiswep))
 		{
 			W_Reload(WEP_CVAR_PRI(shotgun, ammo), SND(RELOAD)); // WEAPONTODO
-			return true;
 		}
-		METHOD(Shotgun, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Shotgun, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(Shotgun, wr_killmessage, bool(entity thiswep))
+		METHOD(Shotgun, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_SHOTGUN_MURDER_SLAP;
@@ -344,10 +336,9 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 #ifdef CSQC
 .float prevric;
 
-		METHOD(Shotgun, wr_impacteffect, bool(entity thiswep))
+		METHOD(Shotgun, wr_impacteffect, void(entity thiswep))
 		{
-			vector org2;
-			org2 = w_org + w_backoff * 2;
+			vector org2 = w_org + w_backoff * 2;
 			pointparticles(particleeffectnum(EFFECT_SHOTGUN_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent && time - self.prevric > 0.25)
 			{
@@ -359,17 +350,6 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTEN_NORM);
 				self.prevric = time;
 			}
-
-			return true;
-		}
-		METHOD(Shotgun, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Shotgun, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

@@ -598,7 +598,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 // Begin: Genereal weapon functions
 // ============================
 
-		METHOD(Seeker, wr_aim, bool(entity thiswep))
+		METHOD(Seeker, wr_aim, void(entity thiswep))
 		{
 			if(WEP_CVAR(seeker, type) == 1)
 				if(W_Seeker_Tagged_Info(self, self.enemy) != world)
@@ -607,9 +607,8 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 					self.BUTTON_ATCK2 = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
 			else
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
-			return true;
 		}
-		METHOD(Seeker, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Seeker, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) { // forced reload
 				Weapon w = get_weaponinfo(self.weapon);
@@ -653,13 +652,10 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 					}
 				}
 			}
-
-			return true;
 		}
-		METHOD(Seeker, wr_init, bool(entity thiswep))
+		METHOD(Seeker, wr_init, void(entity thiswep))
 		{
 			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(Seeker, wr_checkammo1, bool(entity thiswep))
 		{
@@ -691,21 +687,19 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			}
 			return ammo_amount;
 		}
-		METHOD(Seeker, wr_config, bool(entity thiswep))
+		METHOD(Seeker, wr_config, void(entity thiswep))
 		{
 			SEEKER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Seeker, wr_reload, bool(entity thiswep))
+		METHOD(Seeker, wr_reload, void(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND(RELOAD));
-			return true;
 		}
-		METHOD(Seeker, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Seeker, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_SEEKER_SUICIDE;
 		}
-		METHOD(Seeker, wr_killmessage, bool(entity thiswep))
+		METHOD(Seeker, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_SEEKER_MURDER_TAG;
@@ -716,7 +710,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 #endif
 #ifdef CSQC
 
-		METHOD(Seeker, wr_impacteffect, bool(entity thiswep))
+		METHOD(Seeker, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
@@ -754,16 +748,6 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 						sound(self, CH_SHOTS, SND_SEEKEREXP3, 1, ATTEN_NORM);
 				}
 			}
-			return true;
-		}
-		METHOD(Seeker, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Seeker, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

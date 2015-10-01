@@ -50,7 +50,7 @@ float autocvar_g_monster_spider_attack_bite_delay;
 
 void M_Spider_Attack_Web();
 
-METHOD(SpiderAttack, wr_think, bool(SpiderAttack thiswep, bool fire1, bool fire2)) {
+METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     if (fire1)
@@ -66,7 +66,7 @@ METHOD(SpiderAttack, wr_think, bool(SpiderAttack thiswep, bool fire1, bool fire2
     	if (!isPlayer) w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 		M_Spider_Attack_Web();
         weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
-        return true;
+        return;
     }
     if (fire2)
     if (!isPlayer || weapon_prepareattack(true, 0.5)) {
@@ -77,7 +77,6 @@ METHOD(SpiderAttack, wr_think, bool(SpiderAttack thiswep, bool fire1, bool fire2
     	Monster_Attack_Melee(self.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, true);
         weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
     }
-    return true;
 }
 
 float autocvar_g_monster_spider_health;
@@ -160,11 +159,13 @@ bool M_Spider_Attack(int attack_type, entity targ)
 		Weapon wep = WEP_SPIDER_ATTACK;
 		case MONSTER_ATTACK_MELEE:
 		{
-			return wep.wr_think(wep, false, true);
+			wep.wr_think(wep, false, true);
+			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			return wep.wr_think(wep, true, false);
+			wep.wr_think(wep, true, false);
+			return true;
 		}
 	}
 

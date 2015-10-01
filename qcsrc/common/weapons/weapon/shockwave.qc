@@ -668,16 +668,14 @@ void W_Shockwave_Attack(void)
 	}
 }
 
-		METHOD(Shockwave, wr_aim, bool(entity thiswep))
+		METHOD(Shockwave, wr_aim, void(entity thiswep))
 		{
 			if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
 				{ self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false); }
 			else
 				{ self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false); }
-
-			return true;
 		}
-		METHOD(Shockwave, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Shockwave, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(fire1)
 			{
@@ -701,13 +699,10 @@ void W_Shockwave_Attack(void)
 					weapon_thinkf(WFRAME_FIRE1, 0, W_Shockwave_Melee);
 				}
 			}
-
-			return true;
 		}
-		METHOD(Shockwave, wr_init, bool(entity thiswep))
+		METHOD(Shockwave, wr_init, void(entity thiswep))
 		{
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(Shockwave, wr_checkammo1, bool(entity thiswep))
 		{
@@ -718,16 +713,15 @@ void W_Shockwave_Attack(void)
 			// shockwave has infinite ammo
 			return true;
 		}
-		METHOD(Shockwave, wr_config, bool(entity thiswep))
+		METHOD(Shockwave, wr_config, void(entity thiswep))
 		{
 			SHOCKWAVE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Shockwave, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Shockwave, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(Shockwave, wr_killmessage, bool(entity thiswep))
+		METHOD(Shockwave, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_SHOCKWAVE_MURDER_SLAP;
@@ -857,22 +851,12 @@ void Net_ReadShockwaveParticle(void)
 	shockwave.sw_time = time;
 }
 
-		METHOD(Shockwave, wr_impacteffect, bool(entity thiswep))
+		METHOD(Shockwave, wr_impacteffect, void(entity thiswep))
 		{
 			// handled by Net_ReadShockwaveParticle
 			//vector org2;
 			//org2 = w_org + w_backoff * 2;
 			//pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
-			return false;
-		}
-		METHOD(Shockwave, wr_init, bool(entity thiswep))
-		{
-			return false;
-		}
-		METHOD(Shockwave, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

@@ -133,7 +133,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 
 .float vortex_chargepool_pauseregen_finished;
 
-		METHOD(Vortex, wr_aim, bool(entity thiswep))
+		METHOD(Vortex, wr_aim, void(entity thiswep))
 		{
 			if(bot_aim(1000000, 0, 1, false))
 				self.BUTTON_ATCK = true;
@@ -142,9 +142,8 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 				if(WEP_CVAR(vortex, charge))
 					self.BUTTON_ATCK2 = true;
 			}
-			return true;
 		}
-		METHOD(Vortex, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Vortex, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(vortex, charge) && self.vortex_charge < WEP_CVAR(vortex, charge_limit))
 				self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
@@ -244,18 +243,14 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 					}
 				}
 			}
-
-			return true;
 		}
-		METHOD(Vortex, wr_init, bool(entity thiswep))
+		METHOD(Vortex, wr_init, void(entity thiswep))
 		{
 			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(Vortex, wr_setup, bool(entity thiswep))
+		METHOD(Vortex, wr_setup, void(entity thiswep))
 		{
 			self.vortex_lasthit = 0;
-			return true;
 		}
 		METHOD(Vortex, wr_checkammo1, bool(entity thiswep))
 		{
@@ -277,26 +272,23 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 				return false; // zoom is not a fire mode
 			}
 		}
-		METHOD(Vortex, wr_config, bool(entity thiswep))
+		METHOD(Vortex, wr_config, void(entity thiswep))
 		{
 			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Vortex, wr_resetplayer, bool(entity thiswep))
+		METHOD(Vortex, wr_resetplayer, void(entity thiswep))
 		{
 			self.vortex_lasthit = 0;
-			return true;
 		}
-		METHOD(Vortex, wr_reload, bool(entity thiswep))
+		METHOD(Vortex, wr_reload, void(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND(RELOAD));
-			return true;
 		}
-		METHOD(Vortex, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Vortex, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(Vortex, wr_killmessage, bool(entity thiswep))
+		METHOD(Vortex, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_VORTEX_MURDER;
 		}
@@ -305,23 +297,19 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 #ifdef CSQC
 float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
 
-		METHOD(Vortex, wr_impacteffect, bool(entity thiswep))
+		METHOD(Vortex, wr_impacteffect, void(entity thiswep))
 		{
-			vector org2;
-			org2 = w_org + w_backoff * 6;
+			vector org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
-
-			return true;
 		}
-		METHOD(Vortex, wr_init, bool(entity thiswep))
+		METHOD(Vortex, wr_init, void(entity thiswep))
 		{
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");
 			}
-			return true;
 		}
 		METHOD(Vortex, wr_zoomreticle, bool(entity thiswep))
 		{

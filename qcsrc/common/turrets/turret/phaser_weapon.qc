@@ -18,7 +18,7 @@ void beam_think();
 
 .int fireflag;
 
-METHOD(PhaserTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, bool fire1, bool fire2))
 {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
@@ -62,7 +62,6 @@ METHOD(PhaserTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2
         if (self.tur_head.frame == 0)
             self.tur_head.frame = 1;
     }
-    return true;
 }
 
 void beam_think()

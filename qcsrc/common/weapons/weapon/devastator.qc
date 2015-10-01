@@ -395,7 +395,7 @@ void W_Devastator_Attack(Weapon thiswep)
 }
 
 		#if 0
-		METHOD(Devastator, wr_aim, bool(entity thiswep))
+		METHOD(Devastator, wr_aim, void(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
@@ -420,11 +420,9 @@ void W_Devastator_Attack(Weapon thiswep)
 
 				if(self.BUTTON_ATCK2) self.BUTTON_ATCK = false;
 			}
-
-			return true;
 		}
 		#else
-		METHOD(Devastator, wr_aim, bool(entity thiswep))
+		METHOD(Devastator, wr_aim, void(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
@@ -518,11 +516,9 @@ void W_Devastator_Attack(Weapon thiswep)
 				//	dprint(ftos(desirabledamage),"\n");
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
-
-			return true;
 		}
 		#endif
-		METHOD(Devastator, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Devastator, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && self.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
 				Weapon w = get_weaponinfo(self.weapon);
@@ -559,18 +555,14 @@ void W_Devastator_Attack(Weapon thiswep)
 						sound(self, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
 				}
 			}
-
-			return true;
 		}
-		METHOD(Devastator, wr_init, bool(entity thiswep))
+		METHOD(Devastator, wr_init, void(entity thiswep))
 		{
 			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(Devastator, wr_setup, bool(entity thiswep))
+		METHOD(Devastator, wr_setup, void(entity thiswep))
 		{
 			self.rl_release = 1;
-			return true;
 		}
 		METHOD(Devastator, wr_checkammo1, bool(entity thiswep))
 		{
@@ -612,26 +604,23 @@ void W_Devastator_Attack(Weapon thiswep)
 		{
 			return false;
 		}
-		METHOD(Devastator, wr_config, bool(entity thiswep))
+		METHOD(Devastator, wr_config, void(entity thiswep))
 		{
 			DEVASTATOR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Devastator, wr_resetplayer, bool(entity thiswep))
+		METHOD(Devastator, wr_resetplayer, void(entity thiswep))
 		{
 			self.rl_release = 0;
-			return true;
 		}
-		METHOD(Devastator, wr_reload, bool(entity thiswep))
+		METHOD(Devastator, wr_reload, void(entity thiswep))
 		{
 			W_Reload(WEP_CVAR(devastator, ammo), SND(RELOAD));
-			return true;
 		}
-		METHOD(Devastator, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Devastator, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_DEVASTATOR_SUICIDE;
 		}
-		METHOD(Devastator, wr_killmessage, bool(entity thiswep))
+		METHOD(Devastator, wr_killmessage, int(entity thiswep))
 		{
 			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
 				return WEAPON_DEVASTATOR_MURDER_SPLASH;
@@ -642,24 +631,13 @@ void W_Devastator_Attack(Weapon thiswep)
 #endif
 #ifdef CSQC
 
-		METHOD(Devastator, wr_impacteffect, bool(entity thiswep))
+		METHOD(Devastator, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
-
-			return true;
-		}
-		METHOD(Devastator, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Devastator, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

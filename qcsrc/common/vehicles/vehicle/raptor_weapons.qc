@@ -51,7 +51,7 @@ float autocvar_g_vehicle_raptor_bomblet_radius;
 float autocvar_g_vehicle_raptor_bomblet_force;
 float autocvar_g_vehicle_raptor_bomblet_explode_delay;
 
-METHOD(RaptorCannon, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(RaptorCannon, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     entity player = isPlayer ? self : self.owner;
@@ -79,7 +79,6 @@ METHOD(RaptorCannon, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
         weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
     }
     setself(this);
-    return true;
 }
 METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
     SELFPARAM();
@@ -92,7 +91,7 @@ METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
 float autocvar_g_vehicle_raptor_bombs_refire;
 
 void raptor_bombdrop();
-METHOD(RaptorBomb, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(RaptorBomb, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     entity player = isPlayer ? self : self.owner;
@@ -105,7 +104,6 @@ METHOD(RaptorBomb, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
         weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
     }
     setself(this);
-    return true;
 }
 
 float autocvar_g_vehicle_raptor_flare_refire;
@@ -117,7 +115,7 @@ void raptor_flare_think();
 void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void raptor_flare_touch();
 
-METHOD(RaptorFlare, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(RaptorFlare, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     entity player = isPlayer ? self : self.owner;
@@ -147,7 +145,6 @@ METHOD(RaptorFlare, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
         weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
     }
     setself(this);
-    return true;
 }
 
 

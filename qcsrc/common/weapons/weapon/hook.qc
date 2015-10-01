@@ -176,12 +176,7 @@ void W_Hook_Attack2(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-		METHOD(Hook, wr_aim, bool(entity thiswep))
-		{
-			// no bot AI for hook (yet?)
-			return true;
-		}
-		METHOD(Hook, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Hook, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(fire1 || self.BUTTON_HOOK)
 			{
@@ -281,18 +276,14 @@ void W_Hook_Attack2(Weapon thiswep)
 			}
 
 			_GrapplingHookFrame();
-
-			return true;
 		}
-		METHOD(Hook, wr_init, bool(entity thiswep))
+		METHOD(Hook, wr_init, void(entity thiswep))
 		{
 			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(Hook, wr_setup, bool(entity thiswep))
+		METHOD(Hook, wr_setup, void(entity thiswep))
 		{
 			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-			return true;
 		}
 		METHOD(Hook, wr_checkammo1, bool(entity thiswep))
 		{
@@ -306,21 +297,19 @@ void W_Hook_Attack2(Weapon thiswep)
 			// infinite ammo for now
 			return true; // self.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
 		}
-		METHOD(Hook, wr_config, bool(entity thiswep))
+		METHOD(Hook, wr_config, void(entity thiswep))
 		{
 			HOOK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Hook, wr_resetplayer, bool(entity thiswep))
+		METHOD(Hook, wr_resetplayer, void(entity thiswep))
 		{
 			self.hook_refire = time;
-			return true;
 		}
-		METHOD(Hook, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Hook, wr_suicidemessage, int(entity thiswep))
 		{
 			return false;
 		}
-		METHOD(Hook, wr_killmessage, bool(entity thiswep))
+		METHOD(Hook, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_HOOK_MURDER;
 		}
@@ -328,24 +317,13 @@ void W_Hook_Attack2(Weapon thiswep)
 #endif
 #ifdef CSQC
 
-		METHOD(Hook, wr_impacteffect, bool(entity thiswep))
+		METHOD(Hook, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
 			pointparticles(particleeffectnum(EFFECT_HOOK_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_HOOKBOMB_IMPACT, VOL_BASE, ATTN_NORM);
-
-			return true;
-		}
-		METHOD(Hook, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Hook, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

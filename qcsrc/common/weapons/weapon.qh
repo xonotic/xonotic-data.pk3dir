@@ -47,39 +47,42 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, message, string, "AOL CD Thrower");
 
     /** (SERVER) setup weapon data */
-    METHOD(Weapon, wr_setup, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_setup, void(Weapon this)) {}
     /** (SERVER) logic to run every frame */
-    METHOD(Weapon, wr_think, bool(Weapon this, bool fire1, bool fire2)) {return false;}
+    METHOD(Weapon, wr_think, void(Weapon this, bool fire1, bool fire2)) {}
     /** (SERVER) checks ammo for weapon primary */
     METHOD(Weapon, wr_checkammo1, bool(Weapon this)) {return false;}
     /** (SERVER) checks ammo for weapon second */
     METHOD(Weapon, wr_checkammo2, bool(Weapon this)) {return false;}
     /** (SERVER) runs bot aiming code for this weapon */
-    METHOD(Weapon, wr_aim, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_aim, void(Weapon this)) {}
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
-    METHOD(Weapon, wr_init, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_init, void(Weapon this)) {}
     /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
-    METHOD(Weapon, wr_suicidemessage, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_suicidemessage, int(Weapon this)) {return 0;}
     /** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
-    METHOD(Weapon, wr_killmessage, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_killmessage, int(Weapon this)) {return 0;}
     /** (SERVER) handles reloading for weapon */
-    METHOD(Weapon, wr_reload, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_reload, void(Weapon this)) {}
     /** (SERVER) clears fields that the weapon may use */
-    METHOD(Weapon, wr_resetplayer, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_resetplayer, void(Weapon this)) {}
     /** (CLIENT) impact effect for weapon explosion */
-    METHOD(Weapon, wr_impacteffect, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_impacteffect, void(Weapon this)) {}
     /** (SERVER) called whenever a player dies */
-    METHOD(Weapon, wr_playerdeath, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_playerdeath, void(Weapon this)) {}
     /** (SERVER) logic to run when weapon is lost */
-    METHOD(Weapon, wr_gonethink, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_gonethink, void(Weapon this)) {}
     /** (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
-    METHOD(Weapon, wr_config, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_config, void(Weapon this)) {}
     /** (CLIENT) weapon specific zoom reticle */
-    METHOD(Weapon, wr_zoomreticle, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_zoomreticle, bool(Weapon this)) {
+        // no weapon specific image for this weapon
+        return false;
+    }
     /** (SERVER) the weapon is dropped */
-    METHOD(Weapon, wr_drop, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_drop, void(Weapon this)) {}
     /** (SERVER) a weapon is picked up */
-    METHOD(Weapon, wr_pickup, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_pickup, void(Weapon this)) {}
 
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
 		returns(this.message, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);

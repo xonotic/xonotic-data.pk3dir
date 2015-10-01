@@ -137,7 +137,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 
 .float bot_secondary_riflemooth;
 
-		METHOD(Rifle, wr_aim, bool(entity thiswep))
+		METHOD(Rifle, wr_aim, void(entity thiswep))
 		{
 			self.BUTTON_ATCK=false;
 			self.BUTTON_ATCK2=false;
@@ -159,10 +159,8 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 					if(random() < 0.03) self.bot_secondary_riflemooth = 0;
 				}
 			}
-
-			return true;
 		}
-		METHOD(Rifle, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Rifle, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(self.weapon);
@@ -198,13 +196,10 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 					}
 				}
 			}
-
-			return true;
 		}
-		METHOD(Rifle, wr_init, bool(entity thiswep))
+		METHOD(Rifle, wr_init, void(entity thiswep))
 		{
 			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(Rifle, wr_checkammo1, bool(entity thiswep))
 		{
@@ -218,26 +213,23 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 			ammo_amount += self.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
 			return ammo_amount;
 		}
-		METHOD(Rifle, wr_config, bool(entity thiswep))
+		METHOD(Rifle, wr_config, void(entity thiswep))
 		{
 			RIFLE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Rifle, wr_resetplayer, bool(entity thiswep))
+		METHOD(Rifle, wr_resetplayer, void(entity thiswep))
 		{
 			self.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
-			return true;
 		}
-		METHOD(Rifle, wr_reload, bool(entity thiswep))
+		METHOD(Rifle, wr_reload, void(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND(RELOAD));
-			return true;
 		}
-		METHOD(Rifle, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Rifle, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(Rifle, wr_killmessage, bool(entity thiswep))
+		METHOD(Rifle, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
@@ -258,7 +250,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 #endif
 #ifdef CSQC
 
-		METHOD(Rifle, wr_impacteffect, bool(entity thiswep))
+		METHOD(Rifle, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
@@ -272,16 +264,13 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 				else if(w_random < 0.5)
 					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTN_NORM);
 			}
-
-			return true;
 		}
-		METHOD(Rifle, wr_init, bool(entity thiswep))
+		METHOD(Rifle, wr_init, void(entity thiswep))
 		{
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");
 			}
-			return true;
 		}
 		METHOD(Rifle, wr_zoomreticle, bool(entity thiswep))
 		{

@@ -15,7 +15,7 @@ REGISTER_WEAPON(TUR_MLRS, NEW(MLRSTurretAttack));
 
 #ifdef SVQC
 
-METHOD(MLRSTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, bool fire1, bool fire2))
 {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
@@ -36,7 +36,6 @@ METHOD(MLRSTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
         missile.missile_flags = MIF_SPLASH;
         te_explosion (missile.origin);
     }
-    return true;
 }
 
 #endif

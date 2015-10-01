@@ -147,7 +147,7 @@ void W_Blaster_Attack(
 	}
 }
 
-		METHOD(Blaster, wr_aim, bool(entity thiswep))
+		METHOD(Blaster, wr_aim, void(entity thiswep))
 		{
 			if(WEP_CVAR(blaster, secondary))
 			{
@@ -158,11 +158,9 @@ void W_Blaster_Attack(
 			}
 			else
 				{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
-
-			return true;
 		}
 
-		METHOD(Blaster, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Blaster, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(fire1)
 			{
@@ -217,19 +215,16 @@ void W_Blaster_Attack(
 					}
 				}
 			}
-			return true;
 		}
 
-		METHOD(Blaster, wr_init, bool(entity thiswep))
+		METHOD(Blaster, wr_init, void(entity thiswep))
 		{
 			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 
-		METHOD(Blaster, wr_setup, bool(entity thiswep))
+		METHOD(Blaster, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
-			return true;
 		}
 
 		METHOD(Blaster, wr_checkammo1, bool(entity thiswep))
@@ -242,18 +237,17 @@ void W_Blaster_Attack(
 			return true; // blaster has infinite ammo
 		}
 
-		METHOD(Blaster, wr_config, bool(entity thiswep))
+		METHOD(Blaster, wr_config, void(entity thiswep))
 		{
 			BLASTER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
 
-		METHOD(Blaster, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Blaster, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_BLASTER_SUICIDE;
 		}
 
-		METHOD(Blaster, wr_killmessage, bool(entity thiswep))
+		METHOD(Blaster, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_BLASTER_MURDER;
 		}
@@ -261,24 +255,12 @@ void W_Blaster_Attack(
 #endif
 #ifdef CSQC
 
-		METHOD(Blaster, wr_impacteffect, bool(entity thiswep))
+		METHOD(Blaster, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
-			return true;
-		}
-
-		METHOD(Blaster, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-
-		METHOD(Blaster, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

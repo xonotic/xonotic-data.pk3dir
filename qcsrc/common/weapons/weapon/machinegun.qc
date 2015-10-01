@@ -240,16 +240,14 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 
 }
 
-		METHOD(MachineGun, wr_aim, bool(entity thiswep))
+		METHOD(MachineGun, wr_aim, void(entity thiswep))
 		{
 			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
-
-			return true;
 		}
-		METHOD(MachineGun, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(MachineGun, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(machinegun, reload_ammo) && self.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) { // forced reload
 				Weapon w = get_weaponinfo(self.weapon);
@@ -273,7 +271,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 					{
 						W_SwitchWeapon_Force(self, w_getbestweapon(self));
 						w_ready(thiswep, fire1, fire2);
-						return false;
+						return;
 					}
 
 					W_DecreaseAmmo(thiswep, WEP_CVAR(machinegun, burst_ammo));
@@ -301,13 +299,10 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(machinegun, first_refire), w_ready);
 				}
 			}
-
-			return true;
 		}
-		METHOD(MachineGun, wr_init, bool(entity thiswep))
+		METHOD(MachineGun, wr_init, void(entity thiswep))
 		{
 			MACHINEGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(MachineGun, wr_checkammo1, bool(entity thiswep))
 		{
@@ -343,21 +338,19 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 			}
 			return ammo_amount;
 		}
-		METHOD(MachineGun, wr_config, bool(entity thiswep))
+		METHOD(MachineGun, wr_config, void(entity thiswep))
 		{
 			MACHINEGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(MachineGun, wr_reload, bool(entity thiswep))
+		METHOD(MachineGun, wr_reload, void(entity thiswep))
 		{
 			W_Reload(min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), SND(RELOAD));
-			return true;
 		}
-		METHOD(MachineGun, wr_suicidemessage, bool(entity thiswep))
+		METHOD(MachineGun, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(MachineGun, wr_killmessage, bool(entity thiswep))
+		METHOD(MachineGun, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MACHINEGUN_MURDER_SNIPE;
@@ -368,7 +361,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 #endif
 #ifdef CSQC
 
-		METHOD(MachineGun, wr_impacteffect, bool(entity thiswep))
+		METHOD(MachineGun, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
@@ -380,17 +373,6 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.2)
 					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTN_NORM);
-
-			return true;
-		}
-		METHOD(MachineGun, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(MachineGun, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

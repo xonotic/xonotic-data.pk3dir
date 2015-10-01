@@ -285,7 +285,7 @@ void W_Porto_Attack(float type)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-		METHOD(PortoLaunch, wr_aim, bool(entity thiswep))
+		METHOD(PortoLaunch, wr_aim, void(entity thiswep))
 		{
 			SELFPARAM();
 			self.BUTTON_ATCK = false;
@@ -293,15 +293,12 @@ void W_Porto_Attack(float type)
 			if(!WEP_CVAR(porto, secondary))
 				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
 					self.BUTTON_ATCK = true;
-
-			return true;
 		}
-		METHOD(PortoLaunch, wr_config, bool(entity this))
+		METHOD(PortoLaunch, wr_config, void(entity this))
 		{
 			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(PortoLaunch, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(PortoLaunch, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			SELFPARAM();
 			if(WEP_CVAR(porto, secondary))
@@ -357,8 +354,6 @@ void W_Porto_Attack(float type)
 					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 			}
-
-			return true;
 		}
 		METHOD(PortoLaunch, wr_checkammo1, bool(entity this))
 		{
@@ -370,36 +365,24 @@ void W_Porto_Attack(float type)
 			// always allow infinite ammo
 			return true;
 		}
-		METHOD(PortoLaunch, wr_init, bool(entity this))
+		METHOD(PortoLaunch, wr_init, void(entity this))
 		{
 			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(PortoLaunch, wr_setup, bool(entity thiswep))
+		METHOD(PortoLaunch, wr_setup, void(entity thiswep))
 		{
 			SELFPARAM();
 			self.ammo_field = ammo_none;
-			return true;
 		}
-		METHOD(PortoLaunch, wr_resetplayer, bool(entity thiswep))
+		METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep))
 		{
 			SELFPARAM();
 			self.porto_current = world;
-			return true;
 		}
 #endif
 #ifdef CSQC
-		METHOD(PortoLaunch, wr_impacteffect, bool(entity this)) {
+		METHOD(PortoLaunch, wr_impacteffect, void(entity this)) {
 			LOG_WARNING("Since when does Porto send DamageInfo?\n");
-			return true;
-		}
-		METHOD(PortoLaunch, wr_init, bool(entity this)) {
-			// nothing to do
-			return true;
-		}
-		METHOD(PortoLaunch, wr_zoomreticle, bool(entity this)) {
-			// no weapon specific image for this weapon
-			return false;
 		}
 #endif
 #endif

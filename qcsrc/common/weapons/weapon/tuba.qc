@@ -367,7 +367,7 @@ void W_Tuba_NoteOn(float hittype)
 	}
 }
 
-		METHOD(Tuba, wr_aim, bool(entity thiswep))
+		METHOD(Tuba, wr_aim, void(entity thiswep))
 		{
 			// bots cannot play the Tuba well yet
 			// I think they should start with the recorder first
@@ -378,10 +378,8 @@ void W_Tuba_NoteOn(float hittype)
 				else
 					self.BUTTON_ATCK2 = 1;
 			}
-
-			return true;
 		}
-		METHOD(Tuba, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Tuba, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(fire1)
 			if(weapon_prepareattack(false, WEP_CVAR(tuba, refire)))
@@ -404,21 +402,17 @@ void W_Tuba_NoteOn(float hittype)
 					WITH(entity, self, self.tuba_note, W_Tuba_NoteOff());
 				}
 			}
-
-			return true;
 		}
-		METHOD(Tuba, wr_init, bool(entity thiswep))
+		METHOD(Tuba, wr_init, void(entity thiswep))
 		{
 			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(Tuba, wr_setup, bool(entity thiswep))
+		METHOD(Tuba, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
 			self.tuba_instrument = 0;
-			return true;
 		}
-		METHOD(Tuba, wr_reload, bool(entity thiswep))
+		METHOD(Tuba, wr_reload, void(entity thiswep))
 		{
 			// switch to alternate instruments :)
 			if(self.weaponentity.state == WS_READY)
@@ -443,8 +437,6 @@ void W_Tuba_NoteOn(float hittype)
 				self.weaponentity.state = WS_INUSE;
 				weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
 			}
-
-			return true;
 		}
 		METHOD(Tuba, wr_checkammo1, bool(entity thiswep))
 		{
@@ -454,12 +446,11 @@ void W_Tuba_NoteOn(float hittype)
 		{
 			return true; // tuba has infinite ammo
 		}
-		METHOD(Tuba, wr_config, bool(entity thiswep))
+		METHOD(Tuba, wr_config, void(entity thiswep))
 		{
 			TUBA_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Tuba, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Tuba, wr_suicidemessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 				return WEAPON_KLEINBOTTLE_SUICIDE;
@@ -468,7 +459,7 @@ void W_Tuba_NoteOn(float hittype)
 			else
 				return WEAPON_TUBA_SUICIDE;
 		}
-		METHOD(Tuba, wr_killmessage, bool(entity thiswep))
+		METHOD(Tuba, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
 				return WEAPON_KLEINBOTTLE_MURDER;
@@ -476,15 +467,6 @@ void W_Tuba_NoteOn(float hittype)
 				return WEAPON_ACCORDEON_MURDER;
 			else
 				return WEAPON_TUBA_MURDER;
-		}
-
-#endif
-#ifdef CSQC
-
-		METHOD(Tuba, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

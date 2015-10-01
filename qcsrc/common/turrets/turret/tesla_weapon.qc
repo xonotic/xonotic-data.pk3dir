@@ -16,7 +16,7 @@ REGISTER_WEAPON(TESLA, NEW(TeslaCoilTurretAttack));
 #ifdef SVQC
 
 entity toast(entity from, float range, float damage);
-METHOD(TeslaCoilTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     if (fire1)
@@ -40,7 +40,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fi
         entity t = toast(e,r,d);
         remove(e);
 
-        if (t == NULL) return true;
+        if (t == NULL) return;
 
         self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_TEAMCHECK;
 
@@ -60,7 +60,6 @@ METHOD(TeslaCoilTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fi
         }
 
     }
-    return true;
 }
 
 entity toast(entity from, float range, float damage)

@@ -634,7 +634,7 @@ void Arc_Smoke()
 	}
 }
 
-		METHOD(Arc, wr_aim, bool(entity thiswep))
+		METHOD(Arc, wr_aim, void(entity thiswep))
 		{
 			SELFPARAM();
 			if(WEP_CVAR(arc, beam_botaimspeed))
@@ -655,9 +655,8 @@ void Arc_Smoke()
 					false
 				);
 			}
-			return true;
 		}
-		METHOD(Arc, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Arc, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			SELFPARAM();
 			Arc_Player_SetHeat(self);
@@ -691,7 +690,7 @@ void Arc_Smoke()
 					}
 				}
 
-				return true;
+				return;
 			}
 
 			if(self.arc_BUTTON_ATCK_prev)
@@ -712,10 +711,8 @@ void Arc_Smoke()
 				self.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
 			}
 			#endif
-
-			return true;
 		}
-		METHOD(Arc, wr_init, bool(entity thiswep))
+		METHOD(Arc, wr_init, void(entity thiswep))
 		{
 			if(!arc_shotorigin[0])
 			{
@@ -725,7 +722,6 @@ void Arc_Smoke()
 				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
 			}
 			ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(Arc, wr_checkammo1, bool(entity thiswep))
 		{
@@ -738,24 +734,22 @@ void Arc_Smoke()
 			return WEP_CVAR(arc, overheat_max) > 0 &&
 				((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
-		METHOD(Arc, wr_config, bool(entity thiswep))
+		METHOD(Arc, wr_config, void(entity thiswep))
 		{
 			ARC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Arc, wr_killmessage, bool(entity thiswep))
+		METHOD(Arc, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_ARC_MURDER;
 		}
-		METHOD(Arc, wr_drop, bool(entity thiswep))
+		METHOD(Arc, wr_drop, void(entity thiswep))
 		{
 			weapon_dropevent_item.arc_overheat = self.arc_overheat;
 			weapon_dropevent_item.arc_cooldown = self.arc_cooldown;
 			self.arc_overheat = 0;
 			self.arc_cooldown = 0;
-			return true;
 		}
-		METHOD(Arc, wr_pickup, bool(entity thiswep))
+		METHOD(Arc, wr_pickup, void(entity thiswep))
 		{
 			if ( !client_hasweapon(self, WEP_ARC.m_id, false, false) &&
 				weapon_dropevent_item.arc_overheat > time )
@@ -763,7 +757,6 @@ void Arc_Smoke()
 				self.arc_overheat = weapon_dropevent_item.arc_overheat;
 				self.arc_cooldown = weapon_dropevent_item.arc_cooldown;
 			}
-			return true;
 		}
 #endif
 #ifdef CSQC
@@ -1509,19 +1502,5 @@ void Ent_ReadArcBeam(float isnew)
 	}
 }
 
-		METHOD(Arc, wr_impacteffect, bool(entity thiswep))
-		{
-			// todo
-			return true;
-		}
-		METHOD(Arc, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Arc, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
-		}
 #endif
 #endif

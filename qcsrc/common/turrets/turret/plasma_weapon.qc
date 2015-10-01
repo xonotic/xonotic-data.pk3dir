@@ -15,7 +15,7 @@ REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
 
 #ifdef SVQC
 
-METHOD(PlasmaAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(PlasmaAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
 	bool isPlayer = IS_PLAYER(self);
 	if (fire1)
@@ -32,7 +32,6 @@ METHOD(PlasmaAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
         missile.missile_flags = MIF_SPLASH;
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 	}
-	return true;
 }
 
 #endif

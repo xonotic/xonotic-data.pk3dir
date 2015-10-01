@@ -15,7 +15,7 @@ REGISTER_WEAPON(WALKER, NEW(WalkerTurretAttack));
 
 #ifdef SVQC
 
-METHOD(WalkerTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(WalkerTurretAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     if (fire1)
@@ -32,7 +32,6 @@ METHOD(WalkerTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2
         fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0);
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
     }
-    return true;
 }
 
 #endif

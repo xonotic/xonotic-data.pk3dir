@@ -23,7 +23,7 @@ float autocvar_g_turrets_unit_hk_shot_speed_max;
 float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
 void turret_hk_missile_think();
-METHOD(HunterKillerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+METHOD(HunterKillerAttack, wr_think, void(entity thiswep, bool fire1, bool fire2))
 {
 	SELFPARAM();
 	bool isPlayer = IS_PLAYER(self);
@@ -53,7 +53,6 @@ METHOD(HunterKillerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2
         if (self.tur_head.frame == 0)
             self.tur_head.frame = self.tur_head.frame + 1;
 	}
-	return true;
 }
 
 bool hk_is_valid_target(entity e_target);

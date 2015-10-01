@@ -777,8 +777,8 @@ void W_WeaponFrame()
         }
 
 		if (w) {
-			entity e = get_weaponinfo(self.weapon);
-			if (e.wr_think) e.wr_think(e, self.BUTTON_ATCK, self.BUTTON_ATCK2);
+			Weapon e = get_weaponinfo(self.weapon);
+			e.wr_think(e, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 		} else {
 			Weapon w = get_weaponinfo(self.weapon);
 			w.wr_gonethink(w);
@@ -981,7 +981,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	self.clip_load = self.(weapon_load[self.weapon]) = -1;
 }
 
-void W_DropEvent(.bool(Weapon) event, entity player, float weapon_type, entity weapon_item)
+void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item)
 {SELFPARAM();
 	setself(player);
 	weapon_dropevent_item = weapon_item;

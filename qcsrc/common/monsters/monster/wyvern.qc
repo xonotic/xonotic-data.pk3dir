@@ -48,7 +48,7 @@ float autocvar_g_monster_wyvern_attack_fireball_speed;
 void M_Wyvern_Attack_Fireball_Explode();
 void M_Wyvern_Attack_Fireball_Touch();
 
-METHOD(WyvernAttack, wr_think, bool(WyvernAttack thiswep, bool fire1, bool fire2)) {
+METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
 
     if (fire1)
@@ -76,9 +76,7 @@ METHOD(WyvernAttack, wr_think, bool(WyvernAttack thiswep, bool fire1, bool fire2
 		CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 
         weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
-        return true;
     }
-    return true;
 }
 
 METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack thiswep)) {

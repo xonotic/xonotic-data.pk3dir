@@ -207,12 +207,11 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 	}
 }
 
-		METHOD(HLAC, wr_aim, bool(entity thiswep))
+		METHOD(HLAC, wr_aim, void(entity thiswep))
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
-			return true;
 		}
-		METHOD(HLAC, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(HLAC, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(self.weapon);
@@ -235,13 +234,10 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
 				}
 			}
-
-			return true;
 		}
-		METHOD(HLAC, wr_init, bool(entity thiswep))
+		METHOD(HLAC, wr_init, void(entity thiswep))
 		{
 			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(HLAC, wr_checkammo1, bool(entity thiswep))
 		{
@@ -255,21 +251,19 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
 			return ammo_amount;
 		}
-		METHOD(HLAC, wr_config, bool(entity thiswep))
+		METHOD(HLAC, wr_config, void(entity thiswep))
 		{
 			HLAC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(HLAC, wr_reload, bool(entity thiswep))
+		METHOD(HLAC, wr_reload, void(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND(RELOAD));
-			return true;
 		}
-		METHOD(HLAC, wr_suicidemessage, bool(entity thiswep))
+		METHOD(HLAC, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_HLAC_SUICIDE;
 		}
-		METHOD(HLAC, wr_killmessage, bool(entity thiswep))
+		METHOD(HLAC, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_HLAC_MURDER;
 		}
@@ -277,24 +271,13 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 #endif
 #ifdef CSQC
 
-		METHOD(HLAC, wr_impacteffect, bool(entity thiswep))
+		METHOD(HLAC, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
-
-			return true;
-		}
-		METHOD(HLAC, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(HLAC, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

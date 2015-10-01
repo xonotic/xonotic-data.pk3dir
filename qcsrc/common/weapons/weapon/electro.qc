@@ -423,7 +423,7 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 
 .float bot_secondary_electromooth;
 
-		METHOD(Electro, wr_aim, bool(entity thiswep))
+		METHOD(Electro, wr_aim, void(entity thiswep))
 		{
 			self.BUTTON_ATCK = self.BUTTON_ATCK2 = false;
 			if(vlen(self.origin-self.enemy.origin) > 1000) { self.bot_secondary_electromooth = 0; }
@@ -450,10 +450,8 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 					if(random() < 0.03) self.bot_secondary_electromooth = 0;
 				}
 			}
-
-			return true;
 		}
-		METHOD(Electro, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Electro, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
 			{
@@ -467,10 +465,8 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 				{
 					Weapon w = get_weaponinfo(self.weapon);
 					w.wr_reload(w);
-					return false;
+					return;
 				}
-
-				return true;
 			}
 
 			if(fire1)
@@ -492,13 +488,10 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 					self.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
 				}
 			}
-
-			return true;
 		}
-		METHOD(Electro, wr_init, bool(entity thiswep))
+		METHOD(Electro, wr_init, void(entity thiswep))
 		{
 			ELECTRO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(Electro, wr_checkammo1, bool(entity thiswep))
 		{
@@ -521,29 +514,26 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 			}
 			return ammo_amount;
 		}
-		METHOD(Electro, wr_config, bool(entity thiswep))
+		METHOD(Electro, wr_config, void(entity thiswep))
 		{
 			ELECTRO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Electro, wr_resetplayer, bool(entity thiswep))
+		METHOD(Electro, wr_resetplayer, void(entity thiswep))
 		{
 			self.electro_secondarytime = time;
-			return true;
 		}
-		METHOD(Electro, wr_reload, bool(entity thiswep))
+		METHOD(Electro, wr_reload, void(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
-			return true;
 		}
-		METHOD(Electro, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Electro, wr_suicidemessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_ELECTRO_SUICIDE_ORBS;
 			else
 				return WEAPON_ELECTRO_SUICIDE_BOLT;
 		}
-		METHOD(Electro, wr_killmessage, bool(entity thiswep))
+		METHOD(Electro, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
@@ -561,7 +551,7 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 #endif
 #ifdef CSQC
 
-		METHOD(Electro, wr_impacteffect, bool(entity thiswep))
+		METHOD(Electro, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
@@ -587,17 +577,6 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 						sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 				}
 			}
-
-			return true;
-		}
-		METHOD(Electro, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Electro, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

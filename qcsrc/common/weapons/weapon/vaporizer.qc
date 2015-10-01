@@ -237,16 +237,14 @@ void W_RocketMinsta_Attack3 (void)
     }
 }
 
-		METHOD(Vaporizer, wr_aim, bool(entity thiswep))
+		METHOD(Vaporizer, wr_aim, void(entity thiswep))
 		{
 			if(self.WEP_AMMO(VAPORIZER) > 0)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
-
-			return true;
 		}
-		METHOD(Vaporizer, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Vaporizer, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			// if the laser uses load, we also consider its ammo for reloading
@@ -320,20 +318,16 @@ void W_RocketMinsta_Attack3 (void)
 			}
 			else
 				self.held_down = false;
-
-			return true;
 		}
-		METHOD(Vaporizer, wr_init, bool(entity thiswep))
+		METHOD(Vaporizer, wr_init, void(entity thiswep))
 		{
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(Vaporizer, wr_setup, bool(entity thiswep))
+		METHOD(Vaporizer, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = WEP_AMMO(VAPORIZER);
 			self.vaporizer_lasthit = 0;
-			return true;
 		}
 		METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep))
 		{
@@ -350,17 +344,15 @@ void W_RocketMinsta_Attack3 (void)
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
 			return ammo_amount;
 		}
-		METHOD(Vaporizer, wr_config, bool(entity thiswep))
+		METHOD(Vaporizer, wr_config, void(entity thiswep))
 		{
 			VAPORIZER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Vaporizer, wr_resetplayer, bool(entity thiswep))
+		METHOD(Vaporizer, wr_resetplayer, void(entity thiswep))
 		{
 			self.vaporizer_lasthit = 0;
-			return true;
 		}
-		METHOD(Vaporizer, wr_reload, bool(entity thiswep))
+		METHOD(Vaporizer, wr_reload, void(entity thiswep))
 		{
 			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			float used_ammo;
@@ -370,13 +362,12 @@ void W_RocketMinsta_Attack3 (void)
 				used_ammo = vaporizer_ammo;
 
 			W_Reload(used_ammo, SND(RELOAD));
-			return true;
 		}
-		METHOD(Vaporizer, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Vaporizer, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(Vaporizer, wr_killmessage, bool(entity thiswep))
+		METHOD(Vaporizer, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_VAPORIZER_MURDER;
 		}
@@ -384,7 +375,7 @@ void W_RocketMinsta_Attack3 (void)
 #endif
 #ifdef CSQC
 
-		METHOD(Vaporizer, wr_impacteffect, bool(entity thiswep))
+		METHOD(Vaporizer, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2 = w_org + w_backoff * 6;
 			if(w_deathtype & HITTYPE_SECONDARY)
@@ -397,15 +388,13 @@ void W_RocketMinsta_Attack3 (void)
 				pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
 				if(!w_issilent) { sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM); }
 			}
-			return true;
 		}
-		METHOD(Vaporizer, wr_init, bool(entity thiswep))
+		METHOD(Vaporizer, wr_init, void(entity thiswep))
 		{
 			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
 			{
 				precache_pic("gfx/reticle_nex");
 			}
-			return true;
 		}
 		METHOD(Vaporizer, wr_zoomreticle, bool(entity thiswep))
 		{

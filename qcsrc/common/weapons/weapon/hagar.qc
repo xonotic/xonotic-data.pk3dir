@@ -400,16 +400,14 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 	}
 }
 
-		METHOD(Hagar, wr_aim, bool(entity thiswep))
+		METHOD(Hagar, wr_aim, void(entity thiswep))
 		{
 			if(random()>0.15)
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
 			else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
-
-			return true;
 		}
-		METHOD(Hagar, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Hagar, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			float loadable_secondary;
 			loadable_secondary = (WEP_CVAR_SEC(hagar, load) && WEP_CVAR(hagar, secondary));
@@ -435,9 +433,8 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, refire), w_ready);
 				}
 			}
-			return true;
 		}
-		METHOD(Hagar, wr_gonethink, bool(entity thiswep))
+		METHOD(Hagar, wr_gonethink, void(entity thiswep))
 		{
 			// we lost the weapon and want to prepare switching away
 			if(self.hagar_load)
@@ -445,15 +442,12 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 				self.weaponentity.state = WS_READY;
 				W_Hagar_Attack2_Load_Release();
 			}
-
-			return true;
 		}
-		METHOD(Hagar, wr_init, bool(entity thiswep))
+		METHOD(Hagar, wr_init, void(entity thiswep))
 		{
 			HAGAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(Hagar, wr_setup, bool(entity thiswep))
+		METHOD(Hagar, wr_setup, void(entity thiswep))
 		{
 			self.hagar_loadblock = false;
 
@@ -462,8 +456,6 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 				W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo if necessary
 				self.hagar_load = 0;
 			}
-
-			return true;
 		}
 		METHOD(Hagar, wr_checkammo1, bool(entity thiswep))
 		{
@@ -477,36 +469,30 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 			ammo_amount += self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 			return ammo_amount;
 		}
-		METHOD(Hagar, wr_config, bool(entity thiswep))
+		METHOD(Hagar, wr_config, void(entity thiswep))
 		{
 			HAGAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Hagar, wr_resetplayer, bool(entity thiswep))
+		METHOD(Hagar, wr_resetplayer, void(entity thiswep))
 		{
 			self.hagar_load = 0;
-			return true;
 		}
-		METHOD(Hagar, wr_playerdeath, bool(entity thiswep))
+		METHOD(Hagar, wr_playerdeath, void(entity thiswep))
 		{
 			// if we have any rockets loaded when we die, release them
 			if(self.hagar_load && WEP_CVAR_SEC(hagar, load_releasedeath))
 				W_Hagar_Attack2_Load_Release();
-
-			return true;
 		}
-		METHOD(Hagar, wr_reload, bool(entity thiswep))
+		METHOD(Hagar, wr_reload, void(entity thiswep))
 		{
 			if(!self.hagar_load) // require releasing loaded rockets first
 				W_Reload(min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), SND(RELOAD));
-
-			return true;
 		}
-		METHOD(Hagar, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Hagar, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_HAGAR_SUICIDE;
 		}
-		METHOD(Hagar, wr_killmessage, bool(entity thiswep))
+		METHOD(Hagar, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_HAGAR_MURDER_BURST;
@@ -517,7 +503,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 #endif
 #ifdef CSQC
 
-		METHOD(Hagar, wr_impacteffect, bool(entity thiswep))
+		METHOD(Hagar, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
@@ -531,17 +517,6 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 				else
 					sound(self, CH_SHOTS, SND_HAGEXP3, VOL_BASE, ATTN_NORM);
 			}
-
-			return true;
-		}
-		METHOD(Hagar, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Hagar, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

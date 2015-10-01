@@ -42,7 +42,7 @@ float autocvar_g_vehicle_racer_rocket_climbspeed;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle;
 
 void racer_fire_rocket(vector org, vector dir, entity trg);
-METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+METHOD(RacerAttack, wr_think, void(entity thiswep, bool fire1, bool fire2))
 {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
@@ -72,7 +72,6 @@ METHOD(RacerAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
         weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
     }
     setself(this);
-    return true;
 }
 
 METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep))

@@ -350,7 +350,7 @@ void W_Fireball_Attack2(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-		METHOD(Fireball, wr_aim, bool(entity thiswep))
+		METHOD(Fireball, wr_aim, void(entity thiswep))
 		{
 			self.BUTTON_ATCK = false;
 			self.BUTTON_ATCK2 = false;
@@ -370,10 +370,8 @@ void W_Fireball_Attack2(void)
 					if(random() < 0.01) self.bot_primary_fireballmooth = 1;
 				}
 			}
-
-			return true;
 		}
-		METHOD(Fireball, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Fireball, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(fire1)
 			{
@@ -392,18 +390,14 @@ void W_Fireball_Attack2(void)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(fireball, animtime), w_ready);
 				}
 			}
-
-			return true;
 		}
-		METHOD(Fireball, wr_init, bool(entity thiswep))
+		METHOD(Fireball, wr_init, void(entity thiswep))
 		{
 			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		METHOD(Fireball, wr_setup, bool(entity thiswep))
+		METHOD(Fireball, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
-			return true;
 		}
 		METHOD(Fireball, wr_checkammo1, bool(entity thiswep))
 		{
@@ -413,24 +407,22 @@ void W_Fireball_Attack2(void)
 		{
 			return true; // fireball has infinite ammo
 		}
-		METHOD(Fireball, wr_config, bool(entity thiswep))
+		METHOD(Fireball, wr_config, void(entity thiswep))
 		{
 			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Fireball, wr_resetplayer, bool(entity thiswep))
+		METHOD(Fireball, wr_resetplayer, void(entity thiswep))
 		{
 			self.fireball_primarytime = time;
-			return true;
 		}
-		METHOD(Fireball, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Fireball, wr_suicidemessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_FIREBALL_SUICIDE_FIREMINE;
 			else
 				return WEAPON_FIREBALL_SUICIDE_BLAST;
 		}
-		METHOD(Fireball, wr_killmessage, bool(entity thiswep))
+		METHOD(Fireball, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_FIREBALL_MURDER_FIREMINE;
@@ -441,7 +433,7 @@ void W_Fireball_Attack2(void)
 #endif
 #ifdef CSQC
 
-		METHOD(Fireball, wr_impacteffect, bool(entity thiswep))
+		METHOD(Fireball, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			if(w_deathtype & HITTYPE_SECONDARY)
@@ -455,17 +447,6 @@ void W_Fireball_Attack2(void)
 				if(!w_issilent)
 					sound(self, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 			}
-
-			return true;
-		}
-		METHOD(Fireball, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Fireball, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

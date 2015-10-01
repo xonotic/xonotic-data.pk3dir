@@ -297,7 +297,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 .float bot_secondary_grenademooth;
 
-		METHOD(Mortar, wr_aim, bool(entity thiswep))
+		METHOD(Mortar, wr_aim, void(entity thiswep))
 		{
 			self.BUTTON_ATCK = false;
 			self.BUTTON_ATCK2 = false;
@@ -317,8 +317,6 @@ void W_Mortar_Attack2(Weapon thiswep)
 					if(random() < 0.02) self.bot_secondary_grenademooth = 0;
 				}
 			}
-
-			return true;
 		}
 		/*case WR_CALCINFO:
 		{
@@ -336,7 +334,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime))));
 			wepinfo_ter_dps = 0;
 			*/
-		METHOD(Mortar, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+		METHOD(Mortar, wr_think, void(entity thiswep, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(self.weapon);
@@ -372,13 +370,10 @@ void W_Mortar_Attack2(Weapon thiswep)
 					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
 				}
 			}
-
-			return true;
 		}
-		METHOD(Mortar, wr_init, bool(entity thiswep))
+		METHOD(Mortar, wr_init, void(entity thiswep))
 		{
 			MORTAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
 		METHOD(Mortar, wr_checkammo1, bool(entity thiswep))
 		{
@@ -392,24 +387,22 @@ void W_Mortar_Attack2(Weapon thiswep)
 			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
-		METHOD(Mortar, wr_config, bool(entity thiswep))
+		METHOD(Mortar, wr_config, void(entity thiswep))
 		{
 			MORTAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		METHOD(Mortar, wr_reload, bool(entity thiswep))
+		METHOD(Mortar, wr_reload, void(entity thiswep))
 		{
 			W_Reload(min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
-			return true;
 		}
-		METHOD(Mortar, wr_suicidemessage, bool(entity thiswep))
+		METHOD(Mortar, wr_suicidemessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MORTAR_SUICIDE_BOUNCE;
 			else
 				return WEAPON_MORTAR_SUICIDE_EXPLODE;
 		}
-		METHOD(Mortar, wr_killmessage, bool(entity thiswep))
+		METHOD(Mortar, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MORTAR_MURDER_BOUNCE;
@@ -420,24 +413,13 @@ void W_Mortar_Attack2(Weapon thiswep)
 #endif
 #ifdef CSQC
 
-		METHOD(Mortar, wr_impacteffect, bool(entity thiswep))
+		METHOD(Mortar, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum(EFFECT_GRENADE_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
-
-			return true;
-		}
-		METHOD(Mortar, wr_init, bool(entity thiswep))
-		{
-			return true;
-		}
-		METHOD(Mortar, wr_zoomreticle, bool(entity thiswep))
-		{
-			// no weapon specific image for this weapon
-			return false;
 		}
 
 #endif

@@ -19,7 +19,7 @@ float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
 void turret_hellion_missile_think();
-METHOD(HellionAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(HellionAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     if (fire1)
@@ -50,7 +50,6 @@ METHOD(HellionAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
         missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
         if (!isPlayer) self.tur_head.frame += 1;
     }
-    return true;
 }
 
 void turret_hellion_missile_think()

@@ -17,7 +17,7 @@ REGISTER_WEAPON(TUR_MACHINEGUN, NEW(MachineGunTurretAttack));
 
 void W_MachineGun_MuzzleFlash();
 
-METHOD(MachineGunTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2))
+METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, bool fire1, bool fire2))
 {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
@@ -35,7 +35,6 @@ METHOD(MachineGunTurretAttack, wr_think, bool(entity thiswep, bool fire1, bool f
         W_MachineGun_MuzzleFlash();
         setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
     }
-    return true;
 }
 
 #endif

@@ -16,7 +16,7 @@ REGISTER_WEAPON(EWHEEL, NEW(EWheelAttack));
 #ifdef SVQC
 
 void turret_initparams(entity);
-METHOD(EWheelAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
+METHOD(EWheelAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     if (fire1)
@@ -44,7 +44,6 @@ METHOD(EWheelAttack, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
                 self.tur_head.frame = 0;
         }
     }
-    return true;
 }
 
 #endif
