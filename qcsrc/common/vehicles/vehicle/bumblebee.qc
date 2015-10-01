@@ -14,7 +14,7 @@ CLASS(Bumblebee, Vehicle)
 /* hud_model  */ ATTRIB(Bumblebee, hud_model, string, "models/vehicles/spiderbot_cockpit.dpm");
 /* tags       */ ATTRIB(Bumblebee, tag_head, string, "");
 /* tags       */ ATTRIB(Bumblebee, tag_hud, string, "");
-/* tags       */ ATTRIB(Bumblebee, tag_hview, string, "tag_viewport");
+/* tags       */ ATTRIB(Bumblebee, tag_view, string, "tag_viewport");
 /* netname    */ ATTRIB(Bumblebee, netname, string, "bumblebee");
 /* fullname   */ ATTRIB(Bumblebee, vehicle_name, string, _("Bumblebee"));
 /* icon       */ ATTRIB(Bumblebee, m_icon, string, "vehicle_bumble");

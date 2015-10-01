@@ -14,7 +14,7 @@ CLASS(Raptor, Vehicle)
 /* hud_model  */ ATTRIB(Raptor, hud_model, string, "models/vehicles/raptor_cockpit.dpm");
 /* tags       */ ATTRIB(Raptor, tag_head, string, "");
 /* tags       */ ATTRIB(Raptor, tag_hud, string, "tag_hud");
-/* tags       */ ATTRIB(Raptor, tag_hview, string, "tag_camera");
+/* tags       */ ATTRIB(Raptor, tag_view, string, "tag_camera");
 /* netname    */ ATTRIB(Raptor, netname, string, "raptor");
 /* fullname   */ ATTRIB(Raptor, vehicle_name, string, _("Raptor"));
 /* icon       */ ATTRIB(Raptor, m_icon, string, "vehicle_raptor");

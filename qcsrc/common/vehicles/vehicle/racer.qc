@@ -13,7 +13,7 @@ CLASS(Racer, Vehicle)
 /* hud_model  */ ATTRIB(Racer, hud_model, string, "models/vehicles/wakizashi_cockpit.dpm");
 /* tags       */ ATTRIB(Racer, tag_head, string, "");
 /* tags       */ ATTRIB(Racer, tag_hud, string, "");
-/* tags       */ ATTRIB(Racer, tag_hview, string, "tag_viewport");
+/* tags       */ ATTRIB(Racer, tag_view, string, "tag_viewport");
 /* netname    */ ATTRIB(Racer, netname, string, "racer");
 /* fullname   */ ATTRIB(Racer, vehicle_name, string, _("Racer"));
 /* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");

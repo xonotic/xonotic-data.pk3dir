@@ -13,7 +13,7 @@ CLASS(Spiderbot, Vehicle)
 /* hud_model  */ ATTRIB(Spiderbot, hud_model, string, "models/vehicles/spiderbot_cockpit.dpm");
 /* tags       */ ATTRIB(Spiderbot, tag_head, string, "tag_head");
 /* tags       */ ATTRIB(Spiderbot, tag_hud, string, "tag_hud");
-/* tags       */ ATTRIB(Spiderbot, tag_hview, string, "");
+/* tags       */ ATTRIB(Spiderbot, tag_view, string, "");
 /* netname    */ ATTRIB(Spiderbot, netname, string, "spiderbot");
 /* fullname   */ ATTRIB(Spiderbot, vehicle_name, string, _("Spiderbot"));
 /* icon       */ ATTRIB(Spiderbot, m_icon, string, "vehicle_spider");
