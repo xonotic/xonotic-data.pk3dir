@@ -1,8 +1,6 @@
 #ifndef MINIGAMES_H
 #define MINIGAMES_H
 
-entity minigame_descriptors;
-
 // previous node in a doubly linked list
 .entity list_prev;
 // next node in a linked list

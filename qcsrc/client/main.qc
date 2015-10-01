@@ -48,7 +48,6 @@
 #include "../common/triggers/include.qh"
 
 #include "../common/turrets/cl_turrets.qh"
-#include "../common/turrets/turrets.qh"
 
 #include "../warpzonelib/client.qh"
 
@@ -151,8 +150,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-
-	initialize_minigames();
 
 	// precaches
 

@@ -1,3 +1,5 @@
+REGISTER_MINIGAME(ttt, "Tic Tac Toe");
+
 const int TTT_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const int TTT_TURN_WIN   = 0x0200; // player has won
 const int TTT_TURN_DRAW  = 0x0400; // no moves are possible

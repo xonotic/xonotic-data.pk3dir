@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ WALKER,
 /* function   */ t_walker,
@@ -334,7 +334,7 @@ void walker_move_path()
 #endif
 }
 
-void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER)) remove(self); }
+void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER.m_id)) remove(self); }
 
 float t_walker(float req)
 {SELFPARAM();

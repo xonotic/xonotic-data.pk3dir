@@ -299,6 +299,8 @@ string formatmessage(string msg)
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(self.velocity)); break;
+			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
+			case "T": replacement = seconds_tostring(time); break;
 			default:
 			{
 				MUTATOR_CALLHOOK(FormatMessage, escape, replacement, msg);

@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ HK,
 /* function   */ t_hk,
@@ -273,7 +273,7 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
     return 0;
 }
 
-void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK)) remove(self); }
+void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK.m_id)) remove(self); }
 
 float t_hk(float req)
 {SELFPARAM();

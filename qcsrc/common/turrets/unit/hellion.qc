@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ HELLION,
 /* function   */ t_hellion,
@@ -76,7 +76,7 @@ void turret_hellion_missile_think()
     UpdateCSQCProjectile(self);
 }
 
-void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION)) remove(self); }
+void spawnfunc_turret_hellion() { SELFPARAM(); if(!turret_initialize(TUR_HELLION.m_id)) remove(self); }
 
 float t_hellion(float req)
 {SELFPARAM();
