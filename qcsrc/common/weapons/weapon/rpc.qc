@@ -109,7 +109,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(self);
 	entity flash = spawn ();
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR(rpc, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR(rpc, ammo));
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKET_FIRE), CH_WEAPON_A, WEP_CVAR(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
@@ -143,7 +143,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 	setmodel(flash, MDL_RPC_MUZZLEFLASH); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	W_AttachToShotorg(self, flash, '5 0 0');
 	missile.pos1 = missile.velocity;
 
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
@@ -153,19 +153,19 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 		}
-		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(WEP_CVAR(rpc, reload_ammo) && self.clip_load < WEP_CVAR(rpc, ammo)) {
-				Weapon w = get_weaponinfo(self.weapon);
+			if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
+				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else
 			{
 				if (fire1)
 				{
-					if(weapon_prepareattack(false, WEP_CVAR(rpc, refire)))
+					if(weapon_prepareattack(actor, false, WEP_CVAR(rpc, refire)))
 					{
 						W_RocketPropelledChainsaw_Attack(thiswep);
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
 					}
 				}
 
@@ -195,7 +195,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		}
 		METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep))
 		{
-			W_Reload(WEP_CVAR(rpc, ammo), SND(RELOAD));
+			W_Reload(self, WEP_CVAR(rpc, ammo), SND(RELOAD));
 		}
 		METHOD(RocketPropelledChainsaw, wr_suicidemessage, int(entity thiswep))
 		{

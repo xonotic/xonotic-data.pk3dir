@@ -50,32 +50,31 @@ float autocvar_g_monster_spider_attack_bite_delay;
 
 void M_Spider_Attack_Web();
 
-METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, bool fire1, bool fire2)) {
-    SELFPARAM();
-    bool isPlayer = IS_PLAYER(self);
+METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, bool fire1, bool fire2)) {
+    bool isPlayer = IS_PLAYER(actor);
     if (fire1)
-    if ((!isPlayer && time >= self.spider_web_delay) || weapon_prepareattack(false, autocvar_g_monster_spider_attack_web_delay)) {
+    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(actor, false, autocvar_g_monster_spider_attack_web_delay)) {
 		if (!isPlayer) {
-			self.spider_web_delay = time + 3;
-			setanim(self, self.anim_shoot, true, true, true);
-			self.attack_finished_single = time + (autocvar_g_monster_spider_attack_web_delay);
-			self.anim_finished = time + 1;
+			actor.spider_web_delay = time + 3;
+			setanim(actor, actor.anim_shoot, true, true, true);
+			actor.attack_finished_single = time + (autocvar_g_monster_spider_attack_web_delay);
+			actor.anim_finished = time + 1;
 		}
-        if (isPlayer) self.enemy = Monster_FindTarget(self);
-        W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-    	if (!isPlayer) w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+        if (isPlayer) actor.enemy = Monster_FindTarget(actor);
+        W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+    	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web();
-        weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
         return;
     }
     if (fire2)
-    if (!isPlayer || weapon_prepareattack(true, 0.5)) {
+    if (!isPlayer || weapon_prepareattack(actor, true, 0.5)) {
     	if (isPlayer) {
-    		self.enemy = Monster_FindTarget(self);
-    		self.attack_range = 60;
+    		actor.enemy = Monster_FindTarget(actor);
+    		actor.attack_range = 60;
     	}
-    	Monster_Attack_Melee(self.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, true);
-        weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
+    	Monster_Attack_Melee(actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, true);
+        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
     }
 }
 
@@ -159,12 +158,12 @@ bool M_Spider_Attack(int attack_type, entity targ)
 		Weapon wep = WEP_SPIDER_ATTACK;
 		case MONSTER_ATTACK_MELEE:
 		{
-			wep.wr_think(wep, false, true);
+			wep.wr_think(wep, self, false, true);
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			wep.wr_think(wep, true, false);
+			wep.wr_think(wep, self, true, false);
 			return true;
 		}
 	}

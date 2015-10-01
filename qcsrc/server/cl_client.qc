@@ -2552,7 +2552,7 @@ void PlayerPreThink (void)
 		{
 			self.items &= ~self.items_added;
 
-			W_WeaponFrame();
+			W_WeaponFrame(self);
 
 			self.items_added = 0;
 			if(self.items & ITEM_Jetpack.m_itemid)

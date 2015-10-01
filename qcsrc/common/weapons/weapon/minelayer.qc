@@ -325,7 +325,7 @@ void W_MineLayer_Attack(Weapon thiswep)
 		}
 	}
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR(minelayer, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR(minelayer, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, SND(MINE_FIRE), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -371,7 +371,7 @@ void W_MineLayer_Attack(Weapon thiswep)
 	setmodel(flash, MDL_MINELAYER_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	W_AttachToShotorg(self, flash, '5 0 0');
 
 	// common properties
 
@@ -499,29 +499,29 @@ float W_MineLayer_PlacedMines(float detonate)
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
 		}
-		METHOD(MineLayer, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
+			if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-				if(!(W_MineLayer_PlacedMines(false) && self.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo))) {
-					Weapon w = get_weaponinfo(self.weapon);
+				if(!(W_MineLayer_PlacedMines(false) && actor.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo))) {
+					Weapon w = get_weaponinfo(actor.weapon);
 					w.wr_reload(w);
 				}
 			}
 			else if(fire1)
 			{
-				if(weapon_prepareattack(false, WEP_CVAR(minelayer, refire)))
+				if(weapon_prepareattack(actor, false, WEP_CVAR(minelayer, refire)))
 				{
 					W_MineLayer_Attack(thiswep);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
 				}
 			}
 
 			if(fire2)
 			{
 				if(W_MineLayer_PlacedMines(true))
-					sound(self, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
+					sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
 			}
 		}
 		METHOD(MineLayer, wr_init, void(entity thiswep))
@@ -556,7 +556,7 @@ float W_MineLayer_PlacedMines(float detonate)
 		}
 		METHOD(MineLayer, wr_reload, void(entity thiswep))
 		{
-			W_Reload(WEP_CVAR(minelayer, ammo), SND(RELOAD));
+			W_Reload(self, WEP_CVAR(minelayer, ammo), SND(RELOAD));
 		}
 		METHOD(MineLayer, wr_suicidemessage, int(entity thiswep))
 		{

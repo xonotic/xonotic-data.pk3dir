@@ -379,27 +379,27 @@ void W_Tuba_NoteOn(float hittype)
 					self.BUTTON_ATCK2 = 1;
 			}
 		}
-		METHOD(Tuba, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
 			if(fire1)
-			if(weapon_prepareattack(false, WEP_CVAR(tuba, refire)))
+			if(weapon_prepareattack(actor, false, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(0);
-				//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
-				weapon_thinkf(WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+				//weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
+				weapon_thinkf(actor, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
 			if(fire2)
-			if(weapon_prepareattack(true, WEP_CVAR(tuba, refire)))
+			if(weapon_prepareattack(actor, true, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(HITTYPE_SECONDARY);
-				//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
-				weapon_thinkf(WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+				//weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
+				weapon_thinkf(actor, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
-			if(self.tuba_note)
+			if(actor.tuba_note)
 			{
 				if(!fire1 && !fire2)
 				{
-					WITH(entity, self, self.tuba_note, W_Tuba_NoteOff());
+					WITH(entity, self, actor.tuba_note, W_Tuba_NoteOff());
 				}
 			}
 		}
@@ -435,7 +435,7 @@ void W_Tuba_NoteOn(float hittype)
 				W_SetupShot(self, false, 0, "", 0, 0);
 				Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 				self.weaponentity.state = WS_INUSE;
-				weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
+				weapon_thinkf(self, WFRAME_RELOAD, 0.5, w_ready);
 			}
 		}
 		METHOD(Tuba, wr_checkammo1, bool(entity thiswep))

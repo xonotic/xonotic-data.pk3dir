@@ -84,6 +84,7 @@ void W_Blaster_Think(void)
 }
 
 void W_Blaster_Attack(
+	entity actor,
 	float atk_deathtype,
 	float atk_shotangle,
 	float atk_damage,
@@ -97,11 +98,11 @@ void W_Blaster_Attack(
 {SELFPARAM();
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(self, s_forward, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, atk_damage);
+	W_SetupShot_Dir(actor, s_forward, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, atk_damage);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = spawn();
-	missile.owner = missile.realowner = self;
+	missile.owner = missile.realowner = actor;
 	missile.classname = "blasterbolt";
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = atk_damage;
@@ -139,9 +140,9 @@ void W_Blaster_Attack(
 	missile.think = W_Blaster_Think;
 	missile.nextthink = time + atk_delay;
 
-	MUTATOR_CALLHOOK(EditProjectile, self, missile);
+	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
-	if(time >= missile.nextthink)
+	if (time >= missile.nextthink)
 	{
 		WITH(entity, self, missile, missile.think());
 	}
@@ -160,13 +161,14 @@ void W_Blaster_Attack(
 				{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 		}
 
-		METHOD(Blaster, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, bool fire1, bool fire2))
 		{
 			if(fire1)
 			{
-				if(weapon_prepareattack(false, WEP_CVAR_PRI(blaster, refire)))
+				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(blaster, refire)))
 				{
 					W_Blaster_Attack(
+						actor,
 						WEP_BLASTER.m_id,
 						WEP_CVAR_PRI(blaster, shotangle),
 						WEP_CVAR_PRI(blaster, damage),
@@ -178,7 +180,7 @@ void W_Blaster_Attack(
 						WEP_CVAR_PRI(blaster, delay),
 						WEP_CVAR_PRI(blaster, lifetime)
 					);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
 				}
 			}
 			else if(fire2)
@@ -187,16 +189,17 @@ void W_Blaster_Attack(
 				{
 					case 0: // switch to last used weapon
 					{
-						if(self.switchweapon == WEP_BLASTER.m_id) // don't do this if already switching
+						if(actor.switchweapon == WEP_BLASTER.m_id) // don't do this if already switching
 							W_LastWeapon();
 						break;
 					}
 
 					case 1: // normal projectile secondary
 					{
-						if(weapon_prepareattack(true, WEP_CVAR_SEC(blaster, refire)))
+						if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(blaster, refire)))
 						{
 							W_Blaster_Attack(
+								actor,
 								WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 								WEP_CVAR_SEC(blaster, shotangle),
 								WEP_CVAR_SEC(blaster, damage),
@@ -208,7 +211,7 @@ void W_Blaster_Attack(
 								WEP_CVAR_SEC(blaster, delay),
 								WEP_CVAR_SEC(blaster, lifetime)
 							);
-							weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
+							weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
 						}
 
 						break;

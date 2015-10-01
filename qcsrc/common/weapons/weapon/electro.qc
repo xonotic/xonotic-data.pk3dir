@@ -249,7 +249,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep)
 {SELFPARAM();
 	entity proj;
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(electro, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
 		self,
@@ -347,7 +347,7 @@ void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int d
 
 void W_Electro_Attack_Orb(Weapon thiswep)
 {SELFPARAM();
-	W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(electro, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
 		self,
@@ -406,19 +406,19 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
+void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
 {SELFPARAM();
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)
-	if(weapon_prepareattack(true, -1))
+	if(weapon_prepareattack(actor, true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO);
 		self.electro_count -= 1;
-		weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+		weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
 	// WEAPONTODO: when the player releases the button, cut down the length of refire2?
-	w_ready(thiswep, fire1, fire2);
+	w_ready(thiswep, actor, fire1, fire2);
 }
 
 .float bot_secondary_electromooth;
@@ -451,19 +451,19 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 				}
 			}
 		}
-		METHOD(Electro, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Electro, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
 			if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
 			{
 				float ammo_amount = 0;
-				if(self.clip_load >= WEP_CVAR_PRI(electro, ammo))
+				if(actor.clip_load >= WEP_CVAR_PRI(electro, ammo))
 					ammo_amount = 1;
-				if(self.clip_load >= WEP_CVAR_SEC(electro, ammo))
+				if(actor.clip_load >= WEP_CVAR_SEC(electro, ammo))
 					ammo_amount += 1;
 
 				if(!ammo_amount)
 				{
-					Weapon w = get_weaponinfo(self.weapon);
+					Weapon w = get_weaponinfo(actor.weapon);
 					w.wr_reload(w);
 					return;
 				}
@@ -471,21 +471,21 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 
 			if(fire1)
 			{
-				if(weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire)))
+				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(electro, refire)))
 				{
 						W_Electro_Attack_Bolt(thiswep);
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 				}
 			}
 			else if(fire2)
 			{
-				if(time >= self.electro_secondarytime)
-				if(weapon_prepareattack(true, WEP_CVAR_SEC(electro, refire)))
+				if(time >= actor.electro_secondarytime)
+				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(electro, refire)))
 				{
 					W_Electro_Attack_Orb(thiswep);
-					self.electro_count = WEP_CVAR_SEC(electro, count);
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
-					self.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
+					actor.electro_count = WEP_CVAR_SEC(electro, count);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+					actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
 				}
 			}
 		}
@@ -524,7 +524,7 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 		}
 		METHOD(Electro, wr_reload, void(entity thiswep))
 		{
-			W_Reload(min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
+			W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
 		}
 		METHOD(Electro, wr_suicidemessage, int(entity thiswep))
 		{

@@ -42,15 +42,13 @@ float autocvar_g_vehicle_racer_rocket_climbspeed;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle;
 
 void racer_fire_rocket(vector org, vector dir, entity trg);
-METHOD(RacerAttack, wr_think, void(entity thiswep, bool fire1, bool fire2))
+METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 {
-    SELFPARAM();
-    bool isPlayer = IS_PLAYER(self);
-    entity player = isPlayer ? self : self.owner;
+    bool isPlayer = IS_PLAYER(actor);
+    entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
-    setself(player);
     if (fire1)
-    if (weapon_prepareattack(false, autocvar_g_vehicle_racer_cannon_refire)) {
+    if (weapon_prepareattack(player, false, autocvar_g_vehicle_racer_cannon_refire)) {
         if (veh) {
             veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
             veh.wait = time;
@@ -63,15 +61,14 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, bool fire1, bool fire2))
                                autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
                                DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, player);
         bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
-        weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(player, WFRAME_FIRE1, 0, w_ready);
     }
     if (fire2)
-    if (!isPlayer || weapon_prepareattack(false, 0.2)) {
-        if (isPlayer) W_SetupShot_Dir(self, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
+    if (!isPlayer || weapon_prepareattack(actor, false, 0.2)) {
+        if (isPlayer) W_SetupShot_Dir(actor, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
         racer_fire_rocket(w_shotorg, w_shotdir, NULL);
-        weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
     }
-    setself(this);
 }
 
 METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep))

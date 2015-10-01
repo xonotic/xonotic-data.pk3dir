@@ -23,19 +23,18 @@ float autocvar_g_turrets_unit_hk_shot_speed_max;
 float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
 void turret_hk_missile_think();
-METHOD(HunterKillerAttack, wr_think, void(entity thiswep, bool fire1, bool fire2))
+METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 {
-	SELFPARAM();
-	bool isPlayer = IS_PLAYER(self);
+	bool isPlayer = IS_PLAYER(actor);
 	if (fire1)
-	if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
+	if (!isPlayer || weapon_prepareattack(actor, false, WEP_CVAR_PRI(electro, refire))) {
 		if (isPlayer) {
-            turret_initparams(self);
-            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-            self.tur_shotdir_updated = w_shotdir;
-            self.tur_shotorg = w_shotorg;
-            self.tur_head = self;
-            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            turret_initparams(actor);
+            W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            actor.tur_shotdir_updated = w_shotdir;
+            actor.tur_shotorg = w_shotorg;
+            actor.tur_head = actor;
+            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
         entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, FALSE, FALSE);
         te_explosion (missile.origin);
@@ -43,15 +42,15 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, bool fire1, bool fire2
         missile.think = turret_hk_missile_think;
         missile.nextthink = time + 0.25;
         missile.movetype = MOVETYPE_BOUNCEMISSILE;
-        missile.velocity = self.tur_shotdir_updated * (self.shot_speed * 0.75);
+        missile.velocity = actor.tur_shotdir_updated * (actor.shot_speed * 0.75);
         missile.angles = vectoangles(missile.velocity);
         missile.cnt = time + 30;
         missile.ticrate = max(autocvar_sys_ticrate, 0.05);
         missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_AI;
 
         if (!isPlayer)
-        if (self.tur_head.frame == 0)
-            self.tur_head.frame = self.tur_head.frame + 1;
+        if (actor.tur_head.frame == 0)
+            actor.tur_head.frame = actor.tur_head.frame + 1;
 	}
 }
 

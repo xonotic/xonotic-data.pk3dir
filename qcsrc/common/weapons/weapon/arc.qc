@@ -656,36 +656,35 @@ void Arc_Smoke()
 				);
 			}
 		}
-		METHOD(Arc, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Arc, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			SELFPARAM();
-			Arc_Player_SetHeat(self);
+			Arc_Player_SetHeat(actor);
 			Arc_Smoke();
 
-			if (time >= self.arc_overheat)
-			if (fire1 || fire2 || self.arc_beam.beam_bursting)
+			if (time >= actor.arc_overheat)
+			if (fire1 || fire2 || actor.arc_beam.beam_bursting)
 			{
 
-				if(self.arc_BUTTON_ATCK_prev)
+				if(actor.arc_BUTTON_ATCK_prev)
 				{
 					#if 0
-					if(self.animstate_startframe == self.anim_shoot.x && self.animstate_numframes == self.anim_shoot.y)
-						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
+					if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
+						weapon_thinkf(actor, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
 					else
 					#endif
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 				}
 
-				if((!self.arc_beam) || wasfreed(self.arc_beam))
+				if((!actor.arc_beam) || wasfreed(actor.arc_beam))
 				{
-					if(weapon_prepareattack(fire2, 0))
+					if(weapon_prepareattack(actor, fire2, 0))
 					{
 						W_Arc_Beam(fire2);
 
-						if(!self.arc_BUTTON_ATCK_prev)
+						if(!actor.arc_BUTTON_ATCK_prev)
 						{
-							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-							self.arc_BUTTON_ATCK_prev = true;
+							weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+							actor.arc_BUTTON_ATCK_prev = true;
 						}
 					}
 				}
@@ -693,22 +692,22 @@ void Arc_Smoke()
 				return;
 			}
 
-			if(self.arc_BUTTON_ATCK_prev)
+			if(actor.arc_BUTTON_ATCK_prev)
 			{
-				sound(self, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
-				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-				ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
+				sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
+				weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+				ATTACK_FINISHED(actor) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
 			}
-			self.arc_BUTTON_ATCK_prev = false;
+			actor.arc_BUTTON_ATCK_prev = false;
 
 			#if 0
 			if(fire2)
-			if(weapon_prepareattack(true, autocvar_g_balance_arc_secondary_refire))
+			if(weapon_prepareattack(actor, true, autocvar_g_balance_arc_secondary_refire))
 			{
 				W_Arc_Attack2();
-				self.arc_count = autocvar_g_balance_arc_secondary_count;
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
-				self.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
+				actor.arc_count = autocvar_g_balance_arc_secondary_count;
+				weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+				actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
 			}
 			#endif
 		}

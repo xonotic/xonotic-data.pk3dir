@@ -165,11 +165,11 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 // WEAPONTODO
 .float autoswitch;
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
-void w_clear(Weapon thiswep, bool fire1, bool fire2);
-void w_ready(Weapon thiswep, bool fire1, bool fire2);
+void w_clear(Weapon thiswep, entity actor, bool fire1, bool fire2);
+void w_ready(Weapon thiswep, entity actor, bool fire1, bool fire2);
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
-.void(Weapon thiswep, bool fire1, bool fire2) weapon_think;
+.void(Weapon thiswep, entity actor, bool fire1, bool fire2) weapon_think;
 
 
 // weapon states (self.weaponentity.state)

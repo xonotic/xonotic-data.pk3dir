@@ -21,7 +21,7 @@ CLASS(OffhandHook, OffhandWeapon)
     METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity player, bool key_pressed))
     {
     	Weapon wep = WEP_HOOK;
-    	WITH(entity, self, player, wep.wr_think(wep, key_pressed, false));
+    	WITH(entity, self, player, wep.wr_think(wep, self, key_pressed, false));
     }
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
@@ -135,7 +135,7 @@ void W_Hook_Attack2(Weapon thiswep)
 {SELFPARAM();
 	entity gren;
 
-	//W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
+	//W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
 	W_SetupShot(self, false, 4, SND(HOOKBOMB_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn();
@@ -176,68 +176,68 @@ void W_Hook_Attack2(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-		METHOD(Hook, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Hook, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(fire1 || self.BUTTON_HOOK)
+			if(fire1 || actor.BUTTON_HOOK)
 			{
-				if(!self.hook)
-				if(!(self.hook_state & HOOK_WAITING_FOR_RELEASE))
-				if(!(self.hook_state & HOOK_FIRING))
-				if(time > self.hook_refire)
-				if(weapon_prepareattack(false, -1))
+				if(!actor.hook)
+				if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
+				if(!(actor.hook_state & HOOK_FIRING))
+				if(time > actor.hook_refire)
+				if(weapon_prepareattack(actor, false, -1))
 				{
-					W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(hook, ammo));
-					self.hook_state |= HOOK_FIRING;
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
+					W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hook, ammo));
+					actor.hook_state |= HOOK_FIRING;
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
 				}
 			}
 
 			if(fire2)
 			{
-				if(weapon_prepareattack(true, WEP_CVAR_SEC(hook, refire)))
+				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(hook, refire)))
 				{
 					W_Hook_Attack2(thiswep);
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
 				}
 			}
 
-			if(self.hook)
+			if(actor.hook)
 			{
 				// if hooked, no bombs, and increase the timer
-				self.hook_refire = max(self.hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor());
+				actor.hook_refire = max(actor.hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor());
 
 				// hook also inhibits health regeneration, but only for 1 second
-				if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-					self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
+				if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+					actor.pauseregen_finished = max(actor.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
 			}
 
-			if(self.hook && self.hook.state == 1)
+			if(actor.hook && actor.hook.state == 1)
 			{
 				float hooked_time_max = WEP_CVAR_PRI(hook, hooked_time_max);
 				if(hooked_time_max > 0)
 				{
-					if( time > self.hook_time_hooked + hooked_time_max )
-						self.hook_state |= HOOK_REMOVING;
+					if( time > actor.hook_time_hooked + hooked_time_max )
+						actor.hook_state |= HOOK_REMOVING;
 				}
 
 				float hooked_fuel = WEP_CVAR_PRI(hook, hooked_ammo);
 				if(hooked_fuel > 0)
 				{
-					if( time > self.hook_time_fueldecrease )
+					if( time > actor.hook_time_fueldecrease )
 					{
-						if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+						if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 						{
-							if( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
+							if( actor.ammo_fuel >= (time - actor.hook_time_fueldecrease) * hooked_fuel )
 							{
-								W_DecreaseAmmo(thiswep, (time - self.hook_time_fueldecrease) * hooked_fuel);
-								self.hook_time_fueldecrease = time;
+								W_DecreaseAmmo(thiswep, actor, (time - actor.hook_time_fueldecrease) * hooked_fuel);
+								actor.hook_time_fueldecrease = time;
 								// decrease next frame again
 							}
 							else
 							{
-								self.ammo_fuel = 0;
-								self.hook_state |= HOOK_REMOVING;
-								W_SwitchWeapon_Force(self, w_getbestweapon(self));
+								actor.ammo_fuel = 0;
+								actor.hook_state |= HOOK_REMOVING;
+								W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 							}
 						}
 					}
@@ -245,33 +245,33 @@ void W_Hook_Attack2(Weapon thiswep)
 			}
 			else
 			{
-				self.hook_time_hooked = time;
-				self.hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
+				actor.hook_time_hooked = time;
+				actor.hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
 			}
 
-			if(self.BUTTON_CROUCH)
+			if(actor.BUTTON_CROUCH)
 			{
-				self.hook_state &= ~HOOK_PULLING;
-				if(fire1 || self.BUTTON_HOOK)
-					self.hook_state &= ~HOOK_RELEASING;
+				actor.hook_state &= ~HOOK_PULLING;
+				if(fire1 || actor.BUTTON_HOOK)
+					actor.hook_state &= ~HOOK_RELEASING;
 				else
-					self.hook_state |= HOOK_RELEASING;
+					actor.hook_state |= HOOK_RELEASING;
 			}
 			else
 			{
-				self.hook_state |= HOOK_PULLING;
-				self.hook_state &= ~HOOK_RELEASING;
+				actor.hook_state |= HOOK_PULLING;
+				actor.hook_state &= ~HOOK_RELEASING;
 
-				if(fire1 || self.BUTTON_HOOK)
+				if(fire1 || actor.BUTTON_HOOK)
 				{
 					// already fired
-					if(self.hook)
-						self.hook_state |= HOOK_WAITING_FOR_RELEASE;
+					if(actor.hook)
+						actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
 				}
 				else
 				{
-					self.hook_state |= HOOK_REMOVING;
-					self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
+					actor.hook_state |= HOOK_REMOVING;
+					actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 				}
 			}
 

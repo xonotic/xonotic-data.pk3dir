@@ -298,60 +298,59 @@ void W_Porto_Attack(float type)
 		{
 			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
-		METHOD(PortoLaunch, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			SELFPARAM();
 			if(WEP_CVAR(porto, secondary))
 			{
 				if(fire1)
-				if(!self.porto_current)
-				if(!self.porto_forbidden)
-				if(weapon_prepareattack(false, WEP_CVAR_PRI(porto, refire)))
+				if(!actor.porto_current)
+				if(!actor.porto_forbidden)
+				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(0);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 
 				if(fire2)
-				if(!self.porto_current)
-				if(!self.porto_forbidden)
-				if(weapon_prepareattack(true, WEP_CVAR_SEC(porto, refire)))
+				if(!actor.porto_current)
+				if(!actor.porto_forbidden)
+				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(porto, refire)))
 				{
 					W_Porto_Attack(1);
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
 				}
 			}
 			else
 			{
-				if(self.porto_v_angle_held)
+				if(actor.porto_v_angle_held)
 				{
 					if(!fire2)
 					{
-						self.porto_v_angle_held = 0;
+						actor.porto_v_angle_held = 0;
 
-						ClientData_Touch(self);
+						ClientData_Touch(actor);
 					}
 				}
 				else
 				{
 					if(fire2)
 					{
-						self.porto_v_angle = self.v_angle;
-						self.porto_v_angle_held = 1;
+						actor.porto_v_angle = actor.v_angle;
+						actor.porto_v_angle_held = 1;
 
-						ClientData_Touch(self);
+						ClientData_Touch(actor);
 					}
 				}
-				if(self.porto_v_angle_held)
-					makevectors(self.porto_v_angle); // override the previously set angles
+				if(actor.porto_v_angle_held)
+					makevectors(actor.porto_v_angle); // override the previously set angles
 
 				if(fire1)
-				if(!self.porto_current)
-				if(!self.porto_forbidden)
-				if(weapon_prepareattack(false, WEP_CVAR_PRI(porto, refire)))
+				if(!actor.porto_current)
+				if(!actor.porto_forbidden)
+				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(-1);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 			}
 		}

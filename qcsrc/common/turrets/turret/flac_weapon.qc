@@ -16,19 +16,18 @@ REGISTER_WEAPON(FLAC, NEW(FlacAttack));
 #ifdef SVQC
 
 void turret_flac_projectile_think_explode();
-METHOD(FlacAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
-    SELFPARAM();
-    bool isPlayer = IS_PLAYER(self);
+METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+    bool isPlayer = IS_PLAYER(actor);
     if (fire1)
-    if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
+    if (!isPlayer || weapon_prepareattack(actor, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
-            turret_initparams(self);
-            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-            self.tur_shotdir_updated = w_shotdir;
-            self.tur_shotorg = w_shotorg;
-            self.tur_head = self;
-            self.tur_impacttime = 10;
-            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            turret_initparams(actor);
+            W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            actor.tur_shotdir_updated = w_shotdir;
+            actor.tur_shotorg = w_shotorg;
+            actor.tur_head = actor;
+            actor.tur_impacttime = 10;
+            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
 
         turret_tag_fire_update();
@@ -36,13 +35,13 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
         entity proj = turret_projectile(SND(HAGAR_FIRE), 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, true, true);
         proj.missile_flags = MIF_SPLASH | MIF_PROXY;
         proj.think	  = turret_flac_projectile_think_explode;
-        proj.nextthink  = time + self.tur_impacttime + (random() * 0.01 - random() * 0.01);
-        Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+        proj.nextthink  = time + actor.tur_impacttime + (random() * 0.01 - random() * 0.01);
+        Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
 
         if (!isPlayer) {
-            self.tur_head.frame = self.tur_head.frame + 1;
-            if (self.tur_head.frame >= 4)
-                self.tur_head.frame = 0;
+            actor.tur_head.frame = actor.tur_head.frame + 1;
+            if (actor.tur_head.frame >= 4)
+                actor.tur_head.frame = 0;
         }
     }
 }

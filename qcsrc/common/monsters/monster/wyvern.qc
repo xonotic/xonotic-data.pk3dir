@@ -48,25 +48,23 @@ float autocvar_g_monster_wyvern_attack_fireball_speed;
 void M_Wyvern_Attack_Fireball_Explode();
 void M_Wyvern_Attack_Fireball_Touch();
 
-METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, bool fire1, bool fire2)) {
-    SELFPARAM();
-
+METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, bool fire1, bool fire2)) {
     if (fire1)
-    if (time > self.attack_finished_single || weapon_prepareattack(false, 1.2)) {
-        if (IS_PLAYER(self)) W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-		if (IS_MONSTER(self)) {
-			self.attack_finished_single = time + 1.2;
-			self.anim_finished = time + 1.2;
-			monster_makevectors(self.enemy);
+    if (time > actor.attack_finished_single || weapon_prepareattack(actor, false, 1.2)) {
+        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+		if (IS_MONSTER(actor)) {
+			actor.attack_finished_single = time + 1.2;
+			actor.anim_finished = time + 1.2;
+			monster_makevectors(actor.enemy);
 		}
 
 		entity missile = spawn();
-		missile.owner = missile.realowner = self;
+		missile.owner = missile.realowner = actor;
 		missile.solid = SOLID_TRIGGER;
 		missile.movetype = MOVETYPE_FLYMISSILE;
 		missile.projectiledeathtype = DEATH_MONSTER_WYVERN;
 		setsize(missile, '-6 -6 -6', '6 6 6');
-		setorigin(missile, self.origin + self.view_ofs + v_forward * 14);
+		setorigin(missile, actor.origin + actor.view_ofs + v_forward * 14);
 		missile.flags = FL_PROJECTILE;
 		missile.velocity = w_shotdir * (autocvar_g_monster_wyvern_attack_fireball_speed);
 		missile.avelocity = '300 300 300';
@@ -75,7 +73,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, bool fire1, bool fire2
 		missile.touch = M_Wyvern_Attack_Fireball_Touch;
 		CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 
-        weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
     }
 }
 
@@ -130,7 +128,7 @@ float M_Wyvern_Attack(float attack_type, entity targ)
 		{
 			w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 			Weapon wep = WEP_WYVERN_ATTACK;
-			wep.wr_think(wep, true, false);
+			wep.wr_think(wep, self, true, false);
 			return true;
 		}
 	}

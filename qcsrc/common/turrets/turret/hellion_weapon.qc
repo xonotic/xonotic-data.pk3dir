@@ -19,25 +19,24 @@ float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
 void turret_hellion_missile_think();
-METHOD(HellionAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
-    SELFPARAM();
-    bool isPlayer = IS_PLAYER(self);
+METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+    bool isPlayer = IS_PLAYER(actor);
     if (fire1)
-    if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
+    if (!isPlayer || weapon_prepareattack(actor, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
-            turret_initparams(self);
-            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-            self.tur_shotdir_updated = w_shotdir;
-            self.tur_shotorg = w_shotorg;
-            self.tur_head = self;
-            self.shot_radius = 500;
-            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            turret_initparams(actor);
+            W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            actor.tur_shotdir_updated = w_shotdir;
+            actor.tur_shotorg = w_shotorg;
+            actor.tur_head = actor;
+            actor.shot_radius = 500;
+            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
         if (!isPlayer) {
-            if (self.tur_head.frame != 0)
-                self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
+            if (actor.tur_head.frame != 0)
+                actor.tur_shotorg = gettaginfo(actor.tur_head, gettagindex(actor.tur_head, "tag_fire"));
             else
-                self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
+                actor.tur_shotorg = gettaginfo(actor.tur_head, gettagindex(actor.tur_head, "tag_fire2"));
         }
 
         entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
@@ -48,7 +47,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
         missile.max_health   = time + 9;
         missile.tur_aimpos   = randomvec() * 128;
         missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
-        if (!isPlayer) self.tur_head.frame += 1;
+        if (!isPlayer) actor.tur_head.frame += 1;
     }
 }
 

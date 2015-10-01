@@ -45,48 +45,48 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG.m_id); }
 
-void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
-{SELFPARAM();
-	if (!self.BUTTON_ATCK)
+void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, bool fire2)
+{
+	if (!actor.BUTTON_ATCK)
 	{
-		w_ready(thiswep, fire1, fire2);
+		w_ready(thiswep, actor, fire1, fire2);
 		return;
 	}
 
-	Weapon w = get_weaponinfo(self.weapon);
+	Weapon w = get_weaponinfo(actor.weapon);
 	if(!w.wr_checkammo1(w))
-	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(self, w_getbestweapon(self));
-		w_ready(thiswep, fire1, fire2);
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		w_ready(thiswep, actor, fire1, fire2);
 		return;
 	}
 
-	W_DecreaseAmmo(WEP_HMG, WEP_CVAR(hmg, ammo));
+	W_DecreaseAmmo(WEP_HMG, self, WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (self, true, 0, SND(UZI_FIRE), CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (actor, true, 0, SND(UZI_FIRE), CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
+		actor.punchangle_x = random () - 0.5;
+		actor.punchangle_y = random () - 0.5;
 	}
 
-	float hmg_spread = bound(WEP_CVAR(hmg, spread_min), WEP_CVAR(hmg, spread_min) + (WEP_CVAR(hmg, spread_add) * self.misc_bulletcounter), WEP_CVAR(hmg, spread_max));
+	float hmg_spread = bound(WEP_CVAR(hmg, spread_min), WEP_CVAR(hmg, spread_min) + (WEP_CVAR(hmg, spread_add) * actor.misc_bulletcounter), WEP_CVAR(hmg, spread_max));
 	fireBullet(w_shotorg, w_shotdir, hmg_spread, WEP_CVAR(hmg, solidpenetration), WEP_CVAR(hmg, damage), WEP_CVAR(hmg, force), WEP_HMG.m_id, 0);
 
-	self.misc_bulletcounter = self.misc_bulletcounter + 1;
+	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
-	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
+	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	if (autocvar_g_casings >= 2) // casing code
-		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 
-	ATTACK_FINISHED(self) = time + WEP_CVAR(hmg, refire) * W_WeaponRateFactor();
-	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
+	ATTACK_FINISHED(actor) = time + WEP_CVAR(hmg, refire) * W_WeaponRateFactor();
+	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
 		METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
@@ -96,18 +96,18 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 		}
-		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(WEP_CVAR(hmg, reload_ammo) && self.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
-				Weapon w = get_weaponinfo(self.weapon);
+			if(WEP_CVAR(hmg, reload_ammo) && actor.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
+				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else
 			{
 				if (fire1)
-				if (weapon_prepareattack(false, 0))
+				if (weapon_prepareattack(actor, false, 0))
 				{
-					self.misc_bulletcounter = 0;
-					W_HeavyMachineGun_Attack_Auto(thiswep, fire1, fire2);
+					actor.misc_bulletcounter = 0;
+					W_HeavyMachineGun_Attack_Auto(thiswep, actor, fire1, fire2);
 				}
 			}
 		}
@@ -139,7 +139,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 		}
 		METHOD(HeavyMachineGun, wr_reload, void(entity thiswep))
 		{
-			W_Reload(WEP_CVAR(hmg, ammo), SND(RELOAD));
+			W_Reload(self, WEP_CVAR(hmg, ammo), SND(RELOAD));
 		}
 		METHOD(HeavyMachineGun, wr_suicidemessage, int(entity thiswep))
 		{

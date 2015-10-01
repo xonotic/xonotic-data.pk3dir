@@ -16,35 +16,34 @@ REGISTER_WEAPON(TESLA, NEW(TeslaCoilTurretAttack));
 #ifdef SVQC
 
 entity toast(entity from, float range, float damage);
-METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, bool fire1, bool fire2)) {
-    SELFPARAM();
-    bool isPlayer = IS_PLAYER(self);
+METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+    bool isPlayer = IS_PLAYER(actor);
     if (fire1)
-    if (!isPlayer || weapon_prepareattack(false, WEP_CVAR_PRI(electro, refire))) {
+    if (!isPlayer || weapon_prepareattack(actor, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
-            turret_initparams(self);
-            W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-            self.tur_shotdir_updated = w_shotdir;
-            self.tur_shotorg = w_shotorg;
-            self.tur_head = self;
-            weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            turret_initparams(actor);
+            W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            actor.tur_shotdir_updated = w_shotdir;
+            actor.tur_shotorg = w_shotorg;
+            actor.tur_head = actor;
+            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
 
-        float d = self.shot_dmg;
-        float r = self.target_range;
+        float d = actor.shot_dmg;
+        float r = actor.target_range;
         entity e = spawn();
-        setorigin(e,self.tur_shotorg);
+        setorigin(e,actor.tur_shotorg);
 
-        self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
+        actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 
         entity t = toast(e,r,d);
         remove(e);
 
         if (t == NULL) return;
 
-        self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_TEAMCHECK;
+        actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_TEAMCHECK;
 
-        self.attack_finished_single = time + self.shot_refire;
+        actor.attack_finished_single = time + actor.shot_refire;
         for (int i = 0; i < 10; ++i) {
             d *= 0.75;
             r *= 0.85;

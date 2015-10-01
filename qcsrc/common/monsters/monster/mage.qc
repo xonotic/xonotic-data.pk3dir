@@ -40,21 +40,20 @@ REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 
 void M_Mage_Attack_Spike(vector dir);
 void M_Mage_Attack_Push();
-METHOD(MageSpike, wr_think, void(MageSpike thiswep, bool fire1, bool fire2)) {
-    SELFPARAM();
+METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, bool fire1, bool fire2)) {
     if (fire1)
-    if (!IS_PLAYER(self) || weapon_prepareattack(false, 0.2)) {
-        if (!self.target_range) self.target_range = autocvar_g_monsters_target_range;
-        self.enemy = Monster_FindTarget(self);
-        W_SetupShot_Dir(self, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
-    	if (!IS_PLAYER(self)) w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+    if (!IS_PLAYER(actor) || weapon_prepareattack(actor, false, 0.2)) {
+        if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
+        actor.enemy = Monster_FindTarget(actor);
+        W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+    	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Mage_Attack_Spike(w_shotdir);
-        weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
     }
     if (fire2)
-    if (!IS_PLAYER(self) || weapon_prepareattack(true, 0.5)) {
+    if (!IS_PLAYER(actor) || weapon_prepareattack(actor, true, 0.5)) {
         M_Mage_Attack_Push();
-        weapon_thinkf(WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
     }
 }
 
@@ -361,7 +360,7 @@ float M_Mage_Attack(float attack_type, entity targ)
 			if(random() <= 0.7)
 			{
 				Weapon wep = WEP_MAGE_SPIKE;
-				wep.wr_think(wep, false, true);
+				wep.wr_think(wep, self, false, true);
 				return true;
 			}
 
@@ -383,7 +382,7 @@ float M_Mage_Attack(float attack_type, entity targ)
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
 					Weapon wep = WEP_MAGE_SPIKE;
-					wep.wr_think(wep, true, false);
+					wep.wr_think(wep, self, true, false);
 					return true;
 				}
 			}

@@ -342,7 +342,7 @@ void W_Devastator_Attack(Weapon thiswep)
 	entity missile;
 	entity flash;
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR(devastator, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR(devastator, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKET_FIRE), CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -388,7 +388,7 @@ void W_Devastator_Attack(Weapon thiswep)
 	setmodel(flash, MDL_DEVASTATOR_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	W_AttachToShotorg(self, flash, '5 0 0');
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
@@ -518,32 +518,31 @@ void W_Devastator_Attack(Weapon thiswep)
 			}
 		}
 		#endif
-		METHOD(Devastator, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(WEP_CVAR(devastator, reload_ammo) && self.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
-				Weapon w = get_weaponinfo(self.weapon);
+			if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
+				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
-			} else
-			{
+			} else {
 				if(fire1)
 				{
-					if(self.rl_release || WEP_CVAR(devastator, guidestop))
-					if(weapon_prepareattack(false, WEP_CVAR(devastator, refire)))
+					if(actor.rl_release || WEP_CVAR(devastator, guidestop))
+					if(weapon_prepareattack(actor, false, WEP_CVAR(devastator, refire)))
 					{
 						W_Devastator_Attack(thiswep);
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
-						self.rl_release = 0;
+						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
+						actor.rl_release = 0;
 					}
 				}
 				else
-					self.rl_release = 1;
+					actor.rl_release = 1;
 
 				if(fire2)
-				if(self.switchweapon == WEP_DEVASTATOR.m_id)
+				if(actor.switchweapon == WEP_DEVASTATOR.m_id)
 				{
 					entity rock;
 					bool rockfound = false;
-					for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == self)
+					for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == actor)
 					{
 						if(!rock.rl_detonate_later)
 						{
@@ -552,7 +551,7 @@ void W_Devastator_Attack(Weapon thiswep)
 						}
 					}
 					if(rockfound)
-						sound(self, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
+						sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
 				}
 			}
 		}
@@ -614,7 +613,7 @@ void W_Devastator_Attack(Weapon thiswep)
 		}
 		METHOD(Devastator, wr_reload, void(entity thiswep))
 		{
-			W_Reload(WEP_CVAR(devastator, ammo), SND(RELOAD));
+			W_Reload(self, WEP_CVAR(devastator, ammo), SND(RELOAD));
 		}
 		METHOD(Devastator, wr_suicidemessage, int(entity thiswep))
 		{

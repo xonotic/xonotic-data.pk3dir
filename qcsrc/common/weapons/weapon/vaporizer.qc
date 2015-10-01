@@ -105,7 +105,7 @@ void W_Vaporizer_Attack(Weapon thiswep)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		W_RocketMinsta_Explosion(trace_endpos);
 
-	W_DecreaseAmmo(thiswep, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
+	W_DecreaseAmmo(thiswep, self, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
 }
 
 void W_RocketMinsta_Laser_Explode (void)
@@ -244,61 +244,62 @@ void W_RocketMinsta_Attack3 (void)
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
 		}
-		METHOD(Vaporizer, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
 			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			// if the laser uses load, we also consider its ammo for reloading
-			if(WEP_CVAR(vaporizer, reload_ammo) && WEP_CVAR_SEC(vaporizer, ammo) && self.clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo))) { // forced reload
-				Weapon w = get_weaponinfo(self.weapon);
+			if(WEP_CVAR(vaporizer, reload_ammo) && WEP_CVAR_SEC(vaporizer, ammo) && actor.clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
-			} else if(WEP_CVAR(vaporizer, reload_ammo) && self.clip_load < vaporizer_ammo) { // forced reload
-				Weapon w = get_weaponinfo(self.weapon);
+			} else if(WEP_CVAR(vaporizer, reload_ammo) && actor.clip_load < vaporizer_ammo) { // forced reload
+				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			}
-			if(fire1 && (self.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(self))
+			if(fire1 && (actor.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(actor))
 			{
-				if(weapon_prepareattack(false, WEP_CVAR_PRI(vaporizer, refire)))
+				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(vaporizer, refire)))
 				{
 					W_Vaporizer_Attack(thiswep);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
 				}
 			}
-			if(fire2 || (fire1 && !self.ammo_cells && autocvar_g_rm))
+			if(fire2 || (fire1 && !actor.ammo_cells && autocvar_g_rm))
 			{
 				if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
 				{
 					bool rapid = autocvar_g_rm_laser_rapid;
-					if(self.jump_interval <= time && !self.held_down)
+					if(actor.jump_interval <= time && !actor.held_down)
 					{
 						if(rapid)
-							self.held_down = true;
-						self.jump_interval = time + autocvar_g_rm_laser_refire;
-						self.jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
+							actor.held_down = true;
+						actor.jump_interval = time + autocvar_g_rm_laser_refire;
+						actor.jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
 						damage_goodhits = 0;
 						W_RocketMinsta_Attack2();
 					}
-					else if(rapid && self.jump_interval2 <= time && self.held_down)
+					else if(rapid && actor.jump_interval2 <= time && actor.held_down)
 					{
-						self.jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
+						actor.jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
 						damage_goodhits = 0;
 						W_RocketMinsta_Attack3();
-						//weapon_thinkf(WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
+						//weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
 					}
 				}
-				else if (self.jump_interval <= time)
+				else if (actor.jump_interval <= time)
 				{
 					// handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
-					self.jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor();
+					actor.jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor();
 
 					// decrease ammo for the laser?
 					if(WEP_CVAR_SEC(vaporizer, ammo))
-						W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(vaporizer, ammo));
+						W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(vaporizer, ammo));
 
 					// ugly instagib hack to reuse the fire mode of the laser
-					makevectors(self.v_angle);
-					int oldwep = self.weapon; // we can't avoid this hack
-					self.weapon = WEP_BLASTER.m_id;
+					makevectors(actor.v_angle);
+					int oldwep = actor.weapon; // we can't avoid this hack
+					actor.weapon = WEP_BLASTER.m_id;
 					W_Blaster_Attack(
+						actor,
 						WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 						WEP_CVAR_SEC(vaporizer, shotangle),
 						WEP_CVAR_SEC(vaporizer, damage),
@@ -310,14 +311,14 @@ void W_RocketMinsta_Attack3 (void)
 						WEP_CVAR_SEC(vaporizer, delay),
 						WEP_CVAR_SEC(vaporizer, lifetime)
 					);
-					self.weapon = oldwep;
+					actor.weapon = oldwep;
 
 					// now do normal refire
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
 				}
 			}
 			else
-				self.held_down = false;
+				actor.held_down = false;
 		}
 		METHOD(Vaporizer, wr_init, void(entity thiswep))
 		{
@@ -361,7 +362,7 @@ void W_RocketMinsta_Attack3 (void)
 			else
 				used_ammo = vaporizer_ammo;
 
-			W_Reload(used_ammo, SND(RELOAD));
+			W_Reload(self, used_ammo, SND(RELOAD));
 		}
 		METHOD(Vaporizer, wr_suicidemessage, int(entity thiswep))
 		{

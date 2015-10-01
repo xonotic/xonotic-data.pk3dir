@@ -249,7 +249,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, vector f_diff, entity m_target)
 {SELFPARAM();
 	entity missile;
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR(seeker, missile_ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(SEEKER_FIRE), CH_WEAPON_A, 0);
@@ -324,7 +324,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep)
 	vector f_diff;
 	float c;
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR(seeker, flac_ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR(seeker, flac_ammo));
 
 	c = self.bulletcounter % 4;
 	switch(c)
@@ -559,7 +559,7 @@ void W_Seeker_Tag_Touch(void)
 void W_Seeker_Fire_Tag(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
-	W_DecreaseAmmo(thiswep, WEP_CVAR(seeker, tag_ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR(seeker, tag_ammo));
 
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(TAG_FIRE), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
@@ -608,27 +608,27 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			else
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
 		}
-		METHOD(Seeker, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Seeker, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) { // forced reload
-				Weapon w = get_weaponinfo(self.weapon);
+			if(autocvar_g_balance_seeker_reload_ammo && actor.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) { // forced reload
+				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else if(fire1)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{
-					if(weapon_prepareattack(false, WEP_CVAR(seeker, missile_refire)))
+					if(weapon_prepareattack(actor, false, WEP_CVAR(seeker, missile_refire)))
 					{
 						W_Seeker_Attack();
-						weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
 					}
 				}
 				else
 				{
-					if(weapon_prepareattack(false, WEP_CVAR(seeker, tag_refire)))
+					if(weapon_prepareattack(actor, false, WEP_CVAR(seeker, tag_refire)))
 					{
 						W_Seeker_Fire_Tag(thiswep);
-						weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
 					}
 				}
 			}
@@ -637,18 +637,18 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{
-					if(weapon_prepareattack(false, WEP_CVAR(seeker, tag_refire)))
+					if(weapon_prepareattack(actor, false, WEP_CVAR(seeker, tag_refire)))
 					{
 						W_Seeker_Fire_Tag(thiswep);
-						weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
 					}
 				}
 				else
 				{
-					if(weapon_prepareattack(false, WEP_CVAR(seeker, flac_refire)))
+					if(weapon_prepareattack(actor, false, WEP_CVAR(seeker, flac_refire)))
 					{
 						W_Seeker_Fire_Flac(thiswep);
-						weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
 					}
 				}
 			}
@@ -693,7 +693,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 		}
 		METHOD(Seeker, wr_reload, void(entity thiswep))
 		{
-			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND(RELOAD));
+			W_Reload(self, min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND(RELOAD));
 		}
 		METHOD(Seeker, wr_suicidemessage, int(entity thiswep))
 		{

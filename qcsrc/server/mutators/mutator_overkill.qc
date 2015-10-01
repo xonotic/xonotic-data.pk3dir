@@ -3,7 +3,7 @@
 
 #include "mutator.qh"
 
-void W_Blaster_Attack(float, float, float, float, float, float, float, float, float, float);
+void W_Blaster_Attack(entity, float, float, float, float, float, float, float, float, float, float);
 void spawnfunc_weapon_hmg();
 void spawnfunc_weapon_rpc();
 
@@ -149,6 +149,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		int oldwep = self.weapon;
 		self.weapon = WEP_BLASTER.m_id;
 		W_Blaster_Attack(
+			self,
 			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
 			WEP_CVAR_SEC(vaporizer, damage),
@@ -178,7 +179,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		}
 		Weapon wpn = get_weaponinfo(self.weapon);
 		if(self.weaponentity.state != WS_CLEAR)
-			w_ready(wpn, self.BUTTON_ATCK, self.BUTTON_ATCK2);
+			w_ready(wpn, self, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 
 		self.weapon_blocked = true;
 	}

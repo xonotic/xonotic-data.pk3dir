@@ -72,7 +72,7 @@ void W_HLAC_Attack(Weapon thiswep)
 	entity missile;
     float spread;
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(hlac, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(hlac, ammo));
 
     spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * self.misc_bulletcounter);
     spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
@@ -161,33 +161,33 @@ void W_HLAC_Attack2(void)
 }
 
 // weapon frames
-void W_HLAC_Attack_Frame(Weapon thiswep, bool fire1, bool fire2)
-{SELFPARAM();
-	if(self.weapon != self.switchweapon) // abort immediately if switching
+void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, bool fire1, bool fire2)
+{
+	if(actor.weapon != actor.switchweapon) // abort immediately if switching
 	{
-		w_ready(thiswep, fire1, fire2);
+		w_ready(thiswep, actor, fire1, fire2);
 		return;
 	}
 
-	if(self.BUTTON_ATCK)
+	if(actor.BUTTON_ATCK)
 	{
-		Weapon w = get_weaponinfo(self.weapon);
+		Weapon w = get_weaponinfo(actor.weapon);
 		if(!w.wr_checkammo1(w))
-		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(self, w_getbestweapon(self));
-			w_ready(thiswep, fire1, fire2);
+			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+			w_ready(thiswep, actor, fire1, fire2);
 			return;
 		}
 
-		ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
+		ATTACK_FINISHED(actor) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
 		W_HLAC_Attack(WEP_HLAC);
-		self.misc_bulletcounter = self.misc_bulletcounter + 1;
-        weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
+        weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
 	else
 	{
-		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, animtime), w_ready);
+		weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, animtime), w_ready);
 	}
 }
 
@@ -195,7 +195,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 {SELFPARAM();
     float i;
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(hlac, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(hlac, ammo));
 
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
         W_HLAC_Attack2();
@@ -211,27 +211,27 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
 		}
-		METHOD(HLAC, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(HLAC, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
-				Weapon w = get_weaponinfo(self.weapon);
+			if(autocvar_g_balance_hlac_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else if(fire1)
 			{
-				if(weapon_prepareattack(false, WEP_CVAR_PRI(hlac, refire)))
+				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(hlac, refire)))
 				{
-					self.misc_bulletcounter = 0;
+					actor.misc_bulletcounter = 0;
 					W_HLAC_Attack(thiswep);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 				}
 			}
 
 			else if(fire2 && WEP_CVAR(hlac, secondary))
 			{
-				if(weapon_prepareattack(true, WEP_CVAR_SEC(hlac, refire)))
+				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(hlac, refire)))
 				{
 					W_HLAC_Attack2_Frame(thiswep);
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
 				}
 			}
 		}
@@ -257,7 +257,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 		}
 		METHOD(HLAC, wr_reload, void(entity thiswep))
 		{
-			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND(RELOAD));
+			W_Reload(self, min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND(RELOAD));
 		}
 		METHOD(HLAC, wr_suicidemessage, int(entity thiswep))
 		{

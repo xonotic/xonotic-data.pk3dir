@@ -202,7 +202,7 @@ void W_Mortar_Attack(Weapon thiswep)
 {SELFPARAM();
 	entity gren;
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR_PRI(mortar, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(mortar, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND(GRENADE_FIRE), CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -251,7 +251,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 {SELFPARAM();
 	entity gren;
 
-	W_DecreaseAmmo(thiswep, WEP_CVAR_SEC(mortar, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(mortar, ammo));
 
 	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND(GRENADE_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -334,17 +334,17 @@ void W_Mortar_Attack2(Weapon thiswep)
 			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime))));
 			wepinfo_ter_dps = 0;
 			*/
-		METHOD(Mortar, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Mortar, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
-				Weapon w = get_weaponinfo(self.weapon);
+			if(autocvar_g_balance_mortar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else if(fire1)
 			{
-				if(weapon_prepareattack(false, WEP_CVAR_PRI(mortar, refire)))
+				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(mortar, refire)))
 				{
 					W_Mortar_Attack(thiswep);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
 				}
 			}
 			else if(fire2)
@@ -353,7 +353,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 				{
 					bool nadefound = false;
 					entity nade;
-					for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == self)
+					for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == actor)
 					{
 						if(!nade.gl_detonate_later)
 						{
@@ -362,12 +362,12 @@ void W_Mortar_Attack2(Weapon thiswep)
 						}
 					}
 					if(nadefound)
-						sound(self, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
+						sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
 				}
-				else if(weapon_prepareattack(true, WEP_CVAR_SEC(mortar, refire)))
+				else if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(mortar, refire)))
 				{
 					W_Mortar_Attack2(thiswep);
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
 				}
 			}
 		}
@@ -393,7 +393,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 		}
 		METHOD(Mortar, wr_reload, void(entity thiswep))
 		{
-			W_Reload(min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
+			W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
 		}
 		METHOD(Mortar, wr_suicidemessage, int(entity thiswep))
 		{

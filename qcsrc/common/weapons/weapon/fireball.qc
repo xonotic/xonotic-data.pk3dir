@@ -226,35 +226,35 @@ void W_Fireball_AttackEffect(float i, vector f_diff)
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
 
-void W_Fireball_Attack1_Frame4(Weapon thiswep, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame4(Weapon thiswep, entity actor, bool fire1, bool fire2)
 {
 	W_Fireball_Attack1();
-	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), w_ready);
+	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), w_ready);
 }
 
-void W_Fireball_Attack1_Frame3(Weapon thiswep, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame3(Weapon thiswep, entity actor, bool fire1, bool fire2)
 {
 	W_Fireball_AttackEffect(0, '+1.25 +3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame4);
+	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame4);
 }
 
-void W_Fireball_Attack1_Frame2(Weapon thiswep, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame2(Weapon thiswep, entity actor, bool fire1, bool fire2)
 {
 	W_Fireball_AttackEffect(0, '-1.25 +3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame3);
+	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame3);
 }
 
-void W_Fireball_Attack1_Frame1(Weapon thiswep, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame1(Weapon thiswep, entity actor, bool fire1, bool fire2)
 {
 	W_Fireball_AttackEffect(1, '+1.25 -3.75 0');
-	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame2);
+	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame2);
 }
 
-void W_Fireball_Attack1_Frame0(Weapon thiswep, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame0(Weapon thiswep, entity actor, bool fire1, bool fire2)
 {SELFPARAM();
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
 	sound(self, CH_WEAPON_SINGLE, SND_FIREBALL_PREFIRE2, VOL_BASE, ATTEN_NORM);
-	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
+	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
 }
 
 void W_Fireball_Firemine_Think(void)
@@ -371,23 +371,23 @@ void W_Fireball_Attack2(void)
 				}
 			}
 		}
-		METHOD(Fireball, wr_think, void(entity thiswep, bool fire1, bool fire2))
+		METHOD(Fireball, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
 			if(fire1)
 			{
-				if(time >= self.fireball_primarytime)
-				if(weapon_prepareattack(false, WEP_CVAR_PRI(fireball, refire)))
+				if(time >= actor.fireball_primarytime)
+				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(fireball, refire)))
 				{
-					W_Fireball_Attack1_Frame0(thiswep, fire1, fire2);
-					self.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor();
+					W_Fireball_Attack1_Frame0(thiswep, actor, fire1, fire2);
+					actor.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor();
 				}
 			}
 			else if(fire2)
 			{
-				if(weapon_prepareattack(true, WEP_CVAR_SEC(fireball, refire)))
+				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(fireball, refire)))
 				{
 					W_Fireball_Attack2();
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(fireball, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(fireball, animtime), w_ready);
 				}
 			}
 		}
