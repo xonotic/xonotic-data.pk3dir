@@ -654,7 +654,7 @@ float Item_GiveTo(entity item, entity player)
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(it & WepSet_FromWeapon(i))
 			{
-				W_DropEvent(WR_PICKUP, player, i, item);
+				W_DropEvent(wr_pickup, player, i, item);
 				W_GiveWeapon(player, i);
 			}
 		}
@@ -1444,8 +1444,10 @@ void spawnfunc_target_items (void)
 					if(s == e.netname)
 					{
 						self.weapons |= WepSet_FromWeapon(j);
-						if(self.spawnflags == 0 || self.spawnflags == 2)
-							_WEP_ACTION(e.weapon, WR_INIT);
+						if(self.spawnflags == 0 || self.spawnflags == 2) {
+							Weapon w = get_weaponinfo(e.weapon);
+							w.wr_init(w);
+						}
 						break;
 					}
 				}
@@ -1515,7 +1517,8 @@ void spawnfunc_target_items (void)
 			e = get_weaponinfo(j);
 			if(argv(i) == e.netname)
 			{
-				_WEP_ACTION(e.weapon, WR_INIT);
+				Weapon w = get_weaponinfo(e.weapon);
+				w.wr_init(w);
 				break;
 			}
 		}
@@ -1828,8 +1831,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 		{
 			POSTGIVE_WEAPON(e, j, SND(WEAPONPICKUP), string_null);
 			if (!(save_weapons & WepSet_FromWeapon(j)))
-				if(e.weapons & WepSet_FromWeapon(j))
-					_WEP_ACTION(wi.weapon, WR_INIT);
+				if(e.weapons & WepSet_FromWeapon(j)) {
+					Weapon w = get_weaponinfo(wi.weapon);
+					w.wr_init(w);
+				}
 		}
 	}
 	POSTGIVE_VALUE(e, strength_finished, 1, SND(POWERUP), SND(POWEROFF));

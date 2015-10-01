@@ -171,7 +171,8 @@ void W_HLAC_Attack_Frame(Weapon thiswep, bool fire1, bool fire2)
 
 	if(self.BUTTON_ATCK)
 	{
-		if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO1))
+		Weapon w = get_weaponinfo(self.weapon);
+		if(!w.wr_checkammo1(w))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -213,9 +214,10 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 		}
 		METHOD(HLAC, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(fire1)
+			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else if(fire1)
 			{
 				if(weapon_prepareattack(false, WEP_CVAR_PRI(hlac, refire)))
 				{

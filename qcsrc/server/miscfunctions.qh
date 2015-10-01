@@ -419,8 +419,10 @@ void readlevelcvars(void)
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
-	for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-		_WEP_ACTION(i, WR_INIT);
+	for(int i = WEP_FIRST; i <= WEP_LAST; ++i) {
+		Weapon w = get_weaponinfo(i);
+		w.wr_init(w);
+	}
 
 	readplayerstartcvars();
 }

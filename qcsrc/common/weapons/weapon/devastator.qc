@@ -524,9 +524,10 @@ void W_Devastator_Attack(Weapon thiswep)
 		#endif
 		METHOD(Devastator, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(WEP_CVAR(devastator, reload_ammo) && self.clip_load < WEP_CVAR(devastator, ammo)) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else
+			if(WEP_CVAR(devastator, reload_ammo) && self.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else
 			{
 				if(fire1)
 				{

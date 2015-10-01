@@ -355,6 +355,8 @@ void Ent_DamageInfo(float isNew)
 			w_backoff = -1 * normalize(force);
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) { _WEP_ACTION(hitwep, WR_IMPACTEFFECT); }
+		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) {
+			Weapon w = get_weaponinfo(hitwep); w.wr_impacteffect(w);
+		}
 	}
 }

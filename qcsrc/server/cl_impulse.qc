@@ -134,7 +134,10 @@ void ImpulseCommands (void)
 					W_PreviousWeapon(1);
 					break;
 				case 20:
-					if(!forbidWeaponUse(self)) { _WEP_ACTION(self.weapon, WR_RELOAD); }
+					if(!forbidWeaponUse(self)) {
+						Weapon w = get_weaponinfo(self.weapon);
+						w.wr_reload(w);
+					}
 					break;
 			}
 		}

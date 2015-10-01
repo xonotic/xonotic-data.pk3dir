@@ -719,8 +719,10 @@ void readplayerstartcvars()
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(precache_weapons & WepSet_FromWeapon(i))
-			_WEP_ACTION(i, WR_INIT);
+		if(precache_weapons & WepSet_FromWeapon(i)) {
+			Weapon w = get_weaponinfo(i);
+			w.wr_init(w);
+		}
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);

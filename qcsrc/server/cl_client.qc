@@ -619,7 +619,8 @@ void PutClientInServer()
 		// reset fields the weapons may use
 		for (int j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			_WEP_ACTION(j, WR_RESETPLAYER);
+			Weapon w = get_weaponinfo(j);
+			w.wr_resetplayer(w);
 
 			// all weapons must be fully loaded when we spawn
 			entity e = get_weaponinfo(j);

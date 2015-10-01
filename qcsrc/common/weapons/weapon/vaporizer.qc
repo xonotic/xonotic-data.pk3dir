@@ -250,10 +250,13 @@ void W_RocketMinsta_Attack3 (void)
 		{
 			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			// if the laser uses load, we also consider its ammo for reloading
-			if(WEP_CVAR(vaporizer, reload_ammo) && WEP_CVAR_SEC(vaporizer, ammo) && self.clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo))) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(WEP_CVAR(vaporizer, reload_ammo) && self.clip_load < vaporizer_ammo) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
+			if(WEP_CVAR(vaporizer, reload_ammo) && WEP_CVAR_SEC(vaporizer, ammo) && self.clip_load < min(vaporizer_ammo, WEP_CVAR_SEC(vaporizer, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else if(WEP_CVAR(vaporizer, reload_ammo) && self.clip_load < vaporizer_ammo) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			}
 			if(fire1 && (self.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(self))
 			{
 				if(weapon_prepareattack(false, WEP_CVAR_PRI(vaporizer, refire)))

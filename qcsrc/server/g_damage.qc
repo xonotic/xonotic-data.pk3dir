@@ -265,7 +265,8 @@ float Obituary_WeaponDeath(
 	if(death_weapon)
 	{
 		w_deathtype = deathtype;
-		int death_message = _WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
+		Weapon w = get_weaponinfo(death_weapon);
+		int death_message = ((murder) ? w.wr_killmessage : w.wr_suicidemessage)(w);
 		w_deathtype = false;
 
 		if (death_message)

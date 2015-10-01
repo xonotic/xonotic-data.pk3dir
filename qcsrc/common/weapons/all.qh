@@ -52,9 +52,7 @@ entity get_weaponinfo(int id)
 	return dummy_weapon_info;
 }
 
-#define REGISTER_WEAPON(...) EVAL(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
-
-#define REGISTER_WEAPON_2(id, inst) \
+#define REGISTER_WEAPON(id, inst) \
 	WepSet WEPSET_##id; \
 	REGISTER(RegisterWeapons, WEP, weapon_info, WEP_COUNT, id, m_id, inst) { \
 		this.m_id++; \
@@ -64,18 +62,6 @@ entity get_weaponinfo(int id)
 		localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", this.netname, 230 + this.m_id - 1)); \
 	} \
 	REGISTER_INIT(WEP, id)
-
-#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname) \
-	REGISTER_WEAPON_2(id, NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname))
-
-#ifndef MENUQC
-	#define REGISTER_WEAPON_13(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname) \
-    	bool function(entity this, int); \
-    	_REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname)
-#else
-	#define REGISTER_WEAPON_13(id, function, ammotype, impulse, flags, rating, color, modelname, mdl, crosshair, wepimg, refname, wepname) \
-		_REGISTER_WEAPON(id, w_new,   ammotype, impulse, flags, rating, color, modelname, NULL, crosshair, wepimg, refname, wepname)
-#endif
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;

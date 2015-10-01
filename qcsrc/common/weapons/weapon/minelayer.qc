@@ -125,7 +125,8 @@ void W_MineLayer_Explode(void)
 	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
 		setself(self.realowner);
-		if(!WEP_ACTION(WEP_MINE_LAYER, WR_CHECKAMMO1))
+		Weapon w = WEP_MINE_LAYER;
+		if(!w.wr_checkammo1(w))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
@@ -150,7 +151,8 @@ void W_MineLayer_DoRemoteExplode(void)
 	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
 		setself(self.realowner);
-		if(!WEP_ACTION(WEP_MINE_LAYER, WR_CHECKAMMO1))
+		Weapon w = WEP_MINE_LAYER;
+		if(!w.wr_checkammo1(w))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
@@ -504,8 +506,10 @@ float W_MineLayer_PlacedMines(float detonate)
 			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-				if(!(W_MineLayer_PlacedMines(false) && self.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo)))
-					_WEP_ACTION(self.weapon, WR_RELOAD);
+				if(!(W_MineLayer_PlacedMines(false) && self.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo))) {
+					Weapon w = get_weaponinfo(self.weapon);
+					w.wr_reload(w);
+				}
 			}
 			else if(fire1)
 			{

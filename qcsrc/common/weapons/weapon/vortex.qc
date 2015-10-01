@@ -157,9 +157,10 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 					self.pauseregen_finished = max(self.pauseregen_finished, time + WEP_CVAR_SEC(vortex, chargepool_pause_regen));
 				}
 
-			if(autocvar_g_balance_vortex_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else
+			if(autocvar_g_balance_vortex_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else
 			{
 				if(fire1)
 				{

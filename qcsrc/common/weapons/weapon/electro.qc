@@ -465,7 +465,8 @@ void W_Electro_CheckAttack(Weapon thiswep, bool fire1, bool fire2)
 
 				if(!ammo_amount)
 				{
-					_WEP_ACTION(self.weapon, WR_RELOAD);
+					Weapon w = get_weaponinfo(self.weapon);
+					w.wr_reload(w);
 					return false;
 				}
 

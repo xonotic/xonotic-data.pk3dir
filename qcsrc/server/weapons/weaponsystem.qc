@@ -459,8 +459,9 @@ void w_ready(Weapon thiswep, bool fire1, bool fire2)
 .float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
 {SELFPARAM();
+	Weapon w = get_weaponinfo(self.weapon);
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-	if (!_WEP_ACTION(self.weapon, WR_CHECKAMMO1 + secondary))
+	if (!w.(secondary ? wr_checkammo2 : wr_checkammo1)(w))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
 		entity mine;
@@ -478,7 +479,7 @@ float weapon_prepareattack_checkammo(float secondary)
 			self.prevdryfire = time;
 		}
 
-		if(_WEP_ACTION(self.weapon, WR_CHECKAMMO2 - secondary)) // check if the other firing mode has enough ammo
+		if(w.(secondary ? wr_checkammo1 : wr_checkammo2)(w)) // check if the other firing mode has enough ammo
 		{
 			if(time - self.prevwarntime > 1)
 			{
@@ -703,7 +704,8 @@ void W_WeaponFrame()
 			self.weaponname = newwep.mdl;
 			self.bulletcounter = 0;
 			self.ammo_field = newwep.ammo_field;
-			_WEP_ACTION(self.switchweapon, WR_SETUP);
+			Weapon w = get_weaponinfo(self.switchweapon);
+			w.wr_setup(w);
 			self.weaponentity.state = WS_RAISE;
 
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
@@ -778,7 +780,8 @@ void W_WeaponFrame()
 			entity e = get_weaponinfo(self.weapon);
 			if (e.wr_think) e.wr_think(e, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 		} else {
-			_WEP_ACTION(self.weapon, WR_GONETHINK);
+			Weapon w = get_weaponinfo(self.weapon);
+			w.wr_gonethink(w);
 		}
 
 		if (time + self.weapon_frametime * 0.5 >= self.weapon_nextthink)
@@ -942,7 +945,8 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 			self.reload_complain = time + 1;
 		}
 		// switch away if the amount of ammo is not enough to keep using this weapon
-		if (!(_WEP_ACTION(self.weapon, WR_CHECKAMMO1) + _WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
+		Weapon w = get_weaponinfo(self.weapon);
+		if (!(w.wr_checkammo1(w) + w.wr_checkammo2(w)))
 		{
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);
@@ -977,10 +981,11 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	self.clip_load = self.(weapon_load[self.weapon]) = -1;
 }
 
-void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item)
+void W_DropEvent(.bool(Weapon) event, entity player, float weapon_type, entity weapon_item)
 {SELFPARAM();
 	setself(player);
 	weapon_dropevent_item = weapon_item;
-	_WEP_ACTION(weapon_type, event);
+	Weapon w = get_weaponinfo(weapon_type);
+	w.event(w);
 	setself(this);
 }

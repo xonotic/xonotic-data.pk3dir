@@ -338,9 +338,10 @@ void W_Mortar_Attack2(Weapon thiswep)
 			*/
 		METHOD(Mortar, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(fire1)
+			if(autocvar_g_balance_mortar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else if(fire1)
 			{
 				if(weapon_prepareattack(false, WEP_CVAR_PRI(mortar, refire)))
 				{

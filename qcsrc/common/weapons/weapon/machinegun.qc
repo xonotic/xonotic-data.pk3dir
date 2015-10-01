@@ -146,7 +146,8 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, bool fire1, bool fire2)
 	}
 	if(self.BUTTON_ATCK)
 	{
-		if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+		Weapon w = get_weaponinfo(self.weapon);
+		if(!w.wr_checkammo2(w))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -172,7 +173,8 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, bool fire1, bool fire2)
 		return;
 	}
 
-	if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO1))
+	Weapon w = get_weaponinfo(self.weapon);
+	if(!w.wr_checkammo1(w))
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -249,9 +251,10 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 		}
 		METHOD(MachineGun, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(WEP_CVAR(machinegun, reload_ammo) && self.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else
+			if(WEP_CVAR(machinegun, reload_ammo) && self.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else
 			if(WEP_CVAR(machinegun, mode) == 1)
 			{
 				if(fire1)
@@ -264,7 +267,8 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, bool fire1, bool fire2)
 				if(fire2)
 				if(weapon_prepareattack(true, 0))
 				{
-					if(!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+					Weapon w = get_weaponinfo(self.weapon);
+					if(!w.wr_checkammo2(w))
 					if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						W_SwitchWeapon_Force(self, w_getbestweapon(self));

@@ -275,7 +275,8 @@ void W_Arc_Beam_Think(void)
 
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		setself(self.owner);
-		if(!WEP_ACTION(WEP_ARC, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC, WR_CHECKAMMO2))
+		Weapon w = WEP_ARC;
+		if(!w.wr_checkammo1(w) && !w.wr_checkammo2(w))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch

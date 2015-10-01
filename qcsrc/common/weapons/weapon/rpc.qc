@@ -156,9 +156,10 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		}
 		METHOD(RocketPropelledChainsaw, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(WEP_CVAR(rpc, reload_ammo) && self.clip_load < WEP_CVAR(rpc, ammo))
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else
+			if(WEP_CVAR(rpc, reload_ammo) && self.clip_load < WEP_CVAR(rpc, ammo)) {
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else
 			{
 				if (fire1)
 				{

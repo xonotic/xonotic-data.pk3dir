@@ -611,10 +611,10 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 		}
 		METHOD(Seeker, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-
-			else if(fire1)
+			if(autocvar_g_balance_seeker_reload_ammo && self.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else if(fire1)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{

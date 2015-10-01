@@ -579,8 +579,10 @@ void W_Crylink_Attack2(Weapon thiswep)
 		METHOD(Crylink, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
 			SELFPARAM();
-			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
+			if(autocvar_g_balance_crylink_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			}
 
 			if(fire1)
 			{

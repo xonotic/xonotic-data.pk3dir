@@ -197,7 +197,8 @@ void W_Shotgun_Attack2(Weapon thiswep, bool fire1, bool fire2)
 // alternate secondary weapon frames
 void W_Shotgun_Attack3_Frame2(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
-	if (!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+	Weapon w = get_weaponinfo(self.weapon);
+	if (!w.wr_checkammo2(w))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -211,7 +212,8 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, bool fire1, bool fire2)
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 {SELFPARAM();
-	if (!_WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+	Weapon w = get_weaponinfo(self.weapon);
+	if (!w.wr_checkammo2(w))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
@@ -239,8 +241,10 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, bool fire1, bool fire2)
 			if(WEP_CVAR(shotgun, reload_ammo) && self.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{
 				// don't force reload an empty shotgun if its melee attack is active
-				if(WEP_CVAR(shotgun, secondary) < 2)
-					_WEP_ACTION(self.weapon, WR_RELOAD);
+				if(WEP_CVAR(shotgun, secondary) < 2) {
+					Weapon w = get_weaponinfo(self.weapon);
+					w.wr_reload(w);
+				}
 			}
 			else
 			{

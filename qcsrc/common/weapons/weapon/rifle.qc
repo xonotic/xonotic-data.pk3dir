@@ -164,9 +164,10 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 		}
 		METHOD(Rifle, wr_think, bool(entity thiswep, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) // forced reload
-				_WEP_ACTION(self.weapon, WR_RELOAD);
-			else
+			if(autocvar_g_balance_rifle_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(self.weapon);
+				w.wr_reload(w);
+			} else
 			{
 				self.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), self.rifle_accumulator, time);
 				if(fire1)
@@ -181,9 +182,10 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 				{
 					if(WEP_CVAR(rifle, secondary))
 					{
-						if(WEP_CVAR_SEC(rifle, reload))
-							_WEP_ACTION(self.weapon, WR_RELOAD);
-						else
+						if(WEP_CVAR_SEC(rifle, reload)) {
+							Weapon w = get_weaponinfo(self.weapon);
+							w.wr_reload(w);
+						} else
 						{
 							if(weapon_prepareattack_check(true, WEP_CVAR_SEC(rifle, refire)))
 							if(time >= self.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))

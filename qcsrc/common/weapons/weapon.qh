@@ -1,8 +1,6 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-bool w_new(entity this, int req);
-
 .int ammo_shells;
 .int ammo_nails;
 .int ammo_rockets;
@@ -10,42 +8,6 @@ bool w_new(entity this, int req);
 .int ammo_plasma;
 .int ammo_fuel;
 .int ammo_none;
-
-// weapon requests
-const int WR_SETUP          =  1; // (SERVER) setup weapon data
-.bool(entity this) wr_setup;
-/** (SERVER) logic to run every frame */
-.bool(entity this, bool fire1, bool fire2) wr_think;
-const int WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon primary
-.bool(entity this) wr_checkammo1;
-const int WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon second
-.bool(entity this) wr_checkammo2;
-const int WR_AIM            =  5; // (SERVER) runs bot aiming code for this weapon
-.bool(entity this) wr_aim;
-const int WR_INIT           =  6; // (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties
-.bool(entity this) wr_init;
-const int WR_SUICIDEMESSAGE =  7; // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
-.bool(entity this) wr_suicidemessage;
-const int WR_KILLMESSAGE    =  8; // (SERVER) notification number for kill message (may inspect w_deathtype for details)
-.bool(entity this) wr_killmessage;
-const int WR_RELOAD         =  9; // (SERVER) handles reloading for weapon
-.bool(entity this) wr_reload;
-const int WR_RESETPLAYER    = 10; // (SERVER) clears fields that the weapon may use
-.bool(entity this) wr_resetplayer;
-const int WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect for weapon explosion
-.bool(entity this) wr_impacteffect;
-const int WR_PLAYERDEATH    = 12; // (SERVER) called whenever a player dies
-.bool(entity this) wr_playerdeath;
-const int WR_GONETHINK      = 13; // (SERVER) logic to run when weapon is lost
-.bool(entity this) wr_gonethink;
-const int WR_CONFIG         = 14; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
-.bool(entity this) wr_config;
-const int WR_ZOOMRETICLE    = 15; // (CLIENT) weapon specific zoom reticle
-.bool(entity this) wr_zoomreticle;
-const int WR_DROP           = 16; // (SERVER) the weapon is dropped
-.bool(entity this) wr_drop;
-const int WR_PICKUP         = 17; // (SERVER) a weapon is picked up
-.bool(entity this) wr_pickup;
 
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
 CLASS(Weapon, Object)
@@ -57,8 +19,6 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, weapon, int, 0);
     /** A: WEPSET_id : WEPSET_... */
     ATTRIB(Weapon, weapons, WepSet, '0 0 0');
-    /** M: function  : w_... */
-    METHOD(Weapon, weapon_func, bool(entity this, int req)) { return w_new(this, req); }
     /** M: ammotype  : main ammo field */
     ATTRIB(Weapon, ammo_field, .int, ammo_none);
     /** M: impulse   : weapon impulse */
@@ -86,47 +46,52 @@ CLASS(Weapon, Object)
     /** M: wepname   : human readable name */
     ATTRIB(Weapon, message, string, "AOL CD Thrower");
 
+    /** (SERVER) setup weapon data */
+    METHOD(Weapon, wr_setup, bool(Weapon this)) {return false;}
+    /** (SERVER) logic to run every frame */
+    METHOD(Weapon, wr_think, bool(Weapon this, bool fire1, bool fire2)) {return false;}
+    /** (SERVER) checks ammo for weapon primary */
+    METHOD(Weapon, wr_checkammo1, bool(Weapon this)) {return false;}
+    /** (SERVER) checks ammo for weapon second */
+    METHOD(Weapon, wr_checkammo2, bool(Weapon this)) {return false;}
+    /** (SERVER) runs bot aiming code for this weapon */
+    METHOD(Weapon, wr_aim, bool(Weapon this)) {return false;}
+    /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
+    METHOD(Weapon, wr_init, bool(Weapon this)) {return false;}
+    /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
+    METHOD(Weapon, wr_suicidemessage, bool(Weapon this)) {return false;}
+    /** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
+    METHOD(Weapon, wr_killmessage, bool(Weapon this)) {return false;}
+    /** (SERVER) handles reloading for weapon */
+    METHOD(Weapon, wr_reload, bool(Weapon this)) {return false;}
+    /** (SERVER) clears fields that the weapon may use */
+    METHOD(Weapon, wr_resetplayer, bool(Weapon this)) {return false;}
+    /** (CLIENT) impact effect for weapon explosion */
+    METHOD(Weapon, wr_impacteffect, bool(Weapon this)) {return false;}
+    /** (SERVER) called whenever a player dies */
+    METHOD(Weapon, wr_playerdeath, bool(Weapon this)) {return false;}
+    /** (SERVER) logic to run when weapon is lost */
+    METHOD(Weapon, wr_gonethink, bool(Weapon this)) {return false;}
+    /** (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
+    METHOD(Weapon, wr_config, bool(Weapon this)) {return false;}
+    /** (CLIENT) weapon specific zoom reticle */
+    METHOD(Weapon, wr_zoomreticle, bool(Weapon this)) {return false;}
+    /** (SERVER) the weapon is dropped */
+    METHOD(Weapon, wr_drop, bool(Weapon this)) {return false;}
+    /** (SERVER) a weapon is picked up */
+    METHOD(Weapon, wr_pickup, bool(Weapon this)) {return false;}
+
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
 		returns(this.message, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
 	}
 
-	CONSTRUCTOR(Weapon,
-		bool(entity this, int req) function,
-		.int ammotype,
-		int i,
-		int weapontype,
-		float pickupbasevalue,
-		vector clr,
-		string modelname,
-		entity m,
-		string crosshair,
-		string wepimg,
-		string refname,
-		string wepname
-	) {
-		CONSTRUCT(Weapon);
-		this.weapon_func = function;
-		this.ammo_field = ammotype;
-		this.impulse = i;
-		this.spawnflags = weapontype;
-		this.bot_pickupbasevalue = pickupbasevalue;
-		this.wpcolor = clr;
-		this.mdl = modelname;
-		this.m_model = m;
-		this.w_crosshair = strzone(car(crosshair));
-		string s = cdr(crosshair);
-		this.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
-		this.model2 = strzone(wepimg);
-		this.netname = refname;
-		this.message = wepname;
-	}
 	void register_weapon(entity this, int id, WepSet bit)
 	{
 		this.weapon = id;
 		this.weapons = bit;
 		this.wpmodel = strzone(strcat("wpn-", ftos(id)));
 		#ifdef CSQC
-		this.weapon_func(this, WR_INIT);
+		this.wr_init(this);
 		#endif
 	}
 ENDCLASS(Weapon)
@@ -158,26 +123,6 @@ const int WEP_FLAG_RELOADABLE     =  0x80; // can has reload
 const int WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
 const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 
-bool w_new(entity this, int req) {
-    if (req == WR_SETUP) return this.wr_setup ? this.wr_setup(this) : false;
-    if (req == WR_CHECKAMMO1) return this.wr_checkammo1 ? this.wr_checkammo1(this) : false;
-    if (req == WR_CHECKAMMO2) return this.wr_checkammo2 ? this.wr_checkammo2(this) : false;
-    if (req == WR_AIM) return this.wr_aim ? this.wr_aim(this) : false;
-    if (req == WR_INIT) return this.wr_init ? this.wr_init(this) : false;
-    if (req == WR_SUICIDEMESSAGE) return this.wr_suicidemessage ? this.wr_suicidemessage(this) : false;
-    if (req == WR_KILLMESSAGE) return this.wr_killmessage ? this.wr_killmessage(this) : false;
-    if (req == WR_RELOAD) return this.wr_reload ? this.wr_reload(this) : false;
-    if (req == WR_RESETPLAYER) return this.wr_resetplayer ? this.wr_resetplayer(this) : false;
-    if (req == WR_IMPACTEFFECT) return this.wr_impacteffect ? this.wr_impacteffect(this) : false;
-    if (req == WR_PLAYERDEATH) return this.wr_playerdeath ? this.wr_playerdeath(this) : false;
-    if (req == WR_GONETHINK) return this.wr_gonethink ? this.wr_gonethink(this) : false;
-    if (req == WR_CONFIG) return this.wr_config ? this.wr_config(this) : false;
-    if (req == WR_ZOOMRETICLE) return this.wr_zoomreticle ? this.wr_zoomreticle(this) : false;
-    if (req == WR_DROP) return this.wr_drop ? this.wr_drop(this) : false;
-    if (req == WR_PICKUP) return this.wr_pickup ? this.wr_pickup(this) : false;
-    return false;
-}
-
 // variables:
 string weaponorder_byid;
 
@@ -203,8 +148,6 @@ string W_Model(string w_mdl);
 
 
 // other useful macros
-#define WEP_ACTION(wpn,wrequest) wpn.weapon_func(wpn, wrequest)
-#define _WEP_ACTION(wpn,wrequest) WEP_ACTION(get_weaponinfo(wpn), wrequest)
 #define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
 #define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
 
