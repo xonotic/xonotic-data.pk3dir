@@ -557,16 +557,15 @@ void racer_draw()
 #endif
 #endif
 
-		METHOD(Racer, vr_impact, bool(Racer thisveh))
+		METHOD(Racer, vr_impact, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			if(autocvar_g_vehicle_racer_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 		#endif
-			return true;
 		}
 
-		METHOD(Racer, vr_enter, bool(Racer thisveh))
+		METHOD(Racer, vr_enter, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.movetype = MOVETYPE_BOUNCE;
@@ -579,11 +578,9 @@ void racer_draw()
 
 			self.move_movetype = MOVETYPE_BOUNCE;
 		#endif
-
-			return true;
 		}
 
-		METHOD(Racer, vr_spawn, bool(Racer thisveh))
+		METHOD(Racer, vr_spawn, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			if(self.scale != 0.5)
@@ -619,10 +616,9 @@ void racer_draw()
 			self.vehicle_health = autocvar_g_vehicle_racer_health;
 			self.vehicle_shield = autocvar_g_vehicle_racer_shield;
 		#endif
-			return true;
 		}
 
-		METHOD(Racer, vr_death, bool(Racer thisveh))
+		METHOD(Racer, vr_death, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.SendEntity		= func_null; // stop networking this racer (for now)
@@ -651,20 +647,18 @@ void racer_draw()
 			self.think = racer_blowup_think;
 			self.nextthink = time;
 		#endif
-			return true;
 		}
 
 #ifdef CSQC
-		METHOD(Racer, vr_hud, bool(Racer thisveh))
+		METHOD(Racer, vr_hud, void(Racer thisveh))
 		{
 			Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 vCROSS_GUIDE);
-			return true;
 		}
 #endif
-		METHOD(Racer, vr_setup, bool(Racer thisveh))
+		METHOD(Racer, vr_setup, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.vehicle_exit = racer_exit;
@@ -694,12 +688,6 @@ void racer_draw()
 		#ifdef CSQC
 			AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
 		#endif
-			return true;
 		}
 
-		METHOD(Racer, vr_precache, bool(Racer thisveh))
-		{
-			return true;
-		}
-
-#endif // REGISTER_VEHICLE
+#endif

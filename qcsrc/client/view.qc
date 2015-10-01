@@ -1860,8 +1860,10 @@ void CSQC_UpdateView(float w, float h)
     if(hud && !intermission)
     if(hud == HUD_BUMBLEBEE_GUN)
     	CSQC_BUMBLE_GUN_HUD();
-    else
-		VEH_ACTION(hud, VR_HUD);
+    else {
+    	Vehicle info = get_vehicleinfo(hud);
+		info.vr_hud(info);
+	}
 
 	cl_notice_run();
 

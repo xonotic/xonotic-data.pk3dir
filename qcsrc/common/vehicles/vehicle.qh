@@ -1,53 +1,6 @@
 #ifndef VEHICLE_H
 #define VEHICLE_H
 
-// vehicle requests
-const int VR_SETUP          = 1; // (BOTH) setup vehicle data
-.bool(entity) vr_setup;
-const int VR_THINK		  	= 2; // (SERVER) logic to run every frame
-.bool(entity) vr_think;
-const int VR_DEATH          = 3; // (SERVER) called when vehicle dies
-.bool(entity) vr_death;
-const int VR_PRECACHE       = 4; // (BOTH) precaches models/sounds used by this vehicle
-.bool(entity) vr_precache;
-const int VR_ENTER          = 5; // (SERVER) called when a player enters this vehicle
-.bool(entity) vr_enter;
-const int VR_SPAWN          = 6; // (SERVER) called when the vehicle re-spawns
-.bool(entity) vr_spawn;
-const int VR_IMPACT         = 7; // (SERVER) called when a vehicle hits something
-.bool(entity) vr_impact;
-const int VR_HUD            = 8; // (CLIENT) logic to run every frame
-.bool(entity) vr_hud;
-
-// vehicle spawn flags (need them here for common registrations)
-const int VHF_ISVEHICLE			= 2; /// Indicates vehicle
-const int VHF_HASSHIELD			= 4; /// Vehicle has shileding
-const int VHF_SHIELDREGEN		= 8; /// Vehicles shield regenerates
-const int VHF_HEALTHREGEN		= 16; /// Vehicles health regenerates
-const int VHF_ENERGYREGEN		= 32; /// Vehicles energy regenerates
-const int VHF_DEATHEJECT		= 64; /// Vehicle ejects pilot upon fatal damage
-const int VHF_MOVE_GROUND		= 128; /// Vehicle moves on gound
-const int VHF_MOVE_HOVER		= 256; /// Vehicle hover close to gound
-const int VHF_MOVE_FLY			= 512; /// Vehicle is airborn
-const int VHF_DMGSHAKE			= 1024; /// Add random velocity each frame if health < 50%
-const int VHF_DMGROLL			= 2048; /// Add random angles each frame if health < 50%
-const int VHF_DMGHEADROLL		= 4096; /// Add random head angles each frame if health < 50%
-const int VHF_MULTISLOT			= 8192; /// Vehicle has multiple player slots
-const int VHF_PLAYERSLOT		= 16384; /// This ent is a player slot on a multi-person vehicle
-
-// functions:
-entity get_vehicleinfo(int id);
-
-// fields:
-.entity tur_head;
-
-// other useful macros
-#define _VEH_ACTION(veh, mrequest) veh.vehicle_func(veh, mrequest)
-#define VEH_ACTION(veh, mrequest) _VEH_ACTION(get_vehicleinfo(veh), mrequest)
-#define VEH_NAME(veh) (get_vehicleinfo(veh)).vehicle_name
-
-bool v_new(entity, int);
-
 CLASS(Vehicle, Object)
     ATTRIB(Vehicle, vehicleid, int, 0)
     /** hud icon */
@@ -56,8 +9,6 @@ CLASS(Vehicle, Object)
     ATTRIB(Vehicle, netname, string, "")
     /** human readable name */
     ATTRIB(Vehicle, vehicle_name, string, "Vehicle")
-    /**  */
-    ATTRIB(Vehicle, vehicle_func, bool(Vehicle, int), v_new)
     /** full name of model */
     ATTRIB(Vehicle, model, string, "")
     /** currently a copy of the model */
@@ -80,19 +31,42 @@ CLASS(Vehicle, Object)
     ATTRIB(Vehicle, mins, vector, '-0 -0 -0')
     /** vehicle hitbox size */
     ATTRIB(Vehicle, maxs, vector, '0 0 0')
+
+    /** (BOTH) setup vehicle data */
+    METHOD(Vehicle, vr_setup, void(Vehicle)) { }
+    /** (SERVER) logic to run every frame */
+    METHOD(Vehicle, vr_think, void(Vehicle)) { }
+    /** (SERVER) called when vehicle dies */
+    METHOD(Vehicle, vr_death, void(Vehicle)) { }
+    /** (BOTH) precaches models/sounds used by this vehicle */
+    METHOD(Vehicle, vr_precache, void(Vehicle)) { }
+    /** (SERVER) called when a player enters this vehicle */
+    METHOD(Vehicle, vr_enter, void(Vehicle)) { }
+    /** (SERVER) called when the vehicle re-spawns */
+    METHOD(Vehicle, vr_spawn, void(Vehicle)) { }
+    /** (SERVER) called when a vehicle hits something */
+    METHOD(Vehicle, vr_impact, void(Vehicle)) { }
+    /** (CLIENT) logic to run every frame */
+    METHOD(Vehicle, vr_hud, void(Vehicle)) { }
 ENDCLASS(Vehicle)
 
-bool v_new(Vehicle this, int req)
-{
-    if (req == VR_SETUP) return this.vr_setup ? this.vr_setup(this) : false;
-    if (req == VR_THINK) return this.vr_think ? this.vr_think(this) : false;
-    if (req == VR_DEATH) return this.vr_death ? this.vr_death(this) : false;
-    if (req == VR_PRECACHE) return this.vr_precache ? this.vr_precache(this) : false;
-    if (req == VR_ENTER) return this.vr_enter ? this.vr_enter(this) : false;
-    if (req == VR_SPAWN) return this.vr_spawn ? this.vr_spawn(this) : false;
-    if (req == VR_IMPACT) return this.vr_impact ? this.vr_impact(this) : false;
-    if (req == VR_HUD) return this.vr_hud ? this.vr_hud(this) : false;
-    return false;
-}
+// vehicle spawn flags (need them here for common registrations)
+const int VHF_ISVEHICLE			= 2; /// Indicates vehicle
+const int VHF_HASSHIELD			= 4; /// Vehicle has shileding
+const int VHF_SHIELDREGEN		= 8; /// Vehicles shield regenerates
+const int VHF_HEALTHREGEN		= 16; /// Vehicles health regenerates
+const int VHF_ENERGYREGEN		= 32; /// Vehicles energy regenerates
+const int VHF_DEATHEJECT		= 64; /// Vehicle ejects pilot upon fatal damage
+const int VHF_MOVE_GROUND		= 128; /// Vehicle moves on gound
+const int VHF_MOVE_HOVER		= 256; /// Vehicle hover close to gound
+const int VHF_MOVE_FLY			= 512; /// Vehicle is airborn
+const int VHF_DMGSHAKE			= 1024; /// Add random velocity each frame if health < 50%
+const int VHF_DMGROLL			= 2048; /// Add random angles each frame if health < 50%
+const int VHF_DMGHEADROLL		= 4096; /// Add random head angles each frame if health < 50%
+const int VHF_MULTISLOT			= 8192; /// Vehicle has multiple player slots
+const int VHF_PLAYERSLOT		= 16384; /// This ent is a player slot on a multi-person vehicle
+
+// fields:
+.entity tur_head;
 
 #endif

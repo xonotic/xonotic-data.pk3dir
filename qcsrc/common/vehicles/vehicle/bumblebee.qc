@@ -729,22 +729,19 @@ void spawnfunc_vehicle_bumblebee()
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }
 
-		METHOD(Bumblebee, vr_impact, bool(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh))
 		{
 			if(autocvar_g_vehicle_bumblebee_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
-
-			return true;
 		}
-		METHOD(Bumblebee, vr_enter, bool(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh))
 		{
 			SELFPARAM();
 			self.touch = bumblebee_touch;
 			self.nextthink = 0;
 			self.movetype = MOVETYPE_BOUNCEMISSILE;
-			return true;
 		}
-		METHOD(Bumblebee, vr_think, bool(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_think, void(Bumblebee thisveh))
 		{
 			SELFPARAM();
 			self.angles_z *= 0.8;
@@ -765,7 +762,7 @@ void spawnfunc_vehicle_bumblebee()
 					self.phase = 0;
 					self.touch();
 					other = oldother;
-					return true;
+					return;
 				}
 
 				if(self.gunner2)
@@ -778,13 +775,11 @@ void spawnfunc_vehicle_bumblebee()
 					self.phase = 0;
 					self.touch();
 					other = oldother;
-					return true;
+					return;
 				}
 			}
-
-			return true;
 		}
-		METHOD(Bumblebee, vr_death, bool(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_death, void(Bumblebee thisveh))
 		{
 			SELFPARAM();
 			entity oldself = self;
@@ -847,9 +842,8 @@ void spawnfunc_vehicle_bumblebee()
 			self.nextthink 		= 0;
 
 			setorigin(self, self.pos1);
-			return true;
 		}
-		METHOD(Bumblebee, vr_spawn, bool(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh))
 		{
 			SELFPARAM();
 			if(!self.gun1)
@@ -928,9 +922,8 @@ void spawnfunc_vehicle_bumblebee()
 			self.PlayerPhysplug = bumblebee_pilot_frame;
 
 			setorigin(self, self.origin + '0 0 25');
-			return true;
 		}
-		METHOD(Bumblebee, vr_setup, bool(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
 		{
 			SELFPARAM();
 			if(autocvar_g_vehicle_bumblebee_energy)
@@ -951,12 +944,6 @@ void spawnfunc_vehicle_bumblebee()
 			self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
 			self.max_health = self.vehicle_health;
 			self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
-
-			return true;
-		}
-		METHOD(Bumblebee, vr_precache, bool(Bumblebee thisveh))
-		{
-			return true;
 		}
 
 #endif // SVQC
@@ -970,24 +957,18 @@ void CSQC_BUMBLE_GUN_HUD()
 					 string_null);
 }
 
-		METHOD(Bumblebee, vr_hud, bool(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_hud, void(Bumblebee thisveh))
 		{
 			Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 vCROSS_HEAL);
-			return true;
 		}
-		METHOD(Bumblebee, vr_setup, bool(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_LOCK;  // Raygun-locked
 			AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1
 			AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
-			return true;
-		}
-		METHOD(Bumblebee, vr_precache, bool(Bumblebee thisveh))
-		{
-			return true;
 		}
 
 #endif

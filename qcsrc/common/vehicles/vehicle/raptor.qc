@@ -613,14 +613,12 @@ void spawnfunc_vehicle_raptor()
 	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
 
-		METHOD(Raptor, vr_impact, bool(Raptor thisveh))
+		METHOD(Raptor, vr_impact, void(Raptor thisveh))
 		{
 			if(autocvar_g_vehicle_raptor_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
-
-			return true;
 		}
-		METHOD(Raptor, vr_enter, bool(Raptor thisveh))
+		METHOD(Raptor, vr_enter, void(Raptor thisveh))
 		{
 			self.vehicle_weapon2mode = RSM_BOMB;
 			self.owner.PlayerPhysplug = raptor_takeoff;
@@ -638,13 +636,8 @@ void spawnfunc_vehicle_raptor()
 			   setorigin(self.owner.flagcarried, '-20 0 96');
 
 			CSQCVehicleSetup(self.owner, 0);
-			return true;
 		}
-		METHOD(Raptor, vr_think, bool(Raptor thisveh))
-		{
-			return true;
-		}
-		METHOD(Raptor, vr_death, bool(Raptor thisveh))
+		METHOD(Raptor, vr_death, void(Raptor thisveh))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -665,9 +658,8 @@ void spawnfunc_vehicle_raptor()
 
 			self.colormod = '-0.5 -0.5 -0.5';
 			self.touch = raptor_blowup;
-			return true;
 		}
-		METHOD(Raptor, vr_spawn, bool(Raptor thisveh))
+		METHOD(Raptor, vr_spawn, void(Raptor thisveh))
 		{
 			if(!self.gun1)
 			{
@@ -757,9 +749,8 @@ void spawnfunc_vehicle_raptor()
 			self.damageforcescale = 0.25;
 			self.vehicle_health = autocvar_g_vehicle_raptor_health;
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-			return true;
 		}
-		METHOD(Raptor, vr_setup, bool(Raptor thisveh))
+		METHOD(Raptor, vr_setup, void(Raptor thisveh))
 		{
 			if(autocvar_g_vehicle_raptor_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -778,18 +769,12 @@ void spawnfunc_vehicle_raptor()
 			self.vehicle_health = autocvar_g_vehicle_raptor_health;
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 			self.max_health = self.vehicle_health;
-
-			return true;
-		}
-		METHOD(Raptor, vr_precache, bool(Raptor thisveh))
-		{
-			return true;
 		}
 
-#endif // SVQC
+#endif
 #ifdef CSQC
 
-		METHOD(Raptor, vr_hud, bool(Raptor thisveh))
+		METHOD(Raptor, vr_hud, void(Raptor thisveh))
 		{
 			string crosshair;
 
@@ -804,17 +789,11 @@ void spawnfunc_vehicle_raptor()
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 crosshair);
-			return true;
 		}
-		METHOD(Raptor, vr_setup, bool(Raptor thisveh))
+		METHOD(Raptor, vr_setup, void(Raptor thisveh))
 		{
 			AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
-			return true;
-		}
-		METHOD(Raptor, vr_precache, bool(Raptor thisveh))
-		{
-			return true;
 		}
 
-#endif // CSQC
-#endif // REGISTER_VEHICLE
+#endif
+#endif

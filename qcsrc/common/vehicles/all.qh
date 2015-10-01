@@ -6,6 +6,7 @@
 void RegisterVehicles();
 const int VEH_MAXCOUNT = 24;
 entity vehicle_info[VEH_MAXCOUNT], vehicle_info_first, vehicle_info_last;
+Vehicle get_vehicleinfo(int id);
 int VEH_COUNT;
 const int VEH_FIRST = 1;
 #define VEH_LAST (VEH_FIRST + VEH_COUNT - 1)

@@ -552,14 +552,12 @@ void spawnfunc_vehicle_spiderbot()
 	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
-		METHOD(Spiderbot, vr_impact, bool(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh))
 		{
 			if(autocvar_g_vehicle_spiderbot_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
-
-			return true;
 		}
-		METHOD(Spiderbot, vr_enter, bool(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh))
 		{
 			self.vehicle_weapon2mode = SBRM_GUIDE;
 			self.movetype = MOVETYPE_WALK;
@@ -572,17 +570,13 @@ void spawnfunc_vehicle_spiderbot()
 				setattachment(self.owner.flagcarried, self.tur_head, "");
 				setorigin(self.owner.flagcarried, '-20 0 120');
 			}
-
-			return true;
 		}
-		METHOD(Spiderbot, vr_think, bool(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh))
 		{
 			if(self.flags & FL_ONGROUND)
 				movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
-
-			return true;
 		}
-		METHOD(Spiderbot, vr_death, bool(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -599,10 +593,8 @@ void spawnfunc_vehicle_spiderbot()
 			self.movetype			= MOVETYPE_TOSS;
 
 			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
-
-			return true;
 		}
-		METHOD(Spiderbot, vr_spawn, bool(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh))
 		{
 			if(!self.gun1)
 			{
@@ -632,10 +624,8 @@ void spawnfunc_vehicle_spiderbot()
 			self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 
 			self.PlayerPhysplug = spiderbot_frame;
-
-			return true;
 		}
-		METHOD(Spiderbot, vr_setup, bool(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh))
 		{
 			if(autocvar_g_vehicle_spiderbot_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -651,12 +641,6 @@ void spawnfunc_vehicle_spiderbot()
 			self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 			self.max_health = self.vehicle_health;
 			self.pushable = true; // spiderbot can use jumppads
-
-			return true;
-		}
-		METHOD(Spiderbot, vr_precache, bool(Spiderbot thisveh))
-		{
-			return true;
 		}
 
 #endif // SVQC
@@ -664,7 +648,7 @@ void spawnfunc_vehicle_spiderbot()
 float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
 float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
-		METHOD(Spiderbot, vr_hud, bool(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_hud, void(Spiderbot thisveh))
 		{
 			string crosshair;
 
@@ -680,19 +664,12 @@ float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 crosshair);
-			return true;
 		}
-		METHOD(Spiderbot, vr_setup, bool(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
 			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
-
-			return true;
-		}
-		METHOD(Spiderbot, vr_precache, bool(Spiderbot thisveh))
-		{
-			return true;
 		}
 
-#endif // CSQC
-#endif // REGISTER_VEHICLE
+#endif
+#endif
