@@ -147,26 +147,6 @@ WepSet ReadWepSet()
 }
 #endif
 
-void register_weapons_done()
-{
-	dummy_weapon_info = NEW(Weapon);
-
-	weaponorder_byid = "";
-	for (int i = WEP_MAXCOUNT - 1; i >= 0; --i)
-		if (weapon_info[i])
-			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
-	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
-}
-entity get_weaponinfo(int id)
-{
-	entity w;
-	if(id < WEP_FIRST || id > WEP_LAST)
-		return dummy_weapon_info;
-	w = weapon_info[id - 1];
-	if(w)
-		return w;
-	return dummy_weapon_info;
-}
 string W_FixWeaponOrder(string order, float complete)
 {
 	return fixPriorityList(order, WEP_FIRST, WEP_LAST, 230 - WEP_FIRST, complete);
