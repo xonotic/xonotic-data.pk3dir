@@ -75,7 +75,7 @@ METHOD(RaptorCannon, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
         vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
                                org, normalize(dir + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                                autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-                               DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, player);
+                               DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, veh ? veh : player);
         weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
     }
     setself(this);
@@ -96,9 +96,11 @@ METHOD(RaptorBomb, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     entity player = isPlayer ? self : self.owner;
+    entity veh = player.vehicle;
     setself(player);
     if (fire2)
     if (weapon_prepareattack(false, autocvar_g_vehicle_raptor_bombs_refire)) {
+        if (veh) setself(veh);
         raptor_bombdrop();
         weapon_thinkf(WFRAME_FIRE1, 0, w_ready);
     }
@@ -119,6 +121,7 @@ METHOD(RaptorFlare, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
     SELFPARAM();
     bool isPlayer = IS_PLAYER(self);
     entity player = isPlayer ? self : self.owner;
+    entity veh = player.vehicle;
     setself(player);
     if (fire2)
     if (weapon_prepareattack(true, autocvar_g_vehicle_raptor_flare_refire)) {
@@ -133,7 +136,7 @@ METHOD(RaptorFlare, wr_think, bool(entity thiswep, bool fire1, bool fire2)) {
             _flare.velocity = 0.25 * self.velocity + (v_forward + randomvec() * 0.25)* -500;
             _flare.think = raptor_flare_think;
             _flare.nextthink = time;
-            _flare.owner = self;
+            _flare.owner = veh ? veh : player;
             _flare.solid = SOLID_CORPSE;
             _flare.takedamage = DAMAGE_YES;
             _flare.event_damage = raptor_flare_damage;
