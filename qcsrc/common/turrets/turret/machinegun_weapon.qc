@@ -2,7 +2,7 @@
 #define TURRET_MACHINEGUN_WEAPON_H
 
 CLASS(MachineGunTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(MachineGunTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
+/* flags     */ ATTRIB(MachineGunTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(MachineGunTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(MachineGunTurretAttack, netname, string, "turret_machinegun");
 /* wepname   */ ATTRIB(MachineGunTurretAttack, message, string, _("Machinegun"));

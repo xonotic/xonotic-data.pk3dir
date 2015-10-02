@@ -25,7 +25,7 @@ REGISTER_MONSTER(SPIDER, NEW(Spider)) {
 #include "../../weapons/all.qh"
 
 CLASS(SpiderAttack, PortoLaunch)
-/* flags     */ ATTRIB(SpiderAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
+/* flags     */ ATTRIB(SpiderAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(SpiderAttack, impulse, int, 9);
 /* refname   */ ATTRIB(SpiderAttack, netname, string, "spider");
 /* wepname   */ ATTRIB(SpiderAttack, message, string, _("Spider attack"));

@@ -2,7 +2,7 @@
 #define TURRET_PLASMA_WEAPON_H
 
 CLASS(PlasmaAttack, PortoLaunch)
-/* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
+/* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(PlasmaAttack, impulse, int, 5);
 /* refname   */ ATTRIB(PlasmaAttack, netname, string, "turret_plasma");
 /* wepname   */ ATTRIB(PlasmaAttack, message, string, _("Plasma"));

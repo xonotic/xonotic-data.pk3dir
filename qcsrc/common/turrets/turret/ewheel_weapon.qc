@@ -2,7 +2,7 @@
 #define TURRET_EWHEEL_WEAPON_H
 
 CLASS(EWheelAttack, PortoLaunch)
-/* flags     */ ATTRIB(EWheelAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
+/* flags     */ ATTRIB(EWheelAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(EWheelAttack, impulse, int, 5);
 /* refname   */ ATTRIB(EWheelAttack, netname, string, "turret_ewheel");
 /* wepname   */ ATTRIB(EWheelAttack, message, string, _("eWheel"));

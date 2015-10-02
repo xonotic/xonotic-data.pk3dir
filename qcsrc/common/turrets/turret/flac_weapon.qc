@@ -2,7 +2,7 @@
 #define TURRET_FLAC_WEAPON_H
 
 CLASS(FlacAttack, PortoLaunch)
-/* flags     */ ATTRIB(FlacAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
+/* flags     */ ATTRIB(FlacAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(FlacAttack, impulse, int, 5);
 /* refname   */ ATTRIB(FlacAttack, netname, string, "turret_flac");
 /* wepname   */ ATTRIB(FlacAttack, message, string, _("FLAC"));

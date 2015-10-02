@@ -2,7 +2,7 @@
 #define TURRET_HK_WEAPON_H
 
 CLASS(HunterKillerAttack, PortoLaunch)
-/* flags     */ ATTRIB(HunterKillerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
+/* flags     */ ATTRIB(HunterKillerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(HunterKillerAttack, impulse, int, 9);
 /* refname   */ ATTRIB(HunterKillerAttack, netname, string, "turret_hk");
 /* wepname   */ ATTRIB(HunterKillerAttack, message, string, _("Hunter-Killer"));

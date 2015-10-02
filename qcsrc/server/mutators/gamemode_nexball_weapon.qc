@@ -3,7 +3,7 @@
 
 CLASS(BallStealer, PortoLaunch)
 /* flags     */ ATTRIB(BallStealer, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
-/* impulse   */ ATTRIB(BallStealer, impulse, int, 2);
+/* impulse   */ ATTRIB(BallStealer, impulse, int, 0);
 /* refname   */ ATTRIB(BallStealer, netname, string, "ballstealer");
 /* wepname   */ ATTRIB(BallStealer, message, string, _("Ball Stealer"));
 ENDCLASS(BallStealer)

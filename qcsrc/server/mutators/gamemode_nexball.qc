@@ -787,11 +787,8 @@ void W_Nexball_Attack2(void)
 	if(!autocvar_g_nexball_tackling)
 		return;
 
-	entity missile;
-	if(!(balls & BALL_BASKET))
-		return;
 	W_SetupShot(self, false, 2, SND(NB_SHOOT2), CH_WEAPON_A, 0);
-	missile = spawn();
+	entity missile = spawn();
 
 	missile.owner = self;
 	missile.classname = "ballstealer";
@@ -982,7 +979,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {SELFPARAM();
-	if(self.weapon == WEP_MORTAR.m_id)
+	if(self.weapon == WEP_NEXBALL.m_id)
 		return true;
 
 	return false;
@@ -991,7 +988,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 {SELFPARAM();
 	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_MORTAR.m_id)
+	if(self.weapon == WEP_NEXBALL.m_id)
 		return true;
 
 	return false;

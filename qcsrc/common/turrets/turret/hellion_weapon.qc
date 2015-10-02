@@ -2,7 +2,7 @@
 #define TURRET_HELLION_WEAPON_H
 
 CLASS(HellionAttack, PortoLaunch)
-/* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN);
+/* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(HellionAttack, impulse, int, 9);
 /* refname   */ ATTRIB(HellionAttack, netname, string, "turret_hellion");
 /* wepname   */ ATTRIB(HellionAttack, message, string, _("Hellion"));
