@@ -149,7 +149,7 @@ WepSet ReadWepSet()
 
 string W_FixWeaponOrder(string order, float complete)
 {
-	return fixPriorityList(order, WEP_FIRST, WEP_LAST, 230 - WEP_FIRST, complete);
+	return fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete);
 }
 string W_NameWeaponOrder_MapFunc(string s)
 {
@@ -157,7 +157,7 @@ string W_NameWeaponOrder_MapFunc(string s)
 	if(s == "0" || stof(s))
 	{
 		wi = get_weaponinfo(stof(s));
-		if(wi != dummy_weapon_info)
+		if(wi != WEP_Null)
 			return wi.netname;
 	}
 	return s;

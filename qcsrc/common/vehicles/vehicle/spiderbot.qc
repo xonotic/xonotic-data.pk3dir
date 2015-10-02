@@ -498,18 +498,14 @@ bool spiderbot_impulse(int _imp)
 	switch(_imp)
 	{
 		case 1:
-		case 230:
 			self.vehicle.vehicle_weapon2mode = SBRM_VOLLY;
 			CSQCVehicleSetup(self, 0);
 			return true;
 		case 2:
-		case 231:
 			self.vehicle.vehicle_weapon2mode = SBRM_GUIDE;
 			CSQCVehicleSetup(self, 0);
 			return true;
 		case 3:
-		case 232:
-		case 251:
 			self.vehicle.vehicle_weapon2mode = SBRM_ARTILLERY;
 			CSQCVehicleSetup(self, 0);
 			return true;

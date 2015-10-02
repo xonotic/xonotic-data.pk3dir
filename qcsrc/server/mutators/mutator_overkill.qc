@@ -274,10 +274,10 @@ MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
-	WepSet ok_start_items = (WEPSET_MACHINEGUN | WEPSET_VORTEX | WEPSET_SHOTGUN);
+	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
 
-	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
-	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
+	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET(RPC); }
+	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET(HMG); }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;

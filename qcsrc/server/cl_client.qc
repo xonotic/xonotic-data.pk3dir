@@ -510,10 +510,10 @@ void PutClientInServer()
 		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
 		{
 			if(g_weaponarena_random_with_blaster)
-				self.weapons &= ~WEPSET_BLASTER;
+				self.weapons &= ~WEPSET(BLASTER);
 			W_RandomWeapons(self, g_weaponarena_random);
 			if(g_weaponarena_random_with_blaster)
-				self.weapons |= WEPSET_BLASTER;
+				self.weapons |= WEPSET(BLASTER);
 		}
 
 		self.items = start_items;
@@ -1236,7 +1236,7 @@ void ClientConnect (void)
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 		}
 
-		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET_TUBA))
+		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET(TUBA)))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 

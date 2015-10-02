@@ -168,7 +168,7 @@ void GiveBall(entity plyr, entity ball)
 
 	plyr.weaponentity.weapons = plyr.weapons;
 	plyr.weaponentity.switchweapon = plyr.weapon;
-	plyr.weapons = WEPSET_NEXBALL;
+	plyr.weapons = WEPSET(NEXBALL);
 	setself(plyr);
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w);
@@ -963,7 +963,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 	self.weaponentity.weapons = '0 0 0';
 
 	if(nexball_mode & NBM_BASKETBALL)
-		self.weapons |= WEPSET_NEXBALL;
+		self.weapons |= WEPSET(NEXBALL);
 	else
 		self.weapons = '0 0 0';
 

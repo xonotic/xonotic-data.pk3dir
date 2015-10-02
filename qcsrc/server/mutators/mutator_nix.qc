@@ -144,7 +144,7 @@ void NIX_GiveCurrentWeapon()
 
 	self.weapons = '0 0 0';
 	if(g_nix_with_blaster)
-		self.weapons |= WEPSET_BLASTER;
+		self.weapons |= WEPSET(BLASTER);
 	self.weapons |= WepSet_FromWeapon(nix_weapon);
 
 	if(self.switchweapon != nix_weapon)

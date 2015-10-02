@@ -29,8 +29,6 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, bot_pickupbasevalue, float, 0);
     /** M: color     : waypointsprite color */
     ATTRIB(Weapon, wpcolor, vector, '0 0 0');
-    /** A: wpn-id    : wpn- sprite name */
-    ATTRIB(Weapon, wpmodel, string, "");
     /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
     ATTRIB(Weapon, mdl, string, "");
     /** M: model MDL_id_ITEM */
@@ -86,16 +84,6 @@ CLASS(Weapon, Object)
 
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
 		returns(this.message, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
-	}
-
-	void register_weapon(entity this, int id, WepSet bit)
-	{
-		this.weapon = id;
-		this.weapons = bit;
-		this.wpmodel = strzone(strcat("wpn-", ftos(id)));
-		#ifdef CSQC
-		this.wr_init(this);
-		#endif
 	}
 ENDCLASS(Weapon)
 

@@ -333,7 +333,7 @@ MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 	start_ammo_rockets = warmup_start_ammo_rockets = 0;
 	start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
 
-	start_weapons = warmup_start_weapons = WEPSET_VAPORIZER;
+	start_weapons = warmup_start_weapons = WEPSET(VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	return false;
