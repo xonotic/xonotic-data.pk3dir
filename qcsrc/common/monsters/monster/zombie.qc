@@ -18,7 +18,7 @@ ENDCLASS(Zombie)
 
 REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
 #ifndef MENUQC
-    MON_ACTION(this, MR_PRECACHE);
+    this.mr_precache(this);
 #endif
 }
 

@@ -18,7 +18,7 @@ ENDCLASS(Shambler)
 
 REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
 #ifndef MENUQC
-    MON_ACTION(this, MR_PRECACHE);
+    this.mr_precache(this);
 #endif
 }
 

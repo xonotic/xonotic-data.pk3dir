@@ -18,7 +18,7 @@ ENDCLASS(Spider)
 
 REGISTER_MONSTER(SPIDER, NEW(Spider)) {
 #ifndef MENUQC
-    MON_ACTION(this, MR_PRECACHE);
+    this.mr_precache(this);
 #endif
 }
 

@@ -27,7 +27,7 @@ bool monsters_animoverride(entity e)
 
 	if(!monster_id) { return false; }
 
-	MON_ACTION(monster_id, MR_ANIM);
+	monster_id.mr_anim(monster_id);
 
 	vector none = '0 0 0';
 	e.anim_duckwalk = e.anim_walk;

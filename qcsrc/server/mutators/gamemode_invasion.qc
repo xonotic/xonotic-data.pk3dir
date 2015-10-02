@@ -13,8 +13,10 @@ void spawnfunc_invasion_spawnpoint()
 	self.classname = "invasion_spawnpoint";
 
 	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
-	if(self.monsterid)
-		_MON_ACTION(self.monsterid, MR_PRECACHE);
+	if(self.monsterid) {
+		Monster mon = get_monsterinfo(self.monsterid);
+		mon.mr_precache(mon);
+	}
 }
 
 float invasion_PickMonster(float supermonster_count)
@@ -430,9 +432,10 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 
 void invasion_Initialize()
 {
-	if(autocvar_g_invasion_zombies_only)
-		MON_ACTION(MON_ZOMBIE, MR_PRECACHE);
-	else
+	if(autocvar_g_invasion_zombies_only) {
+		Monster mon = MON_ZOMBIE;
+		mon.mr_precache(mon);
+	} else
 	{
 		float i;
 		entity mon;
@@ -442,7 +445,7 @@ void invasion_Initialize()
 			if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM))
 				continue; // flying/swimming monsters not yet supported
 
-			MON_ACTION(mon, MR_PRECACHE);
+			mon.mr_precache(mon);
 		}
 	}
 

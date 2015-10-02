@@ -18,7 +18,7 @@ ENDCLASS(Mage)
 
 REGISTER_MONSTER(MAGE, NEW(Mage)) {
 #ifndef MENUQC
-    MON_ACTION(this, MR_PRECACHE);
+    this.mr_precache(this);
 #endif
 }
 

@@ -27,13 +27,9 @@ const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
 .vector anim_walk;
 .vector anim_spawn;
 
-bool m_null(entity thismon, int) { return false; }
-bool m_new(entity thismon, int);
-
 /** If you register a new monster, make sure to add it to all.inc */
 CLASS(Monster, Object)
     ATTRIB(Monster, monsterid, int, 0)
-    ATTRIB(Monster, monster_func, bool(Monster, int), m_new)
     /** attributes */
     ATTRIB(Monster, spawnflags, int, 0)
     /** human readable name */
@@ -46,34 +42,20 @@ CLASS(Monster, Object)
     ATTRIB(Monster, mins, vector, '-0 -0 -0')
     /** hitbox size */
     ATTRIB(Monster, maxs, vector, '0 0 0')
+    
+    /** (SERVER) setup monster data */
+    METHOD(Monster, mr_setup, bool(Monster this)) { return false; }
+    /** (SERVER) logic to run every frame */
+    METHOD(Monster, mr_think, bool(Monster this)) { return false; }
+    /** (SERVER) called when monster dies */
+    METHOD(Monster, mr_death, bool(Monster this)) { return false; }
+    /** (BOTH) precaches models/sounds used by this monster */
+    METHOD(Monster, mr_precache, bool(Monster this)) { return false; }
+    /** (SERVER) called when monster is damaged */
+    METHOD(Monster, mr_pain, bool(Monster this)) { return false; }
+    /** (BOTH?) sets animations for monster */
+    METHOD(Monster, mr_anim, bool(Monster this)) { return false; }
+
 ENDCLASS(Monster)
-
-// monster requests
-const int MR_SETUP = 1; // (SERVER) setup monster data
-.bool(Monster this) mr_setup;
-const int MR_THINK = 2; // (SERVER) logic to run every frame
-.bool(Monster this) mr_think;
-const int MR_DEATH = 3; // (SERVER) called when monster dies
-.bool(Monster this) mr_death;
-const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
-.bool(Monster this) mr_precache;
-const int MR_PAIN = 5; // (SERVER) called when monster is damaged
-.bool(Monster this) mr_pain;
-const int MR_ANIM = 6; // (BOTH?) sets animations for monster
-.bool(Monster this) mr_anim;
-
-// other useful macros
-#define MON_ACTION(mon,mrequest) mon.monster_func(mon, mrequest)
-#define _MON_ACTION(mon,mrequest) MON_ACTION(get_monsterinfo(mon), mrequest)
-
-bool m_new(entity this, int req) {
-    if (req == MR_SETUP) return this.mr_setup ? this.mr_setup(this) : false;
-    if (req == MR_THINK) return this.mr_think ? this.mr_think(this) : false;
-    if (req == MR_DEATH) return this.mr_death ? this.mr_death(this) : false;
-    if (req == MR_PRECACHE) return this.mr_precache ? this.mr_precache(this) : false;
-    if (req == MR_PAIN) return this.mr_pain ? this.mr_pain(this) : false;
-    if (req == MR_ANIM) return this.mr_anim ? this.mr_anim(this) : false;
-    return false;
-}
 
 #endif

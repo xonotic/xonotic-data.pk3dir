@@ -18,7 +18,7 @@ ENDCLASS(Wyvern)
 
 REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
 #ifndef MENUQC
-    MON_ACTION(this, MR_PRECACHE);
+    this.mr_precache(this);
 #endif
 }
 
