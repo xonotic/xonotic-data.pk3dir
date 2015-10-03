@@ -240,7 +240,9 @@ void GenericCommand_dumpcommands(float request)
 	}
 }
 
+#ifndef MENUQC
 void effectinfo_dump(int fh, bool alsoprint);
+#endif
 void GenericCommand_dumpeffectinfo(float request)
 {
     switch (request) {
