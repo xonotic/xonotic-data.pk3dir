@@ -55,8 +55,8 @@ respawntime: "off" cycle time (default: same as wait)
 -------- SPAWNFLAGS --------
 START_ON: assume it is already turned on (when targeted)
 */
-void spawnfunc_trigger_multivibrator()
-{SELFPARAM();
+spawnfunc(trigger_multivibrator)
+{
 	if(!self.wait)
 		self.wait = 1;
 	if(!self.respawntime)

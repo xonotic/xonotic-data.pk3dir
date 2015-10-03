@@ -49,7 +49,7 @@ void monster_dropitem()
 	{
 		setself(e);
 		e.noalign = true;
-		e.monster_loot();
+		e.monster_loot(e);
 		e.gravity = 1;
 		e.movetype = MOVETYPE_TOSS;
 		e.reset = SUB_Remove;

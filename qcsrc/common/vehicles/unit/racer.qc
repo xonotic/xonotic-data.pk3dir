@@ -667,8 +667,8 @@ void racer_deadtouch()
 		racer_blowup();
 }
 
-void spawnfunc_vehicle_racer()
-{SELFPARAM();
+spawnfunc(vehicle_racer)
+{
 	if(!autocvar_g_vehicle_racer) { remove(self); return; }
 	if(!vehicle_initialize(VEH_RACER, false)) { remove(self); return; }
 }

@@ -62,8 +62,8 @@ void follow_init()
 	}
 }
 
-void spawnfunc_misc_follow()
-{SELFPARAM();
+spawnfunc(misc_follow)
+{
 	InitializeEntity(self, follow_init, INITPRIO_FINDTARGET);
 }
 #endif

@@ -67,7 +67,7 @@ void W_Electro_ExplodeCombo(void);
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_electro(void) { weapon_defaultspawnfunc(WEP_ELECTRO.m_id); }
+spawnfunc(weapon_electro) { weapon_defaultspawnfunc(WEP_ELECTRO.m_id); }
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {

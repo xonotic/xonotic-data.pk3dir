@@ -8,7 +8,7 @@ void() SUB_CalcAngleMoveDone;
 //void() SUB_UseTargets;
 void() SUB_Remove;
 
-void spawnfunc_info_null (void);
+spawnfunc(info_null);
 
 void setanim(entity e, vector anim, float looping, float override, float restart);
 

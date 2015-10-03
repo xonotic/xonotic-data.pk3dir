@@ -41,7 +41,7 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 #include "../../triggers/trigger/jumppads.qh"
 
-void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
+spawnfunc(weapon_porto) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
 
 void W_Porto_Success(void)
 {SELFPARAM();

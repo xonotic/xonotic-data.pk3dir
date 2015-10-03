@@ -150,8 +150,8 @@ void trigger_impulse_link()
 	//Net_LinkEntity(self, 0, false, trigger_impulse_send);
 }
 
-void spawnfunc_trigger_impulse()
-{SELFPARAM();
+spawnfunc(trigger_impulse)
+{
 	self.active = ACTIVE_ACTIVE;
 
 	EXACTTRIGGER_INIT;

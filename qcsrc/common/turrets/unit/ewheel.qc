@@ -121,7 +121,7 @@ void ewheel_move_idle()
         movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
-void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m_id)) remove(self); }
+spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL.m_id)) remove(self); }
 
 float t_ewheel(float req)
 {SELFPARAM();

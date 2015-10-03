@@ -183,8 +183,8 @@ speed : speed the train moves (can be overridden by each spawnfunc_path_corner)
 target : targetname of first spawnfunc_path_corner (starts here)
 */
 #ifdef SVQC
-void spawnfunc_func_train()
-{SELFPARAM();
+spawnfunc(func_train)
+{
 	if (self.noise != "")
 		precache_sound(self.noise);
 

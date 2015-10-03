@@ -41,7 +41,7 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-void spawnfunc_weapon_hmg() { weapon_defaultspawnfunc(WEP_HMG.m_id); }
+spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(WEP_HMG.m_id); }
 
 void W_HeavyMachineGun_Attack_Auto()
 {SELFPARAM();

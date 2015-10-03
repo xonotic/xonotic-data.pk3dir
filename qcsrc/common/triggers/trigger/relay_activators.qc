@@ -21,20 +21,20 @@ void relay_activators_use()
 	setself(this);
 }
 
-void spawnfunc_relay_activate()
-{SELFPARAM();
+spawnfunc(relay_activate)
+{
 	self.cnt = ACTIVE_ACTIVE;
 	self.use = relay_activators_use;
 }
 
-void spawnfunc_relay_deactivate()
-{SELFPARAM();
+spawnfunc(relay_deactivate)
+{
 	self.cnt = ACTIVE_NOT;
 	self.use = relay_activators_use;
 }
 
-void spawnfunc_relay_activatetoggle()
-{SELFPARAM();
+spawnfunc(relay_activatetoggle)
+{
 	self.cnt = ACTIVE_TOGGLE;
 	self.use = relay_activators_use;
 }

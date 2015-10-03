@@ -257,7 +257,7 @@ MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
     /**/ i(entity, other) \
     /**/ o(entity, other) \
     /**/
-.void() monster_loot;
+.void(entity this) monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
 
 /**

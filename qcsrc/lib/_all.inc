@@ -22,6 +22,7 @@
 #include "registry.qh"
 #include "replicate.qh"
 #include "sortlist.qc"
+#include "spawnfunc.qh"
 #include "static.qh"
 #include "string.qh"
 #include "struct.qh"

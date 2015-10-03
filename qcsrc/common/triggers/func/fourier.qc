@@ -39,8 +39,8 @@ void func_fourier_controller_think()
 		self.owner.velocity = (v - self.owner.origin) * 10;
 }
 
-void spawnfunc_func_fourier()
-{SELFPARAM();
+spawnfunc(func_fourier)
+{
 	entity controller;
 	if (self.noise != "")
 	{

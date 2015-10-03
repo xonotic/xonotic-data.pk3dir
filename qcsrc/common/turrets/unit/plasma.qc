@@ -11,7 +11,7 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
-void spawnfunc_turret_plasma() { SELFPARAM(); if(!turret_initialize(TUR_PLASMA.m_id)) remove(self); }
+spawnfunc(turret_plasma) { if(!turret_initialize(TUR_PLASMA.m_id)) remove(self); }
 
 float t_plasma(float req)
 {SELFPARAM();

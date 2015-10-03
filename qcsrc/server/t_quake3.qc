@@ -3,27 +3,27 @@
 #include "../common/weapons/all.qh"
 #include "../common/buffs.qh"
 
-void spawnfunc_weapon_crylink();
-void spawnfunc_weapon_electro();
-void spawnfunc_weapon_hagar();
-void spawnfunc_weapon_machinegun();
-void spawnfunc_weapon_vortex();
+spawnfunc(weapon_crylink);
+spawnfunc(weapon_electro);
+spawnfunc(weapon_hagar);
+spawnfunc(weapon_machinegun);
+spawnfunc(weapon_vortex);
 
-void spawnfunc_target_items();
+spawnfunc(target_items);
 
-void spawnfunc_item_bullets();
-void spawnfunc_item_cells();
-void spawnfunc_item_rockets();
-void spawnfunc_item_shells();
+spawnfunc(item_bullets);
+spawnfunc(item_cells);
+spawnfunc(item_rockets);
+spawnfunc(item_shells);
 
-void spawnfunc_item_jetpack();
+spawnfunc(item_jetpack);
 
-void spawnfunc_item_armor_big();
-void spawnfunc_item_armor_large();
-void spawnfunc_item_armor_small();
+spawnfunc(item_armor_big);
+spawnfunc(item_armor_large);
+spawnfunc(item_armor_small);
 
-void spawnfunc_item_health_medium();
-void spawnfunc_item_health_mega();
+spawnfunc(item_health_medium);
+spawnfunc(item_health_mega);
 
 //***********************
 //QUAKE 3 ENTITIES - So people can play quake3 maps with the xonotic weapons
@@ -32,38 +32,38 @@ void spawnfunc_item_health_mega();
 // NOTE: for best experience, you need to swap MGs with SGs in the map or it won't have a MG
 
 // SG -> SG
-void spawnfunc_ammo_shells()         { spawnfunc_item_shells();         }
+spawnfunc(ammo_shells)         { spawnfunc_item_shells(this);         }
 
 // MG -> MG
-void spawnfunc_ammo_bullets()        { spawnfunc_item_bullets();        }
+spawnfunc(ammo_bullets)        { spawnfunc_item_bullets(this);        }
 
 // GL -> Mortar
-void spawnfunc_ammo_grenades()       { spawnfunc_item_rockets();        }
+spawnfunc(ammo_grenades)       { spawnfunc_item_rockets(this);        }
 
 // LG -> Lightning
-void spawnfunc_weapon_lightning()    { spawnfunc_weapon_electro();      }
-void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
+spawnfunc(weapon_lightning)    { spawnfunc_weapon_electro(this);      }
+spawnfunc(ammo_lightning)      { spawnfunc_item_cells(this);          }
 
 // Plasma -> Hagar
-void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
-void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
+spawnfunc(weapon_plasmagun)    { spawnfunc_weapon_hagar(this);        }
+spawnfunc(ammo_cells)          { spawnfunc_item_rockets(this);        }
 
 // Rail -> Vortex
-void spawnfunc_weapon_railgun()      { spawnfunc_weapon_vortex();          }
-void spawnfunc_ammo_slugs()          { spawnfunc_item_cells();          }
+spawnfunc(weapon_railgun)      { spawnfunc_weapon_vortex(this);          }
+spawnfunc(ammo_slugs)          { spawnfunc_item_cells(this);          }
 
 // BFG -> Crylink
-void spawnfunc_weapon_bfg()          { spawnfunc_weapon_crylink();      }
-void spawnfunc_ammo_bfg()            { spawnfunc_item_cells();          }
+spawnfunc(weapon_bfg)          { spawnfunc_weapon_crylink(this);      }
+spawnfunc(ammo_bfg)            { spawnfunc_item_cells(this);          }
 
 // RL -> RL
-void spawnfunc_ammo_rockets()        { spawnfunc_item_rockets();        }
+spawnfunc(ammo_rockets)        { spawnfunc_item_rockets(this);        }
 
 // Armor
-void spawnfunc_item_armor_body()     { spawnfunc_item_armor_large();    }
-void spawnfunc_item_armor_combat()   { spawnfunc_item_armor_big();      }
-void spawnfunc_item_armor_shard()    { spawnfunc_item_armor_small();    }
-void spawnfunc_item_enviro()         { spawnfunc_item_invincible();     }
+spawnfunc(item_armor_body)     { spawnfunc_item_armor_large(this);    }
+spawnfunc(item_armor_combat)   { spawnfunc_item_armor_big(this);      }
+spawnfunc(item_armor_shard)    { spawnfunc_item_armor_small(this);    }
+spawnfunc(item_enviro)         { spawnfunc_item_invincible(this);     }
 
 // weapon remove ent from df
 void target_init_verify()
@@ -84,11 +84,11 @@ void target_init_verify()
 			}
 }
 
-void spawnfunc_target_init()
-{SELFPARAM();
+spawnfunc(target_init)
+{
 	self.spawnflags = 0; // remove all weapons except the ones listed below
 	self.netname = "shotgun"; // keep these weapons through the remove trigger
-	spawnfunc_target_items();
+	spawnfunc_target_items(this);
 	InitializeEntity(self, target_init_verify, INITPRIO_FINDTARGET);
 }
 
@@ -131,30 +131,30 @@ void target_give_init()
         targ.nextthink = time;
 	}
 	self.spawnflags = 2;
-	spawnfunc_target_items();
+	spawnfunc_target_items(this);
 	InitializeEntity(self, target_init_verify, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_target_give()
-{SELFPARAM();
+spawnfunc(target_give)
+{
 	InitializeEntity(self, target_give_init, INITPRIO_FINDTARGET);
 }
 
-//void spawnfunc_item_flight()       /* handled by buffs mutator or jetpack */
-//void spawnfunc_item_haste()        /* handled by buffs mutator */
-//void spawnfunc_item_health()       /* handled in t_quake.qc */
-//void spawnfunc_item_health_large() /* handled in t_items.qc */
-//void spawnfunc_item_health_small() /* handled in t_items.qc */
-//void spawnfunc_item_health_mega()  /* handled in t_items.qc */
-//void spawnfunc_item_invis()        /* handled by buffs mutator */
-//void spawnfunc_item_regen()        /* handled by buffs mutator */
+//spawnfunc(item_flight)       /* handled by buffs mutator or jetpack */
+//spawnfunc(item_haste)        /* handled by buffs mutator */
+//spawnfunc(item_health)       /* handled in t_quake.qc */
+//spawnfunc(item_health_large) /* handled in t_items.qc */
+//spawnfunc(item_health_small) /* handled in t_items.qc */
+//spawnfunc(item_health_mega)  /* handled in t_items.qc */
+//spawnfunc(item_invis)        /* handled by buffs mutator */
+//spawnfunc(item_regen)        /* handled by buffs mutator */
 
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
-void spawnfunc_item_flight()
-{SELFPARAM();
+spawnfunc(item_flight)
+{
 	if(!cvar("g_buffs") || !cvar("g_buffs_flight"))
-		spawnfunc_item_jetpack();
+		spawnfunc_item_jetpack(this);
 	else
 		buff_Init_Compat(self, BUFF_FLIGHT);
 }

@@ -36,8 +36,8 @@ If nomessage is not set, t will print "1 more.. " etc when triggered and "sequen
 
 After the counter has been triggered "count" times (default 2), it will fire all of it's targets and remove itself.
 */
-void spawnfunc_trigger_counter()
-{SELFPARAM();
+spawnfunc(trigger_counter)
+{
 	self.wait = -1;
 	if (!self.count)
 		self.count = 2;

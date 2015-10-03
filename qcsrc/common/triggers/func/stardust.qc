@@ -1,6 +1,6 @@
 #ifdef SVQC
-void spawnfunc_func_stardust()
-{SELFPARAM();
+spawnfunc(func_stardust)
+{
 	self.effects = EF_STARDUST;
 
 	CSQCMODEL_AUTOINIT(self);

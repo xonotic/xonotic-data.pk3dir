@@ -811,8 +811,8 @@ bool spiderbot_impulse(int _imp)
 	return false;
 }
 
-void spawnfunc_vehicle_spiderbot()
-{SELFPARAM();
+spawnfunc(vehicle_spiderbot)
+{
 	if(!autocvar_g_vehicle_spiderbot) { remove(self); return; }
 	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }

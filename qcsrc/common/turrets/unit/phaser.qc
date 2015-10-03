@@ -57,7 +57,7 @@ void beam_think()
 
 }
 
-void spawnfunc_turret_phaser() { SELFPARAM(); if(!turret_initialize(TUR_PHASER.m_id)) remove(self); }
+spawnfunc(turret_phaser) { if(!turret_initialize(TUR_PHASER.m_id)) remove(self); }
 
 float t_phaser(float req)
 {SELFPARAM();
