@@ -59,4 +59,6 @@ noref bool autocvar_prvm_backtraceforwarnings;
     cvar_set("prvm_backtraceforwarnings", ftos(war)); \
 } while (0)
 
+#define ASSERT(expr) do { if (!(expr)) LOG_FATAL("assertion failed: " #expr "\n"); } while (0)
+
 #endif

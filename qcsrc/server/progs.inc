@@ -83,6 +83,7 @@
 #include "../common/campaign_file.qc"
 #include "../common/campaign_setup.qc"
 #include "../common/effects/effects.qc"
+#include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"
 #include "../common/monsters/spawn.qc"
 #include "../common/monsters/sv_monsters.qc"
