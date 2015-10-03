@@ -216,7 +216,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_particles", _("Particles")));
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_spawn_point_particles", _("Spawnpoint effects")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "cl_spawn_point_particles", _("Spawnpoint effects"),
+			_("Particles effects at all spawn points and whenever a player spawns")));
 			makeMulti(e, "cl_spawn_event_particles");
 			setDependent(e, "cl_particles", 1, 1);
 	me.TR(me);
