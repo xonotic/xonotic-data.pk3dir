@@ -1,4 +1,4 @@
-void spawnfunc_turret_targettrigger();
+spawnfunc(turret_targettrigger);
 void turret_targettrigger_touch();
 
 void turret_targettrigger_touch()
@@ -27,8 +27,8 @@ void turret_targettrigger_touch()
 
 /*QUAKED turret_targettrigger (.5 .5 .5) ?
 */
-void spawnfunc_turret_targettrigger()
-{SELFPARAM();
+spawnfunc(turret_targettrigger)
+{
     if(!autocvar_g_turrets) { remove(self); return; }
 
     InitTrigger ();

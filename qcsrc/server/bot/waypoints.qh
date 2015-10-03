@@ -38,7 +38,7 @@ float botframe_cachedwaypointlinks;
  * Functions
  */
 
-void spawnfunc_waypoint();
+spawnfunc(waypoint);
 void waypoint_addlink(entity from, entity to);
 void waypoint_think();
 void waypoint_clearlinks(entity wp);

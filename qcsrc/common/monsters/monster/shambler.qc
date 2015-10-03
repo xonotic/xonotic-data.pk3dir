@@ -222,7 +222,7 @@ float M_Shambler_Attack(float attack_type, entity targ)
 	return false;
 }
 
-void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER.monsterid); }
+spawnfunc(monster_shambler) { Monster_Spawn(MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC

@@ -86,12 +86,12 @@ void ItemRead(float _IsNew);
 
 #endif
 #ifdef SVQC
-void spawnfunc_item_strength();
-void spawnfunc_item_invincible();
-void spawnfunc_item_armor_small();
-void spawnfunc_item_shells();
-void spawnfunc_item_bullets();
-void spawnfunc_item_rockets();
+spawnfunc(item_strength);
+spawnfunc(item_invincible);
+spawnfunc(item_armor_small);
+spawnfunc(item_shells);
+spawnfunc(item_bullets);
+spawnfunc(item_rockets);
 
 float autocvar_sv_simple_items;
 bool ItemSend(entity to, int sf);

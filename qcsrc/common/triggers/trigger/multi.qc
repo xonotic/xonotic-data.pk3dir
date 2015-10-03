@@ -139,8 +139,8 @@ sounds
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_multiple()
-{SELFPARAM();
+spawnfunc(trigger_multiple)
+{
 	self.reset = multi_reset;
 	if (self.sounds == 1)
 	{
@@ -201,9 +201,9 @@ sounds
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_once()
-{SELFPARAM();
-	self.wait = -1;
-	spawnfunc_trigger_multiple();
+spawnfunc(trigger_once)
+{
+	this.wait = -1;
+	spawnfunc_trigger_multiple(this);
 }
 #endif

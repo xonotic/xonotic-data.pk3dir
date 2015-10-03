@@ -112,8 +112,8 @@ When a button is touched, it moves some distance in the direction of it's angle,
 2) metallic click
 3) in-out
 */
-void spawnfunc_func_button()
-{SELFPARAM();
+spawnfunc(func_button)
+{
 	SetMovedir ();
 
 	if (!InitMovingBrushTrigger())

@@ -6,8 +6,8 @@
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
-void spawnfunc_invasion_spawnpoint()
-{SELFPARAM();
+spawnfunc(invasion_spawnpoint)
+{
 	if(!g_invasion) { remove(self); return; }
 
 	self.classname = "invasion_spawnpoint";

@@ -129,8 +129,8 @@ void info_autoscreenshot_findtarget()
 	self.angles_y = a.y;
 	// we leave Rick Roll alone
 }
-void spawnfunc_info_autoscreenshot()
-{SELFPARAM();
+spawnfunc(info_autoscreenshot)
+{
 	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
 	{
 		objerror("Too many info_autoscreenshot entitites. FAIL!");
@@ -372,7 +372,7 @@ float CheatCommand(float argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					WITH(entity, self, e, spawnfunc_func_breakable());
+					WITH(entity, self, e, spawnfunc_func_breakable(e));
 					// now, is it valid?
 					if(f == 0)
 					{

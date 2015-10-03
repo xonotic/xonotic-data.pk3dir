@@ -24,7 +24,7 @@ REGISTER_TURRET(FLAC, NEW(Flac));
 
 #ifdef SVQC
 
-void spawnfunc_turret_flac() { SELFPARAM(); if (!turret_initialize(TUR_FLAC)) remove(self); }
+spawnfunc(turret_flac) { if (!turret_initialize(TUR_FLAC)) remove(self); }
 
 METHOD(Flac, tr_setup, void(Flac this, entity it))
 {

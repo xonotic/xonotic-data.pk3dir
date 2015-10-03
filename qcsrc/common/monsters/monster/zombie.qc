@@ -149,7 +149,7 @@ float M_Zombie_Attack(float attack_type, entity targ)
 	return false;
 }
 
-void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE.monsterid); }
+spawnfunc(monster_zombie) { Monster_Spawn(MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC

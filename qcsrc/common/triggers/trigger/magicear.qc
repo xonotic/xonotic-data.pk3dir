@@ -162,8 +162,8 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 	return msgin;
 }
 
-void spawnfunc_trigger_magicear()
-{SELFPARAM();
+spawnfunc(trigger_magicear)
+{
 	self.enemy = magicears;
 	magicears = self;
 

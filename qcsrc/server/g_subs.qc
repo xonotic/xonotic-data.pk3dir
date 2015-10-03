@@ -5,8 +5,8 @@
 #include "command/common.qh"
 #include "../warpzonelib/common.qh"
 
-void spawnfunc_info_null (void)
-{SELFPARAM();
+spawnfunc(info_null)
+{
 	remove(self);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
 }

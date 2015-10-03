@@ -723,8 +723,8 @@ void bumblebee_diethink()
 	self.nextthink = time + 0.1;
 }
 
-void spawnfunc_vehicle_bumblebee()
-{SELFPARAM();
+spawnfunc(vehicle_bumblebee)
+{
 	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }

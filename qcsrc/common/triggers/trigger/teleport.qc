@@ -47,8 +47,8 @@ void Teleport_Touch (void)
 	WITH(entity, self, e, SUB_UseTargets());
 }
 
-void spawnfunc_trigger_teleport()
-{SELFPARAM();
+spawnfunc(trigger_teleport)
+{
 	self.angles = '0 0 0';
 
 	EXACTTRIGGER_INIT;

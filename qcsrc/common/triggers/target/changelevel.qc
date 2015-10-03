@@ -3,8 +3,9 @@
 .entity chlevel_targ;
 
 
-void spawnfunc_target_changelevel_use()
-{SELFPARAM();
+void target_changelevel_use()
+{
+	SELFPARAM();
 	if(self.spawnflags & 2)
 	{
 		// simply don't react if a non-player triggers it
@@ -35,9 +36,9 @@ void spawnfunc_target_changelevel_use()
 		localcmd(strcat("changelevel ", self.chmap, "\n"));
 }
 
-void spawnfunc_target_changelevel()
-{SELFPARAM();
-	self.use = spawnfunc_target_changelevel_use;
+spawnfunc(target_changelevel)
+{
+	self.use = target_changelevel_use;
 
 	if(!self.count) { self.count = 0.7; }
 }

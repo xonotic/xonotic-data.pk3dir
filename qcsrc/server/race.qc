@@ -86,7 +86,7 @@ string race_readName(string map, float pos)
 
 const float MAX_CHECKPOINTS = 255;
 
-void spawnfunc_target_checkpoint();
+spawnfunc(target_checkpoint);
 
 .float race_penalty;
 .float race_penalty_accumulator;
@@ -929,8 +929,8 @@ vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector
 	return current;
 }
 
-void spawnfunc_trigger_race_checkpoint()
-{SELFPARAM();
+spawnfunc(trigger_race_checkpoint)
+{
 	vector o;
 	if(!g_race && !g_cts) { remove(self); return; }
 
@@ -977,8 +977,8 @@ void spawnfunc_trigger_race_checkpoint()
 	InitializeEntity(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_target_checkpoint() // defrag entity
-{SELFPARAM();
+spawnfunc(target_checkpoint) // defrag entity
+{
 	vector o;
 	if(!g_race && !g_cts) { remove(self); return; }
 	defrag_ents = 1;
@@ -1018,8 +1018,8 @@ void spawnfunc_target_checkpoint() // defrag entity
 	InitializeEntity(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_target_startTimer() { spawnfunc_target_checkpoint(); }
-void spawnfunc_target_stopTimer() { spawnfunc_target_checkpoint(); }
+spawnfunc(target_startTimer) { spawnfunc_target_checkpoint(this); }
+spawnfunc(target_stopTimer) { spawnfunc_target_checkpoint(this); }
 
 void race_AbandonRaceCheck(entity p)
 {
@@ -1059,11 +1059,11 @@ void race_RetractPlayer()
 	self.race_checkpoint = self.race_respawn_checkpoint;
 }
 
-void spawnfunc_info_player_race (void)
-{SELFPARAM();
+spawnfunc(info_player_race)
+{
 	if(!g_race && !g_cts) { remove(self); return; }
 	++race_spawns;
-	spawnfunc_info_player_deathmatch();
+	spawnfunc_info_player_deathmatch(this);
 
 	if(self.race_place > race_highest_place_spawn)
 		race_highest_place_spawn = self.race_place;
@@ -1141,8 +1141,8 @@ void penalty_use()
 	race_ImposePenaltyTime(activator, self.race_penalty, self.race_penalty_reason);
 }
 
-void spawnfunc_trigger_race_penalty()
-{SELFPARAM();
+spawnfunc(trigger_race_penalty)
+{
 	EXACTTRIGGER_INIT;
 
 	self.use = penalty_use;

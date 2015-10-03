@@ -24,7 +24,7 @@ REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
 
 #ifdef SVQC
 
-void spawnfunc_turret_plasma() { SELFPARAM(); if (!turret_initialize(TUR_PLASMA)) remove(self); }
+spawnfunc(turret_plasma) { if (!turret_initialize(TUR_PLASMA)) remove(self); }
 
 METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this))
 {

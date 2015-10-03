@@ -38,6 +38,7 @@
 #include "../common/animdecide.qc"
 #include "../common/buffs.qc"
 #include "../common/effects/effects.qc"
+#include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"
 #include "../common/movetypes/include.qc"
 #include "../common/nades.qc"

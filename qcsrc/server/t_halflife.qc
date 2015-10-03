@@ -5,30 +5,30 @@
 .float  rendermode;
 .vector rendercolor;
 
-void spawnfunc_weapon_crossbow() {}
-void spawnfunc_weapon_handgrenade() {}
-void spawnfunc_ammo_crossbow() {}
-void spawnfunc_ammo_9mmclip() {}
-void spawnfunc_ammo_gaussclip() {}
-void spawnfunc_weapon_rpg() {}
-void spawnfunc_weapon_357() {}
+spawnfunc(weapon_crossbow) {}
+spawnfunc(weapon_handgrenade) {}
+spawnfunc(ammo_crossbow) {}
+spawnfunc(ammo_9mmclip) {}
+spawnfunc(ammo_gaussclip) {}
+spawnfunc(weapon_rpg) {}
+spawnfunc(weapon_357) {}
 void ammo_ARgrenades() {}
-void spawnfunc_item_battery() {}
-void spawnfunc_ammo_rpgclip() {}
+spawnfunc(item_battery) {}
+spawnfunc(ammo_rpgclip) {}
 void weapon_9mmAR() {}
-void spawnfunc_weapon_tripmine() {}
-void spawnfunc_weapon_snark() {}
-void spawnfunc_ammo_buckshot() {}
+spawnfunc(weapon_tripmine) {}
+spawnfunc(weapon_snark) {}
+spawnfunc(ammo_buckshot) {}
 void ammo_9mmAR() {}
-void spawnfunc_ammo_357() {}
-void spawnfunc_weapon_gauss() {}
-void spawnfunc_weapon_hornetgun() {}
-//void spawnfunc_weapon_shotgun() {}
-void spawnfunc_item_healthkit() {}
-void spawnfunc_item_longjump() {}
-void spawnfunc_item_antidote() {}
-void spawnfunc_func_recharge() {}
-void spawnfunc_info_node() {}
-void spawnfunc_env_sound() {}
-void spawnfunc_light_spot() {}
-void spawnfunc_func_healthcharger() {}
+spawnfunc(ammo_357) {}
+spawnfunc(weapon_gauss) {}
+spawnfunc(weapon_hornetgun) {}
+//spawnfunc(weapon_shotgun) {}
+spawnfunc(item_healthkit) {}
+spawnfunc(item_longjump) {}
+spawnfunc(item_antidote) {}
+spawnfunc(func_recharge) {}
+spawnfunc(info_node) {}
+spawnfunc(env_sound) {}
+spawnfunc(light_spot) {}
+spawnfunc(func_healthcharger) {}

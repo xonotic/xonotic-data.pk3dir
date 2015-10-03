@@ -49,7 +49,7 @@ void monster_dropitem()
 	{
 		setself(e);
 		e.noalign = true;
-		e.monster_loot();
+		e.monster_loot(e);
 		e.gravity = 1;
 		e.movetype = MOVETYPE_TOSS;
 		e.reset = SUB_Remove;
@@ -118,7 +118,7 @@ bool Monster_ValidTarget(entity mon, entity player)
 		makevectors (mon.angles);
 		dot = normalize (player.origin - mon.origin) * v_forward;
 
-		if(dot <= 0.3) { return false; }
+		if(dot <= autocvar_g_monsters_target_infront_range) { return false; }
 	}
 
 	return true; // this target is valid!
@@ -1047,7 +1047,7 @@ void Monster_Dead(entity attacker, float gibbed)
 
 void Monster_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
-	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL)
+	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL && !ITEM_DAMAGE_NEEDKILL(deathtype))
 		return;
 
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)

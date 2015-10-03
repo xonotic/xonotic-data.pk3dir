@@ -30,7 +30,7 @@ REGISTER_TURRET(HK, NEW(HunterKiller));
 .float atime;
 #endif
 
-void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK)) remove(self); }
+spawnfunc(turret_hk) { if(!turret_initialize(TUR_HK)) remove(self); }
 
 METHOD(HunterKiller, tr_think, void(HunterKiller thistur))
 {

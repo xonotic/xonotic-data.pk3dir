@@ -24,7 +24,7 @@ REGISTER_TURRET(PHASER, NEW(PhaserTurret));
 
 #ifdef SVQC
 
-void spawnfunc_turret_phaser() { SELFPARAM(); if (!turret_initialize(TUR_PHASER)) remove(self); }
+spawnfunc(turret_phaser) { if (!turret_initialize(TUR_PHASER)) remove(self); }
 
 METHOD(PhaserTurret, tr_think, void(PhaserTurret thistur))
 {

@@ -136,7 +136,7 @@ float M_Wyvern_Attack(float attack_type, entity targ)
 	return false;
 }
 
-void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN.monsterid); }
+spawnfunc(monster_wyvern) { Monster_Spawn(MON_WYVERN.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC

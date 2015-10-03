@@ -24,7 +24,7 @@ REGISTER_TURRET(MLRS, NEW(MLRSTurret));
 
 #ifdef SVQC
 
-void spawnfunc_turret_mlrs() { SELFPARAM(); if (!turret_initialize(TUR_MLRS)) remove(self); }
+spawnfunc(turret_mlrs) { if (!turret_initialize(TUR_MLRS)) remove(self); }
 
 METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur))
 {

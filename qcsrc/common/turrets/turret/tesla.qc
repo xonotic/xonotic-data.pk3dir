@@ -24,7 +24,7 @@ REGISTER_TURRET(TESLA, NEW(TeslaCoil));
 
 #ifdef SVQC
 
-void spawnfunc_turret_tesla() { SELFPARAM(); if (!turret_initialize(TUR_TESLA)) remove(self); }
+spawnfunc(turret_tesla) { if (!turret_initialize(TUR_TESLA)) remove(self); }
 
 METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur))
 {

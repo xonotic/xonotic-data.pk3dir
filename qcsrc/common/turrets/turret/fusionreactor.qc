@@ -46,7 +46,7 @@ bool turret_fusionreactor_firecheck()
     return true;
 }
 
-void spawnfunc_turret_fusionreactor() { SELFPARAM(); if (!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
+spawnfunc(turret_fusionreactor) { if (!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
 
 METHOD(FusionReactor, tr_attack, void(FusionReactor this))
 {

@@ -85,8 +85,8 @@ void trigger_gravity_touch()
 	}
 }
 
-void spawnfunc_trigger_gravity()
-{SELFPARAM();
+spawnfunc(trigger_gravity)
+{
 	if(self.gravity == 1)
 		return;
 

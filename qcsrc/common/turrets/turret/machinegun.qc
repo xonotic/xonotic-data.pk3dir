@@ -24,7 +24,7 @@ REGISTER_TURRET(MACHINEGUN, NEW(MachineGunTurret));
 
 #ifdef SVQC
 
-void spawnfunc_turret_machinegun() { SELFPARAM(); if (!turret_initialize(TUR_MACHINEGUN)) remove(self); }
+spawnfunc(turret_machinegun) { if (!turret_initialize(TUR_MACHINEGUN)) remove(self); }
 
 METHOD(MachineGunTurret, tr_setup, void(MachineGunTurret this, entity it))
 {

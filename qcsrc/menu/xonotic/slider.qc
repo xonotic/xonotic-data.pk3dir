@@ -71,7 +71,7 @@ void XonoticSlider_loadCvars(entity me)
 	if (!me.cvarName)
 		return;
 
-	me.setValue( me, cvar(me.cvarName) );
+	me.setValue_noAnim(me, cvar(me.cvarName));
 }
 void XonoticSlider_saveCvars(entity me)
 {
