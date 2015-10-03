@@ -39,6 +39,7 @@ void monster_dropitem()
 
 	vector org = self.origin + ((self.mins + self.maxs) * 0.5);
 	entity e = spawn();
+	e.spawnfunc_checked = true;
 
 	e.monster_loot = self.monster_loot;
 
