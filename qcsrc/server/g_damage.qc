@@ -560,6 +560,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
+	self.bot_attack = false;
 
 	entity ice, head;
 	ice = spawn();
@@ -591,6 +592,9 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
+	if(!targ.frozen)
+		return;
+
 	if(targ.frozen && targ.frozen != 3) // only reset health if target was frozen
 		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
 
@@ -598,6 +602,7 @@ void Unfreeze (entity targ)
 	targ.frozen = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
+	self.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
