@@ -299,6 +299,8 @@ string formatmessage(string msg)
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
 			case "S": replacement = ftos(vlen(self.velocity)); break;
+			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
+			case "T": replacement = seconds_tostring(floor(time - game_starttime)); break;
 			default:
 			{
 				MUTATOR_CALLHOOK(FormatMessage, escape, replacement, msg);
@@ -764,14 +766,6 @@ float sound_allowed(float destin, entity e)
     return true;
 }
 
-#undef sound
-void sound(entity e, float chan, string samp, float vol, float attenu)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-    sound7(e, chan, samp, vol, attenu, 0, 0);
-}
-
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float attenu)
 {
     float entno, idx;
@@ -847,7 +841,7 @@ void stopsoundto(float _dest, entity e, float chan)
     if (entno >= 8192 || chan < 0 || chan > 7)
     {
         float idx, sflags;
-        idx = precache_sound_index("misc/null.wav");
+        idx = precache_sound_index(SND(Null));
         sflags = SND_LARGEENTITY;
         if (idx >= 256)
             sflags |= SND_LARGESOUND;
@@ -895,7 +889,7 @@ float spamsound(entity e, float chan, string samp, float vol, float _atten)
     if (time > e.spamtime)
     {
         e.spamtime = time;
-        sound(e, chan, samp, vol, _atten);
+        _sound(e, chan, samp, vol, _atten);
         return true;
     }
     return false;
@@ -920,7 +914,7 @@ void play2all(string samp)
     if (autocvar_bot_sound_monopoly)
         return;
 
-    sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
+    _sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
 }
 
 void PrecachePlayerSounds(string f);
@@ -1013,36 +1007,8 @@ void precache()
     }
 
     // gore and miscellaneous sounds
-    //precache_sound ("misc/h2ohit.wav");
-    precache_sound ("misc/armorimpact.wav");
-    precache_sound ("misc/bodyimpact1.wav");
-    precache_sound ("misc/bodyimpact2.wav");
-    precache_sound ("misc/gib.wav");
-    precache_sound ("misc/gib_splat01.wav");
-    precache_sound ("misc/gib_splat02.wav");
-    precache_sound ("misc/gib_splat03.wav");
-    precache_sound ("misc/gib_splat04.wav");
     PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
     PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
-    precache_sound ("misc/null.wav");
-    precache_sound ("misc/spawn.wav");
-    precache_sound ("misc/talk.wav");
-    precache_sound ("misc/teleport.wav");
-    precache_sound ("misc/poweroff.wav");
-    precache_sound ("player/lava.wav");
-    precache_sound ("player/slime.wav");
-
-    // common weapon precaches
-	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound (W_Sound("weapon_switch"));
-    precache_sound (W_Sound("weaponpickup"));
-    precache_sound (W_Sound("unavailable"));
-    precache_sound (W_Sound("dryfire"));
-    if (g_grappling_hook)
-    {
-        precache_sound (W_Sound("hook_fire")); // hook
-        precache_sound (W_Sound("hook_impact")); // hook
-    }
 
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
@@ -1057,8 +1023,6 @@ void precache()
         ambientsound ('0 0 0', self.noise, VOL_BASE, ATTEN_NONE);
     }
 #endif
-
-#include "precache-for-csqc.inc"
 }
 
 
@@ -1470,7 +1434,7 @@ string uid2name(string myuid) {
 	return s;
 }
 
-float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
@@ -1479,8 +1443,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
 
-    org = world.mins;
-    delta = world.maxs - world.mins;
+    org = boundmin;
+    delta = boundmax - boundmin;
 
     start = end = org;
 
@@ -1579,6 +1543,11 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     }
     else
         return false;
+}
+
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+{
+	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance);
 }
 
 void write_recordmarker(entity pl, float tstart, float dt)

@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ EWHEEL,
 /* function   */ t_ewheel,
@@ -121,7 +121,7 @@ void ewheel_move_idle()
         movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
-void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL)) remove(self); }
+void spawnfunc_turret_ewheel() { SELFPARAM(); if(!turret_initialize(TUR_EWHEEL.m_id)) remove(self); }
 
 float t_ewheel(float req)
 {SELFPARAM();
@@ -136,7 +136,7 @@ float t_ewheel(float req)
             {
                 turret_do_updates(self);
 
-                _mis = turret_projectile(W_Sound("lasergun_fire"), 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, TRUE, TRUE);
+                _mis = turret_projectile(SND(LASERGUN_FIRE), 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, TRUE, TRUE);
                 _mis.missile_flags = MIF_SPLASH;
 
                 Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);

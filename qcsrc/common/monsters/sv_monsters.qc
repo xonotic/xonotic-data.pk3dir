@@ -118,7 +118,7 @@ bool Monster_ValidTarget(entity mon, entity player)
 		makevectors (mon.angles);
 		dot = normalize (player.origin - mon.origin) * v_forward;
 
-		if(dot <= 0.3) { return false; }
+		if(dot <= autocvar_g_monsters_target_infront_range) { return false; }
 	}
 
 	return true; // this target is valid!
@@ -1085,7 +1085,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 	self.dmg_time = time;
 
 	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN)
-		spamsound (self, CH_PAIN, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+		spamsound (self, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	self.velocity += force * self.damageforcescale;
 

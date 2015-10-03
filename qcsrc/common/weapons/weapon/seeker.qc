@@ -250,7 +250,7 @@ void W_Seeker_Fire_Missile(vector f_diff, entity m_target)
 	W_DecreaseAmmo(WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("seeker_fire"), CH_WEAPON_A, 0);
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(SEEKER_FIRE), CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
 	Send_Effect(EFFECT_SEEKER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -341,7 +341,7 @@ void W_Seeker_Fire_Flac(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("flac_fire"), CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(FLAC_FIRE), CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
 	w_shotorg += f_diff;
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -559,7 +559,7 @@ void W_Seeker_Fire_Tag(void)
 	entity missile;
 	W_DecreaseAmmo(WEP_CVAR(seeker, tag_ammo));
 
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, W_Sound("tag_fire"), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(TAG_FIRE), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
 	missile                 = spawn();
 	missile.owner           = missile.realowner = self;
@@ -662,9 +662,6 @@ bool W_Seeker(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("tag_fire"));
-			precache_sound(W_Sound("flac_fire"));
-			precache_sound(W_Sound("seeker_fire"));
 			SEEKER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -703,7 +700,7 @@ bool W_Seeker(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), W_Sound("reload"));
+			W_Reload(min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -735,7 +732,7 @@ bool W_Seeker(int req)
 				if(w_deathtype & HITTYPE_SECONDARY)
 				{
 					if(!w_issilent)
-						sound(self, CH_SHOTS, W_Sound("tag_impact"), 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, SND_TAG_IMPACT, 1, ATTEN_NORM);
 				}
 				else
 				{
@@ -743,11 +740,11 @@ bool W_Seeker(int req)
 					if(!w_issilent)
 					{
 						if(w_random<0.15)
-							sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
 						else if(w_random<0.7)
-							sound(self, CH_SHOTS, W_Sound("tagexp2"), 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, SND_TAGEXP2, 1, ATTEN_NORM);
 						else
-							sound(self, CH_SHOTS, W_Sound("tagexp3"), 1, ATTEN_NORM);
+							sound(self, CH_SHOTS, SND_TAGEXP3, 1, ATTEN_NORM);
 					}
 				}
 			}
@@ -757,24 +754,17 @@ bool W_Seeker(int req)
 				if(!w_issilent)
 				{
 					if(w_random<0.15)
-						sound(self, CH_SHOTS, W_Sound("seekerexp1"), 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, SND_SEEKEREXP1, 1, ATTEN_NORM);
 					else if(w_random<0.7)
-						sound(self, CH_SHOTS, W_Sound("seekerexp2"), 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, SND_SEEKEREXP2, 1, ATTEN_NORM);
 					else
-						sound(self, CH_SHOTS, W_Sound("seekerexp3"), 1, ATTEN_NORM);
+						sound(self, CH_SHOTS, SND_SEEKEREXP3, 1, ATTEN_NORM);
 				}
 			}
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("seekerexp1"));
-			precache_sound(W_Sound("seekerexp2"));
-			precache_sound(W_Sound("seekerexp3"));
-			precache_sound(W_Sound("tagexp1"));
-			precache_sound(W_Sound("tagexp2"));
-			precache_sound(W_Sound("tagexp3"));
-			precache_sound(W_Sound("tag_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

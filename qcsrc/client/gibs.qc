@@ -85,7 +85,7 @@ void Gib_Touch()
 	}
 
 	if(!self.silent)
-		sound(self, CH_PAIN, strcat("misc/gib_splat0", ftos(floor(prandom() * 4 + 1)), ".wav"), VOL_BASE, ATTEN_NORM);
+		sound(self, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
 	pointparticles(_particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
 
 	Gib_Delete();
@@ -218,7 +218,7 @@ void Ent_GibSplash(bool isNew)
 	{
 		case 0x01:
 			if(!issilent)
-				sound (self, CH_PAIN, "misc/gib.wav", VOL_BASE, ATTEN_NORM);
+				sound (self, CH_PAIN, SND_GIB, VOL_BASE, ATTEN_NORM);
 
 			if(prandom() < amount)
 				TossGib ("models/gibs/eye.md3", org, org, vel, prandomvec() * 150, specnum, 0, issilent);
@@ -271,13 +271,4 @@ void Ent_GibSplash(bool isNew)
 			// no gibs in gentle mode, sorry
 			break;
 	}
-}
-
-void GibSplash_Precache()
-{
-	precache_sound ("misc/gib.wav");
-    precache_sound ("misc/gib_splat01.wav");
-    precache_sound ("misc/gib_splat02.wav");
-    precache_sound ("misc/gib_splat03.wav");
-    precache_sound ("misc/gib_splat04.wav");
 }

@@ -11,6 +11,10 @@ REGISTER_REGISTRY(RegisterItems)
 
 void Dump_Items();
 
+#ifndef MENUQC
+string Item_Model(string item_mdl);
+#endif
+
 #endif
 
 #include "inventory.qh"

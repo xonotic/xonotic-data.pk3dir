@@ -173,7 +173,7 @@ void SUB_UseTargets()
 	{
 		centerprint(activator, self.message);
 		if (self.noise == "")
-			play2(activator, "misc/talk.wav");
+			play2(activator, SND(TALK));
 	}
 
 //

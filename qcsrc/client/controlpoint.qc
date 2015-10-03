@@ -4,7 +4,6 @@
 #include "../common/movetypes/movetypes.qh"
 
 .float alpha;
-bool cpicon_precached;
 .int count;
 .float pain_finished;
 
@@ -20,14 +19,6 @@ bool cpicon_precached;
 .float max_health;
 
 .entity icon_realmodel;
-
-void cpicon_precache()
-{
-	if(cpicon_precached)
-		return; // already precached
-
-	cpicon_precached = true;
-}
 
 void cpicon_draw()
 {SELFPARAM();
@@ -186,7 +177,6 @@ void ent_cpicon()
 			self.count = (self.health - self.max_health) * frametime;
 
 		cpicon_changeteam();
-		cpicon_precache();
 		cpicon_construct();
 	}
 

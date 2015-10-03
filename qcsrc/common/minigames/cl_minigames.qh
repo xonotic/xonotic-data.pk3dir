@@ -79,9 +79,6 @@ string minigame_texture(string name);
 // For minigame_player: player server slot, don't use for anything else
 .float minigame_playerslot;
 
-// register all minigames
-void initialize_minigames();
-
 // client-side minigame session cleanup
 void deactivate_minigame();
 
@@ -117,5 +114,26 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_ar
 #define FOREACH_MINIGAME_ENTITY(entityvar) \
 	entityvar=world; \
 	while( (entityvar = findentity(entityvar,owner,active_minigame)) )
+
+
+void RegisterMinigames();
+const int MINIGAMES_MAX = 24;
+entity MINIGAMES[MINIGAMES_MAX], MINIGAMES_first, MINIGAMES_last;
+int MINIGAMES_COUNT;
+#define REGISTER_MINIGAME(name,nicename) \
+    REGISTER(RegisterMinigames, MINIGAME, MINIGAMES, MINIGAMES_COUNT, name, m_id, spawn()); \
+    void name##_hud_board(vector, vector); \
+    void name##_hud_status(vector, vector); \
+    int name##_client_event(entity, string, ...); \
+    REGISTER_INIT_POST(MINIGAME, name) { \
+        this.classname = "minigame_descriptor"; \
+        this.netname = strzone(strtolower(#name)); \
+        this.message = nicename; \
+        this.minigame_hud_board = name##_hud_board; \
+		this.minigame_hud_status = name##_hud_status; \
+		this.minigame_event = name##_client_event; \
+    } \
+    REGISTER_INIT(MINIGAME, name)
+REGISTER_REGISTRY(RegisterMinigames)
 
 #endif

@@ -79,7 +79,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
-				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
+				sound (player, CH_TRIGGER, SND_TELEPORT, VOL_BASE, ATTEN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
 				Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);

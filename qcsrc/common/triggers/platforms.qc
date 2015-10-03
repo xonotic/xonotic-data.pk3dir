@@ -65,7 +65,7 @@ void plat_spawn_inside_trigger()
 
 void plat_hit_top()
 {SELFPARAM();
-	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+	_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 1;
 
 	self.SUB_THINK = plat_go_down;
@@ -74,20 +74,20 @@ void plat_hit_top()
 
 void plat_hit_bottom()
 {SELFPARAM();
-	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+	_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 2;
 }
 
 void plat_go_down()
 {SELFPARAM();
-	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
+	_sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 3;
 	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, plat_hit_bottom);
 }
 
 void plat_go_up()
 {SELFPARAM();
-	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
+	_sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 4;
 	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, plat_hit_top);
 }

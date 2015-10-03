@@ -27,8 +27,8 @@ void XonoticMonsterToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "wyvern", _("Wyvern")));
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Spawn"), '0 0 0', "cmd mobspawn $menu_monsters_edit_spawn $menu_monsters_edit_movetarget", 0));
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Remove"), '0 0 0', "cmd mobkill", 0));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Spawn"), '0 0 0', "spawnmob $menu_monsters_edit_spawn $menu_monsters_edit_movetarget", 0));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Remove"), '0 0 0', "killmob", 0));
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Move target:"), '0 0 0', "editmob movetarget $menu_monsters_edit_movetarget", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_monsters_edit_movetarget", "1", _("Follow")));

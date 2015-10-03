@@ -69,7 +69,7 @@ string Slider_toString(entity me)
 void Slider_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(Slider).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.controlWidth = absSize.y / absSize.x;
+	me.controlWidth = absSize.x == 0 ? 0 : (absSize.y / absSize.x);
 }
 string Slider_valueToText(entity me, float val)
 {

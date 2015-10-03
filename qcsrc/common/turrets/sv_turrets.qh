@@ -1,6 +1,8 @@
 #ifndef SV_TURRETS_H
 #define SV_TURRETS_H
 
+#include "all.qh"
+
 // turret fields
 .float ticrate; // interal ai think rate
 .vector aim_idle; // where to aim while idle
