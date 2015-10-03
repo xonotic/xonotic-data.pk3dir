@@ -1045,7 +1045,7 @@ void Monster_Dead(entity attacker, float gibbed)
 
 void Monster_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
-	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL)
+	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL && !ITEM_DAMAGE_NEEDKILL(deathtype))
 		return;
 
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
