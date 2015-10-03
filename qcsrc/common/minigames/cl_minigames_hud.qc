@@ -211,18 +211,17 @@ void HUD_MinigameMenu_ClickCreate()
 {SELFPARAM();
 	if ( HUD_MinigameMenu_Click_ExpandCollapse() )
 	{
-		entity e;
 		entity curr;
 		entity prev = self;
-		for ( e = minigame_descriptors; e != world; e = e.list_next )
+		FOREACH(MINIGAMES, true, LAMBDA(
 		{
 			curr = HUD_MinigameMenu_SpawnSubEntry(
-				e.message, HUD_MinigameMenu_ClickCreate_Entry,  self );
-			curr.netname = e.netname;
-			curr.model = strzone(minigame_texture(strcat(e.netname,"/icon")));
+				it.message, HUD_MinigameMenu_ClickCreate_Entry,  self );
+			curr.netname = it.netname;
+			curr.model = strzone(minigame_texture(strcat(it.netname,"/icon")));
 			HUD_MinigameMenu_InsertEntry( curr, prev );
 			prev = curr;
-		}
+		}));
 	}
 }
 

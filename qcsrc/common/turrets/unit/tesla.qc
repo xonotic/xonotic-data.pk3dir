@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ TESLA,
 /* function   */ t_tesla,
@@ -89,7 +89,7 @@ float turret_tesla_firecheck()
     return 0;
 }
 
-spawnfunc(turret_tesla) { if(!turret_initialize(TUR_TESLA)) remove(self); }
+spawnfunc(turret_tesla) { if(!turret_initialize(TUR_TESLA.m_id)) remove(self); }
 
 float t_tesla(float req)
 {SELFPARAM();

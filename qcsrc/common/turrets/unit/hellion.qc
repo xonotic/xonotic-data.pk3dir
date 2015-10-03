@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ HELLION,
 /* function   */ t_hellion,
@@ -76,7 +76,7 @@ void turret_hellion_missile_think()
     UpdateCSQCProjectile(self);
 }
 
-spawnfunc(turret_hellion) { if(!turret_initialize(TUR_HELLION)) remove(self); }
+spawnfunc(turret_hellion) { if(!turret_initialize(TUR_HELLION.m_id)) remove(self); }
 
 float t_hellion(float req)
 {SELFPARAM();
@@ -91,7 +91,7 @@ float t_hellion(float req)
             else
                 self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
 
-            missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
+            missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
             te_explosion (missile.origin);
             missile.think		= turret_hellion_missile_think;
             missile.nextthink	= time;

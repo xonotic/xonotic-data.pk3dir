@@ -49,7 +49,8 @@ void XonoticProfileTab_fill(entity me)
 			label.fontSize = SKINFONTSIZE_TITLE;
 
 	me.gotoRC(me, 2.5, 0);
-		me.TD(me, 1, 3.0, box = makeXonoticInputBox(1, "_cl_name"));
+		me.TD(me, 1, 3.0, box = makeXonoticInputBox_T(1, "_cl_name",
+			_("Name under which you will appear in the game")));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.

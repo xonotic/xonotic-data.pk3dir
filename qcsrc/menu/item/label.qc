@@ -130,8 +130,8 @@ void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absO
 	SUPER(Label).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	// absSize_y is height of label
-	me.realFontSize_y = me.fontSize / absSize.y;
-	me.realFontSize_x = me.fontSize / absSize.x;
+	me.realFontSize_y = absSize.y == 0 ? 0 : (me.fontSize / absSize.y);
+	me.realFontSize_x = absSize.x == 0 ? 0 : (me.fontSize / absSize.x);
 	if(me.marginLeft)
 		me.keepspaceLeft = me.marginLeft * me.realFontSize.x;
 	if(me.marginRight)

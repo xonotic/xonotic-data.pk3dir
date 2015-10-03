@@ -134,7 +134,7 @@ void W_Hook_Attack2(void)
 	entity gren;
 
 	//W_DecreaseAmmo(WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(self, false, 4, W_Sound("hookbomb_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(self, false, 4, SND(HOOKBOMB_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	gren = spawn();
 	gren.owner = gren.realowner = self;
@@ -288,9 +288,6 @@ bool W_Hook(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("hook_impact")); // done by g_hook.qc
-			precache_sound(W_Sound("hook_fire"));
-			precache_sound(W_Sound("hookbomb_fire"));
 			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -344,13 +341,12 @@ bool W_Hook(int req)
 			org2 = w_org + w_backoff * 2;
 			pointparticles(particleeffectnum(EFFECT_HOOK_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, W_Sound("hookbomb_impact"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_HOOKBOMB_IMPACT, VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("hookbomb_impact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

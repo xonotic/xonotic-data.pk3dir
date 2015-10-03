@@ -80,7 +80,7 @@ void trigger_gravity_touch()
 	{
 		other.gravity = g;
 		if(self.noise != "")
-			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+			_sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 		UpdateCSQCProjectile(self.owner);
 	}
 }

@@ -98,7 +98,7 @@ void train_next()
 	}
 
 	if(self.noise != "")
-		sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
+		_sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 }
 
 #ifdef SVQC

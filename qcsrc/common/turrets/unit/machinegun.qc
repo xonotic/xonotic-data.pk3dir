@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ MACHINEGUN,
 /* function   */ t_machinegun,
@@ -11,7 +11,7 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
-spawnfunc(turret_machinegun) { if(!turret_initialize(TUR_MACHINEGUN)) remove(self); }
+spawnfunc(turret_machinegun) { if(!turret_initialize(TUR_MACHINEGUN.m_id)) remove(self); }
 
 void W_MachineGun_MuzzleFlash(void);
 
@@ -48,7 +48,6 @@ float t_machinegun(float req)
         }
         case TR_PRECACHE:
         {
-            precache_sound (W_Sound("uzi_fire"));
             return true;
         }
     }

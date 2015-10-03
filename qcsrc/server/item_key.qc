@@ -234,7 +234,7 @@ spawnfunc(item_key)
 		self.message = strzone(strcat("You've picked up the ", self.netname, "!"));
 
 	if (self.noise == "")
-		self.noise = "misc/itempickup.wav";
+		self.noise = SND(ITEMPICKUP);
 
 	// save the name for later
 	item_keys_names[lowestbit(self.itemkeys)] = self.netname;

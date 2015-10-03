@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ FLAC,
 /* function   */ t_flac,
@@ -28,7 +28,7 @@ void turret_flac_projectile_think_explode()
     remove(self);
 }
 
-spawnfunc(turret_flac) { if(!turret_initialize(TUR_FLAC)) remove(self); }
+spawnfunc(turret_flac) { if(!turret_initialize(TUR_FLAC.m_id)) remove(self); }
 
 float t_flac(float req)
 {SELFPARAM();
@@ -40,7 +40,7 @@ float t_flac(float req)
 
             turret_tag_fire_update();
 
-            proj = turret_projectile(W_Sound("hagar_fire"), 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, TRUE, TRUE);
+            proj = turret_projectile(SND(HAGAR_FIRE), 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, TRUE, TRUE);
             Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
             proj.think	  = turret_flac_projectile_think_explode;
             proj.nextthink  = time + self.tur_impacttime + (random() * 0.01 - random() * 0.01);

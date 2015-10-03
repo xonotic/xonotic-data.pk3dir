@@ -44,7 +44,7 @@ void button_fire()
 		return;
 
 	if (self.noise != "")
-		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, button_wait);

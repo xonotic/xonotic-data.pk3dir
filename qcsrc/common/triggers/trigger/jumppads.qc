@@ -182,7 +182,7 @@ void trigger_push_touch()
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, other.origin, other.velocity, 1);
-			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+			_sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.pushltime = time + 0.2;
 		}
 		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))

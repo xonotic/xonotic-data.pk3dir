@@ -61,9 +61,9 @@ void dompoint_captured ()
 
 	if (head.noise != "")
 		if(self.enemy)
-			sound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
+			_sound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
 		else
-			sound(self, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
+			_sound(self, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
@@ -582,12 +582,12 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(float teams)
 {
-	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND(DOM_CLAIM), "", "Red team has captured a control point");
+	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND(DOM_CLAIM), "", "Blue team has captured a control point");
 	if(teams >= 3)
-		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
+		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND(DOM_CLAIM), "", "Yellow team has captured a control point");
 	if(teams >= 4)
-		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND(DOM_CLAIM), "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 
@@ -623,8 +623,6 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 
 void dom_Initialize()
 {
-	precache_sound("domination/claim.wav");
-
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 

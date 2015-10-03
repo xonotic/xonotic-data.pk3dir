@@ -8053,3 +8053,623 @@ msgstr "Csapat színe:"
 #: qcsrc/menu/xonotic/util.qh:48
 msgid "Enable panel"
 msgstr "Panel engedélyezése"
+
+
+msgid "Moving"
+msgstr "Mozgás"
+
+msgid "forward"
+msgstr "előre"
+
+msgid "backpedal"
+msgstr "hátra"
+
+msgid "strafe left"
+msgstr "balra lépés"
+
+msgid "strafe right"
+msgstr "jobbra lépés"
+
+msgid "jump / swim"
+msgstr "ugrás / úszás"
+
+msgid "crouch / sink"
+msgstr "guggolás / süllyedés"
+
+msgid "off-hand hook"
+msgstr "kézi kampó"
+
+msgid "jet pack"
+msgstr "rakéta puttony"
+
+msgid "Attacking"
+msgstr "Tüzelés"
+
+msgid "primary fire"
+msgstr "Elsődleges"
+
+msgid "secondary fire"
+msgstr "Másodlagos"
+
+msgid "Weapon switching"
+msgstr "Fegyverváltás"
+
+msgid "previous"
+msgstr "előző"
+
+msgid "next"
+msgstr "következő"
+
+msgid "previously used"
+msgstr "előzőleg használt"
+
+msgid "best"
+msgstr "legjobb"
+
+msgid "reload"
+msgstr "újratöltés"
+
+msgid "View"
+msgstr "Nézet"
+
+msgid "hold zoom"
+msgstr "nagyítás tartás"
+
+msgid "toggle zoom"
+msgstr "nagyítás váltás"
+
+msgid "show scores"
+msgstr "pontszámok"
+
+msgid "screen shot"
+msgstr "kép mentés"
+
+msgid "maximize radar"
+msgstr ""
+
+msgid "toggle minigame menu"
+msgstr ""
+
+msgid "Communicate"
+msgstr "Kommunikáció"
+
+msgid "public chat"
+msgstr "nyilvános beszélgetés"
+
+msgid "team chat"
+msgstr "csapat beszélgetés"
+
+msgid "show chat history"
+msgstr "beszélgetés történet"
+
+msgid "vote YES"
+msgstr "IGEN szavazat"
+
+msgid "vote NO"
+msgstr "NEM szavazat"
+
+msgid "ready"
+msgstr "kész"
+
+msgid "Client"
+msgstr "Kliens"
+
+msgid "quick menu"
+msgstr ""
+
+msgid "server info"
+msgstr "kiszolgáló info"
+
+msgid "enter console"
+msgstr "belépés a konzolba"
+
+msgid "disconnect"
+msgstr "lekapcsolodás"
+
+msgid "quit"
+msgstr "kilépés"
+
+msgid "Teamplay"
+msgstr "Csapatjáték"
+
+msgid "team chat"
+msgstr "csapat beszélgetés"
+
+msgid "auto-join team"
+msgstr "automatikus csapatválasztás"
+
+msgid "team menu"
+msgstr "csapat menü"
+
+msgid "sandbox menu"
+msgstr ""
+
+msgid "enter spectator mode"
+msgstr "néző módba váltás"
+
+msgid "drop weapon"
+msgstr "fegyver eldobás"
+
+msgid "drop key / drop flag"
+msgstr "zászló eldobás, kiszállás"
+
+msgid "drag object"
+msgstr "drag object"
+
+msgid "3rd person view"
+msgstr ""
+
+msgid "User defined"
+msgstr "Felhasználói hozzárendelések"
+
+msgid "userbind"
+msgstr ""
+
+
+msgid "Add every available map to your selection"
+msgstr "Minden pálya kiválasztása"
+
+msgid "Add the maps shown in Maplist above to your selection"
+msgstr ""
+
+msgid "Advanced server settings"
+msgstr "Haladó szerverbeállítások"
+
+msgid "Advanced settings where you can tweak every single variable of the game"
+msgstr "Haladó beállítások, ahol finomíthatod a játék minden egyes változóját. Ha nem értesz hozzá, inkább ne piszkáld..."
+
+msgid "All players are almost invisible"
+msgstr "Minden játékos majdnem láthatatlan"
+
+msgid "Allow the console toggling bind to also close the console"
+msgstr "A konzol egy különleges interfész, amelynek segítségél különböző parancsokat tudsz adni a játéknak (a parancsok listáját megtalálhatod az Egyéb -> Haladó beállítások alatt). Ennek az opciónak a bekapcsolásával a konzolnyitó billentyűvel be is tudod zárni a konzolt. A konzolnyitó billentyű (BACKQUOTE) sajnos nem létezik magyar billentyűzeten, ezért ha ilyet használsz, először meg kell változtatnod a billentyű hozzárendelést a bal oldali listában (Kliens: belépés a konzolba), vagy használd a SHIFT+ESC kombinációt."
+
+msgid "Always carry the laser as an additional weapon in Nix"
+msgstr "Mindig legyen a lézer a Nix mellett kiegészítésül"
+
+msgid "Ambient lighting, if set too high it tends to make light on maps look dull and flat (default: 4)"
+msgstr "Környezeti világítás, a túl magasra beállítás a kép fakóságát eredményezheti (alapérték: 4)"
+
+msgid "Amount of bots on your server"
+msgstr "Botok száma a szervereden"
+
+msgid "Amount of health below which your player gets stunned because of blood loss"
+msgstr "Életerőpont, ami alatt a játékos elkábul a vérveszteségtől"
+
+msgid "Anisotropic filtering quality (default: 1x)"
+msgstr "Az anizotrópikus szűrés használatával a megjelenített textúrák távolságtól függetlenül is élesek maradnak, így javul a képminőség. FIGYELEM! Jelentősen csökkenheti a teljesítményt gyengébb számítógépeken (alapérték: 1x)"
+
+msgid "Announcer sound telling you the remaining minutes of the match"
+msgstr "Figyelmeztető hang, ami a meccsből hátralévő percekről tájékoztat"
+
+msgid "Audio settings"
+msgstr "Hang beállítások: sávok és csatornák hangerejének beállítása, figyelmeztető hangok, gúnyolódások stb."
+
+msgid "Automatically switch to newly picked up weapons if they are better than what you are carrying"
+msgstr "A játék önmagától átvált az újonnan felvett fegyverre, ha az jobb az addig kézben tartottnál az elsőbbségi lista szerint"
+
+msgid "Automatically taunt enemies after fragging them"
+msgstr "Ha megölsz valakit, kigúnyolod egy mindenki álltal hallható hangüzenetben. A csúszkával ezeknek a beszólásoknak a gyakoriságát változtathatod"
+
+msgid "Autoselect team (recommended)"
+msgstr "Automatikus csapatválasztás a játék állásának és játékosok számának függvényében (ajánlott)"
+
+msgid "Back to work..."
+msgstr "Vissza a munkához..."
+
+msgid "Benchmark how fast your computer can run the highlighted demo"
+msgstr "Leméri, hogy a számítógéped milyen gyorsan képes futtatni a kiválasztott demót."
+
+msgid "Bookmark the currently highlighted server so that it's faster to find in the future"
+msgstr "Az éppen kiválasztott szerver megjelölése, hogy a jövőben könnyebben megtaláld"
+
+msgid "Brightness of black (default: 0)"
+msgstr "A képernyő fényereje, a fekete szín fényességének változtatásával (alapérték: 0)"
+
+msgid "Brightness of white (default: 1)"
+msgstr "A csúszkával a képernyő kontrasztját tud szabályozni, azaz a fehér szín fényességét (alapérték: 1)"
+
+msgid "Browse and view demos"
+msgstr "Demók böngészése és megtekintése"
+
+msgid "By how much to multiply the contrast in dark areas (default: 1)"
+msgstr "A csúszkával a sötét területek kontrasztját tudod növelni (alapérték: 1)"
+
+msgid "Change the game settings"
+msgstr "A játék beállításainak megváltoztatása: billentyűzetkiosztás, képernyőfelbontás, vizuális effektek, audió, stb."
+
+msgid "Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)"
+msgstr "A csúszkával a textúrák élességét tudod beállítani. Kisebb érték hatásosan csökkenti a textúra memória használatot, de a textúrák megjelenése csúnyább, homályosabb lesz. (alapértelmezett: jó)"
+
+msgid "Change the smoothness of the curves on the map (default: normal)"
+msgstr "A csúszkával az ívelt geometria finomságát, részletességét tudod szabályozni (alapértelmezett: normál)"
+
+msgid "Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done."
+msgstr ""
+
+msgid "Compress the textures for video cards with small amounts of video memory available (default: None)"
+msgstr "Textúrák tömörítése, hogy a videokártyán található memóriából kevesebbet használjon (alapértelmezett: nem)"
+
+msgid "Control transparency of the waypoints"
+msgstr "A csúszkával az iránypontok átlátszóságát tudod szabályozni. Az érték növelésével az iránypontok egyre kevésbé lesznek átláthatóak"
+
+msgid "Customize your player settings"
+msgstr ""
+                                                                                                                                                                                                                                                              ---"
+msgid "Damage done to your enemy gets added to your own health"
+msgstr "Annyi pont adódik életerődhöz, amennyi sebzést a másiknak okozol"
+
+msgid "Decals further away than this will not be drawn (default: 300)"
+msgstr "A becsapódási nyomok maximális megjelenítési távolsága (azaz ettől az értéktől messzebb már nem jelennek meg) (alapérték: 300)"
+
+msgid "Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly. (default: disabled)"
+msgstr "Textúra összetettség letiltása nagyon lassú gépeken. Ez egy  nagy gyorsulást hozz a teljesítményben, de nagyon csúnyán néz ki. (alapértelmezett: letiltva)"
+
+msgid "Distance from which taunts can be heard"
+msgstr "A távolság, ahonnan a gúnyolódás még hallható"
+
+msgid "Draw the weapon model"
+msgstr "Az éppen kézben tartott fegyver megjelenítése"
+
+msgid "Effect settings"
+msgstr "Különböző grafikai effektek beállításai: geometriai részletesség, textúra élesség, fények, árnyékolás, tükröződés, utófeldolgozás stb."
+
+msgid "Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts (default: disabled)"
+msgstr "Leképzés előtt egy távolságteszt történik, és az aktuális leképzés a közelebbi eseményekkel, tárgyakkal kezdődik. Ez vonatkozhat csak a világ geometriájára, illetve a modellekre is (alapértelmezett: letiltva)"
+
+msgid "Enable OpenGL 2.0 pixel shaders for lightning (default: enabled)"
+msgstr "Az OpenGL 2.0 pixel shaderek használatának engedélyezése (alapértelmezett: engedélyezve)"
+
+msgid "Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot (default: disabled)"
+msgstr "Az élsimítás engedélyezésével a leképzett 3D-s tárgyak széleinek \"csipkézettsége\" csökken. FIGYELEM! Jelentősen csökkenheti a teljesítményt gyengébb számítógépeken (alapértelmezett: letiltva)"
+
+msgid "Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)"
+msgstr "A fényes testek felületén végigfutó halvány, derengő ragyogás engedélyezése FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva)."
+
+msgid "Enable clientside movement prediction"
+msgstr "Kliensoldali mozgásbecslés engedélyezése. Ez az opció rossz minőségű, vagy lassú kapcsolat esetén segíthet a késés (lag) okozta mozgási problémák javításában"
+
+msgid "Enable corona flares around certain lights (default: enabled)"
+msgstr "Fényudvarok megjelenítése bizonyos effektek körül. (alapértelmezett: engedélyezve)"
+
+msgid "Enable decals (bullet holes and blood) (default: enabled)"
+msgstr "Becsapódási nyomok (égési és robbanási nyomok, vérfoltok) engedélyzése és tiltása (alapértelmezett: engedélyezve)"
+
+msgid "Enable directional voices"
+msgstr "Irányított hangok engedélyezése"
+
+msgid "Enable dodging"
+msgstr "El tudsz szökkenni jobbra-balra a lövések elől"
+
+msgid "Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)"
+msgstr "Gyors, de nagyon csúnya dinamikus fényekeffektek megjelenítése a valós dinamikus világítás helyett. Csak nagyon gyenge számítógépek esetén ajánlott (alapértelmezett: letiltva)"
+
+msgid "Enable footstep sounds"
+msgstr "Enable footstep sounds"
+
+msgid "Enable fullscreen mode (default: enabled)"
+msgstr "Teljes képernyős mód engedélyezése (alapértelmezett: engedélyezve)"
+
+msgid "Enable network update smoothing"
+msgstr "Engedélyezi a hálózat frissítés simítását"
+
+msgid "Enable rendering of dynamic lights such as explosions and rocket lights (default: enabled)"
+msgstr "Dinamikus fényeffektek engedélyezése, mint pl. robbanások és rakéták fényei (alapértelmezett: engedélyezve)"
+
+msgid "Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance. (default: disabled)"
+msgstr "Teljesen valós idejű és dinamikus megvilágítások engedélyezése azokon a pályákon, amik támogatják. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva)"
+
+msgid "Enable rendering of shadows from dynamic lights (default: disabled)"
+msgstr "A dinamikus fényeffektek árnyékokat is vetnek (alapértelmezett: letiltva)"
+
+msgid "Enable rendering of shadows from realtime world lights (default: disabled)"
+msgstr "A teljesen valós idejű és dinamikus fények árnyékokat is vetnek. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva)"
+
+msgid "Enable spatialization (blend the right and left channel slightly to decrease stereo separation a bit for headphones)"
+msgstr "A jobb és bal hangcsatornák enyhe összemosása, a sztereó szétválasztás csökkentésére fejhallgatókban"
+
+msgid "Enable the use of glossmaps on textures supporting it (default: enabled)"
+msgstr "A felületek felszínén megcsillanó fény engedélyezése. (alapértelmezett: engedélyezve)"
+
+msgid "Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot (default: disabled)"
+msgstr "A GLSL alkalmazása a gamma korrekcióhoz, Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)"
+
+msgid "Enable use of directional shading on textures (default: enabled)"
+msgstr "A dinamikus fényeffektek által vetett árnyékok megjelenítése a textúrákon (alapértelmezett: engedélyezve)"
+
+msgid "Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)"
+msgstr "A függőleges szinkronizáció engedélyezése, a megjelenített kép szétesésének megakadályozására. A másodpercenként leképzett képkockák számát (FPS) a képernyő frissítési frekvenciájához igazítja (alapértelmezett: kikapcsolva)"
+
+msgid "Enable/disable the HUD background"
+msgstr "HUD hátterének engedélyezése/letiltása"
+
+msgid "Enables special postprocessing effects for when damaged or under water or using a powerup (default: disabled)"
+msgstr "Extra képernyő effektek engedélyezése, mint pl. víz alatti hullámok, Sebzésnövelő használata során extra kontrasztos látómező stb."
+
+msgid "Fade coronas according to visibility (default: enabled)"
+msgstr "A fényudvarok elhalványítása láthatóságuk szerint (alapértelmezett: engedélyezve)"
+
+msgid "Field of vision in degrees from 60 to 130, default is 90"
+msgstr "A látószög fokokban mérve 60-tól 130-ig, az alapérték 90 fok"
+
+msgid "Find servers to play on"
+msgstr "Internetes és helyi hálózaton indított szerverek böngészése"
+
+msgid "Force client to use chosen port unless it is set to 0"
+msgstr "Az adott UDP port használata az alapértelmezett helyett"
+
+msgid "Global rendering brightness (default: 1)"
+msgstr "Általános világosság  (alapérték: 1)"
+
+msgid "Higher quality offset mapping, which also has a huge impact on performance (default: disabled)"
+msgstr "Még jobb minőségű, finomabb Offset mapping. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva)"
+
+msgid "Higher quality version of bloom, which has a huge impact on performance. (default: disabled)"
+msgstr "A bloom magas minőségű verziója, ami óriási hatással van a teljesítményre. (alapértelmezett: letiltva)"
+
+msgid "Host your own game"
+msgstr "Saját játékszerver indítása"
+
+msgid "How big the zoom factor is when the zoom button is pressed"
+msgstr "A nagyítási szorzó a ráközelítés gomb megnyomása esetén"
+
+msgid "How fast the view will be zoomed, disable to zoom instantly"
+msgstr "Milyen gyorsan hajtsa végre a távcső a nagyítást. Tiltás esetén a nagyítás azonnal végbemegy"
+
+msgid "How long a view kick from damage lasts (default: 0)"
+msgstr "Mennyi ideig legyen a kép kiütve a  sérülés után (alapérték: 0)"
+
+msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
+msgstr "Színmélyég BPP-ben (bits per pixel). Az ajánlott színmélyég 32bit"
+
+msgid "How many input packets to send to the server each second"
+msgstr "A csúszkával a szerver felé küldött adatcsomagok másodpercenkénti számát tudod beállítani. Magasabb érték finomabb mozgást eredményezhet."
+
+msgid "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)"
+msgstr "Nagyítás során az egér érzékenységének változtatása a könnyebb célzás érdekében, 0-tól (kisebb érzékenység) 1-ig (nem változik az érzékenység)"
+
+msgid "I got some more fragging to do!"
+msgstr "A mészárlás folytatódik!"
+
+msgid "If set, only reduce the texture quality of models (default: enabled)"
+msgstr "Ha ha be van állítva, csak a modellek textúra minősége csökken (alapértelmezett: engedélyezve)"
+
+msgid "Input settings"
+msgstr "Billentyűzetkiosztás, egér és botkormány beállítások"
+
+msgid "Inverse gamma correction value, a brightness effect that does not affect white or black (default: 1.125)"
+msgstr "Fordított gamma korrekciós érték, egy fényességi hatás , ami nem befolyásolja a fehéret vagy feketét (alapérték: 1)"
+
+msgid "Invert mouse movement on the Y-axis"
+msgstr "Fordított egérmozgás az Y-tengely (fel-le) mentén"
+
+msgid "Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines (default: disabled)"
+msgstr "A processzor megvárja amíg a videókártya befejezi a képkockát leképzését, ez segíthet egyes gépeken jelentkező furcsa bemeneti és videó késés problémák kiküszöbölésében (alapértelmezett: letiltva)"
+
+msgid "Make things fall to the ground slower, lower value means lower gravity"
+msgstr "A tárgyak lassabban esnek a földre, kisebb érték alacsonyabb gravitációt jelent"
+
+msgid "Make use of DGA mouse input"
+msgstr "Segíti a DGA egér bemenet használatát"
+
+msgid "Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)"
+msgstr "A gyorsabb leképzés érdekében a megjelenítendő statikus geometria a videó memóriában ún. Vertex Buffer Objectként kerül tárolásra (alapértelmezett: Csúcspontok és háromszögek, kompatibilis)"
+
+msgid "Make use of the list above when cycling through weapons with the mouse wheel"
+msgstr "A bal oldali lista használata, amikor az előző fegyver/következő fegyver gombokkal váltasz a fegyverek között"
+
+msgid "Maximum download speed"
+msgstr "A csúszkával a maximális letöltési sebességet tudod beállítani"
+
+msgid "Maximum number of concurrent HTTP/FTP downloads"
+msgstr ""
+
+msgid "Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)"
+msgstr "A csúszkával a menüopciók tippjeinek részletesség tudod beállítani. Letilthatod az összes tippet, iletve a \"Részletes\" választása esetén a tippek mellett az adott változó is megjelenik"
+
+msgid "Misc settings"
+msgstr "Játékosmodell, célkereszt, HUD, és egyéb játékosorientált beállítások"
+
+msgid "Motion blur strength - 0.4 recommended"
+msgstr "A csúszkával a mozgási elmosódás intenzivitását tudod szabályozni. Az ajánlott érték 0.4"
+
+msgid "Mouse speed multiplier"
+msgstr "Ezzel a csúszkával az egér érzékenységét tudod szabályozni. A magasabb értékek érzékenyebb egeret eredményeznek"
+
+msgid "Mouse speed multiplier in the menu, does not affect aiming in the game"
+msgstr "Egér sebessége a menüben, nincs hatással a játékbeli célzásra"
+
+msgid "Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1)"
+msgstr "A különböző effektek (robbanások, becsapódások) által létrehozott effekt-részecskék számának szorzója. A kisebb értékek kevesebb részecske megjelenítését eredményezik, ami gyengébb gépeken növelheti a teljesítményt. (alapérték: 1.0)"
+
+msgid "Mutators and weapon arenas"
+msgstr "Módosítók és fegyverarénák"
+
+msgid "Name under which you will appear in the game"
+msgstr "A név, amivel szerepelsz a játékban. Ha engedélyezted a statisztikák gyűjtését és elküldését, akkor a http://stats.xonotic.org -on ezen a néven fogsz szerepelni az adatbázisban"
+
+msgid "Network settings"
+msgstr "Hálózati beállítások, FPS limit, haladó beállítások stb."
+
+msgid "No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon."
+msgstr "Xonotic felvehető fegyverek nélkül – Mindenki ugyanazzal a fegyverrel játszik. Kis idő után visszaszámlálás indul, amely végén mindenki fegyvert vált"
+
+msgid "None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy"
+msgstr "A találatellenőrzés megjelenítése a célkereszten. Nincs: a találat lehetősége nincs hatással a célkeresztre; Valós célzás: elmossa a célkeresztet, mikor nem a falat találod el; Ellenségek: Fel is nagyítja a célkeresztet, mikor egy ellenfelet találsz el"
+
+msgid "Number of channels for the sound output"
+msgstr "A hang kimenet csatornáinak száma"
+
+msgid "Number of maps that are shown in the map voting at the end of a match"
+msgstr "A meccs utáni pályaválasztásnál megjelenő szvazati lehetőségek száma"
+
+msgid "Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface (default: disabled)"
+msgstr "A texúrák kidomborításának engedélyezése, mintha valódi felületük lenne (alapértelmezett: letiltva)"
+
+msgid "Only possible to inflict damage on your enemy while he's airborne"
+msgstr "Csak addig tudod az ellenséged megsebezni, amíg az levegőben tartózkodik"
+
+msgid "Override the default amount of teams in teamgames"
+msgstr "Csapatjátékban felülbírálja a csapatok számának alapbeállítását"
+
+msgid "Particles further away than this will not be drawn (default: 1000)"
+msgstr "A különböző effektek (robbanások, becsapódások) által létrehozott effekt-részecskék maximális megjelenítési távolsága (azaz ettől az értéktől messzebb már nem jelennek meg). (alapérték: 1000)"
+
+msgid "Pause updating the server list to prevent servers from \"jumping around\""
+msgstr "Megállítja a szerver lista frissítését, hogy a szerverek ne \"ugráljanak össze-vissza\" a listában"
+
+msgid "Percentage of damage dealt to teammates"
+msgstr "Sérülés viszonylagos mértéke, amit a csapattársadnak okozol"
+
+msgid "Percentage of teamdamage that will be mirrored to you"
+msgstr "Általad okozott csapatsérülés viszonylagos mértéke, amit te szenvedsz el büntetésből, mert a csapattársad ellen fordultál"
+
+msgid "Play a hit indicator sound when your shot hits an enemy"
+msgstr "Találatjelző hang adása, ha sikeresen eltaláltad az ellenségedet"
+
+msgid "Play online, against your friends in LAN, view demos or change player settings"
+msgstr "Játék interneten keresztül, helyi hálózaton, demók megtekintése, vagy a karaktered beállításainak finomítása"
+
+msgid "Play sounds when clicking or hovering over menu items"
+msgstr "Menühangok engedélyezése, ha valamire rákattintasz, vagy az opciók felett mozgatod az egeret"
+
+msgid "Play the singleplayer campaign or instant action matches against bots"
+msgstr "Egyjátékos mód vagy azonnali játék gépi vezérlésű botok ellen"
+
+msgid "Players spawn with the grappling hook"
+msgstr "A játékosok arzenáljában a vonóhorog is szerepelni fog"
+
+msgid "Players spawn with the jetpack"
+msgstr "A játékosok hátán sugárhajtóműves hátizsák van"
+
+msgid "Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps."
+msgstr ""
+
+msgid "Players will drop all weapons they possessed when they are killed"
+msgstr "A játékosok eldobnak minden fegyvert, amit birtokoltak a haláluk előtt"
+
+msgid "Poor man's left handed mode (default: off)"
+msgstr "A teljes képernyő vízszintes tükrözése, \"szegény ember bal kezes módja\". (alapértelmezett: ki)"
+
+msgid "Position of the weapon model; requires reconnect"
+msgstr "Fegyvermodell helyzete. FIGYELEM! Ha játék közben vagy, újra kell csatlakoznod a szerverhez (helyi játék esetén újra kell indítanod azt), hogy a változtatás életbe lépjen!"
+
+msgid "Quit the game"
+msgstr "Kilépés a játékból"
+
+msgid "Reduce the amount of gibs or remove them completely (default: lots)"
+msgstr "A csúszkával a felrobbantott ellendelek húscafatainak mennyiségének tudod beállítani (alapértelmezett: sok)"
+
+msgid "Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces (default: disabled)"
+msgstr "Valós idejű tükröződések, portálok és fénytörések engedélyzése. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott!  (alapértelmezett: letiltva)"
+
+msgid "Remove all the maps from your selection"
+msgstr "Egyik pálya sincs kiválasztva"
+
+msgid "Remove the maps shown in Maplist above from your selection"
+msgstr ""
+
+msgid "Replace blood and gibs with content that does not have any gore effects (default: disabled)"
+msgstr "A véres és erőszakos grafikai tartalmak cserélése színes mintákká, \"gyerek barát mód\" (alapértelmezett: letiltva)"
+
+msgid "Resolution of reflections/refractions (default: good)"
+msgstr "Tükröződések/A csúszkával a valós idejű tükröződési effektek minőségét tudod szabályozni. (alapértelmezett: jó)"
+
+msgid "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), requires GLSL color control (default: 1)"
+msgstr "Színtelítettség beállítása  (0 = szürke, 1 = normál, 2 = túltelített ), GLSL színkezelés szükséges (alapérték: 1)"
+
+msgid "Scale multiplier of the waypoints"
+msgstr "A csúszkával az iránypontok méretét tudod szabályozni. A nagyobb értékek nagyobb feliratokat eredményeznek"
+
+msgid "Screen resolution"
+msgstr "A csúszkával a képernyő felbontását tudod megváltoztatni. TIPP: Ha több monitorod van, és a kép az összes monitorra szét van feszítve, akkor az Egyéb -> Haladó beállításokban keresd ki a listából a "vid_netwmfullscreen" változót, és állítsd át az értékét \"1\"-re! Ez megoldja problémát, de ebben az esetben csak a képernyőd natív felbontását tudod csak használni!"
+
+msgid "Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups."
+msgstr "A kiválasztott fegyver aréna minden játékosnak ugyanazt a fegyvert biztosítja korlátlan lőszerrel, és letiltja minden más fegyver felvételét"
+
+msgid "Set a different crosshair for each weapon, good if you play without weapon models"
+msgstr "Különböző célkeresztek beállítása az éppen kézben tartott fegyverhez; hasznos lehet fegyvermodell nélküli játék során"
+
+msgid "Set the color of the crosshair depending on the weapon you are currently holding"
+msgstr "A célkereszt színének változtatása az éppen kézben tartott fegyvertől függően"
+
+msgid "Set your most preferred weapons, autoswitch and weapon model settings"
+msgstr "A legkedveltebb fegyver, önműködő fegyverváltás és fegyvermodell pozíciójának beállításai"
+
+msgid "Show a graph of packet sizes and other information"
+msgstr "Csomagméret és egyéb információk grafikonjának kirajzolása játék közben a képernyő jobb alsó sarkába"
+
+msgid "Show current date, useful on screenshots"
+msgstr "Az aktuális dátum kijelzése a képernyő jobb alsó sarkában"
+
+msgid "Show current time of day, useful on screenshots"
+msgstr "Az aktuális időt kijelzése a képernyő jobb alsó sarkában"
+
+msgid "Show empty servers"
+msgstr "Üres szerverek mutatása"
+
+msgid "Show full servers that have no slots available"
+msgstr "Teli szerverek mutatása, amelyeken nincs már szabad férőhely"
+
+msgid "Show more information about the currently highlighted server"
+msgstr "Még több információ megjelenítése az éppen kiválasztott szerverről"
+
+msgid "Show the name of the player you are aiming at"
+msgstr "A látómeződben tartózkodó játékosok nevének mutatása"
+
+msgid "Show various gametype specific waypoints"
+msgstr "Különböző játéktípusok során iránypontok rajzolása a képernyőre, amik segítenek a tájékozódásban (pl. bázisok, generátorok, uralmi pontok helyzete stb.)"
+
+msgid "Show your rendered frames per second"
+msgstr "A másodpercenként megjelenített képkockák (FPS) számának kijelzése a képernyő jobb alsó sarkában"
+
+msgid "Simple majority wins a vote"
+msgstr "Egyszerű többség nyerjen egy szavazásban"
+
+msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
+msgstr "Simítja az egérmozgást, de így célzás pontossága némiképp csökkenhet"
+
+msgid "Sound output frequency"
+msgstr "Hang kimenet frekvenciája"
+
+msgid "Specify how experienced the bots will be"
+msgstr "A botok ügyességi szintjének meghatározása"
+
+msgid "Specify your network speed with this slider"
+msgstr "A csúszkával a hálózati kapcsolatod sebessége és típusát tudod meghatározni"
+
+msgid "Swap left/right channels"
+msgstr "A jobb és bal hangcsatornák felcserélése"
+
+msgid "The Xonotic credits"
+msgstr "A Xonotic készítőinek és segítségnyújtóinak listája"
+
+msgid "The amount of frags needed before the match will end"
+msgstr "Gyilokok száma, amit a meccs vége előtt el kell érni"
+
+msgid "The maximum amount of players or bots that can be connected to your server at once"
+msgstr "A játékosok és botok maximális összlétszáma, ahányan egyszerre a szerverre csatlakozhatnak"
+
+msgid "Time in seconds before decals fade away (default: 2)"
+msgstr "A becsapódási nyomok eltűnésének kezdetének időtartama másodpercben mérve (alapérték: 2)"
+
+msgid "Timelimit in minutes that when hit, will end the match"
+msgstr "Időhatár percekben mérve, aminek elérése után vége a meccsnek"
+
+msgid "Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)"
+msgstr "Nagy részletességű fénytérképek használata a statikus árnyékok leképzéséhez, ami szépen néz ki, de kissé megemeli a szükséges videó memória mennyiségét (alapértelmezett: engedélyezve)"
+
+msgid "Use per-pixel lighting effects (default: enabled)"
+msgstr "Képpontokkénti megvilágítás és árnyékolás használata a statikus fényekhez. A textúrák nagy része így olyan lesz, mintha valós felületük lenne. (alapértelmezett: engedélyezve)"
+
+msgid "Use the old HUD layout"
+msgstr ""
+
+msgid "Video settings"
+msgstr "Videó beállítások: képernyő felbontás, színmélység, fényerő, kontraszt, stb."
+
+msgid "View bobbing frequency, disable for no bobbing"
+msgstr ""
+
+msgid "Weapons stay after they are picked up"
+msgstr "A fegyverek a helyükön maradnak, még azután is, hogy valaki felvette őket"

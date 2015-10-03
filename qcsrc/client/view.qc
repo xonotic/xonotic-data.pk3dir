@@ -517,7 +517,7 @@ void UpdateHitsound()
 			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
 			// todo: normalize sound pressure levels? seems unnecessary
 
-			sound7(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
+			sound7(world, CH_INFO, SND(HIT), VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
 		}
 		unaccounted_damage = 0;
 		hitsound_time_prev = time;
@@ -527,7 +527,7 @@ void UpdateHitsound()
 	float typehit_time = getstatf(STAT_TYPEHIT_TIME);
 	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
-		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		sound(world, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
 		typehit_time_prev = typehit_time;
 	}
 }

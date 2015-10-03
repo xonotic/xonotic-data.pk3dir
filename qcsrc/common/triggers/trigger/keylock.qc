@@ -146,7 +146,7 @@ spawnfunc(trigger_keylock)
 		if(self.sounds == 1)
 			self.noise = "misc/secret.wav";
 		else if(self.sounds == 2)
-			self.noise = "misc/talk.wav";
+			self.noise = SND(TALK);
 		else //if (self.sounds == 3) {
 			self.noise = "misc/trigger1.wav";
 	}
@@ -157,7 +157,7 @@ spawnfunc(trigger_keylock)
 
 	// set closed sourd
 	if(self.noise2 == "")
-		self.noise2 = "misc/talk.wav";
+		self.noise2 = SND(TALK);
 
 	// delay between triggering message2 and trigger2
 	if(!self.wait) { self.wait = 5; }

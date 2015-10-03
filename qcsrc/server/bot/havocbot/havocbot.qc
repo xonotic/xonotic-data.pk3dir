@@ -856,7 +856,7 @@ void havocbot_movetogoal()
 void havocbot_chooseenemy()
 {SELFPARAM();
 	entity head, best, head2;
-	float rating, bestrating, i, hf;
+	float rating, bestrating, hf;
 	vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 	{
@@ -908,10 +908,29 @@ void havocbot_chooseenemy()
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	for(i = 0; ; ++i)
+	bool scan_transparent = false;
+	bool scan_secondary_targets = false;
+	bool have_secondary_targets = false;
+	while(true)
 	{
-		while (head)
+		scan_secondary_targets = false;
+		:scan_targets
+		for( ; head; head = head.chain)
 		{
+			if(!scan_secondary_targets)
+			{
+				if(head.classname == "misc_breakablemodel")
+				{
+					have_secondary_targets = true;
+					continue;
+				}
+			}
+			else
+			{
+				if(head.classname != "misc_breakablemodel")
+					continue;
+			}
+
 			v = (head.absmin + head.absmax) * 0.5;
 			rating = vlen(v - eye);
 			if (rating<autocvar_bot_ai_enemydetectionradius)
@@ -925,20 +944,29 @@ void havocbot_chooseenemy()
 					bestrating = rating;
 				}
 			}
-			head = head.chain;
+		}
+
+		if(!best && have_secondary_targets && !scan_secondary_targets)
+		{
+			scan_secondary_targets = true;
+			// restart the loop
+			head = head2;
+			bestrating = 100000000;
+			goto scan_targets;
 		}
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
 		if(best || self.weapons) // || self.weapon == WEP_RIFLE.m_id
 			break;
-		if(i)
+		if(scan_transparent)
 			break;
 
 		// Set flags to see through transparent objects
 		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
+		scan_transparent = true;
 	}
 
 	// Restore hit flags
@@ -946,6 +974,8 @@ void havocbot_chooseenemy()
 
 	self.enemy = best;
 	self.havocbot_stickenemy = true;
+	if(best && best.classname == "misc_breakablemodel")
+		self.havocbot_stickenemy = false;
 }
 
 float havocbot_chooseweapon_checkreload(int new_weapon)

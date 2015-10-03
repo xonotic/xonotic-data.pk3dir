@@ -59,7 +59,7 @@
 #include "../common/weapons/all.qc"
 
 #include "../common/turrets/cl_turrets.qc"
-#include "../common/turrets/turrets.qc"
+#include "../common/turrets/all.qc"
 
 #include "../common/triggers/include.qc"
 

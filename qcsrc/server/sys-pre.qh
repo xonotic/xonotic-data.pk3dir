@@ -3,7 +3,6 @@
 
 #define objerror builtin_objerror
 #define droptofloor builtin_droptofloor
-#define sound builtin_sound
 #define remove builtin_remove
 #define cvar_set builtin_cvar_set
 #define cvar_string builtin_cvar_string

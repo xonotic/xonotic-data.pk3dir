@@ -1050,7 +1050,7 @@ float bot_cmd_sound()
 		atten = stof(argv(2));
 
 	precache_sound(f);
-	sound(self, chan, sample, vol, atten);
+	_sound(self, chan, sample, vol, atten);
 
 	return CMD_STATUS_FINISHED;
 }

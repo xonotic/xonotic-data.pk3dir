@@ -127,8 +127,8 @@ string Nade_TrailEffect(float proj, float nade_team)
     ));
     switch (proj)
     {
-        case PROJECTILE_NADE: return strcat("nade_", Static_Team_ColorName_Lower(nade_team));
-        case PROJECTILE_NADE_BURN: return strcat("nade_", Static_Team_ColorName_Lower(nade_team), "_burn");
+        case PROJECTILE_NADE:       return EFFECT_NADE_TRAIL(nade_team).eent_eff_name;
+        case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team).eent_eff_name;
     }
     return "";
 }
