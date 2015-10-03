@@ -82,8 +82,8 @@ void Net_ReadShockwaveParticle(void);
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_shockwave(void)
-{SELFPARAM();
+spawnfunc(weapon_shockwave)
+{
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
@@ -229,7 +229,7 @@ void W_Shockwave_Melee_Think(void)
 
 void W_Shockwave_Melee(void)
 {SELFPARAM();
-	sound(self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTN_NORM);
+	sound(self, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
 	entity meleetemp;
@@ -360,7 +360,7 @@ void W_Shockwave_Attack(void)
 	float i, queue = 0;
 
 	// set up the shot direction
-	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
+	W_SetupShot(self, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(shockwave, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
@@ -708,9 +708,6 @@ bool W_Shockwave(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("misc/itempickup.wav");
-			precache_sound(W_Sound("lasergun_fire"));
-			precache_sound(W_Sound("shotgun_melee"));
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -875,9 +872,6 @@ bool W_Shockwave(int req)
 		}
 		case WR_INIT:
 		{
-			//precache_sound(W_Sound("ric1"));
-			//precache_sound(W_Sound("ric2"));
-			//precache_sound(W_Sound("ric3"));
 			return false;
 		}
 		case WR_ZOOMRETICLE:

@@ -98,8 +98,8 @@ void func_vectormamamam_findtarget()
 	controller.think = func_vectormamamam_controller_think;
 }
 
-void spawnfunc_func_vectormamamam()
-{SELFPARAM();
+spawnfunc(func_vectormamamam)
+{
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);

@@ -289,7 +289,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 		proj.flags		   = FL_PROJECTILE | FL_NOTARGET;
 
 	if(_mzlsound)
-		sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
 	if(_mzlfx)
 		Send_Effect_(_mzlfx, proj.origin, proj.velocity, 1);
@@ -303,7 +303,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 
 void vehicles_gib_explode()
 {SELFPARAM();
-	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, self.wp00.origin + '0 0 64', '0 0 0', 1);
 	remove(self);
@@ -907,7 +907,7 @@ void vehicles_exit(bool eject)
 
 	_vehicle.team = _vehicle.tur_head.team;
 
-	sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTEN_NORM);
+	sound (_vehicle, CH_TRIGGER_SINGLE, SND_Null, 1, ATTEN_NORM);
 	_vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;
 	_vehicle.phase = time + 1;
 

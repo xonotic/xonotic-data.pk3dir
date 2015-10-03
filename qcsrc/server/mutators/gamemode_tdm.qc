@@ -8,8 +8,8 @@ Note: If you use spawnfunc_tdm_team entities you must define at least 2!  Howeve
 Keys:
 "netname" Name of the team (for example Red, Blue, Green, Yellow, Life, Death, Offense, Defense, etc)...
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
-void spawnfunc_tdm_team()
-{SELFPARAM();
+spawnfunc(tdm_team)
+{
 	if(!g_tdm || !self.cnt) { remove(self); return; }
 
 	self.classname = "tdm_team";
@@ -18,15 +18,12 @@ void spawnfunc_tdm_team()
 
 // code from here on is just to support maps that don't have team entities
 void tdm_SpawnTeam (string teamname, float teamcolor)
-{SELFPARAM();
-	setself(spawn());
-	self.classname = "tdm_team";
-	self.netname = teamname;
-	self.cnt = teamcolor;
-
-	spawnfunc_tdm_team();
-
-	setself(this);
+{
+	entity this = new(tdm_team);
+	this.netname = teamname;
+	this.cnt = teamcolor;
+	this.spawnfunc_checked = true;
+	WITH(entity, self, this, spawnfunc_tdm_team(this));
 }
 
 void tdm_DelayedInit()

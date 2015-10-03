@@ -19,14 +19,14 @@ void trigger_heal_touch()
 			{
 				other.health = min(other.health + self.health, self.max_health);
 				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+				_sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}
 }
 
-void spawnfunc_trigger_heal()
-{SELFPARAM();
+spawnfunc(trigger_heal)
+{
 	self.active = ACTIVE_ACTIVE;
 
 	EXACTTRIGGER_INIT;

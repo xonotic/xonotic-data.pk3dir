@@ -26,8 +26,8 @@ Keys:
 "count"
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
 */
-void spawnfunc_func_rain()
-{SELFPARAM();
+spawnfunc(func_rain)
+{
 	self.dest = self.velocity;
 	self.velocity = '0 0 0';
 	if (!self.dest)
@@ -64,8 +64,8 @@ Keys:
 "count"
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
 */
-void spawnfunc_func_snow()
-{SELFPARAM();
+spawnfunc(func_snow)
+{
 	self.dest = self.velocity;
 	self.velocity = '0 0 0';
 	if (!self.dest)

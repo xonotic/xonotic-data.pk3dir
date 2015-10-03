@@ -91,7 +91,7 @@ void GrapplingHookThink();
 void GrapplingHook_Stop()
 {SELFPARAM();
 	Send_Effect(EFFECT_HOOK_IMPACT, self.origin, '0 0 0', 1);
-	sound (self, CH_SHOTS, W_Sound("hook_impact"), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	self.state = 1;
 	self.think = GrapplingHookThink;
@@ -357,7 +357,7 @@ void FireGrapplingHook (void)
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-	sound (self, CH_WEAPON_B, W_Sound("hook_fire"), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
 	org = self.origin + self.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);

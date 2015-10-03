@@ -232,10 +232,15 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, entity item, float
         HUD_Panel_DrawProgressBar(p_pos, p_size, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_progressbar_maxtime, 0, autocvar_hud_panel_itemstime_iconalign, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
     }
 
-    if (t > 0 && autocvar_hud_panel_itemstime_text)
-        drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-    else
-        picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
+    if(autocvar_hud_panel_itemstime_text)
+    {
+        if(t > 0)
+            drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+        else if(precache_pic("gfx/hud/default/checkmark")) // COMPAT: check if this image exists, as 0.8.1 clients lack it
+            drawpic_aspect_skin(numpos, "checkmark", eX * (ar - 1) * mySize_y + eY * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
+        else // legacy code, if the image is missing just center the icon
+            picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
+    }
     if (item_availableTime)
         drawpic_aspect_skin_expanding(picpos, item.m_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
     drawpic_aspect_skin(picpos, item.m_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);

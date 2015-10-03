@@ -39,6 +39,7 @@ void monster_dropitem()
 
 	vector org = self.origin + ((self.mins + self.maxs) * 0.5);
 	entity e = spawn();
+	e.spawnfunc_checked = true;
 
 	e.monster_loot = self.monster_loot;
 
@@ -49,7 +50,7 @@ void monster_dropitem()
 	{
 		setself(e);
 		e.noalign = true;
-		e.monster_loot();
+		e.monster_loot(e);
 		e.gravity = 1;
 		e.movetype = MOVETYPE_TOSS;
 		e.reset = SUB_Remove;
@@ -118,7 +119,7 @@ bool Monster_ValidTarget(entity mon, entity player)
 		makevectors (mon.angles);
 		dot = normalize (player.origin - mon.origin) * v_forward;
 
-		if(dot <= 0.3) { return false; }
+		if(dot <= autocvar_g_monsters_target_infront_range) { return false; }
 	}
 
 	return true; // this target is valid!
@@ -1045,7 +1046,7 @@ void Monster_Dead(entity attacker, float gibbed)
 
 void Monster_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
-	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL)
+	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL && !ITEM_DAMAGE_NEEDKILL(deathtype))
 		return;
 
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
@@ -1085,7 +1086,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 	self.dmg_time = time;
 
 	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN)
-		spamsound (self, CH_PAIN, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+		spamsound (self, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	self.velocity += force * self.damageforcescale;
 

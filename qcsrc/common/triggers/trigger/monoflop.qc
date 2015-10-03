@@ -34,8 +34,8 @@ void monoflop_reset()
 	self.nextthink = 0;
 }
 
-void spawnfunc_trigger_monoflop()
-{SELFPARAM();
+spawnfunc(trigger_monoflop)
+{
 	if(!self.wait)
 		self.wait = 1;
 	if(self.spawnflags & 1)

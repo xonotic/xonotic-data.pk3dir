@@ -7,8 +7,8 @@
 
 #include "../../common/items/all.qc"
 
-void spawnfunc_item_minst_cells()
-{SELFPARAM();
+spawnfunc(item_minst_cells)
+{
 	if (!g_instagib) { remove(self); return; }
 	if (!self.ammo_cells) self.ammo_cells = autocvar_g_instagib_ammo_drop;
 	StartItemA(ITEM_VaporizerCells);
@@ -187,7 +187,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 
 	if (self.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
+		play_countdown(self.strength_finished, SND(POWEROFF));
 		if (time > self.strength_finished)
 		{
 			self.alpha = default_player_alpha;
@@ -210,7 +210,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 
 	if (self.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
+		play_countdown(self.invincible_finished, SND(POWEROFF));
 		if (time > self.invincible_finished)
 		{
 			self.items &= ~ITEM_Speed.m_itemid;
@@ -357,7 +357,7 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 		e.noalign = self.noalign;
         e.cnt = self.cnt;
         e.team = self.team;
-		WITH(entity, self, e, spawnfunc_item_minst_cells());
+		WITH(entity, self, e, spawnfunc_item_minst_cells(e));
 		return true;
 	}
 

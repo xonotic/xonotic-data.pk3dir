@@ -63,7 +63,7 @@ void M_Spider_Attack_Web()
 {SELFPARAM();
 	monster_makevectors(self.enemy);
 
-	sound(self, CH_SHOTS, W_Sound("electro_fire2"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
 
 	entity proj = spawn ();
 	proj.classname = "plasma";
@@ -124,7 +124,7 @@ bool M_Spider_Attack(int attack_type)
 	return false;
 }
 
-void spawnfunc_monster_spider() { Monster_Spawn(MON_SPIDER.monsterid); }
+spawnfunc(monster_spider) { Monster_Spawn(MON_SPIDER.monsterid); }
 #endif // SVQC
 
 bool M_Spider(int req)
@@ -176,7 +176,6 @@ bool M_Spider(int req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_sound (W_Sound("electro_fire2"));
 			return true;
 		}
 		#endif

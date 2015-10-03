@@ -39,8 +39,8 @@ void func_ladder_link()
 	//self.model = "null";
 }
 
-void spawnfunc_func_ladder()
-{SELFPARAM();
+spawnfunc(func_ladder)
+{
 	self.mdl = self.model;
 	EXACTTRIGGER_INIT;
 	self.touch = func_ladder_touch;
@@ -48,8 +48,8 @@ void spawnfunc_func_ladder()
 	func_ladder_link();
 }
 
-void spawnfunc_func_water()
-{SELFPARAM();
+spawnfunc(func_water)
+{
 	self.mdl = self.model;
 	EXACTTRIGGER_INIT;
 	self.touch = func_ladder_touch;

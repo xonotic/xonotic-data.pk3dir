@@ -251,24 +251,24 @@ void assault_new_round()
 }
 
 // spawnfuncs
-void spawnfunc_info_player_attacker()
-{SELFPARAM();
+spawnfunc(info_player_attacker)
+{
 	if (!g_assault) { remove(self); return; }
 
 	self.team = NUM_TEAM_1; // red, gets swapped every round
-	spawnfunc_info_player_deathmatch();
+	spawnfunc_info_player_deathmatch(this);
 }
 
-void spawnfunc_info_player_defender()
-{SELFPARAM();
+spawnfunc(info_player_defender)
+{
 	if (!g_assault) { remove(self); return; }
 
 	self.team = NUM_TEAM_2; // blue, gets swapped every round
-	spawnfunc_info_player_deathmatch();
+	spawnfunc_info_player_deathmatch(this);
 }
 
-void spawnfunc_target_objective()
-{SELFPARAM();
+spawnfunc(target_objective)
+{
 	if (!g_assault) { remove(self); return; }
 
 	self.classname = "target_objective";
@@ -278,8 +278,8 @@ void spawnfunc_target_objective()
 	self.spawn_evalfunc = target_objective_spawn_evalfunc;
 }
 
-void spawnfunc_target_objective_decrease()
-{SELFPARAM();
+spawnfunc(target_objective_decrease)
+{
 	if (!g_assault) { remove(self); return; }
 
 	self.classname = "target_objective_decrease";
@@ -296,8 +296,8 @@ void spawnfunc_target_objective_decrease()
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
-void spawnfunc_func_assault_destructible()
-{SELFPARAM();
+spawnfunc(func_assault_destructible)
+{
 	if (!g_assault) { remove(self); return; }
 
 	self.spawnflags = 3;
@@ -308,11 +308,11 @@ void spawnfunc_func_assault_destructible()
 	else
 		self.team = NUM_TEAM_1;
 
-	spawnfunc_func_breakable();
+	spawnfunc_func_breakable(this);
 }
 
-void spawnfunc_func_assault_wall()
-{SELFPARAM();
+spawnfunc(func_assault_wall)
+{
 	if (!g_assault) { remove(self); return; }
 
 	self.classname = "func_assault_wall";
@@ -324,8 +324,8 @@ void spawnfunc_func_assault_wall()
 	InitializeEntity(self, assault_setenemytoobjective, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_target_assault_roundend()
-{SELFPARAM();
+spawnfunc(target_assault_roundend)
+{
 	if (!g_assault) { remove(self); return; }
 
 	self.winning = 0; // round not yet won by attackers
@@ -335,8 +335,8 @@ void spawnfunc_target_assault_roundend()
 	self.reset = target_assault_roundend_reset;
 }
 
-void spawnfunc_target_assault_roundstart()
-{SELFPARAM();
+spawnfunc(target_assault_roundstart)
+{
 	if (!g_assault) { remove(self); return; }
 
 	assault_attacker_team = NUM_TEAM_1;

@@ -52,7 +52,7 @@ SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN.m_id); }
+spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(WEP_SHOTGUN.m_id); }
 
 void W_Shotgun_Attack(float isprimary)
 {SELFPARAM();
@@ -61,7 +61,7 @@ void W_Shotgun_Attack(float isprimary)
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot(self, true, 5, W_Sound("shotgun_fire"), ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(self, true, 5, SND(SHOTGUN_FIRE), ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
@@ -181,7 +181,7 @@ void W_Shotgun_Melee_Think(void)
 
 void W_Shotgun_Attack2(void)
 {SELFPARAM();
-	sound(self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
 
 	entity meleetemp;
@@ -203,7 +203,7 @@ void W_Shotgun_Attack3_Frame2()
 		return;
 	}
 
-	sound(self, CH_WEAPON_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM); // kill previous sound
+	sound(self, CH_WEAPON_SINGLE, SND_Null, VOL_BASE, ATTN_NORM); // kill previous sound
 	W_Shotgun_Attack(true); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
@@ -286,9 +286,6 @@ float W_Shotgun(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("misc/itempickup.wav");
-			precache_sound(W_Sound("shotgun_fire"));
-			precache_sound(W_Sound("shotgun_melee"));
 			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -327,7 +324,7 @@ float W_Shotgun(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR_PRI(shotgun, ammo), W_Sound("reload")); // WEAPONTODO
+			W_Reload(WEP_CVAR_PRI(shotgun, ammo), SND(RELOAD)); // WEAPONTODO
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -359,11 +356,11 @@ float W_Shotgun(float req)
 			if(!w_issilent && time - self.prevric > 0.25)
 			{
 				if(w_random < 0.0165)
-					sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.033)
-					sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTEN_NORM);
 				else if(w_random < 0.05)
-					sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTEN_NORM);
+					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTEN_NORM);
 				self.prevric = time;
 			}
 
@@ -371,9 +368,6 @@ float W_Shotgun(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("ric1"));
-			precache_sound(W_Sound("ric2"));
-			precache_sound(W_Sound("ric3"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

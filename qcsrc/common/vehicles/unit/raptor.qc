@@ -195,7 +195,7 @@ void raptor_bombdrop()
 
 void raptor_fire_cannon(entity gun, string tagname)
 {SELFPARAM();
-	vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, W_Sound("lasergun_fire"),
+	vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
 						   gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
 						   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
 						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, self.owner);
@@ -334,15 +334,15 @@ float raptor_frame()
 	if(self.sound_nexttime < time)
 	{
 		self.sound_nexttime = time + 7.955812;
-		//sound (self.tur_head, CH_TRIGGER_SINGLE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTEN_NORM );
-		sound (self, CH_TRIGGER_SINGLE, "vehicles/raptor_speed.wav", 1, ATTEN_NORM);
+		//sound (self.tur_head, CH_TRIGGER_SINGLE, SND_VEH_RAPTOR_FLY, 1 - ftmp,   ATTEN_NORM );
+		sound (self, CH_TRIGGER_SINGLE, SND_VEH_RAPTOR_SPEED, 1, ATTEN_NORM);
 		self.wait = ftmp;
 	}
 	/*
 	else if(fabs(ftmp - self.wait) > 0.2)
 	{
-		sound (self.tur_head, CH_TRIGGER_SINGLE, "", 1 - ftmp,   ATTEN_NORM );
-		sound (self, CH_TRIGGER_SINGLE, "", ftmp, ATTEN_NORM);
+		sound (self.tur_head, CH_TRIGGER_SINGLE, SND_Null, 1 - ftmp,   ATTEN_NORM );
+		sound (self, CH_TRIGGER_SINGLE, SND_Null, ftmp, ATTEN_NORM);
 		self.wait = ftmp;
 	}
 	*/
@@ -629,7 +629,7 @@ float raptor_frame()
 		}
 
 		if(_incomming)
-			sound(self, CH_PAIN_SINGLE, "vehicles/missile_alarm.wav", VOL_BASE, ATTEN_NONE);
+			sound(self, CH_PAIN_SINGLE, SND_VEH_MISSILE_ALARM, VOL_BASE, ATTEN_NONE);
 
 		self.bomb1.cnt = time + 1;
 	}
@@ -661,7 +661,7 @@ float raptor_takeoff()
 	if(self.sound_nexttime < time)
 	{
 		self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
-		sound (self, CH_TRIGGER_SINGLE, "vehicles/raptor_speed.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
+		sound (self, CH_TRIGGER_SINGLE, SND_VEH_RAPTOR_SPEED, VOL_VEHICLEENGINE, ATTEN_NORM);
 	}
 
 	// Takeoff sequense
@@ -727,7 +727,7 @@ void raptor_diethink()
 
 	if(random() < 0.05)
 	{
-		sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+		sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 	self.nextthink = time;
@@ -789,8 +789,8 @@ float raptor_impulse(float _imp)
 	return false;
 }
 
-void spawnfunc_vehicle_raptor()
-{SELFPARAM();
+spawnfunc(vehicle_raptor)
+{
 	if(!autocvar_g_vehicle_raptor) { remove(self); return; }
 	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
@@ -969,10 +969,6 @@ float v_raptor(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_sound ("vehicles/raptor_fly.wav");
-			precache_sound ("vehicles/raptor_speed.wav");
-			precache_sound ("vehicles/missile_alarm.wav");
-
 			return true;
 		}
 	}

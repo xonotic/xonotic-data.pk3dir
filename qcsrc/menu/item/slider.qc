@@ -15,6 +15,8 @@ CLASS(Slider, Label)
 	METHOD(Slider, mouseRelease, float(entity, vector));
 	METHOD(Slider, valueToText, string(entity, float));
 	METHOD(Slider, toString, string(entity));
+	METHOD(Slider, setValue_allowAnim, void(entity, float, bool));
+	METHOD(Slider, setValue_noAnim, void(entity, float));
 	METHOD(Slider, setValue, void(entity, float));
 	METHOD(Slider, setSliderValue, void(entity, float));
 	METHOD(Slider, showNotify, void(entity));
@@ -24,6 +26,7 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, value, float, 0)
 	ATTRIB(Slider, animated, float, 1)
 	ATTRIB(Slider, sliderValue, float, 0)
+	ATTRIB(Slider, sliderAnim, entity, world)
 	ATTRIB(Slider, valueMin, float, 0)
 	ATTRIB(Slider, valueMax, float, 0)
 	ATTRIB(Slider, valueStep, float, 0)
@@ -48,15 +51,26 @@ ENDCLASS(Slider)
 #endif
 
 #ifdef IMPLEMENTATION
-void Slider_setValue(entity me, float val)
+void Slider_setValue_allowAnim(entity me, float val, bool allowAnim)
 {
-	if (me.animated) {
-		anim.removeObjAnim(anim, me);
-		makeHostedEasing(me, Slider_setSliderValue, easingQuadInOut, 1, me.sliderValue, val);
+	if(allowAnim && me.animated) {
+		float t = 0.5;
+		if(!me.sliderAnim)
+			me.sliderAnim = makeHostedEasing(me, Slider_setSliderValue, easingQuadOut, t, me.sliderValue, val);
+		else
+			me.sliderAnim.update(me.sliderAnim, t, me.sliderValue, val);
 	} else {
 		me.setSliderValue(me, val);
 	}
 	me.value = val;
+}
+void Slider_setValue_noAnim(entity me, float val)
+{
+	Slider_setValue_allowAnim(me, val, false);
+}
+void Slider_setValue(entity me, float val)
+{
+	Slider_setValue_allowAnim(me, val, true);
 }
 void Slider_setSliderValue(entity me, float val)
 {
@@ -69,7 +83,7 @@ string Slider_toString(entity me)
 void Slider_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(Slider).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	me.controlWidth = absSize.y / absSize.x;
+	me.controlWidth = absSize.x == 0 ? 0 : (absSize.y / absSize.x);
 }
 string Slider_valueToText(entity me, float val)
 {
@@ -177,13 +191,9 @@ float Slider_keyUp(entity me, float key, float ascii, float shift)
 float Slider_mouseDrag(entity me, vector pos)
 {
 	float hit;
-	float v, animed;
+	float v;
 	if(me.disabled)
 		return 0;
-
-	anim.removeObjAnim(anim, me);
-	animed = me.animated;
-	me.animated = false;
 
 	if(me.pressed)
 	{
@@ -194,16 +204,17 @@ float Slider_mouseDrag(entity me, vector pos)
 		if(pos.y >= 1 + me.tolerance.y) hit = 0;
 		if(hit)
 		{
+			// handle dragging
+			me.pressed = 2;
+
 			v = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 			if(me.valueStep)
 				v = floor(0.5 + v / me.valueStep) * me.valueStep;
-			me.setValue(me, v);
+			me.setValue_noAnim(me, v);
 		}
 		else
 			me.setValue(me, me.previousValue);
 	}
-
-	me.animated = animed;
 
 	return 1;
 }
@@ -295,6 +306,14 @@ void Slider_draw(entity me)
 		else
 			draw_Picture(eX * controlLeft, strcat(me.src, "_n"), eX * me.controlWidth + eY, me.color, 1);
 	}
+
+	if(me.sliderAnim)
+	if(me.sliderAnim.isFinished(me.sliderAnim))
+	{
+		anim.removeObjAnim(anim, me);
+		me.sliderAnim = world;
+	}
+
 	me.setText(me, me.valueToText(me, me.value));
 	draw_alpha = save;
 	SUPER(Slider).draw(me);

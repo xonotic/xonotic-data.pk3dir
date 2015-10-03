@@ -126,7 +126,7 @@ vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as 
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_arc(void) { weapon_defaultspawnfunc(WEP_ARC.m_id); }
+spawnfunc(weapon_arc) { weapon_defaultspawnfunc(WEP_ARC.m_id); }
 
 float W_Arc_Beam_Send(entity to, int sf)
 {SELFPARAM();
@@ -267,7 +267,7 @@ void W_Arc_Beam_Think(void)
 			{
 				Send_Effect_("arc_overheat",
 					self.beam_start, self.beam_wantdir, 1 );
-				sound(self, CH_WEAPON_A, W_Sound("arc_stop"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
 			}
 		}
 
@@ -579,7 +579,7 @@ void W_Arc_Beam(float burst)
 
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
-		sound(self, CH_WEAPON_A, W_Sound("arc_fire"), VOL_BASE, ATTN_NORM);
+		sound(self, CH_WEAPON_A, SND_ARC_FIRE, VOL_BASE, ATTN_NORM);
 
 	entity beam = self.arc_beam = spawn();
 	beam.classname = "W_Arc_Beam";
@@ -611,7 +611,7 @@ void Arc_Smoke()
 			if ( !self.arc_smoke_sound )
 			{
 				self.arc_smoke_sound = 1;
-				sound(self, CH_SHOTS_SINGLE, W_Sound("arc_loop_overheat"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, SND_ARC_LOOP_OVERHEAT, VOL_BASE, ATTN_NORM);
 			}
 		}
 	}
@@ -627,7 +627,7 @@ void Arc_Smoke()
 		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || self.switchweapon != WEP_ARC.m_id )
 	{
 		self.arc_smoke_sound = 0;
-		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -695,7 +695,7 @@ bool W_Arc(int req)
 
 			if(self.arc_BUTTON_ATCK_prev != 0)
 			{
-				sound(self, CH_WEAPON_A, W_Sound("arc_stop"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
 				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 				ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
 			}
@@ -716,10 +716,6 @@ bool W_Arc(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("arc_fire"));
-			precache_sound(W_Sound("arc_loop"));
-			precache_sound(W_Sound("arc_stop"));
-			precache_sound(W_Sound("arc_loop_overheat"));
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 1);
@@ -1158,7 +1154,7 @@ void Draw_ArcBeam(void)
 void Remove_ArcBeam(void)
 {SELFPARAM();
 	remove(self.beam_muzzleentity);
-	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 void Ent_ReadArcBeam(float isnew)
@@ -1180,7 +1176,7 @@ void Ent_ReadArcBeam(float isnew)
 		self.draw = Draw_ArcBeam;
 		self.entremove = Remove_ArcBeam;
 		self.move_time = time;
-		loopsound(self, CH_SHOTS_SINGLE, W_Sound("arc_loop"), VOL_BASE, ATTEN_NORM);
+		loopsound(self, CH_SHOTS_SINGLE, SND(ARC_LOOP), VOL_BASE, ATTEN_NORM);
 
 		flash = spawn();
 		flash.owner = self;
@@ -1524,7 +1520,6 @@ bool W_Arc(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("arc_loop"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

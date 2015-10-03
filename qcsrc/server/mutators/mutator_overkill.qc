@@ -4,8 +4,8 @@
 #include "mutator.qh"
 
 void W_Blaster_Attack(float, float, float, float, float, float, float, float, float, float);
-void spawnfunc_weapon_hmg();
-void spawnfunc_weapon_rpc();
+spawnfunc(weapon_hmg);
+spawnfunc(weapon_rpc);
 
 void ok_DecreaseCharge(entity ent, int wep)
 {
@@ -84,7 +84,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.ok_item = true;
 	self.noalign = true;
 	self.pickup_anyway = true;
-	spawnfunc_item_armor_small();
+	spawnfunc_item_armor_small(this);
 	self.movetype = MOVETYPE_TOSS;
 	self.gravity = 1;
 	self.reset = SUB_Remove;
@@ -174,7 +174,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
-			play2(self, W_Sound("dryfire"));
+			play2(self, SND(DRYFIRE));
 		}
 		if(self.weaponentity.state != WS_CLEAR)
 			w_ready();
@@ -205,6 +205,9 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 	return false;
 }
 
+void _spawnfunc_weapon_hmg() { SELFPARAM(); spawnfunc_weapon_hmg(this); }
+void _spawnfunc_weapon_rpc() { SELFPARAM(); spawnfunc_weapon_rpc(this); }
+
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 {SELFPARAM();
 	if(autocvar_g_powerups)
@@ -222,7 +225,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
-			wep.think = spawnfunc_weapon_hmg;
+			wep.think = _spawnfunc_weapon_hmg;
 			wep.nextthink = time + 0.1;
 			return true;
 		}
@@ -239,7 +242,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
-			wep.think = spawnfunc_weapon_rpc;
+			wep.think = _spawnfunc_weapon_rpc;
 			wep.nextthink = time + 0.1;
 			return true;
 		}
@@ -315,8 +318,6 @@ void ok_Initialize()
 	ok_SetCvars();
 
 	precache_all_playermodels("models/ok_player/*.dpm");
-
-	precache_sound(W_Sound("dryfire"));
 
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);

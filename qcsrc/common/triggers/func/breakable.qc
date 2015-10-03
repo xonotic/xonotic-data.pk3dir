@@ -162,7 +162,7 @@ void func_breakable_behave_restore()
 	self.nextthink = 0; // cancel auto respawn
 	func_breakable_colormod();
 	if (self.noise1)
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 }
 
 void func_breakable_init_for_player(entity player)
@@ -207,7 +207,7 @@ void func_breakable_destroy()
 	func_breakable_destroyed();
 
 	if(self.noise)
-		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 	if(self.dmg)
 		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, world, self.dmg_force, DEATH_HURTTRIGGER, world);
@@ -266,8 +266,8 @@ void func_breakable_reset()
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
-void spawnfunc_func_breakable()
-{SELFPARAM();
+spawnfunc(func_breakable)
+{
 	float n, i;
 	if(!self.health)
 		self.health = 100;
@@ -335,7 +335,7 @@ void spawnfunc_func_breakable()
 }
 
 // for use in maps with a "model" key set
-void spawnfunc_misc_breakablemodel() {
-	spawnfunc_func_breakable();
+spawnfunc(misc_breakablemodel) {
+	spawnfunc_func_breakable(this);
 }
 #endif

@@ -32,7 +32,7 @@ void multi_trigger()
 	}
 
 	if (self.noise)
-		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+		_sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -139,8 +139,8 @@ sounds
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_multiple()
-{SELFPARAM();
+spawnfunc(trigger_multiple)
+{
 	self.reset = multi_reset;
 	if (self.sounds == 1)
 	{
@@ -149,8 +149,7 @@ void spawnfunc_trigger_multiple()
 	}
 	else if (self.sounds == 2)
 	{
-		precache_sound ("misc/talk.wav");
-		self.noise = "misc/talk.wav";
+		self.noise = SND(TALK);
 	}
 	else if (self.sounds == 3)
 	{
@@ -202,9 +201,9 @@ sounds
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_once()
-{SELFPARAM();
-	self.wait = -1;
-	spawnfunc_trigger_multiple();
+spawnfunc(trigger_once)
+{
+	this.wait = -1;
+	spawnfunc_trigger_multiple(this);
 }
 #endif

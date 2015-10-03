@@ -203,8 +203,8 @@ void laser_reset()
 		self.state = 0;
 }
 
-void spawnfunc_misc_laser()
-{SELFPARAM();
+spawnfunc(misc_laser)
+{
 	if(self.mdl)
 	{
 		if(self.mdl == "none")

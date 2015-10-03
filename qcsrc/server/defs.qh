@@ -5,8 +5,6 @@
 
 #define INDEPENDENT_ATTACK_FINISHED
 
-noref float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
-
 #define BUTTON_ATCK       button0
 #define BUTTON_JUMP       button2
 #define BUTTON_ATCK2      button3
@@ -147,7 +145,9 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float pauserothealth_finished;
 .float pauserotarmor_finished;
 .float pauserotfuel_finished;
+// string overrides entity
 .string item_pickupsound;
+.entity item_pickupsound_ent;
 
 // definitions for weaponsystem
 // more WEAPONTODO: move these to their proper files

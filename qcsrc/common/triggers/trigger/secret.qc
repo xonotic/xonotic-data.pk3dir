@@ -51,8 +51,8 @@ killtarget: remove all entities with this targetname when triggered
 You should create a common/trigger textured brush covering the entrance to a secret room/area.
 Trigger secret can only be trigger by a player's touch and can not be a target itself.
 */
-void spawnfunc_trigger_secret()
-{SELFPARAM();
+spawnfunc(trigger_secret)
+{
 	// FIXME: should it be disabled in most modes?
 
 	// update secrets count
@@ -78,7 +78,7 @@ void spawnfunc_trigger_secret()
 
 	// convert this trigger to trigger_once
 	self.classname = "trigger_once";
-	spawnfunc_trigger_once();
+	spawnfunc_trigger_once(this);
 
 	// take over the touch() function, so we can mark secret as found
 	self.touch = trigger_secret_touch;

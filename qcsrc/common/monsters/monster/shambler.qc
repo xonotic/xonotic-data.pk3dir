@@ -50,7 +50,7 @@ void M_Shambler_Attack_Smash()
 {SELFPARAM();
 	makevectors(self.angles);
 	Send_Effect(EFFECT_EXPLOSION_MEDIUM, (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
-	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	// RadiusDamage does NOT support custom starting location, which means we must use this hack...
 
@@ -75,7 +75,7 @@ void M_Shambler_Attack_Lightning_Explode()
 {SELFPARAM();
 	entity head;
 
-	sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, '0 0 0', '0 0 0', 1);
 
 	self.event_damage = func_null;
@@ -211,7 +211,7 @@ float M_Shambler_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER.monsterid); }
+spawnfunc(monster_shambler) { Monster_Spawn(MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 bool M_Shambler(int req)

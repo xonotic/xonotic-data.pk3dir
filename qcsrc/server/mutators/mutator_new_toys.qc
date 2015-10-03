@@ -190,8 +190,10 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 
 MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {SELFPARAM();
-	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound)
-		self.item_pickupsound = W_Sound("weaponpickup_new_toys");
+	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound) {
+		self.item_pickupsound = string_null;
+		self.item_pickupsound_ent = SND_WEAPONPICKUP_NEW_TOYS;
+	}
 	return 0;
 }
 
@@ -206,8 +208,6 @@ MUTATOR_DEFINITION(mutator_new_toys)
 	{
 		if(time > 1) // game loads at time 1
 			error("This cannot be added at runtime\n");
-
-		precache_sound(W_Sound("weaponpickup_new_toys"));
 
 		// mark the guns as ok to use by e.g. impulse 99
 		float i;

@@ -48,7 +48,7 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
+spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
 
 void W_HLAC_Touch(void)
 {SELFPARAM();
@@ -77,7 +77,7 @@ void W_HLAC_Attack(void)
     if(self.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
-	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
+	W_SetupShot(self, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
@@ -125,7 +125,7 @@ void W_HLAC_Attack2(void)
     if(self.crouch)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
-	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
+	W_SetupShot(self, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
@@ -241,7 +241,6 @@ bool W_HLAC(int req)
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("lasergun_fire"));
 			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 			return true;
 		}
@@ -264,7 +263,7 @@ bool W_HLAC(int req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), W_Sound("reload"));
+			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND(RELOAD));
 			return true;
 		}
 		case WR_SUICIDEMESSAGE:
@@ -290,13 +289,12 @@ bool W_HLAC(int req)
 			org2 = w_org + w_backoff * 6;
 			pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
 
 			return true;
 		}
 		case WR_INIT:
 		{
-			precache_sound(W_Sound("laserimpact"));
 			return true;
 		}
 		case WR_ZOOMRETICLE:

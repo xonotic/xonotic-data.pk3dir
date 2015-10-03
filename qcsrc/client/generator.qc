@@ -1,21 +1,7 @@
 #include "generator.qh"
 
-bool generator_precached;
 .int count;
 .float max_health;
-
-void generator_precache()
-{
-	if(generator_precached)
-		return; // already precached
-
-	precache_sound("onslaught/shockwave.wav");
-	precache_sound(W_Sound("grenade_impact"));
-	precache_sound(W_Sound("rocket_impact"));
-	precache_sound("onslaught/electricity_explode.wav");
-
-	generator_precached = true;
-}
 
 void ons_generator_ray_draw()
 {SELFPARAM();
@@ -68,7 +54,7 @@ void generator_draw()
 		if(random() < 0.01)
 		{
 			pointparticles(particleeffectnum(EFFECT_ELECTRO_BALLEXPLODE), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
-			sound(self, CH_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_TRIGGER, SND_ONS_ELECTRICITY_EXPLODE, VOL_BASE, ATTEN_NORM);
 		}
 		else
 			pointparticles(particleeffectnum(EFFECT_ONS_GENERATOR_DAMAGED), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
@@ -87,7 +73,7 @@ void generator_draw()
 	// White shockwave
 	if(self.count==40||self.count==20)
 	{
-		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_ONS_SHOCKWAVE, VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum(EFFECT_ELECTRO_COMBO), self.origin, '0 0 0', 6);
 	}
 
@@ -108,7 +94,7 @@ void generator_draw()
 	if(random() < 0.25)
 	{
 		te_explosion(self.origin);
-		sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 
 	// Particles
@@ -121,7 +107,7 @@ void generator_draw()
 		org = self.origin;
 		te_explosion(org);
 		pointparticles(particleeffectnum(EFFECT_ONS_GENERATOR_EXPLODE2), org, '0 0 0', 1);
-		sound(self, CH_TRIGGER, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 
 	self.move_time = time + 0.05;
@@ -213,7 +199,6 @@ void ent_generator()
 			self.count = 40;
 
 		generator_changeteam();
-		generator_precache();
 		generator_construct();
 	}
 

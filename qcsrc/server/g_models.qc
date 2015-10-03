@@ -177,15 +177,15 @@ float g_clientmodel_genericsendentity (entity to, int sf)
 	self.default_solid = sol;
 
 // non-solid model entities:
-void spawnfunc_misc_gamemodel()         { SELFPARAM(); self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity
-void spawnfunc_misc_clientmodel()       { SELFPARAM(); self.angles_x = -self.angles.x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
-void spawnfunc_misc_models()            { SELFPARAM(); self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
+spawnfunc(misc_gamemodel)         { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity
+spawnfunc(misc_clientmodel)       { self.angles_x = -self.angles.x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
+spawnfunc(misc_models)            { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
 
 // non-solid brush entities:
-void spawnfunc_func_illusionary()       { SELFPARAM(); G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
-void spawnfunc_func_clientillusionary() { SELFPARAM(); G_CLIENTMODEL_INIT(SOLID_NOT) } // brush entity
-void spawnfunc_func_static()            { SELFPARAM(); G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old alias name from some other game
+spawnfunc(func_illusionary)       { G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
+spawnfunc(func_clientillusionary) { G_CLIENTMODEL_INIT(SOLID_NOT) } // brush entity
+spawnfunc(func_static)            { G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old alias name from some other game
 
 // solid brush entities
-void spawnfunc_func_wall()              { SELFPARAM(); G_MODEL_INIT      (SOLID_BSP) } // Q1 name
-void spawnfunc_func_clientwall()        { SELFPARAM(); G_CLIENTMODEL_INIT(SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+spawnfunc(func_wall)              { G_MODEL_INIT      (SOLID_BSP) } // Q1 name
+spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)

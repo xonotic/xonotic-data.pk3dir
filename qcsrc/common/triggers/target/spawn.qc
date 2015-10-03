@@ -280,6 +280,7 @@ void target_spawn_use()
 		if(!target_spawn_cancreate())
 			return;
 		e = spawn();
+		e.spawnfunc_checked = true;
 		target_spawn_useon(e);
 		e.target_spawn_id = self.target_spawn_id;
 	}
@@ -332,8 +333,8 @@ void initialize_field_db()
 	}
 }
 
-void spawnfunc_target_spawn()
-{SELFPARAM();
+spawnfunc(target_spawn)
+{
 	initialize_field_db();
 	self.use = target_spawn_use;
 	self.message = strzone(strreplace("'", "\"", self.message));

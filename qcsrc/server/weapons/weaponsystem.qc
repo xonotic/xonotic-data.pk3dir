@@ -474,7 +474,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CH_WEAPON_A, W_Sound("dryfire"), VOL_BASE, ATTEN_NORM);
+			sound (self, CH_WEAPON_A, SND_DRYFIRE, VOL_BASE, ATTEN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -732,7 +732,7 @@ void W_WeaponFrame()
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 			#endif
-				sound(self, CH_WEAPON_SINGLE, W_Sound("weapon_switch"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_SINGLE, SND_WEAPON_SWITCH, VOL_BASE, ATTN_NORM);
 				self.weaponentity.state = WS_DROP;
 				weapon_thinkf(WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
 			#ifndef INDEPENDENT_ATTACK_FINISHED
@@ -927,7 +927,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	{
 		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
-			play2(self, W_Sound("unavailable"));
+			play2(self, SND(UNAVAILABLE));
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", WEP_NAME(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}
@@ -951,7 +951,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 
 	// now begin the reloading process
 
-	sound(self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTEN_NORM);
+	_sound(self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTEN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,

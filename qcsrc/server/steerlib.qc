@@ -640,7 +640,7 @@ void flocker_hunter_think()
 
 
 float globflockcnt;
-void spawnfunc_flockerspawn()
+spawnfunc(flockerspawn)
 {SELFPARAM();
     ++globflockcnt;
 

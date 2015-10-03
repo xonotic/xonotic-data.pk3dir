@@ -87,7 +87,7 @@ void door_blocked()
 void door_hit_top()
 {SELFPARAM();
 	if (self.noise1 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
@@ -104,14 +104,14 @@ void door_hit_top()
 void door_hit_bottom()
 {SELFPARAM();
 	if (self.noise1 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_BOTTOM;
 }
 
 void door_go_down()
 {SELFPARAM();
 	if (self.noise2 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	if (self.max_health)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -134,7 +134,7 @@ void door_go_up()
 	}
 
 	if (self.noise2 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, door_hit_top);
 
@@ -180,7 +180,7 @@ float door_check_keys(void)
 		if (other.key_door_messagetime <= time)
 		{
 
-			play2(other, "misc/talk.wav");
+			play2(other, SND(TALK));
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
@@ -190,7 +190,7 @@ float door_check_keys(void)
 		// no keys were used
 		if (other.key_door_messagetime <= time)
 		{
-			play2(other, "misc/talk.wav");
+			play2(other, SND(TALK));
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(door.itemkeys));
 
 			other.key_door_messagetime = time + 2;
@@ -202,7 +202,7 @@ float door_check_keys(void)
 	{
 #ifdef SVQC
 		// door is now unlocked
-		play2(other, "misc/talk.wav");
+		play2(other, SND(TALK));
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_UNLOCKED);
 #endif
 		return true;
@@ -321,7 +321,7 @@ void door_touch()
 	{
 		if (IS_CLIENT(other))
 			centerprint(other, self.owner.message);
-		play2(other, "misc/talk.wav");
+		play2(other, SND(TALK));
 	}
 #endif
 }
@@ -367,7 +367,7 @@ void door_generic_plat_blocked()
 void door_rotating_hit_top()
 {SELFPARAM();
 	if (self.noise1 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
@@ -378,7 +378,7 @@ void door_rotating_hit_top()
 void door_rotating_hit_bottom()
 {SELFPARAM();
 	if (self.noise1 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	if (self.lip==666) // self.lip is used to remember reverse opening direction for door_rotating
 	{
 		self.pos2 = '0 0 0' - self.pos2;
@@ -390,7 +390,7 @@ void door_rotating_hit_bottom()
 void door_rotating_go_down()
 {SELFPARAM();
 	if (self.noise2 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	if (self.max_health)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -412,7 +412,7 @@ void door_rotating_go_up()
 		return;
 	}
 	if (self.noise2 != "")
-		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_UP;
 	SUB_CalcAngleMove (self.pos2, TSPEED_LINEAR, self.speed, door_rotating_hit_top);
 
@@ -723,8 +723,8 @@ void door_reset()
 #ifdef SVQC
 
 // spawnflags require key (for now only func_door)
-void spawnfunc_func_door()
-{SELFPARAM();
+spawnfunc(func_door)
+{
 	// Quake 1 keys compatibility
 	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
 		self.itemkeys |= ITEM_KEY_BIT(0);

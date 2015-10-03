@@ -104,7 +104,7 @@ float bumble_raygun_send(entity to, int sf);
 void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
 {
 	vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-	vehicles_projectile(EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, W_Sound("flacexp3"),
+	vehicles_projectile(EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, SND(VEH_BUMBLEBEE_FIRE),
 						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
 						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
 						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
@@ -716,7 +716,7 @@ void bumblebee_blowup()
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 				 DEATH_VH_BUMB_DEATH, world);
 
-	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_BIG, (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 
 	if(self.owner.deadflag == DEAD_DYING)
@@ -732,7 +732,7 @@ void bumblebee_diethink()
 
 	if(random() < 0.1)
 	{
-		sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+		sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 
@@ -768,8 +768,8 @@ float bumble_raygun_send(entity to, float sf)
 	return true;
 }
 
-void spawnfunc_vehicle_bumblebee()
-{SELFPARAM();
+spawnfunc(vehicle_bumblebee)
+{
 	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }

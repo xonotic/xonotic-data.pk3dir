@@ -132,8 +132,8 @@ wait: prevent triggering again for this amount of time (default: 5) - applies to
 If spawned without any key specified in itemkeys, this trigger will display an error and remove itself.
 message2 and noise2 will be resent to the player every 2 seconds while he is in the trigger zone.
 */
-void spawnfunc_trigger_keylock(void)
-{SELFPARAM();
+spawnfunc(trigger_keylock)
+{
 	if(!self.itemkeys) { remove(self); return; }
 
 	// set unlocked message
@@ -146,7 +146,7 @@ void spawnfunc_trigger_keylock(void)
 		if(self.sounds == 1)
 			self.noise = "misc/secret.wav";
 		else if(self.sounds == 2)
-			self.noise = "misc/talk.wav";
+			self.noise = SND(TALK);
 		else //if (self.sounds == 3) {
 			self.noise = "misc/trigger1.wav";
 	}
@@ -157,7 +157,7 @@ void spawnfunc_trigger_keylock(void)
 
 	// set closed sourd
 	if(self.noise2 == "")
-		self.noise2 = "misc/talk.wav";
+		self.noise2 = SND(TALK);
 
 	// delay between triggering message2 and trigger2
 	if(!self.wait) { self.wait = 5; }

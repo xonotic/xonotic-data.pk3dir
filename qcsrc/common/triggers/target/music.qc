@@ -46,8 +46,8 @@ void target_music_use()
 	entity head;
 	FOR_EACH_SPEC(head) if(head.enemy == activator) { msg_entity = head; target_music_sendto(MSG_ONE, 1); }
 }
-void spawnfunc_target_music()
-{SELFPARAM();
+spawnfunc(target_music)
+{
 	self.use = target_music_use;
 	self.reset = target_music_reset;
 	if(!self.volume)
@@ -125,8 +125,8 @@ void trigger_music_use()
 	self.cnt = !self.cnt;
 	self.SendFlags |= 0x80;
 }
-void spawnfunc_trigger_music()
-{SELFPARAM();
+spawnfunc(trigger_music)
+{
 	if(self.model != "")
 		_setmodel(self, self.model);
 	if(!self.volume)
@@ -182,9 +182,9 @@ void TargetMusic_Advance()
 		if(vol != vol0)
 		{
 			if(vol0 < 0)
-				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
+				_sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
 			else
-				sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
+				_sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
 			e.lastvol = vol;
 		}
 	}
@@ -223,7 +223,7 @@ void Net_TargetMusic()
 			strunzone(e.noise);
 		e.noise = strzone(noi);
 		precache_sound(e.noise);
-		sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
+		_sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
 			LOG_TRACEF("Cannot initialize sound %s\n", e.noise);
@@ -310,7 +310,7 @@ void Ent_ReadTriggerMusic()
 		if(self.noise != s)
 		{
 			precache_sound(self.noise);
-			sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
+			_sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
 			if(getsoundtime(self, CH_BGM_SINGLE) < 0)
 			{
 				LOG_TRACEF("Cannot initialize sound %s\n", self.noise);

@@ -1,4 +1,4 @@
-#ifdef REGISTER_TURRET
+#ifndef IMPLEMENTATION
 REGISTER_TURRET(
 /* TUR_##id   */ WALKER,
 /* function   */ t_walker,
@@ -221,7 +221,7 @@ void walker_fire_rocket(vector org)
     rocket = spawn ();
     setorigin(rocket, org);
 
-    sound (self, CH_WEAPON_A, W_Sound("hagar_fire"), VOL_BASE, ATTEN_NORM);
+    sound (self, CH_WEAPON_A, SND_HAGAR_FIRE, VOL_BASE, ATTEN_NORM);
     setsize (rocket, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
     rocket.classname		  = "walker_rocket";
@@ -334,7 +334,7 @@ void walker_move_path()
 #endif
 }
 
-void spawnfunc_turret_walker() { SELFPARAM(); if(!turret_initialize(TUR_WALKER)) remove(self); }
+spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER.m_id)) remove(self); }
 
 float t_walker(float req)
 {SELFPARAM();
@@ -342,7 +342,7 @@ float t_walker(float req)
     {
         case TR_ATTACK:
         {
-            sound (self, CH_WEAPON_A, W_Sound("uzi_fire"), VOL_BASE, ATTEN_NORM);
+            sound (self, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
             fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0);
             Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
@@ -634,7 +634,6 @@ float t_walker(float req)
         }
         case TR_PRECACHE:
         {
-            precache_sound (W_Sound("rocket_impact"));
             return true;
         }
     }
@@ -645,7 +644,7 @@ float t_walker(float req)
 #endif // SVQC
 #ifdef CSQC
 
-#include "../../../server/movelib.qh"
+#include "../../../client/movelib.qh"
 
 void walker_draw()
 {SELFPARAM();
