@@ -5,6 +5,8 @@
 noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
 
+// Optional type checking; increases compile time too much to be enabled by default
+#if 0
 bool entityfieldassignablefromeditor(int i) {
     switch (entityfieldtype(i)) {
         case FIELD_STRING:
@@ -17,6 +19,9 @@ bool entityfieldassignablefromeditor(int i) {
 
 #define _spawnfunc_checktypes(fld) if (fieldname == #fld) \
     if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted\n", fieldname);
+#else
+#define _spawnfunc_checktypes(fld)
+#endif
 #define _spawnfunc_check(fld) if (fieldname == #fld) \
     continue;
 
