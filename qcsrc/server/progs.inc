@@ -120,4 +120,6 @@
 #include "../warpzonelib/server.qc"
 #include "../warpzonelib/util_server.qc"
 
-#include "../mod/server/progs.inc"
+#if BUILD_MOD
+#include "../../mod/server/progs.inc"
+#endif

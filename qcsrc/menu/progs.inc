@@ -26,4 +26,6 @@
 #include "../common/vehicles/all.qc"
 #include "../common/weapons/all.qc"
 
-#include "../mod/menu/progs.inc"
+#if BUILD_MOD
+#include "../../mod/menu/progs.inc"
+#endif
