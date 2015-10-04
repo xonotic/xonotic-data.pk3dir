@@ -57,7 +57,7 @@ void W_MineLayer_Think(void);
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_minelayer(void) { weapon_defaultspawnfunc(WEP_MINE_LAYER.m_id); }
+spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(WEP_MINE_LAYER.m_id); }
 
 void W_MineLayer_Stick(entity to)
 {SELFPARAM();

@@ -24,8 +24,8 @@ void trigger_disablerelay_use()
 		LOG_INFO("Invalid use of trigger_disablerelay: ", ftos(a), " relays were on, ", ftos(b), " relays were off!\n");
 }
 
-void spawnfunc_trigger_disablerelay()
-{SELFPARAM();
+spawnfunc(trigger_disablerelay)
+{
 	self.use = trigger_disablerelay_use;
 }
 #endif

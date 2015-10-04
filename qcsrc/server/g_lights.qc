@@ -86,7 +86,7 @@ void dynlight_use()
 	else
 		self.light_lev = 0;
 }
-void spawnfunc_dynlight()
+spawnfunc(dynlight)
 {
 	if (!self.light_lev)
 		self.light_lev = 200;

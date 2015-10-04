@@ -534,8 +534,8 @@ void RandomSeed_Spawn()
 	WITH(entity, self, randomseed, randomseed.think()); // sets random seed and nextthink
 }
 
-void spawnfunc___init_dedicated_server(void)
-{SELFPARAM();
+spawnfunc(__init_dedicated_server)
+{
 	// handler for _init/_init map (only for dedicated server initialization)
 
 	world_initialized = -1; // don't complain
@@ -572,8 +572,8 @@ void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
 void Physics_AddStats();
-void spawnfunc_worldspawn (void)
-{SELFPARAM();
+spawnfunc(worldspawn)
+{
 	float fd, l, j, n;
 	string s;
 
@@ -918,8 +918,8 @@ void spawnfunc_worldspawn (void)
 	world_initialized = 1;
 }
 
-void spawnfunc_light (void)
-{SELFPARAM();
+spawnfunc(light)
+{
 	//makestatic (self); // Who the f___ did that?
 	remove(self);
 }

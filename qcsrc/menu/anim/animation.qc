@@ -4,6 +4,7 @@
 void setterDummy(entity, float);
 CLASS(Animation, Object)
 	METHOD(Animation, configureAnimation, void(entity, entity, void(entity, float), float, float, float, float));
+	METHOD(Animation, update, void(entity, float, float, float));
 	METHOD(Animation, setTimeStartEnd, void(entity, float, float));
 	METHOD(Animation, setTimeStartDuration, void(entity, float, float));
 	METHOD(Animation, setValueStartEnd, void(entity, float, float));
@@ -33,6 +34,12 @@ void Animation_configureAnimation(entity me, entity obj, void(entity, float) obj
 {
 	me.setObjectSetter(me, obj, objSetter);
 	me.setTimeStartDuration(me, animStartTime, animDuration);
+	me.setValueStartEnd(me, animStartValue, animEndValue);
+}
+
+void Animation_update(entity me, float animDuration, float animStartValue, float animEndValue)
+{
+	me.setTimeStartDuration(me, time, animDuration);
 	me.setValueStartEnd(me, animStartValue, animEndValue);
 }
 

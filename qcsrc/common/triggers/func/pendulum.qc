@@ -21,8 +21,8 @@ void func_pendulum_controller_think()
 	}
 }
 
-void spawnfunc_func_pendulum()
-{SELFPARAM();
+spawnfunc(func_pendulum)
+{
 	entity controller;
 	if (self.noise != "")
 	{

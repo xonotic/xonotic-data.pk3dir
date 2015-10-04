@@ -273,7 +273,7 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
     return 0;
 }
 
-void spawnfunc_turret_hk() { SELFPARAM(); if(!turret_initialize(TUR_HK.m_id)) remove(self); }
+spawnfunc(turret_hk) { if(!turret_initialize(TUR_HK.m_id)) remove(self); }
 
 float t_hk(float req)
 {SELFPARAM();

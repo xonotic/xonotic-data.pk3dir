@@ -680,18 +680,18 @@ float warpzone_initialized;
 entity warpzone_position_first;
 entity warpzone_camera_first;
 .entity warpzone_next;
-void spawnfunc_misc_warpzone_position(void)
-{SELFPARAM();
+spawnfunc(misc_warpzone_position)
+{
 	// "target", "angles", "origin"
 	self.warpzone_next = warpzone_position_first;
 	warpzone_position_first = self;
 }
-void spawnfunc_trigger_warpzone_position(void)
+spawnfunc(trigger_warpzone_position)
 {
-	spawnfunc_misc_warpzone_position();
+	spawnfunc_misc_warpzone_position(this);
 }
-void spawnfunc_trigger_warpzone(void)
-{SELFPARAM();
+spawnfunc(trigger_warpzone)
+{
 	// warp zone entities must have:
 	// "killtarget" pointing to a target_position with a direction arrow
 	//              that points AWAY from the warp zone, and that is inside
@@ -723,8 +723,8 @@ void spawnfunc_trigger_warpzone(void)
 	self.warpzone_next = warpzone_first;
 	warpzone_first = self;
 }
-void spawnfunc_func_camera(void)
-{SELFPARAM();
+spawnfunc(func_camera)
+{
 	if(!self.scale)
 		self.scale = self.modelscale;
 	if(!self.scale)
@@ -877,14 +877,14 @@ void trigger_warpzone_reconnect_use()
 	setself(e);
 }
 
-void spawnfunc_trigger_warpzone_reconnect()
-{SELFPARAM();
+spawnfunc(trigger_warpzone_reconnect)
+{
 	self.use = trigger_warpzone_reconnect_use;
 }
 
-void spawnfunc_target_warpzone_reconnect()
+spawnfunc(target_warpzone_reconnect)
 {
-	spawnfunc_trigger_warpzone_reconnect(); // both names make sense here :(
+	spawnfunc_trigger_warpzone_reconnect(this); // both names make sense here :(
 }
 
 void WarpZone_PlayerPhysics_FixVAngle(void)

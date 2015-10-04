@@ -21,7 +21,7 @@
 .entity swampslug;
 
 #ifdef SVQC
-void spawnfunc_trigger_swamp(void);
+spawnfunc(trigger_swamp);
 #endif
 void swamp_touch(void);
 void swampslug_think();
@@ -116,8 +116,8 @@ void swamp_link()
 Players gettin into the swamp will
 get slowd down and damaged
 */
-void spawnfunc_trigger_swamp(void)
-{SELFPARAM();
+spawnfunc(trigger_swamp)
+{
 	// Init stuff
 	EXACTTRIGGER_INIT;
 	self.touch = swamp_touch;

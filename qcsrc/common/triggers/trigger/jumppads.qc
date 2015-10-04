@@ -363,8 +363,8 @@ void trigger_push_link()
  *            values to target a point on the ceiling.
  *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
  */
-void spawnfunc_trigger_push()
-{SELFPARAM();
+spawnfunc(trigger_push)
+{
 	SetMovedir ();
 
 	EXACTTRIGGER_INIT;
@@ -406,9 +406,9 @@ void target_push_link()
 	self.SendFlags |= 1; // update
 }
 
-void spawnfunc_target_push() { target_push_link(); }
-void spawnfunc_info_notnull() { target_push_link(); }
-void spawnfunc_target_position() { target_push_link(); }
+spawnfunc(target_push) { target_push_link(); }
+spawnfunc(info_notnull) { target_push_link(); }
+spawnfunc(target_position) { target_push_link(); }
 
 #endif
 

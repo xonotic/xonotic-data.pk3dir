@@ -25,8 +25,8 @@ void trigger_heal_touch()
 	}
 }
 
-void spawnfunc_trigger_heal()
-{SELFPARAM();
+spawnfunc(trigger_heal)
+{
 	self.active = ACTIVE_ACTIVE;
 
 	EXACTTRIGGER_INIT;

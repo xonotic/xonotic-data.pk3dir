@@ -129,15 +129,15 @@ void conveyor_init()
 	self.SendFlags |= 1;
 }
 
-void spawnfunc_trigger_conveyor()
+spawnfunc(trigger_conveyor)
 {
 	SetMovedir();
 	EXACTTRIGGER_INIT;
 	conveyor_init();
 }
 
-void spawnfunc_func_conveyor()
-{SELFPARAM();
+spawnfunc(func_conveyor)
+{
 	SetMovedir();
 	InitMovingBrushTrigger();
 	self.movetype = MOVETYPE_NONE;

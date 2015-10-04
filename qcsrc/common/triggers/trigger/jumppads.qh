@@ -59,10 +59,10 @@ void trigger_push_findtarget();
  *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
  */
 #ifdef SVQC
-void spawnfunc_trigger_push();
+spawnfunc(trigger_push);
 
-void spawnfunc_target_push();
-void spawnfunc_info_notnull();
-void spawnfunc_target_position();
+spawnfunc(target_push);
+spawnfunc(info_notnull);
+spawnfunc(target_position);
 #endif
 #endif

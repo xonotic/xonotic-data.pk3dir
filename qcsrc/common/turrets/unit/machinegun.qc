@@ -11,7 +11,7 @@ REGISTER_TURRET(
 );
 #else
 #ifdef SVQC
-void spawnfunc_turret_machinegun() { SELFPARAM(); if(!turret_initialize(TUR_MACHINEGUN.m_id)) remove(self); }
+spawnfunc(turret_machinegun) { if(!turret_initialize(TUR_MACHINEGUN.m_id)) remove(self); }
 
 void W_MachineGun_MuzzleFlash(void);
 

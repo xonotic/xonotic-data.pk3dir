@@ -67,16 +67,16 @@ void turret_checkpoint_init()
     //tc_acum += 0.25;
 }
 
-void spawnfunc_turret_checkpoint()
-{SELFPARAM();
+spawnfunc(turret_checkpoint)
+{
     setorigin(self,self.origin);
     self.think = turret_checkpoint_init;
     self.nextthink = time + 0.2;
 }
 
 // Compat.
-void spawnfunc_walker_checkpoint()
-{SELFPARAM();
+spawnfunc(walker_checkpoint)
+{
     self.classname = "turret_checkpoint";
-    spawnfunc_turret_checkpoint();
+    spawnfunc_turret_checkpoint(this);
 }

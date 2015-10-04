@@ -89,7 +89,7 @@ float turret_tesla_firecheck()
     return 0;
 }
 
-void spawnfunc_turret_tesla() { SELFPARAM(); if(!turret_initialize(TUR_TESLA.m_id)) remove(self); }
+spawnfunc(turret_tesla) { if(!turret_initialize(TUR_TESLA.m_id)) remove(self); }
 
 float t_tesla(float req)
 {SELFPARAM();

@@ -26,8 +26,8 @@ void trigger_relay_teamcheck_reset()
 	self.team = self.team_saved;
 }
 
-void spawnfunc_trigger_relay_teamcheck()
-{SELFPARAM();
+spawnfunc(trigger_relay_teamcheck)
+{
 	self.team_saved = self.team;
 	self.use = trigger_relay_teamcheck_use;
 	self.reset = trigger_relay_teamcheck_reset;

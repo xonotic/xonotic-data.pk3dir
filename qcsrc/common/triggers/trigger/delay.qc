@@ -11,8 +11,8 @@ void delay_reset()
 	self.nextthink = 0;
 }
 
-void spawnfunc_trigger_delay()
-{SELFPARAM();
+spawnfunc(trigger_delay)
+{
     if(!self.wait)
         self.wait = 1;
 

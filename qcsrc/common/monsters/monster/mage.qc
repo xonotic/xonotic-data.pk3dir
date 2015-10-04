@@ -343,7 +343,7 @@ float M_Mage_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE.monsterid); }
+spawnfunc(monster_mage) { Monster_Spawn(MON_MAGE.monsterid); }
 
 #endif // SVQC
 

@@ -2,7 +2,7 @@
 #define TRIGGERS_FUNC_BREAKABLE_H
 
 #ifdef SVQC
-void spawnfunc_func_breakable();
+spawnfunc(func_breakable);
 #endif
 
 #endif

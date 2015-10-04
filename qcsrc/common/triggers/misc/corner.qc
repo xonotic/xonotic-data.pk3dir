@@ -26,8 +26,8 @@ void corner_link()
 	//Net_LinkEntity(self, false, 0, corner_send);
 }
 
-void spawnfunc_path_corner()
-{SELFPARAM();
+spawnfunc(path_corner)
+{
 	// setup values for overriding train movement
 	// if a second value does not exist, both start and end speeds are the single value specified
 	set_platmovetype(self, self.platmovetype);

@@ -1,0 +1,167 @@
+#ifndef SPAWNFUNC_H
+#define SPAWNFUNC_H
+
+/** If this global exists, only functions with spawnfunc_ name prefix qualify as spawn functions */
+noref bool require_spawnfunc_prefix;
+.bool spawnfunc_checked;
+
+// Optional type checking; increases compile time too much to be enabled by default
+#if 0
+bool entityfieldassignablefromeditor(int i) {
+    switch (entityfieldtype(i)) {
+        case FIELD_STRING:
+        case FIELD_FLOAT:
+        case FIELD_VECTOR:
+            return true;
+    }
+    return false;
+}
+
+#define _spawnfunc_checktypes(fld) if (fieldname == #fld) \
+    if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted\n", fieldname);
+#else
+#define _spawnfunc_checktypes(fld)
+#endif
+#define _spawnfunc_check(fld) if (fieldname == #fld) \
+    continue;
+
+#define spawnfunc_1(id, whitelist) spawnfunc_2(id, whitelist)
+#define spawnfunc_2(id, whitelist) void spawnfunc_##id(entity this) { \
+    this = self; \
+    if (!this.spawnfunc_checked) { \
+        for (int i = 0, n = numentityfields(); i < n; ++i) { \
+            string value = getentityfieldstring(i, this); \
+            string fieldname = entityfieldname(i); \
+            whitelist(_spawnfunc_checktypes) \
+            if (value == "") continue; \
+            if (fieldname == "") continue; \
+            FIELDS_COMMON(_spawnfunc_check) \
+            whitelist(_spawnfunc_check) \
+            LOG_WARNINGF(_("Entity field %s.%s (%s) is not whitelisted. If you believe this is an error, please file an issue.\n"), #id, fieldname, value); \
+        } \
+        this.spawnfunc_checked = true; \
+    } \
+} \
+[[accumulate]] void spawnfunc_##id(entity this)
+
+#define FIELD_SCALAR(fld, n) \
+    fld(n)
+#define FIELD_VEC(fld, n) \
+    fld(n) \
+    fld(n##_x) \
+    fld(n##_y) \
+    fld(n##_z)
+
+#define FIELDS_NONE(fld)
+#define FIELDS_ALL(fld) if (false)
+
+#define FIELDS_COMMON(fld) \
+    FIELD_SCALAR(fld, classname) \
+    FIELD_SCALAR(fld, spawnfunc_checked) \
+    /**/
+
+#define FIELDS_UNION(fld) \
+    FIELD_SCALAR(fld, Version) \
+    FIELD_SCALAR(fld, ammo_cells) \
+    FIELD_SCALAR(fld, ammo_nails) \
+    FIELD_SCALAR(fld, ammo_rockets) \
+    FIELD_SCALAR(fld, armorvalue) \
+    FIELD_SCALAR(fld, atten) \
+    FIELD_SCALAR(fld, bgmscriptdecay) \
+    FIELD_SCALAR(fld, bgmscriptsustain) \
+    FIELD_SCALAR(fld, bgmscript) \
+    FIELD_SCALAR(fld, button0) \
+    FIELD_SCALAR(fld, cnt) \
+    FIELD_SCALAR(fld, colormap) \
+    FIELD_SCALAR(fld, count) \
+    FIELD_SCALAR(fld, curvetarget) \
+    FIELD_SCALAR(fld, cvarfilter) \
+    FIELD_SCALAR(fld, debrisdamageforcescale) \
+    FIELD_SCALAR(fld, debrisfadetime) \
+    FIELD_SCALAR(fld, debristimejitter) \
+    FIELD_SCALAR(fld, debristime) \
+    FIELD_SCALAR(fld, debris) \
+    FIELD_SCALAR(fld, delay) \
+    FIELD_SCALAR(fld, dmgtime) \
+    FIELD_SCALAR(fld, dmg) \
+    FIELD_SCALAR(fld, dmg_edge) \
+    FIELD_SCALAR(fld, dmg_force) \
+    FIELD_SCALAR(fld, dmg_radius) \
+    FIELD_SCALAR(fld, effects) \
+    FIELD_SCALAR(fld, flags) \
+    FIELD_SCALAR(fld, fog) \
+    FIELD_SCALAR(fld, frags) \
+    FIELD_SCALAR(fld, frame) \
+    FIELD_SCALAR(fld, gametypefilter) \
+    FIELD_SCALAR(fld, geomtype) \
+    FIELD_SCALAR(fld, gravity) \
+    FIELD_SCALAR(fld, health) \
+    FIELD_SCALAR(fld, height) \
+    FIELD_SCALAR(fld, impulse) \
+    FIELD_SCALAR(fld, killtarget) \
+    FIELD_SCALAR(fld, lerpfrac) \
+    FIELD_SCALAR(fld, light_lev) \
+    FIELD_SCALAR(fld, lip) \
+    FIELD_SCALAR(fld, loddistance1) \
+    FIELD_SCALAR(fld, lodmodel1) \
+    FIELD_SCALAR(fld, ltime) \
+    FIELD_SCALAR(fld, mdl) \
+    FIELD_SCALAR(fld, message2) \
+    FIELD_SCALAR(fld, message) \
+    FIELD_SCALAR(fld, modelindex) \
+    FIELD_SCALAR(fld, modelscale) \
+    FIELD_SCALAR(fld, model) \
+    FIELD_SCALAR(fld, monster_moveflags) \
+    FIELD_SCALAR(fld, movetype) \
+    FIELD_SCALAR(fld, netname) \
+    FIELD_SCALAR(fld, nextthink) \
+    FIELD_SCALAR(fld, noalign) \
+    FIELD_SCALAR(fld, noise1) \
+    FIELD_SCALAR(fld, noise2) \
+    FIELD_SCALAR(fld, noise) \
+    FIELD_SCALAR(fld, phase) \
+    FIELD_SCALAR(fld, platmovetype) \
+    FIELD_SCALAR(fld, race_place) \
+    FIELD_SCALAR(fld, radius) \
+    FIELD_SCALAR(fld, respawntimejitter) \
+    FIELD_SCALAR(fld, respawntime) \
+    FIELD_SCALAR(fld, restriction) \
+    FIELD_SCALAR(fld, scale) \
+    FIELD_SCALAR(fld, skin) \
+    FIELD_SCALAR(fld, solid) \
+    FIELD_SCALAR(fld, sound1) \
+    FIELD_SCALAR(fld, sounds) \
+    FIELD_SCALAR(fld, spawnflags) \
+    FIELD_SCALAR(fld, speed) \
+    FIELD_SCALAR(fld, strength) \
+    FIELD_SCALAR(fld, target2) \
+    FIELD_SCALAR(fld, target3) \
+    FIELD_SCALAR(fld, target4) \
+    FIELD_SCALAR(fld, targetname) \
+    FIELD_SCALAR(fld, target) \
+    FIELD_SCALAR(fld, target_random) \
+    FIELD_SCALAR(fld, target_range) \
+    FIELD_SCALAR(fld, team) \
+    FIELD_SCALAR(fld, turret_scale_health) \
+    FIELD_SCALAR(fld, turret_scale_range) \
+    FIELD_SCALAR(fld, turret_scale_respawn) \
+    FIELD_SCALAR(fld, volume) \
+    FIELD_SCALAR(fld, wait) \
+    FIELD_SCALAR(fld, warpzone_fadeend) \
+    FIELD_SCALAR(fld, warpzone_fadestart) \
+    FIELD_SCALAR(fld, weapon) \
+    FIELD_VEC(fld, absmax) \
+    FIELD_VEC(fld, absmin) \
+    FIELD_VEC(fld, angles) \
+    FIELD_VEC(fld, avelocity) \
+    FIELD_VEC(fld, maxs) \
+    FIELD_VEC(fld, maxs) \
+    FIELD_VEC(fld, mins) \
+    FIELD_VEC(fld, modelscale_vec) \
+    FIELD_VEC(fld, origin) \
+    FIELD_VEC(fld, velocity) \
+    /**/
+
+#define spawnfunc(...) EVAL(OVERLOAD(spawnfunc, __VA_ARGS__, FIELDS_UNION))
+
+#endif

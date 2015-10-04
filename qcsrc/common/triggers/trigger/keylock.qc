@@ -132,8 +132,8 @@ wait: prevent triggering again for this amount of time (default: 5) - applies to
 If spawned without any key specified in itemkeys, this trigger will display an error and remove itself.
 message2 and noise2 will be resent to the player every 2 seconds while he is in the trigger zone.
 */
-void spawnfunc_trigger_keylock(void)
-{SELFPARAM();
+spawnfunc(trigger_keylock)
+{
 	if(!self.itemkeys) { remove(self); return; }
 
 	// set unlocked message

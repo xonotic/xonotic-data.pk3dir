@@ -138,7 +138,7 @@ float M_Zombie_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE.monsterid); }
+spawnfunc(monster_zombie) { Monster_Spawn(MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 bool M_Zombie(int req)

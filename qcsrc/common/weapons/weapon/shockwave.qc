@@ -82,8 +82,8 @@ void Net_ReadShockwaveParticle(void);
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_shockwave(void)
-{SELFPARAM();
+spawnfunc(weapon_shockwave)
+{
 	//if(autocvar_sv_q3acompat_machineshockwaveswap) // WEAPONTODO
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")

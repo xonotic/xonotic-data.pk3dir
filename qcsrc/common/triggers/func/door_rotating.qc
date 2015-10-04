@@ -44,8 +44,8 @@ void door_rotating_init_startopen()
 }
 
 
-void spawnfunc_func_door_rotating()
-{SELFPARAM();
+spawnfunc(func_door_rotating)
+{
 
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
