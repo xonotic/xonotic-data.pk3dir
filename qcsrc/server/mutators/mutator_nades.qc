@@ -772,7 +772,7 @@ float nade_customize()
 	{
 		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 		if(!self.traileffectnum)
-			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(NADES[self.nade_type].m_projectile[false], self.team));
+			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(NADES[self.nade_type].m_projectile[false], self.team).eent_eff_name);
 		self.alpha = 1;
 	}
 
@@ -816,7 +816,7 @@ void nade_prime()
 	//setattachment(n, self, "bip01 l hand");
 	n.exteriormodeltoclient = self;
 	n.customizeentityforclient = nade_customize;
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(NADES[n.nade_type].m_projectile[false], self.team));
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(NADES[n.nade_type].m_projectile[false], self.team).eent_eff_name);
 	n.colormod = NADES[n.nade_type].m_color;
 	n.realowner = self;
 	n.colormap = self.colormap;

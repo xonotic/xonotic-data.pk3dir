@@ -59,6 +59,7 @@
 		CSQCMODEL_PROPERTY(512, float, ReadApproxPastTime, WriteApproxPastTime, anim_upper_time) \
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_PROPERTY(1024, float, ReadAngle, WriteAngle, v_angle_x) \
+	CSQCMODEL_PROPERTY(2048, int, ReadByte, WriteByte, traileffect) \
 	CSQCMODEL_PROPERTY_SCALED(4096, float, ReadByte, WriteByte, scale, 16, 0, 255) \
 	CSQCMODEL_PROPERTY(8192, int, ReadInt24_t, WriteInt24_t, dphitcontentsmask) \
 	CSQCMODEL_PROPERTY(16384, TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME)

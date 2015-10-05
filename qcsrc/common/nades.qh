@@ -34,7 +34,7 @@ CLASS(Nade, Object)
     ATTRIB(Nade, m_name, string, _("Grenade"))
     ATTRIB(Nade, m_icon, string, "nade_normal")
     ATTRIBARRAY(Nade, m_projectile, int, 2)
-    ATTRIBARRAY(Nade, m_trail, string, 2)
+    ATTRIBARRAY(Nade, m_trail, entity, 2)
     METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
         returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
     }
@@ -49,56 +49,56 @@ REGISTER_NADE(Null);
 
 REGISTER_NADE(NORMAL) {
     this.m_color = '1 1 1';
-    NADE_PROJECTILE(0, PROJECTILE_NADE, string_null);
-    NADE_PROJECTILE(1, PROJECTILE_NADE_BURN, string_null);
+    NADE_PROJECTILE(0, PROJECTILE_NADE, EFFECT_Null);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_BURN, EFFECT_Null);
 }
 
 REGISTER_NADE(NAPALM) {
     this.m_color = '2 0.5 0';
     this.m_name = _("Napalm grenade");
     this.m_icon = "nade_napalm";
-    NADE_PROJECTILE(0, PROJECTILE_NADE_NAPALM, "TR_ROCKET");
-    NADE_PROJECTILE(1, PROJECTILE_NADE_NAPALM_BURN, "spiderbot_rocket_thrust");
+    NADE_PROJECTILE(0, PROJECTILE_NADE_NAPALM, EFFECT_TR_ROCKET);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_NAPALM_BURN, EFFECT_SPIDERBOT_ROCKET_TRAIL);
 }
 
 REGISTER_NADE(ICE) {
     this.m_color = '0 0.5 2';
     this.m_name = _("Ice grenade");
     this.m_icon = "nade_ice";
-    NADE_PROJECTILE(0, PROJECTILE_NADE_ICE, "TR_NEXUIZPLASMA");
-    NADE_PROJECTILE(1, PROJECTILE_NADE_ICE_BURN, "wakizashi_rocket_thrust");
+    NADE_PROJECTILE(0, PROJECTILE_NADE_ICE, EFFECT_TR_NEXUIZPLASMA);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_ICE_BURN, EFFECT_RACER_ROCKET_TRAIL);
 }
 
 REGISTER_NADE(TRANSLOCATE) {
     this.m_color = '1 0 1';
     this.m_name = _("Translocate grenade");
     this.m_icon = "nade_translocate";
-    NADE_PROJECTILE(0, PROJECTILE_NADE_TRANSLOCATE, "TR_CRYLINKPLASMA");
-    NADE_PROJECTILE(1, PROJECTILE_NADE_TRANSLOCATE, "TR_CRYLINKPLASMA");
+    NADE_PROJECTILE(0, PROJECTILE_NADE_TRANSLOCATE, EFFECT_TR_CRYLINKPLASMA);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_TRANSLOCATE, EFFECT_TR_CRYLINKPLASMA);
 }
 
 REGISTER_NADE(SPAWN) {
     this.m_color = '1 0.9 0';
     this.m_name = _("Spawn grenade");
     this.m_icon = "nade_spawn";
-    NADE_PROJECTILE(0, PROJECTILE_NADE_SPAWN, "nade_yellow");
-    NADE_PROJECTILE(1, PROJECTILE_NADE_SPAWN, "nade_yellow");
+    NADE_PROJECTILE(0, PROJECTILE_NADE_SPAWN, EFFECT_NADE_TRAIL_YELLOW);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_SPAWN, EFFECT_NADE_TRAIL_YELLOW);
 }
 
 REGISTER_NADE(HEAL) {
     this.m_color = '1 0 0';
     this.m_name = _("Heal grenade");
     this.m_icon = "nade_heal";
-    NADE_PROJECTILE(0, PROJECTILE_NADE_HEAL, "nade_red");
-    NADE_PROJECTILE(1, PROJECTILE_NADE_HEAL_BURN, "nade_red_burn");
+    NADE_PROJECTILE(0, PROJECTILE_NADE_HEAL, EFFECT_NADE_TRAIL_RED);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_HEAL_BURN, EFFECT_NADE_TRAIL_BURN_RED);
 }
 
 REGISTER_NADE(MONSTER) {
     this.m_color = '0.25 0.75 0';
     this.m_name = _("Monster grenade");
     this.m_icon = "nade_monster";
-    NADE_PROJECTILE(0, PROJECTILE_NADE_MONSTER, "nade_red");
-    NADE_PROJECTILE(1, PROJECTILE_NADE_MONSTER_BURN, "nade_red_burn");
+    NADE_PROJECTILE(0, PROJECTILE_NADE_MONSTER, EFFECT_NADE_TRAIL_RED);
+    NADE_PROJECTILE(1, PROJECTILE_NADE_MONSTER_BURN, EFFECT_NADE_TRAIL_BURN_RED);
 }
 
 entity Nade_FromProjectile(float proj)
@@ -112,25 +112,27 @@ entity Nade_FromProjectile(float proj)
     return NADE_TYPE_Null;
 }
 
-string Nade_TrailEffect(int proj, float nade_team)
+entity Nade_TrailEffect(int proj, int nade_team)
 {
     switch (proj)
     {
-        case PROJECTILE_NADE:       return EFFECT_NADE_TRAIL(nade_team).eent_eff_name;
-        case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team).eent_eff_name;
+        case PROJECTILE_NADE:       return EFFECT_NADE_TRAIL(nade_team);
+        case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team);
     }
+
     FOREACH(NADES, true, LAMBDA(
         for (int j = 0; j < 2; j++)
         {
             if (it.m_projectile[j] == proj)
             {
-                string trail = it.m_trail[j];
-                if (trail) return trail;
+                string trail = it.m_trail[j].eent_eff_name;
+                if (trail) return it.m_trail[j];
                 break;
             }
         }
     ));
-    return string_null;
+
+    return EFFECT_Null;
 }
 
 #ifdef SVQC

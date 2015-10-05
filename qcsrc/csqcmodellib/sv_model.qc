@@ -135,7 +135,7 @@ void CSQCModel_LinkEntity(entity e)
 	CSQCModel_CheckUpdate(e);
 }
 
-void CSQCModel_UnlinkEntity()
-{SELFPARAM();
-	self.SendEntity = func_null;
+void CSQCModel_UnlinkEntity(entity e)
+{
+	e.SendEntity = func_null;
 }
