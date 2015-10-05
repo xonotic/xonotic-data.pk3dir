@@ -867,7 +867,7 @@ float v_spiderbot(float req)
 			self.frame				= 10;
 			self.movetype			= MOVETYPE_TOSS;
 
-			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
+			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
 
 			return true;
 		}
