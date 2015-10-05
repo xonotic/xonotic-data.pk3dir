@@ -114,6 +114,12 @@ entity Nade_FromProjectile(float proj)
 
 entity Nade_TrailEffect(int proj, int nade_team)
 {
+    switch (proj)
+    {
+        case PROJECTILE_NADE:       return EFFECT_NADE_TRAIL(nade_team);
+        case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team);
+    }
+
     FOREACH(NADES, true, LAMBDA(
         for (int j = 0; j < 2; j++)
         {
@@ -125,11 +131,7 @@ entity Nade_TrailEffect(int proj, int nade_team)
             }
         }
     ));
-    switch (proj)
-    {
-        case PROJECTILE_NADE:       return EFFECT_NADE_TRAIL(nade_team);
-        case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team);
-    }
+
     return EFFECT_Null;
 }
 
