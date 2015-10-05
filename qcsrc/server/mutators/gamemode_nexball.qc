@@ -1023,10 +1023,12 @@ MUTATOR_DEFINITION(gamemode_nexball)
 		radar_showennemies = autocvar_g_nexball_radar_showallplayers;
 
 		InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
+		WEP_NEXBALL.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 		// we actually cannot roll back nb_delayedinit here
 		// BUT: we don't need to! If this gets called, adding always
 		// succeeds.
