@@ -131,16 +131,13 @@ void W_Hook_Touch2(void)
 	self.use();
 }
 
-void W_Hook_Attack2(Weapon thiswep)
-{SELFPARAM();
-	entity gren;
+void W_Hook_Attack2(Weapon thiswep, entity actor)
+{
+	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
+	W_SetupShot(actor, false, 4, SND(HOOKBOMB_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
-	//W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(self, false, 4, SND(HOOKBOMB_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
-
-	gren = spawn();
-	gren.owner = gren.realowner = self;
-	gren.classname = "hookbomb";
+	entity gren = new(hookbomb);
+	gren.owner = gren.realowner = actor;
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(hook, damage);
 	gren.movetype = MOVETYPE_TOSS;
@@ -162,8 +159,8 @@ void W_Hook_Attack2(Weapon thiswep)
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 
 	gren.velocity = '0 0 1' * WEP_CVAR_SEC(hook, speed);
-	if(autocvar_g_projectiles_newton_style)
-		gren.velocity = gren.velocity + self.velocity;
+	if (autocvar_g_projectiles_newton_style)
+		gren.velocity = gren.velocity + actor.velocity;
 
 	gren.gravity = WEP_CVAR_SEC(hook, gravity);
 	//W_SetupProjVelocity_Basic(gren); // just falling down!
@@ -173,7 +170,7 @@ void W_Hook_Attack2(Weapon thiswep)
 
 	CSQCProjectile(gren, true, PROJECTILE_HOOKBOMB, true);
 
-	MUTATOR_CALLHOOK(EditProjectile, self, gren);
+	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
 		METHOD(Hook, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
@@ -196,7 +193,7 @@ void W_Hook_Attack2(Weapon thiswep)
 			{
 				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(hook, refire)))
 				{
-					W_Hook_Attack2(thiswep);
+					W_Hook_Attack2(thiswep, actor);
 					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
 				}
 			}
