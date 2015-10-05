@@ -1500,26 +1500,6 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 	return 1;
 }
 
-void shuffle(float n, swapfunc_t swap, entity pass)
-{
-	float i, j;
-	for(i = 1; i < n; ++i)
-	{
-		// swap i-th item at a random position from 0 to i
-		// proof for even distribution:
-		//   n = 1: obvious
-		//   n -> n+1:
-		//     item n+1 gets at any position with chance 1/(n+1)
-		//     all others will get their 1/n chance reduced by factor n/(n+1)
-		//     to be on place n+1, their chance will be 1/(n+1)
-		//     1/n * n/(n+1) = 1/(n+1)
-		//     q.e.d.
-		j = floor(random() * (i + 1));
-		if(j != i)
-			swap(j, i, pass);
-	}
-}
-
 string substring_range(string s, float b, float e)
 {
 	return substring(s, b, e - b);
@@ -1750,58 +1730,6 @@ vector decompressShotOrigin(int f)
 	return v;
 }
 
-void heapsort(float n, swapfunc_t swap, comparefunc_t cmp, entity pass)
-{
-	float start, end, root, child;
-
-	// heapify
-	start = floor((n - 2) / 2);
-	while(start >= 0)
-	{
-		// siftdown(start, count-1);
-		root = start;
-		while(root * 2 + 1 <= n-1)
-		{
-			child = root * 2 + 1;
-			if(child < n-1)
-				if(cmp(child, child+1, pass) < 0)
-					++child;
-			if(cmp(root, child, pass) < 0)
-			{
-				swap(root, child, pass);
-				root = child;
-			}
-			else
-				break;
-		}
-		// end of siftdown
-		--start;
-	}
-
-	// extract
-	end = n - 1;
-	while(end > 0)
-	{
-		swap(0, end, pass);
-		--end;
-		// siftdown(0, end);
-		root = 0;
-		while(root * 2 + 1 <= end)
-		{
-			child = root * 2 + 1;
-			if(child < end && cmp(child, child+1, pass) < 0)
-				++child;
-			if(cmp(root, child, pass) < 0)
-			{
-				swap(root, child, pass);
-				root = child;
-			}
-			else
-				break;
-		}
-		// end of siftdown
-	}
-}
 
 void RandomSelection_Init()
 {

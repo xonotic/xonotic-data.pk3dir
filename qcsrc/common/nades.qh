@@ -137,8 +137,4 @@ string Nade_TrailEffect(int proj, float nade_team)
 float healer_send(entity to, int sf);
 #endif
 
-#ifdef CSQC
-// misc functions
-void ent_healer();
-#endif // CSQC
 #endif

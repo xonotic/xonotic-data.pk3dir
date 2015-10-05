@@ -2,7 +2,6 @@
 #define OO_H
 
 #include "nil.qh"
-#include "registry.qh"
 
 #ifdef MENUQC
     #define NULL (null_entity)

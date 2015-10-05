@@ -130,11 +130,6 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
 
 float isGametypeInFilter(float gt, float tp, float ts, string pattern);
 
-typedef void(float i1, float i2, entity pass) swapfunc_t; // is only ever called for i1 < i2
-typedef float(float i1, float i2, entity pass) comparefunc_t; // <0 for <, ==0 for ==, >0 for > (like strcmp)
-void shuffle(float n, swapfunc_t swap, entity pass);
-void heapsort(float n, swapfunc_t swap, comparefunc_t cmp, entity pass);
-
 string swapwords(string str, float i, float j);
 string shufflewords(string str);
 

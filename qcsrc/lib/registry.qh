@@ -6,6 +6,12 @@
 #define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
 #define REGISTER_INIT_POST(ns, id) [[accumulate]] void Register_##ns##_##id##_init_post(entity this)
 
+#define REGISTRY(id, max) \
+    void Register##id() {} \
+    const int id##_MAX = max; \
+    noref entity id[id##_MAX], id##_first, id##_last; \
+    int id##_COUNT;
+
 /**
  * Register a new entity with a global constructor.
  * Must be followed by a semicolon or a function body with a `this` parameter.
@@ -47,5 +53,22 @@
     }                                                           \
     ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id)         \
     REGISTER_INIT(ns, id)
+
+#define REGISTRY_SORT(id, field, skip)                          \
+    void _REGISTRY_SWAP_##id(int i, int j, entity pass) {       \
+        i += skip; j += skip;                                   \
+        entity e = id[i];                                       \
+        id[i] = id[j];                                          \
+        id[j] = e;                                              \
+    }                                                           \
+    float _REGISTRY_CMP_##id(int i, int j, entity pass) {       \
+        i += skip; j += skip;                                   \
+        string a = id[i].field;                                 \
+        string b = id[j].field;                                 \
+        return strcasecmp(a, b);                                \
+    }                                                           \
+    STATIC_INIT(Registry_sort_##id) {                           \
+        heapsort(id##_COUNT, _REGISTRY_SWAP_##id, _REGISTRY_CMP_##id, NULL); \
+    }
 
 #endif
