@@ -326,7 +326,8 @@ void Ent_Projectile()
 				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
 				{
 					setmodel(self, MDL_PROJECTILE_NADE);
-					self.traileffect = _particleeffectnum(Nade_TrailEffect(self.cnt, self.team));
+					string trail = Nade_TrailEffect(self.cnt, self.team);
+					if (trail) self.traileffect = _particleeffectnum(trail);
 					break;
 				}
 				error("Received invalid CSQC projectile, can't work with this!");

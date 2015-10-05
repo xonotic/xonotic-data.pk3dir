@@ -112,8 +112,13 @@ entity Nade_FromProjectile(float proj)
     return NADE_TYPE_Null;
 }
 
-string Nade_TrailEffect(float proj, float nade_team)
+string Nade_TrailEffect(int proj, float nade_team)
 {
+    switch (proj)
+    {
+        case PROJECTILE_NADE:       return EFFECT_NADE_TRAIL(nade_team).eent_eff_name;
+        case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team).eent_eff_name;
+    }
     FOREACH(NADES, true, LAMBDA(
         for (int j = 0; j < 2; j++)
         {
@@ -125,12 +130,7 @@ string Nade_TrailEffect(float proj, float nade_team)
             }
         }
     ));
-    switch (proj)
-    {
-        case PROJECTILE_NADE:       return EFFECT_NADE_TRAIL(nade_team).eent_eff_name;
-        case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team).eent_eff_name;
-    }
-    return "";
+    return string_null;
 }
 
 #ifdef SVQC
