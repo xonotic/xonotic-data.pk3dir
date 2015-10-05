@@ -1,4 +1,5 @@
-AUTOCVAR(g_grappling_hook, bool, _("let players spawn with the grappling hook which allows them to pull themselves up"));
+AUTOCVAR(g_grappling_hook, bool, false, _("let players spawn with the grappling hook which allows them to pull themselves up"));
+#ifdef SVQC
 REGISTER_MUTATOR(hook, autocvar_g_grappling_hook) {
     MUTATOR_ONADD {
         g_grappling_hook = true;
@@ -40,3 +41,4 @@ MUTATOR_HOOKFUNCTION(hook, SetStartItems)
     start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
     warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 }
+#endif
