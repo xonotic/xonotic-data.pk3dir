@@ -35,7 +35,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Frag Information")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_show_sprees", _("Display information about killing sprees")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "notification_show_sprees", _("Display information about killing sprees"), "-"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "notification_show_sprees_info_specialonly", _("Only display sprees if they are achievements"), "-"));
@@ -43,18 +43,18 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 			setDependent(e, "notification_show_sprees", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "notification_show_sprees_center", _("Show spree information in centerprints")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "notification_show_sprees_center", _("Show spree information in centerprints"), "-"));
 			setDependent(e, "notification_show_sprees", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(3, 0, "notification_show_sprees_info", _("Show spree information in death messages")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(3, 0, "notification_show_sprees_info", _("Show spree information in death messages"), "-"));
 			setDependent(e, "notification_show_sprees", 1, 1);
 	#if 0
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Sprees in info messages:")));
 			setDependent(e, "notification_show_sprees", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("notification_show_sprees_info"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("notification_show_sprees_info", "-"));
 			e.addValue(e, ZCTX(_("SPREES^Disabled")), "0");
 			e.addValue(e, _("Target"), "1");
 			e.addValue(e, _("Attacker"), "2");
@@ -64,14 +64,14 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	#endif
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.6, e = makeXonoticCheckBox(0, "notification_show_sprees_info_newline", _("Print on a seperate line")));
+		me.TD(me, 1, 2.6, e = makeXonoticCheckBox_T(0, "notification_show_sprees_info_newline", _("Print on a seperate line"), "-"));
 			setDependent(e, "notification_show_sprees", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_FRAG", _("Add extra frag information to centerprint when available"), "-"));
 			makeMulti(e, "notification_CHOICE_FRAGGED notification_CHOICE_TYPEFRAG notification_CHOICE_TYPEFRAGGED");
 			e.sendCvars = true;
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "notification_show_location", _("Add frag location to death messages when available")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "notification_show_location", _("Add frag location to death messages when available"), "-"));
 
 	me.gotoRC(me, 9, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Gamemode Settings")));
@@ -87,9 +87,9 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(4, 1, "con_notify", _("Display console messages in the top left corner")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(4, 1, "con_notify", _("Display console messages in the top left corner"), "-"));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 1, "notification_allow_chatboxprint", _("Display all info messages in the chatbox")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_allow_chatboxprint", _("Display all info messages in the chatbox"), "-"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_INFO_QUIT_DISCONNECT", _("Display player statuses in the chatbox"), "-"));
 			makeMulti(e, "notification_INFO_QUIT_KICK_IDLING notification_INFO_JOIN_CONNECT_TEAM_BLUE notification_INFO_JOIN_CONNECT_TEAM_PINK notification_INFO_JOIN_CONNECT_TEAM_RED notification_INFO_JOIN_CONNECT_TEAM_YELLOW");
