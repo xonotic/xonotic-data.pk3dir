@@ -472,7 +472,15 @@ void HUD_Weapons(void)
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
-		vector table_size = HUD_GetTableSize_BestItemAR((WEP_COUNT - 1), padded_panel_size, aspect);
+		int nHidden = 0;
+		WepSet weapons_stat = WepSet_GetFromStat();
+		for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
+			WepSet weapons_wep = WepSet_FromWeapon(i);
+			if (weapons_stat & weapons_wep) continue;
+			Weapon w = get_weaponinfo(i);
+			if (w.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+		}
+		vector table_size = HUD_GetTableSize_BestItemAR((WEP_COUNT - 1) - nHidden, padded_panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
