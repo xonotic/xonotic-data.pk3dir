@@ -39,6 +39,7 @@ void monster_dropitem()
 
 	vector org = self.origin + ((self.mins + self.maxs) * 0.5);
 	entity e = spawn();
+	e.spawnfunc_checked = true;
 
 	e.monster_loot = self.monster_loot;
 
@@ -1036,7 +1037,7 @@ void Monster_Dead(entity attacker, float gibbed)
 	if(!((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 		self.velocity = '0 0 0';
 
-	CSQCModel_UnlinkEntity();
+	CSQCModel_UnlinkEntity(self);
 
 	Monster mon = get_monsterinfo(self.monsterid);
 	mon.mr_death(mon);

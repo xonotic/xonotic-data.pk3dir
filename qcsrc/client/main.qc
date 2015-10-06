@@ -795,15 +795,13 @@ void Ent_Init();
 void Ent_ScoresInfo();
 void CSQC_Ent_Update(float bIsNewEntity)
 {SELFPARAM();
-	float t;
-	float savetime;
-	t = ReadByte();
+	int t = ReadByte();
 
 	if(autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t);
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
-	savetime = time;
+	float savetime = time;
 	if(servertime)
 	{
 		time = servertime;
@@ -820,7 +818,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	{
 		if(t != self.enttype || bIsNewEntity)
 		{
-			//print("A CSQC entity changed its type!\n");
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(self), self.entnum, self.enttype, t);
 			Ent_Remove();
 			clearentity(self);
@@ -837,6 +834,13 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	}
 #endif
 	self.enttype = t;
+	bool done = false;
+	FOREACH(Linked, it.m_id == t, LAMBDA(
+		it.m_read(self, bIsNewEntity);
+		done = true;
+		break;
+	));
+	if (!done)
 	switch(t)
 	{
 		case ENT_CLIENT_MUTATOR: {
@@ -883,7 +887,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
-		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
 		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
 		case ENT_CLIENT_VIEWLOC: ent_viewloc(); break;
 		case ENT_CLIENT_VIEWLOC_TRIGGER: ent_viewloc_trigger(); break;

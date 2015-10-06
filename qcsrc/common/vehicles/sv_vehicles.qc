@@ -1115,7 +1115,7 @@ void vehicles_enter(entity pl, entity veh)
 	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
 	setself(veh);
-	CSQCModel_UnlinkEntity();
+	CSQCModel_UnlinkEntity(veh);
 	Vehicle info = get_vehicleinfo(veh.vehicleid);
 	info.vr_enter(info);
 	setself(this);

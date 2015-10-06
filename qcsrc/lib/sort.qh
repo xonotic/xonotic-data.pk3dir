@@ -1,0 +1,75 @@
+#ifndef SORT_H
+#define SORT_H
+
+/** is only ever called for i1 < i2 */
+typedef void(float i1, float i2, entity pass) swapfunc_t;
+/** <0 for <, ==0 for ==, >0 for > (like strcmp) */
+typedef float(float i1, float i2, entity pass) comparefunc_t;
+
+void heapsort(float n, swapfunc_t swap, comparefunc_t cmp, entity pass)
+{
+    int root, child;
+
+    // heapify
+    int start = floor((n - 2) / 2);
+    while (start >= 0) {
+        // siftdown(start, n - 1);
+        root = start;
+        while (root * 2 + 1 <= n - 1) {
+            child = root * 2 + 1;
+            if (child < n - 1 && cmp(child, child + 1, pass) < 0) {
+                child += 1;
+            }
+            if (cmp(root, child, pass) < 0) {
+                swap(root, child, pass);
+                root = child;
+            } else {
+                break;
+            }
+        }
+        // end of siftdown
+        --start;
+    }
+
+    // extract
+    int end = n - 1;
+    while (end > 0) {
+        swap(0, end, pass);
+        end -= 1;
+        // siftdown(0, end);
+        root = 0;
+        while (root * 2 + 1 <= end) {
+            child = root * 2 + 1;
+            if (child < end && cmp(child, child+1, pass) < 0) {
+                child += 1;
+            }
+            if (cmp(root, child, pass) < 0) {
+                swap(root, child, pass);
+                root = child;
+            } else {
+                break;
+            }
+        }
+        // end of siftdown
+    }
+}
+
+void shuffle(float n, swapfunc_t swap, entity pass)
+{
+    for (int i = 1; i < n; ++i) {
+        // swap i-th item at a random position from 0 to i
+        // proof for even distribution:
+        //   n = 1: obvious
+        //   n -> n+1:
+        //     item n+1 gets at any position with chance 1/(n+1)
+        //     all others will get their 1/n chance reduced by factor n/(n+1)
+        //     to be on place n+1, their chance will be 1/(n+1)
+        //     1/n * n/(n+1) = 1/(n+1)
+        //     q.e.d.
+        int j = floor(random() * (i + 1));
+        if (j != i)
+            swap(j, i, pass);
+    }
+}
+
+#endif

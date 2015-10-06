@@ -784,7 +784,7 @@ spawnfunc(vehicle_bumblebee)
 			SELFPARAM();
 			entity oldself = self;
 
-			CSQCModel_UnlinkEntity();
+			CSQCModel_UnlinkEntity(self);
 
 			// Hide beam
 			if(self.gun3.enemy || !wasfreed(self.gun3.enemy))

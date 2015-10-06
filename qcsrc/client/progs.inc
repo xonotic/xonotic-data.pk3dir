@@ -75,4 +75,6 @@
 #include "../warpzonelib/common.qc"
 #include "../warpzonelib/util_server.qc"
 
-#include "../mod/client/progs.inc"
+#if BUILD_MOD
+#include "../../mod/client/progs.inc"
+#endif

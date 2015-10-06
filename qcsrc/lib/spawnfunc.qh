@@ -5,6 +5,8 @@
 noref bool require_spawnfunc_prefix;
 .bool spawnfunc_checked;
 
+// Optional type checking; increases compile time too much to be enabled by default
+#if 0
 bool entityfieldassignablefromeditor(int i) {
     switch (entityfieldtype(i)) {
         case FIELD_STRING:
@@ -17,6 +19,9 @@ bool entityfieldassignablefromeditor(int i) {
 
 #define _spawnfunc_checktypes(fld) if (fieldname == #fld) \
     if (!entityfieldassignablefromeditor(i)) LOG_FATALF("Entity field '%s' cannot be whitelisted\n", fieldname);
+#else
+#define _spawnfunc_checktypes(fld)
+#endif
 #define _spawnfunc_check(fld) if (fieldname == #fld) \
     continue;
 
@@ -69,12 +74,15 @@ bool entityfieldassignablefromeditor(int i) {
     FIELD_SCALAR(fld, cnt) \
     FIELD_SCALAR(fld, colormap) \
     FIELD_SCALAR(fld, count) \
+    FIELD_SCALAR(fld, curvetarget) \
+    FIELD_SCALAR(fld, cvarfilter) \
     FIELD_SCALAR(fld, debrisdamageforcescale) \
     FIELD_SCALAR(fld, debrisfadetime) \
     FIELD_SCALAR(fld, debristimejitter) \
     FIELD_SCALAR(fld, debristime) \
     FIELD_SCALAR(fld, debris) \
     FIELD_SCALAR(fld, delay) \
+    FIELD_SCALAR(fld, dmgtime) \
     FIELD_SCALAR(fld, dmg) \
     FIELD_SCALAR(fld, dmg_edge) \
     FIELD_SCALAR(fld, dmg_force) \
@@ -82,8 +90,10 @@ bool entityfieldassignablefromeditor(int i) {
     FIELD_SCALAR(fld, effects) \
     FIELD_SCALAR(fld, flags) \
     FIELD_SCALAR(fld, fog) \
+    FIELD_SCALAR(fld, frags) \
     FIELD_SCALAR(fld, frame) \
     FIELD_SCALAR(fld, gametypefilter) \
+    FIELD_SCALAR(fld, geomtype) \
     FIELD_SCALAR(fld, gravity) \
     FIELD_SCALAR(fld, health) \
     FIELD_SCALAR(fld, height) \
@@ -101,6 +111,7 @@ bool entityfieldassignablefromeditor(int i) {
     FIELD_SCALAR(fld, modelindex) \
     FIELD_SCALAR(fld, modelscale) \
     FIELD_SCALAR(fld, model) \
+    FIELD_SCALAR(fld, monster_moveflags) \
     FIELD_SCALAR(fld, movetype) \
     FIELD_SCALAR(fld, netname) \
     FIELD_SCALAR(fld, nextthink) \
@@ -109,6 +120,7 @@ bool entityfieldassignablefromeditor(int i) {
     FIELD_SCALAR(fld, noise2) \
     FIELD_SCALAR(fld, noise) \
     FIELD_SCALAR(fld, phase) \
+    FIELD_SCALAR(fld, platmovetype) \
     FIELD_SCALAR(fld, race_place) \
     FIELD_SCALAR(fld, radius) \
     FIELD_SCALAR(fld, respawntimejitter) \
@@ -128,6 +140,7 @@ bool entityfieldassignablefromeditor(int i) {
     FIELD_SCALAR(fld, targetname) \
     FIELD_SCALAR(fld, target) \
     FIELD_SCALAR(fld, target_random) \
+    FIELD_SCALAR(fld, target_range) \
     FIELD_SCALAR(fld, team) \
     FIELD_SCALAR(fld, turret_scale_health) \
     FIELD_SCALAR(fld, turret_scale_range) \
@@ -136,6 +149,7 @@ bool entityfieldassignablefromeditor(int i) {
     FIELD_SCALAR(fld, wait) \
     FIELD_SCALAR(fld, warpzone_fadeend) \
     FIELD_SCALAR(fld, warpzone_fadestart) \
+    FIELD_SCALAR(fld, weapon) \
     FIELD_VEC(fld, absmax) \
     FIELD_VEC(fld, absmin) \
     FIELD_VEC(fld, angles) \

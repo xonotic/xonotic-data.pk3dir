@@ -1,0 +1,81 @@
+#ifndef NET_H
+#define NET_H
+
+#ifdef SVQC
+.int SendFlags;
+.bool(entity to, int sendflags) SendEntity;
+
+void Net_LinkEntity(entity e, bool docull, float dt, bool(entity to, int sendflags) sendfunc)
+{
+    if (!e.classname) e.classname = "net_linked";
+
+    if (!e.model || !self.modelindex) {
+        vector mi = e.mins;
+        vector ma = e.maxs;
+        _setmodel(e, "null");
+        setsize(e, mi, ma);
+    }
+
+    e.SendEntity = sendfunc;
+    e.SendFlags = 0xFFFFFF;
+
+    if (!docull) e.effects |= EF_NODEPTHTEST;
+
+    if (dt) {
+        e.nextthink = time + dt;
+        e.think = SUB_Remove;
+    }
+}
+
+.void() uncustomizeentityforclient;
+.float uncustomizeentityforclient_set;
+
+void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
+{
+    e.customizeentityforclient = customizer;
+    e.uncustomizeentityforclient = uncustomizer;
+    e.uncustomizeentityforclient_set = !!uncustomizer;
+}
+
+void UncustomizeEntitiesRun()
+{
+    for (entity e = NULL; (e = findfloat(e, uncustomizeentityforclient_set, 1)); ) {
+        WITH(entity, self, e, e.uncustomizeentityforclient());
+    }
+}
+
+#endif
+
+#include "registry.qh"
+#include "sort.qh"
+
+REGISTRY(Linked, 24)
+
+.string netname;
+.int m_id;
+.void(entity this, bool isNew) m_read;
+
+#ifdef CSQC
+    #define REGISTER_LINKED(id, param) \
+        void Ent_Read##id(entity this, param) { this = self; } \
+        REGISTER(RegisterLinked, Linked, Linked, Linked_COUNT, id, m_id, spawn()) { \
+            this.netname = #id; \
+            this.m_read = Ent_Read##id; \
+        } \
+        [[accumulate]] void Ent_Read##id(entity this, param)
+#else
+    #define REGISTER_LINKED(id, param) \
+        REGISTER(RegisterLinked, Linked, Linked, Linked_COUNT, id, m_id, spawn()) { \
+            this.netname = #id; \
+        }
+#endif
+
+REGISTER_REGISTRY(RegisterLinked)
+REGISTRY_SORT(Linked, netname, 0)
+STATIC_INIT(RegisterLinked_renumber) {
+    for (int i = 0; i < Linked_COUNT; ++i) {
+        Linked[i].m_id = 100 + i;
+    }
+}
+
+#endif

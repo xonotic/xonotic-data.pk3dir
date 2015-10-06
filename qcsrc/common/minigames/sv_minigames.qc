@@ -168,7 +168,7 @@ void minigame_frame()
 	entity minig = self;
 
 	minig.minigame_event(minig,"frame");
-	minig.nextthink = time;
+	minig.nextthink = time + 0.1;
 }
 
 entity start_minigame(entity player, string minigame )

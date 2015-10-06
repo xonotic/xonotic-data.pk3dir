@@ -1155,49 +1155,6 @@ void InitializeEntitiesRun()
     remove = remove_unsafely;
 }
 
-void UncustomizeEntitiesRun()
-{SELFPARAM();
-    for (entity e = NULL; (e = findfloat(e, uncustomizeentityforclient_set, 1)); )
-    {
-        WITH(entity, self, e, e.uncustomizeentityforclient());
-    }
-}
-void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
-{
-    e.customizeentityforclient = customizer;
-    e.uncustomizeentityforclient = uncustomizer;
-    e.uncustomizeentityforclient_set = !!uncustomizer;
-}
-
-void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc)
-{SELFPARAM();
-    vector mi, ma;
-
-    if (e.classname == "")
-        e.classname = "net_linked";
-
-    if (e.model == "" || self.modelindex == 0)
-    {
-        mi = e.mins;
-        ma = e.maxs;
-        setmodel(e, MDL_Null);
-        setsize(e, mi, ma);
-    }
-
-    e.SendEntity = sendfunc;
-    e.SendFlags = 0xFFFFFF;
-
-    if (!docull)
-        e.effects |= EF_NODEPTHTEST;
-
-    if (dt)
-    {
-        e.nextthink = time + dt;
-        e.think = SUB_Remove;
-    }
-}
-
-
 .float(entity) isEliminated;
 float EliminatedPlayers_SendEntity(entity to, float sendflags)
 {

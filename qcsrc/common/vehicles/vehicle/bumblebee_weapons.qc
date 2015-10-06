@@ -78,7 +78,7 @@ void bumble_raygun_read(bool bIsNew)
         else
             self.colormod = '0 1 0';
 
-        self.traileffect = particleeffectnum(EFFECT_BUMBLEBEE_HEAL_MUZZLEFLASH);
+        self.traileffect = EFFECT_BUMBLEBEE_HEAL_MUZZLEFLASH.m_id;
         self.lip = particleeffectnum(EFFECT_BUMBLEBEE_HEAL_IMPACT);
 
         self.draw = bumble_raygun_draw;
@@ -112,7 +112,7 @@ void bumble_raygun_draw()
 
     if(self.total_damages < time)
     {
-        boxparticles(self.traileffect, self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+        boxparticles(particleeffectnum(effects_ent[self.traileffect]), self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
         boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
         self.total_damages = time + 0.1;
     }

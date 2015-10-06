@@ -494,10 +494,12 @@ const int MF_TRACER2 =  64; // orange split trail
 const int MF_TRACER3 = 128; // purple trail
 .int csqcmodel_effects;
 .int csqcmodel_modelflags;
+.int csqcmodel_traileffect;
 void CSQCModel_Effects_PreUpdate(void)
 {SELFPARAM();
 	self.effects = self.csqcmodel_effects;
 	self.modelflags = self.csqcmodel_modelflags;
+	self.traileffect = self.csqcmodel_traileffect;
 }
 void Reset_ArcBeam(void);
 void CSQCModel_Effects_PostUpdate(void)
@@ -509,6 +511,7 @@ void CSQCModel_Effects_PostUpdate(void)
 	}
 	self.csqcmodel_effects = self.effects;
 	self.csqcmodel_modelflags = self.modelflags;
+	self.csqcmodel_traileffect = self.traileffect;
 	self.effects = 0;
 	self.modelflags = 0;
 	if(self.csqcmodel_teleported)
@@ -518,13 +521,14 @@ void CSQCModel_Effects_PostUpdate(void)
 void CSQCModel_Effects_Apply(void)
 {SELFPARAM();
 	int eff = self.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
+	int tref = self.csqcmodel_traileffect;
 
 	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
 	self.traileffect = 0;
 
 	if(eff & EF_BRIGHTFIELD)
-		self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA);
+		tref = particleeffectnum(EFFECT_TR_NEXUIZPLASMA);
 	// ignoring EF_MUZZLEFLASH
 	if(eff & EF_BRIGHTLIGHT)
 		adddynamiclight(self.origin, 400, '3 3 3');
@@ -558,24 +562,26 @@ void CSQCModel_Effects_Apply(void)
 		self.renderflags |= RF_DYNAMICMODELLIGHT;
 	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(self.csqcmodel_modelflags & MF_ROCKET)
-		self.traileffect = particleeffectnum(EFFECT_TR_ROCKET);
+		tref = particleeffectnum(EFFECT_TR_ROCKET);
 	if(self.csqcmodel_modelflags & MF_GRENADE)
-		self.traileffect = particleeffectnum(EFFECT_TR_GRENADE);
+		tref = particleeffectnum(EFFECT_TR_GRENADE);
 	if(self.csqcmodel_modelflags & MF_GIB)
-		self.traileffect = particleeffectnum(EFFECT_TR_BLOOD);
+		tref = particleeffectnum(EFFECT_TR_BLOOD);
 	if(self.csqcmodel_modelflags & MF_ROTATE)
 	{
 		self.renderflags |= RF_USEAXIS;
 		makevectors(self.angles + '0 100 0' * fmod(time, 3.6));
 	}
 	if(self.csqcmodel_modelflags & MF_TRACER)
-		self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE);
+		tref = particleeffectnum(EFFECT_TR_WIZSPIKE);
 	if(self.csqcmodel_modelflags & MF_ZOMGIB)
-		self.traileffect = particleeffectnum(EFFECT_TR_SLIGHTBLOOD);
+		tref = particleeffectnum(EFFECT_TR_SLIGHTBLOOD);
 	if(self.csqcmodel_modelflags & MF_TRACER2)
-		self.traileffect = particleeffectnum(EFFECT_TR_KNIGHTSPIKE);
+		tref = particleeffectnum(EFFECT_TR_KNIGHTSPIKE);
 	if(self.csqcmodel_modelflags & MF_TRACER3)
-		self.traileffect = particleeffectnum(EFFECT_TR_VORESPIKE);
+		tref = particleeffectnum(EFFECT_TR_VORESPIKE);
+
+	self.traileffect = tref;
 
 	if(self.drawmask)
 		Projectile_DrawTrail(self.origin);

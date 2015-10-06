@@ -4634,7 +4634,7 @@ SUB(alien_TR_BLOOD) {
 }
 
 // splash around gib
-SUB(alien_TR_BLOOD) {
+SUB(TR_BLOOD) {
 	MY(alpha_min) = 684;
 	MY(alpha_max) = 684;
 	MY(alpha_fade) = 7492;
@@ -4867,7 +4867,7 @@ SUB(alien_bloodshower) {
 	MY(velocityjitter) = '764.0 764.0 764.0';
 }
 // center blood
-SUB(alien_bloodshower) {
+SUB(bloodshower) {
 	MY(alpha_min) = 156;
 	MY(alpha_max) = 656;
 	MY(alpha_fade) = 1664;

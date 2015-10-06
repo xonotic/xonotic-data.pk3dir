@@ -588,7 +588,7 @@ spawnfunc(vehicle_spiderbot)
 			self.frame				= 10;
 			self.movetype			= MOVETYPE_TOSS;
 
-			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
+			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
 		}
 		METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh))
 		{

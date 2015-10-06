@@ -29,8 +29,6 @@ float cvar_normal(string n)
 #define cvar_set_normal builtin_cvar_set
 
 .vector dropped_origin;
-.void(void) uncustomizeentityforclient;
-.float uncustomizeentityforclient_set;
 .float nottargeted;
 
 entity eliminatedPlayers;
@@ -61,9 +59,6 @@ void precache_all_playermodels(string pattern);
 
 void soundat(entity e, vector o, float chan, string samp, float vol, float _atten);
 
-void defer(float fdelay, void() func);
-
-void UncustomizeEntitiesRun();
 void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);

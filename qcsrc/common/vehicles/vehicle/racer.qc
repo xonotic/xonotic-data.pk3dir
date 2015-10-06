@@ -488,6 +488,7 @@ void racer_blowup()
 	self.think	  = vehicles_spawn;
 	self.movetype   = MOVETYPE_NONE;
 	self.effects	= EF_NODRAW;
+	self.solid = SOLID_NOT;
 
 	self.colormod  = '0 0 0';
 	self.avelocity = '0 0 0';
