@@ -22,7 +22,7 @@ void turret_hellion_missile_think();
 METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire1)
-    if (!isPlayer || weapon_prepareattack(actor, false, WEP_CVAR_PRI(electro, refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);

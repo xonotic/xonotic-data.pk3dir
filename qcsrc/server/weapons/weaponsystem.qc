@@ -457,57 +457,66 @@ void w_ready(Weapon thiswep, entity actor, bool fire1, bool fire2)
 
 .float prevdryfire;
 .float prevwarntime;
-bool weapon_prepareattack_checkammo(entity actor, float secondary)
+bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, float secondary)
 {
-	Weapon w = get_weaponinfo(actor.weapon);
-	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
-	if (!w.(secondary ? wr_checkammo2 : wr_checkammo1)(w))
-	{
-		// always keep the Mine Layer if we placed mines, so that we can detonate them
-		entity mine;
-		if(actor.weapon == WEP_MINE_LAYER.m_id)
-		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == actor)
-			return false;
-
-		if(actor.weapon == WEP_SHOTGUN.m_id)
-		if(!secondary && WEP_CVAR(shotgun, secondary) == 1)
-			return false; // no clicking, just allow
-
-		if(actor.weapon == actor.switchweapon && time - actor.prevdryfire > 1) // only play once BEFORE starting to switch weapons
-		{
-			sound (actor, CH_WEAPON_A, SND_DRYFIRE, VOL_BASE, ATTEN_NORM);
-			actor.prevdryfire = time;
-		}
-
-		if(w.(secondary ? wr_checkammo1 : wr_checkammo2)(w)) // check if the other firing mode has enough ammo
-		{
-			if(time - actor.prevwarntime > 1)
-			{
-				Send_Notification(
-					NOTIF_ONE,
-					actor,
-					MSG_MULTI,
-					ITEM_WEAPON_PRIMORSEC,
-					actor.weapon,
-					secondary,
-					(1 - secondary)
-				);
-			}
-			actor.prevwarntime = time;
-		}
-		else // this weapon is totally unable to fire, switch to another one
-		{
-			W_SwitchToOtherWeapon(actor);
-		}
-
-		return false;
+	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
+	bool ammo = false;
+	if (secondary) {
+		WITH(entity, self, actor, ammo = thiswep.wr_checkammo2(thiswep));
+	} else {
+		WITH(entity, self, actor, ammo = thiswep.wr_checkammo1(thiswep));
 	}
-	return true;
+	if (ammo) return true;
+	// always keep the Mine Layer if we placed mines, so that we can detonate them
+	entity mine;
+	if(actor.weapon == WEP_MINE_LAYER.m_id)
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == actor)
+		return false;
+
+	if(actor.weapon == WEP_SHOTGUN.m_id)
+	if(!secondary && WEP_CVAR(shotgun, secondary) == 1)
+		return false; // no clicking, just allow
+
+	if(actor.weapon == actor.switchweapon && time - actor.prevdryfire > 1) // only play once BEFORE starting to switch weapons
+	{
+		sound (actor, CH_WEAPON_A, SND_DRYFIRE, VOL_BASE, ATTEN_NORM);
+		actor.prevdryfire = time;
+	}
+
+	// check if the other firing mode has enough ammo
+	bool ammo_other = false;
+	if (secondary) {
+		WITH(entity, self, actor, ammo = thiswep.wr_checkammo1(thiswep));
+	} else {
+		WITH(entity, self, actor, ammo = thiswep.wr_checkammo2(thiswep));
+	}
+	if (ammo_other)
+	{
+		if (time - actor.prevwarntime > 1)
+		{
+			Send_Notification(
+				NOTIF_ONE,
+				actor,
+				MSG_MULTI,
+				ITEM_WEAPON_PRIMORSEC,
+				actor.weapon,
+				secondary,
+				(1 - secondary)
+			);
+		}
+		actor.prevwarntime = time;
+	}
+	else // this weapon is totally unable to fire, switch to another one
+	{
+		W_SwitchToOtherWeapon(actor);
+	}
+
+	return false;
 }
 .float race_penalty;
-bool weapon_prepareattack_check(entity actor, bool secondary, float attacktime)
+bool weapon_prepareattack_check(Weapon thiswep, entity actor, bool secondary, float attacktime)
 {
-	if(!weapon_prepareattack_checkammo(actor, secondary))
+	if(!weapon_prepareattack_checkammo(thiswep, actor, secondary))
 		return false;
 
 	//if sv_ready_restart_after_countdown is set, don't allow the player to shoot
@@ -553,9 +562,9 @@ void weapon_prepareattack_do(entity actor, bool secondary, float attacktime)
 	actor.bulletcounter += 1;
 	//dprint("attack finished ", ftos(ATTACK_FINISHED(actor)), "\n");
 }
-bool weapon_prepareattack(entity actor, bool secondary, float attacktime)
+bool weapon_prepareattack(Weapon thiswep, entity actor, bool secondary, float attacktime)
 {
-	if (weapon_prepareattack_check(actor, secondary, attacktime)) {
+	if (weapon_prepareattack_check(thiswep, actor, secondary, attacktime)) {
 		weapon_prepareattack_do(actor, secondary, attacktime);
 		return true;
 	}
@@ -652,6 +661,8 @@ float forbidWeaponUse(entity player)
 		return 1;
 	return 0;
 }
+
+.bool hook_switchweapon;
 
 void W_WeaponFrame(entity actor)
 {
@@ -766,12 +777,24 @@ void W_WeaponFrame(entity actor)
 		v_right = ri;
 		v_up = up;
 
+		bool block_weapon = false;
 		{
-			bool key_pressed = actor.BUTTON_HOOK;
-        	Weapon wpn = actor.offhand;
-        	if (wpn.offhand_think) wpn.offhand_think(wpn, actor, key_pressed);
+			bool key_pressed = actor.BUTTON_HOOK && !actor.vehicle;
+        	Weapon off = actor.offhand;
+        	if (off) {
+        		if (off.offhand_think) off.offhand_think(off, actor, key_pressed);
+        	} else {
+        		if (key_pressed && actor.switchweapon != WEP_HOOK.m_id && !actor.hook_switchweapon) {
+					W_SwitchWeapon(WEP_HOOK.m_id);
+				}
+				actor.hook_switchweapon = key_pressed;
+				Weapon h = WEP_HOOK;
+				block_weapon = (actor.weapon == h.m_id && (actor.BUTTON_ATCK || key_pressed));
+				h.wr_think(h, actor, block_weapon, false);
+        	}
         }
 
+		if (!block_weapon)
 		if (w) {
 			Weapon e = get_weaponinfo(actor.weapon);
 			e.wr_think(e, actor, actor.BUTTON_ATCK, actor.BUTTON_ATCK2);

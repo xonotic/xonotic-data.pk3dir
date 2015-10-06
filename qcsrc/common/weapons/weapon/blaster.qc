@@ -165,7 +165,7 @@ void W_Blaster_Attack(
 		{
 			if(fire1)
 			{
-				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(blaster, refire)))
+				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(blaster, refire)))
 				{
 					W_Blaster_Attack(
 						actor,
@@ -196,7 +196,7 @@ void W_Blaster_Attack(
 
 					case 1: // normal projectile secondary
 					{
-						if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(blaster, refire)))
+						if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(blaster, refire)))
 						{
 							W_Blaster_Attack(
 								actor,

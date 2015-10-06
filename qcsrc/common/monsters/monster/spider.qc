@@ -53,7 +53,7 @@ void M_Spider_Attack_Web();
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, bool fire1, bool fire2)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire1)
-    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(actor, false, autocvar_g_monster_spider_attack_web_delay)) {
+    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, false, autocvar_g_monster_spider_attack_web_delay)) {
 		if (!isPlayer) {
 			actor.spider_web_delay = time + 3;
 			setanim(actor, actor.anim_shoot, true, true, true);
@@ -68,7 +68,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, bool fir
         return;
     }
     if (fire2)
-    if (!isPlayer || weapon_prepareattack(actor, true, 0.5)) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, true, 0.5)) {
     	if (isPlayer) {
     		actor.enemy = Monster_FindTarget(actor);
     		actor.attack_range = 60;

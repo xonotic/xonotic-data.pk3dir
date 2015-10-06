@@ -48,7 +48,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, boo
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     if (fire1)
-    if (weapon_prepareattack(player, false, autocvar_g_vehicle_racer_cannon_refire)) {
+    if (weapon_prepareattack(thiswep, player, false, autocvar_g_vehicle_racer_cannon_refire)) {
         if (veh) {
             veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
             veh.wait = time;
@@ -64,7 +64,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, boo
         weapon_thinkf(player, WFRAME_FIRE1, 0, w_ready);
     }
     if (fire2)
-    if (!isPlayer || weapon_prepareattack(actor, false, 0.2)) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, 0.2)) {
         if (isPlayer) W_SetupShot_Dir(actor, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
         racer_fire_rocket(w_shotorg, w_shotdir, NULL);
         weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);

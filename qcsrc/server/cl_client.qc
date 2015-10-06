@@ -2546,8 +2546,6 @@ void PlayerPreThink (void)
 
 		FixPlayermodel();
 
-		GrapplingHookFrame();
-
 		// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 		//if(frametime)
 		{

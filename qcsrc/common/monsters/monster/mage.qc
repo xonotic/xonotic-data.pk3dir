@@ -42,7 +42,7 @@ void M_Mage_Attack_Spike(vector dir);
 void M_Mage_Attack_Push();
 METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, bool fire1, bool fire2)) {
     if (fire1)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(actor, false, 0.2)) {
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
         W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
@@ -51,7 +51,7 @@ METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, bool fire1, bo
         weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
     }
     if (fire2)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(actor, true, 0.5)) {
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, true, 0.5)) {
         M_Mage_Attack_Push();
         weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
     }

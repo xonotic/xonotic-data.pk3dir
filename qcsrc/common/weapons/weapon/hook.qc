@@ -18,10 +18,10 @@ ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, NEW(Hook));
 
 CLASS(OffhandHook, OffhandWeapon)
-    METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity player, bool key_pressed))
+    METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
     {
     	Weapon wep = WEP_HOOK;
-    	WITH(entity, self, player, wep.wr_think(wep, self, key_pressed, false));
+    	wep.wr_think(wep, actor, key_pressed, false);
     }
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
@@ -175,23 +175,25 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 		METHOD(Hook, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(fire1 || actor.BUTTON_HOOK)
-			{
+			if (fire1) {
 				if(!actor.hook)
 				if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
-				if(!(actor.hook_state & HOOK_FIRING))
 				if(time > actor.hook_refire)
-				if(weapon_prepareattack(actor, false, -1))
+				if(weapon_prepareattack(thiswep, actor, false, -1))
 				{
 					W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hook, ammo));
 					actor.hook_state |= HOOK_FIRING;
+					actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
 					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
 				}
+			} else {
+				actor.hook_state |= HOOK_REMOVING;
+				actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			}
 
 			if(fire2)
 			{
-				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(hook, refire)))
+				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hook, refire)))
 				{
 					W_Hook_Attack2(thiswep, actor);
 					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
@@ -246,33 +248,22 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 				actor.hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
 			}
 
-			if(actor.BUTTON_CROUCH)
-			{
-				actor.hook_state &= ~HOOK_PULLING;
-				if(fire1 || actor.BUTTON_HOOK)
-					actor.hook_state &= ~HOOK_RELEASING;
-				else
-					actor.hook_state |= HOOK_RELEASING;
-			}
-			else
-			{
-				actor.hook_state |= HOOK_PULLING;
-				actor.hook_state &= ~HOOK_RELEASING;
+			actor.hook_state = BITSET(actor.hook_state, HOOK_PULLING, (!actor.BUTTON_CROUCH || !autocvar_g_balance_grapplehook_crouchslide));
 
-				if(fire1 || actor.BUTTON_HOOK)
-				{
-					// already fired
-					if(actor.hook)
-						actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
-				}
-				else
-				{
-					actor.hook_state |= HOOK_REMOVING;
-					actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-				}
+			if (actor.hook_state & HOOK_FIRING)
+			{
+				if (actor.hook)
+					RemoveGrapplingHook(actor);
+				WITH(entity, self, actor, FireGrapplingHook());
+				actor.hook_state &= ~HOOK_FIRING;
+				actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
 			}
-
-			_GrapplingHookFrame();
+			else if (actor.hook_state & HOOK_REMOVING)
+			{
+				if (actor.hook)
+					RemoveGrapplingHook(actor);
+				actor.hook_state &= ~HOOK_REMOVING;
+			}
 		}
 		METHOD(Hook, wr_init, void(entity thiswep))
 		{

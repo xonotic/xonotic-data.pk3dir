@@ -50,7 +50,7 @@ void M_Wyvern_Attack_Fireball_Touch();
 
 METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, bool fire1, bool fire2)) {
     if (fire1)
-    if (time > actor.attack_finished_single || weapon_prepareattack(actor, false, 1.2)) {
+    if (time > actor.attack_finished_single || weapon_prepareattack(thiswep, actor, false, 1.2)) {
         if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
 			actor.attack_finished_single = time + 1.2;

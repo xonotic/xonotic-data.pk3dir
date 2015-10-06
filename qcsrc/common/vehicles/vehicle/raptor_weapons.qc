@@ -58,7 +58,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, bool fire1, bo
     // 1 [wait] 1 [wait] 2 [wait] 2 [wait] [wait]
     float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + veh.misc_bulletcounter == 4);
     if (fire1)
-    if (weapon_prepareattack(player, false, t)) {
+    if (weapon_prepareattack(thiswep, player, false, t)) {
         if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
         vector org = w_shotorg;
         vector dir = w_shotdir;
@@ -93,7 +93,7 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, bool fire1, bool
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     if (fire2)
-    if (!isPlayer || weapon_prepareattack(player, true, autocvar_g_vehicle_raptor_bombs_refire)) {
+    if (!isPlayer || weapon_prepareattack(thiswep, player, true, autocvar_g_vehicle_raptor_bombs_refire)) {
         if (veh) setself(veh);
         raptor_bombdrop();
         weapon_thinkf(player, WFRAME_FIRE2, 0, w_ready);
@@ -114,7 +114,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, bool fire1, boo
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     if (fire2)
-    if (!isPlayer || weapon_prepareattack(player, true, autocvar_g_vehicle_raptor_flare_refire)) {
+    if (!isPlayer || weapon_prepareattack(thiswep, player, true, autocvar_g_vehicle_raptor_flare_refire)) {
         for(int i = 0; i < 3; ++i) {
             entity _flare = spawn();
             setmodel(_flare, MDL_VEH_RAPTOR_FLARE);

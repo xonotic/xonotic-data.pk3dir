@@ -842,7 +842,7 @@ float ball_customize()
 	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, bool fire1, bool fire2))
 	{
 		if(fire1)
-			if(weapon_prepareattack(actor, false, autocvar_g_balance_nexball_primary_refire))
+			if(weapon_prepareattack(thiswep, actor, false, autocvar_g_balance_nexball_primary_refire))
 				if(autocvar_g_nexball_basketball_meter)
 				{
 					if(self.ballcarried && !self.metertime)
@@ -856,7 +856,7 @@ float ball_customize()
 					weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 				}
 		if(fire2)
-			if(weapon_prepareattack(actor, true, autocvar_g_balance_nexball_secondary_refire))
+			if(weapon_prepareattack(thiswep, actor, true, autocvar_g_balance_nexball_secondary_refire))
 			{
 				W_Nexball_Attack2();
 				weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);

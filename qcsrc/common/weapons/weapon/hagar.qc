@@ -419,7 +419,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 				w.wr_reload(w);
 			} else if(fire1 && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
-				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(hagar, refire)))
+				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(hagar, refire)))
 				{
 					W_Hagar_Attack(thiswep);
 					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
@@ -427,7 +427,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 			}
 			else if(fire2 && !loadable_secondary && WEP_CVAR(hagar, secondary))
 			{
-				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(hagar, refire)))
+				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hagar, refire)))
 				{
 					W_Hagar_Attack2(thiswep);
 					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hagar, refire), w_ready);

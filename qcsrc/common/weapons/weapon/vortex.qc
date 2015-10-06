@@ -163,7 +163,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 			{
 				if(fire1)
 				{
-					if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(vortex, refire)))
+					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(vortex, refire)))
 					{
 						W_Vortex_Attack(thiswep, 0);
 						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
@@ -235,7 +235,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 					}
 					else if(WEP_CVAR(vortex, secondary))
 					{
-						if(weapon_prepareattack(actor, false, WEP_CVAR_SEC(vortex, refire)))
+						if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_SEC(vortex, refire)))
 						{
 							W_Vortex_Attack(thiswep, 1);
 							weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);

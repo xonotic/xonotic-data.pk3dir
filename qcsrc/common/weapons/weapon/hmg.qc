@@ -104,7 +104,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, boo
 			} else
 			{
 				if (fire1)
-				if (weapon_prepareattack(actor, false, 0))
+				if (weapon_prepareattack(thiswep, actor, false, 0))
 				{
 					actor.misc_bulletcounter = 0;
 					W_HeavyMachineGun_Attack_Auto(thiswep, actor, fire1, fire2);

@@ -34,9 +34,9 @@ float W_WeaponRateFactor();
 
 float W_WeaponSpeedFactor();
 
-bool weapon_prepareattack(entity actor, bool secondary, float attacktime);
+bool weapon_prepareattack(Weapon thiswep, entity actor, bool secondary, float attacktime);
 
-bool weapon_prepareattack_check(entity actor, float secondary, float attacktime);
+bool weapon_prepareattack_check(Weapon thiswep, entity actor, float secondary, float attacktime);
 
 void weapon_prepareattack_do(entity actor, float secondary, float attacktime);
 

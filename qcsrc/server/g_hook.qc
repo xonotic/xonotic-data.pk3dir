@@ -65,7 +65,6 @@ And you should be done!
 ============================================*/
 
 .float hook_length;
-.float hook_switchweapon;
 
 void RemoveGrapplingHook(entity pl)
 {
@@ -403,111 +402,6 @@ void FireGrapplingHook (void)
 	missile.hook_start = missile.hook_end = missile.origin;
 
 	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
-}
-
-//  void GrapplingHookFrame()
-//  {
-//         // this function has been modified for Xonotic
-// -       if (self.BUTTON_HOOK && g_grappling_hook)
-//         {
-// -               if (!self.hook && self.hook_time <= time && !self.button6_pressed_before)
-// -                       if (timeoutStatus != 2) //only allow the player to fire the grappling hook if the game is not paused (timeout)
-// -                               FireGrapplingHook();
-//         }
-// -       else
-//         {
-//                 if (self.hook)
-//                         RemoveGrapplingHook(self);
-//         }
-// -       self.button6_pressed_before = self.BUTTON_HOOK;
-//         /*
-//         // if I have no hook or it's not pulling yet, make sure I'm not flying!
-//         if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-
-void _GrapplingHookFrame();
-void GrapplingHookFrame()
-{SELFPARAM();
-	if (self.offhand == OFFHAND_HOOK) {
-        if (timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id && !self.vehicle) {
-            // offhand hook controls
-            if (self.BUTTON_HOOK) {
-                if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)) && (time > self.hook_refire)) {
-                    self.hook_state |= HOOK_FIRING;
-                    self.hook_state |= HOOK_WAITING_FOR_RELEASE;
-                }
-            } else {
-                self.hook_state |= HOOK_REMOVING;
-                self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-            }
-
-            self.hook_state &= ~HOOK_RELEASING;
-            if (self.BUTTON_CROUCH && autocvar_g_balance_grapplehook_crouchslide) {
-                self.hook_state &= ~HOOK_PULLING;
-                //self.hook_state |= HOOK_RELEASING;
-            } else {
-                self.hook_state |= HOOK_PULLING;
-                //self.hook_state &= ~HOOK_RELEASING;
-            }
-        }
-	} else {
-		if (self.switchweapon != WEP_HOOK.m_id && !self.vehicle) {
-			if (self.BUTTON_HOOK && !self.hook_switchweapon)
-				W_SwitchWeapon(WEP_HOOK.m_id);
-		}
-		if (self.weapon != WEP_HOOK.m_id && self.offhand != OFFHAND_HOOK) {
-			self.hook_state &= ~HOOK_FIRING;
-			self.hook_state |= HOOK_REMOVING;
-		}
-	}
-	self.hook_switchweapon = self.BUTTON_HOOK;
-	_GrapplingHookFrame();
-}
-
-void _GrapplingHookFrame()
-{
-	if (self.hook_state & HOOK_FIRING)
-	{
-		if (self.hook)
-			RemoveGrapplingHook(self);
-		FireGrapplingHook();
-		self.hook_state &= ~HOOK_FIRING;
-		self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
-	}
-	else if(self.hook_state & HOOK_REMOVING)
-	{
-		if (self.hook)
-			RemoveGrapplingHook(self);
-		self.hook_state &= ~HOOK_REMOVING;
-	}
-
-	/*
-	// if I have no hook or it's not pulling yet, make sure I'm not flying!
-	if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-	{
-		self.movetype = MOVETYPE_WALK;
-	}
-	if(self.impulse == GRAPHOOK_FIRE && self.hook_time <= time && g_grappling_hook)
-	{
-		// fire hook
-		FireGrapplingHook();
-		return;
-	}
-	else if(self.hookimpulse == GRAPHOOK_RELEASE)
-	{
-		// remove hook, reset movement type
-		RemoveGrapplingHook(self);
-		return;
-	}
-	*/
-	/*else // make sure the player's movetype is correct
-	{
-		//if(self.hook == world && self.movetype == MOVETYPE_FLY)
-		if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-		{
-			self.movetype = MOVETYPE_WALK;
-		}
-	}*/
-	// note: The hook entity does the actual pulling
 }
 
 void GrappleHookInit()

@@ -99,7 +99,7 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, bool fire1, bool 
 	actor.switchweapon = actor.weapon;
 	ATTACK_FINISHED(actor) = time;
 	LOG_INFO(ftos(actor.WEP_AMMO(RIFLE)), "\n");
-	r = weapon_prepareattack(actor, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
+	r = weapon_prepareattack(thiswep, actor, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
 	if(actor.switchweapon == actor.weapon)
 		actor.switchweapon = sw;
 	if(r)
@@ -169,7 +169,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 			{
 				actor.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), actor.rifle_accumulator, time);
 				if(fire1)
-				if(weapon_prepareattack_check(actor, false, WEP_CVAR_PRI(rifle, refire)))
+				if(weapon_prepareattack_check(thiswep, actor, false, WEP_CVAR_PRI(rifle, refire)))
 				if(time >= actor.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
 				{
 					weapon_prepareattack_do(actor, false, WEP_CVAR_PRI(rifle, refire));
@@ -185,7 +185,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 							w.wr_reload(w);
 						} else
 						{
-							if(weapon_prepareattack_check(actor, true, WEP_CVAR_SEC(rifle, refire)))
+							if(weapon_prepareattack_check(thiswep, actor, true, WEP_CVAR_SEC(rifle, refire)))
 							if(time >= actor.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
 							{
 								weapon_prepareattack_do(actor, true, WEP_CVAR_SEC(rifle, refire));

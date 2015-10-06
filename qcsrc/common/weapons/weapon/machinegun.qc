@@ -256,14 +256,14 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, bool fire1, bool fi
 			if(WEP_CVAR(machinegun, mode) == 1)
 			{
 				if(fire1)
-				if(weapon_prepareattack(actor, false, 0))
+				if(weapon_prepareattack(thiswep, actor, false, 0))
 				{
 					actor.misc_bulletcounter = 0;
 					W_MachineGun_Attack_Auto(thiswep, actor, fire1, fire2);
 				}
 
 				if(fire2)
-				if(weapon_prepareattack(actor, true, 0))
+				if(weapon_prepareattack(thiswep, actor, true, 0))
 				{
 					Weapon w = get_weaponinfo(actor.weapon);
 					if(!w.wr_checkammo2(w))
@@ -284,7 +284,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, bool fire1, bool fi
 			{
 
 				if(fire1)
-				if(weapon_prepareattack(actor, false, 0))
+				if(weapon_prepareattack(thiswep, actor, false, 0))
 				{
 					actor.misc_bulletcounter = 1;
 					W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id); // sets attack_finished
@@ -292,7 +292,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, bool fire1, bool fi
 				}
 
 				if(fire2 && WEP_CVAR(machinegun, first))
-				if(weapon_prepareattack(actor, true, 0))
+				if(weapon_prepareattack(thiswep, actor, true, 0))
 				{
 					actor.misc_bulletcounter = 1;
 					W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id | HITTYPE_SECONDARY); // sets attack_finished

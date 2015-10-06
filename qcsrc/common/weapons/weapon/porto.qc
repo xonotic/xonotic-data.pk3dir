@@ -305,7 +305,7 @@ void W_Porto_Attack(float type)
 				if(fire1)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(0);
 					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
@@ -314,7 +314,7 @@ void W_Porto_Attack(float type)
 				if(fire2)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(actor, true, WEP_CVAR_SEC(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(porto, refire)))
 				{
 					W_Porto_Attack(1);
 					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
@@ -347,7 +347,7 @@ void W_Porto_Attack(float type)
 				if(fire1)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(actor, false, WEP_CVAR_PRI(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(-1);
 					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);

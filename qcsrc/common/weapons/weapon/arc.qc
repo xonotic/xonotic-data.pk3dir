@@ -677,7 +677,7 @@ void Arc_Smoke()
 
 				if((!actor.arc_beam) || wasfreed(actor.arc_beam))
 				{
-					if(weapon_prepareattack(actor, fire2, 0))
+					if(weapon_prepareattack(thiswep, actor, fire2, 0))
 					{
 						W_Arc_Beam(fire2);
 
@@ -702,7 +702,7 @@ void Arc_Smoke()
 
 			#if 0
 			if(fire2)
-			if(weapon_prepareattack(actor, true, autocvar_g_balance_arc_secondary_refire))
+			if(weapon_prepareattack(thiswep, actor, true, autocvar_g_balance_arc_secondary_refire))
 			{
 				W_Arc_Attack2();
 				actor.arc_count = autocvar_g_balance_arc_secondary_count;

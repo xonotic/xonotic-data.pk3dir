@@ -681,7 +681,7 @@ void W_Shockwave_Attack(void)
 			{
 				if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
 				{
-					if(weapon_prepareattack(actor, false, WEP_CVAR(shockwave, blast_animtime)))
+					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(shockwave, blast_animtime)))
 					{
 						W_Shockwave_Attack();
 						actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
@@ -693,7 +693,7 @@ void W_Shockwave_Attack(void)
 			{
 				//if(actor.clip_load >= 0) // we are not currently reloading
 				if(!actor.crouch) // no crouchmelee please
-				if(weapon_prepareattack(actor, true, WEP_CVAR(shockwave, melee_refire)))
+				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR(shockwave, melee_refire)))
 				{
 					// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 					weapon_thinkf(actor, WFRAME_FIRE1, 0, W_Shockwave_Melee);

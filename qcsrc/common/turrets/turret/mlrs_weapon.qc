@@ -19,7 +19,7 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, bool fire1
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire1)
-    if (!isPlayer || weapon_prepareattack(actor, false, WEP_CVAR(machinegun, sustained_refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR(machinegun, sustained_refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
