@@ -51,9 +51,10 @@ void healer_setup(entity e)
 }
 #endif // CSQC
 
-REGISTER_LINKED(Nade_Heal, bool isNew)
+REGISTER_NET_LINKED(Nade_Heal, bool isNew)
 #ifdef CSQC
 {
+	Net_Accept();
 	int sf = ReadByte();
 	if (sf & 1) {
 		this.origin_x = ReadCoord();
@@ -70,21 +71,22 @@ REGISTER_LINKED(Nade_Heal, bool isNew)
 #endif
 
 #ifdef SVQC
-float healer_send(entity to, int sf)
+bool healer_send(entity to, int sf)
 {
 	SELFPARAM();
-	WriteByte(MSG_ENTITY, Linked_Nade_Heal.m_id);
-	WriteByte(MSG_ENTITY, sf);
+	int channel = MSG_ENTITY;
+	WriteHeader(channel, Nade_Heal);
+	WriteByte(channel, sf);
 	if (sf & 1) {
-		WriteCoord(MSG_ENTITY, this.origin.x);
-		WriteCoord(MSG_ENTITY, this.origin.y);
-		WriteCoord(MSG_ENTITY, this.origin.z);
+		WriteCoord(channel, this.origin.x);
+		WriteCoord(channel, this.origin.y);
+		WriteCoord(channel, this.origin.z);
 
-		WriteByte(MSG_ENTITY, this.healer_lifetime);
+		WriteByte(channel, this.healer_lifetime);
 		//WriteByte(MSG_ENTITY, this.ltime - time + 1);
-		WriteShort(MSG_ENTITY, this.healer_radius);
+		WriteShort(channel, this.healer_radius);
 		// round time delta to a 1/10th of a second
-		WriteByte(MSG_ENTITY, (this.ltime - time)*10.0+0.5);
+		WriteByte(channel, (this.ltime - time)*10.0+0.5);
 	}
 	return true;
 }

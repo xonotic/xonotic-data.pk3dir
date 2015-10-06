@@ -835,7 +835,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 #endif
 	self.enttype = t;
 	bool done = false;
-	FOREACH(Linked, it.m_id == t, LAMBDA(
+	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
 		it.m_read(self, bIsNewEntity);
 		done = true;
 		break;
@@ -1266,7 +1266,7 @@ void Net_WeaponComplain()
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
-float CSQC_Parse_TempEntity()
+bool CSQC_Parse_TempEntity()
 {
 	// Acquire TE ID
 	int nTEID = ReadByte();
@@ -1274,6 +1274,10 @@ float CSQC_Parse_TempEntity()
 	if (autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
+	FOREACH(TempEntities, it.m_id == nTEID, LAMBDA(
+		it.m_read(NULL, true);
+		return true;
+	));
 	switch (nTEID)
 	{
 		case TE_CSQC_MUTATOR:

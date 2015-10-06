@@ -49,32 +49,67 @@ void UncustomizeEntitiesRun()
 #include "registry.qh"
 #include "sort.qh"
 
-REGISTRY(Linked, 24)
-
 .string netname;
 .int m_id;
 .void(entity this, bool isNew) m_read;
 
 #ifdef CSQC
-    #define REGISTER_LINKED(id, param) \
+    #define Net_Accept() do { if (!this)    this = spawn(); } while (0)
+    #define Net_Reject() do { if (this)     remove(this);   } while (0)
+#else
+    #define WriteHeader(to, id) do { \
+        if (NET_##id##_istemp) WriteByte(to, SVC_TEMPENTITY); \
+        WriteByte(to, NET_##id.m_id); \
+    } while (0)
+#endif
+
+#ifdef CSQC
+    #define REGISTER_NET_LINKED(id, param) \
         void Ent_Read##id(entity this, param) { this = self; } \
-        REGISTER(RegisterLinked, Linked, Linked, Linked_COUNT, id, m_id, spawn()) { \
+        REGISTER(RegisterLinkedEntities, NET, LinkedEntities, LinkedEntities_COUNT, id, m_id, spawn()) { \
             this.netname = #id; \
             this.m_read = Ent_Read##id; \
         } \
         [[accumulate]] void Ent_Read##id(entity this, param)
 #else
-    #define REGISTER_LINKED(id, param) \
-        REGISTER(RegisterLinked, Linked, Linked, Linked_COUNT, id, m_id, spawn()) { \
+    #define REGISTER_NET_LINKED(id, param) \
+        const bool NET_##id##_istemp = false; \
+        REGISTER(RegisterLinkedEntities, NET, LinkedEntities, LinkedEntities_COUNT, id, m_id, spawn()) { \
             this.netname = #id; \
         }
 #endif
 
-REGISTER_REGISTRY(RegisterLinked)
-REGISTRY_SORT(Linked, netname, 0)
-STATIC_INIT(RegisterLinked_renumber) {
-    for (int i = 0; i < Linked_COUNT; ++i) {
-        Linked[i].m_id = 100 + i;
+REGISTRY(LinkedEntities, 24)
+REGISTER_REGISTRY(RegisterLinkedEntities)
+REGISTRY_SORT(LinkedEntities, netname, 0)
+STATIC_INIT(RegisterLinkedEntities_renumber) {
+    for (int i = 0; i < LinkedEntities_COUNT; ++i) {
+        LinkedEntities[i].m_id = 100 + i;
+    }
+}
+
+#ifdef CSQC
+    #define REGISTER_NET_TEMP(id, param) \
+        void Net_Read##id(entity this, param); \
+        REGISTER(RegisterTempEntities, NET, TempEntities, TempEntities_COUNT, id, m_id, spawn()) { \
+            this.netname = #id; \
+            this.m_read = Net_Read##id; \
+        } \
+        void Net_Read##id(entity this, param)
+#else
+    #define REGISTER_NET_TEMP(id, param) \
+        const bool NET_##id##_istemp = true; \
+        REGISTER(RegisterTempEntities, NET, TempEntities, TempEntities_COUNT, id, m_id, spawn()) { \
+            this.netname = #id; \
+        }
+#endif
+
+REGISTRY(TempEntities, 24)
+REGISTER_REGISTRY(RegisterTempEntities)
+REGISTRY_SORT(TempEntities, netname, 0)
+STATIC_INIT(RegisterTempEntities_renumber) {
+    for (int i = 0; i < TempEntities_COUNT; ++i) {
+        TempEntities[i].m_id = 115 + i;
     }
 }
 
