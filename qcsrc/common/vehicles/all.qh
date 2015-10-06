@@ -3,16 +3,13 @@
 
 #include "vehicle.qh"
 
-void RegisterVehicles();
-const int VEH_MAXCOUNT = 24;
-entity vehicle_info[VEH_MAXCOUNT], vehicle_info_first, vehicle_info_last;
-Vehicle get_vehicleinfo(int id);
-int VEH_COUNT;
-const int VEH_FIRST = 1;
-#define VEH_LAST (VEH_FIRST + VEH_COUNT - 1)
-/** If you register a new vehicle, make sure to add it to all.inc */
-#define REGISTER_VEHICLE(id, inst) REGISTER(RegisterVehicles, VEH, vehicle_info, VEH_COUNT, id, vehicleid, inst)
+REGISTRY(Vehicles, 24)
 REGISTER_REGISTRY(RegisterVehicles)
+const int VEH_FIRST = 1;
+#define VEH_LAST (Vehicles_COUNT - 1)
+
+/** If you register a new vehicle, make sure to add it to all.inc */
+#define REGISTER_VEHICLE(id, inst) REGISTER(RegisterVehicles, VEH, Vehicles, Vehicles_COUNT, id, vehicleid, inst)
 
 #if defined(SVQC)
 	#include "sv_vehicles.qh"
@@ -21,6 +18,15 @@ REGISTER_REGISTRY(RegisterVehicles)
 #endif
 
 REGISTER_VEHICLE(Null, NEW(Vehicle));
+
+Vehicle get_vehicleinfo(int id)
+{
+	if (id >= VEH_FIRST && id <= VEH_LAST) {
+		Vehicle v = Vehicles[id];
+		if (v) return v;
+	}
+	return VEH_Null;
+}
 
 #include "all.inc"
 

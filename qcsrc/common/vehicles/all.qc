@@ -23,13 +23,6 @@ STATIC_INIT(vehicles_common_initialize)
 }
 #endif
 
-entity get_vehicleinfo(int id)
-{
-	if (id < VEH_FIRST || id > VEH_LAST) return VEH_Null;
-	entity m = vehicle_info[id];
-	return m ? m : VEH_Null;
-}
-
 #if defined(SVQC)
 	#include "sv_vehicles.qc"
 #elif defined(CSQC)
