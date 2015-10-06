@@ -12,7 +12,7 @@
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
-#include "../common/nades.qh"
+#include "../common/nades/all.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"

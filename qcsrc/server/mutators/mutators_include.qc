@@ -11,7 +11,7 @@
     #include "../../common/stats.qh"
     #include "../../common/teams.qh"
     #include "../../common/util.qh"
-    #include "../../common/nades.qh"
+    #include "../../common/nades/all.qh"
     #include "../../common/buffs/all.qh"
     #include "../../common/command/markup.qh"
     #include "../../common/command/rpn.qh"

@@ -5,7 +5,7 @@
 
 #include "gamemode_keyhunt.qh"
 #include "gamemode_freezetag.qh"
-#include "../../common/nades.qh"
+#include "../../common/nades/all.qh"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
@@ -23,7 +23,7 @@ void nade_timer_think()
 
 void nade_burn_spawn(entity _nade)
 {
-	CSQCProjectile(_nade, true, NADES[_nade.nade_type].m_projectile[true], true);
+	CSQCProjectile(_nade, true, Nades[_nade.nade_type].m_projectile[true], true);
 }
 
 void nade_spawn(entity _nade)
@@ -42,7 +42,7 @@ void nade_spawn(entity _nade)
 
 	_nade.effects |= EF_LOWPRECISION;
 
-	CSQCProjectile(_nade, true, NADES[_nade.nade_type].m_projectile[false], true);
+	CSQCProjectile(_nade, true, Nades[_nade.nade_type].m_projectile[false], true);
 }
 
 void napalm_damage(float dist, float damage, float edgedamage, float burntime)
@@ -477,7 +477,7 @@ void nade_boom()
 	entity expef = NULL;
 	bool nade_blast = true;
 
-	switch ( NADES[self.nade_type] )
+	switch ( Nades[self.nade_type] )
 	{
 		case NADE_TYPE_NAPALM:
 			nade_blast = autocvar_g_nades_napalm_blast;
@@ -529,7 +529,7 @@ void nade_boom()
 	}
 
 	if(self.takedamage)
-	switch ( NADES[self.nade_type] )
+	switch ( Nades[self.nade_type] )
 	{
 		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
 		case NADE_TYPE_ICE: nade_ice_boom(); break;
@@ -772,7 +772,7 @@ float nade_customize()
 	{
 		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 		if(!self.traileffectnum)
-			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(NADES[self.nade_type].m_projectile[false], self.team).eent_eff_name);
+			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades[self.nade_type].m_projectile[false], self.team).eent_eff_name);
 		self.alpha = 1;
 	}
 
@@ -810,14 +810,14 @@ void nade_prime()
 		n.pokenade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
-	n.nade_type = bound(1, n.nade_type, NADES_COUNT);
+	n.nade_type = bound(1, n.nade_type, Nades_COUNT);
 
 	setmodel(n, MDL_PROJECTILE_NADE);
 	//setattachment(n, self, "bip01 l hand");
 	n.exteriormodeltoclient = self;
 	n.customizeentityforclient = nade_customize;
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(NADES[n.nade_type].m_projectile[false], self.team).eent_eff_name);
-	n.colormod = NADES[n.nade_type].m_color;
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades[n.nade_type].m_projectile[false], self.team).eent_eff_name);
+	n.colormod = Nades[n.nade_type].m_color;
 	n.realowner = self;
 	n.colormap = self.colormap;
 	n.glowmod = self.glowmod;
@@ -830,7 +830,7 @@ void nade_prime()
 	setmodel(fn, MDL_NADE_VIEW);
 	setattachment(fn, self.weaponentity, "");
 	fn.realowner = fn.owner = self;
-	fn.colormod = NADES[n.nade_type].m_color;
+	fn.colormod = Nades[n.nade_type].m_color;
 	fn.colormap = self.colormap;
 	fn.glowmod = self.glowmod;
 	fn.think = SUB_Remove;
@@ -993,7 +993,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				self.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 			}
 
-			self.nade_type = bound(1, self.nade_type, NADES_COUNT);
+			self.nade_type = bound(1, self.nade_type, Nades_COUNT);
 
 			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
 				nades_GiveBonus(self, time_score / autocvar_g_nades_bonus_score_max);

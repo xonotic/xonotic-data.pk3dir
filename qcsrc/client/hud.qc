@@ -14,7 +14,7 @@
 #include "../common/deathtypes.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
-#include "../common/nades.qh"
+#include "../common/nades/all.qh"
 
 #include "../server/mutators/gamemode_ctf.qh"
 
@@ -858,8 +858,8 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 	float bonusNades    = getstatf(STAT_NADE_BONUS);
 	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
 	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
-	vector nadeColor    = NADES[bonusType].m_color;
-	string nadeIcon     = NADES[bonusType].m_icon;
+	vector nadeColor    = Nades[bonusType].m_color;
+	string nadeIcon     = Nades[bonusType].m_icon;
 
 	vector iconPos, textPos;
 

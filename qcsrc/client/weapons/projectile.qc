@@ -5,7 +5,7 @@
 #include "../main.qh"
 
 #include "../../common/constants.qh"
-#include "../../common/nades.qh"
+#include "../../common/nades/all.qh"
 #include "../../common/movetypes/movetypes.qh"
 #include "../../common/util.qh"
 

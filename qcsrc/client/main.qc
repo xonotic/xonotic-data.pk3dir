@@ -30,7 +30,7 @@
 #include "../common/effects/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
-#include "../common/nades.qh"
+#include "../common/nades/all.qh"
 #include "../common/net_notice.qh"
 #include "../common/notifications.qh"
 #include "../common/stats.qh"

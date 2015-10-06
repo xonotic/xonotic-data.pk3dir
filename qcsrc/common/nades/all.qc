@@ -1,17 +1,17 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../client/defs.qh"
-	#include "nades.qh"
-	#include "buffs/all.qh"
-	#include "../common/movetypes/movetypes.qh"
-	#include "../client/main.qh"
-	#include "../csqcmodellib/cl_model.qh"
+	#include "../../dpdefs/csprogsdefs.qh"
+	#include "../../client/defs.qh"
+	#include "all.qh"
+	#include "../buffs/all.qh"
+	#include "../movetypes/movetypes.qh"
+	#include "../../client/main.qh"
+	#include "../../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "constants.qh"
-    #include "../server/constants.qh"
-	#include "../common/turrets/sv_turrets.qh"
+	#include "../../dpdefs/progsdefs.qh"
+    #include "../constants.qh"
+    #include "../../server/constants.qh"
+	#include "../turrets/sv_turrets.qh"
 #endif
 
 
