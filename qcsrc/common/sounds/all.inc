@@ -35,7 +35,7 @@ SOUND(GRENADE_BOUNCE4, W_Sound("grenade_bounce4"));
 SOUND(GRENADE_BOUNCE5, W_Sound("grenade_bounce5"));
 SOUND(GRENADE_BOUNCE6, W_Sound("grenade_bounce6"));
 Sound SND_GRENADE_BOUNCE_RANDOM() {
-    return SOUNDS[SND_GRENADE_BOUNCE1.m_id + rint(random() * 5)];
+    return Sounds[SND_GRENADE_BOUNCE1.m_id + rint(random() * 5)];
 }
 SOUND(GRENADE_FIRE, W_Sound("grenade_fire"));
 SOUND(GRENADE_IMPACT, W_Sound("grenade_impact"));
@@ -47,7 +47,7 @@ SOUND(HAGEXP1, W_Sound("hagexp1"));
 SOUND(HAGEXP2, W_Sound("hagexp2"));
 SOUND(HAGEXP3, W_Sound("hagexp3"));
 Sound SND_HAGEXP_RANDOM() {
-    return SOUNDS[SND_HAGEXP1.m_id + rint(random() * 2)];
+    return Sounds[SND_HAGEXP1.m_id + rint(random() * 2)];
 }
 
 SOUND(HOOKBOMB_FIRE, W_Sound("hookbomb_fire"));
@@ -70,7 +70,7 @@ SOUND(NEXWHOOSH1, W_Sound("nexwhoosh1"));
 SOUND(NEXWHOOSH2, W_Sound("nexwhoosh2"));
 SOUND(NEXWHOOSH3, W_Sound("nexwhoosh3"));
 Sound SND_NEXWHOOSH_RANDOM() {
-    return SOUNDS[SND_NEXWHOOSH1.m_id + rint(random() * 2)];
+    return Sounds[SND_NEXWHOOSH1.m_id + rint(random() * 2)];
 }
 SOUND(RELOAD, W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
 
@@ -78,7 +78,7 @@ SOUND(RIC1, W_Sound("ric1"));
 SOUND(RIC2, W_Sound("ric2"));
 SOUND(RIC3, W_Sound("ric3"));
 Sound SND_RIC_RANDOM() {
-    return SOUNDS[SND_RIC1.m_id + rint(random() * 2)];
+    return Sounds[SND_RIC1.m_id + rint(random() * 2)];
 }
 
 SOUND(ROCKET_DET, W_Sound("rocket_det"));
@@ -259,7 +259,7 @@ SOUND(GIB_SPLAT02, "misc/gib_splat02.wav");
 SOUND(GIB_SPLAT03, "misc/gib_splat03.wav");
 SOUND(GIB_SPLAT04, "misc/gib_splat04.wav");
 Sound SND_GIB_SPLAT_RANDOM() {
-    return SOUNDS[SND_GIB_SPLAT01.m_id + floor(prandom() * 4)];
+    return Sounds[SND_GIB_SPLAT01.m_id + floor(prandom() * 4)];
 }
 
 SOUND(HIT, "misc/hit.wav");

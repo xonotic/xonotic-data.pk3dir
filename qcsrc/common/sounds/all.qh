@@ -1,5 +1,5 @@
-#ifndef SOUNDS_H
-#define SOUNDS_H
+#ifndef SOUNDS_ALL_H
+#define SOUNDS_ALL_H
 
 #include "../teams.qh"
 
@@ -18,10 +18,8 @@
 // Used in places where a string is required
 #define SND(id) (SND_##id.sound_str())
 
-void RegisterSounds();
-const int MAX_SOUNDS = 128;
-entity SOUNDS[MAX_SOUNDS], SOUNDS_first, SOUNDS_last;
-int SOUNDS_COUNT;
+REGISTRY(Sounds, 128)
+REGISTER_REGISTRY(RegisterSounds)
 
 CLASS(Sound, Object)
     ATTRIB(Sound, m_id, int, 0)
@@ -44,16 +42,15 @@ ENDCLASS(Sound)
 
 #define SOUND(name, path) \
     string SND_##name##_get() { return path; } \
-    REGISTER(RegisterSounds, SND, SOUNDS, SOUNDS_COUNT, name, m_id, NEW(Sound, SND_##name##_get))
-REGISTER_REGISTRY(RegisterSounds)
+    REGISTER(RegisterSounds, SND, Sounds, Sounds_COUNT, name, m_id, NEW(Sound, SND_##name##_get))
 
 STATIC_INIT(RegisterSounds_precache) {
-    FOREACH(SOUNDS, true, LAMBDA({
+    FOREACH(Sounds, true, LAMBDA({
         it.sound_precache(it);
     }));
 }
 
 SOUND(Null, "misc/null.wav");
-#include "sounds.inc"
+#include "all.inc"
 
 #endif
