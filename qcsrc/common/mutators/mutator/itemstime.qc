@@ -12,8 +12,8 @@ void IT_Write(entity e, int i, float f) {
 #endif
 
 #ifdef CSQC
-float ItemsTime_time[MAX_ITEMS];
-float ItemsTime_availableTime[MAX_ITEMS];
+float ItemsTime_time[Items_MAX];
+float ItemsTime_availableTime[Items_MAX];
 MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
     if (MUTATOR_RETURNVALUE) return false;
     if (!ReadMutatorEquals(mutator_argv_int_0, itemstime)) return false;
@@ -60,11 +60,11 @@ bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons)
 
 #ifdef SVQC
 
-float it_times[MAX_ITEMS];
+float it_times[Items_MAX];
 
 void Item_ItemsTime_Init()
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, true, LAMBDA(
         it_times[it.m_id] = -1;
     ));
 }
@@ -76,21 +76,21 @@ STATIC_INIT(ItemsTime_Init) {
 
 void Item_ItemsTime_ResetTimes()
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, true, LAMBDA(
         it_times[it.m_id] = (it_times[it.m_id] == -1) ? -1 : 0;
     ));
 }
 
 void Item_ItemsTime_ResetTimesForPlayer(entity e)
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, true, LAMBDA(
         IT_Write(e, it.m_id, (it_times[it.m_id] == -1) ? -1 : 0);
     ));
 }
 
 void Item_ItemsTime_SetTimesForPlayer(entity e)
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, true, LAMBDA(
         IT_Write(e, it.m_id, it_times[it.m_id]);
     ));
 }
@@ -265,15 +265,15 @@ void HUD_ItemsTime()
 
     int count = 0;
     if (autocvar_hud_panel_itemstime_hidespawned == 1)
-        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+        FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] > time || -ItemsTime_time[i] > time);
         ));
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
-        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+        FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] > time);
         ));
     else
-        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+        FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
             count += (ItemsTime_time[i] != -1);
         ));
     if (count == 0)
@@ -346,7 +346,7 @@ void HUD_ItemsTime()
 
     float row = 0, column = 0;
     bool item_available;
-    FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0') && ItemsTime_time[i] != -1, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0') && ItemsTime_time[i] != -1, LAMBDA(
         float item_time = ItemsTime_time[i];
         if (item_time < -1)
         {

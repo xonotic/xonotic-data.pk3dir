@@ -237,7 +237,7 @@ float spritelookupblinkvalue(string s)
         if (get_weaponinfo(self.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
             return 2;
     }
-    if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_waypointblink;
+    if (s == WP_Item.netname) return Items[self.wp_extra].m_waypointblink;
 
     return 1;
 }
@@ -245,7 +245,7 @@ float spritelookupblinkvalue(string s)
 vector spritelookupcolor(string s, vector def)
 {SELFPARAM();
     if (s == WP_Weapon.netname) return get_weaponinfo(self.wp_extra).wpcolor;
-    if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_color;
+    if (s == WP_Item.netname) return Items[self.wp_extra].m_color;
     if (s == WP_Buff.netname) return BUFFS[self.wp_extra].m_color;
     return def;
 }
@@ -254,7 +254,7 @@ string spritelookuptext(string s)
 {SELFPARAM();
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return get_weaponinfo(self.wp_extra).message;
-    if (s == WP_Item.netname) return ITEMS[self.wp_extra].m_waypoint;
+    if (s == WP_Item.netname) return Items[self.wp_extra].m_waypoint;
     if (s == WP_Buff.netname) return BUFFS[self.wp_extra].m_prettyName;
     if (s == WP_Monster.netname) return get_monsterinfo(self.wp_extra).monster_name;
 
