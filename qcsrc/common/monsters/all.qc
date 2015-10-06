@@ -3,15 +3,6 @@
 
 #include "all.qh"
 
-entity get_monsterinfo(int id)
-{
-	if (id >= MON_FIRST && id <= MON_LAST) {
-		entity m = monster_info[id];
-		if (m) return m;
-	}
-	return MON_Null;
-}
-
 #define IMPLEMENTATION
 #include "all.inc"
 #undef IMPLEMENTATION
