@@ -723,6 +723,7 @@ float autocvar_g_random_gravity_positive;
 float autocvar_g_random_gravity_negative;
 float autocvar_g_random_gravity_delay;
 bool autocvar_g_nades;
+bool autocvar_g_nades_override_dropweapon = true;
 vector autocvar_g_nades_throw_offset;
 bool autocvar_g_nades_spawn;
 int autocvar_g_nades_spawn_count;

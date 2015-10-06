@@ -952,7 +952,7 @@ NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOff
 
 MUTATOR_HOOKFUNCTION(nades_CheckThrow)
 {
-	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK))) {
+	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
 		nades_CheckThrow();
 		return true;
 	}
