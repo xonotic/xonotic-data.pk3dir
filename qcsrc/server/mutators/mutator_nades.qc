@@ -907,7 +907,10 @@ void nades_Clear(entity player)
 
 MUTATOR_HOOKFUNCTION(nades_CheckThrow)
 {
-	if(MUTATOR_RETURNVALUE) { nades_CheckThrow(); }
+	if (self.offhand) {
+		nades_CheckThrow();
+		return true;
+	}
 	return false;
 }
 
