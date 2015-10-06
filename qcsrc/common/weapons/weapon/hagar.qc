@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ HAGAR,
-/* function  */ W_Hagar,
-/* ammotype  */ ammo_rockets,
-/* impulse   */ 8,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '1 1 0.5',
-/* modelname */ "hagar",
-/* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairhagar 0.8",
-/* wepimg    */ "weaponhagar",
-/* refname   */ "hagar",
-/* wepname   */ _("Hagar")
-);
+CLASS(Hagar, Weapon)
+/* ammotype  */ ATTRIB(Hagar, ammo_field, .int, ammo_rockets)
+/* impulse   */ ATTRIB(Hagar, impulse, int, 8)
+/* flags     */ ATTRIB(Hagar, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(Hagar, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* color     */ ATTRIB(Hagar, wpcolor, vector, '1 1 0.5');
+/* modelname */ ATTRIB(Hagar, mdl, string, "hagar");
+#ifndef MENUQC
+/* model     */ ATTRIB(Hagar, m_model, Model, MDL_HAGAR_ITEM);
+#endif
+/* crosshair */ ATTRIB(Hagar, w_crosshair, string, "gfx/crosshairhagar");
+/* crosshair */ ATTRIB(Hagar, w_crosshair_size, float, 0.8);
+/* wepimg    */ ATTRIB(Hagar, model2, string, "weaponhagar");
+/* refname   */ ATTRIB(Hagar, netname, string, "hagar");
+/* wepname   */ ATTRIB(Hagar, message, string, _("Hagar"));
+ENDCLASS(Hagar)
+REGISTER_WEAPON(HAGAR, NEW(Hagar));
 
 #define HAGAR_SETTINGS(w_cvar,w_prop) HAGAR_SETTINGS_LIST(w_cvar, w_prop, HAGAR, hagar)
 #define HAGAR_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -121,11 +123,11 @@ void W_Hagar_Touch2(void)
 	}
 }
 
-void W_Hagar_Attack(void)
+void W_Hagar_Attack(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
 
-	W_DecreaseAmmo(WEP_CVAR_PRI(hagar, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(hagar, ammo));
 
 	W_SetupShot(self, false, 2, SND(HAGAR_FIRE), CH_WEAPON_A, WEP_CVAR_PRI(hagar, damage));
 
@@ -164,11 +166,11 @@ void W_Hagar_Attack(void)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-void W_Hagar_Attack2(void)
+void W_Hagar_Attack2(Weapon thiswep)
 {SELFPARAM();
 	entity missile;
 
-	W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(hagar, ammo));
 
 	W_SetupShot(self, false, 2, SND(HAGAR_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 
@@ -221,7 +223,7 @@ void W_Hagar_Attack2_Load_Release(void)
 	if(!self.hagar_load)
 		return;
 
-	weapon_prepareattack_do(1, WEP_CVAR_SEC(hagar, refire));
+	weapon_prepareattack_do(self, true, WEP_CVAR_SEC(hagar, refire));
 
 	W_SetupShot(self, false, 2, SND(HAGAR_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hagar, damage));
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -284,12 +286,12 @@ void W_Hagar_Attack2_Load_Release(void)
 		MUTATOR_CALLHOOK(EditProjectile, self, missile);
 	}
 
-	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, load_animtime), w_ready);
+	weapon_thinkf(self, WFRAME_FIRE2, WEP_CVAR_SEC(hagar, load_animtime), w_ready);
 	self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, refire) * W_WeaponRateFactor();
 	self.hagar_load = 0;
 }
 
-void W_Hagar_Attack2_Load(void)
+void W_Hagar_Attack2_Load(Weapon thiswep)
 {SELFPARAM();
 	// loadable hagar secondary attack, must always run each frame
 
@@ -317,7 +319,7 @@ void W_Hagar_Attack2_Load(void)
 			{
 				// if we pressed primary fire while loading, unload all rockets and abort
 				self.weaponentity.state = WS_READY;
-				W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo
+				W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo
 				self.hagar_load = 0;
 				sound(self, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
 
@@ -335,7 +337,7 @@ void W_Hagar_Attack2_Load(void)
 			{
 				if(!self.hagar_loadblock && self.hagar_loadstep < time)
 				{
-					W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo));
+					W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(hagar, ammo));
 					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
 					sound(self, CH_WEAPON_B, SND_HAGAR_LOAD, VOL_BASE * 0.8, ATTN_NORM); // sound is too loud according to most
@@ -387,7 +389,8 @@ void W_Hagar_Attack2_Load(void)
 		self.hagar_warning = false;
 
 		// we aren't checking ammo during an attack, so we must do it here
-		if(!(WEP_ACTION(self.weapon, WR_CHECKAMMO1) + WEP_ACTION(self.weapon, WR_CHECKAMMO2)))
+		Weapon w = get_weaponinfo(self.weapon);
+		if(!(w.wr_checkammo1(w) + w.wr_checkammo2(w)))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -397,48 +400,41 @@ void W_Hagar_Attack2_Load(void)
 	}
 }
 
-bool W_Hagar(int req)
-{SELFPARAM();
-	float ammo_amount;
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Hagar, wr_aim, void(entity thiswep))
 		{
 			if(random()>0.15)
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
 			else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
-
-			return true;
 		}
-		case WR_THINK:
+		METHOD(Hagar, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
 			float loadable_secondary;
 			loadable_secondary = (WEP_CVAR_SEC(hagar, load) && WEP_CVAR(hagar, secondary));
 
 			if(loadable_secondary)
-				W_Hagar_Attack2_Load(); // must always run each frame
-			if(autocvar_g_balance_hagar_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(self.BUTTON_ATCK && !self.hagar_load && !self.hagar_loadblock) // not while secondary is loaded or awaiting reset
+				W_Hagar_Attack2_Load(thiswep); // must always run each frame
+			if(autocvar_g_balance_hagar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) { // forced reload
+				Weapon w = get_weaponinfo(actor.weapon);
+				w.wr_reload(w);
+			} else if(fire1 && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(hagar, refire)))
+				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(hagar, refire)))
 				{
-					W_Hagar_Attack();
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
+					W_Hagar_Attack(thiswep);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
 				}
 			}
-			else if(self.BUTTON_ATCK2 && !loadable_secondary && WEP_CVAR(hagar, secondary))
+			else if(fire2 && !loadable_secondary && WEP_CVAR(hagar, secondary))
 			{
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(hagar, refire)))
+				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hagar, refire)))
 				{
-					W_Hagar_Attack2();
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hagar, refire), w_ready);
+					W_Hagar_Attack2(thiswep);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hagar, refire), w_ready);
 				}
 			}
-			return true;
 		}
-		case WR_GONETHINK:
+		METHOD(Hagar, wr_gonethink, void(entity thiswep))
 		{
 			// we lost the weapon and want to prepare switching away
 			if(self.hagar_load)
@@ -446,84 +442,68 @@ bool W_Hagar(int req)
 				self.weaponentity.state = WS_READY;
 				W_Hagar_Attack2_Load_Release();
 			}
-
-			return true;
 		}
-		case WR_INIT:
+		METHOD(Hagar, wr_init, void(entity thiswep))
 		{
 			HAGAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		case WR_SETUP:
+		METHOD(Hagar, wr_setup, void(entity thiswep))
 		{
 			self.hagar_loadblock = false;
 
 			if(self.hagar_load)
 			{
-				W_DecreaseAmmo(WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo if necessary
+				W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(hagar, ammo) * self.hagar_load * -1); // give back ammo if necessary
 				self.hagar_load = 0;
 			}
-
-			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Hagar, wr_checkammo1, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(HAGAR) >= WEP_CVAR_PRI(hagar, ammo);
+			float ammo_amount = self.WEP_AMMO(HAGAR) >= WEP_CVAR_PRI(hagar, ammo);
 			ammo_amount += self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_PRI(hagar, ammo);
 			return ammo_amount;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Hagar, wr_checkammo2, bool(entity thiswep))
 		{
-			ammo_amount = self.WEP_AMMO(HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
+			float ammo_amount = self.WEP_AMMO(HAGAR) >= WEP_CVAR_SEC(hagar, ammo);
 			ammo_amount += self.(weapon_load[WEP_HAGAR.m_id]) >= WEP_CVAR_SEC(hagar, ammo);
 			return ammo_amount;
 		}
-		case WR_CONFIG:
+		METHOD(Hagar, wr_config, void(entity thiswep))
 		{
 			HAGAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(Hagar, wr_resetplayer, void(entity thiswep))
 		{
 			self.hagar_load = 0;
-			return true;
 		}
-		case WR_PLAYERDEATH:
+		METHOD(Hagar, wr_playerdeath, void(entity thiswep))
 		{
 			// if we have any rockets loaded when we die, release them
 			if(self.hagar_load && WEP_CVAR_SEC(hagar, load_releasedeath))
 				W_Hagar_Attack2_Load_Release();
-
-			return true;
 		}
-		case WR_RELOAD:
+		METHOD(Hagar, wr_reload, void(entity thiswep))
 		{
 			if(!self.hagar_load) // require releasing loaded rockets first
-				W_Reload(min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), SND(RELOAD));
-
-			return true;
+				W_Reload(self, min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), SND(RELOAD));
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Hagar, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_HAGAR_SUICIDE;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Hagar, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_HAGAR_MURDER_BURST;
 			else
 				return WEAPON_HAGAR_MURDER_SPRAY;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_Hagar(int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(Hagar, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
@@ -537,20 +517,7 @@ bool W_Hagar(int req)
 				else
 					sound(self, CH_SHOTS, SND_HAGEXP3, VOL_BASE, ATTN_NORM);
 			}
+		}
 
-			return true;
-		}
-		case WR_INIT:
-		{
-			return true;
-		}
-		case WR_ZOOMRETICLE:
-		{
-			// no weapon specific image for this weapon
-			return false;
-		}
-	}
-	return false;
-}
 #endif
 #endif

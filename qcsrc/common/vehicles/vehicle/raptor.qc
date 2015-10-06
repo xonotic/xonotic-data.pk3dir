@@ -1,30 +1,34 @@
 #ifndef VEHICLE_RAPTOR
 #define VEHICLE_RAPTOR
 #include "raptor.qh"
-#ifndef MENUQC
-int v_raptor(int);
-#endif
-REGISTER_VEHICLE_SIMPLE(
-/* VEH_##id   */ RAPTOR,
-/* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
-/* mins,maxs  */ '-80 -80 0', '80 80 70',
-/* model	  */ "models/vehicles/raptor.dpm",
-/* head_model */ "",
-/* hud_model  */ "models/vehicles/raptor_cockpit.dpm",
-/* tags	   	  */ "", "tag_hud", "tag_camera",
-/* netname	  */ "raptor",
-/* fullname   */ _("Raptor")
-) {
-    this.m_icon = "vehicle_raptor";
-#ifndef MENUQC
-    this.vehicle_func = v_raptor;
-#endif
-}
+
+#include "raptor_weapons.qc"
+
+CLASS(Raptor, Vehicle)
+/* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
+/* mins       */ ATTRIB(Raptor, mins, vector, '-80 -80 0');
+/* maxs       */ ATTRIB(Raptor, maxs, vector, '80 80 70');
+/* model	  */ ATTRIB(Raptor, mdl, string, "models/vehicles/raptor.dpm");
+/* model	  */ ATTRIB(Raptor, model, string, "models/vehicles/raptor.dpm");
+/* head_model */ ATTRIB(Raptor, head_model, string, "");
+/* hud_model  */ ATTRIB(Raptor, hud_model, string, "models/vehicles/raptor_cockpit.dpm");
+/* tags       */ ATTRIB(Raptor, tag_head, string, "");
+/* tags       */ ATTRIB(Raptor, tag_hud, string, "tag_hud");
+/* tags       */ ATTRIB(Raptor, tag_view, string, "tag_camera");
+/* netname    */ ATTRIB(Raptor, netname, string, "raptor");
+/* fullname   */ ATTRIB(Raptor, vehicle_name, string, _("Raptor"));
+/* icon       */ ATTRIB(Raptor, m_icon, string, "vehicle_raptor");
+ENDCLASS(Raptor)
+REGISTER_VEHICLE(RAPTOR, NEW(Raptor));
+
 #endif
 
 #ifdef IMPLEMENTATION
 
+#include "raptor_weapons.qc"
+
 #ifdef SVQC
+
 bool autocvar_g_vehicle_raptor;
 
 float autocvar_g_vehicle_raptor_respawntime;
@@ -41,22 +45,6 @@ float autocvar_g_vehicle_raptor_speed_up;
 float autocvar_g_vehicle_raptor_speed_down;
 float autocvar_g_vehicle_raptor_friction;
 
-float autocvar_g_vehicle_raptor_bomblets;
-float autocvar_g_vehicle_raptor_bomblet_alt;
-float autocvar_g_vehicle_raptor_bomblet_time;
-float autocvar_g_vehicle_raptor_bomblet_damage;
-float autocvar_g_vehicle_raptor_bomblet_spread;
-float autocvar_g_vehicle_raptor_bomblet_edgedamage;
-float autocvar_g_vehicle_raptor_bomblet_radius;
-float autocvar_g_vehicle_raptor_bomblet_force;
-float autocvar_g_vehicle_raptor_bomblet_explode_delay;
-float autocvar_g_vehicle_raptor_bombs_refire;
-
-float autocvar_g_vehicle_raptor_flare_refire;
-float autocvar_g_vehicle_raptor_flare_lifetime;
-float autocvar_g_vehicle_raptor_flare_chase;
-float autocvar_g_vehicle_raptor_flare_range;
-
 float autocvar_g_vehicle_raptor_cannon_turnspeed;
 float autocvar_g_vehicle_raptor_cannon_turnlimit;
 float autocvar_g_vehicle_raptor_cannon_pitchlimit_up;
@@ -67,14 +55,6 @@ float autocvar_g_vehicle_raptor_cannon_locking_time;
 float autocvar_g_vehicle_raptor_cannon_locking_releasetime;
 float autocvar_g_vehicle_raptor_cannon_locked_time;
 float autocvar_g_vehicle_raptor_cannon_predicttarget;
-
-float autocvar_g_vehicle_raptor_cannon_cost;
-float autocvar_g_vehicle_raptor_cannon_damage;
-float autocvar_g_vehicle_raptor_cannon_radius;
-float autocvar_g_vehicle_raptor_cannon_refire;
-float autocvar_g_vehicle_raptor_cannon_speed;
-float autocvar_g_vehicle_raptor_cannon_spread;
-float autocvar_g_vehicle_raptor_cannon_force;
 
 float autocvar_g_vehicle_raptor_energy;
 float autocvar_g_vehicle_raptor_energy_regen;
@@ -99,106 +79,6 @@ float raptor_altitude(float amax)
 {SELFPARAM();
 	tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * amax), MOVE_WORLDONLY, self);
 	return vlen(self.origin - trace_endpos);
-}
-
-void raptor_bomblet_boom()
-{SELFPARAM();
-	RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
-									autocvar_g_vehicle_raptor_bomblet_edgedamage,
-									autocvar_g_vehicle_raptor_bomblet_radius, world, world,
-									autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB, world);
-	remove(self);
-}
-
-void raptor_bomblet_touch()
-{SELFPARAM();
-	if(other == self.owner)
-		return;
-
-	PROJECTILE_TOUCH;
-	self.think = raptor_bomblet_boom;
-	self.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
-}
-
-void raptor_bomb_burst()
-{SELFPARAM();
-	if(self.cnt > time)
-	if(autocvar_g_vehicle_raptor_bomblet_alt)
-	{
-		self.nextthink = time;
-		traceline(self.origin, self.origin + (normalize(self.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, self);
-		if((trace_fraction == 1.0) || (vlen(self.origin - self.owner.origin) < autocvar_g_vehicle_raptor_bomblet_radius))
-		{
-			UpdateCSQCProjectile(self);
-			return;
-		}
-	}
-
-	entity bomblet;
-	float i;
-
-	Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_VH_RAPT_FRAGMENT, 0, self);
-
-	for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
-	{
-		bomblet = spawn();
-		setorigin(bomblet, self.origin);
-
-		bomblet.movetype	= MOVETYPE_TOSS;
-		bomblet.touch	   = raptor_bomblet_touch;
-		bomblet.think	   = raptor_bomblet_boom;
-		bomblet.nextthink   = time + 5;
-		bomblet.owner	   = self.owner;
-		bomblet.realowner   = self.realowner;
-		bomblet.velocity	= normalize(normalize(self.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(self.velocity);
-
-		PROJECTILE_MAKETRIGGER(bomblet);
-		CSQCProjectile(bomblet, true, PROJECTILE_RAPTORBOMBLET, true);
-	}
-
-	remove(self);
-}
-
-void raptor_bombdrop()
-{SELFPARAM();
-	entity bomb_1, bomb_2;
-
-	bomb_1 = spawn();
-	bomb_2 = spawn();
-
-	setorigin(bomb_1, gettaginfo(self, gettagindex(self, "bombmount_left")));
-	setorigin(bomb_2, gettaginfo(self, gettagindex(self, "bombmount_right")));
-
-	bomb_1.movetype	 = bomb_2.movetype   = MOVETYPE_BOUNCE;
-	bomb_1.velocity	 = bomb_2.velocity   = self.velocity;
-	bomb_1.touch		= bomb_2.touch	  = raptor_bomb_burst;
-	bomb_1.think		= bomb_2.think	  = raptor_bomb_burst;
-	bomb_1.cnt		  = bomb_2.cnt		= time + 10;
-
-	if(autocvar_g_vehicle_raptor_bomblet_alt)
-		bomb_1.nextthink = bomb_2.nextthink  = time;
-	else
-		bomb_1.nextthink = bomb_2.nextthink  = time + autocvar_g_vehicle_raptor_bomblet_time;
-
-	bomb_1.owner	 = bomb_2.owner	  = self;
-	bomb_1.realowner = bomb_2.realowner  = self.owner;
-	bomb_1.solid	 = bomb_2.solid	  = SOLID_BBOX;
-	bomb_1.gravity   = bomb_2.gravity	= 1;
-
-	PROJECTILE_MAKETRIGGER(bomb_1);
-	PROJECTILE_MAKETRIGGER(bomb_2);
-
-	CSQCProjectile(bomb_1, true, PROJECTILE_RAPTORBOMB, true);
-	CSQCProjectile(bomb_2, true, PROJECTILE_RAPTORBOMB, true);
-}
-
-
-void raptor_fire_cannon(entity gun, string tagname)
-{SELFPARAM();
-	vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
-						   gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
-						   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, self.owner);
 }
 
 void raptor_land()
@@ -274,35 +154,6 @@ void raptor_exit(float eject)
 
 	antilag_clear(self.owner);
 	self.owner = world;
-}
-
-void raptor_flare_touch()
-{SELFPARAM();
-	remove(self);
-}
-
-void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	self.health -= damage;
-	if(self.health <= 0)
-		remove(self);
-}
-
-void raptor_flare_think()
-{SELFPARAM();
-	self.nextthink = time + 0.1;
-	entity _missile = findchainentity(enemy, self.owner);
-	while(_missile)
-	{
-		if(_missile.flags & FL_PROJECTILE)
-		if(vlen(self.origin - _missile.origin) < autocvar_g_vehicle_raptor_flare_range)
-		if(random() > autocvar_g_vehicle_raptor_flare_chase)
-			_missile.enemy = self;
-		_missile = _missile.chain;
-	}
-
-	if(self.tur_impacttime < time)
-		remove(self);
 }
 
 float raptor_frame()
@@ -536,25 +387,12 @@ float raptor_frame()
 	UpdateAuxiliaryXhair(player, trace_endpos, '0 1 0', 0);
 	*/
 
+	Weapon wep1 = WEP_RAPTOR;
 	if(!forbidWeaponUse(player))
 	if(player.BUTTON_ATCK)
-	if(raptor.attack_finished_single <= time)
-	if(raptor.vehicle_energy > autocvar_g_vehicle_raptor_cannon_cost)
+	if (wep1.wr_checkammo1(wep1))
 	{
-		raptor.misc_bulletcounter += 1;
-		raptor.attack_finished_single = time + autocvar_g_vehicle_raptor_cannon_refire;
-		if(raptor.misc_bulletcounter <= 2)
-			raptor_fire_cannon(self.gun1, "fire1");
-		else if(raptor.misc_bulletcounter == 3)
-			raptor_fire_cannon(self.gun2, "fire1");
-		else
-		{
-			raptor.attack_finished_single = time + autocvar_g_vehicle_raptor_cannon_refire * 2;
-			raptor_fire_cannon(self.gun2, "fire1");
-			raptor.misc_bulletcounter = 0;
-		}
-		raptor.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
-		self.cnt = time;
+		wep1.wr_think(wep1, self, true, false);
 	}
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
@@ -566,45 +404,25 @@ float raptor_frame()
 	if(self.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, false);
 
+	Weapon wep2a = WEP_RAPTOR_BOMB;
 	if(!forbidWeaponUse(player))
 	if(raptor.vehicle_weapon2mode == RSM_BOMB)
 	{
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_bombs_refire)
 		if(player.BUTTON_ATCK2)
 		{
-			raptor_bombdrop();
+			wep2a.wr_think(wep2a, self, false, true);
 			raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
 			raptor.lip   = time;
 		}
 	}
 	else
 	{
+		Weapon wep2b = WEP_RAPTOR_FLARE;
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_flare_refire)
 		if(player.BUTTON_ATCK2)
 		{
-			float i;
-			entity _flare;
-
-			for(i = 0; i < 3; ++i)
-			{
-			_flare = spawn();
-			setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
-			_flare.effects = EF_LOWPRECISION | EF_FLAME;
-			_flare.scale = 0.5;
-			setorigin(_flare, self.origin - '0 0 16');
-			_flare.movetype = MOVETYPE_TOSS;
-			_flare.gravity = 0.15;
-			_flare.velocity = 0.25 * raptor.velocity + (v_forward + randomvec() * 0.25)* -500;
-			_flare.think = raptor_flare_think;
-			_flare.nextthink = time;
-			_flare.owner = raptor;
-			_flare.solid = SOLID_CORPSE;
-			_flare.takedamage = DAMAGE_YES;
-			_flare.event_damage = raptor_flare_damage;
-			_flare.health = 20;
-			_flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
-			_flare.touch = raptor_flare_touch;
-			}
+			wep2b.wr_think(wep2b, self, false, true);
 			raptor.delay = time + autocvar_g_vehicle_raptor_flare_refire;
 			raptor.lip   = time;
 		}
@@ -749,12 +567,10 @@ float raptor_impulse(float _imp)
 	switch(_imp)
 	{
 		case 1:
-		case 230:
 			self.vehicle.vehicle_weapon2mode = RSM_BOMB;
 			CSQCVehicleSetup(self, 0);
 			return true;
 		case 2:
-		case 231:
 			self.vehicle.vehicle_weapon2mode = RSM_FLARE;
 			CSQCVehicleSetup(self, 0);
 			return true;
@@ -795,18 +611,12 @@ spawnfunc(vehicle_raptor)
 	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
 
-float v_raptor(float req)
-{SELFPARAM();
-	switch(req)
-	{
-		case VR_IMPACT:
+		METHOD(Raptor, vr_impact, void(Raptor thisveh))
 		{
 			if(autocvar_g_vehicle_raptor_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
-
-			return true;
 		}
-		case VR_ENTER:
+		METHOD(Raptor, vr_enter, void(Raptor thisveh))
 		{
 			self.vehicle_weapon2mode = RSM_BOMB;
 			self.owner.PlayerPhysplug = raptor_takeoff;
@@ -824,13 +634,8 @@ float v_raptor(float req)
 			   setorigin(self.owner.flagcarried, '-20 0 96');
 
 			CSQCVehicleSetup(self.owner, 0);
-			return true;
 		}
-		case VR_THINK:
-		{
-			return true;
-		}
-		case VR_DEATH:
+		METHOD(Raptor, vr_death, void(Raptor thisveh))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -851,9 +656,8 @@ float v_raptor(float req)
 
 			self.colormod = '-0.5 -0.5 -0.5';
 			self.touch = raptor_blowup;
-			return true;
 		}
-		case VR_SPAWN:
+		METHOD(Raptor, vr_spawn, void(Raptor thisveh))
 		{
 			if(!self.gun1)
 			{
@@ -943,9 +747,8 @@ float v_raptor(float req)
 			self.damageforcescale = 0.25;
 			self.vehicle_health = autocvar_g_vehicle_raptor_health;
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-			return true;
 		}
-		case VR_SETUP:
+		METHOD(Raptor, vr_setup, void(Raptor thisveh))
 		{
 			if(autocvar_g_vehicle_raptor_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -964,70 +767,12 @@ float v_raptor(float req)
 			self.vehicle_health = autocvar_g_vehicle_raptor_health;
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 			self.max_health = self.vehicle_health;
-
-			return true;
 		}
-		case VR_PRECACHE:
-		{
-			return true;
-		}
-	}
 
-	return true;
-}
-
-#endif // SVQC
+#endif
 #ifdef CSQC
 
-void RaptorCBShellfragDraw()
-{SELFPARAM();
-	if(wasfreed(self))
-		return;
-
-	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
-	self.move_avelocity += randomvec() * 15;
-	self.renderflags = 0;
-
-	if(self.cnt < time)
-		self.alpha = bound(0, self.nextthink - time, 1);
-
-	if(self.alpha < ALPHA_MIN_VISIBLE)
-		remove(self);
-}
-
-void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
-{SELFPARAM();
-	entity sfrag;
-
-	sfrag = spawn();
-	setmodel(sfrag, MDL_VEH_RAPTOR_CB_FRAGMENT);
-	setorigin(sfrag, _org);
-
-	sfrag.move_movetype = MOVETYPE_BOUNCE;
-	sfrag.gravity = 0.15;
-	sfrag.solid = SOLID_CORPSE;
-
-	sfrag.draw = RaptorCBShellfragDraw;
-
-	sfrag.move_origin = sfrag.origin = _org;
-	sfrag.move_velocity = _vel;
-	sfrag.move_avelocity = prandomvec() * vlen(sfrag.move_velocity);
-	sfrag.angles = self.move_angles = _ang;
-
-	sfrag.move_time = time;
-	sfrag.damageforcescale = 4;
-
-	sfrag.nextthink = time + 3;
-	sfrag.cnt = time + 2;
-	sfrag.alpha = 1;
-	sfrag.drawmask = MASK_NORMAL;
-}
-
-float v_raptor(float req)
-{
-	switch(req)
-	{
-		case VR_HUD:
+		METHOD(Raptor, vr_hud, void(Raptor thisveh))
 		{
 			string crosshair;
 
@@ -1042,21 +787,11 @@ float v_raptor(float req)
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 crosshair);
-			return true;
 		}
-		case VR_SETUP:
+		METHOD(Raptor, vr_setup, void(Raptor thisveh))
 		{
 			AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
-			return true;
 		}
-		case VR_PRECACHE:
-		{
-			return true;
-		}
-	}
 
-	return true;
-}
-
-#endif // CSQC
-#endif // REGISTER_VEHICLE
+#endif
+#endif

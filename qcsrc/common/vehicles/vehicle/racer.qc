@@ -1,27 +1,31 @@
 #ifndef VEHICLE_RACER
 #define VEHICLE_RACER
-#ifndef MENUQC
-int v_racer(int);
-#endif
-REGISTER_VEHICLE_SIMPLE(
-/* VEH_##id   */ RACER,
-/* spawnflags */ VHF_DMGSHAKE | VHF_DMGROLL,
-/* mins,maxs  */ '-120 -120 -40' * 0.5, '120 120 40' * 0.5,
-/* model	  */ "models/vehicles/wakizashi.dpm",
-/* head_model */ "null",
-/* hud_model  */ "models/vehicles/wakizashi_cockpit.dpm",
-/* tags	   	  */ "", "", "tag_viewport",
-/* netname	  */ "racer",
-/* fullname   */ _("Racer")
-) {
-    this.m_icon = "vehicle_racer";
-#ifndef MENUQC
-    this.vehicle_func = v_racer;
-#endif
-}
+
+#include "racer_weapon.qc"
+
+CLASS(Racer, Vehicle)
+/* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
+/* mins       */ ATTRIB(Racer, mins, vector, '-120 -120 -40' * 0.5);
+/* maxs       */ ATTRIB(Racer, maxs, vector, '120 120 40' * 0.5);
+/* model	  */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
+/* model	  */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
+/* head_model */ ATTRIB(Racer, head_model, string, "null");
+/* hud_model  */ ATTRIB(Racer, hud_model, string, "models/vehicles/wakizashi_cockpit.dpm");
+/* tags       */ ATTRIB(Racer, tag_head, string, "");
+/* tags       */ ATTRIB(Racer, tag_hud, string, "");
+/* tags       */ ATTRIB(Racer, tag_view, string, "tag_viewport");
+/* netname    */ ATTRIB(Racer, netname, string, "racer");
+/* fullname   */ ATTRIB(Racer, vehicle_name, string, _("Racer"));
+/* icon       */ ATTRIB(Racer, m_icon, string, "vehicle_racer");
+ENDCLASS(Racer)
+REGISTER_VEHICLE(RACER, NEW(Racer));
+
 #endif
 
 #ifdef IMPLEMENTATION
+
+#include "racer_weapon.qc"
+
 #ifdef SVQC
 #include "../../effects/effects.qh"
 #include "../../triggers/trigger/impulse.qh"
@@ -72,28 +76,10 @@ float autocvar_g_vehicle_racer_shield;
 float autocvar_g_vehicle_racer_shield_regen;
 float autocvar_g_vehicle_racer_shield_regen_pause;
 
-float autocvar_g_vehicle_racer_cannon_cost;
-float autocvar_g_vehicle_racer_cannon_damage;
-float autocvar_g_vehicle_racer_cannon_radius;
-float autocvar_g_vehicle_racer_cannon_refire;
-float autocvar_g_vehicle_racer_cannon_speed;
-float autocvar_g_vehicle_racer_cannon_spread;
-float autocvar_g_vehicle_racer_cannon_force;
-
-float autocvar_g_vehicle_racer_rocket_accel;
-float autocvar_g_vehicle_racer_rocket_damage;
-float autocvar_g_vehicle_racer_rocket_radius;
-float autocvar_g_vehicle_racer_rocket_force;
-float autocvar_g_vehicle_racer_rocket_refire;
-float autocvar_g_vehicle_racer_rocket_speed;
-float autocvar_g_vehicle_racer_rocket_turnrate;
-
 float autocvar_g_vehicle_racer_rocket_locktarget;
 float autocvar_g_vehicle_racer_rocket_locking_time;
 float autocvar_g_vehicle_racer_rocket_locking_releasetime;
 float autocvar_g_vehicle_racer_rocket_locked_time;
-float autocvar_g_vehicle_racer_rocket_locked_maxangle;
-float autocvar_g_vehicle_racer_rocket_climbspeed;
 
 float autocvar_g_vehicle_racer_respawntime;
 
@@ -168,145 +154,11 @@ void racer_align4point(float _delta)
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
 }
 
-void racer_fire_cannon(string tagname)
-{SELFPARAM();
-	vector v;
-	entity bolt;
-
-	v = gettaginfo(self, gettagindex(self, tagname));
-	bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
-						   v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
-						   autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-						   DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, self.owner);
-
-	// Fix z-aim (for chase mode)
-	v = normalize(trace_endpos - bolt.origin);
-	v_forward_z = v_z * 0.5;
-	bolt.velocity = v_forward * autocvar_g_vehicle_racer_cannon_speed;
-}
-
-void racer_rocket_groundhugger()
-{SELFPARAM();
-	vector olddir, newdir;
-	float oldvel, newvel;
-
-	self.nextthink  = time;
-
-	if(self.owner.deadflag != DEAD_NO || self.cnt < time)
-	{
-		self.use();
-		return;
-	}
-
-	if(!self.realowner.vehicle)
-	{
-		UpdateCSQCProjectile(self);
-		return;
-	}
-
-	olddir = normalize(self.velocity);
-	oldvel = vlen(self.velocity);
-	newvel = oldvel + self.lip;
-
-	tracebox(self.origin, self.mins, self.maxs, self.origin + olddir * 64, MOVE_WORLDONLY,self);
-	if(trace_fraction <= 0.5)
-	{
-		// Hitting somethign soon, just speed ahead
-		self.velocity = olddir * newvel;
-		UpdateCSQCProjectile(self);
-		return;
-	}
-
-	traceline(trace_endpos, trace_endpos - '0 0 64', MOVE_NORMAL, self);
-	if(trace_fraction != 1.0)
-	{
-		newdir = normalize(trace_endpos + '0 0 64' - self.origin) * autocvar_g_vehicle_racer_rocket_turnrate;
-		self.velocity = normalize(olddir + newdir) * newvel;
-	}
-	else
-	{
-		self.velocity = olddir * newvel;
-		self.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
-	}
-
-	int cont = pointcontents(self.origin - '0 0 32');
-	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
-		self.velocity_z += 200;
-
-	UpdateCSQCProjectile(self);
-	return;
-}
-
-void racer_rocket_tracker()
-{SELFPARAM();
-	vector olddir, newdir;
-	float oldvel, newvel;
-
-	self.nextthink  = time;
-
-	if (self.owner.deadflag != DEAD_NO || self.cnt < time)
-	{
-		self.use();
-		return;
-	}
-
-	if(!self.realowner.vehicle)
-	{
-		UpdateCSQCProjectile(self);
-		return;
-	}
-
-	olddir = normalize(self.velocity);
-	oldvel = vlen(self.velocity);
-	newvel = oldvel + self.lip;
-	makevectors(vectoangles(olddir));
-
-	float time_to_impact = min(vlen(self.enemy.origin - self.origin) / vlen(self.velocity), 1);
-	vector predicted_origin = self.enemy.origin + self.enemy.velocity * time_to_impact;
-
-	traceline(self.origin, self.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, self);
-	newdir = normalize(predicted_origin - self.origin);
-
-	//vector
-	float height_diff = predicted_origin_z - self.origin_z;
-
-	if(vlen(newdir - v_forward) > autocvar_g_vehicle_racer_rocket_locked_maxangle)
-	{
-		//bprint("Target lost!\n");
-		//dprint("OF:", ftos(vlen(newdir - v_forward)), "\n");
-		self.think = racer_rocket_groundhugger;
-		return;
-	}
-
-	if(trace_fraction != 1.0 && trace_ent != self.enemy)
-		newdir_z += 16 * sys_frametime;
-
-	self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
-	self.velocity_z -= 800 * sys_frametime;
-	self.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
-
-	UpdateCSQCProjectile(self);
-	return;
-}
-
-void racer_fire_rocket(string tagname, entity trg)
-{SELFPARAM();
+void racer_fire_rocket_aim(string tagname, entity trg)
+{
+	SELFPARAM();
 	vector v = gettaginfo(self, gettagindex(self, tagname));
-	entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND(ROCKET_FIRE),
-						   v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
-						   autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-						   DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
-
-	rocket.lip			  = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
-	rocket.wait			 = autocvar_g_vehicle_racer_rocket_turnrate;
-	rocket.nextthink		= time;
-	rocket.enemy			= trg;
-	rocket.cnt			  = time + 15;
-
-	if(trg)
-		rocket.think			= racer_rocket_tracker;
-	else
-		rocket.think			= racer_rocket_groundhugger;
+	racer_fire_rocket(v, v_forward, trg);
 }
 
 float racer_frame()
@@ -456,26 +308,21 @@ float racer_frame()
 	player.movement = racer.velocity += df * PHYS_INPUT_TIMELENGTH;
 
 #ifdef SVQC
-	if(!forbidWeaponUse(player))
-	if(player.BUTTON_ATCK)
-	if(time > racer.attack_finished_single)
-	if(racer.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost)
+	Weapon wep1 = WEP_RACER;
+	if (!forbidWeaponUse(player))
+	if (player.BUTTON_ATCK)
+	if (wep1.wr_checkammo1(wep1))
 	{
-		racer.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
-		racer.wait = time;
-
+		string tagname = (racer.cnt)
+		    ? (racer.cnt = 0, "tag_fire1")
+		    : (racer.cnt = 1, "tag_fire2");
+		vector org = gettaginfo(self, gettagindex(self, tagname));
+		w_shotorg = org;
+		w_shotdir = v_forward;
+		// Fix z-aim (for chase mode)
 		crosshair_trace(player);
-		if(racer.cnt)
-		{
-			racer_fire_cannon("tag_fire1");
-			racer.cnt = 0;
-		}
-		else
-		{
-			racer_fire_cannon("tag_fire2");
-			racer.cnt = 1;
-		}
-		racer.attack_finished_single = time + autocvar_g_vehicle_racer_cannon_refire;
+		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
+		wep1.wr_think(wep1, self, true, false);
 	}
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
@@ -504,12 +351,12 @@ float racer_frame()
 
 		if(racer.misc_bulletcounter == 1)
 		{
-			racer_fire_rocket("tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+			racer_fire_rocket_aim("tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
 			player.vehicle_ammo2 = 50;
 		}
 		else if(racer.misc_bulletcounter == 2)
 		{
-			racer_fire_rocket("tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+			racer_fire_rocket_aim("tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
 			racer.lock_strength  = 0;
 			racer.lock_target	= world;
 			racer.misc_bulletcounter = 0;
@@ -711,20 +558,15 @@ void racer_draw()
 #endif
 #endif
 
-bool v_racer(int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case VR_IMPACT:
+		METHOD(Racer, vr_impact, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			if(autocvar_g_vehicle_racer_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 		#endif
-			return true;
 		}
 
-		case VR_ENTER:
+		METHOD(Racer, vr_enter, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.movetype = MOVETYPE_BOUNCE;
@@ -737,11 +579,9 @@ bool v_racer(int req)
 
 			self.move_movetype = MOVETYPE_BOUNCE;
 		#endif
-
-			return true;
 		}
 
-		case VR_SPAWN:
+		METHOD(Racer, vr_spawn, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			if(self.scale != 0.5)
@@ -777,10 +617,9 @@ bool v_racer(int req)
 			self.vehicle_health = autocvar_g_vehicle_racer_health;
 			self.vehicle_shield = autocvar_g_vehicle_racer_shield;
 		#endif
-			return true;
 		}
 
-		case VR_DEATH:
+		METHOD(Racer, vr_death, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.SendEntity		= func_null; // stop networking this racer (for now)
@@ -809,20 +648,18 @@ bool v_racer(int req)
 			self.think = racer_blowup_think;
 			self.nextthink = time;
 		#endif
-			return true;
 		}
 
 #ifdef CSQC
-		case VR_HUD:
+		METHOD(Racer, vr_hud, void(Racer thisveh))
 		{
 			Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
 							 vCROSS_GUIDE);
-			return true;
 		}
 #endif
-		case VR_SETUP:
+		METHOD(Racer, vr_setup, void(Racer thisveh))
 		{
 		#ifdef SVQC
 			self.vehicle_exit = racer_exit;
@@ -852,16 +689,6 @@ bool v_racer(int req)
 		#ifdef CSQC
 			AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
 		#endif
-			return true;
 		}
 
-		case VR_PRECACHE:
-		{
-			return true;
-		}
-	}
-
-	return true;
-}
-
-#endif // REGISTER_VEHICLE
+#endif

@@ -304,8 +304,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");
-	if(g_grappling_hook)
-		modifications = strcat(modifications, ", Hook");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
@@ -324,9 +322,6 @@ string getwelcomemessage(void)
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
-
-	if (g_grappling_hook)
-		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
 
 	if (cvar("g_nades"))
 		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");

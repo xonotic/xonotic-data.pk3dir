@@ -56,11 +56,11 @@
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"
+#include "../common/turrets/all.qc"
 #include "../common/vehicles/all.qc"
 #include "../common/weapons/all.qc"
 
 #include "../common/turrets/cl_turrets.qc"
-#include "../common/turrets/all.qc"
 
 #include "../common/triggers/include.qc"
 

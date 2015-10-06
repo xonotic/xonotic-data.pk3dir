@@ -3,6 +3,21 @@
 
 #include "gamemode.qh"
 
+float autocvar_g_nexball_basketball_bouncefactor;
+float autocvar_g_nexball_basketball_bouncestop;
+float autocvar_g_nexball_basketball_carrier_highspeed;
+bool autocvar_g_nexball_basketball_meter;
+float autocvar_g_nexball_basketball_meter_maxpower;
+float autocvar_g_nexball_basketball_meter_minpower;
+float autocvar_g_nexball_delay_collect;
+float autocvar_g_nexball_delay_goal;
+float autocvar_g_nexball_delay_start;
+float autocvar_g_nexball_football_bouncefactor;
+float autocvar_g_nexball_football_bouncestop;
+bool autocvar_g_nexball_radar_showallplayers;
+bool autocvar_g_nexball_sound_bounce;
+int autocvar_g_nexball_trail_color;
+
 float autocvar_g_nexball_safepass_turnrate;
 float autocvar_g_nexball_safepass_maxdist;
 float autocvar_g_nexball_safepass_holdtime;
@@ -153,11 +168,12 @@ void GiveBall(entity plyr, entity ball)
 
 	plyr.weaponentity.weapons = plyr.weapons;
 	plyr.weaponentity.switchweapon = plyr.weapon;
-	plyr.weapons = WEPSET_PORTO;
+	plyr.weapons = WEPSET(NEXBALL);
 	setself(plyr);
-	WEP_ACTION(WEP_PORTO.m_id, WR_RESETPLAYER);
-	plyr.switchweapon = WEP_PORTO.m_id;
-	W_SwitchWeapon(WEP_PORTO.m_id);
+	Weapon w = WEP_NEXBALL;
+	w.wr_resetplayer(w);
+	plyr.switchweapon = WEP_NEXBALL.m_id;
+	W_SwitchWeapon(WEP_NEXBALL.m_id);
 	setself(this);
 }
 
@@ -771,11 +787,8 @@ void W_Nexball_Attack2(void)
 	if(!autocvar_g_nexball_tackling)
 		return;
 
-	entity missile;
-	if(!(balls & BALL_BASKET))
-		return;
 	W_SetupShot(self, false, 2, SND(NB_SHOOT2), CH_WEAPON_A, 0);
-	missile = spawn();
+	entity missile = spawn();
 
 	missile.owner = self;
 	missile.classname = "ballstealer";
@@ -826,48 +839,48 @@ float ball_customize()
 	return true;
 }
 
-float w_nexball_weapon(float req)
-{SELFPARAM();
-	if(req == WR_THINK)
+	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, bool fire1, bool fire2))
 	{
-		if(self.BUTTON_ATCK)
-			if(weapon_prepareattack(0, autocvar_g_balance_nexball_primary_refire))
+		if(fire1)
+			if(weapon_prepareattack(thiswep, actor, false, autocvar_g_balance_nexball_primary_refire))
 				if(autocvar_g_nexball_basketball_meter)
 				{
 					if(self.ballcarried && !self.metertime)
 						self.metertime = time;
 					else
-						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 				}
 				else
 				{
 					W_Nexball_Attack(-1);
-					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 				}
-		if(self.BUTTON_ATCK2)
-			if(weapon_prepareattack(1, autocvar_g_balance_nexball_secondary_refire))
+		if(fire2)
+			if(weapon_prepareattack(thiswep, actor, true, autocvar_g_balance_nexball_secondary_refire))
 			{
 				W_Nexball_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
+				weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
 			}
 
-		if(!self.BUTTON_ATCK && self.metertime && self.ballcarried)
+		if(!fire1 && self.metertime && self.ballcarried)
 		{
 			W_Nexball_Attack(time - self.metertime);
 			// DropBall or stealing will set metertime back to 0
-			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+			weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
 	}
-	else if(req == WR_INIT)
-	{
-	}
-	else if(req == WR_SETUP)
+	METHOD(BallStealer, wr_setup, void(BallStealer thiswep))
 	{
 		//weapon_setup(WEP_PORTO.m_id);
 	}
-	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return true
-	return true;
-}
+	METHOD(BallStealer, wr_checkammo1, bool(BallStealer thiswep))
+	{
+		return true;
+	}
+	METHOD(BallStealer, wr_checkammo2, bool(BallStealer thiswep))
+	{
+		return true;
+	}
 
 MUTATOR_HOOKFUNCTION(nexball_BallDrop)
 {SELFPARAM();
@@ -926,7 +939,8 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			if(self.weaponentity.weapons)
 			{
 				self.weapons = self.weaponentity.weapons;
-				WEP_ACTION(WEP_PORTO.m_id, WR_RESETPLAYER);
+				Weapon w = WEP_NEXBALL;
+				w.wr_resetplayer(w);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 
@@ -946,7 +960,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 	self.weaponentity.weapons = '0 0 0';
 
 	if(nexball_mode & NBM_BASKETBALL)
-		self.weapons |= WEPSET_PORTO;
+		self.weapons |= WEPSET(NEXBALL);
 	else
 		self.weapons = '0 0 0';
 
@@ -963,16 +977,9 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
-{
-	start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
-
-	return false;
-}
-
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {SELFPARAM();
-	if(self.weapon == WEP_MORTAR.m_id)
+	if(self.weapon == WEP_NEXBALL.m_id)
 		return true;
 
 	return false;
@@ -981,7 +988,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 {SELFPARAM();
 	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_MORTAR.m_id)
+	if(self.weapon == WEP_NEXBALL.m_id)
 		return true;
 
 	return false;
@@ -995,7 +1002,6 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, nexball_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, nexball_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nexball_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, nexball_FilterItem, CBC_ORDER_ANY);
 
@@ -1017,10 +1023,12 @@ MUTATOR_DEFINITION(gamemode_nexball)
 		radar_showennemies = autocvar_g_nexball_radar_showallplayers;
 
 		InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
+		WEP_NEXBALL.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 		// we actually cannot roll back nb_delayedinit here
 		// BUT: we don't need to! If this gets called, adding always
 		// succeeds.

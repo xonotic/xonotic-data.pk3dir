@@ -737,7 +737,8 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, int deatht
 
 		antilag_clear(self);
 
-		VEH_ACTION(self.vehicleid, VR_DEATH);
+		Vehicle info = get_vehicleinfo(self.vehicleid);
+		info.vr_death(info);
 		vehicles_setreturn(self);
 	}
 }
@@ -942,8 +943,10 @@ void vehicles_touch()
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
 
-		if(self.play_time < time)
-			VEH_ACTION(self.vehicleid, VR_IMPACT);
+		if(self.play_time < time) {
+			Vehicle info = get_vehicleinfo(self.vehicleid);
+			info.vr_impact(info);
+		}
 
 		return;
 	}
@@ -1113,7 +1116,8 @@ void vehicles_enter(entity pl, entity veh)
 
 	setself(veh);
 	CSQCModel_UnlinkEntity(veh);
-	VEH_ACTION(veh.vehicleid, VR_ENTER);
+	Vehicle info = get_vehicleinfo(veh.vehicleid);
+	info.vr_enter(info);
 	setself(this);
 
 	antilag_clear(pl);
@@ -1126,7 +1130,8 @@ void vehicles_think()
 	if(self.owner)
 		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
 
-	VEH_ACTION(self.vehicleid, VR_THINK);
+	Vehicle info = get_vehicleinfo(self.vehicleid);
+	info.vr_think(info);
 
 	CSQCMODEL_AUTOUPDATE(self);
 }
@@ -1177,7 +1182,8 @@ void vehicles_spawn()
 
 	vehicles_reset_colors();
 
-	VEH_ACTION(self.vehicleid, VR_SPAWN);
+	Vehicle info = get_vehicleinfo(self.vehicleid);
+	info.vr_spawn(info);
 
 	CSQCMODEL_AUTOINIT(self);
 }
@@ -1190,7 +1196,10 @@ bool vehicle_initialize(entity veh, bool nodrop)
 	if(!veh.vehicleid)
 		return false;
 
-	if(!veh.tur_head) { VEH_ACTION(veh.vehicleid, VR_PRECACHE); }
+	if(!veh.tur_head) {
+		Vehicle info = get_vehicleinfo(veh.vehicleid);
+		info.vr_precache(info);
+	}
 
 	if(self.targetname && self.targetname != "")
 	{
@@ -1283,7 +1292,8 @@ bool vehicle_initialize(entity veh, bool nodrop)
 	self.pos2 = self.angles;
 	self.tur_head.team = self.team;
 
-	VEH_ACTION(veh.vehicleid, VR_SETUP);
+	Vehicle info = get_vehicleinfo(veh.vehicleid);
+	info.vr_setup(info);
 
 	if(self.active == ACTIVE_NOT)
 		self.nextthink = 0; // wait until activated

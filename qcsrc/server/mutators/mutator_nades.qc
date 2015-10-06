@@ -9,7 +9,7 @@
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
-.float lifetime;
+.float nade_time_primed;
 
 .entity nade_spawnloc;
 
@@ -822,7 +822,7 @@ void nade_prime()
 	n.colormap = self.colormap;
 	n.glowmod = self.glowmod;
 	n.wait = time + autocvar_g_nades_nade_lifetime;
-	n.lifetime = time;
+	n.nade_time_primed = time;
 	n.think = nade_beep;
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
@@ -863,14 +863,18 @@ float CanThrowNade()
 	return true;
 }
 
+.bool nade_altbutton;
+
 void nades_CheckThrow()
 {SELFPARAM();
 	if(!CanThrowNade())
 		return;
 
-	if(!self.nade)
+	entity held_nade = self.nade;
+	if (!held_nade)
 	{
-		if(self.nade_refire < time)
+		self.nade_altbutton = true;
+		if(time > self.nade_refire)
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_NADE_THROW);
 			nade_prime();
@@ -879,10 +883,10 @@ void nades_CheckThrow()
 	}
 	else
 	{
-		if(time - self.nade.lifetime >= 1)
-		{
+		self.nade_altbutton = false;
+		if (time >= held_nade.nade_time_primed + 1) {
 			makevectors(self.v_angle);
-			float _force = time - self.nade.lifetime;
+			float _force = time - held_nade.nade_time_primed;
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
 			toss_nade(self, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
@@ -901,12 +905,6 @@ void nades_Clear(entity player)
 	player.nade_timer = 0;
 }
 
-MUTATOR_HOOKFUNCTION(nades_CheckThrow)
-{
-	if(MUTATOR_RETURNVALUE) { nades_CheckThrow(); }
-	return false;
-}
-
 MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 {
 	if(vh_player.nade)
@@ -915,51 +913,57 @@ MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
-{SELFPARAM();
-	if(!IS_PLAYER(self)) { return false; }
-
-	float key_pressed = self.BUTTON_HOOK;
-	float time_score;
-
-	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK.m_id, false, false) || (weaponsInMap & WEPSET_HOOK))
-		key_pressed = self.button16; // if hook is enabled, use an alternate key
-
-	if(self.nade)
-	{
-		self.nade_timer = bound(0, (time - self.nade.lifetime) / autocvar_g_nades_nade_lifetime, 1);
-		//print(sprintf("%d %d\n", self.nade_timer, time - self.nade.lifetime));
-		makevectors(self.angles);
-		self.nade.velocity = self.velocity;
-
-		setorigin(self.nade, self.origin + self.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);
-		self.nade.angles_y = self.angles.y;
-	}
-
-	if(self.nade)
-	if(self.nade.wait - 0.1 <= time)
-		toss_nade(self, '0 0 0', time + 0.05);
-
-	if(CanThrowNade())
-	if(self.nade_refire < time)
-	{
-		if(key_pressed)
+CLASS(NadeOffhand, OffhandWeapon)
+    METHOD(NadeOffhand, offhand_think, void(NadeOffhand this, entity player, bool key_pressed))
+    {
+    	entity held_nade = player.nade;
+		if (held_nade)
 		{
-			if(!self.nade)
-				nade_prime();
+			player.nade_timer = bound(0, (time - held_nade.nade_time_primed) / autocvar_g_nades_nade_lifetime, 1);
+			// LOG_TRACEF("%d %d\n", player.nade_timer, time - held_nade.nade_time_primed);
+			makevectors(player.angles);
+			held_nade.velocity = player.velocity;
+			setorigin(held_nade, player.origin + player.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);
+			held_nade.angles_y = player.angles.y;
+
+			if (time + 0.1 >= held_nade.wait)
+				toss_nade(player, '0 0 0', time + 0.05);
 		}
-		else if(time - self.nade.lifetime >= 1)
-		{
-			if(self.nade)
-			{
-				makevectors(self.v_angle);
-				float _force = time - self.nade.lifetime;
+
+        if (!CanThrowNade()) return;
+        if (!(time > player.nade_refire)) return;
+		if (key_pressed) {
+			if (!held_nade) {
+				nade_prime();
+				held_nade = player.nade;
+			}
+		} else if (time >= held_nade.nade_time_primed + 1) {
+			if (held_nade) {
+				makevectors(player.v_angle);
+				float _force = time - held_nade.nade_time_primed;
 				_force /= autocvar_g_nades_nade_lifetime;
 				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-				toss_nade(self, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
+				toss_nade(player, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
 			}
 		}
+    }
+ENDCLASS(NadeOffhand)
+NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOffhand); }
+
+MUTATOR_HOOKFUNCTION(nades_CheckThrow)
+{
+	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK))) {
+		nades_CheckThrow();
+		return true;
 	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
+{SELFPARAM();
+	if (!IS_PLAYER(self)) { return false; }
+
+	if (self.nade && self.offhand != OFFHAND_NADE) OFFHAND_NADE.offhand_think(OFFHAND_NADE, self, self.nade_altbutton);
 
 	if(IS_PLAYER(self))
 	{
@@ -969,6 +973,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 			float key_count = 0;
 			FOR_EACH_KH_KEY(key) if(key.owner == self) { ++key_count; }
 
+			float time_score;
 			if(self.flagcarried || self.ballcarried) // this player is important
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
@@ -1057,6 +1062,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 		self.nade_type = self.cvar_cl_nade_type;
 
 	self.nade_timer = 0;
+
+	if (!self.offhand) self.offhand = OFFHAND_NADE;
 
 	if(self.nade_spawnloc)
 	{

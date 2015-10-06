@@ -441,7 +441,7 @@ void HUD_Weapons(void)
 		if(cvar("wep_add"))
 		{
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % WEP_COUNT);
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (WEP_COUNT - 1));
 			for(i = WEP_FIRST; i <= countw; ++i)
 				weapons_stat |= WepSet_FromWeapon(i);
 		}
@@ -472,7 +472,15 @@ void HUD_Weapons(void)
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
-		vector table_size = HUD_GetTableSize_BestItemAR(WEP_COUNT, padded_panel_size, aspect);
+		int nHidden = 0;
+		WepSet weapons_stat = WepSet_GetFromStat();
+		for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
+			WepSet weapons_wep = WepSet_FromWeapon(i);
+			if (weapons_stat & weapons_wep) continue;
+			Weapon w = get_weaponinfo(i);
+			if (w.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+		}
+		vector table_size = HUD_GetTableSize_BestItemAR((WEP_COUNT - 1) - nHidden, padded_panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
@@ -527,7 +535,7 @@ void HUD_Weapons(void)
 			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
-		weapon_count = WEP_COUNT;
+		weapon_count = (WEP_COUNT - 1);
 
 	// animation for fading in/out the panel respectively when not in use
 	if(!autocvar__hud_configure)
@@ -632,7 +640,7 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		vector table_size = HUD_GetTableSize_BestItemAR(WEP_COUNT, panel_size, aspect);
+		vector table_size = HUD_GetTableSize_BestItemAR((WEP_COUNT - 1), panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = panel_size.x / columns;

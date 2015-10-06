@@ -102,13 +102,13 @@
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"
+#include "../common/turrets/all.qc"
 #include "../common/vehicles/all.qc"
-#include "../common/weapons/all.qc" // TODO
+#include "../common/weapons/all.qc"
 
 #include "../common/turrets/sv_turrets.qc"
 #include "../common/turrets/config.qc"
 #include "../common/turrets/util.qc"
-#include "../common/turrets/all.qc"
 #include "../common/turrets/checkpoint.qc"
 #include "../common/turrets/targettrigger.qc"
 #include "../common/weapons/config.qc"

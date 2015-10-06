@@ -321,6 +321,7 @@ float TrueAimCheck()
 	{
 		case WEP_TUBA.m_id: // no aim
 		case WEP_PORTO.m_id: // shoots from eye
+		case WEP_NEXBALL.m_id: // shoots from eye
 		case WEP_HOOK.m_id: // no trueaim
 		case WEP_MORTAR.m_id: // toss curve
 			return SHOTTYPE_HITWORLD;
@@ -440,7 +441,7 @@ bool WantEventchase()
 			return true;
 		if(MUTATOR_CALLHOOK(WantEventchase, self))
 			return true;
-		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO.m_id)))
+		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_NEXBALL.m_id)))
 			return true;
 		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
 		{
@@ -1531,6 +1532,7 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar_cl_reticle)
 	{
+		Weapon wep = get_weaponinfo(activeweapon);
 		// Draw the aiming reticle for weapons that use it
 		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
@@ -1540,7 +1542,7 @@ void CSQC_UpdateView(float w, float h)
 			// no zoom reticle while dead
 			reticle_type = 0;
 		}
-		else if(WEP_ACTION(activeweapon, WR_ZOOMRETICLE) && autocvar_cl_reticle_weapon)
+		else if(wep.wr_zoomreticle(wep) && autocvar_cl_reticle_weapon)
 		{
 			if(reticle_image != "") { reticle_type = 2; }
 			else { reticle_type = 0; }
@@ -1859,8 +1861,10 @@ void CSQC_UpdateView(float w, float h)
     if(hud && !intermission)
     if(hud == HUD_BUMBLEBEE_GUN)
     	CSQC_BUMBLE_GUN_HUD();
-    else
-		VEH_ACTION(hud, VR_HUD);
+    else {
+    	Vehicle info = get_vehicleinfo(hud);
+		info.vr_hud(info);
+	}
 
 	cl_notice_run();
 

@@ -27,3 +27,5 @@
 #include "weapon/arc.qc"
 #include "weapon/hmg.qc"
 #include "weapon/rpc.qc"
+
+#include "../../server/mutators/gamemode_nexball_weapon.qc"

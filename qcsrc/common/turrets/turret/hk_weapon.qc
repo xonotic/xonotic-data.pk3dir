@@ -1,16 +1,20 @@
-#ifndef IMPLEMENTATION
-REGISTER_TURRET(
-/* TUR_##id   */ HK,
-/* function   */ t_hk,
-/* spawnflags */ TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS,
-/* mins,maxs  */ '-32 -32 0', '32 32 64',
-/* model	  */ "base.md3",
-/* head_model */ "hk.md3",
-/* netname	  */ "hk",
-/* fullname   */ _("Hunter-Killer Turret")
-);
-#else
+#ifndef TURRET_HK_WEAPON_H
+#define TURRET_HK_WEAPON_H
+
+CLASS(HunterKillerAttack, PortoLaunch)
+/* flags     */ ATTRIB(HunterKillerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* impulse   */ ATTRIB(HunterKillerAttack, impulse, int, 9);
+/* refname   */ ATTRIB(HunterKillerAttack, netname, string, "turret_hk");
+/* wepname   */ ATTRIB(HunterKillerAttack, message, string, _("Hunter-Killer"));
+ENDCLASS(HunterKillerAttack)
+REGISTER_WEAPON(HK, NEW(HunterKillerAttack));
+
+#endif
+
+#ifdef IMPLEMENTATION
+
 #ifdef SVQC
+
 float autocvar_g_turrets_unit_hk_shot_speed;
 float autocvar_g_turrets_unit_hk_shot_speed_accel;
 float autocvar_g_turrets_unit_hk_shot_speed_accel2;
@@ -18,46 +22,39 @@ float autocvar_g_turrets_unit_hk_shot_speed_decel;
 float autocvar_g_turrets_unit_hk_shot_speed_max;
 float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
-//#define TURRET_DEBUG_HK
+void turret_hk_missile_think();
+METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+{
+	bool isPlayer = IS_PLAYER(actor);
+	if (fire1)
+	if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
+		if (isPlayer) {
+            turret_initparams(actor);
+            W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            actor.tur_shotdir_updated = w_shotdir;
+            actor.tur_shotorg = w_shotorg;
+            actor.tur_head = actor;
+            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+        }
+        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, FALSE, FALSE);
+        te_explosion (missile.origin);
 
-#ifdef TURRET_DEBUG_HK
-.float atime;
-#endif
+        missile.think = turret_hk_missile_think;
+        missile.nextthink = time + 0.25;
+        missile.movetype = MOVETYPE_BOUNCEMISSILE;
+        missile.velocity = actor.tur_shotdir_updated * (actor.shot_speed * 0.75);
+        missile.angles = vectoangles(missile.velocity);
+        missile.cnt = time + 30;
+        missile.ticrate = max(autocvar_sys_ticrate, 0.05);
+        missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_AI;
 
-float hk_is_valid_target(entity e_target)
-{SELFPARAM();
-    if (e_target == world)
-        return 0;
-
-    // If only this was used more..
-    if (e_target.flags & FL_NOTARGET)
-        return 0;
-
-    // Cant touch this
-    if ((e_target.takedamage == DAMAGE_NO) || (e_target.health < 0))
-        return 0;
-
-    // player
-    if (IS_CLIENT(e_target))
-    {
-        if (self.owner.target_select_playerbias < 0)
-            return 0;
-
-        if (e_target.deadflag != DEAD_NO)
-            return 0;
-    }
-
-    // Missile
-    if ((e_target.flags & FL_PROJECTILE) && (self.owner.target_select_missilebias < 0))
-        return 0;
-
-    // Team check
-    if ((e_target.team == self.owner.team) || (self.owner.team == e_target.owner.team))
-        return 0;
-
-    return 1;
+        if (!isPlayer)
+        if (actor.tur_head.frame == 0)
+            actor.tur_head.frame = actor.tur_head.frame + 1;
+	}
 }
 
+bool hk_is_valid_target(entity e_target);
 void turret_hk_missile_think()
 {SELFPARAM();
     vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
@@ -259,101 +256,40 @@ void turret_hk_missile_think()
     UpdateCSQCProjectile(self);
 }
 
-float turret_hk_addtarget(entity e_target,entity e_sender)
+bool hk_is_valid_target(entity e_target)
 {SELFPARAM();
-    if (e_target)
+    if (e_target == world)
+        return 0;
+
+    // If only this was used more..
+    if (e_target.flags & FL_NOTARGET)
+        return 0;
+
+    // Cant touch this
+    if ((e_target.takedamage == DAMAGE_NO) || (e_target.health < 0))
+        return 0;
+
+    // player
+    if (IS_CLIENT(e_target))
     {
-        if (turret_validate_target(self,e_target,self.target_validate_flags) > 0)
-        {
-            self.enemy = e_target;
-            return 1;
-        }
+        if (self.owner.target_select_playerbias < 0)
+            return 0;
+
+        if (e_target.deadflag != DEAD_NO)
+            return 0;
     }
 
-    return 0;
+    // Missile
+    if ((e_target.flags & FL_PROJECTILE) && (self.owner.target_select_missilebias < 0))
+        return 0;
+
+    // Team check
+    if ((e_target.team == self.owner.team) || (self.owner.team == e_target.owner.team))
+        return 0;
+
+    return 1;
 }
 
-spawnfunc(turret_hk) { if(!turret_initialize(TUR_HK.m_id)) remove(self); }
+#endif
 
-float t_hk(float req)
-{SELFPARAM();
-    switch(req)
-    {
-        case TR_ATTACK:
-        {
-            entity missile;
-
-            missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, FALSE, FALSE);
-            te_explosion (missile.origin);
-
-            missile.think			= turret_hk_missile_think;
-            missile.nextthink		= time + 0.25;
-            missile.movetype		 = MOVETYPE_BOUNCEMISSILE;
-            missile.velocity		 = self.tur_shotdir_updated * (self.shot_speed * 0.75);
-            missile.angles		   = vectoangles(missile.velocity);
-            missile.cnt			  = time + 30;
-            missile.ticrate		  = max(autocvar_sys_ticrate, 0.05);
-            missile.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_AI;
-
-            if (self.tur_head.frame == 0)
-                self.tur_head.frame = self.tur_head.frame + 1;
-
-            return true;
-        }
-        case TR_THINK:
-        {
-            if (self.tur_head.frame != 0)
-                self.tur_head.frame = self.tur_head.frame + 1;
-
-            if (self.tur_head.frame > 5)
-                self.tur_head.frame = 0;
-
-            return true;
-        }
-        case TR_DEATH:
-        {
-            return true;
-        }
-        case TR_SETUP:
-        {
-            self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-            self.aim_flags = TFL_AIM_SIMPLE;
-            self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
-            self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCHECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
-            self.shoot_flags = TFL_SHOOT_CLEARTARGET;
-            self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TEAMCHECK;
-
-            self.turret_addtarget = turret_hk_addtarget;
-
-            return true;
-        }
-        case TR_PRECACHE:
-        {
-            return true;
-        }
-    }
-
-    return true;
-}
-
-#endif // SVQC
-#ifdef CSQC
-float t_hk(float req)
-{
-    switch(req)
-    {
-        case TR_SETUP:
-        {
-            return true;
-        }
-        case TR_PRECACHE:
-        {
-            return true;
-        }
-    }
-
-    return true;
-}
-
-#endif // CSQC
-#endif // REGISTER_TURRET
+#endif

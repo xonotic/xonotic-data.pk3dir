@@ -1,25 +1,26 @@
 #ifndef VEHICLE_BUMBLEBEE
 #define VEHICLE_BUMBLEBEE
 #include "bumblebee.qh"
-#ifndef MENUQC
-int v_bumblebee(int);
-#endif
-REGISTER_VEHICLE_SIMPLE(
-/* VEH_##id   */ BUMBLEBEE,
-/* spawnflags */ VHF_DMGSHAKE,
-/* mins,maxs  */ '-245 -130 -130', '230 130 130',
-/* model	  */ "models/vehicles/bumblebee_body.dpm",
-/* head_model */ "",
-/* hud_model  */ "models/vehicles/spiderbot_cockpit.dpm",
-/* tags	   	  */ "", "", "tag_viewport",
-/* netname	  */ "bumblebee",
-/* fullname   */ _("Bumblebee")
-) {
-    this.m_icon = "vehicle_bumble";
-#ifndef MENUQC
-    this.vehicle_func = v_bumblebee;
-#endif
-}
+
+#include "bumblebee_weapons.qc"
+
+CLASS(Bumblebee, Vehicle)
+/* spawnflags */ ATTRIB(Bumblebee, spawnflags, int, VHF_DMGSHAKE);
+/* mins       */ ATTRIB(Bumblebee, mins, vector, '-245 -130 -130');
+/* maxs       */ ATTRIB(Bumblebee, maxs, vector, '230 130 130');
+/* model	  */ ATTRIB(Bumblebee, mdl, string, "models/vehicles/bumblebee_body.dpm");
+/* model	  */ ATTRIB(Bumblebee, model, string, "models/vehicles/bumblebee_body.dpm");
+/* head_model */ ATTRIB(Bumblebee, head_model, string, "");
+/* hud_model  */ ATTRIB(Bumblebee, hud_model, string, "models/vehicles/spiderbot_cockpit.dpm");
+/* tags       */ ATTRIB(Bumblebee, tag_head, string, "");
+/* tags       */ ATTRIB(Bumblebee, tag_hud, string, "");
+/* tags       */ ATTRIB(Bumblebee, tag_view, string, "tag_viewport");
+/* netname    */ ATTRIB(Bumblebee, netname, string, "bumblebee");
+/* fullname   */ ATTRIB(Bumblebee, vehicle_name, string, _("Bumblebee"));
+/* icon       */ ATTRIB(Bumblebee, m_icon, string, "vehicle_bumble");
+ENDCLASS(Bumblebee)
+REGISTER_VEHICLE(BUMBLEBEE, NEW(Bumblebee));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -27,6 +28,8 @@ REGISTER_VEHICLE_SIMPLE(
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
 const float BRG_END = 8;
+
+#include "bumblebee_weapons.qc"
 
 #ifdef SVQC
 float autocvar_g_vehicle_bumblebee_speed_forward;
@@ -49,14 +52,6 @@ float autocvar_g_vehicle_bumblebee_health_regen_pause;
 float autocvar_g_vehicle_bumblebee_shield;
 float autocvar_g_vehicle_bumblebee_shield_regen;
 float autocvar_g_vehicle_bumblebee_shield_regen_pause;
-
-float autocvar_g_vehicle_bumblebee_cannon_cost;
-float autocvar_g_vehicle_bumblebee_cannon_damage;
-float autocvar_g_vehicle_bumblebee_cannon_radius;
-float autocvar_g_vehicle_bumblebee_cannon_refire;
-float autocvar_g_vehicle_bumblebee_cannon_speed;
-float autocvar_g_vehicle_bumblebee_cannon_spread;
-float autocvar_g_vehicle_bumblebee_cannon_force;
 
 float autocvar_g_vehicle_bumblebee_cannon_ammo;
 float autocvar_g_vehicle_bumblebee_cannon_ammo_regen;
@@ -98,17 +93,6 @@ float autocvar_g_vehicle_bumblebee_blowup_forceintensity;
 vector autocvar_g_vehicle_bumblebee_bouncepain;
 
 bool autocvar_g_vehicle_bumblebee = 0;
-
-float bumble_raygun_send(entity to, int sf);
-
-void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
-{
-	vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-	vehicles_projectile(EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, SND(VEH_BUMBLEBEE_FIRE),
-						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
-						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
-						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
-}
 
 float bumblebee_gunner_frame()
 {SELFPARAM();
@@ -739,61 +723,27 @@ void bumblebee_diethink()
 	self.nextthink = time + 0.1;
 }
 
-float bumble_raygun_send(entity to, float sf)
-{SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_BUMBLE_RAYGUN);
-
-	WriteByte(MSG_ENTITY, sf);
-	if(sf & BRG_SETUP)
-	{
-		WriteByte(MSG_ENTITY, num_for_edict(self.realowner));
-		WriteByte(MSG_ENTITY, self.realowner.team);
-		WriteByte(MSG_ENTITY, self.cnt);
-	}
-
-	if(sf & BRG_START)
-	{
-		WriteCoord(MSG_ENTITY, self.hook_start_x);
-		WriteCoord(MSG_ENTITY, self.hook_start_y);
-		WriteCoord(MSG_ENTITY, self.hook_start_z);
-	}
-
-	if(sf & BRG_END)
-	{
-		WriteCoord(MSG_ENTITY, self.hook_end_x);
-		WriteCoord(MSG_ENTITY, self.hook_end_y);
-		WriteCoord(MSG_ENTITY, self.hook_end_z);
-	}
-
-	return true;
-}
-
 spawnfunc(vehicle_bumblebee)
 {
 	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }
 
-float v_bumblebee(float req)
-{SELFPARAM();
-	switch(req)
-	{
-		case VR_IMPACT:
+		METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh))
 		{
 			if(autocvar_g_vehicle_bumblebee_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
-
-			return true;
 		}
-		case VR_ENTER:
+		METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			self.touch = bumblebee_touch;
 			self.nextthink = 0;
 			self.movetype = MOVETYPE_BOUNCEMISSILE;
-			return true;
 		}
-		case VR_THINK:
+		METHOD(Bumblebee, vr_think, void(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			self.angles_z *= 0.8;
 			self.angles_x *= 0.8;
 
@@ -812,7 +762,7 @@ float v_bumblebee(float req)
 					self.phase = 0;
 					self.touch();
 					other = oldother;
-					return true;
+					return;
 				}
 
 				if(self.gunner2)
@@ -825,14 +775,13 @@ float v_bumblebee(float req)
 					self.phase = 0;
 					self.touch();
 					other = oldother;
-					return true;
+					return;
 				}
 			}
-
-			return true;
 		}
-		case VR_DEATH:
+		METHOD(Bumblebee, vr_death, void(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			entity oldself = self;
 
 			CSQCModel_UnlinkEntity(self);
@@ -893,10 +842,10 @@ float v_bumblebee(float req)
 			self.nextthink 		= 0;
 
 			setorigin(self, self.pos1);
-			return true;
 		}
-		case VR_SPAWN:
+		METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			if(!self.gun1)
 			{
 				// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
@@ -973,10 +922,10 @@ float v_bumblebee(float req)
 			self.PlayerPhysplug = bumblebee_pilot_frame;
 
 			setorigin(self, self.origin + '0 0 25');
-			return true;
 		}
-		case VR_SETUP:
+		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
 		{
+			SELFPARAM();
 			if(autocvar_g_vehicle_bumblebee_energy)
 			if(autocvar_g_vehicle_bumblebee_energy_regen)
 				self.vehicle_flags |= VHF_ENERGYREGEN;
@@ -995,17 +944,7 @@ float v_bumblebee(float req)
 			self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
 			self.max_health = self.vehicle_health;
 			self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
-
-			return true;
 		}
-		case VR_PRECACHE:
-		{
-			return true;
-		}
-	}
-
-	return true;
-}
 
 #endif // SVQC
 #ifdef CSQC
@@ -1018,109 +957,19 @@ void CSQC_BUMBLE_GUN_HUD()
 					 string_null);
 }
 
-void bumble_raygun_draw()
-{SELFPARAM();
-	float _len;
-	vector _dir;
-	vector _vtmp1, _vtmp2;
-
-	_len = vlen(self.origin - self.move_origin);
-	_dir = normalize(self.move_origin - self.origin);
-
-	if(self.total_damages < time)
-	{
-		boxparticles(particleeffectnum(effects_ent[self.traileffect]), self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
-		boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
-		self.total_damages = time + 0.1;
-	}
-
-	float i, df, sz, al;
-	for(i = -0.1; i < 0.2; i += 0.1)
-	{
-		df = DRAWFLAG_NORMAL; //((random() < 0.5) ? DRAWFLAG_ADDITIVE : DRAWFLAG_SCREEN);
-		sz = 5 + random() * 5;
-		al = 0.25 + random() * 0.5;
-		_vtmp1 = self.origin + _dir * _len * (0.25 + i);
-		_vtmp1 += (randomvec() * (_len * 0.2) * (frametime * 2));       //self.raygun_l1;
-		Draw_CylindricLine(self.origin, _vtmp1, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
-
-		_vtmp2 = self.origin + _dir * _len * (0.5 + i);
-		_vtmp2 += (randomvec() * (_len * 0.2) * (frametime * 5));       //self.raygun_l2;
-		Draw_CylindricLine(_vtmp1, _vtmp2, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
-
-		_vtmp1 = self.origin + _dir * _len * (0.75 + i);
-		_vtmp1 += randomvec() * (_len * 0.2) * (frametime * 10);     //self.raygun_l3;
-		Draw_CylindricLine(_vtmp2, _vtmp1, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
-
-		Draw_CylindricLine(_vtmp1, self.move_origin +  randomvec() * 32, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
-	}
-}
-
-void bumble_raygun_read(bool bIsNew)
-{SELFPARAM();
-	int sf = ReadByte();
-
-	if(sf & BRG_SETUP)
-	{
-		self.cnt  = ReadByte();
-		self.team = ReadByte();
-		self.cnt  = ReadByte();
-
-		if(self.cnt)
-			self.colormod = '1 0 0';
-		else
-			self.colormod = '0 1 0';
-
-		self.traileffect = EFFECT_BUMBLEBEE_HEAL_MUZZLEFLASH.m_id;
-		self.lip = particleeffectnum(EFFECT_BUMBLEBEE_HEAL_IMPACT);
-
-		self.draw = bumble_raygun_draw;
-	}
-
-
-	if(sf & BRG_START)
-	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
-	}
-
-	if(sf & BRG_END)
-	{
-		self.move_origin_x = ReadCoord();
-		self.move_origin_y = ReadCoord();
-		self.move_origin_z = ReadCoord();
-	}
-}
-
-float v_bumblebee(float req)
-{
-	switch(req)
-	{
-		case VR_HUD:
+		METHOD(Bumblebee, vr_hud, void(Bumblebee thisveh))
 		{
 			Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 vCROSS_HEAL);
-			return true;
 		}
-		case VR_SETUP:
+		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_LOCK;  // Raygun-locked
 			AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1
 			AuxiliaryXhair[2].axh_image = vCROSS_BURST; // Gunner2
-			return true;
 		}
-		case VR_PRECACHE:
-		{
-			return true;
-		}
-	}
 
-	return true;
-}
-
-#endif // CSQC
-#endif // REGISTER_VEHICLE
+#endif
+#endif

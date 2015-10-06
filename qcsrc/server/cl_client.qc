@@ -511,10 +511,10 @@ void PutClientInServer()
 		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
 		{
 			if(g_weaponarena_random_with_blaster)
-				self.weapons &= ~WEPSET_BLASTER;
+				self.weapons &= ~WEPSET(BLASTER);
 			W_RandomWeapons(self, g_weaponarena_random);
 			if(g_weaponarena_random_with_blaster)
-				self.weapons |= WEPSET_BLASTER;
+				self.weapons |= WEPSET(BLASTER);
 		}
 
 		self.items = start_items;
@@ -620,7 +620,8 @@ void PutClientInServer()
 		// reset fields the weapons may use
 		for (int j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			WEP_ACTION(j, WR_RESETPLAYER);
+			Weapon w = get_weaponinfo(j);
+			w.wr_resetplayer(w);
 
 			// all weapons must be fully loaded when we spawn
 			entity e = get_weaponinfo(j);
@@ -1236,7 +1237,7 @@ void ClientConnect (void)
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 		}
 
-		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET_TUBA))
+		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET(TUBA)))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 
@@ -2545,14 +2546,12 @@ void PlayerPreThink (void)
 
 		FixPlayermodel();
 
-		GrapplingHookFrame();
-
 		// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 		//if(frametime)
 		{
 			self.items &= ~self.items_added;
 
-			W_WeaponFrame();
+			W_WeaponFrame(self);
 
 			self.items_added = 0;
 			if(self.items & ITEM_Jetpack.m_itemid)

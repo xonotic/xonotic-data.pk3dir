@@ -331,12 +331,6 @@ MODEL(VEH_SPIDERBOT_MUZZLEFLASH,        "models/uziflash.md3");
 MODEL(VEH_SPIDERBOT_TOP,                "models/vehicles/spiderbot_top.dpm");
 MODEL(VEH_SPIDERBOT_VIEW,               "models/vehicles/spiderbot_cockpit.dpm");
 
-MODEL(MON_MAGE,                         "models/monsters/mage.dpm");
-MODEL(MON_SHAMBLER,                     "models/monsters/shambler.mdl");
-MODEL(MON_SPIDER,                       "models/monsters/spider.dpm");
-MODEL(MON_WYVERN,                       "models/monsters/wizard.mdl");
-MODEL(MON_ZOMBIE,                       "models/monsters/zombie.dpm");
-
 MODEL(CHAT,                             "models/misc/chatbubble.spr");
 
 MODEL(0,                                "models/sprites/0.spr32");

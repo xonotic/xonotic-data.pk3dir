@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ ARC,
-/* function  */ W_Arc,
-/* ammotype  */ ammo_cells,
-/* impulse   */ 3,
-/* flags     */ WEP_FLAG_NORMAL,
-/* rating    */ BOT_PICKUP_RATING_HIGH,
-/* color     */ '1 1 1',
-/* modelname */ "arc",
-/* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairhlac 0.7",
-/* wepimg    */ "weaponarc",
-/* refname   */ "arc",
-/* wepname   */ _("Arc")
-);
+CLASS(Arc, Weapon)
+/* ammotype  */ ATTRIB(Arc, ammo_field, .int, ammo_cells)
+/* impulse   */ ATTRIB(Arc, impulse, int, 3)
+/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_NORMAL);
+/* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
+/* modelname */ ATTRIB(Arc, mdl, string, "arc");
+#ifndef MENUQC
+/* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);
+#endif
+/* crosshair */ ATTRIB(Arc, w_crosshair, string, "gfx/crosshairhlac");
+/* crosshair */ ATTRIB(Arc, w_crosshair_size, float, 0.7);
+/* wepimg    */ ATTRIB(Arc, model2, string, "weaponarc");
+/* refname   */ ATTRIB(Arc, netname, string, "arc");
+/* wepname   */ ATTRIB(Arc, message, string, _("Arc"));
+ENDCLASS(Arc)
+REGISTER_WEAPON(ARC, NEW(Arc));
 
 #define ARC_SETTINGS(w_cvar,w_prop) ARC_SETTINGS_LIST(w_cvar, w_prop, ARC, arc)
 #define ARC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -82,7 +84,7 @@ const int ARC_SF_LOCALMASK =   14;
 #ifdef SVQC
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity arc_beam;
-.float arc_BUTTON_ATCK_prev; // for better animation control
+.bool arc_BUTTON_ATCK_prev; // for better animation control
 .float beam_prev;
 .float beam_initialized;
 .float beam_bursting;
@@ -273,7 +275,8 @@ void W_Arc_Beam_Think(void)
 
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		setself(self.owner);
-		if(!WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO1) && !WEP_ACTION(WEP_ARC.m_id, WR_CHECKAMMO2))
+		Weapon w = WEP_ARC;
+		if(!w.wr_checkammo1(w) && !w.wr_checkammo2(w))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -631,12 +634,9 @@ void Arc_Smoke()
 	}
 }
 
-bool W_Arc(int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Arc, wr_aim, void(entity thiswep))
 		{
+			SELFPARAM();
 			if(WEP_CVAR(arc, beam_botaimspeed))
 			{
 				self.BUTTON_ATCK = bot_aim(
@@ -655,66 +655,63 @@ bool W_Arc(int req)
 					false
 				);
 			}
-			return true;
 		}
-		case WR_THINK:
+		METHOD(Arc, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			Arc_Player_SetHeat(self);
+			Arc_Player_SetHeat(actor);
 			Arc_Smoke();
 
-			if ( self.arc_overheat <= time )
-			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting )
+			if (time >= actor.arc_overheat)
+			if (fire1 || fire2 || actor.arc_beam.beam_bursting)
 			{
 
-				if(self.arc_BUTTON_ATCK_prev)
+				if(actor.arc_BUTTON_ATCK_prev)
 				{
 					#if 0
-					if(self.animstate_startframe == self.anim_shoot.x && self.animstate_numframes == self.anim_shoot.y)
-						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
+					if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
+						weapon_thinkf(actor, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
 					else
 					#endif
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 				}
 
-				if((!self.arc_beam) || wasfreed(self.arc_beam))
+				if((!actor.arc_beam) || wasfreed(actor.arc_beam))
 				{
-					if(weapon_prepareattack(!!self.BUTTON_ATCK2, 0))
+					if(weapon_prepareattack(thiswep, actor, fire2, 0))
 					{
-						W_Arc_Beam(!!self.BUTTON_ATCK2);
+						W_Arc_Beam(fire2);
 
-						if(!self.arc_BUTTON_ATCK_prev)
+						if(!actor.arc_BUTTON_ATCK_prev)
 						{
-							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-							self.arc_BUTTON_ATCK_prev = 1;
+							weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+							actor.arc_BUTTON_ATCK_prev = true;
 						}
 					}
 				}
 
-				return true;
+				return;
 			}
 
-			if(self.arc_BUTTON_ATCK_prev != 0)
+			if(actor.arc_BUTTON_ATCK_prev)
 			{
-				sound(self, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
-				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-				ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
+				sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
+				weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+				ATTACK_FINISHED(actor) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
 			}
-			self.arc_BUTTON_ATCK_prev = 0;
+			actor.arc_BUTTON_ATCK_prev = false;
 
 			#if 0
-			if(self.BUTTON_ATCK2)
-			if(weapon_prepareattack(1, autocvar_g_balance_arc_secondary_refire))
+			if(fire2)
+			if(weapon_prepareattack(thiswep, actor, true, autocvar_g_balance_arc_secondary_refire))
 			{
 				W_Arc_Attack2();
-				self.arc_count = autocvar_g_balance_arc_secondary_count;
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
-				self.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
+				actor.arc_count = autocvar_g_balance_arc_secondary_count;
+				weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+				actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
 			}
 			#endif
-
-			return true;
 		}
-		case WR_INIT:
+		METHOD(Arc, wr_init, void(entity thiswep))
 		{
 			if(!arc_shotorigin[0])
 			{
@@ -724,35 +721,34 @@ bool W_Arc(int req)
 				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
 			}
 			ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(Arc, wr_checkammo1, bool(entity thiswep))
 		{
+			SELFPARAM();
 			return ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
-		case WR_CHECKAMMO2:
+		METHOD(Arc, wr_checkammo2, bool(entity thiswep))
 		{
+			SELFPARAM();
 			return WEP_CVAR(arc, overheat_max) > 0 &&
 				((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
-		case WR_CONFIG:
+		METHOD(Arc, wr_config, void(entity thiswep))
 		{
 			ARC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Arc, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_ARC_MURDER;
 		}
-		case WR_DROP:
+		METHOD(Arc, wr_drop, void(entity thiswep))
 		{
 			weapon_dropevent_item.arc_overheat = self.arc_overheat;
 			weapon_dropevent_item.arc_cooldown = self.arc_cooldown;
 			self.arc_overheat = 0;
 			self.arc_cooldown = 0;
-			return true;
 		}
-		case WR_PICKUP:
+		METHOD(Arc, wr_pickup, void(entity thiswep))
 		{
 			if ( !client_hasweapon(self, WEP_ARC.m_id, false, false) &&
 				weapon_dropevent_item.arc_overheat > time )
@@ -760,11 +756,7 @@ bool W_Arc(int req)
 				self.arc_overheat = weapon_dropevent_item.arc_overheat;
 				self.arc_cooldown = weapon_dropevent_item.arc_cooldown;
 			}
-			return true;
 		}
-	}
-	return false;
-}
 #endif
 #ifdef CSQC
 void Draw_ArcBeam_callback(vector start, vector hit, vector end)
@@ -1509,26 +1501,5 @@ void Ent_ReadArcBeam(float isnew)
 	}
 }
 
-bool W_Arc(int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
-		{
-			// todo
-			return true;
-		}
-		case WR_INIT:
-		{
-			return true;
-		}
-		case WR_ZOOMRETICLE:
-		{
-			// no weapon specific image for this weapon
-			return false;
-		}
-	}
-	return false;
-}
 #endif
 #endif

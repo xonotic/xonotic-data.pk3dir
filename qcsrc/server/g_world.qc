@@ -557,7 +557,6 @@ spawnfunc(__init_dedicated_server)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
@@ -604,7 +603,6 @@ spawnfunc(worldspawn)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
@@ -689,10 +687,6 @@ spawnfunc(worldspawn)
 
 		MUTATOR_CALLHOOK(BuildMutatorsString, s);
 		s = ret_string;
-
-		// simple, probably not good in the mutator system
-		if(autocvar_g_grappling_hook)
-			s = strcat(s, ":grappling_hook");
 
 		// initialiation stuff, not good in the mutator system
 		if(!autocvar_g_use_ammunition)
