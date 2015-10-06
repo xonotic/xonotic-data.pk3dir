@@ -9,7 +9,7 @@
 
 #include "../dpdefs/keycodes.qh"
 
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
 #include "../common/items/all.qc"
@@ -1283,7 +1283,7 @@ void HUD_Powerups()
 	if(superTime)
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
-	FOREACH(BUFFS, it.m_itemid & allBuffs, LAMBDA(
+	FOREACH(Buffs, it.m_itemid & allBuffs, LAMBDA(
 		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
 	));
 

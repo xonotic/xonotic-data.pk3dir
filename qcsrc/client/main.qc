@@ -25,7 +25,7 @@
 
 #include "weapons/projectile.qh"
 
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 #include "../common/deathtypes.qh"
 #include "../common/effects/effects.qh"
 #include "../common/mapinfo.qh"

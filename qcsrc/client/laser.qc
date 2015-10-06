@@ -3,7 +3,7 @@
 
 #include "hook.qh"
 
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/interpolate.qh"

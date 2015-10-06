@@ -3,7 +3,7 @@
 #include "mutator.qh"
 
 #include "../cl_client.qh"
-#include "../../common/buffs.qh"
+#include "../../common/buffs/all.qh"
 
 #include "../../common/items/all.qc"
 

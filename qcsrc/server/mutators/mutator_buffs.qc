@@ -4,13 +4,13 @@
 
 #include "mutator.qh"
 
-#include "../../common/buffs.qh"
+#include "../../common/buffs/all.qh"
 
 entity buff_FirstFromFlags(int _buffs)
 {
 	if (flags)
 	{
-		FOREACH(BUFFS, it.m_itemid & _buffs, LAMBDA(return it));
+		FOREACH(Buffs, it.m_itemid & _buffs, LAMBDA(return it));
 	}
 	return BUFF_Null;
 }
@@ -211,7 +211,7 @@ float buff_Available(entity buff)
 void buff_NewType(entity ent, float cb)
 {
 	RandomSelection_Init();
-	FOREACH(BUFFS, buff_Available(it), LAMBDA(
+	FOREACH(Buffs, buff_Available(it), LAMBDA(
 		it.buff_seencount += 1;
 		// if it's already been chosen, give it a lower priority
 		RandomSelection_Add(world, it.m_itemid, string_null, 1, max(0.2, 1 / it.buff_seencount));

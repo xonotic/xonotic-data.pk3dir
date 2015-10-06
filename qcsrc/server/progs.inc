@@ -79,7 +79,6 @@
 #include "weapons/weaponsystem.qc"
 
 #include "../common/animdecide.qc"
-#include "../common/buffs.qc"
 #include "../common/campaign_file.qc"
 #include "../common/campaign_setup.qc"
 #include "../common/effects/effects.qc"
@@ -99,6 +98,7 @@
 #include "../common/triggers/include.qc"
 #include "../common/util.qc"
 
+#include "../common/buffs/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"

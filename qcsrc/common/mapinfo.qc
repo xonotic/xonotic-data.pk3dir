@@ -2,7 +2,7 @@
 	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "util.qh"
-    #include "buffs.qh"
+    #include "buffs/all.qh"
     #include "weapons/all.qh"
     #include "mapinfo.qh"
 #elif defined(MENUQC)
@@ -10,7 +10,7 @@
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
     #include "util.qh"
-    #include "buffs.qh"
+    #include "buffs/all.qh"
     #include "monsters/all.qh"
     #include "mapinfo.qh"
 #endif

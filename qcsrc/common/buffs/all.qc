@@ -6,5 +6,5 @@
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
 #endif
-#include "buffs.qh"
+#include "all.qh"
 

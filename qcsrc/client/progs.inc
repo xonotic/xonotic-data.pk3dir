@@ -36,7 +36,6 @@
 #include "weapons/projectile.qc" // TODO
 
 #include "../common/animdecide.qc"
-#include "../common/buffs.qc"
 #include "../common/effects/effects.qc"
 #include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"
@@ -53,6 +52,7 @@
 #include "../common/minigames/minigames.qc"
 #include "../common/minigames/cl_minigames.qc"
 
+#include "../common/buffs/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"

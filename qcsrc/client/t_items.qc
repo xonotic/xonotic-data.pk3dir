@@ -1,6 +1,6 @@
 #include "_all.qh"
 
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 #include "../common/movetypes/movetypes.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"

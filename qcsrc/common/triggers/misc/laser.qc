@@ -1,6 +1,6 @@
 #if defined(CSQC)
 	#include "../../../client/_all.qh"
-	#include "../../buffs.qh"
+	#include "../../buffs/all.qh"
 	#include "../../../csqcmodellib/interpolate.qh"
 	#include "../../../client/main.qh"
 	#include "../../../csqcmodellib/cl_model.qh"
