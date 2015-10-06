@@ -905,15 +905,6 @@ void nades_Clear(entity player)
 	player.nade_timer = 0;
 }
 
-MUTATOR_HOOKFUNCTION(nades_CheckThrow)
-{
-	if (self.offhand) {
-		nades_CheckThrow();
-		return true;
-	}
-	return false;
-}
-
 MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 {
 	if(vh_player.nade)
@@ -958,6 +949,15 @@ CLASS(NadeOffhand, OffhandWeapon)
     }
 ENDCLASS(NadeOffhand)
 NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOffhand); }
+
+MUTATOR_HOOKFUNCTION(nades_CheckThrow)
+{
+	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK))) {
+		nades_CheckThrow();
+		return true;
+	}
+	return false;
+}
 
 MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {SELFPARAM();

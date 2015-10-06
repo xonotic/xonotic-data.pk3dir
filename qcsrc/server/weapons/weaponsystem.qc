@@ -781,7 +781,7 @@ void W_WeaponFrame(entity actor)
 		{
 			bool key_pressed = actor.BUTTON_HOOK && !actor.vehicle;
         	Weapon off = actor.offhand;
-        	if (off) {
+        	if (off && !(actor.weapons & WEPSET(HOOK))) {
         		if (off.offhand_think) off.offhand_think(off, actor, key_pressed);
         	} else {
         		if (key_pressed && actor.switchweapon != WEP_HOOK.m_id && !actor.hook_switchweapon) {
