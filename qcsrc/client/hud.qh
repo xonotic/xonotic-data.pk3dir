@@ -46,7 +46,7 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 0.25;
 float scoreboard_bottom;
-int weapon_accuracy[WEP_MAXCOUNT];
+int weapon_accuracy[Weapons_MAX];
 
 int complain_weapon;
 string complain_weapon_name;

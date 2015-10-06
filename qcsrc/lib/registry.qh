@@ -68,7 +68,7 @@
         return strcasecmp(a, b);                                \
     }                                                           \
     STATIC_INIT(Registry_sort_##id) {                           \
-        heapsort(id##_COUNT, _REGISTRY_SWAP_##id, _REGISTRY_CMP_##id, NULL); \
+        heapsort(id##_COUNT - (skip), _REGISTRY_SWAP_##id, _REGISTRY_CMP_##id, NULL); \
     }
 
 #endif

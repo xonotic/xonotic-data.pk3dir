@@ -261,7 +261,7 @@ WepSet weaponsInMap;
 
 float bot_waypoints_for_items;
 
-.float attack_finished_for[WEP_MAXCOUNT];
+.float attack_finished_for[Weapons_MAX];
 .float attack_finished_single;
 #ifdef INDEPENDENT_ATTACK_FINISHED
 #define ATTACK_FINISHED_FOR(ent,w) ((ent).(attack_finished_for[(w) - WEP_FIRST]))
@@ -466,7 +466,7 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float weapon_load[WEP_MAXCOUNT];
+.float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
 .float old_clip_load;

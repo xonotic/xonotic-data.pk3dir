@@ -58,56 +58,45 @@
 
 // WEAPON PLUGIN SYSTEM
 
-#if WEP_MAXCOUNT > 72
-# error Kein Weltraum links auf dem Gerät
-#endif
-
 WepSet WepSet_FromWeapon(int a) {
 	a -= WEP_FIRST;
-#if WEP_MAXCOUNT > 24
-	if(a >= 24) {
+	if (Weapons_MAX > 24)
+	if (a >= 24) {
 		a -= 24;
-#if WEP_MAXCOUNT > 48
-		if(a >= 24) {
+		if (Weapons_MAX > 48)
+		if (a >= 24) {
 			a -= 24;
 			return '0 0 1' * power2of(a);
 		}
-#endif
 		return '0 1 0' * power2of(a);
 	}
-#endif
 	return '1 0 0' * power2of(a);
 }
 #ifdef SVQC
 void WepSet_AddStat()
 {
 	addstat(STAT_WEAPONS, AS_INT, weapons_x);
-#if WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	addstat(STAT_WEAPONS2, AS_INT, weapons_y);
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	addstat(STAT_WEAPONS3, AS_INT, weapons_z);
-#endif
-#endif
 }
 void WepSet_AddStat_InMap()
 {
 	addstat(STAT_WEAPONSINMAP, AS_INT, weaponsinmap_x);
-#if WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	addstat(STAT_WEAPONSINMAP2, AS_INT, weaponsinmap_y);
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	addstat(STAT_WEAPONSINMAP3, AS_INT, weaponsinmap_z);
-#endif
-#endif
 }
 void WriteWepSet(float dst, WepSet w)
 {
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	WriteInt72_t(dst, w);
-#elif WEP_MAXCOUNT > 24
+	else if (Weapons_MAX > 24)
 	WriteInt48_t(dst, w);
-#else
+	else
 	WriteInt24_t(dst, w.x);
-#endif
 }
 #endif
 #ifdef CSQC
@@ -115,35 +104,29 @@ WepSet WepSet_GetFromStat()
 {
 	WepSet w = '0 0 0';
 	w.x = getstati(STAT_WEAPONS);
-#if WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	w.y = getstati(STAT_WEAPONS2);
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	w.z = getstati(STAT_WEAPONS3);
-#endif
-#endif
 	return w;
 }
 WepSet WepSet_GetFromStat_InMap()
 {
 	WepSet w = '0 0 0';
 	w_x = getstati(STAT_WEAPONSINMAP);
-#if WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	w_y = getstati(STAT_WEAPONSINMAP2);
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	w_z = getstati(STAT_WEAPONSINMAP3);
-#endif
-#endif
 	return w;
 }
 WepSet ReadWepSet()
 {
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	return ReadInt72_t();
-#elif WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	return ReadInt48_t();
-#else
 	return ReadInt24_t() * '1 0 0';
-#endif
 }
 #endif
 
@@ -196,7 +179,7 @@ string W_NumberWeaponOrder(string order)
 	return mapPriorityList(order, W_NumberWeaponOrder_MapFunc);
 }
 
-float W_FixWeaponOrder_BuildImpulseList_buf[WEP_MAXCOUNT];
+float W_FixWeaponOrder_BuildImpulseList_buf[Weapons_MAX];
 string W_FixWeaponOrder_BuildImpulseList_order;
 void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 {

@@ -334,7 +334,7 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 
 // Weapon icons (#0)
 //
-entity weaponorder[WEP_MAXCOUNT];
+entity weaponorder[Weapons_MAX];
 void weaponorder_swap(int i, int j, entity pass)
 {
 	entity h = weaponorder[i];
@@ -420,7 +420,7 @@ void HUD_Weapons(void)
 				++weapon_cnt;
 			}
 		}
-		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
+		for(i = weapon_cnt; i < Weapons_MAX; ++i)
 			weaponorder[i] = world;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
@@ -441,7 +441,7 @@ void HUD_Weapons(void)
 		if(cvar("wep_add"))
 		{
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (WEP_COUNT - 1));
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (Weapons_COUNT - 1));
 			for(i = WEP_FIRST; i <= countw; ++i)
 				weapons_stat |= WepSet_FromWeapon(i);
 		}
@@ -480,7 +480,7 @@ void HUD_Weapons(void)
 			Weapon w = get_weaponinfo(i);
 			if (w.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
 		}
-		vector table_size = HUD_GetTableSize_BestItemAR((WEP_COUNT - 1) - nHidden, padded_panel_size, aspect);
+		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, padded_panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
@@ -535,7 +535,7 @@ void HUD_Weapons(void)
 			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
-		weapon_count = (WEP_COUNT - 1);
+		weapon_count = (Weapons_COUNT - 1);
 
 	// animation for fading in/out the panel respectively when not in use
 	if(!autocvar__hud_configure)
@@ -640,7 +640,7 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		vector table_size = HUD_GetTableSize_BestItemAR((WEP_COUNT - 1), panel_size, aspect);
+		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1), panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = panel_size.x / columns;

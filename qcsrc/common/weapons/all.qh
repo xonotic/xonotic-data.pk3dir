@@ -30,21 +30,13 @@ WepSet ReadWepSet();
 #include "../../server/bot/aim.qh"
 #endif
 
-const int WEP_FIRST = 1;
-#define WEP_MAXCOUNT 72 // Increase as needed. Can be up to 72.
-int WEP_COUNT;
-#define WEP_LAST (WEP_FIRST + (WEP_COUNT - 1) - 1)
-WepSet WEPSET_ALL;
-WepSet WEPSET_SUPERWEAPONS;
-
-void RegisterWeapons();
+REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 REGISTER_REGISTRY(RegisterWeapons)
-entity weapon_info[WEP_MAXCOUNT], weapon_info_first, weapon_info_last;
 entity get_weaponinfo(int id);
 
 #define REGISTER_WEAPON(id, inst) \
 	/* WepSet WEPSET_##id; */ \
-	REGISTER(RegisterWeapons, WEP, weapon_info, WEP_COUNT, id, m_id, inst)
+	REGISTER(RegisterWeapons, WEP, Weapons, Weapons_COUNT, id, m_id, inst)
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;
@@ -72,49 +64,37 @@ entity get_weaponinfo(int id);
 #define WEP_SKIP_CVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
 #define WEP_SET_PROP(wepid,wepname,type,prop,name) WEP_##wepid.prop = autocvar_g_balance_##wepname##_##name;
 
+const int WEP_FIRST = 1;
+#define WEP_LAST (Weapons_COUNT - 1)
+WepSet WEPSET_ALL;
+WepSet WEPSET_SUPERWEAPONS;
+
 REGISTER_WEAPON(Null, NEW(Weapon));
 
 #include "all.inc"
 
 entity get_weaponinfo(int id)
 {
-	if(id < WEP_FIRST || id > WEP_LAST)
-		return WEP_Null;
-	Weapon w = weapon_info[id];
-	if(w)
-		return w;
+	if (id >= WEP_FIRST && id <= WEP_LAST) {
+		Weapon w = Weapons[id];
+		if (w) return w;
+	}
 	return WEP_Null;
 }
 
 // TODO: remove after 0.8.2. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
 #define WEP_HARDCODED_IMPULSES 22
 
-void _REGISTRY_SWAP(int i, int j, entity pass)
-{
-	i += WEP_HARDCODED_IMPULSES + 1; j += WEP_HARDCODED_IMPULSES + 1;
-	entity e = weapon_info[i];
-	weapon_info[i] = weapon_info[j];
-	weapon_info[j] = e;
-}
-
-float _REGISTRY_CMP(int i, int j, entity pass)
-{
-	i += WEP_HARDCODED_IMPULSES + 1; j += WEP_HARDCODED_IMPULSES + 1;
-	string a = weapon_info[i].netname;
-	string b = weapon_info[j].netname;
-	return strcasecmp(a, b);
-}
-
 // TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
 #define WEP_IMPULSE_BEGIN 230
-#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (WEP_COUNT - 1) - 1, 253)
+#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (Weapons_COUNT - 1) - 1, 253)
+
+REGISTRY_SORT(Weapons, netname, WEP_HARDCODED_IMPULSES + 1)
 
 STATIC_INIT(register_weapons_done)
 {
-	// Sort all extra weapons not #included in all.inc by their netname so it doesn't matter when they were initialized
-	heapsort(WEP_COUNT - (1 /* WEP_Null */ + WEP_HARDCODED_IMPULSES), _REGISTRY_SWAP, _REGISTRY_CMP, NULL);
-	for (int i = 0; i < WEP_COUNT; ++i) {
-		Weapon it = weapon_info[i];
+	for (int i = 0; i < Weapons_COUNT; ++i) {
+		Weapon it = Weapons[i];
 		it.m_id = i;
 		WepSet set = WepSet_FromWeapon(it.m_id);
 		WEPSET_ALL |= set;
@@ -131,8 +111,8 @@ STATIC_INIT(register_weapons_done)
 			LOG_TRACEF(_("Impulse limit exceeded, weapon will not be directly accessible: %s\n"), it.netname);
 	}
 	weaponorder_byid = "";
-	for (int i = WEP_MAXCOUNT - 1; i >= 1; --i)
-		if (weapon_info[i])
+	for (int i = Weapons_MAX - 1; i >= 1; --i)
+		if (Weapons[i])
 			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
 	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }

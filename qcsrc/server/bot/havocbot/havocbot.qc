@@ -1067,7 +1067,7 @@ void havocbot_chooseweapon()
 
 		// Choose weapons for far distance
 		if ( distance > bot_distance_far ) {
-			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
+			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
 				if ( client_hasweapon(self, w, true, false) )
 				{
@@ -1081,7 +1081,7 @@ void havocbot_chooseweapon()
 
 		// Choose weapons for mid distance
 		if ( distance > bot_distance_close) {
-			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
+			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
 				if ( client_hasweapon(self, w, true, false) )
 				{
@@ -1094,7 +1094,7 @@ void havocbot_chooseweapon()
 		}
 
 		// Choose weapons for close distance
-		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
+		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
 			if ( client_hasweapon(self, w, true, false) )
 			{

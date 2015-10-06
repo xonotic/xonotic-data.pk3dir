@@ -994,13 +994,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			++disownedcnt;
 	}
 
-	int weapon_cnt = (WEP_COUNT - 1) - disownedcnt;
+	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
 
 	if(weapon_cnt <= 0)
 		return pos;
 
 	int rows;
-	if(autocvar_scoreboard_accuracy_doublerows && weapon_cnt >= floor((WEP_COUNT - 1) * 0.5))
+	if(autocvar_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - 1) * 0.5))
 		rows = 2;
 	else
 		rows = 1;
