@@ -907,8 +907,8 @@ void nades_Clear(entity player)
 
 MUTATOR_HOOKFUNCTION(nades_CheckThrow)
 {
-	if(MUTATOR_RETURNVALUE) { nades_CheckThrow(); }
-	return false;
+	nades_CheckThrow();
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
