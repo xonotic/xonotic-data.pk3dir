@@ -3,18 +3,23 @@
 
 #include "turret.qh"
 
-const int TUR_MAXCOUNT = 24;
-entity turret_info[TUR_MAXCOUNT], turret_info_first, turret_info_last;
-float TUR_COUNT;
-
-void RegisterTurrets();
+REGISTRY(Turrets, 24)
 REGISTER_REGISTRY(RegisterTurrets)
+const int TUR_FIRST = 1;
+#define TUR_LAST (Turrets_COUNT - 1)
 
-#define REGISTER_TURRET(id, inst) REGISTER(RegisterTurrets, TUR, turret_info, TUR_COUNT, id, m_id, inst)
-
-entity get_turretinfo(int id);
+#define REGISTER_TURRET(id, inst) REGISTER(RegisterTurrets, TUR, Turrets, Turrets_COUNT, id, m_id, inst)
 
 REGISTER_TURRET(Null, NEW(Turret));
+
+Turret get_turretinfo(int id)
+{
+    if (id >= TUR_FIRST && id <= TUR_LAST) {
+        Turret t = Turrets[id];
+        if (t) return t;
+    }
+    return TUR_Null;
+}
 
 #include "all.inc"
 
