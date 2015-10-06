@@ -14,6 +14,7 @@ CLASS(Hook, Weapon)
 /* wepimg    */ ATTRIB(Hook, model2, string, "weaponhook");
 /* refname   */ ATTRIB(Hook, netname, string, "hook");
 /* wepname   */ ATTRIB(Hook, message, string, _("Grappling Hook"));
+	ATTRIB(Hook, ammo_factor, float, 1)
 ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, NEW(Hook));
 
@@ -181,7 +182,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 				if(time > actor.hook_refire)
 				if(weapon_prepareattack(thiswep, actor, false, -1))
 				{
-					W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hook, ammo));
+					W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(hook, ammo));
 					actor.hook_state |= HOOK_FIRING;
 					actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
 					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
@@ -219,7 +220,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 						actor.hook_state |= HOOK_REMOVING;
 				}
 
-				float hooked_fuel = WEP_CVAR_PRI(hook, hooked_ammo);
+				float hooked_fuel = thiswep.ammo_factor * WEP_CVAR_PRI(hook, hooked_ammo);
 				if(hooked_fuel > 0)
 				{
 					if( time > actor.hook_time_fueldecrease )
@@ -273,14 +274,15 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 		{
 			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 		}
-		METHOD(Hook, wr_checkammo1, bool(entity thiswep))
+		METHOD(Hook, wr_checkammo1, bool(Hook thiswep))
 		{
+			if (!thiswep.ammo_factor) return true;
 			if(self.hook)
 				return self.ammo_fuel > 0;
 			else
 				return self.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
 		}
-		METHOD(Hook, wr_checkammo2, bool(entity thiswep))
+		METHOD(Hook, wr_checkammo2, bool(Hook thiswep))
 		{
 			// infinite ammo for now
 			return true; // self.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above

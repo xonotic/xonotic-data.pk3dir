@@ -3,9 +3,11 @@ AUTOCVAR(g_grappling_hook, bool, false, _("let players spawn with the grappling 
 REGISTER_MUTATOR(hook, autocvar_g_grappling_hook) {
     MUTATOR_ONADD {
         g_grappling_hook = true;
+        WEP_HOOK.ammo_factor = 0;
     }
     MUTATOR_ONROLLBACK_OR_REMOVE {
         g_grappling_hook = false;
+        WEP_HOOK.ammo_factor = 1;
     }
 }
 
@@ -35,10 +37,4 @@ MUTATOR_HOOKFUNCTION(hook, FilterItem)
     return self.weapon == WEP_HOOK.m_id;
 }
 
-MUTATOR_HOOKFUNCTION(hook, SetStartItems)
-{
-    start_items |= ITEM_JetpackRegen.m_itemid;
-    start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-    warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-}
 #endif
