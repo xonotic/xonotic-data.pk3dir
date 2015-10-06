@@ -1,12 +1,10 @@
-#ifndef MODELS_H
-#define MODELS_H
+#ifndef MODELS_ALL_H
+#define MODELS_ALL_H
 
 #define setmodel(e, m) _setmodel((e), (m).model_str())
 
-void RegisterModels();
-const int MAX_MODELS = 128;
-entity MODELS[MAX_MODELS], MODELS_first, MODELS_last;
-int MODELS_COUNT;
+REGISTRY(Models, 128)
+REGISTER_REGISTRY(RegisterModels)
 
 CLASS(Model, Object)
     ATTRIB(Model, m_id, int, 0)
@@ -29,16 +27,15 @@ ENDCLASS(Model)
 
 #define MODEL(name, path) \
     string MDL_##name##_get() { return path; } \
-    REGISTER(RegisterModels, MDL, MODELS, MODELS_COUNT, name, m_id, NEW(Model, MDL_##name##_get))
-REGISTER_REGISTRY(RegisterModels)
+    REGISTER(RegisterModels, MDL, Models, Models_COUNT, name, m_id, NEW(Model, MDL_##name##_get))
 
 STATIC_INIT(RegisterModels_precache) {
-    FOREACH(MODELS, true, LAMBDA({
+    FOREACH(Models, true, LAMBDA({
         it.model_precache(it);
     }));
 }
 
 MODEL(Null, "null");
-#include "models.inc"
+#include "all.inc"
 
 #endif
