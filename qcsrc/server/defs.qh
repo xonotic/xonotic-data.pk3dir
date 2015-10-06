@@ -348,6 +348,7 @@ ALLVOICEMSGS
 //		_VOICEMSG(droppedflag) \
 //		_VOICEMSG(negative) \
 //		_VOICEMSG(seenenemy) \
+//      /**/
 
 string globalsound_fall;
 string globalsound_metalfall;
