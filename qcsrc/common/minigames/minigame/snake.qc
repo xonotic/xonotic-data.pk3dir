@@ -74,6 +74,17 @@ void snake_new_mouse(entity minigame)
 	minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 }
 
+void snake_move_head(entity minigame);
+void snake_head_think()
+{
+	entity minigame = self.owner;
+
+	if(minigame.minigame_flags & SNAKE_TURN_MOVE)
+		snake_move_head(minigame);
+
+	self.nextthink = time + minigame.snake_delay;
+}
+
 void snake_setup_pieces(entity minigame)
 {
 	int targnum = bound(1, floor(random() * SNAKE_NUM_CNT), SNAKE_NUM_CNT - 1);
@@ -83,6 +94,8 @@ void snake_setup_pieces(entity minigame)
 	piece.team = 1; // init default team?
 	piece.netname = strzone(minigame_tile_buildname(targlet,targnum));
 	piece.cnt = 1;
+	piece.think = snake_head_think;
+	piece.nextthink = time + 0.1;
 	minigame_server_sendflags(piece,MINIG_SF_ALL);
 
 	minigame.snake_head = piece;
@@ -274,16 +287,6 @@ int snake_server_event(entity minigame, string event, ...)
 
 			// Team 1 by default
 			return 1;
-		}
-		case "frame":
-		{
-			if(minigame.minigame_flags & SNAKE_TURN_MOVE)
-			if(time >= minigame.snake_nextmove)
-			{
-				snake_move_head(minigame);
-				minigame.snake_nextmove = time + minigame.snake_delay;
-			}
-			return false;
 		}
 		case "cmd":
 		{

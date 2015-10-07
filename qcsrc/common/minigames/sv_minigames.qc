@@ -163,14 +163,6 @@ int minigame_addplayer(entity minigame_session, entity player)
 	return mgteam;
 }
 
-void minigame_frame()
-{
-	entity minig = self;
-
-	minig.minigame_event(minig,"frame");
-	minig.nextthink = time + 0.1;
-}
-
 entity start_minigame(entity player, string minigame )
 {
 	if ( !autocvar_sv_minigames || !IS_REAL_CLIENT(player) )
@@ -183,8 +175,6 @@ entity start_minigame(entity player, string minigame )
 		minig.classname = "minigame";
 		minig.netname = strzone(strcat(e.netname,"_",ftos(num_for_edict(minig))));
 		minig.descriptor = e;
-		minig.think = minigame_frame;
-		minig.nextthink = time;
 		minig.minigame_event = e.minigame_event;
 		minig.minigame_event(minig,"start");
 		GameLogEcho(strcat(":minigame:start:",minig.netname));
