@@ -8295,7 +8295,7 @@ msgstr "A csúszkával az iránypontok átlátszóságát tudod szabályozni. Az
 
 msgid "Customize your player settings"
 msgstr ""
-                                                                                                                                                                                                                                                              ---"
+
 msgid "Damage done to your enemy gets added to your own health"
 msgstr "Annyi pont adódik életerődhöz, amennyi sebzést a másiknak okozol"
 
@@ -8582,7 +8582,7 @@ msgid "Scale multiplier of the waypoints"
 msgstr "A csúszkával az iránypontok méretét tudod szabályozni. A nagyobb értékek nagyobb feliratokat eredményeznek"
 
 msgid "Screen resolution"
-msgstr "A csúszkával a képernyő felbontását tudod megváltoztatni. TIPP: Ha több monitorod van, és a kép az összes monitorra szét van feszítve, akkor az Egyéb -> Haladó beállításokban keresd ki a listából a "vid_netwmfullscreen" változót, és állítsd át az értékét \"1\"-re! Ez megoldja problémát, de ebben az esetben csak a képernyőd natív felbontását tudod csak használni!"
+msgstr "A csúszkával a képernyő felbontását tudod megváltoztatni. TIPP: Ha több monitorod van, és a kép az összes monitorra szét van feszítve, akkor az Egyéb -> Haladó beállításokban keresd ki a listából a \"vid_netwmfullscreen\" változót, és állítsd át az értékét \"1\"-re! Ez megoldja problémát, de ebben az esetben csak a képernyőd natív felbontását tudod csak használni!"
 
 msgid "Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups."
 msgstr "A kiválasztott fegyver aréna minden játékosnak ugyanazt a fegyvert biztosítja korlátlan lőszerrel, és letiltja minden más fegyver felvételét"
