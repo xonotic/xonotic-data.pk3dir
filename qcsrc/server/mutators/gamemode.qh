@@ -12,14 +12,6 @@
 #include "../scores.qh"
 #include "../scores_rules.qh"
 
-#include "../bot/bot.qh"
-#include "../bot/navigation.qh"
-#include "../bot/waypoints.qh"
-#include "../bot/havocbot/roles.qh"
-#include "../bot/havocbot/role_keyhunt.qh"
-
-#include "../bot/havocbot/havocbot.qh"
-
 #include "../command/vote.qh"
 
 #include "../../common/monsters/all.qh"

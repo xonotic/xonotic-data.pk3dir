@@ -6,8 +6,6 @@
 #include "scores.qh"
 #include "scores_rules.qh"
 
-#include "bot/bot.qh"
-
 #include "command/vote.qh"
 
 #include "mutators/mutators_include.qh"

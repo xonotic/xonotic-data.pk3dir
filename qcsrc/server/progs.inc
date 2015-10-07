@@ -45,16 +45,6 @@
 #include "t_quake3.qc"
 #include "t_quake.qc"
 
-#include "bot/aim.qc"
-#include "bot/bot.qc"
-#include "bot/navigation.qc"
-#include "bot/scripting.qc"
-#include "bot/waypoints.qc"
-
-#include "bot/havocbot/havocbot.qc"
-#include "bot/havocbot/role_keyhunt.qc"
-#include "bot/havocbot/roles.qc"
-
 #include "command/all.qc"
 
 #include "mutators/mutators_include.qc"
@@ -119,6 +109,8 @@
 #include "../warpzonelib/common.qc"
 #include "../warpzonelib/server.qc"
 #include "../warpzonelib/util_server.qc"
+
+#include "bot/impl.qc"
 
 #if BUILD_MOD
 #include "../../mod/server/progs.inc"

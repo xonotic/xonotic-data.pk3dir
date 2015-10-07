@@ -1,7 +1,6 @@
 #include "cl_player.qh"
 #include "_all.qh"
 
-#include "bot/bot.qh"
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "g_subs.qh"

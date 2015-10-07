@@ -1,5 +1,3 @@
-#include "../bot/waypoints.qh"
-
 #include "pathlib.qh"
 #include "main.qh"
 
