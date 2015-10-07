@@ -8225,9 +8225,6 @@ msgstr "beste"
 msgid "reload"
 msgstr "nachladen"
 
-msgid "View"
-msgstr "Anzeige"
-
 msgid "hold zoom"
 msgstr "Vergrößern (festhalten)"
 
@@ -8284,12 +8281,6 @@ msgstr "Verbindung trennen"
 
 msgid "quit"
 msgstr "Beenden"
-
-msgid "Teamplay"
-msgstr "Teamplay"
-
-msgid "team chat"
-msgstr "Nachricht ans Team"
 
 msgid "auto-join team"
 msgstr "Team automatisch wählen"

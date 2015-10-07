@@ -8129,9 +8129,6 @@ msgstr "найкраща"
 msgid "reload"
 msgstr "перезарядити"
 
-msgid "View"
-msgstr "Вид"
-
 msgid "hold zoom"
 msgstr "утримувати для зуму"
 
@@ -8188,12 +8185,6 @@ msgstr "роз'єднатися"
 
 msgid "quit"
 msgstr "вийти"
-
-msgid "Teamplay"
-msgstr "Командна гра"
-
-msgid "team chat"
-msgstr "командний чат"
 
 msgid "auto-join team"
 msgstr "автовибір команди"

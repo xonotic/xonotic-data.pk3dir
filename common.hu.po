@@ -8109,9 +8109,6 @@ msgstr "legjobb"
 msgid "reload"
 msgstr "újratöltés"
 
-msgid "View"
-msgstr "Nézet"
-
 msgid "hold zoom"
 msgstr "nagyítás tartás"
 
@@ -8168,12 +8165,6 @@ msgstr "lekapcsolodás"
 
 msgid "quit"
 msgstr "kilépés"
-
-msgid "Teamplay"
-msgstr "Csapatjáték"
-
-msgid "team chat"
-msgstr "csapat beszélgetés"
 
 msgid "auto-join team"
 msgstr "automatikus csapatválasztás"

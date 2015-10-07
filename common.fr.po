@@ -8258,9 +8258,6 @@ msgstr "meilleure arme"
 msgid "reload"
 msgstr "recharger"
 
-msgid "View"
-msgstr "Vue"
-
 msgid "hold zoom"
 msgstr "zoom"
 
@@ -8317,12 +8314,6 @@ msgstr "se déconnecter"
 
 msgid "quit"
 msgstr "quitter"
-
-msgid "Teamplay"
-msgstr "Équipe"
-
-msgid "team chat"
-msgstr "tchat d'équipe"
 
 msgid "auto-join team"
 msgstr "auto-joindre une équipe"

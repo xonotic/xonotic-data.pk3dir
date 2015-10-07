@@ -8174,9 +8174,6 @@ msgstr "mejor"
 msgid "reload"
 msgstr "recargar"
 
-msgid "View"
-msgstr "Vista"
-
 msgid "hold zoom"
 msgstr "mantener zoom"
 
@@ -8233,12 +8230,6 @@ msgstr "desconectar"
 
 msgid "quit"
 msgstr "salir"
-
-msgid "Teamplay"
-msgstr "Juego en equipo"
-
-msgid "team chat"
-msgstr "chat de equipo"
 
 msgid "auto-join team"
 msgstr "unirse al equipo automáticamente"
