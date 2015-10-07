@@ -3,7 +3,6 @@ REGISTER_MINIGAME(c4, "Connect Four");
 const float C4_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const float C4_TURN_WIN   = 0x0200; // player has won
 const float C4_TURN_DRAW  = 0x0400; // no moves are possible
-const float C4_TURN_TYPE  = 0x0f00; // turn type mask
 
 const float C4_TURN_TEAM1 = 0x0001;
 const float C4_TURN_TEAM2 = 0x0002;
