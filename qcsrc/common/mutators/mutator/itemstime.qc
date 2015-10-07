@@ -266,15 +266,15 @@ void HUD_ItemsTime()
     int count = 0;
     if (autocvar_hud_panel_itemstime_hidespawned == 1)
         FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
-            count += (ItemsTime_time[i] > time || -ItemsTime_time[i] > time);
+            count += (ItemsTime_time[it.m_id] > time || -ItemsTime_time[it.m_id] > time);
         ));
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
         FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
-            count += (ItemsTime_time[i] > time);
+            count += (ItemsTime_time[it.m_id] > time);
         ));
     else
         FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
-            count += (ItemsTime_time[i] != -1);
+            count += (ItemsTime_time[it.m_id] != -1);
         ));
     if (count == 0)
         return;
@@ -346,8 +346,8 @@ void HUD_ItemsTime()
 
     float row = 0, column = 0;
     bool item_available;
-    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0') && ItemsTime_time[i] != -1, LAMBDA(
-        float item_time = ItemsTime_time[i];
+    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0') && ItemsTime_time[it.m_id] != -1, LAMBDA(
+        float item_time = ItemsTime_time[it.m_id];
         if (item_time < -1)
         {
             item_available = true;
@@ -356,25 +356,25 @@ void HUD_ItemsTime()
         else
             item_available = (item_time <= time);
 
-        if (ItemsTime_time[i] >= 0)
+        if (ItemsTime_time[it.m_id] >= 0)
         {
-            if (time <= ItemsTime_time[i])
-                ItemsTime_availableTime[i] = 0;
-            else if (ItemsTime_availableTime[i] == 0)
-                ItemsTime_availableTime[i] = time;
+            if (time <= ItemsTime_time[it.m_id])
+                ItemsTime_availableTime[it.m_id] = 0;
+            else if (ItemsTime_availableTime[it.m_id] == 0)
+                ItemsTime_availableTime[it.m_id] = time;
         }
-        else if (ItemsTime_availableTime[i] == 0)
-            ItemsTime_availableTime[i] = time;
+        else if (ItemsTime_availableTime[it.m_id] == 0)
+            ItemsTime_availableTime[it.m_id] = time;
 
-        float f = (time - ItemsTime_availableTime[i]) * 2;
+        float f = (time - ItemsTime_availableTime[it.m_id]) * 2;
         f = (f > 1) ? 0 : bound(0, f, 1);
 
         if (autocvar_hud_panel_itemstime_hidespawned == 1)
-            if (!(ItemsTime_time[i] > time || -ItemsTime_time[i] > time))
+            if (!(ItemsTime_time[it.m_id] > time || -ItemsTime_time[it.m_id] > time))
                 continue;
 
         if (autocvar_hud_panel_itemstime_hidespawned == 2)
-            if (!(ItemsTime_time[i] > time))
+            if (!(ItemsTime_time[it.m_id] > time))
                 continue;
 
         DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, it, item_time, item_available, f);
