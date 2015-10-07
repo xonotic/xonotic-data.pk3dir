@@ -225,7 +225,7 @@ spawnfunc(func_train)
 	// TODO make a reset function for this one
 }
 #elif defined(CSQC)
-void train_draw()
+void train_draw(entity this)
 {
 	//Movetype_Physics_NoMatchServer();
 	Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);

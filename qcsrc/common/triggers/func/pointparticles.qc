@@ -183,8 +183,8 @@ spawnfunc(func_sparks)
 }
 #elif defined(CSQC)
 
-void Draw_PointParticles()
-{SELFPARAM();
+void Draw_PointParticles(entity this)
+{
 	float n, i, fail;
 	vector p;
 	vector sz;

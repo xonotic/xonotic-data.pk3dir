@@ -20,8 +20,8 @@
 
 #include "../../common/command/generic.qh"
 
-void DrawDebugModel()
-{SELFPARAM();
+void DrawDebugModel(entity this)
+{
 	if(time - floor(time) > 0.5)
 	{
 		PolyDrawModel(self);

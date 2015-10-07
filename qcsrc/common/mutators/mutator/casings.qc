@@ -40,8 +40,8 @@ void Casing_Delete()
     remove(self);
 }
 
-void Casing_Draw()
-{SELFPARAM();
+void Casing_Draw(entity this)
+{
     if (self.move_flags & FL_ONGROUND)
     {
         self.move_angles_x = 0;

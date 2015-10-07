@@ -23,36 +23,33 @@ void SUB_Stop()
 	self.move_movetype = MOVETYPE_NONE;
 }
 
-void Projectile_ResetTrail(vector to)
-{SELFPARAM();
-	self.trail_oldorigin = to;
-	self.trail_oldtime = time;
+void Projectile_ResetTrail(entity this, vector to)
+{
+	this.trail_oldorigin = to;
+	this.trail_oldtime = time;
 }
 
-void Projectile_DrawTrail(vector to)
-{SELFPARAM();
-	vector from;
-	float t0;
-
-	from = self.trail_oldorigin;
-	t0 = self.trail_oldtime;
-	self.trail_oldorigin = to;
-	self.trail_oldtime = time;
+void Projectile_DrawTrail(entity this, vector to)
+{
+	vector from = this.trail_oldorigin;
+	// float t0 = this.trail_oldtime;
+	this.trail_oldorigin = to;
+	this.trail_oldtime = time;
 
 	// force the effect even for stationary firemine
-	if(self.cnt == PROJECTILE_FIREMINE)
+	if(this.cnt == PROJECTILE_FIREMINE)
 		if(from == to)
 			from.z += 1;
 
-	if (self.traileffect)
+	if (this.traileffect)
 	{
-		particles_alphamin = particles_alphamax = particles_fade = sqrt(self.alpha);
-		boxparticles(particleeffectnum(Effects[self.traileffect]), self, from, to, self.velocity, self.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
+		boxparticles(particleeffectnum(Effects[this.traileffect]), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
 
-void Projectile_Draw()
-{SELFPARAM();
+void Projectile_Draw(entity this)
+{
 	vector rot;
 	vector trailorigin;
 	int f;
@@ -146,9 +143,9 @@ void Projectile_Draw()
 		trailorigin += v_up * 4;
 
 	if(drawn)
-		Projectile_DrawTrail(trailorigin);
+		Projectile_DrawTrail(self, trailorigin);
 	else
-		Projectile_ResetTrail(trailorigin);
+		Projectile_ResetTrail(self, trailorigin);
 
 	self.drawmask = 0;
 
@@ -179,7 +176,7 @@ void Ent_RemoveProjectile()
 	if(self.count & 0x80)
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, MOVE_NORMAL, self);
-		Projectile_DrawTrail(trace_endpos);
+		Projectile_DrawTrail(self, trace_endpos);
 	}
 }
 

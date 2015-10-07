@@ -90,13 +90,13 @@ spawnfunc(func_snow)
 	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 #elif defined(CSQC)
-void Draw_Rain()
-{SELFPARAM();
+void Draw_Rain(entity this)
+{
     te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
-void Draw_Snow()
-{SELFPARAM();
+void Draw_Snow(entity this)
+{
     te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 

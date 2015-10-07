@@ -51,8 +51,8 @@ void Ent_Wall_PreDraw()
 		self.drawmask = MASK_NORMAL;
 }
 
-void Ent_Wall_Draw()
-{SELFPARAM();
+void Ent_Wall_Draw(entity this)
+{
 	float f;
 	var .vector fld;
 

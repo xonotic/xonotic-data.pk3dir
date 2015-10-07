@@ -263,8 +263,8 @@ void raptor_flare_think()
 
 #ifdef CSQC
 
-void RaptorCBShellfragDraw()
-{SELFPARAM();
+void RaptorCBShellfragDraw(entity this)
+{
     if(wasfreed(self))
         return;
 

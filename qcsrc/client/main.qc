@@ -81,6 +81,8 @@ void menu_sub_null()
 {
 }
 
+void draw_null(entity this) { }
+
 string forcefog;
 void ConsoleCommand_macro_init();
 void CSQC_Init(void)
@@ -686,9 +688,9 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
-void Spawn_Draw(void)
-{SELFPARAM();
-	pointparticles(self.cnt, self.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
+void Spawn_Draw(entity this)
+{
+	pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
 void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
@@ -880,7 +882,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
 		case ENT_CLIENT_GENERATOR: ent_generator(); break;
-		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(); break;
+		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(this); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
@@ -933,7 +935,7 @@ void Ent_Remove()
 
 	self.enttype = 0;
 	self.classname = "";
-	self.draw = menu_sub_null;
+	self.draw = draw_null;
 	self.entremove = menu_sub_null;
 	// TODO possibly set more stuff to defaults
 }

@@ -146,9 +146,11 @@ spawnfunc(func_conveyor)
 
 #elif defined(CSQC)
 
+void conveyor_draw(entity this) { WITH(entity, self, this, conveyor_think()); }
+
 void conveyor_init()
 {SELFPARAM();
-	self.draw = conveyor_think;
+	self.draw = conveyor_draw;
 	self.drawmask = MASK_NORMAL;
 
 	self.movetype = MOVETYPE_NONE;

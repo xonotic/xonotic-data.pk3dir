@@ -5,7 +5,7 @@ void Net_AuXair2(float bIsNew);
 
 void Net_VehicleSetup();
 
-void RaptorCBShellfragDraw();
+void RaptorCBShellfragDraw(entity this);
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
 
 #define weapon2mode getstati(STAT_VEHICLESTAT_W2MODE)

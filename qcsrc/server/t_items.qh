@@ -78,9 +78,9 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 .float  spawntime;
 .float  gravity;
 .vector colormod;
-void ItemDraw();
 
-void ItemDrawSimple();
+void ItemDraw(entity this);
+void ItemDrawSimple(entity this);
 
 void ItemRead(float _IsNew);
 

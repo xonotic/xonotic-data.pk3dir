@@ -26,8 +26,8 @@ void vehicle_alarm(entity e, int ch, string s0und)
 	_sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
 }
 
-void AuxiliaryXhair_Draw2D()
-{SELFPARAM();
+void AuxiliaryXhair_Draw2D(entity this)
+{
 	if (scoreboard_showscores)
 		return;
 

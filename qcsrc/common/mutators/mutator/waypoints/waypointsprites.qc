@@ -455,8 +455,8 @@ vector fixrgbexcess(vector rgb)
     return rgb;
 }
 
-void Draw_WaypointSprite()
-{SELFPARAM();
+void Draw_WaypointSprite(entity this)
+{
     if (self.lifetime)
         self.alpha = pow(bound(0, (self.fadetime - time) / self.lifetime, 1), waypointsprite_timealphaexponent);
     else

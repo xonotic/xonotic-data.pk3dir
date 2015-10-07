@@ -114,7 +114,7 @@ void WaypointSprite_Load_Frames(string ext);
 
 void WaypointSprite_Load();
 .float alpha;
-void Draw_WaypointSprite();
+void Draw_WaypointSprite(entity this);
 #endif
 
 #ifdef SVQC

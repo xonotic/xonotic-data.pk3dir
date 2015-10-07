@@ -515,7 +515,7 @@ void CSQCModel_Effects_PostUpdate(void)
 	self.effects = 0;
 	self.modelflags = 0;
 	if(self.csqcmodel_teleported)
-		Projectile_ResetTrail(self.origin);
+		Projectile_ResetTrail(self, self.origin);
 }
 .int snd_looping;
 void CSQCModel_Effects_Apply(void)
@@ -584,9 +584,9 @@ void CSQCModel_Effects_Apply(void)
 	self.traileffect = tref;
 
 	if(self.drawmask)
-		Projectile_DrawTrail(self.origin);
+		Projectile_DrawTrail(self, self.origin);
 	else
-		Projectile_ResetTrail(self.origin);
+		Projectile_ResetTrail(self, self.origin);
 
 	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
 		self.renderflags |= RF_ADDITIVE;

@@ -237,8 +237,8 @@ spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 #endif // SVQC
 #ifdef CSQC
 
-void ewheel_draw()
-{SELFPARAM();
+void ewheel_draw(entity this)
+{
     float dt;
 
     dt = time - self.move_time;

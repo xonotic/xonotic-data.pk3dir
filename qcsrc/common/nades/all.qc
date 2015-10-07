@@ -17,8 +17,8 @@
 
 #ifdef CSQC
 .float ltime;
-void healer_draw()
-{SELFPARAM();
+void healer_draw(entity this)
+{
 	float dt = time - self.move_time;
 	self.move_time = time;
 	if(dt <= 0)

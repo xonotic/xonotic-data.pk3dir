@@ -31,8 +31,8 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 }
 
 class(Hook) .float teleport_time;
-void Draw_GrapplingHook()
-{SELFPARAM();
+void Draw_GrapplingHook(entity this)
+{
 	vector a, b, atrans;
 	string tex;
 	vector rgb;

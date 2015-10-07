@@ -633,8 +633,8 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 
 #include "../../../client/movelib.qh"
 
-void walker_draw()
-{SELFPARAM();
+void walker_draw(entity this)
+{
     float dt;
 
     dt = time - self.move_time;

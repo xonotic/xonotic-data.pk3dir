@@ -850,8 +850,8 @@ void Reset_ArcBeam(void)
 	}
 }
 
-void Draw_ArcBeam(void)
-{SELFPARAM();
+void Draw_ArcBeam(entity this)
+{
 	float dt = time - self.move_time;
 	self.move_time = time;
 	if(dt <= 0) { return; }

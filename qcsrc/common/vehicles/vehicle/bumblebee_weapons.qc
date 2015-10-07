@@ -61,7 +61,7 @@ bool bumble_raygun_send(entity this, entity to, float sf)
 
 #ifdef CSQC
 
-void bumble_raygun_draw();
+void bumble_raygun_draw(entity this);
 
 void bumble_raygun_read(bool bIsNew)
 {SELFPARAM();
@@ -101,8 +101,8 @@ void bumble_raygun_read(bool bIsNew)
     }
 }
 
-void bumble_raygun_draw()
-{SELFPARAM();
+void bumble_raygun_draw(entity this)
+{
     float _len;
     vector _dir;
     vector _vtmp1, _vtmp2;

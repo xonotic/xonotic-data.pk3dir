@@ -91,8 +91,8 @@ void Gib_Touch()
 	Gib_Delete();
 }
 
-void Gib_Draw()
-{SELFPARAM();
+void Gib_Draw(entity this)
+{
 	vector oldorg;
 	oldorg = self.origin;
 

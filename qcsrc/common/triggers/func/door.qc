@@ -795,11 +795,11 @@ spawnfunc(func_door)
 
 #elif defined(CSQC)
 
-void door_draw()
+void door_draw(entity this)
 {
 	Movetype_Physics_NoMatchServer();
 
-	trigger_draw_generic();
+	trigger_draw_generic(this);
 }
 
 void ent_door()

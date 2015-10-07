@@ -27,7 +27,7 @@
 
 entity porto;
 vector polyline[16];
-void Porto_Draw()
+void Porto_Draw(entity this)
 {
 	vector p, dir, ang, q, nextdir;
 	float portal_number, portal1_idx;
@@ -1468,7 +1468,7 @@ void CSQC_UpdateView(float w, float h)
 	 */
 
 	for(entity e = NULL; (e = nextent(e)); ) if (e.draw) {
-		WITH(entity, self, e, e.draw());
+		WITH(entity, self, e, e.draw(e));
 	}
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
@@ -1806,7 +1806,7 @@ void CSQC_UpdateView(float w, float h)
 
 	// draw 2D entities
 	for (entity e = NULL; (e = nextent(e)); ) if (e.draw2d) {
-		WITH(entity, self, e, e.draw2d());
+		WITH(entity, self, e, e.draw2d(e));
 	}
 	Draw_ShowNames_All();
 

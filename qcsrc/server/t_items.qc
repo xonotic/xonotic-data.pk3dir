@@ -28,8 +28,8 @@
 #endif
 
 #ifdef CSQC
-void ItemDraw()
-{SELFPARAM();
+void ItemDraw(entity self)
+{
     if(self.gravity)
     {
         Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
@@ -64,8 +64,8 @@ void ItemDraw()
     }
 }
 
-void ItemDrawSimple()
-{SELFPARAM();
+void ItemDrawSimple(entity this)
+{
     if(self.gravity)
     {
         Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);

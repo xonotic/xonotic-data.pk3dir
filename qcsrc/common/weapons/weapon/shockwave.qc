@@ -735,8 +735,8 @@ void W_Shockwave_Attack(void)
 const float SW_MAXALPHA = 0.5;
 const float SW_FADETIME = 0.4;
 const float SW_DISTTOMIN = 200;
-void Draw_Shockwave()
-{SELFPARAM();
+void Draw_Shockwave(entity this)
+{
 	// fading/removal control
 	float a = bound(0, (SW_MAXALPHA - ((time - self.sw_time) / SW_FADETIME)), SW_MAXALPHA);
 	if(a < ALPHA_MIN_VISIBLE) { remove(self); }

@@ -7,7 +7,7 @@ class(ModelEffect) .float lifetime, fadetime;
 class(ModelEffect) .float teleport_time;
 class(ModelEffect) .float scale1, scale2;
 
-void ModelEffect_Draw();
+void ModelEffect_Draw(entity this);
 
 void Ent_ModelEffect(bool isNew);
 #endif

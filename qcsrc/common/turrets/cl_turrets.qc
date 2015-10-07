@@ -24,8 +24,8 @@ void turret_head_draw()
 	self.drawmask = MASK_NORMAL;
 }
 
-void turret_draw()
-{SELFPARAM();
+void turret_draw(entity this)
+{
 	float dt;
 
 	dt = time - self.move_time;
@@ -53,8 +53,8 @@ void turret_draw()
 
 }
 
-void turret_draw2d()
-{SELFPARAM();
+void turret_draw2d(entity this)
+{
 	if(self.netname == "")
 		return;
 
@@ -246,8 +246,8 @@ void turret_construct()
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
 void turret_gibboom();
-void turret_gib_draw()
-{SELFPARAM();
+void turret_gib_draw(entity this)
+{
 	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 
 	self.drawmask = MASK_NORMAL;
