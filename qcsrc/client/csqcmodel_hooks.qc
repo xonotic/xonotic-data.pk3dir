@@ -528,7 +528,7 @@ void CSQCModel_Effects_Apply(void)
 	self.traileffect = 0;
 
 	if(eff & EF_BRIGHTFIELD)
-		tref = particleeffectnum(EFFECT_TR_NEXUIZPLASMA);
+		tref = EFFECT_TR_NEXUIZPLASMA.m_id;
 	// ignoring EF_MUZZLEFLASH
 	if(eff & EF_BRIGHTLIGHT)
 		adddynamiclight(self.origin, 400, '3 3 3');
@@ -562,24 +562,24 @@ void CSQCModel_Effects_Apply(void)
 		self.renderflags |= RF_DYNAMICMODELLIGHT;
 	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(self.csqcmodel_modelflags & MF_ROCKET)
-		tref = particleeffectnum(EFFECT_TR_ROCKET);
+		tref = EFFECT_TR_ROCKET.m_id;
 	if(self.csqcmodel_modelflags & MF_GRENADE)
-		tref = particleeffectnum(EFFECT_TR_GRENADE);
+		tref = EFFECT_TR_GRENADE.m_id;
 	if(self.csqcmodel_modelflags & MF_GIB)
-		tref = particleeffectnum(EFFECT_TR_BLOOD);
+		tref = EFFECT_TR_BLOOD.m_id;
 	if(self.csqcmodel_modelflags & MF_ROTATE)
 	{
 		self.renderflags |= RF_USEAXIS;
 		makevectors(self.angles + '0 100 0' * fmod(time, 3.6));
 	}
 	if(self.csqcmodel_modelflags & MF_TRACER)
-		tref = particleeffectnum(EFFECT_TR_WIZSPIKE);
+		tref = EFFECT_TR_WIZSPIKE.m_id;
 	if(self.csqcmodel_modelflags & MF_ZOMGIB)
-		tref = particleeffectnum(EFFECT_TR_SLIGHTBLOOD);
+		tref = EFFECT_TR_SLIGHTBLOOD.m_id;
 	if(self.csqcmodel_modelflags & MF_TRACER2)
-		tref = particleeffectnum(EFFECT_TR_KNIGHTSPIKE);
+		tref = EFFECT_TR_KNIGHTSPIKE.m_id;
 	if(self.csqcmodel_modelflags & MF_TRACER3)
-		tref = particleeffectnum(EFFECT_TR_VORESPIKE);
+		tref = EFFECT_TR_VORESPIKE.m_id;
 
 	self.traileffect = tref;
 
