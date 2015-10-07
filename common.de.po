@@ -8329,100 +8329,100 @@ msgid "Add the maps shown in Maplist above to your selection"
 msgstr ""
 
 msgid "Advanced server settings"
-msgstr "Erweiterte Einstellungen für den Server"
+msgstr "Erweiterte Einstellungen fÃ¼r den Server"
 
 msgid "Advanced settings where you can tweak every single variable of the game"
-msgstr "Erweiterte Einstellungen, in denen du jede beliebige Variable des Spiels ändern kannst"
+msgstr "Erweiterte Einstellungen, in denen du jede beliebige Variable des Spiels Ã¤ndern kannst"
 
 msgid "All players are almost invisible"
 msgstr "Tarnmodus: Alle Spieler sind fast unsichtbar"
 
 msgid "Allow the console toggling bind to also close the console"
-msgstr "Schließen der Konsole auch mit der Taste, die zum Öffnen verwendet wird"
+msgstr "SchlieÃŸen der Konsole auch mit der Taste, die zum Ã–ffnen verwendet wird"
 
 msgid "Always carry the laser as an additional weapon in Nix"
 msgstr "In Nix ist als zweite Waffe der Laser vorhanden"
 
 msgid "Ambient lighting, if set too high it tends to make light on maps look dull and flat (default: 4)"
-msgstr "Umgebungslicht, ein zu hoch eingestellter Wert lässt die Map matt und flach erscheinen (Standard: 4)"
+msgstr "Umgebungslicht, ein zu hoch eingestellter Wert lÃ¤sst die Map matt und flach erscheinen (Standard: 4)"
 
 msgid "Amount of bots on your server"
-msgstr "Wähle die maximale Anzahl von Bots auf dem Server"
+msgstr "WÃ¤hle die maximale Anzahl von Bots auf dem Server"
 
 msgid "Amount of health below which your player gets stunned because of blood loss"
-msgstr "Blutverlust: Aktiviere diesen Modus und stelle den Wert der Lebensenergie, bei der Spieler auf Grund von Blutverlust betäubt wirken, ein"
+msgstr "Blutverlust: Aktiviere diesen Modus und stelle den Wert der Lebensenergie, bei der Spieler auf Grund von Blutverlust betÃ¤ubt wirken, ein"
 
 msgid "Anisotropic filtering quality (default: 1x)"
-msgstr "Qualität für das Filtern von Anisotropie (Standard: Aus)"
+msgstr "QualitÃ¤t fÃ¼r das Filtern von Anisotropie (Standard: Aus)"
 
 msgid "Announcer sound telling you the remaining minutes of the match"
-msgstr "Abspielen einer Ansage für die verbleibenden Minuten des Spiels"
+msgstr "Abspielen einer Ansage fÃ¼r die verbleibenden Minuten des Spiels"
 
 msgid "Audio settings"
 msgstr "Audio Einstellungen"
 
 msgid "Automatically switch to newly picked up weapons if they are better than what you are carrying"
-msgstr "Wechsel automatisch zu der neu aufgesammelten Waffe, wenn diese in der Liste weiter oben steht als die, welche Du gerade trägst"
+msgstr "Wechsel automatisch zu der neu aufgesammelten Waffe, wenn diese in der Liste weiter oben steht als die, welche Du gerade trÃ¤gst"
 
 msgid "Automatically taunt enemies after fragging them"
-msgstr "Automatisches Abspielen einer spöttigen Bemerkung, wenn Gegner gefraggt wurden"
+msgstr "Automatisches Abspielen einer spÃ¶ttigen Bemerkung, wenn Gegner gefraggt wurden"
 
 msgid "Autoselect team (recommended)"
 msgstr "Automatische Auswahl des Teams (bevorzugt)"
 
 msgid "Back to work..."
-msgstr "Zurück an die Arbeit..."
+msgstr "ZurÃ¼ck an die Arbeit..."
 
 msgid "Benchmark how fast your computer can run the highlighted demo"
 msgstr "Mache einen Benchmark-Test der markierten Demo. Die Demo wird in Zeitraffer, -lupe abgespielt. Das Ergebnis wird in \"gamedir/data/benchmark.log\" gespeichert"
 
 msgid "Bookmark the currently highlighted server so that it's faster to find in the future"
-msgstr "Setze ein Lesezeichen für den markierten Server um ihn beim nächsten Mal schneller wiederzufinden"
+msgstr "Setze ein Lesezeichen fÃ¼r den markierten Server um ihn beim nÃ¤chsten Mal schneller wiederzufinden"
 
 msgid "Brightness of black (default: 0)"
 msgstr "Helligkeit von Schwarz (Standard: 0)"
 
 msgid "Brightness of white (default: 1)"
-msgstr "Helligkeit von Weiß (Standard: 1)"
+msgstr "Helligkeit von WeiÃŸ (Standard: 1)"
 
 msgid "Browse and view demos"
 msgstr "Schaue dir Demos an"
 
 msgid "By how much to multiply the contrast in dark areas (default: 1)"
-msgstr "Faktor für die Änderung des Kontrasts in dunklen Bildteilen (Standard: 1)"
+msgstr "Faktor fÃ¼r die Ã„nderung des Kontrasts in dunklen Bildteilen (Standard: 1)"
 
 msgid "Change the game settings"
-msgstr "Ändere die Spiel-Einstellungen"
+msgstr "Ã„ndere die Spiel-Einstellungen"
 
 msgid "Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)"
-msgstr "Ändere die Auflösung von Texturen. Ein geringerer Wert verringert die Auslastung des Speichers, aber lässt die Texturen verschwommen aussehen. (Standard: Gut)"
+msgstr "Ã„ndere die AuflÃ¶sung von Texturen. Ein geringerer Wert verringert die Auslastung des Speichers, aber lÃ¤sst die Texturen verschwommen aussehen. (Standard: Gut)"
 
 msgid "Change the smoothness of the curves on the map (default: normal)"
-msgstr "Ändere die Qualität der Geometrie in der Map - Rundheit/Glattheit von Kurven (Standard: Gut)"
+msgstr "Ã„ndere die QualitÃ¤t der Geometrie in der Map - Rundheit/Glattheit von Kurven (Standard: Gut)"
 
 msgid "Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done."
 msgstr ""
 
 msgid "Compress the textures for video cards with small amounts of video memory available (default: None)"
-msgstr "Komprimiere die Texturen für Grafikkarten mit einem geringen Grafikspeicher (Standard: deaktiviert)"
+msgstr "Komprimiere die Texturen fÃ¼r Grafikkarten mit einem geringen Grafikspeicher (Standard: deaktiviert)"
 
 msgid "Control transparency of the waypoints"
-msgstr "Verändere den Wert der Transparenz von der Anzeige der Wegpunkte"
+msgstr "VerÃ¤ndere den Wert der Transparenz von der Anzeige der Wegpunkte"
 
 msgid "Customize your player settings"
-msgstr "Ändere deine Spieler-Einstellungen"
+msgstr "Ã„ndere deine Spieler-Einstellungen"
 
 msgid "Damage done to your enemy gets added to your own health"
-msgstr "Vampirmodus: Der Schaden dem du anderen Spielern zufügst, wird deiner eigenen Lebensenergie hinzugefügt"
+msgstr "Vampirmodus: Der Schaden dem du anderen Spielern zufÃ¼gst, wird deiner eigenen Lebensenergie hinzugefÃ¼gt"
 
 msgid "Decals further away than this will not be drawn (default: 300)"
 msgstr "Weiter, als eingestellt, entfernte Dekore werden nicht dargestellt (Standard: 300)"
 
 msgid "Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly. (default: disabled)"
-msgstr "Komplettes Deaktivieren von Texturen für sehr langsame Hardware. Starke Verbesserung der Leistung, sieht aber sehr komisch aus (Standard: deaktiviert)"
+msgstr "Komplettes Deaktivieren von Texturen fÃ¼r sehr langsame Hardware. Starke Verbesserung der Leistung, sieht aber sehr komisch aus (Standard: deaktiviert)"
 
 msgid "Distance from which taunts can be heard"
-msgstr "Distanz in der spöttige Bemerkungen anderer Spieler gehört werden können"
+msgstr "Distanz in der spÃ¶ttige Bemerkungen anderer Spieler gehÃ¶rt werden kÃ¶nnen"
 
 msgid "Draw the weapon model"
 msgstr "Darstellung der Waffe im Spiel"
@@ -8431,16 +8431,16 @@ msgid "Effect settings"
 msgstr "Einstellungen der Effekte"
 
 msgid "Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts (default: disabled)"
-msgstr "Verhindere das Überblenden, in dem das Tiefenbild der Szene vor dem Licht gerendert wird (Standard: nur Map)"
+msgstr "Verhindere das Ãœberblenden, in dem das Tiefenbild der Szene vor dem Licht gerendert wird (Standard: nur Map)"
 
 msgid "Enable OpenGL 2.0 pixel shaders for lightning (default: enabled)"
-msgstr "Aktiviere OpenGL 2.0 für Lichteffekte (Standard: aktiviert)"
+msgstr "Aktiviere OpenGL 2.0 fÃ¼r Lichteffekte (Standard: aktiviert)"
 
 msgid "Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot (default: disabled)"
-msgstr "Aktiviere Antialiasing um Ecken der 3D-Geometire zu glätten. Kann die Leistung stark verringern (Standard: Aus)"
+msgstr "Aktiviere Antialiasing um Ecken der 3D-Geometire zu glÃ¤tten. Kann die Leistung stark verringern (Standard: Aus)"
 
 msgid "Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)"
-msgstr "Aktiviere Überstrahlung, welche die umgebenden Pixel sehr hell erleuchteter Pixel erhellt. Dieser Effekt hat einen großen Einfluss auf die Leistung (Standard: deaktiviert)"
+msgstr "Aktiviere Ãœberstrahlung, welche die umgebenden Pixel sehr hell erleuchteter Pixel erhellt. Dieser Effekt hat einen groÃŸen Einfluss auf die Leistung (Standard: deaktiviert)"
 
 msgid "Enable clientside movement prediction"
 msgstr "Aktiviere die Client-seitige Bewegungssimulation"
@@ -8449,31 +8449,31 @@ msgid "Enable corona flares around certain lights (default: enabled)"
 msgstr "Aktiviere die Korona um bestimmte Lichter (Standard: aktiviert)"
 
 msgid "Enable decals (bullet holes and blood) (default: enabled)"
-msgstr "Aktiviere Dekore (Einschusslöcher und Blut) (Standard: aktiviert)"
+msgstr "Aktiviere Dekore (EinschusslÃ¶cher und Blut) (Standard: aktiviert)"
 
 msgid "Enable directional voices"
-msgstr "Aktiviere richtungsunabhängige Geräusche"
+msgstr "Aktiviere richtungsunabhÃ¤ngige GerÃ¤usche"
 
 msgid "Enable dodging"
-msgstr "Ausweichmodus: Es ist möglich rasch zur Seite zu springen (spezielle Bewegung)"
+msgstr "Ausweichmodus: Es ist mÃ¶glich rasch zur Seite zu springen (spezielle Bewegung)"
 
 msgid "Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)"
-msgstr "Aktiviere schnell gerenderte dynamische Lichter. Es wird eine große Korona anstelle von eines richtigen dynamischen Lichts dargestellt (Standard: aktiviert)"
+msgstr "Aktiviere schnell gerenderte dynamische Lichter. Es wird eine groÃŸe Korona anstelle von eines richtigen dynamischen Lichts dargestellt (Standard: aktiviert)"
 
 msgid "Enable footstep sounds"
-msgstr "Schrittklang: Schritte von Spielern erzeugen Geräusche"
+msgstr "Schrittklang: Schritte von Spielern erzeugen GerÃ¤usche"
 
 msgid "Enable fullscreen mode (default: enabled)"
 msgstr "Aktiviere den Vollbildmodus (Standard: aktiviert)"
 
 msgid "Enable network update smoothing"
-msgstr "Aktiviere die Netzwerk Update Glättung"
+msgstr "Aktiviere die Netzwerk Update GlÃ¤ttung"
 
 msgid "Enable rendering of dynamic lights such as explosions and rocket lights (default: enabled)"
 msgstr "Aktiviere das Rendern von dynamischen Lichtern, wie Explosionen und Raketen-Lichter (Standard: aktiviert)"
 
 msgid "Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance. (default: disabled)"
-msgstr "Aktiviere das Rendern der gesamten Echtzeit-Welt-Lichter. Hat einen großen Einfluss auf die Leistung (Standard: deaktiviert)"
+msgstr "Aktiviere das Rendern der gesamten Echtzeit-Welt-Lichter. Hat einen groÃŸen Einfluss auf die Leistung (Standard: deaktiviert)"
 
 msgid "Enable rendering of shadows from dynamic lights (default: disabled)"
 msgstr "Aktiviere das Rendern von Schatten von dynamischen Lichtern (Standard: deaktiviert)"
@@ -8482,19 +8482,19 @@ msgid "Enable rendering of shadows from realtime world lights (default: disabled
 msgstr "Aktiviere das Rendern von Schatten von Echtzeit-Welt-Lichter (Standard: deaktiviert)"
 
 msgid "Enable spatialization (blend the right and left channel slightly to decrease stereo separation a bit for headphones)"
-msgstr "Aktiviere \"räumlicheren\" Klang (Mischung des linken und rechten Kanals um die Stereo-Trennung leicht zu verringern, für Kopfhörer)"
+msgstr "Aktiviere \"rÃ¤umlicheren\" Klang (Mischung des linken und rechten Kanals um die Stereo-Trennung leicht zu verringern, fÃ¼r KopfhÃ¶rer)"
 
 msgid "Enable the use of glossmaps on textures supporting it (default: enabled)"
-msgstr "Aktiviere Glanzeffekte für Texturen, wenn die Textur es unterstützt. (Standard: aktiviert)"
+msgstr "Aktiviere Glanzeffekte fÃ¼r Texturen, wenn die Textur es unterstÃ¼tzt. (Standard: aktiviert)"
 
 msgid "Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot (default: disabled)"
-msgstr "Aktiviere die Verwendung von GLSL um die Gamma-Korrektur zu ermöglichen, kann die Leistung stark verringern (Standard: Aus)"
+msgstr "Aktiviere die Verwendung von GLSL um die Gamma-Korrektur zu ermÃ¶glichen, kann die Leistung stark verringern (Standard: Aus)"
 
 msgid "Enable use of directional shading on textures (default: enabled)"
 msgstr "Aktiviere die Verwendung von gerichteter Schattierung auf Texturen (Standard: aktiviert)"
 
 msgid "Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)"
-msgstr "Aktiviere die vertikale Synchronisation um ein Zeilenreißen zu unterdrücken, die FPS werden auf den Wert der Bildwiederholungsrate deines Monitors gesetzt (Standard: deaktiviert)"
+msgstr "Aktiviere die vertikale Synchronisation um ein ZeilenreiÃŸen zu unterdrÃ¼cken, die FPS werden auf den Wert der Bildwiederholungsrate deines Monitors gesetzt (Standard: deaktiviert)"
 
 msgid "Enable/disable the HUD background"
 msgstr "Aktiviere/Deaktiviere den HUD-Hintergrund"
@@ -8506,7 +8506,7 @@ msgid "Fade coronas according to visibility (default: enabled)"
 msgstr "Verringern der Korona - Angepasst an die Sichtbarkeit (Standard: deaktiviert)"
 
 msgid "Field of vision in degrees from 60 to 130, default is 90"
-msgstr "Stelle den Wert für das Sichtfeld in Grad (60-130) ein - Standard ist 90"
+msgstr "Stelle den Wert fÃ¼r das Sichtfeld in Grad (60-130) ein - Standard ist 90"
 
 msgid "Find servers to play on"
 msgstr "Finde Server und spiele online"
@@ -8515,25 +8515,25 @@ msgid "Force client to use chosen port unless it is set to 0"
 msgstr "Stelle den zu verwendenden UDP Port als Client ein.  Wenn der Port auf 0 gesetzt ist, wird kein Port erzwungen"
 
 msgid "Global rendering brightness (default: 1)"
-msgstr "Globales Rendern der Lichtstärke (Standard: 1)"
+msgstr "Globales Rendern der LichtstÃ¤rke (Standard: 1)"
 
 msgid "Higher quality offset mapping, which also has a huge impact on performance (default: disabled)"
-msgstr "Bessere Qualität des Offsetmappings, hat einen großen Einfluss auf die Leistung (Standard: deaktiviert)"
+msgstr "Bessere QualitÃ¤t des Offsetmappings, hat einen groÃŸen Einfluss auf die Leistung (Standard: deaktiviert)"
 
 msgid "Higher quality version of bloom, which has a huge impact on performance. (default: disabled)"
-msgstr "Bessere Qualität des Überstrahlungseffekts, hat einen sehr großen Einfluss auf die Leistung (Standard: deaktiviert)"
+msgstr "Bessere QualitÃ¤t des Ãœberstrahlungseffekts, hat einen sehr groÃŸen Einfluss auf die Leistung (Standard: deaktiviert)"
 
 msgid "Host your own game"
 msgstr "Hoste dein eigenes Spiel"
 
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr "Setze den Vergrößerungsfaktor"
+msgstr "Setze den VergrÃ¶ÃŸerungsfaktor"
 
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr "Bestimme wie schnell der angegebene Vergrößerungsfaktor erreicht werden soll, deaktivieren für sofortige Vergrößerung"
+msgstr "Bestimme wie schnell der angegebene VergrÃ¶ÃŸerungsfaktor erreicht werden soll, deaktivieren fÃ¼r sofortige VergrÃ¶ÃŸerung"
 
 msgid "How long a view kick from damage lasts (default: 0)"
-msgstr "Wert für die Dauer der Beeinträchtigung der Sicht durch einen Schaden (Standard: 0)"
+msgstr "Wert fÃ¼r die Dauer der BeeintrÃ¤chtigung der Sicht durch einen Schaden (Standard: 0)"
 
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
 msgstr "Bestimme wie viele Bits pro Pixel (BPP) gerendert werden sollen, 32 ist der bevorzugte Wert"
@@ -8542,34 +8542,34 @@ msgid "How many input packets to send to the server each second"
 msgstr "Anzahl der Pakete die pro Sekunde zum Server, mit dem du verbunden bist, geschickt werden sollen"
 
 msgid "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)"
-msgstr "Bestimme die Änderung der Empfindlichkeit während des Vergrößerns. Werte von 0 (geringste Sensitivität) bis 1 (keine Änderung der Sensitivität sind möglich)"
+msgstr "Bestimme die Ã„nderung der Empfindlichkeit wÃ¤hrend des VergrÃ¶ÃŸerns. Werte von 0 (geringste SensitivitÃ¤t) bis 1 (keine Ã„nderung der SensitivitÃ¤t sind mÃ¶glich)"
 
 msgid "I got some more fragging to do!"
 msgstr "Ich muss noch ein paar Typen fraggen!"
 
 msgid "If set, only reduce the texture quality of models (default: enabled)"
-msgstr "Wenn aktiviert, wird nur die Texturqualität von Modellen verringert (Standard: aktiviert)"
+msgstr "Wenn aktiviert, wird nur die TexturqualitÃ¤t von Modellen verringert (Standard: aktiviert)"
 
 msgid "Input settings"
 msgstr "Einstellungen der Eingabe"
 
 msgid "Inverse gamma correction value, a brightness effect that does not affect white or black (default: 1.125)"
-msgstr "Korrekturwert für die Kontraststärke (Gamma-Wert), Helligkeitseffekt, der keinen Einfluss auf Weiß und Schwarz hat (Standard: 1)"
+msgstr "Korrekturwert fÃ¼r die KontraststÃ¤rke (Gamma-Wert), Helligkeitseffekt, der keinen Einfluss auf WeiÃŸ und Schwarz hat (Standard: 1)"
 
 msgid "Invert mouse movement on the Y-axis"
 msgstr "Umkehren der Mausbewegung entlang der Y-Achse"
 
 msgid "Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines (default: disabled)"
-msgstr "Die Grafikkarte wartet bis die CPU die Berechnung eines jeden Frames beendet hat, dies kann bei merkwürdigen Verhalten der Eingabe helfen (Standard: deaktiviert)"
+msgstr "Die Grafikkarte wartet bis die CPU die Berechnung eines jeden Frames beendet hat, dies kann bei merkwÃ¼rdigen Verhalten der Eingabe helfen (Standard: deaktiviert)"
 
 msgid "Make things fall to the ground slower, lower value means lower gravity"
-msgstr "Verringere die Schwerkraft und lass Gegenstände langsamer zu Boden fallen, ein niedrigerer Wert verringert die Gravitation"
+msgstr "Verringere die Schwerkraft und lass GegenstÃ¤nde langsamer zu Boden fallen, ein niedrigerer Wert verringert die Gravitation"
 
 msgid "Make use of DGA mouse input"
 msgstr "Verwende die DGA Maus Eingabe"
 
 msgid "Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)"
-msgstr "Speicher Eckpunkte und/oder Dreiecke der statischen Geometrie im Videospeicher um ein schnelleres Rendern zu ermöglichen (Standard: Eckpunkte, einige Dreiecke)"
+msgstr "Speicher Eckpunkte und/oder Dreiecke der statischen Geometrie im Videospeicher um ein schnelleres Rendern zu ermÃ¶glichen (Standard: Eckpunkte, einige Dreiecke)"
 
 msgid "Make use of the list above when cycling through weapons with the mouse wheel"
 msgstr "Verwende die oben angegebene Liste, wenn die Waffen mit Hilfe des Mausrads gewechselt werden"
@@ -8584,22 +8584,22 @@ msgid "Menu tooltips: disabled, standard or advanced (also shows cvar or console
 msgstr ""
 
 msgid "Misc settings"
-msgstr "Sonstige Einstellungen, wie Sprache, Menü-Skins"
+msgstr "Sonstige Einstellungen, wie Sprache, MenÃ¼-Skins"
 
 msgid "Motion blur strength - 0.4 recommended"
-msgstr "Wert für die Bewegungsunschärfe - 0.5 empfohlen"
+msgstr "Wert fÃ¼r die BewegungsunschÃ¤rfe - 0.5 empfohlen"
 
 msgid "Mouse speed multiplier"
-msgstr "Geschwindigkeitsmultiplikator um die Sensitivität der Maus einzustellen"
+msgstr "Geschwindigkeitsmultiplikator um die SensitivitÃ¤t der Maus einzustellen"
 
 msgid "Mouse speed multiplier in the menu, does not affect aiming in the game"
-msgstr "Multiplikator für die Geschwindigkeit der Maus im Menü, hat keinen Effekt auf die Mausbewegung im Spiel"
+msgstr "Multiplikator fÃ¼r die Geschwindigkeit der Maus im MenÃ¼, hat keinen Effekt auf die Mausbewegung im Spiel"
 
 msgid "Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1)"
-msgstr "Faktor für die Anzahl von Partikel. Weniger bedeutet weniger Partikel, was zu einer besseren Leistung führt (Standard: 1.0)"
+msgstr "Faktor fÃ¼r die Anzahl von Partikel. Weniger bedeutet weniger Partikel, was zu einer besseren Leistung fÃ¼hrt (Standard: 1.0)"
 
 msgid "Mutators and weapon arenas"
-msgstr "Wähle Mutators und Waffen-Arenen"
+msgstr "WÃ¤hle Mutators und Waffen-Arenen"
 
 msgid "Name under which you will appear in the game"
 msgstr "Lege deinen Namen im Spiel fest"
@@ -8608,25 +8608,25 @@ msgid "Network settings"
 msgstr "Netzwerk Einstellungen"
 
 msgid "No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon."
-msgstr "Es gibt keine aufzusammelnden Gegenstände in Xonotic - Anstelle der Möglichkeit Waffen aufzusammeln, spielen alle mit der gleichen Waffe. Nach einiger Zeit startet ein Countdown, danach wechseln alle Spieler zu einer neuen gleichen Waffe"
+msgstr "Es gibt keine aufzusammelnden GegenstÃ¤nde in Xonotic - Anstelle der MÃ¶glichkeit Waffen aufzusammeln, spielen alle mit der gleichen Waffe. Nach einiger Zeit startet ein Countdown, danach wechseln alle Spieler zu einer neuen gleichen Waffe"
 
 msgid "None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy"
-msgstr "Aus: Führe keinen Treffer-Test für das Fadenkreuz aus; TrueAim: Trübe das Fadenkreuz, wenn du nicht die Wand treffen würdest; Gegner: Vergrößere zudem das Fadenkreuz, wenn du einen Gegner treffen würdest"
+msgstr "Aus: FÃ¼hre keinen Treffer-Test fÃ¼r das Fadenkreuz aus; TrueAim: TrÃ¼be das Fadenkreuz, wenn du nicht die Wand treffen wÃ¼rdest; Gegner: VergrÃ¶ÃŸere zudem das Fadenkreuz, wenn du einen Gegner treffen wÃ¼rdest"
 
 msgid "Number of channels for the sound output"
-msgstr "Anzahl der Kanäle für die Audiowiedergabe"
+msgstr "Anzahl der KanÃ¤le fÃ¼r die Audiowiedergabe"
 
 msgid "Number of maps that are shown in the map voting at the end of a match"
 msgstr "Anzahl von Maps, welche am Ende des Spiels zur Wahl stehen"
 
 msgid "Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface (default: disabled)"
-msgstr "Effekt für den Tiefendruck von Texturen, dieser Effekt lässt Texturen mit Bumpmap aus der 2D Ebene \"herausgedrückt\" erscheinen (Deaktiviert: deaktiviert)"
+msgstr "Effekt fÃ¼r den Tiefendruck von Texturen, dieser Effekt lÃ¤sst Texturen mit Bumpmap aus der 2D Ebene \"herausgedrÃ¼ckt\" erscheinen (Deaktiviert: deaktiviert)"
 
 msgid "Only possible to inflict damage on your enemy while he's airborne"
-msgstr "\"Luft\"modus: Dem Gegner Schaden zuzufügen ist nur möglich, wenn er sich in der Luft befindet"
+msgstr "\"Luft\"modus: Dem Gegner Schaden zuzufÃ¼gen ist nur mÃ¶glich, wenn er sich in der Luft befindet"
 
 msgid "Override the default amount of teams in teamgames"
-msgstr "Überschreibe die Standardgröße eines Teams in Teammodi"
+msgstr "Ãœberschreibe die StandardgrÃ¶ÃŸe eines Teams in Teammodi"
 
 msgid "Particles further away than this will not be drawn (default: 1000)"
 msgstr "Weiter, als eingestellt, entfernte Partikel werden nicht dargestellt (Standard 1000)"
@@ -8635,19 +8635,19 @@ msgid "Pause updating the server list to prevent servers from \"jumping around\"
 msgstr "Unterbreche die automatische Aktualisierung der Serverliste um ein \"Herumspringen\" zu verhindern"
 
 msgid "Percentage of damage dealt to teammates"
-msgstr "Prozentualer Anteil des Schadens, der Mitspielern hinzugefügt wird"
+msgstr "Prozentualer Anteil des Schadens, der Mitspielern hinzugefÃ¼gt wird"
 
 msgid "Percentage of teamdamage that will be mirrored to you"
-msgstr "Prozentualer Anteil des Team-Schadens der auf dich zurückgeworfen wird"
+msgstr "Prozentualer Anteil des Team-Schadens der auf dich zurÃ¼ckgeworfen wird"
 
 msgid "Play a hit indicator sound when your shot hits an enemy"
 msgstr "Spiele einen Treffer-Sound, wenn der Spieler auf den gezielt wurde, getroffen wurde"
 
 msgid "Play online, against your friends in LAN, view demos or change player settings"
-msgstr "Spiele online, gegen deine Freunde im LAN, schaue dir Demos an oder ändere deine Spieler-Einstellungen"
+msgstr "Spiele online, gegen deine Freunde im LAN, schaue dir Demos an oder Ã¤ndere deine Spieler-Einstellungen"
 
 msgid "Play sounds when clicking or hovering over menu items"
-msgstr "Sound abspielen, wenn auf ein Menüitem geklickt wird oder mit dem Mauszeiger auf das Menüitem gezeigt wird"
+msgstr "Sound abspielen, wenn auf ein MenÃ¼item geklickt wird oder mit dem Mauszeiger auf das MenÃ¼item gezeigt wird"
 
 msgid "Play the singleplayer campaign or instant action matches against bots"
 msgstr "Spiele die Einzelspieler-Kampagne oder habe Instant-Action Spiele gegen Bots"
@@ -8662,10 +8662,10 @@ msgid "Players will be given the Minstanex, which is a railgun with infinite dam
 msgstr ""
 
 msgid "Players will drop all weapons they possessed when they are killed"
-msgstr "Gestorbene Spieler lassen alle Waffen fallen, die sie besaßen - Waffen verschwinden nicht"
+msgstr "Gestorbene Spieler lassen alle Waffen fallen, die sie besaÃŸen - Waffen verschwinden nicht"
 
 msgid "Poor man's left handed mode (default: off)"
-msgstr "Linkshänder Modus (Standard: deaktiviert)"
+msgstr "LinkshÃ¤nder Modus (Standard: deaktiviert)"
 
 msgid "Position of the weapon model; requires reconnect"
 msgstr "Position der Waffe, links oder rechts; erfordert Neustart"
@@ -8674,10 +8674,10 @@ msgid "Quit the game"
 msgstr "Beende das Spiel"
 
 msgid "Reduce the amount of gibs or remove them completely (default: lots)"
-msgstr "Verringere die Anzahl von Fleischteilen oder entferne sie vollständig (Standard: Viele)"
+msgstr "Verringere die Anzahl von Fleischteilen oder entferne sie vollstÃ¤ndig (Standard: Viele)"
 
 msgid "Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces (default: disabled)"
-msgstr "Reflektions- und Refraktionsqualität, hat einen großen Einfluss auf die Leistung von Maps mit reflektierenden Oberflächen (Standard: deaktiviert)"
+msgstr "Reflektions- und RefraktionsqualitÃ¤t, hat einen groÃŸen Einfluss auf die Leistung von Maps mit reflektierenden OberflÃ¤chen (Standard: deaktiviert)"
 
 msgid "Remove all the maps from your selection"
 msgstr ""
@@ -8689,37 +8689,37 @@ msgid "Replace blood and gibs with content that does not have any gore effects (
 msgstr "Blut und Fleischteile werden durch andere, nicht blutige, Effekte ersetzt"
 
 msgid "Resolution of reflections/refractions (default: good)"
-msgstr "Auflösung von Reflektion und Refraktion (Standard: gut)"
+msgstr "AuflÃ¶sung von Reflektion und Refraktion (Standard: gut)"
 
 msgid "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), requires GLSL color control (default: 1)"
-msgstr "Sättigungskorrektur (0 = Graustufenbild, 1 = normales Bild, 2 = übersättigtes Bild), benötigt GLSL Farbkontrolle (Standard: 1)"
+msgstr "SÃ¤ttigungskorrektur (0 = Graustufenbild, 1 = normales Bild, 2 = Ã¼bersÃ¤ttigtes Bild), benÃ¶tigt GLSL Farbkontrolle (Standard: 1)"
 
 msgid "Scale multiplier of the waypoints"
-msgstr "Skalierungsfaktor für Wegpunkte"
+msgstr "Skalierungsfaktor fÃ¼r Wegpunkte"
 
 msgid "Screen resolution"
-msgstr "Einstellung der zu verwendenden Bildschirmauflösung"
+msgstr "Einstellung der zu verwendenden BildschirmauflÃ¶sung"
 
 msgid "Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups."
-msgstr "Waffen-Arenen: Die Auswahl einer Waffen-Arena führt dazu, dass jeder Spieler mit der gewählten Waffe startet. Diese hat unendlich viel Munition, andere Waffen sind nicht vorhanden - Spezielle Waffen-Arenen: Spieler starten mit allen Waffen und unendlich viel Munition"
+msgstr "Waffen-Arenen: Die Auswahl einer Waffen-Arena fÃ¼hrt dazu, dass jeder Spieler mit der gewÃ¤hlten Waffe startet. Diese hat unendlich viel Munition, andere Waffen sind nicht vorhanden - Spezielle Waffen-Arenen: Spieler starten mit allen Waffen und unendlich viel Munition"
 
 msgid "Set a different crosshair for each weapon, good if you play without weapon models"
-msgstr "Ermögliche unterschiedliche Fadenkreuze für unterschiedliche Waffen. Diese Option ist zu empfehlen, wenn du ohne dargestelltes Waffenmodel spielst"
+msgstr "ErmÃ¶gliche unterschiedliche Fadenkreuze fÃ¼r unterschiedliche Waffen. Diese Option ist zu empfehlen, wenn du ohne dargestelltes Waffenmodel spielst"
 
 msgid "Set the color of the crosshair depending on the weapon you are currently holding"
-msgstr "Ermögliche unterschiedliche Farben für unterschiedliche Fadenkreuze, abhängig von der Waffe die gerade getragen wird"
+msgstr "ErmÃ¶gliche unterschiedliche Farben fÃ¼r unterschiedliche Fadenkreuze, abhÃ¤ngig von der Waffe die gerade getragen wird"
 
 msgid "Set your most preferred weapons, autoswitch and weapon model settings"
 msgstr "Lege deine bevorzugten Waffen fest, den automatischen Wechsel der Waffen und weiteres"
 
 msgid "Show a graph of packet sizes and other information"
-msgstr "Anzeige eines Netzwerkgraphs für gesendete/empfangene Pakete und weitere Informationen"
+msgstr "Anzeige eines Netzwerkgraphs fÃ¼r gesendete/empfangene Pakete und weitere Informationen"
 
 msgid "Show current date, useful on screenshots"
-msgstr "Datum im Spiel anzeigen, geeignet für Screenshots"
+msgstr "Datum im Spiel anzeigen, geeignet fÃ¼r Screenshots"
 
 msgid "Show current time of day, useful on screenshots"
-msgstr "Uhrzeit im Spiel anzeigen, geeignet für Screenshots"
+msgstr "Uhrzeit im Spiel anzeigen, geeignet fÃ¼r Screenshots"
 
 msgid "Show empty servers"
 msgstr "Aktiviere die Anzeige von leeren Servern"
@@ -8728,7 +8728,7 @@ msgid "Show full servers that have no slots available"
 msgstr "Aktiviere die Anzeige von vollen Servern, die keinen freien Platz mehr haben"
 
 msgid "Show more information about the currently highlighted server"
-msgstr "Lass dir mehr Informationen über den markierten Server anzeigen"
+msgstr "Lass dir mehr Informationen Ã¼ber den markierten Server anzeigen"
 
 msgid "Show the name of the player you are aiming at"
 msgstr "Lass dir den Namen des Spielers anzeigen auf den du gerade zielst"
@@ -8743,13 +8743,13 @@ msgid "Simple majority wins a vote"
 msgstr "Die einfache Mehrheit gewinnt die Abstimmung"
 
 msgid "Smoothes the mouse movement, but makes aiming slightly less responsive"
-msgstr "Glättet die Mausbewegung, aber verringert leicht die Reaktion des Zielens"
+msgstr "GlÃ¤ttet die Mausbewegung, aber verringert leicht die Reaktion des Zielens"
 
 msgid "Sound output frequency"
 msgstr "Ausgangsfrequenz des Tons"
 
 msgid "Specify how experienced the bots will be"
-msgstr "Stelle die Stärke der Bots ein"
+msgstr "Stelle die StÃ¤rke der Bots ein"
 
 msgid "Specify your network speed with this slider"
 msgstr "Gib deine Netzwerkgeschwindigkeit mit dem Schieberegler an"
@@ -8761,19 +8761,19 @@ msgid "The Xonotic credits"
 msgstr "Die Xonotic Entwickler"
 
 msgid "The amount of frags needed before the match will end"
-msgstr "Wähle die Anzahl an Frags die benötigt wird, damit die Map endet oder verwende den Map-Standard für diese Option"
+msgstr "WÃ¤hle die Anzahl an Frags die benÃ¶tigt wird, damit die Map endet oder verwende den Map-Standard fÃ¼r diese Option"
 
 msgid "The maximum amount of players or bots that can be connected to your server at once"
-msgstr "Wähle die maximale Anzahl der Spieler, welche sich mit deinem Server gleichzeitig verbinden dürfen. Freie Plätze können mit Bots aufgefüllt werden"
+msgstr "WÃ¤hle die maximale Anzahl der Spieler, welche sich mit deinem Server gleichzeitig verbinden dÃ¼rfen. Freie PlÃ¤tze kÃ¶nnen mit Bots aufgefÃ¼llt werden"
 
 msgid "Time in seconds before decals fade away (default: 2)"
 msgstr "Zeit in Sekunden nach dem Dekore verschwinden (Standard: 2)"
 
 msgid "Timelimit in minutes that when hit, will end the match"
-msgstr "Wähle ein Zeitlimit bei dem die Map endet oder verwende den Map-Standard für diese Option"
+msgstr "WÃ¤hle ein Zeitlimit bei dem die Map endet oder verwende den Map-Standard fÃ¼r diese Option"
 
 msgid "Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)"
-msgstr "Verwende hochauflösende Lightmaps, welche sehr schön aussehen, aber etwas mehr Videospeicher benötigen (Standard: aktiviert)"
+msgstr "Verwende hochauflÃ¶sende Lightmaps, welche sehr schÃ¶n aussehen, aber etwas mehr Videospeicher benÃ¶tigen (Standard: aktiviert)"
 
 msgid "Use per-pixel lighting effects (default: enabled)"
 msgstr "Verwende ein-Pixel Lichteffekte (Standard: aktiviert)"
@@ -8785,7 +8785,7 @@ msgid "Video settings"
 msgstr "Grafik Einstellungen"
 
 msgid "View bobbing frequency, disable for no bobbing"
-msgstr "Setze einen Wert für das Sicht-Wackeln oder deaktiviere es vollständig"
+msgstr "Setze einen Wert fÃ¼r das Sicht-Wackeln oder deaktiviere es vollstÃ¤ndig"
 
 msgid "Weapons stay after they are picked up"
 msgstr "Alle Waffen bleiben liegen, auch wenn sie aufgenommen wurden"
