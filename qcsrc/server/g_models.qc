@@ -72,8 +72,8 @@ void g_clientmodel_dropbyspawnflags()
 		self.SendFlags |= 2;
 }
 
-float g_clientmodel_genericsendentity (entity to, int sf)
-{SELFPARAM();
+bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
+{
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')
 		sf |= 0x10;

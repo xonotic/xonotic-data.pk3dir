@@ -387,8 +387,8 @@ spawnfunc(trigger_push)
 }
 
 
-float target_push_send(entity to, float sf)
-{SELFPARAM();
+bool target_push_send(entity this, entity to, float sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TARGET_PUSH);
 
 	WriteByte(MSG_ENTITY, self.cnt);

@@ -22,7 +22,7 @@ void entcs_init();
 
 float entcs_customize();
 
-float entcs_send(entity to, int sf);
+bool entcs_send(entity this, entity to, int sf);
 
 void entcs_think();
 

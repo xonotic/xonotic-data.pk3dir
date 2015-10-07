@@ -246,8 +246,8 @@ void ItemRead(float _IsNew)
 #endif
 
 #ifdef SVQC
-bool ItemSend(entity to, int sf)
-{SELFPARAM();
+bool ItemSend(entity this, entity to, int sf)
+{
 	if(self.gravity)
 		sf |= ISF_DROP;
 	else

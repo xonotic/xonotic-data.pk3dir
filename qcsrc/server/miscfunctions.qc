@@ -1156,7 +1156,7 @@ void InitializeEntitiesRun()
 }
 
 .float(entity) isEliminated;
-float EliminatedPlayers_SendEntity(entity to, float sendflags)
+bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, f, b;
 	entity e;
@@ -1690,8 +1690,8 @@ vector gettaginfo_relative(entity e, float tag)
 
 .float scale2;
 
-float modeleffect_SendEntity(entity to, int sf)
-{SELFPARAM();
+bool modeleffect_SendEntity(entity this, entity to, int sf)
+{
 	float f;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
 

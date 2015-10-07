@@ -1773,8 +1773,8 @@ void Net_Notification_Remove()
 	remove(self);
 }
 
-float Net_Write_Notification(entity client, int sf)
-{SELFPARAM();
+bool Net_Write_Notification(entity this, entity client, int sf)
+{
 	if(Notification_ShouldSend(self.nent_broadcast, client, self.nent_client))
 	{
 		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);

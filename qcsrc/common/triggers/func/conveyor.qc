@@ -70,8 +70,8 @@ void conveyor_reset()
 	self.SendFlags |= 2;
 }
 
-bool conveyor_send(entity to, int sf)
-{SELFPARAM();
+bool conveyor_send(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
 	WriteByte(MSG_ENTITY, sf);
 

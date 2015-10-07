@@ -17,7 +17,7 @@ float autocvar_g_vehicle_bumblebee_cannon_speed;
 float autocvar_g_vehicle_bumblebee_cannon_spread;
 float autocvar_g_vehicle_bumblebee_cannon_force;
 
-float bumble_raygun_send(entity to, int sf);
+bool bumble_raygun_send(entity this, entity to, int sf);
 
 void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
 {
@@ -28,8 +28,8 @@ void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
                         DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
 }
 
-float bumble_raygun_send(entity to, float sf)
-{SELFPARAM();
+bool bumble_raygun_send(entity this, entity to, float sf)
+{
     WriteByte(MSG_ENTITY, ENT_CLIENT_BUMBLE_RAYGUN);
 
     WriteByte(MSG_ENTITY, sf);

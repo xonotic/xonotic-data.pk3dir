@@ -5,8 +5,8 @@
 #ifdef SVQC
 // NOTE: also contains func_sparks
 
-float pointparticles_SendEntity(entity to, float fl)
-{SELFPARAM();
+bool pointparticles_SendEntity(entity this, entity to, float fl)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
 
 	// optional features to save space

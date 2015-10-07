@@ -343,7 +343,7 @@ void GameTypeVote_SendOption(int i)
 	}
 }
 
-float MapVote_SendEntity(entity to, int sf)
+bool MapVote_SendEntity(entity this, entity to, int sf)
 {
 	float i;
 

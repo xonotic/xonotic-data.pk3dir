@@ -1,6 +1,6 @@
 #ifdef SVQC
-float rainsnow_SendEntity(entity to, float sf)
-{SELFPARAM();
+bool rainsnow_SendEntity(entity this, entity to, float sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
 	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
@@ -12,7 +12,7 @@ float rainsnow_SendEntity(entity to, float sf)
 	WriteShort(MSG_ENTITY, compressShortVector(self.dest));
 	WriteShort(MSG_ENTITY, self.count);
 	WriteByte(MSG_ENTITY, self.cnt);
-	return 1;
+	return true;
 }
 
 /*QUAKED spawnfunc_func_rain (0 .5 .8) ?

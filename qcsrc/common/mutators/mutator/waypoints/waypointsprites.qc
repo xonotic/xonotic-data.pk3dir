@@ -4,8 +4,8 @@ REGISTER_MUTATOR(waypointsprites, true);
 
 #ifdef SVQC
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
-float WaypointSprite_SendEntity(entity to, float sendflags)
-{SELFPARAM();
+bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
+{
     WriteMutator(MSG_ENTITY, waypointsprites);
 
     sendflags = sendflags & 0x7F;
@@ -984,7 +984,7 @@ float WaypointSprite_Customize()
     return self.waypointsprite_visible_for_player(e);
 }
 
-float WaypointSprite_SendEntity(entity to, float sendflags);
+bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
 void WaypointSprite_Reset()
 {SELFPARAM();

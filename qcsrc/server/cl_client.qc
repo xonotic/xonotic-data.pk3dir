@@ -53,8 +53,8 @@ void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
-float ClientData_Send(entity to, int sf)
-{SELFPARAM();
+bool ClientData_Send(entity this, entity to, int sf)
+{
 	if(to != self.owner)
 	{
 		error("wtf");
@@ -667,8 +667,8 @@ void PutClientInServer()
 .float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
-float ClientInit_SendEntity(entity to, int sf)
-{SELFPARAM();
+bool ClientInit_SendEntity(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));

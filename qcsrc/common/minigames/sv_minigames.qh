@@ -44,7 +44,7 @@ entity minigame_find_player(entity client);
 
 entity minigame_sessions;
 
-bool minigame_SendEntity(entity to, int sf);
+bool minigame_SendEntity(entity this, entity to, int sf);
 
 void RegisterMinigames();
 const int MINIGAMES_MAX = 24;

@@ -9,8 +9,8 @@
 #include "../common/util.qh"
 #include "../warpzonelib/util_server.qh"
 
-float SpawnPoint_Send(entity to, int sf)
-{SELFPARAM();
+bool SpawnPoint_Send(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, self.team);
@@ -21,8 +21,8 @@ float SpawnPoint_Send(entity to, int sf)
 	return true;
 }
 
-float SpawnEvent_Send(entity to, int sf)
-{SELFPARAM();
+bool SpawnEvent_Send(entity this, entity to, int sf)
+{
 	float send;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);

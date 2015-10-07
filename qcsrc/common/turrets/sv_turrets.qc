@@ -299,8 +299,8 @@ void turrets_setframe(float _frame, float client_only)
 
 }
 
-float turret_send(entity to, float sf)
-{SELFPARAM();
+bool turret_send(entity this, entity to, float sf)
+{
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
 	WriteByte(MSG_ENTITY, sf);

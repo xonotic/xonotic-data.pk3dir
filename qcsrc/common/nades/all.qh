@@ -40,7 +40,7 @@ ENDCLASS(Nade)
 REGISTER_NADE(Null);
 
 #ifdef SVQC
-float healer_send(entity to, int sf);
+bool healer_send(entity this, entity to, int sf);
 #endif
 
 entity Nade_FromProjectile(float proj)

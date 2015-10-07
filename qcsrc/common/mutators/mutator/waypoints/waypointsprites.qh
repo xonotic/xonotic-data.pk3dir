@@ -171,7 +171,7 @@ float WaypointSprite_isteammate(entity e, entity e2);
 
 float WaypointSprite_Customize();
 
-float WaypointSprite_SendEntity(entity to, float sendflags);
+bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
 void WaypointSprite_Reset();
 

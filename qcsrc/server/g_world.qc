@@ -512,8 +512,8 @@ void detect_maptype()
 }
 
 entity randomseed;
-float RandomSeed_Send(entity to, int sf)
-{SELFPARAM();
+bool RandomSeed_Send(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
 	return true;

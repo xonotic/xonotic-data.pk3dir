@@ -71,9 +71,8 @@ REGISTER_NET_LINKED(Nade_Heal, bool isNew)
 #endif
 
 #ifdef SVQC
-bool healer_send(entity to, int sf)
+bool healer_send(entity this, entity to, int sf)
 {
-	SELFPARAM();
 	int channel = MSG_ENTITY;
 	WriteHeader(channel, Nade_Heal);
 	WriteByte(channel, sf);

@@ -22,8 +22,8 @@
 #include "../csqcmodellib/sv_model.qh"
 #include "../warpzonelib/common.qh"
 
-float Damage_DamageInfo_SendEntity(entity to, int sf)
-{SELFPARAM();
+bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
 	WriteCoord(MSG_ENTITY, floor(self.origin.x));

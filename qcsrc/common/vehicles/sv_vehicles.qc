@@ -38,8 +38,8 @@ bool vehicle_send(entity to, int sf)
 }
 #endif
 
-bool SendAuxiliaryXhair(entity to, int sf)
-{SELFPARAM();
+bool SendAuxiliaryXhair(entity this, entity to, int sf)
+{
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
 

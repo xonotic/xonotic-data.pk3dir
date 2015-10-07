@@ -302,8 +302,6 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 
 float next_pingtime;
 
-.float Version;
-
 // player sounds, voice messages
 // TODO implemented fall and falling
 #define ALLPLAYERSOUNDS \

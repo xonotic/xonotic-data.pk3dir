@@ -253,8 +253,8 @@ int W_Tuba_GetNote(entity pl, int hittype)
 	return note;
 }
 
-bool W_Tuba_NoteSendEntity(entity to, int sf)
-{SELFPARAM();
+bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
+{
 	int f;
 
 	msg_entity = to;

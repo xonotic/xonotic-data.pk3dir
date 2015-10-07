@@ -130,8 +130,8 @@ vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as 
 #ifdef SVQC
 spawnfunc(weapon_arc) { weapon_defaultspawnfunc(WEP_ARC.m_id); }
 
-float W_Arc_Beam_Send(entity to, int sf)
-{SELFPARAM();
+bool W_Arc_Beam_Send(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 
 	// Truncate information when this beam is displayed to the owner client

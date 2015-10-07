@@ -458,6 +458,5 @@ entity initialize_entity_first;
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(void) func, float order);
 void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
-void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc);
 
 #endif

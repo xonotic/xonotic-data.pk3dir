@@ -40,8 +40,8 @@ void Inventory_Write(Inventory data)
 #endif
 
 #ifdef SVQC
-bool Inventory_Send(entity to, int sf)
-{SELFPARAM();
+bool Inventory_Send(entity this, entity to, int sf)
+{
     WriteByte(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     entity e = self.owner;
     if (IS_SPEC(e)) e = e.enemy;

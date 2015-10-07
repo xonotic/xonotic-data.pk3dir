@@ -102,8 +102,8 @@ void GrapplingHook_Stop()
 }
 
 .vector hook_start, hook_end;
-float GrapplingHookSend(entity to, int sf)
-{SELFPARAM();
+bool GrapplingHookSend(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
 	sf = sf & 0x7F;
 	if(sound_allowed(MSG_BROADCAST, self.realowner))

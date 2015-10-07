@@ -60,8 +60,8 @@ void minigame_rmplayer(entity minigame_session, entity player)
 
 // Send an entity to a client
 // only use on minigame entities or entities with a minigame owner
-bool minigame_SendEntity(entity to, int sf)
-{SELFPARAM();
+bool minigame_SendEntity(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
 	WriteByte(MSG_ENTITY, sf);
 

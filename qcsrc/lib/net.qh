@@ -2,10 +2,14 @@
 #define NET_H
 
 #ifdef SVQC
+.int Version; // deprecated, use SendFlags
 .int SendFlags;
 .bool(entity to, int sendflags) SendEntity;
+.bool(entity this, entity to, int sendflags) SendEntity3;
 
-void Net_LinkEntity(entity e, bool docull, float dt, bool(entity to, int sendflags) sendfunc)
+bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, to, sendflags); }
+
+void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 {
     if (!e.classname) e.classname = "net_linked";
 
@@ -16,7 +20,8 @@ void Net_LinkEntity(entity e, bool docull, float dt, bool(entity to, int sendfla
         setsize(e, mi, ma);
     }
 
-    e.SendEntity = sendfunc;
+    e.SendEntity = SendEntity_self;
+    e.SendEntity3 = sendfunc;
     e.SendFlags = 0xFFFFFF;
 
     if (!docull) e.effects |= EF_NODEPTHTEST;

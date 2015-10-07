@@ -228,8 +228,8 @@ void onslaught_updatelinks()
 // Main Link Functions
 // ===================
 
-bool ons_Link_Send(entity to, int sendflags)
-{SELFPARAM();
+bool ons_Link_Send(entity this, entity to, int sendflags)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RADARLINK);
 	WriteByte(MSG_ENTITY, sendflags);
 	if(sendflags & 1)
