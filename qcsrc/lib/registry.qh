@@ -17,7 +17,7 @@
  * Must be followed by a semicolon or a function body with a `this` parameter.
  * Wrapper macros may perform actions after user initialization like so:
  *     #define REGISTER_FOO(id) \
- *         REGISTER(RegisterFoos, FOO, FOOS, FOOS_COUNT, id, m_id, NEW(Foo)); \
+ *         REGISTER(RegisterFoos, FOO, FOOS, id, m_id, NEW(Foo)); \
  *         REGISTER_INIT_POST(FOO, id) { \
  *             print("Registering foo #", this.m_id + 1, "\n"); \
  *         } \
@@ -30,21 +30,21 @@
  * @param initfunc  The global constructor to accumulate into
  * @param ns        Short for namespace, prefix for each global (ns##_##id)
  * @param array     The array to add each entity to. Also requires `array##_first` and `array##_last` to be defined
- * @param counter   Global to count number of entries
  * @param id        The identifier of the current entity being registered
  * @param fld       The field to store the current count into
  * @param inst      An expression to create a new instance, invoked for every registration
  */
-#define REGISTER(initfunc, ns, array, counter, id, fld, inst)   \
+#define REGISTER(initfunc, ns, array, id, fld, inst)            \
     entity ns##_##id;                                           \
     REGISTER_INIT(ns, id) { }                                   \
     REGISTER_INIT_POST(ns, id) { }                              \
     .entity enemy; /* internal next pointer */                  \
     void Register_##ns##_##id() {                               \
+        if (array##_COUNT >= array##_MAX) LOG_FATALF("Registry capacity exceeded (%s)", ftos(array##_MAX)); \
         entity this = inst;                                     \
         ns##_##id = this;                                       \
-        this.fld = counter;                                     \
-        array[counter++] = this;                                \
+        this.fld = array##_COUNT;                               \
+        array[array##_COUNT++] = this;                          \
         if (!array##_first)    array##_first = this;            \
         if ( array##_last)     array##_last.enemy = this;       \
         array##_last = this;                                    \

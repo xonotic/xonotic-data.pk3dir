@@ -2,7 +2,7 @@
 
 entity minigame_get_descriptor(string id)
 {
-	FOREACH(MINIGAMES, true, LAMBDA(
+	FOREACH(Minigames, true, LAMBDA(
 	{
 		if(it.netname == id)
 			return it;

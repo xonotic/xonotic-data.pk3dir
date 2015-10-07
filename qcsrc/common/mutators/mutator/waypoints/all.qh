@@ -3,13 +3,10 @@
 
 #include "waypointsprites.qh"
 
-void RegisterWaypoints();
-const int MAX_WAYPOINTS = 240;
-entity WAYPOINTS[MAX_WAYPOINTS], WAYPOINTS_first, WAYPOINTS_last;
-int WAYPOINT_COUNT;
-/** If you register a new waypoint, make sure to add it to all.inc */
-#define REGISTER_WAYPOINT_(id, init) REGISTER(RegisterWaypoints, WP, WAYPOINTS, WAYPOINT_COUNT, id, m_id, init)
+REGISTRY(Waypoints, BIT(6))
 REGISTER_REGISTRY(RegisterWaypoints)
+/** If you register a new waypoint, make sure to add it to all.inc */
+#define REGISTER_WAYPOINT_(id, init) REGISTER(RegisterWaypoints, WP, Waypoints, id, m_id, init)
 
 CLASS(Waypoint, Object)
     ATTRIB(Waypoint, m_id, int, 0)

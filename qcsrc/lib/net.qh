@@ -71,7 +71,7 @@ void UncustomizeEntitiesRun()
 #ifdef CSQC
     #define REGISTER_NET_LINKED(id, param) \
         void Ent_Read##id(entity this, param) { this = self; } \
-        REGISTER(RegisterLinkedEntities, NET, LinkedEntities, LinkedEntities_COUNT, id, m_id, spawn()) { \
+        REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, spawn()) { \
             this.netname = #id; \
             this.m_read = Ent_Read##id; \
         } \
@@ -79,12 +79,12 @@ void UncustomizeEntitiesRun()
 #else
     #define REGISTER_NET_LINKED(id, param) \
         const bool NET_##id##_istemp = false; \
-        REGISTER(RegisterLinkedEntities, NET, LinkedEntities, LinkedEntities_COUNT, id, m_id, spawn()) { \
+        REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, spawn()) { \
             this.netname = #id; \
         }
 #endif
 
-REGISTRY(LinkedEntities, 24)
+REGISTRY(LinkedEntities, BIT(0))
 REGISTER_REGISTRY(RegisterLinkedEntities)
 REGISTRY_SORT(LinkedEntities, netname, 0)
 STATIC_INIT(RegisterLinkedEntities_renumber) {
@@ -96,7 +96,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber) {
 #ifdef CSQC
     #define REGISTER_NET_TEMP(id, param) \
         void Net_Read##id(entity this, param); \
-        REGISTER(RegisterTempEntities, NET, TempEntities, TempEntities_COUNT, id, m_id, spawn()) { \
+        REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, spawn()) { \
             this.netname = #id; \
             this.m_read = Net_Read##id; \
         } \
@@ -104,12 +104,12 @@ STATIC_INIT(RegisterLinkedEntities_renumber) {
 #else
     #define REGISTER_NET_TEMP(id, param) \
         const bool NET_##id##_istemp = true; \
-        REGISTER(RegisterTempEntities, NET, TempEntities, TempEntities_COUNT, id, m_id, spawn()) { \
+        REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, spawn()) { \
             this.netname = #id; \
         }
 #endif
 
-REGISTRY(TempEntities, 24)
+REGISTRY(TempEntities, BIT(0))
 REGISTER_REGISTRY(RegisterTempEntities)
 REGISTRY_SORT(TempEntities, netname, 0)
 STATIC_INIT(RegisterTempEntities_renumber) {

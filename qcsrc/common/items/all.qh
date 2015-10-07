@@ -3,10 +3,10 @@
 
 #include "item.qh"
 
-REGISTRY(Items, 24)
+REGISTRY(Items, BIT(5))
 REGISTER_REGISTRY(RegisterItems)
 /** If you register a new item, make sure to add it to all.inc */
-#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, Items, Items_COUNT, id, m_id, NEW(class))
+#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, Items, id, m_id, NEW(class))
 
 void Dump_Items();
 

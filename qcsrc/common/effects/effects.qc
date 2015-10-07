@@ -1,9 +1,9 @@
 #ifdef CSQC
 void Read_Effect(bool is_new)
 {
-	int net_name = (EFFECT_COUNT >= 255) ? ReadShort() : ReadByte();
+	int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
 
-	entity eff = effects_ent[net_name];
+	entity eff = Effects[net_name];
 
 	vector v, vel = '0 0 0';
 	int eff_cnt = 1;
@@ -37,7 +37,7 @@ void Read_Effect(bool is_new)
 bool Net_Write_Effect(entity this, entity client, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_EFFECT);
-	(EFFECT_COUNT >= 255)
+	(Effects_COUNT >= 255)
 	? WriteShort(MSG_ENTITY, self.m_id)
 	: WriteByte(MSG_ENTITY, self.m_id);
 	WriteCoord(MSG_ENTITY, self.eent_net_location_x);
@@ -81,7 +81,7 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 {
 	// problem with this is, we might not have all the available effects for it
-	FOREACH(effects_ent, it.eent_eff_name == eff_name, LAMBDA(
+	FOREACH(Effects, it.eent_eff_name == eff_name, LAMBDA(
 		Send_Effect(it, eff_loc, eff_vel, eff_cnt);
 		return;
 	));

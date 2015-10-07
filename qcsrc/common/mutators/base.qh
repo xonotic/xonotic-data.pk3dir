@@ -220,7 +220,7 @@ noref int MUTATORS_COUNT;
         bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(RegisterMutators, MUTATOR, MUTATORS, MUTATORS_COUNT, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    REGISTER(RegisterMutators, MUTATOR, MUTATORS, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
     [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
 

@@ -21,9 +21,9 @@ const int PROJECTILE_NADE_HEAL_BURN = 81;
 const int PROJECTILE_NADE_MONSTER = 82;
 const int PROJECTILE_NADE_MONSTER_BURN = 83;
 
-REGISTRY(Nades, 8)
+REGISTRY(Nades, BIT(3))
 REGISTER_REGISTRY(RegisterNades)
-#define REGISTER_NADE(id) REGISTER(RegisterNades, NADE_TYPE, Nades, Nades_COUNT, id, m_id, NEW(Nade))
+#define REGISTER_NADE(id) REGISTER(RegisterNades, NADE_TYPE, Nades, id, m_id, NEW(Nade))
 
 CLASS(Nade, Object)
     ATTRIB(Nade, m_id, int, 0)

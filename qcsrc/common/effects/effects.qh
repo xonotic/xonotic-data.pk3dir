@@ -10,14 +10,10 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt);
 
 #define particleeffectnum(e) _particleeffectnum(e.eent_eff_name)
 
-void RegisterEffects();
-const int MAX_EFFECTS = 512;
-entity effects_ent[MAX_EFFECTS], effects_ent_first, effects_ent_last;
-int EFFECT_COUNT;
-
-#define EFFECT(istrail, name, realname) \
-    REGISTER(RegisterEffects, EFFECT, effects_ent, EFFECT_COUNT, name, m_id, Create_Effect_Entity(realname, istrail));
+REGISTRY(Effects, BIT(8))
 REGISTER_REGISTRY(RegisterEffects)
+#define EFFECT(istrail, name, realname) \
+    REGISTER(RegisterEffects, EFFECT, Effects, name, m_id, Create_Effect_Entity(realname, istrail));
 
 .int m_id;
 .string eent_eff_name;

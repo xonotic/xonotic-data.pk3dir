@@ -259,7 +259,7 @@ string spritelookuptext(string s)
     if (s == WP_Monster.netname) return get_monsterinfo(self.wp_extra).monster_name;
 
     // need to loop, as our netname could be one of three
-    FOREACH(WAYPOINTS, it.netname == s, LAMBDA(
+    FOREACH(Waypoints, it.netname == s, LAMBDA(
         return it.m_name;
     ));
 

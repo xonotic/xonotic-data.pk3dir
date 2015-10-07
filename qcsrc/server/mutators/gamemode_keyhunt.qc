@@ -380,9 +380,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			{
 				if (!k.owner) continue;
 				entity first = WP_Null;
-				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
 				entity third = WP_Null;
-				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
 				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFinish, third);
 			}
 		}
@@ -395,9 +395,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			{
 				if (!k.owner) continue;
 				entity first = WP_Null;
-				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
 				entity third = WP_Null;
-				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
 				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFriend, third);
 			}
 		}

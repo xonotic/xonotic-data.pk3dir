@@ -350,7 +350,7 @@ void ClientCommand_minigame(int request, int argc, string command)
 		}
 		else if ( minig_cmd == "list" )
 		{
-			FOREACH(MINIGAMES, true, LAMBDA(
+			FOREACH(Minigames, true, LAMBDA(
 			{
 				sprint(self,it.netname," (",it.message,") ","\n");
 			}));

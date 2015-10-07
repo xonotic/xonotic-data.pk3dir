@@ -284,20 +284,13 @@ void effectinfo_dump(int fh, bool alsoprint)
 }
 
 
-void RegisterEffectInfo();
-const int MAX_EFFECTINFOS = 512;
-entity EFFECTINFOS[MAX_EFFECTINFOS], EFFECTINFOS_first, EFFECTINFOS_last;
-int EFFECTINFOS_COUNT;
-
+REGISTRY(EffectInfos, BIT(9))
+REGISTER_REGISTRY(RegisterEffectInfos)
 #define EFFECTINFO(name) \
     [[accumulate]] void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { } \
-    REGISTER(RegisterEffectInfo, EFFECTINFO, EFFECTINFOS, EFFECTINFOS_COUNT, name, m_id, NEW(EffectInfoGroup)) { \
+    REGISTER(RegisterEffectInfos, EFFECTINFO, EffectInfos, name, m_id, NEW(EffectInfoGroup)) { \
         effectinfo_##name(this, NULL); \
     }
-REGISTER_REGISTRY(RegisterEffectInfo)
-
-
-#define REGISTER_EFFECTINFO(id) var void effectinfo_##id(EffectInfoGroup parent)
 
 #define MY(f) this.effectinfo_##f
 #define DEF(name) EFFECTINFO(name)

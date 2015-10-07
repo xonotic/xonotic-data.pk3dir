@@ -8,11 +8,11 @@
 #include "../teams.qh"
 #include "../util.qh"
 
-REGISTRY(Buffs, 16)
+REGISTRY(Buffs, BIT(4))
 REGISTER_REGISTRY(RegisterBuffs)
 
 #define REGISTER_BUFF(id) \
-    REGISTER(RegisterBuffs, BUFF, Buffs, Buffs_COUNT, id, m_id, NEW(Buff)); \
+    REGISTER(RegisterBuffs, BUFF, Buffs, id, m_id, NEW(Buff)); \
     REGISTER_INIT_POST(BUFF, id) { \
         this.netname = this.m_name; \
         this.m_itemid = BIT(this.m_id - 1); \

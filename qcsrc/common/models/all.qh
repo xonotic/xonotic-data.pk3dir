@@ -3,7 +3,7 @@
 
 #define setmodel(e, m) _setmodel((e), (m).model_str())
 
-REGISTRY(Models, 128)
+REGISTRY(Models, BIT(9))
 REGISTER_REGISTRY(RegisterModels)
 
 CLASS(Model, Object)
@@ -27,7 +27,7 @@ ENDCLASS(Model)
 
 #define MODEL(name, path) \
     string MDL_##name##_get() { return path; } \
-    REGISTER(RegisterModels, MDL, Models, Models_COUNT, name, m_id, NEW(Model, MDL_##name##_get))
+    REGISTER(RegisterModels, MDL, Models, name, m_id, NEW(Model, MDL_##name##_get))
 
 STATIC_INIT(RegisterModels_precache) {
     FOREACH(Models, true, LAMBDA({

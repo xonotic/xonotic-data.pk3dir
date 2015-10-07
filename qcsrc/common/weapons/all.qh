@@ -36,7 +36,7 @@ entity get_weaponinfo(int id);
 
 #define REGISTER_WEAPON(id, inst) \
 	/* WepSet WEPSET_##id; */ \
-	REGISTER(RegisterWeapons, WEP, Weapons, Weapons_COUNT, id, m_id, inst)
+	REGISTER(RegisterWeapons, WEP, Weapons, id, m_id, inst)
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;

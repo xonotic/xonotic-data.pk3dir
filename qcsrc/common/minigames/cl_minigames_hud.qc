@@ -213,7 +213,7 @@ void HUD_MinigameMenu_ClickCreate()
 	{
 		entity curr;
 		entity prev = self;
-		FOREACH(MINIGAMES, true, LAMBDA(
+		FOREACH(Minigames, true, LAMBDA(
 		{
 			curr = HUD_MinigameMenu_SpawnSubEntry(
 				it.message, HUD_MinigameMenu_ClickCreate_Entry,  self );
