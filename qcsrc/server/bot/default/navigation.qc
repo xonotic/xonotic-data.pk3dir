@@ -1,6 +1,6 @@
 #include "navigation.qh"
 
-#include "../common/triggers/trigger/jumppads.qh"
+#include "../../../common/triggers/trigger/jumppads.qh"
 
 void bot_debug(string input)
 {

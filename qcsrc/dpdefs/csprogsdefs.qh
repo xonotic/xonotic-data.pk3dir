@@ -23,6 +23,8 @@
 #undef particleeffectnum
 #undef setmodel
 
+entity(.entity fld, entity match) findchainentity = #403;
+
 #pragma noref 0
 
 #define ReadFloat() ReadCoord()
