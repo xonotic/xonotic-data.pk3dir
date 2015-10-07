@@ -27,7 +27,7 @@ void ons_CaptureShield_Touch()
 	vector mymid = (self.absmin + self.absmax) * 0.5;
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
-	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ons_captureshield_force);
+	Damage(other, self, self, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(othermid - mymid) * ons_captureshield_force);
 
 	if(IS_REAL_CLIENT(other))
 	{
@@ -1100,7 +1100,7 @@ bool Onslaught_CheckWinner()
 			else
 				d = d * tmp_entity.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
 
-			Damage(tmp_entity, tmp_entity, tmp_entity, d, DEATH_HURTTRIGGER, tmp_entity.origin, '0 0 0');
+			Damage(tmp_entity, tmp_entity, tmp_entity, d, DEATH_HURTTRIGGER.m_id, tmp_entity.origin, '0 0 0');
 
 			tmp_entity.sprite.SendFlags |= 16;
 

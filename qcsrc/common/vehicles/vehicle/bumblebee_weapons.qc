@@ -25,7 +25,7 @@ void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
     vehicles_projectile(EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, SND(VEH_BUMBLEBEE_FIRE),
                         v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
                         autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
-                        DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
+                        DEATH_VH_BUMB_GUN.m_id, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);
 }
 
 bool bumble_raygun_send(entity this, entity to, float sf)

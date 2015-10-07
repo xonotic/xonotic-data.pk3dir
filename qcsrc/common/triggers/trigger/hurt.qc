@@ -34,7 +34,7 @@ void trigger_hurt_touch()
 				self.enemy = world; // I still hate you all
 			}
 
-			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 	}
 	else if(other.damagedbytriggers)
@@ -42,7 +42,7 @@ void trigger_hurt_touch()
 		if(other.takedamage)
 		{
 			EXACTTRIGGER_TOUCH;
-			Damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage(other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 	}
 

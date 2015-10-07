@@ -26,7 +26,7 @@
 #include "weapons/projectile.qh"
 
 #include "../common/buffs/all.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/effects/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
@@ -148,8 +148,6 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 
 	// precaches

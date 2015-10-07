@@ -68,13 +68,13 @@ void M_Shambler_Attack_Smash()
 	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * autocvar_g_monster_shambler_attack_smash_range, MOVE_NORMAL, self);
 
 	if(trace_ent.takedamage)
-		Damage(trace_ent, self, self, (autocvar_g_monster_shambler_attack_smash_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_SMASH, trace_ent.origin, normalize(trace_ent.origin - self.origin));
+		Damage(trace_ent, self, self, (autocvar_g_monster_shambler_attack_smash_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_SMASH.m_id, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 }
 
 void M_Shambler_Attack_Swing()
 {SELFPARAM();
 	float r = (random() < 0.5);
-	if(r && Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? self.anim_melee2 : self.anim_melee3), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, true))
+	if(r && Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? self.anim_melee2 : self.anim_melee3), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW.m_id, true))
 	{
 		Monster_Delay(1, 0, 0.5, M_Shambler_Attack_Swing);
 		self.attack_finished_single += 0.5;
@@ -102,7 +102,7 @@ void M_Shambler_Attack_Lightning_Explode()
 	for(head = findradius(self.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
 	{
 		te_csqc_lightningarc(self.origin, head.origin);
-		Damage(head, self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_ZAP, head.origin, '0 0 0');
+		Damage(head, self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
 	}
 
 	self.think = SUB_Remove;
@@ -154,7 +154,7 @@ void M_Shambler_Attack_Lightning()
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = DEATH_MONSTER_SHAMBLER_ZAP;
+	gren.projectiledeathtype = DEATH_MONSTER_SHAMBLER_ZAP.m_id;
 	setorigin(gren, CENTER_OR_VIEWOFS(self));
 	setsize(gren, '-8 -8 -8', '8 8 8');
 	gren.scale = 2.5;

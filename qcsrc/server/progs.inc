@@ -97,6 +97,7 @@
 #include "../common/triggers/include.qc"
 #include "../common/util.qc"
 
+#include "../common/deathtypes/all.qc"
 #include "../common/buffs/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"

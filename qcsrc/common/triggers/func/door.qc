@@ -36,14 +36,14 @@ void door_blocked()
 	)
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 #ifdef SVQC
 		if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 
 		 // don't change direction for dead or dying stuff
@@ -78,7 +78,7 @@ void door_blocked()
 		{
 			//gib dying stuff just to make sure
 			if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+				Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 #endif
 	}
@@ -331,7 +331,7 @@ void door_generic_plat_blocked()
 
 	if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 	}
 	else
@@ -339,7 +339,7 @@ void door_generic_plat_blocked()
 
 #ifdef SVQC
 		if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 
 		 //Dont chamge direction for dead or dying stuff
@@ -358,7 +358,7 @@ void door_generic_plat_blocked()
 		{
 			//gib dying stuff just to make sure
 			if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+				Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 #endif
 	}

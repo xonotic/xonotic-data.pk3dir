@@ -11,7 +11,7 @@
 
 #include "../common/buffs/all.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
 #include "../common/nades/all.qh"
@@ -1477,7 +1477,7 @@ void HUD_HealthArmor(void)
 	if(autocvar_hud_panel_healtharmor == 2) // combined health and armor display
 	{
 		vector v;
-		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON);
+		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON.m_id);
 
 		float x;
 		x = floor(v.x + 1);

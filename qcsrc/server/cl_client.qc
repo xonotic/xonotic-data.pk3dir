@@ -811,7 +811,7 @@ void ClientKill_Now()
 	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
-            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');
+            Damage(self, self, self, 1 , DEATH_KILL.m_id, self.origin, '0 0 0');
 	    }
 	}
 
@@ -824,7 +824,7 @@ void ClientKill_Now()
 		ClientKill_Now_TeamChange();
 
 	if(IS_PLAYER(self))
-		Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+		Damage(self, self, self, 100000, DEATH_KILL.m_id, self.origin, '0 0 0');
 
 	// now I am sure the player IS dead
 }
@@ -1658,7 +1658,7 @@ void player_regen (void)
 	{
 		if(self.vehicle)
 			vehicles_exit(VHEF_RELEASE);
-		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+		self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
 	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -2358,7 +2358,7 @@ void PlayerPreThink (void)
 		{
 			if(self.vehicle)
 				vehicles_exit(VHEF_RELEASE);
-			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
+			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, self.origin, '0 0 0');
 		}
 		else if ( self.revive_progress <= 0 )
 			Unfreeze(self);
@@ -2714,7 +2714,7 @@ void PlayerPostThink (void)
 	*/
 
 	if(self.waypointsprite_attachedforcarrier)
-		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
+		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
 
 	playerdemo_write();
 

@@ -114,6 +114,7 @@
 #define GETTER(type, name) type GET(name)() { return name; }
 
 #define BIT(n) (1 << (n))
+#define BITS(n) (BIT(n) - 1)
 #ifndef BRANCHLESS_BITSET
     #define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
 #else

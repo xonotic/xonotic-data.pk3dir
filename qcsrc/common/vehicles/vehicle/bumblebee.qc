@@ -557,7 +557,7 @@ float bumblebee_pilot_frame()
 		{
 			if(autocvar_g_vehicle_bumblebee_raygun)
 			{
-				Damage(trace_ent, vehic, pilot, autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime, DEATH_GENERIC, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * sys_frametime);
+				Damage(trace_ent, vehic, pilot, autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime, DEATH_GENERIC.m_id, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * sys_frametime);
 				vehic.vehicle_energy -= autocvar_g_vehicle_bumblebee_raygun_aps * sys_frametime;
 			}
 			else
@@ -698,7 +698,7 @@ void bumblebee_blowup()
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
 				 autocvar_g_vehicle_bumblebee_blowup_radius, self, world,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
-				 DEATH_VH_BUMB_DEATH, world);
+				 DEATH_VH_BUMB_DEATH.m_id, world);
 
 	sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_BIG, (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);

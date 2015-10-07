@@ -401,7 +401,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 void buff_Vengeance_DelayedDamage()
 {SELFPARAM();
 	if(self.enemy)
-		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF, self.enemy.origin, '0 0 0');
+		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF.m_id, self.enemy.origin, '0 0 0');
 
 	remove(self);
 	return;
@@ -415,7 +415,7 @@ float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float 
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
-	if(frag_deathtype == DEATH_BUFF) { return false; }
+	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
 
 	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
 	{
@@ -429,7 +429,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
-	if(frag_deathtype == DEATH_BUFF) { return false; }
+	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
 
 	if(frag_target.buffs & BUFF_SPEED.m_itemid)
 	if(frag_target != frag_attacker)
@@ -443,7 +443,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_damage = max(5, frag_target.health - autocvar_g_buffs_medic_survive_health);
 
 	if(frag_target.buffs & BUFF_JUMP.m_itemid)
-	if(frag_deathtype == DEATH_FALL)
+	if(frag_deathtype == DEATH_FALL.m_id)
 		frag_damage = 0;
 
 	if(frag_target.buffs & BUFF_VENGEANCE.m_itemid)
@@ -477,7 +477,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
 	if(frag_attacker.buffs & BUFF_MEDIC.m_itemid)
-	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC.m_id)
+	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(SAME_TEAM(frag_attacker, frag_target))
 	if(frag_attacker != frag_target)
 	{
@@ -495,13 +495,13 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 			autocvar_g_buffs_inferno_burntime_target_time,
 			autocvar_g_buffs_inferno_burntime_factor
 		);
-		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF);
+		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF.m_id);
 	}
 
 	// this... is ridiculous (TODO: fix!)
 	if(frag_attacker.buffs & BUFF_VAMPIRE.m_itemid)
 	if(!frag_target.vehicle)
-	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC.m_id)
+	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_target.deadflag == DEAD_NO)
 	if(IS_PLAYER(frag_target) || IS_MONSTER(frag_target))

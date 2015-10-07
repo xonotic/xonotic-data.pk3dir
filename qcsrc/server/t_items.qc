@@ -15,7 +15,7 @@
     #include "weapons/weaponsystem.qh"
 
     #include "../common/constants.qh"
-    #include "../common/deathtypes.qh"
+    #include "../common/deathtypes/all.qh"
     #include "../common/notifications.qh"
 	#include "../common/triggers/subs.qh"
     #include "../common/util.qh"

@@ -654,22 +654,22 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, int deatht
 	self.dmg_time = time;
 
 	// WEAPONTODO
-	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
 		damage *= autocvar_g_vehicles_vortex_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
 		damage *= autocvar_g_vehicles_machinegun_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
 		damage *= autocvar_g_vehicles_rifle_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 		damage *= autocvar_g_vehicles_vaporizer_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;
 
-	if(DEATH_WEAPONOFWEAPONDEATH(deathtype))
+	if(DEATH_WEAPONOF(deathtype) != WEP_Null)
 		damage *= autocvar_g_vehicles_weapon_damagerate;
 
 	self.enemy = attacker;
@@ -767,7 +767,7 @@ void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
 		if(_minspeed < wc)
 		{
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (self, world, world, take, DEATH_FALL, self.origin, '0 0 0');
+			Damage (self, world, world, take, DEATH_FALL.m_id, self.origin, '0 0 0');
 			self.play_time = time + 0.25;
 
 			//dprint("wc: ", ftos(wc), "\n");
@@ -938,7 +938,7 @@ void vehicles_touch()
 		if(vehicles_crushable(other))
 		{
 			if(vlen(self.velocity) >= 30)
-				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
+				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
