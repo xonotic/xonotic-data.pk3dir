@@ -8185,7 +8185,7 @@ msgid "drop key / drop flag"
 msgstr "zászló eldobás, kiszállás"
 
 msgid "drag object"
-msgstr "drag object"
+msgstr ""
 
 msgid "3rd person view"
 msgstr ""

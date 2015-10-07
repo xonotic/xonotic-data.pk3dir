@@ -8263,7 +8263,7 @@ msgid "drop key / drop flag"
 msgstr "бросить ключ или флаг"
 
 msgid "drag object"
-msgstr "drag object"
+msgstr ""
 
 msgid "3rd person view"
 msgstr ""
@@ -8294,7 +8294,7 @@ msgid "Allow the console toggling bind to also close the console"
 msgstr "Использовать привязку для открытия консоли также и для её сокрытия"
 
 msgid "Always carry the laser as an additional weapon in Nix"
-msgstr "Always carry the laser as an additional weapon in Nix"
+msgstr ""
 
 msgid "Ambient lighting, if set too high it tends to make light on maps look dull and flat (default: 4)"
 msgstr "Окружающее освещение, если выставлено слишком сильным, приводит к тому, что свет на картах выглядит блёклым и плоским (по умолчанию: 4)"
@@ -8306,7 +8306,7 @@ msgid "Amount of health below which your player gets stunned because of blood lo
 msgstr "Величина здоровья, ниже которой наступает оглушение из-за потери крови"
 
 msgid "Anisotropic filtering quality (default: 1x)"
-msgstr "Anisotropic filtering quality (default: 1x)"
+msgstr ""
 
 msgid "Announcer sound telling you the remaining minutes of the match"
 msgstr "Звук предупреждения, сообщающий оставшиеся до конца состязания минуты"
@@ -8315,7 +8315,7 @@ msgid "Audio settings"
 msgstr "Настройки звука"
 
 msgid "Automatically switch to newly picked up weapons if they are better than what you are carrying"
-msgstr "Automatically switch to newly picked up weapons if they are better than what you are carrying"
+msgstr ""
 
 msgid "Automatically taunt enemies after fragging them"
 msgstr "Автоматически насмехаться над противниками после их поражений"
@@ -8342,22 +8342,22 @@ msgid "Browse and view demos"
 msgstr "Список демо для просмотра"
 
 msgid "By how much to multiply the contrast in dark areas (default: 1)"
-msgstr "By how much to multiply the contrast in dark areas (default: 1)"
+msgstr ""
 
 msgid "Change the game settings"
 msgstr "Изменить настройки игры"
 
 msgid "Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)"
-msgstr "Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)"
+msgstr ""
 
 msgid "Change the smoothness of the curves on the map (default: normal)"
-msgstr "Change the smoothness of the curves on the map (default: normal)"
+msgstr ""
 
 msgid "Click here or Ctrl-F to provide a keyword to narrow down the maplist above. Ctrl-Delete to clear; Enter when done."
 msgstr ""
 
 msgid "Compress the textures for video cards with small amounts of video memory available (default: None)"
-msgstr "Compress the textures for video cards with small amounts of video memory available (default: None)"
+msgstr ""
 
 msgid "Control transparency of the waypoints"
 msgstr "Управление прозрачностью отметок"
@@ -8369,49 +8369,49 @@ msgid "Damage done to your enemy gets added to your own health"
 msgstr "Урон, наносимый противнику, прибавляется к собственному здоровью"
 
 msgid "Decals further away than this will not be drawn (default: 300)"
-msgstr "Decals further away than this will not be drawn (default: 300)"
+msgstr ""
 
 msgid "Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly. (default: disabled)"
-msgstr "Disable textures completely for very slow hardware. This gives a huge performance boost, but looks very ugly. (default: disabled)"
+msgstr ""
 
 msgid "Distance from which taunts can be heard"
 msgstr "Расстояние, с которого будут слышны насмешки"
 
 msgid "Draw the weapon model"
-msgstr "Draw the weapon model"
+msgstr ""
 
 msgid "Effect settings"
 msgstr "Настройки эффектов"
 
 msgid "Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts (default: disabled)"
-msgstr "Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts (default: disabled)"
+msgstr ""
 
 msgid "Enable OpenGL 2.0 pixel shaders for lightning (default: enabled)"
-msgstr "Enable OpenGL 2.0 pixel shaders for lightning (default: enabled)"
+msgstr ""
 
 msgid "Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot (default: disabled)"
-msgstr "Enable antialiasing, which smooths the edges of 3D geometry. Note that it might decrease performance by quite a lot (default: disabled)"
+msgstr ""
 
 msgid "Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)"
-msgstr "Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)"
+msgstr ""
 
 msgid "Enable clientside movement prediction"
 msgstr "Включить предсказание движения на стороне клиента"
 
 msgid "Enable corona flares around certain lights (default: enabled)"
-msgstr "Enable corona flares around certain lights (default: enabled)"
+msgstr ""
 
 msgid "Enable decals (bullet holes and blood) (default: enabled)"
-msgstr "Enable decals (bullet holes and blood) (default: enabled)"
+msgstr ""
 
 msgid "Enable directional voices"
-msgstr "Enable directional voices"
+msgstr ""
 
 msgid "Enable dodging"
-msgstr "Enable dodging"
+msgstr ""
 
 msgid "Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)"
-msgstr "Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)"
+msgstr ""
 
 msgid "Enable footstep sounds"
 msgstr "Включить звуки шагов"
@@ -8420,34 +8420,34 @@ msgid "Enable fullscreen mode (default: enabled)"
 msgstr "Включить полноэкранный режим (по умолчанию: включено)"
 
 msgid "Enable network update smoothing"
-msgstr "Enable network update smoothing"
+msgstr ""
 
 msgid "Enable rendering of dynamic lights such as explosions and rocket lights (default: enabled)"
-msgstr "Enable rendering of dynamic lights such as explosions and rocket lights (default: enabled)"
+msgstr ""
 
 msgid "Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance. (default: disabled)"
-msgstr "Enable rendering of full realtime world lighting on maps that support it. Note that this might have a big impact on performance. (default: disabled)"
+msgstr ""
 
 msgid "Enable rendering of shadows from dynamic lights (default: disabled)"
-msgstr "Enable rendering of shadows from dynamic lights (default: disabled)"
+msgstr ""
 
 msgid "Enable rendering of shadows from realtime world lights (default: disabled)"
-msgstr "Enable rendering of shadows from realtime world lights (default: disabled)"
+msgstr ""
 
 msgid "Enable spatialization (blend the right and left channel slightly to decrease stereo separation a bit for headphones)"
-msgstr "Enable spatialization (blend the right and left channel slightly to decrease stereo separation a bit for headphones)"
+msgstr ""
 
 msgid "Enable the use of glossmaps on textures supporting it (default: enabled)"
-msgstr "Enable the use of glossmaps on textures supporting it (default: enabled)"
+msgstr ""
 
 msgid "Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot (default: disabled)"
-msgstr "Enable use of GLSL to apply gamma correction, note that it might decrease performance by a lot (default: disabled)"
+msgstr ""
 
 msgid "Enable use of directional shading on textures (default: enabled)"
-msgstr "Enable use of directional shading on textures (default: enabled)"
+msgstr ""
 
 msgid "Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)"
-msgstr "Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)"
+msgstr ""
 
 msgid "Enable/disable the HUD background"
 msgstr "Включить/выключить фон HUD"
@@ -8456,7 +8456,7 @@ msgid "Enables special postprocessing effects for when damaged or under water or
 msgstr ""
 
 msgid "Fade coronas according to visibility (default: enabled)"
-msgstr "Fade coronas according to visibility (default: enabled)"
+msgstr ""
 
 msgid "Field of vision in degrees from 60 to 130, default is 90"
 msgstr "Угол обзора в градусах, допустимы значения от 60 то 130, по умолчанию 90"
@@ -8465,28 +8465,28 @@ msgid "Find servers to play on"
 msgstr "Поиск игровых серверов"
 
 msgid "Force client to use chosen port unless it is set to 0"
-msgstr "Force client to use chosen port unless it is set to 0"
+msgstr ""
 
 msgid "Global rendering brightness (default: 1)"
 msgstr "Общая яркость вывода (по умолчанию: 1)"
 
 msgid "Higher quality offset mapping, which also has a huge impact on performance (default: disabled)"
-msgstr "Higher quality offset mapping, which also has a huge impact on performance (default: disabled)"
+msgstr ""
 
 msgid "Higher quality version of bloom, which has a huge impact on performance. (default: disabled)"
-msgstr "Higher quality version of bloom, which has a huge impact on performance. (default: disabled)"
+msgstr ""
 
 msgid "Host your own game"
 msgstr "Запустить собственную игру"
 
 msgid "How big the zoom factor is when the zoom button is pressed"
-msgstr "How big the zoom factor is when the zoom button is pressed"
+msgstr ""
 
 msgid "How fast the view will be zoomed, disable to zoom instantly"
-msgstr "How fast the view will be zoomed, disable to zoom instantly"
+msgstr ""
 
 msgid "How long a view kick from damage lasts (default: 0)"
-msgstr "How long a view kick from damage lasts (default: 0)"
+msgstr ""
 
 msgid "How many bits per pixel (BPP) to render at, 32 is recommended"
 msgstr "Сколько бит на точку использовать для вывода, советуется 32"
@@ -8495,25 +8495,25 @@ msgid "How many input packets to send to the server each second"
 msgstr "Сколько пакетов посылать серверу каждую секунду"
 
 msgid "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)"
-msgstr "How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)"
+msgstr ""
 
 msgid "I got some more fragging to do!"
 msgstr "Остались здесь ещё дела!"
 
 msgid "If set, only reduce the texture quality of models (default: enabled)"
-msgstr "If set, only reduce the texture quality of models (default: enabled)"
+msgstr ""
 
 msgid "Input settings"
 msgstr "Настройки устройств ввода"
 
 msgid "Inverse gamma correction value, a brightness effect that does not affect white or black (default: 1.125)"
-msgstr "Inverse gamma correction value, a brightness effect that does not affect white or black (default: 1.125)"
+msgstr ""
 
 msgid "Invert mouse movement on the Y-axis"
 msgstr "Обратить движения мыши по вертикальной оси"
 
 msgid "Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines (default: disabled)"
-msgstr "Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines (default: disabled)"
+msgstr ""
 
 msgid "Make things fall to the ground slower, lower value means lower gravity"
 msgstr "Падение происходит медленнее. Чем ниже значение, тем ниже гравитация"
@@ -8522,10 +8522,10 @@ msgid "Make use of DGA mouse input"
 msgstr "Использовать DGA ввод для мыши"
 
 msgid "Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)"
-msgstr "Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)"
+msgstr ""
 
 msgid "Make use of the list above when cycling through weapons with the mouse wheel"
-msgstr "Make use of the list above when cycling through weapons with the mouse wheel"
+msgstr ""
 
 msgid "Maximum download speed"
 msgstr "Предел скорости скачивания"
@@ -8534,13 +8534,13 @@ msgid "Maximum number of concurrent HTTP/FTP downloads"
 msgstr "Предел одновременных HTTP/FTP загрузок"
 
 msgid "Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)"
-msgstr "Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)"
+msgstr ""
 
 msgid "Misc settings"
 msgstr "Разные настройки"
 
 msgid "Motion blur strength - 0.4 recommended"
-msgstr "Motion blur strength - 0.4 recommended"
+msgstr ""
 
 msgid "Mouse speed multiplier"
 msgstr "Множитель скорости мыши"
@@ -8549,7 +8549,7 @@ msgid "Mouse speed multiplier in the menu, does not affect aiming in the game"
 msgstr "Множитель скорости мыши в меню, не влияет на прицеливание в игре"
 
 msgid "Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1)"
-msgstr "Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1.0)"
+msgstr ""
 
 msgid "Mutators and weapon arenas"
 msgstr "Мутаторы и арены оружий"
@@ -8561,7 +8561,7 @@ msgid "Network settings"
 msgstr "Настройки сети"
 
 msgid "No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon."
-msgstr "No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon."
+msgstr ""
 
 msgid "None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy"
 msgstr "Отключена: нет проверок перекрестья на попадание; TrueAim: размывать перекрестье, когда не наведено на стену; Враги: также увеличивать перекрестье, когда наведено на врага"
@@ -8573,7 +8573,7 @@ msgid "Number of maps that are shown in the map voting at the end of a match"
 msgstr "Количество карт, предлагаемых в голосовании после состязания"
 
 msgid "Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface (default: disabled)"
-msgstr "Offset mapping effect that will make textures with bumpmaps appear like they \"pop out\" of the flat 2D surface (default: disabled)"
+msgstr ""
 
 msgid "Only possible to inflict damage on your enemy while he's airborne"
 msgstr "Только находящиеся в воздухе получают повреждения"
@@ -8582,7 +8582,7 @@ msgid "Override the default amount of teams in teamgames"
 msgstr "Заменить значение по умолчанию количества команд в командных играх"
 
 msgid "Particles further away than this will not be drawn (default: 1000)"
-msgstr "Particles further away than this will not be drawn (default: 1000)"
+msgstr ""
 
 msgid "Pause updating the server list to prevent servers from \"jumping around\""
 msgstr "Приостановить обновление списка серверов для предотвращения их скакания"
@@ -8618,19 +8618,19 @@ msgid "Players will drop all weapons they possessed when they are killed"
 msgstr "Во время смерти выбрасывается всё оружие, которое нёс \"убитый\", что даёт возможность его подобрать"
 
 msgid "Poor man's left handed mode (default: off)"
-msgstr "Poor man's left handed mode (default: off)"
+msgstr ""
 
 msgid "Position of the weapon model; requires reconnect"
-msgstr "Position of the weapon model; requires reconnect"
+msgstr ""
 
 msgid "Quit the game"
 msgstr "Выйти из игры"
 
 msgid "Reduce the amount of gibs or remove them completely (default: lots)"
-msgstr "Reduce the amount of gibs or remove them completely (default: lots)"
+msgstr ""
 
 msgid "Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces (default: disabled)"
-msgstr "Reflection and refraction quality, has a huge impact on performance on maps with reflecting surfaces (default: disabled)"
+msgstr ""
 
 msgid "Remove all the maps from your selection"
 msgstr ""
@@ -8639,13 +8639,13 @@ msgid "Remove the maps shown in Maplist above from your selection"
 msgstr ""
 
 msgid "Replace blood and gibs with content that does not have any gore effects (default: disabled)"
-msgstr "Replace blood and gibs with content that does not have any gore effects (default: disabled)"
+msgstr ""
 
 msgid "Resolution of reflections/refractions (default: good)"
-msgstr "Resolution of reflections/refractions (default: good)"
+msgstr ""
 
 msgid "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), requires GLSL color control (default: 1)"
-msgstr "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), requires GLSL color control (default: 1)"
+msgstr ""
 
 msgid "Scale multiplier of the waypoints"
 msgstr "Множитель размера отметок"
@@ -8654,16 +8654,16 @@ msgid "Screen resolution"
 msgstr "Разрешение экрана"
 
 msgid "Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups."
-msgstr "Selecting a weapon arena will give all players that weapon at spawn as well as unlimited ammo, and disable all other weapon pickups."
+msgstr ""
 
 msgid "Set a different crosshair for each weapon, good if you play without weapon models"
-msgstr "Set a different crosshair for each weapon, good if you play without weapon models"
+msgstr ""
 
 msgid "Set the color of the crosshair depending on the weapon you are currently holding"
-msgstr "Set the color of the crosshair depending on the weapon you are currently holding"
+msgstr ""
 
 msgid "Set your most preferred weapons, autoswitch and weapon model settings"
-msgstr "Set your most preferred weapons, autoswitch and weapon model settings"
+msgstr ""
 
 msgid "Show a graph of packet sizes and other information"
 msgstr "Показывать график размеров пакетов и других сведений"
@@ -8690,7 +8690,7 @@ msgid "Show various gametype specific waypoints"
 msgstr "Показывать различные отметки, определяемые видом игры"
 
 msgid "Show your rendered frames per second"
-msgstr "Show your rendered frames per second"
+msgstr ""
 
 msgid "Simple majority wins a vote"
 msgstr "Простое большинство выигрывает голосование"
@@ -8711,7 +8711,7 @@ msgid "Swap left/right channels"
 msgstr "Поменять местами правый и левый каналы"
 
 msgid "The Xonotic credits"
-msgstr "The Xonotic credits"
+msgstr ""
 
 msgid "The amount of frags needed before the match will end"
 msgstr "Количество очков, необходимых для завершения состязания"
@@ -8720,19 +8720,19 @@ msgid "The maximum amount of players or bots that can be connected to your serve
 msgstr "Предельное количество игроков и ботов, которые могут быть одновременно подключены к серверу"
 
 msgid "Time in seconds before decals fade away (default: 2)"
-msgstr "Time in seconds before decals fade away (default: 2)"
+msgstr ""
 
 msgid "Timelimit in minutes that when hit, will end the match"
 msgstr "Ограничение времени в минутах, состязание закончится при его достижении"
 
 msgid "Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)"
-msgstr "Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)"
+msgstr ""
 
 msgid "Use per-pixel lighting effects (default: enabled)"
-msgstr "Use per-pixel lighting effects (default: enabled)"
+msgstr ""
 
 msgid "Use the old HUD layout"
-msgstr "Use the old HUD layout"
+msgstr ""
 
 msgid "Video settings"
 msgstr "Настройки изображения"
