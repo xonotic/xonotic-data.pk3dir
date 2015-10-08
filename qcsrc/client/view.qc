@@ -394,8 +394,6 @@ float TrueAimCheck()
 	return SHOTTYPE_HITWORLD;
 }
 
-void CSQC_common_hud(void);
-
 void PostInit(void);
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard();
@@ -1031,7 +1029,17 @@ void HUD_Draw()
 
 	if(autocvar_r_letterbox == 0)
 		if(autocvar_viewsize < 120)
-			CSQC_common_hud();
+		{
+			if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
+				Accuracy_LoadLevels();
+
+			HUD_Main();
+			HUD_Vehicle();
+			HUD_DrawScoreboard();
+
+			if (scoreboard_active || intermission == 2)
+				HUD_Reset();
+		}
 
 	// crosshair goes VERY LAST
 	UpdateDamage();
@@ -1892,20 +1900,6 @@ void CSQC_UpdateView(float w, float h)
 	// let's reset the view back to normal for the end
 	setproperty(VF_MIN, '0 0 0');
 	setproperty(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
-}
-
-void CSQC_common_hud(void)
-{
-	if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
-		Accuracy_LoadLevels();
-
-	HUD_Main(); // always run these functions for alpha checks
-	HUD_Vehicle();
-	HUD_DrawScoreboard();
-
-	// scoreboard/accuracy, map/gametype voting screen
-	if (scoreboard_active || intermission == 2)
-		HUD_Reset();
 }
 
 
