@@ -4465,7 +4465,7 @@ void HUD_CenterPrint (void)
 			reset_centerprint_messages();
 		if (time > hud_configure_cp_generation_time)
 		{
-			if(HUD_PANEL(CENTERPRINT) == highlightedPanel)
+			if(highlightedPanel == HUD_PANEL(CENTERPRINT))
 			{
 				float r;
 				r = random();
@@ -4800,18 +4800,18 @@ void HUD_Main (void)
 
 	// cache the panel order into the panel_order array
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
-		for(i = 0; i < HUD_PANEL_NUM; ++i)
+		for(i = 0; i < hud_panels_COUNT; ++i)
 			panel_order[i] = -1;
 		string s = "";
 		int p_num;
 		bool warning = false;
 		int argc = tokenize_console(autocvar__hud_panelorder);
-		if (argc > HUD_PANEL_NUM)
+		if (argc > hud_panels_COUNT)
 			warning = true;
 		//first detect wrong/missing panel numbers
-		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+		for(i = 0; i < hud_panels_COUNT; ++i) {
 			p_num = stoi(argv(i));
-			if (p_num >= 0 && p_num < HUD_PANEL_NUM) { //correct panel number?
+			if (p_num >= 0 && p_num < hud_panels_COUNT) { //correct panel number?
 				if (panel_order[p_num] == -1) //found for the first time?
 					s = strcat(s, ftos(p_num), " ");
 				panel_order[p_num] = 1; //mark as found
@@ -4819,7 +4819,7 @@ void HUD_Main (void)
 			else
 				warning = true;
 		}
-		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+		for(i = 0; i < hud_panels_COUNT; ++i) {
 			if (panel_order[i] == -1) {
 				warning = true;
 				s = strcat(s, ftos(i), " "); //add missing panel number
@@ -4835,15 +4835,15 @@ void HUD_Main (void)
 
 		//now properly set panel_order
 		tokenize_console(s);
-		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+		for(i = 0; i < hud_panels_COUNT; ++i) {
 			panel_order[i] = stof(argv(i));
 		}
 	}
 
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
-	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-		HUD_Panel_Draw(hud_panel[panel_order[i]]);
+	for(i = hud_panels_COUNT - 1; i >= 0; --i)
+		HUD_Panel_Draw(hud_panels[panel_order[i]]);
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
