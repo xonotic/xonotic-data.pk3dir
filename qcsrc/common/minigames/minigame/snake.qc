@@ -29,7 +29,7 @@ int autocvar_sv_minigames_snake_lives = 3;
 
 .bool snake_tail;
 
-.int snake_lives;
+.int snake_lives[SNAKE_TEAMS + 1];
 
 .int snake_lost_teams;
 
@@ -110,12 +110,11 @@ int snake_winning_team(entity minigame)
 	for(int i = 1; i <= SNAKE_TEAMS; ++i)
 	{
 		entity pl = snake_get_player(minigame, i);
-		if(pl)
-		if(pl.snake_lives > 0)
+		if(pl && minigame.snake_lives[i] > 0)
 		{
 			if(winning_team)
 				return 0;
-			winning_team = pl.team;
+			winning_team = i;
 		}
 	}
 
@@ -133,8 +132,7 @@ void snake_check_winner(entity minigame)
 	for(int i = 1; i <= SNAKE_TEAMS; ++i)
 	{
 		entity pl = snake_get_player(minigame, i);
-		if(pl)
-		if(pl.snake_lives > 0)
+		if(pl && minigame.snake_lives[i] > 0)
 			++alivecnt;
 	}
 
@@ -209,7 +207,7 @@ entity snake_get_player(entity minigame, int pteam)
 	return world;
 }
 
-void snake_add_score(entity minigame, int pteam, .int score_field, int thescore)
+void snake_add_score(entity minigame, int pteam, int thescore)
 {
 #ifdef SVQC
 	if(!minigame)
@@ -217,7 +215,7 @@ void snake_add_score(entity minigame, int pteam, .int score_field, int thescore)
 	entity pl = snake_get_player(minigame, pteam);
 	if(pl)
 	{
-		pl.score_field += thescore;
+		pl.snake_score += thescore;
 		pl.SendFlags |= SNAKE_SF_PLAYERSCORE;
 	}
 #endif
@@ -266,7 +264,7 @@ void snake_move_body(entity minigame, entity head, bool ate_mouse)
 
 		int newcnt = tail.cnt + 1;
 		head.snake_delay = max(autocvar_sv_minigames_snake_delay_min, autocvar_sv_minigames_snake_delay_initial - (newcnt / autocvar_sv_minigames_snake_delay_multiplier));
-		snake_add_score(minigame, head.team, snake_score, 1);
+		snake_add_score(minigame, head.team, 1);
 
 		entity piece = msle_spawn(minigame,"minigame_board_piece");
 		piece.cnt = newcnt;
@@ -285,7 +283,13 @@ void snake_eat_team(entity minigame, int pteam)
 	entity head = snake_find_head(minigame, pteam);
 	if(!head) { return; }
 
-	snake_add_score(minigame, pteam, snake_lives, -1);
+	minigame.snake_lives[pteam] -= 1;
+
+	entity pl = snake_get_player(minigame, pteam);
+#ifdef SVQC
+	pl.SendFlags |= SNAKE_SF_PLAYERSCORE;
+#endif
+
 	head.nextthink = time + 1; // make sure they don't to eat us somehow
 
 	entity e = world;
@@ -296,11 +300,11 @@ void snake_eat_team(entity minigame, int pteam)
 			remove(e);
 		}
 
-	entity pl = snake_get_player(minigame, pteam);
-	if(pl.snake_lives > 0)
-		minigame_setup_snake(minigame, pteam);
-	else
+	if(minigame.snake_lives[pteam] <= 0)
 		minigame.snake_lost_teams |= BIT(pteam);
+
+	if(pl && minigame.snake_lives[pteam] > 0)
+		minigame_setup_snake(minigame, pteam);	
 }
 
 void snake_move_head(entity minigame, entity head)
@@ -334,7 +338,7 @@ void snake_move_head(entity minigame, entity head)
 		}
 		else
 		{
-			snake_add_score(minigame, head.team, snake_score, -1);
+			snake_add_score(minigame, head.team, -1);
 			snake_eat_team(minigame, head.team);
 		}
 
@@ -354,7 +358,7 @@ void snake_move_head(entity minigame, entity head)
 	if(hit.cnt)
 	{
 		snake_eat_team(minigame, hit.team);
-		snake_add_score(minigame, head.team, snake_score, 1);
+		snake_add_score(minigame, head.team, 1);
 	}
 
 	if(ate_mouse)
@@ -413,6 +417,15 @@ int snake_server_event(entity minigame, string event, ...)
 			snake_setup_pieces(minigame);
 			minigame.minigame_flags = SNAKE_TURN_MOVE;
 			minigame.snake_lost_teams = 0;
+
+			if(SNAKE_TEAMS > 1)
+			{
+				for(int i = 1; i <= SNAKE_TEAMS; ++i)
+					minigame.snake_lives[i] = autocvar_sv_minigames_snake_lives;
+			}
+			else
+				minigame.snake_lives[1] = 1;
+			
 			return true;
 		}
 		case "end":
@@ -449,7 +462,8 @@ int snake_server_event(entity minigame, string event, ...)
 				entity pl = ...(1,entity);
 				if(pl)
 				{
-					pl.snake_lives = ((SNAKE_TEAMS > 1) ? autocvar_sv_minigames_snake_lives : 1);
+					//pl.snake_lives = ((SNAKE_TEAMS > 1) ? autocvar_sv_minigames_snake_lives : 1);
+					// send score anyway, lives are set
 					pl.SendFlags |= SNAKE_SF_PLAYERSCORE;
 				}
 				minigame_setup_snake(minigame, t);
@@ -482,7 +496,7 @@ int snake_server_event(entity minigame, string event, ...)
 			else if ( sent.classname == "minigame_player" && (sf & SNAKE_SF_PLAYERSCORE ) )
 			{
 				WriteLong(MSG_ENTITY,sent.snake_score);
-				WriteByte(MSG_ENTITY,max(0, sent.snake_lives));
+				WriteByte(MSG_ENTITY,max(0, minigame.snake_lives[sent.team]));
 			}
 			else if ( sent.classname == "minigame" && (sf & MINIG_SF_UPDATE ) )
 			{
@@ -625,7 +639,7 @@ void snake_hud_board(vector pos, vector mySize)
 		}
 	}
 
-	if ( (active_minigame.minigame_flags & SNAKE_TURN_LOSS) || (active_minigame.minigame_flags & SNAKE_TURN_WIN) || (minigame_self.snake_lives <= 0) )
+	if ( (active_minigame.minigame_flags & SNAKE_TURN_LOSS) || (active_minigame.minigame_flags & SNAKE_TURN_WIN) || (active_minigame.snake_lives[minigame_self.team] <= 0) )
 	{
 		int scores = minigame_self.snake_score;
 
@@ -637,7 +651,7 @@ void snake_hud_board(vector pos, vector mySize)
 		if(active_minigame.minigame_flags & SNAKE_TURN_WIN)
 		if((active_minigame.minigame_flags & SNAKE_TURN_TEAM) == minigame_self.team)
 			victory_text = "You win!";
-		if(minigame_self.snake_lives <= 0)
+		if(active_minigame.snake_lives[minigame_self.team] <= 0)
 			victory_text = "You ran out of lives!";
 		
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
@@ -705,7 +719,7 @@ void snake_hud_status(vector pos, vector mySize)
 
 			mypos_x += tile_size_x;
 
-			drawstring(mypos,strcat("1UP: ", ftos(e.snake_lives)),tile_size * 0.6,
+			drawstring(mypos,strcat("1UP: ", ftos(active_minigame.snake_lives[e.team])),tile_size * 0.6,
 							 '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
@@ -724,7 +738,7 @@ string snake_turn_to_string(int turnflags)
 		return _("You win!");
 	}
 
-	if(minigame_self.snake_lives <= 0)
+	if(active_minigame.snake_lives[minigame_self.team] <= 0)
 		return _("You ran out of lives!");
 	
 	if ( (snake_find_head(active_minigame, minigame_self.team)).snake_dir == '0 0 0' )
@@ -813,7 +827,7 @@ int snake_client_event(entity minigame, string event, ...)
 			else if ( sent.classname == "minigame_player" && (sf & SNAKE_SF_PLAYERSCORE ) )
 			{
 				sent.snake_score = ReadLong();
-				sent.snake_lives = ReadByte();
+				minigame.snake_lives[sent.team] = ReadByte();
 			}
 
 			return false;
