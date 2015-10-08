@@ -6,8 +6,6 @@
 #include "scores.qh"
 #include "scores_rules.qh"
 
-#include "bot/bot.qh"
-
 #include "command/vote.qh"
 
 #include "mutators/mutators_include.qh"
@@ -246,9 +244,6 @@ void InitGameplayMode()
 		}
 		MUTATOR_ADD(gamemode_invasion);
 	}
-
-	if(teamplay)
-		entcs_init();
 
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");

@@ -4,12 +4,12 @@
 #ifndef SVQC
 float stringwidth_colors(string s, vector theSize)
 {
-	return stringwidth(s, true, theSize);
+    return stringwidth(s, true, theSize);
 }
 
 float stringwidth_nocolors(string s, vector theSize)
 {
-	return stringwidth(s, false, theSize);
+    return stringwidth(s, false, theSize);
 }
 #endif
 
@@ -18,21 +18,174 @@ float stringwidth_nocolors(string s, vector theSize)
 // TODO: macro
 string seconds_tostring(float sec)
 {
-	float minutes;
-	minutes = floor(sec / 60);
-
-	sec -= minutes * 60;
-	return sprintf("%d:%02d", minutes, sec);
+    float minutes = floor(sec / 60);
+    sec -= minutes * 60;
+    return sprintf("%d:%02d", minutes, sec);
 }
 
 int ColorTranslateMode;
 
 string ColorTranslateRGB(string s)
 {
-	if(ColorTranslateMode & 1)
-		return strdecolorize(s);
-	else
-		return s;
+    return (ColorTranslateMode & 1) ? strdecolorize(s) : s;
+}
+
+// color code replace, place inside of sprintf and parse the string... defaults described as constants
+// foreground/normal colors
+string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
+string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
+string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
+string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
+// "kill" colors
+string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
+string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+// background color
+string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
+
+/** color code replace, place inside of sprintf and parse the string */
+string CCR(string input)
+{
+    // See the autocvar declarations in util.qh for default values
+
+    // foreground/normal colors
+    input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
+    input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
+    input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
+    input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
+
+    // "kill" colors
+    input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
+    input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
+    input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
+
+    // background colors
+    input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
+    input = strreplace("^N", "^7", input); // "none"-- reset to white...
+    return input;
+}
+
+bool startsWith(string haystack, string needle)
+{
+    return substring(haystack, 0, strlen(needle)) == needle;
+}
+
+bool startsWithNocase(string haystack, string needle)
+{
+    return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
+}
+
+/** unzone the string, and return it as tempstring. Safe to be called on string_null */
+string fstrunzone(string s)
+{
+    if (!s) return s;
+    string sc = strcat(s, "");
+    strunzone(s);
+    return sc;
+}
+
+string car(string s)
+{
+    int o = strstrofs(s, " ", 0);
+    if (o < 0) return s;
+    return substring(s, 0, o);
+}
+
+string cdr(string s)
+{
+    int o = strstrofs(s, " ", 0);
+    if (o < 0) return string_null;
+    return substring(s, o + 1, strlen(s) - (o + 1));
+}
+
+string substring_range(string s, float b, float e)
+{
+    return substring(s, b, e - b);
+}
+
+string swapwords(string str, float i, float j)
+{
+    float n;
+    string s1, s2, s3, s4, s5;
+    float si, ei, sj, ej, s0, en;
+    n = tokenizebyseparator(str, " "); // must match g_maplist processing in ShuffleMaplist and "shuffle"
+    si = argv_start_index(i);
+    sj = argv_start_index(j);
+    ei = argv_end_index(i);
+    ej = argv_end_index(j);
+    s0 = argv_start_index(0);
+    en = argv_end_index(n-1);
+    s1 = substring_range(str, s0, si);
+    s2 = substring_range(str, si, ei);
+    s3 = substring_range(str, ei, sj);
+    s4 = substring_range(str, sj, ej);
+    s5 = substring_range(str, ej, en);
+    return strcat(s1, s4, s3, s2, s5);
+}
+
+string _shufflewords_str;
+void _shufflewords_swapfunc(float i, float j, entity pass)
+{
+    _shufflewords_str = swapwords(_shufflewords_str, i, j);
+}
+string shufflewords(string str)
+{
+    _shufflewords_str = str;
+    int n = tokenizebyseparator(str, " ");
+    shuffle(n, _shufflewords_swapfunc, NULL);
+    str = _shufflewords_str;
+    _shufflewords_str = string_null;
+    return str;
+}
+
+string unescape(string in)
+{
+    in = strzone(in); // but it doesn't seem to be necessary in my tests at least
+
+    int len = strlen(in);
+    string str = "";
+    for (int i = 0; i < len; ++i) {
+        string s = substring(in, i, 1);
+        if (s == "\\") {
+            s = substring(in, i + 1, 1);
+            if (s == "n")
+                str = strcat(str, "\n");
+            else if (s == "\\")
+                str = strcat(str, "\\");
+            else
+                str = strcat(str, substring(in, i, 2));
+            ++i;
+            continue;
+        }
+        str = strcat(str, s);
+    }
+    strunzone(in);
+    return str;
+}
+
+string strwords(string s, int w)
+{
+    int endpos = 0;
+    for (; w && endpos >= 0; --w) endpos = strstrofs(s, " ", endpos + 1);
+    if (endpos < 0) return s;
+    return substring(s, 0, endpos);
+}
+
+bool strhasword(string s, string w)
+{
+    return strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0;
+}
+
+int u8_strsize(string s)
+{
+    int l = 0;
+    for (int i = 0, c; (c = str2chr(s, i)) > 0; ++i, ++l)
+    {
+        l += (c >= 0x80);
+        l += (c >= 0x800);
+        l += (c >= 0x10000);
+    }
+    return l;
 }
 
 #endif

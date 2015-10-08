@@ -4,9 +4,6 @@
 #include "g_hook.qh"
 #include "g_world.qh"
 
-#include "bot/bot.qh"
-#include "bot/waypoints.qh"
-
 #include "command/common.qh"
 
 #include "mutators/mutators_include.qh"

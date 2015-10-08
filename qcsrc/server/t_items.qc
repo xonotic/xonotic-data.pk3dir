@@ -5,9 +5,6 @@
 #if defined(SVQC)
     #include "_all.qh"
 
-    #include "bot/bot.qh"
-    #include "bot/waypoints.qh"
-
     #include "mutators/mutators_include.qh"
 
     #include "weapons/common.qh"
@@ -476,7 +473,7 @@ void Item_RespawnCountdown (void)
 				{
 					entity wi = get_weaponinfo(self.weapon);
 					if (wi.m_id) {
-						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Weapon);
 						wp.wp_extra = wi.m_id;
 						break;
 					}
@@ -484,7 +481,7 @@ void Item_RespawnCountdown (void)
 				{
 					entity ii = self.itemdef;
 					if (ii.m_id) {
-						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Item);
 						wp.wp_extra = ii.m_id;
 						break;
 					}

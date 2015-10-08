@@ -7,6 +7,8 @@
 
 #include "../lib/_all.inc"
 
+#include "bot/lib/steerlib/steerlib.qh"
+
 #include "anticheat.qc"
 #include "antilag.qc"
 #include "campaign.qc"
@@ -29,7 +31,6 @@
 #include "item_key.qc"
 #include "mapvoting.qc"
 #include "miscfunctions.qc"
-#include "movelib.qc"
 #include "playerdemo.qc"
 #include "portals.qc"
 #include "race.qc"
@@ -37,35 +38,20 @@
 #include "scores.qc"
 #include "scores_rules.qc"
 #include "spawnpoints.qc"
-#include "steerlib.qc"
 #include "sv_main.qc"
 #include "teamplay.qc"
+
+#include "bot/lib/all.inc"
+
 #include "t_halflife.qc"
 #include "t_items.qc"
 #include "t_quake3.qc"
 #include "t_quake.qc"
 
-#include "bot/aim.qc"
-#include "bot/bot.qc"
-#include "bot/navigation.qc"
-#include "bot/scripting.qc"
-#include "bot/waypoints.qc"
-
-#include "bot/havocbot/havocbot.qc"
-#include "bot/havocbot/role_keyhunt.qc"
-#include "bot/havocbot/roles.qc"
-
 #include "command/all.qc"
 
 #include "mutators/mutators_include.qc"
 #include "mutators/mutators.qc"
-
-#include "pathlib/costs.qc"
-#include "pathlib/expandnode.qc"
-#include "pathlib/main.qc"
-#include "pathlib/movenode.qc"
-#include "pathlib/path_waypoint.qc"
-#include "pathlib/utility.qc"
 
 #include "weapons/accuracy.qc"
 #include "weapons/common.qc"
@@ -119,6 +105,8 @@
 #include "../warpzonelib/common.qc"
 #include "../warpzonelib/server.qc"
 #include "../warpzonelib/util_server.qc"
+
+#include "bot/impl.qc"
 
 #if BUILD_MOD
 #include "../../mod/server/progs.inc"

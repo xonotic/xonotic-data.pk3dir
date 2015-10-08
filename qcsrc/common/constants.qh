@@ -134,20 +134,6 @@ const int SPRITERULE_DEFAULT = 0;
 const int SPRITERULE_TEAMPLAY = 1;
 const int SPRITERULE_SPECTATOR = 2;
 
-const int RADARICON_NONE = 0;
-const int RADARICON_FLAG = 1;
-const int RADARICON_FLAGCARRIER = 1;
-const int RADARICON_HERE = 1; // TODO make these 3 and 4, and make images for them
-const int RADARICON_DANGER = 1;
-const int RADARICON_WAYPOINT = 1;
-const int RADARICON_HELPME = 1;
-const int RADARICON_CONTROLPOINT = 1;
-const int RADARICON_GENERATOR = 1;
-const int RADARICON_OBJECTIVE = 1;
-const int RADARICON_DOMPOINT = 1;
-const int RADARICON_POWERUP = 1;
-const int RADARICON_TAGGED = 1;
-
 ///////////////////////////
 // keys pressed
 const int KEY_FORWARD = 1;

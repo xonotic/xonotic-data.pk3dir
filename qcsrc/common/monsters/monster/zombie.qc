@@ -27,6 +27,7 @@ REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
+#include "../../../server/bot/lib/movelib/movelib.qh"
 float autocvar_g_monster_zombie_health;
 float autocvar_g_monster_zombie_damageforcescale = 0.55;
 float autocvar_g_monster_zombie_attack_melee_damage;

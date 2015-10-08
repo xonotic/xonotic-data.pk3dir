@@ -20,8 +20,7 @@
 #include "campaign.qh"
 #include "command/common.qh"
 
-#include "bot/bot.qh"
-#include "bot/navigation.qh"
+#include "bot/api.qh"
 
 #include "../common/vehicles/all.qh"
 
@@ -1216,7 +1215,7 @@ void ClientConnect (void)
 	else
 		stuffcmd(self, "set _teams_available 0\n");
 
-	attach_entcs();
+	attach_entcs(self);
 
 	bot_relinkplayerlist();
 
@@ -1302,8 +1301,7 @@ void ClientDisconnect (void)
 
 	bot_clientdisconnect();
 
-	if(self.entcs)
-		detach_entcs();
+	detach_entcs(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));

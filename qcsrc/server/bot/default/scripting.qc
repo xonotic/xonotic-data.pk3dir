@@ -1,7 +1,4 @@
 #include "scripting.qh"
-#include "../_all.qh"
-
-#include "bot.qh"
 
 .float bot_cmdqueuebuf_allocated;
 .float bot_cmdqueuebuf;
@@ -1167,6 +1164,8 @@ void bot_resetqueues()
 
 	bot_barriertime = time;
 }
+
+bool autocvar_g_debug_bot_commands;
 
 // Here we map commands to functions and deal with complex interactions between commands and execution states
 // NOTE: Of course you need to include your commands here too :)

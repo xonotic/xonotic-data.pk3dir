@@ -1109,6 +1109,8 @@ void PM_check_frozen(void)
 	}
 }
 
+.float ladder_time;
+
 void PM_check_hitground()
 {SELFPARAM();
 #ifdef SVQC
@@ -1299,6 +1301,8 @@ void PM_swim(float maxspd_mod)
 	PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
 	PM_ClientMovement_Move();
 }
+
+.entity ladder_entity;
 
 void PM_ladder(float maxspd_mod)
 {SELFPARAM();
