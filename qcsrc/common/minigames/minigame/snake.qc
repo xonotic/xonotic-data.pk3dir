@@ -27,6 +27,8 @@ int autocvar_sv_minigames_snake_lives = 3;
 .float snake_delay;
 .vector snake_dir;
 
+.entity snake_next, snake_last, snake_prev;
+
 .bool snake_tail;
 
 .int snake_lives[SNAKE_TEAMS + 1];
@@ -179,6 +181,9 @@ void minigame_setup_snake(entity minigame, int pteam)
 	piece.team = pteam;
 	piece.netname = strzone(RandomSelection_chosen_string);
 	piece.cnt = 1;
+	piece.snake_next = world;
+	piece.snake_prev = world;
+	piece.snake_last = piece;
 	piece.think = snake_head_think;
 	piece.snake_delay = autocvar_sv_minigames_snake_delay_initial;
 	piece.nextthink = time + 0.1;
@@ -223,43 +228,22 @@ void snake_add_score(entity minigame, int pteam, int thescore)
 
 void snake_move_body(entity minigame, entity head, bool ate_mouse)
 {
-	entity tail = world;
-	string tailpos = string_null;
-	vector taildir = '0 0 0';
-
-	int i, pieces = 0;
-	for(i = (SNAKE_NUM_CNT * SNAKE_LET_CNT); i >= 2; --i)
+	for(entity e = head.snake_last; e; e = e.snake_prev)
 	{
-		entity piece = snake_find_cnt(minigame, head.team, i);
-		entity nextpiece = snake_find_cnt(minigame, head.team, i - 1);
-		if(!piece)
-			continue;
+		if(!e || e == head) { break; }
 
-		pieces++;
+		entity nextpiece = e.snake_prev; // can be head
 
-		if(!tail)
-		{
-			tail = piece;
-			tailpos = piece.netname;
-			taildir = piece.snake_dir;
-		}
-
-		if(piece.netname) { strunzone(piece.netname); }
-		piece.netname = strzone(nextpiece.netname);
-		piece.snake_dir = nextpiece.snake_dir;
-		minigame_server_sendflags(piece, MINIG_SF_ALL);
+		if(e.netname) { strunzone(e.netname); }
+		e.netname = strzone(nextpiece.netname);
+		e.snake_dir = nextpiece.snake_dir;
+		minigame_server_sendflags(e, MINIG_SF_UPDATE);
 	}
 
-	// just a head
-	if(!pieces)
+	if(ate_mouse)
 	{
-		tail = head;
-		tailpos = head.netname;
-		taildir = head.snake_dir;
-	}
+		entity tail = head.snake_last;
 
-	if(tail && ate_mouse)
-	{
 		tail.snake_tail = false;
 
 		int newcnt = tail.cnt + 1;
@@ -269,12 +253,18 @@ void snake_move_body(entity minigame, entity head, bool ate_mouse)
 		entity piece = msle_spawn(minigame,"minigame_board_piece");
 		piece.cnt = newcnt;
 		piece.team = head.team;
-		piece.snake_dir = taildir;
+		piece.snake_prev = tail;
+		piece.snake_dir = tail.snake_dir;
+		piece.snake_next = world;
 		piece.snake_tail = true;
-		piece.netname = strzone(tailpos);
-		minigame_server_sendflags(piece,MINIG_SF_ALL);
+		piece.netname = strzone(tail.netname);
 
-		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
+		tail.snake_next = piece;
+		head.snake_last = piece;
+
+		minigame_server_sendflags(piece,MINIG_SF_UPDATE);
+
+		//minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 	}
 }
 
@@ -352,7 +342,7 @@ void snake_move_head(entity minigame, entity head)
 
 	if(head.netname) { strunzone(head.netname); }
 	head.netname = strzone(newpos);
-	minigame_server_sendflags(head,MINIG_SF_ALL);
+	minigame_server_sendflags(head,MINIG_SF_UPDATE);
 
 	// above check makes sure it's not our team
 	if(hit.cnt)
@@ -488,10 +478,21 @@ int snake_server_event(entity minigame, string event, ...)
 			int sf = ...(1,int);
 			if ( sent.classname == "minigame_board_piece" && (sf & MINIG_SF_UPDATE) )
 			{
+				int letter = minigame_tile_letter(sent.netname);
+				int number = minigame_tile_number(sent.netname);
+
+				WriteByte(MSG_ENTITY,letter);
+				WriteByte(MSG_ENTITY,number);
+
 				WriteByte(MSG_ENTITY,sent.cnt);
 				WriteByte(MSG_ENTITY,sent.snake_tail);
-				WriteCoord(MSG_ENTITY,sent.snake_dir_x);
-				WriteCoord(MSG_ENTITY,sent.snake_dir_y);
+
+				int dx = sent.snake_dir_x;
+				int dy = sent.snake_dir_y;
+				if(dx == -1) dx = 2;
+				if(dy == -1) dy = 2;
+				WriteByte(MSG_ENTITY,dx);
+				WriteByte(MSG_ENTITY,dy);
 			}
 			else if ( sent.classname == "minigame_player" && (sf & SNAKE_SF_PLAYERSCORE ) )
 			{
@@ -817,10 +818,22 @@ int snake_client_event(entity minigame, string event, ...)
 			{
 				if(sf & MINIG_SF_UPDATE)
 				{
+					int letter = ReadByte();
+					int number = ReadByte();
+					if(sent.netname) { strunzone(sent.netname); }
+					sent.netname = strzone(minigame_tile_buildname(letter, number));
+
 					sent.cnt = ReadByte();
 					sent.snake_tail = ReadByte();
-					sent.snake_dir_x = ReadCoord();
-					sent.snake_dir_y = ReadCoord();
+
+					int dx = ReadByte();
+					int dy = ReadByte();
+
+					if(dx == 2) dx = -1;
+					if(dy == 2) dy = -1;
+
+					sent.snake_dir_x = dx;
+					sent.snake_dir_y = dy;
 					sent.snake_dir_z = 0;
 				}
 			}
