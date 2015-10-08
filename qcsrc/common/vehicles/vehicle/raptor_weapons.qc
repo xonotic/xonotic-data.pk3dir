@@ -73,7 +73,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, bool fire1, bo
         vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
                                org, normalize(dir + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                                autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-                               DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, veh ? veh : player);
+                               DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, true, true, player);
         weapon_thinkf(player, WFRAME_FIRE1, 0, w_ready);
     }
 }
