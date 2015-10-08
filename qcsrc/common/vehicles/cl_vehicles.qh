@@ -1,6 +1,9 @@
 #ifndef CL_VEHICLES_H
 #define CL_VEHICLES_H
 
+vector hudSize;
+vector hudPos;
+
 void Net_AuXair2(float bIsNew);
 
 void Net_VehicleSetup();

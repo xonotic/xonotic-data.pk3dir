@@ -126,8 +126,6 @@ void Vehicles_drawHUD(
 		return;
 
 	// Initialize
-	vector hudSize = '0 0 0';
-	vector hudPos  = '0 0 0';
 	vector tmpSize = '0 0 0';
 	vector tmpPos  = '0 0 0';
 
@@ -292,25 +290,6 @@ void Vehicles_drawHUD(
 		else
 			drawpic_skin(tmpPos, iconAmmo2, tmpSize, '1 1 1', hudAlpha * 0.2, DRAWFLAG_NORMAL);
 	}
-
-	// Bumblebee gunner crosshairs
-	if(hud == VEH_BUMBLEBEE.vehicleid)
-	{
-		tmpSize = '1 1 1' * hud_fontsize;
-		tmpPos.x = hudPos.x + hudSize.x * (520/768);
-
-		if(!AuxiliaryXhair[1].draw2d)
-		{
-			tmpPos.y = hudPos.y + hudSize.y * (96/256) - tmpSize.y;
-			drawstring(tmpPos, _("No right gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
-		}
-
-		if(!AuxiliaryXhair[2].draw2d)
-		{
-			tmpPos.y = hudPos.y + hudSize.y * (160/256);
-			drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
-		}
-	}
 }
 
 void Vehicles_drawCrosshair(string crosshair)
@@ -318,59 +297,6 @@ void Vehicles_drawCrosshair(string crosshair)
 	SELFPARAM();
 	vector tmpSize = '0 0 0';
 	vector tmpPos  = '0 0 0';
-
-	// Raptor bomb crosshair
-	if(hud == VEH_RAPTOR.vehicleid && weapon2mode != RSM_FLARE)
-	{
-		vector where;
-
-		if(!dropmark)
-		{
-			dropmark = spawn();
-			dropmark.owner = self;
-			dropmark.gravity = 1;
-		}
-
-		float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
-		if(reload2 == 1)
-		{
-			setorigin(dropmark, pmove_org);
-			dropmark.velocity = pmove_vel;
-			tracetoss(dropmark, self);
-
-			where = project_3d_to_2d(trace_endpos);
-
-			setorigin(dropmark, trace_endpos);
-			tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
-
-			if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
-			{
-				where.x -= tmpSize.x * 0.5;
-				where.y -= tmpSize.y * 0.5;
-				where.z = 0;
-				drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
-				drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
-			}
-			dropmark.cnt = time + 5;
-		}
-		else
-		{
-			if(dropmark.cnt > time)
-			{
-				where = project_3d_to_2d(dropmark.origin);
-				tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
-
-				if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
-				{
-					where.x -= tmpSize.x * 0.5;
-					where.y -= tmpSize.y * 0.5;
-					where.z = 0;
-					drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
-					drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
-				}
-			}
-		}
-	}
 
 	// Crosshair
 	if(crosshair)
