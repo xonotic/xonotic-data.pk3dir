@@ -7,28 +7,86 @@ const vector eZ = '0 0 1';
 
 vector randompos(vector m1, vector m2)
 {
-	vector v;
-	m2 = m2 - m1;
-	v_x = m2_x * random() + m1_x;
-	v_y = m2_y * random() + m1_y;
-	v_z = m2_z * random() + m1_z;
-	return	v;
+    vector v;
+    m2 = m2 - m1;
+    v_x = m2_x * random() + m1_x;
+    v_y = m2_y * random() + m1_y;
+    v_z = m2_z * random() + m1_z;
+    return	v;
 }
 
 float vlen2d(vector v)
 {
-	return sqrt(v.x * v.x + v.y * v.y);
+    return sqrt(v.x * v.x + v.y * v.y);
 }
 
 float vlen_maxnorm2d(vector v)
 {
-	return max(v.x, v.y, -v.x, -v.y);
+    return max(v.x, v.y, -v.x, -v.y);
 }
 
 float vlen_minnorm2d(vector v)
 {
-	return min(max(v.x, -v.x), max(v.y, -v.y));
+    return min(max(v.x, -v.x), max(v.y, -v.y));
 }
 
+float dist_point_line(vector p, vector l0, vector ldir)
+{
+    ldir = normalize(ldir);
+
+    // remove the component in line direction
+    p = p - (p * ldir) * ldir;
+
+    // vlen of the remaining vector
+    return vlen(p);
+}
+
+/** requires that m2>m1 in all coordinates, and that m4>m3 */
+float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;}
+
+/** requires the same as boxesoverlap, but is a stronger condition */
+float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z;}
+
+
+vector vec2(vector v)
+{
+    v.z = 0;
+    return v;
+}
+
+vector vec3(float x, float y, float z)
+{
+    vector v; v.x = x; v.y = y; v.z = z;
+    return v;
+}
+
+#ifndef MENUQC
+vector get_corner_position(entity box, int corner)
+{
+    switch (corner) {
+        case 1: return vec3(box.absmin.x, box.absmin.y, box.absmin.z);
+        case 2: return vec3(box.absmax.x, box.absmin.y, box.absmin.z);
+        case 3: return vec3(box.absmin.x, box.absmax.y, box.absmin.z);
+        case 4: return vec3(box.absmin.x, box.absmin.y, box.absmax.z);
+        case 5: return vec3(box.absmax.x, box.absmax.y, box.absmin.z);
+        case 6: return vec3(box.absmin.x, box.absmax.y, box.absmax.z);
+        case 7: return vec3(box.absmax.x, box.absmin.y, box.absmax.z);
+        case 8: return vec3(box.absmax.x, box.absmax.y, box.absmax.z);
+        default: return '0 0 0';
+    }
+}
+
+vector NearestPointOnBox(entity box, vector org)
+{
+    vector m1 = box.mins + box.origin;
+    vector m2 = box.maxs + box.origin;
+
+    vector ret;
+    ret.x = bound(m1.x, org.x, m2.x);
+    ret.y = bound(m1.y, org.y, m2.y);
+    ret.z = bound(m1.z, org.z, m2.z);
+    return ret;
+}
+#endif
 
 #endif

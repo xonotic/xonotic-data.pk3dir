@@ -3,6 +3,7 @@
 #include "../warpzonelib/mathlib.qc"
 
 #include "accumulate.qh"
+#include "bits.qh"
 #include "counting.qh"
 #include "cvar.qh"
 #include "defer.qh"
@@ -18,8 +19,8 @@
 #include "oo.qh"
 #include "p2mathlib.qc"
 #include "player.qh"
-#include "prandom.qc"
 #include "progname.qh"
+#include "random.qc"
 #include "registry.qh"
 #include "replicate.qh"
 #include "sort.qh"

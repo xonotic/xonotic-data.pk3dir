@@ -439,7 +439,7 @@ void W_Shockwave_Attack(void)
 					);
 
 				// figure out the direction of force
-				vel = normalize(combine_to_vector(head.velocity.x, head.velocity.y, 0));
+				vel = normalize(vec3(head.velocity.x, head.velocity.y, 0));
 				vel *=
 					(
 						bound(0, (vlen(vel) / autocvar_sv_maxspeed), 1)
