@@ -1,5 +1,3 @@
-#include "../_all.qh"
-
 #include "pathlib.qh"
 #include "utility.qh"
 

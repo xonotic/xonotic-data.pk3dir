@@ -1,0 +1,96 @@
+#ifndef BOT_API_H
+#define BOT_API_H
+
+#include "../defs.qh"
+#include "../autocvars.qh"
+#include "../../common/weapons/all.qh"
+#include "../../common/teams.qh"
+#include "../teamplay.qh"
+#include "../miscfunctions.qh"
+#include "../campaign.qh"
+#include "../cl_client.qh"
+#include "../mutators/mutators_include.qh"
+#include "../constants.qh"
+#include "../weapons/weaponsystem.qh"
+
+const int WAYPOINTFLAG_GENERATED = 0x800000;
+
+int autocvar_bot_vs_human;
+int autocvar_bot_number;
+bool autocvar_bot_sound_monopoly;
+float autocvar_bot_ai_strategyinterval;
+
+float bot_custom_weapon;
+float bot_weapons_close[Weapons_MAX];
+float bot_weapons_far[Weapons_MAX];
+float bot_weapons_mid[Weapons_MAX];
+float currentbots;
+float skill;
+
+.float bot_attack;
+.float bot_dodgerating;
+.float bot_dodge;
+.float bot_forced_team;
+.float bot_moveskill; // moving technique
+.float bot_pickup;
+.float(entity player, entity item) bot_pickupevalfunc;
+.float bot_strategytime;
+.string cleanname;
+.float havocbot_role_timeout;
+.float isbot; // true if this client is actually a bot
+.float lastteleporttime;
+.float navigation_hasgoals;
+.float nearestwaypointtimeout;
+.entity nearestwaypoint;
+.float speed;
+.entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
+.entity wp16, wp17, wp18, wp19, wp20, wp21, wp22, wp23, wp24, wp25, wp26, wp27, wp28, wp29, wp30, wp31;
+.float wp00mincost, wp01mincost, wp02mincost, wp03mincost, wp04mincost, wp05mincost, wp06mincost, wp07mincost;
+.float wp08mincost, wp09mincost, wp10mincost, wp11mincost, wp12mincost, wp13mincost, wp14mincost, wp15mincost;
+.float wp16mincost, wp17mincost, wp18mincost, wp19mincost, wp20mincost, wp21mincost, wp22mincost, wp23mincost;
+.float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
+.float wpconsidered;
+.float wpcost;
+.int wpflags;
+
+bool bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
+void bot_clientconnect();
+void bot_clientdisconnect();
+void bot_cmdhelp(string scmd);
+void bot_endgame();
+bool bot_fixcount();
+void bot_list_commands();
+void bot_queuecommand(entity bot, string cmdstring);
+void bot_relinkplayerlist();
+void bot_resetqueues();
+void bot_serverframe();
+bool bot_shouldattack(entity e);
+void bot_think();
+
+entity find_bot_by_name(string name);
+entity find_bot_by_number(float number);
+
+void havocbot_goalrating_controlpoints(float ratingscale, vector org, float sradius);
+void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius);
+void havocbot_goalrating_items(float ratingscale, vector org, float sradius);
+
+entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
+void navigation_goalrating_end();
+void navigation_goalrating_start();
+void navigation_markroutes(entity fixed_source_waypoint);
+void navigation_markroutes_inverted(entity fixed_source_waypoint);
+void navigation_routerating(entity e, float f, float rangebias);
+
+bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
+
+void waypoint_remove(entity e);
+void waypoint_saveall();
+void waypoint_schedulerelinkall();
+void waypoint_schedulerelink(entity wp);
+void waypoint_spawnforitem(entity e);
+void waypoint_spawnforitem_force(entity e, vector org);
+void waypoint_spawnforteleporter(entity e, vector destination, float timetaken);
+void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken);
+entity waypoint_spawn(vector m1, vector m2, float f);
+
+#endif

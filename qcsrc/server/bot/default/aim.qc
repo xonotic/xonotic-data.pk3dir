@@ -1,9 +1,4 @@
 #include "aim.qh"
-#include "../_all.qh"
-
-#include "bot.qh"
-
-#include "../mutators/mutators_include.qh"
 
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,

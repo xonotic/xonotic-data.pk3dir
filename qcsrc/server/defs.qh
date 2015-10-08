@@ -45,7 +45,6 @@ float sv_clones;
 float sv_foginterval;
 
 float player_count;
-float currentbots;
 float bots_would_leave;
 
 void UpdateFrags(entity player, float f);
