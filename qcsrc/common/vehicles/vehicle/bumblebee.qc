@@ -953,16 +953,18 @@ void CSQC_BUMBLE_GUN_HUD()
 {
 	Vehicles_drawHUD("vehicle_gunner", "vehicle_gunner_weapon1", string_null,
 					 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-					 string_null, '0 0 0',
-					 string_null);
+					 string_null, '0 0 0');
 }
 
 		METHOD(Bumblebee, vr_hud, void(Bumblebee thisveh))
 		{
 			Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 vCROSS_HEAL);
+							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color);
+		}
+		METHOD(Bumblebee, vr_crosshair, void(Bumblebee thisveh))
+		{
+			Vehicles_drawCrosshair(vCROSS_HEAL);
 		}
 		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
 		{

@@ -774,6 +774,12 @@ spawnfunc(vehicle_raptor)
 
 		METHOD(Raptor, vr_hud, void(Raptor thisveh))
 		{
+			Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
+							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+		}
+		METHOD(Raptor, vr_crosshair, void(Raptor thisveh))
+		{
 			string crosshair;
 
 			switch(weapon2mode)
@@ -783,10 +789,7 @@ spawnfunc(vehicle_raptor)
 				default:        crosshair = vCROSS_BURST;
 			}
 
-			Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-							 crosshair);
+			Vehicles_drawCrosshair(crosshair);
 		}
 		METHOD(Raptor, vr_setup, void(Raptor thisveh))
 		{

@@ -646,6 +646,12 @@ float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 		METHOD(Spiderbot, vr_hud, void(Spiderbot thisveh))
 		{
+			Vehicles_drawHUD(VEH_SPIDERBOT.m_icon, "vehicle_spider_weapon1", "vehicle_spider_weapon2",
+							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+		}
+		METHOD(Spiderbot, vr_crosshair, void(Spiderbot thisveh))
+		{
 			string crosshair;
 
 			switch(weapon2mode)
@@ -656,10 +662,7 @@ float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 				default:             crosshair = vCROSS_BURST;
 			}
 
-			Vehicles_drawHUD(VEH_SPIDERBOT.m_icon, "vehicle_spider_weapon1", "vehicle_spider_weapon2",
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-							 crosshair);
+			Vehicles_drawCrosshair(crosshair);
 		}
 		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh))
 		{

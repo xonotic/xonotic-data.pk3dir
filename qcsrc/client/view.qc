@@ -457,6 +457,31 @@ bool WantEventchase()
 	return false;
 }
 
+void HUD_Vehicle()
+{
+	if(!hud || intermission)
+		return;
+
+	if(hud == HUD_BUMBLEBEE_GUN)
+		CSQC_BUMBLE_GUN_HUD();
+	else {
+		Vehicle info = get_vehicleinfo(hud);
+		info.vr_hud(info);
+	}
+}
+
+void HUD_Crosshair_Vehicle()
+{
+	if(!hud || intermission)
+		return;
+
+	if(hud != HUD_BUMBLEBEE_GUN)
+	{
+		Vehicle info = get_vehicleinfo(hud);
+		info.vr_crosshair(info);
+	}
+}
+
 vector damage_blurpostprocess, content_blurpostprocess;
 
 float unaccounted_damage = 0;
@@ -484,7 +509,7 @@ void UpdateDamage()
 	spectatee_status_prev = spectatee_status;
 }
 
-void UpdateHitsound()
+void HitSound()
 {
 	// varying sound pitch
 
@@ -533,34 +558,13 @@ void UpdateHitsound()
 	}
 }
 
-void UpdateCrosshair()
+void HUD_Crosshair()
 {SELFPARAM();
 	static float rainbow_last_flicker;
     static vector rainbow_prev_color;
 	entity e = self;
 	float f, i, j;
 	vector v;
-	if(getstati(STAT_FROZEN))
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-	else if (getstatf(STAT_HEALING_ORB)>time)
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, NADE_TYPE_HEAL.m_color, autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
-	if(!intermission)
-	if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
-	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * getstatf(STAT_NADE_TIMER)) - ('0 1 1' * getstatf(STAT_NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-	else if(getstatf(STAT_REVIVE_PROGRESS))
-	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
-	}
-
-	if(autocvar_r_letterbox == 0)
-		if(autocvar_viewsize < 120)
-			CSQC_common_hud();
-
-	// crosshair goes VERY LAST
 	if(!scoreboard_active && !camera_active && intermission != 2 &&
 		spectatee_status != -1 && hud == HUD_NORMAL && !csqcplayer.viewloc &&
 		!HUD_MinigameMenu_IsOpened() )
@@ -1005,6 +1009,35 @@ void UpdateCrosshair()
 		wcross_resolution_goal_prev = 0;
 		wcross_resolution_goal_prev_prev = 0;
 	}
+}
+
+void HUD_Draw()
+{
+	if(getstati(STAT_FROZEN))
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+	else if (getstatf(STAT_HEALING_ORB)>time)
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, NADE_TYPE_HEAL.m_color, autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
+	if(!intermission)
+	if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
+	{
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * getstatf(STAT_NADE_TIMER)) - ('0 1 1' * getstatf(STAT_NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+	}
+	else if(getstatf(STAT_REVIVE_PROGRESS))
+	{
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+	}
+
+	if(autocvar_r_letterbox == 0)
+		if(autocvar_viewsize < 120)
+			CSQC_common_hud();
+
+	// crosshair goes VERY LAST
+	UpdateDamage();
+	HUD_Crosshair();
+	HUD_Crosshair_Vehicle();
+	HitSound();
 }
 
 bool ov_enabled;
@@ -1810,9 +1843,7 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
-	UpdateDamage();
-	UpdateCrosshair();
-	UpdateHitsound();
+	HUD_Draw();
 
 	if(NextFrameCommand)
 	{
@@ -1856,14 +1887,6 @@ void CSQC_UpdateView(float w, float h)
 	else
 		HUD_Radar_Mouse();
 
-    if(hud && !intermission)
-    if(hud == HUD_BUMBLEBEE_GUN)
-    	CSQC_BUMBLE_GUN_HUD();
-    else {
-    	Vehicle info = get_vehicleinfo(hud);
-		info.vr_hud(info);
-	}
-
 	cl_notice_run();
 
 	// let's reset the view back to normal for the end
@@ -1871,13 +1894,13 @@ void CSQC_UpdateView(float w, float h)
 	setproperty(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
 }
 
-
 void CSQC_common_hud(void)
 {
 	if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
 		Accuracy_LoadLevels();
 
 	HUD_Main(); // always run these functions for alpha checks
+	HUD_Vehicle();
 	HUD_DrawScoreboard();
 
 	// scoreboard/accuracy, map/gametype voting screen

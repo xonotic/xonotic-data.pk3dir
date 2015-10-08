@@ -119,12 +119,9 @@ void Vehicles_drawHUD(
 	string iconAmmo1,
 	vector colorAmmo1,
 	string iconAmmo2,
-	vector colorAmmo2,
-	string crosshair)
-{SELFPARAM();
-	if(autocvar_r_letterbox)
-		return;
-
+	vector colorAmmo2)
+{
+	SELFPARAM();
 	if(scoreboard_showscores)
 		return;
 
@@ -314,6 +311,13 @@ void Vehicles_drawHUD(
 			drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 		}
 	}
+}
+
+void Vehicles_drawCrosshair(string crosshair)
+{
+	SELFPARAM();
+	vector tmpSize = '0 0 0';
+	vector tmpPos  = '0 0 0';
 
 	// Raptor bomb crosshair
 	if(hud == VEH_RAPTOR.vehicleid && weapon2mode != RSM_FLARE)
@@ -327,6 +331,7 @@ void Vehicles_drawHUD(
 			dropmark.gravity = 1;
 		}
 
+		float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
 		if(reload2 == 1)
 		{
 			setorigin(dropmark, pmove_org);
