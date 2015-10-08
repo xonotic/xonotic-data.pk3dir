@@ -92,9 +92,9 @@ float buff_Waypoint_visible_for_player(entity plr)
 void buff_Waypoint_Spawn(entity e)
 {
 	entity buff = buff_FirstFromFlags(e.buffs);
-	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, true, RADARICON_POWERUP);
+	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, true, RADARICON_Buff);
 	wp.wp_extra = buff.m_id;
-	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
+	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_Buff, e.glowmod);
 	e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
 

@@ -99,7 +99,7 @@ void turret_draw2d(entity this)
 
 	string spriteimage = self.netname;
 	float a = self.alpha * autocvar_hud_panel_fg_alpha;
-	vector rgb = spritelookupcolor(spriteimage, self.teamradar_color);
+	vector rgb = spritelookupcolor(self, spriteimage, self.teamradar_color);
 
 
 	if(self.maxdistance > waypointsprite_normdistance)
