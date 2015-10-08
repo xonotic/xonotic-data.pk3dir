@@ -1027,7 +1027,6 @@ void CSQC_UpdateView(float w, float h)
 	entity e;
 	float fov;
 	float f;
-	int i;
 	vector vf_size, vf_min;
 	float a;
 
@@ -1078,8 +1077,7 @@ void CSQC_UpdateView(float w, float h)
 	if(myteam != prev_myteam)
 	{
 		myteamcolors = colormapPaletteColor(myteam, 1);
-		for(i = 0; i < HUD_PANEL_NUM; ++i)
-			hud_panel[i].update_time = time;
+		FOREACH(hud_panels, true, LAMBDA(it.update_time = time));
 		prev_myteam = myteam;
 	}
 
