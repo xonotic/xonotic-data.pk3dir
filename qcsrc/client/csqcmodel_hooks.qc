@@ -401,11 +401,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	if(self.tag_entity && wasfreed(self.tag_entity))
 		self.tag_entity = world;
 
-	if(self.viewloc && wasfreed(self.viewloc))
-		self.viewloc = world;
-
-	if(self.viewloc.entnum != self.tag_networkviewloc)
-		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+	viewloc_SetTags();
 
 	MUTATOR_CALLHOOK(TagIndex_Update, self);
 
