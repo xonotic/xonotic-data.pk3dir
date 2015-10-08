@@ -10,6 +10,7 @@
 #include "../common/effects/effects.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/trigger/viewloc.qh"
+#include "../common/viewloc.qh"
 
 #include "mutators/events.qh"
 
