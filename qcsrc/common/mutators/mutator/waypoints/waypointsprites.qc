@@ -210,8 +210,8 @@ void Ent_WaypointSprite()
     if (sendflags & 32)
     {
         int f = ReadByte();
-        self.teamradar_icon = (f & 0x7F);
-        if (f & 0x80)
+        self.teamradar_icon = f & BITS(7);
+        if (f & BIT(7))
         {
             self.(teamradar_times[self.teamradar_time_index]) = time;
             self.teamradar_time_index = (self.teamradar_time_index + 1) % MAX_TEAMRADAR_TIMES;
@@ -242,11 +242,11 @@ float spritelookupblinkvalue(string s)
     return 1;
 }
 
-vector spritelookupcolor(string s, vector def)
-{SELFPARAM();
-    if (s == WP_Weapon.netname) return get_weaponinfo(self.wp_extra).wpcolor;
-    if (s == WP_Item.netname) return Items[self.wp_extra].m_color;
-    if (s == WP_Buff.netname) return Buffs[self.wp_extra].m_color;
+vector spritelookupcolor(entity this, string s, vector def)
+{
+    if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return get_weaponinfo(this.wp_extra).wpcolor;
+    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return Items[this.wp_extra].m_color;
+    if (s == WP_Buff.netname    || s == RADARICON_Buff.netname) return Buffs[this.wp_extra].m_color;
     return def;
 }
 
@@ -529,7 +529,7 @@ void Draw_WaypointSprite(entity this)
     else if (self.maxdistance > 0)
         a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
-    vector rgb = spritelookupcolor(spriteimage, self.teamradar_color);
+    vector rgb = spritelookupcolor(self, spriteimage, self.teamradar_color);
     if (rgb == '0 0 0')
     {
         self.teamradar_color = '1 0 1';
@@ -827,10 +827,11 @@ void WaypointSprite_UpdateRule(entity e, float t, float r)
     e.SendFlags |= 1;
 }
 
-void WaypointSprite_UpdateTeamRadar(entity e, float icon, vector col)
+void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col)
 {
     // no check, as this is never called without doing an actual change (usually only once)
-    e.cnt = (icon & 0x7F) | (e.cnt & 0x80);
+    int i = icon.m_id;
+    e.cnt = (e.cnt & BIT(7)) | (i & BITS(7));
     e.colormod = col;
     e.SendFlags |= 32;
 }
@@ -841,7 +842,7 @@ void WaypointSprite_Ping(entity e)
     if (time < e.waypointsprite_pingtime) return;
     e.waypointsprite_pingtime = time + 0.3;
     // ALWAYS sends (this causes a radar circle), thus no check
-    e.cnt |= 0x80;
+    e.cnt |= BIT(7);
     e.SendFlags |= 32;
 }
 
@@ -1001,7 +1002,7 @@ entity WaypointSprite_Spawn(
     entity showto, float t, // show to whom? Use a flag to indicate a team
     entity own, .entity ownfield, // remove when own gets killed
     float hideable, // true when it should be controlled by cl_hidewaypoints
-    float icon // initial icon
+    entity icon // initial icon
 )
 {
     entity wp = new(sprite_waypoint);
@@ -1033,7 +1034,7 @@ entity WaypointSprite_Spawn(
     wp.customizeentityforclient = WaypointSprite_Customize;
     wp.waypointsprite_visible_for_player = WaypointSprite_visible_for_player;
     wp.reset2 = WaypointSprite_Reset;
-    wp.cnt = icon;
+    wp.cnt = icon.m_id;
     wp.colormod = spr.m_color;
     Net_LinkEntity(wp, false, 0, WaypointSprite_SendEntity);
     return wp;
@@ -1044,7 +1045,7 @@ entity WaypointSprite_SpawnFixed(
     vector ofs,
     entity own,
     .entity ownfield,
-    float icon // initial icon
+    entity icon // initial icon
 )
 {
     return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, true, icon);
@@ -1054,7 +1055,7 @@ entity WaypointSprite_DeployFixed(
     entity spr,
     float limited_range,
     vector ofs,
-    float icon // initial icon
+    entity icon // initial icon
 )
 {SELFPARAM();
     float t;
@@ -1073,7 +1074,7 @@ entity WaypointSprite_DeployFixed(
 entity WaypointSprite_DeployPersonal(
     entity spr,
     vector ofs,
-    float icon // initial icon
+    entity icon // initial icon
 )
 {SELFPARAM();
     return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, false, icon);
@@ -1082,7 +1083,7 @@ entity WaypointSprite_DeployPersonal(
 entity WaypointSprite_Attach(
     entity spr,
     float limited_range,
-    float icon // initial icon
+    entity icon // initial icon
 )
 {SELFPARAM();
     float t;
@@ -1103,7 +1104,7 @@ entity WaypointSprite_Attach(
 entity WaypointSprite_AttachCarrier(
     entity spr,
     entity carrier,
-    float icon // initial icon and color
+    entity icon // initial icon and color
 )
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached

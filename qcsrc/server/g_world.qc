@@ -997,22 +997,6 @@ string Map_Filename(float position)
 	return strcat("maps/", argv(position), ".bsp");
 }
 
-string strwords(string s, float w)
-{
-	float endpos;
-	for(endpos = 0; w && endpos >= 0; --w)
-		endpos = strstrofs(s, " ", endpos + 1);
-	if(endpos < 0)
-		return s;
-	else
-		return substring(s, 0, endpos);
-}
-
-float strhasword(string s, string w)
-{
-	return strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0;
-}
-
 void Map_MarkAsRecent(string m)
 {
 	cvar_set("g_maplist_mostrecent", strwords(strcat(m, " ", autocvar_g_maplist_mostrecent), max(0, autocvar_g_maplist_mostrecent_count)));

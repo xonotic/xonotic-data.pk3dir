@@ -529,7 +529,7 @@ void vehicles_showwp()
 		rgb = Team_ColorRGB(self.team);
 	else
 		rgb = '1 1 1';
-	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Vehicle);
 	wp.colormod = rgb;
 	if(self.waypointsprite_attached)
 	{

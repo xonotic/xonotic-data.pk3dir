@@ -247,9 +247,6 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_invasion);
 	}
 
-	if(teamplay)
-		entcs_init();
-
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
 

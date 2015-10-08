@@ -16,6 +16,7 @@
 #include "../common/mapinfo.qh"
 #include "../common/nades/all.qh"
 
+#include "../common/mutators/mutator/waypoints/all.qh"
 #include "../server/mutators/gamemode_ctf.qh"
 
 #include "../common/stats.qh"
@@ -2240,8 +2241,8 @@ void HUD_Radar(void)
 				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
 			}
 		}
-
-		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, panel_fg_alpha);
+		entity icon = RadarIcons[tm.teamradar_icon];
+		draw_teamradar_icon(tm.origin, icon, tm, spritelookupcolor(tm, icon.netname, tm.teamradar_color), panel_fg_alpha);
 	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{

@@ -118,4 +118,49 @@ STATIC_INIT(RegisterTempEntities_renumber) {
     }
 }
 
+#ifndef MENUQC
+#ifdef CSQC
+int ReadInt24_t()
+{
+    int v = ReadShort() << 8; // note: this is signed
+    v += ReadByte(); // note: this is unsigned
+    return v;
+}
+vector ReadInt48_t()
+{
+    vector v;
+    v.x = ReadInt24_t();
+    v.y = ReadInt24_t();
+    v.z = 0;
+    return v;
+}
+vector ReadInt72_t()
+{
+    vector v;
+    v.x = ReadInt24_t();
+    v.y = ReadInt24_t();
+    v.z = ReadInt24_t();
+    return v;
+}
+#else
+void WriteInt24_t(float dst, float val)
+{
+    float v;
+    WriteShort(dst, (v = floor(val >> 8)));
+    WriteByte(dst, val - (v << 8)); // 0..255
+}
+void WriteInt48_t(float dst, vector val)
+{
+    WriteInt24_t(dst, val.x);
+    WriteInt24_t(dst, val.y);
+}
+void WriteInt72_t(float dst, vector val)
+{
+    WriteInt24_t(dst, val.x);
+    WriteInt24_t(dst, val.y);
+    WriteInt24_t(dst, val.z);
+}
+#endif
+#endif
+
 #endif

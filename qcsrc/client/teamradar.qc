@@ -132,10 +132,10 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	R_EndPolygon();
 }
 
-void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a)
+void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb, float a)
 {
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord));
-	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon)), '8 8 0', rgb, a, 0);
+	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon.m_radaricon)), '8 8 0', rgb, a, 0);
 
 	if(pingdata)
 	{

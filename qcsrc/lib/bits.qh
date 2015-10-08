@@ -1,0 +1,22 @@
+#ifndef BITS_H
+#define BITS_H
+
+#define BIT(n) (1 << (n))
+#define BITS(n) (BIT(n) - 1)
+#ifndef BRANCHLESS_BITSET
+    #define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
+#else
+    #define BITSET(var, mask, flag) ((var) ^ (-(flag) ^ (var)) & (mask))
+#endif
+
+int lowestbit(int f)
+{
+    f &= ~(f << 1);
+    f &= ~(f << 2);
+    f &= ~(f << 4);
+    f &= ~(f << 8);
+    f &= ~(f << 16);
+    return f;
+}
+
+#endif

@@ -387,33 +387,31 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 void Ent_RemoveEntCS()
 {SELFPARAM();
-	entcs_receiver[self.sv_entnum] = world;
+	entcs_receiver[self.sv_entnum] = NULL;
 }
 void Ent_ReadEntCS()
 {SELFPARAM();
-    int sf;
 	InterpolateOrigin_Undo();
-
 	self.classname = "entcs_receiver";
-	sf = ReadByte();
+	int sf = ReadByte();
 
-	if(sf & 1)
+	if(sf & BIT(0))
 		self.sv_entnum = ReadByte();
-	if(sf & 2)
+	if (sf & BIT(1))
 	{
 		self.origin_x = ReadShort();
 		self.origin_y = ReadShort();
 		self.origin_z = ReadShort();
 		setorigin(self, self.origin);
 	}
-	if(sf & 4)
+	if (sf & BIT(2))
 	{
 		self.angles_y = ReadByte() * 360.0 / 256;
 		self.angles_x = self.angles_z = 0;
 	}
-	if(sf & 8)
+	if (sf & BIT(3))
 		self.healthvalue = ReadByte() * 10;
-	if(sf & 16)
+	if (sf & BIT(4))
 		self.armorvalue = ReadByte() * 10;
 
 	entcs_receiver[self.sv_entnum] = self;

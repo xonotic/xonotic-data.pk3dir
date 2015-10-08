@@ -587,8 +587,8 @@ bool WarpZoneLib_BadEntity(entity e)
 		case "ent_client_scoreinfo":
 		case "saved_cvar_value":
 		case "accuracy":
-		case "entcs_sender_v2":
-		case "entcs_receiver_v2":
+		case "entcs_sender":
+		case "entcs_receiver":
 		case "clientinit":
 		case "sprite_waypoint":
 		case "waypoint":

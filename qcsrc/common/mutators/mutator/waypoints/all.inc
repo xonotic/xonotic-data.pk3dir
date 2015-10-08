@@ -1,6 +1,4 @@
 /** If you register a new waypoint, make sure to add it to this list */
-REGISTER_WAYPOINT(, "", '0 0 0', 1);
-#define WP_Null WP_
 
 REGISTER_WAYPOINT(Waypoint, _("Waypoint"), '0 1 1', 1);
 REGISTER_WAYPOINT(Helpme, _("Help me!"), '1 0.5 0', 1);
