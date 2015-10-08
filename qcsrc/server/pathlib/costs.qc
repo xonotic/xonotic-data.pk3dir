@@ -111,7 +111,7 @@ float pathlib_h_diagonal2sdp(vector preprev,vector prev,vector point,vector end)
     y = fabs(point.y - end.y);
     z = fabs(point.z - end.z);
 
-    h_diag = min(x,y,z);
+    h_diag = min3(x,y,z);
     h_str = x + y + z;
 
     h =  pathlib_movecost_diag * h_diag;
@@ -136,7 +136,7 @@ float pathlib_h_diagonal3(vector a,vector b)
     y = fabs(a.y - b.y);
     z = fabs(a.z - b.z);
 
-    h_diag = min(x,y,z);
+    h_diag = min3(x,y,z);
     h_str = x + y + z;
 
     h =  pathlib_movecost_diag * h_diag;

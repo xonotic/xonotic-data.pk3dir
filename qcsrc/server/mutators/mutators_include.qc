@@ -70,6 +70,7 @@
     #include "../playerdemo.qh"
     #include "../round_handler.qh"
     #include "../item_key.qh"
+    #include "../pathlib/pathlib.qh"
     #include "../../common/vehicles/all.qh"
 #endif
 

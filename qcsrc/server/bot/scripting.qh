@@ -9,7 +9,6 @@
 #define CMD_STATUS_FINISHED 1
 #define CMD_STATUS_ERROR 2
 
-void bot_clearqueue(entity bot);
 
 // NOTE: New commands should be added here. Do not forget to update BOT_CMD_COUNTER
 const int BOT_CMD_NULL 			= 0;

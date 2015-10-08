@@ -3,6 +3,7 @@
 
 #include "anticheat.qh"
 #include "antilag.qh"
+#include "bot/bot.qh"
 #include "campaign.qh"
 #include "cheats.qh"
 #include "cl_client.qh"

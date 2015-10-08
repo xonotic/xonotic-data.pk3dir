@@ -3,8 +3,6 @@
 
 #include "gamemode.qh"
 
-#include "../../common/triggers/trigger/jumppads.qh"
-
 float autocvar_g_nexball_basketball_bouncefactor;
 float autocvar_g_nexball_basketball_bouncestop;
 float autocvar_g_nexball_basketball_carrier_highspeed;

@@ -1,4 +1,5 @@
 #include "bot.qh"
+#include "../_all.qh"
 
 #include "aim.qh"
 #include "navigation.qh"
@@ -6,8 +7,35 @@
 #include "waypoints.qh"
 
 #include "havocbot/havocbot.qh"
+#include "havocbot/scripting.qh"
 
-#include "../../weapons/accuracy.qh"
+#include "../antilag.qh"
+#include "../autocvars.qh"
+#include "../campaign.qh"
+#include "../cl_client.qh"
+#include "../constants.qh"
+#include "../defs.qh"
+#include "../race.qh"
+#include "../t_items.qh"
+
+#include "../mutators/mutators_include.qh"
+
+#include "../weapons/accuracy.qh"
+
+#include "../../common/constants.qh"
+#include "../../common/mapinfo.qh"
+#include "../../common/teams.qh"
+#include "../../common/util.qh"
+
+#include "../../common/weapons/all.qh"
+
+#include "../../csqcmodellib/sv_model.qh"
+
+#include "../../dpdefs/dpextensions.qh"
+#include "../../dpdefs/progsdefs.qh"
+
+#include "../../warpzonelib/common.qh"
+#include "../../warpzonelib/util_server.qh"
 
 entity bot_spawn()
 {SELFPARAM();
