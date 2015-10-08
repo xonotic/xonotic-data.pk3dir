@@ -6,6 +6,16 @@
 
 void RegisterCvars(void(string name, string def, string desc, bool archive, string file) f) { }
 
+/** escape the string to make it safe for consoles */
+string MakeConsoleSafe(string input)
+{
+	input = strreplace("\n", "", input);
+	input = strreplace("\\", "\\\\", input);
+	input = strreplace("$", "$$", input);
+	input = strreplace("\"", "\\\"", input);
+	return input;
+}
+
 void RegisterCvars_Set(string name, string def, string desc, bool archive, string file)
 {
     string val = string_null;
@@ -14,9 +24,9 @@ void RegisterCvars_Set(string name, string def, string desc, bool archive, strin
         // Need to unset first to change the default
         localcmd(sprintf("\nunset %s\n", name));
     }
-    localcmd(sprintf("\n%s %s \"%s\" \"%s\"\n", (archive ? "seta" : "set"), name, def, desc));
+    localcmd(sprintf("\n%s %s \"%s\" \"%s\"\n", (archive ? "seta" : "set"), name, MakeConsoleSafe(def), MakeConsoleSafe(desc)));
     if (val) {
-        localcmd(sprintf("\n%s \"%s\"\n", name, val));
+        localcmd(sprintf("\n%s \"%s\"\n", name, MakeConsoleSafe(val)));
     }
 }
 

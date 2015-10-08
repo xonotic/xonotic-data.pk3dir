@@ -2215,16 +2215,6 @@ string strlimitedlen(string input, string truncation, float strip_colors, float 
 		return strcat(substring(input, 0, (strlen(input) - strlen(truncation))), truncation);
 }*/
 
-// escape the string to make it safe for consoles
-string MakeConsoleSafe(string input)
-{
-	input = strreplace("\n", "", input);
-	input = strreplace("\\", "\\\\", input);
-	input = strreplace("$", "$$", input);
-	input = strreplace("\"", "\\\"", input);
-	return input;
-}
-
 #ifdef CSQC
 entity ReadCSQCEntity()
 {
