@@ -380,7 +380,6 @@ void HUD_Weapons(void)
 	vector color;
 
 	// check to see if we want to continue
-	if(intermission == 2) return;
 	if(hud != HUD_NORMAL) return;
 
 	if(!autocvar__hud_configure)
@@ -966,7 +965,6 @@ int nade_prevframe;
 float nade_statuschange_time;
 void HUD_Ammo(void)
 {
-	if(intermission == 2) return;
 	if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
@@ -1241,8 +1239,6 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 
 void HUD_Powerups()
 {
-	if(intermission == 2) return;
-
 	int allItems = getstati(STAT_ITEMS, 0, 24);
 	int allBuffs = getstati(STAT_BUFFS, 0, 24);
 	int strengthTime, shieldTime, superTime;
@@ -1406,7 +1402,6 @@ void HUD_Powerups()
 void HUD_HealthArmor(void)
 {
 	int armor, health, fuel;
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_healtharmor) return;
@@ -1713,7 +1708,6 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void HUD_Notify(void)
 {
-	if(intermission == 2) return;
 	if (!autocvar__hud_configure)
 		if (!autocvar_hud_panel_notify)
 			return;
@@ -1827,7 +1821,6 @@ void HUD_Notify(void)
 
 void HUD_Timer(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_timer) return;
@@ -2048,7 +2041,6 @@ void HUD_Radar_Mouse()
 
 void HUD_Radar(void)
 {
-	if(intermission == 2) return;
 	if (!autocvar__hud_configure)
 	{
 		if (hud_panel_radar_maximized)
@@ -2397,7 +2389,6 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 void HUD_Score(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
@@ -2581,7 +2572,6 @@ void HUD_Score(void)
 //
 void HUD_RaceTimer (void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
@@ -2732,7 +2722,6 @@ void HUD_RaceTimer (void)
 
 void HUD_Vote(void)
 {
-	if(intermission == 2) return;
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
@@ -3609,7 +3598,6 @@ float mod_change; // "time" when mod_active changed
 
 void HUD_ModIcons(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
@@ -3651,7 +3639,6 @@ void HUD_ModIcons(void)
 //
 void HUD_PressedKeys(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_pressedkeys) return;
@@ -3815,7 +3802,6 @@ float frametimeavg1; // 1 frame ago
 float frametimeavg2; // 2 frames ago
 void HUD_EngineInfo(void)
 {
-	//if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_engineinfo) return;
@@ -3877,7 +3863,6 @@ void HUD_EngineInfo(void)
 } while(0)
 void HUD_InfoMessages(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_infomessages) return;
@@ -4059,7 +4044,6 @@ float acc_prevtime, acc_avg, top_speed, top_speed_time;
 float physics_update_time, discrete_speed, discrete_acceleration;
 void HUD_Physics(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_physics) return;
@@ -4451,7 +4435,6 @@ void reset_centerprint_messages(void)
 float hud_configure_cp_generation_time;
 void HUD_CenterPrint (void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_centerprint) return;
@@ -4712,6 +4695,8 @@ bool HUD_Panel_CheckFlags(int showflags)
 {
 	if ( HUD_Minigame_Showpanels() )
 		return showflags & PANEL_SHOW_MINIGAME;
+	if(intermission == 2)
+		return showflags & PANEL_SHOW_MAPVOTE;
 	return showflags & PANEL_SHOW_MAINGAME;
 }
 

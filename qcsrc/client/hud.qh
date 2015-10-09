@@ -146,6 +146,7 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 const int PANEL_SHOW_NEVER    = 0x00;
 const int PANEL_SHOW_MAINGAME = 0x01;
 const int PANEL_SHOW_MINIGAME = 0x02;
+const int PANEL_SHOW_MAPVOTE  = 0x04;
 const int PANEL_SHOW_ALWAYS   = 0xff;
 bool HUD_Panel_CheckFlags(int showflags);
 
@@ -168,10 +169,10 @@ REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        weapons,        PANEL_SH
 REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           ammo,           PANEL_SHOW_MAINGAME)
 REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       powerups,       PANEL_SHOW_MAINGAME)
 REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    healtharmor,    PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         notify,         PANEL_SHOW_ALWAYS  )
-REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          timer,          PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         notify,         PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
+REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          timer,          PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
 REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          radar,          PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(SCORE,           HUD_Score,          score,          PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(SCORE,           HUD_Score,          score,          PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
 REGISTER_HUD_PANEL(RACETIMER,       HUD_RaceTimer,      racetimer,      PANEL_SHOW_MAINGAME)
 REGISTER_HUD_PANEL(VOTE,            HUD_Vote,           vote,           PANEL_SHOW_ALWAYS  )
 REGISTER_HUD_PANEL(MODICONS,        HUD_ModIcons,       modicons,       PANEL_SHOW_MAINGAME)
@@ -185,7 +186,7 @@ REGISTER_HUD_PANEL(MINIGAME_BOARD,  HUD_MinigameBoard,  minigameboard,  PANEL_SH
 REGISTER_HUD_PANEL(MINIGAME_STATUS, HUD_MinigameStatus, minigamestatus, PANEL_SHOW_MINIGAME)
 REGISTER_HUD_PANEL(MINIGAME_HELP,   HUD_MinigameHelp,   minigamehelp,   PANEL_SHOW_MINIGAME)
 REGISTER_HUD_PANEL(MINIGAME_MENU,   HUD_MinigameMenu,   minigamemenu,   PANEL_SHOW_ALWAYS  )
-REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       mapvote,        PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       mapvote,        PANEL_SHOW_MAPVOTE )
 REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      itemstime,      PANEL_SHOW_MAINGAME)
 REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_SHOW_MAINGAME)
 // always add new panels to the end of list
