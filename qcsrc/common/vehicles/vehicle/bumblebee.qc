@@ -966,17 +966,17 @@ void CSQC_BUMBLE_GUN_HUD()
 			float blinkValue = 0.55 + sin(time * 7) * 0.45;
 			vector tmpPos  = '0 0 0';
 			vector tmpSize = '1 1 1' * hud_fontsize;
-			tmpPos.x = hudPos.x + hudSize.x * (520/768);
+			tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (520/768);
 
 			if(!AuxiliaryXhair[1].draw2d)
 			{
-				tmpPos.y = hudPos.y + hudSize.y * (96/256) - tmpSize.y;
+				tmpPos.y = vehicleHud_Pos.y + vehicleHud_Size.y * (96/256) - tmpSize.y;
 				drawstring(tmpPos, _("No right gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 			}
 
 			if(!AuxiliaryXhair[2].draw2d)
 			{
-				tmpPos.y = hudPos.y + hudSize.y * (160/256);
+				tmpPos.y = vehicleHud_Pos.y + vehicleHud_Size.y * (160/256);
 				drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 			}
 		}
