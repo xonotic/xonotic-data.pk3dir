@@ -2,7 +2,6 @@
 #include "../physics.qh"
 
 #if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qh"
 	#include "../../client/defs.qh"
 	#include "../stats.qh"
 	#include "../util.qh"

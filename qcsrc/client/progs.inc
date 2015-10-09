@@ -1,7 +1,3 @@
-#include "../common/util-pre.qh"
-#include "../dpdefs/csprogsdefs.qh"
-#include "../common/util-post.qh"
-
 #include "../lib/_all.inc"
 
 #include "announcer.qc"

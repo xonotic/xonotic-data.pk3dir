@@ -21,7 +21,6 @@
  * IN THE SOFTWARE.
  */
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
 	#include "../client/defs.qh"
 	#include "../common/constants.qh"
 	#include "../common/stats.qh"

@@ -6,8 +6,6 @@
 #include "main.qh"
 #include "miscfunctions.qh"
 
-#include "../dpdefs/csprogsdefs.qh"
-
 #include "../common/models/all.qh"
 #include "../common/sounds/all.qh"
 

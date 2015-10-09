@@ -5,8 +5,6 @@
 
 #include "../common/constants.qh"
 
-#include "../dpdefs/keycodes.qh"
-
 
 #define HUD_Write(s) fputs(fh, s)
 // q: quoted, n: not quoted

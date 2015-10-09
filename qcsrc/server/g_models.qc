@@ -2,7 +2,12 @@
 
 #include "../common/triggers/subs.qh"
 
-#include "../client/bgmscript.qh"
+entityclass(BGMScript);
+class(BGMScript) .string bgmscript;
+class(BGMScript) .float bgmscriptattack;
+class(BGMScript) .float bgmscriptdecay;
+class(BGMScript) .float bgmscriptsustain;
+class(BGMScript) .float bgmscriptrelease;
 
 #include "../common/constants.qh"
 #include "../csqcmodellib/sv_model.qh"

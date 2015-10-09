@@ -1,13 +1,10 @@
 #include "common.qh"
 
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
     #include "../server/t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "../common/weapons/all.qh"
-    #include "../dpdefs/dpextensions.qh"
-	#include "../dpdefs/progsdefs.qh"
 #endif
 
 void WarpZone_Accumulator_Clear(entity acc)

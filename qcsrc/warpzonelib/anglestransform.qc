@@ -1,11 +1,8 @@
 #include "anglestransform.qh"
 
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
 #endif
 
 #ifdef POSITIVE_PITCH_IS_DOWN

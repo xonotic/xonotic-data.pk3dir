@@ -31,9 +31,6 @@
 
 #include "../../csqcmodellib/sv_model.qh"
 
-#include "../../dpdefs/dpextensions.qh"
-#include "../../dpdefs/progsdefs.qh"
-
 #include "../../warpzonelib/common.qh"
 #include "../../warpzonelib/util_server.qh"
 

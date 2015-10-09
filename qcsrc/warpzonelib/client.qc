@@ -4,7 +4,6 @@
 #if defined(CSQC)
 	#include "../client/autocvars.qh"
 	#include "../csqcmodellib/cl_model.qh"
-	#include "../dpdefs/csprogsdefs.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

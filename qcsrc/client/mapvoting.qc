@@ -7,8 +7,6 @@
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
-#include "../dpdefs/keycodes.qh"
-
 
 int mv_num_maps;
 

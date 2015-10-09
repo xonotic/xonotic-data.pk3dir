@@ -4,7 +4,6 @@
 #include "all.qh"
 
 #if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qh"
 	#include "../../client/defs.qh"
 	#include "../constants.qh"
 	#include "../stats.qh"
@@ -21,8 +20,6 @@
 	#include "../../csqcmodellib/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
     #include "../../warpzonelib/anglestransform.qh"
     #include "../../warpzonelib/common.qh"
     #include "../../warpzonelib/util_server.qh"

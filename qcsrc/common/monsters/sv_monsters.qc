@@ -1,8 +1,6 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
     #include "../../warpzonelib/common.qh"
     #include "../constants.qh"
     #include "../teams.qh"

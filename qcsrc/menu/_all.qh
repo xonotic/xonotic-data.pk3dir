@@ -1,7 +1,4 @@
 #ifndef CLIENT_ALL_H
 #define CLIENT_ALL_H
 
-#include "../dpdefs/menudefs.qh"
-#include "../dpdefs/keycodes.qh"
-
 #endif

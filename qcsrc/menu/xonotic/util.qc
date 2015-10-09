@@ -1,6 +1,5 @@
 #include "util.qh"
 #include "../menu.qh"
-#include "../oo/base.qh"
 #include "../../common/campaign_common.qh"
 #include "../../common/constants.qh"
 #include "../../common/mapinfo.qh"

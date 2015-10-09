@@ -20,7 +20,6 @@
  * IN THE SOFTWARE.
  */
  #if defined(CSQC)
-	 #include "../dpdefs/csprogsdefs.qh"
 	 #include "../client/defs.qh"
 	 #include "../common/util.qh"
 	 #include "../common/animdecide.qh"

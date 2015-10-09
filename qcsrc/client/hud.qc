@@ -7,8 +7,6 @@
 #include "teamradar.qh"
 #include "t_items.qh"
 
-#include "../dpdefs/keycodes.qh"
-
 #include "../common/buffs/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"

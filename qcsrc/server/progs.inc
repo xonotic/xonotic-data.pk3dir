@@ -1,10 +1,3 @@
-#include "../common/util-pre.qh"
-#include "sys-pre.qh"
-#include "../dpdefs/progsdefs.qh"
-#include "../dpdefs/dpextensions.qh"
-#include "sys-post.qh"
-#include "../common/util-post.qh"
-
 #include "../lib/_all.inc"
 
 #include "anticheat.qc"
@@ -45,27 +38,14 @@
 #include "t_quake3.qc"
 #include "t_quake.qc"
 
-#include "bot/aim.qc"
-#include "bot/bot.qc"
-#include "bot/navigation.qc"
-#include "bot/scripting.qc"
-#include "bot/waypoints.qc"
-
-#include "bot/havocbot/havocbot.qc"
-#include "bot/havocbot/role_keyhunt.qc"
-#include "bot/havocbot/roles.qc"
+#include "bot/_all.inc"
 
 #include "command/all.qc"
 
 #include "mutators/mutators_include.qc"
 #include "mutators/mutators.qc"
 
-#include "pathlib/costs.qc"
-#include "pathlib/expandnode.qc"
-#include "pathlib/main.qc"
-#include "pathlib/movenode.qc"
-#include "pathlib/path_waypoint.qc"
-#include "pathlib/utility.qc"
+#include "pathlib/_all.inc"
 
 #include "weapons/accuracy.qc"
 #include "weapons/common.qc"

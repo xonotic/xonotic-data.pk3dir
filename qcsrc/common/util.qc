@@ -1,7 +1,6 @@
 #include "util.qh"
 
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
 	#include "../client/mutators/events.qh"
@@ -10,8 +9,6 @@
     #include "deathtypes.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"

@@ -1,7 +1,6 @@
 #ifndef ITEM_H
 #define ITEM_H
 #include "skin.qh"
-#include "oo/base.qh"
 CLASS(Item, Object)
 	METHOD(Item, draw, void(entity));
 	METHOD(Item, keyDown, float(entity, float, float, float));

@@ -20,7 +20,6 @@
  * IN THE SOFTWARE.
  */
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
 	#include "../client/defs.qh"
 	#include "../warpzonelib/anglestransform.qh"
 	#include "../client/autocvars.qh"
