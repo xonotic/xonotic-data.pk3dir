@@ -1,6 +1,9 @@
 #ifndef WEAPONS_ALL_H
 #define WEAPONS_ALL_H
 
+#include "../command/all.qh"
+#include "config.qh"
+
 // weapon sets
 typedef vector WepSet;
 #define WEPSET(id) WepSet_FromWeapon(WEP_##id.m_id)
@@ -34,9 +37,63 @@ REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 REGISTER_REGISTRY(RegisterWeapons)
 entity get_weaponinfo(int id);
 
+
+GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
+{
+    switch(request)
+    {
+        case CMD_REQUEST_COMMAND:
+        {
+            #ifdef SVQC
+            wep_config_file = -1;
+            wep_config_alsoprint = -1;
+            string filename = argv(1);
+
+            if(filename == "")
+            {
+                filename = "weapons_dump.cfg";
+                wep_config_alsoprint = false;
+            }
+            else if(filename == "-")
+            {
+                filename = "weapons_dump.cfg";
+                wep_config_alsoprint = true;
+            }
+            wep_config_file = fopen(filename, FILE_WRITE);
+
+            if(wep_config_file >= 0)
+            {
+                Dump_Weapon_Settings();
+                LOG_INFO(sprintf("Dumping weapons... File located in ^2data/data/%s^7.\n", filename));
+                fclose(wep_config_file);
+                wep_config_file = -1;
+                wep_config_alsoprint = -1;
+            }
+            else
+            {
+                LOG_INFO(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+            }
+            #else
+            LOG_INFO(_("Weapons dump command only works with sv_cmd.\n"));
+            #endif
+            return;
+        }
+
+        default:
+        case CMD_REQUEST_USAGE:
+        {
+            LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
+            LOG_INFO("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
+            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
+            LOG_INFO("  if left blank, it will only write to default.\n");
+            return;
+        }
+    }
+}
+
 #define REGISTER_WEAPON(id, inst) \
-	/* WepSet WEPSET_##id; */ \
-	REGISTER(RegisterWeapons, WEP, Weapons, id, m_id, inst)
+    /* WepSet WEPSET_##id; */ \
+    REGISTER(RegisterWeapons, WEP, Weapons, id, m_id, inst)
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;
@@ -44,15 +101,15 @@ entity get_weaponinfo(int id);
 #define WEP_ADD_CVAR_PRI(wepname,name) WEP_ADD_CVAR_NONE(wepname, primary_##name)
 #define WEP_ADD_CVAR_SEC(wepname,name) WEP_ADD_CVAR_NONE(wepname, secondary_##name)
 #define WEP_ADD_CVAR_BOTH(wepname,name) \
-	WEP_ADD_CVAR_PRI(wepname, name) \
-	WEP_ADD_CVAR_SEC(wepname, name)
+    WEP_ADD_CVAR_PRI(wepname, name) \
+    WEP_ADD_CVAR_SEC(wepname, name)
 
 #define WEP_ADD_CVAR(wepid,wepname,mode,name) WEP_ADD_CVAR_##mode(wepname, name)
 
 // create properties for weapon settings
 #define WEP_ADD_PROP(wepid,wepname,type,prop,name) \
-	.type prop; \
-	[[last]] type autocvar_g_balance_##wepname##_##name;
+    .type prop; \
+    [[last]] type autocvar_g_balance_##wepname##_##name;
 
 // read cvars from weapon settings
 #define WEP_CVAR(wepname,name) autocvar_g_balance_##wepname##_##name
@@ -75,11 +132,11 @@ REGISTER_WEAPON(Null, NEW(Weapon));
 
 entity get_weaponinfo(int id)
 {
-	if (id >= WEP_FIRST && id <= WEP_LAST) {
-		Weapon w = Weapons[id];
-		if (w) return w;
-	}
-	return WEP_Null;
+    if (id >= WEP_FIRST && id <= WEP_LAST) {
+        Weapon w = Weapons[id];
+        if (w) return w;
+    }
+    return WEP_Null;
 }
 
 // TODO: remove after 0.8.2. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
@@ -93,28 +150,28 @@ REGISTRY_SORT(Weapons, netname, WEP_HARDCODED_IMPULSES + 1)
 
 STATIC_INIT(register_weapons_done)
 {
-	for (int i = 0; i < Weapons_COUNT; ++i) {
-		Weapon it = Weapons[i];
-		it.m_id = i;
-		WepSet set = WepSet_FromWeapon(it.m_id);
-		WEPSET_ALL |= set;
-		if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
-		it.weapon = it.m_id;
-		it.weapons = set;
-		#ifdef CSQC
-		it.wr_init(it);
-		#endif
-		int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
-		if (imp <= WEP_IMPULSE_END)
-			localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
-		else
-			LOG_TRACEF(_("Impulse limit exceeded, weapon will not be directly accessible: %s\n"), it.netname);
-	}
-	weaponorder_byid = "";
-	for (int i = Weapons_MAX - 1; i >= 1; --i)
-		if (Weapons[i])
-			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
-	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
+    for (int i = 0; i < Weapons_COUNT; ++i) {
+        Weapon it = Weapons[i];
+        it.m_id = i;
+        WepSet set = WepSet_FromWeapon(it.m_id);
+        WEPSET_ALL |= set;
+        if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
+        it.weapon = it.m_id;
+        it.weapons = set;
+        #ifdef CSQC
+        it.wr_init(it);
+        #endif
+        int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
+        if (imp <= WEP_IMPULSE_END)
+            localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
+        else
+            LOG_TRACEF(_("Impulse limit exceeded, weapon will not be directly accessible: %s\n"), it.netname);
+    }
+    weaponorder_byid = "";
+    for (int i = Weapons_MAX - 1; i >= 1; --i)
+        if (Weapons[i])
+            weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
+    weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef WEAPONS_CONFIG_H
 #define WEAPONS_CONFIG_H
 
+#ifdef SVQC
 // ==========================
 //  Balance Config Generator
 // ==========================
@@ -46,4 +47,5 @@ string wep_config_queue[MAX_WEP_CONFIG];
 		cvar(sprintf("g_balance_%s_%s", #wepname, #name)))) }
 
 #define WEP_CONFIG_WRITE_PROPS(wepid,wepname,type,prop,name) WEP_CONFIG_WRITE_PROPS_##type(wepname,name)
+#endif
 #endif
