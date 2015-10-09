@@ -131,12 +131,11 @@ int minigame_addplayer(entity minigame_session, entity player)
 			return 0;
 		minigame_rmplayer(player.active_minigame,player);
 	}
-
-	int mgteam = minigame_session.minigame_event(minigame_session,"join",player);
+	entity player_pointer = spawn();
+	int mgteam = minigame_session.minigame_event(minigame_session,"join",player,player_pointer);
 
 	if ( mgteam )
 	{
-		entity player_pointer = spawn();
 		player_pointer.classname = "minigame_player";
 		player_pointer.owner = minigame_session;
 		player_pointer.minigame_players = player;
@@ -157,6 +156,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 
 		minigame_resend(minigame_session);
 	}
+	else { remove(player_pointer); }
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
 		ftos(num_for_edict(player)),":",player.netname));
 
