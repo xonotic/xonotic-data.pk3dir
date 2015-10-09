@@ -123,6 +123,7 @@ bool IsFlying(entity a);
 	#define PHYS_JUMPSPEEDCAP_MAX				cvar_string("cl_jumpspeedcap_max")
 	#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS	getstati(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
 
+	#define PHYS_CL_TRACK_CANJUMP(s)			getstati(STAT_MOVEVARS_CL_TRACK_CANJUMP)
 	#define PHYS_TRACK_CANJUMP(s)				getstati(STAT_MOVEVARS_TRACK_CANJUMP)
 	#define PHYS_ACCELERATE						getstatf(STAT_MOVEVARS_ACCELERATE)
 	#define PHYS_AIRACCEL_QW(s)					getstatf(STAT_MOVEVARS_AIRACCEL_QW)
@@ -247,6 +248,8 @@ bool IsFlying(entity a);
 	.float stat_nostep;
 	.float stat_jumpstep;
 
+	.bool stat_sv_track_canjump;
+
 	#define PHYS_INPUT_ANGLES(s)				s.v_angle
 	#define PHYS_WORLD_ANGLES(s)				s.angles
 
@@ -323,7 +326,8 @@ bool IsFlying(entity a);
 	#define PHYS_JUMPSPEEDCAP_MAX				autocvar_sv_jumpspeedcap_max
 	#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS	autocvar_sv_jumpspeedcap_max_disable_on_ramps
 
-	#define PHYS_TRACK_CANJUMP(s)				s.cvar_cl_movement_track_canjump
+	#define PHYS_CL_TRACK_CANJUMP(s)			s.cvar_cl_movement_track_canjump
+	#define PHYS_TRACK_CANJUMP(s)				s.stat_sv_track_canjump
 	#define PHYS_ACCELERATE						self.stat_sv_accelerate
 	#define PHYS_AIRACCEL_QW(s)					s.stat_sv_airaccel_qw
 	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	self.stat_sv_airaccel_qw_stretchfactor
