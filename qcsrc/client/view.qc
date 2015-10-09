@@ -457,9 +457,6 @@ bool WantEventchase()
 
 void HUD_Crosshair_Vehicle()
 {
-	if(!hud || intermission)
-		return;
-
 	if(hud != HUD_BUMBLEBEE_GUN)
 	{
 		Vehicle info = get_vehicleinfo(hud);
@@ -551,11 +548,17 @@ void HUD_Crosshair()
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 &&
-		spectatee_status != -1 && hud == HUD_NORMAL && !csqcplayer.viewloc &&
+		spectatee_status != -1 && !csqcplayer.viewloc &&
 		!HUD_MinigameMenu_IsOpened() )
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;
+
+		if (hud != HUD_NORMAL)
+		{
+			HUD_Crosshair_Vehicle();
+			return;
+		}
 
 		string wcross_style;
 		float wcross_alpha, wcross_resolution;
@@ -1030,7 +1033,6 @@ void HUD_Draw()
 	// crosshair goes VERY LAST
 	UpdateDamage();
 	HUD_Crosshair();
-	HUD_Crosshair_Vehicle();
 	HitSound();
 }
 
