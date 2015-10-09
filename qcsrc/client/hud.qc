@@ -4703,7 +4703,12 @@ bool HUD_Panel_CheckFlags(int showflags)
 void HUD_Panel_Draw(entity panent)
 {
 	panel = panent;
-	if ( HUD_Panel_CheckFlags(panel.panel_showflags) )
+	if(autocvar__hud_configure)
+	{
+		if(panel.panel_configflags & PANEL_CONFIG_MAIN)
+			panel.panel_draw();
+	}
+	else if(HUD_Panel_CheckFlags(panel.panel_showflags))
 		panel.panel_draw();
 }
 

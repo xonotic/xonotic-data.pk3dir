@@ -6,12 +6,13 @@
 REGISTRY(hud_panels, 24)
 REGISTER_REGISTRY(Registerhud_panels)
 
-#define REGISTER_HUD_PANEL(id, draw_func, name, showflags) \
+#define REGISTER_HUD_PANEL(id, draw_func, name, configflags, showflags) \
 	void draw_func(); \
 	REGISTER(Registerhud_panels, HUD_PANEL, hud_panels, id, m_id, new(hud_panel)) { \
 		this.panel_id = this.m_id; \
 		this.panel_draw = draw_func; \
 		this.panel_name = #name; \
+		this.panel_configflags = configflags; \
 		this.panel_showflags = showflags; \
 	}
 
@@ -150,6 +151,10 @@ const int PANEL_SHOW_MAPVOTE  = 0x04;
 const int PANEL_SHOW_ALWAYS   = 0xff;
 bool HUD_Panel_CheckFlags(int showflags);
 
+.int panel_configflags;
+const int PANEL_CONFIG_NO    = 0x00;
+const int PANEL_CONFIG_MAIN  = 0x01;
+
 
 // prev_* vars contain the health/armor at the previous FRAME
 // set to -1 when player is dead or was not playing
@@ -165,30 +170,30 @@ int prev_p_health, prev_p_armor;
 
 void HUD_ItemsTime();
 
-REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        weapons,        PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           ammo,           PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       powerups,       PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    healtharmor,    PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         notify,         PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
-REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          timer,          PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
-REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          radar,          PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(SCORE,           HUD_Score,          score,          PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
-REGISTER_HUD_PANEL(RACETIMER,       HUD_RaceTimer,      racetimer,      PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(VOTE,            HUD_Vote,           vote,           PANEL_SHOW_ALWAYS  )
-REGISTER_HUD_PANEL(MODICONS,        HUD_ModIcons,       modicons,       PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(PRESSEDKEYS,     HUD_PressedKeys,    pressedkeys,    PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(CHAT,            HUD_Chat,           chat,           PANEL_SHOW_ALWAYS  )
-REGISTER_HUD_PANEL(ENGINEINFO,      HUD_EngineInfo,     engineinfo,     PANEL_SHOW_ALWAYS  )
-REGISTER_HUD_PANEL(INFOMESSAGES,    HUD_InfoMessages,   infomessages,   PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(PHYSICS,         HUD_Physics,        physics,        PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(CENTERPRINT,     HUD_CenterPrint,    centerprint,    PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(MINIGAME_BOARD,  HUD_MinigameBoard,  minigameboard,  PANEL_SHOW_MINIGAME)
-REGISTER_HUD_PANEL(MINIGAME_STATUS, HUD_MinigameStatus, minigamestatus, PANEL_SHOW_MINIGAME)
-REGISTER_HUD_PANEL(MINIGAME_HELP,   HUD_MinigameHelp,   minigamehelp,   PANEL_SHOW_MINIGAME)
-REGISTER_HUD_PANEL(MINIGAME_MENU,   HUD_MinigameMenu,   minigamemenu,   PANEL_SHOW_ALWAYS  )
-REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       mapvote,        PANEL_SHOW_MAPVOTE )
-REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      itemstime,      PANEL_SHOW_MAINGAME)
-REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        weapons,        PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           ammo,           PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       powerups,       PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    healtharmor,    PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         notify,         PANEL_CONFIG_MAIN, PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
+REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          timer,          PANEL_CONFIG_MAIN, PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
+REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          radar,          PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(SCORE,           HUD_Score,          score,          PANEL_CONFIG_MAIN, PANEL_SHOW_ALWAYS & ~PANEL_SHOW_MAPVOTE)
+REGISTER_HUD_PANEL(RACETIMER,       HUD_RaceTimer,      racetimer,      PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(VOTE,            HUD_Vote,           vote,           PANEL_CONFIG_MAIN, PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(MODICONS,        HUD_ModIcons,       modicons,       PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(PRESSEDKEYS,     HUD_PressedKeys,    pressedkeys,    PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(CHAT,            HUD_Chat,           chat,           PANEL_CONFIG_MAIN, PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(ENGINEINFO,      HUD_EngineInfo,     engineinfo,     PANEL_CONFIG_MAIN, PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(INFOMESSAGES,    HUD_InfoMessages,   infomessages,   PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(PHYSICS,         HUD_Physics,        physics,        PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(CENTERPRINT,     HUD_CenterPrint,    centerprint,    PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(MINIGAME_BOARD,  HUD_MinigameBoard,  minigameboard,  PANEL_CONFIG_NO  , PANEL_SHOW_MINIGAME)
+REGISTER_HUD_PANEL(MINIGAME_STATUS, HUD_MinigameStatus, minigamestatus, PANEL_CONFIG_NO  , PANEL_SHOW_MINIGAME)
+REGISTER_HUD_PANEL(MINIGAME_HELP,   HUD_MinigameHelp,   minigamehelp,   PANEL_CONFIG_NO  , PANEL_SHOW_MINIGAME)
+REGISTER_HUD_PANEL(MINIGAME_MENU,   HUD_MinigameMenu,   minigamemenu,   PANEL_CONFIG_NO  , PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       mapvote,        PANEL_CONFIG_NO  , PANEL_SHOW_MAPVOTE )
+REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      itemstime,      PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CONFIG_MAIN, PANEL_SHOW_MAINGAME)
 // always add new panels to the end of list
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
