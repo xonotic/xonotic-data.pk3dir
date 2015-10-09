@@ -599,7 +599,7 @@ void snake_hud_board(vector pos, vector mySize)
 				{
 					int thex = minigame_tile_letter(e.netname);
 					int they = minigame_tile_number(e.netname);
-					entity t = snake_find_cnt(active_minigame, minigame_self.team, e.cnt - 1);
+					entity t = snake_find_cnt(active_minigame, e.team, e.cnt - 1);
 					int tx = minigame_tile_letter(t.netname);
 					int ty = minigame_tile_number(t.netname);
 
