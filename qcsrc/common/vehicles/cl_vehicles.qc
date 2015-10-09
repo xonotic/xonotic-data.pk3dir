@@ -28,7 +28,7 @@ void vehicle_alarm(entity e, int ch, string s0und)
 
 void AuxiliaryXhair_Draw2D(entity this)
 {
-	if (scoreboard_showscores)
+	if (scoreboard_active)
 		return;
 
 	vector size = draw_getimagesize(self.axh_image) * autocvar_cl_vehicles_crosshair_size;
@@ -122,7 +122,7 @@ void Vehicles_drawHUD(
 	vector colorAmmo2)
 {
 	SELFPARAM();
-	if(scoreboard_showscores)
+	if(scoreboard_active)
 		return;
 
 	// Initialize
