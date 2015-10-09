@@ -455,19 +455,6 @@ bool WantEventchase()
 	return false;
 }
 
-void HUD_Vehicle()
-{
-	if(!hud || intermission)
-		return;
-
-	if(hud == HUD_BUMBLEBEE_GUN)
-		CSQC_BUMBLE_GUN_HUD();
-	else {
-		Vehicle info = get_vehicleinfo(hud);
-		info.vr_hud(info);
-	}
-}
-
 void HUD_Crosshair_Vehicle()
 {
 	if(!hud || intermission)
@@ -1034,7 +1021,6 @@ void HUD_Draw()
 				Accuracy_LoadLevels();
 
 			HUD_Main();
-			HUD_Vehicle();
 			HUD_DrawScoreboard();
 
 			if (scoreboard_active || intermission == 2)

@@ -122,14 +122,11 @@ void Vehicles_drawHUD(
 	vector colorAmmo2)
 {
 	SELFPARAM();
-	if(scoreboard_active)
-		return;
-
 	// Initialize
 	vector tmpSize = '0 0 0';
 	vector tmpPos  = '0 0 0';
 
-	float hudAlpha = autocvar_hud_panel_fg_alpha;
+	float hudAlpha = autocvar_hud_panel_fg_alpha * hud_fade_alpha;
 	float barAlpha = autocvar_hud_progressbar_alpha * hudAlpha;
 	float blinkValue = 0.55 + sin(time * 7) * 0.45;
 
@@ -154,9 +151,9 @@ void Vehicles_drawHUD(
 	vehicleHud_Pos.y = vid_conheight - vehicleHud_Size.y;
 
 	if(teamplay && autocvar_hud_panel_bg_color_team)
-		drawpic(vehicleHud_Pos, frame, vehicleHud_Size, myteamcolors * autocvar_hud_panel_bg_color_team, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
+		drawpic(vehicleHud_Pos, frame, vehicleHud_Size, myteamcolors * autocvar_hud_panel_bg_color_team, autocvar_hud_panel_bg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 	else
-		drawpic(vehicleHud_Pos, frame, vehicleHud_Size, autocvar_hud_panel_bg_color, autocvar_hud_panel_bg_alpha, DRAWFLAG_NORMAL);
+		drawpic(vehicleHud_Pos, frame, vehicleHud_Size, autocvar_hud_panel_bg_color, autocvar_hud_panel_bg_alpha * hud_fade_alpha, DRAWFLAG_NORMAL);
 
 	if(!autocvar__vehicles_shownchasemessage && time < vh_notice_time)
 	{

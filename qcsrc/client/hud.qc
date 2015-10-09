@@ -4695,6 +4695,19 @@ Main HUD system
 ==================
 */
 
+void HUD_Vehicle()
+{
+	if(autocvar__hud_configure) return;
+	if(intermission == 2) return;
+
+	if(hud == HUD_BUMBLEBEE_GUN)
+		CSQC_BUMBLE_GUN_HUD();
+	else {
+		Vehicle info = get_vehicleinfo(hud);
+		info.vr_hud(info);
+	}
+}
+
 bool HUD_Panel_CheckFlags(int showflags)
 {
 	if ( HUD_Minigame_Showpanels() )
@@ -4709,14 +4722,14 @@ void HUD_Panel_Draw(entity panent)
 		panel.panel_draw();
 }
 
-void HUD_Reset (void)
+void HUD_Reset(void)
 {
 	// reset gametype specific icons
 	if(gametype == MAPINFO_TYPE_CTF)
 		HUD_Mod_CTF_Reset();
 }
 
-void HUD_Main (void)
+void HUD_Main(void)
 {
 	int i;
 	// global hud theAlpha fade
@@ -4844,6 +4857,8 @@ void HUD_Main (void)
 	// draw panels in the order specified by panel_order array
 	for(i = hud_panels_COUNT - 1; i >= 0; --i)
 		HUD_Panel_Draw(hud_panels[panel_order[i]]);
+
+	HUD_Vehicle();
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
