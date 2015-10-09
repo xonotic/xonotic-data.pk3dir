@@ -4869,6 +4869,9 @@ void HUD_Main(void)
 	if(hud_panel_quickmenu)
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 
+	if (scoreboard_active || intermission == 2)
+		HUD_Reset();
+
 	HUD_Configure_PostDraw();
 
 	hud_configure_prev = autocvar__hud_configure;

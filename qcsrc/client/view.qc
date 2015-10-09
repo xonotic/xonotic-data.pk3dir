@@ -1025,9 +1025,6 @@ void HUD_Draw()
 
 			HUD_Main();
 			HUD_DrawScoreboard();
-
-			if (scoreboard_active || intermission == 2)
-				HUD_Reset();
 		}
 
 	// crosshair goes VERY LAST
