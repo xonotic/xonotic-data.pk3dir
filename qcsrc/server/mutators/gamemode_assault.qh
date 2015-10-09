@@ -21,6 +21,9 @@ void() havocbot_role_ast_offense;
 
 void(entity bot) havocbot_ast_reset_role;
 
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+
 // scoreboard stuff
 const float ST_ASSAULT_OBJECTIVES = 1;
 const float SP_ASSAULT_OBJECTIVES = 4;

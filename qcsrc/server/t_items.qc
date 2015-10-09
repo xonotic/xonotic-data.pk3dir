@@ -5,6 +5,9 @@
 #if defined(SVQC)
     #include "_all.qh"
 
+    #include "bot/bot.qh"
+    #include "bot/waypoints.qh"
+
     #include "mutators/mutators_include.qh"
 
     #include "weapons/common.qh"

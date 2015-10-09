@@ -1,4 +1,12 @@
 #include "role_keyhunt.qh"
+#include "../../_all.qh"
+
+#include "havocbot.qh"
+
+#include "../bot.qh"
+#include "../navigation.qh"
+
+#include "../../mutators/mutators_include.qh"
 
 void() havocbot_role_kh_carrier;
 void() havocbot_role_kh_defense;

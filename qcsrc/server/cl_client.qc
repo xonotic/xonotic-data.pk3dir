@@ -20,7 +20,8 @@
 #include "campaign.qh"
 #include "command/common.qh"
 
-#include "bot/api.qh"
+#include "bot/bot.qh"
+#include "bot/navigation.qh"
 
 #include "../common/vehicles/all.qh"
 

@@ -5,6 +5,8 @@
 #include "portals.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
+#include "bot/waypoints.qh"
+#include "bot/navigation.qh"
 #include "command/getreplies.qh"
 #include "../common/deathtypes.qh"
 #include "../common/notifications.qh"

@@ -26,6 +26,10 @@ WepSet ReadWepSet();
 
 #include "../util.qh"
 
+#ifdef SVQC
+#include "../../server/bot/aim.qh"
+#endif
+
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 REGISTER_REGISTRY(RegisterWeapons)
 entity get_weaponinfo(int id);

@@ -19,6 +19,7 @@
 #include "mapvoting.qc"
 #include "miscfunctions.qc"
 #include "modeleffects.qc"
+#include "movelib.qc"
 #include "particles.qc"
 #include "player_skeleton.qc"
 #include "rubble.qc"
@@ -49,8 +50,6 @@
 
 #include "../common/minigames/minigames.qc"
 #include "../common/minigames/cl_minigames.qc"
-
-#include "../server/bot/lib/all.inc"
 
 #include "../common/buffs/all.qc"
 #include "../common/items/all.qc"
