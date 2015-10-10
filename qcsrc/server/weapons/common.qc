@@ -1,5 +1,4 @@
 #include "common.qh"
-#include "../_all.qh"
 
 #include "../t_items.qh"
 #include "../../common/constants.qh"
@@ -7,6 +6,7 @@
 #include "../../common/notifications.qh"
 #include "../../common/util.qh"
 #include "../../common/weapons/all.qh"
+#include "../../common/items/all.qc"
 
 void W_GiveWeapon (entity e, float wep)
 {SELFPARAM();

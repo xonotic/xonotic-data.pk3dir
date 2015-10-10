@@ -1,5 +1,4 @@
 #include "cheats.qh"
-#include "_all.qh"
 
 #include "g_damage.qh"
 #include "race.qh"

@@ -1,8 +1,9 @@
-#include "../_all.qh"
 
 #include "gamemode.qh"
 #include "../controlpoint.qh"
 #include "../generator.qh"
+
+void FixSize(entity e);
 
 // =======================
 // CaptureShield Functions
@@ -552,6 +553,8 @@ void ons_ControlPoint_Icon_BuildThink()
 	if(random() < 0.9 - self.health / self.max_health)
 		Send_Effect(EFFECT_RAGE, self.origin + 10 * randomvec(), '0 0 -1', 1);
 }
+
+void onslaught_controlpoint_icon_link(entity e, void() spawnproc);
 
 void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 {

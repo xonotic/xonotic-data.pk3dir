@@ -73,6 +73,8 @@ const float zombie_anim_runforwardright		= 29;
 const float zombie_anim_spawn				= 30;
 */
 
+.vector moveto;
+
 void M_Zombie_Attack_Leap_Touch()
 {SELFPARAM();
 	if (self.health <= 0)

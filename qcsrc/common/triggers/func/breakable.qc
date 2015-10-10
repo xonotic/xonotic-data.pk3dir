@@ -1,7 +1,5 @@
 #ifdef SVQC
 
-#include "../../../server/_all.qh"
-
 #include "../../../server/g_subs.qh"
 #include "../../../server/g_damage.qh"
 #include "../../../server/bot/bot.qh"

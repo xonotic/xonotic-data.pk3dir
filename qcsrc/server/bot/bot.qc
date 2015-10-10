@@ -1,5 +1,4 @@
 #include "bot.qh"
-#include "../_all.qh"
 
 #include "aim.qh"
 #include "navigation.qh"
@@ -8,6 +7,8 @@
 
 #include "havocbot/havocbot.qh"
 #include "havocbot/scripting.qh"
+
+#include "../teamplay.qh"
 
 #include "../antilag.qh"
 #include "../autocvars.qh"

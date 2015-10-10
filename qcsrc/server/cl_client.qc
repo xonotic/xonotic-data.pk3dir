@@ -24,6 +24,7 @@
 #include "bot/navigation.qh"
 
 #include "../common/vehicles/all.qh"
+#include "../common/triggers/teleporters.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"

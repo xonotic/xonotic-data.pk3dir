@@ -1,5 +1,4 @@
 #include "mutator_nades.qh"
-#include "../_all.qh"
 
 #include "mutator.qh"
 
@@ -8,6 +7,7 @@
 #include "../../common/nades/all.qh"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
+#include "../g_subs.qh"
 
 .float nade_time_primed;
 

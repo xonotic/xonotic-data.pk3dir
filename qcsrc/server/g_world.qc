@@ -1,5 +1,4 @@
 #include "g_world.qh"
-#include "_all.qh"
 
 #include "anticheat.qh"
 #include "antilag.qh"
@@ -27,9 +26,11 @@
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/notifications.qh"
+#include "../common/physics.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
+#include "../common/triggers/trigger/secret.qh"
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"

@@ -1,5 +1,4 @@
 #include "teamplay.qh"
-#include "_all.qh"
 
 #include "cl_client.qh"
 #include "race.qh"

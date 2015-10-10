@@ -1,5 +1,4 @@
 #include "gamemode_assault.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
 
@@ -296,6 +295,7 @@ spawnfunc(target_objective_decrease)
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
+spawnfunc(func_breakable);
 spawnfunc(func_assault_destructible)
 {
 	if (!g_assault) { remove(self); return; }

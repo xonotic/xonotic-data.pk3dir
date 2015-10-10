@@ -1,5 +1,4 @@
 #include "item_key.qh"
-#include "_all.qh"
 
 #include "../common/triggers/subs.qh"
 #include "../common/monsters/all.qh"

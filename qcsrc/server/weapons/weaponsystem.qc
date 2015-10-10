@@ -1,5 +1,4 @@
 #include "weaponsystem.qh"
-#include "../_all.qh"
 
 #include "selection.qh"
 
@@ -23,6 +22,8 @@
 
 ===========================================================================
 */
+
+.int state;
 
 .float weapon_frametime;
 

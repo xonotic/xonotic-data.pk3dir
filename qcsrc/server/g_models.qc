@@ -1,6 +1,7 @@
-#include "_all.qh"
 
+#include "g_subs.qh"
 #include "../common/triggers/subs.qh"
+#include "../common/triggers/triggers.qh"
 
 entityclass(BGMScript);
 class(BGMScript) .string bgmscript;

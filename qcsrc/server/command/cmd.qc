@@ -1,6 +1,5 @@
 #include "../../common/command/command.qh"
 #include "cmd.qh"
-#include "../_all.qh"
 
 #include "common.qh"
 #include "vote.qh"
@@ -23,8 +22,12 @@
 #include "../../common/deathtypes.qh"
 #include "../../common/mapinfo.qh"
 #include "../../common/notifications.qh"
+#include "../../common/physics.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
+#include "../../common/triggers/triggers.qh"
+
+#include "../../common/minigames/sv_minigames.qh"
 
 #include "../../common/monsters/all.qc"
 #include "../../common/monsters/spawn.qh"

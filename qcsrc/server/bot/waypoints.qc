@@ -1,5 +1,4 @@
 #include "waypoints.qh"
-#include "../_all.qh"
 
 #include "bot.qh"
 #include "navigation.qh"
@@ -8,6 +7,7 @@
 
 #include "../../common/constants.qh"
 
+#include "../../warpzonelib/common.qh"
 #include "../../warpzonelib/util_server.qh"
 
 // create a new spawnfunc_waypoint and automatically link it to other waypoints, and link

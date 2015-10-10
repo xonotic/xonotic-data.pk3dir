@@ -1,4 +1,3 @@
-#include "../_all.qh"
 
 #include "mutator.qh"
 
@@ -228,6 +227,8 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 	}
 	return false;
 }
+
+.float stat_sv_maxspeed;
 
 MUTATOR_HOOKFUNCTION(instagib_PlayerPhysics)
 {SELFPARAM();

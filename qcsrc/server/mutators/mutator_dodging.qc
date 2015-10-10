@@ -30,11 +30,11 @@
 
 #ifdef SVQC
 #include "mutator_dodging.qh"
-#include "../_all.qh"
 
 #include "mutator.qh"
 
 #include "../../common/animdecide.qh"
+#include "../../common/physics.qh"
 
 .float cvar_cl_dodging_timeout;
 

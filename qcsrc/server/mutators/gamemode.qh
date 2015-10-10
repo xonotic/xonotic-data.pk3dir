@@ -11,6 +11,7 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 #include "../scores_rules.qh"
+#include "../teamplay.qh"
 
 #include "../bot/bot.qh"
 #include "../bot/navigation.qh"

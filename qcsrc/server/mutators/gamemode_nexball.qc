@@ -1,5 +1,4 @@
 #include "gamemode_nexball.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
 
@@ -772,6 +771,8 @@ void W_Nexball_Attack(float t)
 	//TODO: use the speed_up cvar too ??
 }
 
+vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
+
 void W_Nexball_Attack2(void)
 {SELFPARAM();
 	if(self.ballcarried.enemy)
@@ -966,6 +967,9 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 
 	return false;
 }
+
+.float stat_sv_airspeedlimit_nonqw;
+.float stat_sv_maxspeed;
 
 MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
 {SELFPARAM();

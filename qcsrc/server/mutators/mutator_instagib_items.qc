@@ -1,4 +1,6 @@
-#include "../../common/items/item.qh"
+#include "../../common/items/all.qh"
+#include "../../common/items/item/ammo.qh"
+#include "../../common/items/item/powerup.qh"
 
 float instagib_respawntime_ammo = 45;
 float instagib_respawntimejitter_ammo = 0;

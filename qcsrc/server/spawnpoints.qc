@@ -1,12 +1,13 @@
 #include "spawnpoints.qh"
-#include "_all.qh"
 
 #include "mutators/mutators_include.qh"
 #include "g_world.qh"
 #include "race.qh"
 #include "../common/constants.qh"
 #include "../common/teams.qh"
+#include "../common/triggers/subs.qh"
 #include "../common/util.qh"
+#include "../warpzonelib/common.qh"
 #include "../warpzonelib/util_server.qh"
 
 bool SpawnPoint_Send(entity this, entity to, int sf)

@@ -1,7 +1,7 @@
 #include "g_hook.qh"
-#include "_all.qh"
 
 #include "weapons/common.qh"
+#include "weapons/csqcprojectile.qh"
 #include "weapons/weaponsystem.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
@@ -14,6 +14,8 @@
 #include "../common/weapons/all.qh"
 #include "../warpzonelib/common.qh"
 #include "../warpzonelib/server.qh"
+
+.int state;
 
 /*============================================
 

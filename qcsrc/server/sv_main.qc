@@ -1,4 +1,3 @@
-#include "_all.qh"
 
 #include "anticheat.qh"
 #include "g_hook.qh"
@@ -26,6 +25,7 @@
 #include "../warpzonelib/server.qh"
 
 .float lastground;
+.int state;
 
 void CreatureFrame (void)
 {SELFPARAM();

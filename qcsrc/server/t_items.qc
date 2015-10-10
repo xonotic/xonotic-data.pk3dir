@@ -3,7 +3,6 @@
 #include "../common/items/all.qc"
 
 #if defined(SVQC)
-    #include "_all.qh"
 
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"

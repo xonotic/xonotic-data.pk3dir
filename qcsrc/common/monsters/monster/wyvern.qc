@@ -177,6 +177,7 @@ spawnfunc(monster_wyvern) { Monster_Spawn(MON_WYVERN.monsterid); }
 		}
 		#endif
 		#ifdef SVQC
+		spawnfunc(item_cells);
 		METHOD(Wyvern, mr_setup, bool(Wyvern thismon))
 		{
 			SELFPARAM();
