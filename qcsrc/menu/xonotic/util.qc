@@ -11,7 +11,7 @@
 
 float GL_CheckExtension(string ext)
 {
-	return (strstrofs(strcat(" ", cvar_string("gl_info_extensions"), " "), strcat(" ", ext, " "), 0) >= 0);
+	return strhasword(cvar_string("gl_info_extensions"), ext);
 }
 
 float GL_Have_TextureCompression()
