@@ -200,7 +200,7 @@ float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	if (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE))
 	{
-		CvarList_Revert_Click(world, me);
+		CvarList_Revert_Click(NULL, me);
 		return 1;
 	}
 	else if(scan == K_ENTER)

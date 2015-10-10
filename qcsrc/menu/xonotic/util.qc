@@ -1,4 +1,7 @@
 #include "util.qh"
+
+#include "../item.qc"
+
 #include "../menu.qh"
 #include "../../common/campaign_common.qh"
 #include "../../common/constants.qh"

@@ -208,7 +208,7 @@ void ScreenshotList_Filter_Change(entity box, entity me)
 	else
 		me.filterString = string_null;
 
-	ScreenshotList_Refresh_Click(world, me);
+	ScreenshotList_Refresh_Click(NULL, me);
 }
 
 void ScreenshotList_Filter_Would_Change(entity box, entity me)

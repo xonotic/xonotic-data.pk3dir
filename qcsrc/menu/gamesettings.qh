@@ -2,6 +2,8 @@
 #ifndef GAMESETTINGS_H
 #define GAMESETTINGS_H
 
+#include "xonotic/tab.qc"
+
 REGISTRY(Settings, BIT(3))
 REGISTER_REGISTRY(RegisterSettings)
 #define REGISTER_SETTINGS(id, impl) \
