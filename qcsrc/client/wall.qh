@@ -1,5 +1,5 @@
-#ifndef WALL_H
-#define WALL_H
+#ifndef CLIENT_WALL_H
+#define CLIENT_WALL_H
 
 entityclass(Wall);
 class(Wall) .float lip;

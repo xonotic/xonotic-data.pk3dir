@@ -1,4 +1,5 @@
 #include "../lib/_all.inc"
+#include "_all.qh"
 
 #include "announcer.qc"
 #include "bgmscript.qc"
@@ -27,12 +28,11 @@
 #include "view.qc"
 #include "wall.qc"
 
-#include "command/all.qc"
+#include "commands/all.qc"
 
 #include "weapons/projectile.qc" // TODO
 
 #include "../common/animdecide.qc"
-#include "../common/effects/effects.qc"
 #include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"
 #include "../common/movetypes/include.qc"
@@ -48,6 +48,7 @@
 #include "../common/minigames/cl_minigames.qc"
 
 #include "../common/buffs/all.qc"
+#include "../common/effects/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"

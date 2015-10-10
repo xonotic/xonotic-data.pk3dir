@@ -1,10 +1,6 @@
 #include "hud_config.qh"
-#include "_all.qh"
 
 #include "hud.qh"
-
-#include "../common/constants.qh"
-
 
 #define HUD_Write(s) fputs(fh, s)
 // q: quoted, n: not quoted

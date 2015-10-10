@@ -1,5 +1,5 @@
-#ifndef RUBBLE_H
-#define RUBBLE_H
+#ifndef CLIENT_RUBBLE_H
+#define CLIENT_RUBBLE_H
 entityclass(Rubble);
 class(Rubble) .float creationtime;
 void RubbleLimit(string cname, float limit, void() deleteproc);

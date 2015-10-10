@@ -240,6 +240,16 @@ void LocalCommand_handlevote(int request, int argc)
 	}
 }
 
+bool QuickMenu_IsOpened();
+void QuickMenu_Close();
+bool QuickMenu_Open(string mode, string submenu);
+
+bool HUD_MinigameMenu_IsOpened();
+void HUD_MinigameMenu_Close();
+void HUD_MinigameMenu_Open();
+
+void HUD_Radar_Show_Maximized(bool doshow, bool clickable);
+
 void LocalCommand_hud(int request, int argc)
 {
 	switch(request)

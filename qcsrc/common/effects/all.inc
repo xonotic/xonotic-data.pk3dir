@@ -1,6 +1,8 @@
 // Global list of effects, networked to CSQC by ID to save bandwidth and to use client particle numbers (allows mismatching effectinfos to some degree)
 // Not too concerned about the order of this list, just keep the weapon effects together!
 
+#include "../teams.qh"
+
 // EFFECT(istrail, EFFECT_NAME,     "effectinfo_string")
 EFFECT(0, EXPLOSION_SMALL,          "explosion_small")
 EFFECT(0, EXPLOSION_MEDIUM,         "explosion_medium")

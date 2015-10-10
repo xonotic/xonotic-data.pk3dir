@@ -1,12 +1,10 @@
 #include "shownames.qh"
-#include "_all.qh"
 
 #include "hud.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
 #include "../common/teams.qh"
-#include "../common/util.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 

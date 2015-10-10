@@ -1,6 +1,7 @@
 // Global list of sounds
 // TODO: remove uses of _sound
 
+#include "../teams.qh"
 string W_Sound(string w_snd);
 
 SOUND(ARC_FIRE, W_Sound("arc_fire"));

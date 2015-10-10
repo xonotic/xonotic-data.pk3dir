@@ -1,11 +1,9 @@
 #include "mapvoting.qh"
-#include "_all.qh"
 
 #include "hud.qh"
 #include "scoreboard.qh"
 
 #include "../common/mapinfo.qh"
-#include "../common/util.qh"
 
 
 int mv_num_maps;

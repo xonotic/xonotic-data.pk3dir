@@ -1,5 +1,10 @@
 #include "generator.qh"
 
+#include "teamradar.qh"
+#include "../common/movetypes/movetypes.qh"
+
+.float alpha;
+.float scale;
 .int count;
 .float max_health;
 

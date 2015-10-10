@@ -1,4 +1,5 @@
 #include "../lib/_all.inc"
+#include "_all.qh"
 
 #include "anticheat.qc"
 #include "antilag.qc"
@@ -61,7 +62,6 @@
 #include "../common/animdecide.qc"
 #include "../common/campaign_file.qc"
 #include "../common/campaign_setup.qc"
-#include "../common/effects/effects.qc"
 #include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"
 #include "../common/monsters/spawn.qc"
@@ -78,6 +78,7 @@
 #include "../common/util.qc"
 
 #include "../common/buffs/all.qc"
+#include "../common/effects/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"

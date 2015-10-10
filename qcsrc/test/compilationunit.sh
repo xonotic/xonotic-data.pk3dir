@@ -26,7 +26,7 @@ declare -a QCC_FLAGS=(
 
 function check() {
   declare -l base="${1}"
-  declare -la predefs=("-D${2}" "lib/_all.inc")
+  declare -la predefs=("-D${2}" "lib/_all.inc" "${base}/_all.qh")
   find "$base" -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
     echo "$file"
     ${QCC} "${QCC_FLAGS[@]}" "${NOWARN[@]}" "${FEATURES[@]}" "${predefs[@]}" "$file" >/dev/null

@@ -1,11 +1,5 @@
 #include "laser.qh"
-#include "_all.qh"
 
-#include "hook.qh"
-
-#include "../common/buffs/all.qh"
-
-#include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/interpolate.qh"
 
 // a laser goes from origin in direction angles

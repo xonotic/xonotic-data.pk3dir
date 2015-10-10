@@ -1,4 +1,7 @@
 #include "animdecide.qh"
+
+#include "monsters/all.qh"
+
 #if defined(SVQC)
     #include "util.qh"
     #include "../server/defs.qh"

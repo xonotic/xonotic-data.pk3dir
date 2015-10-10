@@ -1,5 +1,5 @@
-#ifndef ANNOUNCER_H
-#define ANNOUNCER_H
+#ifndef CLIENT_ANNOUNCER_H
+#define CLIENT_ANNOUNCER_H
 
 void Announcer();
 

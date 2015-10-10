@@ -1,12 +1,6 @@
 #include "hook.qh"
-#include "_all.qh"
-
-#include "hud.qh"
-
-#include "../common/teams.qh"
 
 #include "../csqcmodellib/interpolate.qh"
-
 #include "../warpzonelib/common.qh"
 
 entityclass(Hook);

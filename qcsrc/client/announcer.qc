@@ -1,9 +1,7 @@
 #include "announcer.qh"
-#include "_all.qh"
 
 #include "../common/notifications.qh"
 #include "../common/stats.qh"
-#include "../common/util.qh"
 
 bool announcer_1min;
 bool announcer_5min;

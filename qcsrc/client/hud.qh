@@ -1,7 +1,10 @@
-#ifndef HUD_H
-#define HUD_H
+#ifndef CLIENT_HUD_H
+#define CLIENT_HUD_H
 
 #include "../common/weapons/all.qh"
+
+bool HUD_Radar_Clickable();
+void HUD_Radar_Mouse();
 
 REGISTRY(hud_panels, 24)
 REGISTER_REGISTRY(Registerhud_panels)
@@ -17,6 +20,12 @@ REGISTER_REGISTRY(Registerhud_panels)
 
 #define HUD_PANEL(NAME) HUD_PANEL_##NAME
 
+// draw the background/borders
+#define HUD_Panel_DrawBg(theAlpha) do {																				\
+	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
+		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
+} while(0)
+
 int panel_order[hud_panels_MAX];
 string hud_panelorder_prev;
 
@@ -28,6 +37,7 @@ bool hud_panel_radar_temp_hidden;
 bool chat_panel_modified;
 bool radar_panel_modified;
 
+float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void HUD_Radar_Hide_Maximized();
 
 void HUD_Reset (void);

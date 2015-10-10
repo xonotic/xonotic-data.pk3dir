@@ -1,5 +1,5 @@
-#ifndef CL_CMD_H
-#define CL_CMD_H
+#ifndef CLIENT_COMMANDS_CL_CMD_H
+#define CLIENT_COMMANDS_CL_CMD_H
 // ==============================================
 //  CSQC client commands code, written by Samual
 //  Last updated: December 17th, 2011

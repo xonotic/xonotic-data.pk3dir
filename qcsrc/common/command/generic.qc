@@ -10,7 +10,7 @@
 #endif
 
 #ifdef CSQC
-	#include "../../client/command/cl_cmd.qh"
+	#include "../../client/commands/cl_cmd.qh"
 #endif
 
 #ifdef SVQC

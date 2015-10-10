@@ -1,12 +1,10 @@
 #include "miscfunctions.qh"
-#include "_all.qh"
 
 #include "hud.qh"
 
 #include "../common/command/generic.qh"
 
 #include "../common/teams.qh"
-#include "../common/util.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 

@@ -7,6 +7,7 @@
 #include "miscfunctions.qh"
 
 
+#include "../common/effects/all.qh"
 #include "../common/models/all.qh"
 #include "../common/sounds/all.qh"
 

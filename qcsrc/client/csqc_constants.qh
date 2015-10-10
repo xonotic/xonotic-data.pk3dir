@@ -1,5 +1,5 @@
-#ifndef CSQC_CONSTANTS
-#define CSQC_CONSTANTS
+#ifndef CLIENT_CSQC_CONSTANTS
+#define CLIENT_CSQC_CONSTANTS
 
 // MenuQC redefines world, change define it here to be safe
 #define world world

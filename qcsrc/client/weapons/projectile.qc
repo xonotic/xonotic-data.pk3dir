@@ -3,11 +3,11 @@
 #include "../autocvars.qh"
 #include "../defs.qh"
 #include "../main.qh"
+#include "../mutators/events.qh"
 
 #include "../../common/constants.qh"
 #include "../../common/nades/all.qh"
 #include "../../common/movetypes/movetypes.qh"
-#include "../../common/util.qh"
 
 #include "../../csqcmodellib/interpolate.qh"
 

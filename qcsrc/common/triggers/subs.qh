@@ -26,6 +26,8 @@
 	#define SUB_LTIME		move_ltime
 	#define SUB_FLAGS		move_flags
 
+.vector move_origin;
+
 	void SUB_SETORIGIN(entity s, vector v)
 	{SELFPARAM();
 		s.move_origin = v;

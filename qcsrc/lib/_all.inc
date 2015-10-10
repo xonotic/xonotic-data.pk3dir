@@ -30,6 +30,7 @@
 #include "accumulate.qh"
 #include "bits.qh"
 #include "bool.qh"
+#include "color.qh"
 #include "counting.qh"
 #include "cvar.qh"
 #include "defer.qh"

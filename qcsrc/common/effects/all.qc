@@ -1,3 +1,5 @@
+#include "all.qh"
+
 #ifdef CSQC
 void Read_Effect(bool is_new)
 {

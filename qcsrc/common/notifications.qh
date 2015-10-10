@@ -939,4 +939,6 @@ ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First)
 #include "notifications.inc"
 ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done)
 
+STATIC_INIT(RegisterNotifications) { CALL_ACCUMULATED_FUNCTION(RegisterNotifications); }
+
 #endif

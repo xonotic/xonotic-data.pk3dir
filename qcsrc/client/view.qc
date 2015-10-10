@@ -1,4 +1,3 @@
-#include "_all.qh"
 
 #include "announcer.qh"
 #include "hook.qh"
@@ -7,6 +6,7 @@
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
+#include "quickmenu.qh"
 
 #include "mutators/events.qh"
 
@@ -16,9 +16,12 @@
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
-#include "../common/util.qh"
 
+#include "../common/vehicles/all.qh"
 #include "../common/weapons/all.qh"
+#include "../common/viewloc.qh"
+#include "../common/minigames/cl_minigames.qh"
+#include "../common/minigames/cl_minigames_hud.qh"
 
 #include "../csqcmodellib/cl_player.qh"
 

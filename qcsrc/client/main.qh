@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef CLIENT_MAIN_H
+#define CLIENT_MAIN_H
 
 #include "../common/constants.qh"
 

@@ -1,8 +1,9 @@
 #include "controlpoint.qh"
-#include "gibs.qh"
+
 #include "teamradar.qh"
 #include "../common/movetypes/movetypes.qh"
 
+.vector colormod;
 .float alpha;
 .int count;
 .float pain_finished;
