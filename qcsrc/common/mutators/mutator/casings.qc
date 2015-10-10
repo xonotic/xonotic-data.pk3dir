@@ -9,7 +9,7 @@ REGISTER_MUTATOR(casings, true);
 
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
-{
+{SELFPARAM();
     vector org = self.origin + self.view_ofs + self.weaponentity.spawnorigin.x * v_forward - self.weaponentity.spawnorigin.y * v_right + self.weaponentity.spawnorigin.z * v_up;
 
     if (!sound_allowed(MSG_BROADCAST, casingowner))
@@ -36,11 +36,11 @@ class(Casing) .int state;
 class(Casing) .float cnt;
 
 void Casing_Delete()
-{
+{SELFPARAM();
     remove(self);
 }
 
-void Casing_Draw()
+void Casing_Draw(entity this)
 {
     if (self.move_flags & FL_ONGROUND)
     {
@@ -63,8 +63,21 @@ void Casing_Draw()
     }
 }
 
+SOUND(BRASS1, W_Sound("brass1"));
+SOUND(BRASS2, W_Sound("brass2"));
+SOUND(BRASS3, W_Sound("brass3"));
+Sound SND_BRASS_RANDOM() {
+    return Sounds[SND_BRASS1.m_id + floor(prandom() * 3)];
+}
+SOUND(CASINGS1, W_Sound("casings1"));
+SOUND(CASINGS2, W_Sound("casings2"));
+SOUND(CASINGS3, W_Sound("casings3"));
+Sound SND_CASINGS_RANDOM() {
+    return Sounds[SND_CASINGS1.m_id + floor(prandom() * 3)];
+}
+
 void Casing_Touch()
-{
+{SELFPARAM();
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
         Casing_Delete();
@@ -78,16 +91,14 @@ void Casing_Touch()
         {
             if (time >= self.nextthink)
             {
-                string s;
-                int f = floor(prandom() * 3) + 1;
-
+                Sound s;
                 switch (self.state)
                 {
                     case 1:
-                        s = W_Sound(strcat("casings", itos(f)));
+                        s = SND_CASINGS_RANDOM();
                         break;
                     default:
-                        s = W_Sound(strcat("brass", itos(f)));
+                        s = SND_BRASS_RANDOM();
                         break;
                 }
 
@@ -100,7 +111,7 @@ void Casing_Touch()
 }
 
 void Casing_Damage(float thisdmg, int hittype, vector org, vector thisforce)
-{
+{SELFPARAM();
     if (thisforce.z < 0)
         thisforce.z = 0;
     self.move_velocity = self.move_velocity + thisforce + '0 0 100';
@@ -149,11 +160,11 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
     switch (casing.state)
     {
         case 1:
-            setmodel(casing, "models/casing_shell.mdl");
+            setmodel(casing, MDL_CASING_SHELL);
             casing.cnt = time + autocvar_cl_casings_shell_time;
             break;
         default:
-            setmodel(casing, "models/casing_bronze.iqm");
+            setmodel(casing, MDL_CASING_BULLET);
             casing.cnt = time + autocvar_cl_casings_bronze_time;
             break;
     }
@@ -163,15 +174,4 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
     RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
 }
 
-STATIC_INIT(Casings)
-{
-    precache_model("models/casing_shell.mdl");
-    precache_model("models/casing_bronze.iqm");
-    precache_sound(W_Sound("brass1"));
-    precache_sound(W_Sound("brass2"));
-    precache_sound(W_Sound("brass3"));
-    precache_sound(W_Sound("casings1"));
-    precache_sound(W_Sound("casings2"));
-    precache_sound(W_Sound("casings3"));
-}
 #endif

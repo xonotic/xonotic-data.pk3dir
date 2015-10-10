@@ -13,7 +13,7 @@ Applies some friction to self
 */
 .float friction;
 void SUB_Friction (void)
-{
+{SELFPARAM();
 	self.SUB_NEXTTHINK = time;
 	if(self.SUB_FLAGS & FL_ONGROUND)
 		self.SUB_VELOCITY = self.SUB_VELOCITY * (1 - frametime * self.friction);
@@ -46,7 +46,7 @@ void SUB_VanishOrRemove (entity ent)
 }
 
 void SUB_SetFade_Think (void)
-{
+{SELFPARAM();
 	if(self.alpha == 0)
 		self.alpha = 1;
 	self.SUB_THINK = SUB_SetFade_Think;
@@ -81,7 +81,7 @@ self.SUB_ORIGIN traveling at speed
 ===============
 */
 void SUB_CalcMoveDone (void)
-{
+{SELFPARAM();
 	// After moving, set origin to exact final destination
 
 	SUB_SETORIGIN (self, self.finaldest);
@@ -93,7 +93,7 @@ void SUB_CalcMoveDone (void)
 
 .float platmovetype_turn;
 void SUB_CalcMove_controller_think (void)
-{
+{SELFPARAM();
 	entity oldself;
 	float traveltime;
 	float phasepos;
@@ -123,9 +123,11 @@ void SUB_CalcMove_controller_think (void)
 			destangle_x = -destangle_x; // flip up / down orientation
 
 			// take the shortest distance for the angles
-			SUB_ANGLES(self.owner)_x -= 360 * floor((SUB_ANGLES(self.owner)_x - destangle_x) / 360 + 0.5);
-			SUB_ANGLES(self.owner)_y -= 360 * floor((SUB_ANGLES(self.owner)_y - destangle_y) / 360 + 0.5);
-			SUB_ANGLES(self.owner)_z -= 360 * floor((SUB_ANGLES(self.owner)_z - destangle_z) / 360 + 0.5);
+			vector v = SUB_ANGLES(self.owner);
+			v.x -= 360 * floor((v.x - destangle_x) / 360 + 0.5);
+			v.y -= 360 * floor((v.y - destangle_y) / 360 + 0.5);
+			v.z -= 360 * floor((v.z - destangle_z) / 360 + 0.5);
+			SUB_ANGLES(self.owner) = v;
 			angloc = destangle - SUB_ANGLES(self.owner);
 			angloc = angloc * (1 / PHYS_INPUT_FRAMETIME); // so it arrives for the next frame
 			self.owner.SUB_AVELOCITY = angloc;
@@ -144,7 +146,7 @@ void SUB_CalcMove_controller_think (void)
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
 		oldself = self;
 		self.owner.SUB_THINK = self.think1;
-		self = self.owner;
+		setself(self.owner);
 		remove(oldself);
 		self.SUB_THINK();
 	}
@@ -185,7 +187,7 @@ float TSPEED_END = 2;
 // TODO average too?
 
 void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func)
-{
+{SELFPARAM();
 	float	traveltime;
 	entity controller;
 
@@ -238,13 +240,13 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	self.SUB_NEXTTHINK = self.SUB_LTIME + traveltime;
 
 	// invoke controller
-	self = controller;
+	setself(controller);
 	self.think();
-	self = self.owner;
+	setself(self.owner);
 }
 
 void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
-{
+{SELFPARAM();
 	vector	delta;
 	float	traveltime;
 
@@ -293,15 +295,8 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 }
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func)
-{
-	entity	oldself;
-
-	oldself = self;
-	self = ent;
-
-	SUB_CalcMove (tdest, tspeedtype, tspeed, func);
-
-	self = oldself;
+{SELFPARAM();
+	WITH(entity, self, ent, SUB_CalcMove(tdest, tspeedtype, tspeed, func));
 }
 
 /*
@@ -315,7 +310,7 @@ The calling function should make sure self.SUB_THINK is valid
 ===============
 */
 void SUB_CalcAngleMoveDone (void)
-{
+{SELFPARAM();
 	// After rotating, set angle to exact final angle
 	self.angles = self.finalangle;
 	self.SUB_AVELOCITY = '0 0 0';
@@ -326,7 +321,7 @@ void SUB_CalcAngleMoveDone (void)
 
 // FIXME: I fixed this function only for rotation around the main axes
 void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func)
-{
+{SELFPARAM();
 	vector	delta;
 	float	traveltime;
 
@@ -368,13 +363,6 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 }
 
 void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)
-{
-	entity	oldself;
-
-	oldself = self;
-	self = ent;
-
-	SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func);
-
-	self = oldself;
+{SELFPARAM();
+	WITH(entity, self, ent, SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func));
 }

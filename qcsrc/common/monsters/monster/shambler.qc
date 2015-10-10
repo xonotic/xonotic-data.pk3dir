@@ -1,19 +1,30 @@
+#ifndef SHAMBLER_H
+#define SHAMBLER_H
+
 #ifndef MENUQC
-bool M_Shambler(int);
+MODEL(MON_SHAMBLER, "models/monsters/shambler.mdl");
 #endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ SHAMBLER,
-/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
-/* mins,maxs  */ '-41 -41 -31', '41 41 65',
-/* model      */ "shambler.mdl",
-/* netname    */ "shambler",
-/* fullname   */ _("Shambler")
-) {
+
+CLASS(Shambler, Monster)
+    ATTRIB(Shambler, spawnflags, int, MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Shambler, mins, vector, '-41 -41 -31');
+    ATTRIB(Shambler, maxs, vector, '41 41 65');
 #ifndef MENUQC
-	this.monster_func = M_Shambler;
-	this.monster_func(MR_PRECACHE);
+    ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
+#endif
+    ATTRIB(Shambler, netname, string, "shambler");
+    ATTRIB(Shambler, monster_name, string, _("Shambler"));
+ENDCLASS(Shambler)
+
+REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
+#ifndef MENUQC
+    this.mr_precache(this);
 #endif
 }
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
@@ -47,10 +58,10 @@ const float shambler_anim_death		= 8;
 .float shambler_lastattack; // delay attacks separately
 
 void M_Shambler_Attack_Smash()
-{
+{SELFPARAM();
 	makevectors(self.angles);
 	Send_Effect(EFFECT_EXPLOSION_MEDIUM, (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs.z), '0 0 0', 1);
-	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	// RadiusDamage does NOT support custom starting location, which means we must use this hack...
 
@@ -61,7 +72,7 @@ void M_Shambler_Attack_Smash()
 }
 
 void M_Shambler_Attack_Swing()
-{
+{SELFPARAM();
 	float r = (random() < 0.5);
 	if(r && Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? self.anim_melee2 : self.anim_melee3), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, true))
 	{
@@ -72,10 +83,10 @@ void M_Shambler_Attack_Swing()
 }
 
 void M_Shambler_Attack_Lightning_Explode()
-{
+{SELFPARAM();
 	entity head;
 
-	sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, '0 0 0', '0 0 0', 1);
 
 	self.event_damage = func_null;
@@ -99,7 +110,7 @@ void M_Shambler_Attack_Lightning_Explode()
 }
 
 void M_Shambler_Attack_Lightning_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if (self.health <= 0)
 		return;
 
@@ -113,14 +124,14 @@ void M_Shambler_Attack_Lightning_Damage(entity inflictor, entity attacker, float
 }
 
 void M_Shambler_Attack_Lightning_Touch()
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 
 	self.use ();
 }
 
 void M_Shambler_Attack_Lightning_Think()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if (time > self.cnt)
 	{
@@ -131,7 +142,7 @@ void M_Shambler_Attack_Lightning_Think()
 }
 
 void M_Shambler_Attack_Lightning()
-{
+{SELFPARAM();
 	entity gren;
 
 	monster_makevectors(self.enemy);
@@ -168,8 +179,8 @@ void M_Shambler_Attack_Lightning()
 	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
 
-float M_Shambler_Attack(float attack_type)
-{
+float M_Shambler_Attack(float attack_type, entity targ)
+{SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -211,33 +222,32 @@ float M_Shambler_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_shambler() { Monster_Spawn(MON_SHAMBLER.monsterid); }
+spawnfunc(monster_shambler) { Monster_Spawn(MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
-bool M_Shambler(int req)
-{
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Shambler, mr_think, bool(Shambler thismon))
 		{
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Shambler, mr_pain, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			self.pain_finished = time + 0.5;
 			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Shambler, mr_death, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Shambler, mr_anim, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_die1 = animfixfps(self, '8 1 0.5', none); // 2 seconds
 			self.anim_walk = animfixfps(self, '1 1 1', none);
@@ -253,8 +263,9 @@ bool M_Shambler(int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		METHOD(Shambler, mr_setup, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			if(!self.health) self.health = (autocvar_g_monster_shambler_health);
 			if(!self.attack_range) self.attack_range = 150;
 			if(!self.speed) { self.speed = (autocvar_g_monster_shambler_speed_walk); }
@@ -272,13 +283,10 @@ bool M_Shambler(int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Shambler, mr_precache, bool(Shambler thismon))
 		{
-			precache_model("models/monsters/shambler.mdl");
 			return true;
 		}
 		#endif
-	}
 
-	return true;
-}
+#endif

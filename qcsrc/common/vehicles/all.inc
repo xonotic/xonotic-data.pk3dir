@@ -1,6 +1,6 @@
-#include "unit/spiderbot.qc"
-#include "unit/raptor.qc"
-#include "unit/racer.qc"
+#include "vehicle/spiderbot.qc"
+#include "vehicle/raptor.qc"
+#include "vehicle/racer.qc"
 #ifndef VEHICLES_NO_UNSTABLE
-	#include "unit/bumblebee.qc"
+	#include "vehicle/bumblebee.qc"
 #endif

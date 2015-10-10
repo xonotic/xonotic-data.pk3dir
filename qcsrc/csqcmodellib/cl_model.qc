@@ -42,7 +42,7 @@ float autocvar_cl_nolerp = 0;
 .float csqcmodel_lerpfrac2time;
 
 void CSQCModel_InterpolateAnimation_2To4_PreNote(int sf)
-{
+{SELFPARAM();
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		self.frame3 = self.frame;
@@ -61,7 +61,7 @@ void CSQCModel_InterpolateAnimation_2To4_PreNote(int sf)
 	}
 }
 void CSQCModel_InterpolateAnimation_1To2_PreNote(int sf)
-{
+{SELFPARAM();
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		self.frame2 = self.frame;
@@ -78,7 +78,7 @@ void CSQCModel_InterpolateAnimation_PreNote(int sf)
 }
 
 void CSQCModel_InterpolateAnimation_2To4_Note(int sf, float set_times)
-{
+{SELFPARAM();
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		if(set_times)
@@ -97,7 +97,7 @@ void CSQCModel_InterpolateAnimation_2To4_Note(int sf, float set_times)
 	}
 }
 void CSQCModel_InterpolateAnimation_1To2_Note(int sf, float set_times)
-{
+{SELFPARAM();
 	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		if(set_times)
@@ -114,7 +114,7 @@ void CSQCModel_InterpolateAnimation_Note(int sf)
 }
 
 void CSQCModel_InterpolateAnimation_2To4_Do()
-{
+{SELFPARAM();
 	if(autocvar_cl_nolerp || (autocvar_cl_lerpanim_maxdelta_framegroups == 0))
 	{
 		self.lerpfrac = self.csqcmodel_lerpfrac;
@@ -161,7 +161,7 @@ void CSQCModel_InterpolateAnimation_2To4_Do()
 	}
 }
 void CSQCModel_InterpolateAnimation_1To2_Do()
-{
+{SELFPARAM();
 	if(autocvar_cl_nolerp || (autocvar_cl_lerpanim_maxdelta_framegroups == 0))
 	{
 		self.lerpfrac = 0;
@@ -184,7 +184,7 @@ void CSQCModel_InterpolateAnimation_Do()
 }
 
 void CSQCModel_Draw()
-{
+{SELFPARAM();
 	// some nice flags for CSQCMODEL_IF and the hooks
 	bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
 	noref bool islocalplayer = (self.entnum == player_localnum + 1);
@@ -214,7 +214,7 @@ void CSQCModel_Draw()
 }
 
 void CSQCModel_Read(bool isnew)
-{
+{SELFPARAM();
 	int sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks

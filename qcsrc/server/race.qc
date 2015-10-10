@@ -86,7 +86,7 @@ string race_readName(string map, float pos)
 
 const float MAX_CHECKPOINTS = 255;
 
-void spawnfunc_target_checkpoint();
+spawnfunc(target_checkpoint);
 
 .float race_penalty;
 .float race_penalty_accumulator;
@@ -569,7 +569,7 @@ void dumpsurface(entity e)
 }
 
 void checkpoint_passed()
-{
+{SELFPARAM();
 	string oldmsg;
 	entity cp;
 
@@ -577,7 +577,7 @@ void checkpoint_passed()
 	{
 		// do not allow portalling through checkpoints
 		trace_plane_normal = normalize(-1 * other.velocity);
-		self = other;
+		setself(other);
 		W_Porto_Fail(0);
 		return;
 	}
@@ -724,7 +724,7 @@ void checkpoint_use()
 }
 
 float race_waypointsprite_visible_for_player(entity e)
-{
+{SELFPARAM();
 	if(e.race_checkpoint == -1 || self.owner.race_checkpoint == -2)
 		return true;
 	else if(e.race_checkpoint == self.owner.race_checkpoint)
@@ -735,8 +735,8 @@ float race_waypointsprite_visible_for_player(entity e)
 
 float have_verified;
 void trigger_race_checkpoint_verify()
-{
-	entity oldself, cp;
+{SELFPARAM();
+	entity cp;
 	float i, p;
 	float qual;
 
@@ -746,8 +746,7 @@ void trigger_race_checkpoint_verify()
 
 	qual = g_race_qualifying;
 
-	oldself = self;
-	self = spawn();
+	setself(spawn());
 	self.classname = "player";
 
 	if(g_race)
@@ -895,11 +894,11 @@ void trigger_race_checkpoint_verify()
 				}
 	}
 	remove(self);
-	self = oldself;
+	setself(this);
 }
 
 vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector current)
-{
+{SELFPARAM();
 	if(g_race_qualifying)
 	{
 		// spawn at first
@@ -930,7 +929,7 @@ vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector
 	return current;
 }
 
-void spawnfunc_trigger_race_checkpoint()
+spawnfunc(trigger_race_checkpoint)
 {
 	vector o;
 	if(!g_race && !g_cts) { remove(self); return; }
@@ -978,7 +977,7 @@ void spawnfunc_trigger_race_checkpoint()
 	InitializeEntity(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_target_checkpoint() // defrag entity
+spawnfunc(target_checkpoint) // defrag entity
 {
 	vector o;
 	if(!g_race && !g_cts) { remove(self); return; }
@@ -1019,8 +1018,8 @@ void spawnfunc_target_checkpoint() // defrag entity
 	InitializeEntity(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }
 
-void spawnfunc_target_startTimer() { spawnfunc_target_checkpoint(); }
-void spawnfunc_target_stopTimer() { spawnfunc_target_checkpoint(); }
+spawnfunc(target_startTimer) { spawnfunc_target_checkpoint(this); }
+spawnfunc(target_stopTimer) { spawnfunc_target_checkpoint(this); }
 
 void race_AbandonRaceCheck(entity p)
 {
@@ -1043,7 +1042,7 @@ void race_StartCompleting()
 }
 
 void race_PreparePlayer()
-{
+{SELFPARAM();
 	race_ClearTime(self);
 	self.race_place = 0;
 	self.race_started = 0;
@@ -1052,7 +1051,7 @@ void race_PreparePlayer()
 }
 
 void race_RetractPlayer()
-{
+{SELFPARAM();
 	if(!g_race && !g_cts)
 		return;
 	if(self.race_respawn_checkpoint == 0 || self.race_respawn_checkpoint == race_timed_checkpoint)
@@ -1060,11 +1059,11 @@ void race_RetractPlayer()
 	self.race_checkpoint = self.race_respawn_checkpoint;
 }
 
-void spawnfunc_info_player_race (void)
+spawnfunc(info_player_race)
 {
 	if(!g_race && !g_cts) { remove(self); return; }
 	++race_spawns;
-	spawnfunc_info_player_deathmatch();
+	spawnfunc_info_player_deathmatch(this);
 
 	if(self.race_place > race_highest_place_spawn)
 		race_highest_place_spawn = self.race_place;
@@ -1073,9 +1072,8 @@ void spawnfunc_info_player_race (void)
 }
 
 void race_ClearRecords()
-{
+{SELFPARAM();
 	float i;
-	entity e;
 
 	for(i = 0; i < MAX_CHECKPOINTS; ++i)
 	{
@@ -1085,15 +1083,13 @@ void race_ClearRecords()
 		race_checkpoint_recordholders[i] = string_null;
 	}
 
-	e = self;
-	FOR_EACH_CLIENT(self)
+	entity e;
+	FOR_EACH_CLIENT(e)
 	{
-		float p;
-		p = self.race_place;
-		race_PreparePlayer();
-		self.race_place = p;
+		float p = e.race_place;
+		WITH(entity, self, e, race_PreparePlayer());
+		e.race_place = p;
 	}
-	self = e;
 }
 
 void race_ImposePenaltyTime(entity pl, float penalty, string reason)
@@ -1131,7 +1127,7 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 }
 
 void penalty_touch()
-{
+{SELFPARAM();
 	EXACTTRIGGER_TOUCH;
 	if(other.race_lastpenalty != self)
 	{
@@ -1141,11 +1137,11 @@ void penalty_touch()
 }
 
 void penalty_use()
-{
+{SELFPARAM();
 	race_ImposePenaltyTime(activator, self.race_penalty, self.race_penalty_reason);
 }
 
-void spawnfunc_trigger_race_penalty()
+spawnfunc(trigger_race_penalty)
 {
 	EXACTTRIGGER_INIT;
 

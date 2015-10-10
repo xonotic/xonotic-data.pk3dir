@@ -247,9 +247,6 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_invasion);
 	}
 
-	if(teamplay)
-		entcs_init();
-
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
 
@@ -269,7 +266,8 @@ void InitGameplayMode()
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
 
-string GetClientVersionMessage() {
+string GetClientVersionMessage()
+{SELFPARAM();
 	string versionmsg;
 	if (self.version_mismatch) {
 		if(self.version < autocvar_gameversion) {
@@ -303,8 +301,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");
-	if(g_grappling_hook)
-		modifications = strcat(modifications, ", Hook");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
@@ -323,9 +319,6 @@ string getwelcomemessage(void)
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
-
-	if (g_grappling_hook)
-		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
 
 	if (cvar("g_nades"))
 		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
@@ -404,7 +397,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
-{
+{SELFPARAM();
 	float dm;
 	entity head;
 	string teament_name;
@@ -710,7 +703,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 }
 
 float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
-{
+{SELFPARAM();
 	float smallest, selectedteam;
 
 	// don't join a team if we're not playing a team game
@@ -787,7 +780,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 //void() ctf_playerchanged;
 void SV_ChangeTeam(float _color)
-{
+{SELFPARAM();
 	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done

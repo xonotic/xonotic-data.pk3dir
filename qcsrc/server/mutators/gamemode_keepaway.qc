@@ -27,7 +27,7 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 
 void ka_TouchEvent();
 void ka_RespawnBall() // runs whenever the ball needs to be relocated
-{
+{SELFPARAM();
 	if(gameover) { return; }
 	vector oldballorigin = self.origin;
 
@@ -53,11 +53,11 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	WaypointSprite_Spawn(WP_KaBall, 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 
-	sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	sound(self, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
 void ka_TimeScoring()
-{
+{SELFPARAM();
 	if(self.owner.ballcarried)
 	{ // add points for holding the ball after a certain amount of time
 		if(autocvar_g_keepaway_score_timepoints)
@@ -69,7 +69,7 @@ void ka_TimeScoring()
 }
 
 void ka_TouchEvent() // runs any time that the ball comes in contact with something
-{
+{SELFPARAM();
 	if(gameover) { return; }
 	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -82,7 +82,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if (!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
 		Send_Effect(EFFECT_BALL_SPARKS, self.origin, '0 0 0', 1);
-		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_KA_TOUCH, VOL_BASE, ATTEN_NORM);
 		return;
 	}
 	else if(self.wait > time) { return; }
@@ -112,7 +112,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
 	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
-	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	sound(self.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
@@ -154,7 +154,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ka_EventLog("dropped", plyr);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
-	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTEN_NONE);	// ATTEN_NONE (it's a sound intended to be heard anywhere)
+	sound(other, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE);	// ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
@@ -167,7 +167,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 }
 
 void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
-{
+{SELFPARAM();
 	if((self.owner) && (IS_PLAYER(self.owner)))
 		ka_DropEvent(self.owner);
 
@@ -187,7 +187,7 @@ void ka_Reset() // used to clear the ballcarrier whenever the match switches fro
 // ================
 
 void havocbot_goalrating_ball(float ratingscale, vector org)
-{
+{SELFPARAM();
 	float t;
 	entity ball_owner;
 	ball_owner = ka_ball.owner;
@@ -206,7 +206,7 @@ void havocbot_goalrating_ball(float ratingscale, vector org)
 }
 
 void havocbot_role_ka_carrier()
-{
+{SELFPARAM();
 	if (self.deadflag != DEAD_NO)
 		return;
 
@@ -229,7 +229,7 @@ void havocbot_role_ka_carrier()
 }
 
 void havocbot_role_ka_collector()
-{
+{SELFPARAM();
 	if (self.deadflag != DEAD_NO)
 		return;
 
@@ -257,7 +257,7 @@ void havocbot_role_ka_collector()
 // ==============
 
 MUTATOR_HOOKFUNCTION(ka_Scoring)
-{
+{SELFPARAM();
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
@@ -284,7 +284,7 @@ MUTATOR_HOOKFUNCTION(ka_GiveFragsForKill)
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
-{
+{SELFPARAM();
 	// clear the item used for the ball in keepaway
 	self.items &= ~IT_KEY1;
 
@@ -296,7 +296,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerUseKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE == 0)
 	if(self.ballcarried)
 	{
@@ -338,13 +338,13 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values th
 }
 
 MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
-{
+{SELFPARAM();
 	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has left the match, drop it
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
-{
+{SELFPARAM();
 	// In the future this hook is supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
 	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player()
 
@@ -357,7 +357,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
-{
+{SELFPARAM();
 	if(self.ballcarried)
 	{
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
@@ -367,7 +367,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
 }
 
 MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
-{
+{SELFPARAM();
 	// if neither player has ball then don't attack unless the ball is on the ground
 	if(!checkentity.ballcarried && !self.ballcarried && ka_ball.owner)
 		return true;
@@ -375,7 +375,7 @@ MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
 }
 
 MUTATOR_HOOKFUNCTION(ka_BotRoles)
-{
+{SELFPARAM();
 	if (self.ballcarried)
 		self.havocbot_role = havocbot_role_ka_carrier;
 	else
@@ -396,7 +396,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e = spawn();
 	e.model = "models/orbs/orbblue.md3";
 	precache_model(e.model);
-	setmodel(e, e.model);
+	_setmodel(e, e.model);
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
 	e.classname = "keepawayball";
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
@@ -427,11 +427,6 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 {
 	if(!g_keepaway)
 		return;
-
-	precache_sound("keepaway/pickedup.wav");
-	precache_sound("keepaway/dropped.wav");
-	precache_sound("keepaway/respawn.wav");
-	precache_sound("keepaway/touch.wav");
 
 	ka_ScoreRules();
 	ka_SpawnBall();

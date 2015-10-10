@@ -66,7 +66,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	{
 		m1 = w.mins;
 		m2 = w.maxs;
-		setmodel(w, "models/runematch/rune.mdl"); w.effects = EF_LOWPRECISION;
+		setmodel(w, MDL_WAYPOINT); w.effects = EF_LOWPRECISION;
 		setsize(w, m1, m2);
 		if (w.wpflags & WAYPOINTFLAG_ITEM)
 			w.colormod = '1 0 0';
@@ -162,7 +162,7 @@ void waypoint_addlink(entity from, entity to)
 // (precompile a list of all reachable waypoints from this spawnfunc_waypoint)
 // (SLOW!)
 void waypoint_think()
-{
+{SELFPARAM();
 	entity e;
 	vector sv, sm1, sm2, ev, em1, em2, dv;
 
@@ -269,7 +269,7 @@ void waypoint_schedulerelink(entity wp)
 		vector m1, m2;
 		m1 = wp.mins;
 		m2 = wp.maxs;
-		setmodel(wp, "models/runematch/rune.mdl"); wp.effects = EF_LOWPRECISION;
+		setmodel(wp, MDL_WAYPOINT); wp.effects = EF_LOWPRECISION;
 		setsize(wp, m1, m2);
 		if (wp.wpflags & WAYPOINTFLAG_ITEM)
 			wp.colormod = '1 0 0';
@@ -293,7 +293,7 @@ void waypoint_schedulerelink(entity wp)
 }
 
 // spawnfunc_waypoint map entity
-void spawnfunc_waypoint()
+spawnfunc(waypoint)
 {
 	setorigin(self, self.origin);
 	// schedule a relink after other waypoints have had a chance to spawn
@@ -808,7 +808,7 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 }
 
 entity waypoint_spawnpersonal(vector position)
-{
+{SELFPARAM();
 	entity w;
 
 	// drop the waypoint to a proper location:

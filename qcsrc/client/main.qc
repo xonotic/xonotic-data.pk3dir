@@ -2,7 +2,6 @@
 #include "_all.qh"
 
 #include "controlpoint.qh"
-#include "csqcmodel_hooks.qh"
 #include "damage.qh"
 #include "effects.qh"
 #include "generator.qh"
@@ -26,12 +25,12 @@
 
 #include "weapons/projectile.qh"
 
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 #include "../common/deathtypes.qh"
-#include "../common/effects.qh"
+#include "../common/effects/effects.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
-#include "../common/nades.qh"
+#include "../common/nades/all.qh"
 #include "../common/net_notice.qh"
 #include "../common/notifications.qh"
 #include "../common/stats.qh"
@@ -49,7 +48,6 @@
 #include "../common/triggers/include.qh"
 
 #include "../common/turrets/cl_turrets.qh"
-#include "../common/turrets/turrets.qh"
 
 #include "../warpzonelib/client.qh"
 
@@ -82,6 +80,8 @@ void menu_show_error()
 void menu_sub_null()
 {
 }
+
+void draw_null(entity this) { }
 
 string forcefog;
 void ConsoleCommand_macro_init();
@@ -125,7 +125,7 @@ void CSQC_Init(void)
 	registercvar("cl_jumpspeedcap_min", "");
 	registercvar("cl_jumpspeedcap_max", "");
 
-	registercvar("cl_multijump", "1");
+	registercvar("cl_multijump", "0");
 
 	registercvar("cl_spawn_near_teammate", "1");
 
@@ -148,24 +148,13 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-
-	initialize_minigames();
 
 	// precaches
-	precache_model("null");
-	precache_sound("misc/hit.wav");
-	precache_sound("misc/typehit.wav");
 
-	generator_precache();
 	Projectile_Precache();
-	Hook_Precache();
-	GibSplash_Precache();
 	Tuba_Precache();
-	CSQCPlayer_Precache();
 
 	if(autocvar_cl_reticle)
 	{
@@ -304,7 +293,7 @@ float SetTeam(entity o, int Team)
 }
 
 void Playerchecker_Think()
-{
+{SELFPARAM();
     int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)
@@ -398,34 +387,32 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 // BEGIN OPTIONAL CSQC FUNCTIONS
 
 void Ent_RemoveEntCS()
-{
-	entcs_receiver[self.sv_entnum] = world;
+{SELFPARAM();
+	entcs_receiver[self.sv_entnum] = NULL;
 }
 void Ent_ReadEntCS()
-{
-    int sf;
+{SELFPARAM();
 	InterpolateOrigin_Undo();
-
 	self.classname = "entcs_receiver";
-	sf = ReadByte();
+	int sf = ReadByte();
 
-	if(sf & 1)
+	if(sf & BIT(0))
 		self.sv_entnum = ReadByte();
-	if(sf & 2)
+	if (sf & BIT(1))
 	{
 		self.origin_x = ReadShort();
 		self.origin_y = ReadShort();
 		self.origin_z = ReadShort();
 		setorigin(self, self.origin);
 	}
-	if(sf & 4)
+	if (sf & BIT(2))
 	{
 		self.angles_y = ReadByte() * 360.0 / 256;
 		self.angles_x = self.angles_z = 0;
 	}
-	if(sf & 8)
+	if (sf & BIT(3))
 		self.healthvalue = ReadByte() * 10;
-	if(sf & 16)
+	if (sf & BIT(4))
 		self.armorvalue = ReadByte() * 10;
 
 	entcs_receiver[self.sv_entnum] = self;
@@ -438,7 +425,7 @@ void Ent_ReadEntCS()
 void Ent_Remove();
 
 void Ent_RemovePlayerScore()
-{
+{SELFPARAM();
 	if(self.owner) {
 		SetTeam(self.owner, -1);
 		self.owner.gotscores = 0;
@@ -449,7 +436,7 @@ void Ent_RemovePlayerScore()
 }
 
 void Ent_ReadPlayerScore()
-{
+{SELFPARAM();
 	int i, n;
 	bool isNew;
 	entity o;
@@ -507,7 +494,7 @@ void Ent_ReadPlayerScore()
 }
 
 void Ent_ReadTeamScore()
-{
+{SELFPARAM();
 	int i;
 	entity o;
 
@@ -698,13 +685,13 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
-void Spawn_Draw(void)
+void Spawn_Draw(entity this)
 {
-	pointparticles(self.cnt, self.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
+	pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
 void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
-{
+{SELFPARAM();
 	float teamnum = (ReadByte() - 1);
 	vector spn_origin;
 	spn_origin.x = ReadShort();
@@ -750,7 +737,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 }
 
 void Ent_ReadSpawnEvent(float is_new)
-{
+{SELFPARAM();
 	// If entnum is 0, ONLY do the local spawn actions
 	// this way the server can disable the sending of
 	// spawn origin or such to clients if wanted.
@@ -779,7 +766,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			}
 			if(autocvar_cl_spawn_event_sound)
 			{
-				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}
@@ -806,16 +793,14 @@ void Ent_RadarLink();
 void Ent_Init();
 void Ent_ScoresInfo();
 void CSQC_Ent_Update(float bIsNewEntity)
-{
-	float t;
-	float savetime;
-	t = ReadByte();
+{SELFPARAM();
+	int t = ReadByte();
 
 	if(autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t);
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
-	savetime = time;
+	float savetime = time;
 	if(servertime)
 	{
 		time = servertime;
@@ -832,7 +817,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	{
 		if(t != self.enttype || bIsNewEntity)
 		{
-			//print("A CSQC entity changed its type!\n");
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(self), self.entnum, self.enttype, t);
 			Ent_Remove();
 			clearentity(self);
@@ -849,6 +833,13 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	}
 #endif
 	self.enttype = t;
+	bool done = false;
+	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
+		it.m_read(self, bIsNewEntity);
+		done = true;
+		break;
+	));
+	if (!done)
 	switch(t)
 	{
 		case ENT_CLIENT_MUTATOR: {
@@ -888,14 +879,13 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
 		case ENT_CLIENT_GENERATOR: ent_generator(); break;
-		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(); break;
+		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(this); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
-		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
 		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
 		case ENT_CLIENT_VIEWLOC: ent_viewloc(); break;
 		case ENT_CLIENT_VIEWLOC_TRIGGER: ent_viewloc_trigger(); break;
@@ -924,7 +914,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.
 void Ent_Remove()
-{
+{SELFPARAM();
 	if(self.entremove)
 		self.entremove();
 
@@ -936,19 +926,19 @@ void Ent_Remove()
 
 	if(self.snd_looping > 0)
 	{
-		sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+		sound(self, self.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
 		self.snd_looping = 0;
 	}
 
 	self.enttype = 0;
 	self.classname = "";
-	self.draw = menu_sub_null;
+	self.draw = draw_null;
 	self.entremove = menu_sub_null;
 	// TODO possibly set more stuff to defaults
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
 void CSQC_Ent_Remove()
-{
+{SELFPARAM();
 	if(autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype);
 
@@ -985,7 +975,7 @@ void CSQC_Parse_Print(string strMessage)
 	if(autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
 
-	LOG_INFO(ColorTranslateRGB(strMessage));
+	print(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
@@ -1011,7 +1001,7 @@ void Fog_Force()
 
 void Gamemode_Init();
 void Ent_ScoresInfo()
-{
+{SELFPARAM();
     int i;
 	self.classname = "ent_client_scores_info";
 	gametype = ReadInt24_t();
@@ -1035,7 +1025,7 @@ void Ent_ScoresInfo()
 }
 
 void Ent_Init()
-{
+{SELFPARAM();
 	self.classname = "ent_client_init";
 
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
@@ -1275,7 +1265,7 @@ void Net_WeaponComplain()
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
-float CSQC_Parse_TempEntity()
+bool CSQC_Parse_TempEntity()
 {
 	// Acquire TE ID
 	int nTEID = ReadByte();
@@ -1283,6 +1273,10 @@ float CSQC_Parse_TempEntity()
 	if (autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
+	FOREACH(TempEntities, it.m_id == nTEID, LAMBDA(
+		it.m_read(NULL, true);
+		return true;
+	));
 	switch (nTEID)
 	{
 		case TE_CSQC_MUTATOR:

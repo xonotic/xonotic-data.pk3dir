@@ -1,7 +1,7 @@
 #include "g_violence.qh"
 #include "_all.qh"
 
-float Violence_GibSplash_SendEntity(entity to, int sf)
+bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
 	WriteByte(MSG_ENTITY, self.state); // actually type
@@ -15,7 +15,7 @@ float Violence_GibSplash_SendEntity(entity to, int sf)
 
 // TODO maybe convert this to a TE?
 void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker)
-{
+{SELFPARAM();
 	if(g_cts) // no gibs in CTS
 		return;
 

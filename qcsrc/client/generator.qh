@@ -7,5 +7,4 @@ const int GSF_STATUS = 4;
 const int GSF_SETUP = 8;
 
 void ent_generator();
-void generator_precache();
 #endif

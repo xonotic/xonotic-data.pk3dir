@@ -51,7 +51,7 @@
  */
 
 void ImpulseCommands (void)
-{
+{SELFPARAM();
 	int imp;
 	vector org;
 	float i;
@@ -134,7 +134,10 @@ void ImpulseCommands (void)
 					W_PreviousWeapon(1);
 					break;
 				case 20:
-					if(!forbidWeaponUse(self)) { WEP_ACTION(self.weapon, WR_RELOAD); }
+					if(!forbidWeaponUse(self)) {
+						Weapon w = get_weaponinfo(self.weapon);
+						w.wr_reload(w);
+					}
 					break;
 			}
 		}
@@ -158,11 +161,11 @@ void ImpulseCommands (void)
 		else
 			self.impulse = imp; // retry in next frame
 	}
-	else if(imp >= 230 && imp <= 253)
+	else if(imp >= WEP_IMPULSE_BEGIN && imp <= WEP_IMPULSE_END)
 	{
 		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
-			W_SwitchWeapon (imp - 230 + WEP_FIRST);
+			W_SwitchWeapon (imp - WEP_IMPULSE_BEGIN + WEP_FIRST);
 		else
 			self.impulse = imp; // retry in next frame
 	}
@@ -355,7 +358,7 @@ void ImpulseCommands (void)
 							setorigin(e, org);
 							LOG_INFO("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST;
-							setmodel(e, self.model);
+							_setmodel(e, self.model);
 							e.frame = self.frame;
 							e.skin = self.skin;
 							e.colormod = '8 0.5 8';

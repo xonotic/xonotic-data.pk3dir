@@ -31,7 +31,7 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 }
 
 class(Hook) .float teleport_time;
-void Draw_GrapplingHook()
+void Draw_GrapplingHook(entity this)
 {
 	vector a, b, atrans;
 	string tex;
@@ -44,7 +44,7 @@ void Draw_GrapplingHook()
 	if(self.teleport_time)
 	if(time > self.teleport_time)
 	{
-		sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM); // safeguard
+		sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM); // safeguard
 		self.teleport_time = 0;
 	}
 
@@ -167,12 +167,12 @@ void Draw_GrapplingHook()
 }
 
 void Remove_GrapplingHook()
-{
-	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
+{SELFPARAM();
+	sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 void Ent_ReadHook(float bIsNew, float type)
-{
+{SELFPARAM();
 	self.HookType = type;
 
 	int sf = ReadByte();
@@ -224,22 +224,16 @@ void Ent_ReadHook(float bIsNew, float type)
 			default:
 			case ENT_CLIENT_HOOK:
 				// for the model
-				setmodel(self, "models/hook.md3");
+				setmodel(self, MDL_HOOK);
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_ARC_BEAM:
-				sound (self, CH_SHOTS_SINGLE, W_Sound("lgbeam_fly"), VOL_BASE, ATTEN_NORM);
+				sound (self, CH_SHOTS_SINGLE, SND_LGBEAM_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}
 
 	self.teleport_time = time + 10;
-}
-
-void Hook_Precache()
-{
-	precache_sound(W_Sound("lgbeam_fly"));
-	precache_model("models/hook.md3");
 }
 
 // TODO: hook: temporarily transform self.origin for drawing the model along warpzones!

@@ -28,7 +28,7 @@
 #endif
 
 #ifdef CSQC
-void ItemDraw()
+void ItemDraw(entity self)
 {
     if(self.gravity)
     {
@@ -64,7 +64,7 @@ void ItemDraw()
     }
 }
 
-void ItemDrawSimple()
+void ItemDrawSimple(entity this)
 {
     if(self.gravity)
     {
@@ -76,7 +76,7 @@ void ItemDrawSimple()
 }
 
 void Item_PreDraw()
-{
+{SELFPARAM();
 	vector org;
 	float alph;
 	org = getpropertyvec(VF_ORIGIN);
@@ -96,7 +96,7 @@ void Item_PreDraw()
 }
 
 void ItemRead(float _IsNew)
-{
+{SELFPARAM();
     int sf = ReadByte();
 
     if(sf & ISF_LOCATION)
@@ -207,7 +207,7 @@ void ItemRead(float _IsNew)
             LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
 
         precache_model(self.mdl);
-        setmodel(self, self.mdl);
+        _setmodel(self, self.mdl);
     }
 
     if(sf & ISF_COLORMAP)
@@ -246,7 +246,7 @@ void ItemRead(float _IsNew)
 #endif
 
 #ifdef SVQC
-bool ItemSend(entity to, int sf)
+bool ItemSend(entity this, entity to, int sf)
 {
 	if(self.gravity)
 		sf |= ISF_DROP;
@@ -310,7 +310,7 @@ void ItemUpdate(entity item)
 }
 
 float have_pickup_item(void)
-{
+{SELFPARAM();
 	if(self.flags & FL_POWERUP)
 	{
 		if(autocvar_g_powerups > 0)
@@ -416,7 +416,7 @@ void Item_Show (entity e, float mode)
 }
 
 void Item_Think()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if(self.origin != self.oldorigin)
 	{
@@ -432,15 +432,15 @@ void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
 
 void Item_Respawn (void)
-{
+{SELFPARAM();
 	Item_Show(self, 1);
 	// this is ugly...
 	if(self.items == ITEM_Strength.m_itemid)
-		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else if(self.items == ITEM_Shield.m_itemid)
-		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
-		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
     if (Item_ItemsTime_Allow(self.itemdef, self.weapons))
@@ -458,7 +458,7 @@ void Item_Respawn (void)
 }
 
 void Item_RespawnCountdown (void)
-{
+{SELFPARAM();
 	if(self.count >= ITEM_RESPAWN_TICKS)
 	{
 		if(self.waypointsprite_attached)
@@ -472,15 +472,24 @@ void Item_RespawnCountdown (void)
 		if(self.count == 1)
 		{
 			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
-			int wpextra = 0;
-            entity e = self.itemdef;
-            if (e) wpextra = e.m_id;
-			if (self.flags & FL_WEAPON) {
-				entity wi = get_weaponinfo(self.weapon);
-				if (wi) wpextra = wi.m_id;
-			}
-            entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
-            wp.wp_extra = wpextra;
+			do {
+				{
+					entity wi = get_weaponinfo(self.weapon);
+					if (wi.m_id) {
+						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Weapon);
+						wp.wp_extra = wi.m_id;
+						break;
+					}
+				}
+				{
+					entity ii = self.itemdef;
+					if (ii.m_id) {
+						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Item);
+						wp.wp_extra = ii.m_id;
+						break;
+					}
+				}
+			} while (0);
             if(self.waypointsprite_attached)
             {
                 GameItem def = self.itemdef;
@@ -492,27 +501,26 @@ void Item_RespawnCountdown (void)
 
 		if(self.waypointsprite_attached)
 		{
+			setself(self.waypointsprite_attached);
 			entity e;
-			entity it = self;
-			self = self.waypointsprite_attached;
 			FOR_EACH_REALCLIENT(e)
 				if(self.waypointsprite_visible_for_player(e))
 				{
 					msg_entity = e;
-					soundto(MSG_ONE, it, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+					soundto(MSG_ONE, this, CH_TRIGGER, SND(ITEMRESPAWNCOUNTDOWN), VOL_BASE, ATTEN_NORM);	// play respawn sound
 				}
-			self = it;
+			setself(this);
 
 			WaypointSprite_Ping(self.waypointsprite_attached);
 			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
 		}
 		else
-			sound(self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
+			sound(self, CH_TRIGGER, SND_ITEMRESPAWNCOUNTDOWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	}
 }
 
 void Item_RespawnThink()
-{
+{SELFPARAM();
 	self.nextthink = time;
 	if(self.origin != self.oldorigin)
 	{
@@ -646,7 +654,7 @@ float Item_GiveTo(entity item, entity player)
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(it & WepSet_FromWeapon(i))
 			{
-				W_DropEvent(WR_PICKUP, player, i, item);
+				W_DropEvent(wr_pickup, player, i, item);
 				W_GiveWeapon(player, i);
 			}
 		}
@@ -699,7 +707,7 @@ float Item_GiveTo(entity item, entity player)
 }
 
 void Item_Touch (void)
-{
+{SELFPARAM();
 	entity e, head;
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
@@ -751,7 +759,7 @@ void Item_Touch (void)
 	other.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
-	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
+	_sound (other, CH_TRIGGER, (self.item_pickupsound ? self.item_pickupsound : self.item_pickupsound_ent.sound_str()), VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
 		remove (self);
@@ -779,7 +787,7 @@ void Item_Touch (void)
 }
 
 void Item_Reset()
-{
+{SELFPARAM();
 	Item_Show(self, !self.state);
 	setorigin (self, self.origin);
 
@@ -797,7 +805,7 @@ void Item_Reset()
 }
 
 void Item_FindTeam()
-{
+{SELFPARAM();
 	entity head, e;
 
 	if(self.effects & EF_NODRAW)
@@ -833,7 +841,7 @@ void Item_FindTeam()
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
 void RemoveItem(void)
-{
+{SELFPARAM();
 	if(wasfreed(self) || !self) { return; }
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
@@ -967,7 +975,7 @@ void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype,
 }
 
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
-{
+{SELFPARAM();
 	startitem_failed = false;
 
 	if(self.model == "")
@@ -1120,14 +1128,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		precache_model (self.model);
 		precache_sound (self.item_pickupsound);
 
-		precache_sound ("misc/itemrespawncountdown.wav");
-		if(itemid == ITEM_Strength.m_itemid)
-			precache_sound ("misc/strength_respawn.wav");
-		else if(itemid == ITEM_Shield.m_itemid)
-			precache_sound ("misc/shield_respawn.wav");
-		else
-			precache_sound ("misc/itemrespawn.wav");
-
 		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
 			self.target = "###item###"; // for finding the nearest item using find()
 
@@ -1140,7 +1140,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.mdl = self.model;
 	self.netname = itemname;
 	self.touch = Item_Touch;
-	setmodel(self, "null"); // precision set below
+	setmodel(self, MDL_Null); // precision set below
 	//self.effects |= EF_LOWPRECISION;
 
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
@@ -1197,20 +1197,14 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 }
 
-string Item_Model(string item_mdl)
-{
-	string output = strcat("models/items/", item_mdl);
-	MUTATOR_CALLHOOK(ItemModel, item_mdl, output);
-	return strzone(item_model_output);
-}
-
 void StartItemA (entity a)
-{
+{SELFPARAM();
     self.itemdef = a;
-    StartItem(Item_Model(a.m_model), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
+    StartItem(strzone(a.m_model.model_str()), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
 }
 
-void spawnfunc_item_rockets (void) {
+spawnfunc(item_rockets)
+{
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;
 	if(!self.pickup_anyway)
@@ -1218,13 +1212,14 @@ void spawnfunc_item_rockets (void) {
     StartItemA (ITEM_Rockets);
 }
 
-void spawnfunc_item_bullets (void) {
+spawnfunc(item_bullets)
+{
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weaponswapping = true;
-		spawnfunc_item_shells();
+		spawnfunc_item_shells(this);
 		weaponswapping = false;
 		return;
 	}
@@ -1236,7 +1231,8 @@ void spawnfunc_item_bullets (void) {
     StartItemA (ITEM_Bullets);
 }
 
-void spawnfunc_item_cells (void) {
+spawnfunc(item_cells)
+{
 	if(!self.ammo_cells)
 		self.ammo_cells = g_pickup_cells;
 	if(!self.pickup_anyway)
@@ -1244,7 +1240,7 @@ void spawnfunc_item_cells (void) {
 	StartItemA (ITEM_Cells);
 }
 
-void spawnfunc_item_plasma()
+spawnfunc(item_plasma)
 {
 	if(!self.ammo_plasma)
 		self.ammo_plasma = g_pickup_plasma;
@@ -1253,13 +1249,14 @@ void spawnfunc_item_plasma()
 	StartItemA (ITEM_Plasma);
 }
 
-void spawnfunc_item_shells (void) {
+spawnfunc(item_shells)
+{
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weaponswapping = true;
-		spawnfunc_item_bullets();
+		spawnfunc_item_bullets(this);
 		weaponswapping = false;
 		return;
 	}
@@ -1271,7 +1268,8 @@ void spawnfunc_item_shells (void) {
 	StartItemA (ITEM_Shells);
 }
 
-void spawnfunc_item_armor_small (void) {
+spawnfunc(item_armor_small)
+{
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorsmall;
 	if(!self.max_armorvalue)
@@ -1281,7 +1279,8 @@ void spawnfunc_item_armor_small (void) {
 	StartItemA (ITEM_ArmorSmall);
 }
 
-void spawnfunc_item_armor_medium (void) {
+spawnfunc(item_armor_medium)
+{
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armormedium;
 	if(!self.max_armorvalue)
@@ -1291,7 +1290,8 @@ void spawnfunc_item_armor_medium (void) {
 	StartItemA (ITEM_ArmorMedium);
 }
 
-void spawnfunc_item_armor_big (void) {
+spawnfunc(item_armor_big)
+{
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorbig;
 	if(!self.max_armorvalue)
@@ -1301,7 +1301,8 @@ void spawnfunc_item_armor_big (void) {
 	StartItemA (ITEM_ArmorLarge);
 }
 
-void spawnfunc_item_armor_large (void) {
+spawnfunc(item_armor_large)
+{
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorlarge;
 	if(!self.max_armorvalue)
@@ -1311,7 +1312,8 @@ void spawnfunc_item_armor_large (void) {
 	StartItemA (ITEM_ArmorMega);
 }
 
-void spawnfunc_item_health_small (void) {
+spawnfunc(item_health_small)
+{
 	if(!self.max_health)
 		self.max_health = g_pickup_healthsmall_max;
 	if(!self.health)
@@ -1321,7 +1323,8 @@ void spawnfunc_item_health_small (void) {
 	StartItemA (ITEM_HealthSmall);
 }
 
-void spawnfunc_item_health_medium (void) {
+spawnfunc(item_health_medium)
+{
 	if(!self.max_health)
 		self.max_health = g_pickup_healthmedium_max;
 	if(!self.health)
@@ -1331,7 +1334,8 @@ void spawnfunc_item_health_medium (void) {
     StartItemA (ITEM_HealthMedium);
 }
 
-void spawnfunc_item_health_large (void) {
+spawnfunc(item_health_large)
+{
 	if(!self.max_health)
 		self.max_health = g_pickup_healthlarge_max;
 	if(!self.health)
@@ -1341,7 +1345,8 @@ void spawnfunc_item_health_large (void) {
 	StartItemA (ITEM_HealthLarge);
 }
 
-void spawnfunc_item_health_mega (void) {
+spawnfunc(item_health_mega)
+{
     if(!self.max_health)
         self.max_health = g_pickup_healthmega_max;
     if(!self.health)
@@ -1352,30 +1357,31 @@ void spawnfunc_item_health_mega (void) {
 }
 
 // support old misnamed entities
-void spawnfunc_item_armor1() { spawnfunc_item_armor_small(); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
-void spawnfunc_item_armor25() { spawnfunc_item_armor_large(); }
-void spawnfunc_item_health1() { spawnfunc_item_health_small(); }
-void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
-void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
+spawnfunc(item_armor1) { spawnfunc_item_armor_small(this); }  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard
+spawnfunc(item_armor25) { spawnfunc_item_armor_large(this); }
+spawnfunc(item_health1) { spawnfunc_item_health_small(this); }
+spawnfunc(item_health25) { spawnfunc_item_health_medium(this); }
+spawnfunc(item_health100) { spawnfunc_item_health_mega(this); }
 
-void spawnfunc_item_strength (void) {
-		precache_sound("weapons/strength_fire.wav");
+spawnfunc(item_strength)
+{
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItemA (ITEM_Strength);
 }
 
-void spawnfunc_item_invincible (void) {
+spawnfunc(item_invincible)
+{
 		if(!self.invincible_finished)
 			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 		StartItemA (ITEM_Shield);
 }
 
 // compatibility:
-void spawnfunc_item_quad (void) {self.classname = "item_strength";spawnfunc_item_strength();}
+spawnfunc(item_quad) { self.classname = "item_strength";spawnfunc_item_strength(this);}
 
-void target_items_use (void)
-{
+void target_items_use()
+{SELFPARAM();
 	if(activator.classname == "droppedweapon")
 	{
 		EXACTTRIGGER_TOUCH;
@@ -1398,7 +1404,7 @@ void target_items_use (void)
 		centerprint(activator, self.message);
 }
 
-void spawnfunc_target_items (void)
+spawnfunc(target_items)
 {
 	float n, i, j;
 	entity e;
@@ -1411,13 +1417,6 @@ void spawnfunc_target_items (void)
 		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 	if(!self.superweapons_finished)
 		self.superweapons_finished = autocvar_g_balance_superweapons_time;
-
-	precache_sound("misc/itempickup.wav");
-	precache_sound("misc/megahealth.wav");
-	precache_sound("misc/armor25.wav");
-	precache_sound("misc/powerup.wav");
-	precache_sound("misc/poweroff.wav");
-	precache_sound(W_Sound("weaponpickup"));
 
 	n = tokenize_console(self.netname);
 	if(argv(0) == "give")
@@ -1445,8 +1444,10 @@ void spawnfunc_target_items (void)
 					if(s == e.netname)
 					{
 						self.weapons |= WepSet_FromWeapon(j);
-						if(self.spawnflags == 0 || self.spawnflags == 2)
-							WEP_ACTION(e.weapon, WR_INIT);
+						if(self.spawnflags == 0 || self.spawnflags == 2) {
+							Weapon w = get_weaponinfo(e.weapon);
+							w.wr_init(w);
+						}
 						break;
 					}
 				}
@@ -1516,14 +1517,15 @@ void spawnfunc_target_items (void)
 			e = get_weaponinfo(j);
 			if(argv(i) == e.netname)
 			{
-				WEP_ACTION(e.weapon, WR_INIT);
+				Weapon w = get_weaponinfo(e.weapon);
+				w.wr_init(w);
 				break;
 			}
 		}
 	}
 }
 
-void spawnfunc_item_fuel(void)
+spawnfunc(item_fuel)
 {
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel;
@@ -1532,23 +1534,23 @@ void spawnfunc_item_fuel(void)
 	StartItemA (ITEM_JetpackFuel);
 }
 
-void spawnfunc_item_fuel_regen(void)
+spawnfunc(item_fuel_regen)
 {
 	if(start_items & ITEM_JetpackRegen.m_itemid)
 	{
-		spawnfunc_item_fuel();
+		spawnfunc_item_fuel(this);
 		return;
 	}
 	StartItemA (ITEM_JetpackRegen);
 }
 
-void spawnfunc_item_jetpack(void)
+spawnfunc(item_jetpack)
 {
 	if(!self.ammo_fuel)
 		self.ammo_fuel = g_pickup_fuel_jetpack;
 	if(start_items & ITEM_Jetpack.m_itemid)
 	{
-		spawnfunc_item_fuel();
+		spawnfunc_item_fuel(this);
 		return;
 	}
 	StartItemA (ITEM_Jetpack);
@@ -1647,12 +1649,12 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != "")
-			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
+			_sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != "")
-			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
+			_sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1664,7 +1666,7 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
 float GiveItems(entity e, float beginarg, float endarg)
-{
+{SELFPARAM();
 	float got, i, j, val, op;
 	float _switchweapon;
 	entity wi;
@@ -1818,31 +1820,33 @@ float GiveItems(entity e, float beginarg, float endarg)
 		op = OP_SET;
 	}
 
-	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, "misc/itempickup.wav", string_null);
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, "misc/powerup.wav", "misc/poweroff.wav");
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, "misc/powerup.wav", "misc/poweroff.wav");
-	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, "misc/itempickup.wav", string_null);
+	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, SND(ITEMPICKUP), string_null);
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND(POWERUP), SND(POWEROFF));
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND(POWERUP), SND(POWEROFF));
+	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND(ITEMPICKUP), string_null);
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	{
 		wi = get_weaponinfo(j);
 		if(wi.weapon)
 		{
-			POSTGIVE_WEAPON(e, j, W_Sound("weaponpickup"), string_null);
+			POSTGIVE_WEAPON(e, j, SND(WEAPONPICKUP), string_null);
 			if (!(save_weapons & WepSet_FromWeapon(j)))
-				if(e.weapons & WepSet_FromWeapon(j))
-					WEP_ACTION(wi.weapon, WR_INIT);
+				if(e.weapons & WepSet_FromWeapon(j)) {
+					Weapon w = get_weaponinfo(wi.weapon);
+					w.wr_init(w);
+				}
 		}
 	}
-	POSTGIVE_VALUE(e, strength_finished, 1, "misc/powerup.wav", "misc/poweroff.wav");
-	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", "misc/poweroff.wav");
-	POSTGIVE_VALUE(e, ammo_nails, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE(e, ammo_cells, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE(e, ammo_plasma, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE(e, ammo_shells, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE(e, ammo_rockets, 0, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, "misc/itempickup.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/armor25.wav", string_null);
-	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
+	POSTGIVE_VALUE(e, strength_finished, 1, SND(POWERUP), SND(POWEROFF));
+	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", SND(POWEROFF));
+	POSTGIVE_VALUE(e, ammo_nails, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE(e, ammo_cells, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE(e, ammo_plasma, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE(e, ammo_shells, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE(e, ammo_rockets, 0, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND(ITEMPICKUP), string_null);
+	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND(ARMOR25), string_null);
+	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND(MEGAHEALTH), string_null);
 
 	if(e.superweapons_finished <= 0)
 		if(self.weapons & WEPSET_SUPERWEAPONS)

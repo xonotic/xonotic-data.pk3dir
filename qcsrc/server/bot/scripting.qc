@@ -101,7 +101,7 @@ const int MAX_BOT_PLACES = 4;
 .entity bot_places[MAX_BOT_PLACES];
 .string bot_placenames[MAX_BOT_PLACES];
 entity bot_getplace(string placename)
-{
+{SELFPARAM();
 	entity e;
 	if(substring(placename, 0, 1) == "@")
 	{
@@ -480,20 +480,20 @@ float bot_cmd_cc()
 }
 
 float bot_cmd_impulse()
-{
+{SELFPARAM();
 	self.impulse = bot_cmd.bot_cmd_parm_float;
 	return CMD_STATUS_FINISHED;
 }
 
 float bot_cmd_continue()
-{
+{SELFPARAM();
 	self.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
 	return CMD_STATUS_FINISHED;
 }
 
 .float bot_cmd_wait_time;
 float bot_cmd_wait()
-{
+{SELFPARAM();
 	if(self.bot_exec_status & BOT_EXEC_STATUS_WAITING)
 	{
 		if(time>=self.bot_cmd_wait_time)
@@ -511,7 +511,7 @@ float bot_cmd_wait()
 }
 
 float bot_cmd_wait_until()
-{
+{SELFPARAM();
 	if(time < bot_cmd.bot_cmd_parm_float + bot_barriertime)
 	{
 		self.bot_exec_status |= BOT_EXEC_STATUS_WAITING;
@@ -522,7 +522,7 @@ float bot_cmd_wait_until()
 }
 
 float bot_cmd_barrier()
-{
+{SELFPARAM();
 	entity cl;
 
 	// 0 = no barrier, 1 = waiting, 2 = waiting finished
@@ -561,14 +561,14 @@ float bot_cmd_barrier()
 }
 
 float bot_cmd_turn()
-{
+{SELFPARAM();
 	self.v_angle_y = self.v_angle.y + bot_cmd.bot_cmd_parm_float;
 	self.v_angle_y = self.v_angle.y - floor(self.v_angle.y / 360) * 360;
 	return CMD_STATUS_FINISHED;
 }
 
 float bot_cmd_select_weapon()
-{
+{SELFPARAM();
 	float id;
 
 	id = bot_cmd.bot_cmd_parm_float;
@@ -593,7 +593,7 @@ const int CMD_CONDITION_true_BLOCK = 4;
 const int CMD_CONDITION_false_BLOCK = 8;
 
 float bot_cmd_eval(string expr)
-{
+{SELFPARAM();
 	// Search for numbers
 	if(strstrofs("0123456789", substring(expr, 0, 1), 0) >= 0)
 	{
@@ -622,7 +622,7 @@ float bot_cmd_eval(string expr)
 }
 
 float bot_cmd_if()
-{
+{SELFPARAM();
 	string expr, val_a, val_b;
 	float cmpofs;
 
@@ -693,20 +693,20 @@ float bot_cmd_if()
 }
 
 float bot_cmd_else()
-{
+{SELFPARAM();
 	self.bot_cmd_condition_status &= ~CMD_CONDITION_true_BLOCK;
 	self.bot_cmd_condition_status |= CMD_CONDITION_false_BLOCK;
 	return CMD_STATUS_FINISHED;
 }
 
 float bot_cmd_fi()
-{
+{SELFPARAM();
 	self.bot_cmd_condition_status = CMD_CONDITION_NONE;
 	return CMD_STATUS_FINISHED;
 }
 
 float bot_cmd_resetaim()
-{
+{SELFPARAM();
 	self.v_angle = '0 0 0';
 	return CMD_STATUS_FINISHED;
 }
@@ -717,7 +717,7 @@ float bot_cmd_resetaim()
 .vector bot_cmd_aim_end;
 
 float bot_cmd_aim()
-{
+{SELFPARAM();
 	// Current direction
 	if(self.bot_cmd_aim_endtime)
 	{
@@ -768,7 +768,7 @@ float bot_cmd_aim()
 }
 
 float bot_cmd_aimtarget()
-{
+{SELFPARAM();
 	if(self.bot_cmd_aim_endtime)
 	{
 		return bot_cmd_aim();
@@ -827,7 +827,7 @@ const int BOT_CMD_KEY_CROUCH 	= 512;
 const int BOT_CMD_KEY_CHAT 		= 1024;
 
 float bot_presskeys()
-{
+{SELFPARAM();
 	self.movement = '0 0 0';
 	self.BUTTON_JUMP = false;
 	self.BUTTON_CROUCH = false;
@@ -876,7 +876,7 @@ float bot_presskeys()
 
 
 float bot_cmd_keypress_handler(string key, float enabled)
-{
+{SELFPARAM();
 	switch(key)
 	{
 		case "all":
@@ -990,7 +990,7 @@ float bot_cmd_releasekey()
 }
 
 float bot_cmd_pause()
-{
+{SELFPARAM();
 	self.button1        = 0;
 	self.button8        = 0;
 	self.BUTTON_USE     = 0;
@@ -1009,12 +1009,12 @@ float bot_cmd_pause()
 }
 
 float bot_cmd_moveto()
-{
+{SELFPARAM();
 	return self.cmd_moveto(bot_cmd.bot_cmd_parm_vector);
 }
 
 float bot_cmd_movetotarget()
-{
+{SELFPARAM();
 	entity e;
 	e = bot_getplace(bot_cmd.bot_cmd_parm_string);
 	if(!e)
@@ -1023,13 +1023,13 @@ float bot_cmd_movetotarget()
 }
 
 float bot_cmd_resetgoal()
-{
+{SELFPARAM();
 	return self.cmd_resetgoal();
 }
 
 
 float bot_cmd_sound()
-{
+{SELFPARAM();
 	string f;
 	f = bot_cmd.bot_cmd_parm_string;
 
@@ -1050,14 +1050,14 @@ float bot_cmd_sound()
 		atten = stof(argv(2));
 
 	precache_sound(f);
-	sound(self, chan, sample, vol, atten);
+	_sound(self, chan, sample, vol, atten);
 
 	return CMD_STATUS_FINISHED;
 }
 
 .entity tuba_note;
 float bot_cmd_debug_assert_canfire()
-{
+{SELFPARAM();
 	float f;
 	f = bot_cmd.bot_cmd_parm_float;
 
@@ -1100,7 +1100,7 @@ float bot_cmd_debug_assert_canfire()
 //
 
 void bot_command_executed(float rm)
-{
+{SELFPARAM();
 	entity cmd;
 
 	cmd = bot_cmd;
@@ -1112,7 +1112,7 @@ void bot_command_executed(float rm)
 }
 
 void bot_setcurrentcommand()
-{
+{SELFPARAM();
 	bot_cmd = world;
 
 	if(!self.bot_cmd_current)
@@ -1171,7 +1171,7 @@ void bot_resetqueues()
 // Here we map commands to functions and deal with complex interactions between commands and execution states
 // NOTE: Of course you need to include your commands here too :)
 float bot_execute_commands_once()
-{
+{SELFPARAM();
 	float status, ispressingkey;
 
 	// Find command

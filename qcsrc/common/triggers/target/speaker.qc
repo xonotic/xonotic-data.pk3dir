@@ -2,21 +2,20 @@
 // TODO add a way to do looped sounds with sound(); then complete this entity
 void target_speaker_use_off();
 void target_speaker_use_activator()
-{
+{SELFPARAM();
 	if (!IS_REAL_CLIENT(activator))
 		return;
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
 	{
-		var .string sample;
-		sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
+		var .string sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
-			snd = "misc/null.wav";
-		else if(activator.sample == "")
-			snd = "misc/null.wav";
+			snd = SND(Null);
+		else if(activator.(sample) == "")
+			snd = SND(Null);
 		else
 		{
-			tokenize_console(activator.sample);
+			tokenize_console(activator.(sample));
 			float n;
 			n = stof(argv(1));
 			if(n > 0)
@@ -31,19 +30,18 @@ void target_speaker_use_activator()
 	soundto(MSG_ONE, self, CH_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
 }
 void target_speaker_use_on()
-{
+{SELFPARAM();
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
 	{
-		var .string sample;
-		sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
+		var .string sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
-			snd = "misc/null.wav";
-		else if(activator.sample == "")
-			snd = "misc/null.wav";
+			snd = SND(Null);
+		else if(activator.(sample) == "")
+			snd = SND(Null);
 		else
 		{
-			tokenize_console(activator.sample);
+			tokenize_console(activator.(sample));
 			float n;
 			n = stof(argv(1));
 			if(n > 0)
@@ -54,17 +52,17 @@ void target_speaker_use_on()
 	}
 	else
 		snd = self.noise;
-	sound(self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
+	_sound(self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
 	if(self.spawnflags & 3)
 		self.use = target_speaker_use_off;
 }
 void target_speaker_use_off()
-{
-	sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASE * self.volume, self.atten);
+{SELFPARAM();
+	sound(self, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE * self.volume, self.atten);
 	self.use = target_speaker_use_on;
 }
 void target_speaker_reset()
-{
+{SELFPARAM();
 	if(self.spawnflags & 1) // LOOPED_ON
 	{
 		if(self.use == target_speaker_use_on)
@@ -77,7 +75,7 @@ void target_speaker_reset()
 	}
 }
 
-void spawnfunc_target_speaker()
+spawnfunc(target_speaker)
 {
 	// TODO: "*" prefix to sound file name
 	// TODO: wait and random (just, HOW? random is not a field)

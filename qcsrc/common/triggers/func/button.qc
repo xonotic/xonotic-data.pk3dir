@@ -5,7 +5,7 @@ void() button_wait;
 void() button_return;
 
 void button_wait()
-{
+{SELFPARAM();
 	self.state = STATE_TOP;
 	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 	self.SUB_THINK = button_return;
@@ -15,12 +15,12 @@ void button_wait()
 }
 
 void button_done()
-{
+{SELFPARAM();
 	self.state = STATE_BOTTOM;
 }
 
 void button_return()
-{
+{SELFPARAM();
 	self.state = STATE_DOWN;
 	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, button_done);
 	self.frame = 0;			// use normal textures
@@ -36,7 +36,7 @@ void button_blocked()
 
 
 void button_fire()
-{
+{SELFPARAM();
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;    // will be reset upon return
 
@@ -44,14 +44,14 @@ void button_fire()
 		return;
 
 	if (self.noise != "")
-		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+		_sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, button_wait);
 }
 
 void button_reset()
-{
+{SELFPARAM();
 	self.health = self.max_health;
 	setorigin(self, self.pos1);
 	self.frame = 0;			// use normal textures
@@ -61,7 +61,7 @@ void button_reset()
 }
 
 void button_use()
-{
+{SELFPARAM();
 	if(self.active != ACTIVE_ACTIVE)
 		return;
 
@@ -70,7 +70,7 @@ void button_use()
 }
 
 void button_touch()
-{
+{SELFPARAM();
 	if (!other)
 		return;
 	if (!other.iscreature)
@@ -84,7 +84,7 @@ void button_touch()
 }
 
 void button_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
@@ -112,7 +112,7 @@ When a button is touched, it moves some distance in the direction of it's angle,
 2) metallic click
 3) in-out
 */
-void spawnfunc_func_button()
+spawnfunc(func_button)
 {
 	SetMovedir ();
 

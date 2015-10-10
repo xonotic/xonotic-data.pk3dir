@@ -34,7 +34,7 @@ void turret_checkpoint_use()
 
 #if 0
 void turret_checkpoint_think()
-{
+{SELFPARAM();
     if(self.enemy)
         te_lightning1(self,self.origin, self.enemy.origin);
 
@@ -52,7 +52,7 @@ If the checkpoint chain in not looped, the unit will go "Roaming" when the last 
 */
 //float tc_acum;
 void turret_checkpoint_init()
-{
+{SELFPARAM();
     traceline(self.origin + '0 0 16', self.origin - '0 0 1024', MOVE_WORLDONLY, self);
     setorigin(self, trace_endpos + '0 0 32');
 
@@ -67,7 +67,7 @@ void turret_checkpoint_init()
     //tc_acum += 0.25;
 }
 
-void spawnfunc_turret_checkpoint()
+spawnfunc(turret_checkpoint)
 {
     setorigin(self,self.origin);
     self.think = turret_checkpoint_init;
@@ -75,8 +75,8 @@ void spawnfunc_turret_checkpoint()
 }
 
 // Compat.
-void spawnfunc_walker_checkpoint()
+spawnfunc(walker_checkpoint)
 {
     self.classname = "turret_checkpoint";
-    spawnfunc_turret_checkpoint();
+    spawnfunc_turret_checkpoint(this);
 }

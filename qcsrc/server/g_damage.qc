@@ -10,7 +10,7 @@
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
 #include "../common/notifications.qh"
@@ -22,7 +22,7 @@
 #include "../csqcmodellib/sv_model.qh"
 #include "../warpzonelib/common.qh"
 
-float Damage_DamageInfo_SendEntity(entity to, int sf)
+bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
@@ -67,7 +67,7 @@ void UpdateFrags(entity player, float f)
 }
 
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
-{
+{SELFPARAM();
 	// TODO route through PlayerScores instead
 	if(gameover) return;
 
@@ -142,17 +142,9 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
-	entity oldself;
-	oldself = self;
-	self = attacker;
-	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, self, attacker, targ, f))
 	{
 		f = frag_score;
-		self = oldself;
-	}
-	else
-	{
-		self = oldself;
 	}
 
 	attacker.totalfrags += f;
@@ -273,7 +265,8 @@ float Obituary_WeaponDeath(
 	if(death_weapon)
 	{
 		w_deathtype = deathtype;
-		int death_message = WEP_ACTION(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
+		Weapon w = get_weaponinfo(death_weapon);
+		int death_message = ((murder) ? w.wr_killmessage : w.wr_suicidemessage)(w);
 		w_deathtype = false;
 
 		if (death_message)
@@ -544,7 +537,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 }
 
 void Ice_Think()
-{
+{SELFPARAM();
 	if(!self.owner.frozen || self.owner.iceblock != self)
 	{
 		remove(self);
@@ -555,7 +548,7 @@ void Ice_Think()
 }
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
-{
+{SELFPARAM();
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 
@@ -568,6 +561,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
+	self.bot_attack = false;
 
 	entity ice, head;
 	ice = spawn();
@@ -577,18 +571,14 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	ice.think = Ice_Think;
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
-	setmodel(ice, "models/ice/ice.md3");
+	setmodel(ice, MDL_ICE);
 	ice.alpha = 1;
 	ice.colormod = Team_ColorRGB(targ.team);
 	ice.glowmod = ice.colormod;
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	entity oldself;
-	oldself = self;
-	self = ice;
-	Ice_Think();
-	self = oldself;
+	WITH(entity, self, ice, Ice_Think());
 
 	RemoveGrapplingHook(targ);
 
@@ -603,6 +593,9 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
+	if(!targ.frozen)
+		return;
+
 	if(targ.frozen && targ.frozen != 3) // only reset health if target was frozen
 		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
 
@@ -610,6 +603,7 @@ void Unfreeze (entity targ)
 	targ.frozen = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
+	self.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
@@ -624,7 +618,7 @@ void Unfreeze (entity targ)
 }
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	float mirrordamage;
 	float mirrorforce;
 	float complainteamdamage = 0;
@@ -635,9 +629,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (gameover || targ.killcount == -666)
 		return;
 
-	entity oldself;
-	oldself = self;
-	self = targ;
+	setself(targ);
         damage_targ = targ;
         damage_inflictor = inflictor;
         damage_attacker = attacker;
@@ -655,7 +647,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		if(IS_PLAYER(targ))
 			if(SAME_TEAM(targ, attacker))
 			{
-				self = oldself;
+				setself(this);
 				return;
 			}
 	}
@@ -775,8 +767,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
-			entity oldself = self;
-			self = targ;
+			setself(targ);
 			entity spot = SelectSpawnPoint (false);
 
 			if(spot)
@@ -806,7 +797,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				Send_Effect(EFFECT_TELEPORT, self.origin, '0 0 0', 1);
 			}
 
-			self = oldself;
+			setself(this);
 		}
 
 		if(!g_instagib)
@@ -923,7 +914,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (damage != 0 || (self.damageforcescale && vlen(force)))
 	if (self.event_damage)
 		self.event_damage (inflictor, attacker, damage, deathtype, hitloc, force);
-	self = oldself;
+	setself(this);
 
 	// apply mirror damage if any
 	if(mirrordamage > 0 || mirrorforce > 0)
@@ -1313,7 +1304,7 @@ void Fire_ApplyEffect(entity e)
 }
 
 void fireburner_think()
-{
+{SELFPARAM();
 	// for players, this is done in the regular loop
 	if(wasfreed(self.owner))
 	{

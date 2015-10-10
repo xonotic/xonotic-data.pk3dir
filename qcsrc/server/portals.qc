@@ -248,7 +248,7 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 }
 
 void Portal_Touch()
-{
+{SELFPARAM();
 	vector g;
 
 #ifdef PORTALS_ARE_NOT_SOLID
@@ -414,20 +414,20 @@ void Portal_Remove(entity portal, float killed)
 	if(killed)
 	{
 		fixedmakevectors(portal.mangle);
-		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTEN_NORM);
+		sound(portal, CH_SHOTS, SND_PORTO_EXPLODE, VOL_BASE, ATTEN_NORM);
 		Send_Effect(EFFECT_ROCKET_EXPLODE, portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else
 	{
 		Portal_MakeBrokenPortal(portal);
-		sound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTEN_NORM);
+		sound(portal, CH_SHOTS, SND_PORTO_EXPIRE, VOL_BASE, ATTEN_NORM);
 		SUB_SetFade(portal, time, 0.5);
 	}
 }
 
 void Portal_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(deathtype == DEATH_TELEFRAG)
 		return;
 	if(attacker != self.aiment)
@@ -439,7 +439,7 @@ void Portal_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 }
 
 void Portal_Think_TryTeleportPlayer(entity e, vector g)
-{
+{SELFPARAM();
 	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, self.origin, v_forward, self.maxs.x))
 		return;
 
@@ -451,7 +451,7 @@ void Portal_Think_TryTeleportPlayer(entity e, vector g)
 }
 
 void Portal_Think()
-{
+{SELFPARAM();
 	entity e, o;
 	vector g;
 
@@ -494,7 +494,7 @@ void Portal_Think()
 }
 
 float Portal_Customize()
-{
+{SELFPARAM();
 	if(IS_SPEC(other))
 		other = other.enemy;
 	if(other == self.aiment)
@@ -574,7 +574,7 @@ void Portal_ClearAll(entity own)
 	W_Porto_Remove(own);
 }
 void Portal_RemoveLater_Think()
-{
+{SELFPARAM();
 	Portal_Remove(self, self.cnt);
 }
 void Portal_RemoveLater(entity portal, float kill)
@@ -636,7 +636,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.event_damage = Portal_Damage;
 	portal.fade_time = time + autocvar_g_balance_portal_lifetime;
 	portal.health = autocvar_g_balance_portal_health;
-	setmodel(portal, "models/portal.md3");
+	setmodel(portal, MDL_PORTAL);
 	portal.savemodelindex = portal.modelindex;
 	portal.customizeentityforclient = Portal_Customize;
 

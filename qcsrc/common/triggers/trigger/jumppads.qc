@@ -5,7 +5,7 @@
 #include "../../movetypes/movetypes.qh"
 
 void trigger_push_use()
-{
+{SELFPARAM();
 	if(teamplay)
 	{
 		self.team = activator.team;
@@ -128,7 +128,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 }
 
 void trigger_push_touch()
-{
+{SELFPARAM();
 	if (self.active == ACTIVE_NOT)
 		return;
 
@@ -182,7 +182,7 @@ void trigger_push_touch()
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, other.origin, other.velocity, 1);
-			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+			_sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.pushltime = time + 0.2;
 		}
 		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
@@ -218,12 +218,8 @@ void trigger_push_touch()
 
 	if(self.enemy.target)
 	{
-		entity oldself;
-		oldself = self;
 		activator = other;
-		self = self.enemy;
-		SUB_UseTargets();
-		self = oldself;
+		WITH(entity, self, self.enemy, SUB_UseTargets());
 	}
 
 	if (other.flags & FL_PROJECTILE)
@@ -257,7 +253,7 @@ void trigger_push_link();
 void trigger_push_updatelink();
 #endif
 void trigger_push_findtarget()
-{
+{SELFPARAM();
 	entity t;
 	vector org;
 
@@ -321,7 +317,7 @@ void trigger_push_findtarget()
 
 #ifdef SVQC
 float trigger_push_send(entity to, float sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -345,7 +341,7 @@ float trigger_push_send(entity to, float sf)
 }
 
 void trigger_push_updatelink()
-{
+{SELFPARAM();
 	self.SendFlags |= 1;
 }
 
@@ -367,7 +363,7 @@ void trigger_push_link()
  *            values to target a point on the ceiling.
  *   movedir: if target is not set, this * speed * 10 is the velocity to be reached.
  */
-void spawnfunc_trigger_push()
+spawnfunc(trigger_push)
 {
 	SetMovedir ();
 
@@ -391,7 +387,7 @@ void spawnfunc_trigger_push()
 }
 
 
-float target_push_send(entity to, float sf)
+bool target_push_send(entity this, entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TARGET_PUSH);
 
@@ -405,21 +401,21 @@ float target_push_send(entity to, float sf)
 }
 
 void target_push_link()
-{
+{SELFPARAM();
 	Net_LinkEntity(self, false, 0, target_push_send);
 	self.SendFlags |= 1; // update
 }
 
-void spawnfunc_target_push() { target_push_link(); }
-void spawnfunc_info_notnull() { target_push_link(); }
-void spawnfunc_target_position() { target_push_link(); }
+spawnfunc(target_push) { target_push_link(); }
+spawnfunc(info_notnull) { target_push_link(); }
+spawnfunc(target_position) { target_push_link(); }
 
 #endif
 
 #ifdef CSQC
 
 void ent_trigger_push()
-{
+{SELFPARAM();
 	float sf = ReadByte();
 
 	if(sf & 1)
@@ -449,7 +445,7 @@ void ent_trigger_push()
 }
 
 void target_push_remove()
-{
+{SELFPARAM();
 	if(self.classname)
 		strunzone(self.classname);
 	self.classname = string_null;
@@ -460,7 +456,7 @@ void target_push_remove()
 }
 
 void ent_target_push()
-{
+{SELFPARAM();
 	self.classname = "push_target";
 	self.cnt = ReadByte();
 	self.targetname = strzone(ReadString());

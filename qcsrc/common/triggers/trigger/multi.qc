@@ -3,7 +3,7 @@
 #ifdef SVQC
 // the wait time has passed, so set back up for another activation
 void multi_wait()
-{
+{SELFPARAM();
 	if (self.max_health)
 	{
 		self.health = self.max_health;
@@ -17,7 +17,7 @@ void multi_wait()
 // self.enemy should be set to the activator so it can be held through a delay
 // so wait for the delay time before firing
 void multi_trigger()
-{
+{SELFPARAM();
 	if (self.nextthink > time)
 	{
 		return;		// allready been triggered
@@ -32,7 +32,7 @@ void multi_trigger()
 	}
 
 	if (self.noise)
-		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+		_sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -58,14 +58,14 @@ void multi_trigger()
 }
 
 void multi_use()
-{
+{SELFPARAM();
 	self.goalentity = other;
 	self.enemy = activator;
 	multi_trigger();
 }
 
 void multi_touch()
-{
+{SELFPARAM();
 	if(!(self.spawnflags & 2))
 	if(!other.iscreature)
 			return;
@@ -96,7 +96,7 @@ void multi_touch()
 }
 
 void multi_eventdamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if (!self.takedamage)
 		return;
 	if(self.spawnflags & DOOR_NOSPLASH)
@@ -112,7 +112,7 @@ void multi_eventdamage (entity inflictor, entity attacker, float damage, int dea
 }
 
 void multi_reset()
-{
+{SELFPARAM();
 	if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
 		self.touch = multi_touch;
 	if (self.max_health)
@@ -139,7 +139,7 @@ sounds
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_multiple()
+spawnfunc(trigger_multiple)
 {
 	self.reset = multi_reset;
 	if (self.sounds == 1)
@@ -149,8 +149,7 @@ void spawnfunc_trigger_multiple()
 	}
 	else if (self.sounds == 2)
 	{
-		precache_sound ("misc/talk.wav");
-		self.noise = "misc/talk.wav";
+		self.noise = SND(TALK);
 	}
 	else if (self.sounds == 3)
 	{
@@ -202,9 +201,9 @@ sounds
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_once()
+spawnfunc(trigger_once)
 {
-	self.wait = -1;
-	spawnfunc_trigger_multiple();
+	this.wait = -1;
+	spawnfunc_trigger_multiple(this);
 }
 #endif

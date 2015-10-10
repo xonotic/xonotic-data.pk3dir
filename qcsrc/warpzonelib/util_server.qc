@@ -12,7 +12,7 @@
 #include "common.qh"
 
 void WarpZoneLib_ExactTrigger_Init()
-{
+{SELFPARAM();
 	vector mi, ma;
 	if (self.movedir == '0 0 0')
 	if (self.angles != '0 0 0')
@@ -30,7 +30,7 @@ void WarpZoneLib_ExactTrigger_Init()
 		mi = self.mins;
 		ma = self.maxs;
  		precache_model(self.model);
- 		setmodel(self, self.model);
+ 		_setmodel(self, self.model);
 		// let mapper-set mins/maxs override the model's bounds if set
 		if(mi != '0 0 0' || ma != '0 0 0')
 		{

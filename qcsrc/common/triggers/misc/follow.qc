@@ -2,7 +2,7 @@
 
 #ifdef SVQC
 void follow_init()
-{
+{SELFPARAM();
 	entity src, dst;
 	src = world;
 	dst = world;
@@ -62,7 +62,7 @@ void follow_init()
 	}
 }
 
-void spawnfunc_misc_follow()
+spawnfunc(misc_follow)
 {
 	InitializeEntity(self, follow_init, INITPRIO_FINDTARGET);
 }

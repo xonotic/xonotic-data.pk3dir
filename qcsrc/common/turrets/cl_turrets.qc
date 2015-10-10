@@ -1,5 +1,5 @@
 void turret_remove()
-{
+{SELFPARAM();
 	remove(self.tur_head);
 	//remove(self.enemy);
 	self.tur_head = world;
@@ -7,7 +7,7 @@ void turret_remove()
 
 .vector glowmod;
 void turret_changeteam()
-{
+{SELFPARAM();
 	self.glowmod = Team_ColorRGB(self.team - 1) * 2;
 	self.teamradar_color = Team_ColorRGB(self.team - 1);
 
@@ -20,11 +20,11 @@ void turret_changeteam()
 }
 
 void turret_head_draw()
-{
+{SELFPARAM();
 	self.drawmask = MASK_NORMAL;
 }
 
-void turret_draw()
+void turret_draw(entity this)
 {
 	float dt;
 
@@ -53,7 +53,7 @@ void turret_draw()
 
 }
 
-void turret_draw2d()
+void turret_draw2d(entity this)
 {
 	if(self.netname == "")
 		return;
@@ -84,7 +84,7 @@ void turret_draw2d()
 		o_z = 0;
 		if(hud != HUD_NORMAL)
 		{
-			if((get_turretinfo(self.turretid)).spawnflags & TUR_FLAG_MOVE)
+			if((get_turretinfo(self.m_id)).spawnflags & TUR_FLAG_MOVE)
 				txt = "gfx/vehicles/turret_moving.tga";
 			else
 				txt = "gfx/vehicles/turret_stationary.tga";
@@ -99,7 +99,7 @@ void turret_draw2d()
 
 	string spriteimage = self.netname;
 	float a = self.alpha * autocvar_hud_panel_fg_alpha;
-	vector rgb = spritelookupcolor(spriteimage, self.teamradar_color);
+	vector rgb = spritelookupcolor(self, spriteimage, self.teamradar_color);
 
 
 	if(self.maxdistance > waypointsprite_normdistance)
@@ -202,21 +202,21 @@ void turret_draw2d()
 }
 
 void turret_construct()
-{
-	entity tur = get_turretinfo(self.turretid);
+{SELFPARAM();
+	entity tur = get_turretinfo(self.m_id);
 
 	if(self.tur_head == world)
 		self.tur_head = spawn();
 
-	self.netname = TUR_NAME(self.turretid);
+	self.netname = tur.turret_name;
 
 	setorigin(self, self.origin);
-	setmodel(self, tur.model);
-	setmodel(self.tur_head, tur.head_model);
+	_setmodel(self, tur.model);
+	_setmodel(self.tur_head, tur.head_model);
 	setsize(self, tur.mins, tur.maxs);
 	setsize(self.tur_head, '0 0 0', '0 0 0');
 
-	if(self.turretid == TUR_EWHEEL)
+	if(self.m_id == TUR_EWHEEL.m_id)
 		setattachment(self.tur_head, self, "");
 	else
 		setattachment(self.tur_head, self, "tag_head");
@@ -241,12 +241,12 @@ void turret_construct()
 	self.teamradar_color = '1 0 0';
 	self.alpha = 1;
 
-	TUR_ACTION(self.turretid, TR_SETUP);
+	tur.tr_setup(tur, self);
 }
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
 void turret_gibboom();
-void turret_gib_draw()
+void turret_gib_draw(entity this)
 {
 	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 
@@ -269,10 +269,10 @@ void turret_gib_draw()
 }
 
 void turret_gibboom()
-{
+{SELFPARAM();
 	float i;
 
-	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
 
 	for (i = 1; i < 5; i = i + 1)
@@ -289,7 +289,7 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 
 	gib = spawn();
 	setorigin(gib, _from);
-	setmodel(gib, _model);
+	_setmodel(gib, _model);
 	gib.colormod	= _cmod;
 	gib.solid	   = SOLID_CORPSE;
 	gib.draw		= turret_gib_draw;
@@ -317,18 +317,18 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 }
 
 void turret_die()
-{
-	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+{SELFPARAM();
+	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
 	if (!autocvar_cl_nogibs)
 	{
 		// Base
-		if(self.turretid == TUR_EWHEEL)
-			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', true);
-		else if (self.turretid == TUR_WALKER)
-			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', true);
-		else if (self.turretid == TUR_TESLA)
-			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', false);
+		if(self.m_id == TUR_EWHEEL.m_id)
+			turret_gibtoss((get_turretinfo(self.m_id)).model, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', true);
+		else if (self.m_id == TUR_WALKER.m_id)
+			turret_gibtoss((get_turretinfo(self.m_id)).model, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', true);
+		else if (self.m_id == TUR_TESLA.m_id)
+			turret_gibtoss((get_turretinfo(self.m_id)).model, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', false);
 		else
 		{
 			if (random() > 0.5)
@@ -340,7 +340,7 @@ void turret_die()
 			else
 				turret_gibtoss("models/turrets/base-gib1.md3", self.origin + '0 0 8', '0 0 0', '0 0 0', true);
 
-			entity headgib = turret_gibtoss((get_turretinfo(self.turretid)).head_model, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', true);
+			entity headgib = turret_gibtoss((get_turretinfo(self.m_id)).head_model, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', true);
 			if(headgib)
 			{
 				headgib.angles = headgib.move_angles = self.tur_head.angles;
@@ -351,18 +351,18 @@ void turret_die()
 		}
 	}
 
-	setmodel(self, "null");
-	setmodel(self.tur_head, "null");
+	setmodel(self, MDL_Null);
+	setmodel(self.tur_head, MDL_Null);
 }
 
 void ent_turret()
-{
+{SELFPARAM();
 	float sf;
 	sf = ReadByte();
 
 	if(sf & TNSF_SETUP)
 	{
-		self.turretid = ReadByte();
+		self.m_id = ReadByte();
 
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();

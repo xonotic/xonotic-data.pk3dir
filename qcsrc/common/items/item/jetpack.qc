@@ -6,8 +6,14 @@
 #include "ammo.qh"
 #include "powerup.qh"
 
+#ifndef MENUQC
+MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
+#endif
+
 REGISTER_ITEM(Jetpack, Powerup) {
-    this.m_model                =   "g_jetpack.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_Jetpack_ITEM;
+#endif
     this.m_name                 =   "Jet pack";
     this.m_icon                 =   "jetpack";
     this.m_color                =   '0.5 0.5 0.5';
@@ -20,8 +26,14 @@ REGISTER_ITEM(Jetpack, Powerup) {
 #endif
 }
 
+#ifndef MENUQC
+MODEL(JetpackFuel_ITEM, Item_Model("g_fuel.md3"));
+#endif
+
 REGISTER_ITEM(JetpackFuel, Ammo) {
-    this.m_model    =   "g_fuel.md3";
+#ifndef MENUQC
+    this.m_model    =   MDL_JetpackFuel_ITEM;
+#endif
     this.m_name     =   "Fuel";
     this.m_icon     =   "ammo_fuel";
 #ifdef SVQC
@@ -30,8 +42,14 @@ REGISTER_ITEM(JetpackFuel, Ammo) {
 #endif
 }
 
+#ifndef MENUQC
+MODEL(JetpackRegen_ITEM, Item_Model("g_fuelregen.md3"));
+#endif
+
 REGISTER_ITEM(JetpackRegen, Pickup) {
-    this.m_model                =   "g_fuelregen.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_JetpackRegen_ITEM;
+#endif
     this.m_name                 =   "Fuel regenerator";
     this.m_icon                 =   "fuelregen";
     this.m_color                =   '1 0.5 0';

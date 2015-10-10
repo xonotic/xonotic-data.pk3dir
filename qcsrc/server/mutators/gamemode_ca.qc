@@ -163,7 +163,7 @@ float ca_isEliminated(entity e)
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
-{
+{SELFPARAM();
 	self.caplayer = 1;
 	if(!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
@@ -171,7 +171,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
-{
+{SELFPARAM();
 	if(!allowed_to_spawn)
 	if(IS_PLAYER(self)) // this is true even when player is trying to join
 	{
@@ -188,9 +188,11 @@ MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 }
 
 MUTATOR_HOOKFUNCTION(ca_reset_map_players)
-{
-	FOR_EACH_CLIENT(self)
+{SELFPARAM();
+	entity e;
+	FOR_EACH_CLIENT(e)
 	{
+		setself(e);
 		self.killcount = 0;
 		if(!self.caplayer && IS_BOT_CLIENT(self))
 		{
@@ -208,7 +210,7 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 }
 
 MUTATOR_HOOKFUNCTION(ca_ClientConnect)
-{
+{SELFPARAM();
 	self.classname = "observer";
 	return 1;
 }
@@ -226,7 +228,7 @@ MUTATOR_HOOKFUNCTION(ca_GetTeamCount)
 }
 
 entity ca_LastPlayerForTeam()
-{
+{SELFPARAM();
 	entity pl, last_pl = world;
 	FOR_EACH_PLAYER(pl)
 	{
@@ -253,7 +255,7 @@ void ca_LastPlayerForTeam_Notify()
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerDies)
-{
+{SELFPARAM();
 	ca_LastPlayerForTeam_Notify();
 	if(!allowed_to_spawn)
 		self.respawn_flags =  RESPAWN_SILENT;
@@ -263,7 +265,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(ca_ClientDisconnect)
-{
+{SELFPARAM();
 	if(self.caplayer == 1)
 		ca_LastPlayerForTeam_Notify();
 	return 1;
@@ -275,7 +277,7 @@ MUTATOR_HOOKFUNCTION(ca_ForbidPlayerScore_Clear)
 }
 
 MUTATOR_HOOKFUNCTION(ca_MakePlayerObserver)
-{
+{SELFPARAM();
 	if(self.caplayer == 1)
 		ca_LastPlayerForTeam_Notify();
 	if(self.killindicator_teamchange == -2)
@@ -326,7 +328,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 }
 
 MUTATOR_HOOKFUNCTION(ca_FilterItem)
-{
+{SELFPARAM();
 	if(autocvar_g_powerups <= 0)
 	if(self.flags & FL_POWERUP)
 		return true;

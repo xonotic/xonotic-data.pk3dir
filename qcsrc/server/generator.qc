@@ -1,6 +1,6 @@
 #include "generator.qh"
 
-bool generator_send(entity to, int sf)
+bool generator_send(entity this, entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GENERATOR);
 	WriteByte(MSG_ENTITY, sf);
@@ -30,7 +30,7 @@ bool generator_send(entity to, int sf)
 }
 
 void generator_link(void() spawnproc)
-{
+{SELFPARAM();
 	Net_LinkEntity(self, true, 0, generator_send);
 	self.think		= spawnproc;
 	self.nextthink	= time;

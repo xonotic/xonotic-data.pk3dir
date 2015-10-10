@@ -1,6 +1,6 @@
 #ifdef SVQC
 void func_rotating_setactive(float astate)
-{
+{SELFPARAM();
 
 	if (astate == ACTIVE_TOGGLE)
 	{
@@ -26,7 +26,7 @@ dmg     : Do this mutch dmg every .dmgtime intervall when blocked
 dmgtime : See above.
 */
 
-void spawnfunc_func_rotating()
+spawnfunc(func_rotating)
 {
 	if (self.noise != "")
 	{

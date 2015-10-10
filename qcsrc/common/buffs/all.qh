@@ -1,0 +1,68 @@
+#ifndef BUFFS_ALL_H
+#define BUFFS_ALL_H
+// Welcome to the stuff behind the scenes
+// Below, you will find the list of buffs
+// Add new buffs here!
+// Note: Buffs also need spawnfuncs, which are set below
+
+#include "../teams.qh"
+#include "../util.qh"
+
+REGISTRY(Buffs, BIT(4))
+REGISTER_REGISTRY(RegisterBuffs)
+
+#define REGISTER_BUFF(id) \
+    REGISTER(RegisterBuffs, BUFF, Buffs, id, m_id, NEW(Buff)); \
+    REGISTER_INIT_POST(BUFF, id) { \
+        this.netname = this.m_name; \
+        this.m_itemid = BIT(this.m_id - 1); \
+        this.m_sprite = strzone(strcat("buff-", this.m_name)); \
+    } \
+    REGISTER_INIT(BUFF, id)
+
+#include "../items/item/pickup.qh"
+CLASS(Buff, Pickup)
+	/** bit index */
+	ATTRIB(Buff, m_itemid, int, 0)
+	ATTRIB(Buff, m_name, string, "buff")
+	ATTRIB(Buff, m_color, vector, '1 1 1')
+	ATTRIB(Buff, m_prettyName, string, "Buff")
+	ATTRIB(Buff, m_skin, int, 0)
+	ATTRIB(Buff, m_sprite, string, "")
+	METHOD(Buff, display, void(entity this, void(string name, string icon) returns)) {
+		returns(this.m_prettyName, sprintf("/gfx/hud/%s/buff_%s", cvar_string("menu_skin"), this.m_name));
+	}
+#ifdef SVQC
+	METHOD(Buff, m_time, float(entity));
+	float Buff_m_time(entity this) { return cvar(strcat("g_buffs_", this.netname, "_time")); }
+#endif
+ENDCLASS(Buff)
+
+#ifdef SVQC
+	.int buffs;
+	void buff_Init(entity ent);
+	void buff_Init_Compat(entity ent, entity replacement);
+	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
+		self.buffs = b.m_itemid; \
+		self.team = t; \
+		buff_Init(self); \
+	}
+	#define BUFF_SPAWNFUNCS(e, b)                       \
+			BUFF_SPAWNFUNC(e,           b,  0)          \
+			BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
+			BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
+			BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
+			BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4)
+	#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o, r) spawnfunc(item_##o) { buff_Init_Compat(self, r); }
+#else
+	#define BUFF_SPAWNFUNC(e, b, t)
+	#define BUFF_SPAWNFUNCS(e, b)
+	#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o, r)
+#endif
+
+REGISTER_BUFF(Null);
+BUFF_SPAWNFUNCS(random, BUFF_Null)
+
+#include "all.inc"
+
+#endif

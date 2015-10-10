@@ -1,5 +1,5 @@
 void func_ladder_touch()
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (!other.iscreature)
 		return;
@@ -18,7 +18,7 @@ void func_ladder_touch()
 }
 
 #ifdef SVQC
-float func_ladder_send(entity to, float sf)
+bool func_ladder_send(entity this, entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_LADDER);
 
@@ -39,7 +39,7 @@ void func_ladder_link()
 	//self.model = "null";
 }
 
-void spawnfunc_func_ladder()
+spawnfunc(func_ladder)
 {
 	self.mdl = self.model;
 	EXACTTRIGGER_INIT;
@@ -48,7 +48,7 @@ void spawnfunc_func_ladder()
 	func_ladder_link();
 }
 
-void spawnfunc_func_water()
+spawnfunc(func_water)
 {
 	self.mdl = self.model;
 	EXACTTRIGGER_INIT;
@@ -61,7 +61,7 @@ void spawnfunc_func_water()
 .float speed;
 
 void ent_func_ladder()
-{
+{SELFPARAM();
 	self.classname = strzone(ReadString());
 	self.skin = ReadByte();
 	self.speed = ReadByte();

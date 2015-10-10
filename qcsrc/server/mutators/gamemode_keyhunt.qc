@@ -63,12 +63,6 @@ float kh_interferemsg_time, kh_interferemsg_team;
 .float kh_previous_owner_playerid;
 .float kh_cp_duration;
 
-string kh_sound_capture = "kh/capture.wav";
-string kh_sound_destroy = "kh/destroy.wav";
-string kh_sound_drop = "kh/drop.wav";
-string kh_sound_collect = "kh/collect.wav";
-string kh_sound_alarm = "kh/alarm.wav";  // the new siren/alarm
-
 float kh_key_dropped, kh_key_carried;
 
 const float ST_KH_CAPS = 1;
@@ -92,7 +86,7 @@ void kh_ScoreRules(float teams)
 }
 
 float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the time
-{
+{SELFPARAM();
 	if(!IS_PLAYER(e) || self.team != e.team)
 		if(!kh_tracking_enabled)
 			return false;
@@ -101,7 +95,7 @@ float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the
 }
 
 float kh_Key_waypointsprite_visible_for_player(entity e) // ??
-{
+{SELFPARAM();
 	if(!kh_tracking_enabled)
 		return false;
 	if(!self.owner)
@@ -154,7 +148,7 @@ void kh_Controller_SetThink(float t, kh_Think_t func)  // runs occasionaly
 }
 void kh_WaitForPlayers();
 void kh_Controller_Think()  // called a lot
-{
+{SELFPARAM();
 	if(intermission_running)
 		return;
 	if(self.cnt > 0)
@@ -386,9 +380,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			{
 				if (!k.owner) continue;
 				entity first = WP_Null;
-				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
 				entity third = WP_Null;
-				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
 				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFinish, third);
 			}
 		}
@@ -401,9 +395,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			{
 				if (!k.owner) continue;
 				entity first = WP_Null;
-				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model1, LAMBDA(first = it; break));
 				entity third = WP_Null;
-				FOREACH(WAYPOINTS, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
+				FOREACH(Waypoints, it.netname == k.owner.waypointsprite_attachedforcarrier.model3, LAMBDA(third = it; break));
 				WaypointSprite_UpdateSprites(k.owner.waypointsprite_attachedforcarrier, first, WP_KeyCarrierFriend, third);
 			}
 		}
@@ -411,7 +405,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 }
 
 void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.owner)
 		return;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
@@ -430,7 +424,7 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key
 {
-	sound(player, CH_TRIGGER, kh_sound_collect, VOL_BASE, ATTEN_NORM);
+	sound(player, CH_TRIGGER, SND_KH_COLLECT, VOL_BASE, ATTEN_NORM);
 
 	if(key.kh_dropperteam != player.team)
 	{
@@ -444,7 +438,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 }
 
 void kh_Key_Touch()  // runs many, many times when a key has been dropped and can be picked up
-{
+{SELFPARAM();
 	if(intermission_running)
 		return;
 
@@ -575,7 +569,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 	midpoint = midpoint * (1 / kh_teams);
 	te_customflash(midpoint, 1000, 1, Team_ColorRGB(teem) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
 
-	play2all(kh_sound_capture);
+	play2all(SND(KH_CAPTURE));
 	kh_FinishRound();
 }
 
@@ -664,14 +658,14 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
 
-	play2all(kh_sound_destroy);
+	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);
 
 	kh_FinishRound();
 }
 
 void kh_Key_Think()  // runs all the time
-{
+{SELFPARAM();
 	entity head;
 	//entity player;  // needed by FOR_EACH_PLAYER
 
@@ -696,7 +690,7 @@ void kh_Key_Think()  // runs all the time
 	{
 		if(self.siren_time < time)
 		{
-			sound(self.owner, CH_TRIGGER, kh_sound_alarm, VOL_BASE, ATTEN_NORM);  // play a simple alarm
+			sound(self.owner, CH_TRIGGER, SND_KH_ALARM, VOL_BASE, ATTEN_NORM);  // play a simple alarm
 			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
 		}
 
@@ -729,7 +723,7 @@ void kh_Key_Think()  // runs all the time
 }
 
 void key_reset()
-{
+{SELFPARAM();
 	kh_Key_AssignTo(self, world);
 	kh_Key_Remove(self);
 }
@@ -832,7 +826,7 @@ void kh_Key_DropOne(entity key)
 	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 	key.kh_dropperteam = key.team;
 
-	sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
+	sound(player, CH_TRIGGER, SND_KH_DROP, VOL_BASE, ATTEN_NORM);
 }
 
 void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
@@ -858,7 +852,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			if(suicide)
 				key.kh_dropperteam = player.team;
 		}
-		sound(player, CH_TRIGGER, kh_sound_drop, VOL_BASE, ATTEN_NORM);
+		sound(player, CH_TRIGGER, SND_KH_DROP, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1003,17 +997,6 @@ float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the play
 
 void kh_Initialize()  // sets up th KH environment
 {
-	precache_sound(kh_sound_capture);
-	precache_sound(kh_sound_destroy);
-	precache_sound(kh_sound_drop);
-	precache_sound(kh_sound_collect);
-	precache_sound(kh_sound_alarm);  // the new siren
-
-#ifdef KH_PLAYER_USE_CARRIEDMODEL
-	precache_model("models/keyhunt/key-carried.md3");
-#endif
-	precache_model("models/keyhunt/key.md3");
-
 	// setup variables
 	kh_teams = autocvar_g_keyhunt_teams_override;
 	if(kh_teams < 2)
@@ -1025,7 +1008,7 @@ void kh_Initialize()  // sets up th KH environment
 	kh_controller.think = kh_Controller_Think;
 	kh_Controller_SetThink(0, kh_WaitForPlayers);
 
-	setmodel(kh_controller, "models/keyhunt/key.md3");
+	setmodel(kh_controller, MDL_KH_KEY);
 	kh_key_dropped = kh_controller.modelindex;
 	/*
 	dprint(vtos(kh_controller.mins));
@@ -1033,7 +1016,7 @@ void kh_Initialize()  // sets up th KH environment
 	dprint("\n");
 	*/
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
-	setmodel(kh_controller, "models/keyhunt/key-carried.md3");
+	setmodel(kh_controller, MDL_KH_KEY_CARRIED);
 	kh_key_carried = kh_controller.modelindex;
 #else
 	kh_key_carried = kh_key_dropped;
@@ -1058,13 +1041,13 @@ void kh_finalize()
 // register this as a mutator
 
 MUTATOR_HOOKFUNCTION(kh_Key_DropAll)
-{
+{SELFPARAM();
 	kh_Key_DropAll(self, true);
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PlayerDies)
-{
+{SELFPARAM();
 	if(self == other)
 		kh_Key_DropAll(self, true);
 	else if(IS_PLAYER(other))
@@ -1093,13 +1076,13 @@ MUTATOR_HOOKFUNCTION(kh_GetTeamCount)
 }
 
 MUTATOR_HOOKFUNCTION(kh_SpectateCopy)
-{
+{SELFPARAM();
 	self.kh_state = other.kh_state;
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE == 0)
 	{
 		entity k;

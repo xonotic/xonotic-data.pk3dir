@@ -6,15 +6,17 @@
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
-void spawnfunc_invasion_spawnpoint()
+spawnfunc(invasion_spawnpoint)
 {
 	if(!g_invasion) { remove(self); return; }
 
 	self.classname = "invasion_spawnpoint";
 
 	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
-	if(self.monsterid)
-		MON_ACTION(self.monsterid, MR_PRECACHE);
+	if(self.monsterid) {
+		Monster mon = get_monsterinfo(self.monsterid);
+		mon.mr_precache(mon);
+	}
 }
 
 float invasion_PickMonster(float supermonster_count)
@@ -261,7 +263,7 @@ void Invasion_RoundStart()
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
-{
+{SELFPARAM();
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		inv_numkilled += 1;
@@ -283,7 +285,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
-{
+{SELFPARAM();
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
 
@@ -304,7 +306,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(invasion_OnEntityPreSpawn)
-{
+{SELFPARAM();
 	if(startsWith(self.classname, "monster_"))
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
@@ -327,7 +329,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerRegen)
 }
 
 MUTATOR_HOOKFUNCTION(invasion_PlayerSpawn)
-{
+{SELFPARAM();
 	self.bot_attack = false;
 	return false;
 }
@@ -344,7 +346,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerDamage)
 }
 
 MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 
@@ -430,9 +432,10 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 
 void invasion_Initialize()
 {
-	if(autocvar_g_invasion_zombies_only)
-		MON_ACTION(MON_ZOMBIE.monsterid, MR_PRECACHE);
-	else
+	if(autocvar_g_invasion_zombies_only) {
+		Monster mon = MON_ZOMBIE;
+		mon.mr_precache(mon);
+	} else
 	{
 		float i;
 		entity mon;
@@ -442,7 +445,7 @@ void invasion_Initialize()
 			if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM))
 				continue; // flying/swimming monsters not yet supported
 
-			MON_ACTION(i, MR_PRECACHE);
+			mon.mr_precache(mon);
 		}
 	}
 

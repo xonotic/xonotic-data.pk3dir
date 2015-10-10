@@ -131,7 +131,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	if (snd != "")
 	{
-		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+		_sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 
@@ -194,7 +194,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 // ====================
 
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
-{
+{SELFPARAM();
 	vector hitloc, force, endpoint, dir;
 	entity ent, endent;
 	float endq3surfaceflags;
@@ -287,7 +287,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			if(f <= 0)
 				continue;
 
-			snd = W_Sound(strcat("nexwhoosh", ftos(floor(random() * 3) + 1)));
+			snd = SND(NEXWHOOSH_RANDOM());
 
 			if(!pseudoprojectile)
 				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
@@ -345,7 +345,7 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 }
 
 void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
-{
+{SELFPARAM();
 	vector  end;
 
 	dir = normalize(dir + randomvec() * spread);

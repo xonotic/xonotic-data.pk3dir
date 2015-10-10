@@ -69,7 +69,8 @@ item_key
 /**
  * Key touch handler.
  */
-void item_key_touch(void) {
+void item_key_touch()
+{SELFPARAM();
 	if (!IS_PLAYER(other))
 		return;
 
@@ -86,7 +87,8 @@ void item_key_touch(void) {
 /**
  * Spawn a key with given model, key code and color.
  */
-void spawn_item_key() {
+void spawn_item_key()
+{SELFPARAM();
 	precache_model(self.model);
 
 	if (self.spawnflags & 1) // FLOATING
@@ -101,7 +103,7 @@ void spawn_item_key() {
 
 	self.mdl = self.model;
 	self.effects = EF_LOWPRECISION;
-	setmodel(self, self.model);
+	_setmodel(self, self.model);
 	//setsize(self, '-16 -16 -24', '16 16 32');
 	setorigin(self, self.origin + '0 0 32');
 	setsize(self, '-16 -16 -56', '16 16 0');
@@ -146,7 +148,8 @@ This is the only correct way to put keys on the map!
 
 itemkeys MUST always have exactly one bit set.
 */
-void spawnfunc_item_key() {
+spawnfunc(item_key)
+{
 	string _netname;
 	vector _colormod;
 
@@ -231,7 +234,7 @@ void spawnfunc_item_key() {
 		self.message = strzone(strcat("You've picked up the ", self.netname, "!"));
 
 	if (self.noise == "")
-		self.noise = "misc/itempickup.wav";
+		self.noise = SND(ITEMPICKUP);
 
 	// save the name for later
 	item_keys_names[lowestbit(self.itemkeys)] = self.netname;
@@ -252,10 +255,11 @@ FLOATING: the item will float in air, instead of aligning to the floor by fallin
 ---------NOTES----------
 Don't use this entity on new maps! Use item_key instead.
 */
-void spawnfunc_item_key1(void) {
-	self.classname = "item_key";
-	self.itemkeys = ITEM_KEY_BIT(1);
-	spawnfunc_item_key();
+spawnfunc(item_key1)
+{
+	this.classname = "item_key";
+	this.itemkeys = ITEM_KEY_BIT(1);
+	spawnfunc_item_key(this);
 };
 
 /*QUAKED item_key2 (0 .5 .8) (-16 -16 -24) (16 16 32) FLOATING
@@ -270,8 +274,9 @@ FLOATING: the item will float in air, instead of aligning to the floor by fallin
 ---------NOTES----------
 Don't use this entity on new maps! Use item_key instead.
 */
-void spawnfunc_item_key2(void) {
-	self.classname = "item_key";
-	self.itemkeys = ITEM_KEY_BIT(0);
-	spawnfunc_item_key();
+spawnfunc(item_key2)
+{
+	this.classname = "item_key";
+	this.itemkeys = ITEM_KEY_BIT(0);
+	spawnfunc_item_key(this);
 };

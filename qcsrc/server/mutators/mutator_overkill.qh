@@ -7,7 +7,7 @@
 .float ok_item;
 
 .float ok_notice_time;
-.float ammo_charge[WEP_MAXCOUNT];
+.float ammo_charge[Weapons_MAX];
 .float ok_use_ammocharge;
 .float ok_ammo_charge;
 

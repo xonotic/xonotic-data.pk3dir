@@ -123,7 +123,7 @@ void MapVote_UnzoneStrings()
 }
 
 string MapVote_Suggest(string m)
-{
+{SELFPARAM();
 	float i;
 	if(m == "")
 		return "That's not how to use this command.";
@@ -263,7 +263,7 @@ void MapVote_Init()
 }
 
 void MapVote_SendPicture(float id)
-{
+{SELFPARAM();
 	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_PICTURE);
@@ -343,7 +343,7 @@ void GameTypeVote_SendOption(int i)
 	}
 }
 
-float MapVote_SendEntity(entity to, int sf)
+bool MapVote_SendEntity(entity this, entity to, int sf)
 {
 	float i;
 

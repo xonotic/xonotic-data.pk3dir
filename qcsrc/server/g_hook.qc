@@ -65,7 +65,6 @@ And you should be done!
 ============================================*/
 
 .float hook_length;
-.float hook_switchweapon;
 
 void RemoveGrapplingHook(entity pl)
 {
@@ -80,7 +79,7 @@ void RemoveGrapplingHook(entity pl)
 }
 
 void GrapplingHookReset(void)
-{
+{SELFPARAM();
 	if(self.realowner.hook == self)
 		RemoveGrapplingHook(self.owner);
 	else // in any case:
@@ -89,9 +88,9 @@ void GrapplingHookReset(void)
 
 void GrapplingHookThink();
 void GrapplingHook_Stop()
-{
+{SELFPARAM();
 	Send_Effect(EFFECT_HOOK_IMPACT, self.origin, '0 0 0', 1);
-	sound (self, CH_SHOTS, W_Sound("hook_impact"), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	self.state = 1;
 	self.think = GrapplingHookThink;
@@ -103,7 +102,7 @@ void GrapplingHook_Stop()
 }
 
 .vector hook_start, hook_end;
-float GrapplingHookSend(entity to, int sf)
+bool GrapplingHookSend(entity this, entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_HOOK);
 	sf = sf & 0x7F;
@@ -129,8 +128,10 @@ float GrapplingHookSend(entity to, int sf)
 	return true;
 }
 
+int autocvar_g_grappling_hook_tarzan;
+
 void GrapplingHookThink()
-{
+{SELFPARAM();
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
@@ -300,7 +301,7 @@ void GrapplingHookThink()
 }
 
 void GrapplingHookTouch (void)
-{
+{SELFPARAM();
 	if(other.movetype == MOVETYPE_FOLLOW)
 		return;
 	PROJECTILE_TOUCH;
@@ -318,7 +319,7 @@ void GrapplingHookTouch (void)
 }
 
 void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -340,7 +341,7 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int 
 }
 
 void FireGrapplingHook (void)
-{
+{SELFPARAM();
 	entity missile;
 	vector org;
 	vector vs;
@@ -357,7 +358,7 @@ void FireGrapplingHook (void)
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-	sound (self, CH_WEAPON_B, W_Sound("hook_fire"), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
 	org = self.origin + self.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
@@ -375,7 +376,7 @@ void FireGrapplingHook (void)
 	missile.movetype = ((autocvar_g_balance_grapplehook_gravity) ? MOVETYPE_TOSS : MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
-	//setmodel (missile, "models/hook.md3"); // precision set below
+	//setmodel (missile, MDL_HOOK); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
 	setorigin (missile, org);
 
@@ -403,114 +404,6 @@ void FireGrapplingHook (void)
 	Net_LinkEntity(missile, false, 0, GrapplingHookSend);
 }
 
-//  void GrapplingHookFrame()
-//  {
-//         // this function has been modified for Xonotic
-// -       if (self.BUTTON_HOOK && g_grappling_hook)
-//         {
-// -               if (!self.hook && self.hook_time <= time && !self.button6_pressed_before)
-// -                       if (timeoutStatus != 2) //only allow the player to fire the grappling hook if the game is not paused (timeout)
-// -                               FireGrapplingHook();
-//         }
-// -       else
-//         {
-//                 if (self.hook)
-//                         RemoveGrapplingHook(self);
-//         }
-// -       self.button6_pressed_before = self.BUTTON_HOOK;
-//         /*
-//         // if I have no hook or it's not pulling yet, make sure I'm not flying!
-//         if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-
-void GrapplingHookFrame()
-{
-	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK.m_id && !self.vehicle)
-	{
-		// offhand hook controls
-		if(self.BUTTON_HOOK)
-		{
-			if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)) && (time > self.hook_refire))
-			{
-				self.hook_state |= HOOK_FIRING;
-				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
-			}
-		}
-		else
-		{
-			self.hook_state |= HOOK_REMOVING;
-			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
-		}
-
-		self.hook_state &= ~HOOK_RELEASING;
-		if(self.BUTTON_CROUCH && autocvar_g_balance_grapplehook_crouchslide)
-		{
-			self.hook_state &= ~HOOK_PULLING;
-			//self.hook_state |= HOOK_RELEASING;
-		}
-		else
-		{
-			self.hook_state |= HOOK_PULLING;
-			//self.hook_state &= ~HOOK_RELEASING;
-		}
-	}
-	else if(!g_grappling_hook && self.switchweapon != WEP_HOOK.m_id && !self.vehicle)
-	{
-		if(self.BUTTON_HOOK && !self.hook_switchweapon)
-			W_SwitchWeapon(WEP_HOOK.m_id);
-	}
-	self.hook_switchweapon = self.BUTTON_HOOK;
-
-	if(!g_grappling_hook && self.weapon != WEP_HOOK.m_id)
-	{
-		self.hook_state &= ~HOOK_FIRING;
-		self.hook_state |= HOOK_REMOVING;
-	}
-
-	if (self.hook_state & HOOK_FIRING)
-	{
-		if (self.hook)
-			RemoveGrapplingHook(self);
-		FireGrapplingHook();
-		self.hook_state &= ~HOOK_FIRING;
-		self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
-	}
-	else if(self.hook_state & HOOK_REMOVING)
-	{
-		if (self.hook)
-			RemoveGrapplingHook(self);
-		self.hook_state &= ~HOOK_REMOVING;
-	}
-
-	/*
-	// if I have no hook or it's not pulling yet, make sure I'm not flying!
-	if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-	{
-		self.movetype = MOVETYPE_WALK;
-	}
-	if(self.impulse == GRAPHOOK_FIRE && self.hook_time <= time && g_grappling_hook)
-	{
-		// fire hook
-		FireGrapplingHook();
-		return;
-	}
-	else if(self.hookimpulse == GRAPHOOK_RELEASE)
-	{
-		// remove hook, reset movement type
-		RemoveGrapplingHook(self);
-		return;
-	}
-	*/
-	/*else // make sure the player's movetype is correct
-	{
-		//if(self.hook == world && self.movetype == MOVETYPE_FLY)
-		if((self.hook == world || !self.hook.state) && self.movetype == MOVETYPE_FLY)
-		{
-			self.movetype = MOVETYPE_WALK;
-		}
-	}*/
-	// note: The hook entity does the actual pulling
-}
-
 void GrappleHookInit()
 {
 	if(g_grappling_hook)
@@ -522,7 +415,8 @@ void GrappleHookInit()
 	}
 	else
 	{
-		WEP_ACTION(WEP_HOOK.m_id, WR_INIT);
+		Weapon w = WEP_HOOK;
+		w.wr_init(w);
 		hook_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 1);
 		hook_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 2);
 		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 3);
@@ -531,7 +425,7 @@ void GrappleHookInit()
 }
 
 void SetGrappleHookBindings()
-{
+{SELFPARAM();
 	// this function has been modified for Xonotic
 	// don't remove these lines! old server or demos coud overwrite the new aliases
 	stuffcmd(self, "alias +hook +button6\n");

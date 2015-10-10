@@ -1,6 +1,6 @@
 #ifdef SVQC
 void trigger_teleport_use()
-{
+{SELFPARAM();
 	if(teamplay)
 		self.team = activator.team;
 #ifdef SVQC
@@ -9,8 +9,7 @@ void trigger_teleport_use()
 }
 
 void Teleport_Touch (void)
-{
-	entity oldself;
+{SELFPARAM();
 	string s;
 
 	if (self.active != ACTIVE_ACTIVE)
@@ -38,21 +37,17 @@ void Teleport_Touch (void)
 	if(IS_PLAYER(other))
 		RemoveGrapplingHook(other);
 
-	entity e;
-	e = Simple_TeleportPlayer(self, other);
+	entity e = Simple_TeleportPlayer(self, other);
 
 	activator = other;
 	s = self.target; self.target = string_null;
 	SUB_UseTargets();
 	if (!self.target) self.target = s;
 
-	oldself = self;
-	self = e;
-	SUB_UseTargets();
-	self = oldself;
+	WITH(entity, self, e, SUB_UseTargets());
 }
 
-void spawnfunc_trigger_teleport()
+spawnfunc(trigger_teleport)
 {
 	self.angles = '0 0 0';
 

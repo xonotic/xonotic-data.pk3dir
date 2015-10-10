@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ PORTO,
-/* function  */ W_Porto,
-/* ammotype  */ ammo_none,
-/* impulse   */ 0,
-/* flags     */ WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON,
-/* rating    */ 0,
-/* color     */ '0.5 0.5 0.5',
-/* modelname */ "porto",
-/* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairporto 0.6",
-/* wepimg    */ "weaponporto",
-/* refname   */ "porto",
-/* wepname   */ _("Port-O-Launch")
-);
+CLASS(PortoLaunch, Weapon)
+/* ammotype  */ ATTRIB(PortoLaunch, ammo_field, .int, ammo_none)
+/* impulse   */ ATTRIB(PortoLaunch, impulse, int, 0)
+/* flags     */ ATTRIB(PortoLaunch, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_SUPERWEAPON);
+/* rating    */ ATTRIB(PortoLaunch, bot_pickupbasevalue, float, 0);
+/* color     */ ATTRIB(PortoLaunch, wpcolor, vector, '0.5 0.5 0.5');
+/* modelname */ ATTRIB(PortoLaunch, mdl, string, "porto");
+#ifndef MENUQC
+/* model     */ ATTRIB(PortoLaunch, m_model, Model, MDL_PORTO_ITEM);
+#endif
+/* crosshair */ ATTRIB(PortoLaunch, w_crosshair, string, "gfx/crosshairporto");
+/* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");
+/* refname   */ ATTRIB(PortoLaunch, netname, string, "porto");
+/* wepname   */ ATTRIB(PortoLaunch, message, string, _("Port-O-Launch"));
+ENDCLASS(PortoLaunch)
+REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 
 #define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, PORTO, porto)
 #define PORTO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -39,12 +41,12 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-#include "../triggers/trigger/jumppads.qh"
+#include "../../triggers/trigger/jumppads.qh"
 
-void spawnfunc_weapon_porto(void) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
+spawnfunc(weapon_porto) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
 
 void W_Porto_Success(void)
-{
+{SELFPARAM();
 	if(self.realowner == world)
 	{
 		objerror("Cannot succeed successfully: no owner\n");
@@ -57,7 +59,7 @@ void W_Porto_Success(void)
 
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
 void W_Porto_Fail(float failhard)
-{
+{SELFPARAM();
 	if(self.realowner == world)
 	{
 		objerror("Cannot fail successfully: no owner\n");
@@ -72,7 +74,7 @@ void W_Porto_Fail(float failhard)
 
 	self.realowner.porto_current = world;
 
-	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && self.realowner.deadflag == DEAD_NO && !(self.realowner.weapons & WEPSET_PORTO))
+	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && self.realowner.deadflag == DEAD_NO && !(self.realowner.weapons & WEPSET(PORTO)))
 	{
 		setsize(self, '-16 -16 0', '16 16 32');
 		setorigin(self, self.origin + trace_plane_normal);
@@ -92,19 +94,15 @@ void W_Porto_Fail(float failhard)
 }
 
 void W_Porto_Remove(entity p)
-{
+{SELFPARAM();
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
-		entity oldself;
-		oldself = self;
-		self = p.porto_current;
-		W_Porto_Fail(1);
-		self = oldself;
+		WITH(entity, self, p.porto_current, W_Porto_Fail(1));
 	}
 }
 
 void W_Porto_Think(void)
-{
+{SELFPARAM();
 	trace_plane_normal = '0 0 0';
 	if(self.realowner.playerid != self.playerid)
 		remove(self);
@@ -113,7 +111,7 @@ void W_Porto_Think(void)
 }
 
 void W_Porto_Touch(void)
-{
+{SELFPARAM();
 	vector norm;
 
 	// do not use PROJECTILE_TOUCH here
@@ -136,19 +134,19 @@ void W_Porto_Touch(void)
 
 	if(self.realowner.playerid != self.playerid)
 	{
-		sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 		remove(self);
 	}
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
 	{
-		spamsound(self, CH_SHOTS, "porto/bounce.wav", VOL_BASE, ATTEN_NORM);
+		spamsound(self, CH_SHOTS, SND(PORTO_BOUNCE), VOL_BASE, ATTEN_NORM);
 		// just reflect
 		self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * trace_plane_normal);
 		self.angles = vectoangles(self.velocity - 2 * trace_plane_normal * (self.velocity * trace_plane_normal));
 	}
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
-		sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 		W_Porto_Fail(0);
 		if(self.cnt < 0)
 			Portal_ClearAll_PortalsOnly(self.realowner);
@@ -158,14 +156,14 @@ void W_Porto_Touch(void)
 		// in-portal only
 		if(Portal_SpawnInPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 		{
-			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, SND_PORTO_CREATE, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_IN);
 			W_Porto_Success();
 		}
 		else
 		{
-			sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			W_Porto_Fail(0);
 		}
@@ -175,14 +173,14 @@ void W_Porto_Touch(void)
 		// out-portal only
 		if(Portal_SpawnOutPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 		{
-			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, SND_PORTO_CREATE, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_OUT);
 			W_Porto_Success();
 		}
 		else
 		{
-			sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			W_Porto_Fail(0);
 		}
@@ -192,7 +190,7 @@ void W_Porto_Touch(void)
 		self.effects += EF_BLUE - EF_RED;
 		if(Portal_SpawnInPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 		{
-			sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, SND_PORTO_CREATE, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_IN);
 			self.right_vector = self.right_vector - 2 * trace_plane_normal * (self.right_vector * norm);
@@ -201,7 +199,7 @@ void W_Porto_Touch(void)
 		}
 		else
 		{
-			sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			Portal_ClearAll_PortalsOnly(self.realowner);
 			W_Porto_Fail(0);
@@ -213,21 +211,21 @@ void W_Porto_Touch(void)
 		{
 			if(Portal_SpawnOutPortalAtTrace(self.realowner, self.right_vector, self.portal_id))
 			{
-				sound(self, CH_SHOTS, "porto/create.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_PORTO_CREATE, VOL_BASE, ATTEN_NORM);
 				trace_plane_normal = norm;
 				Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_OUT);
 				W_Porto_Success();
 			}
 			else
 			{
-				sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 				Portal_ClearAll_PortalsOnly(self.realowner);
 				W_Porto_Fail(0);
 			}
 		}
 		else
 		{
-			sound(self, CH_SHOTS, "porto/unsupported.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 			Portal_ClearAll_PortalsOnly(self.realowner);
 			W_Porto_Fail(0);
 		}
@@ -235,10 +233,10 @@ void W_Porto_Touch(void)
 }
 
 void W_Porto_Attack(float type)
-{
+{SELFPARAM();
 	entity gren;
 
-	W_SetupShot(self, false, 4, "porto/fire.wav", CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 4, SND(PORTO_FIRE), CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
@@ -287,145 +285,103 @@ void W_Porto_Attack(float type)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-bool w_nexball_weapon(int req); // WEAPONTODO
-bool W_Porto(int req)
-{
-	//vector v_angle_save;
-
-	if(g_nexball) { return w_nexball_weapon(req); }
-
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(PortoLaunch, wr_aim, void(entity thiswep))
 		{
+			SELFPARAM();
 			self.BUTTON_ATCK = false;
 			self.BUTTON_ATCK2 = false;
 			if(!WEP_CVAR(porto, secondary))
 				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
 					self.BUTTON_ATCK = true;
-
-			return true;
 		}
-		case WR_CONFIG:
+		METHOD(PortoLaunch, wr_config, void(entity this))
 		{
 			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		case WR_THINK:
+		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
 			if(WEP_CVAR(porto, secondary))
 			{
-				if(self.BUTTON_ATCK)
-				if(!self.porto_current)
-				if(!self.porto_forbidden)
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
+				if(fire1)
+				if(!actor.porto_current)
+				if(!actor.porto_forbidden)
+				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(0);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 
-				if(self.BUTTON_ATCK2)
-				if(!self.porto_current)
-				if(!self.porto_forbidden)
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(porto, refire)))
+				if(fire2)
+				if(!actor.porto_current)
+				if(!actor.porto_forbidden)
+				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(porto, refire)))
 				{
 					W_Porto_Attack(1);
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
 				}
 			}
 			else
 			{
-				if(self.porto_v_angle_held)
+				if(actor.porto_v_angle_held)
 				{
-					if(!self.BUTTON_ATCK2)
+					if(!fire2)
 					{
-						self.porto_v_angle_held = 0;
+						actor.porto_v_angle_held = 0;
 
-						ClientData_Touch(self);
+						ClientData_Touch(actor);
 					}
 				}
 				else
 				{
-					if(self.BUTTON_ATCK2)
+					if(fire2)
 					{
-						self.porto_v_angle = self.v_angle;
-						self.porto_v_angle_held = 1;
+						actor.porto_v_angle = actor.v_angle;
+						actor.porto_v_angle_held = 1;
 
-						ClientData_Touch(self);
+						ClientData_Touch(actor);
 					}
 				}
-				if(self.porto_v_angle_held)
-					makevectors(self.porto_v_angle); // override the previously set angles
+				if(actor.porto_v_angle_held)
+					makevectors(actor.porto_v_angle); // override the previously set angles
 
-				if(self.BUTTON_ATCK)
-				if(!self.porto_current)
-				if(!self.porto_forbidden)
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(porto, refire)))
+				if(fire1)
+				if(!actor.porto_current)
+				if(!actor.porto_forbidden)
+				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(-1);
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 			}
-
-			return true;
 		}
-		case WR_CHECKAMMO1:
-		case WR_CHECKAMMO2:
+		METHOD(PortoLaunch, wr_checkammo1, bool(entity this))
 		{
 			// always allow infinite ammo
 			return true;
 		}
-		case WR_INIT:
+		METHOD(PortoLaunch, wr_checkammo2, bool(entity this))
 		{
-			precache_model(W_Model("g_porto.md3"));
-			precache_model(W_Model("v_porto.md3"));
-			precache_model(W_Model("h_porto.iqm"));
-			precache_model("models/portal.md3");
-			precache_sound("porto/bounce.wav");
-			precache_sound("porto/create.wav");
-			precache_sound("porto/expire.wav");
-			precache_sound("porto/explode.wav");
-			precache_sound("porto/fire.wav");
-			precache_sound("porto/unsupported.wav");
+			// always allow infinite ammo
+			return true;
+		}
+		METHOD(PortoLaunch, wr_init, void(entity this))
+		{
 			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		case WR_SETUP:
+		METHOD(PortoLaunch, wr_setup, void(entity thiswep))
 		{
+			SELFPARAM();
 			self.ammo_field = ammo_none;
-			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep))
 		{
+			SELFPARAM();
 			self.porto_current = world;
-			return true;
 		}
-	}
-	return false;
-}
 #endif
 #ifdef CSQC
-bool W_Porto(int req)
-{
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
-		{
-			LOG_INFO("Since when does Porto send DamageInfo?\n");
-			return true;
+		METHOD(PortoLaunch, wr_impacteffect, void(entity this)) {
+			LOG_WARNING("Since when does Porto send DamageInfo?\n");
 		}
-		case WR_INIT:
-		{
-			// nothing to do
-			return true;
-		}
-		case WR_ZOOMRETICLE:
-		{
-			// no weapon specific image for this weapon
-			return false;
-		}
-	}
-	return false;
-}
 #endif
 #endif

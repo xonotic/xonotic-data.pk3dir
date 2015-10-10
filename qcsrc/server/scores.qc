@@ -55,7 +55,7 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
  * teamscore entities
  */
 
-float TeamScore_SendEntity(entity to, float sendflags)
+bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, p, longflags;
 
@@ -186,7 +186,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	}
 }
 
-float ScoreInfo_SendEntity(entity to, int sf)
+bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
@@ -230,7 +230,7 @@ void ScoreInfo_Init(float teams)
  * per-player score entities
  */
 
-float PlayerScore_SendEntity(entity to, float sendflags)
+bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, p, longflags;
 

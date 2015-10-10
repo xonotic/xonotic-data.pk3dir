@@ -11,22 +11,16 @@
  * in onslaught... YAY ;)
  */
 
-// Beware: do not redefine those in other files
-// and NO, you cannot use ".version", which already exists (at least
-// it did when I added this) But you have to use .Version
-// Capital V
-
 .entity entcs;
-
-void entcs_init();
 
 float entcs_customize();
 
-float entcs_send(entity to, int sf);
+bool entcs_send(entity this, entity to, int sf);
 
 void entcs_think();
 
-entity attach_entcs();
+entity attach_entcs(entity e);
 
-void detach_entcs();
+void detach_entcs(entity e);
+
 #endif

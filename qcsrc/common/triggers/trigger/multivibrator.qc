@@ -1,6 +1,6 @@
 #ifdef SVQC
 void multivibrator_send()
-{
+{SELFPARAM();
 	float newstate;
 	float cyclestart;
 
@@ -20,7 +20,7 @@ void multivibrator_send()
 }
 
 void multivibrator_toggle()
-{
+{SELFPARAM();
 	if(self.nextthink == 0)
 	{
 		multivibrator_send();
@@ -37,7 +37,7 @@ void multivibrator_toggle()
 }
 
 void multivibrator_reset()
-{
+{SELFPARAM();
 	if(!(self.spawnflags & 1))
 		self.nextthink = 0; // wait for a trigger event
 	else
@@ -55,7 +55,7 @@ respawntime: "off" cycle time (default: same as wait)
 -------- SPAWNFLAGS --------
 START_ON: assume it is already turned on (when targeted)
 */
-void spawnfunc_trigger_multivibrator()
+spawnfunc(trigger_multivibrator)
 {
 	if(!self.wait)
 		self.wait = 1;

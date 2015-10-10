@@ -11,7 +11,7 @@ dmgtime: See above.
 */
 
 void func_fourier_controller_think()
-{
+{SELFPARAM();
 	vector v;
 	float n, i, t;
 
@@ -39,7 +39,7 @@ void func_fourier_controller_think()
 		self.owner.velocity = (v - self.owner.origin) * 10;
 }
 
-void spawnfunc_func_fourier()
+spawnfunc(func_fourier)
 {
 	entity controller;
 	if (self.noise != "")

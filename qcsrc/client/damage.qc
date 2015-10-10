@@ -7,7 +7,7 @@
 
 #include "../common/constants.qh"
 #include "../common/deathtypes.qh"
-#include "../common/effects.qh"
+#include "../common/effects/effects.qh"
 #include "../common/movetypes/movetypes.qh"
 #include "../common/util.qh"
 
@@ -20,7 +20,7 @@
 .bool isplayermodel;
 
 void DamageEffect_Think()
-{
+{SELFPARAM();
 	// if particle distribution is enabled, slow ticrate by total number of damages
 	if(autocvar_cl_damageeffect_distribute)
 		self.nextthink = time + autocvar_cl_damageeffect_ticrate * self.owner.total_damages;
@@ -53,7 +53,7 @@ void DamageEffect_Think()
 }
 
 void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
-{
+{SELFPARAM();
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
 	int nearestbone = 0;
@@ -113,7 +113,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 	}
 
 	e = spawn();
-	setmodel(e, "null"); // necessary to attach and read origin
+	setmodel(e, MDL_Null); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.classname = "damage";
 	e.owner = self;
@@ -125,14 +125,11 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 }
 
 void Ent_DamageInfo(float isNew)
-{
+{SELFPARAM();
 	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
 	int species, forcemul;
 	vector force, thisforce;
-	entity oldself;
-
-	oldself = self;
 
 	w_deathtype = ReadShort();
 	w_issilent = (w_deathtype & 0x8000);
@@ -159,8 +156,9 @@ void Ent_DamageInfo(float isNew)
 	else
 		forcemul = 1;
 
-	for(self = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); self; self = self.chain)
+	for(entity e = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); e; e = e.chain)
 	{
+		setself(e);
 		// attached ents suck
 		if(self.tag_entity)
 			continue;
@@ -211,8 +209,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.isplayermodel)
 			hitplayer = true; // this impact damaged a player
 	}
-
-	self = oldself;
+	setself(this);
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{
@@ -231,35 +228,33 @@ void Ent_DamageInfo(float isNew)
 
 			// spiderbot
 			case DEATH_VH_SPID_MINIGUN:
-				string _snd;
-				_snd = W_Sound(strcat("ric", ftos(1 + rint(random() * 2))));
-				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_SPIDERBOT_MINIGUN_IMPACT), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_ROCKET:
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_SPIDERBOT_ROCKET_EXPLODE), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_DEATH:
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum(EFFECT_EXPLOSION_BIG), self.origin, w_backoff * 1000, 1);
 				break;
 
 			case DEATH_VH_WAKI_GUN:
-				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_RACER_IMPACT), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_ROCKET:
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_RACER_ROCKET_EXPLODE), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_DEATH:
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum(EFFECT_EXPLOSION_BIG), self.origin, w_backoff * 1000, 1);
 				break;
 
 			case DEATH_VH_RAPT_CANNON:
-				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_RAPTOR_CANNON_IMPACT), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_FRAGMENT:
@@ -271,19 +266,19 @@ void Ent_DamageInfo(float isNew)
 					ang = vectoangles(vel);
 					RaptorCBShellfragToss(w_org, vel, ang + '0 0 1' * (120 * i));
 				}
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_RAPTOR_BOMB_SPREAD), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_BOMB:
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_RAPTOR_BOMB_IMPACT), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_DEATH:
-				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum(EFFECT_EXPLOSION_BIG), self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_BUMB_GUN:
-				sound(self, CH_SHOTS, W_Sound("fireball_impact2"), VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_BIGPLASMA_IMPACT), self.origin, w_backoff * 1000, 1);
 				break;
 		}
@@ -292,7 +287,6 @@ void Ent_DamageInfo(float isNew)
 
 	if(DEATH_ISTURRET(w_deathtype))
 	{
-		string _snd;
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
@@ -304,38 +298,36 @@ void Ent_DamageInfo(float isNew)
 		switch(w_deathtype)
 		{
 			 case DEATH_TURRET_EWHEEL:
-				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_FLAC:
 				pointparticles(particleeffectnum(EFFECT_HAGAR_EXPLODE), w_org, '0 0 0', 1);
-				_snd = W_Sound(strcat("hagexp", ftos(1 + rint(random() * 2))));
-				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
 				break;
 
 			 case DEATH_TURRET_MLRS:
 			 case DEATH_TURRET_HK:
 			 case DEATH_TURRET_WALK_ROCKET:
 			 case DEATH_TURRET_HELLION:
-				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_MACHINEGUN:
 			 case DEATH_TURRET_WALK_GUN:
-				_snd = W_Sound(strcat("ric", ftos(1 + rint(random() * 2))));
-				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum(EFFECT_MACHINEGUN_IMPACT), self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_PLASMA:
-				sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum(EFFECT_ELECTRO_IMPACT), self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_WALK_MELEE:
-				sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum(EFFECT_TE_SPARK), self.origin, w_backoff * 1000, 1);
 				break;
 
@@ -363,6 +355,8 @@ void Ent_DamageInfo(float isNew)
 			w_backoff = -1 * normalize(force);
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) { WEP_ACTION(hitwep, WR_IMPACTEFFECT); }
+		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) {
+			Weapon w = get_weaponinfo(hitwep); w.wr_impacteffect(w);
+		}
 	}
 }

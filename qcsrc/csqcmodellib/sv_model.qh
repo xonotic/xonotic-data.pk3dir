@@ -26,9 +26,9 @@
 
 // generic CSQC model code
 
-void CSQCModel_CheckUpdate();
-void CSQCModel_LinkEntity();
-void CSQCModel_UnlinkEntity();
+void CSQCModel_CheckUpdate(entity e);
+void CSQCModel_LinkEntity(entity e);
+void CSQCModel_UnlinkEntity(entity e);
 
 #define CSQCMODEL_IF(cond)
 #define CSQCMODEL_ENDIF

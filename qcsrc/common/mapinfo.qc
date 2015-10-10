@@ -2,7 +2,7 @@
 	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "util.qh"
-    #include "buffs.qh"
+    #include "buffs/all.qh"
     #include "weapons/all.qh"
     #include "mapinfo.qh"
 #elif defined(MENUQC)
@@ -10,7 +10,7 @@
 	#include "../dpdefs/progsdefs.qh"
     #include "../dpdefs/dpextensions.qh"
     #include "util.qh"
-    #include "buffs.qh"
+    #include "buffs/all.qh"
     #include "monsters/all.qh"
     #include "mapinfo.qh"
 #endif
@@ -602,13 +602,13 @@ void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int lo
 
 string _MapInfo_GetDefaultEx(float t)
 {
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.model2));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.model2));
 	return "";
 }
 
 float _MapInfo_GetTeamPlayBool(float t)
 {
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.team));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.team));
 	return false;
 }
 
@@ -707,53 +707,30 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 	}
 }
 
-float MapInfo_Type_FromString(string t)
+int MapInfo_Type_FromString(string t)
 {
-	if(t == "nexball")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "nb";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "freezetag")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "ft";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "keepaway")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "ka";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "invasion")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "inv";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "assault")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "as";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "race")
-	{
-		LOG_INFO("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
-		t = "rc";
-		LOG_INFO("'. Should use '", t, "'.\n");
-	}
-	if(t == "all")
-		return MAPINFO_TYPE_ALL;
-	FOREACH(MAPINFO_TYPES, it.mdl == t, LAMBDA(return it.items));
+#define deprecate(from, to) do { \
+	if (t == #from) { \
+		string replacement = #to; \
+		LOG_WARNINGF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.\n", MapInfo_Map_bspname, t, replacement); \
+		t = replacement; \
+	} \
+} while (0)
+	deprecate(nexball, nb);
+	deprecate(freezetag, ft);
+	deprecate(keepaway, ka);
+	deprecate(invasion, inv);
+	deprecate(assault, as);
+	deprecate(race, rc);
+	if (t == "all") return MAPINFO_TYPE_ALL;
+	FOREACH(Gametypes, it.mdl == t, LAMBDA(return it.items));
 	return 0;
+#undef deprecate
 }
 
 string MapInfo_Type_Description(float t)
 {
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.gametype_description));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.gametype_description));
 	return "";
 }
 
@@ -761,13 +738,13 @@ string MapInfo_Type_ToString(float t)
 {
 	if(t == MAPINFO_TYPE_ALL)
 	 	return "all";
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.mdl));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.mdl));
 	return "";
 }
 
 string MapInfo_Type_ToText(float t)
 {
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.message));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.message));
 	/* xgettext:no-c-format */
 	return _("@!#%'n Tuba Throwing");
 }
@@ -1062,7 +1039,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 		{
 			t = car(s); s = cdr(s);
 			f = MapInfo_Type_FromString(t);
-			LOG_TRACE("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
+			LOG_WARNING("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, true);
 			else
@@ -1272,7 +1249,7 @@ int MapInfo_CurrentFeatures()
 int MapInfo_CurrentGametype()
 {
 	int prev = cvar("gamecfg");
-	FOREACH(MAPINFO_TYPES, cvar(it.netname) && it.items != prev, LAMBDA(return it.items));
+	FOREACH(Gametypes, cvar(it.netname) && it.items != prev, LAMBDA(return it.items));
 	if (prev) return prev;
 	return MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1298,7 +1275,7 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 
 void MapInfo_SwitchGameType(int t)
 {
-	FOREACH(MAPINFO_TYPES, true, LAMBDA(
+	FOREACH(Gametypes, true, LAMBDA(
 		cvar_set(it.netname, (it.items == t) ? "1" : "0")
 	));
 }

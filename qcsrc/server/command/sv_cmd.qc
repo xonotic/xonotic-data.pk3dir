@@ -41,7 +41,7 @@ void PutObserverInServer (void);
 
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think()
-{
+{SELFPARAM();
 	if(MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
 	{
 		LOG_INFO("Done rebuiling mapinfos.\n");
@@ -196,7 +196,7 @@ void GameCommand_allready(float request)
 }
 
 void GameCommand_allspec(float request, float argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -207,10 +207,9 @@ void GameCommand_allspec(float request, float argc)
 
 			FOR_EACH_REALPLAYER(client)
 			{
-				self = client;
-				if(self.caplayer)
-					self.caplayer = 0;
-				PutObserverInServer();
+				if (client.caplayer)
+					client.caplayer = 0;
+				WITH(entity, self, client, PutObserverInServer());
 				++i;
 			}
 			if(i) { bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n")); }
@@ -230,7 +229,7 @@ void GameCommand_allspec(float request, float argc)
 }
 
 void GameCommand_anticheat(float request, float argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -240,8 +239,7 @@ void GameCommand_anticheat(float request, float argc)
 
 			if(accepted > 0)
 			{
-				self = client;
-				anticheat_report();
+				WITH(entity, self, client, anticheat_report());
 				return;
 			}
 			else
@@ -818,11 +816,11 @@ void GameCommand_gettaginfo(float request, float argc)
 			{
 				tmp_entity = spawn();
 				if(argv(1) == "w")
-					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+					_setmodel(tmp_entity, (nextent(world)).weaponentity.model);
 				else
 				{
 					precache_model(argv(1));
-					setmodel(tmp_entity, argv(1));
+					_setmodel(tmp_entity, argv(1));
 				}
 				tmp_entity.frame = stof(argv(2));
 				if(substring(argv(3), 0, 1) == "#")
@@ -876,11 +874,11 @@ void GameCommand_animbench(float request, float argc)
 			{
 				tmp_entity = spawn();
 				if(argv(1) == "w")
-					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+					_setmodel(tmp_entity, (nextent(world)).weaponentity.model);
 				else
 				{
 					precache_model(argv(1));
-					setmodel(tmp_entity, argv(1));
+					_setmodel(tmp_entity, argv(1));
 				}
 				float f1 = stof(argv(2));
 				float f2 = stof(argv(3));
@@ -1002,7 +1000,7 @@ void GameCommand_make_mapinfo(float request)
 }
 
 void GameCommand_moveplayer(float request, float argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1039,10 +1037,9 @@ void GameCommand_moveplayer(float request, float argc)
 					{
 						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
-							self = client;
-							if(self.caplayer)
-								self.caplayer = 0;
-							PutObserverInServer();
+							if (client.caplayer)
+								client.caplayer = 0;
+							WITH(entity, self, client, PutObserverInServer());
 
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
 						}
@@ -1171,7 +1168,7 @@ void GameCommand_nospectators(float request)
 }
 
 void GameCommand_playerdemo(float request, float argc)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1194,8 +1191,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						self = client;
-						playerdemo_open_read(argv(next_token));
+						WITH(entity, self, client, playerdemo_open_read(argv(next_token)));
 						return;
 					}
 
@@ -1210,8 +1206,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						self = client;
-						playerdemo_open_write(argv(next_token));
+						WITH(entity, self, client, playerdemo_open_write(argv(next_token)));
 						return;
 					}
 
@@ -1344,7 +1339,7 @@ void GameCommand_setbots(float request, float argc)
 }
 
 void GameCommand_shuffleteams(float request)
-{
+{SELFPARAM();
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1409,7 +1404,7 @@ void GameCommand_shuffleteams(float request)
 								continue; // not a player, move on to next random slot
 
 							if(VerifyClientNumber(shuffleteams_players[z]))
-								self = edict_num(shuffleteams_players[z]);
+								setself(edict_num(shuffleteams_players[z]));
 
 							if(self.team != team_color)
 								MoveToTeam(self, team_color, 6);

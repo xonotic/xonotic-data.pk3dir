@@ -200,7 +200,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 }
 
 void OnlineBanList_Think()
-{
+{SELFPARAM();
 	float argc;
 	string uri;
 	float i, n;

@@ -1,5 +1,5 @@
 #ifdef SVQC
-float rainsnow_SendEntity(entity to, float sf)
+bool rainsnow_SendEntity(entity this, entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
@@ -12,7 +12,7 @@ float rainsnow_SendEntity(entity to, float sf)
 	WriteShort(MSG_ENTITY, compressShortVector(self.dest));
 	WriteShort(MSG_ENTITY, self.count);
 	WriteByte(MSG_ENTITY, self.cnt);
-	return 1;
+	return true;
 }
 
 /*QUAKED spawnfunc_func_rain (0 .5 .8) ?
@@ -26,7 +26,7 @@ Keys:
 "count"
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
 */
-void spawnfunc_func_rain()
+spawnfunc(func_rain)
 {
 	self.dest = self.velocity;
 	self.velocity = '0 0 0';
@@ -64,7 +64,7 @@ Keys:
 "count"
  adjusts density, this many particles fall every second for a 1024x1024 area, default is 2000
 */
-void spawnfunc_func_snow()
+spawnfunc(func_snow)
 {
 	self.dest = self.velocity;
 	self.velocity = '0 0 0';
@@ -90,18 +90,18 @@ void spawnfunc_func_snow()
 	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 #elif defined(CSQC)
-void Draw_Rain()
+void Draw_Rain(entity this)
 {
     te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
-void Draw_Snow()
+void Draw_Snow(entity this)
 {
     te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
 void Ent_RainOrSnow()
-{
+{SELFPARAM();
 	self.impulse = ReadByte(); // Rain, Snow, or Whatever
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();

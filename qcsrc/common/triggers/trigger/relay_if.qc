@@ -1,6 +1,6 @@
 #ifdef SVQC
 void trigger_relay_if_use()
-{
+{SELFPARAM();
 	float n;
 	n = self.count;
 
@@ -13,7 +13,7 @@ void trigger_relay_if_use()
 		SUB_UseTargets();
 }
 
-void spawnfunc_trigger_relay_if()
+spawnfunc(trigger_relay_if)
 {
 	self.use = trigger_relay_if_use;
 }

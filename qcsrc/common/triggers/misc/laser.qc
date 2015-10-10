@@ -1,6 +1,6 @@
 #if defined(CSQC)
 	#include "../../../client/_all.qh"
-	#include "../../buffs.qh"
+	#include "../../buffs/all.qh"
 	#include "../../../csqcmodellib/interpolate.qh"
 	#include "../../../client/main.qh"
 	#include "../../../csqcmodellib/cl_model.qh"
@@ -11,7 +11,7 @@
 #ifdef SVQC
 .float modelscale;
 void misc_laser_aim()
-{
+{SELFPARAM();
 	vector a;
 	if(self.enemy)
 	{
@@ -50,16 +50,15 @@ void misc_laser_aim()
 }
 
 void misc_laser_init()
-{
+{SELFPARAM();
 	if(self.target != "")
 		self.enemy = find(world, targetname, self.target);
 }
 
 .entity pusher;
 void misc_laser_think()
-{
+{SELFPARAM();
 	vector o;
-	entity oldself;
 	entity hitent;
 	vector hitloc;
 
@@ -98,11 +97,8 @@ void misc_laser_think()
 			{
 				self.count = 1;
 
-				oldself = self;
-				self = self.enemy;
-				activator = self.pusher;
-				SUB_UseTargets();
-				self = oldself;
+				activator = self.enemy.pusher;
+				WITH(entity, self, self.enemy, SUB_UseTargets());
 			}
 		}
 		else
@@ -111,11 +107,8 @@ void misc_laser_think()
 			{
 				self.count = 0;
 
-				oldself = self;
-				self = self.enemy;
-				activator = self.pusher;
-				SUB_UseTargets();
-				self = oldself;
+				activator = self.enemy.pusher;
+				WITH(entity, self, self.enemy, SUB_UseTargets());
 			}
 		}
 	}
@@ -130,7 +123,7 @@ void misc_laser_think()
 	}
 }
 
-float laser_SendEntity(entity to, float fl)
+bool laser_SendEntity(entity this, entity to, float fl)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
 	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
@@ -196,21 +189,21 @@ Keys:
  damage per second (-1 for a laser that kills immediately)
 */
 void laser_use()
-{
+{SELFPARAM();
 	self.state = !self.state;
 	self.SendFlags |= 4;
 	misc_laser_aim();
 }
 
 void laser_reset()
-{
+{SELFPARAM();
 	if(self.spawnflags & 1)
 		self.state = 1;
 	else
 		self.state = 0;
 }
 
-void spawnfunc_misc_laser()
+spawnfunc(misc_laser)
 {
 	if(self.mdl)
 	{
@@ -279,7 +272,7 @@ class(Laser) .float alpha;
 class(Laser) .float scale; // scaling factor of the thickness
 class(Laser) .float modelscale; // scaling factor of the dlight
 
-void Draw_Laser()
+void Draw_Laser(entity this)
 {
 	if(!self.state)
 		return;
@@ -331,7 +324,7 @@ void Draw_Laser()
 }
 
 void Ent_Laser()
-{
+{SELFPARAM();
 	InterpolateOrigin_Undo();
 
 	// 30 bytes, or 13 bytes for just moving

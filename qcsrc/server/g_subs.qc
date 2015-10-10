@@ -5,7 +5,7 @@
 #include "command/common.qh"
 #include "../warpzonelib/common.qh"
 
-void spawnfunc_info_null (void)
+spawnfunc(info_null)
 {
 	remove(self);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
@@ -281,7 +281,7 @@ vector findbetterlocation (vector org, float mindist)
 }
 
 float LOD_customize()
-{
+{SELFPARAM();
 	float d;
 
 	if(autocvar_loddebug)
@@ -309,12 +309,12 @@ float LOD_customize()
 }
 
 void LOD_uncustomize()
-{
+{SELFPARAM();
 	self.modelindex = self.lodmodelindex0;
 }
 
 void LODmodel_attach()
-{
+{SELFPARAM();
 	entity e;
 
 	if(!self.loddistance1)
@@ -354,13 +354,13 @@ void LODmodel_attach()
 		ma = self.maxs;
 
 		precache_model(self.lodmodel1);
-		setmodel(self, self.lodmodel1);
+		_setmodel(self, self.lodmodel1);
 		self.lodmodelindex1 = self.modelindex;
 
 		if(self.lodmodel2 != "")
 		{
 			precache_model(self.lodmodel2);
-			setmodel(self, self.lodmodel2);
+			_setmodel(self, self.lodmodel2);
 			self.lodmodelindex2 = self.modelindex;
 		}
 
@@ -374,7 +374,7 @@ void LODmodel_attach()
 }
 
 void ApplyMinMaxScaleAngles(entity e)
-{
+{SELFPARAM();
 	if(e.angles.x != 0 || e.angles.z != 0 || self.avelocity.x != 0 || self.avelocity.z != 0) // "weird" rotation
 	{
 		e.maxs = '1 1 1' * vlen(
@@ -401,7 +401,7 @@ void ApplyMinMaxScaleAngles(entity e)
 }
 
 void SetBrushEntityModel()
-{
+{SELFPARAM();
  	if(self.model != "")
  	{
  		precache_model(self.model);
@@ -409,11 +409,11 @@ void SetBrushEntityModel()
 		{
 			vector mi = self.mins;
 			vector ma = self.maxs;
-			setmodel(self, self.model); // no precision needed
+			_setmodel(self, self.model); // no precision needed
 			setsize(self, mi, ma);
 		}
 		else
-			setmodel(self, self.model); // no precision needed
+			_setmodel(self, self.model); // no precision needed
 		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
@@ -421,7 +421,7 @@ void SetBrushEntityModel()
 }
 
 void SetBrushEntityModelNoLOD()
-{
+{SELFPARAM();
  	if(self.model != "")
  	{
  		precache_model(self.model);
@@ -429,11 +429,11 @@ void SetBrushEntityModelNoLOD()
 		{
 			vector mi = self.mins;
 			vector ma = self.maxs;
-			setmodel(self, self.model); // no precision needed
+			_setmodel(self, self.model); // no precision needed
 			setsize(self, mi, ma);
 		}
 		else
-			setmodel(self, self.model); // no precision needed
+			_setmodel(self, self.model); // no precision needed
  	}
 	setorigin(self, self.origin);
 	ApplyMinMaxScaleAngles(self);
@@ -446,7 +446,7 @@ InitTrigger
 */
 
 void SetMovedir()
-{
+{SELFPARAM();
 	if (self.movedir != '0 0 0')
 		self.movedir = normalize(self.movedir);
 	else
@@ -459,7 +459,7 @@ void SetMovedir()
 }
 
 void InitTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir ();
@@ -471,7 +471,7 @@ void InitTrigger()
 }
 
 void InitSolidBSPTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir ();
@@ -483,7 +483,7 @@ void InitSolidBSPTrigger()
 }
 
 float InitMovingBrushTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	self.solid = SOLID_BSP;

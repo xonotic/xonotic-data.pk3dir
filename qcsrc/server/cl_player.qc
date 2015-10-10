@@ -25,7 +25,7 @@
 #include "../common/animdecide.qh"
 
 void CopyBody_Think(void)
-{
+{SELFPARAM();
 	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
 	{
 		self.CopyBody_think();
@@ -35,90 +35,88 @@ void CopyBody_Think(void)
 		self.CopyBody_think = self.think;
 		self.think = CopyBody_Think;
 	}
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 	self.nextthink = time;
 }
 void CopyBody(float keepvelocity)
-{
-	entity oldself;
+{SELFPARAM();
 	if (self.effects & EF_NODRAW)
 		return;
-	oldself = self;
-	self = spawn();
-	self.enemy = oldself;
-	self.lip = oldself.lip;
-	self.colormap = oldself.colormap;
-	self.iscreature = oldself.iscreature;
-	self.teleportable = oldself.teleportable;
-	self.damagedbycontents = oldself.damagedbycontents;
-	self.angles = oldself.angles;
-	self.v_angle = oldself.v_angle;
-	self.avelocity = oldself.avelocity;
+	setself(spawn());
+	self.enemy = this;
+	self.lip = this.lip;
+	self.colormap = this.colormap;
+	self.iscreature = this.iscreature;
+	self.teleportable = this.teleportable;
+	self.damagedbycontents = this.damagedbycontents;
+	self.angles = this.angles;
+	self.v_angle = this.v_angle;
+	self.avelocity = this.avelocity;
 	self.classname = "body";
-	self.damageforcescale = oldself.damageforcescale;
-	self.effects = oldself.effects;
-	self.glowmod = oldself.glowmod;
-	self.event_damage = oldself.event_damage;
-	self.anim_state = oldself.anim_state;
-	self.anim_time = oldself.anim_time;
-	self.anim_lower_action = oldself.anim_lower_action;
-	self.anim_lower_time = oldself.anim_lower_time;
-	self.anim_upper_action = oldself.anim_upper_action;
-	self.anim_upper_time = oldself.anim_upper_time;
-	self.anim_implicit_state = oldself.anim_implicit_state;
-	self.anim_implicit_time = oldself.anim_implicit_time;
-	self.anim_lower_implicit_action = oldself.anim_lower_implicit_action;
-	self.anim_lower_implicit_time = oldself.anim_lower_implicit_time;
-	self.anim_upper_implicit_action = oldself.anim_upper_implicit_action;
-	self.anim_upper_implicit_time = oldself.anim_upper_implicit_time;
-	self.dphitcontentsmask = oldself.dphitcontentsmask;
-	self.death_time = oldself.death_time;
-	self.pain_finished = oldself.pain_finished;
-	self.health = oldself.health;
-	self.armorvalue = oldself.armorvalue;
-	self.armortype = oldself.armortype;
-	self.model = oldself.model;
-	self.modelindex = oldself.modelindex;
-	self.skin = oldself.skin;
-	self.species = oldself.species;
-	self.movetype = oldself.movetype;
-	self.solid = oldself.solid;
-	self.ballistics_density = oldself.ballistics_density;
-	self.takedamage = oldself.takedamage;
-	self.customizeentityforclient = oldself.customizeentityforclient;
-	self.uncustomizeentityforclient = oldself.uncustomizeentityforclient;
-	self.uncustomizeentityforclient_set = oldself.uncustomizeentityforclient_set;
+	self.damageforcescale = this.damageforcescale;
+	self.effects = this.effects;
+	self.glowmod = this.glowmod;
+	self.event_damage = this.event_damage;
+	self.anim_state = this.anim_state;
+	self.anim_time = this.anim_time;
+	self.anim_lower_action = this.anim_lower_action;
+	self.anim_lower_time = this.anim_lower_time;
+	self.anim_upper_action = this.anim_upper_action;
+	self.anim_upper_time = this.anim_upper_time;
+	self.anim_implicit_state = this.anim_implicit_state;
+	self.anim_implicit_time = this.anim_implicit_time;
+	self.anim_lower_implicit_action = this.anim_lower_implicit_action;
+	self.anim_lower_implicit_time = this.anim_lower_implicit_time;
+	self.anim_upper_implicit_action = this.anim_upper_implicit_action;
+	self.anim_upper_implicit_time = this.anim_upper_implicit_time;
+	self.dphitcontentsmask = this.dphitcontentsmask;
+	self.death_time = this.death_time;
+	self.pain_finished = this.pain_finished;
+	self.health = this.health;
+	self.armorvalue = this.armorvalue;
+	self.armortype = this.armortype;
+	self.model = this.model;
+	self.modelindex = this.modelindex;
+	self.skin = this.skin;
+	self.species = this.species;
+	self.movetype = this.movetype;
+	self.solid = this.solid;
+	self.ballistics_density = this.ballistics_density;
+	self.takedamage = this.takedamage;
+	self.customizeentityforclient = this.customizeentityforclient;
+	self.uncustomizeentityforclient = this.uncustomizeentityforclient;
+	self.uncustomizeentityforclient_set = this.uncustomizeentityforclient_set;
 	if (keepvelocity == 1)
-		self.velocity = oldself.velocity;
+		self.velocity = this.velocity;
 	self.oldvelocity = self.velocity;
-	self.alpha = oldself.alpha;
-	self.fade_time = oldself.fade_time;
-	self.fade_rate = oldself.fade_rate;
-	//self.weapon = oldself.weapon;
-	setorigin(self, oldself.origin);
-	setsize(self, oldself.mins, oldself.maxs);
-	self.prevorigin = oldself.origin;
+	self.alpha = this.alpha;
+	self.fade_time = this.fade_time;
+	self.fade_rate = this.fade_rate;
+	//self.weapon = this.weapon;
+	setorigin(self, this.origin);
+	setsize(self, this.mins, this.maxs);
+	self.prevorigin = this.origin;
 	self.reset = SUB_Remove;
 
-	Drag_MoveDrag(oldself, self);
+	Drag_MoveDrag(this, self);
 
 	if(self.colormap <= maxclients && self.colormap > 0)
-		self.colormap = 1024 + oldself.clientcolors;
+		self.colormap = 1024 + this.clientcolors;
 
-	CSQCMODEL_AUTOINIT();
-	self.CopyBody_nextthink = oldself.nextthink;
-	self.CopyBody_think = oldself.think;
+	CSQCMODEL_AUTOINIT(self);
+	self.CopyBody_nextthink = this.nextthink;
+	self.CopyBody_think = this.think;
 	self.nextthink = time;
 	self.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
 	animdecide_load_if_needed(self);
 	animdecide_setframes(self, false, frame, frame1time, frame2, frame2time);
 
-	self = oldself;
+	setself(this);
 }
 
 float player_getspecies()
-{
+{SELFPARAM();
 	float s;
 	get_model_parameters(self.model, self.skin);
 	s = get_model_parameters_species;
@@ -129,14 +127,14 @@ float player_getspecies()
 }
 
 void player_setupanimsformodel()
-{
+{SELFPARAM();
 	// load animation info
 	animdecide_load_if_needed(self);
 	animdecide_setstate(self, 0, false);
 }
 
 void player_anim (void)
-{
+{SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(self.deadflag) {
 		if (!deadbits) {
@@ -169,7 +167,7 @@ void player_anim (void)
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	float take, save;
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
@@ -184,11 +182,11 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int de
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM);
 	}
 
 	if (take > 50)
@@ -221,7 +219,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int de
 }
 
 void calculate_player_respawn_time()
-{
+{SELFPARAM();
 	if(g_ca)
 		return;
 
@@ -308,7 +306,7 @@ void calculate_player_respawn_time()
 }
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	float take, save, dh, da;
 	int j;
 	vector v;
@@ -397,11 +395,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, "misc/armorimpact.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, "misc/bodyimpact2.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, "misc/bodyimpact1.wav", VOL_BASE, ATTEN_NORM); // FIXME possibly remove them?
+			sound (self, CH_SHOTS, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM); // FIXME possibly remove them?
 	}
 
 	if (take > 50)
@@ -550,7 +548,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 		excess = frag_damage;
 
-		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
+		Weapon wep = get_weaponinfo(self.weapon);
+		wep.wr_playerdeath(wep);
 
 		RemoveGrapplingHook(self);
 
@@ -632,7 +631,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		// reset fields the weapons may use just in case
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			WEP_ACTION(j, WR_RESETPLAYER);
+			Weapon w = get_weaponinfo(j);
+			w.wr_resetplayer(w);
 			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}
@@ -893,7 +893,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) 
+			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 				if(head.active_minigame == source.active_minigame)
 					sprint(head, msgstr);
@@ -988,16 +988,15 @@ void PrecacheGlobalSound(string samplestring)
 
 void PrecachePlayerSounds(string f)
 {
-	float fh;
-	string s;
-	fh = fopen(f, FILE_READ);
-	if(fh < 0)
+	int fh = fopen(f, FILE_READ);
+	if (fh < 0)
 		return;
-	while((s = fgets(fh)))
+	for (string s; (s = fgets(fh)); )
 	{
-		if(tokenize_console(s) != 3)
+		int n = tokenize_console(s);
+		if (n != 3)
 		{
-			LOG_TRACE("Invalid sound info line: ", s, "\n");
+			if (n != 0) LOG_TRACEF("Invalid sound info line: %s\n", s);
 			continue;
 		}
 		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
@@ -1014,7 +1013,7 @@ void PrecachePlayerSounds(string f)
 }
 
 void ClearPlayerSounds()
-{
+{SELFPARAM();
 #define _VOICEMSG(m) if(self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = string_null; }
 	ALLPLAYERSOUNDS
 	ALLVOICEMSGS
@@ -1022,7 +1021,7 @@ void ClearPlayerSounds()
 }
 
 float LoadPlayerSounds(string f, float first)
-{
+{SELFPARAM();
 	float fh;
 	string s;
 	var .string field;
@@ -1050,7 +1049,7 @@ float LoadPlayerSounds(string f, float first)
 }
 
 void UpdatePlayerSounds()
-{
+{SELFPARAM();
 	if(self.modelindex == self.modelindex_for_playersound)
 	if(self.skin == self.skin_for_playersound)
 		return;
@@ -1064,7 +1063,7 @@ void UpdatePlayerSounds()
 }
 
 void FakeGlobalSound(string sample, float chan, float voicetype)
-{
+{SELFPARAM();
 	float n;
 	float tauntrand;
 
@@ -1139,7 +1138,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 }
 
 void GlobalSound(string sample, float chan, float voicetype)
-{
+{SELFPARAM();
 	float n;
 	float tauntrand;
 
@@ -1228,7 +1227,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			}
 			break;
 		case VOICETYPE_PLAYERSOUND:
-			sound(self, chan, sample, VOL_BASE, ATTEN_NORM);
+			_sound(self, chan, sample, VOL_BASE, ATTEN_NORM);
 			break;
 		default:
 			backtrace("Invalid voice type!");
@@ -1237,16 +1236,15 @@ void GlobalSound(string sample, float chan, float voicetype)
 }
 
 void PlayerSound(.string samplefield, float chan, float voicetype)
-{
+{SELFPARAM();
 	GlobalSound(self.(samplefield), chan, voicetype);
 }
 
 void VoiceMessage(string type, string msg)
-{
-	var .string sample;
+{SELFPARAM();
 	float voicetype, ownteam;
 	float flood;
-	sample = GetVoiceMessageSampleField(type);
+	var .string sample = GetVoiceMessageSampleField(type);
 
 	if(GetPlayerSoundSampleField_notFound)
 	{

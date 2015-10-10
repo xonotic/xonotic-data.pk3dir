@@ -24,8 +24,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, m_armordamage, int, 0)
     ATTRIB(DamageText, time_prev, float, time)
 
-    void DamageText_draw() {
-        entity this = self;
+    void DamageText_draw2d(DamageText this) {
         float dt = time - this.time_prev;
         this.time_prev = time;
         setorigin(this, this.origin + dt * this.velocity);
@@ -38,7 +37,7 @@ CLASS(DamageText, Object)
             drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', this.m_color, this.alpha, DRAWFLAG_NORMAL);
         }
     }
-    ATTRIB(DamageText, draw2d, void(), DamageText_draw)
+    ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d)
 
     void DamageText_update(DamageText this, vector _origin, int _health, int _armor) {
         this.m_damage = _health;

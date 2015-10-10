@@ -5,7 +5,7 @@
 .float scale;
 .float alpha;
 
-void ModelEffect_Draw()
+void ModelEffect_Draw(entity this)
 {
 	self.angles = self.angles + frametime * self.avelocity;
 	setorigin(self, self.origin + frametime * self.velocity);
@@ -25,7 +25,7 @@ void ModelEffect_Draw()
 }
 
 void Ent_ModelEffect(bool isNew)
-{
+{SELFPARAM();
 	self.classname = "modeleffect_spawner";
 
 	int f = ReadByte();

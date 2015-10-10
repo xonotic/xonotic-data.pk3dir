@@ -43,7 +43,7 @@ void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
 .vector(vector, vector) camera_transform;
 float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
-{
+{SELFPARAM();
 	vector vf, vr, vu;
 	if(self.warpzone_fadestart)
 		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
@@ -81,7 +81,7 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 }
 
 vector WarpZone_Camera_camera_transform(vector org, vector ang)
-{
+{SELFPARAM();
 	// a fixed camera view
 	if(self.warpzone_fadestart)
 		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
@@ -573,15 +573,13 @@ vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 	return nearest;
 }
 
-float WarpZoneLib_BadClassname(string myclassname)
+bool WarpZoneLib_BadEntity(entity e)
 {
+	string myclassname = e.classname;
+	if (e.instanceOfObject) return true;
 	switch(myclassname)
 	{
-		case "weapon_info":
-		case "monster_info":
 		case "deathtype":
-		case "callback":
-		case "callbackchain":
 		case "weaponentity":
 		case "exteriorweaponentity":
 		case "csqc_score_team":
@@ -589,8 +587,8 @@ float WarpZoneLib_BadClassname(string myclassname)
 		case "ent_client_scoreinfo":
 		case "saved_cvar_value":
 		case "accuracy":
-		case "entcs_sender_v2":
-		case "entcs_receiver_v2":
+		case "entcs_sender":
+		case "entcs_receiver":
 		case "clientinit":
 		case "sprite_waypoint":
 		case "waypoint":
@@ -630,7 +628,7 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 
 	for(e = e0; e; e = e.chain)
 	{
-		if(WarpZoneLib_BadClassname(e.classname))
+		if(WarpZoneLib_BadEntity(e))
 			continue;
 		p = WarpZoneLib_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
 		if(needlineofsight)
@@ -667,7 +665,7 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 	}
 	for(e = wz; e; e = e.WarpZone_findradius_next)
 	{
-		if(WarpZoneLib_BadClassname(e.classname))
+		if(WarpZoneLib_BadEntity(e))
 			continue;
 
 		org0_new = WarpZone_TransformOrigin(e, org);
@@ -698,7 +696,7 @@ entity WarpZone_FindRadius(vector org, float rad, float needlineofsight)
 
 .entity WarpZone_refsys;
 void WarpZone_RefSys_GC()
-{
+{SELFPARAM();
 	// garbage collect unused reference systems
 	self.nextthink = time + 1;
 	if(self.owner.WarpZone_refsys != self)
@@ -818,7 +816,7 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 }
 
 float WarpZoneLib_ExactTrigger_Touch()
-{
+{SELFPARAM();
 	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, self, other);
 }
 

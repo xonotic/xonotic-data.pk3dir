@@ -19,7 +19,7 @@
 // when triggered, the music is overridden for activator until lifetime (or forever, if lifetime is 0)
 // when targetname is not set, THIS ONE is default
 void target_music_sendto(float to, float is)
-{
+{SELFPARAM();
 	WriteByte(to, SVC_TEMPENTITY);
 	WriteByte(to, TE_CSQC_TARGET_MUSIC);
 	WriteShort(to, num_for_edict(self));
@@ -30,7 +30,7 @@ void target_music_sendto(float to, float is)
 	WriteString(to, self.noise);
 }
 void target_music_reset()
-{
+{SELFPARAM();
 	if(self.targetname == "")
 		target_music_sendto(MSG_ALL, 1);
 }
@@ -46,7 +46,7 @@ void target_music_use()
 	entity head;
 	FOR_EACH_SPEC(head) if(head.enemy == activator) { msg_entity = head; target_music_sendto(MSG_ONE, 1); }
 }
-void spawnfunc_target_music()
+spawnfunc(target_music)
 {
 	self.use = target_music_use;
 	self.reset = target_music_reset;
@@ -58,9 +58,10 @@ void spawnfunc_target_music()
 		target_music_sendto(MSG_INIT, 0);
 }
 void TargetMusic_RestoreGame()
-{
-	for(self = world; (self = find(self, classname, "target_music")); )
+{SELFPARAM();
+	for(entity e = world; (e = find(e, classname, "target_music")); )
 	{
+		setself(e);
 		if(self.targetname == "")
 			target_music_sendto(MSG_INIT, 1);
 		else
@@ -75,7 +76,7 @@ void TargetMusic_RestoreGame()
 // spawnflags:
 //   1 = START_OFF
 // when triggered, it is disabled/enabled for everyone
-float trigger_music_SendEntity(entity to, float sf)
+bool trigger_music_SendEntity(entity this, entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
 	sf &= ~0x80;
@@ -115,19 +116,19 @@ float trigger_music_SendEntity(entity to, float sf)
 	return 1;
 }
 void trigger_music_reset()
-{
+{SELFPARAM();
 	self.cnt = !(self.spawnflags & 1);
 	self.SendFlags |= 0x80;
 }
 void trigger_music_use()
-{
+{SELFPARAM();
 	self.cnt = !self.cnt;
 	self.SendFlags |= 0x80;
 }
-void spawnfunc_trigger_music()
+spawnfunc(trigger_music)
 {
 	if(self.model != "")
-		setmodel(self, self.model);
+		_setmodel(self, self.model);
 	if(!self.volume)
 		self.volume = 1;
 	if(!self.modelindex)
@@ -181,9 +182,9 @@ void TargetMusic_Advance()
 		if(vol != vol0)
 		{
 			if(vol0 < 0)
-				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
+				_sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
 			else
-				sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
+				_sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
 			e.lastvol = vol;
 		}
 	}
@@ -222,7 +223,7 @@ void Net_TargetMusic()
 			strunzone(e.noise);
 		e.noise = strzone(noi);
 		precache_sound(e.noise);
-		sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
+		_sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
 			LOG_TRACEF("Cannot initialize sound %s\n", e.noise);
@@ -255,7 +256,7 @@ void Net_TargetMusic()
 }
 
 void Ent_TriggerMusic_Think()
-{
+{SELFPARAM();
 	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, self, world))
 	{
 		music_trigger = self;
@@ -264,14 +265,14 @@ void Ent_TriggerMusic_Think()
 }
 
 void Ent_TriggerMusic_Remove()
-{
+{SELFPARAM();
 	if(self.noise)
 		strunzone(self.noise);
 	self.noise = string_null;
 }
 
 void Ent_ReadTriggerMusic()
-{
+{SELFPARAM();
 	int f = ReadByte();
 	if(f & 4)
 	{
@@ -309,7 +310,7 @@ void Ent_ReadTriggerMusic()
 		if(self.noise != s)
 		{
 			precache_sound(self.noise);
-			sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
+			_sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
 			if(getsoundtime(self, CH_BGM_SINGLE) < 0)
 			{
 				LOG_TRACEF("Cannot initialize sound %s\n", self.noise);

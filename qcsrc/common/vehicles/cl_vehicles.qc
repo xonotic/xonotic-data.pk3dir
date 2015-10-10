@@ -23,10 +23,10 @@ void vehicle_alarm(entity e, int ch, string s0und)
 	if(!autocvar_cl_vehicles_alarm)
 		return;
 
-	sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
+	_sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
 }
 
-void AuxiliaryXhair_Draw2D()
+void AuxiliaryXhair_Draw2D(entity this)
 {
 	if (scoreboard_showscores)
 		return;
@@ -73,14 +73,14 @@ void Net_AuXair2(bool bIsNew)
 }
 
 void Net_VehicleSetup()
-{
+{SELFPARAM();
 	int hud_id = ReadByte();
 
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
 	if(hud_id == 0)
 	{
-		sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
-		sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+		sound(self, CH_TRIGGER_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
+		sound(self, CH_PAIN_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
 		return;
 	}
 
@@ -106,8 +106,10 @@ void Net_VehicleSetup()
 	{
 		AuxiliaryXhair[0].axh_image = vCROSS_BURST; // Plasma cannons
 		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
+	} else {
+		Vehicle info = get_vehicleinfo(hud_id);
+    	info.vr_setup(info);
 	}
-	else { VEH_ACTION(hud_id, VR_SETUP); }
 }
 
 void Vehicles_drawHUD(
@@ -119,7 +121,7 @@ void Vehicles_drawHUD(
 	string iconAmmo2,
 	vector colorAmmo2,
 	string crosshair)
-{
+{SELFPARAM();
 	if(autocvar_r_letterbox)
 		return;
 
@@ -235,7 +237,7 @@ void Vehicles_drawHUD(
 		if(alarm1time < time)
 		{
 			alarm1time = time + 2;
-			vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, SND(VEH_ALARM));
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
@@ -243,7 +245,7 @@ void Vehicles_drawHUD(
 	{
 		if(alarm1time)
 		{
-			vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, SND(Null));
 			alarm1time = 0;
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
@@ -257,7 +259,7 @@ void Vehicles_drawHUD(
 		if(alarm2time < time)
 		{
 			alarm2time = time + 1;
-			vehicle_alarm(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, SND(VEH_ALARM_SHIELD));
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
@@ -265,7 +267,7 @@ void Vehicles_drawHUD(
 	{
 		if(alarm2time)
 		{
-			vehicle_alarm(self, CH_TRIGGER_SINGLE, "misc/null.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, SND(Null));
 			alarm2time = 0;
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);

@@ -1,37 +1,9 @@
 #include "generator.qh"
 
-bool generator_precached;
 .int count;
 .float max_health;
 
-void generator_precache()
-{
-	if(generator_precached)
-		return; // already precached
-
-	precache_model("models/onslaught/generator.md3");
-	precache_model("models/onslaught/generator_dead.md3");
-	precache_model("models/onslaught/generator_dmg1.md3");
-	precache_model("models/onslaught/generator_dmg2.md3");
-	precache_model("models/onslaught/generator_dmg3.md3");
-	precache_model("models/onslaught/generator_dmg4.md3");
-	precache_model("models/onslaught/generator_dmg5.md3");
-	precache_model("models/onslaught/generator_dmg6.md3");
-	precache_model("models/onslaught/generator_dmg7.md3");
-	precache_model("models/onslaught/generator_dmg8.md3");
-	precache_model("models/onslaught/generator_dmg9.md3");
-	precache_model("models/onslaught/generator_dead.md3");
-
-	precache_model("models/onslaught/ons_ray.md3");
-	precache_sound("onslaught/shockwave.wav");
-	precache_sound(W_Sound("grenade_impact"));
-	precache_sound(W_Sound("rocket_impact"));
-	precache_sound("onslaught/electricity_explode.wav");
-
-	generator_precached = true;
-}
-
-void ons_generator_ray_draw()
+void ons_generator_ray_draw(entity this)
 {
 	if(time < self.move_time)
 		return;
@@ -58,7 +30,7 @@ void ons_generator_ray_spawn(vector org)
 	entity e;
 	e = spawn();
 	e.classname = "ons_ray";
-	setmodel(e, "models/onslaught/ons_ray.md3");
+	setmodel(e, MDL_ONS_RAY);
 	setorigin(e, org);
 	e.angles = randomvec() * 360;
 	e.move_origin = org;
@@ -70,7 +42,7 @@ void ons_generator_ray_spawn(vector org)
 	e.draw = ons_generator_ray_draw;
 }
 
-void generator_draw()
+void generator_draw(entity this)
 {
 	if(time < self.move_time)
 		return;
@@ -82,7 +54,7 @@ void generator_draw()
 		if(random() < 0.01)
 		{
 			pointparticles(particleeffectnum(EFFECT_ELECTRO_BALLEXPLODE), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
-			sound(self, CH_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_TRIGGER, SND_ONS_ELECTRICITY_EXPLODE, VOL_BASE, ATTEN_NORM);
 		}
 		else
 			pointparticles(particleeffectnum(EFFECT_ONS_GENERATOR_DAMAGED), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
@@ -101,7 +73,7 @@ void generator_draw()
 	// White shockwave
 	if(self.count==40||self.count==20)
 	{
-		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_ONS_SHOCKWAVE, VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum(EFFECT_ELECTRO_COMBO), self.origin, '0 0 0', 6);
 	}
 
@@ -122,7 +94,7 @@ void generator_draw()
 	if(random() < 0.25)
 	{
 		te_explosion(self.origin);
-		sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 
 	// Particles
@@ -135,7 +107,7 @@ void generator_draw()
 		org = self.origin;
 		te_explosion(org);
 		pointparticles(particleeffectnum(EFFECT_ONS_GENERATOR_EXPLODE2), org, '0 0 0', 1);
-		sound(self, CH_TRIGGER, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 
 	self.move_time = time + 0.05;
@@ -144,40 +116,40 @@ void generator_draw()
 }
 
 void generator_damage(float hp)
-{
+{SELFPARAM();
 	if(hp <= 0)
-		setmodel(self, "models/onslaught/generator_dead.md3");
+		setmodel(self, MDL_ONS_GEN_DEAD);
 	else if(hp < self.max_health * 0.10)
-		setmodel(self, "models/onslaught/generator_dmg9.md3");
+		setmodel(self, MDL_ONS_GEN9);
 	else if(hp < self.max_health * 0.20)
-		setmodel(self, "models/onslaught/generator_dmg8.md3");
+		setmodel(self, MDL_ONS_GEN8);
 	else if(hp < self.max_health * 0.30)
-		setmodel(self, "models/onslaught/generator_dmg7.md3");
+		setmodel(self, MDL_ONS_GEN7);
 	else if(hp < self.max_health * 0.40)
-		setmodel(self, "models/onslaught/generator_dmg6.md3");
+		setmodel(self, MDL_ONS_GEN6);
 	else if(hp < self.max_health * 0.50)
-		setmodel(self, "models/onslaught/generator_dmg5.md3");
+		setmodel(self, MDL_ONS_GEN5);
 	else if(hp < self.max_health * 0.60)
-		setmodel(self, "models/onslaught/generator_dmg4.md3");
+		setmodel(self, MDL_ONS_GEN4);
 	else if(hp < self.max_health * 0.70)
-		setmodel(self, "models/onslaught/generator_dmg3.md3");
+		setmodel(self, MDL_ONS_GEN3);
 	else if(hp < self.max_health * 0.80)
-		setmodel(self, "models/onslaught/generator_dmg2.md3");
+		setmodel(self, MDL_ONS_GEN2);
 	else if(hp < self.max_health * 0.90)
-		setmodel(self, "models/onslaught/generator_dmg1.md3");
+		setmodel(self, MDL_ONS_GEN1);
 	else if(hp <= self.max_health || hp >= self.max_health)
-		setmodel(self, "models/onslaught/generator.md3");
+		setmodel(self, MDL_ONS_GEN);
 
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 }
 
 void generator_construct()
-{
+{SELFPARAM();
 	self.netname = "Generator";
 	self.classname = "onslaught_generator";
 
 	setorigin(self, self.origin);
-	setmodel(self, "models/onslaught/generator.md3");
+	setmodel(self, MDL_ONS_GEN);
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 
 	self.move_movetype	= MOVETYPE_NOCLIP;
@@ -192,7 +164,7 @@ void generator_construct()
 
 .vector glowmod;
 void generator_changeteam()
-{
+{SELFPARAM();
 	if(self.team)
 	{
 		self.glowmod = Team_ColorRGB(self.team - 1);
@@ -208,7 +180,7 @@ void generator_changeteam()
 }
 
 void ent_generator()
-{
+{SELFPARAM();
 	int sf = ReadByte();
 
 	if(sf & GSF_SETUP)
@@ -227,7 +199,6 @@ void ent_generator()
 			self.count = 40;
 
 		generator_changeteam();
-		generator_precache();
 		generator_construct();
 	}
 

@@ -2,5 +2,5 @@
 void multi_trigger();
 void multi_reset();
 
-void spawnfunc_trigger_once();
+spawnfunc(trigger_once);
 #endif

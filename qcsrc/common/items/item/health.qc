@@ -3,8 +3,14 @@
     #include "../../../server/t_items.qh"
 #endif
 
+#ifndef MENUQC
+MODEL(HealthSmall_ITEM, Item_Model("g_h1.md3"));
+#endif
+
 REGISTER_ITEM(HealthSmall, Health) {
-    this.m_model                =   "g_h1.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_HealthSmall_ITEM;
+#endif
     this.m_sound                =   "misc/minihealth.wav";
     this.m_name                 =   "5 Health";
     this.m_icon                 =   "health";
@@ -16,8 +22,14 @@ REGISTER_ITEM(HealthSmall, Health) {
 #endif
 }
 
+#ifndef MENUQC
+MODEL(HealthMedium_ITEM, Item_Model("g_h25.md3"));
+#endif
+
 REGISTER_ITEM(HealthMedium, Health) {
-    this.m_model                =   "g_h25.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_HealthMedium_ITEM;
+#endif
     this.m_sound                =   "misc/mediumhealth.wav";
     this.m_name                 =   "25 Health";
     this.m_icon                 =   "health";
@@ -29,8 +41,14 @@ REGISTER_ITEM(HealthMedium, Health) {
 #endif
 }
 
+#ifndef MENUQC
+MODEL(HealthLarge_ITEM, Item_Model("g_h50.md3"));
+#endif
+
 REGISTER_ITEM(HealthLarge, Health) {
-    this.m_model                =   "g_h50.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_HealthLarge_ITEM;
+#endif
     this.m_sound                =   "misc/mediumhealth.wav";
     this.m_name                 =   "50 Health";
     this.m_icon                 =   "health";
@@ -44,8 +62,14 @@ REGISTER_ITEM(HealthLarge, Health) {
 #endif
 }
 
+#ifndef MENUQC
+MODEL(HealthMega_ITEM, Item_Model("g_h100.md3"));
+#endif
+
 REGISTER_ITEM(HealthMega, Health) {
-    this.m_model                =   "g_h100.md3";
+#ifndef MENUQC
+    this.m_model                =   MDL_HealthMega_ITEM;
+#endif
     this.m_sound                =   "misc/megahealth.wav";
     this.m_name                 =   "100 Health";
     this.m_icon                 =   "item_mega_health";

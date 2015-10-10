@@ -1,7 +1,7 @@
 #include "../physics.qh"
 
 void _Movetype_Physics_Toss(float dt)  // SV_Physics_Toss
-{
+{SELFPARAM();
 	if (self.move_flags & FL_ONGROUND)
 	{
 		if (self.move_velocity.z >= 1 / 32)

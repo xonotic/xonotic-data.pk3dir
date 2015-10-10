@@ -21,7 +21,7 @@ void set_dom_state(entity e)
 }
 
 void dompoint_captured ()
-{
+{SELFPARAM();
 	entity head;
 	float old_delay, old_team, real_team;
 
@@ -61,9 +61,9 @@ void dompoint_captured ()
 
 	if (head.noise != "")
 		if(self.enemy)
-			sound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
+			_sound(self.enemy, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
 		else
-			sound(self, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
+			_sound(self, CH_TRIGGER, head.noise, VOL_BASE, ATTEN_NORM);
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
@@ -129,7 +129,7 @@ void dompoint_captured ()
 }
 
 void AnimateDomPoint()
-{
+{SELFPARAM();
 	if(self.pain_finished > time)
 		return;
 	self.pain_finished = time + self.t_width;
@@ -142,7 +142,7 @@ void AnimateDomPoint()
 }
 
 void dompointthink()
-{
+{SELFPARAM();
 	float fragamt;
 
 	self.nextthink = time + 0.1;
@@ -186,7 +186,7 @@ void dompointthink()
 }
 
 void dompointtouch()
-{
+{SELFPARAM();
 	entity head;
 	if (!IS_PLAYER(other))
 		return;
@@ -241,7 +241,7 @@ void dompointtouch()
 }
 
 void dom_controlpoint_setup()
-{
+{SELFPARAM();
 	entity head;
 	// find the spawnfunc_dom_team representing unclaimed points
 	head = find(world, classname, "dom_team");
@@ -252,7 +252,7 @@ void dom_controlpoint_setup()
 
 	// copy important properties from spawnfunc_dom_team entity
 	self.goalentity = head;
-	setmodel(self, head.mdl); // precision already set
+	_setmodel(self, head.mdl); // precision already set
 	self.skin = head.skin;
 
 	self.cnt = -1;
@@ -385,7 +385,7 @@ void Domination_RoundStart()
 
 //go to best items, or control points you don't own
 void havocbot_role_dom()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -408,10 +408,12 @@ MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
 }
 
 MUTATOR_HOOKFUNCTION(dom_ResetMap)
-{
+{SELFPARAM();
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	FOR_EACH_PLAYER(self)
+	entity e;
+	FOR_EACH_PLAYER(e)
 	{
+		setself(e);
 		PutClientInServer();
 		self.player_blocked = 1;
 		if(IS_REAL_CLIENT(self))
@@ -421,7 +423,7 @@ MUTATOR_HOOKFUNCTION(dom_ResetMap)
 }
 
 MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
-{
+{SELFPARAM();
 	if(domination_roundbased)
 	if(!round_handler_IsRoundStarted())
 		self.player_blocked = 1;
@@ -431,13 +433,13 @@ MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(dom_ClientConnect)
-{
+{SELFPARAM();
 	set_dom_state(self);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom_BotRoles)
-{
+{SELFPARAM();
 	self.havocbot_role = havocbot_role_dom;
 	return true;
 }
@@ -445,7 +447,7 @@ MUTATOR_HOOKFUNCTION(dom_BotRoles)
 /*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)
 Control point for Domination gameplay.
 */
-void spawnfunc_dom_controlpoint()
+spawnfunc(dom_controlpoint)
 {
 	if(!g_domination)
 	{
@@ -490,7 +492,7 @@ Keys:
  (this is a global sound, like "Red team has captured a control point")
 */
 
-void spawnfunc_dom_team()
+spawnfunc(dom_team)
 {
 	if(!g_domination || autocvar_g_domination_teams_override >= 2)
 	{
@@ -503,7 +505,7 @@ void spawnfunc_dom_team()
 	if (self.noise1 != "")
 		precache_sound(self.noise1);
 	self.classname = "dom_team";
-	setmodel(self, self.model); // precision not needed
+	_setmodel(self, self.model); // precision not needed
 	self.mdl = self.model;
 	self.dmg = self.modelindex;
 	self.model = "";
@@ -541,10 +543,8 @@ void ScoreRules_dom(float teams)
 
 // code from here on is just to support maps that don't have control point and team entities
 void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage)
-{
-	entity oldself;
-	oldself = self;
-	self = spawn();
+{SELFPARAM();
+	setself(spawn());
 	self.classname = "dom_team";
 	self.netname = teamname;
 	self.cnt = teamcolor;
@@ -555,7 +555,7 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.message = capmessage;
 
 	// this code is identical to spawnfunc_dom_team
-	setmodel(self, self.model); // precision not needed
+	_setmodel(self, self.model); // precision not needed
 	self.mdl = self.model;
 	self.dmg = self.modelindex;
 	self.model = "";
@@ -564,31 +564,30 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.team = self.cnt + 1;
 
 	//eprint(self);
-	self = oldself;
+	setself(this);
 }
 
+void _spawnfunc_dom_controlpoint() { SELFPARAM(); spawnfunc_dom_controlpoint(self); }
 void dom_spawnpoint(vector org)
-{
-	entity oldself;
-	oldself = self;
-	self = spawn();
+{SELFPARAM();
+	setself(spawn());
 	self.classname = "dom_controlpoint";
-	self.think = spawnfunc_dom_controlpoint;
+	self.think = _spawnfunc_dom_controlpoint;
 	self.nextthink = time;
 	setorigin(self, org);
-	spawnfunc_dom_controlpoint();
-	self = oldself;
+	spawnfunc_dom_controlpoint(this);
+	setself(this);
 }
 
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(float teams)
 {
-	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND(DOM_CLAIM), "", "Red team has captured a control point");
+	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND(DOM_CLAIM), "", "Blue team has captured a control point");
 	if(teams >= 3)
-		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
+		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND(DOM_CLAIM), "", "Yellow team has captured a control point");
 	if(teams >= 4)
-		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND(DOM_CLAIM), "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 
@@ -624,13 +623,6 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 
 void dom_Initialize()
 {
-	precache_model("models/domination/dom_red.md3");
-	precache_model("models/domination/dom_blue.md3");
-	precache_model("models/domination/dom_yellow.md3");
-	precache_model("models/domination/dom_pink.md3");
-	precache_model("models/domination/dom_unclaimed.md3");
-	precache_sound("domination/claim.wav");
-
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 

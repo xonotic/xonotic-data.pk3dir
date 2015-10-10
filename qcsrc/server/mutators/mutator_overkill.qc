@@ -3,9 +3,9 @@
 
 #include "mutator.qh"
 
-void W_Blaster_Attack(float, float, float, float, float, float, float, float, float, float);
-void spawnfunc_weapon_hmg();
-void spawnfunc_weapon_rpc();
+void W_Blaster_Attack(entity, float, float, float, float, float, float, float, float, float, float);
+spawnfunc(weapon_hmg);
+spawnfunc(weapon_rpc);
 
 void ok_DecreaseCharge(entity ent, int wep)
 {
@@ -64,15 +64,14 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_SplitHealthArmor)
-{
+{SELFPARAM();
 	if(damage_take)
 		self.ok_pauseregen_finished = max(self.ok_pauseregen_finished, time + 2);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
-{
-	entity oldself = self;
+{SELFPARAM();
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
 	if(IS_MONSTER(self))
@@ -81,11 +80,11 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 		other = world;
 	}
 
-	self = spawn();
+	setself(spawn());
 	self.ok_item = true;
 	self.noalign = true;
 	self.pickup_anyway = true;
-	spawnfunc_item_armor_small();
+	spawnfunc_item_armor_small(this);
 	self.movetype = MOVETYPE_TOSS;
 	self.gravity = 1;
 	self.reset = SUB_Remove;
@@ -93,7 +92,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
 	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
-	self = oldself;
+	setself(this);
 
 	self.ok_lastwep = self.switchweapon;
 
@@ -101,7 +100,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
-{
+{SELFPARAM();
 	// overkill's values are different, so use custom regen
 	if(!self.frozen)
 	{
@@ -125,7 +124,7 @@ MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
-{
+{SELFPARAM();
 	if(intermission_running || gameover)
 		return false;
 
@@ -150,6 +149,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		int oldwep = self.weapon;
 		self.weapon = WEP_BLASTER.m_id;
 		W_Blaster_Attack(
+			self,
 			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
 			WEP_CVAR_SEC(vaporizer, damage),
@@ -175,10 +175,11 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
-			play2(self, W_Sound("dryfire"));
+			play2(self, SND(DRYFIRE));
 		}
+		Weapon wpn = get_weaponinfo(self.weapon);
 		if(self.weaponentity.state != WS_CLEAR)
-			w_ready();
+			w_ready(wpn, self, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 
 		self.weapon_blocked = true;
 	}
@@ -189,7 +190,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
-{
+{SELFPARAM();
 	if(autocvar_g_overkill_ammo_charge)
 	{
 		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -206,8 +207,11 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 	return false;
 }
 
+void _spawnfunc_weapon_hmg() { SELFPARAM(); spawnfunc_weapon_hmg(this); }
+void _spawnfunc_weapon_rpc() { SELFPARAM(); spawnfunc_weapon_rpc(this); }
+
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
-{
+{SELFPARAM();
 	if(autocvar_g_powerups)
 	if(autocvar_g_overkill_powerups_replace)
 	{
@@ -215,7 +219,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		{
 			entity wep = spawn();
 			setorigin(wep, self.origin);
-			setmodel(wep, W_Model("g_ok_hmg.md3"));
+			setmodel(wep, MDL_OK_HMG);
 			wep.classname = "weapon_hmg";
 			wep.ok_item = true;
 			wep.noalign = self.noalign;
@@ -223,7 +227,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
-			wep.think = spawnfunc_weapon_hmg;
+			wep.think = _spawnfunc_weapon_hmg;
 			wep.nextthink = time + 0.1;
 			return true;
 		}
@@ -232,7 +236,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		{
 			entity wep = spawn();
 			setorigin(wep, self.origin);
-			setmodel(wep, W_Model("g_ok_rl.md3"));
+			setmodel(wep, MDL_OK_RPC);
 			wep.classname = "weapon_rpc";
 			wep.ok_item = true;
 			wep.noalign = self.noalign;
@@ -240,7 +244,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
-			wep.think = spawnfunc_weapon_rpc;
+			wep.think = _spawnfunc_weapon_rpc;
 			wep.nextthink = time + 0.1;
 			return true;
 		}
@@ -250,7 +254,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ok_ItemRemove)
-{
+{SELFPARAM();
 	if(self.ok_item)
 		return false;
 
@@ -264,7 +268,7 @@ MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 }
 
 MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
-{
+{SELFPARAM();
 	self.ammo_charge[self.weapon] = other.ammo_charge[other.weapon];
 	self.ok_use_ammocharge = other.ok_use_ammocharge;
 
@@ -273,10 +277,10 @@ MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
-	WepSet ok_start_items = (WEPSET_MACHINEGUN | WEPSET_VORTEX | WEPSET_SHOTGUN);
+	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
 
-	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
-	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
+	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET(RPC); }
+	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET(HMG); }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
@@ -316,20 +320,6 @@ void ok_Initialize()
 	ok_SetCvars();
 
 	precache_all_playermodels("models/ok_player/*.dpm");
-
-	precache_model(W_Model("h_ok_mg.iqm"));
-	precache_model(W_Model("v_ok_mg.md3"));
-	precache_model(W_Model("g_ok_mg.md3"));
-
-	precache_model(W_Model("h_ok_shotgun.iqm"));
-	precache_model(W_Model("v_ok_shotgun.md3"));
-	precache_model(W_Model("g_ok_shotgun.md3"));
-
-	precache_model(W_Model("h_ok_sniper.iqm"));
-	precache_model(W_Model("v_ok_sniper.md3"));
-	precache_model(W_Model("g_ok_sniper.md3"));
-
-	precache_sound(W_Sound("dryfire"));
 
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);

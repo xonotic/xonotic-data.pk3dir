@@ -10,7 +10,7 @@
 
 .float csqcprojectile_type;
 
-bool CSQCProjectile_SendEntity(entity to, int sf)
+bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 {
 	float ft, fr;
 
@@ -99,13 +99,13 @@ void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 
 void UpdateCSQCProjectile(entity e)
 {
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+	if(e.SendEntity3 == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;
 	}
 // FIXME HACK
-	else if(e.SendEntity == ItemSend)
+	else if(e.SendEntity3 == ItemSend)
 	{
 		ItemUpdate(e);
 	}
@@ -114,7 +114,7 @@ void UpdateCSQCProjectile(entity e)
 
 void UpdateCSQCProjectileAfterTeleport(entity e)
 {
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+	if(e.SendEntity3 == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;

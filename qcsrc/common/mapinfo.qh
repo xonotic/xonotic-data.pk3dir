@@ -38,22 +38,18 @@ CLASS(Gametype, Object)
     }
 ENDCLASS(Gametype)
 
-void RegisterGametypes();
-const int MAX_MAPINFO_TYPES = 24;
-entity MAPINFO_TYPES[MAX_MAPINFO_TYPES], MAPINFO_TYPES_first, MAPINFO_TYPES_last;
-int MAPINFO_TYPE_COUNT;
+REGISTRY(Gametypes, BIT(4))
+REGISTER_REGISTRY(RegisterGametypes)
 int MAPINFO_TYPE_ALL;
-
 #define REGISTER_GAMETYPE(hname, sname, g_name, NAME, gteamplay, defaults, gdescription)                    \
     int MAPINFO_TYPE_##NAME;                                                                                \
-    REGISTER(RegisterGametypes, MAPINFO_TYPE, MAPINFO_TYPES, MAPINFO_TYPE_COUNT, g_name, m_id,              \
+    REGISTER(RegisterGametypes, MAPINFO_TYPE, Gametypes, g_name, m_id,                                      \
         NEW(Gametype, hname, #sname, #g_name, gteamplay, defaults, gdescription)                            \
     ) {                                                                                                     \
         /* same as `1 << m_id` */                                                                           \
         MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME;                \
         this.items = MAPINFO_TYPE_##NAME;                                                                   \
     }
-REGISTER_REGISTRY(RegisterGametypes)
 
 #define IS_GAMETYPE(NAME) \
     (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)

@@ -8,7 +8,7 @@ void plat_delayedinit()
 }
 
 float plat_send(entity to, float sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_PLAT);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -59,7 +59,7 @@ void plat_link()
 	//Net_LinkEntity(self, 0, false, plat_send);
 }
 
-void spawnfunc_func_plat()
+spawnfunc(func_plat)
 {
 	if (self.sounds == 0)
 		self.sounds = 2;
@@ -127,14 +127,14 @@ void spawnfunc_func_plat()
 	InitializeEntity(self, plat_delayedinit, INITPRIO_FINDTARGET);
 }
 #elif defined(CSQC)
-void plat_draw()
+void plat_draw(entity this)
 {
 	Movetype_Physics_NoMatchServer();
 	//Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 
 void ent_plat()
-{
+{SELFPARAM();
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
@@ -145,7 +145,7 @@ void ent_plat()
 		self.spawnflags = ReadByte();
 
 		self.model = strzone(ReadString());
-		setmodel(self, self.model);
+		_setmodel(self, self.model);
 
 		trigger_common_read(true);
 

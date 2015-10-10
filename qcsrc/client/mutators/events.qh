@@ -64,13 +64,13 @@ MUTATOR_HOOKABLE(CSQC_Ent_Update, EV_CSQC_Ent_Update);
 
 /** Called when a projectile is linked with CSQC */
 #define EV_Ent_Projectile(i, o) \
-    /** entity id */ i(entity, self) \
+    /** entity id */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(Ent_Projectile, EV_Ent_Projectile);
 
 /** Called when a projectile's properties are being modified */
 #define EV_EditProjectile(i, o) \
-    /** entity id */ i(entity, self) \
+    /** entity id */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
 
@@ -79,25 +79,25 @@ MUTATOR_HOOKABLE(PrecacheProjectiles, EV_NO_ARGS);
 
 /** Called when updating the attached tags index */
 #define EV_TagIndex_Update(i, o) \
-    /** entity id */ i(entity, self) \
+    /** entity id */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(TagIndex_Update, EV_TagIndex_Update);
 
 /** Called when setting the attached tags */
 #define EV_TagIndex_Apply(i, o) \
-    /** entity id */ i(entity, self) \
+    /** entity id */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(TagIndex_Apply, EV_TagIndex_Apply);
 
 /** Called when setting up skeleton bones */
 #define EV_Skeleton_CheckBones(i, o) \
-    /** entity id */ i(entity, self) \
+    /** entity id */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(Skeleton_CheckBones, EV_Skeleton_CheckBones);
 
 /** Called when setting up bones from the loaded model */
 #define EV_Skeleton_CheckModel(i, o) \
-    /** entity id */ i(entity, self) \
+    /** entity id */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(Skeleton_CheckModel, EV_Skeleton_CheckModel);
 
@@ -125,7 +125,7 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 
 /** Called checking if 3rd person mode should be forced on */
 #define EV_WantEventchase(i, o) \
-    /** entity id */ i(entity, self) \
+    /** entity id */ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(WantEventchase, EV_WantEventchase);
 

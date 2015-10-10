@@ -8,7 +8,7 @@
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_cts()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -57,7 +57,7 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
-{
+{SELFPARAM();
 	// force kbd movement for fairness
 	float wishspeed;
 	vector wishvel;
@@ -142,7 +142,7 @@ MUTATOR_HOOKFUNCTION(cts_ResetMap)
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerPreThink)
-{
+{SELFPARAM();
 	if(IS_SPEC(self) || IS_OBSERVER(self))
 	if(g_race_qualifying)
 	if(msg_entity.enemy.race_laptime)
@@ -152,7 +152,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(cts_ClientConnect)
-{
+{SELFPARAM();
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
 
@@ -179,7 +179,7 @@ MUTATOR_HOOKFUNCTION(cts_ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(cts_MakePlayerObserver)
-{
+{SELFPARAM();
 	if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
 		self.frags = FRAGS_LMS_LOSER;
 	else
@@ -192,7 +192,7 @@ MUTATOR_HOOKFUNCTION(cts_MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
-{
+{SELFPARAM();
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
 		race_PreparePlayer();
@@ -207,7 +207,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(cts_PutClientInServer)
-{
+{SELFPARAM();
 	if(IS_PLAYER(self))
 	if(!gameover)
 	{
@@ -222,20 +222,20 @@ MUTATOR_HOOKFUNCTION(cts_PutClientInServer)
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerDies)
-{
+{SELFPARAM();
 	self.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(self);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts_BotRoles)
-{
+{SELFPARAM();
 	self.havocbot_role = havocbot_role_cts;
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(cts_PlayerPostThink)
-{
+{SELFPARAM();
 	if(self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
 		if (!self.stored_netname)
@@ -258,7 +258,7 @@ MUTATOR_HOOKFUNCTION(cts_ForbidThrowing)
 }
 
 MUTATOR_HOOKFUNCTION(cts_FilterItem)
-{
+{SELFPARAM();
 	if(self.classname == "droppedweapon")
 		return true;
 

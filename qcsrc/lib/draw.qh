@@ -1,0 +1,133 @@
+#ifdef CSQC
+#ifndef DRAW_H
+#define DRAW_H
+
+#include "i18n.qh"
+#include "vector.qh"
+
+#include "../client/defs.qh"
+
+void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
+{
+	// I want to draw a quad...
+	// from and to are MIDPOINTS.
+
+	vector axis, thickdir, A, B, C, D;
+	float length_tex;
+
+	axis = normalize(to - from);
+	length_tex = aspect * vlen(to - from) / thickness;
+
+	// direction is perpendicular to the view normal, and perpendicular to the axis
+	thickdir = normalize(cross(axis, vieworg - from));
+
+	A = from - thickdir * (thickness / 2);
+	B = from + thickdir * (thickness / 2);
+	C = to + thickdir * (thickness / 2);
+	D = to - thickdir * (thickness / 2);
+
+	R_BeginPolygon(texture, drawflag);
+	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
+	R_EndPolygon();
+}
+
+// a border picture is a texture containing nine parts:
+//   1/4 width: left part
+//   1/2 width: middle part (stretched)
+//   1/4 width: right part
+// divided into
+//   1/4 height: top part
+//   1/2 height: middle part (stretched)
+//   1/4 height: bottom part
+void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize)
+{
+    if (theBorderSize.x < 0 && theBorderSize.y < 0) // draw whole image as it is
+    {
+		drawpic(theOrigin, pic, theSize, theColor, theAlpha, 0);
+		return;
+    }
+	if (theBorderSize.x == 0 && theBorderSize.y == 0) // no border
+	{
+		// draw only the central part
+		drawsubpic(theOrigin, theSize, pic, '0.25 0.25 0', '0.5 0.5 0', theColor, theAlpha, 0);
+		return;
+	}
+
+	vector dX, dY;
+	vector width, height;
+	vector bW, bH;
+	//pic = draw_UseSkinFor(pic);
+	width = eX * theSize.x;
+	height = eY * theSize.y;
+	if(theSize.x <= theBorderSize.x * 2)
+	{
+		// not wide enough... draw just left and right then
+		bW = eX * (0.25 * theSize.x / (theBorderSize.x * 2));
+		if(theSize.y <= theBorderSize.y * 2)
+		{
+			// not high enough... draw just corners
+			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
+			drawsubpic(theOrigin,                 width * 0.5 + height * 0.5, pic, '0 0 0',           bW + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width   * 0.5, width * 0.5 + height * 0.5, pic, eX - bW,           bW + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + height  * 0.5, width * 0.5 + height * 0.5, pic, eY - bH,           bW + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + theSize * 0.5, width * 0.5 + height * 0.5, pic, eX + eY - bW - bH, bW + bH, theColor, theAlpha, 0);
+		}
+		else
+		{
+			dY = theBorderSize.x * eY;
+			drawsubpic(theOrigin,                             width * 0.5          +     dY, pic, '0 0    0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width * 0.5,               width * 0.5          +     dY, pic, '0 0    0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin                        + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0',           '0 0.5  0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width * 0.5          + dY, width * 0.5 + height - 2 * dY, pic, '0 0.25 0' + eX - bW, '0 0.5  0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin               + height - dY, width * 0.5          +     dY, pic, '0 0.75 0',           '0 0.25 0' + bW, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width * 0.5 + height - dY, width * 0.5          +     dY, pic, '0 0.75 0' + eX - bW, '0 0.25 0' + bW, theColor, theAlpha, 0);
+		}
+	}
+	else
+	{
+		if(theSize.y <= theBorderSize.y * 2)
+		{
+			// not high enough... draw just top and bottom then
+			bH = eY * (0.25 * theSize.y / (theBorderSize.y * 2));
+			dX = theBorderSize.x * eX;
+			drawsubpic(theOrigin,                                         dX + height * 0.5, pic, '0    0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + dX,                        width - 2 * dX + height * 0.5, pic, '0.25 0 0',           '0.5  0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width - dX,                            dX + height * 0.5, pic, '0.75 0 0',           '0.25 0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin              + height * 0.5,             dX + height * 0.5, pic, '0    0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + dX         + height * 0.5, width - 2 * dX + height * 0.5, pic, '0.25 0 0' + eY - bH, '0.5  0 0' + bH, theColor, theAlpha, 0);
+			drawsubpic(theOrigin + width - dX + height * 0.5,             dX + height * 0.5, pic, '0.75 0 0' + eY - bH, '0.25 0 0' + bH, theColor, theAlpha, 0);
+		}
+		else
+		{
+			dX = theBorderSize.x * eX;
+			dY = theBorderSize.x * eY;
+			drawsubpic(theOrigin,                                        dX          +     dY, pic, '0    0    0', '0.25 0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin                  + dX,      width - 2 * dX          +     dY, pic, '0.25 0    0', '0.5  0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + width - dX,                  dX          +     dY, pic, '0.75 0    0', '0.25 0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + dY,                          dX + height - 2 * dY, pic, '0    0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + dY         + dX, width - 2 * dX + height - 2 * dY, pic, '0.25 0.25 0', '0.5  0.5  0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin          + dY + width - dX,             dX + height - 2 * dY, pic, '0.75 0.25 0', '0.25 0.5  0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin + height - dY,                          dX          +     dY, pic, '0    0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin + height - dY         + dX, width - 2 * dX          +     dY, pic, '0.25 0.75 0', '0.5  0.25 0', theColor, theAlpha, 0);
+			drawsubpic(theOrigin + height - dY + width - dX,             dX          +     dY, pic, '0.75 0.75 0', '0.25 0.25 0', theColor, theAlpha, 0);
+		}
+	}
+}
+
+void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
+{
+	position.x -= 2 / 3 * strlen(text) * theScale.x;
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
+}
+
+void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, int flag)
+{
+	position.x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale.x);
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
+}
+
+#endif
+#endif

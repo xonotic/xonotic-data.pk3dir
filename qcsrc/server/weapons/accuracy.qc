@@ -17,7 +17,7 @@ float accuracy_byte(float n, float d)
 	return 1 + rint(n * 100.0 / d);
 }
 
-float accuracy_send(entity to, int sf)
+bool accuracy_send(entity this, entity to, int sf)
 {
 	int w, f;
 	entity a;

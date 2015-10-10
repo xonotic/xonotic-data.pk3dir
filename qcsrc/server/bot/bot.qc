@@ -38,24 +38,22 @@
 #include "../../warpzonelib/util_server.qh"
 
 entity bot_spawn()
-{
-	entity oldself, bot;
-	bot = spawnclient();
+{SELFPARAM();
+	entity bot = spawnclient();
 	if (bot)
 	{
 		currentbots = currentbots + 1;
-		oldself = self;
-		self = bot;
+		setself(bot);
 		bot_setnameandstuff();
 		ClientConnect();
 		PutClientInServer();
-		self = oldself;
+		setself(this);
 	}
 	return bot;
 }
 
 void bot_think()
-{
+{SELFPARAM();
 	if (self.bot_nextthink > time)
 		return;
 
@@ -133,7 +131,7 @@ void bot_think()
 }
 
 void bot_setnameandstuff()
-{
+{SELFPARAM();
 	string readfile, s;
 	float file, tokens, prio;
 	entity p;
@@ -302,42 +300,42 @@ void bot_custom_weapon_priority_setup()
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_far)," ");
 
 	int c = 0;
-	for(i=0; i < tokens && c < WEP_COUNT; ++i){
+	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {
 			bot_weapons_far[c] = w;
 			++c;
 		}
 	}
-	if(c < WEP_COUNT)
+	if(c < Weapons_COUNT)
 		bot_weapons_far[c] = -1;
 
 	// Parse mid distance weapon priorities
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_mid)," ");
 
 	c = 0;
-	for(i=0; i < tokens && c < WEP_COUNT; ++i){
+	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {
 			bot_weapons_mid[c] = w;
 			++c;
 		}
 	}
-	if(c < WEP_COUNT)
+	if(c < Weapons_COUNT)
 		bot_weapons_mid[c] = -1;
 
 	// Parse close distance weapon priorities
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_close)," ");
 
 	c = 0;
-	for(i=0; i < tokens && i < WEP_COUNT; ++i){
+	for(i=0; i < tokens && i < Weapons_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {
 			bot_weapons_close[c] = w;
 			++c;
 		}
 	}
-	if(c < WEP_COUNT)
+	if(c < Weapons_COUNT)
 		bot_weapons_close[c] = -1;
 
 	bot_custom_weapon = true;
@@ -389,7 +387,7 @@ void bot_relinkplayerlist()
 }
 
 void bot_clientdisconnect()
-{
+{SELFPARAM();
 	if (!IS_BOT_CLIENT(self))
 		return;
 	bot_clearqueue(self);
@@ -412,7 +410,7 @@ void bot_clientdisconnect()
 }
 
 void bot_clientconnect()
-{
+{SELFPARAM();
 	if (!IS_BOT_CLIENT(self))
 		return;
 	self.bot_preferredcolors = self.clientcolors;

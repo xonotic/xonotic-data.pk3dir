@@ -8,7 +8,7 @@
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
-#include "../common/turrets/turrets.qh"
+#include "../common/turrets/all.qh"
 
 #ifdef RELEASE
 #define cvar_string_normal builtin_cvar_string
@@ -29,8 +29,6 @@ float cvar_normal(string n)
 #define cvar_set_normal builtin_cvar_set
 
 .vector dropped_origin;
-.void(void) uncustomizeentityforclient;
-.float uncustomizeentityforclient_set;
 .float nottargeted;
 
 entity eliminatedPlayers;
@@ -61,9 +59,6 @@ void precache_all_playermodels(string pattern);
 
 void soundat(entity e, vector o, float chan, string samp, float vol, float _atten);
 
-void defer(float fdelay, void() func);
-
-void UncustomizeEntitiesRun();
 void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);
@@ -105,6 +100,8 @@ float isPushable(entity e);
 float LostMovetypeFollow(entity ent);
 
 string uid2name(string myuid);
+
+float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance);
 
@@ -336,7 +333,6 @@ void readlevelcvars(void)
 	sv_foginterval = cvar("sv_foginterval");
 	g_cloaked = cvar("g_cloaked");
 	g_footsteps = cvar("g_footsteps");
-	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
@@ -420,8 +416,10 @@ void readlevelcvars(void)
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
-	for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-		WEP_ACTION(i, WR_INIT);
+	for(int i = WEP_FIRST; i <= WEP_LAST; ++i) {
+		Weapon w = get_weaponinfo(i);
+		w.wr_init(w);
+	}
 
 	readplayerstartcvars();
 }
@@ -460,6 +458,5 @@ entity initialize_entity_first;
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(void) func, float order);
 void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
-void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc);
 
 #endif

@@ -10,7 +10,7 @@ float object_count;
 
 .float touch_timer;
 void sandbox_ObjectFunction_Touch()
-{
+{SELFPARAM();
 	// apply material impact effects
 
 	if(!self.material)
@@ -30,12 +30,12 @@ void sandbox_ObjectFunction_Touch()
 	intensity -= autocvar_g_sandbox_object_material_velocity_min; // start from minimum velocity, not actual velocity
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
-	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTEN_NORM);
+	_sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTEN_NORM);
 	Send_Effect_(strcat("impact_", self.material), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
 void sandbox_ObjectFunction_Think()
-{
+{SELFPARAM();
 	entity e;
 
 	// decide if and how this object can be grabbed
@@ -61,12 +61,12 @@ void sandbox_ObjectFunction_Think()
 
 	self.nextthink = time;
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 .float old_solid, old_movetype;
 entity sandbox_ObjectEdit_Get(float permissions)
-{
+{SELFPARAM();
 	// Returns the traced entity if the player can edit it, and world if not.
 	// If permissions if false, the object is returned regardless of editing rights.
 	// Attached objects are SOLID_NOT and do not get traced.
@@ -91,7 +91,7 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 	if(e.scale)
 	{
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
-		setmodel(e, e.model); // reset mins and maxs based on mesh
+		_setmodel(e, e.model); // reset mins and maxs based on mesh
 		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 	}
 }
@@ -140,11 +140,10 @@ void sandbox_ObjectAttach_Remove(entity e)
 }
 
 entity sandbox_ObjectSpawn(float database)
-{
+{SELFPARAM();
 	// spawn a new object with default properties
 
-	entity e, oldself;
-	e = spawn();
+	entity e = spawn();
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
@@ -179,10 +178,7 @@ entity sandbox_ObjectSpawn(float database)
 		e.angles_y = self.v_angle.y;
 	}
 
-	oldself = self;
-	self = e;
-	CSQCMODEL_AUTOINIT();
-	self = oldself;
+	WITH(entity, self, e, CSQCMODEL_AUTOINIT(e));
 
 	object_count += 1;
 	return e;
@@ -327,7 +323,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		setmodel(e, argv(argv_num));	++argv_num;
+		_setmodel(e, argv(argv_num));	++argv_num;
 		e.skin = stof(argv(argv_num));	++argv_num;
 		e.alpha = stof(argv(argv_num));	++argv_num;
 		e.colormod = stov(argv(argv_num));	++argv_num;
@@ -424,7 +420,7 @@ void sandbox_Database_Load()
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 	if(cmd_name == "g_sandbox")
@@ -502,7 +498,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 
 				e = sandbox_ObjectSpawn(false);
-				setmodel(e, argv(2));
+				_setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
 					LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));

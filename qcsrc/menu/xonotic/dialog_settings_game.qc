@@ -5,21 +5,21 @@
 
 #include "datasource.qc"
 CLASS(SettingSource, DataSource)
-    METHOD(SettingSource, getEntry, entity(int i, void(string name, string icon) returns))
+    METHOD(SettingSource, getEntry, entity(entity this, int i, void(string name, string icon) returns))
     {
-        Lazy l = SETTINGS[i];
+        Lazy l = Settings[i];
         entity it = l.m_get();
         if (returns) returns(it.title, string_null);
         return it;
     }
-    METHOD(SettingSource, getEntryTooltip, entity(int i, void(string theTooltip) returns))
+    METHOD(SettingSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns))
     {
-        Lazy l = SETTINGS[i];
+        Lazy l = Settings[i];
         entity it = l.m_get();
         if (returns) returns(it.tooltip);
         return it;
     }
-    METHOD(SettingSource, reload, int(string filter)) { return SETTINGS_COUNT; }
+    METHOD(SettingSource, reload, int(entity this, string filter)) { return Settings_COUNT; }
 ENDCLASS(SettingSource)
 
 #include "listbox.qc"
@@ -53,7 +53,7 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	METHOD(XonoticRegisteredSettingsList, drawListBoxItem, void(entity this, int i, vector absSize, bool isSelected, bool isFocused))
 	{
 		if (!this.source) return;
-		if (!this.source.getEntry(i, XonoticRegisteredSettingsList_getNameIcon_cb)) return;
+		if (!this.source.getEntry(this.source, i, XonoticRegisteredSettingsList_getNameIcon_cb)) return;
 		string name = XonoticRegisteredSettingsList_cb_name;
 		if (isSelected) {
 			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
@@ -72,7 +72,7 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 			clearTooltip(this);
 			return;
 		}
-		if (!this.source.getEntryTooltip(this.focusedItem, XonoticRegisteredSettingsList_getTooltip_cb))
+		if (!this.source.getEntryTooltip(this, this.focusedItem, XonoticRegisteredSettingsList_getTooltip_cb))
 		{
 			clearTooltip(this);
 			return;
@@ -90,7 +90,7 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 			this.nItems = 0;
 			return;
 		}
-		this.nItems = this.source.reload(this.stringFilter);
+		this.nItems = this.source.reload(this.source, this.stringFilter);
 	}
 	METHOD(XonoticRegisteredSettingsList, resizeNotify, void(entity this, vector relOrigin, vector relSize, vector absOrigin, vector absSize))
 	{
@@ -119,14 +119,16 @@ CLASS(XonoticGameSettingsTab, XonoticTab)
 	ATTRIB(XonoticGameSettingsTab, intendedWidth, float, 0.9)
     ATTRIB(XonoticGameSettingsTab, rows, float, 15.5)
     ATTRIB(XonoticGameSettingsTab, columns, float, 6.5)
-    ATTRIB(XonoticGameSettingsTab, topicList, entity, NEW(XonoticRegisteredSettingsList, NEW(SettingSource)))
+    ATTRIB(XonoticGameSettingsTab, source, DataSource, NEW(SettingSource))
+    ATTRIB(XonoticGameSettingsTab, topicList, entity, NEW(XonoticRegisteredSettingsList, this.source))
     ATTRIB(XonoticGameSettingsTab, currentPanel, entity, NEW(XonoticTab))
     ATTRIB(XonoticGameSettingsTab, currentItem, entity, NULL)
     METHOD(XonoticGameSettingsTab, topicChangeNotify, void(entity, entity this))
 	{
 		entity c = this.currentPanel;
 		entity removing = this.currentItem;
-		entity adding = this.topicList.source.getEntry(this.topicList.selectedItem, func_null);
+		DataSource data = this.topicList.source;
+		entity adding = data.getEntry(data, this.topicList.selectedItem, func_null);
 		if (removing == adding) return;
 		if (removing) {
 			this.currentItem = NULL;

@@ -1,6 +1,6 @@
 #ifdef SVQC
 
-void spawnfunc_info_teleport_destination (void)
+spawnfunc(info_teleport_destination)
 {
 	self.classname = "info_teleport_destination";
 
@@ -17,14 +17,14 @@ void spawnfunc_info_teleport_destination (void)
 		objerror ("^3Teleport destination without a targetname");
 }
 
-void spawnfunc_misc_teleporter_dest (void)
+spawnfunc(misc_teleporter_dest)
 {
-	spawnfunc_info_teleport_destination();
+	spawnfunc_info_teleport_destination(this);
 }
 
-void spawnfunc_target_teleporter (void)
+spawnfunc(target_teleporter)
 {
-	spawnfunc_info_teleport_destination();
+	spawnfunc_info_teleport_destination(this);
 }
 
 #endif

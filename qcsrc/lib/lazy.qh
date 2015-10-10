@@ -1,0 +1,18 @@
+#ifndef LAZY_H
+#define LAZY_H
+
+#include "oo.qh"
+
+CLASS(Lazy, Object)
+    ATTRIB(Lazy, m_get, entity(), func_null);
+    CONSTRUCTOR(Lazy, entity() _compute) { this.m_get = _compute; }
+ENDCLASS(Lazy)
+
+#define LAZY(id) __lazy_##id
+#define LAZY_NEW(id, compute) entity LAZY(id)() { \
+    static bool done; \
+    static entity it; \
+    if (!done) { it = compute; done = true; } \
+    return it; \
+}
+#endif

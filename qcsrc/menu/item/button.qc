@@ -44,7 +44,7 @@ void Button_resizeNotify(entity me, vector relOrigin, vector relSize, vector abs
 	if(me.srcMulti)
 		me.keepspaceLeft = 0;
 	else
-		me.keepspaceLeft = min(0.8, absSize.y / absSize.x);
+		me.keepspaceLeft = min(0.8, absSize.x == 0 ? 0 : (absSize.y / absSize.x));
 	SUPER(Button).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 }
 void Button_configureButton(entity me, string txt, float sz, string gfx)

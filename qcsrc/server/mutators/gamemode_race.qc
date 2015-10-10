@@ -8,7 +8,7 @@
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_race()
-{
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -64,7 +64,7 @@ void race_EventLog(string mode, entity actor) // use an alias for easy changing 
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
-{
+{SELFPARAM();
 	// force kbd movement for fairness
 	float wishspeed;
 	vector wishvel;
@@ -149,7 +149,7 @@ MUTATOR_HOOKFUNCTION(race_ResetMap)
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerPreThink)
-{
+{SELFPARAM();
 	if(IS_SPEC(self) || IS_OBSERVER(self))
 	if(g_race_qualifying)
 	if(msg_entity.enemy.race_laptime)
@@ -159,7 +159,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(race_ClientConnect)
-{
+{SELFPARAM();
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
 
@@ -186,7 +186,7 @@ MUTATOR_HOOKFUNCTION(race_ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(race_MakePlayerObserver)
-{
+{SELFPARAM();
 	if(g_race_qualifying)
 	if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
 		self.frags = FRAGS_LMS_LOSER;
@@ -200,7 +200,7 @@ MUTATOR_HOOKFUNCTION(race_MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerSpawn)
-{
+{SELFPARAM();
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
 		race_PreparePlayer();
@@ -215,7 +215,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(race_PutClientInServer)
-{
+{SELFPARAM();
 	if(IS_PLAYER(self))
 	if(!gameover)
 	{
@@ -230,20 +230,20 @@ MUTATOR_HOOKFUNCTION(race_PutClientInServer)
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerDies)
-{
+{SELFPARAM();
 	self.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(self);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(race_BotRoles)
-{
+{SELFPARAM();
 	self.havocbot_role = havocbot_role_race;
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(race_PlayerPostThink)
-{
+{SELFPARAM();
 	if(self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
 		if (!self.stored_netname)

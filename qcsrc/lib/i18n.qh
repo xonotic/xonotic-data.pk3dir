@@ -1,0 +1,34 @@
+#ifndef I18N_H
+#define I18N_H
+
+#include "log.qh"
+
+// translation helpers
+string prvm_language;
+
+string language_filename(string s)
+{
+    string fn = prvm_language;
+    if (fn == "" || fn == "dump")
+        return s;
+    fn = strcat(s, ".", fn);
+    int fh = fopen(fn, FILE_READ);
+    if (fh >= 0)
+    {
+        fclose(fh);
+        return fn;
+    }
+    return s;
+}
+
+string CTX(string s)
+{
+    int p = strstrofs(s, "^", 0);
+    if (p < 0)
+        return s;
+    return substring(s, p + 1, -1);
+}
+
+#define ZCTX(s) strzone(CTX(s))
+
+#endif

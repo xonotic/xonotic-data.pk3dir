@@ -3,7 +3,7 @@
 
 #include "hook.qh"
 
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 
 #include "../csqcmodellib/cl_model.qh"
 #include "../csqcmodellib/interpolate.qh"
@@ -21,7 +21,7 @@ class(Laser) .float alpha;
 class(Laser) .float scale; // scaling factor of the thickness
 class(Laser) .float modelscale; // scaling factor of the dlight
 
-void Draw_Laser()
+void Draw_Laser(entity this)
 {
 	if(!self.state)
 		return;

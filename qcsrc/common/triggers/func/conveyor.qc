@@ -1,5 +1,5 @@
 void conveyor_think()
-{
+{SELFPARAM();
 #ifdef CSQC
 	// TODO: check if this is what is causing the glitchiness when switching between them
 	float dt = time - self.move_time;
@@ -57,20 +57,20 @@ void conveyor_think()
 #ifdef SVQC
 
 void conveyor_use()
-{
+{SELFPARAM();
 	self.state = !self.state;
 
 	self.SendFlags |= 2;
 }
 
 void conveyor_reset()
-{
+{SELFPARAM();
 	self.state = (self.spawnflags & 1);
 
 	self.SendFlags |= 2;
 }
 
-bool conveyor_send(entity to, int sf)
+bool conveyor_send(entity this, entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
 	WriteByte(MSG_ENTITY, sf);
@@ -107,7 +107,7 @@ bool conveyor_send(entity to, int sf)
 }
 
 void conveyor_init()
-{
+{SELFPARAM();
 	if (!self.speed)
 		self.speed = 200;
 	self.movedir = self.movedir * self.speed;
@@ -129,14 +129,14 @@ void conveyor_init()
 	self.SendFlags |= 1;
 }
 
-void spawnfunc_trigger_conveyor()
+spawnfunc(trigger_conveyor)
 {
 	SetMovedir();
 	EXACTTRIGGER_INIT;
 	conveyor_init();
 }
 
-void spawnfunc_func_conveyor()
+spawnfunc(func_conveyor)
 {
 	SetMovedir();
 	InitMovingBrushTrigger();
@@ -146,9 +146,11 @@ void spawnfunc_func_conveyor()
 
 #elif defined(CSQC)
 
+void conveyor_draw(entity this) { WITH(entity, self, this, conveyor_think()); }
+
 void conveyor_init()
-{
-	self.draw = conveyor_think;
+{SELFPARAM();
+	self.draw = conveyor_draw;
 	self.drawmask = MASK_NORMAL;
 
 	self.movetype = MOVETYPE_NONE;
@@ -159,7 +161,7 @@ void conveyor_init()
 }
 
 void ent_conveyor()
-{
+{SELFPARAM();
 	float sf = ReadByte();
 
 	if(sf & 1)

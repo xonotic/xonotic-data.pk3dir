@@ -10,7 +10,7 @@
     #include "../../server/defs.qh"
 #endif
 entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
-{
+{SELFPARAM();
        float i;
 	entity e = spawn();
 
@@ -62,12 +62,9 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 
 		e.angles_y = spawnedby.angles_y;
 	}
-	
+
 	// Monster_Spawn checks if monster is valid
-	entity oldself = self;
-	self = e;
-	Monster_Spawn(monster_id);
-	self = oldself;
+	WITH(entity, self, e, Monster_Spawn(monster_id));
 
 	return e;
 }

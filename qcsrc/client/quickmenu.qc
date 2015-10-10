@@ -117,7 +117,7 @@ bool QuickMenu_Open(string mode, string submenu)
 			{
 				if(argv(1) == "")
 					continue;
-				QuickMenu_Buffer_Set(QM_TAG_TITLE, argv(0)); 
+				QuickMenu_Buffer_Set(QM_TAG_TITLE, argv(0));
 				++QuickMenu_Buffer_Size;
 				QuickMenu_Buffer_Set(QM_TAG_COMMAND, argv(1));
 			}
@@ -173,7 +173,7 @@ bool QuickMenu_Open(string mode, string submenu)
 		setcursormode(1);
 	hudShiftState = 0;
 
-	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
 	return true;
 }
 
@@ -357,7 +357,7 @@ bool QuickMenu_Page_Load(string target_submenu, int new_page)
 		QuickMenu_Close();
 		return false;
 	}
-	QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+	QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
 	return true;
 }
 
@@ -380,7 +380,7 @@ bool QuickMenu_ActionForNumber(int num)
 	if (QuickMenu_Page_Command[num] != "")
 	{
 		localcmd(strcat("\n", QuickMenu_Page_Command[num], "\n"));
-		QuickMenu_TimeOut = time + autocvar_hud_panel_quickmenu_time;
+		QuickMenu_TimeOut = ((autocvar_hud_panel_quickmenu_time > 0) ? time + autocvar_hud_panel_quickmenu_time : 0);
 		return true;
 	}
 	if (QuickMenu_Page_Description[num] != "")
@@ -586,6 +586,7 @@ void HUD_QuickMenu(void)
 		//if(!autocvar_hud_panel_quickmenu) return;
 		if(!hud_panel_quickmenu) return;
 
+		if(QuickMenu_TimeOut)
 		if(time > QuickMenu_TimeOut)
 		{
 			QuickMenu_Close();
@@ -799,7 +800,7 @@ void QuickMenu_Default(string target_submenu)
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^killed flag, icon")), "say_team %s; g_waypointsprite_team_here_p", "killed flagcarrier (l:%y^7)", CTX(_("QMCMD^killed flagcarrier (l:%y^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^dropped flag, icon")), "say_team %s; g_waypointsprite_team_here_d", "dropped flag (l:%d^7)", CTX(_("QMCMD^dropped flag (l:%d^7)")))
 		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop gun, icon")), "say_team %s; g_waypointsprite_team_here; wait; dropweapon", "dropped gun %w^7 (l:%l^7)", CTX(_("QMCMD^dropped gun %w^7 (l:%l^7)")))
-		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; +use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
+		QUICKMENU_ENTRY_TC(CTX(_("QMCMD^drop flag/key, icon")), "say_team %s; g_waypointsprite_team_here; wait; use", "dropped flag/key %w^7 (l:%l^7)", CTX(_("QMCMD^dropped flag/key %w^7 (l:%l^7)")))
 	QUICKMENU_SMENU(CTX(_("QMCMD^Team chat")), "Team chat")
 	}
 

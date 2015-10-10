@@ -69,7 +69,7 @@ string Notification_CheckArgs_TypeName(float net_type, float net_name)
 {
 	// check supplied type and name for errors
 	string checkargs = "";
-	#define CHECKARG_TYPENAME(type) case MSG_##type##: \
+	#define CHECKARG_TYPENAME(type) case MSG_##type: \
 		{ if(!net_name || (net_name > NOTIF_##type##_COUNT)) \
 		{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
 	switch(net_type)
@@ -1286,7 +1286,7 @@ void Local_Notification_sound(
 		));
 		#endif
 
-		sound(
+		_sound(
 			world,
 			soundchannel,
 			sprintf(
@@ -1550,7 +1550,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 
 		case MSG_INFO:
 		{
-			LOG_INFO(
+			print(
 				Local_Notification_sprintf(
 					notif.nent_string,
 					notif.nent_args,
@@ -1756,7 +1756,7 @@ void Read_Notification(float is_new)
 
 #ifdef SVQC
 void Net_Notification_Remove()
-{
+{SELFPARAM();
 	if (!self) { backtrace(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
 
 	#ifdef NOTIFICATIONS_DEBUG
@@ -1773,7 +1773,7 @@ void Net_Notification_Remove()
 	remove(self);
 }
 
-float Net_Write_Notification(entity client, int sf)
+bool Net_Write_Notification(entity this, entity client, int sf)
 {
 	if(Notification_ShouldSend(self.nent_broadcast, client, self.nent_client))
 	{

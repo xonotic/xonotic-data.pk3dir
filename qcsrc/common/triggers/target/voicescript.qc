@@ -10,7 +10,7 @@ void target_voicescript_clear(entity pl)
 }
 
 void target_voicescript_use()
-{
+{SELFPARAM();
 	if(activator.voicescript != self)
 	{
 		activator.voicescript = self;
@@ -73,7 +73,7 @@ void target_voicescript_next(entity pl)
 	}
 }
 
-void spawnfunc_target_voicescript()
+spawnfunc(target_voicescript)
 {
 	// netname: directory of the sound files
 	// message: list of "sound file" duration "sound file" duration, a *, and again a list

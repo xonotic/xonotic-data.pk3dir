@@ -35,11 +35,10 @@ string W_Apply_Weaponreplace(string in)
 }
 
 void weapon_defaultspawnfunc(float wpn)
-{
+{SELFPARAM();
 	entity e;
 	float t;
 	string s;
-	entity oldself;
 	float i, j;
 	int f;
 
@@ -67,7 +66,6 @@ void weapon_defaultspawnfunc(float wpn)
 		if(t >= 2)
 		{
 			self.team = --internalteam;
-			oldself = self;
 			for(i = 1; i < t; ++i)
 			{
 				s = argv(i);
@@ -76,8 +74,8 @@ void weapon_defaultspawnfunc(float wpn)
 					e = get_weaponinfo(j);
 					if(e.netname == s)
 					{
-						self = spawn();
-						copyentity(oldself, self);
+						setself(spawn());
+						copyentity(this, self);
 						self.classname = "replacedweapon";
 						weapon_defaultspawnfunc(j);
 						break;
@@ -85,10 +83,10 @@ void weapon_defaultspawnfunc(float wpn)
 				}
 				if(j > WEP_LAST)
 				{
-					LOG_INFO("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+					LOG_INFO("The weapon replace list for ", this.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 				}
 			}
-			self = oldself;
+			setself(this);
 		}
 		if(t >= 1) // always the case!
 		{
@@ -179,9 +177,12 @@ void weapon_defaultspawnfunc(float wpn)
 	if(self.team)
 		f |= FL_NO_WEAPON_STAY;
 
-	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	StartItem(strzone(e.m_model.model_str()), string_null, self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	self.item_pickupsound_ent = SND_WEAPONPICKUP;
 	#if 0 // WEAPONTODO
-	if (self.modelindex) // don't precache if self was removed
-		WEP_ACTION(e.weapon, WR_INIT);
+	if (self.modelindex) { // don't precache if self was removed
+		Weapon w = get_weaponinfo(e.weapon);
+		w.wr_init(w);
+	}
 	#endif
 }

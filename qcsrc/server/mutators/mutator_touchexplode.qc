@@ -5,12 +5,12 @@
 .float touchexplode_time;
 
 void PlayerTouchExplode(entity p1, entity p2)
-{
+{SELFPARAM();
 	vector org;
 	org = (p1.origin + p2.origin) * 0.5;
 	org.z += (p1.mins.z + p2.mins.z) * 0.5;
 
-	sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
+	sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, org, '0 0 0', 1);
 
 	entity e;
@@ -21,7 +21,7 @@ void PlayerTouchExplode(entity p1, entity p2)
 }
 
 MUTATOR_HOOKFUNCTION(touchexplode_PlayerThink)
-{
+{SELFPARAM();
 	if(time > self.touchexplode_time)
 	if(!gameover)
 	if(!self.frozen)

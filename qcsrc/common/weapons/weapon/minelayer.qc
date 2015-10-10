@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ MINE_LAYER,
-/* function  */ W_MineLayer,
-/* ammotype  */ ammo_rockets,
-/* impulse   */ 4,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_HIGH,
-/* color     */ '0.75 1 0',
-/* modelname */ "minelayer",
-/* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairminelayer 0.9",
-/* wepimg    */ "weaponminelayer",
-/* refname   */ "minelayer",
-/* wepname   */ _("Mine Layer")
-);
+CLASS(MineLayer, Weapon)
+/* ammotype  */ ATTRIB(MineLayer, ammo_field, .int, ammo_rockets)
+/* impulse   */ ATTRIB(MineLayer, impulse, int, 4)
+/* flags     */ ATTRIB(MineLayer, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(MineLayer, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* color     */ ATTRIB(MineLayer, wpcolor, vector, '0.75 1 0');
+/* modelname */ ATTRIB(MineLayer, mdl, string, "minelayer");
+#ifndef MENUQC
+/* model     */ ATTRIB(MineLayer, m_model, Model, MDL_MINELAYER_ITEM);
+#endif
+/* crosshair */ ATTRIB(MineLayer, w_crosshair, string, "gfx/crosshairminelayer");
+/* crosshair */ ATTRIB(MineLayer, w_crosshair_size, float, 0.9);
+/* wepimg    */ ATTRIB(MineLayer, model2, string, "weaponminelayer");
+/* refname   */ ATTRIB(MineLayer, netname, string, "minelayer");
+/* wepname   */ ATTRIB(MineLayer, message, string, _("Mine Layer"));
+ENDCLASS(MineLayer)
+REGISTER_WEAPON(MINE_LAYER, NEW(MineLayer));
 
 #define MINELAYER_SETTINGS(w_cvar,w_prop) MINELAYER_SETTINGS_LIST(w_cvar, w_prop, MINE_LAYER, minelayer)
 #define MINELAYER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -57,11 +59,11 @@ void W_MineLayer_Think(void);
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_minelayer(void) { weapon_defaultspawnfunc(WEP_MINE_LAYER.m_id); }
+spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(WEP_MINE_LAYER.m_id); }
 
 void W_MineLayer_Stick(entity to)
-{
-	spamsound(self, CH_SHOTS, W_Sound("mine_stick"), VOL_BASE, ATTN_NORM);
+{SELFPARAM();
+	spamsound(self, CH_SHOTS, SND(MINE_STICK), VOL_BASE, ATTN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -76,7 +78,7 @@ void W_MineLayer_Stick(entity to)
 	newmine.realowner = self.realowner;
 	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, self.origin);
-	setmodel(newmine, "models/mine.md3");
+	setmodel(newmine, MDL_MINELAYER_MINE);
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
 	newmine.mine_orientation = -trace_plane_normal;
@@ -100,14 +102,14 @@ void W_MineLayer_Stick(entity to)
 	newmine.flags = self.flags;
 
 	remove(self);
-	self = newmine;
+	setself(newmine);
 
 	if(to)
 		SetMovetypeFollow(self, to);
 }
 
 void W_MineLayer_Explode(void)
-{
+{SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -122,23 +124,22 @@ void W_MineLayer_Explode(void)
 
 	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
-		entity oldself;
-		oldself = self;
-		self = self.realowner;
-		if(!WEP_ACTION(WEP_MINE_LAYER.m_id, WR_CHECKAMMO1))
+		setself(self.realowner);
+		Weapon w = WEP_MINE_LAYER;
+		if(!w.wr_checkammo1(w))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
-		self = oldself;
+		setself(this);
 	}
 	self.realowner.minelayer_mines -= 1;
 	remove(self);
 }
 
 void W_MineLayer_DoRemoteExplode(void)
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
@@ -149,23 +150,22 @@ void W_MineLayer_DoRemoteExplode(void)
 
 	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
 	{
-		entity oldself;
-		oldself = self;
-		self = self.realowner;
-		if(!WEP_ACTION(WEP_MINE_LAYER.m_id, WR_CHECKAMMO1))
+		setself(self.realowner);
+		Weapon w = WEP_MINE_LAYER;
+		if(!w.wr_checkammo1(w))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			ATTACK_FINISHED(self) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
-		self = oldself;
+		setself(this);
 	}
 	self.realowner.minelayer_mines -= 1;
 	remove(self);
 }
 
 void W_MineLayer_RemoteExplode(void)
-{
+{SELFPARAM();
 	if(self.realowner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
@@ -177,7 +177,7 @@ void W_MineLayer_RemoteExplode(void)
 }
 
 void W_MineLayer_ProximityExplode(void)
-{
+{SELFPARAM();
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
 	if(WEP_CVAR(minelayer, protection) && self.mine_explodeanyway == 0)
 	{
@@ -206,7 +206,7 @@ int W_MineLayer_Count(entity e)
 }
 
 void W_MineLayer_Think(void)
-{
+{SELFPARAM();
 	entity head;
 
 	self.nextthink = time;
@@ -225,7 +225,7 @@ void W_MineLayer_Think(void)
 	if((time > self.cnt) && (!self.mine_time) && (self.cnt > 0))
 	{
 		if(WEP_CVAR(minelayer, lifetime_countdown) > 0)
-			spamsound(self, CH_SHOTS, W_Sound("mine_trigger"), VOL_BASE, ATTN_NORM);
+			spamsound(self, CH_SHOTS, SND(MINE_TRIGGER), VOL_BASE, ATTN_NORM);
 		self.mine_time = time + WEP_CVAR(minelayer, lifetime_countdown);
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
@@ -248,7 +248,7 @@ void W_MineLayer_Think(void)
 		if(head != self.realowner && DIFF_TEAM(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
-			spamsound(self, CH_SHOTS, W_Sound("mine_trigger"), VOL_BASE, ATTN_NORM);
+			spamsound(self, CH_SHOTS, SND(MINE_TRIGGER), VOL_BASE, ATTN_NORM);
 			self.mine_time = time + WEP_CVAR(minelayer, time);
 		}
 		head = head.chain;
@@ -269,7 +269,7 @@ void W_MineLayer_Think(void)
 }
 
 void W_MineLayer_Touch(void)
-{
+{SELFPARAM();
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
 
@@ -292,7 +292,7 @@ void W_MineLayer_Touch(void)
 }
 
 void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
@@ -308,8 +308,8 @@ void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, int dea
 		W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode);
 }
 
-void W_MineLayer_Attack(void)
-{
+void W_MineLayer_Attack(Weapon thiswep)
+{SELFPARAM();
 	entity mine;
 	entity flash;
 
@@ -320,14 +320,14 @@ void W_MineLayer_Attack(void)
 		{
 			// the refire delay keeps this message from being spammed
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, WEAPON_MINELAYER_LIMIT, WEP_CVAR(minelayer, limit));
-			play2(self, W_Sound("unavailable"));
+			play2(self, SND(UNAVAILABLE));
 			return;
 		}
 	}
 
-	W_DecreaseAmmo(WEP_CVAR(minelayer, ammo));
+	W_DecreaseAmmo(thiswep, self, WEP_CVAR(minelayer, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, W_Sound("mine_fire"), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, SND(MINE_FIRE), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -368,10 +368,10 @@ void W_MineLayer_Attack(void)
 
 	// muzzle flash for 1st person view
 	flash = spawn();
-	setmodel(flash, "models/flash.md3"); // precision set below
+	setmodel(flash, MDL_MINELAYER_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');
+	W_AttachToShotorg(self, flash, '5 0 0');
 
 	// common properties
 
@@ -381,7 +381,7 @@ void W_MineLayer_Attack(void)
 }
 
 float W_MineLayer_PlacedMines(float detonate)
-{
+{SELFPARAM();
 	entity mine;
 	float minfound = 0;
 
@@ -401,13 +401,7 @@ float W_MineLayer_PlacedMines(float detonate)
 	return minfound;
 }
 
-bool W_MineLayer(int req)
-{
-	entity mine;
-	float ammo_amount;
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(MineLayer, wr_aim, void(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
 			if(self.minelayer_mines >= WEP_CVAR(minelayer, limit))
@@ -428,7 +422,7 @@ bool W_MineLayer(int req)
 				teamdamage = 0;
 				enemydamage = 0;
 				targetlist = findchainfloat(bot_attack, true);
-				mine = find(world, classname, "mine");
+				entity mine = find(world, classname, "mine");
 				while(mine)
 				{
 					if(mine.realowner != self)
@@ -504,120 +498,86 @@ bool W_MineLayer(int req)
 				//	dprint(ftos(desirabledamage),"\n");
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
-
-			return true;
 		}
-		case WR_THINK:
+		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
+			if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-				if(!(W_MineLayer_PlacedMines(false) && self.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo)))
-					WEP_ACTION(self.weapon, WR_RELOAD);
+				if(!(W_MineLayer_PlacedMines(false) && actor.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo))) {
+					Weapon w = get_weaponinfo(actor.weapon);
+					w.wr_reload(w);
+				}
 			}
-			else if(self.BUTTON_ATCK)
+			else if(fire1)
 			{
-				if(weapon_prepareattack(0, WEP_CVAR(minelayer, refire)))
+				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(minelayer, refire)))
 				{
-					W_MineLayer_Attack();
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
+					W_MineLayer_Attack(thiswep);
+					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
 				}
 			}
 
-			if(self.BUTTON_ATCK2)
+			if(fire2)
 			{
 				if(W_MineLayer_PlacedMines(true))
-					sound(self, CH_WEAPON_B, W_Sound("mine_det"), VOL_BASE, ATTN_NORM);
+					sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
 			}
-
-			return true;
 		}
-		case WR_INIT:
+		METHOD(MineLayer, wr_init, void(entity thiswep))
 		{
-			precache_model("models/flash.md3");
-			precache_model("models/mine.md3");
-			precache_model(W_Model("g_minelayer.md3"));
-			precache_model(W_Model("v_minelayer.md3"));
-			precache_model(W_Model("h_minelayer.iqm"));
-			precache_sound(W_Sound("mine_det"));
-			precache_sound(W_Sound("mine_fire"));
-			precache_sound(W_Sound("mine_stick"));
-			precache_sound(W_Sound("mine_trigger"));
 			MINELAYER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		case WR_CHECKAMMO1:
+		METHOD(MineLayer, wr_checkammo1, bool(entity thiswep))
 		{
 			// don't switch while placing a mine
 			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER.m_id)
 			{
-				ammo_amount = self.WEP_AMMO(MINE_LAYER) >= WEP_CVAR(minelayer, ammo);
+				float ammo_amount = self.WEP_AMMO(MINE_LAYER) >= WEP_CVAR(minelayer, ammo);
 				ammo_amount += self.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
 				return ammo_amount;
 			}
 			return true;
 		}
-		case WR_CHECKAMMO2:
+		METHOD(MineLayer, wr_checkammo2, bool(entity thiswep))
 		{
 			if(W_MineLayer_PlacedMines(false))
 				return true;
 			else
 				return false;
 		}
-		case WR_CONFIG:
+		METHOD(MineLayer, wr_config, void(entity thiswep))
 		{
 			MINELAYER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		case WR_RESETPLAYER:
+		METHOD(MineLayer, wr_resetplayers, void(entity thiswep))
 		{
 			self.minelayer_mines = 0;
-			return true;
 		}
-		case WR_RELOAD:
+		METHOD(MineLayer, wr_reload, void(entity thiswep))
 		{
-			W_Reload(WEP_CVAR(minelayer, ammo), W_Sound("reload"));
-			return true;
+			W_Reload(self, WEP_CVAR(minelayer, ammo), SND(RELOAD));
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(MineLayer, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_MINELAYER_SUICIDE;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(MineLayer, wr_killmessage, int(entity thiswep))
 		{
 			return WEAPON_MINELAYER_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
-bool W_MineLayer(int req)
-{
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+
+		METHOD(MineLayer, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
 			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, W_Sound("mine_exp"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
+		}
 
-			return true;
-		}
-		case WR_INIT:
-		{
-			precache_sound(W_Sound("mine_exp"));
-			return true;
-		}
-		case WR_ZOOMRETICLE:
-		{
-			// no weapon specific image for this weapon
-			return false;
-		}
-	}
-	return false;
-}
 #endif
 #endif

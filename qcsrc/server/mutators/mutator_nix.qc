@@ -44,7 +44,7 @@ void NIX_ChooseNextWeapon()
 }
 
 void NIX_GiveCurrentWeapon()
-{
+{SELFPARAM();
 	float dt;
 
 	if(!nix_nextweapon)
@@ -60,7 +60,8 @@ void NIX_GiveCurrentWeapon()
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		//WEP_ACTION(nix_weapon, WR_INIT); // forget it, too slow
+		// Weapon w = get_weaponinfo(nix_weapon);
+		// w.wr_init(w); // forget it, too slow
 	}
 
 	// get weapon info
@@ -101,7 +102,8 @@ void NIX_GiveCurrentWeapon()
 		else
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
-		WEP_ACTION(nix_weapon, WR_RESETPLAYER);
+		Weapon w = get_weaponinfo(nix_weapon);
+		w.wr_resetplayer(w);
 
 		// all weapons must be fully loaded when we spawn
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
@@ -142,7 +144,7 @@ void NIX_GiveCurrentWeapon()
 
 	self.weapons = '0 0 0';
 	if(g_nix_with_blaster)
-		self.weapons |= WEPSET_BLASTER;
+		self.weapons |= WEPSET(BLASTER);
 	self.weapons |= WepSet_FromWeapon(nix_weapon);
 
 	if(self.switchweapon != nix_weapon)
@@ -155,8 +157,10 @@ void NIX_precache()
 {
 	float i;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		if (NIX_CanChooseWeapon(i))
-			WEP_ACTION(i, WR_INIT);
+		if (NIX_CanChooseWeapon(i)) {
+			Weapon w = get_weaponinfo(i);
+			w.wr_init(w);
+		}
 }
 
 MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)
@@ -177,7 +181,7 @@ MUTATOR_HOOKFUNCTION(nix_BuildMutatorsPrettyString)
 }
 
 MUTATOR_HOOKFUNCTION(nix_FilterItem)
-{
+{SELFPARAM();
 	switch (self.items)
 	{
 		case ITEM_HealthSmall.m_itemid:
@@ -202,14 +206,14 @@ MUTATOR_HOOKFUNCTION(nix_FilterItem)
 }
 
 MUTATOR_HOOKFUNCTION(nix_OnEntityPreSpawn)
-{
+{SELFPARAM();
 	if(self.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
 		return 1;
 	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
-{
+{SELFPARAM();
 	if(!intermission_running)
 	if(self.deadflag == DEAD_NO)
 	if(IS_PLAYER(self))
@@ -218,7 +222,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
-{
+{SELFPARAM();
 	self.nix_lastchange_id = -1;
 	NIX_GiveCurrentWeapon(); // overrides the weapons you got when spawning
 	self.items |= IT_UNLIMITED_SUPERWEAPONS;
@@ -232,7 +236,7 @@ MUTATOR_HOOKFUNCTION(nix_SetModname)
 }
 
 MUTATOR_DEFINITION(mutator_nix)
-{
+{SELFPARAM();
 	entity e;
 
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nix_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);

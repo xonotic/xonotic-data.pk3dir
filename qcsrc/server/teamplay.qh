@@ -13,8 +13,6 @@ float cb1, cb2, cb3, cb4;
 
 void TeamchangeFrags(entity e);
 
-void entcs_init();
-
 void LogTeamchange(float player_id, float team_number, float type);
 
 void default_delayedinit();

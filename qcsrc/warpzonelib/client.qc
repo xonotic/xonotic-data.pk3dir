@@ -10,7 +10,7 @@
 #endif
 
 void WarpZone_Fade_PreDraw()
-{
+{SELFPARAM();
 	vector org;
 	org = getpropertyvec(VF_ORIGIN);
 	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
@@ -27,7 +27,7 @@ void WarpZone_Fade_PreDraw()
 }
 
 void WarpZone_Read(float isnew)
-{
+{SELFPARAM();
 	warpzone_warpzones_exist = 1;
 	if (!self.enemy)
 	{
@@ -92,7 +92,7 @@ void WarpZone_Read(float isnew)
 }
 
 void WarpZone_Camera_Read(float isnew)
-{
+{SELFPARAM();
 	warpzone_cameras_exist = 1;
 	self.classname = "func_warpzone_camera";
 
@@ -149,7 +149,7 @@ void WarpZone_Camera_Read(float isnew)
 
 void CL_RotateMoves(vector ang) = #638;
 void WarpZone_Teleported_Read(float isnew)
-{
+{SELFPARAM();
 	vector v;
 	self.classname = "warpzone_teleported";
 	v.x = ReadCoord();

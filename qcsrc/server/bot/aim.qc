@@ -40,7 +40,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 		tracetossfaketarget = spawn();
 	tracetossfaketarget.solid = savesolid;
 	tracetossfaketarget.movetype = targ.movetype;
-	setmodel(tracetossfaketarget, targ.model); // no low precision
+	_setmodel(tracetossfaketarget, targ.model); // no low precision
 	tracetossfaketarget.model = targ.model;
 	tracetossfaketarget.modelindex = targ.modelindex;
 	setsize(tracetossfaketarget, targ.mins, targ.maxs);
@@ -86,7 +86,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 }
 
 void lag_update()
-{
+{SELFPARAM();
 	if (self.lag1_time) if (time > self.lag1_time) {self.lag_func(self.lag1_time, self.lag1_float1, self.lag1_float2, self.lag1_entity1, self.lag1_vec1, self.lag1_vec2, self.lag1_vec3, self.lag1_vec4);self.lag1_time = 0;}
 	if (self.lag2_time) if (time > self.lag2_time) {self.lag_func(self.lag2_time, self.lag2_float1, self.lag2_float2, self.lag2_entity1, self.lag2_vec1, self.lag2_vec2, self.lag2_vec3, self.lag2_vec4);self.lag2_time = 0;}
 	if (self.lag3_time) if (time > self.lag3_time) {self.lag_func(self.lag3_time, self.lag3_float1, self.lag3_float2, self.lag3_entity1, self.lag3_vec1, self.lag3_vec2, self.lag3_vec3, self.lag3_vec4);self.lag3_time = 0;}
@@ -95,7 +95,7 @@ void lag_update()
 }
 
 float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
-{
+{SELFPARAM();
 	if (self.lag1_time == 0) {self.lag1_time = t;self.lag1_float1 = f1;self.lag1_float2 = f2;self.lag1_entity1 = e1;self.lag1_vec1 = v1;self.lag1_vec2 = v2;self.lag1_vec3 = v3;self.lag1_vec4 = v4;return true;}
 	if (self.lag2_time == 0) {self.lag2_time = t;self.lag2_float1 = f1;self.lag2_float2 = f2;self.lag2_entity1 = e1;self.lag2_vec1 = v1;self.lag2_vec2 = v2;self.lag2_vec3 = v3;self.lag2_vec4 = v4;return true;}
 	if (self.lag3_time == 0) {self.lag3_time = t;self.lag3_float1 = f1;self.lag3_float2 = f2;self.lag3_entity1 = e1;self.lag3_vec1 = v1;self.lag3_vec2 = v2;self.lag3_vec3 = v3;self.lag3_vec4 = v4;return true;}
@@ -106,7 +106,7 @@ float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, 
 }
 
 float bot_shouldattack(entity e)
-{
+{SELFPARAM();
 	if (e.team == self.team)
 	{
 		if (e == self)
@@ -144,7 +144,7 @@ float bot_shouldattack(entity e)
 }
 
 void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
-{
+{SELFPARAM();
 	if(self.flags & FL_INWATER)
 	{
 		self.bot_aimtarg = world;
@@ -167,7 +167,7 @@ void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, v
 }
 
 float bot_aimdir(vector v, float maxfiredeviation)
-{
+{SELFPARAM();
 	float dist, delta_t, blend;
 	vector desiredang, diffang;
 
@@ -318,7 +318,7 @@ vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, flo
 }
 
 float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity)
-{
+{SELFPARAM();
 	float f, r, hf, distanceratio;
 	vector v;
 	/*

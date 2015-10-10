@@ -2,8 +2,7 @@
  * trigger given targets
  */
 void trigger_keylock_trigger(string s)
-{
-	entity stemp = self;
+{SELFPARAM();
 	entity otemp = other;
 	entity atemp = activator;
 
@@ -11,13 +10,13 @@ void trigger_keylock_trigger(string s)
 	for(t = world; (t = find(t, targetname, s)); )
 		if(t.use)
 		{
-			self = t;
-			other = stemp;
+			setself(t);
+			other = this;
 			activator = atemp;
 			self.use();
 		}
 
-	self = stemp;
+	setself(this);
 	other = otemp;
 	activator = atemp;
 }
@@ -33,7 +32,7 @@ void trigger_keylock_kill(string s)
 }
 
 void trigger_keylock_touch()
-{
+{SELFPARAM();
 	bool key_used = false;
 	bool started_delay = false;
 
@@ -97,7 +96,7 @@ void trigger_keylock_touch()
 
 #ifdef SVQC
 bool trigger_keylock_send(entity to, int sf)
-{
+{SELFPARAM();
 	WriteByte(MSG_ENTITY, ENT_CLIENT_KEYLOCK);
 
 	WriteInt24_t(MSG_ENTITY, self.itemkeys);
@@ -133,7 +132,7 @@ wait: prevent triggering again for this amount of time (default: 5) - applies to
 If spawned without any key specified in itemkeys, this trigger will display an error and remove itself.
 message2 and noise2 will be resent to the player every 2 seconds while he is in the trigger zone.
 */
-void spawnfunc_trigger_keylock(void)
+spawnfunc(trigger_keylock)
 {
 	if(!self.itemkeys) { remove(self); return; }
 
@@ -147,7 +146,7 @@ void spawnfunc_trigger_keylock(void)
 		if(self.sounds == 1)
 			self.noise = "misc/secret.wav";
 		else if(self.sounds == 2)
-			self.noise = "misc/talk.wav";
+			self.noise = SND(TALK);
 		else //if (self.sounds == 3) {
 			self.noise = "misc/trigger1.wav";
 	}
@@ -158,7 +157,7 @@ void spawnfunc_trigger_keylock(void)
 
 	// set closed sourd
 	if(self.noise2 == "")
-		self.noise2 = "misc/talk.wav";
+		self.noise2 = SND(TALK);
 
 	// delay between triggering message2 and trigger2
 	if(!self.wait) { self.wait = 5; }
@@ -176,7 +175,7 @@ void spawnfunc_trigger_keylock(void)
 }
 #elif defined(CSQC)
 void keylock_remove()
-{
+{SELFPARAM();
 	if(self.target) { strunzone(self.target); }
 	self.target = string_null;
 
@@ -197,7 +196,7 @@ void keylock_remove()
 }
 
 void ent_keylock()
-{
+{SELFPARAM();
 	self.itemkeys = ReadInt24_t();
 	self.height = ReadByte();
 

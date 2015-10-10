@@ -1,5 +1,5 @@
 void generic_plat_blocked()
-{
+{SELFPARAM();
 #ifdef SVQC
 	if(self.dmg && other.takedamage != DAMAGE_NO)
 	{
@@ -17,7 +17,7 @@ void generic_plat_blocked()
 }
 
 void plat_spawn_inside_trigger()
-{
+{SELFPARAM();
 	entity trigger;
 	vector tmin, tmax;
 
@@ -64,8 +64,8 @@ void plat_spawn_inside_trigger()
 }
 
 void plat_hit_top()
-{
-	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+{SELFPARAM();
+	_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 1;
 
 	self.SUB_THINK = plat_go_down;
@@ -73,27 +73,27 @@ void plat_hit_top()
 }
 
 void plat_hit_bottom()
-{
-	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+{SELFPARAM();
+	_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 2;
 }
 
 void plat_go_down()
-{
-	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
+{SELFPARAM();
+	_sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 3;
 	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, plat_hit_bottom);
 }
 
 void plat_go_up()
-{
-	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
+{SELFPARAM();
+	_sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 4;
 	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, plat_hit_top);
 }
 
 void plat_center_touch()
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (!other.iscreature)
 		return;
@@ -107,7 +107,7 @@ void plat_center_touch()
 		return;
 #endif
 
-	self = self.enemy;
+	setself(self.enemy);
 	if (self.state == 2)
 		plat_go_up ();
 	else if (self.state == 1)
@@ -115,7 +115,7 @@ void plat_center_touch()
 }
 
 void plat_outside_touch()
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (!other.iscreature)
 		return;
@@ -127,13 +127,13 @@ void plat_outside_touch()
 		return;
 #endif
 
-	self = self.enemy;
+	setself(self.enemy);
 	if (self.state == 1)
 		plat_go_down ();
 }
 
 void plat_trigger_use()
-{
+{SELFPARAM();
 #ifdef SVQC
 	if (self.think)
 		return;		// already activated
@@ -146,7 +146,7 @@ void plat_trigger_use()
 
 
 void plat_crush()
-{
+{SELFPARAM();
 	if((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
@@ -176,7 +176,7 @@ void plat_crush()
 }
 
 void plat_use()
-{
+{SELFPARAM();
 	self.use = func_null;
 	if (self.state != 4)
 		objerror ("plat_use: not in up state");
@@ -186,7 +186,7 @@ void plat_use()
 .string sound1, sound2;
 
 void plat_reset()
-{
+{SELFPARAM();
 	IFTARGETED
 	{
 		setorigin (self, self.pos1);

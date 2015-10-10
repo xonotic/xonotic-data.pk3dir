@@ -14,7 +14,7 @@
 #include "../../../warpzonelib/common.qh"
 
 void havocbot_ai()
-{
+{SELFPARAM();
 	if(self.draggedby)
 		return;
 
@@ -102,7 +102,8 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			WEP_ACTION(self.weapon, WR_AIM);
+			Weapon w = get_weaponinfo(self.weapon);
+			w.wr_aim(w);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
 				self.BUTTON_ATCK = false;
@@ -179,7 +180,7 @@ void havocbot_ai()
 }
 
 void havocbot_keyboard_movement(vector destorg)
-{
+{SELFPARAM();
 	vector keyboard;
 	float blend, maxspeed;
 	float sk;
@@ -254,7 +255,7 @@ void havocbot_keyboard_movement(vector destorg)
 }
 
 void havocbot_bunnyhop(vector dir)
-{
+{SELFPARAM();
 	float bunnyhopdistance;
 	vector deviation;
 	float maxspeed;
@@ -397,7 +398,7 @@ void havocbot_bunnyhop(vector dir)
 }
 
 void havocbot_movetogoal()
-{
+{SELFPARAM();
 	vector destorg;
 	vector diff;
 	vector dir;
@@ -854,9 +855,9 @@ void havocbot_movetogoal()
 }
 
 void havocbot_chooseenemy()
-{
+{SELFPARAM();
 	entity head, best, head2;
-	float rating, bestrating, i, hf;
+	float rating, bestrating, hf;
 	vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 	{
@@ -908,10 +909,29 @@ void havocbot_chooseenemy()
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	for(i = 0; ; ++i)
+	bool scan_transparent = false;
+	bool scan_secondary_targets = false;
+	bool have_secondary_targets = false;
+	while(true)
 	{
-		while (head)
+		scan_secondary_targets = false;
+		:scan_targets
+		for( ; head; head = head.chain)
 		{
+			if(!scan_secondary_targets)
+			{
+				if(head.classname == "misc_breakablemodel")
+				{
+					have_secondary_targets = true;
+					continue;
+				}
+			}
+			else
+			{
+				if(head.classname != "misc_breakablemodel")
+					continue;
+			}
+
 			v = (head.absmin + head.absmax) * 0.5;
 			rating = vlen(v - eye);
 			if (rating<autocvar_bot_ai_enemydetectionradius)
@@ -925,20 +945,29 @@ void havocbot_chooseenemy()
 					bestrating = rating;
 				}
 			}
-			head = head.chain;
+		}
+
+		if(!best && have_secondary_targets && !scan_secondary_targets)
+		{
+			scan_secondary_targets = true;
+			// restart the loop
+			head = head2;
+			bestrating = 100000000;
+			goto scan_targets;
 		}
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
 		if(best || self.weapons) // || self.weapon == WEP_RIFLE.m_id
 			break;
-		if(i)
+		if(scan_transparent)
 			break;
 
 		// Set flags to see through transparent objects
 		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
+		scan_transparent = true;
 	}
 
 	// Restore hit flags
@@ -946,10 +975,12 @@ void havocbot_chooseenemy()
 
 	self.enemy = best;
 	self.havocbot_stickenemy = true;
+	if(best && best.classname == "misc_breakablemodel")
+		self.havocbot_stickenemy = false;
 }
 
 float havocbot_chooseweapon_checkreload(int new_weapon)
-{
+{SELFPARAM();
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
 	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
@@ -962,8 +993,9 @@ float havocbot_chooseweapon_checkreload(int new_weapon)
 		float i, other_weapon_available = false;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
+			Weapon w = get_weaponinfo(i);
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
-			if (WEP_ACTION(i, WR_CHECKAMMO1) + WEP_ACTION(i, WR_CHECKAMMO2))
+			if (w.wr_checkammo1(w) + w.wr_checkammo2(w))
 				other_weapon_available = true;
 		}
 		if(other_weapon_available)
@@ -974,11 +1006,11 @@ float havocbot_chooseweapon_checkreload(int new_weapon)
 }
 
 void havocbot_chooseweapon()
-{
+{SELFPARAM();
 	int i;
 
 	// ;)
-	if(g_weaponarena_weapons == WEPSET_TUBA)
+	if(g_weaponarena_weapons == WEPSET(TUBA))
 	{
 		self.switchweapon = WEP_TUBA.m_id;
 		return;
@@ -1035,7 +1067,7 @@ void havocbot_chooseweapon()
 
 		// Choose weapons for far distance
 		if ( distance > bot_distance_far ) {
-			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
+			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
 				if ( client_hasweapon(self, w, true, false) )
 				{
@@ -1049,7 +1081,7 @@ void havocbot_chooseweapon()
 
 		// Choose weapons for mid distance
 		if ( distance > bot_distance_close) {
-			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
+			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
 				if ( client_hasweapon(self, w, true, false) )
 				{
@@ -1062,7 +1094,7 @@ void havocbot_chooseweapon()
 		}
 
 		// Choose weapons for close distance
-		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
+		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
 			if ( client_hasweapon(self, w, true, false) )
 			{
@@ -1076,7 +1108,7 @@ void havocbot_chooseweapon()
 }
 
 void havocbot_aim()
-{
+{SELFPARAM();
 	vector selfvel, enemyvel;
 //	if(self.flags & FL_INWATER)
 //		return;
@@ -1098,7 +1130,7 @@ void havocbot_aim()
 }
 
 float havocbot_moveto_refresh_route()
-{
+{SELFPARAM();
 	// Refresh path to goal if necessary
 	entity wp;
 	wp = self.havocbot_personal_waypoint;
@@ -1109,7 +1141,7 @@ float havocbot_moveto_refresh_route()
 }
 
 float havocbot_moveto(vector pos)
-{
+{SELFPARAM();
 	entity wp;
 
 	if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
@@ -1231,7 +1263,7 @@ float havocbot_resetgoal()
 }
 
 void havocbot_setupbot()
-{
+{SELFPARAM();
 	self.bot_ai = havocbot_ai;
 	self.cmd_moveto = havocbot_moveto;
 	self.cmd_resetgoal = havocbot_resetgoal;
@@ -1240,7 +1272,7 @@ void havocbot_setupbot()
 }
 
 vector havocbot_dodge()
-{
+{SELFPARAM();
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
 #if 0

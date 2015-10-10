@@ -15,11 +15,11 @@ const float PLAYERDEMO_MODE_OFF = 0;
 const float PLAYERDEMO_MODE_READING = 1;
 const float PLAYERDEMO_MODE_WRITING = 2;
 void playerdemo_init()
-{
+{SELFPARAM();
 	self.playerdemo_mode = PLAYERDEMO_MODE_OFF;
 }
 void playerdemo_shutdown()
-{
+{SELFPARAM();
 	if(self.playerdemo_mode != PLAYERDEMO_MODE_OFF)
 	{
 		LOG_INFO("playerdemo: ", self.netname, " closed\n");
@@ -28,7 +28,7 @@ void playerdemo_shutdown()
 	self.playerdemo_mode = 0;
 }
 void playerdemo_open_read(string f)
-{
+{SELFPARAM();
 	playerdemo_shutdown();
 	self.playerdemo_mode = PLAYERDEMO_MODE_READING;
 	self.playerdemo_fh = fopen(f, FILE_READ);
@@ -39,7 +39,7 @@ void playerdemo_open_read(string f)
 	LOG_INFO("playerdemo: ", self.netname, " reading from ", f, "\n");
 }
 void playerdemo_open_write(string f)
-{
+{SELFPARAM();
 	playerdemo_shutdown();
 	self.playerdemo_mode = PLAYERDEMO_MODE_WRITING;
 	self.playerdemo_fh = fopen(f, FILE_WRITE);
@@ -70,51 +70,51 @@ void playerdemo_open_write(string f)
 	// end of list
 
 void playerdemo_write_originvector(.vector f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_sizevector(.vector f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_vector(.vector f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_string(.string f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
 }
 void playerdemo_write_modelstring(.string f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
 }
 void playerdemo_write_float(.float f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(ftos(self.(f)), "\n"));
 }
 void playerdemo_write()
-{
+{SELFPARAM();
 	if(self.playerdemo_mode != PLAYERDEMO_MODE_WRITING)
 		return;
 	fputs(self.playerdemo_fh, strcat(ftos(time - self.playerdemo_starttime), "\n"));
 	PLAYERDEMO_FIELDS(playerdemo_write_)
 }
 void playerdemo_read_originvector(.vector f, string name)
-{
+{SELFPARAM();
 	setorigin(self, stov(fgets(self.playerdemo_fh)));
 }
 void playerdemo_read_sizevector(.vector f, string name)
-{
+{SELFPARAM();
 	self.(f) = stov(fgets(self.playerdemo_fh));
 	setsize(self, self.mins, self.maxs);
 }
 void playerdemo_read_vector(.vector f, string name)
-{
+{SELFPARAM();
 	self.(f) = stov(fgets(self.playerdemo_fh));
 }
 void playerdemo_read_string(.string f, string name)
-{
+{SELFPARAM();
 	string s = fgets(self.playerdemo_fh);
 	if (s != self.(f))
 	{
@@ -126,17 +126,17 @@ void playerdemo_read_string(.string f, string name)
 	}
 }
 void playerdemo_read_modelstring(.string f, string name)
-{
+{SELFPARAM();
 	string s = fgets(self.playerdemo_fh);
 	if (s != self.(f))
-		setmodel(self, s);
+		_setmodel(self, s);
 }
 void playerdemo_read_float(.float f, string name)
-{
+{SELFPARAM();
 	self.(f) = stof(fgets(self.playerdemo_fh));
 }
 float playerdemo_read()
-{
+{SELFPARAM();
 	if(self.playerdemo_mode != PLAYERDEMO_MODE_READING)
 		return 0;
 	if(self.playerdemo_time < 0)

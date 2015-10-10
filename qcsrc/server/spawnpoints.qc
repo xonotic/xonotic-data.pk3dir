@@ -9,7 +9,7 @@
 #include "../common/util.qh"
 #include "../warpzonelib/util_server.qh"
 
-float SpawnPoint_Send(entity to, int sf)
+bool SpawnPoint_Send(entity this, entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
@@ -21,7 +21,7 @@ float SpawnPoint_Send(entity to, int sf)
 	return true;
 }
 
-float SpawnEvent_Send(entity to, int sf)
+bool SpawnEvent_Send(entity this, entity to, int sf)
 {
 	float send;
 
@@ -46,7 +46,7 @@ float SpawnEvent_Send(entity to, int sf)
 }
 
 void spawnpoint_use()
-{
+{SELFPARAM();
 	if(teamplay)
 	if(have_team_spawns > 0)
 	{
@@ -57,7 +57,7 @@ void spawnpoint_use()
 }
 
 void relocate_spawnpoint()
-{
+{SELFPARAM();
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
@@ -141,17 +141,17 @@ void relocate_spawnpoint()
 	{ Net_LinkEntity(self, false, 0, SpawnPoint_Send); }
 }
 
-void spawnfunc_info_player_survivor (void)
+spawnfunc(info_player_survivor)
 {
-	spawnfunc_info_player_deathmatch();
+	spawnfunc_info_player_deathmatch(this);
 }
 
-void spawnfunc_info_player_start (void)
+spawnfunc(info_player_start)
 {
-	spawnfunc_info_player_deathmatch();
+	spawnfunc_info_player_deathmatch(this);
 }
 
-void spawnfunc_info_player_deathmatch (void)
+spawnfunc(info_player_deathmatch)
 {
 	self.classname = "info_player_deathmatch";
 	relocate_spawnpoint();
@@ -160,54 +160,54 @@ void spawnfunc_info_player_deathmatch (void)
 /*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
 Starting point for a player in team one (Red).
 Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team1()
+spawnfunc(info_player_team1)
 {
-	if(g_assault) { remove(self); return; }
+	if(g_assault) { remove(this); return; }
 
-	self.team = NUM_TEAM_1; // red
-	spawnfunc_info_player_deathmatch();
+	this.team = NUM_TEAM_1; // red
+	spawnfunc_info_player_deathmatch(this);
 }
 
 
 /*QUAKED spawnfunc_info_player_team2 (1 0 0) (-16 -16 -24) (16 16 24)
 Starting point for a player in team two (Blue).
 Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team2()
+spawnfunc(info_player_team2)
 {
-	if(g_assault) { remove(self); return; }
+	if(g_assault) { remove(this); return; }
 
-	self.team = NUM_TEAM_2; // blue
-	spawnfunc_info_player_deathmatch();
+	this.team = NUM_TEAM_2; // blue
+	spawnfunc_info_player_deathmatch(this);
 }
 
 /*QUAKED spawnfunc_info_player_team3 (1 0 0) (-16 -16 -24) (16 16 24)
 Starting point for a player in team three (Yellow).
 Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team3()
+spawnfunc(info_player_team3)
 {
-	if(g_assault) { remove(self); return; }
+	if(g_assault) { remove(this); return; }
 
-	self.team = NUM_TEAM_3; // yellow
-	spawnfunc_info_player_deathmatch();
+	this.team = NUM_TEAM_3; // yellow
+	spawnfunc_info_player_deathmatch(this);
 }
 
 
 /*QUAKED spawnfunc_info_player_team4 (1 0 0) (-16 -16 -24) (16 16 24)
 Starting point for a player in team four (Purple).
 Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team4()
+spawnfunc(info_player_team4)
 {
-	if(g_assault) { remove(self); return; }
+	if(g_assault) { remove(this); return; }
 
-	self.team = NUM_TEAM_4; // purple
-	spawnfunc_info_player_deathmatch();
+	this.team = NUM_TEAM_4; // purple
+	spawnfunc_info_player_deathmatch(this);
 }
 
 // Returns:
 //   _x: prio (-1 if unusable)
 //   _y: weight
 vector Spawn_Score(entity spot, float mindist, float teamcheck)
-{
+{SELFPARAM();
 	float shortest, thisdist;
 	float prio;
 	entity player;
@@ -258,10 +258,9 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 			++found;
 			if(ent.spawn_evalfunc)
 			{
-				entity oldself = self;
-				self = ent;
-				spawn_score = ent.spawn_evalfunc(oldself, spot, spawn_score);
-				self = oldself;
+				WITH(entity, self, ent, {
+					spawn_score = ent.spawn_evalfunc(this, spot, spawn_score);
+				});
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}
@@ -332,7 +331,7 @@ Finds a point to respawn
 =============
 */
 entity SelectSpawnPoint (float anypoint)
-{
+{SELFPARAM();
 	float teamcheck;
 	entity spot, firstspot;
 

@@ -23,22 +23,21 @@ float target_spawn_spawnfunc_field;
 float target_spawn_count;
 
 void target_spawn_helper_setmodel()
-{
-	setmodel(self, self.model);
+{SELFPARAM();
+	_setmodel(self, self.model);
 }
 
 void target_spawn_helper_setsize()
-{
+{SELFPARAM();
 	setsize(self, self.mins, self.maxs);
 }
 
 void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act)
-{
+{SELFPARAM();
 	float i, n, valuefieldpos;
 	string key, value, valuefield, valueoffset, valueoffsetrandom;
 	entity valueent;
 	vector data, data2;
-	entity oldself;
 	entity oldactivator;
 
 	n = tokenize_console(msg);
@@ -220,15 +219,10 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 				value = strcat("target_spawn_helper", value);
 			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
 
-			oldself = self;
 			oldactivator = activator;
 
-			self = e;
 			activator = act;
-
-			self.target_spawn_spawnfunc();
-
-			self = oldself;
+			WITH(entity, self, e, e.target_spawn_spawnfunc());
 			activator = oldactivator;
 
 			// We called an external function, so we have to re-tokenize msg.
@@ -244,7 +238,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 }
 
 void target_spawn_useon(entity e)
-{
+{SELFPARAM();
 	self.target_spawn_activator = activator;
 	target_spawn_edit_entity(
 		e,
@@ -258,7 +252,7 @@ void target_spawn_useon(entity e)
 }
 
 float target_spawn_cancreate()
-{
+{SELFPARAM();
 	float c;
 	entity e;
 
@@ -277,7 +271,7 @@ float target_spawn_cancreate()
 }
 
 void target_spawn_use()
-{
+{SELFPARAM();
 	entity e;
 
 	if(self.target == "")
@@ -286,6 +280,7 @@ void target_spawn_use()
 		if(!target_spawn_cancreate())
 			return;
 		e = spawn();
+		e.spawnfunc_checked = true;
 		target_spawn_useon(e);
 		e.target_spawn_id = self.target_spawn_id;
 	}
@@ -304,7 +299,7 @@ void target_spawn_use()
 }
 
 void target_spawn_spawnfirst()
-{
+{SELFPARAM();
 	activator = self.target_spawn_activator;
 	if(self.spawnflags & 2)
 		target_spawn_use();
@@ -338,7 +333,7 @@ void initialize_field_db()
 	}
 }
 
-void spawnfunc_target_spawn()
+spawnfunc(target_spawn)
 {
 	initialize_field_db();
 	self.use = target_spawn_use;

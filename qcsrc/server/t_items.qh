@@ -78,23 +78,23 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 .float  spawntime;
 .float  gravity;
 .vector colormod;
-void ItemDraw();
 
-void ItemDrawSimple();
+void ItemDraw(entity this);
+void ItemDrawSimple(entity this);
 
 void ItemRead(float _IsNew);
 
 #endif
 #ifdef SVQC
-void spawnfunc_item_strength();
-void spawnfunc_item_invincible();
-void spawnfunc_item_armor_small();
-void spawnfunc_item_shells();
-void spawnfunc_item_bullets();
-void spawnfunc_item_rockets();
+spawnfunc(item_strength);
+spawnfunc(item_invincible);
+spawnfunc(item_armor_small);
+spawnfunc(item_shells);
+spawnfunc(item_bullets);
+spawnfunc(item_rockets);
 
 float autocvar_sv_simple_items;
-bool ItemSend(entity to, int sf);
+bool ItemSend(entity this, entity to, int sf);
 
 
 float have_pickup_item(void);
@@ -135,7 +135,7 @@ void Item_FindTeam();
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
 
-bool ItemSend(entity to, int sf);
+bool ItemSend(entity this, entity to, int sf);
 void ItemUpdate(entity item);
 
 // pickup evaluation functions
