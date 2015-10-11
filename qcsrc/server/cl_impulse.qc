@@ -1,4 +1,3 @@
-#include "_all.qh"
 #include "round_handler.qh"
 
 #include "bot/waypoints.qh"
@@ -14,8 +13,13 @@
 #include "../common/minigames/sv_minigames.qh"
 
 #include "../common/weapons/all.qh"
+#include "../common/vehicles/sv_vehicles.qh"
 
-/*
+#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+
+.entity vehicle;
+
+/**
  * Impulse map:
  *
  * 0 reserved (no input)

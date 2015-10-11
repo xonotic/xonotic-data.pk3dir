@@ -1,6 +1,5 @@
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
-#include "../../../server/_all.qh"
 #include "jumppads.qh"
 #include "../../movetypes/movetypes.qh"
 

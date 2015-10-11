@@ -2,8 +2,6 @@
 #define BOOL_H
 
 #ifndef QCC_SUPPORT_BOOL
-    #define bool float
-
     // Boolean Constants
     const int true 	= 1;
     const int false = 0;

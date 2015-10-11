@@ -1,4 +1,3 @@
-#include "_all.qh"
 
 #include "announcer.qh"
 #include "hook.qh"
@@ -7,23 +6,28 @@
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
+#include "quickmenu.qh"
 
 #include "mutators/events.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
+#include "../common/gamemodes/all.qh"
 #include "../common/nades/all.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
-#include "../common/util.qh"
 
+#include "../common/vehicles/all.qh"
 #include "../common/weapons/all.qh"
+#include "../common/viewloc.qh"
+#include "../common/minigames/cl_minigames.qh"
+#include "../common/minigames/cl_minigames_hud.qh"
 
-#include "../csqcmodellib/cl_player.qh"
+#include "../lib/csqcmodel/cl_player.qh"
 
-#include "../warpzonelib/client.qh"
-#include "../warpzonelib/common.qh"
+#include "../lib/warpzone/client.qh"
+#include "../lib/warpzone/common.qh"
 
 entity porto;
 vector polyline[16];
@@ -1027,7 +1031,6 @@ void CSQC_UpdateView(float w, float h)
 	entity e;
 	float fov;
 	float f;
-	int i;
 	vector vf_size, vf_min;
 	float a;
 
@@ -1078,8 +1081,7 @@ void CSQC_UpdateView(float w, float h)
 	if(myteam != prev_myteam)
 	{
 		myteamcolors = colormapPaletteColor(myteam, 1);
-		for(i = 0; i < HUD_PANEL_NUM; ++i)
-			hud_panel[i].update_time = time;
+		FOREACH(hud_panels, true, LAMBDA(it.update_time = time));
 		prev_myteam = myteam;
 	}
 

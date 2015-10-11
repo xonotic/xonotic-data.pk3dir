@@ -81,7 +81,7 @@ void GameCommand(string theCommand)
 			entity e;
 			string s;
 
-			for(i = 0, e = world; (e = nextent(e)); )
+			for(i = 0, e = NULL; (e = nextent(e)); )
 				if(e.classname != "vtbl" && e.name != "")
 				{
 					s = e.name;

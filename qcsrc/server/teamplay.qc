@@ -1,5 +1,4 @@
 #include "teamplay.qh"
-#include "_all.qh"
 
 #include "cl_client.qh"
 #include "race.qh"
@@ -13,6 +12,7 @@
 #include "mutators/mutators_include.qh"
 
 #include "../common/deathtypes/all.qh"
+#include "../common/gamemodes/all.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)

@@ -1,3 +1,6 @@
+#include "../../common/deathtypes/all.qh"
+#include "../round_handler.qh"
+
 REGISTER_MUTATOR(rm, cvar("g_instagib"));
 
 MUTATOR_HOOKFUNCTION(rm, PlayerDamage_Calculate)

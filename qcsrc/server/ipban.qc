@@ -1,13 +1,10 @@
 #include "ipban.qh"
-#include "_all.qh"
 
 #include "autocvars.qh"
 #include "command/banning.qh"
 #include "defs.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
-#include "../dpdefs/dpextensions.qh"
-#include "../dpdefs/progsdefs.qh"
 
 /*
  * Protocol of online ban list:

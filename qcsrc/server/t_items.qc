@@ -3,7 +3,6 @@
 #include "../common/items/all.qc"
 
 #if defined(SVQC)
-    #include "_all.qh"
 
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
@@ -24,7 +23,7 @@
 
     #include "../common/weapons/all.qh"
 
-    #include "../warpzonelib/util_server.qh"
+    #include "../lib/warpzone/util_server.qh"
 #endif
 
 #ifdef CSQC

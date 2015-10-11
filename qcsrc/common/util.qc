@@ -1,7 +1,6 @@
 #include "util.qh"
 
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
 	#include "../client/mutators/events.qh"
@@ -10,8 +9,6 @@
     #include "deathtypes/all.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"
@@ -175,40 +172,6 @@ string ftos_decimals(float number, float decimals)
 		number = 0;
 	// we have sprintf...
 	return sprintf("%.*f", decimals, number);
-}
-
-vector colormapPaletteColor(float c, bool isPants)
-{
-	switch (c)
-	{
-		case  0: return '1.000000 1.000000 1.000000';
-		case  1: return '1.000000 0.333333 0.000000';
-		case  2: return '0.000000 1.000000 0.501961';
-		case  3: return '0.000000 1.000000 0.000000';
-		case  4: return '1.000000 0.000000 0.000000';
-		case  5: return '0.000000 0.666667 1.000000';
-		case  6: return '0.000000 1.000000 1.000000';
-		case  7: return '0.501961 1.000000 0.000000';
-		case  8: return '0.501961 0.000000 1.000000';
-		case  9: return '1.000000 0.000000 1.000000';
-		case 10: return '1.000000 0.000000 0.501961';
-		case 11: return '0.000000 0.000000 1.000000';
-		case 12: return '1.000000 1.000000 0.000000';
-		case 13: return '0.000000 0.333333 1.000000';
-		case 14: return '1.000000 0.666667 0.000000';
-		case 15:
-			if (isPants)
-				return
-					  '1 0 0' * (0.502 + 0.498 * sin(time / 2.7182818285 + 0.0000000000))
-					+ '0 1 0' * (0.502 + 0.498 * sin(time / 2.7182818285 + 2.0943951024))
-					+ '0 0 1' * (0.502 + 0.498 * sin(time / 2.7182818285 + 4.1887902048));
-			else
-				return
-					  '1 0 0' * (0.502 + 0.498 * sin(time / 3.1415926536 + 5.2359877560))
-					+ '0 1 0' * (0.502 + 0.498 * sin(time / 3.1415926536 + 3.1415926536))
-					+ '0 0 1' * (0.502 + 0.498 * sin(time / 3.1415926536 + 1.0471975512));
-		default: return '0.000 0.000 0.000';
-	}
 }
 
 // Databases (hash tables)

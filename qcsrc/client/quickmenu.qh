@@ -1,0 +1,8 @@
+#ifndef CLIENT_QUICKMENU_H
+#define CLIENT_QUICKMENU_H
+
+bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary);
+bool QuickMenu_IsOpened();
+void QuickMenu_Mouse();
+
+#endif

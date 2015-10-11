@@ -1,13 +1,16 @@
 #include "navigation.qh"
-#include "../_all.qh"
 
 #include "bot.qh"
 #include "waypoints.qh"
 
 #include "../t_items.qh"
 
+#include "../../common/items/all.qh"
+
 #include "../../common/constants.qh"
 #include "../../common/triggers/trigger/jumppads.qh"
+
+.float speed;
 
 void bot_debug(string input)
 {

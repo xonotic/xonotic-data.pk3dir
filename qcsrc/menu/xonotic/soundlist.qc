@@ -24,7 +24,7 @@ CLASS(XonoticSoundList, XonoticListBox)
 	ATTRIB(XonoticSoundList, itemAbsSize, vector, '0 0 0')
 
 	ATTRIB(XonoticSoundList, filterString, string, string_null)
-	ATTRIB(XonoticSoundList, playlist, entity, world)
+	ATTRIB(XonoticSoundList, playlist, entity, NULL)
 ENDCLASS(XonoticSoundList)
 
 entity makeXonoticSoundList();

@@ -1,8 +1,9 @@
-#include "_all.qh"
 
 void train_next();
 
 const float LOOP = 1;
+
+.float speed;
 
 const float DNOSHADOW = 2;
 const float DFOLLOW = 4;

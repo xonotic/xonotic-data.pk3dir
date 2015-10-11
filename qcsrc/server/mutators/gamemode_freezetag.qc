@@ -1,5 +1,4 @@
 #include "gamemode_freezetag.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
 

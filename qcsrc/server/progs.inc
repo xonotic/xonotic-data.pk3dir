@@ -1,11 +1,5 @@
-#include "../common/util-pre.qh"
-#include "sys-pre.qh"
-#include "../dpdefs/progsdefs.qh"
-#include "../dpdefs/dpextensions.qh"
-#include "sys-post.qh"
-#include "../common/util-post.qh"
-
 #include "../lib/_all.inc"
+#include "_all.qh"
 
 #include "anticheat.qc"
 #include "antilag.qc"
@@ -45,27 +39,14 @@
 #include "t_quake3.qc"
 #include "t_quake.qc"
 
-#include "bot/aim.qc"
-#include "bot/bot.qc"
-#include "bot/navigation.qc"
-#include "bot/scripting.qc"
-#include "bot/waypoints.qc"
-
-#include "bot/havocbot/havocbot.qc"
-#include "bot/havocbot/role_keyhunt.qc"
-#include "bot/havocbot/roles.qc"
+#include "bot/_all.inc"
 
 #include "command/all.qc"
 
 #include "mutators/mutators_include.qc"
 #include "mutators/mutators.qc"
 
-#include "pathlib/costs.qc"
-#include "pathlib/expandnode.qc"
-#include "pathlib/main.qc"
-#include "pathlib/movenode.qc"
-#include "pathlib/path_waypoint.qc"
-#include "pathlib/utility.qc"
+#include "pathlib/_all.inc"
 
 #include "weapons/accuracy.qc"
 #include "weapons/common.qc"
@@ -81,7 +62,6 @@
 #include "../common/animdecide.qc"
 #include "../common/campaign_file.qc"
 #include "../common/campaign_setup.qc"
-#include "../common/effects/effects.qc"
 #include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"
 #include "../common/monsters/spawn.qc"
@@ -99,6 +79,8 @@
 
 #include "../common/deathtypes/all.qc"
 #include "../common/buffs/all.qc"
+#include "../common/effects/all.qc"
+#include "../common/gamemodes/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"
@@ -114,12 +96,12 @@
 #include "../common/turrets/targettrigger.qc"
 #include "../common/weapons/config.qc"
 
-#include "../csqcmodellib/sv_model.qc"
+#include "../lib/csqcmodel/sv_model.qc"
 
-#include "../warpzonelib/anglestransform.qc"
-#include "../warpzonelib/common.qc"
-#include "../warpzonelib/server.qc"
-#include "../warpzonelib/util_server.qc"
+#include "../lib/warpzone/anglestransform.qc"
+#include "../lib/warpzone/common.qc"
+#include "../lib/warpzone/server.qc"
+#include "../lib/warpzone/util_server.qc"
 
 #if BUILD_MOD
 #include "../../mod/server/progs.inc"

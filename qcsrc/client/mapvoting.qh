@@ -1,5 +1,5 @@
-#ifndef MAPVOTING_H
-#define MAPVOTING_H
+#ifndef CLIENT_MAPVOTING_H
+#define CLIENT_MAPVOTING_H
 
 #include "../common/constants.qh"
 void MapVote_Draw();

@@ -1,9 +1,9 @@
 #include "../../common/triggers/target/music.qh"
 #include "mutator_buffs.qh"
-#include "../_all.qh"
 
 #include "mutator.qh"
 
+#include "../../common/gamemodes/all.qh"
 #include "../../common/buffs/all.qh"
 
 entity buff_FirstFromFlags(int _buffs)
@@ -526,6 +526,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 	self.buff_disability_effect_time = 0;
 	return false;
 }
+
+.float stat_sv_maxspeed;
+.float stat_sv_airspeedlimit_nonqw;
+.float stat_sv_jumpvelocity;
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 {SELFPARAM();

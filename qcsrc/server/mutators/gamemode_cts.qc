@@ -1,5 +1,4 @@
 #include "gamemode_cts.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
 

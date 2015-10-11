@@ -1,5 +1,4 @@
 #include "mutator_overkill.qh"
-#include "../_all.qh"
 
 #include "mutator.qh"
 

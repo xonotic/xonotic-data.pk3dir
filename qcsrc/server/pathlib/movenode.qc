@@ -1,7 +1,8 @@
-#include "../_all.qh"
 
 #include "pathlib.qh"
 #include "utility.qh"
+
+.vector	pos1, pos2;
 
 vector pathlib_wateroutnode(vector start,vector end, float doedge)
 {SELFPARAM();

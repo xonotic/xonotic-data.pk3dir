@@ -1,8 +1,8 @@
-#include "_all.qh"
+#include "quickmenu.qh"
 
+#include "hud.qh"
 #include "hud_config.qh"
-
-#include "../dpdefs/keycodes.qh"
+#include "mapvoting.qh"
 
 // QUICKMENU_MAXLINES must be <= 10
 const int QUICKMENU_MAXLINES = 10;

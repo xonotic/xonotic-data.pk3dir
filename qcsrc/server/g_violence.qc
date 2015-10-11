@@ -1,5 +1,6 @@
 #include "g_violence.qh"
-#include "_all.qh"
+
+.int state;
 
 bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 {

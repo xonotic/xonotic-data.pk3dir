@@ -1,12 +1,9 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "animdecide.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
+#include "animdecide.qh"
+
+#include "monsters/all.qh"
+
+#if defined(SVQC)
     #include "util.qh"
-    #include "animdecide.qh"
     #include "../server/defs.qh"
 #endif
 

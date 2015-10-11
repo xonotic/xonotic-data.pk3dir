@@ -1,16 +1,9 @@
 #include "damage.qh"
-#include "_all.qh"
 
 #include "gibs.qh"
-
-#include "../common/vehicles/all.qh"
-
-#include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
-#include "../common/effects/effects.qh"
 #include "../common/movetypes/movetypes.qh"
-#include "../common/util.qh"
-
+#include "../common/vehicles/all.qh"
 #include "../common/weapons/all.qh"
 
 .entity tag_entity;

@@ -1,5 +1,9 @@
 #include "controlpoint.qh"
 
+#include "command/common.qh"
+
+.bool iscaptured;
+
 bool cpicon_send(entity this, entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CONTROLPOINT_ICON);

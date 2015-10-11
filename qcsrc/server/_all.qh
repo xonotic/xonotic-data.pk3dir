@@ -6,9 +6,8 @@
 #include "defs.qh"
 #include "miscfunctions.qh"
 
-#include "../dpdefs/progsdefs.qh"
-#include "../dpdefs/dpextensions.qh"
 
+#include "../common/effects/all.qh"
 #include "../common/models/all.qh"
 #include "../common/sounds/all.qh"
 

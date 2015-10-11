@@ -155,7 +155,7 @@ CLASS(Mutator, Object)
     }
 ENDCLASS(Mutator)
 
-const int MAX_MUTATORS = 20;
+const int MAX_MUTATORS = 30;
 Mutator loaded_mutators[MAX_MUTATORS];
 
 bool Mutator_Add(Mutator mut)
@@ -265,7 +265,7 @@ STATIC_INIT_LATE(Mutators) {
 #define MUTATOR_HOOK(cb, func, order) do {                              \
     MUTATOR_ONADD {                                                     \
         if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
-            LOG_INFO("HOOK FAILED: ", #cb, ":", #func, "\n");              \
+            LOG_INFO("HOOK FAILED: ", #cb, ":", #func, "\n");           \
             return true;                                                \
         }                                                               \
     }                                                                   \

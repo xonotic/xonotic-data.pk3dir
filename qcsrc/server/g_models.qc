@@ -1,11 +1,17 @@
-#include "_all.qh"
 
+#include "g_subs.qh"
 #include "../common/triggers/subs.qh"
+#include "../common/triggers/triggers.qh"
 
-#include "../client/bgmscript.qh"
+entityclass(BGMScript);
+class(BGMScript) .string bgmscript;
+class(BGMScript) .float bgmscriptattack;
+class(BGMScript) .float bgmscriptdecay;
+class(BGMScript) .float bgmscriptsustain;
+class(BGMScript) .float bgmscriptrelease;
 
 #include "../common/constants.qh"
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
 .float modelscale;
 

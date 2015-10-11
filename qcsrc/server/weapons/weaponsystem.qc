@@ -1,5 +1,4 @@
 #include "weaponsystem.qh"
-#include "../_all.qh"
 
 #include "selection.qh"
 
@@ -13,7 +12,7 @@
 #include "../../common/notifications.qh"
 #include "../../common/util.qh"
 #include "../../common/weapons/all.qh"
-#include "../../csqcmodellib/sv_model.qh"
+#include "../../lib/csqcmodel/sv_model.qh"
 
 /*
 ===========================================================================
@@ -23,6 +22,8 @@
 
 ===========================================================================
 */
+
+.int state;
 
 .float weapon_frametime;
 

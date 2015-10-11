@@ -82,6 +82,8 @@ void M_Shambler_Attack_Swing()
 	}
 }
 
+#include "../../../server/csqceffects.qh"
+
 void M_Shambler_Attack_Lightning_Explode()
 {SELFPARAM();
 	entity head;
@@ -179,6 +181,8 @@ void M_Shambler_Attack_Lightning()
 	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
 
+.int state;
+
 float M_Shambler_Attack(float attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
@@ -263,6 +267,8 @@ spawnfunc(monster_shambler) { Monster_Spawn(MON_SHAMBLER.monsterid); }
 		}
 		#endif
 		#ifdef SVQC
+		spawnfunc(item_health_mega);
+		.float animstate_endtime;
 		METHOD(Shambler, mr_setup, bool(Shambler thismon))
 		{
 			SELFPARAM();

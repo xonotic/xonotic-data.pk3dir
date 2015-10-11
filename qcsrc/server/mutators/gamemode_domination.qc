@@ -1,7 +1,8 @@
 #include "gamemode_domination.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
+
+#include "../teamplay.qh"
 
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {
@@ -295,7 +296,7 @@ void dom_controlpoint_setup()
 	WaypointSprite_SpawnFixed(WP_DomNeut, self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT);
 }
 
-float total_controlpoints, redowned, blueowned, yellowowned, pinkowned;
+float total_controlpoints;
 void Domination_count_controlpoints()
 {
 	entity e;

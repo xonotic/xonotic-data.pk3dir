@@ -1,7 +1,7 @@
-#ifndef CLIENT_ALL_H
-#define CLIENT_ALL_H
+#ifndef MENU_ALL_H
+#define MENU_ALL_H
 
-#include "../dpdefs/menudefs.qh"
-#include "../dpdefs/keycodes.qh"
+#include "draw.qh"
+#include "xonotic/util.qh"
 
 #endif
