@@ -1,6 +1,11 @@
 #ifndef GAMEMODE_NEXBALL_H
 #define GAMEMODE_NEXBALL_H
 
+#include "weapon.qc"
+
+#ifdef SVQC
+MUTATOR_DECLARATION(gamemode_nexball);
+
 //EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
 const float BALL_EFFECTMASK = 1229;
 const vector BALL_MINS = '-16 -16 -16'; // The model is 24*24*24
@@ -33,4 +38,5 @@ float nb_teams;
 .float nb_droptime;
 
 .float teamtime;
+#endif
 #endif

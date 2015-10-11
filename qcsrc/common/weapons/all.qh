@@ -150,23 +150,22 @@ REGISTRY_SORT(Weapons, netname, WEP_HARDCODED_IMPULSES + 1)
 
 STATIC_INIT(register_weapons_done)
 {
-    for (int i = 0; i < Weapons_COUNT; ++i) {
-        Weapon it = Weapons[i];
+    FOREACH(Weapons, true, LAMBDA(
         it.m_id = i;
         WepSet set = WepSet_FromWeapon(it.m_id);
         WEPSET_ALL |= set;
         if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
         it.weapon = it.m_id;
         it.weapons = set;
-        #ifdef CSQC
-        it.wr_init(it);
-        #endif
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)
             localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
         else
             LOG_TRACEF(_("Impulse limit exceeded, weapon will not be directly accessible: %s\n"), it.netname);
-    }
+    ));
+    #ifdef CSQC
+    FOREACH(Weapons, true, LAMBDA(it.wr_init(it)));
+    #endif
     weaponorder_byid = "";
     for (int i = Weapons_MAX - 1; i >= 1; --i)
         if (Weapons[i])

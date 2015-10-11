@@ -1,10 +1,19 @@
+#ifndef MUTATOR_INSTAGIB_H
+#define MUTATOR_INSTAGIB_H
 
-#include "mutator.qh"
+#include "items.qc"
 
-#include "../cl_client.qh"
-#include "../../common/buffs/all.qh"
+#endif
 
-#include "../../common/items/all.qc"
+#ifdef IMPLEMENTATION
+#ifdef SVQC
+
+#include "../../../../server/cl_client.qh"
+#include "../../../buffs/all.qh"
+
+#include "../../../items/all.qc"
+
+REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
 
 spawnfunc(item_minst_cells)
 {
@@ -122,7 +131,7 @@ void instagib_ammocheck()
 	self.instagib_nextthink = time + 1;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_MatchEnd)
+MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
 	entity head;
 	FOR_EACH_PLAYER(head)
@@ -131,14 +140,14 @@ MUTATOR_HOOKFUNCTION(instagib_MatchEnd)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_MonsterLoot)
+MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
 	other.monster_loot = spawnfunc_item_minst_cells;
 
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
+MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 {SELFPARAM();
 	// always refill ammo
 	if(self.monsterid == MON_MAGE.monsterid)
@@ -147,7 +156,7 @@ MUTATOR_HOOKFUNCTION(instagib_MonsterSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_BotShouldAttack)
+MUTATOR_HOOKFUNCTION(mutator_instagib, BotShouldAttack)
 {
 	if (checkentity.items & ITEM_Invisibility.m_itemid)
 		return true;
@@ -155,31 +164,31 @@ MUTATOR_HOOKFUNCTION(instagib_BotShouldAttack)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_MakePlayerObserver)
+MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 {SELFPARAM();
 	instagib_stop_countdown(self);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
 {SELFPARAM();
 	self.effects |= EF_FULLBRIGHT;
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPreThink)
 {
 	instagib_ammocheck();
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_PlayerRegen)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerRegen)
 {
 	// no regeneration in instagib
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 {SELFPARAM();
 	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
@@ -230,7 +239,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPowerups)
 
 .float stat_sv_maxspeed;
 
-MUTATOR_HOOKFUNCTION(instagib_PlayerPhysics)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics)
 {SELFPARAM();
 	if(self.items & ITEM_Speed.m_itemid)
 		self.stat_sv_maxspeed = self.stat_sv_maxspeed * autocvar_g_instagib_speed_highspeed;
@@ -238,7 +247,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_SplitHealthArmor)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
 {
 	damage_save = 0;
 	damage_take = frag_damage;
@@ -246,14 +255,14 @@ MUTATOR_HOOKFUNCTION(instagib_SplitHealthArmor)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_ForbidThrowing)
+MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
 {
 	// weapon dropping on death handled by FilterItem
 
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 {
 	if(autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 		frag_damage = 0;
@@ -322,7 +331,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 {
 	start_health       = warmup_start_health       = 100;
 	start_armorvalue   = warmup_start_armorvalue   = 0;
@@ -340,7 +349,7 @@ MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_FilterItem)
+MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 {SELFPARAM();
 	if(self.classname == "item_cells")
 		return true; // no normal cells?
@@ -374,7 +383,7 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_CustomizeWaypoint)
+MUTATOR_HOOKFUNCTION(mutator_instagib, CustomizeWaypoint)
 {SELFPARAM();
 	entity e = WaypointSprite_getviewentity(other);
 
@@ -387,7 +396,7 @@ MUTATOR_HOOKFUNCTION(instagib_CustomizeWaypoint)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
+MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 {
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER.m_id))
 		frag_damage = 1000; // always gib if it was a vaporizer death
@@ -395,7 +404,7 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDies)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
+MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 {SELFPARAM();
 	if(self.ammo_cells)
 	{
@@ -424,7 +433,7 @@ MUTATOR_HOOKFUNCTION(instagib_ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
+MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 {SELFPARAM();
 	if (!autocvar_g_powerups) { return false; }
 	// Can't use .itemdef here
@@ -449,48 +458,23 @@ MUTATOR_HOOKFUNCTION(instagib_OnEntityPreSpawn)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":instagib");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", instagib");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(instagib_SetModname)
+MUTATOR_HOOKFUNCTION(mutator_instagib, SetModname)
 {
 	modname = "instagib";
 	return true;
 }
 
-MUTATOR_DEFINITION(mutator_instagib)
-{
-	MUTATOR_HOOK(MatchEnd, instagib_MatchEnd, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterDropItem, instagib_MonsterLoot, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterSpawn, instagib_MonsterSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BotShouldAttack, instagib_BotShouldAttack, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPhysics, instagib_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, instagib_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, instagib_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, instagib_MakePlayerObserver, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, instagib_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ItemTouch, instagib_ItemTouch, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, instagib_FilterItem, CBC_ORDER_ANY);
-	MUTATOR_HOOK(CustomizeWaypoint, instagib_CustomizeWaypoint, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, instagib_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, instagib_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPowerups, instagib_PlayerPowerups, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, instagib_ForbidThrowing, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, instagib_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerRegen, instagib_PlayerRegen, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, instagib_OnEntityPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, instagib_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, instagib_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, instagib_SetModname, CBC_ORDER_ANY);
-
-	return false;
-}
+#endif
+#endif

@@ -10,6 +10,9 @@ REGISTER_REGISTRY(RegisterItems)
 /** If you register a new item, make sure to add it to all.inc */
 #define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, Items, id, m_id, NEW(class))
 
+REGISTRY_SORT(Items, m_name, 0)
+STATIC_INIT(Items) { FOREACH(Items, true, LAMBDA(it.m_id = i)); }
+
 void Dump_Items();
 
 GENERIC_COMMAND(dumpitems, "Dump all items to the console") {

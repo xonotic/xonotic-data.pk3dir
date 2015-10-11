@@ -12,6 +12,7 @@
 #include "mutators/mutators_include.qh"
 
 #include "../common/deathtypes.qh"
+#include "../common/gamemodes/all.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)

@@ -49,6 +49,7 @@
 
 #include "../common/buffs/all.qc"
 #include "../common/effects/all.qc"
+#include "../common/gamemodes/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"

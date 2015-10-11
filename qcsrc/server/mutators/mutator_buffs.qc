@@ -3,6 +3,7 @@
 
 #include "mutator.qh"
 
+#include "../../common/gamemodes/all.qh"
 #include "../../common/buffs/all.qh"
 
 entity buff_FirstFromFlags(int _buffs)

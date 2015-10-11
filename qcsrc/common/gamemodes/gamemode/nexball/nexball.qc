@@ -1,7 +1,7 @@
-#include "gamemode_nexball.qh"
+#include "nexball.qh"
 
-#include "gamemode.qh"
-
+#ifdef IMPLEMENTATION
+#ifdef SVQC
 float autocvar_g_nexball_basketball_bouncefactor;
 float autocvar_g_nexball_basketball_bouncestop;
 float autocvar_g_nexball_basketball_carrier_highspeed;
@@ -27,9 +27,9 @@ vector autocvar_g_nexball_viewmodel_offset;
 void basketball_touch();
 void football_touch();
 void ResetBall();
-const float NBM_NONE = 0;
-const float NBM_FOOTBALL = 2;
-const float NBM_BASKETBALL = 4;
+const int NBM_NONE = 0;
+const int NBM_FOOTBALL = 2;
+const int NBM_BASKETBALL = 4;
 float nexball_mode;
 
 float OtherTeam(float t)  //works only if there are two teams on the map!
@@ -1046,3 +1046,6 @@ MUTATOR_DEFINITION(gamemode_nexball)
 
 	return 0;
 }
+
+#endif
+#endif

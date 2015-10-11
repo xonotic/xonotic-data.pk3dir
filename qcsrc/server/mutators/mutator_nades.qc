@@ -5,6 +5,7 @@
 #include "gamemode_keyhunt.qh"
 #include "gamemode_freezetag.qh"
 #include "../../common/nades/all.qh"
+#include "../../common/gamemodes/all.qh"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 #include "../g_subs.qh"
