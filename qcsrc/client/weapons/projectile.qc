@@ -9,9 +9,9 @@
 #include "../../common/nades/all.qh"
 #include "../../common/movetypes/movetypes.qh"
 
-#include "../../csqcmodellib/interpolate.qh"
+#include "../../lib/csqcmodel/interpolate.qh"
 
-#include "../../warpzonelib/anglestransform.qh"
+#include "../../lib/warpzone/anglestransform.qh"
 
 .float alpha;
 .float scale;

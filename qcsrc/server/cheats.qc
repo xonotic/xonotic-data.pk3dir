@@ -20,10 +20,10 @@
 
 #include "../common/triggers/func/breakable.qh"
 
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/util_server.qh"
 
 void CopyBody(float keepvelocity);
 

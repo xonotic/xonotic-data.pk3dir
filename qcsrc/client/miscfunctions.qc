@@ -6,7 +6,7 @@
 
 #include "../common/teams.qh"
 
-#include "../csqcmodellib/cl_model.qh"
+#include "../lib/csqcmodel/cl_model.qh"
 
 
 void AuditLists()

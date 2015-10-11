@@ -5,7 +5,7 @@
 
 #include "../../common/monsters/all.qh"
 #include "../../common/notifications.qh"
-#include "../../warpzonelib/common.qh"
+#include "../../lib/warpzone/common.qh"
 
 
 // ====================================================

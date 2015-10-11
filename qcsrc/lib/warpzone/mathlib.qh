@@ -1,5 +1,5 @@
-#ifndef MATHLIB_H
-#define MATHLIB_H
+#ifndef LIB_WARPZONE_MATHLIB_H
+#define LIB_WARPZONE_MATHLIB_H
 
 // <math.h>
 

@@ -19,26 +19,37 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
- #ifndef SV_MODEL_H
- #define SV_MODEL_H
+#ifndef LIB_CSQCMODEL_CL_MODEL_H
+#define LIB_CSQCMODEL_CL_MODEL_H
 
- #include "common.qh"
+#include "common.qh"
 
-// generic CSQC model code
-
-void CSQCModel_CheckUpdate(entity e);
-void CSQCModel_LinkEntity(entity e);
-void CSQCModel_UnlinkEntity(entity e);
+void CSQCModel_Read(bool isnew);
 
 #define CSQCMODEL_IF(cond)
 #define CSQCMODEL_ENDIF
 #define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
-	.t f; \
-	.t csqcmodel_##f;
+	.t f;
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY
 #undef CSQCMODEL_ENDIF
 #undef CSQCMODEL_IF
+
+entity CSQCModel_server2csqc(float pl);
+.float csqcmodel_teleported;
+
+// this is exported for custom frame animation code. Use with care.
+// to update frames, first call this:
+void CSQCModel_InterpolateAnimation_2To4_PreNote(int sf);
+void CSQCModel_InterpolateAnimation_1To2_PreNote(int sf);
+// then update frame, frame1time (and possibly frame2, frame2time, lerpfrac)
+// if set_times is not set, caller is responsible for frame1time, frame2time, csqcmodel_lerpfractime!
+void CSQCModel_InterpolateAnimation_2To4_Note(int sf, float set_times);
+void CSQCModel_InterpolateAnimation_1To2_Note(int sf, float set_times);
+// to retrieve animation state, call this
+void CSQCModel_InterpolateAnimation_2To4_Do();
+void CSQCModel_InterpolateAnimation_1To2_Do();
+// will overwrite lerpfrac, lerpfrac3, lerpfrac4, and possibly clear frame*time if they are undisplayed according to lerpfracs
 #endif

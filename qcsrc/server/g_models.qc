@@ -11,7 +11,7 @@ class(BGMScript) .float bgmscriptsustain;
 class(BGMScript) .float bgmscriptrelease;
 
 #include "../common/constants.qh"
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
 .float modelscale;
 

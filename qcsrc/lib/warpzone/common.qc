@@ -1,10 +1,10 @@
 #include "common.qh"
 
 #if defined(CSQC)
-    #include "../server/t_items.qh"
+    #include "../../server/t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../common/weapons/all.qh"
+    #include "../../common/weapons/all.qh"
 #endif
 
 void WarpZone_Accumulator_Clear(entity acc)

@@ -11,8 +11,8 @@
 #include "../common/notifications.qh"
 #include "../common/mapinfo.qh"
 #include "../common/triggers/subs.qh"
-#include "../warpzonelib/util_server.qh"
-#include "../warpzonelib/common.qh"
+#include "../lib/warpzone/util_server.qh"
+#include "../lib/warpzone/common.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 
 void W_Porto_Fail(float failhard);

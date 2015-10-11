@@ -12,7 +12,7 @@
 #include "../common/mutators/mutator/waypoints/all.qh"
 #include "../common/nades/all.qh"
 #include "../common/stats.qh"
-#include "../csqcmodellib/cl_player.qh"
+#include "../lib/csqcmodel/cl_player.qh"
 #include "../server/mutators/gamemode_ctf.qh"
 
 

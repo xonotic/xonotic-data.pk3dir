@@ -15,7 +15,7 @@
 #include "../common/deathtypes.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/playerstats.qh"
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
 #include "../common/minigames/sv_minigames.qh"
 

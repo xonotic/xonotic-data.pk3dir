@@ -12,8 +12,8 @@
 #include "../common/constants.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
-#include "../warpzonelib/common.qh"
-#include "../warpzonelib/server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../lib/warpzone/server.qh"
 
 .int state;
 

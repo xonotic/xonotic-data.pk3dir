@@ -20,21 +20,18 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#if defined(CSQC)
-	#include "../client/defs.qh"
-	#include "../common/constants.qh"
-	#include "../common/stats.qh"
-	#include "../common/util.qh"
-	#include "interpolate.qh"
-	#include "../client/main.qh"
-	#include "common.qh"
-	#include "cl_model.qh"
-	#include "cl_player.qh"
- 	#include "../common/triggers/trigger/viewloc.qh"
- 	#include "../common/viewloc.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "cl_player.qh"
+
+#include "cl_model.qh"
+#include "common.qh"
+#include "interpolate.qh"
+#include "../../client/defs.qh"
+#include "../../client/main.qh"
+#include "../../common/constants.qh"
+#include "../../common/stats.qh"
+#include "../../common/triggers/trigger/viewloc.qh"
+#include "../../common/util.qh"
+#include "../../common/viewloc.qh"
 
 float autocvar_cl_movement_errorcompensation = 0;
 int autocvar_cl_movement = 1;

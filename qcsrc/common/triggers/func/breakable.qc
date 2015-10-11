@@ -4,7 +4,7 @@
 #include "../../../server/g_damage.qh"
 #include "../../../server/bot/bot.qh"
 #include "../../../common/csqcmodel_settings.qh"
-#include "../../../csqcmodellib/sv_model.qh"
+#include "../../../lib/csqcmodel/sv_model.qh"
 #include "../../../server/weapons/common.qh"
 
 .entity sprite;

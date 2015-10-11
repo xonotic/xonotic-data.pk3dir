@@ -4,7 +4,7 @@
 #include "../common/monsters/all.qh"
 #include "../common/notifications.qh"
 #include "../common/util.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../lib/warpzone/util_server.qh"
 
 /*
 TODO:

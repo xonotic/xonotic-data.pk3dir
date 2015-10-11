@@ -6,7 +6,7 @@
 
 #include "../../common/util.qh"
 
-#include "../../csqcmodellib/sv_model.qh"
+#include "../../lib/csqcmodel/sv_model.qh"
 
 // ===============================================
 //	Generates radar map images for use in the HUD

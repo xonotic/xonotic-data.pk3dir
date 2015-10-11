@@ -23,7 +23,7 @@
 
     #include "../common/weapons/all.qh"
 
-    #include "../warpzonelib/util_server.qh"
+    #include "../lib/warpzone/util_server.qh"
 #endif
 
 #ifdef CSQC

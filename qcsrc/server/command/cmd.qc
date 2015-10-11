@@ -33,7 +33,7 @@
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
-#include "../../warpzonelib/common.qh"
+#include "../../lib/warpzone/common.qh"
 
 void ClientKill_TeamChange (float targetteam); // 0 = don't change, -1 = auto, -2 = spec
 

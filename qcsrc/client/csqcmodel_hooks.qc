@@ -4,9 +4,9 @@
 #include "../common/animdecide.qh"
 #include "../common/movetypes/movetypes.qh"
 #include "../common/viewloc.qh"
-#include "../csqcmodellib/cl_model.qh"
-#include "../csqcmodellib/cl_player.qh"
-#include "../csqcmodellib/interpolate.qh"
+#include "../lib/csqcmodel/cl_model.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 .float death_time;
 .int modelflags;

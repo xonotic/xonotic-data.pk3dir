@@ -7,7 +7,7 @@
 #include "../teamplay.qh"
 #endif
 
-#include "../../warpzonelib/common.qh"
+#include "../../lib/warpzone/common.qh"
 
 void ctf_FakeTimeLimit(entity e, float t)
 {

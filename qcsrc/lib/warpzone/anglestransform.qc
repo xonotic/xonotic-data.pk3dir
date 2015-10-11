@@ -1,10 +1,5 @@
 #include "anglestransform.qh"
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
 #ifdef POSITIVE_PITCH_IS_DOWN
 vector fixedvectoangles(vector a)
 {

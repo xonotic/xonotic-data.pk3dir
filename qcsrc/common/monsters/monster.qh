@@ -9,7 +9,7 @@
 #include "../../server/weapons/tracing.qh"
 #include "../../server/weapons/weaponsystem.qh"
 #include "../mutators/mutator/waypoints/waypointsprites.qh"
-#include "../../warpzonelib/server.qh"
+#include "../../lib/warpzone/server.qh"
 #endif
 
 // special spawn flags

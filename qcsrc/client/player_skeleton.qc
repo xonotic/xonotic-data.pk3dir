@@ -1,8 +1,8 @@
 #include "player_skeleton.qh"
 
 #include "mutators/events.qh"
-#include "../csqcmodellib/cl_player.qh"
-#include "../warpzonelib/anglestransform.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../lib/warpzone/anglestransform.qh"
 
 .vector v_angle;
 

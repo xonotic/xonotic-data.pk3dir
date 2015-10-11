@@ -23,9 +23,9 @@
 #include "../common/vehicles/sv_vehicles.qh"
 #include "../common/vehicles/vehicle.qh"
 #include "../common/items/all.qc"
-#include "../csqcmodellib/sv_model.qh"
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/server.qh"
+#include "../lib/csqcmodel/sv_model.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/server.qh"
 
 void crosshair_trace(entity pl)
 {

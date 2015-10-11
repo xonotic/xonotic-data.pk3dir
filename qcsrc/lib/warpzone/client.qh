@@ -1,5 +1,5 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef LIB_WARPZONE_CLIENT_H
+#define LIB_WARPZONE_CLIENT_H
 
 void WarpZone_Read(float bIsNewEntity);
 void WarpZone_Camera_Read(float bIsNewEntity);

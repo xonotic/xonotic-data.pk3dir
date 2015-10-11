@@ -3,9 +3,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../warpzonelib/common.qh"
-    #include "../../warpzonelib/util_server.qh"
-    #include "../../warpzonelib/server.qh"
+    #include "../../lib/warpzone/common.qh"
+    #include "../../lib/warpzone/util_server.qh"
+    #include "../../lib/warpzone/server.qh"
     #include "../constants.qh"
 	#include "../triggers/subs.qh"
     #include "../util.qh"

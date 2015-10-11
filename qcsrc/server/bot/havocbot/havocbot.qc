@@ -11,7 +11,7 @@
 
 #include "../../../common/triggers/trigger/jumppads.qh"
 
-#include "../../../warpzonelib/common.qh"
+#include "../../../lib/warpzone/common.qh"
 
 .float speed;
 

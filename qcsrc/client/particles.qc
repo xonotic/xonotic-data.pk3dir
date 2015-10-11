@@ -2,7 +2,7 @@
 
 #include "../common/stats.qh"
 
-#include "../warpzonelib/common.qh"
+#include "../lib/warpzone/common.qh"
 
 void Net_ReadVortexBeamParticle()
 {

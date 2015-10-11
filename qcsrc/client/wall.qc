@@ -3,7 +3,7 @@
 #include "bgmscript.qh"
 
 
-#include "../csqcmodellib/interpolate.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 .float alpha;
 .float scale;

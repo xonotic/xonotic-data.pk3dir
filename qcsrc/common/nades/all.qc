@@ -4,7 +4,7 @@
 	#include "../buffs/all.qh"
 	#include "../movetypes/movetypes.qh"
 	#include "../../client/main.qh"
-	#include "../../csqcmodellib/cl_model.qh"
+	#include "../../lib/csqcmodel/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "../constants.qh"

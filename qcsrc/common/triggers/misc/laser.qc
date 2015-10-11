@@ -1,8 +1,8 @@
 #if defined(CSQC)
 	#include "../../buffs/all.qh"
-	#include "../../../csqcmodellib/interpolate.qh"
+	#include "../../../lib/csqcmodel/interpolate.qh"
 	#include "../../../client/main.qh"
-	#include "../../../csqcmodellib/cl_model.qh"
+	#include "../../../lib/csqcmodel/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

@@ -19,10 +19,10 @@
 #include "../common/vehicles/all.qh"
 #include "../common/weapons/all.qh"
 
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
-#include "../warpzonelib/common.qh"
-#include "../warpzonelib/server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../lib/warpzone/server.qh"
 
 .float lastground;
 .int state;

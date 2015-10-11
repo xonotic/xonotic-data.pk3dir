@@ -7,8 +7,8 @@
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"
-#include "../warpzonelib/common.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../lib/warpzone/util_server.qh"
 
 bool SpawnPoint_Send(entity this, entity to, int sf)
 {

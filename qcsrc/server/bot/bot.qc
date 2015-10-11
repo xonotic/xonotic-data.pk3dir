@@ -30,10 +30,10 @@
 
 #include "../../common/weapons/all.qh"
 
-#include "../../csqcmodellib/sv_model.qh"
+#include "../../lib/csqcmodel/sv_model.qh"
 
-#include "../../warpzonelib/common.qh"
-#include "../../warpzonelib/util_server.qh"
+#include "../../lib/warpzone/common.qh"
+#include "../../lib/warpzone/util_server.qh"
 
 entity bot_spawn()
 {SELFPARAM();

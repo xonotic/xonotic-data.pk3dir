@@ -1,5 +1,5 @@
-#ifndef WARPZONELIB_COMMON_H
-#define WARPZONELIB_COMMON_H
+#ifndef LIB_WARPZONE_COMMON_H
+#define LIB_WARPZONE_COMMON_H
 
 // uncomment this if your mod uses the roll angle in fixangle
 // #define KEEP_ROLL

@@ -1,5 +1,5 @@
-#ifndef CSQCMODELLIB_SETTINGS_H
-#define CSQCMODELLIB_SETTINGS_H
+#ifndef LIB_CSQCMODEL_SETTINGS_H
+#define LIB_CSQCMODEL_SETTINGS_H
 // define this if svqc code wants to use .frame2 and .lerpfrac
 //#define CSQCMODEL_HAVE_TWO_FRAMES
 

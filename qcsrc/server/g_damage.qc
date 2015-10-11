@@ -21,8 +21,8 @@
 #include "../common/teams.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
-#include "../csqcmodellib/sv_model.qh"
-#include "../warpzonelib/common.qh"
+#include "../lib/csqcmodel/sv_model.qh"
+#include "../lib/warpzone/common.qh"
 
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {

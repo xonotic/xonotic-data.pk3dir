@@ -1,6 +1,6 @@
 #include "laser.qh"
 
-#include "../csqcmodellib/interpolate.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 // a laser goes from origin in direction angles
 // it has color 'colormod'

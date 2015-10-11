@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../../warpzonelib/util_server.qh"
+    #include "../../../lib/warpzone/util_server.qh"
     #include "../../weapons/all.qh"
     #include "../../../server/defs.qh"
     #include "../../deathtypes.qh"

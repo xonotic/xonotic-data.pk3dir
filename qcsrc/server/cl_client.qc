@@ -46,7 +46,7 @@
 
 #include "../common/monsters/sv_monsters.qh"
 
-#include "../warpzonelib/server.qh"
+#include "../lib/warpzone/server.qh"
 
 
 void send_CSQC_teamnagger() {

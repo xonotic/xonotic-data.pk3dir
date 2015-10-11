@@ -19,18 +19,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#include "sv_model.qh"
 
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../common/constants.qh"
-	#include "../common/util.qh"
-	#include "../common/animdecide.qh"
-	#include "../server/constants.qh"
-	#include "../server/defs.qh"
-	#include "common.qh"
-	#include "sv_model.qh"
-#endif
+#include "common.qh"
+#include "../../common/animdecide.qh"
+#include "../../common/constants.qh"
+#include "../../common/util.qh"
+#include "../../server/constants.qh"
+#include "../../server/defs.qh"
 
 // generic CSQC model code
 

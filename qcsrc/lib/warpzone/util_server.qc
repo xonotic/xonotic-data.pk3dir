@@ -5,7 +5,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../csqcmodellib/sv_model.qh"
+    #include "../csqcmodel/sv_model.qh"
 #endif
 #include "common.qh"
 

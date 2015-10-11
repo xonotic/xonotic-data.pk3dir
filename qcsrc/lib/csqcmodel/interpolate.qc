@@ -19,12 +19,13 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
+#include "interpolate.qh"
+
 #if defined(CSQC)
-	#include "../client/defs.qh"
-	#include "../warpzonelib/anglestransform.qh"
-	#include "../client/autocvars.qh"
-	#include "interpolate.qh"
-	#include "cl_model.qh"
+//	#include "../../client/defs.qh"
+//	#include "../warpzone/anglestransform.qh"
+//	#include "../../client/autocvars.qh"
+//	#include "cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

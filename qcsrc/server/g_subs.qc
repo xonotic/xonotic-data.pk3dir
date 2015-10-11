@@ -2,7 +2,7 @@
 
 #include "antilag.qh"
 #include "command/common.qh"
-#include "../warpzonelib/common.qh"
+#include "../lib/warpzone/common.qh"
 #include "../common/triggers/subs.qh"
 
 spawnfunc(info_null)

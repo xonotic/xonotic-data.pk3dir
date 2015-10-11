@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../warpzonelib/common.qh"
+    #include "../../lib/warpzone/common.qh"
     #include "../constants.qh"
     #include "../teams.qh"
     #include "../util.qh"
@@ -20,7 +20,7 @@
     #include "../../server/command/common.qh"
     #include "../../server/command/cmd.qh"
 	#include "../triggers/triggers.qh"
-    #include "../../csqcmodellib/sv_model.qh"
+    #include "../../lib/csqcmodel/sv_model.qh"
     #include "../../server/round_handler.qh"
 #endif
 

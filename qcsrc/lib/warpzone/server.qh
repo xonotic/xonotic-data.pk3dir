@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef LIB_WARPZONE_SERVER_H
+#define LIB_WARPZONE_SERVER_H
 
 void WarpZone_StartFrame();
 float WarpZone_Projectile_Touch();

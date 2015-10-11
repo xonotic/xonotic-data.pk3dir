@@ -19,18 +19,15 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
- #if defined(CSQC)
-	 #include "../client/defs.qh"
-	 #include "../common/util.qh"
-	 #include "../common/animdecide.qh"
-	 #include "interpolate.qh"
-	 #include "../common/csqcmodel_settings.qh"
-	 #include "common.qh"
-	 #include "cl_model.qh"
-	 #include "cl_player.qh"
- #elif defined(MENUQC)
- #elif defined(SVQC)
- #endif
+#include "cl_model.qh"
+
+#include "cl_player.qh"
+#include "common.qh"
+#include "interpolate.qh"
+#include "../../client/defs.qh"
+#include "../../common/animdecide.qh"
+#include "../../common/csqcmodel_settings.qh"
+#include "../../common/util.qh"
 
 float autocvar_cl_lerpanim_maxdelta_framegroups = 0.1;
 float autocvar_cl_nolerp = 0;

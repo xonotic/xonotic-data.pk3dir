@@ -29,9 +29,9 @@
 #include "../common/triggers/include.qh"
 #include "../common/turrets/cl_turrets.qh"
 #include "../common/vehicles/all.qh"
-#include "../csqcmodellib/cl_model.qh"
-#include "../csqcmodellib/interpolate.qh"
-#include "../warpzonelib/client.qh"
+#include "../lib/csqcmodel/cl_model.qh"
+#include "../lib/csqcmodel/interpolate.qh"
+#include "../lib/warpzone/client.qh"
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS

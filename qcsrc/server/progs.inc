@@ -94,12 +94,12 @@
 #include "../common/turrets/targettrigger.qc"
 #include "../common/weapons/config.qc"
 
-#include "../csqcmodellib/sv_model.qc"
+#include "../lib/csqcmodel/sv_model.qc"
 
-#include "../warpzonelib/anglestransform.qc"
-#include "../warpzonelib/common.qc"
-#include "../warpzonelib/server.qc"
-#include "../warpzonelib/util_server.qc"
+#include "../lib/warpzone/anglestransform.qc"
+#include "../lib/warpzone/common.qc"
+#include "../lib/warpzone/server.qc"
+#include "../lib/warpzone/util_server.qc"
 
 #if BUILD_MOD
 #include "../../mod/server/progs.inc"

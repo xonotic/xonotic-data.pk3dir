@@ -1,5 +1,5 @@
-#ifndef UTIL_SERVER_H
-#define UTIL_SERVER_H
+#ifndef LIB_WARPZONE_UTIL_SERVER_H
+#define LIB_WARPZONE_UTIL_SERVER_H
 
 float WarpZoneLib_MoveOutOfSolid(entity e);
 float WarpZoneLib_ExactTrigger_Touch();

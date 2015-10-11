@@ -1,10 +1,10 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../warpzonelib/anglestransform.qh"
-    #include "../../warpzonelib/common.qh"
-    #include "../../warpzonelib/util_server.qh"
-    #include "../../warpzonelib/server.qh"
+    #include "../../lib/warpzone/anglestransform.qh"
+    #include "../../lib/warpzone/common.qh"
+    #include "../../lib/warpzone/util_server.qh"
+    #include "../../lib/warpzone/server.qh"
     #include "../../common/constants.qh"
     #include "../../common/stats.qh"
     #include "../../common/teams.qh"
@@ -52,8 +52,8 @@
     #include "../command/cmd.qh"
     #include "../command/sv_cmd.qh"
     #include "../../common/csqcmodel_settings.qh"
-    #include "../../csqcmodellib/common.qh"
-    #include "../../csqcmodellib/sv_model.qh"
+    #include "../../lib/csqcmodel/common.qh"
+    #include "../../lib/csqcmodel/sv_model.qh"
     #include "../anticheat.qh"
     #include "../cheats.qh"
     #include "../../common/playerstats.qh"
