@@ -56,7 +56,7 @@ float W_Tuba_MarkClientOnlyFieldsAsUsed() {
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(WEP_TUBA.m_id); }
+spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(this, WEP_TUBA); }
 
 bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {

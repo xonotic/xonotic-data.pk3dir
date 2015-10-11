@@ -19,25 +19,25 @@ spawnfunc(item_minst_cells)
 {
 	if (!g_instagib) { remove(self); return; }
 	if (!self.ammo_cells) self.ammo_cells = autocvar_g_instagib_ammo_drop;
-	StartItemA(ITEM_VaporizerCells);
+	StartItem(this, ITEM_VaporizerCells);
 }
 
 void instagib_invisibility()
 {SELFPARAM();
 	self.strength_finished = autocvar_g_balance_powerup_strength_time;
-	StartItemA(ITEM_Invisibility);
+	StartItem(this, ITEM_Invisibility);
 }
 
 void instagib_extralife()
 {SELFPARAM();
 	self.max_health = 1;
-	StartItemA(ITEM_ExtraLife);
+	StartItem(this, ITEM_ExtraLife);
 }
 
 void instagib_speed()
 {SELFPARAM();
 	self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-	StartItemA(ITEM_Speed);
+	StartItem(this, ITEM_Speed);
 }
 
 .float instagib_nextthink;

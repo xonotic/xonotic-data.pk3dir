@@ -25,7 +25,7 @@ const int ISF_SIZE 				= 128;
 .float fade_end;
 
 #ifdef SVQC
-void StartItemA (entity a);
+void StartItem(entity this, entity a);
 #endif
 
 #ifdef CSQC
@@ -92,7 +92,7 @@ float Item_GiveTo(entity item, entity player);
 
 void Item_Touch (void);
 
-void Item_Reset();
+void Item_Reset(entity this);
 
 void Item_FindTeam();
 // Savage: used for item garbage-collection
@@ -112,7 +112,7 @@ float commodity_pickupevalfunc(entity player, entity item);
 
 .float is_item;
 .entity itemdef;
-void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue);
+void _StartItem(entity this, string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue);
 
 
 void target_items_use (void);

@@ -57,7 +57,7 @@ FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_fireball) { weapon_defaultspawnfunc(WEP_FIREBALL.m_id); }
+spawnfunc(weapon_fireball) { weapon_defaultspawnfunc(this, WEP_FIREBALL); }
 
 void W_Fireball_Explode(void)
 {SELFPARAM();

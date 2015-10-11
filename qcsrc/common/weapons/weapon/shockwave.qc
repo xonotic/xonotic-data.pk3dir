@@ -90,10 +90,10 @@ spawnfunc(weapon_shockwave)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(WEP_MACHINEGUN.m_id);
+		weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_SHOCKWAVE.m_id);
+	weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
 }
 
 const float MAX_SHOCKWAVE_HITS = 10;

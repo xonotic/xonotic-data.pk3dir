@@ -62,10 +62,10 @@ spawnfunc(weapon_machinegun)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(WEP_SHOCKWAVE.m_id);
+		weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_MACHINEGUN.m_id);
+	weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
 }
 spawnfunc(weapon_uzi) { spawnfunc_weapon_machinegun(this); }
 

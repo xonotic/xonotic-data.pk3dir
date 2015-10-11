@@ -43,7 +43,7 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(WEP_HMG.m_id); }
+spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
 
 void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, bool fire2)
 {

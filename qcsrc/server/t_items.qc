@@ -785,23 +785,24 @@ void Item_Touch (void)
 	}
 }
 
-void Item_Reset()
-{SELFPARAM();
-	Item_Show(self, !self.state);
-	setorigin (self, self.origin);
+void Item_Reset(entity this)
+{
+	Item_Show(this, !this.state);
+	setorigin(this, this.origin);
 
-	if(self.classname != "droppedweapon")
+	if (this.classname != "droppedweapon")
 	{
-		self.think = Item_Think;
-		self.nextthink = time;
+		this.think = Item_Think;
+		this.nextthink = time;
 
-		if(self.waypointsprite_attached)
-			WaypointSprite_Kill(self.waypointsprite_attached);
+		if (this.waypointsprite_attached)
+			WaypointSprite_Kill(this.waypointsprite_attached);
 
-		if((self.flags & FL_POWERUP) || (self.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
-			Item_ScheduleInitialRespawn(self);
+		if ((this.flags & FL_POWERUP) || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
+			Item_ScheduleInitialRespawn(this);
 	}
 }
+void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
 void Item_FindTeam()
 {SELFPARAM();
@@ -833,7 +834,7 @@ void Item_FindTeam()
 			head.effects &= ~EF_NODRAW;
 		}
 
-		Item_Reset();
+		Item_Reset(self);
 	}
 }
 
@@ -973,86 +974,86 @@ void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype,
 		RemoveItem();
 }
 
-void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
-{SELFPARAM();
+void _StartItem(entity this, string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
+{
 	startitem_failed = false;
 
-	if(self.model == "")
-		self.model = itemmodel;
+	if(this.model == "")
+		this.model = itemmodel;
 
-	if(self.model == "")
+	if(this.model == "")
     {
         error(strcat("^1Tried to spawn ", itemname, " with no model!\n"));
         return;
     }
 
-	if(self.item_pickupsound == "")
-		self.item_pickupsound = pickupsound;
+	if(this.item_pickupsound == "")
+		this.item_pickupsound = pickupsound;
 
-	if(!self.respawntime) // both need to be set
+	if(!this.respawntime) // both need to be set
 	{
-		self.respawntime = defaultrespawntime;
-		self.respawntimejitter = defaultrespawntimejitter;
+		this.respawntime = defaultrespawntime;
+		this.respawntimejitter = defaultrespawntimejitter;
 	}
 
-	self.items = itemid;
-	self.weapon = weaponid;
+	this.items = itemid;
+	this.weapon = weaponid;
 
-	if(!self.fade_end)
+	if(!this.fade_end)
 	{
-		self.fade_start = autocvar_g_items_mindist;
-		self.fade_end = autocvar_g_items_maxdist;
+		this.fade_start = autocvar_g_items_mindist;
+		this.fade_end = autocvar_g_items_maxdist;
 	}
 
 	if(weaponid)
-		self.weapons = WepSet_FromWeapon(weaponid);
+		this.weapons = WepSet_FromWeapon(weaponid);
 
-	self.flags = FL_ITEM | itemflags;
+	this.flags = FL_ITEM | itemflags;
 
-	if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
+	if(MUTATOR_CALLHOOK(FilterItem, this)) // error means we do not want the item
 	{
 		startitem_failed = true;
-		remove(self);
+		remove(this);
 		return;
 	}
 
 	// is it a dropped weapon?
-	if (self.classname == "droppedweapon")
+	if (this.classname == "droppedweapon")
 	{
-		self.reset = SUB_Remove;
+		this.reset = SUB_Remove;
 		// it's a dropped weapon
-		self.movetype = MOVETYPE_TOSS;
+		this.movetype = MOVETYPE_TOSS;
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
-		self.think = RemoveItem;
-		self.nextthink = time + 20;
+		this.think = RemoveItem;
+		this.nextthink = time + 20;
 
-		self.takedamage = DAMAGE_YES;
-		self.event_damage = Item_Damage;
+		this.takedamage = DAMAGE_YES;
+		this.event_damage = Item_Damage;
 
-		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
+		if(this.strength_finished || this.invincible_finished || this.superweapons_finished)
 		/*
-		if(self.items == 0)
-		if(!(self.weapons & ~WEPSET_SUPERWEAPONS)) // only superweapons
-		if(self.ammo_nails == 0)
-		if(self.ammo_cells == 0)
-		if(self.ammo_rockets == 0)
-		if(self.ammo_shells == 0)
-		if(self.ammo_fuel == 0)
-		if(self.health == 0)
-		if(self.armorvalue == 0)
+		if(this.items == 0)
+		if(!(this.weapons & ~WEPSET_SUPERWEAPONS)) // only superweapons
+		if(this.ammo_nails == 0)
+		if(this.ammo_cells == 0)
+		if(this.ammo_rockets == 0)
+		if(this.ammo_shells == 0)
+		if(this.ammo_fuel == 0)
+		if(this.health == 0)
+		if(this.armorvalue == 0)
 		*/
 		{
 			// if item is worthless after a timer, have it expire then
-			self.nextthink = max(self.strength_finished, self.invincible_finished, self.superweapons_finished);
+			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
 		}
 
 		// don't drop if in a NODROP zone (such as lava)
-		traceline(self.origin, self.origin, MOVE_NORMAL, self);
+		traceline(this.origin, this.origin, MOVE_NORMAL, this);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
 		{
 			startitem_failed = true;
-			remove(self);
+			remove(this);
 			return;
 		}
 	}
@@ -1061,145 +1062,156 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		if(!have_pickup_item())
 		{
 			startitem_failed = true;
-			remove (self);
+			remove (this);
 			return;
 		}
 
-		if(self.angles != '0 0 0')
-			self.SendFlags |= ISF_ANGLES;
+		if(this.angles != '0 0 0')
+			this.SendFlags |= ISF_ANGLES;
 
-		self.reset = Item_Reset;
+		this.reset = Item_Reset_self;
 		// it's a level item
-		if(self.spawnflags & 1)
-			self.noalign = 1;
-		if (self.noalign)
-			self.movetype = MOVETYPE_NONE;
+		if(this.spawnflags & 1)
+			this.noalign = 1;
+		if (this.noalign)
+			this.movetype = MOVETYPE_NONE;
 		else
-			self.movetype = MOVETYPE_TOSS;
+			this.movetype = MOVETYPE_TOSS;
 		// do item filtering according to game mode and other things
-		if (!self.noalign)
+		if (!this.noalign)
 		{
 			// first nudge it off the floor a little bit to avoid math errors
-			setorigin(self, self.origin + '0 0 1');
+			setorigin(this, this.origin + '0 0 1');
 			// set item size before we spawn a spawnfunc_waypoint
-			if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-				setsize (self, '-16 -16 0', '16 16 48');
+			if((itemflags & FL_POWERUP) || this.health || this.armorvalue)
+				setsize (this, '-16 -16 0', '16 16 48');
 			else
-				setsize (self, '-16 -16 0', '16 16 32');
-			self.SendFlags |= ISF_SIZE;
+				setsize (this, '-16 -16 0', '16 16 32');
+			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
-			droptofloor();
-			waypoint_spawnforitem(self);
+			WITH(entity, self, this, droptofloor());
+			waypoint_spawnforitem(this);
 		}
 
 		/*
 		 * can't do it that way, as it would break maps
 		 * TODO make a target_give like entity another way, that perhaps has
 		 * the weapon name in a key
-		if(self.targetname)
+		if(this.targetname)
 		{
 			// target_give not yet supported; maybe later
-			print("removed targeted ", self.classname, "\n");
+			print("removed targeted ", this.classname, "\n");
 			startitem_failed = true;
-			remove (self);
+			remove (this);
 			return;
 		}
 		*/
 
 		if(autocvar_spawn_debug >= 2)
 		{
-			entity otheritem;
-			for(otheritem = findradius(self.origin, 3); otheritem; otheritem = otheritem.chain)
+			for(entity otheritem = findradius(this.origin, 3); otheritem; otheritem = otheritem.chain)
 			{
 			    // why not flags & fl_item?
 				if(otheritem.is_item)
 				{
-					LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(self.origin));
+					LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
 					LOG_TRACE(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
 					error("Mapper sucks.");
 				}
 			}
-			self.is_item = true;
+			this.is_item = true;
 		}
 
 		weaponsInMap |= WepSet_FromWeapon(weaponid);
 
-		precache_model (self.model);
-		precache_sound (self.item_pickupsound);
+		precache_model(this.model);
+		precache_sound(this.item_pickupsound);
 
-		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
-			self.target = "###item###"; // for finding the nearest item using find()
+		if ((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
+			this.target = "###item###"; // for finding the nearest item using find()
 
-		Item_ItemsTime_SetTime(self, 0);
+		Item_ItemsTime_SetTime(this, 0);
 	}
 
-	self.bot_pickup = true;
-	self.bot_pickupevalfunc = pickupevalfunc;
-	self.bot_pickupbasevalue = pickupbasevalue;
-	self.mdl = self.model;
-	self.netname = itemname;
-	self.touch = Item_Touch;
-	setmodel(self, MDL_Null); // precision set below
-	//self.effects |= EF_LOWPRECISION;
+	this.bot_pickup = true;
+	this.bot_pickupevalfunc = pickupevalfunc;
+	this.bot_pickupbasevalue = pickupbasevalue;
+	this.mdl = this.model;
+	this.netname = itemname;
+	this.touch = Item_Touch;
+	setmodel(this, MDL_Null); // precision set below
+	//this.effects |= EF_LOWPRECISION;
 
-	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
+	if((itemflags & FL_POWERUP) || this.health || this.armorvalue)
 	{
-		self.pos1 = '-16 -16 0';
-		self.pos2 = '16 16 48';
+		this.pos1 = '-16 -16 0';
+		this.pos2 = '16 16 48';
 	}
 	else
 	{
-		self.pos1 = '-16 -16 0';
-		self.pos2 = '16 16 32';
+		this.pos1 = '-16 -16 0';
+		this.pos2 = '16 16 32';
 	}
-	setsize (self, self.pos1, self.pos2);
+	setsize (this, this.pos1, this.pos2);
 
-	self.SendFlags |= ISF_SIZE;
+	this.SendFlags |= ISF_SIZE;
 
 	if(itemflags & FL_POWERUP)
-		self.ItemStatus |= ITS_ANIMATE1;
+		this.ItemStatus |= ITS_ANIMATE1;
 
-	if(self.armorvalue || self.health)
-		self.ItemStatus |= ITS_ANIMATE2;
+	if(this.armorvalue || this.health)
+		this.ItemStatus |= ITS_ANIMATE2;
 
 	if(itemflags & FL_WEAPON)
 	{
-		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
-			self.colormap = 1024; // color shirt=0 pants=0 grey
+		if (this.classname != "droppedweapon") // if dropped, colormap is already set up nicely
+			this.colormap = 1024; // color shirt=0 pants=0 grey
 		else
-			self.gravity = 1;
+			this.gravity = 1;
 
-		self.ItemStatus |= ITS_ANIMATE1;
-		self.ItemStatus |= ISF_COLORMAP;
+		this.ItemStatus |= ITS_ANIMATE1;
+		this.ItemStatus |= ISF_COLORMAP;
 	}
 
-	self.state = 0;
-	if(self.team) // broken, no idea why.
+	this.state = 0;
+	if(this.team) // broken, no idea why.
 	{
-		if(!self.cnt)
-			self.cnt = 1; // item probability weight
+		if(!this.cnt)
+			this.cnt = 1; // item probability weight
 
-		self.effects |= EF_NODRAW; // marker for item team search
-		InitializeEntity(self, Item_FindTeam, INITPRIO_FINDTARGET);
+		this.effects |= EF_NODRAW; // marker for item team search
+		InitializeEntity(this, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
 	else
-		Item_Reset();
+		Item_Reset(this);
 
-	Net_LinkEntity(self, !((itemflags & FL_POWERUP) || self.health || self.armorvalue), 0, ItemSend);
+	Net_LinkEntity(this, !((itemflags & FL_POWERUP) || this.health || this.armorvalue), 0, ItemSend);
 
 	// call this hook after everything else has been done
-	if(MUTATOR_CALLHOOK(Item_Spawn, self))
+	if (MUTATOR_CALLHOOK(Item_Spawn, this))
 	{
 		startitem_failed = true;
-		remove(self);
+		remove(this);
 		return;
 	}
 }
 
-void StartItemA (entity a)
-{SELFPARAM();
-    self.itemdef = a;
-    StartItem(strzone(a.m_model.model_str()), a.m_sound, a.m_respawntime(), a.m_respawntimejitter(), a.m_name, a.m_itemid, 0, a.m_itemflags, a.m_pickupevalfunc, a.m_botvalue);
+void StartItem(entity this, entity a)
+{
+    this.itemdef = a;
+    _StartItem(
+    	this,
+    	strzone(a.m_model.model_str()), // itemmodel
+    	a.m_sound, // pickupsound
+    	a.m_respawntime(), // defaultrespawntime
+    	a.m_respawntimejitter(), // defaultrespawntimejitter
+    	a.m_name, // itemname
+    	a.m_itemid, // itemid
+    	0, // weaponid
+    	a.m_itemflags, // itemflags
+    	a.m_pickupevalfunc, // pickupevalfunc
+    	a.m_botvalue // pickupbasevalue
+	);
 }
 
 spawnfunc(item_rockets)
@@ -1208,7 +1220,7 @@ spawnfunc(item_rockets)
 		self.ammo_rockets = g_pickup_rockets;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-    StartItemA (ITEM_Rockets);
+    StartItem(this, ITEM_Rockets);
 }
 
 spawnfunc(item_bullets)
@@ -1227,7 +1239,7 @@ spawnfunc(item_bullets)
 		self.ammo_nails = g_pickup_nails;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-    StartItemA (ITEM_Bullets);
+    StartItem(this, ITEM_Bullets);
 }
 
 spawnfunc(item_cells)
@@ -1236,7 +1248,7 @@ spawnfunc(item_cells)
 		self.ammo_cells = g_pickup_cells;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItemA (ITEM_Cells);
+	StartItem(this, ITEM_Cells);
 }
 
 spawnfunc(item_plasma)
@@ -1245,7 +1257,7 @@ spawnfunc(item_plasma)
 		self.ammo_plasma = g_pickup_plasma;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItemA (ITEM_Plasma);
+	StartItem(this, ITEM_Plasma);
 }
 
 spawnfunc(item_shells)
@@ -1264,7 +1276,7 @@ spawnfunc(item_shells)
 		self.ammo_shells = g_pickup_shells;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItemA (ITEM_Shells);
+	StartItem(this, ITEM_Shells);
 }
 
 spawnfunc(item_armor_small)
@@ -1275,7 +1287,7 @@ spawnfunc(item_armor_small)
 		self.max_armorvalue = g_pickup_armorsmall_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armorsmall_anyway;
-	StartItemA (ITEM_ArmorSmall);
+	StartItem(this, ITEM_ArmorSmall);
 }
 
 spawnfunc(item_armor_medium)
@@ -1286,7 +1298,7 @@ spawnfunc(item_armor_medium)
 		self.max_armorvalue = g_pickup_armormedium_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armormedium_anyway;
-	StartItemA (ITEM_ArmorMedium);
+	StartItem(this, ITEM_ArmorMedium);
 }
 
 spawnfunc(item_armor_big)
@@ -1297,7 +1309,7 @@ spawnfunc(item_armor_big)
 		self.max_armorvalue = g_pickup_armorbig_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armorbig_anyway;
-	StartItemA (ITEM_ArmorLarge);
+	StartItem(this, ITEM_ArmorLarge);
 }
 
 spawnfunc(item_armor_large)
@@ -1308,7 +1320,7 @@ spawnfunc(item_armor_large)
 		self.max_armorvalue = g_pickup_armorlarge_max;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_armorlarge_anyway;
-	StartItemA (ITEM_ArmorMega);
+	StartItem(this, ITEM_ArmorMega);
 }
 
 spawnfunc(item_health_small)
@@ -1319,7 +1331,7 @@ spawnfunc(item_health_small)
 		self.health = g_pickup_healthsmall;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_healthsmall_anyway;
-	StartItemA (ITEM_HealthSmall);
+	StartItem(this, ITEM_HealthSmall);
 }
 
 spawnfunc(item_health_medium)
@@ -1330,7 +1342,7 @@ spawnfunc(item_health_medium)
 		self.health = g_pickup_healthmedium;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_healthmedium_anyway;
-    StartItemA (ITEM_HealthMedium);
+    StartItem(this, ITEM_HealthMedium);
 }
 
 spawnfunc(item_health_large)
@@ -1341,7 +1353,7 @@ spawnfunc(item_health_large)
 		self.health = g_pickup_healthlarge;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_healthlarge_anyway;
-	StartItemA (ITEM_HealthLarge);
+	StartItem(this, ITEM_HealthLarge);
 }
 
 spawnfunc(item_health_mega)
@@ -1352,7 +1364,7 @@ spawnfunc(item_health_mega)
         self.health = g_pickup_healthmega;
     if(!self.pickup_anyway)
         self.pickup_anyway = g_pickup_healthmega_anyway;
-    StartItemA (ITEM_HealthMega);
+    StartItem(this, ITEM_HealthMega);
 }
 
 // support old misnamed entities
@@ -1366,14 +1378,14 @@ spawnfunc(item_strength)
 {
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
-		StartItemA (ITEM_Strength);
+		StartItem(this, ITEM_Strength);
 }
 
 spawnfunc(item_invincible)
 {
 		if(!self.invincible_finished)
 			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-		StartItemA (ITEM_Shield);
+		StartItem(this, ITEM_Shield);
 }
 
 // compatibility:
@@ -1530,7 +1542,7 @@ spawnfunc(item_fuel)
 		self.ammo_fuel = g_pickup_fuel;
 	if(!self.pickup_anyway)
 		self.pickup_anyway = g_pickup_ammo_anyway;
-	StartItemA (ITEM_JetpackFuel);
+	StartItem(this, ITEM_JetpackFuel);
 }
 
 spawnfunc(item_fuel_regen)
@@ -1540,7 +1552,7 @@ spawnfunc(item_fuel_regen)
 		spawnfunc_item_fuel(this);
 		return;
 	}
-	StartItemA (ITEM_JetpackRegen);
+	StartItem(this, ITEM_JetpackRegen);
 }
 
 spawnfunc(item_jetpack)
@@ -1552,7 +1564,7 @@ spawnfunc(item_jetpack)
 		spawnfunc_item_fuel(this);
 		return;
 	}
-	StartItemA (ITEM_Jetpack);
+	StartItem(this, ITEM_Jetpack);
 }
 
 float GiveWeapon(entity e, float wpn, float op, float val)

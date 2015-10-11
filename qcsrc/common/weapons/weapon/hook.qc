@@ -71,7 +71,7 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-spawnfunc(weapon_hook) { weapon_defaultspawnfunc(WEP_HOOK.m_id); }
+spawnfunc(weapon_hook) { weapon_defaultspawnfunc(this, WEP_HOOK); }
 
 void W_Hook_ExplodeThink(void)
 {SELFPARAM();
