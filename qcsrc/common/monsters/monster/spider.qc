@@ -113,6 +113,8 @@ void M_Spider_Attack_Web_Touch()
 	M_Spider_Attack_Web_Explode();
 }
 
+void adaptor_think2use_hittype_splash();
+
 void M_Spider_Attack_Web()
 {SELFPARAM();
 	monster_makevectors(self.enemy);
@@ -206,6 +208,7 @@ spawnfunc(monster_spider) { Monster_Spawn(MON_SPIDER.monsterid); }
 		}
 		#endif
 		#ifdef SVQC
+		spawnfunc(item_health_medium);
 		METHOD(Spider, mr_setup, bool(Spider thismon))
 		{
 			SELFPARAM();

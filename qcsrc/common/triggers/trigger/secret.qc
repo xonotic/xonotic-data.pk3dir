@@ -1,7 +1,6 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../../server/_all.qh"
     #include "../../util.qh"
     #include "../../../server/defs.qh"
     #include "secret.qh"

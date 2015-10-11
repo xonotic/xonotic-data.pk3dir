@@ -1,5 +1,4 @@
 #include "main.qh"
-#include "_all.qh"
 
 #include "controlpoint.qh"
 #include "damage.qh"
@@ -12,44 +11,27 @@
 #include "laser.qh"
 #include "mapvoting.qh"
 #include "modeleffects.qh"
+#include "mutators/events.qh"
 #include "particles.qh"
+#include "quickmenu.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"
-
-#include "../common/vehicles/all.qh"
-
-#include "mutators/events.qh"
-
 #include "weapons/projectile.qh"
-
-#include "../common/buffs/all.qh"
 #include "../common/deathtypes.qh"
-#include "../common/effects/effects.qh"
-#include "../common/mapinfo.qh"
-#include "../common/monsters/all.qh"
-#include "../common/nades/all.qh"
-#include "../common/net_notice.qh"
-#include "../common/notifications.qh"
-#include "../common/stats.qh"
-#include "../common/teams.qh"
-
 #include "../common/items/all.qh"
-
-#include "../common/mutators/base.qh"
-
-#include "../common/weapons/all.qh"
-
-#include "../csqcmodellib/cl_model.qh"
-#include "../csqcmodellib/interpolate.qh"
-
+#include "../common/mapinfo.qh"
+#include "../common/minigames/cl_minigames.qh"
+#include "../common/minigames/cl_minigames_hud.qh"
+#include "../common/net_notice.qh"
 #include "../common/triggers/include.qh"
-
 #include "../common/turrets/cl_turrets.qh"
-
-#include "../warpzonelib/client.qh"
+#include "../common/vehicles/all.qh"
+#include "../lib/csqcmodel/cl_model.qh"
+#include "../lib/csqcmodel/interpolate.qh"
+#include "../lib/warpzone/client.qh"
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS
@@ -148,7 +130,6 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	// precaches

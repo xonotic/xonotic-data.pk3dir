@@ -1,5 +1,4 @@
 #include "cl_player.qh"
-#include "_all.qh"
 
 #include "bot/bot.qh"
 #include "cheats.qh"
@@ -16,9 +15,12 @@
 #include "../common/deathtypes.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/playerstats.qh"
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
 #include "../common/minigames/sv_minigames.qh"
+
+#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include "../common/triggers/include.qh"
 
 #include "weapons/weaponstats.qh"
 

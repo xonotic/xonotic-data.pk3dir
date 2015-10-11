@@ -1,5 +1,4 @@
 #include "portals.qh"
-#include "_all.qh"
 
 #include "g_hook.qh"
 #include "mutators/mutators_include.qh"
@@ -10,9 +9,12 @@
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
-#include "../csqcmodellib/sv_model.qh"
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../lib/csqcmodel/sv_model.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/util_server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../common/vehicles/vehicle.qh"
+#include "../common/vehicles/sv_vehicles.qh"
 
 #define PORTALS_ARE_NOT_SOLID
 

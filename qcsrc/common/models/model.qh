@@ -1,0 +1,25 @@
+#ifndef MODEL_H
+#define MODEL_H
+
+#define setmodel(e, m) _setmodel((e), (m).model_str())
+
+CLASS(Model, Object)
+    ATTRIB(Model, m_id, int, 0)
+    ATTRIB(Model, model_str, string(), func_null)
+    CONSTRUCTOR(Model, string() path)
+    {
+        CONSTRUCT(Model);
+        this.model_str = path;
+    }
+    METHOD(Model, model_precache, void(entity this)) {
+        string s = this.model_str();
+        if (s != "" && s != "null" && !fexists(s)) {
+            LOG_WARNINGF("Missing model: \"%s\"\n", s);
+            return;
+        }
+        LOG_TRACEF("precache_model(\"%s\")\n", s);
+        precache_model(s);
+    }
+ENDCLASS(Model)
+
+#endif

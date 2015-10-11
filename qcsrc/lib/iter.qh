@@ -1,0 +1,20 @@
+#ifndef ITER_H
+#define ITER_H
+
+#define FOREACH_ARRAY(arr, start, end, cond, body) do { \
+    for (int i = start; i < end; ++i) {                 \
+        const noref entity it = arr[i];                 \
+        if (cond) { body }                              \
+    }                                                   \
+} while(0)
+
+#define FOREACH_LIST(list, next, cond, body) do {               \
+    noref int i = 0;                                            \
+    for (entity it = list##_first; it; (it = it.next, ++i)) {   \
+        if (cond) { body }                                      \
+    }                                                           \
+} while(0)
+
+#define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
+
+#endif

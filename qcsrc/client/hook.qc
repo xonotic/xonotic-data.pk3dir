@@ -1,13 +1,7 @@
 #include "hook.qh"
-#include "_all.qh"
 
-#include "hud.qh"
-
-#include "../common/teams.qh"
-
-#include "../csqcmodellib/interpolate.qh"
-
-#include "../warpzonelib/common.qh"
+#include "../lib/csqcmodel/interpolate.qh"
+#include "../lib/warpzone/common.qh"
 
 entityclass(Hook);
 class(Hook) .float HookType; // ENT_CLIENT_*

@@ -1,14 +1,12 @@
 #include "shownames.qh"
-#include "_all.qh"
 
 #include "hud.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
 #include "../common/teams.qh"
-#include "../common/util.qh"
 
-#include "../csqcmodellib/cl_model.qh"
+#include "../lib/csqcmodel/cl_model.qh"
 
 // self.isactive = player is in range and coordinates/status (health and armor) are up to date
 // self.origin = player origin TODO: should maybe move this so it's the origin of the shownames tag already in SSQC for culling?

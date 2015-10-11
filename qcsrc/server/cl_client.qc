@@ -24,6 +24,7 @@
 #include "bot/navigation.qh"
 
 #include "../common/vehicles/all.qh"
+#include "../common/triggers/teleporters.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
@@ -45,7 +46,7 @@
 
 #include "../common/monsters/sv_monsters.qh"
 
-#include "../warpzonelib/server.qh"
+#include "../lib/warpzone/server.qh"
 
 
 void send_CSQC_teamnagger() {

@@ -1,5 +1,5 @@
-#ifndef HOOK_H
-#define HOOK_H
+#ifndef CLIENT_HOOK_H
+#define CLIENT_HOOK_H
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg);
 

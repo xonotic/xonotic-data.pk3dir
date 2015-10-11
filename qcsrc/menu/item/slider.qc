@@ -26,7 +26,7 @@ CLASS(Slider, Label)
 	ATTRIB(Slider, value, float, 0)
 	ATTRIB(Slider, animated, float, 1)
 	ATTRIB(Slider, sliderValue, float, 0)
-	ATTRIB(Slider, sliderAnim, entity, world)
+	ATTRIB(Slider, sliderAnim, entity, NULL)
 	ATTRIB(Slider, valueMin, float, 0)
 	ATTRIB(Slider, valueMax, float, 0)
 	ATTRIB(Slider, valueStep, float, 0)
@@ -311,7 +311,7 @@ void Slider_draw(entity me)
 	if(me.sliderAnim.isFinished(me.sliderAnim))
 	{
 		anim.removeObjAnim(anim, me);
-		me.sliderAnim = world;
+		me.sliderAnim = NULL;
 	}
 
 	me.setText(me, me.valueToText(me, me.value));

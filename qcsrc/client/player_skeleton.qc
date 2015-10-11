@@ -1,8 +1,10 @@
 #include "player_skeleton.qh"
 
-#include "../common/csqcmodel_settings.qh"
+#include "mutators/events.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../lib/warpzone/anglestransform.qh"
 
-#include "../warpzonelib/anglestransform.qh"
+.vector v_angle;
 
 class(Skeleton) .float skeleton_info_modelindex;
 class(Skeleton) .float skeleton_info_skin;

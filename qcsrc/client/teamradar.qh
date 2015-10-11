@@ -1,5 +1,5 @@
-#ifndef TEAMRADAR_H
-#define TEAMRADAR_H
+#ifndef CLIENT_TEAMRADAR_H
+#define CLIENT_TEAMRADAR_H
 
 const int MAX_TEAMRADAR_TIMES = 32;
 

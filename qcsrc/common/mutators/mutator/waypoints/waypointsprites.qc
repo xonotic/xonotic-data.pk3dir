@@ -1,5 +1,7 @@
 #include "waypointsprites.qh"
 
+#ifdef IMPLEMENTATION
+
 REGISTER_MUTATOR(waypointsprites, true);
 
 #ifdef SVQC
@@ -1147,4 +1149,5 @@ void WaypointSprite_PlayerGone()
     WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);
     WaypointSprite_DetachCarrier(self);
 }
+#endif
 #endif

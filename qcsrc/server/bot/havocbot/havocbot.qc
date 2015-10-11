@@ -1,5 +1,4 @@
 #include "havocbot.qh"
-#include "../../_all.qh"
 
 #include "../aim.qh"
 #include "../bot.qh"
@@ -8,10 +7,13 @@
 #include "../waypoints.qh"
 
 #include "../../../common/constants.qh"
+#include "../../../common/items/all.qh"
 
 #include "../../../common/triggers/trigger/jumppads.qh"
 
-#include "../../../warpzonelib/common.qh"
+#include "../../../lib/warpzone/common.qh"
+
+.float speed;
 
 void havocbot_ai()
 {SELFPARAM();

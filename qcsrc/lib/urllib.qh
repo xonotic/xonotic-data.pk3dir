@@ -1,8 +1,6 @@
 #ifndef URLLIB_H
 #define URLLIB_H
 
-#include "../common/util.qh"
-
 // URI handles
 const int URI_GET_DISCARD = 0;
 const int URI_GET_IPBAN = 1;

@@ -9,6 +9,8 @@ string cache_lastmutatormsg;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
 
+int redowned, blueowned, yellowowned, pinkowned;
+
 //float audit_teams_time;
 
 void TeamchangeFrags(entity e);

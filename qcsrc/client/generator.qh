@@ -1,5 +1,5 @@
-#ifndef GENERATOR_H
-#define GENERATOR_H
+#ifndef CLIENT_GENERATOR_H
+#define CLIENT_GENERATOR_H
 const vector GENERATOR_MIN = '-52 -52 -14';
 const vector GENERATOR_MAX = '52 52 75';
 

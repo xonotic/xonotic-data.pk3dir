@@ -1,5 +1,46 @@
 #ifndef GAMEITEM_H
 #define GAMEITEM_H
+
+const int IT_UNLIMITED_WEAPON_AMMO 		=       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+const int IT_UNLIMITED_SUPERWEAPONS		=       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+const int IT_CTF_SHIELDED          		=       4; // set for the flag shield
+const int IT_USING_JETPACK         		=       8; // confirmation that button is pressed
+const int IT_JETPACK               		=      16; // actual item
+const int IT_FUEL_REGEN            		=      32; // fuel regeneration trigger
+// where is 64... ?
+const int IT_FUEL       				=     128;
+// -Wdouble-declaration
+#define IT_SHELLS     				          256
+// -Wdouble-declaration
+#define IT_NAILS      				          512
+// -Wdouble-declaration
+#define IT_ROCKETS    				         1024
+// -Wdouble-declaration
+#define IT_CELLS      				         2048
+const int IT_SUPERWEAPON				=    4096;
+const int IT_STRENGTH   				=    8192;
+const int IT_INVINCIBLE 				=   16384;
+const int IT_HEALTH     				=   32768;
+const int IT_PLASMA     				=   65536;
+
+// shared value space (union):
+	// for items:
+	// -Wdouble-declaration
+	#define IT_KEY1							131072
+	// -Wdouble-declaration
+	#define IT_KEY2							262144
+// end
+
+const int IT_5HP                       	=  524288;
+const int IT_25HP                      	= 1048576;
+const int IT_ARMOR_SHARD               	= 2097152;
+const int IT_ARMOR                     	= 4194304;
+
+// item masks
+const int IT_AMMO                      	=    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
+const int IT_PICKUPMASK                	=      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+const int IT_UNLIMITED_AMMO            	=       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 /** If you register a new item, make sure to add it to all.inc */
 CLASS(GameItem, Object)

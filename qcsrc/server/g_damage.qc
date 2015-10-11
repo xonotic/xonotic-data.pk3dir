@@ -1,12 +1,14 @@
 #include "g_damage.qh"
-#include "_all.qh"
 
+#include "bot/bot.qh"
 #include "g_hook.qh"
 #include "mutators/mutators_include.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
 #include "t_items.qh"
 #include "../common/vehicles/all.qh"
+#include "../common/items/all.qc"
+#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
@@ -19,8 +21,8 @@
 #include "../common/teams.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
-#include "../csqcmodellib/sv_model.qh"
-#include "../warpzonelib/common.qh"
+#include "../lib/csqcmodel/sv_model.qh"
+#include "../lib/warpzone/common.qh"
 
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {

@@ -1,23 +1,12 @@
-#include "_all.qh"
-
-#include "gibs.qh"
-#include "player_skeleton.qh"
-
-#include "weapons/projectile.qh"
-
-#include "../common/animdecide.qh"
-#include "../common/csqcmodel_settings.qh"
-#include "../common/effects/effects.qh"
-#include "../common/teams.qh"
-#include "../common/triggers/trigger/viewloc.qh"
-#include "../common/viewloc.qh"
-
 #include "mutators/events.qh"
-
-#include "../csqcmodellib/cl_model.qh"
-#include "../csqcmodellib/cl_player.qh"
-#include "../csqcmodellib/interpolate.qh"
-
+#include "player_skeleton.qh"
+#include "weapons/projectile.qh"
+#include "../common/animdecide.qh"
+#include "../common/movetypes/movetypes.qh"
+#include "../common/viewloc.qh"
+#include "../lib/csqcmodel/cl_model.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 .float death_time;
 .int modelflags;

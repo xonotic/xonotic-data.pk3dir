@@ -1,5 +1,4 @@
 #include "mapvoting.qh"
-#include "_all.qh"
 
 #include "g_world.qh"
 #include "command/cmd.qh"

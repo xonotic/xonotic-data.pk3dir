@@ -1,6 +1,5 @@
 #include "physics.qh"
-#include "triggers/trigger/swamp.qh"
-#include "triggers/trigger/jumppads.qh"
+#include "triggers/include.qh"
 #include "viewloc.qh"
 
 #ifdef SVQC
@@ -11,14 +10,7 @@
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	if(!autocvar_g_physics_clientselect) { return false; }
-
-	string l = strcat(" ", autocvar_g_physics_clientselect_options, " ");
-
-	if(strstrofs(l, strcat(" ", thecvar, " "), 0) >= 0)
-		return true;
-
-	return false;
+	return autocvar_g_physics_clientselect && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity pl, string option)

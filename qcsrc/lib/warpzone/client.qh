@@ -1,0 +1,16 @@
+#ifndef LIB_WARPZONE_CLIENT_H
+#define LIB_WARPZONE_CLIENT_H
+
+void WarpZone_Read(float bIsNewEntity);
+void WarpZone_Camera_Read(float bIsNewEntity);
+void WarpZone_Teleported_Read(float bIsNewEntity);
+
+void WarpZone_FixPMove();
+void WarpZone_FixView();
+
+void WarpZone_Init();
+void WarpZone_Shutdown();
+
+vector warpzone_save_view_origin;
+vector warpzone_save_view_angles;
+#endif

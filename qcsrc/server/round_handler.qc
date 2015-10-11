@@ -1,5 +1,4 @@
 #include "round_handler.qh"
-#include "_all.qh"
 
 #include "command/vote.qh"
 #include "../common/util.qh"

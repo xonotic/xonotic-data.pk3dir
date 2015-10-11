@@ -1,10 +1,69 @@
 #ifndef TURRETS_ALL_H
 #define TURRETS_ALL_H
 
+#include "../command/all.qh"
+#include "config.qh"
+
 #include "turret.qh"
 
 REGISTRY(Turrets, BIT(5))
 REGISTER_REGISTRY(RegisterTurrets)
+
+
+GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")
+{
+    switch(request)
+    {
+        case CMD_REQUEST_COMMAND:
+        {
+            #ifdef SVQC
+            tur_config_file = -1;
+            tur_config_alsoprint = -1;
+            string filename = argv(1);
+
+            if(filename == "")
+            {
+                filename = "turrets_dump.cfg";
+                tur_config_alsoprint = FALSE;
+            }
+            else if(filename == "-")
+            {
+                filename = "turrets_dump.cfg";
+                tur_config_alsoprint = TRUE;
+            }
+            tur_config_file = fopen(filename, FILE_WRITE);
+
+            if(tur_config_file >= 0)
+            {
+                Dump_Turret_Settings();
+                LOG_INFO(sprintf("Dumping turrets... File located in ^2data/data/%s^7.\n", filename));
+                fclose(tur_config_file);
+                tur_config_file = -1;
+                tur_config_alsoprint = -1;
+            }
+            else
+            {
+                LOG_INFO(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+            }
+            #else
+            LOG_INFO(_("Turrets dump command only works with sv_cmd.\n"));
+            #endif
+            return;
+        }
+
+        default:
+        case CMD_REQUEST_USAGE:
+        {
+            LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpturrets [filename]"));
+            LOG_INFO("  Where 'filename' is the file to write (default is turrets_dump.cfg),\n");
+            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
+            LOG_INFO("  if left blank, it will only write to default.\n");
+            return;
+        }
+    }
+}
+
+
 const int TUR_FIRST = 1;
 #define TUR_LAST (Turrets_COUNT - 1)
 

@@ -1,5 +1,4 @@
 #include "scores_rules.qh"
-#include "_all.qh"
 
 #include "cl_client.qh"
 #include "scores.qh"

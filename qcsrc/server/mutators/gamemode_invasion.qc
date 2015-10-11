@@ -1,10 +1,11 @@
 #include "gamemode_invasion.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
 
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
+
+#include "../teamplay.qh"
 
 spawnfunc(invasion_spawnpoint)
 {

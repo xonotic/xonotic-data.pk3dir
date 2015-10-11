@@ -1,13 +1,13 @@
 #include "gamemode_ctf.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
 
 #ifdef SVQC
 #include "../../common/vehicles/all.qh"
+#include "../teamplay.qh"
 #endif
 
-#include "../../warpzonelib/common.qh"
+#include "../../lib/warpzone/common.qh"
 
 void ctf_FakeTimeLimit(entity e, float t)
 {
@@ -2344,9 +2344,11 @@ spawnfunc(ctf_team)
 // compatibility for quake maps
 spawnfunc(team_CTF_redflag)    { spawnfunc_item_flag_team1(this);    }
 spawnfunc(team_CTF_blueflag)   { spawnfunc_item_flag_team2(this);    }
+spawnfunc(info_player_team1);
 spawnfunc(team_CTF_redplayer)  { spawnfunc_info_player_team1(this);  }
-spawnfunc(team_CTF_blueplayer) { spawnfunc_info_player_team2(this);  }
 spawnfunc(team_CTF_redspawn)   { spawnfunc_info_player_team1(this);  }
+spawnfunc(info_player_team2);
+spawnfunc(team_CTF_blueplayer) { spawnfunc_info_player_team2(this);  }
 spawnfunc(team_CTF_bluespawn)  { spawnfunc_info_player_team2(this);  }
 
 void team_CTF_neutralflag()			 { SELFPARAM(); spawnfunc_item_flag_neutral(self);  }

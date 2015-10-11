@@ -1,5 +1,5 @@
-#ifndef HUD_CONFIG_H
-#define HUD_CONFIG_H
+#ifndef CLIENT_HUD_CONFIG_H
+#define CLIENT_HUD_CONFIG_H
 
 const int S_MOUSE1 = 1;
 const int S_MOUSE2 = 2;

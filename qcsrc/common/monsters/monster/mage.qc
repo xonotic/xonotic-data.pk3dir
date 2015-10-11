@@ -23,6 +23,7 @@ REGISTER_MONSTER(MAGE, NEW(Mage)) {
 }
 
 #include "../../weapons/all.qh"
+#include "../../items/all.qc"
 
 CLASS(MageSpike, PortoLaunch)
 /* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -161,6 +162,8 @@ void M_Mage_Attack_Spike_Touch()
 
 	M_Mage_Attack_Spike_Explode();
 }
+
+.float wait;
 
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think()
@@ -460,6 +463,8 @@ spawnfunc(monster_mage) { Monster_Spawn(MON_MAGE.monsterid); }
 		}
 		#endif
 		#ifdef SVQC
+		.float speed;
+		spawnfunc(item_health_large);
 		METHOD(Mage, mr_setup, bool(Monster thismon))
 		{
 			SELFPARAM();

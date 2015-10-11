@@ -1,5 +1,4 @@
 #include "effects.qh"
-#include "_all.qh"
 
 /*
 .vector fx_start;

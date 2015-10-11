@@ -1,5 +1,4 @@
 #include "miscfunctions.qh"
-#include "_all.qh"
 #include "antilag.qh"
 #include "command/common.qh"
 #include "constants.qh"
@@ -21,9 +20,12 @@
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include "../common/weapons/all.qh"
-#include "../csqcmodellib/sv_model.qh"
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/server.qh"
+#include "../common/vehicles/sv_vehicles.qh"
+#include "../common/vehicles/vehicle.qh"
+#include "../common/items/all.qc"
+#include "../lib/csqcmodel/sv_model.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/server.qh"
 
 void crosshair_trace(entity pl)
 {

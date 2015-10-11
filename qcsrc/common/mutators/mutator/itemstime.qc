@@ -1,3 +1,4 @@
+#ifdef IMPLEMENTATION
 REGISTER_MUTATOR(itemstime, true);
 
 #ifdef SVQC
@@ -387,4 +388,5 @@ void HUD_ItemsTime()
     ));
 }
 
+#endif
 #endif
