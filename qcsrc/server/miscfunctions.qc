@@ -967,6 +967,18 @@ void precache_all_playermodels(string pattern)
 	search_end(globhandle);
 }
 
+void precache_playermodels(string s)
+{
+	if(s != "")
+	{
+		int n = tokenize_console(s);
+		precache_playermodel(argv(0));
+
+		for (int i = 1; i < n; ++i)
+			precache_model(argv(i));
+	}
+}
+
 void precache()
 {SELFPARAM();
     // gamemode related things
@@ -984,22 +996,11 @@ void precache()
 
     if (autocvar_sv_defaultcharacter)
     {
-        string s;
-        s = autocvar_sv_defaultplayermodel_red;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_blue;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_yellow;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_pink;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel;
-        if (s != "")
-            precache_playermodel(s);
+		precache_playermodels(autocvar_sv_defaultplayermodel_red);
+		precache_playermodels(autocvar_sv_defaultplayermodel_blue);
+		precache_playermodels(autocvar_sv_defaultplayermodel_yellow);
+		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
+		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
 
     if (g_footsteps)
