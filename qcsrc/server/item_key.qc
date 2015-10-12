@@ -81,6 +81,9 @@ void item_key_touch()
 	play2(other, self.noise);
 
 	centerprint(other, self.message);
+
+	activator = other;
+	SUB_UseTargets();
 };
 
 /**
