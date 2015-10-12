@@ -5,7 +5,7 @@ CLASS(TeslaCoilTurretAttack, PortoLaunch)
 /* flags     */ ATTRIB(TeslaCoilTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(TeslaCoilTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(TeslaCoilTurretAttack, netname, string, "turret_tesla");
-/* wepname   */ ATTRIB(TeslaCoilTurretAttack, message, string, _("Tesla Coil"));
+/* wepname   */ ATTRIB(TeslaCoilTurretAttack, m_name, string, _("Tesla Coil"));
 ENDCLASS(TeslaCoilTurretAttack)
 REGISTER_WEAPON(TESLA, NEW(TeslaCoilTurretAttack));
 

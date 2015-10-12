@@ -29,7 +29,7 @@ CLASS(MageSpike, PortoLaunch)
 /* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(MageSpike, impulse, int, 9);
 /* refname   */ ATTRIB(MageSpike, netname, string, "magespike");
-/* wepname   */ ATTRIB(MageSpike, message, string, _("Mage spike"));
+/* wepname   */ ATTRIB(MageSpike, m_name, string, _("Mage spike"));
 ENDCLASS(MageSpike)
 REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 

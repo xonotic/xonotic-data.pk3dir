@@ -176,9 +176,6 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		this.itemdef = def,
 		this.respawntime, // defaultrespawntime
 		this.respawntimejitter, // defaultrespawntimejitter
-		e.message, // itemname
-		0, // itemid
-		e.weapon, // weaponid
 		f // itemflags
 	);
 	#if 0 // WEAPONTODO

@@ -13,7 +13,7 @@ CLASS(PortoLaunch, Weapon)
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");
 /* refname   */ ATTRIB(PortoLaunch, netname, string, "porto");
-/* wepname   */ ATTRIB(PortoLaunch, message, string, _("Port-O-Launch"));
+/* wepname   */ ATTRIB(PortoLaunch, m_name, string, _("Port-O-Launch"));
 ENDCLASS(PortoLaunch)
 REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 

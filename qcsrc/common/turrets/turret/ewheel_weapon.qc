@@ -5,7 +5,7 @@ CLASS(EWheelAttack, PortoLaunch)
 /* flags     */ ATTRIB(EWheelAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(EWheelAttack, impulse, int, 5);
 /* refname   */ ATTRIB(EWheelAttack, netname, string, "turret_ewheel");
-/* wepname   */ ATTRIB(EWheelAttack, message, string, _("eWheel"));
+/* wepname   */ ATTRIB(EWheelAttack, m_name, string, _("eWheel"));
 ENDCLASS(EWheelAttack)
 REGISTER_WEAPON(EWHEEL, NEW(EWheelAttack));
 

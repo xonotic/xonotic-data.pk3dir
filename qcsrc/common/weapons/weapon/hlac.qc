@@ -13,7 +13,7 @@ CLASS(HLAC, Weapon)
 /* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(HLAC, model2, string, "weaponhlac");
 /* refname   */ ATTRIB(HLAC, netname, string, "hlac");
-/* wepname   */ ATTRIB(HLAC, message, string, _("Heavy Laser Assault Cannon"));
+/* wepname   */ ATTRIB(HLAC, m_name, string, _("Heavy Laser Assault Cannon"));
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, NEW(HLAC));
 

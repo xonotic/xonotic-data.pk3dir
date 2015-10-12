@@ -13,7 +13,7 @@ CLASS(Hook, Weapon)
 /* crosshair */ ATTRIB(Hook, w_crosshair_size, float, 0.5);
 /* wepimg    */ ATTRIB(Hook, model2, string, "weaponhook");
 /* refname   */ ATTRIB(Hook, netname, string, "hook");
-/* wepname   */ ATTRIB(Hook, message, string, _("Grappling Hook"));
+/* wepname   */ ATTRIB(Hook, m_name, string, _("Grappling Hook"));
 	ATTRIB(Hook, ammo_factor, float, 1)
 ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, NEW(Hook));

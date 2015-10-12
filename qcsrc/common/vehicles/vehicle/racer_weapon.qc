@@ -7,7 +7,7 @@ CLASS(RacerAttack, PortoLaunch)
 /* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(RacerAttack, impulse, int, 3);
 /* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
-/* wepname   */ ATTRIB(RacerAttack, message, string, _("Racer cannon"));
+/* wepname   */ ATTRIB(RacerAttack, m_name, string, _("Racer cannon"));
 ENDCLASS(RacerAttack)
 REGISTER_WEAPON(RACER, NEW(RacerAttack));
 

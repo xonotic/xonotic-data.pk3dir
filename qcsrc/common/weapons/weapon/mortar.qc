@@ -13,7 +13,7 @@ CLASS(Mortar, Weapon)
 /* crosshair */ ATTRIB(Mortar, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Mortar, model2, string, "weapongrenadelauncher");
 /* refname   */ ATTRIB(Mortar, netname, string, "mortar");
-/* wepname   */ ATTRIB(Mortar, message, string, _("Mortar"));
+/* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
 ENDCLASS(Mortar)
 REGISTER_WEAPON(MORTAR, NEW(Mortar));
 

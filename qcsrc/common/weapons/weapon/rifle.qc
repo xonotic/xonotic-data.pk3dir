@@ -13,7 +13,7 @@ CLASS(Rifle, Weapon)
 /* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
 /* refname   */ ATTRIB(Rifle, netname, string, "rifle");
-/* wepname   */ ATTRIB(Rifle, message, string, _("Rifle"));
+/* wepname   */ ATTRIB(Rifle, m_name, string, _("Rifle"));
 ENDCLASS(Rifle)
 REGISTER_WEAPON(RIFLE, NEW(Rifle));
 

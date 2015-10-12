@@ -60,7 +60,7 @@ float autocvar_sv_simple_items;
 bool ItemSend(entity this, entity to, int sf);
 
 
-float have_pickup_item(void);
+bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
@@ -112,7 +112,7 @@ float commodity_pickupevalfunc(entity player, entity item);
 
 .float is_item;
 .entity itemdef;
-void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags);
+void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter, float itemflags);
 
 
 void target_items_use (void);

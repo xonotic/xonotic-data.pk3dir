@@ -13,7 +13,7 @@ CLASS(MineLayer, Weapon)
 /* crosshair */ ATTRIB(MineLayer, w_crosshair_size, float, 0.9);
 /* wepimg    */ ATTRIB(MineLayer, model2, string, "weaponminelayer");
 /* refname   */ ATTRIB(MineLayer, netname, string, "minelayer");
-/* wepname   */ ATTRIB(MineLayer, message, string, _("Mine Layer"));
+/* wepname   */ ATTRIB(MineLayer, m_name, string, _("Mine Layer"));
 ENDCLASS(MineLayer)
 REGISTER_WEAPON(MINE_LAYER, NEW(MineLayer));
 

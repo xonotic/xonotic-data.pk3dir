@@ -5,7 +5,7 @@ CLASS(MachineGunTurretAttack, PortoLaunch)
 /* flags     */ ATTRIB(MachineGunTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(MachineGunTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(MachineGunTurretAttack, netname, string, "turret_machinegun");
-/* wepname   */ ATTRIB(MachineGunTurretAttack, message, string, _("Machinegun"));
+/* wepname   */ ATTRIB(MachineGunTurretAttack, m_name, string, _("Machinegun"));
 ENDCLASS(MachineGunTurretAttack)
 REGISTER_WEAPON(TUR_MACHINEGUN, NEW(MachineGunTurretAttack));
 

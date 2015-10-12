@@ -13,7 +13,7 @@ CLASS(Vortex, Weapon)
 /* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);
 /* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
-/* wepname   */ ATTRIB(Vortex, message, string, _("Vortex"));
+/* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
 ENDCLASS(Vortex)
 REGISTER_WEAPON(VORTEX, NEW(Vortex));
 

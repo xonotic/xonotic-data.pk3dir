@@ -13,7 +13,7 @@ CLASS(Shotgun, Weapon)
 /* crosshair */ ATTRIB(Shotgun, w_crosshair_size, float, 0.65);
 /* wepimg    */ ATTRIB(Shotgun, model2, string, "weaponshotgun");
 /* refname   */ ATTRIB(Shotgun, netname, string, "shotgun");
-/* wepname   */ ATTRIB(Shotgun, message, string, _("Shotgun"));
+/* wepname   */ ATTRIB(Shotgun, m_name, string, _("Shotgun"));
 ENDCLASS(Shotgun)
 REGISTER_WEAPON(SHOTGUN, NEW(Shotgun));
 

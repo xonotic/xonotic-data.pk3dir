@@ -13,7 +13,7 @@ CLASS(Seeker, Weapon)
 /* crosshair */ ATTRIB(Seeker, w_crosshair_size, float, 0.8);
 /* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
 /* refname   */ ATTRIB(Seeker, netname, string, "seeker");
-/* wepname   */ ATTRIB(Seeker, message, string, _("T.A.G. Seeker"));
+/* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
 ENDCLASS(Seeker)
 REGISTER_WEAPON(SEEKER, NEW(Seeker));
 

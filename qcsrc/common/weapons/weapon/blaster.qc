@@ -13,7 +13,7 @@ CLASS(Blaster, Weapon)
 /* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
 /* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
 /* refname   */ ATTRIB(Blaster, netname, string, "blaster");
-/* wepname   */ ATTRIB(Blaster, message, string, _("Blaster"));
+/* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
 ENDCLASS(Blaster)
 REGISTER_WEAPON(BLASTER, NEW(Blaster));
 

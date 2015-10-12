@@ -10,6 +10,8 @@ CLASS(Pickup, GameItem)
     METHOD(Pickup, show, void(entity this));
     void Pickup_show(entity this) { LOG_INFOF("%s: %s\n", etos(this), this.m_name); }
 #ifdef SVQC
+    ATTRIB(Pickup, m_mins, vector, '-16 -16 0')
+    ATTRIB(Pickup, m_maxs, vector, '16 16 32')
     ATTRIB(Pickup, m_botvalue, int, 0)
     ATTRIB(Pickup, m_itemflags, int, 0)
     ATTRIB(Pickup, m_itemid, int, 0)

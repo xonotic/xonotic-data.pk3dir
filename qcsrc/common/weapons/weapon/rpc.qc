@@ -13,7 +13,7 @@ CLASS(RocketPropelledChainsaw, Weapon)
 /* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(RocketPropelledChainsaw, model2, string, "weaponrpc");
 /* refname   */ ATTRIB(RocketPropelledChainsaw, netname, string, "rpc");
-/* wepname   */ ATTRIB(RocketPropelledChainsaw, message, string, _("Rocket Propelled Chainsaw"));
+/* wepname   */ ATTRIB(RocketPropelledChainsaw, m_name, string, _("Rocket Propelled Chainsaw"));
 ENDCLASS(RocketPropelledChainsaw)
 REGISTER_WEAPON(RPC, NEW(RocketPropelledChainsaw));
 

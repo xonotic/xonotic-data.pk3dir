@@ -3,7 +3,7 @@
 
 CLASS(PlasmaDualAttack, PlasmaAttack)
 /* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "turret_plasma_dual");
-/* wepname   */ ATTRIB(PlasmaDualAttack, message, string, _("Dual plasma"));
+/* wepname   */ ATTRIB(PlasmaDualAttack, m_name, string, _("Dual plasma"));
 ENDCLASS(PlasmaDualAttack)
 REGISTER_WEAPON(PLASMA_DUAL, NEW(PlasmaDualAttack));
 

@@ -272,7 +272,8 @@ bool ItemSend(entity this, entity to, int sf)
 
 	if(sf & ISF_SIZE)
 	{
-		WriteByte(MSG_ENTITY, ((self.flags & FL_POWERUP) || self.health || self.armorvalue));
+		Pickup p = this.itemdef;
+		WriteByte(MSG_ENTITY, p.instanceOfPowerup || p.instanceOfHealth || p.instanceOfArmor);
 	}
 
 	if(sf & ISF_STATUS)
@@ -308,9 +309,9 @@ void ItemUpdate(entity item)
 	item.SendFlags |= ISF_LOCATION;
 }
 
-float have_pickup_item(void)
-{SELFPARAM();
-	if(self.flags & FL_POWERUP)
+bool have_pickup_item(entity this)
+{
+	if(this.itemdef.instanceOfPowerup)
 	{
 		if(autocvar_g_powerups > 0)
 			return true;
@@ -324,7 +325,7 @@ float have_pickup_item(void)
 		if(autocvar_g_pickup_items == 0)
 			return false;
 		if(g_weaponarena)
-			if(self.weapons || (self.items & IT_AMMO)) // no item or ammo pickups in weaponarena
+			if(this.weapons || (this.items & IT_AMMO)) // no item or ammo pickups in weaponarena
 				return false;
 	}
 	return true;
@@ -377,7 +378,7 @@ void Item_Show (entity e, float mode)
 		e.spawnshieldtime = 1;
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
-	else if((e.flags & FL_WEAPON) && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
+	else if(e.itemdef.instanceOfWeaponPickup && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
@@ -641,7 +642,7 @@ float Item_GiveTo(entity item, entity player)
 	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
 	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
-	if (item.flags & FL_WEAPON)
+	if (item.itemdef.instanceOfWeaponPickup)
 	{
 		WepSet it;
 		it = item.weapons;
@@ -692,7 +693,7 @@ float Item_GiveTo(entity item, entity player)
 		return 0;
 
 	// crude hack to enforce switching weapons
-	if(g_cts && (item.flags & FL_WEAPON))
+	if(g_cts && item.itemdef.instanceOfWeaponPickup)
 	{
 		W_SwitchWeapon_Force(player, item.weapon);
 		return 1;
@@ -798,7 +799,7 @@ void Item_Reset(entity this)
 		if (this.waypointsprite_attached)
 			WaypointSprite_Kill(this.waypointsprite_attached);
 
-		if ((this.flags & FL_POWERUP) || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
+		if (this.itemdef.instanceOfPowerup || (this.weapons & WEPSET_SUPERWEAPONS)) // do not spawn powerups initially!
 			Item_ScheduleInitialRespawn(this);
 	}
 }
@@ -974,8 +975,9 @@ void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype,
 		RemoveItem();
 }
 
-void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags)
+void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter, float itemflags)
 {
+	string itemname = def.m_name;
 	Model itemmodel = def.m_model;
     Sound pickupsound = def.m_sound;
 	float(entity player, entity item) pickupevalfunc = def.m_pickupevalfunc;
@@ -992,7 +994,9 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.respawntimejitter = defaultrespawntimejitter;
 	}
 
+	int itemid = def.m_itemid;
 	this.items = itemid;
+	int weaponid = def.instanceOfWeaponPickup ? def.m_weapon.m_id : 0;
 	this.weapon = weaponid;
 
 	if(!this.fade_end)
@@ -1055,7 +1059,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 	else
 	{
-		if(!have_pickup_item())
+		if(!have_pickup_item(this))
 		{
 			startitem_failed = true;
 			remove (this);
@@ -1079,10 +1083,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			// first nudge it off the floor a little bit to avoid math errors
 			setorigin(this, this.origin + '0 0 1');
 			// set item size before we spawn a spawnfunc_waypoint
-			if((itemflags & FL_POWERUP) || this.health || this.armorvalue)
-				setsize (this, '-16 -16 0', '16 16 48');
-			else
-				setsize (this, '-16 -16 0', '16 16 32');
+			setsize(this, def.m_mins, def.m_maxs);
 			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			WITH(entity, self, this, droptofloor());
@@ -1123,8 +1124,12 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		precache_model(this.model);
 		precache_sound(this.item_pickupsound);
 
-		if ((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
-			this.target = "###item###"; // for finding the nearest item using find()
+		if (   def.instanceOfPowerup
+			|| def.instanceOfWeaponPickup
+			|| (def.instanceOfHealth && def != ITEM_HealthSmall)
+			|| (def.instanceOfArmor && def != ITEM_ArmorSmall)
+			|| (itemid & (IT_KEY1 | IT_KEY2))
+		) this.target = "###item###"; // for finding the nearest item using find()
 
 		Item_ItemsTime_SetTime(this, 0);
 	}
@@ -1138,27 +1143,17 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	setmodel(this, MDL_Null); // precision set below
 	//this.effects |= EF_LOWPRECISION;
 
-	if((itemflags & FL_POWERUP) || this.health || this.armorvalue)
-	{
-		this.pos1 = '-16 -16 0';
-		this.pos2 = '16 16 48';
-	}
-	else
-	{
-		this.pos1 = '-16 -16 0';
-		this.pos2 = '16 16 32';
-	}
-	setsize (this, this.pos1, this.pos2);
+	setsize (this, this.pos1 =  def.m_mins, this.pos2 = def.m_maxs);
 
 	this.SendFlags |= ISF_SIZE;
 
-	if(itemflags & FL_POWERUP)
+	if(def.instanceOfPowerup)
 		this.ItemStatus |= ITS_ANIMATE1;
 
 	if(this.armorvalue || this.health)
 		this.ItemStatus |= ITS_ANIMATE2;
 
-	if(itemflags & FL_WEAPON)
+	if(def.instanceOfWeaponPickup)
 	{
 		if (this.classname != "droppedweapon") // if dropped, colormap is already set up nicely
 			this.colormap = 1024; // color shirt=0 pants=0 grey
@@ -1181,7 +1176,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	else
 		Item_Reset(this);
 
-	Net_LinkEntity(this, !((itemflags & FL_POWERUP) || this.health || this.armorvalue), 0, ItemSend);
+	Net_LinkEntity(this, !(def.instanceOfPowerup || def.instanceOfHealth || def.instanceOfArmor), 0, ItemSend);
 
 	// call this hook after everything else has been done
 	if (MUTATOR_CALLHOOK(Item_Spawn, this))
@@ -1199,9 +1194,6 @@ void StartItem(entity this, GameItem def)
     	this.itemdef = def,
     	def.m_respawntime(), // defaultrespawntime
     	def.m_respawntimejitter(), // defaultrespawntimejitter
-    	def.m_name, // itemname
-    	def.m_itemid, // itemid
-    	0, // weaponid
     	def.m_itemflags // itemflags
 	);
 }

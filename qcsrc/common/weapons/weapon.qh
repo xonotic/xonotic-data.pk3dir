@@ -42,7 +42,7 @@ CLASS(Weapon, Object)
     /** M: refname   : reference name name */
     ATTRIB(Weapon, netname, string, "");
     /** M: wepname   : human readable name */
-    ATTRIB(Weapon, message, string, "AOL CD Thrower");
+    ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
 
     ATTRIB(Weapon, m_pickup, entity, NULL);
 
@@ -85,12 +85,14 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_pickup, void(Weapon this)) {}
 
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.message, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
+		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
 	}
 ENDCLASS(Weapon)
 
 #include "../items/all.qh"
 CLASS(WeaponPickup, Pickup)
+    ATTRIB(WeaponPickup, m_weapon, Weapon, NULL)
+    ATTRIB(WeaponPickup, m_name, string, string_null)
 #ifndef MENUQC
     ATTRIB(WeaponPickup, m_sound, Sound, SND_WEAPONPICKUP)
 #endif
@@ -100,6 +102,8 @@ CLASS(WeaponPickup, Pickup)
 #endif
     CONSTRUCTOR(WeaponPickup, Weapon w) {
         CONSTRUCT(WeaponPickup);
+        this.m_weapon = w;
+        this.m_name = w.m_name;
 #ifndef MENUQC
         this.m_model = w.m_model;
 #endif
@@ -162,6 +166,6 @@ string W_Model(string w_mdl);
 
 // other useful macros
 #define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
-#define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
+#define WEP_NAME(wpn) ((get_weaponinfo(wpn)).m_name)
 
 #endif

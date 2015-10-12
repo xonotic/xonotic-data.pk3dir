@@ -13,7 +13,7 @@ CLASS(Arc, Weapon)
 /* crosshair */ ATTRIB(Arc, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Arc, model2, string, "weaponarc");
 /* refname   */ ATTRIB(Arc, netname, string, "arc");
-/* wepname   */ ATTRIB(Arc, message, string, _("Arc"));
+/* wepname   */ ATTRIB(Arc, m_name, string, _("Arc"));
 ENDCLASS(Arc)
 REGISTER_WEAPON(ARC, NEW(Arc));
 

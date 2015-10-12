@@ -13,7 +13,7 @@ CLASS(Fireball, Weapon)
 /* crosshair */ //ATTRIB(Fireball, w_crosshair_size, float, 0.65);
 /* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
 /* refname   */ ATTRIB(Fireball, netname, string, "fireball");
-/* wepname   */ ATTRIB(Fireball, message, string, _("Fireball"));
+/* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
 ENDCLASS(Fireball)
 REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 

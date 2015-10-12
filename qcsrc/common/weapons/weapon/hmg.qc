@@ -13,7 +13,7 @@ CLASS(HeavyMachineGun, Weapon)
 /* crosshair */ ATTRIB(HeavyMachineGun, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(HeavyMachineGun, model2, string, "weaponhmg");
 /* refname   */ ATTRIB(HeavyMachineGun, netname, string, "hmg");
-/* wepname   */ ATTRIB(HeavyMachineGun, message, string, _("Heavy Machine Gun"));
+/* wepname   */ ATTRIB(HeavyMachineGun, m_name, string, _("Heavy Machine Gun"));
 ENDCLASS(HeavyMachineGun)
 REGISTER_WEAPON(HMG, NEW(HeavyMachineGun));
 

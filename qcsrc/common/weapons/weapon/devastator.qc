@@ -13,7 +13,7 @@ CLASS(Devastator, Weapon)
 /* crosshair */ ATTRIB(Devastator, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Devastator, model2, string, "weaponrocketlauncher");
 /* refname   */ ATTRIB(Devastator, netname, string, "devastator");
-/* wepname   */ ATTRIB(Devastator, message, string, _("Devastator"));
+/* wepname   */ ATTRIB(Devastator, m_name, string, _("Devastator"));
 ENDCLASS(Devastator)
 REGISTER_WEAPON(DEVASTATOR, NEW(Devastator));
 

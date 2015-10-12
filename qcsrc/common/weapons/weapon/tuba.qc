@@ -14,7 +14,7 @@ CLASS(Tuba, Weapon)
 /* wepimg    */ ATTRIB(Tuba, model2, string, "weapontuba");
 /* refname   */ ATTRIB(Tuba, netname, string, "tuba");
 /* xgettext:no-c-format */
-/* wepname   */ ATTRIB(Tuba, message, string, _("@!#%'n Tuba"));
+/* wepname   */ ATTRIB(Tuba, m_name, string, _("@!#%'n Tuba"));
 ENDCLASS(Tuba)
 REGISTER_WEAPON(TUBA, NEW(Tuba));
 

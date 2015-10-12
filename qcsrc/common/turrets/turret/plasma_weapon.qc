@@ -5,7 +5,7 @@ CLASS(PlasmaAttack, PortoLaunch)
 /* flags     */ ATTRIB(PlasmaAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(PlasmaAttack, impulse, int, 5);
 /* refname   */ ATTRIB(PlasmaAttack, netname, string, "turret_plasma");
-/* wepname   */ ATTRIB(PlasmaAttack, message, string, _("Plasma"));
+/* wepname   */ ATTRIB(PlasmaAttack, m_name, string, _("Plasma"));
 ENDCLASS(PlasmaAttack)
 REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
 

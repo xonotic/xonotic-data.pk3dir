@@ -13,7 +13,7 @@ CLASS(Hagar, Weapon)
 /* crosshair */ ATTRIB(Hagar, w_crosshair_size, float, 0.8);
 /* wepimg    */ ATTRIB(Hagar, model2, string, "weaponhagar");
 /* refname   */ ATTRIB(Hagar, netname, string, "hagar");
-/* wepname   */ ATTRIB(Hagar, message, string, _("Hagar"));
+/* wepname   */ ATTRIB(Hagar, m_name, string, _("Hagar"));
 ENDCLASS(Hagar)
 REGISTER_WEAPON(HAGAR, NEW(Hagar));
 

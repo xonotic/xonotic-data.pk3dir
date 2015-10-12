@@ -13,7 +13,7 @@ CLASS(Vaporizer, Weapon)
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponminstanex");
 /* refname   */ ATTRIB(Vaporizer, netname, string, "vaporizer");
-/* wepname   */ ATTRIB(Vaporizer, message, string, _("Vaporizer"));
+/* wepname   */ ATTRIB(Vaporizer, m_name, string, _("Vaporizer"));
 ENDCLASS(Vaporizer)
 REGISTER_WEAPON(VAPORIZER, NEW(Vaporizer));
 
