@@ -974,21 +974,17 @@ void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype,
 		RemoveItem();
 }
 
-void _StartItem(entity this, string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
+void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags)
 {
+	Model itemmodel = def.m_model;
+    Sound pickupsound = def.m_sound;
+	float(entity player, entity item) pickupevalfunc = def.m_pickupevalfunc;
+	float pickupbasevalue = def.m_botvalue;
+
 	startitem_failed = false;
 
-	if(this.model == "")
-		this.model = itemmodel;
-
-	if(this.model == "")
-    {
-        error(strcat("^1Tried to spawn ", itemname, " with no model!\n"));
-        return;
-    }
-
-	if(this.item_pickupsound == "")
-		this.item_pickupsound = pickupsound;
+	this.item_model_ent = itemmodel;
+    this.item_pickupsound_ent = pickupsound;
 
 	if(!this.respawntime) // both need to be set
 	{
@@ -1136,7 +1132,7 @@ void _StartItem(entity this, string itemmodel, string pickupsound, float default
 	this.bot_pickup = true;
 	this.bot_pickupevalfunc = pickupevalfunc;
 	this.bot_pickupbasevalue = pickupbasevalue;
-	this.mdl = this.model;
+	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
 	this.netname = itemname;
 	this.touch = Item_Touch;
 	setmodel(this, MDL_Null); // precision set below
@@ -1196,21 +1192,17 @@ void _StartItem(entity this, string itemmodel, string pickupsound, float default
 	}
 }
 
-void StartItem(entity this, entity a)
+void StartItem(entity this, GameItem def)
 {
-    this.itemdef = a;
     _StartItem(
     	this,
-    	strzone(a.m_model.model_str()), // itemmodel
-    	a.m_sound, // pickupsound
-    	a.m_respawntime(), // defaultrespawntime
-    	a.m_respawntimejitter(), // defaultrespawntimejitter
-    	a.m_name, // itemname
-    	a.m_itemid, // itemid
+    	this.itemdef = def,
+    	def.m_respawntime(), // defaultrespawntime
+    	def.m_respawntimejitter(), // defaultrespawntimejitter
+    	def.m_name, // itemname
+    	def.m_itemid, // itemid
     	0, // weaponid
-    	a.m_itemflags, // itemflags
-    	a.m_pickupevalfunc, // pickupevalfunc
-    	a.m_botvalue // pickupbasevalue
+    	def.m_itemflags // itemflags
 	);
 }
 

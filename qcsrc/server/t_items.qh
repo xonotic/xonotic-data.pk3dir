@@ -112,7 +112,7 @@ float commodity_pickupevalfunc(entity player, entity item);
 
 .float is_item;
 .entity itemdef;
-void _StartItem(entity this, string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue);
+void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags);
 
 
 void target_items_use (void);

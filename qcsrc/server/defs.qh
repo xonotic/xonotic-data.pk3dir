@@ -25,20 +25,20 @@ float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
-float g_pickup_respawntime_weapon;
-float g_pickup_respawntime_superweapon;
-float g_pickup_respawntime_ammo;
-float g_pickup_respawntime_short;
-float g_pickup_respawntime_medium;
-float g_pickup_respawntime_long;
-float g_pickup_respawntime_powerup;
-float g_pickup_respawntimejitter_weapon;
-float g_pickup_respawntimejitter_superweapon;
-float g_pickup_respawntimejitter_ammo;
-float g_pickup_respawntimejitter_short;
-float g_pickup_respawntimejitter_medium;
-float g_pickup_respawntimejitter_long;
-float g_pickup_respawntimejitter_powerup;
+PROPERTY(float, g_pickup_respawntime_weapon)
+PROPERTY(float, g_pickup_respawntime_superweapon)
+PROPERTY(float, g_pickup_respawntime_ammo)
+PROPERTY(float, g_pickup_respawntime_short)
+PROPERTY(float, g_pickup_respawntime_medium)
+PROPERTY(float, g_pickup_respawntime_long)
+PROPERTY(float, g_pickup_respawntime_powerup)
+PROPERTY(float, g_pickup_respawntimejitter_weapon)
+PROPERTY(float, g_pickup_respawntimejitter_superweapon)
+PROPERTY(float, g_pickup_respawntimejitter_ammo)
+PROPERTY(float, g_pickup_respawntimejitter_short)
+PROPERTY(float, g_pickup_respawntimejitter_medium)
+PROPERTY(float, g_pickup_respawntimejitter_long)
+PROPERTY(float, g_pickup_respawntimejitter_powerup)
 float g_jetpack;
 
 float sv_clones;
@@ -148,6 +148,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 // string overrides entity
 .string item_pickupsound;
 .entity item_pickupsound_ent;
+.entity item_model_ent;
 
 // definitions for weaponsystem
 // more WEAPONTODO: move these to their proper files

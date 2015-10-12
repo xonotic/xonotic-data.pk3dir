@@ -123,7 +123,7 @@ STATIC_INIT(RegisterClasses) { RegisterClasses(); }
     class(cname) .type name[cnt];
 
 #define ENDCLASS(cname) \
-    [[last]] INIT(cname) { return this; }
+    INIT(cname) { return this; }
 
 #define SUPER(cname) (cname##_vtbl.vtblbase)
 #define super (this.vtblbase.vtblbase)

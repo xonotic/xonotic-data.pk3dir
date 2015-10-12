@@ -170,20 +170,17 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	if (this.team)
 		f |= FL_NO_WEAPON_STAY;
 
+	GameItem def = e.m_pickup;
 	_StartItem(
 		this,
-		strzone(e.m_model.model_str()), // itemmodel
-		string_null, // pickupsound
+		this.itemdef = def,
 		this.respawntime, // defaultrespawntime
 		this.respawntimejitter, // defaultrespawntimejitter
 		e.message, // itemname
 		0, // itemid
 		e.weapon, // weaponid
-		f, // itemflags
-		weapon_pickupevalfunc, // pickupevalfunc
-		e.bot_pickupbasevalue // pickupbasevalue
+		f // itemflags
 	);
-	this.item_pickupsound_ent = SND_WEAPONPICKUP;
 	#if 0 // WEAPONTODO
 	if (this.modelindex) { // don't precache if this was removed
 		e.wr_init(e);

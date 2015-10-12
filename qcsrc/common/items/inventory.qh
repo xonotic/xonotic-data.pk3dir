@@ -44,7 +44,7 @@ bool Inventory_Send(entity this, entity to, int sf)
 {
     WriteByte(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     entity e = self.owner;
-    if (IS_SPEC(e)) e = e.enemy;
+    if (/*IS_SPEC(e)*/ (e.classname == "spectator")) e = e.enemy;
     Inventory data = e.inventory;
     Inventory_Write(data);
     return true;
@@ -53,7 +53,7 @@ bool Inventory_Send(entity this, entity to, int sf)
 void Inventory_new(entity e)
 {
     Inventory inv = new(Inventory), bak = new(Inventory);
-    inv.classname = "inventory", bak.classname = "inventory";
+    inv.classname = bak.classname = "inventory";
     inv.inventory = bak;
     inv.drawonlytoclient = e;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);
