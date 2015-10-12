@@ -158,7 +158,6 @@ float door_check_keys(void)
 {SELFPARAM();
 	local entity door;
 
-
 	if (self.owner)
 		door = self.owner;
 	else
@@ -179,7 +178,6 @@ float door_check_keys(void)
 		// some keys were used
 		if (other.key_door_messagetime <= time)
 		{
-
 			play2(other, SND(TALK));
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
 			other.key_door_messagetime = time + 2;
