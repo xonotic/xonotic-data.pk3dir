@@ -378,7 +378,12 @@ void Item_Show (entity e, float mode)
 		e.spawnshieldtime = 1;
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
-	else if(e.itemdef.instanceOfWeaponPickup && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
+	else {
+	entity def = e.itemdef;
+	bool nostay = def.instanceOfWeaponPickup ? !!(def.m_weapon.weapons & WEPSET_SUPERWEAPONS) : false // no weapon-stay on superweapons
+		|| e.team // weapon stay isn't supported for teamed weapons
+		;
+	if(def.instanceOfWeaponPickup && !nostay && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
@@ -395,7 +400,7 @@ void Item_Show (entity e, float mode)
 		e.glowmod = e.colormod;
 		e.spawnshieldtime = 1;
 		e.ItemStatus &= ~ITS_AVAILABLE;
-	}
+	}}
 
 	if (e.items & ITEM_Strength.m_itemid || e.items & ITEM_Shield.m_itemid)
 		e.ItemStatus |= ITS_POWERUP;
@@ -975,13 +980,14 @@ void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype,
 		RemoveItem();
 }
 
-void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter, float itemflags)
+void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
 {
 	string itemname = def.m_name;
 	Model itemmodel = def.m_model;
     Sound pickupsound = def.m_sound;
 	float(entity player, entity item) pickupevalfunc = def.m_pickupevalfunc;
 	float pickupbasevalue = def.m_botvalue;
+	int itemflags = def.m_itemflags;
 
 	startitem_failed = false;
 
@@ -1193,8 +1199,7 @@ void StartItem(entity this, GameItem def)
     	this,
     	this.itemdef = def,
     	def.m_respawntime(), // defaultrespawntime
-    	def.m_respawntimejitter(), // defaultrespawntimejitter
-    	def.m_itemflags // itemflags
+    	def.m_respawntimejitter() // defaultrespawntimejitter
 	);
 }
 

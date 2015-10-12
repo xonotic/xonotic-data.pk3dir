@@ -97,6 +97,7 @@ CLASS(WeaponPickup, Pickup)
     ATTRIB(WeaponPickup, m_sound, Sound, SND_WEAPONPICKUP)
 #endif
 #ifdef SVQC
+    ATTRIB(WeaponPickup, m_itemflags, int, FL_WEAPON)
     float weapon_pickupevalfunc(entity player, entity item);
     ATTRIB(WeaponPickup, m_pickupevalfunc, float(entity player, entity item), weapon_pickupevalfunc)
 #endif

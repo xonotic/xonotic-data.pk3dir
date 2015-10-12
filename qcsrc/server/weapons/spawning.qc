@@ -160,23 +160,12 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	if (g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
 
-	int f = FL_WEAPON;
-
-	// no weapon-stay on superweapons
-	if (e.weapons & WEPSET_SUPERWEAPONS)
-		f |= FL_NO_WEAPON_STAY;
-
-	// weapon stay isn't supported for teamed weapons
-	if (this.team)
-		f |= FL_NO_WEAPON_STAY;
-
 	GameItem def = e.m_pickup;
 	_StartItem(
 		this,
 		this.itemdef = def,
 		this.respawntime, // defaultrespawntime
-		this.respawntimejitter, // defaultrespawntimejitter
-		f // itemflags
+		this.respawntimejitter // defaultrespawntimejitter
 	);
 	#if 0 // WEAPONTODO
 	if (this.modelindex) { // don't precache if this was removed
