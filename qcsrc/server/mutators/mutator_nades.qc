@@ -964,7 +964,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {SELFPARAM();
 	if (!IS_PLAYER(self)) { return false; }
 
-	if (self.nade && self.offhand != OFFHAND_NADE) OFFHAND_NADE.offhand_think(OFFHAND_NADE, self, self.nade_altbutton);
+	if (self.nade && (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, self, self.nade_altbutton);
 
 	if(IS_PLAYER(self))
 	{
