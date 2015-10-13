@@ -25,8 +25,7 @@ void XonoticMediaTab_fill(entity me)
 	mc = makeXonoticTabController(me.rows - 2);
 
 	me.gotoRC(me, 0.5, 0);
-		me.TD(me, 1, 1, e = mc.makeTabButton_T(mc, _("Demos"), makeXonoticDemoBrowserTab(),
-			_("Browse and view demos")));
+		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Demos"), makeXonoticDemoBrowserTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Screenshots"), makeXonoticScreenshotBrowserTab()));
 		me.TD(me, 1, 1, e = mc.makeTabButton(mc, _("Music Player"), makeXonoticMusicPlayerTab()));
 

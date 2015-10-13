@@ -11,6 +11,7 @@ entity makeXonoticMiscSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
+#define ADDVALUE_FPS(i) e.addValue(e, strzone(sprintf(_("%d fps"), i)), #i)
 entity makeXonoticMiscSettingsTab()
 {
 	entity me;
@@ -33,7 +34,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bandwidth:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("_cl_rate",
-			_("Specify your network speed with this slider")));
+			_("Specify your network speed")));
 			e.addValue(e, _("56k"), "4000");
 			e.addValue(e, _("ISDN"), "7000");
 			e.addValue(e, _("Slow ADSL"), "15000");
@@ -67,8 +68,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "shownetgraph", _("Show netgraph"),
 			_("Show a graph of packet sizes and other information")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "cl_movement", _("Client-side movement prediction"),
-			_("Enable clientside movement prediction")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Movement error compensation")));
 		setDependent(e, "cl_movement", 1, 1);
@@ -81,38 +81,38 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxfps"));
-			e.addValue(e, ZCTX(_("MAXFPS^5 fps")), "5");
-			e.addValue(e, ZCTX(_("MAXFPS^10 fps")), "10");
-			e.addValue(e, ZCTX(_("MAXFPS^20 fps")), "20");
-			e.addValue(e, ZCTX(_("MAXFPS^30 fps")), "30");
-			e.addValue(e, ZCTX(_("MAXFPS^40 fps")), "40");
-			e.addValue(e, ZCTX(_("MAXFPS^50 fps")), "50");
-			e.addValue(e, ZCTX(_("MAXFPS^60 fps")), "60");
-			e.addValue(e, ZCTX(_("MAXFPS^70 fps")), "70");
-			e.addValue(e, ZCTX(_("MAXFPS^100 fps")), "100");
-			e.addValue(e, ZCTX(_("MAXFPS^125 fps")), "125");
-			e.addValue(e, ZCTX(_("MAXFPS^200 fps")), "200");
+			ADDVALUE_FPS(5);
+			ADDVALUE_FPS(10);
+			ADDVALUE_FPS(20);
+			ADDVALUE_FPS(30);
+			ADDVALUE_FPS(40);
+			ADDVALUE_FPS(50);
+			ADDVALUE_FPS(60);
+			ADDVALUE_FPS(70);
+			ADDVALUE_FPS(100);
+			ADDVALUE_FPS(125);
+			ADDVALUE_FPS(200);
 			e.addValue(e, ZCTX(_("MAXFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Target:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_minfps"));
 			e.addValue(e, ZCTX(_("TRGT^Disabled")), "0");
-			e.addValue(e, ZCTX(_("TRGT^30 fps")), "30");
-			e.addValue(e, ZCTX(_("TRGT^40 fps")), "40");
-			e.addValue(e, ZCTX(_("TRGT^50 fps")), "50");
-			e.addValue(e, ZCTX(_("TRGT^60 fps")), "60");
-			e.addValue(e, ZCTX(_("TRGT^100 fps")), "100");
-			e.addValue(e, ZCTX(_("TRGT^125 fps")), "125");
-			e.addValue(e, ZCTX(_("TRGT^200 fps")), "200");
+			ADDVALUE_FPS(30);
+			ADDVALUE_FPS(40);
+			ADDVALUE_FPS(50);
+			ADDVALUE_FPS(60);
+			ADDVALUE_FPS(100);
+			ADDVALUE_FPS(125);
+			ADDVALUE_FPS(200);
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Idle limit:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxidlefps"));
-			e.addValue(e, ZCTX(_("IDLFPS^10 fps")), "10");
-			e.addValue(e, ZCTX(_("IDLFPS^20 fps")), "20");
-			e.addValue(e, ZCTX(_("IDLFPS^30 fps")), "30");
-			e.addValue(e, ZCTX(_("IDLFPS^60 fps")), "60");
+			ADDVALUE_FPS(10);
+			ADDVALUE_FPS(20);
+			ADDVALUE_FPS(30);
+			ADDVALUE_FPS(60);
 			e.addValue(e, ZCTX(_("IDLFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
@@ -152,4 +152,5 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.resetDialog;
 }
+#undef ADDVALUE_FPS
 #endif

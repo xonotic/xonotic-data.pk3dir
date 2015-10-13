@@ -47,8 +47,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, _("32bit"), "32");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox_T(0, "vid_fullscreen", _("Full screen"),
-			_("Enable fullscreen mode (default: enabled)")));
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "vid_vsync", _("Vertical Synchronization"),
 			_("Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)")));
 
@@ -95,8 +94,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton_T(1, "gl_vbo", "0", ZCTX(_("VBO^Off")),
-			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "gl_vbo", "0", ZCTX(_("VBO^Off"))));
 		me.TD(me, 1, 1.9, e = makeXonoticRadioButton_T(1, "gl_vbo", "3", _("Vertices, some Tris (compatible)"),
 			_("Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)")));
 	me.TR(me);
