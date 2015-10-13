@@ -721,7 +721,7 @@ void HUD_Weapons(void)
 					break;
 
 				case 3: // weapon name
-					drawstring(weapon_pos, strtolower(self.message), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, strtolower(self.m_name), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				default: // nothing
