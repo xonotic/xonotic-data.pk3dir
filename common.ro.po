@@ -2963,7 +2963,7 @@ msgstr "^BG%s%s^K1 a fost pălit de pușca lui ^BG%s^K1%s%s"
 #: qcsrc/common/notifications.inc:435
 #, c-format
 msgid "^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"
-msgstr "%BG%s%s^K1 a murit în rafala de gloanțe%s%s a lui ^BG%s^K1's"
+msgstr "^BG%s%s^K1 a murit în rafala de gloanțe%s%s a lui ^BG%s^K1's"
 
 #: qcsrc/common/notifications.inc:436
 #, c-format
