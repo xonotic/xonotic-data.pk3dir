@@ -1,5 +1,4 @@
 #include "cl_player.qh"
-#include "_all.qh"
 
 #include "bot/bot.qh"
 #include "cheats.qh"
@@ -13,12 +12,15 @@
 #include "command/common.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/playerstats.qh"
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
 #include "../common/minigames/sv_minigames.qh"
+
+#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include "../common/triggers/include.qh"
 
 #include "weapons/weaponstats.qh"
 
@@ -323,7 +325,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_TUBA.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
 		// tuba causes blood to come out of the ears
 		vector ear1, ear2;
@@ -434,11 +436,11 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 					}
 
 					if(sound_allowed(MSG_BROADCAST, attacker))
-					if((self.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) || !((get_weaponinfo(DEATH_WEAPONOF(deathtype))).spawnflags & WEP_FLAG_CANCLIMB) || attacker != self) // WEAPONTODO: create separate limit for pain notification with laser
+					if((self.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || attacker != self) // WEAPONTODO: create separate limit for pain notification with laser
 					if(self.health > 1)
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
-						if(deathtype == DEATH_FALL)
+						if(deathtype == DEATH_FALL.m_id)
 							PlayerSound(playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 75) // TODO make a "gentle" version?
 							PlayerSound(playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
@@ -469,12 +471,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	float abot, vbot, awep;
+	float abot, vbot;
 	abot = (IS_BOT_CLIENT(attacker));
 	vbot = (IS_BOT_CLIENT(self));
 
 	valid_damage_for_weaponstats = 0;
-	awep = 0;
+	Weapon awep = WEP_Null;
 
 	if(vbot || IS_REAL_CLIENT(self))
 	if(abot || IS_REAL_CLIENT(attacker))
@@ -482,7 +484,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(DIFF_TEAM(self, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
-			awep = attacker.weapon;
+			awep = get_weaponinfo(attacker.weapon);
 		else
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
@@ -492,7 +494,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	{
 		dh = dh - max(self.health, 0);
 		da = da - max(self.armorvalue, 0);
-		WeaponStats_LogDamage(awep, abot, self.weapon, vbot, dh + da);
+		WeaponStats_LogDamage(awep.m_id, abot, self.weapon, vbot, dh + da);
 		MUTATOR_CALLHOOK(PlayerDamaged, attacker, self, dh, da, hitloc);
 	}
 
@@ -508,12 +510,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		}
 
 		if(valid_damage_for_weaponstats)
-			WeaponStats_LogKill(awep, abot, self.weapon, vbot);
+			WeaponStats_LogKill(awep.m_id, abot, self.weapon, vbot);
 
 		if(autocvar_sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
-			if(deathtype == DEATH_DROWN)
+			if(deathtype == DEATH_DROWN.m_id)
 				PlayerSound(playersound_drown, CH_PAIN, VOICETYPE_PLAYERSOUND);
 			else
 				PlayerSound(playersound_death, CH_PAIN, VOICETYPE_PLAYERSOUND);
@@ -528,7 +530,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 				defer_ClientKill_Now_TeamChange = true;
 
 			if(self.classname == "body")
-			if(deathtype == DEATH_KILL)
+			if(deathtype == DEATH_KILL.m_id)
 			{
 				// for the lemmings fans, a small harmless explosion
 				Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
@@ -540,15 +542,16 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			Obituary (attacker, inflictor, self, deathtype);
 
         // increment frag counter for used weapon type
-        int w = DEATH_WEAPONOF(deathtype);
-        if(WEP_VALID(w))
+        Weapon w = DEATH_WEAPONOF(deathtype);
+        if(w != WEP_Null)
 	if(accuracy_isgooddamage(attacker, self))
-        attacker.accuracy.(accuracy_frags[w-1]) += 1;
+        attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 		excess = frag_damage;
 
-		WEP_ACTION(self.weapon, WR_PLAYERDEATH);
+		Weapon wep = get_weaponinfo(self.weapon);
+		wep.wr_playerdeath(wep);
 
 		RemoveGrapplingHook(self);
 
@@ -630,7 +633,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		// reset fields the weapons may use just in case
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			WEP_ACTION(j, WR_RESETPLAYER);
+			Weapon w = get_weaponinfo(j);
+			w.wr_resetplayer(w);
 			ATTACK_FINISHED_FOR(self, j) = 0;
 		}
 	}
@@ -1271,7 +1275,7 @@ void MoveToTeam(entity client, float team_colour, float type)
 
 	TeamchangeFrags(client);  // move the players frags
 	SetPlayerColors(client, team_colour - 1);  // set the players colour
-	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE, client.origin, '0 0 0');  // kill the player
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
 
 	lockteams = lockteams_backup;  // restore the team lock
 

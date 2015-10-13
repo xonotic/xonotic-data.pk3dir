@@ -478,7 +478,7 @@ entity m_findtooltipitem(entity root, vector pos)
 	entity it;
 	entity best;
 
-	best = world;
+	best = NULL;
 	it = root;
 
 	while(it.instanceOfContainer)
@@ -495,7 +495,7 @@ entity m_findtooltipitem(entity root, vector pos)
 				best = it;
 			else if(menu_tooltips == 2 && (it.cvarName || it.onClickCommand))
 				best = it;
-			it = world;
+			it = NULL;
 		}
 		else if(it.instanceOfModalController)
 			it = it.focusedChild;
@@ -545,9 +545,9 @@ void m_tooltip(vector pos)
 	if (!menu_tooltips)
 	{
 		// don't return immediately, fade out the active tooltip first
-		if (menuTooltipItem == world)
+		if (menuTooltipItem == NULL)
 			return;
-		it = world;
+		it = NULL;
 		menu_tooltips_old = menu_tooltips;
 	}
 	else
@@ -558,7 +558,7 @@ void m_tooltip(vector pos)
 		if(f < 0.01)
 			it = m_findtooltipitem(main, pos);
 		else
-			it = world;
+			it = NULL;
 	}
 	fontsize = '1 0 0' * (SKINFONTSIZE_TOOLTIP / conwidth) + '0 1 0' * (SKINFONTSIZE_TOOLTIP / conheight);
 
@@ -629,12 +629,12 @@ void m_tooltip(vector pos)
 			if(menuTooltipAlpha == 0)
 			{
 				menuTooltipState = 0;
-				menuTooltipItem = world;
+				menuTooltipItem = NULL;
 			}
 			break;
 	}
 
-	if(menuTooltipItem == world)
+	if(menuTooltipItem == NULL)
 	{
 		if (menuTooltipText)
 		{
@@ -648,7 +648,7 @@ void m_tooltip(vector pos)
 		if(menu_tooltips != menu_tooltips_old)
 		{
 			if (menu_tooltips != 0 && menu_tooltips_old != 0)
-				menuTooltipItem = world; // reload tooltip next frame
+				menuTooltipItem = NULL; // reload tooltip next frame
 			menu_tooltips_old = menu_tooltips;
 		}
 		else if(menuTooltipOrigin.x < 0) // unallocated?

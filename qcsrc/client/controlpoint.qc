@@ -1,8 +1,9 @@
 #include "controlpoint.qh"
-#include "gibs.qh"
+
 #include "teamradar.qh"
 #include "../common/movetypes/movetypes.qh"
 
+.vector colormod;
 .float alpha;
 .int count;
 .float pain_finished;
@@ -20,180 +21,180 @@
 
 .entity icon_realmodel;
 
-void cpicon_draw()
-{SELFPARAM();
-	if(time < self.move_time) { return; }
+void cpicon_draw(entity this)
+{
+	if(time < this.move_time) { return; }
 
-	if(self.cp_bob_dmg_z > 0)
-		self.cp_bob_dmg_z = self.cp_bob_dmg_z - 3 * frametime;
+	if(this.cp_bob_dmg_z > 0)
+		this.cp_bob_dmg_z = this.cp_bob_dmg_z - 3 * frametime;
 	else
-		self.cp_bob_dmg_z = 0;
-	self.cp_bob_origin_z = 4 * PI * (1 - cos(self.cp_bob_spd));
-	self.cp_bob_spd = self.cp_bob_spd + 1.875 * frametime;
-	self.colormod = '1 1 1' * (2 - bound(0, (self.pain_finished - time) / 10, 1));
+		this.cp_bob_dmg_z = 0;
+	this.cp_bob_origin_z = 4 * PI * (1 - cos(this.cp_bob_spd));
+	this.cp_bob_spd = this.cp_bob_spd + 1.875 * frametime;
+	this.colormod = '1 1 1' * (2 - bound(0, (this.pain_finished - time) / 10, 1));
 
-	if(!self.iscaptured) self.alpha = self.health / self.max_health;
+	if(!this.iscaptured) this.alpha = this.health / this.max_health;
 
-	if(self.iscaptured)
+	if(this.iscaptured)
 	{
-		if (self.punchangle_x > 0)
+		if (this.punchangle_x > 0)
 		{
-			self.punchangle_x = self.punchangle_x - 60 * frametime;
-			if (self.punchangle_x < 0)
-				self.punchangle_x = 0;
+			this.punchangle_x = this.punchangle_x - 60 * frametime;
+			if (this.punchangle_x < 0)
+				this.punchangle_x = 0;
 		}
-		else if (self.punchangle_x < 0)
+		else if (this.punchangle_x < 0)
 		{
-			self.punchangle_x = self.punchangle_x + 60 * frametime;
-			if (self.punchangle_x > 0)
-				self.punchangle_x = 0;
-		}
-
-		if (self.punchangle_y > 0)
-		{
-			self.punchangle_y = self.punchangle_y - 60 * frametime;
-			if (self.punchangle_y < 0)
-				self.punchangle_y = 0;
-		}
-		else if (self.punchangle_y < 0)
-		{
-			self.punchangle_y = self.punchangle_y + 60 * frametime;
-			if (self.punchangle_y > 0)
-				self.punchangle_y = 0;
+			this.punchangle_x = this.punchangle_x + 60 * frametime;
+			if (this.punchangle_x > 0)
+				this.punchangle_x = 0;
 		}
 
-		if (self.punchangle_z > 0)
+		if (this.punchangle_y > 0)
 		{
-			self.punchangle_z = self.punchangle_z - 60 * frametime;
-			if (self.punchangle_z < 0)
-				self.punchangle_z = 0;
+			this.punchangle_y = this.punchangle_y - 60 * frametime;
+			if (this.punchangle_y < 0)
+				this.punchangle_y = 0;
 		}
-		else if (self.punchangle_z < 0)
+		else if (this.punchangle_y < 0)
 		{
-			self.punchangle_z = self.punchangle_z + 60 * frametime;
-			if (self.punchangle_z > 0)
-				self.punchangle_z = 0;
+			this.punchangle_y = this.punchangle_y + 60 * frametime;
+			if (this.punchangle_y > 0)
+				this.punchangle_y = 0;
 		}
 
-		self.angles_x = self.punchangle_x;
-		self.angles_y = self.punchangle_y + self.move_angles_y;
-		self.angles_z = self.punchangle_z;
-		self.move_angles_y = self.move_angles_y + 45 * frametime;
+		if (this.punchangle_z > 0)
+		{
+			this.punchangle_z = this.punchangle_z - 60 * frametime;
+			if (this.punchangle_z < 0)
+				this.punchangle_z = 0;
+		}
+		else if (this.punchangle_z < 0)
+		{
+			this.punchangle_z = this.punchangle_z + 60 * frametime;
+			if (this.punchangle_z > 0)
+				this.punchangle_z = 0;
+		}
+
+		this.angles_x = this.punchangle_x;
+		this.angles_y = this.punchangle_y + this.move_angles_y;
+		this.angles_z = this.punchangle_z;
+		this.move_angles_y = this.move_angles_y + 45 * frametime;
 	}
 
-	setorigin(self, self.cp_origin + self.cp_bob_origin + self.cp_bob_dmg);
+	setorigin(this, this.cp_origin + this.cp_bob_origin + this.cp_bob_dmg);
 }
 
-void cpicon_damage(float hp)
-{SELFPARAM();
-	if(!self.iscaptured) { return; }
+void cpicon_damage(entity this, float hp)
+{
+	if(!this.iscaptured) { return; }
 
-	if(hp < self.max_health * 0.25)
-		setmodel(self, MDL_ONS_CP3);
-	else if(hp < self.max_health * 0.50)
-		setmodel(self, MDL_ONS_CP2);
-	else if(hp < self.max_health * 0.75)
-		setmodel(self, MDL_ONS_CP1);
-	else if(hp <= self.max_health || hp >= self.max_health)
-		setmodel(self, MDL_ONS_CP);
+	if(hp < this.max_health * 0.25)
+		setmodel(this, MDL_ONS_CP3);
+	else if(hp < this.max_health * 0.50)
+		setmodel(this, MDL_ONS_CP2);
+	else if(hp < this.max_health * 0.75)
+		setmodel(this, MDL_ONS_CP1);
+	else if(hp <= this.max_health || hp >= this.max_health)
+		setmodel(this, MDL_ONS_CP);
 
-	self.punchangle = (2 * randomvec() - '1 1 1') * 45;
+	this.punchangle = (2 * randomvec() - '1 1 1') * 45;
 
-	self.cp_bob_dmg_z = (2 * random() - 1) * 15;
-	self.pain_finished = time + 1;
-	self.colormod = '2 2 2';
+	this.cp_bob_dmg_z = (2 * random() - 1) * 15;
+	this.pain_finished = time + 1;
+	this.colormod = '2 2 2';
 
-	setsize(self, CPICON_MIN, CPICON_MAX);
+	setsize(this, CPICON_MIN, CPICON_MAX);
 }
 
-void cpicon_construct()
-{SELFPARAM();
-	self.netname = "Control Point Icon";
+void cpicon_construct(entity this)
+{
+	this.netname = "Control Point Icon";
 
-	setmodel(self, MDL_ONS_CP);
-	setsize(self, CPICON_MIN, CPICON_MAX);
+	setmodel(this, MDL_ONS_CP);
+	setsize(this, CPICON_MIN, CPICON_MAX);
 
-	if(self.icon_realmodel == world)
+	if(this.icon_realmodel == world)
 	{
-		self.icon_realmodel = spawn();
-		setmodel(self.icon_realmodel, MDL_Null);
-		setorigin(self.icon_realmodel, self.origin);
-		setsize(self.icon_realmodel, CPICON_MIN, CPICON_MAX);
-		self.icon_realmodel.movetype = MOVETYPE_NOCLIP;
-		self.icon_realmodel.solid = SOLID_NOT;
-		self.icon_realmodel.move_origin = self.icon_realmodel.origin;
+		this.icon_realmodel = spawn();
+		setmodel(this.icon_realmodel, MDL_Null);
+		setorigin(this.icon_realmodel, this.origin);
+		setsize(this.icon_realmodel, CPICON_MIN, CPICON_MAX);
+		this.icon_realmodel.movetype = MOVETYPE_NOCLIP;
+		this.icon_realmodel.solid = SOLID_NOT;
+		this.icon_realmodel.move_origin = this.icon_realmodel.origin;
 	}
 
-	if(self.iscaptured) { self.icon_realmodel.solid = SOLID_BBOX; }
+	if(this.iscaptured) { this.icon_realmodel.solid = SOLID_BBOX; }
 
-	self.move_movetype	= MOVETYPE_NOCLIP;
-	self.solid			= SOLID_NOT;
-	self.movetype		= MOVETYPE_NOCLIP;
-	self.move_origin	= self.origin;
-	self.move_time		= time;
-	self.drawmask		= MASK_NORMAL;
-	self.alpha			= 1;
-	self.draw			= cpicon_draw;
-	self.cp_origin		= self.origin;
-	self.cp_bob_origin 	= '0 0 0.1';
-	self.cp_bob_spd 	= 0;
+	this.move_movetype	= MOVETYPE_NOCLIP;
+	this.solid			= SOLID_NOT;
+	this.movetype		= MOVETYPE_NOCLIP;
+	this.move_origin	= this.origin;
+	this.move_time		= time;
+	this.drawmask		= MASK_NORMAL;
+	this.alpha			= 1;
+	this.draw			= cpicon_draw;
+	this.cp_origin		= this.origin;
+	this.cp_bob_origin 	= '0 0 0.1';
+	this.cp_bob_spd 	= 0;
 }
 
 .vector glowmod;
-void cpicon_changeteam()
-{SELFPARAM();
-	if(self.team)
+void cpicon_changeteam(entity this)
+{
+	if(this.team)
 	{
-		self.glowmod = Team_ColorRGB(self.team - 1);
-		self.teamradar_color = Team_ColorRGB(self.team - 1);
-		self.colormap = 1024 + (self.team - 1) * 17;
+		this.glowmod = Team_ColorRGB(this.team - 1);
+		this.teamradar_color = Team_ColorRGB(this.team - 1);
+		this.colormap = 1024 + (this.team - 1) * 17;
 	}
 	else
 	{
-		self.colormap = 1024;
-		self.glowmod = '1 1 0';
-		self.teamradar_color = '1 1 0';
+		this.colormap = 1024;
+		this.glowmod = '1 1 0';
+		this.teamradar_color = '1 1 0';
 	}
 }
 
-void ent_cpicon()
-{SELFPARAM();
+void ent_cpicon(entity this)
+{
 	int sf = ReadByte();
 
 	if(sf & CPSF_SETUP)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 
-		self.health = ReadByte();
-		self.max_health = ReadByte();
-		self.count = ReadByte();
-		self.team = ReadByte();
-		self.iscaptured = ReadByte();
+		this.health = ReadByte();
+		this.max_health = ReadByte();
+		this.count = ReadByte();
+		this.team = ReadByte();
+		this.iscaptured = ReadByte();
 
-		if(!self.count)
-			self.count = (self.health - self.max_health) * frametime;
+		if(!this.count)
+			this.count = (this.health - this.max_health) * frametime;
 
-		cpicon_changeteam();
-		cpicon_construct();
+		cpicon_changeteam(this);
+		cpicon_construct(this);
 	}
 
 	if(sf & CPSF_STATUS)
 	{
 		int _tmp = ReadByte();
-		if(_tmp != self.team)
+		if(_tmp != this.team)
 		{
-			self.team = _tmp;
-			cpicon_changeteam();
+			this.team = _tmp;
+			cpicon_changeteam(this);
 		}
 
 		_tmp = ReadByte();
 
-		if(_tmp != self.health)
-			cpicon_damage(_tmp);
+		if(_tmp != this.health)
+			cpicon_damage(this, _tmp);
 
-		self.health = _tmp;
+		this.health = _tmp;
 	}
 }

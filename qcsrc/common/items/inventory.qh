@@ -6,7 +6,7 @@
 
 entityclass(Inventory);
 /** Stores counts of items, the id being the index */
-class(Inventory) .int inv_items[MAX_ITEMS];
+class(Inventory) .int inv_items[Items_MAX];
 
 /** Player inventory; Inventories also have one inventory for storing the previous state */
 .Inventory inventory;
@@ -15,11 +15,11 @@ class(Inventory) .int inv_items[MAX_ITEMS];
 void Inventory_Read(Inventory data)
 {
     const int bits = ReadInt24_t();
-    FOREACH(ITEMS, bits & BIT(i), LAMBDA(
-        .int fld = inv_items[i];
+    FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
+        .int fld = inv_items[it.m_id];
         int prev = data.(fld);
         int next = data.(fld) = ReadByte();
-        LOG_TRACEF("%s: %.0f -> %.0f\n", ITEMS[i].m_name, prev, next);
+        LOG_TRACEF("%s: %.0f -> %.0f\n", it.m_name, prev, next);
     ));
 }
 #endif
@@ -28,20 +28,20 @@ void Inventory_Read(Inventory data)
 void Inventory_Write(Inventory data)
 {
     int bits = 0;
-    FOREACH(ITEMS, true, LAMBDA(
-        .int fld = inv_items[i];
-        bits = BITSET(bits, BIT(i), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
+    FOREACH(Items, true, LAMBDA(
+        .int fld = inv_items[it.m_id];
+        bits = BITSET(bits, BIT(it.m_id), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
     ));
     WriteInt24_t(MSG_ENTITY, bits);
-    FOREACH(ITEMS, bits & BIT(i), LAMBDA(
-        WriteByte(MSG_ENTITY, data.inv_items[i]);
+    FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
+        WriteByte(MSG_ENTITY, data.inv_items[it.m_id]);
     ));
 }
 #endif
 
 #ifdef SVQC
-bool Inventory_Send(entity to, int sf)
-{SELFPARAM();
+bool Inventory_Send(entity this, entity to, int sf)
+{
     WriteByte(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     entity e = self.owner;
     if (IS_SPEC(e)) e = e.enemy;

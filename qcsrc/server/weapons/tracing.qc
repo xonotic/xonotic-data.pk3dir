@@ -1,9 +1,9 @@
 #include "tracing.qh"
-#include "../_all.qh"
 
 #include "accuracy.qh"
 #include "common.qh"
 #include "hitplot.qh"
+#include "weaponsystem.qh"
 
 #include "../g_damage.qh"
 #include "../g_subs.qh"
@@ -14,7 +14,7 @@
 
 #include "../../common/weapons/all.qh"
 
-#include "../../warpzonelib/common.qh"
+#include "../../lib/warpzone/common.qh"
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.

@@ -1,6 +1,6 @@
 #include "scoreboard.qh"
-#include "_all.qh"
 
+#include "quickmenu.qh"
 #include "hud.qh"
 
 #include "../common/constants.qh"
@@ -8,7 +8,6 @@
 #include "../common/minigames/cl_minigames.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
-#include "../common/util.qh"
 
 float scoreboard_alpha_bg;
 float scoreboard_alpha_fg;
@@ -994,13 +993,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			++disownedcnt;
 	}
 
-	int weapon_cnt = WEP_COUNT - disownedcnt;
+	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
 
 	if(weapon_cnt <= 0)
 		return pos;
 
 	int rows;
-	if(autocvar_scoreboard_accuracy_doublerows && weapon_cnt >= floor(WEP_COUNT * 0.5))
+	if(autocvar_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - 1) * 0.5))
 		rows = 2;
 	else
 		rows = 1;

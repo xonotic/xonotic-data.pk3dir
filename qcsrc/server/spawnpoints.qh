@@ -3,7 +3,7 @@
 
 .vector spawnpoint_score;
 float spawnpoint_nag;
-float SpawnEvent_Send(entity to, int sf);
+bool SpawnEvent_Send(entity this, entity to, int sf);
 entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck);
 entity SelectSpawnPoint (float anypoint);
 spawnfunc(info_player_deathmatch);

@@ -1,3 +1,5 @@
+#ifdef IMPLEMENTATION
+
 #include "../../util.qh"
 
 #ifdef CSQC
@@ -40,8 +42,8 @@ void Casing_Delete()
     remove(self);
 }
 
-void Casing_Draw()
-{SELFPARAM();
+void Casing_Draw(entity this)
+{
     if (self.move_flags & FL_ONGROUND)
     {
         self.move_angles_x = 0;
@@ -67,13 +69,13 @@ SOUND(BRASS1, W_Sound("brass1"));
 SOUND(BRASS2, W_Sound("brass2"));
 SOUND(BRASS3, W_Sound("brass3"));
 Sound SND_BRASS_RANDOM() {
-    return SOUNDS[SND_BRASS1.m_id + floor(prandom() * 3)];
+    return Sounds[SND_BRASS1.m_id + floor(prandom() * 3)];
 }
 SOUND(CASINGS1, W_Sound("casings1"));
 SOUND(CASINGS2, W_Sound("casings2"));
 SOUND(CASINGS3, W_Sound("casings3"));
 Sound SND_CASINGS_RANDOM() {
-    return SOUNDS[SND_CASINGS1.m_id + floor(prandom() * 3)];
+    return Sounds[SND_CASINGS1.m_id + floor(prandom() * 3)];
 }
 
 void Casing_Touch()
@@ -174,4 +176,5 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
     RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
 }
 
+#endif
 #endif

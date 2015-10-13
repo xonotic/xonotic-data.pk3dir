@@ -1,21 +1,76 @@
+#ifndef MAGE_H
+#define MAGE_H
+
 #ifndef MENUQC
-bool M_Mage(int);
+MODEL(MON_MAGE, "models/monsters/mage.dpm");
 #endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ MAGE,
-/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
-/* mins,maxs  */ '-36 -36 -24', '36 36 50',
-/* model      */ "mage.dpm",
-/* netname    */ "mage",
-/* fullname   */ _("Mage")
-) {
+
+CLASS(Mage, Monster)
+    ATTRIB(Mage, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Mage, mins, vector, '-36 -36 -24');
+    ATTRIB(Mage, maxs, vector, '36 36 50');
 #ifndef MENUQC
-    this.monster_func = M_Mage;
-    this.monster_func(MR_PRECACHE);
+    ATTRIB(Mage, m_model, Model, MDL_MON_MAGE);
+#endif
+    ATTRIB(Mage, netname, string, "mage");
+    ATTRIB(Mage, monster_name, string, _("Mage"));
+ENDCLASS(Mage)
+
+REGISTER_MONSTER(MAGE, NEW(Mage)) {
+#ifndef MENUQC
+    this.mr_precache(this);
 #endif
 }
 
+#include "../../weapons/all.qh"
+#include "../../items/all.qc"
+
+CLASS(MageSpike, PortoLaunch)
+/* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* impulse   */ ATTRIB(MageSpike, impulse, int, 9);
+/* refname   */ ATTRIB(MageSpike, netname, string, "magespike");
+/* wepname   */ ATTRIB(MageSpike, message, string, _("Mage spike"));
+ENDCLASS(MageSpike)
+REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
+
+#endif
+
+#ifdef IMPLEMENTATION
+
 #ifdef SVQC
+
+void M_Mage_Attack_Spike(vector dir);
+void M_Mage_Attack_Push();
+METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, bool fire1, bool fire2)) {
+    if (fire1)
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, false, 0.2)) {
+        if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
+        actor.enemy = Monster_FindTarget(actor);
+        W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+    	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
+        M_Mage_Attack_Spike(w_shotdir);
+        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
+    }
+    if (fire2)
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, true, 0.5)) {
+        M_Mage_Attack_Push();
+        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
+    }
+}
+
+void M_Mage_Attack_Teleport();
+
+CLASS(OffhandMageTeleport, OffhandWeapon)
+    .bool OffhandMageTeleport_key_pressed;
+    METHOD(OffhandMageTeleport, offhand_think, void(OffhandMageTeleport this, entity player, bool key_pressed))
+    {
+        if (key_pressed && !player.OffhandMageTeleport_key_pressed)
+            WITH(entity, self, player, M_Mage_Attack_Teleport());
+        player.OffhandMageTeleport_key_pressed = key_pressed;
+    }
+ENDCLASS(OffhandMageTeleport)
+OffhandMageTeleport OFFHAND_MAGE_TELEPORT; STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
+
 float autocvar_g_monster_mage_health;
 float autocvar_g_monster_mage_damageforcescale = 0.5;
 float autocvar_g_monster_mage_attack_spike_damage;
@@ -96,7 +151,7 @@ void M_Mage_Attack_Spike_Explode()
 	self.realowner.mage_spike = world;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE, other);
+	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, other);
 
 	remove (self);
 }
@@ -108,22 +163,17 @@ void M_Mage_Attack_Spike_Touch()
 	M_Mage_Attack_Spike_Explode();
 }
 
+.float wait;
+
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think()
 {SELFPARAM();
-	entity e;
-	vector desireddir, olddir, newdir, eorg;
-	float turnrate;
-	float dist;
-	float spd;
-
-	if (time > self.ltime || self.enemy.health <= 0 || self.owner.health <= 0)
-	{
+	if (time > self.ltime || (self.enemy && self.enemy.health <= 0) || self.owner.health <= 0) {
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 		M_Mage_Attack_Spike_Explode();
 	}
 
-	spd = vlen(self.velocity);
+	float spd = vlen(self.velocity);
 	spd = bound(
 		spd - (autocvar_g_monster_mage_attack_spike_decel) * frametime,
 		(autocvar_g_monster_mage_attack_spike_speed_max),
@@ -136,12 +186,12 @@ void M_Mage_Attack_Spike_Think()
 
 	if (self.enemy != world)
 	{
-		e				= self.enemy;
-		eorg			= 0.5 * (e.absmin + e.absmax);
-		turnrate		= (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
-		desireddir		= normalize(eorg - self.origin);
-		olddir			= normalize(self.velocity); // get my current direction
-		dist			= vlen(eorg - self.origin);
+		entity e = self.enemy;
+		vector eorg = 0.5 * (e.absmin + e.absmax);
+		float turnrate = (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
+		vector desireddir = normalize(eorg - self.origin);
+		vector olddir = normalize(self.velocity); // get my current direction
+		float dist = vlen(eorg - self.origin);
 
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
 		if ((autocvar_g_monster_mage_attack_spike_smart) && (dist > (autocvar_g_monster_mage_attack_spike_smart_mindist)))
@@ -159,11 +209,9 @@ void M_Mage_Attack_Spike_Think()
 			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
 		}
 
-		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
+		vector newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
 		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
 	}
-	else
-		dist = 0;
 
 	///////////////
 
@@ -172,14 +220,12 @@ void M_Mage_Attack_Spike_Think()
 	UpdateCSQCProjectile(self);
 }
 
-void M_Mage_Attack_Spike()
-{SELFPARAM();
-	entity missile;
-	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
-
+void M_Mage_Attack_Spike(vector dir)
+{
+	SELFPARAM();
 	makevectors(self.angles);
 
-	missile = spawn ();
+	entity missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.think = M_Mage_Attack_Spike_Think;
 	missile.ltime = time + 7;
@@ -188,7 +234,7 @@ void M_Mage_Attack_Spike()
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.flags = FL_PROJECTILE;
 	setorigin(missile, self.origin + v_forward * 14 + '0 0 30' + v_right * -14);
-	setsize (missile, '0 0 0', '0 0 0');
+	setsize(missile, '0 0 0', '0 0 0');
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.enemy = self.enemy;
@@ -259,7 +305,7 @@ void M_Mage_Defend_Heal()
 void M_Mage_Attack_Push()
 {SELFPARAM();
 	sound(self, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
-	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
+	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, self.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, self.origin, '0 0 0', 1);
 
 	setanim(self, self.anim_shoot, true, true, true);
@@ -268,17 +314,25 @@ void M_Mage_Attack_Push()
 
 void M_Mage_Attack_Teleport()
 {SELFPARAM();
-	if(vlen(self.enemy.origin - self.origin) >= 500)
-		return;
+	entity targ = self.enemy;
+	if (!targ) return;
+	if (vlen(targ.origin - self.origin) > 1500) return;
 
-	makevectors(self.enemy.angles);
-	tracebox(self.enemy.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
+	makevectors(targ.angles);
+	tracebox(targ.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
 
 	if(trace_fraction < 1)
 		return;
 
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1);
-	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
+	setorigin(self, targ.origin + ((v_forward * -1) * 200));
+
+	vector a = vectoangles(targ.origin - self.origin);
+	a.x = -a.x;
+	self.angles_x = a.x;
+	self.angles_y = a.y;
+	self.fixangle = true;
+	self.velocity *= 0.5;
 
 	self.attack_finished_single = time + 0.2;
 }
@@ -300,7 +354,7 @@ void M_Mage_Defend_Shield()
 	self.anim_finished = time + 1;
 }
 
-float M_Mage_Attack(float attack_type)
+float M_Mage_Attack(float attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{
@@ -308,7 +362,8 @@ float M_Mage_Attack(float attack_type)
 		{
 			if(random() <= 0.7)
 			{
-				M_Mage_Attack_Push();
+				Weapon wep = WEP_MAGE_SPIKE;
+				wep.wr_think(wep, self, false, true);
 				return true;
 			}
 
@@ -320,7 +375,8 @@ float M_Mage_Attack(float attack_type)
 			{
 				if(random() <= 0.4)
 				{
-					M_Mage_Attack_Teleport();
+					OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
+					off.offhand_think(off, self, true);
 					return true;
 				}
 				else
@@ -328,7 +384,8 @@ float M_Mage_Attack(float attack_type)
 					setanim(self, self.anim_shoot, true, true, true);
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
-					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike);
+					Weapon wep = WEP_MAGE_SPIKE;
+					wep.wr_think(wep, self, true, false);
 					return true;
 				}
 			}
@@ -347,13 +404,10 @@ spawnfunc(monster_mage) { Monster_Spawn(MON_MAGE.monsterid); }
 
 #endif // SVQC
 
-bool M_Mage(int req)
-{SELFPARAM();
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Mage, mr_think, bool(Monster thismon))
 		{
+			SELFPARAM();
 			entity head;
 			bool need_help = false;
 
@@ -382,19 +436,21 @@ bool M_Mage(int req)
 
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Mage, mr_pain, bool(Monster thismon))
 		{
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Mage, mr_death, bool(Monster thismon))
 		{
+			SELFPARAM();
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Mage, mr_anim, bool(Monster thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
 			self.anim_walk = animfixfps(self, '1 1 1', none);
@@ -407,8 +463,11 @@ bool M_Mage(int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		.float speed;
+		spawnfunc(item_health_large);
+		METHOD(Mage, mr_setup, bool(Monster thismon))
 		{
+			SELFPARAM();
 			if(!self.health) self.health = (autocvar_g_monster_mage_health);
 			if(!self.speed) { self.speed = (autocvar_g_monster_mage_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_mage_speed_run); }
@@ -420,12 +479,10 @@ bool M_Mage(int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Mage, mr_precache, bool(Monster thismon))
 		{
 			return true;
 		}
 		#endif
-	}
 
-	return true;
-}
+#endif

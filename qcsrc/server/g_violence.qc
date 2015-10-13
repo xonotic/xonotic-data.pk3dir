@@ -1,8 +1,9 @@
 #include "g_violence.qh"
-#include "_all.qh"
 
-float Violence_GibSplash_SendEntity(entity to, int sf)
-{SELFPARAM();
+.int state;
+
+bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
 	WriteByte(MSG_ENTITY, self.state); // actually type
 	WriteByte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier

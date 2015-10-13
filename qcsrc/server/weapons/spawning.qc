@@ -1,5 +1,4 @@
 #include "spawning.qh"
-#include "../_all.qh"
 
 #include "weaponsystem.qh"
 #include "../mutators/mutators_include.qh"
@@ -177,10 +176,12 @@ void weapon_defaultspawnfunc(float wpn)
 	if(self.team)
 		f |= FL_NO_WEAPON_STAY;
 
-	StartItem(e.model, string_null, self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	StartItem(strzone(e.m_model.model_str()), string_null, self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	self.item_pickupsound_ent = SND_WEAPONPICKUP;
 	#if 0 // WEAPONTODO
-	if (self.modelindex) // don't precache if self was removed
-		WEP_ACTION(e.weapon, WR_INIT);
+	if (self.modelindex) { // don't precache if self was removed
+		Weapon w = get_weaponinfo(e.weapon);
+		w.wr_init(w);
+	}
 	#endif
 }

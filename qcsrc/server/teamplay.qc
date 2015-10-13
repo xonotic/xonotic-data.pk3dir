@@ -1,5 +1,4 @@
 #include "teamplay.qh"
-#include "_all.qh"
 
 #include "cl_client.qh"
 #include "race.qh"
@@ -12,7 +11,8 @@
 
 #include "mutators/mutators_include.qh"
 
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
+#include "../common/gamemodes/all.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
@@ -247,9 +247,6 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_invasion);
 	}
 
-	if(teamplay)
-		entcs_init();
-
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
 
@@ -304,8 +301,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");
-	if(g_grappling_hook)
-		modifications = strcat(modifications, ", Hook");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
@@ -324,9 +319,6 @@ string getwelcomemessage(void)
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
-
-	if (g_grappling_hook)
-		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
 
 	if (cvar("g_nades"))
 		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
@@ -780,7 +772,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		LogTeamchange(pl.playerid, pl.team, 2); // log auto join
 
 		if(pl.deadflag == DEAD_NO)
-			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
+			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE.m_id, pl.origin, '0 0 0');
 	}
 
 	return smallest;
@@ -866,7 +858,7 @@ void SV_ChangeTeam(float _color)
 	{
 		// kill player when changing teams
 		if(self.deadflag == DEAD_NO)
-			Damage(self, self, self, 100000, DEATH_TEAMCHANGE, self.origin, '0 0 0');
+			Damage(self, self, self, 100000, DEATH_TEAMCHANGE.m_id, self.origin, '0 0 0');
 	}
 }
 
@@ -1007,6 +999,6 @@ void ShufflePlayerOutOfTeam (float source_team)
 	SetPlayerTeam(selected, smallestteam, source_team, false);
 
 	if(selected.deadflag == DEAD_NO)
-		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
+		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE.m_id, selected.origin, '0 0 0');
 	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }

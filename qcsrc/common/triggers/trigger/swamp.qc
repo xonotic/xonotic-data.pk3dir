@@ -1,11 +1,10 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../../server/_all.qh"
-    #include "../../../warpzonelib/util_server.qh"
+    #include "../../../lib/warpzone/util_server.qh"
     #include "../../weapons/all.qh"
     #include "../../../server/defs.qh"
-    #include "../../deathtypes.qh"
+    #include "../../deathtypes/all.qh"
 #endif
 
 /*
@@ -55,7 +54,7 @@ void swampslug_think(void)
 	// Or we have exited it very recently.
 	// Do the damage and renew the timer.
 #ifdef SVQC
-	Damage (self.owner, self, self, self.dmg, DEATH_SWAMP, other.origin, '0 0 0');
+	Damage (self.owner, self, self, self.dmg, DEATH_SWAMP.m_id, other.origin, '0 0 0');
 #endif
 
 	self.nextthink = time + self.swamp_interval;

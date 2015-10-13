@@ -1,8 +1,5 @@
-#include "../common/util-pre.qh"
-#include "../dpdefs/csprogsdefs.qh"
-#include "../common/util-post.qh"
-
 #include "../lib/_all.inc"
+#include "_all.qh"
 
 #include "announcer.qc"
 #include "bgmscript.qc"
@@ -31,17 +28,14 @@
 #include "view.qc"
 #include "wall.qc"
 
-#include "command/all.qc"
+#include "commands/all.qc"
 
 #include "weapons/projectile.qc" // TODO
 
 #include "../common/animdecide.qc"
-#include "../common/buffs.qc"
-#include "../common/effects/effects.qc"
 #include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"
 #include "../common/movetypes/include.qc"
-#include "../common/nades.qc"
 #include "../common/net_notice.qc"
 #include "../common/notifications.qc"
 #include "../common/physics.qc"
@@ -53,26 +47,33 @@
 #include "../common/minigames/minigames.qc"
 #include "../common/minigames/cl_minigames.qc"
 
+#include "../common/buffs/all.qc"
+#include "../common/deathtypes/all.qc"
+#include "../common/effects/all.qc"
+#include "../common/gamemodes/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/mutators/all.qc"
+#include "../common/nades/all.qc"
+#include "../common/turrets/all.qc"
 #include "../common/vehicles/all.qc"
 #include "../common/weapons/all.qc"
 
 #include "../common/turrets/cl_turrets.qc"
-#include "../common/turrets/all.qc"
 
 #include "../common/triggers/include.qc"
 
-#include "../csqcmodellib/cl_model.qc"
-#include "../csqcmodellib/cl_player.qc"
-#include "../csqcmodellib/interpolate.qc"
+#include "../lib/csqcmodel/cl_model.qc"
+#include "../lib/csqcmodel/cl_player.qc"
+#include "../lib/csqcmodel/interpolate.qc"
 
 #include "../server/mutators/mutator_multijump.qc"
 
-#include "../warpzonelib/anglestransform.qc"
-#include "../warpzonelib/client.qc"
-#include "../warpzonelib/common.qc"
-#include "../warpzonelib/util_server.qc"
+#include "../lib/warpzone/anglestransform.qc"
+#include "../lib/warpzone/client.qc"
+#include "../lib/warpzone/common.qc"
+#include "../lib/warpzone/util_server.qc"
 
-#include "../mod/client/progs.inc"
+#if BUILD_MOD
+#include "../../mod/client/progs.inc"
+#endif

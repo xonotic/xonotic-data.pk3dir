@@ -1,3 +1,6 @@
+#include "../../common/deathtypes/all.qh"
+#include "../g_hook.qh"
+
 REGISTER_MUTATOR(bh, cvar("g_breakablehook"));
 
 bool autocvar_g_breakablehook; // allow toggling mid match?

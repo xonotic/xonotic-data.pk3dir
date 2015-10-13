@@ -265,8 +265,8 @@ void trigger_touch_generic(void() touchfunc)
 		}
 	}
 }
-void trigger_draw_generic()
-{SELFPARAM();
+void trigger_draw_generic(entity this)
+{
 	float dt = time - self.move_time;
 	self.move_time = time;
 	if(dt <= 0) { return; }

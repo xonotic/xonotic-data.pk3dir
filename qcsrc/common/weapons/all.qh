@@ -1,116 +1,99 @@
 #ifndef WEAPONS_ALL_H
 #define WEAPONS_ALL_H
 
-#ifndef MENUQC
-#include "calculations.qh"
-#endif
-
-#include "../util.qh"
-#ifdef SVQC
-#include "../../server/bot/aim.qh"
-#endif
-const int MAX_SHOT_DISTANCE = 32768;
-
-// weapon pickup ratings for bot logic
-const int BOT_PICKUP_RATING_LOW  =  2500;
-const int BOT_PICKUP_RATING_MID  =  5000;
-const int BOT_PICKUP_RATING_HIGH = 10000;
-
-// weapon flags
-const int WEP_TYPE_OTHER          =  0x00; // not for damaging people
-const int WEP_TYPE_SPLASH         =  0x01; // splash damage
-const int WEP_TYPE_HITSCAN        =  0x02; // hitscan
-const int WEP_TYPEMASK            =  0x0F;
-const int WEP_FLAG_CANCLIMB       =  0x10; // can be used for movement
-const int WEP_FLAG_NORMAL         =  0x20; // in "most weapons" set
-const int WEP_FLAG_HIDDEN         =  0x40; // hides from menu
-const int WEP_FLAG_RELOADABLE     =  0x80; // can has reload
-const int WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
-const int WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
-
-// weapon requests
-const int WR_SETUP          =  1; // (SERVER) setup weapon data
-const int WR_THINK          =  2; // (SERVER) logic to run every frame
-const int WR_CHECKAMMO1     =  3; // (SERVER) checks ammo for weapon primary
-const int WR_CHECKAMMO2     =  4; // (SERVER) checks ammo for weapon second
-const int WR_AIM            =  5; // (SERVER) runs bot aiming code for this weapon
-const int WR_INIT           =  6; // (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties
-const int WR_SUICIDEMESSAGE =  7; // (SERVER) notification number for suicide message (may inspect w_deathtype for details)
-const int WR_KILLMESSAGE    =  8; // (SERVER) notification number for kill message (may inspect w_deathtype for details)
-const int WR_RELOAD         =  9; // (SERVER) handles reloading for weapon
-const int WR_RESETPLAYER    = 10; // (SERVER) clears fields that the weapon may use
-const int WR_IMPACTEFFECT   = 11; // (CLIENT) impact effect for weapon explosion
-const int WR_PLAYERDEATH    = 12; // (SERVER) called whenever a player dies
-const int WR_GONETHINK      = 13; // (SERVER) logic to run when weapon is lost
-const int WR_CONFIG         = 14; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
-const int WR_ZOOMRETICLE    = 15; // (CLIENT) weapon specific zoom reticle
-const int WR_DROP           = 16; // (SERVER) the weapon is dropped
-const int WR_PICKUP         = 17; // (SERVER) a weapon is picked up
-
-// variables:
-string weaponorder_byid;
+#include "../command/all.qh"
+#include "config.qh"
 
 // weapon sets
 typedef vector WepSet;
+#define WEPSET(id) WepSet_FromWeapon(WEP_##id.m_id)
 WepSet WepSet_FromWeapon(int a);
 #ifdef SVQC
 void WepSet_AddStat();
 void WepSet_AddStat_InMap();
 void WriteWepSet(float dest, WepSet w);
 #endif
+
 #ifdef CSQC
 WepSet WepSet_GetFromStat();
 WepSet WepSet_GetFromStat_InMap();
 WepSet ReadWepSet();
 #endif
 
-// weapon name macros
-const int WEP_FIRST = 1;
-#define WEP_MAXCOUNT 24 // Increase as needed. Can be up to three times as much.
-int WEP_COUNT;
-#define WEP_LAST (WEP_FIRST + WEP_COUNT - 1)
-WepSet WEPSET_ALL;
-WepSet WEPSET_SUPERWEAPONS;
+#include "weapon.qh"
 
-// functions:
-entity get_weaponinfo(int id);
-string W_FixWeaponOrder(string order, float complete);
-string W_UndeprecateName(string s);
-string W_NameWeaponOrder(string order);
-string W_NumberWeaponOrder(string order);
-string W_FixWeaponOrder_BuildImpulseList(string o);
-string W_FixWeaponOrder_AllowIncomplete(string order);
-string W_FixWeaponOrder_ForceComplete(string order);
-void W_RandomWeapons(entity e, float n);
-
-string GetAmmoPicture(.int ammotype);
-
-#ifdef CSQC
-.int GetAmmoFieldFromNum(int i);
-int GetAmmoStat(.int ammotype);
+#ifndef MENUQC
+#include "calculations.qh"
+#include "../models/all.qh"
 #endif
 
-string W_Sound(string w_snd);
-string W_Model(string w_mdl);
+#include "../util.qh"
 
-// ammo types
-.int ammo_shells;
-.int ammo_nails;
-.int ammo_rockets;
-.int ammo_cells;
-.int ammo_plasma;
-.int ammo_fuel;
-.int ammo_none;
+#ifdef SVQC
+#include "../../server/bot/aim.qh"
+#endif
 
-// other useful macros
-#define WEP_ACTION(wpn,wrequest) (get_weaponinfo(wpn)).weapon_func(wrequest)
-#define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
-#define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
+REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
+REGISTER_REGISTRY(RegisterWeapons)
+entity get_weaponinfo(int id);
 
 
-// ======================
-//  Configuration Macros
-// ======================
+GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
+{
+    switch(request)
+    {
+        case CMD_REQUEST_COMMAND:
+        {
+            #ifdef SVQC
+            wep_config_file = -1;
+            wep_config_alsoprint = -1;
+            string filename = argv(1);
+
+            if(filename == "")
+            {
+                filename = "weapons_dump.cfg";
+                wep_config_alsoprint = false;
+            }
+            else if(filename == "-")
+            {
+                filename = "weapons_dump.cfg";
+                wep_config_alsoprint = true;
+            }
+            wep_config_file = fopen(filename, FILE_WRITE);
+
+            if(wep_config_file >= 0)
+            {
+                Dump_Weapon_Settings();
+                LOG_INFO(sprintf("Dumping weapons... File located in ^2data/data/%s^7.\n", filename));
+                fclose(wep_config_file);
+                wep_config_file = -1;
+                wep_config_alsoprint = -1;
+            }
+            else
+            {
+                LOG_INFO(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+            }
+            #else
+            LOG_INFO(_("Weapons dump command only works with sv_cmd.\n"));
+            #endif
+            return;
+        }
+
+        default:
+        case CMD_REQUEST_USAGE:
+        {
+            LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
+            LOG_INFO("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
+            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
+            LOG_INFO("  if left blank, it will only write to default.\n");
+            return;
+        }
+    }
+}
+
+#define REGISTER_WEAPON(id, inst) \
+    /* WepSet WEPSET_##id; */ \
+    REGISTER(RegisterWeapons, WEP, Weapons, id, m_id, inst)
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;
@@ -118,15 +101,15 @@ string W_Model(string w_mdl);
 #define WEP_ADD_CVAR_PRI(wepname,name) WEP_ADD_CVAR_NONE(wepname, primary_##name)
 #define WEP_ADD_CVAR_SEC(wepname,name) WEP_ADD_CVAR_NONE(wepname, secondary_##name)
 #define WEP_ADD_CVAR_BOTH(wepname,name) \
-	WEP_ADD_CVAR_PRI(wepname, name) \
-	WEP_ADD_CVAR_SEC(wepname, name)
+    WEP_ADD_CVAR_PRI(wepname, name) \
+    WEP_ADD_CVAR_SEC(wepname, name)
 
 #define WEP_ADD_CVAR(wepid,wepname,mode,name) WEP_ADD_CVAR_##mode(wepname, name)
 
 // create properties for weapon settings
 #define WEP_ADD_PROP(wepid,wepname,type,prop,name) \
-	.type prop; \
-	[[last]] type autocvar_g_balance_##wepname##_##name;
+    .type prop; \
+    [[last]] type autocvar_g_balance_##wepname##_##name;
 
 // read cvars from weapon settings
 #define WEP_CVAR(wepname,name) autocvar_g_balance_##wepname##_##name
@@ -138,134 +121,56 @@ string W_Model(string w_mdl);
 #define WEP_SKIP_CVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
 #define WEP_SET_PROP(wepid,wepname,type,prop,name) WEP_##wepid.prop = autocvar_g_balance_##wepname##_##name;
 
+const int WEP_FIRST = 1;
+#define WEP_LAST (Weapons_COUNT - 1)
+WepSet WEPSET_ALL;
+WepSet WEPSET_SUPERWEAPONS;
 
-// =====================
-//  Weapon Registration
-// =====================
-
-bool w_null(int) { return false; }
-
-/** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
-CLASS(Weapon, Object)
-	ATTRIB(Weapon, m_id, int, 0)
-    /**
-     * M: WEP_id    : WEP_...
-     * you can recognize dummies when this == 0
-     */
-    ATTRIB(Weapon, weapon, int, 0);
-    /** A: WEPSET_id : WEPSET_... */
-    ATTRIB(Weapon, weapons, WepSet, '0 0 0');
-    /** M: function  : w_... */
-    ATTRIB(Weapon, weapon_func, bool(int), w_null);
-    /** M: ammotype  : main ammo field */
-    ATTRIB(Weapon, ammo_field, .int, ammo_none);
-    /** M: impulse   : weapon impulse */
-    ATTRIB(Weapon, impulse, int, -1);
-    /** M: flags     : WEPSPAWNFLAG_... combined */
-    ATTRIB(Weapon, spawnflags, int, 0);
-    /** M: rating    : bot weapon priority */
-    ATTRIB(Weapon, bot_pickupbasevalue, float, 0);
-    /** M: color     : waypointsprite color */
-    ATTRIB(Weapon, wpcolor, vector, '0 0 0');
-    /** A: wpn-id    : wpn- sprite name */
-    ATTRIB(Weapon, wpmodel, string, "");
-    /** M: modelname : name of model (without g_ v_ or h_ prefixes) */
-    ATTRIB(Weapon, mdl, string, "");
-    /** A: modelname : full path to g_ model */
-    ATTRIB(Weapon, model, string, "");
-    /** M: simplemdl : simpleitems weapon model/image */
-    ATTRIB(Weapon, w_simplemdl, string, "foobar");
-    /** M: crosshair : per-weapon crosshair: "CrosshairImage Size" */
-    ATTRIB(Weapon, w_crosshair, string, "gfx/crosshair1");
-    /** A: crosshair : per-weapon crosshair size (argument two of "crosshair" field) */
-    ATTRIB(Weapon, w_crosshair_size, float, 1);
-    /** M: wepimg    : "weaponfoobar" side view image file of weapon. WEAPONTODO: Move out of skin files, move to common files */
-    ATTRIB(Weapon, model2, string, "");
-    /** M: refname   : reference name name */
-    ATTRIB(Weapon, netname, string, "");
-    /** M: wepname   : human readable name */
-    ATTRIB(Weapon, message, string, "AOL CD Thrower");
-
-	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.message, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
-	}
-
-	CONSTRUCTOR(Weapon,
-		bool(int) function,
-		.int ammotype,
-		int i,
-		int weapontype,
-		float pickupbasevalue,
-		vector clr,
-		string modelname,
-		string simplemdl,
-		string crosshair,
-		string wepimg,
-		string refname,
-		string wepname
-	) {
-		CONSTRUCT(Weapon);
-		this.weapon_func = function;
-		this.ammo_field = ammotype;
-		this.impulse = i;
-		this.spawnflags = weapontype;
-		this.bot_pickupbasevalue = pickupbasevalue;
-		this.wpcolor = clr;
-		this.mdl = modelname;
-		this.model = strzone(W_Model(strcat("g_", modelname, ".md3")));
-		this.w_simplemdl = strzone(simplemdl); // simpleitems weapon model/image
-		this.w_crosshair = strzone(car(crosshair));
-		string s = cdr(crosshair);
-		this.w_crosshair_size = ((s != "") ? stof(s) : 1); // so that we can scale the crosshair from code (for compat)
-		this.model2 = strzone(wepimg);
-		this.netname = refname;
-		this.message = wepname;
-	}
-	void register_weapon(entity this, int id, WepSet bit)
-	{
-		this.classname = "weapon_info";
-		this.weapon = id;
-		this.weapons = bit;
-		this.wpmodel = strzone(strcat("wpn-", ftos(id)));
-		#ifdef CSQC
-		this.weapon_func(WR_INIT);
-		#endif
-	}
-ENDCLASS(Weapon)
-
-void RegisterWeapons();
-REGISTER_REGISTRY(RegisterWeapons)
-entity weapon_info[WEP_MAXCOUNT], weapon_info_first, weapon_info_last;
-entity dummy_weapon_info;
-
-#define _REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-	WepSet WEPSET_##id; \
-	REGISTER(RegisterWeapons, WEP, weapon_info, WEP_COUNT, id, m_id, \
-		NEW(Weapon, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-	) { \
-		this.m_id++; \
-		WEPSET_ALL |= (WEPSET_##id = WepSet_FromWeapon(this.m_id)); \
-		if ((flags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= WEPSET_##id; \
-		register_weapon(this, this.m_id, WEPSET_##id); \
-	}
-
-#ifndef MENUQC
-	#define REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-    	bool function(int); \
-    	_REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
-#else
-	#define REGISTER_WEAPON(id, function, ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname) \
-		_REGISTER_WEAPON(id, w_null,   ammotype, impulse, flags, rating, color, modelname, simplemdl, crosshair, wepimg, refname, wepname)
-#endif
+REGISTER_WEAPON(Null, NEW(Weapon));
 
 #include "all.inc"
 
-#undef WEP_ADD_CVAR_MO_PRI
-#undef WEP_ADD_CVAR_MO_SEC
-#undef WEP_ADD_CVAR_MO_BOTH
-#undef WEP_ADD_CVAR_MO_NONE
-#undef WEP_ADD_CVAR
-#undef WEP_ADD_PROP
-void register_weapons_done();
-ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done)
+entity get_weaponinfo(int id)
+{
+    if (id >= WEP_FIRST && id <= WEP_LAST) {
+        Weapon w = Weapons[id];
+        if (w) return w;
+    }
+    return WEP_Null;
+}
+
+// TODO: remove after 0.8.2. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
+#define WEP_HARDCODED_IMPULSES 22
+
+// TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
+#define WEP_IMPULSE_BEGIN 230
+#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (Weapons_COUNT - 1) - 1, 253)
+
+REGISTRY_SORT(Weapons, netname, WEP_HARDCODED_IMPULSES + 1)
+
+STATIC_INIT(register_weapons_done)
+{
+    FOREACH(Weapons, true, LAMBDA(
+        it.m_id = i;
+        WepSet set = WepSet_FromWeapon(it.m_id);
+        WEPSET_ALL |= set;
+        if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
+        it.weapon = it.m_id;
+        it.weapons = set;
+        int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
+        if (imp <= WEP_IMPULSE_END)
+            localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
+        else
+            LOG_TRACEF(_("Impulse limit exceeded, weapon will not be directly accessible: %s\n"), it.netname);
+    ));
+    #ifdef CSQC
+    FOREACH(Weapons, true, LAMBDA(it.wr_init(it)));
+    #endif
+    weaponorder_byid = "";
+    for (int i = Weapons_MAX - 1; i >= 1; --i)
+        if (Weapons[i])
+            weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
+    weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
+}
+
 #endif

@@ -1,5 +1,4 @@
 #include "havocbot.qh"
-#include "../../_all.qh"
 
 #include "../aim.qh"
 #include "../bot.qh"
@@ -8,10 +7,13 @@
 #include "../waypoints.qh"
 
 #include "../../../common/constants.qh"
+#include "../../../common/items/all.qh"
 
 #include "../../../common/triggers/trigger/jumppads.qh"
 
-#include "../../../warpzonelib/common.qh"
+#include "../../../lib/warpzone/common.qh"
+
+.float speed;
 
 void havocbot_ai()
 {SELFPARAM();
@@ -102,7 +104,8 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			WEP_ACTION(self.weapon, WR_AIM);
+			Weapon w = get_weaponinfo(self.weapon);
+			w.wr_aim(w);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
 				self.BUTTON_ATCK = false;
@@ -992,8 +995,9 @@ float havocbot_chooseweapon_checkreload(int new_weapon)
 		float i, other_weapon_available = false;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
+			Weapon w = get_weaponinfo(i);
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
-			if (WEP_ACTION(i, WR_CHECKAMMO1) + WEP_ACTION(i, WR_CHECKAMMO2))
+			if (w.wr_checkammo1(w) + w.wr_checkammo2(w))
 				other_weapon_available = true;
 		}
 		if(other_weapon_available)
@@ -1008,7 +1012,7 @@ void havocbot_chooseweapon()
 	int i;
 
 	// ;)
-	if(g_weaponarena_weapons == WEPSET_TUBA)
+	if(g_weaponarena_weapons == WEPSET(TUBA))
 	{
 		self.switchweapon = WEP_TUBA.m_id;
 		return;
@@ -1065,7 +1069,7 @@ void havocbot_chooseweapon()
 
 		// Choose weapons for far distance
 		if ( distance > bot_distance_far ) {
-			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
+			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
 				if ( client_hasweapon(self, w, true, false) )
 				{
@@ -1079,7 +1083,7 @@ void havocbot_chooseweapon()
 
 		// Choose weapons for mid distance
 		if ( distance > bot_distance_close) {
-			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
+			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
 				if ( client_hasweapon(self, w, true, false) )
 				{
@@ -1092,7 +1096,7 @@ void havocbot_chooseweapon()
 		}
 
 		// Choose weapons for close distance
-		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
+		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
 			if ( client_hasweapon(self, w, true, false) )
 			{

@@ -1,10 +1,15 @@
 #include "generator.qh"
 
+#include "teamradar.qh"
+#include "../common/movetypes/movetypes.qh"
+
+.float alpha;
+.float scale;
 .int count;
 .float max_health;
 
-void ons_generator_ray_draw()
-{SELFPARAM();
+void ons_generator_ray_draw(entity this)
+{
 	if(time < self.move_time)
 		return;
 
@@ -42,8 +47,8 @@ void ons_generator_ray_spawn(vector org)
 	e.draw = ons_generator_ray_draw;
 }
 
-void generator_draw()
-{SELFPARAM();
+void generator_draw(entity this)
+{
 	if(time < self.move_time)
 		return;
 

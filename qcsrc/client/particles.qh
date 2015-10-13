@@ -1,5 +1,5 @@
-#ifndef PARTICLES_H
-#define PARTICLES_H
+#ifndef CLIENT_PARTICLES_H
+#define CLIENT_PARTICLES_H
 .int dphitcontentsmask;
 
 entityclass(PointParticles);
@@ -14,7 +14,7 @@ class(PointParticles) .float volume;
 class(PointParticles) .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
 class(PointParticles) .vector movedir; // trace direction
 
-void Draw_PointParticles();
+void Draw_PointParticles(entity this);
 
 void Ent_PointParticles_Remove();
 

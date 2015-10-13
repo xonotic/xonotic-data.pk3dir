@@ -1,15 +1,33 @@
 #ifndef ITEMS_ALL_H
 #define ITEMS_ALL_H
 
-void RegisterItems();
-const int MAX_ITEMS = 24;
-entity ITEMS[MAX_ITEMS], ITEMS_first, ITEMS_last;
-int ITEM_COUNT;
-/** If you register a new item, make sure to add it to all.inc */
-#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, ITEMS, ITEM_COUNT, id, m_id, NEW(class))
+#include "../command/all.qh"
+
+#include "item.qh"
+
+REGISTRY(Items, BIT(5))
 REGISTER_REGISTRY(RegisterItems)
+/** If you register a new item, make sure to add it to all.inc */
+#define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, Items, id, m_id, NEW(class))
+
+REGISTRY_SORT(Items, m_name, 0)
+STATIC_INIT(Items) { FOREACH(Items, true, LAMBDA(it.m_id = i)); }
 
 void Dump_Items();
+
+GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
+    switch (request) {
+        case CMD_REQUEST_COMMAND: {
+            Dump_Items();
+            return;
+        }
+        default:
+        case CMD_REQUEST_USAGE: {
+            LOG_INFOF("\nUsage:^3 %s dumpitems", GetProgramCommandPrefix());
+            return;
+        }
+    }
+}
 
 #ifndef MENUQC
 string Item_Model(string item_mdl);

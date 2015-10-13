@@ -98,7 +98,7 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t);
 vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s);
 
 float spritelookupblinkvalue(string s);
-vector spritelookupcolor(string s, vector def);
+vector spritelookupcolor(entity this, string s, vector def);
 string spritelookuptext(string s);
 
 vector fixrgbexcess_move(vector rgb, vector src, vector dst);
@@ -114,7 +114,7 @@ void WaypointSprite_Load_Frames(string ext);
 
 void WaypointSprite_Load();
 .float alpha;
-void Draw_WaypointSprite();
+void Draw_WaypointSprite(entity this);
 #endif
 
 #ifdef SVQC
@@ -142,7 +142,7 @@ void WaypointSprite_UpdateOrigin(entity e, vector o);
 
 void WaypointSprite_UpdateRule(entity e, float t, float r);
 
-void WaypointSprite_UpdateTeamRadar(entity e, float icon, vector col);
+void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col);
 
 .float waypointsprite_pingtime;
 .float waypointsprite_helpmetime;
@@ -171,7 +171,7 @@ float WaypointSprite_isteammate(entity e, entity e2);
 
 float WaypointSprite_Customize();
 
-float WaypointSprite_SendEntity(entity to, float sendflags);
+bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
 void WaypointSprite_Reset();
 
@@ -182,7 +182,7 @@ entity WaypointSprite_Spawn(
     entity showto, float t, // show to whom? Use a flag to indicate a team
     entity own, .entity ownfield, // remove when own gets killed
     float hideable, // true when it should be controlled by cl_hidewaypoints
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 entity WaypointSprite_SpawnFixed(
@@ -190,7 +190,7 @@ entity WaypointSprite_SpawnFixed(
     vector ofs,
     entity own,
     .entity ownfield,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 .entity waypointsprite_deployed_fixed;
@@ -198,14 +198,14 @@ entity WaypointSprite_DeployFixed(
     entity spr,
     float limited_range,
     vector ofs,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 .entity waypointsprite_deployed_personal;
 entity WaypointSprite_DeployPersonal(
     entity spr,
     vector ofs,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 .entity waypointsprite_attached;
@@ -213,13 +213,13 @@ entity WaypointSprite_DeployPersonal(
 entity WaypointSprite_Attach(
     entity spr,
     float limited_range,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 entity WaypointSprite_AttachCarrier(
     entity spr,
     entity carrier,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 void WaypointSprite_DetachCarrier(entity carrier);

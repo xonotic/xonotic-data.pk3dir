@@ -6,12 +6,18 @@
 #define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
 #define REGISTER_INIT_POST(ns, id) [[accumulate]] void Register_##ns##_##id##_init_post(entity this)
 
+#define REGISTRY(id, max) \
+    void Register##id() {} \
+    const int id##_MAX = max; \
+    noref entity id[id##_MAX], id##_first, id##_last; \
+    int id##_COUNT;
+
 /**
  * Register a new entity with a global constructor.
  * Must be followed by a semicolon or a function body with a `this` parameter.
  * Wrapper macros may perform actions after user initialization like so:
  *     #define REGISTER_FOO(id) \
- *         REGISTER(RegisterFoos, FOO, FOOS, FOOS_COUNT, id, m_id, NEW(Foo)); \
+ *         REGISTER(RegisterFoos, FOO, FOOS, id, m_id, NEW(Foo)); \
  *         REGISTER_INIT_POST(FOO, id) { \
  *             print("Registering foo #", this.m_id + 1, "\n"); \
  *         } \
@@ -24,28 +30,59 @@
  * @param initfunc  The global constructor to accumulate into
  * @param ns        Short for namespace, prefix for each global (ns##_##id)
  * @param array     The array to add each entity to. Also requires `array##_first` and `array##_last` to be defined
- * @param counter   Global to count number of entries
  * @param id        The identifier of the current entity being registered
  * @param fld       The field to store the current count into
  * @param inst      An expression to create a new instance, invoked for every registration
  */
-#define REGISTER(initfunc, ns, array, counter, id, fld, inst)   \
-    entity ns##_##id;                                           \
-    REGISTER_INIT(ns, id) { }                                   \
-    REGISTER_INIT_POST(ns, id) { }                              \
-    .entity enemy; /* internal next pointer */                  \
-    void Register_##ns##_##id() {                               \
-        entity this = inst;                                     \
-        ns##_##id = this;                                       \
-        this.fld = counter;                                     \
-        array[counter++] = this;                                \
-        if (!array##_first)    array##_first = this;            \
-        if ( array##_last)     array##_last.enemy = this;       \
-        array##_last = this;                                    \
-        Register_##ns##_##id##_init(this);                      \
-        Register_##ns##_##id##_init_post(this);                 \
-    }                                                           \
-    ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id)         \
+#define REGISTER(initfunc, ns, array, id, fld, inst)                \
+    entity ns##_##id;                                               \
+    REGISTER_INIT(ns, id) { }                                       \
+    REGISTER_INIT_POST(ns, id) { }                                  \
+    void Register_##ns##_##id() {                                   \
+        if (array##_COUNT >= array##_MAX) LOG_FATALF("Registry capacity exceeded (%s)", ftos(array##_MAX)); \
+        entity this = inst;                                         \
+        ns##_##id = this;                                           \
+        this.fld = array##_COUNT;                                   \
+        array[array##_COUNT++] = this;                              \
+        if (!array##_first)    array##_first = this;                \
+        if ( array##_last)     array##_last.REGISTRY_NEXT = this;   \
+        array##_last = this;                                        \
+        Register_##ns##_##id##_init(this);                          \
+        Register_##ns##_##id##_init_post(this);                     \
+    }                                                               \
+    ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id)             \
     REGISTER_INIT(ns, id)
+
+/** internal next pointer */
+#define REGISTRY_NEXT enemy
+.entity REGISTRY_NEXT;
+
+#define REGISTRY_SORT(id, field, skip)                              \
+    void _REGISTRY_SWAP_##id(int i, int j, entity pass) {           \
+        i += skip; j += skip;                                       \
+                                                                    \
+        entity a = id[i], b = id[j];                                \
+        id[i] = b;                                                  \
+        id[j] = a;                                                  \
+                                                                    \
+        entity a_next = a.REGISTRY_NEXT, b_next = b.REGISTRY_NEXT;  \
+        a.REGISTRY_NEXT = b_next;                                   \
+        b.REGISTRY_NEXT = a_next;                                   \
+                                                                    \
+        if (i == 0) id##_first = b;                                 \
+        else id[i - 1].REGISTRY_NEXT = b;                           \
+                                                                    \
+        if (j == 0) id##_first = a;                                 \
+        else id[j - 1].REGISTRY_NEXT = a;                           \
+    }                                                               \
+    float _REGISTRY_CMP_##id(int i, int j, entity pass) {           \
+        i += skip; j += skip;                                       \
+        string a = id[i].field;                                     \
+        string b = id[j].field;                                     \
+        return strcasecmp(a, b);                                    \
+    }                                                               \
+    STATIC_INIT(Registry_sort_##id) {                               \
+        heapsort(id##_COUNT - (skip), _REGISTRY_SWAP_##id, _REGISTRY_CMP_##id, NULL); \
+    }
 
 #endif

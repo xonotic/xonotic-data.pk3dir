@@ -1,0 +1,25 @@
+#ifndef SOUNDS_ALL_H
+#define SOUNDS_ALL_H
+
+#include "sound.qh"
+
+REGISTRY(Sounds, BITS(8))
+REGISTER_REGISTRY(RegisterSounds)
+
+#define SOUND(name, path) \
+    string SND_##name##_get() { return path; } \
+    REGISTER(RegisterSounds, SND, Sounds, name, m_id, NEW(Sound, SND_##name##_get))
+
+// Used in places where a string is required
+#define SND(id) (SND_##id.sound_str())
+
+STATIC_INIT(RegisterSounds_precache) {
+    FOREACH(Sounds, true, LAMBDA({
+        it.sound_precache(it);
+    }));
+}
+
+SOUND(Null, "misc/null.wav");
+#include "all.inc"
+
+#endif

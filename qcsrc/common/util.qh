@@ -28,8 +28,6 @@ string ftos_decimals(float number, float decimals);
 
 bool fexists(string f);
 
-vector colormapPaletteColor(float c, float isPants);
-
 // unzone the string, and return it as tempstring. Safe to be called on string_null
 string fstrunzone(string s);
 
@@ -130,11 +128,6 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
 
 float isGametypeInFilter(float gt, float tp, float ts, string pattern);
 
-typedef void(float i1, float i2, entity pass) swapfunc_t; // is only ever called for i1 < i2
-typedef float(float i1, float i2, entity pass) comparefunc_t; // <0 for <, ==0 for ==, >0 for > (like strcmp)
-void shuffle(float n, swapfunc_t swap, entity pass);
-void heapsort(float n, swapfunc_t swap, comparefunc_t cmp, entity pass);
-
 string swapwords(string str, float i, float j);
 string shufflewords(string str);
 
@@ -156,14 +149,6 @@ vector decompressShotOrigin(float f);
 string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_reply; // cached replies
 string records_reply[10];
 #endif
-
-float RandomSelection_totalweight;
-float RandomSelection_best_priority;
-entity RandomSelection_chosen_ent;
-float RandomSelection_chosen_float;
-string RandomSelection_chosen_string;
-void RandomSelection_Init();
-void RandomSelection_Add(entity e, float f, string s, float weight, float priority);
 
 #ifndef MENUQC
 vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
@@ -230,8 +215,6 @@ const float XENCODE_LEN = 5;
 string xencode(float f);
 float xdecode(string s);
 
-int lowestbit(float f);
-
 #ifdef CSQC
 entity ReadCSQCEntity();
 #endif
@@ -281,30 +264,12 @@ typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_
 typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
-#ifdef SVQC
-vector combine_to_vector(float x, float y, float z);
-vector get_corner_position(entity box, float corner);
-#endif
-
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
 // Some common varargs functions. Lowercase as they match C.
 #define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
-
-// color code replace, place inside of sprintf and parse the string... defaults described as constants
-// foreground/normal colors
-string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
-string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
-string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
-string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
-// "kill" colors
-string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
-string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
-// background color
-string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
 
 string CCR(string input);
 

@@ -1,5 +1,5 @@
-#ifndef WALL_H
-#define WALL_H
+#ifndef CLIENT_WALL_H
+#define CLIENT_WALL_H
 
 entityclass(Wall);
 class(Wall) .float lip;
@@ -16,7 +16,7 @@ class(Wall) .vector saved;
 .float fade_start, fade_end, fade_vertical_offset;
 .float default_solid;
 
-void Ent_Wall_Draw();
+void Ent_Wall_Draw(entity this);
 
 void Ent_Wall_Remove();
 

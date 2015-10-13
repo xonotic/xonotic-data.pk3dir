@@ -1,5 +1,4 @@
 #include "race.qh"
-#include "_all.qh"
 
 #include "cl_client.qh"
 #include "portals.qh"
@@ -8,10 +7,13 @@
 #include "bot/waypoints.qh"
 #include "bot/navigation.qh"
 #include "command/getreplies.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/notifications.qh"
 #include "../common/mapinfo.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../common/triggers/subs.qh"
+#include "../lib/warpzone/util_server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 
 void W_Porto_Fail(float failhard);
 
@@ -704,7 +706,7 @@ void checkpoint_passed()
 	else
 	{
 		if(self.spawnflags & 4)
-			Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 	}
 }
 

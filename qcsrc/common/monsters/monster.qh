@@ -1,15 +1,72 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 
-bool m_null(int) { return false; }
+#ifdef SVQC
+#include "sv_monsters.qh"
+#include "../../server/g_damage.qh"
+#include "../../server/bot/bot.qh"
+#include "../../server/weapons/common.qh"
+#include "../../server/weapons/tracing.qh"
+#include "../../server/weapons/weaponsystem.qh"
+#include "../mutators/mutator/waypoints/waypointsprites.qh"
+#include "../../lib/warpzone/server.qh"
+#endif
+
+// special spawn flags
+const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
+const int MONSTER_TYPE_FLY = 32;
+const int MONSTER_TYPE_SWIM = 64;
+const int MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are replaced
+const int MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
+const int MON_FLAG_RANGED = 512; // monster shoots projectiles
+const int MON_FLAG_MELEE = 1024;
+const int MON_FLAG_CRUSH = 2048; // monster can be stomped in special modes
+const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
+
+// entity properties of monsterinfo:
+.bool(int, entity targ) monster_attackfunc;
+
+// animations
+.vector anim_blockend;
+.vector anim_blockstart;
+.vector anim_melee1;
+.vector anim_melee2;
+.vector anim_melee3;
+.vector anim_pain3;
+.vector anim_pain4;
+.vector anim_pain5;
+.vector anim_walk;
+.vector anim_spawn;
 
 /** If you register a new monster, make sure to add it to all.inc */
 CLASS(Monster, Object)
     ATTRIB(Monster, monsterid, int, 0)
-    ATTRIB(Monster, classname, string, "monster_info")
+    /** attributes */
+    ATTRIB(Monster, spawnflags, int, 0)
     /** human readable name */
-    ATTRIB(Monster, monster_name, string, string_null)
-    ATTRIB(Monster, monster_func, bool(int), m_null)
+    ATTRIB(Monster, monster_name, string, "Monster")
+    /** short name */
+    ATTRIB(Monster, netname, string, "")
+    /** model */
+    ATTRIB(Monster, m_model, entity, NULL)
+    /** hitbox size */
+    ATTRIB(Monster, mins, vector, '-0 -0 -0')
+    /** hitbox size */
+    ATTRIB(Monster, maxs, vector, '0 0 0')
+    
+    /** (SERVER) setup monster data */
+    METHOD(Monster, mr_setup, bool(Monster this)) { return false; }
+    /** (SERVER) logic to run every frame */
+    METHOD(Monster, mr_think, bool(Monster this)) { return false; }
+    /** (SERVER) called when monster dies */
+    METHOD(Monster, mr_death, bool(Monster this)) { return false; }
+    /** (BOTH) precaches models/sounds used by this monster */
+    METHOD(Monster, mr_precache, bool(Monster this)) { return false; }
+    /** (SERVER) called when monster is damaged */
+    METHOD(Monster, mr_pain, bool(Monster this)) { return false; }
+    /** (BOTH?) sets animations for monster */
+    METHOD(Monster, mr_anim, bool(Monster this)) { return false; }
+
 ENDCLASS(Monster)
 
 #endif

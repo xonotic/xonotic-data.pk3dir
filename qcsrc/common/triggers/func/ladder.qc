@@ -18,8 +18,8 @@ void func_ladder_touch()
 }
 
 #ifdef SVQC
-float func_ladder_send(entity to, float sf)
-{SELFPARAM();
+bool func_ladder_send(entity this, entity to, float sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_LADDER);
 
 	WriteString(MSG_ENTITY, self.classname);

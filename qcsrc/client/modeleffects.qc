@@ -1,12 +1,11 @@
 #include "modeleffects.qh"
-#include "_all.qh"
 
 .float cnt;
 .float scale;
 .float alpha;
 
-void ModelEffect_Draw()
-{SELFPARAM();
+void ModelEffect_Draw(entity this)
+{
 	self.angles = self.angles + frametime * self.avelocity;
 	setorigin(self, self.origin + frametime * self.velocity);
 	self.scale = self.scale1 + (self.scale2 - self.scale1) * (time - self.teleport_time) / (self.lifetime + self.fadetime - self.teleport_time);

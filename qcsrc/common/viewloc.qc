@@ -1,7 +1,6 @@
 #include "util.qh"
 
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "constants.qh"
 #elif defined(MENUQC)

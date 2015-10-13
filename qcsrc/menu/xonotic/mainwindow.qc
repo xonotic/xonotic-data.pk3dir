@@ -32,7 +32,7 @@ void MainWindow_draw(entity me)
 
 	if(me.dialogToShow)
 	{
-		DialogOpenButton_Click_withCoords(world, me.dialogToShow, '0 0 0', eX * conwidth + eY * conheight);
+		DialogOpenButton_Click_withCoords(NULL, me.dialogToShow, '0 0 0', eX * conwidth + eY * conheight);
 		me.dialogToShow = NULL;
 	}
 }

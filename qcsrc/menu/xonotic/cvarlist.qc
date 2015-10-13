@@ -70,12 +70,12 @@ float XonoticCvarList_updateCvarType(entity me)
 	t = cvar_type(me.cvarName);
 	me.cvarType = "";
 	float needsForcing;
-	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
 	{
 		me.cvarType = strcat(me.cvarType, ", ", _("forced to be saved to config.cfg"));
 		needsForcing = 0;
 	}
-	else if(strstrofs(strcat(" ", autocvar_menu_reverted_nonsaved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	else if(strhasword(autocvar_menu_reverted_nonsaved_cvars, me.cvarName))
 	{
 		// Currently claims to be saved, but won't be on next startup.
 		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
@@ -177,9 +177,9 @@ void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSe
 	v = cvar_string(k);
 	d = cvar_defstring(k);
 	t = cvar_type(k);
-	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", k, " "), 0) >= 0)
+	if(strhasword(autocvar_menu_forced_saved_cvars, k))
 		theAlpha = SKINALPHA_CVARLIST_SAVED;
-	else if(strstrofs(strcat(" ", autocvar_menu_reverted_nonsaved_cvars, " "), strcat(" ", k, " "), 0) >= 0)
+	else if(strhasword(autocvar_menu_reverted_nonsaved_cvars, k))
 		theAlpha = SKINALPHA_CVARLIST_TEMPORARY;
 	else if(t & CVAR_TYPEFLAG_SAVED)
 		theAlpha = SKINALPHA_CVARLIST_SAVED;
@@ -200,7 +200,7 @@ float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	if (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE))
 	{
-		CvarList_Revert_Click(world, me);
+		CvarList_Revert_Click(NULL, me);
 		return 1;
 	}
 	else if(scan == K_ENTER)
@@ -243,7 +243,7 @@ void CvarList_Revert_Click(entity btn, entity me)
 {
 	me.cvarValueBox.setText(me.cvarValueBox, me.cvarDefault);
 	me.cvarValueBox.cursorPos = strlen(me.cvarDefault);
-	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
 	{
 		cvar_set("menu_forced_saved_cvars", substring(strreplace(strcat(" ", me.cvarName, " "), " ", strcat(" ", autocvar_menu_forced_saved_cvars, " ")), 1, -2));
 		if (autocvar_menu_reverted_nonsaved_cvars == "")

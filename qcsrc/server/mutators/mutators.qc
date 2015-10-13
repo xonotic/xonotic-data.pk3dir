@@ -1,7 +1,6 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
     #include "mutators_include.qh"
     #include "../../common/mapinfo.qh"
 #endif
@@ -15,7 +14,6 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, teamplay);
 	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
 	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
-	CHECK_MUTATOR_ADD("g_instagib", mutator_instagib, !g_nexball);
 	CHECK_MUTATOR_ADD("g_invincible_projectiles", mutator_invincibleprojectiles, 1);
 	CHECK_MUTATOR_ADD("g_new_toys", mutator_new_toys, !cvar("g_instagib") && !cvar("g_overkill"));
 	CHECK_MUTATOR_ADD("g_nix", mutator_nix, !cvar("g_instagib") && !cvar("g_overkill"));

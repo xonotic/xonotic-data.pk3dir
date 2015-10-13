@@ -1,8 +1,8 @@
 #ifndef OO_H
 #define OO_H
 
+#include "misc.qh"
 #include "nil.qh"
-#include "registry.qh"
 
 #ifdef MENUQC
     #define NULL (null_entity)
@@ -36,6 +36,7 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine) {
     #define class(name) [[class(name)]]
     #define new(class) ((class) __spawn(#class, __FILE__, __LINE__))
 #endif
+#define spawn() new(entity)
 
 // Classes have a `spawn##cname(entity)` constructor
 // The parameter is used across [[accumulate]] functions

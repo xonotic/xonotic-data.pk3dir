@@ -1,6 +1,5 @@
 #include "../../common/command/command.qh"
 #include "vote.qh"
-#include "../_all.qh"
 
 #include "common.qh"
 
@@ -24,7 +23,7 @@
 // =============================================
 
 //  Nagger for players to know status of voting
-float Nagger_SendEntity(entity to, float sendflags)
+bool Nagger_SendEntity(entity this, entity to, float sendflags)
 {
 	int nags, i, f, b;
 	entity e;

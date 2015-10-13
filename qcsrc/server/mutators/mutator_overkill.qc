@@ -1,9 +1,8 @@
 #include "mutator_overkill.qh"
-#include "../_all.qh"
 
 #include "mutator.qh"
 
-void W_Blaster_Attack(float, float, float, float, float, float, float, float, float, float);
+void W_Blaster_Attack(entity, float, float, float, float, float, float, float, float, float, float);
 spawnfunc(weapon_hmg);
 spawnfunc(weapon_rpc);
 
@@ -46,7 +45,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER.m_id))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 	{
 		frag_damage = 0;
 
@@ -149,6 +148,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		int oldwep = self.weapon;
 		self.weapon = WEP_BLASTER.m_id;
 		W_Blaster_Attack(
+			self,
 			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
 			WEP_CVAR_SEC(vaporizer, damage),
@@ -176,8 +176,9 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 			self.ok_notice_time = time + 2;
 			play2(self, SND(DRYFIRE));
 		}
+		Weapon wpn = get_weaponinfo(self.weapon);
 		if(self.weaponentity.state != WS_CLEAR)
-			w_ready();
+			w_ready(wpn, self, self.BUTTON_ATCK, self.BUTTON_ATCK2);
 
 		self.weapon_blocked = true;
 	}
@@ -275,10 +276,10 @@ MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
-	WepSet ok_start_items = (WEPSET_MACHINEGUN | WEPSET_VORTEX | WEPSET_SHOTGUN);
+	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
 
-	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET_RPC; }
-	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET_HMG; }
+	if(WEP_RPC.weaponstart > 0) { ok_start_items |= WEPSET(RPC); }
+	if(WEP_HMG.weaponstart > 0) { ok_start_items |= WEPSET(HMG); }
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;

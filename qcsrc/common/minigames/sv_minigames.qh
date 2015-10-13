@@ -44,14 +44,12 @@ entity minigame_find_player(entity client);
 
 entity minigame_sessions;
 
-bool minigame_SendEntity(entity to, int sf);
+bool minigame_SendEntity(entity this, entity to, int sf);
 
-void RegisterMinigames();
-const int MINIGAMES_MAX = 24;
-entity MINIGAMES[MINIGAMES_MAX], MINIGAMES_first, MINIGAMES_last;
-int MINIGAMES_COUNT;
+REGISTRY(Minigames, BIT(3))
+REGISTER_REGISTRY(RegisterMinigames)
 #define REGISTER_MINIGAME(name,nicename) \
-    REGISTER(RegisterMinigames, MINIGAME, MINIGAMES, MINIGAMES_COUNT, name, m_id, spawn()); \
+    REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, spawn()); \
     int name##_server_event(entity, string, ...); \
     REGISTER_INIT_POST(MINIGAME, name) { \
         this.classname = "minigame_descriptor"; \
@@ -60,6 +58,5 @@ int MINIGAMES_COUNT;
 		this.minigame_event = name##_server_event; \
     } \
     REGISTER_INIT(MINIGAME, name)
-REGISTER_REGISTRY(RegisterMinigames)
 
 #endif

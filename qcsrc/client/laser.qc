@@ -1,12 +1,6 @@
 #include "laser.qh"
-#include "_all.qh"
 
-#include "hook.qh"
-
-#include "../common/buffs.qh"
-
-#include "../csqcmodellib/cl_model.qh"
-#include "../csqcmodellib/interpolate.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 // a laser goes from origin in direction angles
 // it has color 'colormod'
@@ -21,7 +15,7 @@ class(Laser) .float alpha;
 class(Laser) .float scale; // scaling factor of the thickness
 class(Laser) .float modelscale; // scaling factor of the dlight
 
-void Draw_Laser()
+void Draw_Laser(entity this)
 {
 	if(!self.state)
 		return;

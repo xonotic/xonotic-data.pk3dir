@@ -1,8 +1,6 @@
 #ifndef CL_MINIGAMES_H
 #define CL_MINIGAMES_H
 
-#include "../../dpdefs/keycodes.qh"
-
 // Get a square in the center of the avaliable area
 // \note macro to pass by reference pos and mySize
 #define minigame_hud_fitsqare(pos, mySize) \
@@ -116,12 +114,10 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_ar
 	while( (entityvar = findentity(entityvar,owner,active_minigame)) )
 
 
-void RegisterMinigames();
-const int MINIGAMES_MAX = 24;
-entity MINIGAMES[MINIGAMES_MAX], MINIGAMES_first, MINIGAMES_last;
-int MINIGAMES_COUNT;
+REGISTRY(Minigames, BIT(3))
+REGISTER_REGISTRY(RegisterMinigames)
 #define REGISTER_MINIGAME(name,nicename) \
-    REGISTER(RegisterMinigames, MINIGAME, MINIGAMES, MINIGAMES_COUNT, name, m_id, spawn()); \
+    REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, spawn()); \
     void name##_hud_board(vector, vector); \
     void name##_hud_status(vector, vector); \
     int name##_client_event(entity, string, ...); \
@@ -134,6 +130,5 @@ int MINIGAMES_COUNT;
 		this.minigame_event = name##_client_event; \
     } \
     REGISTER_INIT(MINIGAME, name)
-REGISTER_REGISTRY(RegisterMinigames)
 
 #endif

@@ -64,6 +64,8 @@ string WeaponArenaString()
 	return weaponarenastring;
 }
 
+AUTOCVAR(g_grappling_hook, bool, _("let players spawn with the grappling hook which allows them to pull themselves up"));
+
 string XonoticMutatorsDialog_toString(entity me)
 {
 	string s;
@@ -88,7 +90,7 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Low gravity"));
 	if(cvar("g_cloaked"))
 		s = strcat(s, ", ", _("Cloaked"));
-	if(cvar("g_grappling_hook"))
+	if(autocvar_g_grappling_hook)
 		s = strcat(s, ", ", _("Hook"));
 	if(cvar("g_midair"))
 		s = strcat(s, ", ", _("Midair"));

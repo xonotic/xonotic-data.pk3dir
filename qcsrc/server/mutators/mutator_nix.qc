@@ -1,4 +1,3 @@
-#include "../_all.qh"
 
 #include "mutator.qh"
 
@@ -60,7 +59,8 @@ void NIX_GiveCurrentWeapon()
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		//WEP_ACTION(nix_weapon, WR_INIT); // forget it, too slow
+		// Weapon w = get_weaponinfo(nix_weapon);
+		// w.wr_init(w); // forget it, too slow
 	}
 
 	// get weapon info
@@ -101,7 +101,8 @@ void NIX_GiveCurrentWeapon()
 		else
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
-		WEP_ACTION(nix_weapon, WR_RESETPLAYER);
+		Weapon w = get_weaponinfo(nix_weapon);
+		w.wr_resetplayer(w);
 
 		// all weapons must be fully loaded when we spawn
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
@@ -142,7 +143,7 @@ void NIX_GiveCurrentWeapon()
 
 	self.weapons = '0 0 0';
 	if(g_nix_with_blaster)
-		self.weapons |= WEPSET_BLASTER;
+		self.weapons |= WEPSET(BLASTER);
 	self.weapons |= WepSet_FromWeapon(nix_weapon);
 
 	if(self.switchweapon != nix_weapon)
@@ -155,8 +156,10 @@ void NIX_precache()
 {
 	float i;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		if (NIX_CanChooseWeapon(i))
-			WEP_ACTION(i, WR_INIT);
+		if (NIX_CanChooseWeapon(i)) {
+			Weapon w = get_weaponinfo(i);
+			w.wr_init(w);
+		}
 }
 
 MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)

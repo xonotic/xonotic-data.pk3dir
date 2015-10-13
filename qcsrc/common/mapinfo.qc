@@ -1,16 +1,13 @@
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
     #include "../client/defs.qh"
     #include "util.qh"
-    #include "buffs.qh"
+    #include "buffs/all.qh"
     #include "weapons/all.qh"
     #include "mapinfo.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "util.qh"
-    #include "buffs.qh"
+    #include "buffs/all.qh"
     #include "monsters/all.qh"
     #include "mapinfo.qh"
 #endif
@@ -602,13 +599,13 @@ void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int lo
 
 string _MapInfo_GetDefaultEx(float t)
 {
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.model2));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.model2));
 	return "";
 }
 
 float _MapInfo_GetTeamPlayBool(float t)
 {
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.team));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.team));
 	return false;
 }
 
@@ -723,14 +720,14 @@ int MapInfo_Type_FromString(string t)
 	deprecate(assault, as);
 	deprecate(race, rc);
 	if (t == "all") return MAPINFO_TYPE_ALL;
-	FOREACH(MAPINFO_TYPES, it.mdl == t, LAMBDA(return it.items));
+	FOREACH(Gametypes, it.mdl == t, LAMBDA(return it.items));
 	return 0;
 #undef deprecate
 }
 
 string MapInfo_Type_Description(float t)
 {
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.gametype_description));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.gametype_description));
 	return "";
 }
 
@@ -738,13 +735,13 @@ string MapInfo_Type_ToString(float t)
 {
 	if(t == MAPINFO_TYPE_ALL)
 	 	return "all";
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.mdl));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.mdl));
 	return "";
 }
 
 string MapInfo_Type_ToText(float t)
 {
-	FOREACH(MAPINFO_TYPES, it.items == t, LAMBDA(return it.message));
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it.message));
 	/* xgettext:no-c-format */
 	return _("@!#%'n Tuba Throwing");
 }
@@ -1249,7 +1246,7 @@ int MapInfo_CurrentFeatures()
 int MapInfo_CurrentGametype()
 {
 	int prev = cvar("gamecfg");
-	FOREACH(MAPINFO_TYPES, cvar(it.netname) && it.items != prev, LAMBDA(return it.items));
+	FOREACH(Gametypes, cvar(it.netname) && it.items != prev, LAMBDA(return it.items));
 	if (prev) return prev;
 	return MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1275,7 +1272,7 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 
 void MapInfo_SwitchGameType(int t)
 {
-	FOREACH(MAPINFO_TYPES, true, LAMBDA(
+	FOREACH(Gametypes, true, LAMBDA(
 		cvar_set(it.netname, (it.items == t) ? "1" : "0")
 	));
 }

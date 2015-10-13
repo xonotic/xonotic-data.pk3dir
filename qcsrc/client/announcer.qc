@@ -1,20 +1,19 @@
 #include "announcer.qh"
-#include "_all.qh"
 
 #include "../common/notifications.qh"
 #include "../common/stats.qh"
-#include "../common/util.qh"
 
 bool announcer_1min;
 bool announcer_5min;
 void Announcer_Countdown()
-{SELFPARAM();
+{
+	SELFPARAM();
 	float starttime = getstatf(STAT_GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
-		remove(self);
+		remove(this);
 		return;
 	}
 	if(roundstarttime >= starttime)
@@ -29,7 +28,7 @@ void Announcer_Countdown()
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
-		remove(self);
+		remove(this);
 		return;
 	}
 	else // countdown is still going
@@ -46,7 +45,7 @@ void Announcer_Countdown()
 			Local_Notification(MSG_ANNCE, Announcer_PickNumber(CNT_GAMESTART, countdown_rounded));
 		}
 
-		self.nextthink = (starttime - (countdown - 1));
+		this.nextthink = (starttime - (countdown - 1));
 	}
 }
 

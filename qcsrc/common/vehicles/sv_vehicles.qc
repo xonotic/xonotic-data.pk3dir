@@ -1,5 +1,4 @@
 #include "sv_vehicles.qh"
-#include "../effects/effects.qh"
 
 #if 0
 bool vehicle_send(entity to, int sf)
@@ -38,8 +37,8 @@ bool vehicle_send(entity to, int sf)
 }
 #endif
 
-bool SendAuxiliaryXhair(entity to, int sf)
-{SELFPARAM();
+bool SendAuxiliaryXhair(entity this, entity to, int sf)
+{
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
 
@@ -529,7 +528,7 @@ void vehicles_showwp()
 		rgb = Team_ColorRGB(self.team);
 	else
 		rgb = '1 1 1';
-	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_POWERUP);
+	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Vehicle);
 	wp.colormod = rgb;
 	if(self.waypointsprite_attached)
 	{
@@ -654,22 +653,22 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, int deatht
 	self.dmg_time = time;
 
 	// WEAPONTODO
-	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
 		damage *= autocvar_g_vehicles_vortex_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
 		damage *= autocvar_g_vehicles_machinegun_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
 		damage *= autocvar_g_vehicles_rifle_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 		damage *= autocvar_g_vehicles_vaporizer_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;
 
-	if(DEATH_WEAPONOFWEAPONDEATH(deathtype))
+	if(DEATH_WEAPONOF(deathtype) != WEP_Null)
 		damage *= autocvar_g_vehicles_weapon_damagerate;
 
 	self.enemy = attacker;
@@ -737,7 +736,8 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, int deatht
 
 		antilag_clear(self);
 
-		VEH_ACTION(self.vehicleid, VR_DEATH);
+		Vehicle info = get_vehicleinfo(self.vehicleid);
+		info.vr_death(info);
 		vehicles_setreturn(self);
 	}
 }
@@ -766,7 +766,7 @@ void vehicles_impact(float _minspeed, float _speedfac, float _maxpain)
 		if(_minspeed < wc)
 		{
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (self, world, world, take, DEATH_FALL, self.origin, '0 0 0');
+			Damage (self, world, world, take, DEATH_FALL.m_id, self.origin, '0 0 0');
 			self.play_time = time + 0.25;
 
 			//dprint("wc: ", ftos(wc), "\n");
@@ -937,13 +937,15 @@ void vehicles_touch()
 		if(vehicles_crushable(other))
 		{
 			if(vlen(self.velocity) >= 30)
-				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
+				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
 
-		if(self.play_time < time)
-			VEH_ACTION(self.vehicleid, VR_IMPACT);
+		if(self.play_time < time) {
+			Vehicle info = get_vehicleinfo(self.vehicleid);
+			info.vr_impact(info);
+		}
 
 		return;
 	}
@@ -1112,8 +1114,9 @@ void vehicles_enter(entity pl, entity veh)
 	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
 	setself(veh);
-	CSQCModel_UnlinkEntity();
-	VEH_ACTION(veh.vehicleid, VR_ENTER);
+	CSQCModel_UnlinkEntity(veh);
+	Vehicle info = get_vehicleinfo(veh.vehicleid);
+	info.vr_enter(info);
 	setself(this);
 
 	antilag_clear(pl);
@@ -1126,7 +1129,8 @@ void vehicles_think()
 	if(self.owner)
 		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
 
-	VEH_ACTION(self.vehicleid, VR_THINK);
+	Vehicle info = get_vehicleinfo(self.vehicleid);
+	info.vr_think(info);
 
 	CSQCMODEL_AUTOUPDATE(self);
 }
@@ -1177,7 +1181,8 @@ void vehicles_spawn()
 
 	vehicles_reset_colors();
 
-	VEH_ACTION(self.vehicleid, VR_SPAWN);
+	Vehicle info = get_vehicleinfo(self.vehicleid);
+	info.vr_spawn(info);
 
 	CSQCMODEL_AUTOINIT(self);
 }
@@ -1190,7 +1195,10 @@ bool vehicle_initialize(entity veh, bool nodrop)
 	if(!veh.vehicleid)
 		return false;
 
-	if(!veh.tur_head) { VEH_ACTION(veh.vehicleid, VR_PRECACHE); }
+	if(!veh.tur_head) {
+		Vehicle info = get_vehicleinfo(veh.vehicleid);
+		info.vr_precache(info);
+	}
 
 	if(self.targetname && self.targetname != "")
 	{
@@ -1283,7 +1291,8 @@ bool vehicle_initialize(entity veh, bool nodrop)
 	self.pos2 = self.angles;
 	self.tur_head.team = self.team;
 
-	VEH_ACTION(veh.vehicleid, VR_SETUP);
+	Vehicle info = get_vehicleinfo(veh.vehicleid);
+	info.vr_setup(info);
 
 	if(self.active == ACTIVE_NOT)
 		self.nextthink = 0; // wait until activated

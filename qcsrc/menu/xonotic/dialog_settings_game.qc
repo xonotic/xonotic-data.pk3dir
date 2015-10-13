@@ -7,12 +7,12 @@
 CLASS(SettingSource, DataSource)
     METHOD(SettingSource, getEntry, entity(entity this, int i, void(string name, string icon) returns))
     {
-        Lazy l = SETTINGS[i];
+        Lazy l = Settings[i];
         entity it = l.m_get();
         if (returns) returns(it.title, string_null);
         return it;
     }
-    METHOD(SettingSource, reload, int(entity this, string filter)) { return SETTINGS_COUNT; }
+    METHOD(SettingSource, reload, int(entity this, string filter)) { return Settings_COUNT; }
 ENDCLASS(SettingSource)
 
 #include "listbox.qc"

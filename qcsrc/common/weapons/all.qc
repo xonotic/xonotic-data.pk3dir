@@ -4,34 +4,31 @@
 #include "all.qh"
 
 #if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qh"
 	#include "../../client/defs.qh"
 	#include "../constants.qh"
 	#include "../stats.qh"
-	#include "../../warpzonelib/anglestransform.qh"
-	#include "../../warpzonelib/common.qh"
-	#include "../../warpzonelib/client.qh"
+	#include "../../lib/warpzone/anglestransform.qh"
+	#include "../../lib/warpzone/common.qh"
+	#include "../../lib/warpzone/client.qh"
 	#include "../util.qh"
-	#include "../buffs.qh"
+	#include "../buffs/all.qh"
 	#include "../../client/autocvars.qh"
-	#include "../deathtypes.qh"
-	#include "../../csqcmodellib/interpolate.qh"
+	#include "../deathtypes/all.qh"
+	#include "../../lib/csqcmodel/interpolate.qh"
 	#include "../movetypes/movetypes.qh"
 	#include "../../client/main.qh"
-	#include "../../csqcmodellib/cl_model.qh"
+	#include "../../lib/csqcmodel/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/anglestransform.qh"
-    #include "../../warpzonelib/common.qh"
-    #include "../../warpzonelib/util_server.qh"
-    #include "../../warpzonelib/server.qh"
+    #include "../../lib/warpzone/anglestransform.qh"
+    #include "../../lib/warpzone/common.qh"
+    #include "../../lib/warpzone/util_server.qh"
+    #include "../../lib/warpzone/server.qh"
     #include "../constants.qh"
     #include "../stats.qh"
     #include "../teams.qh"
     #include "../util.qh"
-    #include "../buffs.qh"
+    #include "../buffs/all.qh"
     #include "../monsters/all.qh"
     #include "config.qh"
     #include "../../server/weapons/csqcprojectile.qh"
@@ -41,11 +38,11 @@
     #include "../../server/constants.qh"
     #include "../../server/defs.qh"
     #include "../notifications.qh"
-    #include "../deathtypes.qh"
+    #include "../deathtypes/all.qh"
     #include "../../server/mutators/mutators_include.qh"
     #include "../mapinfo.qh"
     #include "../../server/command/common.qh"
-    #include "../../csqcmodellib/sv_model.qh"
+    #include "../../lib/csqcmodel/sv_model.qh"
     #include "../../server/portals.qh"
     #include "../../server/g_hook.qh"
 #endif
@@ -58,56 +55,45 @@
 
 // WEAPON PLUGIN SYSTEM
 
-#if WEP_MAXCOUNT > 72
-# error Kein Weltraum links auf dem Gerät
-#endif
-
 WepSet WepSet_FromWeapon(int a) {
 	a -= WEP_FIRST;
-#if WEP_MAXCOUNT > 24
-	if(a >= 24) {
+	if (Weapons_MAX > 24)
+	if (a >= 24) {
 		a -= 24;
-#if WEP_MAXCOUNT > 48
-		if(a >= 24) {
+		if (Weapons_MAX > 48)
+		if (a >= 24) {
 			a -= 24;
 			return '0 0 1' * power2of(a);
 		}
-#endif
 		return '0 1 0' * power2of(a);
 	}
-#endif
 	return '1 0 0' * power2of(a);
 }
 #ifdef SVQC
 void WepSet_AddStat()
 {
 	addstat(STAT_WEAPONS, AS_INT, weapons_x);
-#if WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	addstat(STAT_WEAPONS2, AS_INT, weapons_y);
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	addstat(STAT_WEAPONS3, AS_INT, weapons_z);
-#endif
-#endif
 }
 void WepSet_AddStat_InMap()
 {
 	addstat(STAT_WEAPONSINMAP, AS_INT, weaponsinmap_x);
-#if WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	addstat(STAT_WEAPONSINMAP2, AS_INT, weaponsinmap_y);
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	addstat(STAT_WEAPONSINMAP3, AS_INT, weaponsinmap_z);
-#endif
-#endif
 }
 void WriteWepSet(float dst, WepSet w)
 {
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	WriteInt72_t(dst, w);
-#elif WEP_MAXCOUNT > 24
+	else if (Weapons_MAX > 24)
 	WriteInt48_t(dst, w);
-#else
+	else
 	WriteInt24_t(dst, w.x);
-#endif
 }
 #endif
 #ifdef CSQC
@@ -115,61 +101,35 @@ WepSet WepSet_GetFromStat()
 {
 	WepSet w = '0 0 0';
 	w.x = getstati(STAT_WEAPONS);
-#if WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	w.y = getstati(STAT_WEAPONS2);
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	w.z = getstati(STAT_WEAPONS3);
-#endif
-#endif
 	return w;
 }
 WepSet WepSet_GetFromStat_InMap()
 {
 	WepSet w = '0 0 0';
 	w_x = getstati(STAT_WEAPONSINMAP);
-#if WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	w_y = getstati(STAT_WEAPONSINMAP2);
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	w_z = getstati(STAT_WEAPONSINMAP3);
-#endif
-#endif
 	return w;
 }
 WepSet ReadWepSet()
 {
-#if WEP_MAXCOUNT > 48
+	if (Weapons_MAX > 48)
 	return ReadInt72_t();
-#elif WEP_MAXCOUNT > 24
+	if (Weapons_MAX > 24)
 	return ReadInt48_t();
-#else
 	return ReadInt24_t() * '1 0 0';
-#endif
 }
 #endif
 
-void register_weapons_done()
-{
-	dummy_weapon_info = NEW(Weapon);
-
-	weaponorder_byid = "";
-	for (int i = WEP_MAXCOUNT - 1; i >= 0; --i)
-		if (weapon_info[i])
-			weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
-	weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
-}
-entity get_weaponinfo(int id)
-{
-	entity w;
-	if(id < WEP_FIRST || id > WEP_LAST)
-		return dummy_weapon_info;
-	w = weapon_info[id - 1];
-	if(w)
-		return w;
-	return dummy_weapon_info;
-}
 string W_FixWeaponOrder(string order, float complete)
 {
-	return fixPriorityList(order, WEP_FIRST, WEP_LAST, 230 - WEP_FIRST, complete);
+	return fixPriorityList(order, WEP_FIRST, WEP_LAST, WEP_IMPULSE_BEGIN - WEP_FIRST, complete);
 }
 string W_NameWeaponOrder_MapFunc(string s)
 {
@@ -177,7 +137,7 @@ string W_NameWeaponOrder_MapFunc(string s)
 	if(s == "0" || stof(s))
 	{
 		wi = get_weaponinfo(stof(s));
-		if(wi != dummy_weapon_info)
+		if(wi != WEP_Null)
 			return wi.netname;
 	}
 	return s;
@@ -216,7 +176,7 @@ string W_NumberWeaponOrder(string order)
 	return mapPriorityList(order, W_NumberWeaponOrder_MapFunc);
 }
 
-float W_FixWeaponOrder_BuildImpulseList_buf[WEP_MAXCOUNT];
+float W_FixWeaponOrder_BuildImpulseList_buf[Weapons_MAX];
 string W_FixWeaponOrder_BuildImpulseList_order;
 void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 {

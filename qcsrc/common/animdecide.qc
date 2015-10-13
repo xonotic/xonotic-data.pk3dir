@@ -1,18 +1,15 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "animdecide.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
+#include "animdecide.qh"
+
+#include "monsters/all.qh"
+
+#if defined(SVQC)
     #include "util.qh"
-    #include "animdecide.qh"
     #include "../server/defs.qh"
 #endif
 
 bool monsters_animoverride(entity e)
 {
-	int monster_id = 0;
+	Monster monster_id = NULL;
 	for(int i = MON_FIRST; i <= MON_LAST; ++i)
 	{
 		entity mon = get_monsterinfo(i);
@@ -20,14 +17,14 @@ bool monsters_animoverride(entity e)
 		//if(substring(e.model, 0, strlen(mon.model) - 4) == substring(mon.model, 0, strlen(mon.model) - 4))
 		if(e.model == mon.model)
 		{
-			monster_id = i;
+			monster_id = mon;
 			break;
 		}
 	}
 
 	if(!monster_id) { return false; }
 
-	MON_ACTION(monster_id, MR_ANIM);
+	monster_id.mr_anim(monster_id);
 
 	vector none = '0 0 0';
 	e.anim_duckwalk = e.anim_walk;

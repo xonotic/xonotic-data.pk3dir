@@ -1,6 +1,5 @@
 #include "../../common/command/command.qh"
 #include "cmd.qh"
-#include "../_all.qh"
 
 #include "common.qh"
 #include "vote.qh"
@@ -20,17 +19,21 @@
 #endif
 
 #include "../../common/constants.qh"
-#include "../../common/deathtypes.qh"
+#include "../../common/deathtypes/all.qh"
 #include "../../common/mapinfo.qh"
 #include "../../common/notifications.qh"
+#include "../../common/physics.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
+#include "../../common/triggers/triggers.qh"
+
+#include "../../common/minigames/sv_minigames.qh"
 
 #include "../../common/monsters/all.qc"
 #include "../../common/monsters/spawn.qh"
 #include "../../common/monsters/sv_monsters.qh"
 
-#include "../../warpzonelib/common.qh"
+#include "../../lib/warpzone/common.qh"
 
 void ClientKill_TeamChange (float targetteam); // 0 = don't change, -1 = auto, -2 = spec
 

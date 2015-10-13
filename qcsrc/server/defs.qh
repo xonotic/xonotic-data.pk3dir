@@ -162,13 +162,12 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 // WEAPONTODO
 .float autoswitch;
-//float WEP_ACTION(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
-void w_clear();
-void w_ready();
+void w_clear(Weapon thiswep, entity actor, bool fire1, bool fire2);
+void w_ready(Weapon thiswep, entity actor, bool fire1, bool fire2);
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
-.void() weapon_think;
+.void(Weapon thiswep, entity actor, bool fire1, bool fire2) weapon_think;
 
 
 // weapon states (self.weaponentity.state)
@@ -262,7 +261,7 @@ WepSet weaponsInMap;
 
 float bot_waypoints_for_items;
 
-.float attack_finished_for[WEP_MAXCOUNT];
+.float attack_finished_for[Weapons_MAX];
 .float attack_finished_single;
 #ifdef INDEPENDENT_ATTACK_FINISHED
 #define ATTACK_FINISHED_FOR(ent,w) ((ent).(attack_finished_for[(w) - WEP_FIRST]))
@@ -302,10 +301,6 @@ float sv_maxidle_spectatorsareidle;
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;
-
-.float Version;
-.int SendFlags;
-.bool(entity to, int sendflags) SendEntity;
 
 // player sounds, voice messages
 // TODO implemented fall and falling
@@ -351,6 +346,7 @@ ALLVOICEMSGS
 //		_VOICEMSG(droppedflag) \
 //		_VOICEMSG(negative) \
 //		_VOICEMSG(seenenemy) \
+//      /**/
 
 string globalsound_fall;
 string globalsound_metalfall;
@@ -469,7 +465,7 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-.float weapon_load[WEP_MAXCOUNT];
+.float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
 .float old_clip_load;

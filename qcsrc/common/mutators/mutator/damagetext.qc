@@ -1,3 +1,13 @@
+#ifndef MUTATOR_DAMAGETEXT_H
+#define MUTATOR_DAMAGETEXT_H
+
+#ifdef MENUQC
+#include "../../../menu/xonotic/tab.qc"
+#endif
+
+#endif
+
+#ifdef IMPLEMENTATION
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
@@ -24,8 +34,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, m_armordamage, int, 0)
     ATTRIB(DamageText, time_prev, float, time)
 
-    void DamageText_draw() {
-        SELFPARAM();
+    void DamageText_draw2d(DamageText this) {
         float dt = time - this.time_prev;
         this.time_prev = time;
         setorigin(this, this.origin + dt * this.velocity);
@@ -38,7 +47,7 @@ CLASS(DamageText, Object)
             drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', this.m_color, this.alpha, DRAWFLAG_NORMAL);
         }
     }
-    ATTRIB(DamageText, draw2d, void(), DamageText_draw)
+    ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d)
 
     void DamageText_update(DamageText this, vector _origin, int _health, int _armor) {
         this.m_damage = _health;
@@ -112,7 +121,6 @@ MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
 #endif
 
 #ifdef MENUQC
-#include "../../../menu/xonotic/tab.qc"
 CLASS(XonoticDamageTextSettings, XonoticTab)
     #include "../../../menu/gamesettings.qh"
     REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
@@ -140,4 +148,5 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
             this.TD(this, 2, 2, makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
     }
 ENDCLASS(XonoticDamageTextSettings)
+#endif
 #endif

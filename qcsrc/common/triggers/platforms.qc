@@ -5,13 +5,13 @@ void generic_plat_blocked()
 	{
 		if(self.dmgtime2 < time)
 		{
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 			self.dmgtime2 = time + self.dmgtime;
 		}
 
 		// Gib dead/dying stuff
 		if(other.deadflag != DEAD_NO)
-			Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 	}
 #endif
 }
@@ -150,7 +150,7 @@ void plat_crush()
 	if((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 	}
 	else
@@ -158,10 +158,10 @@ void plat_crush()
 #ifdef SVQC
 		if((self.dmg) && (other.takedamage != DAMAGE_NO))
 		{   // Shall we bite?
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 			// Gib dead/dying stuff
 			if(other.deadflag != DEAD_NO)
-				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+				Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 #endif
 

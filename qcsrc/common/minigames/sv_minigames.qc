@@ -60,8 +60,8 @@ void minigame_rmplayer(entity minigame_session, entity player)
 
 // Send an entity to a client
 // only use on minigame entities or entities with a minigame owner
-bool minigame_SendEntity(entity to, int sf)
-{SELFPARAM();
+bool minigame_SendEntity(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -131,12 +131,11 @@ int minigame_addplayer(entity minigame_session, entity player)
 			return 0;
 		minigame_rmplayer(player.active_minigame,player);
 	}
-
-	int mgteam = minigame_session.minigame_event(minigame_session,"join",player);
+	entity player_pointer = spawn();
+	int mgteam = minigame_session.minigame_event(minigame_session,"join",player,player_pointer);
 
 	if ( mgteam )
 	{
-		entity player_pointer = spawn();
 		player_pointer.classname = "minigame_player";
 		player_pointer.owner = minigame_session;
 		player_pointer.minigame_players = player;
@@ -157,18 +156,11 @@ int minigame_addplayer(entity minigame_session, entity player)
 
 		minigame_resend(minigame_session);
 	}
+	else { remove(player_pointer); }
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
 		ftos(num_for_edict(player)),":",player.netname));
 
 	return mgteam;
-}
-
-void minigame_frame()
-{
-	entity minig = self;
-
-	minig.minigame_event(minig,"frame");
-	minig.nextthink = time + 0.1;
 }
 
 entity start_minigame(entity player, string minigame )
@@ -183,8 +175,6 @@ entity start_minigame(entity player, string minigame )
 		minig.classname = "minigame";
 		minig.netname = strzone(strcat(e.netname,"_",ftos(num_for_edict(minig))));
 		minig.descriptor = e;
-		minig.think = minigame_frame;
-		minig.nextthink = time;
 		minig.minigame_event = e.minigame_event;
 		minig.minigame_event(minig,"start");
 		GameLogEcho(strcat(":minigame:start:",minig.netname));
@@ -350,7 +340,7 @@ void ClientCommand_minigame(int request, int argc, string command)
 		}
 		else if ( minig_cmd == "list" )
 		{
-			FOREACH(MINIGAMES, true, LAMBDA(
+			FOREACH(Minigames, true, LAMBDA(
 			{
 				sprint(self,it.netname," (",it.message,") ","\n");
 			}));

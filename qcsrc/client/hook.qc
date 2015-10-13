@@ -1,13 +1,7 @@
 #include "hook.qh"
-#include "_all.qh"
 
-#include "hud.qh"
-
-#include "../common/teams.qh"
-
-#include "../csqcmodellib/interpolate.qh"
-
-#include "../warpzonelib/common.qh"
+#include "../lib/csqcmodel/interpolate.qh"
+#include "../lib/warpzone/common.qh"
 
 entityclass(Hook);
 class(Hook) .float HookType; // ENT_CLIENT_*
@@ -31,8 +25,8 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 }
 
 class(Hook) .float teleport_time;
-void Draw_GrapplingHook()
-{SELFPARAM();
+void Draw_GrapplingHook(entity this)
+{
 	vector a, b, atrans;
 	string tex;
 	vector rgb;

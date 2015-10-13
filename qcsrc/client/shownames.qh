@@ -1,5 +1,5 @@
-#ifndef SHOWNAMES_H
-#define SHOWNAMES_H
+#ifndef CLIENT_SHOWNAMES_H
+#define CLIENT_SHOWNAMES_H
 
 entityclass(ShowNames);
 class(ShowNames) .float healthvalue;

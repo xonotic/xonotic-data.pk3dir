@@ -1,9 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
-    #include "../../warpzonelib/common.qh"
+    #include "../../lib/warpzone/common.qh"
     #include "../constants.qh"
     #include "../teams.qh"
     #include "../util.qh"
@@ -12,7 +10,7 @@
     #include "../weapons/all.qh"
     #include "../../server/autocvars.qh"
     #include "../../server/defs.qh"
-    #include "../deathtypes.qh"
+    #include "../deathtypes/all.qh"
     #include "../../server/mutators/mutators_include.qh"
 	#include "../../server/steerlib.qh"
 	#include "../turrets/sv_turrets.qh"
@@ -22,7 +20,7 @@
     #include "../../server/command/common.qh"
     #include "../../server/command/cmd.qh"
 	#include "../triggers/triggers.qh"
-    #include "../../csqcmodellib/sv_model.qh"
+    #include "../../lib/csqcmodel/sv_model.qh"
     #include "../../server/round_handler.qh"
 #endif
 
@@ -268,7 +266,7 @@ void Monster_Sound_Precache(string f)
 
 void Monster_Sounds_Precache()
 {SELFPARAM();
-	string m = (get_monsterinfo(self.monsterid)).model;
+	string m = (get_monsterinfo(self.monsterid)).m_model.model_str();
 	float globhandle, n, i;
 	string f;
 
@@ -435,7 +433,7 @@ void Monster_Attack_Check(entity e, entity targ)
 
 	if(targ_vlen <= e.attack_range)
 	{
-		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_MELEE);
+		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_MELEE, targ);
 		if(attack_success == 1)
 			Monster_Sound(monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -444,7 +442,7 @@ void Monster_Attack_Check(entity e, entity targ)
 
 	if(targ_vlen > e.attack_range)
 	{
-		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_RANGED);
+		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_RANGED, targ);
 		if(attack_success == 1)
 			Monster_Sound(monstersound_melee, 0, false, CH_VOICE);
 		else if(attack_success > 0)
@@ -472,7 +470,8 @@ void Monster_UpdateModel()
 	self.anim_die2   = animfixfps(self, '9 1 0.01', '0 0 0');*/
 
 	// then get the real values
-	MON_ACTION(self.monsterid, MR_ANIM);
+	Monster mon = get_monsterinfo(self.monsterid);
+	mon.mr_anim(mon);
 }
 
 void Monster_Touch()
@@ -743,7 +742,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 			Unfreeze(self);
 			self.health = 0;
 			if(self.event_damage)
-				self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
+				self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, self.origin, '0 0 0');
 		}
 
 		else if ( self.revive_progress <= 0 )
@@ -760,7 +759,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 			{
 				self.last_trace = time + 0.4;
 
-				Damage (self, world, world, 2, DEATH_DROWN, self.origin, '0 0 0');
+				Damage (self, world, world, 2, DEATH_DROWN.m_id, self.origin, '0 0 0');
 				self.angles = '90 90 0';
 				if(random() < 0.5)
 				{
@@ -1036,9 +1035,10 @@ void Monster_Dead(entity attacker, float gibbed)
 	if(!((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 		self.velocity = '0 0 0';
 
-	CSQCModel_UnlinkEntity();
+	CSQCModel_UnlinkEntity(self);
 
-	MON_ACTION(self.monsterid, MR_DEATH);
+	Monster mon = get_monsterinfo(self.monsterid);
+	mon.mr_death(mon);
 
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
@@ -1046,19 +1046,19 @@ void Monster_Dead(entity attacker, float gibbed)
 
 void Monster_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
-	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL && !ITEM_DAMAGE_NEEDKILL(deathtype))
+	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL.m_id && !ITEM_DAMAGE_NEEDKILL(deathtype))
 		return;
 
-	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
+	if(self.frozen && deathtype != DEATH_KILL.m_id && deathtype != DEATH_NADE_ICE_FREEZE.m_id)
 		return;
 
-	//if(time < self.pain_finished && deathtype != DEATH_KILL)
+	//if(time < self.pain_finished && deathtype != DEATH_KILL.m_id)
 		//return;
 
-	if(time < self.spawnshieldtime && deathtype != DEATH_KILL)
+	if(time < self.spawnshieldtime && deathtype != DEATH_KILL.m_id)
 		return;
 
-	if(deathtype == DEATH_FALL && self.draggedby != world)
+	if(deathtype == DEATH_FALL.m_id && self.draggedby != world)
 		return;
 
 	vector v;
@@ -1071,7 +1071,8 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 	damage_take = take;
 	frag_attacker = attacker;
 	frag_deathtype = deathtype;
-	MON_ACTION(self.monsterid, MR_PAIN);
+	Monster mon = get_monsterinfo(self.monsterid);
+	mon.mr_pain(mon);
 	take = damage_take;
 
 	if(take)
@@ -1085,12 +1086,12 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 
 	self.dmg_time = time;
 
-	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN)
+	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN.m_id)
 		spamsound (self, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	self.velocity += force * self.damageforcescale;
 
-	if(deathtype != DEATH_DROWN && take)
+	if(deathtype != DEATH_DROWN.m_id && take)
 	{
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, take, 200) / 16, self, attacker);
 		if (take > 50)
@@ -1101,7 +1102,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 
 	if(self.health <= 0)
 	{
-		if(deathtype == DEATH_KILL)
+		if(deathtype == DEATH_KILL.m_id)
 			self.candrop = false; // killed by mobkill command
 
 		// TODO: fix this?
@@ -1110,14 +1111,14 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 		SUB_UseTargets();
 		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
 
-		Monster_Dead(attacker, (self.health <= -100 || deathtype == DEATH_KILL));
+		Monster_Dead(attacker, (self.health <= -100 || deathtype == DEATH_KILL.m_id));
 
 		WaypointSprite_Kill(self.sprite);
 
 		frag_target = self;
 		MUTATOR_CALLHOOK(MonsterDies, attacker);
 
-		if(self.health <= -100 || deathtype == DEATH_KILL) // check if we're already gibbed
+		if(self.health <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
 		{
 			Violence_GibSplash(self, 1, 0.5, attacker);
 
@@ -1228,11 +1229,12 @@ void Monster_Think()
 	if(self.monster_lifetime)
 	if(time >= self.monster_lifetime)
 	{
-		Damage(self, self, self, self.health + self.max_health, DEATH_KILL, self.origin, self.origin);
+		Damage(self, self, self, self.health + self.max_health, DEATH_KILL.m_id, self.origin, self.origin);
 		return;
 	}
 
-	if(MON_ACTION(self.monsterid, MR_THINK))
+	Monster mon = get_monsterinfo(self.monsterid);
+	if(mon.mr_think(mon))
 		Monster_Move(self.speed2, self.speed, self.stopspeed);
 
 	Monster_Anim();
@@ -1242,7 +1244,8 @@ void Monster_Think()
 
 float Monster_Spawn_Setup()
 {SELFPARAM();
-	MON_ACTION(self.monsterid, MR_SETUP);
+	Monster mon = get_monsterinfo(self.monsterid);
+	mon.mr_setup(mon);
 
 	// ensure some basic needs are met
 	if(!self.health) { self.health = 100; }
@@ -1308,7 +1311,6 @@ bool Monster_Spawn(int mon_id)
 
 	if(!autocvar_g_monsters) { Monster_Remove(self); return false; }
 
-	self.mdl = mon.model;
 	if(Monster_Appear_Check(self, mon_id)) { return true; } // return true so the monster isn't removed
 
 	if(!self.monster_skill)
@@ -1326,7 +1328,7 @@ bool Monster_Spawn(int mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	_setmodel(self, self.mdl);
+	setmodel(self, mon.m_model);
 	self.flags				= FL_MONSTER;
 	self.classname			= "monster";
 	self.takedamage			= DAMAGE_AIM;

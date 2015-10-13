@@ -1,19 +1,21 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ SHOCKWAVE,
-/* function  */ W_Shockwave,
-/* ammotype  */ ammo_none,
-/* impulse   */ 2,
-/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED,
-/* rating    */ BOT_PICKUP_RATING_LOW,
-/* color     */ '0.5 0.25 0',
-/* modelname */ "shotgun",
-/* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairshotgun 0.7",
-/* wepimg    */ "weaponshotgun",
-/* refname   */ "shockwave",
-/* wepname   */ _("Shockwave")
-);
+CLASS(Shockwave, Weapon)
+/* ammotype  */ //ATTRIB(Shockwave, ammo_field, .int, ammo_none)
+/* impulse   */ ATTRIB(Shockwave, impulse, int, 2)
+/* flags     */ ATTRIB(Shockwave, spawnflags, int, WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED);
+/* rating    */ ATTRIB(Shockwave, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
+/* color     */ ATTRIB(Shockwave, wpcolor, vector, '0.5 0.25 0');
+/* modelname */ ATTRIB(Shockwave, mdl, string, "shotgun");
+#ifndef MENUQC
+/* model     */ ATTRIB(Shockwave, m_model, Model, MDL_SHOCKWAVE_ITEM);
+#endif
+/* crosshair */ ATTRIB(Shockwave, w_crosshair, string, "gfx/crosshairshotgun");
+/* crosshair */ ATTRIB(Shockwave, w_crosshair_size, float, 0.7);
+/* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshotgun");
+/* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
+/* wepname   */ ATTRIB(Shockwave, message, string, _("Shockwave"));
+ENDCLASS(Shockwave)
+REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 
 #define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, SHOCKWAVE, shockwave)
 #define SHOCKWAVE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
@@ -227,17 +229,17 @@ void W_Shockwave_Melee_Think(void)
 	}
 }
 
-void W_Shockwave_Melee(void)
-{SELFPARAM();
-	sound(self, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
-	weapon_thinkf(WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
+void W_Shockwave_Melee(Weapon thiswep, entity actor, bool fire1, bool fire2)
+{
+	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
+	weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
-	meleetemp.owner = meleetemp.realowner = self;
+	meleetemp.owner = meleetemp.realowner = actor;
 	meleetemp.think = W_Shockwave_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor();
-	W_SetupShot_Range(self, true, 0, "", 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
+	W_SetupShot_Range(actor, true, 0, "", 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
 }
 
 // SHOCKWAVE ATTACK MODE
@@ -437,7 +439,7 @@ void W_Shockwave_Attack(void)
 					);
 
 				// figure out the direction of force
-				vel = normalize(combine_to_vector(head.velocity.x, head.velocity.y, 0));
+				vel = normalize(vec3(head.velocity.x, head.velocity.y, 0));
 				vel *=
 					(
 						bound(0, (vlen(vel) / autocvar_sv_maxspeed), 1)
@@ -666,84 +668,75 @@ void W_Shockwave_Attack(void)
 	}
 }
 
-bool W_Shockwave(int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_AIM:
+		METHOD(Shockwave, wr_aim, void(entity thiswep))
 		{
 			if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
 				{ self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false); }
 			else
 				{ self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false); }
-
-			return true;
 		}
-		case WR_THINK:
+		METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
 		{
-			if(self.BUTTON_ATCK)
+			if(fire1)
 			{
-				if(time >= self.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
+				if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
 				{
-					if(weapon_prepareattack(0, WEP_CVAR(shockwave, blast_animtime)))
+					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(shockwave, blast_animtime)))
 					{
 						W_Shockwave_Attack();
-						self.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
-						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
+						actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
+						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
 					}
 				}
 			}
-			else if(self.BUTTON_ATCK2)
+			else if(fire2)
 			{
-				//if(self.clip_load >= 0) // we are not currently reloading
-				if(!self.crouch) // no crouchmelee please
-				if(weapon_prepareattack(1, WEP_CVAR(shockwave, melee_refire)))
+				//if(actor.clip_load >= 0) // we are not currently reloading
+				if(!actor.crouch) // no crouchmelee please
+				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR(shockwave, melee_refire)))
 				{
 					// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-					weapon_thinkf(WFRAME_FIRE1, 0, W_Shockwave_Melee);
+					weapon_thinkf(actor, WFRAME_FIRE1, 0, W_Shockwave_Melee);
 				}
 			}
-
-			return true;
 		}
-		case WR_INIT:
+		METHOD(Shockwave, wr_init, void(entity thiswep))
 		{
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
 		}
-		case WR_CHECKAMMO1:
-		case WR_CHECKAMMO2:
+		METHOD(Shockwave, wr_checkammo1, bool(entity thiswep))
+		{
+			return true; // infinite ammo
+		}
+		METHOD(Shockwave, wr_checkammo2, bool(entity thiswep))
 		{
 			// shockwave has infinite ammo
 			return true;
 		}
-		case WR_CONFIG:
+		METHOD(Shockwave, wr_config, void(entity thiswep))
 		{
 			SHOCKWAVE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
 		}
-		case WR_SUICIDEMESSAGE:
+		METHOD(Shockwave, wr_suicidemessage, int(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		case WR_KILLMESSAGE:
+		METHOD(Shockwave, wr_killmessage, int(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_SHOCKWAVE_MURDER_SLAP;
 			else
 				return WEAPON_SHOCKWAVE_MURDER;
 		}
-	}
-	return false;
-}
+
 #endif
 #ifdef CSQC
 // WEAPONTODO: add client side settings for these
 const float SW_MAXALPHA = 0.5;
 const float SW_FADETIME = 0.4;
 const float SW_DISTTOMIN = 200;
-void Draw_Shockwave()
-{SELFPARAM();
+void Draw_Shockwave(entity this)
+{
 	// fading/removal control
 	float a = bound(0, (SW_MAXALPHA - ((time - self.sw_time) / SW_FADETIME)), SW_MAXALPHA);
 	if(a < ALPHA_MIN_VISIBLE) { remove(self); }
@@ -858,29 +851,13 @@ void Net_ReadShockwaveParticle(void)
 	shockwave.sw_time = time;
 }
 
-bool W_Shockwave(int req)
-{SELFPARAM();
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
+		METHOD(Shockwave, wr_impacteffect, void(entity thiswep))
 		{
 			// handled by Net_ReadShockwaveParticle
 			//vector org2;
 			//org2 = w_org + w_backoff * 2;
 			//pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
-			return false;
 		}
-		case WR_INIT:
-		{
-			return false;
-		}
-		case WR_ZOOMRETICLE:
-		{
-			// no weapon specific image for this weapon
-			return false;
-		}
-	}
-	return false;
-}
+
 #endif
 #endif

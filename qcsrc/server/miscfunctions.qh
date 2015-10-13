@@ -29,8 +29,6 @@ float cvar_normal(string n)
 #define cvar_set_normal builtin_cvar_set
 
 .vector dropped_origin;
-.void(void) uncustomizeentityforclient;
-.float uncustomizeentityforclient_set;
 .float nottargeted;
 
 entity eliminatedPlayers;
@@ -61,9 +59,6 @@ void precache_all_playermodels(string pattern);
 
 void soundat(entity e, vector o, float chan, string samp, float vol, float _atten);
 
-void defer(float fdelay, void() func);
-
-void UncustomizeEntitiesRun();
 void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);
@@ -140,7 +135,7 @@ void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomo
 
 
 #define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
-#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER) || ((dt) == DEATH_SLIME) || ((dt) == DEATH_LAVA) || ((dt) == DEATH_SWAMP))
+#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER.m_id) || ((dt) == DEATH_SLIME.m_id) || ((dt) == DEATH_LAVA.m_id) || ((dt) == DEATH_SWAMP.m_id))
 
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
@@ -338,7 +333,6 @@ void readlevelcvars(void)
 	sv_foginterval = cvar("sv_foginterval");
 	g_cloaked = cvar("g_cloaked");
 	g_footsteps = cvar("g_footsteps");
-	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
@@ -422,8 +416,10 @@ void readlevelcvars(void)
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
-	for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-		WEP_ACTION(i, WR_INIT);
+	for(int i = WEP_FIRST; i <= WEP_LAST; ++i) {
+		Weapon w = get_weaponinfo(i);
+		w.wr_init(w);
+	}
 
 	readplayerstartcvars();
 }
@@ -462,6 +458,5 @@ entity initialize_entity_first;
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(void) func, float order);
 void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
-void Net_LinkEntity(entity e, bool docull, float dt, bool(entity, int) sendfunc);
 
 #endif

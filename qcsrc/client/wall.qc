@@ -1,11 +1,9 @@
 #include "wall.qh"
-#include "_all.qh"
 
 #include "bgmscript.qh"
 
-#include "../common/util.qh"
 
-#include "../csqcmodellib/interpolate.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 .float alpha;
 .float scale;
@@ -51,8 +49,8 @@ void Ent_Wall_PreDraw()
 		self.drawmask = MASK_NORMAL;
 }
 
-void Ent_Wall_Draw()
-{SELFPARAM();
+void Ent_Wall_Draw(entity this)
+{
 	float f;
 	var .vector fld;
 

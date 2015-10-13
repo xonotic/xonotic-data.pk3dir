@@ -24,6 +24,7 @@
 #include "bot/navigation.qh"
 
 #include "../common/vehicles/all.qh"
+#include "../common/triggers/teleporters.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
@@ -45,7 +46,7 @@
 
 #include "../common/monsters/sv_monsters.qh"
 
-#include "../warpzonelib/server.qh"
+#include "../lib/warpzone/server.qh"
 
 
 void send_CSQC_teamnagger() {
@@ -53,8 +54,8 @@ void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
-float ClientData_Send(entity to, int sf)
-{SELFPARAM();
+bool ClientData_Send(entity this, entity to, int sf)
+{
 	if(to != self.owner)
 	{
 		error("wtf");
@@ -511,10 +512,10 @@ void PutClientInServer()
 		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
 		{
 			if(g_weaponarena_random_with_blaster)
-				self.weapons &= ~WEPSET_BLASTER;
+				self.weapons &= ~WEPSET(BLASTER);
 			W_RandomWeapons(self, g_weaponarena_random);
 			if(g_weaponarena_random_with_blaster)
-				self.weapons |= WEPSET_BLASTER;
+				self.weapons |= WEPSET(BLASTER);
 		}
 
 		self.items = start_items;
@@ -620,7 +621,8 @@ void PutClientInServer()
 		// reset fields the weapons may use
 		for (int j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			WEP_ACTION(j, WR_RESETPLAYER);
+			Weapon w = get_weaponinfo(j);
+			w.wr_resetplayer(w);
 
 			// all weapons must be fully loaded when we spawn
 			entity e = get_weaponinfo(j);
@@ -666,8 +668,8 @@ void PutClientInServer()
 .float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
-float ClientInit_SendEntity(entity to, int sf)
-{SELFPARAM();
+bool ClientInit_SendEntity(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
@@ -810,7 +812,7 @@ void ClientKill_Now()
 	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
-            Damage(self, self, self, 1 , DEATH_KILL, self.origin, '0 0 0');
+            Damage(self, self, self, 1 , DEATH_KILL.m_id, self.origin, '0 0 0');
 	    }
 	}
 
@@ -823,7 +825,7 @@ void ClientKill_Now()
 		ClientKill_Now_TeamChange();
 
 	if(IS_PLAYER(self))
-		Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+		Damage(self, self, self, 100000, DEATH_KILL.m_id, self.origin, '0 0 0');
 
 	// now I am sure the player IS dead
 }
@@ -1215,7 +1217,7 @@ void ClientConnect (void)
 	else
 		stuffcmd(self, "set _teams_available 0\n");
 
-	attach_entcs();
+	attach_entcs(self);
 
 	bot_relinkplayerlist();
 
@@ -1236,7 +1238,7 @@ void ClientConnect (void)
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 		}
 
-		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET_TUBA))
+		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET(TUBA)))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 
@@ -1301,8 +1303,7 @@ void ClientDisconnect (void)
 
 	bot_clientdisconnect();
 
-	if(self.entcs)
-		detach_entcs();
+	detach_entcs(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
@@ -1657,7 +1658,7 @@ void player_regen (void)
 	{
 		if(self.vehicle)
 			vehicles_exit(VHEF_RELEASE);
-		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+		self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
 	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -2357,7 +2358,7 @@ void PlayerPreThink (void)
 		{
 			if(self.vehicle)
 				vehicles_exit(VHEF_RELEASE);
-			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
+			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, self.origin, '0 0 0');
 		}
 		else if ( self.revive_progress <= 0 )
 			Unfreeze(self);
@@ -2545,14 +2546,12 @@ void PlayerPreThink (void)
 
 		FixPlayermodel();
 
-		GrapplingHookFrame();
-
 		// LordHavoc: allow firing on move frames (sub-ticrate), this gives better timing on slow servers
 		//if(frametime)
 		{
 			self.items &= ~self.items_added;
 
-			W_WeaponFrame();
+			W_WeaponFrame(self);
 
 			self.items_added = 0;
 			if(self.items & ITEM_Jetpack.m_itemid)
@@ -2715,7 +2714,7 @@ void PlayerPostThink (void)
 	*/
 
 	if(self.waypointsprite_attachedforcarrier)
-		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
+		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
 
 	playerdemo_write();
 

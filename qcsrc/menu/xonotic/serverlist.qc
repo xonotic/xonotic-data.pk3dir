@@ -231,7 +231,7 @@ entity RetrieveCategoryEnt(int catnum)
 	else
 	{
 		error(sprintf("RetrieveCategoryEnt(%d): Improper category number!\n", catnum));
-		return world;
+		return NULL;
 	}
 }
 

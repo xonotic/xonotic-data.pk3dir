@@ -1,5 +1,3 @@
-#include "all.qh"
-
 void turret_remove()
 {SELFPARAM();
 	remove(self.tur_head);
@@ -26,8 +24,8 @@ void turret_head_draw()
 	self.drawmask = MASK_NORMAL;
 }
 
-void turret_draw()
-{SELFPARAM();
+void turret_draw(entity this)
+{
 	float dt;
 
 	dt = time - self.move_time;
@@ -55,8 +53,8 @@ void turret_draw()
 
 }
 
-void turret_draw2d()
-{SELFPARAM();
+void turret_draw2d(entity this)
+{
 	if(self.netname == "")
 		return;
 
@@ -86,7 +84,7 @@ void turret_draw2d()
 		o_z = 0;
 		if(hud != HUD_NORMAL)
 		{
-			if((get_turretinfo(self.turretid)).spawnflags & TUR_FLAG_MOVE)
+			if((get_turretinfo(self.m_id)).spawnflags & TUR_FLAG_MOVE)
 				txt = "gfx/vehicles/turret_moving.tga";
 			else
 				txt = "gfx/vehicles/turret_stationary.tga";
@@ -101,7 +99,7 @@ void turret_draw2d()
 
 	string spriteimage = self.netname;
 	float a = self.alpha * autocvar_hud_panel_fg_alpha;
-	vector rgb = spritelookupcolor(spriteimage, self.teamradar_color);
+	vector rgb = spritelookupcolor(self, spriteimage, self.teamradar_color);
 
 
 	if(self.maxdistance > waypointsprite_normdistance)
@@ -205,12 +203,12 @@ void turret_draw2d()
 
 void turret_construct()
 {SELFPARAM();
-	entity tur = get_turretinfo(self.turretid);
+	entity tur = get_turretinfo(self.m_id);
 
 	if(self.tur_head == world)
 		self.tur_head = spawn();
 
-	self.netname = TUR_NAME(self.turretid);
+	self.netname = tur.turret_name;
 
 	setorigin(self, self.origin);
 	_setmodel(self, tur.model);
@@ -218,7 +216,7 @@ void turret_construct()
 	setsize(self, tur.mins, tur.maxs);
 	setsize(self.tur_head, '0 0 0', '0 0 0');
 
-	if(self.turretid == TUR_EWHEEL.m_id)
+	if(self.m_id == TUR_EWHEEL.m_id)
 		setattachment(self.tur_head, self, "");
 	else
 		setattachment(self.tur_head, self, "tag_head");
@@ -243,13 +241,13 @@ void turret_construct()
 	self.teamradar_color = '1 0 0';
 	self.alpha = 1;
 
-	TUR_ACTION(self.turretid, TR_SETUP);
+	tur.tr_setup(tur, self);
 }
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
 void turret_gibboom();
-void turret_gib_draw()
-{SELFPARAM();
+void turret_gib_draw(entity this)
+{
 	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 
 	self.drawmask = MASK_NORMAL;
@@ -325,12 +323,12 @@ void turret_die()
 	if (!autocvar_cl_nogibs)
 	{
 		// Base
-		if(self.turretid == TUR_EWHEEL.m_id)
-			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', true);
-		else if (self.turretid == TUR_WALKER.m_id)
-			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', true);
-		else if (self.turretid == TUR_TESLA.m_id)
-			turret_gibtoss((get_turretinfo(self.turretid)).model, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', false);
+		if(self.m_id == TUR_EWHEEL.m_id)
+			turret_gibtoss((get_turretinfo(self.m_id)).model, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', true);
+		else if (self.m_id == TUR_WALKER.m_id)
+			turret_gibtoss((get_turretinfo(self.m_id)).model, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', true);
+		else if (self.m_id == TUR_TESLA.m_id)
+			turret_gibtoss((get_turretinfo(self.m_id)).model, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', false);
 		else
 		{
 			if (random() > 0.5)
@@ -342,7 +340,7 @@ void turret_die()
 			else
 				turret_gibtoss("models/turrets/base-gib1.md3", self.origin + '0 0 8', '0 0 0', '0 0 0', true);
 
-			entity headgib = turret_gibtoss((get_turretinfo(self.turretid)).head_model, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', true);
+			entity headgib = turret_gibtoss((get_turretinfo(self.m_id)).head_model, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', true);
 			if(headgib)
 			{
 				headgib.angles = headgib.move_angles = self.tur_head.angles;
@@ -364,7 +362,7 @@ void ent_turret()
 
 	if(sf & TNSF_SETUP)
 	{
-		self.turretid = ReadByte();
+		self.m_id = ReadByte();
 
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();

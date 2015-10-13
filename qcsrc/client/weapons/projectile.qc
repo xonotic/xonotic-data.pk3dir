@@ -3,15 +3,15 @@
 #include "../autocvars.qh"
 #include "../defs.qh"
 #include "../main.qh"
+#include "../mutators/events.qh"
 
 #include "../../common/constants.qh"
-#include "../../common/nades.qh"
+#include "../../common/nades/all.qh"
 #include "../../common/movetypes/movetypes.qh"
-#include "../../common/util.qh"
 
-#include "../../csqcmodellib/interpolate.qh"
+#include "../../lib/csqcmodel/interpolate.qh"
 
-#include "../../warpzonelib/anglestransform.qh"
+#include "../../lib/warpzone/anglestransform.qh"
 
 .float alpha;
 .float scale;
@@ -23,36 +23,33 @@ void SUB_Stop()
 	self.move_movetype = MOVETYPE_NONE;
 }
 
-void Projectile_ResetTrail(vector to)
-{SELFPARAM();
-	self.trail_oldorigin = to;
-	self.trail_oldtime = time;
+void Projectile_ResetTrail(entity this, vector to)
+{
+	this.trail_oldorigin = to;
+	this.trail_oldtime = time;
 }
 
-void Projectile_DrawTrail(vector to)
-{SELFPARAM();
-	vector from;
-	float t0;
-
-	from = self.trail_oldorigin;
-	t0 = self.trail_oldtime;
-	self.trail_oldorigin = to;
-	self.trail_oldtime = time;
+void Projectile_DrawTrail(entity this, vector to)
+{
+	vector from = this.trail_oldorigin;
+	// float t0 = this.trail_oldtime;
+	this.trail_oldorigin = to;
+	this.trail_oldtime = time;
 
 	// force the effect even for stationary firemine
-	if(self.cnt == PROJECTILE_FIREMINE)
+	if(this.cnt == PROJECTILE_FIREMINE)
 		if(from == to)
 			from.z += 1;
 
-	if (self.traileffect)
+	if (this.traileffect)
 	{
-		particles_alphamin = particles_alphamax = particles_fade = sqrt(self.alpha);
-		boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
+		boxparticles(particleeffectnum(Effects[this.traileffect]), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
 
-void Projectile_Draw()
-{SELFPARAM();
+void Projectile_Draw(entity this)
+{
 	vector rot;
 	vector trailorigin;
 	int f;
@@ -146,9 +143,9 @@ void Projectile_Draw()
 		trailorigin += v_up * 4;
 
 	if(drawn)
-		Projectile_DrawTrail(trailorigin);
+		Projectile_DrawTrail(self, trailorigin);
 	else
-		Projectile_ResetTrail(trailorigin);
+		Projectile_ResetTrail(self, trailorigin);
 
 	self.drawmask = 0;
 
@@ -179,7 +176,7 @@ void Ent_RemoveProjectile()
 	if(self.count & 0x80)
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, MOVE_NORMAL, self);
-		Projectile_DrawTrail(trace_endpos);
+		Projectile_DrawTrail(self, trace_endpos);
 	}
 }
 
@@ -279,45 +276,45 @@ void Ent_Projectile()
 		self.traileffect = 0;
 		switch (self.cnt) {
 #define CASE(id) case PROJECTILE_##id: setmodel(self, MDL_PROJECTILE_##id);
-			CASE(ELECTRO)            self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
-			CASE(ROCKET)             self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); self.scale = 2; break;
-			CASE(CRYLINK)            self.traileffect = particleeffectnum(EFFECT_TR_CRYLINKPLASMA); break;
-			CASE(CRYLINK_BOUNCING)   self.traileffect = particleeffectnum(EFFECT_TR_CRYLINKPLASMA); break;
-			CASE(ELECTRO_BEAM)       self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
-			CASE(GRENADE)            self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
-			CASE(GRENADE_BOUNCING)   self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
-			CASE(MINE)               self.traileffect = particleeffectnum(EFFECT_TR_GRENADE); break;
-			CASE(BLASTER)            self.traileffect = particleeffectnum(EFFECT_Null); break;
-			CASE(HLAC)               self.traileffect = particleeffectnum(EFFECT_Null); break;
-			CASE(PORTO_RED)          self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE); self.scale = 4; break;
-			CASE(PORTO_BLUE)         self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE); self.scale = 4; break;
-			CASE(HOOKBOMB)           self.traileffect = particleeffectnum(EFFECT_TR_KNIGHTSPIKE); break;
-			CASE(HAGAR)              self.traileffect = particleeffectnum(EFFECT_HAGAR_ROCKET); self.scale = 0.75; break;
-			CASE(HAGAR_BOUNCING)     self.traileffect = particleeffectnum(EFFECT_HAGAR_ROCKET); self.scale = 0.75; break;
+			CASE(ELECTRO)            self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			CASE(ROCKET)             self.traileffect = EFFECT_TR_ROCKET.m_id; self.scale = 2; break;
+			CASE(CRYLINK)            self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
+			CASE(CRYLINK_BOUNCING)   self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
+			CASE(ELECTRO_BEAM)       self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			CASE(GRENADE)            self.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			CASE(GRENADE_BOUNCING)   self.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			CASE(MINE)               self.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			CASE(BLASTER)            self.traileffect = EFFECT_Null.m_id; break;
+			CASE(HLAC)               self.traileffect = EFFECT_Null.m_id; break;
+			CASE(PORTO_RED)          self.traileffect = EFFECT_TR_WIZSPIKE.m_id; self.scale = 4; break;
+			CASE(PORTO_BLUE)         self.traileffect = EFFECT_TR_WIZSPIKE.m_id; self.scale = 4; break;
+			CASE(HOOKBOMB)           self.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
+			CASE(HAGAR)              self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
+			CASE(HAGAR_BOUNCING)     self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
 			CASE(NAPALM_FOUNTAIN)    // fallthrough // sself.modelindex = 0; self.traileffect = _particleeffectnum("torch_small"); break;
-			CASE(FIREBALL)           self.modelindex = 0; self.traileffect = particleeffectnum(EFFECT_FIREBALL); break; // particle effect is good enough
-			CASE(FIREMINE)           self.modelindex = 0; self.traileffect = particleeffectnum(EFFECT_FIREMINE); break; // particle effect is good enough
-			CASE(TAG)                self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); break;
-			CASE(FLAC)               self.scale = 0.4; self.traileffect = particleeffectnum(EFFECT_FLAC_TRAIL); break;
-			CASE(SEEKER)             self.traileffect = particleeffectnum(EFFECT_SEEKER_TRAIL); break;
+			CASE(FIREBALL)           self.modelindex = 0; self.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
+			CASE(FIREMINE)           self.modelindex = 0; self.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
+			CASE(TAG)                self.traileffect = EFFECT_TR_ROCKET.m_id; break;
+			CASE(FLAC)               self.scale = 0.4; self.traileffect = EFFECT_FLAC_TRAIL.m_id; break;
+			CASE(SEEKER)             self.traileffect = EFFECT_SEEKER_TRAIL.m_id; break;
 
-			CASE(MAGE_SPIKE)         self.traileffect = particleeffectnum(EFFECT_TR_VORESPIKE); break;
-			CASE(SHAMBLER_LIGHTNING) self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
+			CASE(MAGE_SPIKE)         self.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
+			CASE(SHAMBLER_LIGHTNING) self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
 
-			CASE(RAPTORBOMB)         self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(EFFECT_Null); break;
-			CASE(RAPTORBOMBLET)      self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(EFFECT_Null); break;
-			CASE(RAPTORCANNON)       self.traileffect = particleeffectnum(EFFECT_TR_CRYLINKPLASMA); break;
+			CASE(RAPTORBOMB)         self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = EFFECT_Null.m_id; break;
+			CASE(RAPTORBOMBLET)      self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = EFFECT_Null.m_id; break;
+			CASE(RAPTORCANNON)       self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
 
-			CASE(SPIDERROCKET)       self.traileffect = particleeffectnum(EFFECT_SPIDERBOT_ROCKET_TRAIL); break;
-			CASE(WAKIROCKET)         self.traileffect = particleeffectnum(EFFECT_RACER_ROCKET_TRAIL); break;
-			CASE(WAKICANNON)         self.traileffect = particleeffectnum(EFFECT_Null); break;
+			CASE(SPIDERROCKET)       self.traileffect = EFFECT_SPIDERBOT_ROCKET_TRAIL.m_id; break;
+			CASE(WAKIROCKET)         self.traileffect = EFFECT_RACER_ROCKET_TRAIL.m_id; break;
+			CASE(WAKICANNON)         self.traileffect = EFFECT_Null.m_id; break;
 
-			CASE(BUMBLE_GUN)         self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
-			CASE(BUMBLE_BEAM)        self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA); break;
+			CASE(BUMBLE_GUN)         self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			CASE(BUMBLE_BEAM)        self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
 
-			CASE(RPC)                self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); break;
+			CASE(RPC)                self.traileffect = EFFECT_TR_ROCKET.m_id; break;
 
-			CASE(ROCKETMINSTA_LASER) self.traileffect = particleeffectnum(EFFECT_ROCKETMINSTA_LASER(self.team)); break;
+			CASE(ROCKETMINSTA_LASER) self.traileffect = EFFECT_ROCKETMINSTA_LASER(self.team).m_id; break;
 #undef CASE
 			default:
 				if(MUTATOR_CALLHOOK(Ent_Projectile, self))
@@ -326,7 +323,8 @@ void Ent_Projectile()
 				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
 				{
 					setmodel(self, MDL_PROJECTILE_NADE);
-					self.traileffect = _particleeffectnum(Nade_TrailEffect(self.cnt, self.team));
+					entity trail = Nade_TrailEffect(self.cnt, self.team);
+					if (trail.eent_eff_name) self.traileffect = trail.m_id;
 					break;
 				}
 				error("Received invalid CSQC projectile, can't work with this!");

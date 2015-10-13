@@ -51,7 +51,6 @@ void pathlib_showpath2(entity path)
     path.nextthink = time;
 }
 
-
 void pathlib_showsquare2(entity node ,vector ncolor,float align)
 {
 

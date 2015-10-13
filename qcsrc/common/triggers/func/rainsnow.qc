@@ -1,6 +1,6 @@
 #ifdef SVQC
-float rainsnow_SendEntity(entity to, float sf)
-{SELFPARAM();
+bool rainsnow_SendEntity(entity this, entity to, float sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
 	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
@@ -12,7 +12,7 @@ float rainsnow_SendEntity(entity to, float sf)
 	WriteShort(MSG_ENTITY, compressShortVector(self.dest));
 	WriteShort(MSG_ENTITY, self.count);
 	WriteByte(MSG_ENTITY, self.cnt);
-	return 1;
+	return true;
 }
 
 /*QUAKED spawnfunc_func_rain (0 .5 .8) ?
@@ -90,13 +90,13 @@ spawnfunc(func_snow)
 	Net_LinkEntity(self, false, 0, rainsnow_SendEntity);
 }
 #elif defined(CSQC)
-void Draw_Rain()
-{SELFPARAM();
+void Draw_Rain(entity this)
+{
     te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
-void Draw_Snow()
-{SELFPARAM();
+void Draw_Snow(entity this)
+{
     te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 

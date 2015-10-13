@@ -36,14 +36,14 @@ void door_blocked()
 	)
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 #ifdef SVQC
 		if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 
 		 // don't change direction for dead or dying stuff
@@ -78,7 +78,7 @@ void door_blocked()
 		{
 			//gib dying stuff just to make sure
 			if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+				Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 #endif
 	}
@@ -158,7 +158,6 @@ float door_check_keys(void)
 {SELFPARAM();
 	local entity door;
 
-
 	if (self.owner)
 		door = self.owner;
 	else
@@ -179,7 +178,6 @@ float door_check_keys(void)
 		// some keys were used
 		if (other.key_door_messagetime <= time)
 		{
-
 			play2(other, SND(TALK));
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
 			other.key_door_messagetime = time + 2;
@@ -331,7 +329,7 @@ void door_generic_plat_blocked()
 
 	if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 	}
 	else
@@ -339,7 +337,7 @@ void door_generic_plat_blocked()
 
 #ifdef SVQC
 		if((self.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
 
 		 //Dont chamge direction for dead or dying stuff
@@ -358,7 +356,7 @@ void door_generic_plat_blocked()
 		{
 			//gib dying stuff just to make sure
 			if((self.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+				Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 #endif
 	}
@@ -795,11 +793,11 @@ spawnfunc(func_door)
 
 #elif defined(CSQC)
 
-void door_draw()
+void door_draw(entity this)
 {
 	Movetype_Physics_NoMatchServer();
 
-	trigger_draw_generic();
+	trigger_draw_generic(this);
 }
 
 void ent_door()

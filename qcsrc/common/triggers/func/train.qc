@@ -161,6 +161,13 @@ void train_link()
 	//Net_LinkEntity(self, 0, false, train_send);
 }
 
+void train_use()
+{
+	self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
+	self.SUB_THINK = train_next;
+	self.use = func_null; // not again
+}
+
 void func_train_find()
 {SELFPARAM();
 	entity targ;
@@ -169,8 +176,12 @@ void func_train_find()
 	if (self.target == "")
 		objerror("func_train_find: no next target");
 	SUB_SETORIGIN(self, targ.origin - self.view_ofs);
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
-	self.SUB_THINK = train_next;
+
+	if(!(self.spawnflags & 4))
+	{
+		self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
+		self.SUB_THINK = train_next;
+	}
 
 	train_link();
 }
@@ -196,6 +207,9 @@ spawnfunc(func_train)
 	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
+
+	if(self.spawnflags & 4)
+		self.use = train_use;
 
 	if (self.spawnflags & 2)
 	{
@@ -225,7 +239,7 @@ spawnfunc(func_train)
 	// TODO make a reset function for this one
 }
 #elif defined(CSQC)
-void train_draw()
+void train_draw(entity this)
 {
 	//Movetype_Physics_NoMatchServer();
 	Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);

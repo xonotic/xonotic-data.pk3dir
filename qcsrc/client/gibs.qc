@@ -1,11 +1,7 @@
 #include "gibs.qh"
-#include "_all.qh"
 
 #include "rubble.qh"
-
-#include "../common/constants.qh"
 #include "../common/movetypes/movetypes.qh"
-#include "../common/util.qh"
 
 .float scale;
 .float alpha;
@@ -91,8 +87,8 @@ void Gib_Touch()
 	Gib_Delete();
 }
 
-void Gib_Draw()
-{SELFPARAM();
+void Gib_Draw(entity this)
+{
 	vector oldorg;
 	oldorg = self.origin;
 

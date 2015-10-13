@@ -1,5 +1,5 @@
-#ifndef MISCFUNCTIONS_H
-#define MISCFUNCTIONS_H
+#ifndef CLIENT_MISCFUNCTIONS_H
+#define CLIENT_MISCFUNCTIONS_H
 
 entity players;
 entity teams;

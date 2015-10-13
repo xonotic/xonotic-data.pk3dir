@@ -1,11 +1,17 @@
-#include "_all.qh"
 
+#include "g_subs.qh"
 #include "../common/triggers/subs.qh"
+#include "../common/triggers/triggers.qh"
 
-#include "../client/bgmscript.qh"
+entityclass(BGMScript);
+class(BGMScript) .string bgmscript;
+class(BGMScript) .float bgmscriptattack;
+class(BGMScript) .float bgmscriptdecay;
+class(BGMScript) .float bgmscriptsustain;
+class(BGMScript) .float bgmscriptrelease;
 
 #include "../common/constants.qh"
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
 .float modelscale;
 
@@ -72,8 +78,8 @@ void g_clientmodel_dropbyspawnflags()
 		self.SendFlags |= 2;
 }
 
-float g_clientmodel_genericsendentity (entity to, int sf)
-{SELFPARAM();
+bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
+{
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')
 		sf |= 0x10;

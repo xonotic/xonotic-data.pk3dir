@@ -1,5 +1,5 @@
-#ifndef PROJECTILE_H
-#define PROJECTILE_H
+#ifndef CLIENT_WEAPONS_PROJECTILE_H
+#define CLIENT_WEAPONS_PROJECTILE_H
 
 entityclass(Projectile);
 class(Projectile) .int traileffect;
@@ -19,11 +19,11 @@ class(Projectile) .bool silent;
 
 void SUB_Stop();
 
-void Projectile_ResetTrail(vector to);
+void Projectile_ResetTrail(entity this, vector to);
 
-void Projectile_DrawTrail(vector to);
+void Projectile_DrawTrail(entity this, vector to);
 
-void Projectile_Draw();
+void Projectile_Draw(entity this);
 
 void loopsound(entity e, int ch, string samp, float vol, float attn);
 

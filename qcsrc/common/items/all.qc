@@ -6,7 +6,7 @@
 
 void Dump_Items()
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, true, LAMBDA(
         ITEM_HANDLE(Show, it);
     ));
 }

@@ -1,5 +1,4 @@
 #ifdef SVQC
-#include "all.qh"
 #include "../../server/autocvars.qh"
 
 // Generic aiming
@@ -189,9 +188,10 @@ void turret_die()
 // Go boom
 	//RadiusDamage (self,self, min(self.ammo,50),min(self.ammo,50) * 0.25,250,world,min(self.ammo,50)*5,DEATH_TURRET,world);
 
+	Turret tur = get_turretinfo(self.m_id);
 	if(self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
 	{
-		TUR_ACTION(self.turretid, TR_DEATH);
+		tur.tr_death(tur, self);
 
 		remove(self.tur_head);
 		remove(self);
@@ -203,7 +203,7 @@ void turret_die()
 		self.nextthink	 = time + 0.2;
 		self.think		 = turret_hide;
 
-		TUR_ACTION(self.turretid, TR_DEATH);
+		tur.tr_death(tur, self);
 	}
 }
 
@@ -276,7 +276,8 @@ void turret_respawn()
 
 	self.SendFlags = TNSF_FULL_UPDATE;
 
-	TUR_ACTION(self.turretid, TR_SETUP);
+	Turret tur = get_turretinfo(self.m_id);
+	tur.tr_setup(tur, self);
 }
 
 
@@ -298,14 +299,14 @@ void turrets_setframe(float _frame, float client_only)
 
 }
 
-float turret_send(entity to, float sf)
-{SELFPARAM();
+bool turret_send(entity this, entity to, float sf)
+{
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & TNSF_SETUP)
 	{
-		WriteByte(MSG_ENTITY, self.turretid);
+		WriteByte(MSG_ENTITY, self.m_id);
 
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
@@ -359,8 +360,9 @@ float turret_send(entity to, float sf)
 	return true;
 }
 
-void load_unit_settings(entity ent, string unitname, float is_reload)
+void load_unit_settings(entity ent, float is_reload)
 {SELFPARAM();
+	string unitname = ent.netname;
 	string sbase;
 
 	if (ent == world)
@@ -419,8 +421,10 @@ void load_unit_settings(entity ent, string unitname, float is_reload)
 	ent.track_accel_rotate  = cvar(strcat(sbase,"_track_accel_rot"));
 	ent.track_blendrate  = cvar(strcat(sbase,"_track_blendrate"));
 
-	if(is_reload)
-		TUR_ACTION(self.turretid, TR_SETUP);
+	if(is_reload) {
+		Turret tur = get_turretinfo(self.m_id);
+		tur.tr_setup(tur, self);
+	}
 }
 
 void turret_projectile_explode()
@@ -990,7 +994,8 @@ void turret_fire()
 	if(MUTATOR_CALLHOOK(TurretFire, self))
 		return;
 
-	TUR_ACTION(self.turretid, TR_ATTACK);
+	Turret info = get_turretinfo(self.m_id);
+	info.tr_attack(info);
 
 	self.attack_finished_single = time + self.shot_refire;
 	self.ammo -= self.shot_dmg;
@@ -1118,7 +1123,8 @@ void turret_think()
 				if (turret_checkfire())
 					turret_fire();
 
-				TUR_ACTION(self.turretid, TR_THINK);
+				Turret tur = get_turretinfo(self.m_id);
+				tur.tr_think(tur);
 
 				return;
 			}
@@ -1156,7 +1162,8 @@ void turret_think()
 			if(!(self.track_flags & TFL_TRACK_NO))
 				turret_track();
 
-			TUR_ACTION(self.turretid, TR_THINK);
+			Turret tur = get_turretinfo(self.m_id);
+			tur.tr_think(tur);
 
 			// And bail.
 			return;
@@ -1179,7 +1186,8 @@ void turret_think()
 			turret_fire();
 	}
 
-	TUR_ACTION(self.turretid, TR_THINK);
+	Turret tur = get_turretinfo(self.m_id);
+	tur.tr_think(tur);
 }
 
 /*
@@ -1219,8 +1227,9 @@ void turrets_manager_think()
 		{
 			if (IS_TURRET(e))
 			{
-				load_unit_settings(e,e.cvar_basename,1);
-				TUR_ACTION(self.turretid, TR_THINK);
+				load_unit_settings(e,1);
+				Turret tur = get_turretinfo(self.m_id);
+				tur.tr_think(tur);
 			}
 
 			e = nextent(e);
@@ -1229,19 +1238,49 @@ void turrets_manager_think()
 	}
 }
 
-float turret_initialize(float tur_id)
+void turret_initparams(entity tur)
+{
+	#define TRY(x) (x) ? (x)
+	tur.respawntime                 = max  (-1,              (TRY(tur.respawntime)               :  60                                         ));
+	tur.shot_refire                 = bound(0.01,            (TRY(tur.shot_refire)               :  1                                          ), 9999);
+	tur.shot_dmg                    = max  (1,               (TRY(tur.shot_dmg)                  :  tur.shot_refire * 50                       ));
+	tur.shot_radius                 = max  (1,               (TRY(tur.shot_radius)               :  tur.shot_dmg * 0.5                         ));
+	tur.shot_speed                  = max  (1,               (TRY(tur.shot_speed)                :  2500                                       ));
+	tur.shot_spread                 = bound(0.0001,          (TRY(tur.shot_spread)               :  0.0125                                     ), 500);
+	tur.shot_force                  = bound(0.001,           (TRY(tur.shot_force)                :  tur.shot_dmg * 0.5 + tur.shot_radius * 0.5 ), 5000);
+	tur.shot_volly                  = bound(1,               (TRY(tur.shot_volly)                :  1                                          ), floor(tur.ammo_max / tur.shot_dmg));
+	tur.shot_volly_refire           = bound(tur.shot_refire, (TRY(tur.shot_volly_refire)         :  tur.shot_refire * tur.shot_volly           ), 60);
+	tur.target_range                = bound(0,               (TRY(tur.target_range)              :  tur.shot_speed * 0.5                       ), MAX_SHOT_DISTANCE);
+	tur.target_range_min            = bound(0,               (TRY(tur.target_range_min)          :  tur.shot_radius * 2                        ), MAX_SHOT_DISTANCE);
+	tur.target_range_optimal        = bound(0,               (TRY(tur.target_range_optimal)      :  tur.target_range * 0.5                     ), MAX_SHOT_DISTANCE);
+	tur.aim_maxrotate               = bound(0,               (TRY(tur.aim_maxrotate)             :  90                                         ), 360);
+	tur.aim_maxpitch                = bound(0,               (TRY(tur.aim_maxpitch)              :  20                                         ), 90);
+	tur.aim_speed                   = bound(0.1,             (TRY(tur.aim_speed)                 :  36                                         ), 1000);
+	tur.aim_firetolerance_dist      = bound(0.1,             (TRY(tur.aim_firetolerance_dist)    :  5 + (tur.shot_radius * 2)                  ), MAX_SHOT_DISTANCE);
+	tur.target_select_rangebias     = bound(-10,             (TRY(tur.target_select_rangebias)   :  1                                          ), 10);
+	tur.target_select_samebias      = bound(-10,             (TRY(tur.target_select_samebias)    :  1                                          ), 10);
+	tur.target_select_anglebias     = bound(-10,             (TRY(tur.target_select_anglebias)   :  1                                          ), 10);
+	tur.target_select_missilebias   = bound(-10,             (TRY(tur.target_select_missilebias) :  1                                          ), 10);
+	tur.target_select_playerbias    = bound(-10,             (TRY(tur.target_select_playerbias)  :  1                                          ), 10);
+	tur.ammo_max                    = max  (tur.shot_dmg,    (TRY(tur.ammo_max)                  :  tur.shot_dmg * 10                          ));
+	tur.ammo_recharge               = max  (0,               (TRY(tur.ammo_recharge)             :  tur.shot_dmg * 0.5                         ));
+	#undef TRY
+}
+
+float turret_initialize(Turret tur)
 {SELFPARAM();
 	if(!autocvar_g_turrets)
 		return false;
 
-	entity e;
-	entity tur = get_turretinfo(tur_id);
-	if(tur.turretid == 0)
+	if(tur.m_id == 0)
 		return false; // invalid turret
 
-	if(!self.tur_head) { TUR_ACTION(tur_id, TR_PRECACHE); } // if tur_head exists, we can assume this turret re-spawned
+	// if tur_head exists, we can assume this turret re-spawned
+	if(!self.tur_head) {
+		tur.tr_precache(tur);
+	}
 
-	e = find(world, classname, "turret_manager");
+	entity e = find(world, classname, "turret_manager");
 	if(!e)
 	{
 		e = spawn();
@@ -1253,8 +1292,8 @@ float turret_initialize(float tur_id)
 	if(!(self.spawnflags & TSF_SUSPENDED))
 		builtin_droptofloor();
 
-	self.cvar_basename = tur.cvar_basename;
-	load_unit_settings(self, self.cvar_basename, 0);
+	self.netname = tur.netname;
+	load_unit_settings(self, 0);
 
 	if(!self.team || !teamplay)		{ self.team = MAX_SHOT_DISTANCE; }
 	if(!self.ticrate)				{ self.ticrate = ((self.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
@@ -1283,29 +1322,7 @@ float turret_initialize(float tur_id)
 		if(!self.track_blendrate)		{ self.track_blendrate = 0.35; }
 	}
 
-	self.respawntime 				= max(-1, ((!self.respawntime) ? 60 : self.respawntime));
-	self.shot_refire 				= bound(0.01, ((!self.shot_refire) ? 1 : self.shot_refire), 9999);
-	self.shot_dmg 					= max(1, ((!self.shot_dmg) ? self.shot_refire * 50 : self.shot_dmg));
-	self.shot_radius 				= max(1, ((!self.shot_radius) ? self.shot_dmg * 0.5 : self.shot_radius));
-	self.shot_speed 				= max(1, ((!self.shot_speed) ? 2500 : self.shot_speed));
-	self.shot_spread 				= bound(0.0001, ((!self.shot_spread) ? 0.0125 : self.shot_spread), 500);
-	self.shot_force 				= bound(0.001, ((!self.shot_force) ? self.shot_dmg * 0.5 + self.shot_radius * 0.5 : self.shot_force), 5000);
-	self.shot_volly 				= bound(1, ((!self.shot_volly) ? 1 : self.shot_volly), floor(self.ammo_max / self.shot_dmg));
-	self.shot_volly_refire 			= bound(self.shot_refire, ((!self.shot_volly_refire) ? self.shot_refire * self.shot_volly : self.shot_volly_refire), 60);
-	self.target_range 				= bound(0, ((!self.target_range) ? self.shot_speed * 0.5 : self.target_range), MAX_SHOT_DISTANCE);
-	self.target_range_min 			= bound(0, ((!self.target_range_min) ? self.shot_radius * 2 : self.target_range_min), MAX_SHOT_DISTANCE);
-	self.target_range_optimal 		= bound(0, ((!self.target_range_optimal) ? self.target_range * 0.5 : self.target_range_optimal), MAX_SHOT_DISTANCE);
-	self.aim_maxrotate				= bound(0, ((!self.aim_maxrotate) ? 90 : self.aim_maxrotate), 360);
-	self.aim_maxpitch				= bound(0, ((!self.aim_maxpitch) ? 20 : self.aim_maxpitch), 90);
-	self.aim_speed					= bound(0.1, ((!self.aim_speed) ? 36 : self.aim_speed), 1000);
-	self.aim_firetolerance_dist 	= bound(0.1, ((!self.aim_firetolerance_dist) ? 5 + (self.shot_radius * 2) : self.aim_firetolerance_dist), MAX_SHOT_DISTANCE);
-	self.target_select_rangebias	= bound(-10, ((!self.target_select_rangebias) ? 1 : self.target_select_rangebias), 10);
-	self.target_select_samebias 	= bound(-10, ((!self.target_select_samebias) ? 1 : self.target_select_samebias), 10);
-	self.target_select_anglebias	= bound(-10, ((!self.target_select_anglebias) ? 1 : self.target_select_anglebias), 10);
-	self.target_select_missilebias	= bound(-10, ((!self.target_select_missilebias) ? 1 : self.target_select_missilebias), 10);
-	self.target_select_playerbias	= bound(-10, ((!self.target_select_playerbias) ? 1 : self.target_select_playerbias), 10);
-	self.ammo_max					= max(self.shot_dmg, ((!self.ammo_max) ? self.shot_dmg * 10 : self.ammo_max));
-	self.ammo_recharge				= max(0, ((!self.ammo_recharge) ? self.shot_dmg * 0.5 : self.ammo_recharge));
+	turret_initparams(self);
 
 	self.turret_flags = TUR_FLAG_ISTURRET | (tur.spawnflags);
 
@@ -1331,11 +1348,11 @@ float turret_initialize(float tur_id)
 	_setmodel(self, tur.model);
 	setsize(self, tur.mins, tur.maxs);
 
-	self.turretid				= tur_id;
+	self.m_id					= tur.m_id;
 	self.classname				= "turret_main";
 	self.active					= ACTIVE_ACTIVE;
 	self.effects				= EF_NODRAW;
-	self.netname				= TUR_NAME(tur_id);
+	self.netname				= tur.turret_name;
 	self.ticrate				= bound(sys_frametime, self.ticrate, 60);
 	self.max_health				= self.health;
 	self.target_validate_flags	= self.target_select_flags;
@@ -1395,7 +1412,7 @@ float turret_initialize(float tur_id)
 	turret_respawn();
 	turret_tag_fire_update();
 
-	TUR_ACTION(tur_id, TR_SETUP);
+	tur.tr_setup(tur, self);
 
 	if(MUTATOR_CALLHOOK(TurretSpawn, self))
 		return false;

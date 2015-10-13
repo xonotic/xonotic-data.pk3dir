@@ -1,16 +1,9 @@
 #include "damage.qh"
-#include "_all.qh"
 
 #include "gibs.qh"
-
-#include "../common/vehicles/all.qh"
-
-#include "../common/constants.qh"
-#include "../common/deathtypes.qh"
-#include "../common/effects/effects.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/movetypes/movetypes.qh"
-#include "../common/util.qh"
-
+#include "../common/vehicles/all.qh"
 #include "../common/weapons/all.qh"
 
 .entity tag_entity;
@@ -99,7 +92,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, thedamage * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
-	effectname = get_weaponinfo(DEATH_WEAPONOF(type)).netname;
+	effectname = DEATH_WEAPONOF(type).netname;
 
 	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
 	{
@@ -221,7 +214,7 @@ void Ent_DamageInfo(float isNew)
 
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		switch(w_deathtype)
+		switch(DEATH_ENT(w_deathtype))
 		{
 			case DEATH_VH_CRUSH:
 				break;
@@ -295,7 +288,7 @@ void Ent_DamageInfo(float isNew)
 
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		switch(w_deathtype)
+		switch(DEATH_ENT(w_deathtype))
 		{
 			 case DEATH_TURRET_EWHEEL:
 				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_MIN);
@@ -345,16 +338,18 @@ void Ent_DamageInfo(float isNew)
 	if(!DEATH_ISSPECIAL(w_deathtype))
 	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
-		int hitwep = DEATH_WEAPONOFWEAPONDEATH(w_deathtype);
+		Weapon hitwep = DEATH_WEAPONOF(w_deathtype);
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
-		if(trace_fraction < 1 && hitwep != WEP_VORTEX.m_id && hitwep != WEP_VAPORIZER.m_id)
+		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) { WEP_ACTION(hitwep, WR_IMPACTEFFECT); }
+		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) {
+			hitwep.wr_impacteffect(hitwep);
+		}
 	}
 }

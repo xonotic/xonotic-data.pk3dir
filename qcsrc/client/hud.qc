@@ -1,26 +1,19 @@
 #include "hud.qh"
-#include "_all.qh"
 
 #include "hud_config.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "teamradar.qh"
 #include "t_items.qh"
-
-#include "../dpdefs/keycodes.qh"
-
-#include "../common/buffs.qh"
-#include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/buffs/all.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
-#include "../common/nades.qh"
-
-#include "../server/mutators/gamemode_ctf.qh"
-
+#include "../common/mutators/mutator/waypoints/all.qh"
+#include "../common/nades/all.qh"
 #include "../common/stats.qh"
-
-#include "../csqcmodellib/cl_player.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../server/mutators/gamemode_ctf.qh"
 
 
 /*
@@ -205,12 +198,6 @@ HUD panels
 ==================
 */
 
-// draw the background/borders
-#define HUD_Panel_DrawBg(theAlpha) do {																				\
-	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
-		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
-} while(0)
-
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
 {
@@ -334,7 +321,7 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 
 // Weapon icons (#0)
 //
-entity weaponorder[WEP_MAXCOUNT];
+entity weaponorder[Weapons_MAX];
 void weaponorder_swap(int i, int j, entity pass)
 {
 	entity h = weaponorder[i];
@@ -420,7 +407,7 @@ void HUD_Weapons(void)
 				++weapon_cnt;
 			}
 		}
-		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
+		for(i = weapon_cnt; i < Weapons_MAX; ++i)
 			weaponorder[i] = world;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
@@ -441,7 +428,7 @@ void HUD_Weapons(void)
 		if(cvar("wep_add"))
 		{
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % WEP_COUNT);
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (Weapons_COUNT - 1));
 			for(i = WEP_FIRST; i <= countw; ++i)
 				weapons_stat |= WepSet_FromWeapon(i);
 		}
@@ -472,7 +459,15 @@ void HUD_Weapons(void)
 		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
 
 		// get the all-weapons layout
-		vector table_size = HUD_GetTableSize_BestItemAR(WEP_COUNT, padded_panel_size, aspect);
+		int nHidden = 0;
+		WepSet weapons_stat = WepSet_GetFromStat();
+		for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
+			WepSet weapons_wep = WepSet_FromWeapon(i);
+			if (weapons_stat & weapons_wep) continue;
+			Weapon w = get_weaponinfo(i);
+			if (w.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+		}
+		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, padded_panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = padded_panel_size.x / columns;
@@ -527,7 +522,7 @@ void HUD_Weapons(void)
 			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
 	}
 	else
-		weapon_count = WEP_COUNT;
+		weapon_count = (Weapons_COUNT - 1);
 
 	// animation for fading in/out the panel respectively when not in use
 	if(!autocvar__hud_configure)
@@ -632,7 +627,7 @@ void HUD_Weapons(void)
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		vector table_size = HUD_GetTableSize_BestItemAR(WEP_COUNT, panel_size, aspect);
+		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1), panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = panel_size.x / columns;
@@ -850,8 +845,8 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 	float bonusNades    = getstatf(STAT_NADE_BONUS);
 	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
 	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
-	vector nadeColor    = NADES[bonusType].m_color;
-	string nadeIcon     = NADES[bonusType].m_icon;
+	vector nadeColor    = Nades[bonusType].m_color;
+	string nadeIcon     = Nades[bonusType].m_icon;
 
 	vector iconPos, textPos;
 
@@ -1275,7 +1270,7 @@ void HUD_Powerups()
 	if(superTime)
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
-	FOREACH(BUFFS, it.m_itemid & allBuffs, LAMBDA(
+	FOREACH(Buffs, it.m_itemid & allBuffs, LAMBDA(
 		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
 	));
 
@@ -1469,7 +1464,7 @@ void HUD_HealthArmor(void)
 	if(autocvar_hud_panel_healtharmor == 2) // combined health and armor display
 	{
 		vector v;
-		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON);
+		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON.m_id);
 
 		float x;
 		x = floor(v.x + 1);
@@ -2232,8 +2227,8 @@ void HUD_Radar(void)
 				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
 			}
 		}
-
-		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, panel_fg_alpha);
+		entity icon = RadarIcons[tm.teamradar_icon];
+		draw_teamradar_icon(tm.origin, icon, tm, spritelookupcolor(tm, icon.netname, tm.teamradar_color), panel_fg_alpha);
 	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{
@@ -4456,7 +4451,7 @@ void HUD_CenterPrint (void)
 			reset_centerprint_messages();
 		if (time > hud_configure_cp_generation_time)
 		{
-			if(HUD_PANEL(CENTERPRINT) == highlightedPanel)
+			if(highlightedPanel == HUD_PANEL(CENTERPRINT))
 			{
 				float r;
 				r = random();
@@ -4791,18 +4786,18 @@ void HUD_Main (void)
 
 	// cache the panel order into the panel_order array
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
-		for(i = 0; i < HUD_PANEL_NUM; ++i)
+		for(i = 0; i < hud_panels_COUNT; ++i)
 			panel_order[i] = -1;
 		string s = "";
 		int p_num;
 		bool warning = false;
 		int argc = tokenize_console(autocvar__hud_panelorder);
-		if (argc > HUD_PANEL_NUM)
+		if (argc > hud_panels_COUNT)
 			warning = true;
 		//first detect wrong/missing panel numbers
-		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+		for(i = 0; i < hud_panels_COUNT; ++i) {
 			p_num = stoi(argv(i));
-			if (p_num >= 0 && p_num < HUD_PANEL_NUM) { //correct panel number?
+			if (p_num >= 0 && p_num < hud_panels_COUNT) { //correct panel number?
 				if (panel_order[p_num] == -1) //found for the first time?
 					s = strcat(s, ftos(p_num), " ");
 				panel_order[p_num] = 1; //mark as found
@@ -4810,7 +4805,7 @@ void HUD_Main (void)
 			else
 				warning = true;
 		}
-		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+		for(i = 0; i < hud_panels_COUNT; ++i) {
 			if (panel_order[i] == -1) {
 				warning = true;
 				s = strcat(s, ftos(i), " "); //add missing panel number
@@ -4826,15 +4821,15 @@ void HUD_Main (void)
 
 		//now properly set panel_order
 		tokenize_console(s);
-		for(i = 0; i < HUD_PANEL_NUM; ++i) {
+		for(i = 0; i < hud_panels_COUNT; ++i) {
 			panel_order[i] = stof(argv(i));
 		}
 	}
 
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
-	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-		HUD_Panel_Draw(hud_panel[panel_order[i]]);
+	for(i = hud_panels_COUNT - 1; i >= 0; --i)
+		HUD_Panel_Draw(hud_panels[panel_order[i]]);
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top

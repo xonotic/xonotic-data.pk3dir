@@ -1,8 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../../dpdefs/progsdefs.qh"
-    #include "../../../warpzonelib/util_server.qh"
+    #include "../../../lib/warpzone/util_server.qh"
     #include "../../../server/defs.qh"
 #endif
 
@@ -38,8 +37,8 @@ void viewloc_think()
 	self.nextthink = time;
 }
 
-bool trigger_viewloc_send(entity to, int sf)
-{SELFPARAM();
+bool trigger_viewloc_send(entity this, entity to, int sf)
+{
 	// CSQC doesn't need to know our origin (yet), as we're only available for referencing
 	WriteByte(MSG_ENTITY, ENT_CLIENT_VIEWLOC_TRIGGER);
 
@@ -89,8 +88,8 @@ spawnfunc(trigger_viewlocation)
 	InitializeEntity(self, viewloc_init, INITPRIO_FINDTARGET);
 }
 
-bool viewloc_send(entity to, int sf)
-{SELFPARAM();
+bool viewloc_send(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_VIEWLOC);
 
 	WriteByte(MSG_ENTITY, self.cnt);

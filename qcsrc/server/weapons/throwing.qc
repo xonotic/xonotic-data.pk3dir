@@ -1,12 +1,13 @@
 #include "throwing.qh"
-#include "../_all.qh"
 
 #include "weaponsystem.qh"
 #include "../mutators/mutators_include.qh"
 #include "../t_items.qh"
 #include "../g_damage.qh"
+#include "../../common/items/item.qh"
 #include "../../common/mapinfo.qh"
 #include "../../common/notifications.qh"
+#include "../../common/triggers/subs.qh"
 #include "../../common/util.qh"
 #include "../../common/weapons/all.qh"
 
@@ -44,7 +45,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 
-	W_DropEvent(WR_DROP,own,wpn,wep);
+	W_DropEvent(wr_drop,own,wpn,wep);
 
 	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
 	{

@@ -13,7 +13,6 @@ const vector PLIB_FORWARD = '0 1 0';
 const vector PLIB_RIGHT = '1 0 0';
 //#define PLIB_LEFT    '-1 0 0'
 
-#define DEBUGPATHING
 #ifdef DEBUGPATHING
 void pathlib_showpath(entity start);
 void pathlib_showpath2(entity path);
@@ -108,9 +107,5 @@ var float  pathlib_makenode(entity parent,vector start, vector to, vector goal,f
 var float  buildpath_nodefilter(vector n,vector c,vector p);
 
 var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);
-
-#ifdef DEBUGPATHING
-	#include "debug.qc"
-#endif
 
 #endif

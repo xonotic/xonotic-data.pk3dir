@@ -42,17 +42,17 @@ $(QCCVERSIONFILE):
 	$(RM) qccversion.*
 	echo This file intentionally left blank. > $@
 
-FILES_CSPROGS = $(shell find client lib common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm)
+FILES_CSPROGS = $(shell find lib common client -type f)
 ../csprogs.dat: $(FILES_CSPROGS) $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	cd client && $(QCC) $(QCCFLAGS) -DCSQC
 
-FILES_PROGS = $(shell find server lib common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm)
+FILES_PROGS = $(shell find lib common server -type f)
 ../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	cd server && $(QCC) $(QCCFLAGS) -DSVQC
 
-FILES_MENU = $(shell find menu lib common warpzonelib -type f -not -name fteqcc.log -not -name qc.asm)
+FILES_MENU = $(shell find lib common menu -type f)
 ../menu.dat: $(FILES_MENU) $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
 	cd menu && $(QCC) $(QCCFLAGS) -DMENUQC

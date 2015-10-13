@@ -2,14 +2,13 @@
 #ifndef GAMESETTINGS_H
 #define GAMESETTINGS_H
 
-void RegisterSettings();
-const int MAX_SETTINGS = 24;
-Lazy SETTINGS[MAX_SETTINGS], SETTINGS_first, SETTINGS_last;
-int SETTINGS_COUNT;
+#include "xonotic/tab.qc"
+
+REGISTRY(Settings, BIT(3))
+REGISTER_REGISTRY(RegisterSettings)
 #define REGISTER_SETTINGS(id, impl) \
     LAZY_NEW(id, impl) \
-    REGISTER(RegisterSettings, MENU, SETTINGS, SETTINGS_COUNT, id, m_id, NEW(Lazy, LAZY(id)))
-REGISTER_REGISTRY(RegisterSettings)
+    REGISTER(RegisterSettings, MENU, Settings, id, m_id, NEW(Lazy, LAZY(id)))
 
 #endif
 #endif

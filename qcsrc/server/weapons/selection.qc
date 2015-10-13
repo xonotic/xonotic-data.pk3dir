@@ -1,11 +1,12 @@
 #include "selection.qh"
-#include "../_all.qh"
 
 #include "weaponsystem.qh"
 #include "../t_items.qh"
 #include "../../common/constants.qh"
 #include "../../common/util.qh"
+#include "../../common/items/item.qh"
 #include "../../common/weapons/all.qh"
+#include "../../common/mutators/mutator/waypoints/waypointsprites.qh"
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)
@@ -24,8 +25,10 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
 
-	if(wpn == WEP_HOOK.m_id && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
-		complain = 0;
+	// ignore hook button when using other offhand equipment
+	if (cl.offhand != OFFHAND_HOOK)
+	if (wpn == WEP_HOOK.m_id && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
+	    complain = 0;
 
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
@@ -47,8 +50,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			else
 			{
 				setself(cl);
-				f = WEP_ACTION(wpn, WR_CHECKAMMO1);
-				f = f + WEP_ACTION(wpn, WR_CHECKAMMO2);
+				Weapon w = get_weaponinfo(wpn);
+				f = w.wr_checkammo1(w) + w.wr_checkammo2(w);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				entity mine;
@@ -260,7 +263,10 @@ void W_SwitchWeapon(float imp)
 		else
 			self.selectweapon = imp; // update selectweapon ANYWAY
 	}
-	else if(!forbidWeaponUse(self)) { WEP_ACTION(self.weapon, WR_RELOAD); }
+	else if(!forbidWeaponUse(self)) {
+		Weapon w = get_weaponinfo(self.weapon);
+		w.wr_reload(w);
+	}
 }
 
 void W_CycleWeapon(string weaponorder, float dir)

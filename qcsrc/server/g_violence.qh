@@ -1,7 +1,7 @@
 #ifndef G_VIOLENCE_H
 #define G_VIOLENCE_H
 
-float Violence_GibSplash_SendEntity(entity to, int sf);
+bool Violence_GibSplash_SendEntity(entity this, entity to, int sf);
 
 // TODO maybe convert this to a TE?
 void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker);

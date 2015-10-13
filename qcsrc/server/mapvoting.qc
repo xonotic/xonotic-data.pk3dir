@@ -1,5 +1,4 @@
 #include "mapvoting.qh"
-#include "_all.qh"
 
 #include "g_world.qh"
 #include "command/cmd.qh"
@@ -343,7 +342,7 @@ void GameTypeVote_SendOption(int i)
 	}
 }
 
-float MapVote_SendEntity(entity to, int sf)
+bool MapVote_SendEntity(entity this, entity to, int sf)
 {
 	float i;
 

@@ -26,8 +26,8 @@ void vehicle_alarm(entity e, int ch, string s0und)
 	_sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
 }
 
-void AuxiliaryXhair_Draw2D()
-{SELFPARAM();
+void AuxiliaryXhair_Draw2D(entity this)
+{
 	if (scoreboard_showscores)
 		return;
 
@@ -106,8 +106,10 @@ void Net_VehicleSetup()
 	{
 		AuxiliaryXhair[0].axh_image = vCROSS_BURST; // Plasma cannons
 		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
+	} else {
+		Vehicle info = get_vehicleinfo(hud_id);
+    	info.vr_setup(info);
 	}
-	else { VEH_ACTION(hud_id, VR_SETUP); }
 }
 
 void Vehicles_drawHUD(

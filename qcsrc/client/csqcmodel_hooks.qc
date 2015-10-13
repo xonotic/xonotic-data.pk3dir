@@ -1,22 +1,12 @@
-#include "_all.qh"
-
-#include "gibs.qh"
-#include "player_skeleton.qh"
-
-#include "weapons/projectile.qh"
-
-#include "../common/animdecide.qh"
-#include "../common/csqcmodel_settings.qh"
-#include "../common/effects/effects.qh"
-#include "../common/teams.qh"
-#include "../common/triggers/trigger/viewloc.qh"
-
 #include "mutators/events.qh"
-
-#include "../csqcmodellib/cl_model.qh"
-#include "../csqcmodellib/cl_player.qh"
-#include "../csqcmodellib/interpolate.qh"
-
+#include "player_skeleton.qh"
+#include "weapons/projectile.qh"
+#include "../common/animdecide.qh"
+#include "../common/movetypes/movetypes.qh"
+#include "../common/viewloc.qh"
+#include "../lib/csqcmodel/cl_model.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 .float death_time;
 .int modelflags;
@@ -401,11 +391,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	if(self.tag_entity && wasfreed(self.tag_entity))
 		self.tag_entity = world;
 
-	if(self.viewloc && wasfreed(self.viewloc))
-		self.viewloc = world;
-
-	if(self.viewloc.entnum != self.tag_networkviewloc)
-		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+	viewloc_SetTags();
 
 	MUTATOR_CALLHOOK(TagIndex_Update, self);
 
@@ -494,10 +480,12 @@ const int MF_TRACER2 =  64; // orange split trail
 const int MF_TRACER3 = 128; // purple trail
 .int csqcmodel_effects;
 .int csqcmodel_modelflags;
+.int csqcmodel_traileffect;
 void CSQCModel_Effects_PreUpdate(void)
 {SELFPARAM();
 	self.effects = self.csqcmodel_effects;
 	self.modelflags = self.csqcmodel_modelflags;
+	self.traileffect = self.csqcmodel_traileffect;
 }
 void Reset_ArcBeam(void);
 void CSQCModel_Effects_PostUpdate(void)
@@ -509,22 +497,24 @@ void CSQCModel_Effects_PostUpdate(void)
 	}
 	self.csqcmodel_effects = self.effects;
 	self.csqcmodel_modelflags = self.modelflags;
+	self.csqcmodel_traileffect = self.traileffect;
 	self.effects = 0;
 	self.modelflags = 0;
 	if(self.csqcmodel_teleported)
-		Projectile_ResetTrail(self.origin);
+		Projectile_ResetTrail(self, self.origin);
 }
 .int snd_looping;
 void CSQCModel_Effects_Apply(void)
 {SELFPARAM();
 	int eff = self.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
+	int tref = self.csqcmodel_traileffect;
 
 	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
 	self.traileffect = 0;
 
 	if(eff & EF_BRIGHTFIELD)
-		self.traileffect = particleeffectnum(EFFECT_TR_NEXUIZPLASMA);
+		tref = EFFECT_TR_NEXUIZPLASMA.m_id;
 	// ignoring EF_MUZZLEFLASH
 	if(eff & EF_BRIGHTLIGHT)
 		adddynamiclight(self.origin, 400, '3 3 3');
@@ -558,29 +548,31 @@ void CSQCModel_Effects_Apply(void)
 		self.renderflags |= RF_DYNAMICMODELLIGHT;
 	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(self.csqcmodel_modelflags & MF_ROCKET)
-		self.traileffect = particleeffectnum(EFFECT_TR_ROCKET);
+		tref = EFFECT_TR_ROCKET.m_id;
 	if(self.csqcmodel_modelflags & MF_GRENADE)
-		self.traileffect = particleeffectnum(EFFECT_TR_GRENADE);
+		tref = EFFECT_TR_GRENADE.m_id;
 	if(self.csqcmodel_modelflags & MF_GIB)
-		self.traileffect = particleeffectnum(EFFECT_TR_BLOOD);
+		tref = EFFECT_TR_BLOOD.m_id;
 	if(self.csqcmodel_modelflags & MF_ROTATE)
 	{
 		self.renderflags |= RF_USEAXIS;
 		makevectors(self.angles + '0 100 0' * fmod(time, 3.6));
 	}
 	if(self.csqcmodel_modelflags & MF_TRACER)
-		self.traileffect = particleeffectnum(EFFECT_TR_WIZSPIKE);
+		tref = EFFECT_TR_WIZSPIKE.m_id;
 	if(self.csqcmodel_modelflags & MF_ZOMGIB)
-		self.traileffect = particleeffectnum(EFFECT_TR_SLIGHTBLOOD);
+		tref = EFFECT_TR_SLIGHTBLOOD.m_id;
 	if(self.csqcmodel_modelflags & MF_TRACER2)
-		self.traileffect = particleeffectnum(EFFECT_TR_KNIGHTSPIKE);
+		tref = EFFECT_TR_KNIGHTSPIKE.m_id;
 	if(self.csqcmodel_modelflags & MF_TRACER3)
-		self.traileffect = particleeffectnum(EFFECT_TR_VORESPIKE);
+		tref = EFFECT_TR_VORESPIKE.m_id;
+
+	self.traileffect = tref;
 
 	if(self.drawmask)
-		Projectile_DrawTrail(self.origin);
+		Projectile_DrawTrail(self, self.origin);
 	else
-		Projectile_ResetTrail(self.origin);
+		Projectile_ResetTrail(self, self.origin);
 
 	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
 		self.renderflags |= RF_ADDITIVE;

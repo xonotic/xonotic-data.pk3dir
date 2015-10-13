@@ -1,5 +1,4 @@
 #include "accuracy.qh"
-#include "../_all.qh"
 
 #include "../mutators/mutators_include.qh"
 #include "../../common/constants.qh"
@@ -17,8 +16,8 @@ float accuracy_byte(float n, float d)
 	return 1 + rint(n * 100.0 / d);
 }
 
-float accuracy_send(entity to, int sf)
-{SELFPARAM();
+bool accuracy_send(entity this, entity to, int sf)
+{
 	int w, f;
 	entity a;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);

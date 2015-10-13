@@ -1,12 +1,6 @@
 #include "hud_config.qh"
-#include "_all.qh"
 
 #include "hud.qh"
-
-#include "../common/constants.qh"
-
-#include "../dpdefs/keycodes.qh"
-
 
 #define HUD_Write(s) fputs(fh, s)
 // q: quoted, n: not quoted
@@ -59,10 +53,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write("\n");
 
 		// common cvars for all panels
-		int i;
-		for (i = 0; i < HUD_PANEL_NUM; ++i)
+		for (int i = 0; i < hud_panels_COUNT; ++i)
 		{
-			panel = hud_panel[i];
+			panel = hud_panels[i];
 
 			HUD_Write_PanelCvar_n("");
 			HUD_Write_PanelCvar_q("_pos");
@@ -73,7 +66,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			HUD_Write_PanelCvar_q("_bg_alpha");
 			HUD_Write_PanelCvar_q("_bg_border");
 			HUD_Write_PanelCvar_q("_bg_padding");
-			switch(i) {
+			switch(panel) {
 				case HUD_PANEL_WEAPONS:
 					HUD_Write_PanelCvar_q("_accuracy");
 					HUD_Write_PanelCvar_q("_label");
@@ -240,8 +233,8 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	vector myCenter, targCenter;
 	vector myTarget = myPos;
 	int i;
-	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		panel = hud_panel[i];
+	for (i = 0; i < hud_panels_COUNT; ++i) {
+		panel = hud_panels[i];
 		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
@@ -337,8 +330,8 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	vector dist;
 	float ratio = mySize.x/mySize.y;
 	int i;
-	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		panel = hud_panel[i];
+	for (i = 0; i < hud_panels_COUNT; ++i) {
+		panel = hud_panels[i];
 		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
@@ -639,7 +632,7 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 }
 
 void HUD_Panel_EnableMenu();
-entity tab_panels[HUD_PANEL_MAX];
+entity tab_panels[hud_panels_MAX];
 entity tab_panel;
 vector tab_panel_pos;
 float tab_backward;
@@ -647,7 +640,7 @@ void HUD_Panel_FirstInDrawQ(float id);
 void reset_tab_panels()
 {
 	int i;
-	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	for(i = 0; i < hud_panels_COUNT; ++i)
 		tab_panels[i] = world;
 }
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
@@ -788,9 +781,9 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		k=0;
 		while(++k)
 		{
-			for(i = 0; i < HUD_PANEL_NUM; ++i)
+			for(i = 0; i < hud_panels_COUNT; ++i)
 			{
-				panel = hud_panel[i];
+				panel = hud_panels[i];
 				if(panel == HUD_PANEL(MAPVOTE))
 					continue;
 				if (panel == tab_panels[i] || panel == starting_panel)
@@ -934,12 +927,12 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 float HUD_Panel_Check_Mouse_Pos(float allow_move)
 {
 	int i, j = 0;
-	while(j < HUD_PANEL_NUM)
+	while(j < hud_panels_COUNT)
 	{
 		i = panel_order[j];
 		j += 1;
 
-		panel = hud_panel[i];
+		panel = hud_panels[i];
 		if(panel == HUD_PANEL(MAPVOTE)) continue;
 		HUD_Panel_UpdatePosSize();
 
@@ -980,7 +973,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	int i;
 	int place = -1;
 	// find out where in the array our current id is, save into place
-	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	for(i = 0; i < hud_panels_COUNT; ++i)
 	{
 		if(panel_order[i] == id)
 		{
@@ -990,7 +983,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	}
 	// place last if we didn't find a place for it yet (probably new panel, or screwed up cvar)
 	if(place == -1)
-		place = HUD_PANEL_NUM - 1;
+		place = hud_panels_COUNT - 1;
 
 	// move all ids up by one step in the array until "place"
 	for(i = place; i > 0; --i)
@@ -1002,7 +995,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 
 	// let's save them into the cvar by some strcat trickery
 	string s = "";
-	for(i = 0; i < HUD_PANEL_NUM; ++i)
+	for(i = 0; i < hud_panels_COUNT; ++i)
 	{
 		s = strcat(s, ftos(panel_order[i]), " ");
 	}
@@ -1016,12 +1009,12 @@ void HUD_Panel_Highlight(float allow_move)
 {
 	int i, j = 0;
 
-	while(j < HUD_PANEL_NUM)
+	while(j < hud_panels_COUNT)
 	{
 		i = panel_order[j];
 		j += 1;
 
-		panel = hud_panel[i];
+		panel = hud_panels[i];
 		if(panel == HUD_PANEL(MAPVOTE))
 			continue;
 		HUD_Panel_UpdatePosSize();
@@ -1031,7 +1024,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// move
 		if(allow_move && mousepos.x > panel_pos.x && mousepos.y > panel_pos.y && mousepos.x < panel_pos.x + panel_size.x && mousepos.y < panel_pos.y + panel_size.y)
 		{
-			highlightedPanel = hud_panel[i];
+			highlightedPanel = hud_panels[i];
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 1;
 			panel_click_distance = mousepos - panel_pos;
@@ -1040,7 +1033,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from topleft border
 		else if(mousepos.x >= panel_pos.x - border && mousepos.y >= panel_pos.y - border && mousepos.x <= panel_pos.x + 0.5 * panel_size.x && mousepos.y <= panel_pos.y + 0.5 * panel_size.y)
 		{
-			highlightedPanel = hud_panel[i];
+			highlightedPanel = hud_panels[i];
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 1;
@@ -1051,7 +1044,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from topright border
 		else if(mousepos.x >= panel_pos.x + 0.5 * panel_size.x && mousepos.y >= panel_pos.y - border && mousepos.x <= panel_pos.x + panel_size.x + border && mousepos.y <= panel_pos.y + 0.5 * panel_size.y)
 		{
-			highlightedPanel = hud_panel[i];
+			highlightedPanel = hud_panels[i];
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 2;
@@ -1063,7 +1056,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from bottomleft border
 		else if(mousepos.x >= panel_pos.x - border && mousepos.y >= panel_pos.y + 0.5 * panel_size.y && mousepos.x <= panel_pos.x + 0.5 * panel_size.x && mousepos.y <= panel_pos.y + panel_size.y + border)
 		{
-			highlightedPanel = hud_panel[i];
+			highlightedPanel = hud_panels[i];
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 3;
@@ -1075,7 +1068,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from bottomright border
 		else if(mousepos.x >= panel_pos.x + 0.5 * panel_size.x && mousepos.y >= panel_pos.y + 0.5 * panel_size.y && mousepos.x <= panel_pos.x + panel_size.x + border && mousepos.y <= panel_pos.y + panel_size.y + border)
 		{
-			highlightedPanel = hud_panel[i];
+			highlightedPanel = hud_panels[i];
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 4;
@@ -1249,8 +1242,8 @@ void HUD_Configure_Frame()
 			if(autocvar_hud_cursormode)
 				setcursormode(1);
 			hudShiftState = 0;
-			for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-				hud_panel[panel_order[i]].update_time = time;
+			for(i = hud_panels_COUNT - 1; i >= 0; --i)
+				hud_panels[panel_order[i]].update_time = time;
 		}
 
 		// NOTE this check is necessary because _menu_alpha isn't updated the frame the menu gets enabled

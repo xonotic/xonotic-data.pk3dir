@@ -1,22 +1,58 @@
 #ifndef CVAR_H
 #define CVAR_H
 
+#include "nil.qh"
 #include "static.qh"
 
-void RegisterCvars(void(string name, string desc, bool archive, string file) f) { }
+void RegisterCvars(void(string name, string def, string desc, bool archive, string file) f) { }
 
-void RegisterCvars_Set(string name, string desc, bool archive, string file)
+/** escape the string to make it safe for consoles */
+string MakeConsoleSafe(string input)
 {
-    localcmd(sprintf("\n%1$s %2$s \"$%2$s\" \"%3$s\"\n", (archive ? "seta" : "set"), name, desc));
+	input = strreplace("\n", "", input);
+	input = strreplace("\\", "\\\\", input);
+	input = strreplace("$", "$$", input);
+	input = strreplace("\"", "\\\"", input);
+	return input;
 }
 
-STATIC_INIT_LATE(Cvars) { RegisterCvars(RegisterCvars_Set); }
+void RegisterCvars_Set(string name, string def, string desc, bool archive, string file)
+{
+    string val = string_null;
+    if (cvar_type(name) & CVAR_TYPEFLAG_EXISTS) {
+        val = cvar_string(name);
+        // Need to unset first to change the default
+        localcmd(sprintf("\nunset %s\n", name));
+    }
+    localcmd(sprintf("\n%s %s \"%s\" \"%s\"\n", (archive ? "seta" : "set"), name, MakeConsoleSafe(def), MakeConsoleSafe(desc)));
+    if (val) {
+        localcmd(sprintf("\n%s \"%s\"\n", name, MakeConsoleSafe(val)));
+    }
+}
 
+#ifndef SVQC
+STATIC_INIT_LATE(Cvars) { RegisterCvars(RegisterCvars_Set); }
+#endif
+
+const noref bool default_bool = false;
+const noref int default_int = 0;
+const noref float default_float = 0;
+const noref string default_string = "";
+const noref vector default_vector = '0 0 0';
+
+#define repr_cvar_bool(x)   ((x) ? "1" : "0")
+#define repr_cvar_int(x)    (ftos(x))
+#define repr_cvar_float(x)  (ftos(x))
+#define repr_cvar_string(x) (x)
+#define repr_cvar_vector(x) (sprintf("%v", x))
+
+#define __AUTOCVAR(file, archive, var, type, desc, default) \
+    [[accumulate]] void RegisterCvars(void(string, string, string, bool, string) f) { f(#var, repr_cvar_##type(default), desc, archive, file); } \
+    type autocvar_##var = default
 #define AUTOCVAR_5(file, archive, var, type, desc) \
-    [[accumulate]] void RegisterCvars(void(string, string, bool, string) f) { f(#var, desc, archive, file); } \
-    type autocvar_##var
+    __AUTOCVAR(file, archive, var, type, desc, default_##type)
 #define AUTOCVAR_6(file, archive, var, type, default, desc) \
-    AUTOCVAR_5(file, archive, var, type, desc) = default
+    __AUTOCVAR(file, archive, var, type, desc, default)
 #define _AUTOCVAR(...) EVAL(OVERLOAD(AUTOCVAR, __FILE__, __VA_ARGS__))
 #define AUTOCVAR_SAVE(...) _AUTOCVAR(true, __VA_ARGS__)
 #define AUTOCVAR(...) _AUTOCVAR(false, __VA_ARGS__)

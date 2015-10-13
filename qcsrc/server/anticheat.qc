@@ -5,8 +5,6 @@
 #include "defs.qh"
 #include "miscfunctions.qh"
 
-#include "../dpdefs/progsdefs.qh"
-#include "../dpdefs/dpextensions.qh"
 
 
 #include "command/common.qh"

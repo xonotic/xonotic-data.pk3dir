@@ -1,5 +1,4 @@
 #include "gamemode_keepaway.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
 
@@ -355,6 +354,9 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 
 	return 0;
 }
+
+.float stat_sv_airspeedlimit_nonqw;
+.float stat_sv_maxspeed;
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
 {SELFPARAM();

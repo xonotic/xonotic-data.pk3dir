@@ -1,0 +1,41 @@
+#ifndef EFFECTS_ALL_H
+#define EFFECTS_ALL_H
+
+#include "effect.qh"
+
+#ifdef CSQC
+void Read_Effect(bool is_new);
+#elif defined(SVQC)
+void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt);
+void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt);
+#endif
+
+REGISTRY(Effects, BIT(8))
+REGISTER_REGISTRY(RegisterEffects)
+#define EFFECT(istrail, name, realname) \
+    REGISTER(RegisterEffects, EFFECT, Effects, name, m_id, Create_Effect_Entity(realname, istrail));
+
+void RegisterEffects_First()
+{
+    #ifdef SVQC
+    #define dedi (server_is_dedicated ? "a dedicated " : "")
+    #else
+    #define dedi ""
+    #endif
+
+    LOG_TRACEF("Beginning effect initialization on %s%s program...\n", dedi, PROGNAME);
+    #undef dedi
+}
+
+void RegisterEffects_Done()
+{
+    LOG_TRACE("Effects initialization successful!\n");
+}
+
+// NOW we actually activate the declarations
+ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffects_First)
+EFFECT(0, Null, string_null)
+#include "all.inc"
+ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffects_Done)
+
+#endif

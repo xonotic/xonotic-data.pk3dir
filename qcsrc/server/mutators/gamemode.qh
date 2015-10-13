@@ -11,6 +11,7 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 #include "../scores_rules.qh"
+#include "../teamplay.qh"
 
 #include "../bot/bot.qh"
 #include "../bot/navigation.qh"
@@ -29,15 +30,15 @@
 #include "../weapons/tracing.qh"
 #include "../weapons/weaponsystem.qh"
 
-#include "../../common/deathtypes.qh"
+#include "../../common/deathtypes/all.qh"
 #include "../../common/notifications.qh"
 #include "../../common/triggers/teleporters.qh"
 #include "../../common/triggers/subs.qh"
 #include "../../common/stats.qh"
 #include "../../common/teams.qh"
 
-#include "../../warpzonelib/server.qh"
-#include "../../warpzonelib/util_server.qh"
+#include "../../lib/warpzone/server.qh"
+#include "../../lib/warpzone/util_server.qh"
 
 .float lastground;
 float total_players;

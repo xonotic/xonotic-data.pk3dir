@@ -1,14 +1,15 @@
 #ifndef CLIENT_ALL_H
 #define CLIENT_ALL_H
 
+#include "../common/util.qh"
+
+#include "../common/effects/all.qh"
+#include "../common/models/all.qh"
+#include "../common/sounds/all.qh"
+
 #include "autocvars.qh"
 #include "defs.qh"
 #include "main.qh"
 #include "miscfunctions.qh"
-
-#include "../dpdefs/csprogsdefs.qh"
-
-#include "../common/models/models.qh"
-#include "../common/sounds/sounds.qh"
 
 #endif

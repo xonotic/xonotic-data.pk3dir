@@ -1,19 +1,30 @@
+#ifndef SHAMBLER_H
+#define SHAMBLER_H
+
 #ifndef MENUQC
-bool M_Shambler(int);
+MODEL(MON_SHAMBLER, "models/monsters/shambler.mdl");
 #endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ SHAMBLER,
-/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
-/* mins,maxs  */ '-41 -41 -31', '41 41 65',
-/* model      */ "shambler.mdl",
-/* netname    */ "shambler",
-/* fullname   */ _("Shambler")
-) {
+
+CLASS(Shambler, Monster)
+    ATTRIB(Shambler, spawnflags, int, MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Shambler, mins, vector, '-41 -41 -31');
+    ATTRIB(Shambler, maxs, vector, '41 41 65');
 #ifndef MENUQC
-	this.monster_func = M_Shambler;
-	this.monster_func(MR_PRECACHE);
+    ATTRIB(Shambler, m_model, Model, MDL_MON_SHAMBLER);
+#endif
+    ATTRIB(Shambler, netname, string, "shambler");
+    ATTRIB(Shambler, monster_name, string, _("Shambler"));
+ENDCLASS(Shambler)
+
+REGISTER_MONSTER(SHAMBLER, NEW(Shambler)) {
+#ifndef MENUQC
+    this.mr_precache(this);
 #endif
 }
+
+#endif
+
+#ifdef IMPLEMENTATION
 
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
@@ -57,19 +68,21 @@ void M_Shambler_Attack_Smash()
 	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * autocvar_g_monster_shambler_attack_smash_range, MOVE_NORMAL, self);
 
 	if(trace_ent.takedamage)
-		Damage(trace_ent, self, self, (autocvar_g_monster_shambler_attack_smash_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_SMASH, trace_ent.origin, normalize(trace_ent.origin - self.origin));
+		Damage(trace_ent, self, self, (autocvar_g_monster_shambler_attack_smash_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_SMASH.m_id, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 }
 
 void M_Shambler_Attack_Swing()
 {SELFPARAM();
 	float r = (random() < 0.5);
-	if(r && Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? self.anim_melee2 : self.anim_melee3), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, true))
+	if(r && Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? self.anim_melee2 : self.anim_melee3), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW.m_id, true))
 	{
 		Monster_Delay(1, 0, 0.5, M_Shambler_Attack_Swing);
 		self.attack_finished_single += 0.5;
 		self.anim_finished = self.attack_finished_single;
 	}
 }
+
+#include "../../../server/csqceffects.qh"
 
 void M_Shambler_Attack_Lightning_Explode()
 {SELFPARAM();
@@ -91,7 +104,7 @@ void M_Shambler_Attack_Lightning_Explode()
 	for(head = findradius(self.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
 	{
 		te_csqc_lightningarc(self.origin, head.origin);
-		Damage(head, self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_ZAP, head.origin, '0 0 0');
+		Damage(head, self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
 	}
 
 	self.think = SUB_Remove;
@@ -143,7 +156,7 @@ void M_Shambler_Attack_Lightning()
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = DEATH_MONSTER_SHAMBLER_ZAP;
+	gren.projectiledeathtype = DEATH_MONSTER_SHAMBLER_ZAP.m_id;
 	setorigin(gren, CENTER_OR_VIEWOFS(self));
 	setsize(gren, '-8 -8 -8', '8 8 8');
 	gren.scale = 2.5;
@@ -168,7 +181,9 @@ void M_Shambler_Attack_Lightning()
 	CSQCProjectile(gren, true, PROJECTILE_SHAMBLER_LIGHTNING, true);
 }
 
-float M_Shambler_Attack(float attack_type)
+.int state;
+
+float M_Shambler_Attack(float attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{
@@ -214,30 +229,29 @@ float M_Shambler_Attack(float attack_type)
 spawnfunc(monster_shambler) { Monster_Spawn(MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
-bool M_Shambler(int req)
-{SELFPARAM();
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Shambler, mr_think, bool(Shambler thismon))
 		{
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Shambler, mr_pain, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			self.pain_finished = time + 0.5;
 			setanim(self, self.anim_pain1, true, true, false);
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Shambler, mr_death, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			setanim(self, self.anim_die1, false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Shambler, mr_anim, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_die1 = animfixfps(self, '8 1 0.5', none); // 2 seconds
 			self.anim_walk = animfixfps(self, '1 1 1', none);
@@ -253,8 +267,11 @@ bool M_Shambler(int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		spawnfunc(item_health_mega);
+		.float animstate_endtime;
+		METHOD(Shambler, mr_setup, bool(Shambler thismon))
 		{
+			SELFPARAM();
 			if(!self.health) self.health = (autocvar_g_monster_shambler_health);
 			if(!self.attack_range) self.attack_range = 150;
 			if(!self.speed) { self.speed = (autocvar_g_monster_shambler_speed_walk); }
@@ -272,12 +289,10 @@ bool M_Shambler(int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Shambler, mr_precache, bool(Shambler thismon))
 		{
 			return true;
 		}
 		#endif
-	}
 
-	return true;
-}
+#endif

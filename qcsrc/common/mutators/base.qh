@@ -155,7 +155,7 @@ CLASS(Mutator, Object)
     }
 ENDCLASS(Mutator)
 
-const int MAX_MUTATORS = 20;
+const int MAX_MUTATORS = 30;
 Mutator loaded_mutators[MAX_MUTATORS];
 
 bool Mutator_Add(Mutator mut)
@@ -220,7 +220,7 @@ noref int MUTATORS_COUNT;
         bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(RegisterMutators, MUTATOR, MUTATORS, MUTATORS_COUNT, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    REGISTER(RegisterMutators, MUTATOR, MUTATORS, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
     [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
 
@@ -265,7 +265,7 @@ STATIC_INIT_LATE(Mutators) {
 #define MUTATOR_HOOK(cb, func, order) do {                              \
     MUTATOR_ONADD {                                                     \
         if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
-            LOG_INFO("HOOK FAILED: ", #cb, ":", #func, "\n");              \
+            LOG_INFO("HOOK FAILED: ", #cb, ":", #func, "\n");           \
             return true;                                                \
         }                                                               \
     }                                                                   \

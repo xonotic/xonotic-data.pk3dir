@@ -1,5 +1,5 @@
-#ifndef TEAMRADAR_H
-#define TEAMRADAR_H
+#ifndef CLIENT_TEAMRADAR_H
+#define CLIENT_TEAMRADAR_H
 
 const int MAX_TEAMRADAR_TIMES = 32;
 
@@ -41,7 +41,7 @@ void draw_teamradar_background(float fg);
 
 void draw_teamradar_player(vector coord3d, vector pangles, vector rgb);
 
-void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a);
+void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb, float a);
 
 void draw_teamradar_link(vector start, vector end, int colors);
 

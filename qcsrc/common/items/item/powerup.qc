@@ -1,5 +1,4 @@
 #include "powerup.qh"
-#include "../../../server/t_items.qh"
 
 #ifndef SVQC
 .int m_itemid;

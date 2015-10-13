@@ -1,15 +1,32 @@
-#ifndef HUD_H
-#define HUD_H
+#ifndef CLIENT_HUD_H
+#define CLIENT_HUD_H
 
 #include "../common/weapons/all.qh"
 
-const int HUD_PANEL_MAX = 24;
-entity hud_panel[HUD_PANEL_MAX];
-const int HUD_PANEL_FIRST = 0;
-int HUD_PANEL_NUM;
-int HUD_PANEL_LAST;
+bool HUD_Radar_Clickable();
+void HUD_Radar_Mouse();
 
-int panel_order[HUD_PANEL_MAX];
+REGISTRY(hud_panels, 24)
+REGISTER_REGISTRY(Registerhud_panels)
+
+#define REGISTER_HUD_PANEL(id, draw_func, name, showflags) \
+	void draw_func(); \
+	REGISTER(Registerhud_panels, HUD_PANEL, hud_panels, id, m_id, new(hud_panel)) { \
+		this.panel_id = this.m_id; \
+		this.panel_draw = draw_func; \
+		this.panel_name = #name; \
+		this.panel_showflags = showflags; \
+	}
+
+#define HUD_PANEL(NAME) HUD_PANEL_##NAME
+
+// draw the background/borders
+#define HUD_Panel_DrawBg(theAlpha) do {																				\
+	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
+		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
+} while(0)
+
+int panel_order[hud_panels_MAX];
 string hud_panelorder_prev;
 
 bool hud_draw_maximized;
@@ -20,6 +37,7 @@ bool hud_panel_radar_temp_hidden;
 bool chat_panel_modified;
 bool radar_panel_modified;
 
+float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void HUD_Radar_Hide_Maximized();
 
 void HUD_Reset (void);
@@ -46,7 +64,7 @@ float highlightedAction; // 0 = nothing, 1 = move, 2 = resize
 
 const float BORDER_MULTIPLIER = 0.25;
 float scoreboard_bottom;
-int weapon_accuracy[WEP_MAXCOUNT];
+int weapon_accuracy[Weapons_MAX];
 
 int complain_weapon;
 string complain_weapon_name;
@@ -156,55 +174,31 @@ int prev_p_health, prev_p_armor;
 
 void HUD_ItemsTime();
 
-#define HUD_PANELS(HUD_PANEL) \
-	HUD_PANEL(WEAPONS      , HUD_Weapons      , weapons,        PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(AMMO         , HUD_Ammo         , ammo,           PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(POWERUPS     , HUD_Powerups     , powerups,       PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(HEALTHARMOR  , HUD_HealthArmor  , healtharmor,    PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(NOTIFY       , HUD_Notify       , notify,         PANEL_SHOW_ALWAYS   ) \
-	HUD_PANEL(TIMER        , HUD_Timer        , timer,          PANEL_SHOW_ALWAYS   ) \
-	HUD_PANEL(RADAR        , HUD_Radar        , radar,          PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(SCORE        , HUD_Score        , score,          PANEL_SHOW_ALWAYS   ) \
-	HUD_PANEL(RACETIMER    , HUD_RaceTimer    , racetimer,      PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(VOTE         , HUD_Vote         , vote,           PANEL_SHOW_ALWAYS   ) \
-	HUD_PANEL(MODICONS     , HUD_ModIcons     , modicons,       PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(PRESSEDKEYS  , HUD_PressedKeys  , pressedkeys,    PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(CHAT         , HUD_Chat         , chat,           PANEL_SHOW_ALWAYS   ) \
-	HUD_PANEL(ENGINEINFO   , HUD_EngineInfo   , engineinfo,     PANEL_SHOW_ALWAYS   ) \
-	HUD_PANEL(INFOMESSAGES , HUD_InfoMessages , infomessages,   PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(PHYSICS      , HUD_Physics      , physics,        PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(CENTERPRINT  , HUD_CenterPrint  , centerprint,    PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(MINIGAME_BOARD, HUD_MinigameBoard ,minigameboard, PANEL_SHOW_MINIGAME ) \
-	HUD_PANEL(MINIGAME_STATUS,HUD_MinigameStatus,minigamestatus,PANEL_SHOW_MINIGAME ) \
-	HUD_PANEL(MINIGAME_HELP,  HUD_MinigameHelp  ,minigamehelp,  PANEL_SHOW_MINIGAME ) \
-	HUD_PANEL(MINIGAME_MENU,  HUD_MinigameMenu  ,minigamemenu,  PANEL_SHOW_ALWAYS   ) \
-	HUD_PANEL(MAPVOTE      ,  MapVote_Draw      ,mapvote,       PANEL_SHOW_ALWAYS   ) \
-	HUD_PANEL(ITEMSTIME    ,  HUD_ItemsTime     ,itemstime,     PANEL_SHOW_MAINGAME ) \
-	HUD_PANEL(QUICKMENU    , HUD_QuickMenu    , quickmenu,      PANEL_SHOW_MAINGAME ) \
-	// always add new panels to the end of list
-
-
-#define HUD_PANEL(NAME, draw_func, name, showflags)																			\
-	int HUD_PANEL_##NAME;																							\
-	void draw_func(void);																							\
-	void RegisterHUD_Panel_##NAME() {																				\
-		HUD_PANEL_LAST = HUD_PANEL_##NAME = HUD_PANEL_NUM; 															\
-		entity hud_panelent = spawn(); 																				\
-		hud_panel[HUD_PANEL_##NAME] = hud_panelent; 																\
-		hud_panelent.classname = "hud_panel"; 																		\
-		hud_panelent.panel_name = #name; 																			\
-		hud_panelent.panel_id = HUD_PANEL_##NAME; 																	\
-		hud_panelent.panel_draw = draw_func;																		\
-		hud_panelent.panel_showflags = showflags;		 															\
-		HUD_PANEL_NUM++; 																							\
-	} 																												\
-	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME)
-
-HUD_PANELS(HUD_PANEL)
-#undef HUD_PANEL
-
-#define HUD_PANEL(NAME) hud_panel[HUD_PANEL_##NAME]
-
+REGISTER_HUD_PANEL(WEAPONS,         HUD_Weapons,        weapons,        PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(AMMO,            HUD_Ammo,           ammo,           PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(POWERUPS,        HUD_Powerups,       powerups,       PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(HEALTHARMOR,     HUD_HealthArmor,    healtharmor,    PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(NOTIFY,          HUD_Notify,         notify,         PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(TIMER,           HUD_Timer,          timer,          PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(RADAR,           HUD_Radar,          radar,          PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(SCORE,           HUD_Score,          score,          PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(RACETIMER,       HUD_RaceTimer,      racetimer,      PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(VOTE,            HUD_Vote,           vote,           PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(MODICONS,        HUD_ModIcons,       modicons,       PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(PRESSEDKEYS,     HUD_PressedKeys,    pressedkeys,    PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(CHAT,            HUD_Chat,           chat,           PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(ENGINEINFO,      HUD_EngineInfo,     engineinfo,     PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(INFOMESSAGES,    HUD_InfoMessages,   infomessages,   PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(PHYSICS,         HUD_Physics,        physics,        PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(CENTERPRINT,     HUD_CenterPrint,    centerprint,    PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(MINIGAME_BOARD,  HUD_MinigameBoard,  minigameboard,  PANEL_SHOW_MINIGAME)
+REGISTER_HUD_PANEL(MINIGAME_STATUS, HUD_MinigameStatus, minigamestatus, PANEL_SHOW_MINIGAME)
+REGISTER_HUD_PANEL(MINIGAME_HELP,   HUD_MinigameHelp,   minigamehelp,   PANEL_SHOW_MINIGAME)
+REGISTER_HUD_PANEL(MINIGAME_MENU,   HUD_MinigameMenu,   minigamemenu,   PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(MAPVOTE,         MapVote_Draw,       mapvote,        PANEL_SHOW_ALWAYS  )
+REGISTER_HUD_PANEL(ITEMSTIME,       HUD_ItemsTime,      itemstime,      PANEL_SHOW_MAINGAME)
+REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_SHOW_MAINGAME)
+// always add new panels to the end of list
 
 // Because calling lots of functions in QC apparently cuts fps in half on many machines:
 // ----------------------

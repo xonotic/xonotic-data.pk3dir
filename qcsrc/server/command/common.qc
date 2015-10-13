@@ -1,10 +1,11 @@
 #include "../../common/command/command.qh"
 #include "common.qh"
-#include "../_all.qh"
 
 #include "../scores.qh"
 
+#include "../../common/monsters/all.qh"
 #include "../../common/notifications.qh"
+#include "../../lib/warpzone/common.qh"
 
 
 // ====================================================
@@ -392,7 +393,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if(mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if(!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
-					Damage (mon, world, world, mon.health + mon.max_health + 200, DEATH_KILL, mon.origin, '0 0 0');
+					Damage (mon, world, world, mon.health + mon.max_health + 200, DEATH_KILL.m_id, mon.origin, '0 0 0');
 					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
 					return;
 				}

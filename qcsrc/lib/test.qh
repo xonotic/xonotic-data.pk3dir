@@ -1,8 +1,6 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include "../common/util.qh"
-
 #define TEST_Check(cond) do { if(!(cond)) TEST_Fail(#cond); } while(0)
 
 void TEST_OK();

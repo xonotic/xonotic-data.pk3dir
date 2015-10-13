@@ -1,5 +1,4 @@
 #include "bot.qh"
-#include "../_all.qh"
 
 #include "aim.qh"
 #include "navigation.qh"
@@ -8,6 +7,8 @@
 
 #include "havocbot/havocbot.qh"
 #include "havocbot/scripting.qh"
+
+#include "../teamplay.qh"
 
 #include "../antilag.qh"
 #include "../autocvars.qh"
@@ -29,13 +30,10 @@
 
 #include "../../common/weapons/all.qh"
 
-#include "../../csqcmodellib/sv_model.qh"
+#include "../../lib/csqcmodel/sv_model.qh"
 
-#include "../../dpdefs/dpextensions.qh"
-#include "../../dpdefs/progsdefs.qh"
-
-#include "../../warpzonelib/common.qh"
-#include "../../warpzonelib/util_server.qh"
+#include "../../lib/warpzone/common.qh"
+#include "../../lib/warpzone/util_server.qh"
 
 entity bot_spawn()
 {SELFPARAM();
@@ -300,42 +298,42 @@ void bot_custom_weapon_priority_setup()
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_far)," ");
 
 	int c = 0;
-	for(i=0; i < tokens && c < WEP_COUNT; ++i){
+	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {
 			bot_weapons_far[c] = w;
 			++c;
 		}
 	}
-	if(c < WEP_COUNT)
+	if(c < Weapons_COUNT)
 		bot_weapons_far[c] = -1;
 
 	// Parse mid distance weapon priorities
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_mid)," ");
 
 	c = 0;
-	for(i=0; i < tokens && c < WEP_COUNT; ++i){
+	for(i=0; i < tokens && c < Weapons_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {
 			bot_weapons_mid[c] = w;
 			++c;
 		}
 	}
-	if(c < WEP_COUNT)
+	if(c < Weapons_COUNT)
 		bot_weapons_mid[c] = -1;
 
 	// Parse close distance weapon priorities
 	tokens = tokenizebyseparator(W_NumberWeaponOrder(autocvar_bot_ai_custom_weapon_priority_close)," ");
 
 	c = 0;
-	for(i=0; i < tokens && i < WEP_COUNT; ++i){
+	for(i=0; i < tokens && i < Weapons_COUNT; ++i){
 		w = stof(argv(i));
 		if ( w >= WEP_FIRST && w <= WEP_LAST) {
 			bot_weapons_close[c] = w;
 			++c;
 		}
 	}
-	if(c < WEP_COUNT)
+	if(c < Weapons_COUNT)
 		bot_weapons_close[c] = -1;
 
 	bot_custom_weapon = true;

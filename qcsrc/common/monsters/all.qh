@@ -1,71 +1,26 @@
 #ifndef MONSTERS_ALL_H
 #define MONSTERS_ALL_H
 
-void RegisterMonsters();
-const int MON_MAXCOUNT = 24;
-entity monster_info[MON_MAXCOUNT], monster_info_first, monster_info_last;
-entity get_monsterinfo(float id);
-int MON_COUNT;
-const int MON_FIRST = 1;
-#define MON_LAST (MON_FIRST + MON_COUNT - 1)
-/** If you register a new monster, make sure to add it to all.inc */
-#define REGISTER_MONSTER(id, class) REGISTER(RegisterMonsters, MON, monster_info, MON_COUNT, id, monsterid, NEW(class))
 #include "monster.qh"
-#define REGISTER_MONSTER_SIMPLE(id, monsterflags, min_s, max_s, modelname, shortname, mname) \
-    REGISTER_MONSTER(id, Monster) {                                     \
-        this.netname = shortname;                                       \
-        this.monster_name = mname;                                      \
-        this.mdl = modelname;                                           \
-        this.spawnflags = monsterflags;                                 \
-        this.mins = min_s;                                              \
-        this.maxs = max_s;                                              \
-        this.model = strzone(strcat("models/monsters/", modelname));    \
-    }                                                                   \
-    REGISTER_INIT(MON, id)
+
+REGISTRY(Monsters, BIT(3))
 REGISTER_REGISTRY(RegisterMonsters)
+const int MON_FIRST = 1;
+#define MON_LAST (Monsters_COUNT - 1)
+/** If you register a new monster, make sure to add it to all.inc */
+#define REGISTER_MONSTER(id, inst) REGISTER(RegisterMonsters, MON, Monsters, id, monsterid, inst)
 
-#include "../util.qh"
+REGISTER_MONSTER(Null, NEW(Monster));
 
-// monster requests
-const int MR_SETUP = 1; // (SERVER) setup monster data
-const int MR_THINK = 2; // (SERVER) logic to run every frame
-const int MR_DEATH = 3; // (SERVER) called when monster dies
-const int MR_PRECACHE = 4; // (BOTH) precaches models/sounds used by this monster
-const int MR_PAIN = 5; // (SERVER) called when monster is damaged
-const int MR_ANIM = 6; // (BOTH?) sets animations for monster
+Monster get_monsterinfo(int id)
+{
+	if (id >= MON_FIRST && id <= MON_LAST) {
+		Monster m = Monsters[id];
+		if (m) return m;
+	}
+	return MON_Null;
+}
 
-// special spawn flags
-const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
-const int MONSTER_TYPE_FLY = 32;
-const int MONSTER_TYPE_SWIM = 64;
-const int MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are replaced
-const int MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
-const int MON_FLAG_RANGED = 512; // monster shoots projectiles
-const int MON_FLAG_MELEE = 1024;
-const int MON_FLAG_CRUSH = 2048; // monster can be stomped in special modes
-const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
-
-// entity properties of monsterinfo:
-.string netname; // short name
-.string mdl; // currently a copy of the model
-.string model; // full name of model
-.int spawnflags;
-.vector mins, maxs; // monster hitbox size
-.bool(int) monster_attackfunc;
-
-// animations
-.vector anim_blockend;
-.vector anim_blockstart;
-.vector anim_melee1;
-.vector anim_melee2;
-.vector anim_melee3;
-.vector anim_pain3;
-.vector anim_pain4;
-.vector anim_pain5;
-.vector anim_walk;
-.vector anim_spawn;
-
-// other useful macros
-#define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
+#include "all.inc"
 
 #endif

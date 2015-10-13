@@ -1,6 +1,8 @@
 #ifndef NOTIFICATIONS_H
 #define NOTIFICATIONS_H
 
+#include "command/all.qh"
+
 #include "constants.qh"
 #include "teams.qh"
 #include "util.qh"
@@ -82,6 +84,57 @@ void Create_Notification_Entity(
     float optionb);
 
 void Dump_Notifications(float fh, float alsoprint);
+
+
+GENERIC_COMMAND(dumpnotifs, "Dump all notifications into notifications_dump.txt")
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifndef MENUQC
+			float fh, alsoprint = false;
+			string filename = argv(1);
+
+			if(filename == "")
+			{
+				filename = "notifications_dump.cfg";
+				alsoprint = false;
+			}
+			else if(filename == "-")
+			{
+				filename = "notifications_dump.cfg";
+				alsoprint = true;
+			}
+			fh = fopen(filename, FILE_WRITE);
+
+			if(fh >= 0)
+			{
+				Dump_Notifications(fh, alsoprint);
+				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
+				fclose(fh);
+			}
+			else
+			{
+				LOG_INFOF("^1Error: ^7Could not open file '%s'!\n", filename);
+			}
+			#else
+			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
+			#endif
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
+			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),\n");
+			LOG_INFO("  if supplied with '-' output to console as well as default,\n");
+			LOG_INFO("  if left blank, it will only write to default.\n");
+			return;
+		}
+	}
+}
 
 #ifdef NOTIFICATIONS_DEBUG
 void Debug_Notification(string input);
@@ -265,8 +318,8 @@ const float ARG_DC = 6; // unique result to durcnt/centerprint
     ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "item_wepname",  WEP_NAME(f1)) \
-    ARG_CASE(ARG_CS_SV,     "item_buffname", sprintf("%s%s", rgb_to_hexcolor(BUFFS[f1].m_color), BUFFS[f1].m_prettyName)) \
-    ARG_CASE(ARG_CS_SV,     "f3buffname",    sprintf("%s%s", rgb_to_hexcolor(BUFFS[f3].m_color), BUFFS[f3].m_prettyName)) \
+    ARG_CASE(ARG_CS_SV,     "item_buffname", sprintf("%s%s", rgb_to_hexcolor(Buffs[f1].m_color), Buffs[f1].m_prettyName)) \
+    ARG_CASE(ARG_CS_SV,     "f3buffname",    sprintf("%s%s", rgb_to_hexcolor(Buffs[f3].m_color), Buffs[f3].m_prettyName)) \
     ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
     ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
     ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
@@ -885,5 +938,7 @@ void RegisterNotifications_Done()
 ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First)
 #include "notifications.inc"
 ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done)
+
+STATIC_INIT(RegisterNotifications) { CALL_ACCUMULATED_FUNCTION(RegisterNotifications); }
 
 #endif

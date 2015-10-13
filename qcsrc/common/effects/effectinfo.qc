@@ -1,4 +1,8 @@
 #define EFFECTINFO_PARSER(on) \
+    on(type,                                        MY(type) \
+    ,{ ASSERT(n == 1 && "type");                    MY(type) = strzone(argv(1)); \
+    }, sprintf(" %s",                               (MY(type)) \
+    )) \
     on(airfriction,                                 MY(airfriction) \
     ,{ ASSERT(n == 1 && "airfriction");             MY(airfriction) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(airfriction)) \
@@ -8,7 +12,7 @@
     }, sprintf(" %s %s %s",                         ftos(MY(alpha_min)),                ftos(MY(alpha_max)),            ftos(MY(alpha_fade)) \
     )) \
     on(blend,                                       MY(blend) \
-    ,{ ASSERT(n == 1 && "blend");                   MY(blend) = argv(1); \
+    ,{ ASSERT(n == 1 && "blend");                   MY(blend) = strzone(argv(1)); \
     }, sprintf(" %s",                               (MY(blend)) \
     )) \
     on(bounce,                                      MY(bounce) \
@@ -16,7 +20,7 @@
     }, sprintf(" %s",                               ftos(MY(bounce)) \
     )) \
     on(color,                                       MY(color_min) ||                    MY(color_max) \
-    ,{ ASSERT(n == 2 && "color");                   MY(color_min) = argv(1);            MY(color_max) = argv(2); \
+    ,{ ASSERT(n == 2 && "color");                   MY(color_min) = strzone(argv(1));   MY(color_max) = strzone(argv(2)); \
     }, sprintf(" %s %s",                            (MY(color_min)),                    (MY(color_max)) \
     )) \
     on(countabsolute,                               MY(countabsolute) \
@@ -56,7 +60,7 @@
     }, "" \
     ) \
     on(orientation,                                 MY(orientation) \
-    ,{ ASSERT(n == 1 && "orientation");             MY(orientation) = argv(1); \
+    ,{ ASSERT(n == 1 && "orientation");             MY(orientation) = strzone(argv(1)); \
     }, sprintf(" %s",                               (MY(orientation)) \
     )) \
     on(originjitter,                                MY(originjitter) \
@@ -87,9 +91,9 @@
     ,{ ASSERT(n == 2 && "size");                    MY(size_min) = stof(argv(1));       MY(size_max) = stof(argv(2)); \
     }, sprintf(" %s %s",                            ftos(MY(size_min)),                 ftos(MY(size_max)) \
     )) \
-    on(staincolor,                                  MY(staincolor_min) ||               MY(staincolor_max) \
-    ,{ ASSERT(n == 2 && "staincolor");              MY(staincolor_min) = argv(1);       MY(staincolor_max) = argv(2); \
-    }, sprintf(" %s %s",                            (MY(staincolor_min)),               (MY(staincolor_max)) \
+    on(staincolor,                                  MY(staincolor_min) ||                   MY(staincolor_max) \
+    ,{ ASSERT(n == 2 && "staincolor");              MY(staincolor_min) = strzone(argv(1));  MY(staincolor_max) = strzone(argv(2)); \
+    }, sprintf(" %s %s",                            (MY(staincolor_min)),                   (MY(staincolor_max)) \
     )) \
     on(stainsize,                                   MY(stainsize_min) ||                MY(stainsize_max) \
     ,{ ASSERT(n == 2 && "stainsize");               MY(stainsize_min) = stof(argv(1));  MY(stainsize_max) = stof(argv(2)); \
@@ -114,10 +118,6 @@
     on(trailspacing,                                MY(trailspacing) \
     ,{ ASSERT(n == 1 && "trailspacing");            MY(trailspacing) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(trailspacing)) \
-    )) \
-    on(type,                                        MY(type) \
-    ,{ ASSERT(n == 1 && "type");                    MY(type) = argv(1); \
-    }, sprintf(" %s",                               (MY(type)) \
     )) \
     on(underwater,                                  MY(underwater) \
     ,{ ASSERT(n == 0 && "underwater");              MY(underwater) = true; \
@@ -239,7 +239,7 @@ void effectinfo_read()
         string k = argv(0);
         if (k == "effect") {
             ASSERT(n == 1);
-            info = NEW(EffectInfo, argv(1));
+            info = NEW(EffectInfo, strzone(argv(1)));
             continue;
         }
         ASSERT(info != NULL);
@@ -283,21 +283,49 @@ void effectinfo_dump(int fh, bool alsoprint)
     #undef WRITE
 }
 
+GENERIC_COMMAND(dumpeffectinfo, "Dump all effectinfo to effectinfo_dump.txt")
+{
+    switch (request) {
+        case CMD_REQUEST_COMMAND: {
+            string filename = argv(1);
+			bool alsoprint = false;
+            if (filename == "") {
+                filename = "effectinfo_dump.txt";
+                alsoprint = false;
+            } else if (filename == "-") {
+                filename = "effectinfo_dump.txt";
+                alsoprint = true;
+            }
+            int fh = fopen(filename, FILE_WRITE);
+            if (fh >= 0) {
+            	effectinfo_dump(fh, alsoprint);
+                LOG_INFOF("Dumping effectinfo... File located at ^2data/data/%s^7.\n", filename);
+				LOG_INFOF("Reload with ^2cl_particles_reloadeffects data/%s^7.\n", filename);
+                fclose(fh);
+            } else {
+                LOG_WARNINGF("Could not open file '%s'!\n", filename);
+            }
+            return;
+        }
+        default:
+        case CMD_REQUEST_USAGE: {
+            LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpeffectinfo [filename]"));
+            LOG_INFO("  Where 'filename' is the file to write (default is effectinfo_dump.txt),\n");
+            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
+            LOG_INFO("  if left blank, it will only write to default.\n");
+            return;
+        }
+    }
+}
 
-void RegisterEffectInfo();
-const int MAX_EFFECTINFOS = 512;
-entity EFFECTINFOS[MAX_EFFECTINFOS], EFFECTINFOS_first, EFFECTINFOS_last;
-int EFFECTINFOS_COUNT;
 
+REGISTRY(EffectInfos, BIT(9))
+REGISTER_REGISTRY(RegisterEffectInfos)
 #define EFFECTINFO(name) \
     [[accumulate]] void effectinfo_##name(EffectInfoGroup parent, EffectInfo this) { } \
-    REGISTER(RegisterEffectInfo, EFFECTINFO, EFFECTINFOS, EFFECTINFOS_COUNT, name, m_id, NEW(EffectInfoGroup)) { \
+    REGISTER(RegisterEffectInfos, EFFECTINFO, EffectInfos, name, m_id, NEW(EffectInfoGroup)) { \
         effectinfo_##name(this, NULL); \
     }
-REGISTER_REGISTRY(RegisterEffectInfo)
-
-
-#define REGISTER_EFFECTINFO(id) var void effectinfo_##id(EffectInfoGroup parent)
 
 #define MY(f) this.effectinfo_##f
 #define DEF(name) EFFECTINFO(name)

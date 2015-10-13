@@ -1,16 +1,16 @@
 #include "../../common/triggers/target/music.qh"
 #include "mutator_buffs.qh"
-#include "../_all.qh"
 
 #include "mutator.qh"
 
-#include "../../common/buffs.qh"
+#include "../../common/gamemodes/all.qh"
+#include "../../common/buffs/all.qh"
 
 entity buff_FirstFromFlags(int _buffs)
 {
 	if (flags)
 	{
-		FOREACH(BUFFS, it.m_itemid & _buffs, LAMBDA(return it));
+		FOREACH(Buffs, it.m_itemid & _buffs, LAMBDA(return it));
 	}
 	return BUFF_Null;
 }
@@ -92,9 +92,9 @@ float buff_Waypoint_visible_for_player(entity plr)
 void buff_Waypoint_Spawn(entity e)
 {
 	entity buff = buff_FirstFromFlags(e.buffs);
-	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, true, RADARICON_POWERUP);
+	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, true, RADARICON_Buff);
 	wp.wp_extra = buff.m_id;
-	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
+	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_Buff, e.glowmod);
 	e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
 
@@ -211,7 +211,7 @@ float buff_Available(entity buff)
 void buff_NewType(entity ent, float cb)
 {
 	RandomSelection_Init();
-	FOREACH(BUFFS, buff_Available(it), LAMBDA(
+	FOREACH(Buffs, buff_Available(it), LAMBDA(
 		it.buff_seencount += 1;
 		// if it's already been chosen, give it a lower priority
 		RandomSelection_Add(world, it.m_itemid, string_null, 1, max(0.2, 1 / it.buff_seencount));
@@ -401,7 +401,7 @@ void buff_SpawnReplacement(entity ent, entity old)
 void buff_Vengeance_DelayedDamage()
 {SELFPARAM();
 	if(self.enemy)
-		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF, self.enemy.origin, '0 0 0');
+		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF.m_id, self.enemy.origin, '0 0 0');
 
 	remove(self);
 	return;
@@ -415,7 +415,7 @@ float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float 
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
-	if(frag_deathtype == DEATH_BUFF) { return false; }
+	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
 
 	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
 	{
@@ -429,7 +429,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
-	if(frag_deathtype == DEATH_BUFF) { return false; }
+	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
 
 	if(frag_target.buffs & BUFF_SPEED.m_itemid)
 	if(frag_target != frag_attacker)
@@ -443,7 +443,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_damage = max(5, frag_target.health - autocvar_g_buffs_medic_survive_health);
 
 	if(frag_target.buffs & BUFF_JUMP.m_itemid)
-	if(frag_deathtype == DEATH_FALL)
+	if(frag_deathtype == DEATH_FALL.m_id)
 		frag_damage = 0;
 
 	if(frag_target.buffs & BUFF_VENGEANCE.m_itemid)
@@ -477,7 +477,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
 	if(frag_attacker.buffs & BUFF_MEDIC.m_itemid)
-	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC.m_id)
+	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(SAME_TEAM(frag_attacker, frag_target))
 	if(frag_attacker != frag_target)
 	{
@@ -495,13 +495,13 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 			autocvar_g_buffs_inferno_burntime_target_time,
 			autocvar_g_buffs_inferno_burntime_factor
 		);
-		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF);
+		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF.m_id);
 	}
 
 	// this... is ridiculous (TODO: fix!)
 	if(frag_attacker.buffs & BUFF_VAMPIRE.m_itemid)
 	if(!frag_target.vehicle)
-	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC.m_id)
+	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_target.deadflag == DEAD_NO)
 	if(IS_PLAYER(frag_target) || IS_MONSTER(frag_target))
@@ -526,6 +526,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 	self.buff_disability_effect_time = 0;
 	return false;
 }
+
+.float stat_sv_maxspeed;
+.float stat_sv_airspeedlimit_nonqw;
+.float stat_sv_jumpvelocity;
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 {SELFPARAM();

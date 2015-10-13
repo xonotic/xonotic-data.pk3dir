@@ -1,29 +1,85 @@
+#ifndef SPIDER_H
+#define SPIDER_H
+
 #ifndef MENUQC
-bool M_Spider(int);
+MODEL(MON_SPIDER, "models/monsters/spider.dpm");
 #endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ SPIDER,
-/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE,
-/* mins,maxs  */ '-18 -18 -25', '18 18 30',
-/* model      */ "spider.dpm",
-/* netname    */ "spider",
-/* fullname   */ _("Spider")
-) {
+
+CLASS(Spider, Monster)
+    ATTRIB(Spider, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE);
+    ATTRIB(Spider, mins, vector, '-18 -18 -25');
+    ATTRIB(Spider, maxs, vector, '18 18 30');
 #ifndef MENUQC
-	this.monster_func = M_Spider;
-	this.monster_func(MR_PRECACHE);
+    ATTRIB(Spider, m_model, Model, MDL_MON_SPIDER);
+#endif
+    ATTRIB(Spider, netname, string, "spider");
+    ATTRIB(Spider, monster_name, string, _("Spider"));
+ENDCLASS(Spider)
+
+REGISTER_MONSTER(SPIDER, NEW(Spider)) {
+#ifndef MENUQC
+    this.mr_precache(this);
 #endif
 }
 
+#include "../../weapons/all.qh"
+
+CLASS(SpiderAttack, PortoLaunch)
+/* flags     */ ATTRIB(SpiderAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* impulse   */ ATTRIB(SpiderAttack, impulse, int, 9);
+/* refname   */ ATTRIB(SpiderAttack, netname, string, "spider");
+/* wepname   */ ATTRIB(SpiderAttack, message, string, _("Spider attack"));
+ENDCLASS(SpiderAttack)
+REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));
+
+#endif
+
+#ifdef IMPLEMENTATION
+
 #ifdef SVQC
-float autocvar_g_monster_spider_health;
-float autocvar_g_monster_spider_damageforcescale = 0.6;
-float autocvar_g_monster_spider_attack_bite_damage;
-float autocvar_g_monster_spider_attack_bite_delay;
+
+.float spider_web_delay;
+
 float autocvar_g_monster_spider_attack_web_damagetime;
 float autocvar_g_monster_spider_attack_web_speed;
 float autocvar_g_monster_spider_attack_web_speed_up;
 float autocvar_g_monster_spider_attack_web_delay;
+
+float autocvar_g_monster_spider_attack_bite_damage;
+float autocvar_g_monster_spider_attack_bite_delay;
+
+void M_Spider_Attack_Web();
+
+METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, bool fire1, bool fire2)) {
+    bool isPlayer = IS_PLAYER(actor);
+    if (fire1)
+    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, false, autocvar_g_monster_spider_attack_web_delay)) {
+		if (!isPlayer) {
+			actor.spider_web_delay = time + 3;
+			setanim(actor, actor.anim_shoot, true, true, true);
+			actor.attack_finished_single = time + (autocvar_g_monster_spider_attack_web_delay);
+			actor.anim_finished = time + 1;
+		}
+        if (isPlayer) actor.enemy = Monster_FindTarget(actor);
+        W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+    	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
+		M_Spider_Attack_Web();
+        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
+        return;
+    }
+    if (fire2)
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, true, 0.5)) {
+    	if (isPlayer) {
+    		actor.enemy = Monster_FindTarget(actor);
+    		actor.attack_range = 60;
+    	}
+    	Monster_Attack_Melee(actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
+        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
+    }
+}
+
+float autocvar_g_monster_spider_health;
+float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_speed_stop;
 float autocvar_g_monster_spider_speed_run;
 float autocvar_g_monster_spider_speed_walk;
@@ -34,8 +90,6 @@ const float spider_anim_walk		= 1;
 const float spider_anim_attack		= 2;
 const float spider_anim_attack2		= 3;
 */
-
-.float spider_web_delay;
 
 void M_Spider_Attack_Web_Explode()
 {SELFPARAM();
@@ -59,6 +113,8 @@ void M_Spider_Attack_Web_Touch()
 	M_Spider_Attack_Web_Explode();
 }
 
+void adaptor_think2use_hittype_splash();
+
 void M_Spider_Attack_Web()
 {SELFPARAM();
 	monster_makevectors(self.enemy);
@@ -74,7 +130,7 @@ void M_Spider_Attack_Web()
 	proj.bot_dodgerating = 0;
 	proj.nextthink = time + 5;
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = DEATH_MONSTER_SPIDER;
+	proj.projectiledeathtype = DEATH_MONSTER_SPIDER.m_id;
 	setorigin(proj, CENTER_OR_VIEWOFS(self));
 
 	//proj.glow_size = 50;
@@ -97,27 +153,20 @@ void M_Spider_Attack_Web()
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, true);
 }
 
-bool M_Spider_Attack(int attack_type)
+bool M_Spider_Attack(int attack_type, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{
+		Weapon wep = WEP_SPIDER_ATTACK;
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, true);
+			wep.wr_think(wep, self, false, true);
+			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(time >= self.spider_web_delay)
-			{
-				setanim(self, self.anim_shoot, true, true, true);
-				self.attack_finished_single = time + (autocvar_g_monster_spider_attack_web_delay);
-				self.anim_finished = time + 1;
-				M_Spider_Attack_Web();
-				self.spider_web_delay = time + 3;
-				return true;
-			}
-
-			return false;
+			wep.wr_think(wep, self, true, false);
+			return true;
 		}
 	}
 
@@ -127,29 +176,27 @@ bool M_Spider_Attack(int attack_type)
 spawnfunc(monster_spider) { Monster_Spawn(MON_SPIDER.monsterid); }
 #endif // SVQC
 
-bool M_Spider(int req)
-{SELFPARAM();
-	switch(req)
-	{
 		#ifdef SVQC
-		case MR_THINK:
+		METHOD(Spider, mr_think, bool(Spider thismon))
 		{
 			return true;
 		}
-		case MR_PAIN:
+		METHOD(Spider, mr_pain, bool(Spider thismon))
 		{
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Spider, mr_death, bool(Spider thismon))
 		{
+			SELFPARAM();
 			setanim(self, self.anim_melee, false, true, true);
 			self.angles_x = 180;
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		case MR_ANIM:
+		METHOD(Spider, mr_anim, bool(Spider thismon))
 		{
+			SELFPARAM();
 			vector none = '0 0 0';
 			self.anim_walk = animfixfps(self, '1 1 1', none);
 			self.anim_idle = animfixfps(self, '0 1 1', none);
@@ -161,8 +208,10 @@ bool M_Spider(int req)
 		}
 		#endif
 		#ifdef SVQC
-		case MR_SETUP:
+		spawnfunc(item_health_medium);
+		METHOD(Spider, mr_setup, bool(Spider thismon))
 		{
+			SELFPARAM();
 			if(!self.health) self.health = (autocvar_g_monster_spider_health);
 			if(!self.speed) { self.speed = (autocvar_g_monster_spider_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_spider_speed_run); }
@@ -174,12 +223,10 @@ bool M_Spider(int req)
 
 			return true;
 		}
-		case MR_PRECACHE:
+		METHOD(Spider, mr_precache, bool(Spider thismon))
 		{
 			return true;
 		}
 		#endif
-	}
 
-	return true;
-}
+#endif

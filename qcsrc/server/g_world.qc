@@ -1,5 +1,4 @@
 #include "g_world.qh"
-#include "_all.qh"
 
 #include "anticheat.qh"
 #include "antilag.qh"
@@ -19,18 +18,19 @@
 #include "scores.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
-#include "../common/effects/effects.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/notifications.qh"
+#include "../common/physics.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
+#include "../common/triggers/trigger/secret.qh"
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
@@ -512,8 +512,8 @@ void detect_maptype()
 }
 
 entity randomseed;
-float RandomSeed_Send(entity to, int sf)
-{SELFPARAM();
+bool RandomSeed_Send(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
 	return true;
@@ -557,9 +557,6 @@ spawnfunc(__init_dedicated_server)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
-	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -604,9 +601,6 @@ spawnfunc(worldspawn)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
-	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -689,10 +683,6 @@ spawnfunc(worldspawn)
 
 		MUTATOR_CALLHOOK(BuildMutatorsString, s);
 		s = ret_string;
-
-		// simple, probably not good in the mutator system
-		if(autocvar_g_grappling_hook)
-			s = strcat(s, ":grappling_hook");
 
 		// initialiation stuff, not good in the mutator system
 		if(!autocvar_g_use_ammunition)
@@ -1004,22 +994,6 @@ float MapHasRightSize(string map)
 string Map_Filename(float position)
 {
 	return strcat("maps/", argv(position), ".bsp");
-}
-
-string strwords(string s, float w)
-{
-	float endpos;
-	for(endpos = 0; w && endpos >= 0; --w)
-		endpos = strstrofs(s, " ", endpos + 1);
-	if(endpos < 0)
-		return s;
-	else
-		return substring(s, 0, endpos);
-}
-
-float strhasword(string s, string w)
-{
-	return strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0;
 }
 
 void Map_MarkAsRecent(string m)

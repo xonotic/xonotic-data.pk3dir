@@ -1,7 +1,7 @@
 #include "generator.qh"
 
-bool generator_send(entity to, int sf)
-{SELFPARAM();
+bool generator_send(entity this, entity to, int sf)
+{
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GENERATOR);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & GSF_SETUP)

@@ -1,7 +1,6 @@
-#include "_all.qh"
 
 #include "../common/weapons/all.qh"
-#include "../common/buffs.qh"
+#include "../common/buffs/all.qh"
 
 spawnfunc(weapon_crylink);
 spawnfunc(weapon_electro);
@@ -64,6 +63,9 @@ spawnfunc(item_armor_body)     { spawnfunc_item_armor_large(this);    }
 spawnfunc(item_armor_combat)   { spawnfunc_item_armor_big(this);      }
 spawnfunc(item_armor_shard)    { spawnfunc_item_armor_small(this);    }
 spawnfunc(item_enviro)         { spawnfunc_item_invincible(this);     }
+
+.float wait;
+.float delay;
 
 // weapon remove ent from df
 void target_init_verify()

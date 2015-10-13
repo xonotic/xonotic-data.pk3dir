@@ -1,5 +1,4 @@
 #include "csqcprojectile.qh"
-#include "../_all.qh"
 
 #include "../t_items.qh"
 
@@ -10,8 +9,8 @@
 
 .float csqcprojectile_type;
 
-bool CSQCProjectile_SendEntity(entity to, int sf)
-{SELFPARAM();
+bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
+{
 	float ft, fr;
 
 	// note: flag 0x08 = no trail please (teleport bit)
@@ -99,13 +98,13 @@ void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 
 void UpdateCSQCProjectile(entity e)
 {
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+	if(e.SendEntity3 == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;
 	}
 // FIXME HACK
-	else if(e.SendEntity == ItemSend)
+	else if(e.SendEntity3 == ItemSend)
 	{
 		ItemUpdate(e);
 	}
@@ -114,7 +113,7 @@ void UpdateCSQCProjectile(entity e)
 
 void UpdateCSQCProjectileAfterTeleport(entity e)
 {
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+	if(e.SendEntity3 == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;
