@@ -1,5 +1,6 @@
 #ifndef WEAPON_H
 #define WEAPON_H
+#include "../items/item/pickup.qh"
 
 .int ammo_shells;
 .int ammo_nails;
@@ -112,6 +113,16 @@ CLASS(WeaponPickup, Pickup)
         this.m_botvalue = w.bot_pickupbasevalue;
 #endif
     }
+#ifdef SVQC
+    METHOD(WeaponPickup, giveTo, bool(entity this, entity item, entity player))
+    {
+        bool b = Item_GiveTo(item, player);
+        if (b) {
+            LOG_TRACEF("entity %i picked up %s\n", player, this.m_name);
+        }
+        return b;
+    }
+#endif
 ENDCLASS(WeaponPickup)
 
 CLASS(OffhandWeapon, Object)

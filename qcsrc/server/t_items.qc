@@ -711,16 +711,16 @@ float Item_GiveTo(entity item, entity player)
 	return 1;
 }
 
-void Item_Touch (void)
-{SELFPARAM();
-	entity e, head;
+void Item_Touch()
+{
+	SELFPARAM();
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if(self.classname == "droppedweapon")
+	if (this.classname == "droppedweapon")
 	{
 		if (ITEM_TOUCH_NEEDKILL())
 		{
-			remove(self);
+			remove(this);
 			return;
 		}
 	}
@@ -728,33 +728,33 @@ void Item_Touch (void)
 	if(!(other.flags & FL_PICKUPITEMS)
 	|| other.frozen
 	|| other.deadflag
-	|| (self.solid != SOLID_TRIGGER)
-	|| (self.owner == other)
-	|| (time < self.item_spawnshieldtime)
-	) { return;}
+	|| (this.solid != SOLID_TRIGGER)
+	|| (this.owner == other)
+	|| (time < this.item_spawnshieldtime)
+	) { return; }
 
-	switch(MUTATOR_CALLHOOK(ItemTouch, self, other))
+	switch (MUTATOR_CALLHOOK(ItemTouch, this, other))
 	{
 		case MUT_ITEMTOUCH_RETURN: { return; }
 		case MUT_ITEMTOUCH_PICKUP: { goto pickup; }
 	}
 
-	if (self.classname == "droppedweapon")
+	if (this.classname == "droppedweapon")
 	{
-		self.strength_finished = max(0, self.strength_finished - time);
-		self.invincible_finished = max(0, self.invincible_finished - time);
-		self.superweapons_finished = max(0, self.superweapons_finished - time);
+		this.strength_finished = max(0, this.strength_finished - time);
+		this.invincible_finished = max(0, this.invincible_finished - time);
+		this.superweapons_finished = max(0, this.superweapons_finished - time);
 	}
-	entity it = self.itemdef;
-	bool gave = (it && it.instanceOfPickup) ? ITEM_HANDLE(Pickup, it, self, other) : Item_GiveTo(self, other);
+	entity it = this.itemdef;
+	bool gave = ITEM_HANDLE(Pickup, it, this, other);
 	if (!gave)
 	{
-		if (self.classname == "droppedweapon")
+		if (this.classname == "droppedweapon")
 		{
 			// undo what we did above
-			self.strength_finished += time;
-			self.invincible_finished += time;
-			self.superweapons_finished += time;
+			this.strength_finished += time;
+			this.invincible_finished += time;
+			this.superweapons_finished += time;
 		}
 		return;
 	}
@@ -763,17 +763,18 @@ void Item_Touch (void)
 
 	other.last_pickup = time;
 
-	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
-	_sound (other, CH_TRIGGER, (self.item_pickupsound ? self.item_pickupsound : self.item_pickupsound_ent.sound_str()), VOL_BASE, ATTEN_NORM);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
+	_sound (other, CH_TRIGGER, (this.item_pickupsound ? this.item_pickupsound : this.item_pickupsound_ent.sound_str()), VOL_BASE, ATTEN_NORM);
 
-	if (self.classname == "droppedweapon")
-		remove (self);
-	else if (self.spawnshieldtime)
+	if (this.classname == "droppedweapon")
+		remove (this);
+	else if (this.spawnshieldtime)
 	{
-		if(self.team)
+		entity e;
+		if(this.team)
 		{
 			RandomSelection_Init();
-			for(head = world; (head = findfloat(head, team, self.team)); )
+			for(entity head = world; (head = findfloat(head, team, this.team)); )
 			{
 				if(head.flags & FL_ITEM)
 				if(head.classname != "item_flag_team" && head.classname != "item_key_team")
@@ -786,7 +787,7 @@ void Item_Touch (void)
 
 		}
 		else
-			e = self;
+			e = this;
 		Item_ScheduleRespawn(e);
 	}
 }
