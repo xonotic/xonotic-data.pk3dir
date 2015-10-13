@@ -20,7 +20,7 @@
 #include "weapons/weaponstats.qh"
 #include "../common/buffs/all.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
@@ -557,7 +557,6 @@ spawnfunc(__init_dedicated_server)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -602,7 +601,6 @@ spawnfunc(worldspawn)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 

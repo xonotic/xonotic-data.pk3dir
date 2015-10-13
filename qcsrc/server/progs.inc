@@ -77,6 +77,7 @@
 #include "../common/triggers/include.qc"
 #include "../common/util.qc"
 
+#include "../common/deathtypes/all.qc"
 #include "../common/buffs/all.qc"
 #include "../common/effects/all.qc"
 #include "../common/gamemodes/all.qc"

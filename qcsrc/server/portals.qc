@@ -3,7 +3,7 @@
 #include "g_hook.qh"
 #include "mutators/mutators_include.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/notifications.qh"
 #include "../common/triggers/teleporters.qh"
 #include "../common/triggers/subs.qh"
@@ -430,7 +430,7 @@ void Portal_Remove(entity portal, float killed)
 
 void Portal_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
-	if(deathtype == DEATH_TELEFRAG)
+	if(deathtype == DEATH_TELEFRAG.m_id)
 		return;
 	if(attacker != self.aiment)
 		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(self.aiment))

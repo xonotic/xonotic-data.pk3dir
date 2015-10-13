@@ -11,7 +11,7 @@
 #include "weapons/selection.qh"
 #include "../common/command/generic.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"

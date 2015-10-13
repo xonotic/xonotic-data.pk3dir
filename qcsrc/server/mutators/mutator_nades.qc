@@ -132,7 +132,7 @@ void nade_napalm_ball()
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
-	proj.projectiledeathtype = DEATH_NADE_NAPALM;
+	proj.projectiledeathtype = DEATH_NADE_NAPALM.m_id;
 	PROJECTILE_MAKETRIGGER(proj);
 	setmodel(proj, MDL_Null);
 	proj.scale = 1;//0.5;
@@ -215,7 +215,7 @@ void nade_napalm_boom()
 	fountain.pushltime = fountain.ltime;
 	fountain.team = self.team;
 	fountain.movetype = MOVETYPE_TOSS;
-	fountain.projectiledeathtype = DEATH_NADE_NAPALM;
+	fountain.projectiledeathtype = DEATH_NADE_NAPALM.m_id;
 	fountain.bot_dodge = true;
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
 	fountain.nade_special_time = time;
@@ -316,7 +316,7 @@ void nade_ice_boom()
 	fountain.pushltime = fountain.wait = fountain.ltime;
 	fountain.team = self.team;
 	fountain.movetype = MOVETYPE_TOSS;
-	fountain.projectiledeathtype = DEATH_NADE_ICE;
+	fountain.projectiledeathtype = DEATH_NADE_ICE.m_id;
 	fountain.bot_dodge = false;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	fountain.nade_special_time = time+0.3;
@@ -425,7 +425,7 @@ void nade_heal_touch()
 		}
 		else if ( health_factor < 0 )
 		{
-			Damage(other,self,self.realowner,-health_factor,DEATH_NADE_HEAL,other.origin,'0 0 0');
+			Damage(other,self,self.realowner,-health_factor,DEATH_NADE_HEAL.m_id,other.origin,'0 0 0');
 		}
 
 	}
@@ -598,28 +598,28 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE.m_id || self.nade_type == NADE_TYPE_SPAWN.m_id)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
 	{
 		force *= 1.5;
 		damage = 0;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id) && (deathtype & HITTYPE_SECONDARY))
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
 	{
 		force *= 0.5; // too much
 		frag_damage = 0;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX.m_id) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 	{
 		force *= 6;
 		damage = self.max_health * 0.55;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN.m_id) || DEATH_ISWEAPON(deathtype, WEP_HMG.m_id))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
 		damage = self.max_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE.m_id) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN.m_id)) // WEAPONTODO
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	if(deathtype & HITTYPE_SECONDARY)
 	{
 		damage = self.max_health * 0.1;
@@ -710,7 +710,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.damagedbycontents = true;
 	_nade.angles = vectoangles(_nade.velocity);
 	_nade.flags = FL_PROJECTILE;
-	_nade.projectiledeathtype = DEATH_NADE;
+	_nade.projectiledeathtype = DEATH_NADE.m_id;
 	_nade.toss_time = time;
 	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
 
@@ -826,7 +826,7 @@ void nade_prime()
 	n.nade_time_primed = time;
 	n.think = nade_beep;
 	n.nextthink = max(n.wait - 3, time);
-	n.projectiledeathtype = DEATH_NADE;
+	n.projectiledeathtype = DEATH_NADE.m_id;
 
 	setmodel(fn, MDL_NADE_VIEW);
 	setattachment(fn, self.weaponentity, "");
@@ -1120,7 +1120,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
 	if(frag_target.frozen)
 	if(autocvar_g_freezetag_revive_nade)
 	if(frag_attacker == frag_target)
-	if(frag_deathtype == DEATH_NADE)
+	if(frag_deathtype == DEATH_NADE.m_id)
 	if(time - frag_inflictor.toss_time <= 0.1)
 	{
 		Unfreeze(frag_target);

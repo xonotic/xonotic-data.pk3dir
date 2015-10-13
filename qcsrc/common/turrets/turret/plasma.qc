@@ -31,7 +31,7 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this))
     if(g_instagib)
     {
         FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
-                           800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
+                           800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
 
         Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 

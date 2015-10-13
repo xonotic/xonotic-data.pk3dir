@@ -45,7 +45,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER.m_id))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 	{
 		frag_damage = 0;
 

@@ -20,7 +20,7 @@
 #include "t_items.qh"
 #include "wall.qh"
 #include "weapons/projectile.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/items/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/minigames/cl_minigames.qh"
@@ -130,7 +130,6 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	// precaches
 

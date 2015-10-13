@@ -31,7 +31,7 @@ METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bo
 
         turret_do_updates(actor);
 
-        entity missile = turret_projectile(SND(LASERGUN_FIRE), 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_BLASTER, true, true);
+        entity missile = turret_projectile(SND(LASERGUN_FIRE), 1, 0, DEATH_TURRET_EWHEEL.m_id, PROJECTILE_BLASTER, true, true);
         missile.missile_flags = MIF_SPLASH;
 
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);

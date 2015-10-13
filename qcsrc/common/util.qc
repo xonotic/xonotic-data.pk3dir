@@ -6,7 +6,7 @@
 	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications.qh"
-    #include "deathtypes.qh"
+    #include "deathtypes/all.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
@@ -14,7 +14,7 @@
     #include "../server/defs.qh"
 	#include "../server/mutators/events.qh"
     #include "notifications.qh"
-    #include "deathtypes.qh"
+    #include "deathtypes/all.qh"
     #include "mapinfo.qh"
 #endif
 
@@ -1491,7 +1491,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
-	if (deathtype == DEATH_DROWN)  // Why should armor help here...
+	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
 		armorblock = 0;
 	vector v;
 	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
@@ -1514,7 +1514,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage)
 {
 	vector v;
-	if (deathtype == DEATH_DROWN)  // Why should armor help here...
+	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
 		armorblock = 0;
 	v.y = bound(0, damage * armorblock, a); // save
 	v.x = bound(0, damage - v.y, damage); // take

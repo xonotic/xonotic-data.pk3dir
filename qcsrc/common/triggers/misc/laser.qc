@@ -118,7 +118,7 @@ void misc_laser_think()
 			if(((self.spawnflags & 8) == 0) == (self.team != hitent.team))
 				return;
 		if(hitent.takedamage)
-			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER, hitloc, '0 0 0');
+			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER.m_id, hitloc, '0 0 0');
 	}
 }
 

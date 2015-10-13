@@ -266,7 +266,7 @@ MUTATOR_HOOKFUNCTION(cts_FilterItem)
 
 MUTATOR_HOOKFUNCTION(cts_PlayerDamage)
 {
-	if(frag_target == frag_attacker || frag_deathtype == DEATH_FALL)
+	if(frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id)
 	if(!autocvar_g_cts_selfdamage)
 		frag_damage = 0;
 
