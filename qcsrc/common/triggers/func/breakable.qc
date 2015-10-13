@@ -247,7 +247,20 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, int 
 	if(self.health <= 0)
 	{
 		debrisforce = force;
-		W_PrepareExplosionByDamage(attacker, func_breakable_destroy);
+
+		self.takedamage = DAMAGE_NO;
+		self.event_damage = func_null;
+
+		if(IS_CLIENT(attacker) && self.classname == "func_assault_destructible")
+		{
+			self.owner = attacker;
+			self.realowner = attacker;
+		}
+
+		// do not explode NOW but in the NEXT FRAME!
+		// because recursive calls to RadiusDamage are not allowed
+		self.nextthink = time;
+		self.think = func_breakable_destroy;
 	}
 }
 
