@@ -536,15 +536,17 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(!IS_PLAYER(p) && p.caplayer != 1 && !g_lms)
+			if(!IS_PLAYER(p) && !MUTATOR_CALLHOOK(SetPlayerFullStatus, p, s))
 				s = strcat(s, ":spectator");
+			s = strcat(s, ret_string);
 		}
 		else
 		{
-			if(IS_PLAYER(p) || p.caplayer == 1 || g_lms)
+			if(IS_PLAYER(p) || MUTATOR_CALLHOOK(SetPlayerStatus, p, s))
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";
+			s = strcat(s, ret_string);
 		}
 
 		if(p.clientstatus)

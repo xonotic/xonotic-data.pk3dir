@@ -462,6 +462,20 @@ MUTATOR_HOOKFUNCTION(ca, WantWeapon)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ca, SetPlayerFullStatus)
+{
+	if(set_player.caplayer == 1)
+		return true;
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ca, SetPlayerStatus)
+{
+	if(set_player.caplayer == 1)
+		return true;
+	return false;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = true;

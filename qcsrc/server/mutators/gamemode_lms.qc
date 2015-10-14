@@ -242,6 +242,16 @@ MUTATOR_HOOKFUNCTION(lms, WantWeapon)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(lms, SetPlayerFullStatus)
+{
+	return true;
+}
+
+MUTATOR_HOOKFUNCTION(lms, SetPlayerStatus)
+{
+	return true;
+}
+
 // scoreboard stuff
 void lms_ScoreRules()
 {
