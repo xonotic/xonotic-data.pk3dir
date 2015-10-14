@@ -281,6 +281,25 @@ MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(rc, GetRecords)
+{
+	for(int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
+	{
+		if(MapInfo_Get_ByID(i))
+		{
+			float r = race_readTime(MapInfo_Map_bspname, 1);
+
+			if(!r)
+				continue;
+
+			string h = race_readName(MapInfo_Map_bspname, 1);
+			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
+		}
+	}
+
+	return false;
+}
+
 void race_Initialize()
 {
 	race_ScoreRules();

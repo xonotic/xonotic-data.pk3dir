@@ -2239,6 +2239,26 @@ MUTATOR_HOOKFUNCTION(ctf, SpectateCopy)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ctf, GetRecords)
+{
+	for(int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
+	{
+		if (MapInfo_Get_ByID(i))
+		{
+			float r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
+
+			if(!r)
+				continue;
+
+			// TODO: uid2name
+			string h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/netname"));
+			ret_string = strcat(ret_string, strpad(32, MapInfo_Map_bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", h, "\n");
+		}
+	}
+
+	return false;
+}
+
 
 // ==========
 // Spawnfuncs
@@ -2433,7 +2453,6 @@ void ctf_Initialize()
 
 	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }
-
 
 REGISTER_MUTATOR(ctf, g_ctf)
 {

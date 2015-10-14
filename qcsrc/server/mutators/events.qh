@@ -635,4 +635,12 @@ MUTATOR_HOOKABLE(BuffModel_Customize, EV_BuffModel_Customize);
     /** player */ i(entity, other) \
     /**/
 MUTATOR_HOOKABLE(BuffTouch, EV_BuffTouch);
+
+#define EV_GetRecords(i, o) \
+    /**/ i(int, record_page) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+int record_page;
+MUTATOR_HOOKABLE(GetRecords, EV_GetRecords);
 #endif
