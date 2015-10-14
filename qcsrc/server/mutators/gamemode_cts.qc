@@ -4,6 +4,9 @@
 
 #include "../race.qh"
 
+float autocvar_g_cts_finish_kill_delay;
+bool autocvar_g_cts_selfdamage;
+
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_cts()
@@ -53,6 +56,17 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 {
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+}
+
+void CTS_ClientKill(entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
+{
+    e.killindicator = spawn();
+    e.killindicator.owner = e;
+    e.killindicator.think = KillIndicator_Think;
+    e.killindicator.nextthink = time + (e.lip) * 0.05;
+    e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
+    e.killindicator.health = 1; // this is used to indicate that it should be silent
+    e.lip = 0;
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
@@ -301,6 +315,35 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 		}
 	}
 
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(cts, ClientKill)
+{
+	ret_float = 0;
+
+	if(self.killindicator && self.killindicator.health == 1) // self.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
+	{
+		remove(self.killindicator);
+		self.killindicator = world;
+
+		ClientKill_Now(); // allow instant kill in this case
+		return;
+	}
+
+}
+
+MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
+{
+	if(autocvar_g_cts_finish_kill_delay)
+		CTS_ClientKill(self);
+
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(cts, FixClientCvars)
+{
+	stuffcmd(fix_client, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 	return false;
 }
 

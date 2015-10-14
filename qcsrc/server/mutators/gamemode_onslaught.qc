@@ -1,7 +1,31 @@
-
 #include "gamemode.qh"
 #include "../controlpoint.qh"
 #include "../generator.qh"
+
+float autocvar_g_onslaught_debug;
+float autocvar_g_onslaught_teleport_wait;
+bool autocvar_g_onslaught_spawn_at_controlpoints;
+bool autocvar_g_onslaught_spawn_at_generator;
+float autocvar_g_onslaught_cp_proxydecap;
+float autocvar_g_onslaught_cp_proxydecap_distance = 512;
+float autocvar_g_onslaught_cp_proxydecap_dps = 100;
+float autocvar_g_onslaught_spawn_at_controlpoints_chance = 0.5;
+float autocvar_g_onslaught_spawn_at_controlpoints_random;
+float autocvar_g_onslaught_spawn_at_generator_chance;
+float autocvar_g_onslaught_spawn_at_generator_random;
+float autocvar_g_onslaught_cp_buildhealth;
+float autocvar_g_onslaught_cp_buildtime;
+float autocvar_g_onslaught_cp_health;
+float autocvar_g_onslaught_cp_regen;
+float autocvar_g_onslaught_gen_health;
+float autocvar_g_onslaught_shield_force = 100;
+float autocvar_g_onslaught_allow_vehicle_touch;
+float autocvar_g_onslaught_round_timelimit;
+float autocvar_g_onslaught_point_limit;
+float autocvar_g_onslaught_warmup;
+float autocvar_g_onslaught_teleport_radius;
+float autocvar_g_onslaught_spawn_choose;
+float autocvar_g_onslaught_click_radius;
 
 void FixSize(entity e);
 

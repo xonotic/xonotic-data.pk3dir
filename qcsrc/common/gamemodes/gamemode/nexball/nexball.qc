@@ -2,6 +2,9 @@
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
+int autocvar_g_nexball_goalleadlimit;
+#define autocvar_g_nexball_goallimit cvar("g_nexball_goallimit")
+
 float autocvar_g_nexball_basketball_bouncefactor;
 float autocvar_g_nexball_basketball_bouncestop;
 float autocvar_g_nexball_basketball_carrier_highspeed;

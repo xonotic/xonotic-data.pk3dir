@@ -4,6 +4,19 @@
 
 #include "../teamplay.qh"
 
+int autocvar_g_domination_default_teams;
+bool autocvar_g_domination_disable_frags;
+int autocvar_g_domination_point_amt;
+bool autocvar_g_domination_point_fullbright;
+int autocvar_g_domination_point_leadlimit;
+bool autocvar_g_domination_roundbased;
+int autocvar_g_domination_roundbased_point_limit;
+float autocvar_g_domination_round_timelimit;
+float autocvar_g_domination_warmup;
+#define autocvar_g_domination_point_limit cvar("g_domination_point_limit")
+float autocvar_g_domination_point_rate;
+int autocvar_g_domination_teams_override;
+
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)

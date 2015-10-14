@@ -748,22 +748,22 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		if(targ.frozen)
 		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
 		{
-			if(autocvar_g_freezetag_revive_falldamage > 0)
+			if(autocvar_g_frozen_revive_falldamage > 0)
 			if(deathtype == DEATH_FALL.m_id)
-			if(damage >= autocvar_g_freezetag_revive_falldamage)
+			if(damage >= autocvar_g_frozen_revive_falldamage)
 			{
 				Unfreeze(targ);
-				targ.health = autocvar_g_freezetag_revive_falldamage_health;
+				targ.health = autocvar_g_frozen_revive_falldamage_health;
 				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
 
 			damage = 0;
-			force *= autocvar_g_freezetag_frozen_force;
+			force *= autocvar_g_frozen_force;
 		}
 
-		if(targ.frozen && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_freezetag_frozen_damage_trigger)
+		if(targ.frozen && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_frozen_damage_trigger)
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 

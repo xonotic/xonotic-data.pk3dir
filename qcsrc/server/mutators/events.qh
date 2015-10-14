@@ -643,4 +643,51 @@ MUTATOR_HOOKABLE(BuffTouch, EV_BuffTouch);
     /**/
 int record_page;
 MUTATOR_HOOKABLE(GetRecords, EV_GetRecords);
+
+#define EV_Race_FinalCheckpoint(i, o) \
+    /**/ i(entity, race_player) \
+    /**/
+entity race_player;
+MUTATOR_HOOKABLE(Race_FinalCheckpoint, EV_Race_FinalCheckpoint);
+
+/** called when player triggered kill (or is changing teams), return error to not do anything */
+#define EV_ClientKill(i, o) \
+    /** player */ i(entity, __self) \
+    /* kill delay */ i(float, ret_float) \
+    /* kill delay */ o(float, ret_float) \
+    /**/
+MUTATOR_HOOKABLE(ClientKill, EV_ClientKill);
+
+#define EV_FixClientCvars(i, o) \
+    /**/ i(entity, fix_client) \
+    /**/
+entity fix_client;
+MUTATOR_HOOKABLE(FixClientCvars, EV_FixClientCvars);
+
+#define EV_SpectateSet(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, spec_player) \
+    /**/
+entity spec_player;
+MUTATOR_HOOKABLE(SpectateSet, EV_SpectateSet);
+
+#define EV_SpectateNext(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, spec_player) \
+    /**/
+MUTATOR_HOOKABLE(SpectateNext, EV_SpectateNext);
+
+#define EV_SpectatePrev(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, spec_player) \
+    /**/ i(entity, spec_first) \
+    /**/
+entity spec_first;
+MUTATOR_HOOKABLE(SpectatePrev, EV_SpectatePrev);
+
+enum {
+    MUT_SPECPREV_CONTINUE, // return this flag to make the function continue as normal
+    MUT_SPECPREV_RETURN, // return this flag to make the function return (handled entirely by mutator)
+    MUT_SPECPREV_FOUND // return this flag to make the function continue without default functions (handled mostly by mutator)
+};
 #endif

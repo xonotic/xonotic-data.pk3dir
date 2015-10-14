@@ -2,6 +2,11 @@
 
 #include "gamemode.qh"
 
+int autocvar_g_keyhunt_point_leadlimit;
+bool autocvar_g_keyhunt_team_spawns;
+#define autocvar_g_keyhunt_point_limit cvar("g_keyhunt_point_limit")
+int autocvar_g_keyhunt_teams;
+int autocvar_g_keyhunt_teams_override;
 
 // #define KH_PLAYER_USE_ATTACHMENT
 // #define KH_PLAYER_USE_CARRIEDMODEL

@@ -7,6 +7,16 @@
 
 #include "../teamplay.qh"
 
+float autocvar_g_invasion_round_timelimit;
+int autocvar_g_invasion_teams;
+bool autocvar_g_invasion_team_spawns;
+float autocvar_g_invasion_spawnpoint_spawn_delay;
+#define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
+float autocvar_g_invasion_warmup;
+int autocvar_g_invasion_monster_count;
+bool autocvar_g_invasion_zombies_only;
+float autocvar_g_invasion_spawn_delay;
+
 spawnfunc(invasion_spawnpoint)
 {
 	if(!g_invasion) { remove(self); return; }

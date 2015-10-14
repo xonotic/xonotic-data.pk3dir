@@ -4,6 +4,11 @@
 
 #include "../race.qh"
 
+#define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
+float autocvar_g_race_qualifying_timelimit;
+float autocvar_g_race_qualifying_timelimit_override;
+int autocvar_g_race_teams;
+
 // legacy bot roles
 .float race_checkpoint;
 void havocbot_role_race()
@@ -297,6 +302,12 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 		}
 	}
 
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(rc, FixClientCvars)
+{
+	stuffcmd(fix_client, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 	return false;
 }
 

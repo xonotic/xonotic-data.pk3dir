@@ -2,6 +2,16 @@
 
 #include "gamemode.qh"
 
+float autocvar_g_ca_damage2score_multiplier;
+int autocvar_g_ca_point_leadlimit;
+int autocvar_g_ca_point_limit;
+float autocvar_g_ca_round_timelimit;
+bool autocvar_g_ca_spectate_enemies;
+int autocvar_g_ca_teams;
+int autocvar_g_ca_teams_override;
+bool autocvar_g_ca_team_spawns;
+float autocvar_g_ca_warmup;
+
 float ca_teams;
 float allowed_to_spawn;
 
@@ -159,6 +169,28 @@ float ca_isEliminated(entity e)
 	if(e.caplayer == 0.5)
 		return true;
 	return false;
+}
+
+// Returns next available player to spectate if g_ca_spectate_enemies == 0
+entity CA_SpectateNext(entity player, entity start)
+{
+	if(SAME_TEAM(start, player))
+		return start;
+
+	entity spec_other = start;
+	// continue from current player
+	while(spec_other && DIFF_TEAM(spec_other, player))
+		spec_other = find(spec_other, classname, "player");
+
+	if (!spec_other)
+	{
+		// restart from begining
+		spec_other = find(spec_other, classname, "player");
+		while(spec_other && DIFF_TEAM(spec_other, player))
+			spec_other = find(spec_other, classname, "player");
+	}
+
+	return spec_other;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
@@ -358,6 +390,44 @@ MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
 {
 	// announce remaining frags
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(ca, SpectateSet)
+{
+	if(!autocvar_g_ca_spectate_enemies && self.caplayer)
+	if(DIFF_TEAM(spec_player, self))
+		return true;
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ca, SpectateNext)
+{SELFPARAM();
+	if(!autocvar_g_ca_spectate_enemies && self.caplayer)
+	{
+		spec_player = CA_SpectateNext(self, spec_player);
+		return true;
+	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
+{SELFPARAM();
+	if(!autocvar_g_ca_spectate_enemies && self.caplayer)
+	{
+		do { spec_player = spec_player.chain; }
+		while(spec_player && DIFF_TEAM(spec_player, self));
+
+		if (!spec_player)
+		{
+			spec_player = spec_first;
+			while(spec_player && DIFF_TEAM(spec_player, self))
+				spec_player = spec_player.chain;
+			if(spec_player == self.enemy)
+				return MUT_SPECPREV_RETURN;
+		}
+	}
+
+	return MUT_SPECPREV_FOUND;
 }
 
 void ca_Initialize()

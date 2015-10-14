@@ -5,6 +5,12 @@
 #include "../campaign.qh"
 #include "../command/cmd.qh"
 
+int autocvar_g_lms_extra_lives;
+bool autocvar_g_lms_join_anytime;
+int autocvar_g_lms_last_join;
+#define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
+bool autocvar_g_lms_regenerate;
+
 // main functions
 float LMS_NewPlayerLives()
 {

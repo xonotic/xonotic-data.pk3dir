@@ -2,6 +2,20 @@
 
 #include "gamemode.qh"
 
+float autocvar_g_freezetag_frozen_maxtime;
+bool autocvar_g_freezetag_revive_nade;
+float autocvar_g_freezetag_revive_nade_health;
+int autocvar_g_freezetag_point_leadlimit;
+int autocvar_g_freezetag_point_limit;
+float autocvar_g_freezetag_revive_extra_size;
+float autocvar_g_freezetag_revive_speed;
+float autocvar_g_freezetag_revive_clearspeed;
+float autocvar_g_freezetag_round_timelimit;
+int autocvar_g_freezetag_teams;
+int autocvar_g_freezetag_teams_override;
+bool autocvar_g_freezetag_team_spawns;
+float autocvar_g_freezetag_warmup;
+
 const float SP_FREEZETAG_REVIVALS = 4;
 void freezetag_ScoreRules(float teams)
 {

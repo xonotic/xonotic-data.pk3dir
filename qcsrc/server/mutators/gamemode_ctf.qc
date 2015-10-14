@@ -9,6 +9,75 @@
 
 #include "../../lib/warpzone/common.qh"
 
+bool autocvar_g_ctf_allow_vehicle_carry;
+bool autocvar_g_ctf_allow_vehicle_touch;
+bool autocvar_g_ctf_allow_monster_touch;
+bool autocvar_g_ctf_throw;
+float autocvar_g_ctf_throw_angle_max;
+float autocvar_g_ctf_throw_angle_min;
+int autocvar_g_ctf_throw_punish_count;
+float autocvar_g_ctf_throw_punish_delay;
+float autocvar_g_ctf_throw_punish_time;
+float autocvar_g_ctf_throw_strengthmultiplier;
+float autocvar_g_ctf_throw_velocity_forward;
+float autocvar_g_ctf_throw_velocity_up;
+float autocvar_g_ctf_drop_velocity_up;
+float autocvar_g_ctf_drop_velocity_side;
+bool autocvar_g_ctf_oneflag_reverse;
+bool autocvar_g_ctf_portalteleport;
+bool autocvar_g_ctf_pass;
+float autocvar_g_ctf_pass_arc;
+float autocvar_g_ctf_pass_arc_max;
+float autocvar_g_ctf_pass_directional_max;
+float autocvar_g_ctf_pass_directional_min;
+float autocvar_g_ctf_pass_radius;
+float autocvar_g_ctf_pass_wait;
+bool autocvar_g_ctf_pass_request;
+float autocvar_g_ctf_pass_turnrate;
+float autocvar_g_ctf_pass_timelimit;
+float autocvar_g_ctf_pass_velocity;
+bool autocvar_g_ctf_dynamiclights;
+float autocvar_g_ctf_flag_collect_delay;
+float autocvar_g_ctf_flag_damageforcescale;
+bool autocvar_g_ctf_flag_dropped_waypoint;
+bool autocvar_g_ctf_flag_dropped_floatinwater;
+bool autocvar_g_ctf_flag_glowtrails;
+int autocvar_g_ctf_flag_health;
+bool autocvar_g_ctf_flag_return;
+float autocvar_g_ctf_flag_return_carried_radius;
+float autocvar_g_ctf_flag_return_time;
+bool autocvar_g_ctf_flag_return_when_unreachable;
+float autocvar_g_ctf_flag_return_damage;
+float autocvar_g_ctf_flag_return_damage_delay;
+float autocvar_g_ctf_flag_return_dropped;
+float autocvar_g_ctf_flagcarrier_auto_helpme_damage;
+float autocvar_g_ctf_flagcarrier_auto_helpme_time;
+float autocvar_g_ctf_flagcarrier_selfdamagefactor;
+float autocvar_g_ctf_flagcarrier_selfforcefactor;
+float autocvar_g_ctf_flagcarrier_damagefactor;
+float autocvar_g_ctf_flagcarrier_forcefactor;
+//float autocvar_g_ctf_flagcarrier_waypointforenemy_spotting;
+bool autocvar_g_ctf_fullbrightflags;
+bool autocvar_g_ctf_ignore_frags;
+int autocvar_g_ctf_score_capture;
+int autocvar_g_ctf_score_capture_assist;
+int autocvar_g_ctf_score_kill;
+int autocvar_g_ctf_score_penalty_drop;
+int autocvar_g_ctf_score_penalty_returned;
+int autocvar_g_ctf_score_pickup_base;
+int autocvar_g_ctf_score_pickup_dropped_early;
+int autocvar_g_ctf_score_pickup_dropped_late;
+int autocvar_g_ctf_score_return;
+float autocvar_g_ctf_shield_force;
+float autocvar_g_ctf_shield_max_ratio;
+int autocvar_g_ctf_shield_min_negscore;
+bool autocvar_g_ctf_stalemate;
+int autocvar_g_ctf_stalemate_endcondition;
+float autocvar_g_ctf_stalemate_time;
+bool autocvar_g_ctf_reverse;
+float autocvar_g_ctf_dropped_capture_delay;
+float autocvar_g_ctf_dropped_capture_radius;
+
 void ctf_FakeTimeLimit(entity e, float t)
 {
 	msg_entity = e;

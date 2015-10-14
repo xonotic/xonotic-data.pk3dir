@@ -2,10 +2,25 @@
 
 #include "gamemode.qh"
 
-// ===========================================================
-//  Keepaway game mode coding, written by Samual and Diabolik
-//  Last updated: September, 2012
-// ===========================================================
+int autocvar_g_keepaway_ballcarrier_effects;
+float autocvar_g_keepaway_ballcarrier_damage;
+float autocvar_g_keepaway_ballcarrier_force;
+float autocvar_g_keepaway_ballcarrier_highspeed;
+float autocvar_g_keepaway_ballcarrier_selfdamage;
+float autocvar_g_keepaway_ballcarrier_selfforce;
+float autocvar_g_keepaway_noncarrier_damage;
+float autocvar_g_keepaway_noncarrier_force;
+float autocvar_g_keepaway_noncarrier_selfdamage;
+float autocvar_g_keepaway_noncarrier_selfforce;
+bool autocvar_g_keepaway_noncarrier_warn;
+int autocvar_g_keepaway_score_bckill;
+int autocvar_g_keepaway_score_killac;
+int autocvar_g_keepaway_score_timepoints;
+float autocvar_g_keepaway_score_timeinterval;
+float autocvar_g_keepawayball_damageforcescale;
+int autocvar_g_keepawayball_effects;
+float autocvar_g_keepawayball_respawntime;
+int autocvar_g_keepawayball_trail_color;
 
 float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {

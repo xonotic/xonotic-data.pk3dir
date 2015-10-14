@@ -1,5 +1,10 @@
-
 #include "gamemode.qh"
+
+bool autocvar_g_tdm_team_spawns;
+int autocvar_g_tdm_point_limit;
+int autocvar_g_tdm_point_leadlimit;
+int autocvar_g_tdm_teams;
+int autocvar_g_tdm_teams_override;
 
 /*QUAKED spawnfunc_tdm_team (0 .5 .8) (-16 -16 -24) (16 16 32)
 Team declaration for TDM gameplay, this allows you to decide what team names and control point models are used in your map.
