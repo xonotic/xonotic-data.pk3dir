@@ -778,7 +778,9 @@ MUTATOR_HOOKABLE(ReadLevelCvars, EV_NO_ARGS);
     /**/ i(entity, __self) \
     /**/ i(entity, wp_sendto) \
     /**/ i(int, wp_sendflags) \
+    /**/ o(int, wp_sendflags) \
     /**/ i(int, wp_flag) \
+    /**/ o(int, wp_flag) \
     /**/
 entity wp_sendto;
 int wp_sendflags;

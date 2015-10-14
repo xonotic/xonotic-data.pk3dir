@@ -12,13 +12,8 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     sendflags = sendflags & 0x7F;
 
-    if (g_nexball)
-        sendflags &= ~0x80;
-    else if (self.max_health || (self.pain_finished && (time < self.pain_finished + 0.25)))
+    if (self.max_health || (self.pain_finished && (time < self.pain_finished + 0.25)))
         sendflags |= 0x80;
-
-    WriteByte(MSG_ENTITY, sendflags);
-    WriteByte(MSG_ENTITY, self.wp_extra);
 
     int f = 0;
     if(self.currentammo)
@@ -27,6 +22,9 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
         f |= 2; // my own
 
     MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
+
+    WriteByte(MSG_ENTITY, sendflags);
+    WriteByte(MSG_ENTITY, self.wp_extra);
 
     if (sendflags & 0x80)
     {

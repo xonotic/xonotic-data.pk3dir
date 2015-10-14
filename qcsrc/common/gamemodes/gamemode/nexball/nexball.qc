@@ -1046,6 +1046,12 @@ MUTATOR_HOOKFUNCTION(nb, DropSpecialItems)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
+{
+	wp_sendflags &= ~0x80;
+	return false;
+}
+
 REGISTER_MUTATOR(nb, g_nexball)
 {
 	ActivateTeamplay();
