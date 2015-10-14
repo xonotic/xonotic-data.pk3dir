@@ -557,6 +557,7 @@ spawnfunc(__init_dedicated_server)
 
 	// needs to be done so early because of the constants they create
 	static_init();
+	static_init_late();
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -601,6 +602,7 @@ spawnfunc(worldspawn)
 
 	// needs to be done so early because of the constants they create
 	static_init();
+	static_init_late();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 

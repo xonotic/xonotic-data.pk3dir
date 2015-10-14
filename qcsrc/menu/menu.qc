@@ -82,6 +82,7 @@ void m_init()
 
 	// needs to be done so early because of the constants they create
 	static_init();
+	static_init_late();
 
 	RegisterSLCategories();
 
