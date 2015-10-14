@@ -2,6 +2,8 @@
 #include "../controlpoint.qh"
 #include "../generator.qh"
 
+bool g_onslaught;
+
 float autocvar_g_onslaught_debug;
 float autocvar_g_onslaught_teleport_wait;
 bool autocvar_g_onslaught_spawn_at_controlpoints;
@@ -2177,6 +2179,7 @@ void ons_DelayedInit() // Do this check with a delay so we can wait for teams to
 
 void ons_Initialize()
 {
+	g_onslaught = true;
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;
 
 	addstat(STAT_ROUNDLOST, AS_INT, ons_roundlost);
@@ -2184,7 +2187,7 @@ void ons_Initialize()
 	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
 
-REGISTER_MUTATOR(ons, g_onslaught)
+REGISTER_MUTATOR(ons, IS_GAMETYPE(ONSLAUGHT))
 {
 	ActivateTeamplay();
 	SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);

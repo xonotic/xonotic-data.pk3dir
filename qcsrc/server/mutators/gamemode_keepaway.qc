@@ -421,8 +421,6 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 
 void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
 {
-	if(!g_keepaway) { return; }
-
 	entity e;
 	e = spawn();
 	e.model = "models/orbs/orbblue.md3";
@@ -456,15 +454,12 @@ void ka_ScoreRules()
 
 void ka_Initialize() // run at the start of a match, initiates game mode
 {
-	if(!g_keepaway)
-		return;
-
 	ka_ScoreRules();
 	ka_SpawnBall();
 }
 
 
-REGISTER_MUTATOR(ka, g_keepaway)
+REGISTER_MUTATOR(ka, IS_GAMETYPE(KEEPAWAY))
 {
 	MUTATOR_ONADD
 	{

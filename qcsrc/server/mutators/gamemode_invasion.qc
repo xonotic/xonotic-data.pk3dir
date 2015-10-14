@@ -7,6 +7,8 @@
 
 #include "../teamplay.qh"
 
+bool g_invasion;
+
 float autocvar_g_invasion_round_timelimit;
 int autocvar_g_invasion_teams;
 bool autocvar_g_invasion_team_spawns;
@@ -468,7 +470,7 @@ void invasion_Initialize()
 	InitializeEntity(world, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
 
-REGISTER_MUTATOR(inv, g_invasion)
+REGISTER_MUTATOR(inv, IS_GAMETYPE(INVASION))
 {
 	SetLimits(autocvar_g_invasion_point_limit, -1, -1, -1);
 	if(autocvar_g_invasion_teams >= 2)
@@ -482,6 +484,7 @@ REGISTER_MUTATOR(inv, g_invasion)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
+		g_invasion = true;
 		invasion_Initialize();
 
 		cvar_settemp("g_monsters", "1");

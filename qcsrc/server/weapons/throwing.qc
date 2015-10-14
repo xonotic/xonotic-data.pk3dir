@@ -141,8 +141,6 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_cts)
 		return 0;
-	if (g_nexball && w == WEP_MORTAR.m_id)
-		return 0;
     if(w == 0)
         return 0;
 
@@ -170,7 +168,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
-	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
+	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon) || MUTATOR_CALLHOOK(ForbidDropCurrentWeapon))
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
@@ -193,6 +191,6 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 void SpawnThrownWeapon(vector org, float w)
 {SELFPARAM();
 	if(self.weapons & WepSet_FromWeapon(self.weapon))
-		if(W_IsWeaponThrowable(self.weapon))
+		if(!MUTATOR_CALLHOOK(ForbidDropCurrentWeapon) && W_IsWeaponThrowable(self.weapon))
 			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');
 }

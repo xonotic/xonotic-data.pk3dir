@@ -272,7 +272,7 @@ void lms_Initialize()
 	lms_ScoreRules();
 }
 
-REGISTER_MUTATOR(lms, g_lms)
+REGISTER_MUTATOR(lms, IS_GAMETYPE(LMS))
 {
 	SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, -1, -1);
 

@@ -1011,10 +1011,12 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
 {SELFPARAM();
-	if(self.weapon == WEP_NEXBALL.m_id)
-		return true;
+	return self.weapon == WEP_NEXBALL.m_id;
+}
 
-	return false;
+MUTATOR_HOOKFUNCTION(nb, ForbidDropCurrentWeapon)
+{SELFPARAM();
+	return self.weapon == WEP_MORTAR.m_id; // TODO: what is this for?
 }
 
 MUTATOR_HOOKFUNCTION(nb, FilterItem)

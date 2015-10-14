@@ -6,7 +6,7 @@ MUTATOR_HOOKFUNCTION(dm, Scores_CountFragsRemaining)
 	return true;
 }
 
-REGISTER_MUTATOR(dm, g_dm)
+REGISTER_MUTATOR(dm, IS_GAMETYPE(DEATHMATCH))
 {
 	MUTATOR_ONADD
 	{

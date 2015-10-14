@@ -1349,7 +1349,7 @@ MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 	return false;
 }
 
-REGISTER_MUTATOR(kh, g_keyhunt)
+REGISTER_MUTATOR(kh, IS_GAMETYPE(KEYHUNT))
 {
 	ActivateTeamplay();
 	SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, -1, -1);

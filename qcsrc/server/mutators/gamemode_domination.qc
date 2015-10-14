@@ -4,6 +4,8 @@
 
 #include "../teamplay.qh"
 
+bool g_domination;
+
 int autocvar_g_domination_default_teams;
 bool autocvar_g_domination_disable_frags;
 int autocvar_g_domination_point_amt;
@@ -659,11 +661,12 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 
 void dom_Initialize()
 {
+	g_domination = true;
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 
-REGISTER_MUTATOR(dom, g_domination)
+REGISTER_MUTATOR(dom, IS_GAMETYPE(DOMINATION))
 {
 	int fraglimit_override = autocvar_g_domination_point_limit;
 	if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)

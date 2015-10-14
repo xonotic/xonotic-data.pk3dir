@@ -55,10 +55,8 @@ int MAPINFO_TYPE_ALL;
     (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
 
 REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,false,"timelimit=20 pointlimit=30 leadlimit=0",_("Score as many frags as you can."));
-#define g_dm IS_GAMETYPE(DEATHMATCH)
 
 REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,false,"timelimit=20 lives=9 leadlimit=0",_("Survive and kill until the enemies have no lives left."));
-#define g_lms IS_GAMETYPE(LMS)
 
 REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,false,"timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0",_("Race against other players to the finish line."));
 #define g_race IS_GAMETYPE(RACE)
@@ -76,16 +74,13 @@ REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,true,"timelimit=20 pointlimit=10 te
 #define g_ca IS_GAMETYPE(CA)
 
 REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,true,"timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture and defend all the control points to win."));
-#define g_domination IS_GAMETYPE(DOMINATION)
 
 REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,true,"timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round."));
-#define g_keyhunt IS_GAMETYPE(KEYHUNT)
 
 REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,true,"timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out."));
 #define g_assault IS_GAMETYPE(ASSAULT)
 
 REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,true,"pointlimit=1 timelimit=20",_("Capture control points to reach and destroy the enemy generator."));
-#define g_onslaught IS_GAMETYPE(ONSLAUGHT)
 
 REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,true,"timelimit=20 pointlimit=5 leadlimit=0",_("Shoot and kick the ball into the enemies goal, keep your goal clean."));
 #define g_nexball IS_GAMETYPE(NEXBALL)
@@ -94,10 +89,8 @@ REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,true,"timelimit=20 po
 #define g_freezetag IS_GAMETYPE(FREEZETAG)
 
 REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,true,"timelimit=20 pointlimit=30",_("Hold the ball to get points for kills."));
-#define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
 REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,false,"pointlimit=50 teams=0",_("Survive against waves of monsters."));
-#define g_invasion IS_GAMETYPE(INVASION)
 
 const int MAPINFO_FEATURE_WEAPONS       = 1; // not defined for instagib-only maps
 const int MAPINFO_FEATURE_VEHICLES      = 2;
