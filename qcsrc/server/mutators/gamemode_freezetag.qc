@@ -584,6 +584,14 @@ MUTATOR_HOOKFUNCTION(ft, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
+{
+	// most weapons arena
+	if(ret_string == "0" || ret_string == "")
+		ret_string = "most";
+	return false;
+}
+
 void freezetag_Initialize()
 {
 	freezetag_teams = autocvar_g_freezetag_teams_override;

@@ -547,11 +547,9 @@ void readplayerstartcvars()
 	g_weaponarena_weapons = '0 0 0';
 
 	s = cvar_string("g_weaponarena");
-	if (s == "0" || s == "")
-	{
-		if(g_ca || g_freezetag)
-			s = "most";
-	}
+
+	MUTATOR_CALLHOOK(SetWeaponArena, s);
+	s = ret_string;
 
 	if (s == "0" || s == "")
 	{

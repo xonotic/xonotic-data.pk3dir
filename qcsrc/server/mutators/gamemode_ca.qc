@@ -469,6 +469,14 @@ MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
+{
+	// most weapons arena
+	if(ret_string == "0" || ret_string == "")
+		ret_string = "most";
+	return false;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = true;

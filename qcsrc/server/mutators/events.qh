@@ -754,4 +754,10 @@ MUTATOR_HOOKABLE(AddPlayerScore, EV_AddPlayerScore);
     /**/
 entity set_player;
 MUTATOR_HOOKABLE(GetPlayerStatus, EV_GetPlayerStatus);
+
+#define EV_SetWeaponArena(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+MUTATOR_HOOKABLE(SetWeaponArena, EV_SetWeaponArena);
 #endif
