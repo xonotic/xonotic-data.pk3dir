@@ -703,4 +703,15 @@ enum {
 int bot_activerealplayers;
 int bot_realplayers;
 MUTATOR_HOOKABLE(Bot_FixCount, EV_Bot_FixCount);
+
+#define EV_ClientCommand_Spectate(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(ClientCommand_Spectate, EV_ClientCommand_Spectate);
+
+enum {
+    MUT_SPECCMD_CONTINUE, // return this flag to make the function continue as normal
+    MUT_SPECCMD_RETURN, // return this flag to make the function return (don't spectate)
+    MUT_SPECCMD_FORCE // return this flag to force the player to spectate, even if they're not a player
+};
 #endif

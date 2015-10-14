@@ -443,6 +443,19 @@ MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
+{
+	if(self.caplayer)
+	{
+		// they're going to spec, we can do other checks
+		if(autocvar_sv_spectate && (IS_SPEC(self) || IS_OBSERVER(self)))
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CA_LEAVE);
+		return MUT_SPECCMD_FORCE;
+	}
+
+	return MUT_SPECCMD_CONTINUE;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = true;
