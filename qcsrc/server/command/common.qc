@@ -425,7 +425,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 				case "butcher":
 				{
 					if(caller) { print_to(caller, "This command is not available to players"); return; }
-					if(g_invasion) { print_to(caller, "This command does not work during an invasion!"); return; }
+					if(MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(ret_string, "\n"); return; }
 
 					int tmp_remcount = 0;
 					entity tmp_entity;

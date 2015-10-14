@@ -411,6 +411,12 @@ MUTATOR_HOOKFUNCTION(inv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
+{
+	ret_string = "This command does not work during an invasion!";
+	return true;
+}
+
 void invasion_ScoreRules(float inv_teams)
 {
 	if(inv_teams) { CheckAllowedTeams(world); }

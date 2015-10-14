@@ -765,4 +765,10 @@ MUTATOR_HOOKABLE(SetWeaponArena, EV_SetWeaponArena);
     /**/ i(entity, frag_target) \
     /**/
 MUTATOR_HOOKABLE(DropSpecialItems, EV_DropSpecialItems);
+
+/**
+ * called when an admin tries to kill all monsters
+ * return 1 to prevent spawning
+ */
+MUTATOR_HOOKABLE(AllowMobButcher, EV_NO_ARGS);
 #endif
