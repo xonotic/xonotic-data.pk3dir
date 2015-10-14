@@ -252,6 +252,14 @@ MUTATOR_HOOKFUNCTION(lms, SetPlayerStatus)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
+{
+	if(gameover)
+	if(score_field == SP_LMS_RANK)
+		return true; // allow writing to this field in intermission as it is needed for newly joining players
+	return false;
+}
+
 // scoreboard stuff
 void lms_ScoreRules()
 {

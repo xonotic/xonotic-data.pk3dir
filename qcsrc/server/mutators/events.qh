@@ -753,4 +753,12 @@ MUTATOR_HOOKABLE(SetPlayerFullStatus, EV_SetPlayerFullStatus);
     /**/ o(string, ret_string) \
     /**/
 MUTATOR_HOOKABLE(SetPlayerStatus, EV_SetPlayerStatus);
+
+#define EV_AddPlayerScore(i, o) \
+    /**/ i(int, score_field) \
+    /**/ i(float, ret_float) \
+    /**/ o(float, ret_float) \
+    /**/
+int score_field;
+MUTATOR_HOOKABLE(AddPlayerScore, EV_AddPlayerScore);
 #endif

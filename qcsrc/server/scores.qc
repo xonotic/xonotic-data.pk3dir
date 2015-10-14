@@ -335,14 +335,15 @@ void PlayerScore_Detach(entity player)
 
 float PlayerScore_Add(entity player, float scorefield, float score)
 {
-	entity s;
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score);
+	score = ret_float;
 
 	if(gameover)
-	if(!(g_lms && scorefield == SP_LMS_RANK)) // allow writing to this field in intermission as it is needed for newly joining players
+	if(!mutator_returnvalue)
 		score = 0;
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
-	s = player.scorekeeper;
+	entity s = player.scorekeeper;
 	if(!s)
 	{
 		if(gameover)
