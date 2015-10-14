@@ -114,7 +114,7 @@ When a button is touched, it moves some distance in the direction of it's angle,
 */
 spawnfunc(func_button)
 {
-	SetMovedir ();
+	SetMovedir(self);
 
 	if (!InitMovingBrushTrigger())
 		return;

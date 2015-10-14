@@ -726,7 +726,7 @@ spawnfunc(func_door)
 	if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
 		self.itemkeys |= ITEM_KEY_BIT(1);
 
-	SetMovedir ();
+	SetMovedir(self);
 
 	self.max_health = self.health;
 	if (!InitMovingBrushTrigger())
