@@ -24,7 +24,7 @@ const float SSF_ITEMMSG = 4;
 
 .string superspec_itemfilter; //"classname1 classname2 ..."
 
-float _spectate(entity _player)
+bool superspec_Spectate(entity _player)
 {SELFPARAM();
 	if(Spectate(_player) == 1)
 		self.classname = "spectator";
@@ -115,7 +115,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 					superspec_msg("", "", self, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", other.netname, _item.netname, _item.classname), 1);
 				if((self.autospec_flags & ASF_SSIM) && self.enemy != other)
 				{
-					_spectate(other);
+					superspec_Spectate(other);
 
 					setself(this);
 					return MUT_ITEMTOUCH_CONTINUE;
@@ -141,7 +141,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 					if(self.autospec_flags & ASF_SHOWWHAT)
 						superspec_msg("", "", self, sprintf("^7Following %s^7 due to picking up %s\n", other.netname, _item.netname), 2);
 
-					_spectate(other);
+					superspec_Spectate(other);
 				}
 			}
 		}
@@ -349,7 +349,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 		FOR_EACH_PLAYER(_player)
 		{
 			if(_player.strength_finished > time || _player.invincible_finished > time)
-				return _spectate(_player);
+				return superspec_Spectate(_player);
 		}
 
 		superspec_msg("", "", self, "No active powerup\n", 1);
@@ -362,7 +362,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 		FOR_EACH_PLAYER(_player)
 		{
 			if(_player.strength_finished > time)
-				return _spectate(_player);
+				return superspec_Spectate(_player);
 		}
 
 		superspec_msg("", "", self, "No active Strength\n", 1);
@@ -375,46 +375,10 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 		FOR_EACH_PLAYER(_player)
 		{
 			if(_player.invincible_finished > time)
-				return _spectate(_player);
+				return superspec_Spectate(_player);
 		}
 
 		superspec_msg("", "", self, "No active Shield\n", 1);
-		return true;
-	}
-
-	if(cmd_name == "followfc")
-	{
-		if(!g_ctf)
-			return true;
-
-		entity _player;
-		int _team = 0;
-		bool found = false;
-
-		if(cmd_argc == 2)
-		{
-			switch(argv(1))
-			{
-				case "red": _team = NUM_TEAM_1; break;
-				case "blue": _team = NUM_TEAM_2; break;
-				case "yellow": if(ctf_teams >= 3) _team = NUM_TEAM_3; break;
-				case "pink": if(ctf_teams >= 4) _team = NUM_TEAM_4; break;
-			}
-		}
-
-		FOR_EACH_PLAYER(_player)
-		{
-			if(_player.flagcarried && (_player.team == _team || _team == 0))
-			{
-				found = true;
-				if(_team == 0 && IS_SPEC(self) && self.enemy == _player)
-					continue; // already spectating a fc, try to find the other fc
-				return _spectate(_player);
-			}
-		}
-
-		if(!found)
-			superspec_msg("", "", self, "No active flag carrier\n", 1);
 		return true;
 	}
 
@@ -501,7 +465,7 @@ MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 			if(self.autospec_flags & ASF_SHOWWHAT)
 				superspec_msg("", "", self, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
 
-			_spectate(frag_attacker);
+			superspec_Spectate(frag_attacker);
 		}
 	}
 

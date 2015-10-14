@@ -2328,6 +2328,51 @@ MUTATOR_HOOKFUNCTION(ctf, GetRecords)
 	return false;
 }
 
+bool superspec_Spectate(entity _player); // TODO
+void superspec_msg(string _center_title, string _con_title, entity _to, string _msg, float _spamlevel); // TODO
+MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
+{
+	if(IS_PLAYER(self) || MUTATOR_RETURNVALUE || !cvar("g_superspectate")) { return false; }
+
+	if(cmd_name == "followfc")
+	{
+		if(!g_ctf)
+			return true;
+
+		entity _player;
+		int _team = 0;
+		bool found = false;
+
+		if(cmd_argc == 2)
+		{
+			switch(argv(1))
+			{
+				case "red": _team = NUM_TEAM_1; break;
+				case "blue": _team = NUM_TEAM_2; break;
+				case "yellow": if(ctf_teams >= 3) _team = NUM_TEAM_3; break;
+				case "pink": if(ctf_teams >= 4) _team = NUM_TEAM_4; break;
+			}
+		}
+
+		FOR_EACH_PLAYER(_player)
+		{
+			if(_player.flagcarried && (_player.team == _team || _team == 0))
+			{
+				found = true;
+				if(_team == 0 && IS_SPEC(self) && self.enemy == _player)
+					continue; // already spectating a fc, try to find the other fc
+				return superspec_Spectate(_player);
+			}
+		}
+
+		if(!found)
+			superspec_msg("", "", self, "No active flag carrier\n", 1);
+		return true;
+	}
+
+	return false;
+}
+
 
 // ==========
 // Spawnfuncs
