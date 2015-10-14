@@ -497,7 +497,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	// no arena, assault support yet...
+	// no assault support yet...
 	if(g_assault | gameover | intermission_running | race_completing)
 		localcmd("restart\n");
 	else
