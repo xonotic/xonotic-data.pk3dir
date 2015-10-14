@@ -456,6 +456,12 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
+MUTATOR_HOOKFUNCTION(ca, WantWeapon)
+{
+	want_allguns = true;
+	return false;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = true;

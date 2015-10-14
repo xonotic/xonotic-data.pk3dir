@@ -347,6 +347,13 @@ MUTATOR_HOOKFUNCTION(cts, FixClientCvars)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(cts, WantWeapon)
+{
+	ret_float = (want_weaponinfo.weapon == WEP_SHOTGUN.m_id);
+	want_mutatorblocked = true;
+	return true;
+}
+
 void cts_Initialize()
 {
 	cts_ScoreRules();

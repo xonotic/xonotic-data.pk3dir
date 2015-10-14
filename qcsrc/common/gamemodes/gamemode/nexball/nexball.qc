@@ -1023,6 +1023,12 @@ MUTATOR_HOOKFUNCTION(nb, GetTeamCount)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(nb, WantWeapon)
+{
+	ret_float = 0; // weapon is set a few lines later, apparently
+	return true;
+}
+
 REGISTER_MUTATOR(nb, g_nexball)
 {
 	ActivateTeamplay();

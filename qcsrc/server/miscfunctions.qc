@@ -485,25 +485,27 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 {
 	int i = weaponinfo.weapon;
 	int d = 0;
+	bool allow_mutatorblocked = false;
 
-	if (!i)
+	if(!i)
 		return 0;
 
-	if (g_lms || g_ca || allguns)
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
+	d = ret_float;
+	allguns = want_allguns;
+	allow_mutatorblocked = false;
+
+	if(allguns)
 	{
 		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
 			d = true;
 		else
 			d = false;
 	}
-	else if (g_cts)
-		d = (i == WEP_SHOTGUN.m_id);
-	else if (g_nexball)
-		d = 0; // weapon is set a few lines later
-	else
+	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
 
-	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
+	if(!allow_mutatorblocked && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
 	float t = weaponinfo.weaponstartoverride;

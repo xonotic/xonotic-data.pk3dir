@@ -715,7 +715,6 @@ enum {
     MUT_SPECCMD_FORCE // return this flag to force the player to spectate, even if they're not a player
 };
 
-/** called when player triggered kill (or is changing teams), return error to not do anything */
 #define EV_CheckRules_World(i, o) \
     /* status */ i(float, ret_float) \
     /* status */ o(float, ret_float) \
@@ -725,4 +724,18 @@ enum {
 float checkrules_timelimit;
 int checkrules_fraglimit;
 MUTATOR_HOOKABLE(CheckRules_World, EV_CheckRules_World);
+
+#define EV_WantWeapon(i, o) \
+    /**/ i(entity, want_weaponinfo) \
+    /**/ i(float, ret_float) \
+    /**/ o(float, ret_float) \
+    /**/ i(bool, want_allguns) \
+    /**/ o(bool, want_allguns) \
+    /**/ i(bool, want_mutatorblocked) \
+    /**/ o(bool, want_mutatorblocked) \
+    /**/
+entity want_weaponinfo;
+bool want_allguns;
+bool want_mutatorblocked;
+MUTATOR_HOOKABLE(WantWeapon, EV_WantWeapon);
 #endif

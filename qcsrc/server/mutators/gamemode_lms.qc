@@ -236,6 +236,12 @@ MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(lms, WantWeapon)
+{
+	want_allguns = true;
+	return false;
+}
+
 // scoreboard stuff
 void lms_ScoreRules()
 {
