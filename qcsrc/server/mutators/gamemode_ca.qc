@@ -214,7 +214,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_reset_map_global)
+MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 {
 	allowed_to_spawn = true;
 	return 1;
