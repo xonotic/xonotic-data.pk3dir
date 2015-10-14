@@ -1,3 +1,5 @@
+#ifdef IMPLEMENTATION
+
 #include "../../util.qh"
 
 #ifdef CSQC
@@ -174,4 +176,5 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
     RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
 }
 
+#endif
 #endif

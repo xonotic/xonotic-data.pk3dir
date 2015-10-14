@@ -1,11 +1,10 @@
 #include "item_key.qh"
-#include "_all.qh"
 
 #include "../common/triggers/subs.qh"
 #include "../common/monsters/all.qh"
 #include "../common/notifications.qh"
 #include "../common/util.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../lib/warpzone/util_server.qh"
 
 /*
 TODO:
@@ -40,7 +39,7 @@ string item_keys_keylist(float keylist) {
 		return "";
 
 	// one key
-	if ((keylist & (keylist-1)) != 0)
+	if ((keylist & (keylist-1)) == 0)
 		return strcat("the ", item_keys_names[lowestbit(keylist)]);
 
 	string n = "";
@@ -82,6 +81,12 @@ void item_key_touch()
 	play2(other, self.noise);
 
 	centerprint(other, self.message);
+
+	string oldmsg = self.message;
+	self.message = "";
+	activator = other;
+	SUB_UseTargets();
+	self.message = oldmsg;
 };
 
 /**

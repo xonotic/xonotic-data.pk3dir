@@ -90,7 +90,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Edge offset:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 0.3, 0.01, "g_waypointsprite_edgeoffset_bottom"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 0.3, 0.01, "g_waypointsprite_edgeoffset_bottom", "-"));
 			makeMulti(e, "g_waypointsprite_edgeoffset_top g_waypointsprite_edgeoffset_left g_waypointsprite_edgeoffset_right");
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 

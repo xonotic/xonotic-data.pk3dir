@@ -1,9 +1,9 @@
 #include "g_subs.qh"
-#include "_all.qh"
 
 #include "antilag.qh"
 #include "command/common.qh"
-#include "../warpzonelib/common.qh"
+#include "../lib/warpzone/common.qh"
+#include "../common/triggers/subs.qh"
 
 spawnfunc(info_null)
 {
@@ -445,24 +445,24 @@ InitTrigger
 ================
 */
 
-void SetMovedir()
-{SELFPARAM();
-	if (self.movedir != '0 0 0')
-		self.movedir = normalize(self.movedir);
+void SetMovedir(entity this)
+{
+	if(this.movedir != '0 0 0')
+		this.movedir = normalize(this.movedir);
 	else
 	{
-		makevectors (self.angles);
-		self.movedir = v_forward;
+		makevectors(this.angles);
+		this.movedir = v_forward;
 	}
 
-	self.angles = '0 0 0';
+	this.angles = '0 0 0';
 }
 
 void InitTrigger()
 {SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir ();
+	SetMovedir(self);
 	self.solid = SOLID_TRIGGER;
 	SetBrushEntityModel();
 	self.movetype = MOVETYPE_NONE;
@@ -474,7 +474,7 @@ void InitSolidBSPTrigger()
 {SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir ();
+	SetMovedir(self);
 	self.solid = SOLID_BSP;
 	SetBrushEntityModel();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0

@@ -52,7 +52,7 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.01, 0, "cl_bob", _("View bobbing while walking around")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(0.01, 0, "cl_bob", _("View bobbing while walking around"), "-"));
 		makeMulti(e, "cl_bob2");
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
@@ -78,7 +78,7 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(60, 130, 5, "fov",
-			_("Field of vision in degrees from 60 to 130, default is 90")));
+			_("Field of vision in degrees (default: 100)")));
 	me.TR(me);
 	me.TR(me);
 		//me.TDempty(me, 0.2);
@@ -122,7 +122,7 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_reticle", _("Display reticle 2D overlay while zooming")));
 	me.TR(me);
 		//me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_death", _("Release zoom when you die or respawn")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "cl_unpress_zoom_on_death", _("Release zoom when you die or respawn"), "-"));
 			makeMulti(e, "cl_unpress_zoom_on_spawn");
 	me.TR(me);
 		//me.TDempty(me, 0.2);

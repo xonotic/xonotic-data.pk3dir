@@ -1,5 +1,4 @@
 #include "weaponstats.qh"
-#include "../_all.qh"
 
 #include "../g_world.qh"
 

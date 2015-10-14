@@ -1,5 +1,5 @@
+#include "cl_minigames_hud.qh"
 #include "minigames.qh"
-#include "../../client/mapvoting.qh"
 
 // whether the mouse is over the given panel
 bool HUD_mouse_over(entity somepanel)

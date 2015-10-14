@@ -1,4 +1,3 @@
-#include "../_all.qh"
 
 #include "mutator.qh"
 
@@ -16,7 +15,7 @@ void PlayerTouchExplode(entity p1, entity p2)
 	entity e;
 	e = spawn();
 	setorigin(e, org);
-	RadiusDamage(e, world, autocvar_g_touchexplode_damage, autocvar_g_touchexplode_edgedamage, autocvar_g_touchexplode_radius, world, world, autocvar_g_touchexplode_force, DEATH_TOUCHEXPLODE, world);
+	RadiusDamage(e, world, autocvar_g_touchexplode_damage, autocvar_g_touchexplode_edgedamage, autocvar_g_touchexplode_radius, world, world, autocvar_g_touchexplode_force, DEATH_TOUCHEXPLODE.m_id, world);
 	remove(e);
 }
 

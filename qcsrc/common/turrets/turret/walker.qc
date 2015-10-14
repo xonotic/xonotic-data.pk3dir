@@ -88,7 +88,7 @@ void walker_melee_do_dmg()
     {
         if (turret_validate_target(self, e, self.target_validate_flags))
             if (e != self && e.owner != self)
-                Damage(e, self, self, (autocvar_g_turrets_unit_walker_melee_damage), DEATH_TURRET_WALK_MELEE, '0 0 0', v_forward * (autocvar_g_turrets_unit_walker_melee_force));
+                Damage(e, self, self, (autocvar_g_turrets_unit_walker_melee_damage), DEATH_TURRET_WALK_MELEE.m_id, '0 0 0', v_forward * (autocvar_g_turrets_unit_walker_melee_force));
 
         e = e.chain;
     }
@@ -101,7 +101,7 @@ void walker_setnoanim()
 }
 void walker_rocket_explode()
 {SELFPARAM();
-    RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, world, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET, world);
+    RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, world, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET.m_id, world);
     remove (self);
 }
 

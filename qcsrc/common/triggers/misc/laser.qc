@@ -1,9 +1,8 @@
 #if defined(CSQC)
-	#include "../../../client/_all.qh"
 	#include "../../buffs/all.qh"
-	#include "../../../csqcmodellib/interpolate.qh"
+	#include "../../../lib/csqcmodel/interpolate.qh"
 	#include "../../../client/main.qh"
-	#include "../../../csqcmodellib/cl_model.qh"
+	#include "../../../lib/csqcmodel/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif
@@ -119,7 +118,7 @@ void misc_laser_think()
 			if(((self.spawnflags & 8) == 0) == (self.team != hitent.team))
 				return;
 		if(hitent.takedamage)
-			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER, hitloc, '0 0 0');
+			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER.m_id, hitloc, '0 0 0');
 	}
 }
 

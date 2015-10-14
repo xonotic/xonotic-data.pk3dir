@@ -181,7 +181,7 @@ InitTrigger
 ================
 */
 
-void SetMovedir();
+void SetMovedir(entity this);
 
 void InitTrigger();
 

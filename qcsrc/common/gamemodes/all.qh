@@ -1,0 +1,6 @@
+#ifndef GAMEMODES_ALL_H
+#define GAMEMODES_ALL_H
+
+#include "all.inc"
+
+#endif

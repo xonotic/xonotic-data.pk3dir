@@ -1,4 +1,3 @@
-#include "../_all.qh"
 
 #include "pathlib.qh"
 #include "utility.qh"
@@ -26,6 +25,14 @@ void dumpnode(entity n)
     n.think        = SUB_Remove;
     n.nextthink    = time;
 }
+
+#ifdef DEBUGPATHING
+void pathlib_showpath(entity start);
+void pathlib_showpath2(entity path);
+#endif
+
+void pathlib_showsquare(vector where,float goodsquare,float _lifetime);
+void pathlib_showsquare2(entity node ,vector ncolor,float align);
 
 entity pathlib_mknode(vector where,entity parent)
 {

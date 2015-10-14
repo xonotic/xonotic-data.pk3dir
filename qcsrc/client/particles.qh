@@ -1,5 +1,5 @@
-#ifndef PARTICLES_H
-#define PARTICLES_H
+#ifndef CLIENT_PARTICLES_H
+#define CLIENT_PARTICLES_H
 .int dphitcontentsmask;
 
 entityclass(PointParticles);

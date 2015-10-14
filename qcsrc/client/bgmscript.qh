@@ -1,5 +1,5 @@
-#ifndef BGMSCRIPT_H
-#define BGMSCRIPT_H
+#ifndef CLIENT_BGMSCRIPT_H
+#define CLIENT_BGMSCRIPT_H
 
 entityclass(BGMScript);
 class(BGMScript) .string bgmscript;

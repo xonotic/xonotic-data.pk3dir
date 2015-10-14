@@ -1,5 +1,4 @@
 #include "miscfunctions.qh"
-#include "_all.qh"
 #include "antilag.qh"
 #include "command/common.qh"
 #include "constants.qh"
@@ -12,7 +11,7 @@
 #include "weapons/selection.qh"
 #include "../common/command/generic.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
@@ -21,9 +20,12 @@
 #include "../common/util.qh"
 #include "../common/turrets/sv_turrets.qh"
 #include "../common/weapons/all.qh"
-#include "../csqcmodellib/sv_model.qh"
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/server.qh"
+#include "../common/vehicles/sv_vehicles.qh"
+#include "../common/vehicles/vehicle.qh"
+#include "../common/items/all.qc"
+#include "../lib/csqcmodel/sv_model.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/server.qh"
 
 void crosshair_trace(entity pl)
 {
@@ -965,6 +967,18 @@ void precache_all_playermodels(string pattern)
 	search_end(globhandle);
 }
 
+void precache_playermodels(string s)
+{
+	if(s != "")
+	{
+		int n = tokenize_console(s);
+		precache_playermodel(argv(0));
+
+		for (int i = 1; i < n; ++i)
+			precache_model(argv(i));
+	}
+}
+
 void precache()
 {SELFPARAM();
     // gamemode related things
@@ -982,22 +996,11 @@ void precache()
 
     if (autocvar_sv_defaultcharacter)
     {
-        string s;
-        s = autocvar_sv_defaultplayermodel_red;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_blue;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_yellow;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_pink;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel;
-        if (s != "")
-            precache_playermodel(s);
+		precache_playermodels(autocvar_sv_defaultplayermodel_red);
+		precache_playermodels(autocvar_sv_defaultplayermodel_blue);
+		precache_playermodels(autocvar_sv_defaultplayermodel_yellow);
+		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
+		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
 
     if (g_footsteps)

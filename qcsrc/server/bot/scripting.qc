@@ -1,7 +1,8 @@
 #include "scripting.qh"
-#include "../_all.qh"
 
 #include "bot.qh"
+
+.int state;
 
 .float bot_cmdqueuebuf_allocated;
 .float bot_cmdqueuebuf;

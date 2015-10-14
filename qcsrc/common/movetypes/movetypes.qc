@@ -2,12 +2,11 @@
 #include "../physics.qh"
 
 #if defined(CSQC)
-	#include "../../dpdefs/csprogsdefs.qh"
 	#include "../../client/defs.qh"
 	#include "../stats.qh"
 	#include "../util.qh"
 	#include "movetypes.qh"
-	#include "../../csqcmodellib/common.qh"
+	#include "../../lib/csqcmodel/common.qh"
 	#include "../../server/t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)

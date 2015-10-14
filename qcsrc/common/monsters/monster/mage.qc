@@ -23,6 +23,7 @@ REGISTER_MONSTER(MAGE, NEW(Mage)) {
 }
 
 #include "../../weapons/all.qh"
+#include "../../items/all.qc"
 
 CLASS(MageSpike, PortoLaunch)
 /* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -150,7 +151,7 @@ void M_Mage_Attack_Spike_Explode()
 	self.realowner.mage_spike = world;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE, other);
+	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, other);
 
 	remove (self);
 }
@@ -161,6 +162,8 @@ void M_Mage_Attack_Spike_Touch()
 
 	M_Mage_Attack_Spike_Explode();
 }
+
+.float wait;
 
 // copied from W_Seeker_Think
 void M_Mage_Attack_Spike_Think()
@@ -302,7 +305,7 @@ void M_Mage_Defend_Heal()
 void M_Mage_Attack_Push()
 {SELFPARAM();
 	sound(self, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
-	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
+	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, self.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, self.origin, '0 0 0', 1);
 
 	setanim(self, self.anim_shoot, true, true, true);
@@ -460,6 +463,8 @@ spawnfunc(monster_mage) { Monster_Spawn(MON_MAGE.monsterid); }
 		}
 		#endif
 		#ifdef SVQC
+		.float speed;
+		spawnfunc(item_health_large);
 		METHOD(Mage, mr_setup, bool(Monster thismon))
 		{
 			SELFPARAM();

@@ -98,7 +98,7 @@ float XonoticScreenshotViewerDialog_keyDown(entity me, float key, float ascii, f
 			// to press buttons while browsing with only the keyboard
 			if (shift & S_CTRL)
 			{
-				toggleSlideShow_Click(world, me);
+				toggleSlideShow_Click(NULL, me);
 				return 1;
 			}
 			return SUPER(XonoticScreenshotViewerDialog).keyDown(me, key, ascii, shift);

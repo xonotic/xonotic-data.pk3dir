@@ -1,27 +1,19 @@
 #include "hud.qh"
-#include "_all.qh"
 
 #include "hud_config.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "teamradar.qh"
 #include "t_items.qh"
-
-#include "../dpdefs/keycodes.qh"
-
 #include "../common/buffs/all.qh"
-#include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
-#include "../common/nades/all.qh"
-
 #include "../common/mutators/mutator/waypoints/all.qh"
-#include "../server/mutators/gamemode_ctf.qh"
-
+#include "../common/nades/all.qh"
 #include "../common/stats.qh"
-
-#include "../csqcmodellib/cl_player.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../server/mutators/gamemode_ctf.qh"
 
 
 /*
@@ -205,12 +197,6 @@ int race_CheckName(string net_name)
 HUD panels
 ==================
 */
-
-// draw the background/borders
-#define HUD_Panel_DrawBg(theAlpha) do {																				\
-	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
-		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
-} while(0)
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
@@ -1473,7 +1459,7 @@ void HUD_HealthArmor(void)
 	if(autocvar_hud_panel_healtharmor == 2) // combined health and armor display
 	{
 		vector v;
-		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON);
+		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON.m_id);
 
 		float x;
 		x = floor(v.x + 1);

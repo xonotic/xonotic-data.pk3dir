@@ -1,7 +1,8 @@
 #include "aim.qh"
-#include "../_all.qh"
 
 #include "bot.qh"
+
+#include "../weapons/weaponsystem.qh"
 
 #include "../mutators/mutators_include.qh"
 

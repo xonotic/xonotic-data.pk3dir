@@ -1,5 +1,4 @@
 #include "bot.qh"
-#include "../_all.qh"
 
 #include "aim.qh"
 #include "navigation.qh"
@@ -8,6 +7,8 @@
 
 #include "havocbot/havocbot.qh"
 #include "havocbot/scripting.qh"
+
+#include "../teamplay.qh"
 
 #include "../antilag.qh"
 #include "../autocvars.qh"
@@ -29,13 +30,10 @@
 
 #include "../../common/weapons/all.qh"
 
-#include "../../csqcmodellib/sv_model.qh"
+#include "../../lib/csqcmodel/sv_model.qh"
 
-#include "../../dpdefs/dpextensions.qh"
-#include "../../dpdefs/progsdefs.qh"
-
-#include "../../warpzonelib/common.qh"
-#include "../../warpzonelib/util_server.qh"
+#include "../../lib/warpzone/common.qh"
+#include "../../lib/warpzone/util_server.qh"
 
 entity bot_spawn()
 {SELFPARAM();

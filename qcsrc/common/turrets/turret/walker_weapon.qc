@@ -28,7 +28,7 @@ METHOD(WalkerTurretAttack, wr_think, void(entity thiswep, entity actor, bool fir
             weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
         sound (actor, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
-        fireBullet (actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_WALK_GUN, 0);
+        fireBullet (actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_WALK_GUN.m_id, 0);
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
     }
 }

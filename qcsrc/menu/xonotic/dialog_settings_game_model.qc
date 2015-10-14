@@ -66,8 +66,7 @@ void XonoticGameModelSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 2, 0.2, "cl_deathglow"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gibs:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("cl_nogibs",
-			_("Reduce the amount of gibs or remove them completely (default: lots)")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_nogibs"));
 			e.addValue(e, ZCTX(_("GIBS^None")), "1");
 			e.addValue(e, ZCTX(_("GIBS^Few")), "0.75");
 			e.addValue(e, ZCTX(_("GIBS^Many")), "0.5");

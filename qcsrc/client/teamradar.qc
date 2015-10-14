@@ -1,11 +1,10 @@
 #include "teamradar.qh"
-#include "_all.qh"
 
 #include "hud.qh"
 
-#include "../common/util.qh"
+#include "../common/mutators/mutator/waypoints/all.qh"
 
-#include "../csqcmodellib/interpolate.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 vector teamradar_3dcoord_to_texcoord(vector in)
 {

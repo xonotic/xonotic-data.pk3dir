@@ -1,5 +1,4 @@
 #include "cheats.qh"
-#include "_all.qh"
 
 #include "g_damage.qh"
 #include "race.qh"
@@ -10,8 +9,7 @@
 #include "weapons/tracing.qh"
 
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
-#include "../common/effects/effects.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/util.qh"
 
 #include "../common/monsters/all.qh"
@@ -22,10 +20,10 @@
 
 #include "../common/triggers/func/breakable.qh"
 
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/util_server.qh"
 
 void CopyBody(float keepvelocity);
 
@@ -287,7 +285,7 @@ float CheatImpulse(float i)
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
-			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
+			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT.m_id, e);
 			remove(e2);
 
 			LOG_INFO("404 Sportsmanship not found.\n");

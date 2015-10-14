@@ -5,4 +5,3 @@
 #include "item/jetpack.qc"
 #include "item/pickup.qc"
 #include "item/powerup.qc"
-#include "../../server/mutators/mutator_instagib_items.qc"

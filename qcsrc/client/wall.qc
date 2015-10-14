@@ -1,11 +1,9 @@
 #include "wall.qh"
-#include "_all.qh"
 
 #include "bgmscript.qh"
 
-#include "../common/util.qh"
 
-#include "../csqcmodellib/interpolate.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 .float alpha;
 .float scale;

@@ -1,5 +1,4 @@
 #include "csqcprojectile.qh"
-#include "../_all.qh"
 
 #include "../t_items.qh"
 

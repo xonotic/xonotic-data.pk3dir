@@ -1,5 +1,4 @@
 #include "teamplay.qh"
-#include "_all.qh"
 
 #include "cl_client.qh"
 #include "race.qh"
@@ -12,7 +11,8 @@
 
 #include "mutators/mutators_include.qh"
 
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
+#include "../common/gamemodes/all.qh"
 #include "../common/teams.qh"
 
 void TeamchangeFrags(entity e)
@@ -772,7 +772,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		LogTeamchange(pl.playerid, pl.team, 2); // log auto join
 
 		if(pl.deadflag == DEAD_NO)
-			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE, pl.origin, '0 0 0');
+			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE.m_id, pl.origin, '0 0 0');
 	}
 
 	return smallest;
@@ -858,7 +858,7 @@ void SV_ChangeTeam(float _color)
 	{
 		// kill player when changing teams
 		if(self.deadflag == DEAD_NO)
-			Damage(self, self, self, 100000, DEATH_TEAMCHANGE, self.origin, '0 0 0');
+			Damage(self, self, self, 100000, DEATH_TEAMCHANGE.m_id, self.origin, '0 0 0');
 	}
 }
 
@@ -999,6 +999,6 @@ void ShufflePlayerOutOfTeam (float source_team)
 	SetPlayerTeam(selected, smallestteam, source_team, false);
 
 	if(selected.deadflag == DEAD_NO)
-		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
+		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE.m_id, selected.origin, '0 0 0');
 	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }

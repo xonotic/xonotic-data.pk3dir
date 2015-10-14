@@ -3,7 +3,6 @@
 #include "../common/items/all.qc"
 
 #if defined(SVQC)
-    #include "_all.qh"
 
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
@@ -15,7 +14,7 @@
     #include "weapons/weaponsystem.qh"
 
     #include "../common/constants.qh"
-    #include "../common/deathtypes.qh"
+    #include "../common/deathtypes/all.qh"
     #include "../common/notifications.qh"
 	#include "../common/triggers/subs.qh"
     #include "../common/util.qh"
@@ -24,7 +23,7 @@
 
     #include "../common/weapons/all.qh"
 
-    #include "../warpzonelib/util_server.qh"
+    #include "../lib/warpzone/util_server.qh"
 #endif
 
 #ifdef CSQC
@@ -514,8 +513,6 @@ void Item_RespawnCountdown (void)
 			WaypointSprite_Ping(self.waypointsprite_attached);
 			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
 		}
-		else
-			sound(self, CH_TRIGGER, SND_ITEMRESPAWNCOUNTDOWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	}
 }
 

@@ -1,5 +1,4 @@
 #include "g_world.qh"
-#include "_all.qh"
 
 #include "anticheat.qh"
 #include "antilag.qh"
@@ -21,16 +20,17 @@
 #include "weapons/weaponstats.qh"
 #include "../common/buffs/all.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
-#include "../common/effects/effects.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/notifications.qh"
+#include "../common/physics.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
+#include "../common/triggers/trigger/secret.qh"
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
@@ -557,8 +557,6 @@ spawnfunc(__init_dedicated_server)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -603,8 +601,6 @@ spawnfunc(worldspawn)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 

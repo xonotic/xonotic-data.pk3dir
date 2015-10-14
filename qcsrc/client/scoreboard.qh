@@ -1,5 +1,5 @@
-#ifndef SCOREBOARD_H
-#define SCOREBOARD_H
+#ifndef CLIENT_SCOREBOARD_H
+#define CLIENT_SCOREBOARD_H
 
 float xmin, xmax, ymin, ymax, sbwidth;
 

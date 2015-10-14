@@ -1,6 +1,5 @@
 #include "physics.qh"
-#include "triggers/trigger/swamp.qh"
-#include "triggers/trigger/jumppads.qh"
+#include "triggers/include.qh"
 #include "viewloc.qh"
 
 #ifdef SVQC
@@ -11,14 +10,7 @@
 // client side physics
 bool Physics_Valid(string thecvar)
 {
-	if(!autocvar_g_physics_clientselect) { return false; }
-
-	string l = strcat(" ", autocvar_g_physics_clientselect_options, " ");
-
-	if(strstrofs(l, strcat(" ", thecvar, " "), 0) >= 0)
-		return true;
-
-	return false;
+	return autocvar_g_physics_clientselect && strhasword(autocvar_g_physics_clientselect_options, thecvar);
 }
 
 float Physics_ClientOption(entity pl, string option)
@@ -78,7 +70,8 @@ void Physics_AddStats()
 	addstat(STAT_JETPACK_MAXSPEED_SIDE, AS_FLOAT, stat_jetpack_maxspeed_side);
 
 	// hack to fix track_canjump
-	addstat(STAT_MOVEVARS_TRACK_CANJUMP, AS_INT, cvar_cl_movement_track_canjump);
+	addstat(STAT_MOVEVARS_CL_TRACK_CANJUMP, AS_INT, cvar_cl_movement_track_canjump);
+	addstat(STAT_MOVEVARS_TRACK_CANJUMP, AS_INT, stat_sv_track_canjump);
 
 	// double jump
 	addstat(STAT_DOUBLEJUMP, AS_INT, stat_doublejump);
@@ -174,6 +167,8 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_sv_airaccelerate = Physics_ClientOption(self, "airaccelerate");
 	self.stat_sv_airstopaccelerate = Physics_ClientOption(self, "airstopaccelerate");
 	self.stat_sv_jumpvelocity = Physics_ClientOption(self, "jumpvelocity");
+
+	self.stat_sv_track_canjump = Physics_ClientOption(self, "track_canjump");
 
 	self.stat_gameplayfix_upvelocityclearsonground = UPWARD_VELOCITY_CLEARS_ONGROUND;
 }
@@ -591,7 +586,11 @@ bool PlayerJump (void)
 		if (!IS_ONGROUND(self))
 			return IS_JUMP_HELD(self);
 
-	if (PHYS_TRACK_CANJUMP(self))
+	bool track_jump = PHYS_CL_TRACK_CANJUMP(self);
+	if(PHYS_TRACK_CANJUMP(self))
+		track_jump = true;
+
+	if (track_jump)
 		if (IS_JUMP_HELD(self))
 			return true;
 

@@ -4,30 +4,35 @@ cd "$(dirname "$0")"
 cd ..
 
 declare -a NOWARN=(
-  '-Wno-field-redeclared'
-  '-Wno-unused-variable'
-  '-Wno-implicit-function-pointer'
+  -Wno-field-redeclared
+  -Wno-unused-variable
+  -Wno-implicit-function-pointer
 )
 declare -a FEATURES=(
-  '-DVEHICLES_ENABLED=1'
-  '-DVEHICLES_USE_ODE=0'
+  -DVEHICLES_ENABLED=1
+  -DVEHICLES_USE_ODE=0
 )
 declare QCC=../../../gmqcc/gmqcc
 
+declare -a QCC_FLAGS=(
+  -std=gmqcc
+  -Wall -Werror
+  -fftepp -fftepp-predefs -Wcpp
+  -futf8
+  -freturn-assignments
+  -frelaxed-switch
+  -O3
+)
+
 function check() {
-  declare -l base="$1"
-  declare -la predefs=("${!2}")
-  find "$base" -type f -name '*.qc' -print0 | sort -z | while IFS= read -r -d '' file; do
+  declare -l base="${1}"
+  declare -la predefs=("-D${2}" "lib/_all.inc" "${base}/_all.qh")
+  find "$base" -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
     echo "$file"
-    ${QCC} -std=gmqcc -fftepp -fftepp-predefs -Werror -Wall "${NOWARN[@]}" "${FEATURES[@]}" -futf8 -O3 "${predefs[@]}" "$file" >/dev/null
+    ${QCC} "${QCC_FLAGS[@]}" "${NOWARN[@]}" "${FEATURES[@]}" "${predefs[@]}" "$file" >/dev/null
   done
 }
 
-clientdefs=("-DCSQC" "common/util-pre.qh" "dpdefs/csprogsdefs.qh")
-check "client" clientdefs[@]
-
-serverdefs=("-DSVQC" "common/util-pre.qh" "server/sys-pre.qh" "dpdefs/progsdefs.qh" "dpdefs/dpextensions.qh" "server/sys-post.qh" "server/defs.qh" "server/autocvars.qh")
-check "server" serverdefs[@]
-
-menudefs=("-DMENUQC" "common/util-pre.qh" "dpdefs/menudefs.qh")
-check "menu" menudefs[@]
+check client CSQC
+check server SVQC
+check menu MENUQC

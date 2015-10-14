@@ -1,8 +1,8 @@
 #ifdef SVQC
-	#include "../_all.qh"
 	#include "mutator.qh"
 	#include "../antilag.qh"
 #endif
+#include "../../common/physics.qh"
 
 .int multijump_count;
 .bool multijump_ready;

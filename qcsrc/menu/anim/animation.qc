@@ -1,6 +1,5 @@
 #ifndef ANIM_ANIMATION_H
 #define ANIM_ANIMATION_H
-#include "../oo/base.qh"
 void setterDummy(entity, float);
 CLASS(Animation, Object)
 	METHOD(Animation, configureAnimation, void(entity, entity, void(entity, float), float, float, float, float));

@@ -73,7 +73,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, bool fir
     		actor.enemy = Monster_FindTarget(actor);
     		actor.attack_range = 60;
     	}
-    	Monster_Attack_Melee(actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, true);
+    	Monster_Attack_Melee(actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
         weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
     }
 }
@@ -113,6 +113,8 @@ void M_Spider_Attack_Web_Touch()
 	M_Spider_Attack_Web_Explode();
 }
 
+void adaptor_think2use_hittype_splash();
+
 void M_Spider_Attack_Web()
 {SELFPARAM();
 	monster_makevectors(self.enemy);
@@ -128,7 +130,7 @@ void M_Spider_Attack_Web()
 	proj.bot_dodgerating = 0;
 	proj.nextthink = time + 5;
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = DEATH_MONSTER_SPIDER;
+	proj.projectiledeathtype = DEATH_MONSTER_SPIDER.m_id;
 	setorigin(proj, CENTER_OR_VIEWOFS(self));
 
 	//proj.glow_size = 50;
@@ -206,6 +208,7 @@ spawnfunc(monster_spider) { Monster_Spawn(MON_SPIDER.monsterid); }
 		}
 		#endif
 		#ifdef SVQC
+		spawnfunc(item_health_medium);
 		METHOD(Spider, mr_setup, bool(Spider thismon))
 		{
 			SELFPARAM();
