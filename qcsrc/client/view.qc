@@ -547,7 +547,7 @@ void HitSound()
 void HUD_Crosshair()
 {SELFPARAM();
 	static float rainbow_last_flicker;
-    static vector rainbow_prev_color;
+	static vector rainbow_prev_color;
 	entity e = self;
 	float f, i, j;
 	vector v;
@@ -1750,7 +1750,7 @@ void CSQC_UpdateView(float w, float h)
 
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
-		else
+		else if(myhealth_flash_temp > 0)
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 
 		if(autocvar_hud_postprocessing) // we still need to set this anyway even when chase_active is set, this way it doesn't get stuck on.
