@@ -602,7 +602,6 @@ spawnfunc(worldspawn)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	static_init_late();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -657,6 +656,7 @@ spawnfunc(worldspawn)
 	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	InitGameplayMode();
+	static_init_late();
 	readlevelcvars();
 	GrappleHookInit();
 
