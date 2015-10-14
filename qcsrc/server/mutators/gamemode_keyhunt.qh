@@ -14,8 +14,6 @@ typedef void(void) kh_Think_t;
 void kh_StartRound();
 void kh_Controller_SetThink(float t, kh_Think_t func);
 
-void kh_Key_DropAll(entity player, float suicide);
-
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
 

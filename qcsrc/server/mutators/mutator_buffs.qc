@@ -649,11 +649,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 			their_vel = closest.velocity;
 			their_ang = closest.angles;
 
-			if(closest.ballcarried)
-			if(g_keepaway) { ka_DropEvent(closest); }
-			else { DropBall(closest.ballcarried, closest.origin, closest.velocity);}
-			if(closest.flagcarried) { ctf_Handle_Throw(closest, world, DROP_THROW); }
-			if(closest.nade) { toss_nade(closest, '0 0 0', time + 0.05); }
+			Drop_Special_Items(closest);
 
 			MUTATOR_CALLHOOK(PortalTeleport, self); // initiate flag dropper
 

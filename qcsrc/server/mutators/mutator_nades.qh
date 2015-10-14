@@ -18,8 +18,6 @@
 .float stat_healing_orb_alpha;
 .float nade_show_particles;
 
-void toss_nade(entity e, vector _velocity, float _time);
-
 // Remove nades that are being thrown
 void(entity player) nades_Clear;
 
