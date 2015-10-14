@@ -1741,14 +1741,13 @@ void CSQC_UpdateView(float w, float h)
 			if(autocvar_cl_gentle_damage == 2)
 			{
 				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
-				{
 					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
-				}
 			}
 			else
 				myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
 
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+			if(myhealth_flash_temp > 0)
+				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
 		else if(myhealth_flash_temp > 0)
 			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
