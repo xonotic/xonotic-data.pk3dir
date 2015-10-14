@@ -2373,6 +2373,14 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ctf, DropSpecialItems)
+{
+	if(frag_target.flagcarried)
+		ctf_Handle_Throw(frag_target, world, DROP_THROW);
+
+	return false;
+}
+
 
 // ==========
 // Spawnfuncs

@@ -1320,6 +1320,12 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
+{
+	kh_Key_DropAll(frag_target, false);
+	return false;
+}
+
 REGISTER_MUTATOR(kh, g_keyhunt)
 {
 	ActivateTeamplay();

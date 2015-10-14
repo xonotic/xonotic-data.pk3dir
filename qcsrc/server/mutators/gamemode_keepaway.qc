@@ -406,6 +406,14 @@ MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
+{
+	if(frag_target.ballcarried)
+		ka_DropEvent(frag_target);
+
+	return false;
+}
+
 
 // ==============
 // Initialization

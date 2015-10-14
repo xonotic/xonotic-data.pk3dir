@@ -243,13 +243,8 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 	frost_target.frozen_by = freezefield.realowner;
 	Send_Effect(EFFECT_ELECTRO_IMPACT, frost_target.origin, '0 0 0', 1);
 	Freeze(frost_target, 1/freeze_time, 3, false);
-	if(frost_target.ballcarried)
-	if(g_keepaway) { ka_DropEvent(frost_target); }
-	else { DropBall(frost_target.ballcarried, frost_target.origin, frost_target.velocity);}
-	if(frost_target.flagcarried) { ctf_Handle_Throw(frost_target, world, DROP_THROW); }
-	if(frost_target.nade) { toss_nade(frost_target, '0 0 0', time + 0.05); }
 
-	kh_Key_DropAll(frost_target, false);
+	Drop_Special_Items(frost_target);
 }
 
 void nade_ice_think()
@@ -1156,6 +1151,14 @@ MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 	if(DIFF_TEAM(frag_attacker, self))
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 		nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor);
+
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
+{
+	if(frag_target.nade)
+		toss_nade(frag_target, '0 0 0', time + 0.05);
 
 	return false;
 }

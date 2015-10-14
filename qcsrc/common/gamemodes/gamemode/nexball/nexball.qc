@@ -1029,6 +1029,14 @@ MUTATOR_HOOKFUNCTION(nb, WantWeapon)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(nb, DropSpecialItems)
+{
+	if(frag_target.ballcarried)
+		DropBall(frag_target.ballcarried, frag_target.origin, frag_target.velocity);
+
+	return false;
+}
+
 REGISTER_MUTATOR(nb, g_nexball)
 {
 	ActivateTeamplay();
