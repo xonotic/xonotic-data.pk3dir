@@ -773,4 +773,15 @@ MUTATOR_HOOKABLE(DropSpecialItems, EV_DropSpecialItems);
 MUTATOR_HOOKABLE(AllowMobButcher, EV_NO_ARGS);
 
 MUTATOR_HOOKABLE(ReadLevelCvars, EV_NO_ARGS);
+
+#define EV_SendWaypoint(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, wp_sendto) \
+    /**/ i(int, wp_sendflags) \
+    /**/ i(int, wp_flag) \
+    /**/
+entity wp_sendto;
+int wp_sendflags;
+int wp_flag;
+MUTATOR_HOOKABLE(SendWaypoint, EV_SendWaypoint);
 #endif

@@ -2044,6 +2044,28 @@ MUTATOR_HOOKFUNCTION(ons, PlayHitsound)
 		|| (frag_victim.classname == "onslaught_controlpoint_icon" && !frag_victim.owner.isshielded);
 }
 
+MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
+{
+	if(wp_sendflags & 16)
+	{
+		if(self.owner.classname == "onslaught_controlpoint")
+		{
+			entity wp_owner = self.owner;
+			entity e = WaypointSprite_getviewentity(wp_sendto);
+			if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health) { wp_flag |= 2; }
+			if(!ons_ControlPoint_Attackable(wp_owner, e.team)) { wp_flag |= 2; }
+		}
+		if(self.owner.classname == "onslaught_generator")
+		{
+			entity wp_owner = self.owner;
+			if(wp_owner.isshielded && wp_owner.health >= wp_owner.max_health) { wp_flag |= 2; }
+			if(wp_owner.health <= 0) { wp_flag |= 2; }
+		}
+	}
+
+	return false;
+}
+
 // ==========
 // Spawnfuncs
 // ==========
