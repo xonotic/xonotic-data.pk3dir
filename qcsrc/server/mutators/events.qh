@@ -739,21 +739,6 @@ bool want_allguns;
 bool want_mutatorblocked;
 MUTATOR_HOOKABLE(WantWeapon, EV_WantWeapon);
 
-#define EV_SetPlayerFullStatus(i, o) \
-    /**/ i(entity, set_player) \
-    /**/ i(string, ret_string) \
-    /**/ o(string, ret_string) \
-    /**/
-entity set_player;
-MUTATOR_HOOKABLE(SetPlayerFullStatus, EV_SetPlayerFullStatus);
-
-#define EV_SetPlayerStatus(i, o) \
-    /**/ i(entity, set_player) \
-    /**/ i(string, ret_string) \
-    /**/ o(string, ret_string) \
-    /**/
-MUTATOR_HOOKABLE(SetPlayerStatus, EV_SetPlayerStatus);
-
 #define EV_AddPlayerScore(i, o) \
     /**/ i(int, score_field) \
     /**/ i(float, ret_float) \
@@ -761,4 +746,12 @@ MUTATOR_HOOKABLE(SetPlayerStatus, EV_SetPlayerStatus);
     /**/
 int score_field;
 MUTATOR_HOOKABLE(AddPlayerScore, EV_AddPlayerScore);
+
+#define EV_GetPlayerStatus(i, o) \
+    /**/ i(entity, set_player) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+entity set_player;
+MUTATOR_HOOKABLE(GetPlayerStatus, EV_GetPlayerStatus);
 #endif

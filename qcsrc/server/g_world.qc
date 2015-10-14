@@ -1425,7 +1425,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(IS_PLAYER(other) || other.caplayer == 1 || g_lms)
+			if(IS_PLAYER(other) || MUTATOR_CALLHOOK(GetPlayerStatus, other, s))
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");

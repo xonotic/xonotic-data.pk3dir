@@ -242,12 +242,7 @@ MUTATOR_HOOKFUNCTION(lms, WantWeapon)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms, SetPlayerFullStatus)
-{
-	return true;
-}
-
-MUTATOR_HOOKFUNCTION(lms, SetPlayerStatus)
+MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 {
 	return true;
 }

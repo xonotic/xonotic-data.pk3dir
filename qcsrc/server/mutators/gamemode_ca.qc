@@ -462,14 +462,7 @@ MUTATOR_HOOKFUNCTION(ca, WantWeapon)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ca, SetPlayerFullStatus)
-{
-	if(set_player.caplayer == 1)
-		return true;
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(ca, SetPlayerStatus)
+MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 {
 	if(set_player.caplayer == 1)
 		return true;
