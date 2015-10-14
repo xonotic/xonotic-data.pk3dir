@@ -14,6 +14,8 @@ bool SpawnPoint_Send(entity this, entity to, int sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
+	print("Sending spawnpoint\n");
+
 	WriteByte(MSG_ENTITY, self.team);
 	WriteShort(MSG_ENTITY, self.origin.x);
 	WriteShort(MSG_ENTITY, self.origin.y);
@@ -44,6 +46,17 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 	else { send = false; }
 
 	return send;
+}
+
+.vector spawnpoint_prevorigin;
+void spawnpoint_think()
+{
+	self.nextthink = time + 0.1;
+	if(self.origin != self.spawnpoint_prevorigin)
+	{
+		self.spawnpoint_prevorigin = self.origin;
+		self.SendFlags |= 1;
+	}
 }
 
 void spawnpoint_use()
@@ -91,6 +104,8 @@ void relocate_spawnpoint()
     }
 
     self.use = spawnpoint_use;
+    self.think = spawnpoint_think;
+    self.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
     self.team_saved = self.team;
     if (!self.cnt)
         self.cnt = 1;
