@@ -2,6 +2,23 @@
 
 #include "gamemode.qh"
 
+float autocvar_g_balance_keyhunt_damageforcescale;
+float autocvar_g_balance_keyhunt_delay_collect;
+float autocvar_g_balance_keyhunt_delay_return;
+float autocvar_g_balance_keyhunt_delay_round;
+float autocvar_g_balance_keyhunt_delay_tracking;
+float autocvar_g_balance_keyhunt_dropvelocity;
+float autocvar_g_balance_keyhunt_maxdist;
+float autocvar_g_balance_keyhunt_protecttime;
+
+int autocvar_g_balance_keyhunt_score_capture;
+int autocvar_g_balance_keyhunt_score_carrierfrag;
+int autocvar_g_balance_keyhunt_score_collect;
+int autocvar_g_balance_keyhunt_score_destroyed;
+int autocvar_g_balance_keyhunt_score_destroyed_ownfactor;
+int autocvar_g_balance_keyhunt_score_push;
+float autocvar_g_balance_keyhunt_throwvelocity;
+
 int autocvar_g_keyhunt_point_leadlimit;
 bool autocvar_g_keyhunt_team_spawns;
 #define autocvar_g_keyhunt_point_limit cvar("g_keyhunt_point_limit")
@@ -1323,6 +1340,12 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 {
 	kh_Key_DropAll(frag_target, false);
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(kh, reset_map_global)
+{
+	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
 	return false;
 }
 

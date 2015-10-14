@@ -27,6 +27,15 @@ float autocvar_g_nexball_viewmodel_scale;
 float autocvar_g_nexball_tackling;
 vector autocvar_g_nexball_viewmodel_offset;
 
+float autocvar_g_balance_nexball_primary_animtime;
+float autocvar_g_balance_nexball_primary_refire;
+float autocvar_g_balance_nexball_primary_speed;
+float autocvar_g_balance_nexball_secondary_animtime;
+float autocvar_g_balance_nexball_secondary_force;
+float autocvar_g_balance_nexball_secondary_lifetime;
+float autocvar_g_balance_nexball_secondary_refire;
+float autocvar_g_balance_nexball_secondary_speed;
+
 void basketball_touch();
 void football_touch();
 void ResetBall();
