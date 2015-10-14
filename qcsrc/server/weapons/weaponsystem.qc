@@ -14,14 +14,49 @@
 #include "../../common/weapons/all.qh"
 #include "../../lib/csqcmodel/sv_model.qh"
 
-/*
-===========================================================================
+vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
+{
+	switch(algn)
+	{
+		default: case 3: break; // right alignment
+		case 4: vecs.y = -vecs.y; break; // left
+		case 1: case 2: vecs.y = 0; vecs.z -= 2; break; // center
+	}
 
-  CLIENT WEAPONSYSTEM CODE
-  Bring back W_Weaponframe
+	return vecs;
+}
 
-===========================================================================
-*/
+vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn)
+{
+	string s;
+
+	if(visual)
+		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
+	else if(autocvar_g_shootfromeye)
+		vecs.y = vecs.z = 0;
+	else if(autocvar_g_shootfromcenter)
+	{
+		vecs.y = 0;
+		vecs.z -= 2;
+	}
+	else if((s = autocvar_g_shootfromfixedorigin) != "")
+	{
+		vector v = stov(s);
+		if(y_is_right) { v.y = -v.y; }
+		if(v.x != 0) { vecs.x = v.x; }
+		vecs.y = v.y;
+		vecs.z = v.z;
+	}
+	else // just do the same as top
+		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
+
+	return vecs;
+}
+
+vector shotorg_adjust(vector vecs, float y_is_right, float visual)
+{SELFPARAM();
+	return shotorg_adjust_values(vecs, y_is_right, visual, self.owner.cvar_cl_gunalign);
+}
 
 .int state;
 

@@ -14,6 +14,10 @@ const float WFRAME_FIRE2 = 1;
 const float WFRAME_IDLE = 2;
 const float WFRAME_RELOAD = 3;
 
+vector shotorg_adjust(vector vecs, float y_is_right, float visual);
+
+vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn);
+
 void CL_SpawnWeaponentity(entity e);
 
 vector CL_Weapon_GetShotOrg(float wpn);
