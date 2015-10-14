@@ -154,59 +154,56 @@ ACTIVATION FUNCTIONS
 =============================================================================
 */
 
-float door_check_keys(void)
-{SELFPARAM();
-	local entity door;
-
-	if (self.owner)
-		door = self.owner;
-	else
-		door = self;
+bool door_check_keys(entity door, entity player)
+{
+	if(door.owner)
+		door = door.owner;
 
 	// no key needed
-	if (!door.itemkeys)
+	if(!door.itemkeys)
 		return true;
 
 	// this door require a key
 	// only a player can have a key
-	if (!IS_PLAYER(other))
+	if(!IS_PLAYER(player))
 		return false;
 
-#ifdef SVQC
-	if (item_keys_usekey(door, other))
-	{
-		// some keys were used
-		if (other.key_door_messagetime <= time)
-		{
-			play2(other, SND(TALK));
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
-			other.key_door_messagetime = time + 2;
-		}
-	}
-	else
-	{
-		// no keys were used
-		if (other.key_door_messagetime <= time)
-		{
-			play2(other, SND(TALK));
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(door.itemkeys));
+	int valid = (door.itemkeys & player.itemkeys);
+	door.itemkeys &= ~valid; // only some of the needed keys were given
 
-			other.key_door_messagetime = time + 2;
-		}
-	}
-#endif
-
-	if (door.itemkeys)
+	if(!door.itemkeys)
 	{
 #ifdef SVQC
-		// door is now unlocked
-		play2(other, SND(TALK));
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_UNLOCKED);
+		play2(player, SND(TALK));
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_UNLOCKED);
 #endif
 		return true;
 	}
-	else
+
+	if(!valid)
+	{
+#ifdef SVQC
+		if(player.key_door_messagetime <= time)
+		{
+			play2(player, SND(TALK));
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(door.itemkeys));
+			player.key_door_messagetime = time + 2;
+		}
+#endif
 		return false;
+	}
+
+	// door needs keys the player doesn't have
+#ifdef SVQC
+	if(player.key_door_messagetime <= time)
+	{
+		play2(player, SND(TALK));
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
+		player.key_door_messagetime = time + 2;
+	}
+#endif
+
+	return false;
 }
 
 void door_fire()
@@ -444,7 +441,7 @@ void door_trigger_touch()
 		return;
 
 	// check if door is locked
-	if (!door_check_keys())
+	if (!door_check_keys(self, other))
 		return;
 
 	self.attack_finished_single = time + 1;
@@ -455,7 +452,7 @@ void door_trigger_touch()
 	door_use ();
 }
 
-void spawn_field(vector fmins, vector fmaxs)
+void door_spawnfield(vector fmins, vector fmaxs)
 {SELFPARAM();
 	entity	trigger;
 	vector	t1 = fmins, t2 = fmaxs;
@@ -531,7 +528,7 @@ void LinkDoors()
 		if (self.items)
 			return;
 
-		spawn_field(self.absmin, self.absmax);
+		door_spawnfield(self.absmin, self.absmax);
 
 		return;		// don't want to link this door
 	}
@@ -599,7 +596,7 @@ void LinkDoors()
 	if (self.items)
 		return;
 
-	spawn_field(cmins, cmaxs);
+	door_spawnfield(cmins, cmaxs);
 }
 
 #ifdef SVQC

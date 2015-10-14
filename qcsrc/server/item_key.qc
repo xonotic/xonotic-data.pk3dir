@@ -39,7 +39,7 @@ string item_keys_keylist(float keylist) {
 		return "";
 
 	// one key
-	if ((keylist & (keylist-1)) != 0)
+	if ((keylist & (keylist-1)) == 0)
 		return strcat("the ", item_keys_names[lowestbit(keylist)]);
 
 	string n = "";
@@ -82,8 +82,11 @@ void item_key_touch()
 
 	centerprint(other, self.message);
 
+	string oldmsg = self.message;
+	self.message = "";
 	activator = other;
 	SUB_UseTargets();
+	self.message = oldmsg;
 };
 
 /**

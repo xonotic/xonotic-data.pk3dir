@@ -2,19 +2,8 @@
 void ent_keylock();
 bool item_keys_usekey(entity l, entity p)
 {
-	float valid = l.itemkeys & p.itemkeys;
-
-	if (!valid) {
-		// other has none of the needed keys
-		return false;
-	} else if (l.itemkeys == valid) {
-		// ALL needed keys were given
-		l.itemkeys = 0;
-		return true;
-	} else {
-		// only some of the needed keys were given
-		l.itemkeys &= ~valid;
-		return true;
-	}
+	int valid = (l.itemkeys & p.itemkeys);
+	l.itemkeys &= ~valid; // only some of the needed keys were given
+	return valid != 0;
 }
 #endif
