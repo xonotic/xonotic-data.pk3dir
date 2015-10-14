@@ -692,4 +692,15 @@ enum {
     MUT_SPECPREV_RETURN, // return this flag to make the function return (handled entirely by mutator)
     MUT_SPECPREV_FOUND // return this flag to make the function continue without default functions (handled mostly by mutator)
 };
+
+/** called when player triggered kill (or is changing teams), return error to not do anything */
+#define EV_Bot_FixCount(i, o) \
+    /**/ i(int, bot_activerealplayers) \
+    /**/ o(int, bot_activerealplayers) \
+    /**/ i(int, bot_realplayers) \
+    /**/ o(int, bot_realplayers) \
+    /**/
+int bot_activerealplayers;
+int bot_realplayers;
+MUTATOR_HOOKABLE(Bot_FixCount, EV_Bot_FixCount);
 #endif

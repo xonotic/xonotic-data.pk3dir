@@ -200,6 +200,18 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
+MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
+{
+	entity head;
+	FOR_EACH_REALCLIENT(head)
+	{
+		++bot_activerealplayers;
+		++bot_realplayers;
+	}
+
+	return true;
+}
+
 // scoreboard stuff
 void lms_ScoreRules()
 {

@@ -572,12 +572,18 @@ float bot_fixcount()
 	activerealplayers = 0;
 	realplayers = 0;
 
-	FOR_EACH_REALCLIENT(head)
+	if(!MUTATOR_CALLHOOK(Bot_FixCount, activerealplayers, realplayers))
 	{
-		if(IS_PLAYER(head) || g_lms || head.caplayer == 1)
-			++activerealplayers;
-		++realplayers;
+		FOR_EACH_REALCLIENT(head)
+		{
+			if(IS_PLAYER(head))
+				++activerealplayers;
+			++realplayers;
+		}
 	}
+
+	activerealplayers = bot_activerealplayers;
+	realplayers = bot_realplayers;
 
 	// add/remove bots if needed to make sure there are at least
 	// minplayers+bot_number, or remove all bots if no one is playing

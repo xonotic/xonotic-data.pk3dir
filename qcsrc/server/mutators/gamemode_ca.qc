@@ -430,6 +430,19 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 	return MUT_SPECPREV_FOUND;
 }
 
+MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
+{
+	entity head;
+	FOR_EACH_REALCLIENT(head)
+	{
+		if(IS_PLAYER(head) || head.caplayer == 1)
+			++bot_activerealplayers;
+		++bot_realplayers;
+	}
+
+	return true;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = true;
