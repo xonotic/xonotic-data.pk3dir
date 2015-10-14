@@ -993,7 +993,7 @@ void WaypointSprite_Reset()
 {SELFPARAM();
     // if a WP wants to time out, let it time out immediately; other WPs ought to be reset/killed by their owners
 
-    if (self.fade_time) // there was there before: || g_keyhunt, do we really need this?
+    if (self.fade_time) // was there before: || g_keyhunt, do we really need this?
         WaypointSprite_Kill(self);
 }
 
