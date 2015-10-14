@@ -530,7 +530,7 @@ void havocbot_ast_reset_role(entity bot)
 }
 
 // mutator hooks
-MUTATOR_HOOKFUNCTION(assault, PlayerSpawn)
+MUTATOR_HOOKFUNCTION(as, PlayerSpawn)
 {SELFPARAM();
 	if(self.team == assault_attacker_team)
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
@@ -540,7 +540,7 @@ MUTATOR_HOOKFUNCTION(assault, PlayerSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(assault, TurretSpawn)
+MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 {SELFPARAM();
 	if(!self.team || self.team == MAX_SHOT_DISTANCE)
 		self.team = 5; // this gets reversed when match starts?
@@ -548,22 +548,29 @@ MUTATOR_HOOKFUNCTION(assault, TurretSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(assault, VehicleSpawn)
+MUTATOR_HOOKFUNCTION(as, VehicleSpawn)
 {SELFPARAM();
 	self.nextthink = time + 0.5;
 
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(assault, HavocBot_ChooseRole)
+MUTATOR_HOOKFUNCTION(as, HavocBot_ChooseRole)
 {SELFPARAM();
 	havocbot_ast_reset_role(self);
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(assault, PlayHitsound)
+MUTATOR_HOOKFUNCTION(as, PlayHitsound)
 {
 	return (frag_victim.classname == "func_assault_destructible");
+}
+
+MUTATOR_HOOKFUNCTION(as, GetTeamCount)
+{
+	// assault always has 2 teams
+	c1 = c2 = 0;
+	return true;
 }
 
 // scoreboard setup
@@ -575,7 +582,7 @@ void assault_ScoreRules()
 	ScoreRules_basics_end();
 }
 
-REGISTER_MUTATOR(assault, g_assault)
+REGISTER_MUTATOR(as, g_assault)
 {
 	ActivateTeamplay();
 	have_team_spawns = -1; // request team spawns

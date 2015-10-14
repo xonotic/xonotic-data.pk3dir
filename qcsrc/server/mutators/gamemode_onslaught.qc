@@ -1937,8 +1937,7 @@ MUTATOR_HOOKFUNCTION(ons, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(ons, GetTeamCount)
 {
 	// onslaught is special
-	entity tmp_entity;
-	for(tmp_entity = ons_worldgeneratorlist; tmp_entity; tmp_entity = tmp_entity.ons_worldgeneratornext)
+	for(entity tmp_entity = ons_worldgeneratorlist; tmp_entity; tmp_entity = tmp_entity.ons_worldgeneratornext)
 	{
 		switch(tmp_entity.team)
 		{

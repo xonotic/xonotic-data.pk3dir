@@ -1082,7 +1082,7 @@ MUTATOR_HOOKFUNCTION(kh, MatchEnd)
 MUTATOR_HOOKFUNCTION(kh, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	ret_float = kh_teams;
-	return 0;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh, SpectateCopy)

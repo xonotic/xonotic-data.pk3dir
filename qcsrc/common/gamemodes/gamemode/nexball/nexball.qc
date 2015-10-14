@@ -1017,6 +1017,12 @@ MUTATOR_HOOKFUNCTION(nb, FilterItem)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(nb, GetTeamCount)
+{
+	ret_string = "nexball_team";
+	return true;
+}
+
 REGISTER_MUTATOR(nb, g_nexball)
 {
 	ActivateTeamplay();

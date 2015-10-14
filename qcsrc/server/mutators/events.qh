@@ -122,6 +122,8 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 #define EV_GetTeamCount(i, o) \
     /**/ i(float, ret_float) \
     /**/ o(float, ret_float) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
     /**/
 float ret_float;
 MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);

@@ -417,8 +417,30 @@ void havocbot_role_dom()
 
 MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
 {
+	// fallback?
 	ret_float = domination_teams;
-	return 0;
+	ret_string = "dom_team";
+
+	entity head = find(world, classname, ret_string);
+	while(head)
+	{
+		if(head.netname != "")
+		{
+			switch(head.team)
+			{
+				case NUM_TEAM_1: c1 = 0; break;
+				case NUM_TEAM_2: c2 = 0; break;
+				case NUM_TEAM_3: c3 = 0; break;
+				case NUM_TEAM_4: c4 = 0; break;
+			}
+		}
+
+		head = find(head, classname, ret_string);
+	}
+
+	ret_string = string_null;
+
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(dom, reset_map_players)

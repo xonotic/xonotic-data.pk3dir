@@ -231,45 +231,19 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
 {SELFPARAM();
-	float dm;
-	entity head;
-	string teament_name;
+	int dm = 0;
 
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
-	teament_name = string_null;
-	if(g_onslaught)
-	{
-		// onslaught is special
-		head = findchain(classname, "onslaught_generator");
-		while (head)
-		{
-			if (head.team == NUM_TEAM_1) c1 = 0;
-			if (head.team == NUM_TEAM_2) c2 = 0;
-			if (head.team == NUM_TEAM_3) c3 = 0;
-			if (head.team == NUM_TEAM_4) c4 = 0;
-			head = head.chain;
-		}
-	}
-	else if(g_domination)
-		teament_name = "dom_team";
-	else if(g_ctf)
-		teament_name = "ctf_team";
-	else if(g_tdm)
-		teament_name = "tdm_team";
-	else if(g_nexball)
-		teament_name = "nexball_team";
-	else if(g_assault)
-		c1 = c2 = 0; // Assault always has 2 teams
-	else
-	{
-		// cover anything else by treating it like tdm with no teams spawned
-		dm = 2;
+	string teament_name = string_null;
 
-		MUTATOR_CALLHOOK(GetTeamCount, dm);
-		dm = ret_float;
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(GetTeamCount, dm, teament_name);
+	teament_name = ret_string;
+	dm = ret_float;
 
+	if(!mutator_returnvalue)
+	{
 		if(dm >= 4)
 			c1 = c2 = c3 = c4 = 0;
 		else if(dm >= 3)
@@ -281,20 +255,17 @@ void CheckAllowedTeams (entity for_whom)
 	// find out what teams are allowed if necessary
 	if(teament_name)
 	{
-		head = find(world, classname, teament_name);
+		entity head = find(world, classname, teament_name);
 		while(head)
 		{
-			if(!(g_domination && head.netname == ""))
+			switch(head.team)
 			{
-				if(head.team == NUM_TEAM_1)
-					c1 = 0;
-				else if(head.team == NUM_TEAM_2)
-					c2 = 0;
-				else if(head.team == NUM_TEAM_3)
-					c3 = 0;
-				else if(head.team == NUM_TEAM_4)
-					c4 = 0;
+				case NUM_TEAM_1: c1 = 0; break;
+				case NUM_TEAM_2: c2 = 0; break;
+				case NUM_TEAM_3: c3 = 0; break;
+				case NUM_TEAM_4: c4 = 0; break;
 			}
+
 			head = find(head, classname, teament_name);
 		}
 	}

@@ -255,7 +255,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 MUTATOR_HOOKFUNCTION(ca, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	ret_float = ca_teams;
-	return 0;
+	return false;
 }
 
 entity ca_LastPlayerForTeam()
