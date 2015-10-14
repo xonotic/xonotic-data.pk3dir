@@ -771,4 +771,6 @@ MUTATOR_HOOKABLE(DropSpecialItems, EV_DropSpecialItems);
  * return 1 to prevent spawning
  */
 MUTATOR_HOOKABLE(AllowMobButcher, EV_NO_ARGS);
+
+MUTATOR_HOOKABLE(ReadLevelCvars, EV_NO_ARGS);
 #endif

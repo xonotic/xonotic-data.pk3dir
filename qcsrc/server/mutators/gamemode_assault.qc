@@ -579,6 +579,13 @@ MUTATOR_HOOKFUNCTION(as, CheckRules_World)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
+{
+	// no assault warmups
+	warmup_stage = 0;
+	return false;
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {

@@ -322,6 +322,13 @@ MUTATOR_HOOKFUNCTION(rc, CheckRules_World)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(rc, ReadLevelCvars)
+{
+	if(g_race_qualifying == 2)
+		warmup_stage = 0;
+	return false;
+}
+
 void race_Initialize()
 {
 	race_ScoreRules();
