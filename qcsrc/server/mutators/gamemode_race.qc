@@ -69,6 +69,27 @@ void race_EventLog(string mode, entity actor) // use an alias for easy changing 
 
 MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 {SELFPARAM();
+	self.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
+	float f = floor(self.race_movetime_frac);
+	self.race_movetime_frac -= f;
+	self.race_movetime_count += f;
+	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+
+#ifdef SVQC
+	if(IS_PLAYER(self))
+	{
+		if (self.race_penalty)
+			if (time > self.race_penalty)
+				self.race_penalty = 0;
+		if(self.race_penalty)
+		{
+			self.velocity = '0 0 0';
+			self.movetype = MOVETYPE_NONE;
+			self.disableclientprediction = 2;
+		}
+	}
+#endif
+
 	// force kbd movement for fairness
 	float wishspeed;
 	vector wishvel;
@@ -260,6 +281,31 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 		}
 	}
 
+	if (!IS_OBSERVER(self))
+	{
+		if (vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed)
+		{
+			speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
+			speedaward_holder = self.netname;
+			speedaward_uid = self.crypto_idfp;
+			speedaward_lastupdate = time;
+		}
+		if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
+		{
+			string rr = RACE_RECORD;
+			race_send_speedaward(MSG_ALL);
+			speedaward_lastsent = speedaward_speed;
+			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
+			{
+				speedaward_alltimebest = speedaward_speed;
+				speedaward_alltimebest_holder = speedaward_holder;
+				speedaward_alltimebest_uid = speedaward_uid;
+				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"), ftos(speedaward_alltimebest));
+				db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"), speedaward_alltimebest_uid);
+				race_send_speedaward_alltimebest(MSG_ALL);
+			}
+		}
+	}
 	return false;
 }
 
