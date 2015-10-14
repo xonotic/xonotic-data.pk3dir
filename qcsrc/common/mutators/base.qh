@@ -119,7 +119,6 @@ ENDCLASS(CallbackChain)
 
 void RegisterHooks() {};
 void RegisterCallbacks() {};
-void RegisterMutators() {};
 
 #define _MUTATOR_HOOKABLE(id, ...) CallbackChain HOOK_##id; bool __Mutator_Send_##id(__VA_ARGS__)
 #define MUTATOR_HOOKABLE(id, params) \
@@ -155,13 +154,13 @@ CLASS(Mutator, Object)
     }
 ENDCLASS(Mutator)
 
-const int MAX_MUTATORS = 30;
-Mutator loaded_mutators[MAX_MUTATORS];
+REGISTRY(Mutators, BITS(6))
+Mutator loaded_mutators[Mutators_MAX];
 
 bool Mutator_Add(Mutator mut)
 {
     int j = -1;
-    for (int i = 0; i < MAX_MUTATORS; ++i) {
+    for (int i = 0; i < Mutators_MAX; ++i) {
         if (loaded_mutators[i] == mut)
             return true; // already added
         if (!(loaded_mutators[i]))
@@ -188,10 +187,10 @@ bool Mutator_Add(Mutator mut)
 void Mutator_Remove(Mutator mut)
 {
     int i;
-    for (i = 0; i < MAX_MUTATORS; ++i)
+    for (i = 0; i < Mutators_MAX; ++i)
         if (loaded_mutators[i] == mut)
             break;
-    if (i >= MAX_MUTATORS) {
+    if (i >= Mutators_MAX) {
         backtrace("WARNING: removing not-added mutator\n");
         return;
     }
@@ -203,9 +202,6 @@ void Mutator_Remove(Mutator mut)
     }
 }
 
-const int MUTATORS_MAX = MAX_MUTATORS;
-noref entity MUTATORS[MUTATORS_MAX], MUTATORS_first, MUTATORS_last;
-noref int MUTATORS_COUNT;
 #define REGISTER_MUTATOR(id, dependence) \
     bool MUTATORFUNCTION_##id##_hooks(int mode) { return = false; } \
     bool MUTATORFUNCTION_##id(int mode) { \
@@ -213,7 +209,7 @@ noref int MUTATORS_COUNT;
         bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(RegisterMutators, MUTATOR, MUTATORS, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    REGISTER(RegisterMutators, MUTATOR, Mutators, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
     [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
 
@@ -224,7 +220,7 @@ STATIC_INIT(Mutators) {
 }
 
 STATIC_INIT_LATE(Mutators) {
-    FOREACH(MUTATORS, it.mutatorcheck(), LAMBDA(Mutator_Add(it)));
+    FOREACH(Mutators, it.mutatorcheck(), LAMBDA(Mutator_Add(it)));
 }
 
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)
