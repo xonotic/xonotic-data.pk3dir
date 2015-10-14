@@ -149,7 +149,7 @@ int W_GetGunAlignment(entity player)
 #else
 	int gunalign = autocvar_cl_gunalign;
 #endif
-	if(gunalign != 1 && gunalign != 2 && gunalign != 4)
+	if(gunalign < 1 || gunalign > 4)
 		gunalign = 3; // default value
 	--gunalign;
 
