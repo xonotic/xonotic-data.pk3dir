@@ -203,13 +203,6 @@ void Mutator_Remove(Mutator mut)
     }
 }
 
-#define MUTATOR_DECLARATION(name) \
-    Mutator MUTATOR_##name
-#define MUTATOR_DEFINITION(name) \
-    bool MUTATORFUNCTION_##name(int mode); \
-    [[accumulate]] void RegisterMutators() { MUTATOR_##name = NEW(Mutator, #name, MUTATORFUNCTION_##name); } \
-    [[last]] bool MUTATORFUNCTION_##name(int mode)
-
 const int MUTATORS_MAX = MAX_MUTATORS;
 noref entity MUTATORS[MUTATORS_MAX], MUTATORS_first, MUTATORS_last;
 noref int MUTATORS_COUNT;
