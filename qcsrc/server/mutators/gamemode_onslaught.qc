@@ -1664,7 +1664,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(ons_ResetMap)
+MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 {SELFPARAM();
 	entity e;
 	FOR_EACH_PLAYER(e)
@@ -1676,13 +1676,19 @@ MUTATOR_HOOKFUNCTION(ons_ResetMap)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ons_RemovePlayer)
+MUTATOR_HOOKFUNCTION(ons, ClientDisconnect)
 {SELFPARAM();
 	self.ons_deathloc = '0 0 0';
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(ons, MakePlayerObserver)
+{SELFPARAM();
+	self.ons_deathloc = '0 0 0';
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 {SELFPARAM();
 	if(!round_handler_IsRoundStarted())
 	{
@@ -1808,7 +1814,7 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
     return false;
 }
 
-MUTATOR_HOOKFUNCTION(ons_PlayerDies)
+MUTATOR_HOOKFUNCTION(ons, PlayerDies)
 {SELFPARAM();
 	frag_target.ons_deathloc = frag_target.origin;
 	entity l;
@@ -1828,7 +1834,7 @@ MUTATOR_HOOKFUNCTION(ons_PlayerDies)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ons_MonsterThink)
+MUTATOR_HOOKFUNCTION(ons, MonsterMove)
 {SELFPARAM();
 	entity e = find(world, targetname, self.target);
 	if (e != world)
@@ -1858,7 +1864,7 @@ void ons_MonsterSpawn_Delayed()
 	remove(self);
 }
 
-MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
+MUTATOR_HOOKFUNCTION(ons, MonsterSpawn)
 {SELFPARAM();
 	entity e = spawn();
 	e.owner = self;
@@ -1889,7 +1895,7 @@ void ons_TurretSpawn_Delayed()
 	remove(self);
 }
 
-MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
+MUTATOR_HOOKFUNCTION(ons, TurretSpawn)
 {SELFPARAM();
 	entity e = spawn();
 	e.owner = self;
@@ -1898,13 +1904,13 @@ MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ons_BotRoles)
+MUTATOR_HOOKFUNCTION(ons, HavocBot_ChooseRole)
 {SELFPARAM();
 	havocbot_ons_reset_role(self);
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
+MUTATOR_HOOKFUNCTION(ons, GetTeamCount)
 {
 	// onslaught is special
 	entity tmp_entity;
@@ -1922,13 +1928,13 @@ MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ons_SpectateCopy)
+MUTATOR_HOOKFUNCTION(ons, SpectateCopy)
 {SELFPARAM();
 	self.ons_roundlost = other.ons_roundlost; // make spectators see it too
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
+MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
@@ -1992,7 +1998,7 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
+MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
@@ -2009,7 +2015,7 @@ MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ons_PlayHitsound)
+MUTATOR_HOOKFUNCTION(ons, PlayHitsound)
 {
 	return (frag_victim.classname == "onslaught_generator" && !frag_victim.isshielded)
 		|| (frag_victim.classname == "onslaught_controlpoint_icon" && !frag_victim.owner.isshielded);
@@ -2105,22 +2111,11 @@ void ons_Initialize()
 	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
 
-MUTATOR_DEFINITION(gamemode_onslaught)
+REGISTER_MUTATOR(ons, g_onslaught)
 {
-	MUTATOR_HOOK(reset_map_global, ons_ResetMap, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, ons_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, ons_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, ons_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ons_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterMove, ons_MonsterThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterSpawn, ons_MonsterSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(TurretSpawn, ons_TurretSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRole, ons_BotRoles, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, ons_GetTeamCount, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SpectateCopy, ons_SpectateCopy, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SV_ParseClientCommand, ons_SV_ParseClientCommand, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerUseKey, ons_PlayerUseKey, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayHitsound, ons_PlayHitsound, CBC_ORDER_ANY);
+	ActivateTeamplay();
+	SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);
+	have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD
 	{

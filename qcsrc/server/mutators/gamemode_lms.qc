@@ -25,7 +25,7 @@ float LMS_NewPlayerLives()
 }
 
 // mutator hooks
-MUTATOR_HOOKFUNCTION(lms_ResetMap)
+MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 {
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
@@ -33,7 +33,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetMap)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
+MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 {SELFPARAM();
 	entity e;
 	if(restart_mapalreadyrestarted || (time < game_starttime))
@@ -46,7 +46,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
+MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 {SELFPARAM();
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
@@ -59,31 +59,41 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms_PlayerDies)
+MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 {SELFPARAM();
 	self.respawn_flags |= RESPAWN_FORCE;
 
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
-{SELFPARAM();
+void lms_RemovePlayer(entity player)
+{
 	// Only if the player cannot play at all
-	if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
-		self.frags = FRAGS_SPECTATOR;
+	if(PlayerScore_Add(player, SP_LMS_RANK, 0) == 666)
+		player.frags = FRAGS_SPECTATOR;
 	else
-		self.frags = FRAGS_LMS_LOSER;
+		player.frags = FRAGS_LMS_LOSER;
 
-	if(self.killcount != -666)
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0 && self.lms_spectate_warning != 2)
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname);
+	if(player.killcount != -666)
+		if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, player.netname);
+}
 
+MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
+{SELFPARAM();
+	lms_RemovePlayer(self);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms_ClientConnect)
+MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
+{SELFPARAM();
+	lms_RemovePlayer(self);
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 {SELFPARAM();
 	self.classname = "player";
 	campaign_bots_may_start = 1;
@@ -97,7 +107,7 @@ MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms_PlayerThink)
+MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 {SELFPARAM();
 	if(self.deadflag == DEAD_DYING)
 		self.deadflag = DEAD_RESPAWNING;
@@ -105,20 +115,20 @@ MUTATOR_HOOKFUNCTION(lms_PlayerThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms_PlayerRegen)
+MUTATOR_HOOKFUNCTION(lms, PlayerRegen)
 {
 	if(autocvar_g_lms_regenerate)
 		return false;
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms_ForbidThrowing)
+MUTATOR_HOOKFUNCTION(lms, ForbidThrowCurrentWeapon)
 {
 	// forbode!
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
+MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 {
 	// remove a life
 	float tl;
@@ -139,7 +149,7 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms_SetStartItems)
+MUTATOR_HOOKFUNCTION(lms, SetStartItems)
 {
 	start_items &= ~IT_UNLIMITED_AMMO;
 	start_health       = warmup_start_health       = cvar("g_lms_start_health");
@@ -154,13 +164,13 @@ MUTATOR_HOOKFUNCTION(lms_SetStartItems)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(lms_KeepScore)
+MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 {
 	// don't clear player score
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms_FilterItem)
+MUTATOR_HOOKFUNCTION(lms, FilterItem)
 {SELFPARAM();
 	if(autocvar_g_lms_extra_lives)
 	if(self.itemdef == ITEM_HealthMega)
@@ -172,7 +182,7 @@ MUTATOR_HOOKFUNCTION(lms_FilterItem)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(lms_ItemTouch)
+MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 {SELFPARAM();
 	// give extra lives for mega health
 	if (self.items & ITEM_HealthMega.m_itemid)
@@ -201,22 +211,9 @@ void lms_Initialize()
 	lms_ScoreRules();
 }
 
-MUTATOR_DEFINITION(gamemode_lms)
+REGISTER_MUTATOR(lms, g_lms)
 {
-	MUTATOR_HOOK(reset_map_global, lms_ResetMap, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_players, lms_ResetPlayers, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PutClientInServer, lms_PlayerPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, lms_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, lms_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientConnect, lms_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, lms_PlayerThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerRegen, lms_PlayerRegen, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, lms_ForbidThrowing, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GiveFragsForKill, lms_GiveFragsForKill, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, lms_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidPlayerScore_Clear, lms_KeepScore, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, lms_FilterItem, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ItemTouch, lms_ItemTouch, CBC_ORDER_ANY);
+	SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, -1, -1);
 
 	MUTATOR_ONADD
 	{

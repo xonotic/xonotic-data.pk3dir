@@ -62,7 +62,7 @@ void race_EventLog(string mode, entity actor) // use an alias for easy changing 
 		GameLogEcho(strcat(":race:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
+MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 {SELFPARAM();
 	// force kbd movement for fairness
 	float wishspeed;
@@ -113,7 +113,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_ResetMap)
+MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 {
 	float s;
 
@@ -147,7 +147,7 @@ MUTATOR_HOOKFUNCTION(race_ResetMap)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(rc, PlayerPreThink)
 {SELFPARAM();
 	if(IS_SPEC(self) || IS_OBSERVER(self))
 	if(g_race_qualifying)
@@ -157,7 +157,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerPreThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_ClientConnect)
+MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 {SELFPARAM();
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
@@ -184,7 +184,7 @@ MUTATOR_HOOKFUNCTION(race_ClientConnect)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_MakePlayerObserver)
+MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 {SELFPARAM();
 	if(g_race_qualifying)
 	if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
@@ -198,7 +198,7 @@ MUTATOR_HOOKFUNCTION(race_MakePlayerObserver)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
 {SELFPARAM();
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
@@ -213,7 +213,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_PutClientInServer)
+MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 {SELFPARAM();
 	if(IS_PLAYER(self))
 	if(!gameover)
@@ -228,20 +228,20 @@ MUTATOR_HOOKFUNCTION(race_PutClientInServer)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_PlayerDies)
+MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 {SELFPARAM();
 	self.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(self);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_BotRoles)
+MUTATOR_HOOKFUNCTION(rc, HavocBot_ChooseRole)
 {SELFPARAM();
 	self.havocbot_role = havocbot_role_race;
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(race_PlayerPostThink)
+MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 {SELFPARAM();
 	if(self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
@@ -258,7 +258,7 @@ MUTATOR_HOOKFUNCTION(race_PlayerPostThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_ForbidClearPlayerScore)
+MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
 {
 	if(g_race_qualifying)
 		return true; // in qualifying, you don't lose score by observing
@@ -266,13 +266,13 @@ MUTATOR_HOOKFUNCTION(race_ForbidClearPlayerScore)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_GetTeamCount)
+MUTATOR_HOOKFUNCTION(rc, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	ret_float = race_teams;
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(race_CountFrags)
+MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
 {
 	// announce remaining frags if not in qualifying mode
 	if(!g_race_qualifying)
@@ -288,21 +288,53 @@ void race_Initialize()
 		warmup_stage = 0;
 }
 
-MUTATOR_DEFINITION(gamemode_race)
+void rc_SetLimits()
 {
-	MUTATOR_HOOK(PlayerPhysics, race_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_global, race_ResetMap, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, race_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientConnect, race_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, race_MakePlayerObserver, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, race_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PutClientInServer, race_PutClientInServer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, race_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRole, race_BotRoles, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetPressedKeys, race_PlayerPostThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidPlayerScore_Clear, race_ForbidClearPlayerScore, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, race_GetTeamCount, CBC_ORDER_ANY);
-	MUTATOR_HOOK(Scores_CountFragsRemaining, race_CountFrags, CBC_ORDER_ANY);
+	int fraglimit_override, leadlimit_override;
+	float timelimit_override, qualifying_override;
+
+	if(autocvar_g_race_teams)
+	{
+		ActivateTeamplay();
+		race_teams = bound(2, autocvar_g_race_teams, 4);
+		have_team_spawns = -1; // request team spawns
+	}
+	else
+		race_teams = 0;
+
+	qualifying_override = autocvar_g_race_qualifying_timelimit_override;
+	fraglimit_override = autocvar_g_race_laps_limit;
+	leadlimit_override = 0; // currently not supported by race
+	timelimit_override = -1; // use default if we don't set it below
+
+	// we need to find out the correct value for g_race_qualifying
+	float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
+
+	if(autocvar_g_campaign)
+	{
+		g_race_qualifying = 1;
+		independent_players = 1;
+	}
+	else if(!autocvar_g_campaign && want_qualifying)
+	{
+		g_race_qualifying = 2;
+		independent_players = 1;
+		race_fraglimit = (race_fraglimit >= 0) ? fraglimit_override : autocvar_fraglimit;
+		race_leadlimit = (race_leadlimit >= 0) ? leadlimit_override : autocvar_leadlimit;
+		race_timelimit = (race_timelimit >= 0) ? timelimit_override : autocvar_timelimit;
+		fraglimit_override = 0;
+		leadlimit_override = 0;
+		timelimit_override = autocvar_g_race_qualifying_timelimit;
+	}
+	else
+		g_race_qualifying = 0;
+
+	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
+}
+
+REGISTER_MUTATOR(rc, g_race)
+{
+	rc_SetLimits();
 
 	MUTATOR_ONADD
 	{

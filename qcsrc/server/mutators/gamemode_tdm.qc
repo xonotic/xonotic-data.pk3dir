@@ -43,22 +43,24 @@ void tdm_DelayedInit()
 	}
 }
 
-MUTATOR_HOOKFUNCTION(tdm_GetTeamCount)
+MUTATOR_HOOKFUNCTION(tdm, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	ret_string = "tdm_team";
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(tdm_CountFrags)
+MUTATOR_HOOKFUNCTION(tdm, Scores_CountFragsRemaining)
 {
 	// announce remaining frags
 	return true;
 }
 
-MUTATOR_DEFINITION(gamemode_tdm)
+REGISTER_MUTATOR(tdm, g_tdm)
 {
-	MUTATOR_HOOK(GetTeamCount, tdm_GetTeamCount, CBC_ORDER_ANY);
-	MUTATOR_HOOK(Scores_CountFragsRemaining, tdm_CountFrags, CBC_ORDER_ANY);
+	ActivateTeamplay();
+	SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, -1, -1);
+	if(autocvar_g_tdm_team_spawns)
+		have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD
 	{

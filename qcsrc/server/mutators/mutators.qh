@@ -1,21 +1,6 @@
 #ifndef MUTATORS_H
 #define MUTATORS_H
 
-MUTATOR_DECLARATION(gamemode_assault);
-MUTATOR_DECLARATION(gamemode_ca);
-MUTATOR_DECLARATION(gamemode_keyhunt);
-MUTATOR_DECLARATION(gamemode_freezetag);
-MUTATOR_DECLARATION(gamemode_keepaway);
-MUTATOR_DECLARATION(gamemode_ctf);
-MUTATOR_DECLARATION(gamemode_onslaught);
-MUTATOR_DECLARATION(gamemode_domination);
-MUTATOR_DECLARATION(gamemode_lms);
-MUTATOR_DECLARATION(gamemode_invasion);
-MUTATOR_DECLARATION(gamemode_cts);
-MUTATOR_DECLARATION(gamemode_race);
-MUTATOR_DECLARATION(gamemode_tdm);
-MUTATOR_DECLARATION(gamemode_deathmatch);
-
 MUTATOR_DECLARATION(mutator_dodging);
 MUTATOR_DECLARATION(mutator_invincibleprojectiles);
 MUTATOR_DECLARATION(mutator_new_toys);

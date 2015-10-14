@@ -1039,13 +1039,19 @@ void kh_finalize()
 
 // register this as a mutator
 
-MUTATOR_HOOKFUNCTION(kh_Key_DropAll)
+MUTATOR_HOOKFUNCTION(kh, ClientDisconnect)
 {SELFPARAM();
 	kh_Key_DropAll(self, true);
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(kh_PlayerDies)
+MUTATOR_HOOKFUNCTION(kh, MakePlayerObserver)
+{SELFPARAM();
+	kh_Key_DropAll(self, true);
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(kh, PlayerDies)
 {SELFPARAM();
 	if(self == other)
 		kh_Key_DropAll(self, true);
@@ -1056,31 +1062,31 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(kh_GiveFragsForKill)
+MUTATOR_HOOKFUNCTION(kh, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	frag_score = kh_HandleFrags(frag_attacker, frag_target, frag_score);
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(kh_finalize)
+MUTATOR_HOOKFUNCTION(kh, MatchEnd)
 {
 	kh_finalize();
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(kh_GetTeamCount)
+MUTATOR_HOOKFUNCTION(kh, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	ret_float = kh_teams;
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(kh_SpectateCopy)
+MUTATOR_HOOKFUNCTION(kh, SpectateCopy)
 {SELFPARAM();
 	self.kh_state = other.kh_state;
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
+MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE == 0)
 	{
@@ -1095,16 +1101,12 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 	return 0;
 }
 
-MUTATOR_DEFINITION(gamemode_keyhunt)
+REGISTER_MUTATOR(kh, g_keyhunt)
 {
-	MUTATOR_HOOK(MakePlayerObserver, kh_Key_DropAll, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, kh_Key_DropAll, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, kh_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GiveFragsForKill, kh_GiveFragsForKill, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(MatchEnd, kh_finalize, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, kh_GetTeamCount, CBC_ORDER_EXCLUSIVE);
-	MUTATOR_HOOK(SpectateCopy, kh_SpectateCopy, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerUseKey, kh_PlayerUseKey, CBC_ORDER_ANY);
+	ActivateTeamplay();
+	SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, -1, -1);
+	if(autocvar_g_keyhunt_team_spawns)
+		have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD
 	{

@@ -402,13 +402,13 @@ void havocbot_role_dom()
 	}
 }
 
-MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
+MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
 {
 	ret_float = domination_teams;
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(dom_ResetMap)
+MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 {SELFPARAM();
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	entity e;
@@ -423,7 +423,7 @@ MUTATOR_HOOKFUNCTION(dom_ResetMap)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(dom, PlayerSpawn)
 {SELFPARAM();
 	if(domination_roundbased)
 	if(!round_handler_IsRoundStarted())
@@ -433,13 +433,13 @@ MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(dom_ClientConnect)
+MUTATOR_HOOKFUNCTION(dom, ClientConnect)
 {SELFPARAM();
 	set_dom_state(self);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(dom_BotRoles)
+MUTATOR_HOOKFUNCTION(dom, HavocBot_ChooseRole)
 {SELFPARAM();
 	self.havocbot_role = havocbot_role_dom;
 	return true;
@@ -628,13 +628,15 @@ void dom_Initialize()
 }
 
 
-MUTATOR_DEFINITION(gamemode_domination)
+REGISTER_MUTATOR(dom, g_domination)
 {
-	MUTATOR_HOOK(GetTeamCount, dom_GetTeamCount, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_players, dom_ResetMap, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, dom_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientConnect, dom_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRole, dom_BotRoles, CBC_ORDER_ANY);
+	int fraglimit_override = autocvar_g_domination_point_limit;
+	if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
+		fraglimit_override = autocvar_g_domination_roundbased_point_limit;
+
+	ActivateTeamplay();
+	SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, -1, -1);
+	have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD
 	{

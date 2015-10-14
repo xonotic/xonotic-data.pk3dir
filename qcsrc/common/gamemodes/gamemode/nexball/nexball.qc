@@ -883,15 +883,31 @@ float ball_customize()
 		return true;
 	}
 
-MUTATOR_HOOKFUNCTION(nexball_BallDrop)
-{SELFPARAM();
-	if(self.ballcarried && g_nexball)
-		DropBall(self.ballcarried, self.origin, self.velocity);
-
-	return 0;
+void nb_DropBall(entity player)
+{
+	if(player.ballcarried && g_nexball)
+		DropBall(player.ballcarried, player.origin, player.velocity);
 }
 
-MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(nb, ClientDisconnect)
+{SELFPARAM();
+	nb_DropBall(self);
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(nb, PlayerDies)
+{SELFPARAM();
+	nb_DropBall(self);
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(nb, MakePlayerObserver)
+{SELFPARAM();
+	nb_DropBall(self);
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 {SELFPARAM();
 	makevectors(self.v_angle);
 	if(nexball_mode & NBM_BASKETBALL)
@@ -956,7 +972,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 {SELFPARAM();
 	self.weaponentity.weapons = '0 0 0';
 
@@ -971,7 +987,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 .float stat_sv_airspeedlimit_nonqw;
 .float stat_sv_maxspeed;
 
-MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
+MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
 {SELFPARAM();
 	if(self.ballcarried)
 	{
@@ -981,7 +997,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
+MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
 {SELFPARAM();
 	if(self.weapon == WEP_NEXBALL.m_id)
 		return true;
@@ -989,7 +1005,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nexball_FilterItem)
+MUTATOR_HOOKFUNCTION(nb, FilterItem)
 {SELFPARAM();
 	if(self.classname == "droppedweapon")
 	if(self.weapon == WEP_NEXBALL.m_id)
@@ -998,16 +1014,11 @@ MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 	return false;
 }
 
-MUTATOR_DEFINITION(gamemode_nexball)
+REGISTER_MUTATOR(nb, g_nexball)
 {
-	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, nexball_BallDrop, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, nexball_BallDrop, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPhysics, nexball_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nexball_ForbidThrowing, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, nexball_FilterItem, CBC_ORDER_ANY);
+	ActivateTeamplay();
+	SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, -1, -1);
+	have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD
 	{

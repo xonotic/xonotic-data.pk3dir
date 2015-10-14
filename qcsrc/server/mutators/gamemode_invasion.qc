@@ -263,7 +263,7 @@ void Invasion_RoundStart()
 	}
 }
 
-MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
+MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 {SELFPARAM();
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
@@ -285,7 +285,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
+MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 {SELFPARAM();
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
@@ -306,7 +306,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_OnEntityPreSpawn)
+MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
 {SELFPARAM();
 	if(startsWith(self.classname, "monster_"))
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
@@ -315,7 +315,7 @@ MUTATOR_HOOKFUNCTION(invasion_OnEntityPreSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_StartFrame)
+MUTATOR_HOOKFUNCTION(inv, SV_StartFrame)
 {
 	monsters_total = inv_maxspawned; // TODO: make sure numspawned never exceeds maxspawned
 	monsters_killed = inv_numkilled;
@@ -323,19 +323,19 @@ MUTATOR_HOOKFUNCTION(invasion_StartFrame)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_PlayerRegen)
+MUTATOR_HOOKFUNCTION(inv, PlayerRegen)
 {
 	// no regeneration in invasion
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
 {SELFPARAM();
 	self.bot_attack = false;
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_PlayerDamage)
+MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker != frag_target)
 	{
@@ -346,7 +346,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerDamage)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
+MUTATOR_HOOKFUNCTION(inv, SV_ParseClientCommand)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
@@ -367,7 +367,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
+MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
 {
 	if(!IS_MONSTER(checkentity))
 		return true;
@@ -375,28 +375,27 @@ MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
+MUTATOR_HOOKFUNCTION(inv, SetStartItems)
 {
 	start_health = 200;
 	start_armorvalue = 200;
-
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
+MUTATOR_HOOKFUNCTION(inv, AccuracyTargetValid)
 {
 	if(IS_MONSTER(frag_target))
 		return MUT_ACCADD_INVALID;
 	return MUT_ACCADD_INDIFFERENT;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_AllowMobSpawning)
+MUTATOR_HOOKFUNCTION(inv, AllowMobSpawning)
 {
 	// monster spawning disabled during an invasion
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_GetTeamCount)
+MUTATOR_HOOKFUNCTION(inv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	ret_float = invasion_teams;
 	return false;
@@ -453,21 +452,15 @@ void invasion_Initialize()
 	InitializeEntity(world, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
 
-MUTATOR_DEFINITION(gamemode_invasion)
+REGISTER_MUTATOR(inv, g_invasion)
 {
-	MUTATOR_HOOK(MonsterDies, invasion_MonsterDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterSpawn, invasion_MonsterSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, invasion_OnEntityPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SV_StartFrame, invasion_StartFrame, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerRegen, invasion_PlayerRegen, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, invasion_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SV_ParseClientCommand, invasion_PlayerCommand, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BotShouldAttack, invasion_BotShouldAttack, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, invasion_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(AccuracyTargetValid, invasion_AccuracyTargetValid, CBC_ORDER_ANY);
-	MUTATOR_HOOK(AllowMobSpawning, invasion_AllowMobSpawning, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, invasion_GetTeamCount, CBC_ORDER_ANY);
+	SetLimits(autocvar_g_invasion_point_limit, -1, -1, -1);
+	if(autocvar_g_invasion_teams >= 2)
+	{
+		ActivateTeamplay();
+		if(autocvar_g_invasion_team_spawns)
+			have_team_spawns = -1; // request team spawns
+	}
 
 	MUTATOR_ONADD
 	{

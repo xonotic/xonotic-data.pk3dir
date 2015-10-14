@@ -1889,7 +1889,7 @@ void havocbot_role_ctf_setrole(entity bot, int role)
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 {SELFPARAM();
 	entity flag;
 	int t = 0, t2 = 0, t3 = 0;
@@ -1941,7 +1941,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ctf, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
 {
 	if(frag_attacker.flagcarried) // if the attacker is a flagcarrier
 	{
@@ -1969,7 +1969,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
+MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 {
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
 	{
@@ -1987,30 +1987,38 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
+MUTATOR_HOOKFUNCTION(ctf, GiveFragsForKill)
 {
 	frag_score = 0;
 	return (autocvar_g_ctf_ignore_frags); // no frags counted in ctf if this is true
 }
 
-MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
-{SELFPARAM();
-	entity flag; // temporary entity for the search method
+void ctf_RemovePlayer(entity player)
+{
+	if(player.flagcarried)
+		{ ctf_Handle_Throw(player, world, DROP_NORMAL); }
 
-	if(self.flagcarried)
-		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
-
-	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+	for(entity flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
-		if(flag.pass_sender == self) { flag.pass_sender = world; }
-		if(flag.pass_target == self) { flag.pass_target = world; }
-		if(flag.ctf_dropper == self) { flag.ctf_dropper = world; }
+		if(flag.pass_sender == player) { flag.pass_sender = world; }
+		if(flag.pass_target == player) { flag.pass_target = world; }
+		if(flag.ctf_dropper == player) { flag.ctf_dropper = world; }
 	}
+}
 
+MUTATOR_HOOKFUNCTION(ctf, MakePlayerObserver)
+{SELFPARAM();
+	ctf_RemovePlayer(self);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
+MUTATOR_HOOKFUNCTION(ctf, ClientDisconnect)
+{SELFPARAM();
+	ctf_RemovePlayer(self);
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 {SELFPARAM();
 	if(self.flagcarried)
 	if(!autocvar_g_ctf_portalteleport)
@@ -2019,7 +2027,7 @@ MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
+MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
@@ -2112,7 +2120,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
+MUTATOR_HOOKFUNCTION(ctf, HelpMePing)
 {SELFPARAM();
 	if(self.wps_flagcarrier) // update the flagcarrier waypointsprite with "NEEDING HELP" notification
 	{
@@ -2128,7 +2136,7 @@ MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
+MUTATOR_HOOKFUNCTION(ctf, VehicleEnter)
 {
 	if(vh_player.flagcarried)
 	{
@@ -2151,7 +2159,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
+MUTATOR_HOOKFUNCTION(ctf, VehicleExit)
 {
 	if(vh_player.flagcarried)
 	{
@@ -2166,7 +2174,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
+MUTATOR_HOOKFUNCTION(ctf, AbortSpeedrun)
 {SELFPARAM();
 	if(self.flagcarried)
 	{
@@ -2178,7 +2186,7 @@ MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
+MUTATOR_HOOKFUNCTION(ctf, MatchEnd)
 {
 	entity flag; // temporary entity for the search method
 
@@ -2212,20 +2220,20 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_BotRoles)
+MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
 {SELFPARAM();
 	havocbot_ctf_reset_role(self);
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_GetTeamCount)
+MUTATOR_HOOKFUNCTION(ctf, GetTeamCount)
 {
 	//ret_float = ctf_teams;
 	ret_string = "ctf_team";
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ctf_SpectateCopy)
+MUTATOR_HOOKFUNCTION(ctf, SpectateCopy)
 {SELFPARAM();
 	self.ctf_flagstatus = other.ctf_flagstatus;
 	return false;
@@ -2427,24 +2435,11 @@ void ctf_Initialize()
 }
 
 
-MUTATOR_DEFINITION(gamemode_ctf)
+REGISTER_MUTATOR(ctf, g_ctf)
 {
-	MUTATOR_HOOK(MakePlayerObserver, ctf_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, ctf_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ctf_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MatchEnd, ctf_MatchEnd, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PortalTeleport, ctf_PortalTeleport, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GiveFragsForKill, ctf_GiveFragsForKill, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, ctf_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerUseKey, ctf_PlayerUseKey, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HelpMePing, ctf_HelpMePing, CBC_ORDER_ANY);
-	MUTATOR_HOOK(VehicleEnter, ctf_VehicleEnter, CBC_ORDER_ANY);
-	MUTATOR_HOOK(VehicleExit, ctf_VehicleExit, CBC_ORDER_ANY);
-	MUTATOR_HOOK(AbortSpeedrun, ctf_AbortSpeedrun, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRole, ctf_BotRoles, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, ctf_GetTeamCount, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SpectateCopy, ctf_SpectateCopy, CBC_ORDER_ANY);
+	ActivateTeamplay();
+	SetLimits(autocvar_capturelimit_override, -1, autocvar_captureleadlimit_override, -1);
+	have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD
 	{

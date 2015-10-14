@@ -1,15 +1,13 @@
 #include "gamemode.qh"
 
-MUTATOR_HOOKFUNCTION(dm_CountFrags)
+MUTATOR_HOOKFUNCTION(dm, Scores_CountFragsRemaining)
 {
 	// announce remaining frags
 	return true;
 }
 
-MUTATOR_DEFINITION(gamemode_deathmatch)
+REGISTER_MUTATOR(dm, g_dm)
 {
-	MUTATOR_HOOK(Scores_CountFragsRemaining, dm_CountFrags, CBC_ORDER_ANY);
-
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1

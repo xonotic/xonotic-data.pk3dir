@@ -255,7 +255,7 @@ void havocbot_role_ka_collector()
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(ka_Scoring)
+MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 {SELFPARAM();
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
@@ -276,13 +276,13 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(ka_GiveFragsForKill)
+MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
 {
 	frag_score = 0; // no frags counted in keepaway
 	return 1; // you deceptive little bugger ;3 This needs to be true in order for this function to even count.
 }
 
-MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
 {SELFPARAM();
 	// clear the item used for the ball in keepaway
 	self.items &= ~IT_KEY1;
@@ -294,7 +294,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(ka_PlayerUseKey)
+MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE == 0)
 	if(self.ballcarried)
@@ -305,7 +305,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerUseKey)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values that are applied to players in g_damage.qc
+MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
 {
 	if(frag_attacker.ballcarried) // if the attacker is a ballcarrier
 	{
@@ -336,13 +336,19 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values th
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
+MUTATOR_HOOKFUNCTION(ka, ClientDisconnect)
 {SELFPARAM();
 	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has left the match, drop it
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
+MUTATOR_HOOKFUNCTION(ka, MakePlayerObserver)
+{SELFPARAM();
+	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has left the match, drop it
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
 {SELFPARAM();
 	// In the future this hook is supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
 	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player()
@@ -358,7 +364,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 .float stat_sv_airspeedlimit_nonqw;
 .float stat_sv_maxspeed;
 
-MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
+MUTATOR_HOOKFUNCTION(ka, PlayerPhysics)
 {SELFPARAM();
 	if(self.ballcarried)
 	{
@@ -368,7 +374,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
+MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)
 {SELFPARAM();
 	// if neither player has ball then don't attack unless the ball is on the ground
 	if(!checkentity.ballcarried && !self.ballcarried && ka_ball.owner)
@@ -376,7 +382,7 @@ MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ka_BotRoles)
+MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
 {SELFPARAM();
 	if (self.ballcarried)
 		self.havocbot_role = havocbot_role_ka_carrier;
@@ -435,20 +441,8 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 }
 
 
-MUTATOR_DEFINITION(gamemode_keepaway)
+REGISTER_MUTATOR(ka, g_keepaway)
 {
-	MUTATOR_HOOK(MakePlayerObserver, ka_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, ka_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ka_Scoring, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GiveFragsForKill, ka_GiveFragsForKill, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, ka_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPhysics, ka_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BotShouldAttack, ka_BotShouldAttack, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRole, ka_BotRoles, CBC_ORDER_ANY);
-
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1

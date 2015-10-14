@@ -55,7 +55,7 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
+MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 {SELFPARAM();
 	// force kbd movement for fairness
 	float wishspeed;
@@ -106,7 +106,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_ResetMap)
+MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 {
 	float s;
 
@@ -140,7 +140,7 @@ MUTATOR_HOOKFUNCTION(cts_ResetMap)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(cts, PlayerPreThink)
 {SELFPARAM();
 	if(IS_SPEC(self) || IS_OBSERVER(self))
 	if(g_race_qualifying)
@@ -150,7 +150,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPreThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_ClientConnect)
+MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 {SELFPARAM();
 	race_PreparePlayer();
 	self.race_checkpoint = -1;
@@ -177,7 +177,7 @@ MUTATOR_HOOKFUNCTION(cts_ClientConnect)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_MakePlayerObserver)
+MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 {SELFPARAM();
 	if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
 		self.frags = FRAGS_LMS_LOSER;
@@ -190,7 +190,7 @@ MUTATOR_HOOKFUNCTION(cts_MakePlayerObserver)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(cts, PlayerSpawn)
 {SELFPARAM();
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
@@ -205,7 +205,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_PutClientInServer)
+MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 {SELFPARAM();
 	if(IS_PLAYER(self))
 	if(!gameover)
@@ -220,20 +220,20 @@ MUTATOR_HOOKFUNCTION(cts_PutClientInServer)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_PlayerDies)
+MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 {SELFPARAM();
 	self.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(self);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_BotRoles)
+MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)
 {SELFPARAM();
 	self.havocbot_role = havocbot_role_cts;
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(cts_PlayerPostThink)
+MUTATOR_HOOKFUNCTION(cts, GetPressedKeys)
 {SELFPARAM();
 	if(self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
@@ -250,13 +250,13 @@ MUTATOR_HOOKFUNCTION(cts_PlayerPostThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_ForbidThrowing)
+MUTATOR_HOOKFUNCTION(cts, ForbidThrowCurrentWeapon)
 {
 	// no weapon dropping in CTS
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(cts_FilterItem)
+MUTATOR_HOOKFUNCTION(cts, FilterItem)
 {SELFPARAM();
 	if(self.classname == "droppedweapon")
 		return true;
@@ -264,7 +264,7 @@ MUTATOR_HOOKFUNCTION(cts_FilterItem)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_PlayerDamage)
+MUTATOR_HOOKFUNCTION(cts, PlayerDamage_Calculate)
 {
 	if(frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id)
 	if(!autocvar_g_cts_selfdamage)
@@ -273,12 +273,12 @@ MUTATOR_HOOKFUNCTION(cts_PlayerDamage)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(cts_ForbidClearPlayerScore)
+MUTATOR_HOOKFUNCTION(cts, ForbidPlayerScore_Clear)
 {
 	return true; // in CTS, you don't lose score by observing
 }
 
-MUTATOR_HOOKFUNCTION(cts_SetMods)
+MUTATOR_HOOKFUNCTION(cts, SetModname)
 {
 	g_cloaked = 1; // always enable cloak in CTS
 
@@ -290,23 +290,11 @@ void cts_Initialize()
 	cts_ScoreRules();
 }
 
-MUTATOR_DEFINITION(gamemode_cts)
+REGISTER_MUTATOR(cts, g_cts)
 {
-	MUTATOR_HOOK(PlayerPhysics, cts_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_global, cts_ResetMap, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, cts_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientConnect, cts_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, cts_MakePlayerObserver, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, cts_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PutClientInServer, cts_PutClientInServer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, cts_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRole, cts_BotRoles, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetPressedKeys, cts_PlayerPostThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, cts_ForbidThrowing, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, cts_FilterItem, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, cts_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidPlayerScore_Clear, cts_ForbidClearPlayerScore, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, cts_SetMods, CBC_ORDER_ANY);
+	g_race_qualifying = 1;
+	independent_players = 1;
+	SetLimits(0, 0, 0, -1);
 
 	MUTATOR_ONADD
 	{

@@ -161,7 +161,7 @@ float ca_isEliminated(entity e)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {SELFPARAM();
 	self.caplayer = 1;
 	if(!warmup_stage)
@@ -169,7 +169,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
+MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 {SELFPARAM();
 	if(!allowed_to_spawn)
 	if(IS_PLAYER(self)) // this is true even when player is trying to join
@@ -186,7 +186,7 @@ MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_reset_map_players)
+MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {SELFPARAM();
 	entity e;
 	FOR_EACH_CLIENT(e)
@@ -208,7 +208,7 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_ClientConnect)
+MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {SELFPARAM();
 	self.classname = "observer";
 	return 1;
@@ -220,7 +220,7 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_global)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_GetTeamCount)
+MUTATOR_HOOKFUNCTION(ca, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	ret_float = ca_teams;
 	return 0;
@@ -253,7 +253,7 @@ void ca_LastPlayerForTeam_Notify()
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ca_PlayerDies)
+MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 {SELFPARAM();
 	ca_LastPlayerForTeam_Notify();
 	if(!allowed_to_spawn)
@@ -263,19 +263,19 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDies)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_ClientDisconnect)
+MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {SELFPARAM();
 	if(self.caplayer == 1)
 		ca_LastPlayerForTeam_Notify();
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_ForbidPlayerScore_Clear)
+MUTATOR_HOOKFUNCTION(ca, ForbidPlayerScore_Clear)
 {
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_MakePlayerObserver)
+MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {SELFPARAM();
 	if(self.caplayer == 1)
 		ca_LastPlayerForTeam_Notify();
@@ -288,18 +288,18 @@ MUTATOR_HOOKFUNCTION(ca_MakePlayerObserver)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_ForbidThrowCurrentWeapon)
+MUTATOR_HOOKFUNCTION(ca, ForbidThrowCurrentWeapon)
 {
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_GiveFragsForKill)
+MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	frag_score = 0; // score will be given to the winner team when the round ends
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_SetStartItems)
+MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 {
 	start_items &= ~IT_UNLIMITED_AMMO;
 	start_health       = warmup_start_health       = cvar("g_lms_start_health");
@@ -314,7 +314,7 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
+MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_target))
 	if(frag_target.deadflag == DEAD_NO)
@@ -326,7 +326,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ca_FilterItem)
+MUTATOR_HOOKFUNCTION(ca, FilterItem)
 {SELFPARAM();
 	if(autocvar_g_powerups <= 0)
 	if(self.flags & FL_POWERUP)
@@ -338,7 +338,7 @@ MUTATOR_HOOKFUNCTION(ca_FilterItem)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
+MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 {
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
@@ -348,13 +348,13 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ca_PlayerRegen)
+MUTATOR_HOOKFUNCTION(ca, PlayerRegen)
 {
 	// no regeneration in CA
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ca_CountFrags)
+MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
 {
 	// announce remaining frags
 	return true;
@@ -382,26 +382,13 @@ void ca_Initialize()
 	EliminatedPlayers_Init(ca_isEliminated);
 }
 
-MUTATOR_DEFINITION(gamemode_ca)
+REGISTER_MUTATOR(ca, g_ca)
 {
-	MUTATOR_HOOK(PlayerSpawn, ca_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PutClientInServer, ca_PutClientInServer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, ca_MakePlayerObserver, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientConnect, ca_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_global, ca_reset_map_global, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_players, ca_reset_map_players, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, ca_GetTeamCount, CBC_ORDER_EXCLUSIVE);
-	MUTATOR_HOOK(PlayerDies, ca_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, ca_ClientDisconnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidPlayerScore_Clear, ca_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(SetStartItems, ca_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, ca_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, ca_FilterItem, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerRegen, ca_PlayerRegen, CBC_ORDER_ANY);
-	MUTATOR_HOOK(Scores_CountFragsRemaining, ca_CountFrags, CBC_ORDER_ANY);
+	ActivateTeamplay();
+	SetLimits(autocvar_g_ca_point_limit, autocvar_g_ca_point_leadlimit, -1, -1);
+
+	if(autocvar_g_ca_team_spawns)
+		have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD
 	{

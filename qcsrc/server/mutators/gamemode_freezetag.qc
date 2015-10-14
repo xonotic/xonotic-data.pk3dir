@@ -317,17 +317,28 @@ void havocbot_role_ft_freeing()
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
+void ft_RemovePlayer()
 {SELFPARAM();
 	self.health = 0; // neccessary to update correctly alive stats
 	if(!self.frozen)
 		freezetag_LastPlayerForTeam_Notify();
 	freezetag_Unfreeze(world);
 	freezetag_count_alive_players();
+}
+
+MUTATOR_HOOKFUNCTION(ft, ClientDisconnect)
+{SELFPARAM();
+	ft_RemovePlayer();
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
+MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
+{SELFPARAM();
+	ft_RemovePlayer();
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 {SELFPARAM();
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
@@ -381,7 +392,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 {SELFPARAM();
 	if(self.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return 1; // do nothing, round is starting right now
@@ -404,7 +415,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
+MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 {SELFPARAM();
 	entity e;
 	FOR_EACH_PLAYER(e)
@@ -419,13 +430,13 @@ MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
+MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	frag_score = 0; // no frags counted in Freeze Tag
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 {SELFPARAM();
 	float n;
 
@@ -525,7 +536,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_SetStartItems)
+MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 {
 	start_items &= ~IT_UNLIMITED_AMMO;
 	//start_health       = warmup_start_health       = cvar("g_lms_start_health");
@@ -540,7 +551,7 @@ MUTATOR_HOOKFUNCTION(freezetag_SetStartItems)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
+MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 {SELFPARAM();
 	if (!self.deadflag)
 	{
@@ -553,7 +564,7 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
+MUTATOR_HOOKFUNCTION(ft, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
 	ret_float = freezetag_teams;
 	return false;
@@ -578,18 +589,13 @@ void freezetag_Initialize()
 	EliminatedPlayers_Init(freezetag_isEliminated);
 }
 
-MUTATOR_DEFINITION(gamemode_freezetag)
+REGISTER_MUTATOR(ft, g_freezetag)
 {
-	MUTATOR_HOOK(MakePlayerObserver, freezetag_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, freezetag_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, freezetag_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, freezetag_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_players, freezetag_reset_map_players, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GiveFragsForKill, freezetag_GiveFragsForKill, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(SetStartItems, freezetag_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRole, freezetag_BotRoles, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
+	ActivateTeamplay();
+	SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, -1, -1);
+
+	if(autocvar_g_freezetag_team_spawns)
+		have_team_spawns = -1; // request team spawns
 
 	MUTATOR_ONADD
 	{
