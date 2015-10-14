@@ -1,7 +1,9 @@
 
 #include "mutator.qh"
 
-MUTATOR_HOOKFUNCTION(melee_SetStartItems)
+REGISTER_MUTATOR(melee_only, cvar("g_melee_only") && !cvar("g_instagib") && !g_nexball);
+
+MUTATOR_HOOKFUNCTION(melee_only, SetStartItems)
 {
 	start_ammo_shells = warmup_start_ammo_shells = 0;
 	start_weapons = warmup_start_weapons = WEPSET(SHOTGUN);
@@ -9,12 +11,12 @@ MUTATOR_HOOKFUNCTION(melee_SetStartItems)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(melee_ForbidThrowing)
+MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
 {
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(melee_FilterItem)
+MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
 {SELFPARAM();
 	switch (self.items)
 	{
@@ -26,25 +28,14 @@ MUTATOR_HOOKFUNCTION(melee_FilterItem)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(melee_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":MeleeOnly");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(melee_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Melee Only Arena");
-	return false;
-}
-
-MUTATOR_DEFINITION(mutator_melee_only)
-{
-	MUTATOR_HOOK(SetStartItems, melee_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, melee_ForbidThrowing, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, melee_FilterItem, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, melee_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, melee_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
 	return false;
 }

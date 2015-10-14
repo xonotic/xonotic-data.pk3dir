@@ -10,6 +10,21 @@
 #include "../../common/monsters/sv_monsters.qh"
 #include "../g_subs.qh"
 
+REGISTER_MUTATOR(nades, cvar("g_nades"))
+{
+	MUTATOR_ONADD
+	{
+		addstat(STAT_NADE_TIMER, AS_FLOAT, nade_timer);
+		addstat(STAT_NADE_BONUS, AS_FLOAT, bonus_nades);
+		addstat(STAT_NADE_BONUS_TYPE, AS_INT, nade_type);
+		addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
+		addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
+		addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
+	}
+
+	return false;
+}
+
 .float nade_time_primed;
 
 .entity nade_spawnloc;
@@ -906,7 +921,7 @@ void nades_Clear(entity player)
 	player.nade_timer = 0;
 }
 
-MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
+MUTATOR_HOOKFUNCTION(nades, VehicleEnter)
 {
 	if(vh_player.nade)
 		toss_nade(vh_player, '0 0 100', max(vh_player.nade.wait, time + 0.05));
@@ -951,7 +966,7 @@ CLASS(NadeOffhand, OffhandWeapon)
 ENDCLASS(NadeOffhand)
 NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOffhand); }
 
-MUTATOR_HOOKFUNCTION(nades_CheckThrow)
+MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
 	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
 		nades_CheckThrow();
@@ -960,7 +975,7 @@ MUTATOR_HOOKFUNCTION(nades_CheckThrow)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {SELFPARAM();
 	if (!IS_PLAYER(self)) { return false; }
 
@@ -1052,7 +1067,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 {SELFPARAM();
 	if(autocvar_g_nades_spawn)
 		self.nade_refire = time + autocvar_g_spawnshieldtime;
@@ -1081,7 +1096,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_PlayerDies)
+MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 {
 	if(frag_target.nade)
 	if(!frag_target.frozen || !autocvar_g_freezetag_revive_nade)
@@ -1115,7 +1130,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
+MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 {
 	if(frag_target.frozen)
 	if(autocvar_g_freezetag_revive_nade)
@@ -1135,7 +1150,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_MonsterDies)
+MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 {SELFPARAM();
 	if(IS_PLAYER(frag_attacker))
 	if(DIFF_TEAM(frag_attacker, self))
@@ -1145,14 +1160,18 @@ MUTATOR_HOOKFUNCTION(nades_MonsterDies)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
+bool nades_RemovePlayer()
 {SELFPARAM();
 	nades_Clear(self);
 	nades_RemoveBonus(self);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
+MUTATOR_HOOKFUNCTION(nades, MakePlayerObserver) { nades_RemovePlayer(); }
+MUTATOR_HOOKFUNCTION(nades, ClientDisconnect) { nades_RemovePlayer(); }
+MUTATOR_HOOKFUNCTION(nades, reset_map_global) { nades_RemovePlayer(); }
+
+MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 {SELFPARAM();
 	self.nade_timer = other.nade_timer;
 	self.nade_type = other.nade_type;
@@ -1164,7 +1183,7 @@ MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_GetCvars)
+MUTATOR_HOOKFUNCTION(nades, GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nade_type, "cl_nade_type");
 	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_pokenade_type, "cl_pokenade_type");
@@ -1172,49 +1191,14 @@ MUTATOR_HOOKFUNCTION(nades_GetCvars)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Nades");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Nades");
-	return false;
-}
-
-void nades_Initialize()
-{
-	addstat(STAT_NADE_TIMER, AS_FLOAT, nade_timer);
-	addstat(STAT_NADE_BONUS, AS_FLOAT, bonus_nades);
-	addstat(STAT_NADE_BONUS_TYPE, AS_INT, nade_type);
-	addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
-	addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
-	addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
-}
-
-MUTATOR_DEFINITION(mutator_nades)
-{
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nades_CheckThrow, CBC_ORDER_LAST);
-	MUTATOR_HOOK(VehicleEnter, nades_VehicleEnter, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, nades_PlayerDies, CBC_ORDER_LAST);
-	MUTATOR_HOOK(PlayerDamage_Calculate, nades_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterDies, nades_MonsterDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SpectateCopy, nades_SpectateCopy, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetCvars, nades_GetCvars, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_global, nades_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, nades_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, nades_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
-	MUTATOR_ONADD
-	{
-		nades_Initialize();
-	}
-
 	return false;
 }

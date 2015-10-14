@@ -3,17 +3,19 @@
 
 #include "../campaign.qh"
 
+REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
+
 .float campcheck_nextcheck;
 .float campcheck_traveled_distance;
 
-MUTATOR_HOOKFUNCTION(campcheck_PlayerDies)
+MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
 {SELFPARAM();
 	Kill_Notification(NOTIF_ONE, self, MSG_CENTER_CPID, CPID_CAMPCHECK);
 
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(campcheck_PlayerDamage)
+MUTATOR_HOOKFUNCTION(campcheck, PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_target))
 	if(IS_PLAYER(frag_attacker))
@@ -26,7 +28,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerDamage)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
+MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 {SELFPARAM();
 	if(!gameover)
 	if(!warmup_stage) // don't consider it camping during warmup?
@@ -72,7 +74,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(campcheck_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(campcheck, PlayerSpawn)
 {SELFPARAM();
 	self.campcheck_nextcheck = time + autocvar_g_campcheck_interval * 2;
 	self.campcheck_traveled_distance = 0;
@@ -80,19 +82,8 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(campcheck_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(campcheck, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":CampCheck");
-	return false;
-}
-
-MUTATOR_DEFINITION(mutator_campcheck)
-{
-	MUTATOR_HOOK(PlayerDies, campcheck_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, campcheck_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, campcheck_PlayerThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, campcheck_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, campcheck_BuildMutatorsString, CBC_ORDER_ANY);
-
 	return false;
 }

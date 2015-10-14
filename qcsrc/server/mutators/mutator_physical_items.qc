@@ -1,6 +1,32 @@
 
 #include "mutator.qh"
 
+REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
+{
+	// check if we have a physics engine
+	MUTATOR_ONADD
+	{
+		if (!(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")))
+		{
+			LOG_TRACE("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
+			return -1;
+		}
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This cannot be removed at runtime\n");
+		return -1;
+	}
+
+	return 0;
+}
+
 .vector spawn_origin, spawn_angles;
 
 void physical_item_think()
@@ -60,7 +86,7 @@ void physical_item_damage(entity inflictor, entity attacker, float damage, int d
 	}
 }
 
-MUTATOR_HOOKFUNCTION(item_spawning)
+MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 {SELFPARAM();
 	if(self.owner == world && autocvar_g_physical_items <= 1)
 		return false;
@@ -111,32 +137,4 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	self.SendEntity = func_null;
 
 	return false;
-}
-
-MUTATOR_DEFINITION(mutator_physical_items)
-{
-	MUTATOR_HOOK(Item_Spawn, item_spawning, CBC_ORDER_ANY);
-
-	// check if we have a physics engine
-	MUTATOR_ONADD
-	{
-		if (!(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")))
-		{
-			LOG_TRACE("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
-			return -1;
-		}
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// nothing to roll back
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This cannot be removed at runtime\n");
-		return -1;
-	}
-
-	return 0;
 }

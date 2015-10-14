@@ -1,12 +1,12 @@
 #include "../../common/deathtypes/all.qh"
 #include "../g_hook.qh"
 
-REGISTER_MUTATOR(bh, cvar("g_breakablehook"));
+REGISTER_MUTATOR(breakablehook, cvar("g_breakablehook"));
 
 bool autocvar_g_breakablehook; // allow toggling mid match?
 bool autocvar_g_breakablehook_owner;
 
-MUTATOR_HOOKFUNCTION(bh, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(breakablehook, PlayerDamage_Calculate)
 {
 	if(frag_target.classname == "grapplinghook")
 	{

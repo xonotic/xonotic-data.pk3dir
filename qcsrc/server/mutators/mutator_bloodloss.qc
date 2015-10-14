@@ -1,9 +1,11 @@
 
 #include "mutator.qh"
 
+REGISTER_MUTATOR(bloodloss, cvar("g_bloodloss"));
+
 .float bloodloss_timer;
 
-MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
+MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 {SELFPARAM();
 	if(IS_PLAYER(self))
 	if(self.health <= autocvar_g_bloodloss && self.deadflag == DEAD_NO)
@@ -23,7 +25,7 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(bloodloss_PlayerJump)
+MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
 {SELFPARAM();
 	if(self.health <= autocvar_g_bloodloss)
 		return true;
@@ -31,24 +33,14 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerJump)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(bloodloss_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":bloodloss");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(bloodloss_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Blood loss");
-	return false;
-}
-
-MUTATOR_DEFINITION(mutator_bloodloss)
-{
-	MUTATOR_HOOK(PlayerPreThink, bloodloss_PlayerThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerJump, bloodloss_PlayerJump, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, bloodloss_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, bloodloss_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
 	return false;
 }

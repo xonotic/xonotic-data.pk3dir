@@ -302,12 +302,8 @@ float sv_autotaunt;
 float sv_taunt;
 
 string GetGametype(); // g_world.qc
-void mutators_add(); // mutators.qc
 void readlevelcvars(void)
 {
-	// load mutators
-	mutators_add();
-
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 

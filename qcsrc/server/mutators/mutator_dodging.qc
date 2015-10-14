@@ -50,6 +50,35 @@
 .float stat_dodging_up_speed;
 .float stat_dodging_wall;
 
+REGISTER_MUTATOR(dodging, cvar("g_dodging"))
+{
+	// this just turns on the cvar.
+	MUTATOR_ONADD
+	{
+		g_dodging = cvar("g_dodging");
+		addstat(STAT_DODGING, AS_INT, stat_dodging);
+		addstat(STAT_DODGING_DELAY, AS_FLOAT, stat_dodging_delay);
+		addstat(STAT_DODGING_TIMEOUT, AS_FLOAT, cvar_cl_dodging_timeout); // we stat this, so it is updated on the client when updated on server (otherwise, chaos)
+		addstat(STAT_DODGING_FROZEN_NO_DOUBLETAP, AS_INT, stat_dodging_frozen_nodoubletap);
+		addstat(STAT_DODGING_HORIZ_SPEED_FROZEN, AS_FLOAT, stat_dodging_horiz_speed_frozen);
+		addstat(STAT_DODGING_FROZEN, AS_INT, stat_dodging_frozen);
+		addstat(STAT_DODGING_HORIZ_SPEED, AS_FLOAT, stat_dodging_horiz_speed);
+		addstat(STAT_DODGING_HEIGHT_THRESHOLD, AS_FLOAT, stat_dodging_height_threshold);
+		addstat(STAT_DODGING_DISTANCE_THRESHOLD, AS_FLOAT, stat_dodging_distance_threshold);
+		addstat(STAT_DODGING_RAMP_TIME, AS_FLOAT, stat_dodging_ramp_time);
+		addstat(STAT_DODGING_UP_SPEED, AS_FLOAT, stat_dodging_up_speed);
+		addstat(STAT_DODGING_WALL, AS_FLOAT, stat_dodging_wall);
+	}
+
+	// this just turns off the cvar.
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		g_dodging = 0;
+	}
+
+	return false;
+}
+
 #endif
 
 // set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
@@ -94,22 +123,6 @@ void dodging_UpdateStats()
 	self.stat_dodging_ramp_time = PHYS_DODGING_RAMP_TIME;
 	self.stat_dodging_up_speed = PHYS_DODGING_UP_SPEED;
 	self.stat_dodging_wall = PHYS_DODGING_WALL;
-}
-
-void dodging_Initialize()
-{
-	addstat(STAT_DODGING, AS_INT, stat_dodging);
-	addstat(STAT_DODGING_DELAY, AS_FLOAT, stat_dodging_delay);
-	addstat(STAT_DODGING_TIMEOUT, AS_FLOAT, cvar_cl_dodging_timeout); // we stat this, so it is updated on the client when updated on server (otherwise, chaos)
-	addstat(STAT_DODGING_FROZEN_NO_DOUBLETAP, AS_INT, stat_dodging_frozen_nodoubletap);
-	addstat(STAT_DODGING_HORIZ_SPEED_FROZEN, AS_FLOAT, stat_dodging_horiz_speed_frozen);
-	addstat(STAT_DODGING_FROZEN, AS_INT, stat_dodging_frozen);
-	addstat(STAT_DODGING_HORIZ_SPEED, AS_FLOAT, stat_dodging_horiz_speed);
-	addstat(STAT_DODGING_HEIGHT_THRESHOLD, AS_FLOAT, stat_dodging_height_threshold);
-	addstat(STAT_DODGING_DISTANCE_THRESHOLD, AS_FLOAT, stat_dodging_distance_threshold);
-	addstat(STAT_DODGING_RAMP_TIME, AS_FLOAT, stat_dodging_ramp_time);
-	addstat(STAT_DODGING_UP_SPEED, AS_FLOAT, stat_dodging_up_speed);
-	addstat(STAT_DODGING_WALL, AS_FLOAT, stat_dodging_wall);
 }
 
 #endif
@@ -277,13 +290,13 @@ void PM_dodging()
 
 #ifdef SVQC
 
-MUTATOR_HOOKFUNCTION(dodging_GetCvars)
+MUTATOR_HOOKFUNCTION(dodging, GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics)
+MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 {
 	// print("dodging_PlayerPhysics\n");
 	PM_dodging();
@@ -291,38 +304,11 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys)
+MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
 	PM_dodging_checkpressedkeys();
 
 	return false;
 }
 
-MUTATOR_DEFINITION(mutator_dodging)
-{
-	// we need to be called before GetPressedKey does its thing so we can
-	// detect state changes and therefore dodging actions..
-	MUTATOR_HOOK(GetPressedKeys, dodging_GetPressedKeys, CBC_ORDER_ANY);
-
-	// in the physics hook we actually implement the dodge..
-	MUTATOR_HOOK(PlayerPhysics, dodging_PlayerPhysics, CBC_ORDER_ANY);
-
-	// get timeout information from the client, so the client can configure it..
-	MUTATOR_HOOK(GetCvars, dodging_GetCvars, CBC_ORDER_ANY);
-
-	// this just turns on the cvar.
-	MUTATOR_ONADD
-	{
-		g_dodging = cvar("g_dodging");
-		dodging_Initialize();
-	}
-
-	// this just turns off the cvar.
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		g_dodging = 0;
-	}
-
-	return false;
-}
 #endif

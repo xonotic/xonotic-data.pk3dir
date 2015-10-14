@@ -69,6 +69,37 @@ roflsound "New toys, new toys!" sound.
 
 */
 
+bool nt_IsNewToy(int w);
+
+REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overkill"))
+{
+	MUTATOR_ONADD
+	{
+		if(time > 1) // game loads at time 1
+			error("This cannot be added at runtime\n");
+
+		// mark the guns as ok to use by e.g. impulse 99
+		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
+			if(nt_IsNewToy(i))
+				get_weaponinfo(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
+			if(nt_IsNewToy(i))
+				get_weaponinfo(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This cannot be removed at runtime\n");
+		return -1;
+	}
+
+	return 0;
+}
+
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
@@ -77,13 +108,13 @@ const float NT_AUTOREPLACE_NEVER = 0;
 const float NT_AUTOREPLACE_ALWAYS = 1;
 const float NT_AUTOREPLACE_RANDOM = 2;
 
-MUTATOR_HOOKFUNCTION(nt_SetModname)
+MUTATOR_HOOKFUNCTION(nt, SetModname)
 {
 	modname = "NewToys";
 	return 0;
 }
 
-float nt_IsNewToy(float w)
+bool nt_IsNewToy(int w)
 {
 	switch(w)
 	{
@@ -123,7 +154,7 @@ string nt_GetReplacement(string w, float m)
 	return s;
 }
 
-MUTATOR_HOOKFUNCTION(nt_SetStartItems)
+MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 {
 	// rearrange start_weapon_default
 	// apply those bits that are set by start_weapon_defaultmask
@@ -167,7 +198,7 @@ MUTATOR_HOOKFUNCTION(nt_SetStartItems)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
+MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
 {SELFPARAM();
 	// otherwise, we do replace
 	if(self.new_toys)
@@ -187,47 +218,11 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nt_FilterItem)
+MUTATOR_HOOKFUNCTION(nt, FilterItem)
 {SELFPARAM();
 	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound) {
 		self.item_pickupsound = string_null;
 		self.item_pickupsound_ent = SND_WEAPONPICKUP_NEW_TOYS;
 	}
-	return 0;
-}
-
-MUTATOR_DEFINITION(mutator_new_toys)
-{
-	MUTATOR_HOOK(SetModname, nt_SetModname, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, nt_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetWeaponreplace, nt_SetWeaponreplace, CBC_ORDER_LAST);
-	MUTATOR_HOOK(FilterItem, nt_FilterItem, CBC_ORDER_ANY);
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This cannot be added at runtime\n");
-
-		// mark the guns as ok to use by e.g. impulse 99
-		float i;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(nt_IsNewToy(i))
-				get_weaponinfo(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		float i;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(nt_IsNewToy(i))
-				get_weaponinfo(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This cannot be removed at runtime\n");
-		return -1;
-	}
-
 	return 0;
 }

@@ -1,7 +1,8 @@
-
 #include "mutator.qh"
 
-MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
+REGISTER_MUTATOR(vampire, cvar("g_vampire") && !cvar("g_instagib"));
+
+MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
 {
 	if(time >= frag_target.spawnshieldtime)
 	if(frag_target != frag_attacker)
@@ -14,23 +15,14 @@ MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(vampire_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(vampire, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Vampire");
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(vampire_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(vampire, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Vampire");
-	return 0;
-}
-
-MUTATOR_DEFINITION(mutator_vampire)
-{
-	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, vampire_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, vampire_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, vampire_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
 	return 0;
 }
