@@ -784,4 +784,19 @@ entity wp_sendto;
 int wp_sendflags;
 int wp_flag;
 MUTATOR_HOOKABLE(SendWaypoint, EV_SendWaypoint);
+
+#define EV_TurretValidateTarget(i, o) \
+    /**/ i(entity, turret_this) \
+    /**/ i(entity, turret_target) \
+    /**/ i(int, turret_vflags) \
+    /**/
+entity turret_this;
+entity turret_target;
+int turret_vflags;
+MUTATOR_HOOKABLE(TurretValidateTarget, EV_TurretValidateTarget);
+
+#define EV_TurretThink(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(TurretThink, EV_TurretThink);
 #endif

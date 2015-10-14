@@ -2066,6 +2066,34 @@ MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(ons, TurretValidateTarget)
+{
+	if(substring(turret_target.classname, 0, 10) == "onslaught_") // don't attack onslaught targets, that's the player's job!
+	{
+		ret_float = -3;
+		return true;
+	}
+
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ons, TurretThink)
+{
+	// ONS uses somewhat backwards linking.
+	if(self.target)
+	{
+		entity e = find(world, targetname, self.target);
+		if (e != world)
+			self.team = e.team;
+	}
+
+	if(self.team != self.tur_head.team)
+		turret_respawn();
+
+	return false;
+}
+
+
 // ==========
 // Spawnfuncs
 // ==========
