@@ -208,7 +208,7 @@ void PutObserverInServer (void)
 	self.frags = FRAGS_SPECTATOR;
 	self.bot_attack = false;
 
-	MUTATOR_CALLHOOK(MakePlayerObserver);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
 
@@ -226,7 +226,7 @@ void PutObserverInServer (void)
 
 	WaypointSprite_PlayerDead();
 
-	if (!g_ca)  // don't reset teams when moving a ca player to the spectators
+	if(!mutator_returnvalue)  // mutator prevents resetting teams
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
 	if(self.killcount != -666)

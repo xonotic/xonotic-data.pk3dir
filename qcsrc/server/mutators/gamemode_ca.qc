@@ -317,7 +317,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 		self.frags = FRAGS_LMS_LOSER;
 	if(!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ForbidThrowCurrentWeapon)

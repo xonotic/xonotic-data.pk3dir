@@ -349,7 +349,7 @@ MUTATOR_HOOKFUNCTION(ft, ClientDisconnect)
 MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 {SELFPARAM();
 	ft_RemovePlayer();
-	return 1;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerDies)
