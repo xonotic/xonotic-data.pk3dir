@@ -573,6 +573,12 @@ MUTATOR_HOOKFUNCTION(as, GetTeamCount)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(as, CheckRules_World)
+{
+	ret_float = WinningCondition_Assault();
+	return true;
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {

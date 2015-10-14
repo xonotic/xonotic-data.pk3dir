@@ -311,6 +311,17 @@ MUTATOR_HOOKFUNCTION(rc, FixClientCvars)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(rc, CheckRules_World)
+{
+	if(g_race_qualifying == 2 && checkrules_timelimit >= 0)
+	{
+		ret_float = WinningCondition_QualifyingThenRace(checkrules_fraglimit);
+		return true;
+	}
+
+	return false;
+}
+
 void race_Initialize()
 {
 	race_ScoreRules();

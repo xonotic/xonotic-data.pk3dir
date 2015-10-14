@@ -2084,35 +2084,13 @@ void CheckRules_World()
 		return;
 	}
 
-	float checkrules_status;
-	checkrules_status = WinningCondition_RanOutOfSpawns();
+	int checkrules_status = WinningCondition_RanOutOfSpawns();
 	if(checkrules_status == WINNING_YES)
-	{
 		bprint("Hey! Someone ran out of spawns!\n");
-	}
-	else if(g_race && !g_race_qualifying && timelimit >= 0)
-	{
-		checkrules_status = WinningCondition_Race(fraglimit);
-		//print("WC_RACE yields ", ftos(checkrules_status), "\n");
-	}
-	else if(g_race && g_race_qualifying == 2 && timelimit >= 0)
-	{
-		checkrules_status = WinningCondition_QualifyingThenRace(fraglimit);
-		//print("WC_QUALIFYING_THEN_RACE yields ", ftos(checkrules_status), "\n");
-	}
-	else if(g_assault)
-	{
-		checkrules_status = WinningCondition_Assault(); // TODO remove this?
-	}
-	else if(g_lms)
-	{
-		checkrules_status = WinningCondition_LMS();
-	}
-	else
-	{
+	else if(!MUTATOR_CALLHOOK(CheckRules_World, checkrules_status, timelimit, fraglimit))
 		checkrules_status = WinningCondition_Scores(fraglimit, leadlimit);
-		//print("WC_SCORES yields ", ftos(checkrules_status), "\n");
-	}
+
+	checkrules_status = ret_float;
 
 	if(checkrules_status == WINNING_STARTSUDDENDEATHOVERTIME)
 	{

@@ -230,6 +230,12 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
+MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
+{
+	ret_float = WinningCondition_LMS();
+	return true;
+}
+
 // scoreboard stuff
 void lms_ScoreRules()
 {
