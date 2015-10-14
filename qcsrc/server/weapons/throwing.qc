@@ -133,27 +133,29 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	}
 }
 
-float W_IsWeaponThrowable(float w)
+bool W_IsWeaponThrowable(bool w)
 {
+	if (MUTATOR_CALLHOOK(ForbidDropCurrentWeapon))
+		return false;
 	if (!autocvar_g_pickup_items)
-		return 0;
+		return false;
 	if (g_weaponarena)
 		return 0;
 	if (g_cts)
 		return 0;
-    if(w == 0)
-        return 0;
+    if(w == WEP_Null.m_id)
+        return false;
 
 	#if 0
 	if(start_weapons & WepSet_FromWeapon(w))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
-			return 0;
+			return false;
 		if((get_weaponinfo(w)).ammo_field == ammo_none)
-			return 0;
+			return false;
 	}
-	return 1;
+	return true;
 	#else
 	return (get_weaponinfo(w)).weaponthrowable;
 	#endif
@@ -162,13 +164,10 @@ float W_IsWeaponThrowable(float w)
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 {SELFPARAM();
-	float w;
-	string a;
-
-	w = self.weapon;
-	if (w == 0)
+	int w = self.weapon;
+	if (w == WEP_Null.m_id)
 		return; // just in case
-	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon) || MUTATOR_CALLHOOK(ForbidDropCurrentWeapon))
+	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
@@ -182,7 +181,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	self.weapons &= ~WepSet_FromWeapon(w);
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
-	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
+	string a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 
 	if(!a) return;
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
@@ -191,6 +190,6 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 void SpawnThrownWeapon(vector org, float w)
 {SELFPARAM();
 	if(self.weapons & WepSet_FromWeapon(self.weapon))
-		if(!MUTATOR_CALLHOOK(ForbidDropCurrentWeapon) && W_IsWeaponThrowable(self.weapon))
+		if(W_IsWeaponThrowable(self.weapon))
 			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');
 }
