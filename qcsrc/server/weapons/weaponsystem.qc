@@ -26,7 +26,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
 	return vecs;
 }
 
-vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn)
+vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
 {
 	string s;
 
@@ -53,9 +53,9 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	return vecs;
 }
 
-vector shotorg_adjust(vector vecs, float y_is_right, float visual)
-{SELFPARAM();
-	return shotorg_adjust_values(vecs, y_is_right, visual, self.owner.cvar_cl_gunalign);
+vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn)
+{
+	return shotorg_adjust_values(vecs, y_is_right, visual, algn);
 }
 
 .int state;
@@ -289,8 +289,8 @@ void CL_WeaponEntity_SetModel(string name)
 	{
 		vector v0;
 		v0 = self.movedir;
-		self.movedir = shotorg_adjust(v0, false, false);
-		self.view_ofs = shotorg_adjust(v0, false, true) - v0;
+		self.movedir = shotorg_adjust(v0, false, false, self.owner.cvar_cl_gunalign);
+		self.view_ofs = shotorg_adjust(v0, false, true, self.owner.cvar_cl_gunalign) - v0;
 	}
 	self.owner.stat_shotorg = compressShotOrigin(self.movedir);
 	self.movedir = decompressShotOrigin(self.owner.stat_shotorg); // make them match perfectly
