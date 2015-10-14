@@ -19,7 +19,6 @@
 
 #include "../bot/havocbot/havocbot.qh"
 #include "../bot/havocbot/roles.qh"
-#include "../bot/havocbot/role_keyhunt.qh"
 
 #include "../command/vote.qh"
 #include "../command/common.qh"
