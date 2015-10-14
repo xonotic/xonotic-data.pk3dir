@@ -15,9 +15,14 @@ const int SP_CTF_DROPS = 7;
 const int SP_CTF_FCKILLS = 8;
 const int SP_CTF_RETURNS = 9;
 
+CLASS(Flag, Pickup)
+    ATTRIB(Flag, m_mins, vector, PL_MIN_CONST + '0 0 -13')
+    ATTRIB(Flag, m_maxs, vector, PL_MAX_CONST + '0 0 -13')
+ENDCLASS(Flag)
+Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
+void ctf_FlagTouch() { SELFPARAM(); ITEM_HANDLE(Pickup, CTF_FLAG, this, other); }
+
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
-#define FLAG_MIN (PL_MIN_CONST + '0 0 -13')
-#define FLAG_MAX (PL_MAX_CONST + '0 0 -13')
 
 const float FLAG_SCALE = 0.6;
 

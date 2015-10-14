@@ -766,11 +766,11 @@ void ctf_FlagThink()
 			ctf_CaptureShield_Update(tmp_entity, 1); // release shield only
 
 	// sanity checks
-	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
+	if(self.mins != CTF_FLAG.m_mins || self.maxs != CTF_FLAG.m_maxs) { // reset the flag boundaries in case it got squished
 		LOG_TRACE("wtf the flag got squashed?\n");
-		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
+		tracebox(self.origin, CTF_FLAG.m_mins, CTF_FLAG.m_maxs, self.origin, MOVE_NOMONSTERS, self);
 		if(!trace_startsolid || self.noalign) // can we resize it without getting stuck?
-			setsize(self, FLAG_MIN, FLAG_MAX); }
+			setsize(self, CTF_FLAG.m_mins, CTF_FLAG.m_maxs); }
 
 	switch(self.ctf_status) // reset flag angles in case warpzones adjust it
 	{
@@ -901,10 +901,6 @@ void ctf_FlagThink()
 	}
 }
 
-CLASS(Flag, Pickup)
-ENDCLASS(Flag)
-Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
-void ctf_FlagTouch() { SELFPARAM(); ITEM_HANDLE(Pickup, CTF_FLAG, this, other); }
 METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 {
 	return = false;
@@ -1154,7 +1150,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
-	setsize(flag, FLAG_MIN, FLAG_MAX);
+	setsize(flag, CTF_FLAG.m_mins, CTF_FLAG.m_maxs);
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
 
 	if(autocvar_g_ctf_flag_glowtrails)
