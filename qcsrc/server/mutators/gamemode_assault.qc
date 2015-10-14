@@ -586,6 +586,20 @@ MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
+{
+	switch(self.classname)
+	{
+		case "info_player_team1":
+		case "info_player_team2":
+		case "info_player_team3":
+		case "info_player_team4":
+			return true;
+	}
+
+	return false;
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {
