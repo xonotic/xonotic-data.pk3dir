@@ -1566,40 +1566,25 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn)
 {
 	string s;
-	vector v;
 
-	if (autocvar_g_shootfromeye)
-	{
-		if (visual)
-		{
-			if (autocvar_g_shootfromclient) { vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn); }
-			else { vecs.y = 0; vecs.z -= 2; }
-		}
-		else
-		{
-			vecs.y = 0;
-			vecs.z = 0;
-		}
-	}
-	else if (autocvar_g_shootfromcenter)
+	if(visual)
+		vecs = shotorg_adjustfromclient(vecs, y_is_right, true, algn);
+	else if(autocvar_g_shootfromeye)
+		vecs.y = vecs.z = 0;
+	else if(autocvar_g_shootfromcenter)
 	{
 		vecs.y = 0;
 		vecs.z -= 2;
 	}
-	else if ((s = autocvar_g_shootfromfixedorigin) != "")
+	else if((s = autocvar_g_shootfromfixedorigin) != "")
 	{
-		v = stov(s);
-		if (y_is_right)
-			v.y = -v.y;
-		if (v.x != 0)
-			vecs.x = v.x;
+		vector v = stov(s);
+		if(y_is_right) { v.y = -v.y; }
+		if(v.x != 0) { vecs.x = v.x; }
 		vecs.y = v.y;
 		vecs.z = v.z;
 	}
-	else if (autocvar_g_shootfromclient)
-	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn);
-	}
+
 	return vecs;
 }
 
