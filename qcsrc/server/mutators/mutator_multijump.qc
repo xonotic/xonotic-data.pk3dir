@@ -138,7 +138,16 @@ bool PM_multijump_checkjump()
 }
 
 #ifdef SVQC
-MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
+REGISTER_MUTATOR(multijump, cvar("g_multijump"))
+{
+	MUTATOR_ONADD
+	{
+		multijump_AddStats();
+	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 {
 	multijump_UpdateStats();
 	PM_multijump();
@@ -146,42 +155,27 @@ MUTATOR_HOOKFUNCTION(multijump_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(multijump_PlayerJump)
+MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 {
 	return PM_multijump_checkjump();
 }
 
-MUTATOR_HOOKFUNCTION(multijump_GetCvars)
+MUTATOR_HOOKFUNCTION(multijump, GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_multijump, "cl_multijump");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(multijump_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":multijump");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(multijump_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Multi jump");
 	return false;
 }
 
-MUTATOR_DEFINITION(mutator_multijump)
-{
-	MUTATOR_HOOK(PlayerPhysics, multijump_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerJump, multijump_PlayerJump, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetCvars, multijump_GetCvars, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, multijump_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, multijump_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
-	MUTATOR_ONADD
-	{
-		multijump_AddStats();
-	}
-
-	return false;
-}
 #endif

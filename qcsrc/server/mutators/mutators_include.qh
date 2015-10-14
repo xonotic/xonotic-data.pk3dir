@@ -2,7 +2,6 @@
 #define MUTATORS_INCLUDE_H
 
 #include "../../common/mutators/base.qh"
-#include "mutators.qh"
 
 #include "gamemode_assault.qh"
 #include "gamemode_ca.qh"

@@ -1,5 +1,6 @@
-
 #include "mutator.qh"
+
+REGISTER_MUTATOR(superspec, cvar("g_superspectate"));
 
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL ((edict_num(1) == self) ? true : false)
@@ -97,7 +98,7 @@ float superspec_filteritem(entity _for, entity _item)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
+MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 {SELFPARAM();
 	entity _item = self;
 
@@ -151,7 +152,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
+MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 {SELFPARAM();
 #define OPTIONINFO(flag,var,test,text,long,short) \
     var = strcat(var, ((flag & test) ? "^2[ON]  ^7" : "^1[OFF] ^7")); \
@@ -421,13 +422,13 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 #undef OPTIONINFO
 }
 
-MUTATOR_HOOKFUNCTION(superspec_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(superspec, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":SS");
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(superspec_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(superspec, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Super Spectators");
 	return 0;
@@ -441,7 +442,7 @@ void superspec_hello()
 	remove(self);
 }
 
-MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
+MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 {SELFPARAM();
 	if(!IS_REAL_CLIENT(self))
 		return false;
@@ -489,7 +490,7 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(superspec_PlayerDies)
+MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 {SELFPARAM();
 	entity e;
 	FOR_EACH_SPEC(e)
@@ -508,22 +509,8 @@ MUTATOR_HOOKFUNCTION(superspec_PlayerDies)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(superspec_ClientDisconnect)
+MUTATOR_HOOKFUNCTION(superspec, ClientDisconnect)
 {
 	superspec_save_client_conf();
 	return false;
-}
-
-MUTATOR_DEFINITION(mutator_superspec)
-{
-
-	MUTATOR_HOOK(BuildMutatorsString, superspec_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, superspec_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SV_ParseClientCommand, superspec_SV_ParseClientCommand, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ItemTouch, superspec_ItemTouch, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientConnect, superspec_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, superspec_ClientDisconnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, superspec_PlayerDies, CBC_ORDER_ANY);
-
-	return 0;
 }

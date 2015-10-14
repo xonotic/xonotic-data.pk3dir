@@ -6,9 +6,19 @@
 // Mutator by Mario
 // Inspired by Player 2
 
+REGISTER_MUTATOR(random_gravity, cvar("g_random_gravity"))
+{
+	MUTATOR_ONADD
+	{
+		cvar_settemp("sv_gravity", cvar_string("sv_gravity")); // settemp current gravity so it's restored on match end
+	}
+
+	return false;
+}
+
 float gravity_delay;
 
-MUTATOR_HOOKFUNCTION(gravity_StartFrame)
+MUTATOR_HOOKFUNCTION(random_gravity, SV_StartFrame)
 {
 	if(gameover || !cvar("g_random_gravity")) return false;
 	if(time < gravity_delay) return false;
@@ -27,28 +37,14 @@ MUTATOR_HOOKFUNCTION(gravity_StartFrame)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(gravity_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(random_gravity, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":RandomGravity");
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(gravity_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(random_gravity, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Random gravity");
 	return 0;
-}
-
-MUTATOR_DEFINITION(mutator_random_gravity)
-{
-	MUTATOR_HOOK(SV_StartFrame, gravity_StartFrame, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, gravity_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, gravity_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
-	MUTATOR_ONADD
-	{
-		cvar_settemp("sv_gravity", cvar_string("sv_gravity")); // settemp current gravity so it's restored on match end
-	}
-
-	return false;
 }

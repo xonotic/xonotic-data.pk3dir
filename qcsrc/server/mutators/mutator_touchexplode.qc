@@ -1,25 +1,24 @@
-
 #include "mutator.qh"
+
+REGISTER_MUTATOR(touchexplode, cvar("g_touchexplode"));
 
 .float touchexplode_time;
 
 void PlayerTouchExplode(entity p1, entity p2)
 {SELFPARAM();
-	vector org;
-	org = (p1.origin + p2.origin) * 0.5;
+	vector org = (p1.origin + p2.origin) * 0.5;
 	org.z += (p1.mins.z + p2.mins.z) * 0.5;
 
 	sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, org, '0 0 0', 1);
 
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	setorigin(e, org);
 	RadiusDamage(e, world, autocvar_g_touchexplode_damage, autocvar_g_touchexplode_edgedamage, autocvar_g_touchexplode_radius, world, world, autocvar_g_touchexplode_force, DEATH_TOUCHEXPLODE.m_id, world);
 	remove(e);
 }
 
-MUTATOR_HOOKFUNCTION(touchexplode_PlayerThink)
+MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
 {SELFPARAM();
 	if(time > self.touchexplode_time)
 	if(!gameover)
@@ -39,13 +38,6 @@ MUTATOR_HOOKFUNCTION(touchexplode_PlayerThink)
 			self.touchexplode_time = other.touchexplode_time = time + 0.2;
 		}
 	}
-
-	return false;
-}
-
-MUTATOR_DEFINITION(mutator_touchexplode)
-{
-	MUTATOR_HOOK(PlayerPreThink, touchexplode_PlayerThink, CBC_ORDER_ANY);
 
 	return false;
 }

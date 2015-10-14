@@ -10,10 +10,53 @@ float nix_nextweapon;
 .float nix_lastinfotime;
 .float nix_nextincr;
 
-float NIX_CanChooseWeapon(float wpn)
+bool NIX_CanChooseWeapon(int wpn);
+
+REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"))
 {
-	entity e;
-	e = get_weaponinfo(wpn);
+	MUTATOR_ONADD
+	{
+		g_nix_with_blaster = autocvar_g_nix_with_blaster;
+
+		nix_nextchange = 0;
+		nix_nextweapon = 0;
+
+		for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
+			if (NIX_CanChooseWeapon(i)) {
+				Weapon w = get_weaponinfo(i);
+				w.wr_init(w);
+			}
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
+		entity e;
+		FOR_EACH_PLAYER(e) if(e.deadflag == DEAD_NO)
+		{
+			e.ammo_cells = start_ammo_cells;
+			e.ammo_plasma = start_ammo_plasma;
+			e.ammo_shells = start_ammo_shells;
+			e.ammo_nails = start_ammo_nails;
+			e.ammo_rockets = start_ammo_rockets;
+			e.ammo_fuel = start_ammo_fuel;
+			e.weapons = start_weapons;
+			if(!client_hasweapon(e, e.weapon, true, false))
+				e.switchweapon = w_getbestweapon(self);
+		}
+	}
+
+	return 0;
+}
+
+bool NIX_CanChooseWeapon(int wpn)
+{
+	entity e = get_weaponinfo(wpn);
 	if(!e.weapon) // skip dummies
 		return false;
 	if(g_weaponarena)
@@ -23,7 +66,7 @@ float NIX_CanChooseWeapon(float wpn)
 	}
 	else
 	{
-		if(wpn == WEP_BLASTER.m_id && g_nix_with_blaster) // WEAPONTODO: rename to g_nix_with_blaster
+		if(wpn == WEP_BLASTER.m_id && g_nix_with_blaster)
 			return false;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return false;
@@ -152,34 +195,24 @@ void NIX_GiveCurrentWeapon()
 				W_SwitchWeapon(nix_weapon);
 }
 
-void NIX_precache()
-{
-	float i;
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		if (NIX_CanChooseWeapon(i)) {
-			Weapon w = get_weaponinfo(i);
-			w.wr_init(w);
-		}
-}
-
-MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)
+MUTATOR_HOOKFUNCTION(nix, ForbidThrowCurrentWeapon)
 {
 	return 1; // no throwing in NIX
 }
 
-MUTATOR_HOOKFUNCTION(nix_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(nix, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":NIX");
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nix_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(nix, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", NIX");
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nix_FilterItem)
+MUTATOR_HOOKFUNCTION(nix, FilterItem)
 {SELFPARAM();
 	switch (self.items)
 	{
@@ -204,14 +237,14 @@ MUTATOR_HOOKFUNCTION(nix_FilterItem)
 	return 1; // delete all other items
 }
 
-MUTATOR_HOOKFUNCTION(nix_OnEntityPreSpawn)
+MUTATOR_HOOKFUNCTION(nix, OnEntityPreSpawn)
 {SELFPARAM();
 	if(self.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
 		return 1;
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
 {SELFPARAM();
 	if(!intermission_running)
 	if(self.deadflag == DEAD_NO)
@@ -220,7 +253,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerPreThink)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(nix, PlayerSpawn)
 {SELFPARAM();
 	self.nix_lastchange_id = -1;
 	NIX_GiveCurrentWeapon(); // overrides the weapons you got when spawning
@@ -228,57 +261,8 @@ MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nix_SetModname)
+MUTATOR_HOOKFUNCTION(nix, SetModname, CBC_ORDER_LAST)
 {
 	modname = "NIX";
-	return 0;
-}
-
-MUTATOR_DEFINITION(mutator_nix)
-{SELFPARAM();
-	entity e;
-
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nix_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, nix_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, nix_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, nix_FilterItem, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, nix_OnEntityPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, nix_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, nix_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, nix_SetModname, CBC_ORDER_LAST);
-
-	MUTATOR_ONADD
-	{
-		g_nix_with_blaster = autocvar_g_nix_with_blaster;
-
-		nix_nextchange = 0;
-		nix_nextweapon = 0;
-
-		NIX_precache();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// nothing to roll back
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
-
-		FOR_EACH_PLAYER(e) if(e.deadflag == DEAD_NO)
-		{
-			e.ammo_cells = start_ammo_cells;
-			e.ammo_plasma = start_ammo_plasma;
-			e.ammo_shells = start_ammo_shells;
-			e.ammo_nails = start_ammo_nails;
-			e.ammo_rockets = start_ammo_rockets;
-			e.ammo_fuel = start_ammo_fuel;
-			e.weapons = start_weapons;
-			if(!client_hasweapon(e, e.weapon, true, false))
-				e.switchweapon = w_getbestweapon(self);
-		}
-	}
-
 	return 0;
 }

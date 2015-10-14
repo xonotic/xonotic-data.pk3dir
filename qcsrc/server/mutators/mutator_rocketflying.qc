@@ -1,7 +1,9 @@
 
 #include "mutator.qh"
 
-MUTATOR_HOOKFUNCTION(rocketflying_EditProjectile)
+REGISTER_MUTATOR(rocketflying, cvar("g_rocket_flying"));
+
+MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 {
 	if(other.classname == "rocket" || other.classname == "mine")
 	{
@@ -11,23 +13,14 @@ MUTATOR_HOOKFUNCTION(rocketflying_EditProjectile)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(rocketflying_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(rocketflying, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":RocketFlying");
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(rocketflying_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(rocketflying, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Rocket Flying");
-	return 0;
-}
-
-MUTATOR_DEFINITION(mutator_rocketflying)
-{
-	MUTATOR_HOOK(EditProjectile, rocketflying_EditProjectile, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, rocketflying_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, rocketflying_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
 	return 0;
 }

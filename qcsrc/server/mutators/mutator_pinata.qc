@@ -1,10 +1,11 @@
 
 #include "mutator.qh"
 
-MUTATOR_HOOKFUNCTION(pinata_PlayerDies)
+REGISTER_MUTATOR(pinata, cvar("g_pinata") && !cvar("g_instagib") && !cvar("g_overkill"));
+
+MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {SELFPARAM();
-	float j;
-	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+	for(int j = WEP_FIRST; j <= WEP_LAST; ++j)
 	if(self.weapons & WepSet_FromWeapon(j))
 	if(self.switchweapon != j)
 	if(W_IsWeaponThrowable(j))
@@ -13,23 +14,15 @@ MUTATOR_HOOKFUNCTION(pinata_PlayerDies)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(pinata_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(pinata, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Pinata");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(pinata_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(pinata, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Piñata");
 	return false;
 }
 
-MUTATOR_DEFINITION(mutator_pinata)
-{
-	MUTATOR_HOOK(PlayerDies, pinata_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, pinata_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, pinata_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
-	return false;
-}

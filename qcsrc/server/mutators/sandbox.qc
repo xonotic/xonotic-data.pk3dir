@@ -1,5 +1,29 @@
-
 #include "mutator.qh"
+
+float autosave_time;
+void sandbox_Database_Load();
+
+REGISTER_MUTATOR(sandbox, cvar("g_sandbox"))
+{
+	MUTATOR_ONADD
+	{
+		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
+		if(autocvar_g_sandbox_storage_autoload)
+			sandbox_Database_Load();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		// nothing to remove
+	}
+
+	return false;
+}
 
 const float MAX_STORAGE_ATTACHMENTS = 16;
 float object_count;
@@ -418,7 +442,7 @@ void sandbox_Database_Load()
 	fclose(file_get);
 }
 
-MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
+MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
@@ -790,8 +814,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 	return false;
 }
 
-float autosave_time;
-MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
+MUTATOR_HOOKFUNCTION(sandbox, SV_StartFrame)
 {
 	if(!autocvar_g_sandbox_storage_autosave)
 		return false;
@@ -804,35 +827,8 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sandbox_SetModname)
+MUTATOR_HOOKFUNCTION(sandbox, SetModname)
 {
 	modname = "Sandbox";
 	return true;
 }
-
-MUTATOR_DEFINITION(sandbox)
-{
-	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, sandbox_SetModname, CBC_ORDER_ANY);
-
-	MUTATOR_ONADD
-	{
-		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
-		if(autocvar_g_sandbox_storage_autoload)
-			sandbox_Database_Load();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// nothing to roll back
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		// nothing to remove
-	}
-
-	return false;
-}
-

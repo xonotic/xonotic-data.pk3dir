@@ -1,7 +1,9 @@
 
 #include "mutator.qh"
 
-MUTATOR_HOOKFUNCTION(invincibleprojectiles_EditProjectile)
+REGISTER_MUTATOR(invincibleprojectiles, cvar("g_invincible_projectiles"));
+
+MUTATOR_HOOKFUNCTION(invincibleprojectiles, EditProjectile)
 {
 	if(other.health)
 	{
@@ -11,23 +13,14 @@ MUTATOR_HOOKFUNCTION(invincibleprojectiles_EditProjectile)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(invincibleprojectiles_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(invincibleprojectiles, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":InvincibleProjectiles");
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(invincibleprojectiles_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(invincibleprojectiles, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Invincible Projectiles");
-	return 0;
-}
-
-MUTATOR_DEFINITION(mutator_invincibleprojectiles)
-{
-	MUTATOR_HOOK(EditProjectile, invincibleprojectiles_EditProjectile, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, invincibleprojectiles_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, invincibleprojectiles_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
 	return 0;
 }

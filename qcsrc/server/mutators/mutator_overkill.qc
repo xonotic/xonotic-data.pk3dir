@@ -2,6 +2,24 @@
 
 #include "mutator.qh"
 
+void ok_Initialize();
+
+REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && cvar_string("g_mod_balance") == "Overkill")
+{
+	MUTATOR_ONADD
+	{
+		ok_Initialize();
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		WEP_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+	}
+
+	return false;
+}
+
 void W_Blaster_Attack(entity, float, float, float, float, float, float, float, float, float, float);
 spawnfunc(weapon_hmg);
 spawnfunc(weapon_rpc);
@@ -42,7 +60,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
-MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
@@ -62,14 +80,14 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok_PlayerDamage_SplitHealthArmor)
+MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
 {SELFPARAM();
 	if(damage_take)
 		self.ok_pauseregen_finished = max(self.ok_pauseregen_finished, time + 2);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok_PlayerDies)
+MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 {SELFPARAM();
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
@@ -97,8 +115,9 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 
 	return false;
 }
+MUTATOR_HOOKFUNCTION(ok, MonsterDropItem) { ok_PlayerDies(); }
 
-MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
+MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
 {SELFPARAM();
 	// overkill's values are different, so use custom regen
 	if(!self.frozen)
@@ -117,12 +136,12 @@ MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
 	return true; // return true anyway, as frozen uses no regen
 }
 
-MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
+MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 {
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 {SELFPARAM();
 	if(intermission_running || gameover)
 		return false;
@@ -188,7 +207,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 {SELFPARAM();
 	if(autocvar_g_overkill_ammo_charge)
 	{
@@ -209,7 +228,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 void _spawnfunc_weapon_hmg() { SELFPARAM(); spawnfunc_weapon_hmg(this); }
 void _spawnfunc_weapon_rpc() { SELFPARAM(); spawnfunc_weapon_rpc(this); }
 
-MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
+MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 {SELFPARAM();
 	if(autocvar_g_powerups)
 	if(autocvar_g_overkill_powerups_replace)
@@ -252,7 +271,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok_ItemRemove)
+MUTATOR_HOOKFUNCTION(ok, FilterItem)
 {SELFPARAM();
 	if(self.ok_item)
 		return false;
@@ -266,7 +285,7 @@ MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
+MUTATOR_HOOKFUNCTION(ok, SpectateCopy)
 {SELFPARAM();
 	self.ammo_charge[self.weapon] = other.ammo_charge[other.weapon];
 	self.ok_use_ammocharge = other.ok_use_ammocharge;
@@ -274,7 +293,7 @@ MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok_StartItems)
+MUTATOR_HOOKFUNCTION(ok, SetStartItems)
 {
 	WepSet ok_start_items = (WEPSET(MACHINEGUN) | WEPSET(VORTEX) | WEPSET(SHOTGUN));
 
@@ -287,19 +306,19 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(ok, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":OK");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(ok, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Overkill");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok_SetModname)
+MUTATOR_HOOKFUNCTION(ok, SetModname)
 {
 	modname = "Overkill";
 	return true;
@@ -329,36 +348,4 @@ void ok_Initialize()
 	WEP_SHOTGUN.mdl = "ok_shotgun";
 	WEP_MACHINEGUN.mdl = "ok_mg";
 	WEP_VORTEX.mdl = "ok_sniper";
-}
-
-MUTATOR_DEFINITION(mutator_overkill)
-{
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ok_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, ok_PlayerPreThink, CBC_ORDER_LAST);
-	MUTATOR_HOOK(PlayerSpawn, ok_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, ok_PlayerDamage_Calculate, CBC_ORDER_LAST);
-	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ok_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerRegen, ok_PlayerRegen, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterDropItem, ok_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SpectateCopy, ok_SpectateCopy, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, ok_StartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, ok_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, ok_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
-
-	MUTATOR_ONADD
-	{
-		ok_Initialize();
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-		WEP_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
-	}
-
-	return false;
 }

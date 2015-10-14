@@ -6,6 +6,20 @@
 #include "../../common/gamemodes/all.qh"
 #include "../../common/buffs/all.qh"
 
+.float buff_time;
+void buffs_DelayedInit();
+
+REGISTER_MUTATOR(buffs, cvar("g_buffs"))
+{
+	MUTATOR_ONADD
+	{
+		addstat(STAT_BUFFS, AS_INT, buffs);
+		addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
+
+		InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
+	}
+}
+
 entity buff_FirstFromFlags(int _buffs)
 {
 	if (flags)
@@ -413,7 +427,7 @@ float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float 
 }
 
 // mutator hooks
-MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
+MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 {
 	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
 
@@ -427,7 +441,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 {
 	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
 
@@ -518,7 +532,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(buffs,PlayerSpawn)
 {SELFPARAM();
 	self.buffs = 0;
 	// reset timers here to prevent them continuing after re-spawn
@@ -531,7 +545,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 .float stat_sv_airspeedlimit_nonqw;
 .float stat_sv_jumpvelocity;
 
-MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
+MUTATOR_HOOKFUNCTION(buffs, PlayerPhysics)
 {SELFPARAM();
 	if(self.buffs & BUFF_SPEED.m_itemid)
 	{
@@ -554,7 +568,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
+MUTATOR_HOOKFUNCTION(buffs, PlayerJump)
 {SELFPARAM();
 	if(self.buffs & BUFF_JUMP.m_itemid)
 		player_jumpheight = autocvar_g_buffs_jump_height;
@@ -562,7 +576,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_MonsterMove)
+MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
 {SELFPARAM();
 	if(time < self.buff_disability_time)
 	{
@@ -573,7 +587,7 @@ MUTATOR_HOOKFUNCTION(buffs_MonsterMove)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
+MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 {SELFPARAM();
 	if(self.buffs)
 	{
@@ -590,7 +604,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
+MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 	if(self.buffs)
@@ -606,7 +620,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
+MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
@@ -676,22 +690,24 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThrowKey)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
-{SELFPARAM();
-	if(self.buff_model)
+bool buffs_RemovePlayer(entity player)
+{
+	if(player.buff_model)
 	{
-		remove(self.buff_model);
-		self.buff_model = world;
+		remove(player.buff_model);
+		player.buff_model = world;
 	}
 
 	// also reset timers here to prevent them continuing after spectating
-	self.buff_disability_time = 0;
-	self.buff_disability_effect_time = 0;
+	player.buff_disability_time = 0;
+	player.buff_disability_effect_time = 0;
 
 	return false;
 }
+MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { return buffs_RemovePlayer(self); }
+MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { return buffs_RemovePlayer(self); }
 
-MUTATOR_HOOKFUNCTION(buffs_CustomizeWaypoint)
+MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 {SELFPARAM();
 	entity e = WaypointSprite_getviewentity(other);
 
@@ -704,7 +720,7 @@ MUTATOR_HOOKFUNCTION(buffs_CustomizeWaypoint)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
+MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {SELFPARAM();
 	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
@@ -720,7 +736,7 @@ MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
+MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
 {SELFPARAM();
 	if(self.buffs & BUFF_SPEED.m_itemid)
 		weapon_rate *= autocvar_g_buffs_speed_rate;
@@ -731,7 +747,7 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
+MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 {SELFPARAM();
 	if(self.buffs & BUFF_SPEED.m_itemid)
 		ret_float *= autocvar_g_buffs_speed_weaponspeed;
@@ -742,9 +758,7 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponSpeed)
 	return false;
 }
 
-.float buff_time;
-
-MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
+MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {SELFPARAM();
 	if(gameover || self.deadflag != DEAD_NO) { return false; }
 
@@ -890,27 +904,27 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_SpectateCopy)
+MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
 {SELFPARAM();
 	self.buffs = other.buffs;
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_VehicleEnter)
+MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
 {
 	vh_vehicle.buffs = vh_player.buffs;
 	vh_player.buffs = 0;
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_VehicleExit)
+MUTATOR_HOOKFUNCTION(buffs, VehicleExit)
 {
 	vh_player.buffs = vh_vehicle.buffs;
 	vh_vehicle.buffs = 0;
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
+MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 {SELFPARAM();
 	if(self.buffs & BUFF_MEDIC.m_itemid)
 	{
@@ -925,19 +939,19 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_GetCvars)
+MUTATOR_HOOKFUNCTION(buffs, GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_buffs_autoreplace, "cl_buffs_autoreplace");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Buffs");
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Buffs");
 	return false;
@@ -957,46 +971,4 @@ void buffs_DelayedInit()
 			buff_Init(e);
 		}
 	}
-}
-
-void buffs_Initialize()
-{
-	addstat(STAT_BUFFS, AS_INT, buffs);
-	addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
-
-	InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
-}
-
-MUTATOR_DEFINITION(mutator_buffs)
-{
-	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, buffs_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, buffs_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPhysics, buffs_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerJump, buffs_PlayerJump, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterMove, buffs_MonsterMove, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SpectateCopy, buffs_SpectateCopy, CBC_ORDER_ANY);
-	MUTATOR_HOOK(VehicleEnter, buffs_VehicleEnter, CBC_ORDER_ANY);
-	MUTATOR_HOOK(VehicleExit, buffs_VehicleExit, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, buffs_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerUseKey, buffs_PlayerUseKey, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, buffs_PlayerThrowKey, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_LAST);
-	MUTATOR_HOOK(CustomizeWaypoint, buffs_CustomizeWaypoint, CBC_ORDER_ANY);
-	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
-	MUTATOR_HOOK(WeaponSpeedFactor, buffs_WeaponSpeed, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetCvars, buffs_GetCvars, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, buffs_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, buffs_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-
-	MUTATOR_ONADD
-	{
-		buffs_Initialize();
-	}
-
-	return false;
 }
