@@ -1623,15 +1623,19 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 	int i;
 	vector loc;
 	float theta;
+	// narrow the range for each iteration to increase chances that a spawnpoint
+	// can be found even if there's little room around the control point
+	float iteration_scale = 1;
 	for(i = 0; i < 16; ++i)
 	{
+		iteration_scale -= i / 16;
 		theta = random() * 2 * M_PI;
 		loc_y = sin(theta);
 		loc_x = cos(theta);
 		loc_z = 0;
-		loc *= random() * range;
+		loc *= random() * range * iteration_scale;
 
-		loc += tele_target.origin + '0 0 128';
+		loc += tele_target.origin + '0 0 128' * iteration_scale;
 
 		tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid)
@@ -1737,10 +1741,12 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 		{
 			float i;
 			vector loc;
+			float iteration_scale = 1;
 			for(i = 0; i < 10; ++i)
 			{
-				loc = closest_target.origin + '0 0 96';
-				loc += ('0 1 0' * random()) * 128;
+				iteration_scale -= i / 10;
+				loc = closest_target.origin + '0 0 96' * iteration_scale;
+				loc += ('0 1 0' * random()) * 128 * iteration_scale;
 				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
@@ -1786,10 +1792,12 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 		{
 			float i;
 			vector loc;
+			float iteration_scale = 1;
 			for(i = 0; i < 10; ++i)
 			{
-				loc = closest_target.origin + '0 0 128';
-				loc += ('0 1 0' * random()) * 256;
+				iteration_scale -= i / 10;
+				loc = closest_target.origin + '0 0 128' * iteration_scale;
+				loc += ('0 1 0' * random()) * 256 * iteration_scale;
 				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
