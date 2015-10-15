@@ -574,7 +574,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 	if (item.spawnshieldtime)
 	{
-		if ((player.(ammotype) < ammomax) || item.pickup_anyway)
+		if ((player.(ammotype) < ammomax) || item.pickup_anyway > 0)
 		{
 			player.(ammotype) = bound(player.(ammotype), ammomax, player.(ammotype) + item.(ammotype));
 			goto YEAH;
@@ -645,7 +645,7 @@ float Item_GiveTo(entity item, entity player)
 		it = item.weapons;
 		it &= ~player.weapons;
 
-		if (it || (item.spawnshieldtime && item.pickup_anyway))
+		if (it || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
 			pickedup = true;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1155,11 +1155,14 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	self.SendFlags |= ISF_SIZE;
 
-	if(itemflags & FL_POWERUP)
-		self.ItemStatus |= ITS_ANIMATE1;
+	if(!(self.spawnflags & 1024))
+	{
+		if(itemflags & FL_POWERUP)
+			self.ItemStatus |= ITS_ANIMATE1;
 
-	if(self.armorvalue || self.health)
-		self.ItemStatus |= ITS_ANIMATE2;
+		if(self.armorvalue || self.health)
+			self.ItemStatus |= ITS_ANIMATE2;
+	}
 
 	if(itemflags & FL_WEAPON)
 	{
@@ -1168,7 +1171,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		else
 			self.gravity = 1;
 
-		self.ItemStatus |= ITS_ANIMATE1;
+		if(!(self.spawnflags & 1024))
+			self.ItemStatus |= ITS_ANIMATE1;
 		self.ItemStatus |= ISF_COLORMAP;
 	}
 
