@@ -23,6 +23,9 @@ void Ent_TriggerMusic_Think();
 void Ent_TriggerMusic_Remove();
 
 void Ent_ReadTriggerMusic();
+
+#elif defined(SVQC)
+void target_music_kill();
 #endif
 
 #endif

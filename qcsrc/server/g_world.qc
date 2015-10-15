@@ -31,6 +31,7 @@
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/trigger/secret.qh"
+#include "../common/triggers/target/music.qh"
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
@@ -1545,6 +1546,10 @@ void NextLevel()
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");
 	}
+
+	entity oldself = self;
+	target_music_kill();
+	self = oldself;
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();

@@ -1070,12 +1070,12 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		// it's a level item
 		if(self.spawnflags & 1)
 			self.noalign = 1;
-		if (self.noalign)
+		if (self.noalign > 0)
 			self.movetype = MOVETYPE_NONE;
 		else
 			self.movetype = MOVETYPE_TOSS;
 		// do item filtering according to game mode and other things
-		if (!self.noalign)
+		if (self.noalign <= 0)
 		{
 			// first nudge it off the floor a little bit to avoid math errors
 			setorigin(self, self.origin + '0 0 1');
@@ -1086,7 +1086,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				setsize (self, '-16 -16 0', '16 16 32');
 			self.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
-			droptofloor();
+			if(!self.noalign)
+				droptofloor();
 			waypoint_spawnforitem(self);
 		}
 
