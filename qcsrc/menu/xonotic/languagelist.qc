@@ -184,15 +184,10 @@ void XonoticLanguageList_getLanguages(entity me)
 			continue;
 		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_ID, argv(0));
 		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_NAME, argv(1));
-		float k = strstrofs(argv(2), "(", 0);
-		if(k > 0)
-		if(substring(argv(2), strlen(argv(2)) - 1, 1) == ")")
-		{
-			string percent = substring(argv(2), k + 1, -2);
-			if(percent != "100%")
-				bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_PERCENTAGE, percent);
-		}
-		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_NAME_LOCALIZED, (k < 0) ? argv(2) : substring(argv(2), 0, k - 1));
+		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_NAME_LOCALIZED, argv(2));
+		string percent = argv(3);
+		if(percent && percent != "100%")
+			bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_PERCENTAGE, percent);
 		++i;
 	}
 	fclose(fh);
