@@ -36,7 +36,8 @@ fi
 
 if [ x"$mode" = x"txt" ]; then
 	{
-		echo "en    English \"English\""
+		item=`grep "^en " languages.txt`
+		echo "$item"
 		for X in common.*.po; do
 			[ -f "$X" ] || continue
 			if [ -n "$language" ]; then
