@@ -566,14 +566,13 @@ void bot_calculate_stepheightvec(void)
 
 float bot_fixcount()
 {
-	entity head;
-	float realplayers, bots, activerealplayers;
-
-	activerealplayers = 0;
-	realplayers = 0;
-
-	if(!MUTATOR_CALLHOOK(Bot_FixCount, activerealplayers, realplayers))
-	{
+	int activerealplayers = 0;
+	int realplayers = 0;
+	if (MUTATOR_CALLHOOK(Bot_FixCount, activerealplayers, realplayers)) {
+		activerealplayers = bot_activerealplayers;
+		realplayers = bot_realplayers;
+	} else {
+		entity head;
 		FOR_EACH_REALCLIENT(head)
 		{
 			if(IS_PLAYER(head))
@@ -582,9 +581,7 @@ float bot_fixcount()
 		}
 	}
 
-	activerealplayers = bot_activerealplayers;
-	realplayers = bot_realplayers;
-
+	int bots;
 	// add/remove bots if needed to make sure there are at least
 	// minplayers+bot_number, or remove all bots if no one is playing
 	// But don't remove bots immediately on level change, as the real players
