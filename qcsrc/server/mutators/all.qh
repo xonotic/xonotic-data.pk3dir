@@ -1,3 +1,6 @@
+#include "mutator.qh"
+#include "gamemode.qh"
+
 #ifndef SERVER_MUTATORS_H
 #define SERVER_MUTATORS_H
 

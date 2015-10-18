@@ -1,6 +1,41 @@
 #ifndef GAMEMODE_KEYHUNT_H
 #define GAMEMODE_KEYHUNT_H
 
+#define autocvar_g_keyhunt_point_limit cvar("g_keyhunt_point_limit")
+int autocvar_g_keyhunt_point_leadlimit;
+bool autocvar_g_keyhunt_team_spawns;
+void kh_Initialize();
+
+REGISTER_MUTATOR(kh, false)
+{
+	ActivateTeamplay();
+	SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, -1, -1);
+	if (autocvar_g_keyhunt_team_spawns)
+		have_team_spawns = -1; // request team spawns
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		kh_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back kh_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 #define FOR_EACH_KH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext )
 
 // ALL OF THESE should be removed in the future, as other code should not have to care
@@ -37,9 +72,6 @@ int autocvar_g_balance_keyhunt_score_destroyed_ownfactor;
 int autocvar_g_balance_keyhunt_score_push;
 float autocvar_g_balance_keyhunt_throwvelocity;
 
-int autocvar_g_keyhunt_point_leadlimit;
-bool autocvar_g_keyhunt_team_spawns;
-#define autocvar_g_keyhunt_point_limit cvar("g_keyhunt_point_limit")
 int autocvar_g_keyhunt_teams;
 int autocvar_g_keyhunt_teams_override;
 
@@ -1367,33 +1399,4 @@ MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 	return false;
 }
 
-REGISTER_MUTATOR(kh, IS_GAMETYPE(KEYHUNT))
-{
-	ActivateTeamplay();
-	SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, -1, -1);
-	if(autocvar_g_keyhunt_team_spawns)
-		have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		kh_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back kh_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

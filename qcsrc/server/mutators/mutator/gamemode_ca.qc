@@ -1,19 +1,46 @@
 #ifndef GAMEMODE_CA_H
 #define GAMEMODE_CA_H
 
+int autocvar_g_ca_point_limit;
+int autocvar_g_ca_point_leadlimit;
+bool autocvar_g_ca_team_spawns;
+
+void ca_Initialize();
+
+REGISTER_MUTATOR(ca, false)
+{
+	ActivateTeamplay();
+	SetLimits(autocvar_g_ca_point_limit, autocvar_g_ca_point_leadlimit, -1, -1);
+
+	if (autocvar_g_ca_team_spawns)
+		have_team_spawns = -1; // request team spawns
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		ca_Initialize();
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 // should be removed in the future, as other code should not have to care
 .float caplayer; // 0.5 if scheduled to join the next round
 #endif
 
 #ifdef IMPLEMENTATION
 float autocvar_g_ca_damage2score_multiplier;
-int autocvar_g_ca_point_leadlimit;
-int autocvar_g_ca_point_limit;
 float autocvar_g_ca_round_timelimit;
 bool autocvar_g_ca_spectate_enemies;
 int autocvar_g_ca_teams;
 int autocvar_g_ca_teams_override;
-bool autocvar_g_ca_team_spawns;
 float autocvar_g_ca_warmup;
 
 float ca_teams;
@@ -503,27 +530,4 @@ void ca_Initialize()
 	EliminatedPlayers_Init(ca_isEliminated);
 }
 
-REGISTER_MUTATOR(ca, g_ca)
-{
-	ActivateTeamplay();
-	SetLimits(autocvar_g_ca_point_limit, autocvar_g_ca_point_leadlimit, -1, -1);
-
-	if(autocvar_g_ca_team_spawns)
-		have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		ca_Initialize();
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

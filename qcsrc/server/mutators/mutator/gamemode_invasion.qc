@@ -1,6 +1,48 @@
 #ifndef GAMEMODE_INVASION_H
 #define GAMEMODE_INVASION_H
 
+#define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
+int autocvar_g_invasion_teams;
+bool autocvar_g_invasion_team_spawns;
+bool g_invasion;
+void invasion_Initialize();
+
+REGISTER_MUTATOR(inv, false)
+{
+	SetLimits(autocvar_g_invasion_point_limit, -1, -1, -1);
+	if (autocvar_g_invasion_teams >= 2)
+	{
+		ActivateTeamplay();
+		if (autocvar_g_invasion_team_spawns)
+			have_team_spawns = -1; // request team spawns
+	}
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		g_invasion = true;
+		invasion_Initialize();
+
+		cvar_settemp("g_monsters", "1");
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back invasion_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 float inv_numspawned;
 float inv_maxspawned;
 float inv_roundcnt;
@@ -24,13 +66,9 @@ const float ST_INV_KILLS = 1;
 
 #include "../../teamplay.qh"
 
-bool g_invasion;
 
 float autocvar_g_invasion_round_timelimit;
-int autocvar_g_invasion_teams;
-bool autocvar_g_invasion_team_spawns;
 float autocvar_g_invasion_spawnpoint_spawn_delay;
-#define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
 float autocvar_g_invasion_warmup;
 int autocvar_g_invasion_monster_count;
 bool autocvar_g_invasion_zombies_only;
@@ -487,39 +525,4 @@ void invasion_Initialize()
 	InitializeEntity(world, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
 
-REGISTER_MUTATOR(inv, IS_GAMETYPE(INVASION))
-{
-	SetLimits(autocvar_g_invasion_point_limit, -1, -1, -1);
-	if(autocvar_g_invasion_teams >= 2)
-	{
-		ActivateTeamplay();
-		if(autocvar_g_invasion_team_spawns)
-			have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		g_invasion = true;
-		invasion_Initialize();
-
-		cvar_settemp("g_monsters", "1");
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back invasion_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

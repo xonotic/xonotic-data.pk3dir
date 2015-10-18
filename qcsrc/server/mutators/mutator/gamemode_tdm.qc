@@ -1,7 +1,44 @@
-#ifdef IMPLEMENTATION
-bool autocvar_g_tdm_team_spawns;
+#ifndef GAMEMODE_TDM_H
+#define GAMEMODE_TDM_H
+
 int autocvar_g_tdm_point_limit;
 int autocvar_g_tdm_point_leadlimit;
+bool autocvar_g_tdm_team_spawns;
+void tdm_DelayedInit();
+
+REGISTER_MUTATOR(tdm, false)
+{
+	ActivateTeamplay();
+	SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, -1, -1);
+	if (autocvar_g_tdm_team_spawns)
+		have_team_spawns = -1; // request team spawns
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		InitializeEntity(world, tdm_DelayedInit, INITPRIO_GAMETYPE);
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back tdm_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
+#endif
+
+#ifdef IMPLEMENTATION
 int autocvar_g_tdm_teams;
 int autocvar_g_tdm_teams_override;
 
@@ -59,33 +96,4 @@ MUTATOR_HOOKFUNCTION(tdm, Scores_CountFragsRemaining)
 	return true;
 }
 
-REGISTER_MUTATOR(tdm, g_tdm)
-{
-	ActivateTeamplay();
-	SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, -1, -1);
-	if(autocvar_g_tdm_team_spawns)
-		have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		InitializeEntity(world, tdm_DelayedInit, INITPRIO_GAMETYPE);
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back tdm_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

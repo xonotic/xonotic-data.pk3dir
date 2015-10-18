@@ -1,7 +1,36 @@
 #ifndef GAMEMODE_RACE_H
 #define GAMEMODE_RACE_H
 
-float g_race_qualifying;
+void rc_SetLimits();
+void race_Initialize();
+
+REGISTER_MUTATOR(rc, false)
+{
+	rc_SetLimits();
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		race_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back race_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 float race_teams;
 
 // scores
@@ -437,30 +466,4 @@ void rc_SetLimits()
 	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
 }
 
-REGISTER_MUTATOR(rc, g_race)
-{
-	rc_SetLimits();
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		race_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back race_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

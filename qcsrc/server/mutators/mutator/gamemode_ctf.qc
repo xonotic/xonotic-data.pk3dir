@@ -1,6 +1,39 @@
 #ifndef GAMEMODE_CTF_H
 #define GAMEMODE_CTF_H
 
+#ifndef CSQC
+void ctf_Initialize();
+
+REGISTER_MUTATOR(ctf, false)
+{
+	ActivateTeamplay();
+	SetLimits(autocvar_capturelimit_override, -1, autocvar_captureleadlimit_override, -1);
+	have_team_spawns = -1; // request team spawns
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		ctf_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back ctf_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+#endif
+
 #ifdef SVQC
 // used in cheats.qc
 void ctf_RespawnFlag(entity flag);
@@ -2741,32 +2774,4 @@ void ctf_Initialize()
 	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }
 
-REGISTER_MUTATOR(ctf, g_ctf)
-{
-	ActivateTeamplay();
-	SetLimits(autocvar_capturelimit_override, -1, autocvar_captureleadlimit_override, -1);
-	have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		ctf_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ctf_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

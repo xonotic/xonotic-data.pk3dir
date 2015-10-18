@@ -1,6 +1,33 @@
 #ifndef GAMEMODE_KEEPAWAY_H
 #define GAMEMODE_KEEPAWAY_H
 
+void ka_Initialize();
+
+REGISTER_MUTATOR(ka, false)
+{
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		ka_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back ka_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 
 entity ka_ball;
 
@@ -472,29 +499,4 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 	ka_SpawnBall();
 }
 
-
-REGISTER_MUTATOR(ka, IS_GAMETYPE(KEEPAWAY))
-{
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		ka_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ka_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

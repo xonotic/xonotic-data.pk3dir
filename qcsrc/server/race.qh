@@ -1,6 +1,8 @@
 #ifndef RACE_H
 #define RACE_H
 
+bool g_race_qualifying;
+
 float speedaward_lastsent;
 float speedaward_lastupdate;
 

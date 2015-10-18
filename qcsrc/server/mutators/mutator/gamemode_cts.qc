@@ -1,5 +1,38 @@
+#include "../../race.qh"
+
 #ifndef GAMEMODE_CTS_H
 #define GAMEMODE_CTS_H
+
+void cts_Initialize();
+
+REGISTER_MUTATOR(cts, false)
+{
+	g_race_qualifying = true;
+	independent_players = 1;
+	SetLimits(0, 0, 0, -1);
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		cts_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back cts_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
 
 // scores
 const float ST_CTS_LAPS = 1;
@@ -414,32 +447,4 @@ void cts_Initialize()
 	cts_ScoreRules();
 }
 
-REGISTER_MUTATOR(cts, g_cts)
-{
-	g_race_qualifying = 1;
-	independent_players = 1;
-	SetLimits(0, 0, 0, -1);
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		cts_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back cts_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

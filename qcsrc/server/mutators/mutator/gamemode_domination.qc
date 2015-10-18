@@ -1,6 +1,39 @@
 #ifndef GAMEMODE_DOMINATION_H
 #define GAMEMODE_DOMINATION_H
 
+#define autocvar_g_domination_point_limit cvar("g_domination_point_limit")
+bool autocvar_g_domination_roundbased;
+int autocvar_g_domination_roundbased_point_limit;
+int autocvar_g_domination_point_leadlimit;
+
+void dom_Initialize();
+
+REGISTER_MUTATOR(dom, false)
+{
+	int fraglimit_override = autocvar_g_domination_point_limit;
+	if (autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
+		fraglimit_override = autocvar_g_domination_roundbased_point_limit;
+
+	ActivateTeamplay();
+	SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, -1, -1);
+	have_team_spawns = -1; // request team spawns
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		dom_Initialize();
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 // score rule declarations
 const float ST_DOM_TICKS = 1;
 const float SP_DOM_TICKS = 4;
@@ -40,12 +73,8 @@ int autocvar_g_domination_default_teams;
 bool autocvar_g_domination_disable_frags;
 int autocvar_g_domination_point_amt;
 bool autocvar_g_domination_point_fullbright;
-int autocvar_g_domination_point_leadlimit;
-bool autocvar_g_domination_roundbased;
-int autocvar_g_domination_roundbased_point_limit;
 float autocvar_g_domination_round_timelimit;
 float autocvar_g_domination_warmup;
-#define autocvar_g_domination_point_limit cvar("g_domination_point_limit")
 float autocvar_g_domination_point_rate;
 int autocvar_g_domination_teams_override;
 
@@ -695,30 +724,4 @@ void dom_Initialize()
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 
-
-REGISTER_MUTATOR(dom, IS_GAMETYPE(DOMINATION))
-{
-	int fraglimit_override = autocvar_g_domination_point_limit;
-	if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
-		fraglimit_override = autocvar_g_domination_roundbased_point_limit;
-
-	ActivateTeamplay();
-	SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, -1, -1);
-	have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		dom_Initialize();
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

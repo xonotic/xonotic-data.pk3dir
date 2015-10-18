@@ -74,8 +74,10 @@
 
 #include "all.qh"
 
-#include "mutator.qh"
-#include "gamemode.qh"
+STATIC_INIT_LATE(Gametype) {
+    string s = GetGametype();
+    FOREACH(Mutators, it.m_name == s, LAMBDA(Mutator_Add(it); break));
+}
 
 #define IMPLEMENTATION
 #include "all.inc"

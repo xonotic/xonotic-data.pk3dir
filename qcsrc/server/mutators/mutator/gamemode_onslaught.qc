@@ -1,6 +1,38 @@
 #ifndef GAMEMODE_ONSLAUGHT_H
 #define GAMEMODE_ONSLAUGHT_H
 
+float autocvar_g_onslaught_point_limit;
+void ons_Initialize();
+
+REGISTER_MUTATOR(ons, false)
+{
+	ActivateTeamplay();
+	SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);
+	have_team_spawns = -1; // request team spawns
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		ons_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back ons_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return false;
+}
+
 #ifdef SVQC
 
 .entity ons_toucher; // player who touched the control point
@@ -120,7 +152,6 @@ float autocvar_g_onslaught_gen_health;
 float autocvar_g_onslaught_shield_force = 100;
 float autocvar_g_onslaught_allow_vehicle_touch;
 float autocvar_g_onslaught_round_timelimit;
-float autocvar_g_onslaught_point_limit;
 float autocvar_g_onslaught_warmup;
 float autocvar_g_onslaught_teleport_radius;
 float autocvar_g_onslaught_spawn_choose;
@@ -2284,32 +2315,4 @@ void ons_Initialize()
 	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
 
-REGISTER_MUTATOR(ons, IS_GAMETYPE(ONSLAUGHT))
-{
-	ActivateTeamplay();
-	SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);
-	have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		ons_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back ons_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return false;
-}
 #endif

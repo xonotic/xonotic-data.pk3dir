@@ -1,6 +1,36 @@
 #ifndef GAMEMODE_LMS_H
 #define GAMEMODE_LMS_H
 
+#define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
+void lms_Initialize();
+
+REGISTER_MUTATOR(lms, false)
+{
+	SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, -1, -1);
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		lms_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back lms_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 // scoreboard stuff
 const float SP_LMS_LIVES = 4;
 const float SP_LMS_RANK = 5;
@@ -20,7 +50,6 @@ float LMS_NewPlayerLives();
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
 int autocvar_g_lms_last_join;
-#define autocvar_g_lms_lives_override cvar("g_lms_lives_override")
 bool autocvar_g_lms_regenerate;
 
 // main functions
@@ -284,30 +313,5 @@ void lms_Initialize()
 	lms_ScoreRules();
 }
 
-REGISTER_MUTATOR(lms, IS_GAMETYPE(LMS))
-{
-	SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, -1, -1);
 
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		lms_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back lms_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

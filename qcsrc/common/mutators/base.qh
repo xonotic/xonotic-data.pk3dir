@@ -144,12 +144,12 @@ typedef bool(int) mutatorfunc_t;
 
 CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0)
-    ATTRIB(Mutator, mutatorname, string, string_null)
+    ATTRIB(Mutator, m_name, string, string_null)
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t, func_null)
     ATTRIB(Mutator, mutatorcheck, bool(), func_null)
     CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
         CONSTRUCT(Mutator);
-        this.mutatorname = _name;
+        this.m_name = _name;
         this.mutatorfunc = func;
     }
 ENDCLASS(Mutator)

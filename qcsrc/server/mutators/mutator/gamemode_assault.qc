@@ -1,6 +1,36 @@
 #ifndef GAMEMODE_ASSAULT_H
 #define GAMEMODE_ASSAULT_H
 
+void assault_ScoreRules();
+
+REGISTER_MUTATOR(as, false)
+{
+	ActivateTeamplay();
+	have_team_spawns = -1; // request team spawns
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		assault_ScoreRules();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back assault_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 // sprites
 .entity assault_decreaser;
 .entity assault_sprite;
@@ -641,31 +671,4 @@ void assault_ScoreRules()
 	ScoreRules_basics_end();
 }
 
-REGISTER_MUTATOR(as, g_assault)
-{
-	ActivateTeamplay();
-	have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		assault_ScoreRules();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back assault_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

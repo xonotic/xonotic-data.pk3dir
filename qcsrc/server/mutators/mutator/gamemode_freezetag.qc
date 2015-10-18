@@ -1,6 +1,42 @@
 #ifndef GAMEMODE_FREEZETAG_H
 #define GAMEMODE_FREEZETAG_H
 
+int autocvar_g_freezetag_point_limit;
+int autocvar_g_freezetag_point_leadlimit;
+bool autocvar_g_freezetag_team_spawns;
+void freezetag_Initialize();
+
+REGISTER_MUTATOR(ft, false)
+{
+	ActivateTeamplay();
+	SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, -1, -1);
+
+	if (autocvar_g_freezetag_team_spawns)
+		have_team_spawns = -1; // request team spawns
+
+	MUTATOR_ONADD
+	{
+		if (time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		freezetag_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back freezetag_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		LOG_INFO("This is a game type and it cannot be removed at runtime.");
+		return -1;
+	}
+
+	return 0;
+}
+
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
 const float ICE_MAX_ALPHA = 1;
@@ -15,15 +51,12 @@ float freezetag_teams;
 float autocvar_g_freezetag_frozen_maxtime;
 bool autocvar_g_freezetag_revive_nade;
 float autocvar_g_freezetag_revive_nade_health;
-int autocvar_g_freezetag_point_leadlimit;
-int autocvar_g_freezetag_point_limit;
 float autocvar_g_freezetag_revive_extra_size;
 float autocvar_g_freezetag_revive_speed;
 float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
 int autocvar_g_freezetag_teams;
 int autocvar_g_freezetag_teams_override;
-bool autocvar_g_freezetag_team_spawns;
 float autocvar_g_freezetag_warmup;
 
 const float SP_FREEZETAG_REVIVALS = 4;
@@ -621,34 +654,4 @@ void freezetag_Initialize()
 	EliminatedPlayers_Init(freezetag_isEliminated);
 }
 
-REGISTER_MUTATOR(ft, g_freezetag)
-{
-	ActivateTeamplay();
-	SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, -1, -1);
-
-	if(autocvar_g_freezetag_team_spawns)
-		have_team_spawns = -1; // request team spawns
-
-	MUTATOR_ONADD
-	{
-		if(time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
-		freezetag_Initialize();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back freezetag_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
-}
 #endif

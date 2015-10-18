@@ -640,10 +640,12 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 			case "timelimit":
 			{
 				cvar_set("timelimit", v);
+				break;
 			}
 			case "leadlimit":
 			{
 				cvar_set("leadlimit", v);
+				break;
 			}
 			case "pointlimit":
 			case "fraglimit":
@@ -652,15 +654,18 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 			case "caplimit":
 			{
 				fraglimit_normal = v;
+				break;
 			}
 			case "teampointlimit":
 			case "teamlaplimit":
 			{
 				fraglimit_teams = v;
+				break;
 			}
 			default:
 			{
 			    handled = false;
+			    break;
 			}
 		}
 		FOREACH(Gametypes, true, LAMBDA(handled |= it.m_parse_mapinfo(k, v)));
