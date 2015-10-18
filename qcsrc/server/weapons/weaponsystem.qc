@@ -3,7 +3,7 @@
 #include "selection.qh"
 
 #include "../command/common.qh"
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 #include "../round_handler.qh"
 #include "../t_items.qh"
 #include "../../common/animdecide.qh"

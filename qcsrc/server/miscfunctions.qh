@@ -4,7 +4,6 @@
 #include "t_items.qh"
 
 #include "mutators/events.qh"
-#include "mutators/gamemode_race.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"

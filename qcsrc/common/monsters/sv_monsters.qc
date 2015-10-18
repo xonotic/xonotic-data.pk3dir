@@ -11,7 +11,7 @@
     #include "../../server/autocvars.qh"
     #include "../../server/defs.qh"
     #include "../deathtypes/all.qh"
-    #include "../../server/mutators/mutators_include.qh"
+    #include "../../server/mutators/all.qh"
 	#include "../../server/steerlib.qh"
 	#include "../turrets/sv_turrets.qh"
 	#include "../turrets/util.qh"

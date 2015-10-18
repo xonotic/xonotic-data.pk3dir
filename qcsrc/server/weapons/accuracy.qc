@@ -1,6 +1,6 @@
 #include "accuracy.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 #include "../../common/constants.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"

@@ -43,7 +43,7 @@
 
 #include "command/all.qc"
 
-#include "mutators/mutators_include.qc"
+#include "mutators/all.qc"
 
 #include "pathlib/_all.inc"
 

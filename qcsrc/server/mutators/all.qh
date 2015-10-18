@@ -1,0 +1,6 @@
+#ifndef SERVER_MUTATORS_H
+#define SERVER_MUTATORS_H
+
+#include "all.inc"
+
+#endif

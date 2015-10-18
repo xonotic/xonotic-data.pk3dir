@@ -1,7 +1,7 @@
 #include "scores.qh"
 
 #include "command/common.qh"
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 

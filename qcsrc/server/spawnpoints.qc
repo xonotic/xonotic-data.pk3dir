@@ -1,6 +1,6 @@
 #include "spawnpoints.qh"
 
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "g_world.qh"
 #include "race.qh"
 #include "../common/constants.qh"

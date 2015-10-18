@@ -19,7 +19,7 @@
 #include "../race.qh"
 #include "../t_items.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 
 #include "../weapons/accuracy.qh"
 

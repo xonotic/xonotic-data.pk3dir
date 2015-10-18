@@ -4,7 +4,7 @@
 
 #include "../weapons/weaponsystem.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 
 // traces multiple trajectories to find one that will impact the target
 // 'end' vector is the place it aims for,

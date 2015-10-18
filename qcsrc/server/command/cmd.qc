@@ -12,7 +12,7 @@
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 
 #ifdef SVQC
 	#include "../../common/vehicles/all.qh"

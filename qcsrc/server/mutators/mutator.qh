@@ -2,7 +2,6 @@
 #define MUTATOR_H
 
 #include "../../common/mutators/base.qh"
-#include "mutator_nades.qh"
 
 #include "../cl_client.qh"
 #include "../cl_player.qh"

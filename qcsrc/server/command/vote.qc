@@ -9,7 +9,7 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 
 #include "../../common/constants.qh"
 #include "../../common/mapinfo.qh"

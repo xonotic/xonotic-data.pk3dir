@@ -13,7 +13,7 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mapvoting.qh"
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "race.qh"
 #include "scores.qh"
 #include "teamplay.qh"
