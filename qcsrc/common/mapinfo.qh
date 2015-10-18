@@ -20,6 +20,7 @@ CLASS(Gametype, Object)
     /** game type description */
     ATTRIB(Gametype, gametype_description, string, string_null)
 
+    ATTRIB(Gametype, m_mutators, string, string_null)
     ATTRIB(Gametype, m_parse_mapinfo, bool(string k, string v), func_null)
 
     METHOD(Gametype, describe, string(entity this)) { return this.gametype_description; }
@@ -28,13 +29,14 @@ CLASS(Gametype, Object)
         returns(this.message, strcat("gametype_", this.mdl));
     }
 
-    CONSTRUCTOR(Gametype, string hname, string sname, string g_name, bool gteamplay, string defaults, string gdescription)
+    CONSTRUCTOR(Gametype, string hname, string sname, string g_name, bool gteamplay, string mutators, string defaults, string gdescription)
     {
         CONSTRUCT(Gametype);
         this.netname = g_name;
         this.mdl = sname;
         this.message = hname;
         this.team = gteamplay;
+        this.m_mutators = mutators;
         this.model2 = defaults;
         this.gametype_description = gdescription;
     }
@@ -43,11 +45,11 @@ ENDCLASS(Gametype)
 REGISTRY(Gametypes, BIT(4))
 REGISTER_REGISTRY(RegisterGametypes)
 int MAPINFO_TYPE_ALL;
-#define REGISTER_GAMETYPE(hname, sname, g_name, NAME, gteamplay, defaults, gdescription)                    \
+#define REGISTER_GAMETYPE(hname, sname, g_name, NAME, gteamplay, mutators, defaults, gdescription)          \
     int MAPINFO_TYPE_##NAME;                                                                                \
     bool NAME##_mapinfo(string k, string v) { return = false; }                                             \
     REGISTER(RegisterGametypes, MAPINFO_TYPE, Gametypes, g_name, m_id,                                      \
-        NEW(Gametype, hname, #sname, #g_name, gteamplay, defaults, gdescription)                            \
+        NEW(Gametype, hname, #sname, #g_name, gteamplay, #sname " " mutators, defaults, gdescription)       \
     ) {                                                                                                     \
         /* same as `1 << m_id` */                                                                           \
         MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME;                \
@@ -59,11 +61,11 @@ int MAPINFO_TYPE_ALL;
 #define IS_GAMETYPE(NAME) \
     (MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
 
-REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,false,"timelimit=20 pointlimit=30 leadlimit=0",_("Score as many frags as you can."));
+REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,false,"","timelimit=20 pointlimit=30 leadlimit=0",_("Score as many frags as you can."));
 
-REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,false,"timelimit=20 lives=9 leadlimit=0",_("Survive and kill until the enemies have no lives left."));
+REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,false,"","timelimit=20 lives=9 leadlimit=0",_("Survive and kill until the enemies have no lives left."));
 
-REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,false,"timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0",_("Race against other players to the finish line."))
+REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,false,"","timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0",_("Race against other players to the finish line."))
 {
     if (!k) {
     	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
@@ -77,10 +79,10 @@ REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,false,"timelimit=20 qualifying_timeli
 }
 #define g_race IS_GAMETYPE(RACE)
 
-REGISTER_GAMETYPE(_("Race CTS"),cts,g_cts,CTS,false,"timelimit=20",_("Race for fastest time."));
+REGISTER_GAMETYPE(_("Race CTS"),cts,g_cts,CTS,false,"","timelimit=20",_("Race for fastest time."));
 #define g_cts IS_GAMETYPE(CTS)
 
-REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,true,"timelimit=20 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team."))
+REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,true,"","timelimit=20 pointlimit=50 teams=2 leadlimit=0",_("Help your team score the most frags against the enemy team."))
 {
     if (!k) {
         cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
@@ -94,10 +96,10 @@ REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,true,"timelimit
 }
 #define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
 
-REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,true,"timelimit=20 caplimit=10 leadlimit=6",_("Find and bring the enemy flag to your base to capture it, defend your base from the other team."));
+REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,true,"","timelimit=20 caplimit=10 leadlimit=6",_("Find and bring the enemy flag to your base to capture it, defend your base from the other team."));
 #define g_ctf IS_GAMETYPE(CTF)
 
-REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,true,"timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill all enemy teammates to win the round."))
+REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill all enemy teammates to win the round."))
 {
     if (!k) {
         cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
@@ -111,7 +113,7 @@ REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,true,"timelimit=20 pointlimit=10 te
 }
 #define g_ca IS_GAMETYPE(CA)
 
-REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,true,"timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture and defend all the control points to win."))
+REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,true,"","timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture and defend all the control points to win."))
 {
     if (!k) {
         cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
@@ -124,7 +126,7 @@ REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,true,"timelimit=20
     }
 }
 
-REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,true,"timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round."))
+REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,true,"","timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round."))
 {
     if (!k) {
     	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
@@ -137,15 +139,15 @@ REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,true,"timelimit=20 pointlim
     }
 }
 
-REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,true,"timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out."));
+REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,true,"","timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out."));
 #define g_assault IS_GAMETYPE(ASSAULT)
 
-REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,true,"pointlimit=1 timelimit=20",_("Capture control points to reach and destroy the enemy generator."));
+REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,true,"","pointlimit=1 timelimit=20",_("Capture control points to reach and destroy the enemy generator."));
 
-REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,true,"timelimit=20 pointlimit=5 leadlimit=0",_("Shoot and kick the ball into the enemies goal, keep your goal clean."));
+REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,true,"","timelimit=20 pointlimit=5 leadlimit=0",_("Shoot and kick the ball into the enemies goal, keep your goal clean."));
 #define g_nexball IS_GAMETYPE(NEXBALL)
 
-REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,true,"timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill enemies to freeze them, stand next to teammates to revive them, freeze the most enemies to win."))
+REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,true,"","timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill enemies to freeze them, stand next to teammates to revive them, freeze the most enemies to win."))
 {
     if (!k) {
         cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
@@ -159,9 +161,9 @@ REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,true,"timelimit=20 po
 }
 #define g_freezetag IS_GAMETYPE(FREEZETAG)
 
-REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,true,"timelimit=20 pointlimit=30",_("Hold the ball to get points for kills."));
+REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,true,"","timelimit=20 pointlimit=30",_("Hold the ball to get points for kills."));
 
-REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,false,"pointlimit=50 teams=0",_("Survive against waves of monsters."))
+REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,false,"","pointlimit=50 teams=0",_("Survive against waves of monsters."))
 {
     switch (k) {
         case "teams":
@@ -234,6 +236,7 @@ string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 // gets a gametype from a string
 string _MapInfo_GetDefaultEx(float t);
 float _MapInfo_GetTeamPlayBool(float t);
+Gametype MapInfo_Type(int t);
 float MapInfo_Type_FromString(string t);
 string MapInfo_Type_Description(float t);
 string MapInfo_Type_ToString(float t);

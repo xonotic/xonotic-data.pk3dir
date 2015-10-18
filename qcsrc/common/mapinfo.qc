@@ -685,6 +685,12 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 	}
 }
 
+Gametype MapInfo_Type(int t)
+{
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it));
+	return NULL;
+}
+
 int MapInfo_Type_FromString(string t)
 {
 #define deprecate(from, to) do { \
