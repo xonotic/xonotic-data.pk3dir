@@ -635,4 +635,10 @@ MUTATOR_HOOKABLE(BuffModel_Customize, EV_BuffModel_Customize);
     /** player */ i(entity, other) \
     /**/
 MUTATOR_HOOKABLE(BuffTouch, EV_BuffTouch);
+
+MUTATOR_HOOKABLE(SetNewParms, EV_NO_ARGS);
+
+MUTATOR_HOOKABLE(SetChangeParms, EV_NO_ARGS);
+
+MUTATOR_HOOKABLE(DecodeLevelParms, EV_NO_ARGS);
 #endif

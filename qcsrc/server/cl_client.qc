@@ -749,6 +749,8 @@ void SetNewParms (void)
 {
 	// initialize parms for a new player
 	parm1 = -(86400 * 366);
+
+	MUTATOR_CALLHOOK(SetNewParms);
 }
 
 /*
@@ -760,6 +762,8 @@ void SetChangeParms (void)
 {SELFPARAM();
 	// save parms for level change
 	parm1 = self.parm_idlesince - time;
+
+	MUTATOR_CALLHOOK(SetChangeParms);
 }
 
 /*
@@ -776,6 +780,8 @@ void DecodeLevelParms (void)
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
 	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
+
+	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
 
 /*
