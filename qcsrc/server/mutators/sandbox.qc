@@ -804,17 +804,10 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sandbox_SetModname)
-{
-	modname = "Sandbox";
-	return true;
-}
-
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, sandbox_SetModname, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
