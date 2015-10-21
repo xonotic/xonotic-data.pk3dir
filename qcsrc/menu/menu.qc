@@ -407,7 +407,7 @@ vector menuTooltipOrigin;
 vector menuTooltipSize;
 float menuTooltipAlpha;
 string menuTooltipText;
-float menuTooltipState; // 0: static, 1: fading in, 2: fading out
+float menuTooltipState; // 0: static, 1: fading in, 2: fading out, 3: forced fading out
 float m_testmousetooltipbox(vector pos)
 {
 	if(pos.x >= menuTooltipOrigin.x && pos.x < menuTooltipOrigin.x + menuTooltipSize.x)
@@ -534,6 +534,7 @@ string gettooltip()
 	}
 	return menuTooltipItem.tooltip;
 }
+string prev_tooltip;
 void m_tooltip(vector pos)
 {
 	float f, i, w;
@@ -556,13 +557,30 @@ void m_tooltip(vector pos)
 		menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
 		f = vlen(pos - menuTooltipAveragedMousePos);
 		if(f < 0.01)
+		{
 			it = m_findtooltipitem(main, pos);
+
+			if(it.instanceOfListBox && it.isScrolling(it))
+				it = world;
+
+			if(it && prev_tooltip != it.tooltip)
+			{
+				// fade out if tooltip of a certain item has changed
+				menuTooltipState = 3;
+				if(prev_tooltip)
+					strunzone(prev_tooltip);
+				prev_tooltip = strzone(it.tooltip);
+			}
+			else if(menuTooltipItem && !m_testmousetooltipbox(pos))
+				menuTooltipState = 3; // fade out if mouse touches it
+
+		}
 		else
 			it = NULL;
 	}
 	fontsize = '1 0 0' * (SKINFONTSIZE_TOOLTIP / conwidth) + '0 1 0' * (SKINFONTSIZE_TOOLTIP / conheight);
 
-	// float menuTooltipState; // 0: static, 1: fading in, 2: fading out
+	// float menuTooltipState; // 0: static, 1: fading in, 2: fading out, 3: forced fading out
 	if(it != menuTooltipItem)
 	{
 		switch(menuTooltipState)
@@ -613,18 +631,15 @@ void m_tooltip(vector pos)
 	else if(menuTooltipState == 2) // re-fade in?
 		menuTooltipState = 1;
 
-	if(menuTooltipItem)
-		if(!m_testmousetooltipbox(pos))
-			menuTooltipState = 2; // fade out if mouse touches it
-
 	switch(menuTooltipState)
 	{
-		case 1:
+		case 1: // fade in
 			menuTooltipAlpha = bound(0, menuTooltipAlpha + 5 * frametime, 1);
 			if(menuTooltipAlpha == 1)
 				menuTooltipState = 0;
 			break;
-		case 2:
+		case 2: // fade out
+		case 3: // forced fade out
 			menuTooltipAlpha = bound(0, menuTooltipAlpha - 2 * frametime, 1);
 			if(menuTooltipAlpha == 0)
 			{
