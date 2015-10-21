@@ -1,4 +1,3 @@
-#include "_all.qh"
 
 #include "anticheat.qh"
 #include "g_hook.qh"
@@ -13,19 +12,20 @@
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
 #include "../common/vehicles/all.qh"
 #include "../common/weapons/all.qh"
 
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
-#include "../warpzonelib/common.qh"
-#include "../warpzonelib/server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../lib/warpzone/server.qh"
 
 .float lastground;
+.int state;
 
 void CreatureFrame (void)
 {SELFPARAM();
@@ -62,7 +62,7 @@ void CreatureFrame (void)
 					if (!self.deadflag)
 					if (self.pain_finished < time)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, self.origin, '0 0 0');
 						self.pain_finished = time + 0.5;
 					}
 				}
@@ -76,11 +76,11 @@ void CreatureFrame (void)
 				{
 					if (self.watertype == CONTENT_LAVA)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA.m_id, self.origin, '0 0 0');
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME.m_id, self.origin, '0 0 0');
 					}
 				}
 				else
@@ -92,7 +92,7 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA.m_id, self.origin, '0 0 0');
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
@@ -101,7 +101,7 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME.m_id, self.origin, '0 0 0');
 					}
 				}
 			}
@@ -130,11 +130,11 @@ void CreatureFrame (void)
 				else
 					dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 				if (dm > 0)
-					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
+					Damage (self, world, world, dm, DEATH_FALL.m_id, self.origin, '0 0 0');
 			}
 
 			if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
+				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR.m_id, self.origin, '0 0 0');
 			// play stupid sounds
 			if (g_footsteps)
 			if (!gameover)

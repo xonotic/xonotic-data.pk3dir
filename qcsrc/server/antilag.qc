@@ -1,8 +1,6 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "../common/vehicles/all.qh"
     #include "antilag.qh"
 #endif

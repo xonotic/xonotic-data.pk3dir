@@ -1,4 +1,3 @@
-#include "../../_all.qh"
 
 #include "havocbot.qh"
 #include "role_keyhunt.qh"

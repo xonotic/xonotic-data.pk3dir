@@ -1,5 +1,4 @@
 #include "weaponsystem.qh"
-#include "../_all.qh"
 
 #include "selection.qh"
 
@@ -13,16 +12,53 @@
 #include "../../common/notifications.qh"
 #include "../../common/util.qh"
 #include "../../common/weapons/all.qh"
-#include "../../csqcmodellib/sv_model.qh"
+#include "../../lib/csqcmodel/sv_model.qh"
 
-/*
-===========================================================================
+vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
+{
+	switch(algn)
+	{
+		default: case 3: break; // right alignment
+		case 4: vecs.y = -vecs.y; break; // left
+		case 1: case 2: vecs.y = 0; vecs.z -= 2; break; // center
+	}
 
-  CLIENT WEAPONSYSTEM CODE
-  Bring back W_Weaponframe
+	return vecs;
+}
 
-===========================================================================
-*/
+vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
+{
+	string s;
+
+	if(visual)
+		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
+	else if(autocvar_g_shootfromeye)
+		vecs.y = vecs.z = 0;
+	else if(autocvar_g_shootfromcenter)
+	{
+		vecs.y = 0;
+		vecs.z -= 2;
+	}
+	else if((s = autocvar_g_shootfromfixedorigin) != "")
+	{
+		vector v = stov(s);
+		if(y_is_right) { v.y = -v.y; }
+		if(v.x != 0) { vecs.x = v.x; }
+		vecs.y = v.y;
+		vecs.z = v.z;
+	}
+	else // just do the same as top
+		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
+
+	return vecs;
+}
+
+vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn)
+{
+	return shotorg_adjust_values(vecs, y_is_right, visual, algn);
+}
+
+.int state;
 
 .float weapon_frametime;
 
@@ -253,8 +289,8 @@ void CL_WeaponEntity_SetModel(string name)
 	{
 		vector v0;
 		v0 = self.movedir;
-		self.movedir = shotorg_adjust(v0, false, false);
-		self.view_ofs = shotorg_adjust(v0, false, true) - v0;
+		self.movedir = shotorg_adjust(v0, false, false, self.owner.cvar_cl_gunalign);
+		self.view_ofs = shotorg_adjust(v0, false, true, self.owner.cvar_cl_gunalign) - v0;
 	}
 	self.owner.stat_shotorg = compressShotOrigin(self.movedir);
 	self.movedir = decompressShotOrigin(self.owner.stat_shotorg); // make them match perfectly

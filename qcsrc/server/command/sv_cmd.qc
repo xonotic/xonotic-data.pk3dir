@@ -1,6 +1,5 @@
 #include "../../common/command/command.qh"
 #include "sv_cmd.qh"
-#include "../_all.qh"
 
 #include "banning.qh"
 #include "cmd.qh"

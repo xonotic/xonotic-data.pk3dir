@@ -1,5 +1,4 @@
-#include "command.qh"
-#include "generic.qh"
+#include "all.qh"
 
 #include "markup.qh"
 #include "rpn.qh"
@@ -11,7 +10,7 @@
 #endif
 
 #ifdef CSQC
-	#include "../../client/command/cl_cmd.qh"
+	#include "../../client/commands/cl_cmd.qh"
 #endif
 
 #ifdef SVQC
@@ -185,7 +184,7 @@ void GenericCommand_qc_curl(float request, float argc)
 	}
 }
 
-void GenericCommand_dumpcommands(float request)
+GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to *_cmd_dump.txt")
 {
 	switch(request)
 	{
@@ -235,224 +234,6 @@ void GenericCommand_dumpcommands(float request)
 		{
 			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpcommands"));
 			LOG_INFO("  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-#ifndef MENUQC
-void effectinfo_dump(int fh, bool alsoprint);
-#endif
-void GenericCommand_dumpeffectinfo(float request)
-{
-    switch (request) {
-        case CMD_REQUEST_COMMAND: {
-            #ifndef MENUQC
-            string filename = argv(1);
-			bool alsoprint = false;
-            if (filename == "") {
-                filename = "effectinfo_dump.txt";
-                alsoprint = false;
-            } else if (filename == "-") {
-                filename = "effectinfo_dump.txt";
-                alsoprint = true;
-            }
-            int fh = fopen(filename, FILE_WRITE);
-            if (fh >= 0) {
-            	effectinfo_dump(fh, alsoprint);
-                LOG_INFOF("Dumping effectinfo... File located at ^2data/data/%s^7.\n", filename);
-				LOG_INFOF("Reload with ^2cl_particles_reloadeffects data/%s^7.\n", filename);
-                fclose(fh);
-            } else {
-                LOG_WARNINGF("Could not open file '%s'!\n", filename);
-            }
-            #else
-            LOG_INFO(_("Effectinfo dump command only works with cl_cmd and sv_cmd.\n"));
-            #endif
-            return;
-        }
-        default:
-        case CMD_REQUEST_USAGE: {
-            LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpeffectinfo [filename]"));
-            LOG_INFO("  Where 'filename' is the file to write (default is effectinfo_dump.txt),\n");
-            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-            LOG_INFO("  if left blank, it will only write to default.\n");
-            return;
-        }
-    }
-}
-STATIC_INIT(dumpeffectinfo) { localcmd("alias dumpeffectinfo \"qc_cmd_svcl dumpeffectinfo ${* ?}\"\n"); }
-
-void GenericCommand_dumpitems(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			Dump_Items();
-			return;
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFOF("\nUsage:^3 %s dumpitems", GetProgramCommandPrefix());
-			return;
-		}
-	}
-}
-
-void GenericCommand_dumpnotifs(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			#ifndef MENUQC
-			float fh, alsoprint = false;
-			string filename = argv(1);
-
-			if(filename == "")
-			{
-				filename = "notifications_dump.cfg";
-				alsoprint = false;
-			}
-			else if(filename == "-")
-			{
-				filename = "notifications_dump.cfg";
-				alsoprint = true;
-			}
-			fh = fopen(filename, FILE_WRITE);
-
-			if(fh >= 0)
-			{
-				Dump_Notifications(fh, alsoprint);
-				LOG_INFOF("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
-				fclose(fh);
-			}
-			else
-			{
-				LOG_INFOF("^1Error: ^7Could not open file '%s'!\n", filename);
-			}
-			#else
-			LOG_INFO(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
-			#endif
-			return;
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
-			LOG_INFO("  Where 'filename' is the file to write (default is notifications_dump.cfg),\n");
-			LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-			LOG_INFO("  if left blank, it will only write to default.\n");
-			return;
-		}
-	}
-}
-
-void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work with other progs than just server
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			#ifdef SVQC
-			wep_config_file = -1;
-			wep_config_alsoprint = -1;
-			string filename = argv(1);
-
-			if(filename == "")
-			{
-				filename = "weapons_dump.cfg";
-				wep_config_alsoprint = false;
-			}
-			else if(filename == "-")
-			{
-				filename = "weapons_dump.cfg";
-				wep_config_alsoprint = true;
-			}
-			wep_config_file = fopen(filename, FILE_WRITE);
-
-			if(wep_config_file >= 0)
-			{
-				Dump_Weapon_Settings();
-				LOG_INFO(sprintf("Dumping weapons... File located in ^2data/data/%s^7.\n", filename));
-				fclose(wep_config_file);
-				wep_config_file = -1;
-				wep_config_alsoprint = -1;
-			}
-			else
-			{
-				LOG_INFO(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
-			}
-			#else
-			LOG_INFO(_("Weapons dump command only works with sv_cmd.\n"));
-			#endif
-			return;
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
-			LOG_INFO("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
-			LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-			LOG_INFO("  if left blank, it will only write to default.\n");
-			return;
-		}
-	}
-}
-
-void GenericCommand_dumpturrets(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			#ifdef SVQC
-			tur_config_file = -1;
-			tur_config_alsoprint = -1;
-			string filename = argv(1);
-
-			if(filename == "")
-			{
-				filename = "turrets_dump.cfg";
-				tur_config_alsoprint = FALSE;
-			}
-			else if(filename == "-")
-			{
-				filename = "turrets_dump.cfg";
-				tur_config_alsoprint = TRUE;
-			}
-			tur_config_file = fopen(filename, FILE_WRITE);
-
-			if(tur_config_file >= 0)
-			{
-				Dump_Turret_Settings();
-				LOG_INFO(sprintf("Dumping turrets... File located in ^2data/data/%s^7.\n", filename));
-				fclose(tur_config_file);
-				tur_config_file = -1;
-				tur_config_alsoprint = -1;
-			}
-			else
-			{
-				LOG_INFO(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
-			}
-			#else
-			LOG_INFO(_("Turrets dump command only works with sv_cmd.\n"));
-			#endif
-			return;
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpturrets [filename]"));
-			LOG_INFO("  Where 'filename' is the file to write (default is turrets_dump.cfg),\n");
-			LOG_INFO("  if supplied with '-' output to console as well as default,\n");
-			LOG_INFO("  if left blank, it will only write to default.\n");
 			return;
 		}
 	}
@@ -757,72 +538,46 @@ void GenericCommand_(float request)
 }
 */
 
-// ==================================
-//  Macro system for server commands
-// ==================================
-
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define GENERIC_COMMANDS(request,arguments,command) \
-	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
-	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
-	GENERIC_COMMAND("dumpeffectinfo", GenericCommand_dumpeffectinfo(request), "Dump all effectinfo to effectinfo_dump.txt") \
-	GENERIC_COMMAND("dumpitems", GenericCommand_dumpitems(request), "Dump all items to the console") \
-	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
-	GENERIC_COMMAND("dumpturrets", GenericCommand_dumpturrets(request), "Dump all turrets into turrets_dump.txt") \
-	GENERIC_COMMAND("dumpweapons", GenericCommand_dumpweapons(request), "Dump all weapons into weapons_dump.txt") \
-	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
-	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
-	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \
-	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \
-	GENERIC_COMMAND("restartnotifs", GenericCommand_restartnotifs(request), "Re-initialize all notifications") \
-	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
-	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
-	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \
-	GENERIC_COMMAND("runtest", GenericCommand_runtest(request, arguments), "Run unit tests") \
-	/* nothing */
+GENERIC_COMMAND(addtolist, "Add a string to a cvar") { GenericCommand_addtolist(request, arguments); }
+GENERIC_COMMAND(maplist, "Automatic control of maplist") { GenericCommand_maplist(request, arguments); }
+GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM") { GenericCommand_nextframe(request, arguments, command); }
+GENERIC_COMMAND(qc_curl, "Queries a URL") { GenericCommand_qc_curl(request, arguments); }
+GENERIC_COMMAND(removefromlist, "Remove a string from a cvar") { GenericCommand_removefromlist(request, arguments); }
+GENERIC_COMMAND(restartnotifs, "Re-initialize all notifications") { GenericCommand_restartnotifs(request); }
+GENERIC_COMMAND(rpn, "RPN calculator") { GenericCommand_rpn(request, arguments, command); }
+GENERIC_COMMAND(settemp, "Temporarily set a value to a cvar which is restored later") { GenericCommand_settemp(request, arguments); }
+GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command") { GenericCommand_settemp_restore(request, arguments); }
+GENERIC_COMMAND(runtest, "Run unit tests") { GenericCommand_runtest(request, arguments); }
 
 void GenericCommand_macro_help()
 {
-	#define GENERIC_COMMAND(name,function,description) \
-		{ LOG_INFO("  ^2", name, "^7: ", description, "\n"); }
-
-	GENERIC_COMMANDS(0, 0, "");
-	#undef GENERIC_COMMAND
-
-	return;
+	FOREACH(GENERIC_COMMANDS, true, LAMBDA(LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description)));
 }
 
 float GenericCommand_macro_command(float argc, string command)
 {
-	#define GENERIC_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return true; } }
-
-	GENERIC_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
-	#undef GENERIC_COMMAND
-
+	string c = strtolower(argv(0));
+	FOREACH(GENERIC_COMMANDS, it.m_name == c, LAMBDA(
+		it.m_invokecmd(CMD_REQUEST_COMMAND, argc, command);
+		return true;
+	));
 	return false;
 }
 
 float GenericCommand_macro_usage(float argc)
 {
-	#define GENERIC_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return true; } }
-
-	GENERIC_COMMANDS(CMD_REQUEST_USAGE, argc, "");
-	#undef GENERIC_COMMAND
-
+	string c = strtolower(argv(1));
+	FOREACH(GENERIC_COMMANDS, it.m_name == c, LAMBDA(
+		it.m_invokecmd(CMD_REQUEST_USAGE, argc, "");
+		return true;
+	));
 	return false;
 }
 
 void GenericCommand_macro_write_aliases(float fh)
 {
-	#define GENERIC_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("qc_cmd_svmenu", name, description); }
-
-	GENERIC_COMMANDS(0, 0, "");
-	#undef GENERIC_COMMAND
-
-	return;
+	FOREACH(GENERIC_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_svmenu", it.m_name, it.m_description)));
 }
 
 

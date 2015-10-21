@@ -1,7 +1,7 @@
 #include "g_hook.qh"
-#include "_all.qh"
 
 #include "weapons/common.qh"
+#include "weapons/csqcprojectile.qh"
 #include "weapons/weaponsystem.qh"
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
@@ -12,8 +12,10 @@
 #include "../common/constants.qh"
 #include "../common/util.qh"
 #include "../common/weapons/all.qh"
-#include "../warpzonelib/common.qh"
-#include "../warpzonelib/server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../lib/warpzone/server.qh"
+
+.int state;
 
 /*============================================
 
@@ -149,10 +151,7 @@ void GrapplingHookThink()
 
 	self.nextthink = time;
 
-	int s = self.realowner.cvar_cl_gunalign;
-	if(s != 1 && s != 2 && s != 4)
-		s = 3; // default value
-	--s;
+	int s = W_GetGunAlignment(self.realowner);
 	vs = hook_shotorigin[s];
 
 	makevectors(self.realowner.v_angle);
@@ -351,10 +350,7 @@ void FireGrapplingHook (void)
 
 	makevectors(self.v_angle);
 
-	int s = self.cvar_cl_gunalign;
-	if(s != 1 && s != 2 && s != 4)
-		s = 3; // default value
-	--s;
+	int s = W_GetGunAlignment(self);
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds

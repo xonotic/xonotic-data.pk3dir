@@ -3,10 +3,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../server/_all.qh"
-    #include "../../warpzonelib/common.qh"
-    #include "../../warpzonelib/util_server.qh"
-    #include "../../warpzonelib/server.qh"
+    #include "../../lib/warpzone/common.qh"
+    #include "../../lib/warpzone/util_server.qh"
+    #include "../../lib/warpzone/server.qh"
     #include "../constants.qh"
 	#include "../triggers/subs.qh"
     #include "../util.qh"
@@ -14,7 +13,7 @@
     #include "../../server/autocvars.qh"
     #include "../../server/constants.qh"
     #include "../../server/defs.qh"
-    #include "../deathtypes.qh"
+    #include "../deathtypes/all.qh"
     #include "../turrets/sv_turrets.qh"
     #include "../vehicles/all.qh"
     #include "../mapinfo.qh"
@@ -49,11 +48,11 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						++tdeath_hit;
-				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG, head.origin, '0 0 0');
+				Damage (head, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, head.origin, '0 0 0');
 			}
 		}
 		else // dead bodies and monsters gib themselves instead of telefragging
-			Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG, telefragger.origin, '0 0 0');
+			Damage (telefragger, teleporter, telefragger, 10000, DEATH_TELEFRAG.m_id, telefragger.origin, '0 0 0');
 	}
 }
 

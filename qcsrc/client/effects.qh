@@ -1,5 +1,5 @@
-#ifndef EFFECTS_H
-#define EFFECTS_H
+#ifndef CLIENT_EFFECTS_H
+#define CLIENT_EFFECTS_H
 
 void Net_ReadArc();
 

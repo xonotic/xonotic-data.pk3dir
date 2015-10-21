@@ -17,6 +17,8 @@ const int PP_NUM_CNT = 7;
 
 const int PP_TILE_SIZE = 7;
 
+.int cnt;
+
 .int pp_team1_score;
 .int pp_team2_score;
 

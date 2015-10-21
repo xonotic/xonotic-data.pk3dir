@@ -1,3 +1,13 @@
+#ifndef MUTATOR_DAMAGETEXT_H
+#define MUTATOR_DAMAGETEXT_H
+
+#ifdef MENUQC
+#include "../../../menu/xonotic/tab.qc"
+#endif
+
+#endif
+
+#ifdef IMPLEMENTATION
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
@@ -111,7 +121,6 @@ MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
 #endif
 
 #ifdef MENUQC
-#include "../../../menu/xonotic/tab.qc"
 CLASS(XonoticDamageTextSettings, XonoticTab)
     #include "../../../menu/gamesettings.qh"
     REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
@@ -139,4 +148,5 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
             this.TD(this, 2, 2, makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
     }
 ENDCLASS(XonoticDamageTextSettings)
+#endif
 #endif

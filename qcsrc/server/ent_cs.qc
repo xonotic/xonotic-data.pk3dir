@@ -1,5 +1,6 @@
 #include "ent_cs.qh"
-#include "_all.qh"
+
+#include "mutators/gamemode_ca.qh"
 
 float entcs_customize()
 {

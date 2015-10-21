@@ -1,5 +1,4 @@
 #include "gamemode_freezetag.qh"
-#include "../_all.qh"
 
 #include "gamemode.qh"
 
@@ -342,7 +341,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
 	// you succeed changing team through the menu: you both really die (gibbing) and get frozen
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
-		|| frag_deathtype == DEATH_TEAMCHANGE || frag_deathtype == DEATH_AUTOTEAMCHANGE)
+		|| frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
 		// let the player die, he will be automatically frozen when he respawns
 		if(self.frozen != 1)

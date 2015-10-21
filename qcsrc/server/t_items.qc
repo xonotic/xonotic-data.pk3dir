@@ -3,7 +3,6 @@
 #include "../common/items/all.qc"
 
 #if defined(SVQC)
-    #include "_all.qh"
 
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
@@ -15,7 +14,7 @@
     #include "weapons/weaponsystem.qh"
 
     #include "../common/constants.qh"
-    #include "../common/deathtypes.qh"
+    #include "../common/deathtypes/all.qh"
     #include "../common/notifications.qh"
 	#include "../common/triggers/subs.qh"
     #include "../common/util.qh"
@@ -24,7 +23,7 @@
 
     #include "../common/weapons/all.qh"
 
-    #include "../warpzonelib/util_server.qh"
+    #include "../lib/warpzone/util_server.qh"
 #endif
 
 #ifdef CSQC
@@ -514,8 +513,6 @@ void Item_RespawnCountdown (void)
 			WaypointSprite_Ping(self.waypointsprite_attached);
 			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
 		}
-		else
-			sound(self, CH_TRIGGER, SND_ITEMRESPAWNCOUNTDOWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	}
 }
 
@@ -577,7 +574,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 	if (item.spawnshieldtime)
 	{
-		if ((player.(ammotype) < ammomax) || item.pickup_anyway)
+		if ((player.(ammotype) < ammomax) || item.pickup_anyway > 0)
 		{
 			player.(ammotype) = bound(player.(ammotype), ammomax, player.(ammotype) + item.(ammotype));
 			goto YEAH;
@@ -648,7 +645,7 @@ float Item_GiveTo(entity item, entity player)
 		it = item.weapons;
 		it &= ~player.weapons;
 
-		if (it || (item.spawnshieldtime && item.pickup_anyway))
+		if (it || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
 			pickedup = true;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1073,12 +1070,12 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		// it's a level item
 		if(self.spawnflags & 1)
 			self.noalign = 1;
-		if (self.noalign)
+		if (self.noalign > 0)
 			self.movetype = MOVETYPE_NONE;
 		else
 			self.movetype = MOVETYPE_TOSS;
 		// do item filtering according to game mode and other things
-		if (!self.noalign)
+		if (self.noalign <= 0)
 		{
 			// first nudge it off the floor a little bit to avoid math errors
 			setorigin(self, self.origin + '0 0 1');
@@ -1089,7 +1086,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				setsize (self, '-16 -16 0', '16 16 32');
 			self.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
-			droptofloor();
+			if(!self.noalign)
+				droptofloor();
 			waypoint_spawnforitem(self);
 		}
 
@@ -1157,11 +1155,14 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	self.SendFlags |= ISF_SIZE;
 
-	if(itemflags & FL_POWERUP)
-		self.ItemStatus |= ITS_ANIMATE1;
+	if(!(self.spawnflags & 1024))
+	{
+		if(itemflags & FL_POWERUP)
+			self.ItemStatus |= ITS_ANIMATE1;
 
-	if(self.armorvalue || self.health)
-		self.ItemStatus |= ITS_ANIMATE2;
+		if(self.armorvalue || self.health)
+			self.ItemStatus |= ITS_ANIMATE2;
+	}
 
 	if(itemflags & FL_WEAPON)
 	{
@@ -1170,7 +1171,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		else
 			self.gravity = 1;
 
-		self.ItemStatus |= ITS_ANIMATE1;
+		if(!(self.spawnflags & 1024))
+			self.ItemStatus |= ITS_ANIMATE1;
 		self.ItemStatus |= ISF_COLORMAP;
 	}
 

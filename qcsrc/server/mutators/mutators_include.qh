@@ -13,7 +13,6 @@
 #include "gamemode_keepaway.qh"
 #include "gamemode_keyhunt.qh"
 #include "gamemode_lms.qh"
-#include "gamemode_nexball.qh"
 #include "gamemode_onslaught.qh"
 #include "gamemode_race.qh"
 

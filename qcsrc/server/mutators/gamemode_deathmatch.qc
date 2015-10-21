@@ -1,3 +1,5 @@
+#include "gamemode.qh"
+
 MUTATOR_HOOKFUNCTION(dm_CountFrags)
 {
 	// announce remaining frags

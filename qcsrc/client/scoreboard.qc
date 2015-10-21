@@ -1,6 +1,6 @@
 #include "scoreboard.qh"
-#include "_all.qh"
 
+#include "quickmenu.qh"
 #include "hud.qh"
 
 #include "../common/constants.qh"
@@ -8,7 +8,6 @@
 #include "../common/minigames/cl_minigames.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
-#include "../common/util.qh"
 
 float scoreboard_alpha_bg;
 float scoreboard_alpha_fg;

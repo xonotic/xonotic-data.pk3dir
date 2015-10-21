@@ -1,12 +1,12 @@
 #include "common.qh"
-#include "../_all.qh"
 
 #include "../t_items.qh"
 #include "../../common/constants.qh"
-#include "../../common/deathtypes.qh"
+#include "../../common/deathtypes/all.qh"
 #include "../../common/notifications.qh"
 #include "../../common/util.qh"
 #include "../../common/weapons/all.qh"
+#include "../../common/items/all.qc"
 
 void W_GiveWeapon (entity e, float wep)
 {SELFPARAM();
@@ -38,7 +38,7 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception)
 {
-	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
+	float is_from_contents = (deathtype == DEATH_SLIME.m_id || deathtype == DEATH_LAVA.m_id);
 	float is_from_owner = (inflictor == projowner);
 	float is_from_exception = (exception != -1);
 

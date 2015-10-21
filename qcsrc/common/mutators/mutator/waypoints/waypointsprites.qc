@@ -1,5 +1,7 @@
 #include "waypointsprites.qh"
 
+#ifdef IMPLEMENTATION
+
 REGISTER_MUTATOR(waypointsprites, true);
 
 #ifdef SVQC
@@ -1111,8 +1113,8 @@ entity WaypointSprite_AttachCarrier(
     entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
     if (e)
     {
-        WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);
-        WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(carrier.health, carrier.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
+        WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
+        WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(carrier.health, carrier.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
     }
     return e;
 }
@@ -1147,4 +1149,5 @@ void WaypointSprite_PlayerGone()
     WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);
     WaypointSprite_DetachCarrier(self);
 }
+#endif
 #endif

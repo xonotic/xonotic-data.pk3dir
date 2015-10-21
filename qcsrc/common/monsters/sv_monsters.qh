@@ -94,6 +94,9 @@ void monster_makevectors(entity e);
 
 void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float chan);
 
+/** number of monsters spawned with mobspawn command */
+int totalspawned;
+
 // monster sounds
 .float msound_delay; // temporary antilag system
 #define ALLMONSTERSOUNDS \

@@ -131,14 +131,14 @@ void conveyor_init()
 
 spawnfunc(trigger_conveyor)
 {
-	SetMovedir();
+	SetMovedir(self);
 	EXACTTRIGGER_INIT;
 	conveyor_init();
 }
 
 spawnfunc(func_conveyor)
 {
-	SetMovedir();
+	SetMovedir(self);
 	InitMovingBrushTrigger();
 	self.movetype = MOVETYPE_NONE;
 	conveyor_init();

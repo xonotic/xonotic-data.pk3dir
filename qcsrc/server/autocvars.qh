@@ -461,7 +461,6 @@ float autocvar_g_respawn_ghosts_speed;
 int autocvar_g_respawn_waves;
 bool autocvar_g_running_guns;
 bool autocvar_g_shootfromcenter;
-int autocvar_g_shootfromclient;
 bool autocvar_g_shootfromeye;
 string autocvar_g_shootfromfixedorigin;
 int autocvar_g_showweaponspawns;

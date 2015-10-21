@@ -1,0 +1,16 @@
+#ifndef COMPILER_H
+#define COMPILER_H
+
+#ifndef QCC_SUPPORT_ACCUMULATE
+    #ifdef GMQCC
+        #define QCC_SUPPORT_ACCUMULATE
+    #endif
+#endif
+
+#ifndef QCC_SUPPORT_NIL
+    #ifdef GMQCC
+        #define QCC_SUPPORT_NIL
+    #endif
+#endif
+
+#endif

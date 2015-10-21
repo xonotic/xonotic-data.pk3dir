@@ -1,7 +1,6 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../../server/_all.qh"
     #include "../../constants.qh"
     #include "../../../server/constants.qh"
     #include "../../../server/defs.qh"
@@ -33,6 +32,17 @@ void target_music_reset()
 {SELFPARAM();
 	if(self.targetname == "")
 		target_music_sendto(MSG_ALL, 1);
+}
+void target_music_kill()
+{
+	for(self = world; (self = find(self, classname, "target_music")); )
+	{
+		self.volume = 0;
+		if(self.targetname == "")
+			target_music_sendto(MSG_ALL, 1);
+		else
+			target_music_sendto(MSG_ALL, 0);
+	}
 }
 void target_music_use()
 {

@@ -1,12 +1,13 @@
 #include "throwing.qh"
-#include "../_all.qh"
 
 #include "weaponsystem.qh"
 #include "../mutators/mutators_include.qh"
 #include "../t_items.qh"
 #include "../g_damage.qh"
+#include "../../common/items/item.qh"
 #include "../../common/mapinfo.qh"
 #include "../../common/notifications.qh"
+#include "../../common/triggers/subs.qh"
 #include "../../common/util.qh"
 #include "../../common/weapons/all.qh"
 

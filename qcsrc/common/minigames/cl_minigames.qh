@@ -1,8 +1,6 @@
 #ifndef CL_MINIGAMES_H
 #define CL_MINIGAMES_H
 
-#include "../../dpdefs/keycodes.qh"
-
 // Get a square in the center of the avaliable area
 // \note macro to pass by reference pos and mySize
 #define minigame_hud_fitsqare(pos, mySize) \

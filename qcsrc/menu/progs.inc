@@ -1,9 +1,6 @@
-#include "../common/util-pre.qh"
-#include "../dpdefs/menudefs.qh"
-#include "../dpdefs/keycodes.qh"
-#include "../common/util-post.qh"
-
 #include "../lib/_all.inc"
+
+#define world NULL
 
 #include "oo/classes.qc"
 
