@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-13 21:14+0200\n"
-"PO-Revision-Date: 2015-10-13 19:02+0000\n"
+"POT-Creation-Date: 2015-10-14 01:50+0200\n"
+"PO-Revision-Date: 2015-10-13 23:50+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/team-xonotic/"
 "xonotic/language/zh_CN/)\n"
@@ -5352,7 +5352,7 @@ msgid "Profile"
 msgstr "配置文件"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:46
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:109
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.qc:190
 #: qcsrc/menu/xonotic/skinlist.qc:123 qcsrc/menu/xonotic/util.qc:743
 #: qcsrc/menu/xonotic/util.qc:759 qcsrc/menu/xonotic/util.qc:768
@@ -5377,185 +5377,127 @@ msgid "Timelimit in minutes that when hit, will end the match"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:80
+#, c-format
+msgid "%d minutes"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
 msgid "TIMLIM^Default"
 msgstr "TIMLIM^默认"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:81
-msgid "TIMLIM^1 minute"
-msgstr "TIMLIM^1 分钟"
-
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:82
-msgid "TIMLIM^2 minutes"
-msgstr "TIMLIM^2 分钟"
+#: qcsrc/menu/xonotic/dialog_settings_audio.qc:158
+msgid "1 minute"
+msgstr "1 分钟"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:83
-msgid "TIMLIM^3 minutes"
-msgstr "TIMLIM^3 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:84
-msgid "TIMLIM^4 minutes"
-msgstr "TIMLIM^4 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:85
-msgid "TIMLIM^5 minutes"
-msgstr "TIMLIM^5 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:86
-msgid "TIMLIM^6 minutes"
-msgstr "TIMLIM^6 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:87
-msgid "TIMLIM^7 minutes"
-msgstr "TIMLIM^7 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:88
-msgid "TIMLIM^8 minutes"
-msgstr "TIMLIM^8 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:89
-msgid "TIMLIM^9 minutes"
-msgstr "TIMLIM^9 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:90
-msgid "TIMLIM^10 minutes"
-msgstr "TIMLIM^10 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:91
-msgid "TIMLIM^15 minutes"
-msgstr "TIMLIM^15 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:92
-msgid "TIMLIM^20 minutes"
-msgstr "TIMLIM^20 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:93
-msgid "TIMLIM^25 minutes"
-msgstr "TIMLIM^25 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:94
-msgid "TIMLIM^30 minutes"
-msgstr "TIMLIM^30 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:95
-msgid "TIMLIM^40 minutes"
-msgstr "TIMLIM^40 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:96
-msgid "TIMLIM^50 minutes"
-msgstr "TIMLIM^50 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:97
-msgid "TIMLIM^60 minutes"
-msgstr "TIMLIM^60 分钟"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:99
 msgid "TIMLIM^Infinite"
 msgstr "TIMLIM^无限时间"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:101
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:233
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:103
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:235
 msgid "Frag limit:"
 msgstr "炸弹限制："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:105
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:107
 msgid "Teams:"
 msgstr "团队："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:108
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
 msgid "2 teams"
 msgstr "团队2"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:109
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:111
 msgid "3 teams"
 msgstr "团队3"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:110
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:112
 msgid "4 teams"
 msgstr "团队4"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:113
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
 msgid "Player slots:"
 msgstr "玩家位置："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:115
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:117
 msgid ""
 "The maximum amount of players or bots that can be connected to your server "
 "at once"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:117
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
 msgid "Number of bots:"
 msgstr "机器人数量："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:119
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
 msgid "Amount of bots on your server"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:121
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:123
 msgid "Bot skill:"
 msgstr "机器人技能"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:124
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
 msgid "Specify how experienced the bots will be"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:125
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
 msgid "Botlike"
 msgstr "僵尸"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:126
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:128
 msgid "Beginner"
 msgstr "新手"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:127
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
 msgid "You will win"
 msgstr "你会赢的"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:128
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
 msgid "You can win"
 msgstr "你能赢的"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:129
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
 msgid "You might win"
 msgstr "你可能会赢"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:130
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
 msgid "Advanced"
 msgstr "高级"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:131
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
 msgid "Expert"
 msgstr "专家"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:132
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
 msgid "Pro"
 msgstr "强化"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:133
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
 msgid "Assassin"
 msgstr "刺客"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:134
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:136
 msgid "Unhuman"
 msgstr "极限"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:135
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:137
 msgid "Godlike"
 msgstr "超神"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:153
 msgid "Mutators..."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:152
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:154
 msgid "Mutators and weapon arenas"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:161
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:163
 msgid "Maplist"
 msgstr "地图列表"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:169
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:171
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.qc:29
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_demo.qc:49
 #: qcsrc/menu/xonotic/dialog_multiplayer_media_musicplayer.qc:29
@@ -5563,75 +5505,75 @@ msgstr "地图列表"
 msgid "Filter:"
 msgstr "筛选器："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:171
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:173
 msgid ""
-"Click here or Ctrl-F to provide a keyword to narrow down the maplist above. "
-"Ctrl-Delete to clear; Enter when done."
+"Click here or Ctrl-F to provide a keyword to narrow down the map list. Ctrl-"
+"Delete to clear; Enter when done."
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:181
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:183
 msgid "Add shown"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:182
-msgid "Add the maps shown in Maplist above to your selection"
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:184
+msgid "Add the maps shown in the list to your selection"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:185
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:187
 msgid "Remove shown"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:186
-msgid "Remove the maps shown in Maplist above from your selection"
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:188
+msgid "Remove the maps shown in the list from your selection"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:191
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:193
 msgid "Add all"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:194
 msgid "Add every available map to your selection"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:195
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:197
 msgid "Remove all"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:196
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:198
 msgid "Remove all the maps from your selection"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:203
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:205
 msgid "Start Multiplayer!"
 msgstr "开始游戏！"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:222
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:224
 msgid "Capture limit:"
 msgstr "捕捉限制："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:223
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:224
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:228
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:229
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:225
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:226
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:230
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:231
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:232
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:233
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:234
 msgid "Point limit:"
 msgstr "点数限制："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:225
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:227
 msgid "Lives:"
 msgstr "活动："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:226
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:228
 msgid "Laps:"
 msgstr "范围："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:227
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:229
 msgid "Goals:"
 msgstr "目标："
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:233
+#: qcsrc/menu/xonotic/dialog_multiplayer_create.qc:235
 msgid "The amount of frags needed before the match will end"
 msgstr ""
 
@@ -6042,14 +5984,10 @@ msgid "Demos"
 msgstr "预览"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:29
-msgid "Browse and view demos"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:30
 msgid "Screenshots"
 msgstr "屏幕截图"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:31
+#: qcsrc/menu/xonotic/dialog_multiplayer_media.qc:30
 msgid "Music Player"
 msgstr ""
 
@@ -6225,8 +6163,8 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_profile.qc:164
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:178
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:237
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:166
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:238
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:164
 msgid "Apply immediately"
 msgstr ""
 
@@ -6382,25 +6320,13 @@ msgstr ""
 msgid "Video"
 msgstr "影像"
 
-#: qcsrc/menu/xonotic/dialog_settings.qc:21
-msgid "Video settings"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_settings.qc:22
 msgid "Effects"
 msgstr "效果"
 
-#: qcsrc/menu/xonotic/dialog_settings.qc:22
-msgid "Effects settings"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_settings.qc:23
 msgid "Audio"
 msgstr "声音"
-
-#: qcsrc/menu/xonotic/dialog_settings.qc:23
-msgid "Audio settings"
-msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings.qc:25
 msgid "Game"
@@ -6410,10 +6336,6 @@ msgstr "游戏"
 msgid "Input"
 msgstr "输入"
 
-#: qcsrc/menu/xonotic/dialog_settings.qc:26
-msgid "Input settings"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_settings.qc:27
 msgid "User"
 msgstr "用户"
@@ -6421,10 +6343,6 @@ msgstr "用户"
 #: qcsrc/menu/xonotic/dialog_settings.qc:28
 msgid "Misc"
 msgstr "杂项"
-
-#: qcsrc/menu/xonotic/dialog_settings.qc:28
-msgid "Misc settings"
-msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:29
 msgid "Master:"
@@ -6603,10 +6521,6 @@ msgstr "时间提示器："
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:157
 msgid "WRN^Disabled"
 msgstr "WRN^已禁用"
-
-#: qcsrc/menu/xonotic/dialog_settings_audio.qc:158
-msgid "1 minute"
-msgstr "1 分钟"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.qc:159
 msgid "5 minutes"
@@ -6863,7 +6777,7 @@ msgid "Decals on models"
 msgstr "模型涂鸦"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.qc:148
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:230
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:231
 msgid "Distance:"
 msgstr "距离："
 
@@ -7003,11 +6917,15 @@ msgstr "粒子效果"
 msgid "Spawnpoint effects"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:224
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:220
+msgid "Particles effects at all spawn points and whenever a player spawns"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:225
 msgid "Quality:"
 msgstr "品质："
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.qc:233
+#: qcsrc/menu/xonotic/dialog_settings_effects.qc:234
 msgid "Particles further away than this will not be drawn (default: 1000)"
 msgstr ""
 
@@ -7381,22 +7299,18 @@ msgid "Gibs:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_model.qc:70
-msgid "Reduce the amount of gibs or remove them completely (default: lots)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:71
 msgid "GIBS^None"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:71
 msgid "GIBS^Few"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:73
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:72
 msgid "GIBS^Many"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:74
+#: qcsrc/menu/xonotic/dialog_settings_game_model.qc:73
 msgid "GIBS^Lots"
 msgstr ""
 
@@ -7450,7 +7364,7 @@ msgid "Field of view:"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:81
-msgid "Field of vision in degrees from 60 to 130, default is 90"
+msgid "Field of vision in degrees (default: 100)"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_view.qc:85
@@ -7692,92 +7606,93 @@ msgstr "保存"
 msgid "Cancel"
 msgstr "取消"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:27
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:14
+#, c-format
+msgid "%d fps"
+msgstr ""
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:28
 msgid "Network"
 msgstr "互联网"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:29
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:30
 msgid "Client UDP port:"
 msgstr "客户端 UDP 端口："
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:31
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:32
 msgid "Force client to use chosen port unless it is set to 0"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:34
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:35
 msgid "Bandwidth:"
 msgstr "带宽："
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:36
-msgid "Specify your network speed with this slider"
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
+msgid "Specify your network speed"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:37
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:38
 msgid "56k"
 msgstr "56k"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:38
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
 msgid "ISDN"
 msgstr "ISDN"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:39
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:40
 msgid "Slow ADSL"
 msgstr "低速 ADSL"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:40
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:41
 msgid "Fast ADSL"
 msgstr "高速 ADSL"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:41
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:42
 msgid "Broadband"
 msgstr "宽带"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:44
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:45
 msgid "Input packets/s:"
 msgstr "Input packets/s:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:46
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:47
 msgid "How many input packets to send to the server each second"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:48
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:49
 msgid "Server queries/s:"
 msgstr "Server queries/s:"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:52
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:53
 msgid "Downloads:"
 msgstr "下载"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:54
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:55
 msgid "Maximum number of concurrent HTTP/FTP downloads"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:57
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:58
 msgid "Speed (kB/s):"
 msgstr "速度 (kB/s):"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:60
 msgid "Maximum download speed"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:63
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:64
 msgid "Local latency:"
 msgstr "本地延迟："
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:67
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
 msgid "Show netgraph"
 msgstr "显示网络图"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_misc.qc:69
 msgid "Show a graph of packet sizes and other information"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:70
-msgid "Client-side movement prediction"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:71
-msgid "Enable clientside movement prediction"
+msgid "Client-side movement prediction"
 msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:73
@@ -7796,50 +7711,6 @@ msgstr "帧率"
 msgid "Maximum:"
 msgstr "最大值："
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:84
-msgid "MAXFPS^5 fps"
-msgstr "MAXFPS^5 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:85
-msgid "MAXFPS^10 fps"
-msgstr "MAXFPS^10 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:86
-msgid "MAXFPS^20 fps"
-msgstr "MAXFPS^20 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:87
-msgid "MAXFPS^30 fps"
-msgstr "MAXFPS^30 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:88
-msgid "MAXFPS^40 fps"
-msgstr "MAXFPS^40 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:89
-msgid "MAXFPS^50 fps"
-msgstr "MAXFPS^50 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:90
-msgid "MAXFPS^60 fps"
-msgstr "MAXFPS^60 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:91
-msgid "MAXFPS^70 fps"
-msgstr "MAXFPS^70 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:92
-msgid "MAXFPS^100 fps"
-msgstr "MAXFPS^100 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:93
-msgid "MAXFPS^125 fps"
-msgstr "MAXFPS^125 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:94
-msgid "MAXFPS^200 fps"
-msgstr "MAXFPS^200 fps"
-
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:95
 msgid "MAXFPS^Unlimited"
 msgstr "MAXFPS^无限制"
@@ -7852,53 +7723,9 @@ msgstr "目标值："
 msgid "TRGT^Disabled"
 msgstr "TRGT^已禁用"
 
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:101
-msgid "TRGT^30 fps"
-msgstr "TRGT^30 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:102
-msgid "TRGT^40 fps"
-msgstr "TRGT^40 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:103
-msgid "TRGT^50 fps"
-msgstr "TRGT^50 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:104
-msgid "TRGT^60 fps"
-msgstr "TRGT^60 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:105
-msgid "TRGT^100 fps"
-msgstr "TRGT^100 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:106
-msgid "TRGT^125 fps"
-msgstr "TRGT^125 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:107
-msgid "TRGT^200 fps"
-msgstr "TRGT^200 fps"
-
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:110
 msgid "Idle limit:"
 msgstr "空余时间限制："
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:112
-msgid "IDLFPS^10 fps"
-msgstr "IDLFPS^10 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:113
-msgid "IDLFPS^20 fps"
-msgstr "IDLFPS^20 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:114
-msgid "IDLFPS^30 fps"
-msgstr "IDLFPS^30 fps"
-
-#: qcsrc/menu/xonotic/dialog_settings_misc.qc:115
-msgid "IDLFPS^60 fps"
-msgstr "IDLFPS^60 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.qc:116
 msgid "IDLFPS^Unlimited"
@@ -8106,217 +7933,212 @@ msgid "Full screen"
 msgstr "全屏幕"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:51
-msgid "Enable fullscreen mode (default: enabled)"
-msgstr ""
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:52
 msgid "Vertical Synchronization"
 msgstr "垂直同步"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:53
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:52
 msgid ""
 "Enable vertical synchronization to prevent tearing, will cap your fps to the "
 "screen refresh rate (default: disabled)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:58
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:57
 msgid "Flip view horizontally"
 msgstr "翻转横向视图"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:59
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:58
 msgid "Poor man's left handed mode (default: off)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:62
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:61
 msgid "Anisotropy:"
 msgstr "各向异性："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:64
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:63
 msgid "Anisotropic filtering quality (default: 1x)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:64
 msgid "ANISO^Disabled"
 msgstr "ANISO^已禁用"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:66
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:77
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:65
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:76
 msgid "2x"
 msgstr "2x"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:67
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:78
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:66
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:77
 msgid "4x"
 msgstr "4x"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:68
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:67
 msgid "8x"
 msgstr "8x"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:69
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:68
 msgid "16x"
 msgstr "16x"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:72
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:71
 msgid "Antialiasing:"
 msgstr "抗锯齿："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:75
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:74
 msgid ""
 "Enable antialiasing, which smooths the edges of 3D geometry. Note that it "
 "might decrease performance by quite a lot (default: disabled)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:76
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:75
 msgid "AA^Disabled"
 msgstr "AA^已禁用"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:82
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:81
 msgid "High-quality frame buffer"
 msgstr "高品质帧缓冲区"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:87
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:86
 msgid "Depth first:"
 msgstr "深度优先："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:89
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:88
 msgid ""
 "Eliminate overdraw by rendering a depth-only version of the scene before the "
 "normal rendering starts (default: disabled)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:90
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:89
 msgid "DF^Disabled"
 msgstr "DF^已禁用"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:91
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:90
 msgid "DF^World"
 msgstr "DF^世界"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:92
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:91
 msgid "DF^All"
 msgstr "DF^全部"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:95
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:94
 msgid "Vertex Buffer Objects (VBOs)"
 msgstr "顶点缓冲区对象 (VBOs)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:98
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:97
 msgid "VBO^Off"
 msgstr "VBO^关"
 
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:98
+msgid "Vertices, some Tris (compatible)"
+msgstr "顶点，部分三角形 (兼容模式)"
+
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:99
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:101
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:103
 #: qcsrc/menu/xonotic/dialog_settings_video.qc:105
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:107
 msgid ""
 "Make use of Vertex Buffer Objects to store static geometry in video memory "
 "for faster rendering (default: Vertex and Triangles)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:100
-msgid "Vertices, some Tris (compatible)"
-msgstr "顶点，部分三角形 (兼容模式)"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:104
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:102
 msgid "Vertices"
 msgstr "顶点"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:106
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:104
 msgid "Vertices and Triangles"
 msgstr "顶点和三角形"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:110
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:108
 msgid "Brightness:"
 msgstr "亮度："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:112
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:110
 msgid "Brightness of black (default: 0)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:114
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:112
 msgid "Contrast:"
 msgstr "对比度："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:116
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:114
 msgid "Brightness of white (default: 1)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:118
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:116
 msgid "Gamma:"
 msgstr "伽玛值："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:121
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:119
 msgid ""
 "Inverse gamma correction value, a brightness effect that does not affect "
 "white or black (default: 1.125)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:124
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:122
 msgid "Contrast boost:"
 msgstr "对比度增强："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:127
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:125
 msgid "By how much to multiply the contrast in dark areas (default: 1)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:130
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:128
 msgid "Saturation:"
 msgstr "饱和度："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:133
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:131
 msgid ""
 "Saturation adjustment (0 = grayscale, 1 = normal, 2 = oversaturated), "
 "requires GLSL color control (default: 1)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:137
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:135
 msgid "LIT^Ambient:"
 msgstr "LIT^环境:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:139
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:137
 msgid ""
 "Ambient lighting, if set too high it tends to make light on maps look dull "
 "and flat (default: 4)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:141
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:139
 msgid "Intensity:"
 msgstr "明暗度："
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:143
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:141
 msgid "Global rendering brightness (default: 1)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:146
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:144
 msgid "Wait for GPU to finish each frame"
 msgstr "等待 GPU 来完成每一帧的渲染"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:147
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:145
 msgid ""
 "Make the CPU wait for the GPU to finish each frame, can help with some "
 "strange input or video lag on some machines (default: disabled)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:149
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:147
 msgid "Use OpenGL 2.0 shaders (GLSL)"
 msgstr "使用 OpenGL 2.0 着色器 (GLSL)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:152
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:150
 msgid "Use GLSL to handle color control"
 msgstr "使用 GLSL 来处理色彩控制"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:153
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:151
 msgid ""
 "Enable use of GLSL to apply gamma correction, note that it might decrease "
 "performance by a lot (default: disabled)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:158
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:156
 msgid "Psycho coloring (easter egg)"
 msgstr ""
 
-#: qcsrc/menu/xonotic/dialog_settings_video.qc:161
+#: qcsrc/menu/xonotic/dialog_settings_video.qc:159
 msgid "Trippy vertices (easter egg)"
 msgstr ""
 

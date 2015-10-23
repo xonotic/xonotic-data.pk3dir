@@ -33,6 +33,17 @@ void target_music_reset()
 	if(self.targetname == "")
 		target_music_sendto(MSG_ALL, 1);
 }
+void target_music_kill()
+{
+	for(self = world; (self = find(self, classname, "target_music")); )
+	{
+		self.volume = 0;
+		if(self.targetname == "")
+			target_music_sendto(MSG_ALL, 1);
+		else
+			target_music_sendto(MSG_ALL, 0);
+	}
+}
 void target_music_use()
 {
 	if(!activator)

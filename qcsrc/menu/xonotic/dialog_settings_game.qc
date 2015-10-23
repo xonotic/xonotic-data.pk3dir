@@ -12,6 +12,13 @@ CLASS(SettingSource, DataSource)
         if (returns) returns(it.title, string_null);
         return it;
     }
+    METHOD(SettingSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns))
+    {
+        Lazy l = Settings[i];
+        entity it = l.m_get();
+        if (returns) returns(it.tooltip);
+        return it;
+    }
     METHOD(SettingSource, reload, int(entity this, string filter)) { return Settings_COUNT; }
 ENDCLASS(SettingSource)
 
@@ -30,15 +37,23 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
     ATTRIB(XonoticRegisteredSettingsList, source, DataSource, NULL)
 	ATTRIB(XonoticRegisteredSettingsList, onChange, void(entity, entity), func_null)
 	ATTRIB(XonoticRegisteredSettingsList, onChangeEntity, entity, NULL)
+	METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity));
+
 	string XonoticRegisteredSettingsList_cb_name;
-	void XonoticRegisteredSettingsList_cb(string _name, string _icon)
+	string XonoticRegisteredSettingsList_cb_tooltip;
+	void XonoticRegisteredSettingsList_getNameIcon_cb(string _name, string _icon)
 	{
 		XonoticRegisteredSettingsList_cb_name = _name;
 	}
+	void XonoticRegisteredSettingsList_getTooltip_cb(string _tooltip)
+	{
+		XonoticRegisteredSettingsList_cb_tooltip = _tooltip;
+	}
+
 	METHOD(XonoticRegisteredSettingsList, drawListBoxItem, void(entity this, int i, vector absSize, bool isSelected, bool isFocused))
 	{
 		if (!this.source) return;
-		if (!this.source.getEntry(this.source, i, XonoticRegisteredSettingsList_cb)) return;
+		if (!this.source.getEntry(this.source, i, XonoticRegisteredSettingsList_getNameIcon_cb)) return;
 		string name = XonoticRegisteredSettingsList_cb_name;
 		if (isSelected) {
 			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
@@ -49,6 +64,26 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 		string s = draw_TextShortenToWidth(strdecolorize(name), 1, 0, this.realFontSize);
 		draw_Text(this.realUpperMargin * eY + (0.5 * this.realFontSize.x) * eX, s, this.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	}
+
+	METHOD(XonoticRegisteredSettingsList, focusedItemChangeNotify, void(entity this))
+	{
+		if (this.focusedItem == -1 || !this.source)
+		{
+			clearTooltip(this);
+			return;
+		}
+		if (!this.source.getEntryTooltip(this, this.focusedItem, XonoticRegisteredSettingsList_getTooltip_cb))
+		{
+			clearTooltip(this);
+			return;
+		}
+		string theTooltip = XonoticRegisteredSettingsList_cb_tooltip;
+		if(theTooltip != "")
+			setZonedTooltip(this, theTooltip, string_null);
+		else
+			clearTooltip(this);
+	}
+
 	METHOD(XonoticRegisteredSettingsList, refilter, void(entity this))
 	{
 		if (!this.source) {

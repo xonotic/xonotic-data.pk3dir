@@ -1,0 +1,57 @@
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+
+CLASS(LinkedListNode, Object)
+    ATTRIB(LinkedListNode, ll_data, entity, NULL)
+    ATTRIB(LinkedListNode, ll_prev, LinkedListNode, NULL)
+    ATTRIB(LinkedListNode, ll_next, LinkedListNode, NULL)
+ENDCLASS(LinkedListNode)
+
+CLASS(LinkedList, Object)
+    ATTRIB(LinkedList, ll_head, LinkedListNode, NULL);
+    ATTRIB(LinkedList, ll_tail, LinkedListNode, NULL);
+ENDCLASS(LinkedList)
+
+#define LL_NEW() NEW(LinkedList)
+
+/**
+ * Push to tail
+ */
+entity LL_PUSH(LinkedList this, entity e) {
+    LinkedListNode n = NEW(LinkedListNode);
+    n.ll_data = e;
+    n.ll_prev = this.ll_tail;
+    LinkedListNode tail = this.ll_tail;
+    if (tail) {
+        tail.ll_next = n;
+    } else {
+        this.ll_head = this.ll_tail = n;
+    }
+    return e;
+}
+
+/**
+ * Pop from tail
+ */
+entity LL_POP(LinkedList this) {
+    if (!this.ll_tail) return NULL;
+    LinkedListNode n = this.ll_tail;
+    entity e = n.ll_data;
+    LinkedListNode prev = n.ll_prev;
+    if (prev) {
+        prev.ll_next = NULL;
+    } else {
+        this.ll_head = this.ll_tail = NULL;
+    }
+    return e;
+}
+
+#define LL_EACH(list, cond, body) do {                                  \
+    noref int i = 0;                                                    \
+    for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i)) {    \
+        noref entity it = _it.ll_data;                                  \
+        if (cond) { body }                                              \
+    }                                                                   \
+} while(0)
+
+#endif

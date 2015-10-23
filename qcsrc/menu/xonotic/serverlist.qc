@@ -994,7 +994,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	bool isv4, isv6;
 	vector theColor;
 	float theAlpha;
-	bool pure = false;
+	bool pure = false, pure_available = false;
 	int freeslots = -1, sflags = -1, j, m;
 	string s, typestr, versionstr, k, v, modname;
 
@@ -1065,7 +1065,10 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		k = substring(argv(j), 0, 1);
 		v = substring(argv(j), 1, -1);
 		if(k == "P")
-			pure = stob(v);
+		{
+			pure = (stof(v) == 0);
+			pure_available = true;
+		}
 		else if(k == "S")
 			freeslots = stof(v);
 		else if(k == "F")
@@ -1093,7 +1096,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(modname != "CTS")
 	if(modname != "NIX")
 	if(modname != "NewToys")
-		pure = false;
+		pure_available = false;
 
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
@@ -1203,7 +1206,9 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	// Mod
 	if(modname == "Xonotic")
 	{
-		if(pure == 0)
+		// Here, pure_available should always be set. If not, consider
+		// it an impurity.
+		if(pure_available && pure)
 			draw_Picture(iconPos, "icon_pure1", iconSize, '1 1 1', 1);
 	}
 	else
@@ -1212,10 +1217,13 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		if(draw_PictureSize(icon) == '0 0 0')
 			icon = "icon_mod_";
 
-		if(pure == 0)
-			draw_Picture(iconPos, icon, iconSize, '1 1 1', 1);
-		else
+		// In mods, pure_available not being present indicates
+		// non-support of the feature. Just show the mod icon as is
+		// then.
+		if(pure_available && !pure)
 			draw_Picture(iconPos, icon, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
+		else
+			draw_Picture(iconPos, icon, iconSize, '1 1 1', 1);
 	}
 
 	iconPos.x += iconSize.x;
