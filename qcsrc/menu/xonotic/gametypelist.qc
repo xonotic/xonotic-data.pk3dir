@@ -11,6 +11,7 @@ CLASS(XonoticGametypeList, XonoticListBox)
 	METHOD(XonoticGametypeList, saveCvars, void(entity));
 	METHOD(XonoticGametypeList, keyDown, float(entity, float, float, float));
 	METHOD(XonoticGametypeList, clickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticGametypeList, focusedItemChangeNotify, void(entity));
 
 	ATTRIB(XonoticGametypeList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticGametypeList, realUpperMargin, float, 0)
@@ -136,5 +137,12 @@ float XonoticGametypeList_keyDown(entity me, float scan, float ascii, float shif
 void XonoticGametypeList_clickListBoxItem(entity me, float i, vector where)
 {
 	m_play_click_sound(MENU_SOUND_SELECT);
+}
+void XonoticGametypeList_focusedItemChangeNotify(entity me)
+{
+	if(me.focusedItem >= 0)
+		setZonedTooltip(me, MapInfo_Type_Description(GameType_GetID(me.focusedItem)), string_null);
+	else
+		clearTooltip(me);
 }
 #endif

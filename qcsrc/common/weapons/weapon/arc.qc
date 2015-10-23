@@ -1156,11 +1156,7 @@ void Ent_ReadArcBeam(float isnew)
 
 	if(isnew)
 	{
-		// calculate shot origin offset from gun alignment
-		int gunalign = autocvar_cl_gunalign;
-		if(gunalign != 1 && gunalign != 2 && gunalign != 4)
-			gunalign = 3; // default value
-		--gunalign;
+		int gunalign = W_GetGunAlignment(world);
 
 		self.beam_shotorigin = arc_shotorigin[gunalign];
 

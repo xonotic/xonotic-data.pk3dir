@@ -641,6 +641,12 @@ MUTATOR_HOOKABLE(BuffModel_Customize, EV_BuffModel_Customize);
     /**/
 MUTATOR_HOOKABLE(BuffTouch, EV_BuffTouch);
 
+MUTATOR_HOOKABLE(SetNewParms, EV_NO_ARGS);
+
+MUTATOR_HOOKABLE(SetChangeParms, EV_NO_ARGS);
+
+MUTATOR_HOOKABLE(DecodeLevelParms, EV_NO_ARGS);
+
 #define EV_GetRecords(i, o) \
     /**/ i(int, record_page) \
     /**/ i(string, ret_string) \

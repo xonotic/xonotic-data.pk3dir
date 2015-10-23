@@ -5,6 +5,7 @@ CLASS(XonoticGameModelSettingsTab, XonoticTab)
 	METHOD(XonoticGameModelSettingsTab, fill, void(entity));
 	METHOD(XonoticGameModelSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameModelSettingsTab, title, string, _("Models"))
+	ATTRIB(XonoticGameModelSettingsTab, tooltip, string, _("Customize how players and items are displayed in game"))
 	ATTRIB(XonoticGameModelSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameModelSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameModelSettingsTab, columns, float, 5)

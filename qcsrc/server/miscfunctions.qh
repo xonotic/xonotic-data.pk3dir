@@ -64,8 +64,6 @@ void stopsoundto(float _dest, entity e, float chan);
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
 float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d);
 
-vector shotorg_adjust(vector vecs, float y_is_right, float visual);
-
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
 void objerror(string s);
@@ -117,8 +115,6 @@ void remove_safely(entity e);
 void remove_unsafely(entity e);
 
 void SetMovetypeFollow(entity ent, entity e);
-
-vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn);
 
 void soundto(float dest, entity e, float chan, string samp, float vol, float atten);
 

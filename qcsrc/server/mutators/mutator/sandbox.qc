@@ -825,10 +825,4 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_StartFrame)
 
 	return true;
 }
-
-MUTATOR_HOOKFUNCTION(sandbox, SetModname)
-{
-	modname = "Sandbox";
-	return true;
-}
 #endif
