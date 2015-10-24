@@ -4,7 +4,6 @@
 #include "t_items.qh"
 
 #include "mutators/events.qh"
-#include "mutators/gamemode_race.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
@@ -298,12 +297,8 @@ float sv_autotaunt;
 float sv_taunt;
 
 string GetGametype(); // g_world.qc
-void mutators_add(); // mutators.qc
 void readlevelcvars(void)
 {
-	// load mutators
-	mutators_add();
-
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
@@ -340,8 +335,8 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_assault || cvar("g_campaign"))
-		warmup_stage = 0; // these modes cannot work together, sorry
+	if(cvar("g_campaign"))
+		warmup_stage = 0; // no warmup during campaign
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
 	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
@@ -408,6 +403,8 @@ void readlevelcvars(void)
     g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
+
+    MUTATOR_CALLHOOK(ReadLevelCvars);
 
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");

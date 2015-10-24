@@ -975,17 +975,6 @@ void SpecialCommand()
 #endif
 }
 
-void PM_check_race_movetime(void)
-{SELFPARAM();
-#ifdef SVQC
-	self.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
-	float f = floor(self.race_movetime_frac);
-	self.race_movetime_frac -= f;
-	self.race_movetime_count += f;
-	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
-#endif
-}
-
 float PM_check_specialcommand(float buttons)
 {SELFPARAM();
 #ifdef SVQC
@@ -1142,40 +1131,6 @@ void PM_check_blocked(void)
 		return;
 	self.movement = '0 0 0';
 	self.disableclientprediction = 1;
-#endif
-}
-
-#ifdef SVQC
-float speedaward_lastsent;
-float speedaward_lastupdate;
-#endif
-void PM_check_race(void)
-{SELFPARAM();
-#ifdef SVQC
-	if(!(g_cts || g_race))
-		return;
-	if (vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed)
-	{
-		speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
-		speedaward_holder = self.netname;
-		speedaward_uid = self.crypto_idfp;
-		speedaward_lastupdate = time;
-	}
-	if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
-	{
-		string rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
-		race_send_speedaward(MSG_ALL);
-		speedaward_lastsent = speedaward_speed;
-		if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
-		{
-			speedaward_alltimebest = speedaward_speed;
-			speedaward_alltimebest_holder = speedaward_holder;
-			speedaward_alltimebest_uid = speedaward_uid;
-			db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed"), ftos(speedaward_alltimebest));
-			db_put(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp"), speedaward_alltimebest_uid);
-			race_send_speedaward_alltimebest(MSG_ALL);
-		}
-	}
 #endif
 }
 
@@ -1675,7 +1630,6 @@ void PM_Main()
 			return;
 #endif
 
-	PM_check_race_movetime();
 #ifdef SVQC
 	anticheat_physics();
 #endif
@@ -1708,17 +1662,7 @@ void PM_Main()
 	if (IS_PLAYER(self))
 #endif
 	{
-#ifdef SVQC
-		if (self.race_penalty)
-			if (time > self.race_penalty)
-				self.race_penalty = 0;
-#endif
-
 		bool not_allowed_to_move = false;
-#ifdef SVQC
-		if (self.race_penalty)
-			not_allowed_to_move = true;
-#endif
 #ifdef SVQC
 		if (time < game_starttime)
 			not_allowed_to_move = true;
@@ -1893,10 +1837,6 @@ void PM_Main()
 	else
 		PM_air(buttons_prev, maxspeed_mod);
 
-#ifdef SVQC
-	if (!IS_OBSERVER(self))
-		PM_check_race();
-#endif
 	PM_check_vortex();
 
 :end

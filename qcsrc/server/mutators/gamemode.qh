@@ -1,8 +1,6 @@
 #ifndef GAMEMODE_H
 #define GAMEMODE_H
 
-#include "mutator_nades.qh"
-
 #include "../cl_client.qh"
 #include "../cl_player.qh"
 #include "../cl_impulse.qh"
@@ -17,7 +15,6 @@
 #include "../bot/navigation.qh"
 #include "../bot/waypoints.qh"
 #include "../bot/havocbot/roles.qh"
-#include "../bot/havocbot/role_keyhunt.qh"
 
 #include "../bot/havocbot/havocbot.qh"
 

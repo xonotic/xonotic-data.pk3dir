@@ -13,7 +13,8 @@
 #include "../common/nades/all.qh"
 #include "../common/stats.qh"
 #include "../lib/csqcmodel/cl_player.qh"
-#include "../server/mutators/gamemode_ctf.qh"
+// TODO: remove
+#include "../server/mutators/mutator/gamemode_ctf.qc"
 
 
 /*

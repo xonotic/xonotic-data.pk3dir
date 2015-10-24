@@ -208,7 +208,7 @@ void PutObserverInServer (void)
 	self.frags = FRAGS_SPECTATOR;
 	self.bot_attack = false;
 
-	MUTATOR_CALLHOOK(MakePlayerObserver);
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	Portal_ClearAll(self);
 
@@ -226,7 +226,7 @@ void PutObserverInServer (void)
 
 	WaypointSprite_PlayerDead();
 
-	if (!g_ca)  // don't reset teams when moving a ca player to the spectators
+	if(!mutator_returnvalue)  // mutator prevents resetting teams
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
 	if(self.killcount != -666)
@@ -890,14 +890,8 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	if(g_race_qualifying || g_cts)
 		killtime = 0;
 
-    if(g_cts && self.killindicator && self.killindicator.health == 1) // self.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
-    {
-		remove(self.killindicator);
-		self.killindicator = world;
-
-        ClientKill_Now(); // allow instant kill in this case
-        return;
-    }
+    if(MUTATOR_CALLHOOK(ClientKill, self, killtime))
+    	return;
 
 	self.killindicator_teamchange = targetteam;
 
@@ -989,23 +983,10 @@ void ClientKill (void)
 	ClientKill_TeamChange(0);
 }
 
-void CTS_ClientKill (entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
-{
-    e.killindicator = spawn();
-    e.killindicator.owner = e;
-    e.killindicator.think = KillIndicator_Think;
-    e.killindicator.nextthink = time + (e.lip) * 0.05;
-    e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
-    e.killindicator.health = 1; // this is used to indicate that it should be silent
-    e.lip = 0;
-}
-
 void FixClientCvars(entity e)
 {
 	// send prediction settings to the client
 	stuffcmd(e, "\nin_bindmap 0 0\n");
-	if(g_race || g_cts)
-		stuffcmd(e, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 	if(autocvar_g_antilag == 3) // client side hitscan
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
@@ -1835,49 +1816,23 @@ void SetSpectator(entity player, entity spectatee)
 
 bool Spectate(entity pl)
 {SELFPARAM();
-	if(g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
-	if(DIFF_TEAM(pl, self))
+	if(MUTATOR_CALLHOOK(SpectateSet, self, pl))
 		return false;
+	pl = spec_player;
 
 	SetSpectator(self, pl);
 	return SpectateSet();
-}
-
-// Returns next available player to spectate if g_ca_spectate_enemies == 0
-entity CA_SpectateNext(entity start)
-{SELFPARAM();
-	if(SAME_TEAM(start, self))
-		return start;
-
-	other = start;
-	// continue from current player
-	while(other && DIFF_TEAM(other, self))
-		other = find(other, classname, "player");
-
-	if (!other)
-	{
-		// restart from begining
-		other = find(other, classname, "player");
-		while(other && DIFF_TEAM(other, self))
-			other = find(other, classname, "player");
-	}
-
-	return other;
 }
 
 bool SpectateNext()
 {SELFPARAM();
 	other = find(self.enemy, classname, "player");
 
-	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
-		// CA and ca players when spectating enemies is forbidden
-		other = CA_SpectateNext(other);
-	else
-	{
-		// other modes and ca spectators or spectating enemies is allowed
-		if (!other)
-			other = find(other, classname, "player");
-	}
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(SpectateNext, self, other);
+	other = spec_player;
+
+	if(!mutator_returnvalue && !other)
+		other = find(other, classname, "player");
 
 	if(other) { SetSpectator(self, other); }
 
@@ -1897,27 +1852,24 @@ bool SpectatePrev()
 	while(other && other != self.enemy)
 		other = other.chain;
 
-	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
-	{
-		do { other = other.chain; }
-		while(other && DIFF_TEAM(other, self));
+	int mutator_returnvalue = MUTATOR_CALLHOOK(SpectatePrev, self, other, first);
+	other = spec_player;
 
-		if (!other)
+	switch(mutator_returnvalue)
+	{
+		case MUT_SPECPREV_FOUND: break;
+		case MUT_SPECPREV_RETURN: return true;
+		case MUT_SPECPREV_CONTINUE:
+		default:
 		{
-			other = first;
-			while(other && DIFF_TEAM(other, self))
+			if(other.chain)
 				other = other.chain;
-			if(other == self.enemy)
-				return true;
+			else
+				other = first;
+			break;
 		}
 	}
-	else
-	{
-		if(other.chain)
-			other = other.chain;
-		else
-			other = first;
-	}
+
 	SetSpectator(self, other);
 	return SpectateSet();
 }

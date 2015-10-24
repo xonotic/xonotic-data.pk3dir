@@ -130,6 +130,7 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
+	static_init_late();
 
 	// precaches
 
@@ -678,11 +679,11 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	spn_origin.y = ReadShort();
 	spn_origin.z = ReadShort();
 
-	if(is_new)
-	{
+	//if(is_new)
+	//{
 		self.origin = spn_origin;
 		setsize(self, PL_MIN_CONST, PL_MAX_CONST);
-		droptofloor();
+		//droptofloor();
 
 		/*if(autocvar_cl_spawn_point_model) // needs a model first
 		{
@@ -711,7 +712,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 
 			self.draw = Spawn_Draw;
 		}
-	}
+	//}
 
 	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt);
 }

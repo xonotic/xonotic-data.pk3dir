@@ -1,7 +1,7 @@
 #include "scores.qh"
 
 #include "command/common.qh"
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 
@@ -335,14 +335,15 @@ void PlayerScore_Detach(entity player)
 
 float PlayerScore_Add(entity player, float scorefield, float score)
 {
-	entity s;
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score);
+	score = ret_float;
 
 	if(gameover)
-	if(!(g_lms && scorefield == SP_LMS_RANK)) // allow writing to this field in intermission as it is needed for newly joining players
+	if(!mutator_returnvalue)
 		score = 0;
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
-	s = player.scorekeeper;
+	entity s = player.scorekeeper;
 	if(!s)
 	{
 		if(gameover)
@@ -536,15 +537,17 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(!IS_PLAYER(p) && p.caplayer != 1 && !g_lms)
+			if(!IS_PLAYER(p) && !MUTATOR_CALLHOOK(GetPlayerStatus, p, s))
 				s = strcat(s, ":spectator");
+			s = strcat(s, ret_string);
 		}
 		else
 		{
-			if(IS_PLAYER(p) || p.caplayer == 1 || g_lms)
+			if(IS_PLAYER(p) || MUTATOR_CALLHOOK(GetPlayerStatus, p, s))
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";
+			s = strcat(s, ret_string);
 		}
 
 		if(p.clientstatus)

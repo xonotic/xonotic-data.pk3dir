@@ -9,7 +9,7 @@
 #include "../round_handler.qh"
 #include "../scores.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 
 #include "../../common/constants.qh"
 #include "../../common/mapinfo.qh"
@@ -422,9 +422,6 @@ void reset_map(float dorespawn)
 		}
 	}
 
-	if(g_keyhunt)
-		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
-
 	setself(this);
 }
 
@@ -500,7 +497,7 @@ void ReadyRestart_force()
 
 void ReadyRestart()
 {
-	// no arena, assault support yet...
+	// no assault support yet...
 	if(g_assault | gameover | intermission_running | race_completing)
 		localcmd("restart\n");
 	else

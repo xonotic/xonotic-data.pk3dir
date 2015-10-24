@@ -7,7 +7,7 @@
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
 
-    #include "mutators/mutators_include.qh"
+    #include "mutators/all.qh"
 
     #include "weapons/common.qh"
     #include "weapons/selection.qh"

@@ -1,6 +1,6 @@
 #include "spawnpoints.qh"
 
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "g_world.qh"
 #include "race.qh"
 #include "../common/constants.qh"
@@ -44,6 +44,17 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 	else { send = false; }
 
 	return send;
+}
+
+.vector spawnpoint_prevorigin;
+void spawnpoint_think()
+{
+	self.nextthink = time + 0.1;
+	if(self.origin != self.spawnpoint_prevorigin)
+	{
+		self.spawnpoint_prevorigin = self.origin;
+		self.SendFlags |= 1;
+	}
 }
 
 void spawnpoint_use()
@@ -91,6 +102,8 @@ void relocate_spawnpoint()
     }
 
     self.use = spawnpoint_use;
+    self.think = spawnpoint_think;
+    self.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
     self.team_saved = self.team;
     if (!self.cnt)
         self.cnt = 1;
@@ -163,8 +176,6 @@ Starting point for a player in team one (Red).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team1)
 {
-	if(g_assault) { remove(this); return; }
-
 	this.team = NUM_TEAM_1; // red
 	spawnfunc_info_player_deathmatch(this);
 }
@@ -175,8 +186,6 @@ Starting point for a player in team two (Blue).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team2)
 {
-	if(g_assault) { remove(this); return; }
-
 	this.team = NUM_TEAM_2; // blue
 	spawnfunc_info_player_deathmatch(this);
 }
@@ -186,8 +195,6 @@ Starting point for a player in team three (Yellow).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team3)
 {
-	if(g_assault) { remove(this); return; }
-
 	this.team = NUM_TEAM_3; // yellow
 	spawnfunc_info_player_deathmatch(this);
 }
@@ -198,8 +205,6 @@ Starting point for a player in team four (Purple).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team4)
 {
-	if(g_assault) { remove(this); return; }
-
 	this.team = NUM_TEAM_4; // purple
 	spawnfunc_info_player_deathmatch(this);
 }

@@ -26,6 +26,14 @@
 
 #include "../common/animdecide.qh"
 
+void Drop_Special_Items(entity player)
+{
+	// called when the player has become stuck or frozen
+	// so objective items aren't stuck with the player
+
+	MUTATOR_CALLHOOK(DropSpecialItems, player);
+}
+
 void CopyBody_Think(void)
 {SELFPARAM();
 	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)

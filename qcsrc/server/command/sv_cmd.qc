@@ -20,7 +20,7 @@
 #include "../bot/navigation.qh"
 #include "../bot/scripting.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 
 #include "../../common/constants.qh"
 #include "../../common/mapinfo.qh"

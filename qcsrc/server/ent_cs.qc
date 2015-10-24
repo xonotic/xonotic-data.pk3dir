@@ -1,7 +1,5 @@
 #include "ent_cs.qh"
 
-#include "mutators/gamemode_ca.qh"
-
 float entcs_customize()
 {
 	SELFPARAM();
