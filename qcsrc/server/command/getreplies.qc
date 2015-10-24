@@ -21,67 +21,12 @@
 
 // See common.qc for their proper commands
 
-string getrecords(float page) // 50 records per page
+string getrecords(int page) // 50 records per page
 {
-	float rec = 0, r, i;
-	string h, s;
+	string s = "";
 
-	s = "";
-
-	if (g_ctf)
-	{
-		for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-		{
-			if (MapInfo_Get_ByID(i))
-			{
-				r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
-
-				if (!r)
-					continue;
-
-				// TODO: uid2name
-				h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/netname"));
-				s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", h, "\n");
-				++rec;
-			}
-		}
-	}
-
-	if (g_race)
-	{
-		for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-		{
-			if (MapInfo_Get_ByID(i))
-			{
-				r = race_readTime(MapInfo_Map_bspname, 1);
-
-				if (!r)
-					continue;
-
-				h = race_readName(MapInfo_Map_bspname, 1);
-				s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
-				++rec;
-			}
-		}
-	}
-
-	if (g_cts)
-	{
-		for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-		{
-			if (MapInfo_Get_ByID(i))
-			{
-				r = race_readTime(MapInfo_Map_bspname, 1);
-
-				if (!r)
-					continue;
-
-				h = race_readName(MapInfo_Map_bspname, 1);
-				s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
-				++rec;
-			}
-		}
-	}
+	MUTATOR_CALLHOOK(GetRecords, page, s);
+	s = ret_string;
 
 	MapInfo_ClearTemps();
 

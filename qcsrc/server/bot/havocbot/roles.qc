@@ -1,6 +1,5 @@
 
 #include "havocbot.qh"
-#include "role_keyhunt.qh"
 
 #include "../bot.qh"
 #include "../navigation.qh"
@@ -237,10 +236,6 @@ void havocbot_chooserole()
 {SELFPARAM();
 	LOG_TRACE("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole, self))
-		return;
-	else if (g_keyhunt)
-		havocbot_chooserole_kh();
-	else
+	if(!MUTATOR_CALLHOOK(HavocBot_ChooseRole, self))
 		havocbot_chooserole_generic();
 }

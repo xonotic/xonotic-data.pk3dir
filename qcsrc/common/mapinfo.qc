@@ -611,13 +611,8 @@ float _MapInfo_GetTeamPlayBool(float t)
 
 void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 {
-	string sa, k, v;
-	float p;
-	string fraglimit_normal;
-	string fraglimit_teams;
-
 	MapInfo_Map_supportedGametypes |= pThisType;
-	if(!(pThisType & pWantedType))
+	if (!(pThisType & pWantedType))
 		return;
 
 	// reset all the cvars to their defaults
@@ -625,74 +620,60 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 	cvar_set("timelimit", cvar_defstring("timelimit"));
 	cvar_set("leadlimit", cvar_defstring("leadlimit"));
 	cvar_set("fraglimit", cvar_defstring("fraglimit"));
-	cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
-	cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
-	cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
-	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
-	cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
-	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
+	FOREACH(Gametypes, true, LAMBDA(it.m_parse_mapinfo(string_null, string_null)));
 
-	fraglimit_normal = string_null;
-	fraglimit_teams = string_null;
+	string fraglimit_normal = string_null;
+	string fraglimit_teams = string_null;
 
-	s = strcat(_MapInfo_GetDefaultEx(pWantedType), " ", s);
-	while(s != "")
-	{
-		sa = car(s);
-		s = cdr(s);
-
-		if(sa == "")
-			continue;
-
-		p = strstrofs(sa, "=", 0);
-		if(p < 0)
-		{
-			LOG_INFO("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
+	for (s = strcat(_MapInfo_GetDefaultEx(pWantedType), " ", s); s != ""; s = cdr(s)) {
+		string sa = car(s);
+		if (sa == "") continue;
+		int p = strstrofs(sa, "=", 0);
+		if (p < 0) {
+			LOG_WARNINGF("Invalid gametype setting in mapinfo for gametype %s: %s\n", MapInfo_Type_ToString(pWantedType), sa);
 			continue;
 		}
-		k = substring(sa, 0, p);
-		v = substring(sa, p+1, -1);
-
-		if(k == "timelimit")
-		{
-			cvar_set("timelimit", v);
+		string k = substring(sa, 0, p);
+		string v = substring(sa, p + 1, -1);
+		bool handled = true;
+		switch (k) {
+			case "timelimit":
+			{
+				cvar_set("timelimit", v);
+				break;
+			}
+			case "leadlimit":
+			{
+				cvar_set("leadlimit", v);
+				break;
+			}
+			case "pointlimit":
+			case "fraglimit":
+			case "lives":
+			case "laplimit":
+			case "caplimit":
+			{
+				fraglimit_normal = v;
+				break;
+			}
+			case "teampointlimit":
+			case "teamlaplimit":
+			{
+				fraglimit_teams = v;
+				break;
+			}
+			default:
+			{
+			    handled = false;
+			    break;
+			}
 		}
-		else if(k == "leadlimit")
-		{
-			cvar_set("leadlimit", v);
-		}
-		else if(k == "pointlimit" || k == "fraglimit" || k == "lives" || k == "laplimit" || k == "caplimit")
-		{
-			fraglimit_normal = v;
-		}
-		else if(k == "teampointlimit" || k == "teamlaplimit")
-		{
-			fraglimit_teams = v;
-		}
-		else if(k == "teams")
-		{
-			cvar_set("g_tdm_teams", v);
-			cvar_set("g_ca_teams", v);
-			cvar_set("g_freezetag_teams", v);
-			cvar_set("g_keyhunt_teams", v);
-			cvar_set("g_domination_default_teams", v);
-			cvar_set("g_invasion_teams", v);
-		}
-		else if(k == "qualifying_timelimit")
-		{
-			cvar_set("g_race_qualifying_timelimit", v);
-		}
-		else if(k == "skill")
-		{
-			// ignore
-		}
-		else
-		{
-			LOG_INFO("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
-		}
+		FOREACH(Gametypes, true, LAMBDA(handled |= it.m_parse_mapinfo(k, v)));
+		if (!handled)
+            LOG_WARNINGF("Invalid gametype setting in mapinfo for gametype %s: %s\n", MapInfo_Type_ToString(pWantedType), sa);
 	}
 
-	if(pWantedType == MAPINFO_TYPE_RACE && cvar("g_race_teams") >= 2)
+	if (pWantedType == MAPINFO_TYPE_RACE && cvar("g_race_teams") >= 2)
 	{
 		if(fraglimit_teams)
 			cvar_set("fraglimit", fraglimit_teams);
@@ -702,6 +683,12 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 		if(fraglimit_normal)
 			cvar_set("fraglimit", fraglimit_normal);
 	}
+}
+
+Gametype MapInfo_Type(int t)
+{
+	FOREACH(Gametypes, it.items == t, LAMBDA(return it));
+	return NULL;
 }
 
 int MapInfo_Type_FromString(string t)

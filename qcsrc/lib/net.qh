@@ -11,9 +11,9 @@ bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, t
 
 void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 {
-    if (!e.classname) e.classname = "net_linked";
+    if (e.classname == "") e.classname = "net_linked";
 
-    if (!e.model || !self.modelindex) {
+    if (e.model == "" || self.modelindex == 0) {
         vector mi = e.mins;
         vector ma = e.maxs;
         _setmodel(e, "null");

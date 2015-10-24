@@ -2,7 +2,6 @@
 #define MUTATOR_H
 
 #include "../../common/mutators/base.qh"
-#include "mutator_nades.qh"
 
 #include "../cl_client.qh"
 #include "../cl_player.qh"
@@ -19,7 +18,6 @@
 
 #include "../bot/havocbot/havocbot.qh"
 #include "../bot/havocbot/roles.qh"
-#include "../bot/havocbot/role_keyhunt.qh"
 
 #include "../command/vote.qh"
 #include "../command/common.qh"

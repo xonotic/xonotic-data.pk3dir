@@ -12,7 +12,7 @@
 #include "../scores.qh"
 #include "../teamplay.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 
 #ifdef SVQC
 	#include "../../common/vehicles/all.qh"
@@ -465,29 +465,13 @@ void ClientCommand_spectate(float request)
 		{
 			if(IS_CLIENT(self))
 			{
-				if(g_lms)
-				{
-					if(self.lms_spectate_warning)
-					{
-						// for the forfeit message...
-						self.lms_spectate_warning = 2;
-						// mark player as spectator
-						PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
-					}
-					else
-					{
-						self.lms_spectate_warning = 1;
-						sprint(self, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
-						return;
-					}
-				}
+				int mutator_returnvalue = MUTATOR_CALLHOOK(ClientCommand_Spectate, self);
 
-				if((IS_PLAYER(self) || self.caplayer) && autocvar_sv_spectate == 1)
-				{
-					if(self.caplayer && (IS_SPEC(self) || IS_OBSERVER(self)))
-						Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CA_LEAVE);
+				if(mutator_returnvalue == MUT_SPECCMD_RETURN)
+					return;
+
+				if((IS_PLAYER(self) || mutator_returnvalue == MUT_SPECCMD_FORCE) && autocvar_sv_spectate == 1)
 					ClientKill_TeamChange(-2); // observe
-				}
 			}
 			return; // never fall through to usage
 		}

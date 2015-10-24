@@ -122,6 +122,8 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
 #define EV_GetTeamCount(i, o) \
     /**/ i(float, ret_float) \
     /**/ o(float, ret_float) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
     /**/
 float ret_float;
 MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
@@ -145,8 +147,11 @@ string format_replacement;
 string format_message;
 MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
 
-/** returns 1 if throwing the current weapon shall not be allowed */
+/** returns true if throwing the current weapon shall not be allowed */
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_NO_ARGS);
+
+/** returns true if dropping the current weapon shall not be allowed at any time including death */
+MUTATOR_HOOKABLE(ForbidDropCurrentWeapon, EV_NO_ARGS);
 
 /** allows changing attack rate */
 #define EV_WeaponRateFactor(i, o) \
@@ -635,4 +640,174 @@ MUTATOR_HOOKABLE(BuffModel_Customize, EV_BuffModel_Customize);
     /** player */ i(entity, other) \
     /**/
 MUTATOR_HOOKABLE(BuffTouch, EV_BuffTouch);
+
+MUTATOR_HOOKABLE(SetNewParms, EV_NO_ARGS);
+
+MUTATOR_HOOKABLE(SetChangeParms, EV_NO_ARGS);
+
+MUTATOR_HOOKABLE(DecodeLevelParms, EV_NO_ARGS);
+
+#define EV_GetRecords(i, o) \
+    /**/ i(int, record_page) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+int record_page;
+MUTATOR_HOOKABLE(GetRecords, EV_GetRecords);
+
+#define EV_Race_FinalCheckpoint(i, o) \
+    /**/ i(entity, race_player) \
+    /**/
+entity race_player;
+MUTATOR_HOOKABLE(Race_FinalCheckpoint, EV_Race_FinalCheckpoint);
+
+/** called when player triggered kill (or is changing teams), return error to not do anything */
+#define EV_ClientKill(i, o) \
+    /** player */ i(entity, __self) \
+    /* kill delay */ i(float, ret_float) \
+    /* kill delay */ o(float, ret_float) \
+    /**/
+MUTATOR_HOOKABLE(ClientKill, EV_ClientKill);
+
+#define EV_FixClientCvars(i, o) \
+    /**/ i(entity, fix_client) \
+    /**/
+entity fix_client;
+MUTATOR_HOOKABLE(FixClientCvars, EV_FixClientCvars);
+
+#define EV_SpectateSet(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, spec_player) \
+    /**/
+entity spec_player;
+MUTATOR_HOOKABLE(SpectateSet, EV_SpectateSet);
+
+#define EV_SpectateNext(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, spec_player) \
+    /**/
+MUTATOR_HOOKABLE(SpectateNext, EV_SpectateNext);
+
+#define EV_SpectatePrev(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, spec_player) \
+    /**/ i(entity, spec_first) \
+    /**/
+entity spec_first;
+MUTATOR_HOOKABLE(SpectatePrev, EV_SpectatePrev);
+
+enum {
+    MUT_SPECPREV_CONTINUE, // return this flag to make the function continue as normal
+    MUT_SPECPREV_RETURN, // return this flag to make the function return (handled entirely by mutator)
+    MUT_SPECPREV_FOUND // return this flag to make the function continue without default functions (handled mostly by mutator)
+};
+
+/** called when player triggered kill (or is changing teams), return error to not do anything */
+#define EV_Bot_FixCount(i, o) \
+    /**/ i(int, bot_activerealplayers) \
+    /**/ o(int, bot_activerealplayers) \
+    /**/ i(int, bot_realplayers) \
+    /**/ o(int, bot_realplayers) \
+    /**/
+int bot_activerealplayers;
+int bot_realplayers;
+MUTATOR_HOOKABLE(Bot_FixCount, EV_Bot_FixCount);
+
+#define EV_ClientCommand_Spectate(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(ClientCommand_Spectate, EV_ClientCommand_Spectate);
+
+enum {
+    MUT_SPECCMD_CONTINUE, // return this flag to make the function continue as normal
+    MUT_SPECCMD_RETURN, // return this flag to make the function return (don't spectate)
+    MUT_SPECCMD_FORCE // return this flag to force the player to spectate, even if they're not a player
+};
+
+#define EV_CheckRules_World(i, o) \
+    /* status */ i(float, ret_float) \
+    /* status */ o(float, ret_float) \
+    /* time limit */ i(float, checkrules_timelimit) \
+    /* frag limit */ i(int, checkrules_fraglimit) \
+    /**/
+float checkrules_timelimit;
+int checkrules_fraglimit;
+MUTATOR_HOOKABLE(CheckRules_World, EV_CheckRules_World);
+
+#define EV_WantWeapon(i, o) \
+    /**/ i(entity, want_weaponinfo) \
+    /**/ i(float, ret_float) \
+    /**/ o(float, ret_float) \
+    /**/ i(bool, want_allguns) \
+    /**/ o(bool, want_allguns) \
+    /**/ i(bool, want_mutatorblocked) \
+    /**/ o(bool, want_mutatorblocked) \
+    /**/
+entity want_weaponinfo;
+bool want_allguns;
+bool want_mutatorblocked;
+MUTATOR_HOOKABLE(WantWeapon, EV_WantWeapon);
+
+#define EV_AddPlayerScore(i, o) \
+    /**/ i(int, score_field) \
+    /**/ i(float, ret_float) \
+    /**/ o(float, ret_float) \
+    /**/
+int score_field;
+MUTATOR_HOOKABLE(AddPlayerScore, EV_AddPlayerScore);
+
+#define EV_GetPlayerStatus(i, o) \
+    /**/ i(entity, set_player) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+entity set_player;
+MUTATOR_HOOKABLE(GetPlayerStatus, EV_GetPlayerStatus);
+
+#define EV_SetWeaponArena(i, o) \
+    /**/ i(string, ret_string) \
+    /**/ o(string, ret_string) \
+    /**/
+MUTATOR_HOOKABLE(SetWeaponArena, EV_SetWeaponArena);
+
+#define EV_DropSpecialItems(i, o) \
+    /**/ i(entity, frag_target) \
+    /**/
+MUTATOR_HOOKABLE(DropSpecialItems, EV_DropSpecialItems);
+
+/**
+ * called when an admin tries to kill all monsters
+ * return 1 to prevent spawning
+ */
+MUTATOR_HOOKABLE(AllowMobButcher, EV_NO_ARGS);
+
+MUTATOR_HOOKABLE(ReadLevelCvars, EV_NO_ARGS);
+
+#define EV_SendWaypoint(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, wp_sendto) \
+    /**/ i(int, wp_sendflags) \
+    /**/ o(int, wp_sendflags) \
+    /**/ i(int, wp_flag) \
+    /**/ o(int, wp_flag) \
+    /**/
+entity wp_sendto;
+int wp_sendflags;
+int wp_flag;
+MUTATOR_HOOKABLE(SendWaypoint, EV_SendWaypoint);
+
+#define EV_TurretValidateTarget(i, o) \
+    /**/ i(entity, turret_this) \
+    /**/ i(entity, turret_target) \
+    /**/ i(int, turret_vflags) \
+    /**/
+entity turret_this;
+entity turret_target;
+int turret_vflags;
+MUTATOR_HOOKABLE(TurretValidateTarget, EV_TurretValidateTarget);
+
+#define EV_TurretThink(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(TurretThink, EV_TurretThink);
 #endif

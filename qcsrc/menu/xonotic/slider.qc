@@ -4,6 +4,7 @@
 CLASS(XonoticSlider, Slider)
 	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string, string));
 	METHOD(XonoticSlider, setValue, void(entity, float));
+	METHOD(XonoticSlider, setValue_noAnim, void(entity, float));
 	ATTRIB(XonoticSlider, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT)
 	ATTRIB(XonoticSlider, image, string, SKINGFX_SLIDER)
@@ -63,6 +64,14 @@ void XonoticSlider_setValue(entity me, float val)
 	if(val != me.value)
 	{
 		SUPER(XonoticSlider).setValue( me, val );
+		me.saveCvars(me);
+	}
+}
+void XonoticSlider_setValue_noAnim(entity me, float val)
+{
+	if(val != me.value)
+	{
+		SUPER(XonoticSlider).setValue_noAnim(me, val);
 		me.saveCvars(me);
 	}
 }

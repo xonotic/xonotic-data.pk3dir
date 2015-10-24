@@ -1,6 +1,11 @@
 #ifndef RACE_H
 #define RACE_H
 
+bool g_race_qualifying;
+
+float speedaward_lastsent;
+float speedaward_lastupdate;
+
 float race_spawns;
 float race_highest_place_spawn; // number of places; a place higher gets spawned at 0
 float race_lowest_place_spawn; // where to spawn in qualifying

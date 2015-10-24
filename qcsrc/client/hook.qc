@@ -31,7 +31,6 @@ void Draw_GrapplingHook(entity this)
 	string tex;
 	vector rgb;
 	float t;
-	int s;
 	vector vs;
 	float intensity, offset;
 
@@ -44,10 +43,8 @@ void Draw_GrapplingHook(entity this)
 
 	InterpolateOrigin_Do();
 
-	s = autocvar_cl_gunalign;
-	if(s != 1 && s != 2 && s != 4)
-		s = 3; // default value
-	--s;
+	int s = W_GetGunAlignment(world);
+
 	switch(self.HookType)
 	{
 		default:

@@ -472,7 +472,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsPrettyString)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetModname)
 {
-	modname = "instagib";
+	modname = "InstaGib";
 	return true;
 }
 

@@ -416,10 +416,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				if(cp == race_timed_checkpoint)
 				{
 					race_setTime(GetMapname(), t, e.crypto_idfp, e.netname, e);
-					if(g_cts && autocvar_g_cts_finish_kill_delay)
-					{
-						CTS_ClientKill(e);
-					}
+					MUTATOR_CALLHOOK(Race_FinalCheckpoint, e);
 				}
 				if(t < recordtime || recordtime == 0)
 				{
@@ -1145,6 +1142,9 @@ void penalty_use()
 
 spawnfunc(trigger_race_penalty)
 {
+	// TODO: find out why this wasnt done:
+	//if(!g_cts && !g_race) { remove(self); return; }
+
 	EXACTTRIGGER_INIT;
 
 	self.use = penalty_use;

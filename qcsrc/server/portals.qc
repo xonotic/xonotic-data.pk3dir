@@ -1,7 +1,7 @@
 #include "portals.qh"
 
 #include "g_hook.qh"
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications.qh"

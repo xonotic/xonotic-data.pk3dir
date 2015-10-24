@@ -9,7 +9,7 @@
 
 #include "command/vote.qh"
 
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 
 #include "../common/deathtypes/all.qh"
 #include "../common/gamemodes/all.qh"
@@ -44,12 +44,25 @@ void ActivateTeamplay()
 	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
 }
 
+void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
+{
+	// enforce the server's universal frag/time limits
+	// set to -1 to not change value
+	if(!autocvar_g_campaign)
+	{
+		if(fraglimit_override >= 0)
+			cvar_set("fraglimit", ftos(fraglimit_override));
+		if(timelimit_override >= 0)
+			cvar_set("timelimit", ftos(timelimit_override));
+		if(leadlimit_override >= 0)
+			cvar_set("leadlimit", ftos(leadlimit_override));
+		if(qualifying_override >= 0)
+			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
+	}
+}
+
 void InitGameplayMode()
 {
-	float fraglimit_override, timelimit_override, leadlimit_override, qualifying_override;
-
-	qualifying_override = -1;
-
 	VoteReset();
 
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
@@ -77,191 +90,11 @@ void InitGameplayMode()
 	MapInfo_ClearTemps();
 
 	// set both here, gamemode can override it later
-	timelimit_override = autocvar_timelimit_override;
-	fraglimit_override = autocvar_fraglimit_override;
-	leadlimit_override = autocvar_leadlimit_override;
+	SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
 	gamemode_name = MapInfo_Type_ToText(MapInfo_LoadedGametype);
-
-	if(g_dm)
-	{
-		MUTATOR_ADD(gamemode_deathmatch);
-	}
-
-	if(g_tdm)
-	{
-		ActivateTeamplay();
-		fraglimit_override = autocvar_g_tdm_point_limit;
-		leadlimit_override = autocvar_g_tdm_point_leadlimit;
-		if(autocvar_g_tdm_team_spawns)
-			have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_tdm);
-	}
-
-	if(g_domination)
-	{
-		ActivateTeamplay();
-		fraglimit_override = autocvar_g_domination_point_limit;
-		leadlimit_override = autocvar_g_domination_point_leadlimit;
-		if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
-			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
-		have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_domination);
-	}
-
-	if(g_ctf)
-	{
-		ActivateTeamplay();
-		fraglimit_override = autocvar_capturelimit_override;
-		leadlimit_override = autocvar_captureleadlimit_override;
-		have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_ctf);
-	}
-
-	if(g_lms)
-	{
-		fraglimit_override = autocvar_g_lms_lives_override;
-		leadlimit_override = 0; // not supported by LMS
-		if(fraglimit_override == 0)
-			fraglimit_override = -1;
-		MUTATOR_ADD(gamemode_lms);
-	}
-
-	if(g_ca)
-	{
-		ActivateTeamplay();
-		fraglimit_override = autocvar_g_ca_point_limit;
-		leadlimit_override = autocvar_g_ca_point_leadlimit;
-		if(autocvar_g_ca_team_spawns)
-			have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_ca);
-	}
-
-	if(g_keyhunt)
-	{
-		ActivateTeamplay();
-		fraglimit_override = autocvar_g_keyhunt_point_limit;
-		leadlimit_override = autocvar_g_keyhunt_point_leadlimit;
-		if(autocvar_g_keyhunt_team_spawns)
-			have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_keyhunt);
-	}
-
-	if(g_freezetag)
-	{
-		ActivateTeamplay();
-		fraglimit_override = autocvar_g_freezetag_point_limit;
-		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
-		if(autocvar_g_freezetag_team_spawns)
-			have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_freezetag);
-	}
-
-	if(g_assault)
-	{
-		ActivateTeamplay();
-		have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_assault);
-	}
-
-	if(g_onslaught)
-	{
-		ActivateTeamplay();
-		fraglimit_override = autocvar_g_onslaught_point_limit;
-		have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_onslaught);
-	}
-
-	if(g_race)
-	{
-		if(autocvar_g_race_teams)
-		{
-			ActivateTeamplay();
-			race_teams = bound(2, autocvar_g_race_teams, 4);
-			have_team_spawns = -1; // request team spawns
-		}
-		else
-			race_teams = 0;
-		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
-		fraglimit_override = autocvar_g_race_laps_limit;
-		leadlimit_override = 0; // currently not supported by race
-
-		// we need to find out the correct value for g_race_qualifying
-		float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
-
-		if(autocvar_g_campaign)
-		{
-			g_race_qualifying = 1;
-			independent_players = 1;
-		}
-		else if(!autocvar_g_campaign && want_qualifying)
-		{
-			g_race_qualifying = 2;
-			independent_players = 1;
-			race_fraglimit = (race_fraglimit >= 0) ? fraglimit_override : autocvar_fraglimit;
-			race_leadlimit = (race_leadlimit >= 0) ? leadlimit_override : autocvar_leadlimit;
-			race_timelimit = (race_timelimit >= 0) ? timelimit_override : autocvar_timelimit;
-			fraglimit_override = 0;
-			leadlimit_override = 0;
-			timelimit_override = autocvar_g_race_qualifying_timelimit;
-		}
-		else
-		{
-			g_race_qualifying = 0;
-		}
-
-		MUTATOR_ADD(gamemode_race);
-	}
-
-	if(g_cts)
-	{
-		g_race_qualifying = 1;
-		fraglimit_override = 0;
-		leadlimit_override = 0;
-		independent_players = 1;
-		MUTATOR_ADD(gamemode_cts);
-	}
-
-	if(g_nexball)
-	{
-		fraglimit_override = autocvar_g_nexball_goallimit;
-		leadlimit_override = autocvar_g_nexball_goalleadlimit;
-		ActivateTeamplay();
-		have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_nexball);
-	}
-
-	if(g_keepaway)
-	{
-		MUTATOR_ADD(gamemode_keepaway);
-	}
-
-	if(g_invasion)
-	{
-		fraglimit_override = autocvar_g_invasion_point_limit;
-		if(autocvar_g_invasion_teams >= 2)
-		{
-			ActivateTeamplay();
-			if(autocvar_g_invasion_team_spawns)
-				have_team_spawns = -1; // request team spawns
-		}
-		MUTATOR_ADD(gamemode_invasion);
-	}
 
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
-
-	// enforce the server's universal frag/time limits
-	if(!autocvar_g_campaign)
-	{
-		if(fraglimit_override >= 0)
-			cvar_set("fraglimit", ftos(fraglimit_override));
-		if(timelimit_override >= 0)
-			cvar_set("timelimit", ftos(timelimit_override));
-		if(leadlimit_override >= 0)
-			cvar_set("leadlimit", ftos(leadlimit_override));
-		if(qualifying_override >= 0)
-			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
-	}
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
@@ -398,45 +231,19 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
 {SELFPARAM();
-	float dm;
-	entity head;
-	string teament_name;
+	int dm = 0;
 
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
-	teament_name = string_null;
-	if(g_onslaught)
-	{
-		// onslaught is special
-		head = findchain(classname, "onslaught_generator");
-		while (head)
-		{
-			if (head.team == NUM_TEAM_1) c1 = 0;
-			if (head.team == NUM_TEAM_2) c2 = 0;
-			if (head.team == NUM_TEAM_3) c3 = 0;
-			if (head.team == NUM_TEAM_4) c4 = 0;
-			head = head.chain;
-		}
-	}
-	else if(g_domination)
-		teament_name = "dom_team";
-	else if(g_ctf)
-		teament_name = "ctf_team";
-	else if(g_tdm)
-		teament_name = "tdm_team";
-	else if(g_nexball)
-		teament_name = "nexball_team";
-	else if(g_assault)
-		c1 = c2 = 0; // Assault always has 2 teams
-	else
-	{
-		// cover anything else by treating it like tdm with no teams spawned
-		dm = 2;
+	string teament_name = string_null;
 
-		MUTATOR_CALLHOOK(GetTeamCount, dm);
-		dm = ret_float;
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(GetTeamCount, dm, teament_name);
+	teament_name = ret_string;
+	dm = ret_float;
 
+	if(!mutator_returnvalue)
+	{
 		if(dm >= 4)
 			c1 = c2 = c3 = c4 = 0;
 		else if(dm >= 3)
@@ -448,20 +255,17 @@ void CheckAllowedTeams (entity for_whom)
 	// find out what teams are allowed if necessary
 	if(teament_name)
 	{
-		head = find(world, classname, teament_name);
+		entity head = find(world, classname, teament_name);
 		while(head)
 		{
-			if(!(g_domination && head.netname == ""))
+			switch(head.team)
 			{
-				if(head.team == NUM_TEAM_1)
-					c1 = 0;
-				else if(head.team == NUM_TEAM_2)
-					c2 = 0;
-				else if(head.team == NUM_TEAM_3)
-					c3 = 0;
-				else if(head.team == NUM_TEAM_4)
-					c4 = 0;
+				case NUM_TEAM_1: c1 = 0; break;
+				case NUM_TEAM_2: c2 = 0; break;
+				case NUM_TEAM_3: c3 = 0; break;
+				case NUM_TEAM_4: c4 = 0; break;
 			}
+
 			head = find(head, classname, teament_name);
 		}
 	}

@@ -39,7 +39,7 @@
     #include "../../server/defs.qh"
     #include "../notifications.qh"
     #include "../deathtypes/all.qh"
-    #include "../../server/mutators/mutators_include.qh"
+    #include "../../server/mutators/all.qh"
     #include "../mapinfo.qh"
     #include "../../server/command/common.qh"
     #include "../../lib/csqcmodel/sv_model.qh"

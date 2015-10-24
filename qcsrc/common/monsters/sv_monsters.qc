@@ -11,7 +11,7 @@
     #include "../../server/autocvars.qh"
     #include "../../server/defs.qh"
     #include "../deathtypes/all.qh"
-    #include "../../server/mutators/mutators_include.qh"
+    #include "../../server/mutators/all.qh"
 	#include "../../server/steerlib.qh"
 	#include "../turrets/sv_turrets.qh"
 	#include "../turrets/util.qh"
@@ -571,7 +571,6 @@ vector Monster_Move_Target(entity targ)
 			|| (self.enemy.takedamage == DAMAGE_NO)
 			|| (vlen(self.origin - targ_origin) > self.target_range)
 			|| ((trace_fraction < 1) && (trace_ent != self.enemy)))
-			//|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit)) // TODO: chase timelimit?
 		{
 			self.enemy = world;
 			self.pass_distance = 0;

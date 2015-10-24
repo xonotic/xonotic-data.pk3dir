@@ -8,7 +8,7 @@
 
 #include "command/common.qh"
 
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"

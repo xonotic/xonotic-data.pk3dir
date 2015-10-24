@@ -708,9 +708,8 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	if(e_target.alpha <= 0.3)
 		return -1;
 
-	if(g_onslaught)
-		if (substring(e_target.classname, 0, 10) == "onslaught_") // don't attack onslaught targets, that's the player's job!
-			return - 3;
+	if(MUTATOR_CALLHOOK(TurretValidateTarget, e_turret, e_target, validate_flags))
+		return ret_float;
 
 	if (validate_flags & TFL_TARGETSELECT_NO)
 		return -4;
@@ -1019,24 +1018,9 @@ void turret_fire()
 
 void turret_think()
 {SELFPARAM();
-	entity e;
-
 	self.nextthink = time + self.ticrate;
 
-	// ONS uses somewhat backwards linking.
-	if (teamplay)
-	{
-		if (g_onslaught)
-			if (self.target)
-			{
-				e = find(world, targetname,self.target);
-				if (e != world)
-					self.team = e.team;
-			}
-
-		if (self.team != self.tur_head.team)
-			turret_respawn();
-	}
+	MUTATOR_CALLHOOK(TurretThink, self);
 
 #ifdef TURRET_DEBUG
 	if (self.tur_debug_tmr1 < time)
@@ -1065,7 +1049,7 @@ void turret_think()
 	if (self.shoot_flags & TFL_SHOOT_HITALLVALID)
 	{
 		// Do a self.turret_fire for every valid target.
-		e = findradius(self.origin,self.target_range);
+		entity e = findradius(self.origin,self.target_range);
 		while (e)
 		{
 			if(e.takedamage)
