@@ -774,6 +774,12 @@ spawnfunc(vehicle_raptor)
 
 		METHOD(Raptor, vr_hud, void(Raptor thisveh))
 		{
+			Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
+							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+		}
+		METHOD(Raptor, vr_crosshair, void(Raptor thisveh))
+		{
 			string crosshair;
 
 			switch(weapon2mode)
@@ -783,10 +789,60 @@ spawnfunc(vehicle_raptor)
 				default:        crosshair = vCROSS_BURST;
 			}
 
-			Vehicles_drawHUD(VEH_RAPTOR.m_icon, "vehicle_raptor_weapon1", "vehicle_raptor_weapon2",
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-							 crosshair);
+			vector tmpSize = '0 0 0';
+			if(weapon2mode != RSM_FLARE)
+			{
+				vector where;
+
+				if(!dropmark)
+				{
+					dropmark = spawn();
+					dropmark.owner = self;
+					dropmark.gravity = 1;
+				}
+
+				float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
+				if(reload2 == 1)
+				{
+					setorigin(dropmark, pmove_org);
+					dropmark.velocity = pmove_vel;
+					tracetoss(dropmark, self);
+
+					where = project_3d_to_2d(trace_endpos);
+
+					setorigin(dropmark, trace_endpos);
+					tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size;
+
+					if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
+					{
+						where.x -= tmpSize.x * 0.5;
+						where.y -= tmpSize.y * 0.5;
+						where.z = 0;
+						drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
+						drawpic(where, vCROSS_DROP, tmpSize, '0 1 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
+					}
+					dropmark.cnt = time + 5;
+				}
+				else
+				{
+					if(dropmark.cnt > time)
+					{
+						where = project_3d_to_2d(dropmark.origin);
+						tmpSize = draw_getimagesize(vCROSS_DROP) * autocvar_cl_vehicles_crosshair_size * 1.25;
+
+						if (!(where.z < 0 || where.x < 0 || where.y < 0 || where.x > vid_conwidth || where.y > vid_conheight))
+						{
+							where.x -= tmpSize.x * 0.5;
+							where.y -= tmpSize.y * 0.5;
+							where.z = 0;
+							drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.9, DRAWFLAG_ADDITIVE);
+							drawpic(where, vCROSS_DROP, tmpSize, '1 0 0', autocvar_crosshair_alpha * 0.6, DRAWFLAG_NORMAL); // Ensure visibility against bright bg
+						}
+					}
+				}
+			}
+
+			Vehicles_drawCrosshair(crosshair);
 		}
 		METHOD(Raptor, vr_setup, void(Raptor thisveh))
 		{

@@ -692,5 +692,5 @@ void HUD_Minigame_Mouse()
 
 bool HUD_Minigame_Showpanels()
 {
-	return HUD_MinigameMenu_IsOpened() && ( autocvar__hud_configure || minigame_isactive() );
+	return (HUD_MinigameMenu_IsOpened() && minigame_isactive());
 }

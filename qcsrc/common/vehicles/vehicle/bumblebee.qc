@@ -953,16 +953,36 @@ void CSQC_BUMBLE_GUN_HUD()
 {
 	Vehicles_drawHUD("vehicle_gunner", "vehicle_gunner_weapon1", string_null,
 					 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-					 string_null, '0 0 0',
-					 string_null);
+					 string_null, '0 0 0');
 }
 
 		METHOD(Bumblebee, vr_hud, void(Bumblebee thisveh))
 		{
 			Vehicles_drawHUD(VEH_BUMBLEBEE.m_icon, "vehicle_bumble_weapon1", "vehicle_bumble_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 vCROSS_HEAL);
+							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color);
+
+			float hudAlpha = autocvar_hud_panel_fg_alpha;
+			float blinkValue = 0.55 + sin(time * 7) * 0.45;
+			vector tmpPos  = '0 0 0';
+			vector tmpSize = '1 1 1' * hud_fontsize;
+			tmpPos.x = vehicleHud_Pos.x + vehicleHud_Size.x * (520/768);
+
+			if(!AuxiliaryXhair[1].draw2d)
+			{
+				tmpPos.y = vehicleHud_Pos.y + vehicleHud_Size.y * (96/256) - tmpSize.y;
+				drawstring(tmpPos, _("No right gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+			}
+
+			if(!AuxiliaryXhair[2].draw2d)
+			{
+				tmpPos.y = vehicleHud_Pos.y + vehicleHud_Size.y * (160/256);
+				drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
+			}
+		}
+		METHOD(Bumblebee, vr_crosshair, void(Bumblebee thisveh))
+		{
+			Vehicles_drawCrosshair(vCROSS_HEAL);
 		}
 		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
 		{
