@@ -1079,24 +1079,26 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
 	if(modname == "")
-		modname = "Xonotic";
+		modname = "xonotic";
 #endif
+
+	modname = strtolower(modname);
 
 	/*
 	SLIST_FIELD_MOD = gethostcacheindexforkey("mod");
 	s = gethostcachestring(SLIST_FIELD_MOD, i);
 	if(s != "data")
-		if(modname == "Xonotic")
+		if(modname == "xonotic")
 			modname = s;
 	*/
 
 	// list the mods here on which the pure server check actually works
-	if(modname != "Xonotic")
-	if(modname != "InstaGib" || modname != "MinstaGib")
-	if(modname != "CTS")
-	if(modname != "NIX")
-	if(modname != "NewToys")
-		pure_available = false;
+	if(modname != "xonotic")
+	if(modname != "instagib" || modname != "minstagib")
+	if(modname != "cts")
+	if(modname != "nix")
+	if(modname != "newtoys")
+		pure = false;
 
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
@@ -1204,7 +1206,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	iconPos.x += iconSize.x;
 
 	// Mod
-	if(modname == "Xonotic")
+	if(modname == "xonotic")
 	{
 		// Here, pure_available should always be set. If not, consider
 		// it an impurity.
