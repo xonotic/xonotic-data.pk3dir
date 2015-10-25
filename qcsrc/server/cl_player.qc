@@ -503,7 +503,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		dh = dh - max(self.health, 0);
 		da = da - max(self.armorvalue, 0);
 		WeaponStats_LogDamage(awep.m_id, abot, self.weapon, vbot, dh + da);
-		MUTATOR_CALLHOOK(PlayerDamaged, attacker, self, dh, da, hitloc);
+		MUTATOR_CALLHOOK(PlayerDamaged, attacker, self, dh, da, hitloc, deathtype);
 	}
 
 	if (self.health < 1)
