@@ -71,6 +71,85 @@ float LMS_NewPlayerLives()
 	return bound(1, lms_lowest_lives, fl);
 }
 
+// LMS winning condition: game terminates if and only if there's at most one
+// one player who's living lives. Top two scores being equal cancels the time
+// limit.
+float WinningCondition_LMS()
+{
+	entity head, head2;
+	float have_player;
+	float have_players;
+	float l;
+
+	have_player = false;
+	have_players = false;
+	l = LMS_NewPlayerLives();
+
+	head = find(world, classname, "player");
+	if(head)
+		have_player = true;
+	head2 = find(head, classname, "player");
+	if(head2)
+		have_players = true;
+
+	if(have_player)
+	{
+		// we have at least one player
+		if(have_players)
+		{
+			// two or more active players - continue with the game
+		}
+		else
+		{
+			// exactly one player?
+
+			ClearWinners();
+			SetWinners(winning, 0); // NOTE: exactly one player is still "player", so this works out
+
+			if(l)
+			{
+				// game still running (that is, nobody got removed from the game by a frag yet)? then continue
+				return WINNING_NO;
+			}
+			else
+			{
+				// a winner!
+				// and assign him his first place
+				PlayerScore_Add(head, SP_LMS_RANK, 1);
+				return WINNING_YES;
+			}
+		}
+	}
+	else
+	{
+		// nobody is playing at all...
+		if(l)
+		{
+			// wait for players...
+		}
+		else
+		{
+			// SNAFU (maybe a draw game?)
+			ClearWinners();
+			LOG_TRACE("No players, ending game.\n");
+			return WINNING_YES;
+		}
+	}
+
+	// When we get here, we have at least two players who are actually LIVING,
+	// now check if the top two players have equal score.
+	WinningConditionHelper();
+
+	ClearWinners();
+	if(WinningConditionHelper_winner)
+		WinningConditionHelper_winner.winning = true;
+	if(WinningConditionHelper_topscore == WinningConditionHelper_secondscore)
+		return WINNING_NEVER;
+
+	// Top two have different scores? Way to go for our beloved TIMELIMIT!
+	return WINNING_NO;
+}
+
 // mutator hooks
 MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 {
