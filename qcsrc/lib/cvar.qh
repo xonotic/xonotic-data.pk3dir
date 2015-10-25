@@ -2,6 +2,7 @@
 #define CVAR_H
 
 #include "nil.qh"
+#include "progname.qh"
 #include "static.qh"
 
 void RegisterCvars(void(string name, string def, string desc, bool archive, string file) f) { }
@@ -16,23 +17,35 @@ string MakeConsoleSafe(string input)
 	return input;
 }
 
-void RegisterCvars_Set(string name, string def, string desc, bool archive, string file)
-{
-    string val = string_null;
-    if (cvar_type(name) & CVAR_TYPEFLAG_EXISTS) {
-        val = cvar_string(name);
-        // Need to unset first to change the default
-        localcmd(sprintf("\nunset %s\n", name));
-    }
-    localcmd(sprintf("\n%s %s \"%s\" \"%s\"\n", (archive ? "seta" : "set"), name, MakeConsoleSafe(def), MakeConsoleSafe(desc)));
-    if (val) {
-        localcmd(sprintf("\n%s \"%s\"\n", name, MakeConsoleSafe(val)));
-    }
+void cvar_describe(string name, string desc) {
+    localcmd(sprintf("\nset %1$s \"$%1$s\" \"%2$s\"\n", name, MakeConsoleSafe(desc)));
 }
 
-#ifndef SVQC
-STATIC_INIT_LATE(Cvars) { RegisterCvars(RegisterCvars_Set); }
-#endif
+void cvar_archive(string name) {
+    localcmd(sprintf("\nseta %1$s \"$%1$s\"\n", name));
+}
+
+void RegisterCvars_Set(string name, string def, string desc, bool archive, string file)
+{
+    cvar_describe(name, desc);
+    if (archive) cvar_archive(name);
+}
+
+int RegisterCvars_Save_fd;
+void RegisterCvars_Save(string name, string def, string desc, bool archive, string file)
+{
+    if (!archive) return;
+    fputs(RegisterCvars_Save_fd, sprintf("seta %s \"%s\"\n", name, def));
+}
+
+STATIC_INIT_LATE(Cvars) {
+    RegisterCvars(RegisterCvars_Set);
+    RegisterCvars_Save_fd = fopen(sprintf("default%s.cfg", PROGNAME), FILE_WRITE);
+    if (RegisterCvars_Save_fd >= 0) {
+        RegisterCvars(RegisterCvars_Save);
+        fclose(RegisterCvars_Save_fd);
+    }
+}
 
 const noref bool default_bool = false;
 const noref int default_int = 0;
