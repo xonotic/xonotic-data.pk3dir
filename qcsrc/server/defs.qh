@@ -388,8 +388,6 @@ string clientstuff;
 .float phase;
 .int pressedkeys;
 
-.float porto_forbidden;
-
 .string fog;
 
 string cvar_changes;

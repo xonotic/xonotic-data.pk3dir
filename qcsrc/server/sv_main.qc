@@ -184,8 +184,9 @@ float game_delay;
 float game_delay_last;
 
 float RedirectionThink();
-void StartFrame (void)
-{SELFPARAM();
+void StartFrame()
+{
+	SELFPARAM();
 	execute_next_frame();
 
 	remove = remove_unsafely; // not during spawning!
@@ -196,12 +197,11 @@ void StartFrame (void)
 #ifdef PROFILING
 	if(time > client_cefc_accumulatortime + 1)
 	{
-		float t, pp, c_seeing, c_seen;
-		entity cl;
-		t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
+		float t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
 		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
-		c_seeing = 0;
-		c_seen = 0;
+		int c_seeing = 0;
+		int c_seen = 0;
+		entity cl;
 		FOR_EACH_CLIENT(cl)
 		{
 			if(IS_REAL_CLIENT(cl))
@@ -238,17 +238,15 @@ void StartFrame (void)
 	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
-	game_delay = (time < game_starttime) ? true : false;
+	game_delay = (time < game_starttime);
 
-	if(game_delay_last == true)
-	if(game_delay == false)
-	if(autocvar_sv_eventlog)
+	if(autocvar_sv_eventlog && game_delay_last && !game_delay)
 		GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
 
-	CreatureFrame ();
-	CheckRules_World ();
+	CreatureFrame();
+	CheckRules_World();
 
 	// if in warmup stage and limit for warmup is hit start match
 	if(warmup_stage)
@@ -261,13 +259,7 @@ void StartFrame (void)
 	}
 
 	bot_serverframe();
-
-	entity e;
-	FOR_EACH_PLAYER(e)
-		e.porto_forbidden = max(0, e.porto_forbidden - 1);
-
 	anticheat_startframe();
-
 	MUTATOR_CALLHOOK(SV_StartFrame);
 }
 

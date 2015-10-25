@@ -37,6 +37,7 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .vector porto_v_angle; // holds "held" view angles
 .float porto_v_angle_held;
 .vector right_vector;
+.float porto_forbidden;
 #endif
 #endif
 #ifdef IMPLEMENTATION
@@ -44,6 +45,13 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #include "../../triggers/trigger/jumppads.qh"
 
 spawnfunc(weapon_porto) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
+
+REGISTER_MUTATOR(porto_ticker, true);
+MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
+	entity e;
+	FOR_EACH_PLAYER(e)
+		e.porto_forbidden = max(0, e.porto_forbidden - 1);
+}
 
 void W_Porto_Success(void)
 {SELFPARAM();
