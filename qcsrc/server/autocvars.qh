@@ -2,7 +2,6 @@
 #define SERVER_AUTOCVARS_H
 
 bool autocvar__notarget;
-bool autocvar__independent_players;
 bool autocvar__campaign_testrun;
 int autocvar__campaign_index;
 string autocvar__campaign_name;

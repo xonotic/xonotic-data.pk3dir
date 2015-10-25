@@ -237,7 +237,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 	if(!allowed_to_spawn)
 	if(IS_PLAYER(self)) // this is true even when player is trying to join
 	{
-		self.classname = "observer";
+		self.classname = STR_OBSERVER;
 		if(self.jointime != time) //not when connecting
 		if(!self.caplayer)
 		{
@@ -263,7 +263,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 		}
 		if(self.caplayer)
 		{
-			self.classname = "player";
+			self.classname = STR_PLAYER;
 			self.caplayer = 1;
 			PutClientInServer();
 		}
@@ -273,7 +273,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 
 MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {SELFPARAM();
-	self.classname = "observer";
+	self.classname = STR_OBSERVER;
 	return 1;
 }
 

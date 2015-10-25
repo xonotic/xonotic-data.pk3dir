@@ -284,7 +284,7 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	if(IS_PLAYER(self))
 	if(!gameover)
 	{
-		if(self.killcount == -666 /* initial spawn */ || g_race_qualifying) // spawn
+		if(self.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
 			race_PreparePlayer();
 		else // respawn
 			race_RetractPlayer();

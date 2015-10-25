@@ -26,7 +26,7 @@ const float SSF_ITEMMSG = 4;
 bool superspec_Spectate(entity _player)
 {SELFPARAM();
 	if(Spectate(_player) == 1)
-		self.classname = "spectator";
+		self.classname = STR_SPECTATOR;
 
 	return true;
 }

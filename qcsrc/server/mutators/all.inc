@@ -37,5 +37,6 @@
 #include "mutator/mutator_touchexplode.qc"
 #include "mutator/mutator_vampirehook.qc"
 #include "mutator/mutator_vampire.qc"
+#include "mutator/mutator_weaponarena_random.qc"
 
 #include "mutator/sandbox.qc"

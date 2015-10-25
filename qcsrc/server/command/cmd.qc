@@ -113,7 +113,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 					}
 					else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0))
 					{
-						self.classname = "observer"; // really?
+						self.classname = STR_OBSERVER; // really?
 						stuffcmd(self, "menu_showteamselect\n");
 					}
 				}
@@ -175,7 +175,7 @@ void ClientCommand_join(float request)
 					{
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
 
-						self.classname = "player";
+						self.classname = STR_PLAYER;
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
 						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);

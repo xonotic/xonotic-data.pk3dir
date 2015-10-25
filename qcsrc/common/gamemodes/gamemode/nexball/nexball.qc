@@ -2,6 +2,8 @@
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
+.float metertime;
+
 int autocvar_g_nexball_goalleadlimit;
 #define autocvar_g_nexball_goallimit cvar("g_nexball_goallimit")
 
@@ -984,14 +986,22 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
-{SELFPARAM();
-	self.weaponentity.weapons = '0 0 0';
+MUTATOR_HOOKFUNCTION(nb, SpectateCopy)
+{
+	SELFPARAM();
+	this.metertime = other.metertime;
+}
 
-	if(nexball_mode & NBM_BASKETBALL)
-		self.weapons |= WEPSET(NEXBALL);
+MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
+{
+	SELFPARAM();
+	this.metertime = 0;
+	this.weaponentity.weapons = '0 0 0';
+
+	if (nexball_mode & NBM_BASKETBALL)
+		this.weapons |= WEPSET(NEXBALL);
 	else
-		self.weapons = '0 0 0';
+		this.weapons = '0 0 0';
 
 	return false;
 }

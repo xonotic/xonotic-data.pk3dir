@@ -67,6 +67,8 @@ DEVASTATOR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 spawnfunc(weapon_devastator) { weapon_defaultspawnfunc(WEP_DEVASTATOR.m_id); }
 spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
+.entity lastrocket;
+
 void W_Devastator_Unregister(void)
 {SELFPARAM();
 	if(self.realowner && self.realowner.lastrocket == self)
@@ -609,6 +611,7 @@ void W_Devastator_Attack(Weapon thiswep)
 		}
 		METHOD(Devastator, wr_resetplayer, void(entity thiswep))
 		{
+			self.lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
 			self.rl_release = 0;
 		}
 		METHOD(Devastator, wr_reload, void(entity thiswep))

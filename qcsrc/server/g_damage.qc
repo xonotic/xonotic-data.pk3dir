@@ -626,7 +626,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	mirrordamage = 0;
 	mirrorforce = 0;
 
-	if (gameover || targ.killcount == -666)
+	if (gameover || targ.killcount == FRAGS_SPECTATOR)
 		return;
 
 	setself(targ);

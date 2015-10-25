@@ -746,7 +746,7 @@ void trigger_race_checkpoint_verify()
 	qual = g_race_qualifying;
 
 	setself(spawn());
-	self.classname = "player";
+	self.classname = STR_PLAYER;
 
 	if(g_race)
 	{

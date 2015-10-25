@@ -178,7 +178,7 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
 	{
-		self.classname = "observer";
+		self.classname = STR_OBSERVER;
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
 	}
 
@@ -200,7 +200,7 @@ void lms_RemovePlayer(entity player)
 	else
 		player.frags = FRAGS_LMS_LOSER;
 
-	if(player.killcount != -666)
+	if(player.killcount != FRAGS_SPECTATOR)
 		if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else
@@ -221,7 +221,7 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 {SELFPARAM();
-	self.classname = "player";
+	self.classname = STR_PLAYER;
 	campaign_bots_may_start = 1;
 
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
