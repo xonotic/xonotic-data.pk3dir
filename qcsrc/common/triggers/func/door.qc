@@ -185,7 +185,7 @@ bool door_check_keys(entity door, entity player)
 #ifdef SVQC
 		if(player.key_door_messagetime <= time)
 		{
-			play2(player, SND(TALK));
+			play2(player, door.noise3);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(door.itemkeys));
 			player.key_door_messagetime = time + 2;
 		}
@@ -197,7 +197,7 @@ bool door_check_keys(entity door, entity player)
 #ifdef SVQC
 	if(player.key_door_messagetime <= time)
 	{
-		play2(player, SND(TALK));
+		play2(player, door.noise3);
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
 		player.key_door_messagetime = time + 2;
 	}
@@ -736,7 +736,10 @@ spawnfunc(func_door)
 
 	if(self.noise == "")
 		self.noise = "misc/talk.wav";
+	if(self.noise3 == "")
+		self.noise3 = "misc/talk.wav";
 	precache_sound(self.noise);
+	precache_sound(self.noise3);
 
 	self.blocked = door_blocked;
 	self.use = door_use;
