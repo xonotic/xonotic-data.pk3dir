@@ -161,7 +161,7 @@ void secret_touch()
 	{
 		if (IS_CLIENT(other))
 			centerprint(other, self.message);
-		play2(other, SND(TALK));
+		play2(other, self.noise);
 	}
 }
 
@@ -209,6 +209,9 @@ spawnfunc(func_door_secret)
 	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
+
+	if(self.noise == "")
+		self.noise = "misc/talk.wav";
 
 	self.touch = secret_touch;
 	self.blocked = secret_blocked;
