@@ -178,10 +178,11 @@ void bd_move(entity minigame, entity player, string dir )
 				return; // should not happen... TODO: end match?
 
 			int dxs = 0, dys = 0;
-			if(dir == "up") { dxs = 0; dys = 1; }
-			if(dir == "down" || dir == "dn") { dxs = 0; dys = -1; }
-			if(dir == "left" || dir == "lt") { dxs = -1; dys = 0; }
-			if(dir == "right" || dir == "rt") { dxs = 1; dys = 0; }
+			string thedir = strtolower(dir);
+			if(thedir == "up" || thedir == "u") { dxs = 0; dys = 1; }
+			if(thedir == "down" || thedir == "dn" || thedir == "d") { dxs = 0; dys = -1; }
+			if(thedir == "left" || thedir == "lt" || thedir == "l") { dxs = -1; dys = 0; }
+			if(thedir == "right" || thedir == "rt" || thedir == "r") { dxs = 1; dys = 0; }
 
 			int dx = bound(-1, dxs, 1);
 			int dy = bound(-1, dys, 1);
@@ -526,19 +527,19 @@ int bd_client_event(entity minigame, string event, ...)
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
-						bd_make_move(minigame, "rt");
+						bd_make_move(minigame, "r");
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
-						bd_make_move(minigame, "lt");
+						bd_make_move(minigame, "l");
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
-						bd_make_move(minigame, "up");
+						bd_make_move(minigame, "u");
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
-						bd_make_move(minigame, "dn");
+						bd_make_move(minigame, "d");
 						return true;
 				}
 			}
