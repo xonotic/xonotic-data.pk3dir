@@ -33,6 +33,8 @@ string TranslateScoresLabel(string l)
 		case "captime": return CTX(_("SCO^captime"));
 		case "deaths": return CTX(_("SCO^deaths"));
 		case "destroyed": return CTX(_("SCO^destroyed"));
+		case "dmg": return CTX(_("SCO^dmg"));
+		case "dmgtaken": return CTX(_("SCO^dmgtaken"));
 		case "drops": return CTX(_("SCO^drops"));
 		case "faults": return CTX(_("SCO^faults"));
 		case "fckills": return CTX(_("SCO^fckills"));
@@ -260,6 +262,8 @@ void Cmd_HUD_Help()
 	LOG_INFO(_("^3suicides^7                 Number of suicides\n"));
 	LOG_INFO(_("^3frags^7                    kills - suicides\n"));
 	LOG_INFO(_("^3kd^7                       The kill-death ratio\n"));
+	LOG_INFO(_("^3dmg^7                      The total damage done\n"));
+	LOG_INFO(_("^3dmgtaken^7                 The total damage taken\n"));
 	LOG_INFO(_("^3sum^7                      frags - deaths\n"));
 	LOG_INFO(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
 	LOG_INFO(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
@@ -300,6 +304,7 @@ void Cmd_HUD_Help()
 #define HUD_DefaultColumnLayout() \
 "ping pl name | " \
 "-teams,rc,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -rc,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
+"dmg dmgtaken " \
 "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
 "+lms/lives +lms/rank " \
 "+kh/caps +kh/pushes +kh/destroyed " \
@@ -394,6 +399,8 @@ void Cmd_HUD_SetFields(float argc)
 			case "sum": case "diff": case "k-d": hud_field[hud_num_fields] = SP_SUM; break;
 			case "name": case "nick": hud_field[hud_num_fields] = SP_NAME; have_name = true; break;
 			case "|": hud_field[hud_num_fields] = SP_SEPARATOR; have_separator = true; break;
+			case "dmg": hud_field[hud_num_fields] = SP_DMG; break;
+			case "dmgtaken": hud_field[hud_num_fields] = SP_DMGTAKEN; break;
 			default:
 			{
 				for(j = 0; j < MAX_SCORE; ++j)
@@ -598,6 +605,20 @@ string HUD_GetField(entity pl, int field)
 			}
 			return ftos(f);
 
+		case SP_DMG:
+			num = pl.(scores[SP_DMG]);
+			denom = 1000;
+			
+			str = sprintf("%.1f k", num/denom);
+			return str;
+			
+		case SP_DMGTAKEN:
+			num = pl.(scores[SP_DMGTAKEN]);
+			denom = 1000;
+			
+			str = sprintf("%.1f k", num/denom);
+			return str; 
+		
 		default:
 			tmp = pl.(scores[field]);
 			f = scores_flags[field];
