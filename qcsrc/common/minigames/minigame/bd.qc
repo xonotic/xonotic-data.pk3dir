@@ -85,7 +85,7 @@ void minigame_setup_randompiece(entity minigame, int ttype)
 	for(j = 1; j < BD_NUM_CNT - 1; ++j)
 	{
 		string pos = minigame_tile_buildname(i, j);
-		if(!bd_find_piece(minigame, pos, false))
+		if(!bd_find_piece(minigame, pos, false) && !bd_find_piece(minigame, pos, true))
 			RandomSelection_Add(world, 0, pos, 1, 1);
 	}
 
