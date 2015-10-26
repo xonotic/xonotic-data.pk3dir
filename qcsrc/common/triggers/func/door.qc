@@ -316,7 +316,7 @@ void door_touch()
 	{
 		if (IS_CLIENT(other))
 			centerprint(other, self.owner.message);
-		play2(other, SND(TALK));
+		play2(other, self.owner.noise);
 	}
 #endif
 }
@@ -733,6 +733,9 @@ spawnfunc(func_door)
 		return;
 	self.effects |= EF_LOWPRECISION;
 	self.classname = "door";
+
+	if(self.noise == "")
+		self.noise = "misc/talk.wav";
 
 	self.blocked = door_blocked;
 	self.use = door_use;
