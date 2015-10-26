@@ -414,6 +414,9 @@ void PutClientInServer()
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
 	}
+	if (gameover) {
+		this.classname = STR_OBSERVER;
+	}
 
 	SetSpectatee(this, NULL);
 
@@ -422,14 +425,9 @@ void PutClientInServer()
 
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
-	if (gameover) {
-		this.classname = STR_OBSERVER;
+	if (IS_OBSERVER(this)) {
 		PutObserverInServer();
-		return;
-	}
-
-	if (IS_PLAYER(this))
-	{
+	} else if (IS_PLAYER(this)) {
 		accuracy_resend(this);
 
 		if (this.team < 0)
