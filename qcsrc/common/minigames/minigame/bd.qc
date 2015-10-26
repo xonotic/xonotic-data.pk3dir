@@ -165,10 +165,10 @@ bool bd_move_dozer(entity minigame, entity dozer)
 }
 
 // make a move
-void bd_move(entity minigame, entity player, string dxs, string dys )
+void bd_move(entity minigame, entity player, string dir )
 {
 	if ( minigame.minigame_flags & BD_TURN_MOVE )
-	if ( dxs || dys )
+	if ( dir )
 	{
 		//if ( bd_valid_tile(pos) )
 		//if ( bd_find_piece(minigame, pos, false) )
@@ -177,8 +177,14 @@ void bd_move(entity minigame, entity player, string dxs, string dys )
 			if(!dozer)
 				return; // should not happen... TODO: end match?
 
-			int dx = ((dxs) ? bound(-1, stof(dxs), 1) : 0);
-			int dy = ((dys) ? bound(-1, stof(dys), 1) : 0);
+			int dxs = 0, dys = 0;
+			if(dir == "up") { dxs = 0; dys = 1; }
+			if(dir == "down" || dir == "dn") { dxs = 0; dys = -1; }
+			if(dir == "left" || dir == "lt") { dxs = -1; dys = 0; }
+			if(dir == "right" || dir == "rt") { dxs = 1; dys = 0; }
+
+			int dx = bound(-1, dxs, 1);
+			int dy = bound(-1, dys, 1);
 
 			dozer.bd_dir_x = dx;
 			dozer.bd_dir_y = dy;
@@ -265,7 +271,7 @@ int bd_server_event(entity minigame, string event, ...)
 			switch(argv(0))
 			{
 				case "move":
-					bd_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) == 3 ? argv(2) : string_null)); 
+					bd_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null)); 
 					return true;
 				case "next":
 					bd_restart_match(minigame,...(0,entity));
@@ -494,11 +500,11 @@ string bd_turn_to_string(int turnflags)
 }
 
 // Make the correct move
-void bd_make_move(entity minigame, int dx, int dy)
+void bd_make_move(entity minigame, string dir)
 {
 	if ( minigame.minigame_flags == BD_TURN_MOVE )
 	{
-		minigame_cmd("move ",ftos(dx), " ", ftos(dy));
+		minigame_cmd("move ", dir);
 	}
 }
 
@@ -520,19 +526,19 @@ int bd_client_event(entity minigame, string event, ...)
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
-						bd_make_move(minigame, 1, 0);
+						bd_make_move(minigame, "rt");
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
-						bd_make_move(minigame, -1, 0);
+						bd_make_move(minigame, "lt");
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
-						bd_make_move(minigame, 0, 1);
+						bd_make_move(minigame, "up");
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
-						bd_make_move(minigame, 0, -1);
+						bd_make_move(minigame, "dn");
 						return true;
 				}
 			}
