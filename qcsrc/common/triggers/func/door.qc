@@ -736,6 +736,7 @@ spawnfunc(func_door)
 
 	if(self.noise == "")
 		self.noise = "misc/talk.wav";
+	precache_sound(self.noise);
 
 	self.blocked = door_blocked;
 	self.use = door_use;

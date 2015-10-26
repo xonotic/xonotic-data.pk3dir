@@ -212,6 +212,7 @@ spawnfunc(func_door_secret)
 
 	if(self.noise == "")
 		self.noise = "misc/talk.wav";
+	precache_sound(self.noise);
 
 	self.touch = secret_touch;
 	self.blocked = secret_blocked;
