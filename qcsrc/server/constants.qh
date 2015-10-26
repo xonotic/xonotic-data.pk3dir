@@ -4,7 +4,7 @@
 const int FL_WEAPON = BIT(13);
 const int FL_POWERUP = BIT(14);
 const int FL_PROJECTILE = BIT(15);
-const int FL_TOSSED = BIT(BIT(4));
+const int FL_TOSSED = BIT(16);
 const int FL_NO_WEAPON_STAY = BIT(17);
 const int FL_SPAWNING = BIT(18);
 const int FL_PICKUPITEMS = BIT(19);
