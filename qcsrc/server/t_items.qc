@@ -1037,17 +1037,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.event_damage = Item_Damage;
 
 		if(this.strength_finished || this.invincible_finished || this.superweapons_finished)
-		/*
-		if(this.items == 0)
-		if(!(this.weapons & ~WEPSET_SUPERWEAPONS)) // only superweapons
-		if(this.ammo_nails == 0)
-		if(this.ammo_cells == 0)
-		if(this.ammo_rockets == 0)
-		if(this.ammo_shells == 0)
-		if(this.ammo_fuel == 0)
-		if(this.health == 0)
-		if(this.armorvalue == 0)
-		*/
 		{
 			// if item is worthless after a timer, have it expire then
 			this.nextthink = max(this.strength_finished, this.invincible_finished, this.superweapons_finished);
