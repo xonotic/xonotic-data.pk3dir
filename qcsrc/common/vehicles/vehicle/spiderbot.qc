@@ -291,7 +291,7 @@ float spiderbot_frame()
 			v += v_forward * 50;
 
 			fireBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
-                                autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0);
+                                autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 
 			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
 			//trailparticles(self, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
@@ -483,7 +483,7 @@ void spiderbot_blowup()
 	SUB_SetFade(g1, time, min(self.respawntime, 10));
 	SUB_SetFade(g2, time, min(self.respawntime, 10));
 
-	RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_VH_SPID_DEATH, world);
+	RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_VH_SPID_DEATH.m_id, world);
 
 	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
 	self.movetype = MOVETYPE_NONE;
@@ -646,6 +646,12 @@ float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 		METHOD(Spiderbot, vr_hud, void(Spiderbot thisveh))
 		{
+			Vehicles_drawHUD(VEH_SPIDERBOT.m_icon, "vehicle_spider_weapon1", "vehicle_spider_weapon2",
+							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+		}
+		METHOD(Spiderbot, vr_crosshair, void(Spiderbot thisveh))
+		{
 			string crosshair;
 
 			switch(weapon2mode)
@@ -656,10 +662,7 @@ float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 				default:             crosshair = vCROSS_BURST;
 			}
 
-			Vehicles_drawHUD(VEH_SPIDERBOT.m_icon, "vehicle_spider_weapon1", "vehicle_spider_weapon2",
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-							 crosshair);
+			Vehicles_drawCrosshair(crosshair);
 		}
 		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh))
 		{

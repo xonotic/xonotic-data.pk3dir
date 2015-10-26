@@ -4,12 +4,12 @@
 #include "race.qh"
 #include "../common/triggers/teleporters.qh"
 
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 
 #include "weapons/tracing.qh"
 
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/util.qh"
 
 #include "../common/monsters/all.qh"
@@ -285,7 +285,7 @@ float CheatImpulse(float i)
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
-			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
+			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT.m_id, e);
 			remove(e2);
 
 			LOG_INFO("404 Sportsmanship not found.\n");

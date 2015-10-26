@@ -128,7 +128,7 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 		if((t = strstrofs(score, ",", 0)) >= 0)
 			score = substring(score, 0, t);
 
-		if(stof(score) == -666)
+		if(stof(score) == FRAGS_SPECTATOR)
 			score = _("spectator");
 	}
 

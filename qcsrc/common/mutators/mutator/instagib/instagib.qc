@@ -73,59 +73,59 @@ void instagib_ammocheck()
 		self.instagib_needammo = true;
 		if (self.health <= 5)
 		{
-			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 5, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
 		}
 		else if (self.health <= 10)
 		{
-			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 5, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_1);
 		}
 		else if (self.health <= 20)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_2);
 		}
 		else if (self.health <= 30)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_3);
 		}
 		else if (self.health <= 40)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_4);
 		}
 		else if (self.health <= 50)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_5);
 		}
 		else if (self.health <= 60)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_6);
 		}
 		else if (self.health <= 70)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_7);
 		}
 		else if (self.health <= 80)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_8);
 		}
 		else if (self.health <= 90)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_9);
 		}
 		else
 		{
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_MULTI, MULTI_INSTAGIB_FINDAMMO);
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
+			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
 		}
 	}
 	self.instagib_nextthink = time + 1;
@@ -269,11 +269,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 
 	if(IS_PLAYER(frag_target))
 	{
-		if(frag_deathtype == DEATH_FALL)
+		if(frag_deathtype == DEATH_FALL.m_id)
 			frag_damage = 0; // never count fall damage
 
 		if(!autocvar_g_instagib_damagedbycontents)
-		switch(frag_deathtype)
+		switch(DEATH_ENT(frag_deathtype))
 		{
 			case DEATH_DROWN:
 			case DEATH_SLIME:
@@ -283,7 +283,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		}
 
 		if(IS_PLAYER(frag_attacker))
-		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER.m_id))
+		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		{
 			if(frag_target.armorvalue)
 			{
@@ -295,7 +295,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 			}
 		}
 
-		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER.m_id))
+		if(IS_PLAYER(frag_attacker) && DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
@@ -398,7 +398,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 {
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER.m_id))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		frag_damage = 1000; // always gib if it was a vaporizer death
 
 	return FALSE;
@@ -472,7 +472,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsPrettyString)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetModname)
 {
-	modname = "instagib";
+	modname = "InstaGib";
 	return true;
 }
 

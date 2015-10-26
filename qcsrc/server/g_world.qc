@@ -13,14 +13,14 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mapvoting.qh"
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "race.qh"
 #include "scores.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
 #include "../common/buffs/all.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
@@ -31,6 +31,7 @@
 #include "../common/stats.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/trigger/secret.qh"
+#include "../common/triggers/target/music.qh"
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
@@ -557,7 +558,7 @@ spawnfunc(__init_dedicated_server)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
+	static_init_late();
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -602,7 +603,6 @@ spawnfunc(worldspawn)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -657,6 +657,7 @@ spawnfunc(worldspawn)
 	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	InitGameplayMode();
+	static_init_late();
 	readlevelcvars();
 	GrappleHookInit();
 
@@ -1425,7 +1426,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(IS_PLAYER(other) || other.caplayer == 1 || g_lms)
+			if(IS_PLAYER(other) || MUTATOR_CALLHOOK(GetPlayerStatus, other, s))
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");
@@ -1547,6 +1548,10 @@ void NextLevel()
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");
 	}
+
+	entity oldself = self;
+	target_music_kill();
+	self = oldself;
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
@@ -1702,85 +1707,6 @@ float WinningCondition_Assault()
 	}
 
 	return status;
-}
-
-// LMS winning condition: game terminates if and only if there's at most one
-// one player who's living lives. Top two scores being equal cancels the time
-// limit.
-float WinningCondition_LMS()
-{
-	entity head, head2;
-	float have_player;
-	float have_players;
-	float l;
-
-	have_player = false;
-	have_players = false;
-	l = LMS_NewPlayerLives();
-
-	head = find(world, classname, "player");
-	if(head)
-		have_player = true;
-	head2 = find(head, classname, "player");
-	if(head2)
-		have_players = true;
-
-	if(have_player)
-	{
-		// we have at least one player
-		if(have_players)
-		{
-			// two or more active players - continue with the game
-		}
-		else
-		{
-			// exactly one player?
-
-			ClearWinners();
-			SetWinners(winning, 0); // NOTE: exactly one player is still "player", so this works out
-
-			if(l)
-			{
-				// game still running (that is, nobody got removed from the game by a frag yet)? then continue
-				return WINNING_NO;
-			}
-			else
-			{
-				// a winner!
-				// and assign him his first place
-				PlayerScore_Add(head, SP_LMS_RANK, 1);
-				return WINNING_YES;
-			}
-		}
-	}
-	else
-	{
-		// nobody is playing at all...
-		if(l)
-		{
-			// wait for players...
-		}
-		else
-		{
-			// SNAFU (maybe a draw game?)
-			ClearWinners();
-			LOG_TRACE("No players, ending game.\n");
-			return WINNING_YES;
-		}
-	}
-
-	// When we get here, we have at least two players who are actually LIVING,
-	// now check if the top two players have equal score.
-	WinningConditionHelper();
-
-	ClearWinners();
-	if(WinningConditionHelper_winner)
-		WinningConditionHelper_winner.winning = true;
-	if(WinningConditionHelper_topscore == WinningConditionHelper_secondscore)
-		return WINNING_NEVER;
-
-	// Top two have different scores? Way to go for our beloved TIMELIMIT!
-	return WINNING_NO;
 }
 
 void ShuffleMaplist()
@@ -2084,35 +2010,13 @@ void CheckRules_World()
 		return;
 	}
 
-	float checkrules_status;
-	checkrules_status = WinningCondition_RanOutOfSpawns();
+	int checkrules_status = WinningCondition_RanOutOfSpawns();
 	if(checkrules_status == WINNING_YES)
-	{
 		bprint("Hey! Someone ran out of spawns!\n");
-	}
-	else if(g_race && !g_race_qualifying && timelimit >= 0)
-	{
-		checkrules_status = WinningCondition_Race(fraglimit);
-		//print("WC_RACE yields ", ftos(checkrules_status), "\n");
-	}
-	else if(g_race && g_race_qualifying == 2 && timelimit >= 0)
-	{
-		checkrules_status = WinningCondition_QualifyingThenRace(fraglimit);
-		//print("WC_QUALIFYING_THEN_RACE yields ", ftos(checkrules_status), "\n");
-	}
-	else if(g_assault)
-	{
-		checkrules_status = WinningCondition_Assault(); // TODO remove this?
-	}
-	else if(g_lms)
-	{
-		checkrules_status = WinningCondition_LMS();
-	}
+	else if(MUTATOR_CALLHOOK(CheckRules_World, checkrules_status, timelimit, fraglimit))
+		checkrules_status = ret_float;
 	else
-	{
 		checkrules_status = WinningCondition_Scores(fraglimit, leadlimit);
-		//print("WC_SCORES yields ", ftos(checkrules_status), "\n");
-	}
 
 	if(checkrules_status == WINNING_STARTSUDDENDEATHOVERTIME)
 	{

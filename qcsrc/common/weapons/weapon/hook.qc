@@ -293,6 +293,8 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 		}
 		METHOD(Hook, wr_resetplayer, void(entity thiswep))
 		{
+			RemoveGrapplingHook(self);
+			self.hook_time = 0;
 			self.hook_refire = time;
 		}
 		METHOD(Hook, wr_suicidemessage, int(entity thiswep))

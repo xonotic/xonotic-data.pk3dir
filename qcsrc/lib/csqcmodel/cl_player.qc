@@ -28,6 +28,7 @@
 #include "../../client/defs.qh"
 #include "../../client/main.qh"
 #include "../../common/constants.qh"
+#include "../../common/physics.qh"
 #include "../../common/stats.qh"
 #include "../../common/triggers/trigger/viewloc.qh"
 #include "../../common/util.qh"

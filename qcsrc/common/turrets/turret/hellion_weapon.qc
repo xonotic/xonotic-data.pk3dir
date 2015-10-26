@@ -39,7 +39,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, bool fire1, b
                 actor.tur_shotorg = gettaginfo(actor.tur_head, gettagindex(actor.tur_head, "tag_fire2"));
         }
 
-        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
+        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, FALSE, FALSE);
         te_explosion (missile.origin);
         missile.think		= turret_hellion_missile_think;
         missile.nextthink	= time;

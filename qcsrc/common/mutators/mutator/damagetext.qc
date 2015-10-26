@@ -14,6 +14,7 @@ REGISTER_MUTATOR(damagetext, true);
 AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      _("Draw damage dealt. 0: disabled, 1: enabled"));
 AUTOCVAR_SAVE(cl_damagetext_format,             string, "-%3$d",    _("How to format the damage text. 1$ is health, 2$ is armor, 3$ is both"));
 AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    _("Default damage text color"));
+AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      _("Damage text uses weapon color"));
 AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          _("Damage text font size"));
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,        float,  1,          _("Damage text initial alpha"));
 AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,     float,  3,          _("Damage text lifetime in seconds"));
@@ -32,6 +33,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, m_group, int, 0)
     ATTRIB(DamageText, m_damage, int, 0)
     ATTRIB(DamageText, m_armordamage, int, 0)
+    ATTRIB(DamageText, m_deathtype, int, 0)
     ATTRIB(DamageText, time_prev, float, time)
 
     void DamageText_draw2d(DamageText this) {
@@ -43,23 +45,29 @@ CLASS(DamageText, Object)
         vector pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
         if (pos.z >= 0 && this.m_size > 0) {
             pos.z = 0;
+            vector rgb = this.m_color;
+            if (autocvar_cl_damagetext_color_per_weapon) {
+                Weapon w = DEATH_WEAPONOF(this.m_deathtype);
+                if (w != WEP_Null) rgb = w.wpcolor;
+            }
             string s = sprintf(autocvar_cl_damagetext_format, this.m_damage, this.m_armordamage, this.m_damage + this.m_armordamage);
-            drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', this.m_color, this.alpha, DRAWFLAG_NORMAL);
+            drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d)
 
-    void DamageText_update(DamageText this, vector _origin, int _health, int _armor) {
+    void DamageText_update(DamageText this, vector _origin, int _health, int _armor, int _deathtype) {
         this.m_damage = _health;
         this.m_armordamage = _armor;
+        this.m_deathtype = _deathtype;
         setorigin(this, _origin);
         this.alpha = 1;
     }
 
-    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor) {
+    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype) {
         CONSTRUCT(DamageText);
         this.m_group = _group;
-        DamageText_update(this, _origin, _health, _armor);
+        DamageText_update(this, _origin, _health, _armor, _deathtype);
     }
 ENDCLASS(DamageText)
 #endif
@@ -76,6 +84,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const entity hit = mutator_argv_entity_1; if (hit == attacker) return;
     const int health = mutator_argv_int_0;
     const int armor = mutator_argv_int_1;
+    const int deathtype = mutator_argv_int_2;
     const vector location = hit.origin;
     entity e;
     FOR_EACH_REALCLIENT(e) if (
@@ -93,6 +102,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
         WriteCoord(MSG_ONE, location.x);
         WriteCoord(MSG_ONE, location.y);
         WriteCoord(MSG_ONE, location.z);
+        WriteInt24_t(MSG_ONE, deathtype);
     }
 }
 #endif
@@ -105,16 +115,17 @@ MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
     int armor = ReadShort();
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
+    int deathtype = ReadInt24_t();
     if (autocvar_cl_damagetext) {
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
                 if (e.instanceOfDamageText && e.m_group == group) {
-                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor);
+                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, deathtype);
                     return true;
                 }
             }
         }
-        NEW(DamageText, group, location, health, armor);
+        NEW(DamageText, group, location, health, armor, deathtype);
     }
     return true;
 }

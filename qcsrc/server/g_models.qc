@@ -26,13 +26,13 @@ void g_model_setcolormaptoactivator (void)
 	}
 	else
 		self.colormap = floor(random() * 256);
-	self.colormap |= 1024; // RENDER_COLORMAPPED
+	self.colormap |= BIT(10); // RENDER_COLORMAPPED
 }
 
 void g_clientmodel_setcolormaptoactivator (void)
 {SELFPARAM();
 	g_model_setcolormaptoactivator();
-	self.SendFlags |= (8 | 1);
+	self.SendFlags |= (BIT(3) | BIT(0));
 }
 
 void g_clientmodel_use(void)

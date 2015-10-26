@@ -481,7 +481,7 @@ void racer_blowup()
 					autocvar_g_vehicle_racer_blowup_edgedamage,
 					autocvar_g_vehicle_racer_blowup_radius, world, world,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
-					DEATH_VH_WAKI_DEATH, world);
+					DEATH_VH_WAKI_DEATH.m_id, world);
 
 	self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
 	self.think	  = vehicles_spawn;
@@ -654,8 +654,11 @@ void racer_draw()
 		{
 			Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color,
-							 vCROSS_GUIDE);
+							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+		}
+		METHOD(Racer, vr_crosshair, void(Racer thisveh))
+		{
+			Vehicles_drawCrosshair(vCROSS_GUIDE);
 		}
 #endif
 		METHOD(Racer, vr_setup, void(Racer thisveh))

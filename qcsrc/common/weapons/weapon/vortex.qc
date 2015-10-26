@@ -278,6 +278,12 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 		}
 		METHOD(Vortex, wr_resetplayer, void(entity thiswep))
 		{
+			if (WEP_CVAR(vortex, charge)) {
+				if (WEP_CVAR_SEC(vortex, chargepool)) {
+					self.vortex_chargepool_ammo = 1;
+				}
+				self.vortex_charge = WEP_CVAR(vortex, charge_start);
+			}
 			self.vortex_lasthit = 0;
 		}
 		METHOD(Vortex, wr_reload, void(entity thiswep))

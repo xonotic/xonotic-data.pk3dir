@@ -7,14 +7,14 @@
     #include "bot/bot.qh"
     #include "bot/waypoints.qh"
 
-    #include "mutators/mutators_include.qh"
+    #include "mutators/all.qh"
 
     #include "weapons/common.qh"
     #include "weapons/selection.qh"
     #include "weapons/weaponsystem.qh"
 
     #include "../common/constants.qh"
-    #include "../common/deathtypes.qh"
+    #include "../common/deathtypes/all.qh"
     #include "../common/notifications.qh"
 	#include "../common/triggers/subs.qh"
     #include "../common/util.qh"
@@ -519,8 +519,6 @@ void Item_RespawnCountdown (void)
 			WaypointSprite_Ping(self.waypointsprite_attached);
 			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
 		}
-		else
-			sound(self, CH_TRIGGER, SND_ITEMRESPAWNCOUNTDOWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	}
 }
 
@@ -582,7 +580,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 	if (item.spawnshieldtime)
 	{
-		if ((player.(ammotype) < ammomax) || item.pickup_anyway)
+		if ((player.(ammotype) < ammomax) || item.pickup_anyway > 0)
 		{
 			player.(ammotype) = bound(player.(ammotype), ammomax, player.(ammotype) + item.(ammotype));
 			goto YEAH;
@@ -653,7 +651,7 @@ float Item_GiveTo(entity item, entity player)
 		it = item.weapons;
 		it &= ~player.weapons;
 
-		if (it || (item.spawnshieldtime && item.pickup_anyway))
+		if (it || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
 			pickedup = true;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1080,12 +1078,12 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		// it's a level item
 		if(this.spawnflags & 1)
 			this.noalign = 1;
-		if (this.noalign)
+		if (this.noalign > 0)
 			this.movetype = MOVETYPE_NONE;
 		else
 			this.movetype = MOVETYPE_TOSS;
 		// do item filtering according to game mode and other things
-		if (!this.noalign)
+		if (this.noalign <= 0)
 		{
 			// first nudge it off the floor a little bit to avoid math errors
 			setorigin(this, this.origin + '0 0 1');
@@ -1093,7 +1091,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			setsize(this, def.m_mins, def.m_maxs);
 			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
-			WITH(entity, self, this, droptofloor());
+			if (!this.noalign)
+				WITH(entity, self, this, droptofloor());
 			waypoint_spawnforitem(this);
 		}
 
@@ -1154,11 +1153,13 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 	this.SendFlags |= ISF_SIZE;
 
-	if(def.instanceOfPowerup)
-		this.ItemStatus |= ITS_ANIMATE1;
-
-	if(this.armorvalue || this.health)
-		this.ItemStatus |= ITS_ANIMATE2;
+	if (!(this.spawnflags & 1024)) {
+		if(def.instanceOfPowerup)
+			this.ItemStatus |= ITS_ANIMATE1;
+	
+		if(this.armorvalue || this.health)
+			this.ItemStatus |= ITS_ANIMATE2;
+	}
 
 	if(def.instanceOfWeaponPickup)
 	{
@@ -1166,8 +1167,8 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.colormap = 1024; // color shirt=0 pants=0 grey
 		else
 			this.gravity = 1;
-
-		this.ItemStatus |= ITS_ANIMATE1;
+		if (!(this.spawnflags & 1024))
+			this.ItemStatus |= ITS_ANIMATE1;
 		this.ItemStatus |= ISF_COLORMAP;
 	}
 

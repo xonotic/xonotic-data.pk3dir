@@ -6,14 +6,15 @@
 #include "teamradar.qh"
 #include "t_items.qh"
 #include "../common/buffs/all.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"
 #include "../common/mutators/mutator/waypoints/all.qh"
 #include "../common/nades/all.qh"
 #include "../common/stats.qh"
 #include "../lib/csqcmodel/cl_player.qh"
-#include "../server/mutators/gamemode_ctf.qh"
+// TODO: remove
+#include "../server/mutators/mutator/gamemode_ctf.qc"
 
 
 /*
@@ -366,7 +367,6 @@ void HUD_Weapons(void)
 	vector color;
 
 	// check to see if we want to continue
-	if(intermission == 2) return;
 	if(hud != HUD_NORMAL) return;
 
 	if(!autocvar__hud_configure)
@@ -952,7 +952,6 @@ int nade_prevframe;
 float nade_statuschange_time;
 void HUD_Ammo(void)
 {
-	if(intermission == 2) return;
 	if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
 	{
@@ -1227,8 +1226,6 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 
 void HUD_Powerups()
 {
-	if(intermission == 2) return;
-
 	int allItems = getstati(STAT_ITEMS, 0, 24);
 	int allBuffs = getstati(STAT_BUFFS, 0, 24);
 	int strengthTime, shieldTime, superTime;
@@ -1392,7 +1389,6 @@ void HUD_Powerups()
 void HUD_HealthArmor(void)
 {
 	int armor, health, fuel;
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_healtharmor) return;
@@ -1464,7 +1460,7 @@ void HUD_HealthArmor(void)
 	if(autocvar_hud_panel_healtharmor == 2) // combined health and armor display
 	{
 		vector v;
-		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON);
+		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON.m_id);
 
 		float x;
 		x = floor(v.x + 1);
@@ -1699,7 +1695,6 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void HUD_Notify(void)
 {
-	if(intermission == 2) return;
 	if (!autocvar__hud_configure)
 		if (!autocvar_hud_panel_notify)
 			return;
@@ -1813,7 +1808,6 @@ void HUD_Notify(void)
 
 void HUD_Timer(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_timer) return;
@@ -2034,7 +2028,6 @@ void HUD_Radar_Mouse()
 
 void HUD_Radar(void)
 {
-	if(intermission == 2) return;
 	if (!autocvar__hud_configure)
 	{
 		if (hud_panel_radar_maximized)
@@ -2383,7 +2376,6 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 
 void HUD_Score(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
@@ -2567,7 +2559,6 @@ void HUD_Score(void)
 //
 void HUD_RaceTimer (void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
@@ -2718,7 +2709,6 @@ void HUD_RaceTimer (void)
 
 void HUD_Vote(void)
 {
-	if(intermission == 2) return;
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
@@ -3595,7 +3585,6 @@ float mod_change; // "time" when mod_active changed
 
 void HUD_ModIcons(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
@@ -3637,7 +3626,6 @@ void HUD_ModIcons(void)
 //
 void HUD_PressedKeys(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_pressedkeys) return;
@@ -3801,7 +3789,6 @@ float frametimeavg1; // 1 frame ago
 float frametimeavg2; // 2 frames ago
 void HUD_EngineInfo(void)
 {
-	//if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_engineinfo) return;
@@ -3863,7 +3850,6 @@ void HUD_EngineInfo(void)
 } while(0)
 void HUD_InfoMessages(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_infomessages) return;
@@ -4045,7 +4031,6 @@ float acc_prevtime, acc_avg, top_speed, top_speed_time;
 float physics_update_time, discrete_speed, discrete_acceleration;
 void HUD_Physics(void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_physics) return;
@@ -4437,7 +4422,6 @@ void reset_centerprint_messages(void)
 float hud_configure_cp_generation_time;
 void HUD_CenterPrint (void)
 {
-	if(intermission == 2) return;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_centerprint) return;
@@ -4681,28 +4665,48 @@ Main HUD system
 ==================
 */
 
+void HUD_Vehicle()
+{
+	if(autocvar__hud_configure) return;
+	if(intermission == 2) return;
+
+	if(hud == HUD_BUMBLEBEE_GUN)
+		CSQC_BUMBLE_GUN_HUD();
+	else {
+		Vehicle info = get_vehicleinfo(hud);
+		info.vr_hud(info);
+	}
+}
+
 bool HUD_Panel_CheckFlags(int showflags)
 {
 	if ( HUD_Minigame_Showpanels() )
 		return showflags & PANEL_SHOW_MINIGAME;
+	if(intermission == 2)
+		return showflags & PANEL_SHOW_MAPVOTE;
 	return showflags & PANEL_SHOW_MAINGAME;
 }
 
 void HUD_Panel_Draw(entity panent)
 {
 	panel = panent;
-	if ( HUD_Panel_CheckFlags(panel.panel_showflags) )
+	if(autocvar__hud_configure)
+	{
+		if(panel.panel_configflags & PANEL_CONFIG_MAIN)
+			panel.panel_draw();
+	}
+	else if(HUD_Panel_CheckFlags(panel.panel_showflags))
 		panel.panel_draw();
 }
 
-void HUD_Reset (void)
+void HUD_Reset(void)
 {
 	// reset gametype specific icons
 	if(gametype == MAPINFO_TYPE_CTF)
 		HUD_Mod_CTF_Reset();
 }
 
-void HUD_Main (void)
+void HUD_Main(void)
 {
 	int i;
 	// global hud theAlpha fade
@@ -4831,6 +4835,8 @@ void HUD_Main (void)
 	for(i = hud_panels_COUNT - 1; i >= 0; --i)
 		HUD_Panel_Draw(hud_panels[panel_order[i]]);
 
+	HUD_Vehicle();
+
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
 	if(hud_panel_radar_maximized)
@@ -4839,6 +4845,9 @@ void HUD_Main (void)
 		HUD_Panel_Draw(HUD_PANEL(CHAT));
 	if(hud_panel_quickmenu)
 		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
+
+	if (scoreboard_active || intermission == 2)
+		HUD_Reset();
 
 	HUD_Configure_PostDraw();
 

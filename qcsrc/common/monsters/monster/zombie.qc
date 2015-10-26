@@ -86,7 +86,7 @@ void M_Zombie_Attack_Leap_Touch()
 	{
 		angles_face = vectoangles(self.moveto - self.origin);
 		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
-		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
+		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_ZOMBIE_JUMP.m_id, other.origin, angles_face);
 		self.touch = Monster_Touch; // instantly turn it off to stop damage spam
 		self.state = 0;
 	}
@@ -139,7 +139,7 @@ float M_Zombie_Attack(float attack_type, entity targ)
 			else
 				chosen_anim = self.anim_melee3;
 
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, true);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE.m_id, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{

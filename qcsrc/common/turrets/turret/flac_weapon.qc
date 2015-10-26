@@ -32,7 +32,7 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool
 
         turret_tag_fire_update();
 
-        entity proj = turret_projectile(SND(HAGAR_FIRE), 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, true, true);
+        entity proj = turret_projectile(SND(HAGAR_FIRE), 5, 0, DEATH_TURRET_FLAC.m_id, PROJECTILE_HAGAR, true, true);
         proj.missile_flags = MIF_SPLASH | MIF_PROXY;
         proj.think	  = turret_flac_projectile_think_explode;
         proj.nextthink  = time + actor.tur_impacttime + (random() * 0.01 - random() * 0.01);

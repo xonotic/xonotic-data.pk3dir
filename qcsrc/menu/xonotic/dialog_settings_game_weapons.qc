@@ -75,7 +75,7 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_followmodel", _("Gun model swaying")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "cl_followmodel", _("Gun model swaying"), "-"));
 		makeMulti(e, "cl_leanmodel");
 		setDependent(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);

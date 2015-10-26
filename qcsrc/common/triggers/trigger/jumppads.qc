@@ -364,7 +364,7 @@ void trigger_push_link()
  */
 spawnfunc(trigger_push)
 {
-	SetMovedir ();
+	SetMovedir(self);
 
 	EXACTTRIGGER_INIT;
 

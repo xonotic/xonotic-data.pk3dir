@@ -142,6 +142,20 @@ vector findperpendicular(vector v)
 	return normalize(cliptoplane(p, v));
 }
 
+int W_GetGunAlignment(entity player)
+{
+#ifdef SVQC
+	int gunalign = player.cvar_cl_gunalign;
+#else
+	int gunalign = autocvar_cl_gunalign;
+#endif
+	if(gunalign < 1 || gunalign > 4)
+		gunalign = 3; // default value
+	--gunalign;
+
+	return gunalign;
+}
+
 vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle)
 {
 	float sigma;

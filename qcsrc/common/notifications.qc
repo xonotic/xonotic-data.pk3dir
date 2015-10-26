@@ -7,7 +7,7 @@
     #include "../server/constants.qh"
     #include "../server/defs.qh"
     #include "notifications.qh"
-    #include "../server/mutators/mutators_include.qh"
+    #include "../server/mutators/all.qh"
 #endif
 
 // ================================================

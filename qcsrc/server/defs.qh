@@ -379,17 +379,15 @@ float GetPlayerSoundSampleField_notFound;
 
 .float version_mismatch;
 
-float independent_players;
+int autocvar__independent_players;
+bool independent_players;
 #define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
-#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER) + ((e).frags = FRAGS_PLAYER_NONSOLID))
-// we're using + here instead of , because fteqcc sucks
+#define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER), ((e).frags = FRAGS_PLAYER_NONSOLID))
 
 string clientstuff;
 .float phase;
 .int pressedkeys;
-
-.float porto_forbidden;
 
 .string fog;
 
@@ -416,7 +414,6 @@ void W_Porto_Remove (entity p);
 
 // Nexball
 .entity ballcarried; // Also used for keepaway
-.float metertime;
 float g_nexball_meter_period;
 
 void SUB_DontUseTargets();
@@ -472,7 +469,6 @@ float client_cefc_accumulatortime;
 .float old_clip_load;
 .float clip_size;
 
-.entity lastrocket;
 .float minelayer_mines;
 .float vortex_charge;
 .float vortex_charge_rottime;
@@ -537,17 +533,17 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 string modname;
 
 .float missile_flags;
-const int MIF_SPLASH = 2;
-const int MIF_ARC = 4;
-const int MIF_PROXY = 8;
-const int MIF_GUIDED_MANUAL = 16;
-const int MIF_GUIDED_HEAT = 32;
-const int MIF_GUIDED_LASER = 64;
-const int MIF_GUIDED_AI = 128;
-const int MIF_GUIDED_TAG = 128;
-#define MIF_GUIDED_ALL (MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
-#define MIF_GUIDED_TRACKING (MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
-#define MIF_GUIDED_CONFUSABLE (MIF_GUIDED_HEAT | MIF_GUIDED_AI)
+const int MIF_SPLASH = BIT(1);
+const int MIF_ARC = BIT(2);
+const int MIF_PROXY = BIT(3);
+const int MIF_GUIDED_MANUAL = BIT(4);
+const int MIF_GUIDED_HEAT = BIT(5);
+const int MIF_GUIDED_LASER = BIT(6);
+const int MIF_GUIDED_AI = BIT(7);
+const int MIF_GUIDED_TAG = BIT(7);
+const int MIF_GUIDED_ALL = MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG;
+const int MIF_GUIDED_TRACKING = MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG;
+const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 #define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? true : false)
 #define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? true : false)

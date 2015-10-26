@@ -1,7 +1,7 @@
 #include "spawning.qh"
 
 #include "weaponsystem.qh"
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 #include "../t_items.qh"
 #include "../../common/weapons/all.qh"
 

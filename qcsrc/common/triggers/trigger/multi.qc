@@ -23,6 +23,10 @@ void multi_trigger()
 		return;		// allready been triggered
 	}
 
+	if(self.spawnflags & 16384)
+	if(!IS_PLAYER(self.enemy))
+		return; // only players
+
 	if (self.classname == "trigger_secret")
 	{
 		if (!IS_PLAYER(self.enemy))

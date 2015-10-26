@@ -79,7 +79,7 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 2.9, e = makeXonoticCheckBox(0, "crosshair_ring", _("Use rings to indicate weapon status")));
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBox_T(0, "crosshair_ring", _("Use rings to indicate weapon status"), "-"));
 			makeMulti(e, "crosshair_ring_reload");
 			setDependent(e, "crosshair_enabled", 1, 2);
 	//me.TR(me);

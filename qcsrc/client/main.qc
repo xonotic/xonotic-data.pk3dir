@@ -20,7 +20,7 @@
 #include "t_items.qh"
 #include "wall.qh"
 #include "weapons/projectile.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/items/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/minigames/cl_minigames.qh"
@@ -130,7 +130,7 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	static_init();
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
+	static_init_late();
 
 	// precaches
 
@@ -558,7 +558,7 @@ void Ent_Nagger()
 
     int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
-	if(!(nags & 4))
+	if(!(nags & BIT(2)))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
@@ -570,7 +570,7 @@ void Ent_Nagger()
 		vote_active = 1;
 	}
 
-	if(nags & 64)
+	if(nags & BIT(6))
 	{
 		vote_yescount = ReadByte();
 		vote_nocount = ReadByte();
@@ -578,7 +578,7 @@ void Ent_Nagger()
 		vote_highlighted = ReadChar();
 	}
 
-	if(nags & 128)
+	if(nags & BIT(7))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
@@ -600,11 +600,11 @@ void Ent_Nagger()
 		}
 	}
 
-	ready_waiting = (nags & 1);
-	ready_waiting_for_me = (nags & 2);
-	vote_waiting = (nags & 4);
-	vote_waiting_for_me = (nags & 8);
-	warmup_stage = (nags & 16);
+	ready_waiting = (nags & BIT(0));
+	ready_waiting_for_me = (nags & BIT(1));
+	vote_waiting = (nags & BIT(2));
+	vote_waiting_for_me = (nags & BIT(3));
+	warmup_stage = (nags & BIT(4));
 }
 
 void Ent_EliminatedPlayers()
@@ -679,11 +679,11 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	spn_origin.y = ReadShort();
 	spn_origin.z = ReadShort();
 
-	if(is_new)
-	{
+	//if(is_new)
+	//{
 		self.origin = spn_origin;
 		setsize(self, PL_MIN_CONST, PL_MAX_CONST);
-		droptofloor();
+		//droptofloor();
 
 		/*if(autocvar_cl_spawn_point_model) // needs a model first
 		{
@@ -712,7 +712,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 
 			self.draw = Spawn_Draw;
 		}
-	}
+	//}
 
 	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt);
 }

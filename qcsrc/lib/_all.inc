@@ -41,6 +41,7 @@
 #include "int.qh"
 #include "iter.qh"
 #include "lazy.qh"
+#include "linkedlist.qh"
 #include "log.qh"
 #include "math.qh"
 #include "misc.qh"

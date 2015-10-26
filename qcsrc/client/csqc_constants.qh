@@ -2,16 +2,16 @@
 #define CLIENT_CSQC_CONSTANTS
 
 // Mask Constants (set .drawmask on entities; use R_AddEntities to add all entities based on mask)
-const int		MASK_ENGINE						= 1;
-const int		MASK_ENGINEVIEWMODELS			= 2;
-const int		MASK_NORMAL						= 4;
+const int		MASK_ENGINE						= BIT(0);
+const int		MASK_ENGINEVIEWMODELS			= BIT(1);
+const int		MASK_NORMAL						= BIT(2);
 
 // Renderflag Constants (used for CSQC entities)
-const int		RF_VIEWMODEL					= 1;
-const int		RF_EXTERNALMODEL				= 2;
-const int		RF_DEPTHHACK					= 4;
-const int		RF_ADDITIVE						= 8;
-const int		RF_USEAXIS						= 16;
+const int		RF_VIEWMODEL					= BIT(0);
+const int		RF_EXTERNALMODEL				= BIT(1);
+const int		RF_DEPTHHACK					= BIT(2);
+const int		RF_ADDITIVE						= BIT(3);
+const int		RF_USEAXIS						= BIT(4);
 
 // Viewflag Constants (use with R_SetView)
 const int		VF_MIN							= 1;	//(vector)
@@ -59,21 +59,21 @@ const vector	VEC_HULL_MIN 					= '-16 -16 -24';
 const vector	VEC_HULL_MAX 					= '16 16 32';
 
 // Effect Constants
-const int 	EF_NODRAW						= 16;
-const int 	EF_ADDITIVE						= 32;
-const int 	EF_BLUE							= 64;
-const int 	EF_RED							= 128;
-const int 	EF_FULLBRIGHT					= 512;
-const int 	EF_FLAME						= 1024;
-const int 	EF_STARDUST						= 2048;
-const int 	EF_NOSHADOW						= 4096;
-const int 	EF_NODEPTHTEST					= 8192;
+const int 	EF_NODRAW						= BIT(4);
+const int 	EF_ADDITIVE						= BIT(5);
+const int 	EF_BLUE							= BIT(6);
+const int 	EF_RED							= BIT(7);
+const int 	EF_FULLBRIGHT					= BIT(9);
+const int 	EF_FLAME						= BIT(10);
+const int 	EF_STARDUST						= BIT(11);
+const int 	EF_NOSHADOW						= BIT(12);
+const int 	EF_NODEPTHTEST					= BIT(13);
 
 // Quake Player Flag Constants
-const int 	PFL_ONGROUND					= 1;
-const int 	PFL_CROUCH						= 2;
-const int 	PFL_DEAD						= 4;
-const int 	PFL_GIBBED						= 8;
+const int 	PFL_ONGROUND					= BIT(0);
+const int 	PFL_CROUCH						= BIT(1);
+const int 	PFL_DEAD						= BIT(2);
+const int 	PFL_GIBBED						= BIT(3);
 
 // Quake Temporary Entity Constants
 const int		TE_SPIKE						= 0;
@@ -104,25 +104,25 @@ const int		FILE_APPEND						= 1;
 const int		FILE_WRITE						= 2;
 
 // Button values used by input_buttons
-const int BUTTON_ATTACK = 1;
-const int BUTTON_JUMP = 2;
-const int BUTTON_3 = 4;
-const int BUTTON_4 = 8;
-const int BUTTON_5 = 16;
-const int BUTTON_6 = 32;
-const int BUTTON7 = 64;
-const int BUTTON8 = 128;
-const int BUTTON_USE = 256;
-const int BUTTON_CHAT = 512;
-const int BUTTON_PRYDONCURSOR = 1024;
-const int BUTTON_9 = 2048;
-const int BUTTON_10 = 4096;
-const int BUTTON_11 = 8192;
-const int BUTTON_12 = 16384;
-const int BUTTON_13 = 32768;
-const int BUTTON_14 = 65536;
-const int BUTTON_15 = 131072;
-const int BUTTON_16 = 262144;
+const int BUTTON_ATTACK = BIT(0);
+const int BUTTON_JUMP = BIT(1);
+const int BUTTON_3 = BIT(2);
+const int BUTTON_4 = BIT(3);
+const int BUTTON_5 = BIT(4);
+const int BUTTON_6 = BIT(5);
+const int BUTTON7 = BIT(6);
+const int BUTTON8 = BIT(7);
+const int BUTTON_USE = BIT(8);
+const int BUTTON_CHAT = BIT(9);
+const int BUTTON_PRYDONCURSOR = BIT(10);
+const int BUTTON_9 = BIT(11);
+const int BUTTON_10 = BIT(12);
+const int BUTTON_11 = BIT(13);
+const int BUTTON_12 = BIT(14);
+const int BUTTON_13 = BIT(15);
+const int BUTTON_14 = BIT(16);
+const int BUTTON_15 = BIT(17);
+const int BUTTON_16 = BIT(18);
 
 const int SOLID_NOT 		= 0; // no interaction with other objects
 const int SOLID_TRIGGER 	= 1; // touch on edge, but not blocking
@@ -140,6 +140,6 @@ const int MOVE_WORLDONLY = 3;
 const int CAMERA_FREE = 1;
 const int CAMERA_CHASE = 2;
 
-const int EF_NOMODELFLAGS = 8388608;
+const int EF_NOMODELFLAGS = BIT(23);
 
 #endif

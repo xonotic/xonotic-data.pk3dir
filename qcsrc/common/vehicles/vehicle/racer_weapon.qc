@@ -59,7 +59,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, boo
         entity bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
                                org, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                                autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-                               DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, true, true, player);
+                               DEATH_VH_WAKI_GUN.m_id, PROJECTILE_WAKICANNON, 0, true, true, player);
         bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
         weapon_thinkf(player, WFRAME_FIRE1, 0, w_ready);
     }
@@ -88,7 +88,7 @@ void racer_fire_rocket(vector org, vector dir, entity trg)
     entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND(ROCKET_FIRE),
                            org, dir * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-                           DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
+                           DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
 
     rocket.lip			  = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
     rocket.wait			 = autocvar_g_vehicle_racer_rocket_turnrate;

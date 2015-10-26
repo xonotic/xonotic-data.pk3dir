@@ -119,7 +119,6 @@ ENDCLASS(CallbackChain)
 
 void RegisterHooks() {};
 void RegisterCallbacks() {};
-void RegisterMutators() {};
 
 #define _MUTATOR_HOOKABLE(id, ...) CallbackChain HOOK_##id; bool __Mutator_Send_##id(__VA_ARGS__)
 #define MUTATOR_HOOKABLE(id, params) \
@@ -145,23 +144,23 @@ typedef bool(int) mutatorfunc_t;
 
 CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0)
-    ATTRIB(Mutator, mutatorname, string, string_null)
+    ATTRIB(Mutator, m_name, string, string_null)
     ATTRIB(Mutator, mutatorfunc, mutatorfunc_t, func_null)
     ATTRIB(Mutator, mutatorcheck, bool(), func_null)
     CONSTRUCTOR(Mutator, string _name, mutatorfunc_t func) {
         CONSTRUCT(Mutator);
-        this.mutatorname = _name;
+        this.m_name = _name;
         this.mutatorfunc = func;
     }
 ENDCLASS(Mutator)
 
-const int MAX_MUTATORS = 30;
-Mutator loaded_mutators[MAX_MUTATORS];
+REGISTRY(Mutators, BITS(6))
+Mutator loaded_mutators[Mutators_MAX];
 
 bool Mutator_Add(Mutator mut)
 {
     int j = -1;
-    for (int i = 0; i < MAX_MUTATORS; ++i) {
+    for (int i = 0; i < Mutators_MAX; ++i) {
         if (loaded_mutators[i] == mut)
             return true; // already added
         if (!(loaded_mutators[i]))
@@ -188,10 +187,10 @@ bool Mutator_Add(Mutator mut)
 void Mutator_Remove(Mutator mut)
 {
     int i;
-    for (i = 0; i < MAX_MUTATORS; ++i)
+    for (i = 0; i < Mutators_MAX; ++i)
         if (loaded_mutators[i] == mut)
             break;
-    if (i >= MAX_MUTATORS) {
+    if (i >= Mutators_MAX) {
         backtrace("WARNING: removing not-added mutator\n");
         return;
     }
@@ -203,16 +202,6 @@ void Mutator_Remove(Mutator mut)
     }
 }
 
-#define MUTATOR_DECLARATION(name) \
-    Mutator MUTATOR_##name
-#define MUTATOR_DEFINITION(name) \
-    bool MUTATORFUNCTION_##name(int mode); \
-    [[accumulate]] void RegisterMutators() { MUTATOR_##name = NEW(Mutator, #name, MUTATORFUNCTION_##name); } \
-    [[last]] bool MUTATORFUNCTION_##name(int mode)
-
-const int MUTATORS_MAX = MAX_MUTATORS;
-noref entity MUTATORS[MUTATORS_MAX], MUTATORS_first, MUTATORS_last;
-noref int MUTATORS_COUNT;
 #define REGISTER_MUTATOR(id, dependence) \
     bool MUTATORFUNCTION_##id##_hooks(int mode) { return = false; } \
     bool MUTATORFUNCTION_##id(int mode) { \
@@ -220,7 +209,7 @@ noref int MUTATORS_COUNT;
         bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(RegisterMutators, MUTATOR, MUTATORS, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    REGISTER(RegisterMutators, MUTATOR, Mutators, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
     [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
 
@@ -231,7 +220,7 @@ STATIC_INIT(Mutators) {
 }
 
 STATIC_INIT_LATE(Mutators) {
-    FOREACH(MUTATORS, it.mutatorcheck(), LAMBDA(Mutator_Add(it)));
+    FOREACH(Mutators, it.mutatorcheck(), LAMBDA(Mutator_Add(it)));
 }
 
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)
@@ -248,10 +237,6 @@ STATIC_INIT_LATE(Mutators) {
 
 #define MUTATOR_HOOKFUNCTION(...) \
     EVAL(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
-
-#define MUTATOR_HOOKFUNCTION_1(name) \
-    _MUTATOR_CALLBACK(name, HOOKFUNCTION_##name) \
-    bool HOOKFUNCTION_##name()
 
 #define MUTATOR_HOOKFUNCTION_2(mut, cb) \
     MUTATOR_HOOKFUNCTION_3(mut, cb, CBC_ORDER_ANY)

@@ -4,20 +4,20 @@
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
-const int ISF_LOCATION 			= 2;
-const int ISF_MODEL				= 4;
-const int ISF_STATUS 			= 8;
-    const int ITS_STAYWEP 		= 1;
-    const int ITS_ANIMATE1 		= 2;
-    const int ITS_ANIMATE2 		= 4;
-    const int ITS_AVAILABLE 	= 8;
-    const int ITS_ALLOWFB 		= 16;
-    const int ITS_ALLOWSI 		= 32;
-    const int ITS_POWERUP 		= 64;
-const int ISF_COLORMAP 			= 16;
-const int ISF_DROP 				= 32;
-const int ISF_ANGLES 			= 64;
-const int ISF_SIZE 				= 128;
+const int ISF_LOCATION 			= BIT(1);
+const int ISF_MODEL				= BIT(2);
+const int ISF_STATUS 			= BIT(3);
+    const int ITS_STAYWEP 		    = BIT(0);
+    const int ITS_ANIMATE1 		    = BIT(1);
+    const int ITS_ANIMATE2 		    = BIT(2);
+    const int ITS_AVAILABLE 	    = BIT(3);
+    const int ITS_ALLOWFB 		    = BIT(4);
+    const int ITS_ALLOWSI 		    = BIT(5);
+    const int ITS_POWERUP 		    = BIT(6);
+const int ISF_COLORMAP 			= BIT(4);
+const int ISF_DROP 				= BIT(5);
+const int ISF_ANGLES 			= BIT(6);
+const int ISF_SIZE 				= BIT(7);
 
 .int ItemStatus;
 

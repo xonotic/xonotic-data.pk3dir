@@ -4,14 +4,14 @@
 #include "constants.qh"
 #include "g_hook.qh"
 #include "ipban.qh"
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "t_items.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
 #include "../common/command/generic.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
@@ -485,25 +485,27 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 {
 	int i = weaponinfo.weapon;
 	int d = 0;
+	bool allow_mutatorblocked = false;
 
-	if (!i)
+	if(!i)
 		return 0;
 
-	if (g_lms || g_ca || allguns)
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
+	d = ret_float;
+	allguns = want_allguns;
+	allow_mutatorblocked = false;
+
+	if(allguns)
 	{
 		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
 			d = true;
 		else
 			d = false;
 	}
-	else if (g_cts)
-		d = (i == WEP_SHOTGUN.m_id);
-	else if (g_nexball)
-		d = 0; // weapon is set a few lines later
-	else
+	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
 
-	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
+	if(!allow_mutatorblocked && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
 	float t = weaponinfo.weaponstartoverride;
@@ -545,11 +547,9 @@ void readplayerstartcvars()
 	g_weaponarena_weapons = '0 0 0';
 
 	s = cvar_string("g_weaponarena");
-	if (s == "0" || s == "")
-	{
-		if(g_ca || g_freezetag)
-			s = "most";
-	}
+
+	MUTATOR_CALLHOOK(SetWeaponArena, s);
+	s = ret_string;
 
 	if (s == "0" || s == "")
 	{
@@ -967,6 +967,18 @@ void precache_all_playermodels(string pattern)
 	search_end(globhandle);
 }
 
+void precache_playermodels(string s)
+{
+	if(s != "")
+	{
+		int n = tokenize_console(s);
+		precache_playermodel(argv(0));
+
+		for (int i = 1; i < n; ++i)
+			precache_model(argv(i));
+	}
+}
+
 void precache()
 {SELFPARAM();
     // gamemode related things
@@ -984,22 +996,11 @@ void precache()
 
     if (autocvar_sv_defaultcharacter)
     {
-        string s;
-        s = autocvar_sv_defaultplayermodel_red;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_blue;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_yellow;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_pink;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel;
-        if (s != "")
-            precache_playermodel(s);
+		precache_playermodels(autocvar_sv_defaultplayermodel_red);
+		precache_playermodels(autocvar_sv_defaultplayermodel_blue);
+		precache_playermodels(autocvar_sv_defaultplayermodel_yellow);
+		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
+		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
 
     if (g_footsteps)
@@ -1519,94 +1520,6 @@ void write_recordmarker(entity pl, float tstart, float dt)
                  strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
                  " ", ftos(tstart), " ", ftos(dt), "\n"));
 }
-
-vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter, float algn)
-{
-	switch(algn)
-	{
-		default:
-		case 3: // right
-			break;
-
-		case 4: // left
-			vecs.y = -vecs.y;
-			break;
-
-		case 1:
-			if(allowcenter) // 2: allow center handedness
-			{
-				// center
-				vecs.y = 0;
-				vecs.z -= 2;
-			}
-			else
-			{
-				// right
-			}
-			break;
-
-		case 2:
-			if(allowcenter) // 2: allow center handedness
-			{
-				// center
-				vecs.y = 0;
-				vecs.z -= 2;
-			}
-			else
-			{
-				// left
-				vecs.y = -vecs.y;
-			}
-			break;
-	}
-	return vecs;
-}
-
-vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn)
-{
-	string s;
-	vector v;
-
-	if (autocvar_g_shootfromeye)
-	{
-		if (visual)
-		{
-			if (autocvar_g_shootfromclient) { vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn); }
-			else { vecs.y = 0; vecs.z -= 2; }
-		}
-		else
-		{
-			vecs.y = 0;
-			vecs.z = 0;
-		}
-	}
-	else if (autocvar_g_shootfromcenter)
-	{
-		vecs.y = 0;
-		vecs.z -= 2;
-	}
-	else if ((s = autocvar_g_shootfromfixedorigin) != "")
-	{
-		v = stov(s);
-		if (y_is_right)
-			v.y = -v.y;
-		if (v.x != 0)
-			vecs.x = v.x;
-		vecs.y = v.y;
-		vecs.z = v.z;
-	}
-	else if (autocvar_g_shootfromclient)
-	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn);
-	}
-	return vecs;
-}
-
-vector shotorg_adjust(vector vecs, float y_is_right, float visual)
-{SELFPARAM();
-	return shotorg_adjust_values(vecs, y_is_right, visual, self.owner.cvar_cl_gunalign);
-}
-
 
 void attach_sameorigin(entity e, entity to, string tag)
 {

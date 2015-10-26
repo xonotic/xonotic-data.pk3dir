@@ -30,7 +30,7 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, bool fire1
             weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
         }
         turret_tag_fire_update();
-        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_MLRS, PROJECTILE_ROCKET, TRUE, TRUE);
+        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_MLRS.m_id, PROJECTILE_ROCKET, TRUE, TRUE);
         missile.nextthink = time + max(actor.tur_impacttime,(actor.shot_radius * 2) / actor.shot_speed);
         missile.missile_flags = MIF_SPLASH;
         te_explosion (missile.origin);

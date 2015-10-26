@@ -8,6 +8,4 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 float Spectate(entity pl);
 
-void CTS_ClientKill (entity e);
-
 #endif

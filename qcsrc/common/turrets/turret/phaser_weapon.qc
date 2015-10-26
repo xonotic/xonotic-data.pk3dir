@@ -95,7 +95,7 @@ void beam_think()
                     self.shot_force,
                     this.shot_dmg,
                     0.75,
-                    DEATH_TURRET_PHASER);
+                    DEATH_TURRET_PHASER.m_id);
     setself(this);
     self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
 

@@ -8,11 +8,11 @@
 
 #include "command/common.qh"
 
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
@@ -62,7 +62,7 @@ void CreatureFrame (void)
 					if (!self.deadflag)
 					if (self.pain_finished < time)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, self.origin, '0 0 0');
 						self.pain_finished = time + 0.5;
 					}
 				}
@@ -76,11 +76,11 @@ void CreatureFrame (void)
 				{
 					if (self.watertype == CONTENT_LAVA)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA.m_id, self.origin, '0 0 0');
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME.m_id, self.origin, '0 0 0');
 					}
 				}
 				else
@@ -92,7 +92,7 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA.m_id, self.origin, '0 0 0');
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
@@ -101,7 +101,7 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME.m_id, self.origin, '0 0 0');
 					}
 				}
 			}
@@ -130,11 +130,11 @@ void CreatureFrame (void)
 				else
 					dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 				if (dm > 0)
-					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
+					Damage (self, world, world, dm, DEATH_FALL.m_id, self.origin, '0 0 0');
 			}
 
 			if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
+				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR.m_id, self.origin, '0 0 0');
 			// play stupid sounds
 			if (g_footsteps)
 			if (!gameover)
@@ -184,8 +184,9 @@ float game_delay;
 float game_delay_last;
 
 float RedirectionThink();
-void StartFrame (void)
-{SELFPARAM();
+void StartFrame()
+{
+	SELFPARAM();
 	execute_next_frame();
 
 	remove = remove_unsafely; // not during spawning!
@@ -196,12 +197,11 @@ void StartFrame (void)
 #ifdef PROFILING
 	if(time > client_cefc_accumulatortime + 1)
 	{
-		float t, pp, c_seeing, c_seen;
-		entity cl;
-		t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
+		float t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
 		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
-		c_seeing = 0;
-		c_seen = 0;
+		int c_seeing = 0;
+		int c_seen = 0;
+		entity cl;
 		FOR_EACH_CLIENT(cl)
 		{
 			if(IS_REAL_CLIENT(cl))
@@ -238,17 +238,15 @@ void StartFrame (void)
 	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
-	game_delay = (time < game_starttime) ? true : false;
+	game_delay = (time < game_starttime);
 
-	if(game_delay_last == true)
-	if(game_delay == false)
-	if(autocvar_sv_eventlog)
+	if(autocvar_sv_eventlog && game_delay_last && !game_delay)
 		GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
 
-	CreatureFrame ();
-	CheckRules_World ();
+	CreatureFrame();
+	CheckRules_World();
 
 	// if in warmup stage and limit for warmup is hit start match
 	if(warmup_stage)
@@ -261,13 +259,7 @@ void StartFrame (void)
 	}
 
 	bot_serverframe();
-
-	entity e;
-	FOR_EACH_PLAYER(e)
-		e.porto_forbidden = max(0, e.porto_forbidden - 1);
-
 	anticheat_startframe();
-
 	MUTATOR_CALLHOOK(SV_StartFrame);
 }
 

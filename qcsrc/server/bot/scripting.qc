@@ -815,17 +815,17 @@ float bot_cmd_aimtarget()
 .int bot_cmd_keys;
 
 const int BOT_CMD_KEY_NONE 		= 0;
-const int BOT_CMD_KEY_FORWARD 	= 1;
-const int BOT_CMD_KEY_BACKWARD 	= 2;
-const int BOT_CMD_KEY_RIGHT 	= 4;
-const int BOT_CMD_KEY_LEFT 		= 8;
-const int BOT_CMD_KEY_JUMP 		= 16;
-const int BOT_CMD_KEY_ATTACK1 	= 32;
-const int BOT_CMD_KEY_ATTACK2 	= 64;
-const int BOT_CMD_KEY_USE 		= 128;
-const int BOT_CMD_KEY_HOOK 		= 256;
-const int BOT_CMD_KEY_CROUCH 	= 512;
-const int BOT_CMD_KEY_CHAT 		= 1024;
+const int BOT_CMD_KEY_FORWARD 	= BIT(0);
+const int BOT_CMD_KEY_BACKWARD 	= BIT(1);
+const int BOT_CMD_KEY_RIGHT 	= BIT(2);
+const int BOT_CMD_KEY_LEFT 		= BIT(3);
+const int BOT_CMD_KEY_JUMP 		= BIT(4);
+const int BOT_CMD_KEY_ATTACK1 	= BIT(5);
+const int BOT_CMD_KEY_ATTACK2 	= BIT(6);
+const int BOT_CMD_KEY_USE 		= BIT(7);
+const int BOT_CMD_KEY_HOOK 		= BIT(8);
+const int BOT_CMD_KEY_CROUCH 	= BIT(9);
+const int BOT_CMD_KEY_CHAT 		= BIT(10);
 
 float bot_presskeys()
 {SELFPARAM();
