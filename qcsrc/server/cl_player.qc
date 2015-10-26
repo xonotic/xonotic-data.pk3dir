@@ -479,9 +479,18 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	float abot, vbot;
-	abot = (IS_BOT_CLIENT(attacker));
-	vbot = (IS_BOT_CLIENT(self));
+	if (self != attacker) {
+		float realdmg = damage - excess;
+		if (IS_PLAYER(attacker)) {
+			PlayerScore_Add(attacker, SP_DMG, realdmg);
+		}
+		if (IS_PLAYER(self)) {
+			PlayerScore_Add(self, SP_DMGTAKEN, realdmg);
+		}
+	}
+	
+	bool abot = (IS_BOT_CLIENT(attacker));
+	bool vbot = (IS_BOT_CLIENT(self));
 
 	valid_damage_for_weaponstats = 0;
 	Weapon awep = WEP_Null;
