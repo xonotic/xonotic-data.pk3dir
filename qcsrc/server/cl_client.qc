@@ -1982,7 +1982,7 @@ void PrintWelcomeMessage()
 	{
 		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(self.motd_actived_time == -2 || IS_PLAYER(self))
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || IS_SPEC(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
