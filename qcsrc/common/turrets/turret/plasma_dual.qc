@@ -41,7 +41,7 @@ METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret this))
         vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
         WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
     } else {
-        super.vtblbase.tr_attack(this);
+        SUPER(PlasmaTurret).tr_attack(this);
     }
     self.tur_head.frame += 1;
 }

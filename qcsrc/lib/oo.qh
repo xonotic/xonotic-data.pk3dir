@@ -146,7 +146,6 @@ STATIC_INIT(RegisterClasses)
 	}
 
 #define SUPER(cname) (cname##_vtbl.vtblbase)
-#define super (this.vtblbase.vtblbase)
 
 #define spawn_static(this)
 #define spawn_1(this)
