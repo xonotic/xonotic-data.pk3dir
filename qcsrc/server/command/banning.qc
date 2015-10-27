@@ -15,11 +15,11 @@
 
 void BanCommand_ban(float request, float argc, string command)
 {
-	switch(request)
+	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2)
+			if (argc >= 2)
 			{
 				string ip = argv(1);
 				float reason_arg, bantime;
@@ -51,7 +51,7 @@ void BanCommand_ban(float request, float argc, string command)
 
 void BanCommand_banlist(float request)
 {
-	switch(request)
+	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
@@ -72,18 +72,18 @@ void BanCommand_banlist(float request)
 
 void BanCommand_kickban(float request, float argc, string command)
 {
-	switch(request)
+	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2)
+			if (argc >= 2)
 			{
 				entity client = GetIndexedEntity(argc, 1);
 				float accepted = VerifyKickableEntity(client);
 				float reason_arg, bantime, masksize;
 				string reason;
 
-				if(accepted > 0)
+				if (accepted > 0)
 				{
 					reason_arg = next_token;
 
@@ -117,18 +117,18 @@ void BanCommand_kickban(float request, float argc, string command)
 	}
 }
 
-void BanCommand_mute(float request, float argc, string command) // TODO: Add a sort of mute-"ban" which allows players to be muted based on IP/cryptokey
+void BanCommand_mute(float request, float argc, string command)  // TODO: Add a sort of mute-"ban" which allows players to be muted based on IP/cryptokey
 {
-	switch(request)
+	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2)
+			if (argc >= 2)
 			{
 				entity client = GetFilteredEntity(argv(1));
 				float accepted = VerifyClientEntity(client, true, false);
 
-				if(accepted > 0)
+				if (accepted > 0)
 				{
 					client.muted = true;
 					return;
@@ -154,39 +154,32 @@ void BanCommand_mute(float request, float argc, string command) // TODO: Add a s
 
 void BanCommand_unban(float request, float argc)
 {
-	switch(request)
+	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argv(1))
+			if (argv(1))
 			{
 				float tmp_number = -1;
 				string tmp_string;
 
-				if(substring(argv(1), 0, 1) == "#")
+				if (substring(argv(1), 0, 1) == "#")
 				{
 					tmp_string = substring(argv(1), 1, -1);
 
-					if(tmp_string != "") // is it all one token? like #1
-					{
+					if (tmp_string != "") // is it all one token? like #1
 						tmp_number = stof(tmp_string);
-					}
-					else if(argc > 2) // no, it's two tokens? # 1
-					{
+					else if (argc > 2)    // no, it's two tokens? # 1
 						tmp_number = stof(argv(2));
-					}
-					else
-						tmp_number = -1;
+					else tmp_number = -1;
 				}
-				else // maybe it's ONLY a number?
+				else  // maybe it's ONLY a number?
 				{
 					tmp_number = stof(argv(1));
 
-					if((tmp_number == 0) && (argv(1) != "0"))
-						{ tmp_number = -1; }
-				}
+					if ((tmp_number == 0) && (argv(1) != "0")) tmp_number = -1; }
 
-				if(tmp_number >= 0)
+				if (tmp_number >= 0)
 				{
 					Ban_Delete(tmp_number);
 					return;
@@ -207,16 +200,16 @@ void BanCommand_unban(float request, float argc)
 
 void BanCommand_unmute(float request, float argc)
 {
-	switch(request)
+	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2)
+			if (argc >= 2)
 			{
 				entity client = GetFilteredEntity(argv(1));
 				float accepted = VerifyClientEntity(client, true, false);
 
-				if(accepted > 0)
+				if (accepted > 0)
 				{
 					client.muted = false;
 					return;
@@ -244,22 +237,22 @@ void BanCommand_unmute(float request, float argc)
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void BanCommand_(float request)
 {
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
+    switch(request)
+    {
+        case CMD_REQUEST_COMMAND:
+        {
 
-			return;
-		}
+            return;
+        }
 
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 sv_cmd \n");
-			print("  No arguments required.\n");
-			return;
-		}
-	}
+        default:
+        case CMD_REQUEST_USAGE:
+        {
+            print("\nUsage:^3 sv_cmd \n");
+            print("  No arguments required.\n");
+            return;
+        }
+    }
 }
 */
 
@@ -269,7 +262,7 @@ void BanCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define BAN_COMMANDS(request,arguments,command) \
+#define BAN_COMMANDS(request, arguments, command) \
 	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
 	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
 	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
@@ -280,46 +273,42 @@ void BanCommand_(float request)
 
 void BanCommand_macro_help()
 {
-	#define BAN_COMMAND(name,function,description) \
-		{ if(strtolower(description) != "") { LOG_INFO("  ^2", name, "^7: ", description, "\n"); } }
+	#define BAN_COMMAND(name, function, description) \
+		{ if (strtolower(description) != "") { LOG_INFO("  ^2", name, "^7: ", description, "\n"); } }
 
 	BAN_COMMANDS(0, 0, "");
-	#undef BAN_COMMAND
-
-	return;
+#undef BAN_COMMAND
 }
 
 float BanCommand_macro_command(float argc, string command)
 {
-	#define BAN_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return true; } }
+	#define BAN_COMMAND(name, function, description) \
+		{ if (name == strtolower(argv(0))) { function; return true; } }
 
 	BAN_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
-	#undef BAN_COMMAND
+#undef BAN_COMMAND
 
 	return false;
 }
 
 float BanCommand_macro_usage(float argc)
 {
-	#define BAN_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return true; } }
+	#define BAN_COMMAND(name, function, description) \
+		{ if (name == strtolower(argv(1))) { function; return true; } }
 
 	BAN_COMMANDS(CMD_REQUEST_USAGE, argc, "");
-	#undef BAN_COMMAND
+#undef BAN_COMMAND
 
 	return false;
 }
 
 void BanCommand_macro_write_aliases(float fh)
 {
-	#define BAN_COMMAND(name,function,description) \
-		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_sv", name, description); } }
+	#define BAN_COMMAND(name, function, description) \
+		{ if (strtolower(description) != "") { CMD_Write_Alias("qc_cmd_sv", name, description); } }
 
 	BAN_COMMANDS(0, 0, "");
-	#undef BAN_COMMAND
-
-	return;
+#undef BAN_COMMAND
 }
 
 float BanCommand(string command)
@@ -331,10 +320,8 @@ float BanCommand(string command)
 	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
 
-	if(BanCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
-	{
-		return true; // handled by one of the above GenericCommand_* functions
-	}
+	if (BanCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
+		return true;                             // handled by one of the above GenericCommand_* functions
 
 	return false;
 }
