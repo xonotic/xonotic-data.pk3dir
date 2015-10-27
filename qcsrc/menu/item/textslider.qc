@@ -1,90 +1,86 @@
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
 #ifndef ITEM_TEXTSLIDER_H
-#define ITEM_TEXTSLIDER_H
-#include "slider.qc"
-CLASS(TextSlider, Slider)
-	METHOD(TextSlider, valueToText, string(entity, float));
-	METHOD(TextSlider, valueToIdentifier, string(entity, float));
-	METHOD(TextSlider, setValueFromIdentifier_allowAnim, void(entity, string, bool));
-	METHOD(TextSlider, setValueFromIdentifier_noAnim, void(entity, string));
-	METHOD(TextSlider, setValueFromIdentifier, void(entity, string));
-	METHOD(TextSlider, getIdentifier, string(entity));
-	METHOD(TextSlider, clearValues, void(entity));
-	METHOD(TextSlider, addValue, void(entity, string, string));
-	METHOD(TextSlider, insertValue, void(entity, float, string, string));
-	METHOD(TextSlider, configureTextSliderValues, void(entity, string));
-	ATTRIBARRAY(TextSlider, valueStrings, string, 256)
-	ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256)
-	ATTRIB(TextSlider, nValues, int, 0)
-ENDCLASS(TextSlider)
+	#define ITEM_TEXTSLIDER_H
+	#include "slider.qc"
+	CLASS(TextSlider, Slider)
+		METHOD(TextSlider, valueToText, string(entity, float));
+		METHOD(TextSlider, valueToIdentifier, string(entity, float));
+		METHOD(TextSlider, setValueFromIdentifier_allowAnim, void(entity, string, bool));
+		METHOD(TextSlider, setValueFromIdentifier_noAnim, void(entity, string));
+		METHOD(TextSlider, setValueFromIdentifier, void(entity, string));
+		METHOD(TextSlider, getIdentifier, string(entity));
+		METHOD(TextSlider, clearValues, void(entity));
+		METHOD(TextSlider, addValue, void(entity, string, string));
+		METHOD(TextSlider, insertValue, void(entity, float, string, string));
+		METHOD(TextSlider, configureTextSliderValues, void(entity, string));
+		ATTRIBARRAY(TextSlider, valueStrings, string, 256)
+		ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256)
+		ATTRIB(TextSlider, nValues, int, 0)
+	ENDCLASS(TextSlider)
 #endif
 
 #ifdef IMPLEMENTATION
-string TextSlider_valueToIdentifier(entity me, int val)
-{
-	if(val >= me.nValues)
-		return "custom";
-	if(val < 0)
-		return "custom";
-	return me.(valueIdentifiers[val]);
-}
-string TextSlider_valueToText(entity me, int val)
-{
-	if(val >= me.nValues)
-		return _("Custom");
-	if(val < 0)
-		return _("Custom");
-	return me.(valueStrings[val]);
-}
-void TextSlider_setValueFromIdentifier_allowAnim(entity me, string id, bool allowAnim)
-{
-	int i;
-	for(i = 0; i < me.nValues; ++i)
-		if(me.valueToIdentifier(me, i) == id)
-		{
-			SUPER(TextSlider).setValue_allowAnim(me, i, allowAnim);
-			return;
-		}
-	SUPER(TextSlider).setValue_allowAnim(me, -1, allowAnim);
-}
-void TextSlider_setValueFromIdentifier_noAnim(entity me, string id)
-{
-	TextSlider_setValueFromIdentifier_allowAnim(me, id, false);
-}
-void TextSlider_setValueFromIdentifier(entity me, string id)
-{
-	TextSlider_setValueFromIdentifier_allowAnim(me, id, true);
-}
-string TextSlider_getIdentifier(entity me)
-{
-	return me.valueToIdentifier(me, me.value);
-}
-void TextSlider_clearValues(entity me)
-{
-	me.nValues = 0;
-}
-void TextSlider_addValue(entity me, string theString, string theIdentifier)
-{
-	me.(valueStrings[me.nValues]) = theString;
-	me.(valueIdentifiers[me.nValues]) = theIdentifier;
-	me.nValues += 1;
-}
-void TextSlider_insertValue(entity me, int pos, string theString, string theIdentifier)
-{
-	int i;
-	for (i = me.nValues; i > pos; --i)
+	string TextSlider_valueToIdentifier(entity me, int val)
 	{
-		me.(valueStrings[i]) = me.(valueStrings[i-1]);
-		me.(valueIdentifiers[i]) = me.(valueIdentifiers[i-1]);
+		if (val >= me.nValues) return "custom";
+		if (val < 0) return "custom";
+		return me.(valueIdentifiers[val]);
 	}
-	me.(valueStrings[pos]) = theString;
-	me.(valueIdentifiers[pos]) = theIdentifier;
-	me.nValues += 1;
-}
-void TextSlider_configureTextSliderValues(entity me, string theDefault)
-{
-	me.configureSliderValues(me, 0, 0, me.nValues - 1, 1, 1, 1);
-	me.setValueFromIdentifier_noAnim(me, theDefault);
-}
+	string TextSlider_valueToText(entity me, int val)
+	{
+		if (val >= me.nValues) return _("Custom");
+		if (val < 0) return _("Custom");
+		return me.(valueStrings[val]);
+	}
+	void TextSlider_setValueFromIdentifier_allowAnim(entity me, string id, bool allowAnim)
+	{
+		int i;
+		for (i = 0; i < me.nValues; ++i)
+			if (me.valueToIdentifier(me, i) == id)
+			{
+				SUPER(TextSlider).setValue_allowAnim(me, i, allowAnim);
+				return;
+			}
+		SUPER(TextSlider).setValue_allowAnim(me, -1, allowAnim);
+	}
+	void TextSlider_setValueFromIdentifier_noAnim(entity me, string id)
+	{
+		TextSlider_setValueFromIdentifier_allowAnim(me, id, false);
+	}
+	void TextSlider_setValueFromIdentifier(entity me, string id)
+	{
+		TextSlider_setValueFromIdentifier_allowAnim(me, id, true);
+	}
+	string TextSlider_getIdentifier(entity me)
+	{
+		return me.valueToIdentifier(me, me.value);
+	}
+	void TextSlider_clearValues(entity me)
+	{
+		me.nValues = 0;
+	}
+	void TextSlider_addValue(entity me, string theString, string theIdentifier)
+	{
+		me.(valueStrings[me.nValues]) = theString;
+		me.(valueIdentifiers[me.nValues]) = theIdentifier;
+		me.nValues += 1;
+	}
+	void TextSlider_insertValue(entity me, int pos, string theString, string theIdentifier)
+	{
+		int i;
+		for (i = me.nValues; i > pos; --i)
+		{
+			me.(valueStrings[i]) = me.(valueStrings[i - 1]);
+			me.(valueIdentifiers[i]) = me.(valueIdentifiers[i - 1]);
+		}
+		me.(valueStrings[pos]) = theString;
+		me.(valueIdentifiers[pos]) = theIdentifier;
+		me.nValues += 1;
+	}
+	void TextSlider_configureTextSliderValues(entity me, string theDefault)
+	{
+		me.configureSliderValues(me, 0, 0, me.nValues - 1, 1, 1, 1);
+		me.setValueFromIdentifier_noAnim(me, theDefault);
+	}
 #endif

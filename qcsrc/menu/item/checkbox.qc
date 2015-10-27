@@ -1,55 +1,57 @@
 #ifndef ITEM_CHECKBOX_H
-#define ITEM_CHECKBOX_H
-#include "button.qc"
-void CheckBox_Click(entity me, entity other);
-CLASS(CheckBox, Button)
-	METHOD(CheckBox, configureCheckBox, void(entity, string, float, string));
-	METHOD(CheckBox, draw, void(entity));
-	METHOD(CheckBox, playClickSound, void(entity));
-	METHOD(CheckBox, toString, string(entity));
-	METHOD(CheckBox, setChecked, void(entity, float));
-	ATTRIB(CheckBox, useDownAsChecked, float, 0)
-	ATTRIB(CheckBox, checked, float, 0)
-	ATTRIB(CheckBox, onClick, void(entity, entity), CheckBox_Click)
-	ATTRIB(CheckBox, srcMulti, float, 0)
-	ATTRIB(CheckBox, disabled, float, 0)
-ENDCLASS(CheckBox)
+	#define ITEM_CHECKBOX_H
+	#include "button.qc"
+	void CheckBox_Click(entity me, entity other);
+	CLASS(CheckBox, Button)
+		METHOD(CheckBox, configureCheckBox, void(entity, string, float, string));
+		METHOD(CheckBox, draw, void(entity));
+		METHOD(CheckBox, playClickSound, void(entity));
+		METHOD(CheckBox, toString, string(entity));
+		METHOD(CheckBox, setChecked, void(entity, float));
+		ATTRIB(CheckBox, useDownAsChecked, float, 0)
+		ATTRIB(CheckBox, checked, float, 0)
+		ATTRIB(CheckBox, onClick, void(entity, entity), CheckBox_Click)
+		ATTRIB(CheckBox, srcMulti, float, 0)
+		ATTRIB(CheckBox, disabled, float, 0)
+	ENDCLASS(CheckBox)
 #endif
 
 #ifdef IMPLEMENTATION
-void CheckBox_setChecked(entity me, float val)
-{
-	me.checked = val;
-}
-void CheckBox_Click(entity me, entity other)
-{
-	me.setChecked(me, !me.checked);
-}
-string CheckBox_toString(entity me)
-{
-	return strcat(SUPER(CheckBox).toString(me), ", ", me.checked ? "checked" : "unchecked");
-}
-void CheckBox_configureCheckBox(entity me, string txt, float sz, string gfx)
-{
-	me.configureButton(me, txt, sz, gfx);
-	me.align = 0;
-}
-void CheckBox_draw(entity me)
-{
-	float s;
-	s = me.pressed;
-	if(me.useDownAsChecked)
+	void CheckBox_setChecked(entity me, float val)
 	{
-		me.srcSuffix = string_null;
-		me.forcePressed = me.checked;
+		me.checked = val;
 	}
-	else
-		me.srcSuffix = (me.checked ? "1" : "0");
-	me.pressed = s;
-	SUPER(CheckBox).draw(me);
-}
-void CheckBox_playClickSound(entity me)
-{
-	m_play_click_sound(MENU_SOUND_SELECT);
-}
+	void CheckBox_Click(entity me, entity other)
+	{
+		me.setChecked(me, !me.checked);
+	}
+	string CheckBox_toString(entity me)
+	{
+		return strcat(SUPER(CheckBox).toString(me), ", ", me.checked ? "checked" : "unchecked");
+	}
+	void CheckBox_configureCheckBox(entity me, string txt, float sz, string gfx)
+	{
+		me.configureButton(me, txt, sz, gfx);
+		me.align = 0;
+	}
+	void CheckBox_draw(entity me)
+	{
+		float s;
+		s = me.pressed;
+		if (me.useDownAsChecked)
+		{
+			me.srcSuffix = string_null;
+			me.forcePressed = me.checked;
+		}
+		else
+		{
+			me.srcSuffix = (me.checked ? "1" : "0");
+		}
+		me.pressed = s;
+		SUPER(CheckBox).draw(me);
+	}
+	void CheckBox_playClickSound(entity me)
+	{
+		m_play_click_sound(MENU_SOUND_SELECT);
+	}
 #endif

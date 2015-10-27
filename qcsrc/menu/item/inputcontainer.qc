@@ -1,163 +1,152 @@
 #ifndef ITEM_INPUTCONTAINER_H
-#define ITEM_INPUTCONTAINER_H
-#include "container.qc"
-CLASS(InputContainer, Container)
-	METHOD(InputContainer, keyDown, float(entity, float, float, float));
-	METHOD(InputContainer, mouseMove, float(entity, vector));
-	METHOD(InputContainer, mousePress, float(entity, vector));
-	METHOD(InputContainer, mouseRelease, float(entity, vector));
-	METHOD(InputContainer, mouseDrag, float(entity, vector));
-	METHOD(InputContainer, focusLeave, void(entity));
-	METHOD(InputContainer, resizeNotify, void(entity, vector, vector, vector, vector));
+	#define ITEM_INPUTCONTAINER_H
+	#include "container.qc"
+	CLASS(InputContainer, Container)
+		METHOD(InputContainer, keyDown, float(entity, float, float, float));
+		METHOD(InputContainer, mouseMove, float(entity, vector));
+		METHOD(InputContainer, mousePress, float(entity, vector));
+		METHOD(InputContainer, mouseRelease, float(entity, vector));
+		METHOD(InputContainer, mouseDrag, float(entity, vector));
+		METHOD(InputContainer, focusLeave, void(entity));
+		METHOD(InputContainer, resizeNotify, void(entity, vector, vector, vector, vector));
 
-	METHOD(InputContainer, _changeFocusXY, bool(entity this, vector pos));
-	ATTRIB(InputContainer, mouseFocusedChild, entity, NULL)
-	ATTRIB(InputContainer, isTabRoot, float, 0)
-ENDCLASS(InputContainer)
+		METHOD(InputContainer, _changeFocusXY, bool(entity this, vector pos));
+		ATTRIB(InputContainer, mouseFocusedChild, entity, NULL)
+		ATTRIB(InputContainer, isTabRoot, float, 0)
+	ENDCLASS(InputContainer)
 #endif
 
 #ifdef IMPLEMENTATION
-void InputContainer_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
-{
-	SUPER(InputContainer).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	/*
-	if(me.parent.instanceOfInputContainer)
-		me.isTabRoot = 0;
-	else
-		me.isTabRoot = 1;
-	*/
-}
-
-void InputContainer_focusLeave(entity me)
-{
-	SUPER(InputContainer).focusLeave(me);
-	me.mouseFocusedChild = NULL;
-}
-
-float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
-{
-	entity f, ff;
-	if(SUPER(InputContainer).keyDown(me, scan, ascii, shift))
-		return 1;
-	if(scan == K_ESCAPE)
+	void InputContainer_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 	{
-		f = me.focusedChild;
-		if(f)
+		SUPER(InputContainer).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
+		/*
+		if(me.parent.instanceOfInputContainer)
+		    me.isTabRoot = 0;
+		else
+		    me.isTabRoot = 1;
+		*/
+	}
+
+	void InputContainer_focusLeave(entity me)
+	{
+		SUPER(InputContainer).focusLeave(me);
+		me.mouseFocusedChild = NULL;
+	}
+
+	float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
+	{
+		entity f, ff;
+		if (SUPER(InputContainer).keyDown(me, scan, ascii, shift)) return 1;
+		if (scan == K_ESCAPE)
 		{
-			me.setFocus(me, NULL);
-			return 1;
+			f = me.focusedChild;
+			if (f)
+			{
+				me.setFocus(me, NULL);
+				return 1;
+			}
+			return 0;
+		}
+		if (scan == K_TAB)
+		{
+			f = me.focusedChild;
+			if (shift & S_SHIFT)
+			{
+				if (f)
+				{
+					for (ff = f.prevSibling; ff; ff = ff.prevSibling)
+					{
+						if (!ff.focusable) continue;
+						me.setFocus(me, ff);
+						return 1;
+					}
+				}
+				if (!f || me.isTabRoot)
+				{
+					for (ff = me.lastChild; ff; ff = ff.prevSibling)
+					{
+						if (!ff.focusable) continue;
+						me.setFocus(me, ff);
+						return 1;
+					}
+					return 0;  // AIIIIEEEEE!
+				}
+			}
+			else
+			{
+				if (f)
+				{
+					for (ff = f.nextSibling; ff; ff = ff.nextSibling)
+					{
+						if (!ff.focusable) continue;
+						me.setFocus(me, ff);
+						return 1;
+					}
+				}
+				if (!f || me.isTabRoot)
+				{
+					for (ff = me.firstChild; ff; ff = ff.nextSibling)
+					{
+						if (!ff.focusable) continue;
+						me.setFocus(me, ff);
+						return 1;
+					}
+					return 0;  // AIIIIEEEEE!
+				}
+			}
 		}
 		return 0;
 	}
-	if(scan == K_TAB)
+
+	bool InputContainer__changeFocusXY(entity this, vector pos)
 	{
-		f = me.focusedChild;
-		if(shift & S_SHIFT)
+		entity e = this.itemFromPoint(this, pos);
+		if (e && !e.focusable) e = NULL;
+		entity prev = this.mouseFocusedChild;
+		this.mouseFocusedChild = e;
+		if (!e) return false;  // keep focus when hovering over non-focusable elements
+		if (e != prev)
 		{
-			if(f)
+			this.setFocus(this, e);
+			if (e.instanceOfInputContainer)
 			{
-				for(ff = f.prevSibling; ff; ff = ff.prevSibling)
-				{
-					if (!ff.focusable)
-						continue;
-					me.setFocus(me, ff);
-					return 1;
-				}
-			}
-			if(!f || me.isTabRoot)
-			{
-				for(ff = me.lastChild; ff; ff = ff.prevSibling)
-				{
-					if (!ff.focusable)
-						continue;
-					me.setFocus(me, ff);
-					return 1;
-				}
-				return 0; // AIIIIEEEEE!
+				e.focusedChild = NULL;
+				e._changeFocusXY(e, globalToBox(pos, e.Container_origin, e.Container_size));
 			}
 		}
-		else
-		{
-			if(f)
-			{
-				for(ff = f.nextSibling; ff; ff = ff.nextSibling)
-				{
-					if (!ff.focusable)
-						continue;
-					me.setFocus(me, ff);
-					return 1;
-				}
-			}
-			if(!f || me.isTabRoot)
-			{
-				for(ff = me.firstChild; ff; ff = ff.nextSibling)
-				{
-					if (!ff.focusable)
-						continue;
-					me.setFocus(me, ff);
-					return 1;
-				}
-				return 0; // AIIIIEEEEE!
-			}
-		}
+		return true;  // have focus
 	}
-	return 0;
-}
 
-bool InputContainer__changeFocusXY(entity this, vector pos)
-{
-	entity e = this.itemFromPoint(this, pos);
-	if (e && !e.focusable) e = NULL;
-	entity prev = this.mouseFocusedChild;
-	this.mouseFocusedChild = e;
-	if (!e) return false; // keep focus when hovering over non-focusable elements
-	if (e != prev) {
-		this.setFocus(this, e);
-		if (e.instanceOfInputContainer) {
-			e.focusedChild = NULL;
-			e._changeFocusXY(e, globalToBox(pos, e.Container_origin, e.Container_size));
-		}
+	float InputContainer_mouseDrag(entity me, vector pos)
+	{
+		if (SUPER(InputContainer).mouseDrag(me, pos)) return 1;
+		if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1) return 1;
+		return 0;
 	}
-	return true; // have focus
-}
-
-float InputContainer_mouseDrag(entity me, vector pos)
-{
-	if(SUPER(InputContainer).mouseDrag(me, pos))
-		return 1;
-	if(pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
-		return 1;
-	return 0;
-}
-float InputContainer_mouseMove(entity me, vector pos)
-{
-	if(me.mouseFocusedChild != me.focusedChild) // if the keyboard moved the focus away
-		me.mouseFocusedChild = NULL; // force focusing
-	if(me._changeFocusXY(me, pos))
-		if(SUPER(InputContainer).mouseMove(me, pos))
-			return 1;
-	if(pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
-		return 1;
-	return 0;
-}
-float InputContainer_mousePress(entity me, vector pos)
-{
-	me.mouseFocusedChild = NULL; // force focusing
-	if(me._changeFocusXY(me, pos))
-		if(SUPER(InputContainer).mousePress(me, pos))
-			return 1;
-	if(pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
-		return 1;
-	return 0;
-}
-float InputContainer_mouseRelease(entity me, vector pos)
-{
-	SUPER(InputContainer).mouseRelease(me, pos); // return value?
-	if(me.focused) // am I still eligible for this? (UGLY HACK, but a mouse event could have changed focus away)
-		if(me._changeFocusXY(me, pos))
-			return 1;
-	if(pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1)
-		return 1;
-	return 0;
-}
+	float InputContainer_mouseMove(entity me, vector pos)
+	{
+		if (me.mouseFocusedChild != me.focusedChild) // if the keyboard moved the focus away
+			me.mouseFocusedChild = NULL;             // force focusing
+		if (me._changeFocusXY(me, pos))
+			if (SUPER(InputContainer).mouseMove(me, pos)) return 1;
+		if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1) return 1;
+		return 0;
+	}
+	float InputContainer_mousePress(entity me, vector pos)
+	{
+		me.mouseFocusedChild = NULL;  // force focusing
+		if (me._changeFocusXY(me, pos))
+			if (SUPER(InputContainer).mousePress(me, pos)) return 1;
+		if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1) return 1;
+		return 0;
+	}
+	float InputContainer_mouseRelease(entity me, vector pos)
+	{
+		SUPER(InputContainer).mouseRelease(me, pos); // return value?
+		if (me.focused)                              // am I still eligible for this? (UGLY HACK, but a mouse event could have changed focus away)
+			if (me._changeFocusXY(me, pos)) return 1;
+		if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1) return 1;
+		return 0;
+	}
 #endif
