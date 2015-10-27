@@ -7,31 +7,31 @@
 
 // Step 1: auto oldself
 #if 1
-#define SELFPARAM() noref entity this = __self
-#define setself(s) (__self = s)
-#define self __self
+	#define SELFPARAM() noref entity this = __self
+	#define setself(s) (__self = s)
+	#define self __self
 #endif
 
 // Step 2: check SELFPARAM() is present for functions that use self
 #if 0
-#define SELFPARAM() [[alias("__self")]] noref entity this = __self
-#define setself(s) (__self = s)
-#define self this
+	#define SELFPARAM() [[alias("__self")]] noref entity this = __self
+	#define setself(s) (__self = s)
+	#define self this
 #endif
 
 // Step 3: const self
 #if 0
-#define SELFPARAM() noref const entity this = __self
-entity setself(entity e) { return self = e; }
-entity getself() { return self; }
-#define self getself()
+	#define SELFPARAM() noref const entity this = __self
+	entity setself(entity e) { return self = e; }
+	entity getself() { return self; }
+	#define self getself()
 #endif
 
 // Step 4: enable when possible
 // TODO: Remove SELFPARAM in favor of a parameter
 #if 0
-#define SELFPARAM() noref const entity this = __self
-#define self this
+	#define SELFPARAM() noref const entity this = __self
+	#define self this
 #endif
 
 #endif

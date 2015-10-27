@@ -1,28 +1,28 @@
 #ifndef NOCOMPAT
-    #define COMPAT_NO_MOD_IS_XONOTIC
+	#define COMPAT_NO_MOD_IS_XONOTIC
 #endif
 
 #include "compiler.qh"
 
 #ifndef QCC_SUPPORT_INT
-    #define int float
+	#define int float
 #endif
 
 #ifndef QCC_SUPPORT_BOOL
-    #define bool float
+	#define bool float
 #endif
 
 #if defined(CSQC)
-    #include "../dpdefs/csprogsdefs.qh"
-    #include "../dpdefs/keycodes.qh"
+	#include "../dpdefs/csprogsdefs.qh"
+	#include "../dpdefs/keycodes.qh"
 #elif defined(SVQC)
-    #include "../server/sys-pre.qh"
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../server/sys-post.qh"
+	#include "../server/sys-pre.qh"
+	#include "../dpdefs/progsdefs.qh"
+	#include "../dpdefs/dpextensions.qh"
+	#include "../server/sys-post.qh"
 #elif defined(MENUQC)
-    #include "../dpdefs/menudefs.qh"
-    #include "../dpdefs/keycodes.qh"
+	#include "../dpdefs/menudefs.qh"
+	#include "../dpdefs/keycodes.qh"
 #endif
 
 #include "warpzone/mathlib.qc"
