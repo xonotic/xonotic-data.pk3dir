@@ -1780,10 +1780,9 @@ bool SpectateNext()
 {SELFPARAM();
 	other = find(self.enemy, classname, "player");
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(SpectateNext, self, other);
-	other = spec_player;
-
-	if(!mutator_returnvalue && !other)
+	if (MUTATOR_CALLHOOK(SpectateNext, self, other))
+		other = spec_player;
+	else if (!other)
 		other = find(other, classname, "player");
 
 	if(other) { SetSpectatee(self, other); }
@@ -1804,13 +1803,14 @@ bool SpectatePrev()
 	while(other && other != self.enemy)
 		other = other.chain;
 
-	int mutator_returnvalue = MUTATOR_CALLHOOK(SpectatePrev, self, other, first);
-	other = spec_player;
-
-	switch(mutator_returnvalue)
+	switch (MUTATOR_CALLHOOK(SpectatePrev, self, other, first))
 	{
-		case MUT_SPECPREV_FOUND: break;
-		case MUT_SPECPREV_RETURN: return true;
+		case MUT_SPECPREV_FOUND:
+		    other = spec_player;
+		    break;
+		case MUT_SPECPREV_RETURN:
+		    other = spec_player;
+		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
