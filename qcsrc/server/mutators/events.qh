@@ -811,4 +811,6 @@ MUTATOR_HOOKABLE(TurretValidateTarget, EV_TurretValidateTarget);
     /**/ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(TurretThink, EV_TurretThink);
+
+MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
 #endif

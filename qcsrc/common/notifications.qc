@@ -595,7 +595,7 @@ void Create_Notification_Entity(
 				{
 					if(notif.nent_enabled)
 					{
-						precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
+						precache_sound(sprintf("announcer/%s/%s.wav", AnnouncerOption(), snd));
 						notif.nent_channel = channel;
 						notif.nent_snd = strzone(snd);
 						notif.nent_vol = vol;
@@ -1276,7 +1276,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1289,7 +1289,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1311,7 +1311,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,

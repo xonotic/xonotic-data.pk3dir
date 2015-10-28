@@ -1037,6 +1037,8 @@ void Ent_Init()
 	g_trueaim_minrange = ReadCoord();
 	g_balance_porto_secondary = ReadByte();
 
+	MUTATOR_CALLHOOK(Ent_Init);
+
 	if(!postinit)
 		PostInit();
 }

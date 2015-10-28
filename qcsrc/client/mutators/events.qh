@@ -129,4 +129,11 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 	/**/
 MUTATOR_HOOKABLE(WantEventchase, EV_WantEventchase);
 
+#define EV_AnnouncerOption(i, o) \
+	/**/ i(string, ret_string) \
+	/**/ o(string, ret_string) \
+	/**/
+MUTATOR_HOOKABLE(AnnouncerOption, EV_AnnouncerOption);
+
+MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
 #endif

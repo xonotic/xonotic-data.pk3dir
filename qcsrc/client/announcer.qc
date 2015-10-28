@@ -1,10 +1,20 @@
 #include "announcer.qh"
 
+#include "mutators/events.qh"
+
 #include "../common/notifications.qh"
 #include "../common/stats.qh"
 
 bool announcer_1min;
 bool announcer_5min;
+string AnnouncerOption()
+{
+	if(MUTATOR_CALLHOOK(AnnouncerOption, ret_string))
+		return ret_string;
+
+	return autocvar_cl_announcer;
+}
+
 void Announcer_Countdown()
 {
 	SELFPARAM();

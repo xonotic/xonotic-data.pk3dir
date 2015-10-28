@@ -650,6 +650,8 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	WriteByte(MSG_ENTITY, WEP_CVAR(porto, secondary)); // WEAPONTODO
+
+	MUTATOR_CALLHOOK(Ent_Init);
 	return true;
 }
 
