@@ -3688,6 +3688,12 @@ void HUD_PressedKeys(void)
 	drawpic_aspect_skin(pos + eX * keysize.x * 2, ((pressedkeys & KEY_RIGHT) ? "key_right_inv.tga" : "key_right.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+entity chatlines;
+STATIC_INIT(chatlines) { chatlines = LL_NEW(); }
+CLASS(ChatEntry, Object)
+	ATTRIB(ChatEntry, m_text, string, string_null)
+ENDCLASS(ChatEntry)
+
 // Handle chat as a panel (#12)
 //
 void HUD_Chat(void)
@@ -3761,14 +3767,26 @@ void HUD_Chat(void)
 	cvar_set("con_chatwidth", ftos(mySize.x/vid_conwidth));
 	cvar_set("con_chat", ftos(floor(mySize.y/autocvar_con_chatsize - 0.5)));
 
+	vector chatsize = '1 1 0' * autocvar_con_chatsize;
+
+	int n = 0;
+	int oldy = pos.y;
+	LL_EACH(chatlines, true, LAMBDA(
+		float a = 1;
+		string s = textShortenToWidth(it.m_text, mySize.x, chatsize, stringwidth_colors);
+		drawcolorcodedstring(pos, s, chatsize, a, DRAWFLAG_NORMAL);
+		pos.y += chatsize.y;
+		n = i;
+	));
+	drawcolorcodedstring(pos, ftos(n), chatsize, 1, DRAWFLAG_NORMAL);
+	pos.y = oldy;
+
 	if(autocvar__hud_configure)
 	{
-		vector chatsize;
-		chatsize = '1 1 0' * autocvar_con_chatsize;
 		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over theAlpha and such
-		float i, a;
-		for(i = 0; i < autocvar_con_chat; ++i)
+		for(int i = 0; i < autocvar_con_chat; ++i)
 		{
+			float a;
 			if(i == autocvar_con_chat - 1)
 				a = panel_fg_alpha;
 			else

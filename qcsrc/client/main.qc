@@ -950,7 +950,32 @@ void CSQC_Parse_Print(string strMessage)
 	if(autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
 
-	print(ColorTranslateRGB(strMessage));
+	for (int i = 0, n = tokenizebyseparator(strMessage, "\n"); i < n; ++i)
+	{
+		string s = ColorTranslateRGB(argv(i));
+		int c = str2chr(s, 0);
+		if (c == 1 || c == 3) {
+			s = substring(s, 1, -1);
+			if (c == 1) {
+				entity snd;
+				if (str2chr(s, 0) == '\r') {
+					s = substring(s, 1, -1);
+					snd = SND_TALK2;
+				} else {
+					snd = SND_TALK;
+				}
+				sound(self, CH_INFO, snd, VOL_BASE, ATTEN_NONE);
+			}
+			s = strcat("^3", s);
+			ChatEntry e = NEW(ChatEntry);
+			e.m_text = strzone(s);
+			LL_PUSH(chatlines, e);
+			print(s, "\n");
+		} else {
+			s = strcat("^7", s);
+			print(s, "\n");
+		}
+	}
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.

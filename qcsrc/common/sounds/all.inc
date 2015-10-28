@@ -269,6 +269,7 @@ SOUND(TYPEHIT, "misc/typehit.wav");
 SOUND(SPAWN, "misc/spawn.ogg");
 
 SOUND(TALK, "misc/talk.wav");
+SOUND(TALK2, "misc/talk2.wav");
 
 SOUND(TELEPORT, "misc/teleport.ogg");
 
