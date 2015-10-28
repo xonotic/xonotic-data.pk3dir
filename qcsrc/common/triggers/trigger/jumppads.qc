@@ -401,8 +401,8 @@ bool target_push_send(entity this, entity to, float sf)
 
 void target_push_link()
 {SELFPARAM();
-	Net_LinkEntity(self, false, 0, target_push_send);
-	self.SendFlags |= 1; // update
+	//Net_LinkEntity(self, false, 0, target_push_send);
+	//self.SendFlags |= 1; // update
 }
 
 spawnfunc(target_push) { target_push_link(); }
