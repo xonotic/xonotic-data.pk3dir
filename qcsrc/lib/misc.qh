@@ -28,15 +28,14 @@
 
 #define LAMBDA(...) { __VA_ARGS__; }
 
-// Can't wrap with do-while as block may contain continue or break
+// With block may not contain continue or break
 #define WITH(type, name, value, block) \
+	do \
 	{ \
 		type __with_save = (name); \
 		name = (value); \
 		LAMBDA(block) \
 		name = __with_save; \
-	} do \
-	{ \
 	} \
 	while (0)
 
