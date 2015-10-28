@@ -526,7 +526,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 				actor,
 				MSG_MULTI,
 				ITEM_WEAPON_PRIMORSEC,
-				thiswep,
+				thiswep.m_id,
 				secondary,
 				(1 - secondary)
 			                 );
