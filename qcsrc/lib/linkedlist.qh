@@ -21,10 +21,8 @@ entity LL_PUSH(LinkedList this, entity e)
 {
 	LinkedListNode n = NEW(LinkedListNode);
 	n.ll_data = e;
-	n.ll_prev = this.ll_tail;
-	LinkedListNode tail = this.ll_tail;
-	if (tail) tail.ll_next = n;
-	else this.ll_head = this.ll_tail = n;
+	LinkedListNode tail = n.ll_prev = this.ll_tail;
+	this.ll_tail = (tail) ? tail.ll_next = n : this.ll_head = n;
 	return e;
 }
 
@@ -43,15 +41,15 @@ entity LL_POP(LinkedList this)
 }
 
 #define LL_EACH(list, cond, body) \
-	do \
-	{                                  \
-		noref int i = 0;                                                    \
-		for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i)) \
-		{    \
-			noref entity it = _it.ll_data;                                  \
-			if (cond) { body }                                              \
-		}                                                                   \
-	} \
+	do                                                                  \
+	{                                                                   \
+		noref int i = 0;                                                \
+		for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i))  \
+		{                                                               \
+			noref entity it = _it.ll_data;                              \
+			if (cond) { body }                                          \
+		}                                                               \
+	}                                                                   \
 	while (0)
 
 #endif
