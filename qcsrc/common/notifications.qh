@@ -574,7 +574,7 @@ float NOTIF_MULTI_COUNT;
 float NOTIF_CHOICE_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
-const float NOTIF_ANNCE_MAX   = 100;
+const float NOTIF_ANNCE_MAX   = 150;
 const float NOTIF_INFO_MAX    = 350;
 const float NOTIF_CENTER_MAX  = 250;
 const float NOTIF_MULTI_MAX   = 200;
