@@ -1,6 +1,8 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
+const int MAX_WEAPONSLOTS = 2;
+
 .int ammo_shells;
 .int ammo_nails;
 .int ammo_rockets;

@@ -669,21 +669,21 @@ void Arc_Smoke()
 				{
 					#if 0
 					if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
-						weapon_thinkf(actor, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
+						weapon_thinkf(actor, slot, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
 					else
 					#endif
-						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 				}
 
 				if((!actor.arc_beam) || wasfreed(actor.arc_beam))
 				{
-					if(weapon_prepareattack(thiswep, actor, boolean(fire & 2), 0))
+					if(weapon_prepareattack(thiswep, actor, slot, boolean(fire & 2), 0))
 					{
 						W_Arc_Beam(boolean(fire & 2));
 
 						if(!actor.arc_BUTTON_ATCK_prev)
 						{
-							weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+							weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 							actor.arc_BUTTON_ATCK_prev = true;
 						}
 					}
@@ -695,18 +695,18 @@ void Arc_Smoke()
 			if(actor.arc_BUTTON_ATCK_prev)
 			{
 				sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
-				weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-				ATTACK_FINISHED(actor) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
+				weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+				ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
 			}
 			actor.arc_BUTTON_ATCK_prev = false;
 
 			#if 0
 			if(fire & 2)
-			if(weapon_prepareattack(thiswep, actor, true, autocvar_g_balance_arc_secondary_refire))
+			if(weapon_prepareattack(thiswep, actor, slot, true, autocvar_g_balance_arc_secondary_refire))
 			{
 				W_Arc_Attack2();
 				actor.arc_count = autocvar_g_balance_arc_secondary_count;
-				weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+				weapon_thinkf(actor, slot, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
 				actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
 			}
 			#endif

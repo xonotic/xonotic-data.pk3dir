@@ -53,28 +53,28 @@ void M_Spider_Attack_Web();
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, false, autocvar_g_monster_spider_attack_web_delay)) {
+    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, slot, false, autocvar_g_monster_spider_attack_web_delay)) {
 		if (!isPlayer) {
 			actor.spider_web_delay = time + 3;
 			setanim(actor, actor.anim_shoot, true, true, true);
-			actor.attack_finished_single = time + (autocvar_g_monster_spider_attack_web_delay);
+			actor.attack_finished_single[0] = time + (autocvar_g_monster_spider_attack_web_delay);
 			actor.anim_finished = time + 1;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
         W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web();
-        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
         return;
     }
     if (fire & 2)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, true, 0.5)) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, true, 0.5)) {
     	if (isPlayer) {
     		actor.enemy = Monster_FindTarget(actor);
     		actor.attack_range = 60;
     	}
     	Monster_Attack_Melee(actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
-        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(actor, slot, WFRAME_FIRE2, 0, w_ready);
     }
 }
 

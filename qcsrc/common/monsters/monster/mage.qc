@@ -43,18 +43,18 @@ void M_Mage_Attack_Spike(vector dir);
 void M_Mage_Attack_Push();
 METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, int slot, int fire)) {
     if (fire & 1)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, false, 0.2)) {
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, slot, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
         W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Mage_Attack_Spike(w_shotdir);
-        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
     }
     if (fire & 2)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, true, 0.5)) {
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, slot, true, 0.5)) {
         M_Mage_Attack_Push();
-        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(actor, slot, WFRAME_FIRE2, 0, w_ready);
     }
 }
 
@@ -297,7 +297,7 @@ void M_Mage_Defend_Heal()
 	if(washealed)
 	{
 		setanim(self, self.anim_shoot, true, true, true);
-		self.attack_finished_single = time + (autocvar_g_monster_mage_heal_delay);
+		self.attack_finished_single[0] = time + (autocvar_g_monster_mage_heal_delay);
 		self.anim_finished = time + 1.5;
 	}
 }
@@ -309,7 +309,7 @@ void M_Mage_Attack_Push()
 	Send_Effect(EFFECT_TE_EXPLOSION, self.origin, '0 0 0', 1);
 
 	setanim(self, self.anim_shoot, true, true, true);
-	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
+	self.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_push_delay);
 }
 
 void M_Mage_Attack_Teleport()
@@ -334,7 +334,7 @@ void M_Mage_Attack_Teleport()
 	self.fixangle = true;
 	self.velocity *= 0.5;
 
-	self.attack_finished_single = time + 0.2;
+	self.attack_finished_single[0] = time + 0.2;
 }
 
 void M_Mage_Defend_Shield_Remove()
@@ -350,7 +350,7 @@ void M_Mage_Defend_Shield()
 	self.armorvalue = (autocvar_g_monster_mage_shield_blockpercent);
 	self.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
 	setanim(self, self.anim_shoot, true, true, true);
-	self.attack_finished_single = time + 1;
+	self.attack_finished_single[0] = time + 1;
 	self.anim_finished = time + 1;
 }
 
@@ -382,7 +382,7 @@ float M_Mage_Attack(float attack_type, entity targ)
 				else
 				{
 					setanim(self, self.anim_shoot, true, true, true);
-					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
+					self.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
 					Weapon wep = WEP_MAGE_SPIKE;
 					wep.wr_think(wep, self, 0, 1);
@@ -421,7 +421,7 @@ spawnfunc(monster_mage) { Monster_Spawn(MON_MAGE.monsterid); }
 			}
 
 			if(self.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
-			if(time >= self.attack_finished_single)
+			if(time >= self.attack_finished_single[0])
 			if(random() < 0.5)
 				M_Mage_Defend_Heal();
 

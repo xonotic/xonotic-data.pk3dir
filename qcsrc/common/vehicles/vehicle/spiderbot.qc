@@ -276,7 +276,7 @@ float spiderbot_frame()
 	if(player.BUTTON_ATCK)
 	{
 		spider.cnt = time;
-		if(spider.vehicle_ammo1 >= autocvar_g_vehicle_spiderbot_minigun_ammo_cost && spider.tur_head.attack_finished_single <= time)
+		if(spider.vehicle_ammo1 >= autocvar_g_vehicle_spiderbot_minigun_ammo_cost && spider.tur_head.attack_finished_single[0] <= time)
 		{
 			entity gun;
 			vector v;
@@ -300,7 +300,7 @@ float spiderbot_frame()
 			setself(spider);
 
 			spider.vehicle_ammo1 -= autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
-			spider.tur_head.attack_finished_single = time + autocvar_g_vehicle_spiderbot_minigun_refire;
+			spider.tur_head.attack_finished_single[0] = time + autocvar_g_vehicle_spiderbot_minigun_refire;
 			player.vehicle_ammo1 = (spider.vehicle_ammo1 / autocvar_g_vehicle_spiderbot_minigun_ammo_max) * 100;
 			spider.gun1.angles_z += 45;
 			spider.gun2.angles_z -= 45;
@@ -332,7 +332,7 @@ float spiderbot_frame()
 	if(spider.gun2.cnt <= time)
 		player.vehicle_reload2 = 100;
 	else
-		player.vehicle_reload2 = 100 - ((spider.gun2.cnt - time) / spider.attack_finished_single) * 100;
+		player.vehicle_reload2 = 100 - ((spider.gun2.cnt - time) / spider.attack_finished_single[0]) * 100;
 
 	setorigin(player, spider.origin + '0 0 1' * spider.maxs_z);
 	player.velocity = spider.velocity;

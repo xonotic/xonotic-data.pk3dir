@@ -293,6 +293,7 @@ void door_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	}
 }
 
+.float door_finished;
 
 /*
 ================
@@ -306,10 +307,10 @@ void door_touch()
 {SELFPARAM();
 	if (!IS_PLAYER(other))
 		return;
-	if (self.owner.attack_finished_single > time)
+	if (self.owner.door_finished > time)
 		return;
 
-	self.owner.attack_finished_single = time + 2;
+	self.owner.door_finished = time + 2;
 
 #ifdef SVQC
 	if (!(self.owner.dmg) && (self.owner.message != ""))
@@ -437,14 +438,14 @@ void door_trigger_touch()
 #endif
 			return;
 
-	if (time < self.attack_finished_single)
+	if (time < self.door_finished)
 		return;
 
 	// check if door is locked
 	if (!door_check_keys(self, other))
 		return;
 
-	self.attack_finished_single = time + 1;
+	self.door_finished = time + 1;
 
 	activator = other;
 

@@ -18,7 +18,7 @@ vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn);
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 
-void CL_SpawnWeaponentity(entity e);
+void CL_SpawnWeaponentity(entity e, int slot);
 
 vector CL_Weapon_GetShotOrg(float wpn);
 
@@ -38,12 +38,12 @@ float W_WeaponRateFactor();
 
 float W_WeaponSpeedFactor();
 
-bool weapon_prepareattack(Weapon thiswep, entity actor, bool secondary, float attacktime);
+bool weapon_prepareattack(Weapon thiswep, entity actor, int slot, bool secondary, float attacktime);
 
-bool weapon_prepareattack_check(Weapon thiswep, entity actor, float secondary, float attacktime);
+bool weapon_prepareattack_check(Weapon thiswep, entity actor, int slot, float secondary, float attacktime);
 
-void weapon_prepareattack_do(entity actor, float secondary, float attacktime);
+void weapon_prepareattack_do(entity actor, int slot, float secondary, float attacktime);
 
-void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int slot, int fire) func);
+void weapon_thinkf(entity actor, int slot, float fr, float t, void(Weapon thiswep, entity actor, int slot, int fire) func);
 
 #endif

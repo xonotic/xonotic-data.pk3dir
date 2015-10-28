@@ -92,7 +92,8 @@ float W_WeaponSpeedFactor()
 }
 
 
-void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int slot, int fire) func);
+void weapon_thinkf(entity actor, int slot, float fr, float t,
+    void(Weapon thiswep, entity actor, int slot, int fire) func);
 
 bool CL_Weaponentity_CustomizeEntityForClient()
 {
@@ -153,12 +154,12 @@ bool CL_Weaponentity_CustomizeEntityForClient()
 // to free:
 //   call again with ""
 //   remove the ent
-void CL_WeaponEntity_SetModel(entity this, string name)
+void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 {
 	if (name != "")
 	{
 		// if there is a child entity, hide it until we're sure we use it
-		if (this.weaponentity) this.weaponentity.model = "";
+		if (this.weaponentity[slot]) this.weaponentity[slot].model = "";
 		_setmodel(this, W_Model(strcat("v_", name, ".md3")));
 		int v_shot_idx = gettagindex(this, "shot");  // used later
 		if (!v_shot_idx) v_shot_idx = gettagindex(this, "tag_shot");
@@ -174,32 +175,32 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 		// if we don't, this is a "real" animated model
 		if (gettagindex(this, "weapon"))
 		{
-			if (!this.weaponentity) this.weaponentity = spawn();
-			_setmodel(this.weaponentity, W_Model(strcat("v_", name, ".md3")));
-			setattachment(this.weaponentity, this, "weapon");
+			if (!this.weaponentity[slot]) this.weaponentity[slot] = spawn();
+			_setmodel(this.weaponentity[slot], W_Model(strcat("v_", name, ".md3")));
+			setattachment(this.weaponentity[slot], this, "weapon");
 		}
 		else if (gettagindex(this, "tag_weapon"))
 		{
-			if (!this.weaponentity) this.weaponentity = spawn();
-			_setmodel(this.weaponentity, W_Model(strcat("v_", name, ".md3")));
-			setattachment(this.weaponentity, this, "tag_weapon");
+			if (!this.weaponentity[slot]) this.weaponentity[slot] = spawn();
+			_setmodel(this.weaponentity[slot], W_Model(strcat("v_", name, ".md3")));
+			setattachment(this.weaponentity[slot], this, "tag_weapon");
 		}
 		else
 		{
-			if (this.weaponentity) remove(this.weaponentity);
-			this.weaponentity = world;
+			if (this.weaponentity[slot]) remove(this.weaponentity[slot]);
+			this.weaponentity[slot] = NULL;
 		}
 
 		setorigin(this, '0 0 0');
 		this.angles = '0 0 0';
 		this.frame = 0;
-		this.viewmodelforclient = world;
+		this.viewmodelforclient = NULL;
 
 		float idx;
 
 		if (v_shot_idx)  // v_ model attached to invisible h_ model
 		{
-			this.movedir = gettaginfo(this.weaponentity, v_shot_idx);
+			this.movedir = gettaginfo(this.weaponentity[slot], v_shot_idx);
 		}
 		else
 		{
@@ -217,11 +218,11 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 			}
 		}
 
-		if (this.weaponentity)  // v_ model attached to invisible h_ model
+		if (this.weaponentity[slot])  // v_ model attached to invisible h_ model
 		{
-			idx = gettagindex(this.weaponentity, "shell");
-			if (!idx) idx = gettagindex(this.weaponentity, "tag_shell");
-			if (idx) this.spawnorigin = gettaginfo(this.weaponentity, idx);
+			idx = gettagindex(this.weaponentity[slot], "shell");
+			if (!idx) idx = gettagindex(this.weaponentity[slot], "tag_shell");
+			if (idx) this.spawnorigin = gettaginfo(this.weaponentity[slot], idx);
 		}
 		else
 		{
@@ -249,7 +250,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 		}
 		else
 		{
-			if (this.weaponentity)
+			if (this.weaponentity[slot])
 			{
 				idx = gettagindex(this, "weapon");
 				if (!idx) idx = gettagindex(this, "tag_weapon");
@@ -276,8 +277,8 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 	else
 	{
 		this.model = "";
-		if (this.weaponentity) remove(this.weaponentity);
-		this.weaponentity = world;
+		if (this.weaponentity[slot]) remove(this.weaponentity[slot]);
+		this.weaponentity[slot] = NULL;
 		this.movedir = '0 0 0';
 		this.spawnorigin = '0 0 0';
 		this.oldorigin = '0 0 0';
@@ -311,9 +312,9 @@ vector CL_Weapon_GetShotOrg(float wpn)
 {
 	entity wi = get_weaponinfo(wpn);
 	entity e = spawn();
-	CL_WeaponEntity_SetModel(e, wi.mdl);
+	CL_WeaponEntity_SetModel(e, 0, wi.mdl);
 	vector ret = e.movedir;
-	CL_WeaponEntity_SetModel(e, "");
+	CL_WeaponEntity_SetModel(e, 0, "");
 	remove(e);
 	return ret;
 }
@@ -323,16 +324,17 @@ void CL_Weaponentity_Think()
 	SELFPARAM();
 	this.nextthink = time;
 	if (intermission_running) this.frame = this.anim_idle.x;
-	if (this.owner.weaponentity != this)
+	int slot = 0; // TODO: unhardcode
+	if (this.owner.weaponentity[slot] != this)
 	{
-		if (this.weaponentity) remove(this.weaponentity);
+		if (this.weaponentity[slot]) remove(this.weaponentity[slot]);
 		remove(this);
 		return;
 	}
 	if (this.owner.deadflag != DEAD_NO)
 	{
 		this.model = "";
-		if (this.weaponentity) this.weaponentity.model = "";
+		if (this.weaponentity[slot]) this.weaponentity[slot].model = "";
 		return;
 	}
 	if (this.weaponname != this.owner.weaponname || this.dmg != this.owner.modelindex
@@ -342,7 +344,7 @@ void CL_Weaponentity_Think()
 		this.dmg = this.owner.modelindex;
 		this.deadflag = this.owner.deadflag;
 
-		CL_WeaponEntity_SetModel(this, this.owner.weaponname);
+		CL_WeaponEntity_SetModel(this, slot, this.owner.weaponname);
 	}
 
 	int tb = (this.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));
@@ -359,12 +361,12 @@ void CL_Weaponentity_Think()
 
 	this.glowmod = this.owner.weaponentity_glowmod;
 	this.colormap = this.owner.colormap;
-	if (this.weaponentity)
+	if (this.weaponentity[slot])
 	{
-		this.weaponentity.effects = this.effects;
-		this.weaponentity.alpha = this.alpha;
-		this.weaponentity.colormap = this.colormap;
-		this.weaponentity.glowmod = this.glowmod;
+		this.weaponentity[slot].effects = this.effects;
+		this.weaponentity[slot].alpha = this.alpha;
+		this.weaponentity[slot].colormap = this.colormap;
+		this.weaponentity[slot].glowmod = this.glowmod;
 	}
 
 	this.angles = '0 0 0';
@@ -437,10 +439,9 @@ void CL_ExteriorWeaponentity_Think()
 }
 
 // spawning weaponentity for client
-void CL_SpawnWeaponentity(entity e)
+void CL_SpawnWeaponentity(entity e, int slot)
 {
-	entity view = e.weaponentity = spawn();
-	view.classname = "weaponentity";
+	entity view = e.weaponentity[slot] = new(weaponentity);
 	view.solid = SOLID_NOT;
 	view.owner = e;
 	setmodel(view, MDL_Null);  // precision set when changed
@@ -452,17 +453,20 @@ void CL_SpawnWeaponentity(entity e)
 	view.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
 	view.nextthink = time;
 
-	entity exterior = e.exteriorweaponentity = spawn();
-	exterior.classname = "exteriorweaponentity";
-	exterior.solid = SOLID_NOT;
-	exterior.exteriorweaponentity = exterior;
-	exterior.owner = e;
-	setorigin(exterior, '0 0 0');
-	exterior.angles = '0 0 0';
-	exterior.think = CL_ExteriorWeaponentity_Think;
-	exterior.nextthink = time;
+	if (slot == 0)
+	{
+		entity exterior = e.exteriorweaponentity = spawn();
+		exterior.classname = "exteriorweaponentity";
+		exterior.solid = SOLID_NOT;
+		exterior.exteriorweaponentity = exterior;
+		exterior.owner = e;
+		setorigin(exterior, '0 0 0');
+		exterior.angles = '0 0 0';
+		exterior.think = CL_ExteriorWeaponentity_Think;
+		exterior.nextthink = time;
 
-	CSQCMODEL_AUTOINIT(exterior);
+		CSQCMODEL_AUTOINIT(exterior);
+	}
 }
 
 // Weapon subs
@@ -473,17 +477,17 @@ void w_clear(Weapon thiswep, entity actor, int slot, int fire)
 		actor.weapon = 0;
 		actor.switchingweapon = 0;
 	}
-	if (actor.weaponentity)
+	if (actor.weaponentity[slot])
 	{
-		actor.weaponentity.state = WS_CLEAR;
-		actor.weaponentity.effects = 0;
+		actor.weaponentity[slot].state = WS_CLEAR;
+		actor.weaponentity[slot].effects = 0;
 	}
 }
 
 void w_ready(Weapon thiswep, entity actor, int slot, int fire)
 {
-	if (actor.weaponentity) actor.weaponentity.state = WS_READY;
-	weapon_thinkf(actor, WFRAME_IDLE, 1000000, w_ready);
+	if (actor.weaponentity[slot]) actor.weaponentity[slot].state = WS_READY;
+	weapon_thinkf(actor, slot, WFRAME_IDLE, 1000000, w_ready);
 }
 
 .float prevdryfire;
@@ -538,7 +542,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 }
 
 .float race_penalty;
-bool weapon_prepareattack_check(Weapon thiswep, entity actor, bool secondary, float attacktime)
+bool weapon_prepareattack_check(Weapon thiswep, entity actor, int slot, bool secondary, float attacktime)
 {
 	if (!weapon_prepareattack_checkammo(thiswep, actor, secondary)) return false;
 
@@ -555,49 +559,50 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, bool secondary, fl
 	if (attacktime >= 0)
 	{
 		// don't fire if previous attack is not finished
-		if (ATTACK_FINISHED(actor) > time + actor.weapon_frametime * 0.5) return false;
+		if (ATTACK_FINISHED(actor, slot) > time + actor.weapon_frametime * 0.5) return false;
 		// don't fire while changing weapon
-		if (actor.weaponentity.state != WS_READY) return false;
+		if (actor.weaponentity[slot].state != WS_READY) return false;
 	}
 	return true;
 }
 
-void weapon_prepareattack_do(entity actor, bool secondary, float attacktime)
+void weapon_prepareattack_do(entity actor, int slot, bool secondary, float attacktime)
 {
-	actor.weaponentity.state = WS_INUSE;
+	actor.weaponentity[slot].state = WS_INUSE;
 
 	actor.spawnshieldtime = min(actor.spawnshieldtime, time);  // kill spawn shield when you fire
 
 	// if the weapon hasn't been firing continuously, reset the timer
 	if (attacktime >= 0)
 	{
-		if (ATTACK_FINISHED(actor) < time - actor.weapon_frametime * 1.5)
+		if (ATTACK_FINISHED(actor, slot) < time - actor.weapon_frametime * 1.5)
 		{
-			ATTACK_FINISHED(actor) = time;
+			ATTACK_FINISHED(actor, slot) = time;
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
-		ATTACK_FINISHED(actor) = ATTACK_FINISHED(actor) + attacktime * W_WeaponRateFactor();
+		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor();
 	}
 	actor.bulletcounter += 1;
-	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor)), "\n");
+	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, slot)), "\n");
 }
 
-bool weapon_prepareattack(Weapon thiswep, entity actor, bool secondary, float attacktime)
+bool weapon_prepareattack(Weapon thiswep, entity actor, int slot, bool secondary, float attacktime)
 {
-	if (weapon_prepareattack_check(thiswep, actor, secondary, attacktime))
+	if (weapon_prepareattack_check(thiswep, actor, slot, secondary, attacktime))
 	{
-		weapon_prepareattack_do(actor, secondary, attacktime);
+		weapon_prepareattack_do(actor, slot, secondary, attacktime);
 		return true;
 	}
 	return false;
 }
 
-void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int slot, int fire) func)
+void weapon_thinkf(entity actor, int slot, float fr, float t,
+	void(Weapon thiswep, entity actor, int slot, int fire) func)
 {
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
-		fr = actor.weaponentity.wframe;
+		fr = actor.weaponentity[slot].wframe;
 		restartanim = false;
 	}
 	else if (fr == WFRAME_IDLE)
@@ -613,24 +618,24 @@ void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity 
 	vector or = v_right;
 	vector ou = v_up;
 
-	if (actor.weaponentity)
+	if (actor.weaponentity[slot])
 	{
-		actor.weaponentity.wframe = fr;
+		actor.weaponentity[slot].wframe = fr;
 		vector a = '0 0 0';
-		if (fr == WFRAME_IDLE) a = actor.weaponentity.anim_idle;
-		else if (fr == WFRAME_FIRE1) a = actor.weaponentity.anim_fire1;
-		else if (fr == WFRAME_FIRE2) a = actor.weaponentity.anim_fire2;
+		if (fr == WFRAME_IDLE) a = actor.weaponentity[slot].anim_idle;
+		else if (fr == WFRAME_FIRE1) a = actor.weaponentity[slot].anim_fire1;
+		else if (fr == WFRAME_FIRE2) a = actor.weaponentity[slot].anim_fire2;
 		else  // if (fr == WFRAME_RELOAD)
-			a = actor.weaponentity.anim_reload;
+			a = actor.weaponentity[slot].anim_reload;
 		a.z *= g_weaponratefactor;
-		setanim(actor.weaponentity, a, restartanim == false, restartanim, restartanim);
+		setanim(actor.weaponentity[slot], a, restartanim == false, restartanim, restartanim);
 	}
 
 	v_forward = of;
 	v_right = or;
 	v_up = ou;
 
-	if (actor.weapon_think == w_ready && func != w_ready && actor.weaponentity.state == WS_RAISE) backtrace(
+	if (actor.weapon_think == w_ready && func != w_ready && actor.weaponentity[slot].state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
 
 	t *= W_WeaponRateFactor();
@@ -678,13 +683,14 @@ bool forbidWeaponUse(entity player)
 
 void W_WeaponFrame(entity actor)
 {
+	int slot = 0; // TODO: unhardcode
 	if (frametime) actor.weapon_frametime = frametime;
 
-	if (!actor.weaponentity || actor.health < 1) return;  // Dead player can't use weapons and injure impulse commands
+	if (!actor.weaponentity[slot] || actor.health < 1) return;  // Dead player can't use weapons and injure impulse commands
 
 	if (forbidWeaponUse(actor))
 	{
-		if (actor.weaponentity.state != WS_CLEAR)
+		if (actor.weaponentity[slot].state != WS_CLEAR)
 		{
 			Weapon wpn = get_weaponinfo(actor.weapon);
 			w_ready(wpn, actor, 0, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
@@ -696,7 +702,7 @@ void W_WeaponFrame(entity actor)
 	{
 		actor.weapon = 0;
 		actor.switchingweapon = 0;
-		actor.weaponentity.state = WS_CLEAR;
+		actor.weaponentity[slot].state = WS_CLEAR;
 		actor.weaponname = "";
 		// actor.items &= ~IT_AMMO;
 		return;
@@ -710,7 +716,7 @@ void W_WeaponFrame(entity actor)
 	// Change weapon
 	if (actor.weapon != actor.switchweapon)
 	{
-		if (actor.weaponentity.state == WS_CLEAR)
+		if (actor.weaponentity[slot].state == WS_CLEAR)
 		{
 			// end switching!
 			actor.switchingweapon = actor.switchweapon;
@@ -723,7 +729,7 @@ void W_WeaponFrame(entity actor)
 			actor.ammo_field = newwep.ammo_field;
 			Weapon w = get_weaponinfo(actor.switchweapon);
 			w.wr_setup(w);
-			actor.weaponentity.state = WS_RAISE;
+			actor.weaponentity[slot].state = WS_RAISE;
 
 			// set our clip load to the load of the weapon we switched to, if it's reloadable
 			if (newwep.spawnflags & WEP_FLAG_RELOADABLE && newwep.reloading_ammo)  // prevent accessing undefined cvars
@@ -736,14 +742,14 @@ void W_WeaponFrame(entity actor)
 				actor.clip_load = actor.clip_size = 0;
 			}
 
-			weapon_thinkf(actor, WFRAME_IDLE, newwep.switchdelay_raise, w_ready);
+			weapon_thinkf(actor, slot, WFRAME_IDLE, newwep.switchdelay_raise, w_ready);
 		}
-		else if (actor.weaponentity.state == WS_DROP)
+		else if (actor.weaponentity[slot].state == WS_DROP)
 		{
 			// in dropping phase we can switch at any time
 			actor.switchingweapon = actor.switchweapon;
 		}
-		else if (actor.weaponentity.state == WS_READY)
+		else if (actor.weaponentity[slot].state == WS_READY)
 		{
 			// start switching!
 			actor.switchingweapon = actor.switchweapon;
@@ -754,20 +760,20 @@ void W_WeaponFrame(entity actor)
 #if INDEPENDENT_ATTACK_FINISHED
 				    true
 #else
-				    ATTACK_FINISHED(actor) <= time + actor.weapon_frametime * 0.5
+				    ATTACK_FINISHED(actor, slot) <= time + actor.weapon_frametime * 0.5
 #endif
 			   )
 			{
 				sound(actor, CH_WEAPON_SINGLE, SND_WEAPON_SWITCH, VOL_BASE, ATTN_NORM);
-				actor.weaponentity.state = WS_DROP;
-				weapon_thinkf(actor, WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
+				actor.weaponentity[slot].state = WS_DROP;
+				weapon_thinkf(actor, slot, WFRAME_DONTCHANGE, oldwep.switchdelay_drop, w_clear);
 			}
 		}
 	}
 
 	// LordHavoc: network timing test code
 	// if (actor.button0)
-	//	print(ftos(frametime), " ", ftos(time), " >= ", ftos(ATTACK_FINISHED(actor)), " >= ", ftos(actor.weapon_nextthink), "\n");
+	//	print(ftos(frametime), " ", ftos(time), " >= ", ftos(ATTACK_FINISHED(actor, slot)), " >= ", ftos(actor.weapon_nextthink), "\n");
 
 	int w = actor.weapon;
 
@@ -841,11 +847,12 @@ void W_WeaponFrame(entity actor)
 
 void W_AttachToShotorg(entity actor, entity flash, vector offset)
 {
+	int slot = 0;
 	flash.owner = actor;
 	flash.angles_z = random() * 360;
 
-	if (gettagindex(actor.weaponentity, "shot")) setattachment(flash, actor.weaponentity, "shot");
-	else setattachment(flash, actor.weaponentity, "tag_shot");
+	if (gettagindex(actor.weaponentity[slot], "shot")) setattachment(flash, actor.weaponentity[slot], "shot");
+	else setattachment(flash, actor.weaponentity[slot], "tag_shot");
 	setorigin(flash, offset);
 
 	entity xflash = spawn();
@@ -853,10 +860,10 @@ void W_AttachToShotorg(entity actor, entity flash, vector offset)
 
 	flash.viewmodelforclient = actor;
 
-	if (actor.weaponentity.oldorigin.x > 0)
+	if (actor.weaponentity[slot].oldorigin.x > 0)
 	{
 		setattachment(xflash, actor.exteriorweaponentity, "");
-		setorigin(xflash, actor.weaponentity.oldorigin + offset);
+		setorigin(xflash, actor.weaponentity[slot].oldorigin + offset);
 	}
 	else
 	{
@@ -933,7 +940,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, int slot, int fire)
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
 	// so your weapon is disabled for a few seconds without reason
 
-	// ATTACK_FINISHED(actor) -= actor.reload_time - 1;
+	// ATTACK_FINISHED(actor, slot) -= actor.reload_time - 1;
 
 	Weapon wpn = get_weaponinfo(actor.weapon);
 	w_ready(wpn, actor, slot, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
@@ -941,6 +948,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, int slot, int fire)
 
 void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 {
+	int slot = 0;
 	// set global values to work with
 	entity e = get_weaponinfo(actor.weapon);
 
@@ -992,12 +1000,12 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 		}
 	}
 
-	if (actor.weaponentity)
+	if (actor.weaponentity[slot])
 	{
-		if (actor.weaponentity.wframe == WFRAME_RELOAD) return;
+		if (actor.weaponentity[slot].wframe == WFRAME_RELOAD) return;
 
 		// allow switching away while reloading, but this will cause a new reload!
-		actor.weaponentity.state = WS_READY;
+		actor.weaponentity[slot].state = WS_READY;
 	}
 
 	// now begin the reloading process
@@ -1008,9 +1016,9 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
 	// so your weapon is disabled for a few seconds without reason
 
-	// ATTACK_FINISHED(actor) = max(time, ATTACK_FINISHED(actor)) + actor.reload_time + 1;
+	// ATTACK_FINISHED(actor, slot) = max(time, ATTACK_FINISHED(actor, slot)) + actor.reload_time + 1;
 
-	weapon_thinkf(actor, WFRAME_RELOAD, actor.reload_time, W_ReloadedAndReady);
+	weapon_thinkf(actor, slot, WFRAME_RELOAD, actor.reload_time, W_ReloadedAndReady);
 
 	if (actor.clip_load < 0) actor.clip_load = 0;
 	actor.old_clip_load = actor.clip_load;

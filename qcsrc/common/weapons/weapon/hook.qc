@@ -180,12 +180,12 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 				if(!actor.hook)
 				if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
 				if(time > actor.hook_refire)
-				if(weapon_prepareattack(thiswep, actor, false, -1))
+				if(weapon_prepareattack(thiswep, actor, slot, false, -1))
 				{
 					W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(hook, ammo));
 					actor.hook_state |= HOOK_FIRING;
 					actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
 				}
 			} else {
 				actor.hook_state |= HOOK_REMOVING;
@@ -194,10 +194,10 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 			if(fire & 2)
 			{
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hook, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(hook, refire)))
 				{
 					W_Hook_Attack2(thiswep, actor);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
 				}
 			}
 

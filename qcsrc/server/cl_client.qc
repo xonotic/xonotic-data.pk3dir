@@ -304,7 +304,10 @@ void PutObserverInServer()
 	self.weaponname = "";
 	self.switchingweapon = 0;
 	self.weaponmodel = "";
-	self.weaponentity = world;
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		self.weaponentity[slot] = NULL;
+	}
 	self.exteriorweaponentity = world;
 	self.killcount = FRAGS_SPECTATOR;
 	self.velocity = '0 0 0';
@@ -568,7 +571,10 @@ void PutClientInServer()
 			this.killcount = 0;
 		}
 
-		CL_SpawnWeaponentity(this);
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			CL_SpawnWeaponentity(this, slot);
+		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
 		this.exteriorweaponentity.alpha = default_weapon_alpha;
@@ -2427,7 +2433,8 @@ void PlayerPreThink (void)
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
-		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+		int slot = 0; // TODO: unhardcode
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity[slot].wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)

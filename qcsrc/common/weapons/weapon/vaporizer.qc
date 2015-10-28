@@ -257,10 +257,10 @@ void W_RocketMinsta_Attack3 (void)
 			}
 			if((fire & 1) && (actor.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(actor))
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(vaporizer, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(vaporizer, refire)))
 				{
 					W_Vaporizer_Attack(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
 				}
 			}
 			if((fire & 2) || ((fire & 1) && !actor.ammo_cells && autocvar_g_rm))
@@ -314,7 +314,7 @@ void W_RocketMinsta_Attack3 (void)
 					actor.weapon = oldwep;
 
 					// now do normal refire
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
 				}
 			}
 			else

@@ -42,7 +42,7 @@ METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur))
     {
         self.tur_head.avelocity = '0 180 0' * (self.ammo / self.shot_dmg);
 
-        if(self.attack_finished_single > time)
+        if(self.attack_finished_single[0] > time)
             return;
 
         float f;

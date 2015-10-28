@@ -14,6 +14,5 @@ const int SPAWNFLAGS_SILVER_KEY = 16;
 // stuff for preload
 void ent_door();
 
-// abused
-.float attack_finished_single;
+.float door_finished;
 #endif

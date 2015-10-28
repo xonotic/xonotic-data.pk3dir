@@ -1025,8 +1025,9 @@ void Drag_Update(entity dragger)
 	draggee.ltime = max(servertime + serverframetime, draggee.ltime); // fixes func_train breakage
 
 	vector vecs = '0 0 0';
-	if(dragger.weaponentity.movedir_x > 0)
-		vecs = dragger.weaponentity.movedir;
+	int slot = 0; // TODO: unhardcode
+	if(dragger.weaponentity[slot].movedir_x > 0)
+		vecs = dragger.weaponentity[slot].movedir;
 
 	vector dv = v_right * -vecs_y + v_up * vecs_z;
 

@@ -85,8 +85,8 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, int slot, int f
 	if (autocvar_g_casings >= 2) // casing code
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 
-	ATTACK_FINISHED(actor) = time + WEP_CVAR(hmg, refire) * W_WeaponRateFactor();
-	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(hmg, refire) * W_WeaponRateFactor();
+	weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
 		METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
@@ -104,7 +104,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, int slot, int f
 			} else
 			{
 				if (fire & 1)
-				if (weapon_prepareattack(thiswep, actor, false, 0))
+				if (weapon_prepareattack(thiswep, actor, slot, false, 0))
 				{
 					actor.misc_bulletcounter = 0;
 					W_HeavyMachineGun_Attack_Auto(thiswep, actor, slot, fire);

@@ -95,27 +95,27 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, int slot, int fir
 	float r, sw, af;
 
 	sw = actor.switchweapon; // make it not detect weapon changes as reason to abort firing
-	af = ATTACK_FINISHED(actor);
+	af = ATTACK_FINISHED(actor, slot);
 	actor.switchweapon = actor.weapon;
-	ATTACK_FINISHED(actor) = time;
+	ATTACK_FINISHED(actor, slot) = time;
 	LOG_INFO(ftos(actor.WEP_AMMO(RIFLE)), "\n");
-	r = weapon_prepareattack(thiswep, actor, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
+	r = weapon_prepareattack(thiswep, actor, slot, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
 	if(actor.switchweapon == actor.weapon)
 		actor.switchweapon = sw;
 	if(r)
 	{
 		actor.rifle_bullethail_attackfunc();
-		weapon_thinkf(actor, actor.rifle_bullethail_frame, actor.rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
+		weapon_thinkf(actor, slot, actor.rifle_bullethail_frame, actor.rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
 		LOG_INFO("thinkf set\n");
 	}
 	else
 	{
-		ATTACK_FINISHED(actor) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
-		LOG_INFO("out of ammo... ", ftos(actor.weaponentity.state), "\n");
+		ATTACK_FINISHED(actor, slot) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
+		LOG_INFO("out of ammo... ", ftos(actor.weaponentity[slot].state), "\n");
 	}
 }
 
-void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animtime, float refire)
+void W_Rifle_BulletHail(int slot, float mode, void(void) AttackFunc, float fr, float animtime, float refire)
 {SELFPARAM();
 	// if we get here, we have at least one bullet to fire
 	AttackFunc();
@@ -126,12 +126,12 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 		self.rifle_bullethail_frame = fr;
 		self.rifle_bullethail_animtime = animtime;
 		self.rifle_bullethail_refire = refire;
-		weapon_thinkf(self, fr, animtime, W_Rifle_BulletHail_Continue);
+		weapon_thinkf(self, slot, fr, animtime, W_Rifle_BulletHail_Continue);
 	}
 	else
 	{
 		// just one shot
-		weapon_thinkf(self, fr, animtime, w_ready);
+		weapon_thinkf(self, slot, fr, animtime, w_ready);
 	}
 }
 
@@ -169,11 +169,11 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 			{
 				actor.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), actor.rifle_accumulator, time);
 				if(fire & 1)
-				if(weapon_prepareattack_check(thiswep, actor, false, WEP_CVAR_PRI(rifle, refire)))
+				if(weapon_prepareattack_check(thiswep, actor, slot, false, WEP_CVAR_PRI(rifle, refire)))
 				if(time >= actor.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
 				{
-					weapon_prepareattack_do(actor, false, WEP_CVAR_PRI(rifle, refire));
-					W_Rifle_BulletHail(WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
+					weapon_prepareattack_do(actor, slot, false, WEP_CVAR_PRI(rifle, refire));
+					W_Rifle_BulletHail(slot, WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
 					actor.rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
 				}
 				if(fire & 2)
@@ -185,11 +185,11 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 							w.wr_reload(w);
 						} else
 						{
-							if(weapon_prepareattack_check(thiswep, actor, true, WEP_CVAR_SEC(rifle, refire)))
+							if(weapon_prepareattack_check(thiswep, actor, slot, true, WEP_CVAR_SEC(rifle, refire)))
 							if(time >= actor.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
 							{
-								weapon_prepareattack_do(actor, true, WEP_CVAR_SEC(rifle, refire));
-								W_Rifle_BulletHail(WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
+								weapon_prepareattack_do(actor, slot, true, WEP_CVAR_SEC(rifle, refire));
+								W_Rifle_BulletHail(slot, WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
 								actor.rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
 							}
 						}

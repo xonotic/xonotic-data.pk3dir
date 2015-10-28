@@ -341,10 +341,10 @@ void W_Mortar_Attack2(Weapon thiswep)
 				w.wr_reload(w);
 			} else if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(mortar, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(mortar, refire)))
 				{
 					W_Mortar_Attack(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
 				}
 			}
 			else if(fire & 2)
@@ -364,10 +364,10 @@ void W_Mortar_Attack2(Weapon thiswep)
 					if(nadefound)
 						sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
 				}
-				else if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(mortar, refire)))
+				else if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(mortar, refire)))
 				{
 					W_Mortar_Attack2(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
 				}
 			}
 		}

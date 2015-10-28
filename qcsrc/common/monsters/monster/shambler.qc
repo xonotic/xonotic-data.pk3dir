@@ -77,8 +77,8 @@ void M_Shambler_Attack_Swing()
 	if(r && Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? self.anim_melee2 : self.anim_melee3), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW.m_id, true))
 	{
 		Monster_Delay(1, 0, 0.5, M_Shambler_Attack_Swing);
-		self.attack_finished_single += 0.5;
-		self.anim_finished = self.attack_finished_single;
+		self.attack_finished_single[0] += 0.5;
+		self.anim_finished = self.attack_finished_single[0];
 	}
 }
 
@@ -202,7 +202,7 @@ float M_Shambler_Attack(float attack_type, entity targ)
 			{
 				setanim(self, self.anim_melee2, true, true, false);
 				Monster_Delay(1, 0, 0.7, M_Shambler_Attack_Smash);
-				self.attack_finished_single = time + 1.1;
+				self.attack_finished_single[0] = time + 1.1;
 				self.anim_finished = time + 1.1;
 				self.state = MONSTER_ATTACK_MELEE; // kinda a melee attack
 				self.shambler_lastattack = time + 3 + random() * 1.5;
@@ -212,7 +212,7 @@ float M_Shambler_Attack(float attack_type, entity targ)
 			{
 				setanim(self, self.anim_shoot, true, true, false);
 				self.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general
-				self.attack_finished_single = time + 1.1;
+				self.attack_finished_single[0] = time + 1.1;
 				self.anim_finished = 1.1;
 				self.shambler_lastattack = time + 3 + random() * 1.5;
 				Monster_Delay(1, 0, 0.6, M_Shambler_Attack_Lightning);

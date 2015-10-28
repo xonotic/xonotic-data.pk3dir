@@ -162,10 +162,10 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 			{
 				if (fire & 1)
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(rpc, refire)))
+					if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(rpc, refire)))
 					{
 						W_RocketPropelledChainsaw_Attack(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
 					}
 				}
 

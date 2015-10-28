@@ -48,7 +48,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, int slot, int f
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     if (fire & 1)
-    if (weapon_prepareattack(thiswep, player, false, autocvar_g_vehicle_racer_cannon_refire)) {
+    if (weapon_prepareattack(thiswep, player, slot, false, autocvar_g_vehicle_racer_cannon_refire)) {
         if (veh) {
             veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
             veh.wait = time;
@@ -61,13 +61,13 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, int slot, int f
                                autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
                                DEATH_VH_WAKI_GUN.m_id, PROJECTILE_WAKICANNON, 0, true, true, player);
         bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
-        weapon_thinkf(player, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(player, slot, WFRAME_FIRE1, 0, w_ready);
     }
     if (fire & 2)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, 0.2)) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, false, 0.2)) {
         if (isPlayer) W_SetupShot_Dir(actor, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
         racer_fire_rocket(w_shotorg, w_shotdir, NULL);
-        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(actor, slot, WFRAME_FIRE2, 0, w_ready);
     }
 }
 

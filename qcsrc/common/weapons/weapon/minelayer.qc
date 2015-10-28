@@ -129,7 +129,8 @@ void W_MineLayer_Explode(void)
 		if(!w.wr_checkammo1(w))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
-			ATTACK_FINISHED(self) = time;
+			int slot = 0; // TODO: unhardcode
+			ATTACK_FINISHED(self, slot) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
 		setself(this);
@@ -155,7 +156,8 @@ void W_MineLayer_DoRemoteExplode(void)
 		if(!w.wr_checkammo1(w))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
-			ATTACK_FINISHED(self) = time;
+			int slot = 0; // TODO: unhardcode
+			ATTACK_FINISHED(self, slot) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
 		setself(this);
@@ -511,10 +513,10 @@ float W_MineLayer_PlacedMines(float detonate)
 			}
 			else if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(minelayer, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(minelayer, refire)))
 				{
 					W_MineLayer_Attack(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
 				}
 			}
 
@@ -530,8 +532,9 @@ float W_MineLayer_PlacedMines(float detonate)
 		}
 		METHOD(MineLayer, wr_checkammo1, bool(entity thiswep))
 		{
+			int slot = 0; // TODO: unhardcode
 			// don't switch while placing a mine
-			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER.m_id)
+			if(ATTACK_FINISHED(self, slot) <= time || self.weapon != WEP_MINE_LAYER.m_id)
 			{
 				float ammo_amount = self.WEP_AMMO(MINE_LAYER) >= WEP_CVAR(minelayer, ammo);
 				ammo_amount += self.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);

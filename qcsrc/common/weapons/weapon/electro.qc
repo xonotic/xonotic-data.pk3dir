@@ -410,11 +410,11 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, int slot, int fire)
 {SELFPARAM();
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)
-	if(weapon_prepareattack(thiswep, actor, true, -1))
+	if(weapon_prepareattack(thiswep, actor, slot, true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO);
 		self.electro_count -= 1;
-		weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+		weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
 	// WEAPONTODO: when the player releases the button, cut down the length of refire2?
@@ -471,20 +471,20 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, int slot, int fire)
 
 			if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(electro, refire)))
 				{
 						W_Electro_Attack_Bolt(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 				}
 			}
 			else if(fire & 2)
 			{
 				if(time >= actor.electro_secondarytime)
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(electro, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(electro, refire)))
 				{
 					W_Electro_Attack_Orb(thiswep);
 					actor.electro_count = WEP_CVAR_SEC(electro, count);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 					actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
 				}
 			}

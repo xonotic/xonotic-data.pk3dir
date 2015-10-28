@@ -1485,11 +1485,14 @@ void FixIntermissionClient(entity e)
 		e.solid = SOLID_NOT;
 		e.movetype = MOVETYPE_NONE;
 		e.takedamage = DAMAGE_NO;
-		if(e.weaponentity)
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			e.weaponentity.effects = EF_NODRAW;
-			if (e.weaponentity.weaponentity)
-				e.weaponentity.weaponentity.effects = EF_NODRAW;
+			if(e.weaponentity[slot])
+			{
+				e.weaponentity[slot].effects = EF_NODRAW;
+				if (e.weaponentity[slot].weaponentity[slot])
+					e.weaponentity[slot].weaponentity[slot].effects = EF_NODRAW;
+			}
 		}
 		if(IS_REAL_CLIENT(e))
 		{

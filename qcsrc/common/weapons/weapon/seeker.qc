@@ -617,18 +617,18 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(seeker, missile_refire)))
+					if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(seeker, missile_refire)))
 					{
 						W_Seeker_Attack();
-						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
 					}
 				}
 				else
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(seeker, tag_refire)))
+					if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(seeker, tag_refire)))
 					{
 						W_Seeker_Fire_Tag(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
 					}
 				}
 			}
@@ -637,18 +637,18 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(seeker, tag_refire)))
+					if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(seeker, tag_refire)))
 					{
 						W_Seeker_Fire_Tag(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
 					}
 				}
 				else
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(seeker, flac_refire)))
+					if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(seeker, flac_refire)))
 					{
 						W_Seeker_Fire_Flac(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
 					}
 				}
 			}

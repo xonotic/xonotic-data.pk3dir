@@ -19,7 +19,7 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, int slot, 
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR(machinegun, sustained_refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(machinegun, sustained_refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
@@ -27,7 +27,7 @@ METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, int slot, 
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
             actor.shot_radius = 500;
-            weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
+            weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
         }
         turret_tag_fire_update();
         entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_MLRS.m_id, PROJECTILE_ROCKET, TRUE, TRUE);

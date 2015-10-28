@@ -133,11 +133,13 @@ void fd_secret_done()
 		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 }
 
+.float door_finished;
+
 void secret_blocked()
 {SELFPARAM();
-	if (time < self.attack_finished_single)
+	if (time < self.door_finished)
 		return;
-	self.attack_finished_single = time + 0.5;
+	self.door_finished = time + 0.5;
 	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
 }
 
@@ -152,10 +154,10 @@ void secret_touch()
 {SELFPARAM();
 	if (!other.iscreature)
 		return;
-	if (self.attack_finished_single > time)
+	if (self.door_finished > time)
 		return;
 
-	self.attack_finished_single = time + 2;
+	self.door_finished = time + 2;
 
 	if (self.message)
 	{
