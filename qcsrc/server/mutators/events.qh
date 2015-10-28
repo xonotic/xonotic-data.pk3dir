@@ -813,4 +813,11 @@ MUTATOR_HOOKABLE(TurretValidateTarget, EV_TurretValidateTarget);
 MUTATOR_HOOKABLE(TurretThink, EV_TurretThink);
 
 MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
+
+/** */
+#define EV_PrepareExplosionByDamage(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, frag_attacker) \
+    /**/
+MUTATOR_HOOKABLE(PrepareExplosionByDamage, EV_PrepareExplosionByDamage);
 #endif
