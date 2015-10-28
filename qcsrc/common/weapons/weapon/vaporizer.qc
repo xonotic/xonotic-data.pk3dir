@@ -244,7 +244,7 @@ void W_RocketMinsta_Attack3 (void)
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
 		}
-		METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			// if the laser uses load, we also consider its ammo for reloading

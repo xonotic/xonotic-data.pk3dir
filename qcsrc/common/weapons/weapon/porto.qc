@@ -306,7 +306,7 @@ void W_Porto_Attack(float type)
 		{
 			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
-		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(WEP_CVAR(porto, secondary))
 			{

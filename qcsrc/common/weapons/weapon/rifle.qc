@@ -90,7 +90,7 @@ void W_Rifle_Attack2(void)
 .float rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
-void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, int fire)
+void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, int slot, int fire)
 {
 	float r, sw, af;
 
@@ -160,7 +160,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 				}
 			}
 		}
-		METHOD(Rifle, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Rifle, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(autocvar_g_balance_rifle_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);

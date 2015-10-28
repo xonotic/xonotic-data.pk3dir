@@ -16,7 +16,7 @@ REGISTER_WEAPON(TESLA, NEW(TeslaCoilTurretAttack));
 #ifdef SVQC
 
 entity toast(entity from, float range, float damage);
-METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, int fire)) {
+METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
     if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {

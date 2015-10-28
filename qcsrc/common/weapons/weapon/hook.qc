@@ -22,7 +22,7 @@ CLASS(OffhandHook, OffhandWeapon)
     METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
     {
     	Weapon wep = WEP_HOOK;
-    	wep.wr_think(wep, actor, key_pressed ? 1 : 0);
+    	wep.wr_think(wep, actor, 1, key_pressed ? 1 : 0);
     }
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
@@ -174,7 +174,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-		METHOD(Hook, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Hook, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if (fire & 1) {
 				if(!actor.hook)

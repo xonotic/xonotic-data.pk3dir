@@ -15,7 +15,7 @@ REGISTER_WEAPON(TUR_MLRS, NEW(MLRSTurretAttack));
 
 #ifdef SVQC
 
-METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(MLRSTurretAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)

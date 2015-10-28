@@ -229,7 +229,7 @@ void W_Shockwave_Melee_Think(void)
 	}
 }
 
-void W_Shockwave_Melee(Weapon thiswep, entity actor, int fire)
+void W_Shockwave_Melee(Weapon thiswep, entity actor, int slot, int fire)
 {
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
@@ -675,7 +675,7 @@ void W_Shockwave_Attack(void)
 			else
 				{ self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false); }
 		}
-		METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(fire & 1)
 			{

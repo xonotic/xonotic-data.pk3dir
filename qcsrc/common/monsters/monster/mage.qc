@@ -41,7 +41,7 @@ REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 
 void M_Mage_Attack_Spike(vector dir);
 void M_Mage_Attack_Push();
-METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, int fire)) {
+METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, int slot, int fire)) {
     if (fire & 1)
     if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
@@ -363,7 +363,7 @@ float M_Mage_Attack(float attack_type, entity targ)
 			if(random() <= 0.7)
 			{
 				Weapon wep = WEP_MAGE_SPIKE;
-				wep.wr_think(wep, self, 2);
+				wep.wr_think(wep, self, 0, 2);
 				return true;
 			}
 
@@ -385,7 +385,7 @@ float M_Mage_Attack(float attack_type, entity targ)
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
 					Weapon wep = WEP_MAGE_SPIKE;
-					wep.wr_think(wep, self, 1);
+					wep.wr_think(wep, self, 0, 1);
 					return true;
 				}
 			}

@@ -321,7 +321,7 @@ float racer_frame()
 		// Fix z-aim (for chase mode)
 		crosshair_trace(player);
 		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
-		wep1.wr_think(wep1, self, 1);
+		wep1.wr_think(wep1, self, 0, 1);
 	}
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)

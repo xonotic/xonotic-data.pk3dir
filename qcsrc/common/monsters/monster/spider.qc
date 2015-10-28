@@ -50,7 +50,7 @@ float autocvar_g_monster_spider_attack_bite_delay;
 
 void M_Spider_Attack_Web();
 
-METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, int fire)) {
+METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
     if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, false, autocvar_g_monster_spider_attack_web_delay)) {
@@ -160,12 +160,12 @@ bool M_Spider_Attack(int attack_type, entity targ)
 		Weapon wep = WEP_SPIDER_ATTACK;
 		case MONSTER_ATTACK_MELEE:
 		{
-			wep.wr_think(wep, self, 2);
+			wep.wr_think(wep, self, 0, 2);
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			wep.wr_think(wep, self, 1);
+			wep.wr_think(wep, self, 0, 1);
 			return true;
 		}
 	}

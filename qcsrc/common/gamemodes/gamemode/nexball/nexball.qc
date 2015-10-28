@@ -854,7 +854,7 @@ float ball_customize()
 	return true;
 }
 
-	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, int fire))
+	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, int slot, int fire))
 	{
 		if(fire & 1)
 			if(weapon_prepareattack(thiswep, actor, false, autocvar_g_balance_nexball_primary_refire))

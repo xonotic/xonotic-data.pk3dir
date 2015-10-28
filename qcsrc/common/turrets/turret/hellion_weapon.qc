@@ -19,7 +19,7 @@ float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
 void turret_hellion_missile_think();
-METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, int fire)) {
+METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
     if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {

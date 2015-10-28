@@ -161,7 +161,7 @@ void W_Blaster_Attack(
 				{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 		}
 
-		METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, int fire))
+		METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, int slot, int fire))
 		{
 			if(fire & 1)
 			{

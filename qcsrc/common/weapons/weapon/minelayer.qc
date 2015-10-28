@@ -499,7 +499,7 @@ float W_MineLayer_PlacedMines(float detonate)
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
 		}
-		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{

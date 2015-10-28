@@ -181,7 +181,7 @@ void W_Shotgun_Melee_Think(void)
 	}
 }
 
-void W_Shotgun_Attack2(Weapon thiswep, entity actor, int fire)
+void W_Shotgun_Attack2(Weapon thiswep, entity actor, int slot, int fire)
 {
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
@@ -195,14 +195,14 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, int fire)
 }
 
 // alternate secondary weapon frames
-void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, int fire)
+void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, int slot, int fire)
 {
 	Weapon w = get_weaponinfo(actor.weapon);
 	if (!w.wr_checkammo2(w))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-		w_ready(thiswep, actor, fire);
+		w_ready(thiswep, actor, slot, fire);
 		return;
 	}
 
@@ -210,14 +210,14 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, int fire)
 	W_Shotgun_Attack(WEP_SHOTGUN, true); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
-void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, int fire)
+void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, int slot, int fire)
 {
 	Weapon w = get_weaponinfo(actor.weapon);
 	if (!w.wr_checkammo2(w))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-		w_ready(thiswep, actor, fire);
+		w_ready(thiswep, actor, slot, fire);
 		return;
 	}
 
@@ -234,7 +234,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, int fire)
 			else
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 		}
-		METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(WEP_CVAR(shotgun, reload_ammo) && actor.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{

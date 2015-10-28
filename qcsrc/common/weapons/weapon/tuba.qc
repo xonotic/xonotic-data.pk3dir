@@ -379,7 +379,7 @@ void W_Tuba_NoteOn(float hittype)
 					self.BUTTON_ATCK2 = 1;
 			}
 		}
-		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(fire & 1)
 			if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(tuba, refire)))

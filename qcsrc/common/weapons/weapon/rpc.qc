@@ -153,7 +153,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 		}
-		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
 				Weapon w = get_weaponinfo(actor.weapon);

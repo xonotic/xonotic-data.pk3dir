@@ -18,7 +18,7 @@ void beam_think();
 
 .int fireflag;
 
-METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)

@@ -44,6 +44,6 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, float secondary, f
 
 void weapon_prepareattack_do(entity actor, float secondary, float attacktime);
 
-void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int fire) func);
+void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int slot, int fire) func);
 
 #endif

@@ -520,7 +520,7 @@ void W_Devastator_Attack(Weapon thiswep)
 			}
 		}
 		#endif
-		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);

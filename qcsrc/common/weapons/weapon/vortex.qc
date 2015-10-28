@@ -143,7 +143,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 					self.BUTTON_ATCK2 = true;
 			}
 		}
-		METHOD(Vortex, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Vortex, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(WEP_CVAR(vortex, charge) && actor.vortex_charge < WEP_CVAR(vortex, charge_limit))
 				actor.vortex_charge = min(1, actor.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);

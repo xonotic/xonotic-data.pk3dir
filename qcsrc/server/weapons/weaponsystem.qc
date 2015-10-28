@@ -92,7 +92,7 @@ float W_WeaponSpeedFactor()
 }
 
 
-void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int fire) func);
+void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int slot, int fire) func);
 
 bool CL_Weaponentity_CustomizeEntityForClient()
 {
@@ -466,7 +466,7 @@ void CL_SpawnWeaponentity(entity e)
 }
 
 // Weapon subs
-void w_clear(Weapon thiswep, entity actor, int fire)
+void w_clear(Weapon thiswep, entity actor, int slot, int fire)
 {
 	if (actor.weapon != -1)
 	{
@@ -480,7 +480,7 @@ void w_clear(Weapon thiswep, entity actor, int fire)
 	}
 }
 
-void w_ready(Weapon thiswep, entity actor, int fire)
+void w_ready(Weapon thiswep, entity actor, int slot, int fire)
 {
 	if (actor.weaponentity) actor.weaponentity.state = WS_READY;
 	weapon_thinkf(actor, WFRAME_IDLE, 1000000, w_ready);
@@ -592,7 +592,7 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, bool secondary, float at
 	return false;
 }
 
-void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int fire) func)
+void weapon_thinkf(entity actor, float fr, float t, void(Weapon thiswep, entity actor, int slot, int fire) func)
 {
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
@@ -687,7 +687,7 @@ void W_WeaponFrame(entity actor)
 		if (actor.weaponentity.state != WS_CLEAR)
 		{
 			Weapon wpn = get_weaponinfo(actor.weapon);
-			w_ready(wpn, actor, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+			w_ready(wpn, actor, 0, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
 			return;
 		}
 	}
@@ -803,7 +803,7 @@ void W_WeaponFrame(entity actor)
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;
 				block_weapon = (actor.weapon == h.m_id && (actor.BUTTON_ATCK || key_pressed));
-				h.wr_think(h, actor, block_weapon ? 1 : 0);
+				h.wr_think(h, actor, 0, block_weapon ? 1 : 0);
 			}
 		}
 
@@ -812,7 +812,7 @@ void W_WeaponFrame(entity actor)
 			if (w)
 			{
 				Weapon e = get_weaponinfo(actor.weapon);
-				e.wr_think(e, actor, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+				e.wr_think(e, actor, 0, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
 			}
 			else
 			{
@@ -829,7 +829,7 @@ void W_WeaponFrame(entity actor)
 				v_right = ri;
 				v_up = up;
 				Weapon wpn = get_weaponinfo(actor.weapon);
-				actor.weapon_think(wpn, actor, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+				actor.weapon_think(wpn, actor, 0, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
 			}
 			else
 			{
@@ -909,7 +909,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use)
 .float reload_complain;
 .string reload_sound;
 
-void W_ReloadedAndReady(Weapon thiswep, entity actor, int fire)
+void W_ReloadedAndReady(Weapon thiswep, entity actor, int slot, int fire)
 {
 	// finish the reloading process, and do the ammo transfer
 
@@ -936,7 +936,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, int fire)
 	// ATTACK_FINISHED(actor) -= actor.reload_time - 1;
 
 	Weapon wpn = get_weaponinfo(actor.weapon);
-	w_ready(wpn, actor, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+	w_ready(wpn, actor, slot, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
 }
 
 void W_Reload(entity actor, float sent_ammo_min, string sent_sound)

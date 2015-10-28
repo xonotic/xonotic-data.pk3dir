@@ -15,7 +15,7 @@ REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
 
 #ifdef SVQC
 
-METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, int fire)) {
+METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
 	bool isPlayer = IS_PLAYER(actor);
 	if (fire & 1)
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {

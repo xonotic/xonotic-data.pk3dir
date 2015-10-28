@@ -407,7 +407,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 			else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
 		}
-		METHOD(Hagar, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Hagar, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			float loadable_secondary;
 			loadable_secondary = (WEP_CVAR_SEC(hagar, load) && WEP_CVAR(hagar, secondary));

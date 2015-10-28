@@ -42,7 +42,7 @@ float autocvar_g_vehicle_racer_rocket_climbspeed;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle;
 
 void racer_fire_rocket(vector org, vector dir, entity trg);
-METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;

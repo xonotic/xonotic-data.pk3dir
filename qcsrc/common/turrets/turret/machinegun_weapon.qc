@@ -17,7 +17,7 @@ REGISTER_WEAPON(TUR_MACHINEGUN, NEW(MachineGunTurretAttack));
 
 void W_MachineGun_MuzzleFlash();
 
-METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, int fire))
+METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)

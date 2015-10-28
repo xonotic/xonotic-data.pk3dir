@@ -656,7 +656,7 @@ void Arc_Smoke()
 				);
 			}
 		}
-		METHOD(Arc, wr_think, void(entity thiswep, entity actor, int fire))
+		METHOD(Arc, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			Arc_Player_SetHeat(actor);
 			Arc_Smoke();
