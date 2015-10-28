@@ -42,12 +42,12 @@ float autocvar_g_vehicle_racer_rocket_climbspeed;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle;
 
 void racer_fire_rocket(vector org, vector dir, entity trg);
-METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
-    if (fire1)
+    if (fire & 1)
     if (weapon_prepareattack(thiswep, player, false, autocvar_g_vehicle_racer_cannon_refire)) {
         if (veh) {
             veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
@@ -63,7 +63,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, boo
         bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
         weapon_thinkf(player, WFRAME_FIRE1, 0, w_ready);
     }
-    if (fire2)
+    if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, actor, false, 0.2)) {
         if (isPlayer) W_SetupShot_Dir(actor, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
         racer_fire_rocket(w_shotorg, w_shotdir, NULL);

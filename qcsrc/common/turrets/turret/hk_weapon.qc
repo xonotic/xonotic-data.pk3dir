@@ -23,10 +23,10 @@ float autocvar_g_turrets_unit_hk_shot_speed_max;
 float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
 void turret_hk_missile_think();
-METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, int fire))
 {
 	bool isPlayer = IS_PLAYER(actor);
-	if (fire1)
+	if (fire & 1)
 	if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
 		if (isPlayer) {
             turret_initparams(actor);

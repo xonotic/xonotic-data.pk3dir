@@ -226,31 +226,31 @@ void W_Fireball_AttackEffect(float i, vector f_diff)
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
 
-void W_Fireball_Attack1_Frame4(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame4(Weapon thiswep, entity actor, int fire)
 {
 	W_Fireball_Attack1();
 	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), w_ready);
 }
 
-void W_Fireball_Attack1_Frame3(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame3(Weapon thiswep, entity actor, int fire)
 {
 	W_Fireball_AttackEffect(0, '+1.25 +3.75 0');
 	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame4);
 }
 
-void W_Fireball_Attack1_Frame2(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame2(Weapon thiswep, entity actor, int fire)
 {
 	W_Fireball_AttackEffect(0, '-1.25 +3.75 0');
 	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame3);
 }
 
-void W_Fireball_Attack1_Frame1(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame1(Weapon thiswep, entity actor, int fire)
 {
 	W_Fireball_AttackEffect(1, '+1.25 -3.75 0');
 	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame2);
 }
 
-void W_Fireball_Attack1_Frame0(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Fireball_Attack1_Frame0(Weapon thiswep, entity actor, int fire)
 {SELFPARAM();
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
 	sound(self, CH_WEAPON_SINGLE, SND_FIREBALL_PREFIRE2, VOL_BASE, ATTEN_NORM);
@@ -371,18 +371,18 @@ void W_Fireball_Attack2(void)
 				}
 			}
 		}
-		METHOD(Fireball, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Fireball, wr_think, void(entity thiswep, entity actor, int fire))
 		{
-			if(fire1)
+			if(fire & 1)
 			{
 				if(time >= actor.fireball_primarytime)
 				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(fireball, refire)))
 				{
-					W_Fireball_Attack1_Frame0(thiswep, actor, fire1, fire2);
+					W_Fireball_Attack1_Frame0(thiswep, actor, fire);
 					actor.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor();
 				}
 			}
-			else if(fire2)
+			else if(fire & 2)
 			{
 				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(fireball, refire)))
 				{

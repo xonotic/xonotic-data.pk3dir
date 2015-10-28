@@ -22,7 +22,7 @@ CLASS(OffhandHook, OffhandWeapon)
     METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
     {
     	Weapon wep = WEP_HOOK;
-    	wep.wr_think(wep, actor, key_pressed, false);
+    	wep.wr_think(wep, actor, key_pressed ? 1 : 0);
     }
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
@@ -174,9 +174,9 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-		METHOD(Hook, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Hook, wr_think, void(entity thiswep, entity actor, int fire))
 		{
-			if (fire1) {
+			if (fire & 1) {
 				if(!actor.hook)
 				if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
 				if(time > actor.hook_refire)
@@ -192,7 +192,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 				actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			}
 
-			if(fire2)
+			if(fire & 2)
 			{
 				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hook, refire)))
 				{

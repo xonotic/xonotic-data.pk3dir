@@ -229,7 +229,7 @@ void W_Shockwave_Melee_Think(void)
 	}
 }
 
-void W_Shockwave_Melee(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Shockwave_Melee(Weapon thiswep, entity actor, int fire)
 {
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
@@ -675,9 +675,9 @@ void W_Shockwave_Attack(void)
 			else
 				{ self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false); }
 		}
-		METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, int fire))
 		{
-			if(fire1)
+			if(fire & 1)
 			{
 				if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
 				{
@@ -689,7 +689,7 @@ void W_Shockwave_Attack(void)
 					}
 				}
 			}
-			else if(fire2)
+			else if(fire & 2)
 			{
 				//if(actor.clip_load >= 0) // we are not currently reloading
 				if(!actor.crouch) // no crouchmelee please

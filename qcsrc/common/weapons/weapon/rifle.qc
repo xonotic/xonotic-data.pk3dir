@@ -90,7 +90,7 @@ void W_Rifle_Attack2(void)
 .float rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
-void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, int fire)
 {
 	float r, sw, af;
 
@@ -160,7 +160,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 				}
 			}
 		}
-		METHOD(Rifle, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Rifle, wr_think, void(entity thiswep, entity actor, int fire))
 		{
 			if(autocvar_g_balance_rifle_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
@@ -168,7 +168,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 			} else
 			{
 				actor.rifle_accumulator = bound(time - WEP_CVAR(rifle, bursttime), actor.rifle_accumulator, time);
-				if(fire1)
+				if(fire & 1)
 				if(weapon_prepareattack_check(thiswep, actor, false, WEP_CVAR_PRI(rifle, refire)))
 				if(time >= actor.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
 				{
@@ -176,7 +176,7 @@ void W_Rifle_BulletHail(float mode, void(void) AttackFunc, float fr, float animt
 					W_Rifle_BulletHail(WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
 					actor.rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
 				}
-				if(fire2)
+				if(fire & 2)
 				{
 					if(WEP_CVAR(rifle, secondary))
 					{

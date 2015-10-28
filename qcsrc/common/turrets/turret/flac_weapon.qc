@@ -16,9 +16,9 @@ REGISTER_WEAPON(FLAC, NEW(FlacAttack));
 #ifdef SVQC
 
 void turret_flac_projectile_think_explode();
-METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
-    if (fire1)
+    if (fire & 1)
     if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);

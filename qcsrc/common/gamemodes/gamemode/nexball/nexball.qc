@@ -854,9 +854,9 @@ float ball_customize()
 	return true;
 }
 
-	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, bool fire1, bool fire2))
+	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, int fire))
 	{
-		if(fire1)
+		if(fire & 1)
 			if(weapon_prepareattack(thiswep, actor, false, autocvar_g_balance_nexball_primary_refire))
 				if(autocvar_g_nexball_basketball_meter)
 				{
@@ -870,14 +870,14 @@ float ball_customize()
 					W_Nexball_Attack(-1);
 					weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 				}
-		if(fire2)
+		if(fire & 2)
 			if(weapon_prepareattack(thiswep, actor, true, autocvar_g_balance_nexball_secondary_refire))
 			{
 				W_Nexball_Attack2();
 				weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
 			}
 
-		if(!fire1 && self.metertime && self.ballcarried)
+		if(!(fire & 1) && self.metertime && self.ballcarried)
 		{
 			W_Nexball_Attack(time - self.metertime);
 			// DropBall or stealing will set metertime back to 0

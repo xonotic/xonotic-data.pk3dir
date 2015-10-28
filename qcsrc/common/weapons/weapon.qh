@@ -47,7 +47,7 @@ CLASS(Weapon, Object)
     /** (SERVER) setup weapon data */
     METHOD(Weapon, wr_setup, void(Weapon this)) {}
     /** (SERVER) logic to run every frame */
-    METHOD(Weapon, wr_think, void(Weapon this, entity actor, bool fire1, bool fire2)) {}
+    METHOD(Weapon, wr_think, void(Weapon this, entity actor, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */
     METHOD(Weapon, wr_checkammo1, bool(Weapon this)) {return false;}
     /** (SERVER) checks ammo for weapon second */

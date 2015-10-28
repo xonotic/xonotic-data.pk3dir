@@ -406,7 +406,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Electro_CheckAttack(Weapon thiswep, entity actor, int fire)
 {SELFPARAM();
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)
@@ -418,7 +418,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
 		return;
 	}
 	// WEAPONTODO: when the player releases the button, cut down the length of refire2?
-	w_ready(thiswep, actor, fire1, fire2);
+	w_ready(thiswep, actor, fire);
 }
 
 .float bot_secondary_electromooth;
@@ -451,7 +451,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
 				}
 			}
 		}
-		METHOD(Electro, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Electro, wr_think, void(entity thiswep, entity actor, int fire))
 		{
 			if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
 			{
@@ -469,7 +469,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
 				}
 			}
 
-			if(fire1)
+			if(fire & 1)
 			{
 				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire)))
 				{
@@ -477,7 +477,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
 						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 				}
 			}
-			else if(fire2)
+			else if(fire & 2)
 			{
 				if(time >= actor.electro_secondarytime)
 				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(electro, refire)))

@@ -334,12 +334,12 @@ void W_Mortar_Attack2(Weapon thiswep)
 			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime))));
 			wepinfo_ter_dps = 0;
 			*/
-		METHOD(Mortar, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Mortar, wr_think, void(entity thiswep, entity actor, int fire))
 		{
 			if(autocvar_g_balance_mortar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
-			} else if(fire1)
+			} else if(fire & 1)
 			{
 				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(mortar, refire)))
 				{
@@ -347,7 +347,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
 				}
 			}
-			else if(fire2)
+			else if(fire & 2)
 			{
 				if(WEP_CVAR_SEC(mortar, remote_detonateprimary))
 				{

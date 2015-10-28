@@ -50,9 +50,9 @@ float autocvar_g_monster_spider_attack_bite_delay;
 
 void M_Spider_Attack_Web();
 
-METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
-    if (fire1)
+    if (fire & 1)
     if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, false, autocvar_g_monster_spider_attack_web_delay)) {
 		if (!isPlayer) {
 			actor.spider_web_delay = time + 3;
@@ -67,7 +67,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, bool fir
         weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
         return;
     }
-    if (fire2)
+    if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, actor, true, 0.5)) {
     	if (isPlayer) {
     		actor.enemy = Monster_FindTarget(actor);
@@ -160,12 +160,12 @@ bool M_Spider_Attack(int attack_type, entity targ)
 		Weapon wep = WEP_SPIDER_ATTACK;
 		case MONSTER_ATTACK_MELEE:
 		{
-			wep.wr_think(wep, self, false, true);
+			wep.wr_think(wep, self, 2);
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			wep.wr_think(wep, self, true, false);
+			wep.wr_think(wep, self, 1);
 			return true;
 		}
 	}

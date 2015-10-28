@@ -16,9 +16,9 @@ REGISTER_WEAPON(EWHEEL, NEW(EWheelAttack));
 #ifdef SVQC
 
 void turret_initparams(entity);
-METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
-    if (fire1)
+    if (fire & 1)
     if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);

@@ -392,7 +392,7 @@ float raptor_frame()
 	if(player.BUTTON_ATCK)
 	if (wep1.wr_checkammo1(wep1))
 	{
-		wep1.wr_think(wep1, self, true, false);
+		wep1.wr_think(wep1, self, 1);
 	}
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
@@ -411,7 +411,7 @@ float raptor_frame()
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_bombs_refire)
 		if(player.BUTTON_ATCK2)
 		{
-			wep2a.wr_think(wep2a, self, false, true);
+			wep2a.wr_think(wep2a, self, 2);
 			raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
 			raptor.lip   = time;
 		}
@@ -422,7 +422,7 @@ float raptor_frame()
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_flare_refire)
 		if(player.BUTTON_ATCK2)
 		{
-			wep2b.wr_think(wep2b, self, false, true);
+			wep2b.wr_think(wep2b, self, 2);
 			raptor.delay = time + autocvar_g_vehicle_raptor_flare_refire;
 			raptor.lip   = time;
 		}

@@ -656,13 +656,13 @@ void Arc_Smoke()
 				);
 			}
 		}
-		METHOD(Arc, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Arc, wr_think, void(entity thiswep, entity actor, int fire))
 		{
 			Arc_Player_SetHeat(actor);
 			Arc_Smoke();
 
 			if (time >= actor.arc_overheat)
-			if (fire1 || fire2 || actor.arc_beam.beam_bursting)
+			if ((fire & 1) || (fire & 2) || actor.arc_beam.beam_bursting)
 			{
 
 				if(actor.arc_BUTTON_ATCK_prev)
@@ -677,9 +677,9 @@ void Arc_Smoke()
 
 				if((!actor.arc_beam) || wasfreed(actor.arc_beam))
 				{
-					if(weapon_prepareattack(thiswep, actor, fire2, 0))
+					if(weapon_prepareattack(thiswep, actor, boolean(fire & 2), 0))
 					{
-						W_Arc_Beam(fire2);
+						W_Arc_Beam(boolean(fire & 2));
 
 						if(!actor.arc_BUTTON_ATCK_prev)
 						{
@@ -701,7 +701,7 @@ void Arc_Smoke()
 			actor.arc_BUTTON_ATCK_prev = false;
 
 			#if 0
-			if(fire2)
+			if(fire & 2)
 			if(weapon_prepareattack(thiswep, actor, true, autocvar_g_balance_arc_secondary_refire))
 			{
 				W_Arc_Attack2();

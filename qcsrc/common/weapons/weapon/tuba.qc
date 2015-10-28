@@ -379,16 +379,16 @@ void W_Tuba_NoteOn(float hittype)
 					self.BUTTON_ATCK2 = 1;
 			}
 		}
-		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, int fire))
 		{
-			if(fire1)
+			if(fire & 1)
 			if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(0);
 				//weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
 				weapon_thinkf(actor, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
-			if(fire2)
+			if(fire & 2)
 			if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(HITTYPE_SECONDARY);
@@ -397,7 +397,7 @@ void W_Tuba_NoteOn(float hittype)
 			}
 			if(actor.tuba_note)
 			{
-				if(!fire1 && !fire2)
+				if(!(fire & 1) && !(fire & 2))
 				{
 					WITH(entity, self, actor.tuba_note, W_Tuba_NoteOff());
 				}

@@ -46,7 +46,7 @@ CLASS(Turret, Object)
     /** (SERVER) called when turret attacks */
     METHOD(Turret, tr_attack, void(Turret this)) {
         Weapon w = this.m_weapon;
-        w.wr_think(w, self, true, false);
+        w.wr_think(w, self, 1);
     }
     /** (ALL) */
     METHOD(Turret, tr_config, void(Turret this)) {

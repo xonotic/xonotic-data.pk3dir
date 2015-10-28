@@ -51,13 +51,13 @@ float autocvar_g_vehicle_raptor_bomblet_radius;
 float autocvar_g_vehicle_raptor_bomblet_force;
 float autocvar_g_vehicle_raptor_bomblet_explode_delay;
 
-METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     // 1 [wait] 1 [wait] 2 [wait] 2 [wait] [wait]
     float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + veh.misc_bulletcounter == 4);
-    if (fire1)
+    if (fire & 1)
     if (weapon_prepareattack(thiswep, player, false, t)) {
         if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
         vector org = w_shotorg;
@@ -88,11 +88,11 @@ METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
 float autocvar_g_vehicle_raptor_bombs_refire;
 
 void raptor_bombdrop();
-METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
-    if (fire2)
+    if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, player, true, autocvar_g_vehicle_raptor_bombs_refire)) {
         if (veh) setself(veh);
         raptor_bombdrop();
@@ -109,11 +109,11 @@ void raptor_flare_think();
 void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void raptor_flare_touch();
 
-METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
-    if (fire2)
+    if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, player, true, autocvar_g_vehicle_raptor_flare_refire)) {
         for(int i = 0; i < 3; ++i) {
             entity _flare = spawn();

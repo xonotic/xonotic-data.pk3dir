@@ -45,11 +45,11 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(WEP_HMG.m_id); }
 
-void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, int fire)
 {
 	if (!actor.BUTTON_ATCK)
 	{
-		w_ready(thiswep, actor, fire1, fire2);
+		w_ready(thiswep, actor, fire);
 		return;
 	}
 
@@ -58,7 +58,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, boo
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-		w_ready(thiswep, actor, fire1, fire2);
+		w_ready(thiswep, actor, fire);
 		return;
 	}
 
@@ -96,18 +96,18 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, boo
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 		}
-		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, int fire))
 		{
 			if(WEP_CVAR(hmg, reload_ammo) && actor.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else
 			{
-				if (fire1)
+				if (fire & 1)
 				if (weapon_prepareattack(thiswep, actor, false, 0))
 				{
 					actor.misc_bulletcounter = 0;
-					W_HeavyMachineGun_Attack_Auto(thiswep, actor, fire1, fire2);
+					W_HeavyMachineGun_Attack_Auto(thiswep, actor, fire);
 				}
 			}
 		}

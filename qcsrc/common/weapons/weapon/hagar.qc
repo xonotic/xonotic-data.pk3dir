@@ -407,7 +407,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 			else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
 		}
-		METHOD(Hagar, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Hagar, wr_think, void(entity thiswep, entity actor, int fire))
 		{
 			float loadable_secondary;
 			loadable_secondary = (WEP_CVAR_SEC(hagar, load) && WEP_CVAR(hagar, secondary));
@@ -417,7 +417,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 			if(autocvar_g_balance_hagar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
-			} else if(fire1 && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
+			} else if((fire & 1) && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
 				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(hagar, refire)))
 				{
@@ -425,7 +425,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep)
 					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
 				}
 			}
-			else if(fire2 && !loadable_secondary && WEP_CVAR(hagar, secondary))
+			else if((fire & 2) && !loadable_secondary && WEP_CVAR(hagar, secondary))
 			{
 				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hagar, refire)))
 				{

@@ -499,7 +499,7 @@ float W_MineLayer_PlacedMines(float detonate)
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
 		}
-		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, int fire))
 		{
 			if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
@@ -509,7 +509,7 @@ float W_MineLayer_PlacedMines(float detonate)
 					w.wr_reload(w);
 				}
 			}
-			else if(fire1)
+			else if(fire & 1)
 			{
 				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(minelayer, refire)))
 				{
@@ -518,7 +518,7 @@ float W_MineLayer_PlacedMines(float detonate)
 				}
 			}
 
-			if(fire2)
+			if(fire & 2)
 			{
 				if(W_MineLayer_PlacedMines(true))
 					sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);

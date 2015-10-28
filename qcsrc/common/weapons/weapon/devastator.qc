@@ -520,13 +520,13 @@ void W_Devastator_Attack(Weapon thiswep)
 			}
 		}
 		#endif
-		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, int fire))
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else {
-				if(fire1)
+				if(fire & 1)
 				{
 					if(actor.rl_release || WEP_CVAR(devastator, guidestop))
 					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(devastator, refire)))
@@ -539,7 +539,7 @@ void W_Devastator_Attack(Weapon thiswep)
 				else
 					actor.rl_release = 1;
 
-				if(fire2)
+				if(fire & 2)
 				if(actor.switchweapon == WEP_DEVASTATOR.m_id)
 				{
 					entity rock;
