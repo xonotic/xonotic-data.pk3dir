@@ -1,4 +1,5 @@
 #if defined(CSQC)
+	#include "../client/announcer.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
