@@ -574,34 +574,34 @@ void W_Crylink_Attack2(Weapon thiswep)
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
 		}
-		METHOD(Crylink, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Crylink, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(autocvar_g_balance_crylink_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			}
 
-			if(fire1)
+			if(fire & 1)
 			{
 				if(actor.crylink_waitrelease != 1)
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(crylink, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(crylink, refire)))
 				{
 					W_Crylink_Attack(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
 				}
 			}
 
-			if(fire2 && autocvar_g_balance_crylink_secondary)
+			if((fire & 2) && autocvar_g_balance_crylink_secondary)
 			{
 				if(actor.crylink_waitrelease != 2)
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(crylink, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(crylink, refire)))
 				{
 					W_Crylink_Attack2(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);
 				}
 			}
 
-			if((actor.crylink_waitrelease == 1 && !fire1) || (actor.crylink_waitrelease == 2 && !fire2))
+			if((actor.crylink_waitrelease == 1 && !(fire & 1)) || (actor.crylink_waitrelease == 2 && !(fire & 2)))
 			{
 				if(!actor.crylink_lastgroup || time > actor.crylink_lastgroup.teleport_time)
 				{

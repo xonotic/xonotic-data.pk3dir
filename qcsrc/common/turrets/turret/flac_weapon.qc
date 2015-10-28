@@ -16,10 +16,10 @@ REGISTER_WEAPON(FLAC, NEW(FlacAttack));
 #ifdef SVQC
 
 void turret_flac_projectile_think_explode();
-METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
-    if (fire1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
+    if (fire & 1)
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
@@ -27,7 +27,7 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
             actor.tur_impacttime = 10;
-            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
 
         turret_tag_fire_update();

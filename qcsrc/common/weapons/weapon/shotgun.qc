@@ -181,10 +181,10 @@ void W_Shotgun_Melee_Think(void)
 	}
 }
 
-void W_Shotgun_Attack2(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Shotgun_Attack2(Weapon thiswep, entity actor, int slot, int fire)
 {
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTEN_NORM);
-	weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
+	weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
@@ -195,34 +195,34 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, bool fire1, bool fire2)
 }
 
 // alternate secondary weapon frames
-void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, int slot, int fire)
 {
 	Weapon w = get_weaponinfo(actor.weapon);
 	if (!w.wr_checkammo2(w))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-		w_ready(thiswep, actor, fire1, fire2);
+		w_ready(thiswep, actor, slot, fire);
 		return;
 	}
 
 	sound(actor, CH_WEAPON_SINGLE, SND_Null, VOL_BASE, ATTN_NORM); // kill previous sound
 	W_Shotgun_Attack(WEP_SHOTGUN, true); // actually is secondary, but we trick the last shot into playing full reload sound
-	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
+	weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
-void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, int slot, int fire)
 {
 	Weapon w = get_weaponinfo(actor.weapon);
 	if (!w.wr_checkammo2(w))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-		w_ready(thiswep, actor, fire1, fire2);
+		w_ready(thiswep, actor, slot, fire);
 		return;
 	}
 
 	W_Shotgun_Attack(WEP_SHOTGUN, false);
-	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
+	weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
 .float shotgun_primarytime;
@@ -234,7 +234,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, bool fire1, bool fir
 			else
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 		}
-		METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(WEP_CVAR(shotgun, reload_ammo) && actor.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{
@@ -246,27 +246,27 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, bool fire1, bool fir
 			}
 			else
 			{
-				if(fire1)
+				if(fire & 1)
 				{
 					if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 					{
-						if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(shotgun, animtime)))
+						if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(shotgun, animtime)))
 						{
 							W_Shotgun_Attack(thiswep, true);
 							actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
-							weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
+							weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
 						}
 					}
 				}
-				else if(fire2 && WEP_CVAR(shotgun, secondary) == 2)
+				else if((fire & 2) && WEP_CVAR(shotgun, secondary) == 2)
 				{
 					if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
 					{
-						if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
+						if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
 						{
 							W_Shotgun_Attack(thiswep, false);
 							actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
-							weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
+							weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
 						}
 					}
 				}
@@ -274,11 +274,11 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, bool fire1, bool fir
 			if(actor.clip_load >= 0) // we are not currently reloading
 			if(!actor.crouch) // no crouchmelee please
 			if(WEP_CVAR(shotgun, secondary) == 1)
-			if((fire1 && actor.WEP_AMMO(SHOTGUN) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || fire2)
-			if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(shotgun, refire)))
+			if(((fire & 1) && actor.WEP_AMMO(SHOTGUN) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (fire & 2))
+			if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(shotgun, refire)))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-				weapon_thinkf(actor, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
+				weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 			}
 		}
 		METHOD(Shotgun, wr_init, void(entity thiswep))

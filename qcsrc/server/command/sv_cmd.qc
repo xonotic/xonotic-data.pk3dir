@@ -831,7 +831,8 @@ void GameCommand_gettaginfo(float request, float argc)
 				tmp_entity = spawn();
 				if (argv(1) == "w")
 				{
-					_setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+					int slot = 0;
+					_setmodel(tmp_entity, (nextent(world)).weaponentity[slot].model);
 				}
 				else
 				{
@@ -891,7 +892,8 @@ void GameCommand_animbench(float request, float argc)
 				tmp_entity = spawn();
 				if (argv(1) == "w")
 				{
-					_setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+					int slot = 0;
+					_setmodel(tmp_entity, (nextent(world)).weaponentity[slot].model);
 				}
 				else
 				{

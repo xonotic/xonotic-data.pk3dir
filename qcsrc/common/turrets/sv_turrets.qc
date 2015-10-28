@@ -13,7 +13,7 @@ vector turret_aim_generic()
 	if(self.aim_flags & TFL_AIM_SIMPLE)
 		return real_origin(self.enemy);
 
-	mintime = max(self.attack_finished_single - time,0) + sys_frametime;
+	mintime = max(self.attack_finished_single[0] - time,0) + sys_frametime;
 
 	// Baseline
 	pre_pos = real_origin(self.enemy);
@@ -913,7 +913,7 @@ float turret_firecheck()
 
 	// Ready?
 	if (self.firecheck_flags & TFL_FIRECHECK_REFIRE)
-		if (self.attack_finished_single > time) return 0;
+		if (self.attack_finished_single[0] > time) return 0;
 
 	// Special case: volly fire turret that has to fire a full volly if a shot was fired.
 	if (self.shoot_flags & TFL_SHOOT_VOLLYALWAYS)
@@ -996,7 +996,7 @@ void turret_fire()
 	Turret info = get_turretinfo(self.m_id);
 	info.tr_attack(info);
 
-	self.attack_finished_single = time + self.shot_refire;
+	self.attack_finished_single[0] = time + self.shot_refire;
 	self.ammo -= self.shot_dmg;
 	self.volly_counter = self.volly_counter - 1;
 
@@ -1008,7 +1008,7 @@ void turret_fire()
 			self.enemy = world;
 
 		if (self.shot_volly > 1)
-			self.attack_finished_single = time + self.shot_volly_refire;
+			self.attack_finished_single[0] = time + self.shot_volly_refire;
 	}
 
 #ifdef TURRET_DEBUG

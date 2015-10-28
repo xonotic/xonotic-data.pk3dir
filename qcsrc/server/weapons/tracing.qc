@@ -55,8 +55,9 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
-	if(ent.weaponentity.movedir.x > 0)
-		vecs = ent.weaponentity.movedir;
+	int slot = 0; // TODO: unhardcode
+	if(ent.weaponentity[slot].movedir.x > 0)
+		vecs = ent.weaponentity[slot].movedir;
 	else
 		vecs = '0 0 0';
 

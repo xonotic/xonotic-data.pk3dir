@@ -111,8 +111,8 @@ float M_Zombie_Defend_Block()
 {SELFPARAM();
 	self.armorvalue = 0.9;
 	self.state = MONSTER_ATTACK_MELEE; // freeze monster
-	self.attack_finished_single = time + 2.1;
-	self.anim_finished = self.attack_finished_single;
+	self.attack_finished_single[0] = time + 2.1;
+	self.anim_finished = self.attack_finished_single[0];
 	setanim(self, self.anim_blockstart, false, true, true);
 
 	Monster_Delay(1, 0, 2, M_Zombie_Defend_Block_End);

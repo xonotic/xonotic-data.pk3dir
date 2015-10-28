@@ -16,17 +16,17 @@ REGISTER_WEAPON(EWHEEL, NEW(EWheelAttack));
 #ifdef SVQC
 
 void turret_initparams(entity);
-METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
-    if (fire1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
+    if (fire & 1)
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
-            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
 
         turret_do_updates(actor);

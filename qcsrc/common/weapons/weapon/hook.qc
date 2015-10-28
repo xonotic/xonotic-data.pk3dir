@@ -22,7 +22,7 @@ CLASS(OffhandHook, OffhandWeapon)
     METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
     {
     	Weapon wep = WEP_HOOK;
-    	wep.wr_think(wep, actor, key_pressed, false);
+    	wep.wr_think(wep, actor, 1, key_pressed ? 1 : 0);
     }
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
@@ -174,30 +174,30 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-		METHOD(Hook, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Hook, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
-			if (fire1) {
+			if (fire & 1) {
 				if(!actor.hook)
 				if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
 				if(time > actor.hook_refire)
-				if(weapon_prepareattack(thiswep, actor, false, -1))
+				if(weapon_prepareattack(thiswep, actor, slot, false, -1))
 				{
 					W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(hook, ammo));
 					actor.hook_state |= HOOK_FIRING;
 					actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
 				}
 			} else {
 				actor.hook_state |= HOOK_REMOVING;
 				actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			}
 
-			if(fire2)
+			if(fire & 2)
 			{
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hook, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(hook, refire)))
 				{
 					W_Hook_Attack2(thiswep, actor);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
 				}
 			}
 

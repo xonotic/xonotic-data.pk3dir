@@ -161,11 +161,11 @@ void W_HLAC_Attack2(void)
 }
 
 // weapon frames
-void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, int slot, int fire)
 {
 	if(actor.weapon != actor.switchweapon) // abort immediately if switching
 	{
-		w_ready(thiswep, actor, fire1, fire2);
+		w_ready(thiswep, actor, slot, fire);
 		return;
 	}
 
@@ -176,18 +176,18 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, bool fire1, bool fire2)
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-			w_ready(thiswep, actor, fire1, fire2);
+			w_ready(thiswep, actor, slot, fire);
 			return;
 		}
 
-		ATTACK_FINISHED(actor) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
+		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
 		W_HLAC_Attack(WEP_HLAC);
 		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
-        weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+        weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
 	else
 	{
-		weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, animtime), w_ready);
+		weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, animtime), w_ready);
 	}
 }
 
@@ -211,27 +211,27 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
 		}
-		METHOD(HLAC, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(HLAC, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
-			} else if(fire1)
+			} else if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(hlac, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(hlac, refire)))
 				{
 					actor.misc_bulletcounter = 0;
 					W_HLAC_Attack(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 				}
 			}
 
-			else if(fire2 && WEP_CVAR(hlac, secondary))
+			else if((fire & 2) && WEP_CVAR(hlac, secondary))
 			{
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hlac, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(hlac, refire)))
 				{
 					W_HLAC_Attack2_Frame(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
 				}
 			}
 		}

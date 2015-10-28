@@ -174,13 +174,13 @@ float bumblebee_gunner_frame()
 
 	if(!forbidWeaponUse(gunner))
 	if(gunner.BUTTON_ATCK)
-		if(time > gun.attack_finished_single)
+		if(time > gun.attack_finished_single[0])
 			if(gun.vehicle_energy >= autocvar_g_vehicle_bumblebee_cannon_cost)
 			{
 				gun.vehicle_energy -= autocvar_g_vehicle_bumblebee_cannon_cost;
 				bumblebee_fire_cannon(gun, "fire", gunner);
 				gun.delay = time;
-				gun.attack_finished_single = time + autocvar_g_vehicle_bumblebee_cannon_refire;
+				gun.attack_finished_single[0] = time + autocvar_g_vehicle_bumblebee_cannon_refire;
 			}
 
 	VEHICLE_UPDATE_PLAYER(gunner, health, bumblebee);
