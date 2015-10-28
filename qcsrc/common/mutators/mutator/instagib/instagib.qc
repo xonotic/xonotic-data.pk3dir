@@ -367,6 +367,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		e.noalign = self.noalign;
         e.cnt = self.cnt;
         e.team = self.team;
+        e.spawnfunc_checked = true;
 		WITH(entity, self, e, spawnfunc_item_minst_cells(e));
 		return true;
 	}
