@@ -150,8 +150,7 @@ void W_RocketMinsta_Attack2(void)
 
     while(counter < total)
 	{
-        proj = spawn ();
-        proj.classname = "plasma_prim";
+        proj = new(plasma_prim);
         proj.owner = proj.realowner = self;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
@@ -203,8 +202,7 @@ void W_RocketMinsta_Attack3 (void)
 
     while(counter < total)
 	{
-        proj = spawn ();
-        proj.classname = "plasma_prim";
+        proj = new(plasma_prim);
         proj.owner = proj.realowner = self;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;

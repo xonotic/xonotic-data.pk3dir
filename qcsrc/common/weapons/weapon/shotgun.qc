@@ -186,8 +186,8 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, int slot, int fire)
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
 
-	entity meleetemp;
-	meleetemp = spawn();
+	entity meleetemp = new(meleetemp);
+	make_pure(meleetemp);
 	meleetemp.realowner = actor;
 	meleetemp.think = W_Shotgun_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();

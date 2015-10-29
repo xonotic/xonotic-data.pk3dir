@@ -853,6 +853,7 @@ void MapVote_UpdateVotes()
 
 void Ent_MapVote()
 {
+	make_pure(self);
 	int sf = ReadByte();
 
 	if(sf & 1)

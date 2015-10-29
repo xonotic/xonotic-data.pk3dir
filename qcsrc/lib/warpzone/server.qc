@@ -137,7 +137,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		// instead of fixangle, send the transform to the client for smoother operation
 		player.fixangle = false;
 
-		entity ts = spawn();
+		entity ts = new(warpzone_teleported);
 		setmodel(ts, MDL_Null);
 		ts.SendEntity = WarpZone_Teleported_Send;
 		ts.SendFlags = 0xFFFFFF;
@@ -147,7 +147,6 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		ts.owner = player;
 		ts.enemy = wz;
 		ts.effects = EF_NODEPTHTEST;
-		ts.classname = "warpzone_teleported";
 		ts.angles = wz.warpzone_transform;
 	}
 #endif

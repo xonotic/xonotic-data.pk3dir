@@ -471,9 +471,8 @@ entity pathlib_astar(vector from,vector to)
     {
         LOG_TRACE("AStar: Goal found on first node!\n");
 
-        open           = spawn();
+        open           = new(path_end);
         open.owner     = open;
-        open.classname = "path_end";
         setorigin(open,path.origin);
 
         pathlib_cleanup();

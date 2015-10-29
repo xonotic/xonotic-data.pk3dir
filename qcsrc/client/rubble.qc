@@ -45,9 +45,8 @@ void RubbleLimit(string cname, float limit, void() deleteproc)
 
 entity RubbleNew(string cname)
 {
-	entity e;
 	// spawn a new entity and return it
-	e = spawn();
+	entity e = spawn();
 	e.classname = cname;
 	e.creationtime = time;
 	return e;

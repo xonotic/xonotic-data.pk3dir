@@ -105,10 +105,10 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 		else { return; } // objects don't bleed
 	}
 
-	e = spawn();
+	e = new(damage);
+	make_pure(e);
 	setmodel(e, MDL_Null); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
-	e.classname = "damage";
 	e.owner = self;
 	e.cnt = time + life;
 	e.team = _particleeffectnum(effectname);
@@ -119,6 +119,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 
 void Ent_DamageInfo(float isNew)
 {SELFPARAM();
+	make_pure(this);
 	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
 	int species, forcemul;

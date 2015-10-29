@@ -83,8 +83,8 @@ void PingPLReport_Think()
 }
 void PingPLReport_Spawn()
 {
-	pingplreport = spawn();
-	pingplreport.classname = "pingplreport";
+	pingplreport = new(pingplreport);
+	make_pure(pingplreport);
 	pingplreport.think = PingPLReport_Think;
 	pingplreport.nextthink = time;
 }
@@ -528,7 +528,8 @@ void RandomSeed_Think()
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
-	randomseed = spawn();
+	randomseed = new(randomseed);
+	make_pure(randomseed);
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
@@ -546,13 +547,11 @@ spawnfunc(__init_dedicated_server)
 
 	remove = remove_unsafely;
 
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	e.think = GotoFirstMap;
 	e.nextthink = time; // this is usually 1 at this point
 
-	e = spawn();
-	e.classname = "info_player_deathmatch"; // safeguard against player joining
+	e = new(info_player_deathmatch);  // safeguard against player joining
 
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 

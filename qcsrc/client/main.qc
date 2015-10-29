@@ -42,8 +42,7 @@ void clearentity(entity e)
 {
 	if (!clearentity_ent)
 	{
-		clearentity_ent = spawn();
-		clearentity_ent.classname = "clearentity";
+		clearentity_ent = new(clearentity);
 	}
 	int n = e.entnum;
 	copyentity(clearentity_ent, e);
@@ -297,7 +296,10 @@ void Playerchecker_Think()
 			{
 				// player connected
 				if (!e)
-					playerslots[i] = e = spawn();
+				{
+					playerslots[i] = e = new(playerslot);
+					make_pure(e);
+				}
 				e.sv_entnum = i;
 				e.ping = 0;
 				e.ping_packetloss = 0;
@@ -316,8 +318,8 @@ void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
 {
-	entity playerchecker;
-	playerchecker = spawn();
+	entity playerchecker = new(playerchecker);
+	make_pure(playerchecker);
 	playerchecker.think = Playerchecker_Think;
 	playerchecker.nextthink = time + 0.2;
 
@@ -373,8 +375,9 @@ void Ent_RemoveEntCS()
 }
 void Ent_ReadEntCS()
 {SELFPARAM();
+	make_pure(this);
+	this.classname = "entcs_receiver";
 	InterpolateOrigin_Undo();
-	self.classname = "entcs_receiver";
 	int sf = ReadByte();
 
 	if(sf & BIT(0))
@@ -418,6 +421,7 @@ void Ent_RemovePlayerScore()
 
 void Ent_ReadPlayerScore()
 {SELFPARAM();
+	make_pure(this);
 	int i, n;
 	bool isNew;
 	entity o;
@@ -440,9 +444,13 @@ void Ent_ReadPlayerScore()
 
 	self.sv_entnum = n;
 
-	if (!(playerslots[self.sv_entnum]))
-		playerslots[self.sv_entnum] = spawn();
-	o = self.owner = playerslots[self.sv_entnum];
+	o = playerslots[self.sv_entnum];
+	if (!o)
+	{
+		o = playerslots[self.sv_entnum] = new(playerslot);
+		make_pure(o);
+	}
+	self.owner = o;
 	o.sv_entnum = self.sv_entnum;
 	o.gotscores = 1;
 
@@ -476,6 +484,7 @@ void Ent_ReadPlayerScore()
 
 void Ent_ReadTeamScore()
 {SELFPARAM();
+	make_pure(this);
 	int i;
 	entity o;
 
@@ -505,6 +514,7 @@ void Ent_ReadTeamScore()
 
 void Ent_ClientData()
 {
+	make_pure(self);
 	float newspectatee_status;
 
     int f = ReadByte();
@@ -554,6 +564,7 @@ void Ent_ClientData()
 
 void Ent_Nagger()
 {
+	make_pure(self);
     int i, j, b, f;
 
     int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
@@ -609,6 +620,7 @@ void Ent_Nagger()
 
 void Ent_EliminatedPlayers()
 {
+	make_pure(self);
     int i, j, b, f;
 
     int sf = ReadByte();
@@ -630,14 +642,15 @@ void Ent_EliminatedPlayers()
 
 void Ent_RandomSeed()
 {
-	float s;
+	make_pure(self);
 	prandom_debug();
-	s = ReadShort();
+	float s = ReadShort();
 	psrandom(s);
 }
 
 void Ent_ReadAccuracy()
 {
+	make_pure(self);
     int sf = ReadInt24_t();
 	if (sf == 0) {
 		for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
@@ -768,11 +781,12 @@ void Ent_RadarLink();
 void Ent_Init();
 void Ent_ScoresInfo();
 void CSQC_Ent_Update(float bIsNewEntity)
-{SELFPARAM();
+{
+	SELFPARAM();
 	int t = ReadByte();
 
 	if(autocvar_developer_csqcentities)
-		LOG_INFOF("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t);
+		LOG_INFOF("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, this, this.entnum, this.enttype, t);
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
 	float savetime = time;
@@ -788,13 +802,13 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	}
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if(self.enttype)
+	if(this.enttype)
 	{
-		if(t != self.enttype || bIsNewEntity)
+		if(t != this.enttype || bIsNewEntity)
 		{
-			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(self), self.entnum, self.enttype, t);
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(this), this.entnum, this.enttype, t);
 			Ent_Remove();
-			clearentity(self);
+			clearentity(this);
 			bIsNewEntity = 1;
 		}
 	}
@@ -802,84 +816,83 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	{
 		if(!bIsNewEntity)
 		{
-			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(self), self.entnum, t);
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(this), this.entnum, t);
 			bIsNewEntity = 1;
 		}
 	}
 #endif
-	self.enttype = t;
+	this.enttype = t;
 	bool done = false;
 	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
-		it.m_read(self, bIsNewEntity);
+		it.m_read(this, bIsNewEntity);
 		done = true;
 		break;
 	));
 	if (!done)
 	switch(t)
 	{
-		case ENT_CLIENT_MUTATOR: {
+		#define HANDLE(t) case t: this.classname = #t; this.sourceLocFile = __FILE__; this.sourceLocLine = __LINE__;
+		HANDLE(ENT_CLIENT_MUTATOR) {
 			int mutID = ReadMutator();
 			if (!MUTATOR_CALLHOOK(CSQC_Ent_Update, mutID, bIsNewEntity))
-			error(sprintf("Unknown mutator type in CSQC_Ent_Update (mutID: %d, edict: %d, classname: %s)\n", mutID, num_for_edict(self), self.classname));
+			error(sprintf("Unknown mutator type in CSQC_Ent_Update (mutID: %d, edict: %d, classname: %s)\n", mutID, num_for_edict(this), this.classname));
 			break;
 		}
-		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(); break;
-		case ENT_CLIENT_SCORES: Ent_ReadPlayerScore(); break;
-		case ENT_CLIENT_TEAMSCORES: Ent_ReadTeamScore(); break;
-		case ENT_CLIENT_POINTPARTICLES: Ent_PointParticles(); break;
-		case ENT_CLIENT_RAINSNOW: Ent_RainOrSnow(); break;
-		case ENT_CLIENT_LASER: Ent_Laser(); break;
-		case ENT_CLIENT_NAGGER: Ent_Nagger(); break;
-		case ENT_CLIENT_ELIMINATEDPLAYERS: Ent_EliminatedPlayers(); break;
-		case ENT_CLIENT_RADARLINK: Ent_RadarLink(); break;
-		case ENT_CLIENT_PROJECTILE: Ent_Projectile(); break;
-		case ENT_CLIENT_GIBSPLASH: Ent_GibSplash(bIsNewEntity); break;
-		case ENT_CLIENT_DAMAGEINFO: Ent_DamageInfo(bIsNewEntity); break;
-		case ENT_CLIENT_INIT: Ent_Init(); break;
-		case ENT_CLIENT_SCORES_INFO: Ent_ScoresInfo(); break;
-		case ENT_CLIENT_MAPVOTE: Ent_MapVote(); break;
-		case ENT_CLIENT_CLIENTDATA: Ent_ClientData(); break;
-		case ENT_CLIENT_RANDOMSEED: Ent_RandomSeed(); break;
-		case ENT_CLIENT_WALL: Ent_Wall(); break;
-		case ENT_CLIENT_MODELEFFECT: Ent_ModelEffect(bIsNewEntity); break;
-		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
-		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
-		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
-		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
-		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
-		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
-		case ENT_CLIENT_INVENTORY: Inventory_Read(self); break;
-		case ENT_CLIENT_ARC_BEAM: Ent_ReadArcBeam(bIsNewEntity); break;
-		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
-		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
-		case ENT_CLIENT_TURRET: ent_turret(); break;
-		case ENT_CLIENT_GENERATOR: ent_generator(); break;
-		case ENT_CLIENT_CONTROLPOINT_ICON: ent_cpicon(this); break;
-		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
-		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
-		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
-		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
-		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
-		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
-		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
-		case ENT_CLIENT_VIEWLOC: ent_viewloc(); break;
-		case ENT_CLIENT_VIEWLOC_TRIGGER: ent_viewloc_trigger(); break;
-		case ENT_CLIENT_LADDER: ent_func_ladder(); break;
-		case ENT_CLIENT_TRIGGER_PUSH: ent_trigger_push(); break;
-		case ENT_CLIENT_TARGET_PUSH: ent_target_push(); break;
-		case ENT_CLIENT_CONVEYOR: ent_conveyor(); break;
-		case ENT_CLIENT_DOOR: ent_door(); break;
-		case ENT_CLIENT_PLAT: ent_plat(); break;
-		case ENT_CLIENT_SWAMP: ent_swamp(); break;
-		case ENT_CLIENT_CORNER: ent_corner(); break;
-		case ENT_CLIENT_KEYLOCK: ent_keylock(); break;
-		case ENT_CLIENT_TRAIN: ent_train(); break;
-		case ENT_CLIENT_TRIGGER_IMPULSE: ent_trigger_impulse(); break;
-		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
-
+		HANDLE(ENT_CLIENT_ENTCS)					Ent_ReadEntCS();								break;
+		HANDLE(ENT_CLIENT_SCORES)					Ent_ReadPlayerScore();							break;
+		HANDLE(ENT_CLIENT_TEAMSCORES)				Ent_ReadTeamScore();							break;
+		HANDLE(ENT_CLIENT_POINTPARTICLES)			Ent_PointParticles();							break;
+		HANDLE(ENT_CLIENT_RAINSNOW)					Ent_RainOrSnow();								break;
+		HANDLE(ENT_CLIENT_LASER)					Ent_Laser();									break;
+		HANDLE(ENT_CLIENT_NAGGER)					Ent_Nagger();									break;
+		HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS)		Ent_EliminatedPlayers();						break;
+		HANDLE(ENT_CLIENT_RADARLINK)				Ent_RadarLink();								break;
+		HANDLE(ENT_CLIENT_PROJECTILE)				Ent_Projectile();								break;
+		HANDLE(ENT_CLIENT_DAMAGEINFO)				Ent_DamageInfo(bIsNewEntity);					break;
+		HANDLE(ENT_CLIENT_INIT)						Ent_Init();										break;
+		HANDLE(ENT_CLIENT_SCORES_INFO)				Ent_ScoresInfo();								break;
+		HANDLE(ENT_CLIENT_MAPVOTE)					Ent_MapVote();									break;
+		HANDLE(ENT_CLIENT_CLIENTDATA)				Ent_ClientData();								break;
+		HANDLE(ENT_CLIENT_RANDOMSEED)				Ent_RandomSeed();								break;
+		HANDLE(ENT_CLIENT_WALL)						Ent_Wall();										break;
+		HANDLE(ENT_CLIENT_MODELEFFECT)				Ent_ModelEffect(bIsNewEntity);					break;
+		HANDLE(ENT_CLIENT_TUBANOTE)					Ent_TubaNote(bIsNewEntity);						break;
+		HANDLE(ENT_CLIENT_WARPZONE)					WarpZone_Read(bIsNewEntity);					break;
+		HANDLE(ENT_CLIENT_WARPZONE_CAMERA)			WarpZone_Camera_Read(bIsNewEntity);				break;
+		HANDLE(ENT_CLIENT_WARPZONE_TELEPORTED)		WarpZone_Teleported_Read(bIsNewEntity);			break;
+		HANDLE(ENT_CLIENT_TRIGGER_MUSIC)			Ent_ReadTriggerMusic();							break;
+		HANDLE(ENT_CLIENT_HOOK)						Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK);	break;
+		HANDLE(ENT_CLIENT_INVENTORY)				Inventory_Read(this);							break;
+		HANDLE(ENT_CLIENT_ARC_BEAM)					Ent_ReadArcBeam(bIsNewEntity);					break;
+		HANDLE(ENT_CLIENT_ACCURACY)					Ent_ReadAccuracy();								break;
+		HANDLE(ENT_CLIENT_AUXILIARYXHAIR)			Net_AuXair2(bIsNewEntity);						break;
+		HANDLE(ENT_CLIENT_TURRET)					ent_turret();									break;
+		HANDLE(ENT_CLIENT_GENERATOR)				ent_generator();								break;
+		HANDLE(ENT_CLIENT_CONTROLPOINT_ICON)		ent_cpicon(this);								break;
+		HANDLE(ENT_CLIENT_MODEL)					CSQCModel_Read(bIsNewEntity);					break;
+		HANDLE(ENT_CLIENT_ITEM)						ItemRead(bIsNewEntity);							break;
+		HANDLE(ENT_CLIENT_BUMBLE_RAYGUN)			bumble_raygun_read(bIsNewEntity);				break;
+		HANDLE(ENT_CLIENT_SPAWNPOINT)				Ent_ReadSpawnPoint(bIsNewEntity);				break;
+		HANDLE(ENT_CLIENT_SPAWNEVENT)				Ent_ReadSpawnEvent(bIsNewEntity);				break;
+		HANDLE(ENT_CLIENT_NOTIFICATION)				Read_Notification(bIsNewEntity);				break;
+		HANDLE(ENT_CLIENT_MINIGAME)					ent_read_minigame();							break;
+		HANDLE(ENT_CLIENT_VIEWLOC)					ent_viewloc();									break;
+		HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER)			ent_viewloc_trigger();							break;
+		HANDLE(ENT_CLIENT_LADDER)					ent_func_ladder();								break;
+		HANDLE(ENT_CLIENT_TRIGGER_PUSH)				ent_trigger_push();								break;
+		HANDLE(ENT_CLIENT_TARGET_PUSH)				ent_target_push();								break;
+		HANDLE(ENT_CLIENT_CONVEYOR)					ent_conveyor();									break;
+		HANDLE(ENT_CLIENT_DOOR)						ent_door();										break;
+		HANDLE(ENT_CLIENT_PLAT)						ent_plat();										break;
+		HANDLE(ENT_CLIENT_SWAMP)					ent_swamp();									break;
+		HANDLE(ENT_CLIENT_CORNER)					ent_corner();									break;
+		HANDLE(ENT_CLIENT_KEYLOCK)					ent_keylock();									break;
+		HANDLE(ENT_CLIENT_TRAIN)					ent_train();									break;
+		HANDLE(ENT_CLIENT_TRIGGER_IMPULSE)			ent_trigger_impulse();							break;
+		#undef HANDLE
 		default:
-			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
-			error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", self.enttype, num_for_edict(self), self.classname));
+			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), this.enttype));
+			error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", this.enttype, num_for_edict(this), this.classname));
 			break;
 	}
 
@@ -978,7 +991,7 @@ void Gamemode_Init();
 void Ent_ScoresInfo()
 {SELFPARAM();
     int i;
-	self.classname = "ent_client_scores_info";
+	make_pure(this);
 	gametype = ReadInt24_t();
 	HUD_ModIcons_SetFunc();
 	for(i = 0; i < MAX_SCORE; ++i)
@@ -1001,7 +1014,7 @@ void Ent_ScoresInfo()
 
 void Ent_Init()
 {SELFPARAM();
-	self.classname = "ent_client_init";
+	make_pure(this);
 
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
 

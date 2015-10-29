@@ -203,7 +203,7 @@ void ons_CaptureShield_Reset()
 
 void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 {
-	entity shield = spawn();
+	entity shield = new(ons_captureshield);
 
 	shield.enemy = generator;
 	shield.team = generator.team;
@@ -211,7 +211,6 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 	shield.reset = ons_CaptureShield_Reset;
 	shield.touch = ons_CaptureShield_Touch;
 	shield.customizeentityforclient = ons_CaptureShield_Customize;
-	shield.classname = "ons_captureshield";
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
 	shield.solid = SOLID_TRIGGER;
@@ -712,12 +711,11 @@ void onslaught_controlpoint_icon_link(entity e, void() spawnproc);
 
 void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 {
-	entity e = spawn();
+	entity e = new(onslaught_controlpoint_icon);
 
 	setsize(e, CPICON_MIN, CPICON_MAX);
 	setorigin(e, cp.origin + CPICON_OFFSET);
 
-	e.classname = "onslaught_controlpoint_icon";
 	e.owner = cp;
 	e.max_health = autocvar_g_onslaught_cp_health;
 	e.health = autocvar_g_onslaught_cp_buildhealth;

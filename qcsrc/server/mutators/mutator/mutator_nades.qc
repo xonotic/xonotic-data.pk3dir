@@ -69,10 +69,9 @@ void nade_burn_spawn(entity _nade)
 
 void nade_spawn(entity _nade)
 {
-	entity timer = spawn();
+	entity timer = new(nade_timer);
 	setmodel(timer, MDL_NADE_TIMER);
 	setattachment(timer, _nade, "");
-	timer.classname = "nade_timer";
 	timer.colormap = _nade.colormap;
 	timer.glowmod = _nade.glowmod;
 	timer.think = nade_timer_think;
@@ -164,11 +163,10 @@ void nade_napalm_ball()
 
 	spamsound(self, CH_SHOTS, SND(FIREBALL_FIRE), VOL_BASE, ATTEN_NORM);
 
-	proj = spawn ();
+	proj = new(grenade);
 	proj.owner = self.owner;
 	proj.realowner = self.realowner;
 	proj.team = self.owner.team;
-	proj.classname = "grenade";
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
@@ -360,10 +358,9 @@ void nade_ice_boom()
 	if ( autocvar_g_nades_ice_explode )
 	{
 		setmodel(fountain, MDL_PROJECTILE_GRENADE);
-		entity timer = spawn();
+		entity timer = new(nade_timer);
 		setmodel(timer, MDL_NADE_TIMER);
 		setattachment(timer, fountain, "");
-		timer.classname = "nade_timer";
 		timer.colormap = self.colormap;
 		timer.glowmod = self.glowmod;
 		timer.think = nade_timer_think;
@@ -827,10 +824,7 @@ void nade_prime()
 	if(self.fake_nade)
 		remove(self.fake_nade);
 
-	entity n = spawn(), fn = spawn();
-
-	n.classname = "nade";
-	fn.classname = "fake_nade";
+	entity n = new(nade), fn = new(fake_nade);
 
 	if(self.items & ITEM_Strength.m_itemid && autocvar_g_nades_bonus_onstrength)
 		n.nade_type = self.nade_type;

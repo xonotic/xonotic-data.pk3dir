@@ -251,11 +251,10 @@ void W_Porto_Attack(float type)
 
 	//Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn();
+	gren = new(porto);
 	gren.cnt = type;
 	gren.owner = gren.realowner = self;
 	gren.playerid = self.playerid;
-	gren.classname = "porto";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = 200;
 	gren.movetype = MOVETYPE_BOUNCEMISSILE;

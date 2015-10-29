@@ -136,8 +136,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 	// which one is ALWAYS good?
 	if (!forceplayermodels_goodmodel)
 	{
-		entity e;
-		e = spawn();
+		entity e = spawn();
 		precache_model(cvar_defstring("_cl_playermodel"));
 		_setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
@@ -168,8 +167,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 		forceplayermodels_attempted = 1;
 
 		// only if this failed, find it out on our own
-		entity e;
-		e = spawn();
+		entity e = spawn();
 		_setmodel(e, autocvar__cl_playermodel); // this is harmless, see below
 		forceplayermodels_modelisgoodmodel = fexists(e.model);
 		forceplayermodels_model = e.model;
@@ -180,8 +178,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 
 	if(autocvar_cl_forcemyplayermodel != "" && autocvar_cl_forcemyplayermodel != forceplayermodels_mymodel)
 	{
-		entity e;
-		e = spawn();
+		entity e = spawn();
 		_setmodel(e, autocvar_cl_forcemyplayermodel); // this is harmless, see below
 		forceplayermodels_myisgoodmodel = fexists(e.model);
 		forceplayermodels_mymodel = e.model;

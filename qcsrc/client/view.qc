@@ -11,6 +11,7 @@
 #include "mutators/events.qh"
 
 #include "../common/constants.qh"
+#include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/gamemodes/all.qh"
 #include "../common/nades/all.qh"
@@ -110,8 +111,8 @@ void Porto_Draw(entity this)
 
 void Porto_Init()
 {
-	porto = spawn();
-	porto.classname = "porto";
+	porto = new(porto);
+	make_pure(porto);
 	porto.draw = Porto_Draw;
 	porto.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
@@ -278,11 +279,11 @@ const float SHOTTYPE_HITENEMY = 4;
 
 void TrueAim_Init()
 {
-	trueaim = spawn();
-	trueaim.classname = "trueaim";
+	trueaim = new(trueaim);
+	make_pure(trueaim);
 	trueaim.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	trueaim_rifle = spawn();
-	trueaim_rifle.classname = "trueaim_rifle";
+	trueaim_rifle = new(trueaim_rifle);
+	make_pure(trueaim_rifle);
 	trueaim_rifle.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
@@ -1516,13 +1517,11 @@ void CSQC_UpdateView(float w, float h)
 
 		if(!nightvision_noise)
 		{
-			nightvision_noise = spawn();
-			nightvision_noise.classname = "nightvision_noise";
+			nightvision_noise = new(nightvision_noise);
 		}
 		if(!nightvision_noise2)
 		{
-			nightvision_noise2 = spawn();
-			nightvision_noise2.classname = "nightvision_noise2";
+			nightvision_noise2 = new(nightvision_noise2);
 		}
 
 		// color tint in yellow
@@ -1836,6 +1835,7 @@ void CSQC_UpdateView(float w, float h)
 		WITH(entity, self, e, e.draw2d(e));
 	}
 	Draw_ShowNames_All();
+	Debug_Draw();
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 

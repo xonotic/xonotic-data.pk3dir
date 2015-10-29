@@ -372,8 +372,7 @@ float RadarMap_Make(float argc)
 
 	if (!radarmapper)
 	{
-		radarmapper = spawn();
-		radarmapper.classname = "radarmapper";
+		radarmapper = new(radarmapper);
 		radarmapper.think = RadarMap_Think;
 		radarmapper.nextthink = time;
 		radarmapper.count = 8;  // default to the --trace method, as it is faster now

@@ -67,8 +67,7 @@ void W_MineLayer_Stick(entity to)
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
-	entity newmine;
-	newmine = spawn();
+	entity newmine = spawn();
 	newmine.classname = self.classname;
 
 	newmine.bot_dodge = self.bot_dodge;

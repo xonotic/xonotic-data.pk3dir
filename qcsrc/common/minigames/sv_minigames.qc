@@ -131,12 +131,11 @@ int minigame_addplayer(entity minigame_session, entity player)
 			return 0;
 		minigame_rmplayer(player.active_minigame,player);
 	}
-	entity player_pointer = spawn();
+	entity player_pointer = new(minigame_player);
 	int mgteam = minigame_session.minigame_event(minigame_session,"join",player,player_pointer);
 
 	if ( mgteam )
 	{
-		player_pointer.classname = "minigame_player";
 		player_pointer.owner = minigame_session;
 		player_pointer.minigame_players = player;
 		player_pointer.team = mgteam;
@@ -171,8 +170,7 @@ entity start_minigame(entity player, string minigame )
 	entity e = minigame_get_descriptor(minigame);
 	if ( e )
 	{
-		entity minig = spawn();
-		minig.classname = "minigame";
+		entity minig = new(minigame);
 		minig.netname = strzone(strcat(e.netname,"_",ftos(num_for_edict(minig))));
 		minig.descriptor = e;
 		minig.minigame_event = e.minigame_event;

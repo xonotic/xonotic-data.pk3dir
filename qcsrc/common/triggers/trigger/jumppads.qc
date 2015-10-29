@@ -407,7 +407,7 @@ void target_push_link()
 
 spawnfunc(target_push) { target_push_link(); }
 spawnfunc(info_notnull) { target_push_link(); }
-spawnfunc(target_position) { target_push_link(); }
+spawnfunc(target_position) { make_pure(this); target_push_link(); }
 
 #endif
 

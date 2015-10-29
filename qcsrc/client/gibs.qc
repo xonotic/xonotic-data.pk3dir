@@ -123,7 +123,6 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 	// TODO remove some gibs according to cl_nogibs
 	gib = RubbleNew("gib");
-	gib.classname = "gib";
 	gib.move_movetype = MOVETYPE_BOUNCE;
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;
@@ -159,23 +158,19 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	RubbleLimit("gib", autocvar_cl_gibs_maxcount, Gib_Delete);
 }
 
-void Ent_GibSplash(bool isNew)
-{SELFPARAM();
-	int amount, type, specnum;
-	vector org, vel;
-	string specstr;
-	bool issilent;
+REGISTER_NET_TEMP(net_gibsplash, bool isNew)
+{
+	Net_Accept(net_gibsplash);
+
 	string gentle_prefix = "morphed_";
 
-	float randomvalue;
-	int c;
-
-	type = ReadByte(); // gibbage type
-	amount = ReadByte() / 16.0; // gibbage amount
+	int type = ReadByte(); // gibbage type
+	int amount = ReadByte() / 16.0; // gibbage amount
+	vector org;
 	org.x = ReadShort() * 4 + 2;
 	org.y = ReadShort() * 4 + 2;
 	org.z = ReadShort() * 4 + 2;
-	vel = decompressShortVector(ReadShort());
+	vector vel = decompressShortVector(ReadShort());
 
 	float cl_gentle_gibs = autocvar_cl_gentle_gibs;
 	if(cl_gentle_gibs || autocvar_cl_gentle)
@@ -203,18 +198,18 @@ void Ent_GibSplash(bool isNew)
 	if(amount <= 0 || !isNew)
 		return;
 
-	setorigin(self, org); // for the sounds
+	setorigin(this, org); // for the sounds
 
-	specnum = (type & 0x78) / 8; // blood/gibmodel type: using four bits (0..7, bit indexes 3,4,5)
-	issilent = (type & 0x40);
+	int specnum = (type & 0x78) / 8; // blood/gibmodel type: using four bits (0..7, bit indexes 3,4,5)
+	bool issilent = (type & 0x40);
 	type = type & 0x87; // remove the species bits: bit 7 = gentle, bit 0,1,2 = kind of gib
-	specstr = species_prefix(specnum);
+	string specstr = species_prefix(specnum);
 
 	switch(type)
 	{
 		case 0x01:
 			if(!issilent)
-				sound (self, CH_PAIN, SND_GIB, VOL_BASE, ATTEN_NORM);
+				sound (this, CH_PAIN, SND_GIB, VOL_BASE, ATTEN_NORM);
 
 			if(prandom() < amount)
 				TossGib ("models/gibs/eye.md3", org, org, vel, prandomvec() * 150, specnum, 0, issilent);
@@ -222,9 +217,9 @@ void Ent_GibSplash(bool isNew)
 			if(prandom() < amount)
 				TossGib ("models/gibs/bloodyskull.md3", org, org + 16 * prandomvec(), vel, prandomvec() * 100, specnum, 0, issilent);
 
-			for(c = 0; c < amount; ++c)
+			for(int c = 0; c < amount; ++c)
 			{
-				randomvalue = amount - c;
+				int randomvalue = amount - c;
 
 				if(prandom() < randomvalue)
 					TossGib ("models/gibs/arm.md3", org, org + 16 * prandomvec() + '0 0 8', vel, prandomvec() * (prandom() * 120 + 90), specnum,0, issilent);
@@ -267,4 +262,5 @@ void Ent_GibSplash(bool isNew)
 			// no gibs in gentle mode, sorry
 			break;
 	}
+	remove(this);
 }

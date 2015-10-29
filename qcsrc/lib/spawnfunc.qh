@@ -33,6 +33,11 @@ noref bool require_spawnfunc_prefix;
 		void spawnfunc_##id(entity this) \
 		{ \
 			this = self; \
+			if (!this.sourceLocFile) \
+			{ \
+				this.sourceLocFile = __FILE__; \
+				this.sourceLocLine = __LINE__; \
+			} \
 			if (!this.spawnfunc_checked) \
 			{ \
 				for (int i = 0, n = numentityfields(); i < n; ++i) \
@@ -68,6 +73,8 @@ noref bool require_spawnfunc_prefix;
 		/**/
 
 	#define FIELDS_UNION(fld) \
+		FIELD_SCALAR(fld, sourceLocFile) \
+		FIELD_SCALAR(fld, sourceLocLine) \
 		FIELD_SCALAR(fld, Version) \
 		FIELD_SCALAR(fld, ammo_cells) \
 		FIELD_SCALAR(fld, ammo_nails) \

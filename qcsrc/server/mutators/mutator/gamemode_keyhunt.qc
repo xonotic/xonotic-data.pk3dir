@@ -802,8 +802,7 @@ void key_reset()
 const string STR_ITEM_KH_KEY = "item_kh_key";
 void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
-	entity key;
-	key = spawn();
+	entity key = spawn();
 	key.count = i;
 	key.classname = STR_ITEM_KH_KEY;
 	key.touch = kh_Key_Touch;

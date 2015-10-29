@@ -32,9 +32,7 @@ void ons_generator_ray_draw(entity this)
 
 void ons_generator_ray_spawn(vector org)
 {
-	entity e;
-	e = spawn();
-	e.classname = "ons_ray";
+	entity e = new(ons_ray);
 	setmodel(e, MDL_ONS_RAY);
 	setorigin(e, org);
 	e.angles = randomvec() * 360;

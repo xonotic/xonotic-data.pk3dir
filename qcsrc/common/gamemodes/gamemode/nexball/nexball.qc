@@ -451,9 +451,7 @@ spawnfunc(nexball_team)
 void nb_spawnteam(string teamname, float teamcolor)
 {
 	LOG_TRACE("^2spawned team ", teamname, "\n");
-	entity e;
-	e = spawn();
-	e.classname = "nexball_team";
+	entity e = new(nexball_team);
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
@@ -804,10 +802,9 @@ void W_Nexball_Attack2(void)
 		return;
 
 	W_SetupShot(self, false, 2, SND(NB_SHOOT2), CH_WEAPON_A, 0);
-	entity missile = spawn();
+	entity missile = new(ballstealer);
 
 	missile.owner = self;
-	missile.classname = "ballstealer";
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);

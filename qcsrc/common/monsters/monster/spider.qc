@@ -121,8 +121,7 @@ void M_Spider_Attack_Web()
 
 	sound(self, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
 
-	entity proj = spawn ();
-	proj.classname = "plasma";
+	entity proj = new(plasma);
 	proj.owner = proj.realowner = self;
 	proj.use = M_Spider_Attack_Web_Explode;
 	proj.think = adaptor_think2use_hittype_splash;

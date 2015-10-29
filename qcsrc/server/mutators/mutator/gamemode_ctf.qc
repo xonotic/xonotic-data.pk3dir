@@ -467,13 +467,12 @@ void ctf_CaptureShield_Touch()
 
 void ctf_CaptureShield_Spawn(entity flag)
 {SELFPARAM();
-	entity shield = spawn();
+	entity shield = new(ctf_captureshield);
 
 	shield.enemy = self;
 	shield.team = self.team;
 	shield.touch = ctf_CaptureShield_Touch;
 	shield.customizeentityforclient = ctf_CaptureShield_Customize;
-	shield.classname = "ctf_captureshield";
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
 	shield.solid = SOLID_TRIGGER;

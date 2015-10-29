@@ -24,13 +24,12 @@ void ModelEffect_Draw(entity this)
 }
 
 void Ent_ModelEffect(bool isNew)
-{SELFPARAM();
-	self.classname = "modeleffect_spawner";
+{
+	make_pure(self);
 
 	int f = ReadByte();
 
-	entity e = spawn();
-	e.classname = "modeleffect";
+	entity e = new(modeleffect);
 	e.model = "from network";
 	e.modelindex = ReadShort();
 	e.skin = ReadByte();

@@ -584,8 +584,7 @@ void W_Arc_Beam(float burst)
 	if(time - self.beam_prev > 1)
 		sound(self, CH_WEAPON_A, SND_ARC_FIRE, VOL_BASE, ATTN_NORM);
 
-	entity beam = self.arc_beam = spawn();
-	beam.classname = "W_Arc_Beam";
+	entity beam = self.arc_beam = new(W_Arc_Beam);
 	beam.solid = SOLID_NOT;
 	beam.think = W_Arc_Beam_Think;
 	beam.owner = self;

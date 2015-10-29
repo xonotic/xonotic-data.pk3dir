@@ -1118,9 +1118,8 @@ void bot_setcurrentcommand()
 
 	if(!self.bot_cmd_current)
 	{
-		self.bot_cmd_current = spawn();
-		self.bot_cmd_current.classname = "bot_cmd";
-		self.bot_cmd_current.is_bot_cmd = 1;
+		self.bot_cmd_current = new(bot_cmd);
+		self.bot_cmd_current.is_bot_cmd = true;
 	}
 
 	bot_cmd = self.bot_cmd_current;

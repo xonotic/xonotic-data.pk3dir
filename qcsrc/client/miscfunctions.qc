@@ -123,7 +123,8 @@ entity GetTeam(int Team, bool add)
 		return teamslots[num];
 	if (!add)
 		return world;
-	entity tm = spawn();
+	entity tm = new(team);
+	make_pure(tm);
 	tm.team = Team;
 	teamslots[num] = tm;
 	RegisterTeam(tm);

@@ -78,19 +78,18 @@ void Announcer_Gamestart()
 	{
 		if(time < startTime)
 		{
-			entity e = find(world, classname, "announcer_countdown");
-			if (!e)
+			static entity announcer_countdown;
+			if (!announcer_countdown)
 			{
-				e = spawn();
-				e.classname = "announcer_countdown";
-				e.think = Announcer_Countdown;
+				announcer_countdown = new(announcer_countdown);
+				announcer_countdown.think = Announcer_Countdown;
 			}
 
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			if(time > e.nextthink) // don't play it again if countdown was already going
+			if(time > announcer_countdown.nextthink) // don't play it again if countdown was already going
 				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 
-			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
+			announcer_countdown.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
 	}
 

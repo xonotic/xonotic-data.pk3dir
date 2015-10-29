@@ -175,13 +175,13 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 		// if we don't, this is a "real" animated model
 		if (gettagindex(this, "weapon"))
 		{
-			if (!this.weaponentity[slot]) this.weaponentity[slot] = spawn();
+			if (!this.weaponentity[slot]) this.weaponentity[slot] = new(weaponentity);
 			_setmodel(this.weaponentity[slot], W_Model(strcat("v_", name, ".md3")));
 			setattachment(this.weaponentity[slot], this, "weapon");
 		}
 		else if (gettagindex(this, "tag_weapon"))
 		{
-			if (!this.weaponentity[slot]) this.weaponentity[slot] = spawn();
+			if (!this.weaponentity[slot]) this.weaponentity[slot] = new(weaponentity);
 			_setmodel(this.weaponentity[slot], W_Model(strcat("v_", name, ".md3")));
 			setattachment(this.weaponentity[slot], this, "tag_weapon");
 		}
@@ -442,6 +442,7 @@ void CL_ExteriorWeaponentity_Think()
 void CL_SpawnWeaponentity(entity e, int slot)
 {
 	entity view = e.weaponentity[slot] = new(weaponentity);
+	make_pure(view);
 	view.solid = SOLID_NOT;
 	view.owner = e;
 	setmodel(view, MDL_Null);  // precision set when changed
@@ -455,8 +456,8 @@ void CL_SpawnWeaponentity(entity e, int slot)
 
 	if (slot == 0)
 	{
-		entity exterior = e.exteriorweaponentity = spawn();
-		exterior.classname = "exteriorweaponentity";
+		entity exterior = e.exteriorweaponentity = new(exteriorweaponentity);
+		make_pure(exterior);
 		exterior.solid = SOLID_NOT;
 		exterior.exteriorweaponentity = exterior;
 		exterior.owner = e;

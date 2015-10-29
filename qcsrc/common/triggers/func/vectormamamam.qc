@@ -91,8 +91,7 @@ void func_vectormamamam_findtarget()
 	self.destvec = self.origin - func_vectormamamam_origin(self, 0);
 
 	entity controller;
-	controller = spawn();
-	controller.classname = "func_vectormamamam_controller";
+	controller = new(func_vectormamamam_controller);
 	controller.owner = self;
 	controller.nextthink = time + 1;
 	controller.think = func_vectormamamam_controller_think;

@@ -28,7 +28,7 @@ ENDCLASS(Waypoint)
 REGISTRY(RadarIcons, BITS(7))
 REGISTER_REGISTRY(RegisterRadarIcons)
 .int m_radaricon;
-#define REGISTER_RADARICON(id, num) REGISTER(RegisterRadarIcons, RADARICON, RadarIcons, id, m_id, new(RadarIcon)) { this.m_radaricon = num; this.netname = #id; }
+#define REGISTER_RADARICON(id, num) REGISTER(RegisterRadarIcons, RADARICON, RadarIcons, id, m_id, new(RadarIcon)) { make_pure(this); this.m_radaricon = num; this.netname = #id; }
 
 REGISTER_WAYPOINT(Null, "", '0 0 0', 1);
 

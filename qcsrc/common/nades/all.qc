@@ -52,7 +52,7 @@ void healer_setup(entity e)
 REGISTER_NET_LINKED(Nade_Heal, bool isNew)
 #ifdef CSQC
 {
-	Net_Accept();
+	Net_Accept(Nade_Heal);
 	int sf = ReadByte();
 	if (sf & 1) {
 		this.origin_x = ReadCoord();

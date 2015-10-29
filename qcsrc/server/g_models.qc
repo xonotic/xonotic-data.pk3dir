@@ -93,20 +93,20 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WALL);
 	WriteByte(MSG_ENTITY, sf);
 
-	if(sf & 1)
+	if(sf & BIT(0))
 	{
 		if(sf & 0x40)
 			WriteShort(MSG_ENTITY, self.colormap);
 	}
 
-	if(sf & 2)
+	if(sf & BIT(1))
 	{
 		WriteCoord(MSG_ENTITY, self.origin.x);
 		WriteCoord(MSG_ENTITY, self.origin.y);
 		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 
-	if(sf & 4)
+	if(sf & BIT(2))
 	{
 		if(sf & 0x10)
 		{
@@ -116,7 +116,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 		}
 	}
 
-	if(sf & 8)
+	if(sf & BIT(3))
 	{
 		if(sf & 0x80)
 		{

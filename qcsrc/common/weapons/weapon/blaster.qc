@@ -101,9 +101,8 @@ void W_Blaster_Attack(
 	W_SetupShot_Dir(actor, s_forward, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, atk_damage);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	entity missile = spawn();
+	entity missile = new(blasterbolt);
 	missile.owner = missile.realowner = actor;
-	missile.classname = "blasterbolt";
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = atk_damage;
 	PROJECTILE_MAKETRIGGER(missile);

@@ -173,9 +173,7 @@ void RegisterSLCategories()
 	#define SLIST_CATEGORY(name,enoverride,dioverride,str) \
 		SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) \
 		CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") \
-		cat = spawn(); \
-		categories[name - 1] = cat; \
-		cat.classname = "slist_category"; \
+		cat = categories[name - 1] = new(slist_category); \
 		cat.cat_name = strzone(#name); \
 		cat.cat_enoverride_string = strzone(SLIST_CATEGORY_AUTOCVAR(name)); \
 		cat.cat_dioverride_string = strzone(dioverride); \

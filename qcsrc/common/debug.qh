@@ -1,0 +1,111 @@
+#ifndef DEBUG_H
+#define DEBUG_H
+
+.bool debug;
+.int sv_entnum;
+REGISTER_NET_TEMP(net_debug, bool isNew)
+#ifdef CSQC
+	{
+		Net_Accept(net_debug);
+		this.sv_entnum = ReadShort();
+		if (ReadByte()) make_pure(this);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
+		this.debug = true;  // identify server entities by this
+		this.classname = strzone(ReadString());
+		this.sourceLocFile = strzone(ReadString());
+		this.sourceLocLine = ReadInt24_t();
+	}
+#endif
+
+#ifdef SVQC
+	bool debug_send(entity this, entity to, int sf)
+	{
+		int channel = MSG_ONE;
+		msg_entity = to;
+		WriteHeader(channel, net_debug);
+		WriteShort(channel, num_for_edict(this));
+		WriteByte(channel, is_pure(this));
+		WriteCoord(channel, this.origin.x);
+		WriteCoord(channel, this.origin.y);
+		WriteCoord(channel, this.origin.z);
+		WriteString(channel, this.classname);
+		WriteString(channel, this.sourceLocFile);
+		WriteInt24_t(channel, this.sourceLocLine);
+		return true;
+	}
+#endif
+
+bool autocvar_debugdraw;
+
+#ifdef CSQC
+	.int debugdraw_last;
+	vector project_3d_to_2d(vector vec);
+	void Debug_Draw()
+	{
+		if (!autocvar_debugdraw) return;
+		static int debugdraw_frame;
+		++debugdraw_frame;
+		const int size = 8;
+		for (entity e1 = NULL; (e1 = nextent(e1)); )
+		{
+			if (e1.debugdraw_last == debugdraw_frame) continue;
+			int ofs = 0;
+			for (entity e = findradius(e1.origin, 100); e; e = e.chain)
+			{
+				if (e.debugdraw_last == debugdraw_frame) continue;
+				e.debugdraw_last = debugdraw_frame;
+				vector rgb = (e.debug) ? '0 0 1' : '1 0 0';
+				if (is_pure(e))
+				{
+					if (autocvar_debugdraw < 2) continue;
+					rgb.y = 1;
+				}
+				vector pos = project_3d_to_2d(e.origin);
+				if (pos.z < 0) continue;
+				pos.z = 0;
+				pos.y += ofs * size;
+				drawcolorcodedstring2(pos,
+					sprintf("%d: '%s'@%s:%d", (e.debug ? e.sv_entnum : num_for_edict(e)),
+					e.classname, e.sourceLocFile, e.sourceLocLine),
+					size * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
+				++ofs;
+			}
+		}
+	}
+#endif
+
+#ifdef SVQC
+	GENERIC_COMMAND(debugdraw_sv, "Dump all server entities")
+	{
+		switch (request)
+		{
+			case CMD_REQUEST_COMMAND:
+			{
+				if (!autocvar_debugdraw) return;
+				int n = 1000;
+				int rem = n;
+				for (entity e = NULL; (e = findfloat(e, debug, 0)) && rem > 0; )
+				{
+					if (autocvar_debugdraw < 2 && is_pure(e)) continue;
+					debug_send(e, nextent(NULL), 0);
+					e.debug = true;
+					--rem;
+				}
+				LOG_INFOF("%d server entities sent\n", n - rem);
+				return;
+			}
+
+			default:
+			case CMD_REQUEST_USAGE:
+			{
+				LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " debugdraw_sv"));
+				return;
+			}
+		}
+	}
+#endif
+
+#endif

@@ -79,9 +79,8 @@ string nmm_tile_build_vmill(entity tile)
 void nmm_spawn_tile(string id, entity minig, int distance)
 {
 	// TODO global variable + list_next for simpler tile loops
-	entity e = spawn();
+	entity e = new(minigame_nmm_tile);
 	e.origin = minigame_tile_pos(id,7,7);
-	e.classname = "minigame_nmm_tile";
 	e.netname = id;
 	e.owner = minig;
 	e.team = 0;

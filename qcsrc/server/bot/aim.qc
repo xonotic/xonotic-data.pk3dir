@@ -19,7 +19,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	if (targ.solid < SOLID_BBOX) // SOLID_NOT and SOLID_TRIGGER
 		return false; // could never hit it
 	if (!tracetossent)
-		tracetossent = spawn();
+		tracetossent = new(tracetossent);
 	tracetossent.owner = ignore;
 	setsize(tracetossent, m1, m2);
 	savesolid = targ.solid;
@@ -38,7 +38,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	}
 
 	if (!tracetossfaketarget)
-		tracetossfaketarget = spawn();
+		tracetossfaketarget = new(tracetossfaketarget);
 	tracetossfaketarget.solid = savesolid;
 	tracetossfaketarget.movetype = targ.movetype;
 	_setmodel(tracetossfaketarget, targ.model); // no low precision
