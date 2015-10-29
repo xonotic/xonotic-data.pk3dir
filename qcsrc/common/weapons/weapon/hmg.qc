@@ -13,7 +13,7 @@ CLASS(HeavyMachineGun, Weapon)
 /* crosshair */ ATTRIB(HeavyMachineGun, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(HeavyMachineGun, model2, string, "weaponhmg");
 /* refname   */ ATTRIB(HeavyMachineGun, netname, string, "hmg");
-/* wepname   */ ATTRIB(HeavyMachineGun, message, string, _("Heavy Machine Gun"));
+/* wepname   */ ATTRIB(HeavyMachineGun, m_name, string, _("Heavy Machine Gun"));
 ENDCLASS(HeavyMachineGun)
 REGISTER_WEAPON(HMG, NEW(HeavyMachineGun));
 
@@ -43,7 +43,7 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(WEP_HMG.m_id); }
+spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
 
 void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, int slot, int fire)
 {

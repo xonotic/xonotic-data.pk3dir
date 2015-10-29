@@ -13,7 +13,7 @@ CLASS(Rifle, Weapon)
 /* crosshair */ ATTRIB(Rifle, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
 /* refname   */ ATTRIB(Rifle, netname, string, "rifle");
-/* wepname   */ ATTRIB(Rifle, message, string, _("Rifle"));
+/* wepname   */ ATTRIB(Rifle, m_name, string, _("Rifle"));
 ENDCLASS(Rifle)
 REGISTER_WEAPON(RIFLE, NEW(Rifle));
 
@@ -49,7 +49,7 @@ RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(WEP_RIFLE.m_id); }
+spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(this, WEP_RIFLE); }
 spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
 spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 

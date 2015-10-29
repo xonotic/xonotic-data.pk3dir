@@ -596,7 +596,7 @@ void readplayerstartcvars()
 				if (e.netname == s)
 				{
 					g_weaponarena_weapons |= WepSet_FromWeapon(j);
-					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
+					g_weaponarena_list = strcat(g_weaponarena_list, e.m_name, " & ");
 					break;
 				}
 			}

@@ -13,7 +13,7 @@ CLASS(MachineGun, Weapon)
 /* crosshair */ ATTRIB(MachineGun, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(MachineGun, model2, string, "weaponuzi");
 /* refname   */ ATTRIB(MachineGun, netname, string, "machinegun");
-/* wepname   */ ATTRIB(MachineGun, message, string, _("MachineGun"));
+/* wepname   */ ATTRIB(MachineGun, m_name, string, _("MachineGun"));
 ENDCLASS(MachineGun)
 REGISTER_WEAPON(MACHINEGUN, NEW(MachineGun));
 
@@ -62,10 +62,10 @@ spawnfunc(weapon_machinegun)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(WEP_SHOCKWAVE.m_id);
+		weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_MACHINEGUN.m_id);
+	weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
 }
 spawnfunc(weapon_uzi) { spawnfunc_weapon_machinegun(this); }
 

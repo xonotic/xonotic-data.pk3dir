@@ -13,7 +13,7 @@ CLASS(RocketPropelledChainsaw, Weapon)
 /* crosshair */ ATTRIB(RocketPropelledChainsaw, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(RocketPropelledChainsaw, model2, string, "weaponrpc");
 /* refname   */ ATTRIB(RocketPropelledChainsaw, netname, string, "rpc");
-/* wepname   */ ATTRIB(RocketPropelledChainsaw, message, string, _("Rocket Propelled Chainsaw"));
+/* wepname   */ ATTRIB(RocketPropelledChainsaw, m_name, string, _("Rocket Propelled Chainsaw"));
 ENDCLASS(RocketPropelledChainsaw)
 REGISTER_WEAPON(RPC, NEW(RocketPropelledChainsaw));
 
@@ -47,7 +47,7 @@ RPC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(WEP_RPC.m_id); }
+spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(this, WEP_RPC); }
 
 void W_RocketPropelledChainsaw_Explode()
 {SELFPARAM();

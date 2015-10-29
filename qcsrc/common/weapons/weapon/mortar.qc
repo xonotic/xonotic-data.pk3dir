@@ -13,7 +13,7 @@ CLASS(Mortar, Weapon)
 /* crosshair */ ATTRIB(Mortar, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Mortar, model2, string, "weapongrenadelauncher");
 /* refname   */ ATTRIB(Mortar, netname, string, "mortar");
-/* wepname   */ ATTRIB(Mortar, message, string, _("Mortar"));
+/* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
 ENDCLASS(Mortar)
 REGISTER_WEAPON(MORTAR, NEW(Mortar));
 
@@ -58,7 +58,7 @@ MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(WEP_MORTAR.m_id); }
+spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(this, WEP_MORTAR); }
 spawnfunc(weapon_grenadelauncher) { spawnfunc_weapon_mortar(this); }
 
 void W_Mortar_Grenade_Explode(void)

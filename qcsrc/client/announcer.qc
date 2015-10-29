@@ -9,10 +9,10 @@ bool announcer_1min;
 bool announcer_5min;
 string AnnouncerOption()
 {
-	if(MUTATOR_CALLHOOK(AnnouncerOption, ret_string))
-		return ret_string;
-
-	return autocvar_cl_announcer;
+	string ret = autocvar_cl_announcer;
+	MUTATOR_CALLHOOK(AnnouncerOption, ret);
+	ret = ret_string;
+	return ret;
 }
 
 void Announcer_Countdown()

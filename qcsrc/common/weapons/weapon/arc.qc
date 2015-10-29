@@ -13,7 +13,7 @@ CLASS(Arc, Weapon)
 /* crosshair */ ATTRIB(Arc, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Arc, model2, string, "weaponarc");
 /* refname   */ ATTRIB(Arc, netname, string, "arc");
-/* wepname   */ ATTRIB(Arc, message, string, _("Arc"));
+/* wepname   */ ATTRIB(Arc, m_name, string, _("Arc"));
 ENDCLASS(Arc)
 REGISTER_WEAPON(ARC, NEW(Arc));
 
@@ -128,7 +128,7 @@ vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as 
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_arc) { weapon_defaultspawnfunc(WEP_ARC.m_id); }
+spawnfunc(weapon_arc) { weapon_defaultspawnfunc(this, WEP_ARC); }
 
 bool W_Arc_Beam_Send(entity this, entity to, int sf)
 {

@@ -152,7 +152,7 @@ STATIC_INIT(RegisterClasses)
 	class(cname).type name[cnt];
 
 #define ENDCLASS(cname) \
-	[[last]] INIT(cname) \
+	INIT(cname) \
 	{ \
 		return this; \
 	}

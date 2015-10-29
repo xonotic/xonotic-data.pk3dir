@@ -34,7 +34,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 {SELFPARAM();
 	float thisammo, i;
 	string s;
-	var .int ammotype = (get_weaponinfo(wpn)).ammo_field;
+	Weapon info = get_weaponinfo(wpn);
+	var .int ammotype = info.ammo_field;
 
 	entity wep = new(droppedweapon);
 
@@ -74,7 +75,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 	}
 
-	WITH(entity, self, wep, weapon_defaultspawnfunc(wpn));
+	weapon_defaultspawnfunc(wep, info);
 	if(startitem_failed)
 		return string_null;
 	wep.glowmod = own.weaponentity_glowmod;

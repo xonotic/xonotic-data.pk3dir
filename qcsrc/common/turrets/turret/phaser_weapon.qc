@@ -5,7 +5,7 @@ CLASS(PhaserTurretAttack, PortoLaunch)
 /* flags     */ ATTRIB(PhaserTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(PhaserTurretAttack, impulse, int, 9);
 /* refname   */ ATTRIB(PhaserTurretAttack, netname, string, "turret_phaser");
-/* wepname   */ ATTRIB(PhaserTurretAttack, message, string, _("Phaser"));
+/* wepname   */ ATTRIB(PhaserTurretAttack, m_name, string, _("Phaser"));
 ENDCLASS(PhaserTurretAttack)
 REGISTER_WEAPON(PHASER, NEW(PhaserTurretAttack));
 

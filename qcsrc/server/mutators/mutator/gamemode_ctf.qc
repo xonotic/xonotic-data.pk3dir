@@ -47,9 +47,14 @@ const int SP_CTF_DROPS = 7;
 const int SP_CTF_FCKILLS = 8;
 const int SP_CTF_RETURNS = 9;
 
+CLASS(Flag, Pickup)
+    ATTRIB(Flag, m_mins, vector, PL_MIN_CONST + '0 0 -13')
+    ATTRIB(Flag, m_maxs, vector, PL_MAX_CONST + '0 0 -13')
+ENDCLASS(Flag)
+Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
+void ctf_FlagTouch() { SELFPARAM(); ITEM_HANDLE(Pickup, CTF_FLAG, this, other); }
+
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
-#define FLAG_MIN (PL_MIN_CONST + '0 0 -13')
-#define FLAG_MAX (PL_MAX_CONST + '0 0 -13')
 
 const float FLAG_SCALE = 0.6;
 
@@ -124,6 +129,8 @@ const int RETURN_DROPPED = 2;
 const int RETURN_DAMAGE = 3;
 const int RETURN_SPEEDRUN = 4;
 const int RETURN_NEEDKILL = 5;
+
+void ctf_Handle_Throw(entity player, entity receiver, float droptype);
 
 // flag properties
 #define ctf_spawnorigin dropped_origin
@@ -1032,11 +1039,11 @@ void ctf_FlagThink()
 			ctf_CaptureShield_Update(tmp_entity, 1); // release shield only
 
 	// sanity checks
-	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
+	if(self.mins != CTF_FLAG.m_mins || self.maxs != CTF_FLAG.m_maxs) { // reset the flag boundaries in case it got squished
 		LOG_TRACE("wtf the flag got squashed?\n");
-		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
+		tracebox(self.origin, CTF_FLAG.m_mins, CTF_FLAG.m_maxs, self.origin, MOVE_NOMONSTERS, self);
 		if(!trace_startsolid || self.noalign) // can we resize it without getting stuck?
-			setsize(self, FLAG_MIN, FLAG_MAX); }
+			setsize(self, CTF_FLAG.m_mins, CTF_FLAG.m_maxs); }
 
 	switch(self.ctf_status) // reset flag angles in case warpzones adjust it
 	{
@@ -1167,26 +1174,27 @@ void ctf_FlagThink()
 	}
 }
 
-void ctf_FlagTouch()
-{SELFPARAM();
+METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
+{
+	return = false;
 	if(gameover) { return; }
 	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
-	entity toucher = other, tmp_entity;
-	bool is_not_monster = (!IS_MONSTER(toucher)), num_perteam = 0;
+	bool is_not_monster = (!IS_MONSTER(toucher));
 
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
 	{
 		if(!autocvar_g_ctf_flag_return_damage_delay)
 		{
-			self.health = 0;
-			ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
+			flag.health = 0;
+			ctf_CheckFlagReturn(flag, RETURN_NEEDKILL);
 		}
-		if(!self.ctf_flagdamaged) { return; }
+		if(!flag.ctf_flagdamaged) { return; }
 	}
 
-	FOR_EACH_PLAYER(tmp_entity) if(SAME_TEAM(toucher, tmp_entity)) { ++num_perteam; }
+	int num_perteam = 0;
+	entity tmp_entity; FOR_EACH_PLAYER(tmp_entity) if(SAME_TEAM(toucher, tmp_entity)) { ++num_perteam; }
 
 	// special touch behaviors
 	if(toucher.frozen) { return; }
@@ -1204,40 +1212,40 @@ void ctf_FlagTouch()
 	}
 	else if (!IS_PLAYER(toucher)) // The flag just touched an object, most likely the world
 	{
-		if(time > self.wait) // if we haven't in a while, play a sound/effect
+		if(time > flag.wait) // if we haven't in a while, play a sound/effect
 		{
-			Send_Effect_(self.toucheffect, self.origin, '0 0 0', 1);
-			_sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
-			self.wait = time + FLAG_TOUCHRATE;
+			Send_Effect_(flag.toucheffect, flag.origin, '0 0 0', 1);
+			_sound(flag, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTEN_NORM);
+			flag.wait = time + FLAG_TOUCHRATE;
 		}
 		return;
 	}
 	else if(toucher.deadflag != DEAD_NO) { return; }
 
-	switch(self.ctf_status)
+	switch(flag.ctf_status)
 	{
 		case FLAG_BASE:
 		{
 			if(ctf_oneflag)
 			{
-				if(CTF_SAMETEAM(toucher, self) && (toucher.flagcarried) && !toucher.flagcarried.team && is_not_monster)
-					ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the neutral flag to enemy base
-				else if(!self.team && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
-					ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the neutral flag
+				if(CTF_SAMETEAM(toucher, flag) && (toucher.flagcarried) && !toucher.flagcarried.team && is_not_monster)
+					ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the neutral flag to enemy base
+				else if(!flag.team && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
+					ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // toucher just stole the neutral flag
 			}
-			else if(CTF_SAMETEAM(toucher, self) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, self) && is_not_monster)
-				ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
-			else if(CTF_DIFFTEAM(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
-				ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the enemies flag
+			else if(CTF_SAMETEAM(toucher, flag) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, flag) && is_not_monster)
+				ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
+			else if(CTF_DIFFTEAM(toucher, flag) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
+				ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
 		}
 
 		case FLAG_DROPPED:
 		{
-			if(CTF_SAMETEAM(toucher, self) && (autocvar_g_ctf_flag_return || num_perteam <= 1) && self.team) // automatically return if there's only 1 player on the team
-				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
-			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
-				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
+			if(CTF_SAMETEAM(toucher, flag) && (autocvar_g_ctf_flag_return || num_perteam <= 1) && flag.team) // automatically return if there's only 1 player on the team
+				ctf_Handle_Return(flag, toucher); // toucher just returned his own flag
+			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != flag.ctf_dropper) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
+				ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
 			break;
 		}
 
@@ -1249,12 +1257,12 @@ void ctf_FlagTouch()
 
 		case FLAG_PASSING:
 		{
-			if((IS_PLAYER(toucher)) && (toucher.deadflag == DEAD_NO) && (toucher != self.pass_sender))
+			if((IS_PLAYER(toucher)) && (toucher.deadflag == DEAD_NO) && (toucher != flag.pass_sender))
 			{
-				if(DIFF_TEAM(toucher, self.pass_sender))
-					ctf_Handle_Return(self, toucher);
+				if(DIFF_TEAM(toucher, flag.pass_sender))
+					ctf_Handle_Return(flag, toucher);
 				else
-					ctf_Handle_Retrieve(self, toucher);
+					ctf_Handle_Retrieve(flag, toucher);
 			}
 			break;
 		}
@@ -1415,7 +1423,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 
 	// appearence
 	_setmodel(flag, flag.model); // precision set below
-	setsize(flag, FLAG_MIN, FLAG_MAX);
+	setsize(flag, CTF_FLAG.m_mins, CTF_FLAG.m_maxs);
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
 
 	if(autocvar_g_ctf_flag_glowtrails)

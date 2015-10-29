@@ -28,7 +28,7 @@ CLASS(SpiderAttack, PortoLaunch)
 /* flags     */ ATTRIB(SpiderAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(SpiderAttack, impulse, int, 9);
 /* refname   */ ATTRIB(SpiderAttack, netname, string, "spider");
-/* wepname   */ ATTRIB(SpiderAttack, message, string, _("Spider attack"));
+/* wepname   */ ATTRIB(SpiderAttack, m_name, string, _("Spider attack"));
 ENDCLASS(SpiderAttack)
 REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));
 

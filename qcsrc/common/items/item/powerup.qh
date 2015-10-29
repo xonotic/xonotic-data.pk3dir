@@ -8,6 +8,8 @@
 #include "pickup.qh"
 CLASS(Powerup, Pickup)
 #ifdef SVQC
+    ATTRIB(Powerup, m_mins, vector, '-16 -16 0')
+    ATTRIB(Powerup, m_maxs, vector, '16 16 48')
     ATTRIB(Powerup, m_botvalue, int, 100000)
     ATTRIB(Powerup, m_itemflags, int, FL_POWERUP)
     ATTRIB(Powerup, m_respawntime, float(), GET(g_pickup_respawntime_powerup))

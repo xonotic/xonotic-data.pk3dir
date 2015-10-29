@@ -35,6 +35,7 @@ WepSet ReadWepSet();
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 REGISTER_REGISTRY(RegisterWeapons)
+STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(WeaponPickup, it))); }
 entity get_weaponinfo(int id);
 
 

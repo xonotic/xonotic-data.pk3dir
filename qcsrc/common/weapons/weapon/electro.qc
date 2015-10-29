@@ -13,7 +13,7 @@ CLASS(Electro, Weapon)
 /* crosshair */ ATTRIB(Electro, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(Electro, model2, string, "weaponelectro");
 /* refname   */ ATTRIB(Electro, netname, string, "electro");
-/* wepname   */ ATTRIB(Electro, message, string, _("Electro"));
+/* wepname   */ ATTRIB(Electro, m_name, string, _("Electro"));
 ENDCLASS(Electro)
 REGISTER_WEAPON(ELECTRO, NEW(Electro));
 
@@ -69,7 +69,7 @@ void W_Electro_ExplodeCombo(void);
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_electro) { weapon_defaultspawnfunc(WEP_ELECTRO.m_id); }
+spawnfunc(weapon_electro) { weapon_defaultspawnfunc(this, WEP_ELECTRO); }
 
 void W_Electro_TriggerCombo(vector org, float rad, entity own)
 {

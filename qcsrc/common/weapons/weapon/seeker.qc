@@ -13,7 +13,7 @@ CLASS(Seeker, Weapon)
 /* crosshair */ ATTRIB(Seeker, w_crosshair_size, float, 0.8);
 /* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
 /* refname   */ ATTRIB(Seeker, netname, string, "seeker");
-/* wepname   */ ATTRIB(Seeker, message, string, _("T.A.G. Seeker"));
+/* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
 ENDCLASS(Seeker)
 REGISTER_WEAPON(SEEKER, NEW(Seeker));
 
@@ -86,7 +86,7 @@ SEEKER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(WEP_SEEKER.m_id); }
+spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
