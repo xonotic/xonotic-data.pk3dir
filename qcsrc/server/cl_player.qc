@@ -168,11 +168,14 @@ void player_anim (void)
 	animdecide_setstate(self, animbits, false);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
 
-	if (self.weaponentity)
+	int slot = 0; // TODO: unhardcode
 	{
-		updateanim(self.weaponentity);
-		if (!self.weaponentity.animstate_override)
-			setanim(self.weaponentity, self.weaponentity.anim_idle, true, false, false);
+		if (self.weaponentity[slot])
+		{
+			updateanim(self.weaponentity[slot]);
+			if (!self.weaponentity[slot].animstate_override)
+				setanim(self.weaponentity[slot], self.weaponentity[slot].anim_idle, true, false, false);
+		}
 	}
 }
 
@@ -479,9 +482,18 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	float abot, vbot;
-	abot = (IS_BOT_CLIENT(attacker));
-	vbot = (IS_BOT_CLIENT(self));
+	if (self != attacker) {
+		float realdmg = damage - excess;
+		if (IS_PLAYER(attacker)) {
+			PlayerScore_Add(attacker, SP_DMG, realdmg);
+		}
+		if (IS_PLAYER(self)) {
+			PlayerScore_Add(self, SP_DMGTAKEN, realdmg);
+		}
+	}
+	
+	bool abot = (IS_BOT_CLIENT(attacker));
+	bool vbot = (IS_BOT_CLIENT(self));
 
 	valid_damage_for_weaponstats = 0;
 	Weapon awep = WEP_Null;
@@ -643,7 +655,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		{
 			Weapon w = get_weaponinfo(j);
 			w.wr_resetplayer(w);
-			ATTACK_FINISHED_FOR(self, j) = 0;
+			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				ATTACK_FINISHED_FOR(self, j, slot) = 0;
+			}
 		}
 	}
 }

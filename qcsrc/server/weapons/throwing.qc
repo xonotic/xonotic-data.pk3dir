@@ -172,7 +172,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
-	if(self.weaponentity.state != WS_READY)
+	int slot = 0; // TODO: unhardcode
+	if(self.weaponentity[slot].state != WS_READY)
 		return;
 	if(!W_IsWeaponThrowable(w))
 		return;

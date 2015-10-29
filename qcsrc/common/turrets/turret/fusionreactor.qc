@@ -19,7 +19,7 @@ REGISTER_TURRET(FUSIONREACTOR, NEW(FusionReactor));
 #ifdef SVQC
 bool turret_fusionreactor_firecheck()
 {SELFPARAM();
-    if (self.attack_finished_single > time)
+    if (self.attack_finished_single[0] > time)
         return false;
 
     if (self.enemy.deadflag != DEAD_NO)

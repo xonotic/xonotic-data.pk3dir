@@ -204,7 +204,7 @@ const int SFL_SORT_PRIO_MASK = 12;
 /**
  * Score indices
  */
-#define MAX_SCORE 10
+#define MAX_SCORE 12
 #define MAX_TEAMSCORE 2
 
 const int ST_SCORE = 0;
@@ -212,6 +212,8 @@ const int SP_KILLS = 0;
 const int SP_DEATHS = 1;
 const int SP_SUICIDES = 2;
 const int SP_SCORE = 3;
+const int SP_DMG = 10;
+const int SP_DMGTAKEN = 11;
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
 const int CH_INFO = 0;

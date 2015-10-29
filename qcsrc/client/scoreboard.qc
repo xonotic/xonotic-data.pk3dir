@@ -33,6 +33,8 @@ string TranslateScoresLabel(string l)
 		case "captime": return CTX(_("SCO^captime"));
 		case "deaths": return CTX(_("SCO^deaths"));
 		case "destroyed": return CTX(_("SCO^destroyed"));
+		case "dmg": return CTX(_("SCO^dmg"));
+		case "dmgtaken": return CTX(_("SCO^dmgtaken"));
 		case "drops": return CTX(_("SCO^drops"));
 		case "faults": return CTX(_("SCO^faults"));
 		case "fckills": return CTX(_("SCO^fckills"));
@@ -260,6 +262,8 @@ void Cmd_HUD_Help()
 	LOG_INFO(_("^3suicides^7                 Number of suicides\n"));
 	LOG_INFO(_("^3frags^7                    kills - suicides\n"));
 	LOG_INFO(_("^3kd^7                       The kill-death ratio\n"));
+	LOG_INFO(_("^3dmg^7                      The total damage done\n"));
+	LOG_INFO(_("^3dmgtaken^7                 The total damage taken\n"));
 	LOG_INFO(_("^3sum^7                      frags - deaths\n"));
 	LOG_INFO(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
 	LOG_INFO(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
@@ -300,6 +304,7 @@ void Cmd_HUD_Help()
 #define HUD_DefaultColumnLayout() \
 "ping pl name | " \
 "-teams,rc,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -rc,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
+"dmg dmgtaken " \
 "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
 "+lms/lives +lms/rank " \
 "+kh/caps +kh/pushes +kh/destroyed " \
@@ -394,6 +399,8 @@ void Cmd_HUD_SetFields(float argc)
 			case "sum": case "diff": case "k-d": hud_field[hud_num_fields] = SP_SUM; break;
 			case "name": case "nick": hud_field[hud_num_fields] = SP_NAME; have_name = true; break;
 			case "|": hud_field[hud_num_fields] = SP_SEPARATOR; have_separator = true; break;
+			case "dmg": hud_field[hud_num_fields] = SP_DMG; break;
+			case "dmgtaken": hud_field[hud_num_fields] = SP_DMGTAKEN; break;
 			default:
 			{
 				for(j = 0; j < MAX_SCORE; ++j)
@@ -598,6 +605,20 @@ string HUD_GetField(entity pl, int field)
 			}
 			return ftos(f);
 
+		case SP_DMG:
+			num = pl.(scores[SP_DMG]);
+			denom = 1000;
+			
+			str = sprintf("%.1f k", num/denom);
+			return str;
+			
+		case SP_DMGTAKEN:
+			num = pl.(scores[SP_DMGTAKEN]);
+			denom = 1000;
+			
+			str = sprintf("%.1f k", num/denom);
+			return str; 
+		
 		default:
 			tmp = pl.(scores[field]);
 			f = scores_flags[field];
@@ -974,35 +995,28 @@ float HUD_WouldDrawScoreboard() {
 
 float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
-{SELFPARAM();
+{
+	SELFPARAM();
 	WepSet weapons_stat = WepSet_GetFromStat();
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	float initial_posx = pos.x;
-	int i;
-	float weapon_stats;
 	int disownedcnt = 0;
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
+	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
 		setself(get_weaponinfo(i));
-		if(!self.weapon)
-			continue;
+		if (!self.weapon) continue;
 
-		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+		if (weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
 			++disownedcnt;
 	}
 
 	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
+	if (weapon_cnt <= 0) return pos;
 
-	if(weapon_cnt <= 0)
-		return pos;
-
-	int rows;
-	if(autocvar_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - 1) * 0.5))
+	int rows = 1;
+	if (autocvar_scoreboard_accuracy_doublerows && weapon_cnt >= floor((Weapons_COUNT - 1) * 0.5))
 		rows = 2;
-	else
-		rows = 1;
 	int columnns = ceil(weapon_cnt / rows);
 
 	float height = 40;
@@ -1023,24 +1037,24 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
 
 	// column highlighting
-	for(i = 0; i < columnns; ++i)
+	for (int i = 0; i < columnns; ++i)
 	{
-		if(!(i % 2))
+		if ((i % 2) == 0)
 			drawfill(pos + '1 0 0' * weapon_width * rows * i, '0 1 0' * height * rows + '1 0 0' * weapon_width * rows, '0 0 0', scoreboard_alpha_bg * 0.2, DRAWFLAG_NORMAL);
 	}
 
 	// row highlighting
-	for(i = 0; i < rows; ++i)
+	for (int i = 0; i < rows; ++i)
 	{
 		drawfill(pos + '0 1 0' * weapon_height + '0 1 0' * height * i, '1 0 0' * sbwidth + '0 1 0' * fontsize, '1 1 1', scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
 	}
 
 	average_accuracy = 0;
 	int weapons_with_stats = 0;
-	if(rows == 2)
+	if (rows == 2)
 		pos.x += weapon_width / 2;
 
-	if(autocvar_scoreboard_accuracy_nocolors)
+	if (autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
 	else
 		Accuracy_LoadColors();
@@ -1048,19 +1062,17 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float oldposx = pos.x;
 	vector tmpos = pos;
 
-	int column;
-	for(i = WEP_FIRST, column = 0; i <= WEP_LAST; ++i)
-	{
+	int column = 0;
+	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
 		setself(get_weaponinfo(i));
-		if (!self.weapon)
-			continue;
-		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+		if (!self.weapon) continue;
+		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+		if (weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
 			continue;
 
 		float weapon_alpha;
-		if(weapon_stats >= 0)
+		if (weapon_stats >= 0)
 			weapon_alpha = scoreboard_alpha_fg;
 		else
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
@@ -1068,7 +1080,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		// weapon icon
 		drawpic_aspect_skin(tmpos, self.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
-		if(weapon_stats >= 0) {
+		if (weapon_stats >= 0) {
 			weapons_with_stats += 1;
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
@@ -1085,7 +1097,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		}
 		tmpos.x += weapon_width * rows;
 		pos.x += weapon_width * rows;
-		if(rows == 2 && column == columnns - 1) {
+		if (rows == 2 && column == columnns - 1) {
 			tmpos.x = oldposx;
 			tmpos.y += height;
 			pos.y += height;
@@ -1093,7 +1105,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		++column;
 	}
 
-	if(weapons_with_stats)
+	if (weapons_with_stats)
 		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
 
 	pos.y += height;
@@ -1349,7 +1361,7 @@ void HUD_DrawScoreboard()
 		}
 		pos = HUD_DrawScoreboardRankings(pos, playerslots[player_localnum], rgb, bg_size);
 	}
-	else if(autocvar_scoreboard_accuracy && spectatee_status == 0 && !warmup_stage && gametype != MAPINFO_TYPE_NEXBALL) {
+	else if (autocvar_scoreboard_accuracy && !warmup_stage && gametype != MAPINFO_TYPE_NEXBALL) {
 		if(teamplay)
 			pos = HUD_DrawScoreboardAccuracyStats(pos, Team_ColorRGB(myteam), bg_size);
 		else

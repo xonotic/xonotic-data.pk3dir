@@ -3,7 +3,7 @@
 
 #include "../common/weapons/all.qh"
 
-#define INDEPENDENT_ATTACK_FINISHED
+#define INDEPENDENT_ATTACK_FINISHED 1
 
 #define BUTTON_ATCK       button0
 #define BUTTON_JUMP       button2
@@ -152,7 +152,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 // definitions for weaponsystem
 // more WEAPONTODO: move these to their proper files
-.entity weaponentity;
+.entity weaponentity[MAX_WEAPONSLOTS];
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
 
@@ -164,11 +164,11 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 // WEAPONTODO
 .float autoswitch;
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
-void w_clear(Weapon thiswep, entity actor, bool fire1, bool fire2);
-void w_ready(Weapon thiswep, entity actor, bool fire1, bool fire2);
+void w_clear(Weapon thiswep, entity actor, int slot, int fire);
+void w_ready(Weapon thiswep, entity actor, int slot, int fire);
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
-.void(Weapon thiswep, entity actor, bool fire1, bool fire2) weapon_think;
+.void(Weapon thiswep, entity actor, int slot, int fire) weapon_think;
 
 
 // weapon states (self.weaponentity.state)
@@ -262,14 +262,14 @@ WepSet weaponsInMap;
 
 float bot_waypoints_for_items;
 
-.float attack_finished_for[Weapons_MAX];
-.float attack_finished_single;
-#ifdef INDEPENDENT_ATTACK_FINISHED
-#define ATTACK_FINISHED_FOR(ent,w) ((ent).(attack_finished_for[(w) - WEP_FIRST]))
+.float attack_finished_for[Weapons_MAX * MAX_WEAPONSLOTS];
+.float attack_finished_single[MAX_WEAPONSLOTS];
+#if INDEPENDENT_ATTACK_FINISHED
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).(attack_finished_for[((w) - WEP_FIRST) * MAX_WEAPONSLOTS + (slot)]))
 #else
-#define ATTACK_FINISHED_FOR(ent,w) ((ent).attack_finished_single)
+#define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
 #endif
-#define ATTACK_FINISHED(ent) ATTACK_FINISHED_FOR(ent,(ent).weapon)
+#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, (ent).weapon, slot)
 
 // assault game mode: Which team is attacking in this round?
 float assault_attacker_team;

@@ -2,13 +2,13 @@
 #define PROGNAME_H
 
 #if defined(MENUQC)
-    #define PROGNAME "MENUQC"
+	#define PROGNAME "MENUQC"
 #elif defined(SVQC)
-    #define PROGNAME "SVQC"
+	#define PROGNAME "SVQC"
 #elif defined(CSQC)
-    #define PROGNAME "CSQC"
+	#define PROGNAME "CSQC"
 #else
-    #error "Unable to detect PROGNAME"
+	#error "Unable to detect PROGNAME"
 #endif
 
 #endif

@@ -51,14 +51,14 @@ float autocvar_g_vehicle_raptor_bomblet_radius;
 float autocvar_g_vehicle_raptor_bomblet_force;
 float autocvar_g_vehicle_raptor_bomblet_explode_delay;
 
-METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     // 1 [wait] 1 [wait] 2 [wait] 2 [wait] [wait]
     float t = autocvar_g_vehicle_raptor_cannon_refire * (1 + veh.misc_bulletcounter == 4);
-    if (fire1)
-    if (weapon_prepareattack(thiswep, player, false, t)) {
+    if (fire & 1)
+    if (weapon_prepareattack(thiswep, player, slot, false, t)) {
         if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
         vector org = w_shotorg;
         vector dir = w_shotdir;
@@ -74,7 +74,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, bool fire1, bo
                                org, normalize(dir + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                                autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
                                DEATH_VH_RAPT_CANNON.m_id, PROJECTILE_RAPTORCANNON, 0, true, true, player);
-        weapon_thinkf(player, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(player, slot, WFRAME_FIRE1, 0, w_ready);
     }
 }
 METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
@@ -88,15 +88,15 @@ METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
 float autocvar_g_vehicle_raptor_bombs_refire;
 
 void raptor_bombdrop();
-METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
-    if (fire2)
-    if (!isPlayer || weapon_prepareattack(thiswep, player, true, autocvar_g_vehicle_raptor_bombs_refire)) {
+    if (fire & 2)
+    if (!isPlayer || weapon_prepareattack(thiswep, player, slot, true, autocvar_g_vehicle_raptor_bombs_refire)) {
         if (veh) setself(veh);
         raptor_bombdrop();
-        weapon_thinkf(player, WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(player, slot, WFRAME_FIRE2, 0, w_ready);
     }
 }
 
@@ -109,12 +109,12 @@ void raptor_flare_think();
 void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void raptor_flare_touch();
 
-METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
-    if (fire2)
-    if (!isPlayer || weapon_prepareattack(thiswep, player, true, autocvar_g_vehicle_raptor_flare_refire)) {
+    if (fire & 2)
+    if (!isPlayer || weapon_prepareattack(thiswep, player, slot, true, autocvar_g_vehicle_raptor_flare_refire)) {
         for(int i = 0; i < 3; ++i) {
             entity _flare = spawn();
             setmodel(_flare, MDL_VEH_RAPTOR_FLARE);
@@ -134,7 +134,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, bool fire1, boo
             _flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
             _flare.touch = raptor_flare_touch;
         }
-        weapon_thinkf(player, WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(player, slot, WFRAME_FIRE2, 0, w_ready);
     }
 }
 

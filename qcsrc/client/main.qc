@@ -636,33 +636,27 @@ void Ent_RandomSeed()
 	psrandom(s);
 }
 
-void Ent_ReadAccuracy(void)
+void Ent_ReadAccuracy()
 {
-    int f, w;
     int sf = ReadInt24_t();
-	if(sf == 0)
-	{
-		for(w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
+	if (sf == 0) {
+		for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
 			weapon_accuracy[w] = -1;
 		return;
 	}
 
-	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
-	{
-		if(sf & f)
-		{
+	int f = 1;
+	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
+		if (sf & f) {
             int b = ReadByte();
-			if(b == 0)
+			if (b == 0)
 				weapon_accuracy[w] = -1;
-			else if(b == 255)
+			else if (b == 255)
 				weapon_accuracy[w] = 1.0; // no better error handling yet, sorry
 			else
 				weapon_accuracy[w] = (b - 1.0) / 100.0;
 		}
-		if(f == 0x800000)
-			f = 1;
-		else
-			f *= 2;
+		f = (f == 0x800000) ? 1 : f * 2;
 	}
 }
 
@@ -1042,6 +1036,8 @@ void Ent_Init()
 
 	g_trueaim_minrange = ReadCoord();
 	g_balance_porto_secondary = ReadByte();
+
+	MUTATOR_CALLHOOK(Ent_Init);
 
 	if(!postinit)
 		PostInit();

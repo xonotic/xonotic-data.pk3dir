@@ -94,7 +94,7 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	}
 	METHOD(XonoticRegisteredSettingsList, resizeNotify, void(entity this, vector relOrigin, vector relSize, vector absOrigin, vector absSize))
 	{
-		super.resizeNotify(this, relOrigin, relSize, absOrigin, absSize);
+		SUPER(XonoticRegisteredSettingsList).resizeNotify(this, relOrigin, relSize, absOrigin, absSize);
 
 		this.itemAbsSize = '0 0 0';
 		this.realFontSize_y = this.fontSize / (this.itemAbsSize_y = (absSize.y * this.itemHeight));
@@ -103,7 +103,7 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	}
 	METHOD(XonoticRegisteredSettingsList, setSelected, void(entity this, int i))
 	{
-		super.setSelected(this, i);
+		SUPER(XonoticRegisteredSettingsList).setSelected(this, i);
 		this.onChange(this, this.onChangeEntity);
 	}
     CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source) {

@@ -133,11 +133,13 @@ void fd_secret_done()
 		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 }
 
+.float door_finished;
+
 void secret_blocked()
 {SELFPARAM();
-	if (time < self.attack_finished_single)
+	if (time < self.door_finished)
 		return;
-	self.attack_finished_single = time + 0.5;
+	self.door_finished = time + 0.5;
 	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
 }
 
@@ -152,16 +154,16 @@ void secret_touch()
 {SELFPARAM();
 	if (!other.iscreature)
 		return;
-	if (self.attack_finished_single > time)
+	if (self.door_finished > time)
 		return;
 
-	self.attack_finished_single = time + 2;
+	self.door_finished = time + 2;
 
 	if (self.message)
 	{
 		if (IS_CLIENT(other))
 			centerprint(other, self.message);
-		play2(other, SND(TALK));
+		play2(other, self.noise);
 	}
 }
 
@@ -209,6 +211,10 @@ spawnfunc(func_door_secret)
 	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
+
+	if(self.noise == "")
+		self.noise = "misc/talk.wav";
+	precache_sound(self.noise);
 
 	self.touch = secret_touch;
 	self.blocked = secret_blocked;

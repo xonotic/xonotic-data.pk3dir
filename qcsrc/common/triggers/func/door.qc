@@ -185,7 +185,7 @@ bool door_check_keys(entity door, entity player)
 #ifdef SVQC
 		if(player.key_door_messagetime <= time)
 		{
-			play2(player, SND(TALK));
+			play2(player, door.noise3);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(door.itemkeys));
 			player.key_door_messagetime = time + 2;
 		}
@@ -197,7 +197,7 @@ bool door_check_keys(entity door, entity player)
 #ifdef SVQC
 	if(player.key_door_messagetime <= time)
 	{
-		play2(player, SND(TALK));
+		play2(player, door.noise3);
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
 		player.key_door_messagetime = time + 2;
 	}
@@ -293,6 +293,7 @@ void door_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	}
 }
 
+.float door_finished;
 
 /*
 ================
@@ -306,17 +307,17 @@ void door_touch()
 {SELFPARAM();
 	if (!IS_PLAYER(other))
 		return;
-	if (self.owner.attack_finished_single > time)
+	if (self.owner.door_finished > time)
 		return;
 
-	self.owner.attack_finished_single = time + 2;
+	self.owner.door_finished = time + 2;
 
 #ifdef SVQC
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
 		if (IS_CLIENT(other))
 			centerprint(other, self.owner.message);
-		play2(other, SND(TALK));
+		play2(other, self.owner.noise);
 	}
 #endif
 }
@@ -437,14 +438,14 @@ void door_trigger_touch()
 #endif
 			return;
 
-	if (time < self.attack_finished_single)
+	if (time < self.door_finished)
 		return;
 
 	// check if door is locked
 	if (!door_check_keys(self, other))
 		return;
 
-	self.attack_finished_single = time + 1;
+	self.door_finished = time + 1;
 
 	activator = other;
 
@@ -733,6 +734,13 @@ spawnfunc(func_door)
 		return;
 	self.effects |= EF_LOWPRECISION;
 	self.classname = "door";
+
+	if(self.noise == "")
+		self.noise = "misc/talk.wav";
+	if(self.noise3 == "")
+		self.noise3 = "misc/talk.wav";
+	precache_sound(self.noise);
+	precache_sound(self.noise3);
 
 	self.blocked = door_blocked;
 	self.use = door_use;

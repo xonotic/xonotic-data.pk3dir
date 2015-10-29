@@ -406,19 +406,19 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Electro_CheckAttack(Weapon thiswep, entity actor, int slot, int fire)
 {SELFPARAM();
 	if(self.electro_count > 1)
 	if(self.BUTTON_ATCK2)
-	if(weapon_prepareattack(thiswep, actor, true, -1))
+	if(weapon_prepareattack(thiswep, actor, slot, true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO);
 		self.electro_count -= 1;
-		weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+		weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
 	// WEAPONTODO: when the player releases the button, cut down the length of refire2?
-	w_ready(thiswep, actor, fire1, fire2);
+	w_ready(thiswep, actor, slot, fire);
 }
 
 .float bot_secondary_electromooth;
@@ -451,7 +451,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
 				}
 			}
 		}
-		METHOD(Electro, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Electro, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
 			{
@@ -469,22 +469,22 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, bool fire1, bool fire2)
 				}
 			}
 
-			if(fire1)
+			if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(electro, refire)))
 				{
 						W_Electro_Attack_Bolt(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
 				}
 			}
-			else if(fire2)
+			else if(fire & 2)
 			{
 				if(time >= actor.electro_secondarytime)
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(electro, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(electro, refire)))
 				{
 					W_Electro_Attack_Orb(thiswep);
 					actor.electro_count = WEP_CVAR_SEC(electro, count);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 					actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
 				}
 			}

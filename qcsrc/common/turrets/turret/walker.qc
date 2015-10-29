@@ -429,7 +429,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
                         self.animflag = ANIM_MELEE;
                     }
                 }
-                else if (self.tur_head.attack_finished_single < time)
+                else if (self.tur_head.attack_finished_single[0] < time)
                 {
                     if(self.tur_head.shot_volly)
                     {
@@ -437,9 +437,9 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 
                         self.tur_head.shot_volly = self.tur_head.shot_volly -1;
                         if(self.tur_head.shot_volly == 0)
-                            self.tur_head.attack_finished_single = time + (autocvar_g_turrets_unit_walker_rocket_refire);
+                            self.tur_head.attack_finished_single[0] = time + (autocvar_g_turrets_unit_walker_rocket_refire);
                         else
-                            self.tur_head.attack_finished_single = time + 0.2;
+                            self.tur_head.attack_finished_single[0] = time + 0.2;
 
                         if(self.tur_head.shot_volly > 1)
                             walker_fire_rocket(gettaginfo(self, gettagindex(self, "tag_rocket01")));

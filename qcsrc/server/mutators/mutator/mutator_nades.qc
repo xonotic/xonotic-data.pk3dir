@@ -864,7 +864,8 @@ void nade_prime()
 	n.projectiledeathtype = DEATH_NADE.m_id;
 
 	setmodel(fn, MDL_NADE_VIEW);
-	setattachment(fn, self.weaponentity, "");
+	int slot = 0; // TODO: unhardcode
+	setattachment(fn, self.weaponentity[slot], "");
 	fn.realowner = fn.owner = self;
 	fn.colormod = Nades[n.nade_type].m_color;
 	fn.colormap = self.colormap;

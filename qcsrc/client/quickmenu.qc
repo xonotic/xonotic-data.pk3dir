@@ -75,12 +75,12 @@ bool QuickMenu_Open(string mode, string submenu)
 	if(mode == "file")
 	{
 		if(autocvar_hud_panel_quickmenu_file == "" || autocvar_hud_panel_quickmenu_file == "0")
-			printf("No file name is set in hud_panel_quickmenu_file, loading default quickmenu\n");
+			LOG_INFO("No file name is set in hud_panel_quickmenu_file, loading default quickmenu\n");
 		else
 		{
 			fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
 			if(fh < 0)
-				printf("Couldn't open file \"%s\", loading default quickmenu\n", autocvar_hud_panel_quickmenu_file);
+				LOG_INFOF("Couldn't open file \"%s\", loading default quickmenu\n", autocvar_hud_panel_quickmenu_file);
 		}
 		if(fh < 0)
 			mode = "default";
@@ -152,7 +152,7 @@ bool QuickMenu_Open(string mode, string submenu)
 	}
 	else
 	{
-		printf("Unrecognized mode %s\n", mode);
+		LOG_WARNINGF("Unrecognized mode %s\n", mode);
 		return false;
 	}
 
@@ -286,7 +286,7 @@ bool QuickMenu_Page_Load(string target_submenu, int new_page)
 			// printf("^1 skipping %s\n", s);
 		}
 		if(QuickMenu_Buffer_Index == QuickMenu_Buffer_Size)
-			printf("Couldn't find submenu \"%s\"\n", z_submenu);
+			LOG_WARNINGF("Couldn't find submenu \"%s\"\n", z_submenu);
 	}
 
 	// only the last page can contain up to QUICKMENU_MAXLINES entries
@@ -859,9 +859,9 @@ void QuickMenu_Default(string target_submenu)
 
 	if(target_submenu != "" && !target_submenu_found)
 	{
-		printf("Couldn't find submenu \"%s\"\n", target_submenu);
+		LOG_WARNINGF("Couldn't find submenu \"%s\"\n", target_submenu);
 		if(prvm_language != "en")
-			printf("^3Warning: submenu must be in English\n", target_submenu);
+			LOG_WARNINGF("^3Warning: submenu must be in English\n", target_submenu);
 		QuickMenu_Buffer_Size = 0;
 	}
 }

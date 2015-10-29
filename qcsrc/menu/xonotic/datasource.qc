@@ -57,13 +57,13 @@ CLASS(CvarStringSource, StringSource)
     {
         string s = this.CvarStringSource_cvar;
         this.StringSource_str = s ? cvar_string(s) : string_null;
-        return super.getEntry(this, i, returns);
+        return SUPER(CvarStringSource).getEntry(this, i, returns);
     }
     METHOD(CvarStringSource, reload, int(entity this, string filter))
     {
         string s = this.CvarStringSource_cvar;
         this.StringSource_str = s ? cvar_string(s) : string_null;
-        return super.reload(this, filter);
+        return SUPER(CvarStringSource).reload(this, filter);
     }
 ENDCLASS(CvarStringSource)
 #endif

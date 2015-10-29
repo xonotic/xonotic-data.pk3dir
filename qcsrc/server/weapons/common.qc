@@ -89,6 +89,8 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 		self.realowner = attacker;
 	}
 
+	MUTATOR_CALLHOOK(PrepareExplosionByDamage, self, attacker);
+
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
 	self.nextthink = time;

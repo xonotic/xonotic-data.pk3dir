@@ -45,11 +45,11 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
 
-void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, int slot, int fire)
 {
 	if (!actor.BUTTON_ATCK)
 	{
-		w_ready(thiswep, actor, fire1, fire2);
+		w_ready(thiswep, actor, slot, fire);
 		return;
 	}
 
@@ -58,7 +58,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, boo
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-		w_ready(thiswep, actor, fire1, fire2);
+		w_ready(thiswep, actor, slot, fire);
 		return;
 	}
 
@@ -85,8 +85,8 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, boo
 	if (autocvar_g_casings >= 2) // casing code
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 
-	ATTACK_FINISHED(actor) = time + WEP_CVAR(hmg, refire) * W_WeaponRateFactor();
-	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(hmg, refire) * W_WeaponRateFactor();
+	weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
 		METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
@@ -96,18 +96,18 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, bool fire1, boo
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 		}
-		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(WEP_CVAR(hmg, reload_ammo) && actor.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else
 			{
-				if (fire1)
-				if (weapon_prepareattack(thiswep, actor, false, 0))
+				if (fire & 1)
+				if (weapon_prepareattack(thiswep, actor, slot, false, 0))
 				{
 					actor.misc_bulletcounter = 0;
-					W_HeavyMachineGun_Attack_Auto(thiswep, actor, fire1, fire2);
+					W_HeavyMachineGun_Attack_Auto(thiswep, actor, slot, fire);
 				}
 			}
 		}

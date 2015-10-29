@@ -304,7 +304,10 @@ void PutObserverInServer()
 	self.weaponname = "";
 	self.switchingweapon = 0;
 	self.weaponmodel = "";
-	self.weaponentity = world;
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		self.weaponentity[slot] = NULL;
+	}
 	self.exteriorweaponentity = world;
 	self.killcount = FRAGS_SPECTATOR;
 	self.velocity = '0 0 0';
@@ -414,6 +417,9 @@ void PutClientInServer()
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
 	}
+	if (gameover) {
+		this.classname = STR_OBSERVER;
+	}
 
 	SetSpectatee(this, NULL);
 
@@ -422,14 +428,9 @@ void PutClientInServer()
 
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
-	if (gameover) {
-		this.classname = STR_OBSERVER;
+	if (IS_OBSERVER(this)) {
 		PutObserverInServer();
-		return;
-	}
-
-	if (IS_PLAYER(this))
-	{
+	} else if (IS_PLAYER(this)) {
 		accuracy_resend(this);
 
 		if (this.team < 0)
@@ -570,7 +571,10 @@ void PutClientInServer()
 			this.killcount = 0;
 		}
 
-		CL_SpawnWeaponentity(this);
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			CL_SpawnWeaponentity(this, slot);
+		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
 		this.exteriorweaponentity.alpha = default_weapon_alpha;
@@ -652,6 +656,8 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
 	WriteByte(MSG_ENTITY, WEP_CVAR(porto, secondary)); // WEAPONTODO
+
+	MUTATOR_CALLHOOK(Ent_Init);
 	return true;
 }
 
@@ -1782,10 +1788,9 @@ bool SpectateNext()
 {SELFPARAM();
 	other = find(self.enemy, classname, "player");
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(SpectateNext, self, other);
-	other = spec_player;
-
-	if(!mutator_returnvalue && !other)
+	if (MUTATOR_CALLHOOK(SpectateNext, self, other))
+		other = spec_player;
+	else if (!other)
 		other = find(other, classname, "player");
 
 	if(other) { SetSpectatee(self, other); }
@@ -1806,13 +1811,14 @@ bool SpectatePrev()
 	while(other && other != self.enemy)
 		other = other.chain;
 
-	int mutator_returnvalue = MUTATOR_CALLHOOK(SpectatePrev, self, other, first);
-	other = spec_player;
-
-	switch(mutator_returnvalue)
+	switch (MUTATOR_CALLHOOK(SpectatePrev, self, other, first))
 	{
-		case MUT_SPECPREV_FOUND: break;
-		case MUT_SPECPREV_RETURN: return true;
+		case MUT_SPECPREV_FOUND:
+		    other = spec_player;
+		    break;
+		case MUT_SPECPREV_RETURN:
+		    other = spec_player;
+		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
@@ -2429,7 +2435,8 @@ void PlayerPreThink (void)
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
-		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+		int slot = 0; // TODO: unhardcode
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity[slot].wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)

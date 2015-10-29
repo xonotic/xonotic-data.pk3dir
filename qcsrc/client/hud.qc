@@ -339,8 +339,9 @@ int weaponorder_cmp(int i, int j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
-void HUD_Weapons(void)
-{SELFPARAM();
+void HUD_Weapons()
+{
+	SELFPARAM();
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();
 	int i;

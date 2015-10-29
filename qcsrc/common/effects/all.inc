@@ -98,8 +98,6 @@ EFFECT(0, HOOK_MUZZLEFLASH,         "grapple_muzzleflash")
 
 EFFECT(0, SEEKER_MUZZLEFLASH,       "seeker_muzzleflash")
 
-EFFECT(0, FLAK_BOUNCE,              "flak_bounce")
-
 EFFECT(1, FIREBALL,                 "fireball")
 EFFECT(0, FIREBALL_BFGDAMAGE,       "fireball_bfgdamage")
 EFFECT(0, FIREBALL_EXPLODE,         "fireball_explode")

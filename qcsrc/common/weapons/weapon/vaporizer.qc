@@ -244,7 +244,7 @@ void W_RocketMinsta_Attack3 (void)
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
 		}
-		METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
 			// if the laser uses load, we also consider its ammo for reloading
@@ -255,15 +255,15 @@ void W_RocketMinsta_Attack3 (void)
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			}
-			if(fire1 && (actor.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(actor))
+			if((fire & 1) && (actor.ammo_cells || !autocvar_g_rm) && !forbidWeaponUse(actor))
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(vaporizer, refire)))
+				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(vaporizer, refire)))
 				{
 					W_Vaporizer_Attack(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
 				}
 			}
-			if(fire2 || (fire1 && !actor.ammo_cells && autocvar_g_rm))
+			if((fire & 2) || ((fire & 1) && !actor.ammo_cells && autocvar_g_rm))
 			{
 				if((autocvar_g_rm && autocvar_g_rm_laser) || autocvar_g_rm_laser == 2)
 				{
@@ -314,7 +314,7 @@ void W_RocketMinsta_Attack3 (void)
 					actor.weapon = oldwep;
 
 					// now do normal refire
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
+					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(vaporizer, animtime), w_ready);
 				}
 			}
 			else
