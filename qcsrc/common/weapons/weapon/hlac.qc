@@ -13,7 +13,7 @@ CLASS(HLAC, Weapon)
 /* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(HLAC, model2, string, "weaponhlac");
 /* refname   */ ATTRIB(HLAC, netname, string, "hlac");
-/* wepname   */ ATTRIB(HLAC, message, string, _("Heavy Laser Assault Cannon"));
+/* wepname   */ ATTRIB(HLAC, m_name, string, _("Heavy Laser Assault Cannon"));
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, NEW(HLAC));
 
@@ -50,7 +50,7 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
+spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
 void W_HLAC_Touch(void)
 {SELFPARAM();

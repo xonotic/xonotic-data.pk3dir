@@ -13,7 +13,7 @@ CLASS(Vortex, Weapon)
 /* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);
 /* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
-/* wepname   */ ATTRIB(Vortex, message, string, _("Vortex"));
+/* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
 ENDCLASS(Vortex)
 REGISTER_WEAPON(VORTEX, NEW(Vortex));
 
@@ -61,7 +61,7 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(WEP_VORTEX.m_id); }
+spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(this, WEP_VORTEX); }
 spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 
 void SendCSQCVortexBeamParticle(float charge) {

@@ -13,7 +13,7 @@ CLASS(Vaporizer, Weapon)
 /* crosshair */ ATTRIB(Vaporizer, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(Vaporizer, model2, string, "weaponminstanex");
 /* refname   */ ATTRIB(Vaporizer, netname, string, "vaporizer");
-/* wepname   */ ATTRIB(Vaporizer, message, string, _("Vaporizer"));
+/* wepname   */ ATTRIB(Vaporizer, m_name, string, _("Vaporizer"));
 ENDCLASS(Vaporizer)
 REGISTER_WEAPON(VAPORIZER, NEW(Vaporizer));
 
@@ -57,7 +57,7 @@ VAPORIZER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_vaporizer) { weapon_defaultspawnfunc(WEP_VAPORIZER.m_id); }
+spawnfunc(weapon_vaporizer) { weapon_defaultspawnfunc(this, WEP_VAPORIZER); }
 spawnfunc(weapon_minstanex) { spawnfunc_weapon_vaporizer(this); }
 
 void W_RocketMinsta_Explosion(vector loc)

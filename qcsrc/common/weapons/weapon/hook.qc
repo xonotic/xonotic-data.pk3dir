@@ -13,7 +13,7 @@ CLASS(Hook, Weapon)
 /* crosshair */ ATTRIB(Hook, w_crosshair_size, float, 0.5);
 /* wepimg    */ ATTRIB(Hook, model2, string, "weaponhook");
 /* refname   */ ATTRIB(Hook, netname, string, "hook");
-/* wepname   */ ATTRIB(Hook, message, string, _("Grappling Hook"));
+/* wepname   */ ATTRIB(Hook, m_name, string, _("Grappling Hook"));
 	ATTRIB(Hook, ammo_factor, float, 1)
 ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, NEW(Hook));
@@ -71,7 +71,7 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-spawnfunc(weapon_hook) { weapon_defaultspawnfunc(WEP_HOOK.m_id); }
+spawnfunc(weapon_hook) { weapon_defaultspawnfunc(this, WEP_HOOK); }
 
 void W_Hook_ExplodeThink(void)
 {SELFPARAM();

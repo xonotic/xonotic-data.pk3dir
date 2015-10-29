@@ -5,7 +5,7 @@ CLASS(WalkerTurretAttack, PortoLaunch)
 /* flags     */ ATTRIB(WalkerTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(WalkerTurretAttack, impulse, int, 5);
 /* refname   */ ATTRIB(WalkerTurretAttack, netname, string, "turret_walker");
-/* wepname   */ ATTRIB(WalkerTurretAttack, message, string, _("Walker"));
+/* wepname   */ ATTRIB(WalkerTurretAttack, m_name, string, _("Walker"));
 ENDCLASS(WalkerTurretAttack)
 REGISTER_WEAPON(WALKER, NEW(WalkerTurretAttack));
 

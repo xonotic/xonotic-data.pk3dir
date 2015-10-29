@@ -34,5 +34,3 @@ string Item_Model(string item_mdl);
 #endif
 
 #endif
-
-#include "inventory.qh"

@@ -182,7 +182,10 @@ MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
  * checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)
  * return error to request removal
  */
-MUTATOR_HOOKABLE(FilterItem, EV_NO_ARGS);
+#define EV_FilterItem(i, o) \
+    /** the current item */ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(FilterItem, EV_FilterItem);
 
 /** return error to request removal */
 #define EV_TurretSpawn(i, o) \

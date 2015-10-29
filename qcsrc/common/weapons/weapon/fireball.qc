@@ -13,7 +13,7 @@ CLASS(Fireball, Weapon)
 /* crosshair */ //ATTRIB(Fireball, w_crosshair_size, float, 0.65);
 /* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
 /* refname   */ ATTRIB(Fireball, netname, string, "fireball");
-/* wepname   */ ATTRIB(Fireball, message, string, _("Fireball"));
+/* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
 ENDCLASS(Fireball)
 REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 
@@ -57,7 +57,7 @@ FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_fireball) { weapon_defaultspawnfunc(WEP_FIREBALL.m_id); }
+spawnfunc(weapon_fireball) { weapon_defaultspawnfunc(this, WEP_FIREBALL); }
 
 void W_Fireball_Explode(void)
 {SELFPARAM();

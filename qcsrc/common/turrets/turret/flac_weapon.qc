@@ -5,7 +5,7 @@ CLASS(FlacAttack, PortoLaunch)
 /* flags     */ ATTRIB(FlacAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(FlacAttack, impulse, int, 5);
 /* refname   */ ATTRIB(FlacAttack, netname, string, "turret_flac");
-/* wepname   */ ATTRIB(FlacAttack, message, string, _("FLAC"));
+/* wepname   */ ATTRIB(FlacAttack, m_name, string, _("FLAC"));
 ENDCLASS(FlacAttack)
 REGISTER_WEAPON(FLAC, NEW(FlacAttack));
 

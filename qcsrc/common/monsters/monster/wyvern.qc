@@ -28,7 +28,7 @@ CLASS(WyvernAttack, PortoLaunch)
 /* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(WyvernAttack, impulse, int, 9);
 /* refname   */ ATTRIB(WyvernAttack, netname, string, "wyvern");
-/* wepname   */ ATTRIB(WyvernAttack, message, string, _("Wyvern attack"));
+/* wepname   */ ATTRIB(WyvernAttack, m_name, string, _("Wyvern attack"));
 ENDCLASS(WyvernAttack)
 REGISTER_WEAPON(WYVERN_ATTACK, NEW(WyvernAttack));
 

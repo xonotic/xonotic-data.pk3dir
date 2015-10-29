@@ -13,7 +13,7 @@ CLASS(Shockwave, Weapon)
 /* crosshair */ ATTRIB(Shockwave, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshotgun");
 /* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
-/* wepname   */ ATTRIB(Shockwave, message, string, _("Shockwave"));
+/* wepname   */ ATTRIB(Shockwave, m_name, string, _("Shockwave"));
 ENDCLASS(Shockwave)
 REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 
@@ -90,10 +90,10 @@ spawnfunc(weapon_shockwave)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(WEP_MACHINEGUN.m_id);
+		weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_SHOCKWAVE.m_id);
+	weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
 }
 
 const float MAX_SHOCKWAVE_HITS = 10;

@@ -5,7 +5,7 @@ CLASS(HellionAttack, PortoLaunch)
 /* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(HellionAttack, impulse, int, 9);
 /* refname   */ ATTRIB(HellionAttack, netname, string, "turret_hellion");
-/* wepname   */ ATTRIB(HellionAttack, message, string, _("Hellion"));
+/* wepname   */ ATTRIB(HellionAttack, m_name, string, _("Hellion"));
 ENDCLASS(HellionAttack)
 REGISTER_WEAPON(HELLION, NEW(HellionAttack));
 

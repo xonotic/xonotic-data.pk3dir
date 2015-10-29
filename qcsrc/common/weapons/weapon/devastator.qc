@@ -13,7 +13,7 @@ CLASS(Devastator, Weapon)
 /* crosshair */ ATTRIB(Devastator, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Devastator, model2, string, "weaponrocketlauncher");
 /* refname   */ ATTRIB(Devastator, netname, string, "devastator");
-/* wepname   */ ATTRIB(Devastator, message, string, _("Devastator"));
+/* wepname   */ ATTRIB(Devastator, m_name, string, _("Devastator"));
 ENDCLASS(Devastator)
 REGISTER_WEAPON(DEVASTATOR, NEW(Devastator));
 
@@ -64,7 +64,7 @@ DEVASTATOR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_devastator) { weapon_defaultspawnfunc(WEP_DEVASTATOR.m_id); }
+spawnfunc(weapon_devastator) { weapon_defaultspawnfunc(this, WEP_DEVASTATOR); }
 spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
 .entity lastrocket;

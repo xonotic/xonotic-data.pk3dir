@@ -13,7 +13,7 @@ CLASS(Crylink, Weapon)
 /* crosshair */ ATTRIB(Crylink, w_crosshair_size, float, 0.5);
 /* wepimg    */ ATTRIB(Crylink, model2, string, "weaponcrylink");
 /* refname   */ ATTRIB(Crylink, netname, string, "crylink");
-/* wepname   */ ATTRIB(Crylink, message, string, _("Crylink"));
+/* wepname   */ ATTRIB(Crylink, m_name, string, _("Crylink"));
 ENDCLASS(Crylink)
 REGISTER_WEAPON(CRYLINK, NEW(Crylink));
 
@@ -66,7 +66,7 @@ CRYLINK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_crylink) { weapon_defaultspawnfunc(WEP_CRYLINK.m_id); }
+spawnfunc(weapon_crylink) { weapon_defaultspawnfunc(this, WEP_CRYLINK); }
 
 void W_Crylink_CheckLinks(entity e)
 {

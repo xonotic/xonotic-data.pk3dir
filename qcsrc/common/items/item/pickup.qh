@@ -1,46 +1,38 @@
 #ifndef PICKUP_H
 #define PICKUP_H
+#include "../inventory.qh"
 #include "../item.qh"
 CLASS(Pickup, GameItem)
 #ifndef MENUQC
     ATTRIB(Pickup, m_model, Model, NULL)
+    ATTRIB(Pickup, m_sound, Sound, SND_ITEMPICKUP)
 #endif
-    ATTRIB(Pickup, m_sound, string, "misc/itempickup.wav")
     ATTRIB(Pickup, m_name, string, string_null)
     METHOD(Pickup, show, void(entity this));
     void Pickup_show(entity this) { LOG_INFOF("%s: %s\n", etos(this), this.m_name); }
 #ifdef SVQC
+    ATTRIB(Pickup, m_mins, vector, '-16 -16 0')
+    ATTRIB(Pickup, m_maxs, vector, '16 16 32')
     ATTRIB(Pickup, m_botvalue, int, 0)
     ATTRIB(Pickup, m_itemflags, int, 0)
     ATTRIB(Pickup, m_itemid, int, 0)
+    float generic_pickupevalfunc(entity player, entity item);
     ATTRIB(Pickup, m_pickupevalfunc, float(entity player, entity item), generic_pickupevalfunc)
     ATTRIB(Pickup, m_respawntime, float(), func_null)
     ATTRIB(Pickup, m_respawntimejitter, float(), func_null)
-    METHOD(Pickup, giveTo, bool(entity this, entity item, entity player));
-    bool Pickup_giveTo(entity this, entity item, entity player) { return Item_GiveTo(item, player); }
+    float Item_GiveTo(entity item, entity player);
+    METHOD(Pickup, giveTo, bool(entity this, entity item, entity player))
+    {
+        bool b = Item_GiveTo(item, player);
+        if (b) {
+            LOG_TRACEF("entity %i picked up %s\n", player, this.m_name);
+            player.inventory.inv_items[this.m_id]++;
+            Inventory_update(player);
+        }
+        return b;
+    }
     bool ITEM_HANDLE(Pickup, entity this, entity item, entity player);
 #endif
 ENDCLASS(Pickup)
-
-#ifdef SVQC
-// For g_pickup_respawntime
-#include "../../../server/defs.qh"
-// Getters to dynamically retrieve the values of g_pickup_respawntime*
-GETTER(float, g_pickup_respawntime_weapon)
-GETTER(float, g_pickup_respawntime_superweapon)
-GETTER(float, g_pickup_respawntime_ammo)
-GETTER(float, g_pickup_respawntime_short)
-GETTER(float, g_pickup_respawntime_medium)
-GETTER(float, g_pickup_respawntime_long)
-GETTER(float, g_pickup_respawntime_powerup)
-GETTER(float, g_pickup_respawntimejitter_weapon)
-GETTER(float, g_pickup_respawntimejitter_superweapon)
-GETTER(float, g_pickup_respawntimejitter_ammo)
-GETTER(float, g_pickup_respawntimejitter_short)
-GETTER(float, g_pickup_respawntimejitter_medium)
-GETTER(float, g_pickup_respawntimejitter_long)
-GETTER(float, g_pickup_respawntimejitter_powerup)
-
-#endif
 
 #endif

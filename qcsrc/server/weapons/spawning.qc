@@ -33,81 +33,75 @@ string W_Apply_Weaponreplace(string in)
 	return substring(out, 1, -1);
 }
 
-void weapon_defaultspawnfunc(float wpn)
-{SELFPARAM();
-	entity e;
-	float t;
-	string s;
-	float i, j;
-	int f;
-
-	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
+void weapon_defaultspawnfunc(entity this, Weapon e)
+{
+	int wpn = e.m_id;
+	if (this.classname != "droppedweapon" && this.classname != "replacedweapon")
 	{
-		e = get_weaponinfo(wpn);
-
-		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
 			objerror("Attempted to spawn a mutator-blocked weapon rejected");
 			startitem_failed = true;
 			return;
 		}
 
-		s = W_Apply_Weaponreplace(e.netname);
-		MUTATOR_CALLHOOK(SetWeaponreplace, self, e, s);
+		string s = W_Apply_Weaponreplace(e.netname);
+		MUTATOR_CALLHOOK(SetWeaponreplace, this, e, s);
 		s = ret_string;
-		if(s == "")
+		if (s == "")
 		{
-			remove(self);
+			remove(this);
 			startitem_failed = true;
 			return;
 		}
-		t = tokenize_console(s);
-		if(t >= 2)
+		int t = tokenize_console(s);
+		if (t >= 2)
 		{
-			self.team = --internalteam;
-			for(i = 1; i < t; ++i)
+			this.team = --internalteam;
+			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+				int j;
+				for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
 					e = get_weaponinfo(j);
-					if(e.netname == s)
+					if (e.netname == s)
 					{
-						setself(spawn());
-						copyentity(this, self);
-						self.classname = "replacedweapon";
-						weapon_defaultspawnfunc(j);
+						entity replacement = spawn();
+						copyentity(this, replacement);
+						replacement.classname = "replacedweapon";
+						weapon_defaultspawnfunc(replacement, e);
 						break;
 					}
 				}
-				if(j > WEP_LAST)
+				if (j > WEP_LAST)
 				{
 					LOG_INFO("The weapon replace list for ", this.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 				}
 			}
-			setself(this);
 		}
-		if(t >= 1) // always the case!
+		if (t >= 1) // always the case!
 		{
 			s = argv(0);
 			wpn = 0;
-			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+			int j;
+			for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 			{
 				e = get_weaponinfo(j);
-				if(e.netname == s)
+				if (e.netname == s)
 				{
 					wpn = j;
 					break;
 				}
 			}
-			if(j > WEP_LAST)
+			if (j > WEP_LAST)
 			{
-				LOG_INFO("The weapon replace list for ", self.classname, " contains an unknown weapon ", s, ". Skipped.\n");
+				LOG_INFO("The weapon replace list for ", this.classname, " contains an unknown weapon ", s, ". Skipped.\n");
 			}
 		}
-		if(wpn == 0)
+		if (wpn == 0)
 		{
-			remove(self);
+			remove(this);
 			startitem_failed = true;
 			return;
 		}
@@ -115,73 +109,67 @@ void weapon_defaultspawnfunc(float wpn)
 
 	e = get_weaponinfo(wpn);
 
-	if(!self.respawntime)
+	if (!this.respawntime)
 	{
-		if(e.weapons & WEPSET_SUPERWEAPONS)
+		if (e.weapons & WEPSET_SUPERWEAPONS)
 		{
-			self.respawntime = g_pickup_respawntime_superweapon;
-			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
+			this.respawntime = g_pickup_respawntime_superweapon;
+			this.respawntimejitter = g_pickup_respawntimejitter_superweapon;
 		}
 		else
 		{
-			self.respawntime = g_pickup_respawntime_weapon;
-			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
+			this.respawntime = g_pickup_respawntime_weapon;
+			this.respawntimejitter = g_pickup_respawntimejitter_weapon;
 		}
 	}
 
-	if(e.weapons & WEPSET_SUPERWEAPONS)
-		if(!self.superweapons_finished)
-			self.superweapons_finished = autocvar_g_balance_superweapons_time;
+	if (e.weapons & WEPSET_SUPERWEAPONS)
+		if (!this.superweapons_finished)
+			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	if(!self.(e.ammo_field))
+	if (!this.(e.ammo_field))
 	{
-		switch(e.ammo_field)
+		switch (e.ammo_field)
 		{
-			case ammo_shells:  self.ammo_shells  = cvar("g_pickup_shells_weapon");  break;
-			case ammo_nails:   self.ammo_nails   = cvar("g_pickup_nails_weapon");   break;
-			case ammo_rockets: self.ammo_rockets = cvar("g_pickup_rockets_weapon"); break;
-			case ammo_cells:   self.ammo_cells   = cvar("g_pickup_cells_weapon");   break;
-			case ammo_plasma:  self.ammo_plasma  = cvar("g_pickup_plasma_weapon");  break;
-			case ammo_fuel:    self.ammo_fuel    = cvar("g_pickup_fuel_weapon");    break;
+			case ammo_shells:  this.ammo_shells  = cvar("g_pickup_shells_weapon");  break;
+			case ammo_nails:   this.ammo_nails   = cvar("g_pickup_nails_weapon");   break;
+			case ammo_rockets: this.ammo_rockets = cvar("g_pickup_rockets_weapon"); break;
+			case ammo_cells:   this.ammo_cells   = cvar("g_pickup_cells_weapon");   break;
+			case ammo_plasma:  this.ammo_plasma  = cvar("g_pickup_plasma_weapon");  break;
+			case ammo_fuel:    this.ammo_fuel    = cvar("g_pickup_fuel_weapon");    break;
 		}
 	}
 
 	#if 0 // WEAPONTODO
-	if(e.items)
+	if (e.items)
 	{
-		for(i = 0, j = 1; i < 24; ++i, j *= 2)
+		for (int i = 0, j = 1; i < 24; ++i, j <<= 1)
 		{
-			if(e.items & j)
+			if (e.items & j)
 			{
 				ammotype = Item_CounterField(j);
-				if(!self.ammotype)
-					self.ammotype = cvar(strcat("g_pickup_", Item_CounterFieldName(j), "_weapon"));
+				if (!this.ammotype)
+					this.ammotype = cvar(strcat("g_pickup_", Item_CounterFieldName(j), "_weapon"));
 			}
 		}
 	}
 	#endif
 
 	// pickup anyway
-	if(g_pickup_weapons_anyway)
-		self.pickup_anyway = true;
+	if (g_pickup_weapons_anyway)
+		this.pickup_anyway = true;
 
-	f = FL_WEAPON;
-
-	// no weapon-stay on superweapons
-	if(e.weapons & WEPSET_SUPERWEAPONS)
-		f |= FL_NO_WEAPON_STAY;
-
-	// weapon stay isn't supported for teamed weapons
-	if(self.team)
-		f |= FL_NO_WEAPON_STAY;
-
-	StartItem(strzone(e.m_model.model_str()), string_null, self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
-	self.item_pickupsound_ent = SND_WEAPONPICKUP;
+	GameItem def = e.m_pickup;
+	_StartItem(
+		this,
+		this.itemdef = def,
+		this.respawntime, // defaultrespawntime
+		this.respawntimejitter // defaultrespawntimejitter
+	);
 	#if 0 // WEAPONTODO
-	if (self.modelindex) { // don't precache if self was removed
-		Weapon w = get_weaponinfo(e.weapon);
-		w.wr_init(w);
+	if (this.modelindex) { // don't precache if this was removed
+		e.wr_init(e);
 	}
 	#endif
 }

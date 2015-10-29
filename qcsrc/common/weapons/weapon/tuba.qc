@@ -14,7 +14,7 @@ CLASS(Tuba, Weapon)
 /* wepimg    */ ATTRIB(Tuba, model2, string, "weapontuba");
 /* refname   */ ATTRIB(Tuba, netname, string, "tuba");
 /* xgettext:no-c-format */
-/* wepname   */ ATTRIB(Tuba, message, string, _("@!#%'n Tuba"));
+/* wepname   */ ATTRIB(Tuba, m_name, string, _("@!#%'n Tuba"));
 ENDCLASS(Tuba)
 REGISTER_WEAPON(TUBA, NEW(Tuba));
 
@@ -56,7 +56,7 @@ float W_Tuba_MarkClientOnlyFieldsAsUsed() {
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(WEP_TUBA.m_id); }
+spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(this, WEP_TUBA); }
 
 bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
