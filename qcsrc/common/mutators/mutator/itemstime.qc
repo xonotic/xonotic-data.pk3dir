@@ -102,7 +102,10 @@ void Item_ItemsTime_SetTime(entity e, float t)
         return;
 
     GameItem item = e.itemdef;
-    it_times[item.m_id] = t;
+    if (item.instanceOfGameItem && !item.instanceOfWeaponPickup)
+    {
+        it_times[item.m_id] = t;
+    }
 }
 
 void Item_ItemsTime_SetTimesForAllPlayers()
