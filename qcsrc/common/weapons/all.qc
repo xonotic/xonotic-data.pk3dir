@@ -320,4 +320,193 @@ string W_Model(string w_mdl)
 #endif
 }
 
+#ifdef SVQC
+/**
+ * supported formats:
+ *
+ * 1. simple animated model, muzzle flash handling on h_ model:
+ *    h_tuba.dpm, h_tuba.dpm.framegroups - invisible model controlling the animation
+ *      tags:
+ *        shot = muzzle end (shot origin, also used for muzzle flashes)
+ *        shell = casings ejection point (must be on the right hand side of the gun)
+ *        weapon = attachment for v_tuba.md3
+ *    v_tuba.md3 - first and third person model
+ *    g_tuba.md3 - pickup model
+ *
+ * 2. simple animated model, muzzle flash handling on v_ model:
+ *    h_tuba.dpm, h_tuba.dpm.framegroups - invisible model controlling the animation
+ *      tags:
+ *        weapon = attachment for v_tuba.md3
+ *    v_tuba.md3 - first and third person model
+ *      tags:
+ *        shot = muzzle end (shot origin, also used for muzzle flashes)
+ *        shell = casings ejection point (must be on the right hand side of the gun)
+ *    g_tuba.md3 - pickup model
+ *
+ * 3. fully animated model, muzzle flash handling on h_ model:
+ *    h_tuba.dpm, h_tuba.dpm.framegroups - animated first person model
+ *      tags:
+ *        shot = muzzle end (shot origin, also used for muzzle flashes)
+ *        shell = casings ejection point (must be on the right hand side of the gun)
+ *        handle = corresponding to the origin of v_tuba.md3 (used for muzzle flashes)
+ *    v_tuba.md3 - third person model
+ *    g_tuba.md3 - pickup model
+ *
+ * 4. fully animated model, muzzle flash handling on v_ model:
+ *    h_tuba.dpm, h_tuba.dpm.framegroups - animated first person model
+ *      tags:
+ *        shot = muzzle end (shot origin)
+ *        shell = casings ejection point (must be on the right hand side of the gun)
+ *    v_tuba.md3 - third person model
+ *      tags:
+ *        shot = muzzle end (for muzzle flashes)
+ *    g_tuba.md3 - pickup model
+ *
+ * writes:
+ *   this.origin, this.angles
+ *   this.weaponchild
+ *   this.movedir, this.view_ofs
+ *   attachment stuff
+ *   anim stuff
+ * to free:
+ *   call again with ""
+ *   remove the ent
+ */
+void CL_WeaponEntity_SetModel(entity this, int slot, string name)
+{
+	if (name == "")
+	{
+		this.model = "";
+		if (this.weaponchild) remove(this.weaponchild);
+		this.weaponchild = NULL;
+		this.movedir = '0 0 0';
+		this.spawnorigin = '0 0 0';
+		this.oldorigin = '0 0 0';
+		this.anim_fire1  = '0 1 0.01';
+		this.anim_fire2  = '0 1 0.01';
+		this.anim_idle   = '0 1 0.01';
+		this.anim_reload = '0 1 0.01';
+	}
+	else
+	{
+		// if there is a child entity, hide it until we're sure we use it
+		if (this.weaponchild) this.weaponchild.model = "";
+		_setmodel(this, W_Model(strcat("v_", name, ".md3")));
+		int v_shot_idx; // used later
+		(v_shot_idx = gettagindex(this, "shot")) || (v_shot_idx = gettagindex(this, "tag_shot"));
+
+		_setmodel(this, W_Model(strcat("h_", name, ".iqm")));
+		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
+		this.anim_fire1  = animfixfps(this, '0 1 0.01', '0 0 0');
+		this.anim_fire2  = animfixfps(this, '1 1 0.01', '0 0 0');
+		this.anim_idle   = animfixfps(this, '2 1 0.01', '0 0 0');
+		this.anim_reload = animfixfps(this, '3 1 0.01', '0 0 0');
+
+		// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
+		// if we don't, this is a "real" animated model
+		string t;
+		if ((t = "weapon", gettagindex(this, t)) || (t = "tag_weapon", gettagindex(this, t)))
+		{
+			if (!this.weaponchild) this.weaponchild = new(weaponchild);
+			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
+			setattachment(this.weaponchild, this, t);
+		}
+		else
+		{
+			if (this.weaponchild) remove(this.weaponchild);
+			this.weaponchild = NULL;
+		}
+
+		setorigin(this, '0 0 0');
+		this.angles = '0 0 0';
+		this.frame = 0;
+		this.viewmodelforclient = NULL;
+
+		if (v_shot_idx)  // v_ model attached to invisible h_ model
+		{
+			this.movedir = gettaginfo(this.weaponchild, v_shot_idx);
+		}
+		else
+		{
+			int idx;
+			if ((idx = gettagindex(this, "shot")) || (idx = gettagindex(this, "tag_shot")))
+			{
+				this.movedir = gettaginfo(this, idx);
+			}
+			else
+			{
+				LOG_WARNINGF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong\n",
+					this.model);
+				this.movedir = '0 0 0';
+			}
+		}
+        {
+            int idx = 0;
+            // v_ model attached to invisible h_ model
+            if (this.weaponchild
+                && ((idx = gettagindex(this.weaponchild, "shell")) || (idx = gettagindex(this.weaponchild, "tag_shell"))))
+            {
+                this.spawnorigin = gettaginfo(this.weaponchild, idx);
+            }
+            else if ((idx = gettagindex(this, "shell")) || (idx = gettagindex(this, "tag_shell")))
+            {
+                this.spawnorigin = gettaginfo(this, idx);
+            }
+            else
+            {
+                LOG_WARNINGF("weapon model %s does not support the 'shell' tag, will display casings wrong\n",
+                    this.model);
+                this.spawnorigin = this.movedir;
+            }
+		}
+		if (v_shot_idx)
+		{
+			this.oldorigin = '0 0 0';  // use regular attachment
+		}
+		else
+		{
+			int idx;
+			if (this.weaponchild)
+				(idx = gettagindex(this, "weapon")) || (idx = gettagindex(this, "tag_weapon"));
+			else
+				(idx = gettagindex(this, "handle")) || (idx = gettagindex(this, "tag_handle"));
+			if (idx)
+			{
+				this.oldorigin = this.movedir - gettaginfo(this, idx);
+			}
+			else
+			{
+				LOG_WARNINGF(
+					"weapon model %s does not support the 'handle' tag "
+					"and neither does the v_ model support the 'shot' tag, "
+					"will display muzzle flashes TOTALLY wrong\n",
+					this.model);
+				this.oldorigin = '0 0 0';  // there is no way to recover from this
+			}
+		}
+
+		this.viewmodelforclient = this.owner;
+	}
+
+	this.view_ofs = '0 0 0';
+
+	if (this.movedir.x >= 0)
+	{
+		vector v = this.movedir;
+		this.movedir = shotorg_adjust(v, false, false, this.owner.cvar_cl_gunalign);
+		this.view_ofs = shotorg_adjust(v, false, true, this.owner.cvar_cl_gunalign) - v;
+	}
+	this.owner.stat_shotorg = compressShotOrigin(this.movedir);
+	this.movedir = decompressShotOrigin(this.owner.stat_shotorg); // make them match perfectly
+
+	this.spawnorigin += this.view_ofs;                            // offset the casings origin by the same amount
+
+	// check if an instant weapon switch occurred
+	setorigin(this, this.view_ofs);
+	// reset animstate now
+	this.wframe = WFRAME_IDLE;
+	setanim(this, this.anim_idle, true, false, true);
+}
+#endif
+
 #endif

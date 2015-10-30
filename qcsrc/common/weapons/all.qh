@@ -174,4 +174,8 @@ STATIC_INIT(register_weapons_done)
     weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }
 
+#ifdef SVQC
+void CL_WeaponEntity_SetModel(entity this, int slot, string name);
+#endif
+
 #endif
