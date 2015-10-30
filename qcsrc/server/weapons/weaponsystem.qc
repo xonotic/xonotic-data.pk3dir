@@ -103,7 +103,7 @@ bool CL_Weaponentity_CustomizeEntityForClient()
 	return true;
 }
 
-/*
+/**
  * supported formats:
  *
  * 1. simple animated model, muzzle flash handling on h_ model:
@@ -143,23 +143,36 @@ bool CL_Weaponentity_CustomizeEntityForClient()
  *      tags:
  *        shot = muzzle end (for muzzle flashes)
  *    g_tuba.md3 - pickup model
+ *
+ * writes:
+ *   this.origin, this.angles
+ *   this.weaponchild
+ *   this.movedir, this.view_ofs
+ *   attachment stuff
+ *   anim stuff
+ * to free:
+ *   call again with ""
+ *   remove the ent
  */
-
-// writes:
-//   this.origin, this.angles
-//   this.weaponentity
-//   this.movedir, this.view_ofs
-//   attachment stuff
-//   anim stuff
-// to free:
-//   call again with ""
-//   remove the ent
 void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 {
-	if (name != "")
+	if (name == "")
+	{
+		this.model = "";
+		if (this.weaponchild) remove(this.weaponchild);
+		this.weaponchild = NULL;
+		this.movedir = '0 0 0';
+		this.spawnorigin = '0 0 0';
+		this.oldorigin = '0 0 0';
+		this.anim_fire1  = '0 1 0.01';
+		this.anim_fire2  = '0 1 0.01';
+		this.anim_idle   = '0 1 0.01';
+		this.anim_reload = '0 1 0.01';
+	}
+	else
 	{
 		// if there is a child entity, hide it until we're sure we use it
-		if (this.weaponentity[slot]) this.weaponentity[slot].model = "";
+		if (this.weaponchild) this.weaponchild.model = "";
 		_setmodel(this, W_Model(strcat("v_", name, ".md3")));
 		int v_shot_idx = gettagindex(this, "shot");  // used later
 		if (!v_shot_idx) v_shot_idx = gettagindex(this, "tag_shot");
@@ -175,20 +188,20 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 		// if we don't, this is a "real" animated model
 		if (gettagindex(this, "weapon"))
 		{
-			if (!this.weaponentity[slot]) this.weaponentity[slot] = spawn();
-			_setmodel(this.weaponentity[slot], W_Model(strcat("v_", name, ".md3")));
-			setattachment(this.weaponentity[slot], this, "weapon");
+			if (!this.weaponchild) this.weaponchild = new(weaponchild);
+			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
+			setattachment(this.weaponchild, this, "weapon");
 		}
 		else if (gettagindex(this, "tag_weapon"))
 		{
-			if (!this.weaponentity[slot]) this.weaponentity[slot] = spawn();
-			_setmodel(this.weaponentity[slot], W_Model(strcat("v_", name, ".md3")));
-			setattachment(this.weaponentity[slot], this, "tag_weapon");
+			if (!this.weaponchild) this.weaponchild = new(weaponchild);
+			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
+			setattachment(this.weaponchild, this, "tag_weapon");
 		}
 		else
 		{
-			if (this.weaponentity[slot]) remove(this.weaponentity[slot]);
-			this.weaponentity[slot] = NULL;
+			if (this.weaponchild) remove(this.weaponchild);
+			this.weaponchild = NULL;
 		}
 
 		setorigin(this, '0 0 0');
@@ -196,15 +209,13 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 		this.frame = 0;
 		this.viewmodelforclient = NULL;
 
-		float idx;
-
 		if (v_shot_idx)  // v_ model attached to invisible h_ model
 		{
-			this.movedir = gettaginfo(this.weaponentity[slot], v_shot_idx);
+			this.movedir = gettaginfo(this.weaponchild, v_shot_idx);
 		}
 		else
 		{
-			idx = gettagindex(this, "shot");
+			int idx = gettagindex(this, "shot");
 			if (!idx) idx = gettagindex(this, "tag_shot");
 			if (idx)
 			{
@@ -212,17 +223,18 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 			}
 			else
 			{
-				LOG_INFO("WARNING: weapon model ", this.model,
-					" does not support the 'shot' tag, will display shots TOTALLY wrong\n");
+				LOG_WARNINGF("weapon model %s does not support the 'shot' tag, will display shots TOTALLY wrong\n",
+					this.model);
 				this.movedir = '0 0 0';
 			}
 		}
 
-		if (this.weaponentity[slot])  // v_ model attached to invisible h_ model
+		int idx;
+		if (this.weaponchild)  // v_ model attached to invisible h_ model
 		{
-			idx = gettagindex(this.weaponentity[slot], "shell");
-			if (!idx) idx = gettagindex(this.weaponentity[slot], "tag_shell");
-			if (idx) this.spawnorigin = gettaginfo(this.weaponentity[slot], idx);
+			idx = gettagindex(this.weaponchild, "shell");
+			if (!idx) idx = gettagindex(this.weaponchild, "tag_shell");
+			if (idx) this.spawnorigin = gettaginfo(this.weaponchild, idx);
 		}
 		else
 		{
@@ -238,8 +250,8 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 			}
 			else
 			{
-				LOG_INFO("WARNING: weapon model ", this.model,
-					" does not support the 'shell' tag, will display casings wrong\n");
+				LOG_WARNINGF("weapon model %s does not support the 'shell' tag, will display casings wrong\n",
+					this.model);
 				this.spawnorigin = this.movedir;
 			}
 		}
@@ -250,7 +262,8 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 		}
 		else
 		{
-			if (this.weaponentity[slot])
+			int idx;
+			if (this.weaponchild)
 			{
 				idx = gettagindex(this, "weapon");
 				if (!idx) idx = gettagindex(this, "tag_weapon");
@@ -266,35 +279,25 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 			}
 			else
 			{
-				LOG_INFO("WARNING: weapon model ", this.model,
-					" does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
+				LOG_WARNINGF(
+					"weapon model %s does not support the 'handle' tag "
+					"and neither does the v_ model support the 'shot' tag, "
+					"will display muzzle flashes TOTALLY wrong\n",
+					this.model);
 				this.oldorigin = '0 0 0';  // there is no way to recover from this
 			}
 		}
 
 		this.viewmodelforclient = this.owner;
 	}
-	else
-	{
-		this.model = "";
-		if (this.weaponentity[slot]) remove(this.weaponentity[slot]);
-		this.weaponentity[slot] = NULL;
-		this.movedir = '0 0 0';
-		this.spawnorigin = '0 0 0';
-		this.oldorigin = '0 0 0';
-		this.anim_fire1  = '0 1 0.01';
-		this.anim_fire2  = '0 1 0.01';
-		this.anim_idle   = '0 1 0.01';
-		this.anim_reload = '0 1 0.01';
-	}
 
 	this.view_ofs = '0 0 0';
 
 	if (this.movedir.x >= 0)
 	{
-		vector v0 = this.movedir;
-		this.movedir = shotorg_adjust(v0, false, false, this.owner.cvar_cl_gunalign);
-		this.view_ofs = shotorg_adjust(v0, false, true, this.owner.cvar_cl_gunalign) - v0;
+		vector v = this.movedir;
+		this.movedir = shotorg_adjust(v, false, false, this.owner.cvar_cl_gunalign);
+		this.view_ofs = shotorg_adjust(v, false, true, this.owner.cvar_cl_gunalign) - v;
 	}
 	this.owner.stat_shotorg = compressShotOrigin(this.movedir);
 	this.movedir = decompressShotOrigin(this.owner.stat_shotorg); // make them match perfectly
@@ -308,7 +311,7 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 	setanim(this, this.anim_idle, true, false, true);
 }
 
-vector CL_Weapon_GetShotOrg(float wpn)
+vector CL_Weapon_GetShotOrg(int wpn)
 {
 	entity wi = get_weaponinfo(wpn);
 	entity e = spawn();
@@ -324,22 +327,26 @@ void CL_Weaponentity_Think()
 	SELFPARAM();
 	this.nextthink = time;
 	if (intermission_running) this.frame = this.anim_idle.x;
-	int slot = 0; // TODO: unhardcode
+	int slot = 0;  // TODO: unhardcode
 	if (this.owner.weaponentity[slot] != this)
 	{
-		if (this.weaponentity[slot]) remove(this.weaponentity[slot]);
+		// owner has new gun; remove self
+		if (this.weaponchild) remove(this.weaponchild);
 		remove(this);
 		return;
 	}
 	if (this.owner.deadflag != DEAD_NO)
 	{
+		// owner died; disappear
 		this.model = "";
-		if (this.weaponentity[slot]) this.weaponentity[slot].model = "";
+		if (this.weaponchild) this.weaponchild.model = "";
 		return;
 	}
-	if (this.weaponname != this.owner.weaponname || this.dmg != this.owner.modelindex
+	if (this.weaponname != this.owner.weaponname
+	    || this.dmg != this.owner.modelindex
 	    || this.deadflag != this.owner.deadflag)
 	{
+		// owner changed weapons; update appearance
 		this.weaponname = this.owner.weaponname;
 		this.dmg = this.owner.modelindex;
 		this.deadflag = this.owner.deadflag;
@@ -348,12 +355,15 @@ void CL_Weaponentity_Think()
 	}
 
 	int tb = (this.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));
-	this.effects = this.owner.effects & EFMASK_CHEAP;
-	this.effects &= ~EF_LOWPRECISION;
-	this.effects &= ~EF_FULLBRIGHT;  // can mask team color, so get rid of it
-	this.effects &= ~EF_TELEPORT_BIT;
-	this.effects &= ~EF_RESTARTANIM_BIT;
-	this.effects |= tb;
+	this.effects = this.owner.effects
+	    & EFMASK_CHEAP
+	    & ~(
+	    EF_LOWPRECISION
+	    | EF_FULLBRIGHT  // can mask team color, so get rid of it
+	    | EF_TELEPORT_BIT
+	    | EF_RESTARTANIM_BIT
+	       )
+	    | tb;
 
 	if (this.owner.alpha == default_player_alpha) this.alpha = default_weapon_alpha;
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
@@ -361,17 +371,17 @@ void CL_Weaponentity_Think()
 
 	this.glowmod = this.owner.weaponentity_glowmod;
 	this.colormap = this.owner.colormap;
-	if (this.weaponentity[slot])
+	if (this.weaponchild)
 	{
-		this.weaponentity[slot].effects = this.effects;
-		this.weaponentity[slot].alpha = this.alpha;
-		this.weaponentity[slot].colormap = this.colormap;
-		this.weaponentity[slot].glowmod = this.glowmod;
+		this.weaponchild.effects = this.effects;
+		this.weaponchild.alpha = this.alpha;
+		this.weaponchild.colormap = this.colormap;
+		this.weaponchild.glowmod = this.glowmod;
 	}
 
 	this.angles = '0 0 0';
 
-	float f = (this.owner.weapon_nextthink - time);
+	float f = this.owner.weapon_nextthink - time;
 	if (this.state == WS_RAISE && !intermission_running)
 	{
 		entity newwep = get_weaponinfo(this.owner.switchweapon);
@@ -439,29 +449,24 @@ void CL_ExteriorWeaponentity_Think()
 }
 
 // spawning weaponentity for client
-void CL_SpawnWeaponentity(entity e, int slot)
+void CL_SpawnWeaponentity(entity actor, int slot)
 {
-	entity view = e.weaponentity[slot] = new(weaponentity);
+	entity view = actor.weaponentity[slot] = new(weaponentity);
 	view.solid = SOLID_NOT;
-	view.owner = e;
+	view.owner = actor;
 	setmodel(view, MDL_Null);  // precision set when changed
 	setorigin(view, '0 0 0');
-	view.angles = '0 0 0';
-	view.viewmodelforclient = e;
-	view.flags = 0;
 	view.think = CL_Weaponentity_Think;
-	view.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
 	view.nextthink = time;
+	view.viewmodelforclient = actor;
+	view.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
 
 	if (slot == 0)
 	{
-		entity exterior = e.exteriorweaponentity = spawn();
-		exterior.classname = "exteriorweaponentity";
+		entity exterior = actor.exteriorweaponentity = new(exteriorweaponentity);
 		exterior.solid = SOLID_NOT;
-		exterior.exteriorweaponentity = exterior;
-		exterior.owner = e;
+		exterior.owner = actor;
 		setorigin(exterior, '0 0 0');
-		exterior.angles = '0 0 0';
 		exterior.think = CL_ExteriorWeaponentity_Think;
 		exterior.nextthink = time;
 
@@ -683,10 +688,10 @@ bool forbidWeaponUse(entity player)
 
 void W_WeaponFrame(entity actor)
 {
-	int slot = 0; // TODO: unhardcode
+	int slot = 0;                                              // TODO: unhardcode
 	if (frametime) actor.weapon_frametime = frametime;
 
-	if (!actor.weaponentity[slot] || actor.health < 1) return;  // Dead player can't use weapons and injure impulse commands
+	if (!actor.weaponentity[slot] || actor.health < 1) return; // Dead player can't use weapons and injure impulse commands
 
 	if (forbidWeaponUse(actor))
 	{
@@ -851,8 +856,11 @@ void W_AttachToShotorg(entity actor, entity flash, vector offset)
 	flash.owner = actor;
 	flash.angles_z = random() * 360;
 
-	if (gettagindex(actor.weaponentity[slot], "shot")) setattachment(flash, actor.weaponentity[slot], "shot");
-	else setattachment(flash, actor.weaponentity[slot], "tag_shot");
+	entity view = actor.weaponentity[slot];
+	entity exterior = actor.exteriorweaponentity;
+
+	if (gettagindex(view, "shot")) setattachment(flash, view, "shot");
+	else setattachment(flash, view, "tag_shot");
 	setorigin(flash, offset);
 
 	entity xflash = spawn();
@@ -860,15 +868,15 @@ void W_AttachToShotorg(entity actor, entity flash, vector offset)
 
 	flash.viewmodelforclient = actor;
 
-	if (actor.weaponentity[slot].oldorigin.x > 0)
+	if (view.oldorigin.x > 0)
 	{
-		setattachment(xflash, actor.exteriorweaponentity, "");
-		setorigin(xflash, actor.weaponentity[slot].oldorigin + offset);
+		setattachment(xflash, exterior, "");
+		setorigin(xflash, view.oldorigin + offset);
 	}
 	else
 	{
-		if (gettagindex(actor.exteriorweaponentity, "shot")) setattachment(xflash, actor.exteriorweaponentity, "shot");
-		else setattachment(xflash, actor.exteriorweaponentity, "tag_shot");
+		if (gettagindex(exterior, "shot")) setattachment(xflash, exterior, "shot");
+		else setattachment(xflash, exterior, "tag_shot");
 		setorigin(xflash, offset);
 	}
 }

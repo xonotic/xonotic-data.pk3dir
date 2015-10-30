@@ -153,6 +153,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 // definitions for weaponsystem
 // more WEAPONTODO: move these to their proper files
 .entity weaponentity[MAX_WEAPONSLOTS];
+.entity weaponchild;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
 
