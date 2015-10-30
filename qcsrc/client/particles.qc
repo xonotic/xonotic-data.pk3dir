@@ -12,7 +12,7 @@ void Net_ReadVortexBeamParticle()
 	endpos.x = ReadCoord(); endpos.y = ReadCoord(); endpos.z = ReadCoord();
 	charge = ReadByte() / 255.0;
 
-	pointparticles(particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH), shotorg, normalize(endpos - shotorg) * 1000, 1);
+	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
 
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha

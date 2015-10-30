@@ -532,9 +532,9 @@ void CSQCModel_Effects_Apply(void)
 	if(eff & EF_FULLBRIGHT)
 		self.renderflags |= RF_FULLBRIGHT;
 	if(eff & EF_FLAME)
-		pointparticles(particleeffectnum(EFFECT_EF_FLAME), self.origin, '0 0 0', bound(0, frametime, 0.1));
+		pointparticles(EFFECT_EF_FLAME, self.origin, '0 0 0', bound(0, frametime, 0.1));
 	if(eff & EF_STARDUST)
-		pointparticles(particleeffectnum(EFFECT_EF_STARDUST), self.origin, '0 0 0', bound(0, frametime, 0.1));
+		pointparticles(EFFECT_EF_STARDUST, self.origin, '0 0 0', bound(0, frametime, 0.1));
 	if(eff & EF_NOSHADOW)
 		self.renderflags |= RF_NOSHADOW;
 	if(eff & EF_NODEPTHTEST)

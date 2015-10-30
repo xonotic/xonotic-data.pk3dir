@@ -101,10 +101,10 @@ void Ent_ReadArcBeam(float isnew);
 .vector beam_color;
 .float beam_alpha;
 .float beam_thickness;
-.float beam_traileffect;
-.float beam_hiteffect;
+.entity beam_traileffect;
+.entity beam_hiteffect;
 .float beam_hitlight[4]; // 0: radius, 123: rgb
-.float beam_muzzleeffect;
+.entity beam_muzzleeffect;
 .float beam_muzzlelight[4]; // 0: radius, 123: rgb
 .string beam_image;
 
@@ -1258,18 +1258,18 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
-				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
+				self.beam_traileffect = (EFFECT_ARC_BEAM);
+				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
@@ -1283,19 +1283,19 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
-				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
+				self.beam_traileffect = (EFFECT_ARC_BEAM);
+				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; // particleeffectnum(EFFECT_GRENADE_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; // (EFFECT_GRENADE_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
@@ -1309,19 +1309,19 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM_HEAL);
-				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_BEAM_HEAL_IMPACT);
+				self.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
+				self.beam_hiteffect = (EFFECT_ARC_BEAM_HEAL_IMPACT);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
@@ -1335,19 +1335,19 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
-				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
+				self.beam_traileffect = (EFFECT_ARC_BEAM);
+				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 20;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 0;
 				self.beam_hitlight[3] = 0;
-				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 50;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 0;
 				self.beam_muzzlelight[3] = 0;
 				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
@@ -1361,19 +1361,19 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
-				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
+				self.beam_traileffect = (EFFECT_ARC_BEAM);
+				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
@@ -1387,19 +1387,19 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
-				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
+				self.beam_traileffect = (EFFECT_ARC_BEAM);
+				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
@@ -1413,19 +1413,19 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM_HEAL);
-				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_BEAM_HEAL_IMPACT2);
+				self.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
+				self.beam_hiteffect = (EFFECT_ARC_BEAM_HEAL_IMPACT2);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
@@ -1439,19 +1439,19 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum(EFFECT_ARC_BEAM);
-				self.beam_hiteffect = particleeffectnum(EFFECT_ARC_LIGHTNING);
+				self.beam_traileffect = (EFFECT_ARC_BEAM);
+				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;
@@ -1467,19 +1467,19 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = randomvec();
 				self.beam_alpha = 1;
 				self.beam_thickness = 8;
-				self.beam_traileffect = false;
-				self.beam_hiteffect = false;
+				self.beam_traileffect = NULL;
+				self.beam_hiteffect = NULL;
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum(EFFECT_VORTEX_MUZZLEFLASH);
+				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect >= 0)
+				if(self.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
 					flash.alpha = self.beam_alpha;

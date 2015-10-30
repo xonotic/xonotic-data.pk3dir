@@ -856,7 +856,7 @@ void Net_ReadShockwaveParticle(void)
 			// handled by Net_ReadShockwaveParticle
 			//vector org2;
 			//org2 = w_org + w_backoff * 2;
-			//pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
+			//pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 		}
 
 #endif

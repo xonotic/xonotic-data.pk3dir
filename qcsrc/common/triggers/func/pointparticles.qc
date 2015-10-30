@@ -221,11 +221,11 @@ void Draw_PointParticles(entity this)
 			{
 				traceline(p, p + normalize(self.movedir) * 4096, 0, world);
 				p = trace_endpos;
-				pointparticles(self.cnt, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
+				__pointparticles(self.cnt, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
 			}
 			else
 			{
-				pointparticles(self.cnt, p, self.velocity + randomvec() * self.waterlevel, self.count);
+				__pointparticles(self.cnt, p, self.velocity + randomvec() * self.waterlevel, self.count);
 			}
 			if(self.noise != "")
 			{

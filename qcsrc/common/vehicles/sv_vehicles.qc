@@ -634,7 +634,7 @@ void vehicles_painframe()
 		float _ftmp;
 		_ftmp = self.owner.vehicle_health / 50;
 		self.pain_frame = time + 0.1 + (random() * 0.5 * _ftmp);
-		pointparticles(particleeffectnum(EFFECT_SMOKE_SMALL), (self.origin + (randomvec() * 80)), '0 0 0', 1);
+		pointparticles(EFFECT_SMOKE_SMALL, (self.origin + (randomvec() * 80)), '0 0 0', 1);
 
 		if(self.vehicle_flags & VHF_DMGSHAKE)
 			self.velocity += randomvec() * 30;

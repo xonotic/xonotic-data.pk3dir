@@ -30,7 +30,7 @@ void Read_Effect(bool is_new)
 		if(eff_trail)
 			WarpZone_TrailParticles(world, particleeffectnum(eff), v, vel);
 		else
-			pointparticles(particleeffectnum(eff), v, vel, eff_cnt);
+			pointparticles(eff, v, vel, eff_cnt);
 	}
 }
 #endif
@@ -88,6 +88,6 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 		return;
 	));
 	// revert to engine handling
-	pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
+	__pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }
 #endif

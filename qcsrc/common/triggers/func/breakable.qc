@@ -211,7 +211,7 @@ void func_breakable_destroy()
 		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, world, self.dmg_force, DEATH_HURTTRIGGER.m_id, world);
 
 	if(self.cnt) // TODO
-		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
+		__pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
 
 	if(self.respawntime)
 	{

@@ -257,7 +257,7 @@ float racer_frame()
 	{
 #ifdef SVQC
 		if(time - racer.wait > 0.2)
-			pointparticles(particleeffectnum(EFFECT_RACER_BOOSTER), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
+			pointparticles(EFFECT_RACER_BOOSTER, self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
 #endif
 
 		racer.wait = time;
@@ -278,7 +278,7 @@ float racer_frame()
 		{
 			traceline(racer.origin, racer.origin - '0 0 256', MOVE_NORMAL, self);
 			if(trace_fraction != 1.0)
-				pointparticles(particleeffectnum(EFFECT_SMOKE_SMALL), trace_endpos, '0 0 0', 1);
+				pointparticles(EFFECT_SMOKE_SMALL, trace_endpos, '0 0 0', 1);
 
 			racer.invincible_finished = time + 0.1 + (random() * 0.1);
 		}

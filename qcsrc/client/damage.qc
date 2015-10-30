@@ -42,7 +42,7 @@ void DamageEffect_Think()
 	// now generate the particles
 	vector org;
 	org = gettaginfo(self, 0); // origin at attached location
-	pointparticles(self.team, org, '0 0 0', 1);
+	__pointparticles(self.team, org, '0 0 0', 1);
 }
 
 void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
@@ -222,33 +222,33 @@ void Ent_DamageInfo(float isNew)
 			// spiderbot
 			case DEATH_VH_SPID_MINIGUN:
 				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_SPIDERBOT_MINIGUN_IMPACT), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_SPIDERBOT_MINIGUN_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_ROCKET:
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_SPIDERBOT_ROCKET_EXPLODE), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_SPIDERBOT_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_DEATH:
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
-				pointparticles(particleeffectnum(EFFECT_EXPLOSION_BIG), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
 				break;
 
 			case DEATH_VH_WAKI_GUN:
 				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_RACER_IMPACT), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_RACER_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_ROCKET:
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_RACER_ROCKET_EXPLODE), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_RACER_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_DEATH:
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
-				pointparticles(particleeffectnum(EFFECT_EXPLOSION_BIG), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
 				break;
 
 			case DEATH_VH_RAPT_CANNON:
 				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_RAPTOR_CANNON_IMPACT), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_RAPTOR_CANNON_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_FRAGMENT:
 				float i;
@@ -260,19 +260,19 @@ void Ent_DamageInfo(float isNew)
 					RaptorCBShellfragToss(w_org, vel, ang + '0 0 1' * (120 * i));
 				}
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_RAPTOR_BOMB_SPREAD), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_RAPTOR_BOMB_SPREAD, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_BOMB:
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_RAPTOR_BOMB_IMPACT), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_RAPTOR_BOMB_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_DEATH:
 				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_MIN);
-				pointparticles(particleeffectnum(EFFECT_EXPLOSION_BIG), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_BUMB_GUN:
 				sound(self, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_BIGPLASMA_IMPACT), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_BIGPLASMA_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 		}
 	}
@@ -292,11 +292,11 @@ void Ent_DamageInfo(float isNew)
 		{
 			 case DEATH_TURRET_EWHEEL:
 				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_MIN);
-				pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_BLASTER_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_FLAC:
-				pointparticles(particleeffectnum(EFFECT_HAGAR_EXPLODE), w_org, '0 0 0', 1);
+				pointparticles(EFFECT_HAGAR_EXPLODE, w_org, '0 0 0', 1);
 				sound(self, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
 				break;
 
@@ -305,23 +305,23 @@ void Ent_DamageInfo(float isNew)
 			 case DEATH_TURRET_WALK_ROCKET:
 			 case DEATH_TURRET_HELLION:
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
-				pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_MACHINEGUN:
 			 case DEATH_TURRET_WALK_GUN:
 				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
-				pointparticles(particleeffectnum(EFFECT_MACHINEGUN_IMPACT), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_MACHINEGUN_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_PLASMA:
 				sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_MIN);
-				pointparticles(particleeffectnum(EFFECT_ELECTRO_IMPACT), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_ELECTRO_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_WALK_MELEE:
 				sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTEN_MIN);
-				pointparticles(particleeffectnum(EFFECT_TE_SPARK), self.origin, w_backoff * 1000, 1);
+				pointparticles(EFFECT_TE_SPARK, self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_PHASER:

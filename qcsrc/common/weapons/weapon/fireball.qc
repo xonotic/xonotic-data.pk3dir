@@ -443,7 +443,7 @@ void W_Fireball_Attack2(void)
 			else
 			{
 				org2 = w_org + w_backoff * 16;
-				pointparticles(particleeffectnum(EFFECT_FIREBALL_EXPLODE), org2, '0 0 0', 1);
+				pointparticles(EFFECT_FIREBALL_EXPLODE, org2, '0 0 0', 1);
 				if(!w_issilent)
 					sound(self, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
 			}

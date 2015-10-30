@@ -457,7 +457,7 @@ entity WarpZone_TrailParticles_trace_callback_own;
 float WarpZone_TrailParticles_trace_callback_eff;
 void WarpZone_TrailParticles_trace_callback(vector from, vector endpos, vector to)
 {
-	trailparticles(WarpZone_TrailParticles_trace_callback_own, WarpZone_TrailParticles_trace_callback_eff, from, endpos);
+	__trailparticles(WarpZone_TrailParticles_trace_callback_own, WarpZone_TrailParticles_trace_callback_eff, from, endpos);
 }
 
 void WarpZone_TrailParticles(entity own, float eff, vector org, vector end)

@@ -306,7 +306,7 @@ float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
 		METHOD(Vortex, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
+			pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 		}

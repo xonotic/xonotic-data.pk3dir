@@ -381,12 +381,12 @@ void W_RocketMinsta_Attack3 (void)
 			vector org2 = w_org + w_backoff * 6;
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
-				pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
+				pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 				if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 			}
 			else
 			{
-				pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
+				pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 				if(!w_issilent) { sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM); }
 			}
 		}

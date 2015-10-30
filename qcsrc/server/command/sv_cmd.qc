@@ -1665,8 +1665,8 @@ void GameCommand_trace(float request, float argc)
 						vv = stov(argv(2));
 						dv = stov(argv(3));
 						traceline(vv, dv, MOVE_NORMAL, world);
-						trailparticles(world, particleeffectnum(EFFECT_TR_NEXUIZPLASMA), vv, trace_endpos);
-						trailparticles(world, particleeffectnum(EFFECT_TR_CRYLINKPLASMA), trace_endpos, dv);
+						__trailparticles(world, particleeffectnum(EFFECT_TR_NEXUIZPLASMA), vv, trace_endpos);
+						__trailparticles(world, particleeffectnum(EFFECT_TR_CRYLINKPLASMA), trace_endpos, dv);
 						return;
 					}
 				}

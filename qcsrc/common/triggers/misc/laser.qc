@@ -316,7 +316,7 @@ void Draw_Laser(entity this)
 	if (!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 	{
 		if(self.cnt >= 0)
-			pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
+			__pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
 		if(self.colormod != '0 0 0' && self.modelscale != 0)
 			adddynamiclight(trace_endpos + trace_plane_normal * 1, self.modelscale, self.colormod * 5);
 	}

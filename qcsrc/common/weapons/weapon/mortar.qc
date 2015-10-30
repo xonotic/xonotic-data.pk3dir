@@ -417,7 +417,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
-			pointparticles(particleeffectnum(EFFECT_GRENADE_EXPLODE), org2, '0 0 0', 1);
+			pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
 		}

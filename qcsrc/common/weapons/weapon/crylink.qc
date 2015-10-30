@@ -683,13 +683,13 @@ void W_Crylink_Attack2(Weapon thiswep)
 			org2 = w_org + w_backoff * 2;
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
-				pointparticles(particleeffectnum(EFFECT_CRYLINK_IMPACT2), org2, '0 0 0', 1);
+				pointparticles(EFFECT_CRYLINK_IMPACT2, org2, '0 0 0', 1);
 				if(!w_issilent)
 					sound(self, CH_SHOTS, SND_CRYLINK_IMPACT2, VOL_BASE, ATTN_NORM);
 			}
 			else
 			{
-				pointparticles(particleeffectnum(EFFECT_CRYLINK_IMPACT), org2, '0 0 0', 1);
+				pointparticles(EFFECT_CRYLINK_IMPACT, org2, '0 0 0', 1);
 				if(!w_issilent)
 					sound(self, CH_SHOTS, SND_CRYLINK_IMPACT, VOL_BASE, ATTN_NORM);
 			}

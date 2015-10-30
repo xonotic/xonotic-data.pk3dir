@@ -577,7 +577,7 @@ float W_MineLayer_PlacedMines(float detonate)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
-			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
+			pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
 		}
