@@ -6,15 +6,15 @@ void ons_Initialize();
 
 REGISTER_MUTATOR(ons, false)
 {
-	ActivateTeamplay();
-	SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);
-	have_team_spawns = -1; // request team spawns
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		ons_Initialize();
+
+		ActivateTeamplay();
+		SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);
+		have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
