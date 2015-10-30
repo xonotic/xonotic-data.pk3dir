@@ -174,8 +174,8 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 		// if there is a child entity, hide it until we're sure we use it
 		if (this.weaponchild) this.weaponchild.model = "";
 		_setmodel(this, W_Model(strcat("v_", name, ".md3")));
-		int v_shot_idx = gettagindex(this, "shot");  // used later
-		if (!v_shot_idx) v_shot_idx = gettagindex(this, "tag_shot");
+		int v_shot_idx; // used later
+		(v_shot_idx = gettagindex(this, "shot")) || (v_shot_idx = gettagindex(this, "tag_shot"));
 
 		_setmodel(this, W_Model(strcat("h_", name, ".iqm")));
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
@@ -186,17 +186,12 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 
 		// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
 		// if we don't, this is a "real" animated model
-		if (gettagindex(this, "weapon"))
+		string t;
+		if ((t = "weapon", gettagindex(this, t)) || (t = "tag_weapon", gettagindex(this, t)))
 		{
 			if (!this.weaponchild) this.weaponchild = new(weaponchild);
 			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
-			setattachment(this.weaponchild, this, "weapon");
-		}
-		else if (gettagindex(this, "tag_weapon"))
-		{
-			if (!this.weaponchild) this.weaponchild = new(weaponchild);
-			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
-			setattachment(this.weaponchild, this, "tag_weapon");
+			setattachment(this.weaponchild, this, t);
 		}
 		else
 		{
@@ -215,9 +210,8 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 		}
 		else
 		{
-			int idx = gettagindex(this, "shot");
-			if (!idx) idx = gettagindex(this, "tag_shot");
-			if (idx)
+			int idx;
+			if ((idx = gettagindex(this, "shot")) || (idx = gettagindex(this, "tag_shot")))
 			{
 				this.movedir = gettaginfo(this, idx);
 			}
@@ -228,34 +222,25 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 				this.movedir = '0 0 0';
 			}
 		}
-
-		int idx;
-		if (this.weaponchild)  // v_ model attached to invisible h_ model
-		{
-			idx = gettagindex(this.weaponchild, "shell");
-			if (!idx) idx = gettagindex(this.weaponchild, "tag_shell");
-			if (idx) this.spawnorigin = gettaginfo(this.weaponchild, idx);
+        {
+            int idx = 0;
+            // v_ model attached to invisible h_ model
+            if (this.weaponchild
+                && ((idx = gettagindex(this.weaponchild, "shell")) || (idx = gettagindex(this.weaponchild, "tag_shell"))))
+            {
+                this.spawnorigin = gettaginfo(this.weaponchild, idx);
+            }
+            else if ((idx = gettagindex(this, "shell")) || (idx = gettagindex(this, "tag_shell")))
+            {
+                this.spawnorigin = gettaginfo(this, idx);
+            }
+            else
+            {
+                LOG_WARNINGF("weapon model %s does not support the 'shell' tag, will display casings wrong\n",
+                    this.model);
+                this.spawnorigin = this.movedir;
+            }
 		}
-		else
-		{
-			idx = 0;
-		}
-		if (!idx)
-		{
-			idx = gettagindex(this, "shell");
-			if (!idx) idx = gettagindex(this, "tag_shell");
-			if (idx)
-			{
-				this.spawnorigin = gettaginfo(this, idx);
-			}
-			else
-			{
-				LOG_WARNINGF("weapon model %s does not support the 'shell' tag, will display casings wrong\n",
-					this.model);
-				this.spawnorigin = this.movedir;
-			}
-		}
-
 		if (v_shot_idx)
 		{
 			this.oldorigin = '0 0 0';  // use regular attachment
@@ -264,15 +249,9 @@ void CL_WeaponEntity_SetModel(entity this, int slot, string name)
 		{
 			int idx;
 			if (this.weaponchild)
-			{
-				idx = gettagindex(this, "weapon");
-				if (!idx) idx = gettagindex(this, "tag_weapon");
-			}
+				(idx = gettagindex(this, "weapon")) || (idx = gettagindex(this, "tag_weapon"));
 			else
-			{
-				idx = gettagindex(this, "handle");
-				if (!idx) idx = gettagindex(this, "tag_handle");
-			}
+				(idx = gettagindex(this, "handle")) || (idx = gettagindex(this, "tag_handle"));
 			if (idx)
 			{
 				this.oldorigin = this.movedir - gettaginfo(this, idx);
