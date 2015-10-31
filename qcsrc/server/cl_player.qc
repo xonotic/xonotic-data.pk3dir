@@ -167,16 +167,6 @@ void player_anim (void)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
-
-	int slot = 0; // TODO: unhardcode
-	{
-		if (self.weaponentity[slot])
-		{
-			updateanim(self.weaponentity[slot]);
-			if (!self.weaponentity[slot].animstate_override)
-				setanim(self.weaponentity[slot], self.weaponentity[slot].anim_idle, true, false, false);
-		}
-	}
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

@@ -1,0 +1,7 @@
+#ifndef ANIM_H
+#define ANIM_H
+
+void setanim(entity e, vector anim, float looping, float override, float restart);
+void updateanim(entity e);
+
+#endif

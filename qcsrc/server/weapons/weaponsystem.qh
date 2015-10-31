@@ -1,22 +1,10 @@
 #ifndef WEAPONSYSTEM_H
 #define WEAPONSYSTEM_H
 
-.float wframe;
 
 float internalteam;
 float weaponswapping;
 entity weapon_dropevent_item;
-
-// VorteX: static frame globals
-const float WFRAME_DONTCHANGE = -1;
-const float WFRAME_FIRE1 = 0;
-const float WFRAME_FIRE2 = 1;
-const float WFRAME_IDLE = 2;
-const float WFRAME_RELOAD = 3;
-
-vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn);
-
-vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 
 void CL_SpawnWeaponentity(entity e, int slot);
 

@@ -92,12 +92,6 @@ float server_is_dedicated;
 .float fade_time;
 .float fade_rate;
 
-// weapon animation vectors:
-.vector anim_fire1;
-.vector anim_fire2;
-.vector anim_idle;
-.vector anim_reload;
-
 void() player_setupanimsformodel;
 void setanim(entity e, vector anim, float looping, float override, float restart);
 
@@ -149,18 +143,6 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .string item_pickupsound;
 .entity item_pickupsound_ent;
 .entity item_model_ent;
-
-// definitions for weaponsystem
-// more WEAPONTODO: move these to their proper files
-.entity weaponentity[MAX_WEAPONSLOTS];
-.entity weaponchild;
-.entity exteriorweaponentity;
-.vector weaponentity_glowmod;
-
-//.int weapon; // current weapon
-.int switchweapon; // weapon requested to switch to
-.int switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
-.string weaponname; // name of .weapon
 
 // WEAPONTODO
 .float autoswitch;
@@ -214,8 +196,6 @@ float nJoinAllowed(entity ignore);
 .int playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
-
-.vector spawnorigin;
 
 .vector death_origin;
 .vector killer_origin;

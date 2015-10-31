@@ -10,6 +10,7 @@
 
 #include "mutators/events.qh"
 
+#include "../common/anim.qh"
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"
 #include "../common/gamemodes/all.qh"
@@ -28,6 +29,24 @@
 
 #include "../lib/warpzone/client.qh"
 #include "../lib/warpzone/common.qh"
+
+void viewmodel_draw(entity this)
+{
+	int c = stof(getplayerkeyvalue(player_localnum, "colors"));
+	vector g = colormapPaletteColor(c & 0x0F, true) * 2;
+	for (entity e = this; e; e = e.weaponchild)
+	{
+		e.colormap = c;
+		e.glowmod = g;
+	}
+}
+
+entity viewmodel;
+STATIC_INIT(viewmodel) {
+	viewmodel = new(viewmodel);
+	viewmodel.drawmask = MASK_NORMAL;
+	viewmodel.draw = viewmodel_draw;
+}
 
 entity porto;
 vector polyline[16];
@@ -1234,6 +1253,17 @@ void CSQC_UpdateView(float w, float h)
 
 	WarpZone_FixView();
 	//WarpZone_FixPMove();
+	{
+		static string name_last;
+		string name = get_weaponinfo(switchingweapon).mdl;
+		if (name != name_last)
+		{
+			CL_WeaponEntity_SetModel(viewmodel, name_last = name);
+			updateanim(viewmodel);
+			if (!viewmodel.animstate_override)
+				setanim(viewmodel, viewmodel.anim_idle, true, false, false);
+		}
+	}
 
 	vector ov_org = '0 0 0';
 	vector ov_mid = '0 0 0';

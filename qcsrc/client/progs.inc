@@ -32,6 +32,7 @@
 
 #include "weapons/projectile.qc" // TODO
 
+#include "../common/anim.qc"
 #include "../common/animdecide.qc"
 #include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"

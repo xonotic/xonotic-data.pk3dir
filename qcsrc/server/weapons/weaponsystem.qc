@@ -14,59 +14,6 @@
 #include "../../common/weapons/all.qh"
 #include "../../lib/csqcmodel/sv_model.qh"
 
-vector shotorg_adjustfromclient(vector vecs, float y_is_right, float algn)
-{
-	switch (algn)
-	{
-		default: case 3: break; // right alignment
-		case 4: vecs.y = -vecs.y;
-			break;              // left
-		case 1: case 2: vecs.y = 0;
-			vecs.z -= 2;
-			break;              // center
-	}
-
-	return vecs;
-}
-
-vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn)
-{
-	string s;
-
-	if (visual)
-	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
-	}
-	else if (autocvar_g_shootfromeye)
-	{
-		vecs.y = vecs.z = 0;
-	}
-	else if (autocvar_g_shootfromcenter)
-	{
-		vecs.y = 0;
-		vecs.z -= 2;
-	}
-	else if ((s = autocvar_g_shootfromfixedorigin) != "")
-	{
-		vector v = stov(s);
-		if (y_is_right) v.y = -v.y;
-		if (v.x != 0) vecs.x = v.x;
-		vecs.y = v.y;
-		vecs.z = v.z;
-	}
-	else  // just do the same as top
-	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, algn);
-	}
-
-	return vecs;
-}
-
-vector shotorg_adjust(vector vecs, bool y_is_right, bool visual, int algn)
-{
-	return shotorg_adjust_values(vecs, y_is_right, visual, algn);
-}
-
 .int state;
 
 .float weapon_frametime;
@@ -107,9 +54,9 @@ vector CL_Weapon_GetShotOrg(int wpn)
 {
 	entity wi = get_weaponinfo(wpn);
 	entity e = spawn();
-	CL_WeaponEntity_SetModel(e, 0, wi.mdl);
+	CL_WeaponEntity_SetModel(e, wi.mdl);
 	vector ret = e.movedir;
-	CL_WeaponEntity_SetModel(e, 0, "");
+	CL_WeaponEntity_SetModel(e, "");
 	remove(e);
 	return ret;
 }
@@ -143,7 +90,7 @@ void CL_Weaponentity_Think()
 		this.dmg = this.owner.modelindex;
 		this.deadflag = this.owner.deadflag;
 
-		CL_WeaponEntity_SetModel(this, slot, this.owner.weaponname);
+		CL_WeaponEntity_SetModel(this, this.owner.weaponname);
 	}
 
 	int tb = (this.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));
@@ -155,7 +102,9 @@ void CL_Weaponentity_Think()
 	    | EF_TELEPORT_BIT
 	    | EF_RESTARTANIM_BIT
 	       )
-	    | tb;
+	    | tb
+	    // TODO: don't render this entity at all
+	    | EF_NODRAW;
 
 	if (this.owner.alpha == default_player_alpha) this.alpha = default_weapon_alpha;
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
@@ -393,6 +342,8 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, int slot, bool secondary
 	return false;
 }
 
+void wframe_send(entity actor, vector a, bool restartanim);
+
 void weapon_thinkf(entity actor, int slot, float fr, float t,
 	void(Weapon thiswep, entity actor, int slot, int fire) func)
 {
@@ -425,7 +376,7 @@ void weapon_thinkf(entity actor, int slot, float fr, float t,
 		else  // if (fr == WFRAME_RELOAD)
 			a = actor.weaponentity[slot].anim_reload;
 		a.z *= g_weaponratefactor;
-		setanim(actor.weaponentity[slot], a, restartanim == false, restartanim, restartanim);
+		wframe_send(actor, a, restartanim);
 	}
 
 	v_forward = of;
