@@ -3,7 +3,7 @@
 
 #include "model.qh"
 
-REGISTRY(Models, BIT(9))
+REGISTRY(Models, BITS(9))
 REGISTER_REGISTRY(RegisterModels)
 
 #define MODEL(name, path) \

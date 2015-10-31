@@ -3,7 +3,7 @@
 
 #include "vehicle.qh"
 
-REGISTRY(Vehicles, BIT(3))
+REGISTRY(Vehicles, BITS(3))
 REGISTER_REGISTRY(RegisterVehicles)
 const int VEH_FIRST = 1;
 #define VEH_LAST (Vehicles_COUNT - 1)

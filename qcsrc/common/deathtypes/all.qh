@@ -3,7 +3,7 @@
 
 #include "../notifications.qh"
 
-REGISTRY(Deathtypes, 100)
+REGISTRY(Deathtypes, BITS(8))
 REGISTER_REGISTRY(RegisterDeathtypes)
 
 .entity death_msgself;

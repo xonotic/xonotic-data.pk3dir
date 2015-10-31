@@ -8,7 +8,7 @@
 #include "../teams.qh"
 #include "../util.qh"
 
-REGISTRY(Buffs, BIT(4))
+REGISTRY(Buffs, BITS(4))
 REGISTER_REGISTRY(RegisterBuffs)
 
 #define REGISTER_BUFF(id) \

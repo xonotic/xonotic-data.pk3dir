@@ -3,7 +3,7 @@
 
 #include "monster.qh"
 
-REGISTRY(Monsters, BIT(4))
+REGISTRY(Monsters, BITS(4))
 REGISTER_REGISTRY(RegisterMonsters)
 const int MON_FIRST = 1;
 #define MON_LAST (Monsters_COUNT - 1)

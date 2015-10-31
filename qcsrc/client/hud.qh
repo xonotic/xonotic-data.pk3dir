@@ -6,7 +6,7 @@
 bool HUD_Radar_Clickable();
 void HUD_Radar_Mouse();
 
-REGISTRY(hud_panels, 24)
+REGISTRY(hud_panels, BITS(6))
 REGISTER_REGISTRY(Registerhud_panels)
 
 #define REGISTER_HUD_PANEL(id, draw_func, name, configflags, showflags) \

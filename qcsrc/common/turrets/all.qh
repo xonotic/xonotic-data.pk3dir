@@ -6,7 +6,7 @@
 
 #include "turret.qh"
 
-REGISTRY(Turrets, BIT(5))
+REGISTRY(Turrets, BITS(5))
 REGISTER_REGISTRY(RegisterTurrets)
 
 

@@ -103,7 +103,7 @@
 		}
 #endif
 
-REGISTRY(LinkedEntities, BIT(0))
+REGISTRY(LinkedEntities, BITS(4))
 REGISTER_REGISTRY(RegisterLinkedEntities)
 REGISTRY_SORT(LinkedEntities, netname, 0)
 STATIC_INIT(RegisterLinkedEntities_renumber)
@@ -130,7 +130,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 		}
 #endif
 
-REGISTRY(TempEntities, BIT(0))
+REGISTRY(TempEntities, BITS(4))
 REGISTER_REGISTRY(RegisterTempEntities)
 REGISTRY_SORT(TempEntities, netname, 0)
 STATIC_INIT(RegisterTempEntities_renumber)

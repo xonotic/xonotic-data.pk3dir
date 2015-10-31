@@ -42,7 +42,7 @@ CLASS(Gametype, Object)
     }
 ENDCLASS(Gametype)
 
-REGISTRY(Gametypes, BIT(4))
+REGISTRY(Gametypes, BITS(4))
 REGISTER_REGISTRY(RegisterGametypes)
 int MAPINFO_TYPE_ALL;
 #define REGISTER_GAMETYPE(hname, sname, g_name, NAME, gteamplay, mutators, defaults, gdescription)          \

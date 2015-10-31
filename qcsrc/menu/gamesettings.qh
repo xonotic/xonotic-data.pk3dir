@@ -4,7 +4,7 @@
 
 #include "xonotic/tab.qc"
 
-REGISTRY(Settings, BIT(3))
+REGISTRY(Settings, BITS(3))
 REGISTER_REGISTRY(RegisterSettings)
 #define REGISTER_SETTINGS(id, impl) \
     LAZY_NEW(id, impl) \
