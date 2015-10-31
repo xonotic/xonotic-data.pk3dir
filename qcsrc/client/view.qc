@@ -32,7 +32,7 @@
 
 void viewmodel_draw(entity this)
 {
-	int c = stof(getplayerkeyvalue(player_localnum, "colors"));
+	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g = colormapPaletteColor(c & 0x0F, true) * 2;
 	for (entity e = this; e; e = e.weaponchild)
 	{
