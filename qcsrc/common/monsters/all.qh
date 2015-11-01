@@ -3,6 +3,8 @@
 
 #include "monster.qh"
 
+string M_Model(string m_mdl);
+
 REGISTRY(Monsters, BITS(4))
 REGISTER_REGISTRY(RegisterMonsters)
 const int MON_FIRST = 1;
