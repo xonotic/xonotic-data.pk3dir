@@ -846,8 +846,9 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 	float bonusNades    = getstatf(STAT_NADE_BONUS);
 	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
 	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
-	vector nadeColor    = Nades[bonusType].m_color;
-	string nadeIcon     = Nades[bonusType].m_icon;
+	Nade def = Nades_from(bonusType);
+	vector nadeColor    = def.m_color;
+	string nadeIcon     = def.m_icon;
 
 	vector iconPos, textPos;
 
@@ -2221,7 +2222,7 @@ void HUD_Radar(void)
 				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
 			}
 		}
-		entity icon = RadarIcons[tm.teamradar_icon];
+		entity icon = RadarIcons_from(tm.teamradar_icon);
 		draw_teamradar_icon(tm.origin, icon, tm, spritelookupcolor(tm, icon.netname, tm.teamradar_color), panel_fg_alpha);
 	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
@@ -4834,7 +4835,7 @@ void HUD_Main(void)
 	hud_draw_maximized = 0;
 	// draw panels in the order specified by panel_order array
 	for(i = hud_panels_COUNT - 1; i >= 0; --i)
-		HUD_Panel_Draw(hud_panels[panel_order[i]]);
+		HUD_Panel_Draw(hud_panels_from(panel_order[i]));
 
 	HUD_Vehicle();
 

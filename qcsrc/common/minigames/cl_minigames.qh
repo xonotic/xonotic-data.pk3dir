@@ -115,6 +115,7 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_ar
 
 
 REGISTRY(Minigames, BITS(3))
+#define Minigames_from(i) _Minigames_from(i, NULL)
 REGISTER_REGISTRY(RegisterMinigames)
 #define REGISTER_MINIGAME(name,nicename) \
     REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, spawn()); \

@@ -4,6 +4,7 @@
 #include "sound.qh"
 
 REGISTRY(Sounds, BITS(8))
+#define Sounds_from(i) _Sounds_from(i, SND_Null)
 REGISTER_REGISTRY(RegisterSounds)
 
 #define SOUND(name, path) \

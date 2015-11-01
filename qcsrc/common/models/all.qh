@@ -4,6 +4,7 @@
 #include "model.qh"
 
 REGISTRY(Models, BITS(9))
+#define Models_from(i) _Models_from(i, MDL_Null)
 REGISTER_REGISTRY(RegisterModels)
 
 #define MODEL(name, path) \

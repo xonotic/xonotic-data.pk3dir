@@ -5,7 +5,7 @@ void Read_Effect(bool is_new)
 {
 	int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
 
-	entity eff = Effects[net_name];
+	entity eff = Effects_from(net_name);
 
 	vector v, vel = '0 0 0';
 	int eff_cnt = 1;

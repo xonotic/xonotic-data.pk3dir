@@ -4,6 +4,8 @@
 #include "vehicle.qh"
 
 REGISTRY(Vehicles, BITS(3))
+#define Vehicles_from(i) _Vehicles_from(i, VEH_Null)
+#define get_vehicleinfo(i) Vehicles_from(i)
 REGISTER_REGISTRY(RegisterVehicles)
 const int VEH_FIRST = 1;
 #define VEH_LAST (Vehicles_COUNT - 1)
@@ -18,15 +20,6 @@ const int VEH_FIRST = 1;
 #endif
 
 REGISTER_VEHICLE(Null, NEW(Vehicle));
-
-Vehicle get_vehicleinfo(int id)
-{
-	if (id >= VEH_FIRST && id <= VEH_LAST) {
-		Vehicle v = Vehicles[id];
-		if (v) return v;
-	}
-	return VEH_Null;
-}
 
 #include "all.inc"
 

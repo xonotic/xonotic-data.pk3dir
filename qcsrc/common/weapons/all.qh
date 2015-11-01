@@ -34,9 +34,10 @@ WepSet ReadWepSet();
 #endif
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
+#define Weapons_from(i) _Weapons_from(i, WEP_Null)
+#define get_weaponinfo(i) Weapons_from(i)
 REGISTER_REGISTRY(RegisterWeapons)
 STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(WeaponPickup, it))); }
-entity get_weaponinfo(int id);
 
 
 GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
@@ -131,15 +132,6 @@ REGISTER_WEAPON(Null, NEW(Weapon));
 
 #include "all.inc"
 
-entity get_weaponinfo(int id)
-{
-    if (id >= WEP_FIRST && id <= WEP_LAST) {
-        Weapon w = Weapons[id];
-        if (w) return w;
-    }
-    return WEP_Null;
-}
-
 // TODO: remove after 0.8.2. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
 #define WEP_HARDCODED_IMPULSES 22
 
@@ -169,7 +161,7 @@ STATIC_INIT(register_weapons_done)
     #endif
     weaponorder_byid = "";
     for (int i = Weapons_MAX - 1; i >= 1; --i)
-        if (Weapons[i])
+        if (Weapons_from(i))
             weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
     weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }

@@ -47,6 +47,7 @@ entity minigame_sessions;
 bool minigame_SendEntity(entity this, entity to, int sf);
 
 REGISTRY(Minigames, BITS(3))
+#define Minigames_from(i) _Minigames_from(i, NULL)
 REGISTER_REGISTRY(RegisterMinigames)
 #define REGISTER_MINIGAME(name,nicename) \
     REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, spawn()); \

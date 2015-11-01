@@ -3,7 +3,7 @@
 string Deathtype_Name(int deathtype)
 {
 	if (DEATH_ISSPECIAL(deathtype)) {
-		entity deathent = Deathtypes[deathtype - DT_FIRST];
+		entity deathent = Deathtypes_from(deathtype - DT_FIRST);
 		if (!deathent) { backtrace("Deathtype_Name: Could not find deathtype entity!\n"); return ""; }
 		return deathent.nent_name;
 	}
