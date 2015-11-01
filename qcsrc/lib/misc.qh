@@ -23,6 +23,20 @@
 	#define OVERLOAD(F, ...) OVERLOAD_(F,##__VA_ARGS__)(__VA_ARGS__)
 #endif
 
+#if defined(CSQC)
+	#define etof(e) num_for_edict(e)
+	#define ftoe(i) entitybyindex(i)
+#elif defined(SVQC)
+	#define etof(e) num_for_edict(e)
+	#define ftoe(i) edict_num(i)
+#elif defined(MENUQC)
+	// already defined
+#endif
+
+#undef etof
+// avoid bounds checks
+#define etof(e) stof(sprintf("%i", e))
+
 #define GET(name) name##get
 #define GETTER(type, name) type GET(name)() { return name; }
 #define PROPERTY(type, name) type name; GETTER(type, name)
