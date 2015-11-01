@@ -555,7 +555,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, int slot, int fire)
 			org2 = w_org + w_backoff * 6;
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
-				pointparticles(particleeffectnum(EFFECT_ELECTRO_BALLEXPLODE), org2, '0 0 0', 1);
+				pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);
 				if(!w_issilent)
 					sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 			}
@@ -564,13 +564,13 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, int slot, int fire)
 				if(w_deathtype & HITTYPE_BOUNCE)
 				{
 					// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
-					pointparticles(particleeffectnum(EFFECT_ELECTRO_COMBO), org2, '0 0 0', 1);
+					pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
 					if(!w_issilent)
 						sound(self, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
 				}
 				else
 				{
-					pointparticles(particleeffectnum(EFFECT_ELECTRO_IMPACT), org2, '0 0 0', 1);
+					pointparticles(EFFECT_ELECTRO_IMPACT, org2, '0 0 0', 1);
 					if(!w_issilent)
 						sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 				}

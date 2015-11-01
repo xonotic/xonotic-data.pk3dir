@@ -6,15 +6,15 @@ void ons_Initialize();
 
 REGISTER_MUTATOR(ons, false)
 {
-	ActivateTeamplay();
-	SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);
-	have_team_spawns = -1; // request team spawns
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		ons_Initialize();
+
+		ActivateTeamplay();
+		SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);
+		have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -529,7 +529,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 		WaypointSprite_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / ONS_CP_THINKRATE));
 	self.pain_finished = time + 1;
 	// particles on every hit
-	pointparticles(particleeffectnum(EFFECT_SPARKS), hitloc, force*-1, 1);
+	pointparticles(EFFECT_SPARKS, hitloc, force*-1, 1);
 	//sound on every hit
 	if (random() < 0.5)
 		sound(self, CH_TRIGGER, SND_ONS_HIT1, VOL_BASE+0.3, ATTEN_NORM);
@@ -539,7 +539,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 	if (self.health < 0)
 	{
 		sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
+		pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_CPDESTROYED_), self.owner.message, attacker.netname);
 
 		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);

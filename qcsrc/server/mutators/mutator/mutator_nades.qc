@@ -64,7 +64,7 @@ void nade_timer_think()
 
 void nade_burn_spawn(entity _nade)
 {
-	CSQCProjectile(_nade, true, Nades[_nade.nade_type].m_projectile[true], true);
+	CSQCProjectile(_nade, true, Nades_from(_nade.nade_type).m_projectile[true], true);
 }
 
 void nade_spawn(entity _nade)
@@ -82,7 +82,7 @@ void nade_spawn(entity _nade)
 
 	_nade.effects |= EF_LOWPRECISION;
 
-	CSQCProjectile(_nade, true, Nades[_nade.nade_type].m_projectile[false], true);
+	CSQCProjectile(_nade, true, Nades_from(_nade.nade_type).m_projectile[false], true);
 }
 
 void napalm_damage(float dist, float damage, float edgedamage, float burntime)
@@ -510,7 +510,7 @@ void nade_boom()
 	entity expef = NULL;
 	bool nade_blast = true;
 
-	switch ( Nades[self.nade_type] )
+	switch ( Nades_from(self.nade_type) )
 	{
 		case NADE_TYPE_NAPALM:
 			nade_blast = autocvar_g_nades_napalm_blast;
@@ -562,7 +562,7 @@ void nade_boom()
 	}
 
 	if(self.takedamage)
-	switch ( Nades[self.nade_type] )
+	switch ( Nades_from(self.nade_type) )
 	{
 		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
 		case NADE_TYPE_ICE: nade_ice_boom(); break;
@@ -805,7 +805,7 @@ float nade_customize()
 	{
 		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 		if(!self.traileffectnum)
-			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades[self.nade_type].m_projectile[false], self.team).eent_eff_name);
+			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(self.nade_type).m_projectile[false], self.team).eent_eff_name);
 		self.alpha = 1;
 	}
 
@@ -846,8 +846,8 @@ void nade_prime()
 	//setattachment(n, self, "bip01 l hand");
 	n.exteriormodeltoclient = self;
 	n.customizeentityforclient = nade_customize;
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades[n.nade_type].m_projectile[false], self.team).eent_eff_name);
-	n.colormod = Nades[n.nade_type].m_color;
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], self.team).eent_eff_name);
+	n.colormod = Nades_from(n.nade_type).m_color;
 	n.realowner = self;
 	n.colormap = self.colormap;
 	n.glowmod = self.glowmod;
@@ -861,7 +861,7 @@ void nade_prime()
 	int slot = 0; // TODO: unhardcode
 	setattachment(fn, self.weaponentity[slot], "");
 	fn.realowner = fn.owner = self;
-	fn.colormod = Nades[n.nade_type].m_color;
+	fn.colormod = Nades_from(n.nade_type).m_color;
 	fn.colormap = self.colormap;
 	fn.glowmod = self.glowmod;
 	fn.think = SUB_Remove;

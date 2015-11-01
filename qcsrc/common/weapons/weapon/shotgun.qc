@@ -339,7 +339,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, int slot, int fire)
 		METHOD(Shotgun, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum(EFFECT_SHOTGUN_IMPACT), org2, w_backoff * 1000, 1);
+			pointparticles(EFFECT_SHOTGUN_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent && time - self.prevric > 0.25)
 			{
 				if(w_random < 0.0165)

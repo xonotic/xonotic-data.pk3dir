@@ -45,11 +45,11 @@ void turret_draw(entity this)
 
 	if(self.health < 85)
 	if(dt < 0.01)
-		pointparticles(particleeffectnum(EFFECT_SMOKE_LARGE), (self.origin + (randomvec() * 80)), '0 0 0', 1);
+		pointparticles(EFFECT_SMOKE_LARGE, (self.origin + (randomvec() * 80)), '0 0 0', 1);
 
 	if(self.health < 32)
 	if(dt < 0.015)
-		pointparticles(particleeffectnum(EFFECT_SMOKE_SMALL), (self.origin + (randomvec() * 80)), '0 0 0', 1);
+		pointparticles(EFFECT_SMOKE_SMALL, (self.origin + (randomvec() * 80)), '0 0 0', 1);
 
 }
 
@@ -273,7 +273,7 @@ void turret_gibboom()
 	float i;
 
 	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
+	pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 
 	for (i = 1; i < 5; i = i + 1)
 		turret_gibtoss(strcat("models/turrets/head-gib", ftos(i), ".md3"), self.origin + '0 0 2', self.velocity + randomvec() * 700, '0 0 0', false);
@@ -318,7 +318,7 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 void turret_die()
 {SELFPARAM();
 	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), self.origin, '0 0 0', 1);
+	pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 	if (!autocvar_cl_nogibs)
 	{
 		// Base

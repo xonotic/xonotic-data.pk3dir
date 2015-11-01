@@ -261,7 +261,7 @@ void W_Blaster_Attack(
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
+			pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 		}
 

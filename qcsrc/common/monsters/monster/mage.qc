@@ -2,7 +2,7 @@
 #define MAGE_H
 
 #ifndef MENUQC
-MODEL(MON_MAGE, "models/monsters/mage.dpm");
+MODEL(MON_MAGE, M_Model("mage.dpm"));
 #endif
 
 CLASS(Mage, Monster)

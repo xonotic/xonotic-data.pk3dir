@@ -61,7 +61,7 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 	float i, pmod;
 	pmod = autocvar_cl_particles_quality;
 	for (i = 0; i < 50 * pmod; ++i)
-		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
+		__pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
 }
 
 void SUB_RemoveOnNoImpact()
@@ -82,7 +82,7 @@ void Gib_Touch()
 
 	if(!self.silent)
 		sound(self, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
-	pointparticles(_particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
+	__pointparticles(_particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
 
 	Gib_Delete();
 }
@@ -98,9 +98,9 @@ void Gib_Draw(entity this)
 
 	if(self.touch == Gib_Touch) // don't do this for the "chunk" thingie...
 		// TODO somehow make it spray in a direction dependent on self.angles
-		trailparticles(self, _particleeffectnum(strcat(species_prefix(self.cnt), EFFECT_TR_SLIGHTBLOOD.eent_eff_name)), oldorg, self.origin);
+		__trailparticles(self, _particleeffectnum(strcat(species_prefix(self.cnt), EFFECT_TR_SLIGHTBLOOD.eent_eff_name)), oldorg, self.origin);
 	else
-		trailparticles(self, _particleeffectnum(strcat(species_prefix(self.cnt), EFFECT_TR_BLOOD.eent_eff_name)), oldorg, self.origin);
+		__trailparticles(self, _particleeffectnum(strcat(species_prefix(self.cnt), EFFECT_TR_BLOOD.eent_eff_name)), oldorg, self.origin);
 
 	self.renderflags = 0;
 
@@ -246,17 +246,17 @@ REGISTER_NET_TEMP(net_gibsplash, bool isNew)
 			}
 			break;
 		case 0x02:
-			pointparticles(_particleeffectnum(strcat(specstr, "blood")), org, vel, amount * 16);
+			__pointparticles(_particleeffectnum(strcat(specstr, "blood")), org, vel, amount * 16);
 			break;
 		case 0x03:
 			if(prandom() < amount)
 				TossGib ("models/gibs/chunk.mdl", org, org, vel, prandomvec() * (prandom() * 30 + 20), specnum, 1, issilent); // TODO maybe adjust to more randomization?
 			break;
 		case 0x81:
-			pointparticles(_particleeffectnum(strcat(gentle_prefix, "damage_dissolve")), org, vel, amount);
+			__pointparticles(_particleeffectnum(strcat(gentle_prefix, "damage_dissolve")), org, vel, amount);
 			break;
 		case 0x82:
-			pointparticles(_particleeffectnum(strcat(gentle_prefix, "damage_hit")), org, vel, amount * 16);
+			__pointparticles(_particleeffectnum(strcat(gentle_prefix, "damage_hit")), org, vel, amount * 16);
 			break;
 		case 0x83:
 			// no gibs in gentle mode, sorry

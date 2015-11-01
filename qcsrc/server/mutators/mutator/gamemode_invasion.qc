@@ -9,14 +9,6 @@ void invasion_Initialize();
 
 REGISTER_MUTATOR(inv, false)
 {
-	SetLimits(autocvar_g_invasion_point_limit, -1, -1, -1);
-	if (autocvar_g_invasion_teams >= 2)
-	{
-		ActivateTeamplay();
-		if (autocvar_g_invasion_team_spawns)
-			have_team_spawns = -1; // request team spawns
-	}
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
@@ -25,6 +17,14 @@ REGISTER_MUTATOR(inv, false)
 		invasion_Initialize();
 
 		cvar_settemp("g_monsters", "1");
+
+		SetLimits(autocvar_g_invasion_point_limit, -1, -1, -1);
+		if (autocvar_g_invasion_teams >= 2)
+		{
+			ActivateTeamplay();
+			if (autocvar_g_invasion_team_spawns)
+				have_team_spawns = -1; // request team spawns
+		}
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

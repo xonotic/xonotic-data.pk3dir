@@ -2,7 +2,7 @@
 #define ZOMBIE_H
 
 #ifndef MENUQC
-MODEL(MON_ZOMBIE, "models/monsters/zombie.dpm");
+MODEL(MON_ZOMBIE, M_Model("zombie.dpm"));
 #endif
 
 CLASS(Zombie, Monster)

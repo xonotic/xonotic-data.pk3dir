@@ -4,6 +4,7 @@
 #include "sound.qh"
 
 REGISTRY(Sounds, BITS(8))
+#define Sounds_from(i) _Sounds_from(i, SND_Null)
 REGISTER_REGISTRY(RegisterSounds)
 
 #define SOUND(name, path) \
@@ -13,7 +14,7 @@ REGISTER_REGISTRY(RegisterSounds)
 // Used in places where a string is required
 #define SND(id) (SND_##id.sound_str())
 
-STATIC_INIT(RegisterSounds_precache) {
+PRECACHE(Sounds) {
     FOREACH(Sounds, true, LAMBDA({
         it.sound_precache(it);
     }));

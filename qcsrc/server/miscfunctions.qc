@@ -296,7 +296,7 @@ string formatmessage(string msg)
 			case "l": replacement = NearestLocation(self.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(self.death_origin); break;
-			case "w": replacement = WEP_NAME((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon); break;
+			case "w": replacement = WEP_NAME(((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon)); break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;

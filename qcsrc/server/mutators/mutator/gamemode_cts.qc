@@ -7,15 +7,15 @@ void cts_Initialize();
 
 REGISTER_MUTATOR(cts, false)
 {
-	g_race_qualifying = true;
-	independent_players = 1;
-	SetLimits(0, 0, 0, -1);
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		cts_Initialize();
+
+		g_race_qualifying = true;
+		independent_players = 1;
+		SetLimits(0, 0, 0, -1);
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

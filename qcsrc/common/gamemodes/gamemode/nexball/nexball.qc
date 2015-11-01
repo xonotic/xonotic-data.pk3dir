@@ -1066,10 +1066,6 @@ MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 
 REGISTER_MUTATOR(nb, g_nexball)
 {
-	ActivateTeamplay();
-	SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, -1, -1);
-	have_team_spawns = -1; // request team spawns
-
 	MUTATOR_ONADD
 	{
 		g_nexball_meter_period = autocvar_g_nexball_meter_period;
@@ -1089,6 +1085,10 @@ REGISTER_MUTATOR(nb, g_nexball)
 
 		InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+
+		ActivateTeamplay();
+		SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, -1, -1);
+		have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

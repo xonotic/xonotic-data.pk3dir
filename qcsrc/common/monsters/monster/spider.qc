@@ -2,7 +2,7 @@
 #define SPIDER_H
 
 #ifndef MENUQC
-MODEL(MON_SPIDER, "models/monsters/spider.dpm");
+MODEL(MON_SPIDER, M_Model("spider.dpm"));
 #endif
 
 CLASS(Spider, Monster)

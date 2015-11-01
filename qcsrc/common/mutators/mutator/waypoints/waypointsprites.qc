@@ -224,7 +224,7 @@ float spritelookupblinkvalue(string s)
         if (get_weaponinfo(self.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
             return 2;
     }
-    if (s == WP_Item.netname) return Items[self.wp_extra].m_waypointblink;
+    if (s == WP_Item.netname) return Items_from(self.wp_extra).m_waypointblink;
 
     return 1;
 }
@@ -232,8 +232,8 @@ float spritelookupblinkvalue(string s)
 vector spritelookupcolor(entity this, string s, vector def)
 {
     if (s == WP_Weapon.netname  || s == RADARICON_Weapon.netname) return get_weaponinfo(this.wp_extra).wpcolor;
-    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return Items[this.wp_extra].m_color;
-    if (s == WP_Buff.netname    || s == RADARICON_Buff.netname) return Buffs[this.wp_extra].m_color;
+    if (s == WP_Item.netname    || s == RADARICON_Item.netname) return Items_from(this.wp_extra).m_color;
+    if (s == WP_Buff.netname    || s == RADARICON_Buff.netname) return Buffs_from(this.wp_extra).m_color;
     return def;
 }
 
@@ -241,8 +241,8 @@ string spritelookuptext(string s)
 {SELFPARAM();
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
     if (s == WP_Weapon.netname) return get_weaponinfo(self.wp_extra).m_name;
-    if (s == WP_Item.netname) return Items[self.wp_extra].m_waypoint;
-    if (s == WP_Buff.netname) return Buffs[self.wp_extra].m_prettyName;
+    if (s == WP_Item.netname) return Items_from(self.wp_extra).m_waypoint;
+    if (s == WP_Buff.netname) return Buffs_from(self.wp_extra).m_prettyName;
     if (s == WP_Monster.netname) return get_monsterinfo(self.wp_extra).monster_name;
 
     // need to loop, as our netname could be one of three

@@ -130,6 +130,7 @@ void CSQC_Init(void)
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
+	static_init_precache();
 
 	// precaches
 
@@ -675,7 +676,7 @@ void Ent_ReadAccuracy()
 
 void Spawn_Draw(entity this)
 {
-	pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
+	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
 void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
@@ -745,11 +746,11 @@ void Ent_ReadSpawnEvent(float is_new)
 			{
 				switch(teamnum)
 				{
-					case NUM_TEAM_1: pointparticles(particleeffectnum(EFFECT_SPAWN_RED), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_2: pointparticles(particleeffectnum(EFFECT_SPAWN_BLUE), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_3: pointparticles(particleeffectnum(EFFECT_SPAWN_YELLOW), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_4: pointparticles(particleeffectnum(EFFECT_SPAWN_PINK), self.origin, '0 0 0', 1); break;
-					default: pointparticles(particleeffectnum(EFFECT_SPAWN_NEUTRAL), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_1: pointparticles(EFFECT_SPAWN_RED, self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_2: pointparticles(EFFECT_SPAWN_BLUE, self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_3: pointparticles(EFFECT_SPAWN_YELLOW, self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_4: pointparticles(EFFECT_SPAWN_PINK, self.origin, '0 0 0', 1); break;
+					default: pointparticles(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); break;
 				}
 			}
 			if(autocvar_cl_spawn_event_sound)

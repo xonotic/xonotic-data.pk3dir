@@ -2,7 +2,7 @@
 #define WYVERN_H
 
 #ifndef MENUQC
-MODEL(MON_WYVERN, "models/monsters/wizard.mdl");
+MODEL(MON_WYVERN, M_Model("wizard.mdl"));
 #endif
 
 CLASS(Wyvern, Monster)

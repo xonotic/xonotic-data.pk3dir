@@ -337,7 +337,7 @@ float CheatCommand(float argc)
 				effectnum = _particleeffectnum(argv(1));
 				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
-				trailparticles(self, effectnum, w_shotorg, trace_endpos);
+				__trailparticles(self, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
 				break;
 			}

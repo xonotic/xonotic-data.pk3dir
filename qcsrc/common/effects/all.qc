@@ -5,7 +5,7 @@ REGISTER_NET_TEMP(net_effect, bool isNew)
 {
 	int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
 
-	entity eff = Effects[net_name];
+	entity eff = Effects_from(net_name);
 
 	vector vel = '0 0 0';
 	int eff_cnt = 1;
@@ -29,7 +29,7 @@ REGISTER_NET_TEMP(net_effect, bool isNew)
 	if(eff_trail)
 		WarpZone_TrailParticles(world, particleeffectnum(eff), v, vel);
 	else
-		pointparticles(particleeffectnum(eff), v, vel, eff_cnt);
+		pointparticles(eff, v, vel, eff_cnt);
 }
 #endif
 
@@ -86,6 +86,6 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 		return;
 	));
 	// revert to engine handling
-	pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
+	__pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }
 #endif

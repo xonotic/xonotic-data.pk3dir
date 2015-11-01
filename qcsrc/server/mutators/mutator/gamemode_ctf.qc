@@ -6,15 +6,15 @@ void ctf_Initialize();
 
 REGISTER_MUTATOR(ctf, false)
 {
-	ActivateTeamplay();
-	SetLimits(autocvar_capturelimit_override, -1, autocvar_captureleadlimit_override, -1);
-	have_team_spawns = -1; // request team spawns
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		ctf_Initialize();
+
+		ActivateTeamplay();
+		SetLimits(autocvar_capturelimit_override, -1, autocvar_captureleadlimit_override, -1);
+		have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

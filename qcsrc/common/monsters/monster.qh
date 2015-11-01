@@ -22,6 +22,7 @@ const int MON_FLAG_RANGED = 512; // monster shoots projectiles
 const int MON_FLAG_MELEE = 1024;
 const int MON_FLAG_CRUSH = 2048; // monster can be stomped in special modes
 const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
+const int MONSTER_SIZE_QUAKE = 8192;
 
 // entity properties of monsterinfo:
 .bool(int, entity targ) monster_attackfunc;

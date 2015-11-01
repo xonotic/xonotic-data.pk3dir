@@ -1376,9 +1376,15 @@ bool Monster_Spawn(int mon_id)
 		self.movetype = MOVETYPE_FLY;
 	}
 
-	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
-		self.scale *= 1.3;
+	{
+		if(mon.spawnflags & MONSTER_SIZE_BROKEN)
+			self.scale *= 1.3;
+
+		if(mon.spawnflags & MONSTER_SIZE_QUAKE)
+		if(autocvar_g_monsters_quake_resize)
+			self.scale *= 1.3;
+	}
 
 	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 

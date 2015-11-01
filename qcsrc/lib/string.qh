@@ -65,10 +65,7 @@ string CCR(string input)
 	return input;
 }
 
-bool startsWith(string haystack, string needle)
-{
-	return substring(haystack, 0, strlen(needle)) == needle;
-}
+#define startsWith(haystack, needle) (strstrofs(haystack, needle, 0) == 0)
 
 bool startsWithNocase(string haystack, string needle)
 {
@@ -84,6 +81,7 @@ string fstrunzone(string s)
 	return sc;
 }
 
+/** returns first word */
 string car(string s)
 {
 	int o = strstrofs(s, " ", 0);
@@ -91,6 +89,7 @@ string car(string s)
 	return substring(s, 0, o);
 }
 
+/** returns all but first word */
 string cdr(string s)
 {
 	int o = strstrofs(s, " ", 0);
@@ -171,10 +170,7 @@ string strwords(string s, int w)
 	return substring(s, 0, endpos);
 }
 
-bool strhasword(string s, string w)
-{
-	return strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0;
-}
+#define strhasword(s, w) (strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0)
 
 int u8_strsize(string s)
 {

@@ -50,8 +50,11 @@
 #endif
 
 // used for simplifying ACCUMULATE_FUNCTIONs
-#define SET_FIRST_OR_LAST(input, first, count) if (!input) { input = (first + count); }
-#define SET_FIELD_COUNT(field, first, count) if (!field) { field = (first + count); ++count; }
-#define CHECK_MAX_COUNT(name, max, count, type) if (count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
+#define SET_FIRST_OR_LAST(input, first, count) \
+	if (!input) { input = (first + count); }
+#define SET_FIELD_COUNT(field, first, count) \
+	if (!field) { field = (first + count); ++count; }
+#define CHECK_MAX_COUNT(name, max, count, type) \
+	if (count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
 
 #endif

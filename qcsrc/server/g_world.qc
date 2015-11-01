@@ -558,6 +558,7 @@ spawnfunc(__init_dedicated_server)
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
+	static_init_precache();
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -657,6 +658,7 @@ spawnfunc(worldspawn)
 
 	InitGameplayMode();
 	static_init_late();
+	static_init_precache();
 	readlevelcvars();
 	GrappleHookInit();
 

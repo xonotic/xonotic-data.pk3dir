@@ -506,7 +506,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, int slot)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum(EFFECT_HAGAR_EXPLODE), org2, '0 0 0', 1);
+			pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 			if(!w_issilent)
 			{
 				if(w_random<0.15)

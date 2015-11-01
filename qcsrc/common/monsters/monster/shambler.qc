@@ -2,7 +2,7 @@
 #define SHAMBLER_H
 
 #ifndef MENUQC
-MODEL(MON_SHAMBLER, "models/monsters/shambler.mdl");
+MODEL(MON_SHAMBLER, M_Model("shambler.mdl"));
 #endif
 
 CLASS(Shambler, Monster)

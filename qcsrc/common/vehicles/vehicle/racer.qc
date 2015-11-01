@@ -153,11 +153,11 @@ void racer_align4point(float _delta)
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
 }
 
-void racer_fire_rocket_aim(string tagname, entity trg)
+void racer_fire_rocket_aim(entity player, string tagname, entity trg)
 {
-	SELFPARAM();
-	vector v = gettaginfo(self, gettagindex(self, tagname));
-	racer_fire_rocket(v, v_forward, trg);
+	entity racer = player.vehicle;
+	vector v = gettaginfo(racer, gettagindex(racer, tagname));
+	racer_fire_rocket(player, v, v_forward, trg);
 }
 
 float racer_frame()
@@ -257,7 +257,7 @@ float racer_frame()
 	{
 #ifdef SVQC
 		if(time - racer.wait > 0.2)
-			pointparticles(particleeffectnum(EFFECT_RACER_BOOSTER), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
+			pointparticles(EFFECT_RACER_BOOSTER, self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
 #endif
 
 		racer.wait = time;
@@ -278,7 +278,7 @@ float racer_frame()
 		{
 			traceline(racer.origin, racer.origin - '0 0 256', MOVE_NORMAL, self);
 			if(trace_fraction != 1.0)
-				pointparticles(particleeffectnum(EFFECT_SMOKE_SMALL), trace_endpos, '0 0 0', 1);
+				pointparticles(EFFECT_SMOKE_SMALL, trace_endpos, '0 0 0', 1);
 
 			racer.invincible_finished = time + 0.1 + (random() * 0.1);
 		}
@@ -350,12 +350,12 @@ float racer_frame()
 
 		if(racer.misc_bulletcounter == 1)
 		{
-			racer_fire_rocket_aim("tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+			racer_fire_rocket_aim(player, "tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
 			player.vehicle_ammo2 = 50;
 		}
 		else if(racer.misc_bulletcounter == 2)
 		{
-			racer_fire_rocket_aim("tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+			racer_fire_rocket_aim(player, "tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
 			racer.lock_strength  = 0;
 			racer.lock_target	= world;
 			racer.misc_bulletcounter = 0;

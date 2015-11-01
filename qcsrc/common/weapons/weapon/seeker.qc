@@ -719,7 +719,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 				}
 				else
 				{
-					pointparticles(particleeffectnum(EFFECT_HAGAR_EXPLODE), org2, '0 0 0', 1);
+					pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 					if(!w_issilent)
 					{
 						if(w_random<0.15)
@@ -733,7 +733,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			}
 			else
 			{
-				pointparticles(particleeffectnum(EFFECT_HAGAR_EXPLODE), org2, '0 0 0', 1);
+				pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 				if(!w_issilent)
 				{
 					if(w_random<0.15)

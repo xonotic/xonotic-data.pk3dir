@@ -318,8 +318,8 @@ const float ARG_DC = 6; // unique result to durcnt/centerprint
     ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "item_wepname",  WEP_NAME(f1)) \
-    ARG_CASE(ARG_CS_SV,     "item_buffname", sprintf("%s%s", rgb_to_hexcolor(Buffs[f1].m_color), Buffs[f1].m_prettyName)) \
-    ARG_CASE(ARG_CS_SV,     "f3buffname",    sprintf("%s%s", rgb_to_hexcolor(Buffs[f3].m_color), Buffs[f3].m_prettyName)) \
+    ARG_CASE(ARG_CS_SV,     "item_buffname", sprintf("%s%s", rgb_to_hexcolor(Buffs_from(f1).m_color), Buffs_from(f1).m_prettyName)) \
+    ARG_CASE(ARG_CS_SV,     "f3buffname",    sprintf("%s%s", rgb_to_hexcolor(Buffs_from(f3).m_color), Buffs_from(f3).m_prettyName)) \
     ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
     ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
     ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
@@ -574,11 +574,11 @@ float NOTIF_MULTI_COUNT;
 float NOTIF_CHOICE_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
-const float NOTIF_ANNCE_MAX   = 200;
-const float NOTIF_INFO_MAX    = 350;
-const float NOTIF_CENTER_MAX  = 250;
-const float NOTIF_MULTI_MAX   = 200;
-const float NOTIF_CHOICE_MAX  = 30;
+const float NOTIF_ANNCE_MAX   = 400;
+const float NOTIF_INFO_MAX    = 450;
+const float NOTIF_CENTER_MAX  = 350;
+const float NOTIF_MULTI_MAX   = 300;
+const float NOTIF_CHOICE_MAX  = 50;
 
 // notification entities
 entity msg_annce_notifs[NOTIF_ANNCE_MAX];

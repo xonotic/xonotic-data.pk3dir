@@ -8,16 +8,16 @@ void tdm_DelayedInit();
 
 REGISTER_MUTATOR(tdm, false)
 {
-	ActivateTeamplay();
-	SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, -1, -1);
-	if (autocvar_g_tdm_team_spawns)
-		have_team_spawns = -1; // request team spawns
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		InitializeEntity(world, tdm_DelayedInit, INITPRIO_GAMETYPE);
+
+		ActivateTeamplay();
+		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, -1, -1);
+		if (autocvar_g_tdm_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

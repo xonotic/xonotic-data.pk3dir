@@ -11,6 +11,8 @@
 [[deprecated("use true")]][[alias("true")]] const bool TRUE;
 [[deprecated("use false")]][[alias("false")]] const bool FALSE;
 
+#define boolean(value) ((value) != 0)
+
 // get true/false value of a string with multiple different inputs
 float InterpretBoolean(string input)
 {
@@ -26,10 +28,8 @@ float InterpretBoolean(string input)
 		case "off":
 			return false;
 
-		default: return stof(input);
+		default: return boolean(stof(input));
 	}
 }
-
-#define boolean(value) ((value) != 0)
 
 #endif
