@@ -11,7 +11,7 @@ REGISTER_REGISTRY(RegisterModels)
     string MDL_##name##_get() { return path; } \
     REGISTER(RegisterModels, MDL, Models, name, m_id, NEW(Model, MDL_##name##_get))
 
-STATIC_INIT(RegisterModels_precache) {
+PRECACHE(Models) {
     FOREACH(Models, true, LAMBDA({
         it.model_precache(it);
     }));
