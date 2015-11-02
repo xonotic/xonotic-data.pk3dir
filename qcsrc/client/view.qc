@@ -30,16 +30,24 @@
 #include "../lib/warpzone/client.qh"
 #include "../lib/warpzone/common.qh"
 
+#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
+
 void viewmodel_draw(entity this)
 {
-	int mask = (intermission || (getstati(STAT_HEALTH) <= 0)) ? 0 : MASK_NORMAL;
+	int mask = (intermission || (getstati(STAT_HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g = colormapPaletteColor(c & 0x0F, true) * 2;
+	entity me = CSQCModel_server2csqc(player_localentnum);
+	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
+		| EF_NODEPTHTEST)
+		&~ (EF_FULLBRIGHT); // can mask team color, so get rid of it
 	for (entity e = this; e; e = e.weaponchild)
 	{
 		e.drawmask = mask;
 		e.colormap = c;
 		e.glowmod = g;
+		e.csqcmodel_effects = fx;
+		WITH(entity, self, e, CSQCModel_Effects_Apply());
 	}
 }
 
