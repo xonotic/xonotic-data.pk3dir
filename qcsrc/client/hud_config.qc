@@ -55,7 +55,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 		// common cvars for all panels
 		for (int i = 0; i < hud_panels_COUNT; ++i)
 		{
-			panel = hud_panels[i];
+			panel = hud_panels_from(i);
 
 			HUD_Write_PanelCvar_n("");
 			HUD_Write_PanelCvar_q("_pos");
@@ -234,7 +234,7 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	vector myTarget = myPos;
 	int i;
 	for (i = 0; i < hud_panels_COUNT; ++i) {
-		panel = hud_panels[i];
+		panel = hud_panels_from(i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
@@ -331,7 +331,7 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	float ratio = mySize.x/mySize.y;
 	int i;
 	for (i = 0; i < hud_panels_COUNT; ++i) {
-		panel = hud_panels[i];
+		panel = hud_panels_from(i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN)) continue;
 		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize();
@@ -783,7 +783,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		{
 			for(i = 0; i < hud_panels_COUNT; ++i)
 			{
-				panel = hud_panels[i];
+				panel = hud_panels_from(i);
 				if(!(panel.panel_configflags & PANEL_CONFIG_MAIN))
 					continue;
 				if (panel == tab_panels[i] || panel == starting_panel)
@@ -932,7 +932,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		i = panel_order[j];
 		j += 1;
 
-		panel = hud_panels[i];
+		panel = hud_panels_from(i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN)) continue;
 		HUD_Panel_UpdatePosSize();
 
@@ -1014,7 +1014,7 @@ void HUD_Panel_Highlight(float allow_move)
 		i = panel_order[j];
 		j += 1;
 
-		panel = hud_panels[i];
+		panel = hud_panels_from(i);
 		if(!(panel.panel_configflags & PANEL_CONFIG_MAIN))
 			continue;
 		HUD_Panel_UpdatePosSize();
@@ -1024,7 +1024,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// move
 		if(allow_move && mousepos.x > panel_pos.x && mousepos.y > panel_pos.y && mousepos.x < panel_pos.x + panel_size.x && mousepos.y < panel_pos.y + panel_size.y)
 		{
-			highlightedPanel = hud_panels[i];
+			highlightedPanel = hud_panels_from(i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 1;
 			panel_click_distance = mousepos - panel_pos;
@@ -1033,7 +1033,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from topleft border
 		else if(mousepos.x >= panel_pos.x - border && mousepos.y >= panel_pos.y - border && mousepos.x <= panel_pos.x + 0.5 * panel_size.x && mousepos.y <= panel_pos.y + 0.5 * panel_size.y)
 		{
-			highlightedPanel = hud_panels[i];
+			highlightedPanel = hud_panels_from(i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 1;
@@ -1044,7 +1044,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from topright border
 		else if(mousepos.x >= panel_pos.x + 0.5 * panel_size.x && mousepos.y >= panel_pos.y - border && mousepos.x <= panel_pos.x + panel_size.x + border && mousepos.y <= panel_pos.y + 0.5 * panel_size.y)
 		{
-			highlightedPanel = hud_panels[i];
+			highlightedPanel = hud_panels_from(i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 2;
@@ -1056,7 +1056,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from bottomleft border
 		else if(mousepos.x >= panel_pos.x - border && mousepos.y >= panel_pos.y + 0.5 * panel_size.y && mousepos.x <= panel_pos.x + 0.5 * panel_size.x && mousepos.y <= panel_pos.y + panel_size.y + border)
 		{
-			highlightedPanel = hud_panels[i];
+			highlightedPanel = hud_panels_from(i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 3;
@@ -1068,7 +1068,7 @@ void HUD_Panel_Highlight(float allow_move)
 		// resize from bottomright border
 		else if(mousepos.x >= panel_pos.x + 0.5 * panel_size.x && mousepos.y >= panel_pos.y + 0.5 * panel_size.y && mousepos.x <= panel_pos.x + panel_size.x + border && mousepos.y <= panel_pos.y + panel_size.y + border)
 		{
-			highlightedPanel = hud_panels[i];
+			highlightedPanel = hud_panels_from(i);
 			HUD_Panel_FirstInDrawQ(i);
 			highlightedAction = 2;
 			resizeCorner = 4;
@@ -1243,7 +1243,7 @@ void HUD_Configure_Frame()
 				setcursormode(1);
 			hudShiftState = 0;
 			for(i = hud_panels_COUNT - 1; i >= 0; --i)
-				hud_panels[panel_order[i]].update_time = time;
+				hud_panels_from(panel_order[i]).update_time = time;
 		}
 
 		// NOTE this check is necessary because _menu_alpha isn't updated the frame the menu gets enabled

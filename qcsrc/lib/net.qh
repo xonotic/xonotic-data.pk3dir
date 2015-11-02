@@ -103,13 +103,14 @@
 		}
 #endif
 
-REGISTRY(LinkedEntities, BIT(0))
+REGISTRY(LinkedEntities, BITS(4))
+#define LinkedEntities_from(i) _LinkedEntities_from(i, NULL)
 REGISTER_REGISTRY(RegisterLinkedEntities)
 REGISTRY_SORT(LinkedEntities, netname, 0)
 STATIC_INIT(RegisterLinkedEntities_renumber)
 {
 	for (int i = 0; i < LinkedEntities_COUNT; ++i)
-		LinkedEntities[i].m_id = 100 + i;
+		LinkedEntities_from(i).m_id = 100 + i;
 }
 
 #ifdef CSQC
@@ -130,13 +131,14 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 		}
 #endif
 
-REGISTRY(TempEntities, BITS(3))
+REGISTRY(TempEntities, BITS(4))
+#define TempEntities_from(i) _TempEntities_from(i, NULL)
 REGISTER_REGISTRY(RegisterTempEntities)
 REGISTRY_SORT(TempEntities, netname, 0)
 STATIC_INIT(RegisterTempEntities_renumber)
 {
 	for (int i = 0; i < TempEntities_COUNT; ++i)
-		TempEntities[i].m_id = 115 + i;
+		TempEntities_from(i).m_id = 115 + i;
 }
 
 #ifndef MENUQC

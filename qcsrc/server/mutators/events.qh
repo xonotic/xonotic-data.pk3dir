@@ -823,4 +823,14 @@ MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
     /**/ i(entity, frag_attacker) \
     /**/
 MUTATOR_HOOKABLE(PrepareExplosionByDamage, EV_PrepareExplosionByDamage);
+
+/** called when a monster model is about to be set, allows custom paths etc. */
+#define EV_MonsterModel(i, o) \
+    /**/ i(string, monster_model) \
+    /**/ i(string, monster_model_output) \
+    /**/ o(string, monster_model_output) \
+    /**/
+string monster_model;
+string monster_model_output;
+MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
 #endif

@@ -9,8 +9,9 @@
 #define REGISTRY(id, max) \
 	void Register##id() {} \
 	const int id##_MAX = max; \
-	noref entity id[id##_MAX], id##_first, id##_last; \
-	int id##_COUNT;
+	noref entity _##id[id##_MAX], id##_first, id##_last; \
+	int id##_COUNT; \
+	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _##id[i]; if (e) return e; } return null; }
 
 /**
  * Register a new entity with a global constructor.
@@ -44,9 +45,9 @@
 		entity this = inst;                                         \
 		ns##_##id = this;                                           \
 		this.fld = array##_COUNT;                                   \
-		array[array##_COUNT++] = this;                              \
+		_##array[array##_COUNT++] = this;                           \
 		if (!array##_first)    array##_first = this;                \
-		if (array##_last)     array##_last.REGISTRY_NEXT = this;   \
+		if (array##_last)     array##_last.REGISTRY_NEXT = this;    \
 		array##_last = this;                                        \
 		Register_##ns##_##id##_init(this);                          \
 		Register_##ns##_##id##_init_post(this);                     \
@@ -63,25 +64,25 @@
 	{           \
 		i += skip; j += skip;                                       \
                                                                     \
-		entity a = id[i], b = id[j];                                \
-		id[i] = b;                                                  \
-		id[j] = a;                                                  \
+		entity a = _##id[i], b = _##id[j];                          \
+		_##id[i] = b;                                               \
+		_##id[j] = a;                                               \
                                                                     \
 		entity a_next = a.REGISTRY_NEXT, b_next = b.REGISTRY_NEXT;  \
 		a.REGISTRY_NEXT = b_next;                                   \
 		b.REGISTRY_NEXT = a_next;                                   \
                                                                     \
 		if (i == 0) id##_first = b;                                 \
-		else id[i - 1].REGISTRY_NEXT = b;                           \
+		else _##id[i - 1].REGISTRY_NEXT = b;                        \
                                                                     \
 		if (j == 0) id##_first = a;                                 \
-		else id[j - 1].REGISTRY_NEXT = a;                           \
+		else _##id[j - 1].REGISTRY_NEXT = a;                        \
 	}                                                               \
 	float _REGISTRY_CMP_##id(int i, int j, entity pass) \
 	{           \
 		i += skip; j += skip;                                       \
-		string a = id[i].field;                                     \
-		string b = id[j].field;                                     \
+		string a = _##id[i].field;                                  \
+		string b = _##id[j].field;                                  \
 		return strcasecmp(a, b);                                    \
 	}                                                               \
 	STATIC_INIT(Registry_sort_##id) \

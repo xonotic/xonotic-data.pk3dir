@@ -379,21 +379,21 @@ void W_Tuba_NoteOn(float hittype)
 					self.BUTTON_ATCK2 = 1;
 			}
 		}
-		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, int slot, int fire))
+		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(fire & 1)
-			if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(tuba, refire)))
+			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(0);
 				//weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
-				weapon_thinkf(actor, slot, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
 			if(fire & 2)
-			if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR(tuba, refire)))
+			if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(HITTYPE_SECONDARY);
 				//weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
-				weapon_thinkf(actor, slot, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
 			if(actor.tuba_note)
 			{
@@ -414,9 +414,9 @@ void W_Tuba_NoteOn(float hittype)
 		}
 		METHOD(Tuba, wr_reload, void(entity thiswep))
 		{
-			int slot = 0; // TODO: unhardcode
+			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 			// switch to alternate instruments :)
-			if(self.weaponentity[slot].state == WS_READY)
+			if(self.(weaponentity).state == WS_READY)
 			{
 				switch(self.tuba_instrument)
 				{
@@ -435,8 +435,8 @@ void W_Tuba_NoteOn(float hittype)
 				}
 				W_SetupShot(self, false, 0, "", 0, 0);
 				Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
-				self.weaponentity[slot].state = WS_INUSE;
-				weapon_thinkf(self, slot, WFRAME_RELOAD, 0.5, w_ready);
+				self.(weaponentity).state = WS_INUSE;
+				weapon_thinkf(self, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
 			}
 		}
 		METHOD(Tuba, wr_checkammo1, bool(entity thiswep))

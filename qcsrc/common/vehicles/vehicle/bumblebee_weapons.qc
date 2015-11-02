@@ -112,7 +112,7 @@ void bumble_raygun_draw(entity this)
 
     if(self.total_damages < time)
     {
-        boxparticles(particleeffectnum(Effects[self.traileffect]), self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+        boxparticles(particleeffectnum(Effects_from(self.traileffect)), self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
         boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
         self.total_damages = time + 0.1;
     }

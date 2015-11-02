@@ -6,7 +6,9 @@
 
 #include "turret.qh"
 
-REGISTRY(Turrets, BIT(5))
+REGISTRY(Turrets, BITS(5))
+#define Turrets_from(i) _Turrets_from(i, TUR_Null)
+#define get_turretinfo(i) Turrets_from(i)
 REGISTER_REGISTRY(RegisterTurrets)
 
 
@@ -70,15 +72,6 @@ const int TUR_FIRST = 1;
 #define REGISTER_TURRET(id, inst) REGISTER(RegisterTurrets, TUR, Turrets, id, m_id, inst)
 
 REGISTER_TURRET(Null, NEW(Turret));
-
-Turret get_turretinfo(int id)
-{
-    if (id >= TUR_FIRST && id <= TUR_LAST) {
-        Turret t = Turrets[id];
-        if (t) return t;
-    }
-    return TUR_Null;
-}
 
 #include "all.inc"
 

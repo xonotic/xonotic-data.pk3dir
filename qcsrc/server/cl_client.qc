@@ -306,7 +306,7 @@ void PutObserverInServer()
 	self.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		self.weaponentity[slot] = NULL;
+		self.weaponentities[slot] = NULL;
 	}
 	self.exteriorweaponentity = world;
 	self.killcount = FRAGS_SPECTATOR;
@@ -573,7 +573,7 @@ void PutClientInServer()
 
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			CL_SpawnWeaponentity(this, slot);
+			CL_SpawnWeaponentity(this, weaponentities[slot]);
 		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -1990,7 +1990,7 @@ void PrintWelcomeMessage()
 	{
 		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(self.motd_actived_time == -2 || IS_PLAYER(self))
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || IS_SPEC(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
@@ -2435,8 +2435,8 @@ void PlayerPreThink (void)
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
-		int slot = 0; // TODO: unhardcode
-		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity[slot].wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)

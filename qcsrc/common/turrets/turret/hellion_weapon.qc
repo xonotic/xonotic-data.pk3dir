@@ -19,10 +19,10 @@ float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
 void turret_hellion_missile_think();
-METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
+METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(electro, refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
@@ -30,7 +30,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, int slot, int
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
             actor.shot_radius = 500;
-            weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
         if (!isPlayer) {
             if (actor.tur_head.frame != 0)

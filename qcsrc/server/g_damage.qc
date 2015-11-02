@@ -204,7 +204,7 @@ void Obituary_SpecialDeath(
 {
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = Deathtypes[deathtype - DT_FIRST];
+		entity deathent = Deathtypes_from(deathtype - DT_FIRST);
 		if (!deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
 		if(murder)

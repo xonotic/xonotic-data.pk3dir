@@ -12,8 +12,9 @@ REGISTER_MUTATOR(casings, true);
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
 {SELFPARAM();
-    int slot = 0; // TODO: parameter
-    vector org = self.origin + self.view_ofs + self.weaponentity[slot].spawnorigin.x * v_forward - self.weaponentity[slot].spawnorigin.y * v_right + self.weaponentity[slot].spawnorigin.z * v_up;
+    .entity weaponentity = weaponentities[0]; // TODO: parameter
+    entity wep = self.(weaponentity);
+    vector org = self.origin + self.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
     if (!sound_allowed(MSG_BROADCAST, casingowner))
         casingtype |= 0x80;
@@ -70,13 +71,13 @@ SOUND(BRASS1, W_Sound("brass1"));
 SOUND(BRASS2, W_Sound("brass2"));
 SOUND(BRASS3, W_Sound("brass3"));
 Sound SND_BRASS_RANDOM() {
-    return Sounds[SND_BRASS1.m_id + floor(prandom() * 3)];
+    return Sounds_from(SND_BRASS1.m_id + floor(prandom() * 3));
 }
 SOUND(CASINGS1, W_Sound("casings1"));
 SOUND(CASINGS2, W_Sound("casings2"));
 SOUND(CASINGS3, W_Sound("casings3"));
 Sound SND_CASINGS_RANDOM() {
-    return Sounds[SND_CASINGS1.m_id + floor(prandom() * 3)];
+    return Sounds_from(SND_CASINGS1.m_id + floor(prandom() * 3));
 }
 
 void Casing_Touch()

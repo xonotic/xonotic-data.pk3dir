@@ -559,6 +559,7 @@ spawnfunc(__init_dedicated_server)
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
+	static_init_precache();
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -658,6 +659,7 @@ spawnfunc(worldspawn)
 
 	InitGameplayMode();
 	static_init_late();
+	static_init_precache();
 	readlevelcvars();
 	GrappleHookInit();
 
@@ -1487,11 +1489,12 @@ void FixIntermissionClient(entity e)
 		e.takedamage = DAMAGE_NO;
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			if(e.weaponentity[slot])
+		    .entity weaponentity = weaponentities[slot];
+			if(e.(weaponentity))
 			{
-				e.weaponentity[slot].effects = EF_NODRAW;
-				if (e.weaponentity[slot].weaponchild)
-					e.weaponentity[slot].weaponchild.effects = EF_NODRAW;
+				e.(weaponentity).effects = EF_NODRAW;
+				if (e.(weaponentity).weaponchild)
+					e.(weaponentity).weaponchild.effects = EF_NODRAW;
 			}
 		}
 		if(IS_REAL_CLIENT(e))

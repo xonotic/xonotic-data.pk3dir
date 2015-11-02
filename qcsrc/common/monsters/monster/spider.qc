@@ -2,7 +2,7 @@
 #define SPIDER_H
 
 #ifndef MENUQC
-MODEL(MON_SPIDER, "models/monsters/spider.dpm");
+MODEL(MON_SPIDER, M_Model("spider.dpm"));
 #endif
 
 CLASS(Spider, Monster)
@@ -50,10 +50,10 @@ float autocvar_g_monster_spider_attack_bite_delay;
 
 void M_Spider_Attack_Web();
 
-METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, int slot, int fire)) {
+METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, slot, false, autocvar_g_monster_spider_attack_web_delay)) {
+    if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_spider_attack_web_delay)) {
 		if (!isPlayer) {
 			actor.spider_web_delay = time + 3;
 			setanim(actor, actor.anim_shoot, true, true, true);
@@ -64,17 +64,17 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, int slot
         W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web();
-        weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
         return;
     }
     if (fire & 2)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, true, 0.5)) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5)) {
     	if (isPlayer) {
     		actor.enemy = Monster_FindTarget(actor);
     		actor.attack_range = 60;
     	}
     	Monster_Attack_Melee(actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
-        weapon_thinkf(actor, slot, WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
 
@@ -155,17 +155,18 @@ void M_Spider_Attack_Web()
 
 bool M_Spider_Attack(int attack_type, entity targ)
 {SELFPARAM();
+    .entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		Weapon wep = WEP_SPIDER_ATTACK;
 		case MONSTER_ATTACK_MELEE:
 		{
-			wep.wr_think(wep, self, 0, 2);
+			wep.wr_think(wep, self, weaponentity, 2);
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			wep.wr_think(wep, self, 0, 1);
+			wep.wr_think(wep, self, weaponentity, 1);
 			return true;
 		}
 	}

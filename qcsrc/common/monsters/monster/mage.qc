@@ -2,7 +2,7 @@
 #define MAGE_H
 
 #ifndef MENUQC
-MODEL(MON_MAGE, "models/monsters/mage.dpm");
+MODEL(MON_MAGE, M_Model("mage.dpm"));
 #endif
 
 CLASS(Mage, Monster)
@@ -41,20 +41,20 @@ REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 
 void M_Mage_Attack_Spike(vector dir);
 void M_Mage_Attack_Push();
-METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, int slot, int fire)) {
+METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weaponentity, int fire)) {
     if (fire & 1)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, slot, false, 0.2)) {
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
         W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Mage_Attack_Spike(w_shotdir);
-        weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
     }
     if (fire & 2)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, slot, true, 0.5)) {
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5)) {
         M_Mage_Attack_Push();
-        weapon_thinkf(actor, slot, WFRAME_FIRE2, 0, w_ready);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
 
@@ -356,6 +356,7 @@ void M_Mage_Defend_Shield()
 
 float M_Mage_Attack(float attack_type, entity targ)
 {SELFPARAM();
+    .entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -363,7 +364,8 @@ float M_Mage_Attack(float attack_type, entity targ)
 			if(random() <= 0.7)
 			{
 				Weapon wep = WEP_MAGE_SPIKE;
-				wep.wr_think(wep, self, 0, 2);
+
+				wep.wr_think(wep, self, weaponentity, 2);
 				return true;
 			}
 
@@ -385,7 +387,7 @@ float M_Mage_Attack(float attack_type, entity targ)
 					self.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_spike_delay);
 					self.anim_finished = time + 1;
 					Weapon wep = WEP_MAGE_SPIKE;
-					wep.wr_think(wep, self, 0, 1);
+					wep.wr_think(wep, self, weaponentity, 1);
 					return true;
 				}
 			}
