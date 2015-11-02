@@ -2164,6 +2164,8 @@ float isInvisibleString(string s)
 	return true;
 }
 
+void wglow_send(entity actor, vector g);
+
 /*
 =============
 PlayerPreThink
@@ -2339,22 +2341,24 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
+			vector g;
 			if(self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge))
 			{
-				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
+				g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
+				g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
+				g.z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
 
 				if(self.vortex_charge > WEP_CVAR(vortex, charge_animlimit))
 				{
-					self.weaponentity_glowmod_x = self.weaponentity_glowmod.x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					self.weaponentity_glowmod_y = self.weaponentity_glowmod.y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					self.weaponentity_glowmod_z = self.weaponentity_glowmod.z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					g.x += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					g.y += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
+					g.z += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
 				}
 			}
 			else
-				self.weaponentity_glowmod = colormapPaletteColor(self.clientcolors & 0x0F, true) * 2;
-
+				g = colormapPaletteColor(self.clientcolors & 0x0F, true) * 2;
+			if (g != self.weaponentity_glowmod)
+				wglow_send(self, self.weaponentity_glowmod = g);
 			player_powerups();
 		}
 

@@ -93,31 +93,15 @@ void CL_Weaponentity_Think()
 		CL_WeaponEntity_SetModel(this, this.owner.weaponname);
 	}
 
-	int tb = (this.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));
-	this.effects = this.owner.effects
-	    & EFMASK_CHEAP
-	    & ~(
-	    EF_LOWPRECISION
-	    | EF_FULLBRIGHT  // can mask team color, so get rid of it
-	    | EF_TELEPORT_BIT
-	    | EF_RESTARTANIM_BIT
-	       )
-	    | tb
-	    // TODO: don't render this entity at all
-	    | EF_NODRAW;
+	this.effects = EF_NODRAW; // TODO: don't render this entity at all
 
 	if (this.owner.alpha == default_player_alpha) this.alpha = default_weapon_alpha;
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
 	else this.alpha = 1;
 
-	this.glowmod = this.owner.weaponentity_glowmod;
-	this.colormap = this.owner.colormap;
 	if (this.weaponchild)
 	{
 		this.weaponchild.effects = this.effects;
-		this.weaponchild.alpha = this.alpha;
-		this.weaponchild.colormap = this.colormap;
-		this.weaponchild.glowmod = this.glowmod;
 	}
 }
 

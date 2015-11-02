@@ -592,6 +592,7 @@ REGISTER_NET_TEMP(wframe, bool isNew)
 	bool restartanim = ReadByte();
 	setanim(viewmodel, a, restartanim == false, restartanim, restartanim);
 	viewmodel.state = ReadByte();
+	viewmodel.alpha = ReadByte() / 255;
 }
 #endif
 
@@ -607,6 +608,31 @@ void wframe_send(entity actor, .entity weaponentity, vector a, bool restartanim)
 	WriteCoord(channel, a.z);
 	WriteByte(channel, restartanim);
 	WriteByte(channel, actor.(weaponentity).state);
+	WriteByte(channel, actor.(weaponentity).alpha * 255);
+}
+#endif
+
+REGISTER_NET_TEMP(wglow, bool isNew)
+#ifdef CSQC
+{
+	vector g = '0 0 0';
+	g.x = ReadCoord();
+	g.y = ReadCoord();
+	g.z = ReadCoord();
+	viewmodel.glowmod = g;
+}
+#endif
+
+#ifdef SVQC
+void wglow_send(entity actor, vector g)
+{
+	if (!IS_REAL_CLIENT(actor)) return;
+	int channel = MSG_ONE;
+	msg_entity = actor;
+	WriteHeader(channel, wglow);
+	WriteCoord(channel, g.x);
+	WriteCoord(channel, g.y);
+	WriteCoord(channel, g.z);
 }
 #endif
 
