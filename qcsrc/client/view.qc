@@ -32,10 +32,12 @@
 
 void viewmodel_draw(entity this)
 {
+	int mask = (intermission || (getstati(STAT_HEALTH) <= 0)) ? 0 : MASK_NORMAL;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g = colormapPaletteColor(c & 0x0F, true) * 2;
 	for (entity e = this; e; e = e.weaponchild)
 	{
+		e.drawmask = mask;
 		e.colormap = c;
 		e.glowmod = g;
 	}
@@ -43,8 +45,7 @@ void viewmodel_draw(entity this)
 
 entity viewmodel;
 STATIC_INIT(viewmodel) {
-	viewmodel = new(viewmodel);
-	viewmodel.drawmask = MASK_NORMAL;
+    viewmodel = new(viewmodel);
 	viewmodel.draw = viewmodel_draw;
 }
 
@@ -1258,7 +1259,8 @@ void CSQC_UpdateView(float w, float h)
 		string name = get_weaponinfo(switchingweapon).mdl;
 		if (name != name_last)
 		{
-			CL_WeaponEntity_SetModel(viewmodel, name_last = name);
+		    name_last = name;
+			CL_WeaponEntity_SetModel(viewmodel, name);
 			updateanim(viewmodel);
 			if (!viewmodel.animstate_override)
 				setanim(viewmodel, viewmodel.anim_idle, true, false, false);
