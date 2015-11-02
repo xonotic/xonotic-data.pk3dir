@@ -597,7 +597,7 @@ REGISTER_NET_TEMP(wframe, bool isNew)
 #endif
 
 #ifdef SVQC
-void wframe_send(entity actor, .entity weaponentity, vector a, bool restartanim)
+void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 {
 	if (!IS_REAL_CLIENT(actor)) return;
 	int channel = MSG_ONE;
@@ -607,8 +607,8 @@ void wframe_send(entity actor, .entity weaponentity, vector a, bool restartanim)
 	WriteCoord(channel, a.y);
 	WriteCoord(channel, a.z);
 	WriteByte(channel, restartanim);
-	WriteByte(channel, actor.(weaponentity).state);
-	WriteByte(channel, actor.(weaponentity).alpha * 255);
+	WriteByte(channel, weaponentity.state);
+	WriteByte(channel, weaponentity.alpha * 255);
 }
 #endif
 

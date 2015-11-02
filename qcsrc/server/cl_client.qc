@@ -1680,6 +1680,7 @@ void SpectateCopy(entity spectatee)
 	self.switchweapon = spectatee.switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
+	self.weapon_nextthink = spectatee.weapon_nextthink;
 	self.vortex_charge = spectatee.vortex_charge;
 	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
@@ -2342,7 +2343,11 @@ void PlayerPreThink (void)
 		if(frametime)
 		{
 			vector g;
-			if(self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge))
+			if (IS_SPEC(self))
+			{
+				g = self.enemy.weaponentity_glowmod;
+			}
+			else if(self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge))
 			{
 				g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
 				g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));

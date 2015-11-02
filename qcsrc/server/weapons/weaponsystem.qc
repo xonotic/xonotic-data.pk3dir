@@ -307,7 +307,7 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bo
 	return false;
 }
 
-void wframe_send(entity actor, .entity weaponentity, vector a, bool restartanim);
+void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
 
 void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(Weapon thiswep, entity actor,
 	.entity weaponentity, int fire) func)
@@ -341,7 +341,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(W
 		else  // if (fr == WFRAME_RELOAD)
 			a = actor.(weaponentity).anim_reload;
 		a.z *= g_weaponratefactor;
-		wframe_send(actor, weaponentity, a, restartanim);
+		entity e; FOR_EACH_CLIENT(e) if (e == actor || (IS_SPEC(e) && e.enemy == actor)) {
+			wframe_send(e, actor.(weaponentity), a, restartanim);
+		}
 	}
 
 	v_forward = of;
