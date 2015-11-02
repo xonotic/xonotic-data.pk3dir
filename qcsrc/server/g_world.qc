@@ -1489,11 +1489,12 @@ void FixIntermissionClient(entity e)
 		e.takedamage = DAMAGE_NO;
 		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			if(e.weaponentity[slot])
+		    .entity weaponentity = weaponentities[slot];
+			if(e.(weaponentity))
 			{
-				e.weaponentity[slot].effects = EF_NODRAW;
-				if (e.weaponentity[slot].weaponentity[slot])
-					e.weaponentity[slot].weaponentity[slot].effects = EF_NODRAW;
+				e.(weaponentity).effects = EF_NODRAW;
+				if (e.(weaponentity).(weaponentity))
+					e.(weaponentity).(weaponentity).effects = EF_NODRAW;
 			}
 		}
 		if(IS_REAL_CLIENT(e))

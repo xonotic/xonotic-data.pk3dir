@@ -168,13 +168,13 @@ void player_anim (void)
 	animdecide_setstate(self, animbits, false);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
 
-	int slot = 0; // TODO: unhardcode
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	{
-		if (self.weaponentity[slot])
+		if (self.(weaponentity))
 		{
-			updateanim(self.weaponentity[slot]);
-			if (!self.weaponentity[slot].animstate_override)
-				setanim(self.weaponentity[slot], self.weaponentity[slot].anim_idle, true, false, false);
+			updateanim(self.(weaponentity));
+			if (!self.(weaponentity).animstate_override)
+				setanim(self.(weaponentity), self.(weaponentity).anim_idle, true, false, false);
 		}
 	}
 }

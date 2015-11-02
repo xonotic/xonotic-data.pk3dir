@@ -17,18 +17,18 @@ REGISTER_WEAPON(TUR_MACHINEGUN, NEW(MachineGunTurretAttack));
 
 void W_MachineGun_MuzzleFlash();
 
-METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire))
+METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(machinegun, sustained_refire))) {
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(machinegun, sustained_refire))) {
         if (isPlayer) {
             turret_initparams(actor);
             W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
-            weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
         }
         fireBullet (actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_MACHINEGUN.m_id, 0);
         W_MachineGun_MuzzleFlash();

@@ -119,7 +119,7 @@ void W_Devastator_Explode(void)
 	remove(self);
 }
 
-void W_Devastator_DoRemoteExplode(int slot)
+void W_Devastator_DoRemoteExplode(.entity weaponentity)
 {SELFPARAM();
 	W_Devastator_Unregister();
 
@@ -191,6 +191,7 @@ void W_Devastator_DoRemoteExplode(int slot)
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			self.realowner.cnt = WEP_DEVASTATOR.m_id;
+			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(self.realowner, slot) = time;
 			self.realowner.switchweapon = w_getbestweapon(self.realowner);
 		}
@@ -198,7 +199,7 @@ void W_Devastator_DoRemoteExplode(int slot)
 	remove(self);
 }
 
-void W_Devastator_RemoteExplode(int slot)
+void W_Devastator_RemoteExplode(.entity weaponentity)
 {SELFPARAM();
 	if(self.realowner.deadflag == DEAD_NO)
 	if(self.realowner.lastrocket)
@@ -208,7 +209,7 @@ void W_Devastator_RemoteExplode(int slot)
 			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > WEP_CVAR(devastator, remote_radius)) // safety device
 		)
 		{
-			W_Devastator_DoRemoteExplode(slot);
+			W_Devastator_DoRemoteExplode(weaponentity);
 		}
 	}
 }
@@ -305,9 +306,9 @@ void W_Devastator_Think(void)
 			}
 		}
 
-		int slot = 0; // TODO: unhardcode
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if(self.rl_detonate_later)
-			W_Devastator_RemoteExplode(slot);
+			W_Devastator_RemoteExplode(weaponentity);
 	}
 
 	if(self.csqcprojectile_clientanimate == 0)
@@ -522,7 +523,7 @@ void W_Devastator_Attack(Weapon thiswep)
 			}
 		}
 		#endif
-		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, int slot, int fire))
+		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
@@ -531,10 +532,10 @@ void W_Devastator_Attack(Weapon thiswep)
 				if(fire & 1)
 				{
 					if(actor.rl_release || WEP_CVAR(devastator, guidestop))
-					if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(devastator, refire)))
+					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(devastator, refire)))
 					{
 						W_Devastator_Attack(thiswep);
-						weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
 						actor.rl_release = 0;
 					}
 				}

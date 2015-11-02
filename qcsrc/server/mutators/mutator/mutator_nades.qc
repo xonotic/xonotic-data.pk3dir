@@ -864,8 +864,8 @@ void nade_prime()
 	n.projectiledeathtype = DEATH_NADE.m_id;
 
 	setmodel(fn, MDL_NADE_VIEW);
-	int slot = 0; // TODO: unhardcode
-	setattachment(fn, self.weaponentity[slot], "");
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	setattachment(fn, self.(weaponentity), "");
 	fn.realowner = fn.owner = self;
 	fn.colormod = Nades_from(n.nade_type).m_color;
 	fn.colormap = self.colormap;
