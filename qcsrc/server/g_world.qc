@@ -772,6 +772,7 @@ spawnfunc(worldspawn)
 	WepSet_AddStat_InMap();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
+	addstat(STAT_WEAPON_NEXTTHINK, AS_FLOAT, weapon_nextthink);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
 	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
 	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);

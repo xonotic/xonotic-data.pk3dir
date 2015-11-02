@@ -119,27 +119,6 @@ void CL_Weaponentity_Think()
 		this.weaponchild.colormap = this.colormap;
 		this.weaponchild.glowmod = this.glowmod;
 	}
-
-	this.angles = '0 0 0';
-
-	float f = this.owner.weapon_nextthink - time;
-	if (this.state == WS_RAISE && !intermission_running)
-	{
-		entity newwep = Weapons_from(this.owner.switchweapon);
-		f = f * g_weaponratefactor / max(f, newwep.switchdelay_raise);
-		this.angles_x = -90 * f * f;
-	}
-	else if (this.state == WS_DROP && !intermission_running)
-	{
-		entity oldwep = Weapons_from(this.owner.weapon);
-		f = 1 - f * g_weaponratefactor / max(f, oldwep.switchdelay_drop);
-		this.angles_x = -90 * f * f;
-	}
-	else if (this.state == WS_CLEAR)
-	{
-		f = 1;
-		this.angles_x = -90 * f * f;
-	}
 }
 
 void CL_ExteriorWeaponentity_Think()
@@ -344,7 +323,7 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bo
 	return false;
 }
 
-void wframe_send(entity actor, vector a, bool restartanim);
+void wframe_send(entity actor, .entity weaponentity, vector a, bool restartanim);
 
 void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(Weapon thiswep, entity actor,
 	.entity weaponentity, int fire) func)
@@ -378,7 +357,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(W
 		else  // if (fr == WFRAME_RELOAD)
 			a = actor.(weaponentity).anim_reload;
 		a.z *= g_weaponratefactor;
-		wframe_send(actor, a, restartanim);
+		wframe_send(actor, weaponentity, a, restartanim);
 	}
 
 	v_forward = of;
@@ -402,7 +381,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(W
 		actor.weapon_nextthink = time;
 		// dprint("reset weapon animation timer at ", ftos(time), "\n");
 	}
-	actor.weapon_nextthink = actor.weapon_nextthink + t;
+	actor.weapon_nextthink += t;
 	actor.weapon_think = func;
 	// dprint("next ", ftos(actor.weapon_nextthink), "\n");
 

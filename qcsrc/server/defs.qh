@@ -154,13 +154,6 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 .void(Weapon thiswep, entity actor, .entity weaponentity, int fire) weapon_think;
 
 
-// weapon states (self.weaponentity.state)
-const int WS_CLEAR			= 0; // no weapon selected
-const int WS_RAISE			= 1; // raise frame
-const int WS_DROP				= 2; // deselecting frame
-const int WS_INUSE			= 3; // fire state
-const int WS_READY			= 4; // idle frame
-
 // there is 2 weapon tics that can run in one server frame
 const int W_TICSPERFRAME = 2;
 

@@ -49,6 +49,45 @@ void viewmodel_draw(entity this)
 		e.csqcmodel_effects = fx;
 		WITH(entity, self, e, CSQCModel_Effects_Apply());
 	}
+	{
+		static string name_last;
+		string name = get_weaponinfo(activeweapon).mdl;
+		if (name != name_last)
+		{
+			name_last = name;
+			CL_WeaponEntity_SetModel(this, name);
+			updateanim(this);
+			if (!this.animstate_override)
+				setanim(this, this.anim_idle, true, false, false);
+		}
+	}
+	float eta = (getstatf(STAT_WEAPON_NEXTTHINK) - time); // TODO: / W_WeaponRateFactor();
+	float f = 0; // 0..1; 0: fully active
+	switch (this.state)
+	{
+		case WS_RAISE:
+		{
+			// entity newwep = Weapons_from(activeweapon);
+			float delay = 0.2; // TODO: newwep.switchdelay_raise;
+			f = eta / max(eta, delay);
+			this.angles_x = -90 * f * f;
+			break;
+		}
+		case WS_DROP:
+		{
+			// entity oldwep = Weapons_from(activeweapon);
+			float delay = 0.2; // TODO: newwep.switchdelay_drop;
+			f = 1 - eta / max(eta, delay);
+			this.angles_x = -90 * f * f;
+			break;
+		}
+		case WS_CLEAR:
+		{
+			f = 1;
+			break;
+		}
+	}
+	this.angles_x = -90 * f * f;
 }
 
 entity viewmodel;
@@ -1262,18 +1301,6 @@ void CSQC_UpdateView(float w, float h)
 
 	WarpZone_FixView();
 	//WarpZone_FixPMove();
-	{
-		static string name_last;
-		string name = get_weaponinfo(switchingweapon).mdl;
-		if (name != name_last)
-		{
-		    name_last = name;
-			CL_WeaponEntity_SetModel(viewmodel, name);
-			updateanim(viewmodel);
-			if (!viewmodel.animstate_override)
-				setanim(viewmodel, viewmodel.anim_idle, true, false, false);
-		}
-	}
 
 	vector ov_org = '0 0 0';
 	vector ov_mid = '0 0 0';

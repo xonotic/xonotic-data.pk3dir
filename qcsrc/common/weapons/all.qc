@@ -591,11 +591,12 @@ REGISTER_NET_TEMP(wframe, bool isNew)
     a.z = ReadCoord();
 	bool restartanim = ReadByte();
 	setanim(viewmodel, a, restartanim == false, restartanim, restartanim);
+	viewmodel.state = ReadByte();
 }
 #endif
 
 #ifdef SVQC
-void wframe_send(entity actor, vector a, bool restartanim)
+void wframe_send(entity actor, .entity weaponentity, vector a, bool restartanim)
 {
 	if (!IS_REAL_CLIENT(actor)) return;
 	int channel = MSG_ONE;
@@ -605,6 +606,7 @@ void wframe_send(entity actor, vector a, bool restartanim)
 	WriteCoord(channel, a.y);
 	WriteCoord(channel, a.z);
 	WriteByte(channel, restartanim);
+	WriteByte(channel, actor.(weaponentity).state);
 }
 #endif
 

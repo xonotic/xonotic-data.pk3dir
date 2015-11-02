@@ -109,7 +109,7 @@ const int STAT_OK_AMMO_CHARGE         = 85;
 const int STAT_OK_AMMO_CHARGEPOOL     = 86;
 const int STAT_FROZEN                 = 87;
 const int STAT_REVIVE_PROGRESS        = 88;
-// 89 empty?
+const int STAT_WEAPON_NEXTTHINK       = 89;
 // 90 empty?
 // 91 empty?
 // 92 empty?

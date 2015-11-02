@@ -17,6 +17,18 @@ int weaponslot(.entity weaponentity)
 	return 0;
 }
 
+// weapon states (actor.(weaponentity).state)
+/** no weapon selected */
+const int WS_CLEAR  = 0;
+/** raise frame */
+const int WS_RAISE  = 1;
+/** deselecting frame */
+const int WS_DROP   = 2;
+/** fire state */
+const int WS_INUSE  = 3;
+/** idle frame */
+const int WS_READY  = 4;
+
 .int ammo_shells;
 .int ammo_nails;
 .int ammo_rockets;
