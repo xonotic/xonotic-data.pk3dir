@@ -1357,12 +1357,6 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	ctf_CaptureShield_Spawn(self);
 }
 
-void set_flag_string(entity flag, .string field, string value, string teamname)
-{
-	if(flag.(field) == "")
-		flag.(field) = strzone(sprintf(value,teamname));
-}
-
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {SELFPARAM();
 	// declarations
@@ -1403,9 +1397,9 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
 	if(flag.skin == 0)			{ flag.skin = cvar(sprintf("g_ctf_flag_%s_skin", teamname)); }
 	if(flag.model == "")		{ flag.model = cvar_string(sprintf("g_ctf_flag_%s_model", teamname)); }
-	set_flag_string(flag, toucheffect, 	"%sflag_touch", teamname);
-	set_flag_string(flag, passeffect, 	"%s_pass", 		teamname);
-	set_flag_string(flag, capeffect, 	"%s_cap", 		teamname);
+	if (flag.toucheffect == "") { flag.toucheffect = EFFECT_FLAG_TOUCH(teamnumber).eent_eff_name; }
+	if (flag.passeffect == "") 	{ flag.passeffect = EFFECT_PASS(teamnumber).eent_eff_name; }
+	if (flag.capeffect == "") 	{ flag.capeffect = EFFECT_CAP(teamnumber).eent_eff_name; }
 
 	// sounds
 	flag.snd_flag_taken = strzone(SND(CTF_TAKEN(teamnumber)));

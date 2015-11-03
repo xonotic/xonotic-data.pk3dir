@@ -23,6 +23,9 @@ EFFECT(0, ARC_BEAM,                 "arc_beam")
 EFFECT(0, ARC_BEAM_HEAL,            "arc_beam_heal")
 EFFECT(0, ARC_BEAM_HEAL_IMPACT,     "arc_beam_healimpact")
 EFFECT(0, ARC_BEAM_HEAL_IMPACT2,    "healray_impact")
+EFFECT(0, ARC_OVERHEAT,             "arc_overheat")
+EFFECT(0, ARC_OVERHEAT_FIRE,        "arc_overheat_fire")
+EFFECT(0, ARC_SMOKE,                "arc_smoke")
 EFFECT(0, ARC_LIGHTNING,            "arc_lightning")
 EFFECT(0, ARC_LIGHTNING2,           "electro_lightning")
 
@@ -220,6 +223,16 @@ EFFECT(1, PASS_BLUE,                "blue_pass")
 EFFECT(1, PASS_YELLOW,              "yellow_pass")
 EFFECT(1, PASS_PINK,                "pink_pass")
 EFFECT(1, PASS_NEUTRAL,             "neutral_pass")
+entity EFFECT_PASS(int teamid)
+{
+    switch (teamid) {
+        case NUM_TEAM_1:    return EFFECT_PASS_RED;
+        case NUM_TEAM_2:    return EFFECT_PASS_BLUE;
+        case NUM_TEAM_3:    return EFFECT_PASS_YELLOW;
+        case NUM_TEAM_4:    return EFFECT_PASS_PINK;
+        default:            return EFFECT_PASS_NEUTRAL;
+    }
+}
 
 EFFECT(0, CAP_RED,                  "red_cap")
 EFFECT(0, CAP_BLUE,                 "blue_cap")
