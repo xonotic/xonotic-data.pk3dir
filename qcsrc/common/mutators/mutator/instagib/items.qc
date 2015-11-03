@@ -9,7 +9,7 @@ GETTER(float, instagib_respawntimejitter_ammo)
 
 #ifndef MENUQC
 MODEL(VaporizerCells_ITEM, Item_Model("a_cells.md3"));
-SOUND(VaporizerCells, "misc/itempickup.ogg");
+SOUND(VaporizerCells, "misc/itempickup");
 #endif
 
 REGISTER_ITEM(VaporizerCells, Ammo) {
@@ -29,7 +29,7 @@ REGISTER_ITEM(VaporizerCells, Ammo) {
 
 #ifndef MENUQC
 MODEL(ExtraLife_ITEM, Item_Model("g_h100.md3"));
-SOUND(ExtraLife, "misc/megahealth.ogg");
+SOUND(ExtraLife, "misc/megahealth");
 #endif
 
 REGISTER_ITEM(ExtraLife, Powerup) {
@@ -47,7 +47,7 @@ REGISTER_ITEM(ExtraLife, Powerup) {
 
 #ifndef MENUQC
 MODEL(Invisibility_ITEM, Item_Model("g_strength.md3"));
-SOUND(Invisibility, "misc/powerup.ogg");
+SOUND(Invisibility, "misc/powerup");
 #endif
 
 REGISTER_ITEM(Invisibility, Powerup) {
@@ -65,7 +65,7 @@ REGISTER_ITEM(Invisibility, Powerup) {
 
 #ifndef MENUQC
 MODEL(Speed_ITEM, Item_Model("g_invincible.md3"));
-SOUND(Speed, "misc/powerup_shield.ogg");
+SOUND(Speed, "misc/powerup_shield");
 #endif
 
 REGISTER_ITEM(Speed, Powerup) {

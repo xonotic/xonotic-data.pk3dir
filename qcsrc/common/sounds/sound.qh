@@ -4,33 +4,56 @@
 // Play all sounds via sound7, for access to the extra channels.
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #ifdef SVQC
-    #define _sound(e, c, s, v, a) do { \
-        entity __e = e; \
-        if (!sound_allowed(MSG_BROADCAST, __e)) break; \
-        sound7(__e, c, s, v, a, 0, 0); \
-    } while (0)
+	#define _sound(e, c, s, v, a) \
+		do \
+		{ \
+			entity __e = e; \
+			if (!sound_allowed(MSG_BROADCAST, __e)) break; \
+			sound7(__e, c, s, v, a, 0, 0); \
+		} \
+		while (0)
 #else
-    #define _sound(e, c, s, v, a) sound7(e, c, s, v, a, 0, 0)
+	#define _sound(e, c, s, v, a) sound7(e, c, s, v, a, 0, 0)
 #endif
-#define sound(e, c, s, v, a) _sound(e, c, s.sound_str(), v, a)
+#define sound(e, c, s, v, a) _sound(e, c, Sound_fixpath(s), v, a)
 
 CLASS(Sound, Object)
-    ATTRIB(Sound, m_id, int, 0)
-    ATTRIB(Sound, sound_str, string(), func_null)
-    CONSTRUCTOR(Sound, string() path)
-    {
-        CONSTRUCT(Sound);
-        this.sound_str = path;
-    }
-    METHOD(Sound, sound_precache, void(entity this)) {
-        string s = this.sound_str();
-        if (s && s != "" && !fexists(strcat("sound/", s))) {
-            LOG_WARNINGF("Missing sound: \"%s\"\n", s);
-            return;
+	ATTRIB(Sound, m_id, int, 0)
+	ATTRIB(Sound, sound_str, string(), func_null)
+	CONSTRUCTOR(Sound, string() path)
+	{
+		CONSTRUCT(Sound);
+		this.sound_str = path;
+	}
+	#define Sound_fixpath(this) _Sound_fixpath((this).sound_str())
+	string _Sound_fixpath(string base)
+	{
+        if (base == "") return string_null;
+        #define extensions(x) \
+            x(wav) \
+            x(ogg) \
+            x(flac) \
+            /**/
+        string full, relative;
+        #define tryext(ext) { if (fexists(full = strcat("sound/", relative = strcat(base, "." #ext)))) break; }
+        do
+        {
+            extensions(tryext);
+#undef tryext
+#undef extensions
+            LOG_WARNINGF("Missing sound: \"%s\"\n", full);
+            return string_null;
         }
-        LOG_TRACEF("precache_sound(\"%s\")\n", s);
-        precache_sound(s);
-    }
+        while (0);
+        return relative;
+	}
+	METHOD(Sound, sound_precache, void(entity this))
+	{
+		string s = Sound_fixpath(this);
+		if (!s) return;
+		LOG_TRACEF("precache_sound(\"%s\")\n", s);
+		precache_sound(s);
+	}
 ENDCLASS(Sound)
 
 #endif

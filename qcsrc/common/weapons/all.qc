@@ -291,16 +291,7 @@ int GetAmmoStat(.int ammotype)
 
 string W_Sound(string w_snd)
 {
-	#define extensions(X) X(wav) X(ogg)
-	#define tryext(ext) { if (fexists(strcat("sound/", output = strcat("weapons/", w_snd, "."#ext)))) break; }
-	string output;
-	do {
-		extensions(tryext);
-		#undef tryext
-		#undef extensions
-		output = strcat("weapons/", w_snd);
-	} while (0);
-
+	string output = strcat("weapons/", w_snd);
 #ifdef SVQC
 	MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
 	return weapon_sound_output;

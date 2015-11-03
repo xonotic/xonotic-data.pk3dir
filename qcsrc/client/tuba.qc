@@ -3,7 +3,7 @@
 #include "../common/constants.qh"
 
 
-#define TUBA_STARTNOTE(i, n) W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n)))
+#define TUBA_STARTNOTE(i, n) _Sound_fixpath(W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n))))
 
 const int TUBA_MIN = -18;
 const int TUBA_MAX = 27;

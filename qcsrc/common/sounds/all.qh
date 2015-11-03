@@ -12,7 +12,7 @@ REGISTER_REGISTRY(RegisterSounds)
     REGISTER(RegisterSounds, SND, Sounds, name, m_id, NEW(Sound, SND_##name##_get))
 
 // Used in places where a string is required
-#define SND(id) (SND_##id.sound_str())
+#define SND(id) Sound_fixpath(SND_##id)
 
 PRECACHE(Sounds) {
     FOREACH(Sounds, true, LAMBDA({
@@ -20,7 +20,7 @@ PRECACHE(Sounds) {
     }));
 }
 
-SOUND(Null, "misc/null.wav");
+SOUND(Null, "misc/null");
 #include "all.inc"
 
 #endif
