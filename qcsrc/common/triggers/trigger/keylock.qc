@@ -146,7 +146,7 @@ spawnfunc(trigger_keylock)
 		if(self.sounds == 1)
 			self.noise = "misc/secret.wav";
 		else if(self.sounds == 2)
-			self.noise = SND(TALK);
+			self.noise = strzone(SND(TALK));
 		else //if (self.sounds == 3) {
 			self.noise = "misc/trigger1.wav";
 	}

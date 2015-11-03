@@ -545,13 +545,13 @@ void SpawnBall(void)
 	if(!autocvar_g_nexball_sound_bounce)
 		self.noise = "";
 	else if(self.noise == "")
-		self.noise = SND(NB_BOUNCE);
+		self.noise = strzone(SND(NB_BOUNCE));
 	//bounce sound placeholder (FIXME)
 	if(self.noise1 == "")
-		self.noise1 = SND(NB_DROP);
+		self.noise1 = strzone(SND(NB_DROP));
 	//ball drop sound placeholder (FIXME)
 	if(self.noise2 == "")
-		self.noise2 = SND(NB_STEAL);
+		self.noise2 = strzone(SND(NB_STEAL));
 	//stealing sound placeholder (FIXME)
 	if(self.noise) precache_sound(self.noise);
 	precache_sound(self.noise1);
@@ -653,7 +653,7 @@ spawnfunc(nexball_fault)
 {
 	self.team = GOAL_FAULT;
 	if(self.noise == "")
-		self.noise = SND(TYPEHIT);
+		self.noise = strzone(SND(TYPEHIT));
 	SpawnGoal();
 }
 
@@ -661,7 +661,7 @@ spawnfunc(nexball_out)
 {
 	self.team = GOAL_OUT;
 	if(self.noise == "")
-		self.noise = SND(TYPEHIT);
+		self.noise = strzone(SND(TYPEHIT));
 	SpawnGoal();
 }
 

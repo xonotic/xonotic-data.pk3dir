@@ -1408,15 +1408,15 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	set_flag_string(flag, capeffect, 	"%s_cap", 		teamname);
 
 	// sounds
-	flag.snd_flag_taken = SND(CTF_TAKEN(teamnumber));
-	flag.snd_flag_returned = SND(CTF_RETURNED(teamnumber));
-	flag.snd_flag_capture = SND(CTF_CAPTURE(teamnumber));
-	flag.snd_flag_dropped = SND(CTF_DROPPED(teamnumber));
-	if (flag.snd_flag_respawn == "") flag.snd_flag_respawn = SND(CTF_RESPAWN); // if there is ever a team-based sound for this, update the code to match.
+	flag.snd_flag_taken = strzone(SND(CTF_TAKEN(teamnumber)));
+	flag.snd_flag_returned = strzone(SND(CTF_RETURNED(teamnumber)));
+	flag.snd_flag_capture = strzone(SND(CTF_CAPTURE(teamnumber)));
+	flag.snd_flag_dropped = strzone(SND(CTF_DROPPED(teamnumber)));
+	if (flag.snd_flag_respawn == "") flag.snd_flag_respawn = strzone(SND(CTF_RESPAWN)); // if there is ever a team-based sound for this, update the code to match.
 	precache_sound(flag.snd_flag_respawn);
-	if (flag.snd_flag_touch == "") flag.snd_flag_touch = SND(CTF_TOUCH); // again has no team-based sound
+	if (flag.snd_flag_touch == "") flag.snd_flag_touch = strzone(SND(CTF_TOUCH)); // again has no team-based sound
 	precache_sound(flag.snd_flag_touch);
-	if (flag.snd_flag_pass == "") flag.snd_flag_pass = SND(CTF_PASS); // same story here
+	if (flag.snd_flag_pass == "") flag.snd_flag_pass = strzone(SND(CTF_PASS)); // same story here
 	precache_sound(flag.snd_flag_pass);
 
 	// precache
