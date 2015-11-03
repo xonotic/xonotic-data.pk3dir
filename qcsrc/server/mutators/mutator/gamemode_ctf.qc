@@ -13,7 +13,7 @@ REGISTER_MUTATOR(ctf, false)
 		ctf_Initialize();
 
 		ActivateTeamplay();
-		SetLimits(autocvar_capturelimit_override, -1, autocvar_captureleadlimit_override, -1);
+		SetLimits(autocvar_capturelimit_override, autocvar_captureleadlimit_override, -1, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 
