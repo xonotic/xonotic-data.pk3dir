@@ -160,11 +160,11 @@ void W_Blaster_Attack(
 				{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 		}
 
-		METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, int slot, int fire))
+		METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(blaster, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(blaster, refire)))
 				{
 					W_Blaster_Attack(
 						actor,
@@ -179,7 +179,7 @@ void W_Blaster_Attack(
 						WEP_CVAR_PRI(blaster, delay),
 						WEP_CVAR_PRI(blaster, lifetime)
 					);
-					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
 				}
 			}
 			else if(fire & 2)
@@ -195,7 +195,7 @@ void W_Blaster_Attack(
 
 					case 1: // normal projectile secondary
 					{
-						if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(blaster, refire)))
+						if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(blaster, refire)))
 						{
 							W_Blaster_Attack(
 								actor,
@@ -210,7 +210,7 @@ void W_Blaster_Attack(
 								WEP_CVAR_SEC(blaster, delay),
 								WEP_CVAR_SEC(blaster, lifetime)
 							);
-							weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
+							weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
 						}
 
 						break;

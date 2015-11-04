@@ -143,7 +143,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 					self.BUTTON_ATCK2 = true;
 			}
 		}
-		METHOD(Vortex, wr_think, void(entity thiswep, entity actor, int slot, int fire))
+		METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(vortex, charge) && actor.vortex_charge < WEP_CVAR(vortex, charge_limit))
 				actor.vortex_charge = min(1, actor.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
@@ -163,10 +163,10 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 			{
 				if(fire & 1)
 				{
-					if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(vortex, refire)))
+					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)))
 					{
 						W_Vortex_Attack(thiswep, 0);
-						weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
 					}
 				}
 				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (actor.BUTTON_ZOOM | actor.BUTTON_ZOOMSCRIPT) : (fire & 2))
@@ -235,10 +235,10 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 					}
 					else if(WEP_CVAR(vortex, secondary))
 					{
-						if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_SEC(vortex, refire)))
+						if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(vortex, refire)))
 						{
 							W_Vortex_Attack(thiswep, 1);
-							weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
+							weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
 						}
 					}
 				}

@@ -14,18 +14,18 @@ REGISTER_WEAPON(PLASMA, NEW(PlasmaAttack));
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-
-METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, int slot, int fire)) {
+SOUND(PlasmaAttack_FIRE, W_Sound("electro_fire"));
+METHOD(PlasmaAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
 	bool isPlayer = IS_PLAYER(actor);
 	if (fire & 1)
-	if (!isPlayer || weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(electro, refire))) {
+	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
 		if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, v_forward, false, 0, SND(PlasmaAttack_FIRE), CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
-            weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
         entity missile = turret_projectile(SND(HAGAR_FIRE), 1, 0, DEATH_TURRET_PLASMA.m_id, PROJECTILE_ELECTRO_BEAM, true, true);
         missile.missile_flags = MIF_SPLASH;

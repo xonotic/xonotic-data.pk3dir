@@ -500,7 +500,7 @@ float W_MineLayer_PlacedMines(float detonate)
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
 		}
-		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, int slot, int fire))
+		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
@@ -512,10 +512,10 @@ float W_MineLayer_PlacedMines(float detonate)
 			}
 			else if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(minelayer, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(minelayer, refire)))
 				{
 					W_MineLayer_Attack(thiswep);
-					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
 				}
 			}
 

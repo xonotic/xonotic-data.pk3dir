@@ -762,7 +762,7 @@ void Item_Touch()
 	other.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	_sound (other, CH_TRIGGER, (this.item_pickupsound ? this.item_pickupsound : this.item_pickupsound_ent.sound_str()), VOL_BASE, ATTEN_NORM);
+	_sound (other, CH_TRIGGER, (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
 		remove (this);

@@ -132,7 +132,7 @@ void DropOwner(void)
 
 void GiveBall(entity plyr, entity ball)
 {SELFPARAM();
-	int slot = 0; // TODO: find ballstealer
+	.entity weaponentity = weaponentities[0]; // TODO: find ballstealer
 	entity ownr = ball.owner;
 	if(ownr)
 	{
@@ -141,7 +141,7 @@ void GiveBall(entity plyr, entity ball)
 		if(ownr.metertime)
 		{
 			ownr.metertime = 0;
-			ownr.weaponentity[slot].state = WS_READY;
+			ownr.(weaponentity).state = WS_READY;
 		}
 		WaypointSprite_Kill(ownr.waypointsprite_attachedforcarrier);
 	}
@@ -179,8 +179,8 @@ void GiveBall(entity plyr, entity ball)
 		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
 	}
 
-	plyr.weaponentity[slot].weapons = plyr.weapons;
-	plyr.weaponentity[slot].switchweapon = plyr.weapon;
+	plyr.(weaponentity).weapons = plyr.weapons;
+	plyr.(weaponentity).switchweapon = plyr.weapon;
 	plyr.weapons = WEPSET(NEXBALL);
 	setself(plyr);
 	Weapon w = WEP_NEXBALL;
@@ -210,8 +210,8 @@ void DropBall(entity ball, vector org, vector vel)
 	if(ball.owner.metertime)
 	{
 		ball.owner.metertime = 0;
-		int slot = 0; // TODO: find ballstealer
-		ball.owner.weaponentity[slot].state = WS_READY;
+		.entity weaponentity = weaponentities[0]; // TODO: find ballstealer
+		ball.owner.(weaponentity).state = WS_READY;
 	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
@@ -543,13 +543,13 @@ void SpawnBall(void)
 	if(!autocvar_g_nexball_sound_bounce)
 		self.noise = "";
 	else if(self.noise == "")
-		self.noise = SND(NB_BOUNCE);
+		self.noise = strzone(SND(NB_BOUNCE));
 	//bounce sound placeholder (FIXME)
 	if(self.noise1 == "")
-		self.noise1 = SND(NB_DROP);
+		self.noise1 = strzone(SND(NB_DROP));
 	//ball drop sound placeholder (FIXME)
 	if(self.noise2 == "")
-		self.noise2 = SND(NB_STEAL);
+		self.noise2 = strzone(SND(NB_STEAL));
 	//stealing sound placeholder (FIXME)
 	if(self.noise) precache_sound(self.noise);
 	precache_sound(self.noise1);
@@ -651,7 +651,7 @@ spawnfunc(nexball_fault)
 {
 	self.team = GOAL_FAULT;
 	if(self.noise == "")
-		self.noise = SND(TYPEHIT);
+		self.noise = strzone(SND(TYPEHIT));
 	SpawnGoal();
 }
 
@@ -659,7 +659,7 @@ spawnfunc(nexball_out)
 {
 	self.team = GOAL_OUT;
 	if(self.noise == "")
-		self.noise = SND(TYPEHIT);
+		self.noise = strzone(SND(TYPEHIT));
 	SpawnGoal();
 }
 
@@ -852,34 +852,34 @@ float ball_customize()
 	return true;
 }
 
-	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, int slot, int fire))
+	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
 	{
 		if(fire & 1)
-			if(weapon_prepareattack(thiswep, actor, slot, false, autocvar_g_balance_nexball_primary_refire))
+			if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
 				if(autocvar_g_nexball_basketball_meter)
 				{
 					if(self.ballcarried && !self.metertime)
 						self.metertime = time;
 					else
-						weapon_thinkf(actor, slot, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 				}
 				else
 				{
 					W_Nexball_Attack(-1);
-					weapon_thinkf(actor, slot, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 				}
 		if(fire & 2)
-			if(weapon_prepareattack(thiswep, actor, slot, true, autocvar_g_balance_nexball_secondary_refire))
+			if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
 			{
 				W_Nexball_Attack2();
-				weapon_thinkf(actor, slot, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
 			}
 
 		if(!(fire & 1) && self.metertime && self.ballcarried)
 		{
 			W_Nexball_Attack(time - self.metertime);
 			// DropBall or stealing will set metertime back to 0
-			weapon_thinkf(actor, slot, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
 	}
 	METHOD(BallStealer, wr_setup, void(BallStealer thiswep))
@@ -965,16 +965,16 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 		}
 		else
 		{
-			int slot = 0; // TODO
-			if(self.weaponentity[slot].weapons)
+			.entity weaponentity = weaponentities[0]; // TODO
+			if(self.(weaponentity).weapons)
 			{
-				self.weapons = self.weaponentity[slot].weapons;
+				self.weapons = self.(weaponentity).weapons;
 				Weapon w = WEP_NEXBALL;
 				w.wr_resetplayer(w);
-				self.switchweapon = self.weaponentity[slot].switchweapon;
+				self.switchweapon = self.(weaponentity).switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 
-		self.weaponentity[slot].weapons = '0 0 0';
+				self.(weaponentity).weapons = '0 0 0';
 			}
 		}
 
@@ -995,8 +995,8 @@ MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 {
 	SELFPARAM();
 	this.metertime = 0;
-	int slot = 0;
-	this.weaponentity[slot].weapons = '0 0 0';
+	.entity weaponentity = weaponentities[0];
+	this.(weaponentity).weapons = '0 0 0';
 
 	if (nexball_mode & NBM_BASKETBALL)
 		this.weapons |= WEPSET(NEXBALL);

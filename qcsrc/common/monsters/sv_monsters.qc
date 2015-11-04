@@ -910,13 +910,13 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 
 void Monster_Remove(entity mon)
 {
-	int slot = 0;
+	.entity weaponentity = weaponentities[0];
 	if(!mon) { return; }
 
 	if(!MUTATOR_CALLHOOK(MonsterRemove, mon))
 		Send_Effect(EFFECT_ITEM_PICKUP, mon.origin, '0 0 0', 1);
 
-	if(mon.weaponentity[slot]) { remove(mon.weaponentity[slot]); }
+	if(mon.(weaponentity)) { remove(mon.(weaponentity)); }
 	if(mon.iceblock) { remove(mon.iceblock); }
 	WaypointSprite_Kill(mon.sprite);
 	remove(mon);

@@ -5,7 +5,7 @@
 
 #ifndef MENUQC
 MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
-SOUND(ArmorSmall, "misc/armor1.wav");
+SOUND(ArmorSmall, "misc/armor1");
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
@@ -25,7 +25,7 @@ REGISTER_ITEM(ArmorSmall, Armor) {
 
 #ifndef MENUQC
 MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
-SOUND(ArmorMedium, "misc/armor10.wav");
+SOUND(ArmorMedium, "misc/armor10");
 #endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
@@ -45,7 +45,7 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 
 #ifndef MENUQC
 MODEL(ArmorLarge_ITEM, Item_Model("item_armor_big.md3"));
-SOUND(ArmorLarge, "misc/armor17_5.wav");
+SOUND(ArmorLarge, "misc/armor17_5");
 #endif
 
 REGISTER_ITEM(ArmorLarge, Armor) {
@@ -67,7 +67,7 @@ REGISTER_ITEM(ArmorLarge, Armor) {
 
 #ifndef MENUQC
 MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
-SOUND(ArmorMega, "misc/armor25.wav");
+SOUND(ArmorMega, "misc/armor25");
 #endif
 
 REGISTER_ITEM(ArmorMega, Armor) {

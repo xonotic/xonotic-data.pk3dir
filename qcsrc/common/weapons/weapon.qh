@@ -3,6 +3,19 @@
 #include "../items/item/pickup.qh"
 
 const int MAX_WEAPONSLOTS = 2;
+.entity weaponentities[MAX_WEAPONSLOTS];
+
+int weaponslot(.entity weaponentity)
+{
+	for (int i = 0; i < MAX_WEAPONSLOTS; ++i)
+	{
+		if (weaponentities[i] == weaponentity)
+		{
+			return i;
+		}
+	}
+	return 0;
+}
 
 .int ammo_shells;
 .int ammo_nails;
@@ -52,7 +65,7 @@ CLASS(Weapon, Object)
     /** (SERVER) setup weapon data */
     METHOD(Weapon, wr_setup, void(Weapon this)) {}
     /** (SERVER) logic to run every frame */
-    METHOD(Weapon, wr_think, void(Weapon this, entity actor, int slot, int fire)) {}
+    METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */
     METHOD(Weapon, wr_checkammo1, bool(Weapon this)) {return false;}
     /** (SERVER) checks ammo for weapon second */

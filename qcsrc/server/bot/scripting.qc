@@ -1062,7 +1062,8 @@ float bot_cmd_debug_assert_canfire()
 	float f = bot_cmd.bot_cmd_parm_float;
 
 	int slot = 0;
-	if(self.weaponentity[slot].state != WS_READY)
+	.entity weaponentity = weaponentities[slot];
+	if(self.(weaponentity).state != WS_READY)
 	{
 		if(f)
 		{

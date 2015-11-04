@@ -305,26 +305,26 @@ void W_Porto_Attack(float type)
 		{
 			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
-		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, int slot, int fire))
+		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(porto, secondary))
 			{
 				if(fire & 1)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(0);
-					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 
 				if(fire & 2)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
 				{
 					W_Porto_Attack(1);
-					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
 				}
 			}
 			else
@@ -354,10 +354,10 @@ void W_Porto_Attack(float type)
 				if(fire & 1)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(-1);
-					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 			}
 		}

@@ -206,9 +206,9 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 			play2(self, SND(DRYFIRE));
 		}
 		Weapon wpn = get_weaponinfo(self.weapon);
-		int slot = 0; // TODO: unhardcode
-		if(self.weaponentity[slot].state != WS_CLEAR)
-			w_ready(wpn, self, slot, (self.BUTTON_ATCK ? 1 : 0) | (self.BUTTON_ATCK2 ? 2 : 0));
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		if(self.(weaponentity).state != WS_CLEAR)
+			w_ready(wpn, self, weaponentity, (self.BUTTON_ATCK ? 1 : 0) | (self.BUTTON_ATCK2 ? 2 : 0));
 
 		self.weapon_blocked = true;
 	}

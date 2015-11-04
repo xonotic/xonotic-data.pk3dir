@@ -6,7 +6,7 @@
 
 #ifndef MENUQC
 MODEL(Strength_ITEM, Item_Model("g_strength.md3"));
-SOUND(Strength, "misc/powerup.ogg");
+SOUND(Strength, "misc/powerup");
 #endif
 
 REGISTER_ITEM(Strength, Powerup) {
@@ -24,7 +24,7 @@ REGISTER_ITEM(Strength, Powerup) {
 
 #ifndef MENUQC
 MODEL(Shield_ITEM, Item_Model("g_invincible.md3"));
-SOUND(Shield, "misc/powerup_shield.ogg");
+SOUND(Shield, "misc/powerup_shield");
 #endif
 
 REGISTER_ITEM(Shield, Powerup) {

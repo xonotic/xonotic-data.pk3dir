@@ -153,7 +153,7 @@ spawnfunc(trigger_multiple)
 	}
 	else if (self.sounds == 2)
 	{
-		self.noise = SND(TALK);
+		self.noise = strzone(SND(TALK));
 	}
 	else if (self.sounds == 3)
 	{
