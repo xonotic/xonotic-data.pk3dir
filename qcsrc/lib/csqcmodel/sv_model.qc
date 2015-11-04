@@ -61,7 +61,7 @@ bool CSQCModel_Send(entity to, int sf)
 	return true;
 }
 
-#ifdef CSQCPLAYER_FORCE_UPDATES
+#if CSQCPLAYER_FORCE_UPDATES
 .float csqcmodel_nextforcedupdate;
 #endif
 void CSQCModel_CheckUpdate(entity e)
@@ -75,7 +75,7 @@ void CSQCModel_CheckUpdate(entity e)
 	unused_float = islocalplayer;
 	unused_float = isnolocalplayer;
 
-#ifdef CSQCPLAYER_FORCE_UPDATES
+#if CSQCPLAYER_FORCE_UPDATES
 	if(isplayer && time > e.csqcmodel_nextforcedupdate)
 	{
 		e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
