@@ -137,14 +137,14 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 		}
 #endif
 
-REGISTRY(TempEntities, 128)
+REGISTRY(TempEntities, BITS(8) - 80)
 #define TempEntities_from(i) _TempEntities_from(i, NULL)
 REGISTER_REGISTRY(RegisterTempEntities)
 REGISTRY_SORT(TempEntities, netname, 0)
 STATIC_INIT(RegisterTempEntities_renumber)
 {
 	for (int i = 0; i < TempEntities_COUNT; ++i)
-		TempEntities_from(i).m_id = 100 + i;
+		TempEntities_from(i).m_id = 80 + i;
 }
 
 #ifndef MENUQC
