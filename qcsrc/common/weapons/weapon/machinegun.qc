@@ -369,12 +369,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 			org2 = w_org + w_backoff * 2;
 			pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent)
-				if(w_random < 0.05)
-					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTN_NORM);
-				else if(w_random < 0.1)
-					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTN_NORM);
-				else if(w_random < 0.2)
-					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
 		}
 
 #endif

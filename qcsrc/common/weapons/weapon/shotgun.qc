@@ -342,12 +342,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 			pointparticles(EFFECT_SHOTGUN_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent && time - self.prevric > 0.25)
 			{
-				if(w_random < 0.0165)
-					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTEN_NORM);
-				else if(w_random < 0.033)
-					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTEN_NORM);
-				else if(w_random < 0.05)
-					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
 				self.prevric = time;
 			}
 		}

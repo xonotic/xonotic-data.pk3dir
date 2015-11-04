@@ -320,7 +320,7 @@ void Ent_DamageInfo(float isNew)
 				break;
 
 			 case DEATH_TURRET_WALK_MELEE:
-				sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_MIN);
 				pointparticles(EFFECT_TE_SPARK, self.origin, w_backoff * 1000, 1);
 				break;
 

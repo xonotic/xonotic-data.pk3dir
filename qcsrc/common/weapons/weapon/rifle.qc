@@ -258,12 +258,7 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void(void) AttackFunc,
 			pointparticles(EFFECT_RIFLE_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 			{
-				if(w_random < 0.2)
-					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTN_NORM);
-				else if(w_random < 0.4)
-					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTN_NORM);
-				else if(w_random < 0.5)
-					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
 			}
 		}
 		METHOD(Rifle, wr_init, void(entity thiswep))
