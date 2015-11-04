@@ -12,8 +12,7 @@
 void Send_WeaponComplain(entity e, float wpn, float type)
 {
 	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
+	WriteHeader(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
 	WriteByte(MSG_ONE, wpn);
 	WriteByte(MSG_ONE, type);
 }

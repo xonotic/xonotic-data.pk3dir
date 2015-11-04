@@ -29,8 +29,7 @@ void sv_notice_join()
 void sv_notice_to(entity _to, string _notice, float _howlong, float _modal)
 {
 	msg_entity = _to;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_SVNOTICE);
+	WriteHeader(MSG_ONE, TE_CSQC_SVNOTICE);
 	WriteString(MSG_ONE, _notice);
 	WriteLong(MSG_ONE, _howlong);
 	WriteByte(MSG_ONE, _modal);
@@ -47,6 +46,11 @@ void sv_notice_toall(string _notice, float _howlong, float _modal)
 #endif // SVQC
 
 #ifdef CSQC
+NET_HANDLE(TE_CSQC_SVNOTICE, bool isNew)
+{
+	cl_notice_read();
+	return true;
+}
 void cl_notice_read()
 {
     //float _done;

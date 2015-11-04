@@ -1777,7 +1777,7 @@ bool Net_Write_Notification(entity this, entity client, int sf)
 {
 	if(Notification_ShouldSend(self.nent_broadcast, client, self.nent_client))
 	{
-		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
+		WriteHeader(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
 		WriteByte(MSG_ENTITY, self.nent_net_type);
 		WriteShort(MSG_ENTITY, self.nent_net_name);
 		for(int i = 0; i < self.nent_stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); }

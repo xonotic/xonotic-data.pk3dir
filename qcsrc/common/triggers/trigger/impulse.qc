@@ -133,7 +133,7 @@ in directional and sperical mode. For damper/accelerator mode this is not nesses
 #ifdef SVQC
 bool trigger_impulse_send(entity to, int sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_IMPULSE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_IMPULSE);
 
 	WriteCoord(MSG_ENTITY, self.radius);
 	WriteCoord(MSG_ENTITY, self.strength);

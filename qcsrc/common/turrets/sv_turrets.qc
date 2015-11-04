@@ -302,7 +302,7 @@ void turrets_setframe(float _frame, float client_only)
 bool turret_send(entity this, entity to, float sf)
 {
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TURRET);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & TNSF_SETUP)
 	{

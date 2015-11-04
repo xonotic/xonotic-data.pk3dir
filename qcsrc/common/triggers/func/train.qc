@@ -104,7 +104,7 @@ void train_next()
 #ifdef SVQC
 float train_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRAIN);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRAIN);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & SF_TRIGGER_INIT)

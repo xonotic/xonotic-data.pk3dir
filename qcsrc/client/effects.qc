@@ -98,3 +98,8 @@ void Net_ReadLightningarc()
 
 }
 void Net_ReadArc() { Net_ReadLightningarc(); }
+NET_HANDLE(TE_CSQC_ARC, bool isNew)
+{
+	Net_ReadArc();
+	return true;
+}

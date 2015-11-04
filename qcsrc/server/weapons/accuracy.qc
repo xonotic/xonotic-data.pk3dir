@@ -15,7 +15,7 @@ int accuracy_byte(float n, float d)
 
 bool accuracy_send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ACCURACY);
 
 	entity a = this.owner;
 	if (IS_SPEC(a)) a = a.enemy;

@@ -264,8 +264,7 @@ void MapVote_Init()
 void MapVote_SendPicture(float id)
 {SELFPARAM();
 	msg_entity = self;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_PICTURE);
+	WriteHeader(MSG_ONE, TE_CSQC_PICTURE);
 	WriteByte(MSG_ONE, id);
 	WritePicture(MSG_ONE, strcat(mapvote_screenshot_dirs[mapvote_maps_screenshot_dir[id]], "/", mapvote_maps[id]), 3072);
 }
@@ -349,7 +348,7 @@ bool MapVote_SendEntity(entity this, entity to, int sf)
 	if(sf & 1)
 		sf &= ~2; // if we send 1, we don't need to also send 2
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)

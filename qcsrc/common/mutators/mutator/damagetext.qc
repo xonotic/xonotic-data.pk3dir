@@ -72,6 +72,8 @@ CLASS(DamageText, Object)
 ENDCLASS(DamageText)
 #endif
 
+REGISTER_NET_TEMP(damagetext)
+
 #ifdef SVQC
 AUTOCVAR(sv_damagetext, int, 2, _("<= 0: disabled, >= 1: spectators, >= 2: players, >= 3: all players"));
 #define SV_DAMAGETEXT_DISABLED()        (autocvar_sv_damagetext <= 0 /* disabled */)
@@ -94,8 +96,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
         (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(e))
     ) {
         msg_entity = e;
-        WriteByte(MSG_ONE, SVC_TEMPENTITY);
-        WriteMutator(MSG_ONE, damagetext);
+        WriteHeader(MSG_ONE, damagetext);
         WriteShort(MSG_ONE, health);
         WriteShort(MSG_ONE, armor);
         WriteEntity(MSG_ONE, hit);
@@ -108,26 +109,25 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
 #endif
 
 #ifdef CSQC
-MUTATOR_HOOKFUNCTION(damagetext, CSQC_Parse_TempEntity) {
-    if (MUTATOR_RETURNVALUE) return false;
-    if (!ReadMutatorEquals(mutator_argv_int_0, damagetext)) return false;
+NET_HANDLE(damagetext, bool isNew)
+{
     int health = ReadShort();
     int armor = ReadShort();
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
+    return = true;
     if (autocvar_cl_damagetext) {
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
                 if (e.instanceOfDamageText && e.m_group == group) {
                     DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, deathtype);
-                    return true;
+                    return;
                 }
             }
         }
         NEW(DamageText, group, location, health, armor, deathtype);
     }
-    return true;
 }
 #endif
 

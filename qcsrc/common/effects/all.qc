@@ -1,7 +1,8 @@
 #include "all.qh"
 
-REGISTER_NET_TEMP(net_effect, bool isNew)
+REGISTER_NET_TEMP(net_effect)
 #ifdef CSQC
+NET_HANDLE(net_effect, bool isNew)
 {
 	int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
 
@@ -30,6 +31,7 @@ REGISTER_NET_TEMP(net_effect, bool isNew)
 		WarpZone_TrailParticles(world, particleeffectnum(eff), v, vel);
 	else
 		pointparticles(eff, v, vel, eff_cnt);
+	return true;
 }
 #endif
 

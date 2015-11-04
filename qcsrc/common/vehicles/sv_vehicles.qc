@@ -40,7 +40,7 @@ bool vehicle_send(entity to, int sf)
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
 
 	WriteByte(MSG_ENTITY, self.cnt);
 
@@ -87,8 +87,7 @@ void CSQCVehicleSetup(entity own, int vehicle_id)
 
 	msg_entity = own;
 
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_VEHICLESETUP);
+	WriteHeader(MSG_ONE, TE_CSQC_VEHICLESETUP);
 	WriteByte(MSG_ONE, vehicle_id);
 }
 

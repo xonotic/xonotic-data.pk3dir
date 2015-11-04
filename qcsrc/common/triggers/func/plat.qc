@@ -9,7 +9,7 @@ void plat_delayedinit()
 
 float plat_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PLAT);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_PLAT);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & SF_TRIGGER_INIT)

@@ -30,7 +30,7 @@ void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
 
 bool bumble_raygun_send(entity this, entity to, float sf)
 {
-    WriteByte(MSG_ENTITY, ENT_CLIENT_BUMBLE_RAYGUN);
+    WriteHeader(MSG_ENTITY, ENT_CLIENT_BUMBLE_RAYGUN);
 
     WriteByte(MSG_ENTITY, sf);
     if(sf & BRG_SETUP)

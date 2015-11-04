@@ -40,7 +40,7 @@ void viewloc_think()
 bool trigger_viewloc_send(entity this, entity to, int sf)
 {
 	// CSQC doesn't need to know our origin (yet), as we're only available for referencing
-	WriteByte(MSG_ENTITY, ENT_CLIENT_VIEWLOC_TRIGGER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_VIEWLOC_TRIGGER);
 
 	WriteEntity(MSG_ENTITY, self.enemy);
 	WriteEntity(MSG_ENTITY, self.goalentity);
@@ -90,7 +90,7 @@ spawnfunc(trigger_viewlocation)
 
 bool viewloc_send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_VIEWLOC);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_VIEWLOC);
 
 	WriteByte(MSG_ENTITY, self.cnt);
 

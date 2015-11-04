@@ -19,7 +19,7 @@ float entcs_customize()
 
 bool entcs_send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ENTCS);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ENTCS);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & BIT(0))
 		WriteByte(MSG_ENTITY, num_for_edict(self.owner) - 1);

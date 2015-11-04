@@ -72,7 +72,7 @@ void conveyor_reset()
 
 bool conveyor_send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)

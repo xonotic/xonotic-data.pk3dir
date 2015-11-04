@@ -72,6 +72,11 @@ void Net_AuXair2(bool bIsNew)
 	axh.draw2d			= AuxiliaryXhair_Draw2D;
 }
 
+NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isNew)
+{
+	Net_VehicleSetup();
+	return true;
+}
 void Net_VehicleSetup()
 {SELFPARAM();
 	int hud_id = ReadByte();

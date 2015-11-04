@@ -261,7 +261,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	if(!sound_allowed(MSG_ONE, self.realowner))
 		return false;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
 	{

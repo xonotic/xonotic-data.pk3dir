@@ -67,8 +67,7 @@ spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 void SendCSQCVortexBeamParticle(float charge) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
 	WriteCoord(MSG_BROADCAST, w_shotorg.y);
 	WriteCoord(MSG_BROADCAST, w_shotorg.z);

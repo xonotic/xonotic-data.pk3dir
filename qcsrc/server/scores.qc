@@ -58,7 +58,7 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, p, longflags;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
 	WriteByte(MSG_ENTITY, self.team - 1);
 
 	longflags = 0;
@@ -187,7 +187,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 {
 	float i;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
 	WriteInt24_t(MSG_ENTITY, MapInfo_LoadedGametype);
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
@@ -232,7 +232,7 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, p, longflags;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES);
 	WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 
 	longflags = 0;

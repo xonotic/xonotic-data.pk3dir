@@ -97,7 +97,7 @@ void trigger_keylock_touch()
 #ifdef SVQC
 bool trigger_keylock_send(entity to, int sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_KEYLOCK);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_KEYLOCK);
 
 	WriteInt24_t(MSG_ENTITY, self.itemkeys);
 	WriteByte(MSG_ENTITY, self.height);

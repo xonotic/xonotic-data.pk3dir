@@ -50,8 +50,7 @@
 
 
 void send_CSQC_teamnagger() {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
 bool ClientData_Send(entity this, entity to, int sf)
@@ -79,7 +78,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if(e.porto_v_angle_held)
 		sf |= 8; // angles held
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 2)
@@ -631,7 +630,7 @@ void PutClientInServer()
 // changes and just have a console command to update this?
 bool ClientInit_SendEntity(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_INIT);
 	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
 	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));

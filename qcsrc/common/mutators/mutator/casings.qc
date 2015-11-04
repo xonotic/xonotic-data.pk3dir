@@ -9,6 +9,8 @@
 
 REGISTER_MUTATOR(casings, true);
 
+REGISTER_NET_TEMP(casings)
+
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
 {SELFPARAM();
@@ -19,8 +21,7 @@ void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float ran
     if (!sound_allowed(MSG_BROADCAST, casingowner))
         casingtype |= 0x80;
 
-    WriteByte(MSG_ALL, SVC_TEMPENTITY);
-    WriteMutator(MSG_ALL, casings);
+    WriteHeader(MSG_ALL, casings);
     WriteByte(MSG_ALL, casingtype);
     WriteCoord(MSG_ALL, org.x);
     WriteCoord(MSG_ALL, org.y);
@@ -122,12 +123,8 @@ void Casing_Damage(float thisdmg, int hittype, vector org, vector thisforce)
     self.move_flags &= ~FL_ONGROUND;
 }
 
-MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
+NET_HANDLE(casings, bool isNew)
 {
-    if (MUTATOR_RETURNVALUE) return;
-    if (!ReadMutatorEquals(mutator_argv_int_0, casings)) return;
-    return = true;
-
     int _state = ReadByte();
     vector org;
     org_x = ReadCoord();
@@ -138,6 +135,7 @@ MUTATOR_HOOKFUNCTION(casings, CSQC_Parse_TempEntity)
     ang_x = ReadByte() * 360 / 256;
     ang_y = ReadByte() * 360 / 256;
     ang_z = ReadByte() * 360 / 256;
+    return = true;
 
     if (!autocvar_cl_casings) return;
 

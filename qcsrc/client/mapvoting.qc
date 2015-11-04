@@ -866,6 +866,12 @@ void Ent_MapVote()
 		MapVote_UpdateVotes();
 }
 
+NET_HANDLE(TE_CSQC_PICTURE, bool isNew)
+{
+	Net_MapVote_Picture();
+	return true;
+}
+
 void Net_MapVote_Picture()
 {
 	int type = ReadByte();

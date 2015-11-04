@@ -95,7 +95,7 @@ void swamp_touch(void)
 #ifdef SVQC
 float swamp_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LADDER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER); // FIXME: should this really be sent as a ladder?
 
 	WriteByte(MSG_ENTITY, self.dmg); // can probably get away with using a single byte here
 	WriteByte(MSG_ENTITY, self.swamp_slowdown);

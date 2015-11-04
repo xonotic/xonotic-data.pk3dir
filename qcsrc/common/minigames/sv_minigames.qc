@@ -62,7 +62,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 // only use on minigame entities or entities with a minigame owner
 bool minigame_SendEntity(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_MINIGAME);
 	WriteByte(MSG_ENTITY, sf);
 
 	if ( sf & MINIG_SF_CREATE )

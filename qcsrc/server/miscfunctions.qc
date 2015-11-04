@@ -1158,7 +1158,7 @@ bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, f, b;
 	entity e;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
 	WriteByte(MSG_ENTITY, sendflags);
 
 	if(sendflags & 1)
@@ -1603,7 +1603,7 @@ vector gettaginfo_relative(entity e, float tag)
 bool modeleffect_SendEntity(entity this, entity to, int sf)
 {
 	float f;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
 
 	f = 0;
 	if(self.velocity != '0 0 0')

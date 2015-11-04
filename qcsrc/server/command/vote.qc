@@ -27,7 +27,7 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 {
 	int nags, i, f, b;
 	entity e;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_NAGGER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_NAGGER);
 
 	// bits:
 	//   1 = ready

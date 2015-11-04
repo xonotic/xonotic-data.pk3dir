@@ -2,7 +2,7 @@
 
 .int state;
 
-REGISTER_NET_TEMP(net_gibsplash, bool isNew)
+REGISTER_NET_TEMP(net_gibsplash)
 
 bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 {

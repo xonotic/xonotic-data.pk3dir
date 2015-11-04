@@ -3,8 +3,9 @@
 
 .bool debug;
 .int sv_entnum;
-REGISTER_NET_TEMP(net_debug, bool isNew)
+REGISTER_NET_TEMP(net_debug)
 #ifdef CSQC
+	NET_HANDLE(net_debug, bool isNew)
 	{
 		Net_Accept(net_debug);
 		this.sv_entnum = ReadShort();
@@ -17,6 +18,7 @@ REGISTER_NET_TEMP(net_debug, bool isNew)
 		this.classname = strzone(ReadString());
 		this.sourceLocFile = strzone(ReadString());
 		this.sourceLocLine = ReadInt24_t();
+		return true;
 	}
 #endif
 

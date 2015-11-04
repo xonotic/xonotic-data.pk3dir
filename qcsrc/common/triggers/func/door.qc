@@ -631,7 +631,7 @@ FIXME: only one sound set available at the time being
 
 float door_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DOOR);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_DOOR);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & SF_TRIGGER_INIT)

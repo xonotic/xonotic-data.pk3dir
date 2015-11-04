@@ -317,7 +317,7 @@ void trigger_push_findtarget()
 #ifdef SVQC
 float trigger_push_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)
@@ -388,7 +388,7 @@ spawnfunc(trigger_push)
 
 bool target_push_send(entity this, entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TARGET_PUSH);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TARGET_PUSH);
 
 	WriteByte(MSG_ENTITY, self.cnt);
 	WriteString(MSG_ENTITY, self.targetname);

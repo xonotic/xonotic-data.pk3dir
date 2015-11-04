@@ -337,8 +337,7 @@ float W_Shockwave_Attack_CheckHit(
 
 void W_Shockwave_Send(void)
 {SELFPARAM();
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
 	WriteCoord(MSG_BROADCAST, w_shotorg.y);
 	WriteCoord(MSG_BROADCAST, w_shotorg.z);
@@ -831,6 +830,12 @@ void Draw_Shockwave(entity this)
 			R_EndPolygon();
 		}
 	}
+}
+
+NET_HANDLE(TE_CSQC_SHOCKWAVEPARTICLE, bool isNew)
+{
+	Net_ReadShockwaveParticle();
+	return true;
 }
 
 void Net_ReadShockwaveParticle(void)

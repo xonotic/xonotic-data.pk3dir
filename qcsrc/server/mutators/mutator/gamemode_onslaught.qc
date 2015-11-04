@@ -384,7 +384,7 @@ void onslaught_updatelinks()
 
 bool ons_Link_Send(entity this, entity to, int sendflags)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_RADARLINK);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_RADARLINK);
 	WriteByte(MSG_ENTITY, sendflags);
 	if(sendflags & 1)
 	{

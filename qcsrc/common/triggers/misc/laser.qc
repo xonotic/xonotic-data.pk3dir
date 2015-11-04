@@ -124,7 +124,7 @@ void misc_laser_think()
 
 bool laser_SendEntity(entity this, entity to, float fl)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_LASER);
 	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
 	if(self.spawnflags & 2)
 		fl |= 0x80;

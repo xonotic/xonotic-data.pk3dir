@@ -26,7 +26,7 @@
 
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
 	WriteShort(MSG_ENTITY, self.projectiledeathtype);
 	WriteCoord(MSG_ENTITY, floor(self.origin.x));
 	WriteCoord(MSG_ENTITY, floor(self.origin.y));

@@ -7,7 +7,7 @@
 
 bool pointparticles_SendEntity(entity this, entity to, float fl)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
 
 	// optional features to save space
 	fl = fl & 0x0F;

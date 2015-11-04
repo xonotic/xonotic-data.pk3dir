@@ -23,8 +23,8 @@ float		dmg_take;
 #endif
 
 // Basic variables
-.float enttype; // entity type sent from server
-.int   sv_entnum; // entity number sent from server
+.int enttype; // entity type sent from server
+.int sv_entnum; // entity number sent from server
 .int team;
 .int team_size;
 

@@ -252,7 +252,7 @@ bool ItemSend(entity this, entity to, int sf)
 	else
 		sf &= ~ISF_DROP;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
 	//WriteByte(MSG_ENTITY, self.cnt);

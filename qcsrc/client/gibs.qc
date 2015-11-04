@@ -158,7 +158,9 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 	RubbleLimit("gib", autocvar_cl_gibs_maxcount, Gib_Delete);
 }
 
-REGISTER_NET_TEMP(net_gibsplash, bool isNew)
+REGISTER_NET_TEMP(net_gibsplash)
+
+NET_HANDLE(net_gibsplash, bool isNew)
 {
 	Net_Accept(net_gibsplash);
 
@@ -171,6 +173,8 @@ REGISTER_NET_TEMP(net_gibsplash, bool isNew)
 	org.y = ReadShort() * 4 + 2;
 	org.z = ReadShort() * 4 + 2;
 	vector vel = decompressShortVector(ReadShort());
+
+	return = true;
 
 	float cl_gentle_gibs = autocvar_cl_gentle_gibs;
 	if(cl_gentle_gibs || autocvar_cl_gentle)

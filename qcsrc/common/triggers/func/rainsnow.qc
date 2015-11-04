@@ -1,7 +1,7 @@
 #ifdef SVQC
 bool rainsnow_SendEntity(entity this, entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
 	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
 	WriteCoord(MSG_ENTITY, self.origin_y + self.mins_y);

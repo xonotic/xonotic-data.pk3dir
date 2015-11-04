@@ -439,7 +439,6 @@ void Ent_ReadPlayerScore()
 		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(self), self.classname);
 		isNew = true;
 		Ent_Remove();
-		self.enttype = ENT_CLIENT_SCORES;
 	}
 #endif
 
@@ -784,10 +783,9 @@ void Ent_ScoresInfo();
 void CSQC_Ent_Update(float bIsNewEntity)
 {
 	SELFPARAM();
+	this.sourceLocLine = __LINE__;
+	this.sourceLocFile = __FILE__;
 	int t = ReadByte();
-
-	if(autocvar_developer_csqcentities)
-		LOG_INFOF("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, this, this.entnum, this.enttype, t);
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
 	float savetime = time;
@@ -825,80 +823,275 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	this.enttype = t;
 	bool done = false;
 	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
-		it.m_read(this, bIsNewEntity);
-		done = true;
+		this.classname = it.netname;
+		if (autocvar_developer_csqcentities)
+            LOG_INFOF("CSQC_Ent_Update(%d) with self=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", bIsNewEntity, this, this.entnum, this.enttype, it.netname, t);
+		done = it.m_read(this, bIsNewEntity);
 		break;
 	));
-	if (!done)
-	switch(t)
-	{
-		#define HANDLE(t) case t: this.classname = #t; this.sourceLocFile = __FILE__; this.sourceLocLine = __LINE__;
-		HANDLE(ENT_CLIENT_MUTATOR) {
-			int mutID = ReadMutator();
-			if (!MUTATOR_CALLHOOK(CSQC_Ent_Update, mutID, bIsNewEntity))
-			error(sprintf("Unknown mutator type in CSQC_Ent_Update (mutID: %d, edict: %d, classname: %s)\n", mutID, num_for_edict(this), this.classname));
-			break;
-		}
-		HANDLE(ENT_CLIENT_ENTCS)					Ent_ReadEntCS();								break;
-		HANDLE(ENT_CLIENT_SCORES)					Ent_ReadPlayerScore();							break;
-		HANDLE(ENT_CLIENT_TEAMSCORES)				Ent_ReadTeamScore();							break;
-		HANDLE(ENT_CLIENT_POINTPARTICLES)			Ent_PointParticles();							break;
-		HANDLE(ENT_CLIENT_RAINSNOW)					Ent_RainOrSnow();								break;
-		HANDLE(ENT_CLIENT_LASER)					Ent_Laser();									break;
-		HANDLE(ENT_CLIENT_NAGGER)					Ent_Nagger();									break;
-		HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS)		Ent_EliminatedPlayers();						break;
-		HANDLE(ENT_CLIENT_RADARLINK)				Ent_RadarLink();								break;
-		HANDLE(ENT_CLIENT_PROJECTILE)				Ent_Projectile();								break;
-		HANDLE(ENT_CLIENT_DAMAGEINFO)				Ent_DamageInfo(bIsNewEntity);					break;
-		HANDLE(ENT_CLIENT_INIT)						Ent_Init();										break;
-		HANDLE(ENT_CLIENT_SCORES_INFO)				Ent_ScoresInfo();								break;
-		HANDLE(ENT_CLIENT_MAPVOTE)					Ent_MapVote();									break;
-		HANDLE(ENT_CLIENT_CLIENTDATA)				Ent_ClientData();								break;
-		HANDLE(ENT_CLIENT_RANDOMSEED)				Ent_RandomSeed();								break;
-		HANDLE(ENT_CLIENT_WALL)						Ent_Wall();										break;
-		HANDLE(ENT_CLIENT_MODELEFFECT)				Ent_ModelEffect(bIsNewEntity);					break;
-		HANDLE(ENT_CLIENT_TUBANOTE)					Ent_TubaNote(bIsNewEntity);						break;
-		HANDLE(ENT_CLIENT_WARPZONE)					WarpZone_Read(bIsNewEntity);					break;
-		HANDLE(ENT_CLIENT_WARPZONE_CAMERA)			WarpZone_Camera_Read(bIsNewEntity);				break;
-		HANDLE(ENT_CLIENT_WARPZONE_TELEPORTED)		WarpZone_Teleported_Read(bIsNewEntity);			break;
-		HANDLE(ENT_CLIENT_TRIGGER_MUSIC)			Ent_ReadTriggerMusic();							break;
-		HANDLE(ENT_CLIENT_HOOK)						Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK);	break;
-		HANDLE(ENT_CLIENT_INVENTORY)				Inventory_Read(this);							break;
-		HANDLE(ENT_CLIENT_ARC_BEAM)					Ent_ReadArcBeam(bIsNewEntity);					break;
-		HANDLE(ENT_CLIENT_ACCURACY)					Ent_ReadAccuracy();								break;
-		HANDLE(ENT_CLIENT_AUXILIARYXHAIR)			Net_AuXair2(bIsNewEntity);						break;
-		HANDLE(ENT_CLIENT_TURRET)					ent_turret();									break;
-		HANDLE(ENT_CLIENT_GENERATOR)				ent_generator();								break;
-		HANDLE(ENT_CLIENT_CONTROLPOINT_ICON)		ent_cpicon(this);								break;
-		HANDLE(ENT_CLIENT_MODEL)					CSQCModel_Read(bIsNewEntity);					break;
-		HANDLE(ENT_CLIENT_ITEM)						ItemRead(bIsNewEntity);							break;
-		HANDLE(ENT_CLIENT_BUMBLE_RAYGUN)			bumble_raygun_read(bIsNewEntity);				break;
-		HANDLE(ENT_CLIENT_SPAWNPOINT)				Ent_ReadSpawnPoint(bIsNewEntity);				break;
-		HANDLE(ENT_CLIENT_SPAWNEVENT)				Ent_ReadSpawnEvent(bIsNewEntity);				break;
-		HANDLE(ENT_CLIENT_NOTIFICATION)				Read_Notification(bIsNewEntity);				break;
-		HANDLE(ENT_CLIENT_MINIGAME)					ent_read_minigame();							break;
-		HANDLE(ENT_CLIENT_VIEWLOC)					ent_viewloc();									break;
-		HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER)			ent_viewloc_trigger();							break;
-		HANDLE(ENT_CLIENT_LADDER)					ent_func_ladder();								break;
-		HANDLE(ENT_CLIENT_TRIGGER_PUSH)				ent_trigger_push();								break;
-		HANDLE(ENT_CLIENT_TARGET_PUSH)				ent_target_push();								break;
-		HANDLE(ENT_CLIENT_CONVEYOR)					ent_conveyor();									break;
-		HANDLE(ENT_CLIENT_DOOR)						ent_door();										break;
-		HANDLE(ENT_CLIENT_PLAT)						ent_plat();										break;
-		HANDLE(ENT_CLIENT_SWAMP)					ent_swamp();									break;
-		HANDLE(ENT_CLIENT_CORNER)					ent_corner();									break;
-		HANDLE(ENT_CLIENT_KEYLOCK)					ent_keylock();									break;
-		HANDLE(ENT_CLIENT_TRAIN)					ent_train();									break;
-		HANDLE(ENT_CLIENT_TRIGGER_IMPULSE)			ent_trigger_impulse();							break;
-		#undef HANDLE
-		default:
-			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), this.enttype));
-			error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", this.enttype, num_for_edict(this), this.classname));
-			break;
-	}
-
 	time = savetime;
+	if (!done)
+	{
+		//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), this.enttype));
+		error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", this.enttype, num_for_edict(this), this.classname));
+	}
 }
+NET_HANDLE(ENT_CLIENT_ENTCS, bool isnew)
+{
+	Ent_ReadEntCS();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
+{
+	Ent_ReadPlayerScore();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
+{
+	Ent_ReadTeamScore();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
+{
+	Ent_PointParticles();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
+{
+	Ent_RainOrSnow();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
+{
+	Ent_Laser();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
+{
+	Ent_Nagger();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
+{
+	Ent_EliminatedPlayers();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
+{
+	Ent_RadarLink();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
+{
+	Ent_Projectile();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isnew)
+{
+	Ent_DamageInfo(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
+{
+	Ent_Init();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
+{
+	Ent_ScoresInfo();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
+{
+	Ent_MapVote();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
+{
+	Ent_ClientData();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_RANDOMSEED, bool isnew)
+{
+	Ent_RandomSeed();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
+{
+	Ent_Wall();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
+{
+	Ent_ModelEffect(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isnew)
+{
+	Ent_TubaNote(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
+{
+	WarpZone_Read(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_WARPZONE_CAMERA, bool isnew)
+{
+	WarpZone_Camera_Read(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_WARPZONE_TELEPORTED, bool isnew)
+{
+	WarpZone_Teleported_Read(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
+{
+	Ent_ReadTriggerMusic();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_HOOK, bool isnew)
+{
+	Ent_ReadHook(isnew, NET_ENT_CLIENT_HOOK);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
+{
+	Inventory_Read(this);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
+{
+	Ent_ReadArcBeam(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
+{
+	Ent_ReadAccuracy();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
+{
+	Net_AuXair2(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
+{
+	ent_turret();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
+{
+	ent_generator();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
+{
+	ent_cpicon(this);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
+{
+	CSQCModel_Read(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
+{
+	ItemRead(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
+{
+	bumble_raygun_read(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool isnew)
+{
+	Ent_ReadSpawnPoint(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool isnew)
+{
+	Ent_ReadSpawnEvent(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool isnew)
+{
+	Read_Notification(isnew);
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
+{
+	ent_read_minigame();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_VIEWLOC, bool isnew)
+{
+	ent_viewloc();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
+{
+	ent_viewloc_trigger();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
+{
+	ent_func_ladder();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
+{
+	ent_trigger_push();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
+{
+	ent_target_push();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
+{
+	ent_conveyor();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
+{
+	ent_door();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
+{
+	ent_plat();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
+{
+	ent_swamp();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_CORNER, bool isnew)
+{
+	ent_corner();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
+{
+	ent_keylock();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
+{
+	ent_train();
+	return true;
+}
+NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
+{
+	ent_trigger_impulse();
+	return true;
+}
+
 // Destructor, but does NOT deallocate the entity by calling remove(). Also
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.
@@ -1213,9 +1406,16 @@ void Net_ReadRace()
 	}
 }
 
-void Net_TeamNagger()
+NET_HANDLE(TE_CSQC_RACE, bool isNew)
+{
+	Net_ReadRace();
+	return true;
+}
+
+NET_HANDLE(TE_CSQC_TEAMNAGGER, bool isNew)
 {
 	teamnagger = 1;
+	return true;
 }
 
 void Net_ReadPingPLReport()
@@ -1230,6 +1430,11 @@ void Net_ReadPingPLReport()
 	playerslots[e].ping = pi;
 	playerslots[e].ping_packetloss = pl / 255.0;
 	playerslots[e].ping_movementloss = ml / 255.0;
+}
+NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
+{
+	Net_ReadPingPLReport();
+	return true;
 }
 
 void Net_WeaponComplain()
@@ -1252,6 +1457,11 @@ void Net_WeaponComplain()
 		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, complain_weapon); break;
 	}
 }
+NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
+{
+	Net_WeaponComplain();
+	return true;
+}
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
@@ -1261,56 +1471,17 @@ bool CSQC_Parse_TempEntity()
 	// Acquire TE ID
 	int nTEID = ReadByte();
 
+	FOREACH(TempEntities, it.m_id == nTEID, LAMBDA(
+		if (autocvar_developer_csqcentities)
+			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
+		return it.m_read(NULL, true);
+	));
+
 	if (autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
 
-	FOREACH(TempEntities, it.m_id == nTEID, LAMBDA(
-		it.m_read(NULL, true);
-		return true;
-	));
-	switch (nTEID)
-	{
-		case TE_CSQC_MUTATOR:
-			int mutID = ReadMutator();
-			if (MUTATOR_CALLHOOK(CSQC_Parse_TempEntity, mutID))
-			return true;
-		case TE_CSQC_TARGET_MUSIC:
-			Net_TargetMusic();
-			return true;
-		case TE_CSQC_PICTURE:
-			Net_MapVote_Picture();
-			return true;
-		case TE_CSQC_RACE:
-			Net_ReadRace();
-			return true;
-		case TE_CSQC_VORTEXBEAMPARTICLE:
-			Net_ReadVortexBeamParticle();
-			return true;
-		case TE_CSQC_TEAMNAGGER:
-			Net_TeamNagger();
-			return true;
-		case TE_CSQC_ARC:
-			Net_ReadArc();
-			return true;
-		case TE_CSQC_PINGPLREPORT:
-			Net_ReadPingPLReport();
-			return true;
-		case TE_CSQC_WEAPONCOMPLAIN:
-			Net_WeaponComplain();
-			return true;
-		case TE_CSQC_VEHICLESETUP:
-			Net_VehicleSetup();
-			return true;
-		case TE_CSQC_SVNOTICE:
-			cl_notice_read();
-			return true;
-		case TE_CSQC_SHOCKWAVEPARTICLE:
-			Net_ReadShockwaveParticle();
-			return true;
-		default:
-			// No special logic for this temporary entity; return 0 so the engine can handle it
-			return false;
-	}
+	// No special logic for this temporary entity; return 0 so the engine can handle it
+	return false;
 }
 
 string getcommandkey(string text, string command)

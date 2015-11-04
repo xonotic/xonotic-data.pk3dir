@@ -1,7 +1,7 @@
 #ifdef SVQC
 bool corner_send(entity to, int sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CORNER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_CORNER);
 
 	WriteString(MSG_ENTITY, self.platmovetype);
 

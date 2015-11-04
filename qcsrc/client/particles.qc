@@ -23,3 +23,8 @@ void Net_ReadVortexBeamParticle()
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 }
+NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
+{
+	Net_ReadVortexBeamParticle();
+	return true;
+}

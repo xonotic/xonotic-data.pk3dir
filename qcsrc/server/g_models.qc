@@ -90,7 +90,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(self.lodmodelindex1)
 		sf |= 0x80;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WALL);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WALL);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & BIT(0))

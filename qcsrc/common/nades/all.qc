@@ -49,8 +49,9 @@ void healer_setup(entity e)
 }
 #endif // CSQC
 
-REGISTER_NET_LINKED(Nade_Heal, bool isNew)
+REGISTER_NET_LINKED(Nade_Heal)
 #ifdef CSQC
+NET_HANDLE(Nade_Heal, bool isNew)
 {
 	Net_Accept(Nade_Heal);
 	int sf = ReadByte();
@@ -65,6 +66,7 @@ REGISTER_NET_LINKED(Nade_Heal, bool isNew)
 		// this.ltime = time + this.healer_lifetime;
 		healer_setup(this);
 	}
+	return true;
 }
 #endif
 

@@ -12,7 +12,7 @@
 
 bool SpawnPoint_Send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, self.team);
 	WriteShort(MSG_ENTITY, self.origin.x);
@@ -26,7 +26,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 {
 	float send;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
 
 	if(autocvar_g_spawn_alloweffects)
 	{

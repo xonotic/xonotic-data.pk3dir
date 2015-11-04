@@ -20,7 +20,7 @@ void func_ladder_touch()
 #ifdef SVQC
 bool func_ladder_send(entity this, entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LADDER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER);
 
 	WriteString(MSG_ENTITY, self.classname);
 	WriteByte(MSG_ENTITY, self.skin);

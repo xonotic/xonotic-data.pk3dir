@@ -53,7 +53,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 
 bool WarpZone_Teleported_Send(entity to, int sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);
 	WriteCoord(MSG_ENTITY, self.angles.y);
 	WriteCoord(MSG_ENTITY, self.angles.z);
@@ -216,7 +216,7 @@ void WarpZone_Touch (void)
 
 bool WarpZone_Send(entity to, int sendflags)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
 	// we must send this flag for clientside to match properly too
 	int f = 0;
@@ -271,7 +271,7 @@ bool WarpZone_Send(entity to, int sendflags)
 bool WarpZone_Camera_Send(entity to, int sendflags)
 {SELFPARAM();
 	int f = 0;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
 	if(self.warpzone_fadestart)
 		BITSET_ASSIGN(f, 2);

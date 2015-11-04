@@ -54,8 +54,7 @@ void PingPLReport_Think()
 	e = edict_num(self.cnt + 1);
 	if(IS_REAL_CLIENT(e))
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
+		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, self.cnt);
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
@@ -72,8 +71,7 @@ void PingPLReport_Think()
 	}
 	else
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
+		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, self.cnt);
 		WriteShort(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
@@ -515,7 +513,7 @@ void detect_maptype()
 entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
 	return true;
 }
