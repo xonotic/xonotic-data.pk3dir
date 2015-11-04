@@ -233,13 +233,12 @@ void walker_fire_rocket(vector org)
 
     te_explosion (org);
 
-    rocket = spawn ();
+    rocket = new(walker_rocket);
     setorigin(rocket, org);
 
     sound (self, CH_WEAPON_A, SND_HAGAR_FIRE, VOL_BASE, ATTEN_NORM);
     setsize (rocket, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
-    rocket.classname		  = "walker_rocket";
     rocket.owner			  = self;
     rocket.bot_dodge		  = true;
     rocket.bot_dodgerating	= 50;

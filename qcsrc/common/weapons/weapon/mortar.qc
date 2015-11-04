@@ -209,9 +209,8 @@ void W_Mortar_Attack(Weapon thiswep)
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn();
+	gren = new(grenade);
 	gren.owner = gren.realowner = self;
-	gren.classname = "grenade";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_PRI(mortar, damage);
 	gren.movetype = MOVETYPE_BOUNCE;
@@ -258,9 +257,8 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn();
+	gren = new(grenade);
 	gren.owner = gren.realowner = self;
-	gren.classname = "grenade";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(mortar, damage);
 	gren.movetype = MOVETYPE_BOUNCE;

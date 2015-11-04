@@ -264,8 +264,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep)
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn();
-	proj.classname = "electro_bolt";
+	proj = new(electro_bolt);
 	proj.owner = proj.realowner = self;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(electro, damage);
@@ -364,8 +363,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	entity proj = spawn();
-	proj.classname = "electro_orb";
+	entity proj = new(electro_orb);
 	proj.owner = proj.realowner = self;
 	proj.use = W_Electro_Explode;
 	proj.think = adaptor_think2use_hittype_splash;

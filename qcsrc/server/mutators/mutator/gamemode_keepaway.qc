@@ -462,13 +462,11 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 
 void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
 {
-	entity e;
-	e = spawn();
+	entity e = new(keepawayball);
 	e.model = "models/orbs/orbblue.md3";
 	precache_model(e.model);
 	_setmodel(e, e.model);
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
-	e.classname = "keepawayball";
 	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
 	e.takedamage = DAMAGE_YES;
 	e.solid = SOLID_TRIGGER;

@@ -81,8 +81,9 @@ const int ENT_CLIENT_LASER = 8;
 const int ENT_CLIENT_NAGGER = 9; // flags [votecalledvote]
 const int ENT_CLIENT_RADARLINK = 11; // flags [startorigin] [endorigin] [startcolor+16*endcolor]
 const int ENT_CLIENT_PROJECTILE = 12;
-const int ENT_CLIENT_GIBSPLASH = 13;
+
 const int ENT_CLIENT_DAMAGEINFO = 14;
+
 const int ENT_CLIENT_INIT = 16;
 const int ENT_CLIENT_MAPVOTE = 17;
 const int ENT_CLIENT_CLIENTDATA = 18;
@@ -123,7 +124,7 @@ const int ENT_CLIENT_CORNER = 70;
 const int ENT_CLIENT_KEYLOCK = 71;
 const int ENT_CLIENT_GENERATOR = 72;
 const int ENT_CLIENT_CONTROLPOINT_ICON = 73;
-const int ENT_CLIENT_EFFECT = 74;
+
 const int ENT_CLIENT_MINIGAME = 75;
 const int ENT_CLIENT_VIEWLOC = 78;
 const int ENT_CLIENT_VIEWLOC_TRIGGER = 79;

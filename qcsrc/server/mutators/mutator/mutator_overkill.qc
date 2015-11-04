@@ -108,7 +108,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 		other = world;
 	}
 
-	setself(spawn());
+	setself(new(droppedweapon)); // hax
 	self.ok_item = true;
 	self.noalign = true;
 	self.pickup_anyway = true;
@@ -118,7 +118,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	self.reset = SUB_Remove;
 	setorigin(self, frag_target.origin + '0 0 32');
 	self.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
-	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	setself(this);
 
@@ -247,10 +246,9 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 	{
 		if(self.classname == "item_strength")
 		{
-			entity wep = spawn();
+			entity wep = new(weapon_hmg);
 			setorigin(wep, self.origin);
 			setmodel(wep, MDL_OK_HMG);
-			wep.classname = "weapon_hmg";
 			wep.ok_item = true;
 			wep.noalign = self.noalign;
 			wep.cnt = self.cnt;
@@ -264,10 +262,9 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 
 		if(self.classname == "item_invincible")
 		{
-			entity wep = spawn();
+			entity wep = new(weapon_rpc);
 			setorigin(wep, self.origin);
 			setmodel(wep, MDL_OK_RPC);
-			wep.classname = "weapon_rpc";
 			wep.ok_item = true;
 			wep.noalign = self.noalign;
 			wep.cnt = self.cnt;

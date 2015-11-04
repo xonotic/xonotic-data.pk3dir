@@ -1267,8 +1267,7 @@ float turret_initialize(Turret tur)
 	entity e = find(world, classname, "turret_manager");
 	if(!e)
 	{
-		e = spawn();
-		e.classname = "turret_manager";
+		e = new(turret_manager);
 		e.think = turrets_manager_think;
 		e.nextthink = time + 2;
 	}
@@ -1353,13 +1352,13 @@ float turret_initialize(Turret tur)
 	self.nextthink				= time + 1;
 	self.nextthink			   += turret_count * sys_frametime;
 
-	self.tur_head = spawn();
+	self.tur_head = new(turret_head);
 	_setmodel(self.tur_head, tur.head_model);
 	setsize(self.tur_head, '0 0 0', '0 0 0');
 	setorigin(self.tur_head, '0 0 0');
 	setattachment(self.tur_head, self, "tag_head");
 
-	self.tur_head.netname		= self.tur_head.classname = "turret_head";
+	self.tur_head.netname		= self.tur_head.classname;
 	self.tur_head.team			= self.team;
 	self.tur_head.owner			= self;
 	self.tur_head.takedamage	= DAMAGE_NO;

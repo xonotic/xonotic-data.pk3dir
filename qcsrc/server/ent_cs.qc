@@ -68,6 +68,7 @@ void entcs_think()
 entity attach_entcs(entity e)
 {
 	entity ent = e.entcs = new(entcs_sender);
+	make_pure(ent);
 	ent.owner = e;
 	ent.think = entcs_think;
 	ent.nextthink = time;

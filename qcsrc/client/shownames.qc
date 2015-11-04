@@ -202,8 +202,7 @@ void Draw_ShowNames_All()
 		e = shownames_ent[i];
 		if(!e)
 		{
-			e = spawn();
-			e.classname = "shownames_tag";
+			e = new(shownames_tag);
 			e.sv_entnum = i+1;
 			shownames_ent[i] = e;
 		}

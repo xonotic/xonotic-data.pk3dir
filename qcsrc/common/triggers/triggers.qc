@@ -148,8 +148,7 @@ void SUB_UseTargets()
 	if (self.delay)
 	{
 	// create a temp object to fire at a later time
-		t = spawn();
-		t.classname = "DelayedUse";
+		t = new(DelayedUse);
 		t.nextthink = time + self.delay;
 		t.think = DelayThink;
 		t.enemy = activator;

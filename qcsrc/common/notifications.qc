@@ -524,6 +524,7 @@ void Create_Notification_Entity(
 	//  Global Entity Setup
 	// =====================
 	entity notif = spawn();
+	make_pure(notif);
 	switch(typeId)
 	{
 		case MSG_ANNCE:
@@ -1842,8 +1843,8 @@ void Kill_Notification(
 
 	if(killed_cpid != NO_CPID)
 	{
-		net_notif = spawn();
-		net_notif.classname = "net_kill_notification";
+		net_notif = new(net_kill_notification);
+		make_pure(net_notif);
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;
 		net_notif.nent_net_type = MSG_CENTER_CPID;
@@ -2093,9 +2094,9 @@ void Send_Notification(
 	}
 	else
 	{
-		entity net_notif = spawn();
+		entity net_notif = new(net_notification);
+		make_pure(net_notif);
 		net_notif.owner = notif;
-		net_notif.classname = "net_notification";
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;
 		net_notif.nent_net_type = net_type;

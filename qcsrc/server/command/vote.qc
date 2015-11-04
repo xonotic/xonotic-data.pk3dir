@@ -86,7 +86,8 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 
 void Nagger_Init()
 {
-	Net_LinkEntity(nagger = spawn(), false, 0, Nagger_SendEntity);
+	Net_LinkEntity(nagger = new(nagger), false, 0, Nagger_SendEntity);
+	make_pure(nagger);
 }
 
 void Nagger_VoteChanged()

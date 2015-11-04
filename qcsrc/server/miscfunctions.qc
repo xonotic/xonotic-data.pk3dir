@@ -1649,10 +1649,7 @@ bool modeleffect_SendEntity(entity this, entity to, int sf)
 
 void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2)
 {
-	entity e;
-	float sz;
-	e = spawn();
-	e.classname = "modeleffect";
+	entity e = new(modeleffect);
 	_setmodel(e, m);
 	e.frame = f;
 	setorigin(e, o);
@@ -1671,7 +1668,7 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 		e.scale2 = s2 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
 	else
 		e.scale2 = -s2;
-	sz = max(e.scale, e.scale2);
+	float sz = max(e.scale, e.scale2);
 	setsize(e, e.mins * sz, e.maxs * sz);
 	Net_LinkEntity(e, false, 0.1, modeleffect_SendEntity);
 }

@@ -458,8 +458,7 @@ void door_spawnfield(vector fmins, vector fmaxs)
 	entity	trigger;
 	vector	t1 = fmins, t2 = fmaxs;
 
-	trigger = spawn();
-	trigger.classname = "doortriggerfield";
+	trigger = new(doortriggerfield);
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = self;

@@ -642,8 +642,7 @@ int ttt_client_event(entity minigame, string event, ...)
 
 					if ( spawnai )
 					{
-						entity aiplayer = spawn();
-						aiplayer.classname = "minigame_player";
+						entity aiplayer = new(minigame_player);
 						aiplayer.owner = minigame;
 						aiplayer.team = ai;
 						aiplayer.minigame_playerslot = 0;

@@ -49,11 +49,9 @@ void sv_notice_toall(string _notice, float _howlong, float _modal)
 #ifdef CSQC
 void cl_notice_read()
 {
-    entity _notice;
     //float _done;
     //float _modal;
-    _notice = spawn();
-    _notice.classname = "sv_notice";
+    entity _notice = new(sv_notice);
     _notice.netname = strzone(ReadString());
     _notice.alpha = ReadLong() + time;
     _notice.skin = ReadByte();

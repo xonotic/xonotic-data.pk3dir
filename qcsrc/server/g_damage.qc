@@ -49,7 +49,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	if(!sound_allowed(MSG_BROADCAST, dmgowner))
 		deathtype |= 0x8000;
 
-	e = spawn();
+	e = new(damageinfo);
+	make_pure(e);
 	setorigin(e, org);
 	e.projectiledeathtype = deathtype;
 	e.dmg = coredamage;
@@ -114,8 +115,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		{
 			if(!GiveFrags_randomweapons)
 			{
-				GiveFrags_randomweapons = spawn();
-				GiveFrags_randomweapons.classname = "GiveFrags_randomweapons";
+				GiveFrags_randomweapons = new(GiveFrags_randomweapons);
 			}
 
 			if(warmup_stage)
@@ -563,10 +563,8 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_speed = freeze_time;
 	self.bot_attack = false;
 
-	entity ice, head;
-	ice = spawn();
+	entity ice = new(ice);
 	ice.owner = targ;
-	ice.classname = "ice";
 	ice.scale = targ.scale;
 	ice.think = Ice_Think;
 	ice.nextthink = time;
@@ -582,6 +580,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	RemoveGrapplingHook(targ);
 
+	entity head;
 	FOR_EACH_PLAYER(head)
 	if(head.hook.aiment == targ)
 		RemoveGrapplingHook(head);
@@ -889,9 +888,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)
 		{
-			entity farcent;
-			farcent = spawn();
-			farcent.classname = "farce";
+			entity farcent = new(farce);
 			farcent.enemy = self;
 			farcent.movedir = farce * 10;
 			if(self.mass)
@@ -1140,8 +1137,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		if(!e.fire_burner)
 		{
 			// print("adding a fire burner to ", e.classname, "\n");
-			e.fire_burner = spawn();
-			e.fire_burner.classname = "fireburner";
+			e.fire_burner = new(fireburner);
 			e.fire_burner.think = fireburner_think;
 			e.fire_burner.nextthink = time;
 			e.fire_burner.owner = e;

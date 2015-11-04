@@ -803,8 +803,8 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	if(created_saved_value != -1)
 	{
 		// creating a new entity to keep track of this cvar
-		e = spawn();
-		e.classname = "saved_cvar_value";
+		e = new(saved_cvar_value);
+		make_pure(e);
 		e.netname = strzone(tmp_cvar);
 		e.message = strzone(cvar_string(tmp_cvar));
 		created_saved_value = 1;

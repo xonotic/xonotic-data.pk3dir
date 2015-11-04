@@ -52,7 +52,7 @@ void CopyBody(float keepvelocity)
 {SELFPARAM();
 	if (self.effects & EF_NODRAW)
 		return;
-	setself(spawn());
+	setself(new(body));
 	self.enemy = this;
 	self.lip = this.lip;
 	self.colormap = this.colormap;
@@ -62,7 +62,6 @@ void CopyBody(float keepvelocity)
 	self.angles = this.angles;
 	self.v_angle = this.v_angle;
 	self.avelocity = this.avelocity;
-	self.classname = "body";
 	self.damageforcescale = this.damageforcescale;
 	self.effects = this.effects;
 	self.glowmod = this.glowmod;

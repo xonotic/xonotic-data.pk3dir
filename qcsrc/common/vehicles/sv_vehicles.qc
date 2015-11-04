@@ -455,10 +455,8 @@ void vehicles_reset_colors()
 
 void vehicles_clearreturn(entity veh)
 {
-	entity ret;
 	// Remove "return helper", if any.
-	ret = findchain(classname, "vehicle_return");
-	while(ret)
+	for (entity ret = findchain(classname, "vehicle_return"); ret; ret = ret.chain)
 	{
 		if(ret.wp00 == veh)
 		{
@@ -471,7 +469,6 @@ void vehicles_clearreturn(entity veh)
 
 			return;
 		}
-		ret = ret.chain;
 	}
 }
 
@@ -548,8 +545,7 @@ void vehicles_setreturn(entity veh)
 
 	vehicles_clearreturn(veh);
 
-	ret = spawn();
-	ret.classname   = "vehicle_return";
+	ret = new(vehicle_return);
 	ret.wp00	   = veh;
 	ret.team		= veh.team;
 	ret.think	   = vehicles_showwp;
@@ -1234,9 +1230,9 @@ bool vehicle_initialize(entity veh, bool nodrop)
 
 	self.vehicle_flags |= VHF_ISVEHICLE;
 
-	self.vehicle_viewport		= spawn();
-	self.vehicle_hudmodel		= spawn();
-	self.tur_head				= spawn();
+	self.vehicle_viewport		= new(vehicle_viewport);
+	self.vehicle_hudmodel		= new(vehicle_hudmodel);
+	self.tur_head				= new(tur_head);
 	self.tur_head.owner			= self;
 	self.takedamage				= DAMAGE_NO;
 	self.bot_attack				= true;

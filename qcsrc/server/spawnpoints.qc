@@ -117,9 +117,7 @@ void relocate_spawnpoint()
     {
         // show where spawnpoints point at too
         makevectors(self.angles);
-        entity e;
-        e = spawn();
-        e.classname = "info_player_foo";
+        entity e = new(info_player_foo);
         setorigin(e, self.origin + v_forward * 24);
         setsize(e, '-8 -8 -8', '8 8 8');
         e.solid = SOLID_TRIGGER;

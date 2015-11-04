@@ -258,9 +258,8 @@ void W_Seeker_Fire_Missile(Weapon thiswep, vector f_diff, entity m_target)
 
 	//self.detornator         = false;
 
-	missile                 = spawn();
+	missile                 = new(seeker_missile);
 	missile.owner           = missile.realowner = self;
-	missile.classname       = "seeker_missile";
 	missile.bot_dodge       = true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, missile_damage);
 
@@ -348,9 +347,8 @@ void W_Seeker_Fire_Flac(Weapon thiswep)
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile 				= spawn();
+	missile 				= new(missile);
 	missile.owner 			= missile.realowner = self;
-	missile.classname 		= "missile";
 	missile.bot_dodge 		= true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, flac_damage);
 	missile.touch 			= W_Seeker_Flac_Explode;
@@ -524,9 +522,8 @@ void W_Seeker_Tag_Touch(void)
 		else
 		{
 			//sprint(self.realowner, strcat("You just tagged ^2", other.netname, "^7 with a tracking device!\n"));
-			e             = spawn();
+			e             = new(tag_tracker);
 			e.cnt         = WEP_CVAR(seeker, missile_count);
-			e.classname   = "tag_tracker";
 			e.owner       = self.owner;
 			e.realowner   = self.realowner;
 
@@ -563,9 +560,8 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(TAG_FIRE), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
-	missile                 = spawn();
+	missile                 = new(seeker_tag);
 	missile.owner           = missile.realowner = self;
-	missile.classname       = "seeker_tag";
 	missile.bot_dodge       = true;
 	missile.bot_dodgerating = 50;
 	missile.touch           = W_Seeker_Tag_Touch;

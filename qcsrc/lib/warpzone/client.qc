@@ -30,8 +30,7 @@ void WarpZone_Read(float isnew)
 	warpzone_warpzones_exist = 1;
 	if (!self.enemy)
 	{
-		self.enemy = spawn();
-		self.enemy.classname = "warpzone_from";
+		self.enemy = new(warpzone_from);
 	}
 	self.classname = "trigger_warpzone";
 
@@ -149,8 +148,8 @@ void WarpZone_Camera_Read(float isnew)
 void CL_RotateMoves(vector ang) = #638;
 void WarpZone_Teleported_Read(float isnew)
 {SELFPARAM();
-	vector v;
 	self.classname = "warpzone_teleported";
+	vector v;
 	v.x = ReadCoord();
 	v.y = ReadCoord();
 	v.z = ReadCoord();

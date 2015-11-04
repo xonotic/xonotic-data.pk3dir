@@ -13,6 +13,7 @@
 
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
+#include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 

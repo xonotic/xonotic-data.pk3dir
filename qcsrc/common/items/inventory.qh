@@ -14,6 +14,7 @@ class(Inventory) .int inv_items[Items_MAX];
 #ifdef CSQC
 void Inventory_Read(Inventory data)
 {
+    make_pure(self);
     const int bits = ReadInt24_t();
     FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
         .int fld = inv_items[it.m_id];
@@ -53,7 +54,7 @@ bool Inventory_Send(entity this, entity to, int sf)
 void Inventory_new(entity e)
 {
     Inventory inv = new(Inventory), bak = new(Inventory);
-    inv.classname = bak.classname = "inventory";
+    make_pure(inv); make_pure(bak);
     inv.inventory = bak;
     inv.drawonlytoclient = e;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);

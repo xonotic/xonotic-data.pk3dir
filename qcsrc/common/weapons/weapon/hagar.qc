@@ -133,9 +133,8 @@ void W_Hagar_Attack(Weapon thiswep)
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn();
+	missile = new(missile);
 	missile.owner = missile.realowner = self;
-	missile.classname = "missile";
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = WEP_CVAR_PRI(hagar, damage);
 
@@ -176,9 +175,8 @@ void W_Hagar_Attack2(Weapon thiswep)
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn();
+	missile = new(missile);
 	missile.owner = missile.realowner = self;
-	missile.classname = "missile";
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 
@@ -236,9 +234,8 @@ void W_Hagar_Attack2_Load_Release(.entity weaponentity)
 	missile = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
-		missile = spawn();
+		missile = new(missile);
 		missile.owner = missile.realowner = self;
-		missile.classname = "missile";
 		missile.bot_dodge = true;
 		missile.bot_dodgerating = WEP_CVAR_SEC(hagar, damage);
 

@@ -118,11 +118,9 @@ void Ent_TubaNote(bool isNew)
 				Ent_TubaNote_StopSound();
 			}
 		} else {
-			self.enemy = spawn();
-			self.enemy.classname = "tuba_note";
+			self.enemy = new(tuba_note);
 			if (Tuba_PitchStep) {
-				self.enemy.enemy = spawn();
-				self.enemy.enemy.classname = "tuba_note_2";
+				self.enemy.enemy = new(tuba_note_2);
 			}
 			isNew = true;
 		}

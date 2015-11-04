@@ -96,9 +96,10 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 void ClientData_Attach()
 {SELFPARAM();
-	Net_LinkEntity(self.clientdata = spawn(), false, 0, ClientData_Send);
-	self.clientdata.drawonlytoclient = self;
-	self.clientdata.owner = self;
+	Net_LinkEntity(this.clientdata = new(clientdata), false, 0, ClientData_Send);
+	make_pure(this.clientdata);
+	self.clientdata.drawonlytoclient = this;
+	self.clientdata.owner = this;
 }
 
 void ClientData_Detach()
@@ -535,7 +536,8 @@ void PutClientInServer()
 		this.revival_time = 0;
 		this.air_finished = time + 12;
 
-		entity spawnevent = spawn();
+		entity spawnevent = new(spawnevent);
+		make_pure(spawnevent);
 		spawnevent.owner = this;
 		Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
 
@@ -693,8 +695,9 @@ void ClientInit_CheckUpdate()
 
 void ClientInit_Spawn()
 {SELFPARAM();
-	entity e = spawn();
-	e.classname = "clientinit";
+
+	entity e = new(clientinit);
+	make_pure(e);
 	e.think = ClientInit_CheckUpdate;
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 
@@ -1338,7 +1341,7 @@ void UpdateChatBubble()
 	// spawn a chatbubble entity if needed
 	if (!self.chatbubbleentity)
 	{
-		self.chatbubbleentity = spawn();
+		self.chatbubbleentity = new(chatbubbleentity);
 		self.chatbubbleentity.owner = self;
 		self.chatbubbleentity.exteriormodeltoclient = self;
 		self.chatbubbleentity.think = ChatBubbleThink;

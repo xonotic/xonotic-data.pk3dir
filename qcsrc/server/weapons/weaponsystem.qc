@@ -446,6 +446,7 @@ void CL_ExteriorWeaponentity_Think()
 void CL_SpawnWeaponentity(entity e, .entity weaponentity)
 {
 	entity view = e.(weaponentity) = new(weaponentity);
+	make_pure(view);
 	view.solid = SOLID_NOT;
 	view.owner = e;
 	setmodel(view, MDL_Null);  // precision set when changed
@@ -460,8 +461,8 @@ void CL_SpawnWeaponentity(entity e, .entity weaponentity)
 
 	if (weaponentity == weaponentities[0])
 	{
-		entity exterior = e.exteriorweaponentity = spawn();
-		exterior.classname = "exteriorweaponentity";
+		entity exterior = e.exteriorweaponentity = new(exteriorweaponentity);
+		make_pure(exterior);
 		exterior.solid = SOLID_NOT;
 		exterior.exteriorweaponentity = exterior;
 		exterior.owner = e;

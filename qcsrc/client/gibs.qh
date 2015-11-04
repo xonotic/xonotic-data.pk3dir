@@ -21,6 +21,4 @@ void Gib_Draw(entity this);
 
 void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector vrand, int specnum, bool destroyontouch, bool issilent);
 
-void Ent_GibSplash(bool isNew);
-
 #endif

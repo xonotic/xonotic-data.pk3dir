@@ -118,12 +118,12 @@ REGISTRY(Minigames, BITS(3))
 #define Minigames_from(i) _Minigames_from(i, NULL)
 REGISTER_REGISTRY(RegisterMinigames)
 #define REGISTER_MINIGAME(name,nicename) \
-    REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, spawn()); \
+    REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, new(minigame_descriptor)); \
     void name##_hud_board(vector, vector); \
     void name##_hud_status(vector, vector); \
     int name##_client_event(entity, string, ...); \
     REGISTER_INIT_POST(MINIGAME, name) { \
-        this.classname = "minigame_descriptor"; \
+        make_pure(this); \
         this.netname = strzone(strtolower(#name)); \
         this.message = nicename; \
         this.minigame_hud_board = name##_hud_board; \

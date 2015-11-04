@@ -222,8 +222,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 		return;
 	}
 
-	controller = spawn();
-	controller.classname = "SUB_CalcMove_controller";
+	controller = new(SUB_CalcMove_controller);
 	controller.owner = self;
 	controller.platmovetype = self.platmovetype;
 	controller.platmovetype_start = self.platmovetype_start;

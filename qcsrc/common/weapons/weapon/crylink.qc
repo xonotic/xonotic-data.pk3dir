@@ -366,10 +366,9 @@ void W_Crylink_Attack(Weapon thiswep)
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
-		proj = spawn();
+		proj = new(spike);
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
-		proj.classname = "spike";
 		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_PRI(crylink, damage);
 		if(shots == 1) {
@@ -475,10 +474,9 @@ void W_Crylink_Attack2(Weapon thiswep)
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
-		proj = spawn();
+		proj = new(spike);
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
-		proj.classname = "spike";
 		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_SEC(crylink, damage);
 		if(shots == 1) {
@@ -614,9 +612,8 @@ void W_Crylink_Attack2(Weapon thiswep)
 
 						pos = W_Crylink_LinkJoin(actor.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
 
-						linkjoineffect = spawn();
+						linkjoineffect = new(linkjoineffect);
 						linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
-						linkjoineffect.classname = "linkjoineffect";
 						linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
 						linkjoineffect.owner = actor;
 						setorigin(linkjoineffect, pos);

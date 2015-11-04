@@ -2,28 +2,28 @@
 
 .int state;
 
+REGISTER_NET_TEMP(net_gibsplash, bool isNew)
+
 bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
-	WriteByte(MSG_ENTITY, self.state); // actually type
-	WriteByte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier
-	WriteShort(MSG_ENTITY, floor(self.origin.x / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, floor(self.origin.y / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, floor(self.origin.z / 4)); // not using a coord here, as gibs don't need this accuracy
-	WriteShort(MSG_ENTITY, self.oldorigin.x); // acrually compressed velocity
+	int channel = MSG_ONE;
+	msg_entity = to;
+	WriteHeader(channel, net_gibsplash);
+	WriteByte(channel, this.state); // actually type
+	WriteByte(channel, bound(1, this.cnt * 16, 255)); // gibbage amount multiplier
+	WriteShort(channel, floor(this.origin.x / 4)); // not using a coord here, as gibs don't need this accuracy
+	WriteShort(channel, floor(this.origin.y / 4)); // not using a coord here, as gibs don't need this accuracy
+	WriteShort(channel, floor(this.origin.z / 4)); // not using a coord here, as gibs don't need this accuracy
+	WriteShort(channel, this.oldorigin.x); // acrually compressed velocity
 	return true;
 }
 
-// TODO maybe convert this to a TE?
 void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker)
 {SELFPARAM();
 	if(g_cts) // no gibs in CTS
 		return;
 
-	entity e;
-
-	e = spawn();
-	e.classname = "gibsplash";
+	entity e = new(gibsplash);
 	e.cnt = amount;
 	e.state = type; // should stay smaller than 15
 	if(!sound_allowed(MSG_BROADCAST, gibowner) || !sound_allowed(MSG_BROADCAST, attacker))
@@ -42,7 +42,8 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 
 	e.oldorigin_x = compressShortVector(e.velocity);
 
-	Net_LinkEntity(e, false, 0.2, Violence_GibSplash_SendEntity);
+	entity cl; FOR_EACH_REALCLIENT(cl) Violence_GibSplash_SendEntity(e, cl, 0);
+	remove(e);
 }
 
 void Violence_GibSplash(entity source, float type, float amount, entity attacker)

@@ -188,8 +188,7 @@ void W_Fireball_Attack1(void)
 
 	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn();
-	proj.classname = "plasma_prim";
+	proj = new(plasma_prim);
 	proj.owner = proj.realowner = self;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(fireball, damage);
@@ -324,9 +323,8 @@ void W_Fireball_Attack2(void)
 
 	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	proj = spawn();
+	proj = new(grenade);
 	proj.owner = proj.realowner = self;
-	proj.classname = "grenade";
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(fireball, damage);
 	proj.movetype = MOVETYPE_BOUNCE;

@@ -165,8 +165,7 @@ entity sandbox_ObjectSpawn(float database)
 {SELFPARAM();
 	// spawn a new object with default properties
 
-	entity e = spawn();
-	e.classname = "object";
+	entity e = new(object);
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
 	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
