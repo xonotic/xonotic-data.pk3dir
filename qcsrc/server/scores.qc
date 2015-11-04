@@ -529,6 +529,7 @@ void WinningConditionHelper()
 
 	FOR_EACH_CLIENT(p)
 	{
+		string s = "";
 		if(fullstatus)
 		{
 			s = GetPlayerScoreString(p, 1);
