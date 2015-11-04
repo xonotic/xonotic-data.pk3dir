@@ -3,6 +3,8 @@
 #include "../menu.qh"
 #include "../oo/classes.qc"
 
+#include "../mutators/events.qh"
+
 #include "../../common/command/generic.qh"
 
 .entity firstChild, nextSibling;
@@ -38,8 +40,8 @@ float updateConwidths(float width, float height, float pixelheight);
 
 void GameCommand(string theCommand)
 {
-	float argc;
-	argc = tokenize_console(theCommand);
+	int argc = tokenize_console(theCommand);
+	string ss = strtolower(argv(0));
 
 	if (argv(0) == "help" || argc == 0)
 	{
@@ -125,6 +127,9 @@ void GameCommand(string theCommand)
 		depthfirst(main, parent, firstChild, nextSibling, _dumptree_open, _dumptree_close, NULL);
 		return;
 	}
+
+	if(MUTATOR_CALLHOOK(Menu_ConsoleCommand, ss, argc, theCommand)) // handled by a mutator
+		return;
 
 	LOG_INFO(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
 }
