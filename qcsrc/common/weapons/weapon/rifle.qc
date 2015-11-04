@@ -99,7 +99,6 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	af = ATTACK_FINISHED(actor, slot);
 	actor.switchweapon = actor.weapon;
 	ATTACK_FINISHED(actor, slot) = time;
-	LOG_INFO(ftos(actor.WEP_AMMO(RIFLE)), "\n");
 	r = weapon_prepareattack(thiswep, actor, weaponentity, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
 	if(actor.switchweapon == actor.weapon)
 		actor.switchweapon = sw;
@@ -107,12 +106,10 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	{
 		actor.rifle_bullethail_attackfunc();
 		weapon_thinkf(actor, weaponentity, actor.rifle_bullethail_frame, actor.rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
-		LOG_INFO("thinkf set\n");
 	}
 	else
 	{
 		ATTACK_FINISHED(actor, slot) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
-		LOG_INFO("out of ammo... ", ftos(actor.(weaponentity).state), "\n");
 	}
 }
 
