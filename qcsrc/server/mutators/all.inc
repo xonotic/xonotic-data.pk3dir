@@ -26,7 +26,6 @@
 #include "mutator/mutator_nades.qc"
 #include "mutator/mutator_new_toys.qc"
 #include "mutator/mutator_nix.qc"
-#include "mutator/mutator_overkill.qc"
 #include "mutator/mutator_physical_items.qc"
 #include "mutator/mutator_pinata.qc"
 #include "mutator/mutator_random_gravity.qc"

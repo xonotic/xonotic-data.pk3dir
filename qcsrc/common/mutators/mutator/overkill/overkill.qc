@@ -1,4 +1,12 @@
 #ifdef IMPLEMENTATION
+bool autocvar_g_overkill_powerups_replace;
+float autocvar_g_overkill_superguns_respawn_time;
+bool autocvar_g_overkill_100h_anyway;
+bool autocvar_g_overkill_100a_anyway;
+bool autocvar_g_overkill_ammo_charge;
+float autocvar_g_overkill_ammo_charge_notice;
+float autocvar_g_overkill_ammo_charge_limit;
+
 .vector ok_deathloc;
 .float ok_spawnsys_timer;
 .float ok_lastwep;
@@ -29,6 +37,22 @@ REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && 
 	}
 
 	return false;
+}
+
+MUTATOR_HOOKFUNCTION(ok, W_DecreaseAmmo)
+{
+	entity actor = MUTATOR_ARGV(0, entity);
+	if (actor.ok_use_ammocharge)
+	{
+		ok_DecreaseCharge(actor, actor.weapon);
+		return true;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(ok, W_Reload)
+{
+	entity actor = MUTATOR_ARGV(0, entity);
+	return actor.ok_use_ammocharge;
 }
 
 void W_Blaster_Attack(entity, float, float, float, float, float, float, float, float, float, float);

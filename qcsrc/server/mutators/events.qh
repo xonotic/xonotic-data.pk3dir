@@ -337,14 +337,30 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
  * Called when a player is damaged
  */
 #define EV_PlayerDamaged(i, o) \
-    /** attacker */ i(entity, mutator_argv_entity_0) \
-    /** target */ i(entity, mutator_argv_entity_1) \
-    /** health */ i(int, mutator_argv_int_0) \
-    /** armor */ i(int, mutator_argv_int_1) \
-    /** location */ i(vector, mutator_argv_vector_0) \
-    /** deathtype */ i(int, mutator_argv_int_2) \
+    /** attacker  */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** target    */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** health    */ i(int,    MUTATOR_ARGV_0_int) \
+    /** armor     */ i(int,    MUTATOR_ARGV_1_int) \
+    /** location  */ i(vector, MUTATOR_ARGV_0_vector) \
+    /** deathtype */ i(int,    MUTATOR_ARGV_2_int) \
     /**/
 MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
+
+/**
+ * Called by W_DecreaseAmmo
+ */
+#define EV_W_DecreaseAmmo(i, o) \
+    /** actor */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(W_DecreaseAmmo, EV_W_DecreaseAmmo);
+
+/**
+ * Called by W_Reload
+ */
+#define EV_W_Reload(i, o) \
+    /** actor */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(W_Reload, EV_W_Reload);
 
 /** called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items. */
 #define EV_PlayerPowerups(i, o) \

@@ -43,6 +43,14 @@ HMG_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
+REGISTER_MUTATOR(hmg_nadesupport, true);
+MUTATOR_HOOKFUNCTION(hmg_nadesupport, Nade_Damage)
+{
+	if (MUTATOR_ARGV(0, entity) != WEP_HMG) return;
+	return = true;
+	MUTATOR_ARGV(0, float) /* damage */ = self.max_health * 0.1;
+}
+
 spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
 
 void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)

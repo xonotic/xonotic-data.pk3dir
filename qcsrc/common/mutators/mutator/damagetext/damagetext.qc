@@ -2,7 +2,7 @@
 #define MUTATOR_DAMAGETEXT_H
 
 #ifdef MENUQC
-#include "../../../menu/xonotic/tab.qc"
+#include "../../../../menu/xonotic/tab.qc"
 #endif
 
 #endif
@@ -82,11 +82,11 @@ AUTOCVAR(sv_damagetext, int, 2, _("<= 0: disabled, >= 1: spectators, >= 2: playe
 #define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3 /* all players */)
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     if (SV_DAMAGETEXT_DISABLED()) return;
-    const entity attacker = mutator_argv_entity_0;
-    const entity hit = mutator_argv_entity_1; if (hit == attacker) return;
-    const int health = mutator_argv_int_0;
-    const int armor = mutator_argv_int_1;
-    const int deathtype = mutator_argv_int_2;
+    const entity attacker = MUTATOR_ARGV(0, entity);
+    const entity hit = MUTATOR_ARGV(1, entity); if (hit == attacker) return;
+    const int health = MUTATOR_ARGV(0, int);
+    const int armor = MUTATOR_ARGV(1, int);
+    const int deathtype = MUTATOR_ARGV(2, int);
     const vector location = hit.origin;
     entity e;
     FOR_EACH_REALCLIENT(e) if (
@@ -133,7 +133,7 @@ NET_HANDLE(damagetext, bool isNew)
 
 #ifdef MENUQC
 CLASS(XonoticDamageTextSettings, XonoticTab)
-    #include "../../../menu/gamesettings.qh"
+    #include "../../../../menu/gamesettings.qh"
     REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
     ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"))
     ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9)

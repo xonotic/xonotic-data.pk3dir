@@ -1,13 +1,9 @@
-#ifdef IMPLEMENTATION
-
-#include "../../util.qh"
+#include "util.qh"
 
 #ifdef CSQC
-#include "../../movetypes/movetypes.qh"
-#include "../../../client/rubble.qh"
+#include "movetypes/movetypes.qh"
+#include "../client/rubble.qh"
 #endif
-
-REGISTER_MUTATOR(casings, true);
 
 REGISTER_NET_TEMP(casings)
 
@@ -176,5 +172,4 @@ NET_HANDLE(casings, bool isNew)
     RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
 }
 
-#endif
 #endif

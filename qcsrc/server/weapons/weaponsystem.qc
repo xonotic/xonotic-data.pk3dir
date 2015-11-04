@@ -905,14 +905,7 @@ void W_AttachToShotorg(entity actor, entity flash, vector offset)
 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use)
 {
-	if (cvar("g_overkill"))
-	{
-		if (actor.ok_use_ammocharge)
-		{
-			ok_DecreaseCharge(actor, actor.weapon);
-			return;  // TODO
-		}
-	}
+	if (MUTATOR_CALLHOOK(W_DecreaseAmmo, actor)) return;
 
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO) && !wep.reloading_ammo) return;
 
@@ -982,9 +975,7 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 	// set global values to work with
 	entity e = Weapons_from(actor.weapon);
 
-	if (cvar("g_overkill"))
-		if (actor.ok_use_ammocharge) return;
-	// TODO
+	if (MUTATOR_CALLHOOK(W_Reload, actor)) return;
 
 	actor.reload_ammo_min = sent_ammo_min;
 	actor.reload_ammo_amount = e.reloading_ammo;

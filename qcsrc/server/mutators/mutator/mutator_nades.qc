@@ -26,6 +26,18 @@ void(entity player, float score) nades_GiveBonus;
 // Remove all bonus nades from a player
 void(entity player) nades_RemoveBonus;
 
+/**
+ * called to adjust nade damage and force on hit
+ */
+#define EV_Nade_Damage(i, o) \
+ 	/** weapon */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** force */  i(vector, MUTATOR_ARGV_0_vector) \
+    /**/          o(vector, MUTATOR_ARGV_0_vector) \
+ 	/** damage */ i(float,  MUTATOR_ARGV_0_float) \
+    /**/          o(float,  MUTATOR_ARGV_0_float) \
+    /**/
+MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
+
 #endif
 #ifdef IMPLEMENTATION
 
@@ -630,35 +642,34 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE.m_id || self.nade_type == NADE_TYPE_SPAWN.m_id)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
+	if (MUTATOR_CALLHOOK(Nade_Damage, DEATH_WEAPONOF(deathtype), force, damage)) {}
+	else if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
 	{
 		force *= 1.5;
 		damage = 0;
 	}
-
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
+	else if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
 	{
 		force *= 0.5; // too much
-		frag_damage = 0;
+		damage = 0;
 	}
-
-	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 	{
 		force *= 6;
 		damage = self.max_health * 0.55;
 	}
-
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
+	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
 		damage = self.max_health * 0.1;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
-	if(deathtype & HITTYPE_SECONDARY)
+	else if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	{
-		damage = self.max_health * 0.1;
-		force *= 10;
+		if(deathtype & HITTYPE_SECONDARY)
+		{
+			damage = self.max_health * 0.1;
+			force *= 10;
+		}
+		else
+			damage = self.max_health * 1.15;
 	}
-	else
-		damage = self.max_health * 1.15;
 
 	self.velocity += force;
 	UpdateCSQCProjectile(self);
