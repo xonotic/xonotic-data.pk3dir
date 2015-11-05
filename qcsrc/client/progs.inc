@@ -13,7 +13,6 @@
 #include "miscfunctions.qc"
 #include "movelib.qc"
 #include "player_skeleton.qc"
-#include "rubble.qc"
 #include "scoreboard.qc"
 #include "shownames.qc"
 #include "teamradar.qc"

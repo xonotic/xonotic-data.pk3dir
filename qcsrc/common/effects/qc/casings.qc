@@ -4,7 +4,7 @@
 
 #ifdef CSQC
 #include "../../movetypes/movetypes.qh"
-#include "../../../client/rubble.qh"
+#include "rubble.qh"
 #endif
 
 REGISTER_NET_TEMP(casings)
