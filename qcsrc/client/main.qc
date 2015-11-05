@@ -8,7 +8,6 @@
 #include "mapvoting.qh"
 #include "modeleffects.qh"
 #include "mutators/events.qh"
-#include "particles.qh"
 #include "quickmenu.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"

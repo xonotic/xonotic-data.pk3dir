@@ -1,7 +1,3 @@
-#ifdef CSQC
-	#include "../../../client/particles.qh"
-#endif
-
 #ifdef SVQC
 // NOTE: also contains func_sparks
 
@@ -182,6 +178,21 @@ spawnfunc(func_sparks)
 	spawnfunc_func_pointparticles(this);
 }
 #elif defined(CSQC)
+
+.int dphitcontentsmask;
+
+entityclass(PointParticles);
+class(PointParticles) .int cnt; // effect number
+class(PointParticles) .vector velocity; // particle velocity
+class(PointParticles) .float waterlevel; // direction jitter
+class(PointParticles) .int count; // count multiplier
+class(PointParticles) .int impulse; // density
+class(PointParticles) .string noise; // sound
+class(PointParticles) .float atten;
+class(PointParticles) .float volume;
+class(PointParticles) .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
+class(PointParticles) .vector movedir; // trace direction
+class(PointParticles) .float glow_color; // palette index
 
 void Draw_PointParticles(entity this)
 {

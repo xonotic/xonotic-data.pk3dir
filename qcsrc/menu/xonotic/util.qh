@@ -28,8 +28,6 @@ float updateCompression();
 
 void UpdateNotification_URI_Get_Callback(float id, float status, string data);
 
-void URI_Get_Callback(float id, float status, string data);
-
 // game type list box stuff (does not NEED to contain all game types, other
 // types stay available via console)
 int GameType_GetID(int cnt);

@@ -58,12 +58,6 @@ vector teamradar_texcoord_to_3dcoord(vector in,float z)
 	return out;
 }
 
-vector yinvert(vector v)
-{
-	v.y = 1 - v.y;
-	return v;
-}
-
 void draw_teamradar_background(float fg)
 {
 	float fga;
