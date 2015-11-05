@@ -57,7 +57,6 @@
 #include "../common/animdecide.qc"
 #include "../common/campaign_file.qc"
 #include "../common/campaign_setup.qc"
-#include "../common/casings.qc"
 #include "../common/effects/effectinfo.qc"
 #include "../common/mapinfo.qc"
 #include "../common/minigames/minigames.qc"
