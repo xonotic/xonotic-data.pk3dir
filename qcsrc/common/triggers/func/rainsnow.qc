@@ -1,3 +1,5 @@
+REGISTER_NET_LINKED(ENT_CLIENT_RAINSNOW)
+
 #ifdef SVQC
 bool rainsnow_SendEntity(entity this, entity to, float sf)
 {

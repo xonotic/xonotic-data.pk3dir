@@ -101,6 +101,8 @@ void train_next()
 		_sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_TRAIN)
+
 #ifdef SVQC
 float train_send(entity to, float sf)
 {SELFPARAM();

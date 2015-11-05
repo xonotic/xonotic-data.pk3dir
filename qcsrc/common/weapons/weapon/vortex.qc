@@ -61,6 +61,8 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 
+REGISTER_NET_TEMP(TE_CSQC_VORTEXBEAMPARTICLE)
+
 #if defined(SVQC)
 void SendCSQCVortexBeamParticle(float charge) {
 	vector v;

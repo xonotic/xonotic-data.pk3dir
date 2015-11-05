@@ -1679,6 +1679,8 @@ void Local_Notification_WOVA(
 //  Notification Networking
 // =========================
 
+REGISTER_NET_LINKED(ENT_CLIENT_NOTIFICATION)
+
 #ifdef CSQC
 NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 {

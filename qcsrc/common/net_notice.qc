@@ -1,5 +1,7 @@
 #include "net_notice.qh"
 
+REGISTER_NET_TEMP(TE_CSQC_SVNOTICE)
+
 #ifdef SVQC
 void sv_notice_join_think()
 {SELFPARAM();

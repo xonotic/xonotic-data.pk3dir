@@ -92,10 +92,12 @@ void swamp_touch()
 	other.swampslug.health = 2;
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_SWAMP)
+
 #ifdef SVQC
 float swamp_send(entity to, float sf)
 {SELFPARAM();
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER); // FIXME: should this really be sent as a ladder?
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SWAMP);
 
 	WriteByte(MSG_ENTITY, self.dmg); // can probably get away with using a single byte here
 	WriteByte(MSG_ENTITY, self.swamp_slowdown);

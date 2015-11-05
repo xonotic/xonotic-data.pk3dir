@@ -13,6 +13,9 @@ void trigger_push_use()
 }
 #endif
 
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_PUSH)
+REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
+
 /*
 	trigger_push_calculatevelocity
 

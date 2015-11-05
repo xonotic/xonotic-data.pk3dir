@@ -599,6 +599,8 @@ void LinkDoors()
 	door_spawnfield(cmins, cmaxs);
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_DOOR)
+
 #ifdef SVQC
 /*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.

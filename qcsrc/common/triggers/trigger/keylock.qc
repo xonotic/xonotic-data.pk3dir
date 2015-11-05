@@ -94,6 +94,8 @@ void trigger_keylock_touch()
 
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_KEYLOCK)
+
 #ifdef SVQC
 bool trigger_keylock_send(entity to, int sf)
 {SELFPARAM();

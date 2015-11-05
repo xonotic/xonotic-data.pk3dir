@@ -6,6 +6,9 @@
     #include "../../../server/defs.qh"
 #endif
 
+REGISTER_NET_TEMP(TE_CSQC_TARGET_MUSIC)
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_MUSIC)
+
 #ifdef SVQC
 
 // values:

@@ -26,6 +26,8 @@
     #include "../lib/warpzone/util_server.qh"
 #endif
 
+REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
+
 #ifdef CSQC
 void ItemDraw(entity self)
 {

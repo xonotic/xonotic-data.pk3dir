@@ -1,3 +1,5 @@
+REGISTER_NET_LINKED(ENT_CLIENT_LADDER)
+
 void func_ladder_touch()
 {SELFPARAM();
 #ifdef SVQC

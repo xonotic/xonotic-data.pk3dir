@@ -1,3 +1,5 @@
+REGISTER_NET_LINKED(ENT_CLIENT_POINTPARTICLES)
+
 #ifdef SVQC
 // NOTE: also contains func_sparks
 

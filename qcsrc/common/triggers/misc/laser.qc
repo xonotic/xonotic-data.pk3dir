@@ -7,6 +7,8 @@
 #elif defined(SVQC)
 #endif
 
+REGISTER_NET_LINKED(ENT_CLIENT_LASER)
+
 #ifdef SVQC
 .float modelscale;
 void misc_laser_aim()

@@ -1,3 +1,5 @@
+REGISTER_NET_LINKED(ENT_CLIENT_CORNER)
+
 #ifdef SVQC
 bool corner_send(entity to, int sf)
 {SELFPARAM();

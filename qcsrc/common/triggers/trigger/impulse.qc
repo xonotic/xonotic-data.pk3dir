@@ -113,6 +113,8 @@ void trigger_impulse_touch3()
 #endif
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_IMPULSE)
+
 /*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
 -------- KEYS --------
 target : If this is set, this points to the spawnfunc_target_position to which the player will get pushed.

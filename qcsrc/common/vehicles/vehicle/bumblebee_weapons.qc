@@ -7,6 +7,8 @@
 
 #ifdef IMPLEMENTATION
 
+REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
+
 #ifdef SVQC
 
 float autocvar_g_vehicle_bumblebee_cannon_cost;

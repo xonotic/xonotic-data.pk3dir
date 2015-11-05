@@ -1,3 +1,5 @@
+REGISTER_NET_LINKED(ENT_CLIENT_PLAT)
+
 #ifdef SVQC
 void plat_link();
 

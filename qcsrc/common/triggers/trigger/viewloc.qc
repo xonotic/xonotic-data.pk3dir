@@ -5,6 +5,9 @@
     #include "../../../server/defs.qh"
 #endif
 
+REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC)
+REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC_TRIGGER)
+
 #ifdef SVQC
 
 void viewloc_think()

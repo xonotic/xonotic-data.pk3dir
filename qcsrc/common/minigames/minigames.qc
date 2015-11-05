@@ -1,5 +1,7 @@
 #include "minigames.qh"
 
+REGISTER_NET_LINKED(ENT_CLIENT_MINIGAME)
+
 entity minigame_get_descriptor(string id)
 {
 	FOREACH(Minigames, true, LAMBDA(

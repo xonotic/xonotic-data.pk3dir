@@ -83,6 +83,9 @@ void Net_ReadShockwaveParticle();
 #endif
 #endif
 #ifdef IMPLEMENTATION
+
+REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
+
 #ifdef SVQC
 spawnfunc(weapon_shockwave)
 {
