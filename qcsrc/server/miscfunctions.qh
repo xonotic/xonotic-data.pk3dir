@@ -39,9 +39,6 @@ void write_recordmarker(entity pl, float tstart, float dt);
 
 void play2all(string samp);
 
-void DistributeEvenly_Init(float amount, float totalweight);
-float DistributeEvenly_Get(float weight);
-
 void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2);
 
 void shockwave_spawn(string m, vector org, float sz, float t1, float t2);
@@ -62,10 +59,7 @@ void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
-float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d);
 
-float DistributeEvenly_amount;
-float DistributeEvenly_totalweight;
 void objerror(string s);
 void droptofloor();
 void() SUB_Remove;

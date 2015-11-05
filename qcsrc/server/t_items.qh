@@ -115,12 +115,6 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 void target_items_use ();
 
-const float OP_SET = 0;
-const float OP_MIN = 1;
-const float OP_MAX = 2;
-const float OP_PLUS = 3;
-const float OP_MINUS = 4;
-
 float GiveWeapon(entity e, float wpn, float op, float val);
 
 float GiveBit(entity e, .float fld, float bit, float op, float val);

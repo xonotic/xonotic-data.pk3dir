@@ -31,6 +31,40 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 	}
 }
 
+float DistributeEvenly_amount;
+float DistributeEvenly_totalweight;
+
+void DistributeEvenly_Init(float amount, float totalweight)
+{
+	if (DistributeEvenly_amount)
+	{
+		LOG_TRACE("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ");
+		LOG_TRACE(ftos(DistributeEvenly_totalweight), " left!)\n");
+	}
+	if (totalweight == 0) DistributeEvenly_amount = 0;
+	else DistributeEvenly_amount = amount;
+	DistributeEvenly_totalweight = totalweight;
+}
+
+float DistributeEvenly_Get(float weight)
+{
+	float f;
+	if (weight <= 0) return 0;
+	f = floor(0.5 + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
+	DistributeEvenly_totalweight -= weight;
+	DistributeEvenly_amount -= f;
+	return f;
+}
+
+float DistributeEvenly_GetRandomized(float weight)
+{
+	float f;
+	if (weight <= 0) return 0;
+	f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
+	DistributeEvenly_totalweight -= weight;
+	DistributeEvenly_amount -= f;
+	return f;
+}
 
 // prandom - PREDICTABLE random number generator (not seeded yet)
 

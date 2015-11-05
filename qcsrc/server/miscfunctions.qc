@@ -60,40 +60,6 @@ string admin_name()
 		return "SERVER ADMIN";
 }
 
-void DistributeEvenly_Init(float amount, float totalweight)
-{
-    if (DistributeEvenly_amount)
-    {
-        LOG_TRACE("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ");
-        LOG_TRACE(ftos(DistributeEvenly_totalweight), " left!)\n");
-    }
-    if (totalweight == 0)
-        DistributeEvenly_amount = 0;
-    else
-        DistributeEvenly_amount = amount;
-    DistributeEvenly_totalweight = totalweight;
-}
-float DistributeEvenly_Get(float weight)
-{
-    float f;
-    if (weight <= 0)
-        return 0;
-    f = floor(0.5 + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
-    DistributeEvenly_totalweight -= weight;
-    DistributeEvenly_amount -= f;
-    return f;
-}
-float DistributeEvenly_GetRandomized(float weight)
-{
-    float f;
-    if (weight <= 0)
-        return 0;
-    f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
-    DistributeEvenly_totalweight -= weight;
-    DistributeEvenly_amount -= f;
-    return f;
-}
-
 
 void GameLogEcho(string s)
 {
@@ -1677,68 +1643,6 @@ void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 {
 	return modeleffect_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
 }
-
-float randombit(float bits)
-{
-	if(!(bits & (bits-1))) // this ONLY holds for powers of two!
-		return bits;
-
-	float n, f, b, r;
-
-	r = random();
-	b = 0;
-	n = 0;
-
-	for(f = 1; f <= bits; f *= 2)
-	{
-		if(bits & f)
-		{
-			++n;
-			r *= n;
-			if(r <= 1)
-				b = f;
-			else
-				r = (r - 1) / (n - 1);
-		}
-	}
-
-	return b;
-}
-
-float randombits(float bits, float k, float error_return)
-{
-	float r;
-	r = 0;
-	while(k > 0 && bits != r)
-	{
-		r += randombit(bits - r);
-		--k;
-	}
-	if(error_return)
-		if(k > 0)
-			return -1; // all
-	return r;
-}
-
-void randombit_test(float bits, float iter)
-{
-	while(iter > 0)
-	{
-		LOG_INFO(ftos(randombit(bits)), "\n");
-		--iter;
-	}
-}
-
-float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)
-{
-	if(halflifedist > 0)
-		return pow(0.5, (bound(mindist, d, maxdist) - mindist) / halflifedist);
-	else if(halflifedist < 0)
-		return pow(0.5, (bound(mindist, d, maxdist) - maxdist) / halflifedist);
-	else
-		return 1;
-}
-
 
 .string aiment_classname;
 .float aiment_deadflag;

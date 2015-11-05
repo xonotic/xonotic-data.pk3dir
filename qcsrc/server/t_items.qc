@@ -1578,62 +1578,6 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 	return (v0 != v1);
 }
 
-float GiveBit(entity e, .float fld, float bit, float op, float val)
-{
-	float v0, v1;
-	v0 = (e.(fld) & bit);
-	switch(op)
-	{
-		case OP_SET:
-			if(val > 0)
-				e.(fld) |= bit;
-			else
-				e.(fld) &= ~bit;
-			break;
-		case OP_MIN:
-		case OP_PLUS:
-			if(val > 0)
-				e.(fld) |= bit;
-			break;
-		case OP_MAX:
-			if(val <= 0)
-				e.(fld) &= ~bit;
-			break;
-		case OP_MINUS:
-			if(val > 0)
-				e.(fld) &= ~bit;
-			break;
-	}
-	v1 = (e.(fld) & bit);
-	return (v0 != v1);
-}
-
-float GiveValue(entity e, .float fld, float op, float val)
-{
-	float v0, v1;
-	v0 = e.(fld);
-	switch(op)
-	{
-		case OP_SET:
-			e.(fld) = val;
-			break;
-		case OP_MIN:
-			e.(fld) = max(e.(fld), val); // min 100 cells = at least 100 cells
-			break;
-		case OP_MAX:
-			e.(fld) = min(e.(fld), val);
-			break;
-		case OP_PLUS:
-			e.(fld) += val;
-			break;
-		case OP_MINUS:
-			e.(fld) -= val;
-			break;
-	}
-	v1 = e.(fld);
-	return (v0 != v1);
-}
-
 void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string snd_decr)
 {
 	if(v1 == v0)

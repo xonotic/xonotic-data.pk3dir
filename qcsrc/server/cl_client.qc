@@ -1635,19 +1635,20 @@ void SetZoomState(float z)
 }
 
 void GetPressedKeys()
-{SELFPARAM();
+{
+	SELFPARAM();
 	MUTATOR_CALLHOOK(GetPressedKeys);
-	#define X(var,bit,flag) (flag ? var |= bit : var &= ~bit)
-	X(self.pressedkeys, KEY_FORWARD, 	self.movement_x > 0);
-	X(self.pressedkeys, KEY_BACKWARD, 	self.movement_x < 0);
-	X(self.pressedkeys, KEY_RIGHT, 		self.movement_y > 0);
-	X(self.pressedkeys, KEY_LEFT, 		self.movement_y < 0);
+	int keys = this.pressedkeys;
+	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
+	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
+	keys = BITSET(keys, KEY_RIGHT, 		this.movement.y > 0);
+	keys = BITSET(keys, KEY_LEFT, 		this.movement.y < 0);
 
-	X(self.pressedkeys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(self));
-	X(self.pressedkeys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(self));
-	X(self.pressedkeys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(self));
-	X(self.pressedkeys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(self));
-	#undef X
+	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
+	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
+	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
+	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
+	this.pressedkeys = keys;
 }
 
 /*
@@ -2138,32 +2139,6 @@ void PlayerUseKey()
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
-float isInvisibleString(string s)
-{
-	float i, n, c;
-	s = strdecolorize(s);
-	for((i = 0), (n = strlen(s)); i < n; ++i)
-	{
-		c = str2chr(s, i);
-		switch(c)
-		{
-			case 0:
-			case 32: // space
-				break;
-			case 192: // charmap space
-				if (!autocvar_utf8_enable)
-					break;
-				return false;
-			case 160: // space in unicode fonts
-			case 0xE000 + 192: // utf8 charmap space
-				if (autocvar_utf8_enable)
-					break;
-			default:
-				return false;
-		}
-	}
-	return true;
-}
 
 /*
 =============

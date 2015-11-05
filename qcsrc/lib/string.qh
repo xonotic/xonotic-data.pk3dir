@@ -184,4 +184,29 @@ int u8_strsize(string s)
 	return l;
 }
 
+bool isInvisibleString(string s)
+{
+	s = strdecolorize(s);
+	bool utf8 = cvar("utf8_enable");
+	for (int i = 0, n = strlen(s); i < n; ++i)
+	{
+		int c = str2chr(s, i);
+		switch (c)
+		{
+			case 0:
+			case 32:           // space
+				break;
+			case 192:          // charmap space
+				if (!utf8) break;
+				return false;
+			case 160:          // space in unicode fonts
+			case 0xE000 + 192: // utf8 charmap space
+				if (utf8) break;
+			default:
+				return false;
+		}
+	}
+	return true;
+}
+
 #endif
