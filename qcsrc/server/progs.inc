@@ -8,7 +8,7 @@
 #include "cl_client.qc"
 #include "cl_impulse.qc"
 #include "cl_player.qc"
-#include "csqceffects.qc"
+#include "../common/effects/qc/all.qc"
 #include "ent_cs.qc"
 #include "g_damage.qc"
 #include "g_hook.qc"

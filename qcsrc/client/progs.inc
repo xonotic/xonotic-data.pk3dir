@@ -5,7 +5,7 @@
 #include "bgmscript.qc"
 #include "csqcmodel_hooks.qc"
 #include "damage.qc"
-#include "effects.qc"
+#include "../common/effects/qc/all.qc"
 #include "gibs.qc"
 #include "hook.qc"
 #include "hud/all.qc"
