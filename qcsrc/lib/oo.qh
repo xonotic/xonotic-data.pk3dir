@@ -3,6 +3,7 @@
 
 #include "misc.qh"
 #include "nil.qh"
+#include "static.qh"
 
 #ifdef MENUQC
 	#define NULL (null_entity)

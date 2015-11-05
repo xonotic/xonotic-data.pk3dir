@@ -4,12 +4,12 @@
 #ifdef SVQC
 	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
-	.bool(entity to, int sendflags)SendEntity;
-	.bool(entity this, entity to, int sendflags)SendEntity3;
+	.bool(entity to, int sendflags) SendEntity;
+	.bool(entity this, entity to, int sendflags) SendEntity3;
 
 	bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, to, sendflags); }
 
-	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags)sendfunc)
+	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
 		if (e.classname == "") e.classname = "net_linked";
 
@@ -37,7 +37,7 @@
 	.void() uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 
-	void SetCustomizer(entity e, float()customizer, void()uncustomizer)
+	void SetCustomizer(entity e, float() customizer, void() uncustomizer)
 	{
 		e.customizeentityforclient = customizer;
 		e.uncustomizeentityforclient = uncustomizer;
@@ -148,7 +148,17 @@ STATIC_INIT(RegisterTempEntities_renumber)
 }
 
 #ifndef MENUQC
+	const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
+	#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+
 	#ifdef CSQC
+		entity ReadCSQCEntity()
+		{
+			int f = ReadShort();
+			if (f == 0) return world;
+			return findfloat(world, entnum, f);
+		}
 		int ReadInt24_t()
 		{
 			int v = ReadShort() << 8; // note: this is signed
@@ -171,6 +181,17 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			v.z = ReadInt24_t();
 			return v;
 		}
+
+		float ReadApproxPastTime()
+		{
+			float dt = ReadByte();
+
+			// map from range...PPROXPASTTIME_MAX / 256
+			dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
+
+			return servertime - dt;
+		}
+
 	#else
 		const int MSG_ENTITY = 5;
 
@@ -192,10 +213,44 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			WriteInt24_t(dst, val.z);
 		}
 
+		// this will use the value:
+		//   128
+		// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
+		// accuracy at x is 1/derivative, i.e.
+		//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
+		void WriteApproxPastTime(float dst, float t)
+		{
+			float dt = time - t;
+
+			// warning: this is approximate; do not resend when you don't have to!
+			// be careful with sendflags here!
+			// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
+
+			// map to range...
+			dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
+
+			// round...
+			dt = rint(bound(0, dt, 255));
+
+			WriteByte(dst, dt);
+		}
+
 		// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
-        #define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
-        #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
-        #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
+		#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname, statement) \
+			entity varname; varname = msg_entity; \
+			FOR_EACH_REALCLIENT(msg_entity) \
+			if (msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) \
+				statement msg_entity = varname
+		#define WRITESPECTATABLE_MSG_ONE(statement) \
+			do \
+			{ \
+				WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement); \
+			} \
+			while (0)
+		#define WRITESPECTATABLE(msg, statement) \
+			if (msg == MSG_ONE) WRITESPECTATABLE_MSG_ONE(statement); \
+			else \
+				statement float WRITESPECTATABLE_workaround = 0
 	#endif
 #endif
 

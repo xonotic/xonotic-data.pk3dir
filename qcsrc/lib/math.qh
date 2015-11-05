@@ -247,5 +247,57 @@ float log2of(float x)
 					else return 0;
 }
 
+/** ax^2 + bx + c = 0 */
+vector solve_quadratic(float a, float b, float c)
+{
+	vector v;
+	float D;
+	v = '0 0 0';
+	if (a == 0)
+	{
+		if (b != 0)
+		{
+			v.x = v.y = -c / b;
+			v.z = 1;
+		}
+		else
+		{
+			if (c == 0)
+			{
+				// actually, every number solves the equation!
+				v.z = 1;
+			}
+		}
+	}
+	else
+	{
+		D = b * b - 4 * a * c;
+		if (D >= 0)
+		{
+			D = sqrt(D);
+			if (a > 0)  // put the smaller solution first
+			{
+				v.x = ((-b) - D) / (2 * a);
+				v.y = ((-b) + D) / (2 * a);
+			}
+			else
+			{
+				v.x = (-b + D) / (2 * a);
+				v.y = (-b - D) / (2 * a);
+			}
+			v.z = 1;
+		}
+		else
+		{
+			// complex solutions!
+			D = sqrt(-D);
+			v.x = -b / (2 * a);
+			if (a > 0) v.y =  D / (2 * a);
+			else v.y = -D / (2 * a);
+			v.z = 0;
+		}
+	}
+	return v;
+}
 
 #endif

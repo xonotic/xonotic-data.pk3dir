@@ -1,6 +1,10 @@
 #ifndef STRING_H
 #define STRING_H
 
+#include "nil.qh"
+#include "sort.qh"
+#include "oo.qh"
+
 #ifndef SVQC
 	float stringwidth_colors(string s, vector theSize)
 	{
@@ -13,14 +17,43 @@
 	}
 #endif
 
-// Timer (#5)
-//
 // TODO: macro
 string seconds_tostring(float sec)
 {
 	float minutes = floor(sec / 60);
 	sec -= minutes * 60;
 	return sprintf("%d:%02d", minutes, sec);
+}
+
+string format_time(float seconds)
+{
+	seconds = floor(seconds + 0.5);
+	float days = floor(seconds / 864000);
+	seconds -= days * 864000;
+	float hours = floor(seconds / 36000);
+	seconds -= hours * 36000;
+	float minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+	if (days > 0) return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+	else return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+}
+
+string mmsss(float tenths)
+{
+	tenths = floor(tenths + 0.5);
+	float minutes = floor(tenths / 600);
+	tenths -= minutes * 600;
+	string s = ftos(1000 + tenths);
+	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 1));
+}
+
+string mmssss(float hundredths)
+{
+	hundredths = floor(hundredths + 0.5);
+	float minutes = floor(hundredths / 6000);
+	hundredths -= minutes * 6000;
+	string s = ftos(10000 + hundredths);
+	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 2));
 }
 
 int ColorTranslateMode;
@@ -208,5 +241,80 @@ bool isInvisibleString(string s)
 	}
 	return true;
 }
+
+// Multiline text file buffers
+
+int buf_load(string pFilename)
+{
+	int buf = buf_create();
+	if (buf < 0) return -1;
+	int fh = fopen(pFilename, FILE_READ);
+	if (fh < 0)
+	{
+		buf_del(buf);
+		return -1;
+	}
+	string l;
+	for (int i = 0; (l = fgets(fh)); ++i)
+		bufstr_set(buf, i, l);
+	fclose(fh);
+	return buf;
+}
+
+void buf_save(float buf, string pFilename)
+{
+	int fh = fopen(pFilename, FILE_WRITE);
+	if (fh < 0) error(strcat("Can't write buf to ", pFilename));
+	int n = buf_getsize(buf);
+	for (int i = 0; i < n; ++i)
+		fputs(fh, strcat(bufstr_get(buf, i), "\n"));
+	fclose(fh);
+}
+
+/**
+ * converts a number to a string with the indicated number of decimals
+ * works for up to 10 decimals!
+ */
+string ftos_decimals(float number, int decimals)
+{
+	// inhibit stupid negative zero
+	if (number == 0) number = 0;
+	// we have sprintf...
+	return sprintf("%.*f", decimals, number);
+}
+
+int vercmp_recursive(string v1, string v2)
+{
+	int dot1 = strstrofs(v1, ".", 0);
+	int dot2 = strstrofs(v2, ".", 0);
+	string s1 = (dot1 == -1) ? v1 : substring(v1, 0, dot1);
+	string s2 = (dot2 == -1) ? v2 : substring(v2, 0, dot2);
+
+	float r;
+	r = stof(s1) - stof(s2);
+	if (r != 0) return r;
+
+	r = strcasecmp(s1, s2);
+	if (r != 0) return r;
+
+	if (dot1 == -1) return (dot2 == -1) ? 0 : -1;
+	else return (dot2 == -1) ? 1 : vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
+}
+
+int vercmp(string v1, string v2)
+{
+	if (strcasecmp(v1, v2) == 0) return 0;  // early out check
+
+	// "git" beats all
+	if (v1 == "git") return 1;
+	if (v2 == "git") return -1;
+
+	return vercmp_recursive(v1, v2);
+}
+
+const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
+#define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
+#define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
+#define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))
 
 #endif

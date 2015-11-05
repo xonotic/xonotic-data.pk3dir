@@ -43,6 +43,7 @@
 #include "lazy.qh"
 #include "linkedlist.qh"
 #include "log.qh"
+#include "map.qc"
 #include "math.qh"
 #include "misc.qh"
 #include "net.qh"

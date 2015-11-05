@@ -1,5 +1,5 @@
 #include "menu.qh"
-#include "oo/classes.qc"
+#include "classes.qc"
 #include "xonotic/util.qh"
 
 #include "../common/items/all.qh"
