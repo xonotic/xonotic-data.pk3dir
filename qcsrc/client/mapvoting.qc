@@ -1,6 +1,6 @@
 #include "mapvoting.qh"
 
-#include "hud.qh"
+#include "hud/all.qh"
 #include "scoreboard.qh"
 
 #include "../common/mapinfo.qh"

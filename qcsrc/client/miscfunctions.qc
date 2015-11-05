@@ -1,6 +1,6 @@
 #include "miscfunctions.qh"
 
-#include "hud.qh"
+#include "hud/all.qh"
 
 #include "../common/command/generic.qh"
 

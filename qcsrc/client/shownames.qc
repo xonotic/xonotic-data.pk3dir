@@ -1,6 +1,6 @@
 #include "shownames.qh"
 
-#include "hud.qh"
+#include "hud/all.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"

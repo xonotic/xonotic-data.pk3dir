@@ -1,6 +1,6 @@
 #include "teamradar.qh"
 
-#include "hud.qh"
+#include "hud/all.qh"
 
 #include "../common/mutators/mutator/waypoints/all.qh"
 

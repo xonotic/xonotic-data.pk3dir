@@ -1,7 +1,6 @@
 #include "quickmenu.qh"
 
-#include "hud.qh"
-#include "hud_config.qh"
+#include "hud/all.qh"
 #include "mapvoting.qh"
 
 // QUICKMENU_MAXLINES must be <= 10

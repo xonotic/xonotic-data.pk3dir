@@ -8,8 +8,7 @@
 
 #include "../autocvars.qh"
 #include "../defs.qh"
-#include "../hud.qh"
-#include "../hud_config.qh"
+#include "../hud/all.qh"
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
