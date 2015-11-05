@@ -322,7 +322,6 @@ void readlevelcvars(void)
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
-	g_cloaked = cvar("g_cloaked");
 	g_footsteps = cvar("g_footsteps");
 	g_jetpack = cvar("g_jetpack");
 	sv_maxidle = cvar("sv_maxidle");

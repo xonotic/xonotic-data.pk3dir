@@ -380,13 +380,6 @@ MUTATOR_HOOKFUNCTION(cts, ForbidPlayerScore_Clear)
 	return true; // in CTS, you don't lose score by observing
 }
 
-MUTATOR_HOOKFUNCTION(cts, SetModname)
-{
-	g_cloaked = 1; // always enable cloak in CTS
-
-	return false;
-}
-
 MUTATOR_HOOKFUNCTION(cts, GetRecords)
 {
 	for(int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)

@@ -20,7 +20,7 @@
 
 // Globals
 
-float g_cloaked, g_footsteps, g_grappling_hook, g_instagib;
+float g_footsteps, g_grappling_hook, g_instagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
