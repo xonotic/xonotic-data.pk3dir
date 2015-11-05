@@ -66,7 +66,7 @@ void draw_null(entity this) { }
 
 string forcefog;
 void ConsoleCommand_macro_init();
-void CSQC_Init(void)
+void CSQC_Init()
 {
 	prvm_language = strzone(cvar_string("prvm_language"));
 
@@ -168,7 +168,7 @@ void CSQC_Init(void)
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
-void Shutdown(void)
+void Shutdown()
 {
 	WarpZone_Shutdown();
 
@@ -317,7 +317,7 @@ void Playerchecker_Think()
 
 void Porto_Init();
 void TrueAim_Init();
-void PostInit(void)
+void PostInit()
 {
 	entity playerchecker = new(playerchecker);
 	make_pure(playerchecker);

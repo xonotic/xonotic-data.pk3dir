@@ -19,7 +19,7 @@ void CSQCModel_Hook_PreDraw(bool isplayer);
 .int lodmodelindex0;
 .int lodmodelindex1;
 .int lodmodelindex2;
-void CSQCPlayer_LOD_Apply(void)
+void CSQCPlayer_LOD_Apply()
 {SELFPARAM();
 	// LOD model loading
 	if(self.lodmodelindex0 != self.modelindex)
@@ -108,14 +108,14 @@ int forceplayermodels_goodmodelindex;
 .vector glowmod;
 .vector old_glowmod;
 
-void CSQCPlayer_ModelAppearance_PreUpdate(void)
+void CSQCPlayer_ModelAppearance_PreUpdate()
 {SELFPARAM();
 	self.model = self.forceplayermodels_savemodel;
 	self.modelindex = self.forceplayermodels_savemodelindex;
 	self.skin = self.forceplayermodels_saveskin;
 	self.colormap = self.forceplayermodels_savecolormap;
 }
-void CSQCPlayer_ModelAppearance_PostUpdate(void)
+void CSQCPlayer_ModelAppearance_PostUpdate()
 {SELFPARAM();
 	self.forceplayermodels_savemodel = self.model;
 	self.forceplayermodels_savemodelindex = self.modelindex;
@@ -310,7 +310,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 .int csqcmodel_framecount;
 
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
-void CSQCPlayer_FallbackFrame_PreUpdate(void)
+void CSQCPlayer_FallbackFrame_PreUpdate()
 {SELFPARAM();
 	self.frame = self.csqcmodel_saveframe;
 	self.frame2 = self.csqcmodel_saveframe2;
@@ -369,7 +369,7 @@ int CSQCPlayer_FallbackFrame(int f)
 	LOG_INFOF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
 	return f;
 }
-void CSQCPlayer_FallbackFrame_Apply(void)
+void CSQCPlayer_FallbackFrame_Apply()
 {SELFPARAM();
 	self.frame = CSQCPlayer_FallbackFrame(self.frame);
 	self.frame2 = CSQCPlayer_FallbackFrame(self.frame2);
@@ -383,7 +383,7 @@ void CSQCPlayer_FallbackFrame_Apply(void)
 .entity tag_entity;
 .int tag_entity_lastmodelindex;
 .int tag_index;
-void CSQCModel_AutoTagIndex_Apply(void)
+void CSQCModel_AutoTagIndex_Apply()
 {SELFPARAM();
 	if(self.tag_entity && wasfreed(self.tag_entity))
 		self.tag_entity = world;
@@ -478,14 +478,14 @@ const int MF_TRACER3 = BIT(7); // purple trail
 .int csqcmodel_effects;
 .int csqcmodel_modelflags;
 .int csqcmodel_traileffect;
-void CSQCModel_Effects_PreUpdate(void)
+void CSQCModel_Effects_PreUpdate()
 {SELFPARAM();
 	self.effects = self.csqcmodel_effects;
 	self.modelflags = self.csqcmodel_modelflags;
 	self.traileffect = self.csqcmodel_traileffect;
 }
-void Reset_ArcBeam(void);
-void CSQCModel_Effects_PostUpdate(void)
+void Reset_ArcBeam();
+void CSQCModel_Effects_PostUpdate()
 {SELFPARAM();
 	if (self == csqcplayer) {
 		if (self.csqcmodel_teleported) {
@@ -501,7 +501,7 @@ void CSQCModel_Effects_PostUpdate(void)
 		Projectile_ResetTrail(self, self.origin);
 }
 .int snd_looping;
-void CSQCModel_Effects_Apply(void)
+void CSQCModel_Effects_Apply()
 {SELFPARAM();
 	int eff = self.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
 	int tref = self.csqcmodel_traileffect;

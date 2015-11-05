@@ -54,7 +54,7 @@
  * 230 to 253: individual weapons (up to 24)
  */
 
-void ImpulseCommands (void)
+void ImpulseCommands ()
 {SELFPARAM();
 	int imp;
 	vector org;

@@ -78,14 +78,14 @@ void LogNB(string mode, entity actor)
 	GameLogEcho(s);
 }
 
-void ball_restart(void)
+void ball_restart()
 {SELFPARAM();
 	if(self.owner)
 		DropBall(self, self.owner.origin, '0 0 0');
 	ResetBall();
 }
 
-void nexball_setstatus(void)
+void nexball_setstatus()
 {SELFPARAM();
 	self.items &= ~IT_KEY1;
 	if(self.ballcarried)
@@ -103,7 +103,7 @@ void nexball_setstatus(void)
 	}
 }
 
-void relocate_nexball(void)
+void relocate_nexball()
 {SELFPARAM();
 	tracebox(self.origin, BALL_MINS, BALL_MAXS, self.origin, true, self);
 	if(trace_startsolid)
@@ -120,7 +120,7 @@ void relocate_nexball(void)
 	}
 }
 
-void DropOwner(void)
+void DropOwner()
 {SELFPARAM();
 	entity ownr;
 	ownr = self.owner;
@@ -222,7 +222,7 @@ void DropBall(entity ball, vector org, vector vel)
 	ball.owner = world;
 }
 
-void InitBall(void)
+void InitBall()
 {SELFPARAM();
 	if(gameover) return;
 	self.flags &= ~FL_ONGROUND;
@@ -242,7 +242,7 @@ void InitBall(void)
 	LogNB("init", world);
 }
 
-void ResetBall(void)
+void ResetBall()
 {SELFPARAM();
 	if(self.cnt < 2)	// step 1
 	{
@@ -278,7 +278,7 @@ void ResetBall(void)
 	}
 }
 
-void football_touch(void)
+void football_touch()
 {SELFPARAM();
 	if(other.solid == SOLID_BSP)
 	{
@@ -324,7 +324,7 @@ void football_touch(void)
 	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
 }
 
-void basketball_touch(void)
+void basketball_touch()
 {SELFPARAM();
 	if(other.ballcarried)
 	{
@@ -346,7 +346,7 @@ void basketball_touch(void)
 	}
 }
 
-void GoalTouch(void)
+void GoalTouch()
 {SELFPARAM();
 	entity ball;
 	float isclient, pscore, otherteam;
@@ -458,7 +458,7 @@ void nb_spawnteam(string teamname, float teamcolor)
 	nb_teams += 1;
 }
 
-void nb_spawnteams(void)
+void nb_spawnteams()
 {
 	bool t_red = false, t_blue = false, t_yellow = false, t_pink = false;
 	entity e;
@@ -498,7 +498,7 @@ void nb_spawnteams(void)
 	}
 }
 
-void nb_delayedinit(void)
+void nb_delayedinit()
 {
 	if(find(world, classname, "nexball_team") == world)
 		nb_spawnteams();
@@ -510,7 +510,7 @@ void nb_delayedinit(void)
 //	  spawnfuncs	   //
 //=======================//
 
-void SpawnBall(void)
+void SpawnBall()
 {SELFPARAM();
 	if(!g_nexball) { remove(self); return; }
 
@@ -606,7 +606,7 @@ float nb_Goal_Customize()
 	return true;
 }
 
-void SpawnGoal(void)
+void SpawnGoal()
 {SELFPARAM();
 	if(!g_nexball) { remove(self); return; }
 
@@ -717,7 +717,7 @@ void W_Nexball_Think()
 	self.nextthink = time;
 }
 
-void W_Nexball_Touch(void)
+void W_Nexball_Touch()
 {SELFPARAM();
 	entity ball, attacker;
 	attacker = self.owner;
@@ -786,7 +786,7 @@ void W_Nexball_Attack(float t)
 
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
 
-void W_Nexball_Attack2(void)
+void W_Nexball_Attack2()
 {SELFPARAM();
 	if(self.ballcarried.enemy)
 	{

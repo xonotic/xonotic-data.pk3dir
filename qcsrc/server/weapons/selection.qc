@@ -307,7 +307,7 @@ void W_PreviousWeapon(float list)
 }
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon(void)
+void W_LastWeapon()
 {SELFPARAM();
 	if(client_hasweapon(self, self.cnt, true, false))
 		W_SwitchWeapon(self.cnt);

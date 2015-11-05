@@ -76,17 +76,17 @@ void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pFor
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 }
 
-void W_Rifle_Attack(void)
+void W_Rifle_Attack()
 {
 	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND(CAMPINGRIFLE_FIRE));
 }
 
-void W_Rifle_Attack2(void)
+void W_Rifle_Attack2()
 {
 	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND(CAMPINGRIFLE_FIRE2));
 }
 
-.void(void) rifle_bullethail_attackfunc;
+.void() rifle_bullethail_attackfunc;
 .float rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
@@ -113,7 +113,7 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	}
 }
 
-void W_Rifle_BulletHail(.entity weaponentity, float mode, void(void) AttackFunc, float fr, float animtime, float refire)
+void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, float fr, float animtime, float refire)
 {SELFPARAM();
 	// if we get here, we have at least one bullet to fire
 	AttackFunc();

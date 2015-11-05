@@ -74,9 +74,9 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 void Item_Show (entity e, float mode);
 
-void Item_Respawn (void);
+void Item_Respawn ();
 
-void Item_RespawnCountdown (void);
+void Item_RespawnCountdown ();
 void Item_ScheduleRespawnIn(entity e, float t);
 
 void Item_ScheduleRespawn(entity e);
@@ -115,7 +115,7 @@ float commodity_pickupevalfunc(entity player, entity item);
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 
 
-void target_items_use (void);
+void target_items_use ();
 
 const float OP_SET = 0;
 const float OP_MIN = 1;

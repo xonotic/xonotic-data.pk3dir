@@ -25,7 +25,7 @@ float T_Config_Queue_Compare(float root, float child, entity pass)
 	return 0;
 }
 
-void Dump_Turret_Settings(void)
+void Dump_Turret_Settings()
 {
 	float x, totalsettings = 0;
 	FOREACH(Turrets, it != TUR_Null, LAMBDA({

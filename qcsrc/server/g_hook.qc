@@ -80,7 +80,7 @@ void RemoveGrapplingHook(entity pl)
 	//pl.disableclientprediction = false;
 }
 
-void GrapplingHookReset(void)
+void GrapplingHookReset()
 {SELFPARAM();
 	if(self.realowner.hook == self)
 		RemoveGrapplingHook(self.owner);
@@ -299,7 +299,7 @@ void GrapplingHookThink()
 	}
 }
 
-void GrapplingHookTouch (void)
+void GrapplingHookTouch ()
 {SELFPARAM();
 	if(other.movetype == MOVETYPE_FOLLOW)
 		return;
@@ -339,7 +339,7 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int 
 	}
 }
 
-void FireGrapplingHook (void)
+void FireGrapplingHook ()
 {SELFPARAM();
 	entity missile;
 	vector org;

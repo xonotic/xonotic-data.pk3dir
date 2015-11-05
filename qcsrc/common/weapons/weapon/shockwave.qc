@@ -73,7 +73,7 @@ REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef CSQC
-void Net_ReadShockwaveParticle(void);
+void Net_ReadShockwaveParticle();
 .vector sw_shotorg;
 .vector sw_shotdir;
 .float sw_distance;
@@ -107,7 +107,7 @@ float shockwave_hit_damage[MAX_SHOCKWAVE_HITS];
 vector shockwave_hit_force[MAX_SHOCKWAVE_HITS];
 
 // MELEE ATTACK MODE
-void W_Shockwave_Melee_Think(void)
+void W_Shockwave_Melee_Think()
 {SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -335,7 +335,7 @@ float W_Shockwave_Attack_CheckHit(
 	return true;
 }
 
-void W_Shockwave_Send(void)
+void W_Shockwave_Send()
 {SELFPARAM();
 	WriteHeader(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
@@ -350,7 +350,7 @@ void W_Shockwave_Send(void)
 	WriteByte(MSG_BROADCAST, num_for_edict(self));
 }
 
-void W_Shockwave_Attack(void)
+void W_Shockwave_Attack()
 {SELFPARAM();
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
@@ -838,7 +838,7 @@ NET_HANDLE(TE_CSQC_SHOCKWAVEPARTICLE, bool isNew)
 	return true;
 }
 
-void Net_ReadShockwaveParticle(void)
+void Net_ReadShockwaveParticle()
 {
 	entity shockwave;
 	shockwave = spawn();

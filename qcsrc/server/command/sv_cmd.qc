@@ -31,7 +31,7 @@
 #include "../../common/monsters/sv_monsters.qh"
 
 
-void PutObserverInServer(void);
+void PutObserverInServer();
 
 // =====================================================
 //  Server side game commands code, reworked by Samual

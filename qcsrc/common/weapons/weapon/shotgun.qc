@@ -85,7 +85,7 @@ void W_Shotgun_Attack(Weapon thiswep, float isprimary)
 
 .float swing_prev;
 .entity swing_alreadyhit;
-void W_Shotgun_Melee_Think(void)
+void W_Shotgun_Melee_Think()
 {SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;

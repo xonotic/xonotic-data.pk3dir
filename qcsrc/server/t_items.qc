@@ -436,7 +436,7 @@ float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
 
-void Item_Respawn (void)
+void Item_Respawn ()
 {SELFPARAM();
 	Item_Show(self, 1);
 	// this is ugly...
@@ -462,7 +462,7 @@ void Item_Respawn (void)
 	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 }
 
-void Item_RespawnCountdown (void)
+void Item_RespawnCountdown ()
 {SELFPARAM();
 	if(self.count >= ITEM_RESPAWN_TICKS)
 	{
@@ -845,7 +845,7 @@ void Item_FindTeam()
 
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
-void RemoveItem(void)
+void RemoveItem()
 {SELFPARAM();
 	if(wasfreed(self) || !self) { return; }
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);

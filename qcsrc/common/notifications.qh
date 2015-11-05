@@ -50,7 +50,7 @@ const int NOTIF_ABORT = -1234;   // allows Send_Notification to safely abort sen
     VARITEM(3, 4, XPD(s1, s2, s3, f1, f2, f3, f4)) \
     VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
 
-void Destroy_All_Notifications(void);
+void Destroy_All_Notifications();
 void Create_Notification_Entity(
     float var_default,
     float var_cvar,
@@ -203,7 +203,7 @@ float autocvar_notification_debug = false;
 
 #ifdef SVQC
 .float FRAG_VERBOSE;
-void Notification_GetCvars(void);
+void Notification_GetCvars();
 float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
 #else
 float autocvar_notification_item_centerprinttime = 1.5;

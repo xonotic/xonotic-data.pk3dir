@@ -16,9 +16,9 @@ float top_scores[LADDER_SIZE];
 
 // allow functions to be used in other code like g_world.qc and race.qc
 string getrecords(float page);
-string getrankings(void);
-string getladder(void);
-string getmaplist(void);
-string getlsmaps(void);
-string getmonsterlist(void);
+string getrankings();
+string getladder();
+string getmaplist();
+string getlsmaps();
+string getmonsterlist();
 #endif

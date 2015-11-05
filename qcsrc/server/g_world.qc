@@ -1650,7 +1650,7 @@ void AddWinners(.float field, float value)
 }
 
 // clear the .winning flags
-void ClearWinners(void)
+void ClearWinners()
 {
 	entity head;
 	FOR_EACH_PLAYER(head)

@@ -114,7 +114,7 @@ string GetClientVersionMessage()
 	return versionmsg;
 }
 
-string getwelcomemessage(void)
+string getwelcomemessage()
 {
 	string s, modifications, motd;
 

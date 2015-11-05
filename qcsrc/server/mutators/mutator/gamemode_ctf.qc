@@ -936,7 +936,7 @@ bool ctf_Stalemate_Customize()
 	return true;
 }
 
-void ctf_CheckStalemate(void)
+void ctf_CheckStalemate()
 {
 	// declarations
 	int stale_flags = 0, stale_red_flags = 0, stale_blue_flags = 0, stale_yellow_flags = 0, stale_pink_flags = 0, stale_neutral_flags = 0;
@@ -1330,7 +1330,7 @@ void ctf_Reset()
 	ctf_RespawnFlag(self);
 }
 
-void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf_FlagSetup()
+void ctf_DelayedFlagSetup() // called after a flag is placed on a map by ctf_FlagSetup()
 {SELFPARAM();
 	// bot waypoints
 	waypoint_spawnforitem_force(self, self.origin);

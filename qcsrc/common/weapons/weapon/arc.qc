@@ -214,7 +214,7 @@ void Arc_Player_SetHeat(entity player)
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
 }
 
-void W_Arc_Beam_Think(void)
+void W_Arc_Beam_Think()
 {SELFPARAM();
 	if(self != self.owner.arc_beam)
 	{
@@ -839,7 +839,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
 }
 
-void Reset_ArcBeam(void)
+void Reset_ArcBeam()
 {
 	entity e;
 	for (e = world; (e = findfloat(e, beam_usevieworigin, 1)); ) {
@@ -1143,7 +1143,7 @@ void Draw_ArcBeam(entity this)
 	Draw_ArcBeam_callback_last_bottom = '0 0 0';
 }
 
-void Remove_ArcBeam(void)
+void Remove_ArcBeam()
 {SELFPARAM();
 	remove(self.beam_muzzleentity);
 	sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);

@@ -52,7 +52,7 @@ void WarpZone_crosshair_trace(entity pl)
 }
 
 
-string admin_name(void)
+string admin_name()
 {
 	if(autocvar_sv_adminnick != "")
 		return autocvar_sv_adminnick;
@@ -1082,7 +1082,7 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void(void) func, float order)
+void InitializeEntity(entity e, void() func, float order)
 {
     entity prev, cur;
 

@@ -952,7 +952,7 @@ void DrawAmmoItem(vector myPos, vector mySize, .int ammoType, bool isCurrent, bo
 int nade_prevstatus;
 int nade_prevframe;
 float nade_statuschange_time;
-void HUD_Ammo(void)
+void HUD_Ammo()
 {
 	if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
@@ -1388,7 +1388,7 @@ void HUD_Powerups()
 //
 
 
-void HUD_HealthArmor(void)
+void HUD_HealthArmor()
 {
 	int armor, health, fuel;
 	if(!autocvar__hud_configure)
@@ -1695,7 +1695,7 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 	notify_times[notify_index] = time;
 }
 
-void HUD_Notify(void)
+void HUD_Notify()
 {
 	if (!autocvar__hud_configure)
 		if (!autocvar_hud_panel_notify)
@@ -1808,7 +1808,7 @@ void HUD_Notify(void)
 	notify_count = count;
 }
 
-void HUD_Timer(void)
+void HUD_Timer()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -2028,7 +2028,7 @@ void HUD_Radar_Mouse()
 	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursor_size, '1 1 1', 0.8, DRAWFLAG_NORMAL);
 }
 
-void HUD_Radar(void)
+void HUD_Radar()
 {
 	if (!autocvar__hud_configure)
 	{
@@ -2376,7 +2376,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != NUM_SPECTATOR || (tm = tm.sort_next)));
 }
 
-void HUD_Score(void)
+void HUD_Score()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -2559,7 +2559,7 @@ void HUD_Score(void)
 
 // Race timer (#8)
 //
-void HUD_RaceTimer (void)
+void HUD_RaceTimer ()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -2709,7 +2709,7 @@ void HUD_RaceTimer (void)
 // Vote window (#9)
 //
 
-void HUD_Vote(void)
+void HUD_Vote()
 {
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
@@ -2943,7 +2943,7 @@ int redflag_prevframe, blueflag_prevframe, yellowflag_prevframe, pinkflag_prevfr
 int redflag_prevstatus, blueflag_prevstatus, yellowflag_prevstatus, pinkflag_prevstatus, neutralflag_prevstatus; // last remembered status
 float redflag_statuschange_time, blueflag_statuschange_time, yellowflag_statuschange_time, pinkflag_statuschange_time, neutralflag_statuschange_time; // time when the status changed
 
-void HUD_Mod_CTF_Reset(void)
+void HUD_Mod_CTF_Reset()
 {
 	redflag_prevstatus = blueflag_prevstatus = yellowflag_prevstatus = pinkflag_prevstatus = neutralflag_prevstatus = 0;
 	redflag_prevframe = blueflag_prevframe = yellowflag_prevframe = pinkflag_prevframe = neutralflag_prevframe = 0;
@@ -3585,7 +3585,7 @@ int mod_prev; // previous state of mod_active to check for a change
 float mod_alpha;
 float mod_change; // "time" when mod_active changed
 
-void HUD_ModIcons(void)
+void HUD_ModIcons()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -3626,7 +3626,7 @@ void HUD_ModIcons(void)
 
 // Draw pressed keys (#11)
 //
-void HUD_PressedKeys(void)
+void HUD_PressedKeys()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -3691,7 +3691,7 @@ void HUD_PressedKeys(void)
 
 // Handle chat as a panel (#12)
 //
-void HUD_Chat(void)
+void HUD_Chat()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -3789,7 +3789,7 @@ int framecounter;
 float frametimeavg;
 float frametimeavg1; // 1 frame ago
 float frametimeavg2; // 2 frames ago
-void HUD_EngineInfo(void)
+void HUD_EngineInfo()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -3850,7 +3850,7 @@ void HUD_EngineInfo(void)
 	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);														\
 	o.y += fontsize.y;																								\
 } while(0)
-void HUD_InfoMessages(void)
+void HUD_InfoMessages()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -4031,7 +4031,7 @@ void HUD_InfoMessages(void)
 vector acc_prevspeed;
 float acc_prevtime, acc_avg, top_speed, top_speed_time;
 float physics_update_time, discrete_speed, discrete_acceleration;
-void HUD_Physics(void)
+void HUD_Physics()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -4408,7 +4408,7 @@ void centerprint_hud(string strMessage)
 	centerprint_generic(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
 }
 
-void reset_centerprint_messages(void)
+void reset_centerprint_messages()
 {
 	int i;
 	for (i=0; i<CENTERPRINT_MAX_MSGS; ++i)
@@ -4422,7 +4422,7 @@ void reset_centerprint_messages(void)
 	}
 }
 float hud_configure_cp_generation_time;
-void HUD_CenterPrint (void)
+void HUD_CenterPrint ()
 {
 	if(!autocvar__hud_configure)
 	{
@@ -4701,14 +4701,14 @@ void HUD_Panel_Draw(entity panent)
 		panel.panel_draw();
 }
 
-void HUD_Reset(void)
+void HUD_Reset()
 {
 	// reset gametype specific icons
 	if(gametype == MAPINFO_TYPE_CTF)
 		HUD_Mod_CTF_Reset();
 }
 
-void HUD_Main(void)
+void HUD_Main()
 {
 	int i;
 	// global hud theAlpha fade

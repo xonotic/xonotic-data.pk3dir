@@ -62,7 +62,7 @@ spawnfunc(weapon_hagar) { weapon_defaultspawnfunc(this, WEP_HAGAR); }
 
 // NO bounce protection, as bounces are limited!
 
-void W_Hagar_Explode(void)
+void W_Hagar_Explode()
 {SELFPARAM();
 	self.event_damage = func_null;
 	RadiusDamage(self, self.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), world, world, WEP_CVAR_PRI(hagar, force), self.projectiledeathtype, other);
@@ -70,7 +70,7 @@ void W_Hagar_Explode(void)
 	remove(self);
 }
 
-void W_Hagar_Explode2(void)
+void W_Hagar_Explode2()
 {SELFPARAM();
 	self.event_damage = func_null;
 	RadiusDamage(self, self.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), world, world, WEP_CVAR_SEC(hagar, force), self.projectiledeathtype, other);
@@ -102,13 +102,13 @@ void W_Hagar_Damage(entity inflictor, entity attacker, float damage, int deathty
 		W_PrepareExplosionByDamage(attacker, self.think);
 }
 
-void W_Hagar_Touch(void)
+void W_Hagar_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 	self.use();
 }
 
-void W_Hagar_Touch2(void)
+void W_Hagar_Touch2()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 

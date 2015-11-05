@@ -6,15 +6,15 @@
 .float istypefrag;
 
 .float CopyBody_nextthink;
-.void(void) CopyBody_think;
-void CopyBody_Think(void);
+.void() CopyBody_think;
+void CopyBody_Think();
 void CopyBody(float keepvelocity);
 
 float player_getspecies();
 
 void player_setupanimsformodel();
 
-void player_anim (void);
+void player_anim ();
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 

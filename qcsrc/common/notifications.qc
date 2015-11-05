@@ -234,7 +234,7 @@ void Destroy_Notification_Entity(entity notif)
 	remove(notif);
 }
 
-void Destroy_All_Notifications(void)
+void Destroy_All_Notifications()
 {
 	entity notif;
 	int i;
@@ -943,7 +943,7 @@ void Create_Notification_Entity(
 
 // used by MSG_CHOICE to build list of choices
 #ifdef SVQC
-void Notification_GetCvars(void)
+void Notification_GetCvars()
 {
 	for(int i = 0; i <= NOTIF_CHOICE_COUNT; ++i)
 	{

@@ -59,7 +59,7 @@ void W_RocketPropelledChainsaw_Explode()
 	remove (self);
 }
 
-void W_RocketPropelledChainsaw_Touch (void)
+void W_RocketPropelledChainsaw_Touch ()
 {SELFPARAM();
 	if(WarpZone_Projectile_Touch())
 		if(wasfreed(self))

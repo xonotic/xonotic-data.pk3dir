@@ -154,7 +154,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	return 1;
 }
 
-void WarpZone_Touch (void)
+void WarpZone_Touch ()
 {SELFPARAM();
 	if(other.classname == "trigger_warpzone")
 		return;
@@ -485,7 +485,7 @@ void WarpZonePosition_InitStep_FindTarget()
 	self.enemy.aiment = self;
 }
 
-void WarpZoneCamera_Think(void)
+void WarpZoneCamera_Think()
 {SELFPARAM();
 	if(self.warpzone_save_origin != self.origin
 	|| self.warpzone_save_angles != self.angles
@@ -884,7 +884,7 @@ spawnfunc(target_warpzone_reconnect)
 	spawnfunc_trigger_warpzone_reconnect(this); // both names make sense here :(
 }
 
-void WarpZone_PlayerPhysics_FixVAngle(void)
+void WarpZone_PlayerPhysics_FixVAngle()
 {SELFPARAM();
 #ifndef WARPZONE_DONT_FIX_VANGLE
 	if(IS_REAL_CLIENT(self))

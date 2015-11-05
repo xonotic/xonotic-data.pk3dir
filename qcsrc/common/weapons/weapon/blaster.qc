@@ -53,7 +53,7 @@ BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
 spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
-void W_Blaster_Touch(void)
+void W_Blaster_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 
@@ -75,7 +75,7 @@ void W_Blaster_Touch(void)
 	remove(self);
 }
 
-void W_Blaster_Think(void)
+void W_Blaster_Think()
 {SELFPARAM();
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;

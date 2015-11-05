@@ -2,9 +2,9 @@
 #define MOVETYPES_H
 
 .float move_ltime;
-.void(void)move_think;
+.void()move_think;
 .float move_nextthink;
-.void(void)move_blocked;
+.void()move_blocked;
 
 .float move_movetype;
 .float move_time;
@@ -15,7 +15,7 @@
 .int move_flags;
 .int move_watertype;
 .int move_waterlevel;
-.void(void)move_touch;
+.void()move_touch;
 .void(float, float)contentstransition;
 .float move_bounce_factor;
 .float move_bounce_stopspeed;

@@ -108,7 +108,7 @@ void W_Crylink_Dequeue(entity e)
 	W_Crylink_Dequeue_Raw(e.realowner, e.queueprev, e, e.queuenext);
 }
 
-void W_Crylink_Reset(void)
+void W_Crylink_Reset()
 {SELFPARAM();
 	W_Crylink_Dequeue(self);
 	remove(self);
@@ -225,7 +225,7 @@ vector W_Crylink_LinkJoin(entity e, float jspeed)
 	return targ_origin;
 }
 
-void W_Crylink_LinkJoinEffect_Think(void)
+void W_Crylink_LinkJoinEffect_Think()
 {SELFPARAM();
 	// is there at least 2 projectiles very close?
 	entity e, p;
@@ -290,7 +290,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 }
 
 // NO bounce protection, as bounces are limited!
-void W_Crylink_Touch(void)
+void W_Crylink_Touch()
 {SELFPARAM();
 	float finalhit;
 	float f;
@@ -335,7 +335,7 @@ void W_Crylink_Touch(void)
 	//	CSQCProjectile(proj, true, PROJECTILE_CRYLINK, true);
 }
 
-void W_Crylink_Fadethink(void)
+void W_Crylink_Fadethink()
 {SELFPARAM();
 	W_Crylink_Dequeue(self);
 	remove(self);

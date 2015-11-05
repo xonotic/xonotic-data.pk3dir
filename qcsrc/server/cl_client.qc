@@ -708,7 +708,7 @@ void ClientInit_Spawn()
 SetNewParms
 =============
 */
-void SetNewParms (void)
+void SetNewParms ()
 {
 	// initialize parms for a new player
 	parm1 = -(86400 * 366);
@@ -721,7 +721,7 @@ void SetNewParms (void)
 SetChangeParms
 =============
 */
-void SetChangeParms (void)
+void SetChangeParms ()
 {SELFPARAM();
 	// save parms for level change
 	parm1 = self.parm_idlesince - time;
@@ -734,7 +734,7 @@ void SetChangeParms (void)
 DecodeLevelParms
 =============
 */
-void DecodeLevelParms (void)
+void DecodeLevelParms ()
 {SELFPARAM();
 	// load parms
 	self.parm_idlesince = parm1;
@@ -937,7 +937,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
 }
 
-void ClientKill (void)
+void ClientKill ()
 {SELFPARAM();
 	if(gameover) return;
 	if(self.player_blocked) return;
@@ -985,7 +985,7 @@ ClientPreConnect
 Called once (not at each match start) when a client begins a connection to the server
 =============
 */
-void ClientPreConnect (void)
+void ClientPreConnect ()
 {SELFPARAM();
 	if(autocvar_sv_eventlog)
 	{
@@ -1005,8 +1005,8 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-void DecodeLevelParms (void);
-void ClientConnect (void)
+void DecodeLevelParms ();
+void ClientConnect ()
 {SELFPARAM();
 	float t;
 
@@ -1224,7 +1224,7 @@ Called when a client disconnects from the server
 */
 .entity chatbubbleentity;
 void ReadyCount();
-void ClientDisconnect (void)
+void ClientDisconnect ()
 {SELFPARAM();
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELEASE);
@@ -1372,7 +1372,7 @@ void UpdateChatBubble()
 	else self.colormod = '1 1 1';
 }*/
 
-void respawn(void)
+void respawn()
 {SELFPARAM();
 	if(self.alpha >= 0 && autocvar_g_respawn_ghosts)
 	{
@@ -1401,7 +1401,7 @@ void play_countdown(float finished, string samp)
 				_sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
-void player_powerups (void)
+void player_powerups ()
 {SELFPARAM();
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = self.items;
@@ -1564,7 +1564,7 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 	return current;
 }
 
-void player_regen (void)
+void player_regen ()
 {SELFPARAM();
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
@@ -2176,7 +2176,7 @@ Called every frame for each client before the physics are run
 void() nexball_setstatus;
 .float last_vehiclecheck;
 .int items_added;
-void PlayerPreThink (void)
+void PlayerPreThink ()
 {SELFPARAM();
 	WarpZone_PlayerPhysics_FixVAngle();
 
@@ -2565,7 +2565,7 @@ Called every frame for each client after the physics are run
 =============
 */
 .float idlekick_lasttimeleft;
-void PlayerPostThink (void)
+void PlayerPostThink ()
 {SELFPARAM();
 	if(sv_maxidle > 0 && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if(IS_REAL_CLIENT(self))

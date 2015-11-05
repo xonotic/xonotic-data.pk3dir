@@ -52,7 +52,7 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
-void W_HLAC_Touch(void)
+void W_HLAC_Touch()
 {SELFPARAM();
 	float isprimary;
 
@@ -115,7 +115,7 @@ void W_HLAC_Attack(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-void W_HLAC_Attack2(void)
+void W_HLAC_Attack2()
 {SELFPARAM();
 	entity missile;
     float spread;

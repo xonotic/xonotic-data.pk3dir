@@ -15,7 +15,7 @@ class(BGMScript) .float bgmscriptrelease;
 
 .float modelscale;
 
-void g_model_setcolormaptoactivator (void)
+void g_model_setcolormaptoactivator ()
 {SELFPARAM();
 	if(teamplay)
 	{
@@ -29,13 +29,13 @@ void g_model_setcolormaptoactivator (void)
 	self.colormap |= BIT(10); // RENDER_COLORMAPPED
 }
 
-void g_clientmodel_setcolormaptoactivator (void)
+void g_clientmodel_setcolormaptoactivator ()
 {SELFPARAM();
 	g_model_setcolormaptoactivator();
 	self.SendFlags |= (BIT(3) | BIT(0));
 }
 
-void g_clientmodel_use(void)
+void g_clientmodel_use()
 {SELFPARAM();
 	if (self.antiwall_flag == 1)
 	{

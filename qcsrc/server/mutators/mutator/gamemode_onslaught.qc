@@ -872,7 +872,7 @@ void ons_ControlPoint_Reset()
 	CSQCMODEL_AUTOUPDATE(self);
 }
 
-void ons_DelayedControlPoint_Setup(void)
+void ons_DelayedControlPoint_Setup()
 {SELFPARAM();
 	onslaught_updatelinks();
 

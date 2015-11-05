@@ -22,7 +22,7 @@ void GenericCommand_macro_write_aliases(float fh);
 float GenericCommand(string command);
 
 // Returns command prefix specific for whatever program it is compiled in
-string GetProgramCommandPrefix(void);
+string GetProgramCommandPrefix();
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 #define CMD_Write(s) fputs(fh, s)

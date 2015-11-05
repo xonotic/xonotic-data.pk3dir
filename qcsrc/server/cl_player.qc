@@ -34,7 +34,7 @@ void Drop_Special_Items(entity player)
 	MUTATOR_CALLHOOK(DropSpecialItems, player);
 }
 
-void CopyBody_Think(void)
+void CopyBody_Think()
 {SELFPARAM();
 	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
 	{
@@ -142,7 +142,7 @@ void player_setupanimsformodel()
 	animdecide_setstate(self, 0, false);
 }
 
-void player_anim (void)
+void player_anim ()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(self.deadflag) {

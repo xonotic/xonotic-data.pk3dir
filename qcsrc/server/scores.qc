@@ -927,7 +927,7 @@ void PlayerScore_PlayerStats(entity p)
 				PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
 }
 
-void PlayerScore_TeamStats(void)
+void PlayerScore_TeamStats()
 {
 	entity sk;
 	float t, i;

@@ -399,7 +399,7 @@ float TrueAimCheck()
 	return SHOTTYPE_HITWORLD;
 }
 
-void PostInit(void);
+void PostInit();
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard();
 float camera_mode;

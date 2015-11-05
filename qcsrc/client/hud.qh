@@ -43,8 +43,8 @@ bool radar_panel_modified;
 float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary);
 void HUD_Radar_Hide_Maximized();
 
-void HUD_Reset (void);
-void HUD_Main (void);
+void HUD_Reset ();
+void HUD_Main ();
 
 int vote_yescount;
 int vote_nocount;

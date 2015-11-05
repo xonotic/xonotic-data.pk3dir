@@ -37,7 +37,7 @@
 	.void() uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 
-	void SetCustomizer(entity e, float(void)customizer, void(void)uncustomizer)
+	void SetCustomizer(entity e, float()customizer, void()uncustomizer)
 	{
 		e.customizeentityforclient = customizer;
 		e.uncustomizeentityforclient = uncustomizer;

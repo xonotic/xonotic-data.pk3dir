@@ -25,7 +25,7 @@ entity makeXonoticGametypeList();
 
 #ifdef IMPLEMENTATION
 
-entity makeXonoticGametypeList(void)
+entity makeXonoticGametypeList()
 {
 	entity me;
 	me = NEW(XonoticGametypeList);

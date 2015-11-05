@@ -22,7 +22,7 @@ float W_Config_Queue_Compare(int root, int child, entity pass)
 	return strcmp(wep_config_queue[root], wep_config_queue[child]);
 }
 
-void Dump_Weapon_Settings(void)
+void Dump_Weapon_Settings()
 {
 	int i, x, totalsettings = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)

@@ -69,7 +69,7 @@ spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
 .entity lastrocket;
 
-void W_Devastator_Unregister(void)
+void W_Devastator_Unregister()
 {SELFPARAM();
 	if(self.realowner && self.realowner.lastrocket == self)
 	{
@@ -78,7 +78,7 @@ void W_Devastator_Unregister(void)
 	}
 }
 
-void W_Devastator_Explode(void)
+void W_Devastator_Explode()
 {SELFPARAM();
 	W_Devastator_Unregister();
 
@@ -247,7 +247,7 @@ vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)
 //   normalize(thisdir + goaldir)
 //   normalize(0)
 
-void W_Devastator_Think(void)
+void W_Devastator_Think()
 {SELFPARAM();
 	vector desireddir, olddir, newdir, desiredorigin, goal;
 	float velspeed, f;
@@ -315,7 +315,7 @@ void W_Devastator_Think(void)
 		UpdateCSQCProjectile(self);
 }
 
-void W_Devastator_Touch(void)
+void W_Devastator_Touch()
 {SELFPARAM();
 	if(WarpZone_Projectile_Touch())
 	{

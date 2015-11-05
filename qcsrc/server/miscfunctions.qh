@@ -33,7 +33,7 @@ float cvar_normal(string n)
 entity eliminatedPlayers;
 void EliminatedPlayers_Init(float(entity) isEliminated_func);
 
-string admin_name(void);
+string admin_name();
 
 void write_recordmarker(entity pl, float tstart, float dt);
 
@@ -297,7 +297,7 @@ float sv_autotaunt;
 float sv_taunt;
 
 string GetGametype(); // g_world.qc
-void readlevelcvars(void)
+void readlevelcvars()
 {
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
@@ -438,7 +438,7 @@ const float INITPRIO_SETLOCATION 		= 90;
 const float INITPRIO_LINKDOORS 			= 91;
 const float INITPRIO_LAST 				= 99;
 
-.void(void) initialize_entity;
+.void() initialize_entity;
 .float initialize_entity_order;
 .entity initialize_entity_next;
 entity initialize_entity_first;
@@ -448,7 +448,7 @@ entity initialize_entity_first;
 
 
 float sound_allowed(float dest, entity e);
-void InitializeEntity(entity e, void(void) func, float order);
-void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
+void InitializeEntity(entity e, void() func, float order);
+void SetCustomizer(entity e, float() customizer, void() uncustomizer);
 
 #endif

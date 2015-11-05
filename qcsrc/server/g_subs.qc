@@ -62,7 +62,7 @@ main
 unused but required by the engine
 ==================
 */
-void main (void)
+void main ()
 {
 
 }

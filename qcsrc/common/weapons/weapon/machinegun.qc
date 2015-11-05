@@ -69,7 +69,7 @@ spawnfunc(weapon_machinegun)
 }
 spawnfunc(weapon_uzi) { spawnfunc_weapon_machinegun(this); }
 
-void W_MachineGun_MuzzleFlash_Think(void)
+void W_MachineGun_MuzzleFlash_Think()
 {SELFPARAM();
 	self.frame = self.frame + 2;
 	self.scale = self.scale * 0.5;
@@ -86,7 +86,7 @@ void W_MachineGun_MuzzleFlash_Think(void)
 
 }
 
-void W_MachineGun_MuzzleFlash(void)
+void W_MachineGun_MuzzleFlash()
 {SELFPARAM();
 	if(self.muzzle_flash == world)
 		self.muzzle_flash = spawn();

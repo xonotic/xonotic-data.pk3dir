@@ -28,7 +28,7 @@
 .float lastground;
 .int state;
 
-void CreatureFrame (void)
+void CreatureFrame ()
 {SELFPARAM();
 	float dm;
 
@@ -423,7 +423,7 @@ void SV_OnEntityPreSpawnFunction()
 	}
 }
 
-void WarpZone_PostInitialize_Callback(void)
+void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
 	entity e;

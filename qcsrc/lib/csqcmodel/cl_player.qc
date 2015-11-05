@@ -146,7 +146,7 @@ void PM_Movement_Move()
 #endif
 }
 
-void CSQCPlayer_Physics(void)
+void CSQCPlayer_Physics()
 {
 	switch(autocvar_cl_movement)
 	{

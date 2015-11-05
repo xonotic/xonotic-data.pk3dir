@@ -114,5 +114,5 @@ void bot_serverframe();
 
 void() havocbot_setupbot;
 
-void bot_calculate_stepheightvec(void);
+void bot_calculate_stepheightvec();
 #endif

@@ -53,7 +53,7 @@ MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
 		e.porto_forbidden = max(0, e.porto_forbidden - 1);
 }
 
-void W_Porto_Success(void)
+void W_Porto_Success()
 {SELFPARAM();
 	if(self.realowner == world)
 	{
@@ -109,7 +109,7 @@ void W_Porto_Remove(entity p)
 	}
 }
 
-void W_Porto_Think(void)
+void W_Porto_Think()
 {SELFPARAM();
 	trace_plane_normal = '0 0 0';
 	if(self.realowner.playerid != self.playerid)
@@ -118,7 +118,7 @@ void W_Porto_Think(void)
 		W_Porto_Fail(0);
 }
 
-void W_Porto_Touch(void)
+void W_Porto_Touch()
 {SELFPARAM();
 	vector norm;
 

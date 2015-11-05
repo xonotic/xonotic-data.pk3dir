@@ -59,7 +59,7 @@ FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 spawnfunc(weapon_fireball) { weapon_defaultspawnfunc(this, WEP_FIREBALL); }
 
-void W_Fireball_Explode(void)
+void W_Fireball_Explode()
 {SELFPARAM();
 	entity e;
 	float dist;
@@ -109,7 +109,7 @@ void W_Fireball_Explode(void)
 	remove(self);
 }
 
-void W_Fireball_TouchExplode(void)
+void W_Fireball_TouchExplode()
 {
 	PROJECTILE_TOUCH;
 	W_Fireball_Explode();
@@ -149,7 +149,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 	}
 }
 
-void W_Fireball_Think(void)
+void W_Fireball_Think()
 {SELFPARAM();
 	if(time > self.pushltime)
 	{
@@ -180,7 +180,7 @@ void W_Fireball_Damage(entity inflictor, entity attacker, float damage, int deat
 	}
 }
 
-void W_Fireball_Attack1(void)
+void W_Fireball_Attack1()
 {SELFPARAM();
 	entity proj;
 
@@ -256,7 +256,7 @@ void W_Fireball_Attack1_Frame0(Weapon thiswep, entity actor, .entity weaponentit
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
 }
 
-void W_Fireball_Firemine_Think(void)
+void W_Fireball_Firemine_Think()
 {SELFPARAM();
 	if(time > self.pushltime)
 	{
@@ -282,7 +282,7 @@ void W_Fireball_Firemine_Think(void)
 	self.nextthink = time + 0.1;
 }
 
-void W_Fireball_Firemine_Touch(void)
+void W_Fireball_Firemine_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM)
@@ -294,7 +294,7 @@ void W_Fireball_Firemine_Touch(void)
 	self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void W_Fireball_Attack2(void)
+void W_Fireball_Attack2()
 {SELFPARAM();
 	entity proj;
 	vector f_diff;

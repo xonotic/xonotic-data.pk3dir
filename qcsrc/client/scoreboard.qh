@@ -11,5 +11,5 @@ void HUD_DrawScoreboard();
 void HUD_InitScores();
 void HUD_UpdatePlayerPos(entity pl);
 void HUD_UpdateTeamPos(entity Team);
-float HUD_WouldDrawScoreboard(void);
+float HUD_WouldDrawScoreboard();
 #endif
