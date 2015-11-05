@@ -11,7 +11,6 @@
 #include "main.qc"
 #include "mapvoting.qc"
 #include "miscfunctions.qc"
-#include "modeleffects.qc"
 #include "movelib.qc"
 #include "player_skeleton.qc"
 #include "rubble.qc"

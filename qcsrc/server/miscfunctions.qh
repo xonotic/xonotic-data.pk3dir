@@ -39,10 +39,6 @@ void write_recordmarker(entity pl, float tstart, float dt);
 
 void play2all(string samp);
 
-void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2);
-
-void shockwave_spawn(string m, vector org, float sz, float t1, float t2);
-
 void play2team(float t, string filename);
 
 void GetCvars_handleFloat(string thisname, float f, .float field, string name);

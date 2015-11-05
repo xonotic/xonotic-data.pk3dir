@@ -678,6 +678,10 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	ctf_CaptureShield_Update(player, 0); // shield player from picking up flag
 }
 
+void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
+{
+	return modeleffect_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
+}
 
 // ==============
 // Event Handlers
