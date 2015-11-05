@@ -1,6 +1,5 @@
 #include "main.qh"
 
-#include "damage.qh"
 #include "../common/effects/qc/all.qh"
 #include "hook.qh"
 #include "hud/all.qh"

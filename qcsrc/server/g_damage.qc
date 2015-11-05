@@ -24,46 +24,6 @@
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
 
-bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
-{
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
-	WriteShort(MSG_ENTITY, self.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(self.origin.x));
-	WriteCoord(MSG_ENTITY, floor(self.origin.y));
-	WriteCoord(MSG_ENTITY, floor(self.origin.z));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg, 255));
-	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, self.oldorigin.x);
-	WriteByte(MSG_ENTITY, self.species);
-	return true;
-}
-
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
-{
-	// TODO maybe call this from non-edgedamage too?
-	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
-
-	entity e;
-
-	if(!sound_allowed(MSG_BROADCAST, dmgowner))
-		deathtype |= 0x8000;
-
-	e = new(damageinfo);
-	make_pure(e);
-	setorigin(e, org);
-	e.projectiledeathtype = deathtype;
-	e.dmg = coredamage;
-	e.dmg_edge = edgedamage;
-	e.dmg_radius = rad;
-	e.dmg_force = vlen(force);
-	e.velocity = force;
-	e.oldorigin_x = compressShortVector(e.velocity);
-	e.species = bloodtype;
-
-	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
-}
-
 void UpdateFrags(entity player, float f)
 {
 	PlayerTeamScore_AddScore(player, f);

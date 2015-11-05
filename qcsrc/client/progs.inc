@@ -6,7 +6,6 @@
 #include "announcer.qc"
 #include "bgmscript.qc"
 #include "csqcmodel_hooks.qc"
-#include "damage.qc"
 #include "hook.qc"
 #include "hud/all.qc"
 #include "main.qc"

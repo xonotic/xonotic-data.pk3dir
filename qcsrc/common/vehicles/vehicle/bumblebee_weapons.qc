@@ -102,6 +102,7 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
     return true;
 }
 
+.float bumble_raygun_nextdraw;
 void bumble_raygun_draw(entity this)
 {
     float _len;
@@ -111,11 +112,11 @@ void bumble_raygun_draw(entity this)
     _len = vlen(self.origin - self.move_origin);
     _dir = normalize(self.move_origin - self.origin);
 
-    if(self.total_damages < time)
+    if(self.bumble_raygun_nextdraw < time)
     {
         boxparticles(particleeffectnum(Effects_from(self.traileffect)), self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
         boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
-        self.total_damages = time + 0.1;
+        self.bumble_raygun_nextdraw = time + 0.1;
     }
 
     float i, df, sz, al;
