@@ -413,8 +413,8 @@ spawnfunc(target_position) { make_pure(this); target_push_link(); }
 
 #ifdef CSQC
 
-void ent_trigger_push()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & 1)
@@ -441,6 +441,7 @@ void ent_trigger_push()
 		self.team = ReadByte();
 		self.active = ReadByte();
 	}
+	return true;
 }
 
 void target_push_remove()
@@ -454,14 +455,17 @@ void target_push_remove()
 	self.targetname = string_null;
 }
 
-void ent_target_push()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
+{
 	self.classname = "push_target";
 	self.cnt = ReadByte();
 	self.targetname = strzone(ReadString());
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();
 	self.origin_z = ReadCoord();
+
+	return = true;
+
 	setorigin(self, self.origin);
 
 	self.drawmask = MASK_NORMAL;

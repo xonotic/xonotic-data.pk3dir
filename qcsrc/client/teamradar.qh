@@ -47,8 +47,4 @@ void draw_teamradar_link(vector start, vector end, int colors);
 
 void teamradar_loadcvars();
 
-// radar links
-
-void Ent_RadarLink();
-
 #endif

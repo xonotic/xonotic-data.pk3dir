@@ -245,8 +245,8 @@ void train_draw(entity this)
 	Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 
-void ent_train()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
@@ -321,6 +321,8 @@ void ent_train()
 	{
 		// TODO: make a reset function for trains
 	}
+
+	return true;
 }
 
 #endif

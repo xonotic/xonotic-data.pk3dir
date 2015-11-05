@@ -148,7 +148,6 @@ void Local_Notification_WOVA(
     float f1, float f2, float f3, float f4);
 
 #ifdef CSQC // CLIENT ONLY
-void Read_Notification(float is_new);
 string prev_soundfile;
 float prev_soundtime;
 #endif

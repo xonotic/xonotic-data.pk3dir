@@ -103,8 +103,8 @@ void Ent_TubaNote_StopSound()
 	self.enemy = world;
 }
 
-void Ent_TubaNote(bool isNew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
+{
 	bool upd = false;
 	int f = ReadByte();
 	if (f & 1) {
@@ -152,9 +152,10 @@ void Ent_TubaNote(bool isNew)
 	if (upd) {
 		Ent_TubaNote_UpdateSound();
 	}
+	return true;
 }
 
-void Tuba_Precache()
+PRECACHE(Tuba)
 {
 	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
 	if (Tuba_PitchStep) {

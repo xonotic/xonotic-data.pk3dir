@@ -25,8 +25,8 @@ void WarpZone_Fade_PreDraw()
 		self.drawmask = MASK_NORMAL;
 }
 
-void WarpZone_Read(float isnew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
+{
 	warpzone_warpzones_exist = 1;
 	if (!self.enemy)
 	{
@@ -87,10 +87,11 @@ void WarpZone_Read(float isnew)
 	// how to draw
 	// engine currently wants this
 	self.predraw = WarpZone_Fade_PreDraw;
+	return true;
 }
 
-void WarpZone_Camera_Read(float isnew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_WARPZONE_CAMERA, bool isnew)
+{
 	warpzone_cameras_exist = 1;
 	self.classname = "func_warpzone_camera";
 
@@ -143,18 +144,19 @@ void WarpZone_Camera_Read(float isnew)
 	// how to draw
 	// engine currently wants this
 	self.predraw = WarpZone_Fade_PreDraw;
+	return true;
 }
 
 void CL_RotateMoves(vector ang) = #638;
-void WarpZone_Teleported_Read(float isnew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_WARPZONE_TELEPORTED, bool isnew)
+{
 	self.classname = "warpzone_teleported";
 	vector v;
 	v.x = ReadCoord();
 	v.y = ReadCoord();
 	v.z = ReadCoord();
-	if(!isnew)
-		return;
+	return = true;
+	if (!isnew) return;
 	self.warpzone_transform = v;
 	setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, getpropertyvec(VF_CL_VIEWANGLES)));
 	if(checkextension("DP_CSQC_ROTATEMOVES"))
@@ -276,10 +278,6 @@ void WarpZone_FixView()
 	o = WarpZone_FixNearClip(org, corner0, corner1, corner2, corner3);
 	if(o != '0 0 0')
 		setproperty(VF_ORIGIN, org + o);
-}
-
-void WarpZone_Init()
-{
 }
 
 void WarpZone_Shutdown()

@@ -322,8 +322,8 @@ void Draw_Laser(entity this)
 	}
 }
 
-void Ent_Laser()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
+{
 	InterpolateOrigin_Undo();
 
 	// 30 bytes, or 13 bytes for just moving
@@ -379,6 +379,9 @@ void Ent_Laser()
 	}
 	if(f & 4)
 		self.state = ReadByte();
+
+	return = true;
+
 	InterpolateOrigin_Note();
 	self.draw = Draw_Laser;
 }

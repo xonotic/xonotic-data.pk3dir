@@ -133,8 +133,8 @@ void plat_draw(entity this)
 	//Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 
-void ent_plat()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
@@ -197,5 +197,6 @@ void ent_plat()
 		self.move_angles = self.angles;
 		self.move_time = time;
 	}
+	return true;
 }
 #endif

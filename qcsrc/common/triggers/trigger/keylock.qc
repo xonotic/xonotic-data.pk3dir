@@ -195,12 +195,14 @@ void keylock_remove()
 	self.targetname = string_null;
 }
 
-void ent_keylock()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
+{
 	self.itemkeys = ReadInt24_t();
 	self.height = ReadByte();
 
 	trigger_common_read(true);
+
+	return = true;
 
 	self.classname = "trigger_keylock";
 	self.drawmask = MASK_NORMAL;

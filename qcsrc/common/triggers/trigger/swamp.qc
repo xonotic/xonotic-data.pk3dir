@@ -134,13 +134,15 @@ spawnfunc(trigger_swamp)
 
 #elif defined(CSQC)
 
-void ent_swamp()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
+{
 	self.dmg = ReadByte();
 	self.swamp_slowdown = ReadByte();
 	self.swamp_interval = ReadByte();
 
 	trigger_common_read(false);
+
+	return = true;
 
 	self.classname = "trigger_swamp";
 	self.solid = SOLID_TRIGGER;

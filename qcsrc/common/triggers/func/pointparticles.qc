@@ -253,8 +253,8 @@ void Ent_PointParticles_Remove()
 	self.bgmscript = string_null;
 }
 
-void Ent_PointParticles()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
+{
 	float i;
 	vector v;
 	int f = ReadByte();
@@ -339,6 +339,8 @@ void Ent_PointParticles()
 		}
 		BGMScript_InitEntity(self);
 	}
+
+	return = true;
 
 	if(f & 2)
 	{

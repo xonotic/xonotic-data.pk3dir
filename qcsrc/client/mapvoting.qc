@@ -851,10 +851,11 @@ void MapVote_UpdateVotes()
 	mv_ownvote = ReadByte()-1;
 }
 
-void Ent_MapVote()
+NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
 {
 	make_pure(self);
 	int sf = ReadByte();
+	return = true;
 
 	if(sf & 1)
 		MapVote_Init();

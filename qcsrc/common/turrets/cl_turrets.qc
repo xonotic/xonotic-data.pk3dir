@@ -354,8 +354,8 @@ void turret_die()
 	setmodel(self.tur_head, MDL_Null);
 }
 
-void ent_turret()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
+{
 	float sf;
 	sf = ReadByte();
 
@@ -441,4 +441,5 @@ void ent_turret()
 		self.health = _tmp;
 	}
 	//self.enemy.health = self.health / 255;
+	return true;
 }

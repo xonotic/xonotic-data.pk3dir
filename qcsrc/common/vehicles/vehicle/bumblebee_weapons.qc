@@ -63,8 +63,8 @@ bool bumble_raygun_send(entity this, entity to, float sf)
 
 void bumble_raygun_draw(entity this);
 
-void bumble_raygun_read(bool bIsNew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
+{
     int sf = ReadByte();
 
     if(sf & BRG_SETUP)
@@ -99,6 +99,7 @@ void bumble_raygun_read(bool bIsNew)
         self.move_origin_y = ReadCoord();
         self.move_origin_z = ReadCoord();
     }
+    return true;
 }
 
 void bumble_raygun_draw(entity this)

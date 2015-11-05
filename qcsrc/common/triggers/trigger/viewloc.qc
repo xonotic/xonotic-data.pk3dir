@@ -137,8 +137,8 @@ void trigger_viewloc_updatelink()
 	self.goalentity = findfloat(world, entnum, self.count);
 }
 
-void ent_viewloc_trigger()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
+{
 	float point1 = ReadShort();
 	float point2 = ReadShort();
 
@@ -148,6 +148,9 @@ void ent_viewloc_trigger()
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();
 	self.origin_z = ReadCoord();
+
+	return = true;
+
 	setorigin(self, self.origin);
 
 	self.cnt = point1;
@@ -160,8 +163,8 @@ void ent_viewloc_trigger()
 	self.drawmask = MASK_NORMAL; // not so concerned, but better keep it alive
 }
 
-void ent_viewloc()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_VIEWLOC, bool isnew)
+{
 	self.cnt = ReadByte();
 
 	self.origin_x = ReadCoord();
@@ -172,6 +175,8 @@ void ent_viewloc()
 	self.movedir_x = ReadCoord();
 	self.movedir_y = ReadCoord();
 	self.movedir_z = ReadCoord();
+
+	return = true;
 
 	self.classname = ((self.cnt == 2) ? "target_viewlocation_end" : "target_viewlocation_start");
 	self.drawmask = MASK_NORMAL; // don't cull it

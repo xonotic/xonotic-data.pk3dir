@@ -178,8 +178,8 @@ void minigame_read_owner()
 	if ( !self.owner )
 		LOG_TRACE("Got a minigame entity without a minigame!\n");
 }
-void ent_read_minigame()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
+{
 	float sf = ReadByte();
 	if ( sf & MINIG_SF_CREATE )
 	{
@@ -241,6 +241,7 @@ void ent_read_minigame()
 			" classname:",self.classname," enttype:",ftos(self.enttype) );
 		LOG_DEBUG(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 	}
+	return true;
 }
 #undef ReadString
 #undef FIELD

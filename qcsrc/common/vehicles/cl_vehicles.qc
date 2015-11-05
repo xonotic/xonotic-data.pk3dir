@@ -45,7 +45,7 @@ void AuxiliaryXhair_Draw2D(entity this)
 		self.draw2d = func_null;
 }
 
-void Net_AuXair2(bool bIsNew)
+NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 {
 	int axh_id	= bound(0, ReadByte(), MAX_AXH);
 	entity axh 		= AuxiliaryXhair[axh_id];
@@ -70,16 +70,13 @@ void Net_AuXair2(bool bIsNew)
 	axh.colormod_z		= ReadByte() / 255;
 	axh.cnt 			= time;
 	axh.draw2d			= AuxiliaryXhair_Draw2D;
-}
-
-NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isNew)
-{
-	Net_VehicleSetup();
 	return true;
 }
-void Net_VehicleSetup()
-{SELFPARAM();
+
+NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
+{
 	int hud_id = ReadByte();
+	return = true;
 
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
 	if(hud_id == 0)

@@ -1,4 +1,3 @@
 #ifdef CSQC
 .float dmgtime;
-void ent_train();
 #endif

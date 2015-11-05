@@ -29,8 +29,4 @@ void loopsound(entity e, int ch, string samp, float vol, float attn);
 
 void Ent_RemoveProjectile();
 
-void Ent_Projectile();
-
-void Projectile_Precache();
-
 #endif

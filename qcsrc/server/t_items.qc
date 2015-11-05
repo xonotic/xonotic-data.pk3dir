@@ -94,8 +94,8 @@ void Item_PreDraw()
 		self.drawmask = MASK_NORMAL;
 }
 
-void ItemRead(float _IsNew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
+{
     int sf = ReadByte();
 
     if(sf & ISF_LOCATION)
@@ -240,6 +240,7 @@ void ItemRead(float _IsNew)
         if(self.ItemStatus & ITS_ANIMATE2)
             self.move_avelocity = '0 -90 0';
     }
+    return true;
 }
 
 #endif

@@ -160,8 +160,8 @@ void conveyor_init()
 	self.move_time = time;
 }
 
-void ent_conveyor()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & 1)
@@ -195,5 +195,7 @@ void ent_conveyor()
 
 	if(sf & 2)
 		self.state = ReadByte();
+
+	return true;
 }
 #endif

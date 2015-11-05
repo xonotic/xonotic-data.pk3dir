@@ -180,15 +180,15 @@ spawnfunc(trigger_impulse)
 	trigger_impulse_link();
 }
 #elif defined(CSQC)
-void ent_trigger_impulse()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
+{
 	self.radius = ReadCoord();
 	self.strength = ReadCoord();
 	self.falloff = ReadByte();
 	self.active = ReadByte();
 
 	trigger_common_read(true);
-
+	return = true;
 
 	self.classname = "trigger_impulse";
 	self.solid = SOLID_TRIGGER;

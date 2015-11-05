@@ -23,7 +23,7 @@ void ModelEffect_Draw(entity this)
 	}
 }
 
-void Ent_ModelEffect(bool isNew)
+NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 {
 	make_pure(self);
 
@@ -66,6 +66,6 @@ void Ent_ModelEffect(bool isNew)
 
 	e.draw = ModelEffect_Draw;
 
-	if(!isNew)
-		remove(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
+	if (!isnew) remove(e); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
+	return true;
 }

@@ -1,5 +1,0 @@
-#ifdef CSQC
-
-void Ent_PointParticles();
-
-#endif

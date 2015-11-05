@@ -96,7 +96,6 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float arc_smoke_sound;
 #endif
 #ifdef CSQC
-void Ent_ReadArcBeam(float isnew);
 
 .vector beam_color;
 .float beam_alpha;
@@ -1149,8 +1148,8 @@ void Remove_ArcBeam()
 	sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
-void Ent_ReadArcBeam(float isnew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
+{
 	int sf = ReadByte();
 	entity flash;
 
@@ -1495,6 +1494,7 @@ void Ent_ReadArcBeam(float isnew)
 	{
 		InterpolateOrigin_Note();
 	}
+	return true;
 }
 
 #endif

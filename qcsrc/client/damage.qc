@@ -117,8 +117,8 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 	self.total_damages += 1;
 }
 
-void Ent_DamageInfo(float isNew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
+{
 	make_pure(this);
 	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
@@ -138,6 +138,8 @@ void Ent_DamageInfo(float isNew)
 	edge = ReadByte();
 	force = decompressShortVector(ReadShort());
 	species = ReadByte();
+
+	return = true;
 
 	if (!isNew)
 		return;

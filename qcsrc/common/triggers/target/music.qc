@@ -286,8 +286,8 @@ void Ent_TriggerMusic_Remove()
 	self.noise = string_null;
 }
 
-void Ent_ReadTriggerMusic()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
+{
 	int f = ReadByte();
 	if(f & 4)
 	{
@@ -340,6 +340,7 @@ void Ent_ReadTriggerMusic()
 	self.cnt = 1;
 	self.think = Ent_TriggerMusic_Think;
 	self.nextthink = time;
+	return true;
 }
 
 #endif

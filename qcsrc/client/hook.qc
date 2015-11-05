@@ -162,9 +162,9 @@ void Remove_GrapplingHook()
 	sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
-void Ent_ReadHook(float bIsNew, entity type)
-{SELFPARAM();
-	self.HookType = type;
+NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
+{
+	self.HookType = NET_ENT_CLIENT_HOOK;
 
 	int sf = ReadByte();
 
@@ -225,6 +225,7 @@ void Ent_ReadHook(float bIsNew, entity type)
 	}
 
 	self.teleport_time = time + 10;
+	return true;
 }
 
 // TODO: hook: temporarily transform self.origin for drawing the model along warpzones!

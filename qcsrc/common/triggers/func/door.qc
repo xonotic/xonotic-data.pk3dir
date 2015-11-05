@@ -804,8 +804,8 @@ void door_draw(entity this)
 	trigger_draw_generic(this);
 }
 
-void ent_door()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
@@ -874,6 +874,7 @@ void ent_door()
 		self.pos2_y = ReadCoord();
 		self.pos2_z = ReadCoord();
 	}
+	return true;
 }
 
 #endif

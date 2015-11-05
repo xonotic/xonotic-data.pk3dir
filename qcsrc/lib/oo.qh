@@ -49,6 +49,22 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine, bool pure
 #endif
 #define spawn() __spawn("entity", __FILE__, __LINE__, false)
 
+entity _clearentity_ent;
+STATIC_INIT(clearentity)
+{
+	_clearentity_ent = new(clearentity);
+}
+void clearentity(entity e)
+{
+#ifdef CSQC
+		int n = e.entnum;
+#endif
+	copyentity(_clearentity_ent, e);
+#ifdef CSQC
+		e.entnum = n;
+#endif
+}
+
 // Classes have a `spawn##cname(entity)` constructor
 // The parameter is used across [[accumulate]] functions
 

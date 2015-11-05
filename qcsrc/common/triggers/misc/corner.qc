@@ -57,8 +57,8 @@ void corner_remove()
 	self.platmovetype = string_null;
 }
 
-void ent_corner()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_CORNER, bool isnew)
+{
 	self.platmovetype = strzone(ReadString());
 
 	self.origin_x = ReadCoord();
@@ -74,6 +74,8 @@ void ent_corner()
 	self.target_random = ReadByte();
 
 	self.wait = ReadByte();
+
+	return = true;
 
 	self.classname = "path_corner";
 	self.drawmask = MASK_NORMAL;

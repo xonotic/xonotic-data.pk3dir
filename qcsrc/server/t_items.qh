@@ -45,8 +45,6 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 void ItemDraw(entity this);
 void ItemDrawSimple(entity this);
 
-void ItemRead(float _IsNew);
-
 #endif
 #ifdef SVQC
 spawnfunc(item_strength);

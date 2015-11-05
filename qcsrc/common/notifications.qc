@@ -1680,10 +1680,11 @@ void Local_Notification_WOVA(
 // =========================
 
 #ifdef CSQC
-void Read_Notification(float is_new)
+NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 {
 	int net_type = ReadByte();
 	int net_name = ReadShort();
+	return = true;
 
 	entity notif;
 

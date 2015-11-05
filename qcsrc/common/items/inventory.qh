@@ -12,16 +12,17 @@ class(Inventory) .int inv_items[Items_MAX];
 .Inventory inventory;
 
 #ifdef CSQC
-void Inventory_Read(Inventory data)
+NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
-    make_pure(self);
+    make_pure(this);
     const int bits = ReadInt24_t();
     FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
         .int fld = inv_items[it.m_id];
-        int prev = data.(fld);
-        int next = data.(fld) = ReadByte();
+        int prev = this.(fld);
+        int next = this.(fld) = ReadByte();
         LOG_TRACEF("%s: %.0f -> %.0f\n", it.m_name, prev, next);
     ));
+    return true;
 }
 #endif
 

@@ -200,8 +200,8 @@ void teamradar_loadcvars()
 
 // radar links
 
-void Ent_RadarLink()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
+{
 	int sendflags = ReadByte();
 
 	InterpolateOrigin_Undo();
@@ -228,6 +228,8 @@ void Ent_RadarLink()
 	{
 		self.team = ReadByte();
 	}
+
+	return = true;
 
 	InterpolateOrigin_Note();
 }

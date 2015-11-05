@@ -183,11 +183,8 @@ void Ent_RemoveProjectile()
 	}
 }
 
-void Ent_Projectile()
+NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 {
-	SELFPARAM();
-	int f;
-
 	// projectile properties:
 	//   kind (interpolated, or clientside)
 	//
@@ -202,7 +199,7 @@ void Ent_Projectile()
 	//
 	// projectiles don't send angles, because they always follow the velocity
 
-	f = ReadByte();
+	int f = ReadByte();
 	self.count = (f & 0x80);
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES | IFLAG_ORIGIN;
 	self.solid = SOLID_TRIGGER;
@@ -485,6 +482,8 @@ void Ent_Projectile()
 		setsize(self, self.mins, self.maxs);
 	}
 
+	return = true;
+
 	if (self.gravity)
 	{
 		if (self.move_movetype == MOVETYPE_FLY)
@@ -508,7 +507,7 @@ void Ent_Projectile()
 	self.entremove = Ent_RemoveProjectile;
 }
 
-void Projectile_Precache()
+PRECACHE(Projectiles)
 {
 	MUTATOR_CALLHOOK(PrecacheProjectiles);
 }

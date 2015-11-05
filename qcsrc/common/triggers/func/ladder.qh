@@ -1,6 +1,2 @@
 .float ladder_time;
 .entity ladder_entity;
-
-#ifdef CSQC
-void ent_func_ladder();
-#endif

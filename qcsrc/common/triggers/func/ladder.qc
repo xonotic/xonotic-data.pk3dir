@@ -60,14 +60,17 @@ spawnfunc(func_water)
 #elif defined(CSQC)
 .float speed;
 
-void ent_func_ladder()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
+{
 	self.classname = strzone(ReadString());
 	self.skin = ReadByte();
 	self.speed = ReadByte();
 	self.model = strzone(ReadString());
 
 	trigger_common_read(false);
+
+	return = true;
+
 	self.mins = self.maxs = '0 0 0';
 
 	self.solid = SOLID_TRIGGER;

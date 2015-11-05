@@ -18,8 +18,6 @@ void Draw_PointParticles(entity this);
 
 void Ent_PointParticles_Remove();
 
-void Ent_PointParticles();
-
 class(PointParticles) .float glow_color; // palette index
 
 void Net_ReadVortexBeamParticle();

@@ -1821,9 +1821,6 @@ void CSQC_UpdateView(float w, float h)
 	else if(cvar("r_glsl_postprocess") == 2)
 		cvar_set("r_glsl_postprocess", "0");
 
-	if(menu_visible)
-		menu_show();
-
 	/*if(gametype == MAPINFO_TYPE_CTF)
 	  {
 	  ctf_view();
