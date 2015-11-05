@@ -28,6 +28,17 @@
 	#define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
 	#define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
 	#define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
+
+	float autocvar_sv_dodging_delay;
+    float autocvar_sv_dodging_height_threshold;
+    float autocvar_sv_dodging_horiz_speed;
+    float autocvar_sv_dodging_horiz_speed_frozen;
+    float autocvar_sv_dodging_ramp_time;
+    bool autocvar_sv_dodging_sound;
+    float autocvar_sv_dodging_up_speed;
+    float autocvar_sv_dodging_wall_distance_threshold;
+    bool autocvar_sv_dodging_wall_dodging;
+    bool autocvar_sv_dodging_frozen_doubletap;
 #endif
 
 #ifdef SVQC
@@ -40,8 +51,8 @@ float g_dodging;
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
-#include "../../../common/animdecide.qh"
-#include "../../../common/physics.qh"
+#include "../../../animdecide.qh"
+#include "../../../physics.qh"
 
 .float cvar_cl_dodging_timeout;
 

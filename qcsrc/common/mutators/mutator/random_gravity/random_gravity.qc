@@ -4,6 +4,13 @@
 // Mutator by Mario
 // Inspired by Player 2
 
+float autocvar_g_random_gravity_negative_chance;
+float autocvar_g_random_gravity_min;
+float autocvar_g_random_gravity_max;
+float autocvar_g_random_gravity_positive;
+float autocvar_g_random_gravity_negative;
+float autocvar_g_random_gravity_delay;
+
 REGISTER_MUTATOR(random_gravity, cvar("g_random_gravity"))
 {
 	MUTATOR_ONADD

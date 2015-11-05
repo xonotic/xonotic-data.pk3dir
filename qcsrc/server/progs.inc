@@ -43,8 +43,6 @@
 
 #include "command/all.qc"
 
-#include "mutators/all.qc"
-
 #include "pathlib/_all.inc"
 
 #include "weapons/accuracy.qc"
@@ -88,6 +86,7 @@
 #include "../common/vehicles/all.qc"
 #include "../common/weapons/all.qc"
 #include "../common/mutators/all.qc"
+#include "mutators/all.qc"
 
 #include "../common/turrets/sv_turrets.qc"
 #include "../common/turrets/config.qc"

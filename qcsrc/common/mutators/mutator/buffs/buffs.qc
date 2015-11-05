@@ -1,6 +1,48 @@
 #ifndef MUTATOR_BUFFS_H
 #define MUTATOR_BUFFS_H
 
+#include "../instagib/module.inc"
+
+bool  autocvar_g_buffs_effects;
+float autocvar_g_buffs_waypoint_distance;
+bool autocvar_g_buffs_randomize;
+float autocvar_g_buffs_random_lifetime;
+bool autocvar_g_buffs_random_location;
+int autocvar_g_buffs_random_location_attempts;
+int autocvar_g_buffs_spawn_count;
+bool autocvar_g_buffs_replace_powerups;
+float autocvar_g_buffs_cooldown_activate;
+float autocvar_g_buffs_cooldown_respawn;
+float autocvar_g_buffs_resistance_blockpercent;
+float autocvar_g_buffs_medic_survive_chance;
+float autocvar_g_buffs_medic_survive_health;
+float autocvar_g_buffs_medic_rot;
+float autocvar_g_buffs_medic_max;
+float autocvar_g_buffs_medic_regen;
+float autocvar_g_buffs_vengeance_damage_multiplier;
+float autocvar_g_buffs_bash_force;
+float autocvar_g_buffs_bash_force_self;
+float autocvar_g_buffs_disability_slowtime;
+float autocvar_g_buffs_disability_speed;
+float autocvar_g_buffs_disability_rate;
+float autocvar_g_buffs_disability_weaponspeed;
+float autocvar_g_buffs_speed_speed;
+float autocvar_g_buffs_speed_rate;
+float autocvar_g_buffs_speed_weaponspeed;
+float autocvar_g_buffs_speed_damage_take;
+float autocvar_g_buffs_speed_regen;
+float autocvar_g_buffs_vampire_damage_steal;
+float autocvar_g_buffs_invisible_alpha;
+float autocvar_g_buffs_flight_gravity;
+float autocvar_g_buffs_jump_height;
+float autocvar_g_buffs_inferno_burntime_factor;
+float autocvar_g_buffs_inferno_burntime_min_time;
+float autocvar_g_buffs_inferno_burntime_target_damage;
+float autocvar_g_buffs_inferno_burntime_target_time;
+float autocvar_g_buffs_inferno_damagemultiplier;
+float autocvar_g_buffs_swapper_range;
+float autocvar_g_buffs_magnet_range_item;
+
 // ammo
 .float buff_ammo_prev_infitems;
 .int buff_ammo_prev_clipload;
@@ -31,9 +73,9 @@ const vector BUFF_MAX = ('16 16 20');
 
 #ifdef IMPLEMENTATION
 
-#include "../../../common/triggers/target/music.qh"
-#include "../../../common/gamemodes/all.qh"
-#include "../../../common/buffs/all.qh"
+#include "../../../triggers/target/music.qh"
+#include "../../../gamemodes/all.qh"
+#include "../../../buffs/all.qh"
 
 .float buff_time;
 void buffs_DelayedInit();

@@ -44,15 +44,16 @@ const float ICE_MIN_ALPHA = 0.1;
 float freezetag_teams;
 
 .float reviving; // temp var
-#endif
 
+float autocvar_g_freezetag_revive_extra_size;
+float autocvar_g_freezetag_revive_speed;
+bool autocvar_g_freezetag_revive_nade;
+float autocvar_g_freezetag_revive_nade_health;
+
+#endif
 #ifdef IMPLEMENTATION
 
 float autocvar_g_freezetag_frozen_maxtime;
-bool autocvar_g_freezetag_revive_nade;
-float autocvar_g_freezetag_revive_nade_health;
-float autocvar_g_freezetag_revive_extra_size;
-float autocvar_g_freezetag_revive_speed;
 float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
 int autocvar_g_freezetag_teams;

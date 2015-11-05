@@ -1,4 +1,12 @@
 #ifdef IMPLEMENTATION
+
+float autocvar_g_spawn_near_teammate_distance;
+int autocvar_g_spawn_near_teammate_ignore_spawnpoint;
+float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
+float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
+int autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health;
+bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath;
+
 REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate") && teamplay);
 
 .entity msnt_lookat;

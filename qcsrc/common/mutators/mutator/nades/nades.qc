@@ -1,6 +1,10 @@
 #ifndef MUTATOR_NADES_H
 #define MUTATOR_NADES_H
 
+#ifdef SVQC
+#include "../../../../server/mutators/mutator/gamemode_freezetag.qc"
+#endif
+
 .entity nade;
 .entity fake_nade;
 .float nade_timer;
@@ -19,12 +23,10 @@
 .float nade_show_particles;
 
 // Remove nades that are being thrown
-void(entity player) nades_Clear;
+void nades_Clear(entity player);
 
 // Give a bonus grenade to a player
 void(entity player, float score) nades_GiveBonus;
-// Remove all bonus nades from a player
-void(entity player) nades_RemoveBonus;
 
 /**
  * called to adjust nade damage and force on hit
@@ -39,13 +41,14 @@ void(entity player) nades_RemoveBonus;
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 
 #endif
+
 #ifdef IMPLEMENTATION
 
-#include "../../../common/nades/all.qh"
-#include "../../../common/gamemodes/all.qh"
-#include "../../../common/monsters/spawn.qh"
-#include "../../../common/monsters/sv_monsters.qh"
-#include "../../g_subs.qh"
+#include "../../../nades/all.qh"
+#include "../../../gamemodes/all.qh"
+#include "../../../monsters/spawn.qh"
+#include "../../../monsters/sv_monsters.qh"
+#include "../../../../server/g_subs.qh"
 
 REGISTER_MUTATOR(nades, cvar("g_nades"))
 {
@@ -796,9 +799,15 @@ void nades_GiveBonus(entity player, float score)
 	}
 }
 
+/** Remove all bonus nades from a player */
 void nades_RemoveBonus(entity player)
 {
 	player.bonus_nades = player.bonus_nade_score = 0;
+}
+
+MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
+{
+	nades_RemoveBonus(self);
 }
 
 float nade_customize()

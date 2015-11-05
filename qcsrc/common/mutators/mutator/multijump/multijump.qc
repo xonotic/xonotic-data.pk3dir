@@ -1,8 +1,8 @@
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-	#include "../../antilag.qh"
+	#include "../../../../server/antilag.qh"
 #endif
-#include "../../../common/physics.qh"
+#include "../../../physics.qh"
 
 .int multijump_count;
 .bool multijump_ready;
@@ -18,12 +18,17 @@
 
 #elif defined(SVQC)
 
+int autocvar_g_multijump;
+float autocvar_g_multijump_add;
+float autocvar_g_multijump_speed;
+float autocvar_g_multijump_maxspeed;
+float autocvar_g_multijump_dodging = 1;
+
 #define PHYS_MULTIJUMP 				autocvar_g_multijump
 #define PHYS_MULTIJUMP_SPEED 		autocvar_g_multijump_speed
 #define PHYS_MULTIJUMP_ADD 			autocvar_g_multijump_add
 #define PHYS_MULTIJUMP_MAXSPEED 	autocvar_g_multijump_maxspeed
 #define PHYS_MULTIJUMP_DODGING 		autocvar_g_multijump_dodging
-
 
 .float stat_multijump;
 .float stat_multijump_speed;

@@ -3,6 +3,10 @@
 
 #include "items.qc"
 
+#ifdef SVQC
+float autocvar_g_instagib_invis_alpha;
+#endif
+
 #endif
 
 #ifdef IMPLEMENTATION

@@ -1,4 +1,19 @@
 #ifdef IMPLEMENTATION
+int autocvar_g_sandbox_info;
+bool autocvar_g_sandbox_readonly;
+string autocvar_g_sandbox_storage_name;
+float autocvar_g_sandbox_storage_autosave;
+bool autocvar_g_sandbox_storage_autoload;
+float autocvar_g_sandbox_editor_flood;
+int autocvar_g_sandbox_editor_maxobjects;
+int autocvar_g_sandbox_editor_free;
+float autocvar_g_sandbox_editor_distance_spawn;
+float autocvar_g_sandbox_editor_distance_edit;
+float autocvar_g_sandbox_object_scale_min;
+float autocvar_g_sandbox_object_scale_max;
+float autocvar_g_sandbox_object_material_velocity_min;
+float autocvar_g_sandbox_object_material_velocity_factor;
+
 float autosave_time;
 void sandbox_Database_Load();
 

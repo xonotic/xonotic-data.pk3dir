@@ -1,4 +1,8 @@
 #ifdef IMPLEMENTATION
+float autocvar_g_campcheck_damage;
+float autocvar_g_campcheck_distance;
+float autocvar_g_campcheck_interval;
+
 REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
 
 .float campcheck_nextcheck;

@@ -1,6 +1,6 @@
 #ifdef IMPLEMENTATION
-#include "../../../common/deathtypes/all.qh"
-#include "../../g_hook.qh"
+#include "../../../deathtypes/all.qh"
+#include "../../../../server/g_hook.qh"
 
 REGISTER_MUTATOR(breakablehook, cvar("g_breakablehook"));
 

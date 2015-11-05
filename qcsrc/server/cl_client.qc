@@ -1871,7 +1871,6 @@ void LeaveSpectatorMode()
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
 		{
 			self.classname = STR_PLAYER;
-			nades_RemoveBonus(self);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, false, true); }

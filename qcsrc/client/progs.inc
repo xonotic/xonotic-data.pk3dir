@@ -68,12 +68,6 @@
 #include "../lib/csqcmodel/cl_player.qc"
 #include "../lib/csqcmodel/interpolate.qc"
 
-// TODO: move to common
-#include "../server/mutators/mutator/mutator_multijump.qc"
-#define IMPLEMENTATION
-#include "../server/mutators/mutator/mutator_multijump.qc"
-#undef IMPLEMENTATION
-
 #include "../lib/warpzone/anglestransform.qc"
 #include "../lib/warpzone/client.qc"
 #include "../lib/warpzone/common.qc"

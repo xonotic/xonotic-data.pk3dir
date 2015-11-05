@@ -1,4 +1,7 @@
 #ifdef IMPLEMENTATION
+
+float autocvar_g_midair_shieldtime;
+
 REGISTER_MUTATOR(midair, cvar("g_midair"));
 
 .float midair_shieldtime;

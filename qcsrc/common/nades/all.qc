@@ -1,6 +1,7 @@
+#include "all.qh"
+
 #if defined(CSQC)
 	#include "../../client/defs.qh"
-	#include "all.qh"
 	#include "../buffs/all.qh"
 	#include "../movetypes/movetypes.qh"
 	#include "../../client/main.qh"

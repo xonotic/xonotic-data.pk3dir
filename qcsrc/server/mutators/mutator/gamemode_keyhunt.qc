@@ -800,7 +800,7 @@ void key_reset()
 }
 
 const string STR_ITEM_KH_KEY = "item_kh_key";
-void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
+void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
 	entity key = spawn();
 	key.count = i;
@@ -809,7 +809,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 	key.think = kh_Key_Think;
 	key.nextthink = time;
 	key.items = IT_KEY1 | IT_KEY2;
-	key.cnt = angle;
+	key.cnt = _angle;
 	key.angles = '0 360 0' * random();
 	key.event_damage = kh_Key_Damage;
 	key.takedamage = DAMAGE_YES;
