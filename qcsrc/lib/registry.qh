@@ -11,7 +11,11 @@
 	const int id##_MAX = max; \
 	noref entity _##id[id##_MAX], id##_first, id##_last; \
 	int id##_COUNT; \
-	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _##id[i]; if (e) return e; } return null; }
+	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _##id[i]; if (e) return e; } return null; } \
+	REGISTRY_CHECK(id)
+
+/** registered item identifier */
+.string registered_id;
 
 /**
  * Register a new entity with a global constructor.
@@ -44,6 +48,7 @@
 		if (array##_COUNT >= array##_MAX) LOG_FATALF("Registry capacity exceeded (%s)", ftos(array##_MAX)); \
 		entity this = inst;                                         \
 		ns##_##id = this;                                           \
+		this.registered_id = #id;                                   \
 		this.fld = array##_COUNT;                                   \
 		_##array[array##_COUNT++] = this;                           \
 		if (!array##_first)    array##_first = this;                \
@@ -88,6 +93,17 @@
 	STATIC_INIT(Registry_sort_##id) \
 	{                               \
 		heapsort(id##_COUNT - (skip), _REGISTRY_SWAP_##id, _REGISTRY_CMP_##id, NULL); \
+	}
+
+#define REGISTRY_CHECK(id) \
+	STATIC_INIT_LATE(Registry_check_##id) \
+	{ \
+		string algo = "SHA256"; \
+		string join = ":"; \
+		string s = ""; \
+		FOREACH(id, true, LAMBDA(s = strcat(s, join, it.registered_id))); \
+		s = substring(s, strlen(join), -1); \
+		LOG_TRACEF(#id ": %s\n[%s]\n", digest_hex(algo, s), s); \
 	}
 
 #endif
