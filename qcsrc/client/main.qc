@@ -1,9 +1,7 @@
 #include "main.qh"
 
-#include "controlpoint.qh"
 #include "damage.qh"
 #include "effects.qh"
-#include "generator.qh"
 #include "gibs.qh"
 #include "hook.qh"
 #include "hud/all.qh"
@@ -978,16 +976,6 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 {
 	ent_turret();
-	return true;
-}
-NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
-{
-	ent_generator();
-	return true;
-}
-NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
-{
-	ent_cpicon(this);
 	return true;
 }
 NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)

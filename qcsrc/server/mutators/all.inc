@@ -9,6 +9,5 @@
 #include "mutator/gamemode_keepaway.qc"
 #include "mutator/gamemode_keyhunt.qc"
 #include "mutator/gamemode_lms.qc"
-#include "mutator/gamemode_onslaught.qc"
 #include "mutator/gamemode_race.qc"
 #include "mutator/gamemode_tdm.qc"

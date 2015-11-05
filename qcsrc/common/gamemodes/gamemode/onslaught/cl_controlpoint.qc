@@ -1,7 +1,4 @@
-#include "controlpoint.qh"
-
-#include "teamradar.qh"
-#include "../common/movetypes/movetypes.qh"
+#include "cl_controlpoint.qh"
 
 .vector colormod;
 .float alpha;
@@ -157,8 +154,9 @@ void cpicon_changeteam(entity this)
 	}
 }
 
-void ent_cpicon(entity this)
+NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
 {
+	return = true;
 	int sf = ReadByte();
 
 	if(sf & CPSF_SETUP)

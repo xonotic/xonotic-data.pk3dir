@@ -1,6 +1,4 @@
-#include "controlpoint.qh"
-
-#include "command/common.qh"
+#include "sv_controlpoint.qh"
 
 .bool iscaptured;
 

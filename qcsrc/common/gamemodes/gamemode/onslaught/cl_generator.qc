@@ -1,7 +1,4 @@
-#include "generator.qh"
-
-#include "teamradar.qh"
-#include "../common/movetypes/movetypes.qh"
+#include "cl_generator.qh"
 
 .float alpha;
 .float scale;
@@ -182,8 +179,9 @@ void generator_changeteam()
 	}
 }
 
-void ent_generator()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
+{
+	return = true;
 	int sf = ReadByte();
 
 	if(sf & GSF_SETUP)

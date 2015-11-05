@@ -128,8 +128,8 @@ const int SP_ONS_TAKES = 6;
 
 #ifdef IMPLEMENTATION
 
-#include "../../controlpoint.qh"
-#include "../../generator.qh"
+#include "sv_controlpoint.qh"
+#include "sv_generator.qh"
 
 bool g_onslaught;
 
@@ -1217,6 +1217,8 @@ int Onslaught_GetWinnerTeam()
 		return winner_team;
 	return -1; // no generators left?
 }
+
+void nades_Clear(entity e);
 
 #define ONS_OWNED_GENERATORS() ((redowned > 0) + (blueowned > 0) + (yellowowned > 0) + (pinkowned > 0))
 #define ONS_OWNED_GENERATORS_OK() (ONS_OWNED_GENERATORS() > 1)

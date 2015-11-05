@@ -1,4 +1,4 @@
-#include "generator.qh"
+#include "sv_generator.qh"
 
 bool generator_send(entity this, entity to, int sf)
 {

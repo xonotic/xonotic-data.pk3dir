@@ -3,11 +3,9 @@
 
 #include "announcer.qc"
 #include "bgmscript.qc"
-#include "controlpoint.qc"
 #include "csqcmodel_hooks.qc"
 #include "damage.qc"
 #include "effects.qc"
-#include "generator.qc"
 #include "gibs.qc"
 #include "hook.qc"
 #include "hud/all.qc"
