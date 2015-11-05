@@ -1,6 +1,5 @@
 #include "damage.qh"
 
-#include "gibs.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/movetypes/movetypes.qh"
 #include "../common/vehicles/all.qh"
@@ -43,6 +42,21 @@ void DamageEffect_Think()
 	vector org;
 	org = gettaginfo(self, 0); // origin at attached location
 	__pointparticles(self.team, org, '0 0 0', 1);
+}
+
+string species_prefix(int specnum)
+{
+	switch(specnum)
+	{
+		case SPECIES_HUMAN:       return "";
+		case SPECIES_ALIEN:       return "alien_";
+		case SPECIES_ROBOT_SHINY: return "robot_";
+		case SPECIES_ROBOT_RUSTY: return "robot_"; // use the same effects, only different gibs
+		case SPECIES_ROBOT_SOLID: return "robot_"; // use the same effects, only different gibs
+		case SPECIES_ANIMAL:      return "animal_";
+		case SPECIES_RESERVED:    return "reserved_";
+		default:         return "";
+	}
 }
 
 void DamageEffect(vector hitorg, float thedamage, int type, int specnum)

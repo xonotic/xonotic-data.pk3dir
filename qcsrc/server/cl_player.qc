@@ -4,7 +4,6 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "g_subs.qh"
-#include "g_violence.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"

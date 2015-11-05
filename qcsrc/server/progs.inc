@@ -1,6 +1,8 @@
 #include "../lib/_all.inc"
 #include "_all.qh"
 
+#include "../common/effects/qc/all.qc"
+
 #include "anticheat.qc"
 #include "antilag.qc"
 #include "campaign.qc"
@@ -8,14 +10,12 @@
 #include "cl_client.qc"
 #include "cl_impulse.qc"
 #include "cl_player.qc"
-#include "../common/effects/qc/all.qc"
 #include "ent_cs.qc"
 #include "g_damage.qc"
 #include "g_hook.qc"
 // #include "g_lights.qc" // TODO: was never used
 #include "g_models.qc"
 #include "g_subs.qc"
-#include "g_violence.qc"
 #include "g_world.qc"
 #include "ipban.qc"
 #include "item_key.qc"
