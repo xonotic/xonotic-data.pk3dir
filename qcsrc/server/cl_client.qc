@@ -630,36 +630,40 @@ void PutClientInServer()
 // changes and just have a console command to update this?
 bool ClientInit_SendEntity(entity this, entity to, int sf)
 {
-	WriteHeader(MSG_ENTITY, ENT_CLIENT_INIT);
-	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[2]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[3]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[0]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[1]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[2]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[3]));
+	WriteHeader(MSG_ENTITY, _ENT_CLIENT_INIT);
+	return = true;
+	msg_entity = to;
+	Registry_send_all();
+	int channel = MSG_ONE;
+	WriteHeader(channel, ENT_CLIENT_INIT);
+	WriteByte(channel, g_nexball_meter_period * 32);
+	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[0]));
+	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[1]));
+	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[2]));
+	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[3]));
+	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[0]));
+	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[1]));
+	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[2]));
+	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[3]));
 
 	if(sv_foginterval && world.fog != "")
-		WriteString(MSG_ENTITY, world.fog);
+		WriteString(channel, world.fog);
 	else
-		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
-	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_mortar_bouncestop
-	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_mortar_bouncefactor
-	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_mortar_bouncestop
-	WriteByte(MSG_ENTITY, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
-	WriteByte(MSG_ENTITY, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
-	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
-	WriteByte(MSG_ENTITY, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
-	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
-	WriteByte(MSG_ENTITY, WEP_CVAR(porto, secondary)); // WEAPONTODO
+		WriteString(channel, "");
+	WriteByte(channel, self.count * 255.0); // g_balance_armor_blockpercent
+	WriteCoord(channel, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
+	WriteCoord(channel, self.bouncestop); // g_balance_mortar_bouncestop
+	WriteCoord(channel, self.ebouncefactor); // g_balance_mortar_bouncefactor
+	WriteCoord(channel, self.ebouncestop); // g_balance_mortar_bouncestop
+	WriteByte(channel, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
+	WriteByte(channel, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
+	WriteByte(channel, serverflags); // client has to know if it should zoom or not
+	WriteByte(channel, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
+	WriteByte(channel, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
+	WriteCoord(channel, autocvar_g_trueaim_minrange);
+	WriteByte(channel, WEP_CVAR(porto, secondary)); // WEAPONTODO
 
 	MUTATOR_CALLHOOK(Ent_Init);
-	return true;
 }
 
 void ClientInit_CheckUpdate()

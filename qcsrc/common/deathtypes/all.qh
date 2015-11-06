@@ -6,6 +6,7 @@
 REGISTRY(Deathtypes, BITS(8))
 #define Deathtypes_from(i) _Deathtypes_from(i, NULL)
 REGISTER_REGISTRY(RegisterDeathtypes)
+REGISTRY_CHECK(Deathtypes)
 
 .entity death_msgself;
 .entity death_msgmurder;

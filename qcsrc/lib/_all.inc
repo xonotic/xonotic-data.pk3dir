@@ -55,6 +55,7 @@
 #include "progname.qh"
 #include "random.qc"
 #include "registry.qh"
+#include "registry_net.qh"
 #include "replicate.qh"
 #include "self.qh"
 #include "sortlist.qc"

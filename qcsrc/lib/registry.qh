@@ -94,10 +94,21 @@
 	STATIC_INIT(Registry_sort_##id) \
 	{ \
 		heapsort(id##_COUNT - (skip), _REGISTRY_SWAP_##id, _REGISTRY_CMP_##id, NULL); \
-	} \
-	REGISTRY_CHECK(id)
+	}
+
+#define REGISTRY_HASH(id) Registry_hash_##id
+
+[[accumulate]] void Registry_check(string r, string server) { }
+[[accumulate]] void Registry_send_all() { }
+
+#ifdef SVQC
+void Registry_send(string id, string hash);
+#else
+#define Registry_send(id, hash)
+#endif
 
 #define REGISTRY_CHECK(id) \
+	string REGISTRY_HASH(id); \
 	STATIC_INIT(Registry_check_##id) \
 	{ \
 		string algo = "SHA256"; \
@@ -105,7 +116,20 @@
 		string s = ""; \
 		FOREACH(id, true, LAMBDA(s = strcat(s, join, it.registered_id))); \
 		s = substring(s, strlen(join), -1); \
-		LOG_TRACEF(#id ": %s\n[%s]\n", digest_hex(algo, s), s); \
-	}
+		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
+		LOG_TRACEF(#id ": %s\n[%s]\n", h, s); \
+	} \
+	[[accumulate]] void Registry_check(string r, string sv) \
+	{ \
+		if (r == #id) \
+		{ \
+			string cl = REGISTRY_HASH(id); \
+			if (cl != sv) \
+			{ \
+				LOG_FATALF("client/server mismatch (%s).\nCL: %s\nSV: %s\n", r, cl, sv); \
+			} \
+		} \
+	} \
+	[[accumulate]] void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
 
 #endif

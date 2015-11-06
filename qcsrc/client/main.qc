@@ -934,8 +934,6 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 
 NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 {
-	make_pure(this);
-
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
 
 	hook_shotorigin[0] = decompressShotOrigin(ReadInt24_t());

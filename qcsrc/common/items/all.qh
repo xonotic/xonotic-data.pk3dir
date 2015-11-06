@@ -12,6 +12,7 @@ REGISTER_REGISTRY(RegisterItems)
 #define REGISTER_ITEM(id, class) REGISTER(RegisterItems, ITEM, Items, id, m_id, NEW(class))
 
 REGISTRY_SORT(Items, 0)
+REGISTRY_CHECK(Items)
 STATIC_INIT(Items) { FOREACH(Items, true, LAMBDA(it.m_id = i)); }
 
 void Dump_Items();
