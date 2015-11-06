@@ -111,7 +111,7 @@
 REGISTRY(LinkedEntities, BITS(8) - 1)
 #define LinkedEntities_from(i) _LinkedEntities_from(i, NULL)
 REGISTER_REGISTRY(RegisterLinkedEntities)
-REGISTRY_SORT(LinkedEntities, netname, 0)
+REGISTRY_SORT(LinkedEntities, 0)
 STATIC_INIT(RegisterLinkedEntities_renumber)
 {
 	for (int i = 0; i < LinkedEntities_COUNT; ++i)
@@ -140,7 +140,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 REGISTRY(TempEntities, BITS(8) - 80)
 #define TempEntities_from(i) _TempEntities_from(i, NULL)
 REGISTER_REGISTRY(RegisterTempEntities)
-REGISTRY_SORT(TempEntities, netname, 0)
+REGISTRY_SORT(TempEntities, 0)
 STATIC_INIT(RegisterTempEntities_renumber)
 {
 	for (int i = 0; i < TempEntities_COUNT; ++i)
