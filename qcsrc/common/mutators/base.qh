@@ -154,7 +154,7 @@ CLASS(Mutator, Object)
     }
 ENDCLASS(Mutator)
 
-REGISTRY(Mutators, BITS(6))
+REGISTRY(Mutators, BITS(7))
 #define Mutators_from(i) _Mutators_from(i, NULL)
 Mutator loaded_mutators[Mutators_MAX];
 
