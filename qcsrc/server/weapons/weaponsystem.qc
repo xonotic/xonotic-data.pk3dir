@@ -92,16 +92,13 @@ void CL_Weaponentity_Think()
 		CL_WeaponEntity_SetModel(this, this.owner.weaponname);
 	}
 
-	this.effects = EF_NODRAW; // TODO: don't render this entity at all
+	this.effects = EF_NODRAW;  // TODO: don't render this entity at all
 
 	if (this.owner.alpha == default_player_alpha) this.alpha = default_weapon_alpha;
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
 	else this.alpha = 1;
 
-	if (this.weaponchild)
-	{
-		this.weaponchild.effects = this.effects;
-	}
+	if (this.weaponchild) this.weaponchild.effects = this.effects;
 }
 
 void CL_ExteriorWeaponentity_Think()
@@ -218,7 +215,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 			if (mine.owner == actor) return false;
 
 	if (thiswep == WEP_SHOTGUN)
-		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;             // no clicking, just allow
+		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;           // no clicking, just allow
 
 	if (thiswep == Weapons_from(actor.switchweapon) && time - actor.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 	{
@@ -315,6 +312,10 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bo
 
 void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
 
+/**
+ * @param t defer thinking until time + t
+ * @param func next think function
+ */
 void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor,
 	.entity weaponentity, int fire) func)
 {
@@ -325,13 +326,9 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		fr = this.wframe;
 		restartanim = false;
 	}
-	else if (fr == WFRAME_IDLE)
-	{
-		restartanim = false;
-	}
 	else
 	{
-		restartanim = true;
+		restartanim = fr != WFRAME_IDLE;
 	}
 
 	vector of = v_forward;
@@ -348,9 +345,8 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		else  // if (fr == WFRAME_RELOAD)
 			a = this.anim_reload;
 		a.z *= g_weaponratefactor;
-		entity e; FOR_EACH_CLIENT(e) if (e == actor || (IS_SPEC(e) && e.enemy == actor)) {
-			wframe_send(e, this, a, restartanim);
-		}
+		entity e;
+		FOR_EACH_CLIENT(e) if (e == actor || (IS_SPEC(e) && e.enemy == actor)) wframe_send(e, this, a, restartanim);
 	}
 
 	v_forward = of;
@@ -406,11 +402,11 @@ bool forbidWeaponUse(entity player)
 
 void W_WeaponFrame(entity actor)
 {
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	.entity weaponentity = weaponentities[0];  // TODO: unhardcode
 	entity this = actor.(weaponentity);
 	if (frametime) actor.weapon_frametime = frametime;
 
-	if (!this || actor.health < 1) return; // Dead player can't use weapons and injure impulse commands
+	if (!this || actor.health < 1) return;  // Dead player can't use weapons and injure impulse commands
 
 
 	if (forbidWeaponUse(actor))

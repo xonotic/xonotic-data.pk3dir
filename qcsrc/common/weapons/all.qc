@@ -580,7 +580,7 @@ NET_HANDLE(wframe, bool isNew)
     a.y = ReadCoord();
     a.z = ReadCoord();
 	bool restartanim = ReadByte();
-	setanim(viewmodel, a, restartanim == false, restartanim, restartanim);
+	anim_set(viewmodel, a, !restartanim, restartanim, restartanim);
 	viewmodel.state = ReadByte();
 	viewmodel.alpha = ReadByte() / 255;
 	return true;

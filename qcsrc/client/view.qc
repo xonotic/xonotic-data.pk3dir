@@ -53,15 +53,15 @@ void viewmodel_draw(entity this)
 	}
 	{
 		static string name_last;
-		string name = get_weaponinfo(activeweapon).mdl;
+		string name = Weapons_from(activeweapon).mdl;
 		if (name != name_last)
 		{
 			name_last = name;
 			CL_WeaponEntity_SetModel(this, name);
-			updateanim(this);
-			if (!this.animstate_override)
-				setanim(this, this.anim_idle, true, false, false);
 		}
+		anim_update(this);
+		if (!this.animstate_override)
+			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float eta = (getstatf(STAT_WEAPON_NEXTTHINK) - time); // TODO: / W_WeaponRateFactor();
 	float f = 0; // 0..1; 0: fully active
