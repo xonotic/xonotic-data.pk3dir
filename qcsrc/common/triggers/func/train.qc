@@ -101,10 +101,12 @@ void train_next()
 		_sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_TRAIN)
+
 #ifdef SVQC
 float train_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRAIN);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRAIN);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & SF_TRIGGER_INIT)
@@ -245,8 +247,8 @@ void train_draw(entity this)
 	Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 
-void ent_train()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
@@ -321,6 +323,8 @@ void ent_train()
 	{
 		// TODO: make a reset function for trains
 	}
+
+	return true;
 }
 
 #endif

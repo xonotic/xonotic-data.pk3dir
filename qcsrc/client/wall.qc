@@ -114,8 +114,8 @@ void Ent_Wall_Remove()
 	self.bgmscript = string_null;
 }
 
-void Ent_Wall()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
+{
 	int f;
 	var .vector fld;
 
@@ -221,6 +221,8 @@ void Ent_Wall()
 		self.fade_vertical_offset = ReadShort();
 		BGMScript_InitEntity(self);
 	}
+
+	return = true;
 
 	InterpolateOrigin_Note();
 

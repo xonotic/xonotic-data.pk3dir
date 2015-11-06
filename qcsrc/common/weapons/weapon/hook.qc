@@ -76,7 +76,7 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 spawnfunc(weapon_hook) { weapon_defaultspawnfunc(this, WEP_HOOK); }
 
-void W_Hook_ExplodeThink(void)
+void W_Hook_ExplodeThink()
 {SELFPARAM();
 	float dt, dmg_remaining_next, f;
 
@@ -96,7 +96,7 @@ void W_Hook_ExplodeThink(void)
 		remove(self);
 }
 
-void W_Hook_Explode2(void)
+void W_Hook_Explode2()
 {SELFPARAM();
 	self.event_damage = func_null;
 	self.touch = func_null;
@@ -129,7 +129,7 @@ void W_Hook_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 		W_PrepareExplosionByDamage(self.realowner, W_Hook_Explode2);
 }
 
-void W_Hook_Touch2(void)
+void W_Hook_Touch2()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 	self.use();

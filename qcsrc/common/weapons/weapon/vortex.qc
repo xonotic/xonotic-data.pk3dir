@@ -60,15 +60,14 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #endif
 #ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(this, WEP_VORTEX); }
-spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 
+REGISTER_NET_TEMP(TE_CSQC_VORTEXBEAMPARTICLE)
+
+#if defined(SVQC)
 void SendCSQCVortexBeamParticle(float charge) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
 	WriteCoord(MSG_BROADCAST, w_shotorg.y);
 	WriteCoord(MSG_BROADCAST, w_shotorg.z);
@@ -77,6 +76,32 @@ void SendCSQCVortexBeamParticle(float charge) {
 	WriteCoord(MSG_BROADCAST, v.z);
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
+#elif defined(CSQC)
+NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
+{
+	vector shotorg, endpos;
+	float charge;
+	shotorg.x = ReadCoord(); shotorg.y = ReadCoord(); shotorg.z = ReadCoord();
+	endpos.x = ReadCoord(); endpos.y = ReadCoord(); endpos.z = ReadCoord();
+	charge = ReadByte() / 255.0;
+
+	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
+
+	//draw either the old v2.3 beam or the new beam
+	charge = sqrt(charge); // divide evenly among trail spacing and alpha
+	particles_alphamin = particles_alphamax = particles_fade = charge;
+
+	if (autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	else
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	return true;
+}
+#endif
+
+#ifdef SVQC
+spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(this, WEP_VORTEX); }
+spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 
 void W_Vortex_Attack(Weapon thiswep, float issecondary)
 {SELFPARAM();

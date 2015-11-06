@@ -22,7 +22,7 @@
 #ifdef SVQC
 spawnfunc(trigger_swamp);
 #endif
-void swamp_touch(void);
+void swamp_touch();
 void swampslug_think();
 
 
@@ -36,7 +36,7 @@ void swampslug_think();
 *
 * I do it this way becuz there is no "untouch" event.
 */
-void swampslug_think(void)
+void swampslug_think()
 {SELFPARAM();
 	//Slowly kill the slug
 	self.health = self.health - 1;
@@ -60,7 +60,7 @@ void swampslug_think(void)
 	self.nextthink = time + self.swamp_interval;
 }
 
-void swamp_touch(void)
+void swamp_touch()
 {SELFPARAM();
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
@@ -92,10 +92,12 @@ void swamp_touch(void)
 	other.swampslug.health = 2;
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_SWAMP)
+
 #ifdef SVQC
 float swamp_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LADDER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SWAMP);
 
 	WriteByte(MSG_ENTITY, self.dmg); // can probably get away with using a single byte here
 	WriteByte(MSG_ENTITY, self.swamp_slowdown);
@@ -134,13 +136,15 @@ spawnfunc(trigger_swamp)
 
 #elif defined(CSQC)
 
-void ent_swamp()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
+{
 	self.dmg = ReadByte();
 	self.swamp_slowdown = ReadByte();
 	self.swamp_interval = ReadByte();
 
 	trigger_common_read(false);
+
+	return = true;
 
 	self.classname = "trigger_swamp";
 	self.solid = SOLID_TRIGGER;

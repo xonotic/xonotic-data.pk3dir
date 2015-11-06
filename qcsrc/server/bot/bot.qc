@@ -556,7 +556,7 @@ void autoskill(float factor)
 		head.totalfrags_lastcheck = head.totalfrags;
 }
 
-void bot_calculate_stepheightvec(void)
+void bot_calculate_stepheightvec()
 {
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
 	jumpstepheightvec = stepheightvec +

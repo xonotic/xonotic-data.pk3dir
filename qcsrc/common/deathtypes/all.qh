@@ -6,6 +6,7 @@
 REGISTRY(Deathtypes, BITS(8))
 #define Deathtypes_from(i) _Deathtypes_from(i, NULL)
 REGISTER_REGISTRY(RegisterDeathtypes)
+REGISTRY_CHECK(Deathtypes)
 
 .entity death_msgself;
 .entity death_msgmurder;
@@ -13,6 +14,7 @@ REGISTER_REGISTRY(RegisterDeathtypes)
 
 #define REGISTER_DEATHTYPE(id, msg_death, msg_death_by, extra) \
     REGISTER(RegisterDeathtypes, DEATH, Deathtypes, id, m_id, new(deathtype)) { \
+        make_pure(this); \
         this.m_id += DT_FIRST; \
         this.nent_name = #id; \
         this.death_msgextra = extra; \

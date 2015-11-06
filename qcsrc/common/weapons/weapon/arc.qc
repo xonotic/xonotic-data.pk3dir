@@ -96,7 +96,6 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float arc_smoke_sound;
 #endif
 #ifdef CSQC
-void Ent_ReadArcBeam(float isnew);
 
 .vector beam_color;
 .float beam_alpha;
@@ -132,7 +131,7 @@ spawnfunc(weapon_arc) { weapon_defaultspawnfunc(this, WEP_ARC); }
 
 bool W_Arc_Beam_Send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
 
 	// Truncate information when this beam is displayed to the owner client
 	// - The owner client has no use for beam start position or directions,
@@ -214,7 +213,7 @@ void Arc_Player_SetHeat(entity player)
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
 }
 
-void W_Arc_Beam_Think(void)
+void W_Arc_Beam_Think()
 {SELFPARAM();
 	if(self != self.owner.arc_beam)
 	{
@@ -267,7 +266,7 @@ void W_Arc_Beam_Think(void)
 
 			if ( WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max) )
 			{
-				Send_Effect_("arc_overheat",
+				Send_Effect(EFFECT_ARC_OVERHEAT,
 					self.beam_start, self.beam_wantdir, 1 );
 				sound(self, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
 			}
@@ -584,8 +583,7 @@ void W_Arc_Beam(float burst)
 	if(time - self.beam_prev > 1)
 		sound(self, CH_WEAPON_A, SND_ARC_FIRE, VOL_BASE, ATTN_NORM);
 
-	entity beam = self.arc_beam = spawn();
-	beam.classname = "W_Arc_Beam";
+	entity beam = self.arc_beam = new(W_Arc_Beam);
 	beam.solid = SOLID_NOT;
 	beam.think = W_Arc_Beam_Think;
 	beam.owner = self;
@@ -607,10 +605,10 @@ void Arc_Smoke()
 	if ( self.arc_overheat > time )
 	{
 		if ( random() < self.arc_heat_percent )
-			Send_Effect_("arc_smoke", smoke_origin, '0 0 0', 1 );
+			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
 		if ( self.BUTTON_ATCK || self.BUTTON_ATCK2 )
 		{
-			Send_Effect_("arc_overheat_fire", smoke_origin, w_shotdir, 1 );
+			Send_Effect(EFFECT_ARC_OVERHEAT_FIRE, smoke_origin, w_shotdir, 1 );
 			if ( !self.arc_smoke_sound )
 			{
 				self.arc_smoke_sound = 1;
@@ -623,7 +621,7 @@ void Arc_Smoke()
 	{
 		if ( random() < (self.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) /
 				( WEP_CVAR(arc, overheat_max)-WEP_CVAR(arc, overheat_min) ) )
-			Send_Effect_("arc_smoke", smoke_origin, '0 0 0', 1 );
+			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
 	}
 
 	if (  self.arc_smoke_sound && ( self.arc_overheat <= time ||
@@ -840,7 +838,7 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
 }
 
-void Reset_ArcBeam(void)
+void Reset_ArcBeam()
 {
 	entity e;
 	for (e = world; (e = findfloat(e, beam_usevieworigin, 1)); ) {
@@ -1144,14 +1142,14 @@ void Draw_ArcBeam(entity this)
 	Draw_ArcBeam_callback_last_bottom = '0 0 0';
 }
 
-void Remove_ArcBeam(void)
+void Remove_ArcBeam()
 {SELFPARAM();
 	remove(self.beam_muzzleentity);
 	sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
-void Ent_ReadArcBeam(float isnew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
+{
 	int sf = ReadByte();
 	entity flash;
 
@@ -1496,6 +1494,7 @@ void Ent_ReadArcBeam(float isnew)
 	{
 		InterpolateOrigin_Note();
 	}
+	return true;
 }
 
 #endif

@@ -1,5 +1,7 @@
 #include "net_notice.qh"
 
+REGISTER_NET_TEMP(TE_CSQC_SVNOTICE)
+
 #ifdef SVQC
 void sv_notice_join_think()
 {SELFPARAM();
@@ -29,8 +31,7 @@ void sv_notice_join()
 void sv_notice_to(entity _to, string _notice, float _howlong, float _modal)
 {
 	msg_entity = _to;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_SVNOTICE);
+	WriteHeader(MSG_ONE, TE_CSQC_SVNOTICE);
 	WriteString(MSG_ONE, _notice);
 	WriteLong(MSG_ONE, _howlong);
 	WriteByte(MSG_ONE, _modal);
@@ -47,13 +48,16 @@ void sv_notice_toall(string _notice, float _howlong, float _modal)
 #endif // SVQC
 
 #ifdef CSQC
+NET_HANDLE(TE_CSQC_SVNOTICE, bool isNew)
+{
+	cl_notice_read();
+	return true;
+}
 void cl_notice_read()
 {
-    entity _notice;
     //float _done;
     //float _modal;
-    _notice = spawn();
-    _notice.classname = "sv_notice";
+    entity _notice = new(sv_notice);
     _notice.netname = strzone(ReadString());
     _notice.alpha = ReadLong() + time;
     _notice.skin = ReadByte();

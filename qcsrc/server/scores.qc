@@ -58,7 +58,7 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, p, longflags;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
 	WriteByte(MSG_ENTITY, self.team - 1);
 
 	longflags = 0;
@@ -87,9 +87,8 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 
 void TeamScore_Spawn(float t, string name)
 {
-	entity ts;
-	ts = spawn();
-	ts.classname = "csqc_score_team";
+	entity ts = new(csqc_score_team);
+	make_pure(ts);
 	ts.netname = name; // not used yet, FIXME
 	ts.team = t;
 	Net_LinkEntity(ts, false, 0, TeamScore_SendEntity);
@@ -188,7 +187,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 {
 	float i;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
 	WriteInt24_t(MSG_ENTITY, MapInfo_LoadedGametype);
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
@@ -211,8 +210,8 @@ void ScoreInfo_Init(float teams)
 	}
 	else
 	{
-		scores_initialized = spawn();
-		scores_initialized.classname = "ent_client_scoreinfo";
+		scores_initialized = new(ent_client_scoreinfo);
+		make_pure(scores_initialized);
 		Net_LinkEntity(scores_initialized, false, 0, ScoreInfo_SendEntity);
 	}
 	if(teams >= 1)
@@ -233,7 +232,7 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, p, longflags;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES);
 	WriteByte(MSG_ENTITY, num_for_edict(self.owner));
 
 	longflags = 0;
@@ -316,10 +315,10 @@ void Score_ClearAll()
 
 void PlayerScore_Attach(entity player)
 {
-	entity sk;
 	if(player.scorekeeper)
 		error("player already has a scorekeeper");
-	sk = spawn();
+	entity sk = new(scorekeeper);
+	make_pure(sk);
 	sk.owner = player;
 	Net_LinkEntity(sk, false, 0, PlayerScore_SendEntity);
 	player.scorekeeper = sk;
@@ -530,6 +529,7 @@ void WinningConditionHelper()
 
 	FOR_EACH_CLIENT(p)
 	{
+		string s = "";
 		if(fullstatus)
 		{
 			s = GetPlayerScoreString(p, 1);
@@ -927,7 +927,7 @@ void PlayerScore_PlayerStats(entity p)
 				PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
 }
 
-void PlayerScore_TeamStats(void)
+void PlayerScore_TeamStats()
 {
 	entity sk;
 	float t, i;

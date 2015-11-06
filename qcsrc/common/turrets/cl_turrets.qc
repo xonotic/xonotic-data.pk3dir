@@ -287,7 +287,7 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 	if(trace_startsolid)
 		return world;
 
-	gib = spawn();
+	gib = new(turret_gib);
 	setorigin(gib, _from);
 	_setmodel(gib, _model);
 	gib.colormod	= _cmod;
@@ -311,7 +311,6 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 	gib.move_avelocity  = prandomvec() * 32;
 	gib.move_time	   = time;
 	gib.damageforcescale = 1;
-	gib.classname = "turret_gib";
 
 	return gib;
 }
@@ -355,8 +354,8 @@ void turret_die()
 	setmodel(self.tur_head, MDL_Null);
 }
 
-void ent_turret()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
+{
 	float sf;
 	sf = ReadByte();
 
@@ -442,4 +441,5 @@ void ent_turret()
 		self.health = _tmp;
 	}
 	//self.enemy.health = self.health / 255;
+	return true;
 }

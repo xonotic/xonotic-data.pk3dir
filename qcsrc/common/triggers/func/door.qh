@@ -12,7 +12,6 @@ const int SPAWNFLAGS_SILVER_KEY = 16;
 
 #ifdef CSQC
 // stuff for preload
-void ent_door();
 
 .float door_finished;
 #endif

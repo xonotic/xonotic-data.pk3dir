@@ -177,7 +177,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	return e;
 }
 
-void teleport_findtarget (void)
+void teleport_findtarget ()
 {SELFPARAM();
 	entity e;
 	float n;

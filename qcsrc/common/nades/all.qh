@@ -24,6 +24,8 @@ const int PROJECTILE_NADE_MONSTER_BURN = 83;
 REGISTRY(Nades, BITS(4))
 #define Nades_from(i) _Nades_from(i, NADE_TYPE_Null)
 REGISTER_REGISTRY(RegisterNades)
+REGISTRY_CHECK(Nades)
+
 #define REGISTER_NADE(id) REGISTER(RegisterNades, NADE_TYPE, Nades, id, m_id, NEW(Nade))
 
 CLASS(Nade, Object)

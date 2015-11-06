@@ -108,7 +108,7 @@ void W_Crylink_Dequeue(entity e)
 	W_Crylink_Dequeue_Raw(e.realowner, e.queueprev, e, e.queuenext);
 }
 
-void W_Crylink_Reset(void)
+void W_Crylink_Reset()
 {SELFPARAM();
 	W_Crylink_Dequeue(self);
 	remove(self);
@@ -225,7 +225,7 @@ vector W_Crylink_LinkJoin(entity e, float jspeed)
 	return targ_origin;
 }
 
-void W_Crylink_LinkJoinEffect_Think(void)
+void W_Crylink_LinkJoinEffect_Think()
 {SELFPARAM();
 	// is there at least 2 projectiles very close?
 	entity e, p;
@@ -290,7 +290,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 }
 
 // NO bounce protection, as bounces are limited!
-void W_Crylink_Touch(void)
+void W_Crylink_Touch()
 {SELFPARAM();
 	float finalhit;
 	float f;
@@ -335,7 +335,7 @@ void W_Crylink_Touch(void)
 	//	CSQCProjectile(proj, true, PROJECTILE_CRYLINK, true);
 }
 
-void W_Crylink_Fadethink(void)
+void W_Crylink_Fadethink()
 {SELFPARAM();
 	W_Crylink_Dequeue(self);
 	remove(self);
@@ -366,10 +366,9 @@ void W_Crylink_Attack(Weapon thiswep)
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
-		proj = spawn();
+		proj = new(spike);
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
-		proj.classname = "spike";
 		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_PRI(crylink, damage);
 		if(shots == 1) {
@@ -475,10 +474,9 @@ void W_Crylink_Attack2(Weapon thiswep)
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
-		proj = spawn();
+		proj = new(spike);
 		proj.reset = W_Crylink_Reset;
 		proj.realowner = proj.owner = self;
-		proj.classname = "spike";
 		proj.bot_dodge = true;
 		proj.bot_dodgerating = WEP_CVAR_SEC(crylink, damage);
 		if(shots == 1) {
@@ -614,9 +612,8 @@ void W_Crylink_Attack2(Weapon thiswep)
 
 						pos = W_Crylink_LinkJoin(actor.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
 
-						linkjoineffect = spawn();
+						linkjoineffect = new(linkjoineffect);
 						linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
-						linkjoineffect.classname = "linkjoineffect";
 						linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
 						linkjoineffect.owner = actor;
 						setorigin(linkjoineffect, pos);

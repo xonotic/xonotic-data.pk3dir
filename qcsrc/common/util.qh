@@ -101,11 +101,6 @@ float almost_in_bounds(float a, float b, float c);
 float power2of(float e);
 float log2of(float x);
 
-const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
-#define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
-#define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
-#define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))
-
 vector rgb_to_hsl(vector rgb);
 vector hsl_to_rgb(vector hsl);
 vector rgb_to_hsv(vector rgb);
@@ -211,10 +206,6 @@ const float XENCODE_LEN = 5;
 string xencode(float f);
 float xdecode(string s);
 
-#ifdef CSQC
-entity ReadCSQCEntity();
-#endif
-
 #ifndef MENUQC
 string strtolower(string s);
 #endif
@@ -277,11 +268,6 @@ string CCR(string input);
 	#endif
 	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
 #endif
-
-// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
-#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
-#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
-#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 
 vector vec3(float x, float y, float z);
 

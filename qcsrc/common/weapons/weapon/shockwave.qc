@@ -73,7 +73,7 @@ REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef CSQC
-void Net_ReadShockwaveParticle(void);
+void Net_ReadShockwaveParticle();
 .vector sw_shotorg;
 .vector sw_shotdir;
 .float sw_distance;
@@ -83,6 +83,9 @@ void Net_ReadShockwaveParticle(void);
 #endif
 #endif
 #ifdef IMPLEMENTATION
+
+REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
+
 #ifdef SVQC
 spawnfunc(weapon_shockwave)
 {
@@ -107,7 +110,7 @@ float shockwave_hit_damage[MAX_SHOCKWAVE_HITS];
 vector shockwave_hit_force[MAX_SHOCKWAVE_HITS];
 
 // MELEE ATTACK MODE
-void W_Shockwave_Melee_Think(void)
+void W_Shockwave_Melee_Think()
 {SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -234,8 +237,8 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
-	entity meleetemp;
-	meleetemp = spawn();
+	entity meleetemp = new(meleetemp);
+	make_pure(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	meleetemp.think = W_Shockwave_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor();
@@ -335,10 +338,9 @@ float W_Shockwave_Attack_CheckHit(
 	return true;
 }
 
-void W_Shockwave_Send(void)
+void W_Shockwave_Send()
 {SELFPARAM();
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
 	WriteCoord(MSG_BROADCAST, w_shotorg.y);
 	WriteCoord(MSG_BROADCAST, w_shotorg.z);
@@ -351,7 +353,7 @@ void W_Shockwave_Send(void)
 	WriteByte(MSG_BROADCAST, num_for_edict(self));
 }
 
-void W_Shockwave_Attack(void)
+void W_Shockwave_Attack()
 {SELFPARAM();
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
@@ -833,7 +835,13 @@ void Draw_Shockwave(entity this)
 	}
 }
 
-void Net_ReadShockwaveParticle(void)
+NET_HANDLE(TE_CSQC_SHOCKWAVEPARTICLE, bool isNew)
+{
+	Net_ReadShockwaveParticle();
+	return true;
+}
+
+void Net_ReadShockwaveParticle()
 {
 	entity shockwave;
 	shockwave = spawn();

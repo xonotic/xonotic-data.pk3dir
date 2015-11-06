@@ -1,7 +1,6 @@
 #include "quickmenu.qh"
 
-#include "hud.qh"
-#include "hud_config.qh"
+#include "hud/all.qh"
 #include "mapvoting.qh"
 
 // QUICKMENU_MAXLINES must be <= 10
@@ -574,7 +573,7 @@ void HUD_Quickmenu_DrawEntry(vector pos, string desc, string option, vector font
 		drawcolorcodedstring(pos, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 }
 
-void HUD_QuickMenu(void)
+void HUD_QuickMenu()
 {
 	if(!autocvar__hud_configure)
 	{

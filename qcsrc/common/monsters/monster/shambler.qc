@@ -82,7 +82,7 @@ void M_Shambler_Attack_Swing()
 	}
 }
 
-#include "../../../server/csqceffects.qh"
+#include "../../effects/qc/all.qh"
 
 void M_Shambler_Attack_Lightning_Explode()
 {SELFPARAM();
@@ -149,9 +149,8 @@ void M_Shambler_Attack_Lightning()
 
 	monster_makevectors(self.enemy);
 
-	gren = spawn ();
+	gren = new(grenade);
 	gren.owner = gren.realowner = self;
-	gren.classname = "grenade";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
 	gren.movetype = MOVETYPE_BOUNCE;

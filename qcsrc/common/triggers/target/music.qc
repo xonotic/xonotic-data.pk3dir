@@ -6,6 +6,9 @@
     #include "../../../server/defs.qh"
 #endif
 
+REGISTER_NET_TEMP(TE_CSQC_TARGET_MUSIC)
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_MUSIC)
+
 #ifdef SVQC
 
 // values:
@@ -19,8 +22,7 @@
 // when targetname is not set, THIS ONE is default
 void target_music_sendto(float to, float is)
 {SELFPARAM();
-	WriteByte(to, SVC_TEMPENTITY);
-	WriteByte(to, TE_CSQC_TARGET_MUSIC);
+	WriteHeader(to, TE_CSQC_TARGET_MUSIC);
 	WriteShort(to, num_for_edict(self));
 	WriteByte(to, self.volume * 255.0 * is);
 	WriteByte(to, self.fade_time * 16.0);
@@ -88,7 +90,7 @@ void TargetMusic_RestoreGame()
 // when triggered, it is disabled/enabled for everyone
 bool trigger_music_SendEntity(entity this, entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
 	sf &= ~0x80;
 	if(self.cnt)
 		sf |= 0x80;
@@ -165,7 +167,7 @@ void TargetMusic_Advance()
 		best = music_target;
 	if(music_trigger)
 		best = music_trigger;
-	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); ) if(e.noise)
+	for(e = world; (e = findfloat(e, enttype, NET_ENT_CLIENT_TRIGGER_MUSIC.m_id)); ) if(e.noise)
 	{
 		vol0 = e.lastvol;
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
@@ -206,6 +208,12 @@ void TargetMusic_Advance()
 		bgmtime = gettime(GETTIME_CDTRACK);
 }
 
+NET_HANDLE(TE_CSQC_TARGET_MUSIC, bool isNew)
+{
+	Net_TargetMusic();
+	return true;
+}
+
 void Net_TargetMusic()
 {
 	int id = ReadShort();
@@ -216,7 +224,7 @@ void Net_TargetMusic()
 	string noi = ReadString();
 
 	entity e;
-	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
+	for(e = world; (e = findfloat(e, enttype, NET_ENT_CLIENT_TRIGGER_MUSIC.m_id)); )
 	{
 		if(e.count == id)
 			break;
@@ -224,7 +232,7 @@ void Net_TargetMusic()
 	if(!e)
 	{
 		e = spawn();
-		e.enttype = ENT_CLIENT_TRIGGER_MUSIC;
+		e.enttype = NET_ENT_CLIENT_TRIGGER_MUSIC.m_id;
 		e.count = id;
 	}
 	if(e.noise != noi)
@@ -281,8 +289,8 @@ void Ent_TriggerMusic_Remove()
 	self.noise = string_null;
 }
 
-void Ent_ReadTriggerMusic()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
+{
 	int f = ReadByte();
 	if(f & 4)
 	{
@@ -335,6 +343,7 @@ void Ent_ReadTriggerMusic()
 	self.cnt = 1;
 	self.think = Ent_TriggerMusic_Think;
 	self.nextthink = time;
+	return true;
 }
 
 #endif

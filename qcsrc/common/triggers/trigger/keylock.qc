@@ -94,10 +94,12 @@ void trigger_keylock_touch()
 
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_KEYLOCK)
+
 #ifdef SVQC
 bool trigger_keylock_send(entity to, int sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_KEYLOCK);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_KEYLOCK);
 
 	WriteInt24_t(MSG_ENTITY, self.itemkeys);
 	WriteByte(MSG_ENTITY, self.height);
@@ -146,7 +148,7 @@ spawnfunc(trigger_keylock)
 		if(self.sounds == 1)
 			self.noise = "misc/secret.wav";
 		else if(self.sounds == 2)
-			self.noise = SND(TALK);
+			self.noise = strzone(SND(TALK));
 		else //if (self.sounds == 3) {
 			self.noise = "misc/trigger1.wav";
 	}
@@ -195,12 +197,14 @@ void keylock_remove()
 	self.targetname = string_null;
 }
 
-void ent_keylock()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
+{
 	self.itemkeys = ReadInt24_t();
 	self.height = ReadByte();
 
 	trigger_common_read(true);
+
+	return = true;
 
 	self.classname = "trigger_keylock";
 	self.drawmask = MASK_NORMAL;

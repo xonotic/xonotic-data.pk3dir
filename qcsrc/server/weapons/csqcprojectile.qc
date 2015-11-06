@@ -34,7 +34,7 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 	if(self.gravity != 0)
 		sf |= 0x10;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)

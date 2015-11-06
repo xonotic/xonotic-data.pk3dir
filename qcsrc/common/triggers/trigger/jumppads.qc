@@ -13,6 +13,9 @@ void trigger_push_use()
 }
 #endif
 
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_PUSH)
+REGISTER_NET_LINKED(ENT_CLIENT_TARGET_PUSH)
+
 /*
 	trigger_push_calculatevelocity
 
@@ -317,7 +320,7 @@ void trigger_push_findtarget()
 #ifdef SVQC
 float trigger_push_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)
@@ -388,7 +391,7 @@ spawnfunc(trigger_push)
 
 bool target_push_send(entity this, entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TARGET_PUSH);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TARGET_PUSH);
 
 	WriteByte(MSG_ENTITY, self.cnt);
 	WriteString(MSG_ENTITY, self.targetname);
@@ -407,14 +410,14 @@ void target_push_link()
 
 spawnfunc(target_push) { target_push_link(); }
 spawnfunc(info_notnull) { target_push_link(); }
-spawnfunc(target_position) { target_push_link(); }
+spawnfunc(target_position) { make_pure(this); target_push_link(); }
 
 #endif
 
 #ifdef CSQC
 
-void ent_trigger_push()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & 1)
@@ -441,6 +444,7 @@ void ent_trigger_push()
 		self.team = ReadByte();
 		self.active = ReadByte();
 	}
+	return true;
 }
 
 void target_push_remove()
@@ -454,14 +458,17 @@ void target_push_remove()
 	self.targetname = string_null;
 }
 
-void ent_target_push()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
+{
 	self.classname = "push_target";
 	self.cnt = ReadByte();
 	self.targetname = strzone(ReadString());
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();
 	self.origin_z = ReadCoord();
+
+	return = true;
+
 	setorigin(self, self.origin);
 
 	self.drawmask = MASK_NORMAL;

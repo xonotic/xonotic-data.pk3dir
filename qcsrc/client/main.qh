@@ -13,13 +13,6 @@ const float DATABUF_PING = 0;
 
 #define DATABUF_NEXT (5*maxclients)
 
-void() menu_show_error;
-void() menu_sub_null;
-
-float menu_visible;
-var void() menu_show;
-var float(float bInputType, float nPrimary, float nSecondary) menu_action;
-
 // --------------------------------------------------------------------------
 // Onslaught
 
@@ -93,7 +86,7 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 
 .void(entity) draw;
 .void(entity) draw2d;
-.void(void) entremove;
+.void() entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 

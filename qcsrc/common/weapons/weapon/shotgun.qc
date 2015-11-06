@@ -85,7 +85,7 @@ void W_Shotgun_Attack(Weapon thiswep, float isprimary)
 
 .float swing_prev;
 .entity swing_alreadyhit;
-void W_Shotgun_Melee_Think(void)
+void W_Shotgun_Melee_Think()
 {SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -186,8 +186,8 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
 
-	entity meleetemp;
-	meleetemp = spawn();
+	entity meleetemp = new(meleetemp);
+	make_pure(meleetemp);
 	meleetemp.realowner = actor;
 	meleetemp.think = W_Shotgun_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
@@ -342,12 +342,8 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 			pointparticles(EFFECT_SHOTGUN_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent && time - self.prevric > 0.25)
 			{
-				if(w_random < 0.0165)
-					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTEN_NORM);
-				else if(w_random < 0.033)
-					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTEN_NORM);
-				else if(w_random < 0.05)
-					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTEN_NORM);
+				if(w_random < 0.05)
+					sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
 				self.prevric = time;
 			}
 		}

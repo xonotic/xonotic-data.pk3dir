@@ -2,7 +2,7 @@
 
 #define world NULL
 
-#include "oo/classes.qc"
+#include "classes.qc"
 
 #include "draw.qc"
 #include "menu.qc"

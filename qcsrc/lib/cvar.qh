@@ -5,7 +5,18 @@
 #include "progname.qh"
 #include "static.qh"
 
-void RegisterCvars(void(string name, string def, string desc, bool archive, string file)f) {}
+void RegisterCvars(void(string name, string def, string desc, bool archive, string file) f) {}
+
+bool cvar_value_issafe(string s)
+{
+	if (strstrofs(s, "\"", 0) >= 0) return false;
+	if (strstrofs(s, "\\", 0) >= 0) return false;
+	if (strstrofs(s, ";", 0) >= 0) return false;
+	if (strstrofs(s, "$", 0) >= 0) return false;
+	if (strstrofs(s, "\r", 0) >= 0) return false;
+	if (strstrofs(s, "\n", 0) >= 0) return false;
+	return true;
+}
 
 /** escape the string to make it safe for consoles */
 string MakeConsoleSafe(string input)
@@ -64,7 +75,7 @@ const noref vector default_vector = '0 0 0';
 #define repr_cvar_vector(x) (sprintf("%v", x))
 
 #define __AUTOCVAR(file, archive, var, type, desc, default) \
-	[[accumulate]] void RegisterCvars(void(string, string, string, bool, string)f) \
+	[[accumulate]] void RegisterCvars(void(string, string, string, bool, string) f) \
 	{ \
 		f( #var, repr_cvar_##type(default), desc, archive, file); \
 	} \

@@ -1,7 +1,7 @@
 #ifndef G_SUBS_H
 #define G_SUBS_H
 
-void SUB_NullThink(void);
+void SUB_NullThink();
 
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
@@ -17,7 +17,7 @@ SUB_Remove
 Remove self
 ==================
 */
-void SUB_Remove (void);
+void SUB_Remove ();
 
 /*
 ==================
@@ -27,7 +27,7 @@ Applies some friction to self
 ==================
 */
 .float friction;
-void SUB_Friction (void);
+void SUB_Friction ();
 
 /*
 ==================
@@ -38,7 +38,7 @@ Makes client invisible or removes non-client
 */
 void SUB_VanishOrRemove (entity ent);
 
-void SUB_SetFade_Think (void);
+void SUB_SetFade_Think ();
 
 /*
 ==================
@@ -57,10 +57,10 @@ calculate self.velocity and self.nextthink to reach dest from
 self.origin traveling at speed
 ===============
 */
-void SUB_CalcMoveDone (void);
+void SUB_CalcMoveDone ();
 
 .float platmovetype_turn;
-void SUB_CalcMove_controller_think (void);
+void SUB_CalcMove_controller_think ();
 
 void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector control, vector dest);
 
@@ -82,7 +82,7 @@ self.angles rotating
 The calling function should make sure self.think is valid
 ===============
 */
-void SUB_CalcAngleMoveDone (void);
+void SUB_CalcAngleMoveDone ();
 
 // FIXME: I fixed this function only for rotation around the main axes
 void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func);
@@ -96,7 +96,7 @@ main
 unused but required by the engine
 ==================
 */
-void main (void);
+void main ();
 
 // Misc
 

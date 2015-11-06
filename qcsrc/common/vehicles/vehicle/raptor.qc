@@ -674,10 +674,10 @@ spawnfunc(vehicle_raptor)
 
 				self.frame = 0;
 
-				self.bomb1 = spawn();
-				self.bomb2 = spawn();
-				self.gun1  = spawn();
-				self.gun2  = spawn();
+				self.bomb1 = new(raptor_bomb);
+				self.bomb2 = new(raptor_bomb);
+				self.gun1  = new(raptor_gun);
+				self.gun2  = new(raptor_gun);
 
 				setmodel(self.bomb1, MDL_VEH_RAPTOR_CB_FOLDED);
 				setmodel(self.bomb2, MDL_VEH_RAPTOR_CB_FOLDED);
@@ -708,7 +708,7 @@ spawnfunc(vehicle_raptor)
 				self.angles = self.bomb1.angles;
 				self.bomb1.angles = '0 0 0';
 
-				spinner = spawn();
+				spinner = new(raptor_spinner);
 				spinner.owner = self;
 				setmodel(spinner, MDL_VEH_RAPTOR_PROP);
 				setattachment(spinner, self, "engine_left");
@@ -716,7 +716,7 @@ spawnfunc(vehicle_raptor)
 				spinner.avelocity = '0 90 0';
 				self.bomb1.gun1 = spinner;
 
-				spinner = spawn();
+				spinner = new(raptor_spinner);
 				spinner.owner = self;
 				setmodel(spinner, MDL_VEH_RAPTOR_PROP);
 				setattachment(spinner, self, "engine_right");

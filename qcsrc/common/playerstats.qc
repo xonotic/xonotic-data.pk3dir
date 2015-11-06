@@ -11,7 +11,7 @@
 #endif
 
 #ifdef SVQC
-void PlayerStats_Prematch(void)
+void PlayerStats_Prematch()
 {
 	//foobar
 }
@@ -635,7 +635,7 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 	LOG_TRACE("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
 }
 
-void PlayerStats_PlayerDetail(void)
+void PlayerStats_PlayerDetail()
 {
 	// http://stats.xonotic.org/player/me
 	if((autocvar_g_playerstats_playerdetail_uri != "") && (crypto_getmyidstatus(0) > 0))
@@ -668,7 +668,7 @@ void PlayerStats_PlayerDetail(void)
 	}
 }
 
-void PlayerStats_PlayerDetail_CheckUpdate(void)
+void PlayerStats_PlayerDetail_CheckUpdate()
 {
 	// determine whether we should retrieve playerdetail information again
 	float gamecount = cvar("cl_matchcount");

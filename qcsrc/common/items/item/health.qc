@@ -5,7 +5,7 @@
 
 #ifndef MENUQC
 MODEL(HealthSmall_ITEM, Item_Model("g_h1.md3"));
-SOUND(HealthSmall, "misc/minihealth.ogg");
+SOUND(HealthSmall, "misc/minihealth");
 #endif
 
 REGISTER_ITEM(HealthSmall, Health) {
@@ -25,7 +25,7 @@ REGISTER_ITEM(HealthSmall, Health) {
 
 #ifndef MENUQC
 MODEL(HealthMedium_ITEM, Item_Model("g_h25.md3"));
-SOUND(HealthMedium, "misc/mediumhealth.ogg");
+SOUND(HealthMedium, "misc/mediumhealth");
 #endif
 
 REGISTER_ITEM(HealthMedium, Health) {
@@ -45,7 +45,7 @@ REGISTER_ITEM(HealthMedium, Health) {
 
 #ifndef MENUQC
 MODEL(HealthLarge_ITEM, Item_Model("g_h50.md3"));
-SOUND(HealthLarge, "misc/mediumhealth.ogg");
+SOUND(HealthLarge, "misc/mediumhealth");
 #endif
 
 REGISTER_ITEM(HealthLarge, Health) {
@@ -67,7 +67,7 @@ REGISTER_ITEM(HealthLarge, Health) {
 
 #ifndef MENUQC
 MODEL(HealthMega_ITEM, Item_Model("g_h100.md3"));
-SOUND(HealthMega, "misc/megahealth.ogg");
+SOUND(HealthMega, "misc/megahealth");
 #endif
 
 REGISTER_ITEM(HealthMega, Health) {

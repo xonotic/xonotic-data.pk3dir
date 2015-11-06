@@ -1,6 +1,6 @@
 #include "miscfunctions.qh"
 
-#include "hud.qh"
+#include "hud/all.qh"
 
 #include "../common/command/generic.qh"
 
@@ -123,7 +123,8 @@ entity GetTeam(int Team, bool add)
 		return teamslots[num];
 	if (!add)
 		return world;
-	entity tm = spawn();
+	entity tm = new(team);
+	make_pure(tm);
 	tm.team = Team;
 	teamslots[num] = tm;
 	RegisterTeam(tm);
@@ -153,15 +154,6 @@ float PreviewExists(string name)
 	if (fexists(strcat(name, ".pcx"))) return true;
 
 	return false;
-}
-
-vector rotate(vector v, float a)
-{
-	vector w = '0 0 0';
-	// FTEQCC SUCKS AGAIN
-	w.x =      v.x * cos(a) + v.y * sin(a);
-	w.y = -1 * v.x * sin(a) + v.y * cos(a);
-	return w;
 }
 
 // decolorizes and team colors the player name when needed
@@ -196,10 +188,6 @@ vector project_3d_to_2d(vector vec)
 		vec.y *= vid_conheight / vid_height;
 	}
 	return vec;
-}
-
-void dummyfunction(float a1, float a2, float a3, float a4, float a5, float a6, float a7, float a8)
-{
 }
 
 float expandingbox_sizefactor_from_fadelerp(float fadelerp)
@@ -286,7 +274,6 @@ void drawstring_expanding(vector position, string text, vector theScale, vector 
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = sz * '1 1 0';
-	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, false, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), rgb, theAlpha * (1 - fadelerp), flag);
 	// width parameter:
 	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
@@ -306,7 +293,6 @@ void drawcolorcodedstring_expanding(vector position, string text, vector theScal
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = sz * '1 1 0';
-	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, true, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), theAlpha * (1 - fadelerp), flag);
 	drawfontscale = '1 1 0';
 }
@@ -547,6 +533,7 @@ float getplayerisdead(float pl)
 	return false;
 }
 
+/** engine callback */
 void URI_Get_Callback(int id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
@@ -566,16 +553,6 @@ void URI_Get_Callback(int id, float status, string data)
 	{
 		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
 	}
-}
-
-void draw_beginBoldFont()
-{
-	drawfont = FONT_USER+2;
-}
-
-void draw_endBoldFont()
-{
-	drawfont = FONT_USER+1;
 }
 
 void Accuracy_LoadLevels()

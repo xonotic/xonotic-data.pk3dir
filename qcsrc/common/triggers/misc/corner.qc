@@ -1,7 +1,9 @@
+REGISTER_NET_LINKED(ENT_CLIENT_CORNER)
+
 #ifdef SVQC
 bool corner_send(entity to, int sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CORNER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_CORNER);
 
 	WriteString(MSG_ENTITY, self.platmovetype);
 
@@ -57,8 +59,8 @@ void corner_remove()
 	self.platmovetype = string_null;
 }
 
-void ent_corner()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_CORNER, bool isnew)
+{
 	self.platmovetype = strzone(ReadString());
 
 	self.origin_x = ReadCoord();
@@ -74,6 +76,8 @@ void ent_corner()
 	self.target_random = ReadByte();
 
 	self.wait = ReadByte();
+
+	return = true;
 
 	self.classname = "path_corner";
 	self.drawmask = MASK_NORMAL;

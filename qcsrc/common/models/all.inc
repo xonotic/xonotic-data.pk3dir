@@ -5,6 +5,7 @@ string W_Model(string w_mdl);
 
 MODEL(CTF_SHIELD,                       "models/ctf/shield.md3");
 MODEL(CTF_CAPTURE,                      "models/ctf/shockwavetransring.md3");
+MODEL(CTF_FLAG,                         "models/ctf/flags.md3");
 
 MODEL(DOM_NEUTRAL,                      "models/domination/dom_unclaimed.md3");
 MODEL(DOM_RED,                          "models/domination/dom_red.md3");

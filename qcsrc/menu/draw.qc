@@ -27,16 +27,6 @@ void draw_reset(float cw, float ch, float ox, float oy)
 	draw_endBoldFont();
 }
 
-void draw_beginBoldFont()
-{
-	drawfont = FONT_USER+3;
-}
-
-void draw_endBoldFont()
-{
-	drawfont = FONT_USER+0;
-}
-
 vector globalToBox(vector v, vector theOrigin, vector theScale)
 {
 	v -= theOrigin;

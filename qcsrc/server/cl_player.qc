@@ -4,7 +4,6 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "g_subs.qh"
-#include "g_violence.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
@@ -35,7 +34,7 @@ void Drop_Special_Items(entity player)
 	MUTATOR_CALLHOOK(DropSpecialItems, player);
 }
 
-void CopyBody_Think(void)
+void CopyBody_Think()
 {SELFPARAM();
 	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
 	{
@@ -53,7 +52,7 @@ void CopyBody(float keepvelocity)
 {SELFPARAM();
 	if (self.effects & EF_NODRAW)
 		return;
-	setself(spawn());
+	setself(new(body));
 	self.enemy = this;
 	self.lip = this.lip;
 	self.colormap = this.colormap;
@@ -63,7 +62,6 @@ void CopyBody(float keepvelocity)
 	self.angles = this.angles;
 	self.v_angle = this.v_angle;
 	self.avelocity = this.avelocity;
-	self.classname = "body";
 	self.damageforcescale = this.damageforcescale;
 	self.effects = this.effects;
 	self.glowmod = this.glowmod;
@@ -144,7 +142,7 @@ void player_setupanimsformodel()
 	animdecide_setstate(self, 0, false);
 }
 
-void player_anim (void)
+void player_anim ()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(self.deadflag) {

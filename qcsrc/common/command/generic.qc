@@ -28,7 +28,7 @@
 // =========================================================
 
 // used by generic commands for better help/usage information
-string GetProgramCommandPrefix(void)
+string GetProgramCommandPrefix()
 {
 	#ifdef SVQC
 	return "sv_cmd";

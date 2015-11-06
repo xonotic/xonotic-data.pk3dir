@@ -95,9 +95,6 @@ float minigame_isactive()
 #define minigame_cmd(...) minigame_cmd_workaround(0,__VA_ARGS__)
 void minigame_cmd_workaround(float dummy, string...cmdargc);
 
-// Read a minigame entity from the server
-void ent_read_minigame();
-
 // Prompt the player to play in the current minigame
 // (ie: it's their turn and they should get back to the minigame)
 void minigame_prompt();
@@ -117,13 +114,14 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_ar
 REGISTRY(Minigames, BITS(3))
 #define Minigames_from(i) _Minigames_from(i, NULL)
 REGISTER_REGISTRY(RegisterMinigames)
+REGISTRY_CHECK(Minigames)
 #define REGISTER_MINIGAME(name,nicename) \
-    REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, spawn()); \
+    REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, new(minigame_descriptor)); \
     void name##_hud_board(vector, vector); \
     void name##_hud_status(vector, vector); \
     int name##_client_event(entity, string, ...); \
     REGISTER_INIT_POST(MINIGAME, name) { \
-        this.classname = "minigame_descriptor"; \
+        make_pure(this); \
         this.netname = strzone(strtolower(#name)); \
         this.message = nicename; \
         this.minigame_hud_board = name##_hud_board; \

@@ -3,6 +3,7 @@
 
 #include "misc.qh"
 #include "nil.qh"
+#include "static.qh"
 
 #ifdef MENUQC
 	#define NULL (null_entity)
@@ -10,17 +11,28 @@
 	#define NULL (world)
 #endif
 
+.vector origin;
+.bool pure_data;
+#define make_pure(e) \
+	do \
+	{ \
+		(e).pure_data = true; \
+	} \
+	while (0)
+#define is_pure(e) ((e).pure_data)
+
 .string classname;
 /** Location entity was spawned from in source */
 .string sourceLocFile;
 .int sourceLocLine;
 entity _spawn();
-entity __spawn(string _classname, string _sourceFile, int _sourceLine)
+entity __spawn(string _classname, string _sourceFile, int _sourceLine, bool pure)
 {
 	entity this = _spawn();
 	this.classname = _classname;
 	this.sourceLocFile = _sourceFile;
 	this.sourceLocLine = _sourceLine;
+	if (pure) make_pure(this);
 	return this;
 }
 
@@ -30,13 +42,29 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine)
 #ifndef QCC_SUPPORT_ENTITYCLASS
 	#define entityclass_2(name, base) typedef entity name
 	#define class(name)
-	#define new(class) __spawn( #class, __FILE__, __LINE__)
+	#define new(class) __spawn( #class, __FILE__, __LINE__, false)
 #else
 	#define entityclass_2(name, base) entityclass name : base {}
 	#define class(name) [[class(name)]]
-	#define new(class) ((class) __spawn( #class, __FILE__, __LINE__))
+	#define new(class) ((class) __spawn( #class, __FILE__, __LINE__, false))
 #endif
-#define spawn() new(entity)
+#define spawn() __spawn("entity", __FILE__, __LINE__, false)
+
+entity _clearentity_ent;
+STATIC_INIT(clearentity)
+{
+	_clearentity_ent = new(clearentity);
+}
+void clearentity(entity e)
+{
+#ifdef CSQC
+		int n = e.entnum;
+#endif
+	copyentity(_clearentity_ent, e);
+#ifdef CSQC
+		e.entnum = n;
+#endif
+}
 
 // Classes have a `spawn##cname(entity)` constructor
 // The parameter is used across [[accumulate]] functions
@@ -82,6 +110,7 @@ STATIC_INIT(RegisterClasses)
 	void cname##_vtbl_init() \
 	{ \
 		cname e = new(vtbl); \
+		make_pure(e); \
 		spawn##cname##_static(e); \
 		e.vtblname = #cname; \
 		/* Top level objects refer to themselves */ \
@@ -164,7 +193,7 @@ CLASS(Object, );
 		}
 		return s;
 	}
-	METHOD(Object, display, void(entity this, void(string name, string icon)returns))
+	METHOD(Object, display, void(entity this, void(string name, string icon) returns))
 	{
 		returns(sprintf("entity %i", this), "nopreview_map");
 	}

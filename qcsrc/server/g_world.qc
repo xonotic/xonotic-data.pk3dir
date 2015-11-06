@@ -54,8 +54,7 @@ void PingPLReport_Think()
 	e = edict_num(self.cnt + 1);
 	if(IS_REAL_CLIENT(e))
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
+		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, self.cnt);
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
@@ -72,8 +71,7 @@ void PingPLReport_Think()
 	}
 	else
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
+		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, self.cnt);
 		WriteShort(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
@@ -83,8 +81,8 @@ void PingPLReport_Think()
 }
 void PingPLReport_Spawn()
 {
-	pingplreport = spawn();
-	pingplreport.classname = "pingplreport";
+	pingplreport = new(pingplreport);
+	make_pure(pingplreport);
 	pingplreport.think = PingPLReport_Think;
 	pingplreport.nextthink = time;
 }
@@ -98,17 +96,7 @@ void ShuffleMaplist();
 
 void SetDefaultAlpha()
 {
-	if(autocvar_g_running_guns)
-	{
-		default_player_alpha = -1;
-		default_weapon_alpha = +1;
-	}
-	else if(g_cloaked)
-	{
-		default_player_alpha = autocvar_g_balance_cloaked_alpha;
-		default_weapon_alpha = default_player_alpha;
-	}
-	else
+	if (!MUTATOR_CALLHOOK(SetDefaultAlpha))
 	{
 		default_player_alpha = autocvar_g_player_alpha;
 		if(default_player_alpha == 0)
@@ -515,7 +503,7 @@ void detect_maptype()
 entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
 	return true;
 }
@@ -528,7 +516,8 @@ void RandomSeed_Think()
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
-	randomseed = spawn();
+	randomseed = new(randomseed);
+	make_pure(randomseed);
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
@@ -546,13 +535,11 @@ spawnfunc(__init_dedicated_server)
 
 	remove = remove_unsafely;
 
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	e.think = GotoFirstMap;
 	e.nextthink = time; // this is usually 1 at this point
 
-	e = spawn();
-	e.classname = "info_player_deathmatch"; // safeguard against player joining
+	e = new(info_player_deathmatch);  // safeguard against player joining
 
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
@@ -1664,7 +1651,7 @@ void AddWinners(.float field, float value)
 }
 
 // clear the .winning flags
-void ClearWinners(void)
+void ClearWinners()
 {
 	entity head;
 	FOR_EACH_PLAYER(head)

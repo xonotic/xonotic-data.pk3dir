@@ -12,7 +12,7 @@
 
 bool SpawnPoint_Send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, self.team);
 	WriteShort(MSG_ENTITY, self.origin.x);
@@ -26,7 +26,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 {
 	float send;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
 
 	if(autocvar_g_spawn_alloweffects)
 	{
@@ -117,9 +117,7 @@ void relocate_spawnpoint()
     {
         // show where spawnpoints point at too
         makevectors(self.angles);
-        entity e;
-        e = spawn();
-        e.classname = "info_player_foo";
+        entity e = new(info_player_foo);
         setorigin(e, self.origin + v_forward * 24);
         setsize(e, '-8 -8 -8', '8 8 8');
         e.solid = SOLID_TRIGGER;

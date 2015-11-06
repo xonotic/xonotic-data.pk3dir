@@ -12,8 +12,7 @@
 void Send_WeaponComplain(entity e, float wpn, float type)
 {
 	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
+	WriteHeader(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
 	WriteByte(MSG_ONE, wpn);
 	WriteByte(MSG_ONE, type);
 }
@@ -308,7 +307,7 @@ void W_PreviousWeapon(float list)
 }
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon(void)
+void W_LastWeapon()
 {SELFPARAM();
 	if(client_hasweapon(self, self.cnt, true, false))
 		W_SwitchWeapon(self.cnt);

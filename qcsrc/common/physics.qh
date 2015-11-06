@@ -33,6 +33,7 @@ bool IsFlying(entity a);
 	void PM_multijump();
 
 	.float watertype;
+	.float waterlevel;
 	.int items;
 
 	.vector movement;

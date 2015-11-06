@@ -50,6 +50,7 @@ float autocvar_g_monster_spider_attack_bite_delay;
 
 void M_Spider_Attack_Web();
 
+SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
@@ -61,7 +62,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 			actor.anim_finished = time + 1;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, v_forward, false, 0, SND(SpiderAttack_FIRE), CH_WEAPON_B, 0);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web();
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -121,8 +122,7 @@ void M_Spider_Attack_Web()
 
 	sound(self, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
 
-	entity proj = spawn ();
-	proj.classname = "plasma";
+	entity proj = new(plasma);
 	proj.owner = proj.realowner = self;
 	proj.use = M_Spider_Attack_Web_Explode;
 	proj.think = adaptor_think2use_hittype_splash;

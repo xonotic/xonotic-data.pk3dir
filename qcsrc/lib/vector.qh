@@ -63,6 +63,21 @@ vector vec3(float x, float y, float z)
 	return v;
 }
 
+vector rotate(vector v, float a)
+{
+	float a_sin = sin(a), a_cos = cos(a);
+	vector r = '0 0 0';
+	r.x =      v.x * a_cos + v.y * a_sin;
+	r.y = -1 * v.x * a_sin + v.y * a_cos;
+	return r;
+}
+
+vector yinvert(vector v)
+{
+	v.y = 1 - v.y;
+	return v;
+}
+
 #ifndef MENUQC
 	vector get_corner_position(entity box, int corner)
 	{

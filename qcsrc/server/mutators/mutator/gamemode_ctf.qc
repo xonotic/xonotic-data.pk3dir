@@ -13,7 +13,7 @@ REGISTER_MUTATOR(ctf, false)
 		ctf_Initialize();
 
 		ActivateTeamplay();
-		SetLimits(autocvar_capturelimit_override, -1, autocvar_captureleadlimit_override, -1);
+		SetLimits(autocvar_capturelimit_override, autocvar_captureleadlimit_override, -1, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -474,13 +474,12 @@ void ctf_CaptureShield_Touch()
 
 void ctf_CaptureShield_Spawn(entity flag)
 {SELFPARAM();
-	entity shield = spawn();
+	entity shield = new(ctf_captureshield);
 
 	shield.enemy = self;
 	shield.team = self.team;
 	shield.touch = ctf_CaptureShield_Touch;
 	shield.customizeentityforclient = ctf_CaptureShield_Customize;
-	shield.classname = "ctf_captureshield";
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
 	shield.solid = SOLID_TRIGGER;
@@ -679,6 +678,10 @@ void ctf_Handle_Throw(entity player, entity receiver, int droptype)
 	ctf_CaptureShield_Update(player, 0); // shield player from picking up flag
 }
 
+void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
+{
+	return modeleffect_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
+}
 
 // ==============
 // Event Handlers
@@ -937,7 +940,7 @@ bool ctf_Stalemate_Customize()
 	return true;
 }
 
-void ctf_CheckStalemate(void)
+void ctf_CheckStalemate()
 {
 	// declarations
 	int stale_flags = 0, stale_red_flags = 0, stale_blue_flags = 0, stale_yellow_flags = 0, stale_pink_flags = 0, stale_neutral_flags = 0;
@@ -1331,7 +1334,7 @@ void ctf_Reset()
 	ctf_RespawnFlag(self);
 }
 
-void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf_FlagSetup()
+void ctf_DelayedFlagSetup() // called after a flag is placed on a map by ctf_FlagSetup()
 {SELFPARAM();
 	// bot waypoints
 	waypoint_spawnforitem_force(self, self.origin);
@@ -1355,12 +1358,6 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 
 	// captureshield setup
 	ctf_CaptureShield_Spawn(self);
-}
-
-void set_flag_string(entity flag, .string field, string value, string teamname)
-{
-	if(flag.(field) == "")
-		flag.(field) = strzone(sprintf(value,teamname));
 }
 
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
@@ -1403,20 +1400,20 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
 	if(flag.skin == 0)			{ flag.skin = cvar(sprintf("g_ctf_flag_%s_skin", teamname)); }
 	if(flag.model == "")		{ flag.model = cvar_string(sprintf("g_ctf_flag_%s_model", teamname)); }
-	set_flag_string(flag, toucheffect, 	"%sflag_touch", teamname);
-	set_flag_string(flag, passeffect, 	"%s_pass", 		teamname);
-	set_flag_string(flag, capeffect, 	"%s_cap", 		teamname);
+	if (flag.toucheffect == "") { flag.toucheffect = EFFECT_FLAG_TOUCH(teamnumber).eent_eff_name; }
+	if (flag.passeffect == "") 	{ flag.passeffect = EFFECT_PASS(teamnumber).eent_eff_name; }
+	if (flag.capeffect == "") 	{ flag.capeffect = EFFECT_CAP(teamnumber).eent_eff_name; }
 
 	// sounds
-	flag.snd_flag_taken = SND(CTF_TAKEN(teamnumber));
-	flag.snd_flag_returned = SND(CTF_RETURNED(teamnumber));
-	flag.snd_flag_capture = SND(CTF_CAPTURE(teamnumber));
-	flag.snd_flag_dropped = SND(CTF_DROPPED(teamnumber));
-	if (flag.snd_flag_respawn == "") flag.snd_flag_respawn = SND(CTF_RESPAWN); // if there is ever a team-based sound for this, update the code to match.
+	flag.snd_flag_taken = strzone(SND(CTF_TAKEN(teamnumber)));
+	flag.snd_flag_returned = strzone(SND(CTF_RETURNED(teamnumber)));
+	flag.snd_flag_capture = strzone(SND(CTF_CAPTURE(teamnumber)));
+	flag.snd_flag_dropped = strzone(SND(CTF_DROPPED(teamnumber)));
+	if (flag.snd_flag_respawn == "") flag.snd_flag_respawn = strzone(SND(CTF_RESPAWN)); // if there is ever a team-based sound for this, update the code to match.
 	precache_sound(flag.snd_flag_respawn);
-	if (flag.snd_flag_touch == "") flag.snd_flag_touch = SND(CTF_TOUCH); // again has no team-based sound
+	if (flag.snd_flag_touch == "") flag.snd_flag_touch = strzone(SND(CTF_TOUCH)); // again has no team-based sound
 	precache_sound(flag.snd_flag_touch);
-	if (flag.snd_flag_pass == "") flag.snd_flag_pass = SND(CTF_PASS); // same story here
+	if (flag.snd_flag_pass == "") flag.snd_flag_pass = strzone(SND(CTF_PASS)); // same story here
 	precache_sound(flag.snd_flag_pass);
 
 	// precache

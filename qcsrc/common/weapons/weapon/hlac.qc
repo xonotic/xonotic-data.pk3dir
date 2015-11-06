@@ -52,7 +52,7 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
-void W_HLAC_Touch(void)
+void W_HLAC_Touch()
 {SELFPARAM();
 	float isprimary;
 
@@ -87,9 +87,8 @@ void W_HLAC_Attack(Weapon thiswep)
 		self.punchangle_y = random() - 0.5;
 	}
 
-	missile = spawn();
+	missile = new(hlacbolt);
 	missile.owner = missile.realowner = self;
-	missile.classname = "hlacbolt";
 	missile.bot_dodge = true;
 
     missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
@@ -116,7 +115,7 @@ void W_HLAC_Attack(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-void W_HLAC_Attack2(void)
+void W_HLAC_Attack2()
 {SELFPARAM();
 	entity missile;
     float spread;
@@ -130,9 +129,8 @@ void W_HLAC_Attack2(void)
 	W_SetupShot(self, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn();
+	missile = new(hlacbolt);
 	missile.owner = missile.realowner = self;
-	missile.classname = "hlacbolt";
 	missile.bot_dodge = true;
 
     missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);

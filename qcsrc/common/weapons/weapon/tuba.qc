@@ -149,7 +149,7 @@ bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch
 	return true;
 }
 
-void W_Tuba_NoteOff(void)
+void W_Tuba_NoteOff()
 {SELFPARAM();
 	// we have a note:
 	//   on: self.spawnshieldtime
@@ -261,7 +261,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	if(!sound_allowed(MSG_ONE, self.realowner))
 		return false;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
 	{
@@ -281,7 +281,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	return true;
 }
 
-void W_Tuba_NoteThink(void)
+void W_Tuba_NoteThink()
 {SELFPARAM();
 	float dist_mult;
 	float vol0, vol1;

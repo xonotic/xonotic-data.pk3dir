@@ -4,11 +4,13 @@
 
 REGISTER_MUTATOR(waypointsprites, true);
 
+REGISTER_NET_LINKED(waypointsprites)
+
 #ifdef SVQC
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 {
-    WriteMutator(MSG_ENTITY, waypointsprites);
+    WriteHeader(MSG_ENTITY, waypointsprites);
 
     sendflags = sendflags & 0x7F;
 
@@ -97,9 +99,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
 #ifdef CSQC
 void Ent_WaypointSprite();
-MUTATOR_HOOKFUNCTION(waypointsprites, CSQC_Ent_Update) {
-    if (MUTATOR_RETURNVALUE) return false;
-    if (!ReadMutatorEquals(mutator_argv_int_0, waypointsprites)) return false;
+NET_HANDLE(waypointsprites, bool isnew) {
     Ent_WaypointSprite();
     return true;
 }
@@ -993,6 +993,7 @@ entity WaypointSprite_Spawn(
 )
 {
     entity wp = new(sprite_waypoint);
+    make_pure(wp);
     wp.teleport_time = time + _lifetime;
     wp.fade_time = _lifetime;
     wp.exteriormodeltoclient = ref;

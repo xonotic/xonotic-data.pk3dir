@@ -48,10 +48,11 @@ float autocvar_g_monster_wyvern_attack_fireball_speed;
 void M_Wyvern_Attack_Fireball_Explode();
 void M_Wyvern_Attack_Fireball_Touch();
 
+SOUND(WyvernAttack_FIRE, W_Sound("electro_fire"));
 METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity weaponentity, int fire)) {
     if (fire & 1)
     if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
-        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, SND(WyvernAttack_FIRE), CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
 			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;

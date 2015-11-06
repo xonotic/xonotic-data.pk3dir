@@ -318,9 +318,7 @@ void Ban_LoadBans()
 		}
 	}
 
-	entity e;
-	e = spawn();
-	e.classname = "bansyncer";
+	entity e = new(bansyncer);
 	e.think = OnlineBanList_Think;
 	e.nextthink = time + 1;
 }

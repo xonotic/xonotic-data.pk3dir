@@ -458,8 +458,7 @@ void door_spawnfield(vector fmins, vector fmaxs)
 	entity	trigger;
 	vector	t1 = fmins, t2 = fmaxs;
 
-	trigger = spawn();
-	trigger.classname = "doortriggerfield";
+	trigger = new(doortriggerfield);
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = self;
@@ -600,6 +599,8 @@ void LinkDoors()
 	door_spawnfield(cmins, cmaxs);
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_DOOR)
+
 #ifdef SVQC
 /*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
@@ -632,7 +633,7 @@ FIXME: only one sound set available at the time being
 
 float door_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DOOR);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_DOOR);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & SF_TRIGGER_INIT)
@@ -805,8 +806,8 @@ void door_draw(entity this)
 	trigger_draw_generic(this);
 }
 
-void ent_door()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
@@ -875,6 +876,7 @@ void ent_door()
 		self.pos2_y = ReadCoord();
 		self.pos2_z = ReadCoord();
 	}
+	return true;
 }
 
 #endif

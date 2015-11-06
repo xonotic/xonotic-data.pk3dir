@@ -10,6 +10,7 @@ REGISTRY(Turrets, BITS(5))
 #define Turrets_from(i) _Turrets_from(i, TUR_Null)
 #define get_turretinfo(i) Turrets_from(i)
 REGISTER_REGISTRY(RegisterTurrets)
+REGISTRY_CHECK(Turrets)
 
 
 GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")

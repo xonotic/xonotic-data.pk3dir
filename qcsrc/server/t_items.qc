@@ -26,6 +26,8 @@
     #include "../lib/warpzone/util_server.qh"
 #endif
 
+REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
+
 #ifdef CSQC
 void ItemDraw(entity self)
 {
@@ -94,8 +96,8 @@ void Item_PreDraw()
 		self.drawmask = MASK_NORMAL;
 }
 
-void ItemRead(float _IsNew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
+{
     int sf = ReadByte();
 
     if(sf & ISF_LOCATION)
@@ -240,6 +242,7 @@ void ItemRead(float _IsNew)
         if(self.ItemStatus & ITS_ANIMATE2)
             self.move_avelocity = '0 -90 0';
     }
+    return true;
 }
 
 #endif
@@ -252,7 +255,7 @@ bool ItemSend(entity this, entity to, int sf)
 	else
 		sf &= ~ISF_DROP;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
 	//WriteByte(MSG_ENTITY, self.cnt);
@@ -436,7 +439,7 @@ float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
 
-void Item_Respawn (void)
+void Item_Respawn ()
 {SELFPARAM();
 	Item_Show(self, 1);
 	// this is ugly...
@@ -462,7 +465,7 @@ void Item_Respawn (void)
 	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 }
 
-void Item_RespawnCountdown (void)
+void Item_RespawnCountdown ()
 {SELFPARAM();
 	if(self.count >= ITEM_RESPAWN_TICKS)
 	{
@@ -762,7 +765,7 @@ void Item_Touch()
 	other.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	_sound (other, CH_TRIGGER, (this.item_pickupsound ? this.item_pickupsound : this.item_pickupsound_ent.sound_str()), VOL_BASE, ATTEN_NORM);
+	_sound (other, CH_TRIGGER, (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
 		remove (this);
@@ -845,7 +848,7 @@ void Item_FindTeam()
 
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
-void RemoveItem(void)
+void RemoveItem()
 {SELFPARAM();
 	if(wasfreed(self) || !self) { return; }
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
@@ -1574,62 +1577,6 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 			break;
 	}
 	v1 = (e.weapons & WepSet_FromWeapon(wpn));
-	return (v0 != v1);
-}
-
-float GiveBit(entity e, .float fld, float bit, float op, float val)
-{
-	float v0, v1;
-	v0 = (e.(fld) & bit);
-	switch(op)
-	{
-		case OP_SET:
-			if(val > 0)
-				e.(fld) |= bit;
-			else
-				e.(fld) &= ~bit;
-			break;
-		case OP_MIN:
-		case OP_PLUS:
-			if(val > 0)
-				e.(fld) |= bit;
-			break;
-		case OP_MAX:
-			if(val <= 0)
-				e.(fld) &= ~bit;
-			break;
-		case OP_MINUS:
-			if(val > 0)
-				e.(fld) &= ~bit;
-			break;
-	}
-	v1 = (e.(fld) & bit);
-	return (v0 != v1);
-}
-
-float GiveValue(entity e, .float fld, float op, float val)
-{
-	float v0, v1;
-	v0 = e.(fld);
-	switch(op)
-	{
-		case OP_SET:
-			e.(fld) = val;
-			break;
-		case OP_MIN:
-			e.(fld) = max(e.(fld), val); // min 100 cells = at least 100 cells
-			break;
-		case OP_MAX:
-			e.(fld) = min(e.(fld), val);
-			break;
-		case OP_PLUS:
-			e.(fld) += val;
-			break;
-		case OP_MINUS:
-			e.(fld) -= val;
-			break;
-	}
-	v1 = e.(fld);
 	return (v0 != v1);
 }
 

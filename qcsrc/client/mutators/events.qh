@@ -38,30 +38,6 @@ MUTATOR_HOOKABLE(CSQC_ConsoleCommand, EV_CSQC_ConsoleCommand);
 /* Called when the crosshair is being updated */
 MUTATOR_HOOKABLE(UpdateCrosshair, EV_NO_ARGS);
 
-/**
- * Called when a temp entity is parsed
- * NOTE: hooks MUST start with:
- *     if (MUTATOR_RETURNVALUE) return;
- *     if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return;
- *     return = true;
- */
-#define EV_CSQC_Parse_TempEntity(i, o) \
-	/** mutator id */ i(int, mutator_argv_int_0) \
-	/**/
-MUTATOR_HOOKABLE(CSQC_Parse_TempEntity, EV_CSQC_Parse_TempEntity);
-
-/**
- * Called when a shared entity is updated
- *     if (MUTATOR_RETURNVALUE) return;
- *     if (!ReadMutatorEquals(mutator_argv_int_0, name_of_mutator)) return;
- *     return = true;
- */
-#define EV_CSQC_Ent_Update(i, o) \
-	/** mutator id */ i(int, mutator_argv_int_0) \
-	/** bIsNewEntity */ i(bool, mutator_argv_bool_0) \
-	/**/
-MUTATOR_HOOKABLE(CSQC_Ent_Update, EV_CSQC_Ent_Update);
-
 /** Called when a projectile is linked with CSQC */
 #define EV_Ent_Projectile(i, o) \
 	/** entity id */ i(entity, __self) \

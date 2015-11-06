@@ -4,12 +4,12 @@
 #ifdef SVQC
 	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
-	.bool(entity to, int sendflags)SendEntity;
-	.bool(entity this, entity to, int sendflags)SendEntity3;
+	.bool(entity to, int sendflags) SendEntity;
+	.bool(entity this, entity to, int sendflags) SendEntity3;
 
 	bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, to, sendflags); }
 
-	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags)sendfunc)
+	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
 		if (e.classname == "") e.classname = "net_linked";
 
@@ -37,7 +37,7 @@
 	.void() uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 
-	void SetCustomizer(entity e, float(void)customizer, void(void)uncustomizer)
+	void SetCustomizer(entity e, float() customizer, void() uncustomizer)
 	{
 		e.customizeentityforclient = customizer;
 		e.uncustomizeentityforclient = uncustomizer;
@@ -57,13 +57,13 @@
 
 .string netname;
 .int m_id;
-.void(entity this, bool isNew)m_read;
+.bool(entity this, bool isNew) m_read;
 
 #ifdef CSQC
-	#define Net_Accept() \
+	#define Net_Accept(classname) \
 		do \
 		{ \
-			if (!this)    this = spawn(); \
+			if (!this)    this = new(classname); \
 		} \
 		while (0)
 	#define Net_Reject() \
@@ -72,6 +72,8 @@
 			if (this)     remove(this); \
 		} \
 		while (0)
+	#define NET_HANDLE(id, param) \
+		bool Net_Handle_##id(entity this, param)
 #else
 	#define WriteHeader(to, id) \
 		do \
@@ -83,66 +85,82 @@
 #endif
 
 #ifdef CSQC
-	#define REGISTER_NET_LINKED(id, param) \
-		void Ent_Read##id(entity this, param) \
+	#define REGISTER_NET_LINKED(id) \
+		[[accumulate]] NET_HANDLE(id, bool) \
 		{ \
 			this = self; \
+			this.sourceLocFile = __FILE__; \
+			this.sourceLocLine = __LINE__; \
 		} \
-		REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, spawn()) \
+		REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, new(net_linked_packet)) \
 		{ \
+			make_pure(this); \
 			this.netname = #id; \
-			this.m_read = Ent_Read##id; \
-		} \
-		[[accumulate]] void Ent_Read##id(entity this, param)
+			this.m_read = Net_Handle_##id; \
+		}
 #else
-	#define REGISTER_NET_LINKED(id, param) \
+	#define REGISTER_NET_LINKED(id) \
 		const bool NET_##id##_istemp = false; \
-		REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, spawn()) \
+		REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, new(net_linked_packet)) \
 		{ \
+			make_pure(this); \
 			this.netname = #id; \
 		}
 #endif
 
-REGISTRY(LinkedEntities, BITS(4))
+REGISTRY(LinkedEntities, BITS(8) - 1)
 #define LinkedEntities_from(i) _LinkedEntities_from(i, NULL)
 REGISTER_REGISTRY(RegisterLinkedEntities)
-REGISTRY_SORT(LinkedEntities, netname, 0)
+REGISTRY_SORT(LinkedEntities, 0)
+REGISTRY_CHECK(LinkedEntities)
 STATIC_INIT(RegisterLinkedEntities_renumber)
 {
 	for (int i = 0; i < LinkedEntities_COUNT; ++i)
-		LinkedEntities_from(i).m_id = 100 + i;
+		LinkedEntities_from(i).m_id = 1 + i;
 }
 
 #ifdef CSQC
-	#define REGISTER_NET_TEMP(id, param) \
-		void Net_Read##id(entity this, param); \
-		REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, spawn()) \
+	#define REGISTER_NET_TEMP(id) \
+		NET_HANDLE(id, bool); \
+		REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, new(net_temp_packet)) \
 		{ \
+			make_pure(this); \
 			this.netname = #id; \
-			this.m_read = Net_Read##id; \
-		} \
-		void Net_Read##id(entity this, param)
+			this.m_read = Net_Handle_##id; \
+		}
 #else
-	#define REGISTER_NET_TEMP(id, param) \
+	#define REGISTER_NET_TEMP(id) \
 		const bool NET_##id##_istemp = true; \
-		REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, spawn()) \
+		REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, new(net_temp_packet)) \
 		{ \
+			make_pure(this); \
 			this.netname = #id; \
 		}
 #endif
 
-REGISTRY(TempEntities, BITS(4))
+REGISTRY(TempEntities, BITS(8) - 80)
 #define TempEntities_from(i) _TempEntities_from(i, NULL)
 REGISTER_REGISTRY(RegisterTempEntities)
-REGISTRY_SORT(TempEntities, netname, 0)
+REGISTRY_SORT(TempEntities, 0)
+REGISTRY_CHECK(TempEntities)
 STATIC_INIT(RegisterTempEntities_renumber)
 {
 	for (int i = 0; i < TempEntities_COUNT; ++i)
-		TempEntities_from(i).m_id = 115 + i;
+		TempEntities_from(i).m_id = 80 + i;
 }
 
 #ifndef MENUQC
+	const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
+	#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+
 	#ifdef CSQC
+		entity ReadCSQCEntity()
+		{
+			int f = ReadShort();
+			if (f == 0) return world;
+			return findfloat(world, entnum, f);
+		}
 		int ReadInt24_t()
 		{
 			int v = ReadShort() << 8; // note: this is signed
@@ -165,7 +183,20 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			v.z = ReadInt24_t();
 			return v;
 		}
+
+		float ReadApproxPastTime()
+		{
+			float dt = ReadByte();
+
+			// map from range...PPROXPASTTIME_MAX / 256
+			dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
+
+			return servertime - dt;
+		}
+
 	#else
+		const int MSG_ENTITY = 5;
+
 		void WriteInt24_t(float dst, float val)
 		{
 			float v;
@@ -183,6 +214,45 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			WriteInt24_t(dst, val.y);
 			WriteInt24_t(dst, val.z);
 		}
+
+		// this will use the value:
+		//   128
+		// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
+		// accuracy at x is 1/derivative, i.e.
+		//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
+		void WriteApproxPastTime(float dst, float t)
+		{
+			float dt = time - t;
+
+			// warning: this is approximate; do not resend when you don't have to!
+			// be careful with sendflags here!
+			// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
+
+			// map to range...
+			dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
+
+			// round...
+			dt = rint(bound(0, dt, 255));
+
+			WriteByte(dst, dt);
+		}
+
+		// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
+		#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname, statement) \
+			entity varname; varname = msg_entity; \
+			FOR_EACH_REALCLIENT(msg_entity) \
+			if (msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) \
+				statement msg_entity = varname
+		#define WRITESPECTATABLE_MSG_ONE(statement) \
+			do \
+			{ \
+				WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement); \
+			} \
+			while (0)
+		#define WRITESPECTATABLE(msg, statement) \
+			if (msg == MSG_ONE) WRITESPECTATABLE_MSG_ONE(statement); \
+			else \
+				statement float WRITESPECTATABLE_workaround = 0
 	#endif
 #endif
 

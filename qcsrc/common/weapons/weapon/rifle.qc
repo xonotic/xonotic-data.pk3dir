@@ -76,17 +76,17 @@ void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pFor
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 }
 
-void W_Rifle_Attack(void)
+void W_Rifle_Attack()
 {
 	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND(CAMPINGRIFLE_FIRE));
 }
 
-void W_Rifle_Attack2(void)
+void W_Rifle_Attack2()
 {
 	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND(CAMPINGRIFLE_FIRE2));
 }
 
-.void(void) rifle_bullethail_attackfunc;
+.void() rifle_bullethail_attackfunc;
 .WFRAME rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
@@ -99,7 +99,6 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	af = ATTACK_FINISHED(actor, slot);
 	actor.switchweapon = actor.weapon;
 	ATTACK_FINISHED(actor, slot) = time;
-	LOG_INFO(ftos(actor.WEP_AMMO(RIFLE)), "\n");
 	r = weapon_prepareattack(thiswep, actor, weaponentity, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
 	if(actor.switchweapon == actor.weapon)
 		actor.switchweapon = sw;
@@ -107,16 +106,14 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	{
 		actor.rifle_bullethail_attackfunc();
 		weapon_thinkf(actor, weaponentity, actor.rifle_bullethail_frame, actor.rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
-		LOG_INFO("thinkf set\n");
 	}
 	else
 	{
 		ATTACK_FINISHED(actor, slot) = af; // reset attack_finished if we didn't fire, so the last shot enforces the refire time
-		LOG_INFO("out of ammo... ", ftos(actor.(weaponentity).state), "\n");
 	}
 }
 
-void W_Rifle_BulletHail(.entity weaponentity, float mode, void(void) AttackFunc, WFRAME fr, float animtime, float refire)
+void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFRAME fr, float animtime, float refire)
 {SELFPARAM();
 	// if we get here, we have at least one bullet to fire
 	AttackFunc();
@@ -258,12 +255,7 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void(void) AttackFunc,
 			pointparticles(EFFECT_RIFLE_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 			{
-				if(w_random < 0.2)
-					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTN_NORM);
-				else if(w_random < 0.4)
-					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTN_NORM);
-				else if(w_random < 0.5)
-					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
 			}
 		}
 		METHOD(Rifle, wr_init, void(entity thiswep))

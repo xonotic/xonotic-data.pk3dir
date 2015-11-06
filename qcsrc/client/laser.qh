@@ -1,6 +1,0 @@
-#ifndef CLIENT_LASER_H
-#define CLIENT_LASER_H
-
-void Ent_Laser();
-
-#endif

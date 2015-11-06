@@ -1,6 +1,0 @@
-#ifndef CLIENT_EFFECTS_H
-#define CLIENT_EFFECTS_H
-
-void Net_ReadArc();
-
-#endif

@@ -3,9 +3,7 @@
 
 #include "effect.qh"
 
-#ifdef CSQC
-void Read_Effect(bool is_new);
-#elif defined(SVQC)
+#ifdef SVQC
 void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt);
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt);
 #endif
@@ -13,6 +11,7 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt);
 REGISTRY(Effects, BITS(8))
 #define Effects_from(i) _Effects_from(i, EFFECT_Null)
 REGISTER_REGISTRY(RegisterEffects)
+REGISTRY_CHECK(Effects)
 #define EFFECT(istrail, name, realname) \
     REGISTER(RegisterEffects, EFFECT, Effects, name, m_id, Create_Effect_Entity(realname, istrail));
 

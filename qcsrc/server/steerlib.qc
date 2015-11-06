@@ -547,16 +547,13 @@ MODEL(FLOCKER, "models/turrets/rocket.md3");
 
 void spawn_flocker()
 {SELFPARAM();
-    entity flocker;
-
-    flocker = spawn ();
+    entity flocker = new(flocker);
 
     setorigin(flocker, self.origin + '0 0 32');
     setmodel (flocker, MDL_FLOCKER);
     setsize (flocker, '-3 -3 -3', '3 3 3');
 
     flocker.flock_id   = self.flock_id;
-    flocker.classname  = "flocker";
     flocker.owner      = self;
     flocker.think      = flocker_think;
     flocker.nextthink  = time + random() * 5;
@@ -649,12 +646,11 @@ spawnfunc(flockerspawn)
     self.think     = flockerspawn_think;
     self.nextthink = time + 0.25;
 
-    self.enemy = spawn();
+    self.enemy = new(FLock Hunter);
 
     setmodel(self.enemy, MDL_FLOCKER);
     setorigin(self.enemy,self.origin + '0 0 768' + (randomvec() * 128));
 
-    self.enemy.classname = "FLock Hunter";
     self.enemy.scale     = 3;
     self.enemy.effects   = EF_LOWPRECISION;
     self.enemy.movetype  = MOVETYPE_BOUNCEMISSILE;

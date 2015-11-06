@@ -7,6 +7,8 @@
 #elif defined(SVQC)
 #endif
 
+REGISTER_NET_LINKED(ENT_CLIENT_LASER)
+
 #ifdef SVQC
 .float modelscale;
 void misc_laser_aim()
@@ -124,7 +126,7 @@ void misc_laser_think()
 
 bool laser_SendEntity(entity this, entity to, float fl)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_LASER);
 	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
 	if(self.spawnflags & 2)
 		fl |= 0x80;
@@ -322,8 +324,8 @@ void Draw_Laser(entity this)
 	}
 }
 
-void Ent_Laser()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
+{
 	InterpolateOrigin_Undo();
 
 	// 30 bytes, or 13 bytes for just moving
@@ -379,6 +381,9 @@ void Ent_Laser()
 	}
 	if(f & 4)
 		self.state = ReadByte();
+
+	return = true;
+
 	InterpolateOrigin_Note();
 	self.draw = Draw_Laser;
 }

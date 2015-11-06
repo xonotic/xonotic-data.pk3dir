@@ -38,10 +38,10 @@ Remove self
 	void defer(float fdelay, void() func)
 	{
 		SELFPARAM();
-		entity e;
 
-		e           = spawn();
-		e.owner     = self;
+		entity e    = new(deferred);
+		make_pure(e);
+		e.owner     = this;
 		e.use       = func;
 		e.think     = defer_think;
 		e.nextthink = time + fdelay;

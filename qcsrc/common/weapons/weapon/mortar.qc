@@ -61,7 +61,7 @@ MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(this, WEP_MORTAR); }
 spawnfunc(weapon_grenadelauncher) { spawnfunc_weapon_mortar(this); }
 
-void W_Mortar_Grenade_Explode(void)
+void W_Mortar_Grenade_Explode()
 {SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -81,7 +81,7 @@ void W_Mortar_Grenade_Explode(void)
 	remove(self);
 }
 
-void W_Mortar_Grenade_Explode2(void)
+void W_Mortar_Grenade_Explode2()
 {SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -116,7 +116,7 @@ void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, in
 		W_PrepareExplosionByDamage(attacker, self.use);
 }
 
-void W_Mortar_Grenade_Think1(void)
+void W_Mortar_Grenade_Think1()
 {SELFPARAM();
 	self.nextthink = time;
 	if(time > self.cnt)
@@ -130,7 +130,7 @@ void W_Mortar_Grenade_Think1(void)
 		W_Mortar_Grenade_Explode();
 }
 
-void W_Mortar_Grenade_Touch1(void)
+void W_Mortar_Grenade_Touch1()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
@@ -162,7 +162,7 @@ void W_Mortar_Grenade_Touch1(void)
 	}
 }
 
-void W_Mortar_Grenade_Touch2(void)
+void W_Mortar_Grenade_Touch2()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
@@ -209,9 +209,8 @@ void W_Mortar_Attack(Weapon thiswep)
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn();
+	gren = new(grenade);
 	gren.owner = gren.realowner = self;
-	gren.classname = "grenade";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_PRI(mortar, damage);
 	gren.movetype = MOVETYPE_BOUNCE;
@@ -258,9 +257,8 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn();
+	gren = new(grenade);
 	gren.owner = gren.realowner = self;
-	gren.classname = "grenade";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = WEP_CVAR_SEC(mortar, damage);
 	gren.movetype = MOVETYPE_BOUNCE;

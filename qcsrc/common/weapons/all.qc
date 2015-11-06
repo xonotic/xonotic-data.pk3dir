@@ -277,18 +277,7 @@ string GetAmmoPicture(.int ammotype)
 
 string W_Sound(string w_snd)
 {
-	#define extensions(X) X(wav) X(ogg)
-	#define tryext(ext) { if (fexists(strcat("sound/", output = strcat("weapons/", w_snd, "." #ext)))) break; }
-	string output;
-	do
-	{
-		extensions(tryext);
-#undef tryext
-#undef extensions
-		output = strcat("weapons/", w_snd);
-	}
-	while (0);
-
+	string output = strcat("weapons/", w_snd);
 #ifdef SVQC
 		MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
 		return weapon_sound_output;
@@ -582,8 +571,9 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 
 #ifndef MENUQC
 
-REGISTER_NET_TEMP(wframe, bool isNew)
+REGISTER_NET_TEMP(wframe)
 #ifdef CSQC
+NET_HANDLE(wframe, bool isNew)
 {
 	vector a;
 	a.x = ReadCoord();
@@ -593,6 +583,7 @@ REGISTER_NET_TEMP(wframe, bool isNew)
 	setanim(viewmodel, a, restartanim == false, restartanim, restartanim);
 	viewmodel.state = ReadByte();
 	viewmodel.alpha = ReadByte() / 255;
+	return true;
 }
 #endif
 
@@ -612,14 +603,16 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 }
 #endif
 
-REGISTER_NET_TEMP(wglow, bool isNew)
+REGISTER_NET_TEMP(wglow)
 #ifdef CSQC
+NET_HANDLE(wglow, bool isNew)
 {
 	vector g = '0 0 0';
 	g.x = ReadCoord();
 	g.y = ReadCoord();
 	g.z = ReadCoord();
 	viewmodel.glowmod = g;
+	return true;
 }
 #endif
 

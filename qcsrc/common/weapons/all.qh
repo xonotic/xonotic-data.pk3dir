@@ -133,13 +133,14 @@ REGISTER_WEAPON(Null, NEW(Weapon));
 #include "all.inc"
 
 // TODO: remove after 0.8.2. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
-#define WEP_HARDCODED_IMPULSES 22
+#define WEP_HARDCODED_IMPULSES 20
 
 // TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
 #define WEP_IMPULSE_BEGIN 230
 #define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (Weapons_COUNT - 1) - 1, 253)
 
-REGISTRY_SORT(Weapons, netname, WEP_HARDCODED_IMPULSES + 1)
+REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
+REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
 {

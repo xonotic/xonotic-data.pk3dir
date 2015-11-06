@@ -53,9 +53,9 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 entity Simple_TeleportPlayer(entity teleporter, entity player);
 
-void Teleport_Touch (void);
+void Teleport_Touch ();
 
-void teleport_findtarget (void);
+void teleport_findtarget ();
 
 entity Teleport_Find(vector mi, vector ma);
 

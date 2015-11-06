@@ -27,9 +27,9 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 		w = find(w, classname, "waypoint");
 	}
 
-	w = spawn();
+	w = new(waypoint);
+	make_pure(w);
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-	w.classname = "waypoint";
 	w.wpflags = f;
 	setorigin(w, (m1 + m2) * 0.5);
 	setsize(w, m1 - w.origin, m2 - w.origin);

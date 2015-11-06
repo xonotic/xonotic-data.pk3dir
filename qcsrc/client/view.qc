@@ -1,8 +1,7 @@
 
 #include "announcer.qh"
 #include "hook.qh"
-#include "hud.qh"
-#include "hud_config.qh"
+#include "hud/all.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
@@ -12,6 +11,7 @@
 
 #include "../common/anim.qh"
 #include "../common/constants.qh"
+#include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/gamemodes/all.qh"
 #include "../common/nades/all.qh"
@@ -179,8 +179,8 @@ void Porto_Draw(entity this)
 
 void Porto_Init()
 {
-	porto = spawn();
-	porto.classname = "porto";
+	porto = new(porto);
+	make_pure(porto);
 	porto.draw = Porto_Draw;
 	porto.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
@@ -347,11 +347,11 @@ const float SHOTTYPE_HITENEMY = 4;
 
 void TrueAim_Init()
 {
-	trueaim = spawn();
-	trueaim.classname = "trueaim";
+	trueaim = new(trueaim);
+	make_pure(trueaim);
 	trueaim.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	trueaim_rifle = spawn();
-	trueaim_rifle.classname = "trueaim_rifle";
+	trueaim_rifle = new(trueaim_rifle);
+	make_pure(trueaim_rifle);
 	trueaim_rifle.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
@@ -467,7 +467,7 @@ float TrueAimCheck()
 	return SHOTTYPE_HITWORLD;
 }
 
-void PostInit(void);
+void PostInit();
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard();
 float camera_mode;
@@ -1585,13 +1585,11 @@ void CSQC_UpdateView(float w, float h)
 
 		if(!nightvision_noise)
 		{
-			nightvision_noise = spawn();
-			nightvision_noise.classname = "nightvision_noise";
+			nightvision_noise = new(nightvision_noise);
 		}
 		if(!nightvision_noise2)
 		{
-			nightvision_noise2 = spawn();
-			nightvision_noise2.classname = "nightvision_noise2";
+			nightvision_noise2 = new(nightvision_noise2);
 		}
 
 		// color tint in yellow
@@ -1892,9 +1890,6 @@ void CSQC_UpdateView(float w, float h)
 	else if(cvar("r_glsl_postprocess") == 2)
 		cvar_set("r_glsl_postprocess", "0");
 
-	if(menu_visible)
-		menu_show();
-
 	/*if(gametype == MAPINFO_TYPE_CTF)
 	  {
 	  ctf_view();
@@ -1905,6 +1900,7 @@ void CSQC_UpdateView(float w, float h)
 		WITH(entity, self, e, e.draw2d(e));
 	}
 	Draw_ShowNames_All();
+	Debug_Draw();
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 

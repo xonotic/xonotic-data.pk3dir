@@ -7,9 +7,6 @@
 .entity goalentity;
 .entity enemy;
 .vector movedir;
-
-void ent_viewloc();
-void ent_viewloc_trigger();
 #endif
 
 #endif

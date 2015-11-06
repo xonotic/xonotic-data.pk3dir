@@ -108,7 +108,7 @@ void W_Vaporizer_Attack(Weapon thiswep)
 	W_DecreaseAmmo(thiswep, self, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
 }
 
-void W_RocketMinsta_Laser_Explode (void)
+void W_RocketMinsta_Laser_Explode ()
 {SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -123,7 +123,7 @@ void W_RocketMinsta_Laser_Explode (void)
 	remove(self);
 }
 
-void W_RocketMinsta_Laser_Touch (void)
+void W_RocketMinsta_Laser_Touch ()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 	//W_RocketMinsta_Laser_Explode ();
@@ -131,7 +131,7 @@ void W_RocketMinsta_Laser_Touch (void)
 	remove(self);
 }
 
-void W_RocketMinsta_Attack2(void)
+void W_RocketMinsta_Attack2()
 {SELFPARAM();
 	makevectors(self.v_angle);
 
@@ -150,8 +150,7 @@ void W_RocketMinsta_Attack2(void)
 
     while(counter < total)
 	{
-        proj = spawn ();
-        proj.classname = "plasma_prim";
+        proj = new(plasma_prim);
         proj.owner = proj.realowner = self;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
@@ -186,7 +185,7 @@ void W_RocketMinsta_Attack2(void)
     }
 }
 
-void W_RocketMinsta_Attack3 (void)
+void W_RocketMinsta_Attack3 ()
 {SELFPARAM();
 	makevectors(self.v_angle);
 
@@ -203,8 +202,7 @@ void W_RocketMinsta_Attack3 (void)
 
     while(counter < total)
 	{
-        proj = spawn ();
-        proj.classname = "plasma_prim";
+        proj = new(plasma_prim);
         proj.owner = proj.realowner = self;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;

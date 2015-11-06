@@ -69,8 +69,7 @@ spawnfunc(func_bobbing)
 		return;
 
 	// wait for targets to spawn
-	controller = spawn();
-	controller.classname = "func_bobbing_controller";
+	controller = new(func_bobbing_controller);
 	controller.owner = self;
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;

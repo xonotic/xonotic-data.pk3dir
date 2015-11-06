@@ -51,7 +51,7 @@ REGISTER_WEAPON(MINE_LAYER, NEW(MineLayer));
 
 #ifdef SVQC
 MINELAYER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-void W_MineLayer_Think(void);
+void W_MineLayer_Think();
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
 .vector mine_orientation;
@@ -67,8 +67,7 @@ void W_MineLayer_Stick(entity to)
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
-	entity newmine;
-	newmine = spawn();
+	entity newmine = spawn();
 	newmine.classname = self.classname;
 
 	newmine.bot_dodge = self.bot_dodge;
@@ -108,7 +107,7 @@ void W_MineLayer_Stick(entity to)
 		SetMovetypeFollow(self, to);
 }
 
-void W_MineLayer_Explode(void)
+void W_MineLayer_Explode()
 {SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -139,7 +138,7 @@ void W_MineLayer_Explode(void)
 	remove(self);
 }
 
-void W_MineLayer_DoRemoteExplode(void)
+void W_MineLayer_DoRemoteExplode()
 {SELFPARAM();
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -166,7 +165,7 @@ void W_MineLayer_DoRemoteExplode(void)
 	remove(self);
 }
 
-void W_MineLayer_RemoteExplode(void)
+void W_MineLayer_RemoteExplode()
 {SELFPARAM();
 	if(self.realowner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
@@ -178,7 +177,7 @@ void W_MineLayer_RemoteExplode(void)
 		}
 }
 
-void W_MineLayer_ProximityExplode(void)
+void W_MineLayer_ProximityExplode()
 {SELFPARAM();
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
 	if(WEP_CVAR(minelayer, protection) && self.mine_explodeanyway == 0)
@@ -207,7 +206,7 @@ int W_MineLayer_Count(entity e)
 	return minecount;
 }
 
-void W_MineLayer_Think(void)
+void W_MineLayer_Think()
 {SELFPARAM();
 	entity head;
 
@@ -270,7 +269,7 @@ void W_MineLayer_Think(void)
 		W_MineLayer_RemoteExplode();
 }
 
-void W_MineLayer_Touch(void)
+void W_MineLayer_Touch()
 {SELFPARAM();
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?

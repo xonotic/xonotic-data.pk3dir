@@ -52,46 +52,12 @@ void WarpZone_crosshair_trace(entity pl)
 }
 
 
-string admin_name(void)
+string admin_name()
 {
 	if(autocvar_sv_adminnick != "")
 		return autocvar_sv_adminnick;
 	else
 		return "SERVER ADMIN";
-}
-
-void DistributeEvenly_Init(float amount, float totalweight)
-{
-    if (DistributeEvenly_amount)
-    {
-        LOG_TRACE("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ");
-        LOG_TRACE(ftos(DistributeEvenly_totalweight), " left!)\n");
-    }
-    if (totalweight == 0)
-        DistributeEvenly_amount = 0;
-    else
-        DistributeEvenly_amount = amount;
-    DistributeEvenly_totalweight = totalweight;
-}
-float DistributeEvenly_Get(float weight)
-{
-    float f;
-    if (weight <= 0)
-        return 0;
-    f = floor(0.5 + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
-    DistributeEvenly_totalweight -= weight;
-    DistributeEvenly_amount -= f;
-    return f;
-}
-float DistributeEvenly_GetRandomized(float weight)
-{
-    float f;
-    if (weight <= 0)
-        return 0;
-    f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
-    DistributeEvenly_totalweight -= weight;
-    DistributeEvenly_amount -= f;
-    return f;
 }
 
 
@@ -1082,7 +1048,7 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void(void) func, float order)
+void InitializeEntity(entity e, void() func, float order)
 {
     entity prev, cur;
 
@@ -1158,7 +1124,7 @@ bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, f, b;
 	entity e;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
 	WriteByte(MSG_ENTITY, sendflags);
 
 	if(sendflags & 1)
@@ -1341,7 +1307,7 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 	return false;
 }
 
-
+/** engine callback */
 void URI_Get_Callback(float id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
@@ -1597,151 +1563,6 @@ vector gettaginfo_relative(entity e, float tag)
     gettaginfo_relative_ent.frame = e.frame;
     return gettaginfo(gettaginfo_relative_ent, tag);
 }
-
-.float scale2;
-
-bool modeleffect_SendEntity(entity this, entity to, int sf)
-{
-	float f;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
-
-	f = 0;
-	if(self.velocity != '0 0 0')
-		f |= 1;
-	if(self.angles != '0 0 0')
-		f |= 2;
-	if(self.avelocity != '0 0 0')
-		f |= 4;
-
-	WriteByte(MSG_ENTITY, f);
-	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteByte(MSG_ENTITY, self.skin);
-	WriteByte(MSG_ENTITY, self.frame);
-	WriteCoord(MSG_ENTITY, self.origin.x);
-	WriteCoord(MSG_ENTITY, self.origin.y);
-	WriteCoord(MSG_ENTITY, self.origin.z);
-	if(f & 1)
-	{
-		WriteCoord(MSG_ENTITY, self.velocity.x);
-		WriteCoord(MSG_ENTITY, self.velocity.y);
-		WriteCoord(MSG_ENTITY, self.velocity.z);
-	}
-	if(f & 2)
-	{
-		WriteCoord(MSG_ENTITY, self.angles.x);
-		WriteCoord(MSG_ENTITY, self.angles.y);
-		WriteCoord(MSG_ENTITY, self.angles.z);
-	}
-	if(f & 4)
-	{
-		WriteCoord(MSG_ENTITY, self.avelocity.x);
-		WriteCoord(MSG_ENTITY, self.avelocity.y);
-		WriteCoord(MSG_ENTITY, self.avelocity.z);
-	}
-	WriteShort(MSG_ENTITY, self.scale * 256.0);
-	WriteShort(MSG_ENTITY, self.scale2 * 256.0);
-	WriteByte(MSG_ENTITY, self.teleport_time * 100.0);
-	WriteByte(MSG_ENTITY, self.fade_time * 100.0);
-	WriteByte(MSG_ENTITY, self.alpha * 255.0);
-
-	return true;
-}
-
-void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2)
-{
-	entity e;
-	float sz;
-	e = spawn();
-	e.classname = "modeleffect";
-	_setmodel(e, m);
-	e.frame = f;
-	setorigin(e, o);
-	e.velocity = v;
-	e.angles = ang;
-	e.avelocity = angv;
-	e.alpha = a;
-	e.teleport_time = t1;
-	e.fade_time = t2;
-	e.skin = s;
-	if(s0 >= 0)
-		e.scale = s0 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
-	else
-		e.scale = -s0;
-	if(s2 >= 0)
-		e.scale2 = s2 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
-	else
-		e.scale2 = -s2;
-	sz = max(e.scale, e.scale2);
-	setsize(e, e.mins * sz, e.maxs * sz);
-	Net_LinkEntity(e, false, 0.1, modeleffect_SendEntity);
-}
-
-void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
-{
-	return modeleffect_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
-}
-
-float randombit(float bits)
-{
-	if(!(bits & (bits-1))) // this ONLY holds for powers of two!
-		return bits;
-
-	float n, f, b, r;
-
-	r = random();
-	b = 0;
-	n = 0;
-
-	for(f = 1; f <= bits; f *= 2)
-	{
-		if(bits & f)
-		{
-			++n;
-			r *= n;
-			if(r <= 1)
-				b = f;
-			else
-				r = (r - 1) / (n - 1);
-		}
-	}
-
-	return b;
-}
-
-float randombits(float bits, float k, float error_return)
-{
-	float r;
-	r = 0;
-	while(k > 0 && bits != r)
-	{
-		r += randombit(bits - r);
-		--k;
-	}
-	if(error_return)
-		if(k > 0)
-			return -1; // all
-	return r;
-}
-
-void randombit_test(float bits, float iter)
-{
-	while(iter > 0)
-	{
-		LOG_INFO(ftos(randombit(bits)), "\n");
-		--iter;
-	}
-}
-
-float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)
-{
-	if(halflifedist > 0)
-		return pow(0.5, (bound(mindist, d, maxdist) - mindist) / halflifedist);
-	else if(halflifedist < 0)
-		return pow(0.5, (bound(mindist, d, maxdist) - maxdist) / halflifedist);
-	else
-		return 1;
-}
-
 
 .string aiment_classname;
 .float aiment_deadflag;

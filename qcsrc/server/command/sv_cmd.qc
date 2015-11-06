@@ -31,7 +31,7 @@
 #include "../../common/monsters/sv_monsters.qh"
 
 
-void PutObserverInServer(void);
+void PutObserverInServer();
 
 // =====================================================
 //  Server side game commands code, reworked by Samual
@@ -1000,8 +1000,7 @@ void GameCommand_make_mapinfo(float request)
 		{
 			entity tmp_entity;
 
-			tmp_entity = spawn();
-			tmp_entity.classname = "make_mapinfo";
+			tmp_entity = new(make_mapinfo);
 			tmp_entity.think = make_mapinfo_Think;
 			tmp_entity.nextthink = time;
 			MapInfo_Enumerate();

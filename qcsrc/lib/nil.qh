@@ -6,7 +6,7 @@
 	#define string_null nil
 #else
 // the NULL function
-	var void func_null(void);
+	var void func_null();
 	string string_null;
 #endif
 

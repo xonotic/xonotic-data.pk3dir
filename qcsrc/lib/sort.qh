@@ -2,61 +2,43 @@
 #define SORT_H
 
 /** is only ever called for i1 < i2 */
-typedef void (float i1, float i2, entity pass) swapfunc_t;
+typedef void (int i1, int i2, entity pass) swapfunc_t;
 /** <0 for <, ==0 for ==, >0 for > (like strcmp) */
-typedef float (float i1, float i2, entity pass) comparefunc_t;
+typedef int (int i1, int i2, entity pass) comparefunc_t;
 
-void heapsort(float n, swapfunc_t swap, comparefunc_t cmp, entity pass)
+void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 {
-	int root, child;
+	#define heapify(_count) \
+		do \
+		{ \
+			for (int start = floor(((_count) - 2) / 2); start >= 0; --start) \
+			{ \
+				siftdown(start, (_count) - 1); \
+			} \
+		} \
+		while (0)
 
-	// heapify
-	int start = floor((n - 2) / 2);
-	while (start >= 0)
-	{
-		// siftdown(start, n - 1);
-		root = start;
-		while (root * 2 + 1 <= n - 1)
-		{
-			child = root * 2 + 1;
-			if (child < n - 1 && cmp(child, child + 1, pass) < 0) child += 1;
-			if (cmp(root, child, pass) < 0)
-			{
-				swap(root, child, pass);
-				root = child;
-			}
-			else
-			{
-				break;
-			}
-		}
-		// end of siftdown
-		--start;
-	}
+	#define siftdown(_start, _end) \
+		do \
+		{ \
+			for (int root = (_start); root * 2 + 1 <= (_end); ) \
+			{ \
+				int child = root * 2 + 1; \
+				if (child < (_end) && cmp(child, child + 1, pass) < 0) child += 1; \
+				if (cmp(root, child, pass) >= 0) break; \
+				swap(root, child, pass); \
+				root = child; \
+			} \
+		} \
+		while (0)
 
-	// extract
+	heapify(n);
 	int end = n - 1;
 	while (end > 0)
 	{
 		swap(0, end, pass);
 		end -= 1;
-		// siftdown(0, end);
-		root = 0;
-		while (root * 2 + 1 <= end)
-		{
-			child = root * 2 + 1;
-			if (child < end && cmp(child, child + 1, pass) < 0) child += 1;
-			if (cmp(root, child, pass) < 0)
-			{
-				swap(root, child, pass);
-				root = child;
-			}
-			else
-			{
-				break;
-			}
-		}
-		// end of siftdown
+		siftdown(0, end);
 	}
 }
 

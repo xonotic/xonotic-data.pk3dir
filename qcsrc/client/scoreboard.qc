@@ -1,7 +1,7 @@
 #include "scoreboard.qh"
 
 #include "quickmenu.qh"
-#include "hud.qh"
+#include "hud/all.qh"
 
 #include "../common/constants.qh"
 #include "../common/mapinfo.qh"

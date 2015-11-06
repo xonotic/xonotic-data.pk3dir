@@ -33,18 +33,11 @@ float cvar_normal(string n)
 entity eliminatedPlayers;
 void EliminatedPlayers_Init(float(entity) isEliminated_func);
 
-string admin_name(void);
+string admin_name();
 
 void write_recordmarker(entity pl, float tstart, float dt);
 
 void play2all(string samp);
-
-void DistributeEvenly_Init(float amount, float totalweight);
-float DistributeEvenly_Get(float weight);
-
-void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2);
-
-void shockwave_spawn(string m, vector org, float sz, float t1, float t2);
 
 void play2team(float t, string filename);
 
@@ -62,10 +55,7 @@ void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
-float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d);
 
-float DistributeEvenly_amount;
-float DistributeEvenly_totalweight;
 void objerror(string s);
 void droptofloor();
 void() SUB_Remove;
@@ -297,7 +287,7 @@ float sv_autotaunt;
 float sv_taunt;
 
 string GetGametype(); // g_world.qc
-void readlevelcvars(void)
+void readlevelcvars()
 {
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
@@ -322,7 +312,6 @@ void readlevelcvars(void)
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
-	g_cloaked = cvar("g_cloaked");
 	g_footsteps = cvar("g_footsteps");
 	g_jetpack = cvar("g_jetpack");
 	sv_maxidle = cvar("sv_maxidle");
@@ -439,7 +428,7 @@ const float INITPRIO_SETLOCATION 		= 90;
 const float INITPRIO_LINKDOORS 			= 91;
 const float INITPRIO_LAST 				= 99;
 
-.void(void) initialize_entity;
+.void() initialize_entity;
 .float initialize_entity_order;
 .entity initialize_entity_next;
 entity initialize_entity_first;
@@ -449,7 +438,7 @@ entity initialize_entity_first;
 
 
 float sound_allowed(float dest, entity e);
-void InitializeEntity(entity e, void(void) func, float order);
-void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
+void InitializeEntity(entity e, void() func, float order);
+void SetCustomizer(entity e, float() customizer, void() uncustomizer);
 
 #endif

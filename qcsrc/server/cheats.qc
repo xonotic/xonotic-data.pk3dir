@@ -150,8 +150,7 @@ float CheatImpulse(float i)
 			// shared with regular waypoint init, so this is not a cheat by itself
 			if(!self.personal)
 			{
-				self.personal = spawn();
-				self.personal.classname = "personal_wp";
+				self.personal = new(personal_wp);
 			}
 			self.personal.origin = self.origin;
 			self.personal.v_angle = self.v_angle;
@@ -402,8 +401,7 @@ float CheatCommand(float argc)
 			break;
 		case "dragbox_spawn": {
 			IS_CHEAT(0, argc, 0);
-			entity e = spawn();
-			e.classname = "dragbox_box";
+			entity e = new(dragbox_box);
 			e.think = DragBox_Think;
 			e.nextthink = time;
 			e.solid = -1; // black
@@ -413,8 +411,7 @@ float CheatCommand(float argc)
 			else
 				e.cnt = max(0, drag_lastcnt);
 
-			e.aiment = spawn();
-			e.aiment.classname = "dragbox_corner_1";
+			e.aiment = new(dragbox_corner_1);
 			e.aiment.owner = e;
 			setmodel(e.aiment, MDL_MARKER);
 			e.aiment.skin = 0;
@@ -427,8 +424,7 @@ float CheatCommand(float argc)
 				setorigin(e.aiment, trace_endpos);
 			}
 
-			e.enemy = spawn();
-			e.enemy.classname = "dragbox_corner_2";
+			e.enemy = new(dragbox_corner_2);
 			e.enemy.owner = e;
 			setmodel(e.enemy, MDL_MARKER);
 			e.enemy.skin = 1;
@@ -442,13 +438,11 @@ float CheatCommand(float argc)
 			else
 				setorigin(e.enemy, e.aiment.origin + 32 * end);
 
-			e.killindicator = spawn();
-			e.killindicator.classname = "drag_digit";
+			e.killindicator = new(drag_digit);
 			e.killindicator.owner = e;
 			setattachment(e.killindicator, e, "");
 			setorigin(e.killindicator, '0 0 -8');
-			e.killindicator.killindicator = spawn();
-			e.killindicator.killindicator.classname = "drag_digit";
+			e.killindicator.killindicator = new(drag_digit);
 			e.killindicator.killindicator.owner = e;
 			setattachment(e.killindicator.killindicator, e, "");
 			setorigin(e.killindicator.killindicator, '0 0 8');
@@ -457,8 +451,7 @@ float CheatCommand(float argc)
 		}
 		case "dragpoint_spawn": {
 			IS_CHEAT(0, argc, 0);
-			entity e = spawn();
-			e.classname = "dragpoint";
+			entity e = new(dragpoint);
 			e.think = DragBox_Think;
 			e.nextthink = time;
 			e.solid = 0; // nothing special
@@ -478,13 +471,11 @@ float CheatCommand(float argc)
 				move_out_of_solid(e);
 			}
 
-			e.killindicator = spawn();
-			e.killindicator.classname = "drag_digit";
+			e.killindicator = new(drag_digit);
 			e.killindicator.owner = e;
 			setattachment(e.killindicator, e, "");
 			setorigin(e.killindicator, '0 0 40');
-			e.killindicator.killindicator = spawn();
-			e.killindicator.killindicator.classname = "drag_digit";
+			e.killindicator.killindicator = new(drag_digit);
 			e.killindicator.killindicator.owner = e;
 			setattachment(e.killindicator.killindicator, e, "");
 			setorigin(e.killindicator.killindicator, '0 0 56');
@@ -713,9 +704,8 @@ float CheatCommand(float argc)
 			break;
 		case "teleporttotarget":
 			IS_CHEAT(0, argc, 0);
-			setself(spawn());
+			setself(new(cheattriggerteleport));
 			setorigin(self, self.origin);
-			self.classname = "cheattriggerteleport";
 			self.target = argv(1);
 			teleport_findtarget();
 			if(!wasfreed(self))

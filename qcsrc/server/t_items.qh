@@ -45,8 +45,6 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 void ItemDraw(entity this);
 void ItemDrawSimple(entity this);
 
-void ItemRead(float _IsNew);
-
 #endif
 #ifdef SVQC
 spawnfunc(item_strength);
@@ -74,9 +72,9 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 void Item_Show (entity e, float mode);
 
-void Item_Respawn (void);
+void Item_Respawn ();
 
-void Item_RespawnCountdown (void);
+void Item_RespawnCountdown ();
 void Item_ScheduleRespawnIn(entity e, float t);
 
 void Item_ScheduleRespawn(entity e);
@@ -115,13 +113,7 @@ float commodity_pickupevalfunc(entity player, entity item);
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 
 
-void target_items_use (void);
-
-const float OP_SET = 0;
-const float OP_MIN = 1;
-const float OP_MAX = 2;
-const float OP_PLUS = 3;
-const float OP_MINUS = 4;
+void target_items_use ();
 
 float GiveWeapon(entity e, float wpn, float op, float val);
 

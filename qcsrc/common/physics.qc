@@ -535,7 +535,7 @@ When you press the jump key
 returns true if handled
 =============
 */
-bool PlayerJump (void)
+bool PlayerJump ()
 {SELFPARAM();
 	if (PHYS_FROZEN(self))
 		return true; // no jumping in freezetag when frozen
@@ -1012,7 +1012,7 @@ float PM_check_specialcommand(float buttons)
 	return false;
 }
 
-void PM_check_nickspam(void)
+void PM_check_nickspam()
 {SELFPARAM();
 #ifdef SVQC
 	if (time >= self.nickspamtime)
@@ -1057,7 +1057,7 @@ void PM_check_punch()
 #endif
 }
 
-void PM_check_spider(void)
+void PM_check_spider()
 {SELFPARAM();
 #ifdef SVQC
 	if (time >= self.spider_slowness)
@@ -1070,7 +1070,7 @@ void PM_check_spider(void)
 }
 
 // predict frozen movement, as frozen players CAN move in some cases
-void PM_check_frozen(void)
+void PM_check_frozen()
 {SELFPARAM();
 	if (!PHYS_FROZEN(self))
 		return;
@@ -1124,7 +1124,7 @@ void PM_check_hitground()
 #endif
 }
 
-void PM_check_blocked(void)
+void PM_check_blocked()
 {SELFPARAM();
 #ifdef SVQC
 	if (!self.player_blocked)
@@ -1134,7 +1134,7 @@ void PM_check_blocked(void)
 #endif
 }
 
-void PM_check_vortex(void)
+void PM_check_vortex()
 {SELFPARAM();
 #ifdef SVQC
 	// WEAPONTODO
@@ -1858,9 +1858,9 @@ void PM_Main()
 }
 
 #ifdef SVQC
-void SV_PlayerPhysics(void)
+void SV_PlayerPhysics()
 #elif defined(CSQC)
-void CSQC_ClientMovement_PlayerMove_Frame(void)
+void CSQC_ClientMovement_PlayerMove_Frame()
 #endif
 {SELFPARAM();
 	PM_Main();

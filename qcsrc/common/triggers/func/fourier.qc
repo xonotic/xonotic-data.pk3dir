@@ -73,8 +73,7 @@ spawnfunc(func_fourier)
 	self.active = ACTIVE_ACTIVE;
 
 	// wait for targets to spawn
-	controller = spawn();
-	controller.classname = "func_fourier_controller";
+	controller = new(func_fourier_controller);
 	controller.owner = self;
 	controller.nextthink = time + 1;
 	controller.think = func_fourier_controller_think;

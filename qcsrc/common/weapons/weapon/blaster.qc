@@ -53,7 +53,7 @@ BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
 spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
-void W_Blaster_Touch(void)
+void W_Blaster_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 
@@ -75,7 +75,7 @@ void W_Blaster_Touch(void)
 	remove(self);
 }
 
-void W_Blaster_Think(void)
+void W_Blaster_Think()
 {SELFPARAM();
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;
@@ -101,9 +101,8 @@ void W_Blaster_Attack(
 	W_SetupShot_Dir(actor, s_forward, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, atk_damage);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	entity missile = spawn();
+	entity missile = new(blasterbolt);
 	missile.owner = missile.realowner = actor;
-	missile.classname = "blasterbolt";
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = atk_damage;
 	PROJECTILE_MAKETRIGGER(missile);

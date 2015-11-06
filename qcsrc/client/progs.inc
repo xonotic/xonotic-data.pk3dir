@@ -1,25 +1,18 @@
 #include "../lib/_all.inc"
 #include "_all.qh"
 
+#include "../common/effects/qc/all.qc"
+
 #include "announcer.qc"
 #include "bgmscript.qc"
-#include "controlpoint.qc"
 #include "csqcmodel_hooks.qc"
-#include "damage.qc"
-#include "effects.qc"
-#include "generator.qc"
-#include "gibs.qc"
 #include "hook.qc"
-#include "hud.qc"
-#include "hud_config.qc"
+#include "hud/all.qc"
 #include "main.qc"
 #include "mapvoting.qc"
 #include "miscfunctions.qc"
-#include "modeleffects.qc"
 #include "movelib.qc"
-#include "particles.qc"
 #include "player_skeleton.qc"
-#include "rubble.qc"
 #include "scoreboard.qc"
 #include "shownames.qc"
 #include "teamradar.qc"
@@ -67,12 +60,6 @@
 #include "../lib/csqcmodel/cl_model.qc"
 #include "../lib/csqcmodel/cl_player.qc"
 #include "../lib/csqcmodel/interpolate.qc"
-
-// TODO: move to common
-#include "../server/mutators/mutator/mutator_multijump.qc"
-#define IMPLEMENTATION
-#include "../server/mutators/mutator/mutator_multijump.qc"
-#undef IMPLEMENTATION
 
 #include "../lib/warpzone/anglestransform.qc"
 #include "../lib/warpzone/client.qc"

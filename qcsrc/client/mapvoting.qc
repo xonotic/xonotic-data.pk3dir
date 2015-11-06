@@ -1,6 +1,6 @@
 #include "mapvoting.qh"
 
-#include "hud.qh"
+#include "hud/all.qh"
 #include "scoreboard.qh"
 
 #include "../common/mapinfo.qh"
@@ -851,9 +851,11 @@ void MapVote_UpdateVotes()
 	mv_ownvote = ReadByte()-1;
 }
 
-void Ent_MapVote()
+NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
 {
+	make_pure(self);
 	int sf = ReadByte();
+	return = true;
 
 	if(sf & 1)
 		MapVote_Init();
@@ -863,6 +865,12 @@ void Ent_MapVote()
 
 	if(sf & 4)
 		MapVote_UpdateVotes();
+}
+
+NET_HANDLE(TE_CSQC_PICTURE, bool isNew)
+{
+	Net_MapVote_Picture();
+	return true;
 }
 
 void Net_MapVote_Picture()
