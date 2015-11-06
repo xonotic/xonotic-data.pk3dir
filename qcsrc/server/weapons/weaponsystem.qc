@@ -39,9 +39,6 @@ float W_WeaponSpeedFactor()
 }
 
 
-void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(Weapon thiswep, entity actor,
-    .entity weaponentity, int fire) func);
-
 bool CL_Weaponentity_CustomizeEntityForClient()
 {
 	SELFPARAM();
@@ -309,13 +306,14 @@ bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bo
 
 void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim);
 
-void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(Weapon thiswep, entity actor,
+void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor,
 	.entity weaponentity, int fire) func)
 {
+	entity this = actor.(weaponentity);
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
-		fr = actor.(weaponentity).wframe;
+		fr = this.wframe;
 		restartanim = false;
 	}
 	else if (fr == WFRAME_IDLE)
@@ -331,18 +329,18 @@ void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(W
 	vector or = v_right;
 	vector ou = v_up;
 
-	if (actor.(weaponentity))
+	if (this)
 	{
-		actor.(weaponentity).wframe = fr;
+		this.wframe = fr;
 		vector a = '0 0 0';
-		if (fr == WFRAME_IDLE) a = actor.(weaponentity).anim_idle;
-		else if (fr == WFRAME_FIRE1) a = actor.(weaponentity).anim_fire1;
-		else if (fr == WFRAME_FIRE2) a = actor.(weaponentity).anim_fire2;
+		if (fr == WFRAME_IDLE) a = this.anim_idle;
+		else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
+		else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
 		else  // if (fr == WFRAME_RELOAD)
-			a = actor.(weaponentity).anim_reload;
+			a = this.anim_reload;
 		a.z *= g_weaponratefactor;
 		entity e; FOR_EACH_CLIENT(e) if (e == actor || (IS_SPEC(e) && e.enemy == actor)) {
-			wframe_send(e, actor.(weaponentity), a, restartanim);
+			wframe_send(e, this, a, restartanim);
 		}
 	}
 
@@ -350,7 +348,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, float fr, float t, void(W
 	v_right = or;
 	v_up = ou;
 
-	if (actor.weapon_think == w_ready && func != w_ready && actor.(weaponentity).state == WS_RAISE) backtrace(
+	if (actor.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
 
 	t *= W_WeaponRateFactor();

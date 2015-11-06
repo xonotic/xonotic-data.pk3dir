@@ -1,0 +1,26 @@
+#ifndef ENUMCLASS_H
+#define ENUMCLASS_H
+
+#include "oo.qh"
+
+// purpose: prevent transposed parameter passing
+
+#if NDEBUG
+
+// zero overhead mode, use this for releases
+
+#define ENUMCLASS(id) typedef int id; enum {
+#define CASE(class, id) class##_##id,
+#define ENUMCLASS_END(id) };
+
+#else
+
+// edict overhead mode, use this for type checking
+
+#define ENUMCLASS(id) CLASS(id, Object)
+#define CASE(class, id) class class##_##id; STATIC_INIT(class##_##id) { class##_##id = NEW(class); }
+#define ENUMCLASS_END(id) ENDCLASS(id)
+
+#endif
+
+#endif

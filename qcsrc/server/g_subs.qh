@@ -10,10 +10,6 @@ void() SUB_Remove;
 
 spawnfunc(info_null);
 
-void setanim(entity e, vector anim, float looping, float override, float restart);
-
-void updateanim(entity e);
-
 /*
 ==================
 SUB_Remove

@@ -93,7 +93,6 @@ float server_is_dedicated;
 .float fade_rate;
 
 void() player_setupanimsformodel;
-void setanim(entity e, vector anim, float looping, float override, float restart);
 
 .string mdl;
 

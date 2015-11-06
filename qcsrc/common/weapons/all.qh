@@ -186,13 +186,16 @@ STATIC_INIT(register_weapons_done)
 .vector anim_reload;
 
 // static frame globals
-.int wframe;
 
-const float WFRAME_DONTCHANGE = -1;
-const float WFRAME_FIRE1 = 0;
-const float WFRAME_FIRE2 = 1;
-const float WFRAME_IDLE = 2;
-const float WFRAME_RELOAD = 3;
+ENUMCLASS(WFRAME)
+CASE(WFRAME, DONTCHANGE)
+CASE(WFRAME, FIRE1)
+CASE(WFRAME, FIRE2)
+CASE(WFRAME, IDLE)
+CASE(WFRAME, RELOAD)
+ENUMCLASS_END(WFRAME)
+
+.WFRAME wframe;
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
 void CL_WeaponEntity_SetModel(entity this, string name);
