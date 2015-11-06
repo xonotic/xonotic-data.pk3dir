@@ -449,6 +449,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 				this.weaponchild = new(weaponchild);
 #ifdef CSQC
 				this.weaponchild.drawmask = MASK_NORMAL;
+				this.weaponchild.renderflags |= RF_VIEWMODEL;
 #endif
 			}
 			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
