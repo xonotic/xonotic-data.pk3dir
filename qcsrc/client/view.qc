@@ -1064,6 +1064,7 @@ void CSQC_UpdateView(float w, float h)
 
 	++framecount;
 
+	stats_get();
 	hud = getstati(STAT_HUD);
 
 	if(hud != HUD_NORMAL && lasthud == HUD_NORMAL)

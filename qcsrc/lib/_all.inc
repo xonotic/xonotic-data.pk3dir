@@ -62,6 +62,7 @@
 #include "sort.qh"
 #include "spawnfunc.qh"
 #include "static.qh"
+#include "stats.qh"
 #include "string.qh"
 #include "struct.qh"
 #include "test.qc"

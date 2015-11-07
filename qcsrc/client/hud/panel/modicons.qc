@@ -279,7 +279,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 
 	// Read current state
 
-	int state = getstati(STAT_KH_KEYS);
+	int state = STAT(KH_KEYS);
 	int i, key_state;
 	int all_keys, team1_keys, team2_keys, team3_keys, team4_keys, dropped_keys, carrying_keys;
 	all_keys = team1_keys = team2_keys = team3_keys = team4_keys = dropped_keys = carrying_keys = 0;

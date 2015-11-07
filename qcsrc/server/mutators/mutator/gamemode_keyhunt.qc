@@ -102,7 +102,7 @@ float kh_no_radar_circles;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.float kh_state;
+.float kh_state = _STAT(KH_KEYS);
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
 
@@ -1094,8 +1094,6 @@ void kh_Initialize()  // sets up th KH environment
 
 	kh_controller.model = "";
 	kh_controller.modelindex = 0;
-
-	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 
 	kh_ScoreRules(kh_teams);
 }

@@ -52,8 +52,8 @@ const int STAT_VIEWZOOM               = 21;
 // 29 empty?
 // 30 empty?
 // 31 empty?
-const int STAT_KH_KEYS                = 32;
-const int STAT_CTF_STATE              = 33;
+REGISTER_STAT(KH_KEYS, int)
+// 33 empty?
 // 34 empty?
 const int STAT_WEAPONS                = 35;
 const int STAT_SWITCHWEAPON           = 36;

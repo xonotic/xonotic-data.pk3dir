@@ -26,11 +26,6 @@
 // Revision 22: hook shot origin
 #define CSQC_REVISION 22
 
-const int AS_STRING = 1;
-const int AS_INT = 2;
-const int AS_FLOAT_TRUNCATED = 2;
-const int AS_FLOAT = 8;
-
 REGISTER_NET_TEMP(TE_CSQC_PICTURE)
 REGISTER_NET_TEMP(TE_CSQC_RACE)
 REGISTER_NET_TEMP(TE_CSQC_TEAMNAGGER)
@@ -111,10 +106,6 @@ const int CVAR_READONLY = 4;
 
 ///////////////////////////
 // csqc communication stuff
-
-const int CTF_STATE_ATTACK = 1;
-const int CTF_STATE_DEFEND = 2;
-const int CTF_STATE_COMMANDER = 3;
 
 const int HUD_NORMAL = 0;
 const int HUD_BUMBLEBEE_GUN = 25;
