@@ -48,7 +48,7 @@ bool Inventory_Send(entity this, entity to, int sf)
 {
     WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     entity e = self.owner;
-    if (/*IS_SPEC(e)*/ (e.classname == "spectator")) e = e.enemy;
+    if (IS_SPEC(e)) e = e.enemy;
     Inventory data = e.inventory;
     Inventory_Write(data);
     return true;

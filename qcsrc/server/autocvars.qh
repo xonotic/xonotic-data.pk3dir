@@ -55,7 +55,6 @@ bool autocvar_bot_navigation_ignoreplayers;
 bool autocvar_bot_nofire;
 #define autocvar_bot_number cvar("bot_number")
 #define autocvar_bot_prefix cvar_string("bot_prefix")
-bool autocvar_bot_sound_monopoly;
 #define autocvar_bot_suffix cvar_string("bot_suffix")
 bool autocvar_bot_usemodelnames;
 int autocvar_bot_vs_human;

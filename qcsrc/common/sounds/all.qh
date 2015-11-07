@@ -22,5 +22,5 @@ PRECACHE(Sounds) {
 
 SOUND(Null, "misc/null");
 #include "all.inc"
-
+#include "all.qc"
 #endif

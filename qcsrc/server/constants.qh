@@ -9,8 +9,6 @@ const int FL_NO_WEAPON_STAY = BIT(17);
 const int FL_SPAWNING = BIT(18);
 const int FL_PICKUPITEMS = BIT(19);
 
-const int SVC_SOUND = 6;
-const int SVC_STOPSOUND = 16;
 const int SVC_SETVIEW = 5;
 
 const int RESPAWN_FORCE = 1;
