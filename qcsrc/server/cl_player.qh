@@ -93,9 +93,9 @@ void PrecachePlayerSounds(string f);
 void ClearPlayerSounds(entity this);
 float LoadPlayerSounds(string f, bool strict);
 void UpdatePlayerSounds(entity this);
-void FakeGlobalSound(string sample, float chan, float voicetype);
-void _GlobalSound(string sample, float chan, float voicetype);
-#define GlobalSound(def, chan, voicetype) _GlobalSound((def).m_globalsoundstr, chan, voicetype)
+#define FakeGlobalSound(sample, chan, voicetype) _GlobalSound(sample, chan, voicetype, true)
+void _GlobalSound(string sample, float chan, float voicetype, bool fake);
+#define GlobalSound(def, chan, voicetype) _GlobalSound((def).m_globalsoundstr, chan, voicetype, false)
 void PlayerSound(.string samplefield, float chan, float voicetype);
 void VoiceMessage(string type, string msg);
 

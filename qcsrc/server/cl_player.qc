@@ -478,7 +478,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 			PlayerScore_Add(self, SP_DMGTAKEN, realdmg);
 		}
 	}
-	
+
 	bool abot = (IS_BOT_CLIENT(attacker));
 	bool vbot = (IS_BOT_CLIENT(self));
 
@@ -1103,7 +1103,7 @@ void UpdatePlayerSounds(entity this)
 		LoadPlayerSounds(get_model_datafilename(this.model, 0, "sounds"), true);
 }
 
-void FakeGlobalSound(string sample, int chan, int voicetype)
+void _GlobalSound(string sample, int chan, int voicetype, bool fake)
 {
 	SELFPARAM();
 	if (sample == "") return;
@@ -1121,113 +1121,89 @@ void FakeGlobalSound(string sample, int chan, int voicetype)
 		case VOICETYPE_LASTATTACKER_ONLY:
 		case VOICETYPE_LASTATTACKER:
 		{
-		    if (voicetype == VOICETYPE_LASTATTACKER_ONLY) break;
-            msg_entity = this;
-            if (IS_REAL_CLIENT(msg_entity)) soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NONE);
-			break;
-		}
-		case VOICETYPE_TEAMRADIO:
-		{
-			msg_entity = this;
-			float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
-			soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
-			break;
-		}
-		case VOICETYPE_AUTOTAUNT:
-		case VOICETYPE_TAUNT:
-		{
-			if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) break; else {}
-			else if (IS_PLAYER(this) && this.deadflag == DEAD_NO) animdecide_setaction(this, ANIMACTION_TAUNT, true);
-			if (!sv_taunt) break;
-			if (autocvar_sv_gentle) break;
-			float tauntrand = 0;
-			if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
-			msg_entity = this;
-			if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt)
+			if (!fake)
 			{
-				float atten = (msg_entity.cvar_cl_voice_directional >= 1)
-					? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX)
-					: ATTEN_NONE;
-				soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
+				if (!this.pusher) break;
+				msg_entity = this.pusher;
+				if (IS_REAL_CLIENT(msg_entity))
+				{
+					float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
+					soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
+				}
 			}
-			break;
-		}
-		case VOICETYPE_PLAYERSOUND:
-		{
-			msg_entity = this;
-			soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NORM);
-			break;
-		}
-		default:
-		{
-			backtrace("Invalid voice type!");
-			break;
-		}
-	}
-}
-
-void _GlobalSound(string sample, int chan, int voicetype)
-{
-	SELFPARAM();
-	if (sample == "") return;
-	int n;
-	{
-		string s = cdr(sample);
-		if (s) n = stof(s);
-		else n = 0;
-	}
-	sample = car(sample);
-	if (n > 0) sample = sprintf("%s%d.wav", sample, floor(random() * n + 1)); // randomization
-	else sample = sprintf("%s.wav", sample);
-	switch (voicetype)
-	{
-		case VOICETYPE_LASTATTACKER_ONLY:
-		case VOICETYPE_LASTATTACKER:
-		{
-			if (!this.pusher) break;
-            msg_entity = this.pusher;
-            if (IS_REAL_CLIENT(msg_entity))
-            {
-                float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
-                soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
-            }
-            if (voicetype == VOICETYPE_LASTATTACKER_ONLY) break;
+			if (voicetype == VOICETYPE_LASTATTACKER_ONLY) break;
 			msg_entity = this;
 			if (IS_REAL_CLIENT(msg_entity)) soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NONE);
 			break;
 		}
 		case VOICETYPE_TEAMRADIO:
 		{
-			FOR_EACH_REALCLIENT(msg_entity)
-			if (!teamplay || msg_entity.team == this.team)
+			#define X() \
+				do \
+				{ \
+					float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
+					soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
+				} \
+				while (0)
+
+			if (fake) { msg_entity = this; X(); }
+			else
 			{
-				float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
-				soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
+				FOR_EACH_REALCLIENT(msg_entity)
+				{
+					if (!teamplay || msg_entity.team == this.team) X();
+				}
 			}
+			#undef X
 			break;
 		}
 		case VOICETYPE_AUTOTAUNT:
 		case VOICETYPE_TAUNT:
 		{
-			if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) break; else {}
+			if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) { break; }else {}
 			else if (IS_PLAYER(this) && this.deadflag == DEAD_NO) animdecide_setaction(this, ANIMACTION_TAUNT, true);
 			if (!sv_taunt) break;
 			if (autocvar_sv_gentle) break;
 			float tauntrand = 0;
 			if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
-			FOR_EACH_REALCLIENT(msg_entity)
-			if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt)
+			#define X() \
+				do \
+				{ \
+					if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt) \
+					{ \
+						float atten = (msg_entity.cvar_cl_voice_directional >= 1) \
+						    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX) \
+							: ATTEN_NONE; \
+						soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
+					} \
+				} \
+				while (0)
+			if (fake)
 			{
-				float atten = (msg_entity.cvar_cl_voice_directional >= 1)
-					? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX)
-					: ATTEN_NONE;
-				soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
+				msg_entity = this;
+				X();
 			}
+			else
+			{
+				FOR_EACH_REALCLIENT(msg_entity)
+				{
+					X();
+				}
+			}
+			#undef X
 			break;
 		}
 		case VOICETYPE_PLAYERSOUND:
 		{
-			_sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
+			if (fake)
+			{
+				msg_entity = this;
+				soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NORM);
+			}
+			else
+			{
+				_sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
+			}
 			break;
 		}
 		default:
@@ -1241,7 +1217,7 @@ void _GlobalSound(string sample, int chan, int voicetype)
 void PlayerSound(.string samplefield, int chan, float voicetype)
 {
 	SELFPARAM();
-	_GlobalSound(this.(samplefield), chan, voicetype);
+	_GlobalSound(this.(samplefield), chan, voicetype, false);
 }
 
 void VoiceMessage(string type, string msg)
@@ -1256,9 +1232,9 @@ void VoiceMessage(string type, string msg)
 	int voicetype = GetVoiceMessageVoiceType(type);
 	bool ownteam = (voicetype == VOICETYPE_TEAMRADIO);
 	int flood = Say(this, ownteam, world, msg, true);
-	void(string sample, int chan, int voicetype) f;
-	f = (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) ? FakeGlobalSound
-		: (flood > 0) ? _GlobalSound
-		: func_null;
-	if (f) f(this.(sample), CH_VOICE, voicetype);
+	bool fake;
+	if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true;
+	else if (flood > 0) fake = false;
+	else return;
+	_GlobalSound(this.(sample), CH_VOICE, voicetype, fake);
 }
