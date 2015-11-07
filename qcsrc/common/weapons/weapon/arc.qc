@@ -92,7 +92,7 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float beam_heat; // (beam) amount of heat produced
 .float arc_overheat; // (dropped arc/player) time during which it's too hot
 .float arc_cooldown; // (dropped arc/player) cooling speed
-.float arc_heat_percent; // (player) arc heat in [0,1] (stat)
+.float arc_heat_percent = _STAT(ARC_HEAT);
 .float arc_smoke_sound;
 #endif
 #ifdef CSQC

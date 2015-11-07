@@ -2,6 +2,7 @@
 #define WEAPONS_ALL_H
 
 #include "../command/all.qh"
+#include "../stats.qh"
 #include "config.qh"
 
 // weapon sets

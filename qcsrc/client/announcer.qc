@@ -18,7 +18,7 @@ string AnnouncerOption()
 void Announcer_Countdown()
 {
 	SELFPARAM();
-	float starttime = getstatf(STAT_GAMESTARTTIME);
+	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
@@ -69,7 +69,7 @@ void Announcer_Countdown()
  float previous_game_starttime;
 void Announcer_Gamestart()
 {
-	float startTime = getstatf(STAT_GAMESTARTTIME);
+	float startTime = STAT(GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
@@ -101,12 +101,12 @@ void Announcer_Gamestart()
 void Announcer_Time()
 {
 	float timelimit = getstatf(STAT_TIMELIMIT);
-	float timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
+	float timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
 	float warmup_timeleft = 0;
 
 	if(warmup_stage)
 		if(autocvar_g_warmup_limit > 0)
-			warmup_timeleft = max(0, autocvar_g_warmup_limit + getstatf(STAT_GAMESTARTTIME) - time);
+			warmup_timeleft = max(0, autocvar_g_warmup_limit + STAT(GAMESTARTTIME) - time);
 
 	// 5 minute check
 	if(autocvar_cl_announcer_maptime >= 2)

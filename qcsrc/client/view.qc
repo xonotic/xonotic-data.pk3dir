@@ -830,7 +830,7 @@ void HUD_Crosshair()
 				vortex_charge = getstatf(STAT_VORTEX_CHARGE);
 				vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
 
-				float arc_heat = getstatf(STAT_ARC_HEAT);
+				float arc_heat = STAT(ARC_HEAT);
 
 				if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 					vortex_charge_movingavg = vortex_charge;
@@ -1793,7 +1793,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
+		float sharpen_intensity = 0, strength_finished = STAT(STRENGTH_FINISHED), invincible_finished = STAT(INVINCIBLE_FINISHED);
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
 

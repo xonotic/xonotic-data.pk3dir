@@ -77,8 +77,8 @@ float server_is_dedicated;
 .float	pain_frame;			//"
 .float  crouch;	// Crouching or not?
 
-.float	strength_finished;
-.float	invincible_finished;
+.float	strength_finished = _STAT(STRENGTH_FINISHED);
+.float	invincible_finished = _STAT(INVINCIBLE_FINISHED);
 .float	superweapons_finished;
 
 .float cnt; // used in too many places
@@ -397,7 +397,7 @@ float cvar_purechanges_count;
 
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
-.float stat_game_starttime;
+.float stat_game_starttime = _STAT(GAMESTARTTIME);
 .float stat_round_starttime;
 
 void W_Porto_Remove (entity p);

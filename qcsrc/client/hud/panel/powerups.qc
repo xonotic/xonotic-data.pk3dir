@@ -68,8 +68,8 @@ void HUD_Powerups()
 		if(getstati(STAT_HEALTH) <= 0) return;
 		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
-		strengthTime = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
-		shieldTime = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
+		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);
+		shieldTime = bound(0, STAT(INVINCIBLE_FINISHED) - time, 99);
 		superTime = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
 
 		if(allItems & IT_UNLIMITED_SUPERWEAPONS)

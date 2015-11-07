@@ -96,10 +96,10 @@ void HUD_InfoMessages()
 			drawInfoMessage(s);
 
 			//show restart countdown:
-			if (time < getstatf(STAT_GAMESTARTTIME)) {
+			if (time < STAT(GAMESTARTTIME)) {
 				float countdown;
 				//we need to ceil, otherwise the countdown would be off by .5 when using round()
-				countdown = ceil(getstatf(STAT_GAMESTARTTIME) - time);
+				countdown = ceil(STAT(GAMESTARTTIME) - time);
 				s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
 				drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
 				o.y += fontsize.y;
