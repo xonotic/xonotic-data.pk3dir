@@ -2,6 +2,7 @@
 #define SERVER_DEFS_H
 
 #include "../common/weapons/all.qh"
+#include "../common/stats.qh"
 
 #define INDEPENDENT_ATTACK_FINISHED 1
 
@@ -156,7 +157,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .vector weaponentity_glowmod;
 
 //.int weapon; // current weapon
-.int switchweapon; // weapon requested to switch to
+.int switchweapon = _STAT(SWITCHWEAPON);
 .int switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
 .string weaponname; // name of .weapon
 

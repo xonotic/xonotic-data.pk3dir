@@ -1388,9 +1388,6 @@ void CSQC_UpdateView(float w, float h)
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 
-	// next WANTED weapon (for HUD)
-	switchweapon = getstati(STAT_SWITCHWEAPON);
-
 	// currently switching-to weapon (for crosshair)
 	switchingweapon = getstati(STAT_SWITCHINGWEAPON);
 

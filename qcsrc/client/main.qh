@@ -96,7 +96,7 @@ float button_attack2;
 
 int activeweapon;
 int switchingweapon;
-int switchweapon;
+#define switchweapon STAT(SWITCHWEAPON)
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
