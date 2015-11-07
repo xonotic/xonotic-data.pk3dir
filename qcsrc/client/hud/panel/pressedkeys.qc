@@ -43,8 +43,7 @@ void HUD_PressedKeys()
 
 	vector keysize;
 	keysize = eX * mySize.x * (1/3.0) + eY * mySize.y * (1/(3.0 - !autocvar_hud_panel_pressedkeys_attack));
-	float pressedkeys;
-	pressedkeys = getstatf(STAT_PRESSED_KEYS);
+	int pressedkeys = STAT(PRESSED_KEYS);
 
 	if(autocvar_hud_panel_pressedkeys_attack)
 	{

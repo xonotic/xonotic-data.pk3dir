@@ -763,7 +763,6 @@ spawnfunc(worldspawn)
 	Nagger_Init();
 
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
-	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
