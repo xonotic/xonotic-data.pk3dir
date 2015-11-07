@@ -24,6 +24,8 @@ float AdjustAirAccelQW(float accelqw, float factor);
 
 bool IsFlying(entity a);
 
+#define PHYS_AMMO_FUEL(s) STAT(FUEL, s)
+
 #ifdef CSQC
 
 	const int FL_WATERJUMP = 2048;	// player jumping out of water
@@ -97,8 +99,6 @@ bool IsFlying(entity a);
 
 	#define ITEMS_STAT(s) 						(s).items
 	#define BUFFS_STAT(s)						getstati(STAT_BUFFS)
-
-	#define PHYS_AMMO_FUEL(s)					getstati(STAT_FUEL)
 
 	#define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
 
@@ -300,8 +300,6 @@ bool IsFlying(entity a);
 
 	#define ITEMS_STAT(s)						s.items
 	#define BUFFS_STAT(s)						(s).buffs
-
-	#define PHYS_AMMO_FUEL(s)					s.ammo_fuel
 
 	#define PHYS_FROZEN(s)						s.frozen
 
