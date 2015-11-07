@@ -89,7 +89,7 @@ enum {
     STAT_LAST_VECTOR
 };
 
-const int REGISTERED_STATS = 9;
+const int REGISTERED_STATS = 10;
 
 REGISTER_STAT(KH_KEYS, int)
 /** weapon requested to switch to; next WANTED weapon (for HUD) */
@@ -103,11 +103,11 @@ REGISTER_STAT(PRESSED_KEYS, int)
 /** this stat could later contain some other bits of info, like, more server-side particle config */
 REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool)
 REGISTER_STAT(FUEL, int)
+REGISTER_STAT(NB_METERSTART, float)
 
 enum {
     STAT_FIRST_MAIN = (STAT_LAST_VECTOR - 1) + REGISTERED_STATS,
 
-    STAT_NB_METERSTART,
     /** compressShotOrigin */ STAT_SHOTORG,
     STAT_LEADLIMIT,
     STAT_WEAPON_CLIPLOAD,

@@ -452,7 +452,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 	int stat_items;
 
 	stat_items = getstati(STAT_ITEMS, 0, 24);
-	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
+	nb_pb_starttime = STAT(NB_METERSTART);
 
 	if (stat_items & IT_KEY1)
 		mod_active = 1;
