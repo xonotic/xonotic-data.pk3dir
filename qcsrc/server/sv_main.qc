@@ -159,9 +159,9 @@ void CreatureFrame ()
 					if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 					{
 						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							GlobalSound(globalsound_metalstep, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(GS_STEP_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 						else
-							GlobalSound(globalsound_step, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(GS_STEP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 					}
 				}
 			}

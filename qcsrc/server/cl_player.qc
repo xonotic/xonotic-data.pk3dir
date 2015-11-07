@@ -960,7 +960,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	return ret;
 }
 
-float GetVoiceMessageVoiceType(string type)
+int GetVoiceMessageVoiceType(string type)
 {
 	if (type == "taunt") return VOICETYPE_TAUNT;
 	if (type == "teamshoot") return VOICETYPE_LASTATTACKER;
@@ -1166,7 +1166,7 @@ void FakeGlobalSound(string sample, int chan, int voicetype)
 	}
 }
 
-void GlobalSound(string sample, int chan, int voicetype)
+void _GlobalSound(string sample, int chan, int voicetype)
 {
 	SELFPARAM();
 	if (sample == "") return;
@@ -1238,10 +1238,10 @@ void GlobalSound(string sample, int chan, int voicetype)
 	}
 }
 
-void PlayerSound(.string samplefield, float chan, float voicetype)
+void PlayerSound(.string samplefield, int chan, float voicetype)
 {
 	SELFPARAM();
-	GlobalSound(this.(samplefield), chan, voicetype);
+	_GlobalSound(this.(samplefield), chan, voicetype);
 }
 
 void VoiceMessage(string type, string msg)
@@ -1258,7 +1258,7 @@ void VoiceMessage(string type, string msg)
 	int flood = Say(this, ownteam, world, msg, true);
 	void(string sample, int chan, int voicetype) f;
 	f = (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) ? FakeGlobalSound
-		: (flood > 0) ? GlobalSound
+		: (flood > 0) ? _GlobalSound
 		: func_null;
 	if (f) f(this.(sample), CH_VOICE, voicetype);
 }

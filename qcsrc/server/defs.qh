@@ -303,11 +303,6 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 
 float next_pingtime;
 
-string globalsound_fall;
-string globalsound_metalfall;
-string globalsound_step;
-string globalsound_metalstep;
-
 const float VOICETYPE_PLAYERSOUND = 10;
 const float VOICETYPE_TEAMRADIO = 11;
 const float VOICETYPE_LASTATTACKER = 12;

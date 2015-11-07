@@ -964,16 +964,6 @@ void precache()
 		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
 
-    if (g_footsteps)
-    {
-        PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));
-        PrecacheGlobalSound((globalsound_metalstep = "misc/metalfootstep0 6"));
-    }
-
-    // gore and miscellaneous sounds
-    PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
-    PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
-
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
 

@@ -94,8 +94,31 @@ void ClearPlayerSounds(entity this);
 float LoadPlayerSounds(string f, bool strict);
 void UpdatePlayerSounds(entity this);
 void FakeGlobalSound(string sample, float chan, float voicetype);
-void GlobalSound(string sample, float chan, float voicetype);
+void _GlobalSound(string sample, float chan, float voicetype);
+#define GlobalSound(def, chan, voicetype) _GlobalSound((def).m_globalsoundstr, chan, voicetype)
 void PlayerSound(.string samplefield, float chan, float voicetype);
 void VoiceMessage(string type, string msg);
+
+.string m_globalsoundstr;
+REGISTRY(GlobalSounds, BITS(8) - 1)
+#define GlobalSounds_from(i) _GlobalSounds_from(i, NULL)
+#define REGISTER_GLOBALSOUND(id, str) \
+	REGISTER(RegisterGlobalSounds, GS, GlobalSounds, id, m_id, new(GlobalSound)) \
+	{ \
+		make_pure(this); \
+		this.m_globalsoundstr = str; \
+	}
+REGISTER_REGISTRY(RegisterGlobalSounds)
+REGISTRY_SORT(GlobalSounds, 0)
+REGISTRY_CHECK(GlobalSounds)
+PRECACHE(GlobalSounds)
+{
+	FOREACH(GlobalSounds, true, LAMBDA(PrecacheGlobalSound(it.m_globalsoundstr)));
+}
+
+REGISTER_GLOBALSOUND(STEP, "misc/footstep0 6")
+REGISTER_GLOBALSOUND(STEP_METAL, "misc/metalfootstep0 6")
+REGISTER_GLOBALSOUND(FALL, "misc/hitground 4")
+REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
 
 #endif

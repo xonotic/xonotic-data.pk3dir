@@ -1115,9 +1115,9 @@ void PM_check_hitground()
 			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 			{
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(GS_FALL_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 				else
-					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(GS_FALL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 			}
 		}
 	}
