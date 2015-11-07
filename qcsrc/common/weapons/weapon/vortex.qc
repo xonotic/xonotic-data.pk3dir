@@ -91,7 +91,7 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
 
-	if (autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
+	if (autocvar_cl_particles_oldvortexbeam && (STAT(ALLOW_OLDVORTEXBEAM) || isdemo()))
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);

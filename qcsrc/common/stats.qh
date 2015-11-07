@@ -89,7 +89,7 @@ enum {
     STAT_LAST_VECTOR
 };
 
-const int REGISTERED_STATS = 7;
+const int REGISTERED_STATS = 8;
 
 REGISTER_STAT(KH_KEYS, int)
 /** weapon requested to switch to; next WANTED weapon (for HUD) */
@@ -100,11 +100,12 @@ REGISTER_STAT(INVINCIBLE_FINISHED, float)
 /** arc heat in [0,1] */
 REGISTER_STAT(ARC_HEAT, float)
 REGISTER_STAT(PRESSED_KEYS, int)
+/** this stat could later contain some other bits of info, like, more server-side particle config */
+REGISTER_STAT(ALLOW_OLDVORTEXBEAM, bool)
 
 enum {
     STAT_FIRST_MAIN = (STAT_LAST_VECTOR - 1) + REGISTERED_STATS,
 
-    /** this stat could later contain some other bits of info, like, more server-side particle config */ STAT_ALLOW_OLDVORTEXBEAM,
     STAT_FUEL,
     STAT_NB_METERSTART,
     /** compressShotOrigin */ STAT_SHOTORG,

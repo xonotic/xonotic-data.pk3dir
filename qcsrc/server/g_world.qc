@@ -759,7 +759,6 @@ spawnfunc(worldspawn)
 	WepSet_AddStat_InMap();
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
-	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);
 	Nagger_Init();
 
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
