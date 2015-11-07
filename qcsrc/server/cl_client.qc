@@ -175,7 +175,7 @@ void setplayermodel(entity e, string modelname)
 	precache_model(modelname);
 	_setmodel(e, modelname);
 	player_setupanimsformodel();
-	UpdatePlayerSounds();
+	UpdatePlayerSounds(e);
 }
 
 /*
@@ -319,6 +319,15 @@ void PutObserverInServer()
 	self.event_damage = func_null;
 }
 
+int player_getspecies(entity this)
+{
+	get_model_parameters(this.model, this.skin);
+	int s = get_model_parameters_species;
+	get_model_parameters(string_null, 0);
+	if (s < 0) return SPECIES_HUMAN;
+	return s;
+}
+
 .float model_randomizer;
 void FixPlayermodel(entity player)
 {
@@ -395,8 +404,8 @@ void FixPlayermodel(entity player)
 
 	if(chmdl || oldskin != player.skin) // model or skin has changed
 	{
-		player.species = player_getspecies(); // update species
-		UpdatePlayerSounds(); // update skin sounds
+		player.species = player_getspecies(player); // update species
+		UpdatePlayerSounds(player); // update skin sounds
 	}
 
 	if(!teamplay)
@@ -1298,7 +1307,7 @@ void ClientDisconnect ()
 	if(self.weaponorder_byimpulse)
 		strunzone(self.weaponorder_byimpulse);
 
-	ClearPlayerSounds();
+	ClearPlayerSounds(self);
 
 	if(self.personal)
 		remove(self.personal);

@@ -303,52 +303,6 @@ float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 
 float next_pingtime;
 
-// player sounds, voice messages
-// TODO implemented fall and falling
-#define ALLPLAYERSOUNDS \
-		_VOICEMSG(death) \
-		_VOICEMSG(drown) \
-		_VOICEMSG(fall) \
-		_VOICEMSG(falling) \
-		_VOICEMSG(gasp) \
-		_VOICEMSG(jump) \
-		_VOICEMSG(pain100) \
-		_VOICEMSG(pain25) \
-		_VOICEMSG(pain50) \
-		_VOICEMSG(pain75)
-
-#define ALLVOICEMSGS \
-		_VOICEMSG(attack) \
-		_VOICEMSG(attackinfive) \
-		_VOICEMSG(coverme) \
-		_VOICEMSG(defend) \
-		_VOICEMSG(freelance) \
-		_VOICEMSG(incoming) \
-		_VOICEMSG(meet) \
-		_VOICEMSG(needhelp) \
-		_VOICEMSG(seenflag) \
-		_VOICEMSG(taunt) \
-		_VOICEMSG(teamshoot)
-
-#define _VOICEMSG(m) .string playersound_##m;
-ALLPLAYERSOUNDS
-ALLVOICEMSGS
-#undef _VOICEMSG
-
-// reserved sound names for the future (some models lack sounds for them):
-//		_VOICEMSG(flagcarriertakingdamage) \
-//		_VOICEMSG(getflag) \
-// reserved sound names for the future (ALL models lack sounds for them):
-//		_VOICEMSG(affirmative) \
-//		_VOICEMSG(attacking) \
-//		_VOICEMSG(defending) \
-//		_VOICEMSG(roaming) \
-//		_VOICEMSG(onmyway) \
-//		_VOICEMSG(droppedflag) \
-//		_VOICEMSG(negative) \
-//		_VOICEMSG(seenenemy) \
-//      /**/
-
 string globalsound_fall;
 string globalsound_metalfall;
 string globalsound_step;
@@ -360,17 +314,6 @@ const float VOICETYPE_LASTATTACKER = 12;
 const float VOICETYPE_LASTATTACKER_ONLY = 13;
 const float VOICETYPE_AUTOTAUNT = 14;
 const float VOICETYPE_TAUNT = 15;
-
-void PrecachePlayerSounds(string f);
-void PrecacheGlobalSound(string samplestring);
-void UpdatePlayerSounds();
-void ClearPlayerSounds();
-void PlayerSound(.string samplefield, float channel, float voicetype);
-void GlobalSound(string samplestring, float channel, float voicetype);
-void FakeGlobalSound(string samplestring, float channel, float voicetype);
-void VoiceMessage(string type, string message);
-float GetPlayerSoundSampleField_notFound;
-.string GetVoiceMessageSampleField(string type);
 
 // autotaunt system
 .float cvar_cl_autotaunt;
