@@ -5,21 +5,34 @@
 	do \
 	{ \
 		for (int i = start; i < end; ++i) \
-		{                 \
-			const noref entity it = arr[i];                 \
-			if (cond) { body }                              \
-		}                                                   \
+		{ \
+			const noref entity it = arr[i]; \
+			if (cond) { body } \
+		} \
 	} \
 	while (0)
 
 #define FOREACH_LIST(list, next, cond, body) \
 	do \
-	{               \
-		noref int i = 0;                                            \
+	{ \
+		int i = 0; \
 		for (entity it = list##_first; it; (it = it.next, ++i)) \
-		{   \
-			if (cond) { body }                                      \
-		}                                                           \
+		{ \
+			if (cond) { body } \
+		} \
+	} \
+	while (0)
+
+#define FOREACH_WORD(words, cond, body) \
+	do \
+	{ \
+		string _words = words; \
+		int i = 0; \
+		for (string _it; (_it = car(_words)); (_words = cdr(_words), ++i)) \
+		{ \
+			const noref string it = _it; \
+			if (cond) { body } \
+		} \
 	} \
 	while (0)
 
