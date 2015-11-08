@@ -1,0 +1,36 @@
+// This quickmenu example file can be loaded by setting
+// hud_panel_quickmenu_file quickmenu_example.txt
+// and executing "quickmenu file"
+// For more options see "quickmenu help"
+
+"Chat"
+	"nice one" "say :-) / nice one"
+	"good game" "say good game"
+	"hi / good luck" "say hi / good luck and have fun"
+"Chat"
+
+"Settings"
+	// nested submenu
+	"Sound settings"
+		"Hit sound" "toggle cl_hitsound"
+		"Chat sound" "toggle cl_chatsound"
+	"Sound settings"
+
+	// A toggle command displays a checkbox showing the current cvar's state
+	"enable 3rd person view" "toggle chase_active"
+	// it's possible to invert the meaning of the checkbox by inverting the
+	// parameters of toggle from the implicit 1 0 to 0 1
+	"disable 3rd person view" "toggle chase_active 0 1"
+"Settings"
+
+"screenshot" "wait; screenshot"
+
+// Commands that accept a player's name as parameter (%s), followed by one of
+// these special keywords:
+//   ALLPLAYERS_BUT_ME
+//   ALLPLAYERS
+//   OWNTEAMPLAYERS_BUT_ME
+//   OWNTEAMPLAYERS
+//   ENEMYTEAMPLAYERS
+// lets you pick a player's name from a list:
+"private chat with:" "commandmode tell \"%s\"" ALLPLAYERS_BUT_ME
