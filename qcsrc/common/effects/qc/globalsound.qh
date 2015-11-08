@@ -1,0 +1,91 @@
+#ifndef GLOBALSOUND_H
+#define GLOBALSOUND_H
+
+// player sounds, voice messages
+// TODO implemented fall and falling
+#define ALLPLAYERSOUNDS(X) \
+	X(death) \
+	X(drown) \
+	X(fall) \
+	X(falling) \
+	X(gasp) \
+	X(jump) \
+	X(pain100) \
+	X(pain25) \
+	X(pain50) \
+	X(pain75)
+
+#define ALLVOICEMSGS(X) \
+	X(attack) \
+	X(attackinfive) \
+	X(coverme) \
+	X(defend) \
+	X(freelance) \
+	X(incoming) \
+	X(meet) \
+	X(needhelp) \
+	X(seenflag) \
+	X(taunt) \
+	X(teamshoot)
+
+// reserved sound names for the future (some models lack sounds for them):
+// _VOICEMSG(flagcarriertakingdamage)
+// _VOICEMSG(getflag)
+// reserved sound names for the future (ALL models lack sounds for them):
+// _VOICEMSG(affirmative)
+// _VOICEMSG(attacking)
+// _VOICEMSG(defending)
+// _VOICEMSG(roaming)
+// _VOICEMSG(onmyway)
+// _VOICEMSG(droppedflag)
+// _VOICEMSG(negative)
+// _VOICEMSG(seenenemy)
+
+.string m_globalsoundstr;
+REGISTRY(GlobalSounds, BITS(8) - 1)
+#define GlobalSounds_from(i) _GlobalSounds_from(i, NULL)
+#define REGISTER_GLOBALSOUND(id, str) \
+	REGISTER(RegisterGlobalSounds, GS, GlobalSounds, id, m_id, new(GlobalSound)) \
+	{ \
+		make_pure(this); \
+		this.m_globalsoundstr = str; \
+	}
+REGISTER_REGISTRY(RegisterGlobalSounds)
+REGISTRY_SORT(GlobalSounds, 0)
+STATIC_INIT(GlobalSounds_renumber) { FOREACH(GlobalSounds, true, LAMBDA(it.m_id = i)); }
+REGISTRY_CHECK(GlobalSounds)
+void PrecacheGlobalSound(string samplestring);
+PRECACHE(GlobalSounds)
+{
+	FOREACH(GlobalSounds, true, LAMBDA(PrecacheGlobalSound(it.m_globalsoundstr)));
+}
+
+REGISTER_GLOBALSOUND(STEP, "misc/footstep0 6")
+REGISTER_GLOBALSOUND(STEP_METAL, "misc/metalfootstep0 6")
+REGISTER_GLOBALSOUND(FALL, "misc/hitground 4")
+REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
+
+#ifdef SVQC
+
+	#define X(m) .string playersound_##m;
+	ALLPLAYERSOUNDS(X)
+	ALLVOICEMSGS(X)
+	#undef X
+
+	bool GetPlayerSoundSampleField_notFound;
+	float GetVoiceMessageVoiceType(string type);
+	.string GetVoiceMessageSampleField(string type);
+	.string GetPlayerSoundSampleField(string type);
+	void PrecachePlayerSounds(string f);
+	void ClearPlayerSounds(entity this);
+	float LoadPlayerSounds(string f, bool strict);
+	void UpdatePlayerSounds(entity this);
+	#define FakeGlobalSound(sample, chan, voicetype) _GlobalSound(NULL, sample, chan, voicetype, true)
+	void _GlobalSound(entity gs, string sample, float chan, float voicetype, bool fake);
+	#define GlobalSound(def, chan, voicetype) _GlobalSound(def, string_null, chan, voicetype, false)
+	void PlayerSound(.string samplefield, float chan, float voicetype);
+	void VoiceMessage(string type, string msg);
+
+#endif
+
+#endif

@@ -1100,27 +1100,19 @@ void PM_check_frozen()
 void PM_check_hitground()
 {SELFPARAM();
 #ifdef SVQC
-	if (IS_ONGROUND(self))
-	if (IS_PLAYER(self)) // no fall sounds for observers thank you very much
-	if (self.wasFlying)
-	{
-		self.wasFlying = 0;
-		if (self.waterlevel < WATERLEVEL_SWIMMING)
-		if (time >= self.ladder_time)
-		if (!self.hook)
-		{
-			self.nextstep = time + 0.3 + random() * 0.1;
-			trace_dphitq3surfaceflags = 0;
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
-			{
-				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(GS_FALL_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-				else
-					GlobalSound(GS_FALL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			}
-		}
-	}
+	if (!IS_PLAYER(this)) return; // no fall sounds for observers thank you very much
+	if (!IS_ONGROUND(this)) return;
+	if (!this.wasFlying) return;
+    this.wasFlying = false;
+    if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
+    if (time < this.ladder_time) return;
+    if (this.hook) return;
+    this.nextstep = time + 0.3 + random() * 0.1;
+    trace_dphitq3surfaceflags = 0;
+    tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+    if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)) return;
+    entity fall = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS) ? GS_FALL_METAL : GS_FALL;
+    GlobalSound(fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 #endif
 }
 
