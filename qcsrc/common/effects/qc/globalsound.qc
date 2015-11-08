@@ -92,7 +92,12 @@
 			ps = PlayerSounds_from(ReadByte());
 			float r = ReadByte() / 255;
 			int who = ReadByte();
-			entity e = findfloat(world, entnum, autocvar_cl_forceplayermodels ? player_currententnum : who);
+			entity e = findfloat(world, entnum, who);
+			if (autocvar_cl_forceplayermodels)
+			{
+				entity me = findfloat(world, entnum, player_currententnum);
+				if (me.model != "null") e = me;
+			}
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
