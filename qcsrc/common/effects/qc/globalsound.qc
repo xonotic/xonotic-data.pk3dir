@@ -7,6 +7,7 @@
     #endif
 
 	REGISTER_NET_TEMP(globalsound)
+	REGISTER_NET_TEMP(playersound)
 
     #ifdef SVQC
         /**
@@ -29,6 +30,27 @@
 			WriteCoord(channel, o.y);
 			WriteCoord(channel, o.z);
         }
+
+        /**
+		 * @param from the source entity, its position is sent
+		 * @param ps the player sound def
+		 * @param r a random number in 0..1
+		 */
+		void playersound(int channel, entity from, entity ps, float r, int chan, float vol, float atten)
+		{
+			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
+			WriteHeader(channel, playersound);
+			WriteByte(channel, ps.m_id);
+			WriteByte(channel, r * 255);
+			WriteByte(channel, etof(from));
+			WriteByte(channel, fabs(chan));
+			WriteByte(channel, floor(vol * 255));
+			WriteByte(channel, floor(atten * 64));
+			vector o = from.origin + 0.5 * (from.mins + from.maxs);
+			WriteCoord(channel, o.x);
+			WriteCoord(channel, o.y);
+			WriteCoord(channel, o.z);
+		}
 	#endif
 
     string GlobalSound_sample(string pair, float r);
@@ -48,7 +70,7 @@
 			o.x = ReadCoord();
 			o.y = ReadCoord();
 			o.z = ReadCoord();
-		    if (who == player_localnum + 1)
+		    if (who == player_currententnum)
 		    {
 		    	// client knows better, play at current position to unlag
 		    	entity e = findfloat(world, entnum, who);
@@ -57,6 +79,36 @@
 		    else
 		    {
 				entity e = new(globalsound);
+				e.origin = o;
+				sound8(e, o, chan, sample, vol, atten, 0, 0);
+				remove(e);  // debug with: e.think = SUB_Remove; e.nextthink = time + 1;
+			}
+			return true;
+		}
+
+		NET_HANDLE(playersound, bool isnew)
+		{
+			entity ps; ps = PlayerSounds_from(ReadByte());
+			float r = ReadByte() / 255;
+			int who = ReadByte();
+			entity e = findfloat(world, entnum, autocvar_cl_forceplayermodels ? player_currententnum : who);
+			string s = e.(ps.m_playersoundfld); // TODO: populate this field
+			string sample = GlobalSound_sample(s, r);
+			int chan = ReadByte();
+			float vol = ReadByte() / 255;
+			float atten = ReadByte() / 64;
+			vector o;
+			o.x = ReadCoord();
+			o.y = ReadCoord();
+			o.z = ReadCoord();
+			if (who == player_currententnum)
+			{
+				// client knows better, play at current position to unlag
+				sound7(e, chan, sample, vol, atten, 0, 0);
+			}
+			else
+			{
+				entity e = new(playersound);
 				e.origin = o;
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
 				remove(e);  // debug with: e.think = SUB_Remove; e.nextthink = time + 1;
@@ -102,37 +154,35 @@
 
 	#ifdef SVQC
 
-		int GetVoiceMessageVoiceType(string type)
+		entity GetVoiceMessage(string type)
 		{
-			if (type == "taunt") return VOICETYPE_TAUNT;
-			if (type == "teamshoot") return VOICETYPE_LASTATTACKER;
-			return VOICETYPE_TEAMRADIO;
+			FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == true, LAMBDA(return it));
+			return NULL;
+		}
+
+		entity GetPlayerSound(string type)
+		{
+			FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == false, LAMBDA(return it));
+			return NULL;
+		}
+
+		.string _GetPlayerSoundSampleField(string type, bool voice)
+		{
+			GetPlayerSoundSampleField_notFound = false;
+			entity e = voice ? GetVoiceMessage(type) : GetPlayerSound(type);
+			if (e) return e.m_playersoundfld;
+			GetPlayerSoundSampleField_notFound = true;
+			return playersound_taunt.m_playersoundfld;
 		}
 
 		.string GetVoiceMessageSampleField(string type)
 		{
-			GetPlayerSoundSampleField_notFound = false;
-			switch (type)
-			{
-				#define X(m) case #m: return playersound_##m;
-				ALLVOICEMSGS(X)
-		#undef X
-			}
-			GetPlayerSoundSampleField_notFound = true;
-			return playersound_taunt;
+			return _GetPlayerSoundSampleField(type, true);
 		}
 
 		.string GetPlayerSoundSampleField(string type)
 		{
-			GetPlayerSoundSampleField_notFound = false;
-			switch (type)
-			{
-				#define X(m) case #m: return playersound_##m;
-				ALLPLAYERSOUNDS(X)
-		#undef X
-			}
-			GetPlayerSoundSampleField_notFound = true;
-			return playersound_taunt;
+			return _GetPlayerSoundSampleField(type, false);
 		}
 
 		string allvoicesamples;
@@ -161,29 +211,27 @@
 
 			if (!allvoicesamples)
 			{
-				#define X(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
-				ALLVOICEMSGS(X)
-		#undef X
+				FOREACH(PlayerSounds, it.instanceOfVoiceMessage, LAMBDA(
+					allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr)
+				));
 				allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
 			}
 		}
 
 		void ClearPlayerSounds(entity this)
 		{
-			#define X(m) \
-				if (this.playersound_##m) \
-				{ \
-					strunzone(this.playersound_##m); \
-					this.playersound_##m = string_null; \
+			FOREACH(PlayerSounds, true, LAMBDA(
+				.string fld = it.m_playersoundfld;
+				if (this.(fld))
+				{
+					strunzone(this.(fld));
+					this.(fld) = string_null;
 				}
-			ALLPLAYERSOUNDS(X)
-			ALLVOICEMSGS(X)
-		#undef X
+			));
 		}
 
-		bool LoadPlayerSounds(string f, bool strict)
+		bool LoadPlayerSounds(entity this, string f, bool strict)
 		{
-			SELFPARAM();
 			int fh = fopen(f, FILE_READ);
 			if (fh < 0)
 			{
@@ -208,8 +256,8 @@
 				}
 				string file = argv(1);
 				string variants = argv(2);
-				if (self.(field)) strunzone(self.(field));
-				self.(field) = strzone(strcat(file, " ", variants));
+				if (this.(field)) strunzone(this.(field));
+				this.(field) = strzone(strcat(file, " ", variants));
 			}
 			fclose(fh);
 			return true;
@@ -224,20 +272,25 @@
 			this.modelindex_for_playersound = this.modelindex;
 			this.skin_for_playersound = this.skin;
 			ClearPlayerSounds(this);
-			LoadPlayerSounds("sound/player/default.sounds", true);
+			LoadPlayerSounds(this, "sound/player/default.sounds", true);
 			if (autocvar_g_debug_defaultsounds) return;
-			if (!LoadPlayerSounds(get_model_datafilename(this.model, this.skin, "sounds"), false))
-				LoadPlayerSounds(get_model_datafilename(
+			if (!LoadPlayerSounds(this, get_model_datafilename(this.model, this.skin, "sounds"), false))
+				LoadPlayerSounds(this, get_model_datafilename(
 					this.model, 0,
 					"sounds"),
 					true);
 		}
 
-		void _GlobalSound(entity gs, string sample, int chan, int voicetype, bool fake)
+		void _GlobalSound(entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
 		{
 			SELFPARAM();
-			if (gs == NULL && sample == "") return;
+			if (gs == NULL && ps == NULL && sample == "") return;
 			float r = random();
+			if (ps)  // TODO: remove
+			{
+				sample = this.(ps.m_playersoundfld);
+				ps = NULL;
+			}
 			if (sample != "") sample = GlobalSound_sample(sample, r);
 			switch (voicetype)
 			{
@@ -252,6 +305,7 @@
 						{
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten);
+							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten);
 							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
 						}
 					}
@@ -260,6 +314,7 @@
 					if (IS_REAL_CLIENT(msg_entity))
 					{
 					    if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASE, ATTEN_NONE);
+					    else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASE, ATTEN_NONE);
 					    else soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NONE);
 					}
 					break;
@@ -271,6 +326,7 @@
 						{ \
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
+							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
 						} \
 						while (0)
@@ -306,6 +362,7 @@
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
 								if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
+								else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
                                 else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
 							} \
 						} \
@@ -331,11 +388,13 @@
 					if (fake)
 					{
 						if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
+						else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
                         else soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NORM);
 					}
 					else
 					{
     					if (gs) globalsound(MSG_ALL, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
+    					else if (ps) playersound(MSG_ALL, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
                         else _sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
 					}
 					break;
@@ -348,29 +407,5 @@
 			}
 		}
 
-		void PlayerSound(.string samplefield, int chan, float voicetype)
-		{
-			SELFPARAM();
-			_GlobalSound(NULL, this.(samplefield), chan, voicetype, false);
-		}
-
-		void VoiceMessage(string type, string msg)
-		{
-			SELFPARAM();
-			var.string sample = GetVoiceMessageSampleField(type);
-			if (GetPlayerSoundSampleField_notFound)
-			{
-				sprint(this, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
-				return;
-			}
-			int voicetype = GetVoiceMessageVoiceType(type);
-			bool ownteam = (voicetype == VOICETYPE_TEAMRADIO);
-			int flood = Say(this, ownteam, world, msg, true);
-			bool fake;
-			if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true;
-			else if (flood > 0) fake = false;
-			else return;
-			_GlobalSound(NULL, this.(sample), CH_VOICE, voicetype, fake);
-		}
 	#endif
 #endif
