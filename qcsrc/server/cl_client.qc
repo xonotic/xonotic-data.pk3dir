@@ -175,7 +175,6 @@ void setplayermodel(entity e, string modelname)
 	precache_model(modelname);
 	_setmodel(e, modelname);
 	player_setupanimsformodel();
-	UpdatePlayerSounds(e);
 }
 
 /*
@@ -405,7 +404,6 @@ void FixPlayermodel(entity player)
 	if(chmdl || oldskin != player.skin) // model or skin has changed
 	{
 		player.species = player_getspecies(player); // update species
-		UpdatePlayerSounds(player); // update skin sounds
 	}
 
 	if(!teamplay)
@@ -1306,8 +1304,6 @@ void ClientDisconnect ()
 		strunzone(self.clientstatus);
 	if(self.weaponorder_byimpulse)
 		strunzone(self.weaponorder_byimpulse);
-
-	ClearPlayerSounds(self);
 
 	if(self.personal)
 		remove(self.personal);

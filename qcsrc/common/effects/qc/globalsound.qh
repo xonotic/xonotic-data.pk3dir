@@ -18,7 +18,10 @@ REGISTRY(PlayerSounds, BITS(8) - 1)
 	}
 REGISTER_REGISTRY(RegisterPlayerSounds)
 REGISTRY_SORT(PlayerSounds, 0)
-STATIC_INIT(PlayerSounds_renumber) { FOREACH(PlayerSounds, true, LAMBDA(it.m_id = i)); }
+STATIC_INIT(PlayerSounds_renumber)
+{
+	FOREACH(PlayerSounds, true, LAMBDA(it.m_id = i));
+}
 REGISTRY_CHECK(PlayerSounds)
 
 // TODO implement fall and falling
@@ -90,7 +93,10 @@ REGISTRY(GlobalSounds, BITS(8) - 1)
 	}
 REGISTER_REGISTRY(RegisterGlobalSounds)
 REGISTRY_SORT(GlobalSounds, 0)
-STATIC_INIT(GlobalSounds_renumber) { FOREACH(GlobalSounds, true, LAMBDA(it.m_id = i)); }
+STATIC_INIT(GlobalSounds_renumber)
+{
+	FOREACH(GlobalSounds, true, LAMBDA(it.m_id = i));
+}
 REGISTRY_CHECK(GlobalSounds)
 void PrecacheGlobalSound(string samplestring);
 PRECACHE(GlobalSounds)
@@ -103,33 +109,36 @@ REGISTER_GLOBALSOUND(STEP_METAL, "misc/metalfootstep0 6")
 REGISTER_GLOBALSOUND(FALL, "misc/hitground 4")
 REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
 
-#ifdef SVQC
-
-	bool GetPlayerSoundSampleField_notFound;
+bool GetPlayerSoundSampleField_notFound;
+void PrecachePlayerSounds(string f);
+#ifdef CSQC
 	.string GetVoiceMessageSampleField(string type);
 	.string GetPlayerSoundSampleField(string type);
-	void PrecachePlayerSounds(string f);
 	void ClearPlayerSounds(entity this);
 	float LoadPlayerSounds(entity this, string f, bool strict);
 	void UpdatePlayerSounds(entity this);
+#endif
+
+#ifdef SVQC
+
 	void _GlobalSound(entity gs, entity ps, string sample, float chan, float voicetype, bool fake);
 	#define GlobalSound(def, chan, voicetype) _GlobalSound(def, NULL, string_null, chan, voicetype, false)
 	#define GlobalSound_string(def, chan, voicetype) _GlobalSound(NULL, NULL, def, chan, voicetype, false)
 	#define PlayerSound(def, chan, voicetype) _GlobalSound(NULL, def, string_null, chan, voicetype, false)
 	#define VoiceMessage(def, msg) \
-	do \
-	{ \
-		entity VM = def; \
-		int voicetype = VM.m_playersoundvt; \
-		bool ownteam = (voicetype == VOICETYPE_TEAMRADIO); \
-		int flood = Say(this, ownteam, world, msg, true); \
-		bool fake; \
-		if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true; \
-		else if (flood > 0) fake = false; \
-		else break; \
-		_GlobalSound(NULL, VM, string_null, CH_VOICE, voicetype, fake); \
-	} \
-	while (0)
+		do \
+		{ \
+			entity VM = def; \
+			int voicetype = VM.m_playersoundvt; \
+			bool ownteam = (voicetype == VOICETYPE_TEAMRADIO); \
+			int flood = Say(this, ownteam, world, msg, true); \
+			bool fake; \
+			if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true; \
+			else if (flood > 0) fake = false; \
+			else break; \
+			_GlobalSound(NULL, VM, string_null, CH_VOICE, voicetype, fake); \
+		} \
+		while (0)
 
 #endif
 

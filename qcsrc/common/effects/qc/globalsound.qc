@@ -93,7 +93,8 @@
 			float r = ReadByte() / 255;
 			int who = ReadByte();
 			entity e = findfloat(world, entnum, autocvar_cl_forceplayermodels ? player_currententnum : who);
-			string s = e.(ps.m_playersoundfld);  // TODO: populate this field
+			UpdatePlayerSounds(e);
+			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
 			int chan = ReadByte();
 			float vol = ReadByte() / 255;
@@ -153,70 +154,69 @@
 		}
 	}
 
-	#ifdef SVQC
+	entity GetVoiceMessage(string type)
+	{
+		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == true, LAMBDA(return it));
+		return NULL;
+	}
 
-		entity GetVoiceMessage(string type)
-		{
-			FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == true, LAMBDA(return it));
-			return NULL;
-		}
+	entity GetPlayerSound(string type)
+	{
+		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == false, LAMBDA(return it));
+		return NULL;
+	}
 
-		entity GetPlayerSound(string type)
-		{
-			FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == false, LAMBDA(return it));
-			return NULL;
-		}
+	string allvoicesamples;
+	STATIC_INIT(allvoicesamples)
+	{
+		FOREACH(PlayerSounds, it.instanceOfVoiceMessage, LAMBDA(
+			allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr)
+			                                                   ));
+		allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
+	}
 
-		.string _GetPlayerSoundSampleField(string type, bool voice)
-		{
-			GetPlayerSoundSampleField_notFound = false;
-			entity e = voice ? GetVoiceMessage(type) : GetPlayerSound(type);
-			if (e) return e.m_playersoundfld;
-			GetPlayerSoundSampleField_notFound = true;
-			return playersound_taunt.m_playersoundfld;
-		}
+	.string _GetPlayerSoundSampleField(string type, bool voice)
+	{
+		GetPlayerSoundSampleField_notFound = false;
+		entity e = voice ? GetVoiceMessage(type) : GetPlayerSound(type);
+		if (e) return e.m_playersoundfld;
+		GetPlayerSoundSampleField_notFound = true;
+		return playersound_taunt.m_playersoundfld;
+	}
 
-		.string GetVoiceMessageSampleField(string type)
+	.string GetVoiceMessageSampleField(string type)
+	{
+		return _GetPlayerSoundSampleField(type, true);
+	}
+
+	void PrecachePlayerSounds(string f)
+	{
+		int fh = fopen(f, FILE_READ);
+		if (fh < 0)
 		{
-			return _GetPlayerSoundSampleField(type, true);
+			LOG_WARNINGF("Player sound file not found: %s\n", f);
+			return;
 		}
+		for (string s; (s = fgets(fh)); )
+		{
+			int n = tokenize_console(s);
+			if (n != 3)
+			{
+				if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
+				continue;
+			}
+			string file = argv(1);
+			string variants = argv(2);
+			PrecacheGlobalSound(strcat(file, " ", variants));
+		}
+		fclose(fh);
+	}
+
+	#ifdef CSQC
 
 		.string GetPlayerSoundSampleField(string type)
 		{
 			return _GetPlayerSoundSampleField(type, false);
-		}
-
-		string allvoicesamples;
-
-		void PrecachePlayerSounds(string f)
-		{
-			int fh = fopen(f, FILE_READ);
-			if (fh < 0)
-			{
-				LOG_WARNINGF("Player sound file not found: %s\n", f);
-				return;
-			}
-			for (string s; (s = fgets(fh)); )
-			{
-				int n = tokenize_console(s);
-				if (n != 3)
-				{
-					if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
-					continue;
-				}
-				string file = argv(1);
-				string variants = argv(2);
-				PrecacheGlobalSound(strcat(file, " ", variants));
-			}
-			fclose(fh);
-
-			if (!allvoicesamples)
-			{
-				FOREACH(PlayerSounds, it.instanceOfVoiceMessage, LAMBDA(
-					allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr)
-					                                                   ));
-				allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
-			}
 		}
 
 		void ClearPlayerSounds(entity this)
@@ -267,6 +267,8 @@
 		.int modelindex_for_playersound;
 		.int skin_for_playersound;
 
+		bool autocvar_g_debug_defaultsounds;
+
 		void UpdatePlayerSounds(entity this)
 		{
 			if (this.modelindex == this.modelindex_for_playersound && this.skin == this.skin_for_playersound) return;
@@ -274,24 +276,20 @@
 			this.skin_for_playersound = this.skin;
 			ClearPlayerSounds(this);
 			LoadPlayerSounds(this, "sound/player/default.sounds", true);
-			if (autocvar_g_debug_defaultsounds) return;
-			if (!LoadPlayerSounds(this, get_model_datafilename(this.model, this.skin, "sounds"), false))
-				LoadPlayerSounds(this, get_model_datafilename(
-					this.model, 0,
-					"sounds"),
-					true);
+			if (this.model == "null" || autocvar_g_debug_defaultsounds) return;
+			if (LoadPlayerSounds(this, get_model_datafilename(this.model, this.skin, "sounds"), false)) return;
+			LoadPlayerSounds(this, get_model_datafilename(this.model, 0, "sounds"), true);
 		}
+
+	#endif
+
+	#ifdef SVQC
 
 		void _GlobalSound(entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
 		{
 			SELFPARAM();
 			if (gs == NULL && ps == NULL && sample == "") return;
 			float r = random();
-			if (ps)  // TODO: remove
-			{
-				sample = this.(ps.m_playersoundfld);
-				ps = NULL;
-			}
 			if (sample != "") sample = GlobalSound_sample(sample, r);
 			switch (voicetype)
 			{
