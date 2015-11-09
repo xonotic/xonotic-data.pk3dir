@@ -39,7 +39,7 @@ void CSQC_Init()
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	LOG_TRACEF("^4CSQC Build information: ^1%s\n", WATERMARK);
+	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	binddb = db_create();
