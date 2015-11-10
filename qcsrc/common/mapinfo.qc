@@ -1017,6 +1017,11 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, int pAllowGenerate, int p
 		{
 			MapInfo_Map_flags |= MAPINFO_FLAG_NOAUTOMAPLIST;
 		}
+		else if(t == "gameversion_min")
+		{
+			if (cvar("gameversion") < stof(s))
+				MapInfo_Map_flags |= MAPINFO_FLAG_NOAUTOMAPLIST;
+		}
 		else if(t == "type")
 		{
 			t = car(s); s = cdr(s);
