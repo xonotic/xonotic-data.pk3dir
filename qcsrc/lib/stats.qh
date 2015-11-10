@@ -20,7 +20,7 @@
 	#define _STAT(id) g_stat_##id
 	#define REGISTER_STAT(id, type) \
 		type _STAT(id); \
-		REGISTER(RegisterStats, STAT, Stats, id, m_id, new(stat)) \
+		REGISTER(Stats, STAT, id, m_id, new(stat)) \
 		{ \
 			make_pure(this); \
 		} \
@@ -43,7 +43,7 @@
 	#define _STAT(id) stat_##id
 	#define REGISTER_STAT(id, type) \
 		.type _STAT(id); \
-		REGISTER(RegisterStats, STAT, Stats, id, m_id, new(stat)) \
+		REGISTER(Stats, STAT, id, m_id, new(stat)) \
 		{ \
 			make_pure(this); \
 		} \
@@ -58,7 +58,7 @@
 const int STATS_ENGINE_RESERVE = 32 + (8 * 3); // Not sure how to handle vector stats yet, reserve them too
 
 REGISTRY(Stats, 220 - STATS_ENGINE_RESERVE)
-REGISTER_REGISTRY(RegisterStats)
+REGISTER_REGISTRY(Stats)
 REGISTRY_SORT(Stats, 0)
 REGISTRY_CHECK(Stats)
 STATIC_INIT(RegisterStats_renumber)

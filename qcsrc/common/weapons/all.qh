@@ -37,7 +37,7 @@ WepSet ReadWepSet();
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 #define Weapons_from(i) _Weapons_from(i, WEP_Null)
 #define get_weaponinfo(i) Weapons_from(i)
-REGISTER_REGISTRY(RegisterWeapons)
+REGISTER_REGISTRY(Weapons)
 STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(WeaponPickup, it))); }
 
 
@@ -96,7 +96,7 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
 
 #define REGISTER_WEAPON(id, inst) \
     /* WepSet WEPSET_##id; */ \
-    REGISTER(RegisterWeapons, WEP, Weapons, id, m_id, inst)
+    REGISTER(Weapons, WEP, id, m_id, inst)
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;

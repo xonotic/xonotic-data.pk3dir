@@ -3,11 +3,12 @@
 
 #include "oo.qh"
 
-#define REGISTER_REGISTRY(func) ACCUMULATE_FUNCTION(__static_init, func)
-
-#define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
-#define REGISTER_INIT_POST(ns, id) [[accumulate]] void Register_##ns##_##id##_init_post(entity this)
-
+/**
+ * Declare a new registry.
+ *
+ * Don't forget to call `REGISTER_REGISTRY`:
+ *     REGISTER_REGISTRY(Foos)
+ */
 #define REGISTRY(id, max) \
 	void Register##id() {} \
 	const int id##_MAX = max; \
@@ -15,51 +16,52 @@
 	int id##_COUNT; \
 	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _##id[i]; if (e) return e; } return null; }
 
+REGISTRY(Registries, BITS(8))
+
 /** registered item identifier */
 .string registered_id;
 
 /**
- * Register a new entity with a global constructor.
+ * Register a new entity with a registry.
  * Must be followed by a semicolon or a function body with a `this` parameter.
  * Wrapper macros may perform actions after user initialization like so:
  *     #define REGISTER_FOO(id) \
- *         REGISTER(RegisterFoos, FOO, FOOS, id, m_id, NEW(Foo)); \
+ *         REGISTER(Foos, FOO, id, m_id, NEW(Foo)); \
  *         REGISTER_INIT_POST(FOO, id) { \
  *             print("Registering foo #", this.m_id + 1, "\n"); \
  *         } \
  *         REGISTER_INIT(FOO, id)
  *
- * Don't forget to forward declare `initfunc` and call `REGISTER_REGISTRY`:
- *     void RegisterFoos();
- *     REGISTER_REGISTRY(RegisterFoos)
  *
- * @param initfunc  The global constructor to accumulate into
+ * @param registry  The registry to add each entity to.
  * @param ns        Short for namespace, prefix for each global (ns##_##id)
- * @param array     The array to add each entity to. Also requires `array##_first` and `array##_last` to be defined
  * @param id        The identifier of the current entity being registered
- * @param fld       The field to store the current count into
+ * @param fld       The field to store the locally unique unique entity id
  * @param inst      An expression to create a new instance, invoked for every registration
  */
-#define REGISTER(initfunc, ns, array, id, fld, inst) \
+#define REGISTER(registry, ns, id, fld, inst) \
 	entity ns##_##id; \
 	REGISTER_INIT(ns, id) {} \
 	REGISTER_INIT_POST(ns, id) {} \
 	void Register_##ns##_##id() \
 	{ \
-		if (array##_COUNT >= array##_MAX) LOG_FATALF("Registry capacity exceeded (%s)", ftos(array##_MAX)); \
-		entity this = inst; \
-		ns##_##id = this; \
+		if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%s)", ftos(registry##_MAX)); \
+		entity this = ns##_##id = inst; \
 		this.registered_id = #id; \
-		this.fld = array##_COUNT; \
-		_##array[array##_COUNT++] = this; \
-		if (!array##_first) array##_first = this; \
-		if (array##_last)   array##_last.REGISTRY_NEXT = this; \
-		array##_last = this; \
+		this.fld = registry##_COUNT; \
+		_##registry[registry##_COUNT] = this; \
+		++registry##_COUNT; \
+		if (!registry##_first) registry##_first = this; \
+		if (registry##_last)   registry##_last.REGISTRY_NEXT = this; \
+		registry##_last = this; \
 		Register_##ns##_##id##_init(this); \
 		Register_##ns##_##id##_init_post(this); \
 	} \
-	ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id) \
+	ACCUMULATE_FUNCTION(Register##registry, Register_##ns##_##id) \
 	REGISTER_INIT(ns, id)
+
+#define REGISTER_INIT(ns, id) [[accumulate]] void Register_##ns##_##id##_init(entity this)
+#define REGISTER_INIT_POST(ns, id) [[accumulate]] void Register_##ns##_##id##_init_post(entity this)
 
 /** internal next pointer */
 #define REGISTRY_NEXT enemy
@@ -119,7 +121,7 @@ void Registry_send(string id, string hash);
 		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
 		LOG_TRACEF(#id ": %s\n[%s]\n", h, s); \
 	} \
-	[[accumulate]] void Registry_check(string r, string sv) \
+	void Registry_check(string r, string sv) \
 	{ \
 		if (r == #id) \
 		{ \
@@ -130,6 +132,17 @@ void Registry_send(string id, string hash);
 			} \
 		} \
 	} \
-	[[accumulate]] void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
+	void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
+
+#define REGISTER_REGISTRY(...) EVAL(OVERLOAD(REGISTER_REGISTRY, __VA_ARGS__))
+#define REGISTER_REGISTRY_1(id) REGISTER_REGISTRY_2(id, #id)
+#define REGISTER_REGISTRY_2(id, str) \
+	ACCUMULATE_FUNCTION(__static_init, Register##id) \
+	CLASS(id##Registry, Object) \
+		ATTRIB(id##Registry, m_name, string, str) \
+		ATTRIB(id##Registry, REGISTRY_NEXT, entity, id##_first) \
+	ENDCLASS(id##Registry) \
+	REGISTER(Registries, REGISTRY, id, m_id, NEW(id##Registry));
+
 
 #endif
