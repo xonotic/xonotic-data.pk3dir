@@ -1,5 +1,4 @@
 #if defined(CSQC)
-	#include "../../buffs/all.qh"
 	#include "../../../lib/csqcmodel/interpolate.qh"
 	#include "../../../client/main.qh"
 	#include "../../../lib/csqcmodel/cl_model.qh"

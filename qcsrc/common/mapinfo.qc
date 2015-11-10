@@ -1,13 +1,11 @@
 #if defined(CSQC)
     #include "../client/defs.qh"
     #include "util.qh"
-    #include "buffs/all.qh"
     #include "weapons/all.qh"
     #include "mapinfo.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "util.qh"
-    #include "buffs/all.qh"
     #include "monsters/all.qh"
     #include "mapinfo.qh"
 #endif

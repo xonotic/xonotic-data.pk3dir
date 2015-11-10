@@ -73,7 +73,6 @@
 #include "../common/viewloc.qc"
 
 #include "../common/deathtypes/all.qc"
-#include "../common/buffs/all.qc"
 #include "../common/effects/all.qc"
 #include "../common/gamemodes/all.qc"
 #include "../common/items/all.qc"

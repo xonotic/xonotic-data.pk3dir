@@ -40,7 +40,6 @@
 #include "../common/minigames/minigames.qc"
 #include "../common/minigames/cl_minigames.qc"
 
-#include "../common/buffs/all.qc"
 #include "../common/deathtypes/all.qc"
 #include "../common/effects/all.qc"
 #include "../common/gamemodes/all.qc"

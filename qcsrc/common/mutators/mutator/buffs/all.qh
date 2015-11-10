@@ -5,8 +5,11 @@
 // Add new buffs here!
 // Note: Buffs also need spawnfuncs, which are set below
 
-#include "../teams.qh"
-#include "../util.qh"
+#include "../../../teams.qh"
+#include "../../../util.qh"
+
+REGISTER_WAYPOINT(Buff, _("Buff"), '1 0.5 0', 1);
+REGISTER_RADARICON(Buff, 1);
 
 REGISTRY(Buffs, BITS(4))
 #define Buffs_from(i) _Buffs_from(i, BUFF_Null)
@@ -22,7 +25,7 @@ REGISTRY_CHECK(Buffs)
     } \
     REGISTER_INIT(BUFF, id)
 
-#include "../items/item/pickup.qh"
+#include "../../../items/item/pickup.qh"
 CLASS(Buff, Pickup)
 	/** bit index */
 	ATTRIB(Buff, m_itemid, int, 0)
@@ -35,8 +38,8 @@ CLASS(Buff, Pickup)
 		returns(this.m_prettyName, sprintf("/gfx/hud/%s/buff_%s", cvar_string("menu_skin"), this.m_name));
 	}
 #ifdef SVQC
-	METHOD(Buff, m_time, float(entity));
-	float Buff_m_time(entity this) { return cvar(strcat("g_buffs_", this.netname, "_time")); }
+	METHOD(Buff, m_time, float(Buff this))
+	{ return cvar(strcat("g_buffs_", this.netname, "_time")); }
 #endif
 ENDCLASS(Buff)
 

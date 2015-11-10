@@ -5,7 +5,6 @@
 #include "scoreboard.qh"
 #include "teamradar.qh"
 #include "t_items.qh"
-#include "../common/buffs/all.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"

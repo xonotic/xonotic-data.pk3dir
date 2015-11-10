@@ -17,7 +17,6 @@ int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
 #include "../../../../server/cl_client.qh"
-#include "../../../buffs/all.qh"
 
 #include "../../../items/all.qc"
 
@@ -333,7 +332,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		frag_mirrordamage = 0;
 	}
 
-	if((frag_target.buffs & BUFF_INVISIBLE.m_itemid) || (frag_target.items & ITEM_Invisibility.m_itemid))
+	if(frag_target.alpha && frag_target.alpha < 1)
 		yoda = 1;
 
 	return false;
