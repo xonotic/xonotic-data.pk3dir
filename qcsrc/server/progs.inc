@@ -78,7 +78,6 @@
 #include "../common/gamemodes/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
-#include "../common/nades/all.qc"
 #include "../common/turrets/all.qc"
 #include "../common/vehicles/all.qc"
 #include "../common/weapons/all.qc"

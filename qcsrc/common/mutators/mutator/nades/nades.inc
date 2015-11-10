@@ -1,7 +1,11 @@
+#ifndef MENUQC
 #define NADE_PROJECTILE(i, projectile, trail) do { \
     this.m_projectile[i] = projectile; \
     this.m_trail[i] = trail; \
 } while (0)
+#else
+#define NADE_PROJECTILE(i, projectile, trail)
+#endif
 
 REGISTER_NADE(NORMAL) {
     this.m_color = '1 1 1';
