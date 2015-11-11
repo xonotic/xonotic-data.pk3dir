@@ -38,7 +38,6 @@ void instagib_invisibility()
 
 void instagib_extralife()
 {SELFPARAM();
-	self.max_health = 1;
 	StartItem(this, ITEM_ExtraLife);
 }
 
@@ -432,7 +431,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
 
-	if(self.max_health)
+	if(self.itemdef == ITEM_ExtraLife)
 	{
 		other.armorvalue = bound(other.armorvalue, 999, other.armorvalue + autocvar_g_instagib_extralives);
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);

@@ -307,7 +307,6 @@ MUTATOR_HOOKFUNCTION(lms, FilterItem)
 
 void lms_extralife()
 {SELFPARAM();
-	self.max_health = 1;
 	StartItem(this, ITEM_ExtraLife);
 }
 
@@ -332,7 +331,7 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 {SELFPARAM();
-	if(self.max_health)
+	if(self.itemdef == ITEM_ExtraLife)
 	{
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
 		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
