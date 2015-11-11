@@ -299,22 +299,44 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 MUTATOR_HOOKFUNCTION(lms, FilterItem)
 {SELFPARAM();
 	if(autocvar_g_lms_extra_lives)
-	if(self.itemdef == ITEM_HealthMega)
-	{
-		self.max_health = 1;
+	if(self.itemdef == ITEM_ExtraLife)
 		return false;
-	}
+
+	return true;
+}
+
+void lms_extralife()
+{SELFPARAM();
+	self.max_health = 1;
+	StartItem(this, ITEM_ExtraLife);
+}
+
+MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
+{SELFPARAM();
+	if (!autocvar_g_powerups) return false;
+	if (!autocvar_g_lms_extra_lives) return false;
+
+	// Can't use .itemdef here
+	if (self.classname != "item_health_mega") return false;
+
+	entity e = spawn();
+	e.think = lms_extralife;
+
+	e.nextthink = time + 0.1;
+	e.spawnflags = self.spawnflags;
+	e.noalign = self.noalign;
+	setorigin(e, self.origin);
 
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 {SELFPARAM();
-	// give extra lives for mega health
-	if (self.items & ITEM_HealthMega.m_itemid)
+	if(self.max_health)
 	{
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
 		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
+		return MUT_ITEMTOUCH_PICKUP;
 	}
 
 	return MUT_ITEMTOUCH_CONTINUE;
