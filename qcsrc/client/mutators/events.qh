@@ -130,4 +130,11 @@ vector vbeam_shotorg;
 vector vbeam_endpos;
 MUTATOR_HOOKABLE(Particles_VortexBeam, EV_Particles_VortexBeam);
 
+/** Return true to not draw any impact effect */
+#define EV_Weapon_ImpactEffect(i, o) \
+	/**/ i(entity, w_hitwep) \
+	/**/
+entity w_hitwep;
+MUTATOR_HOOKABLE(Weapon_ImpactEffect, EV_Weapon_ImpactEffect);
+
 #endif
