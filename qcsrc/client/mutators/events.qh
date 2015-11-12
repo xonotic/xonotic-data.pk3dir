@@ -121,4 +121,13 @@ MUTATOR_HOOKABLE(HUD_Draw_overlay, EV_HUD_Draw_overlay);
 
 MUTATOR_HOOKABLE(HUD_Powerups_add, EV_NO_ARGS);
 
+/** Return true to not draw any vortex beam */
+#define EV_Particles_VortexBeam(i, o) \
+	/**/ i(vector, vbeam_shotorg) \
+	/**/ i(vector, vbeam_endpos) \
+	/**/
+vector vbeam_shotorg;
+vector vbeam_endpos;
+MUTATOR_HOOKABLE(Particles_VortexBeam, EV_Particles_VortexBeam);
+
 #endif
