@@ -75,7 +75,7 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 	WriteByte(MSG_BROADCAST, player.team);
 }
 #elif defined(CSQC)
-bool autocvar_cl_vaporizerbeam_particle = true;
+bool autocvar_cl_vaporizerbeam_particle = false;
 float autocvar_cl_vaporizerbeam_lifetime = 0.8;
 
 string Draw_VaporizerBeam_trace_callback_tex;
