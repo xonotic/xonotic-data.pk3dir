@@ -42,6 +42,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 	{
 		self.modelindex = 0;
 		self.traileffect = EFFECT_FIREBALL.m_id;
+		return true;
 	}
 	if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
 	{
