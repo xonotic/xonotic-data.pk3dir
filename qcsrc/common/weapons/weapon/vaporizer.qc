@@ -75,7 +75,8 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 	WriteByte(MSG_BROADCAST, player.team);
 }
 #elif defined(CSQC)
-bool autocvar_cl_particles_vaporizerbeam = true;
+bool autocvar_cl_vaporizerbeam_particle = true;
+float autocvar_cl_vaporizerbeam_lifetime = 0.8;
 
 string Draw_VaporizerBeam_trace_callback_tex;
 float Draw_VaporizerBeam_trace_callback_rnd;
@@ -124,7 +125,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 {
 	Net_Accept(vortex_beam);
 	this.think = SUB_Remove;
-	this.nextthink = time + 0.8;
+	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	this.draw = VaporizerBeam_Draw;
 	this.drawmask = MASK_NORMAL;
 
@@ -134,12 +135,12 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	this.sv_entnum = ReadShort();
 	this.team = ReadByte() - 1;
 
-	if(autocvar_cl_particles_vaporizerbeam)
+	if(autocvar_cl_vaporizerbeam_particle)
 	{
 		WarpZone_TrailParticles(world, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
 		this.draw = func_null;
 		this.drawmask = MASK_NORMAL;
-		this.nextthink = time + 0.1;
+		remove(this);
 	}
 
 	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
