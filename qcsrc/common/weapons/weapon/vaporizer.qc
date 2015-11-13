@@ -77,6 +77,7 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 #elif defined(CSQC)
 bool autocvar_cl_vaporizerbeam_particle = false;
 float autocvar_cl_vaporizerbeam_lifetime = 0.8;
+float autocvar_cl_vaporizerbeam_colorboost = 0.7;
 
 string Draw_VaporizerBeam_trace_callback_tex;
 float Draw_VaporizerBeam_trace_callback_rnd;
@@ -103,7 +104,7 @@ void VaporizerBeam_Draw(entity this)
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
 	vector rgb = getcsqcplayercolor(this.sv_entnum);
-	rgb *= (1 + 0.7);
+	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
 	float fail = (self.nextthink - time);
 
